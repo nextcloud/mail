@@ -13,7 +13,7 @@
 				</div>
 				<div class="recipient-details">
 					<h6>{{ recipients[0].displayName }}</h6>
-					<RecipientDetails :contact="recipientsVCards[recipients[0].email]" :reload-bus="reloadBus" />
+					<div ref="contactDetails0" />
 				</div>
 			</div>
 		</div>
@@ -34,7 +34,7 @@
 					</div>
 				</div>
 				<div class="recipient-list">
-					<RecipientDetails v-if="isExpanded(index)" :contact="recipientsVCards[recipient.email]" :reload-bus="reloadBus" />
+					<div :ref="`contactDetails${index}`" />
 				</div>
 			</div>
 		</div>
@@ -45,12 +45,13 @@
 import RecipientDetails from '../nextcloud-contacts/RecipientDetails.vue'
 import { mapGetters } from 'vuex'
 import { namespaces as NS } from '@nextcloud/cdav-library'
-import mitt from 'mitt'
+// import mitt from 'mitt'
 import Contact from '../nextcloud-contacts/contact.js'
 import '../css/RecipientProperties.scss'
 import IconArrowDown from 'vue-material-design-icons/ArrowDown.vue'
 import IconArrowUp from 'vue-material-design-icons/ArrowUp.vue'
 import Avatar from './Avatar.vue'
+import logger from '../logger.js'
 
 export default {
 	components: {
@@ -68,13 +69,11 @@ export default {
 	data() {
 		return {
 			expandedRecipients: [],
-			recipientsVCards: {},
-			loadingParticipants: {},
-			reloadBus: mitt(),
+			// reloadBus: mitt(),
+			contactDetailsVms: [],
 		}
 	},
 	computed: {
-		...mapGetters(['getAddressBooks', 'composerMessage']),
 		recipients() {
 			return this.composerMessage.data.to
 		},
@@ -84,39 +83,32 @@ export default {
 			immediate: true,
 			handler() {
 				this.expandedRecipients = this.recipients.map(() => false)
-				this.loadRecipientInfo()
 			},
 		},
 	},
-	methods: {
-		async loadRecipientInfo() {
-			const newEmails = this.recipients.map(r => r.email)
-			await Promise.all(newEmails.map(email => this.fetchRecipientInfo(email)))
-		},
-		async fetchRecipientInfo(email) {
-			if (this.loadingParticipants[email]) return
-
-			this.$set(this.loadingParticipants, email, true)
-			const result = await Promise.all(this.getAddressBooks.map(async (addressBook) => [
-				addressBook,
-				await addressBook.addressbookQuery([{
-					name: [NS.IETF_CARDDAV, 'prop-filter'],
-					attributes: [['name', 'EMAIL']],
-					children: [{
-						name: [NS.IETF_CALDAV, 'text-match'],
-						value: email,
-					}],
-				}]),
-			]))
-			const contacts = result.flatMap(([addressBook, vcards]) =>
-				vcards.map((vcard) => new Contact(vcard.data, addressBook)),
-			)
-			const contact = contacts.find(contact => contact.email === email)
-			if (contact) {
-				this.$set(this.recipientsVCards, email, contact)
+	async mounted() {
+		const mountContactDetails = window.OCA?.Contacts?.mountContactDetails
+		if (mountContactDetails) {
+			for (const [i, recipient] of this.recipients.entries()) {
+				const el = this.$refs[`contactDetails${i}`]
+				try {
+					this.contactDetailsVms.push(await mountContactDetails(el, recipient.email))
+				} catch (error) {
+					logger.error(`Failed to mount contact details: ${error}`, {
+						error,
+						recipient,
+					})
+					throw error
+				}
 			}
-			this.$delete(this.loadingParticipants, email)
-		},
+		}
+	},
+	async beforeDestroy() {
+		for (const vm of this.contactDetailsVms) {
+			vm.$destroy()
+		}
+	},
+	methods: {
 		toggleExpand(index) {
 			this.$set(this.expandedRecipients, index, !this.expandedRecipients[index])
 		},

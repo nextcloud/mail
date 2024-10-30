@@ -45,10 +45,7 @@ const getClient = () => {
  * Initializes the client for use in the user-view
  */
 export async function initializeClientForUserView() {
-	await getClient().connect({
-		enableCalDAV: true,
-		enableCardDAV: true,
-	})
+	await getClient().connect({ enableCalDAV: true })
 }
 
 /**
@@ -70,22 +67,10 @@ export function getCalendarHome() {
 }
 
 /**
- * Fetch all address books from the server
- *
- * @return {Promise<AddressBookHome>}
- */
-export function getAddressBookHomes() {
-	return getClient().addressBookHomes[0]
-}
-
-/**
  * Fetch all collections in the calendar home from the server
  *
  * @return {Promise<Collection[]>}
  */
 export async function findAll() {
-	return {
-		calendarGroups: await getCalendarHome().findAllCalDAVCollectionsGrouped(),
-		addressBooks: await getAddressBookHomes().findAllAddressBooks(),
-	}
+	return await getCalendarHome().findAllCalDAVCollectionsGrouped()
 }
