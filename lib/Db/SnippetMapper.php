@@ -66,15 +66,15 @@ class SnippetMapper extends QBMapper {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('s.*')
 			->from($this->getTableName(), 's')
-			->join('s', 'mail_snippets_shares', 'share', $qb->expr()->eq('s.id', 'sshare.snippet_id'))
+			->join('s', 'mail_snippets_shares', 'share', $qb->expr()->eq('s.id', 'share.snippet_id'))
 			->where($qb->expr()->andX(
-				$qb->expr()->eq('sshare.share_with', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR)),
-				$qb->expr()->in('sshare.type', $qb->createNamedParameter('user', IQueryBuilder::PARAM_STR))
+				$qb->expr()->eq('share.share_with', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR)),
+				$qb->expr()->eq('share.type', $qb->createNamedParameter('user', IQueryBuilder::PARAM_STR))
 			))
 			->orWhere(
 				$qb->expr()->andX(
-					$qb->expr()->in('sshare.share_with', $qb->createNamedParameter($groups, IQueryBuilder::PARAM_STR_ARRAY)),
-					$qb->expr()->in('sshare.type', $qb->createNamedParameter('group', IQueryBuilder::PARAM_STR))
+					$qb->expr()->in('share.share_with', $qb->createNamedParameter($groups, IQueryBuilder::PARAM_STR_ARRAY)),
+					$qb->expr()->eq('share.type', $qb->createNamedParameter('group', IQueryBuilder::PARAM_STR))
 				)
 			);
 		return $this->findEntities($qb);

@@ -32,9 +32,9 @@ export async function fetchSharedSnippets() {
  * @return {Promise<object>}
  */
 
-export async function createSnippet(snippet) {
+export async function createSnippet(title, content) {
 	const url = generateUrl('/apps/mail/api/snippets')
-	const response = await axios.post(url, { title: snippet.title, content: snippet.content })
+	const response = await axios.post(url, { title, content })
 	return response.data.data
 }
 
@@ -46,8 +46,8 @@ export async function createSnippet(snippet) {
  * @return {Promise<void>}
  */
 export async function updateSnippet(snippet) {
-	const url = generateUrl('/apps/mail/api/snippets', { id: snippet.id, title: snippet.title, content: snippet.content })
-	await axios.put(url)
+	const url = generateUrl('/apps/mail/api/snippets')
+	await axios.put(url, { id: snippet.id, title: snippet.title, content: snippet.content })
 }
 
 /**
@@ -55,7 +55,7 @@ export async function updateSnippet(snippet) {
  * @return {Promise<void>}
  */
 export async function deleteSnippet(id) {
-	const url = generateUrl('/apps/mail/api/snippets', { id })
+	const url = generateUrl('/apps/mail/api/snippets/{id}', { id })
 	await axios.delete(url)
 }
 
@@ -66,16 +66,16 @@ export async function deleteSnippet(id) {
  * @return {Promise<void>}
  */
 export async function shareSnippet(id, shareWith, type) {
-	const url = generateUrl('/apps/mail/api/snippets/share', { id, shareWith, type })
-	await axios.post(url)
+	const url = generateUrl('/apps/mail/api/snippets/share')
+	await axios.post(url, { id, shareWith, type })
 }
 
 /**
- * @param {number} snippetId
+ * @param {number} id
  * @return {Promise<void>}
  */
-export async function getShares(snippetId) {
-	const url = generateUrl('/apps/mail/api/snippets/share/shares', { snippetId })
+export async function getShares(id) {
+	const url = generateUrl('/apps/mail/api/snippets/share/shares/{id}', { id })
 	const response = await axios.get(url)
 	return response.data.data
 }
@@ -85,6 +85,6 @@ export async function getShares(snippetId) {
  * @return {Promise<void>}
  */
 export async function unshareSnippet(snippetId, shareWith) {
-	const url = generateUrl('/apps/mail/api/snippets/share', { snippetId, shareWith })
-	await axios.delete(url)
+	const url = generateUrl('/apps/mail/api/snippets/share')
+	await axios.delete(url, { snippetId, shareWith })
 }

@@ -32,11 +32,11 @@ class SnippetService {
 	/** @var IGroupManager */
 	private $groupManager;
 
-	public function __construct(SnippetMapper $snippetMapper, SnippetShareMapper $snippetShareMapper, IUserManager $userManager, IGroupManager $groupManager) {
+	public function __construct(SnippetMapper $snippetMapper, SnippetShareMapper $snippetShareMapper, IGroupManager $groupManager, IUserManager $userManager) {
 		$this->snippetMapper = $snippetMapper;
 		$this->snippetShareMapper = $snippetShareMapper;
 		$this->userManager = $userManager;
-		$this->$groupManager = $groupManager;
+		$this->groupManager = $groupManager;
 	}
 
 	/**
@@ -52,7 +52,8 @@ class SnippetService {
 	 * @return Snippet[]
 	 */
 	public function findAllSharedWithMe(string $userId): array {
-		$groups = $this->groupManager->getUserGroupIds($userId);
+		$user = $this->userManager->get($userId);
+		$groups = $this->groupManager->getUserGroupIds($user);
 		return $this->snippetMapper->findSharedWithMe($userId, $groups);
 	}
 	/**
@@ -128,7 +129,7 @@ class SnippetService {
 	}
 
 	public function getShares(string $uid, int $snippetId): array {
-		return $this->snippetShareMapper->findSnippetShares($uid, $snippetId);
+		return $this->snippetShareMapper->findSnippetShares($snippetId);
 	}
 
 	/**

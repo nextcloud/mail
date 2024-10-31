@@ -1558,16 +1558,16 @@ export default {
 		})
 	},
 
-	async createSnippet({ commit }, { name, content }) {
+	async createSnippet({ commit }, { title, content }) {
 		return handleHttpAuthErrors(commit, async () => {
-			const snippet = await createSnippet(name, content)
+			const snippet = await createSnippet(title, content)
 			commit('addSnippet', snippet)
 		})
 	},
-	async deleteSnippet({ commit }, snippet) {
+	async deleteSnippet({ commit }, { id }) {
 		return handleHttpAuthErrors(commit, async () => {
-			await deleteSnippet(snippet.id)
-			commit('deleteSnippet', snippet)
+			await deleteSnippet(id)
+			commit('deleteSnippet', id)
 		})
 	},
 
