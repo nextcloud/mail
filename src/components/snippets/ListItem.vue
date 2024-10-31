@@ -8,19 +8,22 @@
 			{{ snippet.title }}
 		</p>
 		<p class="snippet-list-item__preview">
-			{{ snippet.preview }}
+			{{ snippet.content }}
 		</p>
 
 		<NcSelect v-if="!shared"
+			:label="t('mail','Share with')"
+			:multiple="true"
 			class="snippet-list-item__shares"
 			:options="['hamzamahjoubi', 'user1', 'user2']"
-			@change="shareSnippet(snippet.id, snippet.sharedWith)" />
+			@option:selecting="shareSnippet"
+			@option:deselecting="removeShare" />
 
 		<NcActions class="snippet-list-item__actions">
-			<NcActionButton icon="icon-delete" @click="deleteSnippet(snippet.id)">
+			<NcActionButton icon="icon-delete" @click="deleteSnippet()">
 				{{ t('mail','Delete {title}', { title: snippet.title }) }}
 			</NcActionButton>
-			<NcActionButton icon="icon-edit" @click="editSnippet(snippet.id)">
+			<NcActionButton icon="icon-edit" @click="editModalOpen = true">
 				{{ t('mail','Edit {title}', { title: snippet.title }) }}
 			</NcActionButton>
 		</NcActions>
@@ -29,15 +32,19 @@
 			:is-form="true"
 			:buttons="buttons"
 			size="normal">
-			<NcInputField :value="snippet.title" :label="t('mail','Title of the snippet')" />
-			<NcTextArea rows="7" :label="t('mail','Content of the snippet')" resize="horizontal" />
+			<NcInputField :value.sync="localSnippet.title" :label="t('mail','Title of the snippet')" />
+			<NcTextArea rows="7"
+				:value.sync="localSnippet.content"
+				:label="t('mail','Content of the snippet')"
+				resize="horizontal" />
 		</NcDialog>
 	</div>
 </template>
 
 <script>
 import { NcActions, NcActionButton, NcSelect, NcDialog, NcTextArea, NcInputField } from '@nextcloud/vue'
-import { getShares } from '../../service/SnippetService.js'
+import { getShares, shareSnippet, unshareSnippet } from '../../service/SnippetService.js'
+import { showError, showSuccess } from '@nextcloud/dialogs'
 import IconCancel from '@mdi/svg/svg/cancel.svg?raw'
 import IconCheck from '@mdi/svg/svg/check.svg?raw'
 
@@ -70,7 +77,10 @@ export default {
 				{
 					label: 'Cancel',
 					icon: IconCancel,
-					callback: () => { console.log('Pressed "Cancel"') },
+					callback: () => {
+						this.editModalOpen = false
+						this.localSnippet = Object.assign({}, this.snippet)
+					},
 				},
 				{
 					label: 'Ok',
@@ -83,21 +93,34 @@ export default {
 	},
 	async mounted() {
 		if (!this.shared) {
-			this.shares = await getShares()
+			this.shares = await getShares(this.snippet.id).then((response) => {
+				return response.map(share => share.shareWith)
+			})
 		}
 	},
-	updated() {
-	},
 	methods: {
-		deleteSnippet(id) {
-			console.log('deleteSnippet', id)
+		async deleteSnippet() {
+			await this.$store.dispatch('deleteSnippet', { id: this.snippet.id }).then(() => {
+				showSuccess(t('mail', 'Snippet deleted'))
+			}).catch(() => {
+				showError(t('mail', 'Failed to delete snippet'))
+			})
 		},
-		shareSnippet(id, sharee) {
-			console.log('shareSnippet', id, sharee)
+		async shareSnippet(sharee) {
+			await shareSnippet(this.snippet.id, sharee.displayName, sharee.type).then(() => {
+				this.shares.push(sharee.displayName)
+				showSuccess(t('mail', 'Snippet shared with {sharee}', { sharee: sharee.displayName }))
+			}).catch(() => {
+				showError(t('mail', 'Failed to share snippet with {sharee}', { sharee: sharee.displayName }))
+			})
 		},
-		editSnippet(id) {
-			this.editModalOpen = true
-			console.log('editSnippet', id)
+		async removeShare(sharee) {
+			await unshareSnippet(this.snippet.id, sharee).then(() => {
+				this.shares = this.shares.filter(share => share !== sharee)
+				showSuccess(t('mail', 'Share deleted for {sharee}', { sharee }))
+			}).catch(() => {
+				showError(t('mail', 'Failed to delete share for {sharee}', { sharee }))
+			})
 		},
 	},
 }
@@ -109,5 +132,10 @@ export default {
     justify-content: space-between;
     align-items: center;
     padding: 5px;
+	&__preview{
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
 }
 </style>

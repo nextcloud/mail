@@ -292,12 +292,26 @@
 				</dl>
 			</NcAppSettingsSection>
 			<NcAppSettingsSection id="snippets" :name="t('mail', 'Snippets')">
+				<NcButton type="primary" @click="() => snippetDialogOpen = true">
+					{{ t('mail', 'Create new snippet') }}
+				</NcButton>
 				<h6>{{ t('mail','My snippets') }}</h6>
-				<List snippets="mySnippets" />
+				<List :snippets="mySnippets" />
 				<h6>{{ t('mail','Shared with me') }}</h6>
-				<List snippets="shareSnippet"
+				<List :snippets="sharedSnippet"
 					:shared="true" />
 			</NcAppSettingsSection>
+			<NcDialog :open.sync="snippetDialogOpen"
+				:name="t('mail','New snippet')"
+				:is-form="true"
+				:buttons="snippetButtons"
+				size="normal">
+				<NcInputField :value.sync="localSnippet.title" :label="t('mail','Title of the snippet')" />
+				<NcTextArea rows="7"
+					:value.sync="localSnippet.content"
+					:label="t('mail','Content of the snippet')"
+					resize="horizontal" />
+			</NcDialog>
 		</NcAppSettingsDialog>
 	</div>
 </template>
@@ -307,7 +321,7 @@ import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 import CompactMode from 'vue-material-design-icons/ReorderHorizontal.vue'
 
-import { NcAppSettingsSection, NcAppSettingsDialog, NcButton, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch } from '@nextcloud/vue'
+import { NcAppSettingsSection, NcAppSettingsDialog, NcButton, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch, NcDialog, NcInputField, NcTextArea } from '@nextcloud/vue'
 
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconEmail from 'vue-material-design-icons/Email.vue'
@@ -321,6 +335,8 @@ import InternalAddress from './InternalAddress.vue'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 import { mapGetters } from 'vuex'
 import List from './snippets/List.vue'
+import IconCancel from '@mdi/svg/svg/cancel.svg?raw'
+import IconCheck from '@mdi/svg/svg/check.svg?raw'
 
 export default {
 	name: 'AppSettingsMenu',
@@ -340,6 +356,9 @@ export default {
 		VerticalSplit,
 		HorizontalSplit,
 		List,
+		NcDialog,
+		NcInputField,
+		NcTextArea,
 	},
 	mixins: [isMobile],
 	props: {
@@ -372,6 +391,32 @@ export default {
 			showMailSettings: true,
 			selectedAccount: null,
 			mailvelopeIsAvailable: false,
+			snippetDialogOpen: false,
+			localSnippet: {
+				title: '',
+				content: '',
+			},
+			snippetButtons: [
+				{
+					label: 'Cancel',
+					icon: IconCancel,
+					callback: () => {
+						this.snippetDialogOpen = false
+						this.localSnippet = {
+							title: '',
+							content: '',
+						}
+					},
+				},
+				{
+					label: 'Ok',
+					type: 'primary',
+					icon: IconCheck,
+					callback: () => {
+						this.$store.dispatch('createSnippet', { ...this.localSnippet })
+					},
+				},
+			],
 		}
 	},
 	computed: {
@@ -409,10 +454,10 @@ export default {
 			return this.$store.getters.getPreference('layout-mode', 'vertical-split')
 		},
 		mySnippets() {
-			return this.$store.getters.getSnippets()
+			return this.$store.getters.getMySnippets
 		},
-		shareSnippet() {
-			return this.$store.getters.getSharedSnippets()
+		sharedSnippet() {
+			return this.$store.getters.getSharedSnippets
 		},
 	},
 	watch: {
@@ -430,6 +475,10 @@ export default {
 	mounted() {
 		this.sortOrder = this.$store.getters.getPreference('sort-order', 'newest')
 		document.addEventListener.call(window, 'mailvelope', () => this.checkMailvelope())
+		if (!this.$store.getters.areSnippetsFetched) {
+			this.$store.dispatch('fetchMySnippets')
+			this.$store.dispatch('fetchSharedSnippets')
+		}
 	},
 	updated() {
 		this.checkMailvelope()

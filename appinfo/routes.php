@@ -502,7 +502,7 @@ return [
 		],
 		[
 			'name' => 'snippet#getShares',
-			'url' => '/api/snippets/share/shares',
+			'url' => '/api/snippets/share/shares/{id}',
 			'verb' => 'GET',
 		],
 		[
@@ -517,7 +517,7 @@ return [
 		],
 		[
 			'name' => 'snippet#delete',
-			'url' => '/api/snippets',
+			'url' => '/api/snippets/{id}',
 			'verb' => 'DELETE',
 		],
 		[

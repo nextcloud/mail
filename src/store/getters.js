@@ -162,4 +162,5 @@ export const getters = {
 	showSettingsForAccount: (state) => (accountId) => state.showAccountSettings === accountId,
 	getMySnippets: (state) => state.mySnippets,
 	getSharedSnippets: (state) => state.sharedSnippets,
+	areSnippetsFetched: (state) => state.snippetsFetched,
 }

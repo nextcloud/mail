@@ -16,7 +16,7 @@ use ReturnTypeWillChange;
 /**
  * @method string getOwner()
  * @method void setOwner(string $owner)
- * @method string geTitle()
+ * @method string getTitle()
  * @method void setTitle(string $title)
  * @method string getContent()
  * @method void setContent(string $content)
@@ -37,7 +37,7 @@ class Snippet extends Entity implements JsonSerializable {
 		return [
 			'id' => $this->getId(),
 			'owner' => $this->getOwner(),
-			'title' => $this->geTitle(),
+			'title' => $this->getTitle(),
 			'content' => $this->getContent(),
 		];
 	}
