@@ -3,7 +3,7 @@ OC.L10N.register(
     {
     "Embedded message %s" : "رسالة مُضمّنة %s",
     "Important mail" : "رسائل بريد مهمة",
-    "No message found yet" : "لا توجد أية رسائل حتى الآن",
+    "No message found yet" : "لا توجد أي رسائل حتى الآن",
     "Set up an account" : "إعداد وتنصيب حساب",
     "Unread mail" : "البريد غير المقروء",
     "Important" : "مهم",
