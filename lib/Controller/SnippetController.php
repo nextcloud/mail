@@ -29,8 +29,6 @@ class SnippetController extends Controller {
 		private SnippetService $snippetService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-
-		$this->snippetService = $snippetService;
 		$this->uid = $userId;
 	}
 
@@ -77,29 +75,29 @@ class SnippetController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @param int $snippetId
+	 * @param int $id
 	 * @param string $title
 	 * @param string $content
 	 *
 	 * @return JsonResponse
 	 */
 	#[TrapError]
-	public function update(int $snippetId, string $title, string $content): JsonResponse {
+	public function update(int $id, string $title, string $content): JsonResponse {
 		
-		$snippet = $this->snippetService->find($snippetId, $this->uid);
+		$snippet = $this->snippetService->find($id, $this->uid);
 
 		if ($snippet === null) {
 			return JsonResponse::error('Snippet not found', Http::STATUS_NOT_FOUND);
 		}
 
-		$this->snippetService->update($snippetId, $this->uid, $title, $content);
+		$this->snippetService->update($id, $this->uid, $title, $content);
 
 		return JsonResponse::success($snippet, Http::STATUS_OK);
 	}
 
-	public function delete($snippetId): JsonResponse {
+	public function delete(int $id): JsonResponse {
 		try {
-			$this->snippetService->delete($snippetId, $this->uid);
+			$this->snippetService->delete($id, $this->uid);
 			return JsonResponse::success();
 		} catch (DoesNotExistException $e) {
 			return JsonResponse::fail('Snippet not found', Http::STATUS_NOT_FOUND);
@@ -135,14 +133,14 @@ class SnippetController extends Controller {
 
 	}
 
-	public function getShares($id): JsonResponse {
-		$snippet = $this->snippetService->find($snippetId, $this->uid);
+	public function getShares(int $id): JsonResponse {
+		$snippet = $this->snippetService->find($id, $this->uid);
 
 		if ($snippet === null) {
 			return JsonResponse::error('Snippet not found', Http::STATUS_NOT_FOUND);
 		}
 
-		$shares = $this->snippetService->getShares($this->uid, $snippetId);
+		$shares = $this->snippetService->getShares($this->uid, $id);
 
 		return JsonResponse::success($shares);
 	}

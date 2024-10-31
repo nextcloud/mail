@@ -993,7 +993,7 @@ export default {
 		if (this.sendAt && this.isSendAtCustom) {
 			this.selectedDate = new Date(this.sendAt)
 		}
-		if (this.snippets.length === 0) {
+		if (!this.$store.getters.areSnippetsFetched) {
 			this.$store.dispatch('fetchSharedSnippets')
 			this.$store.dispatch('fetchMySnippets')
 		}

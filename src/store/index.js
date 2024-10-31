@@ -109,6 +109,7 @@ export default new Store({
 				internalAddress: [],
 				hasCurrentUserPrincipalAndCollections: false,
 				showAccountSettings: null,
+				snippetsFetched: false,
 				mySnippets: [],
 				sharedSnippets: [],
 			},
