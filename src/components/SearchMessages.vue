@@ -604,9 +604,9 @@ export default {
 
 	&__input {
 		min-height: 52px;
-		margin: -1px 0 0 calc(var(--app-navigation-padding)*2 + var(--default-clickable-area));
+		margin-inline-start: calc(var(--app-navigation-padding)*2 + var(--default-clickable-area));
 		padding-right: 3px; /* matches .app-content-list */
-		border-right: 1px solid var(--color-border);
+		border-block-end: 1px solid var(--color-border);
 		position: relative;
 		display: flex;
 		align-items: center;
