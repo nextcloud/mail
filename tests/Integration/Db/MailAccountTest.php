@@ -70,7 +70,7 @@ class MailAccountTest extends TestCase {
 			'snoozeMailboxId' => null,
 			'searchBody' => false,
 			'outOfOfficeFollowsSystem' => true,
-			'debug' => 0,
+			'debug' => '',
 		], $a->toJson());
 	}
 
@@ -108,7 +108,7 @@ class MailAccountTest extends TestCase {
 			'snoozeMailboxId' => null,
 			'searchBody' => false,
 			'outOfOfficeFollowsSystem' => false,
-			'debug' => 0,
+			'debug' => '',
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency

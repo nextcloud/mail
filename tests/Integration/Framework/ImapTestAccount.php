@@ -47,7 +47,7 @@ trait ImapTestAccount {
 		$mailAccount->setOutboundUser('user@domain.tld');
 		$mailAccount->setOutboundPassword(OC::$server->getCrypto()->encrypt('mypassword'));
 		$mailAccount->setOutboundSslMode('none');
-		$mailAccount->setDebug(1);
+		$mailAccount->setDebug('imap');
 		$acc = $accountService->save($mailAccount);
 
 		/** @var MailboxSync $mbSync */
