@@ -28,8 +28,6 @@ class SmtpClientFactory {
 	/** @var HostNameFactory */
 	private $hostNameFactory;
 
-	private int $debugDefault = 16;
-
 	public function __construct(IConfig $config,
 		ICrypto $crypto,
 		HostNameFactory $hostNameFactory) {
@@ -79,7 +77,8 @@ class SmtpClientFactory {
 				$decryptedAccessToken,
 			);
 		}
-		if ($account->getDebug() & $this->debugDefault) {
+		$debug = $account->getDebug();
+		if (in_array('smtp', $debug)) {
 			$fn = 'mail-' . $account->getUserId() . '-' . $account->getId() . '-smtp.log';
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;
 		}

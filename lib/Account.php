@@ -62,10 +62,13 @@ class Account implements JsonSerializable {
 	}
 
 	/**
-	 * @return int
+	 * @return array
 	 */
-	public function getDebug(): int {
-		return $this->account->getDebug();
+	public function getDebug(): array {
+		if (!empty($this->account->getDebug())) {
+			return explode('|', $this->account->getDebug());
+		}
+		return [];
 	}
 
 	/**

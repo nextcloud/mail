@@ -101,8 +101,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setSearchBody(bool $searchBody)
  * @method bool|null getOooFollowsSystem()
  * @method void setOooFollowsSystem(bool $oooFollowsSystem)
- * @method int getDebug()
- * @method void setDebug(int $debug)
+ * @method string getDebug()
+ * @method void setDebug(string $debug)
  */
 class MailAccount extends Entity {
 	public const SIGNATURE_MODE_PLAIN = 0;
@@ -185,7 +185,7 @@ class MailAccount extends Entity {
 	/** @var bool|null */
 	protected $oooFollowsSystem;
 
-	protected int $debug = 0;
+	protected string $debug = '';
 
 	/**
 	 * @param array $params
@@ -270,7 +270,7 @@ class MailAccount extends Entity {
 		$this->addType('junkMailboxId', 'integer');
 		$this->addType('searchBody', 'boolean');
 		$this->addType('oooFollowsSystem', 'boolean');
-		$this->addType('debug', 'integer');
+		$this->addType('debug', 'string');
 	}
 
 	public function getOutOfOfficeFollowsSystem(): bool {

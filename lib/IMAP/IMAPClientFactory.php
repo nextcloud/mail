@@ -40,9 +40,6 @@ class IMAPClientFactory {
 	private ITimeFactory $timeFactory;
 	private HordeCacheFactory $hordeCacheFactory;
 
-	private int $debugDefault = 1;
-	private int $debugFull = 2;
-
 	public function __construct(ICrypto $crypto,
 		IConfig $config,
 		ICacheFactory $cacheFactory,
@@ -121,10 +118,10 @@ class IMAPClientFactory {
 			];
 		}
 		$debug = $account->getDebug();
-		if ($debug & $this->debugDefault || $debug & $this->debugFull) {
+		if (in_array('imap', $debug) || in_array('imap-full', $debug)) {
 			$fn = 'mail-' . $account->getUserId() . '-' . $account->getId() . '-imap.log';
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;
-			if ($debug & $this->debugFull) {
+			if (in_array('imap-full', $debug)) {
 				$params['debug_literal'] = true;
 			}
 		}

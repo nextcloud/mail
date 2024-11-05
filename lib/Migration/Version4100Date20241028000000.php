@@ -28,9 +28,10 @@ class Version4100Date20241028000000 extends SimpleMigrationStep {
 
 		$accountsTable = $schema->getTable('mail_accounts');
 		if (!$accountsTable->hasColumn('debug')) {
-			$accountsTable->addColumn('debug', Types::SMALLINT, [
-				'notnull' => false,
-				'default' => 0,
+			$accountsTable->addColumn('debug', Types::STRING, [
+				'length' => 32,
+				'notnull' => true,
+				'default' => '',
 			]);
 		}
 		return $schema;

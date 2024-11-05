@@ -48,10 +48,7 @@ class DebugAccount extends Command {
 		$imapDefault = $input->getOption(self::OPTION_IMAP_DEFAULT);
 		$imapFull = $input->getOption(self::OPTION_IMAP_FULL);
 		$smtpDefault = $input->getOption(self::OPTION_SMTP_DEFAULT);
-		$debug = 0;
-		$debugImapDefault = 1;
-		$debugImapFull = 2;
-		$debugSmtpDefault = 16;
+		$debug = [];
 
 		try {
 			$account = $this->accountService->findById($accountId)->getMailAccount();
@@ -61,16 +58,16 @@ class DebugAccount extends Command {
 		}
 
 		if ($imapDefault) {
-			$debug += $debugImapDefault;
+			$debug[] = 'imap';
 		} elseif ($imapFull) {
-			$debug += $debugImapFull;
+			$debug[] = 'imap-full';
 		}
 
 		if ($smtpDefault) {
-			$debug += $debugSmtpDefault;
+			$debug[] = 'smtp';
 		}
 
-		$account->setDebug($debug);
+		$account->setDebug(implode('|', $debug));
 		$this->accountService->save($account);
 
 		return 0;
