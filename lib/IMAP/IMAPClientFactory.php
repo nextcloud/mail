@@ -40,8 +40,8 @@ class IMAPClientFactory {
 	private ITimeFactory $timeFactory;
 	private HordeCacheFactory $hordeCacheFactory;
 
-	private int $debugDefault = 1 << 0;   // 1 (0000 0001)
-	private int $debugFull = 1 << 1;     // 2 (0000 0010)
+	private int $debugDefault = 1;
+	private int $debugFull = 2;
 
 	public function __construct(ICrypto $crypto,
 		IConfig $config,

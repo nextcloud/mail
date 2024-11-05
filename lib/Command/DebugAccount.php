@@ -49,9 +49,9 @@ class DebugAccount extends Command {
 		$imapFull = $input->getOption(self::OPTION_IMAP_FULL);
 		$smtpDefault = $input->getOption(self::OPTION_SMTP_DEFAULT);
 		$debug = 0;
-		$debugImapDefault = 1 << 0;   // 1 (0000 0001)
-		$debugImapFull = 1 << 1;      // 2 (0000 0010)
-		$debugSmtpDefault = 1 << 4;   // 16 (0001 0000)
+		$debugImapDefault = 1;
+		$debugImapFull = 2;
+		$debugSmtpDefault = 16;
 
 		try {
 			$account = $this->accountService->findById($accountId)->getMailAccount();

@@ -28,7 +28,7 @@ class SmtpClientFactory {
 	/** @var HostNameFactory */
 	private $hostNameFactory;
 
-	private int $debugDefault = 1 << 4;   // 16 (0001 0000)
+	private int $debugDefault = 16;
 
 	public function __construct(IConfig $config,
 		ICrypto $crypto,
