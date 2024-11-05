@@ -29,8 +29,8 @@
 						:disable-tooltip="true"
 						:disable-menu="true" />
 					<div class="expand-toggle" @click="toggleExpand(index)">
-						<IconArrowUp v-if="isExpanded(index)" size="16" />
-						<IconArrowDown v-else size="16" />
+						<IconArrowUp v-if="isExpanded(index)" :size="16" />
+						<IconArrowDown v-else :size="16" />
 					</div>
 				</div>
 				<div class="recipient-list">
@@ -116,15 +116,31 @@ export default {
 <style scoped lang="scss">
 .recipient-info {
 	display: flex;
-	flex-direction: column;
-	padding: 10px;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
 }
 
-.recipient-single,
-.recipient-item {
+.recipient-single {
+	width: 400px;
 	display: flex;
 	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+
+.recipient-header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.recipient-avatar {
 	margin-bottom: 10px;
+}
+
+.recipient-details {
+	max-width: 100%;
 }
 
 .recipient-multiple {
@@ -133,13 +149,6 @@ export default {
 
 .recipient-item {
 	margin-bottom: 10px;
-}
-
-.recipient-header {
-	display: flex;
-	align-items: center;
-	gap: 1rem;
-	margin-bottom: 1rem;
 }
 
 .recipient-item-details {
@@ -161,19 +170,8 @@ export default {
 }
 .recipient-header {
 	display: flex;
-	align-items: flex-start;
 	gap: 1rem;
 	margin-bottom: 1rem;
-}
-
-.recipient-avatar {
-	flex-shrink: 0;
-}
-
-.recipient-details {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
 }
 
 span {
