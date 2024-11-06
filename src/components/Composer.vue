@@ -181,6 +181,7 @@
 							type="search"
 							class="vs__search"
 							v-bind="attributes"
+							dir="auto"
 							v-on="events">
 					</template>
 					<template #selected-option-container="{option}">
