@@ -43,6 +43,9 @@ class Version4001Date20241017154801 extends SimpleMigrationStep {
 		$table->addColumn('content', Types::TEXT, [
 			'notnull' => true,
 		]);
+		$table->addColumn('preview', Types::TEXT, [
+			'notnull' => true,
+		]);
 		$table->setPrimaryKey(['id']);
 		
 		return $schema;

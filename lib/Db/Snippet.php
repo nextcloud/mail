@@ -20,16 +20,20 @@ use ReturnTypeWillChange;
  * @method void setTitle(string $title)
  * @method string getContent()
  * @method void setContent(string $content)
+ * @method string getPreview()
+ * @method void setPreview(string $preview)
  */
 class Snippet extends Entity implements JsonSerializable {
 	protected $owner;
 	protected $title;
 	protected $content;
+	protected $preview;
 
 	public function __construct() {
 		$this->addType('owner', 'string');
 		$this->addType('title', 'string');
 		$this->addType('content', 'string');
+		$this->addType('preview', 'string');
 	}
 
 	#[ReturnTypeWillChange]
@@ -39,6 +43,7 @@ class Snippet extends Entity implements JsonSerializable {
 			'owner' => $this->getOwner(),
 			'title' => $this->getTitle(),
 			'content' => $this->getContent(),
+			'preview' => $this->getPreview(),
 		];
 	}
 }

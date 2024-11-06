@@ -8,16 +8,8 @@
 			{{ snippet.title }}
 		</p>
 		<p class="snippet-list-item__preview">
-			{{ snippet.content }}
+			{{ snippet.preview }}
 		</p>
-
-		<NcSelect v-if="!shared"
-			:label="t('mail','Share with')"
-			:multiple="true"
-			class="snippet-list-item__shares"
-			:options="['hamzamahjoubi', 'user1', 'user2']"
-			@option:selecting="shareSnippet"
-			@option:deselecting="removeShare" />
 
 		<NcActions class="snippet-list-item__actions">
 			<NcActionButton icon="icon-delete" @click="deleteSnippet()">
@@ -33,20 +25,38 @@
 			:buttons="buttons"
 			size="normal">
 			<NcInputField :value.sync="localSnippet.title" :label="t('mail','Title of the snippet')" />
-			<NcTextArea rows="7"
-				:value.sync="localSnippet.content"
-				:label="t('mail','Content of the snippet')"
-				resize="horizontal" />
+			<TextEditor v-model="localSnippet.content"
+				:html="true"
+				:placeholder="t('mail','Content of the snippet')"
+				:bus="bus"
+				:show-toolbar="handleShowToolbar" />
+			<NcSelect v-if="!shared"
+				v-model="shares"
+				:label="t('mail','Share with')"
+				:multiple="true"
+				class="snippet-list-item__shares"
+				:loading="loading"
+				:user-select="true"
+				:options="options"
+				@option:selecting="shareSnippet"
+				@option:deselecting="removeShare"
+				@search="asyncFind" />
 		</NcDialog>
 	</div>
 </template>
 
 <script>
-import { NcActions, NcActionButton, NcSelect, NcDialog, NcTextArea, NcInputField } from '@nextcloud/vue'
+import { NcActions, NcActionButton, NcSelect, NcDialog, NcInputField } from '@nextcloud/vue'
 import { getShares, shareSnippet, unshareSnippet } from '../../service/SnippetService.js'
+import TextEditor from '../TextEditor.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import IconCancel from '@mdi/svg/svg/cancel.svg?raw'
-import IconCheck from '@mdi/svg/svg/check.svg?raw'
+import IconCancel from '@mdi/svg/svg/cancel.svg'
+import IconCheck from '@mdi/svg/svg/check.svg'
+import debounce from 'lodash/fp/debounce.js'
+import { ShareType } from '@nextcloud/sharing'
+import { generateOcsUrl } from '@nextcloud/router'
+import axios from '@nextcloud/axios'
+import mitt from 'mitt'
 
 export default {
 	name: 'ListItem',
@@ -55,7 +65,7 @@ export default {
 		NcActionButton,
 		NcSelect,
 		NcDialog,
-		NcTextArea,
+		TextEditor,
 		NcInputField,
 	},
 	props: {
@@ -73,6 +83,9 @@ export default {
 			shares: null,
 			localSnippet: Object.assign({}, this.snippet),
 			editModalOpen: false,
+			loading: false,
+			options: [],
+			bus: mitt(),
 			buttons: [
 				{
 					label: 'Cancel',
@@ -115,13 +128,97 @@ export default {
 			})
 		},
 		async removeShare(sharee) {
-			await unshareSnippet(this.snippet.id, sharee).then(() => {
-				this.shares = this.shares.filter(share => share !== sharee)
+			await unshareSnippet(this.snippet.id, sharee.displayName).then(() => {
+				this.shares = this.shares.filter(share => share.displayName !== sharee.displayName)
 				showSuccess(t('mail', 'Share deleted for {sharee}', { sharee }))
 			}).catch(() => {
 				showError(t('mail', 'Failed to delete share for {sharee}', { sharee }))
 			})
 		},
+		/**
+		 * Format shares for the multiselect options
+		 *
+		 * @param {object} result select entry item
+		 * @return {object}
+		 */
+		 formatForSelect(result) {
+			return {
+				user: result.uuid || result.value.shareWith,
+				displayName: result.name || result.label,
+				subtitle: result.dsc | '',
+			}
+		},
+
+		async asyncFind(query) {
+			this.loading = true
+			await this.debounceGetSuggestions(query.trim())
+		},
+		/**
+		 * Get suggestions
+		 *
+		 * @param {string} search the search query
+		 */
+		 async getSuggestions(search) {
+			const shareType = [
+				ShareType.User,
+				ShareType.Group,
+			]
+			let request = null
+			try {
+				request = await axios.get(generateOcsUrl('apps/files_sharing/api/v1/sharees'), {
+					params: {
+						format: 'json',
+						itemType: 'file',
+						search,
+						shareType,
+					},
+				})
+			} catch (error) {
+				console.error('Error fetching suggestions', error)
+				return
+			}
+			const data = request.data.ocs.data
+			const exact = request.data.ocs.data.exact
+			data.exact = [] // removing exact from general results
+			const rawExactSuggestions = exact.users
+			const rawSuggestions = data.users
+			console.info('rawExactSuggestions', rawExactSuggestions)
+			console.info('rawSuggestions', rawSuggestions)
+			// remove invalid data and format to user-select layout
+			const exactSuggestions = rawExactSuggestions
+				.map(share => this.formatForSelect(share))
+			const suggestions = rawSuggestions
+				.map(share => this.formatForSelect(share))
+			const allSuggestions = exactSuggestions.concat(suggestions)
+			// Count occurrences of display names in order to provide a distinguishable description if needed
+			const nameCounts = allSuggestions.reduce((nameCounts, result) => {
+				if (!result.displayName) {
+					return nameCounts
+				}
+				if (!nameCounts[result.displayName]) {
+					nameCounts[result.displayName] = 0
+				}
+				nameCounts[result.displayName]++
+				return nameCounts
+			}, {})
+			this.options = allSuggestions.map(item => {
+				// Make sure that items with duplicate displayName get the shareWith applied as a description
+				if (nameCounts[item.displayName] > 1 && !item.desc) {
+					return { ...item, desc: item.shareWithDisplayNameUnique }
+				}
+				return item
+			})
+			this.loading = false
+			console.info('suggestions', this.options)
+		},
+		/**
+		 * Debounce getSuggestions
+		 *
+		 * @param {...*} args the arguments
+		 */
+		 debounceGetSuggestions: debounce(300, function(...args) {
+			this.getSuggestions(...args)
+		}),
 	},
 }
 </script>
@@ -132,10 +229,20 @@ export default {
     justify-content: space-between;
     align-items: center;
     padding: 5px;
+	&__title{
+		white-space: nowrap;
+		padding-inline-end: 30px;
+		width: 100px;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
 	&__preview{
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+	}
+	&__shares{
+		width: 100%;
 	}
 }
 </style>

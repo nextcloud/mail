@@ -7,6 +7,7 @@
 		<NcAppSettingsDialog id="app-settings-dialog"
 			:name="t('mail', 'Mail settings')"
 			:show-navigation="true"
+			:additional-trap-elements="trapElements"
 			:open.sync="showSettings">
 			<NcAppSettingsSection id="account-creation" :name="t('mail', 'Accounts')">
 				<NcButton v-if="allowNewMailAccounts"
@@ -296,10 +297,12 @@
 					{{ t('mail', 'Create new snippet') }}
 				</NcButton>
 				<h6>{{ t('mail','My snippets') }}</h6>
-				<List :snippets="mySnippets" />
+				<List :snippets="mySnippets"
+					@show-toolbar="handleShowToolbar" />
 				<h6>{{ t('mail','Shared with me') }}</h6>
 				<List :snippets="sharedSnippet"
-					:shared="true" />
+					:shared="true"
+					@show-toolbar="handleShowToolbar" />
 			</NcAppSettingsSection>
 			<NcDialog :open.sync="snippetDialogOpen"
 				:name="t('mail','New snippet')"
@@ -307,10 +310,11 @@
 				:buttons="snippetButtons"
 				size="normal">
 				<NcInputField :value.sync="localSnippet.title" :label="t('mail','Title of the snippet')" />
-				<NcTextArea rows="7"
-					:value.sync="localSnippet.content"
-					:label="t('mail','Content of the snippet')"
-					resize="horizontal" />
+				<TextEditor v-model="localSnippet.content"
+					:html="true"
+					:placeholder="t('mail','Content of the snippet')"
+					:bus="bus"
+					:show-toolbar="handleShowToolbar" />
 			</NcDialog>
 		</NcAppSettingsDialog>
 	</div>
@@ -321,8 +325,8 @@ import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 import CompactMode from 'vue-material-design-icons/ReorderHorizontal.vue'
 
-import { NcAppSettingsSection, NcAppSettingsDialog, NcButton, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch, NcDialog, NcInputField, NcTextArea } from '@nextcloud/vue'
-
+import { NcAppSettingsSection, NcAppSettingsDialog, NcButton, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch, NcDialog, NcInputField } from '@nextcloud/vue'
+import TextEditor from './TextEditor.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconEmail from 'vue-material-design-icons/Email.vue'
 import IconLock from 'vue-material-design-icons/Lock.vue'
@@ -335,8 +339,9 @@ import InternalAddress from './InternalAddress.vue'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 import { mapGetters } from 'vuex'
 import List from './snippets/List.vue'
-import IconCancel from '@mdi/svg/svg/cancel.svg?raw'
-import IconCheck from '@mdi/svg/svg/check.svg?raw'
+import IconCancel from '@mdi/svg/svg/cancel.svg'
+import IconCheck from '@mdi/svg/svg/check.svg'
+import mitt from 'mitt'
 
 export default {
 	name: 'AppSettingsMenu',
@@ -358,7 +363,7 @@ export default {
 		List,
 		NcDialog,
 		NcInputField,
-		NcTextArea,
+		TextEditor,
 	},
 	mixins: [isMobile],
 	props: {
@@ -391,6 +396,8 @@ export default {
 			showMailSettings: true,
 			selectedAccount: null,
 			mailvelopeIsAvailable: false,
+			trapElements: [],
+			bus: mitt(),
 			snippetDialogOpen: false,
 			localSnippet: {
 				title: '',
@@ -414,6 +421,10 @@ export default {
 					icon: IconCheck,
 					callback: () => {
 						this.$store.dispatch('createSnippet', { ...this.localSnippet })
+						this.localSnippet = {
+							title: '',
+							content: '',
+						}
 					},
 				},
 			],
@@ -632,6 +643,9 @@ export default {
 			iframe.style = 'display: none'
 			iframe.src = 'https://api.mailvelope.com/authorize-domain/?api=true'
 			document.body.append(iframe)
+		},
+		handleShowToolbar(element) {
+			this.trapElements.push(element)
 		},
 	},
 }

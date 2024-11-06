@@ -17,6 +17,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Files\NotPermittedException;
 use OCP\IGroupManager;
 use OCP\IUserManager;
+use Html2Text\Html2Text;
 
 class SnippetService {
 
@@ -77,6 +78,9 @@ class SnippetService {
 		$snippet->setContent($content);
 		$snippet->setOwner($userId);
 		$snippet->setTitle($title);
+		$html = new Html2Text($content, ['do_links' => 'none','alt_image' => 'hide']);
+		$preview = trim($html->getText());
+		$snippet->setPreview(substr($preview, 0, 300));
 		return $this->snippetMapper->insert($snippet);
 	}
 
@@ -92,6 +96,9 @@ class SnippetService {
 		$snippet = $this->snippetMapper->find($snippetId, $userId);
 		$snippet->setContent($content);
 		$snippet->setTitle($title);
+		$html = new Html2Text($content, ['do_links' => 'none','alt_image' => 'hide']);
+		$preview = trim($html->getText());
+		$snippet->setPreview(substr($preview, 0, 300));
 		return $this->snippetMapper->update($snippet);
 	}
 
