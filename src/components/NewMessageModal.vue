@@ -184,6 +184,7 @@ export default {
 			cookedComposerData: undefined,
 			changed: false,
 			largerModal: false,
+			isLargeScreen: window.innerWidth >= 1200,
 			recipient: {
 				name: '',
 				email: '',
@@ -221,7 +222,9 @@ export default {
 			return this.composerData?.smartReply ?? null
 		},
 		modalSize() {
-			return this.composerData.to && this.composerData.to.length > 0 ? 'full' : (this.largerModal ? 'large' : 'normal')
+			return this.isLargeScreen && this.composerData.to && this.composerData.to.length > 0
+				? 'full'
+				: (this.largerModal ? 'large' : 'normal')
 		},
 	},
 	created() {
@@ -235,11 +238,16 @@ export default {
 		await this.$nextTick()
 		this.updateCookedComposerData()
 		await this.openModalSize()
+		window.addEventListener('resize', this.checkScreenSize)
 	},
 	beforeDestroy() {
 		window.removeEventListener('beforeunload', this.onBeforeUnload)
+		window.removeEventListener('resize', this.checkScreenSize)
 	},
 	methods: {
+		checkScreenSize() {
+			this.isLargeScreen = window.innerWidth >= 1200
+		},
 		async openModalSize() {
 			try {
 				const sizePreference = this.$store.getters.getPreference('modalSize')
@@ -625,6 +633,9 @@ export default {
 	overflow-y: auto;
 	padding-left: 5px;
 	border-left: 1px solid #ccc;
+	@media (max-width: 1200px) {
+		display: none;
+	}
 }
 
 .modal-content.with-recipient .left-pane {
