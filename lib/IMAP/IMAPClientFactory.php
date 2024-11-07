@@ -117,7 +117,10 @@ class IMAPClientFactory {
 				'backend' => $this->hordeCacheFactory->newCache($account),
 			];
 		}
-		$debug = $account->getDebug();
+		$debug = array_merge(
+			explode('|', $this->config->getSystemValue('MAIL_DEBUG')),
+			explode('|', $account->getDebug())
+		);
 		if (in_array('imap', $debug) || in_array('imap-full', $debug)) {
 			$fn = 'mail-' . $account->getUserId() . '-' . $account->getId() . '-imap.log';
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;

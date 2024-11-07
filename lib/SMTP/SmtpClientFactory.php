@@ -77,7 +77,10 @@ class SmtpClientFactory {
 				$decryptedAccessToken,
 			);
 		}
-		$debug = $account->getDebug();
+		$debug = array_merge(
+			explode('|', $this->config->getSystemValue('MAIL_DEBUG', '')),
+			explode('|', $account->getDebug())
+		);
 		if (in_array('smtp', $debug)) {
 			$fn = 'mail-' . $account->getUserId() . '-' . $account->getId() . '-smtp.log';
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;
