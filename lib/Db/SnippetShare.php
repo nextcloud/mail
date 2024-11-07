@@ -22,9 +22,9 @@ use ReturnTypeWillChange;
  * @method void setSnippetId(int $snippetId)
  */
 class SnippetShare extends Entity implements JsonSerializable {
-	protected $owner;
-	protected $title;
-	protected $content;
+	protected $type;
+	protected $shareWith;
+	protected $snippetId;
 
 	public const TYPE_USER = 'user';
 	public const TYPE_GROUP = 'group';
