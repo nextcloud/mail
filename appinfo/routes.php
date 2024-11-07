@@ -527,7 +527,7 @@ return [
 		],
 		[
 			'name' => 'snippet#deleteShare',
-			'url' => '/api/snippets/share',
+			'url' => '/api/snippets/share/{snippetId}/{shareWith}',
 			'verb' => 'DELETE',
 		],
 	],

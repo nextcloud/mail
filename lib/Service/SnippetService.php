@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
+use Html2Text\Html2Text;
 use OCA\Mail\Db\Snippet;
 use OCA\Mail\Db\SnippetMapper;
 use OCA\Mail\Db\SnippetShare;
@@ -17,7 +18,6 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Files\NotPermittedException;
 use OCP\IGroupManager;
 use OCP\IUserManager;
-use Html2Text\Html2Text;
 
 class SnippetService {
 
