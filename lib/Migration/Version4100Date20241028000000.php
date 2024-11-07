@@ -30,7 +30,7 @@ class Version4100Date20241028000000 extends SimpleMigrationStep {
 		if (!$accountsTable->hasColumn('debug')) {
 			$accountsTable->addColumn('debug', Types::STRING, [
 				'length' => 32,
-				'notnull' => true,
+				'notnull' => false,
 				'default' => '',
 			]);
 		}
