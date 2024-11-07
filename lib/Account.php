@@ -67,8 +67,7 @@ class Account implements JsonSerializable {
 	public function getDebug(): array {
 		if (isset($_SERVER['NC_MAIL_DEBUG'])) {
 			return explode('|', $_SERVER['NC_MAIL_DEBUG']);
-		}
-		elseif (!empty($this->account->getDebug())) {
+		} elseif (!empty($this->account->getDebug())) {
 			return explode('|', $this->account->getDebug());
 		}
 		return [];
