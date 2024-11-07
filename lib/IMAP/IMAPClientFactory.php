@@ -118,7 +118,7 @@ class IMAPClientFactory {
 			];
 		}
 		$debug = array_merge(
-			explode('|', $this->config->getSystemValue('MAIL_DEBUG')),
+			explode('|', $this->config->getSystemValueString('MAIL_DEBUG')),
 			explode('|', $account->getDebug())
 		);
 		if (in_array('imap', $debug) || in_array('imap-full', $debug)) {

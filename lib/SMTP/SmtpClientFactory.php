@@ -78,7 +78,7 @@ class SmtpClientFactory {
 			);
 		}
 		$debug = array_merge(
-			explode('|', $this->config->getSystemValue('MAIL_DEBUG', '')),
+			explode('|', $this->config->getSystemValueString('MAIL_DEBUG')),
 			explode('|', $account->getDebug())
 		);
 		if (in_array('smtp', $debug)) {
