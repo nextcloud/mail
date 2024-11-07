@@ -60,14 +60,14 @@ export async function deleteSnippet(id) {
 }
 
 /**
- * @param {number} id
+ * @param {number} snippetId
  * @param {string} shareWith
  * @param {string} type
  * @return {Promise<void>}
  */
-export async function shareSnippet(id, shareWith, type) {
+export async function shareSnippet(snippetId, shareWith, type) {
 	const url = generateUrl('/apps/mail/api/snippets/share')
-	await axios.post(url, { id, shareWith, type })
+	await axios.post(url, { snippetId, shareWith, type })
 }
 
 /**
@@ -85,6 +85,6 @@ export async function getShares(id) {
  * @return {Promise<void>}
  */
 export async function unshareSnippet(snippetId, shareWith) {
-	const url = generateUrl('/apps/mail/api/snippets/share')
-	await axios.delete(url, { snippetId, shareWith })
+	const url = generateUrl('/apps/mail/api/snippets/share/{snippetId}/{shareWith}', { snippetId, shareWith })
+	await axios.delete(url)
 }

@@ -28,19 +28,23 @@
 			<TextEditor v-model="localSnippet.content"
 				:html="true"
 				:placeholder="t('mail','Content of the snippet')"
-				:bus="bus"
-				:show-toolbar="handleShowToolbar" />
+				:bus="bus" />
 			<NcSelect v-if="!shared"
-				v-model="shares"
+				v-model="share"
 				:label="t('mail','Share with')"
-				:multiple="true"
 				class="snippet-list-item__shares"
 				:loading="loading"
 				:user-select="true"
 				:options="options"
+				:get-option-label="option => option.displayName"
 				@option:selecting="shareSnippet"
-				@option:deselecting="removeShare"
 				@search="asyncFind" />
+			<p v-for="shareaa in shares" :key="shareaa.displayName">
+				{{ shareaa.displayName }}
+				<NcActionButton icon="icon-delete" @click="removeShare(shareaa)">
+					{{ t('mail','Remove share') }}
+				</NcActionButton>
+			</p>
 		</NcDialog>
 	</div>
 </template>
@@ -55,6 +59,8 @@ import IconCheck from '@mdi/svg/svg/check.svg'
 import debounce from 'lodash/fp/debounce.js'
 import { ShareType } from '@nextcloud/sharing'
 import { generateOcsUrl } from '@nextcloud/router'
+import { getCurrentUser } from '@nextcloud/auth'
+
 import axios from '@nextcloud/axios'
 import mitt from 'mitt'
 
@@ -80,11 +86,12 @@ export default {
 	},
 	data() {
 		return {
-			shares: null,
+			shares: [],
 			localSnippet: Object.assign({}, this.snippet),
 			editModalOpen: false,
 			loading: false,
-			options: [],
+			share: null,
+			suggestions: [],
 			bus: mitt(),
 			buttons: [
 				{
@@ -104,6 +111,11 @@ export default {
 			],
 		}
 	},
+	computed: {
+		options() {
+			return this.suggestions.filter(suggestion => !this.shares.find(share => share.name === suggestion.shareWith) && suggestion.shareWith !== getCurrentUser().uid)
+		},
+	},
 	async mounted() {
 		if (!this.shared) {
 			this.shares = await getShares(this.snippet.id).then((response) => {
@@ -120,33 +132,21 @@ export default {
 			})
 		},
 		async shareSnippet(sharee) {
-			await shareSnippet(this.snippet.id, sharee.displayName, sharee.type).then(() => {
-				this.shares.push(sharee.displayName)
+			await shareSnippet(this.snippet.id, sharee.shareWith, sharee.shareType === ShareType.User ? 'user' : 'group').then(() => {
+				this.shares.push([{ name: sharee.shareWith, type: sharee.isNoUser ? 'group' : 'user' }])
 				showSuccess(t('mail', 'Snippet shared with {sharee}', { sharee: sharee.displayName }))
+				this.share = null
 			}).catch(() => {
 				showError(t('mail', 'Failed to share snippet with {sharee}', { sharee: sharee.displayName }))
 			})
 		},
 		async removeShare(sharee) {
-			await unshareSnippet(this.snippet.id, sharee.displayName).then(() => {
-				this.shares = this.shares.filter(share => share.displayName !== sharee.displayName)
+			await unshareSnippet(this.snippet.id, sharee.shareWith).then(() => {
+				this.shares = this.shares.filter(share => share.name !== sharee.name)
 				showSuccess(t('mail', 'Share deleted for {sharee}', { sharee }))
 			}).catch(() => {
 				showError(t('mail', 'Failed to delete share for {sharee}', { sharee }))
 			})
-		},
-		/**
-		 * Format shares for the multiselect options
-		 *
-		 * @param {object} result select entry item
-		 * @return {object}
-		 */
-		 formatForSelect(result) {
-			return {
-				user: result.uuid || result.value.shareWith,
-				displayName: result.name || result.label,
-				subtitle: result.dsc | '',
-			}
 		},
 
 		async asyncFind(query) {
@@ -159,10 +159,13 @@ export default {
 		 * @param {string} search the search query
 		 */
 		 async getSuggestions(search) {
-			const shareType = [
+			this.loading = true
+
+			const shareTypes = [
 				ShareType.User,
 				ShareType.Group,
 			]
+
 			let request = null
 			try {
 				request = await axios.get(generateOcsUrl('apps/files_sharing/api/v1/sharees'), {
@@ -170,26 +173,27 @@ export default {
 						format: 'json',
 						itemType: 'file',
 						search,
-						shareType,
+						shareTypes,
 					},
 				})
 			} catch (error) {
 				console.error('Error fetching suggestions', error)
 				return
 			}
+
 			const data = request.data.ocs.data
 			const exact = request.data.ocs.data.exact
 			data.exact = [] // removing exact from general results
-			const rawExactSuggestions = exact.users
-			const rawSuggestions = data.users
-			console.info('rawExactSuggestions', rawExactSuggestions)
-			console.info('rawSuggestions', rawSuggestions)
+
+			// flatten array of arrays
+			const rawExactSuggestions = exact.users.concat(exact.groups)
+			const rawSuggestions = data.users.concat(data.groups)
 			// remove invalid data and format to user-select layout
-			const exactSuggestions = rawExactSuggestions
-				.map(share => this.formatForSelect(share))
-			const suggestions = rawSuggestions
-				.map(share => this.formatForSelect(share))
-			const allSuggestions = exactSuggestions.concat(suggestions)
+			const exactSuggestions = rawExactSuggestions.map(share => this.formatForMultiselect(share))
+			const suggestions = rawSuggestions.map(share => this.formatForMultiselect(share)).sort((a, b) => a.shareType - b.shareType)
+
+			const allSuggestions = exactSuggestions.concat(suggestions).sort((a, b) => a.shareType - b.shareType)
+
 			// Count occurrences of display names in order to provide a distinguishable description if needed
 			const nameCounts = allSuggestions.reduce((nameCounts, result) => {
 				if (!result.displayName) {
@@ -201,15 +205,61 @@ export default {
 				nameCounts[result.displayName]++
 				return nameCounts
 			}, {})
-			this.options = allSuggestions.map(item => {
+
+			this.suggestions = allSuggestions.map(item => {
 				// Make sure that items with duplicate displayName get the shareWith applied as a description
 				if (nameCounts[item.displayName] > 1 && !item.desc) {
 					return { ...item, desc: item.shareWithDisplayNameUnique }
 				}
 				return item
 			})
+
 			this.loading = false
-			console.info('suggestions', this.options)
+			console.info('suggestions', this.suggestions)
+		},
+		/**
+		 * Get the icon based on the share type
+		 *
+		 * @param {number} type the share type
+		 * @return {string} the icon class
+		 */
+		 shareTypeToIcon(type) {
+			switch (type) {
+			case ShareType.User:
+				// default is a user, other icons are here to differentiate
+				// themselves from it, so let's not display the user icon
+				// case this.SHARE_TYPES.SHARE_TYPE_REMOTE:
+				// case this.SHARE_TYPES.SHARE_TYPE_USER:
+				return {
+					icon: 'icon-user',
+					iconTitle: t('files_sharing', 'Guest'),
+				}
+			case ShareType.Group:
+				return {
+					icon: 'icon-group',
+					iconTitle: t('files_sharing', 'Group'),
+				}
+			default:
+				return {}
+			}
+		},
+
+		/**
+		 * Format shares for the multiselect options
+		 *
+		 * @param {object} result select entry item
+		 * @return {object}
+		 */
+		formatForMultiselect(result) {
+			return {
+				shareWith: result.value.shareWith,
+				shareType: result.value.shareType,
+				user: result.uuid || result.value.shareWith,
+				isNoUser: result.value.shareType !== ShareType.User,
+				displayName: result.name || result.label,
+				shareWithDisplayNameUnique: result.shareWithDisplayNameUnique || '',
+				...this.shareTypeToIcon(result.value.shareType),
+			}
 		},
 		/**
 		 * Debounce getSuggestions
