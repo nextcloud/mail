@@ -92,6 +92,7 @@ OC.L10N.register(
     "Create alias" : "Creează alias",
     "Cancel" : "Anulează",
     "Mail settings" : "Setări Mail",
+    "Accounts" : "Conturi",
     "Add mail account" : "Adaugă un cont de mail",
     "General" : "General",
     "List" : "Listă",
