@@ -21,17 +21,18 @@
 		</NcActions>
 		<NcDialog :open.sync="editModalOpen"
 			:name="t('mail','Edit snippet')"
+			size="large"
 			:is-form="true"
-			:buttons="buttons"
-			size="normal">
+			:buttons="buttons">
+			<h2>{{ t('mail','Content') }}</h2>
 			<NcInputField :value.sync="localSnippet.title" :label="t('mail','Title of the snippet')" />
 			<TextEditor v-model="localSnippet.content"
 				:html="true"
 				:placeholder="t('mail','Content of the snippet')"
 				:bus="bus" />
+			<h2>{{ t('mail','Shares') }}</h2>
 			<NcSelect v-if="!shared"
 				v-model="share"
-				:label="t('mail','Share with')"
 				class="snippet-list-item__shares"
 				:loading="loading"
 				:user-select="true"
@@ -39,18 +40,33 @@
 				:get-option-label="option => option.displayName"
 				@option:selecting="shareSnippet"
 				@search="asyncFind" />
-			<p v-for="user in shares" :key="user.shareWith">
-				{{ user.shareWith }}
-				<NcActionButton icon="icon-delete" @click="removeShare(user)">
-					{{ t('mail','Remove share') }}
-				</NcActionButton>
-			</p>
+			<template v-for="user in sortedShares">
+				<NcUserBubble v-if="user.type === 'group'"
+					:key="user.shareWith"
+					avatar-image="icon-group"
+					:display-name="user.shareWith">
+					<template #name>
+						<a href="#"
+							title="Remove group"
+							class="icon-close"
+							@click="removeShare(user)" />
+					</template>
+				</NcUserBubble>
+				<NcUserBubble v-else :key="user.shareWith" :user="user.shareWith">
+					<template #name>
+						<a href="#"
+							title="Remove user"
+							class="icon-close"
+							@click="removeShare(user)" />
+					</template>
+				</NcUserBubble>
+			</template>
 		</NcDialog>
 	</div>
 </template>
 
 <script>
-import { NcActions, NcActionButton, NcSelect, NcDialog, NcInputField } from '@nextcloud/vue'
+import { NcActions, NcActionButton, NcSelect, NcDialog, NcInputField, NcUserBubble } from '@nextcloud/vue'
 import { getShares, shareSnippet, unshareSnippet } from '../../service/SnippetService.js'
 import TextEditor from '../TextEditor.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
@@ -73,6 +89,7 @@ export default {
 		NcDialog,
 		TextEditor,
 		NcInputField,
+		NcUserBubble,
 	},
 	props: {
 		snippet: {
@@ -115,6 +132,17 @@ export default {
 		options() {
 			return this.suggestions.filter(suggestion => !this.shares.find(share => share.name === suggestion.shareWith) && suggestion.shareWith !== getCurrentUser().uid)
 		},
+		sortedShares() {
+			return [...this.shares].sort((a, b) => {
+				if (a.type === 'user' && b.type === 'group') {
+					return -1
+				}
+				if (a.type === 'group' && b.type === 'user') {
+					return 1
+				}
+				return 0
+			})
+		},
 	},
 	async mounted() {
 		if (!this.shared) {
@@ -141,7 +169,7 @@ export default {
 		async removeShare(sharee) {
 			await unshareSnippet(this.snippet.id, sharee.shareWith).then(() => {
 				this.shares = this.shares.filter(share => share.shareWith !== sharee.shareWith)
-				showSuccess(t('mail', 'Share deleted for {sharee}', { sharee }))
+				showSuccess(t('mail', 'Share deleted for {name}', { name: sharee.shareWith }))
 			}).catch(() => {
 				showError(t('mail', 'Failed to delete share with {name}', { name: sharee.shareWith }))
 			})
@@ -273,10 +301,10 @@ export default {
 
 <style lang="scss" scoped>
 .snippet-list-item{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px;
+	display: grid;
+    grid-template-columns: 1fr 4fr 1fr;
+    gap: 5px;
+	padding: 5px;
 	&__title{
 		white-space: nowrap;
 		padding-inline-end: 30px;
@@ -292,5 +320,9 @@ export default {
 	&__shares{
 		width: 100%;
 	}
+}
+.icon-close {
+	display: block;
+	height: 100%;
 }
 </style>
