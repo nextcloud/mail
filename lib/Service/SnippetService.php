@@ -110,6 +110,7 @@ class SnippetService {
 	public function delete(int $snippetId, string $userId): void {
 		$snippet = $this->snippetMapper->find($snippetId, $userId);
 		$this->snippetMapper->delete($snippet);
+		$this->snippetShareMapper->deleteBySnippetId($snippetId);
 	}
 
 

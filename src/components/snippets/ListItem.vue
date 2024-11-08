@@ -39,9 +39,9 @@
 				:get-option-label="option => option.displayName"
 				@option:selecting="shareSnippet"
 				@search="asyncFind" />
-			<p v-for="shareaa in shares" :key="shareaa.displayName">
-				{{ shareaa.displayName }}
-				<NcActionButton icon="icon-delete" @click="removeShare(shareaa)">
+			<p v-for="user in shares" :key="user.shareWith">
+				{{ user.shareWith }}
+				<NcActionButton icon="icon-delete" @click="removeShare(user)">
 					{{ t('mail','Remove share') }}
 				</NcActionButton>
 			</p>
@@ -118,9 +118,7 @@ export default {
 	},
 	async mounted() {
 		if (!this.shared) {
-			this.shares = await getShares(this.snippet.id).then((response) => {
-				return response.map(share => share.shareWith)
-			})
+			this.shares = await getShares(this.snippet.id)
 		}
 	},
 	methods: {
@@ -133,19 +131,19 @@ export default {
 		},
 		async shareSnippet(sharee) {
 			await shareSnippet(this.snippet.id, sharee.shareWith, sharee.shareType === ShareType.User ? 'user' : 'group').then(() => {
-				this.shares.push([{ name: sharee.shareWith, type: sharee.isNoUser ? 'group' : 'user' }])
-				showSuccess(t('mail', 'Snippet shared with {sharee}', { sharee: sharee.displayName }))
+				this.shares.push({ shareWith: sharee.shareWith, type: sharee.isNoUser ? 'group' : 'user' })
+				showSuccess(t('mail', 'Snippet shared with {sharee}', { sharee: sharee.shareWith }))
 				this.share = null
 			}).catch(() => {
-				showError(t('mail', 'Failed to share snippet with {sharee}', { sharee: sharee.displayName }))
+				showError(t('mail', 'Failed to share snippet with {sharee}', { sharee: sharee.shareWith }))
 			})
 		},
 		async removeShare(sharee) {
 			await unshareSnippet(this.snippet.id, sharee.shareWith).then(() => {
-				this.shares = this.shares.filter(share => share.name !== sharee.name)
+				this.shares = this.shares.filter(share => share.shareWith !== sharee.shareWith)
 				showSuccess(t('mail', 'Share deleted for {sharee}', { sharee }))
 			}).catch(() => {
-				showError(t('mail', 'Failed to delete share for {sharee}', { sharee }))
+				showError(t('mail', 'Failed to delete share with {name}', { name: sharee.shareWith }))
 			})
 		},
 
