@@ -79,4 +79,5 @@ class SnippetMapper extends QBMapper {
 			);
 		return $this->findEntities($qb);
 	}
+
 }
