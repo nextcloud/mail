@@ -40,7 +40,7 @@ Depending on your mail host, it may be necessary to increase your IMAP and/or SM
 ```
 #### SMTP timeout
 ```php
-'app.mail.smtp.timeout' => 2
+'app.mail.smtp.timeout' => 20
 ```
 #### Sieve timeout
 ```php
@@ -49,7 +49,7 @@ Depending on your mail host, it may be necessary to increase your IMAP and/or SM
 
 ### Background sync interval
 
-Configure how often Mail keeps users' mailboxes updated in the background in seconds. Defaults to 3600.
+Configure how often Mail keeps users' mailboxes updated in the background in seconds. Defaults to 3600, minimum 300.
 
 ```php
 'app.mail.background-sync-interval' => 7200,

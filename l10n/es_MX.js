@@ -122,6 +122,7 @@ OC.L10N.register(
     "Untitled event" : "Evento sin título",
     "Operator" : "Operador",
     "Actions" : "Acciones",
+    "Priority" : "Prioridad",
     "Reset" : "Reiniciar",
     "Client ID" : "ID del cliente",
     "Client secret" : "Secreto del cliente",

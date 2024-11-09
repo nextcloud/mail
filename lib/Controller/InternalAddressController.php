@@ -22,8 +22,8 @@ class InternalAddressController extends Controller {
 	private ?string $uid;
 
 	public function __construct(
-		IRequest        $request,
-		?string                                 $userId,
+		IRequest $request,
+		?string $userId,
 		private InternalAddressService $internalAddressService,
 	) {
 		parent::__construct(Application::APP_ID, $request);

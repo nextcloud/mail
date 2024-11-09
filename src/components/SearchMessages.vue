@@ -10,7 +10,8 @@
 				class="search-messages--input"
 				:placeholder="t('mail', 'Search in mailbox')"
 				:aria-label="t('mail', 'Search in mailbox')"
-				@click="toggleButtons">
+				@focus="showButtons = true"
+				@blur="hideButtonsWithDelay">
 			<NcButton type="tertiary" class="search-messages--filter" @click="moreSearchActions = true">
 				<template #icon>
 					<FilterVariantIcon :size="20" />
@@ -267,6 +268,7 @@
 			<NcButton type="secondary"
 				class="shortcut"
 				:aria-label="t('mail', 'Has attachment')"
+				:title="t('mail', 'Has attachment')"
 				:pressed="hasAttachmentActive"
 				@update:pressed="hasAttachmentActive = !hasAttachmentActive"
 				@click="toggleGetAttachments">
@@ -276,6 +278,7 @@
 				class="shortcut"
 				:pressed="hasLast7daysActive"
 				:aria-label="t('mail', 'Last 7 days')"
+				:title="t('mail', 'Last 7 days')"
 				@update:pressed="hasLast7daysActive = !hasLast7daysActive"
 				@click="toggleLastWeekFilter">
 				{{ t('mail', 'Last 7 days') }}
@@ -284,6 +287,7 @@
 				class="shortcut"
 				:pressed="hasFromMeActive"
 				:aria-label="t('mail', 'From me')"
+				:title="t('mail', 'From me')"
 				@update:pressed="hasFromMeActive = !hasFromMeActive"
 				@click="toggleCurrentUser">
 				{{ t('mail', 'From me') }}
@@ -455,8 +459,10 @@ export default {
 		},
 	},
 	methods: {
-		toggleButtons() {
-			this.showButtons = !this.showButtons
+		hideButtonsWithDelay() {
+			setTimeout(() => {
+				this.showButtons = false
+			}, 100)
 		},
 		toggleGetAttachments() {
 			if (this.hasAttachmentActive) {
@@ -598,9 +604,9 @@ export default {
 
 	&__input {
 		min-height: 52px;
-		margin: -1px 0 0 calc(var(--app-navigation-padding)*2 + var(--default-clickable-area));
+		margin-inline-start: calc(var(--app-navigation-padding)*2 + var(--default-clickable-area));
 		padding-right: 3px; /* matches .app-content-list */
-		border-right: 1px solid var(--color-border);
+		border-block-end: 1px solid var(--color-border);
 		position: relative;
 		display: flex;
 		align-items: center;
@@ -790,7 +796,10 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	gap: 4px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 0 5px 5px 5px;
 }
 </style>

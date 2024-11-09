@@ -11,9 +11,9 @@
 		"autoloader-suffix": "Mail"
 	},
 	"require": {
-		"php": ">=8.0 <=8.3",
+		"php": ">=8.1 <=8.3",
 		"ext-openssl": "*",
-		"arthurhoaro/favicon": "^2.0.0",
+		"arthurhoaro/favicon": "^2.0.1",
 		"bamarni/composer-bin-plugin": "^1.8.2",
 		"bytestream/horde-exception": "^2.2.0",
 		"bytestream/horde-imap-client": "^2.33.2",
@@ -40,7 +40,7 @@
 		"phpmailer/dkimvalidator": "^0.3.0",
 		"psr/log": "^3.0.2",
 		"rubix/ml": "2.5.1",
-		"sabberworm/php-css-parser": "^8.6.0",
+		"sabberworm/php-css-parser": "^8.7.0",
 		"youthweb/urllinker": "^2.0"
 	},
 	"require-dev": {

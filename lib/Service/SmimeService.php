@@ -43,11 +43,11 @@ class SmimeService {
 	private SmimeCertificateMapper $certificateMapper;
 	private ITimeFactory $timeFactory;
 
-	public function __construct(ITempManager           $tempManager,
-		ICertificateManager    $certificateManager,
-		ICrypto                $crypto,
+	public function __construct(ITempManager $tempManager,
+		ICertificateManager $certificateManager,
+		ICrypto $crypto,
 		SmimeCertificateMapper $certificateMapper,
-		ITimeFactory           $timeFactory) {
+		ITimeFactory $timeFactory) {
 		$this->tempManager = $tempManager;
 		$this->certificateManager = $certificateManager;
 		$this->crypto = $crypto;
@@ -346,7 +346,7 @@ class SmimeService {
 	 * @throws SmimeSignException If signing the message fails
 	 * @throws ServiceException If decrypting the certificate or private key fails or the private key is missing
 	 */
-	public function signMimePart(Horde_Mime_Part  $part,
+	public function signMimePart(Horde_Mime_Part $part,
 		SmimeCertificate $certificate): Horde_Mime_Part {
 		if ($certificate->getPrivateKey() === null) {
 			throw new ServiceException('Certificate does not have a private key');
@@ -572,7 +572,7 @@ class SmimeService {
 	 * @throws ServiceException If decrypting the certificates fails
 	 * @throws SmimeEncryptException If encrypting the message fails
 	 */
-	public function encryptMimePart(Horde_Mime_Part  $part, array $certificates): Horde_Mime_Part {
+	public function encryptMimePart(Horde_Mime_Part $part, array $certificates): Horde_Mime_Part {
 		try {
 			$decryptedCertificates = array_map(function (SmimeCertificate $certificate) {
 				return $this->crypto->decrypt($certificate->getCertificate());

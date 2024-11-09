@@ -57,10 +57,10 @@ class OutboxService {
 	private $logger;
 
 	public function __construct(
-		IMailTransmission  $transmission,
+		IMailTransmission $transmission,
 		LocalMessageMapper $mapper,
-		AttachmentService  $attachmentService,
-		IEventDispatcher    $eventDispatcher,
+		AttachmentService $attachmentService,
+		IEventDispatcher $eventDispatcher,
 		IMAPClientFactory $clientFactory,
 		IMailManager $mailManager,
 		AccountService $accountService,
