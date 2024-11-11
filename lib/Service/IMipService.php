@@ -120,6 +120,9 @@ class IMipService {
 				continue;
 			}
 
+			$principalUri = 'principals/users/' . $account->getUserId();
+			$recipient = $account->getEmail();
+
 			foreach ($filteredMessages as $message) {
 				/** @var IMAPMessage $imapMessage */
 				$imapMessage = current(array_filter($imapMessages, static function (IMAPMessage $imapMessage) use ($message) {
@@ -131,9 +134,12 @@ class IMipService {
 					continue;
 				}
 
-				$principalUri = 'principals/users/' . $account->getUserId();
-				$sender = $imapMessage->getFrom()->first()->getEmail();
-				$recipient = $account->getEmail();
+				$sender = $imapMessage->getFrom()->first()?->getEmail();
+				if ($sender === null) {
+					$message->setImipError(true);
+					continue;
+				}
+
 				foreach ($imapMessage->scheduling as $schedulingInfo) { // an IMAP message could contain more than one iMIP object
 					if ($schedulingInfo['method'] === 'REQUEST' && method_exists($this->calendarManager, 'handleIMipRequest')) {
 						$processed = $this->calendarManager->handleIMipRequest($principalUri, $sender, $recipient, $schedulingInfo['contents']);
@@ -144,8 +150,7 @@ class IMipService {
 						$message->setImipProcessed($processed);
 						$message->setImipError(!$processed);
 					} elseif ($schedulingInfo['method'] === 'CANCEL') {
-						$replyTo = $imapMessage->getReplyTo()->first();
-						$replyTo = !empty($replyTo) ? $replyTo->getEmail() : null;
+						$replyTo = $imapMessage->getReplyTo()->first()?->getEmail();
 						$processed = $this->calendarManager->handleIMipCancel($principalUri, $sender, $replyTo, $recipient, $schedulingInfo['contents']);
 						$message->setImipProcessed($processed);
 						$message->setImipError(!$processed);
