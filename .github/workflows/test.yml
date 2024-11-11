@@ -28,7 +28,7 @@ jobs:
         node-version: 'false'
         install: true
     - name: Checkout Mail
-      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       with:
         path: nextcloud/apps/mail
         fetch-depth: 2
@@ -145,7 +145,7 @@ jobs:
               php -f nextcloud/occ config:system:set memcache.local --value='\OC\Memcache\Redis'
               php -f nextcloud/occ config:system:set memcache.distributed --value='\OC\Memcache\Redis'
           - name: Checkout Mail
-            uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+            uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
             with:
                 path: nextcloud/apps/mail
                 fetch-depth: 2
@@ -199,7 +199,7 @@ jobs:
       runs-on: ubuntu-latest
       name: Front-end unit tests
       steps:
-          - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+          - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
           - name: Read package.json node and npm engines version
             uses: skjnldsv/read-package-engines-version-actions@8205673bab74a63eb9b8093402fd9e0e018663a1 # v2.2
             id: versions

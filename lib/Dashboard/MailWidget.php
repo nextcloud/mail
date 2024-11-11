@@ -129,6 +129,7 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 		$intSince = $since === null ? null : (int)$since;
 		$emails = $this->getEmails($userId, $intSince, $limit);
 
+		/** @var list<WidgetItem> */
 		return array_map(function (Message $email) {
 			$firstFrom = $email->getFrom()->first();
 			return new WidgetItem(
