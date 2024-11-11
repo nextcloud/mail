@@ -17,7 +17,7 @@
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following email: %3$s" : "مُرسِل الإيميل: %1$s ليس في دفتر العناوين؛ لكن اسم المُرسِل: %2$s مُسجّلٌ في دفتر العناوين مع الإيميل التالي: %3$s",
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s" : "عنوان إيميل المُرسِل: %1$s ليس في دفتر العناوين؛ لكن اسم المُرسِل: %2$s موجود مرتبطاً بعناوين الإيميل التالية : %3$s",
     "Sender is using a custom email: %1$s instead of the sender email: %2$s" : "يستعمل المرسل عنوان مخصص للبريد الإلكتروني: %1$s بدلاً عن عنوان بريد المرسل: %2$s",
-    "Sent date is in the future" : "تاريخ الإرسال في المستقبل و لم يحِن بعدُ",
+    "Sent date is in the future" : "تاريخ الإرسال في المستقبل و لم يحن بعدُ",
     "Some addresses in this message are not matching the link text" : "بعض العناوين في هذا الإيميل لا تتطابق مع نص الرابط",
     "Reply-To email: %1$s  is different from the sender email: %2$s" : "عنوان الإيميل المردود عليه: %1$s  يختلف عن عنوان إيميل المُرسِل: %2$s",
     "💌 A mail app for Nextcloud" : "💌 تطبيق البريد الالكتروني Mail لنكست كلود",
@@ -685,7 +685,7 @@
     "E-mail address" : "عنوان البريد الالكتروني",
     "Valid until" : "صالحٌ حتّى",
     "Delete certificate" : "حذف الشهادة",
-    "No certificate imported yet" : "لم يتمّ استيراد أي شهادةٍ بعدُ",
+    "No certificate imported yet" : "لم يتمّ استيراد أي شهادةٍ حتى الآن",
     "Import certificate" : "إستيراد شهادة",
     "Import S/MIME certificate" : "إستيراد شهادة S/MIME ",
     "PKCS #12 Certificate" : "شهادة PKCS ـ #12 ",
