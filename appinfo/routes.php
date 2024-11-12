@@ -490,6 +490,46 @@ return [
 			'url' => '/api/follow-up/check-message-ids',
 			'verb' => 'POST',
 		],
+		[
+			'name' => 'snippet#getOwnSnippets',
+			'url' => '/api/snippets',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'snippet#getSharedSnippets',
+			'url' => '/api/snippets/share',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'snippet#getShares',
+			'url' => '/api/snippets/share/shares/{id}',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'snippet#create',
+			'url' => '/api/snippets',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'snippet#update',
+			'url' => '/api/snippets',
+			'verb' => 'PUT',
+		],
+		[
+			'name' => 'snippet#delete',
+			'url' => '/api/snippets/{id}',
+			'verb' => 'DELETE',
+		],
+		[
+			'name' => 'snippet#share',
+			'url' => '/api/snippets/share',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'snippet#deleteShare',
+			'url' => '/api/snippets/share/{snippetId}/{shareWith}',
+			'verb' => 'DELETE',
+		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],
