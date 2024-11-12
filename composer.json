@@ -16,7 +16,7 @@
 		"arthurhoaro/favicon": "^2.0.1",
 		"bamarni/composer-bin-plugin": "^1.8.2",
 		"bytestream/horde-exception": "^2.2.0",
-		"bytestream/horde-imap-client": "^2.33.2",
+		"bytestream/horde-imap-client": "^2.33.3",
 		"bytestream/horde-mail": "^2.7.1",
 		"bytestream/horde-mime": "^2.13.2",
 		"bytestream/horde-stream": "^1.7.2",
