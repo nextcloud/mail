@@ -554,12 +554,6 @@ export default {
 		 * @return {boolean}
 		 */
 		showFollowUpHeader() {
-			// TODO: remove this version check once we only support >= 27.1
-			const [major, minor] = OC.config.version.split('.').map(parseInt)
-			if (major < 27 || (major === 27 && minor < 1)) {
-				return false
-			}
-
 			const tags = this.$store.getters.getEnvelopeTags(this.envelope.databaseId)
 			return tags.some((tag) => tag.imapLabel === FOLLOW_UP_TAG_LABEL)
 		},
