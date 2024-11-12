@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "52fbebcbf8e9c2c057f6768b57b17da8",
+    "content-hash": "61b2e42a9124f46ed0b9662036250091",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1156,16 +1156,16 @@
         },
         {
             "name": "bytestream/horde-stream",
-            "version": "v1.7.1",
+            "version": "v1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Stream.git",
-                "reference": "5b3a75eb2118d16af43b9ec59bab7b1b5d1d2289"
+                "reference": "98c1813c743342832b7d6c87be9ccfcf47bfef62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Stream/zipball/5b3a75eb2118d16af43b9ec59bab7b1b5d1d2289",
-                "reference": "5b3a75eb2118d16af43b9ec59bab7b1b5d1d2289",
+                "url": "https://api.github.com/repos/bytestream/Stream/zipball/98c1813c743342832b7d6c87be9ccfcf47bfef62",
+                "reference": "98c1813c743342832b7d6c87be9ccfcf47bfef62",
                 "shasum": ""
             },
             "require": {
@@ -1196,9 +1196,9 @@
             "description": "Horde PHP streams library",
             "homepage": "https://www.horde.org/libraries/Horde_Stream",
             "support": {
-                "source": "https://github.com/bytestream/Stream/tree/v1.7.1"
+                "source": "https://github.com/bytestream/Stream/tree/v1.7.2"
             },
-            "time": "2022-05-25T11:46:14+00:00"
+            "time": "2024-11-06T00:43:41+00:00"
         },
         {
             "name": "bytestream/horde-stream-filter",
@@ -4292,7 +4292,7 @@
         "php": ">=8.0 <=8.3",
         "ext-openssl": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.0"
     },
