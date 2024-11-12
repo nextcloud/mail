@@ -234,12 +234,6 @@ export default {
 		 * @return {boolean}
 		 */
 		hasFollowUpEnvelopes() {
-			// TODO: remove this version check once we only support >= 27.1
-			const [major, minor] = OC.config.version.split('.').map(parseInt)
-			if (major < 27 || (major === 27 && minor < 1)) {
-				return false
-			}
-
 			if (!this.followUpQuery) {
 				return false
 			}
