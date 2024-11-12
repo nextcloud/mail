@@ -8,6 +8,11 @@
       <code>OutOfOfficeListener::class</code>
       <code>OutOfOfficeListener::class</code>
       <code>OutOfOfficeListener::class</code>
+      <code><![CDATA[registerEventListener]]></code>
+      <code><![CDATA[registerEventListener]]></code>
+      <code><![CDATA[registerEventListener]]></code>
+      <code><![CDATA[registerEventListener]]></code>
+      <code><![CDATA[registerEventListener]]></code>
     </InvalidArgument>
     <MissingDependency>
       <code>FilteringProvider</code>
