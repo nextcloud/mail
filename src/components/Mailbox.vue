@@ -488,5 +488,9 @@ export default {
 }
 .empty-content {
 	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: flex-end;
+	margin-bottom: 100px;
 }
 </style>
