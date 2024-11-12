@@ -10,14 +10,12 @@ jobs:
     strategy:
       matrix:
         php-versions: ['8.1', '8.2', '8.3']
-        nextcloud-versions: ['master']
+        nextcloud-versions: ['stable29']
         include:
           - php-versions: '8.0'
             nextcloud-versions: 'stable27'
           - php-versions: '8.1'
             nextcloud-versions: 'stable28'
-          - php-versions: '8.2'
-            nextcloud-versions: 'stable29'
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
     - name: Set up Nextcloud env
@@ -62,7 +60,7 @@ jobs:
       strategy:
           matrix:
               php-versions: ['8.3']
-              nextcloud-versions: ['master']
+              nextcloud-versions: ['stable29']
               db: ['sqlite', 'mysql', 'pgsql']
               cache: ['nocache']
               include:
@@ -74,10 +72,6 @@ jobs:
                   nextcloud-versions: stable28
                   db: 'mysql'
                   cache: 'redis'
-                - php-versions: 8.2
-                  nextcloud-versions: stable29
-                  db: 'mysql'
-                  cache: 'nocache'
       name: ${{ matrix.nextcloud-versions }} w/ php${{ matrix.php-versions }}-${{ matrix.db }}-${{ matrix.cache }} integration tests
       services:
           mail-service:
