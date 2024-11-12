@@ -19,7 +19,7 @@
 		"bytestream/horde-imap-client": "^2.33.2",
 		"bytestream/horde-mail": "^2.7.1",
 		"bytestream/horde-mime": "^2.13.2",
-		"bytestream/horde-stream": "^1.7.1",
+		"bytestream/horde-stream": "^1.7.2",
 		"bytestream/horde-stringprep": "^1.2.1",
 		"bytestream/horde-support": "^2.4.0",
 		"bytestream/horde-text-filter": "^2.5.0",
