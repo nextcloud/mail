@@ -12,7 +12,7 @@
 		<template v-else>
 			<div id="mail-thread-header">
 				<div id="mail-thread-header-fields">
-					<h2 :title="threadSubject">
+					<h2 dir="auto" :title="threadSubject">
 						{{ threadSubject }}
 					</h2>
 					<div v-if="thread.length" ref="avatarHeader" class="avatar-header">
