@@ -92,6 +92,7 @@ class AvatarService implements IAvatarService {
 					'image/jpeg',
 					'image/png',
 					'image/x-icon',
+					'image/vnd.microsoft.icon',
 				]);
 		} else {
 			// We trust internal URLs by default
