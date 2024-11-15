@@ -72,12 +72,12 @@ class ImportanceClassifier {
 	/**
 	 * @var string label for data sets that are classified as important
 	 */
-	private const LABEL_IMPORTANT = 'i';
+	public const LABEL_IMPORTANT = 'i';
 
 	/**
 	 * @var string label for data sets that are classified as not important
 	 */
-	private const LABEL_NOT_IMPORTANT = 'ni';
+	public const LABEL_NOT_IMPORTANT = 'ni';
 
 	/**
 	 * The minimum number of important messages. Without those the unsupervised

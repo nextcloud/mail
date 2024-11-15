@@ -11,6 +11,7 @@ namespace OCA\Mail\Service\Classification\FeatureExtraction;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Service\Classification\ImportanceClassifier;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\Transformers\MultibyteTextNormalizer;
@@ -21,13 +22,15 @@ use function array_column;
 use function array_map;
 
 class SubjectExtractor implements IExtractor {
+	private const MAX_VOCABULARY_SIZE = 500;
+
 	private WordCountVectorizer $wordCountVectorizer;
 	private TfIdfTransformer $tfidf;
 	private int $max = -1;
 
 	public function __construct() {
 		// Limit vocabulary to limit memory usage
-		$this->wordCountVectorizer = new WordCountVectorizer(500);
+		$this->wordCountVectorizer = new WordCountVectorizer(self::MAX_VOCABULARY_SIZE);
 		$this->tfidf = new TfIdfTransformer();
 	}
 
@@ -53,15 +56,14 @@ class SubjectExtractor implements IExtractor {
 		$data = array_map(static function (Message $message) {
 			return [
 				'text' => $message->getSubject() ?? '',
-				'label' => $message->getFlagImportant() ? 'i' : 'ni',
+				'label' => $message->getFlagImportant()
+					? ImportanceClassifier::LABEL_IMPORTANT
+					: ImportanceClassifier::LABEL_NOT_IMPORTANT,
 			];
 		}, $messages);
 
 		// Fit transformers
-		Labeled::build(
-			array_column($data, 'text'),
-			array_column($data, 'label'),
-		)
+		Labeled::build(array_column($data, 'text'), array_column($data, 'label'))
 			->apply(new MultibyteTextNormalizer())
 			->apply($this->wordCountVectorizer)
 			->apply($this->tfidf);
@@ -104,6 +106,5 @@ class SubjectExtractor implements IExtractor {
 		}
 
 		$this->max = count($vocabularies[0]);
-		echo("WCF vocab size: {$this->max}\n");
 	}
 }
