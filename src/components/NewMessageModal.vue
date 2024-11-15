@@ -114,7 +114,7 @@
 						@show-toolbar="handleShow" />
 				</div>
 
-				<div v-if="composerData.to && composerData.to.length > 0" class="right-pane">
+				<div v-if="showRecipientPane" class="right-pane">
 					<RecipientInfo :recipient="composerData.to" />
 				</div>
 			</div>
@@ -185,6 +185,7 @@ export default {
 			changed: false,
 			largerModal: false,
 			isLargeScreen: window.innerWidth >= 1200,
+			isMaximized: false,
 			recipient: {
 				name: '',
 				email: '',
@@ -209,6 +210,9 @@ export default {
 			}
 			return t('mail', 'New message')
 		},
+		showRecipientPane() {
+			return this.composerData.to && this.composerData.to.length > 0 && !this.isMaximized
+		},
 		composerMessage() {
 			return this.$store.getters.composerMessage
 		},
@@ -223,7 +227,7 @@ export default {
 		},
 		modalSize() {
 			return this.isLargeScreen && this.composerData.to && this.composerData.to.length > 0
-				? 'full'
+				? 'large'
 				: (this.largerModal ? 'large' : 'normal')
 		},
 	},
@@ -257,6 +261,7 @@ export default {
 			}
 		},
 		async onMaximize() {
+			this.isMaximized = !this.isMaximized
 			this.largerModal = !this.largerModal
 			try {
 				await this.$store.dispatch('savePreference', {
@@ -266,6 +271,16 @@ export default {
 			} catch (error) {
 				console.error('Failed to save preference', error)
 			}
+		},
+		async onMinimize() {
+			this.isMaximized = false
+			this.modalFirstOpen = false
+
+			await this.$store.dispatch('closeMessageComposer')
+			if (!this.$store.getters.composerMessageIsSaved && this.changed) {
+				await this.onDraft(this.cookedComposerData, { showToast: true })
+			}
+
 		},
 		handleShow(element) {
 			this.additionalTrapElements.push(element)
@@ -552,15 +567,6 @@ export default {
 			} else {
 				console.info('No unsaved changes. See you!')
 			}
-		},
-		async onMinimize() {
-			this.modalFirstOpen = false
-
-			await this.$store.dispatch('closeMessageComposer')
-			if (!this.$store.getters.composerMessageIsSaved && this.changed) {
-				await this.onDraft(this.cookedComposerData, { showToast: true })
-			}
-
 		},
 		async onClose() {
 			this.$store.commit('setComposerIndicatorDisabled', true)

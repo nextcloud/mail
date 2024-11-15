@@ -129,14 +129,8 @@ export default {
 	text-align: center;
 }
 
-.recipient-header {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
 .recipient-avatar {
-	margin-bottom: 10px;
+	margin-top: 10px;
 }
 
 .recipient-details {
@@ -170,8 +164,8 @@ export default {
 }
 .recipient-header {
 	display: flex;
-	gap: 1rem;
-	margin-bottom: 1rem;
+	flex-direction: column;
+	align-items: center;
 }
 
 span {
