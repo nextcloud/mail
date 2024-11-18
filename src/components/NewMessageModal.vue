@@ -646,7 +646,6 @@ export default {
 
 .modal-content.with-recipient .left-pane {
 	flex: 1;
-	width: calc(100% - 400px);
 }
 .modal-content .left-pane {
 	width: 100%;
