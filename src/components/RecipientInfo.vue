@@ -13,7 +13,7 @@
 				</div>
 				<div class="recipient-details">
 					<h6>{{ recipients[0].displayName }}</h6>
-					<div ref="contactDetails0" />
+					<DisplayContactDetails :email="recipient[0].email" />
 				</div>
 			</div>
 		</div>
@@ -33,8 +33,8 @@
 						<IconArrowDown v-else :size="16" />
 					</div>
 				</div>
-				<div class="recipient-list">
-					<div :ref="`contactDetails${index}`" />
+				<div v-show="expandedRecipients[index]" class="recipient-list">
+					<DisplayContactDetails :email="recipient.email" />
 				</div>
 			</div>
 		</div>
@@ -46,13 +46,14 @@ import { mapGetters } from 'vuex'
 import IconArrowDown from 'vue-material-design-icons/ArrowDown.vue'
 import IconArrowUp from 'vue-material-design-icons/ArrowUp.vue'
 import Avatar from './Avatar.vue'
-import logger from '../logger.js'
+import DisplayContactDetails from './DisplayContactDetails.vue'
 
 export default {
 	components: {
 		Avatar,
 		IconArrowDown,
 		IconArrowUp,
+		DisplayContactDetails,
 	},
 	props: {
 		recipient: {
@@ -79,28 +80,6 @@ export default {
 				this.expandedRecipients = this.recipients.map(() => false)
 			},
 		},
-	},
-	async mounted() {
-		const mountContactDetails = window.OCA?.Contacts?.mountContactDetails
-		if (mountContactDetails) {
-			for (const [i, recipient] of this.recipients.entries()) {
-				const el = this.$refs[`contactDetails${i}`]
-				try {
-					this.contactDetailsVms.push(await mountContactDetails(el, recipient.email))
-				} catch (error) {
-					logger.error(`Failed to mount contact details: ${error}`, {
-						error,
-						recipient,
-					})
-					throw error
-				}
-			}
-		}
-	},
-	async beforeDestroy() {
-		for (const vm of this.contactDetailsVms) {
-			vm.$destroy()
-		}
 	},
 	methods: {
 		toggleExpand(index) {
@@ -139,6 +118,8 @@ export default {
 
 .recipient-multiple {
 	margin-top: 10px;
+	display: flex;
+	flex-direction: column;
 }
 
 .recipient-item {
@@ -175,8 +156,4 @@ span {
 	display: block;
 }
 
-.expand-toggle {
-	margin-left: auto;
-	cursor: pointer;
-}
 </style>
