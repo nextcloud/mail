@@ -1,3 +1,12 @@
+## [3.7.12](https://github.com/nextcloud/mail/compare/v3.7.11...v3.7.12) (2024-11-19)
+
+
+### Bug Fixes
+
+* Reply all inside message thread ([2f54e82](https://github.com/nextcloud/mail/commit/2f54e82965c9eccb87c286bad05af0eb4252f06c))
+
+
+
 ## [3.7.11](https://github.com/nextcloud/mail/compare/v3.7.10...v3.7.11) (2024-11-19)
 
 
