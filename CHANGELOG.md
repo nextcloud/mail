@@ -1,4 +1,18 @@
-# [3.7.9](https://github.com/nextcloud/mail/compare/v3.7.8...v3.7.9) (2024-10-16)
+## [3.7.10](https://github.com/nextcloud/mail/compare/v3.7.9...v3.7.10) (2024-11-19)
+
+
+### Bug Fixes
+
+* accept avatars with image/vnd.microsoft.icon mime types ([9405353](https://github.com/nextcloud/mail/commit/94053534d135b088db82d188d73bc371fdc7d6d8))
+* **avatar:** Use Nextcloud HTTP client for favicons ([d98497f](https://github.com/nextcloud/mail/commit/d98497fc2fb54fb50b67b15783a08d457921d9f8))
+* **deps:** bump bytestream/horde-imap-client from 2.33.2 to ^2.33.3 ([96175f9](https://github.com/nextcloud/mail/commit/96175f9ef150788c7da1567a3e89f10efaf281e0))
+* **deps:** bump bytestream/horde-stream from 1.7.1 to ^1.7.2 ([6fee5c3](https://github.com/nextcloud/mail/commit/6fee5c34e03a26e6934652d1c58c3525594edae7))
+* Junk/NotJunk flags ([d07a1c9](https://github.com/nextcloud/mail/commit/d07a1c988140da20d1fe04edcfb956e77b296b6e))
+* **threading:** Handle threads with duplicate send times ([71e88d3](https://github.com/nextcloud/mail/commit/71e88d33ed2575f2aa9589bd7cd9e840e60a1191))
+
+
+
+## [3.7.9](https://github.com/nextcloud/mail/compare/v3.7.8...v3.7.9) (2024-10-16)
 
 
 ### Bug Fixes
@@ -11,7 +25,12 @@
 * **imap:** do a single full sync when QRESYNC is enabled ([cdf550c](https://github.com/nextcloud/mail/commit/cdf550c81d4e31909a75ec1e6b9d4b3ad720d8d0))
 * **imap:** persist vanished messages immediately on EXAMINE commands ([a2c9e8c](https://github.com/nextcloud/mail/commit/a2c9e8cdf6abfe3648e17decaa82407878ffd178))
 * select multiple envelopes by holding shift directly ([5aec041](https://github.com/nextcloud/mail/commit/5aec0416f37bd1a7f7e906bb41cc707acd2c6d15))
-* * implement periodic full sync job to repair cache inconsistencies ([e267da1](https://github.com/nextcloud/mail/commit/e267da1633e8205fca69721e9d9dad4bbe6bfc6e))
+
+
+### Features
+
+* implement periodic full sync job to repair cache inconsistencies ([e267da1](https://github.com/nextcloud/mail/commit/e267da1633e8205fca69721e9d9dad4bbe6bfc6e))
+
 
 ### Performance Improvements
 
