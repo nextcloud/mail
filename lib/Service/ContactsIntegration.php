@@ -241,7 +241,8 @@ class ContactsIntegration {
 		$allowSystemUsers = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'no') === 'yes';
 
 		$result = $this->contactsManager->search($term, $fields, [
-			'strict_search' => $strictSearch
+			'strict_search' => $strictSearch,
+			'limit' => 20,
 		]);
 		$matches = [];
 		foreach ($result as $r) {
