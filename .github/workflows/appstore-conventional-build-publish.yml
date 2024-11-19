@@ -118,7 +118,7 @@ jobs:
           ls -l
           ls -l build
           # Signing
-          php build/nextcloud/occ integrity:sign-app --privateKey=../${{ env.APP_NAME }}.key --certificate=build/${{ env.APP_NAME }}.crt --path=build/artifacts/${{ env.APP_NAME }}
+          php build/nextcloud/occ integrity:sign-app --privateKey=./build/${{ env.APP_NAME }}.key --certificate=./build/${{ env.APP_NAME }}.crt --path=./build/artifacts/${{ env.APP_NAME }}
           # Rebuilding archive
           cd build/artifacts
           tar -zcvf ${{ env.APP_NAME }}.tar.gz ${{ env.APP_NAME }}
