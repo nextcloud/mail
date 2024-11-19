@@ -11,6 +11,7 @@ namespace OCA\Mail\Service\Avatar;
 use Exception;
 use OCA\Mail\Vendor\Favicon\DataAccess;
 use OCP\Http\Client\IClientService;
+use function array_merge;
 
 class FaviconDataAccess extends DataAccess {
 
@@ -45,10 +46,12 @@ class FaviconDataAccess extends DataAccess {
 		// Build the data structure get_headers returns. The status reason
 		// and protocol are inaccurate, but the favicon lib will only extract
 		// the status code.
-		return [
-			0 => 'HTTP/1.1 ' . $response->getStatusCode() . ' FOO',
-			...array_change_key_case($response->getHeaders()),
-		];
+		return array_merge(
+			[
+				0 => 'HTTP/1.1 ' . $response->getStatusCode() . ' FOO',
+			],
+			array_change_key_case($response->getHeaders()),
+		);
 	}
 
 }
