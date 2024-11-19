@@ -33,15 +33,9 @@ class PhishingDetectionService {
 	public function checkHeadersForPhishing(Horde_Mime_Headers $headers, bool $hasHtmlMessage, string $htmlMessage = ''): array {
 		$list = new PhishingDetectionList();
 		$fromHeader = $headers->getHeader('From');
-		if (!($fromHeader instanceof Horde_Mime_Headers_Element_Address)) {
-			return $list->jsonSerialize();
-		}
 		$sender = AddressList::fromHorde($fromHeader->getAddressList(true))->first();
-		if ($sender === null) {
-			return $list->jsonSerialize();
-		}
-		$fromFN = $sender->getLabel();
-		$fromEmail = $sender->getEmail();
+		$fromFN = $sender?->getLabel();
+		$fromEmail = $sender?->getEmail();
 		$replyToHeader = $headers->getHeader('Reply-To');
 		if ($replyToHeader instanceof Horde_Mime_Headers_Element_Address) {
 			$replyToEmailHeader = $replyToHeader->getAddressList(true);
@@ -50,7 +44,7 @@ class PhishingDetectionService {
 			$replyToEmail = null;
 		}
 		$date = $headers->getHeader('Date')->__get('value');
-		$customEmail = $sender->getCustomEmail();
+		$customEmail = $sender?->getCustomEmail();
 		if ($fromEmail !== null) {
 			$list->addCheck($this->replyToCheck->run($fromEmail, $replyToEmail));
 		}
