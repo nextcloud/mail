@@ -1,3 +1,12 @@
+## [3.7.11](https://github.com/nextcloud/mail/compare/v3.7.10...v3.7.11) (2024-11-19)
+
+
+### Bug Fixes
+
+* **contactsintegration:** Limit number of search results ([21dc059](https://github.com/nextcloud/mail/commit/21dc05974af08af0c5adbf9546118437adc1b35e))
+
+
+
 ## [3.7.10](https://github.com/nextcloud/mail/compare/v3.7.9...v3.7.10) (2024-11-19)
 
 
