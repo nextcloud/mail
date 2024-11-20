@@ -106,7 +106,7 @@ OC.L10N.register(
     "Close" : "Aizvērt",
     "Date" : "Datums",
     "Tags" : "Birkas",
-    "Select tags" : "Izvēlies birkas",
+    "Select tags" : "Atlasīt birkas",
     "Clear" : "Notīrīt",
     "Custom" : "Pielāgots",
     "Delete tag" : "Dzēst atzīmi",
