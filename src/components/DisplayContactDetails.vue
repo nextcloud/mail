@@ -27,9 +27,9 @@ export default {
 			}
 		}
 	},
-	beforeDestroy() {
+	async beforeDestroy() {
 		if (this.vm) {
-			this.vm.destroy()
+			this.vm.$destroy()
 		}
 	},
 }
