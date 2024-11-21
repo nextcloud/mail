@@ -78,6 +78,7 @@
 				</div>
 				<div v-if="data.encrypted || data.previewText"
 					class="envelope__preview-text">
+					<SparkleIcon :size="15" :title="t('mail', 'This summary was AI generated')"/>
 					{{ isEncrypted ? t('mail', 'Encrypted message') : data.previewText.trim() }}
 				</div>
 			</div>
@@ -344,6 +345,7 @@ import EnvelopeSkeleton from './EnvelopeSkeleton.vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon.vue'
 import Avatar from './Avatar.vue'
 import IconCreateEvent from 'vue-material-design-icons/Calendar.vue'
+import SparkleIcon from 'vue-material-design-icons/Creation.vue'
 import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline.vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
@@ -414,6 +416,7 @@ export default {
 		PlusIcon,
 		TagIcon,
 		TagModal,
+		SparkleIcon,
 		Star,
 		StarOutline,
 		EmailRead,
@@ -926,11 +929,21 @@ export default {
 	}
 	&__preview-text {
 		color: var(--color-text-maxcontrast);
-		white-space: nowrap;
 		overflow: hidden;
-		text-overflow: ellipsis;
 		font-weight: initial;
-		flex: 1 1;
+		max-height: calc(var(--default-font-size) * var(--default-line-height) * 2);
+
+		/* Weird CSS hacks to make text ellipsize without white-space: nowrap */
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+
+		.material-design-icon {
+			display: inline;
+
+			position: relative;
+			top: 2px;
+		}
 	}
 }
 
