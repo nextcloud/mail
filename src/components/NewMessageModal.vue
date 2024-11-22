@@ -184,7 +184,7 @@ export default {
 			cookedComposerData: undefined,
 			changed: false,
 			largerModal: false,
-			isLargeScreen: window.innerWidth >= 1200,
+			isLargeScreen: window.innerWidth >= 1024,
 			isMaximized: false,
 			recipient: {
 				name: '',
@@ -250,7 +250,7 @@ export default {
 	},
 	methods: {
 		checkScreenSize() {
-			this.isLargeScreen = window.innerWidth >= 1200
+			this.isLargeScreen = window.innerWidth >= 1024
 		},
 		async openModalSize() {
 			try {
@@ -639,7 +639,7 @@ export default {
 	overflow-y: auto;
 	padding-left: 5px;
 	border-left: 1px solid #ccc;
-	@media (max-width: 1200px) {
+	@media (max-width: 1024px) {
 		display: none;
 	}
 }
