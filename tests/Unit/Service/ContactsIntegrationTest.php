@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-FileCopyrightText: 2015-2016 ownCloud, Inc.
@@ -353,7 +355,14 @@ class ContactsIntegrationTest extends TestCase {
 			->will($this->returnValue(true));
 		$this->contactsManager->expects($this->once())
 			->method('search')
-			->with($term, ['UID', 'FN', 'EMAIL'], ['enumeration' => $allowSystemUsers, 'fullmatch' => $shareeEnumerationFullMatch])
+			->with(
+				$term,
+				['UID', 'FN', 'EMAIL'],
+				[
+					'enumeration' => $allowSystemUsers,
+					'fullmatch' => $shareeEnumerationFullMatch,
+					'limit' => 20,
+				])
 			->will($this->returnValue($searchResult));
 	}
 
