@@ -43,6 +43,8 @@ jobs:
         working-directory: ${{ env.APP_NAME }}
         with:
           github-token: ${{ secrets.RELEASE_PAT }}
+          git-user-email: nextcloud-command@users.noreply.github.com
+          git-user-name: Nextcloud Command Bot
           skip-git-pull: "true"
           pre-commit: build/pre-commit.js
           release-count: 0
