@@ -8,10 +8,11 @@
 						:display-name="recipients[0].displayName"
 						:email="recipients[0].email"
 						:size="64"
-						:disable-tooltip="true" />
+						:disable-tooltip="true"
+						:disable-menu="true"
+						:url="recipients[0].photoUrl" />
 				</div>
 				<div class="recipient-details">
-					<h6>{{ recipient[0].email }}</h6>
 					<DisplayContactDetails :email="recipient[0].email" />
 				</div>
 			</div>
@@ -106,7 +107,6 @@ export default {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	text-align: center;
 }
 
 .recipient-avatar {
