@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e7fd0fbd02efa093e4296c18039ff0d1",
+    "content-hash": "4200ec9bfd3fe124508f79a3d9f4124e",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1598,24 +1598,23 @@
         },
         {
             "name": "cerdic/css-tidy",
-            "version": "v2.1.0",
+            "version": "v2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Cerdic/CSSTidy.git",
-                "reference": "50e4e31adfde7fdb08d815a7dc52c3370596f4e7"
+                "reference": "ffc835dc6c122e96b7a13f9936a107e0dd0e84d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/50e4e31adfde7fdb08d815a7dc52c3370596f4e7",
-                "reference": "50e4e31adfde7fdb08d815a7dc52c3370596f4e7",
+                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/ffc835dc6c122e96b7a13f9936a107e0dd0e84d6",
+                "reference": "ffc835dc6c122e96b7a13f9936a107e0dd0e84d6",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1 || ^8"
             },
             "require-dev": {
-                "pear/text_diff": "^1.2",
-                "simpletest/simpletest": "dev-main"
+                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5 || ^10.5"
             },
             "bin": [
                 "bin/pcsstidy"
@@ -1639,11 +1638,16 @@
                 }
             ],
             "description": "CSSTidy is a CSS minifier",
+            "keywords": [
+                "css",
+                "minifier",
+                "tidy"
+            ],
             "support": {
                 "issues": "https://github.com/Cerdic/CSSTidy/issues",
-                "source": "https://github.com/Cerdic/CSSTidy/tree/v2.1.0"
+                "source": "https://github.com/Cerdic/CSSTidy/tree/v2.2.1"
             },
-            "time": "2023-09-21T08:24:51+00:00"
+            "time": "2024-11-18T16:18:51+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
