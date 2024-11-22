@@ -72,7 +72,15 @@ class ContactsIntegration {
 		$shareeEnumerationFullMatchUserId = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_userid', 'yes') === 'yes';
 		$shareeEnumerationFullMatchEmail = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_email', 'yes') === 'yes';
 
-		$result = $this->contactsManager->search($term, ['UID', 'FN', 'EMAIL'], ['enumeration' => $shareeEnumeration, 'fullmatch' => $shareeEnumerationFullMatch]);
+		$result = $this->contactsManager->search(
+			$term,
+			['UID', 'FN', 'EMAIL'],
+			[
+				'enumeration' => $shareeEnumeration,
+				'fullmatch' => $shareeEnumerationFullMatch,
+				'limit' => 20,
+			],
+		);
 		if (empty($result)) {
 			return [];
 		}
