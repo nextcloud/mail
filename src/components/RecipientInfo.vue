@@ -4,8 +4,7 @@
 		<div v-if="recipients.length === 1" class="recipient-single">
 			<div class="recipient-header">
 				<div class="recipient-avatar">
-					<Avatar :user="recipients[0].uid"
-						:display-name="recipients[0].displayName"
+					<Avatar :display-name="recipients[0].label"
 						:email="recipients[0].email"
 						:size="64"
 						:disable-tooltip="true"
@@ -13,8 +12,7 @@
 						:url="recipients[0].photoUrl" />
 				</div>
 				<div class="recipient-details">
-					<h6>{{ recipient[0].email }}</h6>
-					<DisplayContactDetails :email="recipient[0].email" />
+					<DisplayContactDetails :email="recipients[0].email" />
 				</div>
 			</div>
 		</div>
@@ -23,14 +21,13 @@
 		<div v-else class="recipient-multiple">
 			<div v-for="(recipient, index) in recipients" :key="index" class="recipient-item">
 				<div class="recipient-header">
-					<Avatar :user="recipient.uid"
-						:display-name="recipient.displayName"
+					<Avatar :display-name="recipient.label"
 						:email="recipient.email"
 						:size="64"
 						:disable-tooltip="true"
 						:disable-menu="true" />
 					<div v-if="!expandedRecipients[index]" class="recipient-name">
-					<h6>{{ recipient.email }}</h6>
+						<h6>{{ recipient.email }}</h6>
 					</div>
 					<div class="expand-toggle" @click="toggleExpand(index)">
 						<IconArrowUp v-if="isExpanded(index)" :size="16" />
@@ -58,12 +55,6 @@ export default {
 		IconArrowDown,
 		IconArrowUp,
 		DisplayContactDetails,
-	},
-	props: {
-		recipient: {
-			type: Array,
-			required: true,
-		},
 	},
 	data() {
 		return {

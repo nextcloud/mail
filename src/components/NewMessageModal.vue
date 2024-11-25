@@ -115,7 +115,7 @@
 				</div>
 
 				<div v-if="showRecipientPane" class="right-pane">
-					<RecipientInfo :recipient="composerData.to" />
+					<RecipientInfo />
 				</div>
 			</div>
 		</template>
