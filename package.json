@@ -7,8 +7,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "NODE_ENV=production NODE_OPTIONS='--max-old-space-size=4096' vite --mode=production build",
-    "dev": "NODE_ENV=development NODE_OPTIONS='--max-old-space-size=4096' vite --mode=development build",
+    "build": "NODE_ENV=production NODE_OPTIONS='--max-old-space-size=8192' vite --mode=production build",
+    "dev": "NODE_ENV=development NODE_OPTIONS='--max-old-space-size=8192' vite --mode=development build",
     "watch": "NODE_ENV=development NODE_OPTIONS='--max-old-space-size=8192' vite build --mode=development --watch",
     "lint": "eslint --ext .js,.vue --ignore-pattern tests src",
     "lint:fix": "eslint --ext .js,.vue --ignore-pattern tests src --fix",
