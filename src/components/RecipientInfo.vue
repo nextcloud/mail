@@ -13,6 +13,7 @@
 						:url="recipients[0].photoUrl" />
 				</div>
 				<div class="recipient-details">
+					<h6>{{ recipient[0].email }}</h6>
 					<DisplayContactDetails :email="recipient[0].email" />
 				</div>
 			</div>
@@ -29,7 +30,7 @@
 						:disable-tooltip="true"
 						:disable-menu="true" />
 					<div v-if="!expandedRecipients[index]" class="recipient-name">
-						<h6>{{ recipient.email }}</h6>
+					<h6>{{ recipient.email }}</h6>
 					</div>
 					<div class="expand-toggle" @click="toggleExpand(index)">
 						<IconArrowUp v-if="isExpanded(index)" :size="16" />
