@@ -28,6 +28,7 @@ import { testAccountConnection } from '../service/AccountService.js'
 import logger from '../logger.js'
 import MailboxThread from '../components/MailboxThread.vue'
 import Navigation from '../components/Navigation.vue'
+import NewMessageModal from '../components/NewMessageModal.vue'
 import Outbox from '../components/Outbox.vue'
 import ComposerSessionIndicator from '../components/ComposerSessionIndicator.vue'
 import { mapGetters } from 'vuex'
@@ -38,7 +39,7 @@ export default {
 		NcContent,
 		MailboxThread,
 		Navigation,
-		NewMessageModal: () => import(/* webpackChunkName: "new-message-modal" */ '../components/NewMessageModal.vue'),
+		NewMessageModal,
 		Outbox,
 		ComposerSessionIndicator,
 	},

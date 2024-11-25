@@ -90,6 +90,7 @@ import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
 import { Fragment } from 'vue-frag'
 
+import AccountSettings from './AccountSettings.vue'
 import logger from '../logger.js'
 import { fetchQuota } from '../service/AccountService.js'
 import IconInfo from 'vue-material-design-icons/Information.vue'
@@ -108,7 +109,7 @@ export default {
 		ActionCheckbox,
 		ActionInput,
 		ActionText,
-		AccountSettings: () => import(/* webpackChunkName: "account-settings" */ './AccountSettings.vue'),
+		AccountSettings,
 		IconInfo,
 		IconSettings,
 		IconFolderAdd,
