@@ -22,6 +22,7 @@ export default createAppConfig({
 	config: {
 		build: {
 			cssCodeSplit: false,
+			modulePreload: false,
 		},
 		plugins: [
 			ckeditor5({ theme: require.resolve('@ckeditor/ckeditor5-theme-lark') }),
