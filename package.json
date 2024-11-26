@@ -113,7 +113,7 @@
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.30.0",
     "eslint-plugin-standard": "^4.1.0",
-    "eslint-plugin-vue": "^9.28.0",
+    "eslint-plugin-vue": "^9.31.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jest-fetch-mock": "^3.0.3",
