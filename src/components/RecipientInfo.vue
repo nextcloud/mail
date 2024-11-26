@@ -6,7 +6,7 @@
 				<div class="recipient-avatar">
 					<Avatar :display-name="recipients[0].label"
 						:email="recipients[0].email"
-						:size="64"
+						:size="55"
 						:disable-tooltip="true"
 						:disable-menu="true"
 						:url="recipients[0].photoUrl" />
@@ -21,20 +21,30 @@
 		<div v-else class="recipient-multiple">
 			<div v-for="(recipient, index) in recipients" :key="index" class="recipient-item">
 				<div class="recipient-header">
-					<Avatar :display-name="recipient.label"
-						:email="recipient.email"
-						:size="64"
-						:disable-tooltip="true"
-						:disable-menu="true" />
+					<div class="recipient-avatar">
+						<Avatar :display-name="recipient.label"
+							:email="recipient.email"
+							:size="55"
+							:disable-tooltip="true"
+							:disable-menu="true" />
+					</div>
 					<div v-if="!expandedRecipients[index]" class="recipient-name">
 						<h6>{{ recipient.email }}</h6>
 					</div>
 					<div class="expand-toggle" @click="toggleExpand(index)">
-						<IconArrowUp v-if="isExpanded(index)" :size="16" />
-						<IconArrowDown v-else :size="16" />
+						<template v-if="isExpanded(index)">
+							<div class="show-less">
+							<IconArrowUp :size="16" />
+							<span>{{ t('mail', 'Show less') }}</span>
+							</div>
+						</template>
+						<template v-else>
+							<IconArrowDown :size="16" />
+							<span>{{ t('mail', 'Show more') }}</span>
+						</template>
 					</div>
 				</div>
-				<div v-show="expandedRecipients[index]" class="recipient-list">
+				<div v-show="expandedRecipients[index]" class="recipient-details">
 					<DisplayContactDetails :email="recipient.email" />
 				</div>
 			</div>
@@ -88,21 +98,20 @@ export default {
 
 <style scoped lang="scss">
 .recipient-info {
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	display: inline;
 	width: 100%;
 }
 
 .recipient-single {
 	width: 400px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+	display: inline-block;
 }
 
 .recipient-avatar {
-	margin-top: 10px;
+	margin-top: 20px;
+	display: inline;
+	float: left;
+	padding: 20px;
 }
 
 .recipient-details {
@@ -126,10 +135,8 @@ export default {
 
 .expand-toggle {
 	cursor: pointer;
-}
-
-.recipient-email {
-	margin-top: 5px;
+	display: flex;
+	gap: 5px;
 }
 
 .recipient-list {
@@ -137,16 +144,13 @@ export default {
 	margin-top: 1rem;
 }
 .recipient-header {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+	display: contents;
 }
-
-span {
-	color: #666;
-	font-size: 0.9rem;
-	margin-bottom: 1rem;
-	display: block;
+.recipient-name {
+	margin-top: 50px;
+}
+.show-less {
+	margin-top: 40px;
 }
 
 </style>
