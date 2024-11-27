@@ -53,12 +53,14 @@ jobs:
       - name: Get appinfo data
         id: appinfo
         uses: skjnldsv/xpath-action@7e6a7c379d0e9abc8acaef43df403ab4fc4f770c # master
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         with:
           filename: appinfo/info.xml
           expression: "//info//dependencies//nextcloud/@min-version"
 
       - name: Read package.json node and npm engines version
         uses: skjnldsv/read-package-engines-version-actions@8205673bab74a63eb9b8093402fd9e0e018663a1 # v2.2
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         id: versions
         # Continue if no package.json
         continue-on-error: true
@@ -69,14 +71,17 @@ jobs:
 
       - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         with:
           node-version: ${{ steps.versions.outputs.nodeVersion }}
 
       - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: npm i -g npm@"${{ steps.versions.outputs.npmVersion }}"
 
       - name: Set up php ${{ env.PHP_VERSION }}
         uses: shivammathur/setup-php@a4e22b60bbb9c1021113f2860347b0759f66fe5d # v2
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         with:
           php-version: ${{ env.PHP_VERSION }}
           coverage: none
@@ -84,14 +89,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Krankerl
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
           wget https://github.com/ChristophWurst/krankerl/releases/download/v0.14.0/krankerl_0.14.0_amd64.deb
           sudo dpkg -i krankerl_0.14.0_amd64.deb
 
       - name: Package ${{ env.APP_NAME }} ${{ env.APP_VERSION }} with krankerl
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: krankerl package
 
       - name: Checkout server ${{ fromJSON(steps.appinfo.outputs.result).nextcloud.min-version }}
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         continue-on-error: true
         id: server-checkout
         run: |
@@ -108,6 +116,7 @@ jobs:
           path: build/nextcloud
 
       - name: Sign app
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
           # Extracting release
           cd build/artifacts
