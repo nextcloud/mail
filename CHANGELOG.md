@@ -1,4 +1,4 @@
-## [4.0.4](https://github.com/nextcloud/mail/compare/v4.0.3...v4.0.4) (2024-11-27)
+## [4.0.5](https://github.com/nextcloud/mail/compare/v4.0.3...v4.0.5) (2024-11-27)
 
 
 ### Bug Fixes
