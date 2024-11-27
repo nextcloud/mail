@@ -1,3 +1,14 @@
+## [4.0.4](https://github.com/nextcloud/mail/compare/v4.0.3...v4.0.4) (2024-11-27)
+
+
+### Bug Fixes
+
+* **release:** Ignore unnecessary files ([2a6e8da](https://github.com/nextcloud/mail/commit/2a6e8da118cb78522f4cd741b1cabe2363872381))
+* **release:** Specify release committer ([c4a9613](https://github.com/nextcloud/mail/commit/c4a96133fcb48f279cb178a2f87764993a0a21ce))
+* thread disappearing after refresh ([c031bc5](https://github.com/nextcloud/mail/commit/c031bc5759dbc2f669a16adbfcec3bfb5fd28684))
+
+
+
 ## [4.0.3](https://github.com/nextcloud/mail/compare/v4.0.2...v4.0.3) (2024-11-19)
 
 
