@@ -1,3 +1,19 @@
+## [3.7.13](https://github.com/nextcloud/mail/compare/v3.7.12...v3.7.13) (2024-11-27)
+
+
+### Bug Fixes
+
+* **release:** Ignore unnecessary files ([91f4a38](https://github.com/nextcloud/mail/commit/91f4a38b3be6b997956ddf93c4b389c21e7ec3ca))
+* **release:** Specify release committer ([8c79096](https://github.com/nextcloud/mail/commit/8c790964ae3cf825d135cbf54ab4840ffb86d15d))
+* thread disappearing after refresh ([84628f3](https://github.com/nextcloud/mail/commit/84628f35b0ab6eb36e9caea79436eff2888b14cb))
+
+
+### Reverts
+
+* Revert "chore(release): v3.7.13 [skip ci]" ([ff4c226](https://github.com/nextcloud/mail/commit/ff4c226291e608b9ce98d4709cf16f7a32bae3b8))
+
+
+
 ## [3.7.12](https://github.com/nextcloud/mail/compare/v3.7.11...v3.7.12) (2024-11-19)
 
 
