@@ -1,3 +1,12 @@
+## [4.0.6](https://github.com/nextcloud/mail/compare/v4.0.5...v4.0.6) (2024-11-29)
+
+
+### Bug Fixes
+
+* new message button misalignment ([5243d8e](https://github.com/nextcloud/mail/commit/5243d8e9befdbca2adfae529ff1b0dddc7989d09))
+
+
+
 ## [4.0.5](https://github.com/nextcloud/mail/compare/v4.0.3...v4.0.5) (2024-11-27)
 
 
