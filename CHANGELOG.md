@@ -1,3 +1,12 @@
+## [3.7.14](https://github.com/nextcloud/mail/compare/v3.7.13...v3.7.14) (2024-11-29)
+
+
+### Bug Fixes
+
+* **release:** missing certificate causing an invalid signature ([9f839e3](https://github.com/nextcloud/mail/commit/9f839e391ff7b704e990ab5a6c7cc5042cfce603))
+
+
+
 ## [3.7.13](https://github.com/nextcloud/mail/compare/v3.7.12...v3.7.13) (2024-11-27)
 
 
