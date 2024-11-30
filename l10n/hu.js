@@ -468,6 +468,7 @@ OC.L10N.register(
     "Flag" : "Zászló",
     "Delete filter" : "Szűrő törlése",
     "Operator" : "Állapot",
+    "Filter name" : "Név szűrése",
     "Actions" : "Műveletek",
     "New action" : "Új művelet",
     "Priority" : "Prioritás",
