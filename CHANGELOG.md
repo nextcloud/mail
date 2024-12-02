@@ -1,3 +1,12 @@
+## [4.0.7](https://github.com/nextcloud/mail/compare/v4.0.6...v4.0.7) (2024-12-02)
+
+
+### Bug Fixes
+
+* **mailto:** Handle BCC recipients only ([8613e7f](https://github.com/nextcloud/mail/commit/8613e7fae16f00d098690705693585d86be40046))
+
+
+
 ## [4.0.6](https://github.com/nextcloud/mail/compare/v4.0.5...v4.0.6) (2024-11-29)
 
 
