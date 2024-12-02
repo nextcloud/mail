@@ -405,7 +405,10 @@ class PageController extends Controller {
 	 */
 	public function compose(string $uri): RedirectResponse {
 		$parts = parse_url($uri);
-		$params = ['to' => $parts['path']];
+		$params = [];
+		if (isset($parts['path'])) {
+			$params['to'] = $parts['path'];
+		}
 		if (isset($parts['query'])) {
 			$parts = explode('&', $parts['query']);
 			foreach ($parts as $part) {
