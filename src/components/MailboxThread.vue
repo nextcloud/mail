@@ -266,6 +266,7 @@ export default {
 						accountId,
 						to: this.stringToRecipients(this.$route.query.to),
 						cc: this.stringToRecipients(this.$route.query.cc),
+						bcc: this.stringToRecipients(this.$route.query.bcc),
 						subject: this.$route.query.subject || '',
 						body: this.$route.query.body ? detect(this.$route.query.body) : html(''),
 					},
