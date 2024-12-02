@@ -7,7 +7,7 @@
 		<transition name="multiselect-header">
 			<div v-if="selectMode" key="multiselect-header" class="multiselect-header">
 				<div class="action-buttons">
-					<NcButton icon-only
+					<NcButton type="tertiary"
 						:title="areAllSelectedRead ? n('mail', 'Mark {number} unread', 'Mark {number} unread', selection.length, { number: selection.length }) : n('mail', 'Mark {number} read', 'Mark {number} read', selection.length, { number: selection.length })"
 						@click.prevent="markSelectedSeenOrUnseen">
 						<template #icon>
@@ -18,22 +18,21 @@
 						</template>
 					</NcButton>
 
-
 					<NcButton v-if="isAtLeastOneSelectedUnimportant"
-						icon-only
+						type="tertiary"
 						:title="n('mail', 'Mark {number} as important', 'Mark {number} as important', selection.length, { number: selection.length })"
 						@click.prevent="markSelectionImportant">
 						<ImportantIcon :size="16" />
 					</NcButton>
 
 					<NcButton v-if="isAtLeastOneSelectedImportant"
-						icon-only
+						type="tertiary"
 						:title="n('mail', 'Mark {number} as unimportant', 'Mark {number} as unimportant', selection.length, { number: selection.length })"
 						@click.prevent="markSelectionUnimportant">
 						<ImportantIcon :size="16" />
 					</NcButton>
 
-					<NcButton icon-only
+					<NcButton type="tertiary"
 						:title="areAllSelectedFavorite
 							? n('mail', 'Unfavorite {number}', 'Unfavorite {number}', selection.length, { number: selection.length })
 							: n('mail', 'Favorite {number}', 'Favorite {number}', selection.length, { number: selection.length })"
@@ -42,21 +41,20 @@
 					</NcButton>
 
 					<NcButton v-if="isAtLeastOneSelectedNotJunk"
-						icon-only
+						type="tertiary"
 						:title="n('mail', 'Mark {number} as spam', 'Mark {number} as spam', selection.length, { number: selection.length })"
 						@click.prevent="markSelectionJunk">
 						<AlertOctagonIcon :size="16" />
 					</NcButton>
 
 					<NcButton v-if="isAtLeastOneSelectedJunk"
-						icon-only
+						type="tertiary"
 						:title="n('mail', 'Mark {number} as not spam', 'Mark {number} as not spam', selection.length, { number: selection.length })"
 						@click.prevent="markSelectionNotJunk">
 						<AlertOctagonIcon :size="16" />
 					</NcButton>
 				</div>
 
-				<!-- Actions Dropdown for Remaining Options -->
 				<Actions class="app-content-list-item-menu" menu-align="right">
 					<ActionButton :close-after-click="true" @click.prevent="unselectAll">
 						<template #icon>
@@ -155,13 +153,14 @@ import ShareIcon from 'vue-material-design-icons/Share.vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon.vue'
 import TagIcon from 'vue-material-design-icons/Tag.vue'
 import TagModal from './TagModal.vue'
-import EmailRead from "vue-material-design-icons/EmailOpen.vue";
-import EmailUnread from "vue-material-design-icons/Email.vue";
+import EmailRead from 'vue-material-design-icons/EmailOpen.vue'
+import EmailUnread from 'vue-material-design-icons/Email.vue'
 
 export default {
 	name: 'EnvelopeList',
 	components: {
-		EmailUnread, EmailRead,
+		EmailUnread,
+		EmailRead,
 		Actions,
 		AddIcon,
 		NcButton,
