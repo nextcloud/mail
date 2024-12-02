@@ -40,6 +40,7 @@ use OCP\IUserSession;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use function urlencode;
 
 class PageControllerTest extends TestCase {
 	/** @var string */
@@ -374,6 +375,17 @@ class PageControllerTest extends TestCase {
 
 		$expected = new RedirectResponse('?to=' . urlencode($address)
 			. '&cc=' . urlencode($cc));
+
+		$response = $this->controller->compose($uri);
+
+		$this->assertEquals($expected, $response);
+	}
+
+	public function testComposeBcc() {
+		$bcc = 'blind@example.com';
+		$uri = "mailto:?bcc=$bcc";
+
+		$expected = new RedirectResponse('?bcc=' . urlencode($bcc));
 
 		$response = $this->controller->compose($uri);
 
