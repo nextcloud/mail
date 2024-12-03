@@ -1,3 +1,12 @@
+## [4.0.8](https://github.com/nextcloud/mail/compare/v4.0.7...v4.0.8) (2024-12-03)
+
+
+### Bug Fixes
+
+* **deps:** bump horde packages to fix memory leak ([665aa40](https://github.com/nextcloud/mail/commit/665aa40dba94872ec235b38ccd0134137b96e8ea))
+
+
+
 ## [4.0.7](https://github.com/nextcloud/mail/compare/v4.0.6...v4.0.7) (2024-12-02)
 
 
