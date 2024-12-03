@@ -1,41 +1,40 @@
 <template>
 	<div class="recipient-info">
 		<!-- For a single recipient -->
-		<div v-if="recipients.length === 1" class="recipient-single">
-			<div class="recipient-header">
-				<div class="recipient-avatar">
+		<div v-if="recipients.length === 1" class="recipient-info__single">
+			<div class="recipient-info__header">
+				<div class="recipient-info__avatar">
 					<Avatar :display-name="recipients[0].label"
 						:email="recipients[0].email"
 						:size="55"
 						:disable-tooltip="true"
-						:disable-menu="true"
-						:url="recipients[0].photoUrl" />
+						:disable-menu="true" />
 				</div>
-				<div class="recipient-details">
+				<div class="recipient-info__details">
 					<DisplayContactDetails :email="recipients[0].email" />
 				</div>
 			</div>
 		</div>
 
 		<!-- For multiple recipients -->
-		<div v-else class="recipient-multiple">
-			<div v-for="(recipient, index) in recipients" :key="index" class="recipient-item">
-				<div class="recipient-header">
-					<div class="recipient-avatar">
+		<div v-else class="recipient-info__multiple">
+			<div v-for="(recipient, index) in recipients" :key="index" class="recipient-info__item">
+				<div class="recipient-info__header">
+					<div class="recipient-info__avatar">
 						<Avatar :display-name="recipient.label"
 							:email="recipient.email"
 							:size="55"
 							:disable-tooltip="true"
 							:disable-menu="true" />
 					</div>
-					<div v-if="!expandedRecipients[index]" class="recipient-name">
+					<div v-if="!expandedRecipients[index]" class="recipient-info__name">
 						<h6>{{ recipient.email }}</h6>
 					</div>
-					<div class="expand-toggle" @click="toggleExpand(index)">
+					<div class="recipient-info__expand-toggle" @click="toggleExpand(index)">
 						<template v-if="isExpanded(index)">
-							<div class="show-less">
-							<IconArrowUp :size="16" />
-							<span>{{ t('mail', 'Show less') }}</span>
+							<div class="recipient-info__show-less">
+								<IconArrowUp :size="16" />
+								<span>{{ t('mail', 'Show less') }}</span>
 							</div>
 						</template>
 						<template v-else>
@@ -44,7 +43,7 @@
 						</template>
 					</div>
 				</div>
-				<div v-show="expandedRecipients[index]" class="recipient-details">
+				<div v-show="expandedRecipients[index]" class="recipient-info__details">
 					<DisplayContactDetails :email="recipient.email" />
 				</div>
 			</div>
@@ -95,62 +94,53 @@ export default {
 	},
 }
 </script>
-
 <style scoped lang="scss">
 .recipient-info {
 	display: inline;
 	width: 100%;
-}
 
-.recipient-single {
-	width: 400px;
-	display: inline-block;
-}
+	&__single {
+		width: 400px;
+		display: inline-block;
+	}
 
-.recipient-avatar {
-	margin-top: 20px;
-	display: inline;
-	float: left;
-	padding: 20px;
-}
+	&__avatar {
+		margin-top: 20px;
+		display: inline;
+		float: left;
+		padding: 20px;
+	}
 
-.recipient-details {
-	max-width: 100%;
-}
+	&__details {
+		max-width: 100%;
+	}
 
-.recipient-multiple {
-	margin-top: 10px;
-	display: flex;
-	flex-direction: column;
-}
+	&__multiple {
+		margin-top: 10px;
+		display: flex;
+		flex-direction: column;
+	}
 
-.recipient-item {
-	margin-bottom: 10px;
-}
+	&__item {
+		margin-bottom: 10px;
+	}
 
-.recipient-item-details {
-	margin-left: 10px;
-	flex-grow: 1;
-}
+	&__expand-toggle {
+		cursor: pointer;
+		display: flex;
+		gap: 5px;
+	}
 
-.expand-toggle {
-	cursor: pointer;
-	display: flex;
-	gap: 5px;
-}
+	&__header {
+		display: contents;
+	}
 
-.recipient-list {
-	padding-top: 10px;
-	margin-top: 1rem;
-}
-.recipient-header {
-	display: contents;
-}
-.recipient-name {
-	margin-top: 50px;
-}
-.show-less {
-	margin-top: 40px;
-}
+	&__name {
+		margin-top: 50px;
+	}
 
+	&__show-less {
+		margin-top: 40px;
+	}
+}
 </style>
