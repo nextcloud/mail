@@ -40,6 +40,7 @@ use Html2Text\Html2Text;
 use OCA\Mail\Attachment;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Support\PerformanceLoggerTask;
@@ -950,7 +951,7 @@ class MessageMapper {
 				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
 					$structure->setTransferEncoding($enc);
 					$structure->setContents($htmlBody);
-					$htmlBody = $structure->getContents();
+					$htmlBody = $this->converter->convert($structure);
 				}
 				$html = new Html2Text($htmlBody, ['do_links' => 'none','alt_image' => 'hide']);
 				return new MessageStructureData(
@@ -967,7 +968,7 @@ class MessageMapper {
 				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
 					$structure->setTransferEncoding($enc);
 					$structure->setContents($textBody);
-					$textBody = $structure->getContents();
+					$textBody = $this->converter->convert($structure);
 				}
 				return new MessageStructureData(
 					$hasAttachments,
