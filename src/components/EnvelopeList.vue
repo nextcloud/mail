@@ -67,7 +67,7 @@
 						}}
 					</ActionButton>
 					<ActionButton :close-after-click="true"
-						@click.prevent="favoriteOrUnfavoriteAll">
+						@click.prevent="markSelectedFavoriteOrUnfavorite">
 						<template #icon>
 							<IconFavorite :size="16" />
 						</template>
@@ -414,12 +414,11 @@ export default {
 			return this.selection.includes(idx)
 		},
 		markSelectedSeenOrUnseen() {
-			const seen = !this.areAllSelectedRead
-			this.selectedEnvelopes.forEach((envelope) => {
-				this.$store.dispatch('toggleEnvelopeSeen', {
-					envelope,
-					seen,
-				})
+			const state = !this.areAllSelectedRead
+			const envelopes = this.selectedEnvelopes
+			this.$store.dispatch('markEnvelopesSeenOrUnseen', {
+				envelopes,
+				state,
 			})
 			this.unselectAll()
 		},
@@ -442,6 +441,14 @@ export default {
 			this.unselectAll()
 		},
 		async markSelectionJunk() {
+			const state = true
+			const envelopes = this.selectedEnvelopes
+			this.$store.dispatch('markEnvelopesJunkOrNotJunk', {
+				envelopes,
+				state,
+			})
+			this.unselectAll()
+			/*
 			for (const envelope of this.selectedEnvelopes) {
 				if (!envelope.flags.$junk) {
 					await this.$store.dispatch('toggleEnvelopeJunk', {
@@ -451,8 +458,17 @@ export default {
 				}
 			}
 			this.unselectAll()
+			*/
 		},
 		async markSelectionNotJunk() {
+			const state = false
+			const envelopes = this.selectedEnvelopes
+			this.$store.dispatch('markEnvelopesJunkOrNotJunk', {
+				envelopes,
+				state,
+			})
+			this.unselectAll()
+			/*
 			for (const envelope of this.selectedEnvelopes) {
 				if (envelope.flags.$junk) {
 					await this.$store.dispatch('toggleEnvelopeJunk', {
@@ -462,14 +478,14 @@ export default {
 				}
 			}
 			this.unselectAll()
+			*/
 		},
-		favoriteOrUnfavoriteAll() {
-			const favFlag = !this.areAllSelectedFavorite
-			this.selectedEnvelopes.forEach((envelope) => {
-				this.$store.dispatch('markEnvelopeFavoriteOrUnfavorite', {
-					envelope,
-					favFlag,
-				})
+		markSelectedFavoriteOrUnfavorite() {
+			const state = !this.areAllSelectedFavorite
+			const envelopes = this.selectedEnvelopes
+			this.$store.dispatch('markEnvelopesFavoriteOrUnfavorite', {
+				envelopes,
+				state,
 			})
 			this.unselectAll()
 		},
