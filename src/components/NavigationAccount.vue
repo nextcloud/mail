@@ -9,7 +9,7 @@
 			:id="id"
 			:key="id"
 			:name="account.emailAddress"
-			@update:menuOpen="onMenuToggle">
+			@update:open="onMenuToggle">
 			<!-- Actions -->
 			<template #actions>
 				<template v-if="isDisabled">
