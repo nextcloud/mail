@@ -18,7 +18,7 @@
 
 		<!-- For multiple recipients -->
 		<div v-else class="recipient-info__multiple">
-			<div v-for="(recipient, index) in recipients" :key="index" class="recipient-info__item">
+			<div v-for="(recipient, index) in recipients" :key="recipient.email" class="recipient-info__item">
 				<div class="recipient-info__header">
 					<div class="recipient-info__avatar">
 						<Avatar :display-name="recipient.label"
