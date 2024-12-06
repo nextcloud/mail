@@ -69,13 +69,16 @@ class SmtpClientFactoryTest extends TestCase {
 			->method('getSystemValue')
 			->willReturnMap([
 				['app.mail.transport', 'smtp', 'smtp'],
-				['debug', false, false],
 				['app.mail.smtp.timeout', 20, 2],
 			]);
 		$this->config->expects($this->any())
 			->method('getSystemValueBool')
 			->with('app.mail.verify-tls-peer', true)
 			->willReturn(true);
+		$this->config->expects($this->any())
+			->method('getSystemValueString')
+			->with('MAIL_DEBUG')
+			->willReturn('');
 		$this->crypto->expects($this->once())
 			->method('decrypt')
 			->with('obenc')
