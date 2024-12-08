@@ -578,9 +578,18 @@
     "Tests" : "Probak",
     "Tests are applied to incoming emails on your mail server, targeting fields such as subject (the email's subject line), from (the sender), and to (the recipient). You can use the following operators to define conditions for these fields:" : "Zure posta-zerbitzarian sartzen diren posta elektronikoei aplikatzen zaizkie probak. Eremu hauek probatzen dira: gaia (posta elektronikoaren gai-lerroa), bidaltzailea eta hartzailea. Honako eragile hauek erabil ditzakezu eremu horietarako baldintzak zehazteko:",
     "An exact match. The field must be identical to the provided value." : "Bat etortze zehatza. Eremuak emandako balioaren berdina izan behar du.",
+    "A substring match. The field matches if the provided value is contained within it. For example, \"report\" would match \"port\"." : "Azpikate bat etortzea. Eremua bat dator emandako balioa barruan badago. Adibidez, \"aireportua\" bat etorriko litzake \"portua\"-rekin.",
+    "A pattern match using wildcards. The \"*\" symbol represents any number of characters (including none), while \"?\" represents exactly one character. For example, \"*report*\" would match \"Business report 2024\"." : "Patroi bat etortzea komodinak erabiliz. «*» sinboloa edozein karaktere (ezer ez barne) kopuru adierazten du. Bestalde, «?» karaktere bakarra adierazten du. Adibidez «*txosten*» «2024ko txostena»-rekin bat etorriko litzateke.",
+    "New test" : "Proba berria",
     "Actions" : "Ekintzak",
+    "Actions are triggered when the specified tests are true. The following actions are available:" : "Ekintzak zehaztutako probak egiazkoak direnean abiarazten dira. Honako ekintza hauek daude:",
+    "Moves the message into a specified folder." : "Mezua karpeta zehatz batera eramaten du.",
+    "Adds a flag to the message." : "Bandera bat gehitzen dio mezuari.",
+    "Halts the execution of the filter script. No further filters with will be processed after this action." : "Iragazpen scriptaren exekuzioa geldiarazten du. Ekintza honen ondoren ez da iragazki gehiagorik prozesatuko.",
     "New action" : "Ekintza berria",
     "Priority" : "Lehentasuna",
+    "Enable filter" : "Gaitu iragazkia",
+    "Save filter" : "Gorde iragazkia",
     "Mail app" : "Posta elektroniko aplikazioa",
     "The mail app allows users to read mails on their IMAP accounts." : "Posta elektroniko aplikazio honek aukera ematen die erabiltzaileei IMAP kontuetako mezuak irakurtzeko.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Hemen instantzia osoko ezarpenak aurkitu ditzakezu. Erabiltzailearen ezarpen espezifikoak aplikazioan bertan daude (beheko ezkerreko izkinan).",
@@ -736,6 +745,7 @@
     "Continue to %s" : "Jarraitu hona: %s",
     "Sieve filter rules" : "Sieve iragazketa arauak",
     "Sieve filter server" : "Sieve iragazketa zerbitzaria",
-    "Account creation" : "Kontua sortzea"
+    "Account creation" : "Kontua sortzea",
+    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve zure postontzirako iragazkiak idazteko hizkuntza indartsua da. Sieve scriptak Posta-n  kudea ditzakezu zure posta elektroniko zerbitzuak onartzen badu."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
