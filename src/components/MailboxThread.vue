@@ -243,7 +243,7 @@ export default {
 				.length > 0
 		},
 		importantMessagesInitialPageSize() {
-			if (window.innerHeight > 900) {
+			if (window.innerHeight > 1024) {
 				return 7
 			}
 			if (window.innerHeight > 750) {
