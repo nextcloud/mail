@@ -249,13 +249,13 @@
 					</template>
 				</NcActionInput>
 
-				<ActionButton :aria-label="t('spreed', 'Set custom snooze')"
+				<ActionButton :aria-label="t('mail', 'Set custom snooze')"
 					close-after-click
 					@click.stop="setCustomSnooze(customSnoozeDateTime)">
 					<template #icon>
 						<CheckIcon :size="16" />
 					</template>
-					{{ t('spreed', 'Set custom snooze') }}
+					{{ t('mail', 'Set custom snooze') }}
 				</ActionButton>
 			</template>
 			<template v-if="moreActionsOpen">
