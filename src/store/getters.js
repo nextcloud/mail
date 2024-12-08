@@ -160,4 +160,7 @@ export const getters = {
 	getInternalAddresses: (state) => state.internalAddress?.filter(internalAddress => internalAddress !== undefined),
 	hasCurrentUserPrincipalAndCollections: (state) => state.hasCurrentUserPrincipalAndCollections,
 	showSettingsForAccount: (state) => (accountId) => state.showAccountSettings === accountId,
+	isTranslationEnabled: (state) => state.isTranslationEnabled,
+	getTranslationInputLanguages: (state) => state.translationInputLanguages,
+	getTranslationOutputLanguages: (state) => state.translationOutputLanguages,
 }

@@ -288,6 +288,11 @@ class PageController extends Controller {
 		);
 
 		$this->initialStateService->provideInitialState(
+			'llm_translation_enabled',
+			$this->aiIntegrationsService->isTaskAvailable('core:text2text:translate')
+		);
+
+		$this->initialStateService->provideInitialState(
 			'llm_freeprompt_available',
 			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
 		);
