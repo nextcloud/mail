@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -366,7 +368,14 @@ class ContactsIntegrationTest extends TestCase {
 			->will($this->returnValue(true));
 		$this->contactsManager->expects($this->once())
 			->method('search')
-			->with($term, ['UID', 'FN', 'EMAIL'], ['enumeration' => $allowSystemUsers, 'fullmatch' => $shareeEnumerationFullMatch])
+			->with(
+				$term,
+				['UID', 'FN', 'EMAIL'],
+				[
+					'enumeration' => $allowSystemUsers,
+					'fullmatch' => $shareeEnumerationFullMatch,
+					'limit' => 20,
+				])
 			->will($this->returnValue($searchResult));
 	}
 
