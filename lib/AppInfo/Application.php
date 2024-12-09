@@ -47,10 +47,12 @@ use OCA\Mail\Listener\MessageKnownSinceListener;
 use OCA\Mail\Listener\MoveJunkListener;
 use OCA\Mail\Listener\NewMessageClassificationListener;
 use OCA\Mail\Listener\NewMessagesNotifier;
+use OCA\Mail\Listener\NewMessagesSummarizeListener;
 use OCA\Mail\Listener\OauthTokenRefreshListener;
 use OCA\Mail\Listener\OptionalIndicesListener;
 use OCA\Mail\Listener\OutOfOfficeListener;
 use OCA\Mail\Listener\SpamReportListener;
+use OCA\Mail\Listener\TaskProcessingListener;
 use OCA\Mail\Listener\UserDeletedListener;
 use OCA\Mail\Notification\Notifier;
 use OCA\Mail\Provider\MailProvider;
@@ -72,6 +74,7 @@ use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\DB\Events\AddMissingIndicesEvent;
 use OCP\IServerContainer;
+use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
 use OCP\User\Events\OutOfOfficeChangedEvent;
 use OCP\User\Events\OutOfOfficeClearedEvent;
 use OCP\User\Events\OutOfOfficeEndedEvent;
@@ -133,6 +136,7 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(NewMessagesSynchronized::class, NewMessageClassificationListener::class);
 		$context->registerEventListener(NewMessagesSynchronized::class, MessageKnownSinceListener::class);
 		$context->registerEventListener(NewMessagesSynchronized::class, NewMessagesNotifier::class);
+		$context->registerEventListener(NewMessagesSynchronized::class, NewMessagesSummarizeListener::class);
 		$context->registerEventListener(SynchronizationEvent::class, AccountSynchronizedThreadUpdaterListener::class);
 		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
 		$context->registerEventListener(NewMessagesSynchronized::class, FollowUpClassifierListener::class);
@@ -141,6 +145,7 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(OutOfOfficeChangedEvent::class, OutOfOfficeListener::class);
 		$context->registerEventListener(OutOfOfficeClearedEvent::class, OutOfOfficeListener::class);
 		$context->registerEventListener(OutOfOfficeScheduledEvent::class, OutOfOfficeListener::class);
+		$context->registerEventListener(TaskSuccessfulEvent::class, TaskProcessingListener::class);
 
 		$context->registerMiddleWare(ErrorMiddleware::class);
 		$context->registerMiddleWare(ProvisioningMiddleware::class);
