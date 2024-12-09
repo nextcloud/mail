@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Contacts\Event\LoadContactsOcaApiEvent;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IUserPreferences;
@@ -318,6 +319,11 @@ class PageController extends Controller {
 		$csp->addAllowedFrameDomain('\'self\'');
 		$response->setContentSecurityPolicy($csp);
 		$this->dispatcher->dispatchTyped(new RenderReferenceEvent());
+
+		if (class_exists(LoadContactsOcaApiEvent::class)) {
+			$this->dispatcher->dispatchTyped(new LoadContactsOcaApiEvent());
+		}
+
 		return $response;
 	}
 
