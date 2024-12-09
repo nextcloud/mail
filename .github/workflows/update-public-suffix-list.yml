@@ -25,7 +25,7 @@ jobs:
           submodules: true
 
       - name: Download public suffix list
-        run: curl --output resources/resources/public_suffix_list.dat https://publicsuffix.org/list/public_suffix_list.dat
+        run: curl --output resources/public_suffix_list.dat https://publicsuffix.org/list/public_suffix_list.dat
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@7920c48d6af627948130adb390df5809c471ae3b
