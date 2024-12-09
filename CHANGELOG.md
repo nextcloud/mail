@@ -1,3 +1,12 @@
+## [4.0.9](https://github.com/nextcloud/mail/compare/v4.0.8...v4.0.9) (2024-12-09)
+
+
+### Bug Fixes
+
+* **ui:** Restore account quota fetching ([9d7b81d](https://github.com/nextcloud/mail/commit/9d7b81d9ef347bf651e1696d076e438bec82aae9))
+
+
+
 ## [4.0.8](https://github.com/nextcloud/mail/compare/v4.0.7...v4.0.8) (2024-12-03)
 
 
