@@ -5,8 +5,8 @@
 // Please pull this list from, and only from https://publicsuffix.org/list/public_suffix_list.dat,
 // rather than any other VCS sites. Pulling from any other URL is not guaranteed to be supported.
 
-// VERSION: 2024-12-09_07-31-23_UTC
-// COMMIT: d20bb7fddc89f1c840b006f19be3c293a9b9aa8a
+// VERSION: 2024-12-06_15-17-10_UTC
+// COMMIT: d94154e5222aa000f70def82b9711df88b4612d9
 
 // Instructions on pulling and using this list can be found at https://publicsuffix.org/list/.
 
@@ -13393,6 +13393,11 @@ gentlentapis.com
 lab.ms
 cdn-edges.net
 
+// GetLocalCert : https://getlocalcert.net
+// Submitted by William Harrison <psl@getlocalcert.net>
+localcert.net
+localhostcert.net
+
 // GignoSystemJapan: http://gsj.bz
 // Submitted by GignoSystemJapan <kakutou-ec@gsj.bz>
 gsj.bz
@@ -14117,11 +14122,6 @@ ggff.net
 // Localcert : https://localcert.dev
 // Submitted by Lann Martin <security@localcert.dev>
 *.user.localcert.dev
-
-// LocalCert : https://localcert.net
-// Submitted by William Harrison <psl@localcert.net>
-localcert.net
-localhostcert.net
 
 // Lodz University of Technology LODMAN regional domains https://www.man.lodz.pl/dns
 // Submitted by Piotr Wilk <dns@man.lodz.pl>
