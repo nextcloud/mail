@@ -48,7 +48,7 @@
 				@mouseleave="hoveringAvatar = false"
 				@click.stop.prevent="toggleSelected">
 				<template v-if="hoveringAvatar || selected">
-					<CheckIcon :size="40" :class="{ 'app-content-list-item-avatar-selected': selected }" />
+					<CheckIcon :size="40" class="check-icon" :class="{ 'app-content-list-item-avatar-selected': selected }" />
 				</template>
 				<template v-else>
 					<Avatar :display-name="addresses" :email="avatarEmail" />
@@ -1130,6 +1130,15 @@ export default {
 }
 .app-content-list-item-avatar-selected {
 	background-color: var(--color-primary-element);
+	color: var(--color-primary-light);
 	border-radius: 32px;
+}
+.check-icon {
+	color: var(--color-primary-light);
+	&:hover {
+		color: var(--color-primary-hover);
+		background-color: var(--color-primary-light-hover);
+		border-radius: 32px;
+	}
 }
 </style>

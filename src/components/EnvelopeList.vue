@@ -10,12 +10,10 @@
 					<NcButton type="tertiary"
 						:title="areAllSelectedRead ? n('mail', 'Mark {number} unread', 'Mark {number} unread', selection.length, { number: selection.length }) : n('mail', 'Mark {number} read', 'Mark {number} read', selection.length, { number: selection.length })"
 						@click.prevent="markSelectedSeenOrUnseen">
-						<template #icon>
-							<EmailUnread v-if="showImportantIconVariant"
-								:size="16" />
-							<EmailRead v-else
-								:size="16" />
-						</template>
+						<EmailUnread v-if="areAllSelectedRead"
+							:size="16" />
+						<EmailRead v-else
+							:size="16" />
 					</NcButton>
 
 					<NcButton v-if="isAtLeastOneSelectedUnimportant"
@@ -29,7 +27,7 @@
 						type="tertiary"
 						:title="n('mail', 'Mark {number} as unimportant', 'Mark {number} as unimportant', selection.length, { number: selection.length })"
 						@click.prevent="markSelectionUnimportant">
-						<ImportantIcon :size="16" />
+						<UnImportantIcon :size="16" />
 					</NcButton>
 
 					<NcButton type="tertiary"
@@ -37,30 +35,44 @@
 							? n('mail', 'Unfavorite {number}', 'Unfavorite {number}', selection.length, { number: selection.length })
 							: n('mail', 'Favorite {number}', 'Favorite {number}', selection.length, { number: selection.length })"
 						@click.prevent="favoriteOrUnfavoriteAll">
-						<IconFavorite :size="16" />
+						<IconFavorite v-if="areAllSelectedFavorite" :size="16" />
+						<IconUnFavorite v-else :size="16" />
 					</NcButton>
 
-					<NcButton v-if="isAtLeastOneSelectedNotJunk"
-						type="tertiary"
-						:title="n('mail', 'Mark {number} as spam', 'Mark {number} as spam', selection.length, { number: selection.length })"
-						@click.prevent="markSelectionJunk">
-						<AlertOctagonIcon :size="16" />
+					<NcButton type="tertiary"
+						:title="n('mail', 'Unselect {number}', 'Unselect {number}', selection.length, { number: selection.length })"
+						:close-after-click="true"
+						@click.prevent="unselectAll">
+						<IconSelect :size="16" />
 					</NcButton>
-
-					<NcButton v-if="isAtLeastOneSelectedJunk"
-						type="tertiary"
-						:title="n('mail', 'Mark {number} as not spam', 'Mark {number} as not spam', selection.length, { number: selection.length })"
-						@click.prevent="markSelectionNotJunk">
-						<AlertOctagonIcon :size="16" />
+					<NcButton type="tertiary"
+						:title="n(
+							'mail',
+							'Delete {number} thread',
+							'Delete {number} threads',
+							selection.length,
+							{ number: selection.length }
+						)"
+						:close-after-click="true"
+						@click.prevent="deleteAllSelected">
+						<IconDelete :size="16" />
 					</NcButton>
 				</div>
 
 				<Actions class="app-content-list-item-menu" menu-align="right">
-					<ActionButton :close-after-click="true" @click.prevent="unselectAll">
+					<ActionButton v-if="isAtLeastOneSelectedNotJunk"
+						@click.prevent="markSelectionJunk">
 						<template #icon>
-							<IconSelect :size="16" />
+							<AlertOctagonIcon :size="16" />
 						</template>
-						{{ n('mail', 'Unselect {number}', 'Unselect {number}', selection.length, { number: selection.length }) }}
+						{{ n('mail', 'Mark {number} as spam', 'Mark {number} as spam', selection.length, { number: selection.length }) }}
+					</ActionButton>
+					<ActionButton v-if="isAtLeastOneSelectedJunk"
+						@click.prevent="markSelectionNotJunk">
+						<template #icon>
+							<AlertOctagonIcon :size="16" />
+						</template>
+						{{ n('mail', 'Mark {number} as not spam', 'Mark {number} as not spam', selection.length, { number: selection.length }) }}
 					</ActionButton>
 					<ActionButton :close-after-click="true" @click.prevent="onOpenTagModal">
 						<template #icon>
@@ -79,20 +91,6 @@
 							<ShareIcon :size="16" />
 						</template>
 						{{ n('mail', 'Forward {number} as attachment', 'Forward {number} as attachment', selection.length, { number: selection.length }) }}
-					</ActionButton>
-					<ActionButton :close-after-click="true" @click.prevent="deleteAllSelected">
-						<template #icon>
-							<IconDelete :size="16" />
-						</template>
-						{{
-							n(
-								'mail',
-								'Delete {number} thread',
-								'Delete {number} threads',
-								selection.length,
-								{ number: selection.length }
-							)
-						}}
 					</ActionButton>
 				</Actions>
 				<MoveModal v-if="showMoveModal"
@@ -138,6 +136,8 @@ import { showError } from '@nextcloud/dialogs'
 import Envelope from './Envelope.vue'
 import IconDelete from 'vue-material-design-icons/Delete.vue'
 import ImportantIcon from './icons/ImportantIcon.vue'
+import UnImportantIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
+import IconUnFavorite from 'vue-material-design-icons/StarOutline.vue'
 import IconSelect from 'vue-material-design-icons/CloseThick.vue'
 import AddIcon from 'vue-material-design-icons/Plus.vue'
 import IconFavorite from 'vue-material-design-icons/Star.vue'
@@ -159,6 +159,8 @@ import EmailUnread from 'vue-material-design-icons/Email.vue'
 export default {
 	name: 'EnvelopeList',
 	components: {
+		UnImportantIcon,
+		IconUnFavorite,
 		EmailUnread,
 		EmailRead,
 		Actions,
