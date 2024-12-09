@@ -151,15 +151,6 @@
 						data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 					}}
 				</ActionButton>
-				<ActionButton :close-after-click="true"
-					@click.prevent="toggleSelected">
-					<template #icon>
-						<CheckIcon :size="16" />
-					</template>
-					{{
-						selected ? t('mail', 'Unselect') : t('mail', 'Select')
-					}}
-				</ActionButton>
 				<ActionButton v-if="hasWriteAcl"
 					:close-after-click="true"
 					@click.prevent="onOpenTagModal">
