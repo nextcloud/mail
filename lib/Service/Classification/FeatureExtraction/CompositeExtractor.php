@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2020-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
@@ -17,18 +17,25 @@ use function OCA\Mail\array_flat_map;
  * Combines a set of DI'ed extractors so they can be used as one class
  */
 class CompositeExtractor implements IExtractor {
-	/** @var IExtractor[] */
-	private $extractors;
+	private readonly SubjectExtractor $subjectExtractor;
 
-	public function __construct(ImportantMessagesExtractor $ex1,
+	/** @var IExtractor[] */
+	private readonly array $extractors;
+
+	public function __construct(
+		ImportantMessagesExtractor $ex1,
 		ReadMessagesExtractor $ex2,
 		RepliedMessagesExtractor $ex3,
-		SentMessagesExtractor $ex4) {
+		SentMessagesExtractor $ex4,
+		SubjectExtractor $ex5,
+	) {
+		$this->subjectExtractor = $ex5;
 		$this->extractors = [
 			$ex1,
 			$ex2,
 			$ex3,
 			$ex4,
+			$ex5,
 		];
 	}
 
@@ -45,5 +52,9 @@ class CompositeExtractor implements IExtractor {
 		return array_flat_map(static function (IExtractor $extractor) use ($message) {
 			return $extractor->extract($message);
 		}, $this->extractors);
+	}
+
+	public function getSubjectExtractor(): SubjectExtractor {
+		return $this->subjectExtractor;
 	}
 }

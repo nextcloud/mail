@@ -45,7 +45,6 @@ use OCA\Mail\Listener\MailboxesSynchronizedSpecialMailboxesUpdater;
 use OCA\Mail\Listener\MessageCacheUpdaterListener;
 use OCA\Mail\Listener\MessageKnownSinceListener;
 use OCA\Mail\Listener\MoveJunkListener;
-use OCA\Mail\Listener\NewMessageClassificationListener;
 use OCA\Mail\Listener\NewMessagesNotifier;
 use OCA\Mail\Listener\OauthTokenRefreshListener;
 use OCA\Mail\Listener\OptionalIndicesListener;
@@ -130,7 +129,6 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(MessageDeletedEvent::class, MessageCacheUpdaterListener::class);
 		$context->registerEventListener(MessageSentEvent::class, AddressCollectionListener::class);
 		$context->registerEventListener(MessageSentEvent::class, InteractionListener::class);
-		$context->registerEventListener(NewMessagesSynchronized::class, NewMessageClassificationListener::class);
 		$context->registerEventListener(NewMessagesSynchronized::class, MessageKnownSinceListener::class);
 		$context->registerEventListener(NewMessagesSynchronized::class, NewMessagesNotifier::class);
 		$context->registerEventListener(SynchronizationEvent::class, AccountSynchronizedThreadUpdaterListener::class);
