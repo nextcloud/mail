@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\AiIntegrations;
 
+use Horde_Imap_Client_Socket;
 use JsonException;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
@@ -20,6 +21,10 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\EventData;
 use OCA\Mail\Model\IMAPMessage;
 use OCP\IConfig;
+use OCP\TaskProcessing\IManager as TaskProcessingManager;
+use OCP\TaskProcessing\Task as TaskProcessingTask;
+use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
+use OCP\TaskProcessing\Exception\Exception as TaskProcessingException;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager;
 use OCP\TextProcessing\SummaryTaskType;
@@ -61,6 +66,74 @@ PROMPT;
 		$this->mailManager = $mailManager;
 		$this->config = $config;
 	}
+
+	/**
+	 * generates summary for each message
+	 * 
+	 * @param Account $account
+	 * @param array<Message> $messages
+	 * @param Horde_Imap_Client_Socket $client
+	 *
+	 * @return null|string
+	 *
+	 * @throws ServiceException
+	 */
+	public function summarizeMessages(Account $account, array $messages, Horde_Imap_Client_Socket $client = null): void {
+		try {
+			$manager = $this->container->get(TaskProcessingManager::class);
+		} catch (\Throwable $e) {
+			throw new ServiceException('Task processing is not available', 0, $e);
+		}
+		try {
+			$manager->getPreferredProvider(TextToTextSummary::ID);
+		} catch (TaskProcessingException $e) {
+			throw new ServiceException('No text summary provider available');
+		}
+		if (!$client) {
+			$client = $this->clientFactory->getClient($account);
+		}
+		try {
+			foreach ($messages as $entry) {
+
+				if (!empty($entry->getSummary())) {
+					continue;
+				}
+				// retrieve full message from server
+				$userId = $account->getUserId();
+				$mailboxId = $entry->getMailboxId();
+				$messageLocalId = $entry->getId();
+				$messageRemoteId = $entry->getUid();
+				$mailbox = $this->mailManager->getMailbox($userId, $mailboxId);
+				$message = $this->mailManager->getImapMessage(
+					$client,
+					$account,
+					$mailbox,
+					$messageRemoteId,
+					true
+				);
+				$messageBody = $message->getPlainBody();
+				// construct prompt and task
+				$prompt = "You are tasked with formulating a helpful summary of a email message. \r\n" .
+						  "The summary should be less than 1024 characters. \r\n" .
+						  "Here is the ***E-MAIL*** for which you must generate a helpful summary: \r\n" .
+						  "***START_OF_E-MAIL***\r\n$messageBody\r\n***END_OF_E-MAIL***\r\n";
+				$task = new TaskProcessingTask(
+					TextToTextSummary::ID,
+					[
+						'max_tokens' => 1024,
+						'input' => $prompt,
+					],
+					Application::APP_ID,
+					$userId,
+					'message:' . (string)$messageLocalId
+				);
+				$manager->scheduleTask($task);
+			}
+		} finally {
+			$client->logout();
+		}
+	}
+
 	/**
 	 * @param Account $account
 	 * @param string $threadId
