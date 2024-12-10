@@ -413,7 +413,7 @@ OC.L10N.register(
     "Train" : "Vlak",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} iz {depStation} v {arrStation}",
     "Train from {depStation} to {arrStation}" : "Vlak iz {depStation} v {arrStation}",
-    "Flag" : "Zastava",
+    "Flag" : "Zastavica",
     "Delete filter" : "Izbriši filter",
     "Operator" : "Operator",
     "Actions" : "Dejanja",

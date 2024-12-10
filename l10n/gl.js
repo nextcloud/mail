@@ -135,7 +135,7 @@ OC.L10N.register(
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Permitirlle á aplicación recoller datos sobre as súas interaccións. A partir destes datos, a aplicación adaptarase ás súas preferencias. Os datos só se almacenarán localmente.",
     "Trusted senders" : "Remitentes de confianza",
     "Internal addresses" : "Enderezos internos",
-    "Highlight external email addresses by enabling this feature, manage your internal addresses and domains to ensure recognized contacts stay unmarked." : "Destaque os enderezos de correo externos activando esta función, xestione os seus enderezos e dominios internos para garantir que os contactos recoñecidos non estean marcados.",
+    "Highlight external email addresses by enabling this feature, manage your internal addresses and domains to ensure recognized contacts stay unmarked." : "Realce os enderezos de correo externos activando esta función, xestione os seus enderezos e dominios internos para garantir que os contactos recoñecidos non estean marcados.",
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Administrar certificados S/MIME",
     "Mailvelope" : "Mailvelope",
