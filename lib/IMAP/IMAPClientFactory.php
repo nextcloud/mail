@@ -117,8 +117,16 @@ class IMAPClientFactory {
 				'backend' => $this->hordeCacheFactory->newCache($account),
 			];
 		}
-		if ($this->config->getSystemValue('debug', false)) {
-			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_imap.log';
+		$debug = array_merge(
+			explode('|', $this->config->getSystemValueString('MAIL_DEBUG')),
+			explode('|', $account->getDebug())
+		);
+		if (in_array('imap', $debug) || in_array('imap-full', $debug)) {
+			$fn = 'mail-' . $account->getUserId() . '-' . $account->getId() . '-imap.log';
+			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;
+			if (in_array('imap-full', $debug)) {
+				$params['debug_literal'] = true;
+			}
 		}
 
 		$client = new HordeImapClient($params);
