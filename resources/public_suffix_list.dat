@@ -5,8 +5,8 @@
 // Please pull this list from, and only from https://publicsuffix.org/list/public_suffix_list.dat,
 // rather than any other VCS sites. Pulling from any other URL is not guaranteed to be supported.
 
-// VERSION: 2024-12-09_07-31-23_UTC
-// COMMIT: d20bb7fddc89f1c840b006f19be3c293a9b9aa8a
+// VERSION: 2024-12-09_13-10-14_UTC
+// COMMIT: d3ca4d535b3388c7bd6642cc76d579197dc63202
 
 // Instructions on pulling and using this list can be found at https://publicsuffix.org/list/.
 
@@ -12505,7 +12505,6 @@ edu.ru
 gov.ru
 int.ru
 mil.ru
-test.ru
 
 // COSIMO GmbH : http://www.cosimo.de
 // Submitted by Rene Marticke <rmarticke@cosimo.de>
@@ -13281,6 +13280,10 @@ firebaseapp.com
 // FlashDrive : https://flashdrive.io
 // Submitted by Eric Chan <support@flashdrive.io>
 fldrv.com
+
+// Fleek Labs Inc : https://fleek.xyz
+// Submitted by Parsa Ghadimi <dev@fleek.xyz>
+on-fleek.app
 
 // FlutterFlow : https://flutterflow.io
 // Submitted by Anton Emelyanov <anton@flutterflow.io>
@@ -14355,6 +14358,10 @@ ui.nabu.casa
 // Submitted by Jan Jaeschke <jan.jaeschke@netatwork.de>
 cloud.nospamproxy.com
 o365.cloud.nospamproxy.com
+
+// Net libre : https://www.netlib.re
+// Submitted by Philippe PITTOLI <security@netlib.re>
+netlib.re
 
 // Netfy Domains : https://netfy.domains
 // Submitted by Suranga Ranasinghe <security@mavicsoft.com>
