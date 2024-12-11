@@ -101,9 +101,16 @@ class DraftsController extends Controller {
 		$message->setAccountId($accountId);
 		$message->setAliasId($aliasId);
 		$message->setSubject($subject);
-		$message->setBody($body);
+		if ($isHtml) {
+			$message->setBodyPlain(null);
+			$message->setBodyHtml($body);
+			$message->setHtml(true);
+		} else {
+			$message->setBodyPlain($body);
+			$message->setBodyHtml(null);
+			$message->setHtml(false);
+		}
 		$message->setEditorBody($editorBody);
-		$message->setHtml($isHtml);
 		$message->setInReplyToMessageId($inReplyToMessageId);
 		$message->setUpdatedAt($this->timeFactory->getTime());
 		$message->setSendAt($sendAt);
@@ -169,9 +176,16 @@ class DraftsController extends Controller {
 		$message->setAccountId($accountId);
 		$message->setAliasId($aliasId);
 		$message->setSubject($subject);
-		$message->setBody($body);
+		if ($isHtml) {
+			$message->setBodyPlain(null);
+			$message->setBodyHtml($body);
+			$message->setHtml(true);
+		} else {
+			$message->setBodyPlain($body);
+			$message->setBodyHtml(null);
+			$message->setHtml(false);
+		}
 		$message->setEditorBody($editorBody);
-		$message->setHtml($isHtml);
 		$message->setFailed($failed);
 		$message->setInReplyToMessageId($inReplyToMessageId);
 		$message->setSendAt($sendAt);

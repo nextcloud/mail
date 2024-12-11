@@ -122,8 +122,8 @@ class MailTransmission implements IMailTransmission {
 			new DataUriParser()
 		);
 		$mimePart = $mimeMessage->build(
-			$localMessage->isHtml(),
-			$localMessage->getBody(),
+			$localMessage->getBodyPlain(),
+			$localMessage->getBodyHtml(),
 			$attachmentParts,
 			$localMessage->isPgpMime() === true
 		);
