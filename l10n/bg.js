@@ -181,8 +181,6 @@ OC.L10N.register(
     "Unimportant" : "Маловажно",
     "Mark not spam" : "Маркиране, че не е спам",
     "Mark as spam" : "Маркира като спам",
-    "Unselect" : "Размаркирай",
-    "Select" : "Избери",
     "Edit tags" : "Редактиране на етикетите",
     "Move thread" : "Преместване на нишката",
     "Archive thread" : "Архивна нишка",
@@ -198,7 +196,6 @@ OC.L10N.register(
     "No trash mailbox configured" : "Няма конфигурирана пощенска кутия за боклук",
     "Could not delete message" : "Съобщението не може да бъде изтрито",
     "Could not archive message" : "Не можа да се архивира съобщение",
-    "Forward" : "Напред",
     "Load more" : "Зареждане на още",
     "Report this bug" : "Докладване на тази грешка",
     "All day" : "Цял ден",
@@ -212,6 +209,7 @@ OC.L10N.register(
     "You have been invited to an event" : "Поканени сте на събитие",
     "This event was cancelled" : "Това събитие беше отказано",
     "Save to" : "Запиши в",
+    "Select" : "Избери",
     "Comment" : "Коментар",
     "Accept" : "Приемам",
     "Decline" : "Отхвърляне",
@@ -243,6 +241,7 @@ OC.L10N.register(
     "Notify the sender" : "Уведомяване на подателя",
     "You sent a read confirmation to the sender of this message." : "Изпратихте потвърждение за четене на подателя на това съобщение.",
     "Could not send mdn" : "Не можа да се изпрати mdn",
+    "Forward" : "Напред",
     "Move message" : "Преместване на съобщението",
     "Forward message as attachment" : "Препращане на съобщението като прикачен файл",
     "View source" : "Преглед на източника",
@@ -550,6 +549,7 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желаете да посетите тази страница, може да се върнете към <a href=\"%s\">Поща</a>.",
     "Continue to %s" : "Продължи към %s",
     "Sieve filter rules" : "Правила за филтриране чрез сито",
-    "Sieve filter server" : "Сървър за сито филтър"
+    "Sieve filter server" : "Сървър за сито филтър",
+    "Unselect" : "Размаркирай"
 },
 "nplurals=2; plural=(n != 1);");

@@ -89,20 +89,18 @@
     "Favorite" : "Favorito",
     "Read" : "Ler",
     "Mark as spam" : "Marcar como spam",
-    "Unselect" : "Não selecionar",
-    "Select" : "Seleccionar",
     "Edit tags" : "Editar etiquetas",
     "More actions" : "Mais acções",
     "Back" : "Anterior",
     "Edit as new message" : "Editar como nova mensagem",
     "Create event" : "Criar evento",
     "Could not delete message" : "Não foi possível apagar a mensagem",
-    "Forward" : "Encaminhar",
     "Load more" : "Carregar mais",
     "All day" : "Todo o dia",
     "Description" : "Descrição",
     "Create" : "Criar",
     "Could not create event" : "Não foi possível criar o evento",
+    "Select" : "Seleccionar",
     "Comment" : "Comentário",
     "Accept" : "Aceitar",
     "Decline" : "Recusar",
@@ -113,6 +111,7 @@
     "Important info" : "Informação importante",
     "Other" : "Outro",
     "Notify the sender" : "Notificar o remetente",
+    "Forward" : "Encaminhar",
     "View source" : "Ver fonte",
     "Message body" : "Corpo da mensagem",
     "Choose a folder to store the attachment in" : "Escolha uma pasta para guardar o anexo",
@@ -220,6 +219,7 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Clique aqui se não for automaticamente redireccionado dentro de segundos.",
     "Redirect" : "Redirecionar",
     "The link leads to %s" : "A ligação aponta para %s",
-    "Continue to %s" : "Continuar para %s"
+    "Continue to %s" : "Continuar para %s",
+    "Unselect" : "Não selecionar"
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }
