@@ -173,11 +173,17 @@ export default {
 			if (this.message.editorBody === null) {
 				return
 			}
+			const bodyData = {}
+			if (this.message.isHtml) {
+				bodyData.bodyHtml = html(this.message.body)
+			} else {
+				bodyData.bodyPlain = plain(this.message.body)
+			}
 			await this.mainStore.startComposerSession({
 				type: 'outbox',
 				data: {
 					...this.message,
-					body: this.message.isHtml ? html(this.message.body) : plain(this.message.body),
+					...bodyData,
 				},
 			})
 		},

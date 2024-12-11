@@ -86,7 +86,7 @@ class MailTransmissionTest extends TestCase {
 		$account->method('getEMailAddress')->willReturn('test@user');
 		$localMessage = new LocalMessage();
 		$localMessage->setSubject('Test');
-		$localMessage->setBody('Test');
+		$localMessage->setBodyPlain('Test');
 		$localMessage->setHtml(false);
 		$transport = $this->createMock(Horde_Mail_Transport::class);
 
@@ -115,7 +115,7 @@ class MailTransmissionTest extends TestCase {
 		$account->method('getEMailAddress')->willReturn('test@user');
 		$localMessage = new LocalMessage();
 		$localMessage->setSubject('Test');
-		$localMessage->setBody('Test');
+		$localMessage->setBodyPlain('Test');
 		$localMessage->setHtml(false);
 		$transport = $this->createMock(Horde_Mail_Transport::class);
 
@@ -147,7 +147,7 @@ class MailTransmissionTest extends TestCase {
 		$alias->setAlias('a@d.com');
 		$localMessage = new LocalMessage();
 		$localMessage->setSubject('Test');
-		$localMessage->setBody('Test');
+		$localMessage->setBodyPlain('Test');
 		$localMessage->setHtml(false);
 		$localMessage->setAliasId(1);
 		$transport = $this->createMock(Horde_Mail_Transport::class);
@@ -186,7 +186,7 @@ class MailTransmissionTest extends TestCase {
 		$account->method('getUserId')->willReturn($userId);
 		$localMessage = new LocalMessage();
 		$localMessage->setSubject('Test');
-		$localMessage->setBody('Test');
+		$localMessage->setBodyPlain('Test');
 		$localMessage->setHtml(false);
 		$attachment = new LocalAttachment();
 		$attachment->setId(1);
@@ -236,7 +236,7 @@ class MailTransmissionTest extends TestCase {
 		$account->method('getEMailAddress')->willReturn('test@user');
 		$localMessage = new LocalMessage();
 		$localMessage->setSubject('Test');
-		$localMessage->setBody('Test');
+		$localMessage->setBodyPlain('Test');
 		$localMessage->setHtml(false);
 		$localMessage->setInReplyToMessageId('321');
 		$repliedMessageUid = 321;
@@ -306,7 +306,7 @@ class MailTransmissionTest extends TestCase {
 		$localMessage->setAliasId(2);
 		$localMessage->setSendAt(123);
 		$localMessage->setSubject('subject');
-		$localMessage->setBody('message');
+		$localMessage->setBodyHtml('message');
 		$localMessage->setHtml(true);
 		$localMessage->setInReplyToMessageId('abc');
 		$localMessage->setAttachments([]);

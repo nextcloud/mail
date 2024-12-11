@@ -80,8 +80,8 @@ class MessageSendTest extends TestCase {
 			'type' => 0,
 			'accountId' => 100,
 			'subject' => 'World domination',
-			'body' => 'I have the most brilliant plan. Let me tell you all about it. What we do is, we',
-			'html' => true
+			'bodyPlain' => 'I have the most brilliant plan. Let me tell you all about it. What we do is, we',
+			'html' => false
 		];
 		// construct mail app attachment object
 		$this->localAttachmentData = [

@@ -151,9 +151,16 @@ class MessageApiController extends OCSController {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($accountId);
 		$message->setSubject($subject);
-		$message->setBody($body);
+		if ($isHtml) {
+			$message->setBodyPlain(null);
+			$message->setBodyHtml($body);
+			$message->setHtml(true);
+		} else {
+			$message->setBodyPlain($body);
+			$message->setBodyHtml(null);
+			$message->setHtml(false);
+		}
 		$message->setEditorBody($body);
-		$message->setHtml($isHtml);
 		$message->setSendAt($this->time->getTime());
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 

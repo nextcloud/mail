@@ -122,8 +122,8 @@ class MailTransmission implements IMailTransmission {
 			new DataUriParser()
 		);
 		$mimePart = $mimeMessage->build(
-			$localMessage->isHtml(),
-			$localMessage->getBody(),
+			$localMessage->getBodyPlain(),
+			$localMessage->getBodyHtml(),
 			$attachmentParts,
 			$localMessage->isPgpMime() === true
 		);
@@ -183,7 +183,11 @@ class MailTransmission implements IMailTransmission {
 		$imapMessage->setFrom($from);
 		$imapMessage->setCC($cc);
 		$imapMessage->setBcc($bcc);
-		$imapMessage->setContent($message->getBody());
+		if ($message->isHtml() === true) {
+			$imapMessage->setContent($message->getBodyHtml());
+		} else {
+			$imapMessage->setContent($message->getBodyPlain());
+		}
 
 		foreach ($attachments as $attachment) {
 			$this->transmissionService->handleAttachment($account, $attachment);
