@@ -210,8 +210,6 @@ OC.L10N.register(
     "Unimportant" : "Sense importància",
     "Mark not spam" : "Marca com a no brossa",
     "Mark as spam" : "Marca com a brossa",
-    "Unselect" : "No seleccionis",
-    "Select" : "Selecciona",
     "Edit tags" : "Edició d'etiquetes",
     "Snooze" : "Posposa",
     "Unsnooze" : "Deixeu de posposar",
@@ -238,7 +236,6 @@ OC.L10N.register(
     "Could not snooze thread" : "No s'ha pogut posposar el fil",
     "Thread was unsnoozed" : "El fil no es va posposar",
     "Could not unsnooze thread" : "No s'ha reactivar el fil",
-    "Forward" : "Reenvia",
     "Load more" : "Carrega'n més",
     "Report this bug" : "Informa d'aquest error",
     "All day" : "Tot el dia",
@@ -254,6 +251,7 @@ OC.L10N.register(
     "You have been invited to an event" : "Heu estat convidat a un esdeveniment",
     "This event was cancelled" : "Aquest esdeveniment s'ha cancel·lat",
     "Save to" : "Desa a",
+    "Select" : "Selecciona",
     "Comment" : "Comentari",
     "Accept" : "Accepta",
     "Decline" : "Rebutja",
@@ -285,6 +283,7 @@ OC.L10N.register(
     "Notify the sender" : "Notificar al remitent",
     "You sent a read confirmation to the sender of this message." : "Has enviat una confirmació de lectura al remitent d'aquest missatge.",
     "Could not send mdn" : "No s'ha pogut enviar mdn",
+    "Forward" : "Reenvia",
     "Move message" : "Mou el missatge",
     "Forward message as attachment" : "Reenvia el missatge com a adjunt",
     "View source" : "Veure font",
@@ -642,6 +641,7 @@ OC.L10N.register(
     "Continue to %s" : "Continua a %s",
     "Sieve filter rules" : "Regles de filtre de missatges",
     "Sieve filter server" : "Servidor de filtre de missatges",
-    "Account creation" : "Creació de comptes"
+    "Account creation" : "Creació de comptes",
+    "Unselect" : "No seleccionis"
 },
 "nplurals=2; plural=(n != 1);");

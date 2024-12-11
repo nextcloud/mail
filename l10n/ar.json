@@ -239,8 +239,6 @@
     "Unimportant" : "إبعادٌ من المُهِمَّة",
     "Mark not spam" : "ميّز كـ\"ليست بريدًا عشوائيًا\" not spam",
     "Mark as spam" : "ميّز كـ\"بريد عشوائي\" spam",
-    "Unselect" : "إلغاء التحديد",
-    "Select" : "تحديد",
     "Edit tags" : "تعديل الوسوم",
     "Snooze" : "غفوة ",
     "Unsnooze" : "الخروج من الغفوة",
@@ -267,7 +265,6 @@
     "Could not snooze thread" : "تعذّر غَفْوُ snooze النَّظْمَة Thread ",
     "Thread was unsnoozed" : "تمّ خروج نَظْمَة الرسائل من الغفوة",
     "Could not unsnooze thread" : "تعذّر خروج نَظْمَة الرسائل من الغفوة",
-    "Forward" : "إعادة توجيه ",
     "Load more" : "حمّل أكثر",
     "Report this bug" : "الإبلاغ عن هذا الخلل",
     "All day" : "طِوَال اليوم",
@@ -283,6 +280,7 @@
     "You have been invited to an event" : "أنت مدعُوٌّ إلى حدثٍ",
     "This event was cancelled" : "الحدثُ تمّ إلغاؤه",
     "Save to" : "حفظ في",
+    "Select" : "تحديد",
     "Comment" : "تعليق",
     "Accept" : "قبول",
     "Decline" : "رفض",
@@ -321,6 +319,7 @@
     "Notify the sender" : "أبلِغ المُرسِل",
     "You sent a read confirmation to the sender of this message." : "لقد قمت بإرسال تأكيد قراءة إلى مُرسِل هذه الرسالة.",
     "Could not send mdn" : "تعذّر إرسال mdn",
+    "Forward" : "إعادة توجيه ",
     "Move message" : "أنقُل الرسالة",
     "Forward message as attachment" : "أعِد توجيه الرسالة كمُرفَقٍٍ",
     "View source" : "إطَّلِع علي المصدر",
@@ -746,6 +745,7 @@
     "Sieve filter rules" : "قواعد تصفية الغربال sieve",
     "Sieve filter server" : "خادم عامل التصفية sieve",
     "Account creation" : "إنشاء حساب",
+    "Unselect" : "إلغاء التحديد",
     "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "يعتبر \"الغربال \"Sieve لغة قوية لكتابة شروط تصفية صندوق البريد عندك. يمكنك إدارة سكريبتات عوامل تصفية البريد إذا كانت مدعومة من خدمة البريد الإلكتروني لديك."
 },"pluralForm" :"nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;"
 }
