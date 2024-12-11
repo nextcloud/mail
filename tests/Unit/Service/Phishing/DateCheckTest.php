@@ -65,4 +65,20 @@ class DateCheckTest extends TestCase {
 		$this->assertTrue($result->isPhishing());
 	}
 
+	public function testInvalidDate(): void {
+
+		$this->time->expects($this->exactly(2))
+			->method('getDateTime')
+			->willReturnCallback(function ($argument): DateTime {
+				return match ($argument) {
+					'now' => new \DateTime('now'),
+					'invalid date' => throw new \DateException()
+				};
+			});
+	
+		$result = $this->service->run('invalid date');
+
+		$this->assertFalse($result->isPhishing());
+	}
+
 }
