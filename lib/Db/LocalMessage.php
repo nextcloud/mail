@@ -25,8 +25,10 @@ use function array_filter;
  * @method void setSendAt(?int $sendAt)
  * @method string getSubject()
  * @method void setSubject(string $subject)
- * @method string getBody()
- * @method void setBody(?string $body)
+ * @method string getBodyPlain()
+ * @method void setBodyPlain(?string $bodyPlain)
+ * @method string getBodyHtml()
+ * @method void setBodyHtml(?string $bodyHtml)
  * @method string|null getEditorBody()
  * @method void setEditorBody(string $body)
  * @method bool isHtml()
@@ -88,8 +90,11 @@ class LocalMessage extends Entity implements JsonSerializable {
 	/** @var string */
 	protected $subject;
 
-	/** @var string */
-	protected $body;
+	/** @var string|null */
+	protected $bodyPlain;
+	
+	/** @var string|null */
+	protected $bodyHtml;
 
 	/** @var string|null */
 	protected $editorBody;
@@ -163,7 +168,8 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'sendAt' => $this->getSendAt(),
 			'updatedAt' => $this->getUpdatedAt(),
 			'subject' => $this->getSubject(),
-			'body' => $this->getBody(),
+			'bodyPlain' => $this->getBodyPlain(),
+			'bodyHtml' => $this->getBodyHtml(),
 			'editorBody' => $this->getEditorBody(),
 			'isHtml' => ($this->isHtml() === true),
 			'isPgpMime' => ($this->isPgpMime() === true),

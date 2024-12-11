@@ -118,9 +118,16 @@ class OutboxController extends Controller {
 		$message->setAccountId($accountId);
 		$message->setAliasId($aliasId);
 		$message->setSubject($subject);
-		$message->setBody($body);
+		if ($isHtml) {
+			$message->setBodyPlain(null);
+			$message->setBodyHtml($body);
+			$message->setHtml(true);
+		} else {
+			$message->setBodyPlain($body);
+			$message->setBodyHtml(null);
+			$message->setHtml(false);
+		}
 		$message->setEditorBody($editorBody);
-		$message->setHtml($isHtml);
 		$message->setInReplyToMessageId($inReplyToMessageId);
 		$message->setSendAt($sendAt);
 		$message->setPgpMime($isPgpMime);
@@ -181,7 +188,8 @@ class OutboxController extends Controller {
 		int $id,
 		int $accountId,
 		string $subject,
-		string $body,
+		?string $bodyPlain,
+		?string $bodyHtml,
 		?string $editorBody,
 		bool $isHtml,
 		bool $smimeSign,
@@ -207,9 +215,10 @@ class OutboxController extends Controller {
 		$message->setAccountId($accountId);
 		$message->setAliasId($aliasId);
 		$message->setSubject($subject);
-		$message->setBody($body);
-		$message->setEditorBody($editorBody);
+		$message->setBodyPlain($bodyPlain);
+		$message->setBodyHtml($bodyHtml);
 		$message->setHtml($isHtml);
+		$message->setEditorBody($editorBody);
 		$message->setInReplyToMessageId($inReplyToMessageId);
 		$message->setSendAt($sendAt);
 		$message->setPgpMime($isPgpMime);
