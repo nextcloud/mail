@@ -82,6 +82,7 @@ class MailSearchTest extends TestCase {
 			null,
 			null,
 			null,
+			null,
 			null
 		);
 	}
@@ -99,7 +100,8 @@ class MailSearchTest extends TestCase {
 			null,
 			null,
 			null,
-			null
+			null,
+			null,
 		);
 	}
 
@@ -117,6 +119,7 @@ class MailSearchTest extends TestCase {
 			$account,
 			$mailbox,
 			'DESC',
+			null,
 			null,
 			null,
 			null,
@@ -160,6 +163,7 @@ class MailSearchTest extends TestCase {
 			'my search',
 			null,
 			null,
+			null,
 			null
 		);
 
@@ -201,6 +205,7 @@ class MailSearchTest extends TestCase {
 			$mailbox,
 			'DESC',
 			'my search',
+			null,
 			null,
 			null,
 			null

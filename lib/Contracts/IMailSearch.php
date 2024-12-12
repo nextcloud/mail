@@ -39,6 +39,7 @@ interface IMailSearch {
 	 * @param string|null $filter
 	 * @param int|null $cursor
 	 * @param int|null $limit
+	 * @param string|null $userId
 	 * @param string|null $view
 	 *
 	 * @return Message[]
@@ -52,6 +53,7 @@ interface IMailSearch {
 		?string $filter,
 		?int $cursor,
 		?int $limit,
+		?string $userId,
 		?string $view): array;
 
 	/**

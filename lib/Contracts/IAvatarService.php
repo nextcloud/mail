@@ -27,4 +27,6 @@ interface IAvatarService {
 	 * @return array|null image data
 	 */
 	public function getAvatarImage(string $email, string $uid);
+
+	public function getCachedAvatar(string $email, string $uid): Avatar|false|null;
 }

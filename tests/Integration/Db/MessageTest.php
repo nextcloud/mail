@@ -11,6 +11,7 @@ namespace OCA\Mail\Tests\Integration\Db;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Service\Avatar\Avatar;
 
 class MessageTest extends TestCase {
 	protected function setUp(): void {
@@ -108,5 +109,26 @@ class MessageTest extends TestCase {
 		$this->assertNotNull($message->getThreadRootId());
 		$this->assertEquals($expected, $message->getThreadRootId());
 		$this->assertNull($message->getInReplyTo());
+	}
+
+	public function testSetAvatar(): void {
+		$expected = new Avatar(
+			'http://example.com/avatar.png',
+			'image/png',
+			true
+		);
+		$message = new Message();
+
+		$message->setAvatar($expected);
+
+		$this->assertEquals($expected, $message->getAvatar());
+	}
+
+	public function testSetFetchAvatarFromClient(): void {
+		$message = new Message();
+
+		$message->setFetchAvatarFromClient(true);
+
+		$this->assertTrue($message->jsonSerialize()['fetchAvatarFromClient']);
 	}
 }
