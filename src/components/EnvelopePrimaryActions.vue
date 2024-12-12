@@ -30,9 +30,7 @@ export default {
 		margin-bottom: -15px;
 	}
 }
-.action-button__name{
-	font-weight:  500;
-}
+
 .list-item-content__actions--primary .action--primary .action-button__text,
 .list-item-content__actions--primary .action--primary .action-button__icon {
 	height: auto;
