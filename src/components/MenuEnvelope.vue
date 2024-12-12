@@ -45,17 +45,6 @@
 				</template>
 				{{ t('mail', 'Edit tags') }}
 			</ActionButton>
-			<ActionButton v-if="withSelect"
-				:close-after-click="true"
-				@click.prevent="toggleSelected">
-				<template #icon>
-					<CheckIcon :title="isSelected ? t('mail', 'Unselect') : t('mail', 'Select')"
-						:size="16" />
-				</template>
-				{{
-					isSelected ? t('mail', 'Unselect') : t('mail', 'Select')
-				}}
-			</ActionButton>
 			<ActionButton v-if="hasDeleteAcl"
 				:close-after-click="true"
 				@click.prevent="$emit('open-move-modal')">
@@ -283,11 +272,6 @@ export default {
 		moreActionsOpen: {
 			type: Boolean,
 			required: false,
-		},
-		isSelected: {
-			// Indicates if the envelope is currently selected
-			type: Boolean,
-			default: false,
 		},
 		withSelect: {
 			// "Select" action should only appear in envelopes from the envelope list

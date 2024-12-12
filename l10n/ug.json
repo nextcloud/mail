@@ -238,8 +238,6 @@
     "Unimportant" : "مۇھىم ئەمەس",
     "Mark not spam" : "ئەخلەت خەت ئەمەس",
     "Mark as spam" : "ئەخلەت خەت دەپ بەلگە قويۇڭ",
-    "Unselect" : "Unselect",
-    "Select" : "Select",
     "Edit tags" : "خەتكۈچلەرنى تەھرىرلەش",
     "Snooze" : "Snooze",
     "Unsnooze" : "Unsnooze",
@@ -266,7 +264,6 @@
     "Could not snooze thread" : "تېمىنى بوشاشتۇرالمىدى",
     "Thread was unsnoozed" : "تېما ئېچىلمىدى",
     "Could not unsnooze thread" : "تېمىنى ئاچقىلى بولمىدى",
-    "Forward" : "ئالدىغا",
     "Load more" : "تېخىمۇ كۆپ يۈكلەڭ",
     "Report this bug" : "بۇ خاتالىقنى دوكلات قىلىڭ",
     "All day" : "پۈتۈن كۈن",
@@ -282,6 +279,7 @@
     "You have been invited to an event" : "سىزنى بىر پائالىيەتكە تەكلىپ قىلدىڭىز",
     "This event was cancelled" : "بۇ پائالىيەت ئەمەلدىن قالدۇرۇلدى",
     "Save to" : "ساقلىۋېلىڭ",
+    "Select" : "Select",
     "Comment" : "باھا",
     "Accept" : "قوبۇل قىلىڭ",
     "Decline" : "رەت قىلىش",
@@ -320,6 +318,7 @@
     "Notify the sender" : "ئەۋەتكۈچىگە خەۋەر قىلىڭ",
     "You sent a read confirmation to the sender of this message." : "سىز بۇ ئۇچۇرنى ئەۋەتكۈچىگە ئوقۇش جەزملەشتۈردى.",
     "Could not send mdn" : "Mdn ئەۋەتەلمىدى",
+    "Forward" : "ئالدىغا",
     "Move message" : "ئۇچۇر يۆتكەش",
     "Forward message as attachment" : "قوشۇمچە ئۇچۇر سۈپىتىدە قوشۇمچە ئۇچۇر",
     "View source" : "مەنبەنى كۆرۈش",
@@ -741,6 +740,7 @@
     "Sieve filter rules" : "سۈزگۈچ قائىدىسى",
     "Sieve filter server" : "سۈزگۈچ مۇلازىمېتىر",
     "Account creation" : "ھېسابات قۇرۇش",
+    "Unselect" : "Unselect",
     "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "ئەلگەك ساندۇقىڭىزغا سۈزگۈچ يېزىشتىكى كۈچلۈك تىل. ئەگەر ئېلېكترونلۇق خەت مۇلازىمىتىڭىز ئۇنى قوللىسا ، خەتتىكى ئەلگەك ئورگىناللىرىنى باشقۇرالايسىز."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

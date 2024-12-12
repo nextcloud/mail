@@ -19,6 +19,7 @@ codecov.yml
 /jest.config.js
 /krankerl.toml
 /l10n/no-php
+/.php-cs-fixer.dist.php
 /.tx
 /Makefile
 /.nextcloudignore
@@ -36,5 +37,8 @@ codecov.yml
 /vendor/bin
 /vendor-bin
 /vendor/cerdic/css-tidy/css_optimiser.php
-/vendor/wamania/php-stemmer/test
+/vendor/*/*/e2e
+/vendor/*/*/test
+/vendor/*/*/tests
+/vendor/*/*/test_data
 /webpack.*

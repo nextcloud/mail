@@ -55,8 +55,8 @@ use OCA\Mail\Listener\UserDeletedListener;
 use OCA\Mail\Notification\Notifier;
 use OCA\Mail\Provider\MailProvider;
 use OCA\Mail\Search\FilteringProvider;
-use OCA\Mail\Search\Provider;
 use OCA\Mail\Service\Attachment\AttachmentService;
+use OCA\Mail\Service\Avatar\FaviconDataAccess;
 use OCA\Mail\Service\AvatarService;
 use OCA\Mail\Service\DkimService;
 use OCA\Mail\Service\DkimValidator;
@@ -65,13 +65,13 @@ use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\Search\MailSearch;
 use OCA\Mail\Service\TrustedSenderService;
 use OCA\Mail\Service\UserPreferenceService;
+use OCA\Mail\Vendor\Favicon\Favicon;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\DB\Events\AddMissingIndicesEvent;
 use OCP\IServerContainer;
-use OCP\Search\IFilteringProvider;
 use OCP\User\Events\OutOfOfficeChangedEvent;
 use OCP\User\Events\OutOfOfficeClearedEvent;
 use OCP\User\Events\OutOfOfficeEndedEvent;
@@ -80,7 +80,6 @@ use OCP\User\Events\OutOfOfficeStartedEvent;
 use OCP\User\Events\UserDeletedEvent;
 use OCP\Util;
 use Psr\Container\ContainerInterface;
-use function interface_exists;
 
 include_once __DIR__ . '/../../vendor/autoload.php';
 
@@ -99,6 +98,13 @@ class Application extends App implements IBootstrap {
 			$uid = $c->get('UserId');
 
 			return $userContainer->getUserFolder($uid);
+		});
+		$context->registerService(Favicon::class, function (ContainerInterface $c) {
+			$favicon = new Favicon();
+			$favicon->setDataAccess(
+				$c->get(FaviconDataAccess::class),
+			);
+			return $favicon;
 		});
 
 		$context->registerServiceAlias(IAvatarService::class, AvatarService::class);
@@ -130,20 +136,11 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(SynchronizationEvent::class, AccountSynchronizedThreadUpdaterListener::class);
 		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
 		$context->registerEventListener(NewMessagesSynchronized::class, FollowUpClassifierListener::class);
-
-		// TODO: drop condition if nextcloud < 28 is not supported anymore
-		if (class_exists(OutOfOfficeStartedEvent::class)
-			&& class_exists(OutOfOfficeEndedEvent::class)
-			&& class_exists(OutOfOfficeChangedEvent::class)
-			&& class_exists(OutOfOfficeClearedEvent::class)
-			&& class_exists(OutOfOfficeScheduledEvent::class)
-		) {
-			$context->registerEventListener(OutOfOfficeStartedEvent::class, OutOfOfficeListener::class);
-			$context->registerEventListener(OutOfOfficeEndedEvent::class, OutOfOfficeListener::class);
-			$context->registerEventListener(OutOfOfficeChangedEvent::class, OutOfOfficeListener::class);
-			$context->registerEventListener(OutOfOfficeClearedEvent::class, OutOfOfficeListener::class);
-			$context->registerEventListener(OutOfOfficeScheduledEvent::class, OutOfOfficeListener::class);
-		}
+		$context->registerEventListener(OutOfOfficeStartedEvent::class, OutOfOfficeListener::class);
+		$context->registerEventListener(OutOfOfficeEndedEvent::class, OutOfOfficeListener::class);
+		$context->registerEventListener(OutOfOfficeChangedEvent::class, OutOfOfficeListener::class);
+		$context->registerEventListener(OutOfOfficeClearedEvent::class, OutOfOfficeListener::class);
+		$context->registerEventListener(OutOfOfficeScheduledEvent::class, OutOfOfficeListener::class);
 
 		$context->registerMiddleWare(ErrorMiddleware::class);
 		$context->registerMiddleWare(ProvisioningMiddleware::class);
@@ -151,11 +148,7 @@ class Application extends App implements IBootstrap {
 		$context->registerDashboardWidget(ImportantMailWidget::class);
 		$context->registerDashboardWidget(UnreadMailWidget::class);
 
-		if (interface_exists(IFilteringProvider::class)) {
-			$context->registerSearchProvider(FilteringProvider::class);
-		} else {
-			$context->registerSearchProvider(Provider::class);
-		}
+		$context->registerSearchProvider(FilteringProvider::class);
 
 		// Added in version 4.0.0
 		$context->registerMailProvider(MailProvider::class);

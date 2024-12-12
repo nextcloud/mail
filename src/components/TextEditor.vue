@@ -292,7 +292,11 @@ export default {
 			try {
 				logger.debug(`loading ${language} translations for CKEditor`)
 				await import(
-					`../../node_modules/@ckeditor/ckeditor5-build-decoupled-document/build/translations/${language}.js`)
+					/* webpackMode: "lazy-once" */
+					/* webpackPrefetch: true */
+					/* webpackPreload: true */
+					`@ckeditor/ckeditor5-build-decoupled-document/build/translations/${language}`
+				)
 				this.showEditor(language)
 			} catch (error) {
 				logger.error(`could not find CKEditor translations for "${language}"`, { error })
