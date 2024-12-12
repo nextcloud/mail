@@ -198,6 +198,7 @@
     "Could not delete message" : "No se pudo eliminar el mensaje",
     "Could not archive message" : "No se pudo archivar el mensaje",
     "Load more" : "Cargar más",
+    "_Mark {number} read_::_Mark {number} read_" : ["Marcar {number} como leído","Marcar {number} como leído","Marcar {number} como leído"],
     "_Mark {number} unread_::_Mark {number} unread_" : ["Marcar {number} como no leído","Marcar {number} como no leído","Marcar {number} como no leído"],
     "_Mark {number} as important_::_Mark {number} as important_" : ["Marcar {number} como importante","Marcar {number} como importante","Marcar {number} como importante"],
     "_Mark {number} as unimportant_::_Mark {number} as unimportant_" : ["Marcar {number} como no importante","Marcar {number} como no importante","Marcar {number} como no importante"],
