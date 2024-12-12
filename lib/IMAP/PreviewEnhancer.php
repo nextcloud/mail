@@ -38,21 +38,21 @@ class PreviewEnhancer {
 	/** @var AvatarService */
 	private $avatarService;
 
-	/** @var string */
-	private $UserId;
+	/** @var string|null */
+	private $userId;
 
 	public function __construct(IMAPClientFactory $clientFactory,
 		ImapMapper $imapMapper,
 		DbMapper $dbMapper,
 		LoggerInterface $logger,
 		AvatarService $avatarService,
-		string $UserId) {
+		string $userId) {
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
 		$this->mapper = $dbMapper;
 		$this->logger = $logger;
 		$this->avatarService = $avatarService;
-		$this->UserId = $UserId;
+		$this->userId = $userId;
 	}
 
 	/**
@@ -63,9 +63,9 @@ class PreviewEnhancer {
 	public function process(Account $account, Mailbox $mailbox, array $messages): array {
 		$needAnalyze = array_reduce($messages, function (array $carry, Message $message) {
 			if ($message->getStructureAnalyzed()) {
-				// Nothing to do
-				if ($message->getAvatar() === null) {
-					$avatar = $this->avatarService->getAvatar($message->getFrom()->first()->getEmail(), $this->UserId);
+				// Try fetching the avatar if it's not set
+				if ($message->getAvatar() === null && $message->getFrom()->first() !== null) {
+					$avatar = $this->avatarService->getAvatar($message->getFrom()->first()->getEmail(), $this->userId);
 					$message->setAvatar($avatar);
 				}
 				return $carry;
@@ -112,8 +112,11 @@ class PreviewEnhancer {
 			$message->setEncrypted($structureData->isEncrypted());
 			$message->setMentionsMe($structureData->getMentionsMe());
 
-			$avatar = $this->avatarService->getAvatar($message->getFrom()->first()->getEmail(), $this->UserId);
-			$message->setAvatar($avatar);
+			if ($message->getFrom()->first() !== null) {
+				$avatar = $this->avatarService->getAvatar($message->getFrom()->first()->getEmail(), $this->userId);
+				$message->setAvatar($avatar);
+
+			}
 
 			return $message;
 		}, $messages));
