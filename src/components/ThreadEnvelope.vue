@@ -26,6 +26,7 @@
 					:display-name="envelope.from[0].label"
 					:disable-tooltip="true"
 					:size="40"
+					:avatar="envelope.avatar"
 					class="envelope__header__avatar-avatar" />
 				<div v-if="isImportant"
 					class="app-content-list-item-star icon-important"
