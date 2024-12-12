@@ -276,6 +276,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'avatars#url',
+			'url' => '/api/avatars/url/{email}',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'avatars#image',
 			'url' => '/api/avatars/image/{email}',
 			'verb' => 'GET'

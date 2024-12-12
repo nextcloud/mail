@@ -39,6 +39,43 @@ class AvatarsController extends Controller {
 	 * @NoCSRFRequired
 	 *
 	 * @param string $email
+	 * @return JSONResponse
+	 */
+	#[TrapError]
+	public function url(string $email): JSONResponse {
+		if (empty($email)) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		}
+
+		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		}
+
+		$avatar = $this->avatarService->getAvatar($email, $this->uid);
+		if (is_null($avatar)) {
+			// No avatar found
+			$response = new JSONResponse([], Http::STATUS_NOT_FOUND);
+
+			// Debounce this a bit
+			// (cache for one day)
+			$response->cacheFor(24 * 60 * 60, false, true);
+
+			return $response;
+		}
+
+		$response = new JSONResponse($avatar);
+
+		// Let the browser cache this for a week
+		$response->cacheFor(7 * 24 * 60 * 60, false, true);
+
+		return $response;
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 * @param string $email
 	 * @return Response
 	 */
 	#[TrapError]
