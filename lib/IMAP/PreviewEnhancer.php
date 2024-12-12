@@ -15,6 +15,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMapper;
 use OCA\Mail\IMAP\MessageMapper as ImapMapper;
+use OCA\Mail\Service\AvatarService;
 use Psr\Log\LoggerInterface;
 use function array_key_exists;
 use function array_map;
@@ -34,14 +35,24 @@ class PreviewEnhancer {
 	/** @var LoggerInterface */
 	private $logger;
 
+	/** @var AvatarService */
+	private $avatarService;
+
+	/** @var string */
+	private $UserId;
+
 	public function __construct(IMAPClientFactory $clientFactory,
 		ImapMapper $imapMapper,
 		DbMapper $dbMapper,
-		LoggerInterface $logger) {
+		LoggerInterface $logger,
+		AvatarService $avatarService,
+		string $UserId) {
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
 		$this->mapper = $dbMapper;
 		$this->logger = $logger;
+		$this->avatarService = $avatarService;
+		$this->UserId = $UserId;
 	}
 
 	/**
@@ -50,9 +61,13 @@ class PreviewEnhancer {
 	 * @return Message[]
 	 */
 	public function process(Account $account, Mailbox $mailbox, array $messages): array {
-		$needAnalyze = array_reduce($messages, static function (array $carry, Message $message) {
+		$needAnalyze = array_reduce($messages, function (array $carry, Message $message) {
 			if ($message->getStructureAnalyzed()) {
 				// Nothing to do
+				if ($message->getAvatar() === null) {
+					$avatar = $this->avatarService->getAvatar($message->getFrom()->first()->getEmail(), $this->UserId);
+					$message->setAvatar($avatar);
+				}
 				return $carry;
 			}
 
@@ -83,7 +98,7 @@ class PreviewEnhancer {
 			$client->logout();
 		}
 
-		return $this->mapper->updatePreviewDataBulk(...array_map(static function (Message $message) use ($data) {
+		return $this->mapper->updatePreviewDataBulk(...array_map(function (Message $message) use ($data) {
 			if (!array_key_exists($message->getUid(), $data)) {
 				// Nothing to do
 				return $message;
@@ -96,6 +111,9 @@ class PreviewEnhancer {
 			$message->setImipMessage($structureData->isImipMessage());
 			$message->setEncrypted($structureData->isEncrypted());
 			$message->setMentionsMe($structureData->getMentionsMe());
+
+			$avatar = $this->avatarService->getAvatar($message->getFrom()->first()->getEmail(), $this->UserId);
+			$message->setAvatar($avatar);
 
 			return $message;
 		}, $messages));
