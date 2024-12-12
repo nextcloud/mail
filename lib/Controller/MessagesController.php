@@ -156,6 +156,7 @@ class MessagesController extends Controller {
 			$filter === '' ? null : $filter,
 			$cursor,
 			$limit,
+			$this->currentUserId,
 			$view
 		);
 		return new JSONResponse(
