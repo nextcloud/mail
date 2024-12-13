@@ -70,14 +70,16 @@
 						<em>{{ t('mail', 'Draft: ') }}</em>
 					</span>
 					<span class="envelope__subtitle__subject"
-						:class="{'one-line': oneLineLayout }">
+						:class="{'one-line': oneLineLayout }"
+						dir="auto">
 						<span class="envelope__subtitle__subject__text" :class="{'one-line': oneLineLayout }">
 							{{ subjectForSubtitle }}
 						</span>
 					</span>
 				</div>
 				<div v-if="data.encrypted || data.previewText"
-					class="envelope__preview-text">
+					class="envelope__preview-text"
+					dir="auto">
 					{{ isEncrypted ? t('mail', 'Encrypted message') : data.previewText.trim() }}
 				</div>
 			</div>
