@@ -118,7 +118,8 @@ class MailSearch implements IMailSearch {
 			$this->messageMapper->findByIds($account->getUserId(),
 				$this->getIdsLocally($account, $mailbox, $query, $sortOrder, $limit),
 				$sortOrder,
-			)
+			),
+			'apiCall'
 		);
 	}
 

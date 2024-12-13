@@ -60,20 +60,26 @@ class PreviewEnhancer {
 	 *
 	 * @return Message[]
 	 */
-	public function process(Account $account, Mailbox $mailbox, array $messages): array {
-		$needAnalyze = array_reduce($messages, function (array $carry, Message $message) {
+	public function process(Account $account, Mailbox $mailbox, array $messages, string $mode = 'sync'): array {
+		$needAnalyze = array_reduce($messages, static function (array $carry, Message $message) {
 			if ($message->getStructureAnalyzed()) {
-				// Try fetching the avatar if it's not set
-				$from = $message->getFrom()->first() ;
-				if ($message->getAvatar() === null && $from !== null && $from->getEmail() !== null && $this->userId !== null) {
-					$avatar = $this->avatarService->getAvatar($from->getEmail(), $this->userId);
-					$message->setAvatar($avatar);
-				}
+				// Nothing to do
 				return $carry;
 			}
 
 			return array_merge($carry, [$message->getUid()]);
 		}, []);
+
+		// If we are in the API call, we need to fetch the avatar for the sender
+		if ($mode === 'apiCall') {
+			foreach ($messages as $message) {
+				$from = $message->getFrom()->first() ;
+				if ($message->getAvatar() === null && $from !== null && $from->getEmail() !== null && $this->userId !== null) {
+					$avatar = $this->avatarService->getAvatar($from->getEmail(), $this->userId);
+					$message->setAvatar($avatar);
+				}
+			}
+		}
 
 		if ($needAnalyze === []) {
 			// Nothing to enhance
@@ -99,7 +105,7 @@ class PreviewEnhancer {
 			$client->logout();
 		}
 
-		return $this->mapper->updatePreviewDataBulk(...array_map(function (Message $message) use ($data) {
+		return $this->mapper->updatePreviewDataBulk(...array_map(static function (Message $message) use ($data) {
 			if (!array_key_exists($message->getUid(), $data)) {
 				// Nothing to do
 				return $message;
@@ -112,12 +118,6 @@ class PreviewEnhancer {
 			$message->setImipMessage($structureData->isImipMessage());
 			$message->setEncrypted($structureData->isEncrypted());
 			$message->setMentionsMe($structureData->getMentionsMe());
-
-			$from = $message->getFrom()->first() ;
-			if ($message->getAvatar() === null && $from !== null && $from->getEmail() !== null && $this->userId !== null) {
-				$avatar = $this->avatarService->getAvatar($from->getEmail(), $this->userId);
-				$message->setAvatar($avatar);
-			}
 
 			return $message;
 		}, $messages));
