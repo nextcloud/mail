@@ -64,8 +64,9 @@ class PreviewEnhancer {
 		$needAnalyze = array_reduce($messages, function (array $carry, Message $message) {
 			if ($message->getStructureAnalyzed()) {
 				// Try fetching the avatar if it's not set
-				if ($message->getAvatar() === null && $message->getFrom()->first() !== null) {
-					$avatar = $this->avatarService->getAvatar($message->getFrom()->first()->getEmail(), $this->userId);
+				$from = $message->getFrom()->first() ;
+				if ($message->getAvatar() === null && $from !== null && $this->userId !== null) {
+					$avatar = $this->avatarService->getAvatar($from->getEmail(), $this->userId);
 					$message->setAvatar($avatar);
 				}
 				return $carry;
@@ -112,7 +113,8 @@ class PreviewEnhancer {
 			$message->setEncrypted($structureData->isEncrypted());
 			$message->setMentionsMe($structureData->getMentionsMe());
 
-			if ($message->getFrom()->first() !== null) {
+			$from = $message->getFrom()->first() ;
+			if ($message->getAvatar() === null && $from !== null && $this->userId !== null) {
 				$avatar = $this->avatarService->getAvatar($message->getFrom()->first()->getEmail(), $this->userId);
 				$message->setAvatar($avatar);
 
