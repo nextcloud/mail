@@ -600,6 +600,7 @@ export default {
 
 <style lang="scss">
 .search-messages {
+	border-bottom: 1px solid var(--color-border);
 
 	&__input {
 		min-height: 52px;
