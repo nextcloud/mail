@@ -65,7 +65,7 @@ class PreviewEnhancer {
 			if ($message->getStructureAnalyzed()) {
 				// Try fetching the avatar if it's not set
 				$from = $message->getFrom()->first() ;
-				if ($message->getAvatar() === null && $from !== null && $this->userId !== null) {
+				if ($message->getAvatar() === null && $from !== null && $from->getEmail() !== null && $this->userId !== null) {
 					$avatar = $this->avatarService->getAvatar($from->getEmail(), $this->userId);
 					$message->setAvatar($avatar);
 				}
@@ -114,10 +114,9 @@ class PreviewEnhancer {
 			$message->setMentionsMe($structureData->getMentionsMe());
 
 			$from = $message->getFrom()->first() ;
-			if ($message->getAvatar() === null && $from !== null && $this->userId !== null) {
-				$avatar = $this->avatarService->getAvatar($message->getFrom()->first()->getEmail(), $this->userId);
+			if ($message->getAvatar() === null && $from !== null && $from->getEmail() !== null && $this->userId !== null) {
+				$avatar = $this->avatarService->getAvatar($from->getEmail(), $this->userId);
 				$message->setAvatar($avatar);
-
 			}
 
 			return $message;
