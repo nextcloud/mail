@@ -697,7 +697,7 @@ export default {
 }
 
 .tabs-component-panels label {
-	text-align: left;
+	text-align: start;
 	width: 100%;
 	display: inline-block;
 }
@@ -710,7 +710,7 @@ export default {
 
 <style scoped>
 h4 {
-	text-align: left;
+	text-align: start;
 }
 
 .flex-row {
@@ -750,7 +750,7 @@ input[type='radio'][disabled] + label {
 	text-align: center;
 }
 .account-form--error {
-	text-align: left;
+	text-align: start;
 	font-size: 14px;
 }
 #account-form {
