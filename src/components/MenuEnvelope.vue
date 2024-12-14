@@ -83,7 +83,7 @@
 				</template>
 				{{ t('mail', 'Unsnooze') }}
 			</ActionButton>
-			<ActionButton v-if="!isHtml"
+			<ActionButton
 				:close-after-click="true"
 				@click.prevent="$emit('open-translation-modal')">
 				<template #icon>
@@ -309,11 +309,6 @@ export default {
 			// "Show source" action should only appear in thread envelopes
 			type: Boolean,
 			default: true,
-		},
-		isHtml: {
-			// Indicates if the envelope is HTML
-			type: Boolean,
-			default: false,
 		},
 	},
 	data() {

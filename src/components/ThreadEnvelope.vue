@@ -186,7 +186,6 @@
 							:with-select="false"
 							:with-show-source="true"
 							:more-actions-open.sync="moreActionsOpen"
-							:is-html="false"
 							@reply="onReply"
 							@delete="$emit('delete',envelope.databaseId)"
 							@show-source-modal="onShowSourceModal"
@@ -221,7 +220,7 @@
 						@close="onCloseTagModal" />
 					<TranslationModal v-if="showTranslationModal"
 						:rich-parameters="{}"
-						:message="message.body"
+						:message="plainTextBody"
 						@close="onCloseTranslationModal" />
 				</template>
 			</div>
@@ -315,6 +314,7 @@ import { mapStores } from 'pinia'
 import moment from '@nextcloud/moment'
 import { translateTagDisplayName } from '../util/tag.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
+import { getPlainText } from '../service/plainTextService.js'
 
 // Ternary loading state
 const LOADING_DONE = 0
@@ -408,6 +408,7 @@ export default {
 			showTaskModal: false,
 			showTagModal: false,
 			showTranslationModal: false,
+			plainTextBody: '',
 			rawMessage: '', // Will hold the raw source of the message when requested
 			isInternal: true,
 			enabledSmartReply: loadState('mail', 'llm_freeprompt_available', false),
@@ -874,7 +875,18 @@ export default {
 			this.showTagModal = false
 		},
 		onOpenTranslationModal() {
-			this.showTranslationModal = true
+			this.handleHtmlBodyMessages().then(() => {
+				this.showTranslationModal = true
+			})
+		},
+		async handleHtmlBodyMessages() {
+			console.log('message', this.message)
+			if (this.message.isHtml) {
+				const message = await getPlainText(this.message.id)
+				this.plainTextBody = message.body
+			} else {
+				this.plainTextBody = this.message.body
+			}
 		},
 		onCloseTranslationModal() {
 			this.showTranslationModal = false
