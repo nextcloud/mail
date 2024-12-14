@@ -186,11 +186,13 @@ export default {
 		this.availableLanguages = response.data.ocs.data.languages
 	},
 
-	mounted() {
+	async mounted() {
+		await this.handleHtmlBodyMessages()
+
 		this.selectedTo = this.optionsTo.find(language => language.id === this.userLanguage) || null
 
 		if (this.selectedTo) {
-			this.translateMessage()
+			await this.translateMessage()
 		}
 
 		this.$nextTick(() => {
