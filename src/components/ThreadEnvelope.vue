@@ -879,9 +879,8 @@ export default {
 			})
 		},
 		async handleHtmlBodyMessages() {
-			console.log('message', this.message)
-			if (this.message.isHtml) {
-				const message = await getPlainText(this.message.id)
+			if (this.message.hasHtmlBody) {
+				const message = await getPlainText(this.message.databaseId)
 				this.plainTextBody = message.body
 			} else {
 				this.plainTextBody = this.message.body
