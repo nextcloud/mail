@@ -8,12 +8,13 @@ import { generateUrl } from '@nextcloud/router'
 import { convertAxiosError } from '../errors/convert.js'
 
 export async function getPlainText(id) {
-	const url = generateUrl('/apps/mail/api/messages', {
+	const url = generateUrl('/apps/mail/api/messages/{id}/body?plain=true', {
 		id,
-		plain: true,
 	})
 
-	return await axios.get(url).catch((error) => {
+	const response = await axios.get(url).catch((error) => {
 		throw convertAxiosError(error)
 	})
+
+	return response.data
 }

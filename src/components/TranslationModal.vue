@@ -187,8 +187,6 @@ export default {
 	},
 
 	async mounted() {
-		await this.handleHtmlBodyMessages()
-
 		this.selectedTo = this.optionsTo.find(language => language.id === this.userLanguage) || null
 
 		if (this.selectedTo) {
@@ -204,6 +202,11 @@ export default {
 	methods: {
 		t,
 		handleTranslate() {
+			if (!this.selectedFrom || !this.selectedTo) {
+				showError(t('mail', 'Please select languages to translate to and from'))
+				return
+			}
+
 			this.translateMessage(this.selectedFrom?.id)
 		},
 
