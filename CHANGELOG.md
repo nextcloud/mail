@@ -1,3 +1,15 @@
+## [3.7.16](https://github.com/nextcloud/mail/compare/v3.7.15...v3.7.16) (2024-12-16)
+
+
+### Bug Fixes
+
+* **contactsintegration:** Limit number of matches ([c5274da](https://github.com/nextcloud/mail/commit/c5274dacc7ba367c412a2c32622599d99be0209b))
+* **deps:** Apply npm audit fix ([1866f96](https://github.com/nextcloud/mail/commit/1866f96a47f92b68c6f54e1a1e5d525aaec699fa))
+* **dns:** Update public suffix list ([ffc2e70](https://github.com/nextcloud/mail/commit/ffc2e70fe6b1388a1ff21a176eed52854e215034))
+* **dns:** Update public suffix list ([bb87679](https://github.com/nextcloud/mail/commit/bb87679862ac7426f88de69399c803348fc616fb))
+
+
+
 ## [3.7.15](https://github.com/nextcloud/mail/compare/v3.7.14...v3.7.15) (2024-12-02)
 
 
