@@ -34,7 +34,7 @@ class MimeMessage {
 	 */
 	public function build(?string $contentPlain, ?string $contentHtml, array $attachments, bool $isPgpEncrypted = false): Horde_Mime_Part {
 
-		if ($isPgpEncrypted) {
+		if ($isPgpEncrypted === true && $contentPlain !== null) {
 			$basePart = $this->buildPgpPart($contentPlain);
 		} elseif (count($attachments) > 0) {
 			$basePart = new Horde_Mime_Part();
@@ -115,14 +115,14 @@ class MimeMessage {
 			$plainPart->setContents($contentPlain);
 		}
 
-		if (isset($plainPart) && isset($contentHtml)) {
+		if ($plainPart !== null && isset($contentHtml)) {
 			$messagePart = new Horde_Mime_Part();
 			$messagePart->setType('multipart/alternative');
 			$messagePart[] = $plainPart;
 			$messagePart[] = $htmlPart;
-		} elseif (isset($htmlPart)) {
+		} elseif ($htmlPart !== null) {
 			$messagePart = $htmlPart;
-		} elseif (isset($plainPart)) {
+		} elseif ($plainPart !== null) {
 			$messagePart = $plainPart;
 		}
 
