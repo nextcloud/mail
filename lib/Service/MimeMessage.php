@@ -25,11 +25,11 @@ class MimeMessage {
 
 	/**
 	 * generates mime message
-	 * 
+	 *
 	 * @param string $contentPlain
 	 * @param string $contentHtml
 	 * @param Horde_Mime_Part[] $attachments
-	 * 
+	 *
 	 * @return Horde_Mime_Part
 	 */
 	public function build(?string $contentPlain, ?string $contentHtml, array $attachments, bool $isPgpEncrypted = false): Horde_Mime_Part {
@@ -54,10 +54,10 @@ class MimeMessage {
 
 	/**
 	 * generates html/plain message part
-	 * 
+	 *
 	 * @param string $contentPlain
 	 * @param string $contentHtml
-	 * 
+	 *
 	 * @return Horde_Mime_Part
 	 */
 	public function buildMessagePart(?string $contentPlain, ?string $contentHtml): Horde_Mime_Part {
@@ -143,9 +143,9 @@ class MimeMessage {
 
 	/**
 	 * generates pgp encrypted message part
-	 * 
+	 *
 	 * @param string $content
-	 * 
+	 *
 	 * @return Horde_Mime_Part
 	 */
 	public function buildPgpPart(string $content): Horde_Mime_Part {
