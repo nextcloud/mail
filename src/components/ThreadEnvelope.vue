@@ -314,7 +314,7 @@ import { mapStores } from 'pinia'
 import moment from '@nextcloud/moment'
 import { translateTagDisplayName } from '../util/tag.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
-import { getPlainText } from '../service/plainTextService.js'
+import { Text, toPlain } from '../util/text.js'
 
 // Ternary loading state
 const LOADING_DONE = 0
@@ -881,8 +881,9 @@ export default {
 		},
 		async handleHtmlBodyMessages() {
 			if (this.message.hasHtmlBody) {
-				const message = await getPlainText(this.message.databaseId)
-				this.plainTextBody = message.body
+				let text = new Text('html', this.message.body)
+				text = toPlain(text)
+				this.plainTextBody = text.value
 			} else {
 				this.plainTextBody = this.message.body
 			}

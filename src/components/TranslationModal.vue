@@ -44,12 +44,14 @@
 			<NcRichText class="translate-dialog__message translate-dialog__message-source"
 				:text="message"
 				:arguments="richParameters"
+				:use-markdown="true"
 				:reference-limit="0" />
 
 			<NcRichText v-if="translatedMessage"
 				class="translate-dialog__message translate-dialog__message-translation"
 				:text="translatedMessage"
 				:arguments="richParameters"
+				:use-markdown="true"
 				:reference-limit="0" />
 		</template>
 
@@ -213,7 +215,7 @@ export default {
 		async translateMessage(sourceLanguage = null) {
 			try {
 				this.isLoading = true
-				const response = await translateText(this.message, sourceLanguage, this.selectedTo?.id)
+				const response = await translateText(this.message.trim(), sourceLanguage, this.selectedTo?.id)
 				this.translatedMessage = response.data.ocs.data.text
 			} catch (error) {
 				console.error(error)
