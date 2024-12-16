@@ -114,7 +114,7 @@ class MimeMessage {
 			$plainPart->setContents($contentPlain);
 		}
 
-		if (isset($plainPart) && isset($contentHtml)) {
+		if (isset($plainPart) && isset($htmlPart)) {
 			$messagePart = new Horde_Mime_Part();
 			$messagePart->setType('multipart/alternative');
 			$messagePart[] = $plainPart;
