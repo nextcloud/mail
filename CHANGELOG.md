@@ -1,3 +1,17 @@
+## [4.0.10](https://github.com/nextcloud/mail/compare/v4.0.9...v4.0.10) (2024-12-16)
+
+
+### Bug Fixes
+
+* **contactsintegration:** Limit number of matches ([39633d0](https://github.com/nextcloud/mail/commit/39633d0509119d4458a017c59cfd1f4f083debff))
+* **dns:** Update public suffix list ([c60c6fd](https://github.com/nextcloud/mail/commit/c60c6fd600f7a842f34026b7147e92189948ac0f))
+* **dns:** Update public suffix list ([723468c](https://github.com/nextcloud/mail/commit/723468c4149a67d98b7960347121d402453a0120))
+* **dns:** Update public suffix list ([c51dfea](https://github.com/nextcloud/mail/commit/c51dfeaa4e8f39a9824f289983d3f7ee96464223))
+* Junk/NotJunk flags ([8af459f](https://github.com/nextcloud/mail/commit/8af459fc9249e28d7e21ddf9b9b894e994253c58))
+* **ui:** Add padding to primary evenlope actions ([37a1ce1](https://github.com/nextcloud/mail/commit/37a1ce135e54d1c00847c5ec9fa83bb7c9188562))
+
+
+
 ## [4.0.9](https://github.com/nextcloud/mail/compare/v4.0.8...v4.0.9) (2024-12-09)
 
 
