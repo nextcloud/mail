@@ -27,9 +27,6 @@ class Version4200Date20241210000000 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$outboxTable = $schema->getTable('mail_local_messages');
-		if ($outboxTable->hasColumn('body')) {
-			$outboxTable->dropColumn('body');
-		}
 		if (!$outboxTable->hasColumn('body_plain')) {
 			$outboxTable->addColumn('body_plain', Types::TEXT, [
 				'notnull' => false,
