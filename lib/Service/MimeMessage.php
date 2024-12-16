@@ -34,7 +34,7 @@ class MimeMessage {
 	 */
 	public function build(?string $contentPlain, ?string $contentHtml, array $attachments, bool $isPgpEncrypted = false): Horde_Mime_Part {
 
-		if ($isPgpEncrypted === true && $contentPlain !== null) {
+		if ($isPgpEncrypted === true && isset($contentPlain)) {
 			$basePart = $this->buildPgpPart($contentPlain);
 		} elseif (count($attachments) > 0) {
 			$basePart = new Horde_Mime_Part();
@@ -62,9 +62,8 @@ class MimeMessage {
 	 */
 	public function buildMessagePart(?string $contentPlain, ?string $contentHtml): Horde_Mime_Part {
 
-		$embeddedParts = [];
-
-		if ($contentHtml !== null) {
+		if (isset($contentHtml)) {
+			$embeddedParts = [];
 			$source = '<html><meta http-equiv="content-type" content="text/html; charset=UTF-8"><body>' . $contentHtml . '</body>';
 
 			$doc = new DOMDocument();
@@ -108,32 +107,31 @@ class MimeMessage {
 			$htmlPart->setContents($htmlContent);
 		}
 		
-		if ($contentPlain !== null) {
+		if (isset($contentPlain)) {
 			$plainPart = new Horde_Mime_Part();
 			$plainPart->setType('text/plain');
 			$plainPart->setCharset('UTF-8');
 			$plainPart->setContents($contentPlain);
 		}
 
-		if ($plainPart !== null && isset($contentHtml)) {
+		if (isset($plainPart) && isset($contentHtml)) {
 			$messagePart = new Horde_Mime_Part();
 			$messagePart->setType('multipart/alternative');
 			$messagePart[] = $plainPart;
 			$messagePart[] = $htmlPart;
-		} elseif ($htmlPart !== null) {
+		} elseif (isset($htmlPart)) {
 			$messagePart = $htmlPart;
-		} elseif ($plainPart !== null) {
+		} elseif (isset($plainPart)) {
 			$messagePart = $plainPart;
 		}
 
-		if (count($embeddedParts) > 0) {
+		if (isset($embeddedParts) && count($embeddedParts) > 0) {
 			$basePart = new Horde_Mime_Part();
 			$basePart->setType('multipart/related');
 			$basePart[] = $messagePart;
 			foreach ($embeddedParts as $part) {
 				$basePart[] = $part;
 			}
-
 		} else {
 			$basePart = $messagePart;
 		}
