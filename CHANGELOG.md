@@ -6,6 +6,41 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 4.1.0 - unreleased
+### Added
+* Nextcloud 31 support
+* Filtering UI
+* Sieve utils
+* Mention and add recipients with `@`
+* Filter messages by mention
+* Periodic full sync to repair cache inconsistencies
+* Cross-linked app/account settings
+### Changed
+* New and updated translations
+### Fixed
+* Wrong path for itinerary executable
+* New message button misalignment
+* Disable async vue components
+* Junk/NotJunk flags
+* Accept avatars with image/vnd.microsoft.icon mime types
+* CKEditor translations
+* Increase default SMTP timeout
+* Hand PGP/MIME-encrypted emails to Mailvelope
+* Encapsulate PGP/MIME encrypted emails
+* Input icons and native datepicker
+* Thread disappearing after refresh
+* Revive reply to sender only
+* Recipient popover on thread display
+* Center envelope header avatar
+* Remove depricated multiselect class
+* Select multiple envelopes by holding shift directly
+* Search modal on small screen
+* Open search buttons on focus and fix the wraping
+* Use single connection to sync all mailboxes
+* Replace tune icon with filter icon
+* Set content type parameters for attachments
+* Phishing warning layout
+
 ## 4.0.0 - unreleased
 
 ## 3.6.0 – unreleased
