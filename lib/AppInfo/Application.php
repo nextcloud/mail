@@ -167,7 +167,8 @@ class Application extends App implements IBootstrap {
 		}
 
 		// Added in version 4.0.0
-		$context->registerMailProvider(MailProvider::class);
+		// Disabled in v4.1.0 due to stability concerns
+		//$context->registerMailProvider(MailProvider::class);
 
 		$context->registerNotifierService(Notifier::class);
 
