@@ -3,12 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-// eslint-disable-next-line import/no-unresolved, n/no-missing-import
-import 'vite/modulepreload-polyfill'
-
 import Vue from 'vue'
+import { getRequestToken } from '@nextcloud/auth'
 import { registerDavProperty } from '@nextcloud/files'
 import { sync } from 'vuex-router-sync'
+import { generateFilePath } from '@nextcloud/router'
 import '@nextcloud/dialogs/style.css'
 import './directives/drag-and-drop/styles/drag-and-drop.scss'
 import VueShortKey from 'vue-shortkey'
@@ -22,6 +21,11 @@ import { fixAccountId } from './service/AccountService.js'
 import { loadState } from '@nextcloud/initial-state'
 import { createPinia, PiniaVuePlugin } from 'pinia'
 import useOutboxStore from './store/outboxStore.js'
+
+// eslint-disable-next-line camelcase
+__webpack_nonce__ = btoa(getRequestToken())
+// eslint-disable-next-line camelcase
+__webpack_public_path__ = generateFilePath('mail', '', 'js/')
 
 Vue.use(PiniaVuePlugin)
 const pinia = createPinia()

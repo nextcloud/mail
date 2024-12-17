@@ -98,7 +98,6 @@ import IconFolderAdd from 'vue-material-design-icons/Folder.vue'
 import MenuDown from 'vue-material-design-icons/ChevronDown.vue'
 import MenuUp from 'vue-material-design-icons/ChevronUp.vue'
 import IconDelete from 'vue-material-design-icons/Delete.vue'
-import AccountSettings from './AccountSettings.vue'
 import { DialogBuilder } from '@nextcloud/dialogs'
 export default {
 	name: 'NavigationAccount',
@@ -109,7 +108,7 @@ export default {
 		ActionCheckbox,
 		ActionInput,
 		ActionText,
-		AccountSettings,
+		AccountSettings: () => import(/* webpackChunkName: "account-settings" */ './AccountSettings.vue'),
 		IconInfo,
 		IconSettings,
 		IconFolderAdd,

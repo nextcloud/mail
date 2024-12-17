@@ -4,8 +4,7 @@
  * SPDX-FileCopyrightText: 2014-2016 ownCloud, Inc.
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-script('mail', 'mail-redirect');
-style('mail', 'mail-style');
+style('mail', 'redirect');
 ?>
 <?php /** @var array $_ */ ?>
 <?php if (isset($_['authorizedRedirect']) && ($_['authorizedRedirect'])): ?>
