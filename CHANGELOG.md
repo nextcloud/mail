@@ -1,3 +1,13 @@
+## [4.0.11](https://github.com/nextcloud/mail/compare/v4.0.10...v4.0.11) (2024-12-17)
+
+
+### Bug Fixes
+
+* **dns:** Update public suffix list ([8da0ac2](https://github.com/nextcloud/mail/commit/8da0ac2a062386dd700cb7bdd5837a90bfbc10cc))
+* wrong path for itinerary executable ([4caf284](https://github.com/nextcloud/mail/commit/4caf2841c294a10c5741688fd5e60a053ed1e3db))
+
+
+
 ## [4.0.10](https://github.com/nextcloud/mail/compare/v4.0.9...v4.0.10) (2024-12-16)
 
 
