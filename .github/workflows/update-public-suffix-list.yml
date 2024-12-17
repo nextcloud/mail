@@ -5,7 +5,7 @@ name: Update public suffix list
 on:
   workflow_dispatch:
   schedule:
-    - cron: "5 2 * * *"
+    - cron: "0 6 1,15 * *"
 
 jobs:
   update-public-suffix-list:
@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        branches: ['main', 'stable3.7']
+        branches: ['main', 'stable4.1', 'stable4.0', 'stable3.7']
 
     name: update-public-suffix-list-${{ matrix.branches }}
 
@@ -25,7 +25,7 @@ jobs:
           submodules: true
 
       - name: Download public suffix list
-        run: curl --output resources/resources/public_suffix_list.dat https://publicsuffix.org/list/public_suffix_list.dat
+        run: curl --output resources/public_suffix_list.dat https://publicsuffix.org/list/public_suffix_list.dat
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@7920c48d6af627948130adb390df5809c471ae3b

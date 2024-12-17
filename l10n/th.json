@@ -31,18 +31,17 @@
     "Confirm" : "ยืนยัน",
     "Favorite" : "รายการโปรด",
     "Read" : "อ่าน",
-    "Unselect" : "ยกเลิกการเลือก",
-    "Select" : "เลือก",
     "Edit tags" : "แก้ไขแท็ก",
     "Back" : "ย้อนกลับ",
-    "Forward" : "ส่งต่อ",
     "Description" : "คำอธิบาย",
     "Create" : "สร้าง",
+    "Select" : "เลือก",
     "Comment" : "ความคิดเห็น",
     "Accept" : "ยอมรับ",
     "Decline" : "ปฏิเสธ",
     "Remove" : "ลบออก",
     "Other" : "อื่น ๆ",
+    "Forward" : "ส่งต่อ",
     "Choose a folder to store the attachment in" : "เลือกโฟลเดอร์ที่จะเก็บไฟล์แนบลงไป",
     "Unnamed" : "ไม่มีชื่อ",
     "Move" : "ย้าย",
@@ -89,6 +88,7 @@
     "Error loading message" : "เกิดข้อผิดพลาดขณะโหลดข้อความ",
     "Redirect" : "เปลี่ยนเส้นทาง",
     "The link leads to %s" : "ลิงก์จะนำไปยัง %s",
-    "Continue to %s" : "ดำเนินการต่อไปที่ %s"
+    "Continue to %s" : "ดำเนินการต่อไปที่ %s",
+    "Unselect" : "ยกเลิกการเลือก"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

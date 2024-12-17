@@ -318,7 +318,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 #mail-message {
 	margin-bottom: 30vh;
 
@@ -485,6 +485,12 @@ export default {
 	overflow: hidden;
 	display: flex;
 	align-items: stretch;
+
+	::deep(.v-popper--theme-dropdown.v-popper__popper .v-popper__inner) {
+		height: 300px;
+		width: 250px;
+		overflow: auto;
+	}
 }
 .avatar-more {
 	display: inline;
@@ -499,12 +505,6 @@ export default {
 
 .avatar-hidden {
 	visibility: hidden;
-}
-
-.v-popper--theme-dropdown.v-popper__popper .v-popper__inner {
-	height: 300px;
-	width: 250px;
-	overflow: auto;
 }
 
 .app-content-list-item-star.icon-starred {

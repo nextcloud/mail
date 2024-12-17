@@ -26,7 +26,7 @@
 		"bytestream/horde-text-flowed": "^2.1",
 		"bytestream/horde-util": "^2.8.0",
 		"cerdic/css-tidy": "v2.2.1",
-		"ezyang/htmlpurifier": "4.17.0",
+		"ezyang/htmlpurifier": "4.18.0",
 		"glenscott/url-normalizer": "^1.4",
 		"gravatarphp/gravatar": "dev-master#6b9f6a45477ce48285738d9d0c3f0dbf97abe263",
 		"hamza221/html2text": "^1.0",
