@@ -55,6 +55,7 @@
 				<referencedClass name="OCP\User\Events\OutOfOfficeChangedEvent" /><!-- 28+ -->
 				<referencedClass name="OCP\User\Events\OutOfOfficeClearedEvent" /><!-- 28+ -->
 				<referencedClass name="OCP\User\IAvailabilityCoordinator" /><!-- 28+ -->
+				<referencedClass name="OCP\SetupCheck\ISetupCheck" /><!-- 28+ -->
 			</errorLevel>
 		</UndefinedClass>
 		<UndefinedDocblockClass>
