@@ -76,8 +76,9 @@ class DraftsController extends Controller {
 	public function create(
 		int $accountId,
 		string $subject,
-		string $body,
-		string $editorBody,
+		?string $bodyPlain,
+		?string $bodyHtml,
+		?string $editorBody,
 		bool $isHtml,
 		?bool $smimeSign,
 		?bool $smimeEncrypt,
@@ -101,15 +102,9 @@ class DraftsController extends Controller {
 		$message->setAccountId($accountId);
 		$message->setAliasId($aliasId);
 		$message->setSubject($subject);
-		if ($isHtml) {
-			$message->setBodyPlain(null);
-			$message->setBodyHtml($body);
-			$message->setHtml(true);
-		} else {
-			$message->setBodyPlain($body);
-			$message->setBodyHtml(null);
-			$message->setHtml(false);
-		}
+		$message->setBodyPlain($bodyPlain);
+		$message->setBodyHtml($bodyHtml);
+		$message->setHtml($isHtml);
 		$message->setEditorBody($editorBody);
 		$message->setInReplyToMessageId($inReplyToMessageId);
 		$message->setUpdatedAt($this->timeFactory->getTime());
@@ -153,8 +148,9 @@ class DraftsController extends Controller {
 	public function update(int $id,
 		int $accountId,
 		string $subject,
-		string $body,
-		string $editorBody,
+		?string $bodyPlain,
+		?string $bodyHtml,
+		?string $editorBody,
 		bool $isHtml,
 		?bool $smimeSign,
 		?bool $smimeEncrypt,
@@ -176,15 +172,9 @@ class DraftsController extends Controller {
 		$message->setAccountId($accountId);
 		$message->setAliasId($aliasId);
 		$message->setSubject($subject);
-		if ($isHtml) {
-			$message->setBodyPlain(null);
-			$message->setBodyHtml($body);
-			$message->setHtml(true);
-		} else {
-			$message->setBodyPlain($body);
-			$message->setBodyHtml(null);
-			$message->setHtml(false);
-		}
+		$message->setBodyPlain($bodyPlain);
+		$message->setBodyHtml($bodyHtml);
+		$message->setHtml($isHtml);
 		$message->setEditorBody($editorBody);
 		$message->setFailed($failed);
 		$message->setInReplyToMessageId($inReplyToMessageId);
