@@ -123,6 +123,8 @@ class MimeMessage {
 			$messagePart = $htmlPart;
 		} elseif (isset($plainPart)) {
 			$messagePart = $plainPart;
+		} else {
+			$messagePart = new Horde_Mime_Part();
 		}
 
 		if (isset($embeddedParts) && count($embeddedParts) > 0) {

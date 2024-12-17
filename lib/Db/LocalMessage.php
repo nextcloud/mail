@@ -30,7 +30,7 @@ use function array_filter;
  * @method string getBodyHtml()
  * @method void setBodyHtml(?string $bodyHtml)
  * @method string|null getEditorBody()
- * @method void setEditorBody(string $body)
+ * @method void setEditorBody(?string $body)
  * @method bool isHtml()
  * @method void setHtml(bool $html)
  * @method bool|null isFailed()
