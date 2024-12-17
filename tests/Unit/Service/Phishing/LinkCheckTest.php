@@ -42,6 +42,14 @@ class LinkCheckTest extends TestCase {
 		$this->assertFalse($result->isPhishing());
 	}
 
+	public function testAddressInParenthesessPass(): void {
+		$htmlMessage = '<html><body><a href="https://nextcloud.com/">(https://nextcloud.com/)</a></body></html>';
+
+		$result = $this->service->run($htmlMessage);
+
+		$this->assertFalse($result->isPhishing());
+	}
+
 	public function testCompleteAddressFail(): void {
 		$htmlMessage = '<html><body><a href="https://nextcloud.com/">https://google.com/</a></p></body></html>';
 

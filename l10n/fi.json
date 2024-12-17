@@ -173,8 +173,6 @@
     "Unimportant" : "Ei tärkeä",
     "Mark not spam" : "Merkitse ei roskapostiksi",
     "Mark as spam" : "Merkitse roskapostiksi",
-    "Unselect" : "Poista valinta",
-    "Select" : "Valitse",
     "Edit tags" : "Muokkaa tunnisteita",
     "Snooze" : "Torkuta",
     "Move thread" : "Siirrä ketju",
@@ -195,8 +193,10 @@
     "Set reminder for next week" : "Aseta muistutus seuraavalle viikolle",
     "Could not delete message" : "Ei voitu poistaa viestiä",
     "Could not archive message" : "Viestiä ei voitu arkistoida",
-    "Forward" : "Lähetä edelleen",
     "Load more" : "Lataa lisää",
+    "_Mark {number} read_::_Mark {number} read_" : ["Merkitse {number} luetuksi","Merkitse {number} luetuksi"],
+    "_Mark {number} unread_::_Mark {number} unread_" : ["Merkitse {number} lukemattomaksi","Merkitse {number} lukemattomaksi"],
+    "_Mark {number} as important_::_Mark {number} as important_" : ["Merkitse {number} tärkeäksi","Merkitse {number} tärkeäksi"],
     "Report this bug" : "Ilmoita viasta",
     "All day" : "Koko päivä",
     "Select calendar" : "Valitse kalenteri",
@@ -210,6 +210,7 @@
     "You already reacted to this invitation" : "Reagoit jo tähän kutsuun",
     "You have been invited to an event" : "Sinut on kutsuttu tapahtumaan",
     "This event was cancelled" : "Tämä tapahtuma peruttiin",
+    "Select" : "Valitse",
     "Comment" : "Kommentti",
     "Accept" : "Hyväksy",
     "Decline" : "Kieltäydy",
@@ -233,6 +234,7 @@
     "The sender of this message has asked to be notified when you read this message." : "Tämän viestin lähettäjä on pyytänyt ilmoitusta, kun luet tämän viestin.",
     "Notify the sender" : "Ilmoita lähettäjälle",
     "You sent a read confirmation to the sender of this message." : "Lähetit lukukuittauksen tämän viestin lähettäjälle.",
+    "Forward" : "Lähetä edelleen",
     "Move message" : "Siirrä viesti",
     "Forward message as attachment" : "Välitä viesti liitteenä",
     "View source" : "Näytä lähde",
@@ -480,6 +482,7 @@
     "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
     "Continue to %s" : "Jatka sivulle %s",
     "Sieve filter rules" : "Sieve-filtterin säännöt",
-    "Sieve filter server" : "Sieve-filtteripalvelin"
+    "Sieve filter server" : "Sieve-filtteripalvelin",
+    "Unselect" : "Poista valinta"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -35,21 +35,20 @@
     "Confirm" : "Konfirmasi",
     "Favorite" : "Favorit",
     "Read" : "Baca",
-    "Unselect" : "Batal pilih",
-    "Select" : "Pilih",
     "Edit tags" : "Sunting label",
     "Back" : "Kembali",
     "Create event" : "Buat acara",
-    "Forward" : "Teruskan",
     "All day" : "Sepanjang hari",
     "Description" : "Deskrisi",
     "Create" : "Buat",
+    "Select" : "Pilih",
     "Comment" : "Komentar",
     "Accept" : "Terima",
     "Decline" : "Tolak",
     "Remove" : "Buang",
     "email" : "surel",
     "Other" : "Lainnya",
+    "Forward" : "Teruskan",
     "Choose a folder to store the attachment in" : "Pilih folder untuk menyimpan lampiran didalamnya",
     "Import into calendar" : "Impor ke kalender",
     "Download attachment" : "Unduh lampiran",
@@ -104,6 +103,7 @@
     "Error loading message" : "Terjadi kesalahan saat memuat pesan",
     "Forwarding to %s" : "Teruskan ke %s",
     "Redirect" : "Mengalihkan",
-    "Continue to %s" : "Lanjutkan ke %s"
+    "Continue to %s" : "Lanjutkan ke %s",
+    "Unselect" : "Batal pilih"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

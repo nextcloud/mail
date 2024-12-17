@@ -580,16 +580,16 @@ export default {
 
 .minimize-button {
 	float: right;
-	position: absolute !important;
+	position: absolute;
 	top: 4px;
-	right: 63px;
+	inset-inline-end: 63px;
 }
 
 .maximize-button {
 	float: right;
-	position: absolute !important;
+	position: absolute;
 	top: 4px;
-	right: 33px;
+	inset-inline-end: 33px;
 
 }
 .empty-content{

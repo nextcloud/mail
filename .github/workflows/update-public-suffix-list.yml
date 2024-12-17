@@ -5,7 +5,7 @@ name: Update public suffix list
 on:
   workflow_dispatch:
   schedule:
-    - cron: "5 2 * * *"
+    - cron: "0 6 1,15 * *"
 
 jobs:
   update-public-suffix-list:

@@ -240,8 +240,6 @@ OC.L10N.register(
     "Unimportant" : "Sin importancia",
     "Mark not spam" : "Marcar como no spam",
     "Mark as spam" : "Marcar como spam",
-    "Unselect" : "Deseleccionar",
-    "Select" : "Seleccionar",
     "Edit tags" : "Editar etiquetas",
     "Snooze" : "Pausar",
     "Unsnooze" : "Reanudar",
@@ -268,7 +266,6 @@ OC.L10N.register(
     "Could not snooze thread" : "No se ha podido pausar el hilo",
     "Thread was unsnoozed" : "El hilo fue reanudado",
     "Could not unsnooze thread" : "No se pudo reanudar el hilo",
-    "Forward" : "Adelante",
     "Load more" : "Cargar más",
     "Report this bug" : "Reportar este bug",
     "All day" : "Todo el día",
@@ -284,6 +281,7 @@ OC.L10N.register(
     "You have been invited to an event" : "Has sido invitado a un evento",
     "This event was cancelled" : "Este evento fue cancelado",
     "Save to" : "Guardar en",
+    "Select" : "Seleccionar",
     "Comment" : "Comentario",
     "Accept" : "Aceptar",
     "Decline" : "Rechazar",
@@ -316,6 +314,7 @@ OC.L10N.register(
     "Follow up info" : "Información de seguimiento",
     "Important info" : "Información importante",
     "Other" : "Otro",
+    "Forward" : "Adelante",
     "Choose a folder to store the attachment in" : "Seleccciona la carpeta en la cual almacenar el adjunto",
     "Import into calendar" : "Importar al calendario",
     "Download attachment" : "Descargar adjunto",
@@ -392,6 +391,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Haz click aqui si no eres redireccionado automáticamente dentro de los siguietes segundos. ",
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Unselect" : "Deseleccionar"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

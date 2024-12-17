@@ -70,14 +70,16 @@
 						<em>{{ t('mail', 'Draft: ') }}</em>
 					</span>
 					<span class="envelope__subtitle__subject"
-						:class="{'one-line': oneLineLayout }">
+						:class="{'one-line': oneLineLayout }"
+						dir="auto">
 						<span class="envelope__subtitle__subject__text" :class="{'one-line': oneLineLayout }">
 							{{ subjectForSubtitle }}
 						</span>
 					</span>
 				</div>
 				<div v-if="data.encrypted || data.previewText"
-					class="envelope__preview-text">
+					class="envelope__preview-text"
+					dir="auto">
 					{{ isEncrypted ? t('mail', 'Encrypted message') : data.previewText.trim() }}
 				</div>
 			</div>
@@ -342,8 +344,7 @@ import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import ArchiveIcon from 'vue-material-design-icons/PackageDown.vue'
 import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline.vue'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
-// eslint-disable-next-line import/no-unresolved
-import importantSvg from '../../img/important.svg?raw'
+import importantSvg from '../../img/important.svg'
 import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope/index.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
 import { shortRelativeDatetime, messageDateTime } from '../util/shortRelativeDatetime.js'

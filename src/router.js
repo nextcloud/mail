@@ -7,8 +7,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import { generateUrl } from '@nextcloud/router'
 
-import Home from './views/Home.vue'
-import Setup from './views/Setup.vue'
+const Home = () => import('./views/Home.vue')
+const Setup = () => import('./views/Setup.vue')
 
 Vue.use(Router)
 
