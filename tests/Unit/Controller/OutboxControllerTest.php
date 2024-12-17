@@ -259,6 +259,7 @@ class OutboxControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
+		$message->setBodyPlain(null);
 		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
@@ -284,6 +285,7 @@ class OutboxControllerTest extends TestCase {
 		$actual = $this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
+			$message->getBodyPlain(),
 			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
@@ -327,6 +329,7 @@ class OutboxControllerTest extends TestCase {
 		$actual = $this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
+			$message->getBodyPlain(),
 			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
@@ -347,6 +350,7 @@ class OutboxControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
+		$message->setBodyPlain(null);
 		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
@@ -368,6 +372,7 @@ class OutboxControllerTest extends TestCase {
 		$this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
+			$message->getBodyPlain(),
 			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
@@ -546,6 +551,7 @@ class OutboxControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
+		$message->setBodyPlain(null);
 		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
@@ -570,6 +576,7 @@ class OutboxControllerTest extends TestCase {
 		$this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
+			$message->getBodyPlain(),
 			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
