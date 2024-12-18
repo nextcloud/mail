@@ -225,8 +225,6 @@ class MimeMessageTest extends TestCase {
 	}
 
 	public function testMultipartAlternativeGreek() {
-		$this->markTestSkipped();
-
 		$messageData = new NewMessageData(
 			$this->account,
 			new AddressList(),
@@ -240,7 +238,7 @@ class MimeMessageTest extends TestCase {
 		);
 
 		$part = $this->mimeMessage->build(
-			$messageData->getBody(),
+			null,
 			$messageData->getBody(),
 			[],
 		);
