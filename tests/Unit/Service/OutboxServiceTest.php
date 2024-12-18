@@ -146,7 +146,7 @@ class OutboxServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 
@@ -174,7 +174,7 @@ class OutboxServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 
@@ -193,7 +193,7 @@ class OutboxServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$to = [
@@ -243,7 +243,7 @@ class OutboxServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$to = [
@@ -289,7 +289,7 @@ class OutboxServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$old = Recipient::fromParams([
@@ -346,7 +346,7 @@ class OutboxServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$old = Recipient::fromParams([
@@ -397,7 +397,7 @@ class OutboxServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('laskdjhsakjh33233928@startdewvalley.com');
 		$to = [
@@ -514,7 +514,7 @@ class OutboxServiceTest extends TestCase {
 		$sentAt = $this->time->getTime();
 		$message->setSendAt($sentAt);
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$message->setType(LocalMessage::TYPE_DRAFT);

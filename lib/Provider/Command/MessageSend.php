@@ -75,10 +75,13 @@ class MessageSend {
 		$localMessage->setType($localMessage::TYPE_OUTGOING);
 		$localMessage->setAccountId($account->getId());
 		$localMessage->setSubject((string)$message->getSubject());
-		$localMessage->setBody((string)$message->getBody());
-		// disabled due to issues caused by opening these messages in gui
-		//$localMessage->setEditorBody($message->getBody());
-		$localMessage->setHtml(true);
+		$localMessage->setBodyPlain($message->getBodyPlain());
+		$localMessage->setBodyHtml($message->getBodyHtml());
+		if (!empty($message->getBodyHtml())) {
+			$localMessage->setHtml(true);
+		} else {
+			$localMessage->setHtml(false);
+		}
 		$localMessage->setSendAt($this->time->getTime());
 		// convert mail provider addresses to recipient addresses
 		$to = $this->convertAddressArray($message->getTo());
