@@ -6,7 +6,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 4.1.0 - unreleased
+## 4.1.0 - 2024-12-18
 ### Added
 * Nextcloud 31 support
 * Filtering UI
