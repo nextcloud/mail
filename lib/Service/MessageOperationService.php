@@ -43,7 +43,7 @@ class MessageOperationService {
 			if (!isset($carry[$pair['mailbox_id']])) {
 				$carry[$pair['mailbox_id']] = [];
 			}
-			$carry[$pair['mailbox_id']][] = ['id' => $pair['id'], 'uid' => $pair['uid']];
+			$carry[(int)$pair['mailbox_id']][] = ['id' => (int)$pair['id'], 'uid' => (int)$pair['uid']];
 			return $carry;
 		}, []);
 	}
