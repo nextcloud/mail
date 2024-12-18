@@ -13,6 +13,7 @@ use DOMDocument;
 use DOMElement;
 use DOMNode;
 use Horde_Mime_Part;
+use Horde_Text_Filter;
 use OCA\Mail\Exception\InvalidDataUriException;
 use OCA\Mail\Service\DataUri\DataUriParser;
 
@@ -37,6 +38,9 @@ class MimeMessage {
 		if ($isPgpEncrypted === true && isset($contentPlain)) {
 			$basePart = $this->buildPgpPart($contentPlain);
 		} elseif (count($attachments) > 0) {
+			/*
+			* Messages with non embedded attachments need to be wrap in a multipart/mixed part
+			*/
 			$basePart = new Horde_Mime_Part();
 			$basePart->setType('multipart/mixed');
 			$basePart[] = $this->buildMessagePart($contentPlain, $contentHtml);
@@ -55,20 +59,23 @@ class MimeMessage {
 	/**
 	 * generates html/plain message part
 	 *
-	 * @param string $contentPlain
-	 * @param string $contentHtml
-	 *
 	 * @return Horde_Mime_Part
 	 */
-	public function buildMessagePart(?string $contentPlain, ?string $contentHtml): Horde_Mime_Part {
+	private function buildMessagePart(?string $contentPlain, ?string $contentHtml): Horde_Mime_Part {
 
 		if (isset($contentHtml)) {
-			$embeddedParts = [];
-			$source = '<html><meta http-equiv="content-type" content="text/html; charset=UTF-8"><body>' . $contentHtml . '</body>';
-
+			
+			// determine if content is wrapped properly in a html tag, other we need to wrap it properly 
+			if (mb_strpos($contentHtml, '<html') === false) {
+				$source = '<html><meta http-equiv="content-type" content="text/html; charset=UTF-8"><body>' . $contentHtml . '</body>';
+			} else {
+				$source = $contentHtml;
+			}
+			
 			$doc = new DOMDocument();
 			$doc->loadHTML($source, LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
 			// determine if content has any embedded images
+			$embeddedParts = [];
 			foreach ($doc->getElementsByTagName('img') as $id => $image) {
 				if (!($image instanceof DOMElement)) {
 					continue;
@@ -112,9 +119,20 @@ class MimeMessage {
 			$plainPart->setType('text/plain');
 			$plainPart->setCharset('UTF-8');
 			$plainPart->setContents($contentPlain);
+		} elseif (!isset($contentPlain) && isset($contentHtml)) {
+			$plainPart = new Horde_Mime_Part();
+			$plainPart->setType('text/plain');
+			$plainPart->setCharset('UTF-8');
+			$plainPart->setContents(
+				Horde_Text_Filter::filter($contentHtml, 'Html2text', ['callback' => [$this, 'htmlToTextCallback']])
+			);
 		}
 
-		if (isset($plainPart) && isset($htmlPart)) {
+		if (isset($plainPart, $htmlPart)) {
+			/*
+			* RFC1341: Multipart/alternative entities should place the body parts in
+			* increasing order of preference, that is, with the preferred format last.
+			*/
 			$messagePart = new Horde_Mime_Part();
 			$messagePart->setType('multipart/alternative');
 			$messagePart[] = $plainPart;
@@ -128,6 +146,9 @@ class MimeMessage {
 		}
 
 		if (isset($embeddedParts) && count($embeddedParts) > 0) {
+			/*
+			 * Text parts with embedded content (e.g. inline images, etc) need be wrapped in multipart/related part
+			 */
 			$basePart = new Horde_Mime_Part();
 			$basePart->setType('multipart/related');
 			$basePart[] = $messagePart;
@@ -148,7 +169,7 @@ class MimeMessage {
 	 *
 	 * @return Horde_Mime_Part
 	 */
-	public function buildPgpPart(string $content): Horde_Mime_Part {
+	private function buildPgpPart(string $content): Horde_Mime_Part {
 
 		$contentPart = new Horde_Mime_Part();
 		$contentPart->setType('application/octet-stream');
