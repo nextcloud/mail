@@ -36,7 +36,7 @@ class MessageOperationService {
 	 *
 	 * @param array<array{0:int,1:int,2:int}> $collection
 	 *
-	 * @return array<int,array<array{0:int,1:int}>>
+	 * @return array<int,array<{id;int,uid:int}>>
 	 */
 	protected function groupByMailbox(array $collection): array {
 		return array_reduce($collection, function ($carry, $pair) {
@@ -53,9 +53,9 @@ class MessageOperationService {
 	 *
 	 * [mailbox] to [account_id => [mailbox]]
 	 *
-	 * @param array<\OCA\Mail\Db\MailBox> $collection
+	 * @param array<MailBox> $collection
 	 *
-	 * @return array<int,array<\OCA\Mail\Db\MailBox>>
+	 * @return array<int,array<MailBox>>
 	 */
 	protected function groupByAccount(array $collection) {
 		return array_reduce($collection, function ($carry, $entry) {
@@ -72,8 +72,8 @@ class MessageOperationService {
 	 *
 	 * @param array<int,bool> &$results
 	 * @param bool $value
-	 * @param array<\OCA\Mail\Db\MailBox> $mailboxes
-	 * @param array<int,array<array{0:int,1:int}>> $messages
+	 * @param array<MailBox> $mailboxes
+	 * @param array<int,array<array{id:int,uid:int}>> $messages
 	 */
 	protected function generateResult(array &$results, bool $value, array $mailboxes, array $messages) {
 		foreach ($mailboxes as $mailbox) {

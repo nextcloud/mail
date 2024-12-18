@@ -793,7 +793,7 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 *
 	 * @param array<int,int> $identifiers
-	 * @param array<int,string> $flags
+	 * @param array<string,bool> $flags
 	 *
 	 * @return JSONResponse
 	 */

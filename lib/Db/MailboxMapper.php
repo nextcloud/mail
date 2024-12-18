@@ -113,7 +113,7 @@ class MailboxMapper extends QBMapper {
 	}
 
 	/**
-	 * @param array<string> $ids
+	 * @param array<int> $ids
 	 *
 	 * @return array<Mailbox>
 	 *
