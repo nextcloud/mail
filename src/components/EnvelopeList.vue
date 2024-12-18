@@ -24,28 +24,28 @@
 					<NcButton v-if="isAtLeastOneSelectedUnimportant"
 						type="tertiary"
 						:title="n('mail', 'Mark {number} as important', 'Mark {number} as important', selection.length, { number: selection.length })"
-						@click.prevent="markSelectionImportant">
+						@click.prevent="markSelectedImportant">
 						<ImportantIcon :size="16" />
 					</NcButton>
 
 					<NcButton v-if="isAtLeastOneSelectedImportant"
 						type="tertiary"
 						:title="n('mail', 'Mark {number} as unimportant', 'Mark {number} as unimportant', selection.length, { number: selection.length })"
-						@click.prevent="markSelectionUnimportant">
+						@click.prevent="markSelectedUnimportant">
 						<UnImportantIcon :size="16" />
 					</NcButton>
 
 					<NcButton v-if="isAtLeastOneSelectedFavorite"
 						type="tertiary"
 						:title="n('mail', 'Unfavorite {number}', 'Unfavorite {number}', selection.length, { number: selection.length })"
-						@click.prevent="favoriteAll">
+						@click.prevent="markSelectedUnfavorite">
 						<IconUnFavorite :size="16" />
 					</NcButton>
 
 					<NcButton v-if="isAtLeastOneSelectedUnFavorite"
 						type="tertiary"
 						:title="n('mail', 'Favorite {number}', 'Favorite {number}', selection.length, { number: selection.length })"
-						@click.prevent="unFavoriteAll">
+						@click.prevent="markSelectedFavorite">
 						<IconFavorite :size="16" />
 					</NcButton>
 
@@ -71,14 +71,14 @@
 
 				<Actions class="app-content-list-item-menu" menu-align="right">
 					<ActionButton v-if="isAtLeastOneSelectedNotJunk"
-						@click.prevent="markSelectionJunk">
+						@click.prevent="markSelectedJunk">
 						<template #icon>
 							<AlertOctagonIcon :size="16" />
 						</template>
 						{{ n('mail', 'Mark {number} as spam', 'Mark {number} as spam', selection.length, { number: selection.length }) }}
 					</ActionButton>
 					<ActionButton v-if="isAtLeastOneSelectedJunk"
-						@click.prevent="markSelectionNotJunk">
+						@click.prevent="markSelectedNotJunk">
 						<template #icon>
 							<AlertOctagonIcon :size="16" />
 						</template>
@@ -321,25 +321,25 @@ export default {
 
 			return this.selection.includes(idx)
 		},
-		markSelectedRead() {
-			this.selectedEnvelopes.forEach((envelope) => {
-				this.$store.dispatch('toggleEnvelopeSeen', {
-					envelope,
-					seen: true,
-				})
+		async markSelectedRead() {
+			const state = true
+			const envelopes = this.selectedEnvelopes
+			this.$store.dispatch('markEnvelopesSeenOrUnseen', {
+				envelopes,
+				state,
 			})
 			this.unselectAll()
 		},
-		markSelectedUnread() {
-			this.selectedEnvelopes.forEach((envelope) => {
-				this.$store.dispatch('toggleEnvelopeSeen', {
-					envelope,
-					seen: false,
-				})
+		async markSelectedUnread() {
+			const state = false
+			const envelopes = this.selectedEnvelopes
+			this.$store.dispatch('markEnvelopesSeenOrUnseen', {
+				envelopes,
+				state,
 			})
 			this.unselectAll()
 		},
-		markSelectionImportant() {
+		markSelectedImportant() {
 			this.selectedEnvelopes.forEach((envelope) => {
 				this.$store.dispatch('markEnvelopeImportantOrUnimportant', {
 					envelope,
@@ -348,7 +348,7 @@ export default {
 			})
 			this.unselectAll()
 		},
-		markSelectionUnimportant() {
+		markSelectedUnimportant() {
 			this.selectedEnvelopes.forEach((envelope) => {
 				this.$store.dispatch('markEnvelopeImportantOrUnimportant', {
 					envelope,
@@ -357,7 +357,7 @@ export default {
 			})
 			this.unselectAll()
 		},
-		async markSelectionJunk() {
+		async markSelectedJunk() {
 			const state = true
 			const envelopes = this.selectedEnvelopes
 			this.$store.dispatch('markEnvelopesJunkOrNotJunk', {
@@ -365,19 +365,8 @@ export default {
 				state,
 			})
 			this.unselectAll()
-			/*
-			for (const envelope of this.selectedEnvelopes) {
-				if (!envelope.flags.$junk) {
-					await this.$store.dispatch('toggleEnvelopeJunk', {
-						envelope,
-						removeEnvelope: await this.$store.dispatch('moveEnvelopeToJunk', envelope),
-					})
-				}
-			}
-			this.unselectAll()
-			*/
 		},
-		async markSelectionNotJunk() {
+		async markSelectedNotJunk() {
 			const state = false
 			const envelopes = this.selectedEnvelopes
 			this.$store.dispatch('markEnvelopesJunkOrNotJunk', {
@@ -385,35 +374,22 @@ export default {
 				state,
 			})
 			this.unselectAll()
-			/*
-			for (const envelope of this.selectedEnvelopes) {
-				if (envelope.flags.$junk) {
-					await this.$store.dispatch('toggleEnvelopeJunk', {
-						envelope,
-						removeEnvelope: await this.$store.dispatch('moveEnvelopeToJunk', envelope),
-					})
-				}
-			}
-			this.unselectAll()
-			*/
 		},
-		favoriteAll() {
-			const favFlag = !this.isAtLeastOneSelectedUnFavorite
-			this.selectedEnvelopes.forEach((envelope) => {
-				this.$store.dispatch('markEnvelopeFavoriteOrUnfavorite', {
-					envelope,
-					favFlag,
-				})
+		async markSelectedFavorite() {
+			const state = true
+			const envelopes = this.selectedEnvelopes
+			this.$store.dispatch('markEnvelopesFavoriteOrUnfavorite', {
+				envelopes,
+				state,
 			})
 			this.unselectAll()
 		},
-		unFavoriteAll() {
-			const favFlag = !this.isAtLeastOneSelectedFavorite
-			this.selectedEnvelopes.forEach((envelope) => {
-				this.$store.dispatch('markEnvelopeFavoriteOrUnfavorite', {
-					envelope,
-					favFlag,
-				})
+		async markSelectedUnfavorite() {
+			const state = false
+			const envelopes = this.selectedEnvelopes
+			this.$store.dispatch('markEnvelopesFavoriteOrUnfavorite', {
+				envelopes,
+				state,
 			})
 			this.unselectAll()
 		},

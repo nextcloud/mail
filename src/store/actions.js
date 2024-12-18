@@ -1052,7 +1052,7 @@ export default {
 				envelopes.forEach((envelope) => {
 					identifiers.push(envelope.databaseId)
 				})
-				await setEnvelopeFlags(identifiers, { junk: state, notjunk: !state })
+				await setEnvelopeFlags(identifiers, { $junk: state, $notjunk: !state })
 			} catch (error) {
 				console.error('could not mark messages junk or not junk', error)
 				throw error
