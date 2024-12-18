@@ -189,14 +189,14 @@ class MessageMapper extends QBMapper {
 			return [];
 		}
 
-		$cmd = $this->db->getQueryBuilder();
-		$cmd->select('id', 'mailbox_id', 'uid')
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('id', 'mailbox_id', 'uid')
 			->from($this->getTableName())
 			->where(
-				$cmd->expr()->in('id', $cmd->createNamedParameter($identifiers, IQueryBuilder::PARAM_STR_ARRAY), IQueryBuilder::PARAM_STR_ARRAY)
+				$qb->expr()->in('id', $qb->createNamedParameter($identifiers, IQueryBuilder::PARAM_STR_ARRAY), IQueryBuilder::PARAM_STR_ARRAY)
 			);
 
-		return $cmd->executeQuery()->fetchAll();
+		return $qb->executeQuery()->fetchAll();
 		
 	}
 

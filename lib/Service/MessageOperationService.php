@@ -53,9 +53,9 @@ class MessageOperationService {
 	 *
 	 * [mailbox] to [account_id => [mailbox]]
 	 *
-	 * @param array<MailBox> $collection
+	 * @param array<\OCA\Mail\Db\Mailbox> $collection
 	 *
-	 * @return array<int,array<MailBox>>
+	 * @return array<int,array<\OCA\Mail\Db\Mailbox>>
 	 */
 	protected function groupByAccount(array $collection) {
 		return array_reduce($collection, function ($carry, $entry) {
@@ -72,7 +72,7 @@ class MessageOperationService {
 	 *
 	 * @param array<int,bool> &$results
 	 * @param bool $value
-	 * @param array<MailBox> $mailboxes
+	 * @param array<\OCA\Mail\Db\Mailbox> $mailboxes
 	 * @param array<int,array<array{id:int,uid:int}>> $messages
 	 */
 	protected function generateResult(array &$results, bool $value, array $mailboxes, array $messages) {
@@ -99,17 +99,11 @@ class MessageOperationService {
 		// retrieve all mailboxes and group by account
 		$mailboxes = $this->groupByAccount($this->mailboxMapper->findByIds(array_keys($messages)));
 		// retrieve all accounts
-		$accounts = $this->accountMapper->findByIds(array_keys($mailboxes));
+		$accounts = $this->accountMapper->findByIds($userId, array_keys($mailboxes));
 		// process every account
 		$results = [];
 		foreach ($accounts as $account) {
 			$account = new Account($account);
-			// determine if account belongs to the user and skip if not
-			if ($account->getUserId() != $userId) {
-				// add messages to results as failed
-				$this->generateResult($results, false, $mailboxes[$account->getId()], $messages);
-				continue;
-			}
 			$client = $this->clientFactory->getClient($account);
 			// process every mailbox
 			foreach ($mailboxes[$account->getId()] as $mailbox) {
