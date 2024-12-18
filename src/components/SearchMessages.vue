@@ -606,7 +606,6 @@ export default {
 		min-height: 52px;
 		margin-inline-start: calc(var(--app-navigation-padding)*2 + var(--default-clickable-area));
 		padding-right: 3px; /* matches .app-content-list */
-		border-block-end: 1px solid var(--color-border);
 		position: relative;
 		display: flex;
 		align-items: center;
