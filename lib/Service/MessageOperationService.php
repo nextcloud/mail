@@ -36,7 +36,7 @@ class MessageOperationService {
 	 *
 	 * @param array<array{0:int,1:int,2:int}> $collection
 	 *
-	 * @return array<int,array{id:int,uid:int}>
+	 * @return array<int,array<int,array{0:int,1:int,2:int}>>
 	 */
 	protected function groupByMailbox(array $collection): array {
 		return array_reduce($collection, function ($carry, $pair) {
