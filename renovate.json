@@ -23,7 +23,7 @@
 	"ignoreUnstable": false,
 	"baseBranches": [
 		"main",
-		"stable4.0",
+		"stable4.1",
 		"stable3.7"
 	],
 	"enabledManagers": [
