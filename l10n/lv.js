@@ -139,7 +139,7 @@ OC.L10N.register(
     "There was a problem loading {tag}{name}{endtag}" : "Radusies problēma, ielādējot {tag}{name}{endtag}",
     "Error loading message" : "Kļūda ielādējot vēstuli",
     "Forwarding to %s" : "Pārsūtīt uz %s",
-    "Click here if you are not automatically redirected within the next few seconds." : "Noklikšķiniet šeit, ja netiekat pārvirzīts automātiski dažu sekunžu laikā.",
+    "Click here if you are not automatically redirected within the next few seconds." : "Jāklikšķina šeit, ja nenotiek automātiska pārvirzīšana dažu sekunžu laikā.",
     "Redirect" : "Novirzīt",
     "The link leads to %s" : "Saite, kas ved uz %s",
     "Continue to %s" : "Turpināt %s",
