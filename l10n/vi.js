@@ -286,8 +286,6 @@ OC.L10N.register(
     "Redirect" : "Chuyển hướng",
     "The link leads to %s" : "Liên kết dẫn đến %s",
     "Continue to %s" : "Tiếp tục %s",
-    "Sieve filter rules" : "Quy tắc lọc Sieve",
-    "Sieve filter server" : "Máy chủ lọc Sieve",
     "Unselect" : "Bỏ chọn"
 },
 "nplurals=1; plural=0;");

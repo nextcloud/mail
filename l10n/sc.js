@@ -232,6 +232,8 @@ OC.L10N.register(
     "Copy to clipboard" : "Còpia in is punta de billete",
     "Contact name …" : "Nùmene de su cuntatu ...",
     "Add" : "Agiunghe",
+    "Show less" : "Mustra prus pagu",
+    "Show more" : "Mustra de prus",
     "Close" : "Serra",
     "Body" : "Corpus",
     "Date" : "Data",
@@ -355,8 +357,6 @@ OC.L10N.register(
     "Redirect" : "Torra a deretare",
     "The link leads to %s" : "Su ligòngiu deretat a %s",
     "Continue to %s" : "Sighi in %s",
-    "Sieve filter rules" : "Règulas de filtru Sieve",
-    "Sieve filter server" : "Serbidore de filtru Sieve",
     "Unselect" : "Deseletziona"
 },
 "nplurals=2; plural=(n != 1);");

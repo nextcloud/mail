@@ -451,6 +451,8 @@ OC.L10N.register(
     "Add" : "قوش",
     "Copied email address to clipboard" : "ئېلېكترونلۇق خەت ئادرېسىنى چاپلاش تاختىسىغا كۆچۈردى",
     "Could not copy email address to clipboard" : "ئېلېكترونلۇق خەت ئادرېسىنى چاپلاش تاختىسىغا كۆچۈرەلمىدى",
+    "Show less" : "ئازراق كۆرسەت",
+    "Show more" : "تېخىمۇ كۆپ كۆرسەت",
     "Search in mailbox" : "خەت ساندۇقىدىن ئىزدەڭ",
     "Close" : "ياپ",
     "Search parameters" : "ئىزدەش پارامېتىرلىرى",
@@ -739,10 +741,6 @@ OC.L10N.register(
     "The link leads to %s" : "ئۇلىنىش% s نى كەلتۈرۈپ چىقىرىدۇ",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ئەگەر ئۇ بەتنى زىيارەت قىلىشنى خالىمىسىڭىز ، <a href = \"% s\"> خەت </a> گە قايتسىڭىز بولىدۇ.",
     "Continue to %s" : "داۋاملىق% s",
-    "Sieve filter rules" : "سۈزگۈچ قائىدىسى",
-    "Sieve filter server" : "سۈزگۈچ مۇلازىمېتىر",
-    "Account creation" : "ھېسابات قۇرۇش",
-    "Unselect" : "Unselect",
-    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "ئەلگەك ساندۇقىڭىزغا سۈزگۈچ يېزىشتىكى كۈچلۈك تىل. ئەگەر ئېلېكترونلۇق خەت مۇلازىمىتىڭىز ئۇنى قوللىسا ، خەتتىكى ئەلگەك ئورگىناللىرىنى باشقۇرالايسىز."
+    "Unselect" : "Unselect"
 },
 "nplurals=2; plural=(n != 1);");

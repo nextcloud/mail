@@ -378,8 +378,6 @@ OC.L10N.register(
     "Redirect" : "Omdiriger",
     "The link leads to %s" : "Linket fører til %s",
     "Continue to %s" : "Videre til %s",
-    "Sieve filter rules" : "Sieve filter regler",
-    "Sieve filter server" : "Sigt filter server",
     "Unselect" : "Fravælg"
 },
 "nplurals=2; plural=(n != 1);");

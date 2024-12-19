@@ -465,6 +465,8 @@ OC.L10N.register(
     "Add" : "Přidat",
     "Copied email address to clipboard" : "E-mailová adresa zkopírována do schránky",
     "Could not copy email address to clipboard" : "E-mailovou adresu se nepodařilo zkopírovat do schránky",
+    "Show less" : "Zobrazit méně",
+    "Show more" : "Zobrazit více",
     "Search in mailbox" : "Hledat ve schránce",
     "Close" : "Zavřít",
     "Search parameters" : "Parametry hledání",
@@ -755,10 +757,6 @@ OC.L10N.register(
     "The link leads to %s" : "Odkaz vede na %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Pokud nechcete tuto stránku navštívit, můžete se vrátit do <a href=\"%s\">e-mailu</a>.",
     "Continue to %s" : "Pokračovat na %s",
-    "Sieve filter rules" : "Pravidla sieve filtru",
-    "Sieve filter server" : "Filtrovací server sieve",
-    "Account creation" : "Vytváření účtů",
-    "Unselect" : "Zrušit výběr",
-    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve je mocný jazyk pro psaní filtrovacích pravidel pro e-mailovou schránku. Pokud je vámi využívaná e-mailová služba podporuje, je možné zpravovat sieve skripty v aplikaci E-mail."
+    "Unselect" : "Zrušit výběr"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

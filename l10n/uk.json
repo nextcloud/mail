@@ -408,6 +408,8 @@
     "Add" : "Додати",
     "Copied email address to clipboard" : "Адресу електронної пошти скопійовано до буферу обміну",
     "Could not copy email address to clipboard" : "Не вдалося скопіювати адресу електронної пошти до буфера обміну",
+    "Show less" : "Показувати менше",
+    "Show more" : "Показати більше",
     "Search in mailbox" : "Шукати в поштовій скринці",
     "Close" : "Закрити",
     "Search parameters" : "Параметри пошуку",
@@ -565,9 +567,6 @@
     "Redirect" : "Перенаправлення",
     "The link leads to %s" : "Посилання веде до %s",
     "Continue to %s" : "Перейти до %s",
-    "Sieve filter rules" : "Правила фільтру Sieve",
-    "Sieve filter server" : "Сервер Sieve для фільтрування",
-    "Account creation" : "Створення облікового запису",
     "Unselect" : "Зняти виділення"
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);"
 }

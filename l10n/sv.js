@@ -260,6 +260,8 @@ OC.L10N.register(
     "Copy to clipboard" : "Kopiera till urklipp",
     "Contact name …" : "Kontaktnamn …",
     "Add" : "Lägg till",
+    "Show less" : "Visa mindre",
+    "Show more" : "Visa mer",
     "Search in mailbox" : "Sök i brevlådan",
     "Close" : "Stäng",
     "Search parameters" : "Sökparametrar",

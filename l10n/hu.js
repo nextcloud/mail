@@ -391,6 +391,8 @@ OC.L10N.register(
     "Add" : "Hozzáadás",
     "Copied email address to clipboard" : "Az e-mail a vágólapra másolva",
     "Could not copy email address to clipboard" : "Nem sikerült az e-mail-cím vágólapra másolása",
+    "Show less" : "Kevesebb megjelenítése",
+    "Show more" : "Több megjelenítése",
     "Search in mailbox" : "Keresés a postaládában",
     "Close" : "Bezárás",
     "Search parameters" : "Keresési paraméterek",
@@ -627,8 +629,6 @@ OC.L10N.register(
     "The link leads to %s" : "A hivatkozás ide mutat: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarja megnyitni azt az oldalt, akkor térjen vissza a <a href=\"%s\">Levelezéshez</a>.",
     "Continue to %s" : "Folytatás ide: %s",
-    "Sieve filter rules" : "Levélszűrő szabályok",
-    "Sieve filter server" : "Levélszűrő-kiszolgáló",
     "Unselect" : "Kiválasztás megszüntetése"
 },
 "nplurals=2; plural=(n != 1);");

@@ -331,6 +331,8 @@ OC.L10N.register(
     "Add" : "Lisää",
     "Copied email address to clipboard" : "Sähköpostiosoite kopioitu leikepöydälle",
     "Could not copy email address to clipboard" : "Sähköpostiosoitetta ei voitu kopioida leikepöydälle",
+    "Show less" : "Näytä vähemmän",
+    "Show more" : "Näytä enemmän",
     "Close" : "Sulje",
     "Body" : "Sisältö",
     "Date" : "Päivä",
@@ -392,6 +394,7 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "Juna asemalta {depStation} asemalle {arrStation}",
     "Flag" : "Lippu",
     "Operator" : "Operaattori",
+    "Filter name" : "Nimisuodatin",
     "Actions" : "Toiminnot",
     "New action" : "Uusi toiminto",
     "Priority" : "Tärkeys",
@@ -483,8 +486,6 @@ OC.L10N.register(
     "Redirect" : "Uudelleenohjaus",
     "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
     "Continue to %s" : "Jatka sivulle %s",
-    "Sieve filter rules" : "Sieve-filtterin säännöt",
-    "Sieve filter server" : "Sieve-filtteripalvelin",
     "Unselect" : "Poista valinta"
 },
 "nplurals=2; plural=(n != 1);");

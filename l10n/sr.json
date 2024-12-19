@@ -464,6 +464,8 @@
     "Add" : "Додај",
     "Copied email address to clipboard" : "И-мејл адреса је копирана у клипборд",
     "Could not copy email address to clipboard" : "И-мејл адреса не може да се копира у клипборд",
+    "Show less" : "Прикажи мање",
+    "Show more" : "Прикажи више",
     "Search in mailbox" : "Претражи у сандучету",
     "Close" : "Затвори",
     "Search parameters" : "Параметри претраге",
@@ -754,10 +756,6 @@
     "The link leads to %s" : "Веза води на %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желите да посетите ту страницу, можете да се вратите на <a href=\"%s\">Пошту</a>.",
     "Continue to %s" : "Настави на %s",
-    "Sieve filter rules" : "Правила сито филтера",
-    "Sieve filter server" : "Сервер сито филтера",
-    "Account creation" : "Креирање налога",
-    "Unselect" : "Уклони избор",
-    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve је моћан језик којим се пишу филтери за поштанско сандуче. Ако ваш сервис за електронску пошту то подржава, sieve скриптама можете да управљате унутар програма Пошта."
+    "Unselect" : "Уклони избор"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 }

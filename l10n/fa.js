@@ -379,6 +379,8 @@ OC.L10N.register(
     "Add" : "افزودن",
     "Copied email address to clipboard" : "Copied email address to clipboard",
     "Could not copy email address to clipboard" : "Could not copy email address to clipboard",
+    "Show less" : "Show less",
+    "Show more" : "Show more",
     "Search in mailbox" : "Search in mailbox",
     "Close" : "بسته",
     "Search parameters" : "Search parameters",
@@ -601,8 +603,6 @@ OC.L10N.register(
     "The link leads to %s" : "پیوند منجر به%s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "ادامه دهید%s",
-    "Sieve filter rules" : "Sieve filter rules",
-    "Sieve filter server" : "Sieve filter server",
     "Unselect" : "لغو انتخاب"
 },
 "nplurals=2; plural=(n > 1);");

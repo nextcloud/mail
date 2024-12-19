@@ -101,6 +101,7 @@ OC.L10N.register(
     "Message" : "Ziņojums",
     "Copy to clipboard" : "Kopēt starpliktuvē",
     "Add" : "Pievienot",
+    "Show more" : "Parādīt vairāk",
     "Search in mailbox" : "Meklēt pastkastē",
     "Close" : "Aizvērt",
     "Date" : "Datums",

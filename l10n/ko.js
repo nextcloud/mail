@@ -399,6 +399,8 @@ OC.L10N.register(
     "Add" : "추가",
     "Copied email address to clipboard" : "이메일 주소를 클립보드에 복사함",
     "Could not copy email address to clipboard" : "이메일 주소를 클립보드에 복사할 수 없음",
+    "Show less" : "적게 보기",
+    "Show more" : "더 보기",
     "Search in mailbox" : "편지함에서 검색",
     "Close" : "닫기",
     "Search parameters" : "검색 인자",
@@ -636,9 +638,6 @@ OC.L10N.register(
     "The link leads to %s" : "이 링크가 %s을(를) 향함",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "해당 페이지를 방문하지 않으려면 <a href=\"%s\">메일</a>로 돌아갈 수 있습니다.",
     "Continue to %s" : "%s(으)로 이동",
-    "Sieve filter rules" : "Sieve 필터 규칙",
-    "Sieve filter server" : "Sieve 필터 서버",
-    "Account creation" : "계정 생성",
     "Unselect" : "선택 해제"
 },
 "nplurals=1; plural=0;");

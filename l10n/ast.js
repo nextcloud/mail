@@ -197,6 +197,8 @@ OC.L10N.register(
     "Add" : "Amestar",
     "Copied email address to clipboard" : "La direición de corréu electrónicu copióse nel cartafueyu",
     "Could not copy email address to clipboard" : "Nun se pudo copiar la direición de corréu electrónicu nel cartafueyu",
+    "Show less" : "Amosar menos",
+    "Show more" : "Amosar más",
     "Close" : "Zarrar",
     "Search parameters" : "Parámetros de busca",
     "Body" : "Cuerpu",

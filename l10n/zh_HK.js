@@ -466,6 +466,8 @@ OC.L10N.register(
     "Add" : "新增",
     "Copied email address to clipboard" : "將電郵地址複製到剪貼板",
     "Could not copy email address to clipboard" : "無法將電郵地址複製到剪貼板",
+    "Show less" : "顯示較少",
+    "Show more" : "顯示更多",
     "Search in mailbox" : "在郵箱中搜尋",
     "Close" : "關閉",
     "Search parameters" : "在參數中搜尋",
@@ -756,10 +758,6 @@ OC.L10N.register(
     "The link leads to %s" : "該連結導向至 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "若不想造訪該頁，您可以回到<a href=\"%s\">Mail</a>。",
     "Continue to %s" : "前往 %s",
-    "Sieve filter rules" : "Sieve 過濾規則",
-    "Sieve filter server" : "Sieve 過濾伺服器",
-    "Account creation" : "帳戶創建",
-    "Unselect" : "取消選擇",
-    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve 是為電子郵箱編寫篩選器的強大語言。若您的電子郵件服務支援，您可以在郵件中管理篩選命令稿。"
+    "Unselect" : "取消選擇"
 },
 "nplurals=1; plural=0;");

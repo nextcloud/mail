@@ -466,6 +466,8 @@ OC.L10N.register(
     "Add" : "Cuir",
     "Copied email address to clipboard" : "Cóipeáladh an seoladh ríomhphoist chuig an ngearrthaisce",
     "Could not copy email address to clipboard" : "Níorbh fhéidir an seoladh ríomhphoist a chóipeáil chuig an ngearrthaisce",
+    "Show less" : "Taispeáin níos lú",
+    "Show more" : "Taispeáin níos mó",
     "Search in mailbox" : "Cuardaigh sa bhosca poist",
     "Close" : "Dún",
     "Search parameters" : "Paraiméadair cuardaigh",
@@ -756,10 +758,6 @@ OC.L10N.register(
     "The link leads to %s" : "Téann an nasc chuig %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Mura dteastaíonn uait cuairt a thabhairt ar an leathanach sin, is féidir leat filleadh ar <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Lean ar aghaidh go %s",
-    "Sieve filter rules" : "Rialacha scagaire criathar",
-    "Sieve filter server" : "Freastalaí scagaire criathar",
-    "Account creation" : "Cruthú cuntais",
-    "Unselect" : "Díroghnaigh",
-    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Is teanga chumhachtach í Sieve chun scagairí a scríobh do do bhosca poist. Is féidir leat na scripteanna criathar a bhainistiú i Mail má thacaíonn do sheirbhís ríomhphoist leis."
+    "Unselect" : "Díroghnaigh"
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

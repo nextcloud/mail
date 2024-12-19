@@ -464,6 +464,8 @@
     "Add" : "Ekle",
     "Copied email address to clipboard" : "E-posta adresi panoya kopyalandı",
     "Could not copy email address to clipboard" : "E-posta adresi panoya kopyalanamadı",
+    "Show less" : "Daha az ayrıntı",
+    "Show more" : "Daha çok ayrıntı",
     "Search in mailbox" : "E-posta kutusunda ara",
     "Close" : "Kapat",
     "Search parameters" : "Arama parametreleri",
@@ -754,10 +756,6 @@
     "The link leads to %s" : "Bağlantı %s adresine gidiyor",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Bu sayfayı ziyaret etmek istemiyorsanız, <a href=\"%s\">E-posta</a> uygulamasına geri dönebilirsiniz.",
     "Continue to %s" : "%s sayfasına ilerle",
-    "Sieve filter rules" : "Sieve süzgeci kuralları",
-    "Sieve filter server" : "Sieve süzgeci sunucusu",
-    "Account creation" : "Hesap açılışı",
-    "Unselect" : "Bırak",
-    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve, e-posta kutunuz için süzgeçler yazmakta kullanılan güçlü bir dildir. E-posta hizmetiniz destekliyorsa, E-posta uygulamasında Sieve betiklerini yönetebilirsiniz."
+    "Unselect" : "Bırak"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

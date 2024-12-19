@@ -312,6 +312,8 @@ OC.L10N.register(
     "Copy to clipboard" : "Копирај во клипборд",
     "Contact name …" : "Име на контакт ...",
     "Add" : "Додади",
+    "Show less" : "Помалку",
+    "Show more" : "Прикажи повеќе",
     "Search in mailbox" : "Барај во сандачето",
     "Close" : "Затвори",
     "Search parameters" : "Параметри за пребарување",

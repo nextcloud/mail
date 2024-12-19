@@ -444,6 +444,8 @@ OC.L10N.register(
     "Add" : "Добавить",
     "Copied email address to clipboard" : "Адрес электронной почты скопирован в буфер обмена.",
     "Could not copy email address to clipboard" : "Не удалось скопировать адрес электронной почты в буфер обмена.",
+    "Show less" : "Показывать меньше",
+    "Show more" : "Показывать больше",
     "Search in mailbox" : "Искать в почтовом ящике",
     "Close" : "Закрыть",
     "Search parameters" : "Параметры поиска",
@@ -695,10 +697,6 @@ OC.L10N.register(
     "The link leads to %s" : "Эта ссылка ведёт на %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Если вы не хотите посещать эту страницу, вы можете вернуться в <a href=\"%s\">Почту</a>",
     "Continue to %s" : "Продолжать %s",
-    "Sieve filter rules" : "Правила sieve фильтра",
-    "Sieve filter server" : "Сервер sieve фильтра",
-    "Account creation" : "Создание учетной записи",
-    "Unselect" : "Снять выбор",
-    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve - это мощный язык для создания фильтров для вашего почтового ящика. Вы можете управлять скриптами sieve в Mail, если ваш почтовый сервис поддерживает это."
+    "Unselect" : "Снять выбор"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");
