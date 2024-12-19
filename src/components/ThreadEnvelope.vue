@@ -186,6 +186,7 @@
 							:with-select="false"
 							:with-show-source="true"
 							:more-actions-open.sync="moreActionsOpen"
+							:is-translation-available="!!availableTranslationLanguages.length"
 							@reply="onReply"
 							@delete="$emit('delete',envelope.databaseId)"
 							@show-source-modal="onShowSourceModal"
@@ -221,6 +222,7 @@
 					<TranslationModal v-if="showTranslationModal"
 						:rich-parameters="{}"
 						:message="plainTextBody"
+						:available-languages="availableTranslationLanguages"
 						@close="onCloseTranslationModal" />
 				</template>
 			</div>
@@ -314,6 +316,7 @@ import moment from '@nextcloud/moment'
 import { translateTagDisplayName } from '../util/tag.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import { Text, toPlain } from '../util/text.js'
+import { getTranslationLanguages } from '../service/translationService.js'
 
 // Ternary loading state
 const LOADING_DONE = 0
@@ -411,6 +414,7 @@ export default {
 			rawMessage: '', // Will hold the raw source of the message when requested
 			isInternal: true,
 			enabledSmartReply: loadState('mail', 'llm_freeprompt_available', false),
+			availableTranslationLanguages: [],
 		}
 	},
 	computed: {
@@ -613,6 +617,10 @@ export default {
 				clearInterval(this.$checkInterval)
 			}
 		}, 100)
+
+		const response = await getTranslationLanguages()
+		this.availableTranslationLanguages = response.data.ocs.data.languages
+		console.log('availableTranslationLanguages', this.availableTranslationLanguages)
 	},
 	beforeDestroy() {
 		if (this.seenTimer !== undefined) {

@@ -74,7 +74,7 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 
 import { NcButton, NcDialog, NcLoadingIcon, NcRichText, NcSelect } from '@nextcloud/vue'
 
-import { getTranslationLanguages, translateText } from '../service/translationService.js'
+import { translateText } from '../service/translationService.js'
 
 export default {
 	name: 'TranslationModal',
@@ -99,6 +99,10 @@ export default {
 			type: Object,
 			required: true,
 		},
+		availableLanguages: {
+			type: Array,
+			required: true,
+		},
 	},
 
 	emits: ['close'],
@@ -106,7 +110,6 @@ export default {
 	data() {
 		return {
 			isMounted: false,
-			availableLanguages: null,
 			selectedFrom: null,
 			selectedTo: null,
 			isLoading: false,
@@ -181,11 +184,6 @@ export default {
 		selectedFrom() {
 			this.translatedMessage = ''
 		},
-	},
-
-	async created() {
-		const response = await getTranslationLanguages()
-		this.availableLanguages = response.data.ocs.data.languages
 	},
 
 	async mounted() {

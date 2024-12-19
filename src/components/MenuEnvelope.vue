@@ -72,7 +72,7 @@
 				</template>
 				{{ t('mail', 'Unsnooze') }}
 			</ActionButton>
-			<ActionButton
+			<ActionButton v-if="isTranslationAvailable"
 				:close-after-click="true"
 				@click.prevent="$emit('open-translation-modal')">
 				<template #icon>
@@ -293,6 +293,11 @@ export default {
 			// "Show source" action should only appear in thread envelopes
 			type: Boolean,
 			default: true,
+		},
+		isTranslationAvailable: {
+			type: Boolean,
+			required: false,
+			default: false,
 		},
 	},
 	data() {
