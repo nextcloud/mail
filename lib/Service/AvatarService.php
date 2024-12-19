@@ -91,12 +91,12 @@ class AvatarService implements IAvatarService {
 	 * @param string $uid
 	 * @return Avatar|null
 	 */
-	public function getAvatar(string $email, string $uid): ?Avatar {
+	public function getAvatar(string $email, string $uid, bool $cachedOnly = false): ?Avatar {
 		$cachedAvatar = $this->cache->get($email, $uid);
 		if ($cachedAvatar) {
 			return $cachedAvatar;
 		}
-		if ($cachedAvatar === false) {
+		if ($cachedAvatar === false || $cachedOnly) {
 			// We know there is no avatar
 			return null;
 		}

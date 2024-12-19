@@ -38,21 +38,16 @@ class PreviewEnhancer {
 	/** @var AvatarService */
 	private $avatarService;
 
-	/** @var string|null */
-	private $userId;
-
 	public function __construct(IMAPClientFactory $clientFactory,
 		ImapMapper $imapMapper,
 		DbMapper $dbMapper,
 		LoggerInterface $logger,
-		AvatarService $avatarService,
-		string $userId) {
+		AvatarService $avatarService) {
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
 		$this->mapper = $dbMapper;
 		$this->logger = $logger;
 		$this->avatarService = $avatarService;
-		$this->userId = $userId;
 	}
 
 	/**
@@ -60,7 +55,7 @@ class PreviewEnhancer {
 	 *
 	 * @return Message[]
 	 */
-	public function process(Account $account, Mailbox $mailbox, array $messages, string $mode = 'sync'): array {
+	public function process(Account $account, Mailbox $mailbox, array $messages, bool $preLoadAvatars = false, ?string $userId): array {
 		$needAnalyze = array_reduce($messages, static function (array $carry, Message $message) {
 			if ($message->getStructureAnalyzed()) {
 				// Nothing to do
@@ -70,12 +65,11 @@ class PreviewEnhancer {
 			return array_merge($carry, [$message->getUid()]);
 		}, []);
 
-		// If we are in the API call, we need to fetch the avatar for the sender
-		if ($mode === 'apiCall') {
+		if ($preLoadAvatars) {
 			foreach ($messages as $message) {
-				$from = $message->getFrom()->first() ;
-				if ($message->getAvatar() === null && $from !== null && $from->getEmail() !== null && $this->userId !== null) {
-					$avatar = $this->avatarService->getAvatar($from->getEmail(), $this->userId);
+				$from = $message->getFrom()->first();
+				if ($message->getAvatar() === null && $from !== null && $from->getEmail() !== null && $userId !== null) {
+					$avatar = $this->avatarService->getAvatar($from->getEmail(), $userId, true);
 					$message->setAvatar($avatar);
 				}
 			}
