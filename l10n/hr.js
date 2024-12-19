@@ -235,6 +235,8 @@ OC.L10N.register(
     "Copy to clipboard" : "Kopiraj u međuspremnik",
     "Contact name …" : "Naziv kontakta…",
     "Add" : "Dodaj",
+    "Show less" : "Prikaži manje",
+    "Show more" : "Prikaži više",
     "Close" : "Zatvori",
     "Body" : "Tijelo",
     "Date" : "Datum",
@@ -375,8 +377,6 @@ OC.L10N.register(
     "Redirect" : "Preusmjeri",
     "The link leads to %s" : "Ova poveznica vodi do %s",
     "Continue to %s" : "Idi do %s",
-    "Sieve filter rules" : "Pravila filtra Sieve",
-    "Sieve filter server" : "Poslužitelj filtra Sieve",
     "Unselect" : "Poništi odabir"
 },
 "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");

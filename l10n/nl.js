@@ -250,6 +250,8 @@ OC.L10N.register(
     "Copy to clipboard" : "Kopiëren naar het klembord",
     "Contact name …" : "Naam contactpersoon ...",
     "Add" : "Toevoegen",
+    "Show less" : "Toon minder",
+    "Show more" : "Toon meer",
     "Close" : "Sluit",
     "Body" : "Body",
     "Date" : "Datum",
@@ -400,8 +402,6 @@ OC.L10N.register(
     "Redirect" : "Omleiden",
     "The link leads to %s" : "De link verwijst naar %s",
     "Continue to %s" : "Verder naar %s",
-    "Sieve filter rules" : "Sieve filterregels",
-    "Sieve filter server" : "Sieve filterserver",
     "Unselect" : "Deselecteren"
 },
 "nplurals=2; plural=(n != 1);");

@@ -342,6 +342,8 @@
     "Add" : "Aggiungi",
     "Copied email address to clipboard" : "Indirizzo email copiato negli appunti",
     "Could not copy email address to clipboard" : "Impossibile copiare l'indirizzo email negli appunti",
+    "Show less" : "Mostra meno",
+    "Show more" : "Mostra più",
     "Search in mailbox" : "Cerca nella casella di posta",
     "Close" : "Chiudi",
     "Search parameters" : "Parametri di ricerca",
@@ -548,9 +550,6 @@
     "Redirect" : "Redirigi",
     "The link leads to %s" : "Il collegamento conduce a %s",
     "Continue to %s" : "Continua su %s",
-    "Sieve filter rules" : "Regole di filtro Sieve",
-    "Sieve filter server" : "Server dei filtri Sieve",
-    "Account creation" : "Creazione dell'account",
     "Unselect" : "Deseleziona"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

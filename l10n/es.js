@@ -426,6 +426,8 @@ OC.L10N.register(
     "Add" : "Añadir",
     "Copied email address to clipboard" : "Se copió la dirección de correo electrónico al portapapeles",
     "Could not copy email address to clipboard" : "No fue posible copiar la dirección de correo electrónico al portapapeles",
+    "Show less" : "Ver menos",
+    "Show more" : "Ver más",
     "Search in mailbox" : "Buscar en buzón",
     "Close" : "Cerrar",
     "Search parameters" : "Parámetros de búsqueda",
@@ -683,9 +685,6 @@ OC.L10N.register(
     "The link leads to %s" : "El enlace conduce a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no quieres visitar esta página puedes volver a <a href=\"%s\">Correo</a>.",
     "Continue to %s" : "Continuar a %s",
-    "Sieve filter rules" : "Reglas del filtro de Sieve",
-    "Sieve filter server" : "Servidor de filtros Sieve",
-    "Account creation" : "Creación de cuentas",
     "Unselect" : "Deseleccionar"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

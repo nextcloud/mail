@@ -411,6 +411,8 @@ OC.L10N.register(
     "Add" : "Afegeix",
     "Copied email address to clipboard" : "S'ha copiat l'adreça de correu electrònic al porta-retalls",
     "Could not copy email address to clipboard" : "No s'ha pogut copiar l'adreça de correu electrònic al porta-retalls",
+    "Show less" : "Mostra'n menys",
+    "Show more" : "Mostra'n més",
     "Search in mailbox" : "Cercar a la bústia d'entrada",
     "Close" : "Tanca",
     "Search parameters" : "Cerca paràmetres",
@@ -651,9 +653,6 @@ OC.L10N.register(
     "The link leads to %s" : "L'enllaç porta a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no voleu visitar aquesta pàgina, podeu tornar a <a href=\"%s\">Correu</a>.",
     "Continue to %s" : "Continua a %s",
-    "Sieve filter rules" : "Regles de filtre de missatges",
-    "Sieve filter server" : "Servidor de filtre de missatges",
-    "Account creation" : "Creació de comptes",
     "Unselect" : "No seleccionis"
 },
 "nplurals=2; plural=(n != 1);");

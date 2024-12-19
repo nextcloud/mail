@@ -453,6 +453,8 @@
     "Add" : "Pridať",
     "Copied email address to clipboard" : "E-mailová adresa bola skopírovaná do schránky",
     "Could not copy email address to clipboard" : "Nepodarilo sa skopírovať e-mailovú adresu do schránky.",
+    "Show less" : "Zobraziť menej",
+    "Show more" : "Zobraziť viac",
     "Search in mailbox" : "Vyhľadať v schránke",
     "Close" : "Zatvoriť",
     "Search parameters" : "Parametre vyhľadávania",
@@ -743,10 +745,6 @@
     "The link leads to %s" : "Odkaz smeruje na %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ak si neprajete navštíviť stránku, možete sa vátiť na <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Pokračovať na %s",
-    "Sieve filter rules" : "Pravidlá sieve filtra",
-    "Sieve filter server" : "Filtrovací server sieve",
-    "Account creation" : "Vytvoriť účet",
-    "Unselect" : "Zrušiť výber",
-    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve je výkonný jazyk na písanie filtrov pre vašu poštovú schránku. Sieve skripty môžete spravovať v aplikácii Mail, ak to vaša e-mailová služba podporuje."
+    "Unselect" : "Zrušiť výber"
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);"
 }

@@ -459,6 +459,8 @@ OC.L10N.register(
     "Add" : "追加",
     "Copied email address to clipboard" : "メールアドレスをクリップボードにコピーしました",
     "Could not copy email address to clipboard" : "クリップボードにメールアドレスをコピーすることができませんでした",
+    "Show less" : "表示を減らす",
+    "Show more" : "表示を増やす",
     "Search in mailbox" : "メールボックス内の検索",
     "Close" : "閉じる",
     "Search parameters" : "パラメータを検索する",
@@ -715,9 +717,6 @@ OC.L10N.register(
     "The link leads to %s" : "リンクが %s につながります",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ページにアクセスしたくない場合は、<a href=\"%s\">メール</a>に戻ることができます",
     "Continue to %s" : "%s にリダイレクトする",
-    "Sieve filter rules" : "sieveフィルターのルール",
-    "Sieve filter server" : "sieve フィルターサーバー",
-    "Account creation" : "アカウント作成",
     "Unselect" : "選択解除"
 },
 "nplurals=1; plural=0;");

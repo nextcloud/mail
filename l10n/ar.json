@@ -464,6 +464,8 @@
     "Add" : "إضافة",
     "Copied email address to clipboard" : "تمّ نسخ عنوان البريد الالكتروني إلى الحافظة",
     "Could not copy email address to clipboard" : "تعذّر نسخ عنوان البريد الالكتروني إلى الحافظة",
+    "Show less" : "عرض أقل",
+    "Show more" : "عرض المزيد",
     "Search in mailbox" : "البحث في صندوق البريد",
     "Close" : "إغلاق",
     "Search parameters" : "بحث المعاملات",
@@ -754,10 +756,6 @@
     "The link leads to %s" : "الرابط يؤدي إل %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "إذا لم تكن راغباً في زيارة تلك الصفحة، يمكنك العودة إلى <a href=\"%s\">البريد Mail</a>.",
     "Continue to %s" : "إستمر نحو %s",
-    "Sieve filter rules" : "قواعد تصفية الغربال sieve",
-    "Sieve filter server" : "خادم عامل التصفية sieve",
-    "Account creation" : "إنشاء حساب",
-    "Unselect" : "إلغاء التحديد",
-    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "يعتبر \"الغربال \"Sieve لغة قوية لكتابة شروط تصفية صندوق البريد عندك. يمكنك إدارة سكريبتات عوامل تصفية البريد إذا كانت مدعومة من خدمة البريد الإلكتروني لديك."
+    "Unselect" : "إلغاء التحديد"
 },"pluralForm" :"nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;"
 }

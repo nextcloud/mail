@@ -466,6 +466,8 @@ OC.L10N.register(
     "Add" : "Gehitu",
     "Copied email address to clipboard" : "e-posta helbidea arbelera kopiatu da",
     "Could not copy email address to clipboard" : "Ezin izan da e-posta helbidea arbelera kopiatu",
+    "Show less" : "Erakutsi gutxiago",
+    "Show more" : "Erakutsi gehiago",
     "Search in mailbox" : "Bilatu postontzian",
     "Close" : "Itxi",
     "Search parameters" : "Bilaketa parametroak",
@@ -756,10 +758,6 @@ OC.L10N.register(
     "The link leads to %s" : "Estekak hona bideratzen du: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Orrialde hori bisitatu nahi ez baduzu, itzul dezakezu <a href=\"%s\">Mail </a>-ra.",
     "Continue to %s" : "Jarraitu hona: %s",
-    "Sieve filter rules" : "Sieve iragazketa arauak",
-    "Sieve filter server" : "Sieve iragazketa zerbitzaria",
-    "Account creation" : "Kontua sortzea",
-    "Unselect" : "Desautatu",
-    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve zure postontzirako iragazkiak idazteko hizkuntza indartsua da. Sieve scriptak Posta-n  kudea ditzakezu zure posta elektroniko zerbitzuak onartzen badu."
+    "Unselect" : "Desautatu"
 },
 "nplurals=2; plural=(n != 1);");

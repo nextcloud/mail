@@ -407,6 +407,8 @@ OC.L10N.register(
     "Add" : "新增",
     "Copied email address to clipboard" : "已复制电子邮件地址到剪贴板",
     "Could not copy email address to clipboard" : "无法复制电子邮件地址到剪贴板",
+    "Show less" : "显示更少",
+    "Show more" : "显示更多",
     "Search in mailbox" : "在邮箱中搜索",
     "Close" : "关闭",
     "Search parameters" : "搜索参数",
@@ -647,9 +649,6 @@ OC.L10N.register(
     "The link leads to %s" : "链接指向 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "如果不想访问此页面，您可以返回<a href=\"%s\">邮件</a>。",
     "Continue to %s" : "继续 %s",
-    "Sieve filter rules" : "Sieve 过滤器规则",
-    "Sieve filter server" : "Sieve 过滤器服务器",
-    "Account creation" : "账号创建",
     "Unselect" : "取消选择"
 },
 "nplurals=1; plural=0;");

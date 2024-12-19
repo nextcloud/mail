@@ -128,6 +128,8 @@ OC.L10N.register(
     "Message" : "Mesaĝo",
     "Copy to clipboard" : "Kopii tondejen",
     "Add" : "Aldoni",
+    "Show less" : "Montri malpli",
+    "Show more" : "Montri pli",
     "Close" : "Malfermi",
     "Date" : "Date",
     "Tags" : "Etikedoj",

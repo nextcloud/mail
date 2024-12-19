@@ -459,6 +459,8 @@ OC.L10N.register(
     "Add" : "Legg til",
     "Copied email address to clipboard" : "Kopierte e-postadressen til utklippstavlen",
     "Could not copy email address to clipboard" : "Kunne ikke kopiere e-postadressen til utklippstavlen",
+    "Show less" : "Vis mindre",
+    "Show more" : "Vis mer",
     "Search in mailbox" : "Søk i postboks",
     "Close" : "Lukk",
     "Search parameters" : "Søkeparametere",
@@ -718,9 +720,6 @@ OC.L10N.register(
     "The link leads to %s" : "Denne lenken leder til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Hvis du ikke vil besøke den siden, kan du gå tilbake til <a href=\"%s\">E-post</a>",
     "Continue to %s" : "Fortsett til %s",
-    "Sieve filter rules" : "Sieve filter regler",
-    "Sieve filter server" : "Sieve filter server",
-    "Account creation" : "Opprettelse av konto",
     "Unselect" : "Velg bort"
 },
 "nplurals=2; plural=(n != 1);");

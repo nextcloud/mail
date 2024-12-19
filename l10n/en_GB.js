@@ -466,6 +466,8 @@ OC.L10N.register(
     "Add" : "Add",
     "Copied email address to clipboard" : "Copied email address to clipboard",
     "Could not copy email address to clipboard" : "Could not copy email address to clipboard",
+    "Show less" : "Show less",
+    "Show more" : "Show more",
     "Search in mailbox" : "Search in mailbox",
     "Close" : "Close",
     "Search parameters" : "Search parameters",
@@ -756,10 +758,6 @@ OC.L10N.register(
     "The link leads to %s" : "The link leads to %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continue to %s",
-    "Sieve filter rules" : "Sieve filter rules",
-    "Sieve filter server" : "Sieve filter server",
-    "Account creation" : "Account creation",
-    "Unselect" : "Unselect",
-    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it."
+    "Unselect" : "Unselect"
 },
 "nplurals=2; plural=(n != 1);");

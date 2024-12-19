@@ -464,6 +464,8 @@
     "Add" : "Hinzufügen",
     "Copied email address to clipboard" : "E-Mail-Adresse in die Zwischenablage kopiert",
     "Could not copy email address to clipboard" : "E-Mail-Adresse konnte nicht in die Zwischenablage kopiert werden",
+    "Show less" : "Weniger anzeigen",
+    "Show more" : "Mehr anzeigen",
     "Search in mailbox" : "Im Postfach suchen",
     "Close" : "Schließen",
     "Search parameters" : "Suchparameter",
@@ -754,10 +756,6 @@
     "The link leads to %s" : "Der Link führt nach %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Wenn Sie diese Seite nicht besuchen möchten, können Sie zu <a href=\"%s\">Mail</a> zurückkehren.",
     "Continue to %s" : "Weiter nach %s",
-    "Sieve filter rules" : "Sieve-Filterregeln",
-    "Sieve filter server" : "Sieve-Filterserver",
-    "Account creation" : "Kontoerstellung",
-    "Unselect" : "Abwählen",
-    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve ist eine leistungsstarke Sprache zum Schreiben von Filtern für Ihr Postfach. Sie können die Sieve-Skripte in Mail verwalten, wenn Ihr E-Mail-Dienst dies unterstützt."
+    "Unselect" : "Abwählen"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

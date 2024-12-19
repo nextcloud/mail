@@ -183,6 +183,8 @@ OC.L10N.register(
     "Oh Snap!" : "שוד ושבר!",
     "Copy to clipboard" : "העתקה ללוח הגזירים",
     "Add" : "הוספה",
+    "Show less" : "להציג פחות",
+    "Show more" : "להציג יותר",
     "Close" : "סגירה",
     "Body" : "גוף",
     "Date" : "תאריך",

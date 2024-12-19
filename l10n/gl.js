@@ -466,6 +466,8 @@ OC.L10N.register(
     "Add" : "Engadir",
     "Copied email address to clipboard" : "Copiouse o enderezo de correo no portapapeis",
     "Could not copy email address to clipboard" : "Non foi posíbel copiar o enderezo de correo no portapapeis",
+    "Show less" : "Amosar menos",
+    "Show more" : "Amosar máis",
     "Search in mailbox" : "Buscar na caixa de correo",
     "Close" : "Pechar",
     "Search parameters" : "Buscar parámetros",
@@ -756,10 +758,6 @@ OC.L10N.register(
     "The link leads to %s" : "A ligazón leva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Se non quere visitar esa páxina, pode volver a <a href=\"%s\">Correo</a>.",
     "Continue to %s" : "Continuar para %s",
-    "Sieve filter rules" : "Regras de filtros de «sieve» (peneira)",
-    "Sieve filter server" : "Servidor de filtros de «sieve» (peneira)",
-    "Account creation" : "Creación de conta",
-    "Unselect" : "Desmarcar",
-    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve (peneira) é ​​unha potente linguaxe para escribir filtros para a caixa de correo. Pode xestionar os scripts de «sieve» (peneira) na aplicación Correo sempre que o seu servizo de correo o admita."
+    "Unselect" : "Desmarcar"
 },
 "nplurals=2; plural=(n != 1);");

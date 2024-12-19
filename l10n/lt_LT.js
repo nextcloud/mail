@@ -293,6 +293,8 @@ OC.L10N.register(
     "Add" : "Pridėti",
     "Copied email address to clipboard" : "El. pašto adresas nukopijuotas į iškarpinę",
     "Could not copy email address to clipboard" : "Nepavyko nukopijuoti el. pašto adreso į iškarpinę",
+    "Show less" : "Rodyti mažiau",
+    "Show more" : "Rodyti daugiau",
     "Search in mailbox" : "Ieškoti pašto dėžutėje",
     "Close" : "Užverti",
     "Date" : "Data",
@@ -430,7 +432,6 @@ OC.L10N.register(
     "Redirect" : "Peradresuoti",
     "The link leads to %s" : "Nuoroda veda į %s",
     "Continue to %s" : "Tęsti į %s",
-    "Account creation" : "Paskyros sukūrimas",
     "Unselect" : "Nuimti žymėjimą"
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");

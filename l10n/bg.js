@@ -349,6 +349,8 @@ OC.L10N.register(
     "Add" : "Добавяне",
     "Copied email address to clipboard" : "Копиран е имейл адрес в клипборда",
     "Could not copy email address to clipboard" : "Неуспешно копиране на имейл адреса в клипборда",
+    "Show less" : "Покажи по-малко",
+    "Show more" : "Покажи повече",
     "Search in mailbox" : "Търсене в пощенската кутия",
     "Close" : "Затваряне",
     "Search parameters" : "Параметри на търсенето",
@@ -557,8 +559,6 @@ OC.L10N.register(
     "The link leads to %s" : "Връзката води до %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желаете да посетите тази страница, може да се върнете към <a href=\"%s\">Поща</a>.",
     "Continue to %s" : "Продължи към %s",
-    "Sieve filter rules" : "Правила за филтриране чрез сито",
-    "Sieve filter server" : "Сървър за сито филтър",
     "Unselect" : "Размаркирай"
 },
 "nplurals=2; plural=(n != 1);");
