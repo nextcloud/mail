@@ -189,10 +189,6 @@ export default {
 	async mounted() {
 		this.selectedTo = this.optionsTo.find(language => language.id === this.userLanguage) || null
 
-		if (this.selectedTo) {
-			await this.translateMessage()
-		}
-
 		this.$nextTick(() => {
 			// FIXME trick to avoid focusTrap() from activating on NcSelect
 			this.isMounted = !!this.$refs.translateDialog.navigationId
