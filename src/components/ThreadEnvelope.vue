@@ -186,13 +186,15 @@
 							:with-select="false"
 							:with-show-source="true"
 							:more-actions-open.sync="moreActionsOpen"
+							:is-translation-available="!!availableTranslationLanguages.length"
 							@reply="onReply"
 							@delete="$emit('delete',envelope.databaseId)"
 							@show-source-modal="onShowSourceModal"
 							@open-tag-modal="onOpenTagModal"
 							@open-move-modal="onOpenMoveModal"
 							@open-event-modal="onOpenEventModal"
-							@open-task-modal="onOpenTaskModal" />
+							@open-task-modal="onOpenTaskModal"
+							@open-translation-modal="onOpenTranslationModal" />
 					</NcActions>
 					<NcModal v-if="showSourceModal" class="source-modal" @close="onCloseSourceModal">
 						<div class="source-modal-content">
@@ -217,6 +219,11 @@
 						:account="account"
 						:envelopes="[envelope]"
 						@close="onCloseTagModal" />
+					<TranslationModal v-if="showTranslationModal"
+						:rich-parameters="{}"
+						:message="plainTextBody"
+						:available-languages="availableTranslationLanguages"
+						@close="onCloseTranslationModal" />
 				</template>
 			</div>
 		</div>
@@ -299,6 +306,7 @@ import TagModal from './TagModal.vue'
 import MoveModal from './MoveModal.vue'
 import TaskModal from './TaskModal.vue'
 import EventModal from './EventModal.vue'
+import TranslationModal from './TranslationModal.vue'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
@@ -307,6 +315,8 @@ import { mapStores } from 'pinia'
 import moment from '@nextcloud/moment'
 import { translateTagDisplayName } from '../util/tag.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
+import { Text, toPlain } from '../util/text.js'
+import { getTranslationLanguages } from '../service/translationService.js'
 
 // Ternary loading state
 const LOADING_DONE = 0
@@ -321,6 +331,7 @@ export default {
 		TaskModal,
 		MoveModal,
 		TagModal,
+		TranslationModal,
 		ConfirmModal,
 		Avatar,
 		NcActionButton,
@@ -398,9 +409,12 @@ export default {
 			showEventModal: false,
 			showTaskModal: false,
 			showTagModal: false,
+			showTranslationModal: false,
+			plainTextBody: '',
 			rawMessage: '', // Will hold the raw source of the message when requested
 			isInternal: true,
 			enabledSmartReply: loadState('mail', 'llm_freeprompt_available', false),
+			availableTranslationLanguages: [],
 		}
 	},
 	computed: {
@@ -603,6 +617,10 @@ export default {
 				clearInterval(this.$checkInterval)
 			}
 		}, 100)
+
+		const response = await getTranslationLanguages()
+		this.availableTranslationLanguages = response.data.ocs.data.languages
+		console.log('availableTranslationLanguages', this.availableTranslationLanguages)
 	},
 	beforeDestroy() {
 		if (this.seenTimer !== undefined) {
@@ -862,6 +880,23 @@ export default {
 		},
 		onCloseTagModal() {
 			this.showTagModal = false
+		},
+		onOpenTranslationModal() {
+			this.handleHtmlBodyMessages().then(() => {
+				this.showTranslationModal = true
+			})
+		},
+		async handleHtmlBodyMessages() {
+			if (this.message.hasHtmlBody) {
+				let text = new Text('html', this.message.body)
+				text = toPlain(text)
+				this.plainTextBody = text.value
+			} else {
+				this.plainTextBody = this.message.body
+			}
+		},
+		onCloseTranslationModal() {
+			this.showTranslationModal = false
 		},
 		async onShowSourceModal() {
 			if (this.rawMessage.length === 0) {
