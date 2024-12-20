@@ -55,7 +55,7 @@ class PreviewEnhancer {
 	 *
 	 * @return Message[]
 	 */
-	public function process(Account $account, Mailbox $mailbox, array $messages, bool $preLoadAvatars = false, ?string $userId): array {
+	public function process(Account $account, Mailbox $mailbox, array $messages, bool $preLoadAvatars = false, ?string $userId = null): array {
 		$needAnalyze = array_reduce($messages, static function (array $carry, Message $message) {
 			if ($message->getStructureAnalyzed()) {
 				// Nothing to do
