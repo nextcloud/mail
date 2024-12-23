@@ -179,6 +179,28 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
+	 * @param array<int,int> $identifiers
+	 *
+	 * @return array
+	 */
+	public function findMailboxAndUid(array $identifiers): array {
+		
+		if ($identifiers === []) {
+			return [];
+		}
+
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('id', 'mailbox_id', 'uid')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->in('id', $qb->createNamedParameter($identifiers, IQueryBuilder::PARAM_STR_ARRAY), IQueryBuilder::PARAM_STR_ARRAY)
+			);
+
+		return $qb->executeQuery()->fetchAll();
+		
+	}
+
+	/**
 	 * @param Account $account
 	 *
 	 * @return DatabaseMessage[]
