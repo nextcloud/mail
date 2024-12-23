@@ -72,6 +72,15 @@
 				</template>
 				{{ t('mail', 'Unsnooze') }}
 			</ActionButton>
+			<ActionButton v-if="isTranslationEnabled ?? false"
+				:close-after-click="true"
+				@click.prevent="$emit('open-translation-modal')">
+				<template #icon>
+					<TranslationIcon :title="t('mail', 'Translate')"
+						:size="16" />
+				</template>
+				{{ t('mail', 'Translate') }}
+			</ActionButton>
 			<ActionButton :close-after-click="false"
 				@click="localMoreActionsOpen=true">
 				<template #icon>
@@ -214,6 +223,7 @@ import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
 import DownloadIcon from 'vue-material-design-icons/Download.vue'
 import PrinterIcon from 'vue-material-design-icons/Printer.vue'
+import TranslationIcon from 'vue-material-design-icons/Translate.vue'
 import { mailboxHasRights } from '../util/acl.js'
 import { generateUrl } from '@nextcloud/router'
 import InformationIcon from 'vue-material-design-icons/Information.vue'
@@ -247,6 +257,7 @@ export default {
 		ChevronLeft,
 		CheckIcon,
 		DotsHorizontalIcon,
+		TranslationIcon,
 		DownloadIcon,
 		InformationIcon,
 		OpenInNewIcon,
@@ -283,6 +294,11 @@ export default {
 			type: Boolean,
 			default: true,
 		},
+		isTranslationAvailable: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
 	},
 	data() {
 		return {
@@ -296,6 +312,7 @@ export default {
 	computed: {
 		...mapGetters([
 			'isSnoozeDisabled',
+			'isTranslationEnabled',
 		]),
 		account() {
 			const accountId = this.envelope.accountId ?? this.mailbox.accountId
