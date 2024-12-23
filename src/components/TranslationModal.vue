@@ -75,6 +75,7 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import { NcButton, NcDialog, NcLoadingIcon, NcRichText, NcSelect } from '@nextcloud/vue'
 
 import { translateText } from '../service/translationService.js'
+import { mapGetters } from 'vuex'
 
 export default {
 	name: 'TranslationModal',
@@ -99,10 +100,6 @@ export default {
 			type: Object,
 			required: true,
 		},
-		availableLanguages: {
-			type: Array,
-			required: true,
-		},
 	},
 
 	emits: ['close'],
@@ -118,6 +115,10 @@ export default {
 	},
 
 	computed: {
+		...mapGetters({
+			availableLanguages: 'getTranslationLanguages',
+		}),
+
 		userLanguage() {
 			return navigator.language.substring(0, 2)
 		},
