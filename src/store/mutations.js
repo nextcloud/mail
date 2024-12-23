@@ -519,4 +519,10 @@ export default {
 	showSettingsForAccount(state, accountId) {
 		state.showAccountSettings = accountId
 	},
+	enableTranslation(state, enabled) {
+		state.isTranslationEnabled = enabled
+	},
+	setTranslationLanguages(state, languages) {
+		state.translationLanguages = languages
+	},
 }

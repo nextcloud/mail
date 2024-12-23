@@ -72,7 +72,7 @@
 				</template>
 				{{ t('mail', 'Unsnooze') }}
 			</ActionButton>
-			<ActionButton v-if="isTranslationAvailable"
+			<ActionButton v-if="isTranslationEnabled ?? false"
 				:close-after-click="true"
 				@click.prevent="$emit('open-translation-modal')">
 				<template #icon>
@@ -312,6 +312,7 @@ export default {
 	computed: {
 		...mapGetters([
 			'isSnoozeDisabled',
+			'isTranslationEnabled',
 		]),
 		account() {
 			const accountId = this.envelope.accountId ?? this.mailbox.accountId

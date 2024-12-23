@@ -5,9 +5,38 @@
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
+import store from '../store/index.js'
 
-const getTranslationLanguages = async function(options) {
-	return axios.get(generateOcsUrl('/translation/languages', undefined, options), options)
+const checkTranslationServiceAvailability = function() {
+	/// TODO
+	// const response = await axios.post(generateOcsUrl('taskprocessing/tasktypes'), {
+	// 	appId: 'mail',
+	// })
+
+	const isAvailable = true
+	const languages = [
+		{
+			from: 'en',
+			fromLabel: 'English',
+			to: 'fr',
+			toLabel: 'French',
+		},
+		{
+			from: 'en',
+			fromLabel: 'English',
+			to: 'de',
+			toLabel: 'German',
+		},
+		{
+			from: 'fr',
+			fromLabel: 'French',
+			to: 'en',
+			toLabel: 'English',
+		},
+	]
+
+	store.commit('enableTranslation', isAvailable)
+	store.commit('setTranslationLanguages', languages)
 }
 
 const translateText = async function(text, fromLanguage, toLanguage) {
@@ -36,4 +65,4 @@ const translateText = async function(text, fromLanguage, toLanguage) {
 	}
 }
 
-export { getTranslationLanguages, translateText }
+export { checkTranslationServiceAvailability, translateText }

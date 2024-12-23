@@ -21,6 +21,7 @@ import { fixAccountId } from './service/AccountService.js'
 import { loadState } from '@nextcloud/initial-state'
 import { createPinia, PiniaVuePlugin } from 'pinia'
 import useOutboxStore from './store/outboxStore.js'
+import { checkTranslationServiceAvailability } from './service/translationService.js'
 
 // eslint-disable-next-line camelcase
 __webpack_nonce__ = btoa(getRequestToken())
@@ -148,6 +149,8 @@ store.commit('setFollowUpFeatureAvailable', followUpFeatureAvailable)
 
 const smimeCertificates = loadState('mail', 'smime-certificates', [])
 store.commit('setSmimeCertificates', smimeCertificates)
+
+checkTranslationServiceAvailability()
 
 /* eslint-disable vue/match-component-file-name */
 export default new Vue({
