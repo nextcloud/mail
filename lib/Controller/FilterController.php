@@ -12,13 +12,14 @@ namespace OCA\Mail\Controller;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\FilterService;
+use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\Route;
 use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\OCSController;
 use OCP\IRequest;
 
-class FilterController extends OCSController {
+class FilterController extends Controller {
 	private string $currentUserId;
 
 	public function __construct(
@@ -31,7 +32,9 @@ class FilterController extends OCSController {
 		$this->currentUserId = $userId;
 	}
 
+
 	#[Route(Route::TYPE_FRONTPAGE, verb: 'GET', url: '/api/filter/{accountId}', requirements: ['accountId' => '[\d]+'])]
+	#[NoAdminRequired]
 	public function getFilters(int $accountId) {
 		$account = $this->accountService->findById($accountId);
 
@@ -45,6 +48,7 @@ class FilterController extends OCSController {
 	}
 
 	#[Route(Route::TYPE_FRONTPAGE, verb: 'PUT', url: '/api/filter/{accountId}', requirements: ['accountId' => '[\d]+'])]
+	#[NoAdminRequired]
 	public function updateFilters(int $accountId, array $filters) {
 		$account = $this->accountService->findById($accountId);
 
