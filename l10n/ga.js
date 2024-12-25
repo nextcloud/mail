@@ -232,6 +232,7 @@ OC.L10N.register(
     "No messages in this mailbox" : "Níl aon teachtaireacht sa bhosca ríomhphoist seo",
     "No messages" : "Gan teachtaireachtaí",
     "Draft: " : "Dréacht:",
+    "This summary was AI generated" : "Gineadh AI san achoimre seo",
     "Encrypted message" : "Teachtaireacht criptithe",
     "This message is unread" : "Tá an teachtaireacht seo gan léamh",
     "Unfavorite" : "Mí-mheas",
