@@ -232,6 +232,7 @@ OC.L10N.register(
     "No messages in this mailbox" : "此信箱中沒有郵件",
     "No messages" : "沒有訊息",
     "Draft: " : "草稿：",
+    "This summary was AI generated" : "此摘要為人工智能產生",
     "Encrypted message" : "加密訊息",
     "This message is unread" : "此訊息未讀",
     "Unfavorite" : "取消我的最愛",

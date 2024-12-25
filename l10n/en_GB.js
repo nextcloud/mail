@@ -232,6 +232,7 @@ OC.L10N.register(
     "No messages in this mailbox" : "No messages in this mailbox",
     "No messages" : "No messages",
     "Draft: " : "Draft: ",
+    "This summary was AI generated" : "This summary was AI generated",
     "Encrypted message" : "Encrypted message",
     "This message is unread" : "This message is unread",
     "Unfavorite" : "Unfavourite",

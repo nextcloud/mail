@@ -232,6 +232,7 @@ OC.L10N.register(
     "No messages in this mailbox" : "У овом сандучету нема поште",
     "No messages" : "Нема порука",
     "Draft: " : "Нацрт: ",
+    "This summary was AI generated" : "Резиме је генерисала AI",
     "Encrypted message" : "Шифрована порука",
     "This message is unread" : "Ова порука није прочитана",
     "Unfavorite" : "Није омиљено",

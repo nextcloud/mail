@@ -232,6 +232,7 @@ OC.L10N.register(
     "No messages in this mailbox" : "Keine Nachrichten in diesem Postfach",
     "No messages" : "Keine Nachrichten",
     "Draft: " : "Entwurf:",
+    "This summary was AI generated" : "Diese Zusammenfassung wurde von KI generiert",
     "Encrypted message" : "Verschlüsselte Nachricht",
     "This message is unread" : "Diese Nachricht ist ungelesen",
     "Unfavorite" : "Nicht favorisieren",
