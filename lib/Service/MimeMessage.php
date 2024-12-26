@@ -63,7 +63,7 @@ class MimeMessage {
 	 */
 	private function buildMessagePart(?string $contentPlain, ?string $contentHtml): Horde_Mime_Part {
 
-		if ($contentHtml !== null && mb_strlen($contentHtml) > 0) {
+		if (isset($contentHtml)) {
 			
 			// determine if content is wrapped properly in a html tag, otherwise we need to wrap it properly
 			if (mb_strpos($contentHtml, '<html') === false) {
@@ -73,7 +73,7 @@ class MimeMessage {
 			}
 			
 			$doc = new DOMDocument();
-			$doc->loadHTML($source, LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
+			$doc->loadHTML((string)$source, LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
 			// determine if content has any embedded images
 			$embeddedParts = [];
 			foreach ($doc->getElementsByTagName('img') as $id => $image) {
