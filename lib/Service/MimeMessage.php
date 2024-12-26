@@ -65,7 +65,7 @@ class MimeMessage {
 
 		if (isset($contentHtml)) {
 			
-			// determine if content is wrapped properly in a html tag, other we need to wrap it properly
+			// determine if content is wrapped properly in a html tag, otherwise we need to wrap it properly
 			if (mb_strpos($contentHtml, '<html') === false) {
 				$source = '<html><meta http-equiv="content-type" content="text/html; charset=UTF-8"><body>' . $contentHtml . '</body>';
 			} else {
