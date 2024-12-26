@@ -63,7 +63,7 @@ class MimeMessage {
 	 */
 	private function buildMessagePart(?string $contentPlain, ?string $contentHtml): Horde_Mime_Part {
 
-		if (isset($contentHtml)) {
+		if ($contentHtml !== null && mb_strlen($contentHtml) > 0) {
 			
 			// determine if content is wrapped properly in a html tag, otherwise we need to wrap it properly
 			if (mb_strpos($contentHtml, '<html') === false) {
