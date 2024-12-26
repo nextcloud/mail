@@ -211,7 +211,7 @@ export default {
 			try {
 				this.isLoading = true
 				const response = await translateText(this.message.trim(), sourceLanguage, this.selectedTo?.id)
-				this.translatedMessage = response.data.ocs.data.text
+				this.translatedMessage = response
 			} catch (error) {
 				console.error(error)
 				showError(error.response?.data?.ocs?.data?.message ?? t('mail', 'The message could not be translated'))
