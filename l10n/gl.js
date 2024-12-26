@@ -232,6 +232,7 @@ OC.L10N.register(
     "No messages in this mailbox" : "Non hai mensaxes nesta caixa de correo",
     "No messages" : "Non hai mensaxes",
     "Draft: " : "Borrador:",
+    "This summary was AI generated" : "Este resumo foi xerado por IA",
     "Encrypted message" : "Mensaxe cifrada",
     "This message is unread" : "Esta mensaxe está sen ler",
     "Unfavorite" : "Retirar de favoritos",
