@@ -80,6 +80,7 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 		<command>OCA\Mail\Command\CleanUp</command>
 		<command>OCA\Mail\Command\CreateAccount</command>
 		<command>OCA\Mail\Command\CreateTagMigrationJobEntry</command>
+		<command>OCA\Mail\Command\DebugAccount</command>
 		<command>OCA\Mail\Command\DeleteAccount</command>
 		<command>OCA\Mail\Command\DiagnoseAccount</command>
 		<command>OCA\Mail\Command\ExportAccount</command>
