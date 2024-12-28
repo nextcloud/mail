@@ -361,6 +361,7 @@
     "The mailbox and all messages in it will be deleted." : "邮箱和其中的所有邮件都将被删除。",
     "Delete mailbox {name}" : "删除邮箱 {name}",
     "An error occurred, unable to rename the mailbox." : "发生错误，无法重命名邮箱。",
+    "Please wait 10 minutes before repairing again" : "请等待 10 分钟后再进行修复",
     "_{total} message_::_{total} messages_" : ["{total} 条消息"],
     "Outbox" : "发件箱",
     "New message" : "新建消息",
