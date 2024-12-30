@@ -275,7 +275,7 @@ OC.L10N.register(
     "_Mark {number} as unimportant_::_Mark {number} as unimportant_" : ["Marcar {number} como sen importancia","Marcar {number} como sen importancia"],
     "_Unfavorite {number}_::_Unfavorite {number}_" : ["Retirar {number} de favoritos","Retirar {number} de favoritos"],
     "_Favorite {number}_::_Favorite {number}_" : ["Marcar {number} como favorito","Marcar {number} como favoritos"],
-    "_Unselect {number}_::_Unselect {number}_" : ["Desmarcar {number}","Desmarcar {number}"],
+    "_Unselect {number}_::_Unselect {number}_" : ["Deseleccionar {number}","Deseleccionar {number}"],
     "_Mark {number} as spam_::_Mark {number} as spam_" : ["Marcar {number} como correo lixo","Marcar {number} como correo lixo"],
     "_Mark {number} as not spam_::_Mark {number} as not spam_" : ["Marcar {number} como  que non é correo lixo","Marcar {number} como que non é correo lixo"],
     "_Edit tags for {number}_::_Edit tags for {number}_" : ["Editar as etiquetas para {number}","Editar as etiquetas para {number}"],
@@ -759,6 +759,6 @@ OC.L10N.register(
     "The link leads to %s" : "A ligazón leva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Se non quere visitar esa páxina, pode volver a <a href=\"%s\">Correo</a>.",
     "Continue to %s" : "Continuar para %s",
-    "Unselect" : "Desmarcar"
+    "Unselect" : "Deseleccionar"
 },
 "nplurals=2; plural=(n != 1);");
