@@ -221,6 +221,7 @@ OC.L10N.register(
     "No messages in this mailbox" : "V tejto poštovej schránke sa nenachádzajú žiadne správy",
     "No messages" : "Žiadne správy",
     "Draft: " : "Koncept: ",
+    "This summary was AI generated" : "Tento súhrn bol vygenerovaný AI",
     "Encrypted message" : "Zašifrovaná správa",
     "This message is unread" : "Táto správa je neprečítaná",
     "Unfavorite" : "Odstrániť z obľúbených",

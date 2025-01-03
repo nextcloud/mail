@@ -232,6 +232,7 @@ OC.L10N.register(
     "No messages in this mailbox" : "Bu e-posta kutusunda herhangi bir ileti yok",
     "No messages" : "Herhangi bir ileti yok",
     "Draft: " : "Taslak",
+    "This summary was AI generated" : "Bu özet yapay zeka ile oluşturulmuştur",
     "Encrypted message" : "Şifrelenmiş ileti",
     "This message is unread" : "Bu ileti okunmamış",
     "Unfavorite" : "Sık kullanılanlardan kaldır",
