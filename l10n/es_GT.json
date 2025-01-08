@@ -110,20 +110,20 @@
     "Unfavorite" : "Desmarcar como favorito",
     "Favorite" : "Favorito",
     "Read" : "Leer",
-    "Select" : "Seleccionar",
     "Edit tags" : "Editar etiquetas",
     "More actions" : "Más acciones",
     "Back" : "Atrás",
-    "Forward" : "Adelante",
     "All day" : "Todo el día",
     "Description" : "Descripción",
     "Create" : "Crear",
+    "Select" : "Seleccionar",
     "Comment" : "Comentario",
     "Accept" : "Aceptar",
     "Decline" : "Declinar",
     "Remove" : "Eliminar",
     "email" : "correo electrónico",
     "Other" : "Otro",
+    "Forward" : "Adelante",
     "Choose a folder to store the attachment in" : "Seleccciona la carpeta en la cual almacenar el adjunto",
     "Import into calendar" : "Importar al calendario",
     "Download attachment" : "Descargar adjunto",
@@ -190,8 +190,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Haz click aqui si no eres redireccionado automáticamente dentro de los siguietes segundos. ",
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
-    "Continue to %s" : "Continuar a %s",
-    "Sieve filter rules" : "Reglas del filtro de Sieve",
-    "Sieve filter server" : "Servidor de filtros Sieve"
+    "Continue to %s" : "Continuar a %s"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

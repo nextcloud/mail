@@ -5,12 +5,19 @@
 
 <template>
 	<AppContentDetails class="app-content">
-		<NcEmptyContent :name="welcomeMessage" class="app-content__empty">
+		<NcEmptyContent class="app-content__empty">
 			<template #icon>
 				<IconMail :size="65" />
 			</template>
+			<template #name>
+				<h1 class="empty-content__name">
+					{{ welcomeMessage }}
+				</h1>
+			</template>
+			<template #action>
+				<NewMessageButtonHeader />
+			</template>
 		</NcEmptyContent>
-		<NewMessageButtonHeader />
 	</AppContentDetails>
 </template>
 

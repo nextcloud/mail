@@ -154,8 +154,6 @@
     "Unfavorite" : "Nebežymėti kaip mėgstamą",
     "Favorite" : "Mėgstamas",
     "Read" : "Skaityti",
-    "Unselect" : "Nuimti žymėjimą",
-    "Select" : "Pasirinkti",
     "Edit tags" : "Redaguoti žymes",
     "Move thread" : "Perkelti giją",
     "Archive thread" : "Archyvuoti giją",
@@ -173,8 +171,9 @@
     "Set reminder for next week" : "Nustatyti priminimą kitą savaitę",
     "Could not delete message" : "Nepavyko ištrinti laiško",
     "Could not archive message" : "Nepavyko archyvuoti laiško",
-    "Forward" : "Persiųsti",
     "Load more" : "Įkelti daugiau",
+    "_Mark {number} read_::_Mark {number} read_" : ["Žymėti {number} kaip skaitytą","Žymėti {number} kaip skaitytus","Žymėti {number} kaip skaitytus","Žymėti {number} kaip skaitytą"],
+    "_Mark {number} unread_::_Mark {number} unread_" : ["Žymėti {number} kaip neskaitytą","Žymėti {number} kaip neskaitytus","Žymėti {number} kaip neskaitytus","Žymėti {number} kaip neskaitytą"],
     "Report this bug" : "Pranešti apie šią klaidą",
     "All day" : "Visą dieną",
     "Description" : "Aprašas",
@@ -182,6 +181,7 @@
     "Event created" : "Įvykis sukurtas",
     "Could not create event" : "Nepavyko sukurti įvykio",
     "Save to" : "Įrašyti į",
+    "Select" : "Pasirinkti",
     "Comment" : "Komentaras",
     "Accept" : "Priimti",
     "Decline" : "Atmesti",
@@ -203,6 +203,7 @@
     "The sender of this message has asked to be notified when you read this message." : "Šio laiško siuntėjas paprašė, kad jam būtų pranešta, kai perskaitysite šį laišką.",
     "Notify the sender" : "Pranešti siuntėjui",
     "You sent a read confirmation to the sender of this message." : "Jūs išsiuntėte šio laiško siuntėjui patvirtinimą, kad perskaitėte jo laišką.",
+    "Forward" : "Persiųsti",
     "Move message" : "Perkelti laišką",
     "Forward message as attachment" : "Persiųsti laišką kaip priedą",
     "Message body" : "Pagrindinė laiško dalis",
@@ -290,6 +291,8 @@
     "Add" : "Pridėti",
     "Copied email address to clipboard" : "El. pašto adresas nukopijuotas į iškarpinę",
     "Could not copy email address to clipboard" : "Nepavyko nukopijuoti el. pašto adreso į iškarpinę",
+    "Show less" : "Rodyti mažiau",
+    "Show more" : "Rodyti daugiau",
     "Search in mailbox" : "Ieškoti pašto dėžutėje",
     "Close" : "Užverti",
     "Date" : "Data",
@@ -427,6 +430,6 @@
     "Redirect" : "Peradresuoti",
     "The link leads to %s" : "Nuoroda veda į %s",
     "Continue to %s" : "Tęsti į %s",
-    "Account creation" : "Paskyros sukūrimas"
+    "Unselect" : "Nuimti žymėjimą"
 },"pluralForm" :"nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);"
 }

@@ -43,17 +43,17 @@
 				:class="{ 'one-line': oneLineLayout, 'junk-icon-style': !oneLineLayout }"
 				:data-starred="data.flags.$junk ? 'true' : 'false'"
 				@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
-			<div class="app-content-list-item-icon">
-				<Avatar :display-name="addresses" :email="avatarEmail" />
-				<p v-if="selectMode" class="app-content-list-item-select-checkbox">
-					<input :id="`select-checkbox-${data.uid}`"
-						class="checkbox"
-						type="checkbox"
-						:checked="selected">
-					<label :for="`select-checkbox-${data.uid}`"
-						@click.exact.prevent="toggleSelected"
-						@click.shift.exact.prevent="onSelectMultiple" />
-				</p>
+			<div class="hovering-status"
+				:class="{ 'hover-active': hoveringAvatar && !selected }"
+				@mouseenter="hoveringAvatar = true"
+				@mouseleave="hoveringAvatar = false"
+				@click.stop.prevent="toggleSelected">
+				<template v-if="hoveringAvatar || selected">
+					<CheckIcon :size="40" class="check-icon" :class="{ 'app-content-list-item-avatar-selected': selected }" />
+				</template>
+				<template v-else>
+					<Avatar :display-name="addresses" :email="avatarEmail" />
+				</template>
 			</div>
 		</template>
 		<template #subname>
@@ -70,15 +70,18 @@
 						<em>{{ t('mail', 'Draft: ') }}</em>
 					</span>
 					<span class="envelope__subtitle__subject"
-						:class="{'one-line': oneLineLayout }">
+						:class="{'one-line': oneLineLayout }"
+						dir="auto">
 						<span class="envelope__subtitle__subject__text" :class="{'one-line': oneLineLayout }">
 							{{ subjectForSubtitle }}
 						</span>
 					</span>
 				</div>
 				<div v-if="data.encrypted || data.previewText"
-					class="envelope__preview-text">
-					{{ isEncrypted ? t('mail', 'Encrypted message') : data.previewText.trim() }}
+					class="envelope__preview-text"
+					:title="data.summary ? t('mail', 'This summary was AI generated') : null">
+					<SparkleIcon v-if="data.summary" :size="15" />
+					{{ isEncrypted ? t('mail', 'Encrypted message') : data.summary ? data.summary.trim() : data.previewText.trim() }}
 				</div>
 			</div>
 		</template>
@@ -150,15 +153,6 @@
 					</template>
 					{{
 						data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
-					}}
-				</ActionButton>
-				<ActionButton :close-after-click="true"
-					@click.prevent="toggleSelected">
-					<template #icon>
-						<CheckIcon :size="16" />
-					</template>
-					{{
-						selected ? t('mail', 'Unselect') : t('mail', 'Select')
 					}}
 				</ActionButton>
 				<ActionButton v-if="hasWriteAcl"
@@ -344,6 +338,7 @@ import EnvelopeSkeleton from './EnvelopeSkeleton.vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon.vue'
 import Avatar from './Avatar.vue'
 import IconCreateEvent from 'vue-material-design-icons/Calendar.vue'
+import SparkleIcon from 'vue-material-design-icons/Creation.vue'
 import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline.vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
@@ -351,8 +346,7 @@ import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import ArchiveIcon from 'vue-material-design-icons/PackageDown.vue'
 import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline.vue'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
-// eslint-disable-next-line import/no-unresolved
-import importantSvg from '../../img/important.svg?raw'
+import importantSvg from '../../img/important.svg'
 import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope/index.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
 import { shortRelativeDatetime, messageDateTime } from '../util/shortRelativeDatetime.js'
@@ -414,6 +408,7 @@ export default {
 		PlusIcon,
 		TagIcon,
 		TagModal,
+		SparkleIcon,
 		Star,
 		StarOutline,
 		EmailRead,
@@ -477,6 +472,7 @@ export default {
 			snoozeOptions: false,
 			customSnoozeDateTime: new Date(moment().add(2, 'hours').minute(0).second(0).valueOf()),
 			overwriteOneLineMobile: false,
+			hoveringAvatar: false,
 		}
 	},
 	mounted() {
@@ -926,11 +922,21 @@ export default {
 	}
 	&__preview-text {
 		color: var(--color-text-maxcontrast);
-		white-space: nowrap;
 		overflow: hidden;
-		text-overflow: ellipsis;
 		font-weight: initial;
-		flex: 1 1;
+		max-height: calc(var(--default-font-size) * var(--default-line-height) * 2);
+
+		/* Weird CSS hacks to make text ellipsize without white-space: nowrap */
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+
+		.material-design-icon {
+			display: inline;
+
+			position: relative;
+			top: 2px;
+		}
 	}
 }
 
@@ -1128,4 +1134,22 @@ export default {
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
+.app-content-list-item-avatar-selected {
+	background-color: var(--color-primary-element);
+	color: var(--color-primary-light);
+	border-radius: 32px;
+	&:hover {
+		background-color: var(--color-primary-element);
+		color: var(--color-primary-light);
+		border-radius: 32px;
+	}
+}
+.hover-active {
+	&:hover {
+		color: var(--color-primary-hover);
+		background-color: var(--color-primary-light-hover);
+		border-radius: 32px;
+	}
+}
+
 </style>
