@@ -33,7 +33,11 @@ class PhishingDetectionService {
 	public function checkHeadersForPhishing(Horde_Mime_Headers $headers, bool $hasHtmlMessage, string $htmlMessage = ''): array {
 		$list = new PhishingDetectionList();
 		$fromHeader = $headers->getHeader('From');
-		$sender = AddressList::fromHorde($fromHeader->getAddressList(true))->first();
+		if ($fromHeader instanceof Horde_Mime_Headers_Element_Address) {
+			$sender = AddressList::fromHorde($fromHeader->getAddressList(true))->first();
+		} else {
+			$sender = null;
+		}
 		$fromFN = $sender?->getLabel();
 		$fromEmail = $sender?->getEmail();
 		$replyToHeader = $headers->getHeader('Reply-To');
