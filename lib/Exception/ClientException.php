@@ -43,6 +43,9 @@ class ClientException extends Exception {
 		parent::__construct($message, $code, $previous);
 	}
 
+	/**
+	 * @return Http::STATUS_*
+	 */
 	public function getHttpCode(): int {
 		return Http::STATUS_BAD_REQUEST;
 	}

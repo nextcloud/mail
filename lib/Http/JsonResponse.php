@@ -42,6 +42,9 @@ use function get_class;
  * @todo spec template with 28+
  */
 class JsonResponse extends Base {
+	/**
+	 * @param Http::STATUS_* $statusCode
+	 */
 	public function __construct($data = [],
 		int $statusCode = Http::STATUS_OK) {
 		parent::__construct($data, $statusCode);
@@ -51,7 +54,7 @@ class JsonResponse extends Base {
 
 	/**
 	 * @param array|JsonSerializable|bool|string $data
-	 * @param int $status
+	 * @param Http::STATUS_* $status
 	 *
 	 * @return static
 	 */
@@ -68,7 +71,7 @@ class JsonResponse extends Base {
 
 	/**
 	 * @param array|JsonSerializable|bool|string $data
-	 * @param int $status
+	 * @param Http::STATUS_* $status
 	 *
 	 * @return static
 	 */
@@ -95,7 +98,7 @@ class JsonResponse extends Base {
 
 	/**
 	 * @param string $message
-	 * @param int $status
+	 * @param Http::STATUS_* $status
 	 * @param array|JsonSerializable|bool|string $data
 	 *
 	 * @return static
@@ -117,7 +120,7 @@ class JsonResponse extends Base {
 
 	/**
 	 * @param Throwable $error
-	 * @param int $status
+	 * @param Http::STATUS_* $status
 	 * @param array|JsonSerializable|bool|string $data
 	 *
 	 * @return static
