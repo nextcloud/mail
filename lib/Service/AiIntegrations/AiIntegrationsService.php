@@ -72,7 +72,7 @@ PROMPT;
 			$this->logger->info('No text summary provider available');
 			return;
 		}
-		
+
 		$client = $this->clientFactory->getClient($account);
 		try {
 			foreach ($messages as $entry) {
@@ -354,6 +354,11 @@ Never return null or undefined.";
 			return false;
 		}
 		return in_array($taskType, $manager->getAvailableTaskTypes(), true);
+	}
+
+	public function isTaskAvailable(string $taskName): bool {
+		$availableTasks = $this->taskProcessingManager->getAvailableTaskTypes();
+		return array_key_exists($taskName, $availableTasks);
 	}
 
 	/**

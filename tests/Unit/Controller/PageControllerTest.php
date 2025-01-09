@@ -299,7 +299,7 @@ class PageControllerTest extends TestCase {
 			->method('getLoginCredentials')
 			->willReturn($loginCredentials);
 
-		$this->initialState->expects($this->exactly(19))
+		$this->initialState->expects($this->exactly(20))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -318,6 +318,7 @@ class PageControllerTest extends TestCase {
 				['disable-snooze', false],
 				['allow-new-accounts', true],
 				['llm_summaries_available', false],
+				['llm_translation_enabled', false],
 				['llm_freeprompt_available', false],
 				['llm_followup_available', false],
 				['smime-certificates', []],
