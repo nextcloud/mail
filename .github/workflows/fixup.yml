@@ -33,4 +33,4 @@ jobs:
       - name: Run check
         uses: skjnldsv/block-fixup-merge-action@c138ea99e45e186567b64cf065ce90f7158c236a # v2
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: '${{ secrets.GITHUB_TOKEN }}'

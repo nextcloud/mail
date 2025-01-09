@@ -35,14 +35,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
-          path: ${{ env.APP_NAME }}
+          path: '${{ env.APP_NAME }}'
 
       - name: Conventional Changelog Action
         id: changelog
         uses: TriPSs/conventional-changelog-action@b7f32a8347e86c26ea2f4823cc7c160b9014c6a0 # v3
-        working-directory: ${{ env.APP_NAME }}
+        working-directory: '${{ env.APP_NAME }}'
         with:
-          github-token: ${{ secrets.RELEASE_PAT }}
+          github-token: '${{ secrets.RELEASE_PAT }}'
           git-user-email: nextcloud-command@users.noreply.github.com
           git-user-name: Nextcloud Command Bot
           skip-git-pull: "true"
@@ -55,7 +55,7 @@ jobs:
         id: appinfo
         uses: skjnldsv/xpath-action@7e6a7c379d0e9abc8acaef43df403ab4fc4f770c # master
         with:
-          filename: ${{ env.APP_NAME }}/appinfo/info.xml
+          filename: '${{ env.APP_NAME }}/appinfo/info.xml'
           expression: "//info//dependencies//nextcloud/@min-version"
 
       - name: Read package.json node and npm engines version
@@ -65,17 +65,17 @@ jobs:
         # Continue if no package.json
         continue-on-error: true
         with:
-          path: ${{ env.APP_NAME }}
+          path: '${{ env.APP_NAME }}'
           fallbackNode: '^20'
           fallbackNpm: '^9'
 
-      - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
+      - name: 'Set up node ${{ steps.versions.outputs.nodeVersion }}'
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
         with:
-          node-version: ${{ steps.versions.outputs.nodeVersion }}
+          node-version: '${{ steps.versions.outputs.nodeVersion }}'
 
-      - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
+      - name: 'Set up npm ${{ steps.versions.outputs.npmVersion }}'
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: npm i -g npm@"${{ steps.versions.outputs.npmVersion }}"
 
@@ -83,10 +83,10 @@ jobs:
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # v2
         with:
-          php-version: ${{ env.PHP_VERSION }}
+          php-version: '${{ env.PHP_VERSION }}'
           coverage: none
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
       - name: Install Krankerl
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
@@ -94,18 +94,18 @@ jobs:
           wget https://github.com/ChristophWurst/krankerl/releases/download/v0.14.0/krankerl_0.14.0_amd64.deb
           sudo dpkg -i krankerl_0.14.0_amd64.deb
 
-      - name: Package ${{ env.APP_NAME }} ${{ env.APP_VERSION }} with krankerl
+      - name: 'Package ${{ env.APP_NAME }} ${{ env.APP_VERSION }} with krankerl'
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
-          cd ${{ env.APP_NAME }}
+          cd '${{ env.APP_NAME }}'
           krankerl package
 
-      - name: Checkout server ${{ fromJSON(steps.appinfo.outputs.result).nextcloud.min-version }}
+      - name: 'Checkout server ${{ fromJSON(steps.appinfo.outputs.result).nextcloud.min-version }}'
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         continue-on-error: true
         id: server-checkout
         run: |
-          NCVERSION=${{ fromJSON(steps.appinfo.outputs.result).nextcloud.min-version }}
+          NCVERSION='${{ fromJSON(steps.appinfo.outputs.result).nextcloud.min-version }}'
           wget --quiet https://download.nextcloud.com/server/releases/latest-$NCVERSION.zip
           unzip latest-$NCVERSION.zip
 
@@ -121,7 +121,7 @@ jobs:
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
           # Extracting release
-          cd ${{ env.APP_NAME }}/build/artifacts
+          cd '${{ env.APP_NAME }}/build/artifacts'
           tar -xvf ${{ env.APP_NAME }}.tar.gz
           cd ../../../
           # Setting up keys
@@ -130,7 +130,7 @@ jobs:
           # Signing
           php nextcloud/occ integrity:sign-app --privateKey=../${{ env.APP_NAME }}.key --certificate=../${{ env.APP_NAME }}.crt --path=../${{ env.APP_NAME }}/build/artifacts/${{ env.APP_NAME }}
           # Rebuilding archive
-          cd ${{ env.APP_NAME }}/build/artifacts
+          cd '${{ env.APP_NAME }}/build/artifacts'
           tar -zcvf ${{ env.APP_NAME }}.tar.gz ${{ env.APP_NAME }}
 
       - name: Push tag to releases organization
@@ -144,18 +144,18 @@ jobs:
         uses: svenstaro/upload-release-action@04733e069f2d7f7f0b4aebc4fbdbce8613b03ccd # v2
         id: attach_to_release
         with:
-          repo_token: ${{ secrets.RELEASE_PAT }}
-          repo_name: nextcloud-releases/${{ env.APP_NAME }}
-          file: ${{ env.APP_NAME }}/build/artifacts/${{ env.APP_NAME }}.tar.gz
-          asset_name: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}.tar.gz
-          tag: ${{ steps.changelog.outputs.tag }}
+          repo_token: '${{ secrets.RELEASE_PAT }}'
+          repo_name: 'nextcloud-releases/${{ env.APP_NAME }}'
+          file: '${{ env.APP_NAME }}/build/artifacts/${{ env.APP_NAME }}.tar.gz'
+          asset_name: '${{ env.APP_NAME }}-${{ env.APP_VERSION }}.tar.gz'
+          tag: '${{ steps.changelog.outputs.tag }}'
           overwrite: true
 
       - name: Upload app to Nextcloud appstore
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         uses: nextcloud-releases/nextcloud-appstore-push-action@a011fe619bcf6e77ddebc96f9908e1af4071b9c1 # v1
         with:
-          app_name: ${{ env.APP_NAME }}
-          appstore_token: ${{ secrets.APPSTORE_TOKEN }}
-          download_url: ${{ steps.attach_to_release.outputs.browser_download_url }}
-          app_private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          app_name: '{{ env.APP_NAME }}'
+          appstore_token: '${{ secrets.APPSTORE_TOKEN }}'
+          download_url: '${{ steps.attach_to_release.outputs.browser_download_url }}'
+          app_private_key: '${{ secrets.APP_PRIVATE_KEY }}'

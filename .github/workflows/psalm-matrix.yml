@@ -23,7 +23,7 @@ jobs:
       matrix:
         ocp-version: [ 'dev-master' ]
 
-    name: static-psalm-analysis ${{ matrix.ocp-version }}
+    name: 'static-psalm-analysis ${{ matrix.ocp-version }}'
     steps:
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
@@ -35,13 +35,13 @@ jobs:
           coverage: none
           ini-file: development
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
       - name: Install dependencies
         run: composer i
 
       - name: Install dependencies
-        run: composer require --dev nextcloud/ocp:${{ matrix.ocp-version }} --ignore-platform-reqs --with-dependencies
+        run: composer require --dev 'nextcloud/ocp:${{ matrix.ocp-version }}' --ignore-platform-reqs --with-dependencies
 
       - name: Run coding standards check
         run: composer run psalm

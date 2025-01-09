@@ -19,8 +19,8 @@ jobs:
       - name: Set up Nextcloud env
         uses: ChristophWurst/setup-nextcloud@fc0790385c175d97e88a7cb0933490de6e990374 # v0.3.2
         with:
-          node-version: ${{ steps.versions.outputs.nodeVersion }}
-          npm-version: ${{ steps.versions.outputs.npmVersion }}
+          node-version: '${{ steps.versions.outputs.nodeVersion }}'
+          npm-version: '${{ steps.versions.outputs.npmVersion }}'
           tools: 'krankerl'
       - name: Package app
         run: krankerl package

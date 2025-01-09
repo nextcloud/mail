@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871
         with:
-          ref: ${{ matrix.branches }}
+          ref: '${{ matrix.branches }}'
           submodules: true
 
       - name: Download public suffix list
@@ -30,7 +30,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@7920c48d6af627948130adb390df5809c471ae3b
         with:
-          token: ${{ secrets.COMMAND_BOT_PAT }}
+          token: '${{ secrets.COMMAND_BOT_PAT }}'
           commit-message: 'fix(dns): Update public suffix list'
           committer: GitHub <noreply@github.com>
           author: nextcloud-command <nextcloud-command@users.noreply.github.com>

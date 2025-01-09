@@ -35,12 +35,12 @@ jobs:
       - name: Set up php
         uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # 2.31.1
         with:
-          php-version: ${{ steps.php_versions.outputs.php-available }}
+          php-version: '${{ steps.php_versions.outputs.php-available }}'
           extensions: xml
           coverage: none
           ini-file: development
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
       - name: Check Typescript OpenApi types
         id: check_typescript_openapi
@@ -58,13 +58,13 @@ jobs:
           fallbackNode: '^20'
           fallbackNpm: '^10'
 
-      - name: Set up node ${{ steps.node_versions.outputs.nodeVersion }}
+      - name: 'Set up node ${{ steps.node_versions.outputs.nodeVersion }}'
         if: ${{ steps.node_versions.outputs.nodeVersion }}
         uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4.0.4
         with:
-          node-version: ${{ steps.node_versions.outputs.nodeVersion }}
+          node-version: '${{ steps.node_versions.outputs.nodeVersion }}'
 
-      - name: Set up npm ${{ steps.node_versions.outputs.npmVersion }}
+      - name: 'Set up npm ${{ steps.node_versions.outputs.npmVersion }}'
         if: ${{ steps.node_versions.outputs.nodeVersion }}
         run: npm i -g 'npm@${{ steps.node_versions.outputs.npmVersion }}'
 
