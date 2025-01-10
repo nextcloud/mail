@@ -66,6 +66,7 @@ OC.L10N.register(
     "email" : "postë elektronike",
     "Other" : "Tjetër",
     "Forward" : "Përpara",
+    "Translate" : "Përkthe",
     "Choose a folder to store the attachment in" : "Zgjidhni një dosje ku të depozitohet bashkëngjitja",
     "Import into calendar" : "Importo në kalendar",
     "Download attachment" : "Shkarko bashkëlidhjen",

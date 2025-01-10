@@ -47,6 +47,7 @@ OC.L10N.register(
     "email" : "цахим шуудан",
     "Other" : "Бусад",
     "Forward" : "дамжих",
+    "Translate" : "Орчуулга",
     "Choose a folder to store the attachment in" : "-д хавсралт хадгалах фолдер сонгоно уу",
     "Download attachment" : "Татаж авах хавсралт",
     "Save to Files" : "Файлд хадгална",

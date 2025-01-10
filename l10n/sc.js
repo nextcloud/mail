@@ -163,6 +163,7 @@ OC.L10N.register(
     "Could not send mdn" : "No at fatu a imbiare mdn",
     "Forward" : "Torra a imbiare",
     "Move message" : "Tràmuda messàgiu",
+    "Translate" : "Borta",
     "View source" : "Visualiza sa fonte",
     "Download thread data for debugging" : "Iscàrriga is datos de sa dibata pro sa curretzione",
     "Message body" : "Corpus de su messàgiu",

@@ -68,6 +68,7 @@ OC.L10N.register(
     "email" : "correo electrónico",
     "Other" : "Otro",
     "Forward" : "Adelante",
+    "Translate" : "Traducir",
     "Choose a folder to store the attachment in" : "Seleccciona la carpeta en la cual almacenar el adjunto",
     "Import into calendar" : "Importar al calendario",
     "Download attachment" : "Descargar adjunto",

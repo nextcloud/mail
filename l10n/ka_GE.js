@@ -68,6 +68,7 @@ OC.L10N.register(
     "email" : "ელ-ფოსტა",
     "Other" : "სხვა",
     "Forward" : "წინ",
+    "Translate" : "გადათარგმნეთ",
     "Choose a folder to store the attachment in" : "გთხოვთ აირჩიოთ დირექტორია, სადაც მოთავსდება დანართი",
     "Import into calendar" : "იმპორტი კალენდარში",
     "Download attachment" : "დანართის გადმოწერა",

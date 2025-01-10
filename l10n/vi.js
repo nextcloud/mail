@@ -138,6 +138,7 @@ OC.L10N.register(
     "You sent a read confirmation to the sender of this message." : "Bạn đã gửi xác nhận đã đọc cho người gửi tin nhắn này.",
     "Could not send mdn" : "Không thể gửi mdn",
     "Forward" : "Chuyển tiếp",
+    "Translate" : "Dịch",
     "View source" : "Xem nguồn",
     "Download thread data for debugging" : "Tải xuống dữ liệu chuỗi để gỡ lỗi",
     "Message body" : "Nội dung thư",

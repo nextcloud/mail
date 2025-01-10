@@ -165,6 +165,7 @@ OC.L10N.register(
     "Could not send mdn" : "Nije moguće poslati mdn",
     "Forward" : "Naprijed",
     "Move message" : "Premjesti poruku",
+    "Translate" : "Prevedi",
     "View source" : "Vidi izvor",
     "Download thread data for debugging" : "Preuzmi podatke o dretvi radi otklanjanje pogrešaka",
     "Message body" : "Tijelo poruke",

@@ -269,6 +269,7 @@ OC.L10N.register(
     "Could not send mdn" : "Eroare la transmiterea mdn",
     "Forward" : "Înainte",
     "Move message" : "Mută mesajul",
+    "Translate" : "Tradu",
     "Forward message as attachment" : "Transmite mesajul ca atașament",
     "View source" : "Sursa mesajului",
     "Download thread data for debugging" : "Descarcă datele conversației pentru debug",

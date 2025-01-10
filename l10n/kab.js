@@ -25,6 +25,7 @@ OC.L10N.register(
     "Remove" : "Kkes",
     "Other" : "Wayeḍ",
     "Forward" : "Avancer",
+    "Translate" : "Suqel",
     "Move" : "Senkez",
     "Remove account" : "Kkes amiḍan",
     "Loading …" : "Asali ...",
