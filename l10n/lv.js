@@ -77,6 +77,7 @@ OC.L10N.register(
     "email" : "e-pasts",
     "Other" : "Cits",
     "Forward" : "Turpināt",
+    "Translate" : "Tulkot",
     "View source" : "Skatīt avotu",
     "Choose a folder to store the attachment in" : "Izvēlieties mapi, kurā saglabāt pielikumus",
     "Import into calendar" : "Importēt kalendārā",

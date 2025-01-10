@@ -138,6 +138,7 @@ OC.L10N.register(
     "Important info" : "מידע חשוב",
     "Other" : "אחר",
     "Forward" : "העברה",
+    "Translate" : "תרגום",
     "View source" : "הצגת המקור",
     "Choose a folder to store the attachment in" : "יש לבחור תיקייה לשמירת הקובץ המצורף",
     "Import into calendar" : "ייבוא ליומן",

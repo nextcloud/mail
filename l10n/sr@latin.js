@@ -28,6 +28,7 @@ OC.L10N.register(
     "Remove" : "Ukloni",
     "Other" : "Ostali",
     "Forward" : "Prosledi",
+    "Translate" : "Prevedi",
     "Move" : "Premesti",
     "Remove account" : "Ukloni nalog",
     "Loading …" : "Učitavanje...",

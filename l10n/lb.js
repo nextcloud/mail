@@ -29,6 +29,7 @@ OC.L10N.register(
     "Comment" : "Kommentar",
     "Remove" : "Läschen",
     "Other" : "Aner",
+    "Translate" : "Iwwersetzen",
     "Unnamed" : "ouni Numm",
     "Move" : "Verschieben",
     "Quota" : "Quota",

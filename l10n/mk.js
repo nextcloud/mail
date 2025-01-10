@@ -226,6 +226,7 @@ OC.L10N.register(
     "You sent a read confirmation to the sender of this message." : "Испративте потврда до испраќачот дека е прочитана пораката.",
     "Forward" : "Препрати",
     "Move message" : "Премести порака",
+    "Translate" : "Преведи",
     "Forward message as attachment" : "Препрати ја пораката како прилог",
     "View source" : "Погледни извор",
     "Download thread data for debugging" : "Преземи информации за развивачи",

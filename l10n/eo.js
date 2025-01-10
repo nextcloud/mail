@@ -100,6 +100,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indeksas viajn mesaĝojn. Tio eble daŭrus iom pli longe por pli grandaj poŝtkestoj.",
     "Other" : "Alia",
     "Forward" : "Antaŭen",
+    "Translate" : "Traduku",
     "Choose a folder to store the attachment in" : "Elektu dosierujon en kiu konservi la kunsendaĵon",
     "Import into calendar" : "Importi en kalendaron",
     "Download attachment" : "Elŝuti kunsendaĵon",

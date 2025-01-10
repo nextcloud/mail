@@ -207,6 +207,7 @@ OC.L10N.register(
     "You sent a read confirmation to the sender of this message." : "Jūs išsiuntėte šio laiško siuntėjui patvirtinimą, kad perskaitėte jo laišką.",
     "Forward" : "Persiųsti",
     "Move message" : "Perkelti laišką",
+    "Translate" : "Verskite",
     "Forward message as attachment" : "Persiųsti laišką kaip priedą",
     "Message body" : "Pagrindinė laiško dalis",
     "Choose a folder to store the attachment in" : "Pasirinkite aplanką, kuriame išsaugoti priedą",

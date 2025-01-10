@@ -44,6 +44,7 @@ OC.L10N.register(
     "Remove" : "ลบออก",
     "Other" : "อื่น ๆ",
     "Forward" : "ส่งต่อ",
+    "Translate" : "แปลภาษา",
     "Choose a folder to store the attachment in" : "เลือกโฟลเดอร์ที่จะเก็บไฟล์แนบลงไป",
     "Unnamed" : "ไม่มีชื่อ",
     "Move" : "ย้าย",

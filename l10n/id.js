@@ -51,6 +51,7 @@ OC.L10N.register(
     "email" : "surel",
     "Other" : "Lainnya",
     "Forward" : "Teruskan",
+    "Translate" : "Terjemahkan",
     "Choose a folder to store the attachment in" : "Pilih folder untuk menyimpan lampiran didalamnya",
     "Import into calendar" : "Impor ke kalender",
     "Download attachment" : "Unduh lampiran",

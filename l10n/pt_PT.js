@@ -117,6 +117,7 @@ OC.L10N.register(
     "Other" : "Outro",
     "Notify the sender" : "Notificar o remetente",
     "Forward" : "Encaminhar",
+    "Translate" : "Traduzir",
     "View source" : "Ver fonte",
     "Message body" : "Corpo da mensagem",
     "Choose a folder to store the attachment in" : "Escolha uma pasta para guardar o anexo",

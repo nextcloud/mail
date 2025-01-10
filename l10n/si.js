@@ -29,6 +29,7 @@ OC.L10N.register(
     "Decline" : "ප්‍රතික්ෂේප",
     "Remove" : "ඉවත් කරන්න",
     "Other" : "වෙනත්",
+    "Translate" : "පරිවර්තනය",
     "Remove account" : "ගිණුම ඉවත් කරන්න",
     "Loading …" : "පූරණය වෙමින් …",
     "Mark all as read" : "සියල්ල කියවූ ලෙස සලකුණු කරන්න",
