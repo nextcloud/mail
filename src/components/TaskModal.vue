@@ -77,6 +77,8 @@ import Task from '../task.js'
 import CalendarPickerOption from './CalendarPickerOption.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import moment from '@nextcloud/moment'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'TaskModal',
@@ -111,6 +113,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		disabled() {
 			return this.saving || this.calendars.length === 0
 		},
@@ -121,10 +124,10 @@ export default {
 			return this.isAllDay ? 'date' : 'datetime'
 		},
 		tags() {
-			return this.$store.getters.getAllTags
+			return this.mainStore.getAllTags
 		},
 		calendars() {
-			return this.$store.getters.getTaskCalendarsForCurrentUser
+			return this.mainStore.getTaskCalendarsForCurrentUser
 		},
 		calendarChoices() {
 			return this.calendars.map(calendar => ({
@@ -164,7 +167,7 @@ export default {
 			this.$emit('close')
 		},
 		async createTask(taskData) {
-			const task = new Task('BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Nextcloud Mail v' + this.$store.getters.getAppVersion + '\nEND:VCALENDAR', taskData.calendar)
+			const task = new Task('BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Nextcloud Mail v' + this.mainStore.getAppVersion + '\nEND:VCALENDAR', taskData.calendar)
 			task.created = ICAL.Time.now()
 			task.summary = taskData.summary
 			task.hidesubtasks = 0

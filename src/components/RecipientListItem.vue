@@ -17,6 +17,9 @@
 <script>
 import { NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
 import Close from 'vue-material-design-icons/Close.vue'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
+
 export default {
 	name: 'RecipientListItem',
 	components: {
@@ -34,9 +37,12 @@ export default {
 			isInternal: true,
 		}
 	},
+	computed: {
+		...mapStores(useMainStore),
+	},
 	async mounted() {
-		if (this.$store.getters.getPreference('internal-addresses', 'false') === 'true') {
-			this.isInternal = this.$store.getters.isInternalAddress(this.option.email)
+		if (this.mainStore.getPreference('internal-addresses', 'false') === 'true') {
+			this.isInternal = this.mainStore.isInternalAddress(this.option.email)
 		}
 	},
 	methods: {

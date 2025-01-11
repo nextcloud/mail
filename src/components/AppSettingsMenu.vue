@@ -22,7 +22,7 @@
 
 				<h6>{{ t('mail', 'Account settings') }}</h6>
 				<p>{{ t('mail', 'Settings for:') }}</p>
-				<li v-for="account in accounts" :key="account.id">
+				<li v-for="account in getAccounts" :key="account.id">
 					<NcButton v-if="account && account.emailAddress"
 						class="app-settings-button"
 						type="secondary"
@@ -235,7 +235,7 @@
 						@change="onToggleAutoTagging">
 					<label for="auto-tagging-toggle">{{ autoTaggingText }}</label>
 				</p>
-				<p v-if="isFollowUpFeatureAvailable" class="app-settings">
+				<p v-if="followUpFeatureAvailable" class="app-settings">
 					<input id="follow-up-reminder-toggle"
 						class="checkbox"
 						type="checkbox"
@@ -312,7 +312,8 @@ import SmimeCertificateModal from './smime/SmimeCertificateModal.vue'
 import TrustedSenders from './TrustedSenders.vue'
 import InternalAddress from './InternalAddress.vue'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
-import { mapGetters } from 'vuex'
+import useMainStore from '../store/mainStore.js'
+import { mapStores, mapState } from 'pinia'
 
 export default {
 	name: 'AppSettingsMenu',
@@ -366,38 +367,34 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters([
-			'isFollowUpFeatureAvailable',
-		]),
-		...mapGetters({
-			accounts: 'accounts',
-		}),
+		...mapStores(useMainStore),
+		...mapState(useMainStore, ['getAccounts', 'followUpFeatureAvailable']),
 		searchPriorityBody() {
-			return this.$store.getters.getPreference('search-priority-body', 'false') === 'true'
+			return this.mainStore.getPreference('search-priority-body', 'false') === 'true'
 		},
 		useBottomReplies() {
-			return this.$store.getters.getPreference('reply-mode', 'top') === 'bottom'
+			return this.mainStore.getPreference('reply-mode', 'top') === 'bottom'
 		},
 		useExternalAvatars() {
-			return this.$store.getters.getPreference('external-avatars', 'true') === 'true'
+			return this.mainStore.getPreference('external-avatars', 'true') === 'true'
 		},
 		useDataCollection() {
-			return this.$store.getters.getPreference('collect-data', 'true') === 'true'
+			return this.mainStore.getPreference('collect-data', 'true') === 'true'
 		},
 		useAutoTagging() {
-			return this.$store.getters.getPreference('tag-classified-messages', 'true') === 'true'
+			return this.mainStore.getPreference('tag-classified-messages', 'true') === 'true'
 		},
 		useInternalAddresses() {
-			return this.$store.getters.getPreference('internal-addresses', 'false') === 'true'
+			return this.mainStore.getPreference('internal-addresses', 'false') === 'true'
 		},
 		useFollowUpReminders() {
-			return this.$store.getters.getPreference('follow-up-reminders', 'true') === 'true'
+			return this.mainStore.getPreference('follow-up-reminders', 'true') === 'true'
 		},
 		allowNewMailAccounts() {
-			return this.$store.getters.getPreference('allow-new-accounts', true)
+			return this.mainStore.getPreference('allow-new-accounts', true)
 		},
 		layoutMode() {
-			return this.$store.getters.getPreference('layout-mode', 'vertical-split')
+			return this.mainStore.getPreference('layout-mode', 'vertical-split')
 		},
 	},
 	watch: {
@@ -413,7 +410,7 @@ export default {
 		},
 	},
 	mounted() {
-		this.sortOrder = this.$store.getters.getPreference('sort-order', 'newest')
+		this.sortOrder = this.mainStore.getPreference('sort-order', 'newest')
 		document.addEventListener.call(window, 'mailvelope', () => this.checkMailvelope())
 	},
 	updated() {
@@ -424,7 +421,7 @@ export default {
 			this.showAccountSettings = false
 		},
 		openAccountSettings(accountId) {
-			this.$store.commit('showSettingsForAccount', accountId)
+			this.mainStore.showSettingsForAccountMutation(accountId)
 			this.showSettings = false
 		},
 		checkMailvelope() {
@@ -432,7 +429,7 @@ export default {
 		},
 		async setLayout(layoutMode) {
 			try {
-				await this.$store.dispatch('savePreference', {
+				await this.mainStore.savePreference({
 					key: 'layout-mode',
 					value: layoutMode,
 				})
@@ -446,11 +443,10 @@ export default {
 		onToggleButtonReplies(e) {
 			this.loadingReplySettings = true
 
-			this.$store
-				.dispatch('savePreference', {
-					key: 'reply-mode',
-					value: e.target.checked ? 'bottom' : 'top',
-				})
+			this.mainStore.savePreference({
+				key: 'reply-mode',
+				value: e.target.checked ? 'bottom' : 'top',
+			})
 				.catch((error) => Logger.error('could not save preferences', { error }))
 				.then(() => {
 					this.loadingReplySettings = false
@@ -459,11 +455,10 @@ export default {
 		onToggleExternalAvatars(e) {
 			this.loadingAvatarSettings = true
 
-			this.$store
-				.dispatch('savePreference', {
-					key: 'external-avatars',
-					value: e.target.checked ? 'true' : 'false',
-				})
+			this.mainStore.savePreference({
+				key: 'external-avatars',
+				value: e.target.checked ? 'true' : 'false',
+			})
 				.catch((error) => Logger.error('could not save preferences', { error }))
 				.then(() => {
 					this.loadingAvatarSettings = false
@@ -472,11 +467,10 @@ export default {
 		async onToggleSearchPriorityBody(e) {
 			this.loadingPrioritySettings = true
 			try {
-				await this.$store
-					.dispatch('savePreference', {
-						key: 'search-priority-body',
-						value: e.target.checked ? 'true' : 'false',
-					})
+				await this.mainStore.savePreference({
+					key: 'search-priority-body',
+					value: e.target.checked ? 'true' : 'false',
+				})
 			} catch (error) {
 				Logger.error('could not save preferences', { error })
 			} finally {
@@ -486,11 +480,10 @@ export default {
 		onToggleCollectData(e) {
 			this.loadingOptOutSettings = true
 
-			this.$store
-				.dispatch('savePreference', {
-					key: 'collect-data',
-					value: e.target.checked ? 'true' : 'false',
-				})
+			this.mainStore.savePreference({
+				key: 'collect-data',
+				value: e.target.checked ? 'true' : 'false',
+			})
 				.catch((error) => Logger.error('could not save preferences', { error }))
 				.then(() => {
 					this.loadingOptOutSettings = false
@@ -500,13 +493,11 @@ export default {
 			const previousValue = this.sortOrder
 			try {
 				this.sortOrder = e
-				await this.$store
-					.dispatch('savePreference', {
-						key: 'sort-order',
-						value: e,
-					})
-				this.$store.commit('removeAllEnvelopes')
-
+				await this.mainStore.savePreference({
+					key: 'sort-order',
+					value: e,
+				})
+				this.mainStore.removeAllEnvelopesMutation()
 			} catch (error) {
 				Logger.error('could not save preferences', { error })
 				this.sortOrder = previousValue
@@ -517,11 +508,10 @@ export default {
 			this.toggleAutoTagging = true
 
 			try {
-				await this.$store
-					.dispatch('savePreference', {
-						key: 'tag-classified-messages',
-						value: e.target.checked ? 'true' : 'false',
-					})
+				await this.mainStore.savePreference({
+					key: 'tag-classified-messages',
+					value: e.target.checked ? 'true' : 'false',
+				})
 			} catch (error) {
 				Logger.error('could not save preferences', { error })
 
@@ -532,7 +522,7 @@ export default {
 		},
 		async onToggleFollowUpReminders(e) {
 			try {
-				await this.$store.dispatch('savePreference', {
+				await this.mainStore.savePreference({
 					key: 'follow-up-reminders',
 					value: e.target.checked ? 'true' : 'false',
 				})
@@ -543,7 +533,7 @@ export default {
 		},
 		async onToggleInternalAddress(e) {
 			try {
-				await this.$store.dispatch('savePreference', {
+				await this.mainStore.savePreference({
 					key: 'internal-addresses',
 					value: e.target.checked ? 'true' : 'false',
 				})

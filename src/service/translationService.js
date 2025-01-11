@@ -5,15 +5,16 @@
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
-import store from '../store/index.js'
+import useMainStore from '../store/mainStore.js'
 
 const fetchAvailableLanguages = async function() {
+	const mainStore = useMainStore()
 	try {
 		const response = await axios.get(generateOcsUrl('taskprocessing/tasktypes'))
 		const inputLanguages = response.data.ocs.data.types['core:text2text:translate'].inputShapeEnumValues[0]
 		const outputLanguages = response.data.ocs.data.types['core:text2text:translate'].inputShapeEnumValues[1]
-		store.commit('setTranslationInputLanguages', inputLanguages)
-		store.commit('setTranslationOutputLanguages', outputLanguages)
+		mainStore.translationInputLanguages = inputLanguages
+		mainStore.translationOutputLanguages = outputLanguages
 	} catch (e) {
 		console.error('Failed to fetch available languages', e)
 	}

@@ -13,6 +13,9 @@
 
 import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 import { mailboxHasRights } from '../../util/acl.js'
+import { mapStores } from 'pinia'
+import useMainStore from '../../store/mainStore.js'
+
 export default {
 	name: 'ActionFileinto',
 	components: {
@@ -29,11 +32,12 @@ export default {
 		},
 	},
 	computed: {
+		...mapStores(useMainStore),
 		mailbox() {
 			return this.action.mailbox ?? undefined
 		},
 		mailboxes() {
-			const mailboxes = this.$store.getters.getMailboxes(this.account.accountId)
+			const mailboxes = this.mainStore.getMailboxes(this.account.accountId)
 				.filter(mailbox => mailboxHasRights(mailbox, 'i'))
 
 			return mailboxes.map((mailbox) => {

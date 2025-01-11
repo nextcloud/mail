@@ -4,34 +4,29 @@
  */
 
 import {createLocalVue, shallowMount} from '@vue/test-utils'
-import Vuex from 'vuex'
+import { PiniaVuePlugin, setActivePinia } from 'pinia'
+import { createTestingPinia } from '@pinia/testing'
 
 import NavigationMailbox from '../../../components/NavigationMailbox.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 
-const localVue = createLocalVue()
+import useMainStore from '../../../store/mainStore.js'
 
-localVue.use(Vuex)
+const localVue = createLocalVue()
+localVue.use(PiniaVuePlugin)
+
 localVue.mixin(Nextcloud)
 
 describe('NavigationMailbox', () => {
 
-	let actions
-	let getters
+	const subMailboxes = []
 	let store
-	let parentMailbox = undefined
-	let subMailboxes = []
 
 	beforeEach(() => {
-		actions = {}
-		getters = {
-			getSubMailboxes: () => () => subMailboxes,
-			getParentMailbox: () => (id) => parentMailbox,
-		}
-		store = new Vuex.Store({
-			actions,
-			getters,
-		})
+		setActivePinia(createTestingPinia())
+		store = useMainStore()
+
+		store.getSubMailboxes = jest.fn().mockReturnValue([])
 	})
 
 	it('shows no counter', () => {
@@ -42,7 +37,6 @@ describe('NavigationMailbox', () => {
 					unread: 0,
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -61,7 +55,6 @@ describe('NavigationMailbox', () => {
 					unread: 3,
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -79,6 +72,7 @@ describe('NavigationMailbox', () => {
 		subMailboxes.push({
 			unread: 0,
 		})
+		store.getSubMailboxes = jest.fn().mockReturnValue(subMailboxes)
 		const view = shallowMount(NavigationMailbox, {
 			propsData: {
 				account: {},
@@ -86,7 +80,6 @@ describe('NavigationMailbox', () => {
 					unread: 0,
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -102,7 +95,6 @@ describe('NavigationMailbox', () => {
 					myAcls: undefined,
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -110,9 +102,9 @@ describe('NavigationMailbox', () => {
 	})
 
 	it('allows rename with missing ACLs on parent', () => {
-		parentMailbox = {
+		store.getParentMailbox = jest.fn().mockReturnValue({
 			myAcls: undefined,
-		}
+		})
 		const view = shallowMount(NavigationMailbox, {
 			propsData: {
 				account: {},
@@ -120,7 +112,6 @@ describe('NavigationMailbox', () => {
 					myAcls: 'x',
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -135,7 +126,6 @@ describe('NavigationMailbox', () => {
 					myAcls: 'x',
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -150,7 +140,6 @@ describe('NavigationMailbox', () => {
 					myAcls: 's',
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -158,9 +147,10 @@ describe('NavigationMailbox', () => {
 	})
 
 	it('disallows rename without k ACL right on parent', () => {
-		parentMailbox = {
+		store.getParentMailbox = jest.fn().mockReturnValue({
 			myAcls: 'x',
-		}
+		})
+
 		const view = shallowMount(NavigationMailbox, {
 			propsData: {
 				account: {},
@@ -168,7 +158,6 @@ describe('NavigationMailbox', () => {
 					myAcls: 'x',
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -176,9 +165,6 @@ describe('NavigationMailbox', () => {
 	})
 
 	it('allows rename with k ACL right on parent', () => {
-		parentMailbox = {
-			myAcls: 'k',
-		}
 		const view = shallowMount(NavigationMailbox, {
 			propsData: {
 				account: {},
@@ -186,7 +172,6 @@ describe('NavigationMailbox', () => {
 					myAcls: 'x',
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -201,7 +186,6 @@ describe('NavigationMailbox', () => {
 					myAcls: undefined,
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -216,7 +200,6 @@ describe('NavigationMailbox', () => {
 					myAcls: 'x',
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -231,7 +214,6 @@ describe('NavigationMailbox', () => {
 					myAcls: 's',
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -245,7 +227,6 @@ describe('NavigationMailbox', () => {
 					myAcls: undefined,
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -259,7 +240,6 @@ describe('NavigationMailbox', () => {
 					myAcls: 'x',
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -273,7 +253,6 @@ describe('NavigationMailbox', () => {
 					myAcls: 'k',
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -289,7 +268,6 @@ describe('NavigationMailbox', () => {
 					myAcls: undefined,
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -303,7 +281,6 @@ describe('NavigationMailbox', () => {
 					myAcls: 's',
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -317,7 +294,6 @@ describe('NavigationMailbox', () => {
 					myAcls: 'x',
 				},
 			},
-			store,
 			localVue,
 		})
 

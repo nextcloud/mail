@@ -15,6 +15,8 @@
 <script>
 import logger from '../logger.js'
 import MailboxPicker from './MailboxPicker.vue'
+import useMainStore from '../store/mainStore.js'
+import { mapStores } from 'pinia'
 
 export default {
 	name: 'MoveModal',
@@ -41,6 +43,9 @@ export default {
 			destMailboxId: undefined,
 		}
 	},
+	computed: {
+		...mapStores(useMainStore),
+	},
 	methods: {
 		onClose() {
 			this.$emit('close')
@@ -58,13 +63,13 @@ export default {
 
 				for (const envelope of envelopes) {
 					if (this.moveThread) {
-						await this.$store.dispatch('moveThread', { envelope, destMailboxId: this.destMailboxId })
+						await this.mainStore.moveThread({ envelope, destMailboxId: this.destMailboxId })
 					} else {
-						await this.$store.dispatch('moveMessage', { id: envelope.databaseId, destMailboxId: this.destMailboxId })
+						await this.mainStore.moveMessage({ id: envelope.databaseId, destMailboxId: this.destMailboxId })
 					}
 				}
 
-				await this.$store.dispatch('syncEnvelopes', { mailboxId: this.destMailboxId })
+				await this.mainStore.syncEnvelopes({ mailboxId: this.destMailboxId })
 				this.$emit('move')
 			} catch (error) {
 				logger.error('could not move messages', {

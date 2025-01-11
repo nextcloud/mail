@@ -239,7 +239,6 @@
 
 <script>
 import { Tab, Tabs } from 'vue-tabs-component'
-import { mapGetters } from 'vuex'
 import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcPasswordField, NcInputField, NcCheckboxRadioSwitch } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import { translate as t } from '@nextcloud/l10n'
@@ -251,6 +250,8 @@ import {
 	testConnectivity,
 } from '../service/AutoConfigService.js'
 import { CONSENT_ABORTED, getUserConsent } from '../integration/oauth.js'
+import useMainStore from '../store/mainStore.js'
+import { mapStores, mapState } from 'pinia'
 
 export default {
 	name: 'AccountForm',
@@ -314,7 +315,8 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters([
+		...mapStores(useMainStore),
+		...mapState(useMainStore, [
 			'googleOauthUrl',
 			'microsoftOauthUrl',
 		]),
@@ -563,7 +565,7 @@ export default {
 					delete data.smtpPassword
 				}
 				if (!this.account) {
-					const account = await this.$store.dispatch('startAccountSetup', data)
+					const account = await this.mainStore.startAccountSetup(data)
 					if (this.useOauth) {
 						this.loadingMessage = t('mail', 'Awaiting user consent')
 						try {
@@ -584,18 +586,18 @@ export default {
 							}
 						} catch (e) {
 							// Clean up the temporary account before we continue
-							this.$store.dispatch('deleteAccount', account)
+							this.mainStore.deleteAccount(account)
 							logger.info(`Temporary account ${account.id} deleted`)
 							throw e
 						}
 						this.clearFeedback()
 					}
 					this.loadingMessage = t('mail', 'Loading account')
-					await this.$store.dispatch('finishAccountSetup', { account })
+					await this.mainStore.finishAccountSetup({ account })
 					this.$emit('account-created', account)
 				} else {
 					const oldAccountData = this.account
-					const account = await this.$store.dispatch('updateAccount', {
+					const account = await this.mainStore.updateAccount({
 						...data,
 						accountId: this.account.id,
 					})
@@ -619,7 +621,7 @@ export default {
 							}
 						} catch (e) {
 							// Undo changes
-							await this.$store.dispatch('updateAccount', {
+							await this.mainStore.updateAccount({
 								...oldAccountData,
 								accountId: oldAccountData.id,
 							})

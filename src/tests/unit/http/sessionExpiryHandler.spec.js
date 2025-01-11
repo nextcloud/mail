@@ -1,66 +1,75 @@
 /**
- * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2022-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 import { handleHttpAuthErrors } from '../../../http/sessionExpiryHandler.js'
+import { createPinia, setActivePinia } from 'pinia'
+import useMainStore from '../../../store/mainStore.js'
 
 describe('sessionExpiryHandler', () => {
+	beforeEach(() => {
+		setActivePinia(createPinia())
+	})
+
 	it('does not influence successful requests', async () => {
-		const commit = jest.fn()
+		const mainStore = useMainStore()
+		mainStore.isExpiredSession = false
 
-		await handleHttpAuthErrors(commit, () => {})
+		await handleHttpAuthErrors(async () => {})
 
-		expect(commit).not.toHaveBeenCalled()
+		expect(mainStore.isExpiredSession).toBe(false)
 	})
 
 	it('ignores other 401s', async () => {
-		const commit = jest.fn()
-		let exception
+		const mainStore = useMainStore()
+		mainStore.isExpiredSession = false
 
-		try {
-			await handleHttpAuthErrors(commit, () => {
-				throw {
-					response: {
-						status: 401,
-						data: {
-							message: 'Bonjour',
-						},
-					},
-				}
-			})
-		} catch (e) {
-			exception = e
+		const exception = {
+			response: {
+				status: 401,
+				data: {
+					message: 'Bonjour',
+				},
+			},
 		}
 
-		// Is this our exception?
-		expect(exception.response?.status === 401)
-		expect(commit).not.toHaveBeenCalled()
+		let actualException
+		try {
+			await handleHttpAuthErrors(async () => {
+				throw exception
+			})
+		} catch (e) {
+			actualException = e
+		}
+
+		expect(actualException).toBe(exception)
+		expect(mainStore.isExpiredSession).toBe(false)
 	})
 
 	it('handles relevant 401s', async () => {
-		const commit = jest.fn()
-		let exception
+		const mainStore = useMainStore()
+		mainStore.isExpiredSession = false
 
-		try {
-			await handleHttpAuthErrors(commit, () => {
-				throw {
-					response: {
-						status: 401,
-						data: {
-							message: 'Current user is not logged in',
-						},
-					},
-				}
-			})
-		} catch (e) {
-			exception = e
+		const exception = {
+			response: {
+				status: 401,
+				data: {
+					message: 'Current user is not logged in',
+				},
+			},
 		}
 
-		// Is this our exception?
-		expect(exception.response?.status === 401)
-		expect(commit).toHaveBeenCalled()
+		let actualException
+		try {
+			await handleHttpAuthErrors(() => {
+				throw exception
+			})
+		} catch (e) {
+			actualException = e
+		}
+
+		expect(actualException).toBe(exception)
+		expect(mainStore.isExpiredSession).toBe(true)
 	})
-
 })
-
