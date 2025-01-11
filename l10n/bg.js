@@ -252,6 +252,7 @@ OC.L10N.register(
     "Could not send mdn" : "Не можа да се изпрати mdn",
     "Forward" : "Напред",
     "Move message" : "Преместване на съобщението",
+    "Translate" : "Превод",
     "Forward message as attachment" : "Препращане на съобщението като прикачен файл",
     "View source" : "Преглед на източника",
     "Download thread data for debugging" : "Изтегля данните за нишките за отстраняване на грешки",
