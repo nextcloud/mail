@@ -35,6 +35,10 @@ export default {
 			type: Object,
 			default: null,
 		},
+		fetchAvatar: {
+			type: Boolean,
+			default: false,
+		},
 		email: {
 			type: String,
 			required: true,
@@ -66,7 +70,7 @@ export default {
 					email: this.email,
 				})
 				: this.avatar.url
-		} else {
+		} else if (this.fetchAvatar) {
 			if (this.email !== '') {
 				try {
 					this.avatarUrl = await fetchAvatarUrlMemoized(this.email)

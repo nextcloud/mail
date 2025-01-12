@@ -16,6 +16,7 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMapper;
 use OCA\Mail\IMAP\MessageMapper as ImapMapper;
 use OCA\Mail\Service\AvatarService;
+use OCA\Mail\Service\Avatar\Avatar;
 use Psr\Log\LoggerInterface;
 use function array_key_exists;
 use function array_map;
@@ -70,7 +71,13 @@ class PreviewEnhancer {
 				$from = $message->getFrom()->first();
 				if ($message->getAvatar() === null && $from !== null && $from->getEmail() !== null && $userId !== null) {
 					$avatar = $this->avatarService->getAvatar($from->getEmail(), $userId, true);
-					$message->setAvatar($avatar);
+					if ($avatar === false) {
+						$message->setFetchAvatarFromClient(true);
+					}
+					if ($avatar instanceof Avatar) {
+						$message->setAvatar($avatar);
+					}
+					
 				}
 			}
 		}

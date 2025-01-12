@@ -89,16 +89,22 @@ class AvatarService implements IAvatarService {
 	/**
 	 * @param string $email
 	 * @param string $uid
-	 * @return Avatar|null
+	 * @param bool $cachedOnly
+	 * @return Avatar|null|false
 	 */
-	public function getAvatar(string $email, string $uid, bool $cachedOnly = false): ?Avatar {
+	public function getAvatar(string $email, string $uid, bool $cachedOnly = false): mixed{
 		$cachedAvatar = $this->cache->get($email, $uid);
 		if ($cachedAvatar) {
 			return $cachedAvatar;
 		}
-		if ($cachedAvatar === false || $cachedOnly) {
+		if ($cachedAvatar === false) {
 			// We know there is no avatar
 			return null;
+		}
+
+		if($cachedOnly){
+			// We want to fetch the avatar from the frontend
+			return false;
 		}
 
 		$avatar = $this->source->fetch($email, $this->avatarFactory, $this->externalAvatarsAllowed($uid));

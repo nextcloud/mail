@@ -139,6 +139,10 @@ class Message extends Entity implements JsonSerializable {
 
 	/** @var Avatar|null */
 	private $avatar;
+
+	/** @var bool*/
+	private $fetchAvatarFromClient = false;
+	
 	public function __construct() {
 		$this->from = new AddressList([]);
 		$this->to = new AddressList([]);
@@ -298,6 +302,13 @@ class Message extends Entity implements JsonSerializable {
 	}
 
 	/**
+	 * @param bool $fetchAvatarFromClient
+	 */
+	public function setFetchAvatarFromClient(bool $fetchAvatarFromClient): void {
+		$this->fetchAvatarFromClient = $fetchAvatarFromClient;
+	}
+
+	/**
 	 * @return Avatar
 	 */
 	public function getAvatar(): ?Avatar {
@@ -349,6 +360,7 @@ class Message extends Entity implements JsonSerializable {
 			'encrypted' => ($this->isEncrypted() === true),
 			'mentionsMe' => $this->getMentionsMe(),
 			'avatar' => $this->avatar ? $this->avatar->jsonSerialize() : null,
+			'fetchAvatarFromClient' => $this->fetchAvatarFromClient,
 		];
 	}
 }
