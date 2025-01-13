@@ -119,6 +119,8 @@ import { generateUrl } from '@nextcloud/router'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import * as OutOfOfficeService from '../service/OutOfOfficeService.js'
 import mitt from 'mitt'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 const OOO_DISABLED = 'disabled'
 const OOO_ENABLED = 'enabled'
@@ -162,6 +164,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		/**
 		 * @return {boolean}
 		 */
@@ -270,7 +273,7 @@ export default {
 			try {
 				if (this.followingSystem) {
 					await OutOfOfficeService.followSystem(this.account.id)
-					this.$store.commit('patchAccount', {
+					this.mainStore.patchAccountiMutation({
 						account: this.account,
 						data: {
 							outOfOfficeFollowsSystem: true,
@@ -297,14 +300,14 @@ export default {
 						allowedRecipients: this.aliases,
 					})
 
-					this.$store.commit('patchAccount', {
+					this.mainStore.patchAccountMutation({
 						account: this.account,
 						data: {
 							outOfOfficeFollowsSystem: false,
 						},
 					})
 				}
-				await this.$store.dispatch('fetchActiveSieveScript', { accountId: this.account.id })
+				await this.mainStore.fetchActiveSieveScript({ accountId: this.account.id })
 			} catch (error) {
 				this.errorMessage = error.message
 			} finally {

@@ -109,7 +109,6 @@ import { NcButton, NcSelect, NcLoadingIcon } from '@nextcloud/vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import CalendarIcon from 'vue-material-design-icons/Calendar.vue'
 import { getParserManager, Parameter, Property } from '@nextcloud/calendar-js'
-import { mapGetters } from 'vuex'
 import { removeMailtoPrefix } from '../util/eventAttendee.js'
 import logger from '../logger.js'
 import { namespaces as NS } from '@nextcloud/cdav-library'
@@ -119,6 +118,8 @@ import { randomId } from '../util/randomId.js'
 import pLimit from 'p-limit'
 import { flatten } from 'ramda'
 import { showError } from '@nextcloud/dialogs'
+import useMainStore from '../store/mainStore.js'
+import { mapState } from 'pinia'
 
 // iMIP methods
 const REQUEST = 'REQUEST'
@@ -189,7 +190,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters({
+		...mapState(useMainStore, {
 			currentUserPrincipalEmail: 'getCurrentUserPrincipalEmail',
 			clonedWriteableCalendars: 'getClonedWriteableCalendars',
 		}),

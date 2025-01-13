@@ -51,6 +51,7 @@
     "@nextcloud/paths": "^2.2.1",
     "@nextcloud/router": "^3.0.1",
     "@nextcloud/vue": "^8.20.0",
+    "@pinia/testing": "^0.1.6",
     "@riophae/vue-treeselect": "^0.4.0",
     "@vue/babel-preset-app": "^5.0.8",
     "address-rfc2822": "^2.2.2",
@@ -87,8 +88,6 @@
     "vue-scroll": "^2.1.13",
     "vue-shortkey": "^3.1.7",
     "vue-tabs-component": "^1.5.0",
-    "vuex": "^3.6.2",
-    "vuex-router-sync": "^5.0.0",
     "webdav": "4.11.4"
   },
   "browserslist": [

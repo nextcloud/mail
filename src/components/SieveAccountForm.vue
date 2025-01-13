@@ -62,6 +62,9 @@
 
 <script>
 import { NcButton as ButtonVue, NcTextField, NcPasswordField, NcCheckboxRadioSwitch } from '@nextcloud/vue'
+import useMainStore from '../store/mainStore.js'
+import { mapStores } from 'pinia'
+
 export default {
 	name: 'SieveAccountForm',
 	components: {
@@ -91,6 +94,9 @@ export default {
 			errorMessage: '',
 		}
 	},
+	computed: {
+		...mapStores(useMainStore),
+	},
 	methods: {
 		updateSslMode(value) {
 			this.sieveConfig.sieveSslMode = value
@@ -114,12 +120,12 @@ export default {
 			}
 
 			try {
-				await this.$store.dispatch('updateSieveAccount', {
+				await this.mainStore.updateSieveAccount({
 					account: this.account,
 					data: this.sieveConfig,
 				})
 				if (this.sieveConfig.sieveEnabled) {
-					await this.$store.dispatch('fetchActiveSieveScript', {
+					await this.mainStore.fetchActiveSieveScript({
 						accountId: this.account.id,
 					})
 				}

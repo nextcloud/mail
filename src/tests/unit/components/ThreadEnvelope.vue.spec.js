@@ -4,37 +4,19 @@
  */
 
 import {createLocalVue, shallowMount} from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import ThreadEnvelope from '../../../components/ThreadEnvelope.vue'
-import Vuex from 'vuex'
 
 const localVue = createLocalVue()
 
-localVue.use(Vuex)
 localVue.mixin(Nextcloud)
 
 describe('ThreadEnvelope', () => {
-	let actions
-	let getters
-	let store
 
 	beforeEach(() => {
-		actions = {}
-		getters = {
-			accounts: () => [
-				{
-					id: 123,
-				},
-			],
-			getAccount: () => (id) => ({}),
-			getEnvelopeTags: () => (id) => ([]),
-			getMailbox: () => (id) => ({}),
-		}
-		store = new Vuex.Store({
-			actions,
-			getters,
-		})
+		setActivePinia(createPinia())
 	})
 
 	it('allows toggling seen flag without ACLs', () => {
@@ -58,7 +40,6 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: undefined }
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -86,7 +67,6 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: 'x' }
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -114,7 +94,6 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: 's' }
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -144,7 +123,6 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: undefined }
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -175,7 +153,6 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: 'i' }
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -206,7 +183,6 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: undefined }
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -237,7 +213,6 @@ describe('ThreadEnvelope', () => {
 					return { }
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -265,7 +240,6 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: 'x' }
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -294,7 +268,6 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: undefined }
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -321,7 +294,6 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: 's' }
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -348,7 +320,6 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: 'te' }
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -382,7 +353,6 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: 'w' }
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -420,7 +390,6 @@ describe('ThreadEnvelope', () => {
 					return { }
 				},
 			},
-			store,
 			localVue,
 		})
 
@@ -457,7 +426,6 @@ describe('ThreadEnvelope', () => {
 					return { }
 				},
 			},
-			store,
 			localVue,
 		})
 
