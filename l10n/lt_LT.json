@@ -314,6 +314,7 @@
     "Tag name cannot be empty" : "Žymės pavadinimas negali būti tuščias",
     "An error occurred, unable to create the tag." : "Įvyko klaida, nepavyko sukurti žymės.",
     "Not found" : "Nerasta",
+    "Disable reminder" : "Išjungti priminimą",
     "Unsubscribe" : "Atsisakyti prenumeratos",
     "Reply all" : "Atsakyti visiems",
     "Reply to sender only" : "Atsakyti tik siuntėjui",

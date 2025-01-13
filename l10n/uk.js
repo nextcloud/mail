@@ -491,6 +491,7 @@ OC.L10N.register(
     "Go to newest message" : "Перейти до найновішого повідомлення",
     "{name} Assistant" : "Асистент {name}",
     "Translate from" : "Перекласти з",
+    "Translate to" : "Перекласти",
     "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed." : "Вимкніть зберігання кошика, для цього залиште поле порожнім або встановіть його значення у 0. Це буде застосовано лише до листів, які було вилучено після увімкнення зберігання кошика.",
     "No senders are trusted at the moment." : "Наразі відсутні довірені відправники.",
     "Could not remove trusted sender {sender}" : "Не вдалося вилучити довіреного відправника {sender}",
