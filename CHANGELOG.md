@@ -1,3 +1,14 @@
+## [3.7.18](https://github.com/nextcloud/mail/compare/v3.7.17...v3.7.18) (2025-01-14)
+
+
+### Bug Fixes
+
+* create tasks from emails ([416073b](https://github.com/nextcloud/mail/commit/416073bc3bf8043d33c292ab6c1773582dfbfbdf))
+* **deps:** Apply npm audit fix ([670c5c4](https://github.com/nextcloud/mail/commit/670c5c4ca50f951116e2efda8f417b0f23d6f575))
+* **dns:** Update public suffix list ([6c3a786](https://github.com/nextcloud/mail/commit/6c3a7862e1866e31aa58de6da491b491462fe950))
+
+
+
 ## [3.7.17](https://github.com/nextcloud/mail/compare/v3.7.16...v3.7.17) (2024-12-17)
 
 
