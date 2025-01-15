@@ -69,6 +69,7 @@ OC.L10N.register(
     "Decline" : "Gwrthod",
     "Remove" : "Gwaredu",
     "Other" : "Arall",
+    "Translate" : "Cyfieithu",
     "Choose a folder to store the attachment in" : "Dewiswch ffolder i gadw'r atodiad ynddi",
     "Import into calendar" : "Mewnforio i'r calendr",
     "Download attachment" : "Llwytho'r atodiad i lawr",

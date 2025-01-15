@@ -240,6 +240,7 @@ OC.L10N.register(
     "The sender of this message has asked to be notified when you read this message." : "Afsenderen af denne besked har bedt om at blive underrettet, når du læser denne besked.",
     "Forward" : "Videresend",
     "Move message" : "Flyt besked",
+    "Translate" : "Oversæt",
     "Forward message as attachment" : "Videresend besked som vedhæftet fil",
     "View source" : "Vis kildekode",
     "Choose a folder to store the attachment in" : "Vælg den mappe, hvor vedhæftningen skal gemmes i",
