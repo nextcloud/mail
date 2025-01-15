@@ -17,9 +17,10 @@ interface IAvatarService {
 	 *
 	 * @param string $email
 	 * @param string $uid
-	 * @return Avatar|null
+	 * @param bool $cachedOnly
+	 * @return Avatar|null|false the avatar if found, false if $cachedOnly is true and no value cached and null if not found
 	 */
-	public function getAvatar(string $email, string $uid): ?Avatar;
+	public function getAvatar(string $email, string $uid, bool $cachedOnly = false): mixed;
 
 	/**
 	 * @param string $email
