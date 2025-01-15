@@ -97,7 +97,7 @@ class LocalAttachmentMapperTest extends TestCase {
 		$message1->setAliasId(3);
 		$message1->setSendAt(3);
 		$message1->setSubject('testSaveLocalAttachments');
-		$message1->setBody('message');
+		$message1->setBodyHtml('message');
 		$message1->setHtml(true);
 		$message1->setInReplyToMessageId('abcdefg');
 		$message1 = $this->localMessageMapper->insert($message1);
@@ -107,7 +107,7 @@ class LocalAttachmentMapperTest extends TestCase {
 		$message2->setAliasId(3);
 		$message2->setSendAt(3);
 		$message2->setSubject('testSaveLocalAttachments');
-		$message2->setBody('message');
+		$message2->setBodyHtml('message');
 		$message2->setHtml(true);
 		$message2->setInReplyToMessageId('abcdefg');
 		$message2 = $this->localMessageMapper->insert($message2);

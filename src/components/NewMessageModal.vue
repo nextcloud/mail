@@ -363,11 +363,10 @@ export default {
 			return this.draftsPromise
 		},
 		getDataForServer(data) {
-			return {
+			const dataForServer = {
 				...data,
 				id: data.id,
 				accountId: data.accountId,
-				body: data.isHtml ? data.body.value : toPlain(data.body).value,
 				editorBody: data.body.value,
 				to: data.to,
 				cc: data.cc,
@@ -378,6 +377,12 @@ export default {
 				sendAt: data.sendAt,
 				draftId: this.composerData?.draftId,
 			}
+			if (data.isHtml) {
+				dataForServer.bodyHtml = data.body.value
+			} else {
+				dataForServer.bodyPlain = toPlain(data.body).value
+			}
+			return dataForServer
 		},
 		onAttachmentUploading(done, data) {
 			this.attachmentsPromise = this.attachmentsPromise

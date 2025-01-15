@@ -101,7 +101,7 @@ class DraftsServiceTest extends TestCase {
 		$message->setSendAt(null);
 		$message->setUpdatedAt(123456);
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 
@@ -129,7 +129,7 @@ class DraftsServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt(null);
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 
@@ -148,7 +148,7 @@ class DraftsServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt(null);
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$message->setType(LocalMessage::TYPE_DRAFT);
@@ -199,7 +199,7 @@ class DraftsServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt(null);
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$message->setType(LocalMessage::TYPE_DRAFT);
@@ -246,7 +246,7 @@ class DraftsServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt(null);
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$message->setType(LocalMessage::TYPE_DRAFT);
@@ -304,7 +304,7 @@ class DraftsServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$message->setType(LocalMessage::TYPE_OUTGOING);
@@ -362,7 +362,7 @@ class DraftsServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt(null);
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$message->setType(LocalMessage::TYPE_DRAFT);
@@ -412,7 +412,7 @@ class DraftsServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('laskdjhsakjh33233928@startdewvalley.com');
 		$message->setType(LocalMessage::TYPE_OUTGOING);

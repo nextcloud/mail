@@ -555,9 +555,11 @@ export default function mainStoreActions() {
 				let originalSendAt
 				if (type === 'outbox' && data.id && data.sendAt) {
 					originalSendAt = data.sendAt
-					const message = {
-						...data,
-						body: data.isHtml ? data.body.value : toPlain(data.body).value,
+					const message = { ...data }
+					if (data.isHtml) {
+						message.bodyHtml = data.body.value
+					} else {
+						message.bodyPlain = toPlain(data.body).value
 					}
 					const outboxStore = useOutboxStore()
 					await outboxStore.stopMessage({ message })
@@ -588,7 +590,11 @@ export default function mainStoreActions() {
 				const message = this.composerMessage
 				if (restoreOriginalSendAt && message.type === 'outbox' && message.options?.originalSendAt) {
 					const body = message.data.body
-					message.body = message.data.isHtml ? body.value : toPlain(body).value
+					if (message.data.isHtml) {
+						message.bodyHtml = body.value
+					} else {
+						message.bodyPlain = toPlain(body).value
+					}
 					message.sendAt = message.options.originalSendAt
 					updateDraft(message)
 				}
