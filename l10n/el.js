@@ -208,6 +208,7 @@ OC.L10N.register(
     "Could not send mdn" : "Αδυναμία αποστολής mdn",
     "Forward" : "Προώθηση",
     "Move message" : "Μετακίνηση μηνύματος",
+    "Translate" : "Μετάφραση",
     "Forward message as attachment" : "Προώθηση μηνύματος ως συνημμένο",
     "View source" : "Προβολή πηγής",
     "Download thread data for debugging" : "Λήψη δεδομένων νήματος ακολουθίας για εντοπισμό σφαλμάτων",

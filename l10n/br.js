@@ -39,6 +39,7 @@ OC.L10N.register(
     "Important info" : "Titouroù pouezus",
     "Other" : "All",
     "Forward" : "War-raok",
+    "Translate" : "Treiñ",
     "Show images" : "Diskouzh ar skeudennoù",
     "Message frame" : "Fram kemenadenn",
     "Move" : "Diplasañ",
