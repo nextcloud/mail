@@ -102,7 +102,7 @@ class AvatarService implements IAvatarService {
 			return null;
 		}
 
-		if($cachedOnly){
+		if ($cachedOnly){
 			// We want to fetch the avatar from the frontend
 			return false;
 		}

@@ -301,15 +301,12 @@ class Message extends Entity implements JsonSerializable {
 		$this->avatar = $avatar;
 	}
 
-	/**
-	 * @param bool $fetchAvatarFromClient
-	 */
 	public function setFetchAvatarFromClient(bool $fetchAvatarFromClient): void {
 		$this->fetchAvatarFromClient = $fetchAvatarFromClient;
 	}
 
 	/**
-	 * @return Avatar
+	 * @return ?Avatar
 	 */
 	public function getAvatar(): ?Avatar {
 		return $this->avatar;
@@ -359,7 +356,7 @@ class Message extends Entity implements JsonSerializable {
 			'summary' => $this->getSummary(),
 			'encrypted' => ($this->isEncrypted() === true),
 			'mentionsMe' => $this->getMentionsMe(),
-			'avatar' => $this->avatar ? $this->avatar->jsonSerialize() : null,
+			'avatar' => $this->avatar?->jsonSerialize(),
 			'fetchAvatarFromClient' => $this->fetchAvatarFromClient,
 		];
 	}
