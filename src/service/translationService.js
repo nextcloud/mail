@@ -11,8 +11,15 @@ const fetchAvailableLanguages = async function() {
 	const mainStore = useMainStore()
 	try {
 		const response = await axios.get(generateOcsUrl('taskprocessing/tasktypes'))
-		const inputLanguages = response.data.ocs.data.types['core:text2text:translate'].inputShapeEnumValues[0]
-		const outputLanguages = response.data.ocs.data.types['core:text2text:translate'].inputShapeEnumValues[1]
+		let inputLanguages = []
+		let outputLanguages = []
+		if (typeof response.data.ocs.data.types['core:text2text:translate'].inputShapeEnumValues === 'object') {
+			inputLanguages = response.data.ocs.data.types['core:text2text:translate'].inputShapeEnumValues.origin_language
+			outputLanguages = response.data.ocs.data.types['core:text2text:translate'].inputShapeEnumValues.target_language
+		} else {
+			inputLanguages = response.data.ocs.data.types['core:text2text:translate'].inputShapeEnumValues[0]
+			outputLanguages = response.data.ocs.data.types['core:text2text:translate'].inputShapeEnumValues[1]
+		}
 		mainStore.translationInputLanguages = inputLanguages
 		mainStore.translationOutputLanguages = outputLanguages
 	} catch (e) {
