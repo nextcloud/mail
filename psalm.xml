@@ -46,19 +46,11 @@
 				<referencedClass name="Symfony\Component\Console\Input\InputInterface" />
 				<referencedClass name="Symfony\Component\Console\Input\InputOption" />
 				<referencedClass name="Symfony\Component\Console\Output\OutputInterface" />
-				<referencedClass name="OCP\Search\IFilteringProvider" /><!-- 28+ -->
 				<referencedClass name="OCP\TextProcessing\IManager" />
 				<referencedClass name="OCP\TextProcessing\SummaryTaskType" />
 				<referencedClass name="OCP\TextProcessing\Task" />
 				<referencedClass name="OCP\TextProcessing\SummaryTaskType" />
 				<referencedClass name="OCP\TextProcessing\FreePromptTaskType" />
-				<referencedClass name="OCP\DB\Events\AddMissingIndicesEvent" /><!-- 28+ -->
-				<referencedClass name="OCP\User\Events\OutOfOfficeEndedEvent" /><!-- 28+ -->
-				<referencedClass name="OCP\User\Events\OutOfOfficeStartedEvent" /><!-- 28+ -->
-				<referencedClass name="OCP\User\Events\OutOfOfficeScheduledEvent" /><!-- 28+ -->
-				<referencedClass name="OCP\User\Events\OutOfOfficeChangedEvent" /><!-- 28+ -->
-				<referencedClass name="OCP\User\Events\OutOfOfficeClearedEvent" /><!-- 28+ -->
-				<referencedClass name="OCP\User\IAvailabilityCoordinator" /><!-- 28+ -->
 			</errorLevel>
 		</UndefinedClass>
 		<UndefinedDocblockClass>
@@ -70,12 +62,6 @@
 				<referencedClass name="Doctrine\DBAL\Schema\Table" />
 				<referencedClass name="OC\Security\CSP\ContentSecurityPolicyNonceManager" />
 				<referencedClass name="Symfony\Component\Console\Output\OutputInterface" />
-				<referencedClass name="OCP\DB\Events\AddMissingIndicesEvent" /><!-- 28+ -->
-				<referencedClass name="OCP\User\Events\OutOfOfficeEndedEvent" /><!-- 28+ -->
-				<referencedClass name="OCP\User\Events\OutOfOfficeStartedEvent" /><!-- 28+ -->
-				<referencedClass name="OCP\User\Events\OutOfOfficeScheduledEvent" /><!-- 28+ -->
-				<referencedClass name="OCP\User\Events\OutOfOfficeChangedEvent" /><!-- 28+ -->
-				<referencedClass name="OCP\User\Events\OutOfOfficeClearedEvent" /><!-- 28+ -->
 			</errorLevel>
 		</UndefinedDocblockClass>
 		<UndefinedFunction>
