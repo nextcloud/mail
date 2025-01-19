@@ -83,6 +83,10 @@
 				<div v-show="forceDisplayActions || displayActionsOnHoverFocus"
 					class="list-item__actions"
 					@focusout="handleBlur">
+					<!-- These details aren't actually displayed, they are just there to prevent text jittering on hover -->
+					<div class="list-item__actions__filler">
+						<slot name="list-item__actions__filler">{{ details }}</slot>
+					</div>
 					<NcActions ref="actions"
 						:primary="isActive || active"
 						:aria-label="computedActionsAriaLabel"
@@ -633,6 +637,15 @@ export default {
 		justify-content: center;
 		align-self: start;
 		margin-top: 0;
+		display: flex;
+		flex-direction: column-reverse;
+		align-items: flex-end;
+
+		&__filler {
+			padding-right: calc(var(--default-grid-baseline) * 2 + 1px);
+			visibility: hidden;
+			margin-left: calc(var(--default-grid-baseline) * 2 + 1px);
+		}
 	}
 
 }
