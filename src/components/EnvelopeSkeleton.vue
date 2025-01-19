@@ -83,6 +83,10 @@
 				<div v-show="forceDisplayActions || displayActionsOnHoverFocus"
 					class="list-item__actions"
 					@focusout="handleBlur">
+					<!-- These details aren't actually displayed, they are just there to prevent text jittering on hover -->
+					<div class="list-item__actions__filler">
+						<slot name="list-item__actions__filler">{{ details }}</slot>
+					</div>
 					<NcActions ref="actions"
 						:primary="isActive || active"
 						:aria-label="computedActionsAriaLabel"
@@ -595,6 +599,12 @@ export default {
 		.list-item__actions {
 			align-self: center;
 			margin-top: 0;
+
+			&__filler {
+				// For the one-line layout the filler has to be one line shorter seeing as the replaced information when
+				// hovering is on one line and not two, hence needing to use the default line height in the calculation
+				margin-bottom: calc((var(--default-line-height) * var(--default-font-size) - var(--default-grid-baseline) * 3) * -1);
+			}
 		}
 	}
 
@@ -633,6 +643,15 @@ export default {
 		justify-content: center;
 		align-self: start;
 		margin-top: 0;
+		display: flex;
+		flex-direction: column-reverse;
+		align-items: flex-end;
+
+		&__filler {
+			padding-right: calc(var(--default-grid-baseline) * 2 + 1px);
+			visibility: hidden;
+			margin-left: calc(var(--default-grid-baseline) * 2 + 1px);
+		}
 	}
 
 }
