@@ -9,17 +9,11 @@ import { fetchAvailableLanguages } from './service/translationService.js'
 import useOutboxStore from './store/outboxStore.js'
 import useMainStore from './store/mainStore.js'
 
-const getPreferenceFromPage = (key) => {
-	const elem = document.getElementById(key)
-	if (!elem) {
-		return
-	}
-	return elem.value
-}
-
 export default function initAfterAppCreation() {
 	console.debug('Init after app creation')
 	const mainStore = useMainStore()
+
+	const preferences = loadState('mail', 'preferences', [])
 
 	mainStore.savePreferenceMutation({
 		key: 'debug',
@@ -37,32 +31,32 @@ export default function initAfterAppCreation() {
 
 	mainStore.savePreferenceMutation({
 		key: 'attachment-size-limit',
-		value: Number.parseInt(getPreferenceFromPage('attachment-size-limit'), 10),
+		value: Number.parseInt(preferences['attachment-size-limit'], 10),
 	})
 	mainStore.savePreferenceMutation({
 		key: 'version',
-		value: getPreferenceFromPage('config-installed-version'),
+		value: preferences['config-installed-version'],
 	})
 	mainStore.savePreferenceMutation({
 		key: 'external-avatars',
-		value: getPreferenceFromPage('external-avatars'),
+		value: preferences['external-avatars'],
 	})
 	mainStore.savePreferenceMutation({
 		key: 'collect-data',
-		value: getPreferenceFromPage('collect-data'),
+		value: preferences['collect-data'],
 	})
 	mainStore.savePreferenceMutation({
 		key: 'search-priority-body',
-		value: getPreferenceFromPage('search-priority-body'),
+		value: preferences['search-priority-body'],
 	})
-	const startMailboxId = getPreferenceFromPage('start-mailbox-id')
+	const startMailboxId = preferences['start-mailbox-id']
 	mainStore.savePreferenceMutation({
 		key: 'start-mailbox-id',
 		value: startMailboxId ? parseInt(startMailboxId, 10) : null,
 	})
 	mainStore.savePreferenceMutation({
 		key: 'tag-classified-messages',
-		value: getPreferenceFromPage('tag-classified-messages'),
+		value: preferences['tag-classified-messages'],
 	})
 	mainStore.savePreferenceMutation({
 		key: 'allow-new-accounts',
@@ -74,11 +68,11 @@ export default function initAfterAppCreation() {
 	})
 	mainStore.savePreferenceMutation({
 		key: 'layout-mode',
-		value: getPreferenceFromPage('layout-mode'),
+		value: preferences['layout-mode'],
 	})
 	mainStore.savePreferenceMutation({
 		key: 'follow-up-reminders',
-		value: getPreferenceFromPage('follow-up-reminders'),
+		value: preferences['follow-up-reminders'],
 	})
 	mainStore.savePreferenceMutation({
 		key: 'internal-addresses',
