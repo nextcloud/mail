@@ -39,6 +39,11 @@ class Version4200Date20241210000001 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$outboxTable = $schema->getTable('mail_local_messages');
+		if (!$outboxTable->hasColumn('body')) {
+			// Migration has already been executed
+			return;
+		}
+
 		if ($outboxTable->hasColumn('body') && $outboxTable->hasColumn('body_plain') && $outboxTable->hasColumn('body_html')) {
 			// copy plain type content to proper column
 			$qb = $this->db->getQueryBuilder();
