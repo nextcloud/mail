@@ -22,6 +22,7 @@ OC.L10N.register(
     "Sent date is in the future" : "Datum odeslání se nachází v budoucnosti",
     "Some addresses in this message are not matching the link text" : "Některé adresy v této zprávě se neshodují s textem odkazu",
     "Reply-To email: %1$s  is different from the sender email: %2$s" : "E-mail na který odpovídat: %1$s se liší od e-mailu odesilatele: %2$s",
+    "Mail Transport configuration" : "Nastavení transportu e-mailů",
     "💌 A mail app for Nextcloud" : "💌 E-mailová aplikace pro Nextcloud",
     "Your session has expired. The page will be reloaded." : "Platnost vaší relace skončila. Stránka bude znovu načtena.",
     "Drafts are saved in:" : "Koncepty jsou ukládány do:",
