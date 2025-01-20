@@ -1,3 +1,12 @@
+## [3.7.19](https://github.com/nextcloud/mail/compare/v3.7.18...v3.7.19) (2025-01-20)
+
+
+### Bug Fixes
+
+* Restrict allowed JSON response HTTP codes ([8515544](https://github.com/nextcloud/mail/commit/8515544ecab82a06a1c1aafee5a2885436eaebed))
+
+
+
 ## [3.7.18](https://github.com/nextcloud/mail/compare/v3.7.17...v3.7.18) (2025-01-14)
 
 
