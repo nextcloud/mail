@@ -52,7 +52,7 @@ export default {
 }
 .app-content {
 	display: flex;
-	height: 100%;
+	height: 100% !important;
 	justify-content: center;
 	&__empty {
 		flex-grow: unset;
