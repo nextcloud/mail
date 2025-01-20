@@ -201,6 +201,5 @@ export default {
 	flex-direction: column;
 	flex: 1 1 100%;
 	min-width: 70%;
-	height: auto;
 }
 </style>
