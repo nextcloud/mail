@@ -299,7 +299,7 @@ class PageControllerTest extends TestCase {
 			->method('getLoginCredentials')
 			->willReturn($loginCredentials);
 
-		$this->initialState->expects($this->exactly(20))
+		$this->initialState->expects($this->exactly(21))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -311,6 +311,18 @@ class PageControllerTest extends TestCase {
 				['internal-addresses', false],
 				['sort-order', 'newest'],
 				['password-is-unavailable', true],
+				['preferences', [
+					'attachment-size-limit' => 123,
+					'external-avatars' => 'true',
+					'reply-mode' => 'bottom',
+					'app-version' => '1.2.3',
+					'collect-data' => 'true',
+					'start-mailbox-id' => '123',
+					'tag-classified-messages' => 'false',
+					'search-priority-body' => 'false',
+					'layout-mode' => 'vertical-split',
+					'follow-up-reminders' => 'true',
+				]],
 				['prefill_displayName', 'Jane Doe'],
 				['prefill_email', 'jane@doe.cz'],
 				['outbox-messages', []],
@@ -324,18 +336,7 @@ class PageControllerTest extends TestCase {
 				['smime-certificates', []],
 			);
 
-		$expected = new TemplateResponse($this->appName, 'index', [
-			'attachment-size-limit' => 123,
-			'external-avatars' => 'true',
-			'reply-mode' => 'bottom',
-			'app-version' => '1.2.3',
-			'collect-data' => 'true',
-			'start-mailbox-id' => '123',
-			'tag-classified-messages' => 'false',
-			'search-priority-body' => 'false',
-			'layout-mode' => 'vertical-split',
-			'follow-up-reminders' => 'true',
-		]);
+		$expected = new TemplateResponse($this->appName, 'index');
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');
 		$expected->setContentSecurityPolicy($csp);

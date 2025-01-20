@@ -205,19 +205,19 @@ class PageController extends Controller {
 		);
 
 		$user = $this->userSession->getUser();
-		$response = new TemplateResponse($this->appName, 'index',
-			[
-				'attachment-size-limit' => $this->config->getSystemValue('app.mail.attachment-size-limit', 0),
-				'app-version' => $this->config->getAppValue('mail', 'installed_version'),
-				'external-avatars' => $this->preferences->getPreference($this->currentUserId, 'external-avatars', 'true'),
-				'layout-mode' => $this->preferences->getPreference($this->currentUserId, 'layout-mode', 'vertical-split'),
-				'reply-mode' => $this->preferences->getPreference($this->currentUserId, 'reply-mode', 'top'),
-				'collect-data' => $this->preferences->getPreference($this->currentUserId, 'collect-data', 'true'),
-				'search-priority-body' => $this->preferences->getPreference($this->currentUserId, 'search-priority-body', 'false'),
-				'start-mailbox-id' => $this->preferences->getPreference($this->currentUserId, 'start-mailbox-id'),
-				'tag-classified-messages' => $this->classificationSettingsService->isClassificationEnabled($this->currentUserId) ? 'true' : 'false',
-				'follow-up-reminders' => $this->preferences->getPreference($this->currentUserId, 'follow-up-reminders', 'true'),
-			]);
+		$response = new TemplateResponse($this->appName, 'index');
+		$this->initialStateService->provideInitialState('preferences', [
+			'attachment-size-limit' => $this->config->getSystemValue('app.mail.attachment-size-limit', 0),
+			'app-version' => $this->config->getAppValue('mail', 'installed_version'),
+			'external-avatars' => $this->preferences->getPreference($this->currentUserId, 'external-avatars', 'true'),
+			'layout-mode' => $this->preferences->getPreference($this->currentUserId, 'layout-mode', 'vertical-split'),
+			'reply-mode' => $this->preferences->getPreference($this->currentUserId, 'reply-mode', 'top'),
+			'collect-data' => $this->preferences->getPreference($this->currentUserId, 'collect-data', 'true'),
+			'search-priority-body' => $this->preferences->getPreference($this->currentUserId, 'search-priority-body', 'false'),
+			'start-mailbox-id' => $this->preferences->getPreference($this->currentUserId, 'start-mailbox-id'),
+			'tag-classified-messages' => $this->classificationSettingsService->isClassificationEnabled($this->currentUserId) ? 'true' : 'false',
+			'follow-up-reminders' => $this->preferences->getPreference($this->currentUserId, 'follow-up-reminders', 'true'),
+		]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',
 			$this->userManager->getDisplayName($this->currentUserId),
