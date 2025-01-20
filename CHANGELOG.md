@@ -1,3 +1,13 @@
+## [4.1.2](https://github.com/nextcloud/mail/compare/v4.1.1...v4.1.2) (2025-01-20)
+
+
+### Bug Fixes
+
+* Restrict allowed JSON response HTTP codes ([193f143](https://github.com/nextcloud/mail/commit/193f143cd2c1dc843dcd194e68b5437a0a8754d7))
+* setup check for mail transport php-mail ([80f6298](https://github.com/nextcloud/mail/commit/80f6298e369121b65d43431a18095370b3699617))
+
+
+
 ## [4.1.1](https://github.com/nextcloud/mail/compare/v4.1.0...v4.1.1) (2024-12-23)
 
 
