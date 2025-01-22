@@ -177,7 +177,7 @@ export default {
 	}
 }
 .reply-buttons {
-	margin: 0 10px 0 50px;
+	margin: 0 30px 0 50px;
 	display: flex;
 	flex-wrap: wrap;
 	gap: 5px;
@@ -189,9 +189,11 @@ export default {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 5px;
+
 		&__button {
 			margin-right: 5px;
 			border-radius: 12px;
+
 			:deep(.button-vue__text) {
 				font-weight: normal;
 			}
