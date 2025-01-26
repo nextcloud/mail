@@ -23,7 +23,10 @@ class Version4100Date20241021091352 extends SimpleMigrationStep {
 	 */
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 		$schema = $schemaClosure();
-		$schema->dropTable('mail_classifiers');
-		return $schema;
+		if ($schema->hasTable('mail_classifiers')) {
+			$schema->dropTable('mail_classifiers');
+			return $schema;
+		}
+		return null;
 	}
 }
