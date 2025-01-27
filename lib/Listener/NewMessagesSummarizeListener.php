@@ -14,6 +14,7 @@ use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
@@ -28,11 +29,14 @@ class NewMessagesSummarizeListener implements IEventListener {
 		private IMAPClientFactory $imapFactory,
 		private AiIntegrationsService $aiService,
 		private IMailManager $mailManager,
+		private IAppConfig $appConfig,
 	) {
 	}
 
 	public function handle(Event $event): void {
-
+		if ($this->appConfig->getAppValue('llm_processing', 'no') !== 'yes') {
+			return;
+		}
 		if (!($event instanceof NewMessagesSynchronized)) {
 			return;
 		}
