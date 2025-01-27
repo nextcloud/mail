@@ -34,7 +34,7 @@ The rating depends on the installed text processing backend. See [the rating ove
 
 Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).
 	]]></description>
-	<version>4.2.0-beta.3</version>
+	<version>4.3.0-alpha.1</version>
 	<licence>agpl</licence>
 	<author homepage="https://github.com/ChristophWurst">Christoph Wurst</author>
 	<author homepage="https://github.com/GretaD">GretaD</author>
@@ -53,7 +53,7 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 	<screenshot>https://user-images.githubusercontent.com/12728974/266270227-86b99bbb-03ea-468b-8408-e248e1730bed.png</screenshot>
 	<dependencies>
 		<php min-version="8.1" max-version="8.3" />
-		<nextcloud min-version="30" max-version="31" />
+		<nextcloud min-version="30" max-version="32" />
 	</dependencies>
 	<background-jobs>
 		<job>OCA\Mail\BackgroundJob\CleanupJob</job>
