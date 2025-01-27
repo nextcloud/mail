@@ -404,6 +404,7 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} asemalta {depStation} asemalle {arrStation}",
     "Train from {depStation} to {arrStation}" : "Juna asemalta {depStation} asemalle {arrStation}",
     "Flag" : "Lippu",
+    "Delete filter" : "Poista suodatin",
     "Operator" : "Operaattori",
     "Filter name" : "Nimisuodatin",
     "Actions" : "Toiminnot",
