@@ -5,14 +5,11 @@
 
 <template>
 	<AppContentDetails class="app-content">
-		<NcEmptyContent class="app-content__empty">
+		<NcEmptyContent class="app-content__empty"
+			:name="t('mail', 'Welcome to {productName} Mail', { productName }, null, {escape: false})"
+			:description="t('mail', 'Start writing a message by clicking below or select an existing message to display its contents')">
 			<template #icon>
 				<IconMail :size="65" />
-			</template>
-			<template #name>
-				<h1 class="empty-content__name">
-					{{ welcomeMessage }}
-				</h1>
 			</template>
 			<template #action>
 				<NewMessageButtonHeader />
@@ -36,8 +33,8 @@ export default {
 	},
 
 	computed: {
-		welcomeMessage() {
-			return t('mail', 'Welcome to {cloudName} Mail', { cloudName: window?.OC?.theme?.name ?? 'Nextcloud' })
+		productName() {
+			return window?.OC?.theme?.name ?? 'Nextcloud'
 		},
 	},
 }
