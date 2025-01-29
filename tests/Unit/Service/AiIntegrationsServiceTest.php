@@ -22,7 +22,6 @@ use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AiIntegrations\Cache;
 use OCP\AppFramework\QueryException;
 use OCP\IConfig;
-use OCP\TaskProcessing\Exception\Exception as TaskProcessingException;
 use OCP\TaskProcessing\IManager as TaskProcessingManager;
 use OCP\TaskProcessing\IProvider as TaskProcessingProvider;
 use OCP\TextProcessing\FreePromptTaskType;
@@ -379,8 +378,8 @@ class AiIntegrationsServiceTest extends TestCase {
 		$account = new Account(new MailAccount());
 		$message = new Message();
 		$this->taskProcessingManager->expects(self::once())
-			->method('getPreferredProvider')
-			->willThrowException(new TaskProcessingException());
+			->method('getAvailableTaskTypes')
+			->willReturn([]);
 		$this->logger->expects(self::once())
 			->method('info')
 			->with('No text summary provider available');
@@ -402,8 +401,8 @@ class AiIntegrationsServiceTest extends TestCase {
 		$message->setSummary('Test Summary');
 
 		$this->taskProcessingManager->expects(self::once())
-			->method('getPreferredProvider')
-			->willReturn($this->taskProcessingProvider);
+			->method('getAvailableTaskTypes')
+			->willReturn(['core:text2text:summary' => $this->taskProcessingProvider]);
 		$this->clientFactory->expects(self::once())
 			->method('getClient');
 		
@@ -440,8 +439,8 @@ class AiIntegrationsServiceTest extends TestCase {
 			->method('isEncrypted')->willReturn(true);
 
 		$this->taskProcessingManager->expects(self::once())
-			->method('getPreferredProvider')
-			->willReturn($this->taskProcessingProvider);
+			->method('getAvailableTaskTypes')
+			->willReturn(['core:text2text:summary' => $this->taskProcessingProvider]);
 		$this->taskProcessingManager->expects(self::never())
 			->method('scheduleTask');
 
@@ -499,8 +498,8 @@ class AiIntegrationsServiceTest extends TestCase {
 			->method('isEncrypted')->willReturn(false);
 
 		$this->taskProcessingManager->expects(self::once())
-			->method('getPreferredProvider')
-			->willReturn($this->taskProcessingProvider);
+			->method('getAvailableTaskTypes')
+			->willReturn(['core:text2text:summary' => $this->taskProcessingProvider]);
 		$this->taskProcessingManager->expects(self::once())
 			->method('scheduleTask');
 
