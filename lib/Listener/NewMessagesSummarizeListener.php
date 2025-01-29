@@ -34,7 +34,7 @@ class NewMessagesSummarizeListener implements IEventListener {
 	}
 
 	public function handle(Event $event): void {
-		if ($this->appConfig->getAppValue('llm_processing', 'no') !== 'yes') {
+		if ($this->appConfig->getAppValueBool('llm_processing', false) === false) {
 			return;
 		}
 		if (!($event instanceof NewMessagesSynchronized)) {
