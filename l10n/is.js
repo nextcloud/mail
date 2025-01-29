@@ -192,6 +192,7 @@ OC.L10N.register(
     "Mark as read" : "Merkja sem lesið",
     "Message source" : "Uppruni skilaboða",
     "Translate from" : "Þýða úr",
+    "Translate to" : "Þýða yfir á",
     "(organizer)" : "(skipuleggjandi)",
     "Untitled event" : "Ónefndur atburður",
     "Import into {calendar}" : "Flytja inn í {calendar}",
