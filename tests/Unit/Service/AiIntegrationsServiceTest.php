@@ -402,7 +402,7 @@ class AiIntegrationsServiceTest extends TestCase {
 
 		$this->taskProcessingManager->expects(self::once())
 			->method('getAvailableTaskTypes')
-			->willReturn(['core:text2text:summary' => $this->taskProcessingProvider]);
+			->willReturn(['core:text2text' => $this->taskProcessingProvider]);
 		$this->clientFactory->expects(self::once())
 			->method('getClient');
 		
@@ -440,7 +440,7 @@ class AiIntegrationsServiceTest extends TestCase {
 
 		$this->taskProcessingManager->expects(self::once())
 			->method('getAvailableTaskTypes')
-			->willReturn(['core:text2text:summary' => $this->taskProcessingProvider]);
+			->willReturn(['core:text2text' => $this->taskProcessingProvider]);
 		$this->taskProcessingManager->expects(self::never())
 			->method('scheduleTask');
 
@@ -499,7 +499,7 @@ class AiIntegrationsServiceTest extends TestCase {
 
 		$this->taskProcessingManager->expects(self::once())
 			->method('getAvailableTaskTypes')
-			->willReturn(['core:text2text:summary' => $this->taskProcessingProvider]);
+			->willReturn(['core:text2text' => $this->taskProcessingProvider]);
 		$this->taskProcessingManager->expects(self::once())
 			->method('scheduleTask');
 
