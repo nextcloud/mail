@@ -57,9 +57,9 @@ class NewMessagesSummarizeListenerTest extends TestCase {
 			->method('getMessages')
 			->willReturn([]);
 		$this->appConfig->expects($this->once())
-			->method('getAppValueBool')
-			->with('llm_processing', false)
-			->willReturn(true);
+			->method('getAppValue')
+			->with('llm_processing', 'no')
+			->willReturn('yes');
 		$this->aiService->expects($this->once())
 			->method('summarizeMessages')
 			->with($account, []);
@@ -69,9 +69,9 @@ class NewMessagesSummarizeListenerTest extends TestCase {
 	public function testLlmDisabled(): void {
 		$event = $this->createMock(NewMessagesSynchronized::class);
 		$this->appConfig->expects($this->once())
-			->method('getAppValueBool')
-			->with('llm_processing', false)
-			->willReturn(false);
+			->method('getAppValue')
+			->with('llm_processing', 'no')
+			->willReturn('no');
 		$this->aiService->expects($this->never())
 			->method('summarizeMessages');
 		$this->listener->handle($event);

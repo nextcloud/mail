@@ -20,9 +20,10 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\EventData;
 use OCA\Mail\Model\IMAPMessage;
 use OCP\IConfig;
+use OCP\TaskProcessing\Exception\Exception as TaskProcessingException;
 use OCP\TaskProcessing\IManager as TaskProcessingManager;
 use OCP\TaskProcessing\Task as TaskProcessingTask;
-use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
+use OCP\TaskProcessing\TaskTypes\TextToText;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager;
 use OCP\TextProcessing\SummaryTaskType;
@@ -65,8 +66,9 @@ PROMPT;
 	 * @return void
 	 */
 	public function summarizeMessages(Account $account, array $messages): void {
-		$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
-		if (!isset($availableTaskTypes[TextToTextSummary::ID])) {
+		try {
+			$this->taskProcessingManager->getPreferredProvider(TextToText::ID);
+		} catch (TaskProcessingException $e) {
 			$this->logger->info('No text summary provider available');
 			return;
 		}
@@ -74,6 +76,7 @@ PROMPT;
 		$client = $this->clientFactory->getClient($account);
 		try {
 			foreach ($messages as $entry) {
+
 				if (mb_strlen((string)$entry->getSummary()) !== 0) {
 					continue;
 				}
@@ -101,7 +104,7 @@ PROMPT;
 						  "Here is the ***E-MAIL*** for which you must generate a helpful summary: \r\n" .
 						  "***START_OF_E-MAIL***\r\n$messageBody\r\n***END_OF_E-MAIL***\r\n";
 				$task = new TaskProcessingTask(
-					TextToTextSummary::ID,
+					TextToText::ID,
 					[
 						'max_tokens' => 1024,
 						'input' => $prompt,
