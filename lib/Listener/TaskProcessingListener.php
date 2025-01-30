@@ -14,7 +14,7 @@ use OCA\Mail\Db\MessageMapper;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
-use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
+use OCP\TaskProcessing\TaskTypes\TextToText;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -40,7 +40,7 @@ class TaskProcessingListener implements IEventListener {
 			return;
 		}
 
-		if ($task->getTaskTypeId() !== TextToTextSummary::ID) {
+		if ($task->getTaskTypeId() !== TextToText::ID) {
 			return;
 		}
 
