@@ -9,7 +9,9 @@ export const summarizeThread = async (threadId) => {
 
 	try {
 		const resp = await axios.get(url)
-		if (resp.status === 204) throw convertAxiosError()
+		if (resp.status === 204) {
+			throw new Error('Thread summary failed, error in the llm service')
+		}
 		return resp.data.data
 	} catch (e) {
 		throw convertAxiosError(e)
@@ -36,7 +38,9 @@ export const smartReply = async (messageId) => {
 
 	try {
 		const resp = await axios.get(url)
-		if (resp.status === 204) throw convertAxiosError()
+		if (resp.status === 204) {
+			throw new Error('Thread summary failed, error in the llm service')
+		}
 		return resp.data
 	} catch (e) {
 		throw convertAxiosError(e)
