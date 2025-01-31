@@ -435,7 +435,6 @@
     "You mentioned an attachment. Did you forget to add it?" : "您提及了附件。您忘記新增了嗎？",
     "Message discarded" : "郵件已捨棄",
     "Could not discard message" : "無法捨棄郵件",
-    "Welcome to {cloudName} Mail" : "歡迎使用 {cloudName} Mail",
     "Autoresponder off" : "自動回覆程式停用",
     "Autoresponder on" : "自動回覆程式啟用",
     "Autoresponder follows system settings" : "自動回應程式遵循系統設定",

@@ -187,7 +187,6 @@ OC.L10N.register(
     "Failed to save draft" : "Nun se pue guardar el borrador",
     "Message discarded" : "Escartóse'l mensaxe",
     "Could not discard message" : "Nun se pudo escartar el mensaxe",
-    "Welcome to {cloudName} Mail" : "Afáyate en {cloudName} Mail",
     "First day" : "El primer día",
     "Message" : "Mensaxe",
     "Oh Snap!" : "¡Meca!",

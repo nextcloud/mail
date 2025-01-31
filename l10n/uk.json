@@ -382,7 +382,6 @@
     "You mentioned an attachment. Did you forget to add it?" : "Ви згадали про вкладення. Чи ви часом не забули його долучити?",
     "Message discarded" : "Відхилено повідомлення",
     "Could not discard message" : "Не вдалося відхилити повідомлення",
-    "Welcome to {cloudName} Mail" : "Ласкаво запрошуємо до поштової служби {cloudName}",
     "Autoresponder off" : "Автовідповідач вимкнено",
     "Autoresponder on" : "Автовідповідач увімкнено",
     "Autoresponder follows system settings" : "Автовідповідач налаштовано згідно з налаштуваннями системи",

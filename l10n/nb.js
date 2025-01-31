@@ -428,7 +428,6 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Du nevnte et vedlegg. Glemte du å legge det ved?",
     "Message discarded" : "Meldingen forkastet",
     "Could not discard message" : "Kunne ikke forkaste meldingen",
-    "Welcome to {cloudName} Mail" : "Velkommen til {cloudName} Mail",
     "Autoresponder off" : "Autosvar av",
     "Autoresponder on" : "Autosvar på",
     "Autoresponder follows system settings" : "Autosvar følger systeminnstillingene",

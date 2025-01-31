@@ -386,7 +386,6 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "你提到了一个附件。 您忘记添加了吗？",
     "Message discarded" : "邮件已丢弃",
     "Could not discard message" : "无法丢弃邮件",
-    "Welcome to {cloudName} Mail" : "欢迎使用 {cloudName} 邮件",
     "Autoresponder off" : "自动回复关闭",
     "Autoresponder on" : "自动回复开启",
     "Autoresponder follows system settings" : "自动回复遵循系统设置",

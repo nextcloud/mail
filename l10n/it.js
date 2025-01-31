@@ -329,7 +329,6 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Hai menzionato un allegato. Hai dimenticato di aggiungerlo?",
     "Message discarded" : "Messaggio scartato",
     "Could not discard message" : "Impossibile eliminare il messaggio",
-    "Welcome to {cloudName} Mail" : "Benvenuti in {cloudName} Mail.",
     "First day" : "Primo giorno",
     "Last day (optional)" : "Ultimo giorno (facoltativo)",
     "Message" : "Messaggio",

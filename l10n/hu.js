@@ -371,7 +371,6 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Mellékletet említett. Nem felejtette el hozzáadni?",
     "Message discarded" : "Üzenet elvetése",
     "Could not discard message" : "Nem sikerült elvetni az üzenetet",
-    "Welcome to {cloudName} Mail" : "Üdvözli a(z) {cloudName} Mail!",
     "Autoresponder off" : "Automatikus válaszoló ki",
     "Autoresponder on" : "Automatikus válaszoló be",
     "First day" : "Első nap",

@@ -434,7 +434,6 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Você mencionou um anexo. Você esqueceu de adicioná-lo?",
     "Message discarded" : "Mensagem descartada",
     "Could not discard message" : "Não foi possível descartar a mensagem",
-    "Welcome to {cloudName} Mail" : "Bem-vindo ao correio de {cloudName}",
     "Autoresponder off" : "Resposta automática desligada",
     "Autoresponder on" : "Resposta automática ligada",
     "Autoresponder follows system settings" : "Autoresponder segue as configurações do sistema",

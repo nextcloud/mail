@@ -388,7 +388,6 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Has mencionat un fitxer adjunt. T'has oblidat d'afegir-lo?",
     "Message discarded" : "Missatge descartat",
     "Could not discard message" : "No s'ha pogut descartar el missatge",
-    "Welcome to {cloudName} Mail" : "Benvingut a {cloudName} Correu",
     "Autoresponder off" : "Respondre automàticament desactivat",
     "Autoresponder on" : "Respondre automàticament activat",
     "Autoresponder follows system settings" : "La resposta automàtica segueix els paràmetres del sistema",
