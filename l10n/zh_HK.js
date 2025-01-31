@@ -437,7 +437,6 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "您提及了附件。您忘記新增了嗎？",
     "Message discarded" : "訊息已刪除",
     "Could not discard message" : "無法掉棄訊息",
-    "Welcome to {cloudName} Mail" : "歡迎使用 {cloudName} Mail",
     "Autoresponder off" : "關閉自動回復程式",
     "Autoresponder on" : "開啟自動回復程式",
     "Autoresponder follows system settings" : "自動回復程式遵循系統設定。",

@@ -357,7 +357,6 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Ați menționat un atașament. Ați uitat cumva să-l adăugați?",
     "Message discarded" : "Mesaj eliminat",
     "Could not discard message" : "Nu s-a putut elimina mesajul",
-    "Welcome to {cloudName} Mail" : "Bine ați venit la {cloudName} Mail",
     "Autoresponder off" : "Autoresponder oprit",
     "Autoresponder on" : "Autoresponder activ",
     "Autoresponder follows system settings" : "Autoresponder-ul urmează setările sistemului",

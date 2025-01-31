@@ -437,7 +437,6 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Bir ek dosyadan bahsettiniz. Eklemeyi unutmuş olabilir misiniz?",
     "Message discarded" : "İleti iptal edildi",
     "Could not discard message" : "İleti iptal edilemedi",
-    "Welcome to {cloudName} Mail" : "{cloudName} E-posta uygulamasına hoş geldiniz!",
     "Autoresponder off" : "Otomatik yanıtlayıcı kapalı",
     "Autoresponder on" : "Otomatik yanıtlayıcı açık",
     "Autoresponder follows system settings" : "Otomatik yanıtlayıcıya sistem ayarları uygulanıyor",

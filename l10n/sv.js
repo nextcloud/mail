@@ -250,7 +250,6 @@ OC.L10N.register(
     "Edit message" : "Redigera meddelande",
     "Draft" : "Utkast",
     "Reply" : "Svara",
-    "Welcome to {cloudName} Mail" : "Välkommen till {cloudName} Mail",
     "First day" : "Första dagen",
     "Message" : "Meddelande",
     "Oh Snap!" : "Hoppsan!",

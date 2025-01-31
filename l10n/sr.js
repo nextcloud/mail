@@ -437,7 +437,6 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Поменули сте прилог. Да ли сте заборавили да га додате?",
     "Message discarded" : "Порука је одбачена",
     "Could not discard message" : "Порука није могла да се одбаци",
-    "Welcome to {cloudName} Mail" : "Добродошли у {cloudName} пошту",
     "Autoresponder off" : "Аутоматско слање одговора искључено",
     "Autoresponder on" : "Аутоматско слање одговора укључено",
     "Autoresponder follows system settings" : "Аутоматско одговарање следи системска подешавања",

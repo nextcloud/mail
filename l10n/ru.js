@@ -413,7 +413,6 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Вы упомянули вложение. Вы забыли добавить его?",
     "Message discarded" : "Внесение изменений отменено",
     "Could not discard message" : "Не удалось отменить внесение изменений",
-    "Welcome to {cloudName} Mail" : "Добро пожаловать в {cloudName} Mail",
     "Autoresponder off" : "Автоответчик выключен",
     "Autoresponder on" : "Автоответчик включен",
     "Autoresponder follows system settings" : "Автоответчик следует системным настройкам",

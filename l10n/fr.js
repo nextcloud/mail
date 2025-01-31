@@ -434,7 +434,6 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Vous avez évoqué une pièce jointe. Avez-vous oublié de l'attacher ?",
     "Message discarded" : "Message ignoré",
     "Could not discard message" : "Impossible d'ignorer le message",
-    "Welcome to {cloudName} Mail" : "Bienvenue sur {cloudName} Mail",
     "Autoresponder off" : "Répondeur automatique désactivé",
     "Autoresponder on" : "Répondeur automatique activé",
     "Autoresponder follows system settings" : "Le répondeur automatique suit les paramètres système",
