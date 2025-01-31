@@ -437,7 +437,6 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "添付ファイルがあると言及しました。追加するのを忘れましたか？",
     "Message discarded" : "メッセージは破棄されました",
     "Could not discard message" : "メッセージを破棄できませんでした",
-    "Welcome to {cloudName} Mail" : "{cloudName}メールへようこそ！",
     "Autoresponder off" : "自動応答オフ",
     "Autoresponder on" : "自動応答オン",
     "Autoresponder follows system settings" : "自動応答はシステム設定に従います",

@@ -377,7 +377,6 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "메시지에서 첨부파일을 언급했습니다. 첨부 여부를 확인하셨습니까?",
     "Message discarded" : "메시지 폐기됨",
     "Could not discard message" : "메시지를 폐기할 수 없음",
-    "Welcome to {cloudName} Mail" : "{cloudName} 메일에 오신 것을 환영합니다",
     "Autoresponder off" : "자동 응답 끄기",
     "Autoresponder on" : "자동 응답 켜기",
     "Autoresponder follows system settings" : "자동 응답은 시스템 설정을 따릅니다",

@@ -419,7 +419,6 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "قوشۇمچە ھۆججەتنى تىلغا ئالدىڭىز. ئۇنى قوشۇشنى ئۇنتۇپ قالدىڭىزمۇ؟",
     "Message discarded" : "ئۇچۇر تاشلىۋېتىلدى",
     "Could not discard message" : "ئۇچۇرنى تاشلىۋېتەلمىدى",
-    "Welcome to {cloudName} Mail" : "{cloudName} خەتكە كەلگەنلىكىڭىزنى قارشى ئالىمىز",
     "Autoresponder off" : "Autoresponder off",
     "Autoresponder on" : "Autoresponder on",
     "Autoresponder follows system settings" : "Autoresponder سىستېما تەڭشىكىگە ئەگىشىدۇ",

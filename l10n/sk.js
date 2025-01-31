@@ -437,7 +437,6 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Zmienili ste prílohu. Zabudli ste ju pridať?",
     "Message discarded" : "Správa bola zrušená",
     "Could not discard message" : "Správu sa nepodarilo zahodiť",
-    "Welcome to {cloudName} Mail" : "Vitajte v {cloudName} pošte",
     "Autoresponder off" : "Automatická odpoveď vypnutá",
     "Autoresponder on" : "Automatická odpoveď zapnutá",
     "Autoresponder follows system settings" : "Autoresponder používa nastavenia systému",

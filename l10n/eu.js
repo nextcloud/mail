@@ -434,7 +434,6 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Eranskin bat aipatu duzu. Gehitzea ahaztu al zaizu?",
     "Message discarded" : "Mezua bertan behera utzi da",
     "Could not discard message" : "Ezin izan da mezua baztertu",
-    "Welcome to {cloudName} Mail" : "Ongi etorri {cloudName} postara",
     "Autoresponder off" : "Autoerantzulea itzalita",
     "Autoresponder on" : "Autoerantzulea piztuta",
     "Autoresponder follows system settings" : "Erantzun automatikoek sistemaren ezarpenak jarraitzen dituzte",
