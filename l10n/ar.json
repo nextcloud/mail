@@ -435,6 +435,8 @@
     "You mentioned an attachment. Did you forget to add it?" : "لقد أشرت إلى مرفقات. هل نسيت إضافتها؟",
     "Message discarded" : "تمّ تَجاهُل الرسالة",
     "Could not discard message" : "تعذّر تَجاهُل الرسالة",
+    "Welcome to {productName} Mail" : "أهلاً بكم في بريد {productName} ",
+    "Start writing a message by clicking below or select an existing message to display its contents" : "ابدأ بكتابة رسالة بالنقر أدناه أو اختَر رسالة موجودة لعرض مُحتَواها",
     "Autoresponder off" : "تعطيل المُجِيب الآلي Autoresponde",
     "Autoresponder on" : "تفعيل المُجِيب الآلي Autoresponde",
     "Autoresponder follows system settings" : "الرَّدّ الآلي يتبع إعدادات النظام",
