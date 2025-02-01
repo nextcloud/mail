@@ -435,6 +435,8 @@
     "You mentioned an attachment. Did you forget to add it?" : "Bir ek dosyadan bahsettiniz. Eklemeyi unutmuş olabilir misiniz?",
     "Message discarded" : "İleti iptal edildi",
     "Could not discard message" : "İleti iptal edilemedi",
+    "Welcome to {productName} Mail" : "{productName} E-posta uygulamasına hoş geldiniz!",
+    "Start writing a message by clicking below or select an existing message to display its contents" : "Aşağıya tıklayarak bir ileti yazmaya başlayın veya içeriğini görüntülemek için var olan bir iletiyi seçin",
     "Autoresponder off" : "Otomatik yanıtlayıcı kapalı",
     "Autoresponder on" : "Otomatik yanıtlayıcı açık",
     "Autoresponder follows system settings" : "Otomatik yanıtlayıcıya sistem ayarları uygulanıyor",
