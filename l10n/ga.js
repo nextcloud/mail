@@ -437,6 +437,8 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Luaigh tú ceangaltán. An ndearna tú dearmad é a chur leis?",
     "Message discarded" : "Caitheadh ​​an teachtaireacht",
     "Could not discard message" : "Níorbh fhéidir an teachtaireacht a scriosadh",
+    "Welcome to {productName} Mail" : "Fáilte go Ríomhphost {productName}",
+    "Start writing a message by clicking below or select an existing message to display its contents" : "Tosaigh ag scríobh teachtaireacht trí chliceáil thíos nó roghnaigh teachtaireacht atá ann cheana féin chun a bhfuil ann a thaispeáint",
     "Autoresponder off" : "Uathfhreagróir múchta",
     "Autoresponder on" : "Uathfhreagróir ar siúl",
     "Autoresponder follows system settings" : "Leanann uathfhreagróir socruithe an chórais",
