@@ -434,6 +434,7 @@
     "You mentioned an attachment. Did you forget to add it?" : "Zmínili jste přílohu. Nezapomněli jste ji přidat?",
     "Message discarded" : "Zpráva zahozena",
     "Could not discard message" : "Zprávu se nepodařilo zahodit",
+    "Welcome to {productName} Mail" : "Vítejte v {productName} Poště",
     "Autoresponder off" : "Automatické odpovědi vypnuty",
     "Autoresponder on" : "Automatické odpovědi zapnuty",
     "Autoresponder follows system settings" : "Automatický odpovídač následuje nastavení systému",
