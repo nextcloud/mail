@@ -143,6 +143,7 @@ class MailTransmission implements IMailTransmission {
 		try {
 			$mail->send($transport, false, false);
 			$localMessage->setRaw($mail->getRaw(false));
+			$localMessage->setStatus(LocalMessage::STATUS_RAW);
 		} catch (Horde_Mime_Exception $e) {
 			$this->logger->error($e->getMessage(), ['exception' => $e]);
 			if (in_array($e->getCode(), self::RETRIABLE_CODES, true)) {
