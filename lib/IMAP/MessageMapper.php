@@ -20,6 +20,8 @@ use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Socket;
 use Horde_Mime_Exception;
 use Horde_Mime_Headers;
+use Horde_Mime_Headers_ContentParam_ContentType;
+use Horde_Mime_Headers_ContentTransferEncoding;
 use Horde_Mime_Part;
 use Html2Text\Html2Text;
 use OCA\Mail\Attachment;
@@ -934,15 +936,39 @@ class MessageMapper {
 				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
 			}
 
+			// Convert a given binary body to utf-8 according to the transfer encoding and content
+			// type headers of the underlying MIME part
+			$convertBody = function (string $body, Horde_Mime_Headers $mimeHeaders) use ($structure): string {
+				/** @var Horde_Mime_Headers_ContentParam_ContentType $contentType */
+				$contentType = $mimeHeaders->getHeader('content-type');
+				/** @var Horde_Mime_Headers_ContentTransferEncoding $transferEncoding */
+				$transferEncoding = $mimeHeaders->getHeader('content-transfer-encoding');
+
+				if (!$contentType && !$transferEncoding) {
+					// Nothing to convert here ...
+					return $body;
+				}
+
+				if ($transferEncoding) {
+					$structure->setTransferEncoding($transferEncoding->value_single);
+				}
+
+				if ($contentType) {
+					$structure->setType($contentType->value_single);
+					if (isset($contentType['charset'])) {
+						$structure->setCharset($contentType['charset']);
+					}
+				}
+
+				$structure->setContents($body);
+				return $this->converter->convert($structure);
+			};
+
 
 			$htmlBody = ($htmlBodyId !== null) ? $part->getBodyPart($htmlBodyId) : null;
 			if (!empty($htmlBody)) {
 				$mimeHeaders = $part->getMimeHeader($htmlBodyId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
-					$structure->setTransferEncoding($enc);
-					$structure->setContents($htmlBody);
-					$htmlBody = $this->converter->convert($structure);
-				}
+				$htmlBody = $convertBody($htmlBody, $mimeHeaders);
 				$mentionsUser = $this->checkLinks($htmlBody, $emailAddress);
 				$html = new Html2Text($htmlBody, ['do_links' => 'none','alt_image' => 'hide']);
 				return new MessageStructureData(
@@ -957,11 +983,7 @@ class MessageMapper {
 
 			if (!empty($textBody)) {
 				$mimeHeaders = $part->getMimeHeader($textBodyId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
-					$structure->setTransferEncoding($enc);
-					$structure->setContents($textBody);
-					$textBody = $this->converter->convert($structure);
-				}
+				$textBody = $convertBody($textBody, $mimeHeaders);
 				return new MessageStructureData(
 					$hasAttachments,
 					$textBody,
