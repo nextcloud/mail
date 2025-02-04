@@ -437,6 +437,8 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Mencionou un anexo. Esqueceu engadilo?",
     "Message discarded" : "Mensaxe desbotada",
     "Could not discard message" : "Non foi posíbel desbotar a mensaxe",
+    "Welcome to {productName} Mail" : "Dámoslle a benvida a Correo de {productName}",
+    "Start writing a message by clicking below or select an existing message to display its contents" : "Comece a escribir unha mensaxe premendo a seguir ou seleccione unha mensaxe existente para ver o seu contido",
     "Autoresponder off" : "Resposta automática desactivada",
     "Autoresponder on" : "Resposta automática activada",
     "Autoresponder follows system settings" : "A resposta automática segue a configuración do sistema",
