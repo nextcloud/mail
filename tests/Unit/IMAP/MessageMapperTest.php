@@ -32,6 +32,7 @@ use Horde_Imap_Client_Fetch_Results;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\IMAP\ImapMessageFetcher;
 use OCA\Mail\IMAP\ImapMessageFetcherFactory;
 use OCA\Mail\IMAP\MessageMapper;
@@ -55,17 +56,22 @@ class MessageMapperTest extends TestCase {
 	/** @var ImapMessageFetcherFactory|MockObject */
 	private $imapMessageFactory;
 
+	/** @var Converter|MockObject */
+	private $converter;
+
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->sMimeService = $this->createMock(SmimeService::class);
 		$this->imapMessageFactory = $this->createMock(ImapMessageFetcherFactory::class);
+		$this->converter = $this->createMock(Converter::class);
 
 		$this->mapper = new MessageMapper(
 			$this->logger,
 			$this->sMimeService,
 			$this->imapMessageFactory,
+			$this->converter,
 		);
 	}
 
