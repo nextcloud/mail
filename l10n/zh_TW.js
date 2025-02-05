@@ -437,6 +437,8 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "您提及了附件。您忘記新增了嗎？",
     "Message discarded" : "郵件已捨棄",
     "Could not discard message" : "無法捨棄郵件",
+    "Welcome to {productName} Mail" : "歡迎使用 {productName} Mail",
+    "Start writing a message by clicking below or select an existing message to display its contents" : "點選下方開始編寫訊息，或選取現有訊息以顯示其內容",
     "Autoresponder off" : "自動回覆程式停用",
     "Autoresponder on" : "自動回覆程式啟用",
     "Autoresponder follows system settings" : "自動回應程式遵循系統設定",

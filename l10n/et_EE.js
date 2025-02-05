@@ -85,6 +85,7 @@ OC.L10N.register(
     "Custom" : "Kohandatud",
     "Tag already exists" : "Silt on juba olemas",
     "Copy translated text" : "Kopeeri tõlgitud tekst",
+    "Operator" : "Operaator",
     "Actions" : "Tegevused",
     "Priority" : "Prioriteet",
     "Reset" : "Lähtesta",
