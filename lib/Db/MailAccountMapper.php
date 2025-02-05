@@ -234,4 +234,24 @@ class MailAccountMapper extends QBMapper {
 
 		return $this->findEntities($query);
 	}
+
+	public function getRandomAccountIdsByImapHost(string $host, int $limit = 3): array {
+		$query = $this->db->getQueryBuilder();
+		$query->select('id')
+			->from($this->getTableName())
+			->where($query->expr()->eq('inbound_host', $query->createNamedParameter($host), IQueryBuilder::PARAM_STR))
+			->setMaxResults(1000);
+		$result = $query->executeQuery();
+		$ids = $result->fetchAll(\PDO::FETCH_COLUMN);
+		$result->closeCursor();
+		// Pick 3 random accounts or any available
+		if ($ids !== [] && count($ids) >= $limit) {
+			$rids = array_rand($ids, $limit);
+			if (!is_array($rids)) {
+				$rids = [$rids];
+			}
+			return array_intersect_key($ids, array_values($rids));
+		}
+		return $ids;
+	}
 }
