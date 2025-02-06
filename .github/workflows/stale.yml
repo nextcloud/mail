@@ -19,7 +19,7 @@ jobs:
     steps:
     - uses: actions/stale@v9
       with:
-        repo-token: ${{ secrets.COMMAND_BOT_PAT }}
+        repo-token: '${{ secrets.COMMAND_BOT_PAT }}'
         stale-issue-message: >
           Hi there! It looks like this issue hasn’t seen much activity for a while and might need a bit more information to move forward.
           If we don’t hear back soon, we may close it to keep things organized.
