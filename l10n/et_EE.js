@@ -25,6 +25,7 @@ OC.L10N.register(
     "Connect" : "Ühenda",
     "Aliases" : "Aliased",
     "Signature" : "Allkiri",
+    "Filters" : "Filtrid",
     "Go back" : "Mine tagasi",
     "Email address" : "E-posti aadress",
     "Cancel" : "Loobu",
@@ -68,6 +69,7 @@ OC.L10N.register(
     "Quota" : "Kvoot",
     "Saving" : "Salvestamine",
     "Remove account" : "Eemalda konto",
+    "Loading …" : "Laadimine ...",
     "Mark all as read" : "Märgi loetuks",
     "Rename" : "Nimeta ümber",
     "Clear cache" : "Tühjenda puhver",
@@ -107,6 +109,7 @@ OC.L10N.register(
     "Sent" : "Saadetud",
     "Trash" : "Prügikast",
     "{from}\n{subject}" : "{from}\n{subject}",
+    "Discard changes" : "Hülga muudatused",
     "Error loading message" : "Tõrge kirja laadimisel",
     "Forwarding to %s" : "Edasta %s",
     "Redirect" : "Suunamine"
