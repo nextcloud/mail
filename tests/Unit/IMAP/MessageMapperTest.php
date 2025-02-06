@@ -593,4 +593,45 @@ class MessageMapperTest extends TestCase {
 		$result = $this->mapper->getFlagged($imapClient, $mailbox, $flag);
 		$this->assertEquals($result, []);
 	}
+
+	/**
+	 * This test ensures that we correctly identify iMIP messages from various
+	 * sources as valid iMIP messages. The test cases are based on original
+	 * iMIP messages from different vendors. The focus is on the MIME message
+	 * structure and verifying that we traverse the MIME tree properly.
+	 *
+	 * @dataProvider isImipMessageProvider
+	 */
+	public function testGetBodyStructureIsImipMessage(string $filename, bool $expected): void {
+		$text = file_get_contents(__DIR__ . '/../../data/imip/' . $filename . '.txt');
+		$part = \Horde_Mime_Part::parseMessage($text);
+
+		$fetchData = new Horde_Imap_Client_Data_Fetch();
+		$fetchData->setStructure($part);
+		$fetchData->setUid(100);
+
+		$fetchResult = new Horde_Imap_Client_Fetch_Results();
+		$fetchResult[0] = $fetchData;
+
+		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
+		$imapClient->method('fetch')
+			->willReturn($fetchResult);
+
+		$data = $this->mapper->getBodyStructureData(
+			$imapClient,
+			'INBOX',
+			[100],
+			'alice@example.org'
+		);
+
+		$this->assertCount(1, $data);
+		$this->assertEquals($expected, $data[0]->isImipMessage());
+	}
+
+	public function isImipMessageProvider(): array {
+		return [
+			'google request' => ['request_google', true],
+			'outlook.com request' => ['request_outlook_com', true],
+		];
+	}
 }
