@@ -66,6 +66,7 @@ use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\Search\MailSearch;
 use OCA\Mail\Service\TrustedSenderService;
 use OCA\Mail\Service\UserPreferenceService;
+use OCA\Mail\SetupChecks\MailConnectionPerformance;
 use OCA\Mail\SetupChecks\MailTransport;
 use OCA\Mail\Vendor\Favicon\Favicon;
 use OCP\AppFramework\App;
@@ -160,6 +161,7 @@ class Application extends App implements IBootstrap {
 		$context->registerNotifierService(Notifier::class);
 
 		$context->registerSetupCheck(MailTransport::class);
+		$context->registerSetupCheck(MailConnectionPerformance::class);
 
 		// bypass Horde Translation system
 		Horde_Translation::setHandler('Horde_Imap_Client', new HordeTranslationHandler());
