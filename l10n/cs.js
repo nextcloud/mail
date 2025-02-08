@@ -437,6 +437,7 @@ OC.L10N.register(
     "Message discarded" : "Zpráva zahozena",
     "Could not discard message" : "Zprávu se nepodařilo zahodit",
     "Welcome to {productName} Mail" : "Vítejte v {productName} Poště",
+    "Start writing a message by clicking below or select an existing message to display its contents" : "Kliknutím níže začněte psát zprávu nebo vyberte existující a zobrazte si její obsah",
     "Autoresponder off" : "Automatické odpovědi vypnuty",
     "Autoresponder on" : "Automatické odpovědi zapnuty",
     "Autoresponder follows system settings" : "Automatický odpovídač následuje nastavení systému",
