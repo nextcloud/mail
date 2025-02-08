@@ -162,6 +162,28 @@
 			</article>
 		</div>
 		<div class="app-description">
+			<h3>{{ t('mail', 'Internet Message Events Service') }}</h3>
+			<article>
+				<p>
+					{{ t('mail', 'The Internet Message Events Service allows compatible mail servers to push notify the mail app of folder and message changes preformed by other mail clients, allow the mail app to stay in sync with the mail server in real time.') }}
+				</p>
+				<p>
+					<NcCheckboxRadioSwitch type="switch"
+						:checked="imeEnabled"
+						@update:checked="imeEnabled">
+						{{ t('mail', 'Enable IME Service') }}
+					</NcCheckboxRadioSwitch>
+				</p>
+				<p>
+					<NcInputField
+						:label="t('mail', 'IME Service Restrictions')"
+						:value="imeRestrictions"
+						type="">
+					</NcInputField>
+				</p>
+			</article>
+		</div>
+		<div class="app-description">
 			<h3>
 				{{
 					t(
@@ -269,6 +291,7 @@ import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconSettings from 'vue-material-design-icons/Cog.vue'
 import SettingsSection from '@nextcloud/vue/dist/Components/NcSettingsSection.js'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
+import NcInputField from '@nextcloud/vue/dist/Components/NcInputField.js'
 import {
 	disableProvisioning,
 	createProvisioningSettings,
@@ -298,6 +321,7 @@ export default {
 		IconAdd,
 		IconSettings,
 		NcCheckboxRadioSwitch,
+		NcInputField,
 	},
 	props: {
 		provisioningSettings: {
@@ -342,6 +366,8 @@ export default {
 			isLlmFreePromptConfigured: loadState('mail', 'enabled_llm_free_prompt_backend'),
 			isClassificationEnabledByDefault: loadState('mail', 'llm_processing', true),
 			isImportanceClassificationEnabledByDefault: loadState('mail', 'importance_classification_default', true),
+			imeEnabled: loadState('mail', 'ime_enabled', true),
+			imeRestrictions: loadState('mail', 'ime_restrictions', ''),
 		}
 	},
 	methods: {
