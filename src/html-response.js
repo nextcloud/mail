@@ -5,9 +5,7 @@
 
 // injected styles
 import '../css/html-response.css'
-
-// iframe-resizer client script
-import 'iframe-resizer/js/iframeResizer.contentWindow.js'
+import '@iframe-resizer/child'
 
 // Fix width of some newsletter mails
 document.addEventListener('DOMContentLoaded', function() {
