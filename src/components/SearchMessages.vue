@@ -539,7 +539,6 @@ export default {
 			})
 		},
 		resetFilter() {
-			const prevQuery = this.query
 			this.match = 'allof'
 			this.query = ''
 			this.selectedTags = []
@@ -554,10 +553,7 @@ export default {
 			this.startDate = null
 			this.endDate = null
 			this.mentionsMe = false
-			// Need if there is only tag filter or recipients filter
-			if (prevQuery === '') {
-				this.sendQueryEvent()
-			}
+			this.sendQueryEvent()
 		},
 		addTag(tag, type) {
 			if (typeof tag === 'string') {
