@@ -5,7 +5,7 @@
 <!-- Standard Actions menu for Envelopes -->
 <template>
 	<div>
-		<template v-if="!localMoreActionsOpen && !snoozeActionsOpen">
+		<template v-if="!localMoreActionsOpen && !snoozeActionsOpen && !isPrinting">
 			<ActionButton v-if="hasWriteAcl"
 				class="action--primary"
 				:close-after-click="true"
@@ -308,6 +308,7 @@ export default {
 			snoozeActionsOpen: false,
 			forwardMessages: this.envelope.databaseId,
 			customSnoozeDateTime: new Date(moment().add(2, 'hours').minute(0).second(0).valueOf()),
+			isPrinting: false,
 		}
 	},
 	computed: {
@@ -544,9 +545,13 @@ export default {
 		},
 		onPrint() {
 			// needed for the actions menu to actually close and not be shown in the print preview
+			this.isPrinting = true
+
+			window.print()
+
 			setTimeout(() => {
-				window.print()
-			}, 10)
+				this.isPrinting = false
+			}, 2000)
 		},
 	},
 }

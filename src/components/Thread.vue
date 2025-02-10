@@ -457,6 +457,8 @@ export default {
 	.app-content-list,
 	.message-composer,
 	.splitpanes__pane-list,
+	:deep(.v-popper__wrapper),
+	.v-popper__wrapper,
 	.mail-message-attachments {
 		display: none !important;
 	}
