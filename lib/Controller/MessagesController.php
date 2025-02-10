@@ -152,7 +152,8 @@ class MessagesController extends Controller {
 				$order,
 				$filter === '' ? null : $filter,
 				$cursor,
-				$limit
+				$limit,
+				$this->currentUserId
 			)
 		);
 	}
