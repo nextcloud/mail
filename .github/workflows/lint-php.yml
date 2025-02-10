@@ -30,14 +30,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
-      - name: Set up php ${{ matrix.php-versions }}
+      - name: 'Set up php ${{ matrix.php-versions }}'
         uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # v2
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: '${{ matrix.php-versions }}'
           coverage: none
           ini-file: development
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
       - name: Lint
         run: composer run lint
