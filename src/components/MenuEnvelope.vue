@@ -547,7 +547,9 @@ export default {
 			// needed for the actions menu to actually close and not be shown in the print preview
 			this.isPrinting = true
 
-			window.print()
+			setTimeout(() => {
+				window.print()
+			}, 500)
 
 			setTimeout(() => {
 				this.isPrinting = false
