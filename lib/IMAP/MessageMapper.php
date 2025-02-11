@@ -888,15 +888,13 @@ class MessageMapper {
 			$structure = $fetchData->getStructure();
 
 			/** @var Horde_Mime_Part $part */
-			foreach ($structure->getParts() as $part) {
+			foreach ($structure->partIterator() as $part) {
 				if ($part->isAttachment()) {
 					$hasAttachments = true;
 				}
-				$bodyParts = $part->getParts();
-				/** @var Horde_Mime_Part $bodyPart */
-				foreach ($bodyParts as $bodyPart) {
-					$contentParameters = $bodyPart->getAllContentTypeParameters();
-					if ($bodyPart->getType() === 'text/calendar' && isset($contentParameters['method'])) {
+
+				if ($part->getType() === 'text/calendar') {
+					if ($part->getContentTypeParameter('method') !== null) {
 						$isImipMessage = true;
 					}
 				}
