@@ -457,11 +457,16 @@ export default {
 	.app-content-list,
 	.message-composer,
 	.splitpanes__pane-list,
+	:deep(.v-popper__wrapper),
+	.v-popper__wrapper,
 	.mail-message-attachments {
 		display: none !important;
 	}
 	.app-content {
 		margin-left: 0 !important;
+		break-inside: avoid;
+		page-break-inside: avoid;
+		page-break-after: always;
 	}
 	.mail-message-body {
 		margin-bottom: 0 !important;
@@ -474,6 +479,11 @@ export default {
 	}
 	.envelope {
 		border: none !important;
+	}
+	p, img {
+		break-inside: avoid;
+		page-break-inside: avoid;
+		page-break-after: always;
 	}
 }
 
