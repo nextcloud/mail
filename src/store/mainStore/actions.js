@@ -1200,7 +1200,7 @@ export default function mainStoreActions() {
 					})
 					await setEnvelopeFlags(identifiers, { flagged: state })
 				} catch (error) {
-					console.error('could not favorite/unfavorite messages ' + envelope.uid, error)
+					console.error('could not mark messages favorite or not favorite', error)
 					throw error
 				}
 				envelopes.forEach((envelope) => {

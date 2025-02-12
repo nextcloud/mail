@@ -36,7 +36,7 @@ class MessageOperationService {
 	 *
 	 * @param array<array{0:int,1:int,2:int}> $collection
 	 *
-	 * @return array<int,array<int,array{0:int,1:int,2:int}>>
+	 * @return array<array-key, mixed|non-empty-list<array{id: int, uid: int}>>|mixed
 	 */
 	protected function groupByMailbox(array $collection): array {
 		return array_reduce($collection, function ($carry, $pair) {
@@ -73,7 +73,7 @@ class MessageOperationService {
 	 * @param array<int,bool> &$results
 	 * @param bool $value
 	 * @param array<\OCA\Mail\Db\Mailbox> $mailboxes
-	 * @param array<int,array<array{id:int,uid:int}>> $messages
+	 * @param array<int, array<int, array{0: int, 1: int, 2: int}>> $messages
 	 */
 	protected function generateResult(array &$results, bool $value, array $mailboxes, array $messages) {
 		foreach ($mailboxes as $mailbox) {
