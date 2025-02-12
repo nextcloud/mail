@@ -73,7 +73,7 @@ class MessageOperationService {
 	 * @param array<int,bool> &$results
 	 * @param bool $value
 	 * @param array<\OCA\Mail\Db\Mailbox> $mailboxes
-	 * @param array<int, array<int, array{0: int, 1: int, 2: int}>> $messages
+	 * @param array<int, array<int, array{id: int, uid: int}>> $messages
 	 */
 	protected function generateResult(array &$results, bool $value, array $mailboxes, array $messages) {
 		foreach ($mailboxes as $mailbox) {

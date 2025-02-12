@@ -61,7 +61,7 @@ class MessagesController extends Controller {
 	private IMailManager $mailManager;
 	private IMailSearch $mailSearch;
 	private ItineraryService $itineraryService;
-	private ?string $currentUserId;
+	private string $currentUserId;
 	private LoggerInterface $logger;
 	private ?Folder $userFolder;
 	private IMimeTypeDetector $mimeTypeDetector;
@@ -84,7 +84,7 @@ class MessagesController extends Controller {
 		IMailManager $mailManager,
 		IMailSearch $mailSearch,
 		ItineraryService $itineraryService,
-		?string $UserId,
+		string $UserId,
 		$userFolder,
 		LoggerInterface $logger,
 		IL10N $l10n,
