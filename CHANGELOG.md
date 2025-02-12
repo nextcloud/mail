@@ -1,3 +1,14 @@
+## [3.7.20](https://github.com/nextcloud/mail/compare/v3.7.19...v3.7.20) (2025-02-12)
+
+
+### Bug Fixes
+
+* apostrophe issue ([dd881ce](https://github.com/nextcloud/mail/commit/dd881ce7ec3c36ecc2f3b3ab70c00f6b23792861))
+* decoding preview texts ([1d04819](https://github.com/nextcloud/mail/commit/1d048192a2bf15b2adc6592b19b71e623b4808d0))
+* throwing errors in ai intergration frontend service ([26c0207](https://github.com/nextcloud/mail/commit/26c0207690ce9e6362f976a31d0ce6963bb84ab6))
+
+
+
 ## [3.7.19](https://github.com/nextcloud/mail/compare/v3.7.18...v3.7.19) (2025-01-20)
 
 
