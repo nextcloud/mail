@@ -90,21 +90,24 @@ class ContactsIntegrationTest extends TestCase {
 		$expected = [
 			[
 				'id' => 'jf',
-				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
+				'label' => 'Jonathan Frakes',
 				'email' => 'jonathan@frakes.com',
 				'photo' => null,
+				'source' => 'contacts'
 			],
 			[
 				'id' => 'jd',
-				'label' => 'John Doe (john@doe.info)',
+				'label' => 'John Doe',
 				'email' => 'john@doe.info',
 				'photo' => null,
+				'source' => 'contacts'
 			],
 			[
 				'id' => 'jd',
-				'label' => 'John Doe (doe@john.info)',
+				'label' => 'John Doe',
 				'email' => 'doe@john.info',
 				'photo' => null,
+				'source' => 'contacts'
 			],
 		];
 
@@ -157,21 +160,24 @@ class ContactsIntegrationTest extends TestCase {
 		$expected = [
 			[
 				'id' => 'jd',
-				'label' => 'John Doe (john@doe.info)',
+				'label' => 'John Doe',
 				'email' => 'john@doe.info',
 				'photo' => null,
+				'source' => 'contacts'
 			],
 			[
 				'id' => 'jd',
-				'label' => 'John Doe (doe@john.info)',
+				'label' => 'John Doe',
 				'email' => 'doe@john.info',
 				'photo' => null,
+				'source' => 'contacts',
 			],
 			[
 				'id' => 'js',
-				'label' => 'Johann Strauss II (johann@strauss.com)',
+				'label' => 'Johann Strauss II',
 				'email' => 'johann@strauss.com',
 				'photo' => null,
+				'source' => 'contacts',
 			],
 		];
 
@@ -209,9 +215,10 @@ class ContactsIntegrationTest extends TestCase {
 		$expected = [
 			[
 				'id' => 'jf',
-				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
+				'label' => 'Jonathan Frakes',
 				'email' => 'jonathan@frakes.com',
 				'photo' => null,
+				'source' => 'contacts',
 			],
 		];
 
@@ -249,9 +256,10 @@ class ContactsIntegrationTest extends TestCase {
 		$expected = [
 			[
 				'id' => 'jf',
-				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
+				'label' => 'Jonathan Frakes',
 				'email' => 'jonathan@frakes.com',
 				'photo' => null,
+				'source' => 'contacts',
 			],
 		];
 
@@ -289,9 +297,10 @@ class ContactsIntegrationTest extends TestCase {
 		$expected = [
 			[
 				'id' => 'jf',
-				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
+				'label' => 'Jonathan Frakes',
 				'email' => 'jonathan@frakes.com',
 				'photo' => null,
+				'source' => 'contacts',
 			],
 		];
 
