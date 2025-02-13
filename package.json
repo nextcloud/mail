@@ -60,6 +60,7 @@
     "debounce-promise": "^3.1.2",
     "dompurify": "^3.2.3",
     "html-to-text": "^9.0.5",
+    "html2pdf.js": "^0.9.0",
     "ical.js": "^1.5.0",
     "iframe-resizer": "^4.4.5",
     "js-base64": "^3.7.7",
