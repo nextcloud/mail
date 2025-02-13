@@ -69,7 +69,7 @@ OC.L10N.register(
     "Older message" : "Messàgiu prus betzu",
     "Toggle star" : "Ativa/disativa s'istella",
     "Toggle unread" : "Ativa/disativa non lèghidu",
-    "Archive" : "Cartella",
+    "Archive" : "Archìviu",
     "Delete" : "Cantzella",
     "Search" : "Chirca",
     "Send" : "Imbia",
