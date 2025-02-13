@@ -601,7 +601,7 @@ export default {
 
 			// Only one envelope is expanded at the time of mounting so we can
 			// assume that this is the relevant envelope to be scrolled to.
-			this.$nextTick(() => this.scrollToCurrentEnvelope())
+			this.$nextTick(() => this.handleThreadScrolling())
 		}
 		if (this.mainStore.getPreference('internal-addresses', 'false') === 'true') {
 			this.isInternal = this.mainStore.isInternalAddress(this.envelope.from[0].email)
@@ -655,6 +655,9 @@ export default {
 				} else {
 					this.loading = LOADING_DONE
 				}
+				this.$nextTick(() => {
+					this.handleThreadScrolling()
+				})
 			} catch (error) {
 				this.error = error
 				this.loading = LOADING_DONE
@@ -674,6 +677,39 @@ export default {
 			if (this.enabledSmartReply && this.message && !['trash', 'junk'].includes(this.mailbox.specialRole) && !this.showFollowUpHeader) {
 				this.smartReplies = await smartReply(this.envelope.databaseId)
 			}
+		},
+		handleThreadScrolling() {
+			const threadId = this.envelope.threadId // Assuming each envelope has a thread ID
+
+			if (threadId && this.$parent.toggleExpand) {
+				// If thread is not expanded, expand it first
+				if (!this.$parent.expandedThreads.includes(threadId)) {
+					this.$parent.toggleExpand(threadId)
+					this.$nextTick(() => this.scrollToThread(threadId))
+				} else {
+					this.scrollToThread(threadId)
+				}
+			} else {
+				// If there's no thread, just scroll to the envelope
+				this.scrollToEnvelope()
+			}
+		},
+		scrollToThread(threadId) {
+			this.$nextTick(() => {
+				const threadElement = document.querySelector(`[data-thread-id="${threadId}"]`)
+				if (threadElement) {
+					threadElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+				}
+			})
+		},
+
+		scrollToEnvelope() {
+			this.$nextTick(() => {
+				const envelopeElement = this.$refs.envelope
+				if (envelopeElement) {
+					envelopeElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+				}
+			})
 		},
 		async fetchItineraries() {
 			// Sanity check before actually making the request
@@ -703,13 +739,6 @@ export default {
 			} catch (error) {
 				logger.error(`Could not fetch DKIM of message ${this.envelope.databaseId}`, { error })
 			}
-		},
-		scrollToCurrentEnvelope() {
-			// Account for global navigation bar and thread header
-			const globalHeader = document.querySelector('#header').clientHeight
-			const threadHeader = document.querySelector('#mail-thread-header').clientHeight
-			const top = this.$el.getBoundingClientRect().top - globalHeader - threadHeader
-			window.scrollTo({ top })
 		},
 		onReply(body = '', followUp = false, replySenderOnly = false) {
 			this.mainStore.startComposerSession({
