@@ -76,6 +76,7 @@ class GroupsIntegrationTest extends TestCase {
 					'label' => 'first test group (Namespace1)',
 					'email' => 'namespace1:testgroup',
 					'photo' => null,
+					'source' => 'groups',
 				]
 			],
 			$actual
