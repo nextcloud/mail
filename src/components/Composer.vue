@@ -84,10 +84,9 @@
 						<div>
 							<ListItemIcon :no-margin="true"
 								:name="option.label"
-								:subtitle="option.email"
+								:subname="showEmailAsSubname(option)"
 								:icon-class="!option.id ? 'icon-user' : null"
-								:url="option.photo"
-								:avatar-size="24" />
+								:url="option.photo" />
 						</div>
 					</template>
 				</NcSelect>
@@ -138,10 +137,9 @@
 						<div>
 							<ListItemIcon :no-margin="true"
 								:name="option.label"
-								:subtitle="option.email"
+								:subname="showEmailAsSubname(option)"
 								:url="option.photo"
-								:icon-class="!option.id ? 'icon-user' : null"
-								:avatar-size="24" />
+								:icon-class="!option.id ? 'icon-user' : null" />
 						</div>
 					</template>
 				</NcSelect>
@@ -192,10 +190,9 @@
 						<div>
 							<ListItemIcon :no-margin="true"
 								:name="option.label"
-								:subtitle="option.email"
+								:subname="showEmailAsSubname(option)"
 								:url="option.photo"
-								:icon-class="!option.id ? 'icon-user' : null"
-								:avatar-size="24" />
+								:icon-class="!option.id ? 'icon-user' : null" />
 						</div>
 					</template>
 				</NcSelect>
@@ -1422,6 +1419,18 @@ export default {
 		 */
 		createRecipientOption(value) {
 			return { email: value, label: value }
+		},
+
+		/**
+		 * Use the email address as subname if we have label
+		 *
+		 * @param {{email: string, label: string}} option
+		 * @return string
+		 */
+		showEmailAsSubname(option) {
+			return (option.label === option.email)
+				? ''
+				: option.email
 		},
 	},
 }
