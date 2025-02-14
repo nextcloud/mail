@@ -78,7 +78,7 @@ class AvatarControllerTest extends TestCase {
 
 		$resp = $this->controller->url($email);
 
-		$expected = new JSONResponse([], Http::STATUS_NOT_FOUND);
+		$expected = new JSONResponse([], Http::STATUS_NO_CONTENT);
 		$expected->cacheFor(24 * 60 * 60, false, true);
 		$this->assertEquals($expected, $resp);
 	}
