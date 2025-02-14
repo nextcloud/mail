@@ -71,7 +71,7 @@
 						<div class="multiselect__tag multiselect__tag-custom">
 							<ListItemIcon :no-margin="true"
 								:name="option.label"
-								:subname="showEmailAsSubname(option)"
+								:subname="getSubnameForRecipient(option)"
 								:icon-class="!option.id ? 'icon-user' : null"
 								:url="option.photo" />
 						</div>
@@ -127,7 +127,7 @@
 						<div class="multiselect__tag multiselect__tag-custom">
 							<ListItemIcon :no-margin="true"
 								:name="option.label"
-								:subname="showEmailAsSubname(option)"
+								:subname="getSubnameForRecipient(option)"
 								:url="option.photo"
 								:icon-class="!option.id ? 'icon-user' : null" />
 						</div>
@@ -177,7 +177,7 @@
 						<div class="multiselect__tag multiselect__tag-custom">
 							<ListItemIcon :no-margin="true"
 								:name="option.label"
-								:subname="showEmailAsSubname(option)"
+								:subname="getSubnameForRecipient(option)"
 								:url="option.photo"
 								:icon-class="!option.id ? 'icon-user' : null" />
 						</div>
@@ -1376,15 +1376,24 @@ export default {
 		},
 
 		/**
-		 * Use the email address as subname if we have label
+		 * Return the subname for recipient suggestion.
+		 *
+		 * Empty if label and email are the same or
+		 * if the suggestion is a group.
 		 *
 		 * @param {{email: string, label: string}} option
 		 * @return string
 		 */
-		showEmailAsSubname(option) {
-			return (option.label === option.email)
-				? ''
-				: option.email
+		getSubnameForRecipient(option) {
+			if (option.source && option.source === 'groups') {
+				return ''
+			}
+
+			if (option.label === option.email) {
+				return ''
+			}
+
+			return option.email
 		},
 	},
 }

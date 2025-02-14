@@ -141,9 +141,10 @@ class ContactsIntegration {
 				$receivers[] = [
 					'id' => $id,
 					// Show full name if possible or fall back to email
-					'label' => (empty($fn) ? $e : "$fn ($e)"),
+					'label' => $fn,
 					'email' => $e,
 					'photo' => $photo,
+					'source' => 'contacts',
 				];
 			}
 		}
