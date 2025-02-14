@@ -54,7 +54,7 @@ class AvatarsController extends Controller {
 		$avatar = $this->avatarService->getAvatar($email, $this->uid);
 		if (is_null($avatar)) {
 			// No avatar found
-			$response = new JSONResponse([], Http::STATUS_NOT_FOUND);
+			$response = new JSONResponse([], Http::STATUS_NO_CONTENT);
 
 			// Debounce this a bit
 			// (cache for one day)
