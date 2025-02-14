@@ -393,7 +393,7 @@ export default {
 		},
 		filterChanged() {
 			return Object.entries(this.filterData).filter(([key, val]) => {
-				return val !== ''
+				return val !== '' && val !== null && val.length > 0
 			}).length > 0
 		},
 		searchBody() {
