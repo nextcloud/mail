@@ -15,6 +15,7 @@ use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Fetch_Results;
 use Horde_Imap_Client_Ids;
+use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\IMAP\Charset\Converter;
@@ -289,24 +290,42 @@ class MessageMapperTest extends TestCase {
 		/** @var Horde_Imap_Client_Socket|MockObject $client */
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = 'inbox';
-		$client->expects(self::once())
+		$rangeSearchQuery = new Horde_Imap_Client_Search_Query();
+		$rangeSearchQuery->ids(new Horde_Imap_Client_Ids('123:321'));
+		$client->expects(self::exactly(2))
 			->method('search')
-			->with(
-				$mailbox,
-				null,
+			->withConsecutive(
 				[
-					'results' => [
-						Horde_Imap_Client::SEARCH_RESULTS_MIN,
-						Horde_Imap_Client::SEARCH_RESULTS_MAX,
-						Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+					$mailbox,
+					null,
+					[
+						'results' => [
+							Horde_Imap_Client::SEARCH_RESULTS_MIN,
+							Horde_Imap_Client::SEARCH_RESULTS_MAX,
+							Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+						]
 					]
-				]
+				],
+				[
+					$mailbox,
+					($rangeSearchQuery),
+					[
+						'results' => [
+							Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+						]
+					],
+				],
 			)
-			->willReturn([
-				'min' => 123,
-				'max' => 321,
-				'count' => 50,
-			]);
+			->willReturnOnConsecutiveCalls(
+				[
+					'min' => 123,
+					'max' => 321,
+					'count' => 50,
+				],
+				[
+					'count' => 50,
+				],
+			);
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
 		$uidResults = new Horde_Imap_Client_Fetch_Results();
@@ -354,24 +373,42 @@ class MessageMapperTest extends TestCase {
 		/** @var Horde_Imap_Client_Socket|MockObject $client */
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = 'inbox';
-		$client->expects(self::once())
+		$rangeSearchQuery = new Horde_Imap_Client_Search_Query();
+		$rangeSearchQuery->ids(new Horde_Imap_Client_Ids('301:321'));
+		$client->expects(self::exactly(2))
 			->method('search')
-			->with(
-				$mailbox,
-				null,
+			->withConsecutive(
 				[
-					'results' => [
-						Horde_Imap_Client::SEARCH_RESULTS_MIN,
-						Horde_Imap_Client::SEARCH_RESULTS_MAX,
-						Horde_Imap_Client::SEARCH_RESULTS_COUNT,
-					]
-				]
+					$mailbox,
+					null,
+					[
+						'results' => [
+							Horde_Imap_Client::SEARCH_RESULTS_MIN,
+							Horde_Imap_Client::SEARCH_RESULTS_MAX,
+							Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+						],
+					],
+				],
+				[
+					$mailbox,
+					$rangeSearchQuery,
+					[
+						'results' => [
+							Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+						],
+					],
+				],
 			)
-			->willReturn([
-				'min' => 123,
-				'max' => 321,
-				'count' => 50,
-			]);
+			->willReturnOnConsecutiveCalls(
+				[
+					'min' => 123,
+					'max' => 321,
+					'count' => 50,
+				],
+				[
+					'count' => 50,
+				],
+			);
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
 		$uidResults = new Horde_Imap_Client_Fetch_Results();
@@ -426,24 +463,42 @@ class MessageMapperTest extends TestCase {
 		/** @var Horde_Imap_Client_Socket|MockObject $client */
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = 'inbox';
-		$client->expects(self::once())
+		$rangeSearchQuery = new Horde_Imap_Client_Search_Query();
+		$rangeSearchQuery->ids(new Horde_Imap_Client_Ids('92001:99999'));
+		$client->expects(self::exactly(2))
 			->method('search')
-			->with(
-				$mailbox,
-				null,
+			->withConsecutive(
 				[
-					'results' => [
-						Horde_Imap_Client::SEARCH_RESULTS_MIN,
-						Horde_Imap_Client::SEARCH_RESULTS_MAX,
-						Horde_Imap_Client::SEARCH_RESULTS_COUNT,
-					]
-				]
+					$mailbox,
+					null,
+					[
+						'results' => [
+							Horde_Imap_Client::SEARCH_RESULTS_MIN,
+							Horde_Imap_Client::SEARCH_RESULTS_MAX,
+							Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+						],
+					],
+				],
+				[
+					$mailbox,
+					$rangeSearchQuery,
+					[
+						'results' => [
+							Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+						],
+					],
+				],
 			)
-			->willReturn([
-				'min' => 10000,
-				'max' => 99999,
-				'count' => 50000,
-			]);
+			->willReturnOnConsecutiveCalls(
+				[
+					'min' => 10000,
+					'max' => 99999,
+					'count' => 50000,
+				],
+				[
+					'count' => 50,
+				],
+			);
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
 		$uidResults = new Horde_Imap_Client_Fetch_Results();
