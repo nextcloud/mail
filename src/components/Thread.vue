@@ -462,6 +462,9 @@ export default {
 	}
 	.app-content {
 		margin-left: 0 !important;
+		break-inside: avoid;
+		page-break-inside: avoid;
+		page-break-after: always;
 	}
 	.mail-message-body {
 		margin-bottom: 0 !important;

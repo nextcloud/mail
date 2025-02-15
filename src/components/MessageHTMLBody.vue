@@ -125,7 +125,7 @@ export default {
 			}
 		},
 		onBeforePrint() {
-			this.$refs.iframe.style.setProperty('height', `${this.getIframeDoc().body.scrollHeight}px`, 'important')
+			// this.$refs.iframe.style.setProperty('height', `${this.getIframeDoc().body.scrollHeight}px`, 'important')
 		},
 		displayIframe() {
 			const iframeDoc = this.getIframeDoc()
