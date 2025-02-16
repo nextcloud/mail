@@ -457,7 +457,7 @@ OC.L10N.register(
     "Pending or not sent messages will show up here" : "As mensaxes pendentes ou non enviadas aparecerán aquí",
     "Copy to \"Sent\" Mailbox" : "Copiar na caixa de correo «Enviado».",
     "Copy to Sent Mailbox" : "Copiar na caixa de correo Enviado",
-    "Could not copy to \"Sent\" mailbox" : "Non foi posíbel copiar na caixa de correo «Enviado».",
+    "Could not copy to \"Sent\" mailbox" : "Non foi posíbel copialo na caixa de correo «Enviado».",
     "Mail server error" : "Produciuse un erro no servidor de correo",
     "Message could not be sent" : "Non foi posíbel enviar a mensaxe",
     "Message deleted" : "Mensaxe eliminada",
