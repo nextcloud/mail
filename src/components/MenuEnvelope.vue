@@ -5,7 +5,7 @@
 <!-- Standard Actions menu for Envelopes -->
 <template>
 	<div>
-		<template v-if="!localMoreActionsOpen && !snoozeActionsOpen && !isPrinting">
+		<template v-if="!localMoreActionsOpen && !snoozeActionsOpen">
 			<ActionButton v-if="hasWriteAcl"
 				class="action--primary"
 				:close-after-click="true"
@@ -243,7 +243,6 @@ import logger from '../logger.js'
 import moment from '@nextcloud/moment'
 import { mapStores, mapState } from 'pinia'
 import useMainStore from '../store/mainStore.js'
-import html2pdf from 'html2pdf.js';
 
 export default {
 	name: 'MenuEnvelope',
@@ -309,7 +308,6 @@ export default {
 			snoozeActionsOpen: false,
 			forwardMessages: this.envelope.databaseId,
 			customSnoozeDateTime: new Date(moment().add(2, 'hours').minute(0).second(0).valueOf()),
-			isPrinting: false,
 		}
 	},
 	computed: {
@@ -545,33 +543,7 @@ export default {
 			this.onSnooze(this.customSnoozeDateTime.valueOf())
 		},
 		onPrint() {
-			// needed for the actions menu to actually close and not be shown in the print preview
-			this.isPrinting = true
-
-			setTimeout(() => {
-				try {
-					const iframe = document.getElementById('iFrameResizer0')
-
-					iframe.onload = () => {
-						const iframeDocument = iframe.contentDocument || iframe.contentWindow.document
-						const iframeBody = iframeDocument.body
-
-						html2pdf()
-							.from(iframeBody)
-							.set({
-								filename: 'mail.pdf', // Set the filename
-								html2canvas: { scale: 2 },
-								jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-							})
-					}
-				} catch (error) {
-					showError(t('mail', 'Could not print message'))
-				}
-			}, 100)
-
-			setTimeout(() => {
-				this.isPrinting = false
-			}, 2000)
+			this.$emit('print')
 		},
 	},
 }

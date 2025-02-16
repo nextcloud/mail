@@ -45,16 +45,18 @@
 				</div>
 			</div>
 			<ThreadSummary v-if="showSummaryBox" :loading="summaryLoading" :summary="summaryText" />
-			<ThreadEnvelope v-for="env in thread"
+			<ThreadEnvelope v-for="(env, index) in thread"
 				:key="env.databaseId"
 				:envelope="env"
 				:mailbox-id="$route.params.mailboxId"
 				:thread-subject="threadSubject"
 				:expanded="expandedThreads.includes(env.databaseId)"
 				:full-height="thread.length === 1"
+				:thread-index="index"
 				@delete="$emit('delete', env.databaseId)"
 				@move="onMove(env.databaseId)"
-				@toggle-expand="toggleExpand(env.databaseId)" />
+				@toggle-expand="toggleExpand(env.databaseId)"
+				@print="print" />
 		</template>
 	</AppContentDetails>
 </template>
@@ -189,9 +191,11 @@ export default {
 	created() {
 		this.resetThread()
 		window.addEventListener('resize', this.resizeDebounced)
+		window.addEventListener('keydown', this.handleKeyDown)
 	},
 	beforeDestroy() {
 		window.removeEventListener('resize', this.resizeDebounced)
+		window.removeEventListener('keydown', this.handleKeyDown)
 	},
 	methods: {
 		async updateSummary() {
@@ -317,6 +321,40 @@ export default {
 				}
 			}
 		},
+		handleKeyDown(event) {
+			if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
+				event.preventDefault()
+
+				this.print()
+			}
+		},
+		print(threadIndex) {
+			setTimeout(() => {
+				try {
+					const messages = Array.from(document.querySelectorAll('.html-message-body'))
+
+					let message
+
+					if (threadIndex !== undefined) {
+						message = messages[threadIndex] ?? messages.pop()
+					} else {
+						// By default, we print the last opened message in the thread
+						message = messages.pop()
+					}
+
+					const iframe = message.querySelector('iframe')
+
+					if (iframe === null) {
+						showError(t('mail', 'Could not print message'))
+						return
+					}
+
+					iframe.contentWindow.print()
+				} catch (error) {
+					showError(t('mail', 'Could not print message'))
+				}
+			}, 100)
+		},
 	},
 }
 </script>
@@ -437,46 +475,6 @@ export default {
 	.icon-reply-white,
 	.icon-reply-all-white {
 		background-position: 12px center;
-	}
-}
-
-@media print {
-	#mail-thread-header-fields {
-		position: relative;
-	}
-	.app-content-details,
-	.splitpanes__pane-details {
-		max-width: unset !important;
-		width: 100% !important;
-	}
-	#header,
-	.app-navigation,
-	#reply-composer,
-	#forward-button,
-	#mail-message-has-blocked-content,
-	.app-content-list,
-	.message-composer,
-	.splitpanes__pane-list,
-	.mail-message-attachments {
-		display: none !important;
-	}
-	.app-content {
-		margin-left: 0 !important;
-		break-inside: avoid;
-		page-break-inside: avoid;
-		page-break-after: always;
-	}
-	.mail-message-body {
-		margin-bottom: 0 !important;
-	}
-	.app-content-details {
-		min-width: 100% !important;
-	}
-	.action-items, .reply-buttons, .envelope__header__left__unsubscribe {
-		display: none !important;
-	}
-	.envelope {
-		border: none !important;
 	}
 }
 
