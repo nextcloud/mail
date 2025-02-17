@@ -63,16 +63,16 @@ jobs:
       strategy:
           matrix:
               php-versions: ['8.3']
-              nextcloud-versions: ['chore/mail-bisect-6e1d9a26209ec5524fbc2fb9c7cbb53315e64d72']
+              nextcloud-versions: ['chore/mail-bisect-ee48cafd200233203a1444dba797ef3eb89a35ca']
               db: ['sqlite', 'mysql', 'pgsql']
               cache: ['nocache']
               include:
                 - php-versions: 8.1
-                  nextcloud-versions: 'chore/mail-bisect-6e1d9a26209ec5524fbc2fb9c7cbb53315e64d72'
+                  nextcloud-versions: 'chore/mail-bisect-ee48cafd200233203a1444dba797ef3eb89a35ca'
                   db: 'sqlite'
                   cache: 'redis'
                 - php-versions: 8.2
-                  nextcloud-versions: 'chore/mail-bisect-6e1d9a26209ec5524fbc2fb9c7cbb53315e64d72'
+                  nextcloud-versions: 'chore/mail-bisect-ee48cafd200233203a1444dba797ef3eb89a35ca'
                   db: 'mysql'
                   cache: 'redis'
                 - php-versions: 8.2
