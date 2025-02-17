@@ -108,6 +108,23 @@ class AccountService {
 	}
 
 	/**
+	 * Finds a mail account by inbound user identity
+	 *
+	 * @since 5.0.0
+	 *
+	 * @param string $value remote system inbound user identity
+	 *
+	 * @return Account[]
+	 */
+	public function findByInboundUserId(string $value): array {
+		
+		return array_map(static function ($a) {
+			return new Account($a);
+		}, $this->mapper->findByInboundUserId($value));
+
+	}
+
+	/**
 	 * @param string $userId
 	 * @param int $id
 	 *

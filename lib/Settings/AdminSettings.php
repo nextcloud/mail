@@ -15,6 +15,7 @@ use OCA\Mail\Integration\MicrosoftIntegration;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
+use OCA\Mail\Service\Ime\ImeService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
@@ -47,7 +48,8 @@ class AdminSettings implements ISettings {
 		MicrosoftIntegration $microsoftIntegration,
 		IConfig $config,
 		AiIntegrationsService $aiIntegrationsService,
-		ClassificationSettingsService $classificationSettingsService) {
+		ClassificationSettingsService $classificationSettingsService,
+		private ImeService $imeService) {
 		$this->initialStateService = $initialStateService;
 		$this->provisioningManager = $provisioningManager;
 		$this->antiSpamService = $antiSpamService;
@@ -96,6 +98,18 @@ class AdminSettings implements ISettings {
 			Application::APP_ID,
 			'enabled_llm_summary_backend',
 			$this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class)
+		);
+
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'ime_enabled',
+			$this->imeService->getEnabled()
+		);
+
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'ime_restrictions',
+			$this->imeService->getRestrictions()
 		);
 
 		$this->initialStateService->provideLazyInitialState(
