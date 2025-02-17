@@ -124,9 +124,6 @@ export default {
 				this.displayIframe()
 			}
 		},
-		onBeforePrint() {
-			// this.$refs.iframe.style.setProperty('height', `${this.getIframeDoc().body.scrollHeight}px`, 'important')
-		},
 		displayIframe() {
 			const iframeDoc = this.getIframeDoc()
 			logger.debug('showing external images')
