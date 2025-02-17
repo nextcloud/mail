@@ -19,7 +19,7 @@ jobs:
     name: update-public-suffix-list-${{ matrix.branches }}
 
     steps:
-      - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871
+      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
         with:
           ref: ${{ matrix.branches }}
           submodules: true
