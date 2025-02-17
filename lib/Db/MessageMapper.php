@@ -235,7 +235,7 @@ class MessageMapper extends QBMapper {
 			foreach ($messages as $message) {
 				$query->setParameter(
 					'thread_root_id',
-					$message->getThreadRootId(),
+					mb_substr($message->getThreadRootId(), 0, 1023),
 					$message->getThreadRootId() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR
 				);
 				$query->setParameter('id', $message->getDatabaseId(), IQueryBuilder::PARAM_INT);
@@ -289,13 +289,25 @@ class MessageMapper extends QBMapper {
 
 			foreach ($messages as $message) {
 				$qb1->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
-				$qb1->setParameter('message_id', $message->getMessageId(), IQueryBuilder::PARAM_STR);
+				$qb1->setParameter(
+					'message_id',
+					mb_substr($message->getMessageId(), 0, 1023),
+					IQueryBuilder::PARAM_STR,
+				);
 				$inReplyTo = $message->getInReplyTo();
-				$qb1->setParameter('in_reply_to', $inReplyTo, $inReplyTo === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
+				$qb1->setParameter(
+					'in_reply_to',
+					$inReplyTo === null ? null : mb_substr($inReplyTo, 0, 1023), // Truncate longer values
+					$inReplyTo === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR,
+				);
 				$references = $message->getReferences();
 				$qb1->setParameter('references', $references, $references === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
 				$threadRootId = $message->getThreadRootId();
-				$qb1->setParameter('thread_root_id', $threadRootId, $threadRootId === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
+				$qb1->setParameter(
+					'thread_root_id',
+					$threadRootId === null ? null : mb_substr($threadRootId, 0, 1023),
+					$threadRootId === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR,
+				);
 				$qb1->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
 				$qb1->setParameter('subject', $message->getSubject(), IQueryBuilder::PARAM_STR);
 				$qb1->setParameter('sent_at', $message->getSentAt(), IQueryBuilder::PARAM_INT);
