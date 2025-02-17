@@ -12,10 +12,10 @@ jobs:
     strategy:
       matrix:
         php-versions: ['8.1', '8.2', '8.3']
-        nextcloud-versions: ['master', 'stable30']
+        nextcloud-versions: ['stable31', 'stable30']
         include:
           - php-versions: '8.4'
-            nextcloud-versions: 'master'
+            nextcloud-versions: 'stable31'
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
     - name: Set up Nextcloud env
@@ -63,20 +63,20 @@ jobs:
       strategy:
           matrix:
               php-versions: ['8.3']
-              nextcloud-versions: ['chore/mail-bisect-6e1d9a26209ec5524fbc2fb9c7cbb53315e64d72']
+              nextcloud-versions: ['stable31']
               db: ['sqlite', 'mysql', 'pgsql']
               cache: ['nocache']
               include:
                 - php-versions: 8.1
-                  nextcloud-versions: 'chore/mail-bisect-6e1d9a26209ec5524fbc2fb9c7cbb53315e64d72'
+                  nextcloud-versions: 'stable31'
                   db: 'sqlite'
                   cache: 'redis'
                 - php-versions: 8.2
-                  nextcloud-versions: 'chore/mail-bisect-6e1d9a26209ec5524fbc2fb9c7cbb53315e64d72'
+                  nextcloud-versions: 'stable31'
                   db: 'mysql'
                   cache: 'redis'
                 - php-versions: 8.2
-                  nextcloud-versions: stable30
+                  nextcloud-versions: 'stable31'
                   db: 'mysql'
                   cache: 'redis'
       name: ${{ matrix.nextcloud-versions }} w/ php${{ matrix.php-versions }}-${{ matrix.db }}-${{ matrix.cache }} integration tests
@@ -156,7 +156,7 @@ jobs:
             if: ${{ matrix.php-versions == '8.3' }}
             run: sed -i 's/max-version="8.3"/max-version="8.4"/' nextcloud/apps/mail/appinfo/info.xml
           - name: Install Mail
-            run: php -f nextcloud/occ app:enable -f mail
+            run: php -f nextcloud/occ app:enable mail
           - name: Configure Nextcloud for testing
             run: |
                 php -f nextcloud/occ config:system:set debug --type bool --value true
