@@ -499,7 +499,7 @@ OC.L10N.register(
     "From me" : "De min",
     "Clear" : "Limpar",
     "Enable mail body search" : "Activar a busca no corpo do correo",
-    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it. Sieve is also required to use Autoresponder and Filters." : "Sieve é ​​unha linguaxe potente para escribir filtros para a súa caixa de correo. Pode xestionar os scripts de «sieve» (peneira) en Mail se o seu servizo de correo-e o admite. Sieve tamén é necesario para usar Autoresponder e Filtros.",
+    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it. Sieve is also required to use Autoresponder and Filters." : "Sieve é ​​unha linguaxe potente para escribir filtros para a súa caixa de correo. Pode xestionar os scripts de «sieve» (peneira) en Mail se o seu servizo de correo-e o admite. Sieve tamén é necesario para usar a Resposta automática e Filtros.",
     "Enable sieve filter" : "Activar o filtro «sieve» (peneira)",
     "Sieve host" : "Máquina de «sieve» (peneira)",
     "Sieve security" : "Seguranza de «sieve» (peneira)",
