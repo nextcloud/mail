@@ -349,6 +349,24 @@ export default {
 						return
 					}
 
+					const iframeDocument = iframe.contentDocument || iframe.contentWindow.document
+
+					// Create a new div to hold the thread information
+					const threadInfo = document.createElement('div')
+					threadInfo.style.marginBottom = '20px'
+
+					const subjectLine = document.createElement('h2')
+					subjectLine.textContent = `${this.threadSubject}`
+					threadInfo.appendChild(subjectLine)
+
+					const participantsLine = document.createElement('p')
+					participantsLine.textContent = this.threadParticipants
+						.map(participant => `${participant.label} <${participant.email}>`)
+						.join(', ')
+					threadInfo.appendChild(participantsLine)
+
+					iframeDocument.body.insertBefore(threadInfo, iframeDocument.body.firstChild)
+
 					iframe.contentWindow.print()
 				} catch (error) {
 					showError(t('mail', 'Could not print message'))
