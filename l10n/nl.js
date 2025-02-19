@@ -106,6 +106,7 @@ OC.L10N.register(
     "Enable formatting" : "Inschakelen formattering",
     "Upload attachment" : "Bijlage uploaden",
     "Add attachment from Files" : "Bijlage toevoegen vanuit Bestanden",
+    "Smart picker" : "Smart picker",
     "Request a read receipt" : "Vraag een leesbevestiging",
     "Encrypt message with Mailvelope" : "Versleutel bericht met Mailvelope",
     "Enter a date" : "Voeg een datum toe",
