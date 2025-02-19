@@ -6,7 +6,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 4.0.0 - unreleased
+## 4.2.0 - 2025-02-19
+### Added
+* Email translation
+* AI message summary
+* Classify emails by importance based on subjects
+* Recipient info on the right side of the composer
+* More discoverable multiselect menu
+* iMip Request Handling
+* Setup check for mail transport php-mail
+### Changed
+* Load avatar URLs with low priority
+* Updated and new translations
 
 ## 3.6.0 – unreleased
 ### Added
