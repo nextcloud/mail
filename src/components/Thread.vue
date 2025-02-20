@@ -331,7 +331,7 @@ export default {
 		print(threadIndex) {
 			setTimeout(() => {
 				try {
-					const messages = Array.from(document.querySelectorAll('.html-message-body'))
+					const messages = Array.from(document.querySelectorAll('.html-message-body, .mail-message-body'))
 
 					let message
 
@@ -344,28 +344,64 @@ export default {
 
 					const iframe = message.querySelector('iframe')
 
+					const addThreadInfo = (document) => {
+						const threadInfo = document.createElement('div')
+						threadInfo.style.marginBottom = '20px'
+
+						const subjectLine = document.createElement('h2')
+						subjectLine.textContent = `${this.threadSubject}`
+						threadInfo.appendChild(subjectLine)
+
+						const participantsLine = document.createElement('p')
+						participantsLine.textContent = this.threadParticipants
+							.map(participant => `${participant.label} <${participant.email}>`)
+							.join(', ')
+						threadInfo.appendChild(participantsLine)
+
+						document.body.insertBefore(threadInfo, document.body.firstChild)
+					}
+
 					if (iframe === null) {
-						showError(t('mail', 'Could not print message'))
+						// Handle plain text messages
+						const messageContainer = message.querySelector('#message-container')
+
+						if (messageContainer) {
+							// Create a new iframe
+							const newIframe = document.createElement('iframe')
+							newIframe.style.display = 'none' // Hide the iframe
+							document.body.appendChild(newIframe)
+
+							// Insert the message content into the iframe
+							const iframeDocument = newIframe.contentDocument || newIframe.contentWindow.document
+							iframeDocument.open()
+							iframeDocument.write(`
+								<html>
+									<head>
+										<title>${this.threadSubject}</title>
+									</head>
+									<body>
+										<div class="message-container">${messageContainer.innerHTML}</div>
+									</body>
+								</html>
+							`)
+							iframeDocument.close()
+
+							addThreadInfo(iframeDocument)
+
+							newIframe.contentWindow.print()
+
+							// Clean up: remove the iframe after printing
+							setTimeout(() => {
+								document.body.removeChild(newIframe)
+							}, 500)
+						}
+
 						return
 					}
 
 					const iframeDocument = iframe.contentDocument || iframe.contentWindow.document
 
-					// Create a new div to hold the thread information
-					const threadInfo = document.createElement('div')
-					threadInfo.style.marginBottom = '20px'
-
-					const subjectLine = document.createElement('h2')
-					subjectLine.textContent = `${this.threadSubject}`
-					threadInfo.appendChild(subjectLine)
-
-					const participantsLine = document.createElement('p')
-					participantsLine.textContent = this.threadParticipants
-						.map(participant => `${participant.label} <${participant.email}>`)
-						.join(', ')
-					threadInfo.appendChild(participantsLine)
-
-					iframeDocument.body.insertBefore(threadInfo, iframeDocument.body.firstChild)
+					addThreadInfo(iframeDocument)
 
 					iframe.contentWindow.print()
 				} catch (error) {
