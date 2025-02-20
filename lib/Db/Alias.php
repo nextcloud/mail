@@ -17,8 +17,8 @@ use ReturnTypeWillChange;
 /**
  * @method void setAccountId(int $accountId)
  * @method int getAccountId()
- * @method void setName(string $name)
- * @method string getName()
+ * @method void setName(string|null $name)
+ * @method string|null getName()
  * @method void setAlias(string $alias)
  * @method string getAlias()
  * @method void setSignature(string|null $signature)
@@ -37,7 +37,7 @@ class Alias extends Entity implements JsonSerializable {
 	/** @var int */
 	protected $accountId;
 
-	/** @var string */
+	/** @var string|null */
 	protected $name;
 
 	/** @var string */
