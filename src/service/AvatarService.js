@@ -16,7 +16,7 @@ export const fetchAvatarUrl = (email) => {
 		email,
 	})
 
-	return Axios.get(url)
+	return Axios.get(url, { adapter: 'fetch', fetchOptions: { priority: 'low' } })
 		.then((resp) => resp.data)
 		.then((avatar) => {
 			if (avatar.isExternal) {
