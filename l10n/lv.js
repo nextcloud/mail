@@ -72,7 +72,7 @@ OC.L10N.register(
     "Comment" : "Piebilde",
     "Accept" : "Pieņemt",
     "Decline" : "Noraidīt",
-    "More options" : "Vairāk opciju",
+    "More options" : "Vairāk iespēju",
     "Remove" : "Noņemt",
     "email" : "e-pasts",
     "Other" : "Cits",
