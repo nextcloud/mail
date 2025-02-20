@@ -44,6 +44,16 @@ namespace OCA\Mail;
  * }
  *
  * @psalm-type MailMessageApiAttachment = array{ name: string, mime: string, size: int<0, max>, content: string}
+ *
+ * @psalm-type MailAccountListResponse = array{
+ *      id: int,
+ *      email: string,
+ *      aliases: array{
+ *          id: int,
+ *          email: string,
+ *          name: ?string,
+ *      }[]
+ *  }
  */
 class ResponseDefinitions {
 }
