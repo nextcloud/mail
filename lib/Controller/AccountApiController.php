@@ -37,9 +37,9 @@ class AccountApiController extends OCSController {
 	}
 
 	/**
-	 * List all email accounts and their aliases of the user which is currently logged-in.
+	 * List all email accounts and their aliases of the user which is currently logged-in
 	 *
-	 * @return DataResponse<Http::STATUS_OK, MailAccountListResponse, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{}, array{}>
+	 * @return DataResponse<Http::STATUS_OK, MailAccountListResponse[], array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{}, array{}>
 	 *
 	 * 200: Account list
 	 * 404: User was not logged in
