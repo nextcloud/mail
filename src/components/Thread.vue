@@ -325,7 +325,22 @@ export default {
 			if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
 				event.preventDefault()
 
-				this.print()
+				const iframes = document.querySelectorAll('iframe')
+
+				iframes.forEach((iframe) => {
+					const iframeDocument = iframe.contentDocument || iframe.contentWindow.document
+
+					// Iframes need specific print styling to avoid cutting off content
+					const style = iframeDocument.createElement('style')
+					style.innerHTML = `
+							* {
+								page-break-inside: avoid;
+							}
+					`
+
+					iframeDocument.head.appendChild(style)
+				})
+				window.print()
 			}
 		},
 		print(threadIndex) {
@@ -529,6 +544,49 @@ export default {
 	.icon-reply-white,
 	.icon-reply-all-white {
 		background-position: 12px center;
+	}
+}
+
+@media print {
+	#mail-thread-header-fields {
+		position: relative;
+	}
+	.app-content-details,
+	.splitpanes__pane-details {
+		max-width: unset !important;
+		width: 100% !important;
+	}
+	#header,
+	.app-navigation,
+	#reply-composer,
+	#forward-button,
+	#mail-message-has-blocked-content,
+	.app-content-list,
+	.message-composer,
+	.splitpanes__pane-list,
+	.mail-message-attachments {
+		display: none !important;
+	}
+	.app-content {
+		margin-left: 0 !important;
+		break-inside: avoid;
+		page-break-inside: avoid;
+		page-break-after: always;
+	}
+	.mail-message-body {
+		margin-bottom: 0 !important;
+	}
+	.app-content-details {
+		min-width: 100% !important;
+	}
+	.action-items, .reply-buttons, .envelope__header__left__unsubscribe {
+		display: none !important;
+	}
+	.envelope {
+		border: none !important;
+	}
+	* {
+		page-break-inside: avoid;
 	}
 }
 

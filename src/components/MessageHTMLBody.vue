@@ -124,6 +124,9 @@ export default {
 				this.displayIframe()
 			}
 		},
+		onBeforePrint() {
+			this.$refs.iframe.style.setProperty('height', `${this.getIframeDoc().body.scrollHeight}px`, 'important')
+		},
 		displayIframe() {
 			const iframeDoc = this.getIframeDoc()
 			logger.debug('showing external images')
@@ -175,9 +178,11 @@ export default {
 	background-color: #FFFFFF;
 
 	// TODO: collapse quoted text and remove inner scrollbar
-	&.scroll {
-		max-height: 50vh;
-		overflow-y: auto;
+	@media only screen {
+		&.scroll {
+			max-height: 50vh;
+			overflow-y: auto;
+		}
 	}
 }
 :deep(.button-vue__text) {
