@@ -178,9 +178,11 @@ export default {
 	background-color: #FFFFFF;
 
 	// TODO: collapse quoted text and remove inner scrollbar
-	&.scroll {
-		max-height: 50vh;
-		overflow-y: auto;
+	@media only screen {
+		&.scroll {
+			max-height: 50vh;
+			overflow-y: auto;
+		}
 	}
 }
 :deep(.button-vue__text) {
