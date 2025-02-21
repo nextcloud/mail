@@ -307,6 +307,7 @@ OC.L10N.register(
     "Select tags" : "Vælg tags",
     "Marked as" : "Markeret som",
     "Has attachments" : "Har vedhæftede filer",
+    "Mentions me" : "Omtalte mig",
     "Last 7 days" : "Sidste 7 dage",
     "Clear" : "Ryd",
     "Sieve credentials" : "Sieve legitimationsoplysninger",
