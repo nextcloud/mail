@@ -115,15 +115,14 @@ export async function clearCache(accountId, id) {
 /**
  * Set flags for envelope
  *
- * @param {int} id
+ * @param {array} identifiers
  * @param {object} flags
  */
-export async function setEnvelopeFlags(id, flags) {
-	const url = generateUrl('/apps/mail/api/messages/{id}/flags', {
-		id,
-	})
+export async function setEnvelopeFlags(identifiers, flags) {
+	const url = generateUrl('/apps/mail/api/messages/flags')
 
 	return await axios.put(url, {
+		identifiers,
 		flags,
 	})
 }
