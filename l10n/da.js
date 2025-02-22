@@ -73,7 +73,7 @@ OC.L10N.register(
     "Aliases" : "Aliases",
     "Signature" : "Underskrift",
     "A signature is added to the text of new messages and replies." : "En signatur tilføjes til teksten i nye meddelelser og svar.",
-    "Writing mode" : "Skrivemåde",
+    "Writing mode" : "Skrivestil",
     "Preferred writing mode for new messages and replies." : "Foretrukken skrivemåde for nye meddelelser og svar.",
     "Default folders" : "Standardmapper",
     "Autoresponder" : "Autosvar",
