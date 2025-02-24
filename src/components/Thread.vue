@@ -6,8 +6,8 @@
 	<AppContentDetails id="mail-message">
 		<!-- Show outer loading screen only if we have no data about the thread -->
 		<Loading v-if="loading && thread.length === 0" :hint="t('mail', 'Loading thread')" />
-		<Error v-else-if="error"
-			:error="error && error.message ? error.message : t('mail', 'Not found')"
+		<Error v-else-if="errorTitle || errorMessage"
+			:error="errorTitle ? errorTitle : t('mail', 'Not found')"
 			:message="errorMessage" />
 		<template v-else>
 			<div id="mail-thread-header">
@@ -106,7 +106,7 @@ export default {
 			loading: true,
 			message: undefined,
 			errorMessage: '',
-			error: undefined,
+			errorTitle: '',
 			expandedThreads: [],
 			participantsToDisplay: 999,
 			resizeDebounced: debounce(500, this.updateParticipantsToDisplay),
@@ -290,7 +290,7 @@ export default {
 		async resetThread() {
 			this.expandedThreads = [this.threadId]
 			this.errorMessage = ''
-			this.error = undefined
+			this.errorTitle = ''
 			if (this.mainStore.getPreference('layout-message-view', 'threaded') === 'threaded') {
 				await this.fetchThread()
 			}
@@ -301,7 +301,7 @@ export default {
 		async fetchThread() {
 			this.loading = true
 			this.errorMessage = ''
-			this.error = undefined
+			this.errorTitle = ''
 			const threadId = this.threadId
 
 			try {
@@ -328,7 +328,7 @@ export default {
 			} catch (error) {
 				logger.error('could not load envelope thread', { threadId, error })
 				if (error?.response?.status === 403) {
-					this.error = t('mail', 'Could not load your message thread')
+					this.errorTitle = t('mail', 'Could not load your message thread')
 					this.errorMessage = t('mail', 'The thread doesn\'t exist or has been deleted')
 					this.loading = false
 				} else if (error?.response?.status === 500) {
