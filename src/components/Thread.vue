@@ -312,6 +312,9 @@ export default {
 					this.error = t('mail', 'Could not load your message thread')
 					this.errorMessage = t('mail', 'The thread doesn\'t exist or has been deleted')
 					this.loading = false
+				} else if (error?.response?.status === 500) {
+					this.error = { message: t('mail', 'Email was not able to be opened') }
+					this.loading = false
 				} else {
 					this.errorMessage = t('mail', 'Could not load your message thread')
 				}
