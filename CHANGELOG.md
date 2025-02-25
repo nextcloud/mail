@@ -1,3 +1,12 @@
+## [4.2.2](https://github.com/nextcloud/mail/compare/v4.2.1...v4.2.2) (2025-02-25)
+
+
+### Bug Fixes
+
+* App release signature ([f3ed15f](https://github.com/nextcloud/mail/commit/f3ed15f6d87131cda649d51bb32f716ee34b9076))
+
+
+
 ## [4.2.1](https://github.com/nextcloud/mail/compare/v4.2.0...v4.2.1) (2025-02-25)
 
 
