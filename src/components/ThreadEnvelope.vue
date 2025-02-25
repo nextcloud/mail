@@ -633,9 +633,13 @@ export default {
 			return value.replace(/((?:[\t ]*(?:R|RE|F|FW|FWD):[\t ]*)*)/i, '')
 		},
 		async fetchMessage() {
-			this.loading = LOADING_MESSAGE
-			this.error = undefined
+			const isCached = !!this.mainStore.getMessage(this.envelope.databaseId)
+			if (!isCached) {
+				console.log('perf fetchMessage -> isNotCached')
+				this.loading = LOADING_MESSAGE
+			}
 
+			this.error = undefined
 			logger.debug(`fetching thread message ${this.envelope.databaseId}`)
 
 			try {
@@ -650,7 +654,7 @@ export default {
 					}, 2000)
 				}
 
-				if (this.message.hasHtmlBody) {
+				if (this.message.hasHtmlBody && !isCached) {
 					this.loading = LOADING_BODY
 				} else {
 					this.loading = LOADING_DONE
