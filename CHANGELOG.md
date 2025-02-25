@@ -1,3 +1,22 @@
+## [3.7.21](https://github.com/nextcloud/mail/compare/v3.7.20...v3.7.21) (2025-02-25)
+
+
+### Bug Fixes
+
+* change status code from 404 to 204 for missing avatars ([d9f856c](https://github.com/nextcloud/mail/commit/d9f856ca49e632903da710e7d3821dd75e88aaa3))
+* **dns:** Update public suffix list ([ae22d48](https://github.com/nextcloud/mail/commit/ae22d48b79dbdac89aae79b6339a0b396856eae1))
+* filter change icon to be shown only when the filter changes ([3fd9af3](https://github.com/nextcloud/mail/commit/3fd9af3b59091fcd3c8350628c8a5df7e01a258b))
+* handle 204 response ([6104c58](https://github.com/nextcloud/mail/commit/6104c58d701ef88683bcb7335d436d5656bfa3be))
+* recipient label should not contain email address ([66d11a2](https://github.com/nextcloud/mail/commit/66d11a2ffe81c498a2c0ca50e0fd96c100acbb48))
+* show the email address as subname ([117cb8e](https://github.com/nextcloud/mail/commit/117cb8e15d09d49e9d6e9b7d66feaade945e7ab8))
+
+
+### Performance Improvements
+
+* **ui:** Load avatar URLs with low priority ([837ba5a](https://github.com/nextcloud/mail/commit/837ba5ab47c72d46a9beb0f9afb61278edd4ccbb))
+
+
+
 ## [3.7.20](https://github.com/nextcloud/mail/compare/v3.7.19...v3.7.20) (2025-02-12)
 
 
