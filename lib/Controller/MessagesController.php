@@ -318,13 +318,13 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @param int[] $knownIds Known database ids of envelopes
+	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
 	#[TrapError]
-	public function getThread(int $id, array $knownIds): JSONResponse {
+	public function getThread(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -337,15 +337,7 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		}
 
-		$thread = $this->mailManager->getThread($account, $message->getThreadRootId());
-		foreach ($thread as $envelope) {
-			if (!in_array($envelope->getId(), $knownIds)) {
-				// Thread changed -> send it
-				return new JSONResponse($thread);
-			}
-		}
-
-		return new JSONResponse([], Http::STATUS_NO_CONTENT);
+		return new JSONResponse($this->mailManager->getThread($account, $message->getThreadRootId()));
 	}
 
 	/**

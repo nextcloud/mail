@@ -1190,16 +1190,12 @@ export default function mainStoreActions() {
 		},
 		async fetchThread(id) {
 			return handleHttpAuthErrors(async () => {
-				const knownDatabaseIds = this.envelopes[id]?.thread ?? []
-				const thread = await fetchThread(id, knownDatabaseIds)
-				if (thread.length > 0) {
-					this.addEnvelopeThreadMutation({
-						id,
-						thread,
-					})
-				}
-
-				return this.getEnvelopeThread(id)
+				const thread = await fetchThread(id)
+				this.addEnvelopeThreadMutation({
+					id,
+					thread,
+				})
+				return thread
 			})
 		},
 		async fetchMessage(id) {
