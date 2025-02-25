@@ -60,7 +60,7 @@ class LinkCheck {
 		foreach ($anchors as $anchor) {
 			$href = $anchor->getAttribute('href');
 			$linkText = $this->getInnerText($anchor);
-			if ($href === '') {
+			if ($href === '' || strlen($linkText) < 1) {
 				continue;
 			}
 			// handle links that are wrapped in brackets, quotes, etc.
