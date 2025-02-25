@@ -226,15 +226,15 @@
 				</template>
 			</div>
 		</div>
-		<MessageLoadingSkeleton v-if="loading !== LOADING_DONE" />
-		<Message v-if="message && loading !== LOADING_MESSAGE"
-			v-show="loading === LOADING_DONE"
+		<MessageLoadingSkeleton v-if="loading === Loading.Skeleton" />
+		<Message v-if="message"
+			v-show="loading === Loading.Done"
 			:envelope="envelope"
 			:message="message"
 			:full-height="fullHeight"
 			:smart-replies="showFollowUpHeader ? [] : smartReplies"
 			:reply-button-label="replyButtonLabel"
-			@load="loading = LOADING_DONE"
+			@load="onMessageLoaded"
 			@reply="(body) => onReply(body, showFollowUpHeader)" />
 		<Error v-else-if="error"
 			:error="error.message || t('mail', 'Not found')"
@@ -318,9 +318,11 @@ import useMainStore from '../store/mainStore.js'
 import { mapStores } from 'pinia'
 
 // Ternary loading state
-const LOADING_DONE = 0
-const LOADING_MESSAGE = 1
-const LOADING_BODY = 2
+const Loading = Object.seal({
+	Done: 0,
+	Silent: 1,
+	Skeleton: 2,
+})
 
 export default {
 	name: 'ThreadEnvelope',
@@ -394,16 +396,14 @@ export default {
 	},
 	data() {
 		return {
-			loading: LOADING_DONE,
+			loading: Loading.Done,
 			showListUnsubscribeConfirmation: false,
 			error: undefined,
 			message: undefined,
 			importantSvg,
 			unsubscribing: false,
 			seenTimer: undefined,
-			LOADING_BODY,
-			LOADING_DONE,
-			LOADING_MESSAGE,
+			Loading,
 			recomputeMenuSize: 0,
 			moreActionsOpen: false,
 			smartReplies: [],
@@ -417,6 +417,7 @@ export default {
 			rawMessage: '', // Will hold the raw source of the message when requested
 			isInternal: true,
 			enabledSmartReply: loadState('mail', 'llm_freeprompt_available', false),
+			loadingBodyTimeout: undefined,
 		}
 	},
 	computed: {
@@ -595,11 +596,11 @@ export default {
 				this.fetchMessage()
 			} else {
 				this.message = undefined
-				this.loading = LOADING_DONE
+				this.loading = Loading.Done
 			}
 		},
 		loading(loading) {
-			if (loading === LOADING_DONE) {
+			if (loading === Loading.Done) {
 				this.$emit('loaded')
 			}
 		},
@@ -642,15 +643,34 @@ export default {
 		filterSubject(value) {
 			return value.replace(/((?:[\t ]*(?:R|RE|F|FW|FWD):[\t ]*)*)/i, '')
 		},
-		async fetchMessage() {
-			this.loading = LOADING_MESSAGE
-			this.error = undefined
+		onMessageLoaded() {
+			if (this.loadingBodyTimeout) {
+				clearTimeout(this.loadingBodyTimeout)
+				this.loadingBodyTimeout = undefined
+			}
 
+			this.loading = Loading.Done
+		},
+		async fetchMessage() {
+			let loadingTimeout
+			const isCached = !!this.mainStore.getMessage(this.envelope.databaseId)
+			if (!isCached) {
+				loadingTimeout = setTimeout(() => {
+					this.loading = Loading.Skeleton
+				}, 200)
+			}
+
+			this.loading = Loading.Silent
+			this.error = undefined
 			logger.debug(`fetching thread message ${this.envelope.databaseId}`)
 
 			try {
 				this.message = await this.mainStore.fetchMessage(this.envelope.databaseId)
 				logger.debug(`message ${this.envelope.databaseId} fetched`, { message: this.message })
+
+				if (loadingTimeout) {
+					clearTimeout(loadingTimeout)
+				}
 
 				if (!this.envelope.flags.seen && this.hasSeenAcl) {
 					logger.info('Starting timer to mark message as seen/read')
@@ -661,16 +681,18 @@ export default {
 				}
 
 				if (this.message.hasHtmlBody) {
-					this.loading = LOADING_BODY
+					this.loadingBodyTimeout = setTimeout(() => {
+						this.loading = Loading.Skeleton
+					}, 200)
 				} else {
-					this.loading = LOADING_DONE
+					this.loading = Loading.Done
 				}
 				this.$nextTick(() => {
 					this.handleThreadScrolling()
 				})
 			} catch (error) {
 				this.error = error
-				this.loading = LOADING_DONE
+				this.loading = Loading.Done
 				logger.error('Could not fetch message', { error })
 			}
 
