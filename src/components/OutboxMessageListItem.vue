@@ -55,7 +55,6 @@ import moment from '@nextcloud/moment'
 import logger from '../logger.js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { matchError } from '../errors/match.js'
-import { html, plain } from '../util/text.js'
 import Send from 'vue-material-design-icons/Send.vue'
 import Copy from 'vue-material-design-icons/ContentCopy.vue'
 import {
@@ -65,6 +64,7 @@ import {
 	UNDO_DELAY,
 } from '../store/constants.js'
 import useOutboxStore from '../store/outboxStore.js'
+import useMainStore from '../store/mainStore.js'
 import { mapStores } from 'pinia'
 
 export default {
@@ -87,7 +87,7 @@ export default {
 		},
 	},
 	computed: {
-		...mapStores(useOutboxStore),
+		...mapStores(useOutboxStore, useMainStore),
 		selected() {
 			return this.$route.params.messageId === this.message.id
 		},
@@ -170,21 +170,9 @@ export default {
 			if (this.message.status === STATUS_IMAP_SENT_MAILBOX_FAIL) {
 				return
 			}
-			if (this.message.editorBody === null) {
-				return
-			}
-			const bodyData = {}
-			if (this.message.isHtml) {
-				bodyData.bodyHtml = html(this.message.body)
-			} else {
-				bodyData.bodyPlain = plain(this.message.body)
-			}
 			await this.mainStore.startComposerSession({
 				type: 'outbox',
-				data: {
-					...this.message,
-					...bodyData,
-				},
+				data: { ...this.message },
 			})
 		},
 	},
