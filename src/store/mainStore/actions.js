@@ -586,10 +586,11 @@ export default function mainStoreActions() {
 		} = {}) {
 			return handleHttpAuthErrors(async () => {
 				// Restore original sendAt timestamp when requested
-				const message = { ...this.composerMessage.data }
+				const message = this.composerMessage
+				const messageData = { ...this.composerMessage.data }
 				if (restoreOriginalSendAt && message.type === 'outbox' && message.options?.originalSendAt) {
-					message.sendAt = message.options.originalSendAt
-					updateDraft(message)
+					messageData.sendAt = message.options.originalSendAt
+					updateDraft(messageData)
 				}
 				if (moveToImap) {
 					await moveDraft(id)
