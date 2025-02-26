@@ -1102,8 +1102,6 @@ export default {
 				data.bodyPlain = toPlain(html(this.bodyVal)).value
 			}
 
-			debugger
-
 			return data
 		},
 		saveDraft() {

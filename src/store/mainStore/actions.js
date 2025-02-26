@@ -89,7 +89,6 @@ import {
 	priorityImportantQuery,
 	priorityOtherQuery,
 } from '../../util/priorityInbox.js'
-import { html, plain } from '../../util/text.js'
 import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { handleHttpAuthErrors } from '../../http/sessionExpiryHandler.js'

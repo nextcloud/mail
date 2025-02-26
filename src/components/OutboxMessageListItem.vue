@@ -55,7 +55,6 @@ import moment from '@nextcloud/moment'
 import logger from '../logger.js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { matchError } from '../errors/match.js'
-import { html, plain } from '../util/text.js'
 import Send from 'vue-material-design-icons/Send.vue'
 import Copy from 'vue-material-design-icons/ContentCopy.vue'
 import {
