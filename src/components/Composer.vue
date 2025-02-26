@@ -480,7 +480,7 @@ import Vue from 'vue'
 import mitt from 'mitt'
 
 import { findRecipient } from '../service/AutocompleteService.js'
-import { detect, html, plain, toHtml, toPlain } from '../util/text.js'
+import { detect, html, toHtml, toPlain } from '../util/text.js'
 import logger from '../logger.js'
 import TextEditor from './TextEditor.vue'
 import { buildReplyBody } from '../ReplyBuilder.js'
@@ -1076,7 +1076,7 @@ export default {
 			this.bodyVal = html(body).value
 		},
 		getMessageData() {
-			return {
+			const data = {
 				// TODO: Rename account to accountId
 				account: this.selectedAlias.id,
 				accountId: this.selectedAlias.id,
@@ -1085,7 +1085,6 @@ export default {
 				cc: this.selectCc,
 				bcc: this.selectBcc,
 				subject: this.subjectVal,
-				body: this.encrypt ? plain(this.bodyVal) : html(this.bodyVal),
 				attachments: this.attachments,
 				inReplyToMessageId: this.inReplyToMessageId ?? (this.replyTo ? this.replyTo.messageId : undefined),
 				isHtml: !this.encrypt && !this.editorPlainText,
@@ -1096,6 +1095,14 @@ export default {
 				smimeCertificateId: this.smimeCertificateForCurrentAlias?.id,
 				isPgpMime: this.encrypt,
 			}
+
+			if (data.isHtml) {
+				data.bodyHtml = this.bodyVal
+			} else {
+				data.bodyPlain = toPlain(html(this.bodyVal)).value
+			}
+
+			return data
 		},
 		saveDraft() {
 			const draftData = this.getMessageData()
