@@ -65,4 +65,17 @@ class LinkCheckTest extends TestCase {
 
 		$this->assertFalse($result->isPhishing());
 	}
+
+	public function testRunWithUtf8(): void {
+		$htmlMessage = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body><a href="https://iplookup.flagfox.net/">Öffne iplookup.flagfox.net ↗</a></body></html>';
+
+		$result = $this->service->run($htmlMessage);
+		$actualJson = $result->jsonSerialize();
+		$this->assertTrue($result->isPhishing());
+		$this->assertEquals([[
+			'linkText' => 'Öffne iplookup.flagfox.net ↗',
+			'href' => 'https://iplookup.flagfox.net/',
+		]], $actualJson['additionalData']);
+		$this->assertTrue(is_string(json_encode($actualJson, JSON_THROW_ON_ERROR)));
+	}
 }
