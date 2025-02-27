@@ -63,12 +63,11 @@ class LinkCheck {
 			if ($href === '' || $linkText === '') {
 				continue;
 			}
-			// handle links that are wrapped in brackets, quotes, etc.
-			$firstChar = $linkText[0];
-			$lastChar = $linkText[strlen($linkText) - 1];
 
-			if (!ctype_alpha($firstChar) && !ctype_alpha($lastChar)) {
-				$linkText = substr($linkText, 1, -1);
+			// Handle links that are wrapped in brackets, quotes, etc.
+			// Need to use preg_match with the u(nicode) flag to properly match multibyte chars.
+			if (preg_match('/^(?![[:alnum:]]).*(?![[:alnum:]])$/u', $linkText)) {
+				$linkText = mb_substr($linkText, 1, -2);
 			}
 
 			$zippedArray[] = [
