@@ -22,13 +22,7 @@ class PhishingDetectionService {
 		private ReplyToCheck $replyToCheck,
 		private LinkCheck $linkCheck,
 	) {
-		$this->contactCheck = $contactCheck;
-		$this->customEmailCheck = $customEmailCheck;
-		$this->dateCheck = $dateCheck;
-		$this->replyToCheck = $replyToCheck;
-		$this->linkCheck = $linkCheck;
 	}
-
 
 	public function checkHeadersForPhishing(Horde_Mime_Headers $headers, bool $hasHtmlMessage, string $htmlMessage = ''): array {
 		/** @var string|null $fromFN */
