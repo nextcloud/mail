@@ -402,6 +402,7 @@ OC.L10N.register(
     "Show all mailboxes" : "Zobrazit všechny schránky",
     "Collapse mailboxes" : "Sbalit schránky",
     "_{total} message_::_{total} messages_" : ["{total} zpráva","{total} zprávy","{total} zpráv","{total} zprávy"],
+    "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} nepřečtený z {total}","{unread} nepřečtené z {total}","{unread} nepřečtených z {total}","{unread} nepřečtené z {total}"],
     "All messages in mailbox will be deleted." : "Veškeré zprávy ve schránce budou smazány.",
     "Clear mailbox {name}" : "Smazat schránku {name}",
     "Clear mailbox" : "Smazat schránku",

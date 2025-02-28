@@ -401,6 +401,7 @@
     "Show all mailboxes" : "عرض كافة صناديق البريد",
     "Collapse mailboxes" : "طي صناديق البريد",
     "_{total} message_::_{total} messages_" : ["{total} رسائل","{total} رسالة","{total} رسائل","{total} رسائل","{total} رسائل","{total} رسائل"],
+    "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} غير مقروءة من {total}","{unread} غير مقروءة من {total}","{unread} غير مقروءة من {total}","{unread} غير مقروءة من {total}","{unread} غير مقروءة من {total}","{unread} غير مقروءة من {total}"],
     "All messages in mailbox will be deleted." : "كل الرسائل في الصندوق سيقع حذفها",
     "Clear mailbox {name}" : "إخلاء صندوق البريد {name}",
     "Clear mailbox" : "إخلاء clear صندوق البريد",
