@@ -352,6 +352,7 @@
     "Show all mailboxes" : "Mostra totes les bústies",
     "Collapse mailboxes" : "Replega les bústies",
     "_{total} message_::_{total} messages_" : ["{total} missatge","{total} missatges"],
+    "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} no llegit de {total}","{unread} no llegits de {total}"],
     "All messages in mailbox will be deleted." : "Se suprimiran tots els missatges de la bústia.",
     "Clear mailbox {name}" : "Esborra la bústia {name}",
     "Clear mailbox" : "Esborra la bústia",

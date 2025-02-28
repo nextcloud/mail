@@ -299,6 +299,7 @@ OC.L10N.register(
     "Show all mailboxes" : "Показване на всички пощенски кутии",
     "Collapse mailboxes" : "Свиване на пощенските кутии",
     "_{total} message_::_{total} messages_" : ["{total} съобщения","{total} съобщения"],
+    "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} непрочетени от {total}","{unread} непрочетени от {total}"],
     "All messages in mailbox will be deleted." : "Всички съобщения в пощенската кутия ще бъдат изтрити.",
     "Clear mailbox {name}" : "Изчистване на пощенска кутия {name}",
     "Clear mailbox" : "Изчистване на пощенска кутия",
