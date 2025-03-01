@@ -98,7 +98,6 @@
     "Days after which messages in Trash will automatically be deleted:" : "Број дана након којег се поруке у Отпаду аутоматски бришу:",
     "Autoresponder" : "Аутоматско слање одговора",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Аутоматско одговарање на долазне поруке. Ако вам неко пошаље неколико порука, овај аутоматизовани одговор ће се слати највише једном у свака 4 дана.",
-    "Please connect to a sieve server first." : "Молимо вас да се најпре повежете са сервером сита.",
     "Filters" : "Филтери",
     "Sieve script editor" : "Едитор sieve скрипте",
     "Mail server" : "Сервер е-поште",
@@ -777,6 +776,7 @@
     "The link leads to %s" : "Веза води на %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желите да посетите ту страницу, можете да се вратите на <a href=\"%s\">Пошту</a>.",
     "Continue to %s" : "Настави на %s",
+    "Please connect to a sieve server first." : "Молимо вас да се најпре повежете са сервером сита.",
     "Unselect" : "Уклони избор"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 }

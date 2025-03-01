@@ -80,7 +80,6 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "Dni, po których wiadomości w Koszu zostaną automatycznie usunięte:",
     "Autoresponder" : "Automatyczna wiadomość zwrotna",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatyczna odpowiedź na przychodzące wiadomości. Jeśli ktoś wyśle Tobie kilka wiadomości, ta automatyczna odpowiedź będzie wysyłana co najwyżej raz na 4 dni.",
-    "Please connect to a sieve server first." : "Najpierw połącz się z serwerem Sieve.",
     "Filters" : "Filtry",
     "Mail server" : "Serwer poczty",
     "Update alias" : "Zaktualizuj alias",
@@ -563,6 +562,7 @@ OC.L10N.register(
     "The link leads to %s" : "Link prowadzi do %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Jeśli nie chcesz odwiedzić tej strony, możesz powrócić do <a href=\"%s\">Poczty</a>.",
     "Continue to %s" : "Kontynuuj do %s",
+    "Please connect to a sieve server first." : "Najpierw połącz się z serwerem Sieve.",
     "Unselect" : "Odznacz"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

@@ -95,7 +95,6 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "Zaborrontziko mezuak automatikoki ezabatuko dira hainbat egunen ostean:",
     "Autoresponder" : "Autoerantzulea",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Sarrerako mezuei erantzun automatikoa. Norbaitek hainbat mezu bidaltzen badizu, erantzun automatizatu hau gehienez 4 egunean behin bidaliko da.",
-    "Please connect to a sieve server first." : "Konektatu sieve zerbitzari batera lehenik mesedez.",
     "Filters" : "Iragazkiak",
     "Sieve script editor" : "Sieve script editorea",
     "Mail server" : "Posta-zerbitzaria",
@@ -767,6 +766,7 @@ OC.L10N.register(
     "The link leads to %s" : "Estekak hona bideratzen du: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Orrialde hori bisitatu nahi ez baduzu, itzul dezakezu <a href=\"%s\">Mail </a>-ra.",
     "Continue to %s" : "Jarraitu hona: %s",
+    "Please connect to a sieve server first." : "Konektatu sieve zerbitzari batera lehenik mesedez.",
     "Unselect" : "Desautatu"
 },
 "nplurals=2; plural=(n != 1);");

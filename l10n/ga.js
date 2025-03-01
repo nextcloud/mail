@@ -100,7 +100,6 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "Na laethanta ina dhiaidh sin scriosfar teachtaireachtaí sa Bhruscar go huathoibríoch:",
     "Autoresponder" : "Uathfhreagróir",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Freagra uathoibrithe ar theachtaireachtaí isteach. Má sheolann duine éigin roinnt teachtaireachtaí chugat, seolfar an freagra uathoibrithe seo uair amháin gach 4 lá ar a mhéad.",
-    "Please connect to a sieve server first." : "Ceangail le freastalaí criathar ar dtús le do thoil.",
     "Filters" : "Scagairí",
     "Sieve script editor" : "Eagarthóir scripte criathar",
     "Mail server" : "Freastalaí ríomhphoist",
@@ -779,6 +778,7 @@ OC.L10N.register(
     "The link leads to %s" : "Téann an nasc chuig %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Mura dteastaíonn uait cuairt a thabhairt ar an leathanach sin, is féidir leat filleadh ar <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Lean ar aghaidh go %s",
+    "Please connect to a sieve server first." : "Ceangail le freastalaí criathar ar dtús le do thoil.",
     "Unselect" : "Díroghnaigh"
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

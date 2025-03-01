@@ -84,7 +84,6 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "垃圾箱中的邮件将自动删除的天数：",
     "Autoresponder" : "自动回复",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "自动回复来件信息。如果有人向您发送多条消息，此自动回复最多每 4 天发送一次。",
-    "Please connect to a sieve server first." : "请先连接到 sieve 服务器。",
     "Filters" : "过滤器",
     "Mail server" : "邮件服务器",
     "Mailbox search" : "邮箱搜索",
@@ -661,6 +660,7 @@ OC.L10N.register(
     "The link leads to %s" : "链接指向 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "如果不想访问此页面，您可以返回<a href=\"%s\">邮件</a>。",
     "Continue to %s" : "继续 %s",
+    "Please connect to a sieve server first." : "请先连接到 sieve 服务器。",
     "Unselect" : "取消选择"
 },
 "nplurals=1; plural=0;");

@@ -95,7 +95,6 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "Дни, после которых сообщения в Корзине будут автоматически удаляться:",
     "Autoresponder" : "Автоответчик",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Автоматический ответ на входящие сообщения. Если кто-то отправит вам несколько сообщений, этот автоматический ответ будет отправляться не чаще одного раза в 4 дня.",
-    "Please connect to a sieve server first." : "Сначала подключитесь к Sieve-серверу.",
     "Filters" : "Фильтры",
     "Mail server" : "Почтовый сервер",
     "Mailbox search" : "Поиск по почтовому ящику",
@@ -708,6 +707,7 @@ OC.L10N.register(
     "The link leads to %s" : "Эта ссылка ведёт на %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Если вы не хотите посещать эту страницу, вы можете вернуться в <a href=\"%s\">Почту</a>",
     "Continue to %s" : "Продолжать %s",
+    "Please connect to a sieve server first." : "Сначала подключитесь к Sieve-серверу.",
     "Unselect" : "Снять выбор"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

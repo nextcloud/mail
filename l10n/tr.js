@@ -100,7 +100,6 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "Çöp kutusunda şu kadar günden eski olan iletiler silinir:",
     "Autoresponder" : "Otomatik yanıtlayıcı",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Gelen iletileri otomatik yanıtlar. Birisi size birkaç ileti gönderirse, bu otomatik yanıt en fazla 4 günde bir gönderilir.",
-    "Please connect to a sieve server first." : "Lütfen önce bir Sieve sunucusu ile bağlantı kurun. ",
     "Filters" : "Süzgeçler",
     "Sieve script editor" : "Sieve betiği düzenleyici",
     "Mail server" : "E-posta sunucusu",
@@ -779,6 +778,7 @@ OC.L10N.register(
     "The link leads to %s" : "Bağlantı %s adresine gidiyor",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Bu sayfayı ziyaret etmek istemiyorsanız, <a href=\"%s\">E-posta</a> uygulamasına geri dönebilirsiniz.",
     "Continue to %s" : "%s sayfasına ilerle",
+    "Please connect to a sieve server first." : "Lütfen önce bir Sieve sunucusu ile bağlantı kurun. ",
     "Unselect" : "Bırak"
 },
 "nplurals=2; plural=(n > 1);");

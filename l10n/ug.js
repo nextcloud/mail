@@ -95,7 +95,6 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "ئەخلەت ساندۇقىدىكى ئۇچۇرلار ئاپتوماتىك ئۆچۈرۈلىدۇ:",
     "Autoresponder" : "Autoresponder",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "كەلگەن ئۇچۇرلارغا ئاپتوماتىك جاۋاب. ئەگەر بىرسى سىزگە بىر قانچە ئۇچۇر ئەۋەتسە ، بۇ ئاپتوماتىك جاۋاب ھەر 4 كۈندە بىر قېتىم ئەۋەتىلىدۇ.",
-    "Please connect to a sieve server first." : "ئالدى بىلەن ئەلگەك مۇلازىمېتىرىغا ئۇلاڭ.",
     "Filters" : "سۈزگۈچ",
     "Sieve script editor" : "قوليازما تەھرىرلىگۈچ",
     "Mail server" : "خەت مۇلازىمېتىرى",
@@ -751,6 +750,7 @@ OC.L10N.register(
     "The link leads to %s" : "ئۇلىنىش% s نى كەلتۈرۈپ چىقىرىدۇ",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ئەگەر ئۇ بەتنى زىيارەت قىلىشنى خالىمىسىڭىز ، <a href = \"% s\"> خەت </a> گە قايتسىڭىز بولىدۇ.",
     "Continue to %s" : "داۋاملىق% s",
+    "Please connect to a sieve server first." : "ئالدى بىلەن ئەلگەك مۇلازىمېتىرىغا ئۇلاڭ.",
     "Unselect" : "Unselect"
 },
 "nplurals=2; plural=(n != 1);");

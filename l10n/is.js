@@ -100,7 +100,6 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "Tíminn sem líður þar til skilaboðum í rusli verður sjálfkrafa eytt:",
     "Autoresponder" : "Sjálfvirk svörun",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Sjálfvirk svörun skilaboða sem berast. Ef einhver sendir þér mörg skilaboð, verður þetta sjálfvirka svar sent að hámarki á 4 daga fresti.",
-    "Please connect to a sieve server first." : "Þú þarf fyrst að tengjast Sieve-þjóni.",
     "Filters" : "Síur",
     "Sieve script editor" : "Sieve-skrifturitill",
     "Mail server" : "Póstþjónn",
@@ -755,6 +754,7 @@ OC.L10N.register(
     "The link leads to %s" : "Tengillinn leiðir til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ef þú vilt ekki fara á þá síðu, geturðu farið til baka í <a href=\"%s\">póstforritið</a>.",
     "Continue to %s" : "Halda áfram í %s",
+    "Please connect to a sieve server first." : "Þú þarf fyrst að tengjast Sieve-þjóni.",
     "Unselect" : "Afvelja"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

@@ -82,7 +82,6 @@
     "Days after which messages in Trash will automatically be deleted:" : "Dies després dels quals s'eliminaran automàticament els missatges de la paperera:",
     "Autoresponder" : "Contestador automàtic",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Resposta automàtica als missatges entrants. Si algú t'envia diversos missatges, aquesta resposta automàtica s'enviarà com a màxim un cop cada 4 dies.",
-    "Please connect to a sieve server first." : "Connecteu-vos primer a un servidor de filtrat de missatges.",
     "Filters" : "Filtres",
     "Mail server" : "Servidor de correu electrònic",
     "Mailbox search" : "Cerca a bústia",
@@ -662,6 +661,7 @@
     "The link leads to %s" : "L'enllaç porta a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no voleu visitar aquesta pàgina, podeu tornar a <a href=\"%s\">Correu</a>.",
     "Continue to %s" : "Continua a %s",
+    "Please connect to a sieve server first." : "Connecteu-vos primer a un servidor de filtrat de missatges.",
     "Unselect" : "No seleccionis"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

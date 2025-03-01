@@ -78,7 +78,6 @@ OC.L10N.register(
     "Default folders" : "Standardmapper",
     "Autoresponder" : "Autosvar",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatisk svar på indgående beskeder. Hvis nogen sender dig flere beskeder, sendes dette automatiske svar højst en gang hver 4. dag.",
-    "Please connect to a sieve server first." : "Opret forbindelse til en sieve server først.",
     "Filters" : "Filtre",
     "Mail server" : "Mail server",
     "Update alias" : "Opdater alias",
@@ -398,6 +397,7 @@ OC.L10N.register(
     "Redirect" : "Omdiriger",
     "The link leads to %s" : "Linket fører til %s",
     "Continue to %s" : "Videre til %s",
+    "Please connect to a sieve server first." : "Opret forbindelse til en sieve server først.",
     "Unselect" : "Fravælg"
 },
 "nplurals=2; plural=(n != 1);");
