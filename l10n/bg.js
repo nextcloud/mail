@@ -73,7 +73,6 @@ OC.L10N.register(
     "Default folders" : "Папки по подразбиране",
     "Autoresponder" : "Автоматичен отговор",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Автоматичен отговор на входящите съобщения. Ако някой ви изпрати няколко съобщения, този автоматичен отговор ще бъде изпращан най-много веднъж на всеки 4 дни.",
-    "Please connect to a sieve server first." : "Моля да се свържете първо със сървъра на ситото",
     "Filters" : "Филтри",
     "Mail server" : "Имейл сървър",
     "Update alias" : "Актуализиране на псевдоним",
@@ -561,6 +560,7 @@ OC.L10N.register(
     "The link leads to %s" : "Връзката води до %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желаете да посетите тази страница, може да се върнете към <a href=\"%s\">Поща</a>.",
     "Continue to %s" : "Продължи към %s",
+    "Please connect to a sieve server first." : "Моля да се свържете първо със сървъра на ситото",
     "Unselect" : "Размаркирай"
 },
 "nplurals=2; plural=(n != 1);");

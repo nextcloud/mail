@@ -100,7 +100,6 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "垃圾桶的郵件將會自動刪除的天數：",
     "Autoresponder" : "自動回復程式",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "自動回覆收到的訊息。如果有人向您發送多個訊息，此自動回覆最多每 4 天傳送一次。",
-    "Please connect to a sieve server first." : "請先連接到篩網伺服器。",
     "Filters" : "過濾",
     "Sieve script editor" : "Sieve 命令稿編輯器",
     "Mail server" : "郵件伺服器",
@@ -779,6 +778,7 @@ OC.L10N.register(
     "The link leads to %s" : "該連結導向至 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "若不想造訪該頁，您可以回到<a href=\"%s\">Mail</a>。",
     "Continue to %s" : "前往 %s",
+    "Please connect to a sieve server first." : "請先連接到篩網伺服器。",
     "Unselect" : "取消選擇"
 },
 "nplurals=1; plural=0;");

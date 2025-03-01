@@ -97,7 +97,6 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "ゴミ箱内のメッセージは何日後に自動的に削除されます",
     "Autoresponder" : "自動返信",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "受信メッセージへの自動返信。複数のメッセージが送信された場合、この自動返信は最大で4日に1回送信されます。",
-    "Please connect to a sieve server first." : "はじめにsieveサーバーに接続してください。",
     "Filters" : "フィルター",
     "Sieve script editor" : "Sieveスクリプトエディタ",
     "Mail server" : "メールサーバー",
@@ -774,6 +773,7 @@ OC.L10N.register(
     "The link leads to %s" : "リンクが %s につながります",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ページにアクセスしたくない場合は、<a href=\"%s\">メール</a>に戻ることができます",
     "Continue to %s" : "%s にリダイレクトする",
+    "Please connect to a sieve server first." : "はじめにsieveサーバーに接続してください。",
     "Unselect" : "選択解除"
 },
 "nplurals=1; plural=0;");

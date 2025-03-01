@@ -98,7 +98,6 @@
     "Days after which messages in Trash will automatically be deleted:" : "Dni po ktorých sa správy v Koši automaticky vymažú:",
     "Autoresponder" : "Automatická odpoveď",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatická odpoveď na prichádzajúce správy. Ak vám niekto pošle niekoľko správ, táto automatická odpoveď bude odoslaná maximálne raz za 4 dni.",
-    "Please connect to a sieve server first." : "Najprv sa pripojte k sieve serveru.",
     "Filters" : "Filtre",
     "Sieve script editor" : "Editor skriptov sieve",
     "Mail server" : "Poštový server",
@@ -777,6 +776,7 @@
     "The link leads to %s" : "Odkaz smeruje na %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ak si neprajete navštíviť stránku, možete sa vátiť na <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Pokračovať na %s",
+    "Please connect to a sieve server first." : "Najprv sa pripojte k sieve serveru.",
     "Unselect" : "Zrušiť výber"
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);"
 }

@@ -84,7 +84,6 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "A napok száma, ami után a Szemétben lévő üzenetek automatikusan törlésre kerülnek:",
     "Autoresponder" : "Automatikus válaszoló",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatikus válasz a beérkező üzenetekre. Ha valaki több üzenetet is küld, akkor az automatikus válasz legfeljebb 4 naponta lesz elküldve.",
-    "Please connect to a sieve server first." : "Először kapcsolódjon a Sieve-kiszolgálóhoz.",
     "Filters" : "Szűrők",
     "Mail server" : "Levelezőkiszolgáló",
     "Update alias" : "Álnév frissítése",
@@ -650,6 +649,7 @@ OC.L10N.register(
     "The link leads to %s" : "A hivatkozás ide mutat: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarja megnyitni azt az oldalt, akkor térjen vissza a <a href=\"%s\">Levelezéshez</a>.",
     "Continue to %s" : "Folytatás ide: %s",
+    "Please connect to a sieve server first." : "Először kapcsolódjon a Sieve-kiszolgálóhoz.",
     "Unselect" : "Kiválasztás megszüntetése"
 },
 "nplurals=2; plural=(n != 1);");

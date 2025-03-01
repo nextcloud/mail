@@ -95,7 +95,6 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "Dias após os quais as mensagens na Lixeira serão excluídas automaticamente:",
     "Autoresponder" : "Resposta automática",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Responder automaticamente mensagens. Se alguém mandar-lhe vários emails, a resposta automática será enviada no máximo uma vez a cada 4 dias.",
-    "Please connect to a sieve server first." : "Por favor conecte-se a um servidor sieve primeiro",
     "Filters" : "Filtros",
     "Sieve script editor" : "Editor de script Sieve",
     "Mail server" : "Servidor de e-mail",
@@ -769,6 +768,7 @@ OC.L10N.register(
     "The link leads to %s" : "O link leva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Se você não quiser visitar essa página, você pode voltar para <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continue para %s",
+    "Please connect to a sieve server first." : "Por favor conecte-se a um servidor sieve primeiro",
     "Unselect" : "Desmarcar"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

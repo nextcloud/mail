@@ -73,7 +73,6 @@ OC.L10N.register(
     "Default folders" : "Carpetas predeterminadas",
     "Autoresponder" : "Contestador automático",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Respuesta automática a mensajes entrantes. Si alguien te envía varios mensajes, esta respuesta automática se enviará como máximo una vez cada 4 días.",
-    "Please connect to a sieve server first." : "Por favor, conecta primero con un servidor sieve.",
     "Filters" : "Filtros",
     "Mail server" : "Servidor de correo",
     "Update alias" : "Actualizar alias",
@@ -593,6 +592,7 @@ OC.L10N.register(
     "The link leads to %s" : "La liga lleva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no deseas visitar esa página, puedes regresar a <a href=\"%s\">Correo</a>.",
     "Continue to %s" : "Continuar a %s",
+    "Please connect to a sieve server first." : "Por favor, conecta primero con un servidor sieve.",
     "Unselect" : "Deseleccionar"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

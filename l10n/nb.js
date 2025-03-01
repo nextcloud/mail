@@ -94,7 +94,6 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "Dager etter hvilke meldinger i papirkurven automatisk blir slettet:",
     "Autoresponder" : "Automatisk svartjeneste",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatisk svar på innkommende meldinger. Hvis noen sender deg flere meldinger, vil dette automatiserte svaret bli sendt maksimalt en gang hver 4. dag.",
-    "Please connect to a sieve server first." : "Vennligst koble til en sieve-server først.",
     "Filters" : "Filtere",
     "Mail server" : "E-postserver",
     "Mailbox search" : "Søk i postboks",
@@ -731,6 +730,7 @@ OC.L10N.register(
     "The link leads to %s" : "Denne lenken leder til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Hvis du ikke vil besøke den siden, kan du gå tilbake til <a href=\"%s\">E-post</a>",
     "Continue to %s" : "Fortsett til %s",
+    "Please connect to a sieve server first." : "Vennligst koble til en sieve-server først.",
     "Unselect" : "Velg bort"
 },
 "nplurals=2; plural=(n != 1);");

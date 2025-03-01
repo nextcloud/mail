@@ -98,7 +98,6 @@
     "Days after which messages in Trash will automatically be deleted:" : "عدد الأيام التي سيتم بعدها حذف الرسائل من سلة المهلات تلقائيّاً\"",
     "Autoresponder" : "المُجيب الآلي Autoresponder",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "الرد الآلي على الرسائل الواردة. إذا أرسل إليك شخص ما عدة رسائل، فسيتم إرسال هذا الرد التلقائي مرة واحدة كل 4 أيام على الأكثر.",
-    "Please connect to a sieve server first." : "رجاءً، إتّصل بخادم تصفية \"الغربال\" أوّلاً.",
     "Filters" : "فلاتر",
     "Sieve script editor" : "محرر سكريبتات \"الغربال\" Sieve",
     "Mail server" : "خادم البريد",
@@ -777,6 +776,7 @@
     "The link leads to %s" : "الرابط يؤدي إل %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "إذا لم تكن راغباً في زيارة تلك الصفحة، يمكنك العودة إلى <a href=\"%s\">البريد Mail</a>.",
     "Continue to %s" : "إستمر نحو %s",
+    "Please connect to a sieve server first." : "رجاءً، إتّصل بخادم تصفية \"الغربال\" أوّلاً.",
     "Unselect" : "إلغاء التحديد"
 },"pluralForm" :"nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;"
 }

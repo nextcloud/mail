@@ -83,7 +83,6 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "Кількість днів, після спливання яких, листи у кошику буде автоматично вилучено:",
     "Autoresponder" : "Автовідповідач",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Автоматична відповідь на вхідні повідомлення. Якщо хтось надсилає вам кілька повідомлень, ця автоматична відповідь надсилатиметься щонайбільше раз на 4 дні.",
-    "Please connect to a sieve server first." : "Спочатку з'єднайтеся із сервером sieve.",
     "Filters" : "Фільтри",
     "Mail server" : "Поштовий сервер",
     "Mailbox search" : "Пошук поштової скриньки",
@@ -572,6 +571,7 @@ OC.L10N.register(
     "Redirect" : "Перенаправлення",
     "The link leads to %s" : "Посилання веде до %s",
     "Continue to %s" : "Перейти до %s",
+    "Please connect to a sieve server first." : "Спочатку з'єднайтеся із сервером sieve.",
     "Unselect" : "Зняти виділення"
 },
 "nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);");
