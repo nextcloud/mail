@@ -100,6 +100,8 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "Days after which messages in Trash will automatically be deleted:",
     "Autoresponder" : "Autoresponder",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days.",
+    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it.",
+    "Go to Sieve settings" : "Go to Sieve settings",
     "Filters" : "Filters",
     "Sieve script editor" : "Sieve script editor",
     "Mail server" : "Mail server",

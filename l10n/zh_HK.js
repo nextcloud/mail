@@ -100,6 +100,8 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "垃圾桶的郵件將會自動刪除的天數：",
     "Autoresponder" : "自動回復程式",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "自動回覆收到的訊息。如果有人向您發送多個訊息，此自動回覆最多每 4 天傳送一次。",
+    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "自動回覆器使用 Sieve，一種許多電郵提供商支持的腳本語言。如果您不確定您的提供商是否支持 Sieve，請與他們確認。如果 Sieve 可用，請點擊按鈕進入設置並啟用它。",
+    "Go to Sieve settings" : "前往 Sieve 設定",
     "Filters" : "過濾",
     "Sieve script editor" : "Sieve 命令稿編輯器",
     "Mail server" : "郵件伺服器",
