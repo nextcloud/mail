@@ -1,3 +1,19 @@
+## [4.2.3](https://github.com/nextcloud/mail/compare/v4.2.2...v4.2.3) (2025-03-03)
+
+
+### Bug Fixes
+
+* better help text when sieve is not enabled ([b784f62](https://github.com/nextcloud/mail/commit/b784f6227b47914ae7542942acf2a025236ce1a3))
+* **deps:** bump dompurify from 3.2.3 to v3.2.4 ([1fc2393](https://github.com/nextcloud/mail/commit/1fc2393ff23c08fb74b7b3a03a3608dd45ec8c6a))
+* **dns:** Update public suffix list ([719f01b](https://github.com/nextcloud/mail/commit/719f01b29137790c0b25cda83f0554c8acec209e))
+* handle utf-8 strings correctly in the link detection ([c02cbcf](https://github.com/nextcloud/mail/commit/c02cbcf4149d9060464e97fb9572bbc24c440b22))
+* harden phishing detection against missing and malformed headers ([753432a](https://github.com/nextcloud/mail/commit/753432afdd95e12b26466c688c9180cc7e1c2504))
+* html5 errors ([e5897b6](https://github.com/nextcloud/mail/commit/e5897b6c8da7b1e0749d490cf1783049a0d5fe99))
+* **phishing:** Uninitialized string offset error ([3a4f407](https://github.com/nextcloud/mail/commit/3a4f407c52f4655c5c0a5ec0eebf66df0eaa78b6))
+* remove photo property from groups integration ([69c7c64](https://github.com/nextcloud/mail/commit/69c7c64938681e3482299d1a5533b34700e5b437))
+
+
+
 ## [4.2.2](https://github.com/nextcloud/mail/compare/v4.2.1...v4.2.2) (2025-02-25)
 
 
