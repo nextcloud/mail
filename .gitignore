@@ -45,3 +45,6 @@ tests/.phpunit.result.cache
 
 # PhpStorm
 .idea
+
+# OpenAPI specs
+/openapi.json
