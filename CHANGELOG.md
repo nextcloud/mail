@@ -1,3 +1,14 @@
+## [3.7.22](https://github.com/nextcloud/mail/compare/v3.7.21...v3.7.22) (2025-03-03)
+
+
+### Bug Fixes
+
+* **deps:** bump dompurify from 3.1.6 to v3.2.4 ([14bc4dd](https://github.com/nextcloud/mail/commit/14bc4dd3a5770db5900dcf2b87ca173e659110ce))
+* **dns:** Update public suffix list ([ee32e08](https://github.com/nextcloud/mail/commit/ee32e08f06bea9bcbeecc01a24d3e87fd082c31e))
+* remove photo property from groups integration ([a2f64e5](https://github.com/nextcloud/mail/commit/a2f64e53b1c3893d34fa4a4d364731d178cc8be9))
+
+
+
 ## [3.7.21](https://github.com/nextcloud/mail/compare/v3.7.20...v3.7.21) (2025-02-25)
 
 
