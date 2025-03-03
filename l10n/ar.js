@@ -100,6 +100,8 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "عدد الأيام التي سيتم بعدها حذف الرسائل من سلة المهلات تلقائيّاً\"",
     "Autoresponder" : "المُجيب الآلي Autoresponder",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "الرد الآلي على الرسائل الواردة. إذا أرسل إليك شخص ما عدة رسائل، فسيتم إرسال هذا الرد التلقائي مرة واحدة كل 4 أيام على الأكثر.",
+    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "الرد الآلي Autoresponder يستعمل برنامج \"الغِربَال\" Sieve؛ وهي لغة برمجة نصية يدعمها العديد من مزودي البريد الإلكتروني. إذا لم تكن متأكداً مما إذا كان برنامج الرد الآلي الخاص بك يدعم هذه اللغة، فتواصل مع مزود البريد الإلكتروني لديك. إذا كان تطبيق \"الغربال\" Sieve متاحاً، فانقر فوق الزر للانتقال إلى الإعدادات وتمكينه.",
+    "Go to Sieve settings" : "إذهَب إلى إعدادات تطبيق \"الغِربَال\" Sieve",
     "Filters" : "فلاتر",
     "Sieve script editor" : "محرر سكريبتات \"الغربال\" Sieve",
     "Mail server" : "خادم البريد",
