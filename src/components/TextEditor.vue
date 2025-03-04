@@ -469,4 +469,7 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 .ck.ck-button {
 	border-radius: var(--border-radius-element) !important;
 }
+.ck.ck-balloon-panel.ck-balloon-panel_visible {
+	display: none;
+}
 </style>
