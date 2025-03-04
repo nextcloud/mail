@@ -335,6 +335,7 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} από {depStation} προς {arrStation}",
     "Train from {depStation} to {arrStation}" : "Τρένο από {depStation} προς {arrStation}",
     "Train" : "Τρένο",
+    "Flag" : "Σημαία",
     "Delete filter" : "Διαγραφή φίλτρου",
     "Operator" : "Διαχειριστής",
     "Actions" : "Ενέργειες",

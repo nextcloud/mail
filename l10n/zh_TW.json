@@ -98,6 +98,8 @@
     "Days after which messages in Trash will automatically be deleted:" : "垃圾桶的郵件將會自動刪除的天數：",
     "Autoresponder" : "自動回覆程式",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "自動回覆收到的訊息。若某人向您傳送多則訊息，此自動回覆將會最多每四天傳送一次。",
+    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "自動回覆使用 Sieve，這是一種許多電子郵件供應商都支援的命令稿語言。如果您不確定您的供應商是否支援，請向供應商查詢。如果 Sieve 可用，請按一下按鈕前往設定並啟用它。",
+    "Go to Sieve settings" : "前往 Sieve 設定",
     "Filters" : "過濾",
     "Sieve script editor" : "Sieve 命令稿編輯器",
     "Mail server" : "郵件伺服器",

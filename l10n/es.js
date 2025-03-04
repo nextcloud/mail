@@ -251,7 +251,7 @@ OC.L10N.register(
     "Encrypted message" : "Mensaje cifrado",
     "This message is unread" : "Este mensaje no se ha leído",
     "Unfavorite" : "Desmarcar como favorito",
-    "Favorite" : "Marcar como favorito",
+    "Favorite" : "Favorito",
     "Unread" : "No leído",
     "Read" : "Leído",
     "Unimportant" : "No importante",
