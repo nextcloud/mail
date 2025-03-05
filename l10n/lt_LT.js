@@ -95,6 +95,7 @@ OC.L10N.register(
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Tvarkyti S/MIME liudijimus",
     "Looking for a way to encrypt your emails?" : "Ieškote būdo šifruoti el. laiškus?",
+    "About" : "Apie",
     "Keyboard shortcuts" : "Spartieji klavišai",
     "Compose new message" : "Rašyti naują laišką",
     "Newer message" : "Naujesni laiškai",

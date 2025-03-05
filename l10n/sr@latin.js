@@ -12,6 +12,7 @@ OC.L10N.register(
     "Signature" : "Potpis",
     "Cancel" : "Otkaži",
     "General" : "Opšte",
+    "About" : "O programu",
     "Delete" : "Delete",
     "Search" : "Search",
     "Send" : "Pošalji",

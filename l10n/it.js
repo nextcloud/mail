@@ -102,6 +102,7 @@ OC.L10N.register(
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Gestisci i certificati S/MIME",
     "Mailvelope" : "Mailvelope",
+    "About" : "Informazioni",
     "Keyboard shortcuts" : "Scorciatoie da tastiera",
     "Compose new message" : "Componi nuovo messaggio",
     "Newer message" : "Messaggio più recente",

@@ -33,6 +33,7 @@ OC.L10N.register(
     "General" : "ზოგადი",
     "Use Gravatar and favicon avatars" : "მოიხმარეთ Gravatar და favicon ავატარები",
     "Register" : "რეგისტრაცია",
+    "About" : "ჩვენს შესახებ",
     "Keyboard shortcuts" : "კლავიატურის კომბინაციები",
     "Compose new message" : "ახალი წერილის შედგენა",
     "Newer message" : "უფრო ახალი წერილი",

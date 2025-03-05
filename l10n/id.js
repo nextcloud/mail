@@ -24,6 +24,7 @@ OC.L10N.register(
     "General" : "Umum",
     "List" : "Daftar",
     "Register" : "Daftar",
+    "About" : "Tentang",
     "Keyboard shortcuts" : "Pintasan keyboard",
     "Archive" : "Arsip",
     "Delete" : "Hapus",

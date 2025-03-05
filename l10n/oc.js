@@ -32,6 +32,7 @@ OC.L10N.register(
     "General" : "Generals",
     "List" : "Tièra",
     "Register" : "S'inscriure",
+    "About" : "A prepaus",
     "Keyboard shortcuts" : "Acorchis de clavièr",
     "Archive" : "Archius",
     "Delete" : "Suprimir",

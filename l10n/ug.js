@@ -150,6 +150,7 @@ OC.L10N.register(
     "Install Mailvelope browser extension by clicking here" : "بۇ يەرنى چېكىپ Mailvelope توركۆرگۈ كېڭەيتىلمىسىنى قاچىلاڭ",
     "Enable Mailvelope for the current domain" : "نۆۋەتتىكى دائىرە ئۈچۈن Mailvelope نى قوزغىتىڭ",
     "Assistance features" : "ياردەم ئىقتىدارلىرى",
+    "About" : "ھەققىدە",
     "Keyboard shortcuts" : "كۇنۇپكا تاختىسى تېزلەتمىسى",
     "Compose new message" : "يېڭى ئۇچۇر يېزىڭ",
     "Newer message" : "يېڭى ئۇچۇر",

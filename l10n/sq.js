@@ -32,6 +32,7 @@ OC.L10N.register(
     "Add mail account" : "Shto llogarinë e postës elektronike",
     "General" : "Të përgjithshme",
     "Register" : "Regjistrohu",
+    "About" : "Rreth",
     "Keyboard shortcuts" : "Shkurtoret e tastierës",
     "Newer message" : "Mesazhe më të reja",
     "Older message" : "Mesazhe më të vjetra",

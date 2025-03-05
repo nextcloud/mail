@@ -154,6 +154,7 @@ OC.L10N.register(
     "Install Mailvelope browser extension by clicking here" : "Settu upp Mailvelope-viðbótina í vafrann með því að smella hér",
     "Enable Mailvelope for the current domain" : "Virkja Mailvelope fyrir núverandi lén",
     "Assistance features" : "Eiginleikar aðstoðar",
+    "About" : "Um",
     "Keyboard shortcuts" : "Flýtileiðir á lyklaborði",
     "Compose new message" : "Semja ný skilaboð",
     "Newer message" : "Nýrri skilaboð",
