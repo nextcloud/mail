@@ -13,6 +13,7 @@ OC.L10N.register(
     "Go back" : "ආපසු යන්න",
     "Cancel" : "අවලංගු කරන්න",
     "General" : "සමාන්‍යය",
+    "About" : "පිළිබඳ",
     "Archive" : "සංරක්ෂණය",
     "Search" : "සොයන්න",
     "Send" : "යවන්න",

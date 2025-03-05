@@ -92,6 +92,7 @@ OC.L10N.register(
     "Register" : "Регистрирај се",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Дозволете апликацијата да собира податоци за вашите интеракции. Врз основа на овие податоци, апликацијата ќе се прилагоди на вашите потреби. Податоците ќе се зачувуваат само локално.",
     "Trusted senders" : "Доверливи испраќачи",
+    "About" : "За",
     "Keyboard shortcuts" : "Кратенки преку тастатура",
     "Compose new message" : "Состави нова порака",
     "Newer message" : "Понови пораки",

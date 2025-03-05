@@ -155,6 +155,7 @@ OC.L10N.register(
     "Install Mailvelope browser extension by clicking here" : "Inštalujte rozšírenie prehliadača Mailvelope kliknutím sem",
     "Enable Mailvelope for the current domain" : "Povoliť Mailvelope pre aktuálnu doménu",
     "Assistance features" : "Asistenčné funkcie",
+    "About" : "O vás",
     "Keyboard shortcuts" : "Klávesové skratky",
     "Compose new message" : "Nová správa",
     "Newer message" : "Novšia správa",

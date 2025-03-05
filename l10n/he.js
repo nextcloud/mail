@@ -62,6 +62,7 @@ OC.L10N.register(
     "Register" : "רישום",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "לאפשר ליישומן לאסוף נתונים על אופן השימוש שלך. על בסיס המידע הזה, היישומון יתאים את עצמו להעדפות שלך. הנתונים יישמרו מקומית בלבד.",
     "Trusted senders" : "שולחים מהימנים",
+    "About" : "אודות",
     "Keyboard shortcuts" : "קיצורי מקלדת",
     "Compose new message" : "כתיבת הודעה חדשה",
     "Newer message" : "הודעה חדשה יותר",

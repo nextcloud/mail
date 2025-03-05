@@ -122,6 +122,7 @@ OC.L10N.register(
     "Mailvelope" : "Mailvelope",
     "Looking for a way to encrypt your emails?" : "Looking for a way to encrypt your emails?",
     "Install Mailvelope browser extension by clicking here" : "Install Mailvelope browser extension by clicking here",
+    "About" : "About",
     "Keyboard shortcuts" : "Keyboard shortcuts",
     "Compose new message" : "Compose new message",
     "Newer message" : "Newer message",

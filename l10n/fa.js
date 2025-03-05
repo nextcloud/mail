@@ -111,6 +111,7 @@ OC.L10N.register(
     "Trusted senders" : "Trusted senders",
     "Manage S/MIME certificates" : "Manage S/MIME certificates",
     "Looking for a way to encrypt your emails?" : "Looking for a way to encrypt your emails?",
+    "About" : "About",
     "Keyboard shortcuts" : "میان‌برهای صفحه‌کلید",
     "Compose new message" : "نوشتن پیام جدید",
     "Newer message" : "پیام جدیدتر",

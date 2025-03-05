@@ -104,6 +104,7 @@ OC.L10N.register(
     "Trusted senders" : "Zaupanja vredni pošiljatelji",
     "Manage S/MIME certificates" : "Upravljanje s potrdili S/MIME",
     "Looking for a way to encrypt your emails?" : "Ali iščete način za šifriranje elektronskih sporočil?",
+    "About" : "O meni",
     "Keyboard shortcuts" : "Tipkovne bližnjice",
     "Compose new message" : "Novo sporočilo",
     "Newer message" : "Novejše sporočilo",

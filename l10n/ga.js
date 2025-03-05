@@ -155,6 +155,7 @@ OC.L10N.register(
     "Install Mailvelope browser extension by clicking here" : "Suiteáil síneadh brabhsálaí Mailvelope trí chliceáil anseo",
     "Enable Mailvelope for the current domain" : "Cumasaigh Mailvelope don fhearann ​​reatha",
     "Assistance features" : "Gnéithe cúnaimh",
+    "About" : "Faoi",
     "Keyboard shortcuts" : "Aicearraí méarchláir",
     "Compose new message" : "Cum teachtaireacht nua",
     "Newer message" : "Teachtaireacht níos nuaí",

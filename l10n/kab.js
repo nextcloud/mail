@@ -11,6 +11,7 @@ OC.L10N.register(
     "Cancel" : "Sefsex",
     "Accounts" : "Imiḍanen",
     "General" : "Amatu",
+    "About" : "Γef",
     "Delete" : "Kkes",
     "Search" : "Nadi",
     "Send" : "Tuzna",

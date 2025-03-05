@@ -149,6 +149,7 @@ OC.L10N.register(
     "Install Mailvelope browser extension by clicking here" : "Instale la extensión del navegador Mailvelope haciendo clic aquí",
     "Enable Mailvelope for the current domain" : "Activa Mailvelope para el dominio actual",
     "Assistance features" : "Características de asistencia",
+    "About" : "Acerca de",
     "Keyboard shortcuts" : "Atajos de teclado",
     "Compose new message" : "Crear nuevo mensaje",
     "Newer message" : "Mensaje más nuevo",

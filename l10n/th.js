@@ -22,6 +22,7 @@ OC.L10N.register(
     "Accounts" : "บัญชี",
     "General" : "ทั่วไป",
     "Register" : "ลงทะเบียน",
+    "About" : "เกี่ยวกับ",
     "Keyboard shortcuts" : "แป้นพิมพ์ลัด",
     "Archive" : "ที่เก็บถาวร",
     "Delete" : "ลบ",

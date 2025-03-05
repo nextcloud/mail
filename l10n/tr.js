@@ -157,6 +157,7 @@ OC.L10N.register(
     "Install Mailvelope browser extension by clicking here" : "Buraya tıklayarak Mailvelope tarayıcı eklentisini kurun",
     "Enable Mailvelope for the current domain" : "Geçerli etki alanı için Mailvelope kullanılsın",
     "Assistance features" : "Yardımcı özellikleri",
+    "About" : "Hakkında",
     "Keyboard shortcuts" : "Kısayol tuşları",
     "Compose new message" : "Yeni ileti gönder",
     "Newer message" : "Daha yeni ileti",

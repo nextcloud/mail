@@ -60,6 +60,7 @@ OC.L10N.register(
     "Register as application for mail links" : "Registar como aplicação para ligações de correio",
     "Register" : "Registar",
     "Trusted senders" : "Remetentes confiáveis",
+    "About" : "Sobre",
     "Keyboard shortcuts" : "Atalhos de teclado",
     "Compose new message" : "Compor nova mensagem",
     "Archive" : "Arquivar",

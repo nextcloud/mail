@@ -57,6 +57,7 @@ OC.L10N.register(
     "Register" : "Đăng ký",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Cho phép ứng dụng thu thập dữ liệu về các tương tác của bạn. Dựa trên dữ liệu này, ứng dụng sẽ điều chỉnh theo sở thích của bạn. Dữ liệu sẽ chỉ được lưu trữ trên máy của bạn.",
     "Trusted senders" : "Người gửi đáng tin cậy",
+    "About" : "Giới thiệu",
     "Keyboard shortcuts" : "Phím tắt",
     "Compose new message" : "Soạn tin nhăn mơi",
     "Newer message" : "Tin nhắn mới hơn",

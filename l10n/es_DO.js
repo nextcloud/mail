@@ -32,6 +32,7 @@ OC.L10N.register(
     "General" : "General",
     "Use Gravatar and favicon avatars" : "Usar Gravatar y avatares favicon",
     "Register" : "Registrar",
+    "About" : "Acerca",
     "Keyboard shortcuts" : "Atajos del teclado",
     "Compose new message" : "Escribir mensaje nuevo",
     "Newer message" : "Mensaje más nuevo",

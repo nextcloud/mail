@@ -122,6 +122,7 @@ OC.L10N.register(
     "Manage S/MIME certificates" : "Керування сертифікатами S/MIME",
     "Looking for a way to encrypt your emails?" : "Шукаєте спосіб зашифрувати свою електронну пошту?",
     "Install Mailvelope browser extension by clicking here" : "Щоби встановити розширення Mailvelope для бравзера, клацніть тут",
+    "About" : "Про сервіс",
     "Keyboard shortcuts" : "Скорочення",
     "Compose new message" : "Нове повідомлення",
     "Newer message" : "Новіші повідомлення",

@@ -79,6 +79,7 @@ OC.L10N.register(
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Låt appen samla in data om dina interaktioner. Baserat på denna information kommer appen att anpassas till dina preferenser. Uppgifterna lagras endast lokalt.",
     "Trusted senders" : "Betrodda avsändare",
     "Looking for a way to encrypt your emails?" : "Söker du efter ett sätt att kryptera meddelanden?",
+    "About" : "Om",
     "Keyboard shortcuts" : "Tangentbordsgenvägar",
     "Compose new message" : "Skapa nytt meddelande",
     "Newer message" : "Nyare meddelande",
