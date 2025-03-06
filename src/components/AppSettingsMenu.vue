@@ -7,6 +7,7 @@
 		<NcAppSettingsDialog id="app-settings-dialog"
 			:name="t('mail', 'Mail settings')"
 			:show-navigation="true"
+			:additional-trap-elements="trapElements"
 			:open.sync="showSettings">
 			<NcAppSettingsSection id="account-creation" :name="t('mail', 'Accounts')">
 				<NcButton v-if="allowNewMailAccounts"
@@ -293,6 +294,30 @@
 					</div>
 				</dl>
 			</NcAppSettingsSection>
+			<NcAppSettingsSection id="snippets" :name="t('mail', 'Snippets')">
+				<NcButton type="primary" @click="() => snippetDialogOpen = true">
+					{{ t('mail', 'Create new snippet') }}
+				</NcButton>
+				<h6>{{ t('mail','My snippets') }}</h6>
+				<List :snippets="getMySnippets()"
+					@show-toolbar="handleShowToolbar" />
+				<h6>{{ t('mail','Shared with me') }}</h6>
+				<List :snippets="getSharedSnippets()"
+					:shared="true"
+					@show-toolbar="handleShowToolbar" />
+			</NcAppSettingsSection>
+			<NcDialog :open.sync="snippetDialogOpen"
+				:name="t('mail','New snippet')"
+				:is-form="true"
+				:buttons="snippetButtons"
+				size="normal">
+				<NcInputField :value.sync="localSnippet.title" :label="t('mail','Title of the snippet')" />
+				<TextEditor v-model="localSnippet.content"
+					:html="true"
+					:placeholder="t('mail','Content of the snippet')"
+					:bus="bus"
+					:show-toolbar="handleShowToolbar" />
+			</NcDialog>
 		</NcAppSettingsDialog>
 	</div>
 </template>
@@ -302,8 +327,8 @@ import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 import CompactMode from 'vue-material-design-icons/ReorderHorizontal.vue'
 
-import { NcAppSettingsSection, NcAppSettingsDialog, NcButton, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch } from '@nextcloud/vue'
-
+import { NcAppSettingsSection, NcAppSettingsDialog, NcButton, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch, NcDialog, NcInputField } from '@nextcloud/vue'
+import TextEditor from './TextEditor.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconEmail from 'vue-material-design-icons/Email.vue'
 import IconLock from 'vue-material-design-icons/Lock.vue'
@@ -316,6 +341,10 @@ import InternalAddress from './InternalAddress.vue'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 import useMainStore from '../store/mainStore.js'
 import { mapStores, mapState } from 'pinia'
+import List from './snippets/List.vue'
+import IconCancel from '@mdi/svg/svg/cancel.svg'
+import IconCheck from '@mdi/svg/svg/check.svg'
+import mitt from 'mitt'
 
 export default {
 	name: 'AppSettingsMenu',
@@ -334,6 +363,10 @@ export default {
 		CompactMode,
 		VerticalSplit,
 		HorizontalSplit,
+		List,
+		NcDialog,
+		NcInputField,
+		TextEditor,
 	},
 	mixins: [isMobile],
 	props: {
@@ -366,11 +399,43 @@ export default {
 			showMailSettings: true,
 			selectedAccount: null,
 			mailvelopeIsAvailable: false,
+			trapElements: [],
+			bus: mitt(),
+			snippetDialogOpen: false,
+			localSnippet: {
+				title: '',
+				content: '',
+			},
+			snippetButtons: [
+				{
+					label: 'Cancel',
+					icon: IconCancel,
+					callback: () => {
+						this.snippetDialogOpen = false
+						this.localSnippet = {
+							title: '',
+							content: '',
+						}
+					},
+				},
+				{
+					label: 'Ok',
+					type: 'primary',
+					icon: IconCheck,
+					callback: () => {
+						this.mainStore.createSnippet({ ...this.localSnippet })
+						this.localSnippet = {
+							title: '',
+							content: '',
+						}
+					},
+				},
+			],
 		}
 	},
 	computed: {
 		...mapStores(useMainStore),
-		...mapState(useMainStore, ['getAccounts', 'followUpFeatureAvailable']),
+		...mapState(useMainStore, ['getAccounts', 'followUpFeatureAvailable', 'getMySnippets', 'getSharedSnippets']),
 		searchPriorityBody() {
 			return this.mainStore.getPreference('search-priority-body', 'false') === 'true'
 		},
@@ -414,6 +479,10 @@ export default {
 	mounted() {
 		this.sortOrder = this.mainStore.getPreference('sort-order', 'newest')
 		document.addEventListener.call(window, 'mailvelope', () => this.checkMailvelope())
+		if (!this.mainStore.areSnippetsFetched()) {
+			this.mainStore.fetchMySnippets()
+			this.mainStore.fetchSharedSnippets()
+		}
 	},
 	updated() {
 		this.checkMailvelope()
@@ -560,6 +629,9 @@ export default {
 			iframe.style = 'display: none'
 			iframe.src = 'https://api.mailvelope.com/authorize-domain/?api=true'
 			document.body.append(iframe)
+		},
+		handleShowToolbar(element) {
+			this.trapElements.push(element)
 		},
 	},
 }
