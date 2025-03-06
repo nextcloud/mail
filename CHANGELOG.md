@@ -1,7 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 4.0.0 - unreleased
+## 4.2.0 - unreleased
+
+### Added
+* Nextcloud 32 support
+* Setup check for slow IMAP and SMTP servers of provisioned accounts
+* OCS API to list accounts and aliases
+
+### Changed
+- Updated and new translations
 
 ## 3.6.0 – unreleased
 ### Added
