@@ -112,7 +112,7 @@
     "babel-jest": "^29.7.0",
     "babel-loader": "^9.2.1",
     "babel-loader-exclude-node-modules-except": "^1.2.1",
-    "css-loader": "^6.10.0",
+    "css-loader": "^6.11.0",
     "eslint": "^8.57.1",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.31.0",
