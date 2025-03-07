@@ -527,7 +527,6 @@ OC.L10N.register(
     "Redirect" : "Deviere",
     "The link leads to %s" : "Link-ul duce la %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Dacă nu doriți să vizitați acea pagină, vă puteți întoarce la <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continuă către %s",
-    "Unselect" : "Deselectează"
+    "Continue to %s" : "Continuă către %s"
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");

@@ -154,6 +154,8 @@
     "Install Mailvelope browser extension by clicking here" : "Kliknutím sem si nainstalujte rozšíření pro webový prohlížeč Mailvelope",
     "Enable Mailvelope for the current domain" : "Zapnout Mailvelope pro stávající doménu",
     "Assistance features" : "Funkce asistence",
+    "About" : "O aplikaci",
+    "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "Tato aplikace obsahuje CKEditor – opensource editor. Autorská práva © přispěvatelé do projektu CKEditor. Licencováno pod GPLv2.",
     "Keyboard shortcuts" : "Klávesové zkratky",
     "Compose new message" : "Napsat novou zprávu",
     "Newer message" : "Novější zpráva",
@@ -539,6 +541,7 @@
     "Summarizing thread failed." : "Shrnutí vlákna se nezdařilo.",
     "Could not load your message thread" : "Nepodařilo se načíst vlákno s danou zprávou",
     "The thread doesn't exist or has been deleted" : "Vlákno neexistuje nebo bylo smazáno",
+    "Email was not able to be opened" : "E-mail nebylo možné otevřít",
     "Loading thread" : "Načítání vlákna",
     "Not found" : "Nenalezeno",
     "Encrypted & verified " : "Šifrováno a ověřen",
@@ -776,8 +779,6 @@
     "Redirect" : "Přesměrovat",
     "The link leads to %s" : "Odkaz vede na %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Pokud nechcete tuto stránku navštívit, můžete se vrátit do <a href=\"%s\">e-mailu</a>.",
-    "Continue to %s" : "Pokračovat na %s",
-    "Please connect to a sieve server first." : "Nejprve se prosím připojte k sieve serveru.",
-    "Unselect" : "Zrušit výběr"
+    "Continue to %s" : "Pokračovat na %s"
 },"pluralForm" :"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;"
 }

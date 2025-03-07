@@ -730,8 +730,6 @@ OC.L10N.register(
     "Redirect" : "Videresend",
     "The link leads to %s" : "Denne lenken leder til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Hvis du ikke vil besøke den siden, kan du gå tilbake til <a href=\"%s\">E-post</a>",
-    "Continue to %s" : "Fortsett til %s",
-    "Please connect to a sieve server first." : "Vennligst koble til en sieve-server først.",
-    "Unselect" : "Velg bort"
+    "Continue to %s" : "Fortsett til %s"
 },
 "nplurals=2; plural=(n != 1);");

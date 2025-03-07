@@ -782,8 +782,6 @@ OC.L10N.register(
     "Redirect" : "Yönlendir",
     "The link leads to %s" : "Bağlantı %s adresine gidiyor",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Bu sayfayı ziyaret etmek istemiyorsanız, <a href=\"%s\">E-posta</a> uygulamasına geri dönebilirsiniz.",
-    "Continue to %s" : "%s sayfasına ilerle",
-    "Please connect to a sieve server first." : "Lütfen önce bir Sieve sunucusu ile bağlantı kurun. ",
-    "Unselect" : "Bırak"
+    "Continue to %s" : "%s sayfasına ilerle"
 },
 "nplurals=2; plural=(n > 1);");

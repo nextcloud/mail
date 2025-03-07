@@ -560,8 +560,6 @@ OC.L10N.register(
     "Redirect" : "Пренасочване",
     "The link leads to %s" : "Връзката води до %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желаете да посетите тази страница, може да се върнете към <a href=\"%s\">Поща</a>.",
-    "Continue to %s" : "Продължи към %s",
-    "Please connect to a sieve server first." : "Моля да се свържете първо със сървъра на ситото",
-    "Unselect" : "Размаркирай"
+    "Continue to %s" : "Продължи към %s"
 },
 "nplurals=2; plural=(n != 1);");

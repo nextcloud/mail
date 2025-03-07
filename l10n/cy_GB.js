@@ -36,6 +36,7 @@ OC.L10N.register(
     "List" : "Rhestr",
     "Use Gravatar and favicon avatars" : "Defnyddiwch Gravatar ac afatarau favicon",
     "Register" : "Cofrestru",
+    "About" : "Ynglyn â",
     "Keyboard shortcuts" : "Llwybrau byr bysellfwrdd",
     "Compose new message" : "Ysgrifennu Neges _Newydd",
     "Newer message" : "Neges diweddarach",

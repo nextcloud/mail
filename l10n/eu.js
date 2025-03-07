@@ -766,8 +766,6 @@ OC.L10N.register(
     "Redirect" : "Birbideratu",
     "The link leads to %s" : "Estekak hona bideratzen du: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Orrialde hori bisitatu nahi ez baduzu, itzul dezakezu <a href=\"%s\">Mail </a>-ra.",
-    "Continue to %s" : "Jarraitu hona: %s",
-    "Please connect to a sieve server first." : "Konektatu sieve zerbitzari batera lehenik mesedez.",
-    "Unselect" : "Desautatu"
+    "Continue to %s" : "Jarraitu hona: %s"
 },
 "nplurals=2; plural=(n != 1);");

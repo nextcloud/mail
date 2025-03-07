@@ -499,7 +499,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klikkaa jos sinua ei uudelleenohjata automaattisesti muutamaan sekuntiin.",
     "Redirect" : "Uudelleenohjaus",
     "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
-    "Continue to %s" : "Jatka sivulle %s",
-    "Unselect" : "Poista valinta"
+    "Continue to %s" : "Jatka sivulle %s"
 },
 "nplurals=2; plural=(n != 1);");

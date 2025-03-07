@@ -773,8 +773,6 @@ OC.L10N.register(
     "Redirect" : "リダイレクト",
     "The link leads to %s" : "リンクが %s につながります",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ページにアクセスしたくない場合は、<a href=\"%s\">メール</a>に戻ることができます",
-    "Continue to %s" : "%s にリダイレクトする",
-    "Please connect to a sieve server first." : "はじめにsieveサーバーに接続してください。",
-    "Unselect" : "選択解除"
+    "Continue to %s" : "%s にリダイレクトする"
 },
 "nplurals=1; plural=0;");

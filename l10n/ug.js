@@ -750,8 +750,6 @@ OC.L10N.register(
     "Redirect" : "قايتا نىشانلاش",
     "The link leads to %s" : "ئۇلىنىش% s نى كەلتۈرۈپ چىقىرىدۇ",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ئەگەر ئۇ بەتنى زىيارەت قىلىشنى خالىمىسىڭىز ، <a href = \"% s\"> خەت </a> گە قايتسىڭىز بولىدۇ.",
-    "Continue to %s" : "داۋاملىق% s",
-    "Please connect to a sieve server first." : "ئالدى بىلەن ئەلگەك مۇلازىمېتىرىغا ئۇلاڭ.",
-    "Unselect" : "Unselect"
+    "Continue to %s" : "داۋاملىق% s"
 },
 "nplurals=2; plural=(n != 1);");

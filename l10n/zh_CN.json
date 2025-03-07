@@ -780,8 +780,6 @@
     "Redirect" : "重定向",
     "The link leads to %s" : "链接指向 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "如果不想访问此页面，您可以返回<a href=\"%s\">邮件</a>。",
-    "Continue to %s" : "继续 %s",
-    "Please connect to a sieve server first." : "请先连接到 sieve 服务器。",
-    "Unselect" : "取消选择"
+    "Continue to %s" : "继续 %s"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

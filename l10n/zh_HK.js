@@ -782,8 +782,6 @@ OC.L10N.register(
     "Redirect" : "重新導向",
     "The link leads to %s" : "該連結導向至 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "若不想造訪該頁，您可以回到<a href=\"%s\">Mail</a>。",
-    "Continue to %s" : "前往 %s",
-    "Please connect to a sieve server first." : "請先連接到篩網伺服器。",
-    "Unselect" : "取消選擇"
+    "Continue to %s" : "前往 %s"
 },
 "nplurals=1; plural=0;");

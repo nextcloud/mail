@@ -782,8 +782,6 @@ OC.L10N.register(
     "Redirect" : "Redirect",
     "The link leads to %s" : "The link leads to %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continue to %s",
-    "Please connect to a sieve server first." : "Please connect to a sieve server first.",
-    "Unselect" : "Unselect"
+    "Continue to %s" : "Continue to %s"
 },
 "nplurals=2; plural=(n != 1);");

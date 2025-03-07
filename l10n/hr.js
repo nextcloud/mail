@@ -379,7 +379,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Kliknite ovdje ako niste preusmjereni automatski unutar sljedećih nekoliko sekundi.",
     "Redirect" : "Preusmjeri",
     "The link leads to %s" : "Ova poveznica vodi do %s",
-    "Continue to %s" : "Idi do %s",
-    "Unselect" : "Poništi odabir"
+    "Continue to %s" : "Idi do %s"
 },
 "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");

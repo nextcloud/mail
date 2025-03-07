@@ -705,8 +705,6 @@
     "Redirect" : "Перенаправление",
     "The link leads to %s" : "Эта ссылка ведёт на %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Если вы не хотите посещать эту страницу, вы можете вернуться в <a href=\"%s\">Почту</a>",
-    "Continue to %s" : "Продолжать %s",
-    "Please connect to a sieve server first." : "Сначала подключитесь к Sieve-серверу.",
-    "Unselect" : "Снять выбор"
+    "Continue to %s" : "Продолжать %s"
 },"pluralForm" :"nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);"
 }

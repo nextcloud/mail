@@ -92,7 +92,6 @@ OC.L10N.register(
     "Error loading message" : "เกิดข้อผิดพลาดขณะโหลดข้อความ",
     "Redirect" : "เปลี่ยนเส้นทาง",
     "The link leads to %s" : "ลิงก์จะนำไปยัง %s",
-    "Continue to %s" : "ดำเนินการต่อไปที่ %s",
-    "Unselect" : "ยกเลิกการเลือก"
+    "Continue to %s" : "ดำเนินการต่อไปที่ %s"
 },
 "nplurals=1; plural=0;");
