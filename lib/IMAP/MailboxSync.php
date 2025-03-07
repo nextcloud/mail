@@ -299,9 +299,11 @@ class MailboxSync {
 			return $mailbox->getName();
 		}, $syncStatus));
 		foreach ($syncStatus as $mailbox) {
-			$status = $statuses[$mailbox->getName()];
-			$mailbox->setMessages($status->getTotal());
-			$mailbox->setUnseen($status->getUnread());
+			$status = $statuses[$mailbox->getName()] ?? null;
+			if ($status !== null) {
+				$mailbox->setMessages($status->getTotal());
+				$mailbox->setUnseen($status->getUnread());
+			}
 		}
 		$this->atomic(function () use ($syncStatus) {
 			foreach ($syncStatus as $mailbox) {
