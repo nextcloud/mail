@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { iframeResizer } from 'iframe-resizer'
+import iframeResize from '@iframe-resizer/parent'
 import PrintScout from 'printscout'
 import { trustSender } from '../service/TrustedSenderService.js'
 import { NcActionButton as ActionButton, NcActions as Actions } from '@nextcloud/vue'
@@ -97,10 +97,10 @@ export default {
 		scout.on('beforeprint', this.onBeforePrint)
 	},
 	mounted() {
-		iframeResizer({
+		iframeResize({
+			license: 'GPLv3',
 			log: false,
-			heightCalculationMethod: 'taggedElement',
-			scrolling: true,
+			scrolling: false,
 		}, this.$refs.iframe)
 	},
 	beforeDestroy() {
@@ -125,7 +125,7 @@ export default {
 			}
 		},
 		onBeforePrint() {
-			this.$refs.iframe.style.setProperty('height', `${this.getIframeDoc().body.scrollHeight}px`, 'important')
+			// this.$refs.iframe.style.setProperty('height', `${this.getIframeDoc().body.scrollHeight}px`, 'important')
 		},
 		displayIframe() {
 			const iframeDoc = this.getIframeDoc()
@@ -162,9 +162,6 @@ export default {
 .html-message-body {
 	margin-left: 50px;
 	margin-top: 2px;
-	display: flex;
-	flex-direction: column;
-	height: 100%;
 	background-color: #FFFFFF;
 }
 #mail-message-has-blocked-content {
@@ -178,9 +175,11 @@ export default {
 	background-color: #FFFFFF;
 
 	// TODO: collapse quoted text and remove inner scrollbar
-	&.scroll {
-		max-height: 50vh;
-		overflow-y: auto;
+	@media only screen {
+		&.scroll {
+			max-height: 50vh;
+			overflow-y: auto;
+		}
 	}
 }
 :deep(.button-vue__text) {
