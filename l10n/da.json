@@ -395,8 +395,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Klik her hvis du ikke automatisk bliver videre sendt i løbet af et par sekunder.",
     "Redirect" : "Omdiriger",
     "The link leads to %s" : "Linket fører til %s",
-    "Continue to %s" : "Videre til %s",
-    "Please connect to a sieve server first." : "Opret forbindelse til en sieve server først.",
-    "Unselect" : "Fravælg"
+    "Continue to %s" : "Videre til %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -387,7 +387,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Κάντε κλικ εδώ εάν δεν ανακατευθυνθείτε αυτόματα μέσα σε λίγα δευτερόλεπτα.",
     "Redirect" : "Ανακατεύθυνση",
     "The link leads to %s" : "Αυτός ο σύνδεσμος οδηγεί στο %s",
-    "Continue to %s" : "Συνέχεια στο %s",
-    "Unselect" : "Αναίρεση επιλογής"
+    "Continue to %s" : "Συνέχεια στο %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

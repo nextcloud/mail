@@ -357,7 +357,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Incarca inoghe chi no ses torradu a deretare in manera automàtica intro de pagu segundos.",
     "Redirect" : "Torra a deretare",
     "The link leads to %s" : "Su ligòngiu deretat a %s",
-    "Continue to %s" : "Sighi in %s",
-    "Unselect" : "Deseletziona"
+    "Continue to %s" : "Sighi in %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

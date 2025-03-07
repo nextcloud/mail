@@ -614,8 +614,6 @@ OC.L10N.register(
     "Redirect" : "تغییر مسیر",
     "The link leads to %s" : "پیوند منجر به%s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "ادامه دهید%s",
-    "Please connect to a sieve server first." : "Please connect to a sieve server first.",
-    "Unselect" : "لغو انتخاب"
+    "Continue to %s" : "ادامه دهید%s"
 },
 "nplurals=2; plural=(n > 1);");

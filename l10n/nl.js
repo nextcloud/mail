@@ -419,7 +419,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klik hier als je binnen enkele seconden niet automatisch wordt doorgestuurd.",
     "Redirect" : "Omleiden",
     "The link leads to %s" : "De link verwijst naar %s",
-    "Continue to %s" : "Verder naar %s",
-    "Unselect" : "Deselecteren"
+    "Continue to %s" : "Verder naar %s"
 },
 "nplurals=2; plural=(n != 1);");

@@ -782,8 +782,6 @@ OC.L10N.register(
     "Redirect" : "Преусмеравање",
     "The link leads to %s" : "Веза води на %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желите да посетите ту страницу, можете да се вратите на <a href=\"%s\">Пошту</a>.",
-    "Continue to %s" : "Настави на %s",
-    "Please connect to a sieve server first." : "Молимо вас да се најпре повежете са сервером сита.",
-    "Unselect" : "Уклони избор"
+    "Continue to %s" : "Настави на %s"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

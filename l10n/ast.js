@@ -307,7 +307,6 @@ OC.L10N.register(
     "Could not load the message" : "Nun se pudo cargar el mensaxe",
     "Error loading message" : "Hebo un error al cargar el mensaxe",
     "Redirect" : "Redirixir",
-    "The link leads to %s" : "L'enllaz lleva a %s",
-    "Please connect to a sieve server first." : "Conéctate a un sirvidor sieve primero."
+    "The link leads to %s" : "L'enllaz lleva a %s"
 },
 "nplurals=2; plural=(n != 1);");

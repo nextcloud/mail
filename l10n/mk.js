@@ -433,7 +433,6 @@ OC.L10N.register(
     "Redirect" : "Пренасочи",
     "The link leads to %s" : "Линкот води кон %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Доколку несакате да ја посетите страната, можете да се вратите кон <a href=\"%s\">Е-пошта</a>.",
-    "Continue to %s" : "Продолжи до %s",
-    "Unselect" : "Поништи избор"
+    "Continue to %s" : "Продолжи до %s"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

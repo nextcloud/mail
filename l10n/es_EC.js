@@ -592,8 +592,6 @@ OC.L10N.register(
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no deseas visitar esa página, puedes regresar a <a href=\"%s\">Correo</a>.",
-    "Continue to %s" : "Continuar a %s",
-    "Please connect to a sieve server first." : "Por favor, conecta primero con un servidor sieve.",
-    "Unselect" : "Deseleccionar"
+    "Continue to %s" : "Continuar a %s"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

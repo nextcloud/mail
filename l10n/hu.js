@@ -649,8 +649,6 @@ OC.L10N.register(
     "Redirect" : "Átirányítás",
     "The link leads to %s" : "A hivatkozás ide mutat: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarja megnyitni azt az oldalt, akkor térjen vissza a <a href=\"%s\">Levelezéshez</a>.",
-    "Continue to %s" : "Folytatás ide: %s",
-    "Please connect to a sieve server first." : "Először kapcsolódjon a Sieve-kiszolgálóhoz.",
-    "Unselect" : "Kiválasztás megszüntetése"
+    "Continue to %s" : "Folytatás ide: %s"
 },
 "nplurals=2; plural=(n != 1);");

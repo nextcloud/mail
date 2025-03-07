@@ -782,8 +782,6 @@ OC.L10N.register(
     "Redirect" : "Redirixir",
     "The link leads to %s" : "A ligazón leva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Se non quere visitar esa páxina, pode volver a <a href=\"%s\">Correo</a>.",
-    "Continue to %s" : "Continuar para %s",
-    "Please connect to a sieve server first." : "Conéctese antes a un servidor de «sieve» (peneira).",
-    "Unselect" : "Deseleccionar"
+    "Continue to %s" : "Continuar para %s"
 },
 "nplurals=2; plural=(n != 1);");

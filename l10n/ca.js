@@ -123,6 +123,7 @@ OC.L10N.register(
     "Mailvelope" : "Mailvelope",
     "Looking for a way to encrypt your emails?" : "Esteu buscant una manera de xifrar els vostres correus electrònics?",
     "Install Mailvelope browser extension by clicking here" : "Instal·lació de l'extensió del navegador Mailvelope fent clic aquí",
+    "About" : "Quant a",
     "Keyboard shortcuts" : "Dreceres de teclat",
     "Compose new message" : "Crea un missatge nou",
     "Newer message" : "Missatges més nous",
@@ -662,8 +663,6 @@ OC.L10N.register(
     "Redirect" : "Redirigeix",
     "The link leads to %s" : "L'enllaç porta a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no voleu visitar aquesta pàgina, podeu tornar a <a href=\"%s\">Correu</a>.",
-    "Continue to %s" : "Continua a %s",
-    "Please connect to a sieve server first." : "Connecteu-vos primer a un servidor de filtrat de missatges.",
-    "Unselect" : "No seleccionis"
+    "Continue to %s" : "Continua a %s"
 },
 "nplurals=2; plural=(n != 1);");

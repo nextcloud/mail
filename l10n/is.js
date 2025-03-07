@@ -754,8 +754,6 @@ OC.L10N.register(
     "Redirect" : "Endurbeina",
     "The link leads to %s" : "Tengillinn leiðir til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ef þú vilt ekki fara á þá síðu, geturðu farið til baka í <a href=\"%s\">póstforritið</a>.",
-    "Continue to %s" : "Halda áfram í %s",
-    "Please connect to a sieve server first." : "Þú þarf fyrst að tengjast Sieve-þjóni.",
-    "Unselect" : "Afvelja"
+    "Continue to %s" : "Halda áfram í %s"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

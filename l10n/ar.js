@@ -158,6 +158,7 @@ OC.L10N.register(
     "Enable Mailvelope for the current domain" : "تمكين خدمة تشفير البريد Mailvelope للنطاق الحالي",
     "Assistance features" : "ميزات المساعدة",
     "About" : "حول",
+    "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "هذا التطبيق يشتمل على CKEditor والذي هو محرر نصوص حر مفتوح المصدر. جميع الحقوق محفوطة © لمساهمي CKEditor. مرخص وفقاً لـ GPLv2.",
     "Keyboard shortcuts" : "اختصارات لوحة المفاتيح",
     "Compose new message" : "أكتُب رسالةً جديدةً",
     "Newer message" : "الرسائل الأحدث",
@@ -543,6 +544,7 @@ OC.L10N.register(
     "Summarizing thread failed." : "فشل في تلخيص الموضوع",
     "Could not load your message thread" : "تعذر تحميل نَظْمَة thread  رسائلك",
     "The thread doesn't exist or has been deleted" : " النَّظْمَة thread غير موجودة أو تمّ حذفها",
+    "Email was not able to be opened" : "تعذّر فتح الإيميل",
     "Loading thread" : "تحميل النَّظْمَة thread ",
     "Not found" : "غير موجود",
     "Encrypted & verified " : "مَشَفَّرٌ و مُتَحَقَّقٌ مِنه",
@@ -780,8 +782,6 @@ OC.L10N.register(
     "Redirect" : "إعادة توجيه",
     "The link leads to %s" : "الرابط يؤدي إل %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "إذا لم تكن راغباً في زيارة تلك الصفحة، يمكنك العودة إلى <a href=\"%s\">البريد Mail</a>.",
-    "Continue to %s" : "إستمر نحو %s",
-    "Please connect to a sieve server first." : "رجاءً، إتّصل بخادم تصفية \"الغربال\" أوّلاً.",
-    "Unselect" : "إلغاء التحديد"
+    "Continue to %s" : "إستمر نحو %s"
 },
 "nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;");
