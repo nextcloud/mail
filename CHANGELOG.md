@@ -1,3 +1,12 @@
+## [4.2.4](https://github.com/nextcloud/mail/compare/v4.2.3...v4.2.4) (2025-03-10)
+
+
+### Bug Fixes
+
+* **Thread:** add error message for emails not able to be opened ([7dfd0f4](https://github.com/nextcloud/mail/commit/7dfd0f4f114629df3a38eeec88cc5ab23585fa33))
+
+
+
 ## [4.2.3](https://github.com/nextcloud/mail/compare/v4.2.2...v4.2.3) (2025-03-03)
 
 
