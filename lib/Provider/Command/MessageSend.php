@@ -60,8 +60,8 @@ class MessageSend {
 		// validate that all attachments have a name, type, and contents
 		$entries = $message->getAttachments();
 		array_walk($entries, function ($entry) {
-			if (empty($entry->getName()) || empty($entry->getType()) || empty($entry->getContents())) {
-				throw new SendException('Invalid Attachment Parameter: MUST contain values for Name, Type and Contents');
+			if (empty($entry->getType()) || empty($entry->getContents())) {
+				throw new SendException('Invalid Attachment Parameter: MUST contain values for Type and Contents');
 			}
 		});
 		// retrieve user mail account details
