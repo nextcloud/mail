@@ -23,6 +23,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\AppFramework\Db\TTransactional;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\DB\Exception;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\IUser;
@@ -39,6 +40,7 @@ use function ltrim;
 use function mb_convert_encoding;
 use function mb_strcut;
 use function OCA\Mail\array_flat_map;
+use function strlen;
 
 /**
  * @template-extends QBMapper<Message>
@@ -235,7 +237,7 @@ class MessageMapper extends QBMapper {
 			foreach ($messages as $message) {
 				$query->setParameter(
 					'thread_root_id',
-					$message->getThreadRootId(),
+					self::filterMessageIdLength($message->getThreadRootId()),
 					$message->getThreadRootId() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR
 				);
 				$query->setParameter('id', $message->getDatabaseId(), IQueryBuilder::PARAM_INT);
@@ -255,6 +257,7 @@ class MessageMapper extends QBMapper {
 	/**
 	 * @param Message ...$messages
 	 * @return void
+	 * @throws Exception
 	 */
 	public function insertBulk(Account $account, Message ...$messages): void {
 		$this->db->beginTransaction();
@@ -290,11 +293,11 @@ class MessageMapper extends QBMapper {
 			foreach ($messages as $message) {
 				$qb1->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
 				$qb1->setParameter('message_id', $message->getMessageId(), IQueryBuilder::PARAM_STR);
-				$inReplyTo = $message->getInReplyTo();
+				$inReplyTo = self::filterMessageIdLength($message->getInReplyTo());
 				$qb1->setParameter('in_reply_to', $inReplyTo, $inReplyTo === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
-				$references = $message->getReferences();
+				$references = self::filterMessageIdLength($message->getReferences());
 				$qb1->setParameter('references', $references, $references === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
-				$threadRootId = $message->getThreadRootId();
+				$threadRootId = self::filterMessageIdLength($message->getThreadRootId());
 				$qb1->setParameter('thread_root_id', $threadRootId, $threadRootId === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
 				$qb1->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
 				$qb1->setParameter('subject', $message->getSubject(), IQueryBuilder::PARAM_STR);
@@ -345,6 +348,20 @@ class MessageMapper extends QBMapper {
 
 			throw $e;
 		}
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	private static function filterMessageIdLength(?string $messageId): ?string {
+		if ($messageId === null) {
+			return null;
+		}
+		if (strlen($messageId) > 1023) {
+			throw new Exception("IMAP message ID $messageId is too long for the database");
+		}
+
+		return $messageId;
 	}
 
 	/**
