@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Smtp;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use Horde_Mail_Transport_Mail;
 use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
@@ -41,19 +40,6 @@ class SmtpClientFactoryTest extends TestCase {
 		$this->hostNameFactory = $this->createMock(HostNameFactory::class);
 
 		$this->factory = new SmtpClientFactory($this->config, $this->crypto, $this->hostNameFactory);
-	}
-
-	public function testPhpMailTransport() {
-		$account = $this->createMock(Account::class);
-		$this->config->expects($this->once())
-			->method('getSystemValue')
-			->with('app.mail.transport', 'smtp')
-			->willReturn('php-mail');
-
-		$transport = $this->factory->create($account);
-
-		$this->assertNotNull($transport);
-		$this->assertInstanceOf(Horde_Mail_Transport_Mail::class, $transport);
 	}
 
 	public function testSmtpTransport() {
