@@ -488,7 +488,7 @@ import MailvelopeEditor from './MailvelopeEditor.vue'
 import { getMailvelope } from '../crypto/mailvelope.js'
 import { isPgpgMessage } from '../crypto/pgp.js'
 
-import { NcReferencePickerModal } from '@nextcloud/vue/dist/Components/NcRichText.js'
+import { NcReferencePickerModal } from '@nextcloud/vue/components/NcRichText'
 
 import Send from 'vue-material-design-icons/Send.vue'
 import SendClock from 'vue-material-design-icons/SendClock.vue'

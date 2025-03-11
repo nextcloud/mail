@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import NcGuestContent from '@nextcloud/vue/dist/Components/NcGuestContent.js'
+import NcGuestContent from '@nextcloud/vue/components/NcGuestContent'
 
 export default {
 	name: 'OauthDone',
