@@ -116,7 +116,7 @@
 						@show-toolbar="handleShow" />
 				</div>
 
-				<div v-if="showRecipientPane" class="right-pane">
+				<div v-show="showRecipientPane" class="right-pane">
 					<RecipientInfo />
 				</div>
 			</div>
