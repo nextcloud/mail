@@ -30,7 +30,8 @@ import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph.js'
 import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading.js'
 import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic.js'
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link.js'
-import ListStyle from '@ckeditor/ckeditor5-list/src/liststyle.js'
+import ListPlugin from '@ckeditor/ckeditor5-list/src/list.js'
+import ListProperties from '@ckeditor/ckeditor5-list/src/listproperties.js'
 import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat.js'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
 import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough.js'
@@ -98,7 +99,8 @@ export default {
 				BoldPlugin,
 				ItalicPlugin,
 				BlockQuotePlugin,
-				ListStyle,
+				ListPlugin,
+				ListProperties,
 				FontPlugin,
 				RemoveFormat,
 				StrikethroughPlugin,
