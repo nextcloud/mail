@@ -60,10 +60,10 @@ class AliasesController extends Controller {
 	 * @NoAdminRequired
 	 */
 	#[TrapError]
-	public function update(int    $id,
+	public function update(int $id,
 		string $alias,
 		string $aliasName,
-		?int   $smimeCertificateId = null): JSONResponse {
+		?int $smimeCertificateId = null): JSONResponse {
 		return new JSONResponse(
 			$this->aliasService->update(
 				$this->currentUserId,

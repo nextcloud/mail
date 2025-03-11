@@ -37,10 +37,10 @@ class DraftsService {
 	private AccountService $accountService;
 	private ITimeFactory $time;
 
-	public function __construct(IMailTransmission  $transmission,
+	public function __construct(IMailTransmission $transmission,
 		LocalMessageMapper $mapper,
-		AttachmentService  $attachmentService,
-		IEventDispatcher    $eventDispatcher,
+		AttachmentService $attachmentService,
+		IEventDispatcher $eventDispatcher,
 		IMAPClientFactory $clientFactory,
 		IMailManager $mailManager,
 		LoggerInterface $logger,

@@ -4,15 +4,18 @@
  */
 
 import logger from '../logger.js'
+import useMainStore from '../store/mainStore.js'
 
-export async function handleHttpAuthErrors(commit, cb) {
+export async function handleHttpAuthErrors(cb) {
+	const mainStore = useMainStore()
+
 	try {
 		return await cb()
 	} catch (error) {
 		logger.debug('req err', { error, status: error.response?.status, message: error.response?.data?.message })
 		if (error.response?.status === 401 && error.response?.data?.message === 'Current user is not logged in') {
 			logger.warn('Request failed due to expired session')
-			commit('setSessionExpired')
+			mainStore.setSessionExpiredMutation()
 		}
 		throw error
 	}

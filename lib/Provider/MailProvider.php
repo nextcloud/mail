@@ -24,7 +24,7 @@ class MailProvider implements IProvider {
 		protected ContainerInterface $container,
 		protected AccountService $accountService,
 		protected LoggerInterface $logger,
-		protected IL10N $l10n
+		protected IL10N $l10n,
 	) {
 	}
 
@@ -96,7 +96,7 @@ class MailProvider implements IProvider {
 	 * @return IService|null returns service object or null if none found
 	 *
 	 */
-	public function findServiceById(string $userId, string $serviceId): IService|null {
+	public function findServiceById(string $userId, string $serviceId): ?IService {
 		// determine if a valid user and service id was submitted
 		if (empty($userId) && !ctype_digit($serviceId)) {
 			return null;
@@ -104,7 +104,7 @@ class MailProvider implements IProvider {
 		// retrieve service details from data store
 		try {
 			$account = $this->accountService->find($userId, (int)$serviceId);
-		} catch(ClientException $e) {
+		} catch (ClientException $e) {
 			$this->logger->error('Error occurred while retrieving mail account details', [ 'exception' => $e ]);
 			return null;
 		}
@@ -122,7 +122,7 @@ class MailProvider implements IProvider {
 	 *
 	 * @return IService|null returns service object or null if none found
 	 */
-	public function findServiceByAddress(string $userId, string $address): IService|null {
+	public function findServiceByAddress(string $userId, string $address): ?IService {
 		// retrieve service details from data store
 		$accounts = $this->accountService->findByUserIdAndAddress($userId, $address);
 		// evaluate if service details where found

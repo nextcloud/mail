@@ -390,8 +390,8 @@ class MessageMapper extends QBMapper {
 
 		$updateData = [];
 		foreach ($flags as $flag) {
-			$updateData[$flag.'_true'] = [];
-			$updateData[$flag.'_false'] = [];
+			$updateData[$flag . '_true'] = [];
+			$updateData[$flag . '_false'] = [];
 		}
 
 		foreach ($messages as $message) {
@@ -472,7 +472,7 @@ class MessageMapper extends QBMapper {
 						$queryTrue->expr()->eq('mailbox_id', $queryTrue->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT)),
 						$queryTrue->expr()->eq($flag, $queryTrue->createNamedParameter(0, IQueryBuilder::PARAM_INT))
 					));
-				foreach (array_chunk($updateData[$flag.'_true'], 1000) as $chunk) {
+				foreach (array_chunk($updateData[$flag . '_true'], 1000) as $chunk) {
 					$queryTrue->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 					$queryTrue->executeStatement();
 				}
@@ -486,7 +486,7 @@ class MessageMapper extends QBMapper {
 						$queryFalse->expr()->eq('mailbox_id', $queryFalse->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT)),
 						$queryFalse->expr()->eq($flag, $queryFalse->createNamedParameter(1, IQueryBuilder::PARAM_INT))
 					));
-				foreach (array_chunk($updateData[$flag.'_false'], 1000) as $chunk) {
+				foreach (array_chunk($updateData[$flag . '_false'], 1000) as $chunk) {
 					$queryFalse->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 					$queryFalse->executeStatement();
 				}
@@ -575,6 +575,7 @@ class MessageMapper extends QBMapper {
 				->set('updated_at', $query->createNamedParameter($this->timeFactory->getTime(), IQueryBuilder::PARAM_INT))
 				->set('imip_message', $query->createParameter('imip_message'))
 				->set('encrypted', $query->createParameter('encrypted'))
+				->set('mentions_me', $query->createParameter('mentions_me'))
 				->where($query->expr()->andX(
 					$query->expr()->eq('uid', $query->createParameter('uid')),
 					$query->expr()->eq('mailbox_id', $query->createParameter('mailbox_id'))
@@ -605,6 +606,7 @@ class MessageMapper extends QBMapper {
 				);
 				$query->setParameter('imip_message', $message->isImipMessage(), IQueryBuilder::PARAM_BOOL);
 				$query->setParameter('encrypted', $message->isEncrypted(), IQueryBuilder::PARAM_BOOL);
+				$query->setParameter('mentions_me', $message->getMentionsMe(), IQueryBuilder::PARAM_BOOL);
 
 				$query->executeStatement();
 			}
@@ -804,7 +806,13 @@ class MessageMapper extends QBMapper {
 		$selfJoin = $select->expr()->andX(
 			$select->expr()->eq('m.mailbox_id', 'm2.mailbox_id', IQueryBuilder::PARAM_INT),
 			$select->expr()->eq('m.thread_root_id', 'm2.thread_root_id', IQueryBuilder::PARAM_INT),
-			$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT)
+			$select->expr()->orX(
+				$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+				$select->expr()->andX(
+					$select->expr()->eq('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+					$select->expr()->lt('m.message_id', 'm2.message_id', IQueryBuilder::PARAM_STR),
+				),
+			),
 		);
 
 		$select->from($this->getTableName(), 'm')
@@ -936,7 +944,7 @@ class MessageMapper extends QBMapper {
 		if ($uids !== null) {
 			// In the case of body+subject search we need a combination of both results,
 			// thus the orWhere in every other case andWhere should do the job.
-			if(!empty($query->getSubjects())) {
+			if (!empty($query->getSubjects())) {
 				$textOrs[] = $qb->expr()->in('m.uid', $qb->createParameter('uids'));
 			} else {
 				$select->andWhere(
@@ -964,6 +972,12 @@ class MessageMapper extends QBMapper {
 		if ($query->getHasAttachments()) {
 			$select->andWhere(
 				$qb->expr()->eq('m.flag_attachments', $qb->createNamedParameter($query->getHasAttachments(), IQueryBuilder::PARAM_INT))
+			);
+		}
+
+		if ($query->getMentionsMe()) {
+			$select->andWhere(
+				$qb->expr()->eq('m.mentions_me', $qb->createNamedParameter($query->getMentionsMe(), IQueryBuilder::PARAM_BOOL))
 			);
 		}
 
@@ -1028,7 +1042,13 @@ class MessageMapper extends QBMapper {
 		$selfJoin = $select->expr()->andX(
 			$select->expr()->eq('m.mailbox_id', 'm2.mailbox_id', IQueryBuilder::PARAM_INT),
 			$select->expr()->eq('m.thread_root_id', 'm2.thread_root_id', IQueryBuilder::PARAM_INT),
-			$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT)
+			$select->expr()->orX(
+				$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+				$select->expr()->andX(
+					$select->expr()->eq('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+					$select->expr()->lt('m.message_id', 'm2.message_id', IQueryBuilder::PARAM_STR),
+				),
+			),
 		);
 
 		$select->from($this->getTableName(), 'm')
@@ -1385,9 +1405,15 @@ class MessageMapper extends QBMapper {
 		$selfJoin = $select->expr()->andX(
 			$select->expr()->eq('m.mailbox_id', 'm2.mailbox_id', IQueryBuilder::PARAM_INT),
 			$select->expr()->eq('m.thread_root_id', 'm2.thread_root_id', IQueryBuilder::PARAM_INT),
-			$sortOrder === IMailSearch::ORDER_NEWEST_FIRST ?
-				$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT) :
-				$select->expr()->gt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT)
+			$select->expr()->orX(
+				$sortOrder === IMailSearch::ORDER_NEWEST_FIRST ?
+					$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT) :
+					$select->expr()->gt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+				$select->expr()->andX(
+					$select->expr()->eq('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+					$select->expr()->lt('m.message_id', 'm2.message_id', IQueryBuilder::PARAM_STR),
+				),
+			),
 		);
 		$wheres = [$select->expr()->eq('m.mailbox_id', $select->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
 			$select->expr()->andX($subSelect->expr()->notIn('m.id', $select->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY)),

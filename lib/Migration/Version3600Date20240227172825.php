@@ -17,7 +17,9 @@ use OCP\Migration\SimpleMigrationStep;
 
 class Version3600Date20240227172825 extends SimpleMigrationStep {
 
-	public function __construct(private IAppConfig $appConfig) {
+	public function __construct(
+		private IAppConfig $appConfig,
+	) {
 	}
 
 	/**

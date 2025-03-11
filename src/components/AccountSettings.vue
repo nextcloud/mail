@@ -51,13 +51,23 @@
 				{{ t('mail', 'Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days.') }}
 			</p>
 			<OutOfOfficeForm v-if="account.sieveEnabled" :account="account" />
-			<p v-else>
-				{{ t('mail', 'Please connect to a sieve server first.') }}
-			</p>
+			<div v-else>
+				<p>{{ t('mail', 'The autoresponder uses Sieve, a scripting language supported by many email providers. If you\'re unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it.') }}</p>
+				<NcButton type="secondary" :aria-label="t('mail', 'Go to Sieve settings')" href="#sieve-form">
+					{{ t('mail', 'Go to Sieve settings') }}
+				</NcButton>
+			</div>
+		</AppSettingsSection>
+		<AppSettingsSection v-if="account && account.sieveEnabled"
+			id="mail-filters"
+			:name="t('mail', 'Filters')">
+			<div id="mail-filters">
+				<MailFilters :key="account.accountId" ref="mailFilters" :account="account" />
+			</div>
 		</AppSettingsSection>
 		<AppSettingsSection v-if="account && account.sieveEnabled"
 			id="sieve-filter"
-			:name="t('mail', 'Sieve filter rules')">
+			:name="t('mail', 'Sieve script editor')">
 			<div id="sieve-filter">
 				<SieveFilterForm :key="account.accountId"
 					ref="sieveFilterForm"
@@ -77,7 +87,7 @@
 		</AppSettingsSection>
 		<AppSettingsSection v-if="account && !account.provisioningId"
 			id="sieve-settings"
-			:name="t('mail', 'Sieve filter server')">
+			:name="t('mail', 'Sieve server')">
 			<div id="sieve-settings">
 				<SieveAccountForm :key="account.accountId"
 					ref="sieveAccountForm"
@@ -96,7 +106,7 @@ import EditorSettings from '../components/EditorSettings.vue'
 import AccountDefaultsSettings from '../components/AccountDefaultsSettings.vue'
 import SignatureSettings from '../components/SignatureSettings.vue'
 import AliasSettings from '../components/AliasSettings.vue'
-import { NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSettingsSection } from '@nextcloud/vue'
+import { NcButton, NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSettingsSection } from '@nextcloud/vue'
 import SieveAccountForm from './SieveAccountForm.vue'
 import SieveFilterForm from './SieveFilterForm.vue'
 import OutOfOfficeForm from './OutOfOfficeForm.vue'
@@ -104,6 +114,9 @@ import CertificateSettings from './CertificateSettings.vue'
 import SearchSettings from './SearchSettings.vue'
 import TrashRetentionSettings from './TrashRetentionSettings.vue'
 import logger from '../logger.js'
+import MailFilters from './mailFilter/MailFilters.vue'
+import useMainStore from '../store/mainStore.js'
+import { mapStores } from 'pinia'
 
 export default {
 	name: 'AccountSettings',
@@ -121,6 +134,8 @@ export default {
 		CertificateSettings,
 		TrashRetentionSettings,
 		SearchSettings,
+		MailFilters,
+		NcButton,
 	},
 	props: {
 		account: {
@@ -139,6 +154,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		displayName() {
 			return this.account.name
 		},
@@ -151,7 +167,7 @@ export default {
 			if (newState === true && this.fetchActiveSieveScript === true) {
 				logger.debug(`Load active sieve script for account ${this.account.accountId}`)
 				this.fetchActiveSieveScript = false
-				this.$store.dispatch('fetchActiveSieveScript', {
+				this.mainStore.fetchActiveSieveScript({
 					accountId: this.account.id,
 				})
 			}

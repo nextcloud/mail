@@ -109,7 +109,7 @@ class MessageApiControllerTest extends TestCase {
 		$this->message = new LocalMessage();
 		$this->message->setAccountId($this->accountId);
 		$this->message->setSubject('');
-		$this->message->setBody('');
+		$this->message->setBodyHtml('');
 		$this->message->setHtml(true);
 		$this->message->setType(LocalMessage::TYPE_OUTGOING);
 	}

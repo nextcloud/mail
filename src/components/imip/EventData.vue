@@ -46,7 +46,7 @@
 import AccountMultipleIcon from 'vue-material-design-icons/AccountMultiple.vue'
 import CalendarIcon from 'vue-material-design-icons/Calendar.vue'
 import MapMarkerIcon from 'vue-material-design-icons/MapMarker.vue'
-import { getReadableTimezoneName } from '@nextcloud/calendar-js'
+import { getReadableTimezoneName } from '@nextcloud/timezones'
 import moment from '@nextcloud/moment'
 import { removeMailtoPrefix } from '../../util/eventAttendee.js'
 

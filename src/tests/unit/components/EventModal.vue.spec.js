@@ -4,7 +4,6 @@
  */
 
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { loadState } from '@nextcloud/initial-state'
 
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import EventModal from '../../../components/EventModal.vue'

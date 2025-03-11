@@ -212,6 +212,31 @@ trait ImapTest {
 	}
 
 	/**
+	 * Delete a message without informing Horde or the db cache. This simulates another client
+	 * deleting a message on IMAP.
+	 *
+	 * @param int[] $uids
+	 */
+	public function deleteMessagesExternally(string $mailbox, array $uids): void {
+		$client = new Horde_Imap_Client_Socket([
+			'username' => 'user@domain.tld',
+			'password' => 'mypassword',
+			'hostspec' => '127.0.0.1',
+			'port' => 993,
+			'secure' => 'ssl',
+		]);
+		$ids = new Horde_Imap_Client_Ids($uids);
+		try {
+			$client->expunge($mailbox, [
+				'ids' => $ids,
+				'delete' => true,
+			]);
+		} finally {
+			$client->logout();
+		}
+	}
+
+	/**
 	 * @param Horde_Imap_Client_Socket $client
 	 * @param string $mailbox
 	 */

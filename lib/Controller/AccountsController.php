@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
+use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
@@ -64,7 +65,7 @@ class AccountsController extends Controller {
 		SyncService $syncService,
 		IConfig $config,
 		IRemoteHostValidator $hostValidator,
-		MailboxSync $mailboxSync
+		MailboxSync $mailboxSync,
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
@@ -273,11 +274,11 @@ class AccountsController extends Controller {
 			$this->mailManager->getMailbox($this->currentUserId, $junkMailboxId);
 			$dbAccount->setJunkMailboxId($junkMailboxId);
 		}
-		if($searchBody !== null) {
+		if ($searchBody !== null) {
 			$dbAccount->setSearchBody($searchBody);
 		}
 		return new JSONResponse(
-			$this->accountService->save($dbAccount)
+			new Account($this->accountService->save($dbAccount))
 		);
 	}
 

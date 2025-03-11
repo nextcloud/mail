@@ -58,6 +58,8 @@ use function json_encode;
  * @method bool|null getFlagMdnsent()
  * @method void setPreviewText(?string $subject)
  * @method null|string getPreviewText()
+ * @method void setSummary(?string $summary)
+ * @method null|string getSummary()
  * @method void setUpdatedAt(int $time)
  * @method int getUpdatedAt()
  * @method bool isImipMessage()
@@ -68,6 +70,8 @@ use function json_encode;
  * @method void setImipError(bool $imipError)
  * @method bool|null isEncrypted()
  * @method void setEncrypted(bool|null $encrypted)
+ * @method bool getMentionsMe()
+ * @method void setMentionsMe(bool $isMentionned)
  */
 class Message extends Entity implements JsonSerializable {
 	private const MUTABLE_FLAGS = [
@@ -106,9 +110,11 @@ class Message extends Entity implements JsonSerializable {
 	protected $flagImportant = false;
 	protected $flagMdnsent;
 	protected $previewText;
+	protected $summary;
 	protected $imipMessage = false;
 	protected $imipProcessed = false;
 	protected $imipError = false;
+	protected $mentionsMe = false;
 
 	/**
 	 * @var bool|null
@@ -322,7 +328,9 @@ class Message extends Entity implements JsonSerializable {
 			'threadRootId' => $this->getThreadRootId(),
 			'imipMessage' => $this->isImipMessage(),
 			'previewText' => $this->getPreviewText(),
+			'summary' => $this->getSummary(),
 			'encrypted' => ($this->isEncrypted() === true),
+			'mentionsMe' => $this->getMentionsMe(),
 		];
 	}
 }

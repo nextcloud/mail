@@ -77,6 +77,7 @@ import IconSetting from 'vue-material-design-icons/Cog.vue'
 import AppSettingsMenu from '../components/AppSettingsMenu.vue'
 import { UNIFIED_ACCOUNT_ID } from '../store/constants.js'
 import useOutboxStore from '../store/outboxStore.js'
+import useMainStore from '../store/mainStore.js'
 import { mapStores } from 'pinia'
 
 export default {
@@ -99,12 +100,12 @@ export default {
 		}
 	},
 	computed: {
-		...mapStores(useOutboxStore),
+		...mapStores(useOutboxStore, useMainStore),
 		menu() {
-			return this.$store.getters.accounts
+			return this.mainStore.getAccounts
 				.filter(account => account.id !== UNIFIED_ACCOUNT_ID)
 				.map(account => {
-					const mailboxes = this.$store.getters.getMailboxes(account.id)
+					const mailboxes = this.mainStore.getMailboxes(account.id)
 					const nonSpecialRoleMailboxes = mailboxes.filter(
 						(mailbox) => this.isCollapsed(account, mailbox),
 					)
@@ -119,10 +120,10 @@ export default {
 				})
 		},
 		unifiedAccount() {
-			return this.$store.getters.getAccount(UNIFIED_ACCOUNT_ID)
+			return this.mainStore.getAccount(UNIFIED_ACCOUNT_ID)
 		},
 		unifiedMailboxes() {
-			return this.$store.getters.getMailboxes(UNIFIED_ACCOUNT_ID)
+			return this.mainStore.getMailboxes(UNIFIED_ACCOUNT_ID)
 		},
 		/**
 		 * Whether the current session is using passwordless authentication.
@@ -130,7 +131,7 @@ export default {
 		 * @return {boolean}
 		 */
 		passwordIsUnavailable() {
-			return this.$store.getters.getPreference('password-is-unavailable', false)
+			return this.mainStore.getPreference('password-is-unavailable', false)
 		},
 		outboxMessages() {
 			return this.outboxStore.getAllMessages
@@ -156,11 +157,11 @@ export default {
 			return true
 		},
 		isFirst(account) {
-			const accounts = this.$store.getters.accounts
+			const accounts = this.mainStore.getAccounts
 			return account === accounts[1]
 		},
 		isLast(account) {
-			const accounts = this.$store.getters.accounts
+			const accounts = this.mainStore.getAccounts
 			return account === accounts[accounts.length - 1]
 		},
 		/**
@@ -172,7 +173,7 @@ export default {
 		 */
 		isDisabled(account) {
 
-			return (this.passwordIsUnavailable && !!account.provisioningId) && !!this.$store.getters.masterPasswordEnabled
+			return (this.passwordIsUnavailable && !!account.provisioningId) && !!this.mainStore.masterPasswordEnabled
 		},
 	},
 }
@@ -205,6 +206,10 @@ to {
 		width: 100% !important;
 		justify-content: start !important;
 	}
+}
+
+.v-popper__inner {
+	height: unset !important;
 }
 
 </style>

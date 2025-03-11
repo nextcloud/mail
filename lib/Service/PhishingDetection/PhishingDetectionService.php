@@ -10,35 +10,62 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\PhishingDetection;
 
 use Horde_Mime_Headers;
+use Horde_Mime_Headers_Element_Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\PhishingDetectionList;
 
 class PhishingDetectionService {
-	public function __construct(private ContactCheck $contactCheck, private CustomEmailCheck $customEmailCheck, private DateCheck $dateCheck, private ReplyToCheck $replyToCheck, private LinkCheck $linkCheck) {
-		$this->contactCheck = $contactCheck;
-		$this->customEmailCheck = $customEmailCheck;
-		$this->dateCheck = $dateCheck;
-		$this->replyToCheck = $replyToCheck;
-		$this->linkCheck = $linkCheck;
+	public function __construct(
+		private ContactCheck $contactCheck,
+		private CustomEmailCheck $customEmailCheck,
+		private DateCheck $dateCheck,
+		private ReplyToCheck $replyToCheck,
+		private LinkCheck $linkCheck,
+	) {
 	}
 
-
 	public function checkHeadersForPhishing(Horde_Mime_Headers $headers, bool $hasHtmlMessage, string $htmlMessage = ''): array {
+		/** @var string|null $fromFN */
+		$fromFN = null;
+		/** @var string|null $fromEmail */
+		$fromEmail = null;
+		/** @var string|null $customEmail */
+		$customEmail = null;
+		$fromHeader = $headers->getHeader('From');
+		if ($fromHeader instanceof Horde_Mime_Headers_Element_Address) {
+			$firstAddr = AddressList::fromHorde($fromHeader->getAddressList(true))?->first();
+			$fromFN = $firstAddr?->getLabel();
+			$fromEmail = $firstAddr?->getEmail();
+			$customEmail = $firstAddr?->getCustomEmail();
+		}
+
+		/** @var string|null $replyToEmail */
+		$replyToEmail = null;
+		$replyToHeader = $headers->getHeader('Reply-To');
+		if ($replyToHeader instanceof Horde_Mime_Headers_Element_Address) {
+			$replyToAddrs = $replyToHeader->getAddressList(true);
+			if (isset($replyToAddrs)) {
+				$replyToEmail = AddressList::fromHorde($replyToAddrs)->first()?->getEmail();
+			}
+		}
+
+		$date = $headers->getHeader('Date')?->value;
+
 		$list = new PhishingDetectionList();
-		/** @psalm-suppress UndefinedMethod */
-		$fromFN = AddressList::fromHorde($headers->getHeader('From')->getAddressList(true))->first()->getLabel();
-		/** @psalm-suppress UndefinedMethod */
-		$fromEmail = AddressList::fromHorde($headers->getHeader('From')->getAddressList(true))->first()->getEmail();
-		/** @psalm-suppress UndefinedMethod */
-		$replyToEmailHeader = $headers->getHeader('Reply-To')?->getAddressList(true);
-		$replyToEmail = isset($replyToEmailHeader)? AddressList::fromHorde($replyToEmailHeader)->first()->getEmail() : null ;
-		$date = $headers->getHeader('Date')->__get('value');
-		/** @psalm-suppress UndefinedMethod */
-		$customEmail = AddressList::fromHorde($headers->getHeader('From')->getAddressList(true))->first()->getCustomEmail();
-		$list->addCheck($this->replyToCheck->run($fromEmail, $replyToEmail));
-		$list->addCheck($this->contactCheck->run($fromFN, $fromEmail));
-		$list->addCheck($this->dateCheck->run($date));
-		$list->addCheck($this->customEmailCheck->run($fromEmail, $customEmail));
+		if ($fromEmail !== null) {
+			if ($replyToEmail !== null) {
+				$list->addCheck($this->replyToCheck->run($fromEmail, $replyToEmail));
+			}
+			if ($fromFN !== null) {
+				$list->addCheck($this->contactCheck->run($fromFN, $fromEmail));
+			}
+			if ($customEmail !== null) {
+				$list->addCheck($this->customEmailCheck->run($fromEmail, $customEmail));
+			}
+		}
+		if ($date !== null) {
+			$list->addCheck($this->dateCheck->run($date));
+		}
 		if ($hasHtmlMessage) {
 			$list->addCheck($this->linkCheck->run($htmlMessage));
 		}

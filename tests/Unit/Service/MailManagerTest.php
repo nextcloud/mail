@@ -27,6 +27,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\ImapFlag;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Service\MailManager;
@@ -72,7 +73,7 @@ class MailManagerTest extends TestCase {
 	/** @var ThreadMapper|MockObject */
 	private $threadMapper;
 
-	
+
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -100,7 +101,8 @@ class MailManagerTest extends TestCase {
 			$this->logger,
 			$this->tagMapper,
 			$this->messageTagsMapper,
-			$this->threadMapper
+			$this->threadMapper,
+			new ImapFlag(),
 		);
 	}
 
@@ -324,7 +326,7 @@ class MailManagerTest extends TestCase {
 		$this->manager->flagMessage($account, 'INBOX', 123, Tag::LABEL_IMPORTANT, false);
 	}
 
-	public function testFilterFlagStandard(): void {
+	public function testFilterFlagsWithSystemFlags(): void {
 		$account = $this->createMock(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$flags = [
@@ -334,32 +336,50 @@ class MailManagerTest extends TestCase {
 			'deleted' => [\Horde_Imap_Client::FLAG_DELETED],
 			'draft' => [\Horde_Imap_Client::FLAG_DRAFT],
 			'recent' => [\Horde_Imap_Client::FLAG_RECENT],
-			'junk' => [\Horde_Imap_Client::FLAG_JUNK, 'junk'],
-			'mdnsent' => [\Horde_Imap_Client::FLAG_MDNSENT],
 		];
 
-		//standard flags
+		// test all system flags
 		foreach ($flags as $k => $flag) {
 			$this->assertEquals($this->manager->filterFlags($client, $account, $k, 'INBOX'), $flags[$k]);
 		}
 	}
 
-	public function testSetFilterFlagsNoCapabilities() {
+	public function testFilterFlagsWithDefinedKeyword() {
+		$account = $this->createMock(Account::class);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+
+		$client->expects($this->exactly(2))
+			->method('status')
+			->willReturn(['permflags' => ['\seen', '$junk', '$notjunk']]);
+		
+		// test keyword supported
+		$this->assertEquals(['$junk'], $this->manager->filterFlags($client, $account, '$junk', 'INBOX'));
+		// test keyword unsupported
+		$this->assertEquals([], $this->manager->filterFlags($client, $account, '$autojunk', 'INBOX'));
+	}
+
+	public function testFilterFlagsWithCustomKeyword() {
+		$account = $this->createMock(Account::class);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+
+		$client->expects($this->exactly(2))
+			->method('status')
+			->willReturnOnConsecutiveCalls(
+				['permflags' => ['\seen', '$junk', '$notjunk', '\*']],
+				['permflags' => ['\seen', '$junk', '$notjunk']],
+			);
+		
+		// test custom keyword supported
+		$this->assertEquals([Tag::LABEL_IMPORTANT], $this->manager->filterFlags($client, $account, Tag::LABEL_IMPORTANT, 'INBOX'));
+		// test custom keyword unsupported
+		$this->assertEquals([], $this->manager->filterFlags($client, $account, Tag::LABEL_IMPORTANT, 'INBOX'));
+	}
+
+	public function testFilterFlagsNoCapabilities() {
 		$account = $this->createMock(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
 		$this->assertEquals([], $this->manager->filterFlags($client, $account, Tag::LABEL_IMPORTANT, 'INBOX'));
-	}
-
-	public function testSetFilterFlagsImportant() {
-		$account = $this->createMock(Account::class);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-
-		$client->expects($this->once())
-			->method('status')
-			->willReturn(['permflags' => [ '11' => "\*" ]]);
-
-		$this->assertEquals([Tag::LABEL_IMPORTANT], $this->manager->filterFlags($client, $account, Tag::LABEL_IMPORTANT, 'INBOX'));
 	}
 
 	public function testIsPermflagsEnabledTrue(): void {

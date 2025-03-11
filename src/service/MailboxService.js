@@ -66,3 +66,17 @@ export const clearMailbox = async (id) => {
 
 	await axios.post(url)
 }
+
+/**
+ * Delete all vanished emails that are still cached.
+ *
+ * @param {number} id Mailbox database id
+ * @return {Promise<void>}
+ */
+export const repairMailbox = async (id) => {
+	const url = generateUrl('/apps/mail/api/mailboxes/{id}/repair', {
+		id,
+	})
+
+	await axios.post(url)
+}

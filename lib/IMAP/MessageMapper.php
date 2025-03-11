@@ -20,11 +20,14 @@ use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Socket;
 use Horde_Mime_Exception;
 use Horde_Mime_Headers;
+use Horde_Mime_Headers_ContentParam_ContentType;
+use Horde_Mime_Headers_ContentTransferEncoding;
 use Horde_Mime_Part;
 use Html2Text\Html2Text;
 use OCA\Mail\Attachment;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Support\PerformanceLoggerTask;
@@ -50,9 +53,12 @@ class MessageMapper {
 	private SMimeService $smimeService;
 	private ImapMessageFetcherFactory $imapMessageFactory;
 
-	public function __construct(LoggerInterface           $logger,
-		SmimeService              $smimeService,
-		ImapMessageFetcherFactory $imapMessageFactory) {
+	public function __construct(
+		LoggerInterface $logger,
+		SmimeService $smimeService,
+		ImapMessageFetcherFactory $imapMessageFactory,
+		private Converter $converter,
+	) {
 		$this->logger = $logger;
 		$this->smimeService = $smimeService;
 		$this->imapMessageFactory = $imapMessageFactory;
@@ -512,9 +518,9 @@ class MessageMapper {
 	 * @throws ServiceException
 	 */
 	public function getHtmlBody(Horde_Imap_Client_Socket $client,
-		string                   $mailbox,
-		int                      $uid,
-		string                   $userId): ?string {
+		string $mailbox,
+		int $uid,
+		string $userId): ?string {
 		$messageQuery = new Horde_Imap_Client_Fetch_Query();
 		$messageQuery->envelope();
 		$messageQuery->structure();
@@ -858,7 +864,8 @@ class MessageMapper {
 	 */
 	public function getBodyStructureData(Horde_Imap_Client_Socket $client,
 		string $mailbox,
-		array $uids): array {
+		array $uids,
+		string $emailAddress): array {
 		$structureQuery = new Horde_Imap_Client_Fetch_Query();
 		$structureQuery->structure();
 		$structureQuery->headerText([
@@ -870,8 +877,7 @@ class MessageMapper {
 		$structures = $client->fetch($mailbox, $structureQuery, [
 			'ids' => new Horde_Imap_Client_Ids($uids),
 		]);
-
-		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client) {
+		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client, $emailAddress) {
 			$hasAttachments = false;
 			$text = '';
 			$isImipMessage = false;
@@ -884,15 +890,13 @@ class MessageMapper {
 			$structure = $fetchData->getStructure();
 
 			/** @var Horde_Mime_Part $part */
-			foreach ($structure->getParts() as $part) {
+			foreach ($structure->partIterator() as $part) {
 				if ($part->isAttachment()) {
 					$hasAttachments = true;
 				}
-				$bodyParts = $part->getParts();
-				/** @var Horde_Mime_Part $bodyPart */
-				foreach ($bodyParts as $bodyPart) {
-					$contentParameters = $bodyPart->getAllContentTypeParameters();
-					if ($bodyPart->getType() === 'text/calendar' && isset($contentParameters['method'])) {
+
+				if ($part->getType() === 'text/calendar') {
+					if ($part->getContentTypeParameter('method') !== null) {
 						$isImipMessage = true;
 					}
 				}
@@ -901,7 +905,7 @@ class MessageMapper {
 			$textBodyId = $structure->findBody() ?? $structure->findBody('text');
 			$htmlBodyId = $structure->findBody('html');
 			if ($textBodyId === null && $htmlBodyId === null) {
-				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted);
+				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
 			}
 			$partsQuery = new Horde_Imap_Client_Fetch_Query();
 			if ($htmlBodyId !== null) {
@@ -927,43 +931,83 @@ class MessageMapper {
 			$part = $parts[$fetchData->getUid()];
 			// This is sus - why does this even happen? A delete / move in the middle of this processing?
 			if ($part === null) {
-				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted);
+				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
 			}
+
+			// Convert a given binary body to utf-8 according to the transfer encoding and content
+			// type headers of the underlying MIME part
+			$convertBody = function (string $body, Horde_Mime_Headers $mimeHeaders) use ($structure): string {
+				/** @var Horde_Mime_Headers_ContentParam_ContentType $contentType */
+				$contentType = $mimeHeaders->getHeader('content-type');
+				/** @var Horde_Mime_Headers_ContentTransferEncoding $transferEncoding */
+				$transferEncoding = $mimeHeaders->getHeader('content-transfer-encoding');
+
+				if (!$contentType && !$transferEncoding) {
+					// Nothing to convert here ...
+					return $body;
+				}
+
+				if ($transferEncoding) {
+					$structure->setTransferEncoding($transferEncoding->value_single);
+				}
+
+				if ($contentType) {
+					$structure->setType($contentType->value_single);
+					if (isset($contentType['charset'])) {
+						$structure->setCharset($contentType['charset']);
+					}
+				}
+
+				$structure->setContents($body);
+				return $this->converter->convert($structure);
+			};
 
 
 			$htmlBody = ($htmlBodyId !== null) ? $part->getBodyPart($htmlBodyId) : null;
 			if (!empty($htmlBody)) {
 				$mimeHeaders = $part->getMimeHeader($htmlBodyId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
-					$structure->setTransferEncoding($enc);
-					$structure->setContents($htmlBody);
-					$htmlBody = $structure->getContents();
-				}
+				$htmlBody = $convertBody($htmlBody, $mimeHeaders);
+				$mentionsUser = $this->checkLinks($htmlBody, $emailAddress);
 				$html = new Html2Text($htmlBody, ['do_links' => 'none','alt_image' => 'hide']);
 				return new MessageStructureData(
 					$hasAttachments,
 					trim($html->getText()),
 					$isImipMessage,
 					$isEncrypted,
+					$mentionsUser,
 				);
 			}
 			$textBody = $part->getBodyPart($textBodyId);
 
 			if (!empty($textBody)) {
 				$mimeHeaders = $part->getMimeHeader($textBodyId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
-					$structure->setTransferEncoding($enc);
-					$structure->setContents($textBody);
-					$textBody = $structure->getContents();
-				}
+				$textBody = $convertBody($textBody, $mimeHeaders);
 				return new MessageStructureData(
 					$hasAttachments,
 					$textBody,
 					$isImipMessage,
 					$isEncrypted,
+					false,
 				);
 			}
-			return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted);
+			return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
 		}, iterator_to_array($structures->getIterator()));
+	}
+	private function checkLinks(string $body, string $mailAddress) : bool {
+		if (empty($body)) {
+			return false;
+		}
+		$dom = new \DOMDocument();
+		libxml_use_internal_errors(true);
+		$dom->loadHTML($body);
+		libxml_use_internal_errors();
+		$anchors = $dom->getElementsByTagName('a');
+		foreach ($anchors as $anchor) {
+			$href = $anchor->getAttribute('href');
+			if ($href === 'mailto:' . $mailAddress) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

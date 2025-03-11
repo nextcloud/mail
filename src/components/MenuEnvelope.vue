@@ -45,17 +45,6 @@
 				</template>
 				{{ t('mail', 'Edit tags') }}
 			</ActionButton>
-			<ActionButton v-if="withSelect"
-				:close-after-click="true"
-				@click.prevent="toggleSelected">
-				<template #icon>
-					<CheckIcon :title="isSelected ? t('mail', 'Unselect') : t('mail', 'Select')"
-						:size="16" />
-				</template>
-				{{
-					isSelected ? t('mail', 'Unselect') : t('mail', 'Select')
-				}}
-			</ActionButton>
 			<ActionButton v-if="hasDeleteAcl"
 				:close-after-click="true"
 				@click.prevent="$emit('open-move-modal')">
@@ -82,6 +71,15 @@
 						:size="16" />
 				</template>
 				{{ t('mail', 'Unsnooze') }}
+			</ActionButton>
+			<ActionButton v-if="isTranslationEnabled ?? false"
+				:close-after-click="true"
+				@click.prevent="$emit('open-translation-modal')">
+				<template #icon>
+					<TranslationIcon :title="t('mail', 'Translate')"
+						:size="16" />
+				</template>
+				{{ t('mail', 'Translate') }}
 			</ActionButton>
 			<ActionButton :close-after-click="false"
 				@click="localMoreActionsOpen=true">
@@ -225,6 +223,7 @@ import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
 import DownloadIcon from 'vue-material-design-icons/Download.vue'
 import PrinterIcon from 'vue-material-design-icons/Printer.vue'
+import TranslationIcon from 'vue-material-design-icons/Translate.vue'
 import { mailboxHasRights } from '../util/acl.js'
 import { generateUrl } from '@nextcloud/router'
 import InformationIcon from 'vue-material-design-icons/Information.vue'
@@ -242,7 +241,8 @@ import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
 import logger from '../logger.js'
 import moment from '@nextcloud/moment'
-import { mapGetters } from 'vuex'
+import { mapStores, mapState } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'MenuEnvelope',
@@ -258,6 +258,7 @@ export default {
 		ChevronLeft,
 		CheckIcon,
 		DotsHorizontalIcon,
+		TranslationIcon,
 		DownloadIcon,
 		InformationIcon,
 		OpenInNewIcon,
@@ -284,11 +285,6 @@ export default {
 			type: Boolean,
 			required: false,
 		},
-		isSelected: {
-			// Indicates if the envelope is currently selected
-			type: Boolean,
-			default: false,
-		},
 		withSelect: {
 			// "Select" action should only appear in envelopes from the envelope list
 			type: Boolean,
@@ -298,6 +294,11 @@ export default {
 			// "Show source" action should only appear in thread envelopes
 			type: Boolean,
 			default: true,
+		},
+		isTranslationAvailable: {
+			type: Boolean,
+			required: false,
+			default: false,
 		},
 	},
 	data() {
@@ -310,12 +311,14 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters([
+		...mapStores(useMainStore),
+		...mapState(useMainStore, [
 			'isSnoozeDisabled',
+			'isTranslationEnabled',
 		]),
 		account() {
 			const accountId = this.envelope.accountId ?? this.mailbox.accountId
-			return this.$store.getters.getAccount(accountId)
+			return this.mainStore.getAccount(accountId)
 		},
 		hasMultipleRecipients() {
 			if (!this.account) {
@@ -348,7 +351,7 @@ export default {
 			return this.envelope.flags.seen
 		},
 		isImportant() {
-			return this.$store.getters
+			return this.mainStore
 				.getEnvelopeTags(this.envelope.databaseId)
 				.some((tag) => tag.imapLabel === '$label1')
 		},
@@ -425,7 +428,7 @@ export default {
 	},
 	methods: {
 		onForward() {
-			this.$store.dispatch('startComposerSession', {
+			this.mainStore.startComposerSession({
 				reply: {
 					mode: 'forward',
 					data: this.envelope,
@@ -441,11 +444,11 @@ export default {
 			logger.info(`snoozing message ${this.envelope.databaseId}`)
 
 			if (!this.account.snoozeMailboxId) {
-				await this.$store.dispatch('createAndSetSnoozeMailbox', this.account)
+				await this.mainStore.createAndSetSnoozeMailbox(this.account)
 			}
 
 			try {
-				await this.$store.dispatch('snoozeMessage', {
+				await this.mainStore.snoozeMessage({
 					id: this.envelope.databaseId,
 					unixTimestamp: timestamp / 1000,
 					destMailboxId: this.account.snoozeMailboxId,
@@ -465,7 +468,7 @@ export default {
 			logger.info(`unSnoozing message ${this.envelope.databaseId}`)
 
 			try {
-				await this.$store.dispatch('unSnoozeMessage', {
+				await this.mainStore.unSnoozeMessage({
 					id: this.envelope.databaseId,
 				})
 				showSuccess(t('mail', 'Message was unsnoozed'))
@@ -475,16 +478,16 @@ export default {
 			}
 		},
 		onToggleFlagged() {
-			this.$store.dispatch('toggleEnvelopeFlagged', this.envelope)
+			this.mainStore.toggleEnvelopeFlagged(this.envelope)
 		},
 		onToggleImportant() {
-			this.$store.dispatch('toggleEnvelopeImportant', this.envelope)
+			this.mainStore.toggleEnvelopeImportant(this.envelope)
 		},
 		onToggleSeen() {
-			this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.envelope })
+			this.mainStore.toggleEnvelopeSeen({ envelope: this.envelope })
 		},
 		async onToggleJunk() {
-			const removeEnvelope = await this.$store.dispatch('moveEnvelopeToJunk', this.envelope)
+			const removeEnvelope = await this.mainStore.moveEnvelopeToJunk(this.envelope)
 
 			/**
 			 * moveEnvelopeToJunk returns true if the envelope should be moved to a different mailbox.
@@ -503,7 +506,7 @@ export default {
 				await this.$emit('delete', this.envelope.databaseId)
 			}
 
-			await this.$store.dispatch('toggleEnvelopeJunk', {
+			await this.mainStore.toggleEnvelopeJunk({
 				envelope: this.envelope,
 				removeEnvelope,
 			})
@@ -512,12 +515,12 @@ export default {
 			this.$emit('update:selected')
 		},
 		async forwardSelectedAsAttachment() {
-			await this.$store.dispatch('startComposerSession', {
+			await this.mainStore.startComposerSession({
 				forwardedMessages: [this.envelope.databaseId],
 			})
 		},
 		onReply(onlySender = false) {
-			this.$store.dispatch('startComposerSession', {
+			this.mainStore.startComposerSession({
 				reply: {
 					mode: onlySender ? 'reply' : 'replyAll',
 					data: this.envelope,
@@ -525,7 +528,7 @@ export default {
 			})
 		},
 		async onOpenEditAsNew() {
-			await this.$store.dispatch('startComposerSession', {
+			await this.mainStore.startComposerSession({
 				templateMessageId: this.envelope.databaseId,
 				data: this.envelope,
 			})

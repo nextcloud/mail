@@ -1,7 +1,7 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
 	"extends": [
-		"config:base",
+		"config:recommended",
 		"helpers:pinGitHubActionDigests",
 		":dependencyDashboard",
 		":semanticCommits",
@@ -23,7 +23,9 @@
 	"ignoreUnstable": false,
 	"baseBranches": [
 		"main",
-		"stable3.5"
+		"stable4.3",
+		"stable4.2",
+		"stable3.7"
 	],
 	"enabledManagers": [
 		"composer",
@@ -39,7 +41,9 @@
 	"packageRules": [
 		{
 			"description": "Request JavaScript reviews",
-			"matchManagers": ["npm"],
+			"matchManagers": [
+				"npm"
+			],
 			"reviewers": [
 				"@ChristophWurst",
 				"@GretaD"
@@ -47,37 +51,59 @@
 		},
 		{
 			"description": "Ignore Vue 3 packages",
-			"matchManagers": ["npm"],
-			"matchPackageNames": ["vue"],
+			"matchManagers": [
+				"npm"
+			],
+			"matchPackageNames": [
+				"vue"
+			],
 			"allowedVersions": "<3.0"
 		},
 		{
 			"description": "Ignore Vue 3 packages",
-			"matchManagers": ["npm"],
-			"matchPackageNames": ["vue-router"],
+			"matchManagers": [
+				"npm"
+			],
+			"matchPackageNames": [
+				"vue-router"
+			],
 			"allowedVersions": "<4.0"
 		},
 		{
 			"description": "Ignore Vue 3 packages",
-			"matchManagers": ["npm"],
-			"matchPackageNames": ["@vue/test-utils"],
+			"matchManagers": [
+				"npm"
+			],
+			"matchPackageNames": [
+				"@vue/test-utils"
+			],
 			"allowedVersions": "<2.0"
 		},
 		{
 			"description": "Ignore Vue 3 packages",
-			"matchManagers": ["npm"],
-			"matchPackageNames": ["vuex"],
+			"matchManagers": [
+				"npm"
+			],
+			"matchPackageNames": [
+				"vuex"
+			],
 			"allowedVersions": "<4.1.0"
 		},
 		{
 			"description": "Ignore Vue 3 packages",
-			"matchManagers": ["npm"],
-			"matchPackageNames": ["vue-loader"],
+			"matchManagers": [
+				"npm"
+			],
+			"matchPackageNames": [
+				"vue-loader"
+			],
 			"allowedVersions": "<16.0.0"
 		},
 		{
 			"description": "Request PHP reviews",
-			"matchManagers": ["composer"],
+			"matchManagers": [
+				"composer"
+			],
 			"reviewers": [
 				"@ChristophWurst",
 				"@kesselb"
@@ -85,15 +111,22 @@
 		},
 		{
 			"description": "Bump Github actions monthly and request reviews",
-			"matchManagers": ["github-actions"],
-			"extends": ["schedule:monthly"],
+			"matchManagers": [
+				"github-actions"
+			],
+			"extends": [
+				"schedule:monthly"
+			],
 			"reviewers": [
 				"ChristophWurst",
 				"kesselb"
 			]
 		},
 		{
-			"matchUpdateTypes": ["minor", "patch"],
+			"matchUpdateTypes": [
+				"minor",
+				"patch"
+			],
 			"matchCurrentVersion": "!/^0/",
 			"automerge": true,
 			"automergeType": "pr",
@@ -106,7 +139,10 @@
 		},
 		{
 			"description": "Only automerge packages that follow semver",
-			"matchPackageNames": ["@nextcloud/vue", "friendsofphp/php-cs-fixer"],
+			"matchPackageNames": [
+				"@nextcloud/vue",
+				"friendsofphp/php-cs-fixer"
+			],
 			"automerge": false,
 			"labels": [
 				"dependencies",
@@ -122,9 +158,15 @@
 			"matchBaseBranches": "/^stable(.)+/"
 		},
 		{
-			"matchBaseBranches": ["main"],
-			"matchDepTypes": ["devDependencies"],
-			"extends": ["schedule:monthly"]
+			"matchBaseBranches": [
+				"main"
+			],
+			"matchDepTypes": [
+				"devDependencies"
+			],
+			"extends": [
+				"schedule:monthly"
+			]
 		},
 		{
 			"groupName": "CKEditor family",

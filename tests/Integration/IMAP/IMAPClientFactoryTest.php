@@ -14,9 +14,11 @@ use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
 use OC\Memcache\Redis;
 use OCA\Mail\Account;
+use OCA\Mail\Cache\HordeCacheFactory;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\HordeImapClient;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Tests\Integration\Framework\Caching;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ICacheFactory;
@@ -40,6 +42,7 @@ class IMAPClientFactoryTest extends TestCase {
 	private $factory;
 	private IEventDispatcher|MockObject $eventDispatcher;
 	private ITimeFactory|MockObject $timeFactory;
+	private HordeCacheFactory|MockObject $hordeCacheFactory;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -49,6 +52,7 @@ class IMAPClientFactoryTest extends TestCase {
 		$this->cacheFactory = Server::get(ICacheFactory::class);
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
+		$this->hordeCacheFactory = $this->createMock(HordeCacheFactory::class);
 
 		$this->factory = new IMAPClientFactory(
 			$this->crypto,
@@ -56,6 +60,7 @@ class IMAPClientFactoryTest extends TestCase {
 			$this->cacheFactory,
 			$this->eventDispatcher,
 			$this->timeFactory,
+			$this->hordeCacheFactory,
 		);
 	}
 
@@ -106,13 +111,21 @@ class IMAPClientFactoryTest extends TestCase {
 		if (ltrim($cacheClass, '\\') !== Redis::class) {
 			$this->markTestSkipped('Redis not available. Found ' . $cacheClass);
 		}
+
+		[$imapClientFactory, $cacheFactory] = Caching::getImapClientFactoryAndConfiguredCacheFactory($this->crypto);
+		$this->assertInstanceOf(
+			Redis::class,
+			$cacheFactory->createDistributed(),
+			'Distributed cache is not Redis',
+		);
+
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')
 			->with('encrypted')
 			->willReturn('notmypassword');
 
-		$client = $this->factory->getClient($account);
+		$client = $imapClientFactory->getClient($account);
 		self::assertInstanceOf(HordeImapClient::class, $client);
 		foreach ([1, 2, 3] as $attempts) {
 			try {

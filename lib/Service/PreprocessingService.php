@@ -24,7 +24,7 @@ class PreprocessingService {
 		MessageMapper $messageMapper,
 		LoggerInterface $logger,
 		MailboxMapper $mailboxMapper,
-		PreviewEnhancer $previewEnhancer
+		PreviewEnhancer $previewEnhancer,
 	) {
 		$this->messageMapper = $messageMapper;
 		$this->logger = $logger;
@@ -43,7 +43,7 @@ class PreprocessingService {
 		}, $mailboxes));
 
 		$messages = [];
-		foreach(array_chunk($mailboxIds, 1000) as $chunk) {
+		foreach (array_chunk($mailboxIds, 1000) as $chunk) {
 			$messages = array_merge($messages, $this->messageMapper->getUnanalyzed($limitTimestamp, $chunk));
 		}
 		if ($messages === []) {

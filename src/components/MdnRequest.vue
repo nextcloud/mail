@@ -26,6 +26,9 @@ import { sendMdn } from '../service/MessageService.js'
 import { showError } from '@nextcloud/dialogs'
 import { NcButton } from '@nextcloud/vue'
 
+import useMainStore from '../store/mainStore.js'
+import { mapStores } from 'pinia'
+
 export default {
 	name: 'MdnRequest',
 	components: {
@@ -44,6 +47,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		mdnSent() {
 			return this.message.flags.mdnsent
 		},
@@ -55,7 +59,7 @@ export default {
 
 			try {
 				await sendMdn(this.message.databaseId)
-				this.$store.commit('flagEnvelope', { envelope: this.message, flag: 'mdnsent', value: true })
+				this.mainStore.flagEnvelopeMutation({ envelope: this.message, flag: 'mdnsent', value: true })
 			} catch (error) {
 				logger.error('could not send mdn', error)
 				showError(t('mail', 'Could not send mdn'))

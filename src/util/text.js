@@ -10,7 +10,7 @@ import { convert } from 'html-to-text'
 /**
  * @type {Text}
  */
-class Text {
+export class Text {
 
 	constructor(format, value) {
 		this.format = format

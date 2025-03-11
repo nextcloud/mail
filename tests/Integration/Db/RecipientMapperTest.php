@@ -74,7 +74,7 @@ class RecipientMapperTest extends TestCase {
 		$message->setAliasId(2);
 		$message->setSendAt(123);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$this->message = $this->localMessageMapper->insert($message);
@@ -134,7 +134,7 @@ class RecipientMapperTest extends TestCase {
 		$message->setAliasId(2);
 		$message->setSendAt(123);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$message = $this->localMessageMapper->insert($message);
@@ -163,7 +163,7 @@ class RecipientMapperTest extends TestCase {
 		$message->setAccountId($this->account->getId());
 		$message->setSendAt(123);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$message = $this->localMessageMapper->insert($message);

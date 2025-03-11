@@ -138,7 +138,7 @@ class FolderMapper {
 		foreach ($multiStatus as $mailbox => $status) {
 			try {
 				if (!isset($status['messages'], $status['unseen'])) {
-					throw new ServiceException('Could not fetch stats of mailbox: '.$mailbox);
+					throw new ServiceException('Could not fetch stats of mailbox: ' . $mailbox);
 				}
 				$statuses[$mailbox] = new MailboxStats(
 					$status['messages'],
@@ -259,7 +259,7 @@ class FolderMapper {
 		try {
 			$client->deleteMailbox($folderId);
 		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException('Could not delete mailbox: '.$e->getMessage(), 0, $e);
+			throw new ServiceException('Could not delete mailbox: ' . $e->getMessage(), 0, $e);
 		}
 	}
 }

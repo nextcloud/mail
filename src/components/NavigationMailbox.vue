@@ -111,6 +111,14 @@
 				</template>
 				{{ t('mail', 'Move mailbox') }}
 			</ActionButton>
+			<ActionButton v-if="!account.isUnified && mailbox.specialRole !== 'flagged'"
+				:disabled="repairing"
+				@click="repair">
+				<template #icon>
+					<IconWrench :size="16" />
+				</template>
+				{{ t('mail', 'Repair mailbox') }}
+			</ActionButton>
 			<ActionButton v-if="debug && !account.isUnified && mailbox.specialRole !== 'flagged'"
 				:name="t('mail', 'Clear cache')"
 				:disabled="clearingCache"
@@ -195,18 +203,21 @@ import IconAllInboxes from 'vue-material-design-icons/InboxMultiple.vue'
 import EraserVariant from 'vue-material-design-icons/EraserVariant.vue'
 import ImportantIcon from './icons/ImportantIcon.vue'
 import IconSend from 'vue-material-design-icons/Send.vue'
+import IconWrench from 'vue-material-design-icons/Wrench.vue'
 import MoveMailboxModal from './MoveMailboxModal.vue'
 import { PRIORITY_INBOX_ID, UNIFIED_INBOX_ID } from '../store/constants.js'
 import { mailboxHasRights } from '../util/acl.js'
 import { clearCache } from '../service/MessageService.js'
-import { getMailboxStatus } from '../service/MailboxService.js'
+import { getMailboxStatus, repairMailbox } from '../service/MailboxService.js'
 import logger from '../logger.js'
 import { translatePlural as n } from '@nextcloud/l10n'
 import { translate as translateMailboxName } from '../i18n/MailboxTranslator.js'
-import { showInfo } from '@nextcloud/dialogs'
+import { showInfo, showError } from '@nextcloud/dialogs'
 import { DroppableMailboxDirective as droppableMailbox } from '../directives/drag-and-drop/droppable-mailbox/index.js'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus.js'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'NavigationMailbox',
@@ -233,6 +244,7 @@ export default {
 		IconArchive,
 		IconJunk,
 		IconInbox,
+		IconWrench,
 		EraserVariant,
 		ImportantIcon,
 		IconLoading,
@@ -276,9 +288,11 @@ export default {
 			hasDelimiter: !!this.mailbox.delimiter,
 			UNIFIED_INBOX_ID,
 			createMailboxName: '',
+			repairing: false,
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		visible() {
 			return (
 				(this.account.showSubscribedOnly === false
@@ -314,7 +328,7 @@ export default {
 			return this.subMailboxes.length > 0
 		},
 		subMailboxes() {
-			return this.$store.getters.getSubMailboxes(this.mailbox.databaseId)
+			return this.mainStore.getSubMailboxes(this.mailbox.databaseId)
 		},
 		statsText() {
 			if (this.mailboxStats && 'total' in this.mailboxStats && 'unread' in this.mailboxStats) {
@@ -362,7 +376,7 @@ export default {
 			if (!this.mailbox.isUnified) {
 				return true
 			}
-			return this.mailbox.specialUse.includes('inbox') && this.$store.getters.accounts.length > 2
+			return this.mailbox.specialUse.includes('inbox') && this.mainStore.getAccounts.length > 2
 		},
 		showUnreadCounter() {
 			if (this.filter === 'starred' || this.mailbox.specialRole === 'trash') {
@@ -377,7 +391,7 @@ export default {
 			if (!this.mailbox.myAcls) {
 				return true
 			}
-			const parent = this.$store.getters.getParentMailbox(this.mailbox.databaseId)
+			const parent = this.mainStore.getParentMailbox(this.mailbox.databaseId)
 			if (!parent || !parent.myAcls) {
 				return mailboxHasRights(this.mailbox, 'x')
 			}
@@ -459,7 +473,7 @@ export default {
 			logger.info(`creating mailbox ${withPrefix} as submailbox of ${this.mailbox.databaseId}`)
 			this.menuOpen = false
 			try {
-				await this.$store.dispatch('createMailbox', {
+				await this.mainStore.createMailbox({
 					account: this.account,
 					name: withPrefix,
 				})
@@ -480,11 +494,10 @@ export default {
 		markAsRead() {
 			this.loadingMarkAsRead = true
 
-			this.$store
-				.dispatch('markMailboxRead', {
-					accountId: this.account.id,
-					mailboxId: this.mailbox.databaseId,
-				})
+			this.mainStore.markMailboxRead({
+				accountId: this.account.id,
+				mailboxId: this.mailbox.databaseId,
+			})
 				.then(() => logger.info(`mailbox ${this.mailbox.databaseId} marked as read`))
 				.catch((error) => logger.error(`could not mark mailbox ${this.mailbox.databaseId} as read`, { error }))
 				.then(() => (this.loadingMarkAsRead = false))
@@ -493,7 +506,7 @@ export default {
 			try {
 				this.changeSubscription = true
 
-				await this.$store.dispatch('changeMailboxSubscription', {
+				await this.mainStore.changeMailboxSubscription({
 					mailbox: this.mailbox,
 					subscribed,
 				})
@@ -508,7 +521,7 @@ export default {
 			try {
 				this.changingSyncInBackground = true
 
-				await this.$store.dispatch('patchMailbox', {
+				await this.mainStore.patchMailbox({
 					mailbox: this.mailbox,
 					attributes: {
 						syncInBackground,
@@ -550,8 +563,7 @@ export default {
 				},
 				(result) => {
 					if (result) {
-						return this.$store
-							.dispatch('clearMailbox', { mailbox: this.mailbox })
+						return this.mainStore.clearMailbox({ mailbox: this.mailbox })
 							.then(() => {
 								logger.info(`mailbox ${id} cleared`)
 							})
@@ -574,8 +586,7 @@ export default {
 				},
 				(result) => {
 					if (result) {
-						return this.$store
-							.dispatch('deleteMailbox', { mailbox: this.mailbox })
+						return this.mainStore.deleteMailbox({ mailbox: this.mailbox })
 							.then(() => {
 								logger.info(`mailbox ${id} deleted`)
 								if (parseInt(this.$route.params.mailboxId, 10) === this.mailbox.databaseId) {
@@ -601,7 +612,7 @@ export default {
 				if (this.mailbox.path) {
 					newName = this.mailbox.path + this.mailbox.delimiter + newName
 				}
-				await this.$store.dispatch('renameMailbox', {
+				await this.mainStore.renameMailbox({
 					account: this.account,
 					mailbox: this.mailbox,
 					newName,
@@ -631,7 +642,7 @@ export default {
 			if (accountId !== this.mailbox.accountId) {
 				return
 			}
-			this.$store.commit('expandAccount', accountId)
+			this.mainStore.expandAccountMutation(accountId)
 			this.showSubMailboxes = true
 		},
 		onDragEnd({ accountId }) {
@@ -657,6 +668,39 @@ export default {
 						filter: this.$route.params?.filter,
 					},
 				})
+			}
+		},
+		/**
+		 * Delete all vanished emails that are still cached.
+		 *
+		 * @return {Promise<void>}
+		 */
+		async repair() {
+			this.repairing = true
+
+			const mailboxId = this.mailbox.databaseId
+			try {
+				await repairMailbox(mailboxId)
+
+				// Reload the page to start with a clean mailbox state
+				await this.$router.push({
+					name: 'mailbox',
+					params: {
+						mailboxId: this.$route.params.mailboxId,
+					},
+				})
+				window.location.reload()
+			} catch (error) {
+				// Only reset state in case of an error because the page will be reloaded anyway
+				this.repairing = false
+
+				// Handle rate limit: 429 Too Many Requests
+				// Ref https://axios-http.com/docs/handling_errors
+				if (error.response?.status === 429) {
+					showError(t('mail', 'Please wait 10 minutes before repairing again'))
+				} else {
+					throw error
+				}
 			}
 		},
 	},

@@ -416,7 +416,9 @@ export default {
 	.list-item-content__details,
 	.list-item-details__details {
 		white-space: nowrap;
-		margin: 0 auto 0 0;
+		margin-block: 0;
+		margin-inline-start: 0;
+		margin-inline-end: auto;
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
@@ -509,7 +511,7 @@ export default {
 				justify-content: start;
 				align-items: end;
 				white-space: nowrap;
-				margin-left: calc(var(--default-grid-baseline) * 2);
+				margin-inline-start: calc(var(--default-grid-baseline) * 2);
 				// to align details on top instead of in the center. The right way to do it would be to change the template, but that breaks one-line layout
 				margin-top: -22px;
 
@@ -562,7 +564,7 @@ export default {
 			&__name {
 				align-self: center;
 				min-width: 300px;
-				padding-right: calc(var(--default-grid-baseline) * 2);
+				padding-inline-end: calc(var(--default-grid-baseline) * 2);
 			}
 
 			&__inner {
@@ -580,7 +582,7 @@ export default {
 				align-items: unset;
 				justify-content: end;
 				margin-top: 0;
-				margin-left: 0;
+				margin-inline-start: 0;
 			}
 		}
 
@@ -613,7 +615,7 @@ export default {
 		display: flex;
 		flex: 1 0;
 		justify-content: space-between;
-		padding-left: 8px;
+		padding-inline-start: 8px;
 		min-width: 0;
 		&__main {
 			flex: 1 0;

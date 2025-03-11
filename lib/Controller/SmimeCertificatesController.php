@@ -27,9 +27,9 @@ class SmimeCertificatesController extends Controller {
 	private ?string $userId;
 	private SmimeService $certificateService;
 
-	public function __construct(string       $appName,
-		IRequest     $request,
-		?string      $userId,
+	public function __construct(string $appName,
+		IRequest $request,
+		?string $userId,
 		SmimeService $certificateService) {
 		parent::__construct($appName, $request);
 		$this->userId = $userId;

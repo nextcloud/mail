@@ -1,0 +1,55 @@
+[
+	{
+		"name": "Test 3.1",
+		"enable": true,
+		"operator": "anyof",
+		"tests": [
+			{
+				"operator": "contains",
+				"values": [
+					"Project-A",
+					"Project-B"
+				],
+				"field": "subject"
+			},
+			{
+				"operator": "is",
+				"values": [
+					"john@example.org"
+				],
+				"field": "from"
+			}
+		],
+		"actions": [
+			{
+				"type": "fileinto",
+				"mailbox": "Test Data"
+			},
+			{
+				"type": "stop"
+			}
+		],
+		"priority": "20"
+	},
+	{
+		"name": "Test 3.2",
+		"enable": true,
+		"operator": "allof",
+		"tests": [
+			{
+				"operator": "contains",
+				"values": [
+					"@example.org"
+				],
+				"field": "to"
+			}
+		],
+		"actions": [
+			{
+				"type": "addflag",
+				"flag": "Test A"
+			}
+		],
+		"priority": 30
+	}
+]

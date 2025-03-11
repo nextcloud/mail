@@ -21,7 +21,7 @@ class Version1140Date20221113205737 extends SimpleMigrationStep {
 
 	public function __construct(
 		MessageMapper $messageMapper,
-		LoggerInterface $logger
+		LoggerInterface $logger,
 	) {
 		$this->logger = $logger;
 		$this->messageMapper = $messageMapper;

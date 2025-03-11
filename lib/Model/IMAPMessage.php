@@ -69,6 +69,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	private bool $isEncrypted;
 	private bool $isSigned;
 	private bool $signatureIsValid;
+	private bool $isPgpMimeEncrypted;
 
 	public function __construct(int $uid,
 		string $messageId,
@@ -98,7 +99,8 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		bool $isEncrypted,
 		bool $isSigned,
 		bool $signatureIsValid,
-		Html $htmlService) {
+		Html $htmlService,
+		bool $isPgpMimeEncrypted) {
 		$this->messageId = $uid;
 		$this->realMessageId = $messageId;
 		$this->flags = $flags;
@@ -128,6 +130,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$this->isSigned = $isSigned;
 		$this->signatureIsValid = $signatureIsValid;
 		$this->htmlService = $htmlService;
+		$this->isPgpMimeEncrypted = $isPgpMimeEncrypted;
 	}
 
 	public static function generateMessageId(): string {
@@ -276,7 +279,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$mailBody = $this->plainMessage;
 		$data = $this->jsonSerialize();
 
-		if($this->hasHtmlMessage && $loadBody) {
+		if ($this->hasHtmlMessage && $loadBody) {
 			$data['body'] = $this->getHtmlBody($id);
 		}
 
@@ -290,7 +293,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		[$mailBody, $signature] = $this->htmlService->parseMailBody($mailBody);
 		$data['signature'] = $signature;
 		$data['attachments'] = array_merge($this->attachments, $this->inlineAttachments);
-		if($loadBody) {
+		if ($loadBody) {
 			$data['body'] = $mailBody;
 		}
 		return $data;
@@ -317,6 +320,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'isOneClickUnsubscribe' => $this->isOneClickUnsubscribe,
 			'unsubscribeMailto' => $this->unsubscribeMailto,
 			'scheduling' => $this->scheduling,
+			'isPgpMimeEncrypted' => $this->isPgpMimeEncrypted,
 		];
 	}
 
@@ -457,6 +461,10 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 	public function isOneClickUnsubscribe(): bool {
 		return $this->isOneClickUnsubscribe;
+	}
+
+	public function isPgpMimeEncrypted(): bool {
+		return $this->isPgpMimeEncrypted;
 	}
 
 	/**

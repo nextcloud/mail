@@ -10,6 +10,8 @@
 <script>
 import { NcAppNavigationItem as AppNavigationItem } from '@nextcloud/vue'
 import logger from '../logger.js'
+import useMainStore from '../store/mainStore.js'
+import { mapStores } from 'pinia'
 
 export default {
 	name: 'NavigationAccountExpandCollapse',
@@ -23,6 +25,7 @@ export default {
 		},
 	},
 	computed: {
+		...mapStores(useMainStore),
 		id() {
 			return 'collapse-' + this.account.id
 		},
@@ -39,13 +42,12 @@ export default {
 		async toggleCollapse() {
 			logger.debug('toggling collapsed mailboxes for account ' + this.account.id)
 			try {
-				await this.$store.commit('toggleAccountCollapsed', this.account.id)
-				await this.$store
-					.dispatch('setAccountSetting', {
-						accountId: this.account.id,
-						key: 'collapsed',
-						value: this.account.collapsed,
-					})
+				await this.mainStore.toggleAccountCollapsedMutation(this.account.id)
+				await this.mainStore.setAccountSetting({
+					accountId: this.account.id,
+					key: 'collapsed',
+					value: this.account.collapsed,
+				})
 			} catch (error) {
 				logger.error('could not update account settings', {
 					error,

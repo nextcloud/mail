@@ -129,13 +129,14 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { NcButton, NcModal, NcPasswordField, NcEmptyContent } from '@nextcloud/vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import logger from '../../logger.js'
 import moment from '@nextcloud/moment'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import { convertPkcs12ToPem, InvalidPkcs12CertificateError } from '../../util/pkcs12.js'
+import useMainStore from '../../store/mainStore.js'
+import { mapStores, mapState } from 'pinia'
 
 const TYPE_PKCS12 = 'pkcs12'
 const TYPE_PEM = 'pem'
@@ -164,7 +165,8 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters({
+		...mapStores(useMainStore),
+		...mapState(useMainStore, {
 			certificates: 'getSmimeCertificates',
 		}),
 		inputFormIsValid() {
@@ -173,11 +175,11 @@ export default {
 	},
 	async mounted() {
 		// Refresh S/MIME certificates for good measure
-		await this.$store.dispatch('fetchSmimeCertificates')
+		await this.mainStore.fetchSmimeCertificates()
 	},
 	methods: {
 		async deleteCertificate(id) {
-			await this.$store.dispatch('deleteSmimeCertificate', id)
+			await this.mainStore.deleteSmimeCertificate(id)
 		},
 		async uploadCertificate() {
 			let certificate = this.$refs.certificate.files[0]
@@ -206,7 +208,7 @@ export default {
 
 			this.loading = true
 			try {
-				await this.$store.dispatch('createSmimeCertificate', {
+				await this.mainStore.createSmimeCertificate({
 					certificate,
 					privateKey,
 				})

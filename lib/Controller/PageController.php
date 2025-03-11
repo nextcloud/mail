@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Contacts\Event\LoadContactsOcaApiEvent;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IUserPreferences;
@@ -79,17 +80,17 @@ class PageController extends Controller {
 		IConfig $config,
 		AccountService $accountService,
 		AliasesService $aliasesService,
-		?string          $UserId,
-		IUserSession     $userSession,
+		?string $UserId,
+		IUserSession $userSession,
 		IUserPreferences $preferences,
-		IMailManager     $mailManager,
-		TagMapper        $tagMapper,
-		IInitialState    $initialStateService,
-		LoggerInterface  $logger,
-		OutboxService    $outboxService,
+		IMailManager $mailManager,
+		TagMapper $tagMapper,
+		IInitialState $initialStateService,
+		LoggerInterface $logger,
+		OutboxService $outboxService,
 		IEventDispatcher $dispatcher,
 		ICredentialStore $credentialStore,
-		SmimeService     $smimeService,
+		SmimeService $smimeService,
 		AiIntegrationsService $aiIntegrationsService,
 		IUserManager $userManager,
 		ContainerInterface $container,
@@ -204,19 +205,19 @@ class PageController extends Controller {
 		);
 
 		$user = $this->userSession->getUser();
-		$response = new TemplateResponse($this->appName, 'index',
-			[
-				'attachment-size-limit' => $this->config->getSystemValue('app.mail.attachment-size-limit', 0),
-				'app-version' => $this->config->getAppValue('mail', 'installed_version'),
-				'external-avatars' => $this->preferences->getPreference($this->currentUserId, 'external-avatars', 'true'),
-				'layout-mode' => $this->preferences->getPreference($this->currentUserId, 'layout-mode', 'vertical-split'),
-				'reply-mode' => $this->preferences->getPreference($this->currentUserId, 'reply-mode', 'top'),
-				'collect-data' => $this->preferences->getPreference($this->currentUserId, 'collect-data', 'true'),
-				'search-priority-body' => $this->preferences->getPreference($this->currentUserId, 'search-priority-body', 'false'),
-				'start-mailbox-id' => $this->preferences->getPreference($this->currentUserId, 'start-mailbox-id'),
-				'tag-classified-messages' => $this->classificationSettingsService->isClassificationEnabled($this->currentUserId) ? 'true' : 'false',
-				'follow-up-reminders' => $this->preferences->getPreference($this->currentUserId, 'follow-up-reminders', 'true'),
-			]);
+		$response = new TemplateResponse($this->appName, 'index');
+		$this->initialStateService->provideInitialState('preferences', [
+			'attachment-size-limit' => $this->config->getSystemValue('app.mail.attachment-size-limit', 0),
+			'app-version' => $this->config->getAppValue('mail', 'installed_version'),
+			'external-avatars' => $this->preferences->getPreference($this->currentUserId, 'external-avatars', 'true'),
+			'layout-mode' => $this->preferences->getPreference($this->currentUserId, 'layout-mode', 'vertical-split'),
+			'reply-mode' => $this->preferences->getPreference($this->currentUserId, 'reply-mode', 'top'),
+			'collect-data' => $this->preferences->getPreference($this->currentUserId, 'collect-data', 'true'),
+			'search-priority-body' => $this->preferences->getPreference($this->currentUserId, 'search-priority-body', 'false'),
+			'start-mailbox-id' => $this->preferences->getPreference($this->currentUserId, 'start-mailbox-id'),
+			'tag-classified-messages' => $this->classificationSettingsService->isClassificationEnabled($this->currentUserId) ? 'true' : 'false',
+			'follow-up-reminders' => $this->preferences->getPreference($this->currentUserId, 'follow-up-reminders', 'true'),
+		]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',
 			$this->userManager->getDisplayName($this->currentUserId),
@@ -287,6 +288,11 @@ class PageController extends Controller {
 		);
 
 		$this->initialStateService->provideInitialState(
+			'llm_translation_enabled',
+			$this->aiIntegrationsService->isTaskAvailable('core:text2text:translate')
+		);
+
+		$this->initialStateService->provideInitialState(
 			'llm_freeprompt_available',
 			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
 		);
@@ -318,6 +324,11 @@ class PageController extends Controller {
 		$csp->addAllowedFrameDomain('\'self\'');
 		$response->setContentSecurityPolicy($csp);
 		$this->dispatcher->dispatchTyped(new RenderReferenceEvent());
+
+		if (class_exists(LoadContactsOcaApiEvent::class)) {
+			$this->dispatcher->dispatchTyped(new LoadContactsOcaApiEvent());
+		}
+
 		return $response;
 	}
 
@@ -411,7 +422,10 @@ class PageController extends Controller {
 	 */
 	public function compose(string $uri): RedirectResponse {
 		$parts = parse_url($uri);
-		$params = ['to' => $parts['path']];
+		$params = [];
+		if (isset($parts['path'])) {
+			$params['to'] = $parts['path'];
+		}
 		if (isset($parts['query'])) {
 			$parts = explode('&', $parts['query']);
 			foreach ($parts as $part) {

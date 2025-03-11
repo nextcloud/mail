@@ -138,4 +138,19 @@ class ProvisioningMapper extends QBMapper {
 			return null;
 		}
 	}
+
+	/**
+	 * @since 4.2.0
+	 *
+	 * @return array<int,string>
+	 */
+	public function findUniqueImapHosts(): array {
+		$query = $this->db->getQueryBuilder();
+		$query->selectDistinct('imap_host')
+			->from('mail_provisionings');
+		$result = $query->executeQuery();
+		$data = $result->fetchAll(\PDO::FETCH_COLUMN);
+		$result->closeCursor();
+		return $data;
+	}
 }

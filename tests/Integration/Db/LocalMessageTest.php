@@ -31,7 +31,7 @@ class LocalMessageTest extends TestCase {
 		$message->setAliasId(2);
 		$message->setSendAt($time);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('<abcdefg@12345678.com>');
 
@@ -40,7 +40,7 @@ class LocalMessageTest extends TestCase {
 		$this->assertEquals(2, $message->getAliasId());
 		$this->assertEquals($time, $message->getSendAt());
 		$this->assertEquals('subject', $message->getSubject());
-		$this->assertEquals('message', $message->getBody());
+		$this->assertEquals('message', $message->getBodyHtml());
 		$this->assertTrue($message->isHtml());
 		$this->assertEquals('<abcdefg@12345678.com>', $message->getInReplyToMessageId());
 		$this->assertNull($message->getAttachments());

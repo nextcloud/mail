@@ -122,7 +122,7 @@
 						</NcActionButton>
 						<NcActionButton v-if="hasMultipleRecipients"
 							:close-after-click="true"
-							@click="onReply('', true)">
+							@click="onReply('', false, true)">
 							<template #icon>
 								<ReplyIcon :title="t('mail', 'Reply to sender only')"
 									:size="16" />
@@ -192,7 +192,8 @@
 							@open-tag-modal="onOpenTagModal"
 							@open-move-modal="onOpenMoveModal"
 							@open-event-modal="onOpenEventModal"
-							@open-task-modal="onOpenTaskModal" />
+							@open-task-modal="onOpenTaskModal"
+							@open-translation-modal="onOpenTranslationModal" />
 					</NcActions>
 					<NcModal v-if="showSourceModal" class="source-modal" @close="onCloseSourceModal">
 						<div class="source-modal-content">
@@ -217,6 +218,10 @@
 						:account="account"
 						:envelopes="[envelope]"
 						@close="onCloseTagModal" />
+					<TranslationModal v-if="showTranslationModal"
+						:rich-parameters="{}"
+						:message="plainTextBody"
+						@close="onCloseTranslationModal" />
 				</template>
 			</div>
 		</div>
@@ -299,14 +304,17 @@ import TagModal from './TagModal.vue'
 import MoveModal from './MoveModal.vue'
 import TaskModal from './TaskModal.vue'
 import EventModal from './EventModal.vue'
+import TranslationModal from './TranslationModal.vue'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
 import useOutboxStore from '../store/outboxStore.js'
-import { mapStores } from 'pinia'
 import moment from '@nextcloud/moment'
 import { translateTagDisplayName } from '../util/tag.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
+import { Text, toPlain } from '../util/text.js'
+import useMainStore from '../store/mainStore.js'
+import { mapStores } from 'pinia'
 
 // Ternary loading state
 const LOADING_DONE = 0
@@ -321,6 +329,7 @@ export default {
 		TaskModal,
 		MoveModal,
 		TagModal,
+		TranslationModal,
 		ConfirmModal,
 		Avatar,
 		NcActionButton,
@@ -398,13 +407,15 @@ export default {
 			showEventModal: false,
 			showTaskModal: false,
 			showTagModal: false,
+			showTranslationModal: false,
+			plainTextBody: '',
 			rawMessage: '', // Will hold the raw source of the message when requested
 			isInternal: true,
 			enabledSmartReply: loadState('mail', 'llm_freeprompt_available', false),
 		}
 	},
 	computed: {
-		...mapStores(useOutboxStore),
+		...mapStores(useOutboxStore, useMainStore),
 		inlineMenuSize() {
 			// eslint-disable-next-line no-unused-expressions
 			const { envelope } = this.$refs
@@ -413,7 +424,7 @@ export default {
 			return Math.floor(spaceToFill / 44)
 		},
 		account() {
-			return this.$store.getters.getAccount(this.envelope.accountId)
+			return this.mainStore.getAccount(this.envelope.accountId)
 		},
 		from() {
 			if (!this.message || !this.message.from.length) {
@@ -450,12 +461,12 @@ export default {
 				&& isPgpText(this.envelope.previewText)
 		},
 		isImportant() {
-			return this.$store.getters
+			return this.mainStore
 				.getEnvelopeTags(this.envelope.databaseId)
 				.find((tag) => tag.imapLabel === '$label1')
 		},
 		tags() {
-			return this.$store.getters.getEnvelopeTags(this.envelope.databaseId).filter(
+			return this.mainStore.getEnvelopeTags(this.envelope.databaseId).filter(
 				(tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags),
 			)
 		},
@@ -508,10 +519,10 @@ export default {
 			return mailboxHasRights(this.mailbox, 'w')
 		},
 		mailbox() {
-			return this.$store.getters.getMailbox(this.mailboxId)
+			return this.mainStore.getMailbox(this.mailboxId)
 		},
 		archiveMailbox() {
-			return this.$store.getters.getMailbox(this.account.archiveMailboxId)
+			return this.mainStore.getMailbox(this.account.archiveMailboxId)
 		},
 		/**
 		 * @return {{isSigned: (boolean|undefined), signatureIsValid: (boolean|undefined)}}
@@ -553,13 +564,7 @@ export default {
 		 * @return {boolean}
 		 */
 		showFollowUpHeader() {
-			// TODO: remove this version check once we only support >= 27.1
-			const [major, minor] = OC.config.version.split('.').map(parseInt)
-			if (major < 27 || (major === 27 && minor < 1)) {
-				return false
-			}
-
-			const tags = this.$store.getters.getEnvelopeTags(this.envelope.databaseId)
+			const tags = this.mainStore.getEnvelopeTags(this.envelope.databaseId)
 			return tags.some((tag) => tag.imapLabel === FOLLOW_UP_TAG_LABEL)
 		},
 		/**
@@ -598,8 +603,8 @@ export default {
 			// assume that this is the relevant envelope to be scrolled to.
 			this.$nextTick(() => this.scrollToCurrentEnvelope())
 		}
-		if (this.$store.getters.getPreference('internal-addresses', 'false') === 'true') {
-			this.isInternal = this.$store.getters.isInternalAddress(this.envelope.from[0].email)
+		if (this.mainStore.getPreference('internal-addresses', 'false') === 'true') {
+			this.isInternal = this.mainStore.isInternalAddress(this.envelope.from[0].email)
 		}
 		this.$checkInterval = setInterval(() => {
 			const { envelope } = this.$refs
@@ -634,13 +639,13 @@ export default {
 			logger.debug(`fetching thread message ${this.envelope.databaseId}`)
 
 			try {
-				this.message = await this.$store.dispatch('fetchMessage', this.envelope.databaseId)
+				this.message = await this.mainStore.fetchMessage(this.envelope.databaseId)
 				logger.debug(`message ${this.envelope.databaseId} fetched`, { message: this.message })
 
 				if (!this.envelope.flags.seen && this.hasSeenAcl) {
 					logger.info('Starting timer to mark message as seen/read')
 					this.seenTimer = setTimeout(() => {
-						this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.envelope })
+						this.mainStore.toggleEnvelopeSeen({ envelope: this.envelope })
 						this.seenTimer = undefined
 					}, 2000)
 				}
@@ -679,7 +684,7 @@ export default {
 			logger.debug(`Fetching itineraries for message ${this.envelope.databaseId}`)
 
 			try {
-				const itineraries = await this.$store.dispatch('fetchItineraries', this.envelope.databaseId)
+				const itineraries = await this.mainStore.fetchItineraries(this.envelope.databaseId)
 				logger.debug(`Itineraries of message ${this.envelope.databaseId} fetched`, { itineraries })
 			} catch (error) {
 				logger.error(`Could not fetch itineraries of message ${this.envelope.databaseId}`, { error })
@@ -693,7 +698,7 @@ export default {
 			logger.debug(`Fetching DKIM for message ${this.envelope.databaseId}`)
 
 			try {
-				const dkim = await this.$store.dispatch('fetchDkim', this.envelope.databaseId)
+				const dkim = await this.mainStore.fetchDkim(this.envelope.databaseId)
 				logger.debug(`DKIM of message ${this.envelope.databaseId} fetched`, { dkim })
 			} catch (error) {
 				logger.error(`Could not fetch DKIM of message ${this.envelope.databaseId}`, { error })
@@ -706,10 +711,10 @@ export default {
 			const top = this.$el.getBoundingClientRect().top - globalHeader - threadHeader
 			window.scrollTo({ top })
 		},
-		onReply(body = '', followUp = false) {
-			this.$store.dispatch('startComposerSession', {
+		onReply(body = '', followUp = false, replySenderOnly = false) {
+			this.mainStore.startComposerSession({
 				reply: {
-					mode: this.hasMultipleRecipients ? 'replyAll' : 'reply',
+					mode: (this.hasMultipleRecipients && !replySenderOnly) ? 'replyAll' : 'reply',
 					data: this.envelope,
 					smartReply: body,
 					followUp,
@@ -717,16 +722,16 @@ export default {
 			})
 		},
 		onToggleImportant() {
-			this.$store.dispatch('toggleEnvelopeImportant', this.envelope)
+			this.mainStore.toggleEnvelopeImportant(this.envelope)
 		},
 		onToggleFlagged() {
-			this.$store.dispatch('toggleEnvelopeFlagged', this.envelope)
+			this.mainStore.toggleEnvelopeFlagged(this.envelope)
 		},
 		onToggleJunk() {
-			this.$store.dispatch('toggleEnvelopeJunk', this.envelope)
+			this.mainStore.toggleEnvelopeJunk(this.envelope)
 		},
 		onToggleSeen() {
-			this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.envelope })
+			this.mainStore.toggleEnvelopeSeen({ envelope: this.envelope })
 		},
 		async onDelete() {
 			// Remove from selection first
@@ -740,7 +745,7 @@ export default {
 			logger.info(`deleting message ${this.envelope.databaseId}`)
 
 			try {
-				await this.$store.dispatch('deleteMessage', {
+				await this.mainStore.deleteMessage({
 					id: this.envelope.databaseId,
 				})
 			} catch (error) {
@@ -767,7 +772,7 @@ export default {
 			logger.info(`archiving message ${this.envelope.databaseId}`)
 
 			try {
-				await this.$store.dispatch('moveMessage', {
+				await this.mainStore.moveMessage({
 					id: this.envelope.databaseId,
 					destMailboxId: this.account.archiveMailboxId,
 				})
@@ -777,7 +782,7 @@ export default {
 			}
 		},
 		async onDisableFollowUpReminder() {
-			await this.$store.dispatch('clearFollowUpReminder', {
+			await this.mainStore.clearFollowUpReminder({
 				envelope: this.envelope,
 			})
 		},
@@ -868,6 +873,23 @@ export default {
 		},
 		onCloseTagModal() {
 			this.showTagModal = false
+		},
+		onOpenTranslationModal() {
+			try {
+				if (this.message.hasHtmlBody) {
+					let text = new Text('html', this.message.body)
+					text = toPlain(text)
+					this.plainTextBody = text.value
+				} else {
+					this.plainTextBody = this.message.body
+				}
+				this.showTranslationModal = true
+			} catch (error) {
+				showError(t('mail', 'Please wait for the message to load'))
+			}
+		},
+		onCloseTranslationModal() {
+			this.showTranslationModal = false
 		},
 		async onShowSourceModal() {
 			if (this.rawMessage.length === 0) {

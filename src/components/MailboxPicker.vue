@@ -73,6 +73,8 @@ import IconFolder from 'vue-material-design-icons/Folder.vue'
 import { translate as t } from '@nextcloud/l10n'
 import { translate as translateMailboxName } from '../i18n/MailboxTranslator.js'
 import { mailboxHasRights } from '../util/acl.js'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'MailboxPicker',
@@ -128,11 +130,12 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		mailboxes() {
 			if (!this.selectedMailboxId) {
-				return this.$store.getters.getMailboxes(this.account.accountId)
+				return this.mainStore.getMailboxes(this.account.accountId)
 			} else {
-				return this.$store.getters.getSubMailboxes(this.selectedMailboxId)
+				return this.mainStore.getSubMailboxes(this.selectedMailboxId)
 			}
 		},
 		filteredMailboxes() {

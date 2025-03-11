@@ -6,7 +6,7 @@
 	<div class="phishing-warning">
 		<div class="phishing-warning__title">
 			<IconAlertOutline :size="16" :title="t('mail', 'Phishing email')" />
-			This email might be a phishing attempt
+			{{ t('mail','This email might be a phishing attempt') }}
 		</div>
 		<ul v-for="(warning,index) in warnings" :key="index" class="phishing-warning__list">
 			<li class="phishing-warning__list__item">
@@ -19,7 +19,9 @@
 			</NcButton>
 			<div v-if="showMore">
 				<ul v-for="(link,index) in linkWarning.additionalData" :key="index" class="phishing-warning__list">
-					<li><b>href: </b>{{ link.href }} : <b>{{ t('mail','link text') }}</b> {{ link.linkText }} </li>
+					<li class="phishing-warning__list__item" dir="auto">
+						<b>href: </b>{{ link.href }} <b>{{ t('mail','link text') }}:</b> {{ link.linkText }}
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -63,7 +65,7 @@ export default {
 .phishing-warning {
 	background-color:rgba(var(--color-warning-rgb), 0.2);
     border-radius: var(--border-radius);
-    text-align: left;
+    text-align: start;
     padding: 8px;
     margin: calc(var(--default-grid-baseline) * 2);
 	&__title {

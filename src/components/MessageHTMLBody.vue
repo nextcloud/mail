@@ -97,7 +97,11 @@ export default {
 		scout.on('beforeprint', this.onBeforePrint)
 	},
 	mounted() {
-		iframeResizer({ log: false, heightCalculationMethod: 'taggedElement' }, this.$refs.iframe)
+		iframeResizer({
+			log: false,
+			heightCalculationMethod: 'taggedElement',
+			scrolling: true,
+		}, this.$refs.iframe)
 	},
 	beforeDestroy() {
 		scout.off('beforeprint', this.onBeforePrint)

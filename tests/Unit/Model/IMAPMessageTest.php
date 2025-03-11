@@ -81,6 +81,7 @@ class IMAPMessageTest extends TestCase {
 			false,
 			false,
 			$htmlService,
+			false,
 		);
 
 		$actualHtmlBody = $message->getHtmlBody(123);
@@ -123,6 +124,7 @@ class IMAPMessageTest extends TestCase {
 			false,
 			false,
 			$this->htmlService,
+			false,
 		);
 
 		$json = $m->jsonSerialize();
@@ -156,6 +158,7 @@ class IMAPMessageTest extends TestCase {
 			'hasDkimSignature' => false,
 			'phishingDetails' => [],
 			'scheduling' => [],
+			'isPgpMimeEncrypted' => false,
 		], $json);
 		$this->assertEquals(1234, $json['uid']);
 	}

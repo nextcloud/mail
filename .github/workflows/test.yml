@@ -13,6 +13,9 @@ jobs:
       matrix:
         php-versions: ['8.1', '8.2', '8.3']
         nextcloud-versions: ['master', 'stable30']
+        include:
+          - php-versions: '8.4'
+            nextcloud-versions: 'master'
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
     - name: Set up Nextcloud env
@@ -21,13 +24,14 @@ jobs:
         nextcloud-version: ${{ matrix.nextcloud-versions }}
         php-version: ${{ matrix.php-versions }}
         php-coverage: 'xdebug'
-        patch-php-version-check: ${{ matrix.php-versions == '8.2' }}
+        patch-php-version-check: ${{ matrix.php-versions == '8.4' }}
         node-version: 'false'
         install: true
     - name: Checkout Mail
-      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       with:
         path: nextcloud/apps/mail
+        fetch-depth: 2
     - name: Install dependencies
       working-directory: nextcloud/apps/mail
       run: composer install
@@ -44,13 +48,15 @@ jobs:
       env:
         XDEBUG_MODE: off
     - name: Report coverage
-      uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457 # v3.1.6
+      uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
       if: ${{ always() && matrix.php-versions == '8.3' }}
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./nextcloud/apps/mail/tests/clover.unit.xml
+        working-directory: nextcloud/apps/mail
+        file: tests/clover.unit.xml
         flags: unittests
         fail_ci_if_error: ${{ !github.event.pull_request.head.repo.fork }}
+        verbose: true
 
   integration-tests:
       runs-on: ubuntu-latest
@@ -62,11 +68,11 @@ jobs:
               cache: ['nocache']
               include:
                 - php-versions: 8.1
-                  nextcloud-versions: master
+                  nextcloud-versions: 'master'
                   db: 'sqlite'
                   cache: 'redis'
                 - php-versions: 8.2
-                  nextcloud-versions: master
+                  nextcloud-versions: 'master'
                   db: 'mysql'
                   cache: 'redis'
                 - php-versions: 8.2
@@ -129,7 +135,7 @@ jobs:
               nextcloud-version: ${{ matrix.nextcloud-versions }}
               php-version: ${{ matrix.php-versions }}
               php-coverage: 'xdebug'
-              patch-php-version-check: ${{ matrix.php-versions == '8.2' }}
+              patch-php-version-check: ${{ matrix.php-versions == '8.4' }}
               install: true
               database: ${{ matrix.db }}
               node-version: 'false'
@@ -139,17 +145,18 @@ jobs:
               php -f nextcloud/occ config:system:set memcache.local --value='\OC\Memcache\Redis'
               php -f nextcloud/occ config:system:set memcache.distributed --value='\OC\Memcache\Redis'
           - name: Checkout Mail
-            uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+            uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
             with:
                 path: nextcloud/apps/mail
+                fetch-depth: 2
           - name: Install dependencies
             working-directory: nextcloud/apps/mail
             run: composer install
           - name: Patch version check for nightly PHP
-            if: ${{ matrix.php-versions == '8.2' }}
-            run: sed -i 's/max-version="8.1"/max-version="8.2"/' nextcloud/apps/mail/appinfo/info.xml
+            if: ${{ matrix.php-versions == '8.3' }}
+            run: sed -i 's/max-version="8.3"/max-version="8.4"/' nextcloud/apps/mail/appinfo/info.xml
           - name: Install Mail
-            run: php -f nextcloud/occ app:enable -f mail
+            run: php -f nextcloud/occ app:enable mail
           - name: Configure Nextcloud for testing
             run: |
                 php -f nextcloud/occ config:system:set debug --type bool --value true
@@ -179,18 +186,20 @@ jobs:
             if: ${{ always() }}
             run: cat nextcloud/data/horde_*.log
           - name: Report coverage
-            uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457 # v3.1.6
+            uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
             if: ${{ always() && matrix.db == 'mysql' }}
             with:
               token: ${{ secrets.CODECOV_TOKEN }}
-              file: ./nextcloud/apps/mail/tests/clover.integration.xml
+              working-directory: nextcloud/apps/mail
+              file: tests/clover.integration.xml
               flags: integrationtests
               fail_ci_if_error: ${{ !github.event.pull_request.head.repo.fork }}
+              verbose: true
   frontend-unit-test:
       runs-on: ubuntu-latest
       name: Front-end unit tests
       steps:
-          - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+          - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
           - name: Read package.json node and npm engines version
             uses: skjnldsv/read-package-engines-version-actions@8205673bab74a63eb9b8093402fd9e0e018663a1 # v2.2
             id: versions
@@ -198,7 +207,7 @@ jobs:
               fallbackNode: '^14'
               fallbackNpm: '^7'
           - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
-            uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4
+            uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
             with:
               node-version: ${{ steps.versions.outputs.nodeVersion }}
           - name: Set up npm ${{ steps.versions.outputs.npmVersion }}

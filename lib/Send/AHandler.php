@@ -12,7 +12,7 @@ use OCA\Mail\Db\LocalMessage;
 
 abstract class AHandler {
 
-	protected AHandler|null $next = null;
+	protected ?AHandler $next = null;
 	public function setNext(AHandler $next): AHandler {
 		$this->next = $next;
 		return $next;

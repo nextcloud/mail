@@ -29,12 +29,14 @@ use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\ImapFlagEncodingException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\TrashMailboxNotSetException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\ImapFlag;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Model\IMAPMessage;
@@ -46,17 +48,15 @@ use function array_values;
 
 class MailManager implements IMailManager {
 	/**
-	 * https://tools.ietf.org/html/rfc3501#section-2.3.2
+	 * https://datatracker.ietf.org/doc/html/rfc9051#name-flags-message-attribute
 	 */
-	private const ALLOWED_FLAGS = [
+	private const SYSTEM_FLAGS = [
 		'seen' => [Horde_Imap_Client::FLAG_SEEN],
 		'answered' => [Horde_Imap_Client::FLAG_ANSWERED],
 		'flagged' => [Horde_Imap_Client::FLAG_FLAGGED],
 		'deleted' => [Horde_Imap_Client::FLAG_DELETED],
 		'draft' => [Horde_Imap_Client::FLAG_DRAFT],
 		'recent' => [Horde_Imap_Client::FLAG_RECENT],
-		'junk' => [Horde_Imap_Client::FLAG_JUNK, 'junk'],
-		'mdnsent' => [Horde_Imap_Client::FLAG_MDNSENT],
 	];
 
 	/** @var IMAPClientFactory */
@@ -92,7 +92,8 @@ class MailManager implements IMailManager {
 	/** @var ThreadMapper */
 	private $threadMapper;
 
-	public function __construct(IMAPClientFactory $imapClientFactory,
+	public function __construct(
+		IMAPClientFactory $imapClientFactory,
 		MailboxMapper $mailboxMapper,
 		MailboxSync $mailboxSync,
 		FolderMapper $folderMapper,
@@ -102,7 +103,9 @@ class MailManager implements IMailManager {
 		LoggerInterface $logger,
 		TagMapper $tagMapper,
 		MessageTagsMapper $messageTagsMapper,
-		ThreadMapper $threadMapper) {
+		ThreadMapper $threadMapper,
+		private ImapFlag $imapFlag,
+	) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->mailboxSync = $mailboxSync;
@@ -761,16 +764,29 @@ class MailManager implements IMailManager {
 	 * @return array
 	 */
 	public function filterFlags(Horde_Imap_Client_Socket $client, Account $account, string $flag, string $mailbox): array {
-		// check for RFC server flags
-		if (array_key_exists($flag, self::ALLOWED_FLAGS) === true) {
-			return self::ALLOWED_FLAGS[$flag];
+		// check if flag is RFC defined system flag
+		if (array_key_exists($flag, self::SYSTEM_FLAGS) === true) {
+			return self::SYSTEM_FLAGS[$flag];
 		}
-
-		// Only allow flag setting if IMAP supports Permaflags
-		// @TODO check if there are length & char limits on permflags
-		if ($this->isPermflagsEnabled($client, $account, $mailbox) === true) {
+		// check if server supports custom keywords / this specific keyword
+		try {
+			$capabilities = $client->status($mailbox, Horde_Imap_Client::STATUS_PERMFLAGS);
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException(
+				'Could not get message flag options from IMAP: ' . $e->getMessage(),
+				$e->getCode(),
+				$e
+			);
+		}
+		// check if server returned supported flags
+		if (!isset($capabilities['permflags'])) {
+			return [];
+		}
+		// check if server supports custom flags or specific flag
+		if (in_array("\*", $capabilities['permflags']) || in_array($flag, $capabilities['permflags'])) {
 			return [$flag];
 		}
+		
 		return [];
 	}
 
@@ -795,12 +811,11 @@ class MailManager implements IMailManager {
 	}
 
 	public function createTag(string $displayName, string $color, string $userId): Tag {
-		$imapLabel = str_replace(' ', '_', $displayName);
-		$imapLabel = mb_convert_encoding($imapLabel, 'UTF7-IMAP', 'UTF-8');
-		if ($imapLabel === false) {
-			throw new ClientException('Error converting display name to UTF7-IMAP ', 0);
+		try {
+			$imapLabel = $this->imapFlag->create($displayName);
+		} catch (ImapFlagEncodingException $e) {
+			throw new ClientException('Error converting display name to UTF7-IMAP ', 0, $e);
 		}
-		$imapLabel = '$' . strtolower(mb_strcut($imapLabel, 0, 63));
 
 		try {
 			return $this->getTagByImapLabel($imapLabel, $userId);

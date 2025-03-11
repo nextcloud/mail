@@ -21,7 +21,8 @@ use OCP\IURLGenerator;
  */
 class NewMessagesNotifier implements IEventListener {
 
-	public function __construct(private IEventDispatcher $eventDispatcher,
+	public function __construct(
+		private IEventDispatcher $eventDispatcher,
 		private IURLGenerator $urlGenerator,
 	) {
 	}
@@ -29,12 +30,12 @@ class NewMessagesNotifier implements IEventListener {
 	 * @inheritDoc
 	 */
 	public function handle(Event $event): void {
-		if(!$event instanceof NewMessagesSynchronized) {
+		if (!$event instanceof NewMessagesSynchronized) {
 			return;
 		}
 
 		/** @var Message $message */
-		foreach($event->getMessages() as $message) {
+		foreach ($event->getMessages() as $message) {
 			$uri = $this->urlGenerator->linkToOCSRouteAbsolute('mail.messageApi.get', ['id' => $message->getId()]);
 			$this->eventDispatcher->dispatchTyped(new NewMessageReceivedEvent($uri));
 		}

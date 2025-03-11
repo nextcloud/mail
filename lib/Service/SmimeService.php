@@ -43,11 +43,11 @@ class SmimeService {
 	private SmimeCertificateMapper $certificateMapper;
 	private ITimeFactory $timeFactory;
 
-	public function __construct(ITempManager           $tempManager,
-		ICertificateManager    $certificateManager,
-		ICrypto                $crypto,
+	public function __construct(ITempManager $tempManager,
+		ICertificateManager $certificateManager,
+		ICrypto $crypto,
 		SmimeCertificateMapper $certificateMapper,
-		ITimeFactory           $timeFactory) {
+		ITimeFactory $timeFactory) {
 		$this->tempManager = $tempManager;
 		$this->certificateManager = $certificateManager;
 		$this->crypto = $crypto;
@@ -68,7 +68,7 @@ class SmimeService {
 		// smime/pkcs7 module. Unfortunately, it is only supported since php 8.
 		// Ref https://www.php.net/manual/en/function.openssl-cms-verify.php
 
-		$messageTemp = $this->tempManager->getTemporaryFile();
+		$messageTemp = $this->getTemporaryFileOrThrow();
 		$messageTempHandle = fopen($messageTemp, 'wb');
 		fwrite($messageTempHandle, $message);
 		fclose($messageTempHandle);
@@ -106,8 +106,8 @@ class SmimeService {
 		// smime/pkcs7 module. Unfortunately, it is only supported since php 8.
 		// Ref https://www.php.net/manual/en/function.openssl-cms-verify.php
 
-		$verifiedContentTemp = $this->tempManager->getTemporaryFile();
-		$messageTemp = $this->tempManager->getTemporaryFile();
+		$verifiedContentTemp = $this->getTemporaryFileOrThrow();
+		$messageTemp = $this->getTemporaryFileOrThrow();
 		$messageTempHandle = fopen($messageTemp, 'wb');
 		fwrite($messageTempHandle, $message);
 		fclose($messageTempHandle);
@@ -166,7 +166,7 @@ class SmimeService {
 			}
 		}
 
-		$decryptedCertificateFile = $this->tempManager->getTemporaryFile();
+		$decryptedCertificateFile = $this->getTemporaryFileOrThrow();
 		file_put_contents($decryptedCertificateFile, $certificate);
 
 		$caBundle = [$this->certificateManager->getAbsoluteBundlePath()];
@@ -346,7 +346,7 @@ class SmimeService {
 	 * @throws SmimeSignException If signing the message fails
 	 * @throws ServiceException If decrypting the certificate or private key fails or the private key is missing
 	 */
-	public function signMimePart(Horde_Mime_Part  $part,
+	public function signMimePart(Horde_Mime_Part $part,
 		SmimeCertificate $certificate): Horde_Mime_Part {
 		if ($certificate->getPrivateKey() === null) {
 			throw new ServiceException('Certificate does not have a private key');
@@ -363,11 +363,11 @@ class SmimeService {
 			);
 		}
 
-		$decryptedCertificateFile = $this->tempManager->getTemporaryFile();
+		$decryptedCertificateFile = $this->getTemporaryFileOrThrow();
 		file_put_contents($decryptedCertificateFile, $decryptedCertificate);
 
-		$inPath = $this->tempManager->getTemporaryFile();
-		$outPath = $this->tempManager->getTemporaryFile();
+		$inPath = $this->getTemporaryFileOrThrow();
+		$outPath = $this->getTemporaryFileOrThrow();
 		file_put_contents($inPath, $part->toString([
 			'canonical' => true,
 			'headers' => true,
@@ -425,8 +425,8 @@ class SmimeService {
 			);
 		}
 
-		$inPath = $this->tempManager->getTemporaryFile();
-		$outPath = $this->tempManager->getTemporaryFile();
+		$inPath = $this->getTemporaryFileOrThrow();
+		$outPath = $this->getTemporaryFileOrThrow();
 		file_put_contents($inPath, $mimePartText);
 		if (!openssl_pkcs7_decrypt($inPath, $outPath, $decryptedCertificate, $decryptedKey)) {
 			throw new SmimeDecryptException('Failed to decrypt MIME part text');
@@ -572,7 +572,7 @@ class SmimeService {
 	 * @throws ServiceException If decrypting the certificates fails
 	 * @throws SmimeEncryptException If encrypting the message fails
 	 */
-	public function encryptMimePart(Horde_Mime_Part  $part, array $certificates): Horde_Mime_Part {
+	public function encryptMimePart(Horde_Mime_Part $part, array $certificates): Horde_Mime_Part {
 		try {
 			$decryptedCertificates = array_map(function (SmimeCertificate $certificate) {
 				return $this->crypto->decrypt($certificate->getCertificate());
@@ -581,8 +581,8 @@ class SmimeService {
 			throw new ServiceException('Failed to decrypt certificate: ' . $e->getMessage(), 0, $e);
 		}
 
-		$inPath = $this->tempManager->getTemporaryFile();
-		$outPath = $this->tempManager->getTemporaryFile();
+		$inPath = $this->getTemporaryFileOrThrow();
+		$outPath = $this->getTemporaryFileOrThrow();
 		file_put_contents($inPath, $part->toString([
 			'canonical' => true,
 			'headers' => true,
@@ -609,5 +609,19 @@ class SmimeService {
 		}
 
 		return $parsedPart;
+	}
+
+	/**
+	 * Create a temporary file and return the path or throw if it could not be created.
+	 *
+	 * @throws ServiceException If the temporary file could not be created
+	 */
+	private function getTemporaryFileOrThrow(): string {
+		$file = $this->tempManager->getTemporaryFile();
+		if ($file === false) {
+			throw new ServiceException('Failed to create temporary file');
+		}
+
+		return $file;
 	}
 }

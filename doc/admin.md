@@ -32,24 +32,25 @@ Admins can prevent users from attaching large attachments to their emails. Users
 The unit is bytes. The example about with limit to 3MB attachments. The default is 0 bytes which means no upload limit.
 
 ### Timeouts
-Depending on your mail host, it may be necessary to increase your IMAP and/or SMTP timeout threshold. Currently IMAP defaults to 20 seconds and SMTP defaults to 2 seconds. They can be changed as follows:
+Depending on your mail host, it may be necessary to increase your IMAP and/or SMTP timeout threshold.
+Currently IMAP defaults to 5 seconds and SMTP defaults to 20 seconds. They can be changed as follows:
 
 #### IMAP timeout
 ```php
-'app.mail.imap.timeout' => 20
+'app.mail.imap.timeout' => 5
 ```
 #### SMTP timeout
 ```php
-'app.mail.smtp.timeout' => 2
+'app.mail.smtp.timeout' => 20
 ```
 #### Sieve timeout
 ```php
-'app.mail.sieve.timeout' => 2
+'app.mail.sieve.timeout' => 5
 ```
 
 ### Background sync interval
 
-Configure how often Mail keeps users' mailboxes updated in the background in seconds. Defaults to 3600.
+Configure how often Mail keeps users' mailboxes updated in the background in seconds. Defaults to 3600, minimum 300.
 
 ```php
 'app.mail.background-sync-interval' => 7200,

@@ -32,10 +32,12 @@ class AddressCollectionListener implements IEventListener {
 	/** @var LoggerInterface */
 	private $logger;
 
-	public function __construct(IUserPreferences $preferences,
+	public function __construct(
+		IUserPreferences $preferences,
 		AddressCollector $collector,
 		LoggerInterface $logger,
-		private TransmissionService $transmissionService) {
+		private TransmissionService $transmissionService,
+	) {
 		$this->collector = $collector;
 		$this->logger = $logger;
 		$this->preferences = $preferences;

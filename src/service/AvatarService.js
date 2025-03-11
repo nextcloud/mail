@@ -16,23 +16,19 @@ export const fetchAvatarUrl = (email) => {
 		email,
 	})
 
-	return Axios.get(url)
-		.then((resp) => resp.data)
-		.then((avatar) => {
-			if (avatar.isExternal) {
-				return generateUrl('/apps/mail/api/avatars/image/{email}', {
-					email,
-				})
-			} else {
-				return avatar.url
-			}
-		})
-		.catch((err) => {
-			if (err.response.status === 404) {
+	return Axios.get(url, { adapter: 'fetch', fetchOptions: { priority: 'low' } })
+		.then(res => {
+			if (res.status === 204) {
 				return undefined
 			}
 
-			return Promise.reject(err)
+			if (res.data.isExternal) {
+				return generateUrl('/apps/mail/api/avatars/image/{email}', {
+					email,
+				})
+			}
+
+			return res.data.url
 		})
 }
 

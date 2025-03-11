@@ -10,7 +10,8 @@
 				class="search-messages--input"
 				:placeholder="t('mail', 'Search in mailbox')"
 				:aria-label="t('mail', 'Search in mailbox')"
-				@click="toggleButtons">
+				@focus="showButtons = true"
+				@blur="hideButtonsWithDelay">
 			<NcButton type="tertiary" class="search-messages--filter" @click="moreSearchActions = true">
 				<template #icon>
 					<FilterVariantIcon :size="20" />
@@ -65,16 +66,16 @@
 						</label>
 						<div class="modal-inner--container range">
 							<div class="modal-inner-inline">
-								<NcDateTimePicker v-model="startDate"
+								<NcDateTimePickerNative v-model="startDate"
 									type="date"
-									:placeholder="t('mail', 'Pick a start date')"
+									:label="t('mail', 'Pick a start date')"
 									confirm />
 							</div>
 							<div class="modal-inner-inline">
-								<NcDateTimePicker v-model="endDate"
+								<NcDateTimePickerNative v-model="endDate"
 									type="date"
 									:disabled="startDate === null"
-									:placeholder="t('mail', 'Pick an end date')"
+									:label="t('mail', 'Pick an end date')"
 									confirm />
 							</div>
 						</div>
@@ -252,6 +253,11 @@
 									{{ t('mail', 'Has attachments') }}
 								</NcCheckboxRadioSwitch>
 							</div>
+							<div class="modal-inner-inline">
+								<NcCheckboxRadioSwitch :checked.sync="mentionsMe">
+									{{ t('mail', 'Mentions me') }}
+								</NcCheckboxRadioSwitch>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -262,6 +268,7 @@
 			<NcButton type="secondary"
 				class="shortcut"
 				:aria-label="t('mail', 'Has attachment')"
+				:title="t('mail', 'Has attachment')"
 				:pressed="hasAttachmentActive"
 				@update:pressed="hasAttachmentActive = !hasAttachmentActive"
 				@click="toggleGetAttachments">
@@ -271,6 +278,7 @@
 				class="shortcut"
 				:pressed="hasLast7daysActive"
 				:aria-label="t('mail', 'Last 7 days')"
+				:title="t('mail', 'Last 7 days')"
 				@update:pressed="hasLast7daysActive = !hasLast7daysActive"
 				@click="toggleLastWeekFilter">
 				{{ t('mail', 'Last 7 days') }}
@@ -279,6 +287,7 @@
 				class="shortcut"
 				:pressed="hasFromMeActive"
 				:aria-label="t('mail', 'From me')"
+				:title="t('mail', 'From me')"
 				@update:pressed="hasFromMeActive = !hasFromMeActive"
 				@click="toggleCurrentUser">
 				{{ t('mail', 'From me') }}
@@ -292,7 +301,7 @@ import moment from '@nextcloud/moment'
 
 import NcDialog from '@nextcloud/vue/dist/Components/NcDialog.js'
 import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
-import NcDateTimePicker from '@nextcloud/vue/dist/Components/NcDateTimePicker.js'
+import NcDateTimePickerNative from '@nextcloud/vue/dist/Components/NcDateTimePickerNative.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcCheckboxRadioSwitch
 	from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
@@ -306,6 +315,8 @@ import debouncePromise from 'debounce-promise'
 import { findRecipient } from '../service/AutocompleteService.js'
 import uniqBy from 'lodash/fp/uniqBy.js'
 import { hiddenTags } from './tags.js'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -314,7 +325,7 @@ export default {
 	components: {
 		NcDialog,
 		NcSelect,
-		NcDateTimePicker,
+		NcDateTimePickerNative,
 		NcButton,
 		NcCheckboxRadioSwitch,
 		FilterVariantIcon,
@@ -346,6 +357,7 @@ export default {
 			searchInSubject: null,
 			searchInMessageBody: null,
 			searchFlags: [],
+			mentionsMe: false,
 			hasAttachmentActive: false,
 			hasLast7daysActive: false,
 			hasFromMeActive: false,
@@ -368,8 +380,9 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		tags() {
-			return this.$store.getters.getTags.filter((tag) => !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
+			return this.mainStore.getTags.filter((tag) => !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
 				if (a.isDefaultTag && !b.isDefaultTag) {
 					return -1
 				}
@@ -391,10 +404,10 @@ export default {
 			}).length > 0
 		},
 		searchBody() {
-			return this.$store.getters.getAccount(this.accountId)?.searchBody || (this.mailbox.databaseId === 'priority' && this.$store.getters.getPreference('search-priority-body', 'false') === 'true')
+			return this.mainStore.getAccount(this.accountId)?.searchBody || (this.mailbox.databaseId === 'priority' && this.mainStore.getPreference('search-priority-body', 'false') === 'true')
 		},
 		account() {
-			return this.$store.getters.getAccount(this.accountId)
+			return this.mainStore.getAccount(this.accountId)
 		},
 		filterData() {
 			return {
@@ -406,6 +419,7 @@ export default {
 				body: this.searchInMessageBody !== null && this.searchInMessageBody.length > 1 ? this.searchInMessageBody : '',
 				tags: this.selectedTags.length > 0 ? this.selectedTags.map(item => item.id) : '',
 				flags: this.searchFlags.length > 0 ? this.searchFlags.map(item => item) : '',
+				mentions: this.mentionsMe,
 				start: this.prepareStart(),
 				end: this.prepareEnd(),
 			}
@@ -448,8 +462,10 @@ export default {
 		},
 	},
 	methods: {
-		toggleButtons() {
-			this.showButtons = !this.showButtons
+		hideButtonsWithDelay() {
+			setTimeout(() => {
+				this.showButtons = false
+			}, 100)
 		},
 		toggleGetAttachments() {
 			if (this.hasAttachmentActive) {
@@ -523,7 +539,6 @@ export default {
 			})
 		},
 		resetFilter() {
-			const prevQuery = this.query
 			this.match = 'allof'
 			this.query = ''
 			this.selectedTags = []
@@ -537,10 +552,8 @@ export default {
 			this.searchFlags = []
 			this.startDate = null
 			this.endDate = null
-			// Need if there is only tag filter or recipients filter
-			if (prevQuery === '') {
-				this.sendQueryEvent()
-			}
+			this.mentionsMe = false
+			this.sendQueryEvent()
 		},
 		addTag(tag, type) {
 			if (typeof tag === 'string') {
@@ -587,12 +600,10 @@ export default {
 <style lang="scss">
 .search-messages {
 	border-bottom: 1px solid var(--color-border);
-
 	&__input {
 		min-height: 52px;
-		margin: -1px 0 0 calc(var(--app-navigation-padding)*2 + var(--default-clickable-area));
+		margin-inline-start: calc(var(--app-navigation-padding)*2 + var(--default-clickable-area));
 		padding-right: 3px; /* matches .app-content-list */
-		border-right: 1px solid var(--color-border);
 		position: relative;
 		display: flex;
 		align-items: center;
@@ -661,9 +672,6 @@ export default {
 			display: inline-block;
 			width: 32%;
 
-			&:last-child {
-				width: 100%;
-			}
 		}
 		.range {
 			display: flex;
@@ -744,8 +752,8 @@ export default {
 	width: auto;
 	height: auto;
 	z-index: 5;
-	right: 7px; /* same spacing to the input border as top/bottom */
-	left: auto;
+	inset-inline-end: 7px; /* same spacing to the input border as top/bottom */
+	inset-inline-start: auto;
 	box-shadow: none !important;
 	background: transparent !important;
 	border: none !important;
@@ -756,8 +764,8 @@ export default {
 	width: auto;
 	height: auto;
 	z-index: 5;
-	right: 35px;
-	left: auto;
+	inset-inline-end: 35px;
+	inset-inline-start: auto;
 	box-shadow: none !important;
 	background: transparent !important;
 	border: none !important;
@@ -774,7 +782,7 @@ export default {
 	background: var(--color-error);
 	position: absolute;
 	z-index: 10;
-	right: 12px;
+	inset-inline-end: 12px;
 	border-radius: 50%;
 	top: 12px;
 }
@@ -785,7 +793,10 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	gap: 4px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 0 5px 5px 5px;
 }
 </style>

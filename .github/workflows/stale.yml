@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: MIT
+name: Close stale issues
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+
+    if: ${{ github.repository_owner != 'nextcloud-gmbh' }}
+
+    permissions:
+      issues: write
+
+    steps:
+    - uses: actions/stale@5bef64f19d7facfb25b37b414482c7164d639639 # v9
+      with:
+        repo-token: ${{ secrets.COMMAND_BOT_PAT }}
+        stale-issue-message: >
+          Hi there! It looks like this issue hasn’t seen much activity for a while and might need a bit more information to move forward.
+          If we don’t hear back soon, we may close it to keep things organized.
+          Thanks again for your contributions – we really appreciate it!
+        stale-issue-label: 'stale'
+        only-labels: 'needs info'
+        exempt-issue-labels: '1. to develop,2. developing,3. to review,4. to release,discussion'
+        days-before-stale: 30
+        days-before-close: 14
+        debug-only: ${{ vars.WORKFLOW_STALE_DEBUG_ONLY == 'yes' }}
+

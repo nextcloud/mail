@@ -256,7 +256,7 @@ class MailAccount extends Entity {
 		$this->addType('sieveEnabled', 'boolean');
 		$this->addType('sievePort', 'integer');
 		$this->addType('signatureAboveQuote', 'boolean');
-		$this->addType('signatureMode', 'int');
+		$this->addType('signatureMode', 'integer');
 		$this->addType('smimeCertificateId', 'integer');
 		$this->addType('quotaPercentage', 'integer');
 		$this->addType('trashRetentionDays', 'integer');

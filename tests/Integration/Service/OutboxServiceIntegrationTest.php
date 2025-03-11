@@ -135,7 +135,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		$to = [[
@@ -159,7 +159,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		$saved = $this->outbox->saveMessage(new Account($this->account), $message, [], [], []);
@@ -170,7 +170,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		$saved = $this->outbox->saveMessage(new Account($this->account), $message, [], [], []);
@@ -186,7 +186,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		/** @var \Horde_Imap_Client_Mailbox[] $mailBoxes */
@@ -249,7 +249,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 		$this->userFolder->newFile('/test.txt', file_get_contents(__DIR__ . '/../../data/test.txt'));
 		$attachments = [
@@ -281,7 +281,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		$to = [[
@@ -304,7 +304,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		$to = [[
@@ -334,7 +334,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		$to = [[
@@ -358,7 +358,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 		$message->setSendAt(100);
 

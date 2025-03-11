@@ -11,22 +11,24 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\IMAP\Sync\Request;
 
 class RequestTest extends TestCase {
-	/** @var string */
-	private $mailbox;
-
-	/** @var string */
-	private $syncToken;
-
-	/** @var Request */
-	private $request;
-
+	
+	private string $mailbox;
+	private string $syncToken;
+	private Request $request;
+	private string $requestId;
+	
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mailbox = 'inbox';
 		$this->syncToken = 'ab123';
+		$this->requestId = 'abcdef';
 
-		$this->request = new Request($this->mailbox, $this->syncToken, []);
+		$this->request = new Request($this->requestId, $this->mailbox, $this->syncToken, []);
+	}
+
+	public function testGetId() {
+		$this->assertEquals($this->requestId, $this->request->getId());
 	}
 
 	public function testGetMailbox() {

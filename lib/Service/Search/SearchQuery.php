@@ -52,6 +52,9 @@ class SearchQuery {
 	/** @var bool */
 	private $hasAttachments = false;
 
+	/** @var bool */
+	private $mentionsMe = false;
+
 	private string $match = 'allof';
 
 	/**
@@ -229,5 +232,19 @@ class SearchQuery {
 	 */
 	public function setHasAttachments(bool $hasAttachments): void {
 		$this->hasAttachments = $hasAttachments;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getMentionsMe(): bool {
+		return $this->mentionsMe;
+	}
+
+	/**
+	 * @param bool $hasAttachments
+	 */
+	public function setMentionsMe(bool $mentionsMe): void {
+		$this->mentionsMe = $mentionsMe;
 	}
 }

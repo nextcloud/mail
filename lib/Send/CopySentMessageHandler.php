@@ -17,7 +17,8 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
 
 class CopySentMessageHandler extends AHandler {
-	public function __construct(private IMAPClientFactory $imapClientFactory,
+	public function __construct(
+		private IMAPClientFactory $imapClientFactory,
 		private MailboxMapper $mailboxMapper,
 		private LoggerInterface $logger,
 		private MessageMapper $messageMapper,

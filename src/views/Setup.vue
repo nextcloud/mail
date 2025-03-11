@@ -34,6 +34,8 @@ import AccountForm from '../components/AccountForm.vue'
 import IconMail from 'vue-material-design-icons/Email.vue'
 import Navigation from '../components/Navigation.vue'
 import logger from '../logger.js'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'Setup',
@@ -54,8 +56,9 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		hasAccounts() {
-			return this.$store.getters.accounts.length > 1
+			return this.mainStore.getAccounts.length > 1
 		},
 	},
 	methods: {

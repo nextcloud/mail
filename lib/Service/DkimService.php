@@ -38,7 +38,7 @@ class DkimService implements IDkimService {
 		IMAPClientFactory $clientFactory,
 		MessageMapper $messageMapper,
 		ICacheFactory $cacheFactory,
-		IDkimValidator $dkimValidator
+		IDkimValidator $dkimValidator,
 	) {
 		$this->clientFactory = $clientFactory;
 		$this->messageMapper = $messageMapper;

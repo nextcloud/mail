@@ -49,12 +49,6 @@ class IMipServiceTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		// iMIP is NC25+
-		if (!method_exists(IManager::class, 'handleImipReply')) {
-			self::markTestIncomplete();
-		}
-
-
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->calendarManager = $this->createMock(IManager::class);
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
@@ -242,6 +236,12 @@ class IMipServiceTest extends TestCase {
 	}
 
 	public function testIsRequest(): void {
+
+		// iMip Request is NC31+
+		if (!method_exists(IManager::class, 'handleImipRequest')) {
+			self::markTestIncomplete();
+		}
+
 		$message = new Message();
 		$message->setImipMessage(true);
 		$message->setUid(1);
@@ -252,9 +252,10 @@ class IMipServiceTest extends TestCase {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(200);
 		$mailAccount->setEmail('vincent@stardew-valley.edu');
+		$mailAccount->setUserId('vincent');
 		$account = new Account($mailAccount);
 		$imapMessage = $this->createMock(IMAPMessage::class);
-		$imapMessage->scheduling[] = ['method' => 'REQUEST'];
+		$imapMessage->scheduling[] = ['method' => 'REQUEST', 'contents' => 'VCALENDAR'];
 		$addressList = $this->createMock(AddressList::class);
 		$address = $this->createMock(Address::class);
 
@@ -282,15 +283,17 @@ class IMipServiceTest extends TestCase {
 			->willReturn($address);
 		$address->expects(self::once())
 			->method('getEmail')
-			->willReturn('pam@stardew-bus-company.com');
+			->willReturn('pam@stardew-bus-service.com');
 		$this->logger->expects(self::never())
 			->method('info');
-		$this->calendarManager->expects(self::never())
-			->method('handleIMipReply');
-		$this->calendarManager->expects(self::never())
-			->method('handleIMipCancel');
-		$this->messageMapper->expects(self::never())
-			->method('updateBulk');
+		$this->calendarManager->expects(self::once())
+			->method('handleIMipRequest')
+			->with('principals/users/vincent',
+				'pam@stardew-bus-service.com',
+				$account->getEmail(),
+				$imapMessage->scheduling[0]['contents']);
+		$this->messageMapper->expects(self::once())
+			->method('updateImipData');
 
 		$this->service->process();
 	}
@@ -349,8 +352,6 @@ class IMipServiceTest extends TestCase {
 				'pam@stardew-bus-service.com',
 				$account->getEmail(),
 				$imapMessage->scheduling[0]['contents']);
-		$this->calendarManager->expects(self::never())
-			->method('handleIMipCancel');
 		$this->messageMapper->expects(self::once())
 			->method('updateImipData');
 

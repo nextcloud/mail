@@ -18,7 +18,10 @@ use OCP\IDBConnection;
  * @template-extends QBMapper<MessageSnooze>
  */
 class MessageSnoozeMapper extends QBMapper {
-	public function __construct(IDBConnection $db, private ITimeFactory $time) {
+	public function __construct(
+		IDBConnection $db,
+		private ITimeFactory $time,
+	) {
 		parent::__construct($db, 'mail_messages_snoozed', MessageSnooze::class);
 	}
 

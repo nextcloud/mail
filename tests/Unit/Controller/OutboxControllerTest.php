@@ -259,7 +259,8 @@ class OutboxControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setSmimeSign(false);
@@ -267,6 +268,7 @@ class OutboxControllerTest extends TestCase {
 		$message->setInReplyToMessageId('abc');
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setRequestMdn(false);
+		$message->setPgpMime(false);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
@@ -283,7 +285,8 @@ class OutboxControllerTest extends TestCase {
 		$actual = $this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			$message->getSmimeSign(),
@@ -305,7 +308,7 @@ class OutboxControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setSmimeSign(false);
@@ -326,7 +329,8 @@ class OutboxControllerTest extends TestCase {
 		$actual = $this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			$message->getSmimeSign(),
@@ -346,7 +350,8 @@ class OutboxControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setSmimeSign(false);
@@ -367,7 +372,8 @@ class OutboxControllerTest extends TestCase {
 		$this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			$message->getSmimeSign(),
@@ -388,7 +394,8 @@ class OutboxControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setSmimeSign(false);
@@ -418,7 +425,8 @@ class OutboxControllerTest extends TestCase {
 			$message->getId(),
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			$message->getSmimeSign(),
@@ -441,7 +449,8 @@ class OutboxControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setSmimeSign(false);
@@ -466,7 +475,8 @@ class OutboxControllerTest extends TestCase {
 			$message->getId(),
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			$message->getSmimeSign(),
@@ -489,7 +499,8 @@ class OutboxControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setSmimeSign(false);
@@ -519,7 +530,8 @@ class OutboxControllerTest extends TestCase {
 			$message->getId(),
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			$message->getSmimeSign(),
@@ -539,7 +551,8 @@ class OutboxControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setSmimeSign(false);
@@ -563,7 +576,8 @@ class OutboxControllerTest extends TestCase {
 		$this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			$message->getSmimeSign(),
@@ -585,7 +599,8 @@ class OutboxControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setSmimeSign(false);
@@ -615,7 +630,8 @@ class OutboxControllerTest extends TestCase {
 			$message->getId(),
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			$message->getSmimeSign(),

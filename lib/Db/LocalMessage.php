@@ -25,10 +25,12 @@ use function array_filter;
  * @method void setSendAt(?int $sendAt)
  * @method string getSubject()
  * @method void setSubject(string $subject)
- * @method string getBody()
- * @method void setBody(?string $body)
+ * @method string getBodyPlain()
+ * @method void setBodyPlain(?string $bodyPlain)
+ * @method string getBodyHtml()
+ * @method void setBodyHtml(?string $bodyHtml)
  * @method string|null getEditorBody()
- * @method void setEditorBody(string $body)
+ * @method void setEditorBody(?string $body)
  * @method bool isHtml()
  * @method void setHtml(bool $html)
  * @method bool|null isFailed()
@@ -37,6 +39,8 @@ use function array_filter;
  * @method void setInReplyToMessageId(?string $inReplyToId)
  * @method int|null getUpdatedAt()
  * @method setUpdatedAt(?int $updatedAt)
+ * @method bool|null isPgpMime()
+ * @method setPgpMime(bool $pgpMime)
  * @method bool|null getSmimeSign()
  * @method setSmimeSign(bool $smimeSign)
  * @method int|null getSmimeCertificateId()
@@ -86,8 +90,11 @@ class LocalMessage extends Entity implements JsonSerializable {
 	/** @var string */
 	protected $subject;
 
-	/** @var string */
-	protected $body;
+	/** @var string|null */
+	protected $bodyPlain;
+	
+	/** @var string|null */
+	protected $bodyHtml;
 
 	/** @var string|null */
 	protected $editorBody;
@@ -109,6 +116,9 @@ class LocalMessage extends Entity implements JsonSerializable {
 
 	/** @var int|null */
 	protected $updatedAt;
+
+	/** @var bool|null */
+	protected $pgpMime;
 
 	/** @var bool|null */
 	protected $smimeSign;
@@ -139,6 +149,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 		$this->addType('html', 'boolean');
 		$this->addType('failed', 'boolean');
 		$this->addType('updatedAt', 'integer');
+		$this->addType('pgpMime', 'boolean');
 		$this->addType('smimeSign', 'boolean');
 		$this->addType('smimeCertificateId', 'integer');
 		$this->addType('smimeEncrypt', 'boolean');
@@ -157,9 +168,11 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'sendAt' => $this->getSendAt(),
 			'updatedAt' => $this->getUpdatedAt(),
 			'subject' => $this->getSubject(),
-			'body' => $this->getBody(),
+			'bodyPlain' => $this->getBodyPlain(),
+			'bodyHtml' => $this->getBodyHtml(),
 			'editorBody' => $this->getEditorBody(),
 			'isHtml' => ($this->isHtml() === true),
+			'isPgpMime' => ($this->isPgpMime() === true),
 			'inReplyToMessageId' => $this->getInReplyToMessageId(),
 			'attachments' => $this->getAttachments(),
 			'from' => array_values(

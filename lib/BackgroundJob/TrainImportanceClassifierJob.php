@@ -58,7 +58,7 @@ class TrainImportanceClassifierJob extends TimedJob {
 			return;
 		}
 
-		if(!$account->getMailAccount()->canAuthenticateImap()) {
+		if (!$account->getMailAccount()->canAuthenticateImap()) {
 			$this->logger->debug('Cron importance classifier training not possible: no authentication on IMAP possible');
 			return;
 		}
@@ -69,10 +69,7 @@ class TrainImportanceClassifierJob extends TimedJob {
 		}
 
 		try {
-			$this->classifier->train(
-				$account,
-				$this->logger
-			);
+			$this->classifier->train($account, $this->logger);
 		} catch (Throwable $e) {
 			$this->logger->error('Cron importance classifier training failed: ' . $e->getMessage(), [
 				'exception' => $e,

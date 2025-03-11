@@ -13,6 +13,9 @@
 <script>
 import { showSuccess, showInfo } from '@nextcloud/dialogs'
 import ConfirmationModal from './ConfirmationModal.vue'
+import useMainStore from '../store/mainStore.js'
+import { mapStores } from 'pinia'
+
 export default {
 	name: 'DeleteTagModal',
 	components: {
@@ -38,20 +41,23 @@ export default {
 			deleting: false,
 		}
 	},
+	computed: {
+		...mapStores(useMainStore),
+	},
 	methods: {
 		onClose() {
 			this.$emit('close')
 		},
 		removeTag(imapLabel) {
 			this.envelopes.forEach((envelope) => {
-				this.$store.dispatch('removeEnvelopeTag', { envelope, imapLabel })
+				this.mainStore.removeEnvelopeTag({ envelope, imapLabel })
 			})
 		},
 		async deleteTag() {
 			this.deleting = true
 			try {
 				this.removeTag(this.tag.imapLabel)
-				await this.$store.dispatch('deleteTag', {
+				await this.mainStore.deleteTag({
 					tag: this.tag,
 					accountId: this.accountId,
 				})

@@ -30,7 +30,7 @@
 			:message="message"
 			:full-height="fullHeight"
 			@load="$emit('load', $event)" />
-		<MessageEncryptedBody v-else-if="isEncrypted"
+		<MessageEncryptedBody v-else-if="isEncrypted || isPgpMimeEncrypted"
 			:body="message.body"
 			:from="from"
 			:message="message" />
@@ -77,6 +77,8 @@ import MessagePlainTextBody from './MessagePlainTextBody.vue'
 import Imip from './Imip.vue'
 import LockOffIcon from 'vue-material-design-icons/LockOff.vue'
 import ReplyIcon from 'vue-material-design-icons/Reply.vue'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'Message',
@@ -117,6 +119,7 @@ export default {
 		},
 	},
 	computed: {
+		...mapStores(useMainStore),
 		from() {
 			return this.message.from.length === 0 ? '?' : this.message.from[0].label || this.message.from[0].email
 		},
@@ -128,11 +131,14 @@ export default {
 		isEncrypted() {
 			return isPgpgMessage(this.message.hasHtmlBody ? html(this.message.body) : plain(this.message.body))
 		},
+		isPgpMimeEncrypted() {
+			return this.message.isPgpMimeEncrypted
+		},
 		itineraries() {
 			return this.message.itineraries ?? []
 		},
 		hasCurrentUserPrincipalAndCollections() {
-			return this.$store.getters.hasCurrentUserPrincipalAndCollections
+			return this.mainStore.hasCurrentUserPrincipalAndCollections
 		},
 	},
 	methods: {
@@ -171,7 +177,7 @@ export default {
 	}
 }
 .reply-buttons {
-	margin: 0 10px 0 50px;
+	margin: 0 30px 0 50px;
 	display: flex;
 	flex-wrap: wrap;
 	gap: 5px;
@@ -183,9 +189,11 @@ export default {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 5px;
+
 		&__button {
 			margin-right: 5px;
 			border-radius: 12px;
+
 			:deep(.button-vue__text) {
 				font-weight: normal;
 			}

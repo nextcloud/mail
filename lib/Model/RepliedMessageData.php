@@ -24,7 +24,7 @@ class RepliedMessageData {
 	/** @var Message */
 	private $message;
 
-	public function __construct(Account $account, Message  $message) {
+	public function __construct(Account $account, Message $message) {
 		$this->account = $account;
 		$this->message = $message;
 	}

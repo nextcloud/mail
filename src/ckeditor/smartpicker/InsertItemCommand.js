@@ -19,29 +19,32 @@ export default class InsertItemCommand extends Command {
 			// @TODO Add error to handle such a situation in the callback
 			return
 		}
-
 		const range = editor.model.createRange(
 			currentPosition.getShiftedBy(-5),
 			currentPosition,
 		)
-
 		// Iterate over all items in this range:
 		const walker = range.getWalker({ shallow: false, direction: 'backward' })
 
 		for (const value of walker) {
 			if (value.type === 'text' && value.item.data.includes(trigger)) {
 				writer.remove(value.item)
-
 				const text = value.item.data
 				const lastSlash = text.lastIndexOf(trigger)
-
 				const textElement = writer.createElement('paragraph')
 				writer.insertText(text.substring(0, lastSlash), textElement)
 				editor.model.insertContent(textElement)
 
-				const itemElement = writer.createElement('paragraph')
-				writer.insertText(item, itemElement)
-				editor.model.insertContent(itemElement)
+				if (trigger === '@') {
+					const mailtoHref = `mailto:${item.email}`
+					const anchorText = `@${item.label}`
+					const textElement = writer.createText(anchorText, { linkHref: mailtoHref })
+					editor.model.insertContent(textElement)
+				} else {
+					const itemElement = writer.createElement('paragraph')
+					writer.insertText(item, itemElement)
+					editor.model.insertContent(itemElement)
+				}
 
 				return
 			}
