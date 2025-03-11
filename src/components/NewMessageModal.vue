@@ -56,6 +56,7 @@
 					<NcButton class="maximize-button"
 						type="tertiary-no-background"
 						:aria-label="t('mail', 'Maximize composer')"
+						:title="largerModal ? t('mail', 'Collapse composer') : t('mail', 'Maximize composer')"
 						@click="onMaximize">
 						<template #icon>
 							<MaximizeIcon v-if="!largerModal" :size="20" />
@@ -65,6 +66,7 @@
 					<NcButton class="minimize-button"
 						type="tertiary-no-background"
 						:aria-label="t('mail', 'Minimize composer')"
+						:title="t('mail', 'Minimize composer')"
 						@click="onMinimize">
 						<template #icon>
 							<MinimizeIcon :size="20" />
