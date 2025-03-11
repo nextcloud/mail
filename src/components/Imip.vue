@@ -247,8 +247,12 @@ export default {
 		attachedVCalendar() {
 			const parserManager = getParserManager()
 			const parser = parserManager.getParserForFileType('text/calendar')
-			parser.parse(this.scheduling.contents)
-
+			// Temporarily fix the Microsoft invitation with a P trigger until upstream can be fixed
+			let contents = this.scheduling.contents
+						.replace(/TRIGGER:P[\r\n]/, "TRIGGER:PT0S")
+						.replace(/TRIGGER;RELATED=START:P[\r\n]/, "TRIGGER;RELATED=START:PT0S")
+						.replace(/TRIGGER;RELATED=END:P[\r\n]/, "TRIGGER;RELATED=END:PT0S");
+			parser.parse(contents)
 			const vCalendar = parser.getItemIterator().next().value
 			return vCalendar ?? undefined
 		},
