@@ -35,10 +35,12 @@ use function array_map;
 use function array_merge;
 use function array_udiff;
 use function get_class;
+use function hash;
 use function ltrim;
 use function mb_convert_encoding;
 use function mb_strcut;
 use function OCA\Mail\array_flat_map;
+use function strlen;
 
 /**
  * @template-extends QBMapper<Message>
@@ -235,7 +237,7 @@ class MessageMapper extends QBMapper {
 			foreach ($messages as $message) {
 				$query->setParameter(
 					'thread_root_id',
-					mb_substr($message->getThreadRootId(), 0, 1023),
+					self::normalizeMessageIds($message->getThreadRootId()),
 					$message->getThreadRootId() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR
 				);
 				$query->setParameter('id', $message->getDatabaseId(), IQueryBuilder::PARAM_INT);
@@ -250,6 +252,19 @@ class MessageMapper extends QBMapper {
 
 			throw $e;
 		}
+	}
+
+	private static function normalizeMessageIds(?string $messageId): ?string {
+		// null stays null
+		if ($messageId === null) {
+			return null;
+		}
+		// Up to 1023 characters fit into the database …
+		if (strlen($messageId) <= 1023) {
+			return $messageId;
+		}
+		// … anything longer than that gets hashed
+		return hash('sha512', $messageId);
 	}
 
 	/**
@@ -291,13 +306,13 @@ class MessageMapper extends QBMapper {
 				$qb1->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
 				$qb1->setParameter(
 					'message_id',
-					mb_substr($message->getMessageId(), 0, 1023),
+					self::normalizeMessageIds($message->getMessageId()),
 					IQueryBuilder::PARAM_STR,
 				);
 				$inReplyTo = $message->getInReplyTo();
 				$qb1->setParameter(
 					'in_reply_to',
-					$inReplyTo === null ? null : mb_substr($inReplyTo, 0, 1023), // Truncate longer values
+					self::normalizeMessageIds($inReplyTo),
 					$inReplyTo === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR,
 				);
 				$references = $message->getReferences();
@@ -305,7 +320,7 @@ class MessageMapper extends QBMapper {
 				$threadRootId = $message->getThreadRootId();
 				$qb1->setParameter(
 					'thread_root_id',
-					$threadRootId === null ? null : mb_substr($threadRootId, 0, 1023),
+					self::normalizeMessageIds($threadRootId),
 					$threadRootId === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR,
 				);
 				$qb1->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
