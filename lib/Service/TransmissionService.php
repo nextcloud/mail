@@ -7,6 +7,7 @@ declare(strict_types=1);
  */
 namespace OCA\Mail\Service;
 
+use Horde_Mime_Part;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
@@ -73,7 +74,7 @@ class TransmissionService {
 	 * @param array $attachment
 	 * @return \Horde_Mime_Part|null
 	 */
-	public function handleAttachment(Account $account, array $attachment): ?\Horde_Mime_Part {
+	public function handleAttachment(Account $account, array $attachment): ?Horde_Mime_Part {
 		if (!isset($attachment['id'])) {
 			$this->logger->warning('ignoring local attachment because its id is unknown');
 			return null;
@@ -81,12 +82,13 @@ class TransmissionService {
 
 		try {
 			[$localAttachment, $file] = $this->attachmentService->getAttachment($account->getMailAccount()->getUserId(), (int)$attachment['id']);
-			$part = new \Horde_Mime_Part();
+			$part = new Horde_Mime_Part();
 			$part->setCharset('us-ascii');
-			$part->setDisposition('attachment');
-			$part->setName($localAttachment->getFileName());
+			if (!empty($localAttachment->getFileName())) {
+				$part->setDisposition('attachment');
+				$part->setName($localAttachment->getFileName());
+			}
 			$part->setContents($file->getContent());
-
 			/*
 			 * Horde_Mime_Part.setType takes the mimetype (e.g. text/calendar)
 			 * and discards additional parameters (like method=REQUEST).
