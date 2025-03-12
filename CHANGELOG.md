@@ -1,3 +1,17 @@
+## [4.2.5](https://github.com/nextcloud/mail/compare/v4.2.4...v4.2.5) (2025-03-12)
+
+
+### Bug Fixes
+
+* add title for composer actions ([37ae97e](https://github.com/nextcloud/mail/commit/37ae97e2e8b7e6946bd274ab1866f03ece494de2))
+* **db:** Catch message IDs that are too long ([6fc4632](https://github.com/nextcloud/mail/commit/6fc463253fda19898c3d7f55d3da8a714e1be144))
+* import for getTimezoneManager ([c513cda](https://github.com/nextcloud/mail/commit/c513cda7d6369ff18eb2aec4140ed839c92574fc))
+* **mention:** Do not force SAB ([73e0a6b](https://github.com/nextcloud/mail/commit/73e0a6bb658fcd582cfc26fc743548360e2cfac6))
+* **phishing:** Do not force the SAB ([157a369](https://github.com/nextcloud/mail/commit/157a3693cea6a491fdf8033dc7023ef92a26f330))
+* user must scroll to view most recent message in thread ([4280c00](https://github.com/nextcloud/mail/commit/4280c0070a3e3c301b0be356cd366307187cd26d))
+
+
+
 ## [4.2.4](https://github.com/nextcloud/mail/compare/v4.2.3...v4.2.4) (2025-03-10)
 
 
