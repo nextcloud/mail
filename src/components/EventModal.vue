@@ -64,7 +64,8 @@
 </template>
 
 <script>
-import { createEvent, getTimezoneManager, DateTimeValue, TextProperty } from '@nextcloud/calendar-js'
+import { createEvent, DateTimeValue, TextProperty } from '@nextcloud/calendar-js'
+import { getTimezoneManager } from '@nextcloud/timezones'
 import { NcDateTimePicker as DatetimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
 import jstz from 'jstz'
 
