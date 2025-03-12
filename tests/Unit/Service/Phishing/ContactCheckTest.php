@@ -35,7 +35,10 @@ class ContactCheckTest extends TestCase {
 				'email' => ['jhon@example.com']
 			]
 		];
-		$this->contactsIntegration->method('getContactsWithName')->willReturn($contacts);
+		$this->contactsIntegration->expects(self::once())
+			->method('getContactsWithName')
+			->with($fn)
+			->willReturn($contacts);
 		$result = $this->service->run($fn, $email);
 
 		$this->assertFalse($result->isPhishing());
@@ -49,7 +52,11 @@ class ContactCheckTest extends TestCase {
 				'email' => ['JhonDoe@example.com']
 			]
 		];
-		$this->contactsIntegration->method('getContactsWithName')->willReturn($contacts);
+		$this->contactsIntegration
+			->expects(self::once())
+			->method('getContactsWithName')
+			->with($fn)
+			->willReturn($contacts);
 		$result = $this->service->run($fn, $email);
 
 		$this->assertFalse($result->isPhishing());
@@ -63,19 +70,28 @@ class ContactCheckTest extends TestCase {
 				'email' => ['jhonDoe@example.com']
 			]
 		];
-		$this->contactsIntegration->method('getContactsWithName')->willReturn($contacts);
+		$this->contactsIntegration->expects(self::once())
+			->method('getContactsWithName')
+			->with($fn)
+			->willReturn($contacts);
+
 		$result = $this->service->run($fn, $email);
 
 		$this->assertTrue($result->isPhishing());
 	}
 
 	public function testContactNotInAB(): void {
-		
 		$fn = 'John Doe';
 		$email = 'jhon@example.com' ;
 		$contacts = [];
-		$this->contactsIntegration->method('getContactsWithName')->willReturn($contacts);
+		$this->contactsIntegration
+			->expects(self::once())
+			->method('getContactsWithName')
+			->with($fn)
+			->willReturn($contacts);
+
 		$result = $this->service->run($fn, $email);
+
 		$this->assertFalse($result->isPhishing());
 	}
 
