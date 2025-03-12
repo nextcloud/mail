@@ -84,7 +84,7 @@ class ContactIntegrationController extends Controller {
 	 * @return JSONResponse
 	 */
 	#[TrapError]
-	public function autoComplete(string $term, bool $forceSAB = false): JSONResponse {
+	public function autoComplete(string $term): JSONResponse {
 		$cached = $this->cache->get($this->uid . $term);
 		if ($cached !== null) {
 			$decoded = json_decode($cached, true);
@@ -92,7 +92,7 @@ class ContactIntegrationController extends Controller {
 				return new JSONResponse($decoded);
 			}
 		}
-		$res = $this->service->autoComplete($term, $forceSAB);
+		$res = $this->service->autoComplete($term);
 		$this->cache->set($this->uid . $term, json_encode($res), 24 * 3600);
 		return new JSONResponse($res);
 	}
