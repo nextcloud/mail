@@ -257,7 +257,7 @@
 </template>
 
 <script>
-import ButtonVue from '@nextcloud/vue/dist/Components/NcButton.js'
+import ButtonVue from '@nextcloud/vue/components/NcButton'
 import GmailAdminOauthSettings from './GmailAdminOauthSettings.vue'
 import logger from '../../logger.js'
 import MicrosoftAdminOauthSettings from './MicrosoftAdminOauthSettings.vue'
@@ -267,8 +267,8 @@ import ProvisioningSettings from './ProvisioningSettings.vue'
 import AntiSpamSettings from './AntiSpamSettings.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconSettings from 'vue-material-design-icons/Cog.vue'
-import SettingsSection from '@nextcloud/vue/dist/Components/NcSettingsSection.js'
-import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
+import SettingsSection from '@nextcloud/vue/components/NcSettingsSection'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import {
 	disableProvisioning,
 	createProvisioningSettings,
