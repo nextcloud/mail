@@ -24,7 +24,7 @@ class ContactCheck {
 
 	public function run(string $fn, string $email): PhishingDetectionResult {
 		$emails = [];
-		$contacts = $this->contactIntegration->getContactsWithName($fn, true);
+		$contacts = $this->contactIntegration->getContactsWithName($fn);
 		foreach ($contacts as $contact) {
 			if (!isset($contact['email'])) {
 				continue;
