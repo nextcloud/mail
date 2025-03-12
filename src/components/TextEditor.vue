@@ -187,7 +187,7 @@ export default {
 			if (text.length === 0) {
 				return []
 			}
-			let contactResults = await autoCompleteByName(text, true)
+			let contactResults = await autoCompleteByName(text)
 			contactResults = contactResults.filter(result => result.email.length > 0)
 			return contactResults
 		},
