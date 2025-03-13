@@ -447,6 +447,7 @@ OC.L10N.register(
     "Warning sending your message" : "Warnung beim Versenden Ihrer Nachricht",
     "Send anyway" : "Trotzdem senden",
     "Maximize composer" : "Erstellungsbereich maximieren",
+    "Collapse composer" : "Komposer einklappen",
     "Minimize composer" : "Erstellungsbereich minimieren",
     "Welcome to {productName} Mail" : "Willkommen bei {productName} Mail",
     "Start writing a message by clicking below or select an existing message to display its contents" : "Beginnen Sie mit dem Erstellen einer Nachricht, indem Sie unten klicken, oder wählen Sie eine vorhandene Nachricht aus, um deren Inhalt anzuzeigen",
