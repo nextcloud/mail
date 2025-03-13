@@ -124,6 +124,7 @@ class MailboxSyncTest extends TestCase {
 		$folders = [
 			$this->createMock(Folder::class),
 			$this->createMock(Folder::class),
+			$this->createMock(Folder::class),
 		];
 		$status = [
 			'unseen' => 10,
@@ -133,24 +134,27 @@ class MailboxSyncTest extends TestCase {
 		$folders[0]->method('getMailbox')->willReturn('mb1');
 		$folders[1]->method('getStatus')->willReturn($status);
 		$folders[1]->method('getMailbox')->willReturn('mb2');
+		$folders[2]->method('getStatus')->willReturn($status);
+		$folders[2]->method('getMailbox')->willReturn('mb3');
 		$this->folderMapper->expects($this->once())
 			->method('getFolders')
 			->with($account, $client)
 			->willReturn($folders);
 		$this->folderMapper->expects($this->once())
 			->method('getFoldersStatusAsObject')
-			->with($client, self::equalToCanonicalizing(['mb1', 'mb2',]))
+			->with($client, self::equalToCanonicalizing(['mb1', 'mb2', 'mb3',]))
 			->willReturn([
 				'mb1' => new MailboxStats(1, 2),
 				'mb2' => new MailboxStats(1, 2),
+				/* no status for mb3 */
 			]);
 		$this->folderMapper->expects($this->once())
 			->method('detectFolderSpecialUse')
 			->with($folders);
-		$this->mailboxMapper->expects(self::exactly(2))
+		$this->mailboxMapper->expects(self::exactly(3))
 			->method('insert')
 			->willReturnArgument(0);
-		$this->mailboxMapper->expects(self::exactly(2))
+		$this->mailboxMapper->expects(self::exactly(3))
 			->method('update')
 			->willReturnArgument(0);
 		$this->dispatcher
