@@ -447,6 +447,7 @@ OC.L10N.register(
     "Warning sending your message" : "Упозорење приликом слања ваше поруке",
     "Send anyway" : "Ипак пошаљи",
     "Maximize composer" : "Максимизуј композитора",
+    "Collapse composer" : "Сажми састављач",
     "Minimize composer" : "Минимизуј састављач",
     "Welcome to {productName} Mail" : "Добродошли у {productName} Пошту",
     "Start writing a message by clicking below or select an existing message to display its contents" : "Почните да пишете поруку кликом испод, или изаберите постојећу поруку да се прикаже њен садржај",

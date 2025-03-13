@@ -447,6 +447,7 @@ OC.L10N.register(
     "Warning sending your message" : "在傳送您的郵件時警告",
     "Send anyway" : "無論無何都要傳送",
     "Maximize composer" : "最大化編輯器",
+    "Collapse composer" : "折疊編輯器",
     "Minimize composer" : "最小化編輯器",
     "Welcome to {productName} Mail" : "歡迎使用 {productName} Mail",
     "Start writing a message by clicking below or select an existing message to display its contents" : "點選下方開始編寫訊息，或選取現有訊息以顯示其內容",
