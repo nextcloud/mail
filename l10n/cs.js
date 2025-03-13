@@ -446,6 +446,7 @@ OC.L10N.register(
     "Warning sending your message" : "Varování při odesílání vaší zprávy",
     "Send anyway" : "Poslat i tak",
     "Maximize composer" : "Maximalizovat dialog editoru zprávy",
+    "Collapse composer" : "Sbalit editor psaní",
     "Minimize composer" : "Minimalizovat dialog psaní",
     "Welcome to {productName} Mail" : "Vítejte v {productName} Poště",
     "Start writing a message by clicking below or select an existing message to display its contents" : "Kliknutím níže začněte psát zprávu nebo vyberte existující a zobrazte si její obsah",
