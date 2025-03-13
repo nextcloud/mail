@@ -1,3 +1,16 @@
+## [4.2.6](https://github.com/nextcloud/mail/compare/v4.2.5...v4.2.6) (2025-03-13)
+
+
+### Bug Fixes
+
+* allow to send attachment without setting disposition ([5766d90](https://github.com/nextcloud/mail/commit/5766d90755817d545745e279f54371bb89c15bea))
+* **db:** Allow long references ([f65a9f8](https://github.com/nextcloud/mail/commit/f65a9f888bb91e3c3adc2e09c8a767b7da0bfbc4))
+* **deps:** Apply npm audit fix ([a969494](https://github.com/nextcloud/mail/commit/a9694943d0049f867ec64c03eec263c102bfc9cb))
+* **imap:** Sync mailboxes without a status ([c80ebc3](https://github.com/nextcloud/mail/commit/c80ebc30595648379c1f8ba85c2f8f0f96b0dd4c))
+* shorten ai summaries to fit in message list better ([71a28e0](https://github.com/nextcloud/mail/commit/71a28e07018efe1c2bba6803009bc5c713b10258))
+
+
+
 ## [4.2.5](https://github.com/nextcloud/mail/compare/v4.2.4...v4.2.5) (2025-03-12)
 
 
