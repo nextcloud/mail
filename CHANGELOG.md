@@ -1,3 +1,14 @@
+## [3.7.23](https://github.com/nextcloud/mail/compare/v3.7.22...v3.7.23) (2025-03-13)
+
+
+### Bug Fixes
+
+* **db:** Allow long references ([2beb96c](https://github.com/nextcloud/mail/commit/2beb96ce8d35dedd10cc213355be4f5bf08dcc8f))
+* **db:** Catch message IDs that are too long ([cc011c2](https://github.com/nextcloud/mail/commit/cc011c241c5bcbf71cb8b1157416b76e3e55b651))
+* **imap:** Sync mailboxes without a status ([96cc086](https://github.com/nextcloud/mail/commit/96cc086d3abfe88b15400ec7d411d22ec937da2b))
+
+
+
 ## [3.7.22](https://github.com/nextcloud/mail/compare/v3.7.21...v3.7.22) (2025-03-03)
 
 
