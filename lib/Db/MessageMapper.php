@@ -312,7 +312,7 @@ class MessageMapper extends QBMapper {
 				$qb1->setParameter('message_id', $message->getMessageId(), IQueryBuilder::PARAM_STR);
 				$inReplyTo = self::filterMessageIdLength($message->getInReplyTo());
 				$qb1->setParameter('in_reply_to', $inReplyTo, $inReplyTo === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
-				$references = self::filterMessageIdLength($message->getReferences());
+				$references = $message->getReferences();
 				$qb1->setParameter('references', $references, $references === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
 				$threadRootId = self::filterMessageIdLength($message->getThreadRootId());
 				$qb1->setParameter('thread_root_id', $threadRootId, $threadRootId === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
