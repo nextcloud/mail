@@ -436,6 +436,7 @@ OC.L10N.register(
     "attached" : "přiloženo",
     "No sent mailbox configured. Please pick one in the account settings." : "Není nastavená žádná složka pro odchozí. Zvolte nějakou v nastavení účtu.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "V kolonkách Pro a Skrytá kopie se snažíte poslat opravdu mnoha příjemcům. Zvažte použití Skryté kopie a nesdělování tak adres příjemců všem.",
+    "Your message has no subject. Do you want to send it anyway?" : "Vaše zpráva nemá žádný předmět. Chcete ji i tak odeslat?",
     "You mentioned an attachment. Did you forget to add it?" : "Zmínili jste přílohu. Nezapomněli jste ji přidat?",
     "Message discarded" : "Zpráva zahozena",
     "Could not discard message" : "Zprávu se nepodařilo zahodit",

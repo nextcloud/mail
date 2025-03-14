@@ -435,6 +435,7 @@
     "attached" : "已附加",
     "No sent mailbox configured. Please pick one in the account settings." : "未配置发送邮箱，请在账号设置中选择一个。",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "您正在尝试给“收件人”或“抄送”中的许多人发送邮件。考虑使用“密送”来隐藏收件人地址。",
+    "Your message has no subject. Do you want to send it anyway?" : "您的邮件没有主题。是否仍要发送？",
     "You mentioned an attachment. Did you forget to add it?" : "你提到了一个附件。 您忘记添加了吗？",
     "Message discarded" : "邮件已丢弃",
     "Could not discard message" : "无法丢弃邮件",
