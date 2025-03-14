@@ -1,4 +1,4 @@
-# [4.3.0-rc.4](https://github.com/nextcloud/mail/compare/v4.3.0-rc3...v4.3.0-rc.4) (2025-03-14)
+# [4.3.0-rc.5](https://github.com/nextcloud/mail/compare/v4.3.0-rc3...v4.3.0-rc.5) (2025-03-14)
 
 
 ### Bug Fixes
