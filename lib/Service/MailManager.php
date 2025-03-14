@@ -441,28 +441,6 @@ class MailManager implements IMailManager {
 		return $this->mailboxMapper->find($account, $mailbox->getName());
 	}
 
-	public function setImapSpecialUseAtrribute(Account $account, Mailbox $mailbox, string $specialUse): Mailbox {
-
-		$client = $this->imapClientFactory->getClient($account);
-		try {
-			$client->setMetadata($mailbox->getName(), [
-				'/private/specialuse' => $specialUse,
-			]);
-		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException(
-				'Could not set special use attribute for mailbox ' . $mailbox->getId() . ' on IMAP: ' . $e->getMessage(),
-				$e->getCode(),
-				$e
-			);
-		} finally {
-			$client->logout();
-		}
-
-		$this->mailboxSync->sync($account, $this->logger, true);
-
-		return $this->mailboxMapper->find($account, $mailbox->getName());
-	}
-
 	public function enableMailboxBackgroundSync(Mailbox $mailbox,
 		bool $syncInBackground): Mailbox {
 		$mailbox->setSyncInBackground($syncInBackground);
