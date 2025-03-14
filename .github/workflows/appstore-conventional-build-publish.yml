@@ -11,6 +11,20 @@ name: Build and publish app release conventionally
 on:
   workflow_dispatch:
     branches: stable*
+    input:
+      prerelease:
+        description: 'Pre-release'
+        type: boolean
+        required: true
+      prereleaseIdentifier:
+        description: 'Pre-release identifier'
+        required: true
+        default: 'rc'
+        type: choice
+        options:
+          - alpha
+          - beta
+          - rc
 
 env:
   PHP_VERSION: 8.2
@@ -49,6 +63,8 @@ jobs:
           pre-commit: build/pre-commit.js
           release-count: 0
           version-file: "package.json, package-lock.json"
+          pre-release: ${{ inputs.prerelease }}
+          pre-release-identifier: ${{ inputs.prereleaseIdentifier }}
 
       - name: Push tag to releases organization
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
@@ -67,3 +83,4 @@ jobs:
           tag_name: ${{ steps.changelog.outputs.tag }}
           release_name: ${{ steps.changelog.outputs.tag }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
+          prerelease: ${{ inputs.prerelease }}
