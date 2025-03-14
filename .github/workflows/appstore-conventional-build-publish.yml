@@ -11,7 +11,7 @@ name: Build and publish app release conventionally
 on:
   workflow_dispatch:
     branches: stable*
-    input:
+    inputs:
       prerelease:
         description: 'Pre-release'
         type: boolean
