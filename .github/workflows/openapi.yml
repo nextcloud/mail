@@ -60,7 +60,7 @@ jobs:
 
       - name: Set up node ${{ steps.node_versions.outputs.nodeVersion }}
         if: ${{ steps.node_versions.outputs.nodeVersion }}
-        uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4.0.4
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
         with:
           node-version: ${{ steps.node_versions.outputs.nodeVersion }}
 
