@@ -45,16 +45,18 @@
 				</div>
 			</div>
 			<ThreadSummary v-if="showSummaryBox" :loading="summaryLoading" :summary="summaryText" />
-			<ThreadEnvelope v-for="env in thread"
+			<ThreadEnvelope v-for="(env, index) in thread"
 				:key="env.databaseId"
 				:envelope="env"
 				:mailbox-id="$route.params.mailboxId"
 				:thread-subject="threadSubject"
 				:expanded="expandedThreads.includes(env.databaseId)"
 				:full-height="thread.length === 1"
+				:thread-index="index"
 				@delete="$emit('delete', env.databaseId)"
 				@move="onMove(env.databaseId)"
-				@toggle-expand="toggleExpand(env.databaseId)" />
+				@toggle-expand="toggleExpand(env.databaseId)"
+				@print="print" />
 		</template>
 	</AppContentDetails>
 </template>
@@ -189,9 +191,11 @@ export default {
 	created() {
 		this.resetThread()
 		window.addEventListener('resize', this.resizeDebounced)
+		window.addEventListener('keydown', this.handleKeyDown)
 	},
 	beforeDestroy() {
 		window.removeEventListener('resize', this.resizeDebounced)
+		window.removeEventListener('keydown', this.handleKeyDown)
 	},
 	methods: {
 		async updateSummary() {
@@ -319,6 +323,139 @@ export default {
 					this.errorMessage = t('mail', 'Could not load your message thread')
 				}
 			}
+		},
+		handleKeyDown(event) {
+			if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
+				event.preventDefault()
+
+				// So when the menu envelope is opened then closed, the element in html doesn't get immediately deleted, just hidden
+				// This causes firefox pdf formatting to break, making the pdf content be very narrow and only take a small piece of the page
+				// We need to manually remove the element from the dom
+				const menuEnvelope = document.querySelectorAll('.v-popper__popper')
+				menuEnvelope.forEach((element) => {
+					element.remove()
+				})
+
+				// Chrome has a browser bug in which any element with flex properties above an iframe causes empty page generation
+				// Hiding these elements with CSS is not enough, they have to be forcefully removed
+				// This is a workaround for the issue
+				const elementsToRemove = [
+					'#mail-thread-header',
+					'.envelope__header',
+					'.app-details-toggle',
+					'header',
+					'.splitpanes__splitter',
+					'.app-navigation',
+					'.reply-buttons',
+					'#reply-composer',
+				]
+				for (const element of elementsToRemove) {
+					document.querySelectorAll(element).forEach((element) => {
+						element.remove()
+					})
+				}
+
+				document.querySelectorAll('iframe').forEach((iframe, index) => {
+					iframe.setAttribute('data-iframe-size', 'true')
+					const iframeDocument = iframe.contentDocument || iframe.contentWindow.document
+
+					if (index === 0) {
+						this.addThreadInfo(iframeDocument)
+					}
+				})
+
+				window.print()
+
+				// Reload needed to bring back deleted elements
+				setTimeout(() => {
+					location.reload()
+				}, 0)
+			}
+		},
+		addThreadInfo(document) {
+			const threadInfo = document.createElement('div')
+			threadInfo.style.margin = '20px'
+			threadInfo.className = 'mail-thread-info'
+
+			const subjectLine = document.createElement('h2')
+			subjectLine.textContent = `${this.threadSubject}`
+			threadInfo.appendChild(subjectLine)
+
+			const participantsLine = document.createElement('p')
+			participantsLine.textContent = this.threadParticipants
+				.map(participant => `${participant.label} <${participant.email}>`)
+				.join(', ')
+			threadInfo.appendChild(participantsLine)
+
+			document.body.insertBefore(threadInfo, document.body.firstChild)
+
+			setTimeout(() => {
+				threadInfo.remove()
+			}, 200)
+		},
+		print(threadIndex) {
+			setTimeout(() => {
+				try {
+					const messages = Array.from(document.querySelectorAll('.html-message-body, .mail-message-body'))
+
+					let message
+
+					if (threadIndex !== undefined) {
+						message = messages[threadIndex] ?? messages.pop()
+					} else {
+						// By default, we print the last opened message in the thread
+						message = messages.pop()
+					}
+
+					const iframe = message.querySelector('iframe')
+
+					if (iframe === null) {
+						// Handle plain text messages
+						const messageContainer = message.querySelector('#message-container')
+
+						if (messageContainer) {
+							// Create a new iframe
+							const newIframe = document.createElement('iframe')
+							newIframe.style.display = 'none' // Hide the iframe
+							document.body.appendChild(newIframe)
+
+							// Insert the message content into the iframe
+							const iframeDocument = newIframe.contentDocument || newIframe.contentWindow.document
+							iframeDocument.open()
+							iframeDocument.write(`
+								<html>
+									<head>
+										<title>${this.threadSubject}</title>
+									</head>
+									<body>
+										<div class="message-container">${messageContainer.innerHTML}</div>
+									</body>
+								</html>
+							`)
+							iframeDocument.close()
+
+							this.addThreadInfo(iframeDocument)
+
+							newIframe.contentWindow.print()
+
+							// Clean up: remove the iframe after printing
+							setTimeout(() => {
+								document.body.removeChild(newIframe)
+							}, 500)
+						}
+
+						return
+					}
+
+					const iframeDocument = iframe.contentDocument || iframe.contentWindow.document
+
+					this.addThreadInfo(iframeDocument)
+
+					iframe.contentWindow.print()
+				} catch (error) {
+					showError(t('mail', 'Could not print message'))
+				}
+			}, 100)
 		},
 	},
 }
@@ -465,6 +602,9 @@ export default {
 	}
 	.app-content {
 		margin-left: 0 !important;
+		break-inside: avoid;
+		page-break-inside: avoid;
+		page-break-after: always;
 	}
 	.mail-message-body {
 		margin-bottom: 0 !important;
@@ -477,6 +617,42 @@ export default {
 	}
 	.envelope {
 		border: none !important;
+	}
+	.v-popper__popper {
+		display: none !important;
+	}
+	iframe {
+		display: block !important;
+		visibility: visible !important;
+		position: relative !important;
+		width: 100% !important;
+		overflow-y: visible !important;
+	}
+
+	.html-message-body {
+		break-inside: auto;
+	}
+
+	#message-container {
+		break-inside: auto;
+		break-after: avoid-region !important;
+	}
+
+	.mail-message-body-html {
+		break-inside: auto;
+		break-after: avoid-region !important;
+		display: block !important;
+		overflow-y: visible !important;
+	}
+
+	iframe body {
+		display: block !important;
+	}
+
+	@page {
+		size: auto;
+		margin: 10mm;
+		border-collapse: collapse;
 	}
 }
 
