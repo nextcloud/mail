@@ -3,7 +3,7 @@
 # https://github.com/nextcloud/.github
 # https://docs.github.com/en/actions/learn-github-actions/sharing-workflows-with-your-organization
 #
-# SPDX-FileCopyrightText: 2021-2024 Nextcloud GmbH and Nextcloud contributors
+# SPDX-FileCopyrightText: 2021-2025 Nextcloud GmbH and Nextcloud contributors
 # SPDX-License-Identifier: MIT
 
 name: Build and publish app release conventionally
@@ -140,10 +140,12 @@ jobs:
           git remote add release https://github.com/nextcloud-releases/${{ env.APP_NAME }}.git
           git push release ${{ steps.changelog.outputs.tag }}
 
-      - name: Attach tarball to github release
+      - name: Create Release
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
-        uses: svenstaro/upload-release-action@04733e069f2d7f7f0b4aebc4fbdbce8613b03ccd # v2
-        id: attach_to_release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
         with:
           repo_token: ${{ secrets.RELEASE_PAT }}
           repo_name: nextcloud-releases/${{ env.APP_NAME }}
