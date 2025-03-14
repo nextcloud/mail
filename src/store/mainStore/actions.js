@@ -278,12 +278,13 @@ export default function mainStoreActions() {
 		async createMailbox({
 			account,
 			name,
+			isSentMailbox = false,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const prefixed = (account.personalNamespace && !name.startsWith(account.personalNamespace))
 					? account.personalNamespace + name
 					: name
-				const mailbox = await createMailbox(account.id, prefixed)
+				const mailbox = await createMailbox(account.id, prefixed, isSentMailbox)
 				console.debug(`mailbox ${prefixed} created for account ${account.id}`, { mailbox })
 				this.addMailboxMutation({
 					account,

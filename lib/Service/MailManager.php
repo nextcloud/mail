@@ -142,14 +142,15 @@ class MailManager implements IMailManager {
 	/**
 	 * @param Account $account
 	 * @param string $name
+	 * @param bool $isSentMailbox
 	 *
 	 * @return Mailbox
 	 * @throws ServiceException
 	 */
-	public function createMailbox(Account $account, string $name): Mailbox {
+	public function createMailbox(Account $account, string $name, bool $isSentMailbox = false): Mailbox {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
-			$folder = $this->folderMapper->createFolder($client, $account, $name);
+			$folder = $this->folderMapper->createFolder($client, $account, $name, $isSentMailbox);
 			$this->folderMapper->fetchFolderAcls([$folder], $client);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
@@ -437,6 +438,28 @@ class MailManager implements IMailManager {
 		/**
 		 * 3. Return the updated object
 		 */
+		return $this->mailboxMapper->find($account, $mailbox->getName());
+	}
+
+	public function setImapSpecialUseAtrribute(Account $account, Mailbox $mailbox, string $specialUse): Mailbox {
+
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$client->setMetadata($mailbox->getName(), [
+				'/private/specialuse' => $specialUse,
+			]);
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException(
+				'Could not set special use attribute for mailbox ' . $mailbox->getId() . ' on IMAP: ' . $e->getMessage(),
+				$e->getCode(),
+				$e
+			);
+		} finally {
+			$client->logout();
+		}
+
+		$this->mailboxSync->sync($account, $this->logger, true);
+
 		return $this->mailboxMapper->find($account, $mailbox->getName());
 	}
 
