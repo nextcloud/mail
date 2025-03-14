@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 4.2.0 - unreleased
+## 4.3.0 - 2025-03-17
 
 ### Added
 * Nextcloud 32 support
