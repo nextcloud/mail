@@ -54,7 +54,7 @@ jobs:
 
       - name: Conventional Changelog Action
         id: changelog
-        uses: TriPSs/conventional-changelog-action@v3
+        uses: TriPSs/conventional-changelog-action@b7f32a8347e86c26ea2f4823cc7c160b9014c6a0 # v3
         with:
           github-token: ${{ secrets.RELEASE_PAT }}
           git-user-email: nextcloud-command@users.noreply.github.com
@@ -75,7 +75,7 @@ jobs:
       - name: Create Release
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         id: create_release
-        uses: actions/create-release@v1
+        uses: actions/create-release@0cb9c9b65d5d1901c1f53e5e66eaf4afd303e70e # v1
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
         with:
