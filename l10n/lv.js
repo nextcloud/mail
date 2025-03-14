@@ -128,6 +128,8 @@ OC.L10N.register(
     "Valid until" : "Derīgs līdz",
     "Certificate" : "Sertifikāts",
     "Submit" : "Iesniegt",
+    "Account connected" : "Konts sasaistīts",
+    "You can close this window" : "Šo logu var aizvērt.",
     "Connect your mail account" : "Pievienot savu e-pasta kontu",
     "All" : "Visi",
     "Drafts" : "Melnraksti",
