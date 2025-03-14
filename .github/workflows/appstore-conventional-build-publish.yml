@@ -79,7 +79,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
         with:
-          repo: nextcloud-releases/${{ env.APP_NAME }}
+          owner: nextcloud-releases
+          repo: ${{ env.APP_NAME }}
           tag_name: ${{ steps.changelog.outputs.tag }}
           release_name: ${{ steps.changelog.outputs.tag }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
