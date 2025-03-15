@@ -129,7 +129,7 @@ import {
 	NcEmptyContent as EmptyContent,
 	NcModal as Modal,
 } from '@nextcloud/vue'
-import { showError, showSuccess } from '@nextcloud/dialogs'
+import { showError, showSuccess, showWarning } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 
 import logger from '../logger.js'
@@ -297,6 +297,51 @@ export default {
 		},
 		toHtml,
 		plain,
+		async onNewSentMailbox(data, account) {
+			showWarning(t('mail', 'Setting Sent default folder'))
+			let newSentMailboxId = null
+			const mailboxes = this.mainStore.getMailboxes(data.accountId)
+			const sentMailboxId = mailboxes.find((mailbox) => mailbox.name === account.personalNamespace + 'Sent' || mailbox.name === account.personalNamespace + t('mail', 'Sent'))?.databaseId
+			if (sentMailboxId) {
+				await this.setSentMailboxAndResend(account, sentMailboxId, data)
+			}
+			logger.info(`creating ${t('mail', 'Sent')} mailbox`)
+			try {
+				const newSentMailbox = await this.mainStore.createMailbox({ account, name: account.personalNamespace + t('mail', 'Sent') })
+				logger.info(`mailbox ${account.personalNamespace + t('mail', 'Sent')} created`)
+				newSentMailboxId = newSentMailbox.databaseId
+			} catch (error) {
+				showError(t('mail', 'Could not create new mailbox, please try setting a sent mailbox manually'))
+				logger.error('could not create mailbox', { error })
+				this.$emit('close')
+			}
+
+			if (newSentMailboxId) {
+				await this.setSentMailboxAndResend(account, newSentMailboxId, data)
+			} else {
+				showError(t('mail', 'Couldn\'t set sent default folder, please try manually before sending a new message'))
+				this.$emit('close')
+			}
+		},
+
+		async setSentMailboxAndResend(account, id, data) {
+			logger.debug('setting sent mailbox to ' + id)
+			try {
+				await this.mainStore.patchAccount({
+					account,
+					data: {
+						sentMailboxId: id,
+					},
+				})
+				logger.debug('Resending message after new setting sent mailbox')
+				this.onSend(data)
+				showSuccess(t('mail', 'Sent folder set, resending message'))
+			} catch (error) {
+				showError(t('mail', 'Couldn\'t set sent default folder, please try manually before sending a new message'))
+				logger.error('could not set sent mailbox', { error })
+				this.$emit('close')
+			}
+		},
 		/**
 		 * @param data Message data
 		 * @param {object=} opts Options
@@ -395,6 +440,11 @@ export default {
 				.catch((error) => logger.error('could not upload attachments', { error }))
 		},
 		async onSend(data, force = false) {
+			const account = this.mainStore.getAccount(data.accountId)
+			if (!account?.sentMailboxId) {
+				this.onNewSentMailbox(data, account)
+				return
+			}
 			logger.debug('sending message', { data })
 
 			await this.attachmentsPromise
@@ -505,7 +555,6 @@ export default {
 			}
 
 			// Sync sent mailbox when it's currently open
-			const account = this.mainStore.getAccount(data.accountId)
 			if (account && parseInt(this.$route.params.mailboxId, 10) === account.sentMailboxId) {
 				setTimeout(() => {
 					this.mainStore.syncEnvelopes({
