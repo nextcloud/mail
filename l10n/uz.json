@@ -6,7 +6,9 @@
     "Name" : "Name",
     "Password" : "Password",
     "None" : "None",
+    "Email address" : "E-pochta manzili",
     "Cancel" : "Cancel",
+    "Accounts" : "Akkaunt",
     "General" : "General",
     "List" : "Ro`yxat",
     "About" : "About",
@@ -22,6 +24,7 @@
     "_{count} attachment_::_{count} attachments_" : ["{count} qo'shimchalar"],
     "Confirm" : "Confirm",
     "Favorite" : "Favorite",
+    "More actions" : "Ko'proq harakatlar",
     "Back" : "Orqaga",
     "Create event" : "Tadbir yaratish",
     "All day" : "Butun kun",
@@ -40,13 +43,19 @@
     "Reply" : "Javob bering",
     "Add" : "Add",
     "Close" : "Close",
+    "Date" : "Sana",
     "Tags" : "Tags",
+    "Last 7 days" : "Oxirgi 7 kun",
+    "Custom" : "Boshqa",
+    "Not found" : "Topilmadi",
     "Untitled event" : "Nomsiz tadbir",
     "(organizer)" : "(tashkilotchi)",
     "Actions" : "Actions",
     "Port" : "Port",
+    "Account connected" : "Akkaunt ulangan",
     "All" : "All",
     "Favorites" : "Favorites",
-    "Error while sharing file" : "Fayl almashishda xatolik yuz berdi"
+    "Error while sharing file" : "Fayl almashishda xatolik yuz berdi",
+    "Continue to %s" : " %sni davom eting"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

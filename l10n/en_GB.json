@@ -435,6 +435,7 @@
     "attached" : "attached",
     "No sent mailbox configured. Please pick one in the account settings." : "No sent mailbox configured. Please pick one in the account settings.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses.",
+    "Your message has no subject. Do you want to send it anyway?" : "Your message has no subject. Do you want to send it anyway?",
     "You mentioned an attachment. Did you forget to add it?" : "You mentioned an attachment. Did you forget to add it?",
     "Message discarded" : "Message discarded",
     "Could not discard message" : "Could not discard message",
