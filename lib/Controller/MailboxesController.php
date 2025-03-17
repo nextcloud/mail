@@ -35,7 +35,16 @@ class MailboxesController extends Controller {
 	private ?string $currentUserId;
 	private IMailManager $mailManager;
 	private SyncService $syncService;
-
+	
+	private const SUPPORTED_SPECIAL_USE_ATTRIBUTES = [
+		Horde_Imap_Client::SPECIALUSE_ALL,
+		Horde_Imap_Client::SPECIALUSE_ARCHIVE,
+		Horde_Imap_Client::SPECIALUSE_DRAFTS,
+		Horde_Imap_Client::SPECIALUSE_FLAGGED,
+		Horde_Imap_Client::SPECIALUSE_JUNK,
+		Horde_Imap_Client::SPECIALUSE_SENT,
+		Horde_Imap_Client::SPECIALUSE_TRASH,
+	];
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
@@ -247,6 +256,13 @@ class MailboxesController extends Controller {
 	 */
 	#[TrapError]
 	public function create(int $accountId, string $name, array $specialUseAttributes = []): JSONResponse {
+		$diff = array_filter($specialUseAttributes, static function ($attribute) {
+			return !in_array($attribute, self::SUPPORTED_SPECIAL_USE_ATTRIBUTES, true);
+		});
+		if (!empty($diff)) {
+			throw new ServiceException('Unsupported special use attribute: ' . implode(', ', $diff));
+		}
+
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 		try {
 			$mailbox = $this->mailManager->createMailbox($account, $name, $specialUseAttributes);

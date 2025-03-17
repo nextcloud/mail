@@ -45,7 +45,7 @@ interface IMailManager {
 	/**
 	 * @param Account $account
 	 * @param string $name
-	 * @param array $specialUseAttributes
+	 * @param array<"\\All","\\Archive",'\\Drafts',"\\Flagged","\\Junk","\\Sent","\\Trash"> $specialUseAttributes
 	 *
 	 * @return Mailbox
 	 *

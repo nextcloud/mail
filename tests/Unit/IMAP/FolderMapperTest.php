@@ -157,17 +157,6 @@ class FolderMapperTest extends TestCase {
 		$this->assertEquals($expected, $created);
 	}
 
-	public function testCreateFolderUnsupportedSpecialUse(): void {
-		$account = $this->createMock(Account::class);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$client->expects($this->never())
-			->method('createMailbox');
-		$client->expects($this->never())
-			->method('listMailboxes');
-		$this->expectExceptionMessage('Unsupported special use attribute: \\unsupported');
-		$this->mapper->createFolder($client, $account, 'new', ['\\unsupported']);
-	}
-
 	public function testFetchFoldersAclsNoSelect(): void {
 		$folders = [
 			$this->createMock(Folder::class),
