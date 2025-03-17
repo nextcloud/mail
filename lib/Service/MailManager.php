@@ -142,19 +142,19 @@ class MailManager implements IMailManager {
 	/**
 	 * @param Account $account
 	 * @param string $name
-	 * @param bool $isSentMailbox
+	 * @param array $specialUseAttributes
 	 *
 	 * @return Mailbox
 	 * @throws ServiceException
 	 */
-	public function createMailbox(Account $account, string $name, bool $isSentMailbox = false): Mailbox {
+	public function createMailbox(Account $account, string $name, array $specialUseAttributes = []): Mailbox {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
-			$folder = $this->folderMapper->createFolder($client, $account, $name, $isSentMailbox);
+			$folder = $this->folderMapper->createFolder($client, $account, $name, $specialUseAttributes);
 			$this->folderMapper->fetchFolderAcls([$folder], $client);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
-				'Could not get mailbox status: ' . $e->getMessage(),
+				'Could not create Mailbox: ' . $e->getMessage(),
 				$e->getCode(),
 				$e
 			);

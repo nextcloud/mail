@@ -156,11 +156,6 @@ return [
 			'verb' => 'PATCH'
 		],
 		[
-			'name' => 'mailboxes#setImapSpecialUseAtrribute',
-			'url' => '/api/mailboxes/{id}/special-use',
-			'verb' => 'PUT'
-		],
-		[
 			'name' => 'mailboxes#sync',
 			'url' => '/api/mailboxes/{id}/sync',
 			'verb' => 'POST'

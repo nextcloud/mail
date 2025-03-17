@@ -17,13 +17,13 @@ export async function fetchAll(accountId) {
 	return resp.data.mailboxes
 }
 
-export function create(accountId, name, isSentMailbox) {
+export function create(accountId, name, specialUseAttributes) {
 	const url = generateUrl('/apps/mail/api/mailboxes')
 
 	const data = {
 		accountId,
 		name,
-		isSentMailbox,
+		specialUseAttributes,
 	}
 	return axios.post(url, data).then((resp) => resp.data)
 }

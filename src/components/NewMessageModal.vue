@@ -307,7 +307,7 @@ export default {
 			}
 			logger.info(`creating ${t('mail', 'Sent')} mailbox`)
 			try {
-				const newSentMailbox = await this.mainStore.createMailbox({ account, name: account.personalNamespace + t('mail', 'Sent') })
+				const newSentMailbox = await this.mainStore.createMailbox({ account, name: account.personalNamespace + t('mail', 'Sent'), specialUseAttributes: ['\\Sent'] })
 				logger.info(`mailbox ${account.personalNamespace + t('mail', 'Sent')} created`)
 				newSentMailboxId = newSentMailbox.databaseId
 			} catch (error) {

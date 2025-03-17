@@ -39,6 +39,16 @@ class FolderMapper {
 		'INBOX.dovecot.sieve'
 	];
 
+	private const SUPPORTED_SPECIAL_USE_ATTRIBUTES = [
+		Horde_Imap_Client::SPECIALUSE_ALL,
+		Horde_Imap_Client::SPECIALUSE_ARCHIVE,
+		Horde_Imap_Client::SPECIALUSE_DRAFTS,
+		Horde_Imap_Client::SPECIALUSE_FLAGGED,
+		Horde_Imap_Client::SPECIALUSE_JUNK,
+		Horde_Imap_Client::SPECIALUSE_SENT,
+		Horde_Imap_Client::SPECIALUSE_TRASH,
+	];
+
 	/**
 	 * @param Account $account
 	 * @param Horde_Imap_Client_Socket $client
@@ -77,10 +87,14 @@ class FolderMapper {
 	public function createFolder(Horde_Imap_Client_Socket $client,
 		Account $account,
 		string $name,
-		bool $isSentMailbox = false): Folder {
+		array $specialUseAttributes = []): Folder {
 		$opts = [];
-		if ($isSentMailbox) {
-			$opts[] = Horde_Imap_Client::SPECIALUSE_SENT;
+	
+		foreach ($specialUseAttributes as $attribute) {
+			if (!in_array($attribute, self::SUPPORTED_SPECIAL_USE_ATTRIBUTES, true)) {
+				throw new ServiceException('Unsupported special use attribute: ' . $attribute);
+			}
+			$opts[] = $attribute;
 		}
 		$client->createMailbox($name, $opts);
 
