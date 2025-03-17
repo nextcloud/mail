@@ -88,15 +88,16 @@ class FolderMapper {
 		Account $account,
 		string $name,
 		array $specialUseAttributes = []): Folder {
-		$opts = [];
+		$attributes = [];
 	
 		foreach ($specialUseAttributes as $attribute) {
 			if (!in_array($attribute, self::SUPPORTED_SPECIAL_USE_ATTRIBUTES, true)) {
-				throw new ServiceException('Unsupported special use attribute: ' . $attribute);
+				$this->logger->error("Unsupported special use attribute: $attribute");
+				throw new ServiceException("Unsupported special use attribute: $attribute");
 			}
-			$opts[] = $attribute;
+			$attributes[] = $attribute;
 		}
-		$client->createMailbox($name, $opts);
+		$client->createMailbox($name, ['special_use' => $attributes]);
 
 		$list = $client->listMailboxes($name, Horde_Imap_Client::MBOX_ALL_SUBSCRIBED, [
 			'delimiter' => true,

@@ -248,8 +248,12 @@ class MailboxesController extends Controller {
 	#[TrapError]
 	public function create(int $accountId, string $name, array $specialUseAttributes = []): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
-
-		return new JSONResponse($this->mailManager->createMailbox($account, $name, $specialUseAttributes));
+		try {
+			$mailbox = $this->mailManager->createMailbox($account, $name, $specialUseAttributes);
+		} catch (ServiceException $e) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		}
+		return new JSONResponse($mailbox);
 	}
 
 	/**
