@@ -1,3 +1,12 @@
+# [4.3.0](https://github.com/nextcloud/mail/compare/v4.3.0-rc.5...v4.3.0) (2025-03-17)
+
+
+### Bug Fixes
+
+* **dns:** Update public suffix list ([cd728b0](https://github.com/nextcloud/mail/commit/cd728b0715207da2bb1ce16b96c21b06a020291e))
+
+
+
 # [4.3.0-rc.5](https://github.com/nextcloud/mail/compare/v4.3.0-rc3...v4.3.0-rc.5) (2025-03-14)
 
 
