@@ -136,6 +136,7 @@ export default {
 			ready: false,
 			editor: Editor,
 			config: {
+				licenseKey: 'GPL',
 				placeholder: this.placeholder,
 				plugins,
 				toolbar: {
