@@ -1,3 +1,13 @@
+## [4.2.7](https://github.com/nextcloud/mail/compare/v4.2.6...v4.2.7) (2025-03-17)
+
+
+### Bug Fixes
+
+* **dns:** Update public suffix list ([b7f6b38](https://github.com/nextcloud/mail/commit/b7f6b38166f414ed5decc667fec0d698275db743))
+* reloading recipeint info when you expand and collapse the composer ([de23180](https://github.com/nextcloud/mail/commit/de23180a0ba28adc24086ed41e8b2fe79113cea4))
+
+
+
 ## [4.2.6](https://github.com/nextcloud/mail/compare/v4.2.5...v4.2.6) (2025-03-13)
 
 
