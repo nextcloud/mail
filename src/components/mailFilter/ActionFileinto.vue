@@ -11,7 +11,7 @@
 </template>
 <script>
 
-import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import { mailboxHasRights } from '../../util/acl.js'
 import { mapStores } from 'pinia'
 import useMainStore from '../../store/mainStore.js'

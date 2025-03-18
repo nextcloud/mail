@@ -68,11 +68,11 @@ jobs:
               cache: ['nocache']
               include:
                 - php-versions: 8.1
-                  nextcloud-versions: master
+                  nextcloud-versions: 'master'
                   db: 'sqlite'
                   cache: 'redis'
                 - php-versions: 8.2
-                  nextcloud-versions: master
+                  nextcloud-versions: 'master'
                   db: 'mysql'
                   cache: 'redis'
                 - php-versions: 8.2
@@ -156,7 +156,7 @@ jobs:
             if: ${{ matrix.php-versions == '8.3' }}
             run: sed -i 's/max-version="8.3"/max-version="8.4"/' nextcloud/apps/mail/appinfo/info.xml
           - name: Install Mail
-            run: php -f nextcloud/occ app:enable -f mail
+            run: php -f nextcloud/occ app:enable mail
           - name: Configure Nextcloud for testing
             run: |
                 php -f nextcloud/occ config:system:set debug --type bool --value true
@@ -207,7 +207,7 @@ jobs:
               fallbackNode: '^14'
               fallbackNpm: '^7'
           - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
-            uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
+            uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
             with:
               node-version: ${{ steps.versions.outputs.nodeVersion }}
           - name: Set up npm ${{ steps.versions.outputs.npmVersion }}

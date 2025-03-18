@@ -21,6 +21,7 @@
     <extraFiles>
         <directory name="vendor" />
 		<directory name="lib/Vendor" />
+		<directory name="vendor-bin/psalm-stubs" />
     </extraFiles>
 	<issueHandlers>
 		<UndefinedAttributeClass>

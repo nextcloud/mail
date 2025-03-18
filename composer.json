@@ -16,7 +16,7 @@
 		"arthurhoaro/favicon": "^2.0.1",
 		"bamarni/composer-bin-plugin": "^1.8.2",
 		"bytestream/horde-exception": "^2.2.0",
-		"bytestream/horde-imap-client": "^2.33.4",
+		"bytestream/horde-imap-client": "^2.33.5",
 		"bytestream/horde-mail": "^2.7.1",
 		"bytestream/horde-mime": "^2.13.2",
 		"bytestream/horde-stream": "^1.7.2",
@@ -42,6 +42,9 @@
 		"rubix/ml": "2.5.2",
 		"sabberworm/php-css-parser": "^8.7.0",
 		"youthweb/urllinker": "^2.0"
+	},
+	"provide": {
+		"psr/log": "^1.0.4|^2|^3"
 	},
 	"require-dev": {
 		"fig/log-test": "^1.1",

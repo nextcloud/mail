@@ -80,3 +80,6 @@ Need help? Check out our documentation. It's split into three parts.
 * [Admin documentation](doc/admin.md) (installation, configuration, troubleshooting)
 * [Developer documentation](doc/developer.md) (developer setup, nightly builds)
 * [User documentation](doc/user.md) (usage, keyboard shortcuts)
+
+## Credits
+This project uses [CKEditor](https://ckeditor.com), which is licensed under the [GPLv2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).

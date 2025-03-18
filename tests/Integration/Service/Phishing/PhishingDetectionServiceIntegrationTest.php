@@ -46,13 +46,16 @@ class PhishingDetectionServiceIntegrationTest extends TestCase {
 		$this->service = new PhishingDetectionService($this->contactCheck, $this->customEmailCheck, $this->dateCheck, $this->replyToCheck, $this->linkCheck);
 	}
 
-	
+
 
 	public function testContactCheck(): void {
-		$this->contactsIntegration->expects($this->once())
+		$this->contactsIntegration->expects(self::once())
 			->method('getContactsWithName')
+			->with('John Doe')
 			->willReturn([['id' => 1, 'fn' => 'John Doe', 'email' => ['jhon@example.org','Doe@example.org']]]);
+
 		$result = $this->contactCheck->run('John Doe', 'jhon.doe@example.org');
+
 		$this->assertTrue($result->isPhishing());
 	}
 

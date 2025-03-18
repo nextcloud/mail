@@ -56,6 +56,7 @@
 					<NcButton class="maximize-button"
 						type="tertiary-no-background"
 						:aria-label="t('mail', 'Maximize composer')"
+						:title="largerModal ? t('mail', 'Collapse composer') : t('mail', 'Maximize composer')"
 						@click="onMaximize">
 						<template #icon>
 							<MaximizeIcon v-if="!largerModal" :size="20" />
@@ -65,6 +66,7 @@
 					<NcButton class="minimize-button"
 						type="tertiary-no-background"
 						:aria-label="t('mail', 'Minimize composer')"
+						:title="t('mail', 'Minimize composer')"
 						@click="onMinimize">
 						<template #icon>
 							<MinimizeIcon :size="20" />
@@ -114,7 +116,7 @@
 						@show-toolbar="handleShow" />
 				</div>
 
-				<div v-if="showRecipientPane" class="right-pane">
+				<div v-show="showRecipientPane" class="right-pane">
 					<RecipientInfo />
 				</div>
 			</div>
@@ -138,6 +140,7 @@ import { matchError } from '../errors/match.js'
 import NoSentMailboxConfiguredError from '../errors/NoSentMailboxConfiguredError.js'
 import ManyRecipientsError from '../errors/ManyRecipientsError.js'
 import AttachmentMissingError from '../errors/AttachmentMissingError.js'
+import SubjectMissingError from '../errors/SubjectMissingError.js'
 import Loading from './Loading.vue'
 import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
 import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
@@ -413,6 +416,9 @@ export default {
 				if (dataForServer.sendAt < Math.floor((now + UNDO_DELAY) / 1000)) {
 					dataForServer.sendAt = Math.floor((now + UNDO_DELAY) / 1000)
 				}
+				if (!force && !data.subject?.trim()) {
+					throw new SubjectMissingError()
+				}
 
 				if (!force && data.attachments.length === 0) {
 					const lines = toPlain(data.body).value.toLowerCase().split('\n')
@@ -481,6 +487,10 @@ export default {
 					},
 				})
 				this.warning = await matchError(error, {
+					[SubjectMissingError.getName()]() {
+						logger.info('showing the missing subject warning', { error })
+						return t('mail', 'Your message has no subject. Do you want to send it anyway?')
+					},
 					[AttachmentMissingError.getName()]() {
 						logger.info('showing the did you forgot an attachment warning', { error })
 						return t('mail', 'You mentioned an attachment. Did you forget to add it?')

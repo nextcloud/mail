@@ -67,13 +67,13 @@ class MimeMessage {
 			
 			// determine if content is wrapped properly in a html tag, otherwise we need to wrap it properly
 			if (mb_strpos($contentHtml, '<html') === false) {
-				$source = '<html><meta http-equiv="content-type" content="text/html; charset=UTF-8"><body>' . $contentHtml . '</body>';
+				$source = '<!DOCTYPE html><html><meta http-equiv="content-type" content="text/html; charset=UTF-8"><body>' . PHP_EOL . $contentHtml . PHP_EOL . '</body>';
 			} else {
 				$source = ' ' . $contentHtml;
 			}
 			
 			$doc = new DOMDocument();
-			$doc->loadHTML($source, LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
+			$doc->loadHTML($source, LIBXML_NONET | LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
 			// determine if content has any embedded images
 			$embeddedParts = [];
 			foreach ($doc->getElementsByTagName('img') as $id => $image) {

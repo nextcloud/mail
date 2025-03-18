@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\PhishingDetection;
 
-use DateException;
 use OCA\Mail\PhishingDetectionResult;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IL10N;
@@ -27,7 +26,7 @@ class DateCheck {
 		$now = $this->timeFactory->getDateTime('now');
 		try {
 			$dt = $this->timeFactory->getDateTime($date);
-		} catch (DateException $e) {
+		} catch (\Exception $e) {
 			return new PhishingDetectionResult(PhishingDetectionResult::DATE_CHECK, false);
 		}
 		if ($dt > $now) {

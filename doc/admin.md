@@ -57,6 +57,10 @@ Configure how often Mail keeps users' mailboxes updated in the background in sec
 ```
 
 ### Use php-mail for sending mail
+
+> [!WARNING]
+> Support for using php-mail will be removed with Mail 4.4
+
 You can use the php-mail function to send mails. This is needed for some webhosters (1&1 (1und1)):
 ```php
 'app.mail.transport' => 'php-mail'

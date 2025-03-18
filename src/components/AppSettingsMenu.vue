@@ -244,7 +244,9 @@
 					<label for="follow-up-reminder-toggle">{{ followUpReminderText }}</label>
 				</p>
 			</NcAppSettingsSection>
-
+			<NcAppSettingsSection id="about-settings" :name="t('mail', 'About')">
+				<p>{{ t('mail', 'This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2.') }}</p>
+			</NcAppSettingsSection>
 			<NcAppSettingsSection id="keyboard-shortcut-settings" :name="t('mail', 'Keyboard shortcuts')">
 				<dl>
 					<div>

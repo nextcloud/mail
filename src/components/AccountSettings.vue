@@ -51,9 +51,12 @@
 				{{ t('mail', 'Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days.') }}
 			</p>
 			<OutOfOfficeForm v-if="account.sieveEnabled" :account="account" />
-			<p v-else>
-				{{ t('mail', 'Please connect to a sieve server first.') }}
-			</p>
+			<div v-else>
+				<p>{{ t('mail', 'The autoresponder uses Sieve, a scripting language supported by many email providers. If you\'re unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it.') }}</p>
+				<NcButton type="secondary" :aria-label="t('mail', 'Go to Sieve settings')" href="#sieve-form">
+					{{ t('mail', 'Go to Sieve settings') }}
+				</NcButton>
+			</div>
 		</AppSettingsSection>
 		<AppSettingsSection v-if="account && account.sieveEnabled"
 			id="mail-filters"
@@ -103,7 +106,7 @@ import EditorSettings from '../components/EditorSettings.vue'
 import AccountDefaultsSettings from '../components/AccountDefaultsSettings.vue'
 import SignatureSettings from '../components/SignatureSettings.vue'
 import AliasSettings from '../components/AliasSettings.vue'
-import { NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSettingsSection } from '@nextcloud/vue'
+import { NcButton, NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSettingsSection } from '@nextcloud/vue'
 import SieveAccountForm from './SieveAccountForm.vue'
 import SieveFilterForm from './SieveFilterForm.vue'
 import OutOfOfficeForm from './OutOfOfficeForm.vue'
@@ -132,6 +135,7 @@ export default {
 		TrashRetentionSettings,
 		SearchSettings,
 		MailFilters,
+		NcButton,
 	},
 	props: {
 		account: {

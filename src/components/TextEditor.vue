@@ -30,7 +30,8 @@ import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph.js'
 import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading.js'
 import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic.js'
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link.js'
-import ListStyle from '@ckeditor/ckeditor5-list/src/liststyle.js'
+import ListPlugin from '@ckeditor/ckeditor5-list/src/list.js'
+import ListProperties from '@ckeditor/ckeditor5-list/src/listproperties.js'
 import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat.js'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
 import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough.js'
@@ -41,7 +42,7 @@ import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
 import { DropdownView } from '@ckeditor/ckeditor5-ui'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
-import { searchProvider, getLinkWithPicker } from '@nextcloud/vue/dist/Components/NcRichText.js'
+import { searchProvider, getLinkWithPicker } from '@nextcloud/vue/components/NcRichText'
 import { getLanguage } from '@nextcloud/l10n'
 import logger from '../logger.js'
 import PickerPlugin from '../ckeditor/smartpicker/PickerPlugin.js'
@@ -98,7 +99,8 @@ export default {
 				BoldPlugin,
 				ItalicPlugin,
 				BlockQuotePlugin,
-				ListStyle,
+				ListPlugin,
+				ListProperties,
 				FontPlugin,
 				RemoveFormat,
 				StrikethroughPlugin,
@@ -185,7 +187,7 @@ export default {
 			if (text.length === 0) {
 				return []
 			}
-			let contactResults = await autoCompleteByName(text, true)
+			let contactResults = await autoCompleteByName(text)
 			contactResults = contactResults.filter(result => result.email.length > 0)
 			return contactResults
 		},
@@ -468,5 +470,8 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 
 .ck.ck-button {
 	border-radius: var(--border-radius-element) !important;
+}
+.ck-powered-by-balloon {
+	display: none !important;
 }
 </style>

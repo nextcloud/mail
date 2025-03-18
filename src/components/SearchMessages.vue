@@ -299,12 +299,12 @@
 <script>
 import moment from '@nextcloud/moment'
 
-import NcDialog from '@nextcloud/vue/dist/Components/NcDialog.js'
-import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
-import NcDateTimePickerNative from '@nextcloud/vue/dist/Components/NcDateTimePickerNative.js'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch
-	from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
+	from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import FilterVariantIcon from 'vue-material-design-icons/FilterVariant.vue'
 import Close from 'vue-material-design-icons/Close.vue'
 import IconClose from '@mdi/svg/svg/close.svg'
