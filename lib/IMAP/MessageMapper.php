@@ -1040,6 +1040,6 @@ class MessageMapper {
 				],
 			]
 		);
-		return $rangeSearchResult['count'];
+		return (int) $rangeSearchResult['count'];
 	}
 }
