@@ -4,21 +4,26 @@
 		:name="modalTitle"
 		:additional-trap-elements="additionalTrapElements"
 		@close="$event.type === 'click' ? onClose() : onMinimize()">
-		<EmptyContent v-if="error"
-			:name="t('mail', 'Error sending your message')"
-			class="empty-content"
-			role="alert">
-			<p>{{ error }}</p>
-			<template #action>
-				<NcButton type="tertiary"
-					:aria-label="t('mail', 'Go back')"
-					@click="error = undefined">
-					{{ t('mail', 'Go back') }}
+		<div class="modal-content">
+			<div class="left-pane">
+				<NcButton class="maximize-button"
+					type="tertiary-no-background"
+					:aria-label="t('mail', 'Maximize composer')"
+					:title="largerModal ? t('mail', 'Collapse composer') : t('mail', 'Maximize composer')"
+					@click="onMaximize">
+					<template #icon>
+						<MaximizeIcon v-if="!largerModal" :size="20" />
+						<DefaultComposerIcon v-else :size="20" />
+					</template>
 				</NcButton>
-				<NcButton type="tertiary"
-					:aria-label="t('mail', 'Retry')"
-					@click="onSend">
-					{{ t('mail', 'Retry') }}
+				<NcButton class="minimize-button"
+					type="tertiary-no-background"
+					:aria-label="t('mail', 'Minimize composer')"
+					:title="t('mail', 'Minimize composer')"
+					@click="onMinimize">
+					<template #icon>
+						<MinimizeIcon :size="20" />
+					</template>
 				</NcButton>
 			</template>
 		</EmptyContent>
@@ -445,6 +450,7 @@ export default {
 				}, 500)
 			}
 		},
+
 		async onForceSend() {
 			await this.onSend(this.cookedComposerData, true)
 		},
