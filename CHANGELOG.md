@@ -1,3 +1,12 @@
+## [3.7.24](https://github.com/nextcloud/mail/compare/v3.7.23...v3.7.24) (2025-03-18)
+
+
+### Bug Fixes
+
+* **dns:** Update public suffix list ([cc768c7](https://github.com/nextcloud/mail/commit/cc768c71053edd07c3483d955ae975f61a6e3d82))
+
+
+
 ## [3.7.23](https://github.com/nextcloud/mail/compare/v3.7.22...v3.7.23) (2025-03-13)
 
 
