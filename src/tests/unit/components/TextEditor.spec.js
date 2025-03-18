@@ -68,6 +68,7 @@ describe('TextEditor', () => {
 		})
 
 		const editor = await VirtualTestEditor.create({
+			licenseKey: 'GPL',
 			initialData: '<p>bonjour bonjour</p>',
 			plugins: [ParagraphPlugin],
 		})
@@ -88,6 +89,7 @@ describe('TextEditor', () => {
 			})
 
 			const editor = await VirtualTestEditor.create({
+				licenseKey: 'GPL',
 				initialData: '<p>bonjour bonjour</p>',
 				plugins: [ParagraphPlugin, MailPlugin],
 			})

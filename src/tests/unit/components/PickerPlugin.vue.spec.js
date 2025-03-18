@@ -14,6 +14,7 @@ describe('PickerPlugin', () => {
 		const expected = '<p>Hello I am a link</p>'
 
 		const editor = await VirtualTestEditor.create({
+			licenseKey: 'GPL',
 			initialData: text,
 			plugins: [ParagraphPlugin, PickerPlugin],
 		})
