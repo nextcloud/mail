@@ -1,3 +1,13 @@
+## [4.3.1-rc.0](https://github.com/nextcloud/mail/compare/v4.3.0...v4.3.1-rc.0) (2025-03-18)
+
+
+### Bug Fixes
+
+* **CKEditor:** show mentions ([90f4711](https://github.com/nextcloud/mail/commit/90f47116c3b9bbe76c1218f3a90fcdfc6ab2e9f2))
+* **deps:** Apply npm audit fix ([b3217f3](https://github.com/nextcloud/mail/commit/b3217f3a42c2dfd498e993c9410cae1d3437fd9e))
+
+
+
 # [4.3.0](https://github.com/nextcloud/mail/compare/v4.3.0-rc.5...v4.3.0) (2025-03-17)
 
 
