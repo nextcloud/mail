@@ -161,7 +161,8 @@ class MessageMapper {
 		// Determine max UID to fetch, but don't exceed the known maximum
 		$upper = min(
 			$max,
-			$lower + $estimatedPageSize
+			$lower + $estimatedPageSize,
+			$lower + 1_000_000, // Somewhat sensible number of UIDs that fit into memory (Horde_Imap_ClientId bloat)
 		);
 		if ($lower > $upper) {
 			$logger->debug("Range for findAll did not find any (not already known) messages and all messages of mailbox $mailbox have been fetched.");
