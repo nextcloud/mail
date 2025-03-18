@@ -1,3 +1,7 @@
+## [4.3.1](https://github.com/nextcloud/mail/compare/v4.3.1-rc.0...v4.3.1) (2025-03-18)
+
+
+
 ## [4.3.1-rc.0](https://github.com/nextcloud/mail/compare/v4.3.0...v4.3.1-rc.0) (2025-03-18)
 
 
