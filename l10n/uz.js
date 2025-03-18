@@ -31,6 +31,7 @@ OC.L10N.register(
     "Create event" : "Tadbir yaratish",
     "All day" : "Butun kun",
     "Description" : "Tavsif",
+    "Create" : "Yaratish",
     "Select" : "Select",
     "Accept" : "Qabul qiling",
     "Decline" : "Rad etish",
