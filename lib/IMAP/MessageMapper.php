@@ -183,7 +183,8 @@ class MessageMapper {
 
 			$upper = min(
 				$max,
-				$lower + $estimatedPageSize
+				$lower + $estimatedPageSize,
+				$lower + 1_000_000, // Somewhat sensible number of UIDs that fit into memory (Horde_Imap_ClientId bloat)
 			);
 			$idsToFetch = new Horde_Imap_Client_Ids($lower . ':' . $upper);
 			$actualPageSize = $this->getPageSize($client, $mailbox, $idsToFetch);
