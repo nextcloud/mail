@@ -179,7 +179,7 @@ class MessageMapper {
 		while ($actualPageSize > $maxResults) {
 			$logger->debug("Range for findAll matches too many messages: min=$min max=$max total=$total estimatedPageSize=$estimatedPageSize actualPageSize=$actualPageSize");
 
-			$estimatedPageSize = (int) ($estimatedPageSize / 2);
+			$estimatedPageSize = (int)($estimatedPageSize / 2);
 
 			$upper = min(
 				$max,
@@ -1041,6 +1041,6 @@ class MessageMapper {
 				],
 			]
 		);
-		return (int) $rangeSearchResult['count'];
+		return (int)$rangeSearchResult['count'];
 	}
 }
