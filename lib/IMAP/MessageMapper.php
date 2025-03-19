@@ -146,6 +146,7 @@ class MessageMapper {
 		} else {
 			$max = ((int)$metaResults['max']);
 		}
+		unset($metaResults);
 
 		// The inclusive range of UIDs
 		$totalRange = $max - $min + 1;
@@ -210,6 +211,9 @@ class MessageMapper {
 			 * there is nothing to fetch in $highestKnownUid:$upper
 			 */
 			$logger->debug('Range for findAll did not find any messages. Trying again with a succeeding range');
+			// Clean up some unused variables before recursion
+			unset($fetchResult, $idsToFetch, $query);
+			$perf->step('free memory before recursion');
 			return $this->findAll($client, $mailbox, $maxResults, $upper, $logger, $perf, $userId);
 		}
 		$uidCandidates = array_filter(
