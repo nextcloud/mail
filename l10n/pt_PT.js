@@ -186,6 +186,7 @@ OC.L10N.register(
     "Reservation {id}" : "Reserva {id}",
     "Train" : "Comboio",
     "Operator" : "Operador",
+    "Filter name" : "Filtrar nome",
     "Actions" : "Ações",
     "New action" : "Nova ação",
     "Priority" : "Prioridade",
