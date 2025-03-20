@@ -58,11 +58,19 @@ export function fetchEnvelopes(accountId, mailboxId, query, cursor, limit) {
 			throw convertAxiosError(error)
 		})
 }
-export const fetchThread = async (id) => {
+export const fetchThread = async (id, knownIds) => {
 	const url = generateUrl('apps/mail/api/messages/{id}/thread', {
 		id,
 	})
-	const resp = await axios.get(url)
+	const resp = await axios.post(url, {
+		knownIds,
+	})
+
+	// Thread is up to date
+	if (resp.status === 204) {
+		return []
+	}
+
 	return resp.data
 }
 
