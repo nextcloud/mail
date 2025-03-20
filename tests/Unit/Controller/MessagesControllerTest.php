@@ -36,6 +36,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\ItineraryService;
 use OCA\Mail\Service\MailManager;
+use OCA\Mail\Service\MessageOperationService;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -128,6 +129,8 @@ class MessagesControllerTest extends TestCase {
 	/** @var MockObject|AiIntegrationsService */
 	private $aiIntegrationsService;
 
+	private MessageOperationService|MockObject $messageOperationService;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -153,6 +156,7 @@ class MessagesControllerTest extends TestCase {
 		$this->userPreferences = $this->createMock(IUserPreferences::class);
 		$this->snoozeService = $this->createMock(SnoozeService::class);
 		$this->aiIntegrationsService = $this->createMock(AiIntegrationsService::class);
+		$this->messageOperationService = $this->createMock(MessageOperationService::class);
 
 		$timeFactory = $this->createMocK(ITimeFactory::class);
 		$timeFactory->expects($this->any())
@@ -185,6 +189,7 @@ class MessagesControllerTest extends TestCase {
 			$this->userPreferences,
 			$this->snoozeService,
 			$this->aiIntegrationsService,
+			$this->messageOperationService
 		);
 
 		$this->account = $this->createMock(Account::class);
