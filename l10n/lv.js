@@ -100,6 +100,7 @@ OC.L10N.register(
     "Reply" : "Atbildēt",
     "Retry" : "Mēģināt vēlreiz",
     "Sending …" : "Sūta …",
+    "Autoresponder follows system settings" : "Automātiskais atbildētājs izmantot sistēmas iestatījumus",
     "Message" : "Ziņojums",
     "Copy to clipboard" : "Kopēt starpliktuvē",
     "Add" : "Pievienot",
