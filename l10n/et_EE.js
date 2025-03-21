@@ -80,6 +80,7 @@ OC.L10N.register(
     "Message" : "Sõnum",
     "Copy to clipboard" : "Kopeeri lõikepuhvrisse",
     "Add" : "Lisa",
+    "Show less" : "Näita vähem",
     "Clear" : "Tühjenda",
     "Close" : "Sulge",
     "Date" : "Kuupäev",
