@@ -146,6 +146,7 @@ class MessageMapper {
 		} else {
 			$max = ((int)$metaResults['max']);
 		}
+		unset($metaResults);
 
 		// The inclusive range of UIDs
 		$totalRange = $max - $min + 1;
@@ -161,7 +162,8 @@ class MessageMapper {
 		// Determine max UID to fetch, but don't exceed the known maximum
 		$upper = min(
 			$max,
-			$lower + $estimatedPageSize
+			$lower + $estimatedPageSize,
+			$lower + 1_000_000, // Somewhat sensible number of UIDs that fit into memory (Horde_Imap_ClientId bloat)
 		);
 		if ($lower > $upper) {
 			$logger->debug("Range for findAll did not find any (not already known) messages and all messages of mailbox $mailbox have been fetched.");
@@ -172,7 +174,22 @@ class MessageMapper {
 			];
 		}
 
-		$logger->debug("Built range for findAll: min=$min max=$max total=$total totalRange=$totalRange estimatedPageSize=$estimatedPageSize lower=$lower upper=$upper highestKnownUid=$highestKnownUid");
+		$idsToFetch = new Horde_Imap_Client_Ids($lower . ':' . $upper);
+		$actualPageSize = $this->getPageSize($client, $mailbox, $idsToFetch);
+		$logger->debug("Built range for findAll: min=$min max=$max total=$total totalRange=$totalRange estimatedPageSize=$estimatedPageSize actualPageSize=$actualPageSize lower=$lower upper=$upper highestKnownUid=$highestKnownUid");
+		while ($actualPageSize > $maxResults) {
+			$logger->debug("Range for findAll matches too many messages: min=$min max=$max total=$total estimatedPageSize=$estimatedPageSize actualPageSize=$actualPageSize");
+
+			$estimatedPageSize = (int)($estimatedPageSize / 2);
+
+			$upper = min(
+				$max,
+				$lower + $estimatedPageSize,
+				$lower + 1_000_000, // Somewhat sensible number of UIDs that fit into memory (Horde_Imap_ClientId bloat)
+			);
+			$idsToFetch = new Horde_Imap_Client_Ids($lower . ':' . $upper);
+			$actualPageSize = $this->getPageSize($client, $mailbox, $idsToFetch);
+		}
 
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
@@ -180,7 +197,7 @@ class MessageMapper {
 			$mailbox,
 			$query,
 			[
-				'ids' => new Horde_Imap_Client_Ids($lower . ':' . $upper)
+				'ids' => $idsToFetch
 			]
 		);
 		$perf->step('fetch UIDs');
@@ -194,6 +211,9 @@ class MessageMapper {
 			 * there is nothing to fetch in $highestKnownUid:$upper
 			 */
 			$logger->debug('Range for findAll did not find any messages. Trying again with a succeeding range');
+			// Clean up some unused variables before recursion
+			unset($fetchResult, $idsToFetch, $query);
+			$perf->step('free memory before recursion');
 			return $this->findAll($client, $mailbox, $maxResults, $upper, $logger, $perf, $userId);
 		}
 		$uidCandidates = array_filter(
@@ -1009,5 +1029,22 @@ class MessageMapper {
 			}
 		}
 		return false;
+	}
+
+	private function getPageSize(Horde_Imap_Client_Socket $client,
+		string $mailbox,
+		Horde_Imap_Client_Ids $idsToFetch): int {
+		$rangeSearchQuery = new Horde_Imap_Client_Search_Query();
+		$rangeSearchQuery->ids($idsToFetch);
+		$rangeSearchResult = $client->search(
+			$mailbox,
+			$rangeSearchQuery,
+			[
+				'results' => [
+					Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+				],
+			]
+		);
+		return (int)$rangeSearchResult['count'];
 	}
 }
