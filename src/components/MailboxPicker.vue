@@ -191,12 +191,12 @@ export default {
 	width: 100%;
 	height: 100%;
 	flex-direction: column;
-	padding: 15px;
+	padding: calc(var(--default-grid-baseline) * 4);
 }
 
 .crumbs {
 	display: inline-flex;
-	padding-right: 0px;
+	padding-right: 0;
 	flex-wrap: wrap;
 
 	.level {
@@ -205,15 +205,15 @@ export default {
 		min-width: 0px;
 		flex: 0 0 auto;
 		order: 1;
-		padding-right: 7px;
+		padding-right: calc(var(--default-grid-baseline) * 2);
 		background-position: right center;
 		background-size: auto 24px;
-		margin-top: -10px;
+		margin-top: calc(var(--default-grid-baseline) * -2.5);
 	}
 
 	a {
 		position: relative;
-		padding: 12px;
+		padding: calc(var(--default-grid-baseline) * 3);
 		opacity: 0.5;
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -249,7 +249,7 @@ export default {
 		}
 
 		&:not(:last-child) {
-			border-bottom: 1px solid var(--color-border);
+			border-bottom: var(--border-width-input) solid var(--color-border);
 		}
 	}
 
@@ -266,13 +266,13 @@ export default {
 	.mailbox-icon {
 		width: 24px;
 		height: 24px;
-		padding: 14px;
+		padding: calc(var(--default-grid-baseline) * 3);
 		opacity: 0.9;
 		background-size: 24px;
 	}
 
 	.mailbox-title {
-		padding: 14px 14px 14px 0;
+		padding: calc(var(--default-grid-baseline) * 3) calc(var(--default-grid-baseline) * 3) calc(var(--default-grid-baseline) * 3) 0;
 		flex: 1;
 		overflow: hidden;
 		white-space: nowrap;
@@ -283,14 +283,14 @@ export default {
 .buttons {
 	display: flex;
 	justify-content: flex-end;
-	padding-top: 10px;
+	padding-top: calc(var(--default-grid-baseline) * 2);
 
 	.spinner {
-		margin-right: 5px;
+		margin-right: var(--default-grid-baseline);
 	}
 }
 .material-design-icon {
 	opacity: .7;
-	margin-right: 6px;
+	margin-right: calc(var(--default-grid-baseline) * 1.5);
 }
 </style>

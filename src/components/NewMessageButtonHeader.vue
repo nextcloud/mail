@@ -93,7 +93,7 @@ export default {
 	align-items: center;
 	justify-content: space-between;
 	padding: calc(var(--default-grid-baseline, 4px) * 2);
-	gap: 4px;
+	gap: var(--default-grid-baseline);
 }
 .refresh__button {
 	background-color: transparent;
