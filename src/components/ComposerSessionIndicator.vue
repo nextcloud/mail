@@ -97,10 +97,10 @@ export default {
 
 	display: flex;
 	align-items: center;
-	gap: 5px;
+	gap: var(--default-grid-baseline);
 
 	width: 360px;
-	padding: 0 8px;
+	padding: 0 calc(var(--default-grid-baseline) * 2);
 
 	// Retain border radius from outer body container for visual consistency
 	border-radius: var(--body-container-radius);
