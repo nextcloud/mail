@@ -569,22 +569,22 @@ export default {
 p.app-settings span.loading-icon {
 	display: inline-block;
 	vertical-align: middle;
-	padding: 5px 0;
+	padding: var(--default-grid-baseline) 0;
 }
 p.app-settings {
-	padding: 10px 0;
+	padding: calc(var(--default-grid-baseline) * 2) 0;
 }
 .app-settings-button {
 	display: inline-flex;
 	background-position: 10px center;
 	text-align: left;
-	margin-top: 6px;
+	margin-top: calc(var(--default-grid-baseline) * 2);
 }
 .app-settings-button.button.primary.new-button {
 	color: var(--color-primary-element-text);
 	//this style will be removed after we migrate also the  'add mail account' to material design
 	padding-left: 34px;
-	gap: 4px;
+	gap: var(--default-grid-baseline);
 	width: fit-content;
 }
 .app-settings-link {
@@ -598,13 +598,13 @@ p.app-settings {
 	justify-content: flex-start;
 }
 .mailvelope-section {
-	padding-top: 15px;
+	padding-top: calc(var(--default-grid-baseline) * 4);
 
 	a.button {
 		display: flex;
 		align-items: center;
 		line-height: normal;
-		min-height: 44px;
+		min-height: calc(var(--default-grid-baseline) * 11);
 		font-size: unset;
 
 		&:focus-visible,
@@ -615,13 +615,13 @@ p.app-settings {
 }
 .material-design-icon {
 	&.lock-icon {
-		margin-right: 10px;
+		margin-right: calc(var(--default-grid-baseline) * 2);
 	}
 
 }
 .section-title {
-	margin-top: 20px;
-	margin-bottom: 10px;
+	margin-top: calc(var(--default-grid-baseline) * 5);
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
 }
 .sorting {
 	display: flex;
@@ -634,8 +634,8 @@ p.app-settings {
 	width: 100%;
 }
 .settings-hint {
-	margin-top: -12px;
-	margin-bottom: 6px;
+	margin-top: calc(var(--default-grid-baseline) * -3);
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
 	color: var(--color-text-maxcontrast);
 }
 .app-settings-section {
