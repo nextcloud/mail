@@ -11,10 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['8.1', '8.2', '8.3']
+        php-versions: ['8.2', '8.3']
         nextcloud-versions: ['master', 'stable30']
         include:
+          - php-versions: '8.1'
+            nextcloud-versions: 'stable30'
           - php-versions: '8.4'
+            nextcloud-versions: 'stable31'
+          - php-versions: '8.5'
             nextcloud-versions: 'master'
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
@@ -24,7 +28,7 @@ jobs:
         nextcloud-version: ${{ matrix.nextcloud-versions }}
         php-version: ${{ matrix.php-versions }}
         php-coverage: 'xdebug'
-        patch-php-version-check: ${{ matrix.php-versions == '8.4' }}
+        patch-php-version-check: ${{ matrix.php-versions == '8.5' }}
         node-version: 'false'
         install: true
     - name: Checkout Mail
@@ -62,21 +66,25 @@ jobs:
       runs-on: ubuntu-latest
       strategy:
           matrix:
-              php-versions: ['8.3']
+              php-versions: ['8.4']
               nextcloud-versions: ['master']
               db: ['sqlite', 'mysql', 'pgsql']
               cache: ['nocache']
               include:
                 - php-versions: 8.1
-                  nextcloud-versions: 'master'
+                  nextcloud-versions: 'stable30'
                   db: 'sqlite'
                   cache: 'redis'
                 - php-versions: 8.2
-                  nextcloud-versions: 'master'
+                  nextcloud-versions: 'stable30'
+                  db: 'pgsql'
+                  cache: 'redis'
+                - php-versions: 8.3
+                  nextcloud-versions: 'stable31'
                   db: 'mysql'
                   cache: 'redis'
-                - php-versions: 8.2
-                  nextcloud-versions: stable30
+                - php-versions: 8.5
+                  nextcloud-versions: 'master'
                   db: 'mysql'
                   cache: 'redis'
       name: ${{ matrix.nextcloud-versions }} w/ php${{ matrix.php-versions }}-${{ matrix.db }}-${{ matrix.cache }} integration tests
@@ -135,7 +143,7 @@ jobs:
               nextcloud-version: ${{ matrix.nextcloud-versions }}
               php-version: ${{ matrix.php-versions }}
               php-coverage: 'xdebug'
-              patch-php-version-check: ${{ matrix.php-versions == '8.4' }}
+              patch-php-version-check: ${{ matrix.php-versions == '8.5' }}
               install: true
               database: ${{ matrix.db }}
               node-version: 'false'
@@ -153,8 +161,8 @@ jobs:
             working-directory: nextcloud/apps/mail
             run: composer install
           - name: Patch version check for nightly PHP
-            if: ${{ matrix.php-versions == '8.3' }}
-            run: sed -i 's/max-version="8.3"/max-version="8.4"/' nextcloud/apps/mail/appinfo/info.xml
+            if: ${{ matrix.php-versions == '8.5' }}
+            run: sed -i 's/max-version="8.4"/max-version="8.5"/' nextcloud/apps/mail/appinfo/info.xml
           - name: Install Mail
             run: php -f nextcloud/occ app:enable mail
           - name: Configure Nextcloud for testing
