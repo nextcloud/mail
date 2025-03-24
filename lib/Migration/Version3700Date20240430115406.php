@@ -32,7 +32,6 @@ class Version3700Date20240430115406 extends SimpleMigrationStep {
 	 * @return null|ISchemaWrapper
 	 */
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
-		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
 		$localMessagesTable = $schema->getTable('mail_local_messages');
