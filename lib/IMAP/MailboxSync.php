@@ -260,7 +260,6 @@ class MailboxSync {
 	private function syncMailboxStatus(mixed $mailboxes, ?string $personalNamespace, \Horde_Imap_Client_Socket $client): void {
 		/** @var array{0: Mailbox[], 1: Mailbox[]} */
 		[$sync, $doNotSync] = array_reduce($mailboxes, function (array $carry, Mailbox $mailbox) use ($personalNamespace): array {
-			/** @var array{0: Mailbox[], 1: Mailbox[]} $carry */
 			[$sync, $doNotSync] = $carry;
 			$inboxName = $personalNamespace === null ? 'INBOX' : ($personalNamespace . $mailbox->getDelimiter() . 'INBOX');
 			if ($inboxName === $mailbox->getName() || $mailbox->getSyncInBackground()) {

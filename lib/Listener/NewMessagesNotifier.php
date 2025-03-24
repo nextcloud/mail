@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Listener;
 
-use OCA\Mail\Db\Message;
 use OCA\Mail\Events\NewMessageReceivedEvent;
 use OCA\Mail\Events\NewMessagesSynchronized;
 use OCP\EventDispatcher\Event;
@@ -34,7 +33,6 @@ class NewMessagesNotifier implements IEventListener {
 			return;
 		}
 
-		/** @var Message $message */
 		foreach ($event->getMessages() as $message) {
 			$uri = $this->urlGenerator->linkToOCSRouteAbsolute('mail.messageApi.get', ['id' => $message->getId()]);
 			$this->eventDispatcher->dispatchTyped(new NewMessageReceivedEvent($uri));
