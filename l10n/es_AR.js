@@ -31,6 +31,7 @@ OC.L10N.register(
     "Cancel" : "Cancelar",
     "Add mail account" : "Agregar cuenta de correo",
     "General" : "General",
+    "Sorting" : "Orden",
     "Register" : "Registrar",
     "Keyboard shortcuts" : "Atajos de teclado",
     "Compose new message" : "Redactar nuevo mensaje",
