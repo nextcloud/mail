@@ -67,11 +67,31 @@ export default {
 
 <style lang="scss" scoped>
 .confirm-modal {
-	padding: 20px;
+	padding: 24px 32px;
+
+	h2 {
+		margin-bottom: 20px;
+		font-size: 24px;
+		font-weight: 600;
+	}
 
 	&__buttons {
 		display: flex;
-		justify-content: space-between;
+		justify-content: flex-end;
+		gap: 16px;
+		margin-top: 30px;
+		padding-top: 20px;
+
+		:deep(button) {
+			padding: 10px 20px;
+			border-radius: 8px;
+			font-weight: 500;
+			transition: background 0.2s ease;
+
+			&:hover:not(:disabled) {
+				filter: brightness(1.05);
+			}
+		}
 	}
 }
 </style>
