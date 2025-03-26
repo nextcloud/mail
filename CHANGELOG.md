@@ -1,3 +1,12 @@
+## [4.3.2](https://github.com/nextcloud/mail/compare/v4.3.1...v4.3.2) (2025-03-26)
+
+
+### Bug Fixes
+
+* go back warining discards the reply text ([cbcee17](https://github.com/nextcloud/mail/commit/cbcee175e176d4bef13b653adebf2336ab703b02))
+
+
+
 ## [4.3.1](https://github.com/nextcloud/mail/compare/v4.3.1-rc.0...v4.3.1) (2025-03-18)
 
 
