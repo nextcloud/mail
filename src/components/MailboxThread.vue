@@ -103,7 +103,7 @@
 		</template>
 
 		<Thread v-if="showThread" @delete="deleteMessage" />
-		<NoMessageSelected v-else-if="hasEnvelopes" />
+		<NoMessageSelected v-else-if="hasEnvelopes || !showThread" />
 	</AppContent>
 </template>
 
