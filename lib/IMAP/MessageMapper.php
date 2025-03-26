@@ -442,6 +442,44 @@ class MessageMapper {
 	}
 
 	/**
+	 * @throws Horde_Imap_Client_Exception
+	 */
+	public function setFlags(
+		Horde_Imap_Client_Socket $client,
+		Mailbox $mailbox,
+		array $uids,
+		array $addFlags = [],
+		array $removeFlags = [],
+		array $replaceFlags = [],
+	): array {
+
+		if (count($uids) === 0) {
+			return [];
+		}
+
+		$cmd = [];
+		
+		if (count($replaceFlags) > 0) {
+			$cmd['replace'] = $replaceFlags;
+		} else {
+			if (count($addFlags) > 0) {
+				$cmd['add'] = $addFlags;
+			}
+			if (count($removeFlags) > 0) {
+				$cmd['remove'] = $removeFlags;
+			}
+		}
+
+		if (count($cmd) > 0) {
+			$cmd['ids'] = new Horde_Imap_Client_Ids($uids);
+			$result = $client->store($mailbox->getName(), $cmd);
+			return $result->ids;
+		}
+
+		return [];
+	}
+	
+	/**
 	 * @param Horde_Imap_Client_Socket $client
 	 * @param Mailbox $mailbox
 	 * @param string $flag
