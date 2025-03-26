@@ -54,7 +54,6 @@ class QuotaJob extends TimedJob {
 	protected function run($argument): void {
 		$accountId = (int)$argument['accountId'];
 		try {
-			/** @var Account $account */
 			$account = $this->accountService->findById($accountId);
 		} catch (DoesNotExistException $e) {
 			$this->logger->debug('Could not find account <' . $accountId . '> removing from jobs');

@@ -23,7 +23,6 @@ class Version3400Date20230823153943 extends SimpleMigrationStep {
 	 * @return null|ISchemaWrapper
 	 */
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
-		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
 		$messagesSnoozedTable = $schema->getTable('mail_messages_snoozed');
