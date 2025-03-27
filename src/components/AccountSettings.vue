@@ -206,19 +206,19 @@ export default {
 	}
 }
 .settings-hint {
-	margin-top: -12px;
-	margin-bottom: 6px;
+	margin-top: calc(var(--default-grid-baseline) * -3);
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
 	color: var(--color-text-maxcontrast);
 }
 h2 {
 	font-weight: bold;
 	font-size: 20px;
-	margin-bottom: 12px;
-	margin-left: -30px;
-	line-height: 30px;
+	margin-bottom: calc(var(--default-grid-baseline) * 3);
+	margin-left: calc(var(--default-grid-baseline) * -7);
+	line-height: calc(var(--default-grid-baseline) * 7);
 	color: var(--color-text-light);
 }
 .app-settings-section {
-margin-bottom: 45px;
+	margin-bottom: calc(var(--default-grid-baseline) * 12);
 }
 </style>
