@@ -491,7 +491,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$imapClient = $this->clientFactory->getClient($account);
 
 		$imapMessage = $this->createMock(IMAPMessage::class);
-		$imapMessage->expects(self::once())
+		$imapMessage->expects(self::atMost(2))
 			->method('getPlainBody')
 			->willReturn('This is a test message');
 		$imapMessage->expects(self::once())

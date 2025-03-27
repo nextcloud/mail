@@ -90,8 +90,8 @@ PROMPT;
 					$messageRemoteId,
 					true
 				);
-				// skip message if it is encrypted
-				if ($message->isEncrypted()) {
+				// skip message if it is encrypted or empty
+				if ($message->isEncrypted() || empty(trim($message->getPlainBody()))) {
 					continue;
 				}
 				// construct prompt and task
