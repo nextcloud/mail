@@ -7,6 +7,8 @@
 import '../css/html-response.css'
 import '@iframe-resizer/child'
 
+import { vueOfBlockQuote } from './html-body-quotes.js'
+
 // Fix width of some newsletter mails
 document.addEventListener('DOMContentLoaded', function() {
 	for (const el of document.querySelectorAll('*')) {
@@ -14,4 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			el.style['max-width'] = '100%'
 		}
 	}
+
+	vueOfBlockQuote()
 })
