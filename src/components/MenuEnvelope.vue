@@ -543,10 +543,7 @@ export default {
 			this.onSnooze(this.customSnoozeDateTime.valueOf())
 		},
 		onPrint() {
-			// needed for the actions menu to actually close and not be shown in the print preview
-			setTimeout(() => {
-				window.print()
-			}, 10)
+			this.$emit('print')
 		},
 	},
 }
