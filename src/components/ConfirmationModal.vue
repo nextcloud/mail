@@ -68,6 +68,8 @@ export default {
 <style lang="scss" scoped>
 .confirm-modal {
 	&__buttons {
+		display: flex;
+		justify-content: space-between;
 		margin-top: 30px;
 
 	}
