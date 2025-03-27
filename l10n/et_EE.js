@@ -29,6 +29,7 @@ OC.L10N.register(
     "Go back" : "Mine tagasi",
     "Email address" : "E-posti aadress",
     "Cancel" : "Loobu",
+    "Accounts" : "Kasutajakontod",
     "General" : "Üldine",
     "Layout" : "Välimus",
     "List" : "Nimekiri",
@@ -87,6 +88,7 @@ OC.L10N.register(
     "Close" : "Sulge",
     "Date" : "Kuupäev",
     "Tags" : "Sildid",
+    "Last 7 days" : "Viimase 7 päeva jooksul",
     "Custom" : "Kohandatud",
     "Tag already exists" : "Silt on juba olemas",
     "Copy translated text" : "Kopeeri tõlgitud tekst",
@@ -113,6 +115,7 @@ OC.L10N.register(
     "Trash" : "Prügikast",
     "{from}\n{subject}" : "{from}\n{subject}",
     "Discard changes" : "Hülga muudatused",
+    "Message sent" : "Sõnum on saadetud",
     "Error loading message" : "Tõrge kirja laadimisel",
     "Forwarding to %s" : "Edasta %s",
     "Redirect" : "Suunamine"
