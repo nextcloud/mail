@@ -213,7 +213,7 @@ OC.L10N.register(
     "Upload attachment" : "Enviar anexo",
     "Add attachment from Files" : "Adicionar anexo a partir de arquivos",
     "Add share link from Files" : "Adicionar link de compartilhamento de arquivos",
-    "Smart picker" : "Smart picker",
+    "Smart picker" : "Seletor inteligente",
     "Request a read receipt" : "Solicitar confirmação de recebimento",
     "Sign message with S/MIME" : "Sign message with S/MIME",
     "Encrypt message with S/MIME" : "Encrypt message with S/MIME",
