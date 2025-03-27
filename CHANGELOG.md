@@ -1,3 +1,13 @@
+## [4.3.3](https://github.com/nextcloud/mail/compare/v4.3.2...v4.3.3) (2025-03-27)
+
+
+### Bug Fixes
+
+* dont summerize empty messages ([69fcbf5](https://github.com/nextcloud/mail/commit/69fcbf57c2318451dd93d6f39b7146e210485aa0))
+* **imap:** Avoid OOM when syncing sparse mailboxes ([fe98c2d](https://github.com/nextcloud/mail/commit/fe98c2d2cb00ae5d9440788b07e14a06949d7d79))
+
+
+
 ## [4.3.2](https://github.com/nextcloud/mail/compare/v4.3.1...v4.3.2) (2025-03-26)
 
 
