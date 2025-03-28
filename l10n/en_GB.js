@@ -547,6 +547,7 @@ OC.L10N.register(
     "Could not load your message thread" : "Could not load your message thread",
     "The thread doesn't exist or has been deleted" : "The thread doesn't exist or has been deleted",
     "Email was not able to be opened" : "Email cannot be opened",
+    "Print" : "Print",
     "Loading thread" : "Loading thread",
     "Not found" : "Not found",
     "Encrypted & verified " : "Encrypted & verified ",

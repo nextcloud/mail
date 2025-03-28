@@ -547,6 +547,7 @@ OC.L10N.register(
     "Could not load your message thread" : "Nachrichtenverlauf konnte nicht geöffnet werden",
     "The thread doesn't exist or has been deleted" : "Der Thread existiert nicht oder wurde gelöscht.",
     "Email was not able to be opened" : "Die E-Mail konnte nicht geöffnet werden",
+    "Print" : "Drucken",
     "Loading thread" : "Thema wird geladen",
     "Not found" : "Nicht gefunden",
     "Encrypted & verified " : "Veschlüsselt und überprüft",
