@@ -60,6 +60,7 @@ export default {
 		},
 		cancel() {
 			this.$emit('cancel')
+			this.$emit('close')
 		},
 	},
 }
@@ -67,11 +68,15 @@ export default {
 
 <style lang="scss" scoped>
 .confirm-modal {
+	padding: 0 20px 20px 20px;
 	&__buttons {
 		display: flex;
 		justify-content: space-between;
 		margin-top: 30px;
-
 	}
 }
+:deep(.dialog__name){
+	display: none;
+}
+
 </style>
