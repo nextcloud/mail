@@ -470,13 +470,14 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 }
 .ck.ck-list-styles-list {
 /* our composer is very small, having menus vertically shown is better */
-grid-template-rows: repeat(3,auto);
+	grid-template-rows: repeat(3,auto) !important;
+	grid-template-columns: unset !important;
 }
 
 .ck.ck-button {
-border-radius: var(--border-radius-element) !important;
+	border-radius: var(--border-radius-element) !important;
 }
 .ck-powered-by-balloon {
-display: none !important;
+	display: none !important;
 }
 </style>
