@@ -523,6 +523,7 @@ OC.L10N.register(
     "Summarizing thread failed." : "Sammendrag av tråd feilet",
     "Could not load your message thread" : "Kunne ikke laste meldingstråden din",
     "The thread doesn't exist or has been deleted" : "Tråden finnes ikke eller er slettet",
+    "Print" : "Skriv ut",
     "Loading thread" : "Laster tråd",
     "Not found" : "Ikke funnet",
     "Encrypted & verified " : "Kryptert og verifisert",
