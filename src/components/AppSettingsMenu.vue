@@ -72,6 +72,24 @@
 					{{ t('mail', 'Horizontal split') }}
 				</NcCheckboxRadioSwitch>
 
+				<h6>{{ t('mail', 'Message View Mode') }}</h6>
+				<div class="sorting">
+					<NcCheckboxRadioSwitch type="radio"
+						name="message_view_mode_radio"
+						value="threaded"
+						:checked="layoutMessageView"
+						@update:checked="setLayoutMessageView('threaded')">
+						{{ t('mail', 'Show all messages in thread') }}
+					</NcCheckboxRadioSwitch>
+					<NcCheckboxRadioSwitch type="radio"
+						name="message_view_mode_radio"
+						value="singleton"
+						:checked="layoutMessageView"
+						@update:checked="setLayoutMessageView('singleton')">
+						{{ t('mail', 'Show only the selected message') }}
+					</NcCheckboxRadioSwitch>
+				</div>
+
 				<h6>{{ t('mail', 'Sorting') }}</h6>
 				<div class="sorting">
 					<NcCheckboxRadioSwitch class="sorting__switch"
@@ -398,6 +416,9 @@ export default {
 		layoutMode() {
 			return this.mainStore.getPreference('layout-mode', 'vertical-split')
 		},
+		layoutMessageView() {
+			return this.mainStore.getPreference('layout-message-view')
+		},
 	},
 	watch: {
 		showSettings(value) {
@@ -434,6 +455,16 @@ export default {
 				await this.mainStore.savePreference({
 					key: 'layout-mode',
 					value: layoutMode,
+				})
+			} catch (error) {
+				Logger.error('Could not save preferences', { error })
+			}
+		},
+		async setLayoutMessageView(value) {
+			try {
+				await this.mainStore.savePreference({
+					key: 'layout-message-view',
+					value,
 				})
 			} catch (error) {
 				Logger.error('Could not save preferences', { error })

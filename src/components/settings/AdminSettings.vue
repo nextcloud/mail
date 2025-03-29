@@ -253,6 +253,36 @@
 			</article>
 			<MicrosoftAdminOauthSettings :tenant-id="microsoftOauthTenantId" :client-id="microsoftOauthClientId" />
 		</div>
+		<div class="app-description">
+			<h3>{{ t('mail', 'User Interface Preference Defaults') }}</h3>
+			<article>
+				<p>
+					{{ t('mail', 'These settings are used to pre-configure the user interface preferences they can be overridden by the user in the mail settings') }}
+				</p>
+			</article>
+			<br>
+			<article>
+				<p>
+					{{ t('mail', 'Message View Mode') }}
+				</p>
+				<p>
+					<NcCheckboxRadioSwitch type="radio"
+						name="message_view_mode_radio"
+						value="threaded"
+						:checked.sync="layoutMessageView"
+						@update:checked="setLayoutMessageView('threaded')">
+						{{ t('mail', 'Show all messages in thread') }}
+					</NcCheckboxRadioSwitch>
+					<NcCheckboxRadioSwitch type="radio"
+						name="message_view_mode_radio"
+						value="singleton"
+						:checked.sync="layoutMessageView"
+						@update:checked="setLayoutMessageView('singleton')">
+						{{ t('mail', 'Show only the selected message') }}
+					</NcCheckboxRadioSwitch>
+				</p>
+			</article>
+		</div>
 	</SettingsSection>
 </template>
 
@@ -278,6 +308,7 @@ import {
 	updateLlmEnabled,
 	updateEnabledSmartReply,
 	setImportanceClassificationEnabledByDefault,
+	setLayoutMessageView,
 } from '../../service/SettingsService.js'
 
 const googleOauthClientId = loadState('mail', 'google_oauth_client_id', null) ?? undefined
@@ -342,6 +373,7 @@ export default {
 			isLlmFreePromptConfigured: loadState('mail', 'enabled_llm_free_prompt_backend'),
 			isClassificationEnabledByDefault: loadState('mail', 'llm_processing', true),
 			isImportanceClassificationEnabledByDefault: loadState('mail', 'importance_classification_default', true),
+			layoutMessageView: loadState('mail', 'layout_message_view'),
 		}
 	},
 	methods: {
@@ -409,6 +441,9 @@ export default {
 				showError(t('mail', 'Could not save default classification setting'))
 				logger.error('Could not save default classification setting', { error })
 			}
+		},
+		async setLayoutMessageView(value) {
+			await setLayoutMessageView(value)
 		},
 	},
 }

@@ -32,7 +32,7 @@ export function fetchEnvelope(accountId, id) {
 		})
 }
 
-export function fetchEnvelopes(accountId, mailboxId, query, cursor, limit) {
+export function fetchEnvelopes(accountId, mailboxId, query, cursor, limit, sort, view) {
 	const url = generateUrl('/apps/mail/api/messages')
 	const params = {
 		mailboxId,
@@ -46,6 +46,12 @@ export function fetchEnvelopes(accountId, mailboxId, query, cursor, limit) {
 	}
 	if (cursor) {
 		params.cursor = cursor
+	}
+	if (sort) {
+		params.sort = sort
+	}
+	if (view) {
+		params.view = view
 	}
 
 	return axios

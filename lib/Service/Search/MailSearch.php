@@ -80,6 +80,7 @@ class MailSearch implements IMailSearch {
 	 * @param string|null $filter
 	 * @param int|null $cursor
 	 * @param int|null $limit
+	 * @param string|null $view
 	 *
 	 * @return Message[]
 	 *
@@ -91,7 +92,8 @@ class MailSearch implements IMailSearch {
 		string $sortOrder,
 		?string $filter,
 		?int $cursor,
-		?int $limit): array {
+		?int $limit,
+		?string $view): array {
 		if ($mailbox->hasLocks($this->timeFactory->getTime())) {
 			throw MailboxLockedException::from($mailbox);
 		}
@@ -102,6 +104,9 @@ class MailSearch implements IMailSearch {
 		$query = $this->filterStringParser->parse($filter);
 		if ($cursor !== null) {
 			$query->setCursor($cursor);
+		}
+		if ($view !== null) {
+			$query->setThreaded($view === self::VIEW_THREADED);
 		}
 		// In flagged we don't want anything but flagged messages
 		if ($mailbox->isSpecialUse(Horde_Imap_Client::SPECIALUSE_FLAGGED)) {
