@@ -1,9 +1,15 @@
 OC.L10N.register(
     "mail",
     {
+    "Embedded message %s" : "Lõimitud e-kiri %s",
+    "Important mail" : "Oluline e-kiri",
+    "No message found yet" : "Ei leidu veel ühtegi kirja",
+    "Set up an account" : "Seadista kasutajakonto",
+    "Unread mail" : "Lugemata kirjad",
     "Important" : "Tähtis",
     "Work" : "Töö",
     "Personal" : "Isiklik",
+    "To Do" : "Tegemiseks",
     "Later" : "Hiljem",
     "Mail" : "Kirjad",
     "Connecting" : "Ühendamine",
