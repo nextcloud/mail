@@ -546,6 +546,7 @@ OC.L10N.register(
     "Could not load your message thread" : "Nepodařilo se načíst vlákno s danou zprávou",
     "The thread doesn't exist or has been deleted" : "Vlákno neexistuje nebo bylo smazáno",
     "Email was not able to be opened" : "E-mail nebylo možné otevřít",
+    "Print" : "Tisk",
     "Loading thread" : "Načítání vlákna",
     "Not found" : "Nenalezeno",
     "Encrypted & verified " : "Šifrováno a ověřen",
