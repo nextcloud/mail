@@ -1,3 +1,12 @@
+## [4.3.4](https://github.com/nextcloud/mail/compare/v4.3.3...v4.3.4) (2025-03-31)
+
+
+### Bug Fixes
+
+* **db:** Do not JOIN recipients when fetching the latest messages ([7e5097a](https://github.com/nextcloud/mail/commit/7e5097ac23381661fdd8d4ed71ba7b76395cf5a1))
+
+
+
 ## [4.3.3](https://github.com/nextcloud/mail/compare/v4.3.2...v4.3.3) (2025-03-27)
 
 
