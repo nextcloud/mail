@@ -20,11 +20,14 @@ use ReturnTypeWillChange;
  * @method void setShareWith(string $shareWith)
  * @method string getSnippetId()
  * @method void setSnippetId(int $snippetId)
+ * @method string getDisplayName()
+ * @method void setDisplayName(string $displayName)
  */
 class SnippetShare extends Entity implements JsonSerializable {
 	protected $type;
 	protected $shareWith;
 	protected $snippetId;
+	protected $displayName = '';
 
 	public const TYPE_USER = 'user';
 	public const TYPE_GROUP = 'group';
@@ -42,6 +45,7 @@ class SnippetShare extends Entity implements JsonSerializable {
 			'type' => $this->getType(),
 			'shareWith' => $this->getShareWith(),
 			'snippetId' => $this->getSnippetId(),
+			'displayName' => $this->getDisplayName(),
 		];
 	}
 }

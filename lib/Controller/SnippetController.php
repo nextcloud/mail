@@ -153,7 +153,12 @@ class SnippetController extends Controller {
 		}
 
 	}
-
+	/**
+	 * @NoAdminRequired
+	 * @param int $id
+	 *
+	 * @return JsonResponse
+	 */
 	public function getShares(int $id): JsonResponse {
 		if ($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);

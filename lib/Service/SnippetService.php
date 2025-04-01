@@ -141,7 +141,19 @@ class SnippetService {
 	}
 
 	public function getShares(int $snippetId): array {
-		return $this->snippetShareMapper->findSnippetShares($snippetId);
+		$sharees = $this->snippetShareMapper->findSnippetShares($snippetId);
+		foreach ($sharees as $sharee) {
+			if ($sharee->getType() === SnippetShare::TYPE_GROUP) {
+				$sharee->setDisplayName($sharee->getShareWith());
+				continue;
+			}
+			$shareeUser = $this->userManager->get($sharee->getShareWith());
+			if ($shareeUser === null) {
+				continue;
+			}
+			$sharee->setDisplayName($shareeUser->getDisplayName());
+		}
+		return $sharees;
 	}
 
 	/**

@@ -1,79 +1,85 @@
 <!--
-  - SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="snippet-list-item">
-		<p class="snippet-list-item__title">
-			{{ snippet.title }}
-		</p>
-		<p class="snippet-list-item__preview">
-			{{ snippet.preview }}
-		</p>
-
-		<NcActions v-if="!shared" class="snippet-list-item__actions">
-			<NcActionButton icon="icon-delete" @click="deleteSnippet()">
-				{{ t('mail','Delete {title}', { title: snippet.title }) }}
-			</NcActionButton>
-			<NcActionButton icon="icon-edit" @click="editModalOpen = true">
-				{{ t('mail','Edit {title}', { title: snippet.title }) }}
-			</NcActionButton>
-		</NcActions>
+	<div>
+		<NcListItem>
+			<template #name>
+				{{ snippet.title }}
+			</template>
+			<template #subname>
+				{{ snippet.preview }}
+			</template>
+			<template v-if="!shared" #actions>
+				<NcActionButton icon="icon-edit" @click="editModalOpen = true">
+					{{ t('mail','Edit {title}', { title: snippet.title }) }}
+				</NcActionButton>
+				<NcActionButton icon="icon-delete" @click="deleteSnippet()">
+					{{ t('mail','Delete {title}', { title: snippet.title }) }}
+				</NcActionButton>
+			</template>
+		</NcListItem>
 		<NcDialog :open.sync="editModalOpen"
 			:name="t('mail','Edit snippet')"
-			size="large"
+			size="normal"
 			:is-form="true"
 			:buttons="buttons">
-			<h2>{{ t('mail','Content') }}</h2>
 			<NcInputField :value.sync="localSnippet.title" :label="t('mail','Title of the snippet')" />
 			<TextEditor v-model="localSnippet.content"
+				:is-bordered="true"
 				:html="true"
 				:placeholder="t('mail','Content of the snippet')"
 				:bus="bus" />
-			<h2>{{ t('mail','Shares') }}</h2>
+			<h3>{{ t('mail','Shares') }}</h3>
 			<NcSelect v-if="!shared"
 				v-model="share"
 				class="snippet-list-item__shares"
+				:placeholder="t('mail','Search for users or groups')"
+				:label-outside="true"
 				:loading="loading"
 				:user-select="true"
 				:options="options"
 				:get-option-label="option => option.displayName"
 				@option:selecting="shareSnippet"
 				@search="asyncFind" />
-			<template v-for="user in sortedShares">
-				<NcUserBubble v-if="user.type === 'group'"
-					:key="user.shareWith"
-					avatar-image="icon-group"
-					:display-name="user.shareWith">
-					<template #name>
-						<a href="#"
-							title="Remove group"
-							class="icon-close"
-							@click="removeShare(user)" />
-					</template>
-				</NcUserBubble>
-				<NcUserBubble v-else :key="user.shareWith" :user="user.shareWith">
-					<template #name>
-						<a href="#"
-							title="Remove user"
-							class="icon-close"
-							@click="removeShare(user)" />
-					</template>
-				</NcUserBubble>
-			</template>
+
+			<NcListItem v-for="user in sortedShares"
+				:key="user.shareWith"
+				:name="user.displayName"
+				:compact="true">
+				<template #icon>
+					<NcAvatar v-if="user.type === 'group'">
+						<template #icon>
+							<AccountMultiple :size="20" />
+						</template>
+					</NcAvatar>
+					<NcAvatar v-else :user="user.shareWith" :display-name="user.displayName" />
+				</template>
+				<template #extra-actions>
+					<NcButton type="tertiary-no-background" @click="removeShare(user)">
+						<template #icon>
+							<IconClose :size="20" />
+						</template>
+					</NcButton>
+				</template>
+			</NcListItem>
 		</NcDialog>
 	</div>
 </template>
 
 <script>
-import { NcActions, NcActionButton, NcSelect, NcDialog, NcInputField, NcUserBubble } from '@nextcloud/vue'
+import { NcActionButton, NcSelect, NcDialog, NcInputField, NcAvatar, NcListItem, NcButton } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import useMainStore from '../../store/mainStore.js'
 import { getShares, shareSnippet, unshareSnippet } from '../../service/SnippetService.js'
 import TextEditor from '../TextEditor.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import IconCancel from '@mdi/svg/svg/cancel.svg'
+import IconClosee from '@mdi/svg/svg/close.svg'
 import IconCheck from '@mdi/svg/svg/check.svg'
+import AccountMultiple from 'vue-material-design-icons/AccountMultiple.vue'
+import IconClose from 'vue-material-design-icons/Close.vue'
+import IconPencil from 'vue-material-design-icons/Pencil.vue'
 import debounce from 'lodash/fp/debounce.js'
 import { ShareType } from '@nextcloud/sharing'
 import { generateOcsUrl } from '@nextcloud/router'
@@ -85,13 +91,16 @@ import mitt from 'mitt'
 export default {
 	name: 'ListItem',
 	components: {
-		NcActions,
 		NcActionButton,
 		NcSelect,
 		NcDialog,
 		TextEditor,
+		NcButton,
+		NcAvatar,
 		NcInputField,
-		NcUserBubble,
+		AccountMultiple,
+		IconClose,
+		NcListItem,
 	},
 	props: {
 		snippet: {
@@ -115,14 +124,15 @@ export default {
 			buttons: [
 				{
 					label: 'Cancel',
-					icon: IconCancel,
+					type: 'tertiary',
+					icon: IconClosee,
 					callback: () => {
 						this.editModalOpen = false
 						this.localSnippet = Object.assign({}, this.snippet)
 					},
 				},
 				{
-					label: 'Ok',
+					label: 'Save text block',
 					type: 'primary',
 					icon: IconCheck,
 					callback: () => { this.mainStore.patchSnippet(this.localSnippet) },
@@ -162,7 +172,7 @@ export default {
 		},
 		async shareSnippet(sharee) {
 			await shareSnippet(this.snippet.id, sharee.shareWith, sharee.shareType === ShareType.User ? 'user' : 'group').then(() => {
-				this.shares.push({ shareWith: sharee.shareWith, type: sharee.isNoUser ? 'group' : 'user' })
+				this.shares.push({ shareWith: sharee.shareWith, type: sharee.isNoUser ? 'group' : 'user', displayName: sharee.displayName })
 				showSuccess(t('mail', 'Snippet shared with {sharee}', { sharee: sharee.shareWith }))
 				this.share = null
 			}).catch(() => {

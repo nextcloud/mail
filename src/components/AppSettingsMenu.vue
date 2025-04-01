@@ -148,6 +148,19 @@
 					{{ t('mail', 'Register') }}
 				</NcButton>
 			</NcAppSettingsSection>
+			<NcAppSettingsSection id="snippets" :name="t('mail', 'Text blocks')">
+				<List :snippets="getMySnippets()"
+					@show-toolbar="handleShowToolbar" />
+				<NcButton type="primary" @click="() => snippetDialogOpen = true">
+					{{ t('mail', 'Create a new text block') }}
+				</NcButton>
+				<template v-if="getSharedSnippets().length > 0">
+					<h6>{{ t('mail','Shared with me') }}</h6>
+					<List :snippets="getSharedSnippets()"
+						:shared="true"
+						@show-toolbar="handleShowToolbar" />
+				</template>
+			</NcAppSettingsSection>
 
 			<NcAppSettingsSection id="privacy-and-security" :name="t('mail', 'Privacy and security')">
 				<h6>{{ t('mail', 'Data collection consent') }}</h6>
@@ -294,18 +307,6 @@
 					</div>
 				</dl>
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="snippets" :name="t('mail', 'Snippets')">
-				<NcButton type="primary" @click="() => snippetDialogOpen = true">
-					{{ t('mail', 'Create new snippet') }}
-				</NcButton>
-				<h6>{{ t('mail','My snippets') }}</h6>
-				<List :snippets="getMySnippets()"
-					@show-toolbar="handleShowToolbar" />
-				<h6>{{ t('mail','Shared with me') }}</h6>
-				<List :snippets="getSharedSnippets()"
-					:shared="true"
-					@show-toolbar="handleShowToolbar" />
-			</NcAppSettingsSection>
 			<NcDialog :open.sync="snippetDialogOpen"
 				:name="t('mail','New snippet')"
 				:is-form="true"
@@ -313,6 +314,7 @@
 				size="normal">
 				<NcInputField :value.sync="localSnippet.title" :label="t('mail','Title of the snippet')" />
 				<TextEditor v-model="localSnippet.content"
+					:is-bordered="true"
 					:html="true"
 					:placeholder="t('mail','Content of the snippet')"
 					:bus="bus"

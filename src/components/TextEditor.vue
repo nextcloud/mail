@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<div>
+	<div :class="{ 'bordered': isBordered }">
 		<ckeditor v-if="ready"
 			:value="value"
 			:config="config"
@@ -82,6 +82,10 @@ export default {
 		snippets: {
 			type: Array,
 			default: () => [],
+		},
+		isBordered: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	data() {
@@ -408,6 +412,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.bordered {
+	margin-top: var(--default-grid-baseline);
+	border: var(--border-width-input, 2px) solid var(--color-border-maxcontrast);
+    border-radius:var(--border-radius-large);
+	padding: 1px 9px;
+	&:focus {
+		border-color: var(--color-main-text);
+		border-width: var(--border-width-input-focused, 2px);
+	}
+	&:hover {
+		border-color: var(--color-main-text);
+		border-width: var(--border-width-input-focused, 2px);
+	}
+}
+
 .editor {
 	width: 100%;
 	height: calc(100% - 75px);
