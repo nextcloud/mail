@@ -265,7 +265,8 @@ PROMPT;
 			$manager->runTask($task);
 			$replies = $task->getOutput();
 			try {
-				$decoded = json_decode($replies, true, 512, JSON_THROW_ON_ERROR);
+				$cleaned = preg_replace('/^```json\s*|\s*```$/', '', trim($replies));
+                $decoded = json_decode($cleaned, true, 512, JSON_THROW_ON_ERROR);
 				$this->cache->addValue('smartReplies_' . $message->getId(), $replies);
 				return $decoded;
 			} catch (JsonException $e) {
