@@ -543,7 +543,7 @@ OC.L10N.register(
     "Submit" : "Гаразд",
     "Account connected" : "Обліковий запис під’єднано",
     "You can close this window" : "Ви можете закрити це вікно",
-    "Connect your mail account" : "Приєднати вашу поштову скриньку",
+    "Connect your mail account" : "Під'єднати вашу поштову скриньку",
     "To add a mail account, please contact your administrator." : "Щоби додати поштову скриньку, будь ласка, зверніться до адміністратора",
     "All" : "Всі",
     "Drafts" : "Чернетки",
