@@ -1,3 +1,12 @@
+## [4.3.5](https://github.com/nextcloud/mail/compare/v4.3.4...v4.3.5) (2025-04-02)
+
+
+### Bug Fixes
+
+* **dns:** Update public suffix list ([dda16ac](https://github.com/nextcloud/mail/commit/dda16ac56e4eab8ba9bb2209e428e59e1ef73362))
+
+
+
 ## [4.3.4](https://github.com/nextcloud/mail/compare/v4.3.3...v4.3.4) (2025-03-31)
 
 
