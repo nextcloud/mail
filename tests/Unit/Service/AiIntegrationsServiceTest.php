@@ -9,7 +9,9 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccount;
@@ -27,6 +29,7 @@ use OCP\TaskProcessing\IProvider as TaskProcessingProvider;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager;
 use OCP\TextProcessing\SummaryTaskType;
+use OCP\TextProcessing\Task;
 use OCP\TextProcessing\TopicsTaskType;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -115,6 +118,44 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->expectExceptionMessage('Text processing is not available in your current Nextcloud version');
 		$this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
 
+	}
+
+	public function testSmartReply(): void {
+		$account = new Account(new MailAccount());
+		$mailbox = new Mailbox();
+		$message = new Message();
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$message->setUid(1);
+		$currentUserId = 'user';
+		$this->container->method('get')->willReturn($this->manager);
+		$this->manager
+			->method('getAvailableTaskTypes')
+			->willReturn([FreePromptTaskType::class]);
+		$this->cache->method('getValue')->willReturn(false);
+		$this->clientFactory->method('getClient')->with($account)->willReturn($this->createMock(Horde_Imap_Client_Socket::class));
+		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
+		$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
+		$imapMessage->method('getUnsubscribeUrl')->willReturn(null);
+		$fromList = new AddressList([ Address::fromRaw('personal@example.com', 'personal@example.com')]);
+		$imapMessage->method('getFrom')->willReturn($fromList);
+		$imapMessage->method('getPlainBody')->willReturn('This is a test message');
+
+		$this->manager->expects($this->once())
+			->method('runTask')
+			->will($this->returnCallback(function (Task $task) {
+				$task->setOutput('{"reply1":"reply1","reply2":"reply2"}');
+				return '';
+			}));
+
+		$result = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, $currentUserId);
+
+		$this->assertEquals(
+			[
+				'reply1' => 'reply1',
+				'reply2' => 'reply2'
+			],
+			$result
+		);
 	}
 
 	public function testGeneratedMessage() {
