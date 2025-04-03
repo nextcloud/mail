@@ -4,15 +4,22 @@
 -->
 <template>
 	<div>
-		<NcListItem>
+		<NcListItem @click="editModalOpen = true">
 			<template #name>
 				{{ snippet.title }}
 			</template>
 			<template #subname>
 				{{ snippet.preview }}
 			</template>
+			<template v-if="shares.length > 0" #extra-actions>
+				<AccountMultiple :title="t('mail', 'Shared')"
+					:size="16" />
+			</template>
 			<template v-if="!shared" #actions>
-				<NcActionButton icon="icon-edit" @click="editModalOpen = true">
+				<NcActionButton @click="editModalOpen = true">
+					<template #icon>
+						<IconPencil :size="20" />
+					</template>
 					{{ t('mail','Edit {title}', { title: snippet.title }) }}
 				</NcActionButton>
 				<NcActionButton icon="icon-delete" @click="deleteSnippet()">
@@ -25,45 +32,52 @@
 			size="normal"
 			:is-form="true"
 			:buttons="buttons">
-			<NcInputField :value.sync="localSnippet.title" :label="t('mail','Title of the snippet')" />
+			<p v-if="shared">
+				{{ localSnippet.title }}
+			</p>
+			<NcInputField v-else :value.sync="localSnippet.title" :label="t('mail','Title of the snippet')" />
 			<TextEditor v-model="localSnippet.content"
-				:is-bordered="true"
+				:is-bordered="!shared"
 				:html="true"
+				:read-only="shared"
 				:placeholder="t('mail','Content of the snippet')"
 				:bus="bus" />
-			<h3>{{ t('mail','Shares') }}</h3>
-			<NcSelect v-if="!shared"
-				v-model="share"
-				class="snippet-list-item__shares"
-				:placeholder="t('mail','Search for users or groups')"
-				:label-outside="true"
-				:loading="loading"
-				:user-select="true"
-				:options="options"
-				:get-option-label="option => option.displayName"
-				@option:selecting="shareSnippet"
-				@search="asyncFind" />
+			<template v-if="!shared">
+				<h3>
+					{{ t('mail','Shares') }}
+				</h3>
+				<NcSelect v-model="share"
+					class="snippet-list-item__shares"
+					:placeholder="t('mail','Search for users or groups')"
+					:label-outside="true"
+					:loading="loading"
+					:user-select="true"
+					:options="options"
+					:get-option-label="option => option.displayName"
+					@option:selecting="shareSnippet"
+					@search="asyncFind" />
 
-			<NcListItem v-for="user in sortedShares"
-				:key="user.shareWith"
-				:name="user.displayName"
-				:compact="true">
-				<template #icon>
-					<NcAvatar v-if="user.type === 'group'">
-						<template #icon>
-							<AccountMultiple :size="20" />
-						</template>
-					</NcAvatar>
-					<NcAvatar v-else :user="user.shareWith" :display-name="user.displayName" />
-				</template>
-				<template #extra-actions>
-					<NcButton type="tertiary-no-background" @click="removeShare(user)">
-						<template #icon>
-							<IconClose :size="20" />
-						</template>
-					</NcButton>
-				</template>
-			</NcListItem>
+				<NcListItem v-for="user in sortedShares"
+					:key="user.shareWith"
+					:name="user.displayName"
+					:compact="true">
+					<template #icon>
+						<NcAvatar v-if="user.type === 'group'">
+							<template #icon>
+								<AccountMultiple :size="20" />
+							</template>
+						</NcAvatar>
+						<NcAvatar v-else :user="user.shareWith" :display-name="user.displayName" />
+					</template>
+					<template #extra-actions>
+						<NcButton type="tertiary-no-background" @click="removeShare(user)">
+							<template #icon>
+								<IconClose :size="20" />
+							</template>
+						</NcButton>
+					</template>
+				</NcListItem>
+			</template>
 		</NcDialog>
 	</div>
 </template>
@@ -100,6 +114,7 @@ export default {
 		NcInputField,
 		AccountMultiple,
 		IconClose,
+		IconPencil,
 		NcListItem,
 	},
 	props: {

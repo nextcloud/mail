@@ -13,7 +13,7 @@
 			class="editor"
 			@input="onEditorInput"
 			@ready="onEditorReady" />
-		<div ref="container" class="toolbar" />
+		<div v-if="!readOnly" ref="container" class="toolbar" />
 	</div>
 </template>
 
@@ -84,6 +84,10 @@ export default {
 			default: () => [],
 		},
 		isBordered: {
+			type: Boolean,
+			default: false,
+		},
+		readOnly: {
 			type: Boolean,
 			default: false,
 		},
@@ -335,6 +339,9 @@ export default {
 		 * @param {module:core/editor/editor~Editor} editor editor the editor instance
 		 */
 		onEditorReady(editor) {
+			if (this.readOnly) {
+				editor.enableReadOnlyMode('text-block')
+			}
 			logger.debug('TextEditor is ready', { editor })
 
 			// https://ckeditor.com/docs/ckeditor5/latest/examples/builds-custom/bottom-toolbar-editor.html
@@ -461,6 +468,12 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 /* Default ckeditor value of padding-inline-start, to overwrite the global styling from server */
 .ck-content ul, .ck-content ol {
 	padding-inline-start: 40px;
+}
+.ck-read-only {
+	color: var(--color-main-text) !important;
+	background-color: var(--color-main-background) !important;
+	opacity: 1 !important;
+	font-size: 100% !important;
 }
 .ck-list__item {
 	.ck-off {
