@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Contracts;
 
 use Horde_Imap_Client_Socket;
+use Horde_Imap_Client;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
 use OCA\Mail\Db\Mailbox;
@@ -45,7 +46,7 @@ interface IMailManager {
 	/**
 	 * @param Account $account
 	 * @param string $name
-	 * @param array<"\\All"|"\\Archive"|"\\Drafts"|"\\Flagged"|"\\Junk"|"\\Sent"|"\\Trash"> $specialUseAttributes
+	 * @param array<Horde_Imap_Client::SPECIAL_USE_*> $specialUseAttributes
 	 *
 	 * @return Mailbox
 	 *

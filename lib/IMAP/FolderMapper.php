@@ -78,7 +78,7 @@ class FolderMapper {
 	 * @param Horde_Imap_Client_Socket $client
 	 * @param Account $account
 	 * @param string $name
-	 * @param array<"\\All"|"\\Archive"|"\\Drafts"|"\\Flagged"|"\\Junk"|"\\Sent"|"\\Trash"> $specialUseAttributes
+	 * @param array<Horde_Imap_Client::SPECIAL_USE_*> $specialUseAttributes
 	 *
 	 * @return Folder
 	 * @throws Horde_Imap_Client_Exception

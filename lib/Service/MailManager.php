@@ -142,7 +142,7 @@ class MailManager implements IMailManager {
 	/**
 	 * @param Account $account
 	 * @param string $name
-	 * @param array<"\\All"|"\\Archive"|"\\Drafts"|"\\Flagged"|"\\Junk"|"\\Sent"|"\\Trash"> $specialUseAttributes
+	 * @param array<Horde_Imap_Client::SPECIAL_USE_*> $specialUseAttributes
 	 *
 	 * @return Mailbox
 	 * @throws ServiceException
