@@ -23,7 +23,6 @@ class Version4000Date20240716172702 extends SimpleMigrationStep {
 	 * @return ISchemaWrapper
 	 */
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
-		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
 		if (!$schema->hasTable('mail_internal_address')) {
