@@ -80,7 +80,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->taskProcessingProvider = $this->createMock(TaskProcessingProvider::class);
 	}
 
-	public function testSummarizeThreadNoBackend() {
+	public function testSummarizeThreadNoBackend(): void {
 		$account = new Account(new MailAccount());
 		$mailbox = new Mailbox();
 		if ($this->manager !== null) {
@@ -100,7 +100,7 @@ class AiIntegrationsServiceTest extends TestCase {
 	}
 
 
-	public function testSmartReplyNoBackend() {
+	public function testSmartReplyNoBackend(): void {
 		$account = new Account(new MailAccount());
 		$mailbox = new Mailbox();
 		$message = new Message();
@@ -158,7 +158,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		);
 	}
 
-	public function testGeneratedMessage() {
+	public function testGeneratedMessage(): void {
 		$account = new Account(new MailAccount());
 		$mailbox = new Mailbox();
 		$message = new Message();
@@ -192,7 +192,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		}
 	}
 
-	public function testLlmAvailable() {
+	public function testLlmAvailable(): void {
 		if ($this->manager !== null) {
 			$this->container->method('get')->willReturn($this->manager);
 			$this->manager
@@ -208,7 +208,7 @@ class AiIntegrationsServiceTest extends TestCase {
 
 	}
 
-	public function testLlmUnavailable() {
+	public function testLlmUnavailable(): void {
 		if ($this->manager !== null) {
 			$this->container->method('get')->willReturn($this->manager);
 			$this->manager
@@ -243,7 +243,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->assertEquals($expected, $this->aiIntegrationsService->isLlmProcessingEnabled());
 	}
 
-	public function testCached() {
+	public function testCached(): void {
 		$account = new Account(new MailAccount());
 		$mailbox = new Mailbox();
 
@@ -415,7 +415,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		self::assertSame('* Q&A', $result->getDescription());
 	}
 
-	public function testSummarizeMessagesNoProvider() {
+	public function testSummarizeMessagesNoProvider(): void {
 		$account = new Account(new MailAccount());
 		$message = new Message();
 		$this->taskProcessingManager->expects(self::once())
@@ -424,11 +424,11 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->logger->expects(self::once())
 			->method('info')
 			->with('No text summary provider available');
-		
+
 		$this->aiIntegrationsService->summarizeMessages($account, [$message]);
 	}
 
-	public function testSummarizeMessagesContainsSummary() {
+	public function testSummarizeMessagesContainsSummary(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(123);
 		$mailAccount->setEmail('user@domain.tld');
@@ -446,11 +446,11 @@ class AiIntegrationsServiceTest extends TestCase {
 			->willReturn(['core:text2text' => $this->taskProcessingProvider]);
 		$this->clientFactory->expects(self::once())
 			->method('getClient');
-		
+
 		$this->aiIntegrationsService->summarizeMessages($account, [$message]);
 	}
 
-	public function testSummarizeMessagesIsEncrypted() {
+	public function testSummarizeMessagesIsEncrypted(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(123);
 		$mailAccount->setUserId('user1');
@@ -461,10 +461,10 @@ class AiIntegrationsServiceTest extends TestCase {
 		$mailAccount->setInboundUser('user1@domain.tld');
 		$mailAccount->setInboundPassword('encrypted');
 		$account = new Account($mailAccount);
-		
+
 		$mailBox = new Mailbox();
 		$mailBox->setId(1);
-		
+
 		$message = new Message();
 		$message->setId(1);
 		$message->setUid(100);
@@ -505,11 +505,11 @@ class AiIntegrationsServiceTest extends TestCase {
 				true
 			)
 			->willReturn($imapMessage);
-		
+
 		$this->aiIntegrationsService->summarizeMessages($account, [$message]);
 	}
 
-	public function testSummarizeMessages() {
+	public function testSummarizeMessages(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(123);
 		$mailAccount->setUserId('user1');
@@ -520,10 +520,10 @@ class AiIntegrationsServiceTest extends TestCase {
 		$mailAccount->setInboundUser('user1@domain.tld');
 		$mailAccount->setInboundPassword('encrypted');
 		$account = new Account($mailAccount);
-		
+
 		$mailBox = new Mailbox();
 		$mailBox->setId(1);
-		
+
 		$message = new Message();
 		$message->setId(1);
 		$message->setUid(100);
@@ -564,7 +564,7 @@ class AiIntegrationsServiceTest extends TestCase {
 				true
 			)
 			->willReturn($imapMessage);
-		
+
 		$this->aiIntegrationsService->summarizeMessages($account, [$message]);
 	}
 
