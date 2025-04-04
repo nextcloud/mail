@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 5.0.0 – unreleased
+### Added
+* Warn when a message has no subject
+* PHP8.4 support
+### Changed
+* Text editor upgrade
+### Removed
+* Support for php-mail
+
 ## 4.0.0 - unreleased
 
 ## 3.6.0 – unreleased
