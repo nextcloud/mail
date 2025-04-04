@@ -466,7 +466,12 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 }
 .ck-rounded-corners .ck.ck-dropdown__panel, .ck.ck-dropdown__panel.ck-rounded-corners {
 	border-radius: var(--border-radius-large) !important;
-	overflow: hidden;
+	overflow: visible;
+}
+.ck.ck-list-styles-list {
+/* our composer is very small, having menus vertically shown is better */
+	grid-template-rows: repeat(3,auto) !important;
+	grid-template-columns: unset !important;
 }
 
 .ck.ck-button {
