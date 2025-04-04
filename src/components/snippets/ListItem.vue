@@ -4,7 +4,7 @@
 -->
 <template>
 	<div>
-		<NcListItem @click="editModalOpen = true">
+		<NcListItem :active="picked" @click="handleListItemClick">
 			<template #name>
 				{{ snippet.title }}
 			</template>
@@ -15,7 +15,7 @@
 				<AccountMultiple :title="t('mail', 'Shared')"
 					:size="16" />
 			</template>
-			<template v-if="!shared" #actions>
+			<template v-if="!shared && !isViewMode" #actions>
 				<NcActionButton @click="editModalOpen = true">
 					<template #icon>
 						<IconPencil :size="20" />
@@ -85,6 +85,7 @@
 <script>
 import { NcActionButton, NcSelect, NcDialog, NcInputField, NcAvatar, NcListItem, NcButton } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import mitt from 'mitt'
 import useMainStore from '../../store/mainStore.js'
 import { getShares, shareSnippet, unshareSnippet } from '../../service/SnippetService.js'
 import TextEditor from '../TextEditor.vue'
@@ -100,7 +101,6 @@ import { generateOcsUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'
 
 import axios from '@nextcloud/axios'
-import mitt from 'mitt'
 
 export default {
 	name: 'ListItem',
@@ -123,6 +123,14 @@ export default {
 			required: true,
 		},
 		shared: {
+			type: Boolean,
+			default: false,
+		},
+		isViewMode: {
+			type: Boolean,
+			default: false,
+		},
+		picked: {
 			type: Boolean,
 			default: false,
 		},
@@ -173,7 +181,7 @@ export default {
 		},
 	},
 	async mounted() {
-		if (!this.shared) {
+		if (!this.shared && !this.isViewMode) {
 			this.shares = await getShares(this.snippet.id)
 		}
 	},
@@ -323,6 +331,13 @@ export default {
 		 debounceGetSuggestions: debounce(300, function(...args) {
 			this.getSuggestions(...args)
 		}),
+		handleListItemClick() {
+			if (!this.isViewMode) {
+				this.editModalOpen = true
+				return
+			}
+			this.$emit('click', this.snippet)
+		},
 	},
 }
 </script>

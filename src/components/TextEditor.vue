@@ -374,12 +374,7 @@ export default {
 					this.$emit('mention', { email: item.email[0], label: item.label })
 				}
 				if (eventData.marker === '!') {
-					let content = item.content
-					if (!this.html) {
-						const text = new Text('html', content)
-						content = toPlain(text).value
-					}
-					this.editorInstance.execute('insertItem', { content, isHtml: this.html }, '!')
+					this.insertTextBlock(item)
 				}
 			}, { priority: 'high' })
 			this.editorInstance = editor
@@ -393,6 +388,7 @@ export default {
 				this.$emit('show-toolbar', editor.ui._focusableToolbarDefinitions[0].toolbarView.element)
 			}
 			this.bus.on('append-to-body-at-cursor', this.appendToBodyAtCursor)
+			this.bus.on('insert-text-block', this.insertTextBlock)
 			this.$emit('ready', editor)
 		},
 		onEditorInput(text) {
@@ -413,6 +409,15 @@ export default {
 			} else {
 				throw new Error('Impossible to execute a command before editor is ready.')
 			}
+		},
+		insertTextBlock(textBlock) {
+			this.appendToBodyAtCursor('!')
+			let content = textBlock.content
+			if (!this.html) {
+				const text = new Text('html', content)
+				content = toPlain(text).value
+			}
+			this.editorInstance.execute('insertItem', { content, isHtml: this.html }, '!')
 		},
 	},
 }
