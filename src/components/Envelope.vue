@@ -47,7 +47,8 @@
 				:class="{ 'hover-active': hoveringAvatar && !selected }"
 				@mouseenter="hoveringAvatar = true"
 				@mouseleave="hoveringAvatar = false"
-				@click.stop.prevent="toggleSelected">
+				@click.stop.exact.prevent="toggleSelected"
+				@click.shift.exact.prevent="onSelectMultiple">
 				<template v-if="hoveringAvatar || selected">
 					<CheckIcon :size="40" class="check-icon" :class="{ 'app-content-list-item-avatar-selected': selected }" />
 				</template>
