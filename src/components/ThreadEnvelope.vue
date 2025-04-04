@@ -193,7 +193,8 @@
 							@open-move-modal="onOpenMoveModal"
 							@open-event-modal="onOpenEventModal"
 							@open-task-modal="onOpenTaskModal"
-							@open-translation-modal="onOpenTranslationModal" />
+							@open-translation-modal="onOpenTranslationModal"
+							@print="onPrint" />
 					</NcActions>
 					<NcModal v-if="showSourceModal" class="source-modal" @close="onCloseSourceModal">
 						<div class="source-modal-content">
@@ -385,6 +386,10 @@ export default {
 		threadSubject: {
 			required: true,
 			type: String,
+		},
+		threadIndex: {
+			required: true,
+			type: Number,
 		},
 	},
 	data() {
@@ -591,6 +596,11 @@ export default {
 			} else {
 				this.message = undefined
 				this.loading = LOADING_DONE
+			}
+		},
+		loading(loading) {
+			if (loading === LOADING_DONE) {
+				this.$emit('loaded')
 			}
 		},
 	},
@@ -933,6 +943,9 @@ export default {
 		},
 		onCloseSourceModal() {
 			this.showSourceModal = false
+		},
+		onPrint() {
+			this.$emit('print', this.threadIndex)
 		},
 	},
 }
