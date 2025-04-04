@@ -266,11 +266,11 @@ PROMPT;
 			$replies = $task->getOutput();
 			try {
 				$cleaned = preg_replace('/^```json\s*|\s*```$/', '', trim($replies));
-                $decoded = json_decode($cleaned, true, 512, JSON_THROW_ON_ERROR);
+				$decoded = json_decode($cleaned, true, 512, JSON_THROW_ON_ERROR);
 				$this->cache->addValue('smartReplies_' . $message->getId(), $replies);
 				return $decoded;
 			} catch (JsonException $e) {
-				throw new ServiceException('Failed to decode smart replies JSON output', $e);
+				throw new ServiceException('Failed to decode smart replies JSON output', previous: $e);
 			}
 		} else {
 			throw new ServiceException('No language model available for smart replies');
