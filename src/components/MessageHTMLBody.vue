@@ -114,6 +114,7 @@ export default {
 		},
 		onMessageFrameLoad() {
 			const iframeDoc = this.getIframeDoc()
+			this.styleIframe(iframeDoc)
 			this.hasBlockedContent
 				= iframeDoc.querySelectorAll('[data-original-src]').length > 0
 				|| iframeDoc.querySelectorAll('[data-original-style]').length > 0
@@ -143,6 +144,10 @@ export default {
 					node.innerHTML = node.getAttribute('data-original-content')
 				})
 			this.hasBlockedContent = false
+		},
+		styleIframe(iframeDoc) {
+			iframeDoc.body.style.backgroundColor = getComputedStyle(document.body).getPropertyValue('--color-main-background')
+			iframeDoc.body.style.color = getComputedStyle(document.body).getPropertyValue('--color-main-text')
 		},
 		async onShowBlockedContent() {
 			this.displayIframe()
