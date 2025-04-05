@@ -195,6 +195,10 @@ OC.L10N.register(
     "Error loading message" : "Tõrge kirja laadimisel",
     "Forwarding to %s" : "Edasta %s",
     "Redirect" : "Suunamine",
-    "Continue to %s" : "Jätka siit: %s"
+    "Continue to %s" : "Jätka siit: %s",
+    "Subject: " : "Teema:",
+    "From: " : "Saatja:",
+    "Date: " : "Kuupäev:",
+    "To : " : "Saaja:"
 },
 "nplurals=2; plural=(n != 1);");
