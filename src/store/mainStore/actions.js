@@ -971,7 +971,7 @@ export default function mainStoreActions() {
 											mailboxId: mailbox.databaseId,
 										})
 									}
-									
+
 									return await this.syncEnvelopes({
 										mailboxId: mailbox.databaseId,
 									})
@@ -1823,16 +1823,16 @@ export default function mainStoreActions() {
 		 * @return {Array} list of envelope ids
 		 */
 		appendOrReplaceEnvelopeId(existing, envelope) {
-			
-			if (this.getPreference('layout-message-view') === 'threaded') {
+
+			if (this.getPreference('layout-message-view') === 'singleton') {
+				existing.push(envelope.databaseId)
+			} else {
 				const index = existing.findIndex((id) => this.envelopes[id].threadRootId === envelope.threadRootId)
 				if (index === -1) {
 					existing.push(envelope.databaseId)
 				} else {
 					existing[index] = envelope.databaseId
 				}
-			} else {
-				existing.push(envelope.databaseId)
 			}
 
 			return existing
