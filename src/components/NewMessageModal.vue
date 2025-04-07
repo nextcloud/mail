@@ -45,8 +45,6 @@
 							</NcButton>
 						</template>
 					</EmptyContent>
-					<Loading v-else-if="uploadingAttachments" :hint="t('mail', 'Uploading attachments …')" role="alert" />
-					<Loading v-else-if="sending" :hint="t('mail', 'Sending …')" role="alert" />
 					<EmptyContent v-else-if="warning"
 						:name="t('mail', 'Warning sending your message')"
 						class="empty-content"
@@ -131,7 +129,6 @@ import NoSentMailboxConfiguredError from '../errors/NoSentMailboxConfiguredError
 import ManyRecipientsError from '../errors/ManyRecipientsError.js'
 import AttachmentMissingError from '../errors/AttachmentMissingError.js'
 import SubjectMissingError from '../errors/SubjectMissingError.js'
-import Loading from './Loading.vue'
 import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
 import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
 import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
@@ -149,7 +146,6 @@ export default {
 		NcButton,
 		Composer,
 		EmptyContent,
-		Loading,
 		Modal,
 		MinimizeIcon,
 		MaximizeIcon,
