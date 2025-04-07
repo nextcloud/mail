@@ -124,6 +124,8 @@ class MessagesController extends Controller {
 	 * @param int $cursor
 	 * @param string $filter
 	 * @param int|null $limit
+	 * @param string $sort		returns messages in requested order ('newest' or 'oldest')
+	 * @param string $view		returns messages in requested view ('singleton' or 'threaded')
 	 *
 	 * @return JSONResponse
 	 *
@@ -135,8 +137,8 @@ class MessagesController extends Controller {
 		?int $cursor = null,
 		?string $filter = null,
 		?int $limit = null,
-		?string $sort,
-		?string $view): JSONResponse {
+		?string $sort = null,
+		?string $view = null): JSONResponse {
 		try {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $mailboxId);
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
