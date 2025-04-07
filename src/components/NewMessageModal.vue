@@ -4,67 +4,66 @@
 		:name="modalTitle"
 		:additional-trap-elements="additionalTrapElements"
 		@close="$event.type === 'click' ? onClose() : onMinimize()">
-		<EmptyContent v-if="error"
-			:name="t('mail', 'Error sending your message')"
-			class="empty-content"
-			role="alert">
-			<p>{{ error }}</p>
-			<template #action>
-				<NcButton type="tertiary"
-					:aria-label="t('mail', 'Go back')"
-					@click="error = undefined">
-					{{ t('mail', 'Go back') }}
-				</NcButton>
-				<NcButton type="tertiary"
-					:aria-label="t('mail', 'Retry')"
-					@click="onSend">
-					{{ t('mail', 'Retry') }}
-				</NcButton>
+		<NcButton class="maximize-button"
+			type="tertiary-no-background"
+			:aria-label="t('mail', 'Maximize composer')"
+			@click="onMaximize">
+			<template #icon>
+				<MaximizeIcon v-if="!largerModal" :size="20" />
+				<DefaultComposerIcon v-else :size="20" />
 			</template>
-		</EmptyContent>
-		<Loading v-else-if="uploadingAttachments" :hint="t('mail', 'Uploading attachments …')" role="alert" />
-		<Loading v-else-if="sending"
-			:hint="t('mail', 'Sending …')"
-			role="alert" />
-		<EmptyContent v-else-if="warning"
-			:name="t('mail', 'Warning sending your message')"
-			class="empty-content"
-			role="alert">
-			<template #description>
-				{{ warning }}
+		</NcButton>
+		<NcButton class="minimize-button"
+			type="tertiary-no-background"
+			:aria-label="t('mail', 'Minimize composer')"
+			@click="onMinimize">
+			<template #icon>
+				<MinimizeIcon :size="20" />
 			</template>
-			<template #action>
-				<NcButton type="tertiary"
-					:aria-label="t('mail', 'Go back')"
-					@click="warning = undefined">
-					{{ t('mail', 'Go back') }}
-				</NcButton>
-				<NcButton type="tertiary"
-					:aria-label="t('mail', 'Send anyway')"
-					@click="onForceSend">
-					{{ t('mail', 'Send anyway') }}
-				</NcButton>
-			</template>
-		</EmptyContent>
-		<template v-else>
-			<NcButton class="maximize-button"
-				type="tertiary-no-background"
-				:aria-label="t('mail', 'Maximize composer')"
-				@click="onMaximize">
-				<template #icon>
-					<MaximizeIcon v-if="!largerModal" :size="20" />
-					<DefaultComposerIcon v-else :size="20" />
+		</NcButton>
+		<KeepAlive>
+			<EmptyContent v-if="error"
+				:name="t('mail', 'Error sending your message')"
+				class="empty-content"
+				role="alert">
+				<p>{{ error }}</p>
+				<template #action>
+					<NcButton type="tertiary"
+						:aria-label="t('mail', 'Go back')"
+						@click="error = undefined">
+						{{ t('mail', 'Go back') }}
+					</NcButton>
+					<NcButton type="tertiary"
+						:aria-label="t('mail', 'Retry')"
+						@click="onSend">
+						{{ t('mail', 'Retry') }}
+					</NcButton>
 				</template>
-			</NcButton>
-			<NcButton class="minimize-button"
-				type="tertiary-no-background"
-				:aria-label="t('mail', 'Minimize composer')"
-				@click="onMinimize">
-				<template #icon>
-					<MinimizeIcon :size="20" />
+			</EmptyContent>
+			<Loading v-else-if="uploadingAttachments" :hint="t('mail', 'Uploading attachments …')" role="alert" />
+			<Loading v-else-if="sending"
+				:hint="t('mail', 'Sending …')"
+				role="alert" />
+			<EmptyContent v-else-if="warning"
+				:name="t('mail', 'Warning sending your message')"
+				class="empty-content"
+				role="alert">
+				<template #description>
+					{{ warning }}
 				</template>
-			</NcButton>
-
+				<template #action>
+					<NcButton type="tertiary"
+						:aria-label="t('mail', 'Go back')"
+						@click="warning = undefined">
+						{{ t('mail', 'Go back') }}
+					</NcButton>
+					<NcButton type="tertiary"
+						:aria-label="t('mail', 'Send anyway')"
+						@click="onForceSend">
+						{{ t('mail', 'Send anyway') }}
+					</NcButton>
+				</template>
+			</EmptyContent>
 			<Composer ref="composer"
 				:from-account="composerData.accountId"
 				:from-alias="composerData.aliasId"
@@ -106,7 +105,7 @@
 				@upload-attachment="onAttachmentUploading"
 				@send="onSend"
 				@show-toolbar="handleShow" />
-		</template>
+		</KeepAlive>
 	</Modal>
 </template>
 <script>
