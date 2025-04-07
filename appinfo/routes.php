@@ -491,44 +491,9 @@ return [
 			'verb' => 'POST',
 		],
 		[
-			'name' => 'textBlock#getOwnTextBlocks',
-			'url' => '/api/textBlocks',
+			'name' => 'textBlockShares#getTextBlockShares',
+			'url' => '/api/textBlocks/{id}/shares',
 			'verb' => 'GET',
-		],
-		[
-			'name' => 'textBlock#getSharedTextBlocks',
-			'url' => '/api/textBlocks/share',
-			'verb' => 'GET',
-		],
-		[
-			'name' => 'textBlock#getShares',
-			'url' => '/api/textBlocks/share/shares/{id}',
-			'verb' => 'GET',
-		],
-		[
-			'name' => 'textBlock#create',
-			'url' => '/api/textBlocks',
-			'verb' => 'POST',
-		],
-		[
-			'name' => 'textBlock#update',
-			'url' => '/api/textBlocks',
-			'verb' => 'PUT',
-		],
-		[
-			'name' => 'textBlock#delete',
-			'url' => '/api/textBlocks/{id}',
-			'verb' => 'DELETE',
-		],
-		[
-			'name' => 'textBlock#share',
-			'url' => '/api/textBlocks/share',
-			'verb' => 'POST',
-		],
-		[
-			'name' => 'textBlock#deleteShare',
-			'url' => '/api/textBlocks/share/{textBlockId}/{shareWith}',
-			'verb' => 'DELETE',
 		],
 	],
 	'resources' => [
@@ -542,6 +507,8 @@ return [
 		'outbox' => ['url' => '/api/outbox'],
 		'preferences' => ['url' => '/api/preferences'],
 		'smimeCertificates' => ['url' => '/api/smime/certificates'],
+		'textBlock' => ['url' => '/api/textBlocks'],
+		'textBlockShares' => ['url' => '/api/textBlockshares'],
 	],
 	'ocs' => [
 		[
