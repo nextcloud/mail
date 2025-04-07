@@ -8,7 +8,7 @@ import Vue from 'vue'
 
 import * as OutboxService from '../service/OutboxService.js'
 import logger from '../logger.js'
-import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
+import { showError, showSuccess, showUndo, showInfo } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import { html, plain } from '../util/text.js'
 import { UNDO_DELAY } from './constants.js'
@@ -179,11 +179,12 @@ export default defineStore('outbox', {
 				const message = this.getMessage(id)
 
 				showUndo(
-					t('mail', 'Message sent'),
+					t('mail', 'Sending message…'),
 					async () => {
 						logger.info('Attempting to stop sending message ' + message.id)
 						const stopped = await this.stopMessage({ message })
 						logger.info('Message ' + message.id + ' stopped', { message: stopped })
+
 						// The composer expects rich body data and not just a string
 						const bodyData = {}
 						if (message.isHtml) {
@@ -198,7 +199,8 @@ export default defineStore('outbox', {
 								...bodyData,
 							},
 						}, { root: true })
-					}, {
+					},
+					{
 						timeout: UNDO_DELAY,
 						close: true,
 					},
@@ -207,6 +209,9 @@ export default defineStore('outbox', {
 				setTimeout(async () => {
 					try {
 						const wasSent = await this.sendMessage({ id: message.id, force: false })
+						if (wasSent) {
+							showSuccess(t('mail', 'Message sent'))
+						}
 						resolve(wasSent)
 					} catch (error) {
 						showError(t('mail', 'Could not send message'))
