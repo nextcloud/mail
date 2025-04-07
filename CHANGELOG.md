@@ -1,3 +1,15 @@
+## [4.3.6](https://github.com/nextcloud/mail/compare/v4.3.5...v4.3.6) (2025-04-07)
+
+
+### Bug Fixes
+
+* ckeditor buttons dont show up correctly ([cde7d06](https://github.com/nextcloud/mail/commit/cde7d06dcc0b2bcb4f759262d3082be922377b38))
+* handle recurring events and show better message to user ([35e6d4b](https://github.com/nextcloud/mail/commit/35e6d4b0d2c0fdcce853b17c5a778a84da53ef06))
+* multiselect when you hold shift ([f041483](https://github.com/nextcloud/mail/commit/f0414837134222babf64ae8798843cc26a060a2e))
+* printing email threads and singular emails ([4e707f3](https://github.com/nextcloud/mail/commit/4e707f3e8bc13f79acf5c94c674cd22c71bcdbec))
+
+
+
 ## [4.3.5](https://github.com/nextcloud/mail/compare/v4.3.4...v4.3.5) (2025-04-02)
 
 
