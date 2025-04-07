@@ -30,8 +30,7 @@
 		<NcDialog :open.sync="editModalOpen"
 			:name="t('mail','Edit snippet')"
 			size="normal"
-			:is-form="true"
-			:buttons="buttons">
+			:is-form="true">
 			<p v-if="shared">
 				{{ localSnippet.title }}
 			</p>
@@ -77,23 +76,43 @@
 						</NcButton>
 					</template>
 				</NcListItem>
+				<div class="text-block-buttons">
+					<NcButton type="tertiary"
+						class="text-block-buttons__button"
+						:disabled="saveLoading"
+						@click="closeTextBlockDialog">
+						<template #icon>
+							<IconClose :size="16" />
+						</template>
+						{{ t('mail', 'Cancel') }}
+					</NcButton>
+					<NcButton type="primary"
+						class="text-block-buttons__button"
+						:disabled="!localSnippet.title || !localSnippet.content || saveLoading"
+						@click="newTextBlock">
+						<template #icon>
+							<NcLoadingIcon v-if="saveLoading" :size="16" />
+							<IconCheck v-else :size="16" />
+						</template>
+						{{ t('mail', 'Ok') }}
+					</NcButton>
+				</div>
 			</template>
 		</NcDialog>
 	</div>
 </template>
 
 <script>
-import { NcActionButton, NcSelect, NcDialog, NcInputField, NcAvatar, NcListItem, NcButton } from '@nextcloud/vue'
+import { NcActionButton, NcSelect, NcDialog, NcInputField, NcAvatar, NcListItem, NcButton, NcLoadingIcon } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import mitt from 'mitt'
 import useMainStore from '../../store/mainStore.js'
 import { getShares, shareSnippet, unshareSnippet } from '../../service/SnippetService.js'
 import TextEditor from '../TextEditor.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import IconClosee from '@mdi/svg/svg/close.svg'
-import IconCheck from '@mdi/svg/svg/check.svg'
 import AccountMultiple from 'vue-material-design-icons/AccountMultiple.vue'
 import IconClose from 'vue-material-design-icons/Close.vue'
+import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconPencil from 'vue-material-design-icons/Pencil.vue'
 import debounce from 'lodash/fp/debounce.js'
 import { ShareType } from '@nextcloud/sharing'
@@ -106,6 +125,7 @@ export default {
 	name: 'ListItem',
 	components: {
 		NcActionButton,
+		NcLoadingIcon,
 		NcSelect,
 		NcDialog,
 		TextEditor,
@@ -115,6 +135,7 @@ export default {
 		AccountMultiple,
 		IconClose,
 		IconPencil,
+		IconCheck,
 		NcListItem,
 	},
 	props: {
@@ -141,26 +162,10 @@ export default {
 			localSnippet: Object.assign({}, this.snippet),
 			editModalOpen: false,
 			loading: false,
+			saveLoading: false,
 			share: null,
 			suggestions: [],
 			bus: mitt(),
-			buttons: [
-				{
-					label: 'Cancel',
-					type: 'tertiary',
-					icon: IconClosee,
-					callback: () => {
-						this.editModalOpen = false
-						this.localSnippet = Object.assign({}, this.snippet)
-					},
-				},
-				{
-					label: 'Save text block',
-					type: 'primary',
-					icon: IconCheck,
-					callback: () => { this.mainStore.patchSnippet(this.localSnippet) },
-				},
-			],
 		}
 	},
 	computed: {
@@ -338,6 +343,20 @@ export default {
 			}
 			this.$emit('click', this.snippet)
 		},
+		closeTextBlockDialog() {
+			this.editModalOpen = false
+			this.localSnippet = Object.assign({}, this.snippet)
+		},
+		newTextBlock() {
+			this.saveLoading = true
+			this.mainStore.patchSnippet(this.localSnippet).then(() => {
+				this.saveLoading = false
+				this.editModalOpen = false
+				this.localSnippet = Object.assign({}, this.snippet)
+			}).catch(() => {
+				showError(t('mail', 'Failed to save snippet'))
+			})
+		},
 	},
 }
 </script>
@@ -364,8 +383,13 @@ export default {
 		width: 100%;
 	}
 }
-.icon-close {
-	display: block;
-	height: 100%;
+.text-block-buttons{
+	width: 100%;
+	justify-self: end;
+	display: flex;
+    justify-content: flex-end;
+	&__button{
+		margin: var(--default-grid-baseline);
+	}
 }
 </style>

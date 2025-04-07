@@ -439,6 +439,10 @@ export default {
 		border-width: var(--border-width-input-focused, 2px);
 	}
 }
+.bordere:active *{
+		border-color: var(--color-main-text);
+		border-width: var(--border-width-input-focused, 2px);
+	}
 
 .editor {
 	width: 100%;

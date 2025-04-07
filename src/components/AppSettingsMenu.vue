@@ -308,17 +308,35 @@
 				</dl>
 			</NcAppSettingsSection>
 			<NcDialog :open.sync="snippetDialogOpen"
-				:name="t('mail','New snippet')"
+				:name="t('mail','New text block')"
 				:is-form="true"
-				:buttons="snippetButtons"
 				size="normal">
-				<NcInputField :value.sync="localSnippet.title" :label="t('mail','Title of the snippet')" />
+				<NcInputField :value.sync="localSnippet.title" :label="t('mail','Title of the text block')" />
 				<TextEditor v-model="localSnippet.content"
 					:is-bordered="true"
 					:html="true"
-					:placeholder="t('mail','Content of the snippet')"
+					:placeholder="t('mail','Content of the text block')"
 					:bus="bus"
 					:show-toolbar="handleShowToolbar" />
+				<div class="text-block-buttons">
+					<NcButton type="tertiary"
+						class="text-block-buttons__button"
+						@click="closeTextBlockDialog">
+						<template #icon>
+							<IconClose :size="16" />
+						</template>
+						{{ t('mail', 'Cancel') }}
+					</NcButton>
+					<NcButton type="primary"
+						class="text-block-buttons__button"
+						:disabled="!localSnippet.title || !localSnippet.content"
+						@click="newTextBlock">
+						<template #icon>
+							<IconCheck :size="16" />
+						</template>
+						{{ t('mail', 'Ok') }}
+					</NcButton>
+				</div>
 			</NcDialog>
 		</NcAppSettingsDialog>
 	</div>
@@ -334,6 +352,8 @@ import TextEditor from './TextEditor.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconEmail from 'vue-material-design-icons/Email.vue'
 import IconLock from 'vue-material-design-icons/Lock.vue'
+import IconClose from 'vue-material-design-icons/Close.vue'
+import IconCheck from 'vue-material-design-icons/Check.vue'
 import VerticalSplit from 'vue-material-design-icons/FormatColumns.vue'
 import HorizontalSplit from 'vue-material-design-icons/ViewSplitHorizontal.vue'
 import Logger from '../logger.js'
@@ -344,8 +364,6 @@ import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 import useMainStore from '../store/mainStore.js'
 import { mapStores, mapState } from 'pinia'
 import List from './snippets/List.vue'
-import IconCancel from '@mdi/svg/svg/cancel.svg'
-import IconCheck from '@mdi/svg/svg/check.svg'
 import mitt from 'mitt'
 
 export default {
@@ -358,6 +376,8 @@ export default {
 		IconAdd,
 		IconLoading,
 		IconLock,
+		IconClose,
+		IconCheck,
 		SmimeCertificateModal,
 		NcCheckboxRadioSwitch,
 		NcAppSettingsDialog,
@@ -408,31 +428,6 @@ export default {
 				title: '',
 				content: '',
 			},
-			snippetButtons: [
-				{
-					label: 'Cancel',
-					icon: IconCancel,
-					callback: () => {
-						this.snippetDialogOpen = false
-						this.localSnippet = {
-							title: '',
-							content: '',
-						}
-					},
-				},
-				{
-					label: 'Ok',
-					type: 'primary',
-					icon: IconCheck,
-					callback: () => {
-						this.mainStore.createSnippet({ ...this.localSnippet })
-						this.localSnippet = {
-							title: '',
-							content: '',
-						}
-					},
-				},
-			],
 		}
 	},
 	computed: {
@@ -635,6 +630,21 @@ export default {
 		handleShowToolbar(element) {
 			this.trapElements.push(element)
 		},
+		newTextBlock() {
+			this.mainStore.createSnippet({ ...this.localSnippet })
+			this.snippetDialogOpen = false
+			this.localSnippet = {
+				title: '',
+				content: '',
+			}
+		},
+		closeTextBlockDialog() {
+			this.snippetDialogOpen = false
+			this.localSnippet = {
+				title: '',
+				content: '',
+			}
+		},
 	},
 }
 </script>
@@ -718,5 +728,14 @@ p.app-settings {
 // align it with the checkbox
 .internal_address{
 	margin-left: 3px;
+}
+.text-block-buttons{
+	width: 100%;
+	justify-self: end;
+	display: flex;
+    justify-content: flex-end;
+	&__button{
+		margin: var(--default-grid-baseline);
+	}
 }
 </style>
