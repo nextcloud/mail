@@ -13,7 +13,7 @@
 				<NcButton class="maximize-button"
 					type="tertiary-no-background"
 					:aria-label="t('mail', 'Maximize composer')"
-					:title="largerModal ? t('mail', 'Collapse composer') : t('mail', 'Maximize composer')"
+					:title="largerModal ? t('mail', 'Show recipient details') : t('mail', 'Hide recipient details')"
 					@click="onMaximize">
 					<template #icon>
 						<MaximizeIcon v-if="!largerModal" :size="20" />
@@ -212,7 +212,7 @@ export default {
 			return this.hasContactDetailsApi
 				&& this.composerData.to
 				&& this.composerData.to.length > 0
-				&& !this.isMaximized
+				&& !this.largerModal
 		},
 		composerMessage() {
 			return this.mainStore.composerMessage
