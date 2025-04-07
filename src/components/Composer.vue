@@ -242,7 +242,7 @@
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply || !isFirstOpen"
 				:bus="bus"
-				:snippets="snippets"
+				:text-blocks="textBlocks"
 				@input="onEditorInput"
 				@ready="onEditorReady"
 				@mention="handleMention"
@@ -477,7 +477,7 @@ import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox 
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import Delete from 'vue-material-design-icons/Delete.vue'
 import ComposerAttachments from './ComposerAttachments.vue'
-import TextBlockModal from './snippets/TextBlockModal.vue'
+import TextBlockModal from './textBlocks/TextBlockModal.vue'
 import Download from 'vue-material-design-icons/Download.vue'
 import IconUpload from 'vue-material-design-icons/Upload.vue'
 import IconFolder from 'vue-material-design-icons/Folder.vue'
@@ -903,9 +903,9 @@ export default {
 			return missingCertificates
 		},
 
-		snippets() {
-			return this.mainStore.getSharedSnippets()?.map(snippet => ({ title: snippet.title, content: snippet.content }))
-				.concat(this.mainStore.getMySnippets().map(snippet => ({ title: snippet.title, content: snippet.content })))
+		textBlocks() {
+			return this.mainStore.getSharedTextBlocks()?.map(textBlock => ({ title: textBlock.title, content: textBlock.content }))
+				.concat(this.mainStore.getMyTextBlocks().map(textBlock => ({ title: textBlock.title, content: textBlock.content })))
 		},
 	},
 	watch: {
@@ -1005,9 +1005,9 @@ export default {
 		if (this.sendAt && this.isSendAtCustom) {
 			this.selectedDate = new Date(this.sendAt)
 		}
-		if (!this.mainStore.areSnippetsFetched) {
-			this.mainStore.fetchSharedSnippets()
-			this.mainStore.fetchMySnippets()
+		if (!this.mainStore.areTextBlocksFetched) {
+			this.mainStore.fetchSharedTextBlocks()
+			this.mainStore.fetchMyTextBlocks()
 		}
 	},
 	beforeDestroy() {

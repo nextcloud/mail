@@ -15,38 +15,38 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
 /**
- * @template-extends QBMapper<SnippetShare>
+ * @template-extends QBMapper<TextBlockShare>
  */
-class SnippetShareMapper extends QBMapper {
+class TextBlockShareMapper extends QBMapper {
 	/**
 	 * @param IDBConnection $db
 	 */
 	public function __construct(IDBConnection $db) {
-		parent::__construct($db, 'mail_snippets_shares');
+		parent::__construct($db, 'mail_blocks_shares');
 	}
 
 	/**
 	 * @param int $id
 	 * @param string $owner
-	 * @return SnippetShare
+	 * @return TextBlockShare
 	 *
 	 * @throws DoesNotExistException
 	 */
-	public function find(int $snippetId, string $shareWith): SnippetShare {
+	public function find(int $textBlockId, string $shareWith): TextBlockShare {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
-			->where($qb->expr()->eq('snippet_id', $qb->createNamedParameter($snippetId)))
+			->where($qb->expr()->eq('text_block_id', $qb->createNamedParameter($textBlockId)))
 			->andWhere($qb->expr()->eq('share_with', $qb->createNamedParameter($shareWith)));
 
 		return $this->findEntity($qb);
 	}
 
-	public function shareExists(int $snippetId, string $shareWith): bool {
+	public function shareExists(int $textBlockId, string $shareWith): bool {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
-			->where($qb->expr()->eq('snippet_id', $qb->createNamedParameter($snippetId)))
+			->where($qb->expr()->eq('text_block_id', $qb->createNamedParameter($textBlockId)))
 			->andWhere($qb->expr()->eq('share_with', $qb->createNamedParameter($shareWith)));
 
 		try {
@@ -62,13 +62,13 @@ class SnippetShareMapper extends QBMapper {
 
 	/**
 	 * @param string $owner
-	 * @return SnippetShare[]
+	 * @return TextBlockShare[]
 	 */
 	public function findAllShares(string $owner): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('sshare.*')
 			->from($this->getTableName(), 'sshare')
-			->join('sshare', 'mail_snippets', 's', $qb->expr()->eq('sshare.snippet_id', 's.id', IQueryBuilder::PARAM_INT))
+			->join('sshare', 'mail_textBlocks', 's', $qb->expr()->eq('sshare.text_block_id', 's.id', IQueryBuilder::PARAM_INT))
 			->where(
 				$qb->expr()->eq('s.owner', $qb->createNamedParameter($owner, IQueryBuilder::PARAM_STR))
 			);
@@ -77,26 +77,26 @@ class SnippetShareMapper extends QBMapper {
 	}
 
 	/**
-	 * @param int $snippetId
+	 * @param int $textBlockId
 	 *
-	 * @return SnippetShare[]
+	 * @return TextBlockShare[]
 	 */
-	public function findSnippetShares(int $snippetId): array {
+	public function findTextBlockShares(int $textBlockId): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
 			->where(
-				$qb->expr()->eq('snippet_id', $qb->createNamedParameter($snippetId, IQueryBuilder::PARAM_INT))
+				$qb->expr()->eq('text_block_id', $qb->createNamedParameter($textBlockId, IQueryBuilder::PARAM_INT))
 			);
 
 		return $this->findEntities($qb);
 	}
 
-	public function deleteBySnippetId(int $snippetId): void {
+	public function deleteByTextBlockId(int $textBlockId): void {
 		$qb = $this->db->getQueryBuilder();
 		$qb->delete($this->getTableName())
 			->where(
-				$qb->expr()->eq('snippet_id', $qb->createNamedParameter($snippetId, IQueryBuilder::PARAM_INT))
+				$qb->expr()->eq('text_block_id', $qb->createNamedParameter($textBlockId, IQueryBuilder::PARAM_INT))
 			);
 	}
 

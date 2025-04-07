@@ -18,15 +18,15 @@ use ReturnTypeWillChange;
  * @method void setType(string $type)
  * @method string getShareWith()
  * @method void setShareWith(string $shareWith)
- * @method string getSnippetId()
- * @method void setSnippetId(int $snippetId)
+ * @method string getTextBlockId()
+ * @method void setTextBlockId(int $textBlockId)
  * @method string getDisplayName()
  * @method void setDisplayName(string $displayName)
  */
-class SnippetShare extends Entity implements JsonSerializable {
+class TextBlockShare extends Entity implements JsonSerializable {
 	protected $type;
 	protected $shareWith;
-	protected $snippetId;
+	protected $textBlockId;
 	protected $displayName = '';
 
 	public const TYPE_USER = 'user';
@@ -35,7 +35,7 @@ class SnippetShare extends Entity implements JsonSerializable {
 	public function __construct() {
 		$this->addType('type', 'string');
 		$this->addType('shareWith', 'string');
-		$this->addType('snippetId', 'integer');
+		$this->addType('textBlockId', 'integer');
 	}
 
 	#[ReturnTypeWillChange]
@@ -44,7 +44,7 @@ class SnippetShare extends Entity implements JsonSerializable {
 			'id' => $this->getId(),
 			'type' => $this->getType(),
 			'shareWith' => $this->getShareWith(),
-			'snippetId' => $this->getSnippetId(),
+			'textBlockId' => $this->getTextBlockId(),
 			'displayName' => $this->getDisplayName(),
 		];
 	}

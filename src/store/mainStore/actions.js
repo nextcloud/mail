@@ -110,7 +110,7 @@ import * as SmimeCertificateService from '../../service/SmimeCertificateService.
 import useOutboxStore from '../outboxStore.js'
 import * as FollowUpService from '../../service/FollowUpService.js'
 import { addInternalAddress, removeInternalAddress } from '../../service/InternalAddressService.js'
-import { createSnippet, fetchMySnippets, fetchSharedSnippets, deleteSnippet, updateSnippet } from '../../service/SnippetService.js'
+import { createTextBlock, fetchMyTextBlocks, fetchSharedTextBlocks, deleteTextBlock, updateTextBlock } from '../../service/TextBlockService.js'
 
 import escapeRegExp from 'lodash/fp/escapeRegExp.js'
 import uniq from 'lodash/fp/uniq.js'
@@ -1755,34 +1755,34 @@ export default function mainStoreActions() {
 				await this.clearFollowUpReminder({ envelope })
 			}
 		},
-		async fetchMySnippets() {
+		async fetchMyTextBlocks() {
 			return handleHttpAuthErrors(async () => {
-				const snippets = await fetchMySnippets()
-				this.setMySnippets(snippets)
+				const textBlocks = await fetchMyTextBlocks()
+				this.setMyTextBlocks(textBlocks)
 			})
 		},
-		async fetchSharedSnippets() {
+		async fetchSharedTextBlocks() {
 			return handleHttpAuthErrors(async () => {
-				const snippets = await fetchSharedSnippets()
-				this.setSharedSnippets(snippets)
+				const textBlocks = await fetchSharedTextBlocks()
+				this.setSharedTextBlocks(textBlocks)
 			})
 		},
-		async createSnippet({ title, content }) {
+		async createTextBlock({ title, content }) {
 			return handleHttpAuthErrors(async () => {
-				const snippet = await createSnippet(title, content)
-				this.addSnippet(snippet)
+				const textBlock = await createTextBlock(title, content)
+				this.addTextBlock(textBlock)
 			})
 		},
-		async deleteSnippet({ id }) {
+		async deleteTextBlock({ id }) {
 			return handleHttpAuthErrors(async () => {
-				await deleteSnippet(id)
-				this.deleteSnippetLocally(id)
+				await deleteTextBlock(id)
+				this.deleteTextBlockLocally(id)
 			})
 		},
-		async patchSnippet(snippet) {
+		async patchTextBlock(textBlock) {
 			return handleHttpAuthErrors(async () => {
-				await updateSnippet(snippet)
-				this.patchSnippetLocally(snippet)
+				await updateTextBlock(textBlock)
+				this.patchTextBlockLocally(textBlock)
 			})
 		},
 		transformMailboxName(account, mailbox) {
@@ -2329,25 +2329,25 @@ export default function mainStoreActions() {
 		showSettingsForAccountMutation(accountId) {
 			this.showAccountSettings = accountId
 		},
-		setMySnippets(snippets) {
-			this.mySnippets = snippets
-			this.snippetsFetched = true
+		setMyTextBlocks(textBlocks) {
+			this.myTextBlocks = textBlocks
+			this.textBlocksFetched = true
 		},
-		setSharedSnippets(snippets) {
-			this.sharedSnippets = snippets
-			this.snippetsFetched = true
+		setSharedTextBlocks(textBlocks) {
+			this.sharedTextBlocks = textBlocks
+			this.textBlocksFetched = true
 		},
-		addSnippet(snippet) {
-			this.mySnippets.push(snippet)
+		addTextBlock(textBlock) {
+			this.myTextBlocks.push(textBlock)
 		},
-		deleteSnippetLocally(id) {
-			const index = this.mySnippets.findIndex(snippet => snippet.id === id)
-			this.mySnippets.splice(index, 1)
+		deleteTextBlockLocally(id) {
+			const index = this.myTextBlocks.findIndex(textBlock => textBlock.id === id)
+			this.myTextBlocks.splice(index, 1)
 		},
-		patchSnippetLocally(snippet) {
-			const index = this.mySnippets.findIndex(s => s.id === snippet.id)
+		patchTextBlockLocally(textBlock) {
+			const index = this.myTextBlocks.findIndex(s => s.id === textBlock.id)
 			if (index !== -1) {
-				this.mySnippets.splice(index, 1, snippet)
+				this.myTextBlocks.splice(index, 1, textBlock)
 			}
 		},
 		getPreference(key, def) {
@@ -2434,14 +2434,14 @@ export default function mainStoreActions() {
 		showSettingsForAccount(accountId) {
 			return this.showAccountSettings === accountId
 		},
-		getMySnippets() {
-			return this.mySnippets
+		getMyTextBlocks() {
+			return this.myTextBlocks
 		},
-		getSharedSnippets() {
-			return this.sharedSnippets
+		getSharedTextBlocks() {
+			return this.sharedTextBlocks
 		},
-		areSnippetsFetched() {
-			return this.snippetsFetched
+		areTextBlocksFetched() {
+			return this.textBlocksFetched
 		},
 	}
 }

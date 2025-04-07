@@ -148,15 +148,15 @@
 					{{ t('mail', 'Register') }}
 				</NcButton>
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="snippets" :name="t('mail', 'Text blocks')">
-				<List :snippets="getMySnippets()"
+			<NcAppSettingsSection id="textBlocks" :name="t('mail', 'Text blocks')">
+				<List :text-blocks="getMyTextBlocks()"
 					@show-toolbar="handleShowToolbar" />
-				<NcButton type="primary" @click="() => snippetDialogOpen = true">
+				<NcButton type="primary" @click="() => textBlockDialogOpen = true">
 					{{ t('mail', 'Create a new text block') }}
 				</NcButton>
-				<template v-if="getSharedSnippets().length > 0">
+				<template v-if="getSharedTextBlocks().length > 0">
 					<h6>{{ t('mail','Shared with me') }}</h6>
-					<List :snippets="getSharedSnippets()"
+					<List :text-blocks="getSharedTextBlocks()"
 						:shared="true"
 						@show-toolbar="handleShowToolbar" />
 				</template>
@@ -307,12 +307,12 @@
 					</div>
 				</dl>
 			</NcAppSettingsSection>
-			<NcDialog :open.sync="snippetDialogOpen"
+			<NcDialog :open.sync="textBlockDialogOpen"
 				:name="t('mail','New text block')"
 				:is-form="true"
 				size="normal">
-				<NcInputField :value.sync="localSnippet.title" :label="t('mail','Title of the text block')" />
-				<TextEditor v-model="localSnippet.content"
+				<NcInputField :value.sync="localTextBlock.title" :label="t('mail','Title of the text block')" />
+				<TextEditor v-model="localTextBlock.content"
 					:is-bordered="true"
 					:html="true"
 					:placeholder="t('mail','Content of the text block')"
@@ -329,7 +329,7 @@
 					</NcButton>
 					<NcButton type="primary"
 						class="text-block-buttons__button"
-						:disabled="!localSnippet.title || !localSnippet.content"
+						:disabled="!localTextBlock.title || !localTextBlock.content"
 						@click="newTextBlock">
 						<template #icon>
 							<IconCheck :size="16" />
@@ -363,7 +363,7 @@ import InternalAddress from './InternalAddress.vue'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 import useMainStore from '../store/mainStore.js'
 import { mapStores, mapState } from 'pinia'
-import List from './snippets/List.vue'
+import List from './textBlocks/List.vue'
 import mitt from 'mitt'
 
 export default {
@@ -423,8 +423,8 @@ export default {
 			mailvelopeIsAvailable: false,
 			trapElements: [],
 			bus: mitt(),
-			snippetDialogOpen: false,
-			localSnippet: {
+			textBlockDialogOpen: false,
+			localTextBlock: {
 				title: '',
 				content: '',
 			},
@@ -432,7 +432,7 @@ export default {
 	},
 	computed: {
 		...mapStores(useMainStore),
-		...mapState(useMainStore, ['getAccounts', 'followUpFeatureAvailable', 'getMySnippets', 'getSharedSnippets']),
+		...mapState(useMainStore, ['getAccounts', 'followUpFeatureAvailable', 'getMyTextBlocks', 'getSharedTextBlocks']),
 		searchPriorityBody() {
 			return this.mainStore.getPreference('search-priority-body', 'false') === 'true'
 		},
@@ -476,9 +476,9 @@ export default {
 	mounted() {
 		this.sortOrder = this.mainStore.getPreference('sort-order', 'newest')
 		document.addEventListener.call(window, 'mailvelope', () => this.checkMailvelope())
-		if (!this.mainStore.areSnippetsFetched()) {
-			this.mainStore.fetchMySnippets()
-			this.mainStore.fetchSharedSnippets()
+		if (!this.mainStore.areTextBlocksFetched()) {
+			this.mainStore.fetchMyTextBlocks()
+			this.mainStore.fetchSharedTextBlocks()
 		}
 	},
 	updated() {
@@ -631,16 +631,16 @@ export default {
 			this.trapElements.push(element)
 		},
 		newTextBlock() {
-			this.mainStore.createSnippet({ ...this.localSnippet })
-			this.snippetDialogOpen = false
-			this.localSnippet = {
+			this.mainStore.createTextBlock({ ...this.localTextBlock })
+			this.textBlockDialogOpen = false
+			this.localTextBlock = {
 				title: '',
 				content: '',
 			}
 		},
 		closeTextBlockDialog() {
-			this.snippetDialogOpen = false
-			this.localSnippet = {
+			this.textBlockDialogOpen = false
+			this.localTextBlock = {
 				title: '',
 				content: '',
 			}

@@ -28,10 +28,10 @@ class Version4001Date20241017155914 extends SimpleMigrationStep {
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
-		if ($schema->hasTable('mail_snippets_shares')) {
+		if ($schema->hasTable('mail_blocks_shares')) {
 			return null;
 		}
-		$table = $schema->createTable('mail_snippets_shares');
+		$table = $schema->createTable('mail_blocks_shares');
 
 		$table->addColumn('id', Types::INTEGER, [
 			'autoincrement' => true,
@@ -46,7 +46,7 @@ class Version4001Date20241017155914 extends SimpleMigrationStep {
 			'notnull' => true,
 			'length' => 64,
 		]);
-		$table->addColumn('snippet_id', Types::STRING, [
+		$table->addColumn('text_block_id', Types::STRING, [
 			'notnull' => true,
 			'length' => 64,
 		]);

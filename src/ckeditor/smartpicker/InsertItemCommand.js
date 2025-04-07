@@ -42,11 +42,9 @@ export default class InsertItemCommand extends Command {
 					editor.model.insertContent(textElement)
 				} else if (trigger === '!') {
 					if (item.isHtml) {
-						const itemElement = writer.createElement('paragraph')
 						const viewFragment = editor.data.processor.toView(item.content)
 						const modelFragment = editor.data.toModel(viewFragment)
-						writer.insert(modelFragment, itemElement)
-						editor.model.insertContent(itemElement)
+						editor.model.insertContent(modelFragment)
 					} else {
 						const itemElement = writer.createElement('paragraph')
 						writer.insertText(item.content, itemElement)

@@ -10,23 +10,23 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Db\SnippetShare;
+use OCA\Mail\Db\TextBlockShare;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Http\TrapError;
-use OCA\Mail\Service\SnippetService;
+use OCA\Mail\Service\TextBlockService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\IRequest;
 
-class SnippetController extends Controller {
+class TextBlockController extends Controller {
 	private ?string $uid;
 
 	public function __construct(
 		IRequest $request,
 		?string $userId,
-		private SnippetService $snippetService,
+		private TextBlockService $textBlockService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->uid = $userId;
@@ -38,13 +38,13 @@ class SnippetController extends Controller {
 	 * @return JsonResponse
 	 */
 	#[TrapError]
-	public function getOwnSnippets(): JsonResponse {
+	public function getOwnTextBlocks(): JsonResponse {
 		if ($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
-		$snippets = $this->snippetService->findAll($this->uid);
+		$textBlocks = $this->textBlockService->findAll($this->uid);
 
-		return JsonResponse::success($snippets);
+		return JsonResponse::success($textBlocks);
 	}
 
 	/**
@@ -53,17 +53,17 @@ class SnippetController extends Controller {
 	 * @return JsonResponse
 	 */
 	#[TrapError]
-	public function getSharedSnippets(): JsonResponse {
+	public function getSharedTextBlocks(): JsonResponse {
 		if ($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 		try {
-			$snippets = $this->snippetService->findAllSharedWithMe($this->uid);
+			$textBlocks = $this->textBlockService->findAllSharedWithMe($this->uid);
 		} catch (DoesNotExistException $e) {
 			return JsonResponse::error('Sharee not found', Http::STATUS_UNAUTHORIZED);
 		}
 
-		return JsonResponse::success($snippets);
+		return JsonResponse::success($textBlocks);
 	}
 
 	/**
@@ -78,9 +78,9 @@ class SnippetController extends Controller {
 		if ($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
-		$snippet = $this->snippetService->create($this->uid, $title, $content);
+		$textBlock = $this->textBlockService->create($this->uid, $title, $content);
 
-		return JsonResponse::success($snippet, Http::STATUS_CREATED);
+		return JsonResponse::success($textBlock, Http::STATUS_CREATED);
 	}
 
 	/**
@@ -98,15 +98,15 @@ class SnippetController extends Controller {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 
-		$snippet = $this->snippetService->find($id, $this->uid);
+		$textBlock = $this->textBlockService->find($id, $this->uid);
 
-		if ($snippet === null) {
-			return JsonResponse::error('Snippet not found', Http::STATUS_NOT_FOUND);
+		if ($textBlock === null) {
+			return JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
 		}
 
-		$this->snippetService->update($id, $this->uid, $title, $content);
+		$this->textBlockService->update($id, $this->uid, $title, $content);
 
-		return JsonResponse::success($snippet, Http::STATUS_OK);
+		return JsonResponse::success($textBlock, Http::STATUS_OK);
 	}
 
 	public function delete(int $id): JsonResponse {
@@ -114,39 +114,39 @@ class SnippetController extends Controller {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 		try {
-			$this->snippetService->delete($id, $this->uid);
+			$this->textBlockService->delete($id, $this->uid);
 			return JsonResponse::success();
 		} catch (DoesNotExistException $e) {
-			return JsonResponse::fail('Snippet not found', Http::STATUS_NOT_FOUND);
+			return JsonResponse::fail('TextBlock not found', Http::STATUS_NOT_FOUND);
 		}
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @param int $snippetId
+	 * @param int $textBlockId
 	 * @param string $shareWith
 	 * @param string $type
 	 *
 	 * @return JsonResponse
 	 */
 	#[TrapError]
-	public function share(int $snippetId, string $shareWith, string $type): JsonResponse {
+	public function share(int $textBlockId, string $shareWith, string $type): JsonResponse {
 		if ($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 
-		$snippet = $this->snippetService->find($snippetId, $this->uid);
+		$textBlock = $this->textBlockService->find($textBlockId, $this->uid);
 
-		if ($snippet === null) {
-			return JsonResponse::error('Snippet not found', Http::STATUS_NOT_FOUND);
+		if ($textBlock === null) {
+			return JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
 		}
 
 		switch ($type) {
-			case SnippetShare::TYPE_USER:
-				$this->snippetService->share($snippetId, $shareWith);
+			case TextBlockShare::TYPE_USER:
+				$this->textBlockService->share($textBlockId, $shareWith);
 				return JsonResponse::success();
-			case SnippetShare::TYPE_GROUP:
-				$this->snippetService->shareWithGroup($snippetId, $shareWith);
+			case TextBlockShare::TYPE_GROUP:
+				$this->textBlockService->shareWithGroup($textBlockId, $shareWith);
 				return JsonResponse::success();
 			default:
 				return JsonResponse::fail('Invalid share type', Http::STATUS_BAD_REQUEST);
@@ -164,37 +164,37 @@ class SnippetController extends Controller {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 
-		$snippet = $this->snippetService->find($id, $this->uid);
+		$textBlock = $this->textBlockService->find($id, $this->uid);
 
-		if ($snippet === null) {
-			return JsonResponse::error('Snippet not found', Http::STATUS_NOT_FOUND);
+		if ($textBlock === null) {
+			return JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
 		}
 
-		$shares = $this->snippetService->getShares($id);
+		$shares = $this->textBlockService->getShares($id);
 
 		return JsonResponse::success($shares);
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @param int $snippetId
+	 * @param int $textBlockId
 	 * @param string $shareWith
 	 *
 	 * @return JsonResponse
 	 */
 	#[TrapError]
-	public function deleteShare(int $snippetId, string $shareWith): JsonResponse {
+	public function deleteShare(int $textBlockId, string $shareWith): JsonResponse {
 		if ($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 
-		$snippet = $this->snippetService->find($snippetId, $this->uid);
+		$textBlock = $this->textBlockService->find($textBlockId, $this->uid);
 
-		if ($snippet === null) {
-			return JsonResponse::error('Snippet not found', Http::STATUS_NOT_FOUND);
+		if ($textBlock === null) {
+			return JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
 		}
 
-		$this->snippetService->unshare($snippetId, $shareWith);
+		$this->textBlockService->unshare($textBlockId, $shareWith);
 
 		return JsonResponse::success();
 	}

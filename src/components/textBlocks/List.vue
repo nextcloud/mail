@@ -4,11 +4,11 @@
 -->
 <template>
 	<div>
-		<ListItem v-for="snippet in snippets"
-			:key="snippet.id"
-			:snippet="snippet"
+		<ListItem v-for="textBlock in textBlocks"
+			:key="textBlock.id"
+			:text-block="textBlock"
 			:shared="shared" />
-		<span v-if="!snippets.length"> {{ t('mail', 'No snippets available') }} </span>
+		<span v-if="!textBlocks.length"> {{ t('mail', 'No text blocks available') }} </span>
 	</div>
 </template>
 
@@ -24,7 +24,7 @@ export default {
 			type: Boolean,
 			default: false,
 		},
-		snippets: {
+		textBlocks: {
 			type: Array,
 			required: true,
 		},

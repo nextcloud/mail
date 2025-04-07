@@ -15,22 +15,22 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
 /**
- * @template-extends QBMapper<Snippet>
+ * @template-extends QBMapper<TextBlock>
  */
-class SnippetMapper extends QBMapper {
+class TextBlockMapper extends QBMapper {
 	/**
 	 * @param IDBConnection $db
 	 */
 	public function __construct(IDBConnection $db) {
-		parent::__construct($db, 'mail_snippets');
+		parent::__construct($db, 'mail_text_blocks');
 	}
 
 	/**
 	 * @param int $id
 	 * @param string $owner
-	 * @return Snippet|null
+	 * @return TextBlock|null
 	 */
-	public function find(int $id, string $owner): ?Snippet {
+	public function find(int $id, string $owner): ?TextBlock {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
@@ -45,7 +45,7 @@ class SnippetMapper extends QBMapper {
 
 	/**
 	 * @param string $owner
-	 * @return Snippet[]
+	 * @return TextBlock[]
 	 */
 	public function findAll(string $owner): array {
 		$qb = $this->db->getQueryBuilder();
@@ -61,13 +61,13 @@ class SnippetMapper extends QBMapper {
 	/**
 	 * @param string $userId
 	 * @param array $groups
-	 * @return Snippet[]
+	 * @return TextBlock[]
 	 */
 	public function findSharedWithMe(string $userId, array $groups): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('s.*')
 			->from($this->getTableName(), 's')
-			->join('s', 'mail_snippets_shares', 'share', $qb->expr()->eq('s.id', 'share.snippet_id'))
+			->join('s', 'mail_blocks_shares', 'share', $qb->expr()->eq('s.id', 'share.text_block_id'))
 			->where($qb->expr()->andX(
 				$qb->expr()->eq('share.share_with', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR)),
 				$qb->expr()->eq('share.type', $qb->createNamedParameter('user', IQueryBuilder::PARAM_STR))

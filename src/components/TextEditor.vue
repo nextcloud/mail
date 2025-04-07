@@ -79,7 +79,7 @@ export default {
 			type: Boolean,
 			default: false,
 		},
-		snippets: {
+		textBlocks: {
 			type: Array,
 			default: () => [],
 		},
@@ -174,7 +174,7 @@ export default {
 						},
 						{
 							marker: '!',
-							feed: this.getSnippet,
+							feed: this.getTextBlock,
 							itemRenderer: this.customRenderer,
 						},
 					],
@@ -209,11 +209,11 @@ export default {
 			contactResults = contactResults.filter(result => result.email.length > 0)
 			return contactResults
 		},
-		getSnippet(text) {
+		getTextBlock(text) {
 			if (text.length === 0) {
 				return []
 			}
-			return this.snippets.filter(snippet => snippet.title.toLowerCase().includes(text.toLowerCase()))
+			return this.textBlocks.filter(textBlock => textBlock.title.toLowerCase().includes(text.toLowerCase()))
 		},
 		 customEmojiRenderer(item) {
 			const itemElement = document.createElement('span')
@@ -374,7 +374,7 @@ export default {
 					this.$emit('mention', { email: item.email[0], label: item.label })
 				}
 				if (eventData.marker === '!') {
-					this.insertTextBlock(item)
+					this.insertTextBlock(item, false)
 				}
 			}, { priority: 'high' })
 			this.editorInstance = editor
@@ -410,8 +410,10 @@ export default {
 				throw new Error('Impossible to execute a command before editor is ready.')
 			}
 		},
-		insertTextBlock(textBlock) {
-			this.appendToBodyAtCursor('!')
+		insertTextBlock(textBlock, addTriggrer = true) {
+			if (addTriggrer) {
+				this.appendToBodyAtCursor('!')
+			}
 			let content = textBlock.content
 			if (!this.html) {
 				const text = new Text('html', content)

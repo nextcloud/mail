@@ -23,7 +23,7 @@ use ReturnTypeWillChange;
  * @method string getPreview()
  * @method void setPreview(string $preview)
  */
-class Snippet extends Entity implements JsonSerializable {
+class TextBlock extends Entity implements JsonSerializable {
 	protected $owner;
 	protected $title;
 	protected $content;

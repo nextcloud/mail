@@ -6,10 +6,10 @@
 	<div>
 		<NcListItem :active="picked" @click="handleListItemClick">
 			<template #name>
-				{{ snippet.title }}
+				{{ textBlock.title }}
 			</template>
 			<template #subname>
-				{{ snippet.preview }}
+				{{ textBlock.preview }}
 			</template>
 			<template v-if="shares.length > 0" #extra-actions>
 				<AccountMultiple :title="t('mail', 'Shared')"
@@ -20,40 +20,40 @@
 					<template #icon>
 						<IconPencil :size="20" />
 					</template>
-					{{ t('mail','Edit {title}', { title: snippet.title }) }}
+					{{ t('mail','Edit {title}', { title: textBlock.title }) }}
 				</NcActionButton>
-				<NcActionButton icon="icon-delete" @click="deleteSnippet()">
-					{{ t('mail','Delete {title}', { title: snippet.title }) }}
+				<NcActionButton icon="icon-delete" @click="deleteTextBlock()">
+					{{ t('mail','Delete {title}', { title: textBlock.title }) }}
 				</NcActionButton>
 			</template>
 		</NcListItem>
 		<NcDialog :open.sync="editModalOpen"
-			:name="t('mail','Edit snippet')"
+			:name="t('mail','Edit textBlock')"
 			size="normal"
 			:is-form="true">
 			<p v-if="shared">
-				{{ localSnippet.title }}
+				{{ localTextBlock.title }}
 			</p>
-			<NcInputField v-else :value.sync="localSnippet.title" :label="t('mail','Title of the snippet')" />
-			<TextEditor v-model="localSnippet.content"
+			<NcInputField v-else :value.sync="localTextBlock.title" :label="t('mail','Title of the textBlock')" />
+			<TextEditor v-model="localTextBlock.content"
 				:is-bordered="!shared"
 				:html="true"
 				:read-only="shared"
-				:placeholder="t('mail','Content of the snippet')"
+				:placeholder="t('mail','Content of the textBlock')"
 				:bus="bus" />
 			<template v-if="!shared">
 				<h3>
 					{{ t('mail','Shares') }}
 				</h3>
 				<NcSelect v-model="share"
-					class="snippet-list-item__shares"
+					class="textBlock-list-item__shares"
 					:placeholder="t('mail','Search for users or groups')"
 					:label-outside="true"
 					:loading="loading"
 					:user-select="true"
 					:options="options"
 					:get-option-label="option => option.displayName"
-					@option:selecting="shareSnippet"
+					@option:selecting="shareTextBlock"
 					@search="asyncFind" />
 
 				<NcListItem v-for="user in sortedShares"
@@ -88,7 +88,7 @@
 					</NcButton>
 					<NcButton type="primary"
 						class="text-block-buttons__button"
-						:disabled="!localSnippet.title || !localSnippet.content || saveLoading"
+						:disabled="!localTextBlock.title || !localTextBlock.content || saveLoading"
 						@click="newTextBlock">
 						<template #icon>
 							<NcLoadingIcon v-if="saveLoading" :size="16" />
@@ -107,7 +107,7 @@ import { NcActionButton, NcSelect, NcDialog, NcInputField, NcAvatar, NcListItem,
 import { mapStores } from 'pinia'
 import mitt from 'mitt'
 import useMainStore from '../../store/mainStore.js'
-import { getShares, shareSnippet, unshareSnippet } from '../../service/SnippetService.js'
+import { getShares, shareTextBlock, unshareTextBlock } from '../../service/TextBlockService.js'
 import TextEditor from '../TextEditor.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import AccountMultiple from 'vue-material-design-icons/AccountMultiple.vue'
@@ -139,7 +139,7 @@ export default {
 		NcListItem,
 	},
 	props: {
-		snippet: {
+		textBlock: {
 			type: Object,
 			required: true,
 		},
@@ -159,7 +159,7 @@ export default {
 	data() {
 		return {
 			shares: [],
-			localSnippet: Object.assign({}, this.snippet),
+			localTextBlock: Object.assign({}, this.textBlock),
 			editModalOpen: false,
 			loading: false,
 			saveLoading: false,
@@ -187,28 +187,28 @@ export default {
 	},
 	async mounted() {
 		if (!this.shared && !this.isViewMode) {
-			this.shares = await getShares(this.snippet.id)
+			this.shares = await getShares(this.textBlock.id)
 		}
 	},
 	methods: {
-		async deleteSnippet() {
-			await this.mainStore.deleteSnippet({ id: this.snippet.id }).then(() => {
-				showSuccess(t('mail', 'Snippet deleted'))
+		async deleteTextBlock() {
+			await this.mainStore.deleteTextBlock({ id: this.textBlock.id }).then(() => {
+				showSuccess(t('mail', 'TextBlock deleted'))
 			}).catch(() => {
-				showError(t('mail', 'Failed to delete snippet'))
+				showError(t('mail', 'Failed to delete textBlock'))
 			})
 		},
-		async shareSnippet(sharee) {
-			await shareSnippet(this.snippet.id, sharee.shareWith, sharee.shareType === ShareType.User ? 'user' : 'group').then(() => {
+		async shareTextBlock(sharee) {
+			await shareTextBlock(this.textBlock.id, sharee.shareWith, sharee.shareType === ShareType.User ? 'user' : 'group').then(() => {
 				this.shares.push({ shareWith: sharee.shareWith, type: sharee.isNoUser ? 'group' : 'user', displayName: sharee.displayName })
-				showSuccess(t('mail', 'Snippet shared with {sharee}', { sharee: sharee.shareWith }))
+				showSuccess(t('mail', 'TextBlock shared with {sharee}', { sharee: sharee.shareWith }))
 				this.share = null
 			}).catch(() => {
-				showError(t('mail', 'Failed to share snippet with {sharee}', { sharee: sharee.shareWith }))
+				showError(t('mail', 'Failed to share textBlock with {sharee}', { sharee: sharee.shareWith }))
 			})
 		},
 		async removeShare(sharee) {
-			await unshareSnippet(this.snippet.id, sharee.shareWith).then(() => {
+			await unshareTextBlock(this.textBlock.id, sharee.shareWith).then(() => {
 				this.shares = this.shares.filter(share => share.shareWith !== sharee.shareWith)
 				showSuccess(t('mail', 'Share deleted for {name}', { name: sharee.shareWith }))
 			}).catch(() => {
@@ -341,20 +341,20 @@ export default {
 				this.editModalOpen = true
 				return
 			}
-			this.$emit('click', this.snippet)
+			this.$emit('click', this.textBlock)
 		},
 		closeTextBlockDialog() {
 			this.editModalOpen = false
-			this.localSnippet = Object.assign({}, this.snippet)
+			this.localTextBlock = Object.assign({}, this.textBlock)
 		},
 		newTextBlock() {
 			this.saveLoading = true
-			this.mainStore.patchSnippet(this.localSnippet).then(() => {
+			this.mainStore.patchTextBlock(this.localTextBlock).then(() => {
 				this.saveLoading = false
 				this.editModalOpen = false
-				this.localSnippet = Object.assign({}, this.snippet)
+				this.localTextBlock = Object.assign({}, this.textBlock)
 			}).catch(() => {
-				showError(t('mail', 'Failed to save snippet'))
+				showError(t('mail', 'Failed to save textBlock'))
 			})
 		},
 	},
@@ -362,7 +362,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.snippet-list-item{
+.textBlock-list-item{
 	display: grid;
     grid-template-columns: 1fr 4fr 1fr;
     gap: 5px;

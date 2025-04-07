@@ -6,7 +6,7 @@
 	<NcDialog id="text-block-picker" :name="t('mail','Text blocks')" @closing="handleClose">
 		<ListItem v-for="textBlock in textBlocks"
 			:key="textBlock.id"
-			:snippet="textBlock"
+			:text-block="textBlock"
 			:is-view-mode="true"
 			:picked="textBlock.id === picked?.id"
 			@click="handleClick" />
@@ -41,9 +41,9 @@ export default {
 		}
 	},
 	computed: {
-		...mapState(useMainStore, ['getMySnippets', 'getSharedSnippets']),
+		...mapState(useMainStore, ['getMyTextBlocks', 'getSharedTextBlocks']),
 		textBlocks() {
-			return this.getMySnippets().concat(this.getSharedSnippets())
+			return this.getMyTextBlocks().concat(this.getSharedTextBlocks())
 		},
 	},
 	methods: {
