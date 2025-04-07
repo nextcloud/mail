@@ -8,7 +8,7 @@ import Vue from 'vue'
 
 import * as OutboxService from '../service/OutboxService.js'
 import logger from '../logger.js'
-import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
+import { showError, showSuccess, showUndo, showInfo } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import { UNDO_DELAY } from './constants.js'
 import useMainStore from './mainStore.js'
@@ -178,16 +178,24 @@ export default defineStore('outbox', {
 				const message = this.getMessage(id)
 
 				showUndo(
-					t('mail', 'Message sent'),
+					t('mail', 'Sending message…'),
 					async () => {
 						logger.info('Attempting to stop sending message ' + message.id)
 						const stopped = await this.stopMessage({ message })
 						logger.info('Message ' + message.id + ' stopped', { message: stopped })
+						// The composer expects rich body data and not just a string
+						const bodyData = {}
+						if (message.isHtml) {
+							bodyData.bodyHtml = html(message.body)
+						} else {
+							bodyData.bodyPlain = plain(message.body)
+						}
 						await this.mainStore.startComposerSession({
 							type: 'outbox',
 							data: { ...message },
 						}, { root: true })
-					}, {
+					},
+					{
 						timeout: UNDO_DELAY,
 						close: true,
 					},
@@ -196,6 +204,9 @@ export default defineStore('outbox', {
 				setTimeout(async () => {
 					try {
 						const wasSent = await this.sendMessage({ id: message.id, force: false })
+						if (wasSent) {
+							showSuccess(t('mail', 'Message sent'))
+						}
 						resolve(wasSent)
 					} catch (error) {
 						showError(t('mail', 'Could not send message'))
