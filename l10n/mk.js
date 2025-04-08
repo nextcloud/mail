@@ -210,7 +210,6 @@ OC.L10N.register(
     "Accept" : "Прифати",
     "Decline" : "Одбиј",
     "More options" : "Повеќе опции ",
-    "This event is in the past." : "Овој настан е во минатото.",
     "individual" : "индивидуално",
     "domain" : "домен",
     "Remove" : "Отстрани ",
@@ -433,6 +432,7 @@ OC.L10N.register(
     "Redirect" : "Пренасочи",
     "The link leads to %s" : "Линкот води кон %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Доколку несакате да ја посетите страната, можете да се вратите кон <a href=\"%s\">Е-пошта</a>.",
-    "Continue to %s" : "Продолжи до %s"
+    "Continue to %s" : "Продолжи до %s",
+    "This event is in the past." : "Овој настан е во минатото."
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

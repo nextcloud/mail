@@ -241,7 +241,6 @@ OC.L10N.register(
     "Decline" : "Zavrni",
     "Tentatively accept" : "Pogojno sprejmi",
     "More options" : "Več možnosti",
-    "This event is in the past." : "Dogodek je v preteklosti",
     "individual" : "posamično",
     "domain" : "domena",
     "Remove" : "Odstrani",
@@ -540,6 +539,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Če vas sistem v nekaj sekundah ne preusmeri samodejno, pritisnite na to mesto.",
     "Redirect" : "Preusmeri",
     "The link leads to %s" : "Povezava vodi do %s",
-    "Continue to %s" : "Nadaljuj na %s"
+    "Continue to %s" : "Nadaljuj na %s",
+    "This event is in the past." : "Dogodek je v preteklosti"
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");
