@@ -293,7 +293,6 @@ OC.L10N.register(
     "Decline" : "Rechazar",
     "Tentatively accept" : "Aceptar tentativamente",
     "More options" : "Más opciones",
-    "This event is in the past." : "Este evento fue en el pasado.",
     "Could not remove internal address {sender}" : "No se pudo remover la dirección interna {sender}",
     "Could not add internal address {address}" : "No se pudo agregar la dirección interna {address}",
     "individual" : "individual",
@@ -395,6 +394,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Haz click aqui si no eres redireccionado automáticamente dentro de los siguietes segundos. ",
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "This event is in the past." : "Este evento fue en el pasado."
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

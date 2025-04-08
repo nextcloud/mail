@@ -203,7 +203,6 @@ OC.L10N.register(
     "Accept" : "Priimti",
     "Decline" : "Atmesti",
     "More options" : "Daugiau parinkčių",
-    "This event is in the past." : "Šis įvykis yra praeityje.",
     "Could not remove internal address {sender}" : "Nepavyko pašalinti vidinio adreso {sender}",
     "Could not add internal address {address}" : "Nepavyko pridėti vidinį adresą {address}",
     "Remove" : "Šalinti",
@@ -445,6 +444,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Jeigu per artimiausias kelias sekundes nesate automatiškai nukreipiami, spustelėkite čia.",
     "Redirect" : "Peradresuoti",
     "The link leads to %s" : "Nuoroda veda į %s",
-    "Continue to %s" : "Tęsti į %s"
+    "Continue to %s" : "Tęsti į %s",
+    "This event is in the past." : "Šis įvykis yra praeityje."
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");
