@@ -113,27 +113,46 @@ class AvatarControllerTest extends TestCase {
 		$this->assertEquals($expected, $resp);
 	}
 
-	public function testNormalizeEmailWithExtraSpaces() {
-		$email = '   john@doe.com   ';
-		$normalizedEmail = $this->invokePrivate($this->controller, 'normalizeEmail', [$email]);
-		$this->assertEquals('john@doe.com', $normalizedEmail);
-	}
-	
-	public function testNormalizeEmailWithSingleQuotes() {
-		$email = "'john@doe.com'";
-		$normalizedEmail = $this->invokePrivate($this->controller, 'normalizeEmail', [$email]);
-		$this->assertEquals('john@doe.com', $normalizedEmail);
-	}
-	
-	public function testValidateEmailWithValidEmail() {
-		$email = 'valid.email@example.com';
-		$isValid = $this->invokePrivate($this->controller, 'validateEmail', [$email]);
-		$this->assertTrue($isValid);
+	public static function normalizeEmailDataProvider(): array {
+		return [
+			['john@doe.com', 'john@doe.com'],
+			['   john@doe.com   ', 'john@doe.com'],
+			['   john@doe.com', 'john@doe.com'],
+			['john@doe.com   ', 'john@doe.com'],
+			["'john@doe.com'", 'john@doe.com'],
+			["' john@doe.com'", 'john@doe.com'],
+			["'john@doe.com '", 'john@doe.com'],
+		];
 	}
 
-	public function testValidateEmailWithInvalidEmail() {
-		$email = 'valid.email.example.com';
+	/**
+	 * @dataProvider normalizeEmailDataProvider
+	 */
+	public function testNormalizeEmail(string $email, string $expected): void {
+		$normalizedEmail = $this->invokePrivate($this->controller, 'normalizeEmail', [$email]);
+		$this->assertEquals($expected, $normalizedEmail);
+	}
+	
+	public static function validateEmailDataProvider(): array {
+		return [
+			['john@doe.com', true],
+			['john.doe@doe.com', true],
+			['john-doe@doe.com', true],
+			['john@do-e.com', true],
+			['', false],
+			['john@@doe.com', false],
+			['john@doe.com.', false],
+			['john@doe..com', false],
+			['johndoe.com', false],
+			['john.doe.com', false],
+		];
+	}
+
+	/**
+	 * @dataProvider validateEmailDataProvider
+	 */
+	public function testValidateEmail(string $email, bool $expected) {
 		$isValid = $this->invokePrivate($this->controller, 'validateEmail', [$email]);
-		$this->assertFalse($isValid);
+		$this->assertEquals($expected, $isValid);
 	}
 }
