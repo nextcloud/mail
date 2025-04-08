@@ -257,7 +257,6 @@ OC.L10N.register(
     "Decline" : "کاهش می یابد",
     "Tentatively accept" : "Tentatively accept",
     "More options" : "More options",
-    "This event is in the past." : "This event is in the past.",
     "individual" : "individual",
     "domain" : "domain",
     "Remove" : "حذف",
@@ -614,6 +613,7 @@ OC.L10N.register(
     "Redirect" : "تغییر مسیر",
     "The link leads to %s" : "پیوند منجر به%s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "ادامه دهید%s"
+    "Continue to %s" : "ادامه دهید%s",
+    "This event is in the past." : "This event is in the past."
 },
 "nplurals=2; plural=(n > 1);");

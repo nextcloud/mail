@@ -227,7 +227,6 @@ OC.L10N.register(
     "Decline" : "Afvis",
     "Tentatively accept" : "Accepter foreløbigt",
     "More options" : "Flere muligheder",
-    "This event is in the past." : "Denne begivenhed er i fortiden.",
     "Remove" : "Fjern",
     "email" : "e-mail",
     "Could not open mailbox" : "Postkassen kunne ikke åbnes",
@@ -397,6 +396,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klik her hvis du ikke automatisk bliver videre sendt i løbet af et par sekunder.",
     "Redirect" : "Omdiriger",
     "The link leads to %s" : "Linket fører til %s",
-    "Continue to %s" : "Videre til %s"
+    "Continue to %s" : "Videre til %s",
+    "This event is in the past." : "Denne begivenhed er i fortiden."
 },
 "nplurals=2; plural=(n != 1);");

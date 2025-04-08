@@ -194,7 +194,6 @@ OC.L10N.register(
     "Decline" : "Απόρριψη",
     "Tentatively accept" : "Προσωρινά αποδεχτείτε",
     "More options" : "Περισσότερες επιλογές",
-    "This event is in the past." : "Αυτή η εκδήλωση ανήκει στο παρελθόν.",
     "domain" : "τομέας",
     "Remove" : "Αφαίρεση",
     "email" : "Ηλ.Ταχυδρομείο",
@@ -390,6 +389,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Κάντε κλικ εδώ εάν δεν ανακατευθυνθείτε αυτόματα μέσα σε λίγα δευτερόλεπτα.",
     "Redirect" : "Ανακατεύθυνση",
     "The link leads to %s" : "Αυτός ο σύνδεσμος οδηγεί στο %s",
-    "Continue to %s" : "Συνέχεια στο %s"
+    "Continue to %s" : "Συνέχεια στο %s",
+    "This event is in the past." : "Αυτή η εκδήλωση ανήκει στο παρελθόν."
 },
 "nplurals=2; plural=(n != 1);");
