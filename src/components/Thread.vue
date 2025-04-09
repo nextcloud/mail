@@ -420,19 +420,19 @@ export default {
 
 			const subjectSpan = virtualIframeDocument.createElement('p')
 			subjectSpan.style.fontWeight = 'bold'
-			subjectSpan.textContent = t('mail', 'Subject: ') + this.thread[index].subject
+			subjectSpan.textContent = t('mail', 'Subject') + ': ' + this.thread[index].subject
 
 			const senderSpan = virtualIframeDocument.createElement('p')
 			senderSpan.style.fontWeight = 'bold'
-			senderSpan.textContent = t('mail', 'From: ') + this.thread[index].from[0].label + ' <' + this.thread[index].from[0].email + '>'
+			senderSpan.textContent = t('mail', 'From') + ': ' + this.thread[index].from[0].label + ' <' + this.thread[index].from[0].email + '>'
 
 			const dateSpan = virtualIframeDocument.createElement('p')
 			dateSpan.style.fontWeight = 'bold'
-			dateSpan.textContent = t('mail', 'Date: ') + moment.unix(this.thread[index].dateInt).format('LLL')
+			dateSpan.textContent = t('mail', 'Date') + ': ' + moment.unix(this.thread[index].dateInt).format('LLL')
 
 			const recipientSpan = virtualIframeDocument.createElement('p')
 			recipientSpan.style.fontWeight = 'bold'
-			recipientSpan.textContent = t('mail', 'To : ') + this.thread[index].to[0].label + this.thread[index].to[0].email
+			recipientSpan.textContent = t('mail', 'To') + ': ' + this.thread[index].to[0].label + this.thread[index].to[0].email
 
 			virtualIframeDocument.body.appendChild(hr)
 			virtualIframeDocument.body.appendChild(subjectSpan)
