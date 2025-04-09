@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Important mail" : "Postel pouezus",
     "Set up an account" : "Staliañ ur c'hont",
+    "Important" : "Important",
     "Work" : "Labour",
     "Personal" : "Personel",
     "Mail" : "Postel",
