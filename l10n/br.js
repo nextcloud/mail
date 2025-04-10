@@ -17,7 +17,7 @@ OC.L10N.register(
     "STARTTLS" : "STARTTLS",
     "SMTP Password" : "Ger-tremen SMTP",
     "Change name" : "Cheñch env",
-    "Cancel" : "Arrest",
+    "Cancel" : "Nullañ",
     "Accounts" : "Kontoù",
     "General" : "Hollek",
     "List" : "Roll",
