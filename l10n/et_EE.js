@@ -127,6 +127,7 @@ OC.L10N.register(
     "Hide recipient details" : "Peida kirjasaaja üksikasjad",
     "Retry" : "Proovi uuesti",
     "Sending …" : "Saadan ...",
+    "First day" : "Esimene päev",
     "Message" : "Sõnum",
     "This email might be a phishing attempt" : "See e-kiri võib olla üks õngitsuskatse",
     "Hide suspicious links" : "Peida kahtlased lingid",
@@ -160,6 +161,7 @@ OC.L10N.register(
     "Translate to" : "Tõlke sihtkeel",
     "Translating" : "Tõlkimisel",
     "Copy translated text" : "Kopeeri tõlgitud tekst",
+    "Untitled event" : "Ilma nimeta sündmus",
     "Delete action" : "Kustuta tegevus",
     "The stop action ends all processing" : "See tegevus lõpetab kogu töötlemise",
     "Delete filter" : "Kustuta filter",
@@ -235,10 +237,6 @@ OC.L10N.register(
     "Forwarding to %s" : "Edasta %s",
     "Redirect" : "Suunamine",
     "Continue to %s" : "Jätka siit: %s",
-    "Collapse composer" : "Ahenda kirjutusvaade",
-    "Subject: " : "Teema:",
-    "From: " : "Saatja:",
-    "Date: " : "Kuupäev:",
-    "To : " : "Saaja:"
+    "Collapse composer" : "Ahenda kirjutusvaade"
 },
 "nplurals=2; plural=(n != 1);");

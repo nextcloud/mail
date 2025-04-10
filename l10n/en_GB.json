@@ -317,6 +317,8 @@
     "Decline" : "Decline",
     "Tentatively accept" : "Tentatively accept",
     "More options" : "More options",
+    "This message has an attached invitation but the invitation dates are in the past" : "This message has an attached invitation but the invitation dates are in the past",
+    "This message has an attached invitation but the invitation does not contain a participant that matches any configured mail account address" : "This message has an attached invitation but the invitation does not contain a participant that matches any configured mail account address",
     "Could not remove internal address {sender}" : "Could not remove internal address {sender}",
     "Could not add internal address {address}" : "Could not add internal address {address}",
     "individual" : "individual",
@@ -439,6 +441,8 @@
     "Message discarded" : "Message discarded",
     "Could not discard message" : "Could not discard message",
     "Maximize composer" : "Maximize composer",
+    "Show recipient details" : "Show recipient details",
+    "Hide recipient details" : "Hide recipient details",
     "Minimize composer" : "Minimize composer",
     "Error sending your message" : "Error sending your message",
     "Retry" : "Retry",
@@ -784,10 +788,6 @@
     "Continue to %s" : "Continue to %s",
     "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n\n### Priority Inbox\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\n### Thread Summaries (opt-in)\n\n**Rating:** 🟢/🟡/🟠/🔴\n\nThe rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n\n### Priority Inbox\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\n### Thread Summaries (opt-in)\n\n**Rating:** 🟢/🟡/🟠/🔴\n\nThe rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).",
     "This event is in the past." : "This event is in the past.",
-    "Collapse composer" : "Collapse composer",
-    "Subject: " : "Subject: ",
-    "From: " : "From: ",
-    "Date: " : "Date: ",
-    "To : " : "To : "
+    "Collapse composer" : "Collapse composer"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

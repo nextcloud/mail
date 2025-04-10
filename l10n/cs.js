@@ -788,10 +788,6 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Pokud nechcete tuto stránku navštívit, můžete se vrátit do <a href=\"%s\">e-mailu</a>.",
     "Continue to %s" : "Pokračovat na %s",
     "This event is in the past." : "Tato událost je v minulosti.",
-    "Collapse composer" : "Sbalit editor psaní",
-    "Subject: " : "Předmět: ",
-    "From: " : "Od: ",
-    "Date: " : "Datum: ",
-    "To : " : "Pro: "
+    "Collapse composer" : "Sbalit editor psaní"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");
