@@ -107,7 +107,7 @@ class TextBlockSharesController extends Controller {
 		return JsonResponse::success();
 	}
 
-    	/**
+	/**
 	 * @NoAdminRequired
 	 * @param int $id
 	 *
