@@ -101,6 +101,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setSearchBody(bool $searchBody)
  * @method bool|null getOooFollowsSystem()
  * @method void setOooFollowsSystem(bool $oooFollowsSystem)
+ * @method bool getDebug()
+ * @method void setDebug(bool $debug)
  */
 class MailAccount extends Entity {
 	public const SIGNATURE_MODE_PLAIN = 0;
@@ -183,6 +185,8 @@ class MailAccount extends Entity {
 	/** @var bool|null */
 	protected $oooFollowsSystem;
 
+	protected bool $debug = false;
+
 	/**
 	 * @param array $params
 	 */
@@ -240,6 +244,9 @@ class MailAccount extends Entity {
 		if (isset($params['outOfOfficeFollowsSystem'])) {
 			$this->setOutOfOfficeFollowsSystem($params['outOfOfficeFollowsSystem']);
 		}
+		if (isset($params['debug'])) {
+			$this->setDebug($params['debug']);
+		}
 
 		$this->addType('inboundPort', 'integer');
 		$this->addType('outboundPort', 'integer');
@@ -263,6 +270,7 @@ class MailAccount extends Entity {
 		$this->addType('junkMailboxId', 'integer');
 		$this->addType('searchBody', 'boolean');
 		$this->addType('oooFollowsSystem', 'boolean');
+		$this->addType('debug', 'boolean');
 	}
 
 	public function getOutOfOfficeFollowsSystem(): bool {
@@ -310,6 +318,7 @@ class MailAccount extends Entity {
 			'junkMailboxId' => $this->getJunkMailboxId(),
 			'searchBody' => $this->getSearchBody(),
 			'outOfOfficeFollowsSystem' => $this->getOutOfOfficeFollowsSystem(),
+			'debug' => $this->getDebug(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {

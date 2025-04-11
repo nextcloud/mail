@@ -72,8 +72,9 @@ class SmtpClientFactory {
 				$decryptedAccessToken,
 			);
 		}
-		if ($this->config->getSystemValue('debug', false)) {
-			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_smtp.log';
+		if ($account->getDebug() || $this->config->getSystemValueBool('mail_debug') || $this->config->getSystemValueBool('MAIL_DEBUG')) {
+			$fn = 'mail-' . $account->getUserId() . '-' . $account->getId() . '-smtp.log';
+			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;
 		}
 		return new Horde_Mail_Transport_Smtphorde($params);
 	}
