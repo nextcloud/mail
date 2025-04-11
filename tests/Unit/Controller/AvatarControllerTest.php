@@ -7,7 +7,6 @@
 
 namespace OCA\Mail\Tests\Unit\Controller;
 
-use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Controller\AvatarsController;
 use OCA\Mail\Http\AvatarDownloadResponse;
@@ -18,6 +17,7 @@ use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IRequest;
 use PHPUnit_Framework_MockObject_MockObject;
+use Test\TestCase;
 
 class AvatarControllerTest extends TestCase {
 	/** @var IAvatarService|PHPUnit_Framework_MockObject_MockObject */
@@ -79,7 +79,7 @@ class AvatarControllerTest extends TestCase {
 		$resp = $this->controller->url($email);
 
 		$expected = new JSONResponse([], Http::STATUS_NO_CONTENT);
-		$expected->cacheFor(24 * 60 * 60, false, true);
+		$expected->cacheFor(60 * 60, false, true);
 		$this->assertEquals($expected, $resp);
 	}
 
@@ -108,8 +108,51 @@ class AvatarControllerTest extends TestCase {
 		$resp = $this->controller->image($email);
 
 		$expected = new Response();
-		$expected->setStatus(Http::STATUS_NOT_FOUND);
+		$expected->setStatus(Http::STATUS_NO_CONTENT);
 		$expected->cacheFor(0);
 		$this->assertEquals($expected, $resp);
+	}
+
+	public static function normalizeEmailDataProvider(): array {
+		return [
+			['john@doe.com', 'john@doe.com'],
+			['   john@doe.com   ', 'john@doe.com'],
+			['   john@doe.com', 'john@doe.com'],
+			['john@doe.com   ', 'john@doe.com'],
+			["'john@doe.com'", 'john@doe.com'],
+			["' john@doe.com'", 'john@doe.com'],
+			["'john@doe.com '", 'john@doe.com'],
+		];
+	}
+
+	/**
+	 * @dataProvider normalizeEmailDataProvider
+	 */
+	public function testNormalizeEmail(string $email, string $expected): void {
+		$normalizedEmail = $this->invokePrivate($this->controller, 'normalizeEmail', [$email]);
+		$this->assertEquals($expected, $normalizedEmail);
+	}
+	
+	public static function validateEmailDataProvider(): array {
+		return [
+			['john@doe.com', true],
+			['john.doe@doe.com', true],
+			['john-doe@doe.com', true],
+			['john@do-e.com', true],
+			['', false],
+			['john@@doe.com', false],
+			['john@doe.com.', false],
+			['john@doe..com', false],
+			['johndoe.com', false],
+			['john.doe.com', false],
+		];
+	}
+
+	/**
+	 * @dataProvider validateEmailDataProvider
+	 */
+	public function testValidateEmail(string $email, bool $expected) {
+		$isValid = $this->invokePrivate($this->controller, 'validateEmail', [$email]);
+		$this->assertEquals($expected, $isValid);
 	}
 }
