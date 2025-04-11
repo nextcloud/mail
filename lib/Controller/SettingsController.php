@@ -124,4 +124,9 @@ class SettingsController extends Controller {
 		return new JSONResponse([]);
 	}
 
+	public function setLayoutMessageView(string $value): JSONResponse {
+		$this->config->setAppValue('mail', 'layout_message_view', $value);
+		return new JSONResponse([]);
+	}
+
 }

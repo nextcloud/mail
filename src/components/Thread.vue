@@ -126,6 +126,10 @@ export default {
 				return []
 			}
 
+			if (this.mainStore.getPreference('layout-message-view', 'threaded') === 'singleton') {
+				return [envelope]
+			}
+
 			const envelopes = this.mainStore.getEnvelopesByThreadRootId(envelope.accountId, envelope.threadRootId)
 			if (envelopes.length === 0) {
 				return []

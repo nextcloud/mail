@@ -168,7 +168,7 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
-		$this->preferences->expects($this->exactly(10))
+		$this->preferences->expects($this->exactly(11))
 			->method('getPreference')
 			->willReturnMap([
 				[$this->userId, 'account-settings', '[]', json_encode([])],
@@ -179,6 +179,7 @@ class PageControllerTest extends TestCase {
 				[$this->userId, 'search-priority-body', 'false', 'false'],
 				[$this->userId, 'start-mailbox-id', null, '123'],
 				[$this->userId, 'layout-mode', 'vertical-split', 'vertical-split'],
+				[$this->userId, 'layout-message-view', 'threaded', 'threaded'],
 				[$this->userId, 'follow-up-reminders', 'true', 'true'],
 				[$this->userId, 'internal-addresses', 'false', 'false'],
 			]);
@@ -257,10 +258,11 @@ class PageControllerTest extends TestCase {
 				['version', '0.0.0', '26.0.0'],
 				['app.mail.attachment-size-limit', 0, 123],
 			]);
-		$this->config->expects($this->exactly(6))
+		$this->config->expects($this->exactly(7))
 			->method('getAppValue')
 			->withConsecutive(
 				[ 'mail', 'installed_version' ],
+				['mail', 'layout_message_view' ],
 				['mail', 'google_oauth_client_id' ],
 				['mail', 'microsoft_oauth_client_id' ],
 				['mail', 'microsoft_oauth_tenant_id' ],
@@ -268,6 +270,7 @@ class PageControllerTest extends TestCase {
 				['mail', 'allow_new_mail_accounts', 'yes'],
 			)->willReturnOnConsecutiveCalls(
 				$this->returnValue('1.2.3'),
+				$this->returnValue('threaded'),
 				$this->returnValue(''),
 				$this->returnValue(''),
 				$this->returnValue(''),
@@ -321,6 +324,7 @@ class PageControllerTest extends TestCase {
 					'tag-classified-messages' => 'false',
 					'search-priority-body' => 'false',
 					'layout-mode' => 'vertical-split',
+					'layout-message-view' => 'threaded',
 					'follow-up-reminders' => 'true',
 				]],
 				['prefill_displayName', 'Jane Doe'],
