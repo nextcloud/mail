@@ -153,6 +153,12 @@ const addMailboxToState = curry((mailboxes, account, mailbox) => {
 	} else {
 		parent.mailboxes.push(mailbox.databaseId)
 	}
+
+	Object.defineProperty(mailbox, 'isSubscribed', {
+		get() {
+			return this.attributes?.includes('\\subscribed') ?? false
+		},
+	})
 })
 
 export default function mainStoreActions() {
@@ -2309,6 +2315,15 @@ export default function mainStoreActions() {
 		},
 		getMailboxes(accountId) {
 			return this.accountsUnmapped[accountId].mailboxes.map((id) => this.mailboxes[id])
+		},
+		* getRecursiveMailboxIterator(accountId) {
+			for (const mailbox of this.getMailboxes(accountId)) {
+				yield mailbox
+
+				for (const subMailboxId of mailbox.mailboxes) {
+					yield this.getMailbox(subMailboxId)
+				}
+			}
 		},
 		getSubMailboxes(id) {
 			const mailbox = this.getMailbox(id)

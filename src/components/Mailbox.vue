@@ -157,6 +157,9 @@ export default {
 		await this.loadEnvelopes()
 		logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) after mount`)
 		await this.sync(false)
+
+		await this.prefetchOtherMailboxes()
+
 		this.mainStore.setHasFetchedInitialEnvelopesMutation(true)
 	},
 	destroyed() {
@@ -181,7 +184,6 @@ export default {
 		},
 		async loadEnvelopes() {
 			logger.debug(`Fetching envelopes for mailbox ${this.mailbox.databaseId} (${this.searchQuery})`, this.mailbox)
-
 			if (!this.syncedMailboxes.has(this.mailbox.databaseId)) {
 				// Only trigger skeleton if we didn't sync envelopes yet
 				this.loadingEnvelopes = true
@@ -256,6 +258,35 @@ export default {
 				logger.error('could not fetch next envelope page', { error })
 			} finally {
 				this.loadingMore = false
+			}
+		},
+		async prefetchOtherMailboxes() {
+			for (const mailbox of this.mainStore.getRecursiveMailboxIterator(this.account.id)) {
+				if (mailbox.databaseId === this.mailbox.databaseId) {
+					continue
+				}
+
+				if (!mailbox.isSubscribed) {
+					continue
+				}
+
+				try {
+					const envelopes = await this.mainStore.fetchEnvelopes({
+						mailboxId: mailbox.databaseId,
+						limit: this.initialPageSize,
+					})
+					this.syncedMailboxes.add(mailbox.databaseId)
+					logger.debug(`Prefetched ${envelopes.length} envelopes for mailbox ${mailbox.displayName} (${mailbox.databaseId})`)
+				} catch (error) {
+					if (error instanceof MailboxNotCachedError) {
+						// Just ignore
+						continue
+					}
+
+					logger.error(`Failed to prefetch envelopes for mailbox ${mailbox.displayName} (${mailbox.databaseId}): ${error}`, {
+						error,
+					})
+				}
 			}
 		},
 		hasDeleteAcl() {

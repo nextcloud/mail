@@ -130,7 +130,7 @@
 			</ActionButton>
 
 			<ActionCheckbox v-if="notVirtual"
-				:checked="isSubscribed"
+				:checked="mailbox.isSubscribed"
 				:disabled="changeSubscription"
 				@update:checked="changeFolderSubscription">
 				{{ t('mail', 'Subscribed') }}
@@ -350,9 +350,6 @@ export default {
 				}
 			}
 			return t('mail', 'Loading …')
-		},
-		isSubscribed() {
-			return this.mailbox.attributes && this.mailbox.attributes.includes('\\subscribed')
 		},
 		isDroppableSpecialMailbox() {
 			if (this.filter === 'starred') {
