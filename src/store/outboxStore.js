@@ -10,7 +10,6 @@ import * as OutboxService from '../service/OutboxService.js'
 import logger from '../logger.js'
 import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
-import { html, plain } from '../util/text.js'
 import { UNDO_DELAY } from './constants.js'
 import useMainStore from './mainStore.js'
 
@@ -184,19 +183,9 @@ export default defineStore('outbox', {
 						logger.info('Attempting to stop sending message ' + message.id)
 						const stopped = await this.stopMessage({ message })
 						logger.info('Message ' + message.id + ' stopped', { message: stopped })
-						// The composer expects rich body data and not just a string
-						const bodyData = {}
-						if (message.isHtml) {
-							bodyData.bodyHtml = html(message.body)
-						} else {
-							bodyData.bodyPlain = plain(message.body)
-						}
 						await this.mainStore.startComposerSession({
 							type: 'outbox',
-							data: {
-								...message,
-								...bodyData,
-							},
+							data: { ...message },
 						}, { root: true })
 					}, {
 						timeout: UNDO_DELAY,
