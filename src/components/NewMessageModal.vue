@@ -46,7 +46,6 @@
 						</template>
 					</EmptyContent>
 					<Loading v-else-if="uploadingAttachments" :hint="t('mail', 'Uploading attachments …')" role="alert" />
-					<Loading v-else-if="sending" :hint="t('mail', 'Sending …')" role="alert" />
 					<EmptyContent v-else-if="warning"
 						:name="t('mail', 'Warning sending your message')"
 						class="empty-content"
