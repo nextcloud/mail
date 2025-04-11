@@ -213,12 +213,7 @@ class MailboxSyncTest extends TestCase {
 	}
 
 	public function testSyncStats(): void {
-		$account = $this->createMock(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->with($account)
-			->willReturn($client);
 		$stats = new MailboxStats(42, 10, null);
 		$mailbox = new Mailbox();
 		$mailbox->setName('mailbox');
@@ -230,19 +225,14 @@ class MailboxSyncTest extends TestCase {
 			->method('update')
 			->with($mailbox);
 
-		$this->sync->syncStats($account, $mailbox);
+		$this->sync->syncStats($client, $mailbox);
 
 		$this->assertEquals(42, $mailbox->getMessages());
 		$this->assertEquals(10, $mailbox->getUnseen());
 	}
 
 	public function testSyncStatsWithNoStats(): void {
-		$account = $this->createMock(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->with($account)
-			->willReturn($client);
 		$stats = new MailboxStats(42, 10, null);
 		$mailbox = new Mailbox();
 		$mailbox->setMessages(10);
@@ -255,7 +245,7 @@ class MailboxSyncTest extends TestCase {
 		$this->mailboxMapper->expects(self::never())
 			->method('update');
 
-		$this->sync->syncStats($account, $mailbox);
+		$this->sync->syncStats($client, $mailbox);
 
 		$this->assertEquals(10, $mailbox->getMessages());
 		$this->assertEquals(6, $mailbox->getUnseen());
