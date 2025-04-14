@@ -142,7 +142,7 @@ const addMailboxToState = curry((mailboxes, account, mailbox) => {
 	mailbox.mailboxes = []
 	Vue.set(mailbox, 'envelopeLists', {})
 
-	mainStoreActions().transformMailboxName(account, mailbox)
+	transformMailboxName(account, mailbox)
 
 	Vue.set(mailboxes, mailbox.databaseId, mailbox)
 	const parent = Object.values(mailboxes)
@@ -154,6 +154,32 @@ const addMailboxToState = curry((mailboxes, account, mailbox) => {
 		parent.mailboxes.push(mailbox.databaseId)
 	}
 })
+
+function transformMailboxName(account, mailbox) {
+	// Add all mailboxes (including submailboxes to state, but only toplevel to account
+	const nameWithoutPrefix = account.personalNamespace
+		? mailbox.name.replace(new RegExp(escapeRegExp(account.personalNamespace)), '')
+		: mailbox.name
+	if (nameWithoutPrefix.includes(mailbox.delimiter)) {
+		/**
+		 * Sub-mailbox, e.g. 'Archive.2020' or 'INBOX.Archive.2020'
+		 */
+		mailbox.displayName = mailbox.name.substring(mailbox.name.lastIndexOf(mailbox.delimiter) + 1)
+		mailbox.path = mailbox.name.substring(0, mailbox.name.lastIndexOf(mailbox.delimiter))
+	} else if (account.personalNamespace && mailbox.name.startsWith(account.personalNamespace)) {
+		/**
+		 * Top-level mailbox, but with a personal namespace, e.g. 'INBOX.Sent'
+		 */
+		mailbox.displayName = nameWithoutPrefix
+		mailbox.path = account.personalNamespace
+	} else {
+		/**
+		 * Top-level mailbox, e.g. 'INBOX' or 'Draft'
+		 */
+		mailbox.displayName = nameWithoutPrefix
+		mailbox.path = ''
+	}
+}
 
 export default function mainStoreActions() {
 	return {
@@ -1754,32 +1780,6 @@ export default function mainStoreActions() {
 				await this.clearFollowUpReminder({ envelope })
 			}
 		},
-		transformMailboxName(account, mailbox) {
-			// Add all mailboxes (including submailboxes to state, but only toplevel to account
-			const nameWithoutPrefix = account.personalNamespace
-				? mailbox.name.replace(new RegExp(escapeRegExp(account.personalNamespace)), '')
-				: mailbox.name
-			if (nameWithoutPrefix.includes(mailbox.delimiter)) {
-				/**
-				 * Sub-mailbox, e.g. 'Archive.2020' or 'INBOX.Archive.2020'
-				 */
-				mailbox.displayName = mailbox.name.substring(mailbox.name.lastIndexOf(mailbox.delimiter) + 1)
-				mailbox.path = mailbox.name.substring(0, mailbox.name.lastIndexOf(mailbox.delimiter))
-			} else if (account.personalNamespace && mailbox.name.startsWith(account.personalNamespace)) {
-				/**
-				 * Top-level mailbox, but with a personal namespace, e.g. 'INBOX.Sent'
-				 */
-				mailbox.displayName = nameWithoutPrefix
-				mailbox.path = account.personalNamespace
-			} else {
-				/**
-				 * Top-level mailbox, e.g. 'INBOX' or 'Draft'
-				 */
-				mailbox.displayName = nameWithoutPrefix
-				mailbox.path = ''
-			}
-		},
-
 		sortAccounts(accounts) {
 			accounts.sort((a1, a2) => a1.order - a2.order)
 			return accounts
@@ -1901,7 +1901,7 @@ export default function mainStoreActions() {
 		},
 		updateMailboxMutation({ mailbox }) {
 			const account = this.accountsUnmapped[mailbox.accountId]
-			this.transformMailboxName(account, mailbox)
+			transformMailboxName(account, mailbox)
 			Vue.set(this.mailboxes, mailbox.databaseId, mailbox)
 		},
 		removeMailboxMutation({ id }) {
