@@ -1,3 +1,12 @@
+## [4.3.7](https://github.com/nextcloud/mail/compare/v4.3.6...v4.3.7) (2025-04-14)
+
+
+### Bug Fixes
+
+* translation strings in printing feature ([#10944](https://github.com/nextcloud/mail/issues/10944)) ([d531dfc](https://github.com/nextcloud/mail/commit/d531dfc2aae686b087b3c46cfb3a1748b2f29101))
+
+
+
 ## [4.3.6](https://github.com/nextcloud/mail/compare/v4.3.5...v4.3.6) (2025-04-07)
 
 
