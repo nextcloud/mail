@@ -71,11 +71,24 @@ export class DroppableMailbox {
 		return this.draggableInfo.accountId === this.options.accountId
 	}
 
+	/**
+	 * Is the user currently dragging a valid object?
+	 *
+	 * @return {boolean}
+	 */
+	get isCurrentlyDragging() {
+		return Object.keys(this.draggableInfo).length > 0
+	}
+
 	onDragEnd() {
 		this.setInitialAttributes()
 	}
 
 	onDragOver(event) {
+		if (!this.isCurrentlyDragging) {
+			return
+		}
+
 		event.preventDefault()
 
 		// Prevent dropping into current folder
@@ -91,11 +104,19 @@ export class DroppableMailbox {
 	}
 
 	onDragLeave(event) {
+		if (!this.isCurrentlyDragging) {
+			return
+		}
+
 		event.preventDefault()
 		this.setStatus('enabled')
 	}
 
 	async onDrop(event) {
+		if (!this.isCurrentlyDragging) {
+			return
+		}
+
 		event.preventDefault()
 
 		// Prevent dropping into current folder
