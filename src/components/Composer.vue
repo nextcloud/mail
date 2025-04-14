@@ -8,6 +8,7 @@
 			id="reference-picker"
 			@submit="onPicked"
 			@cancel="closePicker" />
+		<TextBlockModal v-if="isTextBlockPickerOpen" @close="isTextBlockPickerOpen = false" @insert="onTextBlockInsert" />
 		<div class="composer-fields composer-fields__from mail-account">
 			<label class="from-label" for="from">
 				{{ t('mail', 'From') }}
@@ -179,6 +180,7 @@
 							type="search"
 							class="vs__search"
 							v-bind="attributes"
+							dir="auto"
 							v-on="events">
 					</template>
 					<template #selected-option-container="{option}">
@@ -240,6 +242,7 @@
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply || !isFirstOpen"
 				:bus="bus"
+				:text-blocks="textBlocks"
 				@input="onEditorInput"
 				@ready="onEditorReady"
 				@mention="handleMention"
@@ -340,6 +343,14 @@
 							</template>
 							{{
 								t('mail', 'Smart picker')
+							}}
+						</ActionButton>
+						<ActionButton @click="openTextBlockPicker">
+							<template #icon>
+								<IconTextBlocks :size="16" :title="t('mail', 'Text blocks')" />
+							</template>
+							{{
+								t('mail', 'Text blocks')
 							}}
 						</ActionButton>
 						<ActionButton v-if="!isScheduledSendingDisabled"
@@ -466,11 +477,13 @@ import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox 
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import Delete from 'vue-material-design-icons/Delete.vue'
 import ComposerAttachments from './ComposerAttachments.vue'
+import TextBlockModal from './textBlocks/TextBlockModal.vue'
 import Download from 'vue-material-design-icons/Download.vue'
 import IconUpload from 'vue-material-design-icons/Upload.vue'
 import IconFolder from 'vue-material-design-icons/Folder.vue'
 import IconPublic from 'vue-material-design-icons/Link.vue'
 import IconLinkPicker from 'vue-material-design-icons/Shape.vue'
+import IconTextBlocks from 'vue-material-design-icons/TextBoxEdit.vue'
 import RecipientListItem from './RecipientListItem.vue'
 import Paperclip from 'vue-material-design-icons/Paperclip.vue'
 import IconFormat from 'vue-material-design-icons/FormatSize.vue'
@@ -515,6 +528,7 @@ export default {
 		ActionRadio,
 		ButtonVue,
 		ComposerAttachments,
+		TextBlockModal,
 		ChevronLeft,
 		Delete,
 		Download,
@@ -522,6 +536,7 @@ export default {
 		IconFolder,
 		IconPublic,
 		IconLinkPicker,
+		IconTextBlocks,
 		NcSelect,
 		Paperclip,
 		TextEditor,
@@ -688,6 +703,7 @@ export default {
 			wantsSmimeSign: this.smimeSign,
 			wantsSmimeEncrypt: this.smimeEncrypt,
 			isPickerOpen: false,
+			isTextBlockPickerOpen: false,
 			recipientSearchTerms: {},
 		}
 	},
@@ -886,6 +902,11 @@ export default {
 
 			return missingCertificates
 		},
+
+		textBlocks() {
+			return this.mainStore.getSharedTextBlocks()?.map(textBlock => ({ title: textBlock.title, content: textBlock.content }))
+				.concat(this.mainStore.getMyTextBlocks().map(textBlock => ({ title: textBlock.title, content: textBlock.content })))
+		},
 	},
 	watch: {
 		'$route.params.threadId'() {
@@ -984,6 +1005,10 @@ export default {
 		if (this.sendAt && this.isSendAtCustom) {
 			this.selectedDate = new Date(this.sendAt)
 		}
+		if (!this.mainStore.areTextBlocksFetched) {
+			this.mainStore.fetchSharedTextBlocks()
+			this.mainStore.fetchMyTextBlocks()
+		}
 	},
 	beforeDestroy() {
 		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
@@ -1000,6 +1025,9 @@ export default {
 		},
 		openPicker() {
 			this.isPickerOpen = true
+		},
+		openTextBlockPicker() {
+			this.isTextBlockPickerOpen = true
 		},
 		closePicker() {
 			this.isPickerOpen = false
@@ -1134,6 +1162,10 @@ export default {
 		onPicked(content) {
 			this.closePicker()
 			this.bus.emit('append-to-body-at-cursor', content)
+		},
+		onTextBlockInsert(content) {
+			this.isTextBlockPickerOpen = false
+			this.bus.emit('insert-text-block', content)
 		},
 		onEditorInput(text) {
 			this.bodyVal = text
