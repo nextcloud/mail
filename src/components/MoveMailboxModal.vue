@@ -62,7 +62,7 @@ export default {
 
 					} else {
 						const destMailbox = this.mainStore.getMailbox(this.destMailboxId)
-						const newName = destMailbox.name + this.mailbox.delimiter + this.mailbox.name
+						const newName = destMailbox.name + this.mailbox.delimiter + this.mailbox.displayName
 						await this.mainStore.renameMailbox({
 							account: this.account,
 							mailbox: this.mailbox,
