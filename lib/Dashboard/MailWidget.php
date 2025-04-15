@@ -15,6 +15,7 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\Search\SearchQuery;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\Dashboard\IAPIWidget;
 use OCP\Dashboard\IAPIWidgetV2;
@@ -91,11 +92,7 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 		// No assets need to be loaded anymore as the widget is rendered from the API
 	}
 
-	/**
-	 * Get widget-specific search filter
-	 * @return string
-	 */
-	abstract public function getSearchFilter(): string;
+	abstract public function getSearchQuery(string $userId): SearchQuery;
 
 	/**
 	 * @param string $userId
@@ -110,16 +107,24 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 		if ($user === null) {
 			return [];
 		}
-		$filter = $this->getSearchFilter();
-		$emails = $this->mailSearch->findMessagesGlobally($user, $filter, null, $limit);
 
+		$query = $this->getSearchQuery($userId);
 		if ($minTimestamp !== null) {
-			return array_filter($emails, static function (Message $email) use ($minTimestamp) {
-				return $email->getSentAt() > $minTimestamp;
-			});
+			$query->setStart((string)$minTimestamp);
 		}
 
-		return $emails;
+		return $this->mailSearch->findMessagesGlobally($user, $query, $limit);
+	}
+
+	protected function getMailboxIdsToExclude(string $userId): array {
+		$mailboxIdsToExclude = [];
+
+		foreach ($this->accountService->findByUserId($userId) as $account) {
+			$mailboxIdsToExclude[] = $account->getMailAccount()->getJunkMailboxId();
+			$mailboxIdsToExclude[] = $account->getMailAccount()->getTrashMailboxId();
+		}
+
+		return array_values(array_filter($mailboxIdsToExclude));
 	}
 
 	/**
