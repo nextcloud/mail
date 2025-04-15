@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "941cddd05d936fbe02a4ff774bb5ded0",
+    "content-hash": "7ee9210fbeaee8f99a6d65c52c8fc1d3",
     "packages": [
         {
             "name": "adhocore/cli",
-            "version": "v1.7.2",
+            "version": "v1.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/adhocore/php-cli.git",
-                "reference": "57834cbaa4fb68cda849417ab86577fba2b15298"
+                "reference": "86be16e3c3b42d76fcdb32529bcded0fedb925d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/adhocore/php-cli/zipball/57834cbaa4fb68cda849417ab86577fba2b15298",
-                "reference": "57834cbaa4fb68cda849417ab86577fba2b15298",
+                "url": "https://api.github.com/repos/adhocore/php-cli/zipball/86be16e3c3b42d76fcdb32529bcded0fedb925d3",
+                "reference": "86be16e3c3b42d76fcdb32529bcded0fedb925d3",
                 "shasum": ""
             },
             "require": {
@@ -28,6 +28,9 @@
             },
             "type": "library",
             "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
                 "psr-4": {
                     "Ahc\\Cli\\": "src/"
                 }
@@ -62,7 +65,7 @@
             ],
             "support": {
                 "issues": "https://github.com/adhocore/php-cli/issues",
-                "source": "https://github.com/adhocore/php-cli/tree/v1.7.2"
+                "source": "https://github.com/adhocore/php-cli/tree/v1.9.3"
             },
             "funding": [
                 {
@@ -74,20 +77,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-05T00:08:47+00:00"
+            "time": "2024-12-04T03:40:29+00:00"
         },
         {
             "name": "nextcloud/openapi-extractor",
-            "version": "v1.0.1",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-releases/openapi-extractor.git",
-                "reference": "654c44363e1afbc6dc5e5140f22f4ac0727cbf32"
+                "reference": "6292e66132d7c6e9409249e51f29b8d93adac91a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-releases/openapi-extractor/zipball/654c44363e1afbc6dc5e5140f22f4ac0727cbf32",
-                "reference": "654c44363e1afbc6dc5e5140f22f4ac0727cbf32",
+                "url": "https://api.github.com/repos/nextcloud-releases/openapi-extractor/zipball/6292e66132d7c6e9409249e51f29b8d93adac91a",
+                "reference": "6292e66132d7c6e9409249e51f29b8d93adac91a",
                 "shasum": ""
             },
             "require": {
@@ -99,11 +102,12 @@
             },
             "require-dev": {
                 "nextcloud/coding-standard": "^1.2",
-                "nextcloud/ocp": "dev-master"
+                "nextcloud/ocp": "dev-master",
+                "rector/rector": "^2.0"
             },
             "bin": [
-                "generate-spec",
-                "merge-specs"
+                "bin/generate-spec",
+                "bin/merge-specs"
             ],
             "type": "library",
             "autoload": {
@@ -118,22 +122,22 @@
             "description": "A tool for extracting OpenAPI specifications from Nextcloud source code",
             "support": {
                 "issues": "https://github.com/nextcloud-releases/openapi-extractor/issues",
-                "source": "https://github.com/nextcloud-releases/openapi-extractor/tree/v1.0.1"
+                "source": "https://github.com/nextcloud-releases/openapi-extractor/tree/v1.4.0"
             },
-            "time": "2024-10-12T04:42:57+00:00"
+            "time": "2025-02-21T14:47:17+00:00"
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.3.1",
+            "version": "v5.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "8eea230464783aa9671db8eea6f8c6ac5285794b"
+                "reference": "447a020a1f875a434d62f2a401f53b82a396e494"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/8eea230464783aa9671db8eea6f8c6ac5285794b",
-                "reference": "8eea230464783aa9671db8eea6f8c6ac5285794b",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/447a020a1f875a434d62f2a401f53b82a396e494",
+                "reference": "447a020a1f875a434d62f2a401f53b82a396e494",
                 "shasum": ""
             },
             "require": {
@@ -176,9 +180,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.3.1"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.4.0"
             },
-            "time": "2024-10-08T18:51:32+00:00"
+            "time": "2024-12-30T11:07:19+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
