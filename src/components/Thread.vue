@@ -546,14 +546,14 @@ export default {
 
 	.icon-loading {
 		&:only-child:after {
-			margin-top: 20px;
+			margin-top: calc(var(--default-line-height) - var(--default-grid-baseline));
 		}
 	}
 }
 
 .mail-message-body {
 	flex: 1;
-	margin-bottom: 30px;
+	margin-bottom: calc(var(--default-grid-baseline) * 7);
 	position: relative;
 }
 
@@ -562,7 +562,7 @@ export default {
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
-	padding: 0 0 10px 0;
+	padding: 0 0 calc(var(--default-grid-baseline) * 2) 0;
 	// somehow ios doesn't care about this !important rule
 	// so we have to manually set left/right padding to chidren
 	// for 100% to be used
@@ -584,15 +584,15 @@ export default {
 	// initial width
 	width: 0;
 	// while scrolling, the back button overlaps with subject on small screen
-	padding-left: 86px;
+	padding-left: calc(var(--default-grid-baseline) * 21);
 	// grow and try to fill 100%
 	flex: 1 1 auto;
 	h2,
 	p {
-		padding-bottom: 7px;
+		padding-bottom: calc(var(--default-grid-baseline) * 2);
 		margin-bottom: 0;
 		// some h2 styling coming from server add some space on top
-		margin-top: 5px;
+		margin-top: var(--default-grid-baseline);
 	}
 
 	p {
@@ -617,7 +617,7 @@ export default {
 
 .attachment-popover {
 	position: sticky;
-	bottom: 12px;
+	bottom: calc(var(--default-grid-baseline) * 3);
 	text-align: center;
 }
 
@@ -626,7 +626,7 @@ export default {
 }
 
 #mail-content {
-	margin: 10px 38px 0 59px;
+	margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 10) 0 calc(var(--default-grid-baseline) * 15);
 }
 
 #mail-content iframe {
@@ -640,7 +640,7 @@ export default {
 #mail-content a,
 .mail-signature a {
 	color: #07d;
-	border-bottom: 1px dotted #07d;
+	border-bottom: var(--border-width-input) dotted #07d;
 	text-decoration: none;
 	word-wrap: break-word;
 }
@@ -655,7 +655,7 @@ export default {
 @media only screen and (min-width: 600px) {
 	.icon-reply-white,
 	.icon-reply-all-white {
-		background-position: 12px center;
+		background-position: calc(var(--default-grid-baseline) * 3) center;
 	}
 }
 
@@ -685,7 +685,7 @@ export default {
 }
 
 .v-popper.avatar-more {
-	padding: 6px;
+	padding: calc(var(--default-grid-baseline) * 2);
 }
 
 .avatar-hidden {

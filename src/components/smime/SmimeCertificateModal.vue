@@ -245,7 +245,7 @@ export default {
 	display: flex;
 }
 .certificate-modal {
-	padding: 20px;
+	padding: calc(var(--default-grid-baseline) * 5);
 
 	&__list {
 		table {
@@ -257,7 +257,7 @@ export default {
 			}
 
 			th, td {
-				padding: 2.5px;
+				padding: calc(var(--default-grid-baseline) * 0.5);
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
@@ -285,7 +285,7 @@ export default {
 		}
 
 		&__actions {
-			margin: 12px;
+			margin: calc(var(--default-grid-baseline) * 3);
 			float: right;
 		}
 	}
@@ -293,7 +293,7 @@ export default {
 	&__import {
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
+		gap: calc(var(--default-grid-baseline) * 2);
 
 		input[type=file] {
 			display: flex;
@@ -302,12 +302,12 @@ export default {
 
 		&__type {
 			display: flex;
-			gap: 0 20px;
+			gap: 0 calc(var(--default-grid-baseline) * 5);
 			flex-wrap: wrap;
 
 			> div {
 				display: flex;
-				gap: 5px;
+				gap: var(--default-grid-baseline);
 				align-items: center;
 			}
 		}
@@ -319,7 +319,7 @@ export default {
 		&__actions {
 			display: flex;
 			justify-content: space-between;
-			gap: 15px;
+			gap: calc(var(--default-grid-baseline) * 4);
 		}
 	}
 }
