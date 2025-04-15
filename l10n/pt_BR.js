@@ -607,7 +607,7 @@ OC.L10N.register(
     "Delete action" : "Excluir ação",
     "Flag" : "Bandeira",
     "The stop action ends all processing" : "A ação de parar finaliza todo o processamento",
-    "Delete filter" : "Deletar filtro",
+    "Delete filter" : "Excluir filtro",
     "Delete mail filter {filterName}?" : "Excluir o filtro de email {filterName}?",
     "Are you sure to delete the mail filter?" : "Quer realmente excluir o filtro de email?",
     "New filter" : "Novo filtro",
