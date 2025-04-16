@@ -56,6 +56,7 @@ OC.L10N.register(
     "Close" : "Serriñ",
     "Date" : "Deiz",
     "Tags" : "Klavioù",
+    "Translate to" : "Treiñ e",
     "Actions" : "Oberoù",
     "Client ID" : "ID kliant",
     "User" : "Implijer",
