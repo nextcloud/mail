@@ -432,10 +432,13 @@ OC.L10N.register(
     "attached" : "priložené",
     "No sent mailbox configured. Please pick one in the account settings." : "Nie je nastavený priečinok pre odchádzajúce správy. Vyberte jeden v nastaveniach účtu.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "V kolónkach Pre resp. Kópia sa nachádza príliš veľa príjemcov. Zvážte použitie kolónky Skrytej kópie, pomocou ktorej skryjete e-mailové adresy všetkých príjemcov.",
+    "Your message has no subject. Do you want to send it anyway?" : "Vaša správa nemá predmet. Chcete ju aj napriek tomu odoslať?",
     "You mentioned an attachment. Did you forget to add it?" : "Zmienili ste prílohu. Zabudli ste ju pridať?",
     "Message discarded" : "Správa bola zrušená",
     "Could not discard message" : "Správu sa nepodarilo zahodiť",
     "Maximize composer" : "Maximalizovať editor",
+    "Show recipient details" : "Zobraziť podprobnosti o prijímateľovi",
+    "Hide recipient details" : "Skryť podrobnosti o prijímateľovy",
     "Minimize composer" : "Minimalizovať editor",
     "Error sending your message" : "Chyba pri odosielaní správy",
     "Retry" : "Skúsiť znova",
@@ -539,6 +542,8 @@ OC.L10N.register(
     "Summarizing thread failed." : "Zhrnutie vlákna zlyhalo.",
     "Could not load your message thread" : "Nepodarilo sa načítať vlákno vašich správ",
     "The thread doesn't exist or has been deleted" : "Vlákno neexistuje alebo bolo zmazané",
+    "Email was not able to be opened" : "E-mail nie je možné otvoriť",
+    "Print" : "Vytlačiť",
     "Loading thread" : "Načítavam vlákno",
     "Not found" : "Nenájdené",
     "Encrypted & verified " : "Zašifrované a overené",
@@ -778,6 +783,7 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ak si neprajete navštíviť stránku, možete sa vátiť na <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Pokračovať na %s",
     "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n\n### Priority Inbox\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\n### Thread Summaries (opt-in)\n\n**Rating:** 🟢/🟡/🟠/🔴\n\nThe rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "**💌 Aplikácia E-mail pre Nextcloud**\n\n- **🚀 Integrácia s inými aplikáciami Nextcloud!** Momentálne Kontakty, Kalendár a Súbory - viac neskôr.\n- **📥 Viacero e-mailových účtov!** Chcete e-email pre osobný a firemný účet? Žiadny problém, a pekná zjednotená schránka. Pripojíte akýkoľvek IMAP účet.\n- **🔒 Posielajte a prijímajte šifrované e-maily!** Používame pekné rozšírenie prehliadača [Mailvelope](https://mailvelope.com).\n- **🙈 Neinventujeme koleso!** Založené na skvelých knižniciach [Horde](https://horde.org).\n- **📬 Chcete hostovať vlastný e-mailový server?** Nemusíme to znovu implementovať, pretože si môžete nastaviť [Mail-in-a-Box](https://mailinabox.email)!\n\n## Etické hodnotenie AI\n\n### Prioritná schránka\n\nPozitívne:\n* Softvér pre trénovanie a inferenciu tohto modelu je open source.\n* Model je vytvorený a trénovaný na vlastných zariadeniach na základe vlastných údajov užívateľa.\n* Trénovacie dáta sú prístupné užívateľovi, čo umožňuje skontrolovať alebo opraviť skreslenie alebo optimalizovať výkon a spotrebu CO2.\n\n### Súhrny vlákien (voliteľné)\n\n**Hodnotenie:** 🟢/🟡/🟠/🔴\n\nHodnotenie závisí od nainštalovaného spracovávacieho backendu textu. Pozrite si [prehľad hodnotenia](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) pre podrobnosti.\n\nDozviete sa viac o etickom hodnotení AI Nextcloud [v našom blogu](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).",
-    "This event is in the past." : "Táto udalosť je v minulosti"
+    "This event is in the past." : "Táto udalosť je v minulosti",
+    "Collapse composer" : "Zbaliť editor správ"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");
