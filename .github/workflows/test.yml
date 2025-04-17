@@ -167,7 +167,7 @@ jobs:
             run: php -f nextcloud/occ app:enable mail
           - name: Configure Nextcloud for testing
             run: |
-                php -f nextcloud/occ config:system:set debug --type bool --value true
+                php -f nextcloud/occ config:system:set app.mail.debug --type bool --value true
                 php -f nextcloud/occ config:system:set app.mail.verify-tls-peer --type bool --value false
           - name: Enable slow mysql query logs
             if: ${{ matrix.db == 'mysql' }}
@@ -192,7 +192,7 @@ jobs:
             run: echo "SELECT * FROM mysql.slow_log WHERE sql_text LIKE '%oc_mail%' AND sql_text NOT LIKE '%information_schema%'" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
           - name: Print debug logs
             if: ${{ always() }}
-            run: cat nextcloud/data/horde_*.log
+            run: cat nextcloud/data/mail-*-*-imap.log
           - name: Report coverage
             uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
             if: ${{ always() && matrix.db == 'mysql' }}
