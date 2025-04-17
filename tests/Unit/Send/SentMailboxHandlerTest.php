@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Unit\Send;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
@@ -32,11 +33,12 @@ class SentMailboxHandlerTest extends TestCase {
 		$account = new Account($mailAccount);
 		$localMessage = new LocalMessage();
 		$localMessage->setStatus(LocalMessage::STATUS_RAW);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
 		$this->antiAbuseHandler->expects(self::once())
 			->method('process');
 
-		$this->handler->process($account, $localMessage);
+		$this->handler->process($account, $localMessage, $client);
 	}
 
 	public function testNoSentMailbox(): void {
@@ -47,6 +49,7 @@ class SentMailboxHandlerTest extends TestCase {
 		$localMessage = $this->getMockBuilder(LocalMessage::class);
 		$localMessage->addMethods(['setStatus']);
 		$mock = $localMessage->getMock();
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
 		$mock->expects(self::once())
 			->method('setStatus')
@@ -54,6 +57,6 @@ class SentMailboxHandlerTest extends TestCase {
 		$this->antiAbuseHandler->expects(self::never())
 			->method('process');
 
-		$this->handler->process($account, $mock);
+		$this->handler->process($account, $mock, $client);
 	}
 }
