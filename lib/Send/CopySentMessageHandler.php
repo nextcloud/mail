@@ -11,22 +11,26 @@ use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailboxMapper;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\LazyHordeImapClient;
 use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
 
 class CopySentMessageHandler extends AHandler {
 	public function __construct(
-		private IMAPClientFactory $imapClientFactory,
 		private MailboxMapper $mailboxMapper,
 		private LoggerInterface $logger,
 		private MessageMapper $messageMapper,
 	) {
 	}
-	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
+
+	public function process(
+		Account $account,
+		LocalMessage $localMessage,
+		LazyHordeImapClient $lazyClient,
+	): LocalMessage {
 		if ($localMessage->getStatus() === LocalMessage::STATUS_PROCESSED) {
-			return $this->processNext($account, $localMessage);
+			return $this->processNext($account, $localMessage, $lazyClient);
 		}
 
 		$rawMessage = $localMessage->getRaw();
@@ -60,7 +64,7 @@ class CopySentMessageHandler extends AHandler {
 			return $localMessage;
 		}
 
-		$client = $this->imapClientFactory->getClient($account);
+		$client = $lazyClient->getClient();
 		try {
 			$this->messageMapper->save(
 				$client,
@@ -74,10 +78,8 @@ class CopySentMessageHandler extends AHandler {
 				'exception' => $e,
 			]);
 			return $localMessage;
-		} finally {
-			$client->logout();
 		}
 
-		return $this->processNext($account, $localMessage);
+		return $this->processNext($account, $localMessage, $lazyClient);
 	}
 }

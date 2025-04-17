@@ -9,13 +9,18 @@ namespace OCA\Mail\Send;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\IMAP\LazyHordeImapClient;
 
 class SentMailboxHandler extends AHandler {
-	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
+	public function process(
+		Account $account,
+		LocalMessage $localMessage,
+		LazyHordeImapClient $lazyClient,
+	): LocalMessage {
 		if ($account->getMailAccount()->getSentMailboxId() === null) {
 			$localMessage->setStatus(LocalMessage::STATUS_NO_SENT_MAILBOX);
 			return $localMessage;
 		}
-		return $this->processNext($account, $localMessage);
+		return $this->processNext($account, $localMessage, $lazyClient);
 	}
 }

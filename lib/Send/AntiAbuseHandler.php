@@ -9,6 +9,7 @@ namespace OCA\Mail\Send;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\IMAP\LazyHordeImapClient;
 use OCA\Mail\Service\AntiAbuseService;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
@@ -21,10 +22,15 @@ class AntiAbuseHandler extends AHandler {
 		private LoggerInterface $logger,
 	) {
 	}
-	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
+
+	public function process(
+		Account $account,
+		LocalMessage $localMessage,
+		LazyHordeImapClient $lazyClient,
+	): LocalMessage {
 		if ($localMessage->getStatus() === LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL
 			|| $localMessage->getStatus() === LocalMessage::STATUS_PROCESSED) {
-			return $this->processNext($account, $localMessage);
+			return $this->processNext($account, $localMessage, $lazyClient);
 		}
 
 		$user = $this->userManager->get($account->getUserId());
@@ -45,6 +51,6 @@ class AntiAbuseHandler extends AHandler {
 		// at this point.
 		// Any future improvement from https://github.com/nextcloud/mail/issues/6461
 		// should refactor the chain to stop at this point unless the force send option is true
-		return $this->processNext($account, $localMessage);
+		return $this->processNext($account, $localMessage, $lazyClient);
 	}
 }

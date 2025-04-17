@@ -131,4 +131,15 @@ class IMAPClientFactory {
 
 		return $client;
 	}
+
+	/**
+	 * Get a lazy connection object for the given account
+	 *
+	 * Connections are not opened until the first usage and are not closed until destruction, so the
+	 * caller site is responsible to log out as soon as possible to keep the number of open (and
+	 * stale) connections at a minimum.
+	 */
+	public function getLazyClient(Account $account, bool $useCache = true): LazyHordeImapClient {
+		return new LazyHordeImapClient($this, $account, $useCache);
+	}
 }

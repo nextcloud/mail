@@ -14,6 +14,8 @@ use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\LazyHordeImapClient;
 use OCA\Mail\Send\AntiAbuseHandler;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Send\CopySentMessageHandler;
@@ -33,6 +35,7 @@ class ChainTest extends TestCase {
 	private MockObject|MessageMapper $messageMapper;
 	private AttachmentService|MockObject $attachmentService;
 	private MockObject|LocalMessageMapper $localMessageMapper;
+	private MockObject&IMAPClientFactory $clientFactory;
 
 	protected function setUp(): void {
 		$this->sentMailboxHandler = $this->createMock(SentMailboxHandler::class);
@@ -42,6 +45,7 @@ class ChainTest extends TestCase {
 		$this->flagRepliedMessageHandler = $this->createMock(FlagRepliedMessageHandler::class);
 		$this->attachmentService = $this->createMock(AttachmentService::class);
 		$this->localMessageMapper = $this->createMock(LocalMessageMapper::class);
+		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->chain = new Chain($this->sentMailboxHandler,
 			$this->antiAbuseHandler,
 			$this->sendHandler,
@@ -49,6 +53,7 @@ class ChainTest extends TestCase {
 			$this->flagRepliedMessageHandler,
 			$this->attachmentService,
 			$this->localMessageMapper,
+			$this->clientFactory,
 		);
 	}
 
@@ -63,9 +68,15 @@ class ChainTest extends TestCase {
 		$expected = new LocalMessage();
 		$expected->setStatus(LocalMessage::STATUS_PROCESSED);
 		$expected->setId(100);
+		$lazyClient = $this->createMock(LazyHordeImapClient::class);
+		$lazyClient->expects(self::once())
+			->method('logout');
 
 		$this->sentMailboxHandler->expects(self::once())
 			->method('setNext');
+		$this->clientFactory->expects(self::once())
+			->method('getLazyClient')
+			->willReturn($lazyClient);
 		$this->sentMailboxHandler->expects(self::once())
 			->method('process')
 			->with($account, $localMessage)
@@ -93,9 +104,15 @@ class ChainTest extends TestCase {
 		$expected = new LocalMessage();
 		$expected->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
 		$expected->setId(100);
+		$lazyClient = $this->createMock(LazyHordeImapClient::class);
+		$lazyClient->expects(self::once())
+			->method('logout');
 
 		$this->sentMailboxHandler->expects(self::once())
 			->method('setNext');
+		$this->clientFactory->expects(self::once())
+			->method('getLazyClient')
+			->willReturn($lazyClient);
 		$this->sentMailboxHandler->expects(self::once())
 			->method('process')
 			->with($account, $localMessage)

@@ -11,6 +11,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\IMAP\LazyHordeImapClient;
 use OCA\Mail\Send\AntiAbuseHandler;
 use OCA\Mail\Send\SentMailboxHandler;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -32,11 +33,14 @@ class SentMailboxHandlerTest extends TestCase {
 		$account = new Account($mailAccount);
 		$localMessage = new LocalMessage();
 		$localMessage->setStatus(LocalMessage::STATUS_RAW);
+		$lazyClient = $this->createMock(LazyHordeImapClient::class);
+		$lazyClient->expects(self::never())
+			->method('getClient');
 
 		$this->antiAbuseHandler->expects(self::once())
 			->method('process');
 
-		$this->handler->process($account, $localMessage);
+		$this->handler->process($account, $localMessage, $lazyClient);
 	}
 
 	public function testNoSentMailbox(): void {
@@ -47,6 +51,9 @@ class SentMailboxHandlerTest extends TestCase {
 		$localMessage = $this->getMockBuilder(LocalMessage::class);
 		$localMessage->addMethods(['setStatus']);
 		$mock = $localMessage->getMock();
+		$lazyClient = $this->createMock(LazyHordeImapClient::class);
+		$lazyClient->expects(self::never())
+			->method('getClient');
 
 		$mock->expects(self::once())
 			->method('setStatus')
@@ -54,6 +61,6 @@ class SentMailboxHandlerTest extends TestCase {
 		$this->antiAbuseHandler->expects(self::never())
 			->method('process');
 
-		$this->handler->process($account, $mock);
+		$this->handler->process($account, $mock, $lazyClient);
 	}
 }
