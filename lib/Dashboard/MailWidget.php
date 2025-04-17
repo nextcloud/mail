@@ -111,15 +111,32 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 			return [];
 		}
 		$filter = $this->getSearchFilter();
+
+		$trashMailboxIds = $this->getTrashMailboxIds($user->getUID());
+		$filter .= ' ignore-mailbox:' . implode(',', $trashMailboxIds);
+
 		$emails = $this->mailSearch->findMessagesGlobally($user, $filter, null, $limit);
 
 		if ($minTimestamp !== null) {
-			return array_filter($emails, static function (Message $email) use ($minTimestamp) {
+			$emails = array_values(array_filter($emails, static function (Message $email) use ($minTimestamp) {
 				return $email->getSentAt() > $minTimestamp;
-			});
+			}));
 		}
 
-		return $emails;
+		return array_splice($emails, 0, 7);
+	}
+
+	protected function getTrashMailboxIds(string $userId): array {
+		$trashMailboxIds = [];
+
+		foreach ($this->accountService->findByUserId($userId) as $account) {
+			$trashMailboxId = $account->getMailAccount()->getTrashMailboxId();
+			if ($trashMailboxId !== null) {
+				$trashMailboxIds[] = $trashMailboxId;
+			}
+		}
+
+		return $trashMailboxIds;
 	}
 
 	/**

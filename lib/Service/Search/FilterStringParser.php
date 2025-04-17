@@ -127,7 +127,12 @@ class FilterStringParser {
 					}
 				}
 
-
+				return true;
+			case 'ignore-mailbox':
+				$mailboxIds = explode(',', $param);
+				foreach ($mailboxIds as $mailboxId) {
+					$query->addIgnoreMailboxId((int)$mailboxId);
+				}
 				return true;
 		}
 

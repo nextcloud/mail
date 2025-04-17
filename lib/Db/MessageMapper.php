@@ -1076,6 +1076,14 @@ class MessageMapper extends QBMapper {
 			->from('mail_mailboxes', 'mb')
 			->join('mb', 'mail_accounts', 'a', $qb->expr()->eq('a.id', 'mb.account_id', IQueryBuilder::PARAM_INT))
 			->where($qb->expr()->eq('a.user_id', $qb->createNamedParameter($user->getUID())));
+
+		$ignoreMailboxIds = $query->getIgnoreMailboxIds();
+		if (count($ignoreMailboxIds) > 0) {
+			$selectMailboxIds->andWhere(
+				$qb->expr()->notIn('mb.id', $qb->createNamedParameter($ignoreMailboxIds, IQueryBuilder::PARAM_INT_ARRAY))
+			);
+		}
+
 		$select->where(
 			$qb->expr()->in('m.mailbox_id', $qb->createFunction($selectMailboxIds->getSQL()), IQueryBuilder::PARAM_INT_ARRAY)
 		);
