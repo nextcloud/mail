@@ -10,6 +10,8 @@ import JestFetchMock from 'jest-fetch-mock'
 // Required for @nextcloud/files
 JestFetchMock.enableMocks()
 
+global.appName = 'mail'
+
 global.OC = {
 	getLocale: () => 'en',
 	getLanguage: () => 'en_US',
