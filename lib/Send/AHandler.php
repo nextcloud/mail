@@ -9,6 +9,7 @@ namespace OCA\Mail\Send;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\IMAP\LazyHordeImapClient;
 
 abstract class AHandler {
 
@@ -18,11 +19,19 @@ abstract class AHandler {
 		return $next;
 	}
 
-	abstract public function process(Account $account, LocalMessage $localMessage): LocalMessage;
+	abstract public function process(
+		Account $account,
+		LocalMessage $localMessage,
+		LazyHordeImapClient $lazyClient,
+	): LocalMessage;
 
-	protected function processNext(Account $account, LocalMessage $localMessage): LocalMessage {
+	protected function processNext(
+		Account $account,
+		LocalMessage $localMessage,
+		LazyHordeImapClient $lazyClient,
+	): LocalMessage {
 		if ($this->next !== null) {
-			return $this->next->process($account, $localMessage);
+			return $this->next->process($account, $localMessage, $lazyClient);
 		}
 		return $localMessage;
 	}

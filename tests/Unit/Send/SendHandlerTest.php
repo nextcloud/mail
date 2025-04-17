@@ -12,6 +12,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\IMAP\LazyHordeImapClient;
 use OCA\Mail\Send\CopySentMessageHandler;
 use OCA\Mail\Send\FlagRepliedMessageHandler;
 use OCA\Mail\Send\SendHandler;
@@ -40,6 +41,9 @@ class SendHandlerTest extends TestCase {
 		$localMessage = new LocalMessage();
 		$localMessage->setId(100);
 		$localMessage->setStatus(LocalMessage::STATUS_RAW);
+		$lazyClient = $this->createMock(LazyHordeImapClient::class);
+		$lazyClient->expects(self::never())
+			->method('getClient');
 
 		$this->transmission->expects(self::once())
 			->method('sendMessage')
@@ -47,7 +51,7 @@ class SendHandlerTest extends TestCase {
 		$this->copySentMessageHandler->expects(self::once())
 			->method('process');
 
-		$this->handler->process($account, $localMessage);
+		$this->handler->process($account, $localMessage, $lazyClient);
 	}
 
 	public function testProcessAlreadyProcessed(): void {
@@ -58,13 +62,16 @@ class SendHandlerTest extends TestCase {
 		$localMessage = new LocalMessage();
 		$localMessage->setId(100);
 		$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
+		$lazyClient = $this->createMock(LazyHordeImapClient::class);
+		$lazyClient->expects(self::never())
+			->method('getClient');
 
 		$this->transmission->expects(self::never())
 			->method('sendMessage');
 		$this->copySentMessageHandler->expects(self::once())
 			->method('process');
 
-		$this->handler->process($account, $localMessage);
+		$this->handler->process($account, $localMessage, $lazyClient);
 	}
 
 	public function testProcessError(): void {
@@ -79,11 +86,15 @@ class SendHandlerTest extends TestCase {
 		$mock->expects(self::any())
 			->method('getStatus')
 			->willReturn(LocalMessage::STATUS_SMPT_SEND_FAIL);
+		$lazyClient = $this->createMock(LazyHordeImapClient::class);
+		$lazyClient->expects(self::never())
+			->method('getClient');
+
 		$this->transmission->expects(self::once())
 			->method('sendMessage');
 		$this->copySentMessageHandler->expects(self::never())
 			->method('process');
 
-		$this->handler->process($account, $mock);
+		$this->handler->process($account, $mock, $lazyClient);
 	}
 }

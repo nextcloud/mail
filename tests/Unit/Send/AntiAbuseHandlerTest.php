@@ -11,6 +11,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\IMAP\LazyHordeImapClient;
 use OCA\Mail\Send\AntiAbuseHandler;
 use OCA\Mail\Send\SendHandler;
 use OCA\Mail\Service\AntiAbuseService;
@@ -45,6 +46,9 @@ class AntiAbuseHandlerTest extends TestCase {
 		$account = new Account($mailAccount);
 		$localMessage = new LocalMessage();
 		$localMessage->setStatus(LocalMessage::STATUS_RAW);
+		$lazyClient = $this->createMock(LazyHordeImapClient::class);
+		$lazyClient->expects(self::never())
+			->method('getClient');
 
 		$this->userManager->expects(self::once())
 			->method('get')
@@ -56,7 +60,7 @@ class AntiAbuseHandlerTest extends TestCase {
 		$this->sendHandler->expects(self::once())
 			->method('process');
 
-		$this->handler->process($account, $localMessage);
+		$this->handler->process($account, $localMessage, $lazyClient);
 	}
 
 	public function testProcessNoUser(): void {
@@ -66,6 +70,9 @@ class AntiAbuseHandlerTest extends TestCase {
 		$account = new Account($mailAccount);
 		$localMessage = new LocalMessage();
 		$localMessage->setStatus(LocalMessage::STATUS_RAW);
+		$lazyClient = $this->createMock(LazyHordeImapClient::class);
+		$lazyClient->expects(self::never())
+			->method('getClient');
 
 		$this->userManager->expects(self::once())
 			->method('get')
@@ -77,7 +84,7 @@ class AntiAbuseHandlerTest extends TestCase {
 		$this->sendHandler->expects(self::never())
 			->method('process');
 
-		$this->handler->process($account, $localMessage);
+		$this->handler->process($account, $localMessage, $lazyClient);
 	}
 
 	public function testProcessAlreadyProcessed(): void {
@@ -87,6 +94,9 @@ class AntiAbuseHandlerTest extends TestCase {
 		$account = new Account($mailAccount);
 		$localMessage = new LocalMessage();
 		$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
+		$lazyClient = $this->createMock(LazyHordeImapClient::class);
+		$lazyClient->expects(self::never())
+			->method('getClient');
 
 		$this->userManager->expects(self::never())
 			->method('get');
@@ -97,6 +107,6 @@ class AntiAbuseHandlerTest extends TestCase {
 		$this->sendHandler->expects(self::once())
 			->method('process');
 
-		$this->handler->process($account, $localMessage);
+		$this->handler->process($account, $localMessage, $lazyClient);
 	}
 }
