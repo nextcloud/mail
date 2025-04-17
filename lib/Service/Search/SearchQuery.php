@@ -55,6 +55,9 @@ class SearchQuery {
 	/** @var bool */
 	private $mentionsMe = false;
 
+	/** @var list<int> */
+	private $ignoreMailboxIds = [];
+
 	private string $match = 'allof';
 
 	/**
@@ -246,5 +249,13 @@ class SearchQuery {
 	 */
 	public function setMentionsMe(bool $mentionsMe): void {
 		$this->mentionsMe = $mentionsMe;
+	}
+
+	public function addIgnoreMailboxId(int $mailboxId): void {
+		$this->ignoreMailboxIds[] = $mailboxId;
+	}
+
+	public function getIgnoreMailboxIds(): array {
+		return $this->ignoreMailboxIds;
 	}
 }

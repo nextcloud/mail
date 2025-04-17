@@ -111,12 +111,11 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 			return [];
 		}
 		$filter = $this->getSearchFilter();
-		$emails = $this->mailSearch->findMessagesGlobally($user, $filter, null, $limit * 2);
 
 		$trashMailboxIds = $this->getTrashMailboxIds($user->getUID());
-		$emails = array_values(array_filter($emails, static function (Message $email) use ($trashMailboxIds) {
-			return !in_array($email->getMailboxId(), $trashMailboxIds, true);
-		}));
+		$filter .= ' ignore-mailbox:' . implode(',', $trashMailboxIds);
+
+		$emails = $this->mailSearch->findMessagesGlobally($user, $filter, null, $limit);
 
 		if ($minTimestamp !== null) {
 			$emails = array_values(array_filter($emails, static function (Message $email) use ($minTimestamp) {
