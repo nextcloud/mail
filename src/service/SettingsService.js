@@ -89,3 +89,16 @@ export const setImportanceClassificationEnabledByDefault = async (enabledByDefau
 		enabledByDefault,
 	})
 }
+
+/**
+ * @param {boolean} value
+ * @return {Promise<void>}
+ */
+export const setLayoutMessageView = async (value) => {
+	const url = generateUrl('/apps/mail/api/settings/layout-message-view')
+	const data = {
+		value,
+	}
+	const resp = await axios.put(url, data)
+	return resp.data
+}
