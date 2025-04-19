@@ -17,6 +17,7 @@
 
 <script>
 import NcAvatar from '@nextcloud/vue/components/NcAvatar'
+import { generateUrl } from '@nextcloud/router'
 import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
 import logger from '../logger.js'
 
@@ -29,6 +30,14 @@ export default {
 		displayName: {
 			type: String,
 			required: true,
+		},
+		avatar: {
+			type: Object,
+			default: null,
+		},
+		fetchAvatar: {
+			type: Boolean,
+			default: false,
 		},
 		email: {
 			type: String,
@@ -55,14 +64,21 @@ export default {
 		},
 	},
 	async mounted() {
-		if (this.email !== '') {
-			try {
-				this.avatarUrl = await fetchAvatarUrlMemoized(this.email)
-			} catch {
-				logger.debug('Could not fetch avatar', { email: this.email })
+		if (this.avatar) {
+			this.avatarUrl = this.avatar.isExternal
+				? generateUrl('/apps/mail/api/avatars/image/{email}', {
+					email: this.email,
+				})
+				: this.avatar.url
+		} else if (this.fetchAvatar) {
+			if (this.email !== '') {
+				try {
+					this.avatarUrl = await fetchAvatarUrlMemoized(this.email)
+				} catch {
+					logger.debug('Could not fetch avatar', { email: this.email })
+				}
 			}
 		}
-
 		this.loading = false
 	},
 }
