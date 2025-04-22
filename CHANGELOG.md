@@ -1,3 +1,12 @@
+## [5.0.2](https://github.com/nextcloud/mail/compare/v5.0.1...v5.0.2) (2025-04-22)
+
+
+### Bug Fixes
+
+* **deps:** downgrade @nextcloud/vue v8.25 ([f89644e](https://github.com/nextcloud/mail/commit/f89644e0a71fe536cf5970d8b44f2bb5a04c8b37))
+
+
+
 ## [5.0.1](https://github.com/nextcloud/mail/compare/v5.0.0...v5.0.1) (2025-04-22)
 
 
