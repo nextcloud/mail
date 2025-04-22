@@ -1611,7 +1611,7 @@ class MessageMapper extends QBMapper {
 		$select = $qb->select('*')
 			->from($this->getTableName())
 			->where(
-				$qb->expr()->lte('sent_at', $qb->createNamedParameter($lastRun, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$qb->expr()->gt('sent_at', $qb->createNamedParameter($lastRun, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$qb->expr()->eq('structure_analyzed', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
 				$qb->expr()->in('mailbox_id', $qb->createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY),
 			)->orderBy('sent_at', 'ASC');
