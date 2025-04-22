@@ -1,3 +1,26 @@
+## [5.0.1](https://github.com/nextcloud/mail/compare/v5.0.0...v5.0.1) (2025-04-22)
+
+
+### Bug Fixes
+
+* **deps:** Apply npm audit fix ([1c5b988](https://github.com/nextcloud/mail/commit/1c5b9882c225f874d6c85254a7bd1fcd1f9b4039))
+* **dns:** Update public suffix list ([54007eb](https://github.com/nextcloud/mail/commit/54007ebf0b22ac20156a71264da3bdb31c7bb7a9))
+* **l10n:** Update translations from Transifex ([e3a3e23](https://github.com/nextcloud/mail/commit/e3a3e2384ab72a6d21edfc9d495201d6dc7a0794))
+* **l10n:** Update translations from Transifex ([6f01a79](https://github.com/nextcloud/mail/commit/6f01a7984f0b0dbc4f82c95559ea171647d57bc8))
+* **l10n:** Update translations from Transifex ([1ecab80](https://github.com/nextcloud/mail/commit/1ecab80f3b6bcd3eb397eaf3ff481e6d855e0b02))
+* **l10n:** Update translations from Transifex ([a116967](https://github.com/nextcloud/mail/commit/a116967e03dd4d97f647aaacd7fb43bb88b6cb00))
+* **l10n:** Update translations from Transifex ([bf95a4a](https://github.com/nextcloud/mail/commit/bf95a4a27a4aa7ef2e17e115d9ba20f105b16feb))
+* moving nested mailboxes ([0904e56](https://github.com/nextcloud/mail/commit/0904e56476eba49029125dd365c513e3bc011ac5))
+* patchAccountiMutation is not defined ([5beeb17](https://github.com/nextcloud/mail/commit/5beeb1741e517f8ceb2aded684b7a04b44ac86cc))
+* prevent dragging mailboxes ([6fe406e](https://github.com/nextcloud/mail/commit/6fe406e9b200d5a3702efaf46ca338a097ce3300))
+
+
+### Performance Improvements
+
+* **imap:** avoid double login during mailbox sync ([78a3361](https://github.com/nextcloud/mail/commit/78a33612c96ef62af3c53dfe48de01725eb89c60))
+
+
+
 # [5.0.0](https://github.com/nextcloud/mail/compare/v5.0.0-rc.1...v5.0.0) (2025-04-14)
 
 
