@@ -107,7 +107,7 @@ class SieveControllerTest extends TestCase {
 
 		$sieveClientFactory = $this->serviceMock->getParameter('sieveClientFactory');
 		$sieveClientFactory->expects($this->once())
-			->method('createClient')
+			->method('getClient')
 			->willThrowException(new Exception('Computer says no'));
 
 		$response = $this->sieveController->updateAccount(2, true, 'localhost', 4190, 'user', 'password', '');
