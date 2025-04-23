@@ -72,7 +72,7 @@
 						:bcc="composerData.bcc"
 						:subject="composerData.subject"
 						:attachments-data="composerData.attachments"
-						:body="composerData.body"
+						:body="composerDataBodyAsTextInstance"
 						:editor-body="convertEditorBody(composerData)"
 						:in-reply-to-message-id="composerData.inReplyToMessageId"
 						:reply-to="composerData.replyTo"
@@ -95,7 +95,7 @@
 						@update:bcc="patchComposerData({ bcc: $event })"
 						@update:subject="patchComposerData({ subject: $event })"
 						@update:attachments-data="patchComposerData({ attachments: $event })"
-						@update:editor-body="patchComposerData({ editorBody: $event })"
+						@update:editor-body="patchEditorBody"
 						@update:send-at="patchComposerData({ sendAt: $event / 1000 })"
 						@update:smime-sign="patchComposerData({ smimeSign: $event })"
 						@update:smime-encrypt="patchComposerData({ smimeSign: $event })"
@@ -124,7 +124,6 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 
 import logger from '../logger.js'
-import { toPlain, toHtml, plain } from '../util/text.js'
 import Composer from './Composer.vue'
 import { UNDO_DELAY } from '../store/constants.js'
 import { matchError } from '../errors/match.js'
@@ -141,6 +140,8 @@ import useOutboxStore from '../store/outboxStore.js'
 import { mapStores, mapState, mapActions } from 'pinia'
 import RecipientInfo from './RecipientInfo.vue'
 import useMainStore from '../store/mainStore.js'
+import { messageBodyToTextInstance } from '../util/message.js'
+import { toPlain } from '../util/text.js'
 
 export default {
 	name: 'NewMessageModal',
@@ -190,6 +191,9 @@ export default {
 		...mapStores(useOutboxStore, useMainStore),
 		...mapState(useMainStore, ['showMessageComposer']),
 		...mapActions(useMainStore, ['getPreference']),
+		composerDataBodyAsTextInstance() {
+			return messageBodyToTextInstance(this.composerData)
+		},
 		modalTitle() {
 			if (this.composerMessage.type === 'outbox') {
 				return t('mail', 'Edit message')
@@ -286,8 +290,6 @@ export default {
 		handleShow(element) {
 			this.additionalTrapElements.push(element)
 		},
-		toHtml,
-		plain,
 		/**
 		 * @param data Message data
 		 * @param {object=} opts Options
@@ -361,7 +363,6 @@ export default {
 				...data,
 				id: data.id,
 				accountId: data.accountId,
-				editorBody: data.body.value,
 				to: data.to,
 				cc: data.cc,
 				bcc: data.bcc,
@@ -371,11 +372,13 @@ export default {
 				sendAt: data.sendAt,
 				draftId: this.composerData?.draftId,
 			}
+
 			if (data.isHtml) {
-				dataForServer.bodyHtml = data.body.value
+				delete dataForServer.bodyPlain
 			} else {
-				dataForServer.bodyPlain = toPlain(data.body).value
+				delete dataForServer.bodyHtml
 			}
+
 			return dataForServer
 		},
 		onAttachmentUploading(done, data) {
@@ -412,7 +415,7 @@ export default {
 				}
 
 				if (!force && data.attachments.length === 0) {
-					const lines = toPlain(data.body).value.toLowerCase().split('\n')
+					const lines = toPlain(messageBodyToTextInstance(data)).value.toLowerCase().split('\n')
 					const wordAttachment = t('mail', 'attachment').toLowerCase()
 					const wordAttached = t('mail', 'attached').toLowerCase()
 					for (const line of lines) {
@@ -550,13 +553,18 @@ export default {
 			}
 		},
 		convertEditorBody(composerData) {
-			if (composerData.editorBody) {
-				return composerData.editorBody
+			if (composerData.isHtml) {
+				return composerData.bodyHtml
 			}
-			if (!composerData.body) {
-				return ''
+
+			return composerData.bodyPlain
+		},
+		patchEditorBody(editorBody) {
+			if (this.composerData.isHtml) {
+				this.patchComposerData({ bodyHtml: editorBody })
+			} else {
+				this.patchComposerData({ bodyPlain: editorBody })
 			}
-			return toHtml(composerData.body).value
 		},
 		updateCookedComposerData() {
 			if (!this.$refs.composer) {

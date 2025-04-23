@@ -89,7 +89,6 @@ import {
 	priorityImportantQuery,
 	priorityOtherQuery,
 } from '../../util/priorityInbox.js'
-import { html, plain, toPlain } from '../../util/text.js'
 import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { handleHttpAuthErrors } from '../../http/sessionExpiryHandler.js'
@@ -475,14 +474,16 @@ export default function mainStoreActions() {
 							FORBID_TAGS: ['style'],
 						})
 
-						data.body = html(resp.data)
+						data.isHtml = true
+						data.bodyHtml = resp.data
 						if (reply.suggestedReply) {
-							data.body.value = `<p>${reply.suggestedReply}<\\p>` + data.body.value
+							data.bodyHtml = `<p>${reply.suggestedReply}<\\p>` + data.bodyHtml
 						}
 					} else {
-						data.body = plain(original.body)
+						data.isHtml = false
+						data.bodyPlain = original.body
 						if (reply.suggestedReply) {
-							data.body.value = `${reply.suggestedReply}\n` + data.body.value
+							data.bodyPlain = `${reply.suggestedReply}\n` + data.bodyPlain
 						}
 					}
 
@@ -498,8 +499,9 @@ export default function mainStoreActions() {
 								to,
 								cc: [],
 								subject: buildReplySubject(reply.data.subject),
-								body: data.body,
-								originalBody: data.body,
+								isHtml: data.isHtml,
+								bodyHtml: data.bodyHtml,
+								bodyPlain: data.bodyPlain,
 								replyTo: reply.data,
 								smartReply: reply.smartReply,
 							},
@@ -518,8 +520,9 @@ export default function mainStoreActions() {
 								to: recipients.to,
 								cc: recipients.cc,
 								subject: buildReplySubject(reply.data.subject),
-								body: data.body,
-								originalBody: data.body,
+								isHtml: data.isHtml,
+								bodyHtml: data.bodyHtml,
+								bodyPlain: data.bodyPlain,
 								replyTo: reply.data,
 							},
 						})
@@ -532,8 +535,9 @@ export default function mainStoreActions() {
 								to: [],
 								cc: [],
 								subject: buildForwardSubject(reply.data.subject),
-								body: data.body,
-								originalBody: data.body,
+								isHtml: data.isHtml,
+								bodyHtml: data.bodyHtml,
+								bodyPlain: data.bodyPlain,
 								forwardFrom: reply.data,
 								attachments: original.attachments.map(attachment => ({
 									...attachment,
@@ -566,9 +570,11 @@ export default function mainStoreActions() {
 							FORBID_TAGS: ['style'],
 						})
 
-						data.body = html(resp.data)
+						data.isHtml = true
+						data.bodyHtml = resp.data
 					} else {
-						data.body = plain(message.body)
+						data.isHtml = false
+						data.bodyPlain = message.body
 					}
 
 					// TODO: implement attachments
@@ -581,14 +587,8 @@ export default function mainStoreActions() {
 				let originalSendAt
 				if (type === 'outbox' && data.id && data.sendAt) {
 					originalSendAt = data.sendAt
-					const message = { ...data }
-					if (data.isHtml) {
-						message.bodyHtml = data.body.value
-					} else {
-						message.bodyPlain = toPlain(data.body).value
-					}
 					const outboxStore = useOutboxStore()
-					await outboxStore.stopMessage({ message })
+					await outboxStore.stopMessage({ message: { ...data } })
 				}
 
 				this.startComposerSessionMutation({
@@ -611,18 +611,12 @@ export default function mainStoreActions() {
 			id,
 		} = {}) {
 			return handleHttpAuthErrors(async () => {
-
 				// Restore original sendAt timestamp when requested
 				const message = this.composerMessage
+				const messageData = { ...this.composerMessage.data }
 				if (restoreOriginalSendAt && message.type === 'outbox' && message.options?.originalSendAt) {
-					const body = message.data.body
-					if (message.data.isHtml) {
-						message.bodyHtml = body.value
-					} else {
-						message.bodyPlain = toPlain(body).value
-					}
-					message.sendAt = message.options.originalSendAt
-					updateDraft(message)
+					messageData.sendAt = message.options.originalSendAt
+					updateDraft(messageData)
 				}
 				if (moveToImap) {
 					await moveDraft(id)
