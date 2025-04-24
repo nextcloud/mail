@@ -183,13 +183,6 @@ export default defineStore('outbox', {
 						logger.info('Attempting to stop sending message ' + message.id)
 						const stopped = await this.stopMessage({ message })
 						logger.info('Message ' + message.id + ' stopped', { message: stopped })
-						// The composer expects rich body data and not just a string
-						const bodyData = {}
-						if (message.isHtml) {
-							bodyData.bodyHtml = html(message.body)
-						} else {
-							bodyData.bodyPlain = plain(message.body)
-						}
 						await this.mainStore.startComposerSession({
 							type: 'outbox',
 							data: { ...message },
