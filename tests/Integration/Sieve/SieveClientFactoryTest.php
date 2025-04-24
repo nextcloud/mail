@@ -35,20 +35,16 @@ class SieveClientFactoryTest extends TestCase {
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->config = $this->createMock(IConfig::class);
 
-		$this->config->method('getSystemValue')
-			->willReturnCallback(static function ($key, $default) {
-				if ($key === 'app.mail.sieve.timeout') {
-					return 5;
-				}
-				if ($key === 'debug') {
-					return false;
-				}
-				return null;
-			});
+		$this->config->method('getSystemValueInt')
+			->willReturnMap([
+				['app.mail.sieve.timeout', 5, 5],
+			]);
 
 		$this->config->method('getSystemValueBool')
-			->with('app.mail.verify-tls-peer', true)
-			->willReturn(false);
+			->willReturnMap([
+				['app.mail.verify-tls-peer', true, false],
+				['app.mail.debug', false, false],
+			]);
 
 		$this->factory = new SieveClientFactory($this->crypto, $this->config);
 	}
