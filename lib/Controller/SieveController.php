@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use Horde\ManageSieve\Exception as ManagesieveException;
-use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
@@ -161,7 +160,7 @@ class SieveController extends Controller {
 		}
 
 		try {
-			$this->sieveClientFactory->getClient(new Account($mailAccount));
+			$this->sieveClientFactory->createClient($sieveHost, $sievePort, $sieveUser, $sievePassword, $sieveSslMode);
 		} catch (ManagesieveException $e) {
 			throw new CouldNotConnectException($e, 'ManageSieve', $sieveHost, $sievePort);
 		}
