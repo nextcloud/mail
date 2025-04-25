@@ -93,6 +93,5 @@ export default {
 .mail-filter-row {
 	display: flex;
 	gap: 5px;
-	align-items: baseline;
 }
 </style>
