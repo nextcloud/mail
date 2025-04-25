@@ -3,23 +3,19 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcSelect ref="select"
-		:value="mailbox"
-		:options="mailboxes"
-		:required="true"
-		@input="onInput" />
+	<MailboxInlinePicker v-model="selectedMailbox" :account="account" />
 </template>
 <script>
 
-import NcSelect from '@nextcloud/vue/components/NcSelect'
-import { mailboxHasRights } from '../../util/acl.js'
 import { mapStores } from 'pinia'
 import useMainStore from '../../store/mainStore.js'
+import MailboxInlinePicker from '../MailboxInlinePicker.vue'
+import logger from '../../logger.js'
 
 export default {
 	name: 'ActionFileinto',
 	components: {
-		NcSelect,
+		MailboxInlinePicker,
 	},
 	props: {
 		action: {
@@ -31,18 +27,24 @@ export default {
 			required: true,
 		},
 	},
+	data() {
+		return {
+			currentSelectedMailboxId: null,
+		}
+	},
 	computed: {
 		...mapStores(useMainStore),
 		mailbox() {
 			return this.action.mailbox ?? undefined
 		},
-		mailboxes() {
-			const mailboxes = this.mainStore.getMailboxes(this.account.accountId)
-				.filter(mailbox => mailboxHasRights(mailbox, 'i'))
-
-			return mailboxes.map((mailbox) => {
-				return mailbox.displayName
-			})
+		selectedMailbox: {
+			get() {
+				return this.currentSelectedMailboxId
+			},
+			set(selectedMailboxId) {
+				logger.debug('Selected mailbox set to', selectedMailboxId)
+				this.currentSelectedMailboxId = selectedMailboxId
+			},
 		},
 	},
 	methods: {

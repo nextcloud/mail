@@ -92,6 +92,7 @@ export default {
 input.vue-treeselect__input {
 	margin: 0;
 	padding: 0;
+	border: 1px solid var(--color-border-maxcontrast) !important;
 }
 .vue-treeselect__menu {
 	background: var(--color-main-background);
