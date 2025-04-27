@@ -148,6 +148,7 @@ OC.L10N.register(
     "Print" : "Trüki",
     "Not found" : "Ei leidu",
     "Please wait for the message to load" : "Palun oota, kuni e-kirja laadimine on lõppenud",
+    "Unsubscribe" : "Lõpeta tellimus",
     "Mark as unread" : "Märgi mitteloetuks",
     "Mark as read" : "Märgi loetuks",
     "Please select languages to translate to and from" : "Palun vali keeled, mille vahel tahad tõlkida",
