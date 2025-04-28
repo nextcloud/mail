@@ -51,11 +51,11 @@
 						:aria-label-combobox="t('mail', 'Select')"
 						label="displayname"
 						:options="calendarsForPicker">
-						<template #option="{option}">
+						<template #option="option">
 							<CalendarPickerOption v-bind="option" />
 						</template>
-						<template #singleLabel="{option}">
-							<CalendarPickerOption :display-icon="true" v-bind="option" />
+						<template #selected-option="option">
+							<CalendarPickerOption v-bind="option" />
 						</template>
 					</NcSelect>
 				</div>
@@ -196,6 +196,7 @@ export default {
 		...mapState(useMainStore, {
 			currentUserPrincipalEmail: 'getCurrentUserPrincipalEmail',
 			clonedWriteableCalendars: 'getClonedWriteableCalendars',
+			currentUserPrincipal: 'getCurrentUserPrincipal',
 		}),
 
 		/**
@@ -367,7 +368,6 @@ export default {
 					},
 					writable: calendar.currentUserPrivilegeSet.indexOf('{DAV:}write') !== -1,
 					url: calendar.url,
-					dav: calendar,
 				}
 			}
 
@@ -375,6 +375,16 @@ export default {
 				.map(getCalendarData)
 				.filter(props => props.components.vevent && props.writable === true)
 		},
+
+		/**
+		 * Get the DAV object of the picked target calendar.
+		 * It can't be included in the option as it contains cyclic references.
+		 *
+		 * @return {object | undefined}
+		 */
+		targetCalendarDavObject() {
+			return this.clonedWriteableCalendars.find((cal) => cal.url === this.targetCalendar.url)
+		}
 	},
 	watch: {
 		attachedVEvent: {
@@ -386,7 +396,16 @@ export default {
 		calendarsForPicker: {
 			immediate: true,
 			handler(calendarsForPicker) {
-				if (calendarsForPicker.length > 0 && !this.targetCalendar) {
+				if (this.targetCalendar) {
+					return
+				}
+
+				const defaultCalendar = calendarsForPicker.find(
+					(cal) => cal.url === this.currentUserPrincipal.scheduleDefaultCalendarUrl
+				)
+				if (defaultCalendar) {
+					this.targetCalendar = defaultCalendar
+				} else if (calendarsForPicker.length > 0) {
 					this.targetCalendar = calendarsForPicker[0]
 				}
 			},
@@ -415,7 +434,7 @@ export default {
 				return
 			}
 
-			const calendar = this.targetCalendar?.dav
+			const calendar = this.targetCalendarDavObject
 			if (!calendar) {
 				return
 			}
