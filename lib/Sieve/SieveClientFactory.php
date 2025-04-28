@@ -15,18 +15,10 @@ use OCP\IConfig;
 use OCP\Security\ICrypto;
 
 class SieveClientFactory {
-	/** @var ICrypto */
-	private $crypto;
+	private ICrypto $crypto;
+	private IConfig $config;
+	private array $cache = [];
 
-	/** @var IConfig */
-	private $config;
-
-	private $cache = [];
-
-	/**
-	 * @param ICrypto $crypto
-	 * @param IConfig $config
-	 */
 	public function __construct(ICrypto $crypto, IConfig $config) {
 		$this->crypto = $crypto;
 		$this->config = $config;
@@ -41,43 +33,62 @@ class SieveClientFactory {
 			if (empty($user)) {
 				$user = $account->getMailAccount()->getInboundUser();
 			}
-
 			$password = $account->getMailAccount()->getSievePassword();
 			if (empty($password)) {
 				$password = $account->getMailAccount()->getInboundPassword();
 			}
 
-			$sslMode = $account->getMailAccount()->getSieveSslMode();
-			if (empty($sslMode)) {
-				$sslMode = true;
-			} elseif ($sslMode === 'none') {
-				$sslMode = false;
-			}
-
-			$params = [
-				'host' => $account->getMailAccount()->getSieveHost(),
-				'port' => $account->getMailAccount()->getSievePort(),
-				'user' => $user,
-				'password' => $this->crypto->decrypt($password),
-				'secure' => $sslMode,
-				'timeout' => $this->config->getSystemValueInt('app.mail.sieve.timeout', 5),
-				'context' => [
-					'ssl' => [
-						'verify_peer' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
-						'verify_peer_name' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
-					]
-				],
-			];
-
 			if ($account->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
-				$fn = 'mail-' . $account->getUserId() . '-' . $account->getId() . '-sieve.log';
-				$params['logger'] = new SieveLogger($this->config->getSystemValue('datadirectory') . '/' . $fn);
+				$logFile = $this->config->getSystemValue('datadirectory') . '/mail-' . $account->getUserId() . '-' . $account->getId() . '-sieve.log';
+			} else {
+				$logFile = null;
 			}
 
-			$this->cache[$account->getId()] = new ManageSieve($params);
+			$this->cache[$account->getId()] = $this->createClient(
+				$account->getMailAccount()->getSieveHost(),
+				$account->getMailAccount()->getSievePort(),
+				$user,
+				$this->crypto->decrypt($password),
+				$account->getMailAccount()->getSieveSslMode(),
+				$logFile,
+			);
 		}
 
 		return $this->cache[$account->getId()];
 	}
 
+	/**
+	 * @param string $sslMode possible values: '', 'none', 'ssl' or 'tls'
+	 * @param ?string $logFile absolute path for logFile or null to disable logging
+	 * @throws ManageSieve\Exception
+	 */
+	public function createClient(string $host, int $port, string $user, string $password, string $sslMode, ?string $logFile): ManageSieve {
+		if (empty($sslMode)) {
+			$sslMode = true;
+		} elseif ($sslMode === 'none') {
+			$sslMode = false;
+		}
+
+		$params = [
+			'host' => $host,
+			'port' => $port,
+			'user' => $user,
+			'password' => $password,
+			'secure' => $sslMode,
+			'timeout' => $this->config->getSystemValueInt('app.mail.sieve.timeout', 5),
+			'context' => [
+				'ssl' => [
+					'verify_peer' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
+					'verify_peer_name' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
+
+				]
+			],
+		];
+
+		if ($logFile !== null) {
+			$params['logger'] = new SieveLogger($logFile);
+		}
+
+		return new ManageSieve($params);
+	}
 }
