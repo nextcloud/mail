@@ -16,6 +16,7 @@ use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\IMAP\Threading\DatabaseMessage;
 use OCA\Mail\Service\Search\Flag;
 use OCA\Mail\Service\Search\FlagExpression;
+use OCA\Mail\Service\Search\GlobalSearchQuery;
 use OCA\Mail\Service\Search\SearchQuery;
 use OCA\Mail\Support\PerformanceLogger;
 use OCA\Mail\Support\PerformanceLoggerTask;
@@ -1076,6 +1077,16 @@ class MessageMapper extends QBMapper {
 			->from('mail_mailboxes', 'mb')
 			->join('mb', 'mail_accounts', 'a', $qb->expr()->eq('a.id', 'mb.account_id', IQueryBuilder::PARAM_INT))
 			->where($qb->expr()->eq('a.user_id', $qb->createNamedParameter($user->getUID())));
+
+		if ($query instanceof GlobalSearchQuery) {
+			$excludeMailboxIds = $query->getExcludeMailboxIds();
+			if (count($excludeMailboxIds) > 0) {
+				$selectMailboxIds->andWhere(
+					$qb->expr()->notIn('mb.id', $qb->createNamedParameter($excludeMailboxIds, IQueryBuilder::PARAM_INT_ARRAY))
+				);
+			}
+		}
+		
 		$select->where(
 			$qb->expr()->in('m.mailbox_id', $qb->createFunction($selectMailboxIds->getSQL()), IQueryBuilder::PARAM_INT_ARRAY)
 		);
