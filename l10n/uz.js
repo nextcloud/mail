@@ -1,6 +1,7 @@
 OC.L10N.register(
     "mail",
     {
+    "Work" : "Ish",
     "Personal" : "Personal",
     "Later" : "Keyinchalik",
     "Mail" : "Mail",
@@ -45,6 +46,7 @@ OC.L10N.register(
     "Other" : "Boshqa",
     "Translate" : "Tarjima",
     "Move" : "Move",
+    "Remove {email}" : " {email} ni o'chirish",
     "Quota" : "kvota",
     "Saving" : "Saving",
     "Rename" : "Nomini o'zgartirish",
