@@ -1,4 +1,5 @@
 { "translations": {
+    "Work" : "Ish",
     "Personal" : "Personal",
     "Later" : "Keyinchalik",
     "Mail" : "Mail",
@@ -43,6 +44,7 @@
     "Other" : "Boshqa",
     "Translate" : "Tarjima",
     "Move" : "Move",
+    "Remove {email}" : " {email} ni o'chirish",
     "Quota" : "kvota",
     "Saving" : "Saving",
     "Rename" : "Nomini o'zgartirish",
