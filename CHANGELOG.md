@@ -1,3 +1,26 @@
+## [5.0.3](https://github.com/nextcloud/mail/compare/v5.0.2...v5.0.3) (2025-04-29)
+
+
+### Bug Fixes
+
+* **composer:** handling of plain and html bodies ([754e123](https://github.com/nextcloud/mail/commit/754e1237268bb5c6562506bd4f234d8e7c7f691f))
+* define appName and app version ([600de87](https://github.com/nextcloud/mail/commit/600de870d9c7a65d2351616cba9a50882071f9bf))
+* **imip:** use default calendar if possible ([235eed4](https://github.com/nextcloud/mail/commit/235eed4ac1cc12faac081b1f443a0b514b68ff82))
+* **l10n:** Update translations from Transifex ([25ef6e0](https://github.com/nextcloud/mail/commit/25ef6e024a3281d9e50cc465236ac94cfdea242f))
+* **l10n:** Update translations from Transifex ([f07fff8](https://github.com/nextcloud/mail/commit/f07fff855042804ed95ab4eb253fc234a4ce25fd))
+* **l10n:** Update translations from Transifex ([b438846](https://github.com/nextcloud/mail/commit/b438846f4a3774e597ad4ef2b1ab8dc4a5961c22))
+* **l10n:** Update translations from Transifex ([1f67440](https://github.com/nextcloud/mail/commit/1f67440286ff076193d6b10273e67eef74a1d446))
+* **l10n:** Update translations from Transifex ([c763208](https://github.com/nextcloud/mail/commit/c7632086ff1ab937210cd0b0979214ffb8022660))
+* preview enhancement process job does not process messages ([3e58fc0](https://github.com/nextcloud/mail/commit/3e58fc0c6168d01d59c8ceff366b13969d95de63))
+* Undefined array key issue ([fbb629d](https://github.com/nextcloud/mail/commit/fbb629d7be66fdbea70fc9b6e5c9c7efdbb59b4b))
+
+
+### Performance Improvements
+
+* reuse a single imap client for the whole send chain ([37bf57c](https://github.com/nextcloud/mail/commit/37bf57cac54d16409f39cfdd064c80be63c9f4ac))
+
+
+
 ## [5.0.2](https://github.com/nextcloud/mail/compare/v5.0.1...v5.0.2) (2025-04-22)
 
 
