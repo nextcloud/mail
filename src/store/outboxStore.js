@@ -174,6 +174,8 @@ export default defineStore('outbox', {
 		 * @return {Promise<boolean>} Resolves to false if sending was skipped. Resolves after UNDO_DELAY has elapsed and the message dispatch was triggered. Warning: This might take a long time, depending on UNDO_DELAY.
 		 */
 		async sendMessageWithUndo({ id }) {
+			this.mainStore.hideMessageComposerMutation()
+
 			return new Promise((resolve, reject) => {
 				const message = this.getMessage(id)
 
