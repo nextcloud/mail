@@ -12,6 +12,7 @@ namespace OCA\Mail\SetupChecks;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\ProvisioningMapper;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCP\IL10N;
@@ -56,7 +57,15 @@ class MailConnectionPerformance implements ISetupCheck {
 		foreach ($accounts as $host => $collection) {
 			foreach ($collection as $accountId) {
 				$account = new Account($this->accountMapper->findById((int)$accountId));
-				$client = $this->clientFactory->getClient($account);
+				try {
+					$client = $this->clientFactory->getClient($account);
+				} catch (ServiceException $e) {
+					$this->logger->warning('Error occurred while getting IMAP client for setup check: ' . $e->getMessage(), [
+						'exception' => $e,
+						'accountId' => $account->getId()
+					]);
+					continue;
+				}
 				try {
 					$tStart = $this->microtime->getNumeric();
 					// time login
