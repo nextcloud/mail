@@ -386,17 +386,23 @@ export default {
 
 				break
 			case 'unseen':
-				if (this.hasSeenAcl()) {
+				logger.debug('marking as seen/unseen via shortcut')
+
+				if (!this.hasSeenAcl()) {
+					showWarning(t('mail', 'Your IMAP server does not support storing the seen/unseen state.'))
 					return
 				}
-				logger.debug('marking message as seen/unseen via shortkey', { env })
-				this.mainStore.toggleEnvelopeSeen({ envelope: env }).catch((error) =>
+
+				logger.debug('marking as seen/unseen', { env })
+				try {
+					await this.mainStore.toggleEnvelopeSeen({ envelope: env })
+				} catch (error) {
 					logger.error('could not mark envelope as seen/unseen via shortkey', {
 						env,
 						error,
-					}),
-				)
-
+					})
+					showError(t('mail', 'Could not mark message as seen/unseen'))
+				}
 				break
 			default:
 				logger.warn('shortcut ' + e.srcKey + ' is unknown. ignoring.')
