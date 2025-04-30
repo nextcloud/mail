@@ -65,6 +65,7 @@ OC.L10N.register(
     "Operator" : "Operator",
     "Actions" : "Actions",
     "Reset" : "Qayta tiklash",
+    "Client ID" : "Mijoz identifikatori",
     "Port" : "Port",
     "Account connected" : "Akkaunt ulangan",
     "All" : "All",
