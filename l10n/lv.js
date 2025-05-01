@@ -9,7 +9,7 @@ OC.L10N.register(
     "Later" : "Vēlāk",
     "Mail" : "E-pasts",
     "Mails" : "E-pasta sūtījumi",
-    "💌 A mail app for Nextcloud" : "Nextcloud E-pasta lietotne",
+    "💌 A mail app for Nextcloud" : "Nextcloud e-pasta lietotne",
     "Connecting" : "Savienojuma izveide",
     "Save" : "Saglabāt",
     "Connect" : "Savienoties",
