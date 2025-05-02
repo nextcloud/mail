@@ -47,9 +47,9 @@ class AddressList implements Countable, JsonSerializable {
 	 * @param Horde_Mail_Rfc822_List $hordeList
 	 * @return AddressList
 	 */
-	public static function fromHorde(Horde_Mail_Rfc822_List $hordeList) {
-		$addresses = array_map(static function (Horde_Mail_Rfc822_Address $addr) {
-			return Address::fromHorde($addr);
+	public static function fromHorde(Horde_Mail_Rfc822_List $hordeList, bool $normalize = false): self {
+		$addresses = array_map(static function (Horde_Mail_Rfc822_Address $addr) use ($normalize) {
+			return Address::fromHorde($addr, $normalize);
 		}, array_filter(iterator_to_array($hordeList), static function (Horde_Mail_Rfc822_Object $obj) {
 			// TODO: how to handle non-addresses? This doesn't seem right …
 			return $obj instanceof Horde_Mail_Rfc822_Address;
