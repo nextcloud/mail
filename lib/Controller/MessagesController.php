@@ -124,8 +124,7 @@ class MessagesController extends Controller {
 	 * @param int $cursor
 	 * @param string $filter
 	 * @param int|null $limit
-	 * @param string $sort		returns messages in requested order ('newest' or 'oldest')
-	 * @param string $view		returns messages in requested view ('singleton' or 'threaded')
+	 * @param string $view returns messages in requested view ('singleton' or 'threaded')
 	 *
 	 * @return JSONResponse
 	 *
@@ -137,7 +136,6 @@ class MessagesController extends Controller {
 		?int $cursor = null,
 		?string $filter = null,
 		?int $limit = null,
-		?string $sort = null,
 		?string $view = null): JSONResponse {
 		try {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $mailboxId);
@@ -147,14 +145,10 @@ class MessagesController extends Controller {
 		}
 
 		$this->logger->debug("loading messages of mailbox <$mailboxId>");
-		if ($sort === null) {
-			$sort = $this->preferences->getPreference($this->currentUserId, 'sort-order', 'newest') === 'newest' ? IMailSearch::ORDER_NEWEST_FIRST: IMailSearch::ORDER_OLDEST_FIRST;
-		} else {
-			$sort = $sort === 'newest' ? IMailSearch::ORDER_NEWEST_FIRST: IMailSearch::ORDER_OLDEST_FIRST;
-		}
-		if ($view !== null) {
-			$view = $view === 'singleton' ? IMailSearch::VIEW_SINGLETON : IMailSearch::VIEW_THREADED;
-		}
+		$sort = $this->preferences->getPreference($this->currentUserId, 'sort-order', 'newest') === 'newest' ? IMailSearch::ORDER_NEWEST_FIRST: IMailSearch::ORDER_OLDEST_FIRST;
+		
+		$view = $view === 'singleton' ? IMailSearch::VIEW_SINGLETON : IMailSearch::VIEW_THREADED;
+
 		$messages = $this->mailSearch->findMessages(
 			$account,
 			$mailbox,
