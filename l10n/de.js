@@ -332,6 +332,8 @@ OC.L10N.register(
     "Itinerary for {type} is not supported yet" : "Reiseroute für {type} wird noch nicht unterstützt",
     "To archive a message please configure an archive mailbox in account settings" : "Um eine Nachricht zu archivieren, bitte ein Archivpostfach in den Kontoeinstellungen einrichten",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Du hast nicht die Berechtigung, diese Nachricht in den Archivordner zu verschieben und/oder diese Nachricht aus dem aktuellen Ordner zu löschen",
+    "Your IMAP server does not support storing the seen/unseen state." : "Dein  IMAP-Server unterstützt das Speichern des Status „Gesehen/Ungesehen“ nicht.",
+    "Could not mark message as seen/unseen" : "Nachricht konnte nicht als gesehen/ungesehen markiert werden",
     "Could not open mailbox" : "E-Mail-Postfach konnte nicht geöffnet werden",
     "Loading messages …" : "Lade Nachrichten …",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Deine Nachrichten werden indiziert. Dies kann bei größeren E-Mail-Postfächern etwas länger dauern.",

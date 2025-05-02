@@ -329,6 +329,8 @@
     "Itinerary for {type} is not supported yet" : "Itinerář {type} zatím ještě není podporován",
     "To archive a message please configure an archive mailbox in account settings" : "Pokud chcete zprávu archivovat, nastavte si v účtu schránku pro archiv",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Nejste oprávněni přesunout tuto zprávu do archivní složky a/nebo tuto zprávu smazat ze stávající složky",
+    "Your IMAP server does not support storing the seen/unseen state." : "Vámi využívaný IMAP server nepodporuje ukládání stavu zobrazeno/nezobrazeno.",
+    "Could not mark message as seen/unseen" : "Nebylo možné označit zprávu jako zobrazenou/nezobrazenou",
     "Could not open mailbox" : "Nedaří se otevřít e-mailovou schránku",
     "Loading messages …" : "Načítání zpráv…",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Vytváření rejstříku vašich zpráv. V případě rozsáhlejších e-mailových schránek toto může trvat poněkud déle.",
