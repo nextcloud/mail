@@ -330,6 +330,8 @@
     "Itinerary for {type} is not supported yet" : "Итеринер за {type} још није подржан",
     "To archive a message please configure an archive mailbox in account settings" : "Да бисте архивирали поруке, молимо вас да конфигуришете сандуче за архивирање у подешавањима налога",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Није вам дозвољено да преместите поруке у фолдер архиве и/или да обришете ову поруку из текућег фолдера",
+    "Your IMAP server does not support storing the seen/unseen state." : "Ваш IMAP сервер не подржава чување стања виђено/невиђено.",
+    "Could not mark message as seen/unseen" : "Није успело маркирање поруке као виђене/невиђене",
     "Could not open mailbox" : "Не могу да отворим сандуче",
     "Loading messages …" : "Учитавање порука ...",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Индексирам Ваше поруке. Ово може потрајати на већим сандучетима.",

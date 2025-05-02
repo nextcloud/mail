@@ -332,6 +332,8 @@ OC.L10N.register(
     "Itinerary for {type} is not supported yet" : "尚不支持 {type} 类型的行程",
     "To archive a message please configure an archive mailbox in account settings" : "要归档邮件，请在账号设置中配置归档邮箱",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "不允许您将此邮件移动到归档文件夹和/或从当前文件夹中删除此邮件",
+    "Your IMAP server does not support storing the seen/unseen state." : "您的 IMAP 服务器不支持存储已读/未读状态。",
+    "Could not mark message as seen/unseen" : "无法将邮件标记为已读/未读",
     "Could not open mailbox" : "无法打开邮箱",
     "Loading messages …" : "正在加载邮件…",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "正在为您的邮件建立索引。对于较大的邮箱，这可能需要更久。",
