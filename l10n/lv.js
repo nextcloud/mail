@@ -62,6 +62,8 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Izvēlēties datni, ko pievienot kā pielikumu",
     "Choose a file to share as a link" : "Jāizvēlas datne, ko kopīgot kā saiti",
     "Confirm" : "Apstiprināt",
+    "Later today – {timeLocale}" : "Vēlāk šodien – {timeLocale}",
+    "Set reminder for later today" : "Iestatīt atgādinājumu vēlākam šodien",
     "Favorite" : "Izlasē",
     "Read" : "Lasīt",
     "Edit tags" : "Labot birkas",
