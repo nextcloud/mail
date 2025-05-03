@@ -193,6 +193,7 @@ OC.L10N.register(
     "Show more" : "Näita rohkem",
     "Clear" : "Tühjenda",
     "Close" : "Sulge",
+    "Body" : "Sisu",
     "Date" : "Kuupäev",
     "Tags" : "Sildid",
     "Select tags" : "Vali sildid",
