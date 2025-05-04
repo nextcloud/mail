@@ -330,6 +330,8 @@
     "Itinerary for {type} is not supported yet" : "Ní thacaítear leis an gclár taistil do {type} fós",
     "To archive a message please configure an archive mailbox in account settings" : "Chun teachtaireacht a chur sa chartlann, cumraigh bosca poist cartlainne i socruithe cuntais",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Níl cead agat an teachtaireacht seo a bhogadh go dtí an fillteán cartlainne agus/nó an teachtaireacht seo a scriosadh as an bhfillteán reatha",
+    "Your IMAP server does not support storing the seen/unseen state." : "Ní thacaíonn do fhreastalaí IMAP leis an staid feicthe/neamhfheicthe a stóráil.",
+    "Could not mark message as seen/unseen" : "Níorbh fhéidir an teachtaireacht a mharcáil mar fheicthe/neamhfheicthe",
     "Could not open mailbox" : "Níorbh fhéidir an bosca ríomhphoist a oscailt",
     "Loading messages …" : "Teachtaireachtaí á lódáil…",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Innéacsú do theachtaireachtaí. Is féidir go dtógfaidh sé seo beagán níos faide do bhoscaí poist níos mó.",
