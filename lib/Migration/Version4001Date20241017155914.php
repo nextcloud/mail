@@ -46,11 +46,23 @@ class Version4001Date20241017155914 extends SimpleMigrationStep {
 			'notnull' => true,
 			'length' => 64,
 		]);
-		$table->addColumn('text_block_id', Types::STRING, [
+		$table->addColumn('text_block_id', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 64,
+			'length' => 4,
 		]);
 		$table->setPrimaryKey(['id']);
+		$table->addIndex(['text_block_id'], 'mail_blocks_shares_tbid_idx');
+		$table->addIndex(['text_block_id', 'share_with'], 'mail_blocks_shares_tbid_sw_idx');
+		if ($schema->hasTable('mail_text_blocks')) {
+			$table->addForeignKeyConstraint(
+				$schema->getTable('mail_text_blocks'),
+				['text_block_id'],
+				['id'],
+				[
+					'onDelete' => 'CASCADE',
+				]
+			);
+		}
 		return $schema;
 	}
 }

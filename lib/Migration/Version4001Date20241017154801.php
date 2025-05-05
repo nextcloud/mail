@@ -53,6 +53,8 @@ class Version4001Date20241017154801 extends SimpleMigrationStep {
 			'notnull' => true,
 		]);
 		$table->setPrimaryKey(['id']);
+		$table->addIndex(['owner'], 'mail_text_blocks_owner_idx');
+		$table->addIndex(['id', 'owner'], 'mail_text_blocks_id_owner_idx');
 		
 		return $schema;
 	}
