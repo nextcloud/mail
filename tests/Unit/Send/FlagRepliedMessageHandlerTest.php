@@ -16,7 +16,6 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Send\FlagRepliedMessageHandler;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -24,7 +23,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class FlagRepliedMessageHandlerTest extends TestCase {
-	private IMAPClientFactory|MockObject $imapClientFactory;
 	private MailboxMapper|MockObject $mailboxMapper;
 	private LoggerInterface|MockObject $loggerInterface;
 	private MockObject|MessageMapper $messageMapper;
@@ -33,13 +31,11 @@ class FlagRepliedMessageHandlerTest extends TestCase {
 
 	protected function setUp(): void {
 
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->loggerInterface = $this->createMock(LoggerInterface::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->dbMessageMapper = $this->createMock(DbMessageMapper::class);
 		$this->handler = new FlagRepliedMessageHandler(
-			$this->imapClientFactory,
 			$this->mailboxMapper,
 			$this->loggerInterface,
 			$this->messageMapper,
@@ -67,15 +63,12 @@ class FlagRepliedMessageHandlerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->loggerInterface->expects(self::never())
 			->method('warning');
-		$this->imapClientFactory->expects(self::once())
-			->method('getClient')
-			->willReturn($client);
 		$this->messageMapper->expects(self::once())
 			->method('addFlag');
 		$this->dbMessageMapper->expects(self::once())
 			->method('update');
 
-		$this->handler->process($account, $localMessage);
+		$this->handler->process($account, $localMessage, $client);
 	}
 
 	public function testProcessError(): void {
@@ -96,9 +89,6 @@ class FlagRepliedMessageHandlerTest extends TestCase {
 		$this->mailboxMapper->expects(self::once())
 			->method('findById')
 			->willReturn($mailbox);
-		$this->imapClientFactory->expects(self::once())
-			->method('getClient')
-			->willReturn($client);
 		$this->messageMapper->expects(self::once())
 			->method('addFlag')
 			->willThrowException(new DoesNotExistException(''));
@@ -107,7 +97,7 @@ class FlagRepliedMessageHandlerTest extends TestCase {
 		$this->dbMessageMapper->expects(self::never())
 			->method('update');
 
-		$this->handler->process($account, $localMessage);
+		$this->handler->process($account, $localMessage, $client);
 	}
 
 	public function testProcessReadOnly(): void {
@@ -130,15 +120,12 @@ class FlagRepliedMessageHandlerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->loggerInterface->expects(self::never())
 			->method('warning');
-		$this->imapClientFactory->expects(self::once())
-			->method('getClient')
-			->willReturn($client);
 		$this->messageMapper->expects(self::never())
 			->method('addFlag');
 		$this->dbMessageMapper->expects(self::never())
 			->method('update');
 
-		$this->handler->process($account, $localMessage);
+		$this->handler->process($account, $localMessage, $client);
 	}
 
 	public function testProcessNotFound(): void {
@@ -146,6 +133,7 @@ class FlagRepliedMessageHandlerTest extends TestCase {
 		$localMessage = new LocalMessage();
 		$localMessage->setInReplyToMessageId('ab123');
 		$localMessage->setStatus(LocalMessage::STATUS_PROCESSED);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
 		$this->dbMessageMapper->expects(self::once())
 			->method('findByMessageId')
@@ -154,20 +142,19 @@ class FlagRepliedMessageHandlerTest extends TestCase {
 			->method('findById');
 		$this->loggerInterface->expects(self::never())
 			->method('warning');
-		$this->imapClientFactory->expects(self::never())
-			->method('getClient');
 		$this->messageMapper->expects(self::never())
 			->method('addFlag');
 		$this->dbMessageMapper->expects(self::never())
 			->method('update');
 
-		$this->handler->process($account, $localMessage);
+		$this->handler->process($account, $localMessage, $client);
 	}
 
 	public function testProcessNoRepliedMessageId(): void {
 		$account = new Account(new MailAccount());
 		$localMessage = new LocalMessage();
 		$localMessage->setStatus(LocalMessage::STATUS_PROCESSED);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
 		$this->dbMessageMapper->expects(self::never())
 			->method('findByMessageId');
@@ -175,13 +162,11 @@ class FlagRepliedMessageHandlerTest extends TestCase {
 			->method('findById');
 		$this->loggerInterface->expects(self::never())
 			->method('warning');
-		$this->imapClientFactory->expects(self::never())
-			->method('getClient');
 		$this->messageMapper->expects(self::never())
 			->method('addFlag');
 		$this->dbMessageMapper->expects(self::never())
 			->method('update');
 
-		$this->handler->process($account, $localMessage);
+		$this->handler->process($account, $localMessage, $client);
 	}
 }

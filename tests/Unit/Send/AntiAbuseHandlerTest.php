@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Unit\Send;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
@@ -45,6 +46,7 @@ class AntiAbuseHandlerTest extends TestCase {
 		$account = new Account($mailAccount);
 		$localMessage = new LocalMessage();
 		$localMessage->setStatus(LocalMessage::STATUS_RAW);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
 		$this->userManager->expects(self::once())
 			->method('get')
@@ -56,7 +58,7 @@ class AntiAbuseHandlerTest extends TestCase {
 		$this->sendHandler->expects(self::once())
 			->method('process');
 
-		$this->handler->process($account, $localMessage);
+		$this->handler->process($account, $localMessage, $client);
 	}
 
 	public function testProcessNoUser(): void {
@@ -66,6 +68,7 @@ class AntiAbuseHandlerTest extends TestCase {
 		$account = new Account($mailAccount);
 		$localMessage = new LocalMessage();
 		$localMessage->setStatus(LocalMessage::STATUS_RAW);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
 		$this->userManager->expects(self::once())
 			->method('get')
@@ -77,7 +80,7 @@ class AntiAbuseHandlerTest extends TestCase {
 		$this->sendHandler->expects(self::never())
 			->method('process');
 
-		$this->handler->process($account, $localMessage);
+		$this->handler->process($account, $localMessage, $client);
 	}
 
 	public function testProcessAlreadyProcessed(): void {
@@ -87,6 +90,7 @@ class AntiAbuseHandlerTest extends TestCase {
 		$account = new Account($mailAccount);
 		$localMessage = new LocalMessage();
 		$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
 		$this->userManager->expects(self::never())
 			->method('get');
@@ -97,6 +101,6 @@ class AntiAbuseHandlerTest extends TestCase {
 		$this->sendHandler->expects(self::once())
 			->method('process');
 
-		$this->handler->process($account, $localMessage);
+		$this->handler->process($account, $localMessage, $client);
 	}
 }

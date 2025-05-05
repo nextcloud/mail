@@ -228,7 +228,6 @@ OC.L10N.register(
     "Decline" : "Kieltäydy",
     "Tentatively accept" : "Alustavasti hyväksytty",
     "More options" : "Lisää valintoja",
-    "This event is in the past." : "Tämä tapahtuma on menneisyydessä.",
     "individual" : "yksittäinen",
     "domain" : "domaini",
     "Remove" : "Poista",
@@ -499,6 +498,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klikkaa jos sinua ei uudelleenohjata automaattisesti muutamaan sekuntiin.",
     "Redirect" : "Uudelleenohjaus",
     "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
-    "Continue to %s" : "Jatka sivulle %s"
+    "Continue to %s" : "Jatka sivulle %s",
+    "This event is in the past." : "Tämä tapahtuma on menneisyydessä."
 },
 "nplurals=2; plural=(n != 1);");

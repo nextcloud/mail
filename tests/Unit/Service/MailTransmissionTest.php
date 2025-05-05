@@ -32,6 +32,7 @@ use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\TransmissionService;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -133,32 +134,27 @@ class MailTransmissionTest extends TestCase {
 	}
 
 	public function testSendMessageFromAlias() {
+		// Arrange
 		$mailAccount = new MailAccount();
-		$mailAccount->setUserId('testuser');
+		$mailAccount->setName('Bob');
+		$mailAccount->setEmail('bob@example.org');
+		$mailAccount->setUserId('bob');
 		$mailAccount->setSentMailboxId(123);
-		/** @var Account|MockObject $account */
-		$account = $this->createMock(Account::class);
-		$account->method('getMailAccount')->willReturn($mailAccount);
-		$account->method('getName')->willReturn('Test User');
-		$account->method('getEMailAddress')->willReturn('test@user');
-		$account->method('getUserId')->willReturn('testuser');
+		$account = new Account($mailAccount);
 		$alias = new Alias();
 		$alias->setId(1);
-		$alias->setAlias('a@d.com');
+		$alias->setName('Info');
+		$alias->setAlias('info@example.org');
 		$localMessage = new LocalMessage();
 		$localMessage->setSubject('Test');
 		$localMessage->setBodyPlain('Test');
 		$localMessage->setHtml(false);
 		$localMessage->setAliasId(1);
+		$localMessage->setRequestMdn(true);
 		$transport = $this->createMock(Horde_Mail_Transport::class);
-
 		$this->smtpClientFactory->expects($this->once())
 			->method('create')
-			->with($account)
 			->willReturn($transport);
-		$account->expects($this->once())
-			->method('getName')
-			->willReturn('User');
 		$this->aliasService->expects(self::once())
 			->method('find')
 			->willReturn($alias);
@@ -169,8 +165,90 @@ class MailTransmissionTest extends TestCase {
 			->method('getEncryptMimePart')
 			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
 
+		// Act
 		$this->transmission->sendMessage($account, $localMessage);
+
+		// Assert
 		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
+		$this->assertStringContainsString('From: Info <info@example.org', $localMessage->getRaw());
+		$this->assertStringContainsString('Disposition-Notification-To: Info <info@example.org>', $localMessage->getRaw());
+	}
+
+	public function testSendMessageAliasFallbackName() {
+		// Arrange
+		$mailAccount = new MailAccount();
+		$mailAccount->setName('Bob');
+		$mailAccount->setEmail('bob@example.org');
+		$mailAccount->setUserId('bob');
+		$mailAccount->setSentMailboxId(123);
+		$account = new Account($mailAccount);
+		$alias = new Alias();
+		$alias->setId(1);
+		$alias->setAlias('info@example.org');
+		$localMessage = new LocalMessage();
+		$localMessage->setSubject('Test');
+		$localMessage->setBodyPlain('Test');
+		$localMessage->setHtml(false);
+		$localMessage->setAliasId(1);
+		$localMessage->setRequestMdn(true);
+		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$this->smtpClientFactory->expects($this->once())
+			->method('create')
+			->willReturn($transport);
+		$this->aliasService->expects(self::once())
+			->method('find')
+			->willReturn($alias);
+		$this->transmissionService->expects(self::once())
+			->method('getSignMimePart')
+			->willReturnCallback(static fn ($localMessage, $account, $mimePart) => $mimePart);
+		$this->transmissionService->expects(self::once())
+			->method('getEncryptMimePart')
+			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
+
+		// Act
+		$this->transmission->sendMessage($account, $localMessage);
+
+		// Assert
+		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
+		$this->assertStringContainsString('From: Bob <info@example.org', $localMessage->getRaw());
+		$this->assertStringContainsString('Disposition-Notification-To: Bob <info@example.org>', $localMessage->getRaw());
+	}
+
+	public function testSendMessageAliasDoesNotExist() {
+		// Arrange
+		$mailAccount = new MailAccount();
+		$mailAccount->setName('Bob');
+		$mailAccount->setEmail('bob@example.org');
+		$mailAccount->setUserId('bob');
+		$mailAccount->setSentMailboxId(123);
+		$account = new Account($mailAccount);
+		$localMessage = new LocalMessage();
+		$localMessage->setSubject('Test');
+		$localMessage->setBodyPlain('Test');
+		$localMessage->setHtml(false);
+		$localMessage->setAliasId(1);
+		$localMessage->setRequestMdn(true);
+		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$this->smtpClientFactory->expects($this->once())
+			->method('create')
+			->willReturn($transport);
+		$this->aliasService->expects(self::once())
+			->method('find')
+			->willThrowException(new DoesNotExistException('Alias does not exist'));
+		$this->transmissionService->expects(self::once())
+			->method('getSignMimePart')
+			->willReturnCallback(static fn ($localMessage, $account, $mimePart) => $mimePart);
+		$this->transmissionService->expects(self::once())
+			->method('getEncryptMimePart')
+			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
+
+		// Act
+		$this->transmission->sendMessage($account, $localMessage);
+
+		// Assert
+		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
+		$this->assertStringContainsString('From: Bob <bob@example.org', $localMessage->getRaw());
+		$this->assertStringContainsString('Disposition-Notification-To: Bob <bob@example.org>', $localMessage->getRaw());
 	}
 
 	public function testSendNewMessageWithMessageAsAttachment() {

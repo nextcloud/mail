@@ -20,9 +20,9 @@
 			:mailbox="mailbox"
 			:search-query="searchQuery"
 			:envelopes="envelopesToShow"
-			:refreshing="refreshing"
 			:loading-more="loadingMore"
 			:load-more-button="showLoadMore"
+			:skip-transition="skipListTransition"
 			@delete="onDelete"
 			@load-more="loadMore" />
 	</div>
@@ -102,6 +102,8 @@ export default {
 			loadMailboxInterval: undefined,
 			expanded: false,
 			endReached: false,
+			syncedMailboxes: new Set(),
+			skipListTransition: false,
 		}
 	},
 	computed: {
@@ -179,7 +181,17 @@ export default {
 		},
 		async loadEnvelopes() {
 			logger.debug(`Fetching envelopes for mailbox ${this.mailbox.databaseId} (${this.searchQuery})`, this.mailbox)
-			this.loadingEnvelopes = true
+
+			if (!this.syncedMailboxes.has(this.mailbox.databaseId)) {
+				// Only trigger skeleton if we didn't sync envelopes yet
+				this.loadingEnvelopes = true
+			} else {
+				this.skipListTransition = true
+				this.$nextTick(() => {
+					this.skipListTransition = false
+				})
+			}
+
 			this.loadingCacheInitialization = false
 			this.error = false
 
@@ -192,6 +204,7 @@ export default {
 
 				logger.debug(envelopes.length + ' envelopes fetched', { envelopes })
 
+				this.syncedMailboxes.add(this.mailbox.databaseId)
 				this.loadingEnvelopes = false
 			} catch (error) {
 				await matchError(error, {
@@ -373,17 +386,23 @@ export default {
 
 				break
 			case 'unseen':
-				if (this.hasSeenAcl()) {
+				logger.debug('marking as seen/unseen via shortcut')
+
+				if (!this.hasSeenAcl()) {
+					showWarning(t('mail', 'Your IMAP server does not support storing the seen/unseen state.'))
 					return
 				}
-				logger.debug('marking message as seen/unseen via shortkey', { env })
-				this.mainStore.toggleEnvelopeSeen({ envelope: env }).catch((error) =>
+
+				logger.debug('marking as seen/unseen', { env })
+				try {
+					await this.mainStore.toggleEnvelopeSeen({ envelope: env })
+				} catch (error) {
 					logger.error('could not mark envelope as seen/unseen via shortkey', {
 						env,
 						error,
-					}),
-				)
-
+					})
+					showError(t('mail', 'Could not mark message as seen/unseen'))
+				}
 				break
 			default:
 				logger.warn('shortcut ' + e.srcKey + ' is unknown. ignoring.')

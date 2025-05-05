@@ -16,6 +16,7 @@ use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\IMAP\Threading\DatabaseMessage;
 use OCA\Mail\Service\Search\Flag;
 use OCA\Mail\Service\Search\FlagExpression;
+use OCA\Mail\Service\Search\GlobalSearchQuery;
 use OCA\Mail\Service\Search\SearchQuery;
 use OCA\Mail\Support\PerformanceLogger;
 use OCA\Mail\Support\PerformanceLoggerTask;
@@ -1076,6 +1077,16 @@ class MessageMapper extends QBMapper {
 			->from('mail_mailboxes', 'mb')
 			->join('mb', 'mail_accounts', 'a', $qb->expr()->eq('a.id', 'mb.account_id', IQueryBuilder::PARAM_INT))
 			->where($qb->expr()->eq('a.user_id', $qb->createNamedParameter($user->getUID())));
+
+		if ($query instanceof GlobalSearchQuery) {
+			$excludeMailboxIds = $query->getExcludeMailboxIds();
+			if (count($excludeMailboxIds) > 0) {
+				$selectMailboxIds->andWhere(
+					$qb->expr()->notIn('mb.id', $qb->createNamedParameter($excludeMailboxIds, IQueryBuilder::PARAM_INT_ARRAY))
+				);
+			}
+		}
+		
 		$select->where(
 			$qb->expr()->in('m.mailbox_id', $qb->createFunction($selectMailboxIds->getSQL()), IQueryBuilder::PARAM_INT_ARRAY)
 		);
@@ -1479,9 +1490,7 @@ class MessageMapper extends QBMapper {
 		$select = $qb
 			->select('m.*')
 			->from($this->getTableName(), 'm')
-			->join('m', 'mail_recipients', 'r', $qb->expr()->eq('m.id', 'r.message_id', IQueryBuilder::PARAM_INT))
 			->where(
-				$qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$qb->expr()->in('m.mailbox_id', $qb->createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
 			)
 			->orderBy('sent_at', 'desc')
@@ -1613,7 +1622,7 @@ class MessageMapper extends QBMapper {
 		$select = $qb->select('*')
 			->from($this->getTableName())
 			->where(
-				$qb->expr()->lte('sent_at', $qb->createNamedParameter($lastRun, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$qb->expr()->gt('sent_at', $qb->createNamedParameter($lastRun, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$qb->expr()->eq('structure_analyzed', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
 				$qb->expr()->in('mailbox_id', $qb->createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY),
 			)->orderBy('sent_at', 'ASC');

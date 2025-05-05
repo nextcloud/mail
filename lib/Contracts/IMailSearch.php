@@ -14,6 +14,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Service\Search\SearchQuery;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IUser;
 
@@ -50,14 +51,12 @@ interface IMailSearch {
 		?int $limit): array;
 
 	/**
-	 * @param IUser $user
-	 * @param string|null $filter
-	 * @param int|null $cursor
+	 * Run a search through all mailboxes of a user.
 	 *
 	 * @return Message[]
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function findMessagesGlobally(IUser $user, ?string $filter, ?int $cursor, ?int $limit): array;
+	public function findMessagesGlobally(IUser $user, SearchQuery $query, ?int $limit): array;
 }

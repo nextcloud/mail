@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Unit\Send;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
@@ -40,6 +41,7 @@ class SendHandlerTest extends TestCase {
 		$localMessage = new LocalMessage();
 		$localMessage->setId(100);
 		$localMessage->setStatus(LocalMessage::STATUS_RAW);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
 		$this->transmission->expects(self::once())
 			->method('sendMessage')
@@ -47,7 +49,7 @@ class SendHandlerTest extends TestCase {
 		$this->copySentMessageHandler->expects(self::once())
 			->method('process');
 
-		$this->handler->process($account, $localMessage);
+		$this->handler->process($account, $localMessage, $client);
 	}
 
 	public function testProcessAlreadyProcessed(): void {
@@ -58,13 +60,14 @@ class SendHandlerTest extends TestCase {
 		$localMessage = new LocalMessage();
 		$localMessage->setId(100);
 		$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
 		$this->transmission->expects(self::never())
 			->method('sendMessage');
 		$this->copySentMessageHandler->expects(self::once())
 			->method('process');
 
-		$this->handler->process($account, $localMessage);
+		$this->handler->process($account, $localMessage, $client);
 	}
 
 	public function testProcessError(): void {
@@ -79,11 +82,13 @@ class SendHandlerTest extends TestCase {
 		$mock->expects(self::any())
 			->method('getStatus')
 			->willReturn(LocalMessage::STATUS_SMPT_SEND_FAIL);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+
 		$this->transmission->expects(self::once())
 			->method('sendMessage');
 		$this->copySentMessageHandler->expects(self::never())
 			->method('process');
 
-		$this->handler->process($account, $mock);
+		$this->handler->process($account, $mock, $client);
 	}
 }

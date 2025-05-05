@@ -12,6 +12,7 @@ namespace OCA\Mail\Search;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Service\Search\FilterStringParser;
 use OCP\IDateTimeFormatter;
 use OCP\IL10N;
 use OCP\IURLGenerator;
@@ -35,10 +36,13 @@ class Provider implements IProvider {
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
-	public function __construct(IMailSearch $mailSearch,
+	public function __construct(
+		IMailSearch $mailSearch,
 		IL10N $l10n,
 		IDateTimeFormatter $dateTimeFormatter,
-		IURLGenerator $urlGenerator) {
+		IURLGenerator $urlGenerator,
+		private FilterStringParser $filterStringParser,
+	) {
 		$this->mailSearch = $mailSearch;
 		$this->l10n = $l10n;
 		$this->dateTimeFormatter = $dateTimeFormatter;
@@ -67,11 +71,16 @@ class Provider implements IProvider {
 	}
 
 	protected function searchByFilter(IUser $user, ISearchQuery $query, string $filter): SearchResult {
+		$mailQuery = $this->filterStringParser->parse($filter);
+
 		$cursor = $query->getCursor();
+		if ($cursor !== null) {
+			$mailQuery->setCursor((int)$cursor);
+		}
+
 		$messages = $this->mailSearch->findMessagesGlobally(
 			$user,
-			$filter,
-			empty($cursor) ? null : ((int)$cursor),
+			$mailQuery,
 			$query->getLimit()
 		);
 
