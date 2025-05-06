@@ -1,3 +1,20 @@
+## [5.0.4](https://github.com/nextcloud/mail/compare/v5.0.3...v5.0.4) (2025-05-06)
+
+
+### Bug Fixes
+
+* **deps:** update ckeditor dev utils to 44 ([f5b9cf2](https://github.com/nextcloud/mail/commit/f5b9cf2e3ad77c7ea8ebbe5b14ff4eccd9c52d95))
+* **dns:** Update public suffix list ([94b0310](https://github.com/nextcloud/mail/commit/94b0310ab63dcab6c1f84e8e86a95cf8e417d65c))
+* **l10n:** Update translations from Transifex ([c40f3ff](https://github.com/nextcloud/mail/commit/c40f3ff2d3afe71943f39839521e436dd00fe1d4))
+* **l10n:** Update translations from Transifex ([bda02cd](https://github.com/nextcloud/mail/commit/bda02cd7f5e72621da59fa3effd1def9783e951e))
+* **l10n:** Update translations from Transifex ([08c1635](https://github.com/nextcloud/mail/commit/08c163528e3543520c86b999be15353dade16dac))
+* **l10n:** Update translations from Transifex ([82f3825](https://github.com/nextcloud/mail/commit/82f3825c042679a9ce5008e3847ca3ffd7aa39ee))
+* **l10n:** Update translations from Transifex ([53faa1b](https://github.com/nextcloud/mail/commit/53faa1be793b2e604fd95df6713f11a0799f616a))
+* **l10n:** Update translations from Transifex ([21d5d15](https://github.com/nextcloud/mail/commit/21d5d15475988195cd4b7780e7301f5ed769f73e))
+* use alias name for from header ([e211914](https://github.com/nextcloud/mail/commit/e211914b388888a9c2bd66a6d35877949b4911a2))
+
+
+
 ## [5.0.3](https://github.com/nextcloud/mail/compare/v5.0.2...v5.0.3) (2025-04-29)
 
 
