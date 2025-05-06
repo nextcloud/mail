@@ -4,7 +4,7 @@
  */
 
 import VirtualTestEditor from '../../virtualtesteditor.js'
-import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
+import { Paragraph } from 'ckeditor5'
 import MailPlugin from '../../../ckeditor/mail/MailPlugin.js'
 
 describe('MailPlugin', () => {
@@ -16,7 +16,7 @@ describe('MailPlugin', () => {
 		const editor = await VirtualTestEditor.create({
 			licenseKey: 'GPL',
 			initialData: text,
-			plugins: [ParagraphPlugin, MailPlugin],
+			plugins: [Paragraph, MailPlugin],
 		})
 
 		expect(editor.getData()).toEqual(expected)

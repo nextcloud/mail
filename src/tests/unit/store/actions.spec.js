@@ -15,13 +15,13 @@ import { createPinia, setActivePinia } from 'pinia'
 
 import useMainStore from '../../../store/mainStore.js'
 
-jest.mock('../../../service/MailboxService.js')
-jest.mock('../../../service/MessageService.js')
-jest.mock('../../../service/NotificationService.js')
-jest.mock('../../../util/normalization.js', () => ({
+vi.mock('../../../service/MailboxService.js')
+vi.mock('../../../service/MessageService.js')
+vi.mock('../../../service/NotificationService.js')
+vi.mock('../../../util/normalization.js', () => ({
 	__esModule: true,
 	// Supply a default list id ('') to prevent annoying errors
-	normalizedEnvelopeListId: jest.fn(() => ''),
+	normalizedEnvelopeListId: vi.fn(() => ''),
 }))
 
 const mockEnvelope = curry((mailboxId, uid) => ({
@@ -42,7 +42,7 @@ describe('Vuex store actions', () => {
 	})
 
 	afterEach(() => {
-		jest.clearAllMocks()
+		vi.clearAllMocks()
 	})
 
 	it('creates a mailbox', async () => {
@@ -166,7 +166,7 @@ describe('Vuex store actions', () => {
 			},
 		})
 
-		store.addEnvelopesMutation = jest.fn()
+		store.addEnvelopesMutation = vi.fn()
 
 		MessageService.fetchEnvelopes.mockReturnValueOnce(Promise.resolve([{
 			databaseId: 123,
@@ -484,8 +484,8 @@ describe('Vuex store actions', () => {
 				},
 			})
 
-			store.fetchEnvelopes = jest.fn(async () => {})
-			store.syncEnvelopes = jest.fn(async () => {})
+			store.fetchEnvelopes = vi.fn(async () => {})
+			store.syncEnvelopes = vi.fn(async () => {})
 
 			await store.syncInboxes()
 
@@ -560,8 +560,8 @@ describe('Vuex store actions', () => {
 				mailbox.envelopeLists[envelopeListId] = {}
 			}
 
-			store.fetchEnvelopes = jest.fn(async () => {})
-			store.syncEnvelopes = jest.fn(async () => [{ id: 123 }, { id: 321 }])
+			store.fetchEnvelopes = vi.fn(async () => {})
+			store.syncEnvelopes = vi.fn(async () => [{ id: 123 }, { id: 321 }])
 
 			await store.syncInboxes()
 
@@ -667,7 +667,7 @@ describe('Vuex store actions', () => {
 			},
 		})
 
-		store.addEnvelopesMutation = jest.fn()
+		store.addEnvelopesMutation = vi.fn()
 
 		MessageService.fetchEnvelopes.mockResolvedValueOnce([])
 

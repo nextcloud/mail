@@ -26,7 +26,7 @@ describe('NavigationMailbox', () => {
 		setActivePinia(createTestingPinia())
 		store = useMainStore()
 
-		store.getSubMailboxes = jest.fn().mockReturnValue([])
+		store.getSubMailboxes = vi.fn().mockReturnValue([])
 	})
 
 	it('shows no counter', () => {
@@ -72,7 +72,7 @@ describe('NavigationMailbox', () => {
 		subMailboxes.push({
 			unread: 0,
 		})
-		store.getSubMailboxes = jest.fn().mockReturnValue(subMailboxes)
+		store.getSubMailboxes = vi.fn().mockReturnValue(subMailboxes)
 		const view = shallowMount(NavigationMailbox, {
 			propsData: {
 				account: {},
@@ -102,7 +102,7 @@ describe('NavigationMailbox', () => {
 	})
 
 	it('allows rename with missing ACLs on parent', () => {
-		store.getParentMailbox = jest.fn().mockReturnValue({
+		store.getParentMailbox = vi.fn().mockReturnValue({
 			myAcls: undefined,
 		})
 		const view = shallowMount(NavigationMailbox, {
@@ -147,7 +147,7 @@ describe('NavigationMailbox', () => {
 	})
 
 	it('disallows rename without k ACL right on parent', () => {
-		store.getParentMailbox = jest.fn().mockReturnValue({
+		store.getParentMailbox = vi.fn().mockReturnValue({
 			myAcls: 'x',
 		})
 
