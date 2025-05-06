@@ -37,7 +37,7 @@ export default {
 			this.$emit('update-action', { mailbox: this.getMailboxNameByDatabaseId(value) })
 		},
 		getMailboxDatabaseIdByName(name) {
-			return this.mainStore.getMailboxesByAccountId(this.account.id).find((mailbox) => mailbox.name === name)?.databaseId
+			return this.mainStore.getMailboxesAndSubmailboxesByAccountId(this.account.id).find((mailbox) => mailbox.name === name)?.databaseId
 		},
 		getMailboxNameByDatabaseId(databaseId) {
 			return this.mainStore.getMailbox(databaseId)?.name
