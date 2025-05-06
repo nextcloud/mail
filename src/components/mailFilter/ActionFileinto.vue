@@ -3,14 +3,13 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<MailboxInlinePicker v-model="selectedMailbox" :account="account" />
+	<MailboxInlinePicker :account="account" :value="mailbox" @input="onInput" />
 </template>
 <script>
 
 import { mapStores } from 'pinia'
 import useMainStore from '../../store/mainStore.js'
 import MailboxInlinePicker from '../MailboxInlinePicker.vue'
-import logger from '../../logger.js'
 
 export default {
 	name: 'ActionFileinto',
@@ -27,29 +26,21 @@ export default {
 			required: true,
 		},
 	},
-	data() {
-		return {
-			currentSelectedMailboxId: null,
-		}
-	},
 	computed: {
 		...mapStores(useMainStore),
 		mailbox() {
-			return this.action.mailbox ?? undefined
-		},
-		selectedMailbox: {
-			get() {
-				return this.currentSelectedMailboxId
-			},
-			set(selectedMailboxId) {
-				logger.debug('Selected mailbox set to', selectedMailboxId)
-				this.currentSelectedMailboxId = selectedMailboxId
-			},
+			return this.getMailboxDatabaseIdByName(this.action?.mailbox)
 		},
 	},
 	methods: {
 		onInput(value) {
-			this.$emit('update-action', { mailbox: value })
+			this.$emit('update-action', { mailbox: this.getMailboxNameByDatabaseId(value) })
+		},
+		getMailboxDatabaseIdByName(name) {
+			return this.mainStore.getMailboxesByAccountId(this.account.id).find((mailbox) => mailbox.name === name)?.databaseId
+		},
+		getMailboxNameByDatabaseId(databaseId) {
+			return this.mainStore.getMailbox(databaseId)?.name
 		},
 	},
 }
