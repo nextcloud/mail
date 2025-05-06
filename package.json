@@ -64,7 +64,7 @@
     "dompurify": "^3.2.5",
     "html-to-text": "^9.0.5",
     "ical.js": "^2.1.0",
-    "iframe-resizer": "^5.3.3",
+    "iframe-resizer": "^5.4.6",
     "js-base64": "^3.7.7",
     "jstz": "^2.1.1",
     "lodash": "^4.17.21",
