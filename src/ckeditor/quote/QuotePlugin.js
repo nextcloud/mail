@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import Plugin from '@ckeditor/ckeditor5-core/src/plugin.js'
+import { Plugin } from 'ckeditor5'
 
 export default class Quote extends Plugin {
 

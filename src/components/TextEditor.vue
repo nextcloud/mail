@@ -18,9 +18,9 @@
 </template>
 
 <script>
-import CKEditor from '@ckeditor/ckeditor5-vue2'
-import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment.js'
+/*
 import { Mention } from '@ckeditor/ckeditor5-mention'
+import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment.js'
 import Editor from '@ckeditor/ckeditor5-editor-decoupled/src/decouplededitor.js'
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials.js'
 import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote.js'
@@ -33,14 +33,38 @@ import LinkPlugin from '@ckeditor/ckeditor5-link/src/link.js'
 import ListPlugin from '@ckeditor/ckeditor5-list/src/list.js'
 import ListProperties from '@ckeditor/ckeditor5-list/src/listproperties.js'
 import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat.js'
-import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
 import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough.js'
-import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
 import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter.js'
 import ImagePlugin from '@ckeditor/ckeditor5-image/src/image.js'
 import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
 import { DropdownView } from '@ckeditor/ckeditor5-ui'
+*/
+
+import CKEditor from '@ckeditor/ckeditor5-vue2'
+import {
+	Mention,
+	Alignment,
+	DecoupledEditor,
+	Essentials,
+	BlockQuote,
+	Bold,
+	Font,
+	Paragraph,
+	Heading,
+	Italic,
+	Link,
+	List,
+	RemoveFormat,
+	Strikethrough,
+	Image,
+	ImageResize,
+	ImageUpload,
+	DropdownView,
+	Base64UploadAdapter,
+} from 'ckeditor5'
+import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
+import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import { searchProvider, getLinkWithPicker } from '@nextcloud/vue/components/NcRichText'
 import { getLanguage } from '@nextcloud/l10n'
@@ -48,6 +72,8 @@ import logger from '../logger.js'
 import PickerPlugin from '../ckeditor/smartpicker/PickerPlugin.js'
 import { autoCompleteByName } from '../service/ContactIntegrationService.js'
 import { emojiSearch, emojiAddRecent } from '@nextcloud/vue'
+
+import 'ckeditor5/ckeditor5.css'
 
 export default {
 	name: 'TextEditor',
@@ -82,32 +108,31 @@ export default {
 	},
 	data() {
 		const plugins = [
-			EssentialsPlugin,
-			ParagraphPlugin,
+			Essentials,
+			Paragraph,
 			SignaturePlugin,
 			QuotePlugin,
 			PickerPlugin,
 			Mention,
-			LinkPlugin,
+			Link,
 		]
 		const toolbar = ['undo', 'redo']
 
 		if (this.html) {
 			plugins.push(...[
-				HeadingPlugin,
-				AlignmentPlugin,
-				BoldPlugin,
-				ItalicPlugin,
-				BlockQuotePlugin,
-				ListPlugin,
-				ListProperties,
-				FontPlugin,
+				Heading,
+				Alignment,
+				Bold,
+				Italic,
+				BlockQuote,
+				List,
+				Font,
 				RemoveFormat,
-				StrikethroughPlugin,
-				ImagePlugin,
-				ImageUploadPlugin,
+				Strikethrough,
+				Image,
+				ImageUpload,
 				Base64UploadAdapter,
-				ImageResizePlugin,
+				ImageResize,
 				MailPlugin,
 			])
 			toolbar.unshift(...[
@@ -134,7 +159,7 @@ export default {
 			emojiTribute: null,
 			textSmiles: [],
 			ready: false,
-			editor: Editor,
+			editor: DecoupledEditor,
 			config: {
 				licenseKey: 'GPL',
 				placeholder: this.placeholder,
