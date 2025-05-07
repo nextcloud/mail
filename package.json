@@ -20,7 +20,7 @@
     "@ckeditor/ckeditor5-block-quote": "44.3.0",
     "@ckeditor/ckeditor5-build-decoupled-document": "44.3.0",
     "@ckeditor/ckeditor5-core": "44.3.0",
-    "@ckeditor/ckeditor5-dev-utils": "^44",
+    "@ckeditor/ckeditor5-dev-utils": "44.2.1",
     "@ckeditor/ckeditor5-dev-webpack-plugin": "~31.1.13",
     "@ckeditor/ckeditor5-editor-balloon": "44.3.0",
     "@ckeditor/ckeditor5-editor-decoupled": "44.3.0",
