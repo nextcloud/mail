@@ -170,6 +170,14 @@
 			]
 		},
 		{
+			"groupName": "calendar-js and timezones",
+			"matchPackageNames": [
+				"@nextcloud/calendar-js",
+				"@nextcloud/timezones"
+			],
+			"automerge": false
+		},
+		{
 			"groupName": "CKEditor family",
 			"matchPackageNames": [
 				"@ckeditor/ckeditor5-alignment",
