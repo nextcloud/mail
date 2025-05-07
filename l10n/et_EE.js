@@ -110,6 +110,7 @@ OC.L10N.register(
     "Back" : "Tagasi",
     "Create event" : "Lisa sündmus",
     "Create task" : "Loo ülesanne",
+    "Load more" : "Laadi veel",
     "_Mark {number} read_::_Mark {number} read_" : ["Märgi {number} loetuks","Märgi {number} loetuks"],
     "_Mark {number} unread_::_Mark {number} unread_" : ["Märgi {number} mitteloetuks","Märgi {number} mitteloetuks"],
     "_Mark {number} as important_::_Mark {number} as important_" : ["Märgi {number} oluliseks","Märgi {number} oluliseks"],
