@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d7efc24c6c106454909802fe2b8f089c",
+    "content-hash": "243768916402bf250aa08f40460b08c4",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2178,16 +2178,16 @@
         },
         {
             "name": "nextcloud/kitinerary-sys",
-            "version": "v1.0.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-libraries/kitinerary-sys.git",
-                "reference": "10755e6cc417bf8b60a21c6e2d9be146e9051b22"
+                "reference": "f54aae1a22c407befa41127fe92c57292e1db8bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-sys/zipball/10755e6cc417bf8b60a21c6e2d9be146e9051b22",
-                "reference": "10755e6cc417bf8b60a21c6e2d9be146e9051b22",
+                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-sys/zipball/f54aae1a22c407befa41127fe92c57292e1db8bf",
+                "reference": "f54aae1a22c407befa41127fe92c57292e1db8bf",
                 "shasum": ""
             },
             "require": {
@@ -2207,7 +2207,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-3.0-or-later"
+                "AGPL-3.0-or-later"
             ],
             "authors": [
                 {
@@ -2216,9 +2216,9 @@
             ],
             "description": "KItinerary binding for the system package",
             "support": {
-                "source": "https://github.com/nextcloud-libraries/kitinerary-sys/tree/v1.0.1"
+                "source": "https://github.com/nextcloud-libraries/kitinerary-sys/tree/v2.0.0"
             },
-            "time": "2024-08-02T13:48:52+00:00"
+            "time": "2025-01-08T14:40:01+00:00"
         },
         {
             "name": "phpmailer/dkimvalidator",
