@@ -36,7 +36,7 @@
 		"nextcloud/kitinerary": "^1.0",
 		"nextcloud/kitinerary-bin": "^1.0.3",
 		"nextcloud/kitinerary-flatpak": "^1.0",
-		"nextcloud/kitinerary-sys": "^1.0.1",
+		"nextcloud/kitinerary-sys": "^2.0.0",
 		"phpmailer/dkimvalidator": "^0.3.0",
 		"psr/log": "^3.0.2",
 		"rubix/ml": "2.5.2",
