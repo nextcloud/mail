@@ -1,3 +1,14 @@
+## [5.0.5](https://github.com/nextcloud/mail/compare/v5.0.4...v5.0.5) (2025-05-07)
+
+
+### Bug Fixes
+
+* **deps:** update vulnerable @nextcloud/moment and babel packages ([bea2b72](https://github.com/nextcloud/mail/commit/bea2b72c5569d039fc7061b7e2dd93ad833a74d9))
+* **l10n:** Update translations from Transifex ([6568a6b](https://github.com/nextcloud/mail/commit/6568a6bcebffe3a046a188e65ca29ac92240f216))
+* show warning when creating a mailbox fails ([f362948](https://github.com/nextcloud/mail/commit/f362948a1f2319d3cd28ab2d57a39a1416a0a362))
+
+
+
 ## [5.0.4](https://github.com/nextcloud/mail/compare/v5.0.3...v5.0.4) (2025-05-06)
 
 
