@@ -67,7 +67,7 @@ class LinkCheck {
 			// Handle links that are wrapped in brackets, quotes, etc.
 			// Need to use preg_match with the u(nicode) flag to properly match multibyte chars.
 			if (preg_match('/^(?![[:alnum:]]).*(?![[:alnum:]])$/u', $linkText)) {
-				$linkText = mb_substr($linkText, 1, -2);
+				$linkText = mb_substr($linkText, 1, -1);
 			}
 
 			$zippedArray[] = [
