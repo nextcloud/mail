@@ -177,7 +177,6 @@ class OutboxController extends Controller {
 	 * @param string $body
 	 * @param string $editorBody
 	 * @param bool $isHtml
-	 * @param bool $failed
 	 * @param array $to i. e. [['label' => 'Linus', 'email' => 'tent@stardewvalley.com'], ['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']]
 	 * @param array $cc
 	 * @param array $bcc
@@ -198,7 +197,6 @@ class OutboxController extends Controller {
 		bool $isHtml,
 		bool $smimeSign,
 		bool $smimeEncrypt,
-		bool $failed = false,
 		array $to = [],
 		array $cc = [],
 		array $bcc = [],
@@ -230,6 +228,10 @@ class OutboxController extends Controller {
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
 		$message->setRequestMdn($requestMdn);
+
+		// Reset the status to make it retryable.
+		$message->setFailed(false);
+		$message->setStatus(LocalMessage::STATUS_RAW);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $effectiveUserId);
