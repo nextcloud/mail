@@ -457,4 +457,34 @@ class SmimeServiceTest extends TestCase {
 			$this->smimeService->parseCertificate($certificate->getCertificate()),
 		);
 	}
+
+	public function testSignMimePart(): void {
+		$plainPart = Horde_Mime_Part::parseMessage(file_get_contents(__DIR__ . '/../../data/html-with-signature.txt'));
+		$certificate = $this->getTestCertificate('debug@imap.localhost');
+
+		$this->crypto
+			->method('decrypt')
+			->will($this->returnArgument(0));
+		$this->tempManager
+			->method('getTemporaryFile')
+			->willReturnCallback(function () {
+				return $this->createTempFile();
+			});
+
+		// Can't compare to serialized part as the boundaries inside the signed MIME message are
+		// generated randomly each time. => Verify the signed part instead.
+		$actualPart = $this->smimeService->signMimePart($plainPart, $certificate);
+		$messageTemp = $this->createTempFile();
+		file_put_contents($messageTemp, $actualPart->toString([
+			'canonical' => true,
+			'headers' => true,
+			'encode' => Horde_Mime_Part::ENCODE_8BIT,
+		]));
+		$this->assertTrue(openssl_pkcs7_verify(
+			$messageTemp,
+			0,
+			null,
+			[__DIR__ . '/../../data/smime-certs/imap.localhost.ca.crt'],
+		));
+	}
 }
