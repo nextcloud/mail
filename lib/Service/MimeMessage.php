@@ -16,6 +16,8 @@ use Horde_Mime_Part;
 use Horde_Text_Filter;
 use OCA\Mail\Exception\InvalidDataUriException;
 use OCA\Mail\Service\DataUri\DataUriParser;
+use function libxml_clear_errors;
+use function libxml_use_internal_errors;
 
 class MimeMessage {
 	private DataUriParser $uriParser;
@@ -71,9 +73,19 @@ class MimeMessage {
 			} else {
 				$source = ' ' . $contentHtml;
 			}
-			
+
+			/**
+			 * DOMDocument uses libxml to parse HTML and that expects HTML4. It
+			 * is likely that some markup cause an error, which is otherwise
+			 * logged. Therefore, we ignore any error here.
+			 * @todo Migrate to \Dom\HTMLDocument::createFromString when this app uses PHP8.4+
+			 */
+			$previousLibxmlErrorsState = libxml_use_internal_errors(true);
 			$doc = new DOMDocument();
 			$doc->loadHTML($source, LIBXML_NONET | LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
+			libxml_clear_errors();
+			libxml_use_internal_errors($previousLibxmlErrorsState);
+
 			// determine if content has any embedded images
 			$embeddedParts = [];
 			foreach ($doc->getElementsByTagName('img') as $id => $image) {
