@@ -400,7 +400,6 @@ import { mapState, mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import { translateTagDisplayName } from '../util/tag.js'
-import { list } from 'postcss'
 
 export default {
 	name: 'Envelope',
@@ -510,7 +509,7 @@ export default {
 			return this.overwriteOneLineMobile ? false : this.mainStore.getPreference('layout-mode', 'vertical-split') === 'no-split'
 		},
 		layoutMessageViewThreaded() {
-			return this.mainStore.getPreference('layout-message-view', 'threaded') === 'threaded';
+			return this.mainStore.getPreference('layout-message-view', 'threaded') === 'threaded'
 		},
 		hasMultipleRecipients() {
 			if (!this.account) {
