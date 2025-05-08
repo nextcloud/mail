@@ -58,6 +58,14 @@ class LinkCheckTest extends TestCase {
 		$this->assertTrue($result->isPhishing());
 	}
 
+	public function testBracketWrappedAddress(): void {
+		$htmlMessage = '<html><body><a href="https://nextcloud.com">[https://nextcloud.com]</a></p></body></html>';
+
+		$result = $this->service->run($htmlMessage);
+
+		$this->assertFalse($result->isPhishing());
+	}
+
 	public function testDeepAddressPass(): void {
 		$htmlMessage = '<html><body><a href="https://nextcloud.com/"><span class="text-big" style="color:hsl(0,75%,60%);font-family: Courier, monospace;"><i><strong>nextcloud.com</strong></i></span></a></body></html>';
 

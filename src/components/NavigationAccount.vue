@@ -98,7 +98,7 @@ import IconFolderAdd from 'vue-material-design-icons/Folder.vue'
 import MenuDown from 'vue-material-design-icons/ChevronDown.vue'
 import MenuUp from 'vue-material-design-icons/ChevronUp.vue'
 import IconDelete from 'vue-material-design-icons/Delete.vue'
-import { DialogBuilder } from '@nextcloud/dialogs'
+import { DialogBuilder, showError } from '@nextcloud/dialogs'
 import { mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
 
@@ -195,6 +195,7 @@ export default {
 					account: this.account, name,
 				})
 			} catch (error) {
+				showError(t('mail', 'Unable to create mailbox. The name likely contains invalid characters. Please try another name.'))
 				logger.error('could not create mailbox', { error })
 				throw error
 			} finally {
