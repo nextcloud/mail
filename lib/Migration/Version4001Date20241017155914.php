@@ -51,8 +51,7 @@ class Version4001Date20241017155914 extends SimpleMigrationStep {
 			'length' => 4,
 		]);
 		$table->setPrimaryKey(['id']);
-		$table->addIndex(['text_block_id'], 'mail_blocks_shares_tbid_idx');
-		$table->addIndex(['text_block_id', 'share_with'], 'mail_blocks_shares_tbid_sw_idx');
+		$table->addUniqueIndex(['text_block_id', 'share_with'], 'mail_blocks_shares_tbid_sw_idx');
 		if ($schema->hasTable('mail_text_blocks')) {
 			$table->addForeignKeyConstraint(
 				$schema->getTable('mail_text_blocks'),

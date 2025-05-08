@@ -46,7 +46,7 @@
 					{{ t('mail','Shares') }}
 				</h3>
 				<NcSelect v-model="share"
-					class="textBlock-list-item__shares"
+					class="text-block-list-item__shares"
 					:placeholder="t('mail','Search for users or groups')"
 					:label-outside="true"
 					:loading="loading"
@@ -199,21 +199,23 @@ export default {
 			})
 		},
 		async shareTextBlock(sharee) {
-			await shareTextBlock(this.textBlock.id, sharee.shareWith, sharee.shareType === ShareType.User ? 'user' : 'group').then(() => {
+			try {
+				await shareTextBlock(this.textBlock.id, sharee.shareWith, sharee.shareType === ShareType.User ? 'user' : 'group')
 				this.shares.push({ shareWith: sharee.shareWith, type: sharee.isNoUser ? 'group' : 'user', displayName: sharee.displayName })
 				showSuccess(t('mail', 'TextBlock shared with {sharee}', { sharee: sharee.shareWith }))
 				this.share = null
-			}).catch(() => {
+			} catch (error) {
 				showError(t('mail', 'Failed to share textBlock with {sharee}', { sharee: sharee.shareWith }))
-			})
+			}
 		},
 		async removeShare(sharee) {
-			await unshareTextBlock(this.textBlock.id, sharee.shareWith).then(() => {
+			try {
+				await unshareTextBlock(this.textBlock.id, sharee.shareWith)
 				this.shares = this.shares.filter(share => share.shareWith !== sharee.shareWith)
 				showSuccess(t('mail', 'Share deleted for {name}', { name: sharee.shareWith }))
-			}).catch(() => {
+			} catch (error) {
 				showError(t('mail', 'Failed to delete share with {name}', { name: sharee.shareWith }))
-			})
+			}
 		},
 
 		async asyncFind(query) {
@@ -247,7 +249,6 @@ export default {
 				console.error('Error fetching suggestions', error)
 				return
 			}
-
 			const data = request.data.ocs.data
 			const exact = request.data.ocs.data.exact
 			data.exact = [] // removing exact from general results
@@ -362,33 +363,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.textBlock-list-item{
+.text-block-list-item {
 	display: grid;
-    grid-template-columns: 1fr 4fr 1fr;
-    gap: 5px;
-	padding: 5px;
-	&__title{
+	grid-template-columns: 1fr 4fr 1fr;
+	gap: var(--default-grid-baseline);
+	padding: var(--default-grid-baseline);
+	&__title {
 		white-space: nowrap;
 		padding-inline-end: 30px;
 		width: 100px;
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}
-	&__preview{
+	&__preview {
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
-	&__shares{
+	&__shares {
 		width: 100%;
 	}
 }
-.text-block-buttons{
+.text-block-buttons {
 	width: 100%;
 	justify-self: end;
 	display: flex;
-    justify-content: flex-end;
-	&__button{
+	justify-content: flex-end;
+	&__button {
 		margin: var(--default-grid-baseline);
 	}
 }
