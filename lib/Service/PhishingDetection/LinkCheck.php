@@ -9,9 +9,11 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\PhishingDetection;
 
+use DOMDocument;
 use OCA\Mail\PhishingDetectionResult;
 use OCP\IL10N;
 use URL\Normalizer;
+use function libxml_clear_errors;
 
 class LinkCheck {
 	protected IL10N $l10n;
@@ -52,10 +54,17 @@ class LinkCheck {
 		$results = [];
 		$zippedArray = [];
 
-		$dom = new \DOMDocument();
-		libxml_use_internal_errors(true);
-		$dom->loadHTML($htmlMessage);
-		libxml_use_internal_errors();
+		/**
+		 * DOMDocument uses libxml to parse HTML and that expects HTML4. It
+		 * is likely that some markup cause an error, which is otherwise
+		 * logged. Therefore, we ignore any error here.
+		 * @todo Migrate to \Dom\HTMLDocument::createFromString when this app uses PHP8.4+
+		 */
+		$dom = new DOMDocument();
+		$previousLibxmlErrorsState = libxml_use_internal_errors(true);
+		$dom->loadHTML($htmlMessage, LIBXML_NONET | LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
+		libxml_clear_errors();
+		libxml_use_internal_errors($previousLibxmlErrorsState);
 		$anchors = $dom->getElementsByTagName('a');
 		foreach ($anchors as $anchor) {
 			$href = $anchor->getAttribute('href');
