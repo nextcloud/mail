@@ -6,7 +6,7 @@
 import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 
-export function saveAttachmentToFiles(id, attachmentId, directory) {
+export async function saveAttachmentToFiles(id, attachmentId, directory) {
 	const url = generateUrl(
 		'/apps/mail/api/messages/{id}/attachment/{attachmentId}',
 		{
@@ -15,14 +15,14 @@ export function saveAttachmentToFiles(id, attachmentId, directory) {
 		},
 	)
 
-	return Axios.post(url, {
+	return await Axios.post(url, {
 		targetPath: directory,
 	})
 }
 
-export function saveAttachmentsToFiles(id, directory) {
+export async function saveAttachmentsToFiles(id, directory) {
 	// attachmentId = 0 means 'all attachments' (see MessageController.php::saveAttachement)
-	return saveAttachmentToFiles(id, 0, directory)
+	return await saveAttachmentToFiles(id, 0, directory)
 }
 
 export function downloadAttachment(url) {

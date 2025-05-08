@@ -273,7 +273,7 @@ export default {
 			try {
 				if (this.followingSystem) {
 					await OutOfOfficeService.followSystem(this.account.id)
-					this.mainStore.patchAccountiMutation({
+					this.mainStore.patchAccountMutation({
 						account: this.account,
 						data: {
 							outOfOfficeFollowsSystem: true,

@@ -23,6 +23,7 @@
 	"ignoreUnstable": false,
 	"baseBranches": [
 		"main",
+		"stable5.0",
 		"stable4.3",
 		"stable4.2",
 		"stable3.7"
@@ -167,6 +168,14 @@
 			"extends": [
 				"schedule:monthly"
 			]
+		},
+		{
+			"groupName": "calendar-js and timezones",
+			"matchPackageNames": [
+				"@nextcloud/calendar-js",
+				"@nextcloud/timezones"
+			],
+			"automerge": false
 		},
 		{
 			"groupName": "CKEditor family",

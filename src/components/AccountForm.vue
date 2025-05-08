@@ -682,11 +682,11 @@ export default {
 	flex-grow: 1;
 	text-align: center;
 	color: var(--color-text-lighter);
-	margin-bottom: 10px;
+	margin-bottom: calc(var(--default-grid-baseline) * 2 + var(--default-grid-baseline) / 2);
 }
 
 :deep(.tabs-component-tab.is-active) {
-	border-bottom: 1px solid black;
+	border-bottom: var(--border-width-input) solid black;
 	font-weight: bold;
 }
 
@@ -695,7 +695,7 @@ export default {
 }
 
 .tabs-component-panels {
-	padding-top: 20px;
+	padding-top: calc(var(--default-grid-baseline) * 5);
 }
 
 .tabs-component-panels label {
@@ -706,7 +706,7 @@ export default {
 
 .tabs-component-panels input,
 .tabs-component-panels select {
-	margin-bottom: 10px;
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
 }
 </style>
 
@@ -740,7 +740,7 @@ input[type='radio'][disabled] + label {
 .account-form__submit-buttons {
 	display: flex;
 	justify-content: center;
-	margin-top: 5px;
+	margin-top: var(--default-grid-baseline);
 }
 .account-form__submit-button {
 	display: flex;
@@ -748,7 +748,7 @@ input[type='radio'][disabled] + label {
 }
 .account-form--feedback {
 	color: var(--color-text-maxcontrast);
-	margin-top: 5px;
+	margin-top: var(--default-grid-baseline);
 	text-align: center;
 }
 .account-form--error {
@@ -759,9 +759,9 @@ input[type='radio'][disabled] + label {
 	z-index: 1001;
 	width: 300px;
 	top: 15%;
-	padding-bottom: 50px;
+	padding-bottom: calc(var(--default-grid-baseline) * 12);
 	margin: 0 auto;
-	padding-top: 30px;
+	padding-top: calc(var(--default-grid-baseline) * 7);
 }
 #account-form input {
 	width: 100%;

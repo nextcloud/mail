@@ -16,7 +16,6 @@ use OCP\Migration\SimpleMigrationStep;
 
 class Version3001Date20230307113544 extends SimpleMigrationStep {
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
-		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
 		$accountsTable = $schema->getTable('mail_accounts');

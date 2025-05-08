@@ -33,7 +33,6 @@ class Version3400Date20230907103114 extends SimpleMigrationStep {
 	}
 
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
-		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
 		$retentionTable = $schema->getTable('mail_messages_retention');

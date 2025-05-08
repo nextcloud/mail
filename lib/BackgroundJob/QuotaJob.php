@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
-use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -54,7 +53,6 @@ class QuotaJob extends TimedJob {
 	protected function run($argument): void {
 		$accountId = (int)$argument['accountId'];
 		try {
-			/** @var Account $account */
 			$account = $this->accountService->findById($accountId);
 		} catch (DoesNotExistException $e) {
 			$this->logger->debug('Could not find account <' . $accountId . '> removing from jobs');

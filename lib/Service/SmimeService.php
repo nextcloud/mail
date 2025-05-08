@@ -371,15 +371,14 @@ class SmimeService {
 		file_put_contents($inPath, $part->toString([
 			'canonical' => true,
 			'headers' => true,
+			'encode' => Horde_Mime_Part::ENCODE_8BIT,
 		]));
-		if (!openssl_pkcs7_sign($inPath, $outPath, $decryptedCertificate, $decryptedKey, null, PKCS7_DETACHED, $decryptedCertificateFile)) {
+		if (!openssl_pkcs7_sign($inPath, $outPath, $decryptedCertificate, $decryptedKey, null, PKCS7_DETACHED | PKCS7_BINARY, $decryptedCertificateFile)) {
 			throw new SmimeSignException('Failed to sign MIME part');
 		}
 
 		try {
-			$parsedPart = Horde_Mime_Part::parseMessage(file_get_contents($outPath), [
-				'forcemime' => true,
-			]);
+			$parsedPart = Horde_Mime_Part::parseMessage(file_get_contents($outPath));
 		} catch (Horde_Mime_Exception $e) {
 			throw new SmimeSignException(
 				'Failed to parse signed MIME part: ' . $e->getMessage(),

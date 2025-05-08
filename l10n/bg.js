@@ -230,7 +230,6 @@ OC.L10N.register(
     "Decline" : "Отхвърляне",
     "Tentatively accept" : "Приемам условно",
     "More options" : "Още опции",
-    "This event is in the past." : "Това събитие е отминало.",
     "individual" : "Индивидуален",
     "domain" : "домейн",
     "Remove" : "Премахване",
@@ -560,6 +559,7 @@ OC.L10N.register(
     "Redirect" : "Пренасочване",
     "The link leads to %s" : "Връзката води до %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желаете да посетите тази страница, може да се върнете към <a href=\"%s\">Поща</a>.",
-    "Continue to %s" : "Продължи към %s"
+    "Continue to %s" : "Продължи към %s",
+    "This event is in the past." : "Това събитие е отминало."
 },
 "nplurals=2; plural=(n != 1);");

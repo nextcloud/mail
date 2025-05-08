@@ -480,7 +480,7 @@ import Vue from 'vue'
 import mitt from 'mitt'
 
 import { findRecipient } from '../service/AutocompleteService.js'
-import { detect, html, plain, toHtml, toPlain } from '../util/text.js'
+import { detect, html, toHtml, toPlain } from '../util/text.js'
 import logger from '../logger.js'
 import TextEditor from './TextEditor.vue'
 import { buildReplyBody } from '../ReplyBuilder.js'
@@ -1076,7 +1076,7 @@ export default {
 			this.bodyVal = html(body).value
 		},
 		getMessageData() {
-			return {
+			const data = {
 				// TODO: Rename account to accountId
 				account: this.selectedAlias.id,
 				accountId: this.selectedAlias.id,
@@ -1085,7 +1085,6 @@ export default {
 				cc: this.selectCc,
 				bcc: this.selectBcc,
 				subject: this.subjectVal,
-				body: this.encrypt ? plain(this.bodyVal) : html(this.bodyVal),
 				attachments: this.attachments,
 				inReplyToMessageId: this.inReplyToMessageId ?? (this.replyTo ? this.replyTo.messageId : undefined),
 				isHtml: !this.encrypt && !this.editorPlainText,
@@ -1096,6 +1095,14 @@ export default {
 				smimeCertificateId: this.smimeCertificateForCurrentAlias?.id,
 				isPgpMime: this.encrypt,
 			}
+
+			if (data.isHtml) {
+				data.bodyHtml = this.bodyVal
+			} else {
+				data.bodyPlain = toPlain(html(this.bodyVal)).value
+			}
+
+			return data
 		},
 		saveDraft() {
 			const draftData = this.getMessageData()
@@ -1475,7 +1482,7 @@ export default {
 
 	&.mail-account {
 		border-top: none;
-		padding-top: 10px;
+		padding-top: calc(var(--default-grid-baseline) * 2);
 	}
 
 	input,
@@ -1490,7 +1497,7 @@ export default {
 		display: flex;
 		align-items: flex-start;
 		justify-content: space-between;
-		padding-top: 2px;
+		padding-top: calc(var(--default-grid-baseline) * 0.5);
 
 		button {
 			margin-top: 0;
@@ -1498,7 +1505,7 @@ export default {
 			background-color: transparent;
 			border: none;
 			opacity: 0.5;
-			padding: 10px 16px;
+			padding: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 4);
 		}
 
 		.select {
@@ -1515,7 +1522,7 @@ export default {
 	.subject {
 		font-size: 15px;
 		font-weight: bold;
-		margin: 3px 0 !important;
+		margin: var(--default-grid-baseline) 0 !important;
 		padding: 0 !important;
 		width: 100%;
 
@@ -1547,7 +1554,7 @@ export default {
 }
 
 .draft-status {
-	padding: 2px;
+	padding: calc(var(--default-grid-baseline) * 0.5);
 	opacity: 0.5;
 	font-size: small;
 	display: block;
@@ -1618,11 +1625,11 @@ export default {
 .send-button {
 	display: flex;
 	align-items: center;
-	padding: 10px 15px;
-	margin-left: 5px;
+	padding: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 4);
+	margin-left: var(--default-grid-baseline);
 }
 .send-button .send-icon {
-	padding-right: 5px;
+	padding-right: var(--default-grid-baseline);
 }
 .centered-content {
 	margin-top: 0 !important;
@@ -1632,12 +1639,12 @@ export default {
 	align-items: center;
 	flex-direction: row;
 	justify-content: space-between;
-	bottom: 5px;
+	bottom: var(--default-grid-baseline);
 }
 .composer-actions--primary-actions {
 	display: flex;
 	flex-direction: row;
-	padding-left: 10px;
+	padding-left: calc(var(--default-grid-baseline) * 2);
 	align-items: center;
 }
 .composer-actions--secondary-actions {

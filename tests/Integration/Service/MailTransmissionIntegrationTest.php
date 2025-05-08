@@ -128,6 +128,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 			Server::get(FlagRepliedMessageHandler::class),
 			$this->attachmentService,
 			$this->localMessageMapper,
+			Server::get(IMAPClientFactory::class),
 		);
 
 		$this->transmission = new MailTransmission(Server::get(IMAPClientFactory::class),

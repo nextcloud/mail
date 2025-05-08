@@ -89,8 +89,9 @@ class NewMessagesClassifier {
 			);
 
 			foreach ($messages as $message) {
-				$this->logger->info("Message {$message->getUid()} ({$message->getPreviewText()}) is " . ($predictions[$message->getUid()] ? 'important' : 'not important'));
-				if ($predictions[$message->getUid()] ?? false) {
+				$prediction = $predictions[$message->getUid()] ?? false;
+				$this->logger->info("Message {$message->getUid()} ({$message->getPreviewText()}) is " . ($prediction ? 'important' : 'not important'));
+				if ($prediction) {
 					$message->setFlagImportant(true);
 					$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), Tag::LABEL_IMPORTANT, true);
 					$this->mailManager->tagMessage($account, $mailbox->getName(), $message, $importantTag, true);

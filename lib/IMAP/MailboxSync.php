@@ -13,6 +13,7 @@ use Horde_Imap_Client;
 use Horde_Imap_Client_Data_Namespace;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Namespace_List;
+use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\Mailbox;
@@ -139,13 +140,11 @@ class MailboxSync {
 	/**
 	 * Sync unread and total message statistics.
 	 *
-	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 *
 	 * @throws ServiceException
 	 */
-	public function syncStats(Account $account, Mailbox $mailbox): void {
-		$client = $this->imapClientFactory->getClient($account);
+	public function syncStats(Horde_Imap_Client_Socket $client, Mailbox $mailbox): void {
 		try {
 			$allStats = $this->folderMapper->getFoldersStatusAsObject($client, [$mailbox->getName()]);
 		} catch (Horde_Imap_Client_Exception $e) {
@@ -155,8 +154,6 @@ class MailboxSync {
 				$e->getCode(),
 				$e
 			);
-		} finally {
-			$client->logout();
 		}
 
 		if (!isset($allStats[$mailbox->getName()])) {
@@ -260,7 +257,6 @@ class MailboxSync {
 	private function syncMailboxStatus(mixed $mailboxes, ?string $personalNamespace, \Horde_Imap_Client_Socket $client): void {
 		/** @var array{0: Mailbox[], 1: Mailbox[]} */
 		[$sync, $doNotSync] = array_reduce($mailboxes, function (array $carry, Mailbox $mailbox) use ($personalNamespace): array {
-			/** @var array{0: Mailbox[], 1: Mailbox[]} $carry */
 			[$sync, $doNotSync] = $carry;
 			$inboxName = $personalNamespace === null ? 'INBOX' : ($personalNamespace . $mailbox->getDelimiter() . 'INBOX');
 			if ($inboxName === $mailbox->getName() || $mailbox->getSyncInBackground()) {

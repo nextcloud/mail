@@ -131,7 +131,6 @@ OC.L10N.register(
     "Decline" : "Refugar",
     "Tentatively accept" : "Aceptar provisionalmente",
     "More options" : "Más opciones",
-    "This event is in the past." : "Esti eventu ye del pasáu.",
     "individual" : "individual",
     "domain" : "dominiu",
     "Remove" : "Quitar",
@@ -307,6 +306,7 @@ OC.L10N.register(
     "Could not load the message" : "Nun se pudo cargar el mensaxe",
     "Error loading message" : "Hebo un error al cargar el mensaxe",
     "Redirect" : "Redirixir",
-    "The link leads to %s" : "L'enllaz lleva a %s"
+    "The link leads to %s" : "L'enllaz lleva a %s",
+    "This event is in the past." : "Esti eventu ye del pasáu."
 },
 "nplurals=2; plural=(n != 1);");

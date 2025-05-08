@@ -111,7 +111,7 @@
 			</div>
 		</transition>
 
-		<transition-group name="list">
+		<transition-group :name="listTransitionName">
 			<Envelope v-for="(env, index) in sortedEnvelops"
 				:key="env.databaseId"
 				:data="env"
@@ -209,11 +209,6 @@ export default {
 			required: false,
 			default: undefined,
 		},
-		refreshing: {
-			type: Boolean,
-			required: true,
-			default: true,
-		},
 		loadingMore: {
 			type: Boolean,
 			required: true,
@@ -221,6 +216,10 @@ export default {
 		loadMoreButton: {
 			type: Boolean,
 			required: false,
+			default: false,
+		},
+		skipTransition: {
+			type: Boolean,
 			default: false,
 		},
 	},
@@ -238,7 +237,6 @@ export default {
 		sortOrder() {
 			return this.mainStore.getPreference('sort-order', 'newest')
 		},
-
 		sortedEnvelops() {
 			if (this.sortOrder === 'oldest') {
 				return [...this.envelopes].sort((a, b) => {
@@ -297,6 +295,9 @@ export default {
 		hasMultipleAccounts() {
 			const mailboxIds = this.sortedEnvelops.map(envelope => envelope.mailboxId)
 			return Array.from(new Set(mailboxIds)).length > 1
+		},
+		listTransitionName() {
+			return this.skipTransition ? 'disabled' : 'list'
 		},
 	},
 	watch: {

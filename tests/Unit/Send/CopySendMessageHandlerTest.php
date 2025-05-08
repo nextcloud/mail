@@ -15,7 +15,6 @@ use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Send\CopySentMessageHandler;
 use OCA\Mail\Send\FlagRepliedMessageHandler;
@@ -24,7 +23,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class CopySendMessageHandlerTest extends TestCase {
-	private IMAPClientFactory|MockObject $imapClientFactory;
 	private MailboxMapper|MockObject $mailboxMapper;
 	private LoggerInterface|MockObject $loggerInterface;
 	private MockObject|MessageMapper $messageMapper;
@@ -33,13 +31,11 @@ class CopySendMessageHandlerTest extends TestCase {
 
 	protected function setUp(): void {
 
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->loggerInterface = $this->createMock(LoggerInterface::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->flagRepliedMessageHandler = $this->createMock(FlagRepliedMessageHandler::class);
 		$this->handler = new CopySentMessageHandler(
-			$this->imapClientFactory,
 			$this->mailboxMapper,
 			$this->loggerInterface,
 			$this->messageMapper,
@@ -68,9 +64,6 @@ class CopySendMessageHandlerTest extends TestCase {
 		$this->mailboxMapper->expects(self::once())
 			->method('findById')
 			->willReturn($mailbox);
-		$this->imapClientFactory->expects(self::once())
-			->method('getClient')
-			->willReturn($client);
 		$mock->expects(self::once())
 			->method('getRaw')
 			->willReturn('Test');
@@ -84,7 +77,7 @@ class CopySendMessageHandlerTest extends TestCase {
 			->with($account, $mock);
 
 
-		$this->handler->process($account, $mock);
+		$this->handler->process($account, $mock, $client);
 	}
 
 	public function testProcessNoSentMailbox(): void {
@@ -94,6 +87,7 @@ class CopySendMessageHandlerTest extends TestCase {
 		$localMessage = $this->getMockBuilder(LocalMessage::class);
 		$localMessage->addMethods(['getStatus', 'setStatus', 'getRaw']);
 		$mock = $localMessage->getMock();
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
 		$this->loggerInterface->expects(self::once())
 			->method('warning');
@@ -110,14 +104,12 @@ class CopySendMessageHandlerTest extends TestCase {
 			->method('error');
 		$this->mailboxMapper->expects(self::never())
 			->method('findById');
-		$this->imapClientFactory->expects(self::never())
-			->method('getClient');
 		$this->messageMapper->expects(self::never())
 			->method('save');
 		$this->flagRepliedMessageHandler->expects(self::never())
 			->method('process');
 
-		$this->handler->process($account, $mock);
+		$this->handler->process($account, $mock, $client);
 	}
 
 	public function testProcessNoSentMailboxFound(): void {
@@ -128,6 +120,7 @@ class CopySendMessageHandlerTest extends TestCase {
 		$localMessage = $this->getMockBuilder(LocalMessage::class);
 		$localMessage->addMethods(['getStatus', 'setStatus', 'getRaw']);
 		$mock = $localMessage->getMock();
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
 		$this->loggerInterface->expects(self::never())
 			->method('warning');
@@ -145,14 +138,12 @@ class CopySendMessageHandlerTest extends TestCase {
 			->willThrowException(new DoesNotExistException(''));
 		$this->loggerInterface->expects(self::once())
 			->method('error');
-		$this->imapClientFactory->expects(self::never())
-			->method('getClient');
 		$this->messageMapper->expects(self::never())
 			->method('save');
 		$this->flagRepliedMessageHandler->expects(self::never())
 			->method('process');
 
-		$this->handler->process($account, $mock);
+		$this->handler->process($account, $mock, $client);
 	}
 
 	public function testProcessCouldNotCopy(): void {
@@ -174,9 +165,6 @@ class CopySendMessageHandlerTest extends TestCase {
 		$this->mailboxMapper->expects(self::once())
 			->method('findById')
 			->willReturn($mailbox);
-		$this->imapClientFactory->expects(self::once())
-			->method('getClient')
-			->willReturn($client);
 		$mock->expects(self::once())
 			->method('getRaw')
 			->willReturn('123 Content');
@@ -191,7 +179,7 @@ class CopySendMessageHandlerTest extends TestCase {
 		$this->flagRepliedMessageHandler->expects(self::never())
 			->method('process');
 
-		$this->handler->process($account, $mock);
+		$this->handler->process($account, $mock, $client);
 	}
 
 	public function testProcessAlreadyProcessed(): void {
@@ -201,6 +189,7 @@ class CopySendMessageHandlerTest extends TestCase {
 		$localMessage = $this->getMockBuilder(LocalMessage::class);
 		$localMessage->addMethods(['getStatus']);
 		$mock = $localMessage->getMock();
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
 		$this->loggerInterface->expects(self::never())
 			->method('warning');
@@ -211,14 +200,12 @@ class CopySendMessageHandlerTest extends TestCase {
 			->method('error');
 		$this->mailboxMapper->expects(self::never())
 			->method('findById');
-		$this->imapClientFactory->expects(self::never())
-			->method('getClient');
 		$this->messageMapper->expects(self::never())
 			->method('save');
 		$this->flagRepliedMessageHandler->expects(self::once())
 			->method('process');
 
-		$this->handler->process($account, $mock);
+		$this->handler->process($account, $mock, $client);
 	}
 
 	public function testProcessNoRawMessage(): void {
@@ -229,6 +216,7 @@ class CopySendMessageHandlerTest extends TestCase {
 		$localMessage = $this->getMockBuilder(LocalMessage::class);
 		$localMessage->addMethods(['getStatus','setStatus', 'getRaw']);
 		$mock = $localMessage->getMock();
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
 		$mock->expects(self::once())
 			->method('getStatus')
@@ -241,14 +229,12 @@ class CopySendMessageHandlerTest extends TestCase {
 			->willReturn(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
 		$this->mailboxMapper->expects(self::never())
 			->method('findById');
-		$this->imapClientFactory->expects(self::never())
-			->method('getClient');
 		$this->messageMapper->expects(self::never())
 			->method('save');
 		$this->flagRepliedMessageHandler->expects(self::never())
 			->method('process');
 
-		$result = $this->handler->process($account, $mock);
+		$result = $this->handler->process($account, $mock, $client);
 		$this->assertEquals($mock, $result);
 	}
 }

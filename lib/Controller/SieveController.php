@@ -141,26 +141,25 @@ class SieveController extends Controller {
 			$mailAccount->setSieveEnabled(false);
 			$mailAccount->setSieveHost(null);
 			$mailAccount->setSievePort(null);
+			$mailAccount->setSieveSslMode(null);
 			$mailAccount->setSieveUser(null);
 			$mailAccount->setSievePassword(null);
-			$mailAccount->setSieveSslMode(null);
 
 			$this->mailAccountMapper->save($mailAccount);
 			return new JSONResponse(['sieveEnabled' => $mailAccount->isSieveEnabled()]);
 		}
 
-		if (empty($sieveUser)) {
+		if (empty($sieveUser) && empty($sievePassword)) {
+			$useImapCredentials = true;
 			$sieveUser = $mailAccount->getInboundUser();
-		}
-
-		if (empty($sievePassword)) {
-			$sievePassword = $mailAccount->getInboundPassword();
+			/** @psalm-suppress PossiblyNullArgument */
+			$sievePassword = $this->crypto->decrypt($mailAccount->getInboundPassword());
 		} else {
-			$sievePassword = $this->crypto->encrypt($sievePassword);
+			$useImapCredentials = false;
 		}
 
 		try {
-			$this->sieveClientFactory->createClient($sieveHost, $sievePort, $sieveUser, $sievePassword, $sieveSslMode);
+			$this->sieveClientFactory->createClient($sieveHost, $sievePort, $sieveUser, $sievePassword, $sieveSslMode, null);
 		} catch (ManagesieveException $e) {
 			throw new CouldNotConnectException($e, 'ManageSieve', $sieveHost, $sievePort);
 		}
@@ -168,9 +167,14 @@ class SieveController extends Controller {
 		$mailAccount->setSieveEnabled(true);
 		$mailAccount->setSieveHost($sieveHost);
 		$mailAccount->setSievePort($sievePort);
-		$mailAccount->setSieveUser($mailAccount->getInboundUser() === $sieveUser ? null : $sieveUser);
-		$mailAccount->setSievePassword($mailAccount->getInboundPassword() === $sievePassword ? null : $sievePassword);
 		$mailAccount->setSieveSslMode($sieveSslMode);
+		if ($useImapCredentials) {
+			$mailAccount->setSieveUser(null);
+			$mailAccount->setSievePassword(null);
+		} else {
+			$mailAccount->setSieveUser($sieveUser);
+			$mailAccount->setSievePassword($this->crypto->encrypt($sievePassword));
+		}
 
 		$this->mailAccountMapper->save($mailAccount);
 		return new JSONResponse(['sieveEnabled' => $mailAccount->isSieveEnabled()]);
