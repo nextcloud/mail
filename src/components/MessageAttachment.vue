@@ -186,13 +186,13 @@ export default {
 		humanReadable(size) {
 			return formatFileSize(size)
 		},
-		saveToCloud(dest) {
+		async saveToCloud(dest) {
 			const path = dest[0].path
 			this.savingToCloud = true
 			const id = this.$route.params.threadId
 
 			try {
-				saveAttachmentToFiles(id, this.id, path)
+				await saveAttachmentToFiles(id, this.id, path)
 				Logger.info('saved')
 				showSuccess(t('mail', 'Attachment saved to Files'))
 			} catch (e) {
