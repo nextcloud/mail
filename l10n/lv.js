@@ -14,6 +14,8 @@ OC.L10N.register(
     "Save" : "Saglabāt",
     "Connect" : "Savienoties",
     "Password required" : "Nepieciešama parole",
+    "Account updated. Please follow the pop-up instructions to reconnect your Google account" : "Konts atjaunināts. Lūgums sekot uznirstošajām norādēm, lai atkārtoti savienotu savu Google kontu",
+    "Account updated. Please follow the pop-up instructions to reconnect your Microsoft account" : "Konts atjaunināts. Lūgums sekot uznirstošajām norādēm, lai atkārtoti savienotu savu Microsoft kontu",
     "Auto" : "Automātiski",
     "Name" : "Nosaukums",
     "Mail address" : "E-pasta adrese",

@@ -393,6 +393,7 @@ OC.L10N.register(
     "Loading …" : "正在載入……",
     "Not supported by the server" : "不被伺服器支援",
     "{usage} of {limit} used" : "已使用 {limit} 中的 {usage}",
+    "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "無法建立信箱。該名稱可能包含無效字元。請嘗試其他名稱。",
     "Remove account" : "移除帳號",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "{email} 帳號與已快取的電子郵件將會從 Nextcloud 移除，但不會從您的電子郵件提供商移除。",
     "Remove {email}" : "移除 {email}",
