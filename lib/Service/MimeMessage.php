@@ -15,9 +15,8 @@ use DOMNode;
 use Horde_Mime_Part;
 use Horde_Text_Filter;
 use OCA\Mail\Exception\InvalidDataUriException;
+use OCA\Mail\Html\Parser;
 use OCA\Mail\Service\DataUri\DataUriParser;
-use function libxml_clear_errors;
-use function libxml_use_internal_errors;
 
 class MimeMessage {
 	private DataUriParser $uriParser;
@@ -66,7 +65,7 @@ class MimeMessage {
 	private function buildMessagePart(?string $contentPlain, ?string $contentHtml): Horde_Mime_Part {
 
 		if (isset($contentHtml)) {
-			
+
 			// determine if content is wrapped properly in a html tag, otherwise we need to wrap it properly
 			if (mb_strpos($contentHtml, '<html') === false) {
 				$source = '<!DOCTYPE html><html><meta http-equiv="content-type" content="text/html; charset=UTF-8"><body>' . PHP_EOL . $contentHtml . PHP_EOL . '</body>';
@@ -74,20 +73,9 @@ class MimeMessage {
 				$source = ' ' . $contentHtml;
 			}
 
-			/**
-			 * DOMDocument uses libxml to parse HTML and that expects HTML4. It
-			 * is likely that some markup cause an error, which is otherwise
-			 * logged. Therefore, we ignore any error here.
-			 * @todo Migrate to \Dom\HTMLDocument::createFromString when this app uses PHP8.4+
-			 */
-			$previousLibxmlErrorsState = libxml_use_internal_errors(true);
-			$doc = new DOMDocument();
-			$doc->loadHTML($source, LIBXML_NONET | LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
-			libxml_clear_errors();
-			libxml_use_internal_errors($previousLibxmlErrorsState);
-
 			// determine if content has any embedded images
 			$embeddedParts = [];
+			$doc = Parser::parseToDomDocument($source);
 			foreach ($doc->getElementsByTagName('img') as $id => $image) {
 				if (!($image instanceof DOMElement)) {
 					continue;
@@ -125,7 +113,7 @@ class MimeMessage {
 			$htmlPart->setCharset('UTF-8');
 			$htmlPart->setContents($htmlContent);
 		}
-		
+
 		if (isset($contentPlain)) {
 			$plainPart = new Horde_Mime_Part();
 			$plainPart->setType('text/plain');
@@ -197,7 +185,7 @@ class MimeMessage {
 		$pgpIdentPart->setTransferEncoding('7bit');
 		$pgpIdentPart->setDescription('PGP/MIME Versions Identification');
 		$pgpIdentPart->setContents('Version: 1');
-		
+
 		$basePart = new Horde_Mime_Part();
 		$basePart->setType('multipart/encrypted');
 		$basePart->setContentTypeParameter('protocol', 'application/pgp-encrypted');

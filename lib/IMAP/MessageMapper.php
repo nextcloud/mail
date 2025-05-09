@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\IMAP;
 
-use DOMDocument;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Data_Fetch;
@@ -28,6 +27,7 @@ use Html2Text\Html2Text;
 use OCA\Mail\Attachment;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Html\Parser;
 use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\SmimeService;
@@ -41,7 +41,6 @@ use function fclose;
 use function in_array;
 use function is_array;
 use function iterator_to_array;
-use function libxml_clear_errors;
 use function max;
 use function min;
 use function OCA\Mail\array_flat_map;
@@ -1019,17 +1018,7 @@ class MessageMapper {
 		if (empty($body)) {
 			return false;
 		}
-		/**
-		 * DOMDocument uses libxml to parse HTML and that expects HTML4. It
-		 * is likely that some markup cause an error, which is otherwise
-		 * logged. Therefore, we ignore any error here.
-		 * @todo Migrate to \Dom\HTMLDocument::createFromString when this app uses PHP8.4+
-		 */
-		$dom = new DOMDocument();
-		$previousLibxmlErrorsState = libxml_use_internal_errors(true);
-		$dom->loadHTML($body, LIBXML_NONET | LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
-		libxml_clear_errors();
-		libxml_use_internal_errors($previousLibxmlErrorsState);
+		$dom = Parser::parseToDomDocument($body);
 		$anchors = $dom->getElementsByTagName('a');
 		foreach ($anchors as $anchor) {
 			$href = $anchor->getAttribute('href');
