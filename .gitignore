@@ -45,3 +45,8 @@ tests/.phpunit.result.cache
 
 # PhpStorm
 .idea
+
+# Playwright
+/playwright
+/playwright-report
+/test-results
