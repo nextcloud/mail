@@ -42,6 +42,14 @@ class LinkCheckTest extends TestCase {
 		$this->assertFalse($result->isPhishing());
 	}
 
+	public function testAddressInParenthesessPass(): void {
+		$htmlMessage = '<html><body><a href="https://nextcloud.com/">(https://nextcloud.com/)</a></body></html>';
+
+		$result = $this->service->run($htmlMessage);
+
+		$this->assertFalse($result->isPhishing());
+	}
+
 	public function testCompleteAddressFail(): void {
 		$htmlMessage = '<html><body><a href="https://nextcloud.com/">https://google.com/</a></p></body></html>';
 
@@ -50,11 +58,32 @@ class LinkCheckTest extends TestCase {
 		$this->assertTrue($result->isPhishing());
 	}
 
+	public function testBracketWrappedAddress(): void {
+		$htmlMessage = '<html><body><a href="https://nextcloud.com">[https://nextcloud.com]</a></p></body></html>';
+
+		$result = $this->service->run($htmlMessage);
+
+		$this->assertFalse($result->isPhishing());
+	}
+
 	public function testDeepAddressPass(): void {
 		$htmlMessage = '<html><body><a href="https://nextcloud.com/"><span class="text-big" style="color:hsl(0,75%,60%);font-family: Courier, monospace;"><i><strong>nextcloud.com</strong></i></span></a></body></html>';
 
 		$result = $this->service->run($htmlMessage);
 
 		$this->assertFalse($result->isPhishing());
+	}
+
+	public function testRunWithUtf8(): void {
+		$htmlMessage = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body><a href="https://iplookup.flagfox.net/">Öffne iplookup.flagfox.net ↗</a></body></html>';
+
+		$result = $this->service->run($htmlMessage);
+		$actualJson = $result->jsonSerialize();
+		$this->assertTrue($result->isPhishing());
+		$this->assertEquals([[
+			'linkText' => 'Öffne iplookup.flagfox.net ↗',
+			'href' => 'https://iplookup.flagfox.net/',
+		]], $actualJson['additionalData']);
+		$this->assertTrue(is_string(json_encode($actualJson, JSON_THROW_ON_ERROR)));
 	}
 }

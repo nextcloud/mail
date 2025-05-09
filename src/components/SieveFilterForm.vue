@@ -29,6 +29,9 @@
 <script>
 import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
+
 export default {
 	name: 'SieveFilterForm',
 	components: {
@@ -50,8 +53,9 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		scriptData() {
-			return this.$store.getters.getActiveSieveScript(this.account.id)
+			return this.mainStore.getActiveSieveScript(this.account.id)
 		},
 	},
 	watch: {
@@ -73,7 +77,7 @@ export default {
 			this.errorMessage = ''
 
 			try {
-				await this.$store.dispatch('updateActiveSieveScript', {
+				await this.mainStore.updateActiveSieveScript({
 					accountId: this.account.id,
 					scriptData: {
 						...this.scriptData,

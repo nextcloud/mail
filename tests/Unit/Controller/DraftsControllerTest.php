@@ -194,7 +194,8 @@ class DraftsControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
@@ -222,7 +223,8 @@ class DraftsControllerTest extends TestCase {
 		$actual = $this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			null,
@@ -243,7 +245,8 @@ class DraftsControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
@@ -273,7 +276,8 @@ class DraftsControllerTest extends TestCase {
 		$actual = $this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			null,
@@ -298,7 +302,8 @@ class DraftsControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
@@ -324,7 +329,8 @@ class DraftsControllerTest extends TestCase {
 		$actual = $this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			null,
@@ -345,7 +351,8 @@ class DraftsControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
@@ -365,7 +372,8 @@ class DraftsControllerTest extends TestCase {
 		$actual = $this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			null,
@@ -384,7 +392,8 @@ class DraftsControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
@@ -403,7 +412,8 @@ class DraftsControllerTest extends TestCase {
 		$this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			null,
@@ -423,7 +433,8 @@ class DraftsControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
@@ -451,7 +462,8 @@ class DraftsControllerTest extends TestCase {
 			$message->getId(),
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			null,
@@ -474,7 +486,8 @@ class DraftsControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
@@ -503,7 +516,8 @@ class DraftsControllerTest extends TestCase {
 			$message->getId(),
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			null,
@@ -528,7 +542,8 @@ class DraftsControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
@@ -551,7 +566,8 @@ class DraftsControllerTest extends TestCase {
 			$message->getId(),
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			null,
@@ -574,7 +590,8 @@ class DraftsControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
@@ -602,7 +619,8 @@ class DraftsControllerTest extends TestCase {
 			$message->getId(),
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			null,

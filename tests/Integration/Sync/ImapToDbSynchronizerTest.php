@@ -94,7 +94,7 @@ class ImapToDbSynchronizerTest extends TestCase {
 		);
 
 		// Assert that the cached state has been reconciled with IMAP
-		self::assertEquals([$uid1, $uid2], $dbMessageMapper->findAllUids($inbox));
+		self::assertEqualsCanonicalizing([$uid1, $uid2], $dbMessageMapper->findAllUids($inbox));
 	}
 
 	public function testRepairSyncNoopIfNoneVanished(): void {
@@ -153,6 +153,6 @@ class ImapToDbSynchronizerTest extends TestCase {
 		);
 
 		// Assert that the cached state has been reconciled with IMAP
-		self::assertEquals([$uid1, $uid2, $uid3], $dbMessageMapper->findAllUids($inbox));
+		self::assertEqualsCanonicalizing([$uid1, $uid2, $uid3], $dbMessageMapper->findAllUids($inbox));
 	}
 }

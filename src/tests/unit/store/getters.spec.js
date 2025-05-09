@@ -3,18 +3,17 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { curry, mapObjIndexed } from 'ramda'
+import { setActivePinia } from 'pinia'
+import { createTestingPinia } from '@pinia/testing'
+import useMainStore from '../../../store/mainStore.js'
 
-import { getters } from '../../../store/getters'
-
-const bindGetterToState = curry((getters, state, num, key) => getters[key](state, getters))
-
-describe('Vuex store getters', () => {
-	let state
-	let bindGetters
+describe('Pinia main store getters', () => {
+	let store
 
 	beforeEach(() => {
-		state = {
+		setActivePinia(createTestingPinia({ stubActions: false }))
+		store = useMainStore()
+		store.$patch({
 			isExpiredSession: false,
 			accountList: [],
 			accounts: {},
@@ -24,57 +23,51 @@ describe('Vuex store getters', () => {
 			tagList: [],
 			tags: {},
 			calendars: [],
-		}
-		bindGetters = () => mapObjIndexed(bindGetterToState(getters, state), getters)
+		})
 	})
 
 	it('gets session expiry', () => {
-		const getters = bindGetters()
-
-		expect(getters.isExpiredSession).toEqual(false)
+		expect(store.isExpiredSession).toEqual(false)
 	})
 	it('gets all accounts', () => {
-		state.accountList.push('13')
-		state.accounts[13] = {
+		store.accountList.push('13')
+		store.accountsUnmapped[13] = {
 			accountId: 13,
 		}
-		const getters = bindGetters()
 
-		const accounts = getters.accounts
+		const accounts = store.accountsUnmapped
 
-		expect(accounts).toEqual([
+		expect(accounts['13']).toEqual(
 			{
 				accountId: 13,
 			},
-		])
+		)
 	})
 	it('gets a specific account', () => {
-		state.accountList.push('13')
-		state.accounts[13] = {
+		store.accountList.push('13')
+		store.accountsUnmapped[13] = {
 			accountId: 13,
 		}
-		const getters = bindGetters()
 
-		const accounts = getters.getAccount(13)
+		const accounts = store.getAccount(13)
 
 		expect(accounts).toEqual({
 			accountId: 13,
 		})
 	})
 	it('returns an envelope\'s empty thread', () => {
-		state.envelopes[1] = {
+		store.envelopes[1] = {
 			databaseId: 1,
 			uid: 101,
 			mailboxId: 13,
 		}
-		const getters = bindGetters()
 
-		const thread = getters.getEnvelopeThread(1)
+		const thread = store.getEnvelopeThread(1)
 
 		expect(thread.length).toEqual(0)
 	})
 	it('returns an envelope\'s empty thread', () => {
-		state.envelopes[1] = {
+		store.envelopes[1] = {
 			databaseId: 1,
 			uid: 101,
 			mailboxId: 13,
@@ -84,19 +77,18 @@ describe('Vuex store getters', () => {
 				3,
 			],
 		}
-		state.envelopes[2] = {
+		store.envelopes[2] = {
 			databaseId: 1,
 			uid: 101,
 			mailboxId: 13,
 		}
-		state.envelopes[3] = {
+		store.envelopes[3] = {
 			databaseId: 1,
 			uid: 101,
 			mailboxId: 13,
 		}
-		const getters = bindGetters()
 
-		const thread = getters.getEnvelopeThread(1)
+		const thread = store.getEnvelopeThread(1)
 
 		expect(thread.length).toBeGreaterThanOrEqual(1)
 		expect(thread).toEqual([
@@ -124,44 +116,43 @@ describe('Vuex store getters', () => {
 	})
 
 	it('return envelopes by thread root id', () => {
-		state.envelopes[0] = {
+		store.envelopes[0] = {
 			accountId: 1,
 			databaseId: 1,
 			uid: 101,
 			mailboxId: 13,
 			threadRootId: '123-456-789',
 		}
-		state.envelopes[1] = {
+		store.envelopes[1] = {
 			accountId: 1,
 			databaseId: 2,
 			uid: 102,
 			mailboxId: 13,
 			threadRootId: '123-456-789',
 		}
-		state.envelopes[2] = {
+		store.envelopes[2] = {
 			accountId: 1,
 			databaseId: 3,
 			uid: 103,
 			mailboxId: 13,
 			threadRootId: '234-567-890',
 		}
-		state.envelopes[3] = {
+		store.envelopes[3] = {
 			accountId: 1,
 			databaseId: 4,
 			uid: 104,
 			mailboxId: 13,
 			threadRootId: '234-567-890',
 		}
-		state.envelopes[4] = {
+		store.envelopes[4] = {
 			accountId: 2,
 			databaseId: 5,
 			uid: 105,
 			mailboxId: 23,
 			threadRootId: '123-456-789',
 		}
-		const getters = bindGetters()
 
-		const envelopesA = getters.getEnvelopesByThreadRootId(1, '123-456-789')
+		const envelopesA = store.getEnvelopesByThreadRootId(1, '123-456-789')
 		expect(envelopesA.length).toEqual(2)
 		expect(envelopesA).toEqual([
 			{
@@ -180,56 +171,52 @@ describe('Vuex store getters', () => {
 			},
 		])
 
-		const envelopesB = getters.getEnvelopesByThreadRootId('345-678-901')
+		const envelopesB = store.getEnvelopesByThreadRootId('345-678-901')
 		expect(envelopesB.length).toEqual(0)
 	})
 
 	it('find mailbox by special role: inbox', () => {
-		const mockedGetters = {
-			getMailboxes: () => [
-				{
-					name: 'Test',
-					specialRole: 0,
-				},
-				{
-					name: 'INBOX',
-					specialRole: 'inbox',
-				},
-				{
-					name: 'Trash',
-					specialRole: 'trash',
-				},
-			],
-		}
+		store.getMailboxes = jest.fn().mockReturnValue([
+			{
+				name: 'Test',
+				specialRole: 0,
+			},
+			{
+				name: 'INBOX',
+				specialRole: 'inbox',
+			},
+			{
+				name: 'Trash',
+				specialRole: 'trash',
+			},
+		])
 
-		const result = getters.findMailboxBySpecialRole(state, mockedGetters)('100', 'inbox')
+		const result = store.findMailboxBySpecialRole('100', 'inbox')
 
 		expect(result).toEqual({
 			name: 'INBOX',
 			specialRole: 'inbox',
-		});
+		})
 	})
 
 	it('find mailbox by special role: undefined', () => {
-		const mockedGetters = {
-			getMailboxes: () => [
-				{
-					name: 'Test',
-					specialRole: 0,
-				},
-				{
-					name: 'INBOX',
-					specialRole: 'inbox',
-				},
-				{
-					name: 'Trash',
-					specialRole: 'trash',
-				},
-			],
-		}
+		store.getMailboxes = jest.fn().mockReturnValue([
+			{
+				name: 'Test',
+				specialRole: 0,
+			},
+			{
+				name: 'INBOX',
+				specialRole: 'inbox',
+			},
+			{
+				name: 'Trash',
+				specialRole: 'trash',
+			},
+		])
 
-		const result = getters.findMailboxBySpecialRole(state, mockedGetters)('100', 'drafts')
+		const result = store.findMailboxBySpecialRole('100', 'drafts')
 
-		expect(result).toEqual(undefined);
+		expect(result).toEqual(undefined)
 	})
 })

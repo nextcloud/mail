@@ -16,6 +16,8 @@
 
 <script>
 import debounce from 'lodash/fp/debounce.js'
+import useMainStore from '../store/mainStore.js'
+import { mapStores } from 'pinia'
 
 export default {
 	name: 'TrashRetentionSettings',
@@ -31,6 +33,9 @@ export default {
 			debouncedSave: debounce(1000, this.save),
 		}
 	},
+	computed: {
+		...mapStores(useMainStore),
+	},
 	methods: {
 		async save() {
 			let trashRetentionDays = parseInt(this.trashRetentionDays)
@@ -39,7 +44,7 @@ export default {
 				trashRetentionDays = 0
 			}
 
-			await this.$store.dispatch('patchAccount', {
+			await this.mainStore.patchAccount({
 				account: this.account,
 				data: { trashRetentionDays },
 			})

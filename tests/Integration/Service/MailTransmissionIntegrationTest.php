@@ -109,7 +109,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->message = new LocalMessage();
 		$this->message->setAccountId($this->account->getId());
 		$this->message->setSubject('greetings');
-		$this->message->setBody('hello there');
+		$this->message->setBodyHtml('hello there');
 		$this->message->setType(LocalMessage::TYPE_OUTGOING);
 		$this->message->setHtml(false);
 		$this->message->setRecipients([$recipient]);
@@ -128,6 +128,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 			Server::get(FlagRepliedMessageHandler::class),
 			$this->attachmentService,
 			$this->localMessageMapper,
+			Server::get(IMAPClientFactory::class),
 		);
 
 		$this->transmission = new MailTransmission(Server::get(IMAPClientFactory::class),

@@ -17,7 +17,6 @@ use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\MessageRetentionMapper;
 use OCA\Mail\Db\MessageSnoozeMapper;
 use OCA\Mail\Db\TagMapper;
-use OCA\Mail\Service\Classification\PersistenceService;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Utility\ITimeFactory;
 use Psr\Log\LoggerInterface;
@@ -44,7 +43,6 @@ class CleanupService {
 
 	private MessageSnoozeMapper $messageSnoozeMapper;
 
-	private PersistenceService $classifierPersistenceService;
 	private ITimeFactory $timeFactory;
 
 	public function __construct(MailAccountMapper $mailAccountMapper,
@@ -55,7 +53,6 @@ class CleanupService {
 		TagMapper $tagMapper,
 		MessageRetentionMapper $messageRetentionMapper,
 		MessageSnoozeMapper $messageSnoozeMapper,
-		PersistenceService $classifierPersistenceService,
 		ITimeFactory $timeFactory) {
 		$this->aliasMapper = $aliasMapper;
 		$this->mailboxMapper = $mailboxMapper;
@@ -64,7 +61,6 @@ class CleanupService {
 		$this->tagMapper = $tagMapper;
 		$this->messageRetentionMapper = $messageRetentionMapper;
 		$this->messageSnoozeMapper = $messageSnoozeMapper;
-		$this->classifierPersistenceService = $classifierPersistenceService;
 		$this->mailAccountMapper = $mailAccountMapper;
 		$this->timeFactory = $timeFactory;
 	}
@@ -92,8 +88,6 @@ class CleanupService {
 		$task->step('delete expired messages');
 		$this->messageSnoozeMapper->deleteOrphans();
 		$task->step('delete orphan snoozes');
-		$this->classifierPersistenceService->cleanUp();
-		$task->step('delete orphan classifiers');
 		$task->end();
 	}
 }

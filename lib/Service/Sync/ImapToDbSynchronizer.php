@@ -18,6 +18,8 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper as DatabaseMessageMapper;
+use OCA\Mail\Db\Tag;
+use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Events\SynchronizationEvent;
 use OCA\Mail\Exception\ClientException;
@@ -32,7 +34,9 @@ use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Synchronizer;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Service\Classification\NewMessagesClassifier;
 use OCA\Mail\Support\PerformanceLogger;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -72,15 +76,21 @@ class ImapToDbSynchronizer {
 	/** @var IMailManager */
 	private $mailManager;
 
+	private TagMapper $tagMapper;
+	private NewMessagesClassifier $newMessagesClassifier;
+
 	public function __construct(DatabaseMessageMapper $dbMapper,
 		IMAPClientFactory $clientFactory,
 		ImapMessageMapper $imapMapper,
 		MailboxMapper $mailboxMapper,
+		DatabaseMessageMapper $messageMapper,
 		Synchronizer $synchronizer,
 		IEventDispatcher $dispatcher,
 		PerformanceLogger $performanceLogger,
 		LoggerInterface $logger,
-		IMailManager $mailManager) {
+		IMailManager $mailManager,
+		TagMapper $tagMapper,
+		NewMessagesClassifier $newMessagesClassifier) {
 		$this->dbMapper = $dbMapper;
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
@@ -90,6 +100,8 @@ class ImapToDbSynchronizer {
 		$this->performanceLogger = $performanceLogger;
 		$this->logger = $logger;
 		$this->mailManager = $mailManager;
+		$this->tagMapper = $tagMapper;
+		$this->newMessagesClassifier = $newMessagesClassifier;
 	}
 
 	/**
@@ -105,9 +117,9 @@ class ImapToDbSynchronizer {
 		$snoozeMailboxId = $account->getMailAccount()->getSnoozeMailboxId();
 		$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
 		$trashRetentionDays = $account->getMailAccount()->getTrashRetentionDays();
-		
+
 		$client = $this->clientFactory->getClient($account);
-		
+
 		foreach ($this->mailboxMapper->findAll($account) as $mailbox) {
 			$syncTrash = $trashMailboxId === $mailbox->getId() && $trashRetentionDays !== null;
 			$syncSnooze = $snoozeMailboxId === $mailbox->getId();
@@ -131,7 +143,7 @@ class ImapToDbSynchronizer {
 				$rebuildThreads = true;
 			}
 		}
-		
+
 		$client->logout();
 
 		$this->dispatcher->dispatchTyped(
@@ -413,12 +425,30 @@ class ImapToDbSynchronizer {
 				});
 			}
 
+			$importantTag = null;
+			try {
+				$importantTag = $this->tagMapper->getTagByImapLabel(Tag::LABEL_IMPORTANT, $account->getUserId());
+			} catch (DoesNotExistException $e) {
+				$this->logger->error('Could not find important tag for ' . $account->getUserId() . ' ' . $e->getMessage(), [
+					'exception' => $e,
+				]);
+			}
+
 			foreach (array_chunk($newMessages, 500) as $chunk) {
 				$dbMessages = array_map(static function (IMAPMessage $imapMessage) use ($mailbox, $account) {
 					return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
 				}, $chunk);
 
 				$this->dbMapper->insertBulk($account, ...$dbMessages);
+
+				if ($importantTag) {
+					$this->newMessagesClassifier->classifyNewMessages(
+						$dbMessages,
+						$mailbox,
+						$account,
+						$importantTag,
+					);
+				}
 
 				$this->dispatcher->dispatch(
 					NewMessagesSynchronized::class,

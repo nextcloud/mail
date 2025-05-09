@@ -15,6 +15,9 @@ import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import { mailboxHasRights } from '../util/acl.js'
 
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
+
 export default {
 	name: 'MailboxInlinePicker',
 	components: {
@@ -40,6 +43,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		mailboxes() {
 			return this.getMailboxes()
 		},
@@ -56,9 +60,9 @@ export default {
 		getMailboxes(mailboxId) {
 			let mailboxes = []
 			if (!mailboxId) {
-				mailboxes = this.$store.getters.getMailboxes(this.account.accountId)
+				mailboxes = this.mainStore.getMailboxes(this.account.accountId)
 			} else {
-				mailboxes = this.$store.getters.getSubMailboxes(mailboxId)
+				mailboxes = this.mainStore.getSubMailboxes(mailboxId)
 			}
 			mailboxes = mailboxes.filter(mailbox => mailboxHasRights(mailbox, 'i'))
 			return mailboxes.map((mailbox) => {

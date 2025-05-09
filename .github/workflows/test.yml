@@ -11,10 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['8.1', '8.2', '8.3']
+        php-versions: ['8.2', '8.3']
         nextcloud-versions: ['master', 'stable30']
         include:
+          - php-versions: '8.1'
+            nextcloud-versions: 'stable30'
           - php-versions: '8.4'
+            nextcloud-versions: 'stable31'
+          - php-versions: '8.5'
             nextcloud-versions: 'master'
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
@@ -24,11 +28,11 @@ jobs:
         nextcloud-version: ${{ matrix.nextcloud-versions }}
         php-version: ${{ matrix.php-versions }}
         php-coverage: 'xdebug'
-        patch-php-version-check: ${{ matrix.php-versions == '8.4' }}
+        patch-php-version-check: ${{ matrix.php-versions == '8.5' }}
         node-version: 'false'
         install: true
     - name: Checkout Mail
-      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       with:
         path: nextcloud/apps/mail
         fetch-depth: 2
@@ -62,21 +66,25 @@ jobs:
       runs-on: ubuntu-latest
       strategy:
           matrix:
-              php-versions: ['8.3']
+              php-versions: ['8.4']
               nextcloud-versions: ['master']
               db: ['sqlite', 'mysql', 'pgsql']
               cache: ['nocache']
               include:
                 - php-versions: 8.1
-                  nextcloud-versions: master
+                  nextcloud-versions: 'stable30'
                   db: 'sqlite'
                   cache: 'redis'
                 - php-versions: 8.2
-                  nextcloud-versions: master
+                  nextcloud-versions: 'stable30'
+                  db: 'pgsql'
+                  cache: 'redis'
+                - php-versions: 8.3
+                  nextcloud-versions: 'stable31'
                   db: 'mysql'
                   cache: 'redis'
-                - php-versions: 8.2
-                  nextcloud-versions: stable30
+                - php-versions: 8.5
+                  nextcloud-versions: 'master'
                   db: 'mysql'
                   cache: 'redis'
       name: ${{ matrix.nextcloud-versions }} w/ php${{ matrix.php-versions }}-${{ matrix.db }}-${{ matrix.cache }} integration tests
@@ -135,7 +143,7 @@ jobs:
               nextcloud-version: ${{ matrix.nextcloud-versions }}
               php-version: ${{ matrix.php-versions }}
               php-coverage: 'xdebug'
-              patch-php-version-check: ${{ matrix.php-versions == '8.4' }}
+              patch-php-version-check: ${{ matrix.php-versions == '8.5' }}
               install: true
               database: ${{ matrix.db }}
               node-version: 'false'
@@ -145,7 +153,7 @@ jobs:
               php -f nextcloud/occ config:system:set memcache.local --value='\OC\Memcache\Redis'
               php -f nextcloud/occ config:system:set memcache.distributed --value='\OC\Memcache\Redis'
           - name: Checkout Mail
-            uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+            uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
             with:
                 path: nextcloud/apps/mail
                 fetch-depth: 2
@@ -153,13 +161,13 @@ jobs:
             working-directory: nextcloud/apps/mail
             run: composer install
           - name: Patch version check for nightly PHP
-            if: ${{ matrix.php-versions == '8.3' }}
-            run: sed -i 's/max-version="8.3"/max-version="8.4"/' nextcloud/apps/mail/appinfo/info.xml
+            if: ${{ matrix.php-versions == '8.5' }}
+            run: sed -i 's/max-version="8.4"/max-version="8.5"/' nextcloud/apps/mail/appinfo/info.xml
           - name: Install Mail
-            run: php -f nextcloud/occ app:enable -f mail
+            run: php -f nextcloud/occ app:enable mail
           - name: Configure Nextcloud for testing
             run: |
-                php -f nextcloud/occ config:system:set debug --type bool --value true
+                php -f nextcloud/occ config:system:set app.mail.debug --type bool --value true
                 php -f nextcloud/occ config:system:set app.mail.verify-tls-peer --type bool --value false
           - name: Enable slow mysql query logs
             if: ${{ matrix.db == 'mysql' }}
@@ -184,7 +192,7 @@ jobs:
             run: echo "SELECT * FROM mysql.slow_log WHERE sql_text LIKE '%oc_mail%' AND sql_text NOT LIKE '%information_schema%'" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
           - name: Print debug logs
             if: ${{ always() }}
-            run: cat nextcloud/data/horde_*.log
+            run: cat nextcloud/data/mail-*-*-imap.log
           - name: Report coverage
             uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
             if: ${{ always() && matrix.db == 'mysql' }}
@@ -199,7 +207,7 @@ jobs:
       runs-on: ubuntu-latest
       name: Front-end unit tests
       steps:
-          - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+          - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
           - name: Read package.json node and npm engines version
             uses: skjnldsv/read-package-engines-version-actions@8205673bab74a63eb9b8093402fd9e0e018663a1 # v2.2
             id: versions
@@ -207,7 +215,7 @@ jobs:
               fallbackNode: '^14'
               fallbackNpm: '^7'
           - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
-            uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4
+            uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
             with:
               node-version: ${{ steps.versions.outputs.nodeVersion }}
           - name: Set up npm ${{ steps.versions.outputs.npmVersion }}

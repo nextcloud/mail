@@ -16,6 +16,7 @@ use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\IMAP\Threading\DatabaseMessage;
 use OCA\Mail\Service\Search\Flag;
 use OCA\Mail\Service\Search\FlagExpression;
+use OCA\Mail\Service\Search\GlobalSearchQuery;
 use OCA\Mail\Service\Search\SearchQuery;
 use OCA\Mail\Support\PerformanceLogger;
 use OCA\Mail\Support\PerformanceLoggerTask;
@@ -23,6 +24,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\AppFramework\Db\TTransactional;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\DB\Exception;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\IUser;
@@ -39,6 +41,7 @@ use function ltrim;
 use function mb_convert_encoding;
 use function mb_strcut;
 use function OCA\Mail\array_flat_map;
+use function strlen;
 
 /**
  * @template-extends QBMapper<Message>
@@ -235,7 +238,7 @@ class MessageMapper extends QBMapper {
 			foreach ($messages as $message) {
 				$query->setParameter(
 					'thread_root_id',
-					$message->getThreadRootId(),
+					self::filterMessageIdLength($message->getThreadRootId()),
 					$message->getThreadRootId() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR
 				);
 				$query->setParameter('id', $message->getDatabaseId(), IQueryBuilder::PARAM_INT);
@@ -255,6 +258,7 @@ class MessageMapper extends QBMapper {
 	/**
 	 * @param Message ...$messages
 	 * @return void
+	 * @throws Exception
 	 */
 	public function insertBulk(Account $account, Message ...$messages): void {
 		$this->db->beginTransaction();
@@ -291,11 +295,11 @@ class MessageMapper extends QBMapper {
 			foreach ($messages as $message) {
 				$qb1->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
 				$qb1->setParameter('message_id', $message->getMessageId(), IQueryBuilder::PARAM_STR);
-				$inReplyTo = $message->getInReplyTo();
+				$inReplyTo = self::filterMessageIdLength($message->getInReplyTo());
 				$qb1->setParameter('in_reply_to', $inReplyTo, $inReplyTo === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
 				$references = $message->getReferences();
 				$qb1->setParameter('references', $references, $references === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
-				$threadRootId = $message->getThreadRootId();
+				$threadRootId = self::filterMessageIdLength($message->getThreadRootId());
 				$qb1->setParameter('thread_root_id', $threadRootId, $threadRootId === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
 				$qb1->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
 				$qb1->setParameter('subject', $message->getSubject(), IQueryBuilder::PARAM_STR);
@@ -347,6 +351,20 @@ class MessageMapper extends QBMapper {
 
 			throw $e;
 		}
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	private static function filterMessageIdLength(?string $messageId): ?string {
+		if ($messageId === null) {
+			return null;
+		}
+		if (strlen($messageId) > 1023) {
+			throw new Exception("IMAP message ID $messageId is too long for the database");
+		}
+
+		return $messageId;
 	}
 
 	/**
@@ -796,7 +814,13 @@ class MessageMapper extends QBMapper {
 		$selfJoin = $select->expr()->andX(
 			$select->expr()->eq('m.mailbox_id', 'm2.mailbox_id', IQueryBuilder::PARAM_INT),
 			$select->expr()->eq('m.thread_root_id', 'm2.thread_root_id', IQueryBuilder::PARAM_INT),
-			$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT)
+			$select->expr()->orX(
+				$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+				$select->expr()->andX(
+					$select->expr()->eq('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+					$select->expr()->lt('m.message_id', 'm2.message_id', IQueryBuilder::PARAM_STR),
+				),
+			),
 		);
 
 		$select->from($this->getTableName(), 'm')
@@ -1026,7 +1050,13 @@ class MessageMapper extends QBMapper {
 		$selfJoin = $select->expr()->andX(
 			$select->expr()->eq('m.mailbox_id', 'm2.mailbox_id', IQueryBuilder::PARAM_INT),
 			$select->expr()->eq('m.thread_root_id', 'm2.thread_root_id', IQueryBuilder::PARAM_INT),
-			$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT)
+			$select->expr()->orX(
+				$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+				$select->expr()->andX(
+					$select->expr()->eq('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+					$select->expr()->lt('m.message_id', 'm2.message_id', IQueryBuilder::PARAM_STR),
+				),
+			),
 		);
 
 		$select->from($this->getTableName(), 'm')
@@ -1049,6 +1079,16 @@ class MessageMapper extends QBMapper {
 			->from('mail_mailboxes', 'mb')
 			->join('mb', 'mail_accounts', 'a', $qb->expr()->eq('a.id', 'mb.account_id', IQueryBuilder::PARAM_INT))
 			->where($qb->expr()->eq('a.user_id', $qb->createNamedParameter($user->getUID())));
+
+		if ($query instanceof GlobalSearchQuery) {
+			$excludeMailboxIds = $query->getExcludeMailboxIds();
+			if (count($excludeMailboxIds) > 0) {
+				$selectMailboxIds->andWhere(
+					$qb->expr()->notIn('mb.id', $qb->createNamedParameter($excludeMailboxIds, IQueryBuilder::PARAM_INT_ARRAY))
+				);
+			}
+		}
+		
 		$select->where(
 			$qb->expr()->in('m.mailbox_id', $qb->createFunction($selectMailboxIds->getSQL()), IQueryBuilder::PARAM_INT_ARRAY)
 		);
@@ -1383,9 +1423,15 @@ class MessageMapper extends QBMapper {
 		$selfJoin = $select->expr()->andX(
 			$select->expr()->eq('m.mailbox_id', 'm2.mailbox_id', IQueryBuilder::PARAM_INT),
 			$select->expr()->eq('m.thread_root_id', 'm2.thread_root_id', IQueryBuilder::PARAM_INT),
-			$sortOrder === IMailSearch::ORDER_NEWEST_FIRST ?
-				$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT) :
-				$select->expr()->gt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT)
+			$select->expr()->orX(
+				$sortOrder === IMailSearch::ORDER_NEWEST_FIRST ?
+					$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT) :
+					$select->expr()->gt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+				$select->expr()->andX(
+					$select->expr()->eq('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+					$select->expr()->lt('m.message_id', 'm2.message_id', IQueryBuilder::PARAM_STR),
+				),
+			),
 		);
 		$wheres = [$select->expr()->eq('m.mailbox_id', $select->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
 			$select->expr()->andX($subSelect->expr()->notIn('m.id', $select->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY)),
@@ -1446,9 +1492,7 @@ class MessageMapper extends QBMapper {
 		$select = $qb
 			->select('m.*')
 			->from($this->getTableName(), 'm')
-			->join('m', 'mail_recipients', 'r', $qb->expr()->eq('m.id', 'r.message_id', IQueryBuilder::PARAM_INT))
 			->where(
-				$qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$qb->expr()->in('m.mailbox_id', $qb->createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
 			)
 			->orderBy('sent_at', 'desc')
@@ -1580,7 +1624,7 @@ class MessageMapper extends QBMapper {
 		$select = $qb->select('*')
 			->from($this->getTableName())
 			->where(
-				$qb->expr()->lte('sent_at', $qb->createNamedParameter($lastRun, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$qb->expr()->gt('sent_at', $qb->createNamedParameter($lastRun, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$qb->expr()->eq('structure_analyzed', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
 				$qb->expr()->in('mailbox_id', $qb->createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY),
 			)->orderBy('sent_at', 'ASC');

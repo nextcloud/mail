@@ -216,6 +216,8 @@ import { showInfo, showError } from '@nextcloud/dialogs'
 import { DroppableMailboxDirective as droppableMailbox } from '../directives/drag-and-drop/droppable-mailbox/index.js'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus.js'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'NavigationMailbox',
@@ -290,6 +292,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		visible() {
 			return (
 				(this.account.showSubscribedOnly === false
@@ -325,7 +328,7 @@ export default {
 			return this.subMailboxes.length > 0
 		},
 		subMailboxes() {
-			return this.$store.getters.getSubMailboxes(this.mailbox.databaseId)
+			return this.mainStore.getSubMailboxes(this.mailbox.databaseId)
 		},
 		statsText() {
 			if (this.mailboxStats && 'total' in this.mailboxStats && 'unread' in this.mailboxStats) {
@@ -373,7 +376,7 @@ export default {
 			if (!this.mailbox.isUnified) {
 				return true
 			}
-			return this.mailbox.specialUse.includes('inbox') && this.$store.getters.accounts.length > 2
+			return this.mailbox.specialUse.includes('inbox') && this.mainStore.getAccounts.length > 2
 		},
 		showUnreadCounter() {
 			if (this.filter === 'starred' || this.mailbox.specialRole === 'trash') {
@@ -388,7 +391,7 @@ export default {
 			if (!this.mailbox.myAcls) {
 				return true
 			}
-			const parent = this.$store.getters.getParentMailbox(this.mailbox.databaseId)
+			const parent = this.mainStore.getParentMailbox(this.mailbox.databaseId)
 			if (!parent || !parent.myAcls) {
 				return mailboxHasRights(this.mailbox, 'x')
 			}
@@ -470,7 +473,7 @@ export default {
 			logger.info(`creating mailbox ${withPrefix} as submailbox of ${this.mailbox.databaseId}`)
 			this.menuOpen = false
 			try {
-				await this.$store.dispatch('createMailbox', {
+				await this.mainStore.createMailbox({
 					account: this.account,
 					name: withPrefix,
 				})
@@ -491,11 +494,10 @@ export default {
 		markAsRead() {
 			this.loadingMarkAsRead = true
 
-			this.$store
-				.dispatch('markMailboxRead', {
-					accountId: this.account.id,
-					mailboxId: this.mailbox.databaseId,
-				})
+			this.mainStore.markMailboxRead({
+				accountId: this.account.id,
+				mailboxId: this.mailbox.databaseId,
+			})
 				.then(() => logger.info(`mailbox ${this.mailbox.databaseId} marked as read`))
 				.catch((error) => logger.error(`could not mark mailbox ${this.mailbox.databaseId} as read`, { error }))
 				.then(() => (this.loadingMarkAsRead = false))
@@ -504,7 +506,7 @@ export default {
 			try {
 				this.changeSubscription = true
 
-				await this.$store.dispatch('changeMailboxSubscription', {
+				await this.mainStore.changeMailboxSubscription({
 					mailbox: this.mailbox,
 					subscribed,
 				})
@@ -519,7 +521,7 @@ export default {
 			try {
 				this.changingSyncInBackground = true
 
-				await this.$store.dispatch('patchMailbox', {
+				await this.mainStore.patchMailbox({
 					mailbox: this.mailbox,
 					attributes: {
 						syncInBackground,
@@ -561,8 +563,7 @@ export default {
 				},
 				(result) => {
 					if (result) {
-						return this.$store
-							.dispatch('clearMailbox', { mailbox: this.mailbox })
+						return this.mainStore.clearMailbox({ mailbox: this.mailbox })
 							.then(() => {
 								logger.info(`mailbox ${id} cleared`)
 							})
@@ -585,8 +586,7 @@ export default {
 				},
 				(result) => {
 					if (result) {
-						return this.$store
-							.dispatch('deleteMailbox', { mailbox: this.mailbox })
+						return this.mainStore.deleteMailbox({ mailbox: this.mailbox })
 							.then(() => {
 								logger.info(`mailbox ${id} deleted`)
 								if (parseInt(this.$route.params.mailboxId, 10) === this.mailbox.databaseId) {
@@ -612,7 +612,7 @@ export default {
 				if (this.mailbox.path) {
 					newName = this.mailbox.path + this.mailbox.delimiter + newName
 				}
-				await this.$store.dispatch('renameMailbox', {
+				await this.mainStore.renameMailbox({
 					account: this.account,
 					mailbox: this.mailbox,
 					newName,
@@ -642,7 +642,7 @@ export default {
 			if (accountId !== this.mailbox.accountId) {
 				return
 			}
-			this.$store.commit('expandAccount', accountId)
+			this.mainStore.expandAccountMutation(accountId)
 			this.showSubMailboxes = true
 		},
 		onDragEnd({ accountId }) {

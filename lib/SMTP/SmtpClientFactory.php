@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace OCA\Mail\SMTP;
 
 use Horde_Mail_Transport;
-use Horde_Mail_Transport_Mail;
 use Horde_Mail_Transport_Smtphorde;
 use Horde_Smtp_Password_Xoauth2;
 use OCA\Mail\Account;
@@ -43,10 +42,6 @@ class SmtpClientFactory {
 	 */
 	public function create(Account $account): Horde_Mail_Transport {
 		$mailAccount = $account->getMailAccount();
-		$transport = $this->config->getSystemValue('app.mail.transport', 'smtp');
-		if ($transport === 'php-mail') {
-			return new Horde_Mail_Transport_Mail();
-		}
 
 		$decryptedPassword = null;
 		if ($mailAccount->getOutboundPassword() !== null) {
@@ -77,8 +72,9 @@ class SmtpClientFactory {
 				$decryptedAccessToken,
 			);
 		}
-		if ($this->config->getSystemValue('debug', false)) {
-			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_smtp.log';
+		if ($account->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
+			$fn = 'mail-' . $account->getUserId() . '-' . $account->getId() . '-smtp.log';
+			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;
 		}
 		return new Horde_Mail_Transport_Smtphorde($params);
 	}

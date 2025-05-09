@@ -84,10 +84,9 @@
 						<div>
 							<ListItemIcon :no-margin="true"
 								:name="option.label"
-								:subtitle="option.email"
+								:subname="getSubnameForRecipient(option)"
 								:icon-class="!option.id ? 'icon-user' : null"
-								:url="option.photo"
-								:avatar-size="24" />
+								:url="option.photo" />
 						</div>
 					</template>
 				</NcSelect>
@@ -138,10 +137,9 @@
 						<div>
 							<ListItemIcon :no-margin="true"
 								:name="option.label"
-								:subtitle="option.email"
+								:subname="getSubnameForRecipient(option)"
 								:url="option.photo"
-								:icon-class="!option.id ? 'icon-user' : null"
-								:avatar-size="24" />
+								:icon-class="!option.id ? 'icon-user' : null" />
 						</div>
 					</template>
 				</NcSelect>
@@ -192,10 +190,9 @@
 						<div>
 							<ListItemIcon :no-margin="true"
 								:name="option.label"
-								:subtitle="option.email"
+								:subname="getSubnameForRecipient(option)"
 								:url="option.photo"
-								:icon-class="!option.id ? 'icon-user' : null"
-								:avatar-size="24" />
+								:icon-class="!option.id ? 'icon-user' : null" />
 						</div>
 					</template>
 				</NcSelect>
@@ -483,7 +480,7 @@ import Vue from 'vue'
 import mitt from 'mitt'
 
 import { findRecipient } from '../service/AutocompleteService.js'
-import { detect, html, plain, toHtml, toPlain } from '../util/text.js'
+import { detect, html, toHtml, toPlain } from '../util/text.js'
 import logger from '../logger.js'
 import TextEditor from './TextEditor.vue'
 import { buildReplyBody } from '../ReplyBuilder.js'
@@ -491,14 +488,15 @@ import MailvelopeEditor from './MailvelopeEditor.vue'
 import { getMailvelope } from '../crypto/mailvelope.js'
 import { isPgpgMessage } from '../crypto/pgp.js'
 
-import { NcReferencePickerModal } from '@nextcloud/vue/dist/Components/NcRichText.js'
+import { NcReferencePickerModal } from '@nextcloud/vue/components/NcRichText'
 
 import Send from 'vue-material-design-icons/Send.vue'
 import SendClock from 'vue-material-design-icons/SendClock.vue'
 import moment from '@nextcloud/moment'
-import { mapGetters } from 'vuex'
 import { TRIGGER_CHANGE_ALIAS, TRIGGER_EDITOR_READY } from '../ckeditor/signature/InsertSignatureCommand.js'
 import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants.js'
+import useMainStore from '../store/mainStore.js'
+import { mapStores, mapState } from 'pinia'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -694,11 +692,10 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters([
-			'isScheduledSendingDisabled',
-		]),
+		...mapStores(useMainStore),
+		...mapState(useMainStore, ['isScheduledSendingDisabled']),
 		isPickerAvailable() {
-			return parseInt(this.$store.getters.getNcVersion) >= 26
+			return parseInt(this.mainStore.getNcVersion) >= 26
 		},
 		aliases() {
 			let cnt = 0
@@ -740,7 +737,7 @@ export default {
 			return new Date(new Date().setDate(new Date().getDate()))
 		},
 		attachmentSizeLimit() {
-			return this.$store.getters.getPreference('attachment-size-limit')
+			return this.mainStore.getPreference('attachment-size-limit')
 		},
 		selectableRecipients() {
 			return uniqBy('email')(this.newRecipients
@@ -881,7 +878,7 @@ export default {
 			const missingCertificates = []
 
 			this.allRecipients.forEach((recipient) => {
-				const recipientCertificate = this.$store.getters.getSmimeCertificateByEmail(recipient.email)
+				const recipientCertificate = this.mainStore.getSmimeCertificateByEmail(recipient.email)
 				if (!recipientCertificate) {
 					missingCertificates.push(recipient.email)
 				}
@@ -968,7 +965,7 @@ export default {
 
 		// Add messages forwarded as attachments
 		for (const id of this.forwardedMessages) {
-			const env = this.$store.getters.getEnvelope(id)
+			const env = this.mainStore.getEnvelope(id)
 			if (!env) {
 				// TODO: also happens when the composer page is reloaded
 				showError(t('mail', 'Message {id} could not be found', {
@@ -1032,7 +1029,7 @@ export default {
 					return alias.id === this.fromAccount && !alias.aliasId
 				})
 			} else {
-				const currentAccountId = this.$store.getters.getMailbox(this.$route.params.mailboxId)?.accountId
+				const currentAccountId = this.mainStore.getMailbox(this.$route.params.mailboxId)?.accountId
 				if (currentAccountId) {
 					this.selectedAlias = this.aliases.find((alias) => {
 						return alias.id === currentAccountId
@@ -1064,14 +1061,14 @@ export default {
 					this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
 					this.replyTo.from[0],
 					this.replyTo.dateInt,
-					this.$store.getters.getPreference('reply-mode', 'top') === 'top',
+					this.mainStore.getPreference('reply-mode', 'top') === 'top',
 				).value
 			} else if (this.forwardFrom && this.isFirstOpen) {
 				body = buildReplyBody(
 					this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
 					this.forwardFrom.from[0],
 					this.forwardFrom.dateInt,
-					this.$store.getters.getPreference('reply-mode', 'top') === 'top',
+					this.mainStore.getPreference('reply-mode', 'top') === 'top',
 				).value
 			} else {
 				body = this.bodyVal
@@ -1079,7 +1076,7 @@ export default {
 			this.bodyVal = html(body).value
 		},
 		getMessageData() {
-			return {
+			const data = {
 				// TODO: Rename account to accountId
 				account: this.selectedAlias.id,
 				accountId: this.selectedAlias.id,
@@ -1088,7 +1085,6 @@ export default {
 				cc: this.selectCc,
 				bcc: this.selectBcc,
 				subject: this.subjectVal,
-				body: this.encrypt ? plain(this.bodyVal) : html(this.bodyVal),
 				attachments: this.attachments,
 				inReplyToMessageId: this.inReplyToMessageId ?? (this.replyTo ? this.replyTo.messageId : undefined),
 				isHtml: !this.encrypt && !this.editorPlainText,
@@ -1099,6 +1095,14 @@ export default {
 				smimeCertificateId: this.smimeCertificateForCurrentAlias?.id,
 				isPgpMime: this.encrypt,
 			}
+
+			if (data.isHtml) {
+				data.bodyHtml = this.bodyVal
+			} else {
+				data.bodyPlain = toPlain(html(this.bodyVal)).value
+			}
+
+			return data
 		},
 		saveDraft() {
 			const draftData = this.getMessageData()
@@ -1411,7 +1415,7 @@ export default {
 			if (!certificateId) {
 				return undefined
 			}
-			return this.$store.getters.getSmimeCertificate(certificateId)
+			return this.mainStore.getSmimeCertificate(certificateId)
 		},
 
 		/**
@@ -1422,6 +1426,27 @@ export default {
 		 */
 		createRecipientOption(value) {
 			return { email: value, label: value }
+		},
+
+		/**
+		 * Return the subname for recipient suggestion.
+		 *
+		 * Empty if label and email are the same or
+		 * if the suggestion is a group.
+		 *
+		 * @param {{email: string, label: string}} option
+		 * @return string
+		 */
+		getSubnameForRecipient(option) {
+			if (option.source && option.source === 'groups') {
+				return ''
+			}
+
+			if (option.label === option.email) {
+				return ''
+			}
+
+			return option.email
 		},
 	},
 }
@@ -1457,7 +1482,7 @@ export default {
 
 	&.mail-account {
 		border-top: none;
-		padding-top: 10px;
+		padding-top: calc(var(--default-grid-baseline) * 2);
 	}
 
 	input,
@@ -1472,7 +1497,7 @@ export default {
 		display: flex;
 		align-items: flex-start;
 		justify-content: space-between;
-		padding-top: 2px;
+		padding-top: calc(var(--default-grid-baseline) * 0.5);
 
 		button {
 			margin-top: 0;
@@ -1480,7 +1505,7 @@ export default {
 			background-color: transparent;
 			border: none;
 			opacity: 0.5;
-			padding: 10px 16px;
+			padding: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 4);
 		}
 
 		.select {
@@ -1497,7 +1522,7 @@ export default {
 	.subject {
 		font-size: 15px;
 		font-weight: bold;
-		margin: 3px 0 !important;
+		margin: var(--default-grid-baseline) 0 !important;
 		padding: 0 !important;
 		width: 100%;
 
@@ -1529,7 +1554,7 @@ export default {
 }
 
 .draft-status {
-	padding: 2px;
+	padding: calc(var(--default-grid-baseline) * 0.5);
 	opacity: 0.5;
 	font-size: small;
 	display: block;
@@ -1579,6 +1604,10 @@ export default {
 	display: none;
 }
 
+:deep(.v-select.select){
+	left: 0 !important;
+}
+
 :deep(.vs__dropdown-menu){
 	padding: 0 !important;
 }
@@ -1596,11 +1625,11 @@ export default {
 .send-button {
 	display: flex;
 	align-items: center;
-	padding: 10px 15px;
-	margin-left: 5px;
+	padding: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 4);
+	margin-left: var(--default-grid-baseline);
 }
 .send-button .send-icon {
-	padding-right: 5px;
+	padding-right: var(--default-grid-baseline);
 }
 .centered-content {
 	margin-top: 0 !important;
@@ -1610,12 +1639,12 @@ export default {
 	align-items: center;
 	flex-direction: row;
 	justify-content: space-between;
-	bottom: 5px;
+	bottom: var(--default-grid-baseline);
 }
 .composer-actions--primary-actions {
 	display: flex;
 	flex-direction: row;
-	padding-left: 10px;
+	padding-left: calc(var(--default-grid-baseline) * 2);
 	align-items: center;
 }
 .composer-actions--secondary-actions {

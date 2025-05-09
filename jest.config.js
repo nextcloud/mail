@@ -18,11 +18,9 @@ module.exports = {
 			require.resolve('jest-transform-stub'),
 		'^.+\\.jsx?$': require.resolve('babel-jest'),
 	},
+	// support the same @ -> src alias mapping in source code
 	moduleNameMapper: {
-		// support the same @ -> src alias mapping in source code
 		'^@/(.*)$': '<rootDir>/src/$1',
-		// trim "?raw" suffixes from svg imports
-		'(.*\\.svg)\\?raw$': '$1',
 	},
 	// serializer for snapshots
 	snapshotSerializers: [

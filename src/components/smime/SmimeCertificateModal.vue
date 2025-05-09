@@ -129,13 +129,14 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { NcButton, NcModal, NcPasswordField, NcEmptyContent } from '@nextcloud/vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import logger from '../../logger.js'
 import moment from '@nextcloud/moment'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import { convertPkcs12ToPem, InvalidPkcs12CertificateError } from '../../util/pkcs12.js'
+import useMainStore from '../../store/mainStore.js'
+import { mapStores, mapState } from 'pinia'
 
 const TYPE_PKCS12 = 'pkcs12'
 const TYPE_PEM = 'pem'
@@ -164,7 +165,8 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters({
+		...mapStores(useMainStore),
+		...mapState(useMainStore, {
 			certificates: 'getSmimeCertificates',
 		}),
 		inputFormIsValid() {
@@ -173,11 +175,11 @@ export default {
 	},
 	async mounted() {
 		// Refresh S/MIME certificates for good measure
-		await this.$store.dispatch('fetchSmimeCertificates')
+		await this.mainStore.fetchSmimeCertificates()
 	},
 	methods: {
 		async deleteCertificate(id) {
-			await this.$store.dispatch('deleteSmimeCertificate', id)
+			await this.mainStore.deleteSmimeCertificate(id)
 		},
 		async uploadCertificate() {
 			let certificate = this.$refs.certificate.files[0]
@@ -206,7 +208,7 @@ export default {
 
 			this.loading = true
 			try {
-				await this.$store.dispatch('createSmimeCertificate', {
+				await this.mainStore.createSmimeCertificate({
 					certificate,
 					privateKey,
 				})
@@ -243,7 +245,7 @@ export default {
 	display: flex;
 }
 .certificate-modal {
-	padding: 20px;
+	padding: calc(var(--default-grid-baseline) * 5);
 
 	&__list {
 		table {
@@ -255,7 +257,7 @@ export default {
 			}
 
 			th, td {
-				padding: 2.5px;
+				padding: calc(var(--default-grid-baseline) * 0.5);
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
@@ -283,7 +285,7 @@ export default {
 		}
 
 		&__actions {
-			margin: 12px;
+			margin: calc(var(--default-grid-baseline) * 3);
 			float: right;
 		}
 	}
@@ -291,7 +293,7 @@ export default {
 	&__import {
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
+		gap: calc(var(--default-grid-baseline) * 2);
 
 		input[type=file] {
 			display: flex;
@@ -300,12 +302,12 @@ export default {
 
 		&__type {
 			display: flex;
-			gap: 0 20px;
+			gap: 0 calc(var(--default-grid-baseline) * 5);
 			flex-wrap: wrap;
 
 			> div {
 				display: flex;
-				gap: 5px;
+				gap: var(--default-grid-baseline);
 				align-items: center;
 			}
 		}
@@ -317,7 +319,7 @@ export default {
 		&__actions {
 			display: flex;
 			justify-content: space-between;
-			gap: 15px;
+			gap: calc(var(--default-grid-baseline) * 4);
 		}
 	}
 }

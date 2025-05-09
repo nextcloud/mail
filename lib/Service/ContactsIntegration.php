@@ -58,7 +58,15 @@ class ContactsIntegration {
 		$shareeEnumerationFullMatchUserId = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_userid', 'yes') === 'yes';
 		$shareeEnumerationFullMatchEmail = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_email', 'yes') === 'yes';
 
-		$result = $this->contactsManager->search($term, ['UID', 'FN', 'EMAIL'], ['enumeration' => $shareeEnumeration, 'fullmatch' => $shareeEnumerationFullMatch]);
+		$result = $this->contactsManager->search(
+			$term,
+			['UID', 'FN', 'EMAIL'],
+			[
+				'enumeration' => $shareeEnumeration,
+				'fullmatch' => $shareeEnumerationFullMatch,
+				'limit' => 20,
+			],
+		);
 		if (empty($result)) {
 			return [];
 		}
@@ -119,9 +127,10 @@ class ContactsIntegration {
 				$receivers[] = [
 					'id' => $id,
 					// Show full name if possible or fall back to email
-					'label' => (empty($fn) ? $e : "$fn ($e)"),
+					'label' => $fn,
 					'email' => $e,
 					'photo' => $photo,
+					'source' => 'contacts',
 				];
 			}
 		}
@@ -223,15 +232,16 @@ class ContactsIntegration {
 	/**
 	 * @param string[] $fields
 	 */
-	private function doSearch(string $term, array $fields, bool $strictSearch, bool $forceSAB = false) : array {
+	private function doSearch(string $term, array $fields, bool $strictSearch) : array {
 		$allowSystemUsers = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'no') === 'yes';
 
 		$result = $this->contactsManager->search($term, $fields, [
-			'strict_search' => $strictSearch
+			'strict_search' => $strictSearch,
+			'limit' => 20,
 		]);
 		$matches = [];
 		foreach ($result as $r) {
-			if ((!$allowSystemUsers && !$forceSAB) && isset($r['isLocalSystemBook']) && $r['isLocalSystemBook']) {
+			if (!$allowSystemUsers && isset($r['isLocalSystemBook']) && $r['isLocalSystemBook']) {
 				continue;
 			}
 			$id = $r['UID'];
@@ -259,7 +269,7 @@ class ContactsIntegration {
 	/**
 	 * Extracts all Contacts with the specified name
 	 */
-	public function getContactsWithName(string $name, bool $forceSAB = false): array {
-		return $this->doSearch($name, ['FN'], false, $forceSAB);
+	public function getContactsWithName(string $name): array {
+		return $this->doSearch($name, ['FN'], false);
 	}
 }

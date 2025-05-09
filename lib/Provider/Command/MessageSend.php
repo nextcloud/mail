@@ -60,8 +60,8 @@ class MessageSend {
 		// validate that all attachments have a name, type, and contents
 		$entries = $message->getAttachments();
 		array_walk($entries, function ($entry) {
-			if (empty($entry->getName()) || empty($entry->getType()) || empty($entry->getContents())) {
-				throw new SendException('Invalid Attachment Parameter: MUST contain values for Name, Type and Contents');
+			if (empty($entry->getType()) || empty($entry->getContents())) {
+				throw new SendException('Invalid Attachment Parameter: MUST contain values for Type and Contents');
 			}
 		});
 		// retrieve user mail account details
@@ -75,10 +75,13 @@ class MessageSend {
 		$localMessage->setType($localMessage::TYPE_OUTGOING);
 		$localMessage->setAccountId($account->getId());
 		$localMessage->setSubject((string)$message->getSubject());
-		$localMessage->setBody((string)$message->getBody());
-		// disabled due to issues caused by opening these messages in gui
-		//$localMessage->setEditorBody($message->getBody());
-		$localMessage->setHtml(true);
+		$localMessage->setBodyPlain($message->getBodyPlain());
+		$localMessage->setBodyHtml($message->getBodyHtml());
+		if (!empty($message->getBodyHtml())) {
+			$localMessage->setHtml(true);
+		} else {
+			$localMessage->setHtml(false);
+		}
 		$localMessage->setSendAt($this->time->getTime());
 		// convert mail provider addresses to recipient addresses
 		$to = $this->convertAddressArray($message->getTo());

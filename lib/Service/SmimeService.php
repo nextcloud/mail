@@ -68,7 +68,7 @@ class SmimeService {
 		// smime/pkcs7 module. Unfortunately, it is only supported since php 8.
 		// Ref https://www.php.net/manual/en/function.openssl-cms-verify.php
 
-		$messageTemp = $this->tempManager->getTemporaryFile();
+		$messageTemp = $this->getTemporaryFileOrThrow();
 		$messageTempHandle = fopen($messageTemp, 'wb');
 		fwrite($messageTempHandle, $message);
 		fclose($messageTempHandle);
@@ -106,8 +106,8 @@ class SmimeService {
 		// smime/pkcs7 module. Unfortunately, it is only supported since php 8.
 		// Ref https://www.php.net/manual/en/function.openssl-cms-verify.php
 
-		$verifiedContentTemp = $this->tempManager->getTemporaryFile();
-		$messageTemp = $this->tempManager->getTemporaryFile();
+		$verifiedContentTemp = $this->getTemporaryFileOrThrow();
+		$messageTemp = $this->getTemporaryFileOrThrow();
 		$messageTempHandle = fopen($messageTemp, 'wb');
 		fwrite($messageTempHandle, $message);
 		fclose($messageTempHandle);
@@ -166,7 +166,7 @@ class SmimeService {
 			}
 		}
 
-		$decryptedCertificateFile = $this->tempManager->getTemporaryFile();
+		$decryptedCertificateFile = $this->getTemporaryFileOrThrow();
 		file_put_contents($decryptedCertificateFile, $certificate);
 
 		$caBundle = [$this->certificateManager->getAbsoluteBundlePath()];
@@ -363,23 +363,22 @@ class SmimeService {
 			);
 		}
 
-		$decryptedCertificateFile = $this->tempManager->getTemporaryFile();
+		$decryptedCertificateFile = $this->getTemporaryFileOrThrow();
 		file_put_contents($decryptedCertificateFile, $decryptedCertificate);
 
-		$inPath = $this->tempManager->getTemporaryFile();
-		$outPath = $this->tempManager->getTemporaryFile();
+		$inPath = $this->getTemporaryFileOrThrow();
+		$outPath = $this->getTemporaryFileOrThrow();
 		file_put_contents($inPath, $part->toString([
 			'canonical' => true,
 			'headers' => true,
+			'encode' => Horde_Mime_Part::ENCODE_8BIT,
 		]));
-		if (!openssl_pkcs7_sign($inPath, $outPath, $decryptedCertificate, $decryptedKey, null, PKCS7_DETACHED, $decryptedCertificateFile)) {
+		if (!openssl_pkcs7_sign($inPath, $outPath, $decryptedCertificate, $decryptedKey, null, PKCS7_DETACHED | PKCS7_BINARY, $decryptedCertificateFile)) {
 			throw new SmimeSignException('Failed to sign MIME part');
 		}
 
 		try {
-			$parsedPart = Horde_Mime_Part::parseMessage(file_get_contents($outPath), [
-				'forcemime' => true,
-			]);
+			$parsedPart = Horde_Mime_Part::parseMessage(file_get_contents($outPath));
 		} catch (Horde_Mime_Exception $e) {
 			throw new SmimeSignException(
 				'Failed to parse signed MIME part: ' . $e->getMessage(),
@@ -425,8 +424,8 @@ class SmimeService {
 			);
 		}
 
-		$inPath = $this->tempManager->getTemporaryFile();
-		$outPath = $this->tempManager->getTemporaryFile();
+		$inPath = $this->getTemporaryFileOrThrow();
+		$outPath = $this->getTemporaryFileOrThrow();
 		file_put_contents($inPath, $mimePartText);
 		if (!openssl_pkcs7_decrypt($inPath, $outPath, $decryptedCertificate, $decryptedKey)) {
 			throw new SmimeDecryptException('Failed to decrypt MIME part text');
@@ -581,8 +580,8 @@ class SmimeService {
 			throw new ServiceException('Failed to decrypt certificate: ' . $e->getMessage(), 0, $e);
 		}
 
-		$inPath = $this->tempManager->getTemporaryFile();
-		$outPath = $this->tempManager->getTemporaryFile();
+		$inPath = $this->getTemporaryFileOrThrow();
+		$outPath = $this->getTemporaryFileOrThrow();
 		file_put_contents($inPath, $part->toString([
 			'canonical' => true,
 			'headers' => true,
@@ -609,5 +608,19 @@ class SmimeService {
 		}
 
 		return $parsedPart;
+	}
+
+	/**
+	 * Create a temporary file and return the path or throw if it could not be created.
+	 *
+	 * @throws ServiceException If the temporary file could not be created
+	 */
+	private function getTemporaryFileOrThrow(): string {
+		$file = $this->tempManager->getTemporaryFile();
+		if ($file === false) {
+			throw new ServiceException('Failed to create temporary file');
+		}
+
+		return $file;
 	}
 }

@@ -67,7 +67,7 @@ class LocalMessageMapperTest extends TestCase {
 		$message->setAliasId(2);
 		$message->setSendAt(123);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
 		$this->entity = $this->mapper->insert($message);
@@ -82,7 +82,7 @@ class LocalMessageMapperTest extends TestCase {
 		$this->assertEquals(2, $row->getAliasId());
 		$this->assertEquals($this->account->getId(), $row->getAccountId());
 		$this->assertEquals('subject', $row->getSubject());
-		$this->assertEquals('message', $row->getBody());
+		$this->assertEquals('message', $row->getBodyHtml());
 		$this->assertEquals('abc', $row->getInReplyToMessageId());
 		$this->assertTrue($row->isHtml());
 		$this->assertEmpty($row->getAttachments());
@@ -99,7 +99,7 @@ class LocalMessageMapperTest extends TestCase {
 		$this->assertEquals(2, $row->getAliasId());
 		$this->assertEquals($this->account->getId(), $row->getAccountId());
 		$this->assertEquals('subject', $row->getSubject());
-		$this->assertEquals('message', $row->getBody());
+		$this->assertEquals('message', $row->getBodyHtml());
 		$this->assertEquals('abc', $row->getInReplyToMessageId());
 		$this->assertTrue($row->isHtml());
 		$this->assertEmpty($row->getAttachments());
@@ -134,7 +134,7 @@ class LocalMessageMapperTest extends TestCase {
 		$message->setAliasId(3);
 		$message->setSendAt(3);
 		$message->setSubject('savedWithRelated');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcdefg');
 		$recipient = new Recipient();
@@ -151,7 +151,7 @@ class LocalMessageMapperTest extends TestCase {
 		$this->assertEquals(3, $row->getAliasId());
 		$this->assertEquals($this->account->getId(), $row->getAccountId());
 		$this->assertEquals('savedWithRelated', $row->getSubject());
-		$this->assertEquals('message', $row->getBody());
+		$this->assertEquals('message', $row->getBodyHtml());
 		$this->assertEquals('abcdefg', $row->getInReplyToMessageId());
 		$this->assertTrue($row->isHtml());
 		$this->assertEmpty($row->getAttachments());
@@ -185,7 +185,7 @@ class LocalMessageMapperTest extends TestCase {
 		$message->setAliasId(3);
 		$message->setSendAt(3);
 		$message->setSubject('savedWithRelated');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcdefg');
 		$recipient = new Recipient();

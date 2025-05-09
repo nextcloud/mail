@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Smtp;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use Horde_Mail_Transport_Mail;
 use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
@@ -43,19 +42,6 @@ class SmtpClientFactoryTest extends TestCase {
 		$this->factory = new SmtpClientFactory($this->config, $this->crypto, $this->hostNameFactory);
 	}
 
-	public function testPhpMailTransport() {
-		$account = $this->createMock(Account::class);
-		$this->config->expects($this->once())
-			->method('getSystemValue')
-			->with('app.mail.transport', 'smtp')
-			->willReturn('php-mail');
-
-		$transport = $this->factory->create($account);
-
-		$this->assertNotNull($transport);
-		$this->assertInstanceOf(Horde_Mail_Transport_Mail::class, $transport);
-	}
-
 	public function testSmtpTransport() {
 		$mailAccount = new MailAccount([
 			'smtpHost' => 'smtp.domain.tld',
@@ -69,13 +55,14 @@ class SmtpClientFactoryTest extends TestCase {
 			->method('getSystemValue')
 			->willReturnMap([
 				['app.mail.transport', 'smtp', 'smtp'],
-				['debug', false, false],
 				['app.mail.smtp.timeout', 20, 2],
 			]);
 		$this->config->expects($this->any())
 			->method('getSystemValueBool')
-			->with('app.mail.verify-tls-peer', true)
-			->willReturn(true);
+			->willReturnMap([
+				['app.mail.verify-tls-peer', true, true],
+				['app.mail.debug', false, false],
+			]);
 		$this->crypto->expects($this->once())
 			->method('decrypt')
 			->with('obenc')

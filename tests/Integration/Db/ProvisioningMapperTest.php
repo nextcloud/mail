@@ -180,4 +180,26 @@ class ProvisioningMapperTest extends TestCase {
 			}
 		}
 	}
+
+	public function testFindUniqueImapHosts() {
+		$provisioning = new Provisioning();
+		$provisioning->setProvisioningDomain($this->data['provisioningDomain']);
+		$provisioning->setEmailTemplate($this->data['emailTemplate']);
+		$provisioning->setImapUser($this->data['imapUser']);
+		$provisioning->setImapHost($this->data['imapHost']);
+		$provisioning->setImapPort(42);
+		$provisioning->setImapSslMode($this->data['imapSslMode']);
+		$provisioning->setSmtpUser($this->data['smtpUser']);
+		$provisioning->setSmtpHost($this->data['smtpHost']);
+		$provisioning->setSmtpPort(24);
+		$provisioning->setSmtpSslMode($this->data['smtpSslMode']);
+		$provisioning->setSieveEnabled($this->data['sieveEnabled']);
+		$provisioning = $this->mapper->insert($provisioning);
+
+		$hosts = $this->mapper->findUniqueImapHosts();
+
+		$this->assertIsArray($hosts);
+		$this->assertNotEmpty($hosts);
+		$this->assertEquals($this->data['imapHost'], $hosts[0]);
+	}
 }

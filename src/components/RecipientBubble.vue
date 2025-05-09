@@ -265,7 +265,6 @@ export default {
 }
 .contact-popover {
 	display: flex;
-	padding: 2px;
 
 	&__email {
 		text-align: center;

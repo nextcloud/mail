@@ -117,8 +117,9 @@ class IMAPClientFactory {
 				'backend' => $this->hordeCacheFactory->newCache($account),
 			];
 		}
-		if ($this->config->getSystemValue('debug', false)) {
-			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_imap.log';
+		if ($account->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
+			$fn = 'mail-' . $account->getUserId() . '-' . $account->getId() . '-imap.log';
+			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;
 		}
 
 		$client = new HordeImapClient($params);

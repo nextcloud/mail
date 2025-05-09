@@ -10,7 +10,8 @@
 				class="search-messages--input"
 				:placeholder="t('mail', 'Search in mailbox')"
 				:aria-label="t('mail', 'Search in mailbox')"
-				@click="toggleButtons">
+				@focus="showButtons = true"
+				@blur="hideButtonsWithDelay">
 			<NcButton type="tertiary" class="search-messages--filter" @click="moreSearchActions = true">
 				<template #icon>
 					<FilterVariantIcon :size="20" />
@@ -267,6 +268,7 @@
 			<NcButton type="secondary"
 				class="shortcut"
 				:aria-label="t('mail', 'Has attachment')"
+				:title="t('mail', 'Has attachment')"
 				:pressed="hasAttachmentActive"
 				@update:pressed="hasAttachmentActive = !hasAttachmentActive"
 				@click="toggleGetAttachments">
@@ -276,6 +278,7 @@
 				class="shortcut"
 				:pressed="hasLast7daysActive"
 				:aria-label="t('mail', 'Last 7 days')"
+				:title="t('mail', 'Last 7 days')"
 				@update:pressed="hasLast7daysActive = !hasLast7daysActive"
 				@click="toggleLastWeekFilter">
 				{{ t('mail', 'Last 7 days') }}
@@ -284,6 +287,7 @@
 				class="shortcut"
 				:pressed="hasFromMeActive"
 				:aria-label="t('mail', 'From me')"
+				:title="t('mail', 'From me')"
 				@update:pressed="hasFromMeActive = !hasFromMeActive"
 				@click="toggleCurrentUser">
 				{{ t('mail', 'From me') }}
@@ -295,12 +299,12 @@
 <script>
 import moment from '@nextcloud/moment'
 
-import NcDialog from '@nextcloud/vue/dist/Components/NcDialog.js'
-import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
-import NcDateTimePickerNative from '@nextcloud/vue/dist/Components/NcDateTimePickerNative.js'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch
-	from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
+	from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import FilterVariantIcon from 'vue-material-design-icons/FilterVariant.vue'
 import Close from 'vue-material-design-icons/Close.vue'
 import IconClose from '@mdi/svg/svg/close.svg'
@@ -311,6 +315,8 @@ import debouncePromise from 'debounce-promise'
 import { findRecipient } from '../service/AutocompleteService.js'
 import uniqBy from 'lodash/fp/uniqBy.js'
 import { hiddenTags } from './tags.js'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -374,8 +380,9 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		tags() {
-			return this.$store.getters.getTags.filter((tag) => !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
+			return this.mainStore.getTags.filter((tag) => !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
 				if (a.isDefaultTag && !b.isDefaultTag) {
 					return -1
 				}
@@ -397,10 +404,10 @@ export default {
 			}).length > 0
 		},
 		searchBody() {
-			return this.$store.getters.getAccount(this.accountId)?.searchBody || (this.mailbox.databaseId === 'priority' && this.$store.getters.getPreference('search-priority-body', 'false') === 'true')
+			return this.mainStore.getAccount(this.accountId)?.searchBody || (this.mailbox.databaseId === 'priority' && this.mainStore.getPreference('search-priority-body', 'false') === 'true')
 		},
 		account() {
-			return this.$store.getters.getAccount(this.accountId)
+			return this.mainStore.getAccount(this.accountId)
 		},
 		filterData() {
 			return {
@@ -455,8 +462,10 @@ export default {
 		},
 	},
 	methods: {
-		toggleButtons() {
-			this.showButtons = !this.showButtons
+		hideButtonsWithDelay() {
+			setTimeout(() => {
+				this.showButtons = false
+			}, 100)
 		},
 		toggleGetAttachments() {
 			if (this.hasAttachmentActive) {
@@ -530,7 +539,6 @@ export default {
 			})
 		},
 		resetFilter() {
-			const prevQuery = this.query
 			this.match = 'allof'
 			this.query = ''
 			this.selectedTags = []
@@ -545,10 +553,7 @@ export default {
 			this.startDate = null
 			this.endDate = null
 			this.mentionsMe = false
-			// Need if there is only tag filter or recipients filter
-			if (prevQuery === '') {
-				this.sendQueryEvent()
-			}
+			this.sendQueryEvent()
 		},
 		addTag(tag, type) {
 			if (typeof tag === 'string') {
@@ -595,12 +600,10 @@ export default {
 <style lang="scss">
 .search-messages {
 	border-bottom: 1px solid var(--color-border);
-
 	&__input {
 		min-height: 52px;
-		margin: -1px 0 0 calc(var(--app-navigation-padding)*2 + var(--default-clickable-area));
+		margin-inline-start: calc(var(--app-navigation-padding)*2 + var(--default-clickable-area));
 		padding-right: 3px; /* matches .app-content-list */
-		border-right: 1px solid var(--color-border);
 		position: relative;
 		display: flex;
 		align-items: center;
@@ -790,7 +793,10 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	gap: 4px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 0 5px 5px 5px;
 }
 </style>

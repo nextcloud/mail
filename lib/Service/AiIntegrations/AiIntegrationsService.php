@@ -20,32 +20,23 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\EventData;
 use OCA\Mail\Model\IMAPMessage;
 use OCP\IConfig;
+use OCP\TaskProcessing\IManager as TaskProcessingManager;
+use OCP\TaskProcessing\Task as TaskProcessingTask;
+use OCP\TaskProcessing\TaskTypes\TextToText;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager;
 use OCP\TextProcessing\SummaryTaskType;
 use OCP\TextProcessing\Task;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
+
 use function array_map;
 use function implode;
 use function in_array;
 use function json_decode;
 
 class AiIntegrationsService {
-
-	/** @var ContainerInterface */
-	private ContainerInterface $container;
-
-	/** @var Cache */
-	private Cache $cache;
-
-	/** @var IMAPClientFactory */
-	private IMAPClientFactory $clientFactory;
-
-	/** @var IMailManager */
-	private IMailManager $mailManager;
-
-	private IConfig $config;
 
 	private const EVENT_DATA_PROMPT_PREAMBLE = <<<PROMPT
 I am scheduling an event based on an email thread and need an event title and agenda. Provide the result as JSON with keys for "title" and "agenda". For example ```{ "title": "Project kick-off meeting", "agenda": "* Introduction\\n* Project goals\\n* Next steps" }```.
@@ -54,13 +45,78 @@ The email contents are:
 
 PROMPT;
 
-	public function __construct(ContainerInterface $container, Cache $cache, IMAPClientFactory $clientFactory, IMailManager $mailManager, IConfig $config) {
-		$this->container = $container;
-		$this->cache = $cache;
-		$this->clientFactory = $clientFactory;
-		$this->mailManager = $mailManager;
-		$this->config = $config;
+	public function __construct(
+		private ContainerInterface $container,
+		private LoggerInterface $logger,
+		private IConfig $config,
+		private Cache $cache,
+		private IMAPClientFactory $clientFactory,
+		private IMailManager $mailManager,
+		private TaskProcessingManager $taskProcessingManager,
+	) {
 	}
+
+	/**
+	 * generates summary for each message
+	 *
+	 * @param Account $account
+	 * @param array<Message> $messages
+	 *
+	 * @return void
+	 */
+	public function summarizeMessages(Account $account, array $messages): void {
+		$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
+		if (!isset($availableTaskTypes[TextToText::ID])) {
+			$this->logger->info('No text summary provider available');
+			return;
+		}
+
+		$client = $this->clientFactory->getClient($account);
+		try {
+			foreach ($messages as $entry) {
+				if (mb_strlen((string)$entry->getSummary()) !== 0) {
+					continue;
+				}
+				// retrieve full message from server
+				$userId = $account->getUserId();
+				$mailboxId = $entry->getMailboxId();
+				$messageLocalId = $entry->getId();
+				$messageRemoteId = $entry->getUid();
+				$mailbox = $this->mailManager->getMailbox($userId, $mailboxId);
+				$message = $this->mailManager->getImapMessage(
+					$client,
+					$account,
+					$mailbox,
+					$messageRemoteId,
+					true
+				);
+				// skip message if it is encrypted or empty
+				if ($message->isEncrypted() || empty(trim($message->getPlainBody()))) {
+					continue;
+				}
+				// construct prompt and task
+				$messageBody = $message->getPlainBody();
+				$prompt = "You are tasked with formulating a helpful summary of a email message. \r\n" .
+						  "The summary should be less than 160 characters. \r\n" .
+						  "Here is the ***E-MAIL*** for which you must generate a helpful summary: \r\n" .
+						  "***START_OF_E-MAIL***\r\n$messageBody\r\n***END_OF_E-MAIL***\r\n";
+				$task = new TaskProcessingTask(
+					TextToText::ID,
+					[
+						'max_tokens' => 1024,
+						'input' => $prompt,
+					],
+					Application::APP_ID,
+					$userId,
+					'message:' . (string)$messageLocalId
+				);
+				$this->taskProcessingManager->scheduleTask($task);
+			}
+		} finally {
+			$client->logout();
+		}
+	}
+
 	/**
 	 * @param Account $account
 	 * @param string $threadId
@@ -209,11 +265,12 @@ PROMPT;
 			$manager->runTask($task);
 			$replies = $task->getOutput();
 			try {
-				$decoded = json_decode($replies, true, 512, JSON_THROW_ON_ERROR);
+				$cleaned = preg_replace('/^```json\s*|\s*```$/', '', trim($replies));
+				$decoded = json_decode($cleaned, true, 512, JSON_THROW_ON_ERROR);
 				$this->cache->addValue('smartReplies_' . $message->getId(), $replies);
 				return $decoded;
 			} catch (JsonException $e) {
-				throw new ServiceException('Failed to decode smart replies JSON output', $e);
+				throw new ServiceException('Failed to decode smart replies JSON output', previous: $e);
 			}
 		} else {
 			throw new ServiceException('No language model available for smart replies');
@@ -295,6 +352,11 @@ Never return null or undefined.";
 			return false;
 		}
 		return in_array($taskType, $manager->getAvailableTaskTypes(), true);
+	}
+
+	public function isTaskAvailable(string $taskName): bool {
+		$availableTasks = $this->taskProcessingManager->getAvailableTaskTypes();
+		return array_key_exists($taskName, $availableTasks);
 	}
 
 	/**

@@ -51,7 +51,7 @@ class GroupsIntegration {
 					'id' => $gid,
 					'label' => $g['name'] . ' (' . $gs->getNamespace() . ')',
 					'email' => $gid,
-					'photo' => null,
+					'source' => 'groups',
 				];
 			}
 		}

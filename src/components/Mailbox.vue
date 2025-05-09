@@ -20,9 +20,9 @@
 			:mailbox="mailbox"
 			:search-query="searchQuery"
 			:envelopes="envelopesToShow"
-			:refreshing="refreshing"
 			:loading-more="loadingMore"
 			:load-more-button="showLoadMore"
+			:skip-transition="skipListTransition"
 			@delete="onDelete"
 			@load-more="loadMore" />
 	</div>
@@ -46,6 +46,8 @@ import EmptyMailboxSection from './EmptyMailboxSection.vue'
 import { showError, showWarning } from '@nextcloud/dialogs'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError.js'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'Mailbox',
@@ -100,14 +102,17 @@ export default {
 			loadMailboxInterval: undefined,
 			expanded: false,
 			endReached: false,
+			syncedMailboxes: new Set(),
+			skipListTransition: false,
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		sortOrder() {
-			return this.$store.getters.getPreference('sort-order', 'DESC')
+			return this.mainStore.getPreference('sort-order', 'DESC')
 		},
 		envelopes() {
-			return this.$store.getters.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
+			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
 		},
 		envelopesToShow() {
 			if (this.paginate === 'manual' && !this.expanded) {
@@ -145,14 +150,14 @@ export default {
 		this.loadMailboxInterval = setInterval(this.loadMailbox, 60000)
 	},
 	async mounted() {
-		if (this.$store.getters.hasFetchedInitialEnvelopes) {
+		if (this.mainStore.hasFetchedInitialEnvelopes) {
 			return
 		}
 
 		await this.loadEnvelopes()
 		logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) after mount`)
 		await this.sync(false)
-		this.$store.commit('setHasFetchedInitialEnvelopes', true)
+		this.mainStore.setHasFetchedInitialEnvelopesMutation(true)
 	},
 	destroyed() {
 		this.bus.off('load-more', this.onScroll)
@@ -176,12 +181,22 @@ export default {
 		},
 		async loadEnvelopes() {
 			logger.debug(`Fetching envelopes for mailbox ${this.mailbox.databaseId} (${this.searchQuery})`, this.mailbox)
-			this.loadingEnvelopes = true
+
+			if (!this.syncedMailboxes.has(this.mailbox.databaseId)) {
+				// Only trigger skeleton if we didn't sync envelopes yet
+				this.loadingEnvelopes = true
+			} else {
+				this.skipListTransition = true
+				this.$nextTick(() => {
+					this.skipListTransition = false
+				})
+			}
+
 			this.loadingCacheInitialization = false
 			this.error = false
 
 			try {
-				const envelopes = await this.$store.dispatch('fetchEnvelopes', {
+				const envelopes = await this.mainStore.fetchEnvelopes({
 					mailboxId: this.mailbox.databaseId,
 					query: this.searchQuery,
 					limit: this.initialPageSize,
@@ -189,6 +204,7 @@ export default {
 
 				logger.debug(envelopes.length + ' envelopes fetched', { envelopes })
 
+				this.syncedMailboxes.add(this.mailbox.databaseId)
 				this.loadingEnvelopes = false
 			} catch (error) {
 				await matchError(error, {
@@ -228,7 +244,7 @@ export default {
 			this.loadingMore = true
 
 			try {
-				const envelopes = await this.$store.dispatch('fetchNextEnvelopePage', {
+				const envelopes = await this.mainStore.fetchNextEnvelopePage({
 					mailboxId: this.mailbox.databaseId,
 					query: this.searchQuery,
 				})
@@ -301,7 +317,7 @@ export default {
 				logger.debug('deleting', { env })
 				this.onDelete(env.databaseId)
 				try {
-					await this.$store.dispatch('deleteThread', {
+					await this.mainStore.deleteThread({
 						envelope: env,
 					})
 				} catch (error) {
@@ -342,7 +358,7 @@ export default {
 				logger.debug('archiving', { env })
 				this.onDelete(env.databaseId)
 				try {
-					await this.$store.dispatch('moveThread', {
+					await this.mainStore.moveThread({
 						envelope: env,
 						destMailboxId: this.account.archiveMailboxId,
 					})
@@ -357,7 +373,7 @@ export default {
 				break
 			case 'flag':
 				logger.debug('flagging envelope via shortkey', { env })
-				this.$store.dispatch('toggleEnvelopeFlagged', env).catch((error) =>
+				this.mainStore.toggleEnvelopeFlagged(env).catch((error) =>
 					logger.error('could not flag envelope via shortkey', {
 						env,
 						error,
@@ -370,17 +386,23 @@ export default {
 
 				break
 			case 'unseen':
-				if (this.hasSeenAcl()) {
+				logger.debug('marking as seen/unseen via shortcut')
+
+				if (!this.hasSeenAcl()) {
+					showWarning(t('mail', 'Your IMAP server does not support storing the seen/unseen state.'))
 					return
 				}
-				logger.debug('marking message as seen/unseen via shortkey', { env })
-				this.$store.dispatch('toggleEnvelopeSeen', { envelope: env }).catch((error) =>
+
+				logger.debug('marking as seen/unseen', { env })
+				try {
+					await this.mainStore.toggleEnvelopeSeen({ envelope: env })
+				} catch (error) {
 					logger.error('could not mark envelope as seen/unseen via shortkey', {
 						env,
 						error,
-					}),
-				)
-
+					})
+					showError(t('mail', 'Could not mark message as seen/unseen'))
+				}
 				break
 			default:
 				logger.warn('shortcut ' + e.srcKey + ' is unknown. ignoring.')
@@ -394,7 +416,7 @@ export default {
 
 			this.refreshing = true
 			try {
-				await this.$store.dispatch('syncEnvelopes', {
+				await this.mainStore.syncEnvelopes({
 					mailboxId: this.mailbox.databaseId,
 					query: this.searchQuery,
 					init,
@@ -418,7 +440,7 @@ export default {
 		// id: The id of the message being delete
 		onDelete(id) {
 			// Get a new message
-			this.$store.dispatch('fetchNextEnvelopes', {
+			this.mainStore.fetchNextEnvelopes({
 				mailboxId: this.mailbox.databaseId,
 				query: this.searchQuery,
 				quantity: 1,
@@ -488,5 +510,7 @@ export default {
 }
 .empty-content {
 	height: 100%;
+	display: flex;
+	justify-content: center;
 }
 </style>

@@ -56,6 +56,8 @@ import IconTag from 'vue-material-design-icons/Tag.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import { showError, showInfo } from '@nextcloud/dialogs'
 import { hiddenTags } from './tags.js'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 function randomColor() {
 	let randomHexColor = ((1 << 24) * Math.random() | 0).toString(16)
@@ -100,8 +102,9 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		tags() {
-			return this.$store.getters.getTags.filter((tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
+			return this.mainStore.getTags.filter((tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
 				if (a.isDefaultTag && !b.isDefaultTag) {
 					return -1
 				}
@@ -134,7 +137,7 @@ export default {
 		isSet(imapLabel) {
 			return this.envelopes.some(
 				(envelope) => (
-					this.$store.getters.getEnvelopeTags(envelope.databaseId).some(
+					this.mainStore.getEnvelopeTags(envelope.databaseId).some(
 						tag => tag.imapLabel === imapLabel,
 					)
 				),
@@ -155,7 +158,7 @@ export default {
 				showError(this.t('mail', 'Tag name is a hidden system tag'))
 				return
 			}
-			if (this.$store.getters.getTags.some(tag => tag.displayName === displayName)) {
+			if (this.mainStore.getTags.some(tag => tag.displayName === displayName)) {
 				showError(this.t('mail', 'Tag already exists'))
 				return
 			}
@@ -164,7 +167,7 @@ export default {
 				return
 			}
 			try {
-				await this.$store.dispatch('createTag', {
+				await this.mainStore.createTag({
 					displayName,
 					color: randomColor(displayName),
 				})
@@ -201,7 +204,7 @@ export default {
 			const displayName = event.target.querySelector('input[type=text]').value
 
 			try {
-				await this.$store.dispatch('updateTag', {
+				await this.mainStore.updateTag({
 					tag,
 					displayName,
 					color: tag.color,

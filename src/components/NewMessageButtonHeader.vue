@@ -35,8 +35,10 @@
 import { NcButton as ButtonVue } from '@nextcloud/vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconRefresh from 'vue-material-design-icons/Refresh.vue'
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
+import IconLoading from '@nextcloud/vue/components/NcLoadingIcon'
 import logger from '../logger.js'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'NewMessageButtonHeader',
@@ -52,9 +54,10 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		currentMailbox() {
 			if (this.$route.name === 'message' || this.$route.name === 'mailbox') {
-				return this.$store.getters.getMailbox(this.$route.params.mailboxId)
+				return this.mainStore.getMailbox(this.$route.params.mailboxId)
 			}
 			return undefined
 		},
@@ -67,7 +70,7 @@ export default {
 			}
 			this.refreshing = true
 			try {
-				await this.$store.dispatch('syncEnvelopes', { mailboxId: this.currentMailbox.databaseId })
+				await this.mainStore.syncEnvelopes({ mailboxId: this.currentMailbox.databaseId })
 				logger.debug('Current mailbox is sync\'ing ')
 			} catch (error) {
 				logger.error('could not sync current mailbox', { error })
@@ -76,7 +79,7 @@ export default {
 			}
 		},
 		async onNewMessage() {
-			await this.$store.dispatch('startComposerSession', {
+			await this.mainStore.startComposerSession({
 				isBlankMessage: true,
 			})
 		},
@@ -90,7 +93,7 @@ export default {
 	align-items: center;
 	justify-content: space-between;
 	padding: calc(var(--default-grid-baseline, 4px) * 2);
-	gap: 4px;
+	gap: var(--default-grid-baseline);
 }
 .refresh__button {
 	background-color: transparent;

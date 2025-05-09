@@ -11,15 +11,12 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\IMAP\Sync\Request;
 
 class RequestTest extends TestCase {
-	/** @var string */
-	private $mailbox;
-
-	/** @var string */
-	private $syncToken;
-
-	/** @var Request */
-	private $request;
-
+	
+	private string $mailbox;
+	private string $syncToken;
+	private Request $request;
+	private string $requestId;
+	
 	protected function setUp(): void {
 		parent::setUp();
 

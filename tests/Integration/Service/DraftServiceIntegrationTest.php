@@ -129,7 +129,7 @@ class DraftServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_DRAFT);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		$to = [[
@@ -153,7 +153,7 @@ class DraftServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_DRAFT);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		$to = [[
@@ -176,7 +176,7 @@ class DraftServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_DRAFT);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		$to = [[
@@ -205,7 +205,7 @@ class DraftServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_DRAFT);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		$to = [[
@@ -239,7 +239,7 @@ class DraftServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_DRAFT);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		$to = [[

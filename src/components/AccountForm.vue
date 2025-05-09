@@ -239,7 +239,6 @@
 
 <script>
 import { Tab, Tabs } from 'vue-tabs-component'
-import { mapGetters } from 'vuex'
 import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcPasswordField, NcInputField, NcCheckboxRadioSwitch } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import { translate as t } from '@nextcloud/l10n'
@@ -251,6 +250,8 @@ import {
 	testConnectivity,
 } from '../service/AutoConfigService.js'
 import { CONSENT_ABORTED, getUserConsent } from '../integration/oauth.js'
+import useMainStore from '../store/mainStore.js'
+import { mapStores, mapState } from 'pinia'
 
 export default {
 	name: 'AccountForm',
@@ -314,7 +315,8 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters([
+		...mapStores(useMainStore),
+		...mapState(useMainStore, [
 			'googleOauthUrl',
 			'microsoftOauthUrl',
 		]),
@@ -563,7 +565,7 @@ export default {
 					delete data.smtpPassword
 				}
 				if (!this.account) {
-					const account = await this.$store.dispatch('startAccountSetup', data)
+					const account = await this.mainStore.startAccountSetup(data)
 					if (this.useOauth) {
 						this.loadingMessage = t('mail', 'Awaiting user consent')
 						try {
@@ -584,18 +586,18 @@ export default {
 							}
 						} catch (e) {
 							// Clean up the temporary account before we continue
-							this.$store.dispatch('deleteAccount', account)
+							this.mainStore.deleteAccount(account)
 							logger.info(`Temporary account ${account.id} deleted`)
 							throw e
 						}
 						this.clearFeedback()
 					}
 					this.loadingMessage = t('mail', 'Loading account')
-					await this.$store.dispatch('finishAccountSetup', { account })
+					await this.mainStore.finishAccountSetup({ account })
 					this.$emit('account-created', account)
 				} else {
 					const oldAccountData = this.account
-					const account = await this.$store.dispatch('updateAccount', {
+					const account = await this.mainStore.updateAccount({
 						...data,
 						accountId: this.account.id,
 					})
@@ -619,7 +621,7 @@ export default {
 							}
 						} catch (e) {
 							// Undo changes
-							await this.$store.dispatch('updateAccount', {
+							await this.mainStore.updateAccount({
 								...oldAccountData,
 								accountId: oldAccountData.id,
 							})
@@ -680,11 +682,11 @@ export default {
 	flex-grow: 1;
 	text-align: center;
 	color: var(--color-text-lighter);
-	margin-bottom: 10px;
+	margin-bottom: calc(var(--default-grid-baseline) * 2 + var(--default-grid-baseline) / 2);
 }
 
 :deep(.tabs-component-tab.is-active) {
-	border-bottom: 1px solid black;
+	border-bottom: var(--border-width-input) solid black;
 	font-weight: bold;
 }
 
@@ -693,24 +695,24 @@ export default {
 }
 
 .tabs-component-panels {
-	padding-top: 20px;
+	padding-top: calc(var(--default-grid-baseline) * 5);
 }
 
 .tabs-component-panels label {
-	text-align: left;
+	text-align: start;
 	width: 100%;
 	display: inline-block;
 }
 
 .tabs-component-panels input,
 .tabs-component-panels select {
-	margin-bottom: 10px;
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
 }
 </style>
 
 <style scoped>
 h4 {
-	text-align: left;
+	text-align: start;
 }
 
 .flex-row {
@@ -738,7 +740,7 @@ input[type='radio'][disabled] + label {
 .account-form__submit-buttons {
 	display: flex;
 	justify-content: center;
-	margin-top: 5px;
+	margin-top: var(--default-grid-baseline);
 }
 .account-form__submit-button {
 	display: flex;
@@ -746,20 +748,20 @@ input[type='radio'][disabled] + label {
 }
 .account-form--feedback {
 	color: var(--color-text-maxcontrast);
-	margin-top: 5px;
+	margin-top: var(--default-grid-baseline);
 	text-align: center;
 }
 .account-form--error {
-	text-align: left;
+	text-align: start;
 	font-size: 14px;
 }
 #account-form {
 	z-index: 1001;
 	width: 300px;
 	top: 15%;
-	padding-bottom: 50px;
+	padding-bottom: calc(var(--default-grid-baseline) * 12);
 	margin: 0 auto;
-	padding-top: 30px;
+	padding-top: calc(var(--default-grid-baseline) * 7);
 }
 #account-form input {
 	width: 100%;

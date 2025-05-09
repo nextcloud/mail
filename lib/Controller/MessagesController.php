@@ -582,8 +582,8 @@ class MessagesController extends Controller {
 					$html,
 					$this->nonceManager->getNonce(),
 					$this->urlGenerator->getAbsoluteURL(
-						$this->urlGenerator->linkTo('mail', 'js/mail-htmlresponse.mjs')
-					),
+						$this->urlGenerator->linkTo('mail', 'js/htmlresponse.js')
+					)
 				);
 
 			// Harden the default security policy

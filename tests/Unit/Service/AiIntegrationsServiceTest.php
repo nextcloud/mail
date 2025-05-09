@@ -9,7 +9,9 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccount;
@@ -22,38 +24,33 @@ use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AiIntegrations\Cache;
 use OCP\AppFramework\QueryException;
 use OCP\IConfig;
+use OCP\TaskProcessing\IManager as TaskProcessingManager;
+use OCP\TaskProcessing\IProvider as TaskProcessingProvider;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager;
 use OCP\TextProcessing\SummaryTaskType;
+use OCP\TextProcessing\Task;
 use OCP\TextProcessing\TopicsTaskType;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\UnknownTypeException;
 use Psr\Container\ContainerInterface;
+use Psr\Log\NullLogger;
+
 use function interface_exists;
 
 class AiIntegrationsServiceTest extends TestCase {
 
-	/** @var ContainerInterface|MockObject */
-	private $container;
-
-	/** @var IManager|MockObject */
-	private $manager;
-
-	/** @var AiIntegrationsService */
-	private $aiIntegrationsService;
-
-	/** @var Cache */
-	private $cache;
-
-	/** @var IMAPClientFactory|MockObject */
-	private $clientFactory;
-
-	/** @var IMailManager|MockObject */
-	private $mailManager;
-
-	/** @var IConfig|MockObject */
-	private $config;
+	private ContainerInterface|MockObject $container;
+	private IManager|MockObject $manager;
+	private IConfig|MockObject $config;
+	private NullLogger|MockObject $logger;
+	private AiIntegrationsService $aiIntegrationsService;
+	private Cache|MockObject $cache;
+	private IMAPClientFactory|MockObject $clientFactory;
+	private IMailManager|MockObject $mailManager;
+	private TaskProcessingManager|MockObject $taskProcessingManager;
+	private TaskProcessingProvider|MockObject $taskProcessingProvider;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -64,20 +61,26 @@ class AiIntegrationsServiceTest extends TestCase {
 			$this->manager = null;
 		}
 
+		$this->logger = $this->createMock(NullLogger::class);
+		$this->config = $this->createMock(IConfig::class);
 		$this->cache = $this->createMock(Cache::class);
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
-		$this->config = $this->createMock(IConfig::class);
+		$this->taskProcessingManager = $this->createMock(TaskProcessingManager::class);
 		$this->aiIntegrationsService = new AiIntegrationsService(
 			$this->container,
+			$this->logger,
+			$this->config,
 			$this->cache,
 			$this->clientFactory,
 			$this->mailManager,
-			$this->config,
+			$this->taskProcessingManager,
 		);
+
+		$this->taskProcessingProvider = $this->createMock(TaskProcessingProvider::class);
 	}
 
-	public function testSummarizeThreadNoBackend() {
+	public function testSummarizeThreadNoBackend(): void {
 		$account = new Account(new MailAccount());
 		$mailbox = new Mailbox();
 		if ($this->manager !== null) {
@@ -97,7 +100,7 @@ class AiIntegrationsServiceTest extends TestCase {
 	}
 
 
-	public function testSmartReplyNoBackend() {
+	public function testSmartReplyNoBackend(): void {
 		$account = new Account(new MailAccount());
 		$mailbox = new Mailbox();
 		$message = new Message();
@@ -117,7 +120,83 @@ class AiIntegrationsServiceTest extends TestCase {
 
 	}
 
-	public function testGeneratedMessage() {
+	public function testSmartReply(): void {
+		$account = new Account(new MailAccount());
+		$mailbox = new Mailbox();
+		$message = new Message();
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$message->setUid(1);
+		$currentUserId = 'user';
+		$this->container->method('get')->willReturn($this->manager);
+		$this->manager
+			->method('getAvailableTaskTypes')
+			->willReturn([FreePromptTaskType::class]);
+		$this->cache->method('getValue')->willReturn(false);
+		$this->clientFactory->method('getClient')->with($account)->willReturn($this->createMock(Horde_Imap_Client_Socket::class));
+		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
+		$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
+		$imapMessage->method('getUnsubscribeUrl')->willReturn(null);
+		$fromList = new AddressList([ Address::fromRaw('personal@example.com', 'personal@example.com')]);
+		$imapMessage->method('getFrom')->willReturn($fromList);
+		$imapMessage->method('getPlainBody')->willReturn('This is a test message');
+
+		$this->manager->expects($this->once())
+			->method('runTask')
+			->will($this->returnCallback(function (Task $task) {
+				$task->setOutput('{"reply1":"reply1","reply2":"reply2"}');
+				return '';
+			}));
+
+		$result = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, $currentUserId);
+
+		$this->assertEquals(
+			[
+				'reply1' => 'reply1',
+				'reply2' => 'reply2'
+			],
+			$result
+		);
+	}
+
+	public function testSmartReplyMarkdownFormat(): void {
+		$account = new Account(new MailAccount());
+		$mailbox = new Mailbox();
+		$message = new Message();
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$message->setUid(1);
+		$currentUserId = 'user';
+		$this->container->method('get')->willReturn($this->manager);
+		$this->manager
+			->method('getAvailableTaskTypes')
+			->willReturn([FreePromptTaskType::class]);
+		$this->cache->method('getValue')->willReturn(false);
+		$this->clientFactory->method('getClient')->with($account)->willReturn($this->createMock(Horde_Imap_Client_Socket::class));
+		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
+		$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
+		$imapMessage->method('getUnsubscribeUrl')->willReturn(null);
+		$fromList = new AddressList([ Address::fromRaw('personal@example.com', 'personal@example.com')]);
+		$imapMessage->method('getFrom')->willReturn($fromList);
+		$imapMessage->method('getPlainBody')->willReturn('This is a test message');
+
+		$this->manager->expects($this->once())
+			->method('runTask')
+			->will($this->returnCallback(function (Task $task) {
+				$task->setOutput('```json{"reply1":"reply1","reply2":"reply2"}```');
+				return '';
+			}));
+
+		$result = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, $currentUserId);
+
+		$this->assertEquals(
+			[
+				'reply1' => 'reply1',
+				'reply2' => 'reply2'
+			],
+			$result
+		);
+	}
+
+	public function testGeneratedMessage(): void {
 		$account = new Account(new MailAccount());
 		$mailbox = new Mailbox();
 		$message = new Message();
@@ -151,7 +230,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		}
 	}
 
-	public function testLlmAvailable() {
+	public function testLlmAvailable(): void {
 		if ($this->manager !== null) {
 			$this->container->method('get')->willReturn($this->manager);
 			$this->manager
@@ -167,7 +246,7 @@ class AiIntegrationsServiceTest extends TestCase {
 
 	}
 
-	public function testLlmUnavailable() {
+	public function testLlmUnavailable(): void {
 		if ($this->manager !== null) {
 			$this->container->method('get')->willReturn($this->manager);
 			$this->manager
@@ -202,7 +281,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->assertEquals($expected, $this->aiIntegrationsService->isLlmProcessingEnabled());
 	}
 
-	public function testCached() {
+	public function testCached(): void {
 		$account = new Account(new MailAccount());
 		$mailbox = new Mailbox();
 
@@ -372,6 +451,159 @@ class AiIntegrationsServiceTest extends TestCase {
 		self::assertNotNull($result);
 		self::assertSame('Meeting', $result->getSummary());
 		self::assertSame('* Q&A', $result->getDescription());
+	}
+
+	public function testSummarizeMessagesNoProvider(): void {
+		$account = new Account(new MailAccount());
+		$message = new Message();
+		$this->taskProcessingManager->expects(self::once())
+			->method('getAvailableTaskTypes')
+			->willReturn([]);
+		$this->logger->expects(self::once())
+			->method('info')
+			->with('No text summary provider available');
+
+		$this->aiIntegrationsService->summarizeMessages($account, [$message]);
+	}
+
+	public function testSummarizeMessagesContainsSummary(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(123);
+		$mailAccount->setEmail('user@domain.tld');
+		$mailAccount->setInboundHost('127.0.0.1');
+		$mailAccount->setInboundPort(993);
+		$mailAccount->setInboundSslMode('ssl');
+		$mailAccount->setInboundUser('user@domain.tld');
+		$mailAccount->setInboundPassword('encrypted');
+		$account = new Account($mailAccount);
+		$message = new Message();
+		$message->setSummary('Test Summary');
+
+		$this->taskProcessingManager->expects(self::once())
+			->method('getAvailableTaskTypes')
+			->willReturn(['core:text2text' => $this->taskProcessingProvider]);
+		$this->clientFactory->expects(self::once())
+			->method('getClient');
+
+		$this->aiIntegrationsService->summarizeMessages($account, [$message]);
+	}
+
+	public function testSummarizeMessagesIsEncrypted(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(123);
+		$mailAccount->setUserId('user1');
+		$mailAccount->setEmail('user1@domain.tld');
+		$mailAccount->setInboundHost('127.0.0.1');
+		$mailAccount->setInboundPort(993);
+		$mailAccount->setInboundSslMode('ssl');
+		$mailAccount->setInboundUser('user1@domain.tld');
+		$mailAccount->setInboundPassword('encrypted');
+		$account = new Account($mailAccount);
+
+		$mailBox = new Mailbox();
+		$mailBox->setId(1);
+
+		$message = new Message();
+		$message->setId(1);
+		$message->setUid(100);
+		$message->setMailboxId(1);
+
+		$imapClient = $this->clientFactory->getClient($account);
+
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$imapMessage->expects(self::never())
+			->method('getPlainBody')
+			->willReturn('This is a test message');
+		$imapMessage->expects(self::once())
+			->method('isEncrypted')->willReturn(true);
+
+		$this->taskProcessingManager->expects(self::once())
+			->method('getAvailableTaskTypes')
+			->willReturn(['core:text2text' => $this->taskProcessingProvider]);
+		$this->taskProcessingManager->expects(self::never())
+			->method('scheduleTask');
+
+		$this->clientFactory->expects(self::once())
+			->method('getClient');
+
+		$this->mailManager->expects(self::once())
+			->method('getMailbox')
+			->with(
+				$account->getUserId(),
+				$message->getMailboxId()
+			)
+			->willReturn($mailBox);
+		$this->mailManager->expects(self::once())
+			->method('getImapMessage')
+			->with(
+				$imapClient,
+				$account,
+				$mailBox,
+				$message->getUid(),
+				true
+			)
+			->willReturn($imapMessage);
+
+		$this->aiIntegrationsService->summarizeMessages($account, [$message]);
+	}
+
+	public function testSummarizeMessages(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(123);
+		$mailAccount->setUserId('user1');
+		$mailAccount->setEmail('user1@domain.tld');
+		$mailAccount->setInboundHost('127.0.0.1');
+		$mailAccount->setInboundPort(993);
+		$mailAccount->setInboundSslMode('ssl');
+		$mailAccount->setInboundUser('user1@domain.tld');
+		$mailAccount->setInboundPassword('encrypted');
+		$account = new Account($mailAccount);
+
+		$mailBox = new Mailbox();
+		$mailBox->setId(1);
+
+		$message = new Message();
+		$message->setId(1);
+		$message->setUid(100);
+		$message->setMailboxId(1);
+
+		$imapClient = $this->clientFactory->getClient($account);
+
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$imapMessage->expects(self::atMost(2))
+			->method('getPlainBody')
+			->willReturn('This is a test message');
+		$imapMessage->expects(self::once())
+			->method('isEncrypted')->willReturn(false);
+
+		$this->taskProcessingManager->expects(self::once())
+			->method('getAvailableTaskTypes')
+			->willReturn(['core:text2text' => $this->taskProcessingProvider]);
+		$this->taskProcessingManager->expects(self::once())
+			->method('scheduleTask');
+
+		$this->clientFactory->expects(self::once())
+			->method('getClient');
+
+		$this->mailManager->expects(self::once())
+			->method('getMailbox')
+			->with(
+				$account->getUserId(),
+				$message->getMailboxId()
+			)
+			->willReturn($mailBox);
+		$this->mailManager->expects(self::once())
+			->method('getImapMessage')
+			->with(
+				$imapClient,
+				$account,
+				$mailBox,
+				$message->getUid(),
+				true
+			)
+			->willReturn($imapMessage);
+
+		$this->aiIntegrationsService->summarizeMessages($account, [$message]);
 	}
 
 }

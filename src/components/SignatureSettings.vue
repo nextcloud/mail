@@ -59,6 +59,8 @@ import mitt from 'mitt'
 
 import { NcSelect, NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
+import useMainStore from '../store/mainStore.js'
+import { mapStores } from 'pinia'
 
 export default {
 	name: 'SignatureSettings',
@@ -85,6 +87,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		identities() {
 			const identities = this.account.aliases.map((alias) => {
 				return {
@@ -109,7 +112,7 @@ export default {
 	watch: {
 		async signatureAboveQuote(val, oldVal) {
 			try {
-				await this.$store.dispatch('patchAccount', {
+				await this.mainStore.patchAccount({
 					account: this.account,
 					data: {
 						signatureAboveQuote: val,
@@ -140,19 +143,25 @@ export default {
 		async saveSignature() {
 			this.loading = true
 
-			let dispatchType = 'updateAccountSignature'
 			const payload = {
 				account: this.account,
 				signature: this.signature,
 			}
 
 			if (this.identity.id > -1) {
-				dispatchType = 'updateAliasSignature'
 				payload.aliasId = this.identity.id
+				return this.mainStore.updateAliasSignature(payload)
+					.then(() => {
+						logger.info('signature updated')
+						this.loading = false
+					})
+					.catch((error) => {
+						logger.error('could not update account signature', { error })
+						throw error
+					})
 			}
 
-			return this.$store
-				.dispatch(dispatchType, payload)
+			return this.mainStore.updateAccountSignature(payload)
 				.then(() => {
 					logger.info('signature updated')
 					this.loading = false

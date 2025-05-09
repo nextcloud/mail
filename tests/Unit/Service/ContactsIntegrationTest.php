@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-FileCopyrightText: 2015-2016 ownCloud, Inc.
@@ -88,21 +90,24 @@ class ContactsIntegrationTest extends TestCase {
 		$expected = [
 			[
 				'id' => 'jf',
-				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
+				'label' => 'Jonathan Frakes',
 				'email' => 'jonathan@frakes.com',
 				'photo' => null,
+				'source' => 'contacts'
 			],
 			[
 				'id' => 'jd',
-				'label' => 'John Doe (john@doe.info)',
+				'label' => 'John Doe',
 				'email' => 'john@doe.info',
 				'photo' => null,
+				'source' => 'contacts'
 			],
 			[
 				'id' => 'jd',
-				'label' => 'John Doe (doe@john.info)',
+				'label' => 'John Doe',
 				'email' => 'doe@john.info',
 				'photo' => null,
+				'source' => 'contacts'
 			],
 		];
 
@@ -155,21 +160,24 @@ class ContactsIntegrationTest extends TestCase {
 		$expected = [
 			[
 				'id' => 'jd',
-				'label' => 'John Doe (john@doe.info)',
+				'label' => 'John Doe',
 				'email' => 'john@doe.info',
 				'photo' => null,
+				'source' => 'contacts'
 			],
 			[
 				'id' => 'jd',
-				'label' => 'John Doe (doe@john.info)',
+				'label' => 'John Doe',
 				'email' => 'doe@john.info',
 				'photo' => null,
+				'source' => 'contacts',
 			],
 			[
 				'id' => 'js',
-				'label' => 'Johann Strauss II (johann@strauss.com)',
+				'label' => 'Johann Strauss II',
 				'email' => 'johann@strauss.com',
 				'photo' => null,
+				'source' => 'contacts',
 			],
 		];
 
@@ -207,9 +215,10 @@ class ContactsIntegrationTest extends TestCase {
 		$expected = [
 			[
 				'id' => 'jf',
-				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
+				'label' => 'Jonathan Frakes',
 				'email' => 'jonathan@frakes.com',
 				'photo' => null,
+				'source' => 'contacts',
 			],
 		];
 
@@ -247,9 +256,10 @@ class ContactsIntegrationTest extends TestCase {
 		$expected = [
 			[
 				'id' => 'jf',
-				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
+				'label' => 'Jonathan Frakes',
 				'email' => 'jonathan@frakes.com',
 				'photo' => null,
+				'source' => 'contacts',
 			],
 		];
 
@@ -287,9 +297,10 @@ class ContactsIntegrationTest extends TestCase {
 		$expected = [
 			[
 				'id' => 'jf',
-				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
+				'label' => 'Jonathan Frakes',
 				'email' => 'jonathan@frakes.com',
 				'photo' => null,
+				'source' => 'contacts',
 			],
 		];
 
@@ -353,7 +364,14 @@ class ContactsIntegrationTest extends TestCase {
 			->will($this->returnValue(true));
 		$this->contactsManager->expects($this->once())
 			->method('search')
-			->with($term, ['UID', 'FN', 'EMAIL'], ['enumeration' => $allowSystemUsers, 'fullmatch' => $shareeEnumerationFullMatch])
+			->with(
+				$term,
+				['UID', 'FN', 'EMAIL'],
+				[
+					'enumeration' => $allowSystemUsers,
+					'fullmatch' => $shareeEnumerationFullMatch,
+					'limit' => 20,
+				])
 			->will($this->returnValue($searchResult));
 	}
 

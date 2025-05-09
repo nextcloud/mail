@@ -9,11 +9,12 @@ import QuotePlugin from '../../../ckeditor/quote/QuotePlugin.js'
 
 describe('QuotePlugin', () => {
 
-	it('Keep quote wrapper with QuotePlugin', async() => {
+	it('Keep quote wrapper with QuotePlugin', async () => {
 		const text = '<div class="quote"><p>bonjour bonjour</p></div>'
-		const expected = '<div class=\"quote\"><p>bonjour bonjour</p></div>'
+		const expected = '<div class="quote"><p>bonjour bonjour</p></div>'
 
 		const editor = await VirtualTestEditor.create({
+			licenseKey: 'GPL',
 			initialData: text,
 			plugins: [ParagraphPlugin, QuotePlugin],
 		})
@@ -21,11 +22,12 @@ describe('QuotePlugin', () => {
 		expect(editor.getData()).toEqual(expected)
 	})
 
-	it('Remove quote wrapper without QuotePlugin', async() => {
+	it('Remove quote wrapper without QuotePlugin', async () => {
 		const text = '<div class="quote"><p>bonjour bonjour</p></div>'
 		const expected = '<p>bonjour bonjour</p>'
 
 		const editor = await VirtualTestEditor.create({
+			licenseKey: 'GPL',
 			initialData: text,
 			plugins: [ParagraphPlugin],
 		})
@@ -33,11 +35,11 @@ describe('QuotePlugin', () => {
 		expect(editor.getData()).toEqual(expected)
 	})
 
-
-	it('Editor contains a <quote> element', async() => {
+	it('Editor contains a <quote> element', async () => {
 		const text = '<div class="quote"><p>bonjour bonjour</p></div>'
 
 		const editor = await VirtualTestEditor.create({
+			licenseKey: 'GPL',
 			initialData: text,
 			plugins: [ParagraphPlugin, QuotePlugin],
 		})

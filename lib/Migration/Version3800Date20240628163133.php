@@ -24,7 +24,6 @@ class Version3800Date20240628163133 extends SimpleMigrationStep {
 	}
 
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
-		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
 		$accounts = $schema->getTable('mail_accounts');

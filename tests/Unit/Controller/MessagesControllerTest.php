@@ -247,7 +247,7 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($nonce);
 		$this->urlGenerator->expects($this->once())
 			->method('linkTo')
-			->with('mail', 'js/mail-htmlresponse.mjs')
+			->with('mail', 'js/htmlresponse.js')
 			->willReturn($relativeScriptUrl);
 		$this->urlGenerator->expects($this->once())
 			->method('getAbsoluteURL')

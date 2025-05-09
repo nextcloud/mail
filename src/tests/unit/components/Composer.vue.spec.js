@@ -4,46 +4,38 @@
  */
 
 import {createLocalVue, shallowMount} from '@vue/test-utils'
-import Vuex from 'vuex'
 
 import Composer from '../../../components/Composer.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
+import { createPinia, PiniaVuePlugin } from 'pinia'
+
+import useMainStore from '../../../store/mainStore.js'
 
 const localVue = createLocalVue()
 
-localVue.use(Vuex)
 localVue.mixin(Nextcloud)
+localVue.use(PiniaVuePlugin)
+const pinia = createPinia()
 
 describe('Composer', () => {
 
-	let actions
-	let getters
 	let store
 
 	beforeEach(() => {
-		Object.defineProperty(window, "firstDay", {
+		Object.defineProperty(window, 'firstDay', {
 			value: 0,
 		})
 
-		actions = {}
-		getters = {
-			accounts: () => [
-				{
-					id: 123,
-					editorMode: 'plaintext',
-					isUnified: false,
-					aliases: [],
-				},
-			],
-			getPreference: () => (key, fallback) => fallback,
-			getAccount: () => ({}),
-			isScheduledSendingDisabled: () => false,
-			getSmimeCertificates: () => [],
-		}
-		store = new Vuex.Store({
-			actions,
-			getters,
+		shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				accounts: [],
+			},
+			localVue,
+			pinia,
+			store,
 		})
+		store = useMainStore()
 	})
 
 	it('does not drop the reply message ID', () => {

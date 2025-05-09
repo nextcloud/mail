@@ -64,7 +64,7 @@ import logger from '../../logger.js'
 import { loadState } from '@nextcloud/initial-state'
 import { setAntiSpamEmail, deleteAntiSpamEmail } from '../../service/SettingsService.js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import ButtonVue from '@nextcloud/vue/dist/Components/NcButton.js'
+import ButtonVue from '@nextcloud/vue/components/NcButton'
 import IconUpload from 'vue-material-design-icons/Upload.vue'
 import IconDelete from 'vue-material-design-icons/Delete.vue'
 

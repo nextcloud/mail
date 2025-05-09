@@ -83,6 +83,8 @@ import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconRename from 'vue-material-design-icons/Pencil.vue'
 import logger from '../logger.js'
 import AliasForm from './AliasForm.vue'
+import useMainStore from '../store/mainStore.js'
+import { mapStores } from 'pinia'
 
 export default {
 	name: 'AliasSettings',
@@ -108,6 +110,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		aliases() {
 			return this.account.aliases
 		},
@@ -124,7 +127,7 @@ export default {
 		async createAlias() {
 			this.loading = true
 
-			await this.$store.dispatch('createAlias', {
+			await this.mainStore.createAlias({
 				account: this.account,
 				alias: this.newAlias,
 				name: this.newName,
@@ -147,7 +150,7 @@ export default {
 
 		async updateAlias(aliasId, newAlias) {
 			const alias = this.aliases.find((alias) => alias.id === aliasId)
-			await this.$store.dispatch('updateAlias', {
+			await this.mainStore.updateAlias({
 				account: this.account,
 				aliasId: alias.id,
 				alias: newAlias.alias,
@@ -156,7 +159,7 @@ export default {
 			})
 		},
 		async deleteAlias(aliasId) {
-			await this.$store.dispatch('deleteAlias', {
+			await this.mainStore.deleteAlias({
 				account: this.account,
 				aliasId,
 			})
