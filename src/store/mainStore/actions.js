@@ -1219,6 +1219,10 @@ export default function mainStoreActions() {
 			})
 		},
 		async fetchMessage(id) {
+			if (this.messages[id]) {
+				return this.messages[id]
+			}
+
 			return handleHttpAuthErrors(async () => {
 				const message = await fetchMessage(id)
 				// Only commit if not undefined (not found)
