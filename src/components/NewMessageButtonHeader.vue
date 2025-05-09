@@ -20,7 +20,7 @@
 			type="tertiary-no-background"
 			class="refresh__button"
 			:disabled="refreshing"
-			@click="refreshMailbox">
+			@click="refreshMailbox(true)">
 			<template #icon>
 				<IconRefresh v-if="!refreshing"
 					:size="16" />
@@ -63,18 +63,28 @@ export default {
 		},
 	},
 	methods: {
-		async refreshMailbox() {
+		async refreshMailbox(manualTrigger = false) {
 			if (this.refreshing === true) {
 				logger.debug('already sync\'ing mailbox.. aborting')
 				return
 			}
-			this.refreshing = true
+
+			let timeout
+			if (!manualTrigger) {
+				timeout = setTimeout(() => {
+					this.refreshing = true
+				}, 5000)
+			} else {
+				this.refreshing = true
+			}
+
 			try {
 				await this.mainStore.syncEnvelopes({ mailboxId: this.currentMailbox.databaseId })
-				logger.debug('Current mailbox is sync\'ing ')
+				logger.debug('Current mailbox is sync\'ing')
 			} catch (error) {
 				logger.error('could not sync current mailbox', { error })
 			} finally {
+				clearTimeout(timeout)
 				this.refreshing = false
 			}
 		},
