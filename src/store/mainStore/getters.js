@@ -60,5 +60,6 @@ export default function mainStore() {
 
 		isOneLineLayout: (state) => state.list,
 		getInternalAddresses: (state) => state.internalAddress?.filter(internalAddress => internalAddress !== undefined),
+		getMailboxesAndSubmailboxesByAccountId: (state) => (accountId) => Object.values(state.mailboxes).filter(mailbox => mailbox.accountId === accountId),
 	}
 }

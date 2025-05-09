@@ -3,23 +3,18 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcSelect ref="select"
-		:value="mailbox"
-		:options="mailboxes"
-		:required="true"
-		@input="onInput" />
+	<MailboxInlinePicker :account="account" :value="mailbox" @input="onInput" />
 </template>
 <script>
 
-import NcSelect from '@nextcloud/vue/components/NcSelect'
-import { mailboxHasRights } from '../../util/acl.js'
 import { mapStores } from 'pinia'
 import useMainStore from '../../store/mainStore.js'
+import MailboxInlinePicker from '../MailboxInlinePicker.vue'
 
 export default {
 	name: 'ActionFileinto',
 	components: {
-		NcSelect,
+		MailboxInlinePicker,
 	},
 	props: {
 		action: {
@@ -34,20 +29,18 @@ export default {
 	computed: {
 		...mapStores(useMainStore),
 		mailbox() {
-			return this.action.mailbox ?? undefined
-		},
-		mailboxes() {
-			const mailboxes = this.mainStore.getMailboxes(this.account.accountId)
-				.filter(mailbox => mailboxHasRights(mailbox, 'i'))
-
-			return mailboxes.map((mailbox) => {
-				return mailbox.displayName
-			})
+			return this.getMailboxDatabaseIdByName(this.action?.mailbox)
 		},
 	},
 	methods: {
 		onInput(value) {
-			this.$emit('update-action', { mailbox: value })
+			this.$emit('update-action', { mailbox: this.getMailboxNameByDatabaseId(value) })
+		},
+		getMailboxDatabaseIdByName(name) {
+			return this.mainStore.getMailboxesAndSubmailboxesByAccountId(this.account.id).find((mailbox) => mailbox.name === name)?.databaseId
+		},
+		getMailboxNameByDatabaseId(databaseId) {
+			return this.mainStore.getMailbox(databaseId)?.name
 		},
 	},
 }
