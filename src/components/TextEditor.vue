@@ -40,6 +40,8 @@ import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64u
 import ImagePlugin from '@ckeditor/ckeditor5-image/src/image.js'
 import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
+import SourceEditingPlugin from '@ckeditor/ckeditor5-source-editing/src/sourceediting.js'
+import GeneralHtmlSupportPlugin from '@ckeditor/ckeditor5-html-support/src/generalhtmlsupport.js'
 import { DropdownView } from '@ckeditor/ckeditor5-ui'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import { searchProvider, getLinkWithPicker } from '@nextcloud/vue/components/NcRichText'
@@ -89,6 +91,7 @@ export default {
 			PickerPlugin,
 			Mention,
 			LinkPlugin,
+			GeneralHtmlSupportPlugin,
 		]
 		const toolbar = ['undo', 'redo']
 
@@ -109,6 +112,8 @@ export default {
 				Base64UploadAdapter,
 				ImageResizePlugin,
 				MailPlugin,
+				SourceEditingPlugin,
+				GeneralHtmlSupportPlugin,
 			])
 			toolbar.unshift(...[
 				'heading',
@@ -126,6 +131,7 @@ export default {
 				'strikethrough',
 				'link',
 				'removeFormat',
+				'sourceEditing',
 			])
 		}
 
@@ -159,6 +165,16 @@ export default {
 							marker: '@',
 							feed: this.getContact,
 							itemRenderer: this.customContactRenderer,
+						},
+					],
+				},
+				htmlSupport: {
+					allow: [
+						{
+							name: /^(p|div|span|b|i|strong|em|ul|ol|li|a|img|blockquote|h[1-6])$/,
+							attributes: true,
+							classes: true,
+							styles: true,
 						},
 					],
 				},
