@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<div :class="{ 'text-editor__bordered': isBordered }">
+	<div :class="{ 'text-editor--bordered': isBordered }">
 		<ckeditor v-if="ready"
 			:value="value"
 			:config="config"
@@ -426,8 +426,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.text-editor{
-	&__bordered {
+.text-editor--bordered{
 	margin-top: var(--default-grid-baseline);
 	border: var(--border-width-input, 2px) solid var(--color-border-maxcontrast);
 	border-radius:var(--border-radius-large);
@@ -444,7 +443,6 @@ export default {
 		border-color: var(--color-main-text);
 		border-width: var(--border-width-input-focused, 2px);
 	}
-}
 }
 
 .editor {
