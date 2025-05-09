@@ -391,6 +391,7 @@
     "Loading …" : "正在加载...",
     "Not supported by the server" : "服务器不支持",
     "{usage} of {limit} used" : "已使用 {usage} / {limit}",
+    "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "无法创建邮箱。名称可能包含无效字符。请尝试其他名称。",
     "Remove account" : "移除账号",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "{email}和缓存的电子邮箱数据将从 Nextcloud 账号中删除，但不会从你的电子邮箱提供商那里删除。",
     "Remove {email}" : "移除 {email}",

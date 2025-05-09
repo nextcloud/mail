@@ -393,6 +393,7 @@ OC.L10N.register(
     "Loading …" : "Lade …",
     "Not supported by the server" : "Wird vom Server nicht unterstützt",
     "{usage} of {limit} used" : "{usage} von {limit} genutzt",
+    "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Postfach konnte nicht erstellt werden. Der Name enthält wahrscheinlich ungültige Zeichen. Bitte mit einem anderen Namen versuchen.",
     "Remove account" : "Konto entfernen",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Das Konto für {email} und zwischengespeicherte E-Mail-Daten werden aus Nextcloud entfernt, jedoch nicht von Ihrem E-Mail-Provider.",
     "Remove {email}" : "{email} entfernen",
