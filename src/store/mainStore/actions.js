@@ -667,6 +667,8 @@ export default function mainStoreActions() {
 								mailboxId: mb.databaseId,
 								query,
 								addToUnifiedMailboxes: false,
+								sort: this.getPreference('sort-order'),
+								view: this.getPreference('layout-message-view'),
 							}),
 						),
 						Promise.all.bind(Promise),
@@ -701,7 +703,7 @@ export default function mainStoreActions() {
 							}),
 						),
 					),
-				)(mailbox.accountId, mailboxId, query, undefined, PAGE_SIZE, this.getPreference('sort-order'))
+				)(mailbox.accountId, mailboxId, query, undefined, PAGE_SIZE, this.getPreference('sort-order'), this.getPreference('layout-message-view'))
 			})
 		},
 		async fetchNextEnvelopePage({
@@ -1819,12 +1821,18 @@ export default function mainStoreActions() {
 		 * @return {Array} list of envelope ids
 		 */
 		appendOrReplaceEnvelopeId(existing, envelope) {
-			const index = existing.findIndex((id) => this.envelopes[id].threadRootId === envelope.threadRootId)
-			if (index === -1) {
+
+			if (this.getPreference('layout-message-view') === 'singleton') {
 				existing.push(envelope.databaseId)
 			} else {
-				existing[index] = envelope.databaseId
+				const index = existing.findIndex((id) => this.envelopes[id].threadRootId === envelope.threadRootId)
+				if (index === -1) {
+					existing.push(envelope.databaseId)
+				} else {
+					existing[index] = envelope.databaseId
+				}
 			}
+
 			return existing
 		},
 		savePreferenceMutation({
