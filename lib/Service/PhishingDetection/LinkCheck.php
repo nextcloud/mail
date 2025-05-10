@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\PhishingDetection;
 
+use OCA\Mail\Html\Parser;
 use OCA\Mail\PhishingDetectionResult;
 use OCP\IL10N;
 use URL\Normalizer;
@@ -52,10 +53,7 @@ class LinkCheck {
 		$results = [];
 		$zippedArray = [];
 
-		$dom = new \DOMDocument();
-		libxml_use_internal_errors(true);
-		$dom->loadHTML($htmlMessage);
-		libxml_use_internal_errors();
+		$dom = Parser::parseToDomDocument($htmlMessage);
 		$anchors = $dom->getElementsByTagName('a');
 		foreach ($anchors as $anchor) {
 			$href = $anchor->getAttribute('href');

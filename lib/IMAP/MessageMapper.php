@@ -27,6 +27,7 @@ use Html2Text\Html2Text;
 use OCA\Mail\Attachment;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Html\Parser;
 use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\SmimeService;
@@ -1017,10 +1018,7 @@ class MessageMapper {
 		if (empty($body)) {
 			return false;
 		}
-		$dom = new \DOMDocument();
-		libxml_use_internal_errors(true);
-		$dom->loadHTML($body);
-		libxml_use_internal_errors();
+		$dom = Parser::parseToDomDocument($body);
 		$anchors = $dom->getElementsByTagName('a');
 		foreach ($anchors as $anchor) {
 			$href = $anchor->getAttribute('href');
