@@ -279,6 +279,7 @@ class MessageMapper {
 		bool $runPhishingCheck = false): array {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->envelope();
+		$query->structure();
 		$query->flags();
 		$query->uid();
 		$query->imapDate();
