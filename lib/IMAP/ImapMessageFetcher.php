@@ -222,7 +222,9 @@ class ImapMessageFetcher {
 			$query->headerText([
 				'peek' => true,
 			]);
-
+			$query->bodyText([
+				'peek' => true,
+			]);
 			$result = $this->client->fetch($this->mailbox, $query, ['ids' => $ids]);
 			$fetch = $result[$this->uid];
 			if (is_null($fetch)) {

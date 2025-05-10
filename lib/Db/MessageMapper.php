@@ -283,7 +283,12 @@ class MessageMapper extends QBMapper {
 			$qb1->setValue('flag_notjunk', $qb1->createParameter('flag_notjunk'));
 			$qb1->setValue('flag_important', $qb1->createParameter('flag_important'));
 			$qb1->setValue('flag_mdnsent', $qb1->createParameter('flag_mdnsent'));
+			$qb1->setValue('flag_attachments', $qb1->createParameter('flag_attachments'));
+			$qb1->setValue('preview_text', $qb1->createParameter('preview_text'));
+			$qb1->setValue('encrypted', $qb1->createParameter('encrypted'));
 			$qb1->setValue('imip_message', $qb1->createParameter('imip_message'));
+			$qb1->setValue('mentions_me', $qb1->createParameter('mentions_me'));
+			$qb1->setValue('structure_analyzed', $qb1->createParameter('structure_analyzed'));
 
 			$qb2 = $this->db->getQueryBuilder();
 			$qb2->insert('mail_recipients')
@@ -314,7 +319,13 @@ class MessageMapper extends QBMapper {
 				$qb1->setParameter('flag_notjunk', $message->getFlagNotjunk(), IQueryBuilder::PARAM_BOOL);
 				$qb1->setParameter('flag_important', $message->getFlagImportant(), IQueryBuilder::PARAM_BOOL);
 				$qb1->setParameter('flag_mdnsent', $message->getFlagMdnsent(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter('flag_attachments', $message->getFlagAttachments(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter('preview_text', $message->getPreviewText(), IQueryBuilder::PARAM_INT);
+				$qb1->setParameter('encrypted', $message->getEncrypted(), IQueryBuilder::PARAM_BOOL);
 				$qb1->setParameter('imip_message', $message->isImipMessage(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter('mentions_me', $message->getMentionsMe(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter('structure_analyzed', $message->getStructureAnalyzed(), IQueryBuilder::PARAM_BOOL);
+
 				$qb1->executeStatement();
 
 				$message->setId($qb1->getLastInsertId());

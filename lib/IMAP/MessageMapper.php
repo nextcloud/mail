@@ -283,12 +283,13 @@ class MessageMapper {
 		$query->flags();
 		$query->uid();
 		$query->imapDate();
-		$query->headerText(
-			[
-				'cache' => true,
-				'peek' => true,
-			]
-		);
+		$query->headerText([
+			'cache' => true,
+			'peek' => true,
+		]);
+		$query->bodyText([
+			'peek' => true,
+		]);
 
 		if (is_array($ids)) {
 			// Chunk to prevent overly long IMAP commands
