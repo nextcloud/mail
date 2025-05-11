@@ -227,6 +227,7 @@ OC.L10N.register(
     "Sending …" : "Imbiende ...",
     "Warning sending your message" : "Avisu in s'imbiu de su messàgiu",
     "Send anyway" : "Imbia a su pròpiu",
+    "Start writing a message by clicking below or select an existing message to display its contents" : "Cumintza a iscrìere unu messàgiu incarchende a suta o seletziona unu messàgiu chi esistit giai pro nde mustrare is cuntenutos",
     "Message" : "Messàgiu",
     "Oh Snap!" : "Lampu!",
     "Contacts with this address" : "Cuntatos cun custu indiritzu",
