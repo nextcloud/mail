@@ -1,3 +1,19 @@
+## [5.0.6](https://github.com/nextcloud/mail/compare/v5.0.5...v5.0.6) (2025-05-12)
+
+
+### Bug Fixes
+
+* **l10n:** Update translations from Transifex ([8dde066](https://github.com/nextcloud/mail/commit/8dde0661d0b42a83ca460cd2f32fd53b450fb482))
+* **l10n:** Update translations from Transifex ([6dea6d0](https://github.com/nextcloud/mail/commit/6dea6d0c62372d095546fc3a757a34fb8507518c))
+* **l10n:** Update translations from Transifex ([bb56198](https://github.com/nextcloud/mail/commit/bb56198970b11e33c42590efc5d2908d993dfcf9))
+* **l10n:** Update translations from Transifex ([68cac3b](https://github.com/nextcloud/mail/commit/68cac3bae5847708f8d6e8a1a281e779599c0ac0))
+* **mime:** ignore HTML parsing errors consistently ([ff58ed7](https://github.com/nextcloud/mail/commit/ff58ed71f0f7709248d2eaa1e8f083689d8378ef))
+* **phishing:** strip exactly 1 character from the end of a link string to remove brackets ([64a3845](https://github.com/nextcloud/mail/commit/64a3845f82369682ebbd5c69a3b605ad5e26455e))
+* **smime:** use proper binary encoding when signing messages ([73ba041](https://github.com/nextcloud/mail/commit/73ba041b0fc7340806c4fcf5ea60d63ac9835838))
+* **ui:** handle error when saving email attachments to Files ([8072a0c](https://github.com/nextcloud/mail/commit/8072a0c45f27e787b90031be9422efa15b01bb8f))
+
+
+
 ## [5.0.5](https://github.com/nextcloud/mail/compare/v5.0.4...v5.0.5) (2025-05-07)
 
 
