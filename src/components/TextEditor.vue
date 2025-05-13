@@ -21,7 +21,7 @@
 import CKEditor from '@ckeditor/ckeditor5-vue2'
 import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment.js'
 import { Mention } from '@ckeditor/ckeditor5-mention'
-import Editor from '@ckeditor/ckeditor5-editor-decoupled/src/decouplededitor.js'
+import Editor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor.js'
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials.js'
 import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote.js'
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold.js'
@@ -41,7 +41,6 @@ import ImagePlugin from '@ckeditor/ckeditor5-image/src/image.js'
 import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
 import SourceEditingPlugin from '@ckeditor/ckeditor5-source-editing/src/sourceediting.js'
-import GeneralHtmlSupportPlugin from '@ckeditor/ckeditor5-html-support/src/generalhtmlsupport.js'
 import { DropdownView } from '@ckeditor/ckeditor5-ui'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import { searchProvider, getLinkWithPicker } from '@nextcloud/vue/components/NcRichText'
@@ -91,9 +90,8 @@ export default {
 			PickerPlugin,
 			Mention,
 			LinkPlugin,
-			GeneralHtmlSupportPlugin,
 		]
-		const toolbar = ['undo', 'redo']
+		const toolbar = ['sourceEditing', 'undo', 'redo']
 
 		if (this.html) {
 			plugins.push(...[
@@ -113,7 +111,6 @@ export default {
 				ImageResizePlugin,
 				MailPlugin,
 				SourceEditingPlugin,
-				GeneralHtmlSupportPlugin,
 			])
 			toolbar.unshift(...[
 				'heading',
@@ -131,7 +128,6 @@ export default {
 				'strikethrough',
 				'link',
 				'removeFormat',
-				'sourceEditing',
 			])
 		}
 
@@ -165,16 +161,6 @@ export default {
 							marker: '@',
 							feed: this.getContact,
 							itemRenderer: this.customContactRenderer,
-						},
-					],
-				},
-				htmlSupport: {
-					allow: [
-						{
-							name: /^(p|div|span|b|i|strong|em|ul|ol|li|a|img|blockquote|h[1-6])$/,
-							attributes: true,
-							classes: true,
-							styles: true,
 						},
 					],
 				},
@@ -484,6 +470,9 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	border-radius: var(--border-radius-large) !important;
 	overflow: visible;
 }
+.ck-rounded-corners .ck.ck-editor__main>.ck-editor__editable, .ck.ck-editor__main>.ck-editor__editable.ck-rounded-corners {
+	width: 100%;
+}
 .ck.ck-list-styles-list {
 /* our composer is very small, having menus vertically shown is better */
 	grid-template-rows: repeat(3,auto) !important;
@@ -495,5 +484,12 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 }
 .ck-powered-by-balloon {
 	display: none !important;
+}
+.toolbar {
+	position: sticky !important;
+	z-index: 1001;
+}
+.ck.ck-editor {
+	z-index: 1000;
 }
 </style>
