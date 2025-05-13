@@ -391,6 +391,7 @@
     "Loading …" : "Carregando...",
     "Not supported by the server" : "Não suportado pelo servidor",
     "{usage} of {limit} used" : "{usage} usado de {limit}",
+    "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Não foi possível criar a caixa de correio. O nome provavelmente contém caracteres inválidos. Tente outro nome.",
     "Remove account" : "Excluir a conta",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "A conta do e-mail {email} e os dados em cache serão removidos do Nextcloud, mas não do seu provedor de e-mail.",
     "Remove {email}" : "Excluir {email}",
