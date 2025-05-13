@@ -1,3 +1,15 @@
+## [5.0.7](https://github.com/nextcloud/mail/compare/v5.0.6...v5.0.7) (2025-05-13)
+
+
+### Bug Fixes
+
+* **deps:** bump bytestream/horde-imap-client from 2.33.5 to ^2.33.6 (stable5.0) ([d2f4c94](https://github.com/nextcloud/mail/commit/d2f4c94d73eccdfc43223483f8c0f499efa78222))
+* don't show important or unread emails in trash ([d6dfba4](https://github.com/nextcloud/mail/commit/d6dfba48c819017bff931f830d5dfb56f0928ddb))
+* **imap:** handle password decryption exception ([9acf38c](https://github.com/nextcloud/mail/commit/9acf38c8ac69fce5047deaf4dd6e213da875a0ff))
+* **l10n:** Update translations from Transifex ([64a9f2b](https://github.com/nextcloud/mail/commit/64a9f2be7d5fc43da33654a4a6b4424fd4ea5e2e))
+
+
+
 ## [5.0.6](https://github.com/nextcloud/mail/compare/v5.0.5...v5.0.6) (2025-05-12)
 
 
