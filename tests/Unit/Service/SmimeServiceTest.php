@@ -354,6 +354,7 @@ class SmimeServiceTest extends TestCase {
 		$encryptedText = $encryptedMimePart->toString([
 			'canonical' => true,
 			'headers' => true,
+			'encode' => Horde_Mime_Part::ENCODE_8BIT,
 		]);
 
 		$decryptedTextImapLocalhost = $this->smimeService
@@ -363,15 +364,16 @@ class SmimeServiceTest extends TestCase {
 			'forcemime' => true,
 		]);
 
-		$decryptedTextDomainTld = $this->smimeService
-			->decryptMimePartText($encryptedText, $certificateDomainTld)
-			->getDecryptedMessage();
+		$decryptionResult = $this->smimeService
+			->decryptMimePartText($encryptedText, $certificateDomainTld);
+		$decryptedTextDomainTld = $decryptionResult->getDecryptedMessage();
 		$decryptedMimePartDomainTld = Horde_Mime_Part::parseMessage($decryptedTextDomainTld, [
 			'forcemime' => true,
 		]);
 
 		$this->assertEquals($mimePart->getContents(), $decryptedMimePartImapLocalhost->getContents());
 		$this->assertEquals($mimePart->getContents(), $decryptedMimePartDomainTld->getContents());
+		$this->assertFalse($decryptionResult->isSigned());
 	}
 
 	public function provideParseCertificateData(): array {
@@ -486,5 +488,55 @@ class SmimeServiceTest extends TestCase {
 			null,
 			[__DIR__ . '/../../data/smime-certs/imap.localhost.ca.crt'],
 		));
+	}
+
+	public function testSignAndEncryptMimePart() {
+		$certificateDomainTld = $this->getTestCertificate('user@domain.tld');
+		$certificateImapLocalhost = $this->getTestCertificate('user@imap.localhost');
+
+		$mailBody = file_get_contents(__DIR__ . '/../../../tests/data/mime-html-unicode.txt');
+		$mimePart = Horde_Mime_Part::parseMessage($mailBody);
+
+		$this->crypto
+			->method('decrypt')
+			->will($this->returnArgument(0));
+		$this->tempManager
+			->method('getTemporaryFile')
+			->willReturnCallback(function () {
+				return $this->createTempFile();
+			});
+		$this->certificateManager->expects(self::once())
+			->method('getAbsoluteBundlePath')
+			->willReturn(__DIR__ . '/../../data/smime-certs/imap.localhost.ca.crt');
+
+		$signedMimePart = $this->smimeService->signMimePart($mimePart, $certificateImapLocalhost);
+		$encryptedMimePart = $this->smimeService->encryptMimePart(
+			$signedMimePart,
+			[$certificateDomainTld],
+		);
+		$encryptedText = $encryptedMimePart->toString([
+			'canonical' => true,
+			'headers' => true,
+			'encode' => Horde_Mime_Part::ENCODE_8BIT,
+		]);
+
+		$decryptionResult = $this->smimeService
+			->decryptMimePartText($encryptedText, $certificateDomainTld);
+		$decryptedMimePart = Horde_Mime_Part::parseMessage($decryptionResult->getDecryptedMessage());
+
+		$this->assertEquals(
+			$signedMimePart->toString([
+				'canonical' => true,
+				'headers' => false,
+				'encode' => Horde_Mime_Part::ENCODE_8BIT,
+			]),
+			$decryptedMimePart->toString([
+				'canonical' => true,
+				'headers' => false,
+				'encode' => Horde_Mime_Part::ENCODE_8BIT,
+			]),
+		);
+		$this->assertTrue($decryptionResult->isSigned());
+		$this->assertTrue($decryptionResult->isSignatureValid());
 	}
 }
