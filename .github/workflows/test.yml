@@ -227,12 +227,95 @@ jobs:
       env:
           CI: true
 
+  matrix:
+    runs-on: ubuntu-latest-low
+    outputs:
+      matrix: ${{ steps.versions.outputs.sparse-matrix }}
+    steps:
+      - name: Checkout app
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - name: Get version matrix
+        id: versions
+        uses: icewind1991/nextcloud-version-matrix@58becf3b4bb6dc6cef677b15e2fd8e7d48c0908f # v1.3.1
+        with:
+          matrix: '{"node-versions": ["20"]}'
+
+  frontend-e2e-tests:
+    runs-on: ubuntu-latest
+    name: Front-end E2E tests
+    needs: matrix
+    strategy:
+      matrix: ${{ fromJson(needs.matrix.outputs.matrix) }}
+    steps:
+      - name: Set up Nextcloud env
+        uses: ChristophWurst/setup-nextcloud@fc0790385c175d97e88a7cb0933490de6e990374 # v0.3.2
+        with:
+          nextcloud-version: ${{ matrix.server-versions }}
+          php-version: ${{ matrix.php-versions }}
+          node-version: ${{ matrix.node-versions }}
+          install: true
+      - name: Configure Nextcloud for testing
+        run: |
+          php -f nextcloud/occ config:system:set debug --type=bool --value=true
+          php -f nextcloud/occ config:system:set overwriteprotocol --value=https
+          php -f nextcloud/occ config:system:set overwritehost --value=localhost
+          php -f nextcloud/occ config:system:set overwrite.cli.url --value=https://localhost
+          php -f nextcloud/occ config:system:set app.mail.debug --type=bool --value=true
+          php -f nextcloud/occ config:system:set app.mail.verify-tls-peer --type=bool --value=false
+      - name: Check out the app
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
+        with:
+          path: nextcloud/apps/mail
+      - name: Install php dependencies
+        working-directory: nextcloud/apps/mail
+        run: composer install
+      - name: Install the app
+        run: php -f nextcloud/occ app:enable mail
+      - name: Set up node ${{ matrix.node-version }}
+        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
+        with:
+          node-version: ${{ matrix.node-versions }}
+      - name: Install npm dependencies
+        working-directory: nextcloud/apps/mail
+        run: npm ci
+      - name: Build frontend
+        working-directory: nextcloud/apps/mail
+        run: npm run build
+      - name: Install stunnel (tiny https proxy)
+        run: sudo apt-get install -y stunnel
+      - name: Start php server and https proxy
+        working-directory: nextcloud
+        run: |
+          openssl req -new -x509 -days 365 -nodes -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=localhost" -out stunnel.pem -keyout stunnel.pem
+          php -S 127.0.0.1:8080 &
+          sudo stunnel3 -p stunnel.pem -d 443 -r 8080
+      - name: Test https access
+        run: curl --insecure -Li https://localhost
+      - name: Install Playwright browsers
+        working-directory: nextcloud/apps/mail
+        run: npx playwright install --with-deps chromium
+      - name: Run Playwright tests
+        working-directory: nextcloud/apps/mail
+        run: DEBUG=pw:api npx playwright test
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: playwright-report-${{ github.event.number }}-nc${{ matrix.server-versions }}-php${{ matrix.php-versions }}-node${{ matrix.node-versions }}
+          path: nextcloud/apps/mail/playwright-report/
+          retention-days: 14
+      - name: Print server logs
+        if: always()
+        run: cat nextcloud/data/nextcloud.log*
+    env:
+      CI: true
+
   summary:
     runs-on: ubuntu-latest-low
     needs:
       - unit-tests
       - integration-tests
       - frontend-unit-test
+      - frontend-e2e-tests
 
     if: always()
 
@@ -245,3 +328,5 @@ jobs:
         run: if ${{ needs.integration-tests.result != 'success' && needs.integration-tests.result != 'skipped' }}; then exit 1; fi
       - name: Frontend unit test status
         run: if ${{ needs.frontend-unit-test.result != 'success' && needs.frontend-unit-test.result != 'skipped' }}; then exit 1; fi
+      - name: Frontend E2E test status
+        run: if ${{ needs.frontend-e2e-tests.result != 'success' && needs.frontend-e2e-tests.result != 'skipped' }}; then exit 1; fi
