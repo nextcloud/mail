@@ -367,8 +367,6 @@ OC.L10N.register(
     "Could not discard message" : "Nie udało się odrzucić wiadomości",
     "Error sending your message" : "Błąd podczas wysyłania wiadomości",
     "Retry" : "Powtórz",
-    "Uploading attachments …" : "Wysyłanie załączników…",
-    "Sending …" : "Wysyłanie…",
     "Warning sending your message" : "Ostrzeżenie podczas wysyłania wiadomości",
     "Send anyway" : "Wyślij mimo to",
     "Autoresponder off" : "Automatyczna wiadomość zwrotna wyłączona",
@@ -595,6 +593,8 @@ OC.L10N.register(
     "The link leads to %s" : "Link prowadzi do %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Jeśli nie chcesz odwiedzić tej strony, możesz powrócić do <a href=\"%s\">Poczty</a>.",
     "Continue to %s" : "Kontynuuj do %s",
-    "This event is in the past." : "To wydarzenie już minęło."
+    "This event is in the past." : "To wydarzenie już minęło.",
+    "Uploading attachments …" : "Wysyłanie załączników…",
+    "Sending …" : "Wysyłanie…"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

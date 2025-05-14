@@ -250,8 +250,6 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Je probeert een e-mail te versturen met veel ontvangers in Aan en /of Cc. Overweeg om Bcc te gebruiken om de adressen van de ontvangers voor elkaar te verbergen.",
     "Error sending your message" : "Fout bij het versturen van jouw bericht",
     "Retry" : "Opnieuw proberen",
-    "Uploading attachments …" : "Bijlage aan het uploaden ...",
-    "Sending …" : "Versturen ...",
     "Warning sending your message" : "Waarschuwing bij het versturen van jouw bericht",
     "Send anyway" : "Toch verzenden",
     "Message" : "Bericht",
@@ -419,6 +417,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klik hier als je binnen enkele seconden niet automatisch wordt doorgestuurd.",
     "Redirect" : "Omleiden",
     "The link leads to %s" : "De link verwijst naar %s",
-    "Continue to %s" : "Verder naar %s"
+    "Continue to %s" : "Verder naar %s",
+    "Uploading attachments …" : "Bijlage aan het uploaden ...",
+    "Sending …" : "Versturen ..."
 },
 "nplurals=2; plural=(n != 1);");

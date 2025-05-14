@@ -324,8 +324,6 @@
     "Could not discard message" : "Съобщението не можа да бъде отхвърлено",
     "Error sending your message" : "Грешка при изпращне на вашето съобщение.",
     "Retry" : "Опитай отново",
-    "Uploading attachments …" : "Качване на прикачените файлове ...",
-    "Sending …" : "Изпращане...",
     "Warning sending your message" : "Предупреждение за изпращане на вашето съобщение",
     "Send anyway" : " Все пак го изпратете",
     "Autoresponder off" : "Автоматичният отговор е изключен",
@@ -558,6 +556,8 @@
     "The link leads to %s" : "Връзката води до %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желаете да посетите тази страница, може да се върнете към <a href=\"%s\">Поща</a>.",
     "Continue to %s" : "Продължи към %s",
-    "This event is in the past." : "Това събитие е отминало."
+    "This event is in the past." : "Това събитие е отминало.",
+    "Uploading attachments …" : "Качване на прикачените файлове ...",
+    "Sending …" : "Изпращане..."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

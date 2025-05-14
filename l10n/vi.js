@@ -199,8 +199,6 @@ OC.L10N.register(
     "No sent mailbox configured. Please pick one in the account settings." : "Không có hộp thư đã gửi nào được định cấu hình. Vui lòng chọn một trong cài đặt tài khoản.",
     "Error sending your message" : "Lỗi khi gửi tin nhắn",
     "Retry" : "Thử lại",
-    "Uploading attachments …" : "Đang tải lên các tệp đính kèm …",
-    "Sending …" : "Đang gửi …",
     "Contacts with this address" : "Liên hệ với địa chỉ này",
     "Add to Contact" : "Thêm liên hệ",
     "New Contact" : "ĐỊa chỉ liên hệ mới",
@@ -288,6 +286,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Nhấp vào đây nếu bạn không được chuyển hướng tự động trong vòng vài giây tới",
     "Redirect" : "Chuyển hướng",
     "The link leads to %s" : "Liên kết dẫn đến %s",
-    "Continue to %s" : "Tiếp tục %s"
+    "Continue to %s" : "Tiếp tục %s",
+    "Uploading attachments …" : "Đang tải lên các tệp đính kèm …",
+    "Sending …" : "Đang gửi …"
 },
 "nplurals=1; plural=0;");

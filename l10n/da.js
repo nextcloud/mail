@@ -285,8 +285,6 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Du prøver at sende til mange modtagere i Til og/eller Cc. Overvej at bruge Bcc til at skjule modtageradresser.",
     "Error sending your message" : "Fejl ved afsendelse af din besked",
     "Retry" : "Prøv igen",
-    "Uploading attachments …" : "Uploader vedhæftninger",
-    "Sending …" : "Sender ...",
     "Warning sending your message" : "Advarsel om at sende din besked",
     "Send anyway" : "Send alligevel",
     "Welcome to {productName} Mail" : "Velkommen til {productName} mail",
@@ -401,6 +399,8 @@ OC.L10N.register(
     "Redirect" : "Omdiriger",
     "The link leads to %s" : "Linket fører til %s",
     "Continue to %s" : "Videre til %s",
-    "This event is in the past." : "Denne begivenhed er i fortiden."
+    "This event is in the past." : "Denne begivenhed er i fortiden.",
+    "Uploading attachments …" : "Uploader vedhæftninger",
+    "Sending …" : "Sender ..."
 },
 "nplurals=2; plural=(n != 1);");

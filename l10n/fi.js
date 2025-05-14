@@ -315,8 +315,6 @@ OC.L10N.register(
     "Minimize composer" : "Pienennä lähetysikkuna",
     "Error sending your message" : "Virhe viestiäsi lähettäessä",
     "Retry" : "Yritä uudelleen",
-    "Uploading attachments …" : "Lähetetään liitteitä…",
-    "Sending …" : "Lähetetään…",
     "Warning sending your message" : "Varoitus viestiä lähettäessä",
     "Send anyway" : "Lähetä silti",
     "Autoresponder off" : "Automaattivastaukset pois päältä",
@@ -499,6 +497,8 @@ OC.L10N.register(
     "Redirect" : "Uudelleenohjaus",
     "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
     "Continue to %s" : "Jatka sivulle %s",
-    "This event is in the past." : "Tämä tapahtuma on menneisyydessä."
+    "This event is in the past." : "Tämä tapahtuma on menneisyydessä.",
+    "Uploading attachments …" : "Lähetetään liitteitä…",
+    "Sending …" : "Lähetetään…"
 },
 "nplurals=2; plural=(n != 1);");
