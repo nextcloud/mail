@@ -228,7 +228,7 @@ jobs:
           CI: true
 
   summary:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-low
     needs:
       - unit-tests
       - integration-tests
