@@ -442,6 +442,7 @@ class ImapToDbSynchronizer {
 
 				$this->dbMapper->insertBulk($account, ...$dbMessages);
 
+				/*
 				if ($importantTag) {
 					$this->newMessagesClassifier->classifyNewMessages(
 						$dbMessages,
@@ -450,6 +451,7 @@ class ImapToDbSynchronizer {
 						$importantTag,
 					);
 				}
+				*/
 				
 				/*
 				$this->dispatcher->dispatch(
@@ -526,7 +528,7 @@ class ImapToDbSynchronizer {
 			$newOrVanished = $newOrVanished || !empty($response->getVanishedMessageUids());
 		}
 		$this->mailboxMapper->update($mailbox);
-		$perf->end();
+ 		$perf->end();
 
 		return $newOrVanished;
 	}

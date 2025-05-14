@@ -320,11 +320,19 @@ class MessageMapper extends QBMapper {
 				$qb1->setParameter('flag_important', $message->getFlagImportant(), IQueryBuilder::PARAM_BOOL);
 				$qb1->setParameter('flag_mdnsent', $message->getFlagMdnsent(), IQueryBuilder::PARAM_BOOL);
 				$qb1->setParameter('flag_attachments', $message->getFlagAttachments(), IQueryBuilder::PARAM_BOOL);
-				$qb1->setParameter('preview_text', $message->getPreviewText(), IQueryBuilder::PARAM_INT);
 				$qb1->setParameter('encrypted', $message->getEncrypted(), IQueryBuilder::PARAM_BOOL);
 				$qb1->setParameter('imip_message', $message->isImipMessage(), IQueryBuilder::PARAM_BOOL);
 				$qb1->setParameter('mentions_me', $message->getMentionsMe(), IQueryBuilder::PARAM_BOOL);
 				$qb1->setParameter('structure_analyzed', $message->getStructureAnalyzed(), IQueryBuilder::PARAM_BOOL);
+
+				if ($message->getPreviewText() !== null) {
+					$convertedText = mb_convert_encoding($message->getPreviewText(), 'UTF-8', 'UTF-8');
+					//converting the spaces is necessary for ltrim to work
+					$previewText = mb_strcut(ltrim(preg_replace('/\s/u', ' ', $convertedText)), 0, 255);
+					// Make sure modifications are visible when these objects are used right away
+					$message->setPreviewText($previewText);
+				}
+				$qb1->setParameter('preview_text', $message->getPreviewText(), IQueryBuilder::PARAM_STR);
 
 				$qb1->executeStatement();
 

@@ -191,11 +191,15 @@ class SyncService {
 		}, $changed);
 		$vanished = array_values(array_diff($knownIds, $stillKnownIds));
 
+		return new Response($new, $changed, $vanished, $mailbox->getStats());
+
+		/*
 		return new Response(
 			$this->previewEnhancer->process($account, $mailbox, $new),
 			$changed,
 			$vanished,
 			$mailbox->getStats()
 		);
+		*/
 	}
 }

@@ -120,7 +120,7 @@ class IMAPClientFactory {
 		if ($account->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
 			$fn = 'mail-' . $account->getUserId() . '-' . $account->getId() . '-imap.log';
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;
-			$params['debug_literal'] = true;
+			//$params['debug_literal'] = true;
 		}
 
 		$client = new HordeImapClient($params);
