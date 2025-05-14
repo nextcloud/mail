@@ -20,6 +20,8 @@ use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\IConfig;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -45,6 +47,9 @@ class MailboxesControllerTest extends TestCase {
 	/** @var SyncService|MockObject */
 	private $syncService;
 
+	private IConfig|MockObject $config;
+	private ITimeFactory|MockObject $timeFactory;
+
 	public function setUp(): void {
 		parent::setUp();
 
@@ -52,13 +57,18 @@ class MailboxesControllerTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->syncService = $this->createMock(SyncService::class);
+		$this->config = $this->createMock(IConfig::class);
+		$this->timeFactory = $this->createMock(ITimeFactory::class);
+
 		$this->controller = new MailboxesController(
 			$this->appName,
 			$this->request,
 			$this->accountService,
 			$this->userId,
 			$this->mailManager,
-			$this->syncService
+			$this->syncService,
+			$this->config,
+			$this->timeFactory
 		);
 	}
 
