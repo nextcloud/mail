@@ -286,8 +286,6 @@ OC.L10N.register(
     "Could not discard message" : "Nepavyko atmesti laiško",
     "Error sending your message" : "Klaida siunčiant jūsų laišką",
     "Retry" : "Bandyti dar kartą",
-    "Uploading attachments …" : "Įkeliami priedai …",
-    "Sending …" : "Siunčiama …",
     "Send anyway" : "Vis tiek siųsti",
     "Autoresponder off" : "Atsakiklis išjungtas",
     "Autoresponder on" : "Atsakiklis įjungtas",
@@ -445,6 +443,8 @@ OC.L10N.register(
     "Redirect" : "Peradresuoti",
     "The link leads to %s" : "Nuoroda veda į %s",
     "Continue to %s" : "Tęsti į %s",
-    "This event is in the past." : "Šis įvykis yra praeityje."
+    "This event is in the past." : "Šis įvykis yra praeityje.",
+    "Uploading attachments …" : "Įkeliami priedai …",
+    "Sending …" : "Siunčiama …"
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");

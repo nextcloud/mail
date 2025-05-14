@@ -69,7 +69,6 @@ OC.L10N.register(
     "Draft" : "Draf",
     "Reply" : "Balas",
     "Retry" : "Ulangi",
-    "Sending …" : "Mengirim ...",
     "Message" : "Pesan",
     "Copy to clipboard" : "Salin ke papan klip",
     "Add" : "Masukkan",
@@ -111,6 +110,7 @@ OC.L10N.register(
     "Error loading message" : "Terjadi kesalahan saat memuat pesan",
     "Forwarding to %s" : "Teruskan ke %s",
     "Redirect" : "Mengalihkan",
-    "Continue to %s" : "Lanjutkan ke %s"
+    "Continue to %s" : "Lanjutkan ke %s",
+    "Sending …" : "Mengirim ..."
 },
 "nplurals=1; plural=0;");

@@ -26,7 +26,6 @@ OC.L10N.register(
     "Move" : "Move",
     "Rename" : "ប្ដូរ​ឈ្មោះ",
     "Reply" : "ឆ្លើយតប",
-    "Sending …" : "កំពុង​ផ្ញើរ...",
     "Add" : "បញ្ចូល",
     "Close" : "បិទ",
     "Date" : "កាលបរិច្ឆេទ",
@@ -40,6 +39,7 @@ OC.L10N.register(
     "Inbox" : "ក្នុង​ប្រអប់សារ",
     "Junk" : "ព្រៃ",
     "Sent" : "ផ្ញើ",
-    "Trash" : "ធុង​សំរាម"
+    "Trash" : "ធុង​សំរាម",
+    "Sending …" : "កំពុង​ផ្ញើរ..."
 },
 "nplurals=1; plural=0;");

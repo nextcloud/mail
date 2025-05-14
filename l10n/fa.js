@@ -360,8 +360,6 @@ OC.L10N.register(
     "Minimize composer" : "Minimize composer",
     "Error sending your message" : "خطایی در ارسال پیام شما",
     "Retry" : "تلاش دوباره",
-    "Uploading attachments …" : "درحال بارگذاری پیوستها …",
-    "Sending …" : "در حال ارسال ...",
     "Warning sending your message" : "Warning sending your message",
     "Send anyway" : "Send anyway",
     "Autoresponder off" : "Autoresponder off",
@@ -614,6 +612,8 @@ OC.L10N.register(
     "The link leads to %s" : "پیوند منجر به%s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "ادامه دهید%s",
-    "This event is in the past." : "This event is in the past."
+    "This event is in the past." : "This event is in the past.",
+    "Uploading attachments …" : "درحال بارگذاری پیوستها …",
+    "Sending …" : "در حال ارسال ..."
 },
 "nplurals=2; plural=(n > 1);");
