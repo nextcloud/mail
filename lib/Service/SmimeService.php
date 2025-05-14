@@ -585,6 +585,7 @@ class SmimeService {
 		file_put_contents($inPath, $part->toString([
 			'canonical' => true,
 			'headers' => true,
+			'encode' => Horde_Mime_Part::ENCODE_8BIT,
 		]));
 
 		/**
