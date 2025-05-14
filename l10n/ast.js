@@ -187,7 +187,6 @@ OC.L10N.register(
     "Minimize composer" : "Minimizar el compositor",
     "Error sending your message" : "Hebo un error al unviar el mensaxe",
     "Retry" : "Retentar",
-    "Sending …" : "Unviando…",
     "Send anyway" : "Unviar de toes toes",
     "First day" : "El primer día",
     "Message" : "Mensaxe",
@@ -307,6 +306,7 @@ OC.L10N.register(
     "Error loading message" : "Hebo un error al cargar el mensaxe",
     "Redirect" : "Redirixir",
     "The link leads to %s" : "L'enllaz lleva a %s",
-    "This event is in the past." : "Esti eventu ye del pasáu."
+    "This event is in the past." : "Esti eventu ye del pasáu.",
+    "Sending …" : "Unviando…"
 },
 "nplurals=2; plural=(n != 1);");
