@@ -4,16 +4,18 @@
 -->
 
 <template>
-	<div>
-		<ckeditor v-if="ready"
-			:value="value"
-			:config="config"
-			:editor="editor"
-			:disabled="disabled"
-			class="editor"
-			@input="onEditorInput"
-			@ready="onEditorReady" />
-		<div ref="container" class="toolbar" />
+	<div class="modal">
+		<div class="editor-wrapper">
+			<ckeditor
+				:value="value"
+				:config="config"
+				:editor="editor"
+				:disabled="disabled"
+				class="editor"
+				@input="onEditorInput"
+				@ready="onEditorReady"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -322,7 +324,6 @@ export default {
 
 			// https://ckeditor.com/docs/ckeditor5/latest/examples/builds-custom/bottom-toolbar-editor.html
 			if (editor.ui) {
-				this.$refs.container.appendChild(editor.ui.view.toolbar.element)
 				this.overrideDropdownPositionsToNorth(editor, editor.ui.view.toolbar)
 				this.overrideTooltipPositions(editor.ui.view.toolbar)
 			}
@@ -485,11 +486,40 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 .ck-powered-by-balloon {
 	display: none !important;
 }
-.toolbar {
-	position: sticky !important;
-	z-index: 1001;
+.ck.ck-editor__top .ck-sticky-panel .ck-sticky-panel__content {
+	border-bottom-width: 1px;
 }
-.ck.ck-editor {
-	z-index: 1000;
+.modal {
+	display: flex;
+	flex-direction: column;
+}
+
+.editor-wrapper {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	overflow: scroll;
+}
+
+.editor .ck-editor__editable_inline {
+	flex: 1;
+	min-height: 150px;
+	max-height: 100%;
+	overflow: auto;
+}
+
+.editor .ck-editor__top {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+}
+
+.ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable) {
+	border: 0;
+	box-shadow: none;
+}
+.ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
+	border: 0;
 }
 </style>
