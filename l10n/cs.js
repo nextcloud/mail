@@ -450,8 +450,6 @@ OC.L10N.register(
     "Minimize composer" : "Minimalizovat dialog psaní",
     "Error sending your message" : "Chyba při odesílání vaší zprávy",
     "Retry" : "Zkusit znovu",
-    "Uploading attachments …" : "Nahrávání příloh…",
-    "Sending …" : "Odesílání…",
     "Warning sending your message" : "Varování při odesílání vaší zprávy",
     "Send anyway" : "Poslat i tak",
     "Welcome to {productName} Mail" : "Vítejte v {productName} Poště",
@@ -791,6 +789,8 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Pokud nechcete tuto stránku navštívit, můžete se vrátit do <a href=\"%s\">e-mailu</a>.",
     "Continue to %s" : "Pokračovat na %s",
     "This event is in the past." : "Tato událost je v minulosti.",
+    "Uploading attachments …" : "Nahrávání příloh…",
+    "Sending …" : "Odesílání…",
     "Collapse composer" : "Sbalit editor psaní"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

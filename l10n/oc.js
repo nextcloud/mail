@@ -71,7 +71,6 @@ OC.L10N.register(
     "Clear cache" : "Voidar l'escondedor",
     "Reply" : "Respondre",
     "Retry" : "Tornar ensajar",
-    "Sending …" : "Mandadís…",
     "Copy to clipboard" : "Copiar dins lo quichapapièrs",
     "Add" : "Apondre",
     "Clear" : "Escafar",
@@ -109,6 +108,7 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "Message sent" : "Messatge mandat",
     "Error loading message" : "Error al moment del cargament del messatge",
-    "Continue to %s" : "Contunhar cap a %s"
+    "Continue to %s" : "Contunhar cap a %s",
+    "Sending …" : "Mandadís…"
 },
 "nplurals=2; plural=(n > 1);");

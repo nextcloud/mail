@@ -338,7 +338,6 @@ OC.L10N.register(
     "New message" : "Mensaje nuevo",
     "Reply" : "Responder",
     "Retry" : "Reintentar",
-    "Sending …" : "Enviando ...",
     "First day" : "Primer día",
     "Message" : "Mensaje",
     "Copy to clipboard" : "Copiar al portapapeles",
@@ -395,6 +394,7 @@ OC.L10N.register(
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
     "Continue to %s" : "Continuar a %s",
-    "This event is in the past." : "Este evento fue en el pasado."
+    "This event is in the past." : "Este evento fue en el pasado.",
+    "Sending …" : "Enviando ..."
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

@@ -148,8 +148,6 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Está intentando enviar a muchos destinatarios en Para y/o Cc. Considera usar Cco para ocultar las direcciones de los destinatarios.",
     "Error sending your message" : "Error al enviar tu mensaje",
     "Retry" : "Reintentar",
-    "Uploading attachments …" : "Subiendo adjuntos…",
-    "Sending …" : "Enviando ...",
     "Warning sending your message" : "Alerta al enviar su mensaje",
     "Send anyway" : "Enviar de todas formas",
     "Message" : "Mensaje",
@@ -194,6 +192,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Haz click aqui si no eres redireccionado automáticamente dentro de los siguietes segundos. ",
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Uploading attachments …" : "Subiendo adjuntos…",
+    "Sending …" : "Enviando ..."
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

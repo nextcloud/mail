@@ -382,8 +382,6 @@ OC.L10N.register(
     "Minimize composer" : "Згорнути редактор",
     "Error sending your message" : "Помилка під час надсилання повідомлення",
     "Retry" : "Ще раз",
-    "Uploading attachments …" : "Завантаження вкладень...",
-    "Sending …" : "Надсилання...",
     "Warning sending your message" : "Застереження під час надсилання вашого повідомлення",
     "Send anyway" : "Надіслати все одно",
     "Autoresponder off" : "Автовідповідач вимкнено",
@@ -571,6 +569,8 @@ OC.L10N.register(
     "Redirect" : "Перенаправлення",
     "The link leads to %s" : "Посилання веде до %s",
     "Continue to %s" : "Перейти до %s",
-    "This event is in the past." : "Ця подія вже минула"
+    "This event is in the past." : "Ця подія вже минула",
+    "Uploading attachments …" : "Завантаження вкладень...",
+    "Sending …" : "Надсилання..."
 },
 "nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);");
