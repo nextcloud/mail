@@ -9,6 +9,8 @@ declare(strict_types=1);
 namespace OCA\Mail\BackgroundJob;
 
 use Horde_Imap_Client_Exception;
+use NCU\Config\IUserConfig;
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\MailboxSync;
@@ -33,14 +35,17 @@ class SyncJob extends TimedJob {
 	private LoggerInterface $logger;
 	private IJobList $jobList;
 
-	public function __construct(ITimeFactory $time,
+	public function __construct(
+		ITimeFactory $time,
 		IUserManager $userManager,
 		AccountService $accountService,
 		MailboxSync $mailboxSync,
 		ImapToDbSynchronizer $syncService,
 		LoggerInterface $logger,
 		IJobList $jobList,
-		IConfig $config) {
+		IConfig $config,
+		private IUserConfig $userConfig,
+	) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;
@@ -76,6 +81,12 @@ class SyncJob extends TimedJob {
 
 		if (!$account->getMailAccount()->canAuthenticateImap()) {
 			$this->logger->debug('No authentication on IMAP possible, skipping background sync job');
+			return;
+		}
+
+		if (($this->userConfig->getValueInt($account->getUserId(), Application::APP_ID, 'ui-hearthbeat') - $this->time->getTime()) > 900) {
+			$this->logger->debug('Detected user activity, skipping background sync job');
+			$this->setInterval(900);
 			return;
 		}
 

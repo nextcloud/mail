@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
+use NCU\Config\IUserConfig;
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Exception\ClientException;
@@ -28,34 +30,28 @@ use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
+use OCP\IUserSession;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class MailboxesController extends Controller {
 	private AccountService $accountService;
-	private ?string $currentUserId;
 	private IMailManager $mailManager;
 	private SyncService $syncService;
+	private ?string $currentUserId;
 
-	/**
-	 * @param string $appName
-	 * @param IRequest $request
-	 * @param AccountService $accountService
-	 * @param string|null $UserId
-	 * @param IMailManager $mailManager
-	 * @param SyncService $syncService
-	 */
-	public function __construct(string $appName,
+	public function __construct(
 		IRequest $request,
 		AccountService $accountService,
-		?string $UserId,
 		IMailManager $mailManager,
-		SyncService $syncService) {
-		parent::__construct($appName, $request);
-
+		SyncService $syncService,
+		private IUserSession $userSession,
+		private IUserConfig $userConfig,
+	) {
+		parent::__construct(Application::APP_ID, $request);
 		$this->accountService = $accountService;
-		$this->currentUserId = $UserId;
 		$this->mailManager = $mailManager;
 		$this->syncService = $syncService;
+		$this->currentUserId = $userSession->getUser()?->getUID();
 	}
 
 	/**
@@ -139,6 +135,8 @@ class MailboxesController extends Controller {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 		$order = $sortOrder === 'newest' ? IMailSearch::ORDER_NEWEST_FIRST: IMailSearch::ORDER_OLDEST_FIRST;
+
+		$this->userConfig->setValueInt($this->currentUserId, Application::APP_ID, 'ui-hearthbeat', time());
 
 		try {
 			$syncResponse = $this->syncService->syncMailbox(
