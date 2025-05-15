@@ -151,6 +151,7 @@ OC.L10N.register(
     "Trash" : "Miskaste",
     "Error while sharing file" : "Kļūda datnes kopīgošanā",
     "{from}\n{subject}" : "{from}\n{subject}",
+    "There is already a message in progress. All unsaved changes will be lost if you continue!" : "Jau tiek apstrādāts ziņojums. Tiks zaudētas visas nesaglabātas izmaiņas, ja turpināsi.",
     "Discard unsaved changes" : "Atmest nesaglabātās izmaiņas",
     "Could not load {tag}{name}{endtag}" : "Nevarēja ielādēt {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Radusies problēma, ielādējot {tag}{name}{endtag}",

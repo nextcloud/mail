@@ -773,6 +773,7 @@ OC.L10N.register(
     "Keep editing message" : "保留編輯中的訊息",
     "Attachments were not copied. Please add them manually." : "未複製附件。請手動新增它們。",
     "Could not create snooze mailbox" : "無法建立暫停郵件信箱",
+    "Sending message…" : "正在傳送訊息……",
     "Message sent" : "已傳送郵件",
     "Could not send message" : "無法傳送郵件",
     "Message copied to \"Sent\" mailbox" : "訊息已複製到「寄件備份」信箱",
