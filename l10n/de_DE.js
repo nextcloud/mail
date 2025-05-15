@@ -773,6 +773,7 @@ OC.L10N.register(
     "Keep editing message" : "Nachricht weiter bearbeiten",
     "Attachments were not copied. Please add them manually." : "Anhänge konnten nicht kopiert werden. Bitte manuell hinzufügen.",
     "Could not create snooze mailbox" : "Das Zurückstellen-Postfach konnte nicht erstellt werden",
+    "Sending message…" : "Sende Nachricht…",
     "Message sent" : "Nachricht versandt",
     "Could not send message" : "Nachricht kann nicht versandt werden",
     "Message copied to \"Sent\" mailbox" : "Nachricht in den \"Gesendet\"-Ordner kopiert",
