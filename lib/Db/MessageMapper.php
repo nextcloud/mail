@@ -1266,24 +1266,6 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param int $uid
-	 *
-	 * @return Message[]
-	 */
-	public function findByUid(int $uid): array {
-		$qb = $this->db->getQueryBuilder();
-
-		$select = $qb
-			->select('*')
-			->from($this->getTableName())
-			->where(
-				$qb->expr()->in('uid', $qb->createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY))
-			)
-			->orderBy('sent_at', 'desc');
-		return $this->findRecipients($this->findEntities($select));
-	}
-
-	/**
 	 * @param Mailbox $mailbox
 	 * @param string $userId
 	 * @param int[] $ids

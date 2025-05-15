@@ -52,9 +52,14 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 			$mailbox = $event->getMailbox();
 			$messages = $event->getMessages();
 			$messageUids = array_map(static fn (Message $m): int => $m->getUid(), $messages);
+			$messageIds = array_map(static fn (Message $m): int => $m->getId(), $messages);
 			$imapMessages = $this->mailManager->getImapMessagesForScheduleProcessing($account, $mailbox, $messageUids);
 
-			$this->submitMessages($imapMessages, $account->getUserId());
+			// Assume that each message has a 1-to-1 equivalent IMAP message, otherwise skip this mailbox for now
+			// TODO: handle situations when this is not the case
+			if (count($imapMessages) === count($messageIds)) {
+				$this->submitMessages($imapMessages, $messageIds, $account->getUserId());
+			}
 			return;
 		}
 
@@ -92,8 +97,8 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 	 * @since 4.4.0
 	 */
 	public function getItemUrl(string $id): string {
-		// Get mailbox ID from message UID
-		$messages = $this->messageMapper->findByUid((int)$id);
+		// Get mailbox ID from message ID
+		$messages = $this->messageMapper->findByIds('', [(int)$id], '');
 		if (!$messages) {
 			return '';
 		}
@@ -118,26 +123,34 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 
 				foreach ($mailboxes as $mailbox) {
 					$messageUids = $this->messageMapper->findAllUids($mailbox);
+					$messageIds = $this->messageMapper->findAllIds($mailbox);
+					$messages = $this->messageMapper->findByUids($mailbox, $messageUids);
 					$imapMessages = $this->mailManager->getImapMessagesForScheduleProcessing($account, $mailbox, $messageUids);
 
-					$this->submitMessages($imapMessages, $userId);
+					// Assume that each message has a 1-to-1 equivalent IMAP message, otherwise skip this mailbox for now
+					// TODO: handle situations when this is not the case
+					if (count($imapMessages) === count($messageIds)) {
+						$this->submitMessages($imapMessages, $messageIds, $userId);
+					}
 				}
 			}
 		});
 	}
 
-	public function submitMessages(array $imapMessages, string $userId): void {
+	public function submitMessages(array $imapMessages, array $messageIds, string $userId): void {
 		$items = [];
-		foreach ($imapMessages as $message) {
-			$uid = $message->getUid();
+
+		for ($i = 0; $i < count($imapMessages); $i++) {
+			$uid = $imapMessage[$i]->getUid();
+			$messageContents = $imapMessage[$i]->getFullMessage($uid);
 
 			$items[] = new ContentItem(
-				(string)$uid,
+				(string)$messageIds[$i],
 				$this->getId(),
-				$message->getSubject(),
-				$message->getFullMessage($uid),
+				$imapMessage[$i]->getSubject(),
+				$messageContents['body'],
 				'E-Mail',
-				$message->getSentDate(),
+				$imapMessage[$i]->getSentDate(),
 				[$userId],
 			);
 
