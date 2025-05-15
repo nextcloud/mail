@@ -229,4 +229,9 @@ export default {
 .warning-large-signature {
 	color: darkorange;
 }
+
+:deep(.ck.ck-toolbar-dropdown>.ck-dropdown__panel) {
+	max-width: 34vw;
+}
+
 </style>
