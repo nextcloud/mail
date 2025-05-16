@@ -76,14 +76,23 @@ class MailTransmission implements IMailTransmission {
 		$bcc = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_BCC);
 		$attachments = $this->transmissionService->getAttachments($localMessage);
 
-		$alias = null;
+		$name = $account->getName();
+		$emailAddress = $account->getEMailAddress();
+
 		if ($localMessage->getAliasId() !== null) {
-			$alias = $this->aliasesService->find($localMessage->getAliasId(), $account->getUserId());
+			try {
+				$alias = $this->aliasesService->find($localMessage->getAliasId(), $account->getUserId());
+				$name = ($alias->getName() ?? $name);
+				$emailAddress = $alias->getAlias();
+			} catch (DoesNotExistException) {
+				$this->logger->debug('The assigned alias no longer exists. Falling back to the default name and email address. It is likely that the alias was deleted or deprovisioned in the meantime.', [
+					'aliasId' => $localMessage->getAliasId(),
+					'accountId' => $account->getId(),
+				]);
+			}
 		}
-		$fromEmail = $alias ? $alias->getAlias() : $account->getEMailAddress();
-		$from = new AddressList([
-			Address::fromRaw($account->getName(), $fromEmail),
-		]);
+
+		$from = Address::fromRaw($name, $emailAddress);
 
 		$attachmentParts = [];
 		foreach ($attachments as $attachment) {
@@ -96,7 +105,7 @@ class MailTransmission implements IMailTransmission {
 		$transport = $this->smtpClientFactory->create($account);
 		// build mime body
 		$headers = [
-			'From' => $from->first()->toHorde(),
+			'From' => $from->toHorde(),
 			'To' => $to->toHorde(),
 			'Cc' => $cc->toHorde(),
 			'Bcc' => $bcc->toHorde(),
@@ -112,7 +121,7 @@ class MailTransmission implements IMailTransmission {
 		}
 
 		if ($localMessage->getRequestMdn()) {
-			$headers[Horde_Mime_Mdn::MDN_HEADER] = $from->first()->toHorde();
+			$headers[Horde_Mime_Mdn::MDN_HEADER] = $from->toHorde();
 		}
 
 		$mail = new Horde_Mime_Mail();

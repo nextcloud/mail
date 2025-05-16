@@ -131,7 +131,6 @@ OC.L10N.register(
     "Decline" : "Refugar",
     "Tentatively accept" : "Aceptar provisionalmente",
     "More options" : "Más opciones",
-    "This event is in the past." : "Esti eventu ye del pasáu.",
     "individual" : "individual",
     "domain" : "dominiu",
     "Remove" : "Quitar",
@@ -184,12 +183,11 @@ OC.L10N.register(
     "Failed to save draft" : "Nun se pue guardar el borrador",
     "Message discarded" : "Escartóse'l mensaxe",
     "Could not discard message" : "Nun se pudo escartar el mensaxe",
-    "Error sending your message" : "Hebo un error al unviar el mensaxe",
-    "Retry" : "Retentar",
-    "Sending …" : "Unviando…",
-    "Send anyway" : "Unviar de toes toes",
     "Maximize composer" : "Maximizar el compositor",
     "Minimize composer" : "Minimizar el compositor",
+    "Error sending your message" : "Hebo un error al unviar el mensaxe",
+    "Retry" : "Retentar",
+    "Send anyway" : "Unviar de toes toes",
     "First day" : "El primer día",
     "Message" : "Mensaxe",
     "Oh Snap!" : "¡Meca!",
@@ -307,6 +305,7 @@ OC.L10N.register(
     "Could not load the message" : "Nun se pudo cargar el mensaxe",
     "Error loading message" : "Hebo un error al cargar el mensaxe",
     "Redirect" : "Redirixir",
-    "The link leads to %s" : "L'enllaz lleva a %s"
+    "The link leads to %s" : "L'enllaz lleva a %s",
+    "Sending …" : "Unviando…"
 },
 "nplurals=2; plural=(n != 1);");

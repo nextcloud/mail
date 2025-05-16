@@ -89,7 +89,6 @@ import {
 	priorityImportantQuery,
 	priorityOtherQuery,
 } from '../../util/priorityInbox.js'
-import { html, plain, toPlain } from '../../util/text.js'
 import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { handleHttpAuthErrors } from '../../http/sessionExpiryHandler.js'
@@ -142,7 +141,7 @@ const addMailboxToState = curry((mailboxes, account, mailbox) => {
 	mailbox.mailboxes = []
 	Vue.set(mailbox, 'envelopeLists', {})
 
-	mainStoreActions().transformMailboxName(account, mailbox)
+	transformMailboxName(account, mailbox)
 
 	Vue.set(mailboxes, mailbox.databaseId, mailbox)
 	const parent = Object.values(mailboxes)
@@ -154,6 +153,32 @@ const addMailboxToState = curry((mailboxes, account, mailbox) => {
 		parent.mailboxes.push(mailbox.databaseId)
 	}
 })
+
+function transformMailboxName(account, mailbox) {
+	// Add all mailboxes (including submailboxes to state, but only toplevel to account
+	const nameWithoutPrefix = account.personalNamespace
+		? mailbox.name.replace(new RegExp(escapeRegExp(account.personalNamespace)), '')
+		: mailbox.name
+	if (nameWithoutPrefix.includes(mailbox.delimiter)) {
+		/**
+		 * Sub-mailbox, e.g. 'Archive.2020' or 'INBOX.Archive.2020'
+		 */
+		mailbox.displayName = mailbox.name.substring(mailbox.name.lastIndexOf(mailbox.delimiter) + 1)
+		mailbox.path = mailbox.name.substring(0, mailbox.name.lastIndexOf(mailbox.delimiter))
+	} else if (account.personalNamespace && mailbox.name.startsWith(account.personalNamespace)) {
+		/**
+		 * Top-level mailbox, but with a personal namespace, e.g. 'INBOX.Sent'
+		 */
+		mailbox.displayName = nameWithoutPrefix
+		mailbox.path = account.personalNamespace
+	} else {
+		/**
+		 * Top-level mailbox, e.g. 'INBOX' or 'Draft'
+		 */
+		mailbox.displayName = nameWithoutPrefix
+		mailbox.path = ''
+	}
+}
 
 export default function mainStoreActions() {
 	return {
@@ -450,14 +475,16 @@ export default function mainStoreActions() {
 							FORBID_TAGS: ['style'],
 						})
 
-						data.body = html(resp.data)
+						data.isHtml = true
+						data.bodyHtml = resp.data
 						if (reply.suggestedReply) {
-							data.body.value = `<p>${reply.suggestedReply}<\\p>` + data.body.value
+							data.bodyHtml = `<p>${reply.suggestedReply}<\\p>` + data.bodyHtml
 						}
 					} else {
-						data.body = plain(original.body)
+						data.isHtml = false
+						data.bodyPlain = original.body
 						if (reply.suggestedReply) {
-							data.body.value = `${reply.suggestedReply}\n` + data.body.value
+							data.bodyPlain = `${reply.suggestedReply}\n` + data.bodyPlain
 						}
 					}
 
@@ -473,8 +500,9 @@ export default function mainStoreActions() {
 								to,
 								cc: [],
 								subject: buildReplySubject(reply.data.subject),
-								body: data.body,
-								originalBody: data.body,
+								isHtml: data.isHtml,
+								bodyHtml: data.bodyHtml,
+								bodyPlain: data.bodyPlain,
 								replyTo: reply.data,
 								smartReply: reply.smartReply,
 							},
@@ -493,8 +521,9 @@ export default function mainStoreActions() {
 								to: recipients.to,
 								cc: recipients.cc,
 								subject: buildReplySubject(reply.data.subject),
-								body: data.body,
-								originalBody: data.body,
+								isHtml: data.isHtml,
+								bodyHtml: data.bodyHtml,
+								bodyPlain: data.bodyPlain,
 								replyTo: reply.data,
 							},
 						})
@@ -507,8 +536,9 @@ export default function mainStoreActions() {
 								to: [],
 								cc: [],
 								subject: buildForwardSubject(reply.data.subject),
-								body: data.body,
-								originalBody: data.body,
+								isHtml: data.isHtml,
+								bodyHtml: data.bodyHtml,
+								bodyPlain: data.bodyPlain,
 								forwardFrom: reply.data,
 								attachments: original.attachments.map(attachment => ({
 									...attachment,
@@ -541,9 +571,11 @@ export default function mainStoreActions() {
 							FORBID_TAGS: ['style'],
 						})
 
-						data.body = html(resp.data)
+						data.isHtml = true
+						data.bodyHtml = resp.data
 					} else {
-						data.body = plain(message.body)
+						data.isHtml = false
+						data.bodyPlain = message.body
 					}
 
 					// TODO: implement attachments
@@ -556,14 +588,8 @@ export default function mainStoreActions() {
 				let originalSendAt
 				if (type === 'outbox' && data.id && data.sendAt) {
 					originalSendAt = data.sendAt
-					const message = { ...data }
-					if (data.isHtml) {
-						message.bodyHtml = data.body.value
-					} else {
-						message.bodyPlain = toPlain(data.body).value
-					}
 					const outboxStore = useOutboxStore()
-					await outboxStore.stopMessage({ message })
+					await outboxStore.stopMessage({ message: { ...data } })
 				}
 
 				this.startComposerSessionMutation({
@@ -586,18 +612,12 @@ export default function mainStoreActions() {
 			id,
 		} = {}) {
 			return handleHttpAuthErrors(async () => {
-
 				// Restore original sendAt timestamp when requested
 				const message = this.composerMessage
+				const messageData = { ...this.composerMessage.data }
 				if (restoreOriginalSendAt && message.type === 'outbox' && message.options?.originalSendAt) {
-					const body = message.data.body
-					if (message.data.isHtml) {
-						message.bodyHtml = body.value
-					} else {
-						message.bodyPlain = toPlain(body).value
-					}
-					message.sendAt = message.options.originalSendAt
-					updateDraft(message)
+					messageData.sendAt = message.options.originalSendAt
+					updateDraft(messageData)
 				}
 				if (moveToImap) {
 					await moveDraft(id)
@@ -1200,6 +1220,10 @@ export default function mainStoreActions() {
 			})
 		},
 		async fetchMessage(id) {
+			if (this.messages[id]) {
+				return this.messages[id]
+			}
+
 			return handleHttpAuthErrors(async () => {
 				const message = await fetchMessage(id)
 				// Only commit if not undefined (not found)
@@ -1755,32 +1779,6 @@ export default function mainStoreActions() {
 				await this.clearFollowUpReminder({ envelope })
 			}
 		},
-		transformMailboxName(account, mailbox) {
-			// Add all mailboxes (including submailboxes to state, but only toplevel to account
-			const nameWithoutPrefix = account.personalNamespace
-				? mailbox.name.replace(new RegExp(escapeRegExp(account.personalNamespace)), '')
-				: mailbox.name
-			if (nameWithoutPrefix.includes(mailbox.delimiter)) {
-				/**
-				 * Sub-mailbox, e.g. 'Archive.2020' or 'INBOX.Archive.2020'
-				 */
-				mailbox.displayName = mailbox.name.substring(mailbox.name.lastIndexOf(mailbox.delimiter) + 1)
-				mailbox.path = mailbox.name.substring(0, mailbox.name.lastIndexOf(mailbox.delimiter))
-			} else if (account.personalNamespace && mailbox.name.startsWith(account.personalNamespace)) {
-				/**
-				 * Top-level mailbox, but with a personal namespace, e.g. 'INBOX.Sent'
-				 */
-				mailbox.displayName = nameWithoutPrefix
-				mailbox.path = account.personalNamespace
-			} else {
-				/**
-				 * Top-level mailbox, e.g. 'INBOX' or 'Draft'
-				 */
-				mailbox.displayName = nameWithoutPrefix
-				mailbox.path = ''
-			}
-		},
-
 		sortAccounts(accounts) {
 			accounts.sort((a1, a2) => a1.order - a2.order)
 			return accounts
@@ -1902,7 +1900,7 @@ export default function mainStoreActions() {
 		},
 		updateMailboxMutation({ mailbox }) {
 			const account = this.accountsUnmapped[mailbox.accountId]
-			this.transformMailboxName(account, mailbox)
+			transformMailboxName(account, mailbox)
 			Vue.set(this.mailboxes, mailbox.databaseId, mailbox)
 		},
 		removeMailboxMutation({ id }) {

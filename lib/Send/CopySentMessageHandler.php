@@ -8,25 +8,29 @@ declare(strict_types=1);
 namespace OCA\Mail\Send;
 
 use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailboxMapper;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
 
 class CopySentMessageHandler extends AHandler {
 	public function __construct(
-		private IMAPClientFactory $imapClientFactory,
 		private MailboxMapper $mailboxMapper,
 		private LoggerInterface $logger,
 		private MessageMapper $messageMapper,
 	) {
 	}
-	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
+
+	public function process(
+		Account $account,
+		LocalMessage $localMessage,
+		Horde_Imap_Client_Socket $client,
+	): LocalMessage {
 		if ($localMessage->getStatus() === LocalMessage::STATUS_PROCESSED) {
-			return $this->processNext($account, $localMessage);
+			return $this->processNext($account, $localMessage, $client);
 		}
 
 		$rawMessage = $localMessage->getRaw();
@@ -60,7 +64,6 @@ class CopySentMessageHandler extends AHandler {
 			return $localMessage;
 		}
 
-		$client = $this->imapClientFactory->getClient($account);
 		try {
 			$this->messageMapper->save(
 				$client,
@@ -74,10 +77,8 @@ class CopySentMessageHandler extends AHandler {
 				'exception' => $e,
 			]);
 			return $localMessage;
-		} finally {
-			$client->logout();
 		}
 
-		return $this->processNext($account, $localMessage);
+		return $this->processNext($account, $localMessage, $client);
 	}
 }

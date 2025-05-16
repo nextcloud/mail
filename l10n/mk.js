@@ -210,7 +210,6 @@ OC.L10N.register(
     "Accept" : "Прифати",
     "Decline" : "Одбиј",
     "More options" : "Повеќе опции ",
-    "This event is in the past." : "Овој настан е во минатото.",
     "individual" : "индивидуално",
     "domain" : "домен",
     "Remove" : "Отстрани ",
@@ -297,8 +296,6 @@ OC.L10N.register(
     "Could not discard message" : "Неможе да се отфрли порака",
     "Error sending your message" : "Грешка при испраќање на пораката",
     "Retry" : "Обидете се повторно",
-    "Uploading attachments …" : "Прикачување на прилог ...",
-    "Sending …" : "Испраќам ...",
     "Send anyway" : "Испрати секако",
     "Autoresponder off" : "Исклучен автоматски одговор",
     "Autoresponder on" : "Вклучен автоматски одговор",
@@ -433,6 +430,8 @@ OC.L10N.register(
     "Redirect" : "Пренасочи",
     "The link leads to %s" : "Линкот води кон %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Доколку несакате да ја посетите страната, можете да се вратите кон <a href=\"%s\">Е-пошта</a>.",
-    "Continue to %s" : "Продолжи до %s"
+    "Continue to %s" : "Продолжи до %s",
+    "Uploading attachments …" : "Прикачување на прилог ...",
+    "Sending …" : "Испраќам ..."
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

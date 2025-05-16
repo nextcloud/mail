@@ -8,70 +8,59 @@
 		:name="modalTitle"
 		:additional-trap-elements="additionalTrapElements"
 		@close="$event.type === 'click' ? onClose() : onMinimize()">
-		<EmptyContent v-if="error"
-			:name="t('mail', 'Error sending your message')"
-			class="empty-content"
-			role="alert">
-			<p>{{ error }}</p>
-			<template #action>
-				<NcButton type="tertiary"
-					:aria-label="t('mail', 'Go back')"
-					@click="error = undefined">
-					{{ t('mail', 'Go back') }}
+		<div class="modal-content">
+			<div class="left-pane">
+				<NcButton class="maximize-button"
+					type="tertiary-no-background"
+					:aria-label="t('mail', 'Maximize composer')"
+					:title="largerModal ? t('mail', 'Show recipient details') : t('mail', 'Hide recipient details')"
+					@click="onMaximize">
+					<template #icon>
+						<MaximizeIcon v-if="!largerModal" :size="20" />
+						<DefaultComposerIcon v-else :size="20" />
+					</template>
 				</NcButton>
-				<NcButton type="tertiary"
-					:aria-label="t('mail', 'Retry')"
-					@click="onSend">
-					{{ t('mail', 'Retry') }}
+				<NcButton class="minimize-button"
+					type="tertiary-no-background"
+					:aria-label="t('mail', 'Minimize composer')"
+					:title="t('mail', 'Minimize composer')"
+					@click="onMinimize">
+					<template #icon>
+						<MinimizeIcon :size="20" />
+					</template>
 				</NcButton>
-			</template>
-		</EmptyContent>
-		<Loading v-else-if="uploadingAttachments"
-			:hint="t('mail', 'Uploading attachments …')"
-			role="alert" />
-		<Loading v-else-if="sending" :hint="t('mail', 'Sending …')" role="alert" />
-		<EmptyContent v-else-if="warning"
-			:name="t('mail', 'Warning sending your message')"
-			class="empty-content"
-			role="alert">
-			<template #description>
-				{{ warning }}
-			</template>
-			<template #action>
-				<NcButton type="tertiary"
-					:aria-label="t('mail', 'Go back')"
-					@click="warning = undefined">
-					{{ t('mail', 'Go back') }}
-				</NcButton>
-				<NcButton type="tertiary"
-					:aria-label="t('mail', 'Send anyway')"
-					@click="onForceSend">
-					{{ t('mail', 'Send anyway') }}
-				</NcButton>
-			</template>
-		</EmptyContent>
-		<template v-else>
-			<div :class="['modal-content', { 'with-recipient': composerData.to && composerData.to.length > 0 }]">
-				<div class="left-pane">
-					<NcButton class="maximize-button"
-						type="tertiary-no-background"
-						:aria-label="t('mail', 'Maximize composer')"
-						:title="largerModal ? t('mail', 'Collapse composer') : t('mail', 'Maximize composer')"
-						@click="onMaximize">
-						<template #icon>
-							<MaximizeIcon v-if="!largerModal" :size="20" />
-							<DefaultComposerIcon v-else :size="20" />
+
+				<KeepAlive>
+					<EmptyContent v-if="error"
+						:name="t('mail', 'Error sending your message')"
+						class="empty-content"
+						role="alert">
+						<p>{{ error }}</p>
+						<template #action>
+							<NcButton type="tertiary" :aria-label="t('mail', 'Go back')" @click="error = undefined">
+								{{ t('mail', 'Go back') }}
+							</NcButton>
+							<NcButton type="tertiary" :aria-label="t('mail', 'Retry')" @click="onSend">
+								{{ t('mail', 'Retry') }}
+							</NcButton>
 						</template>
-					</NcButton>
-					<NcButton class="minimize-button"
-						type="tertiary-no-background"
-						:aria-label="t('mail', 'Minimize composer')"
-						:title="t('mail', 'Minimize composer')"
-						@click="onMinimize">
-						<template #icon>
-							<MinimizeIcon :size="20" />
+					</EmptyContent>
+					<EmptyContent v-else-if="warning"
+						:name="t('mail', 'Warning sending your message')"
+						class="empty-content"
+						role="alert">
+						<template #description>
+							{{ warning }}
 						</template>
-					</NcButton>
+						<template #action>
+							<NcButton type="tertiary" :aria-label="t('mail', 'Go back')" @click="warning = undefined">
+								{{ t('mail', 'Go back') }}
+							</NcButton>
+							<NcButton type="tertiary" :aria-label="t('mail', 'Send anyway')" @click="onForceSend">
+								{{ t('mail', 'Send anyway') }}
+							</NcButton>
+						</template>
+					</EmptyContent>
 
 					<Composer ref="composer"
 						:from-account="composerData.accountId"
@@ -81,7 +70,7 @@
 						:bcc="composerData.bcc"
 						:subject="composerData.subject"
 						:attachments-data="composerData.attachments"
-						:body="composerData.body"
+						:body="composerDataBodyAsTextInstance"
 						:editor-body="convertEditorBody(composerData)"
 						:in-reply-to-message-id="composerData.inReplyToMessageId"
 						:reply-to="composerData.replyTo"
@@ -104,7 +93,7 @@
 						@update:bcc="patchComposerData({ bcc: $event })"
 						@update:subject="patchComposerData({ subject: $event })"
 						@update:attachments-data="patchComposerData({ attachments: $event })"
-						@update:editor-body="patchComposerData({ editorBody: $event })"
+						@update:editor-body="patchEditorBody"
 						@update:send-at="patchComposerData({ sendAt: $event / 1000 })"
 						@update:smime-sign="patchComposerData({ smimeSign: $event })"
 						@update:smime-encrypt="patchComposerData({ smimeSign: $event })"
@@ -114,13 +103,13 @@
 						@upload-attachment="onAttachmentUploading"
 						@send="onSend"
 						@show-toolbar="handleShow" />
-				</div>
-
-				<div v-show="showRecipientPane" class="right-pane">
-					<RecipientInfo />
-				</div>
+				</KeepAlive>
 			</div>
-		</template>
+
+			<div v-show="showRecipientPane && !warning && !error" class="right-pane">
+				<RecipientInfo />
+			</div>
+		</div>
 	</Modal>
 </template>
 <script>
@@ -133,7 +122,6 @@ import { showError, showSuccess, showWarning } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 
 import logger from '../logger.js'
-import { toPlain, toHtml, plain } from '../util/text.js'
 import Composer from './Composer.vue'
 import { UNDO_DELAY } from '../store/constants.js'
 import { matchError } from '../errors/match.js'
@@ -141,7 +129,6 @@ import NoSentMailboxConfiguredError from '../errors/NoSentMailboxConfiguredError
 import ManyRecipientsError from '../errors/ManyRecipientsError.js'
 import AttachmentMissingError from '../errors/AttachmentMissingError.js'
 import SubjectMissingError from '../errors/SubjectMissingError.js'
-import Loading from './Loading.vue'
 import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
 import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
 import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
@@ -150,6 +137,8 @@ import useOutboxStore from '../store/outboxStore.js'
 import { mapStores, mapState, mapActions } from 'pinia'
 import RecipientInfo from './RecipientInfo.vue'
 import useMainStore from '../store/mainStore.js'
+import { messageBodyToTextInstance } from '../util/message.js'
+import { toPlain } from '../util/text.js'
 
 export default {
 	name: 'NewMessageModal',
@@ -157,7 +146,6 @@ export default {
 		NcButton,
 		Composer,
 		EmptyContent,
-		Loading,
 		Modal,
 		MinimizeIcon,
 		MaximizeIcon,
@@ -199,6 +187,9 @@ export default {
 		...mapStores(useOutboxStore, useMainStore),
 		...mapState(useMainStore, ['showMessageComposer']),
 		...mapActions(useMainStore, ['getPreference']),
+		composerDataBodyAsTextInstance() {
+			return messageBodyToTextInstance(this.composerData)
+		},
 		modalTitle() {
 			if (this.composerMessage.type === 'outbox') {
 				return t('mail', 'Edit message')
@@ -221,7 +212,7 @@ export default {
 			return this.hasContactDetailsApi
 				&& this.composerData.to
 				&& this.composerData.to.length > 0
-				&& !this.isMaximized
+				&& !this.largerModal
 		},
 		composerMessage() {
 			return this.mainStore.composerMessage
@@ -295,8 +286,6 @@ export default {
 		handleShow(element) {
 			this.additionalTrapElements.push(element)
 		},
-		toHtml,
-		plain,
 		async onNewSentMailbox(data, account) {
 			showWarning(t('mail', 'Setting Sent default folder'))
 			let newSentMailboxId = null
@@ -415,7 +404,6 @@ export default {
 				...data,
 				id: data.id,
 				accountId: data.accountId,
-				editorBody: data.body.value,
 				to: data.to,
 				cc: data.cc,
 				bcc: data.bcc,
@@ -425,11 +413,13 @@ export default {
 				sendAt: data.sendAt,
 				draftId: this.composerData?.draftId,
 			}
+
 			if (data.isHtml) {
-				dataForServer.bodyHtml = data.body.value
+				delete dataForServer.bodyPlain
 			} else {
-				dataForServer.bodyPlain = toPlain(data.body).value
+				delete dataForServer.bodyHtml
 			}
+
 			return dataForServer
 		},
 		onAttachmentUploading(done, data) {
@@ -471,7 +461,7 @@ export default {
 				}
 
 				if (!force && data.attachments.length === 0) {
-					const lines = toPlain(data.body).value.toLowerCase().split('\n')
+					const lines = toPlain(messageBodyToTextInstance(data)).value.toLowerCase().split('\n')
 					const wordAttachment = t('mail', 'attachment').toLowerCase()
 					const wordAttached = t('mail', 'attached').toLowerCase()
 					for (const line of lines) {
@@ -565,6 +555,7 @@ export default {
 				}, 500)
 			}
 		},
+
 		async onForceSend() {
 			await this.onSend(this.cookedComposerData, true)
 		},
@@ -607,13 +598,18 @@ export default {
 			}
 		},
 		convertEditorBody(composerData) {
-			if (composerData.editorBody) {
-				return composerData.editorBody
+			if (composerData.isHtml) {
+				return composerData.bodyHtml
 			}
-			if (!composerData.body) {
-				return ''
+
+			return composerData.bodyPlain
+		},
+		patchEditorBody(editorBody) {
+			if (this.composerData.isHtml) {
+				this.patchComposerData({ bodyHtml: editorBody })
+			} else {
+				this.patchComposerData({ bodyPlain: editorBody })
 			}
-			return toHtml(composerData.body).value
 		},
 		updateCookedComposerData() {
 			if (!this.$refs.composer) {

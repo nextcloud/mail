@@ -54,7 +54,7 @@ class MailAccountTest extends TestCase {
 			'editorMode' => 'html',
 			'provisioningId' => null,
 			'order' => 13,
-			'showSubscribedOnly' => null,
+			'showSubscribedOnly' => false,
 			'personalNamespace' => null,
 			'draftsMailboxId' => null,
 			'sentMailboxId' => null,
@@ -70,6 +70,7 @@ class MailAccountTest extends TestCase {
 			'snoozeMailboxId' => null,
 			'searchBody' => false,
 			'outOfOfficeFollowsSystem' => true,
+			'debug' => false,
 		], $a->toJson());
 	}
 
@@ -107,6 +108,7 @@ class MailAccountTest extends TestCase {
 			'snoozeMailboxId' => null,
 			'searchBody' => false,
 			'outOfOfficeFollowsSystem' => false,
+			'debug' => false,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency

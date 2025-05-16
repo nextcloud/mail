@@ -15,6 +15,7 @@
     "STARTTLS" : "STARTTLS",
     "SMTP Password" : "Kata sandi SMTP",
     "Signature" : "Tanda",
+    "Filters" : "Penyaring",
     "Go back" : "Kembali",
     "Email address" : "Alamat surel",
     "Cancel" : "Membatalkan",
@@ -55,6 +56,7 @@
     "Import into calendar" : "Impor ke kalender",
     "Download attachment" : "Unduh lampiran",
     "Move" : "Pindah",
+    "Loading …" : "Memuat …",
     "Remove account" : "Hapus akun",
     "Quota" : "Kuota",
     "Saving" : "Menyimpan",
@@ -65,7 +67,6 @@
     "Draft" : "Draf",
     "Reply" : "Balas",
     "Retry" : "Ulangi",
-    "Sending …" : "Mengirim ...",
     "Message" : "Pesan",
     "Copy to clipboard" : "Salin ke papan klip",
     "Add" : "Masukkan",
@@ -73,6 +74,7 @@
     "Close" : "Tutup",
     "Date" : "Date",
     "Tags" : "Tag",
+    "Custom" : "Ubahan",
     "Tag already exists" : "Tag sudah ada",
     "Add tag" : "Tambahkan tag",
     "Unsubscribe" : "Berhenti berlangganan",
@@ -102,9 +104,11 @@
     "Sent" : "Kirim",
     "Trash" : "Tempat sampah",
     "{from}\n{subject}" : "{from}\n{subject}",
+    "Discard changes" : "Buang perubahan",
     "Error loading message" : "Terjadi kesalahan saat memuat pesan",
     "Forwarding to %s" : "Teruskan ke %s",
     "Redirect" : "Mengalihkan",
-    "Continue to %s" : "Lanjutkan ke %s"
+    "Continue to %s" : "Lanjutkan ke %s",
+    "Sending …" : "Mengirim ..."
 },"pluralForm" :"nplurals=1; plural=0;"
 }

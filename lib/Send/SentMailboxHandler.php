@@ -7,15 +7,20 @@ declare(strict_types=1);
  */
 namespace OCA\Mail\Send;
 
+use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 
 class SentMailboxHandler extends AHandler {
-	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
+	public function process(
+		Account $account,
+		LocalMessage $localMessage,
+		Horde_Imap_Client_Socket $client,
+	): LocalMessage {
 		if ($account->getMailAccount()->getSentMailboxId() === null) {
 			$localMessage->setStatus(LocalMessage::STATUS_NO_SENT_MAILBOX);
 			return $localMessage;
 		}
-		return $this->processNext($account, $localMessage);
+		return $this->processNext($account, $localMessage, $client);
 	}
 }

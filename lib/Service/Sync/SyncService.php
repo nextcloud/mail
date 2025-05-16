@@ -133,7 +133,7 @@ class SyncService {
 			!$partialOnly
 		);
 
-		$this->mailboxSync->syncStats($account, $mailbox);
+		$this->mailboxSync->syncStats($client, $mailbox);
 
 		$client->logout();
 

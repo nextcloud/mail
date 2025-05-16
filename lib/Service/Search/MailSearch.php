@@ -123,24 +123,16 @@ class MailSearch implements IMailSearch {
 	}
 
 	/**
-	 * @param IUser $user
-	 * @param string|null $filter
-	 * @param int|null $cursor
+	 * Find messages across all mailboxes for a user
 	 *
 	 * @return Message[]
 	 *
-	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function findMessagesGlobally(IUser $user,
-		?string $filter,
-		?int $cursor,
+	public function findMessagesGlobally(
+		IUser $user,
+		SearchQuery $query,
 		?int $limit): array {
-		$query = $this->filterStringParser->parse($filter);
-		if ($cursor !== null) {
-			$query->setCursor($cursor);
-		}
-
 		return $this->messageMapper->findByIds($user->getUID(),
 			$this->getIdsGlobally($user, $query, $limit),
 			'DESC'

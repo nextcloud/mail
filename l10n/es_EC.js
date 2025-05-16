@@ -235,7 +235,6 @@ OC.L10N.register(
     "Decline" : "Declinar",
     "Tentatively accept" : "Aceptar tentativamente",
     "More options" : "Más opciones",
-    "This event is in the past." : "Este evento está en el pasado.",
     "individual" : "individual",
     "domain" : "dominio",
     "Remove" : "Eliminar",
@@ -334,13 +333,11 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Estás intentando enviar a muchos destinatarios en Para y/o Cc. Considera usar Bcc para ocultar las direcciones de los destinatarios.",
     "Message discarded" : "Mensaje descartado",
     "Could not discard message" : "No se pudo descartar el mensaje",
+    "Minimize composer" : "Minimizar editor",
     "Error sending your message" : "Error al enviar tu mensaje",
     "Retry" : "Reintentar",
-    "Uploading attachments …" : "Subiendo adjuntos...",
-    "Sending …" : "Enviando ...",
     "Warning sending your message" : "Advertencia al enviar tu mensaje",
     "Send anyway" : "Enviar de todos modos",
-    "Minimize composer" : "Minimizar editor",
     "Autoresponder off" : "Respuesta automática desactivada",
     "Autoresponder on" : "Respuesta automática activada",
     "First day" : "Primer día",
@@ -592,6 +589,8 @@ OC.L10N.register(
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no deseas visitar esa página, puedes regresar a <a href=\"%s\">Correo</a>.",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Uploading attachments …" : "Subiendo adjuntos...",
+    "Sending …" : "Enviando ..."
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

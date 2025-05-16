@@ -9,7 +9,9 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccount;
@@ -27,6 +29,7 @@ use OCP\TaskProcessing\IProvider as TaskProcessingProvider;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager;
 use OCP\TextProcessing\SummaryTaskType;
+use OCP\TextProcessing\Task;
 use OCP\TextProcessing\TopicsTaskType;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -77,7 +80,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->taskProcessingProvider = $this->createMock(TaskProcessingProvider::class);
 	}
 
-	public function testSummarizeThreadNoBackend() {
+	public function testSummarizeThreadNoBackend(): void {
 		$account = new Account(new MailAccount());
 		$mailbox = new Mailbox();
 		if ($this->manager !== null) {
@@ -97,7 +100,7 @@ class AiIntegrationsServiceTest extends TestCase {
 	}
 
 
-	public function testSmartReplyNoBackend() {
+	public function testSmartReplyNoBackend(): void {
 		$account = new Account(new MailAccount());
 		$mailbox = new Mailbox();
 		$message = new Message();
@@ -117,7 +120,83 @@ class AiIntegrationsServiceTest extends TestCase {
 
 	}
 
-	public function testGeneratedMessage() {
+	public function testSmartReply(): void {
+		$account = new Account(new MailAccount());
+		$mailbox = new Mailbox();
+		$message = new Message();
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$message->setUid(1);
+		$currentUserId = 'user';
+		$this->container->method('get')->willReturn($this->manager);
+		$this->manager
+			->method('getAvailableTaskTypes')
+			->willReturn([FreePromptTaskType::class]);
+		$this->cache->method('getValue')->willReturn(false);
+		$this->clientFactory->method('getClient')->with($account)->willReturn($this->createMock(Horde_Imap_Client_Socket::class));
+		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
+		$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
+		$imapMessage->method('getUnsubscribeUrl')->willReturn(null);
+		$fromList = new AddressList([ Address::fromRaw('personal@example.com', 'personal@example.com')]);
+		$imapMessage->method('getFrom')->willReturn($fromList);
+		$imapMessage->method('getPlainBody')->willReturn('This is a test message');
+
+		$this->manager->expects($this->once())
+			->method('runTask')
+			->will($this->returnCallback(function (Task $task) {
+				$task->setOutput('{"reply1":"reply1","reply2":"reply2"}');
+				return '';
+			}));
+
+		$result = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, $currentUserId);
+
+		$this->assertEquals(
+			[
+				'reply1' => 'reply1',
+				'reply2' => 'reply2'
+			],
+			$result
+		);
+	}
+
+	public function testSmartReplyMarkdownFormat(): void {
+		$account = new Account(new MailAccount());
+		$mailbox = new Mailbox();
+		$message = new Message();
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$message->setUid(1);
+		$currentUserId = 'user';
+		$this->container->method('get')->willReturn($this->manager);
+		$this->manager
+			->method('getAvailableTaskTypes')
+			->willReturn([FreePromptTaskType::class]);
+		$this->cache->method('getValue')->willReturn(false);
+		$this->clientFactory->method('getClient')->with($account)->willReturn($this->createMock(Horde_Imap_Client_Socket::class));
+		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
+		$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
+		$imapMessage->method('getUnsubscribeUrl')->willReturn(null);
+		$fromList = new AddressList([ Address::fromRaw('personal@example.com', 'personal@example.com')]);
+		$imapMessage->method('getFrom')->willReturn($fromList);
+		$imapMessage->method('getPlainBody')->willReturn('This is a test message');
+
+		$this->manager->expects($this->once())
+			->method('runTask')
+			->will($this->returnCallback(function (Task $task) {
+				$task->setOutput('```json{"reply1":"reply1","reply2":"reply2"}```');
+				return '';
+			}));
+
+		$result = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, $currentUserId);
+
+		$this->assertEquals(
+			[
+				'reply1' => 'reply1',
+				'reply2' => 'reply2'
+			],
+			$result
+		);
+	}
+
+	public function testGeneratedMessage(): void {
 		$account = new Account(new MailAccount());
 		$mailbox = new Mailbox();
 		$message = new Message();
@@ -151,7 +230,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		}
 	}
 
-	public function testLlmAvailable() {
+	public function testLlmAvailable(): void {
 		if ($this->manager !== null) {
 			$this->container->method('get')->willReturn($this->manager);
 			$this->manager
@@ -167,7 +246,7 @@ class AiIntegrationsServiceTest extends TestCase {
 
 	}
 
-	public function testLlmUnavailable() {
+	public function testLlmUnavailable(): void {
 		if ($this->manager !== null) {
 			$this->container->method('get')->willReturn($this->manager);
 			$this->manager
@@ -202,7 +281,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->assertEquals($expected, $this->aiIntegrationsService->isLlmProcessingEnabled());
 	}
 
-	public function testCached() {
+	public function testCached(): void {
 		$account = new Account(new MailAccount());
 		$mailbox = new Mailbox();
 
@@ -374,7 +453,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		self::assertSame('* Q&A', $result->getDescription());
 	}
 
-	public function testSummarizeMessagesNoProvider() {
+	public function testSummarizeMessagesNoProvider(): void {
 		$account = new Account(new MailAccount());
 		$message = new Message();
 		$this->taskProcessingManager->expects(self::once())
@@ -383,11 +462,11 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->logger->expects(self::once())
 			->method('info')
 			->with('No text summary provider available');
-		
+
 		$this->aiIntegrationsService->summarizeMessages($account, [$message]);
 	}
 
-	public function testSummarizeMessagesContainsSummary() {
+	public function testSummarizeMessagesContainsSummary(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(123);
 		$mailAccount->setEmail('user@domain.tld');
@@ -405,11 +484,11 @@ class AiIntegrationsServiceTest extends TestCase {
 			->willReturn(['core:text2text' => $this->taskProcessingProvider]);
 		$this->clientFactory->expects(self::once())
 			->method('getClient');
-		
+
 		$this->aiIntegrationsService->summarizeMessages($account, [$message]);
 	}
 
-	public function testSummarizeMessagesIsEncrypted() {
+	public function testSummarizeMessagesIsEncrypted(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(123);
 		$mailAccount->setUserId('user1');
@@ -420,10 +499,10 @@ class AiIntegrationsServiceTest extends TestCase {
 		$mailAccount->setInboundUser('user1@domain.tld');
 		$mailAccount->setInboundPassword('encrypted');
 		$account = new Account($mailAccount);
-		
+
 		$mailBox = new Mailbox();
 		$mailBox->setId(1);
-		
+
 		$message = new Message();
 		$message->setId(1);
 		$message->setUid(100);
@@ -464,11 +543,11 @@ class AiIntegrationsServiceTest extends TestCase {
 				true
 			)
 			->willReturn($imapMessage);
-		
+
 		$this->aiIntegrationsService->summarizeMessages($account, [$message]);
 	}
 
-	public function testSummarizeMessages() {
+	public function testSummarizeMessages(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(123);
 		$mailAccount->setUserId('user1');
@@ -479,10 +558,10 @@ class AiIntegrationsServiceTest extends TestCase {
 		$mailAccount->setInboundUser('user1@domain.tld');
 		$mailAccount->setInboundPassword('encrypted');
 		$account = new Account($mailAccount);
-		
+
 		$mailBox = new Mailbox();
 		$mailBox->setId(1);
-		
+
 		$message = new Message();
 		$message->setId(1);
 		$message->setUid(100);
@@ -491,7 +570,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$imapClient = $this->clientFactory->getClient($account);
 
 		$imapMessage = $this->createMock(IMAPMessage::class);
-		$imapMessage->expects(self::once())
+		$imapMessage->expects(self::atMost(2))
 			->method('getPlainBody')
 			->willReturn('This is a test message');
 		$imapMessage->expects(self::once())
@@ -523,7 +602,7 @@ class AiIntegrationsServiceTest extends TestCase {
 				true
 			)
 			->willReturn($imapMessage);
-		
+
 		$this->aiIntegrationsService->summarizeMessages($account, [$message]);
 	}
 

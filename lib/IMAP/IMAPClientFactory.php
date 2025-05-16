@@ -9,11 +9,13 @@ declare(strict_types=1);
 
 namespace OCA\Mail\IMAP;
 
+use Exception;
 use Horde_Imap_Client_Password_Xoauth2;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Cache\HordeCacheFactory;
 use OCA\Mail\Events\BeforeImapClientCreated;
+use OCA\Mail\Exception\ServiceException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ICacheFactory;
@@ -63,7 +65,9 @@ class IMAPClientFactory {
 	 *
 	 * @param Account $account
 	 * @param bool $useCache
+	 *
 	 * @return Horde_Imap_Client_Socket
+	 * @throws ServiceException
 	 */
 	public function getClient(Account $account, bool $useCache = true): Horde_Imap_Client_Socket {
 		$this->eventDispatcher->dispatchTyped(
@@ -96,7 +100,11 @@ class IMAPClientFactory {
 			],
 		];
 		if ($account->getMailAccount()->getAuthMethod() === 'xoauth2') {
-			$decryptedAccessToken = $this->crypto->decrypt($account->getMailAccount()->getOauthAccessToken());
+			try {
+				$decryptedAccessToken = $this->crypto->decrypt($account->getMailAccount()->getOauthAccessToken());
+			} catch (Exception $e) {
+				throw new ServiceException('Could not decrypt account password: ' . $e->getMessage(), 0, $e);
+			}
 
 			$params['password'] = $decryptedAccessToken; // Not used, but Horde wants this
 			$params['xoauth2_token'] = new Horde_Imap_Client_Password_Xoauth2(
@@ -117,8 +125,9 @@ class IMAPClientFactory {
 				'backend' => $this->hordeCacheFactory->newCache($account),
 			];
 		}
-		if ($this->config->getSystemValue('debug', false)) {
-			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_imap.log';
+		if ($account->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
+			$fn = 'mail-' . $account->getUserId() . '-' . $account->getId() . '-imap.log';
+			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;
 		}
 
 		$client = new HordeImapClient($params);

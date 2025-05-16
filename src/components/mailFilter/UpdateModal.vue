@@ -210,4 +210,8 @@ export default {
 .help-text p {
 	margin-bottom: 0.2em;
 }
+
+.help-text {
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
+}
 </style>

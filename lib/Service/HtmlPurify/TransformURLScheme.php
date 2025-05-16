@@ -55,7 +55,6 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	 * @return bool
 	 */
 	public function filter(&$uri, $config, $context) {
-		/** @var \HTMLPurifier_Context $context */
 
 		if ($uri->scheme === null) {
 			$uri->scheme = 'https';

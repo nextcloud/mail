@@ -193,7 +193,8 @@
 							@open-move-modal="onOpenMoveModal"
 							@open-event-modal="onOpenEventModal"
 							@open-task-modal="onOpenTaskModal"
-							@open-translation-modal="onOpenTranslationModal" />
+							@open-translation-modal="onOpenTranslationModal"
+							@print="onPrint" />
 					</NcActions>
 					<NcModal v-if="showSourceModal" class="source-modal" @close="onCloseSourceModal">
 						<div class="source-modal-content">
@@ -225,15 +226,15 @@
 				</template>
 			</div>
 		</div>
-		<MessageLoadingSkeleton v-if="loading !== LOADING_DONE" />
-		<Message v-if="message && loading !== LOADING_MESSAGE"
-			v-show="loading === LOADING_DONE"
+		<MessageLoadingSkeleton v-if="loading === Loading.Skeleton" />
+		<Message v-if="message"
+			v-show="loading === Loading.Done"
 			:envelope="envelope"
 			:message="message"
 			:full-height="fullHeight"
 			:smart-replies="showFollowUpHeader ? [] : smartReplies"
 			:reply-button-label="replyButtonLabel"
-			@load="loading = LOADING_DONE"
+			@load="onMessageLoaded"
 			@reply="(body) => onReply(body, showFollowUpHeader)" />
 		<Error v-else-if="error"
 			:error="error.message || t('mail', 'Not found')"
@@ -317,9 +318,11 @@ import useMainStore from '../store/mainStore.js'
 import { mapStores } from 'pinia'
 
 // Ternary loading state
-const LOADING_DONE = 0
-const LOADING_MESSAGE = 1
-const LOADING_BODY = 2
+const Loading = Object.seal({
+	Done: 0,
+	Silent: 1,
+	Skeleton: 2,
+})
 
 export default {
 	name: 'ThreadEnvelope',
@@ -386,19 +389,21 @@ export default {
 			required: true,
 			type: String,
 		},
+		threadIndex: {
+			required: true,
+			type: Number,
+		},
 	},
 	data() {
 		return {
-			loading: LOADING_DONE,
+			loading: Loading.Done,
 			showListUnsubscribeConfirmation: false,
 			error: undefined,
 			message: undefined,
 			importantSvg,
 			unsubscribing: false,
 			seenTimer: undefined,
-			LOADING_BODY,
-			LOADING_DONE,
-			LOADING_MESSAGE,
+			Loading,
 			recomputeMenuSize: 0,
 			moreActionsOpen: false,
 			smartReplies: [],
@@ -412,6 +417,7 @@ export default {
 			rawMessage: '', // Will hold the raw source of the message when requested
 			isInternal: true,
 			enabledSmartReply: loadState('mail', 'llm_freeprompt_available', false),
+			loadingBodyTimeout: undefined,
 		}
 	},
 	computed: {
@@ -590,7 +596,12 @@ export default {
 				this.fetchMessage()
 			} else {
 				this.message = undefined
-				this.loading = LOADING_DONE
+				this.loading = Loading.Done
+			}
+		},
+		loading(loading) {
+			if (loading === Loading.Done) {
+				this.$emit('loaded')
 			}
 		},
 	},
@@ -632,15 +643,34 @@ export default {
 		filterSubject(value) {
 			return value.replace(/((?:[\t ]*(?:R|RE|F|FW|FWD):[\t ]*)*)/i, '')
 		},
-		async fetchMessage() {
-			this.loading = LOADING_MESSAGE
-			this.error = undefined
+		onMessageLoaded() {
+			if (this.loadingBodyTimeout) {
+				clearTimeout(this.loadingBodyTimeout)
+				this.loadingBodyTimeout = undefined
+			}
 
+			this.loading = Loading.Done
+		},
+		async fetchMessage() {
+			let loadingTimeout
+			const isCached = !!this.mainStore.getMessage(this.envelope.databaseId)
+			if (!isCached) {
+				loadingTimeout = setTimeout(() => {
+					this.loading = Loading.Skeleton
+				}, 200)
+			}
+
+			this.loading = Loading.Silent
+			this.error = undefined
 			logger.debug(`fetching thread message ${this.envelope.databaseId}`)
 
 			try {
 				this.message = await this.mainStore.fetchMessage(this.envelope.databaseId)
 				logger.debug(`message ${this.envelope.databaseId} fetched`, { message: this.message })
+
+				if (loadingTimeout) {
+					clearTimeout(loadingTimeout)
+				}
 
 				if (!this.envelope.flags.seen && this.hasSeenAcl) {
 					logger.info('Starting timer to mark message as seen/read')
@@ -651,16 +681,18 @@ export default {
 				}
 
 				if (this.message.hasHtmlBody) {
-					this.loading = LOADING_BODY
+					this.loadingBodyTimeout = setTimeout(() => {
+						this.loading = Loading.Skeleton
+					}, 200)
 				} else {
-					this.loading = LOADING_DONE
+					this.loading = Loading.Done
 				}
 				this.$nextTick(() => {
 					this.handleThreadScrolling()
 				})
 			} catch (error) {
 				this.error = error
-				this.loading = LOADING_DONE
+				this.loading = Loading.Done
 				logger.error('Could not fetch message', { error })
 			}
 
@@ -934,13 +966,16 @@ export default {
 		onCloseSourceModal() {
 			this.showSourceModal = false
 		},
+		onPrint() {
+			this.$emit('print', this.threadIndex)
+		},
 	},
 }
 </script>
 
 <style lang="scss" scoped>
 	.sender {
-		margin-left: 8px;
+		margin-left: calc(var(--default-grid-baseline) * 2);
 		&__email{
 			color: var(--color-text-maxcontrast);
 			text-overflow: ellipsis;
@@ -957,15 +992,15 @@ export default {
 		flex-direction: row;
 		align-items: center;
 		justify-content: flex-end;
-		margin-left: 10px;
+		margin-left: calc(var(--default-grid-baseline) * 2);
 		height: 44px;
 
 		.app-content-list-item-menu {
-			margin-left: 4px;
+			margin-left: var(--default-grid-baseline);
 		}
 
 		.timestamp {
-			margin-right: 10px;
+			margin-right: calc(var(--default-grid-baseline) * 2);
 			color: var(--color-text-maxcontrast);
 			white-space: nowrap;
 			margin-bottom: 0;
@@ -989,11 +1024,11 @@ export default {
 		display: flex;
 		flex-direction: column;
 		border: 2px solid var(--color-border);
-		border-radius: 16px;
-		margin-left: 10px;
-		margin-right: 10px;
+		border-radius: var(--border-radius-container-large);
+		margin-left: calc(var(--default-grid-baseline) * 2);
+		margin-right: calc(var(--default-grid-baseline) * 2);
 		background-color: var(--color-main-background);
-		padding-bottom: 28px;
+		padding-bottom: calc(var(--default-grid-baseline) * 7);
 		animation: show 200ms 90ms cubic-bezier(.17, .67, .83, .67) forwards;
 		opacity: 0.5;
 		transform-origin: top center;
@@ -1005,11 +1040,11 @@ export default {
 		}
 
 		& + .envelope {
-			margin-top: -28px;
+			margin-top: calc(var(--default-grid-baseline) * -7);
 		}
 
 		&:last-of-type {
-			margin-bottom: 10px;
+			margin-bottom: calc(var(--default-grid-baseline) * 2);
 			padding-bottom: 0;
 		}
 
@@ -1017,8 +1052,8 @@ export default {
 			display: flex;
 			align-items: center;
 			justify-content: flex-end;
-			gap: 15px;
-			padding: 10px;
+			gap: calc(var(--default-grid-baseline) * 4);
+			padding: calc(var(--default-grid-baseline) * 2);
 
 			&__date {
 				flex-shrink: 1;
@@ -1027,7 +1062,7 @@ export default {
 			&__actions {
 				flex-shrink: 0;
 				display: flex;
-				gap: 5px;
+				gap: var(--default-grid-baseline);
 			}
 		}
 
@@ -1035,7 +1070,7 @@ export default {
 			position: relative;
 			display: flex;
 			align-items: center;
-			padding: 10px;
+			padding: calc(var(--default-grid-baseline) * 2);
 			border-radius: var(--border-radius);
 			min-height: 68px; /* prevents jumping between open/collapsed */
 
@@ -1134,12 +1169,12 @@ export default {
 		font-weight: bold;
 	}
 	.tag-group__label {
-		margin: 0 7px;
+		margin: 0 calc(var(--default-grid-baseline) * 2);
 		z-index: 2;
 		font-size: calc(var(--default-font-size) * 0.8);
 		font-weight: bold;
-		padding-left: 2px;
-		padding-right: 2px;
+		padding-left: calc(var(--default-grid-baseline) * 0.5);
+		padding-right: calc(var(--default-grid-baseline) * 0.5);
 	}
 	.tag-group__bg {
 		position: absolute;
@@ -1162,11 +1197,11 @@ export default {
 		margin: 0 1px;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		left: 4px;
+		left: var(--default-grid-baseline);
 	}
 	.smime-text {
 		// same as padding-right on action-text styling
-		padding-left: 14px;
+		padding-left: calc(var(--default-grid-baseline) * 3);
 	}
 	:deep(.action-button__name) {
 		font-weight: normal;

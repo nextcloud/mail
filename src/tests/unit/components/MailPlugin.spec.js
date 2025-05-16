@@ -14,6 +14,7 @@ describe('MailPlugin', () => {
 		const expected = '<p style="margin:0;">bonjour bonjour</p>'
 
 		const editor = await VirtualTestEditor.create({
+			licenseKey: 'GPL',
 			initialData: text,
 			plugins: [ParagraphPlugin, MailPlugin],
 		})

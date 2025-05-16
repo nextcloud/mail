@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        branches: ['main', 'stable4.3', 'stable4.2', 'stable3.7']
+        branches: ['main', 'stable5.1', 'stable5.0']
 
     name: npm-audit-fix-${{ matrix.branches }}
 
@@ -39,7 +39,7 @@ jobs:
           fallbackNpm: '^10'
 
       - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
-        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: ${{ steps.versions.outputs.nodeVersion }}
 

@@ -51,11 +51,11 @@
 						:aria-label-combobox="t('mail', 'Select')"
 						label="displayname"
 						:options="calendarsForPicker">
-						<template #option="{option}">
+						<template #option="option">
 							<CalendarPickerOption v-bind="option" />
 						</template>
-						<template #singleLabel="{option}">
-							<CalendarPickerOption :display-icon="true" v-bind="option" />
+						<template #selected-option="option">
+							<CalendarPickerOption v-bind="option" />
 						</template>
 					</NcSelect>
 				</div>
@@ -97,9 +97,12 @@
 				<NcLoadingIcon v-if="loading" />
 			</div>
 			<p v-else-if="!eventIsInFuture" class="imip__actions imip__actions--hint">
-				{{ t('mail', 'This event is in the past.') }}
+				{{ t('mail', 'This message has an attached invitation but the invitation dates are in the past') }}
 			</p>
 		</template>
+		<div v-if="!userIsAttendee" class="imip__actions imip__actions--hint">
+			{{ t('mail', 'This message has an attached invitation but the invitation does not contain a participant that matches any configured mail account address') }}
+		</div>
 	</div>
 </template>
 
@@ -108,7 +111,7 @@ import EventData from './imip/EventData.vue'
 import { NcButton, NcSelect, NcLoadingIcon } from '@nextcloud/vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import CalendarIcon from 'vue-material-design-icons/Calendar.vue'
-import { getParserManager, Parameter, Property } from '@nextcloud/calendar-js'
+import { getParserManager, Parameter, Property, DateTimeValue } from '@nextcloud/calendar-js'
 import { removeMailtoPrefix } from '../util/eventAttendee.js'
 import logger from '../logger.js'
 import { namespaces as NS } from '@nextcloud/cdav-library'
@@ -193,6 +196,7 @@ export default {
 		...mapState(useMainStore, {
 			currentUserPrincipalEmail: 'getCurrentUserPrincipalEmail',
 			clonedWriteableCalendars: 'getClonedWriteableCalendars',
+			currentUserPrincipal: 'getCurrentUserPrincipal',
 		}),
 
 		/**
@@ -287,7 +291,12 @@ export default {
 		 * @return {boolean}
 		 */
 		eventIsInFuture() {
-			return this.attachedVEvent.startDate.jsDate.getTime() > new Date().getTime()
+			if (this.attachedVEvent.isRecurring()) {
+				const recurrence = this.attachedVEvent.recurrenceManager.getClosestOccurrence(DateTimeValue.fromJSDate(new Date()))
+				return recurrence !== undefined && recurrence.startDate.jsDate.getTime() > new Date().getTime()
+			} else {
+				return this.attachedVEvent.startDate.jsDate.getTime() > new Date().getTime()
+			}
 		},
 
 		/**
@@ -359,7 +368,6 @@ export default {
 					},
 					writable: calendar.currentUserPrivilegeSet.indexOf('{DAV:}write') !== -1,
 					url: calendar.url,
-					dav: calendar,
 				}
 			}
 
@@ -367,6 +375,16 @@ export default {
 				.map(getCalendarData)
 				.filter(props => props.components.vevent && props.writable === true)
 		},
+
+		/**
+		 * Get the DAV object of the picked target calendar.
+		 * It can't be included in the option as it contains cyclic references.
+		 *
+		 * @return {object | undefined}
+		 */
+		targetCalendarDavObject() {
+			return this.clonedWriteableCalendars.find((cal) => cal.url === this.targetCalendar.url)
+		}
 	},
 	watch: {
 		attachedVEvent: {
@@ -378,7 +396,16 @@ export default {
 		calendarsForPicker: {
 			immediate: true,
 			handler(calendarsForPicker) {
-				if (calendarsForPicker.length > 0 && !this.targetCalendar) {
+				if (this.targetCalendar) {
+					return
+				}
+
+				const defaultCalendar = calendarsForPicker.find(
+					(cal) => cal.url === this.currentUserPrincipal.scheduleDefaultCalendarUrl
+				)
+				if (defaultCalendar) {
+					this.targetCalendar = defaultCalendar
+				} else if (calendarsForPicker.length > 0) {
 					this.targetCalendar = calendarsForPicker[0]
 				}
 			},
@@ -407,7 +434,7 @@ export default {
 				return
 			}
 
-			const calendar = this.targetCalendar?.dav
+			const calendar = this.targetCalendarDavObject
 			if (!calendar) {
 				return
 			}

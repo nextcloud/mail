@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8d48a894b84c9257ecbe693e6b35dc45",
+    "content-hash": "243768916402bf250aa08f40460b08c4",
     "packages": [
         {
             "name": "amphp/amp",
@@ -824,16 +824,16 @@
         },
         {
             "name": "bytestream/horde-imap-client",
-            "version": "v2.33.5",
+            "version": "v2.33.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Imap_Client.git",
-                "reference": "f66eeb655e2299e35cd79b8f5c597c15b9637333"
+                "reference": "33dc825bb4fb0a3fc6c892625404807aee7cd861"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/f66eeb655e2299e35cd79b8f5c597c15b9637333",
-                "reference": "f66eeb655e2299e35cd79b8f5c597c15b9637333",
+                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/33dc825bb4fb0a3fc6c892625404807aee7cd861",
+                "reference": "33dc825bb4fb0a3fc6c892625404807aee7cd861",
                 "shasum": ""
             },
             "require": {
@@ -875,9 +875,9 @@
             "description": "Horde IMAP client library",
             "homepage": "https://www.horde.org/libraries/Horde_Imap_Client",
             "support": {
-                "source": "https://github.com/bytestream/Imap_Client/tree/v2.33.5"
+                "source": "https://github.com/bytestream/Imap_Client/tree/v2.33.6"
             },
-            "time": "2025-03-07T15:34:26+00:00"
+            "time": "2025-04-30T16:20:39+00:00"
         },
         {
             "name": "bytestream/horde-listheaders",
@@ -1856,41 +1856,42 @@
         },
         {
             "name": "jeremykendall/php-domain-parser",
-            "version": "6.3.1",
+            "version": "6.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jeremykendall/php-domain-parser.git",
-                "reference": "aa1f9bf2617c9863f2286595403f7dbffe2786ea"
+                "reference": "98401b32371fc1a75d93d4653d311b38e71f0d82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jeremykendall/php-domain-parser/zipball/aa1f9bf2617c9863f2286595403f7dbffe2786ea",
-                "reference": "aa1f9bf2617c9863f2286595403f7dbffe2786ea",
+                "url": "https://api.github.com/repos/jeremykendall/php-domain-parser/zipball/98401b32371fc1a75d93d4653d311b38e71f0d82",
+                "reference": "98401b32371fc1a75d93d4653d311b38e71f0d82",
                 "shasum": ""
             },
             "require": {
                 "ext-filter": "*",
-                "ext-intl": "*",
-                "ext-json": "*",
                 "php": "^8.1"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.53.0",
-                "guzzlehttp/guzzle": "^7.8.1",
-                "guzzlehttp/psr7": "^1.6 || ^2.6.2",
-                "phpstan/phpstan": "^1.10.66",
-                "phpstan/phpstan-phpunit": "^1.3.16",
-                "phpstan/phpstan-strict-rules": "^1.5.3",
-                "phpunit/phpunit": "^10.5.15 || ^11.1.1",
-                "psr/http-factory": "^1.0.2",
-                "psr/simple-cache": "^1.0.1",
-                "symfony/cache": "^v5.0.0 || ^6.4.6"
+                "friendsofphp/php-cs-fixer": "^3.65.0",
+                "guzzlehttp/guzzle": "^7.9.2",
+                "guzzlehttp/psr7": "^1.6 || ^2.7.0",
+                "phpstan/phpstan": "^1.12.13",
+                "phpstan/phpstan-phpunit": "^1.4.2",
+                "phpstan/phpstan-strict-rules": "^1.6.1",
+                "phpunit/phpunit": "^10.5.15 || ^11.5.1",
+                "psr/http-factory": "^1.1.0",
+                "psr/simple-cache": "^1.0.1 || ^2.0.0",
+                "symfony/cache": "^v5.0.0 || ^6.4.16",
+                "symfony/var-dumper": "^v6.4.18 || ^7.2"
             },
             "suggest": {
-                "league/uri": "To parse URL and validate host",
-                "psr/http-client-implementation": "To use the storage functionnality which depends on PSR-18",
-                "psr/http-factory-implementation": "To use the storage functionnality which depends on PSR-17",
-                "psr/simple-cache-implementation": "To use the storage functionnality which depends on PSR-16"
+                "league/uri": "To parse and extract the host from an URL using a RFC3986/RFC3987 URI parser",
+                "psr/http-client-implementation": "To use the storage functionality which depends on PSR-18",
+                "psr/http-factory-implementation": "To use the storage functionality which depends on PSR-17",
+                "psr/simple-cache-implementation": "To use the storage functionality which depends on PSR-16",
+                "rowbot/url": "To parse and extract the host from an URL using a  WHATWG URL parser",
+                "symfony/polyfill-intl-idn": "to handle IDN host via the Symfony polyfill if ext-intl is not present"
             },
             "type": "library",
             "extra": {
@@ -1945,7 +1946,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-10T09:18:36+00:00"
+            "time": "2025-04-26T11:19:48+00:00"
         },
         {
             "name": "nextcloud/horde-managesieve",
@@ -2177,16 +2178,16 @@
         },
         {
             "name": "nextcloud/kitinerary-sys",
-            "version": "v1.0.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-libraries/kitinerary-sys.git",
-                "reference": "10755e6cc417bf8b60a21c6e2d9be146e9051b22"
+                "reference": "f54aae1a22c407befa41127fe92c57292e1db8bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-sys/zipball/10755e6cc417bf8b60a21c6e2d9be146e9051b22",
-                "reference": "10755e6cc417bf8b60a21c6e2d9be146e9051b22",
+                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-sys/zipball/f54aae1a22c407befa41127fe92c57292e1db8bf",
+                "reference": "f54aae1a22c407befa41127fe92c57292e1db8bf",
                 "shasum": ""
             },
             "require": {
@@ -2206,7 +2207,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-3.0-or-later"
+                "AGPL-3.0-or-later"
             ],
             "authors": [
                 {
@@ -2215,9 +2216,9 @@
             ],
             "description": "KItinerary binding for the system package",
             "support": {
-                "source": "https://github.com/nextcloud-libraries/kitinerary-sys/tree/v1.0.1"
+                "source": "https://github.com/nextcloud-libraries/kitinerary-sys/tree/v2.0.0"
             },
-            "time": "2024-08-02T13:48:52+00:00"
+            "time": "2025-01-08T14:40:01+00:00"
         },
         {
             "name": "phpmailer/dkimvalidator",
@@ -2536,16 +2537,16 @@
         },
         {
             "name": "sabberworm/php-css-parser",
-            "version": "v8.7.0",
+            "version": "v8.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MyIntervals/PHP-CSS-Parser.git",
-                "reference": "f414ff953002a9b18e3a116f5e462c56f21237cf"
+                "reference": "3de493bdddfd1f051249af725c7e0d2c38fed740"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MyIntervals/PHP-CSS-Parser/zipball/f414ff953002a9b18e3a116f5e462c56f21237cf",
-                "reference": "f414ff953002a9b18e3a116f5e462c56f21237cf",
+                "url": "https://api.github.com/repos/MyIntervals/PHP-CSS-Parser/zipball/3de493bdddfd1f051249af725c7e0d2c38fed740",
+                "reference": "3de493bdddfd1f051249af725c7e0d2c38fed740",
                 "shasum": ""
             },
             "require": {
@@ -2553,7 +2554,7 @@
                 "php": "^5.6.20 || ^7.0.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "5.7.27 || 6.5.14 || 7.5.20 || 8.5.40"
+                "phpunit/phpunit": "5.7.27 || 6.5.14 || 7.5.20 || 8.5.41"
             },
             "suggest": {
                 "ext-mbstring": "for parsing UTF-8 CSS"
@@ -2595,9 +2596,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MyIntervals/PHP-CSS-Parser/issues",
-                "source": "https://github.com/MyIntervals/PHP-CSS-Parser/tree/v8.7.0"
+                "source": "https://github.com/MyIntervals/PHP-CSS-Parser/tree/v8.8.0"
             },
-            "time": "2024-10-27T17:38:32+00:00"
+            "time": "2025-03-23T17:59:05+00:00"
         },
         {
             "name": "symfony/polyfill-iconv",
@@ -4149,7 +4150,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.1 <=8.3",
+        "php": ">=8.1 <=8.4",
         "ext-openssl": "*"
     },
     "platform-dev": {},

@@ -133,7 +133,7 @@ class SyncServiceTest extends TestCase {
 			);
 		$this->mailboxSync->expects($this->once())
 			->method('syncStats')
-			->with($account, $mailbox);
+			->with($this->client, $mailbox);
 
 		$response = $this->syncService->syncMailbox(
 			$account,

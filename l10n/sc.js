@@ -223,10 +223,9 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Ses proende a imbiare a tropu persones in A e/o Cc. Cunsìdera de impreare Bcc pro cuare is indiritzos de is chi retzint.",
     "Error sending your message" : "Errore in s'imbiu de su messàgiu",
     "Retry" : "Torra a proare",
-    "Uploading attachments …" : "Carrighende alligongiadu ...",
-    "Sending …" : "Imbiende ...",
     "Warning sending your message" : "Avisu in s'imbiu de su messàgiu",
     "Send anyway" : "Imbia a su pròpiu",
+    "Start writing a message by clicking below or select an existing message to display its contents" : "Cumintza a iscrìere unu messàgiu incarchende a suta o seletziona unu messàgiu chi esistit giai pro nde mustrare is cuntenutos",
     "Message" : "Messàgiu",
     "Oh Snap!" : "Lampu!",
     "Contacts with this address" : "Cuntatos cun custu indiritzu",
@@ -359,6 +358,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Incarca inoghe chi no ses torradu a deretare in manera automàtica intro de pagu segundos.",
     "Redirect" : "Torra a deretare",
     "The link leads to %s" : "Su ligòngiu deretat a %s",
-    "Continue to %s" : "Sighi in %s"
+    "Continue to %s" : "Sighi in %s",
+    "Uploading attachments …" : "Carrighende alligongiadu ...",
+    "Sending …" : "Imbiende ..."
 },
 "nplurals=2; plural=(n != 1);");

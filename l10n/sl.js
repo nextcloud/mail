@@ -241,7 +241,6 @@ OC.L10N.register(
     "Decline" : "Zavrni",
     "Tentatively accept" : "Pogojno sprejmi",
     "More options" : "Več možnosti",
-    "This event is in the past." : "Dogodek je v preteklosti",
     "individual" : "posamično",
     "domain" : "domena",
     "Remove" : "Odstrani",
@@ -336,8 +335,6 @@ OC.L10N.register(
     "Could not discard message" : "Sporočila ni mogoče zavreči",
     "Error sending your message" : "Prošlo je do napake med pošiljanjem sporočila",
     "Retry" : "Poskusi  znova",
-    "Uploading attachments …" : "Poteka pošiljanje prilog ...",
-    "Sending …" : "Poteka pošiljanje ...",
     "Warning sending your message" : "Opozorilo pred pošiljanjem sporočila",
     "Send anyway" : "Pošlji vseeno",
     "First day" : "Prvi dan",
@@ -540,6 +537,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Če vas sistem v nekaj sekundah ne preusmeri samodejno, pritisnite na to mesto.",
     "Redirect" : "Preusmeri",
     "The link leads to %s" : "Povezava vodi do %s",
-    "Continue to %s" : "Nadaljuj na %s"
+    "Continue to %s" : "Nadaljuj na %s",
+    "Uploading attachments …" : "Poteka pošiljanje prilog ...",
+    "Sending …" : "Poteka pošiljanje ..."
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

@@ -66,6 +66,7 @@ OC.L10N.register(
     "Cancel" : "Avbryt",
     "Put my text to the bottom of a reply instead of on top of it." : "Infoga min text längst ner i ett svar i stället för längst upp.",
     "Could not update preference" : "Kunde inte uppdatera inställningar",
+    "Mail settings" : "E-postinställningar",
     "Accounts" : "Konton",
     "Add mail account" : "Lägg till e-postkonto",
     "General" : "Allmänt",
@@ -253,8 +254,6 @@ OC.L10N.register(
     "Reply" : "Svara",
     "Error sending your message" : "Ett fel inträffade när ditt meddelande skulle skickas",
     "Retry" : "Försök igen",
-    "Uploading attachments …" : "Laddar upp bilagor ...",
-    "Sending …" : "Skickar ...",
     "Send anyway" : "Skicka ändå",
     "First day" : "Första dagen",
     "Message" : "Meddelande",
@@ -376,6 +375,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klicka här om du inte blir omdirigerad inom några sekunder.",
     "Redirect" : "Omdirigera",
     "The link leads to %s" : "Länken pekar mot %s",
-    "Continue to %s" : "Fortsätt till %s"
+    "Continue to %s" : "Fortsätt till %s",
+    "Uploading attachments …" : "Laddar upp bilagor ...",
+    "Sending …" : "Skickar ..."
 },
 "nplurals=2; plural=(n != 1);");

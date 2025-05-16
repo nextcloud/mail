@@ -136,6 +136,7 @@ export default {
 			ready: false,
 			editor: Editor,
 			config: {
+				licenseKey: 'GPL',
 				placeholder: this.placeholder,
 				plugins,
 				toolbar: {
@@ -465,13 +466,18 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 }
 .ck-rounded-corners .ck.ck-dropdown__panel, .ck.ck-dropdown__panel.ck-rounded-corners {
 	border-radius: var(--border-radius-large) !important;
-	overflow: hidden;
+	overflow: visible;
+}
+.ck.ck-list-styles-list {
+/* our composer is very small, having menus vertically shown is better */
+	grid-template-rows: repeat(3,auto) !important;
+	grid-template-columns: unset !important;
 }
 
 .ck.ck-button {
 	border-radius: var(--border-radius-element) !important;
 }
-.ck.ck-balloon-panel.ck-balloon-panel_visible {
-	display: none;
+.ck-powered-by-balloon {
+	display: none !important;
 }
 </style>

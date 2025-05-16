@@ -45,16 +45,19 @@
 				</div>
 			</div>
 			<ThreadSummary v-if="showSummaryBox" :loading="summaryLoading" :summary="summaryText" />
-			<ThreadEnvelope v-for="env in thread"
+			<ThreadEnvelope v-for="(env, index) in thread"
 				:key="env.databaseId"
 				:envelope="env"
 				:mailbox-id="$route.params.mailboxId"
 				:thread-subject="threadSubject"
 				:expanded="expandedThreads.includes(env.databaseId)"
 				:full-height="thread.length === 1"
+				:thread-index="index"
 				@delete="$emit('delete', env.databaseId)"
+				@loaded="addLoadedThread"
 				@move="onMove(env.databaseId)"
-				@toggle-expand="toggleExpand(env.databaseId)" />
+				@toggle-expand="toggleExpand(env.databaseId)"
+				@print="print" />
 		</template>
 	</AppContentDetails>
 </template>
@@ -77,6 +80,7 @@ import ThreadEnvelope from './ThreadEnvelope.vue'
 import ThreadSummary from './ThreadSummary.vue'
 import { mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
+import moment from '@nextcloud/moment'
 
 export default {
 	name: 'Thread',
@@ -103,6 +107,7 @@ export default {
 			enabledThreadSummary: loadState('mail', 'llm_summaries_available', false),
 			summaryText: '',
 			summaryError: false,
+			loadedThreads: 0,
 		}
 	},
 
@@ -189,9 +194,11 @@ export default {
 	created() {
 		this.resetThread()
 		window.addEventListener('resize', this.resizeDebounced)
+		window.addEventListener('keydown', this.handleKeyDown)
 	},
 	beforeDestroy() {
 		window.removeEventListener('resize', this.resizeDebounced)
+		window.removeEventListener('keydown', this.handleKeyDown)
 	},
 	methods: {
 		async updateSummary() {
@@ -277,6 +284,7 @@ export default {
 			await this.fetchThread()
 			this.updateParticipantsToDisplay()
 			this.updateSummary()
+			this.loadedThreads = 0
 
 		},
 		async fetchThread() {
@@ -320,6 +328,214 @@ export default {
 				}
 			}
 		},
+		async handleKeyDown(event) {
+			if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
+				event.preventDefault()
+
+				this.thread.forEach((thread) => {
+					if (!this.expandedThreads.includes(thread.databaseId)) this.expandedThreads.push(thread.databaseId)
+				})
+
+				while (true) {
+					if (this.loadedThreads === this.thread.length) {
+						break
+					}
+					await new Promise(resolve => setTimeout(resolve, 100))
+				}
+
+				const virtualIframe = document.createElement('iframe')
+				virtualIframe.style.display = 'none'
+				document.body.appendChild(virtualIframe)
+				const virtualIframeDocument = virtualIframe.contentDocument || virtualIframe.contentWindow.document
+				virtualIframeDocument.open()
+				virtualIframeDocument.write(`<html><head><title>${t('mail', 'Print')}</title></head><body></body></html>`)
+				virtualIframeDocument.close()
+
+				virtualIframeDocument.body.appendChild(this.addThreadInfo(virtualIframeDocument))
+
+				const messageContainers = document.querySelectorAll('#message-container')
+				for (const [index, messageContainer] of messageContainers.entries()) {
+					const iframe = messageContainer.querySelector('iframe')
+
+					this.addMessageInfo(virtualIframeDocument, index)
+
+					if (!iframe) {
+						const div = virtualIframeDocument.createElement('div')
+						div.innerHTML = messageContainer.innerHTML
+						virtualIframeDocument.body.appendChild(div)
+						continue
+					}
+
+					iframe.setAttribute('data-iframe-size', 'true')
+
+					if (!iframe.contentWindow.document.readyState === 'complete') {
+						await new Promise((resolve) => {
+							iframe.contentWindow.onload = resolve
+						})
+					}
+
+					const iframeDocument = iframe.contentDocument || iframe.contentWindow.document
+					const iframeContent = iframeDocument.body.innerHTML
+					const div = virtualIframeDocument.createElement('div')
+
+					div.innerHTML = iframeContent
+					virtualIframeDocument.body.appendChild(div)
+				}
+
+				const images = virtualIframeDocument.querySelectorAll('img')
+				let imagesLoaded = 0
+
+				images.forEach((img) => {
+					img.addEventListener('load', () => {
+						imagesLoaded++
+						if (imagesLoaded === images.length) {
+							virtualIframe.contentWindow.print()
+							this.removeIframe(virtualIframe)
+						}
+					})
+					img.addEventListener('error', () => {
+						imagesLoaded++
+						if (imagesLoaded === images.length) {
+							virtualIframe.contentWindow.print()
+							this.removeIframe(virtualIframe)
+						}
+					})
+				})
+
+				if (images.length === 0) {
+					virtualIframe.contentWindow.print()
+					this.removeIframe(virtualIframe)
+				}
+
+			}
+		},
+		removeIframe(virtualIframe) {
+			setTimeout(() => {
+				document.body.removeChild(virtualIframe)
+			}, 500)
+		},
+		addMessageInfo(virtualIframeDocument, index) {
+			const hr = virtualIframeDocument.createElement('hr')
+			hr.style.border = '1px solid black'
+
+			const subjectSpan = virtualIframeDocument.createElement('p')
+			subjectSpan.style.fontWeight = 'bold'
+			subjectSpan.textContent = t('mail', 'Subject') + ': ' + this.thread[index].subject
+
+			const senderSpan = virtualIframeDocument.createElement('p')
+			senderSpan.style.fontWeight = 'bold'
+			senderSpan.textContent = t('mail', 'From') + ': ' + this.thread[index].from[0].label + ' <' + this.thread[index].from[0].email + '>'
+
+			const dateSpan = virtualIframeDocument.createElement('p')
+			dateSpan.style.fontWeight = 'bold'
+			dateSpan.textContent = t('mail', 'Date') + ': ' + moment.unix(this.thread[index].dateInt).format('LLL')
+
+			const recipientSpan = virtualIframeDocument.createElement('p')
+			recipientSpan.style.fontWeight = 'bold'
+			recipientSpan.textContent = t('mail', 'To') + ': ' + this.thread[index].to[0].label + this.thread[index].to[0].email
+
+			virtualIframeDocument.body.appendChild(hr)
+			virtualIframeDocument.body.appendChild(subjectSpan)
+			virtualIframeDocument.body.appendChild(senderSpan)
+			virtualIframeDocument.body.appendChild(dateSpan)
+			virtualIframeDocument.body.appendChild(recipientSpan)
+		},
+		addThreadInfo(document) {
+			const threadInfo = document.createElement('div')
+			threadInfo.style.marginTop = '20px'
+			threadInfo.style.marginBottom = '20px'
+			threadInfo.className = 'mail-thread-info'
+
+			const subjectLine = document.createElement('h2')
+			subjectLine.textContent = `${this.threadSubject}`
+			threadInfo.appendChild(subjectLine)
+
+			const participantsLine = document.createElement('p')
+			participantsLine.textContent = this.threadParticipants
+				.map(participant => `${participant.label} <${participant.email}>`)
+				.join(', ')
+			threadInfo.appendChild(participantsLine)
+
+			return threadInfo
+		},
+		addLoadedThread() {
+			this.loadedThreads++
+		},
+		print(threadIndex) {
+			setTimeout(() => {
+				try {
+					const messages = Array.from(document.querySelectorAll('.html-message-body, .mail-message-body'))
+
+					let message
+
+					if (threadIndex !== undefined) {
+						message = messages[threadIndex * 2] ?? messages.pop()
+					} else {
+						// By default, we print the last opened message in the thread
+						message = messages.pop()
+					}
+
+					const iframe = message.querySelector('iframe')
+
+					if (iframe === null) {
+						// Handle plain text messages
+						const messageContainer = message.querySelector('#message-container')
+
+						if (messageContainer) {
+							// Create a new iframe
+							const newIframe = document.createElement('iframe')
+							newIframe.style.display = 'none' // Hide the iframe
+							document.body.appendChild(newIframe)
+
+							// Insert the message content into the iframe
+							const iframeDocument = newIframe.contentDocument || newIframe.contentWindow.document
+							iframeDocument.open()
+							iframeDocument.write(`
+								<html>
+									<head>
+										<title>${this.threadSubject}</title>
+									</head>
+									<body>
+										<div class="message-container">${messageContainer.innerHTML}</div>
+									</body>
+								</html>
+							`)
+
+							const threadInfo = this.addThreadInfo(iframeDocument)
+							iframeDocument.body.insertBefore(threadInfo, iframeDocument.body.firstChild)
+
+							setTimeout(() => {
+								threadInfo.remove()
+							}, 5000)
+
+							iframeDocument.close()
+
+							newIframe.contentWindow.print()
+
+							// Clean up: remove the iframe after printing
+							setTimeout(() => {
+								document.body.removeChild(newIframe)
+							}, 500)
+						}
+
+						return
+					}
+
+					const iframeDocument = iframe.contentDocument || iframe.contentWindow.document
+
+					const threadInfo = this.addThreadInfo(iframeDocument)
+					iframeDocument.body.insertBefore(threadInfo, iframeDocument.body.firstChild)
+
+					setTimeout(() => {
+						threadInfo.remove()
+					}, 200)
+
+					iframe.contentWindow.print()
+				} catch (error) {
+					showError(t('mail', 'Could not print message'))
+				}
+			}, 100)
+		},
 	},
 }
 </script>
@@ -330,14 +546,14 @@ export default {
 
 	.icon-loading {
 		&:only-child:after {
-			margin-top: 20px;
+			margin-top: calc(var(--default-line-height) - var(--default-grid-baseline));
 		}
 	}
 }
 
 .mail-message-body {
 	flex: 1;
-	margin-bottom: 30px;
+	margin-bottom: calc(var(--default-grid-baseline) * 7);
 	position: relative;
 }
 
@@ -346,7 +562,7 @@ export default {
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
-	padding: 0 0 10px 0;
+	padding: 0 0 calc(var(--default-grid-baseline) * 2) 0;
 	// somehow ios doesn't care about this !important rule
 	// so we have to manually set left/right padding to chidren
 	// for 100% to be used
@@ -368,15 +584,15 @@ export default {
 	// initial width
 	width: 0;
 	// while scrolling, the back button overlaps with subject on small screen
-	padding-left: 86px;
+	padding-left: calc(var(--default-grid-baseline) * 21);
 	// grow and try to fill 100%
 	flex: 1 1 auto;
 	h2,
 	p {
-		padding-bottom: 7px;
+		padding-bottom: calc(var(--default-grid-baseline) * 2);
 		margin-bottom: 0;
 		// some h2 styling coming from server add some space on top
-		margin-top: 5px;
+		margin-top: var(--default-grid-baseline);
 	}
 
 	p {
@@ -401,7 +617,7 @@ export default {
 
 .attachment-popover {
 	position: sticky;
-	bottom: 12px;
+	bottom: calc(var(--default-grid-baseline) * 3);
 	text-align: center;
 }
 
@@ -410,7 +626,7 @@ export default {
 }
 
 #mail-content {
-	margin: 10px 38px 0 59px;
+	margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 10) 0 calc(var(--default-grid-baseline) * 15);
 }
 
 #mail-content iframe {
@@ -424,7 +640,7 @@ export default {
 #mail-content a,
 .mail-signature a {
 	color: #07d;
-	border-bottom: 1px dotted #07d;
+	border-bottom: var(--border-width-input) dotted #07d;
 	text-decoration: none;
 	word-wrap: break-word;
 }
@@ -439,44 +655,7 @@ export default {
 @media only screen and (min-width: 600px) {
 	.icon-reply-white,
 	.icon-reply-all-white {
-		background-position: 12px center;
-	}
-}
-
-@media print {
-	#mail-thread-header-fields {
-		position: relative;
-	}
-	.app-content-details,
-	.splitpanes__pane-details {
-		max-width: unset !important;
-		width: 100% !important;
-	}
-	#header,
-	.app-navigation,
-	#reply-composer,
-	#forward-button,
-	#mail-message-has-blocked-content,
-	.app-content-list,
-	.message-composer,
-	.splitpanes__pane-list,
-	.mail-message-attachments {
-		display: none !important;
-	}
-	.app-content {
-		margin-left: 0 !important;
-	}
-	.mail-message-body {
-		margin-bottom: 0 !important;
-	}
-	.app-content-details {
-		min-width: 100% !important;
-	}
-	.action-items, .reply-buttons, .envelope__header__left__unsubscribe {
-		display: none !important;
-	}
-	.envelope {
-		border: none !important;
+		background-position: calc(var(--default-grid-baseline) * 3) center;
 	}
 }
 
@@ -506,7 +685,7 @@ export default {
 }
 
 .v-popper.avatar-more {
-	padding: 6px;
+	padding: calc(var(--default-grid-baseline) * 2);
 }
 
 .avatar-hidden {

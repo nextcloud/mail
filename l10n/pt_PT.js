@@ -47,6 +47,7 @@ OC.L10N.register(
     "Writing mode" : "Modo de escrita",
     "Preferred writing mode for new messages and replies." : "Modo de escrita pré definido para novas mensagens e respostas.",
     "Default folders" : "Pastas pré definidas",
+    "Filters" : "Filtros",
     "Mail server" : "Servidor de correio eletrónico",
     "Go back" : "Voltar",
     "Change name" : "Alterar nome",
@@ -157,8 +158,6 @@ OC.L10N.register(
     "Reply" : "Resposta",
     "Error sending your message" : "Erro ao enviar a sua mensagem",
     "Retry" : "Repetir",
-    "Uploading attachments …" : "A enviar anexos ...",
-    "Sending …" : "A enviar...",
     "Warning sending your message" : "Aviso ao enviar a sua mensagem",
     "Send anyway" : "Enviar de qualquer maneira",
     "Message" : "Mensagem",
@@ -168,6 +167,7 @@ OC.L10N.register(
     "Copy to clipboard" : "Copiar para área de transferência",
     "Contact name …" : "Nome do contacto...",
     "Add" : "Adicionar",
+    "Show less" : "Mostrar menos",
     "Clear" : "Limpar",
     "Close" : "Fechar",
     "Body" : "Corpo",
@@ -186,6 +186,7 @@ OC.L10N.register(
     "Reservation {id}" : "Reserva {id}",
     "Train" : "Comboio",
     "Operator" : "Operador",
+    "Filter name" : "Filtrar nome",
     "Actions" : "Ações",
     "New action" : "Nova ação",
     "Priority" : "Prioridade",
@@ -226,6 +227,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Clique aqui se não for automaticamente redirecionado dentro de segundos.",
     "Redirect" : "Redirecionar",
     "The link leads to %s" : "A ligação aponta para %s",
-    "Continue to %s" : "Continuar para %s"
+    "Continue to %s" : "Continuar para %s",
+    "Uploading attachments …" : "A enviar anexos ...",
+    "Sending …" : "A enviar..."
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

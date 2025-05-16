@@ -11,10 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['8.1', '8.2', '8.3']
+        php-versions: ['8.2', '8.3']
         nextcloud-versions: ['master', 'stable30']
         include:
+          - php-versions: '8.1'
+            nextcloud-versions: 'stable30'
           - php-versions: '8.4'
+            nextcloud-versions: 'stable31'
+          - php-versions: '8.5'
             nextcloud-versions: 'master'
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
@@ -24,7 +28,7 @@ jobs:
         nextcloud-version: ${{ matrix.nextcloud-versions }}
         php-version: ${{ matrix.php-versions }}
         php-coverage: 'xdebug'
-        patch-php-version-check: ${{ matrix.php-versions == '8.4' }}
+        patch-php-version-check: ${{ matrix.php-versions == '8.5' }}
         node-version: 'false'
         install: true
     - name: Checkout Mail
@@ -62,21 +66,25 @@ jobs:
       runs-on: ubuntu-latest
       strategy:
           matrix:
-              php-versions: ['8.3']
+              php-versions: ['8.4']
               nextcloud-versions: ['master']
               db: ['sqlite', 'mysql', 'pgsql']
               cache: ['nocache']
               include:
                 - php-versions: 8.1
-                  nextcloud-versions: 'master'
+                  nextcloud-versions: 'stable30'
                   db: 'sqlite'
                   cache: 'redis'
                 - php-versions: 8.2
-                  nextcloud-versions: 'master'
+                  nextcloud-versions: 'stable30'
+                  db: 'pgsql'
+                  cache: 'redis'
+                - php-versions: 8.3
+                  nextcloud-versions: 'stable31'
                   db: 'mysql'
                   cache: 'redis'
-                - php-versions: 8.2
-                  nextcloud-versions: stable30
+                - php-versions: 8.5
+                  nextcloud-versions: 'master'
                   db: 'mysql'
                   cache: 'redis'
       name: ${{ matrix.nextcloud-versions }} w/ php${{ matrix.php-versions }}-${{ matrix.db }}-${{ matrix.cache }} integration tests
@@ -135,7 +143,7 @@ jobs:
               nextcloud-version: ${{ matrix.nextcloud-versions }}
               php-version: ${{ matrix.php-versions }}
               php-coverage: 'xdebug'
-              patch-php-version-check: ${{ matrix.php-versions == '8.4' }}
+              patch-php-version-check: ${{ matrix.php-versions == '8.5' }}
               install: true
               database: ${{ matrix.db }}
               node-version: 'false'
@@ -153,13 +161,13 @@ jobs:
             working-directory: nextcloud/apps/mail
             run: composer install
           - name: Patch version check for nightly PHP
-            if: ${{ matrix.php-versions == '8.3' }}
-            run: sed -i 's/max-version="8.3"/max-version="8.4"/' nextcloud/apps/mail/appinfo/info.xml
+            if: ${{ matrix.php-versions == '8.5' }}
+            run: sed -i 's/max-version="8.4"/max-version="8.5"/' nextcloud/apps/mail/appinfo/info.xml
           - name: Install Mail
             run: php -f nextcloud/occ app:enable mail
           - name: Configure Nextcloud for testing
             run: |
-                php -f nextcloud/occ config:system:set debug --type bool --value true
+                php -f nextcloud/occ config:system:set app.mail.debug --type bool --value true
                 php -f nextcloud/occ config:system:set app.mail.verify-tls-peer --type bool --value false
           - name: Enable slow mysql query logs
             if: ${{ matrix.db == 'mysql' }}
@@ -184,7 +192,7 @@ jobs:
             run: echo "SELECT * FROM mysql.slow_log WHERE sql_text LIKE '%oc_mail%' AND sql_text NOT LIKE '%information_schema%'" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
           - name: Print debug logs
             if: ${{ always() }}
-            run: cat nextcloud/data/horde_*.log
+            run: cat nextcloud/data/mail-*-*-imap.log
           - name: Report coverage
             uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
             if: ${{ always() && matrix.db == 'mysql' }}
@@ -207,7 +215,7 @@ jobs:
               fallbackNode: '^14'
               fallbackNpm: '^7'
           - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
-            uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
+            uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
             with:
               node-version: ${{ steps.versions.outputs.nodeVersion }}
           - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
@@ -219,12 +227,95 @@ jobs:
       env:
           CI: true
 
-  summary:
+  matrix:
+    runs-on: ubuntu-latest-low
+    outputs:
+      matrix: ${{ steps.versions.outputs.sparse-matrix }}
+    steps:
+      - name: Checkout app
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - name: Get version matrix
+        id: versions
+        uses: icewind1991/nextcloud-version-matrix@58becf3b4bb6dc6cef677b15e2fd8e7d48c0908f # v1.3.1
+        with:
+          matrix: '{"node-versions": ["20"]}'
+
+  frontend-e2e-tests:
     runs-on: ubuntu-latest
+    name: Front-end E2E tests
+    needs: matrix
+    strategy:
+      matrix: ${{ fromJson(needs.matrix.outputs.matrix) }}
+    steps:
+      - name: Set up Nextcloud env
+        uses: ChristophWurst/setup-nextcloud@fc0790385c175d97e88a7cb0933490de6e990374 # v0.3.2
+        with:
+          nextcloud-version: ${{ matrix.server-versions }}
+          php-version: ${{ matrix.php-versions }}
+          node-version: ${{ matrix.node-versions }}
+          install: true
+      - name: Configure Nextcloud for testing
+        run: |
+          php -f nextcloud/occ config:system:set debug --type=bool --value=true
+          php -f nextcloud/occ config:system:set overwriteprotocol --value=https
+          php -f nextcloud/occ config:system:set overwritehost --value=localhost
+          php -f nextcloud/occ config:system:set overwrite.cli.url --value=https://localhost
+          php -f nextcloud/occ config:system:set app.mail.debug --type=bool --value=true
+          php -f nextcloud/occ config:system:set app.mail.verify-tls-peer --type=bool --value=false
+      - name: Check out the app
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
+        with:
+          path: nextcloud/apps/mail
+      - name: Install php dependencies
+        working-directory: nextcloud/apps/mail
+        run: composer install
+      - name: Install the app
+        run: php -f nextcloud/occ app:enable mail
+      - name: Set up node ${{ matrix.node-version }}
+        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
+        with:
+          node-version: ${{ matrix.node-versions }}
+      - name: Install npm dependencies
+        working-directory: nextcloud/apps/mail
+        run: npm ci
+      - name: Build frontend
+        working-directory: nextcloud/apps/mail
+        run: npm run build
+      - name: Install stunnel (tiny https proxy)
+        run: sudo apt-get install -y stunnel
+      - name: Start php server and https proxy
+        working-directory: nextcloud
+        run: |
+          openssl req -new -x509 -days 365 -nodes -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=localhost" -out stunnel.pem -keyout stunnel.pem
+          php -S 127.0.0.1:8080 &
+          sudo stunnel3 -p stunnel.pem -d 443 -r 8080
+      - name: Test https access
+        run: curl --insecure -Li https://localhost
+      - name: Install Playwright browsers
+        working-directory: nextcloud/apps/mail
+        run: npx playwright install --with-deps chromium
+      - name: Run Playwright tests
+        working-directory: nextcloud/apps/mail
+        run: DEBUG=pw:api npx playwright test
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: playwright-report-${{ github.event.number }}-nc${{ matrix.server-versions }}-php${{ matrix.php-versions }}-node${{ matrix.node-versions }}
+          path: nextcloud/apps/mail/playwright-report/
+          retention-days: 14
+      - name: Print server logs
+        if: always()
+        run: cat nextcloud/data/nextcloud.log*
+    env:
+      CI: true
+
+  summary:
+    runs-on: ubuntu-latest-low
     needs:
       - unit-tests
       - integration-tests
       - frontend-unit-test
+      - frontend-e2e-tests
 
     if: always()
 
@@ -237,3 +328,5 @@ jobs:
         run: if ${{ needs.integration-tests.result != 'success' && needs.integration-tests.result != 'skipped' }}; then exit 1; fi
       - name: Frontend unit test status
         run: if ${{ needs.frontend-unit-test.result != 'success' && needs.frontend-unit-test.result != 'skipped' }}; then exit 1; fi
+      - name: Frontend E2E test status
+        run: if ${{ needs.frontend-e2e-tests.result != 'success' && needs.frontend-e2e-tests.result != 'skipped' }}; then exit 1; fi

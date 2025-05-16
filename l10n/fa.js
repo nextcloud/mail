@@ -257,7 +257,6 @@ OC.L10N.register(
     "Decline" : "کاهش می یابد",
     "Tentatively accept" : "Tentatively accept",
     "More options" : "More options",
-    "This event is in the past." : "This event is in the past.",
     "individual" : "individual",
     "domain" : "domain",
     "Remove" : "حذف",
@@ -358,13 +357,11 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses.",
     "Message discarded" : "Message discarded",
     "Could not discard message" : "Could not discard message",
+    "Minimize composer" : "Minimize composer",
     "Error sending your message" : "خطایی در ارسال پیام شما",
     "Retry" : "تلاش دوباره",
-    "Uploading attachments …" : "درحال بارگذاری پیوستها …",
-    "Sending …" : "در حال ارسال ...",
     "Warning sending your message" : "Warning sending your message",
     "Send anyway" : "Send anyway",
-    "Minimize composer" : "Minimize composer",
     "Autoresponder off" : "Autoresponder off",
     "Autoresponder on" : "Autoresponder on",
     "First day" : "First day",
@@ -614,6 +611,8 @@ OC.L10N.register(
     "Redirect" : "تغییر مسیر",
     "The link leads to %s" : "پیوند منجر به%s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "ادامه دهید%s"
+    "Continue to %s" : "ادامه دهید%s",
+    "Uploading attachments …" : "درحال بارگذاری پیوستها …",
+    "Sending …" : "در حال ارسال ..."
 },
 "nplurals=2; plural=(n > 1);");
