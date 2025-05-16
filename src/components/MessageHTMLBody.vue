@@ -158,10 +158,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// account for 8px margin on iframe body
 .html-message-body {
-	margin-left: 50px;
-	margin-top: 2px;
 	background-color: #FFFFFF;
 }
 #mail-message-has-blocked-content {
