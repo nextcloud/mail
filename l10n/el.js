@@ -388,7 +388,6 @@ OC.L10N.register(
     "Redirect" : "Ανακατεύθυνση",
     "The link leads to %s" : "Αυτός ο σύνδεσμος οδηγεί στο %s",
     "Continue to %s" : "Συνέχεια στο %s",
-    "This event is in the past." : "Αυτή η εκδήλωση ανήκει στο παρελθόν.",
     "Uploading attachments …" : "Ανέβασμα συνημμένων ...",
     "Sending …" : "Γίνεται αποστολή..."
 },

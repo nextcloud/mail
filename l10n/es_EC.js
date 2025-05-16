@@ -590,7 +590,6 @@ OC.L10N.register(
     "The link leads to %s" : "La liga lleva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no deseas visitar esa página, puedes regresar a <a href=\"%s\">Correo</a>.",
     "Continue to %s" : "Continuar a %s",
-    "This event is in the past." : "Este evento está en el pasado.",
     "Uploading attachments …" : "Subiendo adjuntos...",
     "Sending …" : "Enviando ..."
 },
