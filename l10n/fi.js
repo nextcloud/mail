@@ -497,7 +497,6 @@ OC.L10N.register(
     "Redirect" : "Uudelleenohjaus",
     "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
     "Continue to %s" : "Jatka sivulle %s",
-    "This event is in the past." : "Tämä tapahtuma on menneisyydessä.",
     "Uploading attachments …" : "Lähetetään liitteitä…",
     "Sending …" : "Lähetetään…"
 },

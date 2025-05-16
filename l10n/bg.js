@@ -558,7 +558,6 @@ OC.L10N.register(
     "The link leads to %s" : "Връзката води до %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желаете да посетите тази страница, може да се върнете към <a href=\"%s\">Поща</a>.",
     "Continue to %s" : "Продължи към %s",
-    "This event is in the past." : "Това събитие е отминало.",
     "Uploading attachments …" : "Качване на прикачените файлове ...",
     "Sending …" : "Изпращане..."
 },

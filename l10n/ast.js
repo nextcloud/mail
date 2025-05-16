@@ -306,7 +306,6 @@ OC.L10N.register(
     "Error loading message" : "Hebo un error al cargar el mensaxe",
     "Redirect" : "Redirixir",
     "The link leads to %s" : "L'enllaz lleva a %s",
-    "This event is in the past." : "Esti eventu ye del pasáu.",
     "Sending …" : "Unviando…"
 },
 "nplurals=2; plural=(n != 1);");

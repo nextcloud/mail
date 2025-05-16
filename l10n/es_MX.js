@@ -394,7 +394,6 @@ OC.L10N.register(
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
     "Continue to %s" : "Continuar a %s",
-    "This event is in the past." : "Este evento fue en el pasado.",
     "Sending …" : "Enviando ..."
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
