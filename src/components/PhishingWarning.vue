@@ -68,6 +68,8 @@ export default {
     text-align: start;
     padding: 8px;
     margin: calc(var(--default-grid-baseline) * 2);
+	// To match the html message margin
+	margin-inline-start: 50px;
 	&__title {
 		display: flex;
 	}
