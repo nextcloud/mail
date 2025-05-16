@@ -612,7 +612,6 @@ OC.L10N.register(
     "The link leads to %s" : "پیوند منجر به%s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "ادامه دهید%s",
-    "This event is in the past." : "This event is in the past.",
     "Uploading attachments …" : "درحال بارگذاری پیوستها …",
     "Sending …" : "در حال ارسال ..."
 },

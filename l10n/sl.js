@@ -538,7 +538,6 @@ OC.L10N.register(
     "Redirect" : "Preusmeri",
     "The link leads to %s" : "Povezava vodi do %s",
     "Continue to %s" : "Nadaljuj na %s",
-    "This event is in the past." : "Dogodek je v preteklosti",
     "Uploading attachments …" : "Poteka pošiljanje prilog ...",
     "Sending …" : "Poteka pošiljanje ..."
 },

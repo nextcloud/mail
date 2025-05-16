@@ -569,7 +569,6 @@ OC.L10N.register(
     "Redirect" : "Перенаправлення",
     "The link leads to %s" : "Посилання веде до %s",
     "Continue to %s" : "Перейти до %s",
-    "This event is in the past." : "Ця подія вже минула",
     "Uploading attachments …" : "Завантаження вкладень...",
     "Sending …" : "Надсилання..."
 },

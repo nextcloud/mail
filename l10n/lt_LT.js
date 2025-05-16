@@ -443,7 +443,6 @@ OC.L10N.register(
     "Redirect" : "Peradresuoti",
     "The link leads to %s" : "Nuoroda veda į %s",
     "Continue to %s" : "Tęsti į %s",
-    "This event is in the past." : "Šis įvykis yra praeityje.",
     "Uploading attachments …" : "Įkeliami priedai …",
     "Sending …" : "Siunčiama …"
 },

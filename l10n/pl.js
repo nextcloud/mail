@@ -593,7 +593,6 @@ OC.L10N.register(
     "The link leads to %s" : "Link prowadzi do %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Jeśli nie chcesz odwiedzić tej strony, możesz powrócić do <a href=\"%s\">Poczty</a>.",
     "Continue to %s" : "Kontynuuj do %s",
-    "This event is in the past." : "To wydarzenie już minęło.",
     "Uploading attachments …" : "Wysyłanie załączników…",
     "Sending …" : "Wysyłanie…"
 },
