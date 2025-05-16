@@ -40,6 +40,7 @@ import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64u
 import ImagePlugin from '@ckeditor/ckeditor5-image/src/image.js'
 import Table from '@ckeditor/ckeditor5-table/src/table.js'
 import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar.js'
+import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandreplace.js'
 import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
 import { DropdownView } from '@ckeditor/ckeditor5-ui'
@@ -93,6 +94,7 @@ export default {
 			LinkPlugin,
 			Table,
 			TableToolbar,
+			FindAndReplace,
 		]
 		const toolbar = ['undo', 'redo']
 
@@ -134,6 +136,7 @@ export default {
 				'tableColumn',
 				'tableRow',
 				'mergeTableCells',
+				'findAndReplace',
 			])
 		}
 
