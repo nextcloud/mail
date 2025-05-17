@@ -65,6 +65,7 @@ OC.L10N.register(
     "Show update alias form" : "Näita uuendatud aliast",
     "Delete alias" : "Kustuta alias",
     "Go back" : "Mine tagasi",
+    "Change name" : "Muuda nime",
     "Email address" : "E-posti aadress",
     "Create alias" : "Loo alias",
     "Cancel" : "Loobu",
