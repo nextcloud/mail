@@ -12,6 +12,8 @@ namespace OCA\Mail\Service\Search;
 class SearchQuery {
 	/** @var int|null */
 	private $cursor;
+	
+	private bool $stacked = true;
 
 	/** @var Flag[] */
 	private $flags = [];
@@ -70,6 +72,14 @@ class SearchQuery {
 	 */
 	public function setCursor(int $cursor): void {
 		$this->cursor = $cursor;
+	}
+
+	public function getStacked(): bool {
+		return $this->stacked;
+	}
+	
+	public function setStacked(bool $stacked): void {
+		$this->stacked = $stacked;
 	}
 
 	public function getMatch(): string {

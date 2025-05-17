@@ -71,6 +71,10 @@ export default function initAfterAppCreation() {
 		value: preferences['layout-mode'],
 	})
 	mainStore.savePreferenceMutation({
+		key: 'layout-message-view',
+		value: preferences['layout-message-view'],
+	})
+	mainStore.savePreferenceMutation({
 		key: 'follow-up-reminders',
 		value: preferences['follow-up-reminders'],
 	})
