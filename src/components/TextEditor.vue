@@ -4,16 +4,18 @@
 -->
 
 <template>
-	<div>
-		<ckeditor v-if="ready"
-			:value="value"
-			:config="config"
-			:editor="editor"
-			:disabled="disabled"
-			class="editor"
-			@input="onEditorInput"
-			@ready="onEditorReady" />
-		<div ref="container" class="toolbar" />
+	<div class="modal">
+		<div class="editor-wrapper">
+			<ckeditor
+				:value="value"
+				:config="config"
+				:editor="editor"
+				:disabled="disabled"
+				class="editor"
+				@input="onEditorInput"
+				@ready="onEditorReady"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -21,7 +23,7 @@
 import CKEditor from '@ckeditor/ckeditor5-vue2'
 import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment.js'
 import { Mention } from '@ckeditor/ckeditor5-mention'
-import Editor from '@ckeditor/ckeditor5-editor-decoupled/src/decouplededitor.js'
+import Editor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor.js'
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials.js'
 import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote.js'
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold.js'
@@ -40,6 +42,7 @@ import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64u
 import ImagePlugin from '@ckeditor/ckeditor5-image/src/image.js'
 import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
+import SourceEditingPlugin from '@ckeditor/ckeditor5-source-editing/src/sourceediting.js'
 import { DropdownView } from '@ckeditor/ckeditor5-ui'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import { searchProvider, getLinkWithPicker } from '@nextcloud/vue/components/NcRichText'
@@ -90,7 +93,7 @@ export default {
 			Mention,
 			LinkPlugin,
 		]
-		const toolbar = ['undo', 'redo']
+		const toolbar = ['sourceEditing', 'undo', 'redo']
 
 		if (this.html) {
 			plugins.push(...[
@@ -109,6 +112,7 @@ export default {
 				Base64UploadAdapter,
 				ImageResizePlugin,
 				MailPlugin,
+				SourceEditingPlugin,
 			])
 			toolbar.unshift(...[
 				'heading',
@@ -320,7 +324,6 @@ export default {
 
 			// https://ckeditor.com/docs/ckeditor5/latest/examples/builds-custom/bottom-toolbar-editor.html
 			if (editor.ui) {
-				this.$refs.container.appendChild(editor.ui.view.toolbar.element)
 				this.overrideDropdownPositionsToNorth(editor, editor.ui.view.toolbar)
 				this.overrideTooltipPositions(editor.ui.view.toolbar)
 			}
@@ -468,6 +471,9 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	border-radius: var(--border-radius-large) !important;
 	overflow: visible;
 }
+.ck-rounded-corners .ck.ck-editor__main>.ck-editor__editable, .ck.ck-editor__main>.ck-editor__editable.ck-rounded-corners {
+	width: 100%;
+}
 .ck.ck-list-styles-list {
 /* our composer is very small, having menus vertically shown is better */
 	grid-template-rows: repeat(3,auto) !important;
@@ -479,5 +485,41 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 }
 .ck-powered-by-balloon {
 	display: none !important;
+}
+.ck.ck-editor__top .ck-sticky-panel .ck-sticky-panel__content {
+	border-bottom-width: 1px;
+}
+.modal {
+	display: flex;
+	flex-direction: column;
+}
+
+.editor-wrapper {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	overflow: scroll;
+}
+
+.editor .ck-editor__editable_inline {
+	flex: 1;
+	min-height: 150px;
+	max-height: 100%;
+	overflow: auto;
+}
+
+.editor .ck-editor__top {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+}
+
+.ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable) {
+	border: 0;
+	box-shadow: none;
+}
+.ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
+	border: 0;
 }
 </style>
