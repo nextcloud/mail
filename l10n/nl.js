@@ -1,7 +1,7 @@
 OC.L10N.register(
     "mail",
     {
-    "Embedded message %s" : "Ingebed bericht %s",
+    "Embedded message %s" : "Ingesloten bericht %s",
     "Important mail" : "Belangrijke mail",
     "No message found yet" : "Nog geen berichten gevonden",
     "Set up an account" : "Maak een account aan",
@@ -76,6 +76,7 @@ OC.L10N.register(
     "Use Gravatar and favicon avatars" : "Gebruik Gravatar en favicon avatars",
     "Register as application for mail links" : "Registreer als applicatie voor e-maillinks",
     "Register" : "Aanmelden",
+    "Privacy and security" : "Privacy en veiligheid",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Laat de app gegevens verzamelen over jouw interacties. Op basis van deze gegevens zal de app zich aanpassen aan je voorkeuren. De gegevens worden alleen lokaal opgeslagen.",
     "Trusted senders" : "Vertrouwde afzenders",
     "About" : "Over",
