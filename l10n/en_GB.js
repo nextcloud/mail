@@ -773,6 +773,7 @@ OC.L10N.register(
     "Keep editing message" : "Keep editing message",
     "Attachments were not copied. Please add them manually." : "Attachments were not copied. Please add them manually.",
     "Could not create snooze mailbox" : "Could not create snooze mailbox",
+    "Sending message…" : "Sending message…",
     "Message sent" : "Message sent",
     "Could not send message" : "Could not send message",
     "Message copied to \"Sent\" mailbox" : "Message copied to \"Sent\" mailbox",
