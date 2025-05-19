@@ -772,6 +772,7 @@ OC.L10N.register(
     "Keep editing message" : "Pokračovat v upravování zprávy",
     "Attachments were not copied. Please add them manually." : "Přílohy nebyly zkopírovány. Přidejte je ručně.",
     "Could not create snooze mailbox" : "Nepodařilo se vytvořit schránku pro odložené",
+    "Sending message…" : "Odesílání zprávy…",
     "Message sent" : "Zpráva odeslána",
     "Could not send message" : "Zprávu se nepodařilo odeslat",
     "Message copied to \"Sent\" mailbox" : "Zpráva zkopírována do složky „Odeslané“",
