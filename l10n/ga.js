@@ -773,6 +773,7 @@ OC.L10N.register(
     "Keep editing message" : "Coinnigh an teachtaireacht eagarthóireachta",
     "Attachments were not copied. Please add them manually." : "Níor cóipeáladh ceangaltáin. Cuir leis de láimh iad le do thoil.",
     "Could not create snooze mailbox" : "Níorbh fhéidir an bosca ríomhphoist ar suan a chruthú",
+    "Sending message…" : "Teachtaireacht á seoladh…",
     "Message sent" : "Teachtaireacht seolta",
     "Could not send message" : "Níorbh fhéidir an teachtaireacht a sheoladh",
     "Message copied to \"Sent\" mailbox" : "Cóipeáladh an teachtaireacht chuig an mbosca poist \"Seolta\".",
