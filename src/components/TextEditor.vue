@@ -438,7 +438,7 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 .custom-item-username {
 	color: var(--color-main-text) !important;
  }
- .link-title{
+ .link-title {
 	color: var(--color-main-text) !important;
 	margin-left: var(--default-grid-baseline) !important;
  }
