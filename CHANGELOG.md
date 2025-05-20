@@ -1,3 +1,21 @@
+## [5.0.8](https://github.com/nextcloud/mail/compare/v5.0.7...v5.0.8) (2025-05-20)
+
+
+### Bug Fixes
+
+* **dns:** Update public suffix list ([95705d6](https://github.com/nextcloud/mail/commit/95705d6e000174cd17ddfb6b69e4daa5b3e995cb))
+* **l10n:** Update translations from Transifex ([2fbbc38](https://github.com/nextcloud/mail/commit/2fbbc384de88e4f9b69042c586dfbaa7a9569516))
+* **l10n:** Update translations from Transifex ([ee99527](https://github.com/nextcloud/mail/commit/ee99527a2caac90db0970f91e0de50ada9a72266))
+* **l10n:** Update translations from Transifex ([fa2c84a](https://github.com/nextcloud/mail/commit/fa2c84a1a1d22f0aff7e80ce8ac7040ce405e936))
+* **l10n:** Update translations from Transifex ([bc6818e](https://github.com/nextcloud/mail/commit/bc6818e53f126329a32b81b622645e445f346d5e))
+* **l10n:** Update translations from Transifex ([30b7030](https://github.com/nextcloud/mail/commit/30b7030bf63c7f9a6a383182cfd3d3cb493c0a5d))
+* **l10n:** Update translations from Transifex ([a8e50f5](https://github.com/nextcloud/mail/commit/a8e50f5bc0e4c924c61374eef87866d40c686743))
+* **l10n:** Update translations from Transifex ([be1d1bd](https://github.com/nextcloud/mail/commit/be1d1bdffa5846a50259a534e7187e699bfa2931))
+* show submailboxes for filtering ([268eae9](https://github.com/nextcloud/mail/commit/268eae98121744d439448425c6c23b3af37ac7fd))
+* **smime:** handle encoding properly when signing and encrypting ([49fb445](https://github.com/nextcloud/mail/commit/49fb44515c931d8580fe75f66283360ebe22cbff))
+
+
+
 ## [5.0.7](https://github.com/nextcloud/mail/compare/v5.0.6...v5.0.7) (2025-05-13)
 
 
