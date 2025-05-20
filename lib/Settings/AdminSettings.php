@@ -82,6 +82,12 @@ class AdminSettings implements ISettings {
 
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,
+			'layout_message_view',
+			$this->config->getAppValue('mail', 'layout_message_view', 'threaded')
+		);
+
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
 			'llm_processing',
 			$this->aiIntegrationsService->isLlmProcessingEnabled(),
 		);
