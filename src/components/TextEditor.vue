@@ -322,7 +322,7 @@ export default {
 		 */
 		onEditorReady(editor) {
 			logger.debug('TextEditor is ready', { editor })
-			
+
 			// https://ckeditor.com/docs/ckeditor5/latest/examples/builds-custom/bottom-toolbar-editor.html
 			this.$refs.toolbarContainer.appendChild(editor.ui.view.toolbar.element)
 			this.$refs.editableContainer.appendChild(editor.ui.view.editable.element)
