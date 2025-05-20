@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        branches: ['main', 'stable5.1', 'stable5.0']
+        branches: ['main', 'stable5.1']
 
     name: update-public-suffix-list-${{ matrix.branches }}
 
