@@ -180,8 +180,6 @@ OC.L10N.register(
     "Reply" : "תגובה",
     "Error sending your message" : "שליחת ההודעה שלך נכשלה",
     "Retry" : "ניסיון חוזר",
-    "Uploading attachments …" : "הקבצים המצורפים מועלים…",
-    "Sending …" : "שולח...",
     "Message" : "הודעה",
     "Oh Snap!" : "שוד ושבר!",
     "Copy to clipboard" : "העתקה ללוח הגזירים",
@@ -268,6 +266,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "יש ללחוץ כאן אם לא הועברת אוטומטית בשניות הקרובות.",
     "Redirect" : "הפנייה",
     "The link leads to %s" : "הקישור מוביל אל %s",
-    "Continue to %s" : "ממשיך אל %s"
+    "Continue to %s" : "ממשיך אל %s",
+    "Uploading attachments …" : "הקבצים המצורפים מועלים…",
+    "Sending …" : "שולח..."
 },
 "nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;");

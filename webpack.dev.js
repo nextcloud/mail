@@ -5,7 +5,7 @@
 const { merge } = require('webpack-merge');
 const common = require('./webpack.common.js');
 
-module.exports = merge(common, {
+module.exports = async() => merge(await common(), {
   mode: 'development',
   devServer: {
     historyApiFallback: true,

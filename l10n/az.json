@@ -43,7 +43,6 @@
     "Rename" : "Adı dəyiş",
     "Clear cache" : "Keşi təmizlə",
     "Reply" : "Cavab",
-    "Sending …" : "Göndərilir...",
     "Add" : "Əlavə etmək",
     "Close" : "Bağla",
     "Date" : "Date",
@@ -66,6 +65,7 @@
     "Junk" : "Önəmsiz",
     "Sent" : "Göndərildi",
     "Trash" : "Zibil",
-    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi"
+    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi",
+    "Sending …" : "Göndərilir..."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

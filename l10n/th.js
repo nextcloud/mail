@@ -57,7 +57,6 @@ OC.L10N.register(
     "Rename" : "เปลี่ยนชื่อ",
     "Clear cache" : "ล้างแคช",
     "Reply" : "ตอบกลับ",
-    "Sending …" : "กำลังส่ง ...",
     "Copy to clipboard" : "คัดลอกไปยังคลิปบอร์ด",
     "Add" : "เพิ่ม",
     "Clear" : "ล้าง",
@@ -92,6 +91,7 @@ OC.L10N.register(
     "Error loading message" : "เกิดข้อผิดพลาดขณะโหลดข้อความ",
     "Redirect" : "เปลี่ยนเส้นทาง",
     "The link leads to %s" : "ลิงก์จะนำไปยัง %s",
-    "Continue to %s" : "ดำเนินการต่อไปที่ %s"
+    "Continue to %s" : "ดำเนินการต่อไปที่ %s",
+    "Sending …" : "กำลังส่ง ..."
 },
 "nplurals=1; plural=0;");

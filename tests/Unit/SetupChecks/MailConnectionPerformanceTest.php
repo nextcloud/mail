@@ -15,6 +15,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\ProvisioningMapper;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\SetupChecks\MailConnectionPerformance;
@@ -25,7 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\Test\TestLogger;
 
 class MailConnectionPerformanceTest extends TestCase {
-	
+
 	private IL10N&MockObject $l10n;
 	private TestLogger $logger;
 	private ProvisioningMapper&MockObject $provisioningMapper;
@@ -122,14 +123,14 @@ class MailConnectionPerformanceTest extends TestCase {
 			->method('getClient')
 			->with(new Account($account))
 			->willReturn($client);
-	
+
 		$this->microtime->method('getNumeric')
 			->willReturnOnConsecutiveCalls(0, .2, .2);
 
 		$result = $this->check->run();
 
 		$this->assertEquals(SetupResult::SUCCESS, $result->getSeverity());
-		
+
 	}
 
 	public function testConnectionWarning(): void {
@@ -179,7 +180,7 @@ class MailConnectionPerformanceTest extends TestCase {
 		$result = $this->check->run();
 
 		$this->assertEquals(SetupResult::WARNING, $result->getSeverity());
-		
+
 	}
 
 	public function testConnectionFailure(): void {
@@ -222,6 +223,39 @@ class MailConnectionPerformanceTest extends TestCase {
 
 		$this->assertEquals(SetupResult::SUCCESS, $result->getSeverity());
 		$this->assertTrue($this->logger->hasWarningThatContains('Error occurred while performing system check on mail account: 42'));
+	}
+
+	public function testClientFailure(): void {
+		$account = new MailAccount(
+			[
+				'accountId' => 42,
+				'imapHost' => 'imap.example.com',
+				'imapUser' => 'user',
+				'imapPassword' => 'password',
+				'imapPort' => 143,
+				'imapSslMode' => 'none',
+			]
+		);
+		$this->provisioningMapper->expects($this->once())
+			->method('findUniqueImapHosts')
+			->willReturn(['imap.example.com']);
+		$this->accountMapper->expects($this->once())
+			->method('getRandomAccountIdsByImapHost')
+			->with('imap.example.com')
+			->willReturn([42]);
+		$this->accountMapper->expects($this->once())
+			->method('findById')
+			->with(42)
+			->willReturn($account);
+		$this->clientFactory->expects($this->once())
+			->method('getClient')
+			->with(new Account($account))
+			->willThrowException(new ServiceException('Something about decryption'));
+
+		$result = $this->check->run();
+
+		$this->assertEquals(SetupResult::SUCCESS, $result->getSeverity());
+		$this->assertTrue($this->logger->hasWarningThatContains('Error occurred while getting IMAP client for setup check: Something about decryption'));
 	}
 
 }

@@ -85,7 +85,6 @@ OC.L10N.register(
     "New message" : "Mesazh i ri",
     "Reply" : "Përgjigju",
     "Retry" : "Riprovoni",
-    "Sending …" : "Po dërgohet …",
     "Message" : "Mesazh",
     "Copy to clipboard" : "Kopjo në dërrasë ",
     "Add" : "Shto",
@@ -129,6 +128,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klikoni këtu nëse nuk ridrejtoheni automatikisht brenda disa sekondave",
     "Redirect" : "Ridrejtoje",
     "The link leads to %s" : "Lidhja shpie te %s",
-    "Continue to %s" : "Vazhdo te %s"
+    "Continue to %s" : "Vazhdo te %s",
+    "Sending …" : "Po dërgohet …"
 },
 "nplurals=2; plural=(n != 1);");

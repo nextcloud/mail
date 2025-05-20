@@ -67,7 +67,6 @@
     "Draft" : "Draf",
     "Reply" : "Balas",
     "Retry" : "Ulangi",
-    "Sending …" : "Mengirim ...",
     "Message" : "Pesan",
     "Copy to clipboard" : "Salin ke papan klip",
     "Add" : "Masukkan",
@@ -109,6 +108,7 @@
     "Error loading message" : "Terjadi kesalahan saat memuat pesan",
     "Forwarding to %s" : "Teruskan ke %s",
     "Redirect" : "Mengalihkan",
-    "Continue to %s" : "Lanjutkan ke %s"
+    "Continue to %s" : "Lanjutkan ke %s",
+    "Sending …" : "Mengirim ..."
 },"pluralForm" :"nplurals=1; plural=0;"
 }

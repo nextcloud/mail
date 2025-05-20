@@ -124,8 +124,6 @@ OC.L10N.register(
     "Reply" : "Respondi",
     "Error sending your message" : "Eraro dum sendo de via mesaĝo",
     "Retry" : "Reprovi",
-    "Uploading attachments …" : "Alŝutas kunsendaĵojn...",
-    "Sending …" : "Sendado...",
     "Message" : "Mesaĝo",
     "Copy to clipboard" : "Kopii tondejen",
     "Add" : "Aldoni",
@@ -192,6 +190,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Alklaku ĉi tie, ĉu vi ne estos aŭtomate alidirektita post kelkaj sekundoj.",
     "Redirect" : "Alidirekto",
     "The link leads to %s" : "La ligilo iras al %s",
-    "Continue to %s" : "Daŭrigi al %s"
+    "Continue to %s" : "Daŭrigi al %s",
+    "Uploading attachments …" : "Alŝutas kunsendaĵojn...",
+    "Sending …" : "Sendado..."
 },
 "nplurals=2; plural=(n != 1);");

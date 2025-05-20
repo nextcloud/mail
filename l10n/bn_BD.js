@@ -37,7 +37,6 @@ OC.L10N.register(
     "Rename" : "পূনঃনামকরণ",
     "Clear cache" : "ক্যাশে পরিষ্কার কর",
     "Reply" : "জবাব",
-    "Sending …" : "পাঠানো হচ্ছে......",
     "Add" : "যোগ করুন",
     "Close" : "বন্ধ",
     "Date" : "Date",
@@ -49,6 +48,7 @@ OC.L10N.register(
     "Host" : "হোস্ট",
     "Port" : "পোর্ট",
     "All" : "সবাই",
-    "Favorites" : "প্রিয়জন"
+    "Favorites" : "প্রিয়জন",
+    "Sending …" : "পাঠানো হচ্ছে......"
 },
 "nplurals=2; plural=(n != 1);");

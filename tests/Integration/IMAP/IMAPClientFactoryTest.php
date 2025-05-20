@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Integration\IMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Exception;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
 use OC\Memcache\Redis;
@@ -89,6 +90,17 @@ class IMAPClientFactoryTest extends TestCase {
 		$client = $this->factory->getClient($account);
 
 		$this->assertInstanceOf(Horde_Imap_Client_Socket::class, $client);
+	}
+
+	public function testGetClientDecryptionFailing(): void {
+		$this->expectException(Exception::class);
+		$account = $this->getTestAccount();
+		$this->crypto->expects($this->once())
+			->method('decrypt')
+			->with('encrypted')
+			->willThrowException(new Exception('Decryption does not throw a specific exception'));
+
+		$this->factory->getClient($account);
 	}
 
 	public function testClientConnectivity() {

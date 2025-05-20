@@ -393,6 +393,7 @@ OC.L10N.register(
     "Loading …" : "正在加载...",
     "Not supported by the server" : "服务器不支持",
     "{usage} of {limit} used" : "已使用 {usage} / {limit}",
+    "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "无法创建邮箱。名称可能包含无效字符。请尝试其他名称。",
     "Remove account" : "移除账号",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "{email}和缓存的电子邮箱数据将从 Nextcloud 账号中删除，但不会从你的电子邮箱提供商那里删除。",
     "Remove {email}" : "移除 {email}",
@@ -450,8 +451,6 @@ OC.L10N.register(
     "Minimize composer" : "最小化编辑器",
     "Error sending your message" : "发送邮件时出错",
     "Retry" : "重试",
-    "Uploading attachments …" : "正在上传附件 ...",
-    "Sending …" : "正在发送 ...",
     "Warning sending your message" : "发送邮件时发生警告",
     "Send anyway" : "仍然发送",
     "Welcome to {productName} Mail" : "欢迎使用 {productName} 邮件",
@@ -774,6 +773,7 @@ OC.L10N.register(
     "Keep editing message" : "继续编辑邮件",
     "Attachments were not copied. Please add them manually." : "附件没有被复制，请手动添加。",
     "Could not create snooze mailbox" : "无法创建延后邮箱",
+    "Sending message…" : "正在发送邮件…",
     "Message sent" : "邮件已发送",
     "Could not send message" : "无法发送邮件",
     "Message copied to \"Sent\" mailbox" : "邮件已复制到“已发送”邮箱",
@@ -790,8 +790,8 @@ OC.L10N.register(
     "The link leads to %s" : "链接指向 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "如果不想访问此页面，您可以返回<a href=\"%s\">邮件</a>。",
     "Continue to %s" : "继续 %s",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n\n### Priority Inbox\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\n### Thread Summaries (opt-in)\n\n**Rating:** 🟢/🟡/🟠/🔴\n\nThe rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "**💌 Nextcloud 的邮件应用程序**\n\n- **🚀 与其他 Nextcloud 应用程序集成！** 目前是联系人、日历和文件 – 未来还会有更多。\n- **📥 多个邮件帐户！** 个人和公司帐户？ 没问题，还有一个漂亮的统一收件箱。 连接任何 IMAP 帐户。\n- **🔒 发送和接收加密邮件！** 使用出色的 [Mailvelope](https://mailvelope.com) 浏览器扩展。\n- **🙈 我们不会重新发明轮子！** 基于伟大的 [Horde](https://horde.org) 库。\n- **📬 想要托管您自己的邮件服务器吗？** 我们不必重新实现这一点，因为您可以设置 [Mail-in-a-Box](https://mailinabox.email)！\n\n## 道德人工智能评级\n\n### 优先收件箱\n\n积极的:\n* 该模型的训练和推理软件是开源的。\n* 该模型是根据用户自己的数据在本地创建和训练的。\n* 用户可以访问训练数据，从而可以检查或纠正偏差或优化性能和二氧化碳使用。\n\n### 线程摘要（选择加入）\n\n**评分:** 🟢/🟡/🟠/🔴\n\n评级取决于安装的文本处理后端。 有关详细信息，请参阅[评级概述](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.\n\n了解有关 Nextcloud 道德 AI 评级的更多信息 [在我们的博客中](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).",
-    "This event is in the past." : "这个事件已经过去了。",
-    "Collapse composer" : "收起编辑器"
+    "Collapse composer" : "收起编辑器",
+    "Uploading attachments …" : "正在上传附件 ...",
+    "Sending …" : "正在发送 ..."
 },
 "nplurals=1; plural=0;");

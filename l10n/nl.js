@@ -1,7 +1,7 @@
 OC.L10N.register(
     "mail",
     {
-    "Embedded message %s" : "Ingebed bericht %s",
+    "Embedded message %s" : "Ingesloten bericht %s",
     "Important mail" : "Belangrijke mail",
     "No message found yet" : "Nog geen berichten gevonden",
     "Set up an account" : "Maak een account aan",
@@ -76,6 +76,7 @@ OC.L10N.register(
     "Use Gravatar and favicon avatars" : "Gebruik Gravatar en favicon avatars",
     "Register as application for mail links" : "Registreer als applicatie voor e-maillinks",
     "Register" : "Aanmelden",
+    "Privacy and security" : "Privacy en veiligheid",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Laat de app gegevens verzamelen over jouw interacties. Op basis van deze gegevens zal de app zich aanpassen aan je voorkeuren. De gegevens worden alleen lokaal opgeslagen.",
     "Trusted senders" : "Vertrouwde afzenders",
     "About" : "Over",
@@ -250,8 +251,6 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Je probeert een e-mail te versturen met veel ontvangers in Aan en /of Cc. Overweeg om Bcc te gebruiken om de adressen van de ontvangers voor elkaar te verbergen.",
     "Error sending your message" : "Fout bij het versturen van jouw bericht",
     "Retry" : "Opnieuw proberen",
-    "Uploading attachments …" : "Bijlage aan het uploaden ...",
-    "Sending …" : "Versturen ...",
     "Warning sending your message" : "Waarschuwing bij het versturen van jouw bericht",
     "Send anyway" : "Toch verzenden",
     "Message" : "Bericht",
@@ -419,6 +418,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klik hier als je binnen enkele seconden niet automatisch wordt doorgestuurd.",
     "Redirect" : "Omleiden",
     "The link leads to %s" : "De link verwijst naar %s",
-    "Continue to %s" : "Verder naar %s"
+    "Continue to %s" : "Verder naar %s",
+    "Uploading attachments …" : "Bijlage aan het uploaden ...",
+    "Sending …" : "Versturen ..."
 },
 "nplurals=2; plural=(n != 1);");

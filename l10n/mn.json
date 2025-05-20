@@ -60,7 +60,6 @@
     "New message" : "шинэ зурвас",
     "Reply" : "хариулт",
     "Retry" : "Дахин оролдох",
-    "Sending …" : "илгээмж",
     "Add" : "нэмэх",
     "Date" : "Он сар өдөр",
     "Tags" : "Tag-үүд",
@@ -81,6 +80,7 @@
     "Junk" : "хэрэггүй",
     "Sent" : "илгээсэн",
     "Trash" : "хог",
-    "Error loading message" : "алдаатай ачааллах зурвас"
+    "Error loading message" : "алдаатай ачааллах зурвас",
+    "Sending …" : "илгээмж"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

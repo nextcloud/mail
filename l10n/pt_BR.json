@@ -391,6 +391,7 @@
     "Loading …" : "Carregando...",
     "Not supported by the server" : "Não suportado pelo servidor",
     "{usage} of {limit} used" : "{usage} usado de {limit}",
+    "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Não foi possível criar a caixa de correio. O nome provavelmente contém caracteres inválidos. Tente outro nome.",
     "Remove account" : "Excluir a conta",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "A conta do e-mail {email} e os dados em cache serão removidos do Nextcloud, mas não do seu provedor de e-mail.",
     "Remove {email}" : "Excluir {email}",
@@ -448,8 +449,6 @@
     "Minimize composer" : "Minimizar compositor",
     "Error sending your message" : "Erro ao enviar sua mensagem",
     "Retry" : "Retentar",
-    "Uploading attachments …" : "Enviando anexos...",
-    "Sending …" : "Enviando...",
     "Warning sending your message" : "Aviso ao enviar sua mensagem",
     "Send anyway" : "Enviar assim mesmo",
     "Welcome to {productName} Mail" : "Bem-vindo ao {productName} E-Mail",
@@ -772,6 +771,7 @@
     "Keep editing message" : "Continuar edição da mensagem",
     "Attachments were not copied. Please add them manually." : "Os anexos não foram copiados. Adicione-os manualmente.",
     "Could not create snooze mailbox" : "Não foi possível criar caixa de correio de soneca",
+    "Sending message…" : "Enviando mensagem…",
     "Message sent" : "Mensagem enviada",
     "Could not send message" : "Não foi possível enviar a mensagem",
     "Message copied to \"Sent\" mailbox" : "Mensagem copiada para a caixa de correio \"Enviadas\"",
@@ -788,8 +788,8 @@
     "The link leads to %s" : "O link leva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Se você não quiser visitar essa página, você pode voltar para <a href=\"%s\">E-Mail</a>.",
     "Continue to %s" : "Continue para %s",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n\n### Priority Inbox\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\n### Thread Summaries (opt-in)\n\n**Rating:** 🟢/🟡/🟠/🔴\n\nThe rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "**💌 Um aplicativo de e-mail para Nextcloud**\n\n- **🚀 Integração com outros aplicativos Nextcloud! ** Atualmente Contatos, Calendário & Arquivos – mais por vir.\n- **📥 Várias contas de e-mail!** Conta pessoal e empresarial? Não há problema, mas uma bela caixa de entrada unificada. Conecte qualquer conta IMAP.\n- **🔒 Envie & receba e-mails criptografados!** Usando a excelente extensão de navegador [Mailvelope](https://mailvelope.com).\n- **🙈 Não estamos reinventando a roda!** Baseado nas excelentes bibliotecas de [Horde](https://horde.org).\n- **📬 Quer hospedar seu próprio servidor de e-mail?** Não precisamos reimplementar isso, pois você pode configurar o [Mail-in-a-Box](https://mailinabox.email)!\n\n## Classificação Ética de IA\n### Caixa Prioritária\n\nPositivo:\n* O software para treinamento e inferência deste modelo é de código aberto.\n* O modelo é criado e treinado localmente com base nos dados do próprio usuário.\n* Os dados de treinamento são acessíveis ao usuário, possibilitando verificar ou corrigir tendências ou otimizar o desempenho e o uso de CO2.\n\n### Resumos de Tópicos (opt-in)\n\n**Classificação:** 🟢/🟡/🟠/🔴\n\nA classificação depende do back-end de processamento de texto instalado. Consulte [a visão geral da classificação](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) para obter detalhes.\n\nSaiba mais sobre a classificação ética de IA do Nextcloud [em nosso blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).",
-    "This event is in the past." : "Este evento é no passado.",
-    "Collapse composer" : "Recolher compositor"
+    "Collapse composer" : "Recolher compositor",
+    "Uploading attachments …" : "Enviando anexos...",
+    "Sending …" : "Enviando..."
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

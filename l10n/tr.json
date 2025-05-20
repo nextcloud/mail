@@ -446,8 +446,6 @@
     "Minimize composer" : "Oluşturucuyu küçült",
     "Error sending your message" : "İletiniz gönderilirken sorun çıktı",
     "Retry" : "Yeniden dene",
-    "Uploading attachments …" : "Ek dosya yükleniyor …",
-    "Sending …" : "Gönderiliyor …",
     "Warning sending your message" : "İletiniz gönderilirken bir uyarı verildi",
     "Send anyway" : "Yine de gönder",
     "Welcome to {productName} Mail" : "{productName} E-posta uygulamasına hoş geldiniz!",
@@ -786,8 +784,8 @@
     "The link leads to %s" : "Bağlantı %s adresine gidiyor",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Bu sayfayı ziyaret etmek istemiyorsanız, <a href=\"%s\">E-posta</a> uygulamasına geri dönebilirsiniz.",
     "Continue to %s" : "%s sayfasına ilerle",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n\n### Priority Inbox\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\n### Thread Summaries (opt-in)\n\n**Rating:** 🟢/🟡/🟠/🔴\n\nThe rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "**💌 Nextcloud için bir e-posta uygulaması**\n\n- **🚀 Diğer Nextcloud uygulamalarıyla bütünleşik!** Şu anda Kişiler, Takvim ve Dosyalar ile. Daha fazlası gelecek.\n- **📥 Birden çok e-posta hesabı!** Kişisel ya da şirket hesabınızı mı kullanacaksınız? Sorun değil ve güzel bir birleşik gelen kutusu. Herhangi bir IMAP hesabını bağlayabilirsiniz.\n- **🔒 Şifrelenmiş e-postalar gönderin ve alın!** Harika [Mailvelope](https://mailvelope.com) tarayıcı eklentisi ile.\n- **🙈 Tekerleği yeniden keşfetmiyoruz!** Harika [Horde](https://horde.org) kitaplıklarını kullanıyoruz.\n- **📬 Kendi e-posta sunucunuzu barındırmak ister misiniz?** [Mail-in-a-Box](https://mailinabox.email) kurabileceğiniz için bunu yeniden yapmak zorunda değiliz!\n\n## Etik yapay zeka değerlendirmesi\n\n### Öncelikli gelen kutusu 🟢\n\nOlumlu:\n* Bu modelin eğitim ve çıkarım yazılımı açık kaynak kodludur.\n* Model, kullanıcının kendi verilerine göre yerinde oluşturulur ve eğitilir.\n* Eğitim verilerine kullanıcı erişebilir, bu da sapmayı denetlemeyi veya düzeltmeyi ya da başarımı ve CO2 kullanımını iyileştirebilmeyi sağlar.\n\n### Yazışma özetleri (abonelik)\n\n**Değerlendirme:** 🟢/🟡/🟠/🔴\n\nDeğerlendirme, kurulu olan metin işleme arka ucuna bağlıdır. Ayrıntılı bilgi almak için [değerlendirme özeti](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) bölümüne bakabilirsiniz.\n\n[Blogumuzda](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/) Nextcloud etik yapay zeka değerlendirmesi hakkında ayrıntılı bilgi alabilirsiniz.",
-    "This event is in the past." : "Bu etkinlik geçmişte.",
-    "Collapse composer" : "Oluşturucuyu daralt"
+    "Collapse composer" : "Oluşturucuyu daralt",
+    "Uploading attachments …" : "Ek dosya yükleniyor …",
+    "Sending …" : "Gönderiliyor …"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

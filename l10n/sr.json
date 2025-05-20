@@ -391,6 +391,7 @@
     "Loading …" : "Учитавање…",
     "Not supported by the server" : "Сервер не подржава ово",
     "{usage} of {limit} used" : "{usage} од {limit} искоришћено",
+    "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Поштанско сандуче не може да се креира. Име вероватно има неисправне карактере. Молимо вас да покушате са неким другим именом.",
     "Remove account" : "Уклони налог",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "{email} налог и кеширани подаци е-поште ће бити уклоњени из Некстклауда, али не и са Вашег е-мејл провајдера.",
     "Remove {email}" : "Уклони {email}",
@@ -448,8 +449,6 @@
     "Minimize composer" : "Минимизуј састављач",
     "Error sending your message" : "Грешка приликом слања поруке",
     "Retry" : "Покушај поново",
-    "Uploading attachments …" : "Отпремам прилоге …",
-    "Sending …" : "Шаљем …",
     "Warning sending your message" : "Упозорење приликом слања ваше поруке",
     "Send anyway" : "Ипак пошаљи",
     "Welcome to {productName} Mail" : "Добродошли у {productName} Пошту",
@@ -772,6 +771,7 @@
     "Keep editing message" : "Настави уређивање поруке",
     "Attachments were not copied. Please add them manually." : "Прилози нису копирани. Моломо вас да их ручно додате.",
     "Could not create snooze mailbox" : "Није могло да се креира сандуче за одлагање",
+    "Sending message…" : "Порука се шаље",
     "Message sent" : "Порука послата",
     "Could not send message" : "Порука није могла да се пошаље",
     "Message copied to \"Sent\" mailbox" : "Порука је копирана у сандуче „Послато”",
@@ -788,8 +788,8 @@
     "The link leads to %s" : "Веза води на %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желите да посетите ту страницу, можете да се вратите на <a href=\"%s\">Пошту</a>.",
     "Continue to %s" : "Настави на %s",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n\n### Priority Inbox\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\n### Thread Summaries (opt-in)\n\n**Rating:** 🟢/🟡/🟠/🔴\n\nThe rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "**💌 Мејл апликација за Nextcloud**\n\n- **🚀 Интеграција са осталим Nextcloud апликацијама!** Третнутно, Контакти, Календар & Фајлови – биће их још.\n- **📥 Више мејл налога!** Лични и пословни налог? Нема проблема, као и фино обједињено сандуче долазне поште. Повежите било који IMAP налог.\n- **🔒 Слање & пријем шифрованих мејлова!** Коришћењем одличног [Mailvelope](https://mailvelope.com) проширења прегледача.\n- **🙈 Не измишљамо топлу воду!** Заснована на одличним [Horde](https://horde.org) библиотекама.\n- **📬 Желите ли да хостујете сопствени мејл сервер?** Нема потреба да ово поново имлементирамо јер можете да подесите [Mail-in-a-Box](https://mailinabox.email)!\n\n## Етичко рангирање AI\n\n###Приоритетно сандуче\n\nДобре стране:\n* Софтвер за тренирање и закључивање овог модела је отвореног кода.\n* Модел се креира и тренира у локалу, заснива се на подацима самог корисника.\n* Корисник има приступ подацима за тренирање, па је тако могуће да се исправи пристрасност или оптимизују перформансе и употреба CO2.\n\n### Thread Summaries (opt-in)\n\n**Rating:** 🟢/🟡/🟠/🔴\n\nРангирање зависи од инсталираног позадинског механизма за обраду текста. За више детаља, погледајте [преглед рангирања](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html)\n\nСазнајте више о Nextcloud рангирању етичке AI [у нашем блогу](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).",
-    "This event is in the past." : "Овај догађај је у прошлости.",
-    "Collapse composer" : "Сажми састављач"
+    "Collapse composer" : "Сажми састављач",
+    "Uploading attachments …" : "Отпремам прилоге …",
+    "Sending …" : "Шаљем …"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 }

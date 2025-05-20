@@ -382,6 +382,7 @@ OC.L10N.register(
     "Loading …" : "Chargement …",
     "Not supported by the server" : "Non pris en charge par le serveur",
     "{usage} of {limit} used" : "{usage} utilisés sur {limit}",
+    "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Impossible de créer la boîte mail. Le nom contient probablement des caractères interdits. Veuillez essayer un autre nom.",
     "Remove account" : "Retirer le compte",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Le compte pour {email} et les données de messagerie mises en cache seront supprimés de Nextcloud, mais pas de votre fournisseur de messagerie.",
     "Remove {email}" : "Supprimer {email}",
@@ -436,8 +437,6 @@ OC.L10N.register(
     "Minimize composer" : "Minimiser la fenêtre de composition",
     "Error sending your message" : "Erreur lors de l'envoi de votre message",
     "Retry" : "Réessayer",
-    "Uploading attachments …" : "Téléversement des pièces jointes en cours…",
-    "Sending …" : "Envoi en cours …",
     "Warning sending your message" : "Attention : envoi de votre message",
     "Send anyway" : "Envoyer quand même",
     "Welcome to {productName} Mail" : "Bienvenue dans Mail {productName} ",
@@ -774,7 +773,7 @@ OC.L10N.register(
     "The link leads to %s" : "Le lien dirige vers %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si vous ne souhaitez pas visiter cette page, vous pouvez retourner à l'application <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continuer vers %s",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n\n### Priority Inbox\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\n### Thread Summaries (opt-in)\n\n**Rating:** 🟢/🟡/🟠/🔴\n\nThe rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "**💌 Une application de Mail pour Nextcloud**\n\n- **🚀 Integration avec les autres applications Nextcloud !** Pour l'instant, Contacts, Calendrier et Fichiers – plus à venir.\n- **📥 Comptes multiples !** Compte personnel et professionnel ? Pas de problème. Et une jolie boite unifiée pour tous. Connectez n'importe quel compte IMAP.\n- **🔒 Envoyez et recevez des mails encryptés !** En utilisant l'excellente extension [Mailvelope](https://mailvelope.com).\n- **🙈 Nous ne réinventons pas la roue !** Basé sur les fameuses librairies [Horde](https://horde.org).\n- **📬 Vous souhaitez héberger votre propre serveur de messagerie ?** Inutile de vous le proposez puisque vous pouvez utiliser [Mail-in-a-Box](https://mailinabox.email)!\n\n## Classement éthique des IA\n\n### Boîte prioritaire\n\nPositif :\n* Le logiciel pour entraîner et inférer le modèle est open source.\n* Le modèle est créé et entraîné en local et basé sur les données de l'utilisateur seulement.\n* Les données d'entraînements sont accessibles à l'utilisateur, ce qui permet de vérifier et corriger les éventuels biais ou d'optimiser la performance et l'impact carbone.\n\n### Résumé des fils (sur abonnement)\n\n**Classement:** 🟢/🟡/🟠/🔴\n\nLe classement dépend du générateur de texte installé. Voir [le résumé du classement](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) pour plus de détails.\n\nEn savoir plus sur le classement éthique des IA Nextcloud [sur notre blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).",
-    "This event is in the past." : "Cet événement est dans le passé."
+    "Uploading attachments …" : "Téléversement des pièces jointes en cours…",
+    "Sending …" : "Envoi en cours …"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

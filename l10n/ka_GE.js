@@ -87,7 +87,6 @@ OC.L10N.register(
     "New message" : "ახალი წერილი",
     "Reply" : "პასუხი",
     "Retry" : "ვცადოთ ახლიდან",
-    "Sending …" : "იგზავნება …",
     "Message" : "წერილი",
     "Copy to clipboard" : "კოპირება ბუფერში",
     "Add" : "დამატება",
@@ -134,6 +133,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "იმ შემთხვევაში, თუ რამდენიმე წამის განმავლობაში არ მოხდება ავტომატური გადამისამართება დააწკაპუნეთ აქ.",
     "Redirect" : "გადამისამართება",
     "The link leads to %s" : "ბმულს მიყევხართ %s-ისკენ",
-    "Continue to %s" : "%s-ისკენ გაგრძელება"
+    "Continue to %s" : "%s-ისკენ გაგრძელება",
+    "Sending …" : "იგზავნება …"
 },
 "nplurals=2; plural=(n!=1);");

@@ -393,6 +393,7 @@ OC.L10N.register(
     "Loading …" : "Á lódáil…",
     "Not supported by the server" : "Ní thacaíonn an freastalaí leis",
     "{usage} of {limit} used" : "{usage} de {limit} úsáidte",
+    "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Ní féidir bosca poist a chruthú. Is dócha go bhfuil carachtair neamhbhailí san ainm. Bain triail as ainm eile.",
     "Remove account" : "Bain cuntas",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Bainfear an cuntas le haghaidh {email} agus na sonraí ríomhphoist i dtaisce de Nextcloud, ach ní bhainfear iad de do sholáthraí ríomhphoist.",
     "Remove {email}" : "Bain {email}",
@@ -450,8 +451,6 @@ OC.L10N.register(
     "Minimize composer" : "Cumadóir a íoslaghdú",
     "Error sending your message" : "Earráid agus do theachtaireacht á seoladh",
     "Retry" : "Bain triail eile as",
-    "Uploading attachments …" : "Ceangaltáin á n-uaslódáil…",
-    "Sending …" : "Ag seoladh…",
     "Warning sending your message" : "Rabhadh maidir le do theachtaireacht a sheoladh",
     "Send anyway" : "Seol ar aon nós",
     "Welcome to {productName} Mail" : "Fáilte go Ríomhphost {productName}",
@@ -774,6 +773,7 @@ OC.L10N.register(
     "Keep editing message" : "Coinnigh an teachtaireacht eagarthóireachta",
     "Attachments were not copied. Please add them manually." : "Níor cóipeáladh ceangaltáin. Cuir leis de láimh iad le do thoil.",
     "Could not create snooze mailbox" : "Níorbh fhéidir an bosca ríomhphoist ar suan a chruthú",
+    "Sending message…" : "Teachtaireacht á seoladh…",
     "Message sent" : "Teachtaireacht seolta",
     "Could not send message" : "Níorbh fhéidir an teachtaireacht a sheoladh",
     "Message copied to \"Sent\" mailbox" : "Cóipeáladh an teachtaireacht chuig an mbosca poist \"Seolta\".",
@@ -790,8 +790,8 @@ OC.L10N.register(
     "The link leads to %s" : "Téann an nasc chuig %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Mura dteastaíonn uait cuairt a thabhairt ar an leathanach sin, is féidir leat filleadh ar <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Lean ar aghaidh go %s",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n\n### Priority Inbox\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\n### Thread Summaries (opt-in)\n\n**Rating:** 🟢/🟡/🟠/🔴\n\nThe rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "**💌 Aip ríomhphoist le haghaidh Nextcloud**\n\n- **🚀 Comhtháthú le haipeanna eile Nextcloud!** Teagmhálacha, Féilire & Comhaid faoi láthair - tuilleadh le teacht.\n- **📥 Ilchuntais ríomhphoist!** Cuntas pearsanta agus cuideachta? Fadhb ar bith, agus bosca isteach deas aontaithe. Ceangail aon chuntas IMAP.\n- **🔒 Seol & faigh ríomhphoist criptithe!** Ag baint úsáide as an síneadh brabhsálaí iontach [Mailvelope](https://mailvelope.com).\n- **🙈 Nílimid ag athchruthú an rotha!** Bunaithe ar na leabharlanna móra [Horde](https://horde.org).\n- **📬 An bhfuil fonn ort do fhreastalaí ríomhphoist féin a óstáil?** Ní gá dúinn é seo a chur i bhfeidhm arís mar d'fhéadfá [Rphost-i-Box](https://mailinabox.email) a shocrú!\n\n## Rátáil Eiticiúil AI\n\n### Bosca Isteach Tosaíochta\n\nDearfach:\n* Tá na bogearraí le haghaidh oiliúna agus tátal a bhaint as an tsamhail seo foinse oscailte.\n* Cruthaítear agus cuirtear oiliúint ar an tsamhail san áitreabh bunaithe ar shonraí an úsáideora féin.\n* Tá rochtain ag an úsáideoir ar na sonraí oiliúna, rud a fhágann gur féidir a sheiceáil nó a cheartú le haghaidh laofachta nó an fheidhmíocht agus an úsáid CO2 a bharrfheabhsú.\n\n### Achoimre Snáithe (rogha an diúltaithe)\n\n**Rátáil:** 🟢/🟡/🟠/🔴\n\nBraitheann an rátáil ar an inneall próiseála téacs suiteáilte. Féach [an forbhreathnú rátála](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) le haghaidh sonraí.\n\nFoghlaim tuilleadh faoi Rátáil Eiticiúil AI Nextcloud [inár mblag]( https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).",
-    "This event is in the past." : "Tá an ócáid ​​​​seo san am atá caite.",
-    "Collapse composer" : "Laghdaigh an cumadóir"
+    "Collapse composer" : "Laghdaigh an cumadóir",
+    "Uploading attachments …" : "Ceangaltáin á n-uaslódáil…",
+    "Sending …" : "Ag seoladh…"
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

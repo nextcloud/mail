@@ -5,7 +5,6 @@
 const path = require('path')
 const webpack = require('webpack')
 const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin')
-const { styles } = require('@ckeditor/ckeditor5-dev-utils')
 const { VueLoaderPlugin } = require('vue-loader')
 const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-modules-except')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
@@ -14,9 +13,10 @@ const { IgnorePlugin } = require('webpack')
 const appName = 'mail'
 const appVersion = require('./package.json').version
 
-function getPostCssConfig(ckEditorOpts) {
+async function getPostCssConfig(ckEditorOpts) {
 	// CKEditor is not compatbile with postcss@8 and postcss-loader@4 despite stating so.
 	// Adapted from https://github.com/ckeditor/ckeditor5/issues/8112#issuecomment-960579351
+	const { styles } = await import('@ckeditor/ckeditor5-dev-utils')
 	const { plugins, ...rest } = styles.getPostCssConfig(ckEditorOpts);
 	return { postcssOptions: { plugins }, ...rest };
 };
@@ -47,7 +47,7 @@ const plugins = [
 	}),
 ]
 
-module.exports = {
+module.exports = async () => ({
 	entry: {
 		autoredirect: path.join(__dirname, 'src/autoredirect.js'),
 		mail: path.join(__dirname, 'src/main.js'),
@@ -113,7 +113,7 @@ module.exports = {
 			{
 				test: /ckeditor5-[^/\\]+[/\\].+\.css$/,
 				loader: 'postcss-loader',
-				options: getPostCssConfig({
+				options: await getPostCssConfig({
 					themeImporter: {
 						themePath: require.resolve('@ckeditor/ckeditor5-theme-lark'),
 					},
@@ -127,4 +127,4 @@ module.exports = {
 		extensions: ['*', '.js', '.vue', '.json'],
 		symlinks: false,
 	},
-}
+})

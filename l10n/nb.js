@@ -427,8 +427,6 @@ OC.L10N.register(
     "Minimize composer" : "Minimer skrivevindu",
     "Error sending your message" : "Feil ved sending av meldingen din",
     "Retry" : "Prøv igjen",
-    "Uploading attachments …" : "Laster opp vedlegg…",
-    "Sending …" : "Sender…",
     "Warning sending your message" : "Advarsel sender meldingen din",
     "Send anyway" : "Send likevel",
     "Autoresponder off" : "Autosvar av",
@@ -730,7 +728,7 @@ OC.L10N.register(
     "The link leads to %s" : "Denne lenken leder til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Hvis du ikke vil besøke den siden, kan du gå tilbake til <a href=\"%s\">E-post</a>",
     "Continue to %s" : "Fortsett til %s",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n\n### Priority Inbox\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\n### Thread Summaries (opt-in)\n\n**Rating:** 🟢/🟡/🟠/🔴\n\nThe rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "**💌 En e-postapp for Nextcloud**\n\n- **🚀 Integrering med andre Nextcloud-apper!** For øyeblikket Contacts, Calendar & Files – mer følger.\n- **📥 Flere e-postkontoer!** Personlig konto og firmakonto? Ingen problem, og en fin enhetlig innboks. Koble til en hvilken som helst IMAP-konto.\n- **🔒 Send og motta krypterte e-poster!** Ved å bruke den flotte [Mailvelope] (https://mailvelope.com) nettleserutvidelsen.\n- **🙈 Vi finner ikke opp hjulet på nytt!** Basert på de store [Horde](https://horde.org) bibliotekene.\n- **📬 Vil du være vert for din egen e-postserver?** Vi trenger ikke å implementere dette på nytt slik du kan sette opp [Mail-in-a-Box](https://mailinabox.email)!\n\n## Etisk AI-vurdering\n\n### Prioritert innboks\n\nPositivt:\n* Programvaren for opplæring og slutning av denne modellen er åpen kildekode.\n* Modellen opprettes og læres opp lokalt basert på brukerens egne data.\n* Treningsdataene er tilgjengelige for brukeren, noe som gjør det mulig å kontrollere eller korrigere for skjevhet eller optimalisere ytelsen og CO2-bruken.\n\n### Trådsammendrag (meld deg på)\n\n**Vurdering:** 🟢/🟡/🟠/🔴\n\nRangeringen avhenger av den installerte tekstbehandlingsbackenden. Se [vurderingsoversikten](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for mer informasjon.\n\nLær mer om Nextcloud Ethical AI Rating [i bloggen vår](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).",
-    "This event is in the past." : "Denne hendelsen er i fortiden."
+    "Uploading attachments …" : "Laster opp vedlegg…",
+    "Sending …" : "Sender…"
 },
 "nplurals=2; plural=(n != 1);");

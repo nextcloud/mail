@@ -434,8 +434,6 @@
     "Minimize composer" : "コンポーザーを最小化する",
     "Error sending your message" : "メッセージ送信エラー",
     "Retry" : "再試行",
-    "Uploading attachments …" : "添付ファイルをアップロード",
-    "Sending …" : "送信中 …",
     "Warning sending your message" : "メッセージを送信する際の警告",
     "Send anyway" : "送信",
     "Autoresponder off" : "自動応答オフ",
@@ -770,7 +768,7 @@
     "The link leads to %s" : "リンクが %s につながります",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ページにアクセスしたくない場合は、<a href=\"%s\">メール</a>に戻ることができます",
     "Continue to %s" : "%s にリダイレクトする",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n\n### Priority Inbox\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\n### Thread Summaries (opt-in)\n\n**Rating:** 🟢/🟡/🟠/🔴\n\nThe rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "💌 Nextcloudのメールアプリ**\n\n- **🚀他のNextcloudアプリとの統合!** 現在、連絡先、カレンダー、ファイル - 今後さらに増えます。\n\n- **📥 複数のメールアカウント!**個人アカウントと会社のアカウント？問題ありません、そして素敵な統一された受信トレイ。任意のIMAPアカウントを接続します。\n\n- **🔒 暗号化されたメールを送受信!** 素晴らしい[Mailvelope](https://mailvelope.com)ブラウザ拡張機能を使用しています。\n\n- **🙈私たちは車輪を再発明していません！**偉大な[Horde](https://horde.org)ライブラリに基づいています。\n\n- **📬独自のメールサーバーをホストしたいですか？** [Mail-in-a-Box](https://mailinabox.email)を設定できるため、これを再実装する必要はありません。\n\n##倫理的なAI評価\n\n### 優先受信トレイ\n\nポジティブ：\n\n* このモデルのトレーニングと推論のためのソフトウェアはオープンソースです。\n\n*モデルは、ユーザー自身のデータに基づいてオンプレミスで作成およびトレーニングされます。\n\n*トレーニングデータはユーザーがアクセスできるため、バイアスを確認または修正したり、パフォーマンスとCO2使用量を最適化したりすることができます。\n\n### スレッドサマリー(オプトイン)\n\n**評価:** 🟢/🟡/🟠/🔴\n\n評価は、インストールされているテキスト処理バックエンドによって異なります。詳細については、[評価の概要](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html)を参照してください。\n\nNextcloud Ethical AI Ratingの詳細については、こちらをご覧ください(https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)。",
-    "This event is in the past." : "このイベントは終了しました"
+    "Uploading attachments …" : "添付ファイルをアップロード",
+    "Sending …" : "送信中 …"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

@@ -435,8 +435,6 @@
     "Minimize composer" : "Lágmarka ritil",
     "Error sending your message" : "Villa við að senda skilaboðin þín",
     "Retry" : "Reyna aftur",
-    "Uploading attachments …" : "Sendi inn viðhengi…",
-    "Sending …" : "Sendi ...",
     "Warning sending your message" : "Aðvörun við að senda skilaboðin þín",
     "Send anyway" : "Senda samt",
     "Welcome to {productName} Mail" : "Velkomin í {productName}-póstinn",
@@ -751,7 +749,7 @@
     "The link leads to %s" : "Tengillinn leiðir til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ef þú vilt ekki fara á þá síðu, geturðu farið til baka í <a href=\"%s\">póstforritið</a>.",
     "Continue to %s" : "Halda áfram í %s",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n\n### Priority Inbox\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\n### Thread Summaries (opt-in)\n\n**Rating:** 🟢/🟡/🟠/🔴\n\nThe rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "**💌 Póstforrit fyrir Nextcloud**\n\n- **🚀 Samþætting við önnur Nextcloud-forrit!** Núna eru það Tengiliðir, Dagatal og Skrár – meira á leiðinni.\n- **📥 Margir póstaðgangar!** Bæði persónulegur og vinnupóstur? Ekkert vandamál, og skemmtilegt sameinað inhólf að auki. Tengdu hvaða IMAP-aðgang sem er.\n- **🔒 Sendu og taktu við dulrituðum tölvupósti!** Með því að nota frábæru [Mailvelope](https://mailvelope.com) vafraviðaukann.\n- **🙈 Við erum ekki að finna upp hjólið!** Byggt á öflugum [Horde](https://horde.org) aðgerðasöfnum.\n- **📬 Viltu hýsa þinn eiginn póstþjón?** Við þurfum ekki að endurhanna þetta þar sem þú getur sett upp [Mail-in-a-Box](https://mailinabox.email)!\n\n## Siðræn einkunn AI-gervigreindar\n\n### Forgangspósthólf\n\nJákvætt:\n* Hugbúnaðurinn fyrir þjálfun og beitingu þessa líkans er opinn hugbúnaður.\n* Líkanið er búið til og þjálfað á staðnum út frá eigin gögnum notandans.\n* Þjálfunargögnin eru aðgengileg notandanum, sem gerir mögulegt að yfirfara og leiðrétta skekkjur eða að besta afköst eða kolefnisfótspor.\n\n### Samantektir spjallþráða (valkvætt)\n\n**Einkunn:** 🟢/🟡/🟠/🔴\n\nEinkunnin fer eftir uppsettum bakenda fyrir textavinnslu. Skoðaðu [yfirlitið um einkunnir](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) til að sjá nánari upplýsingar.\n\nKynntu þér betur einkunnagjöfina Nextcloud Ethical AI Rating [á blogginu okkar](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).",
-    "This event is in the past." : "Þessi atburður er liðinn."
+    "Uploading attachments …" : "Sendi inn viðhengi…",
+    "Sending …" : "Sendi ..."
 },"pluralForm" :"nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
 }

@@ -14,6 +14,8 @@ OC.L10N.register(
     "Save" : "Saglabāt",
     "Connect" : "Savienoties",
     "Password required" : "Nepieciešama parole",
+    "Account updated. Please follow the pop-up instructions to reconnect your Google account" : "Konts atjaunināts. Lūgums sekot uznirstošajām norādēm, lai atkārtoti savienotu savu Google kontu",
+    "Account updated. Please follow the pop-up instructions to reconnect your Microsoft account" : "Konts atjaunināts. Lūgums sekot uznirstošajām norādēm, lai atkārtoti savienotu savu Microsoft kontu",
     "Auto" : "Automātiski",
     "Name" : "Nosaukums",
     "Mail address" : "E-pasta adrese",
@@ -105,7 +107,6 @@ OC.L10N.register(
     "New message" : "Jauna ziņa",
     "Reply" : "Atbildēt",
     "Retry" : "Mēģināt vēlreiz",
-    "Sending …" : "Sūta …",
     "Autoresponder follows system settings" : "Automātiskais atbildētājs ievēro sistēmas iestatījumus",
     "Message" : "Ziņojums",
     "Copy to clipboard" : "Kopēt starpliktuvē",
@@ -150,6 +151,7 @@ OC.L10N.register(
     "Trash" : "Miskaste",
     "Error while sharing file" : "Kļūda datnes kopīgošanā",
     "{from}\n{subject}" : "{from}\n{subject}",
+    "There is already a message in progress. All unsaved changes will be lost if you continue!" : "Jau tiek apstrādāts ziņojums. Tiks zaudētas visas nesaglabātas izmaiņas, ja turpināsi.",
     "Discard unsaved changes" : "Atmest nesaglabātās izmaiņas",
     "Could not load {tag}{name}{endtag}" : "Nevarēja ielādēt {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Radusies problēma, ielādējot {tag}{name}{endtag}",
@@ -158,6 +160,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Jāklikšķina šeit, ja nenotiek automātiska pārvirzīšana dažu sekunžu laikā.",
     "Redirect" : "Novirzīt",
     "The link leads to %s" : "Saite, kas ved uz %s",
-    "Continue to %s" : "Turpināt %s"
+    "Continue to %s" : "Turpināt %s",
+    "Sending …" : "Sūta …"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

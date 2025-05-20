@@ -384,7 +384,7 @@ export default {
 		 */
 		targetCalendarDavObject() {
 			return this.clonedWriteableCalendars.find((cal) => cal.url === this.targetCalendar.url)
-		}
+		},
 	},
 	watch: {
 		attachedVEvent: {
@@ -400,9 +400,8 @@ export default {
 					return
 				}
 
-				const defaultCalendar = calendarsForPicker.find(
-					(cal) => cal.url === this.currentUserPrincipal.scheduleDefaultCalendarUrl
-				)
+				const defaultCalendar = calendarsForPicker.find((cal) => cal.url === this.currentUserPrincipal.scheduleDefaultCalendarUrl)
+
 				if (defaultCalendar) {
 					this.targetCalendar = defaultCalendar
 				} else if (calendarsForPicker.length > 0) {

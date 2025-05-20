@@ -391,6 +391,7 @@
     "Loading …" : "正在載入……",
     "Not supported by the server" : "不被伺服器支援",
     "{usage} of {limit} used" : "已使用 {limit} 中的 {usage}",
+    "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "無法建立信箱。該名稱可能包含無效字元。請嘗試其他名稱。",
     "Remove account" : "移除帳號",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "{email} 帳號與已快取的電子郵件將會從 Nextcloud 移除，但不會從您的電子郵件提供商移除。",
     "Remove {email}" : "移除 {email}",
@@ -448,8 +449,6 @@
     "Minimize composer" : "最小化編輯器",
     "Error sending your message" : "傳送您的郵件時發生錯誤",
     "Retry" : "重試",
-    "Uploading attachments …" : "正在上傳附件……",
-    "Sending …" : "正在傳送……",
     "Warning sending your message" : "在傳送您的郵件時警告",
     "Send anyway" : "無論無何都要傳送",
     "Welcome to {productName} Mail" : "歡迎使用 {productName} Mail",
@@ -772,6 +771,7 @@
     "Keep editing message" : "保留編輯中的訊息",
     "Attachments were not copied. Please add them manually." : "未複製附件。請手動新增它們。",
     "Could not create snooze mailbox" : "無法建立暫停郵件信箱",
+    "Sending message…" : "正在傳送訊息……",
     "Message sent" : "已傳送郵件",
     "Could not send message" : "無法傳送郵件",
     "Message copied to \"Sent\" mailbox" : "訊息已複製到「寄件備份」信箱",
@@ -788,8 +788,8 @@
     "The link leads to %s" : "該連結導向至 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "若不想造訪該頁，您可以回到<a href=\"%s\">郵件</a>。",
     "Continue to %s" : "前往 %s",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n\n### Priority Inbox\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\n### Thread Summaries (opt-in)\n\n**Rating:** 🟢/🟡/🟠/🔴\n\nThe rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "**💌 Nextcloud 的郵件應用程式**\n\n- **🚀 與其他 Nextcloud 應用程式整合！**目前有通訊錄、日曆與檔案，還有更多即將到來的應用程式整合。\n- **📥 多重郵件帳號！**私人與公司帳號？沒問題，還有一個很好的統一收件匣。連線到任何 IMAP 帳號。\n- **🔒 傳送與接收加密郵件！**使用超棒的 [Mailvelope](https://mailvelope.com) 瀏覽器擴充套件。\n- **🙈 我們並未重新發明輪子！**而是以超棒的 [Horde](https://horde.org) 函式庫為基礎開發。\n- **📬 想要架設您自己的郵件伺服器嗎？**我們不必重新實做它，因為您可以架設 [Mail-in-a-Box](https://mailinabox.email)！\n\n## 道德人工智慧評分\n\n### 優先收件匣\n\n正面：\n* 該模型的訓練與推理軟體是開放原始碼的。\n* 該模型是根據使用者自己的資料在本機建立與訓練的。\n* 使用者可以存取訓練資料，因而可以檢查、糾正偏差或最佳化效能與二氧化碳的排放量。\n\n### 郵件串摘要（選擇性加入）\n\n**評分：** 🟢/🟡/🟠/🔴\n\n評分取決於安裝的文字處理後端。請見[評分概覽](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html)以取得更多資訊。\n\n[在我們的部落格](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)取得更多關於 Nextcloud 道德人工智慧評分的資訊。",
-    "This event is in the past." : "此活動發生於過去。",
-    "Collapse composer" : "折疊編輯器"
+    "Collapse composer" : "折疊編輯器",
+    "Uploading attachments …" : "正在上傳附件……",
+    "Sending …" : "正在傳送……"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

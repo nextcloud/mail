@@ -226,8 +226,6 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Pokušavate poslati poruku velikom broju primatelja koji su navedeni u poljima Za i/ili Cc. Razmislite o korištenju polja Bcc kako adrese primatelja ne bi bile vidljive.",
     "Error sending your message" : "Pogreška pri slanju poruke",
     "Retry" : "Pokušaj ponovno",
-    "Uploading attachments …" : "Otpremanje privitaka...",
-    "Sending …" : "Slanje…",
     "Warning sending your message" : "Upozorenje pri slanju poruke",
     "Send anyway" : "Svejedno pošalji",
     "Message" : "Poruka",
@@ -379,6 +377,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Kliknite ovdje ako niste preusmjereni automatski unutar sljedećih nekoliko sekundi.",
     "Redirect" : "Preusmjeri",
     "The link leads to %s" : "Ova poveznica vodi do %s",
-    "Continue to %s" : "Idi do %s"
+    "Continue to %s" : "Idi do %s",
+    "Uploading attachments …" : "Otpremanje privitaka...",
+    "Sending …" : "Slanje…"
 },
 "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");

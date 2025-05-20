@@ -254,8 +254,6 @@ OC.L10N.register(
     "Reply" : "Svara",
     "Error sending your message" : "Ett fel inträffade när ditt meddelande skulle skickas",
     "Retry" : "Försök igen",
-    "Uploading attachments …" : "Laddar upp bilagor ...",
-    "Sending …" : "Skickar ...",
     "Send anyway" : "Skicka ändå",
     "First day" : "Första dagen",
     "Message" : "Meddelande",
@@ -377,6 +375,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klicka här om du inte blir omdirigerad inom några sekunder.",
     "Redirect" : "Omdirigera",
     "The link leads to %s" : "Länken pekar mot %s",
-    "Continue to %s" : "Fortsätt till %s"
+    "Continue to %s" : "Fortsätt till %s",
+    "Uploading attachments …" : "Laddar upp bilagor ...",
+    "Sending …" : "Skickar ..."
 },
 "nplurals=2; plural=(n != 1);");

@@ -98,7 +98,6 @@ OC.L10N.register(
     "New message" : "Nuwe boodskap",
     "Reply" : "Antwoord",
     "Retry" : "Herprobeer",
-    "Sending …" : "Stuur…",
     "Add" : "Voeg by",
     "Date" : "Datum",
     "Tags" : "Etikette",
@@ -127,6 +126,7 @@ OC.L10N.register(
     "Forwarding to %s" : "Stuur aan na %s",
     "Click here if you are not automatically redirected within the next few seconds." : "Klik hier indien u nie binne die volgende paar sekondes outomaties herverwys word nie.",
     "Redirect" : "Herverwys",
-    "The link leads to %s" : "Die skakel lei na %s"
+    "The link leads to %s" : "Die skakel lei na %s",
+    "Sending …" : "Stuur…"
 },
 "nplurals=2; plural=(n != 1);");

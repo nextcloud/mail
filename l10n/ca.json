@@ -441,8 +441,6 @@
     "Minimize composer" : "Minimitzar el compositor",
     "Error sending your message" : "S'ha produït un error mentre s'enviava el vostre missatge",
     "Retry" : "Reintenta",
-    "Uploading attachments …" : "S'estan carregant els adjunts …",
-    "Sending …" : "S'està enviant …",
     "Warning sending your message" : "Avís enviant el teu missatge",
     "Send anyway" : "Envia igualment",
     "Welcome to {productName} Mail" : "Benvingut a Correu {productName}",
@@ -780,8 +778,8 @@
     "The link leads to %s" : "L'enllaç porta a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no voleu visitar aquesta pàgina, podeu tornar a <a href=\"%s\">Correu</a>.",
     "Continue to %s" : "Continua a %s",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n\n### Priority Inbox\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\n### Thread Summaries (opt-in)\n\n**Rating:** 🟢/🟡/🟠/🔴\n\nThe rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "**💌 Una aplicació de correu per a Nextcloud**\n\n- **🚀 Integració amb altres aplicacions de Nextcloud!** Actualment Contactes, Calendari i Fitxers: més per venir.\n- **📥 Múltiples comptes de correu!** Compte personal i d'empresa? Cap problema i una bonica safata d'entrada unificada. Connecteu qualsevol compte IMAP.\n- **🔒 Envia i rep correus electrònics xifrats!** Amb la fantàstica extensió del navegador [Mailvelope](https://mailvelope.com).\n- **🙈 No estem reinventant la roda!** Basat en les grans biblioteques [Horde](https://horde.org).\n- **📬 Voleu allotjar el vostre propi servidor de correu?** No hem de tornar a implementar-ho, ja que podeu configurar [Mail-in-a-Box](https://mailinabox.email)!\n\n## Classificació ètica de l'IA\n\n### Safata d'entrada prioritària\n\nPositiu:\n* El programari per a la formació i la inferència d'aquest model és de codi obert.\n* El model es crea i s'entrena localment a partir de les dades pròpies de l'usuari.\n* Les dades d'entrenament són accessibles per a l'usuari, cosa que permet comprovar o corregir el biaix o optimitzar el rendiment i l'ús de CO2.\n\n### Resums de conversa (activació)\n\n**Valoració:** 🟢/🟡/🟠/🔴\n\nLa qualificació depèn del rerefons de processament de text instal·lat. Consulteu [la visió general de la classificació](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) per obtenir més informació.\n\nObteniu més informació sobre la qualificació d'IA ètica de Nextcloud [al nostre bloc](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).",
-    "This event is in the past." : "Aquest esdeveniment és en el passat.",
-    "Collapse composer" : "Col·lapse el compositor"
+    "Collapse composer" : "Col·lapse el compositor",
+    "Uploading attachments …" : "S'estan carregant els adjunts …",
+    "Sending …" : "S'està enviant …"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -62,7 +62,6 @@ OC.L10N.register(
     "New message" : "шинэ зурвас",
     "Reply" : "хариулт",
     "Retry" : "Дахин оролдох",
-    "Sending …" : "илгээмж",
     "Add" : "нэмэх",
     "Date" : "Он сар өдөр",
     "Tags" : "Tag-үүд",
@@ -83,6 +82,7 @@ OC.L10N.register(
     "Junk" : "хэрэггүй",
     "Sent" : "илгээсэн",
     "Trash" : "хог",
-    "Error loading message" : "алдаатай ачааллах зурвас"
+    "Error loading message" : "алдаатай ачааллах зурвас",
+    "Sending …" : "илгээмж"
 },
 "nplurals=2; plural=(n != 1);");

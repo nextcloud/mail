@@ -1,12 +1,11 @@
-/**
- * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
- * SPDX-License-Identifier: AGPL-3.0-or-later
- */
-
+<!--
+  - SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<div class="recipient-info">
 		<!-- For a single recipient -->
-		<div v-if="recipients.length === 1" class="recipient-info__single">
+		<div v-if="recipients && recipients.length === 1" class="recipient-info__single">
 			<div class="recipient-info__header">
 				<div class="recipient-info__avatar">
 					<Avatar :display-name="recipients[0].label"
@@ -22,7 +21,7 @@
 		</div>
 
 		<!-- For multiple recipients -->
-		<div v-else class="recipient-info__multiple">
+		<div v-else-if="recipients && recipients.length > 1" class="recipient-info__multiple">
 			<div v-for="(recipient, index) in recipients" :key="recipient.email" class="recipient-info__item">
 				<div class="recipient-info__header">
 					<div class="recipient-info__avatar">
@@ -79,7 +78,7 @@ export default {
 	computed: {
 		...mapGetters(useMainStore, ['composerMessage']),
 		recipients() {
-			return this.composerMessage.data.to
+			return Array.isArray(this.composerMessage.data.to) ? this.composerMessage.data.to : []
 		},
 	},
 	watch: {

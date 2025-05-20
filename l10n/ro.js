@@ -357,8 +357,6 @@ OC.L10N.register(
     "Minimize composer" : "Minimizează editorul",
     "Error sending your message" : "Eroare la transmiterea mesajului",
     "Retry" : "Reîncearcă",
-    "Uploading attachments …" : "Încarcă atașamentele ...",
-    "Sending …" : "Se trimite...",
     "Warning sending your message" : "Avertizare la transmiterea mesajului",
     "Send anyway" : "Trimite oricum",
     "Autoresponder off" : "Autoresponder oprit",
@@ -526,7 +524,7 @@ OC.L10N.register(
     "The link leads to %s" : "Link-ul duce la %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Dacă nu doriți să vizitați acea pagină, vă puteți întoarce la <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continuă către %s",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n\n### Priority Inbox\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\n### Thread Summaries (opt-in)\n\n**Rating:** 🟢/🟡/🟠/🔴\n\nThe rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "**💌 O aplicație de mail pentru Nextcloud**\n\n- **🚀 Integrare cu celelalte aplicații Nextcloud!** În prezent Contacte, Calendar & Fișiere – mai multe în curând.\n- **📥 Conturi de mail multiple!** Cont personal și de serviciu? Nicio problemă, și in Inbox unificat și plăcut. Conectați orice cont IMAP.\n- **🔒 Trimiteți & primiți mailuri criptate!** Utilizând extensia de browser [Mailvelope](https://mailvelope.com).\n- **🙈 Nu reinventăm roata!** Bazat pe bibliotecile [Horde](https://horde.org).\n- **📬 Doriți să găzduiți propriul server de mail?** Nu trebuie să reimplementăm aceasta deoarece puteți configura [Mail-in-a-Box](https://mailinabox.email)!\n\n## Rating AI Etic\n\n### Mesaje primite prioritare\n\nPozitiv:\n* Softul pentru antrenare și inferență a acestui model este open source.\n* Modelul este creat și antrenat local, pe baza datelor utilizatorului.\n* Datele modelului sunt accesibile utilizatorului, făcând posibilă verificarea și corectarea abaterilor sau optimizarea performanței și a nivelului de CO2.\n\n### Rezumat conversație (opțional)\n\n**Rating:** 🟢/🟡/🟠/🔴\n\nRatingul depinde de backendul de procesare de text instalat. Vedeți [prezentare generală a ratingului](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) pentru detalii.\n\nAflați mai multe despre Ratingul AI Etic al Nextcloud [în blogul nostru](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).",
-    "This event is in the past." : "Evenimentul este în trecut"
+    "Uploading attachments …" : "Încarcă atașamentele ...",
+    "Sending …" : "Se trimite..."
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");

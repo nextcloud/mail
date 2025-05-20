@@ -392,6 +392,7 @@ OC.L10N.register(
     "Loading …" : "Načítání…",
     "Not supported by the server" : "Nepodporováno serverem",
     "{usage} of {limit} used" : "využito {usage} z {limit}",
+    "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Schránku nebylo možné vytvořit. Název nejspíš obsahuje neplatné znaky. Zkuste jiný název.",
     "Remove account" : "Odebrat účet",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Účet pro {email} a data e-mailů, uložených v mezipaměti, budou odebrána z Nextcloud, ale ne z poskytovatele e-mailů.",
     "Remove {email}" : "Odebrat {email}",
@@ -449,8 +450,6 @@ OC.L10N.register(
     "Minimize composer" : "Minimalizovat dialog psaní",
     "Error sending your message" : "Chyba při odesílání vaší zprávy",
     "Retry" : "Zkusit znovu",
-    "Uploading attachments …" : "Nahrávání příloh…",
-    "Sending …" : "Odesílání…",
     "Warning sending your message" : "Varování při odesílání vaší zprávy",
     "Send anyway" : "Poslat i tak",
     "Welcome to {productName} Mail" : "Vítejte v {productName} Poště",
@@ -773,6 +772,7 @@ OC.L10N.register(
     "Keep editing message" : "Pokračovat v upravování zprávy",
     "Attachments were not copied. Please add them manually." : "Přílohy nebyly zkopírovány. Přidejte je ručně.",
     "Could not create snooze mailbox" : "Nepodařilo se vytvořit schránku pro odložené",
+    "Sending message…" : "Odesílání zprávy…",
     "Message sent" : "Zpráva odeslána",
     "Could not send message" : "Zprávu se nepodařilo odeslat",
     "Message copied to \"Sent\" mailbox" : "Zpráva zkopírována do složky „Odeslané“",
@@ -789,7 +789,8 @@ OC.L10N.register(
     "The link leads to %s" : "Odkaz vede na %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Pokud nechcete tuto stránku navštívit, můžete se vrátit do <a href=\"%s\">e-mailu</a>.",
     "Continue to %s" : "Pokračovat na %s",
-    "This event is in the past." : "Tato událost je v minulosti.",
-    "Collapse composer" : "Sbalit editor psaní"
+    "Collapse composer" : "Sbalit editor psaní",
+    "Uploading attachments …" : "Nahrávání příloh…",
+    "Sending …" : "Odesílání…"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

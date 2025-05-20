@@ -45,7 +45,6 @@ OC.L10N.register(
     "Rename" : "Adı dəyiş",
     "Clear cache" : "Keşi təmizlə",
     "Reply" : "Cavab",
-    "Sending …" : "Göndərilir...",
     "Add" : "Əlavə etmək",
     "Close" : "Bağla",
     "Date" : "Date",
@@ -68,6 +67,7 @@ OC.L10N.register(
     "Junk" : "Önəmsiz",
     "Sent" : "Göndərildi",
     "Trash" : "Zibil",
-    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi"
+    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi",
+    "Sending …" : "Göndərilir..."
 },
 "nplurals=2; plural=(n != 1);");
