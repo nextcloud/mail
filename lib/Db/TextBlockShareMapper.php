@@ -60,10 +60,6 @@ class TextBlockShareMapper extends QBMapper {
 		return false;
 	}
 
-	/**
-	 * @param string $owner
-	 * @return TextBlockShare[]
-	 */
 	public function findAllShares(string $owner): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('sshare.*')

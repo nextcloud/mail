@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
@@ -26,9 +26,7 @@ class TextBlockMapper extends QBMapper {
 	}
 
 	/**
-	 * @param int $id
-	 * @param string $owner
-	 * @return TextBlock|null
+	 * @throws DoesNotExistException
 	 */
 	public function find(int $id, string $owner): ?TextBlock {
 		$qb = $this->db->getQueryBuilder();
@@ -36,17 +34,9 @@ class TextBlockMapper extends QBMapper {
 			->from($this->getTableName())
 			->where($qb->expr()->eq('id', $qb->createNamedParameter($id)))
 			->andWhere($qb->expr()->eq('owner', $qb->createNamedParameter($owner)));
-		try {
-			return $this->findEntity($qb);
-		} catch (DoesNotExistException $e) {
-			return null;
-		}
+		return $this->findEntity($qb);
 	}
 
-	/**
-	 * @param string $owner
-	 * @return TextBlock[]
-	 */
 	public function findAll(string $owner): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
@@ -58,11 +48,6 @@ class TextBlockMapper extends QBMapper {
 		return $this->findEntities($qb);
 	}
 
-	/**
-	 * @param string $userId
-	 * @param array $groups
-	 * @return TextBlock[]
-	 */
 	public function findSharedWithMe(string $userId, array $groups): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('s.*')

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
@@ -11,6 +11,7 @@ namespace OCA\Mail\Controller;
 
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Db\TextBlockShare;
+use OCA\Mail\Exception\UserNotFoundException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\TextBlockService;
@@ -44,30 +45,21 @@ class TextBlockSharesController extends Controller {
 		}
 		try {
 			$textBlocks = $this->textBlockService->findAllSharedWithMe($this->uid);
-		} catch (DoesNotExistException $e) {
+		} catch (UserNotFoundException $e) {
 			return JsonResponse::error('Sharee not found', Http::STATUS_UNAUTHORIZED);
 		}
 
 		return JsonResponse::success($textBlocks);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @param int $textBlockId
-	 * @param string $shareWith
-	 * @param string $type
-	 *
-	 * @return JsonResponse
-	 */
 	#[TrapError]
 	public function create(int $textBlockId, string $shareWith, string $type): JsonResponse {
 		if ($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
-
-		$textBlock = $this->textBlockService->find($textBlockId, $this->uid);
-
-		if ($textBlock === null) {
+		try {
+			$this->textBlockService->find($textBlockId, $this->uid);
+		} catch (DoesNotExistException $e) {
 			return JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
 		}
 
@@ -83,22 +75,15 @@ class TextBlockSharesController extends Controller {
 		}
 
 	}
-	/**
-	 * @NoAdminRequired
-	 * @param int $id
-	 * @param string $shareWith
-	 *
-	 * @return JsonResponse
-	 */
+
 	#[TrapError]
 	public function destroy(int $id, string $shareWith): JsonResponse {
 		if ($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
-
-		$textBlock = $this->textBlockService->find($id, $this->uid);
-
-		if ($textBlock === null) {
+		try {
+			$this->textBlockService->find($id, $this->uid);
+		} catch (DoesNotExistException $e) {
 			return JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
 		}
 
@@ -107,20 +92,14 @@ class TextBlockSharesController extends Controller {
 		return JsonResponse::success();
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @param int $id
-	 *
-	 * @return JsonResponse
-	 */
 	public function getTextBlockShares(int $id): JsonResponse {
 		if ($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 
-		$textBlock = $this->textBlockService->find($id, $this->uid);
-
-		if ($textBlock === null) {
+		try {
+			$this->textBlockService->find($id, $this->uid);
+		} catch (DoesNotExistException $e) {
 			return JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
 		}
 
