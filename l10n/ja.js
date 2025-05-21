@@ -265,7 +265,9 @@ OC.L10N.register(
     "Unsnooze" : "スヌーズを解除する",
     "Move thread" : "スレッドを移動する",
     "Archive thread" : "スレッドをアーカイブする",
+    "Archive message" : "メッセージをアーカイブする",
     "Delete thread" : "スレッドを削除",
+    "Delete message" : "メッセージを削除",
     "More actions" : "その他のアクション",
     "Back" : "戻る",
     "Set custom snooze" : "カスタムスヌーズを設定する",
@@ -551,8 +553,6 @@ OC.L10N.register(
     "Mark as favorite" : "お気に入りにする",
     "Mark as unread" : "未読にする",
     "Mark as read" : "既読にする",
-    "Archive message" : "メッセージをアーカイブする",
-    "Delete message" : "メッセージを削除",
     "Message source" : "メッセージソース",
     "Unsubscribe via link" : "リンク経由で購読を解除する",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "リスト{sender}から全ての配信メッセージを停止する",
@@ -769,8 +769,6 @@ OC.L10N.register(
     "Redirect" : "リダイレクト",
     "The link leads to %s" : "リンクが %s につながります",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ページにアクセスしたくない場合は、<a href=\"%s\">メール</a>に戻ることができます",
-    "Continue to %s" : "%s にリダイレクトする",
-    "Uploading attachments …" : "添付ファイルをアップロード",
-    "Sending …" : "送信中 …"
+    "Continue to %s" : "%s にリダイレクトする"
 },
 "nplurals=1; plural=0;");

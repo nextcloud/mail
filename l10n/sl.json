@@ -198,7 +198,9 @@
     "Edit tags" : "Uredi oznake",
     "Move thread" : "Premakni nit",
     "Archive thread" : "Nit arhiva",
+    "Archive message" : "Arhiviraj sporočilo",
     "Delete thread" : "Izbriši nit",
+    "Delete message" : "Izbriši sporočilo",
     "More actions" : "Več dejanj",
     "Back" : "Nazaj",
     "Edit as new message" : "Uredi kot novo sporočilo",
@@ -408,8 +410,6 @@
     "Mark as favorite" : "Označi kot priljubljeno",
     "Mark as unread" : "Označi kot neprebrano",
     "Mark as read" : "Označi kot prebrano",
-    "Archive message" : "Arhiviraj sporočilo",
-    "Delete message" : "Izbriši sporočilo",
     "Message source" : "Vir sporočila",
     "The message could not be translated" : "Sporočila ni mogoče prevesti",
     "Translation copied to clipboard" : "Prevod je kopiran v odložišče",
@@ -535,8 +535,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Če vas sistem v nekaj sekundah ne preusmeri samodejno, pritisnite na to mesto.",
     "Redirect" : "Preusmeri",
     "The link leads to %s" : "Povezava vodi do %s",
-    "Continue to %s" : "Nadaljuj na %s",
-    "Uploading attachments …" : "Poteka pošiljanje prilog ...",
-    "Sending …" : "Poteka pošiljanje ..."
+    "Continue to %s" : "Nadaljuj na %s"
 },"pluralForm" :"nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);"
 }

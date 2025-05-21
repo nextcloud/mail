@@ -192,7 +192,9 @@ OC.L10N.register(
     "Snooze" : "Torkuta",
     "Move thread" : "Siirrä ketju",
     "Archive thread" : "Arkistoi ketju",
+    "Archive message" : "Arkistoi viesti",
     "Delete thread" : "Poista ketju",
+    "Delete message" : "Poista viesti",
     "More actions" : "Lisää toimintoja",
     "Back" : "Takaisin",
     "Set custom snooze" : "Aseta mukautettu torkutus",
@@ -381,8 +383,6 @@ OC.L10N.register(
     "Mark as favorite" : "Merkitse suosikiksi",
     "Mark as unread" : "Merkitse lukemattomaksi",
     "Mark as read" : "Merkitse luetuksi",
-    "Archive message" : "Arkistoi viesti",
-    "Delete message" : "Poista viesti",
     "Message source" : "Viestin lähde",
     "The message could not be translated" : "Viestiä ei voitu kääntää",
     "Translation copied to clipboard" : "Käännös kopioitu leikepöydälle",
@@ -496,8 +496,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klikkaa jos sinua ei uudelleenohjata automaattisesti muutamaan sekuntiin.",
     "Redirect" : "Uudelleenohjaus",
     "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
-    "Continue to %s" : "Jatka sivulle %s",
-    "Uploading attachments …" : "Lähetetään liitteitä…",
-    "Sending …" : "Lähetetään…"
+    "Continue to %s" : "Jatka sivulle %s"
 },
 "nplurals=2; plural=(n != 1);");

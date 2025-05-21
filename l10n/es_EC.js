@@ -192,7 +192,9 @@ OC.L10N.register(
     "Edit tags" : "Editar etiquetas",
     "Move thread" : "Mover hilo",
     "Archive thread" : "Archivar hilo",
+    "Archive message" : "Archivar mensaje",
     "Delete thread" : "Eliminar hilo",
+    "Delete message" : "Eliminar mensaje",
     "More actions" : "Más acciones",
     "Back" : "Atrás",
     "Edit as new message" : "Editar como nuevo mensaje",
@@ -419,8 +421,6 @@ OC.L10N.register(
     "Mark as favorite" : "Marcar como favorito",
     "Mark as unread" : "Marcar como no leído",
     "Mark as read" : "Marcar como leído",
-    "Archive message" : "Archivar mensaje",
-    "Delete message" : "Eliminar mensaje",
     "Message source" : "Origen del mensaje",
     "Unsubscribe via link" : "Cancelar suscripción mediante enlace",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Cancelar la suscripción detendrá todos los mensajes de la lista de correo {sender}",
@@ -589,8 +589,6 @@ OC.L10N.register(
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no deseas visitar esa página, puedes regresar a <a href=\"%s\">Correo</a>.",
-    "Continue to %s" : "Continuar a %s",
-    "Uploading attachments …" : "Subiendo adjuntos...",
-    "Sending …" : "Enviando ..."
+    "Continue to %s" : "Continuar a %s"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

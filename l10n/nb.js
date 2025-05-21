@@ -258,7 +258,9 @@ OC.L10N.register(
     "Unsnooze" : "Opphev slumring",
     "Move thread" : "Flytt tråden",
     "Archive thread" : "Arkiver tråd",
+    "Archive message" : "Arkiver melding",
     "Delete thread" : "Slett tråden",
+    "Delete message" : "Slett melding",
     "More actions" : "Flere handlinger",
     "Back" : "Tilbake",
     "Set custom snooze" : "Angi tilpasset slumring",
@@ -538,8 +540,6 @@ OC.L10N.register(
     "Mark as favorite" : "Merk som favoritt",
     "Mark as unread" : "Merk som ulest",
     "Mark as read" : "Merk som lest",
-    "Archive message" : "Arkiver melding",
-    "Delete message" : "Slett melding",
     "Message source" : "Melding kilde",
     "Unsubscribe via link" : "Avslutt abonnement via kobling",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Hvis du avslutter abonnementet, stoppes alle meldinger fra adresselisten {avsender}",
@@ -727,8 +727,6 @@ OC.L10N.register(
     "Redirect" : "Videresend",
     "The link leads to %s" : "Denne lenken leder til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Hvis du ikke vil besøke den siden, kan du gå tilbake til <a href=\"%s\">E-post</a>",
-    "Continue to %s" : "Fortsett til %s",
-    "Uploading attachments …" : "Laster opp vedlegg…",
-    "Sending …" : "Sender…"
+    "Continue to %s" : "Fortsett til %s"
 },
 "nplurals=2; plural=(n != 1);");

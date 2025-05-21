@@ -261,7 +261,9 @@ OC.L10N.register(
     "Unsnooze" : "Unsnooze",
     "Move thread" : "تېمىنى يۆتكەڭ",
     "Archive thread" : "ئارخىپ تېمىسى",
+    "Archive message" : "ئارخىپ ئۇچۇرى",
     "Delete thread" : "تېمىنى ئۆچۈرۈڭ",
+    "Delete message" : "ئۇچۇرنى ئۆچۈرۈڭ",
     "More actions" : "تېخىمۇ كۆپ ھەرىكەت",
     "Back" : "قايتىش",
     "Set custom snooze" : "ئىختىيارى ئۇخلاشنى تەڭشەڭ",
@@ -531,8 +533,6 @@ OC.L10N.register(
     "Mark as favorite" : "ياقتۇرىدىغان دەپ بەلگە قويۇڭ",
     "Mark as unread" : "ئوقۇلمىغان دەپ بەلگە قويۇڭ",
     "Mark as read" : "ئوقۇغاندەك بەلگە قويۇڭ",
-    "Archive message" : "ئارخىپ ئۇچۇرى",
-    "Delete message" : "ئۇچۇرنى ئۆچۈرۈڭ",
     "Message source" : "ئۇچۇر مەنبەسى",
     "Unsubscribe via link" : "ئۇلىنىش ئارقىلىق مۇشتەرى بولۇڭ",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "مۇشتەرى بولۇش خەت ئەۋەتىش تىزىملىكىدىكى بارلىق ئۇچۇرلارنى توختىتىدۇ {sender}",
@@ -746,8 +746,6 @@ OC.L10N.register(
     "Redirect" : "قايتا نىشانلاش",
     "The link leads to %s" : "ئۇلىنىش% s نى كەلتۈرۈپ چىقىرىدۇ",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ئەگەر ئۇ بەتنى زىيارەت قىلىشنى خالىمىسىڭىز ، <a href = \"% s\"> خەت </a> گە قايتسىڭىز بولىدۇ.",
-    "Continue to %s" : "داۋاملىق% s",
-    "Uploading attachments …" : "قوشۇمچە ھۆججەتلەرنى يۈكلەۋاتىدۇ…",
-    "Sending …" : "ئەۋەتىش…"
+    "Continue to %s" : "داۋاملىق% s"
 },
 "nplurals=2; plural=(n != 1);");

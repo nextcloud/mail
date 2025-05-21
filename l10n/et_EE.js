@@ -184,7 +184,9 @@ OC.L10N.register(
     "Edit tags" : "Muuda silte",
     "Move thread" : "Tõsta jutulõng mujale",
     "Archive thread" : "Arhiveeri jutulõng",
+    "Archive message" : "Arhiveeri kiri",
     "Delete thread" : "Kustuta jutulõng",
+    "Delete message" : "Kustuta kiri",
     "More actions" : "Täiendavad tegevused",
     "Back" : "Tagasi",
     "Create event" : "Lisa sündmus",
@@ -391,8 +393,6 @@ OC.L10N.register(
     "Mark as favorite" : "Märgi lemmikuks",
     "Mark as unread" : "Märgi mitteloetuks",
     "Mark as read" : "Märgi loetuks",
-    "Archive message" : "Arhiveeri kiri",
-    "Delete message" : "Kustuta kiri",
     "Thread summary" : "Jutulõnga kokkuvõte",
     "Please select languages to translate to and from" : "Palun vali keeled, mille vahel tahad tõlkida",
     "The message could not be translated" : "E-kirja tõlkimine ei õnnestunud",
@@ -506,9 +506,6 @@ OC.L10N.register(
     "Forwarding to %s" : "Edasta %s",
     "Redirect" : "Suunamine",
     "The link leads to %s" : "Link viitab siia: %s",
-    "Continue to %s" : "Jätka siit: %s",
-    "Collapse composer" : "Ahenda kirjutusvaade",
-    "Uploading attachments …" : "Manused on üleslaadimisel…",
-    "Sending …" : "Saadan..."
+    "Continue to %s" : "Jätka siit: %s"
 },
 "nplurals=2; plural=(n != 1);");

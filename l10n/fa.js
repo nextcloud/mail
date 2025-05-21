@@ -213,7 +213,9 @@ OC.L10N.register(
     "Snooze" : "Snooze",
     "Move thread" : "Move thread",
     "Archive thread" : "Archive thread",
+    "Archive message" : "Archive message",
     "Delete thread" : "Delete thread",
+    "Delete message" : "Delete message",
     "More actions" : "اقدامات بیشتر",
     "Back" : "بازگشت",
     "Set custom snooze" : "Set custom snooze",
@@ -445,8 +447,6 @@ OC.L10N.register(
     "Mark as favorite" : "Mark as favorite",
     "Mark as unread" : "علامت به عنوان خوانده‌نشده",
     "Mark as read" : "علامت به عنوان خوانده‌شده",
-    "Archive message" : "Archive message",
-    "Delete message" : "Delete message",
     "Message source" : "Message source",
     "Unsubscribe via link" : "Unsubscribe via link",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Unsubscribing will stop all messages from the mailing list {sender}",
@@ -611,8 +611,6 @@ OC.L10N.register(
     "Redirect" : "تغییر مسیر",
     "The link leads to %s" : "پیوند منجر به%s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "ادامه دهید%s",
-    "Uploading attachments …" : "درحال بارگذاری پیوستها …",
-    "Sending …" : "در حال ارسال ..."
+    "Continue to %s" : "ادامه دهید%s"
 },
 "nplurals=2; plural=(n > 1);");

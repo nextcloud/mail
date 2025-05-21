@@ -272,7 +272,9 @@ OC.L10N.register(
     "Unsnooze" : "Ertelemeyi kaldır",
     "Move thread" : "Yazışmayı taşı",
     "Archive thread" : "Yazışmayı arşivle",
+    "Archive message" : "İletiyi arşivle",
     "Delete thread" : "Yazışmayı sil",
+    "Delete message" : "İletiyi sil",
     "More actions" : "Diğer işlemler",
     "Back" : "Geri",
     "Set custom snooze" : "Özel erteleme ayarla",
@@ -567,8 +569,6 @@ OC.L10N.register(
     "Mark as favorite" : "Sık kullanılanlara ekle",
     "Mark as unread" : "Okunmamış olarak işaretle",
     "Mark as read" : "Okunmuş olarak işaretle",
-    "Archive message" : "İletiyi arşivle",
-    "Delete message" : "İletiyi sil",
     "Message source" : "İleti kaynağı",
     "Unsubscribe via link" : "Bağlantı ile abonelikten ayrıl",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Abonelikten ayrıldığınızda {sender} e-posta listesinden iletileri almayacaksınız ",
@@ -785,9 +785,6 @@ OC.L10N.register(
     "Redirect" : "Yönlendir",
     "The link leads to %s" : "Bağlantı %s adresine gidiyor",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Bu sayfayı ziyaret etmek istemiyorsanız, <a href=\"%s\">E-posta</a> uygulamasına geri dönebilirsiniz.",
-    "Continue to %s" : "%s sayfasına ilerle",
-    "Collapse composer" : "Oluşturucuyu daralt",
-    "Uploading attachments …" : "Ek dosya yükleniyor …",
-    "Sending …" : "Gönderiliyor …"
+    "Continue to %s" : "%s sayfasına ilerle"
 },
 "nplurals=2; plural=(n > 1);");

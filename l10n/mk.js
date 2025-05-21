@@ -181,6 +181,7 @@ OC.L10N.register(
     "Mark not spam" : "Од-означи СПАМ",
     "Mark as spam" : "Означи како СПАМ",
     "Edit tags" : "Удери ознаки",
+    "Delete message" : "Избриши порака",
     "More actions" : "Повеќе акции",
     "Back" : "Назад",
     "Edit as new message" : "Измени како нова порака",
@@ -356,7 +357,6 @@ OC.L10N.register(
     "Mark as favorite" : "Означи како омилена",
     "Mark as unread" : "Означи како непрочитано",
     "Mark as read" : "Означи како прочитано",
-    "Delete message" : "Избриши порака",
     "Message source" : "Извор на пораката",
     "Untitled event" : "Неименуван настан",
     "(organizer)" : "(organizer)",
@@ -430,8 +430,6 @@ OC.L10N.register(
     "Redirect" : "Пренасочи",
     "The link leads to %s" : "Линкот води кон %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Доколку несакате да ја посетите страната, можете да се вратите кон <a href=\"%s\">Е-пошта</a>.",
-    "Continue to %s" : "Продолжи до %s",
-    "Uploading attachments …" : "Прикачување на прилог ...",
-    "Sending …" : "Испраќам ..."
+    "Continue to %s" : "Продолжи до %s"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

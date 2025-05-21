@@ -270,7 +270,9 @@
     "Unsnooze" : "Zrušiť odloženie",
     "Move thread" : "Presunúť konverzáciu",
     "Archive thread" : "Archivovať vlákno",
+    "Archive message" : "Archivovať správu",
     "Delete thread" : "Vymazať konverzáciu",
+    "Delete message" : "Zmazať správu",
     "More actions" : "Viac akcií",
     "Back" : "Späť",
     "Set custom snooze" : "Nastaviť vlastné odloženie",
@@ -568,8 +570,6 @@
     "Mark as favorite" : "Označiť ako obľúbené",
     "Mark as unread" : "Označiť ako neprečítané",
     "Mark as read" : "Označiť ako prečítané",
-    "Archive message" : "Archivovať správu",
-    "Delete message" : "Zmazať správu",
     "Message source" : "Zdrojový kód správy",
     "Unsubscribe via link" : "Odhlásiť sa cez odkaz",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Odhlásenie zastaví všetky správy z mailing listu {sender}.",
@@ -786,9 +786,6 @@
     "Redirect" : "Presmerovať",
     "The link leads to %s" : "Odkaz smeruje na %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ak si neprajete navštíviť stránku, možete sa vátiť na <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Pokračovať na %s",
-    "Collapse composer" : "Zbaliť editor správ",
-    "Uploading attachments …" : "Nahrávanie príloh...",
-    "Sending …" : "Odosiela sa..."
+    "Continue to %s" : "Pokračovať na %s"
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);"
 }

@@ -272,7 +272,9 @@ OC.L10N.register(
     "Unsnooze" : "Desativar soneca",
     "Move thread" : "Mover tópico",
     "Archive thread" : "Arquivar tópico",
+    "Archive message" : "Arquivar mensagem",
     "Delete thread" : "Excluir tópico",
+    "Delete message" : "Excluir mensagem",
     "More actions" : "Mais ações",
     "Back" : "Voltar",
     "Set custom snooze" : "Definir soneca personalizada",
@@ -570,8 +572,6 @@ OC.L10N.register(
     "Mark as favorite" : "Marcar como favorito",
     "Mark as unread" : "Marcar como não lido",
     "Mark as read" : "Marcar como lido",
-    "Archive message" : "Arquivar mensagem",
-    "Delete message" : "Excluir mensagem",
     "Message source" : "Fonte da mensagem",
     "Unsubscribe via link" : "Cancelar inscrição através do link",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Cancelar a inscrição interromperá todas as mensagens da lista de e-mail {sender}",
@@ -789,9 +789,6 @@ OC.L10N.register(
     "Redirect" : "Redirecionar",
     "The link leads to %s" : "O link leva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Se você não quiser visitar essa página, você pode voltar para <a href=\"%s\">E-Mail</a>.",
-    "Continue to %s" : "Continue para %s",
-    "Collapse composer" : "Recolher compositor",
-    "Uploading attachments …" : "Enviando anexos...",
-    "Sending …" : "Enviando..."
+    "Continue to %s" : "Continue para %s"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

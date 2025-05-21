@@ -267,7 +267,9 @@ OC.L10N.register(
     "Unsnooze" : "Vekja af blundi",
     "Move thread" : "Færa spjallþráð",
     "Archive thread" : "Setja spjallþráð í geymslu",
+    "Archive message" : "Geyma skilaboð",
     "Delete thread" : "Eyða spjallþræði",
+    "Delete message" : "Eyða skilaboðum",
     "More actions" : "Fleiri aðgerðir",
     "Back" : "Til baka",
     "Set custom snooze" : "Setja sérsniðinn blund",
@@ -553,8 +555,6 @@ OC.L10N.register(
     "Mark as favorite" : "Merkja sem eftirlæti",
     "Mark as unread" : "Merkja allt sem ólesið",
     "Mark as read" : "Merkja sem lesið",
-    "Archive message" : "Geyma skilaboð",
-    "Delete message" : "Eyða skilaboðum",
     "Message source" : "Uppruni skilaboða",
     "Unsubscribe via link" : "Hætta í áskrift með tengli",
     "Send unsubscribe email" : "Senda tölvupóst til að segja upp áskrift",
@@ -750,8 +750,6 @@ OC.L10N.register(
     "Redirect" : "Endurbeina",
     "The link leads to %s" : "Tengillinn leiðir til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ef þú vilt ekki fara á þá síðu, geturðu farið til baka í <a href=\"%s\">póstforritið</a>.",
-    "Continue to %s" : "Halda áfram í %s",
-    "Uploading attachments …" : "Sendi inn viðhengi…",
-    "Sending …" : "Sendi ..."
+    "Continue to %s" : "Halda áfram í %s"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

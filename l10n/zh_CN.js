@@ -272,7 +272,9 @@ OC.L10N.register(
     "Unsnooze" : "取消延后",
     "Move thread" : "移动线程",
     "Archive thread" : "归档线程",
+    "Archive message" : "归档邮件",
     "Delete thread" : "删除线程",
+    "Delete message" : "删除邮件",
     "More actions" : "更多操作 ",
     "Back" : "返回",
     "Set custom snooze" : "设置自定义延后",
@@ -570,8 +572,6 @@ OC.L10N.register(
     "Mark as favorite" : "标记为我的最爱",
     "Mark as unread" : "标为未读",
     "Mark as read" : "标为已读",
-    "Archive message" : "归档邮件",
-    "Delete message" : "删除邮件",
     "Message source" : "邮件来源",
     "Unsubscribe via link" : "通过链接取消订阅",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "取消订阅将停止来自邮寄列表 {sender} 的全部邮件",
@@ -789,9 +789,6 @@ OC.L10N.register(
     "Redirect" : "重定向",
     "The link leads to %s" : "链接指向 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "如果不想访问此页面，您可以返回<a href=\"%s\">邮件</a>。",
-    "Continue to %s" : "继续 %s",
-    "Collapse composer" : "收起编辑器",
-    "Uploading attachments …" : "正在上传附件 ...",
-    "Sending …" : "正在发送 ..."
+    "Continue to %s" : "继续 %s"
 },
 "nplurals=1; plural=0;");

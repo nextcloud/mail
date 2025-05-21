@@ -263,7 +263,9 @@
     "Unsnooze" : "Annuler la mise en attente",
     "Move thread" : "Déplacer ce fil de discussion",
     "Archive thread" : "Fil de discussion archivé",
+    "Archive message" : "Archiver le message",
     "Delete thread" : "Supprimer ce fil de discussion",
+    "Delete message" : "Supprimer le message",
     "More actions" : "Plus d'actions…",
     "Back" : "Retour",
     "Set custom snooze" : "Définir une mise en attente personnalisée",
@@ -552,8 +554,6 @@
     "Mark as favorite" : "Marquer comme favori",
     "Mark as unread" : "Marquer comme non lu",
     "Mark as read" : "Marquer comme lu",
-    "Archive message" : "Archiver le message",
-    "Delete message" : "Supprimer le message",
     "Message source" : "Source du message",
     "Unsubscribe via link" : "Se désabonner via un lien",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Le désabonnement stoppera la réception des messages de la liste de diffusion {sender}",
@@ -770,8 +770,6 @@
     "Redirect" : "Redirection",
     "The link leads to %s" : "Le lien dirige vers %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si vous ne souhaitez pas visiter cette page, vous pouvez retourner à l'application <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continuer vers %s",
-    "Uploading attachments …" : "Téléversement des pièces jointes en cours…",
-    "Sending …" : "Envoi en cours …"
+    "Continue to %s" : "Continuer vers %s"
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }
