@@ -108,7 +108,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "Message sent" : "Messatge mandat",
     "Error loading message" : "Error al moment del cargament del messatge",
-    "Continue to %s" : "Contunhar cap a %s",
-    "Sending …" : "Mandadís…"
+    "Continue to %s" : "Contunhar cap a %s"
 },
 "nplurals=2; plural=(n > 1);");

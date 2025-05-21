@@ -269,7 +269,9 @@
     "Unsnooze" : "Deixeu de posposar",
     "Move thread" : "Mou el fil",
     "Archive thread" : "Arxiva el fil",
+    "Archive message" : "Arxiva el missatge",
     "Delete thread" : "Esborra el fil",
+    "Delete message" : "Suprimeix el missatge",
     "More actions" : "Més accions",
     "Back" : "Torna",
     "Set custom snooze" : "Estableix una posposació personalitzada",
@@ -559,8 +561,6 @@
     "Mark as favorite" : "Marca'l com a preferit",
     "Mark as unread" : "Marca com a sense llegir",
     "Mark as read" : "Marca com a llegit",
-    "Archive message" : "Arxiva el missatge",
-    "Delete message" : "Suprimeix el missatge",
     "Message source" : "Font de missatge",
     "Unsubscribe via link" : "Cancel·la la subscripció mitjançant l'enllaç",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "La cancel·lació de la subscripció aturarà tots els missatges de la llista de correu {sender}",
@@ -777,9 +777,6 @@
     "Redirect" : "Redirigeix",
     "The link leads to %s" : "L'enllaç porta a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no voleu visitar aquesta pàgina, podeu tornar a <a href=\"%s\">Correu</a>.",
-    "Continue to %s" : "Continua a %s",
-    "Collapse composer" : "Col·lapse el compositor",
-    "Uploading attachments …" : "S'estan carregant els adjunts …",
-    "Sending …" : "S'està enviant …"
+    "Continue to %s" : "Continua a %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

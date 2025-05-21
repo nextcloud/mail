@@ -177,6 +177,7 @@ OC.L10N.register(
     "Move thread" : "Perkelti giją",
     "Archive thread" : "Archyvuoti giją",
     "Delete thread" : "Ištrinti giją",
+    "Delete message" : "Ištrinti laišką",
     "More actions" : "Daugiau veiksmų",
     "Back" : "Atgal",
     "Edit as new message" : "Taisyti kaip naują laišką",
@@ -336,7 +337,6 @@ OC.L10N.register(
     "Reply to sender only" : "Atsakyti tik siuntėjui",
     "Mark as unread" : "Žymėti kaip neskaitytą",
     "Mark as read" : "Žymėti kaip skaitytą",
-    "Delete message" : "Ištrinti laišką",
     "Message source" : "Pirminis laiško kodas",
     "Unsubscribe via link" : "Atsisakyti prenumeratos per nuorodą",
     "Unsubscribe via email" : "Atsisakyti prenumeratos per el. paštą",
@@ -442,8 +442,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Jeigu per artimiausias kelias sekundes nesate automatiškai nukreipiami, spustelėkite čia.",
     "Redirect" : "Peradresuoti",
     "The link leads to %s" : "Nuoroda veda į %s",
-    "Continue to %s" : "Tęsti į %s",
-    "Uploading attachments …" : "Įkeliami priedai …",
-    "Sending …" : "Siunčiama …"
+    "Continue to %s" : "Tęsti į %s"
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");

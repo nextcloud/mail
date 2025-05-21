@@ -262,7 +262,9 @@ OC.L10N.register(
     "Unsnooze" : "Ez utzi geroko",
     "Move thread" : "Mugitu haria",
     "Archive thread" : "Artxibatu haria",
+    "Archive message" : "Artxibatu mezua",
     "Delete thread" : "Ezabatu haria",
+    "Delete message" : "Mezua ezabatzen",
     "More actions" : "Ekintza gehiago",
     "Back" : "Atzera",
     "Set custom snooze" : "Ezarri atzerapen pertsonalizatua",
@@ -547,8 +549,6 @@ OC.L10N.register(
     "Mark as favorite" : "Markatu gogoko gisa",
     "Mark as unread" : "Markatu irakurri gabeko gisa",
     "Mark as read" : "Markatu irakurritako gisa",
-    "Archive message" : "Artxibatu mezua",
-    "Delete message" : "Mezua ezabatzen",
     "Message source" : "Mezuaren iturburua",
     "Unsubscribe via link" : "Harpidetza kendu esteka bidez",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Harpidetza kentzeak {sender} posta-zerrendako mezu guztiak geldituko ditu",
@@ -762,8 +762,6 @@ OC.L10N.register(
     "Redirect" : "Birbideratu",
     "The link leads to %s" : "Estekak hona bideratzen du: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Orrialde hori bisitatu nahi ez baduzu, itzul dezakezu <a href=\"%s\">Mail </a>-ra.",
-    "Continue to %s" : "Jarraitu hona: %s",
-    "Uploading attachments …" : "Fitxategi erantsiak igotzen...",
-    "Sending …" : "Bidaltzen..."
+    "Continue to %s" : "Jarraitu hona: %s"
 },
 "nplurals=2; plural=(n != 1);");

@@ -39,7 +39,6 @@ OC.L10N.register(
     "Inbox" : "ក្នុង​ប្រអប់សារ",
     "Junk" : "ព្រៃ",
     "Sent" : "ផ្ញើ",
-    "Trash" : "ធុង​សំរាម",
-    "Sending …" : "កំពុង​ផ្ញើរ..."
+    "Trash" : "ធុង​សំរាម"
 },
 "nplurals=1; plural=0;");

@@ -100,7 +100,9 @@ OC.L10N.register(
     "Edit tags" : "Editar le setiquetes",
     "Move thread" : "Mover el filu",
     "Archive thread" : "Archivar el filu",
+    "Archive message" : "Archivar el mensaxe",
     "Delete thread" : "Desaniciar el filu",
+    "Delete message" : "Desaniciar el mensaxe",
     "More actions" : "Más aiciones",
     "Back" : "Atrás",
     "Create event" : "Crear un eventu",
@@ -233,8 +235,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Nun se pudo cargar el filu de mensaxes",
     "Loading thread" : "Cargando'l filu",
     "Not found" : "Nun s'atopó",
-    "Archive message" : "Archivar el mensaxe",
-    "Delete message" : "Desaniciar el mensaxe",
     "Message source" : "Orixe del mensaxe",
     "Go to latest message" : "Dir al últimu mensaxe",
     "Go to newest message" : "Dir al mensaxe más nuevu",
@@ -305,7 +305,6 @@ OC.L10N.register(
     "Could not load the message" : "Nun se pudo cargar el mensaxe",
     "Error loading message" : "Hebo un error al cargar el mensaxe",
     "Redirect" : "Redirixir",
-    "The link leads to %s" : "L'enllaz lleva a %s",
-    "Sending …" : "Unviando…"
+    "The link leads to %s" : "L'enllaz lleva a %s"
 },
 "nplurals=2; plural=(n != 1);");

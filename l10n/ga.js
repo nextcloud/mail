@@ -272,7 +272,9 @@ OC.L10N.register(
     "Unsnooze" : "Cuir ar suan",
     "Move thread" : "Bog snáithe",
     "Archive thread" : "Snáithe cartlainne",
+    "Archive message" : "Teachtaireacht cartlainne",
     "Delete thread" : "Scrios snáithe",
+    "Delete message" : "Scrios teachtaireacht",
     "More actions" : "Tuilleadh gníomhartha",
     "Back" : "Ar ais",
     "Set custom snooze" : "Socraigh snooze saincheaptha",
@@ -570,8 +572,6 @@ OC.L10N.register(
     "Mark as favorite" : "Marcáil mar is fearr leat",
     "Mark as unread" : "Marcáil mar neamhléite",
     "Mark as read" : "Marcáil mar léite",
-    "Archive message" : "Teachtaireacht cartlainne",
-    "Delete message" : "Scrios teachtaireacht",
     "Message source" : "Foinse na teachtaireachta",
     "Unsubscribe via link" : "Díliostáil tríd an nasc",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Cuirfidh díliostáil stop le gach teachtaireacht ón liosta postála {sender}",
@@ -789,9 +789,6 @@ OC.L10N.register(
     "Redirect" : "Atreorú",
     "The link leads to %s" : "Téann an nasc chuig %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Mura dteastaíonn uait cuairt a thabhairt ar an leathanach sin, is féidir leat filleadh ar <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Lean ar aghaidh go %s",
-    "Collapse composer" : "Laghdaigh an cumadóir",
-    "Uploading attachments …" : "Ceangaltáin á n-uaslódáil…",
-    "Sending …" : "Ag seoladh…"
+    "Continue to %s" : "Lean ar aghaidh go %s"
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

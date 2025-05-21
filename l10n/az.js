@@ -67,7 +67,6 @@ OC.L10N.register(
     "Junk" : "Önəmsiz",
     "Sent" : "Göndərildi",
     "Trash" : "Zibil",
-    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi",
-    "Sending …" : "Göndərilir..."
+    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi"
 },
 "nplurals=2; plural=(n != 1);");

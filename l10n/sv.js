@@ -155,7 +155,9 @@ OC.L10N.register(
     "Edit tags" : "Redigera taggar",
     "Move thread" : "Flytta tråd",
     "Archive thread" : "Arkivera tråd",
+    "Archive message" : "Arkivera meddelandet",
     "Delete thread" : "Radera tråd",
+    "Delete message" : "Radera meddelande",
     "More actions" : "Fler händelser",
     "Back" : "Tillbaka",
     "Edit as new message" : "Redigera som nytt meddelande",
@@ -296,8 +298,6 @@ OC.L10N.register(
     "Reply to sender only" : "Svara endast avsändaren",
     "Mark as unread" : "Markera som oläst",
     "Mark as read" : "Markera som läst",
-    "Archive message" : "Arkivera meddelandet",
-    "Delete message" : "Radera meddelande",
     "Message source" : "Meddelandekälla",
     "The message could not be translated" : "Meddelandet kunde inte översättas",
     "Translation copied to clipboard" : "Översättningen har kopierats till urklipp",
@@ -375,8 +375,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klicka här om du inte blir omdirigerad inom några sekunder.",
     "Redirect" : "Omdirigera",
     "The link leads to %s" : "Länken pekar mot %s",
-    "Continue to %s" : "Fortsätt till %s",
-    "Uploading attachments …" : "Laddar upp bilagor ...",
-    "Sending …" : "Skickar ..."
+    "Continue to %s" : "Fortsätt till %s"
 },
 "nplurals=2; plural=(n != 1);");

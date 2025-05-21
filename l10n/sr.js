@@ -272,7 +272,9 @@ OC.L10N.register(
     "Unsnooze" : "Прекини одлагање",
     "Move thread" : "Премести нит",
     "Archive thread" : "Архивирај нит",
+    "Archive message" : "Архивирај поруку",
     "Delete thread" : "Обриши нит",
+    "Delete message" : "Обриши поруку",
     "More actions" : "Још акција",
     "Back" : "Назад",
     "Set custom snooze" : "Постави произвољно одлагање",
@@ -570,8 +572,6 @@ OC.L10N.register(
     "Mark as favorite" : "Маркирај као омиљено",
     "Mark as unread" : "Означи као непрочитано",
     "Mark as read" : "Означи као прочитано",
-    "Archive message" : "Архивирај поруку",
-    "Delete message" : "Обриши поруку",
     "Message source" : "Изворни код поруке",
     "Unsubscribe via link" : "Одјавите се преко линка",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Укидање претплате ће да заустави пријем свих порука иза мејлинг листе {sender}",
@@ -789,9 +789,6 @@ OC.L10N.register(
     "Redirect" : "Преусмеравање",
     "The link leads to %s" : "Веза води на %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желите да посетите ту страницу, можете да се вратите на <a href=\"%s\">Пошту</a>.",
-    "Continue to %s" : "Настави на %s",
-    "Collapse composer" : "Сажми састављач",
-    "Uploading attachments …" : "Отпремам прилоге …",
-    "Sending …" : "Шаљем …"
+    "Continue to %s" : "Настави на %s"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

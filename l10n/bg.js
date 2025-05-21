@@ -189,7 +189,9 @@ OC.L10N.register(
     "Edit tags" : "Редактиране на етикетите",
     "Move thread" : "Преместване на нишката",
     "Archive thread" : "Архивна нишка",
+    "Archive message" : "Архивиране на съобщение",
     "Delete thread" : "Изтриване на нишката",
+    "Delete message" : "Изтриване на съобщението",
     "More actions" : "Повече действия",
     "Back" : "Назад",
     "Edit as new message" : "Редактиране като ново съобщение",
@@ -404,8 +406,6 @@ OC.L10N.register(
     "Mark as favorite" : "Маркиране като любими",
     "Mark as unread" : "Маркиране като непрочетено",
     "Mark as read" : "Маркиране като прочетено",
-    "Archive message" : "Архивиране на съобщение",
-    "Delete message" : "Изтриване на съобщението",
     "Message source" : "Източник на съобщение",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Прекратяването на абонамента ще спре всички съобщения от пощенския списък {sender}",
     "Could not remove trusted sender {sender}" : "Не можа да бъде премахнат доверен подател {sender}",
@@ -557,8 +557,6 @@ OC.L10N.register(
     "Redirect" : "Пренасочване",
     "The link leads to %s" : "Връзката води до %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желаете да посетите тази страница, може да се върнете към <a href=\"%s\">Поща</a>.",
-    "Continue to %s" : "Продължи към %s",
-    "Uploading attachments …" : "Качване на прикачените файлове ...",
-    "Sending …" : "Изпращане..."
+    "Continue to %s" : "Продължи към %s"
 },
 "nplurals=2; plural=(n != 1);");

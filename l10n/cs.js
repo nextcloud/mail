@@ -271,7 +271,9 @@ OC.L10N.register(
     "Unsnooze" : "Zrušit odložení",
     "Move thread" : "Přesunout vlákno",
     "Archive thread" : "Archivovat vlákno",
+    "Archive message" : "Archivovat zprávu",
     "Delete thread" : "Smazat vlákno",
+    "Delete message" : "Smazat zprávu",
     "More actions" : "Další akce",
     "Back" : "Zpět",
     "Set custom snooze" : "Nastavit uživatelsky uživatelsky určené odložení",
@@ -569,8 +571,6 @@ OC.L10N.register(
     "Mark as favorite" : "Označit jako oblíbené",
     "Mark as unread" : "Označit jako nepřečtené",
     "Mark as read" : "Označit jako přečtené",
-    "Archive message" : "Archivovat zprávu",
-    "Delete message" : "Smazat zprávu",
     "Message source" : "Zdrojový kód zprávy",
     "Unsubscribe via link" : "Zrušit (prostřednictvím odkazu) přihlášení se k odběru",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Zrušení přihlášení se k odběru zastaví veškeré zprávy  z e-mailové distribuce {sender}",
@@ -788,9 +788,6 @@ OC.L10N.register(
     "Redirect" : "Přesměrovat",
     "The link leads to %s" : "Odkaz vede na %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Pokud nechcete tuto stránku navštívit, můžete se vrátit do <a href=\"%s\">e-mailu</a>.",
-    "Continue to %s" : "Pokračovat na %s",
-    "Collapse composer" : "Sbalit editor psaní",
-    "Uploading attachments …" : "Nahrávání příloh…",
-    "Sending …" : "Odesílání…"
+    "Continue to %s" : "Pokračovat na %s"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

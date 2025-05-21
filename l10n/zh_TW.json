@@ -270,7 +270,9 @@
     "Unsnooze" : "取消延後",
     "Move thread" : "移動討論串",
     "Archive thread" : "封存討論串",
+    "Archive message" : "封存訊息",
     "Delete thread" : "刪除討論串",
+    "Delete message" : "刪除訊息",
     "More actions" : "更多動作",
     "Back" : "返回",
     "Set custom snooze" : "設定自訂延後",
@@ -568,8 +570,6 @@
     "Mark as favorite" : "標記為我的最愛",
     "Mark as unread" : "標為未讀",
     "Mark as read" : "標為已讀",
-    "Archive message" : "封存訊息",
-    "Delete message" : "刪除訊息",
     "Message source" : "郵件原始碼",
     "Unsubscribe via link" : "透過連結取消訂閱",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "取消訂閱將停止來自郵件清單 {sender} 的所有訊息",
@@ -787,9 +787,6 @@
     "Redirect" : "重新導向",
     "The link leads to %s" : "該連結導向至 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "若不想造訪該頁，您可以回到<a href=\"%s\">郵件</a>。",
-    "Continue to %s" : "前往 %s",
-    "Collapse composer" : "折疊編輯器",
-    "Uploading attachments …" : "正在上傳附件……",
-    "Sending …" : "正在傳送……"
+    "Continue to %s" : "前往 %s"
 },"pluralForm" :"nplurals=1; plural=0;"
 }
