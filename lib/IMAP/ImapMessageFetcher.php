@@ -212,34 +212,46 @@ class ImapMessageFetcher {
 					'forcemime' => true,
 				]);
 			}
-
-			// debugging below
-			$structure_type = $structure->getPrimaryType();
-			if ($structure_type === 'multipart') {
-				$i = 1;
-				foreach ($structure->getParts() as $p) {
-					$this->getPart($p, (string)$i++, $isEncrypted || $isSigned);
-				}
-			} else {
-				$bodyPartId = $structure->findBody();
-				if (!is_null($bodyPartId)) {
-					$this->getPart($structure[$bodyPartId], $bodyPartId, $isEncrypted || $isSigned);
-				}
-			}
 		} elseif (is_null($fetch)) {
 			// Reuse given query or construct a new minimal one
 			$query = new Horde_Imap_Client_Fetch_Query();
 			$query->envelope();
+			$query->structure();
 			$query->flags();
 			$query->imapDate();
 			$query->headerText([
 				'peek' => true,
 			]);
-
+			$query->bodyText([
+				'peek' => true,
+			]);
 			$result = $this->client->fetch($this->mailbox, $query, ['ids' => $ids]);
 			$fetch = $result[$this->uid];
 			if (is_null($fetch)) {
 				throw new DoesNotExistException("This email ($this->uid) can't be found. Probably it was deleted from the server recently. Please reload.");
+			}
+		}
+
+		// determine if message structure was already extracted
+		if (!isset($structure)) {
+			// extract message structure
+			$structure = $fetch->getStructure();
+		}
+		// determine if we finally have a message structure
+		// and process the message parts if structure exists
+		if ($structure !== null) {
+			// debugging below
+			$structure_type = $structure->getPrimaryType();
+			if ($structure_type === 'multipart') {
+				$i = 1;
+				foreach ($structure->getParts() as $p) {
+					$this->getPart($p, (string)$i++, !$this->loadBody || $isEncrypted || $isSigned);
+				}
+			} else {
+				$bodyPartId = $structure->findBody();
+				if (!is_null($bodyPartId)) {
+					$this->getPart($structure[$bodyPartId], $bodyPartId, !$this->loadBody || $isEncrypted || $isSigned);
+				}
 			}
 		}
 
