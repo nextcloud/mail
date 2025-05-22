@@ -387,9 +387,13 @@ export default {
 		async onSend(data, force = false) {
 			logger.debug('sending message', { data })
 
+			if (this.sending) {
+				return
+			}
 			await this.attachmentsPromise
 			this.uploadingAttachments = false
 			this.sending = true
+			this.$emit('close')
 			try {
 				const now = new Date().getTime()
 				for (const attachment of data.attachments) {
