@@ -186,7 +186,7 @@
 							:with-select="false"
 							:with-show-source="true"
 							:more-actions-open.sync="moreActionsOpen"
-							@reply="onReply"
+							@reply="onReply('', false, false)"
 							@delete="$emit('delete',envelope.databaseId)"
 							@show-source-modal="onShowSourceModal"
 							@open-tag-modal="onOpenTagModal"
