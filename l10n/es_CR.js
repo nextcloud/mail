@@ -94,6 +94,7 @@ OC.L10N.register(
     "Select tags" : "Selecciona las etiquetas",
     "Custom" : "Personalizado",
     "Add tag" : "Agregar etiqueta",
+    "Operator" : "Operador",
     "Actions" : "Acciones",
     "Priority" : "Prioridad",
     "Reset" : "Restablecer",
