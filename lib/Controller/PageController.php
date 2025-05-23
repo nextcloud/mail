@@ -189,6 +189,11 @@ class PageController extends Controller {
 		);
 
 		$this->initialStateService->provideInitialState(
+			'smime-sign-aliases',
+			json_decode($this->preferences->getPreference($this->currentUserId, 'smime-sign-aliases', '[]'), true, 512, JSON_THROW_ON_ERROR) ?? []
+		);
+
+		$this->initialStateService->provideInitialState(
 			'sort-order',
 			$this->preferences->getPreference($this->currentUserId, 'sort-order', 'newest')
 		);
