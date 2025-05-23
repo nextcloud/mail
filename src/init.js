@@ -78,6 +78,10 @@ export default function initAfterAppCreation() {
 		key: 'internal-addresses',
 		value: loadState('mail', 'internal-addresses', false),
 	})
+	mainStore.savePreferenceMutation({
+		key: 'smime-sign-aliases',
+		value: loadState('mail', 'smime-sign-aliases', []),
+	})
 
 	const accountSettings = loadState('mail', 'account-settings')
 	const accounts = loadState('mail', 'accounts', [])
