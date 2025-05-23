@@ -134,6 +134,8 @@ OC.L10N.register(
     "Vertical split" : "Divisão vertical",
     "Horizontal split" : "Divisão horizontal",
     "Message View Mode" : "Modo de Visualização da Mensagem",
+    "Show all messages in thread" : "Mostrar todas as mensagens no tópico",
+    "Show only the selected message" : "Mostrar apenas a mensagem selecionada",
     "Sorting" : "Classificação",
     "Newest" : "Mais novo",
     "Oldest" : "Mais antigo",
