@@ -87,6 +87,7 @@
 					<input id="certificate"
 						ref="certificate"
 						type="file"
+						accept=".p12,.crt,.pem"
 						required
 						@change="certificate = $event.target.files[0]">
 				</fieldset>
@@ -96,6 +97,7 @@
 					<input id="private-key"
 						ref="privateKey"
 						type="file"
+						accept=".key,.pem"
 						@change="privateKey = $event.target.files[0]">
 				</fieldset>
 
