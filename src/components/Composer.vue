@@ -359,8 +359,8 @@
 						</ActionCheckbox>
 						<ActionCheckbox v-if="smimeCertificateForCurrentAlias"
 							:checked="wantsSmimeSign"
-							@check="wantsSmimeSign = true"
-							@uncheck="wantsSmimeSign = false">
+							@check="smimeSignCheck(true)"
+							@uncheck="smimeSignCheck(false)">
 							{{ t('mail', 'Sign message with S/MIME') }}
 						</ActionCheckbox>
 						<ActionCheckbox v-if="smimeCertificateForCurrentAlias"
@@ -497,6 +497,7 @@ import { TRIGGER_CHANGE_ALIAS, TRIGGER_EDITOR_READY } from '../ckeditor/signatur
 import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import { mapStores, mapState } from 'pinia'
+import { savePreference } from '../service/PreferenceService.js'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -689,6 +690,7 @@ export default {
 			wantsSmimeEncrypt: this.smimeEncrypt,
 			isPickerOpen: false,
 			recipientSearchTerms: {},
+			smimeSignAliases: [],
 		}
 	},
 	computed: {
@@ -983,6 +985,11 @@ export default {
 		// Set custom date and time picker value if initialized with custom send at value
 		if (this.sendAt && this.isSendAtCustom) {
 			this.selectedDate = new Date(this.sendAt)
+		}
+
+		this.smimeSignAliases = this.mainStore.getPreference('smime-sign-aliases', [])
+		if (this.selectedAlias.smimeCertificateId && this.smimeSignAliases.some((alias) => alias === this.selectedAlias.smimeCertificateId)) {
+			this.wantsSmimeSign = true
 		}
 	},
 	beforeDestroy() {
@@ -1416,6 +1423,20 @@ export default {
 				return undefined
 			}
 			return this.mainStore.getSmimeCertificate(certificateId)
+		},
+
+		smimeSignCheck(value) {
+			this.wantsSmimeSign = value
+			let result = this.smimeSignAliases
+			if (value) {
+				result.push(this.selectedAlias.smimeCertificateId)
+			} else {
+				result = result.filter((alias) => {
+					return alias !== this.selectedAlias.smimeCertificateId
+				})
+			}
+			this.smimeSignAliases = result
+			savePreference('smime-sign-aliases', JSON.stringify(result))
 		},
 
 		/**
