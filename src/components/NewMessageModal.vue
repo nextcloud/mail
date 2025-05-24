@@ -290,14 +290,14 @@ export default {
 			showWarning(t('mail', 'Setting Sent default folder'))
 			let newSentMailboxId = null
 			const mailboxes = this.mainStore.getMailboxes(data.accountId)
-			const sentMailboxId = mailboxes.find((mailbox) => mailbox.name === account.personalNamespace + 'Sent' || mailbox.name === account.personalNamespace + t('mail', 'Sent'))?.databaseId
+			const sentMailboxId = mailboxes.find((mailbox) => (mailbox.name === (account.personalNamespace ?? '') + 'Sent') || (mailbox.name === (account.personalNamespace ?? '') + t('mail', 'Sent')))?.databaseId
 			if (sentMailboxId) {
 				await this.setSentMailboxAndResend(account, sentMailboxId, data)
 			}
 			logger.info(`creating ${t('mail', 'Sent')} mailbox`)
 			try {
-				const newSentMailbox = await this.mainStore.createMailbox({ account, name: account.personalNamespace + t('mail', 'Sent'), specialUseAttributes: ['\\Sent'] })
-				logger.info(`mailbox ${account.personalNamespace + t('mail', 'Sent')} created`)
+				const newSentMailbox = await this.mainStore.createMailbox({ account, name: (account.personalNamespace ?? '') + t('mail', 'Sent'), specialUseAttributes: ['\\Sent'] })
+				logger.info(`mailbox ${(account.personalNamespace ?? '') + t('mail', 'Sent')} created`)
 				newSentMailboxId = newSentMailbox.databaseId
 			} catch (error) {
 				showError(t('mail', 'Could not create new mailbox, please try setting a sent mailbox manually'))
