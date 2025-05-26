@@ -12,7 +12,6 @@ namespace OCA\Mail\Service\Classification;
 use Horde_Imap_Client;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
-use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
@@ -35,7 +34,7 @@ class NewMessagesClassifier {
 		private TagMapper $tagMapper,
 		private LoggerInterface $logger,
 		private IMailManager $mailManager,
-		private IUserPreferences $preferences,
+		private ClassificationSettingsService $classificationSettingsService,
 	) {
 	}
 
@@ -59,8 +58,7 @@ class NewMessagesClassifier {
 		Account $account,
 		Tag $importantTag,
 	): void {
-		$allowTagging = $this->preferences->getPreference($account->getUserId(), 'tag-classified-messages');
-		if ($allowTagging === 'false') {
+		if (!$this->classificationSettingsService->isClassificationEnabled($account->getUserId())) {
 			return;
 		}
 
