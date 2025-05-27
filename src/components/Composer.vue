@@ -1227,6 +1227,20 @@ export default {
 			this.loadingIndicatorCc = addressType === 'cc'
 			this.loadingIndicatorBcc = addressType === 'bcc'
 			this.recipientSearchTerms[addressType] = term
+
+			// Autocomplete from own identifies (useful for testing)
+			const accounts = this.accounts.filter((a) => !a.isUnified)
+			const selfRecipients = accounts
+				.filter(
+					account => account.emailAddress.toLowerCase().indexOf(term.toLowerCase()) !== -1
+					|| account.name.toLowerCase().indexOf(term.toLowerCase()) !== -1,
+				)
+				.map(account => ({
+					email: account.emailAddress,
+					label: account.name,
+				}))
+			this.autocompleteRecipients = uniqBy('email')(this.autocompleteRecipients.concat(selfRecipients))
+
 			debouncedSearch(term).then((results) => {
 				if (addressType === 'to') {
 					this.loadingIndicatorTo = false
