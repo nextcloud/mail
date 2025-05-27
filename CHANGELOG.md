@@ -1,4 +1,23 @@
-# [5.1.0](https://github.com/nextcloud/mail/compare/v5.1.0-rc.1...v5.1.0) (2025-05-20)
+## [5.1.1](https://github.com/nextcloud/mail/compare/v5.1.0...v5.1.1) (2025-05-27)
+
+
+### Bug Fixes
+
+* don't propagate click event on reply ([895fe78](https://github.com/nextcloud/mail/commit/895fe788e0603311a9da688c71974d8fbae62652))
+* html message alignment ([b4b93e6](https://github.com/nextcloud/mail/commit/b4b93e60ec1d1c2d4b299a333ee06e08abfc2551))
+* **l10n:** Update translations from Transifex ([af81f59](https://github.com/nextcloud/mail/commit/af81f59a40a8a0d0d192e7bcab6e21513b872b41))
+* **l10n:** Update translations from Transifex ([cc7d5e5](https://github.com/nextcloud/mail/commit/cc7d5e5372f3fd551e5bb4eebc21587ab8efccb9))
+* **l10n:** Update translations from Transifex ([7f9df07](https://github.com/nextcloud/mail/commit/7f9df07cb9132184df83b7fd8a239969532af621))
+* **l10n:** Update translations from Transifex ([9a7693c](https://github.com/nextcloud/mail/commit/9a7693c600c475ee1584bed13b3d9e70f328e7f9))
+* **l10n:** Update translations from Transifex ([82c5de5](https://github.com/nextcloud/mail/commit/82c5de573006f10c9b0d0e82545e24673238292e))
+* **l10n:** Update translations from Transifex ([83fe0a4](https://github.com/nextcloud/mail/commit/83fe0a45e084e35f9be579f4c6e7fd3b07550e02))
+* recipient length is undefined ([7799da9](https://github.com/nextcloud/mail/commit/7799da9fcbfbef0dd5b3e8df664a652bb02e8764))
+* **smime:** only accept certificates and keys in file input ([23ade45](https://github.com/nextcloud/mail/commit/23ade45775bcac7d533298ae0a4efe542e9a7540))
+* **ui:** replace deprecated iframe resizer attribute ([f85e028](https://github.com/nextcloud/mail/commit/f85e028785330173abfd77dfbccc271ed9438aa8))
+
+
+
+# [5.1.0](https://github.com/nextcloud/mail/compare/v5.1.0-dev.2...v5.1.0) (2025-05-20)
 
 
 ### Bug Fixes
