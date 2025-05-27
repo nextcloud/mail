@@ -16,7 +16,6 @@ env:
 jobs:
   build_and_publish:
     runs-on: [ubuntu-latest, self-hosted]
-    environment: release
 
     steps:
       - name: Set app env
