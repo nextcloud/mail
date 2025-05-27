@@ -33,7 +33,6 @@ jobs:
         id: changelog
         uses: TriPSs/conventional-changelog-action@b7f32a8347e86c26ea2f4823cc7c160b9014c6a0 # v3
         with:
-          github-token: ${{ secrets.RELEASE_PAT }}
           git-user-email: nextcloud-command@users.noreply.github.com
           git-user-name: Nextcloud Command Bot
           skip-git-pull: "true"
@@ -42,5 +41,3 @@ jobs:
           pre-commit: build/pre-commit.js
           release-count: 0
           version-file: "package.json, package-lock.json"
-          pre-release: ${{ inputs.prerelease }}
-          pre-release-identifier: ${{ inputs.prereleaseIdentifier }}
