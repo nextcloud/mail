@@ -154,6 +154,15 @@
 				</template>
 				{{ t('mail', 'Download message') }}
 			</ActionLink>
+			<ActionButton v-if="isSieveEnabled"
+				:close-after-click="true"
+				@click.prevent="$emit('open-mail-filter-from-envelope')">
+				<template #icon>
+					<FilterIcon :title="t('mail', 'Create mail filter')"
+						:size="16" />
+				</template>
+				{{ t('mail', 'Create mail filter') }}
+			</ActionButton>
 			<ActionLink v-if="debug"
 				:download="threadingFileName"
 				:href="threadingFile"
@@ -233,7 +242,6 @@ import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline.vue'
 import ShareIcon from 'vue-material-design-icons/Share.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-
 import TagIcon from 'vue-material-design-icons/Tag.vue'
 import CalendarClock from 'vue-material-design-icons/CalendarClock.vue'
 import NcActionSeparator from '@nextcloud/vue/components/NcActionSeparator'
@@ -243,6 +251,7 @@ import logger from '../logger.js'
 import moment from '@nextcloud/moment'
 import { mapStores, mapState } from 'pinia'
 import useMainStore from '../store/mainStore.js'
+import FilterIcon from 'vue-material-design-icons/Filter.vue'
 
 export default {
 	name: 'MenuEnvelope',
@@ -269,6 +278,7 @@ export default {
 		TaskIcon,
 		AlarmIcon,
 		PrinterIcon,
+		FilterIcon,
 	},
 	props: {
 		envelope: {
@@ -544,6 +554,9 @@ export default {
 		},
 		onPrint() {
 			this.$emit('print')
+		},
+		isSieveEnabled() {
+			return this.account.sieveEnabled
 		},
 	},
 }

@@ -6,11 +6,13 @@
 import { defineStore } from 'pinia'
 import * as MailFilterService from '../service/MailFilterService.js'
 import { randomId } from '../util/randomId.js'
+import logger from '../logger'
+import { MailFilter } from '../models/mailFilter'
 
 export default defineStore('mailFilter', {
 	state: () => {
 		return {
-			filters: [],
+			filters: [] as MailFilter[],
 		}
 	},
 	actions: {
@@ -31,7 +33,7 @@ export default defineStore('mailFilter', {
 				})
 			})
 		},
-		async update(accountId) {
+		async store(accountId) {
 			let filters = structuredClone(this.filters)
 			filters = filters.map((filter) => {
 				delete filter.id
@@ -47,6 +49,30 @@ export default defineStore('mailFilter', {
 			})
 
 			await MailFilterService.updateFilters(accountId, filters)
+		},
+		async update(filter: MailFilter) {
+			await this.$patch((state) => {
+				const index = state.filters.findIndex((item: MailFilter) => item.id === filter.id)
+				logger.debug('update filter', { filter, index })
+
+				if (index === -1) {
+					state.filters.push(filter)
+				} else {
+					state.filters[index] = filter
+				}
+
+				state.filters.sort((a, b) => a.priority - b.priority)
+			})
+		},
+		async delete(filter: MailFilter) {
+			await this.$patch((state) => {
+				const index = state.filters.findIndex((item: MailFilter) => item.id === filter.id)
+				logger.debug('delete filter', { filter, index })
+
+				if (index !== -1) {
+					state.filters.splice(index, 1)
+				}
+			})
 		},
 	},
 })
