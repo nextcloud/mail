@@ -9,24 +9,25 @@
 		</div>
 		<div>
 			<NcCheckboxRadioSwitch :checked="filter.operator"
-				value="allof"
+				:value="MailFilterOperator.All"
 				name="sharing_permission_radio"
 				type="radio"
-				@update:checked="updateFilter('allof')">
-				allof ({{ t('mail', 'If all tests pass, then the actions will be executed') }})
+				@update:checked="updateFilter(MailFilterOperator.All)">
+				{{ t('mail', 'If all the conditions are met, the actions will be performed') }}
 			</NcCheckboxRadioSwitch>
 			<NcCheckboxRadioSwitch :checked="filter.operator"
-				value="anyof"
+				:value="MailFilterOperator.Any"
 				name="sharing_permission_radio"
 				type="radio"
-				@update:checked="updateFilter('anyof')">
-				anyof ({{ t('mail', 'If one test pass, then the actions will be executed') }})
+				@update:checked="updateFilter(MailFilterOperator.Any)">
+				{{ t('mail', 'If any of the conditions are met, the actions will be performed') }}
 			</NcCheckboxRadioSwitch>
 		</div>
 	</div>
 </template>
 <script>
 import { NcCheckboxRadioSwitch } from '@nextcloud/vue'
+import { MailFilterOperator } from '../../models/mailFilter.ts'
 
 export default {
 	name: 'Operator',
@@ -38,6 +39,11 @@ export default {
 			type: Object,
 			required: true,
 		},
+	},
+	data() {
+		return {
+			MailFilterOperator,
+		}
 	},
 	methods: {
 		updateFilter(operator) {
