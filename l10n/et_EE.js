@@ -266,6 +266,7 @@ OC.L10N.register(
     "Show images temporarily" : "Näita pilte ajutiselt",
     "Always show images from {sender}" : "Alati näita pilte {sender} saatjalt",
     "Always show images from {domain}" : "Alati näita pilte {domain} domeenist",
+    "Quoted text" : "Tsiteeritud tekst",
     "Move" : "Liiguta",
     "Moving thread" : "Teisaldan jutulõnga mujale",
     "Moving message" : "Teisaldan kirja",
