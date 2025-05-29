@@ -74,10 +74,22 @@ class FolderMapper {
 		}, $toPersist);
 	}
 
+	/**
+	 * @param Horde_Imap_Client_Socket $client
+	 * @param Account $account
+	 * @param string $name
+	 * @param array<Horde_Imap_Client::SPECIAL_USE_*> $specialUseAttributes
+	 *
+	 * @return Folder
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws ServiceException
+	 */
+
 	public function createFolder(Horde_Imap_Client_Socket $client,
 		Account $account,
-		string $name): Folder {
-		$client->createMailbox($name);
+		string $name,
+		array $specialUseAttributes = []): Folder {
+		$client->createMailbox($name, ['special_use' => $specialUseAttributes]);
 
 		$list = $client->listMailboxes($name, Horde_Imap_Client::MBOX_ALL_SUBSCRIBED, [
 			'delimiter' => true,
