@@ -194,6 +194,7 @@
 							@open-event-modal="onOpenEventModal"
 							@open-task-modal="onOpenTaskModal"
 							@open-translation-modal="onOpenTranslationModal"
+							@open-create-filter-modal="showCreateMailFilterModal = true"
 							@print="onPrint" />
 					</NcActions>
 					<NcModal v-if="showSourceModal" class="source-modal" @close="onCloseSourceModal">
@@ -223,6 +224,9 @@
 						:rich-parameters="{}"
 						:message="plainTextBody"
 						@close="onCloseTranslationModal" />
+					<CreateMailFilter v-if="showCreateMailFilterModal"
+						:account="account"
+						:envelope="envelope" />
 				</template>
 			</div>
 		</div>
@@ -316,6 +320,7 @@ import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import { Text, toPlain } from '../util/text.js'
 import useMainStore from '../store/mainStore.js'
 import { mapStores } from 'pinia'
+import CreateMailFilter from './mailFilter/CreateMailFilter.vue'
 
 // Ternary loading state
 const Loading = Object.seal({
@@ -327,6 +332,7 @@ const Loading = Object.seal({
 export default {
 	name: 'ThreadEnvelope',
 	components: {
+		CreateMailFilter,
 		NcModal,
 		EventModal,
 		TaskModal,
@@ -418,6 +424,7 @@ export default {
 			isInternal: true,
 			enabledSmartReply: loadState('mail', 'llm_freeprompt_available', false),
 			loadingBodyTimeout: undefined,
+			showCreateMailFilterModal: false,
 		}
 	},
 	computed: {
@@ -588,6 +595,9 @@ export default {
 			}
 
 			return t('mail', 'Reply')
+		},
+		isSieveEnabled() {
+			return this.account.sieveEnabled
 		},
 	},
 	watch: {

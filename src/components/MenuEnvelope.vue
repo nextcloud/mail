@@ -164,6 +164,14 @@
 				</template>
 				{{ t('mail', 'Download thread data for debugging') }}
 			</ActionLink>
+			<ActionButton :close-after-click="true"
+				@click.prevent="$emit('open-create-filter-modal')">
+				<template #icon>
+					<InformationIcon :title="t('mail', 'Create filter')"
+						:size="16" />
+				</template>
+				{{ t('mail', 'Create filter') }}
+			</ActionButton>
 		</template>
 		<template v-if="snoozeActionsOpen">
 			<ActionButton :close-after-click="false"

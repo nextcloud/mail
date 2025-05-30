@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"target": "ESNext",
+		"strictNullChecks": true,
+		"sourceMap": true,
+		"allowSyntheticDefaultImports": true,
+		"declaration": true,
+	},
+	"include": [
+		"./src/**/*"
+	]
+}
