@@ -2,6 +2,7 @@
  * SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+import { randomId } from '../util/randomId'
 
 export enum MailFilterOperator {
 	All = 'allof',
@@ -20,55 +21,82 @@ export enum MailFilterTestOperator {
 	Matches = 'matches'
 }
 
-export interface MailFilterTest {
-	id: number,
-	field: MailFilterTestField,
-	operator: MailFilterTestOperator,
-	values: string[]
+export class MailFilterTest {
+
+	public id: number
+	public field: MailFilterTestField
+	public operator: MailFilterTestOperator
+	public values: string[]
+
+	constructor(
+	) {
+		this.id = randomId()
+	}
+
+	hasValues(): boolean {
+		return this.values.length > 0
+	}
+
 }
 
 interface MailFilterAction {
 	id: number,
-	type: string | null,
+	type: string,
 }
 
-export interface MailFilterActionAddflag extends MailFilterAction {
-	flag: string
+export class MailFilterActionAddflag implements MailFilterAction {
+
+	public id: number
+	public type: string
+	public flag: string
+
+	constructor(
+	) {
+		this.id = randomId()
+		this.type = 'addflag'
+	}
+
 }
 
-export interface MailFilterActionMailbox extends MailFilterAction {
-	mailbox: string
+export class MailFilterActionMailbox implements MailFilterAction {
+
+	public id: number
+	public type: string
+	public mailbox: string
+
+	constructor(
+	) {
+		this.id = randomId()
+		this.type = 'fileinto'
+	}
+
 }
 
-export interface MailFilterActionStop extends MailFilterAction {
+export class MailFilterActionStop implements MailFilterAction {
+
+	public id: number
+	public type: string
+	constructor(
+	) {
+		this.id = randomId()
+		this.type = 'stop'
+	}
+
 }
 
-export default class MailFilter {
+export class MailFilter {
 
 	public id: number
 	public name: string
-	public enable: boolean
+	public enable: boolean = false
 	public operator: MailFilterOperator
 	public tests: MailFilterTest[]
 	public actions: MailFilterAction[]
-	public priority: number
+	public priority: number = 0
 
 	constructor(
-		id: number,
-		name: string,
-		enable: boolean,
-		operator: MailFilterOperator,
-		tests: MailFilterTest[],
-		actions: MailFilterAction[],
-		priority: number,
 	) {
-		this.id = id
-		this.name = name
-		this.enable = enable
-		this.operator = operator
-		this.tests = tests
-		this.actions = actions
-		this.priority = priority
+		this.id = randomId()
 	}
 
 }
