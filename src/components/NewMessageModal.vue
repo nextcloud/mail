@@ -464,7 +464,6 @@ export default {
 					this.mainStore.removeMessageMutation({ id: dataForServer.id })
 				}
 				await this.mainStore.stopComposerSession()
-				this.$emit('close')
 			} catch (error) {
 				this.error = await matchError(error, {
 					[NoSentMailboxConfiguredError.getName()]() {
