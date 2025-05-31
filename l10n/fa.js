@@ -100,6 +100,7 @@ OC.L10N.register(
     "Accounts" : "حساب‌ها",
     "Add mail account" : "حساب کاربری پست الکترونیکی اضافه کنید",
     "General" : "عمومی",
+    "Layout" : "چیدمان",
     "List" : "فهرست",
     "Sorting" : "مرتب سازی",
     "Newest" : "Newest",
