@@ -51,7 +51,7 @@
 	},
 	"require-dev": {
 		"fig/log-test": "^1.2.1",
-		"psalm/phar": "^5.26.1",
+		"psalm/phar": "~6.7.1",
 		"roave/security-advisories": "dev-master"
 	},
 	"autoload": {
