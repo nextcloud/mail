@@ -439,7 +439,7 @@
 					</template>
 				</Actions>
 
-				<ButtonVue :disabled="!canSend"
+				<ButtonVue :disabled="!canSend || sending"
 					native-type="submit"
 					type="primary"
 					:aria-label="submitButtonTitle"
@@ -644,6 +644,7 @@ export default {
 		selectedDate.setHours(selectedDate.getHours() + 1)
 
 		return {
+			sending: false,
 			showCC: this.cc.length > 0,
 			showBCC: this.bcc.length > 0,
 			selectedAlias: NO_ALIAS_SET, // Fixed in `beforeMount`
