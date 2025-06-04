@@ -73,6 +73,7 @@ class Response implements JsonSerializable {
 		return $this->stats;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

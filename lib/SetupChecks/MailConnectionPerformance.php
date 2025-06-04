@@ -33,14 +33,17 @@ class MailConnectionPerformance implements ISetupCheck {
 	) {
 	}
 
+	#[\Override]
 	public function getName(): string {
 		return $this->l10n->t('Mail connection performance');
 	}
 
+	#[\Override]
 	public function getCategory(): string {
 		return 'mail';
 	}
 
+	#[\Override]
 	public function run(): SetupResult {
 		// retrieve unique imap hosts for provisionings and abort if none exists
 		$hosts = $this->provisioningMapper->findUniqueImapHosts();

@@ -134,6 +134,7 @@ class Container implements JsonSerializable {
 		return $this->children;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

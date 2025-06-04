@@ -28,6 +28,7 @@ class NewMessagesNotifier implements IEventListener {
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function handle(Event $event): void {
 		if (!$event instanceof NewMessagesSynchronized) {
 			return;

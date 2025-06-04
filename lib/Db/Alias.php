@@ -68,6 +68,7 @@ class Alias extends Entity implements JsonSerializable {
 		return $this->getProvisioningId() !== null;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

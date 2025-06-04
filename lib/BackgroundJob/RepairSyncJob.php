@@ -38,6 +38,7 @@ class RepairSyncJob extends TimedJob {
 		$this->setTimeSensitivity(self::TIME_INSENSITIVE);
 	}
 
+	#[\Override]
 	protected function run($argument): void {
 		$accountId = (int)$argument['accountId'];
 

@@ -74,6 +74,7 @@ class AttachmentService implements IAttachmentService {
 	 * @param UploadedFile $file
 	 * @return LocalAttachment
 	 */
+	#[\Override]
 	public function addFile(string $userId, UploadedFile $file): LocalAttachment {
 		$attachment = new LocalAttachment();
 		$attachment->setUserId($userId);
@@ -118,6 +119,7 @@ class AttachmentService implements IAttachmentService {
 	 *
 	 * @throws AttachmentNotFoundException
 	 */
+	#[\Override]
 	public function getAttachment(string $userId, int $id): array {
 		try {
 			$attachment = $this->mapper->find($userId, $id);
@@ -134,6 +136,7 @@ class AttachmentService implements IAttachmentService {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	public function deleteAttachment(string $userId, int $id) {
 		try {
 			$attachment = $this->mapper->find($userId, $id);

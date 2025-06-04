@@ -30,6 +30,7 @@ class ReadMessagesExtractor implements IExtractor {
 		$this->statisticsDao = $statisticsDao;
 	}
 
+	#[\Override]
 	public function prepare(Account $account,
 		array $incomingMailboxes,
 		array $outgoingMailboxes,
@@ -45,6 +46,7 @@ class ReadMessagesExtractor implements IExtractor {
 		$this->readMessages = $this->statisticsDao->getNumberOfMessagesWithFlagGrouped($incomingMailboxes, 'seen', $senders);
 	}
 
+	#[\Override]
 	public function extract(Message $message): array {
 		$sender = $message->getFrom()->first();
 		if ($sender === null) {

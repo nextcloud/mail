@@ -31,6 +31,7 @@ class MakeItineraryExtractorExecutable implements IRepairStep {
 		$this->logger = $logger;
 	}
 
+	#[\Override]
 	public function getName() {
 		return 'Make Mail itinerary extractor executable';
 	}
@@ -38,6 +39,7 @@ class MakeItineraryExtractorExecutable implements IRepairStep {
 	/**
 	 * @return void
 	 */
+	#[\Override]
 	public function run(IOutput $output) {
 		if (!is_file($this->file)) {
 			$this->logger->warning('itinerary file doesn\'t exist');

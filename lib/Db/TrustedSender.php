@@ -31,6 +31,7 @@ class TrustedSender extends Entity implements JsonSerializable {
 	/** @var string */
 	protected $type;
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

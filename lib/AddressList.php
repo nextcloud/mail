@@ -78,6 +78,7 @@ class AddressList implements Countable, JsonSerializable {
 		return $this->addresses[0];
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return array_map(static function (Address $address) {
@@ -88,6 +89,7 @@ class AddressList implements Countable, JsonSerializable {
 	/**
 	 * @return int
 	 */
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function count() {
 		return count($this->addresses);

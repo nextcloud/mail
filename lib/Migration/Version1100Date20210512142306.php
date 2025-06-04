@@ -33,6 +33,7 @@ class Version1100Date20210512142306 extends SimpleMigrationStep {
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
 	 * @param array $options
 	 */
+	#[\Override]
 	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
 		if (!method_exists($this->mailboxMapper, 'findAllIds')) {
 			$output->warning('New Mail code hasn\'t been loaded yet, skipping tag migration. Please run `occ mail:tags:migration-jobs` after the upgrade.');

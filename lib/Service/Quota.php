@@ -33,6 +33,7 @@ class Quota implements JsonSerializable {
 		return $this->limit;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

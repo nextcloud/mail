@@ -91,6 +91,7 @@ class AvatarService implements IAvatarService {
 	 * @param string $uid
 	 * @return Avatar|null
 	 */
+	#[\Override]
 	public function getAvatar(string $email, string $uid): ?Avatar {
 		$cachedAvatar = $this->cache->get($email, $uid);
 		if ($cachedAvatar) {
@@ -121,6 +122,7 @@ class AvatarService implements IAvatarService {
 	 * @param string $uid
 	 * @return array|null image data
 	 */
+	#[\Override]
 	public function getAvatarImage(string $email, string $uid) {
 		$avatar = $this->getAvatar($email, $uid);
 		if (is_null($avatar)) {

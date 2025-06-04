@@ -17,6 +17,7 @@ class MailboxLockedException extends ClientException {
 		return new self($mailbox->getId() . ' is already being synced');
 	}
 
+	#[\Override]
 	public function getHttpCode(): int {
 		return Http::STATUS_CONFLICT;
 	}

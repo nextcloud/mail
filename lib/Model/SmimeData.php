@@ -65,6 +65,7 @@ class SmimeData implements JsonSerializable {
 		$this->isEncrypted = $isEncrypted;
 	}
 
+	#[\Override]
 	#[\ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

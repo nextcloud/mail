@@ -29,6 +29,7 @@ class UserPreferenceService implements IUserPreferences {
 	 * @param mixed $value
 	 * @return mixed new value
 	 */
+	#[\Override]
 	public function setPreference(string $userId, $key, $value) {
 		$this->config->setUserValue($userId, 'mail', $key, $value);
 		return $value;
@@ -40,6 +41,7 @@ class UserPreferenceService implements IUserPreferences {
 	 * @param mixed|null $default
 	 * @return string
 	 */
+	#[\Override]
 	public function getPreference(string $userId, $key, $default = null) {
 		return $this->config->getUserValue($userId, 'mail', $key, $default);
 	}

@@ -58,6 +58,7 @@ class AdminSettings implements ISettings {
 		$this->classificationSettingsService = $classificationSettingsService;
 	}
 
+	#[\Override]
 	public function getForm() {
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,
@@ -147,10 +148,12 @@ class AdminSettings implements ISettings {
 		return new TemplateResponse(Application::APP_ID, 'settings-admin');
 	}
 
+	#[\Override]
 	public function getSection() {
 		return 'groupware';
 	}
 
+	#[\Override]
 	public function getPriority() {
 		return 90;
 	}

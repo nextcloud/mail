@@ -70,6 +70,7 @@ class MailTransmission implements IMailTransmission {
 	) {
 	}
 
+	#[\Override]
 	public function sendMessage(Account $account, LocalMessage $localMessage): void {
 		$to = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_TO);
 		$cc = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_CC);
@@ -176,6 +177,7 @@ class MailTransmission implements IMailTransmission {
 		);
 	}
 
+	#[\Override]
 	public function saveLocalDraft(Account $account, LocalMessage $message): void {
 		$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO);
 		$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC);
@@ -265,6 +267,7 @@ class MailTransmission implements IMailTransmission {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[\Override]
 	public function saveDraft(NewMessageData $message, ?Message $previousDraft = null): array {
 		$perfLogger = $this->performanceLogger->start('save draft');
 		$this->eventDispatcher->dispatch(
@@ -342,6 +345,7 @@ class MailTransmission implements IMailTransmission {
 		return [$account, $draftsMailbox, $newUid];
 	}
 
+	#[\Override]
 	public function sendMdn(Account $account, Mailbox $mailbox, Message $message): void {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->flags();

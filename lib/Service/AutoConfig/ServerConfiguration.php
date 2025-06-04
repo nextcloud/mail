@@ -31,6 +31,7 @@ class ServerConfiguration implements JsonSerializable {
 		$this->security = $security;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

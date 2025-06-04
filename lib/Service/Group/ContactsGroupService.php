@@ -31,10 +31,12 @@ class ContactsGroupService implements IGroupService {
 		$this->config = $config;
 	}
 
+	#[\Override]
 	public function getNamespace(): string {
 		return $this->namespace;
 	}
 
+	#[\Override]
 	public function search(string $term): array {
 		if (!$this->contactsManager->isEnabled()) {
 			return [];
@@ -63,6 +65,7 @@ class ContactsGroupService implements IGroupService {
 		return array_unique($receivers, SORT_REGULAR);
 	}
 
+	#[\Override]
 	public function getUsers(string $groupId): array {
 		if (!$this->contactsManager->isEnabled()) {
 			return [];
