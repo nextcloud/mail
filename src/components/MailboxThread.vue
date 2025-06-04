@@ -11,10 +11,11 @@
 		@update:showDetails="hideMessage">
 		<template #list>
 			<div :class="{ list__wrapper: !showThread || !isMobile }">
-				<SearchMessages v-if="!showThread || !isMobile"
-					:mailbox="mailbox"
-					:account-id="account.accountId"
-					@search-changed="onUpdateSearchQuery" />
+				<div v-if="!showThread || !isMobile" class="sticky-header">
+					<SearchMessages :mailbox="mailbox"
+						:account-id="account.accountId"
+						@search-changed="onUpdateSearchQuery" />
+				</div>
 				<AppContentList v-infinite-scroll="onScroll"
 					v-shortkey.once="shortkeys"
 					class="envelope-list"
@@ -429,7 +430,18 @@ export default {
 		margin: 0 !important;
 	}
 }
-
+:deep(.app-content-list) {
+	flex: 1 1 auto;
+	overflow: hidden;
+	height: 100% !important;
+	min-height: 0;
+}
+:deep(.app-content-wrapper) {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	overflow: hidden;
+}
 .v-popover > .trigger > * {
 	z-index: 1;
 }
@@ -461,11 +473,10 @@ export default {
 		background-color: var(--color-background-dark);
 	}
 }
-:deep(.app-content-wrapper) {
-	overflow: auto;
-}
 .envelope-list {
+	flex: 1 1 auto;
 	overflow-y: auto;
+	min-height: 0;
 }
 .information-icon {
 	opacity: .7;
@@ -477,9 +488,10 @@ export default {
 }
 .list__wrapper {
 	display: flex;
-	flex: 1 0 0;
+	flex: 1 1 auto;
 	flex-direction: column;
 	height: 100%;
+	overflow: hidden;
 }
 :deep(.app-details-toggle) {
 	opacity: 1;
@@ -487,5 +499,12 @@ export default {
  // temporary fix
 :deep(.app-content-list) {
 	min-height: 0;
+	position: absolute;
+	overflow: scroll;
+	width: 100% !important;
+	top: 52px;
+}
+:deep(.app-content-wrapper.app-content-wrapper--no-split.app-content-wrapper--show-details) {
+	overflow-y: scroll !important;
 }
 </style>
