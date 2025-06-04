@@ -73,7 +73,7 @@ class MailConnectionPerformance implements ISetupCheck {
 					$tLogin = $this->microtime->getNumeric();
 					// time operation
 					$list = $client->listMailboxes('*');
-					$status = $client->status(key($list));
+					$client->status(key($list));
 					$tOperation = $this->microtime->getNumeric();
 					
 					$tests[$host][$accountId] = ['start' => $tStart, 'login' => $tLogin, 'operation' => $tOperation];
