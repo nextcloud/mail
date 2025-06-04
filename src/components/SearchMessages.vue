@@ -600,6 +600,11 @@ export default {
 <style lang="scss">
 .search-messages {
 	border-bottom: 1px solid var(--color-border);
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	height: 52px;
+	background-color: var(--color-main-background);
 	&__input {
 		min-height: 52px;
 		margin-inline-start: calc(var(--app-navigation-padding)*2 + var(--default-clickable-area));
