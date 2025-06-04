@@ -37,7 +37,7 @@ class AdminSettingsTest extends TestCase {
 	}
 
 	public function testGetForm() {
-		$this->serviceMock->getParameter('initialStateService')->expects($this->exactly(13))
+		$this->serviceMock->getParameter('initialStateService')->expects($this->exactly(14))
 			->method('provideInitialState')
 			->withConsecutive(
 				[
@@ -98,6 +98,11 @@ class AdminSettingsTest extends TestCase {
 				[
 					Application::APP_ID,
 					'microsoft_oauth_redirect_url',
+					$this->anything()
+				],
+				[
+					Application::APP_ID,
+					'microsoft_oauth_docs',
 					$this->anything()
 				],
 				[
