@@ -66,6 +66,7 @@ class HtmlResponse extends Response {
 	 *
 	 * @return string message html content
 	 */
+	#[\Override]
 	public function render(): string {
 		if ($this->plain) {
 			return $this->content;

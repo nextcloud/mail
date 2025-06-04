@@ -59,6 +59,7 @@ class Avatar implements JsonSerializable {
 		return $this->isExternal;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

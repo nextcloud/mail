@@ -287,6 +287,7 @@ class Message extends Entity implements JsonSerializable {
 		}
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		$tags = $this->getTags();

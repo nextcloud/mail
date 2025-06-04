@@ -49,14 +49,17 @@ class Provider implements IProvider {
 		$this->urlGenerator = $urlGenerator;
 	}
 
+	#[\Override]
 	public function getId(): string {
 		return Application::APP_ID;
 	}
 
+	#[\Override]
 	public function getName(): string {
 		return $this->l10n->t('Mails');
 	}
 
+	#[\Override]
 	public function getOrder(string $route, array $routeParameters): int {
 		if (strpos($route, Application::APP_ID . '.') === 0) {
 			// Active app, prefer Mail results
@@ -66,6 +69,7 @@ class Provider implements IProvider {
 		return 20;
 	}
 
+	#[\Override]
 	public function search(IUser $user, ISearchQuery $query): SearchResult {
 		return $this->searchByFilter($user, $query, $query->getTerm());
 	}

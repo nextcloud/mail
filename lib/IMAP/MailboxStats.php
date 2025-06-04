@@ -29,6 +29,7 @@ class MailboxStats implements JsonSerializable {
 		return $this->unread;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

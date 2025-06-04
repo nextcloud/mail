@@ -59,6 +59,7 @@ class MailSearch implements IMailSearch {
 		$this->timeFactory = $timeFactory;
 	}
 
+	#[\Override]
 	public function findMessage(Account $account,
 		Mailbox $mailbox,
 		Message $message): Message {
@@ -87,6 +88,7 @@ class MailSearch implements IMailSearch {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[\Override]
 	public function findMessages(Account $account,
 		Mailbox $mailbox,
 		string $sortOrder,
@@ -134,6 +136,7 @@ class MailSearch implements IMailSearch {
 	 *
 	 * @throws ServiceException
 	 */
+	#[\Override]
 	public function findMessagesGlobally(
 		IUser $user,
 		SearchQuery $query,

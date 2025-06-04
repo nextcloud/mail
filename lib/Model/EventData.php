@@ -28,6 +28,7 @@ class EventData implements JsonSerializable {
 		return $this->description;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

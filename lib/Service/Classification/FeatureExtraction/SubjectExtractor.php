@@ -51,6 +51,7 @@ class SubjectExtractor implements IExtractor {
 		$this->tfidf = $tfidf;
 	}
 
+	#[\Override]
 	public function prepare(Account $account, array $incomingMailboxes, array $outgoingMailboxes, array $messages): void {
 		/** @var array<array-key, array<string, string>> $data */
 		$data = array_map(static function (Message $message) {
@@ -71,6 +72,7 @@ class SubjectExtractor implements IExtractor {
 		$this->limitFeatureSize();
 	}
 
+	#[\Override]
 	public function extract(Message $message): array {
 		$sender = $message->getFrom()->first();
 		if ($sender === null) {

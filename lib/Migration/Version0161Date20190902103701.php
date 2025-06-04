@@ -31,6 +31,7 @@ class Version0161Date20190902103701 extends SimpleMigrationStep {
 	 *
 	 * @return ISchemaWrapper
 	 */
+	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options) {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
@@ -86,6 +87,7 @@ class Version0161Date20190902103701 extends SimpleMigrationStep {
 	/**
 	 * @return void
 	 */
+	#[\Override]
 	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
 		// Force a re-sync
 		$update = $this->connection->getQueryBuilder();

@@ -88,6 +88,7 @@ class DatabaseMessage extends Message implements JsonSerializable {
 		);
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return array_merge(

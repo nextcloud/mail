@@ -41,6 +41,7 @@ class MailService implements IService, IMessageSend {
 	 *
 	 * @return string id of this service (e.g. 1 or service1 or anything else)
 	 */
+	#[\Override]
 	public function id(): string {
 		return $this->serviceId;
 	}
@@ -54,6 +55,7 @@ class MailService implements IService, IMessageSend {
 	 *
 	 * @return bool true/false if ability is supplied and found in collection
 	 */
+	#[\Override]
 	public function capable(string $value): bool {
 		// evaluate if required ability exists
 		if (isset($this->serviceAbilities[$value])) {
@@ -70,6 +72,7 @@ class MailService implements IService, IMessageSend {
 	 *
 	 * @return array collection of abilities otherwise empty collection
 	 */
+	#[\Override]
 	public function capabilities(): array {
 		return $this->serviceAbilities;
 	}
@@ -81,6 +84,7 @@ class MailService implements IService, IMessageSend {
 	 *
 	 * @return string label/name of service (e.g. ACME Company Mail Service)
 	 */
+	#[\Override]
 	public function getLabel(): string {
 		return $this->serviceLabel;
 	}
@@ -94,6 +98,7 @@ class MailService implements IService, IMessageSend {
 	 *
 	 * @return self return this object for command chaining
 	 */
+	#[\Override]
 	public function setLabel(string $value): self {
 		$this->serviceLabel = $value;
 		return $this;
@@ -106,6 +111,7 @@ class MailService implements IService, IMessageSend {
 	 *
 	 * @return IAddress mail address object
 	 */
+	#[\Override]
 	public function getPrimaryAddress(): IAddress {
 		// retrieve and return primary service address
 		return $this->servicePrimaryAddress;
@@ -120,6 +126,7 @@ class MailService implements IService, IMessageSend {
 	 *
 	 * @return self return this object for command chaining
 	 */
+	#[\Override]
 	public function setPrimaryAddress(IAddress $value): self {
 		$this->servicePrimaryAddress = $value;
 		return $this;
@@ -132,6 +139,7 @@ class MailService implements IService, IMessageSend {
 	 *
 	 * @return array<int, IAddress> collection of mail address object [IAddress, IAddress]
 	 */
+	#[\Override]
 	public function getSecondaryAddresses(): array {
 		// retrieve and return secondary service addresses (aliases) collection
 		return $this->serviceSecondaryAddresses;
@@ -146,6 +154,7 @@ class MailService implements IService, IMessageSend {
 	 *
 	 * @return self return this object for command chaining
 	 */
+	#[\Override]
 	public function setSecondaryAddresses(IAddress ...$value): self {
 		$this->serviceSecondaryAddresses = $value;
 		return $this;
@@ -158,6 +167,7 @@ class MailService implements IService, IMessageSend {
 	 *
 	 * @return IMessage fresh message object
 	 */
+	#[\Override]
 	public function initiateMessage(): IMessage {
 		return new Message();
 	}
@@ -172,6 +182,7 @@ class MailService implements IService, IMessageSend {
 	 *
 	 * @throws SendException on failure, check message for reason
 	 */
+	#[\Override]
 	public function sendMessage(IMessage $message, array $options = []): void {
 		/** @var MessageSend $cmd */
 		$cmd = $this->container->get(MessageSend::class);

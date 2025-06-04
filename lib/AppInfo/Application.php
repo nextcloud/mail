@@ -94,6 +94,7 @@ class Application extends App implements IBootstrap {
 		parent::__construct(self::APP_ID, $urlParams);
 	}
 
+	#[\Override]
 	public function register(IRegistrationContext $context): void {
 		$context->registerParameter('hostname', Util::getServerHostName());
 
@@ -169,6 +170,7 @@ class Application extends App implements IBootstrap {
 		Horde_Translation::setHandler('Horde_Smtp', new HordeTranslationHandler());
 	}
 
+	#[\Override]
 	public function boot(IBootContext $context): void {
 	}
 }

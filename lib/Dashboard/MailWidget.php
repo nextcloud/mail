@@ -58,6 +58,7 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getOrder(): int {
 		return 4;
 	}
@@ -65,6 +66,7 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getIconClass(): string {
 		return 'icon-mail';
 	}
@@ -72,6 +74,7 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getIconUrl(): string {
 		return $this->urlGenerator->getAbsoluteURL(
 			$this->urlGenerator->imagePath(Application::APP_ID, 'mail-dark.svg')
@@ -81,6 +84,7 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getUrl(): ?string {
 		return $this->urlGenerator->getAbsoluteURL($this->urlGenerator->linkToRoute('mail.page.index'));
 	}
@@ -88,6 +92,7 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function load(): void {
 		// No assets need to be loaded anymore as the widget is rendered from the API
 	}
@@ -130,6 +135,7 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getItems(string $userId, ?string $since = null, int $limit = 7): array {
 		$intSince = $since === null ? null : (int)$since;
 		$emails = $this->getEmails($userId, $intSince, $limit);
@@ -161,6 +167,7 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getItemsV2(string $userId, ?string $since = null, int $limit = 7): WidgetItems {
 		$items = $this->getItems($userId, $since, $limit);
 		return new WidgetItems(
@@ -172,6 +179,7 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getWidgetOptions(): WidgetOptions {
 		return new WidgetOptions(true);
 	}
@@ -179,6 +187,7 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getWidgetButtons(string $userId): array {
 		$buttons = [];
 

@@ -44,6 +44,7 @@ class PhishingDetectionResult implements JsonSerializable {
 		return $this->isPhishing;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

@@ -41,6 +41,7 @@ class LocalAttachment extends Entity implements JsonSerializable {
 	/** @var int|null */
 	protected $localMessageId;
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

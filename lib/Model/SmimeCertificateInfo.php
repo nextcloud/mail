@@ -89,6 +89,7 @@ class SmimeCertificateInfo implements JsonSerializable {
 		$this->isChainVerified = $isChainVerified;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

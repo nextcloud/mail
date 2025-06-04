@@ -33,6 +33,7 @@ class NewMessagesSummarizeListener implements IEventListener {
 	) {
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		if ($this->appConfig->getAppValueBool('llm_processing', false) === false) {
 			return;

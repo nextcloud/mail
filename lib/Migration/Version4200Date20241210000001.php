@@ -35,6 +35,7 @@ class Version4200Date20241210000001 extends SimpleMigrationStep {
 	 * @psalm-param Closure():ISchemaWrapper $schemaClosure
 	 * @param array $options
 	 */
+	#[\Override]
 	public function preSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
 		$schema = $schemaClosure();
 
@@ -68,6 +69,7 @@ class Version4200Date20241210000001 extends SimpleMigrationStep {
 	 * @param array $options
 	 * @return null|ISchemaWrapper
 	 */
+	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 		$schema = $schemaClosure();
 

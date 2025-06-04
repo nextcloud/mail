@@ -43,6 +43,7 @@ class FaviconSource implements IAvatarSource {
 	 *
 	 * @return bool
 	 */
+	#[\Override]
 	public function isExternal(): bool {
 		return true;
 	}
@@ -52,6 +53,7 @@ class FaviconSource implements IAvatarSource {
 	 * @param AvatarFactory $factory
 	 * @return Avatar|null avatar URL if one can be found
 	 */
+	#[\Override]
 	public function fetch(string $email, AvatarFactory $factory) {
 		$horde = new Horde_Mail_Rfc822_Address($email);
 		// TODO: fall back to insecure HTTP?

@@ -26,6 +26,7 @@ class OutboxWorkerJob extends TimedJob {
 		$this->outboxService = $outboxService;
 	}
 
+	#[\Override]
 	protected function run($argument): void {
 		$this->outboxService->flush();
 	}
