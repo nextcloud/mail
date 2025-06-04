@@ -65,7 +65,6 @@ class Version0110Date20180825201241 extends SimpleMigrationStep {
 
 		$chunk = $collectedAdressesMapper->getChunk();
 		while (\count($chunk) > 0) {
-			$maxId = null;
 			foreach ($chunk as $address) {
 				/* @var $address CollectedAddress */
 				$maxId = $address->getId();

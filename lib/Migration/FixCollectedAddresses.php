@@ -37,7 +37,6 @@ class FixCollectedAddresses implements IRepairStep {
 
 		$chunk = $this->mapper->getChunk();
 		while (count($chunk) > 0) {
-			$maxId = null;
 			foreach ($chunk as $address) {
 				/* @var $address CollectedAddress */
 				$maxId = $address->getId();
