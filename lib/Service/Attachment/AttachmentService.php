@@ -28,7 +28,7 @@ use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use Psr\Log\LoggerInterface;
 
-class AttachmentService implements IAttachmentService {
+final class AttachmentService implements IAttachmentService {
 	/** @var LocalAttachmentMapper */
 	private $mapper;
 

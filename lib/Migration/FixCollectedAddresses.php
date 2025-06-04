@@ -16,7 +16,7 @@ use OCA\Mail\Db\CollectedAddressMapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 
-class FixCollectedAddresses implements IRepairStep {
+final class FixCollectedAddresses implements IRepairStep {
 	/** @var CollectedAddressMapper */
 	private $mapper;
 

@@ -25,7 +25,7 @@ use function get_class;
  * @psalm-suppress MissingTemplateParam
  * @todo spec template with 28+
  */
-class JsonResponse extends Base {
+final class JsonResponse extends Base {
 	/**
 	 * @param Http::STATUS_* $statusCode
 	 */

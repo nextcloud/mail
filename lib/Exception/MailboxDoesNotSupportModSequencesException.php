@@ -9,5 +9,5 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Exception;
 
-class MailboxDoesNotSupportModSequencesException extends ServiceException {
+final class MailboxDoesNotSupportModSequencesException extends ServiceException {
 }

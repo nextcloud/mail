@@ -14,7 +14,7 @@ use OCA\Mail\Account;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
 
-class SieveClientFactory {
+final class SieveClientFactory {
 	private ICrypto $crypto;
 	private IConfig $config;
 	private array $cache = [];

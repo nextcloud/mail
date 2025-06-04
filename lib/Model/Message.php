@@ -17,7 +17,7 @@ use OCA\Mail\Db\LocalAttachment;
 use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
 
-class Message implements IMessage {
+final class Message implements IMessage {
 	use ConvertAddresses;
 
 	/** @var string */

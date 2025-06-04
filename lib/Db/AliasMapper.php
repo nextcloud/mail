@@ -19,7 +19,7 @@ use function array_map;
 /**
  * @template-extends QBMapper<Alias>
  */
-class AliasMapper extends QBMapper {
+final class AliasMapper extends QBMapper {
 	/**
 	 * @param IDBConnection $db
 	 */

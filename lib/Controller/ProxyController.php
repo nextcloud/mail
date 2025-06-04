@@ -24,7 +24,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\LoggerInterface;
 use function file_get_contents;
 
-#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
+final #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ProxyController extends Controller {
 	private IURLGenerator $urlGenerator;
 	private ISession $session;

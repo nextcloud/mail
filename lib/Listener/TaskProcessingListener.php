@@ -20,7 +20,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @template-implements IEventListener<Event>
  */
-class TaskProcessingListener implements IEventListener {
+final class TaskProcessingListener implements IEventListener {
 
 	public function __construct(
 		private LoggerInterface $logger,

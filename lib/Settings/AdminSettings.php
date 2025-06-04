@@ -25,7 +25,7 @@ use OCP\Settings\ISettings;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\SummaryTaskType;
 
-class AdminSettings implements ISettings {
+final class AdminSettings implements ISettings {
 	/** @var IInitialStateService */
 	private $initialStateService;
 

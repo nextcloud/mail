@@ -46,7 +46,7 @@ use function array_merge;
  * @psalm-import-type MailMessageApiResponse from ResponseDefinitions
  * @psalm-import-type MailMessageApiAttachment from ResponseDefinitions
  */
-class MessageApiController extends OCSController {
+final class MessageApiController extends OCSController {
 
 	private ?string $userId;
 

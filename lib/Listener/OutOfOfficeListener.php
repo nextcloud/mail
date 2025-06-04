@@ -27,7 +27,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @template-implements IEventListener<Event|OutOfOfficeStartedEvent|OutOfOfficeEndedEvent|OutOfOfficeScheduledEvent|OutOfOfficeChangedEvent|OutOfOfficeClearedEvent>
  */
-class OutOfOfficeListener implements IEventListener {
+final class OutOfOfficeListener implements IEventListener {
 	public function __construct(
 		private AccountService $accountService,
 		private OutOfOfficeService $outOfOfficeService,

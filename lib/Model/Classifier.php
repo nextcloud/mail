@@ -12,7 +12,7 @@ namespace OCA\Mail\Model;
 use JsonSerializable;
 use ReturnTypeWillChange;
 
-class Classifier implements JsonSerializable {
+final class Classifier implements JsonSerializable {
 	public const TYPE_IMPORTANCE = 'importance';
 
 	private int $accountId;

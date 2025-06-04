@@ -9,5 +9,5 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Exception;
 
-class IncompleteSyncException extends ServiceException {
+final class IncompleteSyncException extends ServiceException {
 }

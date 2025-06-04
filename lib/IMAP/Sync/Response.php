@@ -16,7 +16,7 @@ use ReturnTypeWillChange;
 /**
  * @psalm-template T
  */
-class Response implements JsonSerializable {
+final class Response implements JsonSerializable {
 	/** @var T[] */
 	private $newMessages;
 

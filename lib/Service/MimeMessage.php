@@ -18,7 +18,7 @@ use OCA\Mail\Exception\InvalidDataUriException;
 use OCA\Mail\Html\Parser;
 use OCA\Mail\Service\DataUri\DataUriParser;
 
-class MimeMessage {
+final class MimeMessage {
 	private DataUriParser $uriParser;
 
 	public function __construct(DataUriParser $uriParser) {

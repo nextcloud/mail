@@ -18,7 +18,7 @@ use Throwable;
 /**
  * @template-extends QBMapper<LocalAttachment>
  */
-class LocalAttachmentMapper extends QBMapper {
+final class LocalAttachmentMapper extends QBMapper {
 	/**
 	 * @param IDBConnection $db
 	 */

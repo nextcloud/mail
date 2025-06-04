@@ -16,7 +16,7 @@ use OCP\IDBConnection;
 /**
  * @template-extends QBMapper<Recipient>
  */
-class RecipientMapper extends QBMapper {
+final class RecipientMapper extends QBMapper {
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'mail_recipients');
 	}

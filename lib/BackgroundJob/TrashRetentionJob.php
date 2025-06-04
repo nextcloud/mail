@@ -23,7 +23,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
 use Psr\Log\LoggerInterface;
 
-class TrashRetentionJob extends TimedJob {
+final class TrashRetentionJob extends TimedJob {
 	public function __construct(
 		ITimeFactory $time,
 		private LoggerInterface $logger,

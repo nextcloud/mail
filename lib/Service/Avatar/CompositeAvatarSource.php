@@ -12,7 +12,7 @@ namespace OCA\Mail\Service\Avatar;
 /**
  * Composition of all avatar sources for easier usage
  */
-class CompositeAvatarSource {
+final class CompositeAvatarSource {
 	/** @var IAvatarSource[] */
 	private $sources;
 

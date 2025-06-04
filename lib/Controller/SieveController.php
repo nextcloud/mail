@@ -28,7 +28,7 @@ use OCP\Security\ICrypto;
 use OCP\Security\IRemoteHostValidator;
 use Psr\Log\LoggerInterface;
 
-#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
+final #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class SieveController extends Controller {
 	private MailAccountMapper $mailAccountMapper;
 	private SieveClientFactory $sieveClientFactory;

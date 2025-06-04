@@ -56,7 +56,7 @@ use ReturnTypeWillChange;
  * @method string|null getLdapAliasesAttribute()
  * @method void setLdapAliasesAttribute(?string $ldapAliasesAttribute)
  */
-class Provisioning extends Entity implements JsonSerializable {
+final class Provisioning extends Entity implements JsonSerializable {
 	public const WILDCARD = '*';
 	public const MASTER_PASSWORD_PLACEHOLDER = '********';
 

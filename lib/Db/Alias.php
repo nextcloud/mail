@@ -30,7 +30,7 @@ use ReturnTypeWillChange;
  * @method int|null getSmimeCertificateId()
  * @method void setSmimeCertificateId(int|null $smimeCertificateId)
  */
-class Alias extends Entity implements JsonSerializable {
+final class Alias extends Entity implements JsonSerializable {
 	public const SIGNATURE_MODE_PLAIN = MailAccount::SIGNATURE_MODE_PLAIN;
 	public const SIGNATURE_MODE_HTML = MailAccount::SIGNATURE_MODE_HTML;
 

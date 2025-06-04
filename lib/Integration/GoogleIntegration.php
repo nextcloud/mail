@@ -21,7 +21,7 @@ use Psr\Log\LoggerInterface;
 use function json_decode;
 use function json_encode;
 
-class GoogleIntegration {
+final class GoogleIntegration {
 	private ITimeFactory $timeFactory;
 	private IConfig $config;
 	private ICrypto $crypto;

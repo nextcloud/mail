@@ -11,5 +11,5 @@ namespace OCA\Mail\Exception;
 
 use Exception;
 
-class SmimeEncryptException extends Exception {
+final class SmimeEncryptException extends Exception {
 }

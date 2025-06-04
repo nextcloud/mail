@@ -11,7 +11,7 @@ namespace OCA\Mail\Exception;
 
 use Exception;
 
-class ImapFlagEncodingException extends Exception {
+final class ImapFlagEncodingException extends Exception {
 	public static function create($label): ImapFlagEncodingException {
 		return new self(
 			'Failed to convert the given label "' . $label . '" to UTF7-IMAP',

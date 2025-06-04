@@ -22,7 +22,7 @@ use OCP\TextProcessing\FreePromptTaskType;
 /**
  * @template-implements IEventListener<Event|NewMessagesSynchronized>
  */
-class FollowUpClassifierListener implements IEventListener {
+final class FollowUpClassifierListener implements IEventListener {
 
 	public function __construct(
 		private IJobList $jobList,

@@ -20,7 +20,7 @@ use OCP\Mail\Provider\Exception\SendException;
 use OCP\Mail\Provider\IAddress;
 use OCP\Mail\Provider\IMessage;
 
-class MessageSend {
+final class MessageSend {
 
 	public function __construct(
 		protected ITimeFactory $time,

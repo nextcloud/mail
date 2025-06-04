@@ -28,7 +28,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-class OutboxService {
+final class OutboxService {
 	/** @var IMailTransmission */
 	private $transmission;
 

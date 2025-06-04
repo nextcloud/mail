@@ -16,7 +16,7 @@ use RuntimeException;
 use function array_map;
 use function array_unique;
 
-class ImportantMessagesExtractor implements IExtractor {
+final class ImportantMessagesExtractor implements IExtractor {
 	/** @var int[] */
 	private $totalMessages = [];
 

@@ -12,7 +12,7 @@ namespace OCA\Mail\Service\MailFilter;
 use JsonSerializable;
 use ReturnTypeWillChange;
 
-class FilterParserResult implements JsonSerializable {
+final class FilterParserResult implements JsonSerializable {
 	public function __construct(
 		private array $filters,
 		private string $sieveScript,

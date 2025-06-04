@@ -13,7 +13,7 @@ use OCA\Mail\Service\IMipService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
 
-class IMipMessageJob extends TimedJob {
+final class IMipMessageJob extends TimedJob {
 	private IMipService $iMipService;
 
 	public function __construct(ITimeFactory $time,

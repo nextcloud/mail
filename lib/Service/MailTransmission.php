@@ -50,7 +50,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 
-class MailTransmission implements IMailTransmission {
+final class MailTransmission implements IMailTransmission {
 	private const RETRIABLE_CODES = [
 		Horde_Smtp_Exception::INSUFFICIENT_STORAGE,
 		Horde_Smtp_Exception::OVERQUOTA,

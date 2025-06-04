@@ -12,7 +12,7 @@ namespace OCA\Mail\Service\AutoConfig;
 
 use Psr\Log\LoggerInterface;
 
-class ConnectivityTester {
+final class ConnectivityTester {
 	public const CONNECTION_TIMEOUT = 5;
 
 	/** @var LoggerInterface */

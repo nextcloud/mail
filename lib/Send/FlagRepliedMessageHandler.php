@@ -18,7 +18,7 @@ use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
 
-class FlagRepliedMessageHandler extends AHandler {
+final class FlagRepliedMessageHandler extends AHandler {
 	public function __construct(
 		private MailboxMapper $mailboxMapper,
 		private LoggerInterface $logger,

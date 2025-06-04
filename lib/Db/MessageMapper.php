@@ -46,7 +46,7 @@ use function strlen;
 /**
  * @template-extends QBMapper<Message>
  */
-class MessageMapper extends QBMapper {
+final class MessageMapper extends QBMapper {
 
 	use TTransactional;
 

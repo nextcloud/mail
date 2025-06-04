@@ -17,7 +17,7 @@ use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
-#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
+final #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AutoCompleteController extends Controller {
 	private AutoCompleteService $service;
 	private ?string $userId;

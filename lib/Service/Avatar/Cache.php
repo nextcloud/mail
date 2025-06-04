@@ -12,7 +12,7 @@ namespace OCA\Mail\Service\Avatar;
 use OCP\ICache;
 use OCP\ICacheFactory;
 
-class Cache {
+final class Cache {
 	// Cache for one week
 	public const CACHE_TTL = 7 * 24 * 60 * 60;
 

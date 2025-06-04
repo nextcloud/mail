@@ -11,7 +11,7 @@ namespace OCA\Mail\Exception;
 
 use Exception;
 
-class FilterParserException extends Exception {
+final class FilterParserException extends Exception {
 
 	public static function invalidJson(\Throwable $exception): FilterParserException {
 		return new self(

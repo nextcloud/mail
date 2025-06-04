@@ -11,6 +11,6 @@ namespace OCA\Mail\Http;
 
 use Attribute;
 
-#[Attribute]
+final #[Attribute]
 class TrapError {
 }

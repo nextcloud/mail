@@ -19,7 +19,7 @@ use OCP\BackgroundJob\TimedJob;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-class TrainImportanceClassifierJob extends TimedJob {
+final class TrainImportanceClassifierJob extends TimedJob {
 	private AccountService $accountService;
 	private ImportanceClassifier $classifier;
 	private IJobList $jobList;

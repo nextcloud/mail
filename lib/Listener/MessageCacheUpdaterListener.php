@@ -19,7 +19,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @template-implements IEventListener<Event>
  */
-class MessageCacheUpdaterListener implements IEventListener {
+final class MessageCacheUpdaterListener implements IEventListener {
 	/** @var MessageMapper */
 	private $mapper;
 

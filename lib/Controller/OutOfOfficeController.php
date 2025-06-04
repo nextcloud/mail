@@ -25,7 +25,7 @@ use OCP\IUserSession;
 use OCP\User\IAvailabilityCoordinator;
 use Psr\Container\ContainerInterface;
 
-#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
+final #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class OutOfOfficeController extends Controller {
 	public function __construct(
 		IRequest $request,

@@ -12,7 +12,7 @@ namespace OCA\Mail;
 use JsonSerializable;
 use ReturnTypeWillChange;
 
-class PhishingDetectionList implements JsonSerializable {
+final class PhishingDetectionList implements JsonSerializable {
 
 	/** @var PhishingDetectionResult[] */
 	private array $checks;

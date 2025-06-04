@@ -17,7 +17,7 @@ use Psr\Log\LoggerInterface;
 use function method_exists;
 use function sprintf;
 
-class AddMissingMessageIds implements IRepairStep {
+final class AddMissingMessageIds implements IRepairStep {
 	/** @var MessageMapper */
 	private $mapper;
 

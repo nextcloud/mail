@@ -13,7 +13,7 @@ use OCA\Mail\PhishingDetectionResult;
 use OCA\Mail\Service\ContactsIntegration;
 use OCP\IL10N;
 
-class ContactCheck {
+final class ContactCheck {
 	public function __construct(
 		private ContactsIntegration $contactIntegration,
 		private IL10N $l10n,

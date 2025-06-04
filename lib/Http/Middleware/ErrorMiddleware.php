@@ -26,7 +26,7 @@ use Psr\Log\LoggerInterface;
 use ReflectionMethod;
 use Throwable;
 
-class ErrorMiddleware extends Middleware {
+final class ErrorMiddleware extends Middleware {
 	/** @var LoggerInterface */
 	private $logger;
 

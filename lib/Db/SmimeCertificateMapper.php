@@ -19,7 +19,7 @@ use OCP\IDBConnection;
 /**
  * @template-extends QBMapper<SmimeCertificate>
  */
-class SmimeCertificateMapper extends QBMapper {
+final class SmimeCertificateMapper extends QBMapper {
 	/**
 	 * @param IDBConnection $db
 	 */

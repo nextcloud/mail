@@ -18,7 +18,7 @@ use function chmod;
 use function is_executable;
 use function is_file;
 
-class MakeItineraryExtractorExecutable implements IRepairStep {
+final class MakeItineraryExtractorExecutable implements IRepairStep {
 	/** @var LoggerInterface */
 	private $logger;
 

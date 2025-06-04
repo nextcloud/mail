@@ -13,7 +13,7 @@ use DOMDocument;
 use function libxml_clear_errors;
 use function libxml_use_internal_errors;
 
-class Parser {
+final class Parser {
 
 	/**
 	 * Parse a DOM document from a string

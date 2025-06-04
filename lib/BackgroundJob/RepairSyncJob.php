@@ -21,7 +21,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
-class RepairSyncJob extends TimedJob {
+final class RepairSyncJob extends TimedJob {
 	public function __construct(
 		ITimeFactory $time,
 		private SyncService $syncService,

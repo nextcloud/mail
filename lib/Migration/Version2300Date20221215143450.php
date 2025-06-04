@@ -18,7 +18,7 @@ use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
-class Version2300Date20221215143450 extends SimpleMigrationStep {
+final class Version2300Date20221215143450 extends SimpleMigrationStep {
 	private IDBConnection $connection;
 
 	use TTransactional;

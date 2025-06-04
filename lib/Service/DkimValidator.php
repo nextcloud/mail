@@ -13,7 +13,7 @@ use OCA\Mail\Contracts\IDkimValidator;
 use PHPMailer\DKIMValidator\DKIMException;
 use PHPMailer\DKIMValidator\Validator;
 
-class DkimValidator implements IDkimValidator {
+final class DkimValidator implements IDkimValidator {
 	#[\Override]
 	public function validate(string $rawMessage): bool {
 		try {

@@ -32,7 +32,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use function str_starts_with;
 use function strtolower;
 
-class ImapMessageFetcher {
+final class ImapMessageFetcher {
 	/** @var string[] */
 	private array $attachmentsToIgnore = ['signature.asc', 'smime.p7s'];
 

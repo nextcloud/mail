@@ -26,7 +26,7 @@ use OCP\IUser;
 use OCP\User\IAvailabilityCoordinator;
 use Psr\Log\LoggerInterface;
 
-class OutOfOfficeService {
+final class OutOfOfficeService {
 
 	public function __construct(
 		private OutOfOfficeParser $outOfOfficeParser,

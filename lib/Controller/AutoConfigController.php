@@ -24,7 +24,7 @@ use OCP\IRequest;
 use OCP\Security\IRemoteHostValidator;
 use function in_array;
 
-#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
+final #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AutoConfigController extends Controller {
 	private IspDb $ispDb;
 	private MxRecord $mxRecord;

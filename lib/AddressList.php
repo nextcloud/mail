@@ -19,7 +19,7 @@ use ReturnTypeWillChange;
 /**
  * @psalm-immutable
  */
-class AddressList implements Countable, JsonSerializable {
+final class AddressList implements Countable, JsonSerializable {
 	/** @var Address[] */
 	private $addresses;
 

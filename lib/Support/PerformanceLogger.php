@@ -12,7 +12,7 @@ namespace OCA\Mail\Support;
 use OCP\AppFramework\Utility\ITimeFactory;
 use Psr\Log\LoggerInterface;
 
-class PerformanceLogger {
+final class PerformanceLogger {
 	/** @var ITimeFactory */
 	private $timeFactory;
 

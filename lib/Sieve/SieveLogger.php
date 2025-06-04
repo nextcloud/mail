@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Sieve;
 
-class SieveLogger {
+final class SieveLogger {
 	/** @var resource */
 	protected $stream;
 

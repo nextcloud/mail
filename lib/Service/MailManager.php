@@ -46,7 +46,7 @@ use Psr\Log\LoggerInterface;
 use function array_map;
 use function array_values;
 
-class MailManager implements IMailManager {
+final class MailManager implements IMailManager {
 	/**
 	 * https://datatracker.ietf.org/doc/html/rfc9051#name-flags-message-attribute
 	 */

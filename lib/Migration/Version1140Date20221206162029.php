@@ -15,7 +15,7 @@ use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 use Psr\Log\LoggerInterface;
 
-class Version1140Date20221206162029 extends SimpleMigrationStep {
+final class Version1140Date20221206162029 extends SimpleMigrationStep {
 	private LoggerInterface $logger;
 	private MessageMapper $messageMapper;
 

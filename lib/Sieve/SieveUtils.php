@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Sieve;
 
-class SieveUtils {
+final class SieveUtils {
 	/**
 	 * Escape a string for use in a Sieve script
 	 *

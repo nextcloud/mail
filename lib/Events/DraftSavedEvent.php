@@ -14,7 +14,7 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Model\NewMessageData;
 use OCP\EventDispatcher\Event;
 
-class DraftSavedEvent extends Event {
+final class DraftSavedEvent extends Event {
 	/** @var Account */
 	private $account;
 

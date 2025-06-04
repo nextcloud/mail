@@ -13,7 +13,7 @@ use OCA\Mail\Service\Search\Flag;
 use OCA\Mail\Service\Search\GlobalSearchQuery;
 use OCA\Mail\Service\Search\SearchQuery;
 
-class ImportantMailWidget extends MailWidget {
+final class ImportantMailWidget extends MailWidget {
 	/**
 	 * @inheritDoc
 	 */

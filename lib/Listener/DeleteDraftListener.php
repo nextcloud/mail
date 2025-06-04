@@ -30,7 +30,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @template-implements IEventListener<Event|DraftSavedEvent|OutboxMessageCreatedEvent|DraftMessageCreatedEvent>
  */
-class DeleteDraftListener implements IEventListener {
+final class DeleteDraftListener implements IEventListener {
 	/** @var IMAPClientFactory */
 	private $imapClientFactory;
 

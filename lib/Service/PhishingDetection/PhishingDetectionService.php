@@ -14,7 +14,7 @@ use Horde_Mime_Headers_Element_Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\PhishingDetectionList;
 
-class PhishingDetectionService {
+final class PhishingDetectionService {
 	public function __construct(
 		private ContactCheck $contactCheck,
 		private CustomEmailCheck $customEmailCheck,

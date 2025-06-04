@@ -14,7 +14,7 @@ use OCP\IL10N;
 use OCP\SetupCheck\ISetupCheck;
 use OCP\SetupCheck\SetupResult;
 
-class MailTransport implements ISetupCheck {
+final class MailTransport implements ISetupCheck {
 	public function __construct(
 		private IConfig $config,
 		private IL10N $l10n,

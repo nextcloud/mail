@@ -15,7 +15,7 @@ use ReturnTypeWillChange;
 /**
  * @psalm-immutable
  */
-class Configuration implements JsonSerializable {
+final class Configuration implements JsonSerializable {
 	private ?ServerConfiguration $imapConfig;
 	private ?ServerConfiguration $smtpConfig;
 

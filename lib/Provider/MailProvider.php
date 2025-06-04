@@ -18,7 +18,7 @@ use OCP\Mail\Provider\IService;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
-class MailProvider implements IProvider {
+final class MailProvider implements IProvider {
 
 	public function __construct(
 		protected ContainerInterface $container,

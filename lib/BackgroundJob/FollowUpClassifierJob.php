@@ -20,7 +20,7 @@ use OCP\BackgroundJob\QueuedJob;
 use OCP\DB\Exception;
 use Psr\Log\LoggerInterface;
 
-class FollowUpClassifierJob extends QueuedJob {
+final class FollowUpClassifierJob extends QueuedJob {
 
 	public const PARAM_MESSAGE_ID = 'messageId';
 	public const PARAM_MAILBOX_ID = 'mailboxId';

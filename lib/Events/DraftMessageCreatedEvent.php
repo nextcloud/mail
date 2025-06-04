@@ -16,7 +16,7 @@ use OCP\EventDispatcher\Event;
 /**
  * @psalm-immutable
  */
-class DraftMessageCreatedEvent extends Event {
+final class DraftMessageCreatedEvent extends Event {
 	/** @var Account */
 	private $account;
 

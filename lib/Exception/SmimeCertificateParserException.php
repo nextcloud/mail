@@ -11,5 +11,5 @@ namespace OCA\Mail\Exception;
 
 use Exception;
 
-class SmimeCertificateParserException extends Exception {
+final class SmimeCertificateParserException extends Exception {
 }

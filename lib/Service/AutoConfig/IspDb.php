@@ -21,7 +21,7 @@ use function explode;
 use function str_replace;
 use function strtolower;
 
-class IspDb {
+final class IspDb {
 	/** @var IClient */
 	private $client;
 

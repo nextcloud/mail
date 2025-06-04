@@ -13,7 +13,7 @@ use OCA\Mail\Vendor\Favicon\DataAccess;
 use OCP\Http\Client\IClientService;
 use function array_merge;
 
-class FaviconDataAccess extends DataAccess {
+final class FaviconDataAccess extends DataAccess {
 
 	public function __construct(
 		private IClientService $clientService,

@@ -17,7 +17,7 @@ use OCP\IDBConnection;
 /**
  * @template-extends QBMapper<MessageSnooze>
  */
-class MessageSnoozeMapper extends QBMapper {
+final class MessageSnoozeMapper extends QBMapper {
 	public function __construct(
 		IDBConnection $db,
 		private ITimeFactory $time,

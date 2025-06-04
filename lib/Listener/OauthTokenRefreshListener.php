@@ -19,7 +19,7 @@ use OCP\EventDispatcher\IEventListener;
 /**
  * @template-implements IEventListener<Event|BeforeImapClientCreated>
  */
-class OauthTokenRefreshListener implements IEventListener {
+final class OauthTokenRefreshListener implements IEventListener {
 	private GoogleIntegration $googleIntegration;
 	private MicrosoftIntegration $microsoftIntegration;
 	private AccountService $accountService;

@@ -18,7 +18,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @template-implements IEventListener<Event|MessageFlaggedEvent>
  */
-class HamReportListener implements IEventListener {
+final class HamReportListener implements IEventListener {
 	/** @var LoggerInterface */
 	private $logger;
 

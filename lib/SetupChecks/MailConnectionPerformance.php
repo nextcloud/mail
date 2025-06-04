@@ -21,7 +21,7 @@ use OCP\SetupCheck\SetupResult;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-class MailConnectionPerformance implements ISetupCheck {
+final class MailConnectionPerformance implements ISetupCheck {
 	public function __construct(
 		private IL10N $l10n,
 		private LoggerInterface $logger,

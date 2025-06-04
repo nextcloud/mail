@@ -13,7 +13,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCP\EventDispatcher\Event;
 
-class MessageFlaggedEvent extends Event {
+final class MessageFlaggedEvent extends Event {
 	/** @var Account */
 	private $account;
 

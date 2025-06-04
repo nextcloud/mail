@@ -16,7 +16,7 @@ use function OCA\Mail\array_flat_map;
 /**
  * Combines a set of DI'ed extractors so they can be used as one class
  */
-class CompositeExtractor implements IExtractor {
+final class CompositeExtractor implements IExtractor {
 	private readonly SubjectExtractor $subjectExtractor;
 
 	/** @var IExtractor[] */

@@ -14,7 +14,7 @@ use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\GroupsIntegration;
 
-class AutoCompleteService {
+final class AutoCompleteService {
 	/** @var ContactsIntegration */
 	private $contactsIntegration;
 

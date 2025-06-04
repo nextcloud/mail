@@ -12,7 +12,7 @@ namespace OCA\Mail\Events;
 use OCA\Mail\Account;
 use OCP\EventDispatcher\Event;
 
-class BeforeMessageDeletedEvent extends Event {
+final class BeforeMessageDeletedEvent extends Event {
 	/** @var Account */
 	private $account;
 

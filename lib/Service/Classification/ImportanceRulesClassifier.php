@@ -19,7 +19,7 @@ use OCA\Mail\Service\Classification\FeatureExtraction\SentMessagesExtractor;
 use function array_combine;
 use function array_map;
 
-class ImportanceRulesClassifier {
+final class ImportanceRulesClassifier {
 	/** @var ImportantMessagesExtractor */
 	private $importantMessagesExtractor;
 

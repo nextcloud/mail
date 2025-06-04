@@ -24,7 +24,7 @@ use Psr\Container\ContainerInterface;
 
 use function array_merge;
 
-#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
+final #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class SettingsController extends Controller {
 	private ProvisioningManager $provisioningManager;
 	private AntiSpamService $antiSpamService;

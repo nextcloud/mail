@@ -36,7 +36,7 @@ use OCP\ICertificateManager;
 use OCP\ITempManager;
 use OCP\Security\ICrypto;
 
-class SmimeService {
+final class SmimeService {
 	private ITempManager $tempManager;
 	private ICertificateManager $certificateManager;
 	private ICrypto $crypto;

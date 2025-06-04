@@ -37,7 +37,7 @@ use OCP\IRequest;
 use OCP\Security\IRemoteHostValidator;
 use Psr\Log\LoggerInterface;
 
-#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
+final #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AccountsController extends Controller {
 	private AccountService $accountService;
 	private string $currentUserId;

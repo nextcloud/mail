@@ -52,7 +52,7 @@ use OCP\Lock\LockedException;
 use Psr\Log\LoggerInterface;
 use function array_map;
 
-#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
+final #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class MessagesController extends Controller {
 	private AccountService $accountService;
 	private IMailManager $mailManager;

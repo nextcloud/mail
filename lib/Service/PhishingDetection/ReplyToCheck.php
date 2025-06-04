@@ -12,7 +12,7 @@ namespace OCA\Mail\Service\PhishingDetection;
 use OCA\Mail\PhishingDetectionResult;
 use OCP\IL10N;
 
-class ReplyToCheck {
+final class ReplyToCheck {
 	protected IL10N $l10n;
 
 	public function __construct(IL10N $l10n) {

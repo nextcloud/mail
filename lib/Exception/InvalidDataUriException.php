@@ -11,7 +11,7 @@ namespace OCA\Mail\Exception;
 
 use Exception;
 
-class InvalidDataUriException extends Exception {
+final class InvalidDataUriException extends Exception {
 	public function __construct() {
 		parent::__construct('Invalid data uri');
 	}

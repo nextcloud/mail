@@ -19,7 +19,7 @@ use OCP\EventDispatcher\IEventListener;
 /**
  * @template-implements IEventListener<Event|NewMessagesSynchronized>
  */
-class MessageKnownSinceListener implements IEventListener {
+final class MessageKnownSinceListener implements IEventListener {
 
 	public function __construct(
 		private MessageRetentionMapper $messageRetentionMapper,

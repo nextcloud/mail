@@ -16,7 +16,7 @@ use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
 use OCP\AppFramework\Db\DoesNotExistException;
 
-class AliasesService {
+final class AliasesService {
 	/** @var AliasMapper */
 	private $aliasMapper;
 

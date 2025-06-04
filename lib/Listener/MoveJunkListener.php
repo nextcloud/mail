@@ -20,7 +20,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @template-implements IEventListener<Event|MessageFlaggedEvent>
  */
-class MoveJunkListener implements IEventListener {
+final class MoveJunkListener implements IEventListener {
 	public function __construct(
 		private IMailManager $mailManager,
 		private LoggerInterface $logger,

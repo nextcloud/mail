@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\IMAP;
 
-class MessageStructureData {
+final class MessageStructureData {
 	/** @var bool */
 	private $hasAttachments;
 

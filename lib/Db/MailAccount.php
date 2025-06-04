@@ -104,7 +104,7 @@ use OCP\AppFramework\Db\Entity;
  * @method bool getDebug()
  * @method void setDebug(bool $debug)
  */
-class MailAccount extends Entity {
+final class MailAccount extends Entity {
 	public const SIGNATURE_MODE_PLAIN = 0;
 	public const SIGNATURE_MODE_HTML = 1;
 

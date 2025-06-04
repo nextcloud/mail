@@ -21,7 +21,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @codeCoverageIgnore
  */
-class Version3500Date20231005091430 extends SimpleMigrationStep {
+final class Version3500Date20231005091430 extends SimpleMigrationStep {
 	/** @var IConfig */
 	protected $config;
 

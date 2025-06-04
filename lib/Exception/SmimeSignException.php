@@ -11,5 +11,5 @@ namespace OCA\Mail\Exception;
 
 use Exception;
 
-class SmimeSignException extends Exception {
+final class SmimeSignException extends Exception {
 }

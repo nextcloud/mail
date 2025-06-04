@@ -21,7 +21,7 @@ use ReturnTypeWillChange;
  * @method setType(string $type): void
  * @method getType(): string
  */
-class TrustedSender extends Entity implements JsonSerializable {
+final class TrustedSender extends Entity implements JsonSerializable {
 	/** @var string */
 	protected $email;
 

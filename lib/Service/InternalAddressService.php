@@ -13,7 +13,7 @@ use OCA\Mail\Contracts\IInternalAddressService;
 use OCA\Mail\Db\InternalAddress;
 use OCA\Mail\Db\InternalAddressMapper;
 
-class InternalAddressService implements IInternalAddressService {
+final class InternalAddressService implements IInternalAddressService {
 	private InternalAddressMapper $mapper;
 
 	public function __construct(InternalAddressMapper $mapper) {

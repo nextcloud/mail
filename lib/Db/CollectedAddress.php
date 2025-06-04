@@ -17,7 +17,7 @@ use OCP\AppFramework\Db\Entity;
  * @method null setDisplayName(string $displayName)
  * @method string getDisplayName()
  */
-class CollectedAddress extends Entity {
+final class CollectedAddress extends Entity {
 	protected $userId;
 	protected $email;
 	protected $displayName;

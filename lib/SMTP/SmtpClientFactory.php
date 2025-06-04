@@ -17,7 +17,7 @@ use OCA\Mail\Support\HostNameFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
 
-class SmtpClientFactory {
+final class SmtpClientFactory {
 	/** @var IConfig */
 	private $config;
 

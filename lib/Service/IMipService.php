@@ -20,7 +20,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Calendar\IManager;
 use Psr\Log\LoggerInterface;
 
-class IMipService {
+final class IMipService {
 	private AccountService $accountService;
 	private IManager $calendarManager;
 	private LoggerInterface $logger;

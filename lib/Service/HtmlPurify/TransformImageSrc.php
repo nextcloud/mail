@@ -20,7 +20,7 @@ use OCP\Util;
 /**
  * Adds copies src to data-src on all img tags.
  */
-class TransformImageSrc extends HTMLPurifier_AttrTransform {
+final class TransformImageSrc extends HTMLPurifier_AttrTransform {
 	/** @var HTMLPurifier_URIParser */
 	private $parser;
 

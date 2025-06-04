@@ -19,7 +19,7 @@ use OCP\IUser;
 use Psr\Log\LoggerInterface;
 use function implode;
 
-class AntiAbuseService {
+final class AntiAbuseService {
 	/** @var IConfig */
 	private $config;
 

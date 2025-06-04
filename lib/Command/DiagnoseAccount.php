@@ -25,7 +25,7 @@ use function array_reduce;
 use function json_decode;
 use function sort;
 
-class DiagnoseAccount extends Command {
+final class DiagnoseAccount extends Command {
 	private const ARGUMENT_ACCOUNT_ID = 'account-id';
 
 	private AccountService $accountService;

@@ -57,7 +57,7 @@ use function strtolower;
  * @method string getNameHash()
  * @method void setNameHash(string $nameHash)
  */
-class Mailbox extends Entity implements JsonSerializable {
+final class Mailbox extends Entity implements JsonSerializable {
 	protected $name;
 	protected $accountId;
 	protected $syncNewToken;

@@ -23,7 +23,7 @@ use ReturnTypeWillChange;
  * @method void setPrivateKey(string|null $privateKey)
  * @method string|null getPrivateKey()
  */
-class SmimeCertificate extends Entity implements JsonSerializable {
+final class SmimeCertificate extends Entity implements JsonSerializable {
 	/** @var string */
 	protected $userId;
 

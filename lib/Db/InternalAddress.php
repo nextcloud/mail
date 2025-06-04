@@ -21,7 +21,7 @@ use ReturnTypeWillChange;
  * @method setType(string $type): void
  * @method getType(): string
  */
-class InternalAddress extends Entity implements JsonSerializable {
+final class InternalAddress extends Entity implements JsonSerializable {
 
 	protected $address ;
 	protected $userId;

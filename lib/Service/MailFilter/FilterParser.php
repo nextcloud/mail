@@ -12,7 +12,7 @@ namespace OCA\Mail\Service\MailFilter;
 use JsonException;
 use OCA\Mail\Exception\FilterParserException;
 
-class FilterParser {
+final class FilterParser {
 	private const SEPARATOR = '### Nextcloud Mail: Filters ### DON\'T EDIT ###';
 	private const DATA_MARKER = '# FILTER: ';
 

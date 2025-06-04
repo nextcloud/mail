@@ -13,7 +13,7 @@ use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 
-class ProvisionAccounts implements IRepairStep {
+final class ProvisionAccounts implements IRepairStep {
 	/** @var ProvisioningManager */
 	private $provisioningManager;
 

@@ -11,7 +11,7 @@ namespace OCA\Mail;
 
 use Horde_Imap_Client_Mailbox;
 
-class Folder {
+final class Folder {
 	/** @var int */
 	private $accountId;
 

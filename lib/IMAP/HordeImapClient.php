@@ -22,7 +22,7 @@ use function floor;
  * an interface, making it hard to base a decorator on composition.
  * For simplicity the component is decorated by inheritance.
  */
-class HordeImapClient extends Horde_Imap_Client_Socket {
+final class HordeImapClient extends Horde_Imap_Client_Socket {
 	private ?IMemcache $rateLimiterCache = null;
 	private ?ITimeFactory $timeFactory = null;
 	private ?string $hash = null;

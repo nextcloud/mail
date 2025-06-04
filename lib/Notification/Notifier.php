@@ -16,7 +16,7 @@ use OCP\Notification\INotification;
 use OCP\Notification\INotifier;
 use OCP\Notification\UnknownNotificationException;
 
-class Notifier implements INotifier {
+final class Notifier implements INotifier {
 	private IFactory $factory;
 	private IURLGenerator $url;
 

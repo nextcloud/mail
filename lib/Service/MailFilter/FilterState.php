@@ -12,7 +12,7 @@ namespace OCA\Mail\Service\MailFilter;
 use JsonSerializable;
 use ReturnTypeWillChange;
 
-class FilterState implements JsonSerializable {
+final class FilterState implements JsonSerializable {
 	public const DEFAULT_VERSION = 1;
 
 	public function __construct(

@@ -12,7 +12,7 @@ namespace OCA\Mail\Model;
 use JsonSerializable;
 use ReturnTypeWillChange;
 
-class SmimeCertificateInfo implements JsonSerializable {
+final class SmimeCertificateInfo implements JsonSerializable {
 	private ?string $commonName;
 	private ?string $emailAddress;
 	private int $notAfter;

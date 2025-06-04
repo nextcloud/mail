@@ -22,7 +22,7 @@ use Throwable;
 /**
  * @template-implements IEventListener<Event|MessageSentEvent>
  */
-class AddressCollectionListener implements IEventListener {
+final class AddressCollectionListener implements IEventListener {
 	/** @var IUserPreferences */
 	private $preferences;
 

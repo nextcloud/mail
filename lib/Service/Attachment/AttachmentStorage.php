@@ -18,7 +18,7 @@ use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Files\SimpleFS\ISimpleFolder;
 use Throwable;
 
-class AttachmentStorage {
+final class AttachmentStorage {
 	/** @var IAppData */
 	private $appData;
 

@@ -10,7 +10,7 @@ namespace OCA\Mail;
 
 use Horde_Mime_Part;
 
-class Attachment {
+final class Attachment {
 	private ?string $id;
 	private ?string $name;
 	private string $type;

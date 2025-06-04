@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Attachment;
 
-class UploadedFile {
+final class UploadedFile {
 	/** @var array */
 	private $fileData;
 

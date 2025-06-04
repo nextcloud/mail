@@ -11,7 +11,7 @@ namespace OCA\Mail\Service\Search;
 
 use function urldecode;
 
-class FilterStringParser {
+final class FilterStringParser {
 	public function parse(?string $filter): SearchQuery {
 		$query = new SearchQuery();
 		if (empty($filter)) {

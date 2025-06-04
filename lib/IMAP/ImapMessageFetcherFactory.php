@@ -15,7 +15,7 @@ use OCA\Mail\Service\Html;
 use OCA\Mail\Service\PhishingDetection\PhishingDetectionService;
 use OCA\Mail\Service\SmimeService;
 
-class ImapMessageFetcherFactory {
+final class ImapMessageFetcherFactory {
 	private Html $htmlService;
 	private SmimeService $smimeService;
 	private Converter $charsetConverter;

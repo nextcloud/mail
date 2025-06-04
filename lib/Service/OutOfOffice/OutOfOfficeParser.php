@@ -18,7 +18,7 @@ use OCA\Mail\Sieve\SieveUtils;
 /**
  * Parses and builds out-of-office states from/to sieve scripts.
  */
-class OutOfOfficeParser {
+final class OutOfOfficeParser {
 	private const SEPARATOR = '### Nextcloud Mail: Vacation Responder ### DON\'T EDIT ###';
 	private const DATA_MARKER = '# DATA: ';
 

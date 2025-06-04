@@ -21,7 +21,7 @@ use function array_merge;
 /**
  * @template-extends QBMapper<LocalMessage>
  */
-class LocalMessageMapper extends QBMapper {
+final class LocalMessageMapper extends QBMapper {
 	/** @var LocalAttachmentMapper */
 	private $attachmentMapper;
 

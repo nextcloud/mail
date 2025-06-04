@@ -19,7 +19,7 @@ use OCP\Notification\IManager;
 use Psr\Log\LoggerInterface;
 use function sprintf;
 
-class QuotaJob extends TimedJob {
+final class QuotaJob extends TimedJob {
 	private IUserManager $userManager;
 	private AccountService $accountService;
 	private IMailManager $mailManager;

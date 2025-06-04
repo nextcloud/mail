@@ -15,7 +15,7 @@ use HTMLPurifier_Context;
 use HTMLPurifier_URI;
 use HTMLPurifier_URIScheme;
 
-class CidURIScheme extends HTMLPurifier_URIScheme {
+final class CidURIScheme extends HTMLPurifier_URIScheme {
 	public $default_port = null;
 	public $browsable = true;
 	public $hierarchical = true;

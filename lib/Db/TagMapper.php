@@ -20,7 +20,7 @@ use function array_map;
 /**
  * @template-extends QBMapper<Tag>
  */
-class TagMapper extends QBMapper {
+final class TagMapper extends QBMapper {
 	/** @var IL10N */
 	private $l10n;
 

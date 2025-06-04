@@ -14,7 +14,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
 use Psr\Log\LoggerInterface;
 
-class CleanupJob extends TimedJob {
+final class CleanupJob extends TimedJob {
 	private CleanupService $cleanupService;
 	private LoggerInterface $logger;
 

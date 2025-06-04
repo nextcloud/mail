@@ -27,7 +27,7 @@ use function strtolower;
 /**
  * @template-implements IEventListener<Event|MailboxesSynchronizedEvent>
  */
-class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
+final class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 	/** @var MailAccountMapper */
 	private $mailAccountMapper;
 

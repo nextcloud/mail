@@ -15,7 +15,7 @@ use OCA\Mail\Service\ContactsIntegration;
  * This class is just a think wrapper around the contacts integration to use it
  * as avatar source
  */
-class AddressbookSource implements IAvatarSource {
+final class AddressbookSource implements IAvatarSource {
 	/** @var ContactsIntegration */
 	private $contactsIntegration;
 

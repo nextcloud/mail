@@ -13,7 +13,7 @@ use Pdp\Domain;
 use Pdp\Rules;
 use function dns_get_record;
 
-class Resolver {
+final class Resolver {
 
 	public function resolve(string $hostname, int $type): array|false {
 		return dns_get_record($hostname, $type);

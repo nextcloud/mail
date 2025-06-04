@@ -16,7 +16,7 @@ use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
 
-class CopySentMessageHandler extends AHandler {
+final class CopySentMessageHandler extends AHandler {
 	public function __construct(
 		private MailboxMapper $mailboxMapper,
 		private LoggerInterface $logger,

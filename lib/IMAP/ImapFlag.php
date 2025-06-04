@@ -11,7 +11,7 @@ namespace OCA\Mail\IMAP;
 
 use OCA\Mail\Exception\ImapFlagEncodingException;
 
-class ImapFlag {
+final class ImapFlag {
 	/**
 	 * @throws ImapFlagEncodingException
 	 */

@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Search;
 
-class GlobalSearchQuery extends SearchQuery {
+final class GlobalSearchQuery extends SearchQuery {
 	/** @var int[] */
 	private array $excludeMailboxIds = [];
 

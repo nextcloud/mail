@@ -13,7 +13,7 @@ use OCA\Mail\Service\OutboxService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
 
-class OutboxWorkerJob extends TimedJob {
+final class OutboxWorkerJob extends TimedJob {
 	private OutboxService $outboxService;
 
 	public function __construct(ITimeFactory $time,

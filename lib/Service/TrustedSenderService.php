@@ -13,7 +13,7 @@ use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\TrustedSenderMapper;
 
-class TrustedSenderService implements ITrustedSenderService {
+final class TrustedSenderService implements ITrustedSenderService {
 	/** @var TrustedSenderMapper */
 	private $mapper;
 

@@ -28,7 +28,7 @@ use OCP\LDAP\ILDAPProviderFactory;
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
 
-class Manager {
+final class Manager {
 	public const MAIL_PROVISIONINGS = 'mail_provisionings';
 	/** @var IUserManager */
 	private $userManager;

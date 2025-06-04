@@ -16,7 +16,7 @@ use function array_column;
 use function array_combine;
 use function array_map;
 
-class StatisticsDao {
+final class StatisticsDao {
 	/** @var IDBConnection */
 	private $db;
 

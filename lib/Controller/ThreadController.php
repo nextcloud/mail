@@ -24,7 +24,7 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 
-#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
+final #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ThreadController extends Controller {
 	private string $currentUserId;
 	private AccountService $accountService;

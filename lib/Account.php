@@ -14,7 +14,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\Quota;
 use ReturnTypeWillChange;
 
-class Account implements JsonSerializable {
+final class Account implements JsonSerializable {
 	public function __construct(
 		private MailAccount $account,
 	) {

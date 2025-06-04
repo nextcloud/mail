@@ -16,7 +16,7 @@ use OCP\IDBConnection;
 /**
  * @template-extends QBMapper<InternalAddress>
  */
-class InternalAddressMapper extends QBMapper {
+final class InternalAddressMapper extends QBMapper {
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'mail_internal_address');
 	}

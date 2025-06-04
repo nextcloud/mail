@@ -16,7 +16,7 @@ use OCP\Files\IMimeTypeDetector;
 use OCP\Http\Client\IClientService;
 use OCP\Security\IRemoteHostValidator;
 
-class FaviconSource implements IAvatarSource {
+final class FaviconSource implements IAvatarSource {
 	/** @var IClientService */
 	private $clientService;
 

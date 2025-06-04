@@ -16,7 +16,7 @@ use OCP\AppFramework\Http\Response;
  * @psalm-suppress MissingTemplateParam
  * @todo spec template with 28+
  */
-class HtmlResponse extends Response {
+final class HtmlResponse extends Response {
 	/** @var string */
 	private $content;
 

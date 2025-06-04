@@ -13,7 +13,7 @@ use OCA\Mail\Exception\ImapFlagEncodingException;
 use OCA\Mail\IMAP\ImapFlag;
 use OCA\Mail\Sieve\SieveUtils;
 
-class FilterBuilder {
+final class FilterBuilder {
 	private const SEPARATOR = '### Nextcloud Mail: Filters ### DON\'T EDIT ###';
 	private const DATA_MARKER = '# FILTER: ';
 	private const SIEVE_NEWLINE = "\r\n";

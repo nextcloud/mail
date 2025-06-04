@@ -13,7 +13,7 @@ use DateTimeImmutable;
 use JsonSerializable;
 use ReturnTypeWillChange;
 
-class OutOfOfficeState implements JsonSerializable {
+final class OutOfOfficeState implements JsonSerializable {
 	public const DEFAULT_VERSION = 1;
 
 	public function __construct(

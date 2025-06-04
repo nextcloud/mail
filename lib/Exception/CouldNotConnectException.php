@@ -12,7 +12,7 @@ namespace OCA\Mail\Exception;
 use Horde_Imap_Client_Exception;
 use Throwable;
 
-class CouldNotConnectException extends ServiceException {
+final class CouldNotConnectException extends ServiceException {
 	/** @var string */
 	private $service;
 

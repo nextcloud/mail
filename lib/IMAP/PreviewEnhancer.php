@@ -23,7 +23,7 @@ use function array_map;
 use function array_merge;
 use function array_reduce;
 
-class PreviewEnhancer {
+final class PreviewEnhancer {
 	/** @var IMAPClientFactory */
 	private $clientFactory;
 

@@ -28,7 +28,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IConfig;
 use Psr\Log\LoggerInterface;
 
-class AntiSpamService {
+final class AntiSpamService {
 	private const NAME = 'antispam_reporting';
 	private const MESSAGE_TYPE = 'message/rfc822';
 

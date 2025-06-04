@@ -26,7 +26,7 @@ use function iterator_to_array;
 /**
  * @template-implements IEventListener<Event|SynchronizationEvent>
  */
-class AccountSynchronizedThreadUpdaterListener implements IEventListener {
+final class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 	private const WRITE_IDS_CHUNK_SIZE = 500;
 
 	public function __construct(

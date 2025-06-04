@@ -23,7 +23,7 @@ use OCP\Http\Client\IClientService;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 
-#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
+final #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ListController extends Controller {
 	private IMailManager $mailManager;
 	private AccountService $accountService;

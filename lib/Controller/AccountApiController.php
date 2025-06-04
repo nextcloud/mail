@@ -25,7 +25,7 @@ use OCP\IRequest;
 /**
  * @psalm-import-type MailAccountListResponse from ResponseDefinitions
  */
-class AccountApiController extends OCSController {
+final class AccountApiController extends OCSController {
 	public function __construct(
 		string $appName,
 		IRequest $request,

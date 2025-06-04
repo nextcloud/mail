@@ -12,7 +12,7 @@ namespace OCA\Mail\Service\Classification;
 use Rubix\ML\Encoding;
 use Rubix\ML\Persisters\Persister;
 
-class RubixMemoryPersister implements Persister {
+final class RubixMemoryPersister implements Persister {
 	public function __construct(
 		private string $data = '',
 	) {

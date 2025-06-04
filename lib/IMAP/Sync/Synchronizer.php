@@ -21,7 +21,7 @@ use OCA\Mail\IMAP\MessageMapper;
 use function array_merge;
 use function OCA\Mail\chunk_uid_sequence;
 
-class Synchronizer {
+final class Synchronizer {
 	/**
 	 * This determines how many UIDs we send to IMAP for a check of changed or
 	 * vanished messages. The number needs a balance between good performance

@@ -25,7 +25,7 @@ use ReturnTypeWillChange;
  * @method string getEmail()
  * @method void setEmail(string $email)
  */
-class Recipient extends Entity implements JsonSerializable {
+final class Recipient extends Entity implements JsonSerializable {
 	public const TYPE_FROM = 0;
 	public const TYPE_TO = 1;
 	public const TYPE_CC = 2;

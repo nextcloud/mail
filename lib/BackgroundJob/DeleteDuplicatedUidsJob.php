@@ -13,7 +13,7 @@ use OCA\Mail\Db\MessageMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\QueuedJob;
 
-class DeleteDuplicatedUidsJob extends QueuedJob {
+final class DeleteDuplicatedUidsJob extends QueuedJob {
 	public function __construct(
 		ITimeFactory $time,
 		private MessageMapper $messageMapper,

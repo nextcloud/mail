@@ -17,7 +17,7 @@ use OCP\IConfig;
 /**
  * @template-implements IEventListener<Event|OptionalIndicesListener>
  */
-class OptionalIndicesListener implements IEventListener {
+final class OptionalIndicesListener implements IEventListener {
 
 	/** @var IConfig */
 	private $config;

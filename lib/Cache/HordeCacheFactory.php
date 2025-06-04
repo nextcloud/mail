@@ -13,7 +13,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
 
-class HordeCacheFactory {
+final class HordeCacheFactory {
 	public function __construct(
 		private MailboxMapper $mailboxMapper,
 		private MessageMapper $messageMapper,

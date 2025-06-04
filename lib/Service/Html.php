@@ -33,7 +33,7 @@ use Youthweb\UrlLinker\UrlLinker;
 
 require_once __DIR__ . '/../../vendor/cerdic/css-tidy/class.csstidy.php';
 
-class Html {
+final class Html {
 	/** @var IURLGenerator */
 	private $urlGenerator;
 

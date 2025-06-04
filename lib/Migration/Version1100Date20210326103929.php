@@ -17,7 +17,7 @@ use OCP\Migration\SimpleMigrationStep;
 /**
  * @link https://github.com/nextcloud/mail/issues/4833
  */
-class Version1100Date20210326103929 extends SimpleMigrationStep {
+final class Version1100Date20210326103929 extends SimpleMigrationStep {
 	/**
 	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`

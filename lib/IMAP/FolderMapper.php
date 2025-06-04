@@ -21,7 +21,7 @@ use function array_map;
 use function in_array;
 use function reset;
 
-class FolderMapper {
+final class FolderMapper {
 
 	/** @var LoggerInterface */
 	private $logger;

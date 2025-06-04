@@ -13,7 +13,7 @@ use OCA\Mail\Service\DraftsService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
 
-class DraftsJob extends TimedJob {
+final class DraftsJob extends TimedJob {
 	private DraftsService $draftsService;
 
 	public function __construct(ITimeFactory $time,

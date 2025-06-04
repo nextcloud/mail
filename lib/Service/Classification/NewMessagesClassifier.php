@@ -20,7 +20,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use Psr\Log\LoggerInterface;
 
-class NewMessagesClassifier {
+final class NewMessagesClassifier {
 	private const EXEMPT_FROM_CLASSIFICATION = [
 		Horde_Imap_Client::SPECIALUSE_ARCHIVE,
 		Horde_Imap_Client::SPECIALUSE_DRAFTS,

@@ -23,7 +23,7 @@ use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 use function filter_var;
 
-#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
+final #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class MicrosoftIntegrationController extends Controller {
 	private ?string $userId;
 	private AccountService $accountService;

@@ -21,7 +21,7 @@ use function class_exists;
 /**
  * @template-implements IEventListener<Event|MessageSentEvent>
  */
-class InteractionListener implements IEventListener {
+final class InteractionListener implements IEventListener {
 	/** @var IEventDispatcher */
 	private $dispatcher;
 

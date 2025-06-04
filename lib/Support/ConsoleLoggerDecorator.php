@@ -12,7 +12,7 @@ namespace OCA\Mail\Support;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ConsoleLoggerDecorator implements LoggerInterface {
+final class ConsoleLoggerDecorator implements LoggerInterface {
 	/** @var LoggerInterface */
 	private $inner;
 

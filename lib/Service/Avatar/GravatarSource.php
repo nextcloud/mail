@@ -15,7 +15,7 @@ use OCP\Http\Client\IClientService;
 use function is_resource;
 use function stream_get_contents;
 
-class GravatarSource implements IAvatarSource {
+final class GravatarSource implements IAvatarSource {
 	/** @var IClientService */
 	private $clientService;
 

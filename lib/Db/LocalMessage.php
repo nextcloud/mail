@@ -54,7 +54,7 @@ use function array_filter;
  * @method bool getRequestMdn()
  * @method setRequestMdn(bool $mdn)
  */
-class LocalMessage extends Entity implements JsonSerializable {
+final class LocalMessage extends Entity implements JsonSerializable {
 	public const TYPE_OUTGOING = 0;
 	public const TYPE_DRAFT = 1;
 

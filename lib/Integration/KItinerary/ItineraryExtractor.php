@@ -18,7 +18,7 @@ use Nextcloud\KItinerary\ItineraryExtractor as Extractor;
 use Nextcloud\KItinerary\Sys\SysAdapter;
 use Psr\Log\LoggerInterface;
 
-class ItineraryExtractor {
+final class ItineraryExtractor {
 	/** @var BinaryAdapter */
 	private $binAdapter;
 

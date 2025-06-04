@@ -24,7 +24,7 @@ use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
 use function in_array;
 
-class SetupService {
+final class SetupService {
 	/** @var AccountService */
 	private $accountService;
 

@@ -18,7 +18,7 @@ use OCA\Mail\Service\Avatar\CompositeAvatarSource;
 use OCA\Mail\Service\Avatar\Downloader;
 use OCP\IURLGenerator;
 
-class AvatarService implements IAvatarService {
+final class AvatarService implements IAvatarService {
 	/** @var AvatarCache */
 	private $cache;
 

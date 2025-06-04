@@ -17,7 +17,7 @@ use OCP\IURLGenerator;
 /**
  * Blocks urls in style attributes and backups original styles for restoring them later.
  */
-class TransformStyleURLs extends HTMLPurifier_AttrTransform {
+final class TransformStyleURLs extends HTMLPurifier_AttrTransform {
 	/** @var IURLGenerator */
 	private $urlGenerator;
 

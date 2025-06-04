@@ -18,7 +18,7 @@ use OCP\IURLGenerator;
 /**
  * @template-implements IEventListener<Event|NewMessagesSynchronized>
  */
-class NewMessagesNotifier implements IEventListener {
+final class NewMessagesNotifier implements IEventListener {
 
 	public function __construct(
 		private IEventDispatcher $eventDispatcher,

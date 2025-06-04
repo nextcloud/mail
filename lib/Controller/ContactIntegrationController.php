@@ -19,7 +19,7 @@ use OCP\ICache;
 use OCP\ICacheFactory;
 use OCP\IRequest;
 
-#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
+final #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ContactIntegrationController extends Controller {
 	private ContactIntegrationService $service;
 	private ICache $cache;

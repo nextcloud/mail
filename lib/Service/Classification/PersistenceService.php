@@ -28,7 +28,7 @@ use Rubix\ML\Transformers\WordCountVectorizer;
 use RuntimeException;
 use function get_class;
 
-class PersistenceService {
+final class PersistenceService {
 	// Increment the version when changing the classifier or transformer pipeline
 	public const VERSION = 1;
 

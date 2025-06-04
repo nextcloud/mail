@@ -13,7 +13,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCP\IConfig;
 use OCP\IGroupManager;
 
-class NextcloudGroupService implements IGroupService {
+final class NextcloudGroupService implements IGroupService {
 	/**
 	 * Nextcloud's group manager
 	 *

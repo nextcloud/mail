@@ -18,7 +18,7 @@ use HTMLPurifier_URIParser;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 
-class TransformURLScheme extends HTMLPurifier_URIFilter {
+final class TransformURLScheme extends HTMLPurifier_URIFilter {
 	public $name = 'TransformURLScheme';
 	public $post = true;
 

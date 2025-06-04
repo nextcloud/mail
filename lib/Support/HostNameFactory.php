@@ -17,7 +17,7 @@ use OCP\Util;
  * A simple abstraction over the static `Util::getServerHostName()` to
  * make it mockable in tests.
  */
-class HostNameFactory {
+final class HostNameFactory {
 	/**
 	 * Determine the host's name (without any port numbers)
 	 *

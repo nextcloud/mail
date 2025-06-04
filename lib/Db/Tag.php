@@ -25,7 +25,7 @@ use ReturnTypeWillChange;
  * @method bool|null getIsDefaultTag()
  * @method void setIsDefaultTag(bool $flag)
  */
-class Tag extends Entity implements JsonSerializable {
+final class Tag extends Entity implements JsonSerializable {
 	protected $userId;
 	protected $displayName;
 	protected $imapLabel;

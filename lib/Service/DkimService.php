@@ -19,7 +19,7 @@ use OCA\Mail\IMAP\MessageMapper;
 use OCP\ICache;
 use OCP\ICacheFactory;
 
-class DkimService implements IDkimService {
+final class DkimService implements IDkimService {
 	private const CACHE_PREFIX = 'mail_dkim';
 	private const CACHE_TTL = 7 * 24 * 3600;
 

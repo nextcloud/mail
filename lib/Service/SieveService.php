@@ -15,7 +15,7 @@ use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Sieve\NamedSieveScript;
 use OCA\Mail\Sieve\SieveClientFactory;
 
-class SieveService {
+final class SieveService {
 	public function __construct(
 		private SieveClientFactory $sieveClientFactory,
 		private AccountService $accountService,

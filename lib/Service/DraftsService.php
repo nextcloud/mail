@@ -26,7 +26,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-class DraftsService {
+final class DraftsService {
 	private IMailTransmission $transmission;
 	private LocalMessageMapper $mapper;
 	private AttachmentService $attachmentService;

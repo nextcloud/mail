@@ -15,7 +15,7 @@ use OCP\EventDispatcher\Event;
 /**
  * @psalm-immutable
  */
-class MailboxesSynchronizedEvent extends Event {
+final class MailboxesSynchronizedEvent extends Event {
 	/** @var Account */
 	private $account;
 

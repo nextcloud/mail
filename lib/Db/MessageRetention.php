@@ -19,7 +19,7 @@ use OCP\AppFramework\Db\Entity;
  * @method void setKnownSince(int $knownSince)
  * @method int getKnownSince()
  */
-class MessageRetention extends Entity {
+final class MessageRetention extends Entity {
 
 	/** @var int */
 	protected $mailboxId;

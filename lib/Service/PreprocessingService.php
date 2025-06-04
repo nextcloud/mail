@@ -14,7 +14,7 @@ use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\IMAP\PreviewEnhancer;
 use Psr\Log\LoggerInterface;
 
-class PreprocessingService {
+final class PreprocessingService {
 	private MailboxMapper $mailboxMapper;
 	private MessageMapper $messageMapper;
 	private LoggerInterface $logger;

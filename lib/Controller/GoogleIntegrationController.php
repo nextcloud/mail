@@ -28,7 +28,7 @@ use Psr\Log\LoggerInterface;
 
 use function filter_var;
 
-#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
+final #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class GoogleIntegrationController extends Controller {
 	private ?string $userId;
 	private GoogleIntegration $googleIntegration;

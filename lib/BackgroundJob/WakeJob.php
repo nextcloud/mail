@@ -13,7 +13,7 @@ use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
 
-class WakeJob extends TimedJob {
+final class WakeJob extends TimedJob {
 	public function __construct(
 		ITimeFactory $time,
 		private SnoozeService $snoozeService,

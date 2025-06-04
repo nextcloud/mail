@@ -14,7 +14,7 @@ use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
-class Version3500Date20231115184458 extends SimpleMigrationStep {
+final class Version3500Date20231115184458 extends SimpleMigrationStep {
 
 	/**
 	 * @param IOutput $output

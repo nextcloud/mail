@@ -15,7 +15,7 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\DB\Exception;
 
-class Chain {
+final class Chain {
 	public function __construct(
 		private SentMailboxHandler $sentMailboxHandler,
 		private AntiAbuseHandler $antiAbuseHandler,

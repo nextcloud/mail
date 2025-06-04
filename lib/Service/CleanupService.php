@@ -21,7 +21,7 @@ use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Utility\ITimeFactory;
 use Psr\Log\LoggerInterface;
 
-class CleanupService {
+final class CleanupService {
 	private MailAccountMapper $mailAccountMapper;
 
 	/** @var AliasMapper */

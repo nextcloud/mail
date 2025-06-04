@@ -17,7 +17,7 @@ use OCP\AppFramework\Http\DownloadResponse;
  * @psalm-suppress MissingTemplateParam
  * @todo spec template with 28+
  */
-class ProxyDownloadResponse extends DownloadResponse {
+final class ProxyDownloadResponse extends DownloadResponse {
 	/** @var string */
 	private $content;
 

@@ -16,7 +16,7 @@ use OCP\IDBConnection;
 /**
  * @template-extends QBMapper<MessageTags>
  */
-class MessageTagsMapper extends QBMapper {
+final class MessageTagsMapper extends QBMapper {
 
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'mail_message_tags');

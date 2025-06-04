@@ -74,7 +74,7 @@ use function json_encode;
  * @method bool getMentionsMe()
  * @method void setMentionsMe(bool $isMentionned)
  */
-class Message extends Entity implements JsonSerializable {
+final class Message extends Entity implements JsonSerializable {
 	private const MUTABLE_FLAGS = [
 		'answered',
 		'deleted',

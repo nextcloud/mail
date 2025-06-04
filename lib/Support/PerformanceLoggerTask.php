@@ -17,7 +17,7 @@ use function memory_get_usage;
 use function round;
 use function sprintf;
 
-class PerformanceLoggerTask {
+final class PerformanceLoggerTask {
 	/** @var string */
 	private $task;
 

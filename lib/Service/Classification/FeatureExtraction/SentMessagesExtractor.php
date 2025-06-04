@@ -16,7 +16,7 @@ use RuntimeException;
 use function array_map;
 use function array_unique;
 
-class SentMessagesExtractor implements IExtractor {
+final class SentMessagesExtractor implements IExtractor {
 	/** @var StatisticsDao */
 	private $statisticsDao;
 

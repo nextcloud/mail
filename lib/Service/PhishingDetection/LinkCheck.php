@@ -14,7 +14,7 @@ use OCA\Mail\PhishingDetectionResult;
 use OCP\IL10N;
 use URL\Normalizer;
 
-class LinkCheck {
+final class LinkCheck {
 	protected IL10N $l10n;
 
 

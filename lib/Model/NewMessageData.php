@@ -17,7 +17,7 @@ use OCA\Mail\AddressList;
  *
  * @psalm-immutable
  */
-class NewMessageData {
+final class NewMessageData {
 	private ?int $smimeCertificateId;
 	private bool $smimeSign;
 	private bool $smimeEncrypt;

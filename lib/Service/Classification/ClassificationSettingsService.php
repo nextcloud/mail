@@ -13,7 +13,7 @@ use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCP\IConfig;
 
-class ClassificationSettingsService {
+final class ClassificationSettingsService {
 	public function __construct(
 		private IUserPreferences $preferences,
 		private IConfig $config,

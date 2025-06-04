@@ -22,7 +22,7 @@ use function array_reduce;
 use function count;
 use function json_encode;
 
-class ItineraryService {
+final class ItineraryService {
 	private const CACHE_PREFIX = 'mail_itinerary';
 	private const CACHE_TTL = 7 * 24 * 3600;
 

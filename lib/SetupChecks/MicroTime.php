@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\SetupChecks;
 
-class MicroTime {
+final class MicroTime {
 
 	public function getNumeric(): float {
 		return (float)microtime(true);

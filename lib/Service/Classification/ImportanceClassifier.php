@@ -57,7 +57,7 @@ use function json_encode;
  * messages to learn meaningful patterns of what the users typically considers
  * as important.
  */
-class ImportanceClassifier {
+final class ImportanceClassifier {
 	/**
 	 * Mailbox special uses to exclude from the training
 	 */

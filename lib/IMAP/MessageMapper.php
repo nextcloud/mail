@@ -47,7 +47,7 @@ use function OCA\Mail\array_flat_map;
 use function OCA\Mail\chunk_uid_sequence;
 use function sprintf;
 
-class MessageMapper {
+final class MessageMapper {
 	/** @var LoggerInterface */
 	private $logger;
 

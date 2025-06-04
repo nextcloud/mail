@@ -45,7 +45,7 @@ use function array_filter;
 use function array_map;
 use function sprintf;
 
-class ImapToDbSynchronizer {
+final class ImapToDbSynchronizer {
 	/** @var int */
 	public const MAX_NEW_MESSAGES = 5000;
 

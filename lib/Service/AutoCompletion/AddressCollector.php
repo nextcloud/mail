@@ -18,7 +18,7 @@ use OCA\Mail\Db\CollectedAddressMapper;
 use OCP\AppFramework\Db\TTransactional;
 use Psr\Log\LoggerInterface;
 
-class AddressCollector {
+final class AddressCollector {
 	use TTransactional;
 
 	/** @var CollectedAddressMapper */

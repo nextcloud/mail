@@ -27,7 +27,7 @@ use OCP\DB\Exception;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-class SnoozeService {
+final class SnoozeService {
 
 	public function __construct(
 		private ITimeFactory $time,

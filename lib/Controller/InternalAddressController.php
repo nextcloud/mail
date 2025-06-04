@@ -18,7 +18,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\IRequest;
 
-class InternalAddressController extends Controller {
+final class InternalAddressController extends Controller {
 	private ?string $uid;
 
 	public function __construct(

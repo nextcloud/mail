@@ -16,7 +16,7 @@ use ReturnTypeWillChange;
 /**
  * @psalm-immutable
  */
-class Address implements JsonSerializable {
+final class Address implements JsonSerializable {
 	public const TYPE_FROM = 0;
 	public const TYPE_TO = 1;
 	public const TYPE_CC = 2;

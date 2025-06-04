@@ -9,5 +9,5 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Exception;
 
-class UploadException extends ServiceException {
+final class UploadException extends ServiceException {
 }

@@ -21,7 +21,7 @@ use RuntimeException;
 use function array_column;
 use function array_map;
 
-class SubjectExtractor implements IExtractor {
+final class SubjectExtractor implements IExtractor {
 	private const MAX_VOCABULARY_SIZE = 500;
 
 	private WordCountVectorizer $wordCountVectorizer;

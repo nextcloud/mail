@@ -12,7 +12,7 @@ namespace OCA\Mail\Model;
 use OCA\Mail\Service\Classification\FeatureExtraction\IExtractor;
 use Rubix\ML\Estimator;
 
-class ClassifierPipeline {
+final class ClassifierPipeline {
 	public function __construct(
 		private readonly Estimator $estimator,
 		private readonly IExtractor $extractor,

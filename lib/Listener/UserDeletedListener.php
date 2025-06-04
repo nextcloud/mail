@@ -19,7 +19,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @template-implements IEventListener<Event|UserDeletedEvent>
  */
-class UserDeletedListener implements IEventListener {
+final class UserDeletedListener implements IEventListener {
 	/** @var AccountService */
 	private $accountService;
 

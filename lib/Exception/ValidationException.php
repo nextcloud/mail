@@ -12,7 +12,7 @@ namespace OCA\Mail\Exception;
 use Exception;
 use OCP\AppFramework\Http;
 
-class ValidationException extends Exception {
+final class ValidationException extends Exception {
 	/** @var bool[] */
 	private $fields;
 

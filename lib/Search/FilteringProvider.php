@@ -16,7 +16,7 @@ use OCP\Search\ISearchQuery;
 use OCP\Search\SearchResult;
 use function implode;
 
-class FilteringProvider extends Provider implements IFilteringProvider {
+final class FilteringProvider extends Provider implements IFilteringProvider {
 
 	#[\Override]
 	public function search(IUser $user, ISearchQuery $query): SearchResult {

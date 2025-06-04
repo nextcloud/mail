@@ -34,7 +34,7 @@ use function trim;
 /**
  * @psalm-import-type MailIMAPFullMessage from ResponseDefinitions
  */
-class IMAPMessage implements IMessage, JsonSerializable {
+final class IMAPMessage implements IMessage, JsonSerializable {
 	use ConvertAddresses;
 
 	private Html $htmlService;

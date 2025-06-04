@@ -18,7 +18,7 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\Search\SearchQuery;
 use function array_reduce;
 
-class Provider {
+final class Provider {
 	/** @var IMAPClientFactory */
 	private $clientFactory;
 

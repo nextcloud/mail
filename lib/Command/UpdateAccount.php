@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UpdateAccount extends Command {
+final class UpdateAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 	public const ARGUMENT_NAME = 'name';
 	public const ARGUMENT_EMAIL = 'email';

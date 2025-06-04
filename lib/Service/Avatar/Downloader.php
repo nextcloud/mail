@@ -14,7 +14,7 @@ use OCP\Http\Client\IClientService;
 use function is_resource;
 use function stream_get_contents;
 
-class Downloader {
+final class Downloader {
 	/** @var IClientService */
 	private $clientService;
 

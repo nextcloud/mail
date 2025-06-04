@@ -19,7 +19,7 @@ use OCP\Mail\Provider\Message;
 
 use Psr\Container\ContainerInterface;
 
-class MailService implements IService, IMessageSend {
+final class MailService implements IService, IMessageSend {
 
 	protected array $serviceSecondaryAddresses = [];
 	protected array $serviceAbilities = [];

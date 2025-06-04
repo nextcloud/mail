@@ -25,7 +25,7 @@ use Throwable;
 use function max;
 use function sprintf;
 
-class SyncJob extends TimedJob {
+final class SyncJob extends TimedJob {
 	private IUserManager $userManager;
 	private AccountService $accountService;
 	private ImapToDbSynchronizer $syncService;

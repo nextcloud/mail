@@ -23,7 +23,7 @@ use OCA\Mail\Service\OutOfOffice\OutOfOfficeParser;
 use OCA\Mail\Service\OutOfOffice\OutOfOfficeState;
 use Psr\Log\LoggerInterface;
 
-class FilterService {
+final class FilterService {
 
 	public function __construct(
 		private AllowedRecipientsService $allowedRecipientsService,

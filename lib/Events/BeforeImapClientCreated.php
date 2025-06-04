@@ -12,7 +12,7 @@ namespace OCA\Mail\Events;
 use OCA\Mail\Account;
 use OCP\EventDispatcher\Event;
 
-class BeforeImapClientCreated extends Event {
+final class BeforeImapClientCreated extends Event {
 	/** @var Account */
 	private $account;
 

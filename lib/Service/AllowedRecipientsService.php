@@ -11,7 +11,7 @@ namespace OCA\Mail\Service;
 
 use OCA\Mail\Db\MailAccount;
 
-class AllowedRecipientsService {
+final class AllowedRecipientsService {
 
 	public function __construct(
 		private AliasesService $aliasesService,

@@ -20,7 +20,7 @@ use function mb_strpos;
 use function mb_substr;
 use function OCA\Mail\array_flat_map;
 
-class GroupsIntegration {
+final class GroupsIntegration {
 	/**
 	 * The services to get groups from
 	 *

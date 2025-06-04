@@ -16,7 +16,7 @@ use OCP\IDBConnection;
 /**
  * @template-extends QBMapper<MessageRetention>
  */
-class MessageRetentionMapper extends QBMapper {
+final class MessageRetentionMapper extends QBMapper {
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'mail_messages_retention', MessageRetention::class);
 	}

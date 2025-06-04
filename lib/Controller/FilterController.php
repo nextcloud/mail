@@ -19,7 +19,7 @@ use OCP\AppFramework\Http\Attribute\Route;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
-class FilterController extends Controller {
+final class FilterController extends Controller {
 	private string $currentUserId;
 
 	public function __construct(

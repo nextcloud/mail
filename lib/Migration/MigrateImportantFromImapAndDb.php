@@ -20,7 +20,7 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use Psr\Log\LoggerInterface;
 
-class MigrateImportantFromImapAndDb {
+final class MigrateImportantFromImapAndDb {
 	/** @var IMAPClientFactory */
 	private $clientFactory;
 

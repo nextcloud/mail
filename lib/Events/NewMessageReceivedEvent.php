@@ -10,7 +10,7 @@ namespace OCA\Mail\Events;
 
 use OCP\EventDispatcher\Event;
 
-class NewMessageReceivedEvent extends Event {
+final class NewMessageReceivedEvent extends Event {
 	public function __construct(
 		private string $uri,
 	) {

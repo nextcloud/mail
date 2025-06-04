@@ -11,5 +11,5 @@ namespace OCA\Mail\Exception;
 
 use Exception;
 
-class NotImplemented extends Exception {
+final class NotImplemented extends Exception {
 }

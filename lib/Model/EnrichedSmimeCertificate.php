@@ -13,7 +13,7 @@ use JsonSerializable;
 use OCA\Mail\Db\SmimeCertificate;
 use ReturnTypeWillChange;
 
-class EnrichedSmimeCertificate implements JsonSerializable {
+final class EnrichedSmimeCertificate implements JsonSerializable {
 	private SmimeCertificate $certificate;
 	private SmimeCertificateInfo $info;
 

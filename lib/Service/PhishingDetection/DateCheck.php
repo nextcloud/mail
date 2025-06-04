@@ -13,7 +13,7 @@ use OCA\Mail\PhishingDetectionResult;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IL10N;
 
-class DateCheck {
+final class DateCheck {
 	protected IL10N $l10n;
 	protected ITimeFactory $timeFactory;
 

@@ -19,7 +19,7 @@ use ReturnTypeWillChange;
  * @method int getTagId()
  * @method void setTagId(int $tagId)
  */
-class MessageTags extends Entity implements JsonSerializable {
+final class MessageTags extends Entity implements JsonSerializable {
 	protected $imapMessageId;
 	protected $tagId;
 

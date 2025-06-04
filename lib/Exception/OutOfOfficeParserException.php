@@ -11,5 +11,5 @@ namespace OCA\Mail\Exception;
 
 use Exception;
 
-class OutOfOfficeParserException extends Exception {
+final class OutOfOfficeParserException extends Exception {
 }

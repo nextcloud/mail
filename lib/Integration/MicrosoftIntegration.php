@@ -20,7 +20,7 @@ use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
 use function json_decode;
 
-class MicrosoftIntegration {
+final class MicrosoftIntegration {
 	private ITimeFactory $timeFactory;
 	private IConfig $config;
 	private ICrypto $crypto;

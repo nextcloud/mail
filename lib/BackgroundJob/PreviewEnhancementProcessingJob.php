@@ -18,7 +18,7 @@ use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 use function sprintf;
 
-class PreviewEnhancementProcessingJob extends TimedJob {
+final class PreviewEnhancementProcessingJob extends TimedJob {
 	private IUserManager $userManager;
 	private AccountService $accountService;
 	private LoggerInterface $logger;

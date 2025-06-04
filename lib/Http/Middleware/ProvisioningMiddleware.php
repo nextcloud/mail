@@ -17,7 +17,7 @@ use OCP\Authentication\LoginCredentials\IStore as ICredentialStore;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 
-class ProvisioningMiddleware extends Middleware {
+final class ProvisioningMiddleware extends Middleware {
 	/** @var IUserSession */
 	private $userSession;
 

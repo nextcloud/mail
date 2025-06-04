@@ -11,7 +11,7 @@ namespace OCA\Mail\Service\ContactIntegration;
 
 use OCA\Mail\Service\ContactsIntegration;
 
-class ContactIntegrationService {
+final class ContactIntegrationService {
 	/** @var ContactsIntegration */
 	private $contactsIntegration;
 

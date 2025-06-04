@@ -14,7 +14,7 @@ use OCA\Mail\Exception\ServiceException;
 use function in_array;
 use function is_string;
 
-class Converter {
+final class Converter {
 
 	/**
 	 * @param Horde_Mime_Part $p

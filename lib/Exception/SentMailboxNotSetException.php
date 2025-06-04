@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Exception;
 
-class SentMailboxNotSetException extends ClientException {
+final class SentMailboxNotSetException extends ClientException {
 	public function __construct() {
 		parent::__construct('No sent mailbox configured');
 	}

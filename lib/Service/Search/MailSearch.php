@@ -26,7 +26,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IUser;
 
-class MailSearch implements IMailSearch {
+final class MailSearch implements IMailSearch {
 	/** @var FilterStringParser */
 	private $filterStringParser;
 

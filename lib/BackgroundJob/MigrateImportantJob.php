@@ -22,7 +22,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\QueuedJob;
 use Psr\Log\LoggerInterface;
 
-class MigrateImportantJob extends QueuedJob {
+final class MigrateImportantJob extends QueuedJob {
 	private MailboxMapper $mailboxMapper;
 	private MailAccountMapper $mailAccountMapper;
 	private MailManager $mailManager;

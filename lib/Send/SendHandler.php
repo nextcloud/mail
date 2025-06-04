@@ -12,7 +12,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 
-class SendHandler extends AHandler {
+final class SendHandler extends AHandler {
 	public function __construct(
 		private IMailTransmission $transmission,
 	) {

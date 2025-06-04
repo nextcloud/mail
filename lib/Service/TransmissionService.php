@@ -22,7 +22,7 @@ use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
 
-class TransmissionService {
+final class TransmissionService {
 
 	public function __construct(
 		private GroupsIntegration $groupsIntegration,

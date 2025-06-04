@@ -12,7 +12,7 @@ namespace OCA\Mail\Service\OutOfOffice;
 use JsonSerializable;
 use ReturnTypeWillChange;
 
-class OutOfOfficeParserResult implements JsonSerializable {
+final class OutOfOfficeParserResult implements JsonSerializable {
 	public function __construct(
 		private ?OutOfOfficeState $state,
 		private string $sieveScript,

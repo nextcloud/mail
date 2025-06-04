@@ -26,7 +26,7 @@ use function hash;
 use function implode;
 use function json_encode;
 
-class IMAPClientFactory {
+final class IMAPClientFactory {
 	/** @var ICrypto */
 	private $crypto;
 

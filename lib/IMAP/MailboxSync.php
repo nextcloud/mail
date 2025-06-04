@@ -36,7 +36,7 @@ use function shuffle;
 use function sprintf;
 use function str_starts_with;
 
-class MailboxSync {
+final class MailboxSync {
 	use TTransactional;
 
 	/** @var MailboxMapper */

@@ -15,7 +15,7 @@ use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 use function sprintf;
 
-class AddMissingDefaultTags implements IRepairStep {
+final class AddMissingDefaultTags implements IRepairStep {
 	/** @var TagMapper */
 	private $tagMapper;
 

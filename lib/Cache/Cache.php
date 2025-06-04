@@ -19,7 +19,7 @@ use OCA\Mail\Db\MessageMapper;
  * This class passes the minimum amount of data from the db cache to Horde to make QRESYNC work
  * reliably.
  */
-class Cache extends Horde_Imap_Client_Cache_Backend {
+final class Cache extends Horde_Imap_Client_Cache_Backend {
 	/** @var CachedMailbox[] */
 	private array $cachedMailboxes = [];
 

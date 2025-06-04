@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Cache;
 
-class HordeSyncTokenParser {
+final class HordeSyncTokenParser {
 	public function parseSyncToken(string $token): HordeSyncToken {
 		$decodedToken = base64_decode($token, true);
 		$parts = explode(',', $decodedToken);

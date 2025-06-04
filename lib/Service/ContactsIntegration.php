@@ -15,7 +15,7 @@ use OCP\IConfig;
 use OCP\IGroupManager;
 use OCP\IUserManager;
 
-class ContactsIntegration {
+final class ContactsIntegration {
 	/** @var IManager */
 	private $contactsManager;
 

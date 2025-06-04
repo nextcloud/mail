@@ -22,7 +22,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @template-implements IEventListener<Event>
  */
-class NewMessagesSummarizeListener implements IEventListener {
+final class NewMessagesSummarizeListener implements IEventListener {
 
 	public function __construct(
 		private LoggerInterface $logger,

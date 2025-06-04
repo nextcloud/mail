@@ -14,7 +14,7 @@ use OCA\Mail\Service\AntiAbuseService;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
-class AntiAbuseHandler extends AHandler {
+final class AntiAbuseHandler extends AHandler {
 
 	public function __construct(
 		private IUserManager $userManager,

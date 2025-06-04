@@ -14,7 +14,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCP\EventDispatcher\Event;
 
-class NewMessagesSynchronized extends Event {
+final class NewMessagesSynchronized extends Event {
 	/** @var Account */
 	private $account;
 

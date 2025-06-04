@@ -36,7 +36,7 @@ use function implode;
 use function in_array;
 use function json_decode;
 
-class AiIntegrationsService {
+final class AiIntegrationsService {
 
 	private const EVENT_DATA_PROMPT_PREAMBLE = <<<PROMPT
 I am scheduling an event based on an email thread and need an event title and agenda. Provide the result as JSON with keys for "title" and "agenda". For example ```{ "title": "Project kick-off meeting", "agenda": "* Introduction\\n* Project goals\\n* Next steps" }```.

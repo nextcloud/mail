@@ -51,7 +51,7 @@ use function class_exists;
 use function http_build_query;
 use function json_decode;
 
-#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
+final #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class PageController extends Controller {
 	private IURLGenerator $urlGenerator;
 	private IConfig $config;

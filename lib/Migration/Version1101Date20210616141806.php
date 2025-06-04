@@ -16,7 +16,7 @@ use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
-class Version1101Date20210616141806 extends SimpleMigrationStep {
+final class Version1101Date20210616141806 extends SimpleMigrationStep {
 	/**
 	 * @throws SchemaException
 	 */

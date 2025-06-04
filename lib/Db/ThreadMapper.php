@@ -16,7 +16,7 @@ use OCP\IDBConnection;
 /**
  * @template-extends QBMapper<Message>
  */
-class ThreadMapper extends QBMapper {
+final class ThreadMapper extends QBMapper {
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'mail_messages');
 	}

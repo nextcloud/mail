@@ -21,7 +21,7 @@ use OCP\AppFramework\Db\Entity;
  * @method void setSrcMailboxId(int $srcMailboxId)
  * @method int getSrcMailboxId()
  */
-class MessageSnooze extends Entity {
+final class MessageSnooze extends Entity {
 
 	/** @var int */
 	protected $mailboxId;

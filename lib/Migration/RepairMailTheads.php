@@ -15,7 +15,7 @@ use OCP\Migration\IRepairStep;
 use Psr\Log\LoggerInterface;
 use function method_exists;
 
-class RepairMailTheads implements IRepairStep {
+final class RepairMailTheads implements IRepairStep {
 	/** @var MessageMapper */
 	private $mapper;
 

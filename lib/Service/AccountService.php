@@ -24,7 +24,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\BackgroundJob\IJobList;
 use function array_map;
 
-class AccountService {
+final class AccountService {
 	/** @var MailAccountMapper */
 	private $mapper;
 

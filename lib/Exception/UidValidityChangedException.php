@@ -9,5 +9,5 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Exception;
 
-class UidValidityChangedException extends ServiceException {
+final class UidValidityChangedException extends ServiceException {
 }

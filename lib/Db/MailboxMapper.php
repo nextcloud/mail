@@ -25,7 +25,7 @@ use function array_map;
 /**
  * @template-extends QBMapper<Mailbox>
  */
-class MailboxMapper extends QBMapper {
+final class MailboxMapper extends QBMapper {
 	/** @var ITimeFactory */
 	private $timeFactory;
 
