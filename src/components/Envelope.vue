@@ -53,7 +53,10 @@
 					<CheckIcon :size="40" class="check-icon" :class="{ 'app-content-list-item-avatar-selected': selected }" />
 				</template>
 				<template v-else>
-					<Avatar :display-name="addresses" :email="avatarEmail" />
+					<Avatar :display-name="addresses"
+						:email="avatarEmail"
+						:fetch-avatar="data.fetchAvatarFromClient"
+						:avatar="data.avatar" />
 				</template>
 			</div>
 		</template>

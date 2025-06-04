@@ -95,6 +95,7 @@ class MailSearch implements IMailSearch {
 		?string $filter,
 		?int $cursor,
 		?int $limit,
+		?string $userId,
 		?string $view): array {
 		if ($mailbox->hasLocks($this->timeFactory->getTime())) {
 			throw MailboxLockedException::from($mailbox);
@@ -125,7 +126,9 @@ class MailSearch implements IMailSearch {
 			$this->messageMapper->findByIds($account->getUserId(),
 				$this->getIdsLocally($account, $mailbox, $query, $sortOrder, $limit),
 				$sortOrder,
-			)
+			),
+			true,
+			$userId
 		);
 	}
 

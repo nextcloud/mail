@@ -10,7 +10,10 @@
 		:details="details"
 		@click="openModal">
 		<template #icon>
-			<Avatar :display-name="avatarDisplayName" :email="avatarEmail" />
+			<Avatar :display-name="avatarDisplayName"
+				:email="avatarEmail"
+				:fetch-avatar="data.fetchAvatarFromClient"
+				:avatar="message.avatar" />
 		</template>
 		<template #subname>
 			{{ subjectForSubtitle }}
