@@ -672,8 +672,6 @@ OC.L10N.register(
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "يسمح Gmail للمستخدمين بالوصول إلى بريدهم الإلكتروني عبر IMAP. لأسباب أمنية، لا يمكن الوصول هذا إلاّ من خلال اتصال OAuth 2.0 أو حسابات Google التي تستخدم التحقُّق المُثَنّى من الهُوِيّة 2FA، وكلمات مرور التطبيق.",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "يتوجب عليك تسجيل مُعرّف عميل Client ID جديد لـ \"تطبيق ويب\" Web application في وحدة التحكم بسحابة قوقل Google Cloud console. أضِف عنوان {url} كعنوانٍ مُخوّلٍ بإعادة التوجيه authorized redirect URI.",
     "Microsoft integration" : "مُكامَلة Microsoft ",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "تسمح Microsoft للمستخدمين بالوصول إلى بريدهم الإلكتروني عبر IMAP. لأسباب أمنية، لا يمكن الوصول إلى هذا إلاّ من خلال اتصال OAuth 2.0.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "يتوجب عليك تسجيل تطبيق جديد في مدخل Microsoft Azure Active Directory. أضِف عنوان URL {url} كعنوان URI لإعادة التوجيه.",
     "Successfully set up anti spam email addresses" : "تمّ بنجاح إعداد عناوين البريد الالكتروني لـ\"ميّز كبريد عشوائي\" Mark as Spam",
     "Error saving anti spam email addresses" : "تعذّر حفظ عناوين البريد الالكتروني لـ\"ميّز كبريد عشوائي\" Mark as Spam",
     "Successfully deleted anti spam reporting email" : "تمّ نجاحٍ حذف عناوين البريد الالكتروني لـ\"ميّز كبريد عشوائي\" Mark as Spam",
@@ -781,6 +779,8 @@ OC.L10N.register(
     "Redirect" : "إعادة توجيه",
     "The link leads to %s" : "الرابط يؤدي إل %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "إذا لم تكن راغباً في زيارة تلك الصفحة، يمكنك العودة إلى <a href=\"%s\">البريد Mail</a>.",
-    "Continue to %s" : "إستمر نحو %s"
+    "Continue to %s" : "إستمر نحو %s",
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "تسمح Microsoft للمستخدمين بالوصول إلى بريدهم الإلكتروني عبر IMAP. لأسباب أمنية، لا يمكن الوصول إلى هذا إلاّ من خلال اتصال OAuth 2.0.",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "يتوجب عليك تسجيل تطبيق جديد في مدخل Microsoft Azure Active Directory. أضِف عنوان URL {url} كعنوان URI لإعادة التوجيه."
 },
 "nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;");

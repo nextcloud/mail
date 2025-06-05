@@ -670,8 +670,6 @@ OC.L10N.register(
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Gmail permet als usuaris accedir al seu correu electrònic mitjançant IMAP. Per motius de seguretat, aquest accés només és possible amb una connexió OAuth 2.0 o amb comptes de Google que utilitzen l'autenticació de doble factor i contrasenyes d'aplicacions.",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "Heu de registrar un nou ID de client per a una \"aplicació web\" a la consola de Google Cloud. Afegiu l'URL {url} com a URI de redirecció autoritzat.",
     "Microsoft integration" : "Integració de Microsoft",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft permet als usuaris accedir al seu correu electrònic mitjançant IMAP. Per motius de seguretat, aquest accés només és possible amb una connexió OAuth 2.0.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Heu de registrar una aplicació nova al portal de Microsoft Azure Active Directory. Afegiu l'URL {url} com a URI de redirecció.",
     "Successfully set up anti spam email addresses" : "Configurar correctament les adreces de correu electrònic contra correu brossa",
     "Error saving anti spam email addresses" : "S'ha produït un error en desar les adreces de correu electrònic contra correu brossa",
     "Successfully deleted anti spam reporting email" : "S'ha suprimit correctament el correu electrònic d'informes contra el correu brossa",
@@ -779,6 +777,8 @@ OC.L10N.register(
     "Redirect" : "Redirigeix",
     "The link leads to %s" : "L'enllaç porta a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no voleu visitar aquesta pàgina, podeu tornar a <a href=\"%s\">Correu</a>.",
-    "Continue to %s" : "Continua a %s"
+    "Continue to %s" : "Continua a %s",
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft permet als usuaris accedir al seu correu electrònic mitjançant IMAP. Per motius de seguretat, aquest accés només és possible amb una connexió OAuth 2.0.",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Heu de registrar una aplicació nova al portal de Microsoft Azure Active Directory. Afegiu l'URL {url} com a URI de redirecció."
 },
 "nplurals=2; plural=(n != 1);");

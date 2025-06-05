@@ -679,8 +679,6 @@ OC.L10N.register(
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Gmail 讓使用者可以透過 IMAP 存取他們的電子郵件。出於安全理由，僅能使用 OAuth 2.0 連線或使用雙重驗證與應用程式密碼的 Google 帳號才能進行此存取。",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "您必須在 Google Cloud 主控台中的「Web 應用程式」註冊一個新的客戶端 ID。新增 URL {url} 作為授權重新導向 URI。",
     "Microsoft integration" : "Microsoft 整合",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft 允許使用者透過 IMAP 存取電子郵件。出於安全性的原因，此存取只能透過 OAuth 2.0 連線進行。",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "您必須在 Microsoft Azure Active Directory 入口網站中註冊一個新應用程式。然後新增 URL {url} 作為重新導向 URI。",
     "Successfully set up anti spam email addresses" : "成功設定了反垃圾郵件電子郵件地址",
     "Error saving anti spam email addresses" : "儲存反垃圾郵件電子郵件地址時發生錯誤",
     "Successfully deleted anti spam reporting email" : "成功刪除了反垃圾電子郵件回報電子郵件",
@@ -789,6 +787,8 @@ OC.L10N.register(
     "Redirect" : "重新導向",
     "The link leads to %s" : "該連結導向至 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "若不想造訪該頁，您可以回到<a href=\"%s\">郵件</a>。",
-    "Continue to %s" : "前往 %s"
+    "Continue to %s" : "前往 %s",
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft 允許使用者透過 IMAP 存取電子郵件。出於安全性的原因，此存取只能透過 OAuth 2.0 連線進行。",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "您必須在 Microsoft Azure Active Directory 入口網站中註冊一個新應用程式。然後新增 URL {url} 作為重新導向 URI。"
 },
 "nplurals=1; plural=0;");

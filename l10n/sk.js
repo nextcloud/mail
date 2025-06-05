@@ -679,8 +679,6 @@ OC.L10N.register(
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Gmail umožňuje užívateľom prístup k ich e-mailom prostredníctvom protokolu IMAP. Z bezpečnostných dôvodov je tento prístup možný iba pomocou pripojenia OAuth 2.0 alebo pomocou účtov Google, ktoré používajú dvojfaktorové overovanie a heslom aplikácie.",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "Musíte zaregistrovať nové ID klienta pre \"Webovú aplikáciu\" v konzole Google Cloud. Pridajte URL {url} ako autorizované redirect URI.",
     "Microsoft integration" : "Microsoft integrácia",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft umožňuje užívateľom prístup k ich e-mailom prostredníctvom protokolu IMAP. Z bezpečnostných dôvodov je tento prístup možný iba prostredníctvom pripojenia OAuth 2.0.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Musíte zaregistrovať novú aplikáciu v portáli Microsoft Azure Active Directory. Pridajte URL {url} ako redirect URI.",
     "Successfully set up anti spam email addresses" : "Úspešne ste nastavili e-mailové adresy proti spamu",
     "Error saving anti spam email addresses" : "Chyba pri ukladaní e-mailových adries proti spamu",
     "Successfully deleted anti spam reporting email" : "E-mail pre nahlásenie spamu bol úspešne odstránený",
@@ -788,6 +786,8 @@ OC.L10N.register(
     "Redirect" : "Presmerovať",
     "The link leads to %s" : "Odkaz smeruje na %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ak si neprajete navštíviť stránku, možete sa vátiť na <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Pokračovať na %s"
+    "Continue to %s" : "Pokračovať na %s",
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft umožňuje užívateľom prístup k ich e-mailom prostredníctvom protokolu IMAP. Z bezpečnostných dôvodov je tento prístup možný iba prostredníctvom pripojenia OAuth 2.0.",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Musíte zaregistrovať novú aplikáciu v portáli Microsoft Azure Active Directory. Pridajte URL {url} ako redirect URI."
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

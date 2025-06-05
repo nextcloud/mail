@@ -653,8 +653,6 @@ OC.L10N.register(
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Gmail-ek erabiltzaileei euren posta elektronikora sartzeko baimena ematen die IMAP bidez. Segurtasun arrazoiengatik sarbide hori soilik da posible OAuth 2.0 konexio batekin edo bi faktoreko autentifikazioa eta aplikazioen pasahitzak erabiltzen diren Google kontuekin.",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "\"Web aplikazio\" baterako bezero ID berri bat erregistratu behar duzu Google Cloud kontsolan. Gehitu {url} URLa baimendutako birbideratze URI gisa.",
     "Microsoft integration" : "Microsoft integrazioa",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft-ek erabiltzaileei euren posta elektronikora sartzeko baimena ematen die IMAP bidez. Segurtasun arrazoiengatik, sarbide hori OAuth 2.0 konexio batekin bakarrik da posible.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Aplikazio berri bat erregistratu behar duzu Microsoft Azure Active Directory atarian. Gehitu {url} URLa birbideratzeko URI gisa.",
     "Successfully set up anti spam email addresses" : "Konfiguratu spamaren aurkako helbide elektronikoak",
     "Error saving anti spam email addresses" : "Errorea spamaren aurkako helbide elektronikoak gordetzean",
     "Successfully deleted anti spam reporting email" : "Spamaren aurkako jakinarazpen mezu elektronikoa behar bezala ezabatu da",
@@ -762,6 +760,8 @@ OC.L10N.register(
     "Redirect" : "Birbideratu",
     "The link leads to %s" : "Estekak hona bideratzen du: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Orrialde hori bisitatu nahi ez baduzu, itzul dezakezu <a href=\"%s\">Mail </a>-ra.",
-    "Continue to %s" : "Jarraitu hona: %s"
+    "Continue to %s" : "Jarraitu hona: %s",
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft-ek erabiltzaileei euren posta elektronikora sartzeko baimena ematen die IMAP bidez. Segurtasun arrazoiengatik, sarbide hori OAuth 2.0 konexio batekin bakarrik da posible.",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Aplikazio berri bat erregistratu behar duzu Microsoft Azure Active Directory atarian. Gehitu {url} URLa birbideratzeko URI gisa."
 },
 "nplurals=2; plural=(n != 1);");

@@ -618,8 +618,6 @@ OC.L10N.register(
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Gmail lar brukere få tilgang til e-posten sin via IMAP. Av sikkerhetsgrunner er denne tilgangen bare mulig med en OAuth 2.0-tilkobling eller Google-kontoer som bruker tofaktorautentisering og app-passord.",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "Du må registrere en ny klient-ID for en \"nettapplikasjon\" i Google Cloud-konsollen. Legg til URL-adressen {url} som autorisert omdirigerings-URI.",
     "Microsoft integration" : "Microsoft-integrering",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft lar brukere få tilgang til e-post via IMAP. Av sikkerhetsgrunner er denne tilgangen bare mulig med en OAuth 2.0-tilkobling.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Du må registrere en ny app i Microsoft Azure Active Directory-portalen. Legg til URL-adressen {url} som omdirigerings-URI.",
     "Successfully set up anti spam email addresses" : "Konfigurer anti spam e-postadresser",
     "Error saving anti spam email addresses" : "Feil ved lagring av anti spam-e-postadresser",
     "Successfully deleted anti spam reporting email" : "Vellykket slettet  anti spam rapportering e-post",
@@ -727,6 +725,8 @@ OC.L10N.register(
     "Redirect" : "Videresend",
     "The link leads to %s" : "Denne lenken leder til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Hvis du ikke vil besøke den siden, kan du gå tilbake til <a href=\"%s\">E-post</a>",
-    "Continue to %s" : "Fortsett til %s"
+    "Continue to %s" : "Fortsett til %s",
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft lar brukere få tilgang til e-post via IMAP. Av sikkerhetsgrunner er denne tilgangen bare mulig med en OAuth 2.0-tilkobling.",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Du må registrere en ny app i Microsoft Azure Active Directory-portalen. Legg til URL-adressen {url} som omdirigerings-URI."
 },
 "nplurals=2; plural=(n != 1);");

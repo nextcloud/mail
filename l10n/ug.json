@@ -636,8 +636,6 @@
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Gmail ئابونتلارنىڭ ئېلېكترونلۇق خەتلىرىنى IMAP ئارقىلىق زىيارەت قىلالايدۇ. بىخەتەرلىك سەۋەبىدىن بۇ زىيارەت پەقەت OAuth 2.0 ئۇلىنىشى ياكى ئىككى ئامىللىق دەلىللەش ۋە ئەپ مەخپىي نومۇرىنى ئىشلىتىدىغان Google ھېساباتى بىلەنلا مۇمكىن.",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "Google Cloud كونترول سۇپىسىدا «تور قوللىنىشچان پروگراممىسى» ئۈچۈن يېڭى خېرىدار كىملىكىنى تىزىملىتىشىڭىز كېرەك. ھوقۇق بېرىلگەن قايتا نىشانلانغان URI سۈپىتىدە URL {url} نى قوشۇڭ.",
     "Microsoft integration" : "مىكروسوفتنىڭ بىر گەۋدىلىشىشى",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "مىكروسوفت ئىشلەتكۈچىلەرنىڭ ئېلېكترونلۇق خەتلىرىنى IMAP ئارقىلىق زىيارەت قىلالايدۇ. بىخەتەرلىك سەۋەبىدىن بۇ زىيارەت پەقەت OAuth 2.0 ئۇلىنىشى بىلەنلا مۇمكىن.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Microsoft Azure ئاكتىپ مۇندەرىجە ئېغىزىدا يېڭى ئەپ تىزىملىتىشىڭىز كېرەك. URL {url} نى قايتا URI غا قوشۇڭ.",
     "Successfully set up anti spam email addresses" : "ئەخلەت خەتكە قارشى ئېلېكترونلۇق خەت ئادرېسىنى مۇۋەپپەقىيەتلىك ئورنىتىڭ",
     "Error saving anti spam email addresses" : "ئەخلەت خەتكە قارشى ئېلېكترونلۇق خەت ئادرېسىنى ساقلاشتا خاتالىق",
     "Successfully deleted anti spam reporting email" : "ئەخلەت خەتكە قارشى ئېلېكترونلۇق خەتنى مۇۋەپپەقىيەتلىك ئۆچۈردى",
@@ -744,6 +742,8 @@
     "Redirect" : "قايتا نىشانلاش",
     "The link leads to %s" : "ئۇلىنىش% s نى كەلتۈرۈپ چىقىرىدۇ",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ئەگەر ئۇ بەتنى زىيارەت قىلىشنى خالىمىسىڭىز ، <a href = \"% s\"> خەت </a> گە قايتسىڭىز بولىدۇ.",
-    "Continue to %s" : "داۋاملىق% s"
+    "Continue to %s" : "داۋاملىق% s",
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "مىكروسوفت ئىشلەتكۈچىلەرنىڭ ئېلېكترونلۇق خەتلىرىنى IMAP ئارقىلىق زىيارەت قىلالايدۇ. بىخەتەرلىك سەۋەبىدىن بۇ زىيارەت پەقەت OAuth 2.0 ئۇلىنىشى بىلەنلا مۇمكىن.",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Microsoft Azure ئاكتىپ مۇندەرىجە ئېغىزىدا يېڭى ئەپ تىزىملىتىشىڭىز كېرەك. URL {url} نى قايتا URI غا قوشۇڭ."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
