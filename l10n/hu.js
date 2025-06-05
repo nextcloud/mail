@@ -218,7 +218,9 @@ OC.L10N.register(
     "Unsnooze" : "Felébresztés",
     "Move thread" : "Szál áthelyezése",
     "Archive thread" : "Szál archiválása",
+    "Archive message" : "Üzenet archiválása",
     "Delete thread" : "Szál törlése",
+    "Delete message" : "Üzenet törlése",
     "More actions" : "További műveletek",
     "Back" : "Vissza",
     "Set custom snooze" : "Egyéni altatás beállítása",
@@ -466,8 +468,6 @@ OC.L10N.register(
     "Mark as favorite" : "Megjelölés kedvencként",
     "Mark as unread" : "Megjelölés olvasatlanként",
     "Mark as read" : "Megjelölés olvasottként",
-    "Archive message" : "Üzenet archiválása",
-    "Delete message" : "Üzenet törlése",
     "Message source" : "Üzenet forrása",
     "Unsubscribe via link" : "Leiratkozás hivatkozással",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "A leiratkozás leállít minden üzenetet, amely a(z) {sender} levelezőlistáról érkezik",
@@ -645,8 +645,6 @@ OC.L10N.register(
     "Redirect" : "Átirányítás",
     "The link leads to %s" : "A hivatkozás ide mutat: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarja megnyitni azt az oldalt, akkor térjen vissza a <a href=\"%s\">Levelezéshez</a>.",
-    "Continue to %s" : "Folytatás ide: %s",
-    "Uploading attachments …" : "Mellékletek feltöltése…",
-    "Sending …" : "Küldés…"
+    "Continue to %s" : "Folytatás ide: %s"
 },
 "nplurals=2; plural=(n != 1);");

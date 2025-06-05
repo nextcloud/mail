@@ -30,6 +30,7 @@ class RepliedMessagesExtractor implements IExtractor {
 		$this->statisticsDao = $statisticsDao;
 	}
 
+	#[\Override]
 	public function prepare(Account $account,
 		array $incomingMailboxes,
 		array $outgoingMailboxes,
@@ -45,6 +46,7 @@ class RepliedMessagesExtractor implements IExtractor {
 		$this->repliedMessages = $this->statisticsDao->getNumberOfMessagesWithFlagGrouped($incomingMailboxes, 'answered', $senders);
 	}
 
+	#[\Override]
 	public function extract(Message $message): array {
 		$sender = $message->getFrom()->first();
 		if ($sender === null) {

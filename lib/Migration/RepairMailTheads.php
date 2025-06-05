@@ -28,10 +28,12 @@ class RepairMailTheads implements IRepairStep {
 		$this->logger = $logger;
 	}
 
+	#[\Override]
 	public function getName(): string {
 		return 'Repair Broken Threads for all mail accounts';
 	}
 
+	#[\Override]
 	public function run(IOutput $output): void {
 		/**
 		 * During the upgrade to v1.11.3 and later the old version of the

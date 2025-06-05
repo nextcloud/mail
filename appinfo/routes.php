@@ -346,6 +346,11 @@ return [
 			'verb' => 'PUT'
 		],
 		[
+			'name' => 'settings#setLayoutMessageView',
+			'url' => '/api/settings/layout-message-view',
+			'verb' => 'PUT'
+		],
+		[
 			'name' => 'trusted_senders#setTrusted',
 			'url' => '/api/trustedsenders/{email}',
 			'verb' => 'PUT'

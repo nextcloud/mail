@@ -53,7 +53,10 @@
 					<CheckIcon :size="40" class="check-icon" :class="{ 'app-content-list-item-avatar-selected': selected }" />
 				</template>
 				<template v-else>
-					<Avatar :display-name="addresses" :email="avatarEmail" />
+					<Avatar :display-name="addresses"
+						:email="avatarEmail"
+						:fetch-avatar="data.fetchAvatarFromClient"
+						:avatar="data.avatar" />
 				</template>
 			</div>
 		</template>
@@ -190,7 +193,12 @@
 					<template #icon>
 						<OpenInNewIcon :size="16" />
 					</template>
-					{{ t('mail', 'Move thread') }}
+					<template v-if="layoutMessageViewThreaded">
+						{{ t('mail', 'Move thread') }}
+					</template>
+					<template v-else>
+						{{ t('mail', 'Move Message') }}
+					</template>
 				</ActionButton>
 				<ActionButton v-if="showArchiveButton && hasArchiveAcl"
 					:close-after-click="true"
@@ -199,7 +207,12 @@
 					<template #icon>
 						<ArchiveIcon :size="16" />
 					</template>
-					{{ t('mail', 'Archive thread') }}
+					<template v-if="layoutMessageViewThreaded">
+						{{ t('mail', 'Archive thread') }}
+					</template>
+					<template v-else>
+						{{ t('mail', 'Archive message') }}
+					</template>
 				</ActionButton>
 				<ActionButton v-if="hasDeleteAcl"
 					:close-after-click="true"
@@ -207,7 +220,12 @@
 					<template #icon>
 						<DeleteIcon :size="16" />
 					</template>
-					{{ t('mail', 'Delete thread') }}
+					<template v-if="layoutMessageViewThreaded">
+						{{ t('mail', 'Delete thread') }}
+					</template>
+					<template v-else>
+						{{ t('mail', 'Delete message') }}
+					</template>
 				</ActionButton>
 				<ActionButton :close-after-click="false"
 					@click="showMoreActionOptions">
@@ -311,7 +329,7 @@
 			<MoveModal v-if="showMoveModal"
 				:account="account"
 				:envelopes="[data]"
-				:move-thread="true"
+				:move-thread="listViewThreaded"
 				@move="onMove"
 				@close="onCloseMoveModal" />
 			<EventModal v-if="showEventModal"
@@ -492,6 +510,9 @@ export default {
 		},
 		oneLineLayout() {
 			return this.overwriteOneLineMobile ? false : this.mainStore.getPreference('layout-mode', 'vertical-split') === 'no-split'
+		},
+		layoutMessageViewThreaded() {
+			return this.mainStore.getPreference('layout-message-view', 'threaded') === 'threaded'
 		},
 		hasMultipleRecipients() {
 			if (!this.account) {
@@ -773,9 +794,15 @@ export default {
 			this.$emit('delete', this.data.databaseId)
 
 			try {
-				await this.mainStore.deleteThread({
-					envelope: this.data,
-				})
+				if (this.layoutMessageViewThreaded) {
+					await this.mainStore.deleteThread({
+						envelope: this.data,
+					})
+				} else {
+					await this.mainStore.deleteMessage({
+						id: this.data.databaseId,
+					})
+				}
 			} catch (error) {
 				showError(await matchError(error, {
 					[NoTrashMailboxConfiguredError.getName()]() {
@@ -807,10 +834,17 @@ export default {
 			this.$emit('archive', this.data.databaseId)
 
 			try {
-				await this.mainStore.moveThread({
-					envelope: this.data,
-					destMailboxId: this.account.archiveMailboxId,
-				})
+				if (this.layoutMessageViewThreaded) {
+					await this.mainStore.moveThread({
+						envelope: this.data,
+						destMailboxId: this.account.archiveMailboxId,
+					})
+				} else {
+					await this.mainStore.moveMessage({
+						id: this.data.databaseId,
+						destMailboxId: this.account.archiveMailboxId,
+					})
+				}
 			} catch (error) {
 				logger.error('could not archive message', error)
 				showError(t('mail', 'Could not archive message'))
@@ -825,11 +859,19 @@ export default {
 			}
 
 			try {
-				await this.mainStore.snoozeThread({
-					envelope: this.data,
-					unixTimestamp: timestamp / 1000,
-					destMailboxId: this.account.snoozeMailboxId,
-				})
+				if (this.layoutMessageViewThreaded) {
+					await this.mainStore.snoozeThread({
+						envelope: this.data,
+						unixTimestamp: timestamp / 1000,
+						destMailboxId: this.account.snoozeMailboxId,
+					})
+				} else {
+					await this.mainStore.snoozeMessage({
+						id: this.data.databaseId,
+						unixTimestamp: timestamp / 1000,
+						destMailboxId: this.account.snoozeMailboxId,
+					})
+				}
 				showSuccess(t('mail', 'Thread was snoozed'))
 			} catch (error) {
 				logger.error('could not snooze thread', error)
@@ -841,9 +883,15 @@ export default {
 			this.setSelected(false)
 
 			try {
-				await this.mainStore.unSnoozeThread({
-					envelope: this.data,
-				})
+				if (this.layoutMessageViewThreaded) {
+					await this.mainStore.unSnoozeThread({
+						envelope: this.data,
+					})
+				} else {
+					await this.mainStore.unSnoozeMessage({
+						id: this.data.databaseId,
+					})
+				}
 				showSuccess(t('mail', 'Thread was unsnoozed'))
 			} catch (error) {
 				logger.error('Could not unsnooze thread', error)

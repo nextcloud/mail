@@ -36,6 +36,7 @@ class OutOfOfficeListener implements IEventListener {
 	) {
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		if (!($event instanceof OutOfOfficeStartedEvent)
 			&& !($event instanceof OutOfOfficeEndedEvent)

@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Listener;
 
 use Generator;
+use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Events\SynchronizationEvent;
 use OCA\Mail\IMAP\Threading\Container;
@@ -17,6 +18,7 @@ use OCA\Mail\IMAP\Threading\DatabaseMessage;
 use OCA\Mail\IMAP\Threading\ThreadBuilder;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
+
 use function array_chunk;
 use function gc_collect_cycles;
 use function iterator_to_array;
@@ -27,24 +29,27 @@ use function iterator_to_array;
 class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 	private const WRITE_IDS_CHUNK_SIZE = 500;
 
-	/** @var MessageMapper */
-	private $mapper;
-
-	/** @var ThreadBuilder */
-	private $builder;
-
-	public function __construct(MessageMapper $mapper,
-		ThreadBuilder $builder) {
-		$this->mapper = $mapper;
-		$this->builder = $builder;
+	public function __construct(
+		private IUserPreferences $preferences,
+		private MessageMapper $mapper,
+		private ThreadBuilder $builder,
+	) {
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		if (!($event instanceof SynchronizationEvent)) {
 			// Unrelated
 			return;
 		}
 		$logger = $event->getLogger();
+		$userId = $event->getAccount()->getUserId();
+		
+		if ($this->preferences->getPreference($userId, 'layout-message-view', 'threaded') !== 'threaded') {
+			$event->getLogger()->debug('Skipping threading as the user prefers a flat view');
+			return;
+		}
+
 		if (!$event->isRebuildThreads()) {
 			$event->getLogger()->debug('Skipping threading as there were no significant changes');
 			return;

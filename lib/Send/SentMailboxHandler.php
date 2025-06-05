@@ -12,6 +12,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 
 class SentMailboxHandler extends AHandler {
+	#[\Override]
 	public function process(
 		Account $account,
 		LocalMessage $localMessage,

@@ -187,6 +187,7 @@ OC.L10N.register(
     "Edit tags" : "Rediger mærker",
     "Move thread" : "Flyt tråden",
     "Delete thread" : "Slet tråd",
+    "Delete message" : "Slet besked",
     "More actions" : "Flere handlinger",
     "Back" : "Tilbage",
     "Edit as new message" : "Rediger som ny besked",
@@ -333,7 +334,6 @@ OC.L10N.register(
     "Reply to sender only" : "Besvar kun afsender",
     "Mark as unread" : "Marker som ulæst",
     "Mark as read" : "Marker som læst",
-    "Delete message" : "Slet besked",
     "Message source" : "Beskedens kildekode",
     "Go to newest message" : "Gå til nyeste besked",
     "Translate from" : "Oversæt fra",
@@ -405,8 +405,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klik her hvis du ikke automatisk bliver videre sendt i løbet af et par sekunder.",
     "Redirect" : "Omdiriger",
     "The link leads to %s" : "Linket fører til %s",
-    "Continue to %s" : "Videre til %s",
-    "Uploading attachments …" : "Uploader vedhæftninger",
-    "Sending …" : "Sender ..."
+    "Continue to %s" : "Videre til %s"
 },
 "nplurals=2; plural=(n != 1);");

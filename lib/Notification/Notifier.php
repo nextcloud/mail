@@ -26,6 +26,7 @@ class Notifier implements INotifier {
 		$this->url = $url;
 	}
 
+	#[\Override]
 	public function getID(): string {
 		return Application::APP_ID;
 	}
@@ -34,11 +35,13 @@ class Notifier implements INotifier {
 	 * Human-readable name describing the notifier
 	 * @return string
 	 */
+	#[\Override]
 	public function getName(): string {
 		return $this->factory->get(Application::APP_ID)->t('Mail');
 	}
 
 
+	#[\Override]
 	public function prepare(INotification $notification, string $languageCode): INotification {
 		if ($notification->getApp() !== Application::APP_ID) {
 			// Not my app => throw

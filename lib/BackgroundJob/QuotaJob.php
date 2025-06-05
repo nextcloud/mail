@@ -50,6 +50,7 @@ class QuotaJob extends TimedJob {
 	/**
 	 * @return void
 	 */
+	#[\Override]
 	protected function run($argument): void {
 		$accountId = (int)$argument['accountId'];
 		try {

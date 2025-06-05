@@ -12,6 +12,8 @@ namespace OCA\Mail\Service\Search;
 class SearchQuery {
 	/** @var int|null */
 	private $cursor;
+	
+	private bool $threaded = true;
 
 	/** @var Flag[] */
 	private $flags = [];
@@ -70,6 +72,14 @@ class SearchQuery {
 	 */
 	public function setCursor(int $cursor): void {
 		$this->cursor = $cursor;
+	}
+
+	public function getThreaded(): bool {
+		return $this->threaded;
+	}
+	
+	public function setThreaded(bool $threaded): void {
+		$this->threaded = $threaded;
 	}
 
 	public function getMatch(): string {

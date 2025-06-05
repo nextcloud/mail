@@ -229,7 +229,9 @@ OC.L10N.register(
     "Unsnooze" : "Unsnooze",
     "Move thread" : "Move thread",
     "Archive thread" : "Archive thread",
+    "Archive message" : "Archive message",
     "Delete thread" : "Delete thread",
+    "Delete message" : "Delete message",
     "More actions" : "More actions",
     "Back" : "Back",
     "Set custom snooze" : "Set custom snooze",
@@ -479,8 +481,6 @@ OC.L10N.register(
     "Mark as favorite" : "Mark as favorite",
     "Mark as unread" : "Mark as unread",
     "Mark as read" : "Mark as read",
-    "Archive message" : "Archive message",
-    "Delete message" : "Delete message",
     "Message source" : "Message source",
     "Unsubscribe via link" : "Unsubscribe via link",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Unsubscribing will stop all messages from the mailing list {sender}",
@@ -654,8 +654,6 @@ OC.L10N.register(
     "Redirect" : "Redirect",
     "The link leads to %s" : "The link leads to %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continue to %s",
-    "Uploading attachments …" : "Uploading attachments …",
-    "Sending …" : "Sending …"
+    "Continue to %s" : "Continue to %s"
 },
 "nplurals=2; plural=(n!=1);");

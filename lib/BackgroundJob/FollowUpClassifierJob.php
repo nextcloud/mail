@@ -37,6 +37,7 @@ class FollowUpClassifierJob extends QueuedJob {
 		parent::__construct($time);
 	}
 
+	#[\Override]
 	public function run($argument): void {
 		$messageId = $argument[self::PARAM_MESSAGE_ID];
 		$mailboxId = $argument[self::PARAM_MAILBOX_ID];

@@ -40,6 +40,7 @@ class ProvisioningMiddleware extends Middleware {
 		$this->logger = $logger;
 	}
 
+	#[\Override]
 	public function beforeController($controller, $methodName) {
 		$user = $this->userSession->getUser();
 		if ($user === null) {

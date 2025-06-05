@@ -250,7 +250,9 @@ OC.L10N.register(
     "Edit tags" : "Изменить метки",
     "Move thread" : "Переместить ветку",
     "Archive thread" : "Архивировать тему",
+    "Archive message" : "Архивное сообщение",
     "Delete thread" : "Удалить ветку",
+    "Delete message" : "Удалить сообщение",
     "More actions" : "Больше действий",
     "Back" : "Назад",
     "Edit as new message" : "Редактировать как новое сообщение",
@@ -512,8 +514,6 @@ OC.L10N.register(
     "Mark as favorite" : "Отметить как избранное",
     "Mark as unread" : "Отметить не прочитанным",
     "Mark as read" : "Отметить прочитанным",
-    "Archive message" : "Архивное сообщение",
-    "Delete message" : "Удалить сообщение",
     "Message source" : "Исходный текст сообщения",
     "Unsubscribe via link" : "Отписаться по ссылке",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Отказ от подписки приведет к остановке всех сообщений из списка рассылки {sender}",
@@ -703,8 +703,6 @@ OC.L10N.register(
     "Redirect" : "Перенаправление",
     "The link leads to %s" : "Эта ссылка ведёт на %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Если вы не хотите посещать эту страницу, вы можете вернуться в <a href=\"%s\">Почту</a>",
-    "Continue to %s" : "Продолжать %s",
-    "Uploading attachments …" : "Загрузка вложений ...",
-    "Sending …" : "Отправка…"
+    "Continue to %s" : "Продолжать %s"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

@@ -12,6 +12,7 @@ namespace OCA\Mail\Db;
 use Horde_Mail_Rfc822_Identification;
 use JsonSerializable;
 use OCA\Mail\AddressList;
+use OCA\Mail\Service\Avatar\Avatar;
 use OCP\AppFramework\Db\Entity;
 use ReturnTypeWillChange;
 use function in_array;
@@ -136,6 +137,12 @@ class Message extends Entity implements JsonSerializable {
 	/** @var Tag[] */
 	private $tags = [];
 
+	/** @var Avatar|null */
+	private $avatar;
+
+	/** @var bool */
+	private $fetchAvatarFromClient = false;
+	
 	public function __construct() {
 		$this->from = new AddressList([]);
 		$this->to = new AddressList([]);
@@ -286,7 +293,26 @@ class Message extends Entity implements JsonSerializable {
 			);
 		}
 	}
+	/**
+	 * @param Avatar|null $avatar
+	 * @return void
+	 */
+	public function setAvatar(?Avatar $avatar): void {
+		$this->avatar = $avatar;
+	}
 
+	public function setFetchAvatarFromClient(bool $fetchAvatarFromClient): void {
+		$this->fetchAvatarFromClient = $fetchAvatarFromClient;
+	}
+
+	/**
+	 * @return ?Avatar
+	 */
+	public function getAvatar(): ?Avatar {
+		return $this->avatar;
+	}
+
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		$tags = $this->getTags();
@@ -331,6 +357,8 @@ class Message extends Entity implements JsonSerializable {
 			'summary' => $this->getSummary(),
 			'encrypted' => ($this->isEncrypted() === true),
 			'mentionsMe' => $this->getMentionsMe(),
+			'avatar' => $this->avatar?->jsonSerialize(),
+			'fetchAvatarFromClient' => $this->fetchAvatarFromClient,
 		];
 	}
 }

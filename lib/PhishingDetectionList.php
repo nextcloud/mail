@@ -39,6 +39,7 @@ class PhishingDetectionList implements JsonSerializable {
 		return false;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		$result = array_map(static function (PhishingDetectionResult $check) {

@@ -212,7 +212,9 @@ OC.L10N.register(
     "Edit tags" : "Edytuj etykiety",
     "Move thread" : "Przenieś wątek",
     "Archive thread" : "Wątek archiwalny",
+    "Archive message" : "Przenieś wiadomość do archiwum",
     "Delete thread" : "Usuń wątek",
+    "Delete message" : "Usuń wiadomość",
     "More actions" : "Więcej akcji",
     "Back" : "Poprzednia",
     "Edit as new message" : "Edytuj jako nową wiadomość",
@@ -438,8 +440,6 @@ OC.L10N.register(
     "Mark as favorite" : "Oznacz jako nieulubione",
     "Mark as unread" : "Oznacz jako nieprzeczytane",
     "Mark as read" : "Oznacz jako przeczytane",
-    "Archive message" : "Przenieś wiadomość do archiwum",
-    "Delete message" : "Usuń wiadomość",
     "Message source" : "Źródło wiadomości",
     "The message could not be translated" : "Nie udało się przetłumaczyć wiadomości",
     "Translation copied to clipboard" : "Tłumaczenie skopiowane do schowka",
@@ -592,8 +592,6 @@ OC.L10N.register(
     "Redirect" : "Przekieruj",
     "The link leads to %s" : "Link prowadzi do %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Jeśli nie chcesz odwiedzić tej strony, możesz powrócić do <a href=\"%s\">Poczty</a>.",
-    "Continue to %s" : "Kontynuuj do %s",
-    "Uploading attachments …" : "Wysyłanie załączników…",
-    "Sending …" : "Wysyłanie…"
+    "Continue to %s" : "Kontynuuj do %s"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

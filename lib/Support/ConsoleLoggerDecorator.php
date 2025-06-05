@@ -25,48 +25,56 @@ class ConsoleLoggerDecorator implements LoggerInterface {
 		$this->consoleOutput = $consoleOutput;
 	}
 
+	#[\Override]
 	public function emergency($message, array $context = []): void {
 		$this->consoleOutput->writeln("<error>[emergency] $message</error>");
 
 		$this->inner->emergency($message, $context);
 	}
 
+	#[\Override]
 	public function alert($message, array $context = []): void {
 		$this->consoleOutput->writeln("<error>[alert] $message</error>");
 
 		$this->inner->alert($message, $context);
 	}
 
+	#[\Override]
 	public function critical($message, array $context = []): void {
 		$this->consoleOutput->writeln("<error>[critical] $message</error>");
 
 		$this->inner->critical($message, $context);
 	}
 
+	#[\Override]
 	public function error($message, array $context = []): void {
 		$this->consoleOutput->writeln("<error>[error] $message</error>");
 
 		$this->inner->error($message, $context);
 	}
 
+	#[\Override]
 	public function warning($message, array $context = []): void {
 		$this->consoleOutput->writeln("[warning] $message");
 
 		$this->inner->warning($message, $context);
 	}
 
+	#[\Override]
 	public function notice($message, array $context = []): void {
 		$this->consoleOutput->writeln("<info>[notice] $message</info>");
 
 		$this->inner->notice($message, $context);
 	}
 
+	#[\Override]
 	public function info($message, array $context = []): void {
 		$this->consoleOutput->writeln("<info>[info] $message</info>");
 
 		$this->inner->info($message, $context);
 	}
 
+	#[\Override]
 	public function debug($message, array $context = []): void {
 		if ($this->consoleOutput->getVerbosity() < OutputInterface::VERBOSITY_DEBUG) {
 			return;
@@ -77,6 +85,7 @@ class ConsoleLoggerDecorator implements LoggerInterface {
 		$this->inner->debug($message, $context);
 	}
 
+	#[\Override]
 	public function log($level, $message, array $context = []): void {
 		$this->consoleOutput->writeln("<info>[log] $message</info>");
 

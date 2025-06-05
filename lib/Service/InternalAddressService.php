@@ -20,6 +20,7 @@ class InternalAddressService implements IInternalAddressService {
 		$this->mapper = $mapper;
 	}
 
+	#[\Override]
 	public function isInternal(string $uid, string $address): bool {
 		return $this->mapper->exists(
 			$uid,
@@ -27,6 +28,7 @@ class InternalAddressService implements IInternalAddressService {
 		);
 	}
 
+	#[\Override]
 	public function add(string $uid, string $address, string $type, ?bool $trust = true): ?InternalAddress {
 		if ($trust && $this->isInternal($uid, $address)) {
 			// Nothing to do
@@ -50,6 +52,7 @@ class InternalAddressService implements IInternalAddressService {
 		return null;
 	}
 
+	#[\Override]
 	public function getInternalAddresses(string $uid): array {
 		return $this->mapper->findAll($uid);
 	}

@@ -437,9 +437,13 @@ export default {
 			}
 			logger.debug('sending message', { data })
 
+			if (this.sending) {
+				return
+			}
 			await this.attachmentsPromise
 			this.uploadingAttachments = false
 			this.sending = true
+			this.$emit('close')
 			try {
 				const now = new Date().getTime()
 				for (const attachment of data.attachments) {
@@ -510,7 +514,6 @@ export default {
 					this.mainStore.removeMessageMutation({ id: dataForServer.id })
 				}
 				await this.mainStore.stopComposerSession()
-				this.$emit('close')
 			} catch (error) {
 				this.error = await matchError(error, {
 					[NoSentMailboxConfiguredError.getName()]() {

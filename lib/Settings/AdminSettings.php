@@ -17,6 +17,7 @@ use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\Defaults;
 use OCP\IConfig;
 use OCP\IInitialStateService;
 use OCP\LDAP\ILDAPProvider;
@@ -40,14 +41,17 @@ class AdminSettings implements ISettings {
 	private AiIntegrationsService $aiIntegrationsService;
 	private ClassificationSettingsService $classificationSettingsService;
 
-	public function __construct(IInitialStateService $initialStateService,
+	public function __construct(
+		IInitialStateService $initialStateService,
 		ProvisioningManager $provisioningManager,
 		AntiSpamService $antiSpamService,
 		GoogleIntegration $googleIntegration,
 		MicrosoftIntegration $microsoftIntegration,
 		IConfig $config,
 		AiIntegrationsService $aiIntegrationsService,
-		ClassificationSettingsService $classificationSettingsService) {
+		ClassificationSettingsService $classificationSettingsService,
+		private Defaults $themingDefaults,
+	) {
 		$this->initialStateService = $initialStateService;
 		$this->provisioningManager = $provisioningManager;
 		$this->antiSpamService = $antiSpamService;
@@ -58,6 +62,7 @@ class AdminSettings implements ISettings {
 		$this->classificationSettingsService = $classificationSettingsService;
 	}
 
+	#[\Override]
 	public function getForm() {
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,
@@ -78,6 +83,12 @@ class AdminSettings implements ISettings {
 			Application::APP_ID,
 			'allow_new_mail_accounts',
 			$this->config->getAppValue('mail', 'allow_new_mail_accounts', 'yes') === 'yes'
+		);
+
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'layout_message_view',
+			$this->config->getAppValue('mail', 'layout_message_view', 'threaded')
 		);
 
 		$this->initialStateService->provideInitialState(
@@ -131,6 +142,11 @@ class AdminSettings implements ISettings {
 			'microsoft_oauth_redirect_url',
 			$this->microsoftIntegration->getRedirectUrl(),
 		);
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'microsoft_oauth_docs',
+			$this->themingDefaults->buildDocLinkToKey('admin-groupware-oauth-microsoft'),
+		);
 
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,
@@ -141,10 +157,12 @@ class AdminSettings implements ISettings {
 		return new TemplateResponse(Application::APP_ID, 'settings-admin');
 	}
 
+	#[\Override]
 	public function getSection() {
 		return 'groupware';
 	}
 
+	#[\Override]
 	public function getPriority() {
 		return 90;
 	}

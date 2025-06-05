@@ -30,10 +30,12 @@ class AddMissingMessageIds implements IRepairStep {
 		$this->logger = $logger;
 	}
 
+	#[\Override]
 	public function getName() {
 		return 'Add a generated message-id to all Mail messages that have none';
 	}
 
+	#[\Override]
 	public function run(IOutput $output): void {
 		$output->info('Looking up messages without a message-id');
 

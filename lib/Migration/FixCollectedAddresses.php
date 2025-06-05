@@ -24,6 +24,7 @@ class FixCollectedAddresses implements IRepairStep {
 		$this->mapper = $mapper;
 	}
 
+	#[\Override]
 	public function getName(): string {
 		return 'Purify and migrate collected mail addresses';
 	}
@@ -31,13 +32,13 @@ class FixCollectedAddresses implements IRepairStep {
 	/**
 	 * @return void
 	 */
+	#[\Override]
 	public function run(IOutput $output) {
 		$nrOfAddresses = $this->mapper->getTotal();
 		$output->startProgress($nrOfAddresses);
 
 		$chunk = $this->mapper->getChunk();
 		while (count($chunk) > 0) {
-			$maxId = null;
 			foreach ($chunk as $address) {
 				/* @var $address CollectedAddress */
 				$maxId = $address->getId();

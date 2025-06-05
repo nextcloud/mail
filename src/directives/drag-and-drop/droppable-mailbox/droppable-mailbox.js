@@ -2,20 +2,15 @@
  * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-import useMainStore from '../../../store/mainStore.js'
 import logger from '../../../logger.js'
 import dragEventBus from '../util/dragEventBus.js'
-
-import { createPinia, setActivePinia } from 'pinia'
-
-setActivePinia(createPinia())
-const mainStore = useMainStore()
 
 export class DroppableMailbox {
 
 	constructor(el, componentInstance, options) {
 		this.el = el
 		this.options = options
+		this.mainStore = options.mainStore
 		this.registerListeners.bind(this)(el)
 		this.setInitialAttributes()
 	}
@@ -149,10 +144,17 @@ export class DroppableMailbox {
 		item.setAttribute('draggable-envelope', 'pending')
 
 		try {
-			await mainStore.moveThread({
-				envelope,
-				destMailboxId: this.options.mailboxId,
-			})
+			if (this.mainStore.getPreference('layout-message-view') === 'threaded') {
+				await this.mainStore.moveThread({
+					envelope,
+					destMailboxId: this.options.mailboxId,
+				})
+			} else {
+				await this.mainStore.moveMessage({
+					id: envelope.databaseId,
+					destMailboxId: this.options.mailboxId,
+				})
+			}
 		} catch (error) {
 			item.removeAttribute('draggable-envelope')
 			logger.error('could not move messages', error)

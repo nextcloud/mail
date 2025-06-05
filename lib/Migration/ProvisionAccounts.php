@@ -21,6 +21,7 @@ class ProvisionAccounts implements IRepairStep {
 		$this->provisioningManager = $provisioningManager;
 	}
 
+	#[\Override]
 	public function getName(): string {
 		return 'Create or update provisioned Mail accounts';
 	}
@@ -28,6 +29,7 @@ class ProvisionAccounts implements IRepairStep {
 	/**
 	 * @return void
 	 */
+	#[\Override]
 	public function run(IOutput $output) {
 		$cnt = $this->provisioningManager->provision();
 		$output->info("$cnt accounts provisioned");

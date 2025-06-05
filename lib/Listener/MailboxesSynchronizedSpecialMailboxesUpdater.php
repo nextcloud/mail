@@ -48,6 +48,7 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 	/**
 	 * @param Event $event
 	 */
+	#[\Override]
 	public function handle(Event $event): void {
 		/** @var MailboxesSynchronizedEvent $event */
 		$account = $event->getAccount();

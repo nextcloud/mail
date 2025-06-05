@@ -20,6 +20,7 @@ class FaviconDataAccess extends DataAccess {
 	) {
 	}
 
+	#[\Override]
 	public function retrieveUrl($url) {
 		$client = $this->clientService->newClient();
 		try {
@@ -31,6 +32,7 @@ class FaviconDataAccess extends DataAccess {
 		return $response->getBody();
 	}
 
+	#[\Override]
 	public function retrieveHeader($url) {
 		$client = $this->clientService->newClient();
 		try {

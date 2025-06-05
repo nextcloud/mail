@@ -49,6 +49,7 @@ class SmimeCertificatePurposes implements JsonSerializable {
 		$this->encrypt = $encrypt;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

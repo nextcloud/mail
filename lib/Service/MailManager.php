@@ -119,6 +119,7 @@ class MailManager implements IMailManager {
 		$this->threadMapper = $threadMapper;
 	}
 
+	#[\Override]
 	public function getMailbox(string $uid, int $id): Mailbox {
 		try {
 			return $this->mailboxMapper->findByUid($id, $uid);
@@ -133,6 +134,7 @@ class MailManager implements IMailManager {
 	 * @return Mailbox[]
 	 * @throws ServiceException
 	 */
+	#[\Override]
 	public function getMailboxes(Account $account): array {
 		$this->mailboxSync->sync($account, $this->logger);
 
@@ -147,6 +149,7 @@ class MailManager implements IMailManager {
 	 * @return Mailbox
 	 * @throws ServiceException
 	 */
+	#[\Override]
 	public function createMailbox(Account $account, string $name, array $specialUseAttributes = []): Mailbox {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
@@ -180,6 +183,7 @@ class MailManager implements IMailManager {
 	 * @throws ServiceException
 	 * @throws SmimeDecryptException
 	 */
+	#[\Override]
 	public function getImapMessage(Horde_Imap_Client_Socket $client,
 		Account $account,
 		Mailbox $mailbox,
@@ -232,14 +236,17 @@ class MailManager implements IMailManager {
 		}
 	}
 
+	#[\Override]
 	public function getThread(Account $account, string $threadRootId): array {
 		return $this->dbMessageMapper->findThread($account, $threadRootId);
 	}
 
+	#[\Override]
 	public function getMessageIdForUid(Mailbox $mailbox, $uid): ?int {
 		return $this->dbMessageMapper->getIdForUid($mailbox, $uid);
 	}
 
+	#[\Override]
 	public function getMessage(string $uid, int $id): Message {
 		return $this->dbMessageMapper->findByUserId($uid, $id);
 	}
@@ -254,6 +261,7 @@ class MailManager implements IMailManager {
 	 *
 	 * @throws ServiceException
 	 */
+	#[\Override]
 	public function getSource(Horde_Imap_Client_Socket $client,
 		Account $account,
 		string $mailbox,
@@ -281,6 +289,7 @@ class MailManager implements IMailManager {
 	 * @return int
 	 * @throws ServiceException
 	 */
+	#[\Override]
 	public function moveMessage(Account $sourceAccount,
 		string $sourceFolderId,
 		int $uid,
@@ -317,6 +326,7 @@ class MailManager implements IMailManager {
 	 * @throws ServiceException
 	 * @todo evaluate if we should sync mailboxes first
 	 */
+	#[\Override]
 	public function deleteMessage(Account $account,
 		string $mailboxId,
 		int $messageUid): void {
@@ -341,6 +351,7 @@ class MailManager implements IMailManager {
 	 *
 	 * @todo evaluate if we should sync mailboxes first
 	 */
+	#[\Override]
 	public function deleteMessageWithClient(
 		Account $account,
 		Mailbox $mailbox,
@@ -404,6 +415,7 @@ class MailManager implements IMailManager {
 		}
 	}
 
+	#[\Override]
 	public function markFolderAsRead(Account $account, Mailbox $mailbox): void {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
@@ -413,6 +425,7 @@ class MailManager implements IMailManager {
 		}
 	}
 
+	#[\Override]
 	public function updateSubscription(Account $account, Mailbox $mailbox, bool $subscribed): Mailbox {
 		/**
 		 * 1. Change subscription on IMAP
@@ -441,6 +454,7 @@ class MailManager implements IMailManager {
 		return $this->mailboxMapper->find($account, $mailbox->getName());
 	}
 
+	#[\Override]
 	public function enableMailboxBackgroundSync(Mailbox $mailbox,
 		bool $syncInBackground): Mailbox {
 		$mailbox->setSyncInBackground($syncInBackground);
@@ -448,6 +462,7 @@ class MailManager implements IMailManager {
 		return $this->mailboxMapper->update($mailbox);
 	}
 
+	#[\Override]
 	public function flagMessage(Account $account, string $mailbox, int $uid, string $flag, bool $value): void {
 		try {
 			$mb = $this->mailboxMapper->find($account, $mailbox);
@@ -547,6 +562,7 @@ class MailManager implements IMailManager {
 	 *
 	 * @link https://github.com/nextcloud/mail/issues/25
 	 */
+	#[\Override]
 	public function tagMessage(Account $account, string $mailbox, Message $message, Tag $tag, bool $value): void {
 		try {
 			$mb = $this->mailboxMapper->find($account, $mailbox);
@@ -567,6 +583,7 @@ class MailManager implements IMailManager {
 	 * @return Quota|null
 	 * @see https://tools.ietf.org/html/rfc2087
 	 */
+	#[\Override]
 	public function getQuota(Account $account): ?Quota {
 		/**
 		 * Get all the quotas roots of the user's mailboxes
@@ -612,6 +629,7 @@ class MailManager implements IMailManager {
 		);
 	}
 
+	#[\Override]
 	public function renameMailbox(Account $account, Mailbox $mailbox, string $name): Mailbox {
 		/*
 		 * 1. Rename on IMAP
@@ -648,6 +666,7 @@ class MailManager implements IMailManager {
 	 *
 	 * @throws ServiceException
 	 */
+	#[\Override]
 	public function deleteMailbox(Account $account,
 		Mailbox $mailbox): void {
 		$client = $this->imapClientFactory->getClient($account);
@@ -670,6 +689,7 @@ class MailManager implements IMailManager {
 	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
 	 * @throws ServiceException
 	 */
+	#[\Override]
 	public function clearMailbox(Account $account,
 		Mailbox $mailbox): void {
 		$client = $this->imapClientFactory->getClient($account);
@@ -698,6 +718,7 @@ class MailManager implements IMailManager {
 	 * @param Message $message
 	 * @return Attachment[]
 	 */
+	#[\Override]
 	public function getMailAttachments(Account $account, Mailbox $mailbox, Message $message): array {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
@@ -725,6 +746,7 @@ class MailManager implements IMailManager {
 	 * @throws ServiceException
 	 * @throws Horde_Mime_Exception
 	 */
+	#[\Override]
 	public function getMailAttachment(Account $account,
 		Mailbox $mailbox,
 		Message $message,
@@ -749,6 +771,7 @@ class MailManager implements IMailManager {
 	 * @return Tag
 	 * @throws ClientException
 	 */
+	#[\Override]
 	public function getTagByImapLabel(string $imapLabel, string $userId): Tag {
 		try {
 			return $this->tagMapper->getTagByImapLabel($imapLabel, $userId);
@@ -798,6 +821,7 @@ class MailManager implements IMailManager {
 	 * @param string $mailbox
 	 * @return boolean
 	 */
+	#[\Override]
 	public function isPermflagsEnabled(Horde_Imap_Client_Socket $client, Account $account, string $mailbox): bool {
 		try {
 			$capabilities = $client->status($mailbox, Horde_Imap_Client::STATUS_PERMFLAGS);
@@ -811,6 +835,7 @@ class MailManager implements IMailManager {
 		return (is_array($capabilities) === true && array_key_exists('permflags', $capabilities) === true && in_array("\*", $capabilities['permflags'], true) === true);
 	}
 
+	#[\Override]
 	public function createTag(string $displayName, string $color, string $userId): Tag {
 		try {
 			$imapLabel = $this->imapFlag->create($displayName);
@@ -834,6 +859,7 @@ class MailManager implements IMailManager {
 		return $this->tagMapper->insert($tag);
 	}
 
+	#[\Override]
 	public function updateTag(int $id, string $displayName, string $color, string $userId): Tag {
 		try {
 			$tag = $this->tagMapper->getTagForUser($id, $userId);
@@ -847,6 +873,7 @@ class MailManager implements IMailManager {
 		return $this->tagMapper->update($tag);
 	}
 
+	#[\Override]
 	public function deleteTag(int $id, string $userId, array $accounts) :Tag {
 		try {
 			$tag = $this->tagMapper->getTagForUser($id, $userId);
@@ -860,6 +887,7 @@ class MailManager implements IMailManager {
 		return $this->tagMapper->delete($tag);
 	}
 
+	#[\Override]
 	public function deleteTagForAccount(int $id, string $userId, Tag $tag, Account $account) :void {
 		try {
 			$messageTags = $this->messageTagsMapper->getMessagesByTag($id);
@@ -894,6 +922,7 @@ class MailManager implements IMailManager {
 		}
 	}
 
+	#[\Override]
 	public function moveThread(Account $srcAccount, Mailbox $srcMailbox, Account $dstAccount, Mailbox $dstMailbox, string $threadRootId): array {
 		$mailAccount = $srcAccount->getMailAccount();
 		$messageInTrash = $srcMailbox->getId() === $mailAccount->getTrashMailboxId();
@@ -927,6 +956,7 @@ class MailManager implements IMailManager {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[\Override]
 	public function deleteThread(Account $account, Mailbox $mailbox, string $threadRootId): void {
 		$mailAccount = $account->getMailAccount();
 		$messageInTrash = $mailbox->getId() === $mailAccount->getTrashMailboxId();
@@ -954,6 +984,7 @@ class MailManager implements IMailManager {
 	/**
 	 * @return Message[]
 	 */
+	#[\Override]
 	public function getByMessageId(Account $account, string $messageId): array {
 		return $this->dbMessageMapper->findByMessageId($account, $messageId);
 	}

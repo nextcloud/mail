@@ -21,6 +21,7 @@ class DeleteDuplicatedUidsJob extends QueuedJob {
 		parent::__construct($time);
 	}
 
+	#[\Override]
 	protected function run($argument): void {
 		$this->messageMapper->deleteDuplicateUids();
 	}

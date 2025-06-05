@@ -48,7 +48,6 @@ OC.L10N.register(
     "Host" : "হোস্ট",
     "Port" : "পোর্ট",
     "All" : "সবাই",
-    "Favorites" : "প্রিয়জন",
-    "Sending …" : "পাঠানো হচ্ছে......"
+    "Favorites" : "প্রিয়জন"
 },
 "nplurals=2; plural=(n != 1);");

@@ -126,6 +126,10 @@ export default {
 				return []
 			}
 
+			if (this.mainStore.getPreference('layout-message-view', 'threaded') === 'singleton') {
+				return [envelope]
+			}
+
 			const envelopes = this.mainStore.getEnvelopesByThreadRootId(envelope.accountId, envelope.threadRootId)
 			if (envelopes.length === 0) {
 				return []
@@ -281,11 +285,12 @@ export default {
 			this.expandedThreads = [this.threadId]
 			this.errorMessage = ''
 			this.error = undefined
-			await this.fetchThread()
+			if (this.mainStore.getPreference('layout-message-view', 'threaded') === 'threaded') {
+				await this.fetchThread()
+			}
 			this.updateParticipantsToDisplay()
 			this.updateSummary()
 			this.loadedThreads = 0
-
 		},
 		async fetchThread() {
 			this.loading = true

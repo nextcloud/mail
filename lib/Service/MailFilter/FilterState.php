@@ -28,6 +28,7 @@ class FilterState implements JsonSerializable {
 		return $this->filters;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return $this->filters;

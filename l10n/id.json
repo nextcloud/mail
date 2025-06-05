@@ -108,7 +108,6 @@
     "Error loading message" : "Terjadi kesalahan saat memuat pesan",
     "Forwarding to %s" : "Teruskan ke %s",
     "Redirect" : "Mengalihkan",
-    "Continue to %s" : "Lanjutkan ke %s",
-    "Sending …" : "Mengirim ..."
+    "Continue to %s" : "Lanjutkan ke %s"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

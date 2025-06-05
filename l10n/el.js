@@ -158,6 +158,7 @@ OC.L10N.register(
     "Edit tags" : "Επεξεργασία ετικετών",
     "Move thread" : "Μετακίνηση νήματος",
     "Delete thread" : "Διαγραφή νήματος",
+    "Delete message" : "Διαγραφή μηνύματος",
     "More actions" : "Περισσότερες ενέργειες",
     "Back" : "Πίσω",
     "Edit as new message" : "Επεξεργασία ως νέο μήνυμα",
@@ -319,7 +320,6 @@ OC.L10N.register(
     "Mark as favorite" : "Επισήμανση ως αγαπημένο",
     "Mark as unread" : "επισήμανση ως μή-αναγνωσμένο",
     "Mark as read" : "Σήμανση ως αναγνωσμένο",
-    "Delete message" : "Διαγραφή μηνύματος",
     "Message source" : "Πηγή μηνύματος",
     "Could not remove trusted sender {sender}" : "Δεν ήταν δυνατή η κατάργηση του αξιόπιστου αποστολέα {sender}",
     "No senders are trusted at the moment." : "Κανένας αποστολέας δεν είναι αξιόπιστος αυτή τη στιγμή.",
@@ -387,8 +387,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Κάντε κλικ εδώ εάν δεν ανακατευθυνθείτε αυτόματα μέσα σε λίγα δευτερόλεπτα.",
     "Redirect" : "Ανακατεύθυνση",
     "The link leads to %s" : "Αυτός ο σύνδεσμος οδηγεί στο %s",
-    "Continue to %s" : "Συνέχεια στο %s",
-    "Uploading attachments …" : "Ανέβασμα συνημμένων ...",
-    "Sending …" : "Γίνεται αποστολή..."
+    "Continue to %s" : "Συνέχεια στο %s"
 },
 "nplurals=2; plural=(n != 1);");

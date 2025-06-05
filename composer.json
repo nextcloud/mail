@@ -34,7 +34,7 @@
 		"nextcloud/horde-managesieve": "^1.0",
 		"nextcloud/horde-smtp": "^1.0.2",
 		"nextcloud/kitinerary": "^1.0",
-		"nextcloud/kitinerary-bin": "^1.0.3",
+		"nextcloud/kitinerary-bin": "^1.0.4",
 		"nextcloud/kitinerary-flatpak": "^1.0",
 		"nextcloud/kitinerary-sys": "^2.0.0",
 		"phpmailer/dkimvalidator": "^0.3.0",
@@ -67,11 +67,6 @@
 		"psalm:fix": "psalm.phar --alter --issues=InvalidReturnType,InvalidNullableReturnType,MismatchingDocblockParamType,MismatchingDocblockReturnType,MissingParamType,InvalidFalsableReturnType",
 		"post-install-cmd": [
 			"@composer bin all install --ansi",
-			"\"vendor/bin/mozart\" compose",
-			"composer dump-autoload"
-		],
-		"post-update-cmd": [
-			"@composer bin all update --ansi",
 			"\"vendor/bin/mozart\" compose",
 			"composer dump-autoload"
 		],

@@ -43,6 +43,7 @@ class TrashRetentionJob extends TimedJob {
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function run($argument) {
 		$accounts = $this->accountMapper->getAllAccounts();
 		foreach ($accounts as $account) {

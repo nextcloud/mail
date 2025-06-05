@@ -25,6 +25,7 @@ class Configuration implements JsonSerializable {
 		$this->smtpConfig = $smtpConfig;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

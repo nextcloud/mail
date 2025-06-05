@@ -29,6 +29,7 @@ class Version3500Date20231115182612 extends SimpleMigrationStep {
 	 * @param array $options
 	 * @return null|ISchemaWrapper
 	 */
+	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 		$schema = $schemaClosure();
 
@@ -45,6 +46,7 @@ class Version3500Date20231115182612 extends SimpleMigrationStep {
 	 * @param Closure(): ISchemaWrapper $schemaClosure
 	 * @param array $options
 	 */
+	#[\Override]
 	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
 		// Round 1: Hash common mailbox names
 

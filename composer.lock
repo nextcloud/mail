@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "243768916402bf250aa08f40460b08c4",
+    "content-hash": "e0c2b9568aeafdee62434d744187894d",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2096,16 +2096,16 @@
         },
         {
             "name": "nextcloud/kitinerary-bin",
-            "version": "v1.0.3",
+            "version": "v1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-libraries/kitinerary-bin.git",
-                "reference": "781d1242c343478674e4058bdcb9a87e64b1bd76"
+                "reference": "58ae0fc814e7b78f29555261e88742396bbd4345"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-bin/zipball/781d1242c343478674e4058bdcb9a87e64b1bd76",
-                "reference": "781d1242c343478674e4058bdcb9a87e64b1bd76",
+                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-bin/zipball/58ae0fc814e7b78f29555261e88742396bbd4345",
+                "reference": "58ae0fc814e7b78f29555261e88742396bbd4345",
                 "shasum": ""
             },
             "require": {
@@ -2122,7 +2122,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-3.0-or-later"
+                "AGPL-3.0-or-later"
             ],
             "authors": [
                 {
@@ -2131,9 +2131,9 @@
             ],
             "description": "KItinerary binary executable",
             "support": {
-                "source": "https://github.com/nextcloud-libraries/kitinerary-bin/tree/v1.0.3"
+                "source": "https://github.com/nextcloud-libraries/kitinerary-bin/tree/v1.0.4"
             },
-            "time": "2024-03-25T09:26:53+00:00"
+            "time": "2025-05-15T19:18:43+00:00"
         },
         {
             "name": "nextcloud/kitinerary-flatpak",

@@ -15,6 +15,8 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMapper;
 use OCA\Mail\IMAP\MessageMapper as ImapMapper;
+use OCA\Mail\Service\Avatar\Avatar;
+use OCA\Mail\Service\AvatarService;
 use Psr\Log\LoggerInterface;
 use function array_key_exists;
 use function array_map;
@@ -34,14 +36,19 @@ class PreviewEnhancer {
 	/** @var LoggerInterface */
 	private $logger;
 
+	/** @var AvatarService */
+	private $avatarService;
+
 	public function __construct(IMAPClientFactory $clientFactory,
 		ImapMapper $imapMapper,
 		DbMapper $dbMapper,
-		LoggerInterface $logger) {
+		LoggerInterface $logger,
+		AvatarService $avatarService) {
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
 		$this->mapper = $dbMapper;
 		$this->logger = $logger;
+		$this->avatarService = $avatarService;
 	}
 
 	/**
@@ -49,7 +56,7 @@ class PreviewEnhancer {
 	 *
 	 * @return Message[]
 	 */
-	public function process(Account $account, Mailbox $mailbox, array $messages): array {
+	public function process(Account $account, Mailbox $mailbox, array $messages, bool $preLoadAvatars = false, ?string $userId = null): array {
 		$needAnalyze = array_reduce($messages, static function (array $carry, Message $message) {
 			if ($message->getStructureAnalyzed()) {
 				// Nothing to do
@@ -58,6 +65,22 @@ class PreviewEnhancer {
 
 			return array_merge($carry, [$message->getUid()]);
 		}, []);
+
+		if ($preLoadAvatars) {
+			foreach ($messages as $message) {
+				$from = $message->getFrom()->first();
+				if ($message->getAvatar() === null && $from !== null && $from->getEmail() !== null && $userId !== null) {
+					$avatar = $this->avatarService->getCachedAvatar($from->getEmail(), $userId);
+					if ($avatar === null) {
+						$message->setFetchAvatarFromClient(true);
+					}
+					if ($avatar instanceof Avatar) {
+						$message->setAvatar($avatar);
+					}
+					
+				}
+			}
+		}
 
 		if ($needAnalyze === []) {
 			// Nothing to enhance
