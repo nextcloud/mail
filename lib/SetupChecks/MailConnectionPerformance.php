@@ -13,7 +13,6 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\ProvisioningMapper;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCP\IL10N;
 use OCP\SetupCheck\ISetupCheck;
@@ -28,7 +27,6 @@ class MailConnectionPerformance implements ISetupCheck {
 		private ProvisioningMapper $provisioningMapper,
 		private MailAccountMapper $accountMapper,
 		private IMAPClientFactory $clientFactory,
-		private FolderMapper $folderMapper,
 		private MicroTime $microtime,
 	) {
 	}

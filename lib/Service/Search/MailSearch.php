@@ -13,7 +13,6 @@ use Horde_Imap_Client;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\Mailbox;
-use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClientException;
@@ -30,9 +29,6 @@ class MailSearch implements IMailSearch {
 	/** @var FilterStringParser */
 	private $filterStringParser;
 
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
 	/** @var ImapSearchProvider */
 	private $imapSearchProvider;
 
@@ -46,13 +42,11 @@ class MailSearch implements IMailSearch {
 	private $timeFactory;
 
 	public function __construct(FilterStringParser $filterStringParser,
-		MailboxMapper $mailboxMapper,
 		ImapSearchProvider $imapSearchProvider,
 		MessageMapper $messageMapper,
 		PreviewEnhancer $previewEnhancer,
 		ITimeFactory $timeFactory) {
 		$this->filterStringParser = $filterStringParser;
-		$this->mailboxMapper = $mailboxMapper;
 		$this->imapSearchProvider = $imapSearchProvider;
 		$this->messageMapper = $messageMapper;
 		$this->previewEnhancer = $previewEnhancer;

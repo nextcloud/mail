@@ -21,7 +21,6 @@ use OCP\Authentication\LoginCredentials\IStore;
 use OCP\IUser;
 use OCP\IUserSession;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Log\LoggerInterface;
 
 class ProvisioningMiddlewareTest extends TestCase {
 	/** @var IUserSession|MockObject */
@@ -33,9 +32,6 @@ class ProvisioningMiddlewareTest extends TestCase {
 	/** @var Manager|MockObject */
 	private $provisioningManager;
 
-	/** @var LoggerInterface|MockObject */
-	private $logger;
-
 	/** @var ProvisioningMiddleware */
 	private $middleware;
 
@@ -45,13 +41,11 @@ class ProvisioningMiddlewareTest extends TestCase {
 		$this->userSession = $this->createMock(IUserSession::class);
 		$this->credentialStore = $this->createMock(IStore::class);
 		$this->provisioningManager = $this->createMock(Manager::class);
-		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->middleware = new ProvisioningMiddleware(
 			$this->userSession,
 			$this->credentialStore,
 			$this->provisioningManager,
-			$this->logger
 		);
 	}
 

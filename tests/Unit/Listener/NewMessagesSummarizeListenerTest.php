@@ -10,10 +10,8 @@ namespace Unit\Listener;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Events\NewMessagesSynchronized;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Listener\NewMessagesSummarizeListener;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCP\AppFramework\Services\IAppConfig;
@@ -24,25 +22,19 @@ use Psr\Log\Test\TestLogger;
 class NewMessagesSummarizeListenerTest extends TestCase {
 	private LoggerInterface $logger;
 	private NewMessagesSummarizeListener $listener;
-	private IMAPClientFactory|MockObject $imapFactory;
 	private AiIntegrationsService|MockObject $aiService;
-	private IMailManager|MockObject $mailManager;
 	private IAppConfig|MockObject $appConfig;
 
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->logger = new TestLogger();
-		$this->imapFactory = $this->createMock(IMAPClientFactory::class);
 		$this->aiService = $this->createMock(AiIntegrationsService::class);
-		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->appConfig = $this->createMock(IAppConfig::class);
 
 		$this->listener = new NewMessagesSummarizeListener(
 			$this->logger,
-			$this->imapFactory,
 			$this->aiService,
-			$this->mailManager,
 			$this->appConfig
 		);
 	}
@@ -76,6 +68,5 @@ class NewMessagesSummarizeListenerTest extends TestCase {
 			->method('summarizeMessages');
 		$this->listener->handle($event);
 	}
-
 
 }

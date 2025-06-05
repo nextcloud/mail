@@ -39,9 +39,6 @@ class SearchQuery {
 	/** @var string[] */
 	private $bodies = [];
 
-	/** @var string[] */
-	private $textTokens = [];
-
 	/** @var array[] */
 	private $tags = [];
 

@@ -80,7 +80,7 @@ class FolderMapperTest extends TestCase {
 				],
 			]);
 		$expected = [
-			new Folder(27, new Horde_Imap_Client_Mailbox('INBOX'), [], '.', null),
+			new Folder(new Horde_Imap_Client_Mailbox('INBOX'), [], '.', null),
 		];
 
 		$folders = $this->mapper->getFolders($account, $client);
@@ -115,8 +115,8 @@ class FolderMapperTest extends TestCase {
 				],
 			]);
 		$expected = [
-			new Folder(27, new Horde_Imap_Client_Mailbox('INBOX'), [], '.', null),
-			new Folder(27, new Horde_Imap_Client_Mailbox('Sent'), ['\sent'], '.', null),
+			new Folder(new Horde_Imap_Client_Mailbox('INBOX'), [], '.', null),
+			new Folder(new Horde_Imap_Client_Mailbox('Sent'), ['\sent'], '.', null),
 		];
 
 		$folders = $this->mapper->getFolders($account, $client);
@@ -151,9 +151,9 @@ class FolderMapperTest extends TestCase {
 				],
 			]);
 
-		$created = $this->mapper->createFolder($client, $account, 'new');
+		$created = $this->mapper->createFolder($client, 'new');
 
-		$expected = new Folder(42, new Horde_Imap_Client_Mailbox('new'), [], '.', ['unseen' => 0]);
+		$expected = new Folder(new Horde_Imap_Client_Mailbox('new'), [], '.', ['unseen' => 0]);
 		$this->assertEquals($expected, $created);
 	}
 
@@ -239,7 +239,7 @@ class FolderMapperTest extends TestCase {
 					'unseen' => 2,
 				],
 			]);
-		
+
 		$stats = $this->mapper->getFoldersStatusAsObject($client, ['INBOX']);
 
 		self::assertArrayNotHasKey('INBOX', $stats);

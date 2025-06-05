@@ -15,7 +15,6 @@ use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
@@ -56,9 +55,6 @@ class OutboxServiceIntegrationTest extends TestCase {
 
 	/** @var IAttachmentService */
 	private $attachmentService;
-
-	/** @var IMailTransmission */
-	private $transmission;
 
 	/** @var OutboxService */
 	private $outbox;
@@ -105,7 +101,6 @@ class OutboxServiceIntegrationTest extends TestCase {
 		);
 		$this->client = $this->getClient($this->account);
 		$this->mapper = Server::get(LocalMessageMapper::class);
-		$this->transmission = Server::get(IMailTransmission::class);
 		$this->eventDispatcher = Server::get(IEventDispatcher::class);
 		$this->clientFactory = Server::get(IMAPClientFactory::class);
 		$this->accountService = Server::get(AccountService::class);
@@ -117,7 +112,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$delete = $qb->delete($this->mapper->getTableName());
 		$delete->execute();
 
-		$this->outbox = new OutboxService($this->transmission,
+		$this->outbox = new OutboxService(
 			$this->mapper,
 			$this->attachmentService,
 			$this->eventDispatcher,
