@@ -6,6 +6,9 @@ module.exports = {
 	extends: [
 		'@nextcloud'
 	],
+	plugins: [
+		'perfectionist'
+	],
 	globals: {
 		expect: true,
 		OC: true,
@@ -17,5 +20,8 @@ module.exports = {
 	},
 	rules: {
 		'jsdoc/require-jsdoc': 'off',
+		'perfectionist/sort-enums': 'error',
+		'perfectionist/sort-interfaces': 'error',
+		'perfectionist/sort-object-types': 'error',
 	},
 }
