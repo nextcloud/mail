@@ -683,8 +683,6 @@ OC.L10N.register(
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Google Mail ermöglicht Benutzern den Zugriff auf ihre E-Mails über IMAP. Aus Sicherheitsgründen ist dieser Zugriff nur mit einer OAuth-2.0-Verbindung oder Google-Konten möglich, die Zwei-Faktor-Authentifizierung und App-Passwörter verwenden.",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "Sie müssen eine neue Client-ID für eine \"Webanwendung\" in der Google Cloud-Konsole registrieren. Fügen Sie die URL {url} als autorisierten Weiterleitungs-URI hinzu.",
     "Microsoft integration" : "Microsoft-Integration",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft ermöglicht Benutzern den Zugriff auf ihre E-Mails über IMAP. Aus Sicherheitsgründen ist dieser Zugriff nur mit einer OAuth 2.0-Verbindung möglich.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Sie müssen eine neue App im Microsoft Azure Active Directory-Portal registrieren. Fügen Sie die URL {url} als Weiterleitungs-URI hinzu.",
     "User Interface Preference Defaults" : "Voreinstellungen der Benutzeroberfläche",
     "These settings are used to pre-configure the user interface preferences they can be overridden by the user in the mail settings" : "Diese Einstellungen werden zur Vorkonfiguration der Benutzeroberfläche verwendet und können vom Benutzer in den E-Mail-Einstellungen überschrieben werden.",
     "Successfully set up anti spam email addresses" : "Anti-Spam-E-Mail-Adressen eingerichtet",
@@ -795,6 +793,8 @@ OC.L10N.register(
     "Redirect" : "Weiterleiten",
     "The link leads to %s" : "Der Link führt nach %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Wenn Sie diese Seite nicht besuchen möchten, können Sie zu <a href=\"%s\">Mail</a> zurückkehren.",
-    "Continue to %s" : "Weiter nach %s"
+    "Continue to %s" : "Weiter nach %s",
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft ermöglicht Benutzern den Zugriff auf ihre E-Mails über IMAP. Aus Sicherheitsgründen ist dieser Zugriff nur mit einer OAuth 2.0-Verbindung möglich.",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Sie müssen eine neue App im Microsoft Azure Active Directory-Portal registrieren. Fügen Sie die URL {url} als Weiterleitungs-URI hinzu."
 },
 "nplurals=2; plural=(n != 1);");

@@ -506,8 +506,6 @@
     "Gmail integration" : "Gmail integration",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI.",
     "Microsoft integration" : "Microsoft integration",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI.",
     "Successfully set up anti spam email addresses" : "Successfully set up anti spam email addresses",
     "Error saving anti spam email addresses" : "Error saving anti spam email addresses",
     "Successfully deleted anti spam reporting email" : "Successfully deleted anti spam reporting email",
@@ -610,6 +608,8 @@
     "Redirect" : "تغییر مسیر",
     "The link leads to %s" : "پیوند منجر به%s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "ادامه دهید%s"
+    "Continue to %s" : "ادامه دهید%s",
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection.",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI."
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

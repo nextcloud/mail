@@ -681,8 +681,6 @@
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Gmail 允许用户通过 IMAP 访问他们的电子邮箱。出于安全原因，只有使用 OAuth 2.0 连接或使用两步身份验证和应用程序密码的 Google 账号才能进行此访问。",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "您必须在Google Cloud控制台中为“Web 应用程序”注册一个新的客户端 ID。添加 URL {url} 作为授权重定向 URI。",
     "Microsoft integration" : "Microsoft 集成",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft 允许用户通过 IMAP 访问电子邮件。出于安全原因，该访问只能通过 OAuth 2.0 连接进行。",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "您必须在 Microsoft Azure Active Directory 入口中注册一个新的应用程序，然后添加 URL {url} 作为重定向 URI。",
     "User Interface Preference Defaults" : "用户界面首选项默认值",
     "These settings are used to pre-configure the user interface preferences they can be overridden by the user in the mail settings" : "这些设置用于预先配置用户界面首选项，用户可以在邮件设置中覆盖这些首选项",
     "Successfully set up anti spam email addresses" : "已成功设置反垃圾邮件电子邮件地址",
@@ -793,6 +791,8 @@
     "Redirect" : "重定向",
     "The link leads to %s" : "链接指向 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "如果不想访问此页面，您可以返回<a href=\"%s\">邮件</a>。",
-    "Continue to %s" : "继续 %s"
+    "Continue to %s" : "继续 %s",
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft 允许用户通过 IMAP 访问电子邮件。出于安全原因，该访问只能通过 OAuth 2.0 连接进行。",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "您必须在 Microsoft Azure Active Directory 入口中注册一个新的应用程序，然后添加 URL {url} 作为重定向 URI。"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

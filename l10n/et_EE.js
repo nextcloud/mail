@@ -640,8 +640,6 @@ OC.L10N.register(
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Microsoft libab kasutajatel lugeda kirju IMAP-i abil. Turvakaalutlustel toimib see vaid OAuth 2.0 liidestusega või kui Googl'i konto kasutab kaheastmelist autentimist ja rakenduse salasõna.",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "Sa pead Google Cloudi juhtpaneelis registreerima veebirakenduse (Web application) jaoks uue klienditunnuse (Client ID). Korrektse suunamisaadressina kasuta: {url}",
     "Microsoft integration" : "Lõiming Microsofti e-postiteenusega",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft libab kasutajatel lugeda kirju IMAP-i abil. Turvakaalutlustel toimib see vaid OAuth 2.0 liidestusega.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Sa pead Microsoft Azure Active Directory portaalis registreerima uue rakenduse. Korrektse suunamisaadressina kasuta: {url}",
     "User Interface Preference Defaults" : "Kasutusliidese eelistuste vaikimisi väärtused",
     "These settings are used to pre-configure the user interface preferences they can be overridden by the user in the mail settings" : "Need on kasutajaliidese eelseadistused, mida iga kasutaja saab oma seadistustest muuta",
     "Reset" : "Lähtesta",
@@ -736,6 +734,8 @@ OC.L10N.register(
     "Redirect" : "Suunamine",
     "The link leads to %s" : "Link viitab siia: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Kui sa ei taha seda lehte avada, siis mine tagasi <a href=\"%s\">E-postirakenduse</a> lehele.",
-    "Continue to %s" : "Jätka siia: %s"
+    "Continue to %s" : "Jätka siia: %s",
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft libab kasutajatel lugeda kirju IMAP-i abil. Turvakaalutlustel toimib see vaid OAuth 2.0 liidestusega.",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Sa pead Microsoft Azure Active Directory portaalis registreerima uue rakenduse. Korrektse suunamisaadressina kasuta: {url}"
 },
 "nplurals=2; plural=(n != 1);");

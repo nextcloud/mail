@@ -642,7 +642,6 @@
     "Gmail integration" : "Samþætting Gmail",
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Gmail gerir notendum sínum kleift að nálgast tölvupóstinn sinn í gegnum IMAP. Af öryggisástæðum er þessi aðgangur aðeins mögulegur í gegnum OAuth 2.0 tengingu eða Google-reikninga sem nota tveggja-þátta auðkenningu og lykilorð forrita.",
     "Microsoft integration" : "Samþætting Microsoft",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft gerir notendum sínum kleift að nálgast tölvupóstinn sinn í gegnum IMAP. Af öryggisástæðum er þessi aðgangur aðeins mögulegur í gegnum OAuth 2.0 tengingu.",
     "Successfully set up anti spam email addresses" : "Tókst að setja upp tölvupóstföng ruslpóstvarnaþjónustu",
     "Error saving anti spam email addresses" : "Villa við að vista tölvupóstföng ruslpóstvarnaþjónustu",
     "Successfully deleted anti spam reporting email" : "Tókst að eyða tölvupósti með tilkynningu til ruslpóstvarnaþjónustu",
@@ -748,6 +747,7 @@
     "Redirect" : "Endurbeina",
     "The link leads to %s" : "Tengillinn leiðir til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ef þú vilt ekki fara á þá síðu, geturðu farið til baka í <a href=\"%s\">póstforritið</a>.",
-    "Continue to %s" : "Halda áfram í %s"
+    "Continue to %s" : "Halda áfram í %s",
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft gerir notendum sínum kleift að nálgast tölvupóstinn sinn í gegnum IMAP. Af öryggisástæðum er þessi aðgangur aðeins mögulegur í gegnum OAuth 2.0 tengingu."
 },"pluralForm" :"nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
 }

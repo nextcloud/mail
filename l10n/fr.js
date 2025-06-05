@@ -677,8 +677,6 @@ OC.L10N.register(
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Gmail permet aux utilisateurs d'accéder à leur courrier électronique via IMAP. Pour des raisons de sécurité, cet accès n'est possible qu'avec une connexion OAuth 2.0 ou des comptes Google qui utilisent une authentification à deux facteurs et des mots de passe d'application.",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "Vous devez enregistrer un nouvel ID client pour une \"application Web\" dans la console Google Cloud. Ajoutez l'URL {url} comme URI de redirection autorisée.",
     "Microsoft integration" : "Intégration Microsoft",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft permet aux utilisateurs d'accéder à leurs e-mails via le protocole IMAP. Pour des raisons de sécurité, cet accès est seulement possible avec une connexion OAuth 2.0.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Vous devez déclarer une nouvelle application dans le portail Microsoft Azure Active Directory. Ajouter l'adresse {url} comme URI de redirection.",
     "User Interface Preference Defaults" : "Paramètres par défaut de l'interface utilisateur",
     "These settings are used to pre-configure the user interface preferences they can be overridden by the user in the mail settings" : "Ces paramètres sont utilisés pour préconfigurer les préférences de l'interface utilisateur ; ils peuvent être modifiés par l'utilisateur dans les paramètres de Mail",
     "Successfully set up anti spam email addresses" : "L'adresse e-mail de signalement anti-spam a été enregistrée avec succès.",
@@ -789,6 +787,8 @@ OC.L10N.register(
     "Redirect" : "Redirection",
     "The link leads to %s" : "Le lien dirige vers %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si vous ne souhaitez pas visiter cette page, vous pouvez retourner à l'application <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continuer vers %s"
+    "Continue to %s" : "Continuer vers %s",
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft permet aux utilisateurs d'accéder à leurs e-mails via le protocole IMAP. Pour des raisons de sécurité, cet accès est seulement possible avec une connexion OAuth 2.0.",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Vous devez déclarer une nouvelle application dans le portail Microsoft Azure Active Directory. Ajouter l'adresse {url} comme URI de redirection."
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

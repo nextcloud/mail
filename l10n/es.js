@@ -657,8 +657,6 @@ OC.L10N.register(
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Gmail le permite a sus usuarios acceder al correo vía IMAP. Por razones de seguridad este acceso sólo esta disponible con una conexión tipo OAuth 2.0, o bien, con cuentas Google que tienen habilitada la autenticación de dos factores con contraseñas de aplicación.",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "Debe registrar un nuevo ID de cliente para una \"aplicación web\" en la consola Google Cloud. Agregue el URL {url} como un URI de redirección autorizado.",
     "Microsoft integration" : "Integración Microsoft",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft le permite a los usuarios acceder a su correo vía IMAP. Por cuestiones de seguridad este acceso solo es posible con una conexión OAuth 2.0.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Debe registrar una app nueva en el portal Microsoft Azure Active Directory. Agregue la URL {url} como un URI de redirección.",
     "Successfully set up anti spam email addresses" : "Direcciones de correo anti spam configuradas correctamente",
     "Error saving anti spam email addresses" : "Error al guardar las direcciones de correo anti spam",
     "Successfully deleted anti spam reporting email" : "Direcciones de correo anti spam borradas correctamente",
@@ -766,6 +764,8 @@ OC.L10N.register(
     "Redirect" : "Redirigir",
     "The link leads to %s" : "El enlace conduce a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no quieres visitar esta página puedes volver a <a href=\"%s\">Correo</a>.",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft le permite a los usuarios acceder a su correo vía IMAP. Por cuestiones de seguridad este acceso solo es posible con una conexión OAuth 2.0.",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Debe registrar una app nueva en el portal Microsoft Azure Active Directory. Agregue la URL {url} como un URI de redirección."
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

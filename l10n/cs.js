@@ -683,8 +683,6 @@ OC.L10N.register(
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Gmail uživatelům umožňuje přistupovat k jejich e-mailům prostřednictvím protokolu IMAP. Z bezpečnostních důvodů je tento přístup možné pouze prostřednictvím  OAuth 2.0 spojení nebo Google účtů, které používají dvoufaktorové ověřování a hesla pro aplikace.",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "Zaregistrovali jste nový identifikátor klienta pro „webovou aplikaci“ v konzoli Google Cloud. Přidejte URL adresu {url} jako pověřenou URI pro přesměrování.",
     "Microsoft integration" : "Integrace Microsoftu",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft umožňuje uživatelům přistupovat k jejich e-mailům prostřednictvím protokolu IMAP. Z důvodů zabezpečení je tento přístup možný pouze připojením ověřeným přes OAuth 2.0.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Na portálu Microsoft Azure Active Directory je třeba zaregistrovat novu aplikaci. Přidejte URL {url} jako URI přeměrování.",
     "User Interface Preference Defaults" : "Výchozí hodnoty předvoleb uživatelského rozhraní",
     "These settings are used to pre-configure the user interface preferences they can be overridden by the user in the mail settings" : "Tato nastavení jsou použita pro přednastavení předvoleb uživatelského rozhraní a mohou být přebita uživateli v jejich nastavení",
     "Successfully set up anti spam email addresses" : "E-mailové adresy proti spam zprávám úspěšně nastaveny",
@@ -795,6 +793,8 @@ OC.L10N.register(
     "Redirect" : "Přesměrovat",
     "The link leads to %s" : "Odkaz vede na %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Pokud nechcete tuto stránku navštívit, můžete se vrátit do <a href=\"%s\">e-mailu</a>.",
-    "Continue to %s" : "Pokračovat na %s"
+    "Continue to %s" : "Pokračovat na %s",
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft umožňuje uživatelům přistupovat k jejich e-mailům prostřednictvím protokolu IMAP. Z důvodů zabezpečení je tento přístup možný pouze připojením ověřeným přes OAuth 2.0.",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Na portálu Microsoft Azure Active Directory je třeba zaregistrovat novu aplikaci. Přidejte URL {url} jako URI přeměrování."
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

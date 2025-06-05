@@ -683,8 +683,6 @@ OC.L10N.register(
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Ligeann Gmail d'úsáideoirí rochtain a fháil ar a ríomhphost trí IMAP. Ar chúiseanna slándála níl an rochtain seo indéanta ach amháin le nasc OAuth 2.0 nó cuntais Google a úsáideann fíordheimhniú dhá-fhachtóir agus pasfhocail aipe.",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "Caithfidh tú ID Cliant nua a chlárú le haghaidh \"Feidhmchlár Gréasáin\" i gconsól Google Cloud. Cuir an URL {url} leis mar URI atreoraithe údaraithe.",
     "Microsoft integration" : "Comhtháthú Microsoft",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Ligeann Microsoft d'úsáideoirí rochtain a fháil ar a ríomhphost trí IMAP. Ar chúiseanna slándála ní féidir an rochtain seo a fháil ach amháin le nasc OAuth 2.0.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Caithfidh tú aip nua a chlárú ar thairseach Eolaire Gníomhach Microsoft Azure. Cuir an URL {url} leis mar URI atreoraithe.",
     "User Interface Preference Defaults" : "Réamhshocruithe Rogha Comhéadain Úsáideora",
     "These settings are used to pre-configure the user interface preferences they can be overridden by the user in the mail settings" : "Úsáidtear na socruithe seo chun réamh-chumrú a dhéanamh ar roghanna an chomhéadain úsáideora agus is féidir leis an úsáideoir iad a shárú sna socruithe ríomhphoist.",
     "Successfully set up anti spam email addresses" : "D'éirigh le socrú seoltaí ríomhphoist frith-thurscair",
@@ -795,6 +793,8 @@ OC.L10N.register(
     "Redirect" : "Atreorú",
     "The link leads to %s" : "Téann an nasc chuig %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Mura dteastaíonn uait cuairt a thabhairt ar an leathanach sin, is féidir leat filleadh ar <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Lean ar aghaidh go %s"
+    "Continue to %s" : "Lean ar aghaidh go %s",
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Ligeann Microsoft d'úsáideoirí rochtain a fháil ar a ríomhphost trí IMAP. Ar chúiseanna slándála ní féidir an rochtain seo a fháil ach amháin le nasc OAuth 2.0.",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Caithfidh tú aip nua a chlárú ar thairseach Eolaire Gníomhach Microsoft Azure. Cuir an URL {url} leis mar URI atreoraithe."
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

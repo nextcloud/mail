@@ -683,8 +683,6 @@ OC.L10N.register(
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords.",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI.",
     "Microsoft integration" : "Microsoft integration",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI.",
     "User Interface Preference Defaults" : "User Interface Preference Defaults",
     "These settings are used to pre-configure the user interface preferences they can be overridden by the user in the mail settings" : "These settings are used to pre-configure the user interface preferences they can be overridden by the user in the mail settings",
     "Successfully set up anti spam email addresses" : "Successfully set up anti spam email addresses",
@@ -795,6 +793,8 @@ OC.L10N.register(
     "Redirect" : "Redirect",
     "The link leads to %s" : "The link leads to %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continue to %s"
+    "Continue to %s" : "Continue to %s",
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection.",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI."
 },
 "nplurals=2; plural=(n != 1);");
