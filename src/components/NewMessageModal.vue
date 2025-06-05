@@ -287,49 +287,55 @@ export default {
 			this.additionalTrapElements.push(element)
 		},
 		async onNewSentMailbox(data, account) {
-			showWarning(t('mail', 'Setting Sent default folder'))
+			showWarning(t('mail', 'Setting Sent default folder...'))
 			let newSentMailboxId = null
 			const mailboxes = this.mainStore.getMailboxes(data.accountId)
 			const sentMailboxId = mailboxes.find((mailbox) => (mailbox.name === (account.personalNamespace ?? '') + 'Sent') || (mailbox.name === (account.personalNamespace ?? '') + t('mail', 'Sent')))?.databaseId
 			if (sentMailboxId) {
-				await this.setSentMailboxAndResend(account, sentMailboxId, data)
+				try {
+					await this.setSentMailboxAndResend(account, sentMailboxId, data)
+					showSuccess(t('mail', 'Default sent folder set'))
+					this.onSend(data)
+
+				} catch (error) {
+					logger.error('could not set sent mailbox', { error })
+					showError(t('mail', 'Couldn\'t set sent default folder, please try manually before sending a new message'))
+				}
+				return
+
 			}
 			logger.info(`creating ${t('mail', 'Sent')} mailbox`)
 			try {
 				const newSentMailbox = await this.mainStore.createMailbox({ account, name: (account.personalNamespace ?? '') + t('mail', 'Sent'), specialUseAttributes: ['\\Sent'] })
+				showSuccess(t('mail', 'Default sent folder set'))
 				logger.info(`mailbox ${(account.personalNamespace ?? '') + t('mail', 'Sent')} created`)
 				newSentMailboxId = newSentMailbox.databaseId
 			} catch (error) {
 				showError(t('mail', 'Could not create new mailbox, please try setting a sent mailbox manually'))
 				logger.error('could not create mailbox', { error })
 				this.$emit('close')
+				return
 			}
 
-			if (newSentMailboxId) {
+			try {
 				await this.setSentMailboxAndResend(account, newSentMailboxId, data)
-			} else {
+				this.onSend(data)
+			} catch (error) {
+				logger.error('could not set sent mailbox', { error })
 				showError(t('mail', 'Couldn\'t set sent default folder, please try manually before sending a new message'))
 				this.$emit('close')
 			}
+
 		},
 
-		async setSentMailboxAndResend(account, id, data) {
+		async setSentMailboxAndResend(account, id) {
 			logger.debug('setting sent mailbox to ' + id)
-			try {
-				await this.mainStore.patchAccount({
-					account,
-					data: {
-						sentMailboxId: id,
-					},
-				})
-				logger.debug('Resending message after new setting sent mailbox')
-				this.onSend(data)
-				showSuccess(t('mail', 'Sent folder set, resending message'))
-			} catch (error) {
-				showError(t('mail', 'Couldn\'t set sent default folder, please try manually before sending a new message'))
-				logger.error('could not set sent mailbox', { error })
-				this.$emit('close')
-			}
+			await this.mainStore.patchAccount({
+				account,
+				data: {
+					sentMailboxId: id,
+				},
+			})
 		},
 		/**
 		 * @param data Message data
