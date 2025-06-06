@@ -56,33 +56,14 @@ export default {
 	},
 	data() {
 		return {
-			showUpdateModal: false,
-			script: '',
-			loading: false,
-			errorMessage: '',
 			currentFilter: null,
+			loading: false,
 		}
 	},
 	computed: {
 		...mapStores(useMailFilterStore, useMainStore),
 		filters() {
 			return this.mailFilterStore.filters
-		},
-		scriptData() {
-			return this.mainStore.getActiveSieveScript(this.account.id)
-		},
-	},
-	watch: {
-		scriptData: {
-			immediate: true,
-			handler(scriptData) {
-				if (!scriptData) {
-					return
-				}
-
-				this.script = scriptData.script
-				this.loading = false
-			},
 		},
 	},
 	async mounted() {
@@ -110,15 +91,15 @@ export default {
 			toTest.values = []
 
 			for (const header of headers) {
-				if (header.field === 'subject') {
+				if (header.field === MailFilterConditionField.Subject) {
 					subjectTest.values = [header.value]
 				}
 
-				if (header.field === 'from') {
+				if (header.field === MailFilterConditionField.From) {
 					fromTest.values.push(header.value)
 				}
 
-				if (header.field === 'to') {
+				if (header.field === MailFilterConditionField.To) {
 					toTest.values.push(header.value)
 				}
 			}
@@ -178,25 +159,3 @@ export default {
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-.section {
-	display: block;
-	padding: 0;
-	margin-bottom: 23px;
-}
-
-textarea {
-	width: 100%;
-}
-
-.primary {
-	padding-left: 26px;
-	background-position: 6px;
-	color: var(--color-main-background);
-
-	&:after {
-		 left: 14px;
-	 }
-}
-</style>

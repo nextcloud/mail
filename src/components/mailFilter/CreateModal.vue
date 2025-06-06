@@ -75,7 +75,6 @@ export default {
 		return {
 			currentFilter: null,
 			headers: [],
-			MailFilterConditionField,
 		}
 	},
 	computed: {
