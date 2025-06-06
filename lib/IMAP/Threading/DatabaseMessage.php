@@ -15,7 +15,7 @@ use function array_map;
 use function array_merge;
 use function json_decode;
 
-class DatabaseMessage extends Message implements JsonSerializable {
+final class DatabaseMessage extends Message implements JsonSerializable {
 	/** @var int */
 	private $databaseId;
 

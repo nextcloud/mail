@@ -26,7 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use function memory_get_peak_usage;
 use function memory_get_usage;
 
-class SyncAccount extends Command {
+final class SyncAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 	public const OPTION_FORCE = 'force';
 

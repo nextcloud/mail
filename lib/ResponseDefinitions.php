@@ -55,5 +55,5 @@ namespace OCA\Mail;
  *      }[]
  *  }
  */
-class ResponseDefinitions {
+final class ResponseDefinitions {
 }

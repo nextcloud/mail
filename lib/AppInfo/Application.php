@@ -87,7 +87,7 @@ use Psr\Container\ContainerInterface;
 
 include_once __DIR__ . '/../../vendor/autoload.php';
 
-class Application extends App implements IBootstrap {
+final class Application extends App implements IBootstrap {
 	public const APP_ID = 'mail';
 
 	public function __construct(array $urlParams = []) {
