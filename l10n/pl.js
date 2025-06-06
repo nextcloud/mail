@@ -119,7 +119,7 @@ OC.L10N.register(
     "Register as application for mail links" : "Zarejestruj się jako aplikacja do linków pocztowych",
     "Register" : "Zarejestruj się",
     "Data collection consent" : "Zgoda na zbieranie danych",
-    "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Zezwól aplikacji na zbieranie danych o Twoich interakcjach. Na podstawie tych danych aplikacja dostosuje się do Twoich preferencji. Dane będą przechowywane tylko lokalnie.",
+    "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Zezwalaj aplikacji na zbieranie danych o Twoich interakcjach. Na podstawie tych danych aplikacja dostosuje się do Twoich preferencji. Dane będą przechowywane tylko lokalnie.",
     "Trusted senders" : "Zaufani nadawcy",
     "Manage S/MIME certificates" : "Zarządzaj certyfikatami S/MIME",
     "Looking for a way to encrypt your emails?" : "Szukasz sposobu na szyfrowanie wiadomości e-mail?",
