@@ -223,33 +223,16 @@
 		</div>
 		<div class="app-description">
 			<h3>
-				{{
-					t(
-						'mail',
-						'Microsoft integration'
-					)
-				}}
+				{{ t('mail', 'Microsoft integration') }}
 			</h3>
 			<article>
 				<p>
-					{{
-						t(
-							'mail',
-							'Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection.'
-						)
-					}}
+					{{ t('mail', 'Microsoft requires you to access your emails via IMAP using OAuth 2.0 authentication. To do this, you need to register an app with Microsoft Entra ID, formerly known as Microsoft Azure Active Directory.') }}
 				</p>
 				<p>
-					{{
-						t(
-							'mail',
-							'You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI.',
-							{
-								url: microsoftOauthRedirectUrl,
-							}
-						)
-					}}
+					{{ t('mail', 'Redirect URI') }}: <code>{{ microsoftOauthRedirectUrl }}</code>
 				</p>
+				<a :href="microsoftOauthDocs" target="_blank" rel="noopener noreferrer">{{ t('mail', 'For more details, please click here to open our documentation.') }}</a>
 			</article>
 			<MicrosoftAdminOauthSettings :tenant-id="microsoftOauthTenantId" :client-id="microsoftOauthClientId" />
 		</div>
@@ -314,6 +297,7 @@ export default {
 			googleOauthRedirectUrl,
 			microsoftOauthTenantId,
 			microsoftOauthClientId,
+			microsoftOauthDocs: loadState('mail', 'microsoft_oauth_docs'),
 			microsoftOauthRedirectUrl,
 			preview: {
 				provisioningDomain: '',
