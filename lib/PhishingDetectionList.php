@@ -17,8 +17,6 @@ class PhishingDetectionList implements JsonSerializable {
 	/** @var PhishingDetectionResult[] */
 	private array $checks;
 
-	private bool $warning = false;
-
 	/**
 	 * @param PhishingDetectionResult[] $checks
 	 */

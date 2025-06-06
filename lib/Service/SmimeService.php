@@ -31,7 +31,6 @@ use OCA\Mail\Model\SmimeCertificateInfo;
 use OCA\Mail\Model\SmimeCertificatePurposes;
 use OCA\Mail\Model\SmimeDecryptionResult;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\ICertificateManager;
 use OCP\ITempManager;
 use OCP\Security\ICrypto;
@@ -41,18 +40,16 @@ class SmimeService {
 	private ICertificateManager $certificateManager;
 	private ICrypto $crypto;
 	private SmimeCertificateMapper $certificateMapper;
-	private ITimeFactory $timeFactory;
+
 
 	public function __construct(ITempManager $tempManager,
 		ICertificateManager $certificateManager,
 		ICrypto $crypto,
-		SmimeCertificateMapper $certificateMapper,
-		ITimeFactory $timeFactory) {
+		SmimeCertificateMapper $certificateMapper) {
 		$this->tempManager = $tempManager;
 		$this->certificateManager = $certificateManager;
 		$this->crypto = $crypto;
 		$this->certificateMapper = $certificateMapper;
-		$this->timeFactory = $timeFactory;
 	}
 
 	/**

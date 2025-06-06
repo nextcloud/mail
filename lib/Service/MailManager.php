@@ -152,7 +152,7 @@ class MailManager implements IMailManager {
 	public function createMailbox(Account $account, string $name): Mailbox {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
-			$folder = $this->folderMapper->createFolder($client, $account, $name);
+			$folder = $this->folderMapper->createFolder($client, $name);
 			$this->folderMapper->fetchFolderAcls([$folder], $client);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
@@ -809,7 +809,7 @@ class MailManager implements IMailManager {
 		if (in_array("\*", $capabilities['permflags']) || in_array($flag, $capabilities['permflags'])) {
 			return [$flag];
 		}
-		
+
 		return [];
 	}
 

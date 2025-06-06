@@ -18,7 +18,6 @@ use OCA\Mail\Service\Avatar\CompositeAvatarSource;
 use OCA\Mail\Service\Avatar\Downloader;
 use OCA\Mail\Service\Avatar\IAvatarSource;
 use OCA\Mail\Service\AvatarService;
-use OCP\IURLGenerator;
 use OCP\IUser;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -33,9 +32,6 @@ class AvatarServiceTest extends TestCase {
 
 	/** @var Cache|MockObject */
 	private $cache;
-
-	/** @var IURLGenerator|MockObject */
-	private $urlGenerator;
 
 	/** @var AvatarFactory|MockObject */
 	private $avatarFactory;
@@ -55,21 +51,15 @@ class AvatarServiceTest extends TestCase {
 		$this->source = $this->createMock(CompositeAvatarSource::class);
 		$this->downloader = $this->createMock(Downloader::class);
 		$this->cache = $this->createMock(Cache::class);
-		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->preferences = $this->createMock(IUserPreferences::class);
-		$this->user = $this->createConfiguredMock(IUser::class, [
-			'getUID' => 'test'
-		]);
 
 		$this->avatarService = new AvatarService(
 			$this->source,
 			$this->downloader,
 			$this->cache,
-			$this->urlGenerator,
 			$this->avatarFactory,
 			$this->preferences,
-			$this->user
 		);
 	}
 

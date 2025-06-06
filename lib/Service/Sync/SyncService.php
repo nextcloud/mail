@@ -12,7 +12,6 @@ namespace OCA\Mail\Service\Sync;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\Mailbox;
-use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClientException;
@@ -30,7 +29,7 @@ use function array_diff;
 use function array_map;
 
 class SyncService {
-	
+
 	private IMAPClientFactory $clientFactory;
 
 	/** @var ImapToDbSynchronizer */
@@ -38,9 +37,6 @@ class SyncService {
 
 	/** @var FilterStringParser */
 	private $filterStringParser;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
 
 	/** @var MessageMapper */
 	private $messageMapper;
@@ -58,7 +54,6 @@ class SyncService {
 		IMAPClientFactory $clientFactory,
 		ImapToDbSynchronizer $synchronizer,
 		FilterStringParser $filterStringParser,
-		MailboxMapper $mailboxMapper,
 		MessageMapper $messageMapper,
 		PreviewEnhancer $previewEnhancer,
 		LoggerInterface $logger,
@@ -66,7 +61,6 @@ class SyncService {
 		$this->clientFactory = $clientFactory;
 		$this->synchronizer = $synchronizer;
 		$this->filterStringParser = $filterStringParser;
-		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->previewEnhancer = $previewEnhancer;
 		$this->logger = $logger;
@@ -120,9 +114,9 @@ class SyncService {
 		if ($partialOnly && !$mailbox->isCached()) {
 			throw MailboxNotCachedException::from($mailbox);
 		}
-		
+
 		$client = $this->clientFactory->getClient($account);
-		
+
 		$this->synchronizer->sync(
 			$account,
 			$client,

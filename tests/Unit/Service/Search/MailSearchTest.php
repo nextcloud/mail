@@ -12,7 +12,6 @@ namespace OCA\Mail\Tests\Unit\Service\Search;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
-use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\MailboxLockedException;
@@ -29,9 +28,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 class MailSearchTest extends TestCase {
 	/** @var FilterStringParser|MockObject */
 	private $filterStringParser;
-
-	/** @var MockObject|MailboxMapper */
-	private $mailboxMapper;
 
 	/** @var MailSearch */
 	private $search;
@@ -52,7 +48,6 @@ class MailSearchTest extends TestCase {
 		parent::setUp();
 
 		$this->filterStringParser = $this->createMock(FilterStringParser::class);
-		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->imapSearchProvider = $this->createMock(Provider::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->previewEnhancer = $this->createMock(PreviewEnhancer::class);
@@ -60,7 +55,6 @@ class MailSearchTest extends TestCase {
 
 		$this->search = new MailSearch(
 			$this->filterStringParser,
-			$this->mailboxMapper,
 			$this->imapSearchProvider,
 			$this->messageMapper,
 			$this->previewEnhancer,

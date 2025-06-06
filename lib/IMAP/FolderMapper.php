@@ -65,7 +65,6 @@ class FolderMapper {
 		});
 		return array_map(static function (array $mailbox) use ($account) {
 			return new Folder(
-				$account->getId(),
 				$mailbox['mailbox'],
 				$mailbox['attributes'],
 				$mailbox['delimiter'],
@@ -75,7 +74,6 @@ class FolderMapper {
 	}
 
 	public function createFolder(Horde_Imap_Client_Socket $client,
-		Account $account,
 		string $name): Folder {
 		$client->createMailbox($name);
 
@@ -92,7 +90,6 @@ class FolderMapper {
 		}
 
 		return new Folder(
-			$account->getId(),
 			$mb['mailbox'],
 			$mb['attributes'],
 			$mb['delimiter'],
