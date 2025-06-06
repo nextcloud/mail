@@ -15,7 +15,7 @@ use ReturnTypeWillChange;
 /**
  * @psalm-immutable
  */
-class Avatar implements JsonSerializable {
+final class Avatar implements JsonSerializable {
 	/** @var string */
 	private $url;
 

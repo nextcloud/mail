@@ -18,6 +18,7 @@ use OCA\Mail\Controller\AccountsController;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\IMAP\MailboxSync;
+use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\SetupService;
@@ -375,6 +376,9 @@ class AccountsControllerTest extends TestCase {
 		$this->mailManager->expects(self::once())
 			->method('getMessageIdForUid')
 			->willReturn($newId);
+		$this->syncService->expects(self::once())
+			->method('syncMailbox')
+			->willReturn(new Response([], [], []));
 
 		$actual = $this->controller->draft($this->accountId, $subject, $body, $to, $cc, $bcc, true, $id);
 

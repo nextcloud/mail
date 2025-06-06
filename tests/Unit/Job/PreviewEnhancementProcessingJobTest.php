@@ -76,8 +76,8 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 	}
 
 	public function testNoUser(): void {
-		$mailAccount = $this->createMock(MailAccount::class);
-		$mailAccount->method('canAuthenticateImap')->willReturn(true);
+		$mailAccount = new MailAccount();
+		$mailAccount->setInboundPassword('pass');
 		$account = $this->createMock(Account::class);
 		$account->method('getUserId')->willReturn('user123');
 		$account->method('getMailAccount')->willReturn($mailAccount);
@@ -95,8 +95,8 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 	}
 
 	public function testProvisionedNoPassword(): void {
-		$mailAccount = $this->createMock(MailAccount::class);
-		$mailAccount->method('canAuthenticateImap')->willReturn(false);
+		$mailAccount = new MailAccount();
+		$mailAccount->setInboundPassword(null);
 		$account = new Account($mailAccount);
 
 		$this->accountService->expects(self::once())
@@ -112,8 +112,8 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 	}
 
 	public function testProcessing(): void {
-		$mailAccount = $this->createMock(MailAccount::class);
-		$mailAccount->method('canAuthenticateImap')->willReturn(true);
+		$mailAccount = new MailAccount();
+		$mailAccount->setInboundPassword('pass');
 		$account = $this->createMock(Account::class);
 		$account->method('getUserId')->willReturn('user123');
 		$account->method('getMailAccount')->willReturn($mailAccount);

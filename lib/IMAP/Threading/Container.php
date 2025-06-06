@@ -15,7 +15,7 @@ use RuntimeException;
 use function array_key_exists;
 use function spl_object_id;
 
-class Container implements JsonSerializable {
+final class Container implements JsonSerializable {
 	/** @var Message|null */
 	private $message;
 

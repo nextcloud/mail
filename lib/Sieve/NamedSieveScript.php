@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Sieve;
 
-class NamedSieveScript {
+final class NamedSieveScript {
 	public function __construct(
 		private ?string $name,
 		private string $script,
