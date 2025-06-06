@@ -45,12 +45,13 @@ interface IMailManager {
 	/**
 	 * @param Account $account
 	 * @param string $name
+	 * @param array<Horde_Imap_Client::SPECIAL_USE_*> $specialUseAttributes
 	 *
 	 * @return Mailbox
 	 *
 	 * @throws ServiceException
 	 */
-	public function createMailbox(Account $account, string $name): Mailbox;
+	public function createMailbox(Account $account, string $name, array $specialUseAttributes = []): Mailbox;
 
 	/**
 	 * @param Mailbox $mailbox
