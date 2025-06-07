@@ -10,16 +10,30 @@
 					:value="test.field"
 					:required="true"
 					:label-outside="true"
-					:options="['subject', 'from', 'to']"
-					@input="updateTest({ field: $event })" />
+					:options="fields"
+					@input="updateTest({ field: $event })">
+					<template #selected-option="{ label }">
+						{{ getLabelForField(label) }}
+					</template>
+					<template #option="{ label }">
+						{{ getLabelForField(label) }}
+					</template>
+				</NcSelect>
 			</div>
 			<div class="mail-filter-rows__row__column">
 				<NcSelect input-label="operator"
 					:value="test.operator"
 					:required="true"
 					:label-outside="true"
-					:options="['is', 'contains', 'matches']"
-					@input="updateTest({ operator: $event })" />
+					:options="operators"
+					@input="updateTest({ operator: $event })">
+					<template #selected-option="{ label }">
+						{{ getLabelForOperator(label) }}
+					</template>
+					<template #option="{ label }">
+						{{ getLabelForOperator(label) }}
+					</template>
+				</NcSelect>
 			</div>
 			<div class="mail-filter-rows__row__column">
 				<NcButton aria-label="Delete action"
@@ -50,6 +64,7 @@
 <script>
 import { NcButton, NcSelect } from '@nextcloud/vue'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
+import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
 
 export default {
 	name: 'Test',
@@ -68,6 +83,16 @@ export default {
 		return {
 			inputValue: '',
 			localValues: [],
+			fields: [
+				MailFilterConditionField.Subject,
+				MailFilterConditionField.From,
+				MailFilterConditionField.To,
+			],
+			operators: [
+				MailFilterConditionOperator.Is,
+				MailFilterConditionOperator.Contains,
+				MailFilterConditionOperator.Matches,
+			],
 		}
 	},
 	mounted() {
@@ -79,6 +104,28 @@ export default {
 		},
 		deleteTest() {
 			this.$emit('delete-test', this.test)
+		},
+		getLabelForField(field) {
+			switch (field) {
+			case MailFilterConditionField.Subject:
+				return t('mail', 'Subject')
+			case MailFilterConditionField.From:
+				return t('mail', 'Sender')
+			case MailFilterConditionField.To:
+				return t('mail', 'Recipient')
+			}
+			return field
+		},
+		getLabelForOperator(field) {
+			switch (field) {
+			case MailFilterConditionOperator.Is:
+				return t('mail', 'is exactly')
+			case MailFilterConditionOperator.Contains:
+				return t('mail', 'contains')
+			case MailFilterConditionOperator.Matches:
+				return t('mail', 'matches')
+			}
+			return field
 		},
 	},
 }

@@ -948,7 +948,7 @@ export default {
 				this.wantsSmimeSign = this.smimeSignAliases.indexOf(aliasEmailAddress) !== -1
 			},
 			immediate: true,
-		}
+		},
 	},
 	async beforeMount() {
 		this.setAlias()
