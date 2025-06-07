@@ -12,7 +12,7 @@
 		<template #icon>
 			<Avatar :display-name="avatarDisplayName"
 				:email="avatarEmail"
-				:fetch-avatar="data.fetchAvatarFromClient"
+				:fetch-avatar="false"
 				:avatar="message.avatar" />
 		</template>
 		<template #subname>
