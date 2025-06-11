@@ -205,7 +205,15 @@ class PersistenceService {
 		}
 
 		$serializedData = json_decode($json);
-		return array_map(base64_decode(...), $serializedData);
+		$decodedData = array_map(base64_decode(...), $serializedData);
+		foreach ($decodedData as $decoded) {
+			if ($decoded === false) {
+				// Decoding failed, abort
+				return null;
+			}
+		}
+		/** @var string[] $decodedData */
+		return $decodedData;
 	}
 
 	/**

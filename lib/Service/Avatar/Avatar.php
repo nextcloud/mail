@@ -15,7 +15,7 @@ use ReturnTypeWillChange;
 /**
  * @psalm-immutable
  */
-class Avatar implements JsonSerializable {
+final class Avatar implements JsonSerializable {
 	/** @var string */
 	private $url;
 
@@ -59,6 +59,7 @@ class Avatar implements JsonSerializable {
 		return $this->isExternal;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

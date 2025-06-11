@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\DataUri;
 
-class DataUri {
+final class DataUri {
 	private string $mediaType;
 	private array $parameters;
 	private bool $base64;

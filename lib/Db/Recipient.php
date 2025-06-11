@@ -56,6 +56,7 @@ class Recipient extends Entity implements JsonSerializable {
 		$this->addType('mailboxType', 'integer');
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

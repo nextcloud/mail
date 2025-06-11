@@ -52,7 +52,7 @@
 			</div>
 			<NcButton type="primary"
 				class="reply-buttons__notsuggested"
-				@click="onReply">
+				@click="onReply('')">
 				<template #icon>
 					<ReplyIcon />
 				</template>
@@ -142,7 +142,7 @@ export default {
 		},
 	},
 	methods: {
-		onReply(replyBody = '') {
+		onReply(replyBody) {
 			this.$emit('reply', replyBody)
 		},
 	},

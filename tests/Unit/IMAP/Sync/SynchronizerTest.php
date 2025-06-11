@@ -39,16 +39,7 @@ class SynchronizerTest extends TestCase {
 
 	public function testSyncWithQresync(): void {
 		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
-		$request = $this->createMock(Request::class);
-		$request->expects($this->any())
-			->method('getMailbox')
-			->willReturn('inbox');
-		$request->expects($this->once())
-			->method('getToken')
-			->willReturn('123456');
-		$request->expects($this->exactly(3))
-			->method('getId')
-			->willReturn('abcdef');
+		$request = new Request('abcdef', 'inbox', '123456', []);
 		$hordeSync = $this->createMock(Horde_Imap_Client_Data_Sync::class);
 		$imapClient->expects($this->once())
 			->method('sync')
@@ -95,13 +86,12 @@ class SynchronizerTest extends TestCase {
 
 	public function testSyncChunked(): void {
 		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
-		$request = $this->createMock(Request::class);
-		$request->method('getMailbox')
-			->willReturn('inbox');
-		$request->method('getToken')
-			->willReturn('123456');
-		$request->method('getUids')
-			->willReturn(range(1, 8000, 2)); // 19444 bytes
+		$request = new Request(
+			'abcdef',
+			'inbox',
+			'123456',
+			range(1, 8000, 2), // 19444 bytes
+		);
 		$hordeSync = $this->createMock(Horde_Imap_Client_Data_Sync::class);
 		$imapClient->expects($this->exactly(3))
 			->method('sync')

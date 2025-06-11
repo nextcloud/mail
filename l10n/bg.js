@@ -189,7 +189,9 @@ OC.L10N.register(
     "Edit tags" : "Редактиране на етикетите",
     "Move thread" : "Преместване на нишката",
     "Archive thread" : "Архивна нишка",
+    "Archive message" : "Архивиране на съобщение",
     "Delete thread" : "Изтриване на нишката",
+    "Delete message" : "Изтриване на съобщението",
     "More actions" : "Повече действия",
     "Back" : "Назад",
     "Edit as new message" : "Редактиране като ново съобщение",
@@ -404,8 +406,6 @@ OC.L10N.register(
     "Mark as favorite" : "Маркиране като любими",
     "Mark as unread" : "Маркиране като непрочетено",
     "Mark as read" : "Маркиране като прочетено",
-    "Archive message" : "Архивиране на съобщение",
-    "Delete message" : "Изтриване на съобщението",
     "Message source" : "Източник на съобщение",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Прекратяването на абонамента ще спре всички съобщения от пощенския списък {sender}",
     "Could not remove trusted sender {sender}" : "Не можа да бъде премахнат доверен подател {sender}",
@@ -457,8 +457,6 @@ OC.L10N.register(
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Gmail позволява на потребителите да имат достъп до електронната си поща чрез IMAP. От съображения за сигурност този достъп е възможен само с връзка OAuth 2.0 или профили в Google, които използват двустепенно удостоверяване и пароли за приложения.",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "Трябва да регистрирате нов клиентски идентификатор за \"уеб приложение\" в конзолата на облачното пространство Google Cloud. Добавете URL {url} като оторизиран URI за пренасочване.",
     "Microsoft integration" : "Microsoft интеграция",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft позволява на потребителите да имат достъп до електронната си поща чрез IMAP. От съображения за сигурност този достъп е възможен само с връзка OAuth 2.0.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Трябва да регистрирате ново приложение в портала на Microsoft Azure Active Directory. Добавете URL адреса {url}, като URI адрес за пренасочване.",
     "Successfully set up anti spam email addresses" : "Успешно настроени имейл адреси срещу нежелана поща",
     "Error saving anti spam email addresses" : "Грешка при записване на имейл адреси срещу нежелана поща",
     "Successfully deleted anti spam reporting email" : "Успешно изтрит имейл за сигнали срещу нежелана поща",
@@ -558,7 +556,7 @@ OC.L10N.register(
     "The link leads to %s" : "Връзката води до %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желаете да посетите тази страница, може да се върнете към <a href=\"%s\">Поща</a>.",
     "Continue to %s" : "Продължи към %s",
-    "Uploading attachments …" : "Качване на прикачените файлове ...",
-    "Sending …" : "Изпращане..."
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft позволява на потребителите да имат достъп до електронната си поща чрез IMAP. От съображения за сигурност този достъп е възможен само с връзка OAuth 2.0.",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Трябва да регистрирате ново приложение в портала на Microsoft Azure Active Directory. Добавете URL адреса {url}, като URI адрес за пренасочване."
 },
 "nplurals=2; plural=(n != 1);");

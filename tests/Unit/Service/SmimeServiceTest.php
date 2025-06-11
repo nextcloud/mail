@@ -22,7 +22,6 @@ use OCA\Mail\Db\SmimeCertificateMapper;
 use OCA\Mail\Model\SmimeCertificateInfo;
 use OCA\Mail\Model\SmimeCertificatePurposes;
 use OCA\Mail\Service\SmimeService;
-use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\ICertificateManager;
 use OCP\ITempManager;
 use OCP\Security\ICrypto;
@@ -43,9 +42,6 @@ class SmimeServiceTest extends TestCase {
 	/** @var SmimeCertificateMapper|MockObject */
 	private $certificateMapper;
 
-	/** @var ITimeFactory|MockObject */
-	private $timeFactory;
-
 	/** @var SmimeService&MockObject */
 	private $smimeService;
 
@@ -56,14 +52,12 @@ class SmimeServiceTest extends TestCase {
 		$this->certificateManager = $this->createMock(ICertificateManager::class);
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->certificateMapper = $this->createMock(SmimeCertificateMapper::class);
-		$this->timeFactory = $this->createMock(ITimeFactory::class);
 
 		$this->smimeService = new SmimeService(
 			$this->tempManager,
 			$this->certificateManager,
 			$this->crypto,
 			$this->certificateMapper,
-			$this->timeFactory
 		);
 	}
 

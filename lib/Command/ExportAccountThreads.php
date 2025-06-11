@@ -22,7 +22,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use function json_encode;
 
-class ExportAccountThreads extends Command {
+final class ExportAccountThreads extends Command {
 	private const ARGUMENT_ACCOUNT_ID = 'account-id';
 	private const OPTION_REDACT = 'redact';
 

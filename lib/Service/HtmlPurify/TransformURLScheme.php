@@ -54,6 +54,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	 * @param \HTMLPurifier_Context $context
 	 * @return bool
 	 */
+	#[\Override]
 	public function filter(&$uri, $config, $context) {
 
 		if ($uri->scheme === null) {

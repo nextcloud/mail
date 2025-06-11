@@ -21,14 +21,17 @@ class MailTransport implements ISetupCheck {
 	) {
 	}
 
+	#[\Override]
 	public function getName(): string {
 		return $this->l10n->t('Mail Transport configuration');
 	}
 
+	#[\Override]
 	public function getCategory(): string {
 		return 'mail';
 	}
 
+	#[\Override]
 	public function run(): SetupResult {
 		$transport = $this->config->getSystemValueString('app.mail.transport', 'smtp');
 

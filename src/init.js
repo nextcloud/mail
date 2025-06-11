@@ -71,12 +71,20 @@ export default function initAfterAppCreation() {
 		value: preferences['layout-mode'],
 	})
 	mainStore.savePreferenceMutation({
+		key: 'layout-message-view',
+		value: preferences['layout-message-view'],
+	})
+	mainStore.savePreferenceMutation({
 		key: 'follow-up-reminders',
 		value: preferences['follow-up-reminders'],
 	})
 	mainStore.savePreferenceMutation({
 		key: 'internal-addresses',
 		value: loadState('mail', 'internal-addresses', false),
+	})
+	mainStore.savePreferenceMutation({
+		key: 'smime-sign-aliases',
+		value: loadState('mail', 'smime-sign-aliases', []),
 	})
 
 	const accountSettings = loadState('mail', 'account-settings')

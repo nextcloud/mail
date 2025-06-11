@@ -39,6 +39,7 @@ class CompositeExtractor implements IExtractor {
 		];
 	}
 
+	#[\Override]
 	public function prepare(Account $account,
 		array $incomingMailboxes,
 		array $outgoingMailboxes,
@@ -48,6 +49,7 @@ class CompositeExtractor implements IExtractor {
 		}
 	}
 
+	#[\Override]
 	public function extract(Message $message): array {
 		return array_flat_map(static function (IExtractor $extractor) use ($message) {
 			return $extractor->extract($message);

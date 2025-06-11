@@ -115,6 +115,7 @@ class Classifier implements JsonSerializable {
 		$this->createdAt = $createdAt;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

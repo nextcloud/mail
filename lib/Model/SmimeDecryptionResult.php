@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Model;
 
-class SmimeDecryptionResult {
+final class SmimeDecryptionResult {
 	private string $decryptedMessage;
 	private bool $isEncrypted;
 	private bool $isSigned;

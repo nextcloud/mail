@@ -31,6 +31,7 @@ class OauthTokenRefreshListener implements IEventListener {
 		$this->microsoftIntegration = $microsoftIntegration;
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		if (!($event instanceof BeforeImapClientCreated)) {
 			return;

@@ -28,6 +28,7 @@ class GravatarSource implements IAvatarSource {
 	 *
 	 * @return bool
 	 */
+	#[\Override]
 	public function isExternal(): bool {
 		return true;
 	}
@@ -37,6 +38,7 @@ class GravatarSource implements IAvatarSource {
 	 * @param AvatarFactory $factory
 	 * @return Avatar|null avatar URL if one can be found
 	 */
+	#[\Override]
 	public function fetch(string $email, AvatarFactory $factory) {
 		$gravatar = new Gravatar(['size' => 128], true);
 		$avatarUrl = $gravatar->avatar($email, ['d' => 404], true);

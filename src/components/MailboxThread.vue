@@ -21,7 +21,7 @@
 					infinite-scroll-immediate-check="false"
 					:show-details="showThread"
 					:infinite-scroll-disabled="false"
-					:infinite-scroll-distance="10"
+					:infinite-scroll-distance="300"
 					role="heading"
 					:aria-level="2"
 					@shortkey.native="onShortcut">

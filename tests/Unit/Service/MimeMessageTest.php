@@ -28,7 +28,7 @@ class MimeMessageTest extends TestCase {
 
 		$this->uriParser = new DataUriParser();
 		$this->mimeMessage = new MimeMessage($this->uriParser);
-		$this->account = new Account($this->createMock(MailAccount::class));
+		$this->account = new Account(new MailAccount());
 	}
 
 	public function testTextPlain() {

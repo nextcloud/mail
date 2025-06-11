@@ -24,6 +24,7 @@ class Version3400Date20230907103114 extends SimpleMigrationStep {
 		$this->connection = $connection;
 	}
 
+	#[\Override]
 	public function preSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
 		foreach (['mail_messages_retention', 'mail_messages_snoozed'] as $tableName) {
 			$qb = $this->connection->getQueryBuilder();
@@ -32,6 +33,7 @@ class Version3400Date20230907103114 extends SimpleMigrationStep {
 		}
 	}
 
+	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 		$schema = $schemaClosure();
 
@@ -80,6 +82,7 @@ class Version3400Date20230907103114 extends SimpleMigrationStep {
 		return $schema;
 	}
 
+	#[\Override]
 	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
 	}
 }

@@ -16,13 +16,11 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use Psr\Log\LoggerInterface;
 
 class MigrateImportantFromImapAndDb {
-	/** @var IMAPClientFactory */
-	private $clientFactory;
+
 
 	/** @var MessageMapper */
 	private $messageMapper;

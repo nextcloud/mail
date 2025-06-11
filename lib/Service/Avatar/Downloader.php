@@ -22,11 +22,7 @@ class Downloader {
 		$this->clientService = $clientService;
 	}
 
-	/**
-	 * @param string $url
-	 * @return string|null
-	 */
-	public function download(string $url) {
+	public function download(string $url): ?string {
 		$client = $this->clientService->newClient();
 
 		try {
@@ -37,7 +33,7 @@ class Downloader {
 
 		$body = $resp->getBody();
 		if (is_resource($body)) {
-			return stream_get_contents($body);
+			return stream_get_contents($body) ?: null;
 		}
 		return $body;
 	}

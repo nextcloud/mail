@@ -30,6 +30,7 @@ class Version2300Date20221205160349 extends SimpleMigrationStep {
 	 * @param array $options
 	 * @return null|ISchemaWrapper
 	 */
+	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
@@ -50,6 +51,7 @@ class Version2300Date20221205160349 extends SimpleMigrationStep {
 	 * @param Closure $schemaClosure
 	 * @param array $options
 	 */
+	#[\Override]
 	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
 		$qb = $this->db->getQueryBuilder();
 		$qb->update('mail_accounts')

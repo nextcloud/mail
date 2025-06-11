@@ -28,6 +28,7 @@ class Version3600Date20240227172825 extends SimpleMigrationStep {
 	 * @param array $options
 	 * @return null|ISchemaWrapper
 	 */
+	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 		$allowThreadSummary = $this->appConfig->getAppValue('enabled_thread_summary', 'no');
 		$this->appConfig->deleteAppValue('enabled_thread_summary');

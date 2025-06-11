@@ -15,7 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ExportAccount extends Command {
+final class ExportAccount extends Command {
 	public const ARGUMENT_USER_ID = 'user-id';
 	public const ARGUMENT_OUTPUT_FORMAT = 'output';
 
@@ -41,7 +41,7 @@ class ExportAccount extends Command {
 
 	private function getAccountsData($accounts) {
 		$accountsData = [];
-	
+
 		foreach ($accounts as $account) {
 			$accountsData[] = [
 				'id' => $account->getId(),
@@ -65,7 +65,7 @@ class ExportAccount extends Command {
 				]
 			];
 		}
-	
+
 		return $accountsData;
 	}
 

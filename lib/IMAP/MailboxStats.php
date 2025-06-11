@@ -12,7 +12,7 @@ namespace OCA\Mail\IMAP;
 use JsonSerializable;
 use ReturnTypeWillChange;
 
-class MailboxStats implements JsonSerializable {
+final class MailboxStats implements JsonSerializable {
 	private int $total;
 	private int $unread;
 
@@ -29,6 +29,7 @@ class MailboxStats implements JsonSerializable {
 		return $this->unread;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

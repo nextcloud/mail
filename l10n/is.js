@@ -267,7 +267,9 @@ OC.L10N.register(
     "Unsnooze" : "Vekja af blundi",
     "Move thread" : "Færa spjallþráð",
     "Archive thread" : "Setja spjallþráð í geymslu",
+    "Archive message" : "Geyma skilaboð",
     "Delete thread" : "Eyða spjallþræði",
+    "Delete message" : "Eyða skilaboðum",
     "More actions" : "Fleiri aðgerðir",
     "Back" : "Til baka",
     "Set custom snooze" : "Setja sérsniðinn blund",
@@ -553,8 +555,6 @@ OC.L10N.register(
     "Mark as favorite" : "Merkja sem eftirlæti",
     "Mark as unread" : "Merkja allt sem ólesið",
     "Mark as read" : "Merkja sem lesið",
-    "Archive message" : "Geyma skilaboð",
-    "Delete message" : "Eyða skilaboðum",
     "Message source" : "Uppruni skilaboða",
     "Unsubscribe via link" : "Hætta í áskrift með tengli",
     "Send unsubscribe email" : "Senda tölvupóst til að segja upp áskrift",
@@ -644,7 +644,6 @@ OC.L10N.register(
     "Gmail integration" : "Samþætting Gmail",
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Gmail gerir notendum sínum kleift að nálgast tölvupóstinn sinn í gegnum IMAP. Af öryggisástæðum er þessi aðgangur aðeins mögulegur í gegnum OAuth 2.0 tengingu eða Google-reikninga sem nota tveggja-þátta auðkenningu og lykilorð forrita.",
     "Microsoft integration" : "Samþætting Microsoft",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft gerir notendum sínum kleift að nálgast tölvupóstinn sinn í gegnum IMAP. Af öryggisástæðum er þessi aðgangur aðeins mögulegur í gegnum OAuth 2.0 tengingu.",
     "Successfully set up anti spam email addresses" : "Tókst að setja upp tölvupóstföng ruslpóstvarnaþjónustu",
     "Error saving anti spam email addresses" : "Villa við að vista tölvupóstföng ruslpóstvarnaþjónustu",
     "Successfully deleted anti spam reporting email" : "Tókst að eyða tölvupósti með tilkynningu til ruslpóstvarnaþjónustu",
@@ -751,7 +750,6 @@ OC.L10N.register(
     "The link leads to %s" : "Tengillinn leiðir til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ef þú vilt ekki fara á þá síðu, geturðu farið til baka í <a href=\"%s\">póstforritið</a>.",
     "Continue to %s" : "Halda áfram í %s",
-    "Uploading attachments …" : "Sendi inn viðhengi…",
-    "Sending …" : "Sendi ..."
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft gerir notendum sínum kleift að nálgast tölvupóstinn sinn í gegnum IMAP. Af öryggisástæðum er þessi aðgangur aðeins mögulegur í gegnum OAuth 2.0 tengingu."
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

@@ -133,7 +133,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "იმ შემთხვევაში, თუ რამდენიმე წამის განმავლობაში არ მოხდება ავტომატური გადამისამართება დააწკაპუნეთ აქ.",
     "Redirect" : "გადამისამართება",
     "The link leads to %s" : "ბმულს მიყევხართ %s-ისკენ",
-    "Continue to %s" : "%s-ისკენ გაგრძელება",
-    "Sending …" : "იგზავნება …"
+    "Continue to %s" : "%s-ისკენ გაგრძელება"
 },
 "nplurals=2; plural=(n!=1);");

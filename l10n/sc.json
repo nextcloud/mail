@@ -120,6 +120,7 @@
     "Edit tags" : "Modìfica etichetas",
     "Move thread" : "Tràmuda dibata",
     "Delete thread" : "Cantzella dibata",
+    "Delete message" : "Cantzella messàgiu",
     "More actions" : "Àteras atziones",
     "Back" : "In segus",
     "Edit as new message" : "Modìfica comente messàgiu nou",
@@ -260,7 +261,6 @@
     "Reply to sender only" : "Responde isceti a chi at imbiadu",
     "Mark as unread" : "Marca comente non lèghidu",
     "Mark as read" : "Marca comente lèghidu",
-    "Delete message" : "Cantzella messàgiu",
     "Message source" : "Fonte de su messàgiu",
     "Go to newest message" : "Bae a su messàgiu prus nou",
     "Could not remove trusted sender {sender}" : "No at fatu a nche bogare s'imbiante afidàbile {sender}",
@@ -356,8 +356,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Incarca inoghe chi no ses torradu a deretare in manera automàtica intro de pagu segundos.",
     "Redirect" : "Torra a deretare",
     "The link leads to %s" : "Su ligòngiu deretat a %s",
-    "Continue to %s" : "Sighi in %s",
-    "Uploading attachments …" : "Carrighende alligongiadu ...",
-    "Sending …" : "Imbiende ..."
+    "Continue to %s" : "Sighi in %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

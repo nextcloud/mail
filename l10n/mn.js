@@ -82,7 +82,6 @@ OC.L10N.register(
     "Junk" : "хэрэггүй",
     "Sent" : "илгээсэн",
     "Trash" : "хог",
-    "Error loading message" : "алдаатай ачааллах зурвас",
-    "Sending …" : "илгээмж"
+    "Error loading message" : "алдаатай ачааллах зурвас"
 },
 "nplurals=2; plural=(n != 1);");

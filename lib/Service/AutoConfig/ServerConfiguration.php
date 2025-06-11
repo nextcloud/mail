@@ -15,7 +15,7 @@ use ReturnTypeWillChange;
 /**
  * @psalm-immutable
  */
-class ServerConfiguration implements JsonSerializable {
+final class ServerConfiguration implements JsonSerializable {
 	private string $username;
 	private string $host;
 	private int $port;
@@ -31,6 +31,7 @@ class ServerConfiguration implements JsonSerializable {
 		$this->security = $security;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

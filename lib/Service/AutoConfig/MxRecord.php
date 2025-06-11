@@ -14,7 +14,7 @@ use Psr\Log\LoggerInterface;
 use function array_combine;
 use function asort;
 
-class MxRecord {
+final class MxRecord {
 	/** @var LoggerInterface */
 	private $logger;
 

@@ -26,6 +26,7 @@ class DraftsJob extends TimedJob {
 		$this->draftsService = $draftsService;
 	}
 
+	#[\Override]
 	protected function run($argument): void {
 		$this->draftsService->flush();
 	}

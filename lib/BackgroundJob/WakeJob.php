@@ -27,6 +27,7 @@ class WakeJob extends TimedJob {
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function run($argument): void {
 		$this->snoozeService->wakeMessages();
 	}

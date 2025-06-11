@@ -218,7 +218,9 @@ OC.L10N.register(
     "Unsnooze" : "Felébresztés",
     "Move thread" : "Szál áthelyezése",
     "Archive thread" : "Szál archiválása",
+    "Archive message" : "Üzenet archiválása",
     "Delete thread" : "Szál törlése",
+    "Delete message" : "Üzenet törlése",
     "More actions" : "További műveletek",
     "Back" : "Vissza",
     "Set custom snooze" : "Egyéni altatás beállítása",
@@ -466,8 +468,6 @@ OC.L10N.register(
     "Mark as favorite" : "Megjelölés kedvencként",
     "Mark as unread" : "Megjelölés olvasatlanként",
     "Mark as read" : "Megjelölés olvasottként",
-    "Archive message" : "Üzenet archiválása",
-    "Delete message" : "Üzenet törlése",
     "Message source" : "Üzenet forrása",
     "Unsubscribe via link" : "Leiratkozás hivatkozással",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "A leiratkozás leállít minden üzenetet, amely a(z) {sender} levelezőlistáról érkezik",
@@ -538,8 +538,6 @@ OC.L10N.register(
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "A Gmail lehetővé teszi, hogy a felhasználók IMAP-on keresztül érjék el az e-mailjeiket. Biztonsági okokból ez csak OAuth 2.0-s kapcsolattal lehetséges, vagy olyan Google-fiókkal, amely kétfaktoros hitelesítést és alkalmazásjelszavakat használ.",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "Regisztrálnia kell egy új kliensazonosítót egy webalkalmazáshoz a Google Cloud konzolon. Adja meg a {url} webcímet engedélyezett átirányítási címként.",
     "Microsoft integration" : "Microsoft integráció",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "A Microsoft lehetővé teszi, hogy a felhasználók IMAP-on keresztül érjék el a leveleiket. Biztonsági okokból ez a hozzáférés csak OAuth 2.0-s kapcsolaton lehetséges.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Regisztrálnia kell egy új alkalmazást a Microsoft Azure Active Directory portálon. Átirányítási URI-nak a következő webcímet adja meg: {url}",
     "Successfully set up anti spam email addresses" : "Sikeresen beállította a levélszemét elhárítási e-mail-címeket",
     "Error saving anti spam email addresses" : "Hiba történt a levélszemét elhárítási e-mail-címek mentése során",
     "Successfully deleted anti spam reporting email" : "Levélszemét bejelentési e-mail-cím sikeresen törölve",
@@ -646,7 +644,7 @@ OC.L10N.register(
     "The link leads to %s" : "A hivatkozás ide mutat: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarja megnyitni azt az oldalt, akkor térjen vissza a <a href=\"%s\">Levelezéshez</a>.",
     "Continue to %s" : "Folytatás ide: %s",
-    "Uploading attachments …" : "Mellékletek feltöltése…",
-    "Sending …" : "Küldés…"
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "A Microsoft lehetővé teszi, hogy a felhasználók IMAP-on keresztül érjék el a leveleiket. Biztonsági okokból ez a hozzáférés csak OAuth 2.0-s kapcsolaton lehetséges.",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Regisztrálnia kell egy új alkalmazást a Microsoft Azure Active Directory portálon. Átirányítási URI-nak a következő webcímet adja meg: {url}"
 },
 "nplurals=2; plural=(n != 1);");

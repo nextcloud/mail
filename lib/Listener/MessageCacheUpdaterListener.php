@@ -32,6 +32,7 @@ class MessageCacheUpdaterListener implements IEventListener {
 		$this->logger = $logger;
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		if ($event instanceof MessageFlaggedEvent) {
 			$messages = $this->mapper->findByUids($event->getMailbox(), [$event->getUid()]);

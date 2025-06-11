@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\IMAP\Sync;
 
-class Request {
+final class Request {
 	private string $id;
 
 	/** @var string */

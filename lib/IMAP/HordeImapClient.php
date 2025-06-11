@@ -37,6 +37,7 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 		$this->hash = $hash;
 	}
 
+	#[\Override]
 	protected function _login() {
 		if ($this->rateLimiterCache === null) {
 			return parent::_login();

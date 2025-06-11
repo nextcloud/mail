@@ -29,6 +29,7 @@ class FixBackgroundJobs implements IRepairStep {
 		$this->mapper = $mapper;
 	}
 
+	#[\Override]
 	public function getName(): string {
 		return 'Insert background jobs for all accounts';
 	}
@@ -36,6 +37,7 @@ class FixBackgroundJobs implements IRepairStep {
 	/**
 	 * @return void
 	 */
+	#[\Override]
 	public function run(IOutput $output) {
 		$accounts = $this->mapper->getAllAccounts();
 

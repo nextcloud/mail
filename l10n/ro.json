@@ -204,7 +204,9 @@
     "Unsnooze" : "Reluare",
     "Move thread" : "Mută conversația",
     "Archive thread" : "Arhivează conversația",
+    "Archive message" : "Arhivează mesajul",
     "Delete thread" : "Șterge conversația",
+    "Delete message" : "Șterge mesajul",
     "More actions" : "Mai multe acțiuni",
     "Back" : "Înapoi",
     "Set custom snooze" : "Setare amânare particularizată",
@@ -437,8 +439,6 @@
     "Mark as favorite" : "Marchează ca favorit",
     "Mark as unread" : "Marchează ca necitit",
     "Mark as read" : "Marchează ca citit",
-    "Archive message" : "Arhivează mesajul",
-    "Delete message" : "Șterge mesajul",
     "Message source" : "Sursa mesajului",
     "Unsubscribe via link" : "Dezabonare prin link",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Dezabonare va opri mesajele din lista de distribuție {sender}",
@@ -521,8 +521,6 @@
     "Redirect" : "Deviere",
     "The link leads to %s" : "Link-ul duce la %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Dacă nu doriți să vizitați acea pagină, vă puteți întoarce la <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continuă către %s",
-    "Uploading attachments …" : "Încarcă atașamentele ...",
-    "Sending …" : "Se trimite..."
+    "Continue to %s" : "Continuă către %s"
 },"pluralForm" :"nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));"
 }

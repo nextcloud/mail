@@ -26,6 +26,8 @@
 					:display-name="envelope.from[0].label"
 					:disable-tooltip="true"
 					:size="40"
+					:fetch-avatar="envelope.fetchAvatarFromClient"
+					:avatar="envelope.avatar"
 					class="envelope__header__avatar-avatar" />
 				<div v-if="isImportant"
 					class="app-content-list-item-star icon-important"
@@ -186,7 +188,7 @@
 							:with-select="false"
 							:with-show-source="true"
 							:more-actions-open.sync="moreActionsOpen"
-							@reply="onReply"
+							@reply="onReply('', false, false)"
 							@delete="$emit('delete',envelope.databaseId)"
 							@show-source-modal="onShowSourceModal"
 							@open-tag-modal="onOpenTagModal"

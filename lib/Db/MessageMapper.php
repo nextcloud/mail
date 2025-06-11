@@ -808,21 +808,23 @@ class MessageMapper extends QBMapper {
 		} else {
 			$select = $qb->select(['m.id', 'm.sent_at']);
 		}
+	
+		$select->from($this->getTableName(), 'm');
 
-		$selfJoin = $select->expr()->andX(
-			$select->expr()->eq('m.mailbox_id', 'm2.mailbox_id', IQueryBuilder::PARAM_INT),
-			$select->expr()->eq('m.thread_root_id', 'm2.thread_root_id', IQueryBuilder::PARAM_INT),
-			$select->expr()->orX(
-				$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
-				$select->expr()->andX(
-					$select->expr()->eq('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
-					$select->expr()->lt('m.message_id', 'm2.message_id', IQueryBuilder::PARAM_STR),
+		if ($query->getThreaded()) {
+			$selfJoin = $select->expr()->andX(
+				$select->expr()->eq('m.mailbox_id', 'm2.mailbox_id', IQueryBuilder::PARAM_INT),
+				$select->expr()->eq('m.thread_root_id', 'm2.thread_root_id', IQueryBuilder::PARAM_INT),
+				$select->expr()->orX(
+					$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+					$select->expr()->andX(
+						$select->expr()->eq('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+						$select->expr()->lt('m.message_id', 'm2.message_id', IQueryBuilder::PARAM_STR),
+					),
 				),
-			),
-		);
-
-		$select->from($this->getTableName(), 'm')
-			->leftJoin('m', $this->getTableName(), 'm2', $selfJoin);
+			);
+			$select->leftJoin('m', $this->getTableName(), 'm2', $selfJoin);
+		}
 
 		if (!empty($query->getFrom())) {
 			$select->innerJoin('m', 'mail_recipients', 'r0', 'm.id = r0.message_id');
@@ -1008,7 +1010,9 @@ class MessageMapper extends QBMapper {
 			);
 		}
 
-		$select->andWhere($qb->expr()->isNull('m2.id'));
+		if ($query->getThreaded()) {
+			$select->andWhere($qb->expr()->isNull('m2.id'));
+		}
 
 		if ($sortOrder === 'ASC') {
 			$select->orderBy('m.sent_at', $sortOrder);

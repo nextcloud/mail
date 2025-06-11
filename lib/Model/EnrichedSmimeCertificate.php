@@ -54,6 +54,7 @@ class EnrichedSmimeCertificate implements JsonSerializable {
 		$this->info = $info;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		$json = $this->certificate->jsonSerialize();

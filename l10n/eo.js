@@ -190,8 +190,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Alklaku ĉi tie, ĉu vi ne estos aŭtomate alidirektita post kelkaj sekundoj.",
     "Redirect" : "Alidirekto",
     "The link leads to %s" : "La ligilo iras al %s",
-    "Continue to %s" : "Daŭrigi al %s",
-    "Uploading attachments …" : "Alŝutas kunsendaĵojn...",
-    "Sending …" : "Sendado..."
+    "Continue to %s" : "Daŭrigi al %s"
 },
 "nplurals=2; plural=(n != 1);");

@@ -16,7 +16,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UpdateSystemAutoresponders extends Command {
+final class UpdateSystemAutoresponders extends Command {
 	public function __construct(
 		private MailAccountMapper $mailAccountMapper,
 		private IUserManager $userManager,

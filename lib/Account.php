@@ -45,6 +45,7 @@ class Account implements JsonSerializable {
 		return $this->account->getEmail();
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return $this->account->toJson();

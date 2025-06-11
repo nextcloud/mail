@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Cache;
 
-class HordeSyncToken {
+final class HordeSyncToken {
 	public function __construct(
 		private ?int $nextUid,
 		private ?int $uidValidity,

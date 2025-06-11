@@ -265,7 +265,9 @@ OC.L10N.register(
     "Unsnooze" : "スヌーズを解除する",
     "Move thread" : "スレッドを移動する",
     "Archive thread" : "スレッドをアーカイブする",
+    "Archive message" : "メッセージをアーカイブする",
     "Delete thread" : "スレッドを削除",
+    "Delete message" : "メッセージを削除",
     "More actions" : "その他のアクション",
     "Back" : "戻る",
     "Set custom snooze" : "カスタムスヌーズを設定する",
@@ -551,8 +553,6 @@ OC.L10N.register(
     "Mark as favorite" : "お気に入りにする",
     "Mark as unread" : "未読にする",
     "Mark as read" : "既読にする",
-    "Archive message" : "メッセージをアーカイブする",
-    "Delete message" : "メッセージを削除",
     "Message source" : "メッセージソース",
     "Unsubscribe via link" : "リンク経由で購読を解除する",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "リスト{sender}から全ての配信メッセージを停止する",
@@ -660,8 +660,6 @@ OC.L10N.register(
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Gmailでは、IMAP経由でメールにアクセスすることができます。セキュリティ上の理由から、このアクセスはOAuth 2.0接続、または二要素認証とアプリのパスワードを使用するGoogleアカウントでのみ可能です。",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "Google Cloudコンソールで\"Webアプリケーション\"の新しいクライアントIDを登録する必要があります。承認済みリダイレクトURIとしてURL{url}を追加します。",
     "Microsoft integration" : "Microsoft と統合する",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoftは、ユーザーがIMAP経由で電子メールにアクセスすることを許可しています。セキュリティ上の理由から、このアクセスはOAuth 2.0接続でのみ可能です。",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Microsoft Azure Active Directoryポータルで新しいアプリを登録する必要があります。リダイレクトURIとしてURL{url}を追加します。",
     "Successfully set up anti spam email addresses" : "スパム対策メールアドレスの設定が成功しました",
     "Error saving anti spam email addresses" : "スパム対策報告メールを保存する時エラーがでました",
     "Successfully deleted anti spam reporting email" : "スパム対策報告メールを正常に削除しました",
@@ -770,7 +768,7 @@ OC.L10N.register(
     "The link leads to %s" : "リンクが %s につながります",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ページにアクセスしたくない場合は、<a href=\"%s\">メール</a>に戻ることができます",
     "Continue to %s" : "%s にリダイレクトする",
-    "Uploading attachments …" : "添付ファイルをアップロード",
-    "Sending …" : "送信中 …"
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoftは、ユーザーがIMAP経由で電子メールにアクセスすることを許可しています。セキュリティ上の理由から、このアクセスはOAuth 2.0接続でのみ可能です。",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Microsoft Azure Active Directoryポータルで新しいアプリを登録する必要があります。リダイレクトURIとしてURL{url}を追加します。"
 },
 "nplurals=1; plural=0;");

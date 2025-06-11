@@ -14,6 +14,7 @@ use PHPMailer\DKIMValidator\DKIMException;
 use PHPMailer\DKIMValidator\Validator;
 
 class DkimValidator implements IDkimValidator {
+	#[\Override]
 	public function validate(string $rawMessage): bool {
 		try {
 			$validator = new Validator($rawMessage);

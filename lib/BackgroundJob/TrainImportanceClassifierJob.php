@@ -47,6 +47,7 @@ class TrainImportanceClassifierJob extends TimedJob {
 	/**
 	 * @return void
 	 */
+	#[\Override]
 	protected function run($argument) {
 		$accountId = (int)$argument['accountId'];
 

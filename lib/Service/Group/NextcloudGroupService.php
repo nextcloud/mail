@@ -38,10 +38,12 @@ class NextcloudGroupService implements IGroupService {
 		$this->config = $config;
 	}
 
+	#[\Override]
 	public function getNamespace(): string {
 		return $this->namespace;
 	}
 
+	#[\Override]
 	public function search(string $term): array {
 		$c1 = $this->config->getAppValue('core', 'shareapi_allow_group_sharing', 'yes');
 		$c2 = $this->config->getAppValue('core', 'shareapi_only_share_with_group_members', 'no');
@@ -62,6 +64,7 @@ class NextcloudGroupService implements IGroupService {
 		);
 	}
 
+	#[\Override]
 	public function getUsers(string $groupId): array {
 		if (!$this->groupManager->groupExists($groupId)) {
 			throw new ServiceException("$groupId ({$this->getNamespace()}) does not exist");

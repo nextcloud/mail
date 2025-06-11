@@ -12,7 +12,7 @@ namespace OCA\Mail\Model;
 use JsonSerializable;
 use ReturnTypeWillChange;
 
-class SmimeCertificatePurposes implements JsonSerializable {
+final class SmimeCertificatePurposes implements JsonSerializable {
 	private bool $sign;
 	private bool $encrypt;
 
@@ -49,6 +49,7 @@ class SmimeCertificatePurposes implements JsonSerializable {
 		$this->encrypt = $encrypt;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

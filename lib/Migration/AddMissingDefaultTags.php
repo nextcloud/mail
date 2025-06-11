@@ -29,6 +29,7 @@ class AddMissingDefaultTags implements IRepairStep {
 		$this->tagMapper = $tagMapper;
 	}
 
+	#[\Override]
 	public function getName() {
 		return 'Restore default tags that are missing';
 	}
@@ -36,6 +37,7 @@ class AddMissingDefaultTags implements IRepairStep {
 	/**
 	 * @return void
 	 */
+	#[\Override]
 	public function run(IOutput $output) {
 		$output->info('Looking up default tags');
 		$accounts = $this->accountMapper->getAllAccounts();

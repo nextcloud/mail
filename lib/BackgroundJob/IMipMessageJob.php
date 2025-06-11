@@ -25,6 +25,7 @@ class IMipMessageJob extends TimedJob {
 		$this->iMipService = $iMipService;
 	}
 
+	#[\Override]
 	protected function run($argument): void {
 		$this->iMipService->process();
 	}

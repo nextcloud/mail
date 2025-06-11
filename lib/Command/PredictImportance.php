@@ -23,7 +23,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use function memory_get_peak_usage;
 
-class PredictImportance extends Command {
+final class PredictImportance extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 	public const ARGUMENT_SENDER = 'sender';
 	public const ARGUMENT_SUBJECT = 'subject';

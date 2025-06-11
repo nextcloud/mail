@@ -18,6 +18,7 @@ class SendHandler extends AHandler {
 	) {
 	}
 
+	#[\Override]
 	public function process(
 		Account $account,
 		LocalMessage $localMessage,

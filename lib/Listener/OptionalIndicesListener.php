@@ -26,6 +26,7 @@ class OptionalIndicesListener implements IEventListener {
 		$this->config = $config;
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		if (!($event instanceof AddMissingIndicesEvent)) {
 			return;

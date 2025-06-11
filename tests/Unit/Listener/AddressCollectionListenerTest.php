@@ -72,9 +72,7 @@ class AddressCollectionListenerTest extends TestCase {
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => 'test'
 		]);
-		$event = $this->createConfiguredMock(MessageSentEvent::class, [
-			'getAccount' => $account
-		]);
+		$event = new MessageSentEvent($account, new LocalMessage());
 		$this->preferences->expects($this->once())
 			->method('getPreference')
 			->with('test', 'collect-data', 'true')

@@ -13,7 +13,6 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\ProvisioningMapper;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCP\IL10N;
 use OCP\SetupCheck\ISetupCheck;
@@ -28,19 +27,21 @@ class MailConnectionPerformance implements ISetupCheck {
 		private ProvisioningMapper $provisioningMapper,
 		private MailAccountMapper $accountMapper,
 		private IMAPClientFactory $clientFactory,
-		private FolderMapper $folderMapper,
 		private MicroTime $microtime,
 	) {
 	}
 
+	#[\Override]
 	public function getName(): string {
 		return $this->l10n->t('Mail connection performance');
 	}
 
+	#[\Override]
 	public function getCategory(): string {
 		return 'mail';
 	}
 
+	#[\Override]
 	public function run(): SetupResult {
 		// retrieve unique imap hosts for provisionings and abort if none exists
 		$hosts = $this->provisioningMapper->findUniqueImapHosts();
@@ -73,7 +74,7 @@ class MailConnectionPerformance implements ISetupCheck {
 					$tLogin = $this->microtime->getNumeric();
 					// time operation
 					$list = $client->listMailboxes('*');
-					$status = $client->status(key($list));
+					$client->status(key($list));
 					$tOperation = $this->microtime->getNumeric();
 					
 					$tests[$host][$accountId] = ['start' => $tStart, 'login' => $tLogin, 'operation' => $tOperation];

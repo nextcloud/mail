@@ -135,7 +135,7 @@ class MailManagerTest extends TestCase {
 		$folder = $this->createMock(Folder::class);
 		$this->folderMapper->expects($this->once())
 			->method('createFolder')
-			->with($this->equalTo($client), $this->equalTo($account), $this->equalTo('new'))
+			->with($this->equalTo($client), $this->equalTo('new'))
 			->willReturn($folder);
 		$this->folderMapper->expects($this->once())
 			->method('fetchFolderAcls')
@@ -351,7 +351,7 @@ class MailManagerTest extends TestCase {
 		$client->expects($this->exactly(2))
 			->method('status')
 			->willReturn(['permflags' => ['\seen', '$junk', '$notjunk']]);
-		
+
 		// test keyword supported
 		$this->assertEquals(['$junk'], $this->manager->filterFlags($client, $account, '$junk', 'INBOX'));
 		// test keyword unsupported
@@ -368,7 +368,7 @@ class MailManagerTest extends TestCase {
 				['permflags' => ['\seen', '$junk', '$notjunk', '\*']],
 				['permflags' => ['\seen', '$junk', '$notjunk']],
 			);
-		
+
 		// test custom keyword supported
 		$this->assertEquals([Tag::LABEL_IMPORTANT], $this->manager->filterFlags($client, $account, Tag::LABEL_IMPORTANT, 'INBOX'));
 		// test custom keyword unsupported

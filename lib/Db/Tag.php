@@ -42,6 +42,7 @@ class Tag extends Entity implements JsonSerializable {
 		$this->addType('isDefaultTag', 'boolean');
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

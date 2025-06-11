@@ -87,13 +87,14 @@ use Psr\Container\ContainerInterface;
 
 include_once __DIR__ . '/../../vendor/autoload.php';
 
-class Application extends App implements IBootstrap {
+final class Application extends App implements IBootstrap {
 	public const APP_ID = 'mail';
 
 	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);
 	}
 
+	#[\Override]
 	public function register(IRegistrationContext $context): void {
 		$context->registerParameter('hostname', Util::getServerHostName());
 
@@ -169,6 +170,7 @@ class Application extends App implements IBootstrap {
 		Horde_Translation::setHandler('Horde_Smtp', new HordeTranslationHandler());
 	}
 
+	#[\Override]
 	public function boot(IBootContext $context): void {
 	}
 }

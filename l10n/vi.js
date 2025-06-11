@@ -286,8 +286,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Nhấp vào đây nếu bạn không được chuyển hướng tự động trong vòng vài giây tới",
     "Redirect" : "Chuyển hướng",
     "The link leads to %s" : "Liên kết dẫn đến %s",
-    "Continue to %s" : "Tiếp tục %s",
-    "Uploading attachments …" : "Đang tải lên các tệp đính kèm …",
-    "Sending …" : "Đang gửi …"
+    "Continue to %s" : "Tiếp tục %s"
 },
 "nplurals=1; plural=0;");

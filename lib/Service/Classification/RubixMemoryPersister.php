@@ -22,10 +22,12 @@ class RubixMemoryPersister implements Persister {
 		return $this->data;
 	}
 
+	#[\Override]
 	public function save(Encoding $encoding): void {
 		$this->data = $encoding->data();
 	}
 
+	#[\Override]
 	public function load(): Encoding {
 		return new Encoding($this->data);
 	}

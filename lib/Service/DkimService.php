@@ -46,6 +46,7 @@ class DkimService implements IDkimService {
 		$this->dkimValidator = $dkimValidator;
 	}
 
+	#[\Override]
 	public function validate(Account $account, Mailbox $mailbox, int $id): bool {
 		$cached = $this->getCached($account, $mailbox, $id);
 		if (is_bool($cached)) {
@@ -77,6 +78,7 @@ class DkimService implements IDkimService {
 		return $result;
 	}
 
+	#[\Override]
 	public function getCached(Account $account, Mailbox $mailbox, int $id): ?bool {
 		return $this->cache->get($this->buildCacheKey($account, $mailbox, $id));
 	}

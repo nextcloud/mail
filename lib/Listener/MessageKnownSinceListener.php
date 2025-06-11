@@ -27,6 +27,7 @@ class MessageKnownSinceListener implements IEventListener {
 	) {
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		if (!($event instanceof NewMessagesSynchronized)) {
 			return;

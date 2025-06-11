@@ -30,6 +30,7 @@ class Version1040Date20200422130220 extends SimpleMigrationStep {
 	 *
 	 * @return ISchemaWrapper
 	 */
+	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ISchemaWrapper {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
@@ -42,6 +43,7 @@ class Version1040Date20200422130220 extends SimpleMigrationStep {
 	/**
 	 * @return void
 	 */
+	#[\Override]
 	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
 		// Reset locks and sync tokens
 		$qb1 = $this->connection->getQueryBuilder();

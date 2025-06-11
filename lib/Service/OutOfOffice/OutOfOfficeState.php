@@ -85,6 +85,7 @@ class OutOfOfficeState implements JsonSerializable {
 		$this->message = $message;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		$json = [

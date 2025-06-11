@@ -18,6 +18,7 @@ class HordeTranslationHandler implements Horde_Translation_Handler {
 	 * @return string The string translation, or the original string if no
 	 *                translation exists.
 	 */
+	#[\Override]
 	public function t($message) {
 		return $message;
 	}
@@ -32,6 +33,7 @@ class HordeTranslationHandler implements Horde_Translation_Handler {
 	 * @return string The string translation, or the original string if no
 	 *                translation exists.
 	 */
+	#[\Override]
 	public function ngettext($singular, $plural, $number) {
 		return ($number > 1 ? $plural : $singular);
 	}

@@ -223,7 +223,9 @@ OC.L10N.register(
     "Unsnooze" : "다시 알림 해제",
     "Move thread" : "쓰레드 이동",
     "Archive thread" : "쓰레드 보관",
+    "Archive message" : "메시지 보관",
     "Delete thread" : "쓰레드 삭제",
+    "Delete message" : "메시지 삭제",
     "More actions" : "더 많은 동작",
     "Back" : "뒤로",
     "Set custom snooze" : "사용자 지정 다시 알림 사용",
@@ -468,8 +470,6 @@ OC.L10N.register(
     "Mark as favorite" : "즐겨찾기로 표시",
     "Mark as unread" : "읽지 않은 것으로 표시",
     "Mark as read" : "읽은 것으로 표시",
-    "Archive message" : "메시지 보관",
-    "Delete message" : "메시지 삭제",
     "Message source" : "메시지 원본",
     "Unsubscribe via link" : "링크로 구독 해지",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "구독 해지는 메일링 리스트 {sender}이(가) 보내는 모든 메시지의 발신을 정지합니다",
@@ -537,8 +537,6 @@ OC.L10N.register(
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "사용자는 IMAP을 통해 Gmail에 접근할 수 있습니다. 단, 보안을 위해 OAuth 2.0 연결 또는 2단계 인증과 앱 압호를 사용하는 Google 계정만 허용합니다.",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "Google Cloud 콘솔의 \"웹 애플리케이션\"에서 새 클라이언트 ID를 등록할 수 있습니다. URL {url}을(를) 인증된 리다이렉트 URI로 추가하십시오",
     "Microsoft integration" : "Microsoft 통합",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "사용자는 IMAP을 통해 Microsoft 계정에 접근할 수 있습니다. 보안을 위해 OAuth 2.0 연결을 사용하는 Microsoft 계정만 허용합니다.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "새 앱을 Microsoft Azure Active Directory 포털에 등록해야 합니다. URL {url}을(를) 리다이렉트 URI로 추가하십시오.",
     "Successfully set up anti spam email addresses" : "스팸 차단 이메일 주소를 성공적으로 설정함",
     "Error saving anti spam email addresses" : "스팸 차단 이메일 주소를 저장하는 중 오류 발생",
     "Successfully deleted anti spam reporting email" : "스팸 차단 보고 이메일을 성공적으로 삭제함",
@@ -644,7 +642,7 @@ OC.L10N.register(
     "The link leads to %s" : "이 링크가 %s을(를) 향함",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "해당 페이지를 방문하지 않으려면 <a href=\"%s\">메일</a>로 돌아갈 수 있습니다.",
     "Continue to %s" : "%s(으)로 이동",
-    "Uploading attachments …" : "첨부 파일 업로드...",
-    "Sending …" : "보내는 중..."
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "사용자는 IMAP을 통해 Microsoft 계정에 접근할 수 있습니다. 보안을 위해 OAuth 2.0 연결을 사용하는 Microsoft 계정만 허용합니다.",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "새 앱을 Microsoft Azure Active Directory 포털에 등록해야 합니다. URL {url}을(를) 리다이렉트 URI로 추가하십시오."
 },
 "nplurals=1; plural=0;");

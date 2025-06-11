@@ -58,6 +58,7 @@ class Message implements JsonSerializable {
 		return $this->references;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

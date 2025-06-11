@@ -28,6 +28,7 @@ class AddressbookSource implements IAvatarSource {
 	 *
 	 * @return bool
 	 */
+	#[\Override]
 	public function isExternal(): bool {
 		return false;
 	}
@@ -37,6 +38,7 @@ class AddressbookSource implements IAvatarSource {
 	 * @param AvatarFactory $factory
 	 * @return Avatar|null avatar URL if one can be found
 	 */
+	#[\Override]
 	public function fetch(string $email, AvatarFactory $factory) {
 		$url = $this->contactsIntegration->getPhoto($email);
 

@@ -20,10 +20,12 @@ class DeleteDuplicateUids implements IRepairStep {
 	) {
 	}
 
+	#[\Override]
 	public function getName(): string {
 		return 'Queue a job to delete duplicated cached messages';
 	}
 
+	#[\Override]
 	public function run(IOutput $output): void {
 		$this->jobList->add(DeleteDuplicatedUidsJob::class);
 	}

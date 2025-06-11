@@ -21,6 +21,7 @@ class TrustedSenderService implements ITrustedSenderService {
 		$this->mapper = $mapper;
 	}
 
+	#[\Override]
 	public function isTrusted(string $uid, string $email): bool {
 		return $this->mapper->exists(
 			$uid,
@@ -45,6 +46,7 @@ class TrustedSenderService implements ITrustedSenderService {
 		);
 	}
 
+	#[\Override]
 	public function trust(string $uid, string $email, string $type, ?bool $trust = true): void {
 		if ($trust && $this->isTrusted($uid, $email)) {
 			// Nothing to do
@@ -66,6 +68,7 @@ class TrustedSenderService implements ITrustedSenderService {
 		}
 	}
 
+	#[\Override]
 	public function getTrusted(string $uid): array {
 		return $this->mapper->findAll($uid);
 	}

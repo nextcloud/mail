@@ -26,6 +26,7 @@ class Version1105Date20210922104324 extends SimpleMigrationStep {
 		$this->logger = $logger;
 	}
 
+	#[\Override]
 	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
 		$qb = $this->connection->getQueryBuilder();
 		$qb->select('accounts.id')

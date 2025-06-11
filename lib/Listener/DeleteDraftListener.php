@@ -58,6 +58,7 @@ class DeleteDraftListener implements IEventListener {
 		$this->eventDispatcher = $eventDispatcher;
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		if (($event instanceof DraftSavedEvent || $event instanceof OutboxMessageCreatedEvent || $event instanceof DraftMessageCreatedEvent) && $event->getDraft() !== null) {
 			$this->deleteDraft($event->getAccount(), $event->getDraft());

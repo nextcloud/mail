@@ -158,6 +158,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

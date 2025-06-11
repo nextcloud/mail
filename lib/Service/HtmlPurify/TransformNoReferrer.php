@@ -32,6 +32,7 @@ class TransformNoReferrer extends HTMLPurifier_AttrTransform {
 	 * @param HTMLPurifier_Context $context
 	 * @return array
 	 */
+	#[\Override]
 	public function transform($attr, $config, $context) {
 		if (!isset($attr['href'])) {
 			return $attr;

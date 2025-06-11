@@ -30,6 +30,7 @@ class ImportantMessagesExtractor implements IExtractor {
 		$this->statisticsDao = $statisticsDao;
 	}
 
+	#[\Override]
 	public function prepare(Account $account,
 		array $incomingMailboxes,
 		array $outgoingMailboxes,
@@ -44,6 +45,7 @@ class ImportantMessagesExtractor implements IExtractor {
 		$this->flaggedMessages = $this->statisticsDao->getNumberOfMessagesWithFlagGrouped($incomingMailboxes, 'important', $senders);
 	}
 
+	#[\Override]
 	public function extract(Message $message): array {
 		$sender = $message->getFrom()->first();
 		if ($sender === null) {

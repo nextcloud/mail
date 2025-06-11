@@ -18,6 +18,7 @@ use function implode;
 
 class FilteringProvider extends Provider implements IFilteringProvider {
 
+	#[\Override]
 	public function search(IUser $user, ISearchQuery $query): SearchResult {
 		$filters = [];
 		if ($term = $query->getFilter('term')?->get()) {
@@ -58,6 +59,7 @@ class FilteringProvider extends Provider implements IFilteringProvider {
 		return $this->searchByFilter($user, $query, implode(' ', $filters));
 	}
 
+	#[\Override]
 	public function getSupportedFilters(): array {
 		return [
 			'term',
@@ -67,10 +69,12 @@ class FilteringProvider extends Provider implements IFilteringProvider {
 		];
 	}
 
+	#[\Override]
 	public function getAlternateIds(): array {
 		return [];
 	}
 
+	#[\Override]
 	public function getCustomFilters(): array {
 		return [];
 	}

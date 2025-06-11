@@ -32,6 +32,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 		parent::__construct();
 	}
 
+	#[\Override]
 	public function get($mailbox, $uids, $fields, $uidvalid) {
 		// Don't forward any data related to individual messages
 		return [];
@@ -45,6 +46,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 		return $this->cachedMailboxes[$mailbox];
 	}
 
+	#[\Override]
 	public function getCachedUids($mailbox, $uidvalid) {
 		$cachedMailbox = $this->getOrInsertCachedMailbox($mailbox);
 
@@ -70,10 +72,12 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 		return array_merge([], $cachedUids);
 	}
 
+	#[\Override]
 	public function set($mailbox, $data, $uidvalid) {
 		// Don't mutate any data related to individual messages
 	}
 
+	#[\Override]
 	public function getMetaData($mailbox, $uidvalid, $entries) {
 		$cachedMailbox = $this->getOrInsertCachedMailbox($mailbox);
 
@@ -106,11 +110,13 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 		return $md;
 	}
 
+	#[\Override]
 	public function setMetaData($mailbox, $data) {
 		// Don't mutate any metadata.
 		// The data will be refreshed once the new sync token is written to the db.
 	}
 
+	#[\Override]
 	public function deleteMsgs($mailbox, $uids) {
 		$mailboxEntity = $this->mailboxMapper->find($this->account, $mailbox);
 		$this->dbMessageMapper->deleteByUid($mailboxEntity, ...$uids);
@@ -128,10 +134,12 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 		$cachedMailbox->setUids(array_diff($cachedUids, $uids));
 	}
 
+	#[\Override]
 	public function deleteMailbox($mailbox) {
 		unset($this->cachedMailboxes[$mailbox]);
 	}
 
+	#[\Override]
 	public function clear($lifetime) {
 		$this->cachedMailboxes = [];
 	}

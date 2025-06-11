@@ -91,6 +91,7 @@ class Provisioning extends Entity implements JsonSerializable {
 		$this->addType('ldapAliasesProvisioning', 'boolean');
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

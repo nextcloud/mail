@@ -70,9 +70,9 @@ class AccountServiceTest extends TestCase {
 			$this->imapClientFactory
 		);
 
-		$this->account1 = $this->createMock(MailAccount::class);
-		$this->account2 = $this->createMock(MailAccount::class);
-		$this->account3 = $this->createMock(MailAccount::class);
+		$this->account1 = new MailAccount();
+		$this->account2 = new MailAccount();
+		$this->account3 = new MailAccount();
 		$this->client = $this->createMock(Horde_Imap_Client_Socket::class);
 	}
 
@@ -170,7 +170,7 @@ class AccountServiceTest extends TestCase {
 		$id = 3;
 		$uid = 'ian';
 		$signature = 'sig';
-		$mailAccount = $this->createMock(MailAccount::class);
+		$mailAccount = new MailAccount();
 		$this->mapper->expects($this->once())
 			->method('find')
 			->with(

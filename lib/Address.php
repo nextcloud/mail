@@ -101,6 +101,7 @@ class Address implements JsonSerializable {
 		return $this->wrapped;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

@@ -29,6 +29,7 @@ class CleanupJob extends TimedJob {
 		$this->setTimeSensitivity(self::TIME_INSENSITIVE);
 	}
 
+	#[\Override]
 	protected function run($argument): void {
 		$this->cleanupService->cleanUp($this->logger);
 	}

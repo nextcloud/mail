@@ -20,7 +20,7 @@ OC.L10N.register(
     "Name" : "Nosaukums",
     "Mail address" : "E-pasta adrese",
     "Password" : "Parole",
-    "Manual" : "Manuāli",
+    "Manual" : "Pašrocīgi",
     "IMAP Settings" : "IMAP iestatījumi",
     "IMAP Host" : "IMAP serveris",
     "IMAP Security" : "IMAP drošība",
@@ -46,7 +46,7 @@ OC.L10N.register(
     "Cancel" : "Atcelt",
     "Accounts" : "Konti",
     "Add mail account" : "Pievienot e-pasta kontu",
-    "General" : "Vispārīgs",
+    "General" : "Vispārīgi",
     "Keyboard shortcuts" : "Tastatūras saīsnes",
     "Archive" : "Arhīvi",
     "Delete" : "Izdzēst",
@@ -160,7 +160,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Jāklikšķina šeit, ja nenotiek automātiska pārvirzīšana dažu sekunžu laikā.",
     "Redirect" : "Novirzīt",
     "The link leads to %s" : "Saite, kas ved uz %s",
-    "Continue to %s" : "Turpināt %s",
-    "Sending …" : "Sūta …"
+    "Continue to %s" : "Turpināt %s"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

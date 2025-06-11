@@ -20,6 +20,7 @@ class CidURIScheme extends HTMLPurifier_URIScheme {
 	public $browsable = true;
 	public $hierarchical = true;
 
+	#[\Override]
 	public function validate(&$uri, $config, $context) {
 		return true;
 	}
@@ -32,6 +33,7 @@ class CidURIScheme extends HTMLPurifier_URIScheme {
 	 * @param HTMLPurifier_Context $context
 	 * @return bool success or failure
 	 */
+	#[\Override]
 	public function doValidate(&$uri, $config, $context) {
 		return true;
 	}

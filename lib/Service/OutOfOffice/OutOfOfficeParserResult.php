@@ -32,6 +32,7 @@ class OutOfOfficeParserResult implements JsonSerializable {
 		return $this->untouchedSieveScript;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

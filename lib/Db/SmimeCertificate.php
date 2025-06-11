@@ -36,6 +36,7 @@ class SmimeCertificate extends Entity implements JsonSerializable {
 	/** @var string|null */
 	protected $privateKey;
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		// Don't leak certificate and private key

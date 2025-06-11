@@ -372,8 +372,8 @@
 						</ActionCheckbox>
 						<ActionCheckbox v-if="smimeCertificateForCurrentAlias"
 							:checked="wantsSmimeSign"
-							@check="wantsSmimeSign = true"
-							@uncheck="wantsSmimeSign = false">
+							@check="smimeSignCheck(true)"
+							@uncheck="smimeSignCheck(false)">
 							{{ t('mail', 'Sign message with S/MIME') }}
 						</ActionCheckbox>
 						<ActionCheckbox v-if="smimeCertificateForCurrentAlias"
@@ -452,7 +452,7 @@
 					</template>
 				</Actions>
 
-				<ButtonVue :disabled="!canSend"
+				<ButtonVue :disabled="!canSend || sending"
 					native-type="submit"
 					type="primary"
 					:aria-label="submitButtonTitle"
@@ -512,6 +512,7 @@ import { TRIGGER_CHANGE_ALIAS, TRIGGER_EDITOR_READY } from '../ckeditor/signatur
 import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import { mapStores, mapState } from 'pinia'
+import { savePreference } from '../service/PreferenceService.js'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -662,6 +663,7 @@ export default {
 
 		return {
 			textBlockSvg,
+			sending: false,
 			showCC: this.cc.length > 0,
 			showBCC: this.bcc.length > 0,
 			selectedAlias: NO_ALIAS_SET, // Fixed in `beforeMount`
@@ -708,6 +710,7 @@ export default {
 			isPickerOpen: false,
 			isTextBlockPickerOpen: false,
 			recipientSearchTerms: {},
+			smimeSignAliases: [],
 		}
 	},
 	computed: {
@@ -963,6 +966,13 @@ export default {
 		requestMdnVal(val) {
 			this.$emit('update:request-mdn', val)
 		},
+		selectedAlias: {
+			handler() {
+				const aliasEmailAddress = this.selectedAlias.emailAddress
+				this.wantsSmimeSign = this.smimeSignAliases.indexOf(aliasEmailAddress) !== -1
+			},
+			immediate: true,
+		}
 	},
 	async beforeMount() {
 		this.setAlias()
@@ -1012,6 +1022,8 @@ export default {
 			this.mainStore.fetchSharedTextBlocks()
 			this.mainStore.fetchMyTextBlocks()
 		}
+
+		this.smimeSignAliases = this.mainStore.getPreference('smime-sign-aliases', [])
 	},
 	beforeDestroy() {
 		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
@@ -1251,6 +1263,20 @@ export default {
 			this.loadingIndicatorCc = addressType === 'cc'
 			this.loadingIndicatorBcc = addressType === 'bcc'
 			this.recipientSearchTerms[addressType] = term
+
+			// Autocomplete from own identifies (useful for testing)
+			const accounts = this.accounts.filter((a) => !a.isUnified)
+			const selfRecipients = accounts
+				.filter(
+					account => account.emailAddress.toLowerCase().indexOf(term.toLowerCase()) !== -1
+					|| account.name.toLowerCase().indexOf(term.toLowerCase()) !== -1,
+				)
+				.map(account => ({
+					email: account.emailAddress,
+					label: account.name,
+				}))
+			this.autocompleteRecipients = uniqBy('email')(this.autocompleteRecipients.concat(selfRecipients))
+
 			debouncedSearch(term).then((results) => {
 				if (addressType === 'to') {
 					this.loadingIndicatorTo = false
@@ -1451,6 +1477,17 @@ export default {
 				return undefined
 			}
 			return this.mainStore.getSmimeCertificate(certificateId)
+		},
+
+		smimeSignCheck(value) {
+			this.wantsSmimeSign = value
+			if (value) {
+				this.smimeSignAliases.push(this.selectedAlias.emailAddress)
+			} else {
+				this.smimeSignAliases = this.smimeSignAliases
+					.filter((alias) => alias !== this.selectedAlias.emailAddress)
+			}
+			savePreference('smime-sign-aliases', JSON.stringify(this.smimeSignAliases))
 		},
 
 		/**

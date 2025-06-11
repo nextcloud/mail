@@ -192,7 +192,9 @@ OC.L10N.register(
     "Snooze" : "Torkuta",
     "Move thread" : "Siirrä ketju",
     "Archive thread" : "Arkistoi ketju",
+    "Archive message" : "Arkistoi viesti",
     "Delete thread" : "Poista ketju",
+    "Delete message" : "Poista viesti",
     "More actions" : "Lisää toimintoja",
     "Back" : "Takaisin",
     "Set custom snooze" : "Aseta mukautettu torkutus",
@@ -381,8 +383,6 @@ OC.L10N.register(
     "Mark as favorite" : "Merkitse suosikiksi",
     "Mark as unread" : "Merkitse lukemattomaksi",
     "Mark as read" : "Merkitse luetuksi",
-    "Archive message" : "Arkistoi viesti",
-    "Delete message" : "Poista viesti",
     "Message source" : "Viestin lähde",
     "The message could not be translated" : "Viestiä ei voitu kääntää",
     "Translation copied to clipboard" : "Käännös kopioitu leikepöydälle",
@@ -422,8 +422,6 @@ OC.L10N.register(
     "Anti Spam Service" : "Roskapostin estopalvelu",
     "Gmail integration" : "Gmail-integraatio",
     "Microsoft integration" : "Microsoft-integraatio",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft sallii käyttäjien yhdistää sähköpostiin IMAP:ia käyttäen. Tietoturvasyistä tällainen käyttö on mahdollista vain OAuth 2.0 -yhteydellä.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Rekisteröi uusi sovellus Microsoft Azure Active Directory -portaalissa. Lisää URL-osoite {url} uudelleenohjauksen URI:ksi.",
     "Anti Spam" : "Roskapostin esto",
     "The original message will be attached as a \"message/rfc822\" attachment." : "Alkuperäinen viesti asetetaan \"message/rfc822\"-liitteeksi.",
     "Reset" : "Palauta",
@@ -497,7 +495,7 @@ OC.L10N.register(
     "Redirect" : "Uudelleenohjaus",
     "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
     "Continue to %s" : "Jatka sivulle %s",
-    "Uploading attachments …" : "Lähetetään liitteitä…",
-    "Sending …" : "Lähetetään…"
+    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft sallii käyttäjien yhdistää sähköpostiin IMAP:ia käyttäen. Tietoturvasyistä tällainen käyttö on mahdollista vain OAuth 2.0 -yhteydellä.",
+    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Rekisteröi uusi sovellus Microsoft Azure Active Directory -portaalissa. Lisää URL-osoite {url} uudelleenohjauksen URI:ksi."
 },
 "nplurals=2; plural=(n != 1);");

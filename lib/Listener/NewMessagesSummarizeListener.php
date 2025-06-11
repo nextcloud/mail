@@ -9,10 +9,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Listener;
 
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCP\AppFramework\Services\IAppConfig;
 use OCP\EventDispatcher\Event;
@@ -26,13 +24,12 @@ class NewMessagesSummarizeListener implements IEventListener {
 
 	public function __construct(
 		private LoggerInterface $logger,
-		private IMAPClientFactory $imapFactory,
 		private AiIntegrationsService $aiService,
-		private IMailManager $mailManager,
 		private IAppConfig $appConfig,
 	) {
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		if ($this->appConfig->getAppValueBool('llm_processing', false) === false) {
 			return;

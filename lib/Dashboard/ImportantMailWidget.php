@@ -17,6 +17,7 @@ class ImportantMailWidget extends MailWidget {
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getId(): string {
 		return 'mail';
 	}
@@ -24,10 +25,12 @@ class ImportantMailWidget extends MailWidget {
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getTitle(): string {
 		return $this->l10n->t('Important mail');
 	}
 
+	#[\Override]
 	public function getSearchQuery(string $userId): SearchQuery {
 		$query = new GlobalSearchQuery();
 		$query->addFlag(Flag::is(Flag::IMPORTANT));

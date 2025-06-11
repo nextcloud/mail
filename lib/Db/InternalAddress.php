@@ -27,6 +27,7 @@ class InternalAddress extends Entity implements JsonSerializable {
 	protected $userId;
 	protected $type;
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

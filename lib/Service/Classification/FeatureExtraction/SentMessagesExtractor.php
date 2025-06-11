@@ -30,6 +30,7 @@ class SentMessagesExtractor implements IExtractor {
 		$this->statisticsDao = $statisticsDao;
 	}
 
+	#[\Override]
 	public function prepare(Account $account,
 		array $incomingMailboxes,
 		array $outgoingMailboxes,
@@ -44,6 +45,7 @@ class SentMessagesExtractor implements IExtractor {
 		$this->messagesSent = $this->statisticsDao->getMessagesSentToGrouped($outgoingMailboxes, $senders);
 	}
 
+	#[\Override]
 	public function extract(Message $message): array {
 		$sender = $message->getFrom()->first();
 		if ($sender === null) {

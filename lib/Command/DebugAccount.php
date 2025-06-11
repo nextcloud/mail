@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class DebugAccount extends Command {
+final class DebugAccount extends Command {
 	protected const ARGUMENT_ACCOUNT_ID = 'account-id';
 	protected const OPTION_DEBUG_ON = 'on';
 	protected const OPTION_DEBUG_OFF = 'off';

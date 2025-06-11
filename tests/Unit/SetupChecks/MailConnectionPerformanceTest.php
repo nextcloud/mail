@@ -16,7 +16,6 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\ProvisioningMapper;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\SetupChecks\MailConnectionPerformance;
 use OCA\Mail\SetupChecks\MicroTime;
@@ -32,7 +31,6 @@ class MailConnectionPerformanceTest extends TestCase {
 	private ProvisioningMapper&MockObject $provisioningMapper;
 	private MailAccountMapper&MockObject $accountMapper;
 	private IMAPClientFactory&MockObject $clientFactory;
-	private FolderMapper&MockObject $folderMapper;
 	private MicroTime&MockObject $microtime;
 	private MailConnectionPerformance $check;
 
@@ -44,7 +42,6 @@ class MailConnectionPerformanceTest extends TestCase {
 		$this->provisioningMapper = $this->createMock(ProvisioningMapper::class);
 		$this->accountMapper = $this->createMock(MailAccountMapper::class);
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
-		$this->folderMapper = $this->createMock(FolderMapper::class);
 		$this->microtime = $this->createMock(MicroTime::class);
 
 		$this->check = new MailConnectionPerformance(
@@ -53,7 +50,6 @@ class MailConnectionPerformanceTest extends TestCase {
 			$this->provisioningMapper,
 			$this->accountMapper,
 			$this->clientFactory,
-			$this->folderMapper,
 			$this->microtime
 		);
 	}

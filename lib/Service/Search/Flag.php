@@ -15,7 +15,7 @@ use OCA\Mail\Db\Tag;
 /**
  * @psalm-immutable
  */
-class Flag {
+final class Flag {
 	public const ANSWERED = Horde_Imap_Client::FLAG_ANSWERED;
 	public const SEEN = Horde_Imap_Client::FLAG_SEEN;
 	public const FLAGGED = Horde_Imap_Client::FLAG_FLAGGED;

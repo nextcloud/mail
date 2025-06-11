@@ -38,6 +38,7 @@ class TransformImageSrc extends HTMLPurifier_AttrTransform {
 	 * @param HTMLPurifier_Context $context
 	 * @return array
 	 */
+	#[\Override]
 	public function transform($attr, $config, $context) {
 		if ($context->get('CurrentToken')->name !== 'img' ||
 			!isset($attr['src'])) {

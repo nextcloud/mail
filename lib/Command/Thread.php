@@ -23,7 +23,7 @@ use function file_get_contents;
 use function json_decode;
 use function memory_get_peak_usage;
 
-class Thread extends Command {
+final class Thread extends Command {
 	public const ARGUMENT_INPUT_FILE = 'thread-file';
 
 	private ThreadBuilder $builder;

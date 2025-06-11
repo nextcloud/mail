@@ -27,6 +27,7 @@ class MessageTags extends Entity implements JsonSerializable {
 		$this->addType('tagId', 'integer');
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

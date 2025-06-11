@@ -11,7 +11,7 @@ namespace OCA\Mail\Model;
 
 use JsonSerializable;
 
-class SmimeData implements JsonSerializable {
+final class SmimeData implements JsonSerializable {
 	private bool $isSigned;
 	private ?bool $signatureIsValid;
 	private bool $isEncrypted;
@@ -65,6 +65,7 @@ class SmimeData implements JsonSerializable {
 		$this->isEncrypted = $isEncrypted;
 	}
 
+	#[\Override]
 	#[\ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

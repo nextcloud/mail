@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Cache;
 
-class CachedMailbox {
+final class CachedMailbox {
 	/** @var int[]|null */
 	private ?array $uids = null;
 

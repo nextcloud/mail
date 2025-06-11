@@ -30,6 +30,7 @@ class Version2010Date20221002201527 extends SimpleMigrationStep {
 	 * @param array $options
 	 * @return ISchemaWrapper
 	 */
+	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ISchemaWrapper {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
@@ -47,6 +48,7 @@ class Version2010Date20221002201527 extends SimpleMigrationStep {
 	/**
 	 * @return void
 	 */
+	#[\Override]
 	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options) {
 		// Force a re-sync, so the values are propagated ASAP
 		$update = $this->connection->getQueryBuilder();

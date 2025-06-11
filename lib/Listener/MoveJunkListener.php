@@ -27,6 +27,7 @@ class MoveJunkListener implements IEventListener {
 	) {
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		if (!$event instanceof MessageFlaggedEvent || $event->getFlag() !== '$junk') {
 			return;

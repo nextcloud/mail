@@ -17,6 +17,7 @@ class UnreadMailWidget extends MailWidget {
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getId(): string {
 		return 'mail-unread';
 	}
@@ -24,10 +25,12 @@ class UnreadMailWidget extends MailWidget {
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getTitle(): string {
 		return $this->l10n->t('Unread mail');
 	}
 
+	#[\Override]
 	public function getSearchQuery(string $userId): SearchQuery {
 		$query = new GlobalSearchQuery();
 		$query->addFlag(Flag::not(Flag::SEEN));

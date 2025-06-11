@@ -39,6 +39,7 @@ class AttachmentDownloadResponse extends DownloadResponse {
 	 *
 	 * @return string the file contents
 	 */
+	#[\Override]
 	public function render(): string {
 		return $this->content;
 	}

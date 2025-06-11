@@ -24,6 +24,7 @@ class CopySentMessageHandler extends AHandler {
 	) {
 	}
 
+	#[\Override]
 	public function process(
 		Account $account,
 		LocalMessage $localMessage,

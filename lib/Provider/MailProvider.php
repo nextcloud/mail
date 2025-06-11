@@ -35,6 +35,7 @@ class MailProvider implements IProvider {
 	 *
 	 * @return string id of this provider (e.g. UUID or 'IMAP/SMTP' or anything else)
 	 */
+	#[\Override]
 	public function id(): string {
 		return 'mail-application';
 	}
@@ -46,6 +47,7 @@ class MailProvider implements IProvider {
 	 *
 	 * @return string label/name of this provider (e.g. Plain Old IMAP/SMTP)
 	 */
+	#[\Override]
 	public function label(): string {
 		return $this->l10n->t('Mail Application');
 	}
@@ -59,6 +61,7 @@ class MailProvider implements IProvider {
 	 *
 	 * @return bool true if any services are configure for the user
 	 */
+	#[\Override]
 	public function hasServices(string $userId): bool {
 		return (count($this->listServices($userId)) > 0);
 	}
@@ -72,6 +75,7 @@ class MailProvider implements IProvider {
 	 *
 	 * @return array<string,IService> collection of service id and object ['1' => IServiceObject]
 	 */
+	#[\Override]
 	public function listServices(string $userId): array {
 		// retrieve service(s) details from data store
 		$accounts = $this->accountService->findByUserId($userId);
@@ -96,6 +100,7 @@ class MailProvider implements IProvider {
 	 * @return IService|null returns service object or null if none found
 	 *
 	 */
+	#[\Override]
 	public function findServiceById(string $userId, string $serviceId): ?IService {
 		// determine if a valid user and service id was submitted
 		if (empty($userId) && !ctype_digit($serviceId)) {
@@ -122,6 +127,7 @@ class MailProvider implements IProvider {
 	 *
 	 * @return IService|null returns service object or null if none found
 	 */
+	#[\Override]
 	public function findServiceByAddress(string $userId, string $address): ?IService {
 		// retrieve service details from data store
 		$accounts = $this->accountService->findByUserIdAndAddress($userId, $address);
@@ -141,6 +147,7 @@ class MailProvider implements IProvider {
 	 *
 	 * @return IService fresh service object
 	 */
+	#[\Override]
 	public function initiateService(): IService {
 		return new MailService($this->container);
 	}

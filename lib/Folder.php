@@ -12,8 +12,6 @@ namespace OCA\Mail;
 use Horde_Imap_Client_Mailbox;
 
 class Folder {
-	/** @var int */
-	private $accountId;
 
 	/** @var Horde_Imap_Client_Mailbox */
 	private $mailbox;
@@ -32,12 +30,10 @@ class Folder {
 
 	private ?string $myAcls;
 
-	public function __construct(int $accountId,
-		Horde_Imap_Client_Mailbox $mailbox,
+	public function __construct(Horde_Imap_Client_Mailbox $mailbox,
 		array $attributes,
 		?string $delimiter,
 		?array $status) {
-		$this->accountId = $accountId;
 		$this->mailbox = $mailbox;
 		$this->attributes = $attributes;
 		$this->delimiter = $delimiter;

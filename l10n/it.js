@@ -194,7 +194,9 @@ OC.L10N.register(
     "Edit tags" : "Modifica etichette",
     "Move thread" : "Sposta conversazione",
     "Archive thread" : "Archivia la discussione",
+    "Archive message" : "Messaggio di archivio",
     "Delete thread" : "Elimina conversazione",
+    "Delete message" : "Elimina messaggio",
     "More actions" : "Altre azioni",
     "Back" : "Indietro",
     "Edit as new message" : "Modifica come nuovo messaggio",
@@ -398,8 +400,6 @@ OC.L10N.register(
     "Reply to sender only" : "Rispondi solo al mittente",
     "Mark as unread" : "Segna come non letto",
     "Mark as read" : "Segna come letto",
-    "Archive message" : "Messaggio di archivio",
-    "Delete message" : "Elimina messaggio",
     "Message source" : "Sorgente del messaggio",
     "Go to latest message" : "Vai all'ultimo messaggio",
     "Go to newest message" : "Vai al messaggio più recente",
@@ -551,8 +551,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Fai clic qui se non viene rediretto automaticamente entro pochi secondi.",
     "Redirect" : "Redirigi",
     "The link leads to %s" : "Il collegamento conduce a %s",
-    "Continue to %s" : "Continua su %s",
-    "Uploading attachments …" : "Caricamento allegati…",
-    "Sending …" : "Invio in corso..."
+    "Continue to %s" : "Continua su %s"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

@@ -31,6 +31,7 @@ class Version1140Date20220808203258 extends SimpleMigrationStep {
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
 	 * @param array $options
 	 */
+	#[\Override]
 	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
 		if (!method_exists($this->messageMapper, 'resetPreviewDataFlag')) {
 			$this->logger->warning('Service method missing due to in process upgrade');

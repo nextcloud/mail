@@ -14,7 +14,7 @@ use ReturnTypeWillChange;
 /**
  * @psalm-immutable
  */
-class PhishingDetectionResult implements JsonSerializable {
+final class PhishingDetectionResult implements JsonSerializable {
 
 	public const DATE_CHECK = 'Date';
 	public const LINK_CHECK = 'Link';
@@ -44,6 +44,7 @@ class PhishingDetectionResult implements JsonSerializable {
 		return $this->isPhishing;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

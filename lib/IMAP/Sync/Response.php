@@ -16,7 +16,7 @@ use ReturnTypeWillChange;
 /**
  * @psalm-template T
  */
-class Response implements JsonSerializable {
+final class Response implements JsonSerializable {
 	/** @var T[] */
 	private $newMessages;
 
@@ -73,6 +73,7 @@ class Response implements JsonSerializable {
 		return $this->stats;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [
