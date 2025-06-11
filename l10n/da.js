@@ -370,7 +370,7 @@ OC.L10N.register(
     "Valid until" : "Gyldig indtil",
     "Delete certificate" : "Slet certifikat",
     "No certificate imported yet" : "Intet certifikat importeret endnu",
-    "Import certificate" : "Importer certifikat",
+    "Import certificate" : "Importér certifikat",
     "Import S/MIME certificate" : "Importer S/MIME-certifikat",
     "PKCS #12 Certificate" : "PKCS #12 Certifikat",
     "PEM Certificate" : "PEM Certifikat",
