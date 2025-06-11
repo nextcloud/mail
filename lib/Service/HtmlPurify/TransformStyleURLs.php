@@ -33,7 +33,7 @@ class TransformStyleURLs extends HTMLPurifier_AttrTransform {
 	 */
 	#[\Override]
 	public function transform($attr, $config, $context) {
-		if (!isset($attr['style']) || strpos($attr['style'], 'url(') === false) {
+		if (!isset($attr['style']) || !str_contains($attr['style'], 'url(')) {
 			return $attr;
 		}
 
@@ -47,7 +47,7 @@ class TransformStyleURLs extends HTMLPurifier_AttrTransform {
 			}
 
 			[$name, $value] = explode(':', $cssAttribute, 2);
-			if (strpos($value, 'url(') !== false) {
+			if (str_contains($value, 'url(')) {
 				// Replace image URL
 				$value = preg_replace('/url\(("|\')?http.*\)/i',
 					'url(' . $this->urlGenerator->imagePath('mail', 'blocked-image.png') . ')',
