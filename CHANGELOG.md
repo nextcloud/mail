@@ -1,3 +1,21 @@
+## [5.1.3](https://github.com/nextcloud/mail/compare/v5.1.2...v5.1.3) (2025-06-11)
+
+
+### Bug Fixes
+
+* avoid invalid false return type ([9d575ff](https://github.com/nextcloud/mail/commit/9d575ff9a4a469620c47fe26d70dbaae0cff8b93))
+* close modal when send is clicked ([040ec3c](https://github.com/nextcloud/mail/commit/040ec3c2d74db36bec78e15373f0be74bab4448c))
+* **l10n:** Update translations from Transifex ([e95cfda](https://github.com/nextcloud/mail/commit/e95cfdab1017cf6a2596d874e5bdd7b6242d89ae))
+* **l10n:** Update translations from Transifex ([3613d40](https://github.com/nextcloud/mail/commit/3613d4080644714dfe703e846f5f8cfe92756907))
+* **l10n:** Update translations from Transifex ([9c7e605](https://github.com/nextcloud/mail/commit/9c7e605f6e35c4abb116ad6b3174828a3c543adc))
+* **l10n:** Update translations from Transifex ([cb71f52](https://github.com/nextcloud/mail/commit/cb71f526ee62f1e8637fb31842b4503e5dbe886e))
+* **l10n:** Update translations from Transifex ([07e2b8a](https://github.com/nextcloud/mail/commit/07e2b8aadd1f1d5b019700a816d0e63c7bd57808))
+* **l10n:** Update translations from Transifex ([8df9969](https://github.com/nextcloud/mail/commit/8df99698b7ac3f19d7ed459783a3524ec3c851b5))
+* **l10n:** Update translations from Transifex ([0aae062](https://github.com/nextcloud/mail/commit/0aae0627fb8c1eb6adde1f43d2e8a1691e66f689))
+* prevent invalid return type ([a2fb473](https://github.com/nextcloud/mail/commit/a2fb473ef3e82023cfae23f1cfbbc6465acc3d27))
+
+
+
 ## [5.1.2](https://github.com/nextcloud/mail/compare/v5.1.1...v5.1.2) (2025-06-03)
 
 
