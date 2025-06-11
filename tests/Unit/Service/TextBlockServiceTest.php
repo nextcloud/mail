@@ -15,7 +15,6 @@ use OCA\Mail\Db\TextBlockShare;
 use OCA\Mail\Db\TextBlockShareMapper;
 use OCA\Mail\Service\TextBlockService;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\Files\NotPermittedException;
 use OCP\IGroupManager;
 use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -119,7 +118,7 @@ class TextBlockServiceTest extends TestCase {
 		$this->textBlockMapper->expects($this->once())
 			->method('find')
 			->with($textBlockId, $userId)
-			->willReturn(null);
+			->willThrowException(new DoesNotExistException('TextBlock does not exist'));
 
 		$this->expectException(DoesNotExistException::class);
 		$this->expectExceptionMessage('TextBlock does not exist');
@@ -155,9 +154,9 @@ class TextBlockServiceTest extends TestCase {
 		$this->textBlockMapper->expects($this->once())
 			->method('find')
 			->with($textBlockId, $userId)
-			->willReturn(null);
+			->willThrowException(new \OCP\AppFramework\Db\DoesNotExistException('TextBlock does not exist'));
 
-		$this->expectException(DoesNotExistException::class);
+		$this->expectException(\OCP\AppFramework\Db\DoesNotExistException::class);
 		$this->expectExceptionMessage('TextBlock does not exist');
 
 		$this->textBlockService->delete($textBlockId, $userId);
@@ -202,8 +201,7 @@ class TextBlockServiceTest extends TestCase {
 			->with($textBlockId, $shareWith)
 			->willReturn(true);
 
-		$this->expectException(NotPermittedException::class);
-		$this->expectExceptionMessage('Share already exists');
+		$this->expectException(\OCA\Mail\Exception\ShareeAlreadyExistsException::class);
 
 		$this->textBlockService->share($textBlockId, $shareWith);
 	}
@@ -217,7 +215,7 @@ class TextBlockServiceTest extends TestCase {
 			->with($shareWith)
 			->willReturn(null);
 
-		$this->expectException(DoesNotExistException::class);
+		$this->expectException(\OCA\Mail\Exception\UserNotFoundException::class);
 		$this->expectExceptionMessage('Sharee does not exist');
 
 		$this->textBlockService->share($textBlockId, $shareWith);
@@ -232,7 +230,7 @@ class TextBlockServiceTest extends TestCase {
 			->with($groupId)
 			->willReturn(false);
 	
-		$this->expectException(DoesNotExistException::class);
+		$this->expectException(\OCA\Mail\Exception\UserNotFoundException::class);
 		$this->expectExceptionMessage('Group does not exist');
 	
 		$this->textBlockService->shareWithGroup($textBlockId, $groupId);
@@ -252,8 +250,7 @@ class TextBlockServiceTest extends TestCase {
 			->with($textBlockId, $groupId)
 			->willReturn(true);
 	
-		$this->expectException(NotPermittedException::class);
-		$this->expectExceptionMessage('Share already exists');
+		$this->expectException(\OCA\Mail\Exception\ShareeAlreadyExistsException::class);
 	
 		$this->textBlockService->shareWithGroup($textBlockId, $groupId);
 	}
@@ -336,8 +333,7 @@ class TextBlockServiceTest extends TestCase {
 		$this->textBlockMapper->expects($this->never())
 			->method('findSharedWithMe');
 
-		$this->expectException(DoesNotExistException::class);
-		$this->expectExceptionMessage('User does not exist');
+		$this->expectException(\OCA\Mail\Exception\UserNotFoundException::class);
 		$this->textBlockService->findAllSharedWithMe($userId);
 
 	}

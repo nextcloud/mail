@@ -90,7 +90,7 @@ class TextBlockSharesControllerTest extends TestCase {
 		$this->textBlockService->expects($this->once())
 			->method('find')
 			->with(1, $this->userId)
-			->willReturn(null);
+			->willThrowException(new DoesNotExistException('not found'));
 
 		$controller = new TextBlockSharesController($this->request, $this->userId, $this->textBlockService);
 
@@ -154,7 +154,7 @@ class TextBlockSharesControllerTest extends TestCase {
 		$this->textBlockService->expects($this->once())
 			->method('find')
 			->with(1, $this->userId)
-			->willReturn(null);
+			->willThrowException(new DoesNotExistException('TextBlock not found'));
 
 		$controller = new TextBlockSharesController($this->request, $this->userId, $this->textBlockService);
 
@@ -183,7 +183,7 @@ class TextBlockSharesControllerTest extends TestCase {
 		$this->textBlockService->expects($this->once())
 			->method('find')
 			->with(1, $this->userId)
-			->willReturn(null);
+			->willThrowException(new DoesNotExistException('TextBlock not found'));
 
 		$controller = new TextBlockSharesController($this->request, $this->userId, $this->textBlockService);
 
