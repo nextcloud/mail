@@ -5,7 +5,7 @@
 
 <template>
 	<div :class="{ 'text-editor--bordered': isBordered }" class="editor-wrapper">
-		<div v-if="!readOnly" ref="toolbarContainer" class="toolbar" />
+		<div ref="toolbarContainer" class="toolbar" />
 
 		<div ref="editableContainer" class="editable" />
 
@@ -344,15 +344,15 @@ export default {
 		 * @param {module:core/editor/editor~Editor} editor editor the editor instance
 		 */
 		onEditorReady(editor) {
-			if (this.readOnly) {
-				editor.enableReadOnlyMode('text-block')
-			}
 			logger.debug('TextEditor is ready', { editor })
 
 			// https://ckeditor.com/docs/ckeditor5/latest/examples/builds-custom/bottom-toolbar-editor.html
 			this.$refs.toolbarContainer.appendChild(editor.ui.view.toolbar.element)
 			this.$refs.editableContainer.appendChild(editor.ui.view.editable.element)
-
+			if (this.readOnly) {
+				editor.ui.view.toolbar.element.style.display = 'none'
+				editor.enableReadOnlyMode('text-block')
+			}
 			if (editor.ui) {
 				this.overrideDropdownPositionsToNorth(editor, editor.ui.view.toolbar)
 				this.overrideTooltipPositions(editor.ui.view.toolbar)

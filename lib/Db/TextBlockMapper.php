@@ -28,7 +28,7 @@ class TextBlockMapper extends QBMapper {
 	/**
 	 * @throws DoesNotExistException
 	 */
-	public function find(int $id, string $owner): ?TextBlock {
+	public function find(int $id, string $owner): TextBlock {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
