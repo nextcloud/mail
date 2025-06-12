@@ -27,7 +27,7 @@
 					:aria-level="2"
 					@shortkey.native="onShortcut">
 					<template v-if="!mailbox.isPriorityInbox">
-						<div v-for="(group, label) in groupEnvelopes" :key="label">
+						<div v-for="[label, group] in Object.entries(groupEnvelopes)" :key="label">
 							<SectionTitle class="section-title" :name="label" />
 							<Mailbox :account="account"
 								:mailbox="mailbox"
