@@ -30,7 +30,7 @@ import MailboxThread from '../components/MailboxThread.vue'
 import Navigation from '../components/Navigation.vue'
 import Outbox from '../components/Outbox.vue'
 import ComposerSessionIndicator from '../components/ComposerSessionIndicator.vue'
-import { mapStores, mapState } from 'pinia'
+import { mapState, mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
 
 export default {
@@ -47,20 +47,19 @@ export default {
 	data() {
 		return {
 			hasComposerSession: false,
-			accounts: null,
 		}
 	},
 	computed: {
 		...mapStores(useMainStore),
 		...mapState(useMainStore, ['composerSessionId']),
+		accounts() {
+			return this.mainStore.getAccounts.filter((a) => !a.isUnified)
+		},
 		activeAccount() {
 			return this.mainStore.getAccount(this.activeMailbox?.accountId)
 		},
 		activeMailbox() {
 			return this.mainStore.getMailbox(this.$route.params.mailboxId)
-		},
-		menu() {
-			return this.buildMenu()
 		},
 	},
 	watch: {
@@ -83,12 +82,12 @@ export default {
 		},
 	},
 	async beforeMount() {
-		const accounts = this.mainStore.getAccounts.filter((a) => !a.isUnified)
-		this.accounts = await Promise.all(
-			 accounts.map(async (account) => {
-				return { ...account, connectionStatus: await testAccountConnection(account.id) }
-			}))
-
+		for (const account of this.accounts) {
+			await this.mainStore.patchAccountMutation({
+				account,
+				data: { connectionStatus: await testAccountConnection(account.accountId) },
+			})
+		}
 	},
 	created() {
 		const accounts = this.mainStore.getAccounts
