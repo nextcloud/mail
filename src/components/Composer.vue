@@ -23,8 +23,7 @@
 					:aria-label-combobox="t('mail', 'Select account')"
 					:clear-on-select="false"
 					:append-to-body="false"
-					:selectable="(option)=> {
-						return option.selectable}"
+					:selectable="(option)=>option.selectable"
 					@option:selected="onAliasChange">
 					<template #option="option">
 						{{ formatAliases(option) }}
@@ -948,7 +947,7 @@ export default {
 				this.wantsSmimeSign = this.smimeSignAliases.indexOf(aliasEmailAddress) !== -1
 			},
 			immediate: true,
-		}
+		},
 	},
 	async beforeMount() {
 		this.setAlias()
