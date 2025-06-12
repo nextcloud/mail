@@ -19,6 +19,7 @@ module.exports = {
 		__webpack_nonce__: true,
 	},
 	rules: {
+		'comma-dangle': 'error',
 		'jsdoc/require-jsdoc': 'off',
 		'perfectionist/sort-enums': 'error',
 		'perfectionist/sort-interfaces': 'error',
