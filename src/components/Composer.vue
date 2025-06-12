@@ -1470,8 +1470,8 @@ export default {
 		 * Empty if label and email are the same or
 		 * if the suggestion is a group.
 		 *
-		 * @param {{email: string, label: string}} option
-		 * @return string
+		 * @param {{email: string, label: string}} option object
+		 * @return {string}
 		 */
 		getSubnameForRecipient(option) {
 			if (option.source && option.source === 'groups') {
