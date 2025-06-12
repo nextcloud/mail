@@ -59,9 +59,6 @@ export default {
 		activeMailbox() {
 			return this.mainStore.getMailbox(this.$route.params.mailboxId)
 		},
-		menu() {
-			return this.buildMenu()
-		},
 	},
 	watch: {
 		async composerSessionId(id) {
