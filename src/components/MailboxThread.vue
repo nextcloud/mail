@@ -31,7 +31,10 @@
 						:mailbox="mailbox"
 						:search-query="query"
 						:bus="bus"
-						:open-first="mailbox.specialRole !== 'drafts'" />
+						:open-first="mailbox.specialRole !== 'drafts'"
+						:group-envelopes="groupEnvelopes"
+						:initial-page-size="messagesOrderBydate"
+						:collapsible="true" />
 					<template v-else>
 						<div v-show="hasFollowUpEnvelopes"
 							class="app-content-list-item">
@@ -191,6 +194,7 @@ export default {
 	},
 	computed: {
 		...mapStores(useMainStore),
+
 		layoutMode() {
 			return this.mainStore.getPreference('layout-mode', 'vertical-split')
 		},
@@ -232,7 +236,12 @@ export default {
 			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery).length > 0
 		},
 		hasImportantEnvelopes() {
-			return this.mainStore.getEnvelopes(this.unifiedInbox.databaseId, this.appendToSearch(priorityImportantQuery)).length > 0
+			const map = this.mainStore.getEnvelopes(
+				this.unifiedInbox.databaseId,
+				this.appendToSearch(this.priorityImportantQuery),
+			)
+			const envelopes = Array.isArray(map) ? map : Array.from(map?.values() || [])
+			return envelopes.length > 0
 		},
 		/**
 		 * @return {boolean}
@@ -242,9 +251,9 @@ export default {
 				return false
 			}
 
-			return this.mainStore
-				.getEnvelopes(FOLLOW_UP_MAILBOX_ID, this.followUpQuery)
-				.length > 0
+			const map = this.mainStore.getEnvelopes(FOLLOW_UP_MAILBOX_ID, this.followUpQuery)
+			const envelopes = Array.isArray(map) ? map : Array.from(map?.values() || [])
+			return envelopes.length > 0
 		},
 		importantMessagesInitialPageSize() {
 			if (window.innerHeight > 1024) {
@@ -254,6 +263,12 @@ export default {
 				return 5
 			}
 			return 3
+		},
+		/**
+		 * @return {number}
+		 */
+		messagesOrderBydate() {
+			return 10
 		},
 		/**
 		 * @return {number}
@@ -276,6 +291,10 @@ export default {
 		},
 		isThreadShown() {
 			return !!this.$route.params.threadId
+		},
+		groupEnvelopes() {
+			const allEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
+			return this.groupEnvelopesByDate(allEnvelopes, this.mainStore.syncTimestamp)
 		},
 	},
 	watch: {
@@ -313,6 +332,47 @@ export default {
 		clearTimeout(this.startMailboxTimer)
 	},
 	methods: {
+		groupEnvelopesByDate(envelopes, syncTimestamp) {
+			const now = new Date(syncTimestamp)
+			const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000)
+			const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+			const startOfYesterday = new Date(startOfToday)
+			startOfYesterday.setDate(startOfYesterday.getDate() - 1)
+			const startOfLastWeek = new Date(now)
+			startOfLastWeek.setDate(startOfLastWeek.getDate() - 7)
+			const startOfLastMonth = new Date(now)
+			startOfLastMonth.setMonth(startOfLastMonth.getMonth() - 1)
+
+			const groups = {
+				lastHour: [],
+				today: [],
+				yesterday: [],
+				lastWeek: [],
+				lastMonth: [],
+				older: [],
+			}
+
+			for (const envelope of envelopes) {
+				const date = new Date(envelope.dateInt * 1000)
+				if (date >= oneHourAgo) {
+					groups.lastHour.push(envelope)
+				} else if (date >= startOfToday) {
+					groups.today.push(envelope)
+				} else if (date >= startOfYesterday && date < startOfToday) {
+					groups.yesterday.push(envelope)
+				} else if (date >= startOfLastWeek) {
+					groups.lastWeek.push(envelope)
+				} else if (date >= startOfLastMonth) {
+					groups.lastMonth.push(envelope)
+				} else {
+					groups.older.push(envelope)
+				}
+			}
+
+			return Object.fromEntries(
+				Object.entries(groups).filter(([_, list]) => list.length > 0),
+			)
+		},
 		async fetchEnvelopes() {
 			const existingEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery || '')
 			if (!existingEnvelopes.length) {

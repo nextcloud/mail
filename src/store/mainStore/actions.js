@@ -189,6 +189,9 @@ function transformMailboxName(account, mailbox) {
 
 export default function mainStoreActions() {
 	return {
+		updateSyncTimestamp() {
+			this.syncTimestamp = Date.now()
+		},
 		savePreference({
 			key,
 			value,
