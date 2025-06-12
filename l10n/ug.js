@@ -744,8 +744,6 @@ OC.L10N.register(
     "Redirect" : "قايتا نىشانلاش",
     "The link leads to %s" : "ئۇلىنىش% s نى كەلتۈرۈپ چىقىرىدۇ",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ئەگەر ئۇ بەتنى زىيارەت قىلىشنى خالىمىسىڭىز ، <a href = \"% s\"> خەت </a> گە قايتسىڭىز بولىدۇ.",
-    "Continue to %s" : "داۋاملىق% s",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "مىكروسوفت ئىشلەتكۈچىلەرنىڭ ئېلېكترونلۇق خەتلىرىنى IMAP ئارقىلىق زىيارەت قىلالايدۇ. بىخەتەرلىك سەۋەبىدىن بۇ زىيارەت پەقەت OAuth 2.0 ئۇلىنىشى بىلەنلا مۇمكىن.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Microsoft Azure ئاكتىپ مۇندەرىجە ئېغىزىدا يېڭى ئەپ تىزىملىتىشىڭىز كېرەك. URL {url} نى قايتا URI غا قوشۇڭ."
+    "Continue to %s" : "داۋاملىق% s"
 },
 "nplurals=2; plural=(n != 1);");

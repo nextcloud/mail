@@ -796,8 +796,6 @@ OC.L10N.register(
     "Redirect" : "重定向",
     "The link leads to %s" : "链接指向 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "如果不想访问此页面，您可以返回<a href=\"%s\">邮件</a>。",
-    "Continue to %s" : "继续 %s",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft 允许用户通过 IMAP 访问电子邮件。出于安全原因，该访问只能通过 OAuth 2.0 连接进行。",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "您必须在 Microsoft Azure Active Directory 入口中注册一个新的应用程序，然后添加 URL {url} 作为重定向 URI。"
+    "Continue to %s" : "继续 %s"
 },
 "nplurals=1; plural=0;");

@@ -641,8 +641,6 @@ OC.L10N.register(
     "Redirect" : "넘겨주기",
     "The link leads to %s" : "이 링크가 %s을(를) 향함",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "해당 페이지를 방문하지 않으려면 <a href=\"%s\">메일</a>로 돌아갈 수 있습니다.",
-    "Continue to %s" : "%s(으)로 이동",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "사용자는 IMAP을 통해 Microsoft 계정에 접근할 수 있습니다. 보안을 위해 OAuth 2.0 연결을 사용하는 Microsoft 계정만 허용합니다.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "새 앱을 Microsoft Azure Active Directory 포털에 등록해야 합니다. URL {url}을(를) 리다이렉트 URI로 추가하십시오."
+    "Continue to %s" : "%s(으)로 이동"
 },
 "nplurals=1; plural=0;");

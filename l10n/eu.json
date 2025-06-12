@@ -758,8 +758,6 @@
     "Redirect" : "Birbideratu",
     "The link leads to %s" : "Estekak hona bideratzen du: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Orrialde hori bisitatu nahi ez baduzu, itzul dezakezu <a href=\"%s\">Mail </a>-ra.",
-    "Continue to %s" : "Jarraitu hona: %s",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft-ek erabiltzaileei euren posta elektronikora sartzeko baimena ematen die IMAP bidez. Segurtasun arrazoiengatik, sarbide hori OAuth 2.0 konexio batekin bakarrik da posible.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Aplikazio berri bat erregistratu behar duzu Microsoft Azure Active Directory atarian. Gehitu {url} URLa birbideratzeko URI gisa."
+    "Continue to %s" : "Jarraitu hona: %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

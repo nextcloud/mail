@@ -784,8 +784,6 @@
     "Redirect" : "Presmerovať",
     "The link leads to %s" : "Odkaz smeruje na %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ak si neprajete navštíviť stránku, možete sa vátiť na <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Pokračovať na %s",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft umožňuje užívateľom prístup k ich e-mailom prostredníctvom protokolu IMAP. Z bezpečnostných dôvodov je tento prístup možný iba prostredníctvom pripojenia OAuth 2.0.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Musíte zaregistrovať novú aplikáciu v portáli Microsoft Azure Active Directory. Pridajte URL {url} ako redirect URI."
+    "Continue to %s" : "Pokračovať na %s"
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);"
 }

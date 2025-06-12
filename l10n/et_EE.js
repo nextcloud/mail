@@ -741,8 +741,6 @@ OC.L10N.register(
     "Redirect" : "Suunamine",
     "The link leads to %s" : "Link viitab siia: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Kui sa ei taha seda lehte avada, siis mine tagasi <a href=\"%s\">E-postirakenduse</a> lehele.",
-    "Continue to %s" : "Jätka siia: %s",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft libab kasutajatel lugeda kirju IMAP-i abil. Turvakaalutlustel toimib see vaid OAuth 2.0 liidestusega.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Sa pead Microsoft Azure Active Directory portaalis registreerima uue rakenduse. Korrektse suunamisaadressina kasuta: {url}"
+    "Continue to %s" : "Jätka siia: %s"
 },
 "nplurals=2; plural=(n != 1);");

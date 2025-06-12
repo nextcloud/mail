@@ -590,8 +590,6 @@ OC.L10N.register(
     "Redirect" : "Przekieruj",
     "The link leads to %s" : "Link prowadzi do %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Jeśli nie chcesz odwiedzić tej strony, możesz powrócić do <a href=\"%s\">Poczty</a>.",
-    "Continue to %s" : "Kontynuuj do %s",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Firma Microsoft umożliwia użytkownikom dostęp do poczty e-mail za pośrednictwem protokołu IMAP. Ze względów bezpieczeństwa dostęp ten jest możliwy tylko przy połączeniu OAuth 2.0.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Musisz zarejestrować nową aplikację w portalu Microsoft Azure Active Directory. Dodaj adres URL {url} jako URI przekierowania."
+    "Continue to %s" : "Kontynuuj do %s"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");
