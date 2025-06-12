@@ -794,8 +794,6 @@
     "Redirect" : "重新導向",
     "The link leads to %s" : "該連結導向至 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "若不想造訪該頁，您可以回到<a href=\"%s\">Mail</a>。",
-    "Continue to %s" : "前往 %s",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft 允許用戶通過 IMAP 存取電郵。出於安全原因，此存取只能通過 OAuth 2.0 連接進行。",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "您必須在 Microsoft Azure Active Directory 中註冊一個新應用程式。然後添加 URL {url} 作為重定向 URI。"
+    "Continue to %s" : "前往 %s"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

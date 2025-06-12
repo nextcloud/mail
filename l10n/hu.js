@@ -643,8 +643,6 @@ OC.L10N.register(
     "Redirect" : "Átirányítás",
     "The link leads to %s" : "A hivatkozás ide mutat: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarja megnyitni azt az oldalt, akkor térjen vissza a <a href=\"%s\">Levelezéshez</a>.",
-    "Continue to %s" : "Folytatás ide: %s",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "A Microsoft lehetővé teszi, hogy a felhasználók IMAP-on keresztül érjék el a leveleiket. Biztonsági okokból ez a hozzáférés csak OAuth 2.0-s kapcsolaton lehetséges.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Regisztrálnia kell egy új alkalmazást a Microsoft Azure Active Directory portálon. Átirányítási URI-nak a következő webcímet adja meg: {url}"
+    "Continue to %s" : "Folytatás ide: %s"
 },
 "nplurals=2; plural=(n != 1);");

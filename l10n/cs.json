@@ -794,8 +794,6 @@
     "Redirect" : "Přesměrovat",
     "The link leads to %s" : "Odkaz vede na %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Pokud nechcete tuto stránku navštívit, můžete se vrátit do <a href=\"%s\">e-mailu</a>.",
-    "Continue to %s" : "Pokračovat na %s",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft umožňuje uživatelům přistupovat k jejich e-mailům prostřednictvím protokolu IMAP. Z důvodů zabezpečení je tento přístup možný pouze připojením ověřeným přes OAuth 2.0.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Na portálu Microsoft Azure Active Directory je třeba zaregistrovat novu aplikaci. Přidejte URL {url} jako URI přeměrování."
+    "Continue to %s" : "Pokračovat na %s"
 },"pluralForm" :"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;"
 }

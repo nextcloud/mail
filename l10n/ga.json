@@ -794,8 +794,6 @@
     "Redirect" : "Atreorú",
     "The link leads to %s" : "Téann an nasc chuig %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Mura dteastaíonn uait cuairt a thabhairt ar an leathanach sin, is féidir leat filleadh ar <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Lean ar aghaidh go %s",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Ligeann Microsoft d'úsáideoirí rochtain a fháil ar a ríomhphost trí IMAP. Ar chúiseanna slándála ní féidir an rochtain seo a fháil ach amháin le nasc OAuth 2.0.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Caithfidh tú aip nua a chlárú ar thairseach Eolaire Gníomhach Microsoft Azure. Cuir an URL {url} leis mar URI atreoraithe."
+    "Continue to %s" : "Lean ar aghaidh go %s"
 },"pluralForm" :"nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);"
 }

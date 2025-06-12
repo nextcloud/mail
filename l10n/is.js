@@ -749,7 +749,6 @@ OC.L10N.register(
     "Redirect" : "Endurbeina",
     "The link leads to %s" : "Tengillinn leiðir til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ef þú vilt ekki fara á þá síðu, geturðu farið til baka í <a href=\"%s\">póstforritið</a>.",
-    "Continue to %s" : "Halda áfram í %s",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft gerir notendum sínum kleift að nálgast tölvupóstinn sinn í gegnum IMAP. Af öryggisástæðum er þessi aðgangur aðeins mögulegur í gegnum OAuth 2.0 tengingu."
+    "Continue to %s" : "Halda áfram í %s"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

@@ -794,8 +794,6 @@
     "Redirect" : "Weiterleiten",
     "The link leads to %s" : "Der Link führt nach %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Wenn Sie diese Seite nicht besuchen möchten, können Sie zu <a href=\"%s\">Mail</a> zurückkehren.",
-    "Continue to %s" : "Weiter nach %s",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft ermöglicht Benutzern den Zugriff auf ihre E-Mails über IMAP. Aus Sicherheitsgründen ist dieser Zugriff nur mit einer OAuth 2.0-Verbindung möglich.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Sie müssen eine neue App im Microsoft Azure Active Directory-Portal registrieren. Fügen Sie die URL {url} als Weiterleitungs-URI hinzu."
+    "Continue to %s" : "Weiter nach %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

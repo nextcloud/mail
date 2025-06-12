@@ -783,8 +783,6 @@ OC.L10N.register(
     "Redirect" : "Yönlendir",
     "The link leads to %s" : "Bağlantı %s adresine gidiyor",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Bu sayfayı ziyaret etmek istemiyorsanız, <a href=\"%s\">E-posta</a> uygulamasına geri dönebilirsiniz.",
-    "Continue to %s" : "%s sayfasına ilerle",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft, kullanıcıların e-postalarına IMAP üzerinden erişmesine izin verir. Güvenlik nedeniyle bu erişim yalnızca OAuth 2.0 bağlantısıyla yapılabilir.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Microsoft Azure Active Directory yönetim sitesinden yeni bir uygulama kaydetmeniz gerekir. {url} adresini yönlendirme URI değeri olarak ekleyin."
+    "Continue to %s" : "%s sayfasına ilerle"
 },
 "nplurals=2; plural=(n > 1);");

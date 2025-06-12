@@ -610,8 +610,6 @@ OC.L10N.register(
     "Redirect" : "تغییر مسیر",
     "The link leads to %s" : "پیوند منجر به%s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "ادامه دهید%s",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI."
+    "Continue to %s" : "ادامه دهید%s"
 },
 "nplurals=2; plural=(n > 1);");

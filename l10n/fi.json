@@ -492,8 +492,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Klikkaa jos sinua ei uudelleenohjata automaattisesti muutamaan sekuntiin.",
     "Redirect" : "Uudelleenohjaus",
     "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
-    "Continue to %s" : "Jatka sivulle %s",
-    "Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection." : "Microsoft sallii käyttäjien yhdistää sähköpostiin IMAP:ia käyttäen. Tietoturvasyistä tällainen käyttö on mahdollista vain OAuth 2.0 -yhteydellä.",
-    "You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI." : "Rekisteröi uusi sovellus Microsoft Azure Active Directory -portaalissa. Lisää URL-osoite {url} uudelleenohjauksen URI:ksi."
+    "Continue to %s" : "Jatka sivulle %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
