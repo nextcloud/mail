@@ -19,7 +19,12 @@
 			</div>
 
 			<div class="filter-tests">
-				<h6>{{ t('mail', 'Tests') }}</h6>
+				<h6 v-if="clone.operator === 'allof'">
+					{{ t('mail', 'If all the conditions are met') }}
+				</h6>
+				<h6 v-else>
+					{{ t('mail', 'If any of the conditions are met') }}
+				</h6>
 
 				<div class="help-text">
 					<p>
@@ -43,14 +48,14 @@
 					@delete-test="deleteTest" />
 				<NcButton class="app-settings-button"
 					type="secondary"
-					:aria-label="t('mail', 'New test')"
+					:aria-label="t('mail', 'Add condition')"
 					@click="createTest">
-					{{ t('mail', 'New test') }}
+					{{ t('mail', 'Add condition') }}
 				</NcButton>
 			</div>
 
 			<div class="filter-actions">
-				<h6>{{ t('mail', 'Actions') }}</h6>
+				<h6>{{ t('mail', 'Then perform these actions') }}</h6>
 
 				<div class="help-text">
 					<p>
@@ -75,9 +80,9 @@
 					@delete-action="deleteAction" />
 				<NcButton class="app-settings-button"
 					type="secondary"
-					:aria-label="t('mail', 'New action')"
+					:aria-label="t('mail', 'Add action')"
 					@click="createAction">
-					{{ t('mail', 'New action') }}
+					{{ t('mail', 'Add action') }}
 				</NcButton>
 			</div>
 
@@ -177,11 +182,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .modal__content {
-	margin: 50px;
-}
-
-.modal__content h2 {
-	text-align: center;
+	margin: 25px;
 }
 
 .filter-name, .filter-operator, .filter-tests, .filter-actions {

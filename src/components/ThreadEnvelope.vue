@@ -196,6 +196,7 @@
 							@open-event-modal="onOpenEventModal"
 							@open-task-modal="onOpenTaskModal"
 							@open-translation-modal="onOpenTranslationModal"
+							@open-mail-filter-from-envelope="showMailFilterFromEnvelope = true"
 							@print="onPrint" />
 					</NcActions>
 					<NcModal v-if="showSourceModal" class="source-modal" @close="onCloseSourceModal">
@@ -225,6 +226,10 @@
 						:rich-parameters="{}"
 						:message="plainTextBody"
 						@close="onCloseTranslationModal" />
+					<MailFilterFromEnvelope v-if="showMailFilterFromEnvelope"
+						:account="account"
+						:envelope="envelope"
+						@close="showMailFilterFromEnvelope = false" />
 				</template>
 			</div>
 		</div>
@@ -318,6 +323,7 @@ import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import { Text, toPlain } from '../util/text.js'
 import useMainStore from '../store/mainStore.js'
 import { mapStores } from 'pinia'
+import MailFilterFromEnvelope from './mailFilter/MailFilterFromEnvelope.vue'
 
 // Ternary loading state
 const Loading = Object.seal({
@@ -329,6 +335,7 @@ const Loading = Object.seal({
 export default {
 	name: 'ThreadEnvelope',
 	components: {
+		MailFilterFromEnvelope,
 		NcModal,
 		EventModal,
 		TaskModal,
@@ -420,6 +427,7 @@ export default {
 			isInternal: true,
 			enabledSmartReply: loadState('mail', 'llm_freeprompt_available', false),
 			loadingBodyTimeout: undefined,
+			showMailFilterFromEnvelope: false,
 		}
 	},
 	computed: {

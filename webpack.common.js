@@ -75,6 +75,11 @@ module.exports = async () => ({
 				loader: 'vue-loader',
 			},
 			{
+				test: /\.tsx?$/,
+				use: 'ts-loader',
+				exclude: /node_modules/,
+			},
+			{
 				test: /\.js$/,
 				loader: 'babel-loader',
 				exclude: BabelLoaderExcludeNodeModulesExcept([
@@ -124,7 +129,7 @@ module.exports = async () => ({
 	},
 	plugins,
 	resolve: {
-		extensions: ['*', '.js', '.vue', '.json'],
+		extensions: ['*', '.tsx', '.ts', '.js', '.vue', '.json'],
 		symlinks: false,
 	},
 })
