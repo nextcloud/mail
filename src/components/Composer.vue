@@ -23,8 +23,7 @@
 					:aria-label-combobox="t('mail', 'Select account')"
 					:clear-on-select="false"
 					:append-to-body="false"
-					:selectable="(option)=> {
-						return option.selectable}"
+					:selectable="(option)=>option.selectable"
 					@option:selected="onAliasChange">
 					<template #option="option">
 						{{ formatAliases(option) }}
