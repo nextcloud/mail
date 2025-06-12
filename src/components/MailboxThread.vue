@@ -34,7 +34,7 @@
 								:search-query="query"
 								:bus="bus"
 								:open-first="mailbox.specialRole !== 'drafts'"
-								:filter-envelopes="group"
+								:custom-envelopes="group"
 								:paginate="'manual'"
 								:initial-page-size="messagesOrderBydate"
 								:collapsible="true" />

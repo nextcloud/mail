@@ -91,6 +91,10 @@ export default {
 			required: false,
 			default: false,
 		},
+		customEnvelopes: {
+			type: Array,
+			required: false,
+		},
 	},
 	data() {
 		return {
