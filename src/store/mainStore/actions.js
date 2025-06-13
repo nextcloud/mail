@@ -109,6 +109,7 @@ import * as SmimeCertificateService from '../../service/SmimeCertificateService.
 import useOutboxStore from '../outboxStore.js'
 import * as FollowUpService from '../../service/FollowUpService.js'
 import { addInternalAddress, removeInternalAddress } from '../../service/InternalAddressService.js'
+import { createTextBlock, fetchMyTextBlocks, fetchSharedTextBlocks, deleteTextBlock, updateTextBlock } from '../../service/TextBlockService.js'
 
 import escapeRegExp from 'lodash/fp/escapeRegExp.js'
 import uniq from 'lodash/fp/uniq.js'
@@ -1780,6 +1781,26 @@ export default function mainStoreActions() {
 				await this.clearFollowUpReminder({ envelope })
 			}
 		},
+		async fetchMyTextBlocks() {
+			const textBlocks = await fetchMyTextBlocks()
+			this.setMyTextBlocks(textBlocks)
+		},
+		async fetchSharedTextBlocks() {
+			const textBlocks = await fetchSharedTextBlocks()
+			this.setSharedTextBlocks(textBlocks)
+		},
+		async createTextBlock({ title, content }) {
+			const textBlock = await createTextBlock(title, content)
+			this.addTextBlock(textBlock)
+		},
+		async deleteTextBlock({ id }) {
+			await deleteTextBlock(id)
+			this.deleteTextBlockLocally(id)
+		},
+		async patchTextBlock(textBlock) {
+			const result = await updateTextBlock(textBlock)
+			this.patchTextBlockLocally(result)
+		},
 		sortAccounts(accounts) {
 			accounts.sort((a1, a2) => a1.order - a2.order)
 			return accounts
@@ -2304,6 +2325,27 @@ export default function mainStoreActions() {
 		showSettingsForAccountMutation(accountId) {
 			this.showAccountSettings = accountId
 		},
+		setMyTextBlocks(textBlocks) {
+			this.myTextBlocks = textBlocks
+			this.textBlocksFetched = true
+		},
+		setSharedTextBlocks(textBlocks) {
+			this.sharedTextBlocks = textBlocks
+			this.textBlocksFetched = true
+		},
+		addTextBlock(textBlock) {
+			this.myTextBlocks.push(textBlock)
+		},
+		deleteTextBlockLocally(id) {
+			const index = this.myTextBlocks.findIndex(textBlock => textBlock.id === id)
+			this.myTextBlocks.splice(index, 1)
+		},
+		patchTextBlockLocally(textBlock) {
+			const index = this.myTextBlocks.findIndex(s => s.id === textBlock.id)
+			if (index !== -1) {
+				Vue.set(this.myTextBlocks, index, textBlock)
+			}
+		},
 		getPreference(key, def) {
 			return defaultTo(def, this.preferences[key])
 		},
@@ -2387,6 +2429,15 @@ export default function mainStoreActions() {
 		},
 		showSettingsForAccount(accountId) {
 			return this.showAccountSettings === accountId
+		},
+		getMyTextBlocks() {
+			return this.myTextBlocks
+		},
+		getSharedTextBlocks() {
+			return this.sharedTextBlocks
+		},
+		areTextBlocksFetched() {
+			return this.textBlocksFetched
 		},
 	}
 }
