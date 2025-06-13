@@ -34,14 +34,8 @@ class SyncServiceTest extends TestCase {
 	/** @var ImapToDbSynchronizer */
 	private $synchronizer;
 
-	/** @var FilterStringParser */
-	private $filterStringParser;
-
 	/** @var MessageMapper */
 	private $messageMapper;
-
-	/** @var PreviewEnhancer */
-	private $previewEnhancer;
 
 	/** @var LoggerInterface */
 	private $loggerInterface;
@@ -58,18 +52,18 @@ class SyncServiceTest extends TestCase {
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$this->synchronizer = $this->createMock(ImapToDbSynchronizer::class);
-		$this->filterStringParser = $this->createMock(FilterStringParser::class);
+		$filterStringParser = $this->createMock(FilterStringParser::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
-		$this->previewEnhancer = $this->createMock(PreviewEnhancer::class);
+		$previewEnhancer = $this->createMock(PreviewEnhancer::class);
 		$this->loggerInterface = $this->createMock(LoggerInterface::class);
 		$this->mailboxSync = $this->createMock(MailboxSync::class);
 
 		$this->syncService = new SyncService(
 			$this->clientFactory,
 			$this->synchronizer,
-			$this->filterStringParser,
+			$filterStringParser,
 			$this->messageMapper,
-			$this->previewEnhancer,
+			$previewEnhancer,
 			$this->loggerInterface,
 			$this->mailboxSync
 		);

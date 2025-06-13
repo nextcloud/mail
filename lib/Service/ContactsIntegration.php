@@ -159,7 +159,7 @@ class ContactsIntegration {
 	 */
 	private function getPhotoUri(string $raw) {
 		$uriPrefix = 'VALUE=uri:';
-		if (substr($raw, 0, strlen($uriPrefix)) === $uriPrefix) {
+		if (str_starts_with($raw, $uriPrefix)) {
 			return substr($raw, strpos($raw, 'http'));
 		} else {
 			// ignore contacts >= 1.0 binary images

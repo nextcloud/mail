@@ -20,7 +20,6 @@ return RectorConfig::configure()
 	])
 	->withPreparedSets(
 		phpunitCodeQuality: true,
-		phpunit: true,
 	)
 	->withPhpSets(
 		php73: true,

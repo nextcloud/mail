@@ -57,9 +57,9 @@ class ProxyController extends Controller {
 	public function redirect(string $src): TemplateResponse {
 		$authorizedRedirect = false;
 
-		if (strpos($src, 'http://') !== 0
-			&& strpos($src, 'https://') !== 0
-			&& strpos($src, 'ftp://') !== 0) {
+		if (!str_starts_with($src, 'http://')
+			&& !str_starts_with($src, 'https://')
+			&& !str_starts_with($src, 'ftp://')) {
 			throw new Exception('URL is not valid.', 1);
 		}
 

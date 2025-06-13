@@ -12,7 +12,6 @@ namespace OCA\Mail\IMAP\Threading;
 use JsonSerializable;
 use ReturnTypeWillChange;
 use function str_replace;
-use function strpos;
 
 class Message implements JsonSerializable {
 	/** @var string */
@@ -36,7 +35,7 @@ class Message implements JsonSerializable {
 	}
 
 	public function hasReSubject(): bool {
-		return strpos($this->getSubject(), 'Re:') === 0;
+		return str_starts_with($this->getSubject(), 'Re:');
 	}
 
 	public function getSubject(): string {

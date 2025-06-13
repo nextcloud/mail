@@ -61,7 +61,7 @@ class Provider implements IProvider {
 
 	#[\Override]
 	public function getOrder(string $route, array $routeParameters): int {
-		if (strpos($route, Application::APP_ID . '.') === 0) {
+		if (str_starts_with($route, Application::APP_ID . '.')) {
 			// Active app, prefer Mail results
 			return -1;
 		}
