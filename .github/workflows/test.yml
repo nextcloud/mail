@@ -101,7 +101,7 @@ jobs:
                   - 993:993
                   - 4190:4190
           mysql-service:
-              image: ghcr.io/nextcloud/continuous-integration-mariadb-10.11:latest
+              image: ghcr.io/nextcloud/continuous-integration-mariadb-11.4:latest
               env:
                   MYSQL_ROOT_PASSWORD: my-secret-pw
                   MYSQL_DATABASE: nextcloud
