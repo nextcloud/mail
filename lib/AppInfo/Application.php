@@ -168,6 +168,15 @@ final class Application extends App implements IBootstrap {
 		Horde_Translation::setHandler('Horde_Imap_Client', new HordeTranslationHandler());
 		Horde_Translation::setHandler('Horde_Mime', new HordeTranslationHandler());
 		Horde_Translation::setHandler('Horde_Smtp', new HordeTranslationHandler());
+
+		// Added in version 4.4.0
+		if (class_exists('OCA\\ContextChat\\Event\\ContentProviderRegisterEvent')) {
+			$contextChatProvider = \OCA\Mail\ContextChat\ContextChatProvider::class;
+
+			$context->registerEventListener(\OCA\ContextChat\Event\ContentProviderRegisterEvent::class, ContextChatProvider::class);
+			$context->registerEventListener(NewMessagesSynchronized::class, ContextChatProvider::class);
+			$context->registerEventListener(MessageDeletedEvent::class, ContextChatProvider::class);
+		}
 	}
 
 	#[\Override]
