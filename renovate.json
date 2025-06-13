@@ -139,7 +139,8 @@
 			"description": "Only automerge packages that follow semver",
 			"matchPackageNames": [
 				"@nextcloud/vue",
-				"friendsofphp/php-cs-fixer"
+				"friendsofphp/php-cs-fixer",
+				"php-cs-fixer/shim"
 			],
 			"automerge": false,
 			"labels": [
