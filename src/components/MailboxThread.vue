@@ -466,6 +466,7 @@ export default {
 }
 .envelope-list {
 	overflow-y: auto;
+	flex: 1 1 auto;
 }
 .information-icon {
 	opacity: .7;
