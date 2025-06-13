@@ -84,7 +84,7 @@ class TextBlockController extends Controller {
 			return JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
 		}
 
-		$this->textBlockService->update($id, $this->uid, $title, $content);
+		$textBlock = $this->textBlockService->update($textBlock, $this->uid, $title, $content);
 
 		return JsonResponse::success($textBlock, Http::STATUS_OK);
 	}

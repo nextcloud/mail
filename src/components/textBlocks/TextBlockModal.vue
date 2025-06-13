@@ -63,5 +63,5 @@ export default {
 .insert-button {
 	justify-self: end;
 	margin-bottom: calc( var(--default-grid-baseline) * 2) ;
-	}
+}
 </style>

@@ -70,8 +70,7 @@ class TextBlockService {
 	/**
 	 * @throws DoesNotExistException
 	 */
-	public function update(int $textBlockId, string $userId, string $title, string $content): TextBlock {
-		$textBlock = $this->textBlockMapper->find($textBlockId, $userId);
+	public function update(TextBlock $textBlock, string $userId, string $title, string $content): TextBlock {
 		$textBlock->setContent($content);
 		$textBlock->setTitle($title);
 		$html = new Html2Text($content, ['do_links' => 'none','alt_image' => 'hide']);

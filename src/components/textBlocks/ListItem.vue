@@ -118,6 +118,7 @@ import debounce from 'lodash/fp/debounce.js'
 import { ShareType } from '@nextcloud/sharing'
 import { generateOcsUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'
+import logger from '../../logger.js'
 
 import axios from '@nextcloud/axios'
 
@@ -159,7 +160,7 @@ export default {
 	data() {
 		return {
 			shares: [],
-			localTextBlock: Object.assign({}, this.textBlock),
+			localTextBlock: JSON.parse(JSON.stringify(this.textBlock)),
 			editModalOpen: false,
 			loading: false,
 			saveLoading: false,
@@ -246,7 +247,7 @@ export default {
 					},
 				})
 			} catch (error) {
-				console.error('Error fetching suggestions', error)
+				logger.error('Error fetching suggestions', error)
 				return
 			}
 			const data = request.data.ocs.data
@@ -283,7 +284,7 @@ export default {
 			})
 
 			this.loading = false
-			console.info('suggestions', this.suggestions)
+			logger.info('suggestions', this.suggestions)
 		},
 		/**
 		 * Get the icon based on the share type
@@ -346,17 +347,18 @@ export default {
 		},
 		closeTextBlockDialog() {
 			this.editModalOpen = false
-			this.localTextBlock = Object.assign({}, this.textBlock)
+			this.localTextBlock = JSON.parse(JSON.stringify(this.textBlock))
 		},
-		newTextBlock() {
+		async newTextBlock() {
 			this.saveLoading = true
-			this.mainStore.patchTextBlock(this.localTextBlock).then(() => {
+			try {
+				await this.mainStore.patchTextBlock(this.localTextBlock)
 				this.saveLoading = false
 				this.editModalOpen = false
-				this.localTextBlock = Object.assign({}, this.textBlock)
-			}).catch(() => {
+			} catch (error) {
 				showError(t('mail', 'Failed to save textBlock'))
-			})
+				logger.error('Failed to save textBlock', error)
+			}
 		},
 	},
 }

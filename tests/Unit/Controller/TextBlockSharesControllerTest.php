@@ -99,7 +99,6 @@ class TextBlockSharesControllerTest extends TestCase {
 		$this->assertEquals($expectedResponse, $response);
 	}
 
-
 	public function testShareTextBlockWrongShareType(): void {
 		$this->textBlockService->expects($this->once())
 			->method('find')
@@ -126,6 +125,7 @@ class TextBlockSharesControllerTest extends TestCase {
 		$expectedResponse = JsonResponse::success();
 		$this->assertEquals($expectedResponse, $response);
 	}
+
 	public function testShareTextBlockGroup(): void {
 	
 		$controller = new TextBlockSharesController($this->request, $this->userId, $this->textBlockService);

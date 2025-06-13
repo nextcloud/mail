@@ -36,8 +36,11 @@ class TextBlockMapper extends QBMapper {
 			->andWhere($qb->expr()->eq('owner', $qb->createNamedParameter($owner)));
 		return $this->findEntity($qb);
 	}
-
-	public function findAll(string $owner): array {
+	/**
+	 * @param string $owner Text blocks' owner
+	 * @return TextBlock[]
+	 */
+	public function findAll(string $owner) {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
@@ -47,8 +50,12 @@ class TextBlockMapper extends QBMapper {
 
 		return $this->findEntities($qb);
 	}
-
-	public function findSharedWithMe(string $userId, array $groups): array {
+	/**
+	 * @param string $userId User ID of the user who is looking for shared text blocks
+	 * @param array $groups Array of group IDs the user belongs to
+	 * @return TextBlock[]
+	 */
+	public function findSharedWithMe(string $userId, array $groups) {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('s.*')
 			->from($this->getTableName(), 's')
