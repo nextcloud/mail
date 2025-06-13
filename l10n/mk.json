@@ -367,8 +367,7 @@
     "Train from {depStation} to {arrStation}" : "Воз од  {depStation} до {arrStation}",
     "Train" : "Воз",
     "Flag" : "Знаме",
-    "Actions" : "Акции",
-    "New action" : "Нова акција",
+    "matches" : "се совпаѓа",
     "Priority" : "Приоритет",
     "Mail app" : "Апликација Електронска пошта",
     "The mail app allows users to read mails on their IMAP accounts." : "Апликацијата за електронска пошта дозволува на корисниците да ги читаат својте пораки од IMAP сметки.",
@@ -428,6 +427,8 @@
     "Redirect" : "Пренасочи",
     "The link leads to %s" : "Линкот води кон %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Доколку несакате да ја посетите страната, можете да се вратите кон <a href=\"%s\">Е-пошта</a>.",
-    "Continue to %s" : "Продолжи до %s"
+    "Continue to %s" : "Продолжи до %s",
+    "Actions" : "Акции",
+    "New action" : "Нова акција"
 },"pluralForm" :"nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;"
 }

@@ -103,7 +103,6 @@ OC.L10N.register(
     "Tags" : "Etikette",
     "Custom" : "Eie",
     "Message source" : "Boodskapbron",
-    "Actions" : "Aksies",
     "Priority" : "Prioriteit",
     "Reset" : "Herstel",
     "Client ID" : "Kliënt-ID",
@@ -126,6 +125,7 @@ OC.L10N.register(
     "Forwarding to %s" : "Stuur aan na %s",
     "Click here if you are not automatically redirected within the next few seconds." : "Klik hier indien u nie binne die volgende paar sekondes outomaties herverwys word nie.",
     "Redirect" : "Herverwys",
-    "The link leads to %s" : "Die skakel lei na %s"
+    "The link leads to %s" : "Die skakel lei na %s",
+    "Actions" : "Aksies"
 },
 "nplurals=2; plural=(n != 1);");

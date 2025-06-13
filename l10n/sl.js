@@ -436,9 +436,11 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "Vlak iz {depStation} v {arrStation}",
     "Train" : "Vlak",
     "Flag" : "Zastavica",
+    "Recipient" : "Prejemnik",
     "Delete filter" : "Izbriši filter",
     "Operator" : "Operator",
-    "Actions" : "Dejanja",
+    "contains" : "vsebuje",
+    "matches" : "se sklada z",
     "Priority" : "Prednost",
     "Successfully updated config for \"{domain}\"" : "Nastavitve za domeno »{domain}« so uspešno posodobljene.",
     "Error saving config" : "Napaka shranjevanja nastavitev",
@@ -537,6 +539,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Če vas sistem v nekaj sekundah ne preusmeri samodejno, pritisnite na to mesto.",
     "Redirect" : "Preusmeri",
     "The link leads to %s" : "Povezava vodi do %s",
-    "Continue to %s" : "Nadaljuj na %s"
+    "Continue to %s" : "Nadaljuj na %s",
+    "Actions" : "Dejanja"
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

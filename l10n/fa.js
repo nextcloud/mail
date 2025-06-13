@@ -482,8 +482,8 @@ OC.L10N.register(
     "Flag" : "Flag",
     "Delete filter" : "Delete filter",
     "Operator" : "Operator",
-    "Actions" : "کنش‌ها",
-    "New action" : "New action",
+    "contains" : "contains",
+    "matches" : "مطابق است",
     "Priority" : "اولویت",
     "Successfully updated config for \"{domain}\"" : "Successfully updated config for \"{domain}\"",
     "Error saving config" : "Error saving config",
@@ -610,6 +610,8 @@ OC.L10N.register(
     "Redirect" : "تغییر مسیر",
     "The link leads to %s" : "پیوند منجر به%s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "ادامه دهید%s"
+    "Continue to %s" : "ادامه دهید%s",
+    "Actions" : "کنش‌ها",
+    "New action" : "New action"
 },
 "nplurals=2; plural=(n > 1);");

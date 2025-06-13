@@ -64,7 +64,8 @@
     "Date" : "Он сар өдөр",
     "Tags" : "Tag-үүд",
     "Custom" : "Дурын",
-    "Actions" : "Үйл ажиллагаа",
+    "Recipient" : "Хүлээн авагч",
+    "matches" : "тохируулах",
     "Reset" : "тохируулах",
     "Client ID" : "Хэрэглэгчийн ID",
     "User" : "Хэрэглэгч",
@@ -80,6 +81,7 @@
     "Junk" : "хэрэггүй",
     "Sent" : "илгээсэн",
     "Trash" : "хог",
-    "Error loading message" : "алдаатай ачааллах зурвас"
+    "Error loading message" : "алдаатай ачааллах зурвас",
+    "Actions" : "Үйл ажиллагаа"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

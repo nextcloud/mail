@@ -151,7 +151,8 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} de {depStation} al {arrStation}",
     "Train from {depStation} to {arrStation}" : "Trajno de {depStation} al {arrStation}",
     "Train" : "Trajno",
-    "Actions" : "Agoj",
+    "Recipient" : "Ricevonto",
+    "matches" : "kongruas kun",
     "Priority" : "Prioritato",
     "Mail app" : "Retpoŝtprogrameto",
     "Reset" : "Restarigi",
@@ -190,6 +191,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Alklaku ĉi tie, ĉu vi ne estos aŭtomate alidirektita post kelkaj sekundoj.",
     "Redirect" : "Alidirekto",
     "The link leads to %s" : "La ligilo iras al %s",
-    "Continue to %s" : "Daŭrigi al %s"
+    "Continue to %s" : "Daŭrigi al %s",
+    "Actions" : "Agoj"
 },
 "nplurals=2; plural=(n != 1);");

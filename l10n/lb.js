@@ -42,13 +42,13 @@ OC.L10N.register(
     "Date" : "Date",
     "Tags" : "Tags",
     "Custom" : "Individualiséier",
-    "Actions" : "Aktiounen",
     "Reset" : "Zeréck setzen",
     "Client ID" : "Client ID",
     "User" : "User",
     "Host" : "Host",
     "Port" : "Port",
     "All" : "All",
-    "Favorites" : "Favoriten"
+    "Favorites" : "Favoriten",
+    "Actions" : "Aktiounen"
 },
 "nplurals=2; plural=(n != 1);");

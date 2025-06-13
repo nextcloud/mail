@@ -464,9 +464,10 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "Pociąg z {depStation} do {arrStation}",
     "Train" : "Pociąg",
     "Flag" : "Flaga",
+    "Recipient" : "Odbiorca",
     "Operator" : "Operator",
-    "Actions" : "Akcje",
-    "New action" : "Nowa akcja",
+    "contains" : "zawiera",
+    "matches" : "pasuje",
     "Priority" : "Priorytet",
     "Successfully updated config for \"{domain}\"" : "Pomyślnie zaktualizowano konfigurację dla \"{domain}\"",
     "Error saving config" : "Błąd podczas zapisywania konfiguracji",
@@ -590,6 +591,8 @@ OC.L10N.register(
     "Redirect" : "Przekieruj",
     "The link leads to %s" : "Link prowadzi do %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Jeśli nie chcesz odwiedzić tej strony, możesz powrócić do <a href=\"%s\">Poczty</a>.",
-    "Continue to %s" : "Kontynuuj do %s"
+    "Continue to %s" : "Kontynuuj do %s",
+    "Actions" : "Akcje",
+    "New action" : "Nowa akcja"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

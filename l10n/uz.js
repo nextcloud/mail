@@ -63,7 +63,7 @@ OC.L10N.register(
     "Untitled event" : "Nomsiz tadbir",
     "(organizer)" : "(tashkilotchi)",
     "Operator" : "Operator",
-    "Actions" : "Actions",
+    "contains" : "o'z ichiga oladi",
     "Reset" : "Qayta tiklash",
     "Client ID" : "Mijoz identifikatori",
     "Port" : "Port",
@@ -71,6 +71,7 @@ OC.L10N.register(
     "All" : "All",
     "Favorites" : "Favorites",
     "Error while sharing file" : "Fayl almashishda xatolik yuz berdi",
-    "Continue to %s" : " %sni davom eting"
+    "Continue to %s" : " %sni davom eting",
+    "Actions" : "Actions"
 },
 "nplurals=1; plural=0;");

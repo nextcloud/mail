@@ -99,7 +99,8 @@ OC.L10N.register(
     "Add tag" : "Shto etiketim",
     "Mark as unread" : "Shënoje si të palexuar",
     "Mark as read" : "Shënoje si të lexuar",
-    "Actions" : "Veprimet",
+    "Recipient" : "Marrës",
+    "matches" : "përputhje",
     "Priority" : "Përparësi",
     "Reset" : "Rivendos",
     "Client ID" : "ID klienti",
@@ -128,6 +129,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klikoni këtu nëse nuk ridrejtoheni automatikisht brenda disa sekondave",
     "Redirect" : "Ridrejtoje",
     "The link leads to %s" : "Lidhja shpie te %s",
-    "Continue to %s" : "Vazhdo te %s"
+    "Continue to %s" : "Vazhdo te %s",
+    "Actions" : "Veprimet"
 },
 "nplurals=2; plural=(n != 1);");

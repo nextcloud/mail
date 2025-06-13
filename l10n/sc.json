@@ -276,9 +276,7 @@
     "Train from {depStation} to {arrStation}" : "Trenu dae {depStation} a {arrStation}",
     "Train" : "Trenu",
     "New filter" : "Filtru nou",
-    "New test" : "Proa noa",
-    "Actions" : "Atziones",
-    "New action" : "Atzione noa",
+    "matches" : "currispondèntzias",
     "Priority" : "Prioridade",
     "Successfully updated config for \"{domain}\"" : "Cunfiguratzione pro \"{domain}\" agiornada in manera curreta",
     "Error saving config" : "Errore sarvende sa cunfiguratzione",
@@ -356,6 +354,9 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Incarca inoghe chi no ses torradu a deretare in manera automàtica intro de pagu segundos.",
     "Redirect" : "Torra a deretare",
     "The link leads to %s" : "Su ligòngiu deretat a %s",
-    "Continue to %s" : "Sighi in %s"
+    "Continue to %s" : "Sighi in %s",
+    "New test" : "Proa noa",
+    "Actions" : "Atziones",
+    "New action" : "Atzione noa"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

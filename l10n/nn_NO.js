@@ -37,7 +37,8 @@ OC.L10N.register(
     "Close" : "Lat att",
     "Date" : "Dato",
     "Tags" : "Emneord",
-    "Actions" : "Handlingar",
+    "Recipient" : "Mottakar",
+    "contains" : "inneheld",
     "Client ID" : "Klient-ID",
     "User" : "Bruker",
     "Host" : "Tenar",
@@ -46,6 +47,7 @@ OC.L10N.register(
     "All" : "Alle",
     "Favorites" : "Favorit",
     "Sent" : "Sendt",
-    "Message sent" : "Melding sendt"
+    "Message sent" : "Melding sendt",
+    "Actions" : "Handlingar"
 },
 "nplurals=2; plural=(n != 1);");

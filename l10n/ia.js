@@ -47,7 +47,7 @@ OC.L10N.register(
     "Date" : "Date",
     "Tags" : "Etiquettas",
     "Custom" : "Personalisate",
-    "Actions" : "Actiones",
+    "matches" : "corresponde",
     "Priority" : "Prioritate",
     "Reset" : "Re-fixar",
     "User" : "User",
@@ -58,6 +58,7 @@ OC.L10N.register(
     "Favorites" : "Favoritos",
     "All inboxes" : "Tote cassas de entrata",
     "Could not load {tag}{name}{endtag}" : "Impossibile cargar {tag}{name}{endtag}",
-    "There was a problem loading {tag}{name}{endtag}" : "Un problema occurreva durante le carga de {tag}{name}{endtag}"
+    "There was a problem loading {tag}{name}{endtag}" : "Un problema occurreva durante le carga de {tag}{name}{endtag}",
+    "Actions" : "Actiones"
 },
 "nplurals=2; plural=(n != 1);");

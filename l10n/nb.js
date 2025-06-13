@@ -573,11 +573,12 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "Tog fra {depStation} til {arrStation}\n ",
     "Train" : "Tog",
     "Flag" : "Flagg",
+    "Recipient" : "Mottaker",
     "Delete filter" : "Slett filter",
     "Operator" : "Operator",
+    "contains" : "inneholder",
+    "matches" : "passer",
     "Filter name" : "Filternavn",
-    "Actions" : "Handlinger",
-    "New action" : "Ny handling",
     "Priority" : "Prioritet",
     "Successfully updated config for \"{domain}\"" : "Vellykket oppdatert konfigurasjon for «{domain}»",
     "Error saving config" : "Feil ved lagring av konfigurasjon",
@@ -725,6 +726,8 @@ OC.L10N.register(
     "Redirect" : "Videresend",
     "The link leads to %s" : "Denne lenken leder til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Hvis du ikke vil besøke den siden, kan du gå tilbake til <a href=\"%s\">E-post</a>",
-    "Continue to %s" : "Fortsett til %s"
+    "Continue to %s" : "Fortsett til %s",
+    "Actions" : "Handlinger",
+    "New action" : "Ny handling"
 },
 "nplurals=2; plural=(n != 1);");
