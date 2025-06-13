@@ -14,7 +14,6 @@ use OCA\Mail\Db\TextBlockMapper;
 use OCA\Mail\Db\TextBlockShare;
 use OCA\Mail\Db\TextBlockShareMapper;
 use OCA\Mail\Service\TextBlockService;
-use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IGroupManager;
 use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -93,12 +92,6 @@ class TextBlockServiceTest extends TestCase {
 		$textBlock = new TextBlock();
 		$textBlock->setId($textBlockId);
 		$textBlock->setOwner($userId);
-
-		$this->textBlockMapper->expects($this->once())
-			->method('find')
-			->with($textBlockId, $userId)
-			->willReturn($textBlock);
-
 		$this->textBlockMapper->expects($this->once())
 			->method('update')
 			->with($this->callback(function (TextBlock $s) use ($title, $content) {
@@ -106,25 +99,11 @@ class TextBlockServiceTest extends TestCase {
 			}))
 			->willReturn($textBlock);
 
-		$result = $this->textBlockService->update($textBlockId, $userId, $title, $content);
+		$result = $this->textBlockService->update($textBlock, $userId, $title, $content);
 
 		$this->assertSame($textBlock, $result);
 	}
 
-	public function testUpdateTextBlockDoesNotExist(): void {
-		$textBlockId = 1;
-		$userId = 'bob';
-
-		$this->textBlockMapper->expects($this->once())
-			->method('find')
-			->with($textBlockId, $userId)
-			->willThrowException(new DoesNotExistException('TextBlock does not exist'));
-
-		$this->expectException(DoesNotExistException::class);
-		$this->expectExceptionMessage('TextBlock does not exist');
-
-		$this->textBlockService->update($textBlockId, $userId, 'title', 'content');
-	}
 
 	public function testDelete(): void {
 		$textBlockId = 1;

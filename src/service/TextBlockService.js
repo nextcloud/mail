@@ -5,14 +5,18 @@
 
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
+import { handleHttpAuthErrors } from '../http/sessionExpiryHandler.js'
 
 /**
  * @return {Promise<object[]>}
  */
 export async function fetchMyTextBlocks() {
 	const url = generateUrl('/apps/mail/api/textBlocks')
-	const response = await axios.get(url)
-	return response.data.data
+	return handleHttpAuthErrors(async () => {
+		const response = await axios.get(url)
+		return response.data.data
+	})
+
 }
 
 /**
@@ -20,8 +24,10 @@ export async function fetchMyTextBlocks() {
  */
 export async function fetchSharedTextBlocks() {
 	const url = generateUrl('/apps/mail/api/textBlockshares')
-	const response = await axios.get(url)
-	return response.data.data
+	return handleHttpAuthErrors(async () => {
+		const response = await axios.get(url)
+		return response.data.data
+	})
 }
 
 /**
@@ -34,8 +40,11 @@ export async function fetchSharedTextBlocks() {
 
 export async function createTextBlock(title, content) {
 	const url = generateUrl('/apps/mail/api/textBlocks')
-	const response = await axios.post(url, { title, content })
-	return response.data.data
+	return handleHttpAuthErrors(async () => {
+		const response = await axios.post(url, { title, content })
+		return response.data.data
+	})
+
 }
 
 /**
@@ -47,7 +56,10 @@ export async function createTextBlock(title, content) {
  */
 export async function updateTextBlock(textBlock) {
 	const url = generateUrl('/apps/mail/api/textBlocks/{id}', { id: textBlock.id })
-	return await axios.put(url, { title: textBlock.title, content: textBlock.content })
+	return handleHttpAuthErrors(async () => {
+		return (await axios.put(url, { title: textBlock.title, content: textBlock.content })).data.data
+
+	})
 }
 
 /**
@@ -56,7 +68,9 @@ export async function updateTextBlock(textBlock) {
  */
 export async function deleteTextBlock(id) {
 	const url = generateUrl('/apps/mail/api/textBlocks/{id}', { id })
-	await axios.delete(url)
+	return handleHttpAuthErrors(async () => {
+		await axios.delete(url)
+	})
 }
 
 /**
@@ -67,7 +81,10 @@ export async function deleteTextBlock(id) {
  */
 export async function shareTextBlock(textBlockId, shareWith, type) {
 	const url = generateUrl('/apps/mail/api/textBlockshares')
-	await axios.post(url, { textBlockId, shareWith, type })
+	return handleHttpAuthErrors(async () => {
+		await axios.post(url, { textBlockId, shareWith, type })
+	})
+
 }
 
 /**
@@ -76,8 +93,10 @@ export async function shareTextBlock(textBlockId, shareWith, type) {
  */
 export async function getShares(id) {
 	const url = generateUrl('/apps/mail/api/textBlocks/{id}/shares', { id })
-	const response = await axios.get(url)
-	return response.data.data
+	return handleHttpAuthErrors(async () => {
+		const response = await axios.get(url)
+		return response.data.data
+	})
 }
 /**
  * @param {number} textBlockId
@@ -86,5 +105,8 @@ export async function getShares(id) {
  */
 export async function unshareTextBlock(textBlockId, shareWith) {
 	const url = generateUrl('/apps/mail/api/textBlockshares/{textBlockId}', { textBlockId })
-	await axios.delete(url, { data: { shareWith } })
+	return handleHttpAuthErrors(async () => {
+		await axios.delete(url, { data: { shareWith } })
+	})
+
 }

@@ -110,6 +110,7 @@ class TextBlockControllerTest extends TestCase {
 
 	public function testUpdateTextBlock(): void {
 		$textBlock = new TextBlock();
+		$updatedTextBlock = new TextBlock();
 
 		$this->textBlockService->expects($this->once())
 			->method('find')
@@ -118,12 +119,13 @@ class TextBlockControllerTest extends TestCase {
 
 		$this->textBlockService->expects($this->once())
 			->method('update')
-			->with(1, $this->userId, 'Updated TextBlock', 'Updated Content');
+			->with($textBlock, $this->userId, 'Updated TextBlock', 'Updated Content')
+			->willReturn($updatedTextBlock);
 
 		$controller = new TextBlockController($this->request, $this->userId, $this->textBlockService);
 
 		$response = $controller->update(1, 'Updated TextBlock', 'Updated Content');
-		$expectedResponse = JsonResponse::success($textBlock, Http::STATUS_OK);
+		$expectedResponse = JsonResponse::success($updatedTextBlock, Http::STATUS_OK);
 		$this->assertEquals($expectedResponse, $response);
 	}
 

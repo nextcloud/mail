@@ -1782,34 +1782,24 @@ export default function mainStoreActions() {
 			}
 		},
 		async fetchMyTextBlocks() {
-			return handleHttpAuthErrors(async () => {
-				const textBlocks = await fetchMyTextBlocks()
-				this.setMyTextBlocks(textBlocks)
-			})
+			const textBlocks = await fetchMyTextBlocks()
+			this.setMyTextBlocks(textBlocks)
 		},
 		async fetchSharedTextBlocks() {
-			return handleHttpAuthErrors(async () => {
-				const textBlocks = await fetchSharedTextBlocks()
-				this.setSharedTextBlocks(textBlocks)
-			})
+			const textBlocks = await fetchSharedTextBlocks()
+			this.setSharedTextBlocks(textBlocks)
 		},
 		async createTextBlock({ title, content }) {
-			return handleHttpAuthErrors(async () => {
-				const textBlock = await createTextBlock(title, content)
-				this.addTextBlock(textBlock)
-			})
+			const textBlock = await createTextBlock(title, content)
+			this.addTextBlock(textBlock)
 		},
 		async deleteTextBlock({ id }) {
-			return handleHttpAuthErrors(async () => {
-				await deleteTextBlock(id)
-				this.deleteTextBlockLocally(id)
-			})
+			await deleteTextBlock(id)
+			this.deleteTextBlockLocally(id)
 		},
 		async patchTextBlock(textBlock) {
-			return handleHttpAuthErrors(async () => {
-				const result = await updateTextBlock(textBlock)
-				this.patchTextBlockLocally(result.data.data)
-			})
+			const result = await updateTextBlock(textBlock)
+			this.patchTextBlockLocally(result)
 		},
 		sortAccounts(accounts) {
 			accounts.sort((a1, a2) => a1.order - a2.order)
