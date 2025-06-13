@@ -4,6 +4,7 @@
 -->
 <template>
 	<NcDialog id="text-block-picker" :name="t('mail','Text blocks')" @closing="handleClose">
+		<p>{{ t('mail','Choose a text block to insert at the cursor') }}</p>
 		<ListItem v-for="textBlock in textBlocks"
 			:key="textBlock.id"
 			:text-block="textBlock"

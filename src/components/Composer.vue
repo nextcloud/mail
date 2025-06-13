@@ -345,7 +345,7 @@
 								t('mail', 'Smart picker')
 							}}
 						</ActionButton>
-						<ActionButton @click="openTextBlockPicker">
+						<ActionButton :close-after-click="true" @click="openTextBlockPicker">
 							<template #icon>
 								<NcIconSvgWrapper :size="16"
 									:title="t('mail', 'Text blocks')"

@@ -28,7 +28,7 @@
 			</template>
 		</NcListItem>
 		<NcDialog :open.sync="editModalOpen"
-			:name="t('mail','Edit textBlock')"
+			:name="t('mail','Edit text block')"
 			size="normal"
 			:is-form="true">
 			<p v-if="shared">

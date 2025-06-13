@@ -435,19 +435,24 @@ export default {
 
 <style lang="scss" scoped>
 .text-editor--bordered{
+	--border-offset: calc(var(--border-width-input-focused, 2px) - var(--border-width-input, 2px));
 	margin-top: var(--default-grid-baseline);
 	border: var(--border-width-input, 2px) solid var(--color-border-maxcontrast);
 	border-radius:var(--border-radius-large);
-	padding: 1px 9px;
+	height: 200px;
+	// to align with the text input in the text block modal
+	padding: 9px;
+
+	:deep(.ck.ck-editor__editable_inline) {
+		padding:0 !important;
+	}
 	&:focus {
+		padding: calc(9px - var(--border-offset));
 		border-color: var(--color-main-text);
 		border-width: var(--border-width-input-focused, 2px);
 	}
 	&:hover {
-		border-color: var(--color-main-text);
-		border-width: var(--border-width-input-focused, 2px);
-	}
-	&:active *{
+		padding: calc(9px - var(--border-offset));
 		border-color: var(--color-main-text);
 		border-width: var(--border-width-input-focused, 2px);
 	}

@@ -166,7 +166,7 @@
 					{{ t('mail', 'Register') }}
 				</NcButton>
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="textBlocks" :name="t('mail', 'Text blocks')">
+			<NcAppSettingsSection id="text-blocks" :name="t('mail', 'Text blocks')">
 				<List :text-blocks="getMyTextBlocks()"
 					@show-toolbar="handleShowToolbar" />
 				<NcButton type="primary" @click="() => textBlockDialogOpen = true">
