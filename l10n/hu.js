@@ -500,11 +500,12 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "Vonat {depStation} és {arrStation} között",
     "Train" : "Vonat",
     "Flag" : "Zászló",
+    "Recipient" : "Címzett",
     "Delete filter" : "Szűrő törlése",
     "Operator" : "Állapot",
+    "contains" : "tartalmazza",
+    "matches" : "egyezik",
     "Filter name" : "Név szűrése",
-    "Actions" : "Műveletek",
-    "New action" : "Új művelet",
     "Priority" : "Prioritás",
     "Successfully updated config for \"{domain}\"" : "A(z) „{domain}” konfigurációja sikeresen frissítve",
     "Error saving config" : "Hiba a konfiguráció mentése során",
@@ -643,6 +644,8 @@ OC.L10N.register(
     "Redirect" : "Átirányítás",
     "The link leads to %s" : "A hivatkozás ide mutat: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarja megnyitni azt az oldalt, akkor térjen vissza a <a href=\"%s\">Levelezéshez</a>.",
-    "Continue to %s" : "Folytatás ide: %s"
+    "Continue to %s" : "Folytatás ide: %s",
+    "Actions" : "Műveletek",
+    "New action" : "Új művelet"
 },
 "nplurals=2; plural=(n != 1);");

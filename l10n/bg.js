@@ -422,8 +422,6 @@ OC.L10N.register(
     "Train" : "Влак",
     "Flag" : "Знаме",
     "Operator" : "Оператор",
-    "Actions" : "Действия",
-    "New action" : "Ново действие",
     "Priority" : "Приоритет",
     "Successfully updated config for \"{domain}\"" : "Конфигурацията за „{domain}“ беше актуализирана успешно",
     "Error saving config" : "Грешка при записване на конфигурацията",
@@ -555,6 +553,8 @@ OC.L10N.register(
     "Redirect" : "Пренасочване",
     "The link leads to %s" : "Връзката води до %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желаете да посетите тази страница, може да се върнете към <a href=\"%s\">Поща</a>.",
-    "Continue to %s" : "Продължи към %s"
+    "Continue to %s" : "Продължи към %s",
+    "Actions" : "Действия",
+    "New action" : "Ново действие"
 },
 "nplurals=2; plural=(n != 1);");

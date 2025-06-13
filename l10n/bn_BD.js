@@ -41,13 +41,13 @@ OC.L10N.register(
     "Close" : "বন্ধ",
     "Date" : "Date",
     "Tags" : "ট্যাগ",
-    "Actions" : "পদক্ষেপসমূহ",
     "Reset" : "পূণঃনির্ধানণ",
     "Client ID" : "ক্লায়েন্ট পরিচিতি",
     "User" : "User",
     "Host" : "হোস্ট",
     "Port" : "পোর্ট",
     "All" : "সবাই",
-    "Favorites" : "প্রিয়জন"
+    "Favorites" : "প্রিয়জন",
+    "Actions" : "পদক্ষেপসমূহ"
 },
 "nplurals=2; plural=(n != 1);");

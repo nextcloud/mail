@@ -320,11 +320,12 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} från {depStation} till {arrStation}",
     "Train from {depStation} to {arrStation}" : "Tåg från {depStation} till {arrStation}",
     "Train" : "Tåg",
+    "Recipient" : "Mottagare",
     "Delete filter" : "Ta bort filter",
     "Operator" : "Operatör",
+    "contains" : "innehåller",
+    "matches" : "träffar",
     "Filter name" : "Filternamn",
-    "Actions" : "Funktioner",
-    "New action" : "Ny åtgärd",
     "Priority" : "Prioritet",
     "Mail app" : "Mail-app",
     "The mail app allows users to read mails on their IMAP accounts." : "Mail-appen tillåter användare att läsa e-post på sina IMAP-konton.",
@@ -375,6 +376,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klicka här om du inte blir omdirigerad inom några sekunder.",
     "Redirect" : "Omdirigera",
     "The link leads to %s" : "Länken pekar mot %s",
-    "Continue to %s" : "Fortsätt till %s"
+    "Continue to %s" : "Fortsätt till %s",
+    "Actions" : "Funktioner",
+    "New action" : "Ny åtgärd"
 },
 "nplurals=2; plural=(n != 1);");

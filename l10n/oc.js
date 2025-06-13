@@ -86,7 +86,6 @@ OC.L10N.register(
     "Untitled event" : "Eveniment sens títol",
     "Train" : "Tren",
     "Flag" : "Drapèu",
-    "Actions" : "Accions",
     "Reset" : "Reïnicializar",
     "Client ID" : "ID client",
     "User" : "User",
@@ -108,6 +107,7 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "Message sent" : "Messatge mandat",
     "Error loading message" : "Error al moment del cargament del messatge",
-    "Continue to %s" : "Contunhar cap a %s"
+    "Continue to %s" : "Contunhar cap a %s",
+    "Actions" : "Accions"
 },
 "nplurals=2; plural=(n > 1);");

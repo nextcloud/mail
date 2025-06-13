@@ -84,8 +84,10 @@ OC.L10N.register(
     "Mark as read" : "tandai sudah dibaca",
     "Untitled event" : "Acara tanpa judul",
     "(organizer)" : "(penyelenggara)",
+    "Recipient" : "Penerima",
     "Operator" : "Operator",
-    "Actions" : "Tindakan",
+    "contains" : "mengandung",
+    "matches" : "cocok dengan",
     "Allow additional Mail accounts from User Settings" : "Perbolehkan akun Mail tambahan dari Setelan Pengguna",
     "Reset" : "Setel ulang",
     "Client ID" : "ID Klien",
@@ -110,6 +112,7 @@ OC.L10N.register(
     "Error loading message" : "Terjadi kesalahan saat memuat pesan",
     "Forwarding to %s" : "Teruskan ke %s",
     "Redirect" : "Mengalihkan",
-    "Continue to %s" : "Lanjutkan ke %s"
+    "Continue to %s" : "Lanjutkan ke %s",
+    "Actions" : "Tindakan"
 },
 "nplurals=1; plural=0;");

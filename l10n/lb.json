@@ -40,13 +40,13 @@
     "Date" : "Date",
     "Tags" : "Tags",
     "Custom" : "Individualiséier",
-    "Actions" : "Aktiounen",
     "Reset" : "Zeréck setzen",
     "Client ID" : "Client ID",
     "User" : "User",
     "Host" : "Host",
     "Port" : "Port",
     "All" : "All",
-    "Favorites" : "Favoriten"
+    "Favorites" : "Favoriten",
+    "Actions" : "Aktiounen"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

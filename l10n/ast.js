@@ -250,7 +250,6 @@ OC.L10N.register(
     "Flag" : "Bandera",
     "Operator" : "Operador",
     "Filter name" : "Nome de la peñera",
-    "Actions" : "Aiciones",
     "Priority" : "Prioridá",
     "Error saving config" : "Hebo un error al guardar la configuración",
     "Anti Spam Service" : "Serviciu de antispam",
@@ -305,6 +304,7 @@ OC.L10N.register(
     "Could not load the message" : "Nun se pudo cargar el mensaxe",
     "Error loading message" : "Hebo un error al cargar el mensaxe",
     "Redirect" : "Redirixir",
-    "The link leads to %s" : "L'enllaz lleva a %s"
+    "The link leads to %s" : "L'enllaz lleva a %s",
+    "Actions" : "Aiciones"
 },
 "nplurals=2; plural=(n != 1);");

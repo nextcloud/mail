@@ -95,7 +95,8 @@ OC.L10N.register(
     "Select tags" : "Selecciona las etiquetas",
     "Custom" : "Personalizado",
     "Add tag" : "Agregar etiqueta",
-    "Actions" : "Acciones",
+    "Recipient" : "Destinatario",
+    "matches" : "coincide",
     "Priority" : "Prioridad",
     "Reset" : "Restablecer",
     "Client ID" : "ID del cliente",
@@ -125,6 +126,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Haz click aqui si no eres redireccionado automáticamente dentro de los siguietes segundos. ",
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Actions" : "Acciones"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

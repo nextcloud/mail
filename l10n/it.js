@@ -418,8 +418,10 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "Treno da {depStation} a {arrStation}",
     "Train" : "Treno",
     "Flag" : "Bandiera",
+    "Recipient" : "Destinatario",
     "Operator" : "Operatore",
-    "Actions" : "Azioni",
+    "contains" : "contiene",
+    "matches" : "corrisponde",
     "Priority" : "Priorità",
     "Successfully updated config for \"{domain}\"" : "Configurazione aggiornata con successo per \"{domain}\"",
     "Error saving config" : "Errore durante il salvataggio della configurazione",
@@ -551,6 +553,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Fai clic qui se non viene rediretto automaticamente entro pochi secondi.",
     "Redirect" : "Redirigi",
     "The link leads to %s" : "Il collegamento conduce a %s",
-    "Continue to %s" : "Continua su %s"
+    "Continue to %s" : "Continua su %s",
+    "Actions" : "Azioni"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

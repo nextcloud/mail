@@ -335,10 +335,11 @@
     "Train from {depStation} to {arrStation}" : "Trein van {depStation} naar {arrStation}",
     "Train" : "Trein",
     "Flag" : "lag",
+    "Recipient" : "Ontvanger",
     "Operator" : "Operator",
+    "contains" : "bevat",
+    "matches" : "komt overeen",
     "Filter name" : "Filternaam",
-    "Actions" : "Acties",
-    "New action" : "Nieuwe actie",
     "Priority" : "Prioriteit",
     "Successfully updated config for \"{domain}\"" : "Configuratie voor \"{domain}\" succesvol bijgewerkt",
     "Error saving config" : "Fout bij opslaan config",
@@ -434,6 +435,8 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Klik hier als je binnen enkele seconden niet automatisch wordt doorgestuurd.",
     "Redirect" : "Omleiden",
     "The link leads to %s" : "De link verwijst naar %s",
-    "Continue to %s" : "Verder naar %s"
+    "Continue to %s" : "Verder naar %s",
+    "Actions" : "Acties",
+    "New action" : "Nieuwe actie"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

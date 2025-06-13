@@ -407,11 +407,12 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "Juna asemalta {depStation} asemalle {arrStation}",
     "Train" : "Juna",
     "Flag" : "Lippu",
+    "Recipient" : "Vastaanottaja",
     "Delete filter" : "Poista suodatin",
     "Operator" : "Operaattori",
+    "contains" : "sisältää",
+    "matches" : "täsmää",
     "Filter name" : "Nimisuodatin",
-    "Actions" : "Toiminnot",
-    "New action" : "Uusi toiminto",
     "Priority" : "Tärkeys",
     "Mail app" : "Sähköpostisovellus",
     "The mail app allows users to read mails on their IMAP accounts." : "Tämä sähköpostisovellus mahdollistaa käyttäjien lukea sähköpostiviestejä IMAP-tileiltä.",
@@ -494,6 +495,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klikkaa jos sinua ei uudelleenohjata automaattisesti muutamaan sekuntiin.",
     "Redirect" : "Uudelleenohjaus",
     "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
-    "Continue to %s" : "Jatka sivulle %s"
+    "Continue to %s" : "Jatka sivulle %s",
+    "Actions" : "Toiminnot",
+    "New action" : "Uusi toiminto"
 },
 "nplurals=2; plural=(n != 1);");

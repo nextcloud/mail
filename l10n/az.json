@@ -48,7 +48,6 @@
     "Date" : "Date",
     "Tags" : "Işarələr",
     "Not found" : "Tapılmadı",
-    "Actions" : "İşlər",
     "Priority" : "Prioritet",
     "Reset" : "Sıfırla",
     "Client ID" : "Müştəri İD-s",
@@ -65,6 +64,7 @@
     "Junk" : "Önəmsiz",
     "Sent" : "Göndərildi",
     "Trash" : "Zibil",
-    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi"
+    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi",
+    "Actions" : "İşlər"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

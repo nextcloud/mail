@@ -348,9 +348,7 @@ OC.L10N.register(
     "Train" : "Tog",
     "New filter" : "Nyt filter",
     "Operator" : "Operatør",
-    "New test" : "Nyeste test",
-    "Actions" : "Handlinger",
-    "New action" : "Ny handling",
+    "contains" : "indeholder",
     "Priority" : "Prioritet",
     "Reset" : "Nulstil",
     "Client ID" : "Klient-ID",
@@ -405,6 +403,9 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klik her hvis du ikke automatisk bliver videre sendt i løbet af et par sekunder.",
     "Redirect" : "Omdiriger",
     "The link leads to %s" : "Linket fører til %s",
-    "Continue to %s" : "Videre til %s"
+    "Continue to %s" : "Videre til %s",
+    "New test" : "Nyeste test",
+    "Actions" : "Handlinger",
+    "New action" : "Ny handling"
 },
 "nplurals=2; plural=(n != 1);");

@@ -513,7 +513,7 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "Train from {depStation} to {arrStation}",
     "Train" : "Train",
     "Operator" : "ოპერატორი",
-    "Actions" : "Actions",
+    "matches" : "matches",
     "Priority" : "Priority",
     "Successfully updated config for \"{domain}\"" : "Successfully updated config for \"{domain}\"",
     "Error saving config" : "Error saving config",
@@ -652,6 +652,7 @@ OC.L10N.register(
     "Redirect" : "Redirect",
     "The link leads to %s" : "The link leads to %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continue to %s"
+    "Continue to %s" : "Continue to %s",
+    "Actions" : "Actions"
 },
 "nplurals=2; plural=(n!=1);");

@@ -501,10 +501,12 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "{depStation}에서 {arrStation}(으)로 향하는 열차",
     "Train" : "열차",
     "Flag" : "깃발",
+    "Recipient" : "받는 사람",
     "Delete filter" : "필터 삭제",
     "Operator" : "운영자",
+    "contains" : "다음을 포함함",
+    "matches" : "일치함",
     "Filter name" : "필터 이름",
-    "Actions" : "동작",
     "Priority" : "우선 순위",
     "Successfully updated config for \"{domain}\"" : "\"{domail}\"에 대한 설정을 성공적으로 갱신함",
     "Error saving config" : "설정을 저장하는 중 오류 발생",
@@ -641,6 +643,7 @@ OC.L10N.register(
     "Redirect" : "넘겨주기",
     "The link leads to %s" : "이 링크가 %s을(를) 향함",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "해당 페이지를 방문하지 않으려면 <a href=\"%s\">메일</a>로 돌아갈 수 있습니다.",
-    "Continue to %s" : "%s(으)로 이동"
+    "Continue to %s" : "%s(으)로 이동",
+    "Actions" : "동작"
 },
 "nplurals=1; plural=0;");

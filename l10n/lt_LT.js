@@ -353,6 +353,7 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "Traukinys iš {depStation} į {arrStation}",
     "Train" : "Traukinys",
     "Delete action" : "Ištrinti veiksmą",
+    "Recipient" : "Gavėjas",
     "Delete filter" : "Ištrinti filtrą",
     "Delete mail filter {filterName}?" : "Ištrinti pašto filtrą {filterName}?",
     "New filter" : "Naujas filtras",
@@ -360,8 +361,7 @@ OC.L10N.register(
     "Could not save filter" : "Nepavyko įrašyti filtro",
     "Filter deleted" : "Filtras ištrintas",
     "Could not delete filter" : "Nepavyko ištrinti filtro",
-    "Actions" : "Veiksmai",
-    "New action" : "Naujas veiksmas",
+    "matches" : "atitinka",
     "Priority" : "Pirmenybė",
     "Enable filter" : "Įjungti filtrą",
     "Save filter" : "Įrašyti filtrą",
@@ -442,6 +442,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Jeigu per artimiausias kelias sekundes nesate automatiškai nukreipiami, spustelėkite čia.",
     "Redirect" : "Peradresuoti",
     "The link leads to %s" : "Nuoroda veda į %s",
-    "Continue to %s" : "Tęsti į %s"
+    "Continue to %s" : "Tęsti į %s",
+    "Actions" : "Veiksmai",
+    "New action" : "Naujas veiksmas"
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");

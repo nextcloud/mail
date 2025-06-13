@@ -457,7 +457,7 @@ OC.L10N.register(
     "Import into {calendar}" : "Importă în {calendar}",
     "Event imported into {calendar}" : "Eveniment importat în {calendar}",
     "Reservation {id}" : "Rezervare {id}",
-    "Actions" : "Acțiuni",
+    "Recipient" : "Destinatar",
     "Successfully updated config for \"{domain}\"" : "S-a actualizat configurația pentru \"{domain}\"",
     "Error saving config" : "Eroare la salvarea configurației",
     "Saved config for \"{domain}\"" : "A fost salvată configurația pentru \"{domain}\"",
@@ -523,6 +523,7 @@ OC.L10N.register(
     "Redirect" : "Deviere",
     "The link leads to %s" : "Link-ul duce la %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Dacă nu doriți să vizitați acea pagină, vă puteți întoarce la <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continuă către %s"
+    "Continue to %s" : "Continuă către %s",
+    "Actions" : "Acțiuni"
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");

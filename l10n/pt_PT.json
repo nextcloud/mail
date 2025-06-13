@@ -183,10 +183,11 @@
     "Airplane" : "Avião",
     "Reservation {id}" : "Reserva {id}",
     "Train" : "Comboio",
+    "Recipient" : "Destinatário",
     "Operator" : "Operador",
+    "contains" : "contém",
+    "matches" : "corresponde",
     "Filter name" : "Filtrar nome",
-    "Actions" : "Ações",
-    "New action" : "Nova ação",
     "Priority" : "Prioridade",
     "Reset" : "Reiniciar",
     "Client ID" : "Id. do Cliente",
@@ -225,6 +226,8 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Clique aqui se não for automaticamente redirecionado dentro de segundos.",
     "Redirect" : "Redirecionar",
     "The link leads to %s" : "A ligação aponta para %s",
-    "Continue to %s" : "Continuar para %s"
+    "Continue to %s" : "Continuar para %s",
+    "Actions" : "Ações",
+    "New action" : "Nova ação"
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

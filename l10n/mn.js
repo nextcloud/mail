@@ -66,7 +66,8 @@ OC.L10N.register(
     "Date" : "Он сар өдөр",
     "Tags" : "Tag-үүд",
     "Custom" : "Дурын",
-    "Actions" : "Үйл ажиллагаа",
+    "Recipient" : "Хүлээн авагч",
+    "matches" : "тохируулах",
     "Reset" : "тохируулах",
     "Client ID" : "Хэрэглэгчийн ID",
     "User" : "Хэрэглэгч",
@@ -82,6 +83,7 @@ OC.L10N.register(
     "Junk" : "хэрэггүй",
     "Sent" : "илгээсэн",
     "Trash" : "хог",
-    "Error loading message" : "алдаатай ачааллах зурвас"
+    "Error loading message" : "алдаатай ачааллах зурвас",
+    "Actions" : "Үйл ажиллагаа"
 },
 "nplurals=2; plural=(n != 1);");
