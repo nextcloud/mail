@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<div :class="{ 'editor-wrappe--bordered': isBordered }" class="editor-wrapper">
+	<div :class="{ 'editor-wrapper--bordered': isBordered }" class="editor-wrapper">
 		<div ref="toolbarContainer" class="toolbar" />
 
 		<div ref="editableContainer" class="editable" />
@@ -434,7 +434,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.editor-wrappe--bordered{
+.editor-wrapper--bordered{
 	--border-offset: calc(var(--border-width-input-focused, 2px) - var(--border-width-input, 2px));
 	margin-top: var(--default-grid-baseline);
 	border: var(--border-width-input, 2px) solid var(--color-border-maxcontrast);

@@ -89,7 +89,7 @@
 					<NcButton type="primary"
 						class="text-block-buttons__button"
 						:disabled="!localTextBlock.title || !localTextBlock.content || saveLoading"
-						@click="newTextBlock">
+						@click="saveTextBlock">
 						<template #icon>
 							<NcLoadingIcon v-if="saveLoading" :size="16" />
 							<IconCheck v-else :size="16" />
@@ -349,7 +349,7 @@ export default {
 			this.editModalOpen = false
 			this.localTextBlock = JSON.parse(JSON.stringify(this.textBlock))
 		},
-		async newTextBlock() {
+		async saveTextBlock() {
 			this.saveLoading = true
 			try {
 				await this.mainStore.patchTextBlock(this.localTextBlock)

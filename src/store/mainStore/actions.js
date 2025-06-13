@@ -1807,8 +1807,8 @@ export default function mainStoreActions() {
 		},
 		async patchTextBlock(textBlock) {
 			return handleHttpAuthErrors(async () => {
-				await updateTextBlock(textBlock)
-				this.patchTextBlockLocally(textBlock)
+				const result = await updateTextBlock(textBlock)
+				this.patchTextBlockLocally(result.data.data)
 			})
 		},
 		sortAccounts(accounts) {
@@ -2353,7 +2353,7 @@ export default function mainStoreActions() {
 		patchTextBlockLocally(textBlock) {
 			const index = this.myTextBlocks.findIndex(s => s.id === textBlock.id)
 			if (index !== -1) {
-				this.myTextBlocks.splice(index, 1, textBlock)
+				Vue.set(this.myTextBlocks, index, textBlock)
 			}
 		},
 		getPreference(key, def) {

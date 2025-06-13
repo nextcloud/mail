@@ -47,7 +47,7 @@ export async function createTextBlock(title, content) {
  */
 export async function updateTextBlock(textBlock) {
 	const url = generateUrl('/apps/mail/api/textBlocks/{id}', { id: textBlock.id })
-	await axios.put(url, { title: textBlock.title, content: textBlock.content })
+	return await axios.put(url, { title: textBlock.title, content: textBlock.content })
 }
 
 /**
