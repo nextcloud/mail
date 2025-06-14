@@ -249,6 +249,8 @@ OC.L10N.register(
     "Train" : "Tren",
     "Flag" : "Bandera",
     "Operator" : "Operador",
+    "contains" : "contién",
+    "matches" : "concasa",
     "Filter name" : "Nome de la peñera",
     "Priority" : "Prioridá",
     "Error saving config" : "Hebo un error al guardar la configuración",

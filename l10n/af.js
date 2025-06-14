@@ -103,6 +103,7 @@ OC.L10N.register(
     "Tags" : "Etikette",
     "Custom" : "Eie",
     "Message source" : "Boodskapbron",
+    "Recipient" : "Ontvanger",
     "Priority" : "Prioriteit",
     "Reset" : "Herstel",
     "Client ID" : "Kliënt-ID",
