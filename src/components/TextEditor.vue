@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<div class="editor-wrapper">
+	<div :class="{ 'editor-wrapper--bordered': isBordered }" class="editor-wrapper">
 		<div ref="toolbarContainer" class="toolbar" />
 
 		<div ref="editableContainer" class="editable" />
@@ -52,7 +52,7 @@ import logger from '../logger.js'
 import PickerPlugin from '../ckeditor/smartpicker/PickerPlugin.js'
 import { autoCompleteByName } from '../service/ContactIntegrationService.js'
 import { emojiSearch, emojiAddRecent } from '@nextcloud/vue'
-
+import { toPlain, Text } from '../util/text.js'
 export default {
 	name: 'TextEditor',
 	components: {
@@ -80,6 +80,18 @@ export default {
 			required: true,
 		},
 		disabled: {
+			type: Boolean,
+			default: false,
+		},
+		textBlocks: {
+			type: Array,
+			default: () => [],
+		},
+		isBordered: {
+			type: Boolean,
+			default: false,
+		},
+		readOnly: {
 			type: Boolean,
 			default: false,
 		},
@@ -163,7 +175,12 @@ export default {
 						{
 							marker: '@',
 							feed: this.getContact,
-							itemRenderer: this.customContactRenderer,
+							itemRenderer: this.customRenderer,
+						},
+						{
+							marker: '!',
+							feed: this.getTextBlock,
+							itemRenderer: this.customRenderer,
 						},
 					],
 				},
@@ -197,6 +214,12 @@ export default {
 			contactResults = contactResults.filter(result => result.email.length > 0)
 			return contactResults
 		},
+		getTextBlock(text) {
+			if (text.length === 0) {
+				return []
+			}
+			return this.textBlocks.filter(textBlock => textBlock.title.toLowerCase().includes(text.toLowerCase()))
+		},
 		 customEmojiRenderer(item) {
 			const itemElement = document.createElement('span')
 
@@ -229,15 +252,15 @@ export default {
 
 			return itemElement
 		},
-		customContactRenderer(item) {
+		customRenderer(item, type) {
 			const itemElement = document.createElement('span')
 
 			itemElement.classList.add('custom-item')
 			itemElement.id = `mention-list-item-id-${item.id}`
 			const usernameElement = document.createElement('p')
-
+			const label = type === 'contact' ? item.label : item.title
 			usernameElement.classList.add('custom-item-username')
-			usernameElement.textContent = item.label
+			usernameElement.textContent = label
 
 			itemElement.appendChild(usernameElement)
 
@@ -326,7 +349,10 @@ export default {
 			// https://ckeditor.com/docs/ckeditor5/latest/examples/builds-custom/bottom-toolbar-editor.html
 			this.$refs.toolbarContainer.appendChild(editor.ui.view.toolbar.element)
 			this.$refs.editableContainer.appendChild(editor.ui.view.editable.element)
-
+			if (this.readOnly) {
+				editor.ui.view.toolbar.element.style.display = 'none'
+				editor.enableReadOnlyMode('text-block')
+			}
 			if (editor.ui) {
 				this.overrideDropdownPositionsToNorth(editor, editor.ui.view.toolbar)
 				this.overrideTooltipPositions(editor.ui.view.toolbar)
@@ -353,6 +379,9 @@ export default {
 					this.editorInstance.execute('insertItem', { email: item.email[0], label: item.label }, '@')
 					this.$emit('mention', { email: item.email[0], label: item.label })
 				}
+				if (eventData.marker === '!') {
+					this.insertTextBlock(item, false)
+				}
 			}, { priority: 'high' })
 
 			this.editorInstance = editor
@@ -367,6 +396,7 @@ export default {
 			}
 
 			this.bus.on('append-to-body-at-cursor', this.appendToBodyAtCursor)
+			this.bus.on('insert-text-block', this.insertTextBlock)
 			this.$emit('ready', editor)
 		},
 		onEditorInput(text) {
@@ -388,11 +418,46 @@ export default {
 				throw new Error('Impossible to execute a command before editor is ready.')
 			}
 		},
+		insertTextBlock(textBlock, addTriggrer = true) {
+			if (addTriggrer) {
+				this.appendToBodyAtCursor('!')
+			}
+			let content = textBlock.content
+			if (!this.html) {
+				const text = new Text('html', content)
+				content = toPlain(text).value
+			}
+			this.editorInstance.execute('insertItem', { content, isHtml: this.html }, '!')
+		},
 	},
 }
 </script>
 
 <style lang="scss" scoped>
+.editor-wrapper--bordered{
+	--border-offset: calc(var(--border-width-input-focused, 2px) - var(--border-width-input, 2px));
+	margin-top: var(--default-grid-baseline);
+	border: var(--border-width-input, 2px) solid var(--color-border-maxcontrast);
+	border-radius:var(--border-radius-large);
+	height: 200px;
+	// to align with the text input in the text block modal
+	padding: 9px;
+
+	:deep(.ck.ck-editor__editable_inline) {
+		padding:0 !important;
+	}
+	&:focus {
+		padding: calc(9px - var(--border-offset));
+		border-color: var(--color-main-text);
+		border-width: var(--border-width-input-focused, 2px);
+	}
+	&:hover {
+		padding: calc(9px - var(--border-offset));
+		border-color: var(--color-main-text);
+		border-width: var(--border-width-input-focused, 2px);
+	}
+}
+
 .editor {
 	width: 100%;
 	height: calc(100% - 75px);
@@ -426,6 +491,12 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 /* Default ckeditor value of padding-inline-start, to overwrite the global styling from server */
 .ck-content ul, .ck-content ol {
 	padding-inline-start: 40px;
+}
+.ck-read-only {
+	color: var(--color-main-text) !important;
+	background-color: var(--color-main-background) !important;
+	opacity: 1 !important;
+	font-size: 100% !important;
 }
 .ck-list__item {
 	.ck-off {
