@@ -50,7 +50,7 @@
 				@click.stop.exact.prevent="toggleSelected"
 				@click.shift.exact.prevent="onSelectMultiple">
 				<template v-if="hoveringAvatar || selected">
-					<CheckIcon :size="40" class="check-icon" :class="{ 'app-content-list-item-avatar-selected': selected }" />
+					<CheckIcon :size="28" class="check-icon" :class="{ 'app-content-list-item-avatar-selected': selected }" />
 				</template>
 				<template v-else>
 					<Avatar :display-name="addresses"
@@ -1201,6 +1201,15 @@ export default {
 		background-color: var(--color-primary-light-hover);
 		border-radius: 32px;
 	}
+}
+
+.check-icon {
+	border-radius: 32px;
+	width: 40px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 </style>

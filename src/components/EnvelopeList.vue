@@ -587,7 +587,7 @@ div {
 .multiselect-header-leave-active,
 .list-enter-active,
 .list-leave-active {
-	transition: all var(--animation-slow);
+	transition: all calc(var(--animation-slow) / 2);
 }
 
 .multiselect-header-enter,
