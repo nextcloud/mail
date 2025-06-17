@@ -369,7 +369,9 @@ export default {
 				}
 			}
 
-			return groups
+			return Object.fromEntries(
+				Object.entries(groups).filter(([_, list]) => list.length > 0),
+			)
 		},
 		async fetchEnvelopes() {
 			const existingEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery || '')
