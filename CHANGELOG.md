@@ -1,3 +1,21 @@
+## [5.1.4](https://github.com/nextcloud/mail/compare/v5.1.3...v5.1.4) (2025-06-17)
+
+
+### Bug Fixes
+
+* **dns:** Update public suffix list ([c893560](https://github.com/nextcloud/mail/commit/c893560a1d6ee96736a31815e3d25df78befd68b))
+* **l10n:** Update translations from Transifex ([ccab1e5](https://github.com/nextcloud/mail/commit/ccab1e5771d673275b0b43d35ceac27ddf6a518f))
+* **l10n:** Update translations from Transifex ([718f546](https://github.com/nextcloud/mail/commit/718f546736369a503938f0380c04be94ce61d73b))
+* **l10n:** Update translations from Transifex ([59c8876](https://github.com/nextcloud/mail/commit/59c88764adc89bad965966740e33e9ef68c93c58))
+* **l10n:** Update translations from Transifex ([1c03d58](https://github.com/nextcloud/mail/commit/1c03d58ab0c6e99b6d6694735ea415554251ae14))
+* **l10n:** Update translations from Transifex ([10900af](https://github.com/nextcloud/mail/commit/10900af8ecd678c0cae75d43e7e88a6fec1f0467))
+* **l10n:** Update translations from Transifex ([b79ccc0](https://github.com/nextcloud/mail/commit/b79ccc03ee8b789811224525df3834a8d41e842a))
+* list layout height ([af4fcaf](https://github.com/nextcloud/mail/commit/af4fcaf69cf84c194825a024534124d9cc5f4bec))
+* make accounts property reactive ([70df55e](https://github.com/nextcloud/mail/commit/70df55ee1d91d39b21afcd5578773a9ea060e92a))
+* remove unused and broken computed menu property ([55a89e9](https://github.com/nextcloud/mail/commit/55a89e92c41eb480b72d091f438a3fde056b5897))
+
+
+
 ## [5.1.3](https://github.com/nextcloud/mail/compare/v5.1.2...v5.1.3) (2025-06-11)
 
 
