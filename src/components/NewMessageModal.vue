@@ -93,7 +93,7 @@
 						@update:bcc="patchComposerData({ bcc: $event })"
 						@update:subject="patchComposerData({ subject: $event })"
 						@update:attachments-data="patchComposerData({ attachments: $event })"
-						@update:editor-body="patchEditorBody"
+						@update:body="patchEditorBody"
 						@update:send-at="patchComposerData({ sendAt: $event / 1000 })"
 						@update:smime-sign="patchComposerData({ smimeSign: $event })"
 						@update:smime-encrypt="patchComposerData({ smimeSign: $event })"
@@ -138,7 +138,7 @@ import { mapStores, mapState, mapActions } from 'pinia'
 import RecipientInfo from './RecipientInfo.vue'
 import useMainStore from '../store/mainStore.js'
 import { messageBodyToTextInstance } from '../util/message.js'
-import { toPlain } from '../util/text.js'
+import { isHtml, isPlain, toPlain } from '../util/text.js'
 
 export default {
 	name: 'NewMessageModal',
@@ -558,11 +558,19 @@ export default {
 
 			return composerData.bodyPlain
 		},
-		patchEditorBody(editorBody) {
-			if (this.composerData.isHtml) {
-				this.patchComposerData({ bodyHtml: editorBody })
-			} else {
-				this.patchComposerData({ bodyPlain: editorBody })
+		async patchEditorBody(body) {
+			if (isHtml(body)) {
+				await this.patchComposerData({
+					isHtml: true,
+					bodyHtml: body.value,
+					bodyPlain: undefined,
+				})
+			} else if (isPlain(body)) {
+				await this.patchComposerData({
+					isHtml: false,
+					bodyHtml: undefined,
+					bodyPlain: body.value,
+				})
 			}
 		},
 		updateCookedComposerData() {
