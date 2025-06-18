@@ -662,6 +662,7 @@ export default function mainStoreActions() {
 			mailboxId,
 			query,
 			addToUnifiedMailboxes = true,
+			includeCacheBuster = false,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const mailbox = this.getMailbox(mailboxId)
@@ -707,7 +708,7 @@ export default function mainStoreActions() {
 							}),
 						),
 					),
-				)(mailbox.accountId, mailboxId, query, undefined, PAGE_SIZE, this.getPreference('sort-order'))
+				)(mailbox.accountId, mailboxId, query, undefined, PAGE_SIZE, includeCacheBuster ? mailbox.cacheBuster : undefined)
 			})
 		},
 		async fetchNextEnvelopePage({

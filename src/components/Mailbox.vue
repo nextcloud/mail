@@ -274,6 +274,7 @@ export default {
 					const envelopes = await this.mainStore.fetchEnvelopes({
 						mailboxId: mailbox.databaseId,
 						limit: this.initialPageSize,
+						includeCacheBuster: true,
 					})
 					this.syncedMailboxes.add(mailbox.databaseId)
 					logger.debug(`Prefetched ${envelopes.length} envelopes for mailbox ${mailbox.displayName} (${mailbox.databaseId})`)
