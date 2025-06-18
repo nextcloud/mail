@@ -141,6 +141,15 @@ class Mailbox extends Entity implements JsonSerializable {
 		return new MailboxStats($this->getMessages(), $this->getUnseen());
 	}
 
+	public function getCacheBuster(): string {
+		return hash('md5', implode('|', [
+			(string)$this->getId(),
+			$this->getSyncNewToken() ?? 'null',
+			$this->getSyncChangedToken() ?? 'null',
+			$this->getSyncVanishedToken() ?? 'null',
+		]));
+	}
+
 	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
@@ -160,6 +169,7 @@ class Mailbox extends Entity implements JsonSerializable {
 			'unread' => $this->unseen,
 			'myAcls' => $this->myAcls,
 			'shared' => $this->shared === true,
+			'cacheBuster' => $this->getCacheBuster(),
 		];
 	}
 }
