@@ -136,7 +136,8 @@ class MessagesController extends Controller {
 		?int $cursor = null,
 		?string $filter = null,
 		?int $limit = null,
-		?string $view = null): JSONResponse {
+		?string $view = null,
+		?string $etag = null /* Is sent to guarantee unique urls for the cache */): JSONResponse {
 		try {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $mailboxId);
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
@@ -146,7 +147,7 @@ class MessagesController extends Controller {
 
 		$this->logger->debug("loading messages of mailbox <$mailboxId>");
 		$sort = $this->preferences->getPreference($this->currentUserId, 'sort-order', 'newest') === 'newest' ? IMailSearch::ORDER_NEWEST_FIRST: IMailSearch::ORDER_OLDEST_FIRST;
-		
+
 		$view = $view === 'singleton' ? IMailSearch::VIEW_SINGLETON : IMailSearch::VIEW_THREADED;
 
 		$messages = $this->mailSearch->findMessages(
@@ -159,9 +160,10 @@ class MessagesController extends Controller {
 			$this->currentUserId,
 			$view
 		);
-		return new JSONResponse(
-			$messages
-		);
+
+		$response = new JSONResponse($messages);
+		$response->cacheFor(7 * 24 * 3600, false, true);
+		return $response;
 	}
 
 	/**
