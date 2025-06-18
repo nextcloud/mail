@@ -609,8 +609,7 @@ export default {
 	}
 }
 @media only screen and (max-width: 1024px) {
-	#mail-thread-header-fields,
-	h2 {
+	#mail-thread-header-fields {
 		margin-top: -20px;
 	}
 }
