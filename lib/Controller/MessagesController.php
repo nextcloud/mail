@@ -146,7 +146,7 @@ class MessagesController extends Controller {
 		}
 
 		$this->logger->debug("loading messages of mailbox <$mailboxId>");
-		$sort = $this->preferences->getPreference($this->currentUserId, 'sort-order', 'newest') === 'newest' ? IMailSearch::ORDER_NEWEST_FIRST: IMailSearch::ORDER_OLDEST_FIRST;
+		$sort = $this->preferences->getPreference($this->currentUserId, 'sort-order', 'newest') === 'newest' ? IMailSearch::ORDER_NEWEST_FIRST : IMailSearch::ORDER_OLDEST_FIRST;
 
 		$view = $view === 'singleton' ? IMailSearch::VIEW_SINGLETON : IMailSearch::VIEW_THREADED;
 
@@ -162,7 +162,9 @@ class MessagesController extends Controller {
 		);
 
 		$response = new JSONResponse($messages);
-		$response->cacheFor(7 * 24 * 3600, false, true);
+		if ($etag) {
+			$response->cacheFor(7 * 24 * 3600, false, true);
+		}
 		return $response;
 	}
 
