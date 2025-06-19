@@ -15,6 +15,7 @@
     "To" : "Mpaka/ hadi",
     "Choose a file to add as attachment" : "Chagua faili kuongeza kama kiambatanisho",
     "Choose a file to share as a link" : "Chagua faili kushirikisha kama kiungo",
+    "_{count} attachment_::_{count} attachments_" : ["{count} attachment","{count} attachments"],
     "Confirm" : "Thibitisha",
     "Later today – {timeLocale}" : "Baadaye leo-{timeLocale}",
     "Tomorrow – {timeLocale}" : "Kesho-{timeLocale}",
@@ -47,6 +48,7 @@
     "(organizer)" : "(Mratibu)",
     "Submit" : "Wasilisha",
     "Favorites" : "Vipendwa",
+    "Error while sharing file" : "Hitilafu wakati wa kushirikisha faili",
     "Actions" : "Utendekaji"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
