@@ -92,7 +92,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 
 	/** @var string|null */
 	protected $bodyPlain;
-	
+
 	/** @var string|null */
 	protected $bodyHtml;
 

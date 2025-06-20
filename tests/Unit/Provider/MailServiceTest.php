@@ -35,13 +35,13 @@ class MailServiceTest extends TestCase {
 	}
 
 	public function testId(): void {
-		
+
 		$this->assertEquals('service1', $this->mailService->id());
 
 	}
 
 	public function testCapable(): void {
-		
+
 		// test matched result
 		$this->assertEquals(true, $this->mailService->capable('MessageSend'));
 
@@ -57,7 +57,7 @@ class MailServiceTest extends TestCase {
 	}
 
 	public function testLabel(): void {
-		
+
 		// test set by constructor
 		$this->assertEquals('Mail Service', $this->mailService->getLabel());
 		// test set by setter
@@ -67,7 +67,7 @@ class MailServiceTest extends TestCase {
 	}
 
 	public function testPrimaryAddress(): void {
-		
+
 		// test set by constructor
 		$this->assertEquals($this->primaryAddress, $this->mailService->getPrimaryAddress());
 		// test set by setter
@@ -78,7 +78,7 @@ class MailServiceTest extends TestCase {
 	}
 
 	public function testSecondaryAddresses(): void {
-		
+
 		// test set by setter
 		$address1 = new Address('test1@testing.com');
 		$address2 = new Address('test2@testing.com');

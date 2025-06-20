@@ -329,8 +329,8 @@ class ImapMessageFetcher {
 			}
 		}
 
-		$isAttachment = ($p->isAttachment() || $p->getType() === 'message/rfc822') &&
-			!in_array($p->getType(), ['application/pgp-signature', 'application/pkcs7-signature', 'application/x-pkcs7-signature']);
+		$isAttachment = ($p->isAttachment() || $p->getType() === 'message/rfc822')
+			&& !in_array($p->getType(), ['application/pgp-signature', 'application/pkcs7-signature', 'application/x-pkcs7-signature']);
 
 		// Regular attachments
 		if ($isAttachment) {

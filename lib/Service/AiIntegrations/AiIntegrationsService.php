@@ -96,10 +96,10 @@ PROMPT;
 				}
 				// construct prompt and task
 				$messageBody = $message->getPlainBody();
-				$prompt = "You are tasked with formulating a helpful summary of a email message. \r\n" .
-						  "The summary should be less than 160 characters. \r\n" .
-						  "Here is the ***E-MAIL*** for which you must generate a helpful summary: \r\n" .
-						  "***START_OF_E-MAIL***\r\n$messageBody\r\n***END_OF_E-MAIL***\r\n";
+				$prompt = "You are tasked with formulating a helpful summary of a email message. \r\n"
+						  . "The summary should be less than 160 characters. \r\n"
+						  . "Here is the ***E-MAIL*** for which you must generate a helpful summary: \r\n"
+						  . "***START_OF_E-MAIL***\r\n$messageBody\r\n***END_OF_E-MAIL***\r\n";
 				$task = new TaskProcessingTask(
 					TextToText::ID,
 					[

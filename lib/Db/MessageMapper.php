@@ -808,7 +808,7 @@ class MessageMapper extends QBMapper {
 		} else {
 			$select = $qb->select(['m.id', 'm.sent_at']);
 		}
-	
+
 		$select->from($this->getTableName(), 'm');
 
 		if ($query->getThreaded()) {
@@ -1090,7 +1090,7 @@ class MessageMapper extends QBMapper {
 				);
 			}
 		}
-		
+
 		$select->where(
 			$qb->expr()->in('m.mailbox_id', $qb->createFunction($selectMailboxIds->getSQL()), IQueryBuilder::PARAM_INT_ARRAY)
 		);
@@ -1411,9 +1411,9 @@ class MessageMapper extends QBMapper {
 		$subSelect = $this->db->getQueryBuilder();
 
 		$subSelect
-			->select($sortOrder === IMailSearch::ORDER_NEWEST_FIRST ?
-				$subSelect->func()->min('sent_at') :
-				$subSelect->func()->max('sent_at'))
+			->select($sortOrder === IMailSearch::ORDER_NEWEST_FIRST
+				? $subSelect->func()->min('sent_at')
+				: $subSelect->func()->max('sent_at'))
 			->from($this->getTableName())
 			->where(
 				$subSelect->expr()->eq('mailbox_id', $select->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
@@ -1426,9 +1426,9 @@ class MessageMapper extends QBMapper {
 			$select->expr()->eq('m.mailbox_id', 'm2.mailbox_id', IQueryBuilder::PARAM_INT),
 			$select->expr()->eq('m.thread_root_id', 'm2.thread_root_id', IQueryBuilder::PARAM_INT),
 			$select->expr()->orX(
-				$sortOrder === IMailSearch::ORDER_NEWEST_FIRST ?
-					$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT) :
-					$select->expr()->gt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+				$sortOrder === IMailSearch::ORDER_NEWEST_FIRST
+					? $select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT)
+					: $select->expr()->gt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
 				$select->expr()->andX(
 					$select->expr()->eq('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
 					$select->expr()->lt('m.message_id', 'm2.message_id', IQueryBuilder::PARAM_STR),

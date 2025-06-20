@@ -27,7 +27,7 @@ use OCP\Mail\Provider\Message;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class MessageSendTest extends TestCase {
-	
+
 	private IConfig&MockObject $config;
 	private ITimeFactory&MockObject $time;
 	private AccountService&MockObject $accountService;
@@ -236,7 +236,7 @@ class MessageSendTest extends TestCase {
 		$this->accountService->method('find')->will(
 			$this->throwException(new ClientException('Something went wrong'))
 		);
-		
+
 		// construct mail provider message
 		$mailMessage = $this->mailMessage;
 		// define exception condition

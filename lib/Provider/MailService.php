@@ -61,7 +61,7 @@ class MailService implements IService, IMessageSend {
 		if (isset($this->serviceAbilities[$value])) {
 			return (bool)$this->serviceAbilities[$value];
 		}
-		
+
 		return false;
 	}
 

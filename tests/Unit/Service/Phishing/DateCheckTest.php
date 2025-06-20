@@ -41,7 +41,7 @@ class DateCheckTest extends TestCase {
 				new DateTime('now'),
 				new DateTime('26 June 2024 22:45:34 +0000')
 			);
-		
+
 		$result = $this->service->run('26 June 2024 22:45:34 +0000');
 
 		$this->assertFalse($result->isPhishing());
@@ -76,7 +76,7 @@ class DateCheckTest extends TestCase {
 					'invalid date' => throw new \DateException()
 				};
 			});
-	
+
 		$result = $this->service->run('invalid date');
 
 		$this->assertFalse($result->isPhishing());
