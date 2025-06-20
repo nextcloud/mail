@@ -141,6 +141,16 @@ class Mailbox extends Entity implements JsonSerializable {
 		return new MailboxStats($this->getMessages(), $this->getUnseen());
 	}
 
+	public function getEtag(): string {
+		$hash = hash('md5', implode('|', [
+			(string)$this->getId(),
+			$this->getSyncNewToken() ?? 'null',
+			$this->getSyncChangedToken() ?? 'null',
+			$this->getSyncVanishedToken() ?? 'null',
+		]));
+		return "\"$hash\"";
+	}
+
 	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
@@ -160,6 +170,7 @@ class Mailbox extends Entity implements JsonSerializable {
 			'unread' => $this->unseen,
 			'myAcls' => $this->myAcls,
 			'shared' => $this->shared === true,
+			'etag' => $this->getEtag(),
 		];
 	}
 }
