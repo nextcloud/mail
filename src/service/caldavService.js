@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { DavClient, CalendarHome, Principal, Collection } from '@nextcloud/cdav-library'
+import DavClient, { CalendarHome, Principal, Collection } from '@nextcloud/cdav-library'
 import { generateRemoteUrl } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
 
