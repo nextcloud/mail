@@ -14,7 +14,7 @@ import { translate as t } from '@nextcloud/l10n'
 import logger from './logger.js'
 import { matchError } from './errors/match.js'
 import MailboxLockedError from './errors/MailboxLockedError.js'
-import { mapStores, mapState } from 'pinia'
+import { mapState, mapStores } from 'pinia'
 import useMainStore from './store/mainStore.js'
 import initAfterAppCreation from './init.js'
 

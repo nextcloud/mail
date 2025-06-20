@@ -108,10 +108,10 @@
 
 <script>
 import EventData from './imip/EventData.vue'
-import { NcButton, NcSelect, NcLoadingIcon } from '@nextcloud/vue'
+import { NcButton, NcLoadingIcon, NcSelect } from '@nextcloud/vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import CalendarIcon from 'vue-material-design-icons/Calendar.vue'
-import { getParserManager, Parameter, Property, DateTimeValue, EventComponent, AttendeeProperty, CalendarComponent } from '@nextcloud/calendar-js'
+import { AttendeeProperty, CalendarComponent, DateTimeValue, EventComponent, Parameter, Property, getParserManager } from '@nextcloud/calendar-js'
 import { removeMailtoPrefix } from '../util/eventAttendee.js'
 import logger from '../logger.js'
 import { namespaces as NS } from '@nextcloud/cdav-library'

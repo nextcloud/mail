@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { NcColorPicker, NcActions as Actions, NcActionButton, NcActionText as ActionText, NcActionInput as ActionInput, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcActionInput as ActionInput, NcActionText as ActionText, NcActions as Actions, NcLoadingIcon as IconLoading, NcActionButton, NcColorPicker } from '@nextcloud/vue'
 import { showInfo } from '@nextcloud/dialogs'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import IconEdit from 'vue-material-design-icons/Pencil.vue'

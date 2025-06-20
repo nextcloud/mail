@@ -141,7 +141,7 @@
 </template>
 
 <script>
-import { NcActions as Actions, NcActionButton as ActionButton, NcButton } from '@nextcloud/vue'
+import { NcActionButton as ActionButton, NcActions as Actions, NcButton } from '@nextcloud/vue'
 import { showError } from '@nextcloud/dialogs'
 import Envelope from './Envelope.vue'
 import IconDelete from 'vue-material-design-icons/Delete.vue'

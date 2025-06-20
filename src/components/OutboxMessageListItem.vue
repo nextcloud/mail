@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { NcListItem as ListItem, NcActionButton as ActionButton } from '@nextcloud/vue'
+import { NcActionButton as ActionButton, NcListItem as ListItem } from '@nextcloud/vue'
 import Avatar from './Avatar.vue'
 import IconDelete from 'vue-material-design-icons/Delete.vue'
 import { getLanguage, translate as t } from '@nextcloud/l10n'
@@ -61,8 +61,8 @@ import { matchError } from '../errors/match.js'
 import Send from 'vue-material-design-icons/Send.vue'
 import Copy from 'vue-material-design-icons/ContentCopy.vue'
 import {
-	STATUS_RAW,
 	STATUS_IMAP_SENT_MAILBOX_FAIL,
+	STATUS_RAW,
 	STATUS_SMTP_ERROR,
 	UNDO_DELAY,
 } from '../store/constants.js'

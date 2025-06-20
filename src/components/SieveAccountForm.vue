@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { NcButton as ButtonVue, NcTextField, NcPasswordField, NcCheckboxRadioSwitch } from '@nextcloud/vue'
+import { NcButton as ButtonVue, NcCheckboxRadioSwitch, NcPasswordField, NcTextField } from '@nextcloud/vue'
 import useMainStore from '../store/mainStore.js'
 import { mapStores } from 'pinia'
 

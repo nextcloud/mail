@@ -22,7 +22,7 @@
 
 <script>
 
-import { NcActions as Actions, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcActionButton as ActionButton, NcActions as Actions, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import ical from 'ical.js'

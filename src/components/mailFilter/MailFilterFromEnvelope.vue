@@ -30,10 +30,10 @@ import {
 	MailFilter,
 	MailFilterActionMailbox,
 	MailFilterActionStop,
-	MailFilterOperator,
 	MailFilterCondition,
 	MailFilterConditionField,
 	MailFilterConditionOperator,
+	MailFilterOperator,
 } from '../../models/mailFilter.ts'
 import CreateModal from './CreateModal.vue'
 

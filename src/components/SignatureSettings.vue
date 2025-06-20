@@ -57,7 +57,7 @@ import TextEditor from './TextEditor.vue'
 import { detect, toHtml } from '../util/text.js'
 import mitt from 'mitt'
 
-import { NcSelect, NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcSelect } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import useMainStore from '../store/mainStore.js'
 import { mapStores } from 'pinia'

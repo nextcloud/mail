@@ -320,7 +320,7 @@ import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 import CompactMode from 'vue-material-design-icons/ReorderHorizontal.vue'
 
-import { NcAppSettingsSection, NcAppSettingsDialog, NcButton, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch } from '@nextcloud/vue'
+import { NcLoadingIcon as IconLoading, NcAppSettingsDialog, NcAppSettingsSection, NcButton, NcCheckboxRadioSwitch } from '@nextcloud/vue'
 
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconEmail from 'vue-material-design-icons/Email.vue'
@@ -333,7 +333,7 @@ import TrustedSenders from './TrustedSenders.vue'
 import InternalAddress from './InternalAddress.vue'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 import useMainStore from '../store/mainStore.js'
-import { mapStores, mapState } from 'pinia'
+import { mapState, mapStores } from 'pinia'
 
 export default {
 	name: 'AppSettingsMenu',

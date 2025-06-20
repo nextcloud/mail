@@ -219,9 +219,9 @@
 
 <script>
 import {
-	NcActionButton,
 	NcActionButton as ActionButton,
 	NcActionLink as ActionLink,
+	NcActionButton,
 } from '@nextcloud/vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon.vue'
 import { Base64 } from 'js-base64'
@@ -249,7 +249,7 @@ import NcActionInput from '@nextcloud/vue/components/NcActionInput'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
 import logger from '../logger.js'
 import moment from '@nextcloud/moment'
-import { mapStores, mapState } from 'pinia'
+import { mapState, mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
 import FilterIcon from 'vue-material-design-icons/Filter.vue'
 

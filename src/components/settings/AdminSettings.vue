@@ -283,15 +283,15 @@ import IconSettings from 'vue-material-design-icons/Cog.vue'
 import SettingsSection from '@nextcloud/vue/components/NcSettingsSection'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import {
-	disableProvisioning,
 	createProvisioningSettings,
-	updateProvisioningSettings,
+	disableProvisioning,
 	provisionAll,
-	updateAllowNewMailAccounts,
-	updateLlmEnabled,
-	updateEnabledSmartReply,
 	setImportanceClassificationEnabledByDefault,
 	setLayoutMessageView,
+	updateAllowNewMailAccounts,
+	updateEnabledSmartReply,
+	updateLlmEnabled,
+	updateProvisioningSettings,
 } from '../../service/SettingsService.js'
 
 const googleOauthClientId = loadState('mail', 'google_oauth_client_id', null) ?? undefined

@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { NcActionButton, NcListItem, NcButton } from '@nextcloud/vue'
+import { NcActionButton, NcButton, NcListItem } from '@nextcloud/vue'
 import UpdateModal from './UpdateModal.vue'
 import { randomId } from '../../util/randomId.js'
 import logger from '../../logger.js'

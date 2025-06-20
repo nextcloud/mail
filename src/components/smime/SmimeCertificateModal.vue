@@ -131,14 +131,14 @@
 </template>
 
 <script>
-import { NcButton, NcModal, NcPasswordField, NcEmptyContent } from '@nextcloud/vue'
+import { NcButton, NcEmptyContent, NcModal, NcPasswordField } from '@nextcloud/vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import logger from '../../logger.js'
 import moment from '@nextcloud/moment'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
-import { convertPkcs12ToPem, InvalidPkcs12CertificateError } from '../../util/pkcs12.js'
+import { InvalidPkcs12CertificateError, convertPkcs12ToPem } from '../../util/pkcs12.js'
 import useMainStore from '../../store/mainStore.js'
-import { mapStores, mapState } from 'pinia'
+import { mapState, mapStores } from 'pinia'
 
 const TYPE_PKCS12 = 'pkcs12'
 const TYPE_PEM = 'pem'

@@ -37,8 +37,8 @@
 <script>
 import {
 	NcButton,
-	NcLoadingIcon,
 	NcCheckboxRadioSwitch,
+	NcLoadingIcon,
 	NcModal,
 } from '@nextcloud/vue'
 import { mapStores } from 'pinia'

@@ -185,7 +185,7 @@
 
 <script>
 
-import { NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconEmailCheck from 'vue-material-design-icons/EmailCheck.vue'
 import IconExternal from 'vue-material-design-icons/OpenInNew.vue'
 import IconFolder from 'vue-material-design-icons/Folder.vue'
@@ -213,7 +213,7 @@ import { getMailboxStatus, repairMailbox } from '../service/MailboxService.js'
 import logger from '../logger.js'
 import { translatePlural as n } from '@nextcloud/l10n'
 import { translate as translateMailboxName } from '../i18n/MailboxTranslator.js'
-import { showInfo, showError } from '@nextcloud/dialogs'
+import { showError, showInfo } from '@nextcloud/dialogs'
 import { DroppableMailboxDirective as droppableMailbox } from '../directives/drag-and-drop/droppable-mailbox/index.js'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus.js'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'

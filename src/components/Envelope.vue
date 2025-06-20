@@ -349,9 +349,9 @@
 import {
 	NcActionButton as ActionButton,
 	NcActionLink as ActionLink,
-	NcActionSeparator,
-	NcActionInput,
 	NcActionText as ActionText,
+	NcActionInput,
+	NcActionSeparator,
 } from '@nextcloud/vue'
 import EnvelopeSkeleton from './EnvelopeSkeleton.vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon.vue'
@@ -368,7 +368,7 @@ import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
 import importantSvg from '../../img/important.svg'
 import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope/index.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
-import { shortRelativeDatetime, messageDateTime } from '../util/shortRelativeDatetime.js'
+import { messageDateTime, shortRelativeDatetime } from '../util/shortRelativeDatetime.js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError.js'

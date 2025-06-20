@@ -110,7 +110,7 @@
 </template>
 
 <script>
-import { NcDateTimePicker as DatetimePicker, NcButton as ButtonVue } from '@nextcloud/vue'
+import { NcButton as ButtonVue, NcDateTimePicker as DatetimePicker } from '@nextcloud/vue'
 import TextEditor from './TextEditor.vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import { html, plain, toHtml, toPlain } from '../util/text.js'

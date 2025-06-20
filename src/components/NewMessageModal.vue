@@ -114,9 +114,9 @@
 </template>
 <script>
 import {
-	NcButton,
 	NcEmptyContent as EmptyContent,
 	NcModal as Modal,
+	NcButton,
 } from '@nextcloud/vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
@@ -134,7 +134,7 @@ import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
 import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
 import { deleteDraft, saveDraft, updateDraft } from '../service/DraftService.js'
 import useOutboxStore from '../store/outboxStore.js'
-import { mapStores, mapState, mapActions } from 'pinia'
+import { mapActions, mapState, mapStores } from 'pinia'
 import RecipientInfo from './RecipientInfo.vue'
 import useMainStore from '../store/mainStore.js'
 import { messageBodyToTextInstance } from '../util/message.js'

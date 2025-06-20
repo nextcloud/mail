@@ -56,7 +56,7 @@ import prop from 'lodash/fp/prop.js'
 import { showWarning } from '@nextcloud/dialogs'
 import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import sumBy from 'lodash/fp/sumBy.js'
-import { translate as t, translatePlural as n } from '@nextcloud/l10n'
+import { translatePlural as n, translate as t } from '@nextcloud/l10n'
 
 import Vue from 'vue'
 

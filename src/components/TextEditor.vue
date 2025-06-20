@@ -46,12 +46,12 @@ import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
 import SourceEditingPlugin from '@ckeditor/ckeditor5-source-editing/src/sourceediting.js'
 import { DropdownView } from '@ckeditor/ckeditor5-ui'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
-import { searchProvider, getLinkWithPicker } from '@nextcloud/vue/components/NcRichText'
+import { getLinkWithPicker, searchProvider } from '@nextcloud/vue/components/NcRichText'
 import { getLanguage } from '@nextcloud/l10n'
 import logger from '../logger.js'
 import PickerPlugin from '../ckeditor/smartpicker/PickerPlugin.js'
 import { autoCompleteByName } from '../service/ContactIntegrationService.js'
-import { emojiSearch, emojiAddRecent } from '@nextcloud/vue'
+import { emojiAddRecent, emojiSearch } from '@nextcloud/vue'
 
 export default {
 	name: 'TextEditor',

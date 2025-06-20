@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { NcModal as Modal, NcActionText as ActionText, NcActionInput as ActionInput, NcLoadingIcon as IconLoading, NcButton } from '@nextcloud/vue'
+import { NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading, NcModal as Modal, NcButton } from '@nextcloud/vue'
 import DeleteTagModal from './DeleteTagModal.vue'
 import TagItem from './TagItem.vue'
 import IconTag from 'vue-material-design-icons/Tag.vue'

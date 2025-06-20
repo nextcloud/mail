@@ -15,7 +15,7 @@ import vToolTip from 'v-tooltip'
 import App from './App.vue'
 import Nextcloud from './mixins/Nextcloud.js'
 import router from './router.js'
-import { createPinia, PiniaVuePlugin } from 'pinia'
+import { PiniaVuePlugin, createPinia } from 'pinia'
 
 // eslint-disable-next-line camelcase
 __webpack_nonce__ = btoa(getRequestToken())

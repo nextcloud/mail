@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { NcContent, NcAppContent as AppContent, NcEmptyContent as EmptyContent } from '@nextcloud/vue'
+import { NcAppContent as AppContent, NcEmptyContent as EmptyContent, NcContent } from '@nextcloud/vue'
 import { loadState } from '@nextcloud/initial-state'
 
 import AccountForm from '../components/AccountForm.vue'

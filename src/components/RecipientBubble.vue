@@ -106,7 +106,7 @@
 <script>
 import { generateUrl } from '@nextcloud/router'
 
-import { NcUserBubble as UserBubble, NcPopover as Popover, NcSelect, NcButton as ButtonVue } from '@nextcloud/vue'
+import { NcButton as ButtonVue, NcSelect, NcPopover as Popover, NcUserBubble as UserBubble } from '@nextcloud/vue'
 
 import IconReply from 'vue-material-design-icons/Reply.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
@@ -116,7 +116,7 @@ import IconDetails from 'vue-material-design-icons/Information.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconUser from 'vue-material-design-icons/Account.vue'
 import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
-import { addToContact, findMatches, newContact, autoCompleteByName } from '../service/ContactIntegrationService.js'
+import { addToContact, autoCompleteByName, findMatches, newContact } from '../service/ContactIntegrationService.js'
 import uniqBy from 'lodash/fp/uniqBy.js'
 import debouncePromise from 'debounce-promise'
 import { showError, showSuccess } from '@nextcloud/dialogs'
