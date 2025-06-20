@@ -20,6 +20,7 @@ module.exports = {
 	},
 	rules: {
 		'comma-dangle': 'error',
+		'jsdoc/no-undefined-types': 'error',
 		'jsdoc/require-jsdoc': 'off',
 		'perfectionist/sort-enums': 'error',
 		'perfectionist/sort-interfaces': 'error',

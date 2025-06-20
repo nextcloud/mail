@@ -6,7 +6,7 @@ import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
 /**
- * @typedef {{ enabled: bool, start: string, end: string, subject: string, message: string }} OutOfOfficeState
+ * @typedef {{ enabled: boolean, start: string, end: string, subject: string, message: string }} OutOfOfficeState
  */
 
 /**

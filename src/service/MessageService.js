@@ -121,7 +121,7 @@ export async function clearCache(accountId, id) {
 /**
  * Set flags for envelope
  *
- * @param {int} id
+ * @param {number} id
  * @param {object} flags
  */
 export async function setEnvelopeFlags(id, flags) {

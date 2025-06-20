@@ -122,7 +122,7 @@ export default {
 		/**
 		 * The select option for no certificate
 		 *
-		 * @return {{label: string, isChainVerified: bool}}
+		 * @return {{label: string, isChainVerified: boolean}}
 		 */
 		noCertificateOption() {
 			return {
