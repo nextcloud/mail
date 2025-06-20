@@ -117,7 +117,6 @@ export default class Task {
 	 * Update linked calendar of this task
 	 *
 	 * @param {object} calendar the calendar
-	 * @memberof Contact
 	 */
 	updateCalendar(calendar) {
 		this.calendar = calendar
@@ -130,7 +129,6 @@ export default class Task {
 	 *
 	 * @param {Array|string} data the data to normalize
 	 * @return {string}
-	 * @memberof Task
 	 */
 	firstIfArray(data) {
 		return Array.isArray(data) ? data[0] : data
@@ -140,7 +138,6 @@ export default class Task {
 	 * Return the key
 	 *
 	 * @readonly
-	 * @memberof Task
 	 */
 	get key() {
 		return this.uid + '~' + this.calendar.id
@@ -150,7 +147,6 @@ export default class Task {
 	 * Return the url
 	 *
 	 * @readonly
-	 * @memberof Task
 	 */
 	get url() {
 		if (this.dav) {
@@ -163,7 +159,6 @@ export default class Task {
 	 * Return the uri
 	 *
 	 * @readonly
-	 * @memberof Task
 	 */
 	get uri() {
 		if (this.dav) {
@@ -176,7 +171,6 @@ export default class Task {
 	 * Return the uid
 	 *
 	 * @readonly
-	 * @memberof Task
 	 */
 	get uid() {
 		return this._uid
@@ -186,7 +180,6 @@ export default class Task {
 	 * Set the uid
 	 *
 	 * @param {string} uid the uid to set
-	 * @memberof Task
 	 */
 	set uid(uid) {
 		this.vtodo.updatePropertyWithValue('uid', uid)
@@ -197,7 +190,6 @@ export default class Task {
 	 * Return the first summary
 	 *
 	 * @readonly
-	 * @memberof Task
 	 */
 	get summary() {
 		return this._summary
@@ -207,7 +199,6 @@ export default class Task {
 	 * Set the summary
 	 *
 	 * @param {string} summary the summary
-	 * @memberof Task
 	 */
 	set summary(summary) {
 		this.vtodo.updatePropertyWithValue('summary', summary)

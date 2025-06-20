@@ -521,8 +521,8 @@ export default {
 		/**
 		 * Find the envelope list index of a given envelope's database id.
 		 *
-		 * @param {int} databaseId
-		 * @return {int|undefined} Index or undefined if not found in the envelope list
+		 * @param {number} databaseId of the given envelope
+		 * @return {number|undefined} Index or undefined if not found in the envelope list
 		 */
 		findSelectionIndex(databaseId) {
 			for (const [index, envelope] of this.sortedEnvelops.entries()) {

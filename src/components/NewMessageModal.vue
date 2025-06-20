@@ -287,7 +287,7 @@ export default {
 			this.additionalTrapElements.push(element)
 		},
 		/**
-		 * @param data Message data
+		 * @param {object} data Message data
 		 * @param {object=} opts Options
 		 * @param {boolean=} opts.showToast Show a toast after saving
 		 * @return {Promise<number>} Draft id promise
