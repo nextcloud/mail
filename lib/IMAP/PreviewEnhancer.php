@@ -77,7 +77,7 @@ class PreviewEnhancer {
 					if ($avatar instanceof Avatar) {
 						$message->setAvatar($avatar);
 					}
-					
+
 				}
 			}
 		}

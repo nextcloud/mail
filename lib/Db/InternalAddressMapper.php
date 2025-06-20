@@ -57,7 +57,7 @@ class InternalAddressMapper extends QBMapper {
 		]);
 
 		$result = $this->insert($address);
-		
+
 		return $result->getId();
 	}
 

@@ -76,7 +76,7 @@ class MailConnectionPerformance implements ISetupCheck {
 					$list = $client->listMailboxes('*');
 					$client->status(key($list));
 					$tOperation = $this->microtime->getNumeric();
-					
+
 					$tests[$host][$accountId] = ['start' => $tStart, 'login' => $tLogin, 'operation' => $tOperation];
 				} catch (Throwable $e) {
 					$this->logger->warning('Error occurred while performing system check on mail account: ' . $account->getId());

@@ -396,7 +396,7 @@ class AttachmentServiceTest extends TestCase {
 		$storage->expects(self::once())
 			->method('getShare')
 			->willReturn($share);
-		
+
 		$file = $this->createConfiguredMock(File::class, [
 			'getName' => 'cat.jpg',
 			'getMimeType' => 'text/plain',

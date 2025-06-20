@@ -146,7 +146,7 @@ class MessagesController extends Controller {
 
 		$this->logger->debug("loading messages of mailbox <$mailboxId>");
 		$sort = $this->preferences->getPreference($this->currentUserId, 'sort-order', 'newest') === 'newest' ? IMailSearch::ORDER_NEWEST_FIRST: IMailSearch::ORDER_OLDEST_FIRST;
-		
+
 		$view = $view === 'singleton' ? IMailSearch::VIEW_SINGLETON : IMailSearch::VIEW_THREADED;
 
 		$messages = $this->mailSearch->findMessages(
@@ -583,9 +583,9 @@ class MessagesController extends Controller {
 				$client->logout();
 			}
 
-			$htmlResponse = $plain ?
-				HtmlResponse::plain($html) :
-				HtmlResponse::withResizer(
+			$htmlResponse = $plain
+				? HtmlResponse::plain($html)
+				: HtmlResponse::withResizer(
 					$html,
 					$this->nonceManager->getNonce(),
 					$this->urlGenerator->getAbsoluteURL(

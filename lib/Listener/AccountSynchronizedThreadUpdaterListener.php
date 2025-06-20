@@ -44,7 +44,7 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 		}
 		$logger = $event->getLogger();
 		$userId = $event->getAccount()->getUserId();
-		
+
 		if ($this->preferences->getPreference($userId, 'layout-message-view', 'threaded') !== 'threaded') {
 			$event->getLogger()->debug('Skipping threading as the user prefers a flat view');
 			return;

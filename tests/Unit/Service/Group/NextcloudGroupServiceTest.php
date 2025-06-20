@@ -120,8 +120,7 @@ class NextcloudGroupServiceTest extends TestCase {
 			$this->createTestUser('bob', 'Bobby', 'bob@smith.net'),
 			$this->createTestUser('alice', 'Alice', 'alice@smith.net')
 		];
-		$group =
-			$this->createTestGroup('testgroup', 'first test group', $users);
+		$group = $this->createTestGroup('testgroup', 'first test group', $users);
 
 		$this->groupsManager->expects($this->once())
 			->method('groupExists')

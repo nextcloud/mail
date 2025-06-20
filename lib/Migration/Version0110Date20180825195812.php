@@ -25,7 +25,7 @@ class Version0110Date20180825195812 extends SimpleMigrationStep {
 	public function changeSchema(IOutput $output, \Closure $schemaClosure, array $options) {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
-		
+
 		$table = $schema->getTable('mail_attachments');
 
 		if ($table->hasIndex('mail_attachments_userid_index')) {

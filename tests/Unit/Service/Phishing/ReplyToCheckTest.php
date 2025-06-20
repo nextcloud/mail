@@ -25,7 +25,7 @@ class ReplyToCheckTest extends TestCase {
 		$this->service = new ReplyToCheck($this->l10n);
 	}
 
-	
+
 	public function testNoEmail(): void {
 		$email = 'jhon@example.com';
 		$result = $this->service->run($email, null);

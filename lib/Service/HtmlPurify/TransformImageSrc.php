@@ -40,14 +40,14 @@ class TransformImageSrc extends HTMLPurifier_AttrTransform {
 	 */
 	#[\Override]
 	public function transform($attr, $config, $context) {
-		if ($context->get('CurrentToken')->name !== 'img' ||
-			!isset($attr['src'])) {
+		if ($context->get('CurrentToken')->name !== 'img'
+			|| !isset($attr['src'])) {
 			return $attr;
 		}
 
 		// Block tracking pixels
-		if (isset($attr['width']) && isset($attr['height']) &&
-			(int)$attr['width'] < 5 && (int)$attr['height'] < 5) {
+		if (isset($attr['width']) && isset($attr['height'])
+			&& (int)$attr['width'] < 5 && (int)$attr['height'] < 5) {
 			// Replace with a transparent png in case it's important for the layout
 			$attr['src'] = $this->urlGenerator->imagePath('mail', 'blocked-image.png');
 			$attr = $this->setDisplayNone($attr);

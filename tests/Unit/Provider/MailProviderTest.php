@@ -49,7 +49,7 @@ class MailProviderTest extends TestCase {
 	}
 
 	public function testLabel(): void {
-		
+
 		// define l10n return
 		$this->l10n->expects(self::once())->method('t')->willReturn('Mail Application');
 		// construct mail provider
@@ -60,7 +60,7 @@ class MailProviderTest extends TestCase {
 	}
 
 	public function testHasServices(): void {
-		
+
 		// construct dummy mail account
 		$mailAccount = new Account(new MailAccount([
 			'accountId' => 100,
@@ -93,7 +93,7 @@ class MailProviderTest extends TestCase {
 	}
 
 	public function testListServices(): void {
-		
+
 		// construct dummy mail account
 		$mailAccount = new Account(new MailAccount([
 			'accountId' => 100,
@@ -134,7 +134,7 @@ class MailProviderTest extends TestCase {
 	}
 
 	public function testFindServiceById(): void {
-		
+
 		// construct dummy mail account
 		$mailAccount = new Account(new MailAccount([
 			'accountId' => 100,
@@ -175,7 +175,7 @@ class MailProviderTest extends TestCase {
 	}
 
 	public function testFindServiceByAddress(): void {
-		
+
 		// construct dummy mail account
 		$mailAccount = new Account(new MailAccount([
 			'accountId' => 100,

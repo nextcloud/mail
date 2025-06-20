@@ -26,7 +26,7 @@ class Version4001Date20241009140707 extends SimpleMigrationStep {
 	 */
 	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
-		
+
 		$schema = $schemaClosure();
 
 		$messagesTable = $schema->getTable('mail_messages');
@@ -36,7 +36,7 @@ class Version4001Date20241009140707 extends SimpleMigrationStep {
 				'default' => false,
 			]);
 		}
-		
+
 		return $schema;
 	}
 

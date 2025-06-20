@@ -116,9 +116,9 @@ class ContactsIntegration {
 				if ($isSystemUser && $shareeEnumerationInGroupOnly && !$isInSameGroup) {
 					// Check for full match. If full match is disabled, matching results already filtered out
 					if (!($lowerTerm !== '' && (
-						($shareeEnumerationFullMatch && !empty($fn) && $lowerTerm === strtolower($fn)) ||
-						($shareeEnumerationFullMatchUserId && $lowerTerm === strtolower($id)) ||
-						($shareeEnumerationFullMatchEmail && $lowerTerm === strtolower($e))))) {
+						($shareeEnumerationFullMatch && !empty($fn) && $lowerTerm === strtolower($fn))
+						|| ($shareeEnumerationFullMatchUserId && $lowerTerm === strtolower($id))
+						|| ($shareeEnumerationFullMatchEmail && $lowerTerm === strtolower($e))))) {
 						// Not a full Match
 						continue;
 					}

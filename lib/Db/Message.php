@@ -142,7 +142,7 @@ class Message extends Entity implements JsonSerializable {
 
 	/** @var bool */
 	private $fetchAvatarFromClient = false;
-	
+
 	public function __construct() {
 		$this->from = new AddressList([]);
 		$this->to = new AddressList([]);
