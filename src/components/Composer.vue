@@ -479,7 +479,7 @@ import Vue from 'vue'
 import mitt from 'mitt'
 
 import { findRecipient } from '../service/AutocompleteService.js'
-import { detect, html, toHtml, toPlain } from '../util/text.js'
+import { detect, html, plain, toHtml, toPlain } from '../util/text.js'
 import logger from '../logger.js'
 import TextEditor from './TextEditor.vue'
 import { buildReplyBody } from '../ReplyBuilder.js'
@@ -925,6 +925,13 @@ export default {
 		},
 		bodyVal(val) {
 			this.$emit('update:editor-body', val)
+
+			const data = this.getMessageData()
+			if (data.isHtml) {
+				this.$emit('update:body', html(data.bodyHtml))
+			} else {
+				this.$emit('update:body', plain(data.bodyPlain))
+			}
 		},
 		attachments(val) {
 			this.$emit('update:attachments-data', val)
