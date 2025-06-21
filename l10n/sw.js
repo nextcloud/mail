@@ -27,6 +27,7 @@ OC.L10N.register(
     "This weekend – {timeLocale}" : "Wikendi-{timeLocale}",
     "Next week – {timeLocale}" : "Wiki ijayo-{timeLocale}",
     "Favorite" : "Kipendwa",
+    "More actions" : "Vitendo zaidi",
     "Back" : "Rudi",
     "Create event" : "Tengeneza matukio",
     "Load more" : "Pakia zaidi",
@@ -52,9 +53,13 @@ OC.L10N.register(
     "Not found" : "Haipatikani",
     "Untitled event" : "Tukio lisilotajwa",
     "(organizer)" : "(Mratibu)",
+    "Client ID" : "Kitambulisho cha mteja",
+    "Client secret" : "Siri ya mteja",
     "Submit" : "Wasilisha",
+    "Account connected" : "Akaunti imeunganishwa",
     "Favorites" : "Vipendwa",
     "Error while sharing file" : "Hitilafu wakati wa kushirikisha faili",
+    "Continue to %s" : "Endelea katika %s",
     "Actions" : "Utendekaji"
 },
 "nplurals=2; plural=(n != 1);");
