@@ -1,3 +1,24 @@
+## [5.1.5](https://github.com/nextcloud/mail/compare/v5.1.4...v5.1.5) (2025-06-24)
+
+
+### Bug Fixes
+
+* **deps:** Apply npm audit fix ([f64c5ad](https://github.com/nextcloud/mail/commit/f64c5ad3665d2274548ce035986752d8c061dcac))
+* invitation title on small screen ([fb9f230](https://github.com/nextcloud/mail/commit/fb9f2303fdfd9a425206f4bf7bcc8f0e826e9649))
+* **l10n:** Update translations from Transifex ([49a182e](https://github.com/nextcloud/mail/commit/49a182e6e3b2726288af3c7c7484afe1f83cf3d0))
+* **l10n:** Update translations from Transifex ([13d498a](https://github.com/nextcloud/mail/commit/13d498a16afb849d9e56e29a86e64ef71ca9ab89))
+* **l10n:** Update translations from Transifex ([ab5a163](https://github.com/nextcloud/mail/commit/ab5a163fe57a9a898a912ddc48f49d625ea106bf))
+* **l10n:** Update translations from Transifex ([8bf70ad](https://github.com/nextcloud/mail/commit/8bf70ad3c08723ee1f893a93c5b076f5f4691e46))
+* **l10n:** Update translations from Transifex ([5334b64](https://github.com/nextcloud/mail/commit/5334b6401b6b7279f23d449330d96d51f761b173))
+* **smime:** persist sign preference per alias ([760db24](https://github.com/nextcloud/mail/commit/760db24a2f939a3d761ead5a69b54611aef8703b))
+
+
+### Performance Improvements
+
+* prefetch other mailboxes in the background ([b72547a](https://github.com/nextcloud/mail/commit/b72547a8836baba2d53d6eab72b30a2b8e3b52ff))
+
+
+
 ## [5.1.4](https://github.com/nextcloud/mail/compare/v5.1.3...v5.1.4) (2025-06-17)
 
 
