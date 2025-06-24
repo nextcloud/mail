@@ -92,6 +92,13 @@ class SnoozeService {
 			$dstAccount,
 			$dstMailbox->getName()
 		);
+
+		// TODO: This is bad - we should handle this case more gracefully!
+		//       Perhaps disable the snooze feature if the IMAP server does not support UIDPLUS?
+		if ($newUid === null) {
+			return;
+		}
+
 		$snoozedMessage = clone $message;
 		$snoozedMessage->setMailboxId($dstMailbox->getId());
 		$snoozedMessage->setUid($newUid);
@@ -170,6 +177,8 @@ class SnoozeService {
 			$dstMailbox,
 			$selectedMessage->getThreadRootId()
 		);
+		// TODO: We will miss some UIDs here on some servers. The new uid array may not contain all
+		//       uids (or none at all) depending on the IMAP server and Message-ID headers.
 		$this->snoozeThreadDB($newUids, $dstMailbox, $unixTimestamp, $srcMailbox);
 	}
 

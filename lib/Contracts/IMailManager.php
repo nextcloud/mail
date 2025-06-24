@@ -116,7 +116,7 @@ interface IMailManager {
 	 * @param int $uid
 	 * @param Account $destinationAccount
 	 * @param string $destFolderId
-	 * @return int the new UID
+	 * @return ?int the new UID (or null if it couldn't be determined)
 	 *
 	 * @throws ServiceException
 	 */
@@ -124,7 +124,7 @@ interface IMailManager {
 		string $sourceFolderId,
 		int $uid,
 		Account $destinationAccount,
-		string $destFolderId): int;
+		string $destFolderId): ?int;
 
 	/**
 	 * @param Account $account
@@ -321,7 +321,7 @@ interface IMailManager {
 	 * @param Account $dstAccount
 	 * @param Mailbox $dstMailbox
 	 * @param string $threadRootId
-	 * @return int[] the new UIDs
+	 * @return int[] the new UIDs (not guaranteed to have an entry for each message of the thread)
 	 * @throws ServiceException
 	 */
 	public function moveThread(Account $srcAccount, Mailbox $srcMailbox, Account $dstAccount, Mailbox $dstMailbox, string $threadRootId): array;
