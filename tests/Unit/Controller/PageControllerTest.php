@@ -37,8 +37,8 @@ use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\IUserSession;
+use OCP\User\IAvailabilityCoordinator;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use function urlencode;
 
@@ -102,14 +102,13 @@ class PageControllerTest extends TestCase {
 
 	private SmimeService $smimeService;
 
-	/** @var ContainerInterface|MockObject */
-	private $container;
-
 	/** @var ClassificationSettingsService|MockObject */
 	private $classificationSettingsService;
 
 	/** @var InternalAddressService|MockObject */
 	private $internalAddressService;
+
+	private IAvailabilityCoordinator&MockObject $availabilityCoordinator;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -133,9 +132,9 @@ class PageControllerTest extends TestCase {
 		$this->credentialStore = $this->createMock(ICredentialStore::class);
 		$this->smimeService = $this->createMock(SmimeService::class);
 		$this->userManager = $this->createMock(IUserManager::class);
-		$this->container = $this->createMock(ContainerInterface::class);
 		$this->classificationSettingsService = $this->createMock(ClassificationSettingsService::class);
 		$this->internalAddressService = $this->createMock(InternalAddressService::class);
+		$this->availabilityCoordinator = $this->createMock(IAvailabilityCoordinator::class);
 
 		$this->controller = new PageController(
 			$this->appName,
@@ -157,10 +156,9 @@ class PageControllerTest extends TestCase {
 			$this->smimeService,
 			$this->aiIntegrationsService,
 			$this->userManager,
-			$this->container,
 			$this->classificationSettingsService,
 			$this->internalAddressService,
-
+			$this->availabilityCoordinator,
 		);
 	}
 
@@ -303,7 +301,11 @@ class PageControllerTest extends TestCase {
 			->method('getLoginCredentials')
 			->willReturn($loginCredentials);
 
-		$this->initialState->expects($this->exactly(22))
+		$this->availabilityCoordinator->expects(self::once())
+			->method('isEnabled')
+			->willReturn(true);
+
+		$this->initialState->expects($this->exactly(23))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -340,6 +342,7 @@ class PageControllerTest extends TestCase {
 				['llm_freeprompt_available', false],
 				['llm_followup_available', false],
 				['smime-certificates', []],
+				['enable-system-out-of-office', true],
 			);
 
 		$expected = new TemplateResponse($this->appName, 'index');
