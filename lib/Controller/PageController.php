@@ -43,8 +43,6 @@ use OCP\IUserSession;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\SummaryTaskType;
 use OCP\User\IAvailabilityCoordinator;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
 use function class_exists;
@@ -70,7 +68,7 @@ class PageController extends Controller {
 	private SmimeService $smimeService;
 	private AiIntegrationsService $aiIntegrationsService;
 	private IUserManager $userManager;
-	private ?IAvailabilityCoordinator $availabilityCoordinator;
+	private IAvailabilityCoordinator $availabilityCoordinator;
 	private ClassificationSettingsService $classificationSettingsService;
 	private InternalAddressService $internalAddressService;
 
@@ -93,9 +91,9 @@ class PageController extends Controller {
 		SmimeService $smimeService,
 		AiIntegrationsService $aiIntegrationsService,
 		IUserManager $userManager,
-		ContainerInterface $container,
 		ClassificationSettingsService $classificationSettingsService,
-		InternalAddressService $internalAddressService, ) {
+		InternalAddressService $internalAddressService,
+		IAvailabilityCoordinator $availabilityCoordinator) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -117,13 +115,7 @@ class PageController extends Controller {
 		$this->userManager = $userManager;
 		$this->classificationSettingsService = $classificationSettingsService;
 		$this->internalAddressService = $internalAddressService;
-
-		// TODO: inject directly if support for nextcloud < 28 is dropped
-		try {
-			$this->availabilityCoordinator = $container->get(IAvailabilityCoordinator::class);
-		} catch (ContainerExceptionInterface) {
-			$this->availabilityCoordinator = null;
-		}
+		$this->availabilityCoordinator = $availabilityCoordinator;
 	}
 
 	/**
@@ -319,12 +311,10 @@ class PageController extends Controller {
 			),
 		);
 
-		if ($this->availabilityCoordinator !== null) {
-			$this->initialStateService->provideInitialState(
-				'enable-system-out-of-office',
-				$this->availabilityCoordinator->isEnabled(),
-			);
-		}
+		$this->initialStateService->provideInitialState(
+			'enable-system-out-of-office',
+			$this->availabilityCoordinator->isEnabled(),
+		);
 
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');
