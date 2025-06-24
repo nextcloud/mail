@@ -277,14 +277,14 @@ class MailManager implements IMailManager {
 	 * @param Account $destinationAccount
 	 * @param string $destFolderId
 	 *
-	 * @return int
+	 * @return ?int the new UID (or null if couldn't be determined)
 	 * @throws ServiceException
 	 */
 	public function moveMessage(Account $sourceAccount,
 		string $sourceFolderId,
 		int $uid,
 		Account $destinationAccount,
-		string $destFolderId): int {
+		string $destFolderId): ?int {
 		if ($sourceAccount->getId() === $destinationAccount->getId()) {
 			try {
 				$sourceMailbox = $this->mailboxMapper->find($sourceAccount, $sourceFolderId);
@@ -387,14 +387,14 @@ class MailManager implements IMailManager {
 	 * @param string $destFolderId
 	 * @param int $messageId
 	 *
-	 * @return int the new UID
+	 * @return ?int the new UID (or null if it couldn't be determined)
 	 * @throws ServiceException
 	 *
 	 */
 	private function moveMessageOnSameAccount(Account $account,
 		string $sourceFolderId,
 		string $destFolderId,
-		int $messageId): int {
+		int $messageId): ?int {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
 			return $this->imapMessageMapper->move($client, $sourceFolderId, $messageId, $destFolderId);
@@ -911,13 +911,16 @@ class MailManager implements IMailManager {
 				'dstMailboxId' => $dstMailbox->getId()
 			]);
 
-			$newUids[] = $this->moveMessage(
+			$newUid = $this->moveMessage(
 				$srcAccount,
 				$message['mailboxName'],
 				$message['messageUid'],
 				$dstAccount,
 				$dstMailbox->getName()
 			);
+			if ($newUid !== null) {
+				$newUids[] = $newUid;
+			}
 		}
 		return $newUids;
 	}

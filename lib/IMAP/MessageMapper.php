@@ -341,12 +341,12 @@ class MessageMapper {
 	 * @param string $sourceFolderId
 	 * @param int $messageId
 	 * @param string $destFolderId
-	 * @return int the new UID
+	 * @return ?int the new UID (or null if couldn't be determined)
 	 */
 	public function move(Horde_Imap_Client_Base $client,
 		string $sourceFolderId,
 		int $messageId,
-		string $destFolderId): int {
+		string $destFolderId): ?int {
 		try {
 			$mapping = $client->copy($sourceFolderId, $destFolderId,
 				[
@@ -355,7 +355,9 @@ class MessageMapper {
 					'force_map' => true,
 				]);
 
-			return $mapping[$messageId];
+			// There won't be a mapping if the IMAP server does not support UIDPLUS and the message
+			// has no Message-ID header. This is extremely rare, but this case needs to be handled.
+			return $mapping[$messageId] ?? null;
 		} catch (Horde_Imap_Client_Exception $e) {
 			$this->logger->debug($e->getMessage(),
 				[
