@@ -262,8 +262,7 @@ export default {
 			return 5
 		},
 		showThread() {
-			return (this.mailbox.isPriorityInbox === true || this.hasEnvelopes)
-				&& this.$route.name === 'message'
+			return this.$route.name === 'message'
 				&& this.$route.params.threadId !== 'mailto'
 		},
 		query() {
