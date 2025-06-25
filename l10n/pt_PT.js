@@ -57,6 +57,8 @@ OC.L10N.register(
     "Add mail account" : "Adicionar conta de email",
     "General" : "Geral",
     "List" : "Lista",
+    "Newest" : "Newest",
+    "Oldest" : "Oldest",
     "Use Gravatar and favicon avatars" : "Usar Gravatar e favicon avatars",
     "Register as application for mail links" : "Registar como aplicação para ligações de correio",
     "Register" : "Registar",
