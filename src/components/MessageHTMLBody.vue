@@ -47,7 +47,7 @@ import PrintScout from 'printscout'
 import { trustSender } from '../service/TrustedSenderService.js'
 import { NcActionButton as ActionButton, NcActions as Actions } from '@nextcloud/vue'
 import IconImage from 'vue-material-design-icons/ImageSizeSelectActual.vue'
-import IconMail from 'vue-material-design-icons/Email.vue'
+import IconMail from 'vue-material-design-icons/EmailOutline.vue'
 import IconDomain from 'vue-material-design-icons/Domain.vue'
 
 import logger from '../logger.js'

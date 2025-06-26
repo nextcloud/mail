@@ -279,7 +279,7 @@ import { loadState } from '@nextcloud/initial-state'
 import ProvisioningSettings from './ProvisioningSettings.vue'
 import AntiSpamSettings from './AntiSpamSettings.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
-import IconSettings from 'vue-material-design-icons/Cog.vue'
+import IconSettings from 'vue-material-design-icons/CogOutline.vue'
 import SettingsSection from '@nextcloud/vue/components/NcSettingsSection'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import {

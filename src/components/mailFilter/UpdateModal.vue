@@ -112,7 +112,7 @@ import Test from './Test.vue'
 import Operator from './Operator.vue'
 import { randomId } from '../../util/randomId.js'
 import Action from './Action.vue'
-import IconCheck from 'vue-material-design-icons/Check.vue'
+import IconCheck from 'vue-material-design-icons/CheckOutline.vue'
 
 export default {
 	name: 'UpdateModal',

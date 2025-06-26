@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import IconMail from 'vue-material-design-icons/Email.vue'
+import IconMail from 'vue-material-design-icons/EmailOutline.vue'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 
 export default {
