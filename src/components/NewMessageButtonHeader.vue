@@ -33,7 +33,7 @@
 
 <script>
 import { NcButton as ButtonVue } from '@nextcloud/vue'
-import IconAdd from 'vue-material-design-icons/Plus.vue'
+import IconAdd from 'vue-material-design-icons/PlusOutline.vue'
 import IconRefresh from 'vue-material-design-icons/Refresh.vue'
 import IconLoading from '@nextcloud/vue/components/NcLoadingIcon'
 import logger from '../logger.js'

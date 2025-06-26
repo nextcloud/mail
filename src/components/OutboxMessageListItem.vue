@@ -51,14 +51,14 @@
 <script>
 import { NcListItem as ListItem, NcActionButton as ActionButton } from '@nextcloud/vue'
 import Avatar from './Avatar.vue'
-import IconDelete from 'vue-material-design-icons/Delete.vue'
+import IconDelete from 'vue-material-design-icons/DeleteOutline.vue'
 import { getLanguage, translate as t } from '@nextcloud/l10n'
 import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin.js'
 import moment from '@nextcloud/moment'
 import logger from '../logger.js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { matchError } from '../errors/match.js'
-import Send from 'vue-material-design-icons/Send.vue'
+import Send from 'vue-material-design-icons/SendOutline.vue'
 import Copy from 'vue-material-design-icons/ContentCopy.vue'
 import {
 	STATUS_RAW,

@@ -54,7 +54,7 @@ import logger from '../../logger.js'
 import { mapStores } from 'pinia'
 import useMailFilterStore from '../../store/mailFilterStore.ts'
 import useMainStore from '../../store/mainStore.js'
-import DeleteIcon from 'vue-material-design-icons/Delete.vue'
+import DeleteIcon from 'vue-material-design-icons/DeleteOutline.vue'
 import DeleteModal from './DeleteModal.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 

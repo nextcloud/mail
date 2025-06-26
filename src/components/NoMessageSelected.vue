@@ -20,7 +20,7 @@
 
 <script>
 import { NcAppContentDetails as AppContentDetails, NcEmptyContent } from '@nextcloud/vue'
-import IconMail from 'vue-material-design-icons/Email.vue'
+import IconMail from 'vue-material-design-icons/EmailOutline.vue'
 import NewMessageButtonHeader from './NewMessageButtonHeader.vue'
 
 export default {

@@ -117,7 +117,7 @@ import mitt from 'mitt'
 import addressParser from 'address-rfc2822'
 
 import infiniteScroll from '../directives/infinite-scroll.js'
-import IconInfo from 'vue-material-design-icons/Information.vue'
+import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
 import logger from '../logger.js'
 import Mailbox from './Mailbox.vue'
 import SearchMessages from './SearchMessages.vue'

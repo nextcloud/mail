@@ -322,9 +322,9 @@ import CompactMode from 'vue-material-design-icons/ReorderHorizontal.vue'
 
 import { NcAppSettingsSection, NcAppSettingsDialog, NcButton, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch } from '@nextcloud/vue'
 
-import IconAdd from 'vue-material-design-icons/Plus.vue'
-import IconEmail from 'vue-material-design-icons/Email.vue'
-import IconLock from 'vue-material-design-icons/Lock.vue'
+import IconAdd from 'vue-material-design-icons/PlusOutline.vue'
+import IconEmail from 'vue-material-design-icons/EmailOutline.vue'
+import IconLock from 'vue-material-design-icons/LockOutline.vue'
 import VerticalSplit from 'vue-material-design-icons/FormatColumns.vue'
 import HorizontalSplit from 'vue-material-design-icons/ViewSplitHorizontal.vue'
 import Logger from '../logger.js'
