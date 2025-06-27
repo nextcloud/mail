@@ -230,22 +230,24 @@ jobs:
   matrix:
     runs-on: ubuntu-latest-low
     outputs:
-      matrix: ${{ steps.versions.outputs.sparse-matrix }}
+      php-min-list: ${{ steps.versions.outputs.php-min-list }}
+      branches: ${{ steps.versions.outputs.branches }}
     steps:
       - name: Checkout app
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Get version matrix
         id: versions
         uses: icewind1991/nextcloud-version-matrix@58becf3b4bb6dc6cef677b15e2fd8e7d48c0908f # v1.3.1
-        with:
-          matrix: '{"node-versions": ["20"]}'
 
   frontend-e2e-tests:
     runs-on: ubuntu-latest
     name: Front-end E2E tests
     needs: matrix
     strategy:
-      matrix: ${{ fromJson(needs.matrix.outputs.matrix) }}
+      matrix:
+        php-versions: ${{ fromJson(needs.matrix.outputs.php-min-list) }}
+        server-versions: ${{ fromJson(needs.matrix.outputs.branches) }}
+        node-versions: ["20"]
     steps:
       - name: Set up Nextcloud env
         uses: ChristophWurst/setup-nextcloud@fc0790385c175d97e88a7cb0933490de6e990374 # v0.3.2
