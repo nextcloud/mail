@@ -168,16 +168,16 @@
         },
         {
             "name": "amphp/parallel",
-            "version": "v1.4.3",
+            "version": "v1.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/parallel.git",
-                "reference": "3aac213ba7858566fd83d38ccb85b91b2d652cb0"
+                "reference": "508ca221f2f47235327db5120f0a89d43435b69b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/parallel/zipball/3aac213ba7858566fd83d38ccb85b91b2d652cb0",
-                "reference": "3aac213ba7858566fd83d38ccb85b91b2d652cb0",
+                "url": "https://api.github.com/repos/amphp/parallel/zipball/508ca221f2f47235327db5120f0a89d43435b69b",
+                "reference": "508ca221f2f47235327db5120f0a89d43435b69b",
                 "shasum": ""
             },
             "require": {
@@ -190,9 +190,9 @@
                 "php": ">=7.1"
             },
             "require-dev": {
-                "amphp/php-cs-fixer-config": "dev-master",
+                "amphp/php-cs-fixer-config": "^2",
                 "amphp/phpunit-util": "^1.1",
-                "phpunit/phpunit": "^8 || ^7"
+                "phpunit/phpunit": "^9 || ^8 || ^7"
             },
             "type": "library",
             "autoload": {
@@ -230,7 +230,7 @@
             ],
             "support": {
                 "issues": "https://github.com/amphp/parallel/issues",
-                "source": "https://github.com/amphp/parallel/tree/v1.4.3"
+                "source": "https://github.com/amphp/parallel/tree/v1.4.4"
             },
             "funding": [
                 {
@@ -238,7 +238,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-03-23T08:04:23+00:00"
+            "time": "2024-12-08T16:28:11+00:00"
         },
         {
             "name": "amphp/parser",
@@ -304,16 +304,16 @@
         },
         {
             "name": "amphp/process",
-            "version": "v1.1.7",
+            "version": "v1.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/process.git",
-                "reference": "1949d85b6d71af2818ff68144304a98495628f19"
+                "reference": "55b837d4f1857b9bd7efb7bb859ae6b0e804f13f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/process/zipball/1949d85b6d71af2818ff68144304a98495628f19",
-                "reference": "1949d85b6d71af2818ff68144304a98495628f19",
+                "url": "https://api.github.com/repos/amphp/process/zipball/55b837d4f1857b9bd7efb7bb859ae6b0e804f13f",
+                "reference": "55b837d4f1857b9bd7efb7bb859ae6b0e804f13f",
                 "shasum": ""
             },
             "require": {
@@ -357,7 +357,7 @@
             "homepage": "https://github.com/amphp/process",
             "support": {
                 "issues": "https://github.com/amphp/process/issues",
-                "source": "https://github.com/amphp/process/tree/v1.1.7"
+                "source": "https://github.com/amphp/process/tree/v1.1.9"
             },
             "funding": [
                 {
@@ -365,7 +365,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-04-19T03:00:28+00:00"
+            "time": "2024-12-13T17:38:25+00:00"
         },
         {
             "name": "amphp/serialization",
