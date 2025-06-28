@@ -66,16 +66,6 @@ OC.L10N.register(
     "Date" : "Он сар өдөр",
     "Tags" : "Tag-үүд",
     "Custom" : "Дурын",
-    "Recipient" : "Хүлээн авагч",
-    "matches" : "тохируулах",
-    "Reset" : "тохируулах",
-    "Client ID" : "Хэрэглэгчийн ID",
-    "User" : "Хэрэглэгч",
-    "Host" : "хост",
-    "Port" : "порт",
-    "Certificate" : "Гэрчилгээ",
-    "Submit" : "мэдэгдэх",
-    "Connect your mail account" : "Таны мэйл бүртгэлийг холбоно",
     "All" : "бүх",
     "Drafts" : "ноорог",
     "Favorites" : "Онцолсон",
@@ -83,7 +73,6 @@ OC.L10N.register(
     "Junk" : "хэрэггүй",
     "Sent" : "илгээсэн",
     "Trash" : "хог",
-    "Error loading message" : "алдаатай ачааллах зурвас",
-    "Actions" : "Үйл ажиллагаа"
+    "Error loading message" : "алдаатай ачааллах зурвас"
 },
 "nplurals=2; plural=(n != 1);");

@@ -42,8 +42,6 @@ OC.L10N.register(
     "Body" : "Telo",
     "Date" : "Date",
     "Tags" : "Oznake",
-    "Not found" : "Nije nađeno",
-    "User" : "User",
     "All" : "Sve",
     "Favorites" : "Omiljene",
     "Continue to %s" : "Nastavi na %s"

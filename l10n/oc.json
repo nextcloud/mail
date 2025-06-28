@@ -77,22 +77,6 @@
     "Date" : "Data",
     "Tags" : "Etiquetas",
     "Custom" : "Personalizats",
-    "Mark as unread" : "Marcar coma pas legit",
-    "Mark as read" : "Marcar coma legit",
-    "Translate message" : "Traduire lo messatge",
-    "Translating" : "Traduccion",
-    "Untitled event" : "Eveniment sens títol",
-    "Train" : "Tren",
-    "Flag" : "Drapèu",
-    "Reset" : "Reïnicializar",
-    "Client ID" : "ID client",
-    "User" : "User",
-    "Host" : "Òste",
-    "Port" : "Pòrt",
-    "Valid until" : "Valid fins a",
-    "Certificate" : "Certificat",
-    "Submit" : "Transmetre",
-    "Account connected" : "Compte connectat",
     "All" : "Tot",
     "Drafts" : "Borrolhons",
     "Favorites" : "Favorits",
@@ -105,7 +89,6 @@
     "{from}\n{subject}" : "{from}\n{subject}",
     "Message sent" : "Messatge mandat",
     "Error loading message" : "Error al moment del cargament del messatge",
-    "Continue to %s" : "Contunhar cap a %s",
-    "Actions" : "Accions"
+    "Continue to %s" : "Contunhar cap a %s"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

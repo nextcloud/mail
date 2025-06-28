@@ -58,20 +58,9 @@ OC.L10N.register(
     "Tags" : "Tags",
     "Last 7 days" : "Oxirgi 7 kun",
     "Custom" : "Boshqa",
-    "Add tag" : "Teg qo'shing",
-    "Not found" : "Topilmadi",
-    "Untitled event" : "Nomsiz tadbir",
-    "(organizer)" : "(tashkilotchi)",
-    "Operator" : "Operator",
-    "contains" : "o'z ichiga oladi",
-    "Reset" : "Qayta tiklash",
-    "Client ID" : "Mijoz identifikatori",
-    "Port" : "Port",
-    "Account connected" : "Akkaunt ulangan",
     "All" : "All",
     "Favorites" : "Favorites",
     "Error while sharing file" : "Fayl almashishda xatolik yuz berdi",
-    "Continue to %s" : " %sni davom eting",
-    "Actions" : "Actions"
+    "Continue to %s" : " %sni davom eting"
 },
 "nplurals=1; plural=0;");

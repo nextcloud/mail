@@ -37,17 +37,9 @@ OC.L10N.register(
     "Close" : "Lat att",
     "Date" : "Dato",
     "Tags" : "Emneord",
-    "Recipient" : "Mottakar",
-    "contains" : "inneheld",
-    "Client ID" : "Klient-ID",
-    "User" : "Bruker",
-    "Host" : "Tenar",
-    "Port" : "Port",
-    "Certificate" : "Sertifikat",
     "All" : "Alle",
     "Favorites" : "Favorit",
     "Sent" : "Sendt",
-    "Message sent" : "Melding sendt",
-    "Actions" : "Handlingar"
+    "Message sent" : "Melding sendt"
 },
 "nplurals=2; plural=(n != 1);");
