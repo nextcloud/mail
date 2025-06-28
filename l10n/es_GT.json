@@ -100,6 +100,7 @@
     "Request a read receipt" : "Solicitar acuse de lectura",
     "Encrypt message with Mailvelope" : "Cifrar el mensaje con Mailvelope",
     "Choose" : "Seleccionar",
+    "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Los archivos adjuntos exceden el tamaño permitido de {size}. Por favor comparte a través de  un enlace.","Los archivos adjuntos superan el tamaño permitido de {size}. Por favor envía los archivos mediante un enlace.","Los archivos adjuntos superan el tamaño permitido de {size}. Por favor envía los archivos mediante un enlace."],
     "Choose a file to add as attachment" : "Selecciona el archivo a agregar como adjunto",
     "Choose a file to share as a link" : "Selecciona un archivo para compartir como enlace",
     "Confirm" : "Confirmar",
@@ -156,20 +157,6 @@
     "Tags" : "Etiquetas",
     "Select tags" : "Selecciona las etiquetas",
     "Custom" : "Personalizado",
-    "Add tag" : "Agregar etiqueta",
-    "Recipient" : "Destinatario",
-    "matches" : "coincide",
-    "Priority" : "Prioridad",
-    "Reset" : "Restablecer",
-    "Client ID" : "ID del cliente",
-    "Client secret" : "Secreto del cliente",
-    "User" : "Ususario",
-    "Host" : "Servidor",
-    "Port" : "Puerto",
-    "Valid until" : "Válido hasta",
-    "Certificate" : "Certificado",
-    "Submit" : "Enviar",
-    "Connect your mail account" : "Conecta tu cuenta de correo",
     "All" : "Todos",
     "Drafts" : "Borradores",
     "Favorites" : "Favoritos",
@@ -191,7 +178,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Haz click aqui si no eres redireccionado automáticamente dentro de los siguietes segundos. ",
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
-    "Continue to %s" : "Continuar a %s",
-    "Actions" : "Acciones"
+    "Continue to %s" : "Continuar a %s"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

@@ -63,22 +63,9 @@ OC.L10N.register(
     "Tags" : "Maoni",
     "Select tags" : "Chagua ukumbusho",
     "Last 7 days" : "Siku 7 zilizopita",
-    "Not found" : "Haipatikani",
-    "Untitled event" : "Tukio lisilotajwa",
-    "(organizer)" : "(Mratibu)",
-    "Priority" : "Kipaumbele",
-    "Reset" : "Pangilia upya",
-    "Client ID" : "Kitambulisho cha mteja",
-    "Client secret" : "Siri ya mteja",
-    "User" : "Mtumiaji",
-    "Valid until" : "Halali mpaka",
-    "Certificate" : "Cheti",
-    "Submit" : "Wasilisha",
-    "Account connected" : "Akaunti imeunganishwa",
     "All" : "Zote",
     "Favorites" : "Vipendwa",
     "Error while sharing file" : "Hitilafu wakati wa kushirikisha faili",
-    "Continue to %s" : "Endelea katika %s",
-    "Actions" : "Utendekaji"
+    "Continue to %s" : "Endelea katika %s"
 },
 "nplurals=2; plural=(n != 1);");

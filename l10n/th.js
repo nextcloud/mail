@@ -66,18 +66,6 @@ OC.L10N.register(
     "Last 7 days" : "ภายใน 7 วัน",
     "Custom" : "กำหนดเอง",
     "Tag already exists" : "มีแท็กอยู่แล้ว",
-    "Not found" : "ไม่พบ",
-    "Priority" : "ลำดับความสำคัญ",
-    "Reset" : "ตั้งค่าใหม่",
-    "Client ID" : "รหัสไคลเอ็นต์",
-    "Client secret" : "ข้อมูลลับไคลเอ็นต์",
-    "User" : "ผู้ใช้",
-    "Host" : "โฮสต์",
-    "Port" : "พอร์ต",
-    "Valid until" : "ใช้ได้จนถึง",
-    "Certificate" : "ใบรับรอง",
-    "Submit" : "ส่ง",
-    "Account connected" : "เชื่อมต่อบัญชีแล้ว",
     "All" : "ทั้งหมด",
     "Drafts" : "ฉบับร่าง",
     "Favorites" : "รายการโปรด",
@@ -90,7 +78,6 @@ OC.L10N.register(
     "Error loading message" : "เกิดข้อผิดพลาดขณะโหลดข้อความ",
     "Redirect" : "เปลี่ยนเส้นทาง",
     "The link leads to %s" : "ลิงก์จะนำไปยัง %s",
-    "Continue to %s" : "ดำเนินการต่อไปที่ %s",
-    "Actions" : "การกระทำ"
+    "Continue to %s" : "ดำเนินการต่อไปที่ %s"
 },
 "nplurals=1; plural=0;");
