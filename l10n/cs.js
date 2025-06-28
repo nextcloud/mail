@@ -228,6 +228,7 @@ OC.L10N.register(
     "Custom date and time" : "Uživatelsky určené datum a čas",
     "Enter a date" : "Zadejte datum",
     "Choose" : "Vybrat",
+    "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Přílohy překračují povolenou velikost příloh {size}. Místo toho prosím sdílejte soubor prostřednictvím odkazu.","Přílohy překračují povolenou velikost příloh {size}. Místo toho prosím sdílejte soubory prostřednictvím odkazu.","Přílohy překračují povolenou velikost příloh {size}. Místo toho prosím sdílejte souborů prostřednictvím odkazu.","Přílohy překračují povolenou velikost příloh {size}. Místo toho prosím sdílejte soubory prostřednictvím odkazu."],
     "Choose a file to add as attachment" : "Vyberte soubor k přiložení",
     "Choose a file to share as a link" : "Zvolte soubor, který sdílet jako odkaz",
     "_{count} attachment_::_{count} attachments_" : ["{count} příloha","{count} přílohy","{count} příloh","{count} přílohy"],

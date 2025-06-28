@@ -167,6 +167,7 @@ OC.L10N.register(
     "Custom date and time" : "Персонализирана дата и час",
     "Enter a date" : "Въведете дата",
     "Choose" : "Изберете",
+    "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Прикачените файлове надвишават разрешения размер на прикачени файлове от {size}. Моля, вместо това да споделите файловете чрез връзка.","Прикачените файлове надвишават разрешения размер на прикачени файлове от {size}. Моля, вместо това да споделите файловете чрез връзка."],
     "Choose a file to add as attachment" : "Избери файл за прикачване",
     "Choose a file to share as a link" : "Изберете файл, който да споделите като връзка",
     "_{count} attachment_::_{count} attachments_" : ["{count} прикачени файлове","{count} прикачени файлове"],
