@@ -63,7 +63,7 @@
 </template>
 <script>
 import { NcButton, NcSelect } from '@nextcloud/vue'
-import DeleteIcon from 'vue-material-design-icons/Delete.vue'
+import DeleteIcon from 'vue-material-design-icons/DeleteOutline.vue'
 import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
 
 export default {

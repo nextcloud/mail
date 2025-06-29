@@ -32,7 +32,7 @@
 </template>
 <script>
 import ArrowDownIcon from 'vue-material-design-icons/ArrowDown.vue'
-import creation from '@mdi/svg/svg/creation.svg'
+import creation from '@mdi/svg/svg/creation-outline.svg'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcChip from '@nextcloud/vue/components/NcChip'
 import LoadingSkeleton from './LoadingSkeleton.vue'

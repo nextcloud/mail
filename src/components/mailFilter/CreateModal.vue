@@ -44,7 +44,7 @@ import {
 import { mapStores } from 'pinia'
 import useMailFilterStore from '../../store/mailFilterStore.ts'
 import useMainStore from '../../store/mainStore.js'
-import IconCheck from 'vue-material-design-icons/Check.vue'
+import IconCheck from 'vue-material-design-icons/CheckOutline.vue'
 import { MailFilterConditionField } from '../../models/mailFilter.ts'
 
 export default {
