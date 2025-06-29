@@ -223,6 +223,7 @@ OC.L10N.register(
     "Custom date and time" : "Valutud kuupäeval ja kellaajal",
     "Enter a date" : "Sisesta kuupäev",
     "Choose" : "Vali",
+    "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Manuse maht ületab lubatud suuruse {size}. Selle asemel palun jaga seda faili lingiga.","Manuste maht ületab lubatud suuruse {size}. Selle asemel palun jaga neid faile lingiga."],
     "Choose a file to add as attachment" : "Vali fail, mida manustada",
     "Choose a file to share as a link" : "Valilingiga jagatav fail",
     "_{count} attachment_::_{count} attachments_" : ["{count} manus","{count} manust"],
