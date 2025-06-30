@@ -226,7 +226,7 @@
     "Custom date and time" : "Data e hora personalizadas",
     "Enter a date" : "Insira uma data",
     "Choose" : "Escolher",
-    "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["O anexo excedeu o tamanho permitido {size}. Compartilhe os arquivos através de links.","Os anexos excederam o tamanho permitido {size}. Compartilhe os arquivos através de links.","Os anexos excederam o tamanho permitido {size}. Compartilhe os arquivos através de links."],
+    "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["O anexo excede o tamanho permitido de {size}. Em vez disso, compartilhe o arquivo por meio de um link.","Os anexos excedem o tamanho permitido de {size}. Em vez disso, compartilhe os arquivos por meio de um link.","Os anexos excedem o tamanho permitido de {size}. Em vez disso, compartilhe os arquivos por meio de um link."],
     "Choose a file to add as attachment" : "Escolha um arquivo para adicionar como anexo",
     "Choose a file to share as a link" : "Escolher um arquivo para compartilhar como link",
     "_{count} attachment_::_{count} attachments_" : ["{count} anexo","{count} anexos","{count} anexos"],
