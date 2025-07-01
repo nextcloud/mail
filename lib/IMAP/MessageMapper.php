@@ -517,6 +517,7 @@ class MessageMapper {
 		}
 
 		if (($message = $result->first()) === null) {
+			\OCP\Log\logger('mail')->info('Found ' . $result->count() . ' results');
 			return null;
 		}
 
