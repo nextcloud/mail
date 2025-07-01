@@ -21,6 +21,7 @@
     "Keyboard shortcuts" : "Mikato ya keyboard",
     "Delete" : "Futa",
     "Search" : "Tafuta",
+    "Send" : "Tuma",
     "From" : "Tangu/ kutoka",
     "To" : "Mpaka/ hadi",
     "Choose" : "Chagua",
@@ -33,6 +34,7 @@
     "This weekend – {timeLocale}" : "Wikendi-{timeLocale}",
     "Next week – {timeLocale}" : "Wiki ijayo-{timeLocale}",
     "Favorite" : "Kipendwa",
+    "Unread" : "Unread",
     "More actions" : "Vitendo zaidi",
     "Back" : "Rudi",
     "Create event" : "Tengeneza matukio",
@@ -45,11 +47,14 @@
     "Accept" : "Kubali",
     "Decline" : "Kataa",
     "More options" : "Mibadala zaidi",
+    "Remove" : "Ondoa",
     "Other" : "Mengine",
+    "Forward" : "Mbele",
     "Translate" : "Tafsiri",
     "Move" : "Hamisha",
     "Loading …" : "Inapakia",
     "{usage} of {limit} used" : "{usage} ya {limit}imetumika",
+    "Remove account" : "Ondoa akaunti",
     "Rename" : "Ipe jina jipya",
     "Subscribed" : "Iliyojisajili",
     "Edit message" : "Hariri ujumbe",
@@ -67,6 +72,7 @@
     "All" : "Zote",
     "Favorites" : "Vipendwa",
     "Error while sharing file" : "Hitilafu wakati wa kushirikisha faili",
+    "Message sent" : "Ujumbe umetumwa",
     "Continue to %s" : "Endelea katika %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
