@@ -1,3 +1,28 @@
+## [5.1.6](https://github.com/nextcloud/mail/compare/v5.1.5...v5.1.6) (2025-07-01)
+
+
+### Bug Fixes
+
+* **deps:** Apply npm audit fix ([62c7ee0](https://github.com/nextcloud/mail/commit/62c7ee0f8854e1c94a7efc3c5f5710b65bb51695))
+* **deps:** bump amphp/parallel and amphp/process for PHP8.4 compat ([de2be6b](https://github.com/nextcloud/mail/commit/de2be6b2f233b7a4114b88174092e9ce114ceadf))
+* **dns:** Update public suffix list ([07c2d29](https://github.com/nextcloud/mail/commit/07c2d29ae875a234103f4f60b5a9214282958049))
+* **l10n:** Update translations from Transifex ([9a20eac](https://github.com/nextcloud/mail/commit/9a20eaca03b051ed6303eb174049cbbcb7649d3d))
+* **l10n:** Update translations from Transifex ([fa276bf](https://github.com/nextcloud/mail/commit/fa276bf45167db5efefd6730fcb0ea5f1a3ff6e3))
+* **l10n:** Update translations from Transifex ([b56c8fb](https://github.com/nextcloud/mail/commit/b56c8fb33fff510902b88557a0ac810fb211139c))
+* **l10n:** Update translations from Transifex ([39bbc4d](https://github.com/nextcloud/mail/commit/39bbc4d6e7586523ccb48c78e57c2623605990c8))
+* **l10n:** Update translations from Transifex ([ad26644](https://github.com/nextcloud/mail/commit/ad266440ac3c476c4d86af321cd10fdb49ca7889))
+* **l10n:** Update translations from Transifex ([351e258](https://github.com/nextcloud/mail/commit/351e2586ad0d67442b85ea5e5517cc5c6c01478e))
+* **l10n:** Update translations from Transifex ([68cdf3a](https://github.com/nextcloud/mail/commit/68cdf3a0c08281073425b5ee16018c5855561b7e))
+* **l10n:** Update translations from Transifex ([e036a45](https://github.com/nextcloud/mail/commit/e036a455dc2b3e4cd27f57e4915c26ce951902c7))
+* moving messages without a message id on servers without UIDPLUS ([9b30a7f](https://github.com/nextcloud/mail/commit/9b30a7fc86a11cd7bfd0cb502806e8ec08cb2e02))
+
+
+### Performance Improvements
+
+* thread list shouldnt reload when searching ([eef1b9e](https://github.com/nextcloud/mail/commit/eef1b9eb1c36cb339397b82d652085b01cf7671a))
+
+
+
 ## [5.1.5](https://github.com/nextcloud/mail/compare/v5.1.4...v5.1.5) (2025-06-24)
 
 
