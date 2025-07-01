@@ -33,7 +33,7 @@ class PhishingDetectionService {
 		$customEmail = null;
 		$fromHeader = $headers->getHeader('From');
 		if ($fromHeader instanceof Horde_Mime_Headers_Element_Address) {
-			$firstAddr = AddressList::fromHorde($fromHeader->getAddressList(true))?->first();
+			$firstAddr = AddressList::fromHorde($fromHeader->getAddressList(true), true)->first();
 			$fromFN = $firstAddr?->getLabel();
 			$fromEmail = $firstAddr?->getEmail();
 			$customEmail = $firstAddr?->getCustomEmail();
@@ -45,7 +45,7 @@ class PhishingDetectionService {
 		if ($replyToHeader instanceof Horde_Mime_Headers_Element_Address) {
 			$replyToAddrs = $replyToHeader->getAddressList(true);
 			if (isset($replyToAddrs)) {
-				$replyToEmail = AddressList::fromHorde($replyToAddrs)->first()?->getEmail();
+				$replyToEmail = AddressList::fromHorde($replyToAddrs, true)->first()?->getEmail();
 			}
 		}
 
