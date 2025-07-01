@@ -70,15 +70,10 @@
 					<IconAttachment v-if="data.flags.hasAttachments === true"
 						class="attachment-icon-style"
 						:size="18" />
-					<span v-else-if="draft" class="draft">
-						<em>{{ t('mail', 'Draft: ') }}</em>
-					</span>
 					<span class="envelope__subtitle__subject"
 						:class="{'one-line': oneLineLayout }"
 						dir="auto">
-						<span class="envelope__subtitle__subject__text" :class="{'one-line': oneLineLayout }">
-							{{ subjectForSubtitle }}
-						</span>
+						<span class="envelope__subtitle__subject__text" :class="{'one-line': oneLineLayout, draft }" v-html="subjectForSubtitle" />
 					</span>
 				</div>
 				<div v-if="data.encrypted || data.previewText"
@@ -391,6 +386,7 @@ import TagModal from './TagModal.vue'
 import EventModal from './EventModal.vue'
 import TaskModal from './TaskModal.vue'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions.vue'
+import escapeHtml from 'escape-html'
 import { hiddenTags } from './tags.js'
 import { generateUrl } from '@nextcloud/router'
 import { isPgpText } from '../crypto/pgp.js'
@@ -625,9 +621,14 @@ export default {
 		 * @return {string}
 		 */
 		subjectForSubtitle() {
-			// We have to use || here (instead of ??) because the subject might be '', null
-			// or undefined.
-			return this.data.subject || this.t('mail', 'No subject')
+			const subject = this.data.subject || this.t('mail', 'No subject')
+			return this.t('mail', '{markup-start}Draft:{markup-end} {subject}', {
+				'markup-start': '<em>',
+				'markup-end': '</em>',
+				subject: escapeHtml(subject),
+			}, {
+				escape: false,
+			})
 		},
 		/**
 		 * Link to download the whole message (.eml).
@@ -969,6 +970,15 @@ export default {
 			text-overflow: ellipsis;
 			white-space: nowrap;
 			line-height: var(--default-line-height);
+			&__text {
+				&.draft {
+					line-height: 130%;
+					/* deep because there is no data attribute for the em rendered from JS output */
+					::v-deep em {
+						font-style: italic;
+					}
+				}
+			}
 		}
 	}
 	&__preview-text {
@@ -1041,15 +1051,6 @@ export default {
 	font-weight: bold;
 }
 
-.list-item-style {
-	.draft {
-		line-height: 130%;
-
-		em {
-			font-style: italic;
-		}
-	}
-}
 .junk-icon-style {
 	opacity: .2;
 	display: flex;

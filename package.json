@@ -66,6 +66,7 @@
     "core-js": "^3.43.0",
     "debounce-promise": "^3.1.2",
     "dompurify": "^3.2.6",
+    "escape-html": "^1.0.3",
     "html-to-text": "^9.0.5",
     "ical.js": "^2.1.0",
     "js-base64": "^3.7.7",
