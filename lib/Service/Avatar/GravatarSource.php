@@ -56,7 +56,7 @@ class GravatarSource implements IAvatarSource {
 		if (is_resource($body)) {
 			$body = stream_get_contents($body);
 		}
-		if (strlen($body) === 0) {
+		if ($body === null || strlen($body) === 0) {
 			return null;
 		}
 
