@@ -148,7 +148,7 @@ function findAttendee(vEvent, email) {
 	}
 
 	email = removeMailtoPrefix(email)
-	for (const attendee of vEvent.getAttendeeIterator()) {
+	for (const attendee of [...vEvent.getPropertyIterator('ORGANIZER'), ...vEvent.getAttendeeIterator()]) {
 		if (removeMailtoPrefix(attendee.email) === email) {
 			return attendee
 		}
