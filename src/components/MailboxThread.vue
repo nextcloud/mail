@@ -26,20 +26,16 @@
 					role="heading"
 					:aria-level="2"
 					@shortkey.native="onShortcut">
-					<template v-if="!mailbox.isPriorityInbox">
-						<div v-for="[label, group] in Object.entries(groupEnvelopes)" :key="label">
-							<SectionTitle class="section-title" :name="label" />
-							<Mailbox :account="account"
-								:mailbox="mailbox"
-								:search-query="query"
-								:bus="bus"
-								:open-first="mailbox.specialRole !== 'drafts'"
-								:custom-envelopes="group"
-								:paginate="'manual'"
-								:initial-page-size="messagesOrderBydate"
-								:collapsible="true" />
-						</div>
-					</template>
+					<Mailbox v-if="!mailbox.isPriorityInbox"
+						:account="account"
+						:mailbox="mailbox"
+						:search-query="query"
+						:bus="bus"
+						:open-first="mailbox.specialRole !== 'drafts'"
+						:group-envelopes="groupEnvelopes"
+						:paginate="'manual'"
+						:initial-page-size="messagesOrderBydate"
+						:collapsible="true" />
 					<template v-else>
 						<div v-show="hasFollowUpEnvelopes"
 							class="app-content-list-item">
