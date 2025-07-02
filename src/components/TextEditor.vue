@@ -41,9 +41,14 @@ import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethro
 import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
 import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter.js'
 import ImagePlugin from '@ckeditor/ckeditor5-image/src/image.js'
+import Table from '@ckeditor/ckeditor5-table/src/table.js'
+import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar.js'
+import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandreplace.js'
 import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
 import SourceEditingPlugin from '@ckeditor/ckeditor5-source-editing/src/sourceediting.js'
+import ImageInsertViaUrlPlugin from '@ckeditor/ckeditor5-image/src/imageinsertviaurl.js'
+import GeneralHtmlSupport from '@ckeditor/ckeditor5-html-support/src/generalhtmlsupport.js'
 import { DropdownView } from '@ckeditor/ckeditor5-ui'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import { searchProvider, getLinkWithPicker } from '@nextcloud/vue/components/NcRichText'
@@ -93,6 +98,10 @@ export default {
 			PickerPlugin,
 			Mention,
 			LinkPlugin,
+			Table,
+			TableToolbar,
+			FindAndReplace,
+			GeneralHtmlSupport,
 		]
 		const toolbar = ['sourceEditing', 'undo', 'redo']
 
@@ -104,14 +113,15 @@ export default {
 				ItalicPlugin,
 				BlockQuotePlugin,
 				ListPlugin,
+				ImagePlugin,
+				ImageUploadPlugin,
+				ImageInsertViaUrlPlugin,
+				ImageResizePlugin,
 				ListProperties,
 				FontPlugin,
 				RemoveFormat,
 				StrikethroughPlugin,
-				ImagePlugin,
-				ImageUploadPlugin,
 				Base64UploadAdapter,
-				ImageResizePlugin,
 				MailPlugin,
 				SourceEditingPlugin,
 			])
@@ -122,15 +132,20 @@ export default {
 				'bold',
 				'italic',
 				'fontColor',
-				'imageUpload',
+				'fontBackgroundColor',
+				'insertImage',
 				'alignment',
 				'bulletedList',
 				'numberedList',
 				'blockquote',
-				'fontBackgroundColor',
 				'strikethrough',
 				'link',
 				'removeFormat',
+				'insertTable',
+				'tableColumn',
+				'tableRow',
+				'mergeTableCells',
+				'findAndReplace',
 			])
 		}
 
