@@ -17,6 +17,7 @@
 		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
 		<EnvelopeList v-else
 			:account="account"
+			:load-more-label="loadMoreLabel"
 			:mailbox="mailbox"
 			:search-query="searchQuery"
 			:envelopes="envelopesToShow"
@@ -456,10 +457,16 @@ export default {
 			} catch (error) {
 				matchError(error, {
 					[MailboxLockedError.getName()](error) {
-						logger.info('Background sync failed because the folder is locked', { error, init })
+						logger.info('Background sync failed because the folder is locked', {
+							error,
+							init,
+						})
 					},
 					default(error) {
-						logger.error('Could not sync envelopes: ' + error.message, { error, init })
+						logger.error('Could not sync envelopes: ' + error.message, {
+							error,
+							init,
+						})
 					},
 				})
 				throw error
