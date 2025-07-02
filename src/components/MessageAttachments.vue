@@ -36,7 +36,7 @@
 		</div>
 		<p v-if="moreThanOne" class="attachments-button-wrapper">
 			<FilePicker v-if="isFilePickerOpen"
-				:title="t('mail', 'Choose a folder to store the attachments in')"
+				:name="t('mail', 'Choose a folder to store the attachments in')"
 				:buttons="saveAttachementButtons"
 				:allow-pick-directory="true"
 				:multiselect="false"

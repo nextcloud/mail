@@ -18,7 +18,7 @@
 			<span class="attachment-size">{{ humanReadable(size) }}</span>
 		</div>
 		<FilePicker v-if="isFilePickerOpen"
-			:title="t('mail', 'Choose a folder to store the attachment in')"
+			:name="t('mail', 'Choose a folder to store the attachment in')"
 			:buttons="saveAttachementButtons"
 			:allow-pick-directory="true"
 			:multiselect="false"
