@@ -33,6 +33,7 @@ OC.L10N.register(
     "Date" : "Date",
     "Tags" : "சீட்டுகள்",
     "All" : "எல்லாம்",
-    "Favorites" : "விருப்பங்கள்"
+    "Favorites" : "விருப்பங்கள்",
+    "Actions" : "செயல்கள்"
 },
 "nplurals=2; plural=(n != 1);");

@@ -173,7 +173,6 @@ OC.L10N.register(
     "Set reminder for next week" : "Постави потсетник за наредната недела",
     "No trash mailbox configured" : "Нема конфигурирано сандаче за отпадоци",
     "Could not delete message" : "Неможе да се избрише пораката",
-    "Draft: " : "Шаблон:",
     "This message is unread" : "Оваа порака не е прочитана",
     "Favorite" : "Омилени",
     "Unread" : "Непрочитана",
@@ -347,6 +346,12 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Името на ознаката е сокриена системска ознака",
     "Tag already exists" : "Тагот веќе постои",
     "An error occurred, unable to create the tag." : "Настана грешка, неможе да се креира ознака.",
+    "Could not load your message thread" : "Неможат да се преземат информации за пораката",
+    "Mark as unread" : "Означи како непрочитано",
+    "Message source" : "Извор на пораката",
+    "Airplane" : "Авион",
+    "Email: {email}" : "Е-пошта: {email}",
+    "Configuration for \"{provisioningDomain}\"" : "Конфигурација за \"{provisioningDomain}\"",
     "All" : "Сите",
     "Drafts" : "Шаблони",
     "Favorites" : "Омилени",
@@ -377,6 +382,7 @@ OC.L10N.register(
     "Redirect" : "Пренасочи",
     "The link leads to %s" : "Линкот води кон %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Доколку несакате да ја посетите страната, можете да се вратите кон <a href=\"%s\">Е-пошта</a>.",
-    "Continue to %s" : "Продолжи до %s"
+    "Continue to %s" : "Продолжи до %s",
+    "Draft: " : "Шаблон:"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

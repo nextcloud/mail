@@ -124,6 +124,7 @@
     "Custom date and time" : "Επιλέξτε ημερομηνία και ώρα",
     "Enter a date" : "Προσθέστε ημερομηνία",
     "Choose" : "Επιλογή",
+    "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Το συνημμένο υπερβαίνει το επιτρεπόμενο μέγεθος συνημμένων {size}. Παρακαλούμε διαμοιράστε το αρχείο μέσω συνδέσμου.","Τα συνημμένα υπερβαίνουν το επιτρεπόμενο μέγεθος συνημμένων {size}. Παρακαλούμε διαμοιράστε τα αρχεία μέσω συνδέσμου."],
     "Choose a file to add as attachment" : "Επιλέξτε ένα αρχείο για να προσθέσετε ως συνημμένο",
     "Choose a file to share as a link" : "Επιλέξτε ένα αρχείο για κοινή χρήση ως σύνδεσμο",
     "_{count} attachment_::_{count} attachments_" : ["{count} συνημμένo","{count} συνημμένα"],
@@ -145,7 +146,6 @@
     "No trash mailbox configured" : "Δεν έχει διαμορφωθεί γραμματοκιβώτιο απορριμμάτων",
     "Could not delete message" : "Δεν ήταν δυνατή η διαγραφή του μηνύματος",
     "Could not archive message" : "Δεν ήταν δυνατή η αρχειοθέτηση του μηνύματος",
-    "Draft: " : "Πρόχειρο:",
     "Unfavorite" : "Μη αγαπημένο",
     "Favorite" : "Αγαπημένο",
     "Unread" : "Μη αναγνωσμένο",
@@ -333,6 +333,7 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Κάντε κλικ εδώ εάν δεν ανακατευθυνθείτε αυτόματα μέσα σε λίγα δευτερόλεπτα.",
     "Redirect" : "Ανακατεύθυνση",
     "The link leads to %s" : "Αυτός ο σύνδεσμος οδηγεί στο %s",
-    "Continue to %s" : "Συνέχεια στο %s"
+    "Continue to %s" : "Συνέχεια στο %s",
+    "Draft: " : "Πρόχειρο:"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

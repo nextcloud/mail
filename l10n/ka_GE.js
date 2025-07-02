@@ -96,6 +96,7 @@ OC.L10N.register(
     "Tags" : "ტეგები",
     "Select tags" : "აირჩიეთ ტეგები",
     "Custom" : "ინდივიდუალური",
+    "Mark as unread" : "წაუკითხავად მონიშვნა",
     "All" : "ყველა",
     "Drafts" : "მონახაზები",
     "Favorites" : "რჩეულები",

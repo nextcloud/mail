@@ -199,7 +199,6 @@
     "Could not archive message" : "Could not archive message",
     "Thread was snoozed" : "Thread was snoozed",
     "Could not snooze thread" : "Could not snooze thread",
-    "Draft: " : "پیش نویس:",
     "Encrypted message" : "Encrypted message",
     "This message is unread" : "This message is unread",
     "Unfavorite" : "ناخوشایند",
@@ -421,6 +420,16 @@
     "Tag name is a hidden system tag" : "Tag name is a hidden system tag",
     "Tag already exists" : "تگ از قبل وجود دارد",
     "An error occurred, unable to create the tag." : "An error occurred, unable to create the tag.",
+    "Could not create task" : "Could not create task",
+    "Signature verified" : "Signature verified",
+    "This message was encrypted by the sender before it was sent." : "This message was encrypted by the sender before it was sent.",
+    "Mark as unread" : "علامت به عنوان خوانده‌نشده",
+    "Message source" : "Message source",
+    "Unsubscribe via email" : "Unsubscribe via email",
+    "Airplane" : "هواپیما",
+    "Using the wildcard (*) in the provisioning domain field will create a configuration that applies to all users, provided they do not match another configuration." : "Using the wildcard (*) in the provisioning domain field will create a configuration that applies to all users, provided they do not match another configuration.",
+    "There can only be one configuration per domain and only one wildcard domain configuration." : "There can only be one configuration per domain and only one wildcard domain configuration.",
+    "Import certificate" : "Import certificate",
     "All" : "همه",
     "Drafts" : "پیش نویس",
     "Favorites" : "علاقه مندی ها",
@@ -453,6 +462,7 @@
     "Redirect" : "تغییر مسیر",
     "The link leads to %s" : "پیوند منجر به%s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "ادامه دهید%s"
+    "Continue to %s" : "ادامه دهید%s",
+    "Draft: " : "پیش نویس:"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

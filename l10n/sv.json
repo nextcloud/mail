@@ -142,7 +142,6 @@
     "No trash mailbox configured" : "Ingen skräpkorg är konfigurerad",
     "Could not delete message" : "Kunde inte radera meddelande",
     "Could not archive message" : "Kunde inte arkivera meddelandet",
-    "Draft: " : "Utkast:",
     "Unfavorite" : "Inte favorit",
     "Favorite" : "Favorit",
     "Unread" : "Oläst",
@@ -286,6 +285,15 @@
     "Delete tag" : "Radera tagg",
     "Tag already exists" : "Taggen finns redan",
     "An error occurred, unable to create the tag." : "Ett fel uppstod, kunde inte spara taggen.",
+    "Could not load your message thread" : "Det gick inte att ladda meddelandetråden",
+    "Mark as unread" : "Markera som oläst",
+    "Message source" : "Meddelandekälla",
+    "Airplane" : "Flygplan",
+    "Filter name" : "Filternamn",
+    "Client ID" : "Klient-ID",
+    "Email: {email}" : "E-post: {email}",
+    "With the settings above, the app will create account settings in the following way:" : "Med inställningarna ovan skapar appen kontoinställningar på följande sätt:",
+    "Delete certificate" : "Ta bort certifikat",
     "All" : "Alla",
     "Drafts" : "Utkast",
     "Favorites" : "Favoriter",
@@ -312,6 +320,8 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Klicka här om du inte blir omdirigerad inom några sekunder.",
     "Redirect" : "Omdirigera",
     "The link leads to %s" : "Länken pekar mot %s",
-    "Continue to %s" : "Fortsätt till %s"
+    "Continue to %s" : "Fortsätt till %s",
+    "Draft: " : "Utkast:",
+    "Actions" : "Funktioner"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

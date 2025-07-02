@@ -91,7 +91,6 @@ OC.L10N.register(
     "Next week – {timeLocale}" : "La próxima selmana – {timeLocale}",
     "Could not delete message" : "Nun se pudo desaniciar el mensaxe",
     "Could not archive message" : "Nun se pudo archivar el mensaxe",
-    "Draft: " : "Borrador:",
     "Encrypted message" : "Mensaxe cifráu",
     "This message is unread" : "Esta mensaxe ta ensin lleer",
     "Favorite" : "Meter en Favoritos",
@@ -248,6 +247,7 @@ OC.L10N.register(
     "Could not load the message" : "Nun se pudo cargar el mensaxe",
     "Error loading message" : "Hebo un error al cargar el mensaxe",
     "Redirect" : "Redirixir",
-    "The link leads to %s" : "L'enllaz lleva a %s"
+    "The link leads to %s" : "L'enllaz lleva a %s",
+    "Draft: " : "Borrador:"
 },
 "nplurals=2; plural=(n != 1);");

@@ -99,7 +99,6 @@
     "Next week – {timeLocale}" : "Tuần sau - {timeLocale}",
     "No trash mailbox configured" : "Không có hộp thư thùng rác nào được định cấu hình",
     "Could not delete message" : "Không thể xóa tin nhắn",
-    "Draft: " : "Bản nháp: ",
     "Favorite" : "Ưa thích",
     "Read" : "Đọc",
     "Mark not spam" : "Đánh dấu không phải là thư rác",
@@ -220,6 +219,15 @@
     "Signature …" : "Chữ ký …",
     "Save signature" : "Lưu chữ ký",
     "Tag already exists" : "Thẻ đã tồn tại",
+    "Could not load your message thread" : "Không thể tải chuỗi tin nhắn của bạn",
+    "Mark as unread" : "Đánh dấu là chưa đọc",
+    "Message source" : "Nguồn tin nhắn",
+    "Could not remove trusted sender {sender}" : "Không thể xóa người gửi đáng tin cậy {sender}",
+    "Airplane" : "Máy bay",
+    "Client ID" : "ID khách hàng",
+    "Email: {email}" : "Thư điện tử: {email}",
+    "With the settings above, the app will create account settings in the following way:" : "Với cài đặt ở trên, ứng dụng sẽ tạo cài đặt tài khoản theo cách sau:",
+    "Account connected" : "Tài khoản đã được kết nối",
     "All" : "Tất cả",
     "Drafts" : "Bản nháp",
     "Favorites" : "Ưa thích",
@@ -244,6 +252,8 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Nhấp vào đây nếu bạn không được chuyển hướng tự động trong vòng vài giây tới",
     "Redirect" : "Chuyển hướng",
     "The link leads to %s" : "Liên kết dẫn đến %s",
-    "Continue to %s" : "Tiếp tục %s"
+    "Continue to %s" : "Tiếp tục %s",
+    "Draft: " : "Bản nháp: ",
+    "Actions" : "Hành động"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

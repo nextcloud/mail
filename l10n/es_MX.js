@@ -243,7 +243,6 @@ OC.L10N.register(
     "Could not snooze thread" : "No se ha podido pausar el hilo",
     "Thread was unsnoozed" : "El hilo fue reanudado",
     "Could not unsnooze thread" : "No se pudo reanudar el hilo",
-    "Draft: " : "Borrador:",
     "Encrypted message" : "Mensaje encriptado",
     "This message is unread" : "Este mensaje no ha sido leído",
     "Unfavorite" : "Quitar favorito",
@@ -374,6 +373,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Haz click aqui si no eres redireccionado automáticamente dentro de los siguietes segundos. ",
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Draft: " : "Borrador:"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

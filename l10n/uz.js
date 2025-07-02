@@ -58,9 +58,12 @@ OC.L10N.register(
     "Tags" : "Tags",
     "Last 7 days" : "Oxirgi 7 kun",
     "Custom" : "Boshqa",
+    "Client ID" : "Mijoz identifikatori",
+    "Account connected" : "Akkaunt ulangan",
     "All" : "All",
     "Favorites" : "Favorites",
     "Error while sharing file" : "Fayl almashishda xatolik yuz berdi",
-    "Continue to %s" : " %sni davom eting"
+    "Continue to %s" : " %sni davom eting",
+    "Actions" : "Faolliklar"
 },
 "nplurals=1; plural=0;");

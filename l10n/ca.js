@@ -256,7 +256,6 @@ OC.L10N.register(
     "Could not snooze thread" : "No s'ha pogut posposar el fil",
     "Thread was unsnoozed" : "El fil no es va posposar",
     "Could not unsnooze thread" : "No s'ha reactivar el fil",
-    "Draft: " : "Esborrany: ",
     "This summary was AI generated" : "Aquest resum es va generar amb IA",
     "Encrypted message" : "Missatge xifrat",
     "This message is unread" : "Aquest missatge no s'ha llegit",
@@ -570,6 +569,7 @@ OC.L10N.register(
     "Redirect" : "Redirigeix",
     "The link leads to %s" : "L'enllaç porta a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no voleu visitar aquesta pàgina, podeu tornar a <a href=\"%s\">Correu</a>.",
-    "Continue to %s" : "Continua a %s"
+    "Continue to %s" : "Continua a %s",
+    "Draft: " : "Esborrany: "
 },
 "nplurals=2; plural=(n != 1);");

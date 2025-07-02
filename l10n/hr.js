@@ -114,7 +114,6 @@ OC.L10N.register(
     "Blind copy recipients only" : "Samo primatelji skrivenih kopija poruke",
     "No trash mailbox configured" : "Nije konfiguriran sandučić za izbrisanu poštu",
     "Could not delete message" : "Brisanje poruke nije uspjelo",
-    "Draft: " : "Skica: ",
     "Unfavorite" : "Ukloni iz favorita",
     "Favorite" : "Favorit",
     "Read" : "Čitaj",
@@ -260,6 +259,14 @@ OC.L10N.register(
     "Delete tag" : "Izbriši oznaku",
     "Tag already exists" : "Oznaka već postoji",
     "An error occurred, unable to create the tag." : "Došlo je do pogreške, nije moguće stvoriti oznaku.",
+    "Mark as unread" : "Označi kao nepročitano",
+    "Message source" : "Izvor poruke",
+    "Airplane" : "Zrakoplov",
+    "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Pogreška pri brisanju i ukidanju dodjele računa za „{domain}“",
+    "Using the wildcard (*) in the provisioning domain field will create a configuration that applies to all users, provided they do not match another configuration." : "Korištenje zamjenskog znaka (*) u polju domene dodjeljivanja stvorit će konfiguraciju koja se primjenjuje na sve korisnike pod uvjetom da se ne podudaraju s drugom konfiguracijom.",
+    "There can only be one configuration per domain and only one wildcard domain configuration." : "Domena može imati samo jednu konfiguraciju i može postojati samo jedna zamjenska konfiguracija domene.",
+    "Email: {email}" : "E-pošta: {email}",
+    "Sieve" : "Sieve",
     "All" : "Sve",
     "Drafts" : "Skice",
     "Favorites" : "Favoriti",
@@ -285,6 +292,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Kliknite ovdje ako niste preusmjereni automatski unutar sljedećih nekoliko sekundi.",
     "Redirect" : "Preusmjeri",
     "The link leads to %s" : "Ova poveznica vodi do %s",
-    "Continue to %s" : "Idi do %s"
+    "Continue to %s" : "Idi do %s",
+    "Draft: " : "Skica: "
 },
 "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");
