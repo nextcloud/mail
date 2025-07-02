@@ -34,12 +34,12 @@
 			style="display: none;"
 			@change="onLocalAttachmentSelected">
 		<FilePicker v-if="isAttachementPickerOpen"
-			:title="t('mail','Choose a file to add as attachment')"
+			:name="t('mail','Choose a file to add as attachment')"
 			:buttons="attachementPickerButtons"
 			:filter-fn="filterAttachements"
 			@close="()=>isAttachementPickerOpen = false" />
 		<FilePicker v-if="isLinkPickerOpen"
-			:title="t('mail','Choose a file to share as a link')"
+			:name="t('mail','Choose a file to share as a link')"
 			:multiselect="false"
 			:buttons="linkPickerButtons"
 			:filter-fn="filterAttachements"
