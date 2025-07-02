@@ -442,9 +442,6 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	color: var(--color-main-text) !important;
 	margin-left: var(--default-grid-baseline) !important;
  }
- .link-icon {
-	width: 16px !important;
- }
  .custom-item {
 	width : 100% !important;
 	border-radius : 8px !important;
@@ -461,6 +458,10 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	display : block;
 	width : 100% !important;
 	background:var(--color-main-background)!important;
+	img.link-icon {
+		width: 16px;
+		height: 16px;
+	}
  }
  .link-container:hover {
 	background:var(--color-primary-element-light)!important;
