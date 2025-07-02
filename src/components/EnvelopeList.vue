@@ -547,6 +547,7 @@ div {
 	text-align: center;
 	margin-top: 10px;
 	cursor: pointer;
+	margin-inline-start: 28px;
 	color: var(--color-text-maxcontrast);
 	display: inline-flex;
 	gap: 15px;
