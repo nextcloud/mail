@@ -93,6 +93,12 @@ export default {
 		ThreadEnvelope,
 		Popover,
 	},
+	props: {
+		currentAccountEmail: {
+			type: String,
+			required: true,
+		},
+	},
 
 	data() {
 		return {
@@ -165,7 +171,7 @@ export default {
 		threadParticipants() {
 			const recipients = this.thread.flatMap(envelope => {
 				return envelope.from.concat(envelope.to).concat(envelope.cc)
-			})
+			}).filter(participant => participant.email !== this.currentAccountEmail)
 			return uniqBy(prop('email'), recipients)
 		},
 		threadSubject() {
@@ -630,7 +636,7 @@ export default {
 }
 
 #mail-content {
-	margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 10) 0 calc(var(--default-grid-baseline) * 15);
+	margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 10) 0 calc(var(--default-grid-baseline) * 14);
 }
 
 #mail-content iframe {

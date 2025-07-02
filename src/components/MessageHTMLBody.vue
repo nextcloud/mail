@@ -160,8 +160,7 @@ export default {
 <style lang="scss" scoped>
 // account for 8px margin on iframe body
 .html-message-body {
-	margin-inline-start: 50px;
-	margin-top: 2px;
+	margin : 2px calc(var(--default-grid-baseline) * 2) 0 calc(var(--default-grid-baseline) * 14);
 	background-color: #FFFFFF;
 }
 
