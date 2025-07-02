@@ -605,6 +605,8 @@ export default {
 	// initial width
 	width: 0;
 	// while scrolling, the back button overlaps with subject on small screen
+	// 66px to allign with the sender Envelope -> 8px margin + 2px border+ avatar -> 40px width  + envelope__header -> 8px padding + sender-> margin 8px
+	padding-left: 66px;
 	// 70ox to allign with the message text 60px mail-content margin + 2px envelope border + 8px envelope margin
 	padding-left: 70px;
 	padding-inline-start: calc(var(--border-radius-container-large) + var(--header-height));
@@ -647,7 +649,7 @@ export default {
 }
 
 #mail-content {
-	margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 10) 0 calc(var(--default-grid-baseline) * 15);
+	margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 10) 0 calc(var(--default-grid-baseline) * 14);
 }
 
 #mail-content iframe {
