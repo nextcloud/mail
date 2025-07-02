@@ -177,7 +177,7 @@ export default {
 	}
 }
 .reply-buttons {
-	margin: 0 30px 0 50px;
+	margin: 0 calc(var(--default-grid-baseline) * 2) 0 50px;
 	display: flex;
 	flex-wrap: wrap;
 	gap: 5px;

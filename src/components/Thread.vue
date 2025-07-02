@@ -558,7 +558,7 @@ export default {
 
 .mail-message-body {
 	flex: 1;
-	margin-bottom: calc(var(--default-grid-baseline) * 7);
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
 	position: relative;
 }
 
