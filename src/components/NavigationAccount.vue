@@ -21,12 +21,12 @@
 					</ActionText>
 				</template>
 				<template v-else>
-					<ActionText v-if="!account.isUnified" :name="t('mail', 'Quota')">
+					<ActionButton v-if="!account.isUnified" :name="t('mail', 'Quota')">
 						<template #icon>
 							<IconInfo :size="16" />
 						</template>
 						{{ quotaText }}
-					</ActionText>
+					</ActionButton>
 					<ActionButton :close-after-click="true"
 						@click="showAccountSettings(true)">
 						<template #icon>
