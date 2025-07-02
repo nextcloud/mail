@@ -78,6 +78,7 @@ OC.L10N.register(
     "Tags" : "Tag",
     "Custom" : "Ubahan",
     "Tag already exists" : "Tag sudah ada",
+    "Mark as unread" : "Tandai belum dibaca",
     "All" : "Semua",
     "Drafts" : "Konsep",
     "Favorites" : "Disukai",

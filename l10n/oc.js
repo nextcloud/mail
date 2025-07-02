@@ -79,6 +79,7 @@ OC.L10N.register(
     "Date" : "Data",
     "Tags" : "Etiquetas",
     "Custom" : "Personalizats",
+    "Mark as unread" : "Marcar coma pas legit",
     "All" : "Tot",
     "Drafts" : "Borrolhons",
     "Favorites" : "Favorits",
@@ -91,6 +92,7 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "Message sent" : "Messatge mandat",
     "Error loading message" : "Error al moment del cargament del messatge",
-    "Continue to %s" : "Contunhar cap a %s"
+    "Continue to %s" : "Contunhar cap a %s",
+    "Actions" : "Accions"
 },
 "nplurals=2; plural=(n > 1);");

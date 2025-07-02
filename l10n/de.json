@@ -258,7 +258,6 @@
     "Could not snooze thread" : "Unterhaltung konnte nicht zurückgestellt werden",
     "Thread was unsnoozed" : "Zurückstellung der Unterhaltung aufgehoben",
     "Could not unsnooze thread" : "Zurückstellung der Unterhaltung konnte nicht aufgehoben werden",
-    "Draft: " : "Entwurf:",
     "This summary was AI generated" : "Diese Zusammenfassung wurde von KI generiert",
     "Encrypted message" : "Verschlüsselte Nachricht",
     "This message is unread" : "Diese Nachricht ist ungelesen",
@@ -547,6 +546,8 @@
     "Tag name cannot be empty" : "Schlagwort darf nicht leer sein",
     "An error occurred, unable to create the tag." : "Es ist ein Fehler aufgetreten. Das Schlagwort konnte nicht erstellt werden.",
     "Print" : "Drucken",
+    "Signature verified" : "Signatur überprüft",
+    "Import certificate" : "Zertifikat importieren",
     "All" : "Alle",
     "Drafts" : "Entwürfe",
     "Favorites" : "Favoriten",
@@ -583,6 +584,7 @@
     "Redirect" : "Weiterleiten",
     "The link leads to %s" : "Der Link führt nach %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Wenn du diese Seite nicht besuchen möchtest, kannst du zu <a href=\"%s\">Mail</a> zurückkehren",
-    "Continue to %s" : "Weiter nach %s"
+    "Continue to %s" : "Weiter nach %s",
+    "Draft: " : "Entwurf:"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

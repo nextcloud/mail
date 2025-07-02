@@ -228,7 +228,7 @@ OC.L10N.register(
     "Custom date and time" : "Benutzerspezifisches Datum und Zeit",
     "Enter a date" : "Datum eingeben",
     "Choose" : "Auswählen",
-    "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Der Anhang überschreitet die zulässige Anhangsgröße von {size}. Bitte teilen Sie die Datei stattdessen über einen Link.","Die Anhänge überschreiten die zulässige Anhangsgröße von {size}. Bitte  die Dateien stattdessen über einen Link teilen."],
+    "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Der Anhang überschreitet die zulässige Anhangsgröße von {size}. Bitte teilen Sie die Datei stattdessen über einen Link.","Die Anhänge überschreiten die zulässige Anhangsgröße von {size}. Bitte die Dateien stattdessen über einen Link teilen."],
     "Choose a file to add as attachment" : "Wählen Sie eine Datei, die als Anhang angefügt werden soll",
     "Choose a file to share as a link" : "Datei auswählen welche als Link geteilt wird",
     "_{count} attachment_::_{count} attachments_" : ["{count} Anhang","{count} Anhänge"],
@@ -260,7 +260,6 @@ OC.L10N.register(
     "Could not snooze thread" : "Unterhaltung konnte nicht zurückgestellt werden",
     "Thread was unsnoozed" : "Zurückstellung der Unterhaltung aufgehoben",
     "Could not unsnooze thread" : "Zurückstellung der Unterhaltung konnte nicht aufgehoben werden",
-    "Draft: " : "Entwurf:",
     "This summary was AI generated" : "Diese Zusammenfassung wurde von KI generiert",
     "Encrypted message" : "Verschlüsselte Nachricht",
     "This message is unread" : "Diese Nachricht ist ungelesen",
@@ -549,6 +548,8 @@ OC.L10N.register(
     "Tag name cannot be empty" : "Schlagwort darf nicht leer sein",
     "An error occurred, unable to create the tag." : "Es ist ein Fehler aufgetreten, das Schlagwort kann nicht erstellt werden.",
     "Print" : "Drucken",
+    "Signature verified" : "Signatur überprüft",
+    "Import certificate" : "Zertifikat importieren",
     "All" : "Alle",
     "Drafts" : "Entwürfe",
     "Favorites" : "Favoriten",
@@ -585,6 +586,7 @@ OC.L10N.register(
     "Redirect" : "Weiterleiten",
     "The link leads to %s" : "Der Link führt nach %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Wenn Sie diese Seite nicht besuchen möchten, können Sie zu <a href=\"%s\">Mail</a> zurückkehren.",
-    "Continue to %s" : "Weiter nach %s"
+    "Continue to %s" : "Weiter nach %s",
+    "Draft: " : "Entwurf:"
 },
 "nplurals=2; plural=(n != 1);");

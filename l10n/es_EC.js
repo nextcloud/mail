@@ -180,7 +180,6 @@ OC.L10N.register(
     "No trash mailbox configured" : "No se ha configurado una bandeja de papelera",
     "Could not delete message" : "No se pudo eliminar el mensaje",
     "Could not archive message" : "No se pudo archivar el mensaje",
-    "Draft: " : "Borrador: ",
     "Encrypted message" : "Mensaje cifrado",
     "This message is unread" : "Este mensaje no se ha leído",
     "Unfavorite" : "Quitar favorito",
@@ -397,6 +396,12 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "El nombre de la etiqueta es una etiqueta oculta del sistema",
     "Tag already exists" : "La etiqueta ya existe",
     "An error occurred, unable to create the tag." : "Ocurrió un error, no se pudo crear la etiqueta.",
+    "Signature verified" : "Firma verificada",
+    "Mark as unread" : "Marcar como no leído",
+    "Unsubscribe via email" : "Cancelar suscripción por correo electrónico",
+    "Airplane" : "Avión",
+    "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Error al eliminar y desaprovisionar cuentas para \"{domain}\"",
+    "Import certificate" : "Importar certificado",
     "All" : "Todos",
     "Drafts" : "Borradores",
     "Favorites" : "Favoritos",
@@ -429,6 +434,7 @@ OC.L10N.register(
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no deseas visitar esa página, puedes regresar a <a href=\"%s\">Correo</a>.",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Draft: " : "Borrador: "
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

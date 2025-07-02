@@ -71,10 +71,13 @@ OC.L10N.register(
     "Select tags" : "Chagua ukumbusho",
     "Last 7 days" : "Siku 7 zilizopita",
     "Custom" : "Mteja",
+    "Mark as unread" : "Weka alama kama haijasomwa",
+    "Client ID" : "Kitambulisho cha mteja",
     "All" : "Zote",
     "Favorites" : "Vipendwa",
     "Error while sharing file" : "Hitilafu wakati wa kushirikisha faili",
     "Message sent" : "Ujumbe umetumwa",
-    "Continue to %s" : "Endelea katika %s"
+    "Continue to %s" : "Endelea katika %s",
+    "Actions" : "Matendo"
 },
 "nplurals=2; plural=(n != 1);");

@@ -105,7 +105,6 @@ OC.L10N.register(
     "Blind copy recipients only" : "נמענים נסתרים בלבד",
     "No trash mailbox configured" : "לא הוגדרה תיבת דוא״ל לאשפה",
     "Could not delete message" : "לא ניתן למחוק הודעה",
-    "Draft: " : "טיוטה:",
     "Unfavorite" : "ביטול כמועדף",
     "Favorite" : "סימון כמועדף",
     "Read" : "קריאה",
@@ -197,6 +196,10 @@ OC.L10N.register(
     "Save signature" : "שמירת החתימה",
     "Tag already exists" : "תגית כבר קיימת",
     "An error occurred, unable to create the tag." : "אירעה שגיאה, לא ניתן ליצור את התגית.",
+    "Mark as unread" : "סימון כלא נקרא",
+    "Message source" : "מקור ההודעה",
+    "Airplane" : "מטוב",
+    "Email: {email}" : "דוא״ל: {email}",
     "All" : "הכול",
     "Drafts" : "טיוטות",
     "Favorites" : "מועדפים",
@@ -222,6 +225,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "יש ללחוץ כאן אם לא הועברת אוטומטית בשניות הקרובות.",
     "Redirect" : "הפנייה",
     "The link leads to %s" : "הקישור מוביל אל %s",
-    "Continue to %s" : "ממשיך אל %s"
+    "Continue to %s" : "ממשיך אל %s",
+    "Draft: " : "טיוטה:"
 },
 "nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;");

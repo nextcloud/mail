@@ -246,7 +246,6 @@
     "Could not snooze thread" : "Haria ezin izan da geroko utzi",
     "Thread was unsnoozed" : "Hariari geroko uztea kendu zaio",
     "Could not unsnooze thread" : "Ezin izan da kendu hariaren atzerapena ",
-    "Draft: " : "Zirriborroa: ",
     "Encrypted message" : "Zifratutako mezua",
     "This message is unread" : "Mezu hau irakurri gabe dago",
     "Unfavorite" : "Kendu gogokoetatik",
@@ -521,6 +520,19 @@
     "Tag already exists" : "Etiketa dagoeneko existitzen da",
     "Tag name cannot be empty" : "Etiketaren izena ezin da hutsik egon",
     "An error occurred, unable to create the tag." : "Errore bat gertatu da, ezin da etiketa sortu.",
+    "Could not create task" : "Ezin izan da eginkizuna sortu",
+    "Signature verified" : "Sinadura egiaztatua",
+    "This message was encrypted by the sender before it was sent." : "Mezu hau igorleak enkriptatu zuen bidali aurretik.",
+    "Mark as unread" : "Markatu ez irakurritako gisa",
+    "Message source" : "Mezuaren iturburua",
+    "Unsubscribe via email" : "Harpidetza kendu mezu elektroniko bidez",
+    "Airplane" : "Hegazkina",
+    "Could not save filter" : "Ezin izan da iragazkia gorde",
+    "Filter name" : "Iragaziaren izena",
+    "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Errorea gertatu da \"{domain}\"-ren kontuak ezabatzean.",
+    "Using the wildcard (*) in the provisioning domain field will create a configuration that applies to all users, provided they do not match another configuration." : "Hornitze domeinuaren eremuan komodina (*)  erabilita erabiltzaile guztiei aplikatuko zaien konfigurazioa sortuko da, beste konfigurazio batekin bat ez datozenean.",
+    "There can only be one configuration per domain and only one wildcard domain configuration." : "Domeinu bakoitzeko konfigurazio bakarra egon daiteke eta komodin-domeinuaren konfigurazio bakarra.",
+    "Import certificate" : "Inportatu ziurtagiria",
     "All" : "Denak",
     "Drafts" : "Zirriborroak",
     "Favorites" : "Gogokoak",
@@ -556,6 +568,8 @@
     "Redirect" : "Birbideratu",
     "The link leads to %s" : "Estekak hona bideratzen du: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Orrialde hori bisitatu nahi ez baduzu, itzul dezakezu <a href=\"%s\">Mail </a>-ra.",
-    "Continue to %s" : "Jarraitu hona: %s"
+    "Continue to %s" : "Jarraitu hona: %s",
+    "Draft: " : "Zirriborroa: ",
+    "New test" : "Proba berria"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

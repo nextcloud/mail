@@ -78,7 +78,6 @@ OC.L10N.register(
     "Confirm" : "Konfirmi",
     "Plain text" : "Ebenaĵa teksto",
     "Blind copy recipients only" : "Nur blindkopiaj ricevontoj",
-    "Draft: " : "Malneto:",
     "Unfavorite" : "Malpliŝatati",
     "Favorite" : "Pliŝatati",
     "Read" : "Legi",
@@ -140,6 +139,7 @@ OC.L10N.register(
     "Save signature" : "Konservi subskribon",
     "Delete tag" : "Forigi etikedon",
     "Tag already exists" : "La etikedo jam ekzistas",
+    "Airplane" : "Aviadilo",
     "All" : "Ĉiuj",
     "Drafts" : "Malnetujo",
     "Favorites" : "Pliŝataĵoj",
@@ -161,6 +161,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Alklaku ĉi tie, ĉu vi ne estos aŭtomate alidirektita post kelkaj sekundoj.",
     "Redirect" : "Alidirekto",
     "The link leads to %s" : "La ligilo iras al %s",
-    "Continue to %s" : "Daŭrigi al %s"
+    "Continue to %s" : "Daŭrigi al %s",
+    "Draft: " : "Malneto:"
 },
 "nplurals=2; plural=(n != 1);");

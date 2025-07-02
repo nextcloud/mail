@@ -159,6 +159,7 @@ OC.L10N.register(
     "Custom date and time" : "Brugerdefineret dato og tid",
     "Enter a date" : "Indtast en dato",
     "Choose" : "Vælg",
+    "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Den vedhæftede fil overskrider den tilladte størrelse på vedhæftede filer på {size}. Del venligst filen via link i stedet.","De vedhæftede filer overskrider den tilladte størrelse på vedhæftede filer på {size}. Del venligst filerne via link i stedet."],
     "Choose a file to add as attachment" : "Vælg en fil, der skal tilføjes som vedhæftning",
     "Choose a file to share as a link" : "Vælg en fil der skal deles som link",
     "_{count} attachment_::_{count} attachments_" : ["{count} vedhæftet fil","{count} vedhæftede filer"],
@@ -175,7 +176,6 @@ OC.L10N.register(
     "Set reminder for next week" : "Sæt påmindelse for næste weekend",
     "No trash mailbox configured" : "Der er ikke konfigureret nogen papirkurvspostkasse",
     "Could not delete message" : "Kunne ikke slette beskeden",
-    "Draft: " : "Kladde:",
     "This message is unread" : "Denne besked er ulæst",
     "Unfavorite" : "U-favorit",
     "Favorite" : "Favorit",
@@ -325,6 +325,7 @@ OC.L10N.register(
     "Save signature" : "Gem underskrift",
     "Saving new tag name …" : "Gemmer nyt tag navn ...",
     "Tag already exists" : "Mærket eksisterer allerede",
+    "Import certificate" : "Importér certifikat",
     "All" : "Alle",
     "Drafts" : "Udkast",
     "Favorites" : "Favoritter",
@@ -350,6 +351,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klik her hvis du ikke automatisk bliver videre sendt i løbet af et par sekunder.",
     "Redirect" : "Omdiriger",
     "The link leads to %s" : "Linket fører til %s",
-    "Continue to %s" : "Videre til %s"
+    "Continue to %s" : "Videre til %s",
+    "Draft: " : "Kladde:"
 },
 "nplurals=2; plural=(n != 1);");

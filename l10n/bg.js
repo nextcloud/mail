@@ -185,7 +185,6 @@ OC.L10N.register(
     "No trash mailbox configured" : "Няма конфигурирана пощенска кутия за боклук",
     "Could not delete message" : "Съобщението не може да бъде изтрито",
     "Could not archive message" : "Не можа да се архивира съобщение",
-    "Draft: " : "Чернова: ",
     "Encrypted message" : "Криптирано съобщение",
     "This message is unread" : "Това съобщение не е прочетено",
     "Unfavorite" : "Премахване от Любими",
@@ -428,6 +427,7 @@ OC.L10N.register(
     "Redirect" : "Пренасочване",
     "The link leads to %s" : "Връзката води до %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желаете да посетите тази страница, може да се върнете към <a href=\"%s\">Поща</a>.",
-    "Continue to %s" : "Продължи към %s"
+    "Continue to %s" : "Продължи към %s",
+    "Draft: " : "Чернова: "
 },
 "nplurals=2; plural=(n != 1);");

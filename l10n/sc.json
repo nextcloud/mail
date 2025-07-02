@@ -111,7 +111,6 @@
     "Set reminder for next week" : "Cunfigura un'apuntu pro chida chi benit",
     "No trash mailbox configured" : "Peruna casella de àliga cunfigurada",
     "Could not delete message" : "No at fatu a cantzellare su messàgiu",
-    "Draft: " : "Brutacòpia:",
     "Unfavorite" : "Boga dae is preferidos",
     "Favorite" : "Preferidu",
     "Unread" : "De lèghere",
@@ -254,6 +253,19 @@
     "Place signature above quoted text" : "Pone sa firma subra su testu tzitadu",
     "Saving new tag name …" : "Sarvende nùmene de eticheta nou...",
     "An error occurred, unable to create the tag." : "B'at àpidu un'errore, no faghet a creare s'eticheta.",
+    "Could not load your message thread" : "No at fatu a carrigare su messàgiu tuo in sa dibata",
+    "Mark as unread" : "Marca comente non lèghidu",
+    "Message source" : "Fonte de su messàgiu",
+    "Could not remove trusted sender {sender}" : "No at fatu a nche bogare s'imbiante afidàbile {sender}",
+    "Airplane" : "Aeroplanu",
+    "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Errore cantzellende e boghende•nde sa frunidura a is contos pro \"{domain}\"",
+    "Using the wildcard (*) in the provisioning domain field will create a configuration that applies to all users, provided they do not match another configuration." : "Impreende sa wild card (*) in su campu de domìniu de sa frunidura s'at a creare una cunfiguratzione de aplicare a totu is utentes, frunida a is chi no tenent àtera cunfiguratzione. ",
+    "There can only be one configuration per domain and only one wildcard domain configuration." : "B'est isceti una cunfiguratzione pro domìniu e isceti una cunfiguratzione de domìniu cun wild card.",
+    "Add new config" : "Agiunghe cunfiguratzione noa",
+    "Client ID" : "ID cliente",
+    "Email: {email}" : "Posta eletrònica: {email}",
+    "Configuration for \"{provisioningDomain}\"" : "Cunfiguratzione pro \"{provisioningDomain}\"",
+    "Sieve" : "Sieve",
     "All" : "Totu",
     "Drafts" : "Brutacòpias",
     "Favorites" : "Preferidos",
@@ -279,6 +291,9 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Incarca inoghe chi no ses torradu a deretare in manera automàtica intro de pagu segundos.",
     "Redirect" : "Torra a deretare",
     "The link leads to %s" : "Su ligòngiu deretat a %s",
-    "Continue to %s" : "Sighi in %s"
+    "Continue to %s" : "Sighi in %s",
+    "Draft: " : "Brutacòpia:",
+    "New test" : "Proa noa",
+    "Actions" : "Atziones"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

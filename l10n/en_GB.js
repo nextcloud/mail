@@ -260,7 +260,6 @@ OC.L10N.register(
     "Could not snooze thread" : "Could not snooze thread",
     "Thread was unsnoozed" : "Thread was unsnoozed",
     "Could not unsnooze thread" : "Could not unsnooze thread",
-    "Draft: " : "Draft: ",
     "This summary was AI generated" : "This summary was AI generated",
     "Encrypted message" : "Encrypted message",
     "This message is unread" : "This message is unread",
@@ -549,6 +548,8 @@ OC.L10N.register(
     "Tag name cannot be empty" : "Tag name cannot be empty",
     "An error occurred, unable to create the tag." : "An error occurred, unable to create the tag.",
     "Print" : "Print",
+    "Signature verified" : "Signature verified",
+    "Import certificate" : "Import certificate",
     "All" : "All",
     "Drafts" : "Drafts",
     "Favorites" : "Favourites",
@@ -585,6 +586,7 @@ OC.L10N.register(
     "Redirect" : "Redirect",
     "The link leads to %s" : "The link leads to %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continue to %s"
+    "Continue to %s" : "Continue to %s",
+    "Draft: " : "Draft: "
 },
 "nplurals=2; plural=(n != 1);");

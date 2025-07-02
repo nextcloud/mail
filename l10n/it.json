@@ -180,7 +180,6 @@
     "No trash mailbox configured" : "Nessuna casella del cestino configurata",
     "Could not delete message" : "Impossibile eliminare il messaggio",
     "Could not archive message" : "Impossibile archiviare il messaggio",
-    "Draft: " : "Bozza:",
     "Encrypted message" : "Messaggio cifrato",
     "This message is unread" : "Questo messaggio è non letto",
     "Unfavorite" : "Rimuovi preferito",
@@ -383,6 +382,21 @@
     "Delete tag" : "Elimina etichetta",
     "Tag already exists" : "L'etichetta esiste già",
     "An error occurred, unable to create the tag." : "Si è verificato un errore, impossibile creare l'etichetta.",
+    "Could not create task" : "Impossibile creare l'attività",
+    "Signature verified" : "Firma verificata",
+    "This message was encrypted by the sender before it was sent." : "Questo messaggio è stato cifrato dal mittente prima di essere inviato.",
+    "Mark as unread" : "Segna come non letto",
+    "Message source" : "Sorgente del messaggio",
+    "Could not remove trusted sender {sender}" : "Impossibile rimuovere il mittente fidato {sender}",
+    "Airplane" : "Aereo",
+    "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Errore durante l'eliminazione e il approvvigionamento degli account per \"{domain}\"",
+    "Using the wildcard (*) in the provisioning domain field will create a configuration that applies to all users, provided they do not match another configuration." : "Usando il metacarattere (*) nel campo del dominio di predisposizione, si creerà una configurazione che si applica a tutti gli utenti, a patto che non dipendano da un'altra configurazione.",
+    "There can only be one configuration per domain and only one wildcard domain configuration." : "Può esistere una sola configurazione per dominio e una sola configurazione di dominio con caratteri jolly.",
+    "Add new config" : "Aggiungi nuova configurazione",
+    "Email: {email}" : "Email: {email}",
+    "Sieve" : "Sieve",
+    "Delete certificate" : "Elimina certificato",
+    "Import certificate" : "Importa certificato",
     "All" : "Tutti",
     "Drafts" : "Bozze",
     "Favorites" : "Preferiti",
@@ -414,6 +428,7 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Fai clic qui se non viene rediretto automaticamente entro pochi secondi.",
     "Redirect" : "Redirigi",
     "The link leads to %s" : "Il collegamento conduce a %s",
-    "Continue to %s" : "Continua su %s"
+    "Continue to %s" : "Continua su %s",
+    "Draft: " : "Bozza:"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

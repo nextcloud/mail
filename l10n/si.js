@@ -43,6 +43,7 @@ OC.L10N.register(
     "Body" : "අන්තර්ගතය",
     "Date" : "දිනය",
     "All" : "සියල්ල",
-    "Favorites" : "ප්‍රියතම"
+    "Favorites" : "ප්‍රියතම",
+    "Actions" : "ක්‍රියාමාර්ග"
 },
 "nplurals=2; plural=(n != 1);");

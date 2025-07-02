@@ -66,6 +66,8 @@ OC.L10N.register(
     "Last 7 days" : "ภายใน 7 วัน",
     "Custom" : "กำหนดเอง",
     "Tag already exists" : "มีแท็กอยู่แล้ว",
+    "Client ID" : "รหัสไคลเอ็นต์",
+    "Account connected" : "เชื่อมต่อบัญชีแล้ว",
     "All" : "ทั้งหมด",
     "Drafts" : "ฉบับร่าง",
     "Favorites" : "รายการโปรด",
@@ -78,6 +80,7 @@ OC.L10N.register(
     "Error loading message" : "เกิดข้อผิดพลาดขณะโหลดข้อความ",
     "Redirect" : "เปลี่ยนเส้นทาง",
     "The link leads to %s" : "ลิงก์จะนำไปยัง %s",
-    "Continue to %s" : "ดำเนินการต่อไปที่ %s"
+    "Continue to %s" : "ดำเนินการต่อไปที่ %s",
+    "Actions" : "การกระทำ"
 },
 "nplurals=1; plural=0;");

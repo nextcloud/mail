@@ -150,7 +150,6 @@
     "Set reminder for next week" : "Herinnering instellen voor volgende week",
     "No trash mailbox configured" : "Geen verwijderde berichtenmap ingesteld",
     "Could not delete message" : "Kon bericht niet verwijderen",
-    "Draft: " : "Concept:",
     "Unfavorite" : "Favoriet weghalen",
     "Favorite" : "Favoriet",
     "Unread" : "Ongelezen",
@@ -303,6 +302,20 @@
     "Delete tag" : "Verwijderen tag",
     "Tag already exists" : "Markering bestaat al",
     "An error occurred, unable to create the tag." : "Er trad een fout op, tag kon niet worden gecreëerd.",
+    "Could not load your message thread" : "Kon je berichtendraad niet laden",
+    "Mark as unread" : "Markeren als ongelezen",
+    "Message source" : "Bericht brontekst",
+    "Could not remove trusted sender {sender}" : "Kon vertrouwde afzender niet verwijderen {afzender}",
+    "Airplane" : "Vliegtuig",
+    "Filter name" : "Filternaam",
+    "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Fout bij het verwijderen en uitschrijven van accounts voor '{domain}'",
+    "Using the wildcard (*) in the provisioning domain field will create a configuration that applies to all users, provided they do not match another configuration." : "Door het jokerteken (*) in het veld Provisioningdomein te gebruiken, wordt een configuratie gemaakt die van toepassing is op alle gebruikers, op voorwaarde dat ze niet overeenkomen met een andere configuratie.",
+    "There can only be one configuration per domain and only one wildcard domain configuration." : "Er kan slechts één configuratie per domein zijn en slechts één domeinconfiguratie met jokertekens.",
+    "Add new config" : "Toevoegen nieuwe configuratie",
+    "Error saving anti spam email addresses" : "Fout bij het opslaan van anti-spam e-mail adressen",
+    "Email: {email}" : "E-mail: {email}",
+    "Configuration for \"{provisioningDomain}\"" : "Configuratie voor \"{provisioningDomain}\"",
+    "Sieve" : "Sieve",
     "All" : "Alle",
     "Drafts" : "Concepten",
     "Favorites" : "Favorieten",
@@ -328,6 +341,7 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Klik hier als je binnen enkele seconden niet automatisch wordt doorgestuurd.",
     "Redirect" : "Omleiden",
     "The link leads to %s" : "De link verwijst naar %s",
-    "Continue to %s" : "Verder naar %s"
+    "Continue to %s" : "Verder naar %s",
+    "Draft: " : "Concept:"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

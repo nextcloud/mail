@@ -96,6 +96,8 @@ OC.L10N.register(
     "Custom" : "E përshtatur",
     "Delete tag" : "Fshi etiketën",
     "Tag already exists" : "Etiketa ekziston",
+    "Mark as unread" : "Shënoje si të palexuar",
+    "Client ID" : "ID klienti",
     "All" : "Të gjithë",
     "Drafts" : "Skica",
     "Favorites" : "Favorites",
@@ -113,6 +115,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klikoni këtu nëse nuk ridrejtoheni automatikisht brenda disa sekondave",
     "Redirect" : "Ridrejtoje",
     "The link leads to %s" : "Lidhja shpie te %s",
-    "Continue to %s" : "Vazhdo te %s"
+    "Continue to %s" : "Vazhdo te %s",
+    "Actions" : "Veprimet"
 },
 "nplurals=2; plural=(n != 1);");

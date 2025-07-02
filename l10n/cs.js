@@ -260,7 +260,6 @@ OC.L10N.register(
     "Could not snooze thread" : "Vlákno se nepodařilo odložit",
     "Thread was unsnoozed" : "Odložení vlákna bylo zrušeno",
     "Could not unsnooze thread" : "Nepodařilo se zrušit odložení vlákna",
-    "Draft: " : "Koncept:",
     "This summary was AI generated" : "Toto shrnutí bylo vytvořeno AI",
     "Encrypted message" : "Šifrovaná zpráva",
     "This message is unread" : "Tato zpráva je nepřečtená",
@@ -585,6 +584,7 @@ OC.L10N.register(
     "Redirect" : "Přesměrovat",
     "The link leads to %s" : "Odkaz vede na %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Pokud nechcete tuto stránku navštívit, můžete se vrátit do <a href=\"%s\">e-mailu</a>.",
-    "Continue to %s" : "Pokračovat na %s"
+    "Continue to %s" : "Pokračovat na %s",
+    "Draft: " : "Koncept:"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

@@ -92,7 +92,6 @@
     "Plain text" : "Texto simples",
     "No messages" : "Sem mensagens",
     "Could not delete message" : "Não foi possível apagar a mensagem",
-    "Draft: " : "Rascunho:",
     "Unfavorite" : "Não favorito",
     "Favorite" : "Favorito",
     "Read" : "Ler",
@@ -180,6 +179,11 @@
     "Signature …" : "Assinatura...",
     "Save signature" : "Guardar assinatura",
     "Tag already exists" : "A etiqueta já existe",
+    "Message source" : "Fonte da mensagem",
+    "Airplane" : "Avião",
+    "Filter name" : "Filtrar nome",
+    "Client ID" : "Id. de Cliente",
+    "Email: {email}" : "Email: {email}",
     "All" : "Todos",
     "Drafts" : "Rascunhos",
     "Favorites" : "Favoritos",
@@ -201,6 +205,8 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Clique aqui se não for automaticamente redirecionado dentro de segundos.",
     "Redirect" : "Redirecionar",
     "The link leads to %s" : "A ligação aponta para %s",
-    "Continue to %s" : "Continuar para %s"
+    "Continue to %s" : "Continuar para %s",
+    "Draft: " : "Rascunho:",
+    "Actions" : "Ações"
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

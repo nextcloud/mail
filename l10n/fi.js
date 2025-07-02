@@ -179,7 +179,6 @@ OC.L10N.register(
     "Set reminder for next week" : "Aseta muistutus seuraavalle viikolle",
     "Could not delete message" : "Ei voitu poistaa viestiä",
     "Could not archive message" : "Viestiä ei voitu arkistoida",
-    "Draft: " : "Luonnos: ",
     "Encrypted message" : "Salattu viesti",
     "This message is unread" : "Tämä viesti on lukematon",
     "Unfavorite" : "Poista suosikeista",
@@ -366,6 +365,13 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Tunnisteen nimi on piilotettu järjestelmätunniste",
     "Tag already exists" : "Tunniste on jo olemassa",
     "An error occurred, unable to create the tag." : "Tapahtui virhe, tunnistetta ei voitu luoda.",
+    "Signature verified" : "Allekirjoitus vahvistettu",
+    "This message was encrypted by the sender before it was sent." : "Tämän viestin lähettäjä salasi viestin ennen sen lähettämistä.",
+    "Mark as unread" : "Merkitse lukemattomaksi",
+    "Message source" : "Viestin lähde",
+    "Airplane" : "Lentokone",
+    "Filter name" : "Nimisuodatin",
+    "Import certificate" : "Tuo varmenne",
     "All" : "Kaikki",
     "Drafts" : "Luonnokset",
     "Favorites" : "Suosikit",
@@ -396,6 +402,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klikkaa jos sinua ei uudelleenohjata automaattisesti muutamaan sekuntiin.",
     "Redirect" : "Uudelleenohjaus",
     "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
-    "Continue to %s" : "Jatka sivulle %s"
+    "Continue to %s" : "Jatka sivulle %s",
+    "Draft: " : "Luonnos: "
 },
 "nplurals=2; plural=(n != 1);");

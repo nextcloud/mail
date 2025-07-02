@@ -247,7 +247,6 @@ OC.L10N.register(
     "Could not snooze thread" : "No se ha podido archivar el hilo",
     "Thread was unsnoozed" : "El hilo fue reanudado",
     "Could not unsnooze thread" : "No se pudo reanudar el hilo",
-    "Draft: " : "Borrador:",
     "This summary was AI generated" : "Este resumen ha sido generado con IA",
     "Encrypted message" : "Mensaje cifrado",
     "This message is unread" : "Este mensaje no se ha leído",
@@ -523,6 +522,10 @@ OC.L10N.register(
     "Tag already exists" : "La etiqueta ya existe",
     "Tag name cannot be empty" : "El nombre de la etiqueta no puede estar vacío",
     "An error occurred, unable to create the tag." : "Ocurrió un error, no fue posible crear la etiqueta.",
+    "Signature verified" : "La firma fue verificada",
+    "Mark as unread" : "Marcar como no leído",
+    "Airplane" : "Aeroplano",
+    "Import certificate" : "Importar certificado",
     "All" : "Todo",
     "Drafts" : "Borradores",
     "Favorites" : "Favoritos",
@@ -558,6 +561,8 @@ OC.L10N.register(
     "Redirect" : "Redirigir",
     "The link leads to %s" : "El enlace conduce a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no quieres visitar esta página puedes volver a <a href=\"%s\">Correo</a>.",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Draft: " : "Borrador:",
+    "New test" : "Nueva prueba"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
