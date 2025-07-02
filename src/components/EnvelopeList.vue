@@ -547,13 +547,13 @@ div {
 	text-align: center;
 	margin-top: 10px;
 	cursor: pointer;
+	margin-inline-start: 28px;
 	color: var(--color-text-maxcontrast);
 	display: inline-flex;
-	gap: 15px;
-}
-
-.plus-icon {
-	margin-inline-start: 20px;
+	gap: 12px;
+	.plus-icon{
+		transform: translateX(-8px);
+	}
 }
 
 .multiselect-header {
