@@ -180,7 +180,7 @@ export default {
 }
 
 .reply-buttons {
-	margin: 0 calc(var(--default-grid-baseline) * 2) 0 calc(var(--default-grid-baseline) * 14);
+	margin: 0 calc(var(--default-grid-baseline) * 4) calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 14);
 	display: flex;
 	flex-wrap: wrap;
 	gap: 5px;
