@@ -175,6 +175,7 @@ export default {
 .html-message-body {
 	margin-inline-start: 50px;
 	margin-top: 2px;
+	margin : 2px calc(var(--default-grid-baseline) * 2) 0 50px;
 	background-color: #FFFFFF;
 }
 
