@@ -49,6 +49,16 @@ OC.L10N.register(
     "Close" : "Bağla",
     "Date" : "Date",
     "Tags" : "Işarələr",
+    "Not found" : "Tapılmadı",
+    "Priority" : "Prioritet",
+    "Reset" : "Sıfırla",
+    "Client ID" : "Müştəri İD-s",
+    "Client secret" : "Müxtəri sirri",
+    "User" : "User",
+    "Host" : "Şəbəkədə ünvan",
+    "Port" : "Port",
+    "Valid until" : "Vaxtadək keçərlidir",
+    "Certificate" : "Sertifikat",
     "All" : "Hamısı",
     "Drafts" : "Qaralamalar",
     "Favorites" : "Sevimlilər",
@@ -56,6 +66,7 @@ OC.L10N.register(
     "Junk" : "Önəmsiz",
     "Sent" : "Göndərildi",
     "Trash" : "Zibil",
-    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi"
+    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi",
+    "Actions" : "İşlər"
 },
 "nplurals=2; plural=(n != 1);");

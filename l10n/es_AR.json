@@ -89,6 +89,24 @@
     "Tags" : "Etiquetas",
     "Custom" : "Personalizado",
     "Tag already exists" : "La etiqueta ya existe",
+    "Add tag" : "Añadir etiqueta",
+    "Not found" : "No encontrado",
+    "Recipient" : "Recipiente",
+    "Operator" : "Operador",
+    "contains" : "contiene",
+    "matches" : "coincide",
+    "Priority" : "Prioridad",
+    "Reset" : "Restablecer",
+    "Client ID" : "ID del cliente",
+    "Client secret" : "Secreto del cliente",
+    "User" : "Usuario",
+    "Host" : "Servidor",
+    "Port" : "Puerto",
+    "Valid until" : "Válido hasta",
+    "Certificate" : "Certificado",
+    "Submit" : "Enviar",
+    "Account connected" : "Cuenta conectada",
+    "Connect your mail account" : "Conecte su cuenta de correo",
     "All" : "Todos",
     "Drafts" : "Borradores",
     "Favorites" : "Favoritos",
@@ -109,6 +127,7 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Haga click aqui si no es redireccionado automáticamente dentro de los siguietes segundos. ",
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "El link lleva a %s",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Actions" : "Acciones"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

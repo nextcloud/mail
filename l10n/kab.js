@@ -39,6 +39,8 @@ OC.L10N.register(
     "Close" : "Mdel",
     "Tags" : "Tibzimin",
     "Mark as unread" : "Creḍ ur yettwaɣra ara",
+    "Mark as read" : "Creḍ yettwaɣra",
+    "User" : "Aseqdac",
     "All" : "Akk",
     "Favorites" : "Imenyafen",
     "Inbox" : "Tanaka",

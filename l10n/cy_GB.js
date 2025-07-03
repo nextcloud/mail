@@ -90,6 +90,13 @@ OC.L10N.register(
     "Date" : "Date",
     "Tags" : "Tagiau",
     "Custom" : "Cyfaddas",
+    "Not found" : "Heb ei ganfod",
+    "Untitled event" : "Digwyddiad di-deitl",
+    "(organizer)" : "(trefnydd)",
+    "Recipient" : "Derbynnydd",
+    "User" : "Defnyddwyr",
+    "Certificate" : "Tystysgrif",
+    "Connect your mail account" : "Cysylltu â'r cyfrif e-bost",
     "All" : "Popeth",
     "Drafts" : "Drafftiau",
     "Favorites" : "Ffefrynnau",
@@ -112,6 +119,7 @@ OC.L10N.register(
     "Redirect" : "Ailgyfeirio",
     "The link leads to %s" : "Mae'r ddolen yn arwain at %s",
     "Continue to %s" : "Parhau i %s",
-    "Draft: " : "Drafft:"
+    "Draft: " : "Drafft:",
+    "Actions" : "Gweithredoedd"
 },
 "nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;");
