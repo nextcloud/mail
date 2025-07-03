@@ -622,13 +622,16 @@ export default {
 		 */
 		subjectForSubtitle() {
 			const subject = this.data.subject || this.t('mail', 'No subject')
-			return this.t('mail', '{markup-start}Draft:{markup-end} {subject}', {
-				'markup-start': '<em>',
-				'markup-end': '</em>',
-				subject: escapeHtml(subject),
-			}, {
-				escape: false,
-			})
+			if (this.draft) {
+				return this.t('mail', '{markup-start}Draft:{markup-end} {subject}', {
+					'markup-start': '<em>',
+					'markup-end': '</em>',
+					subject: escapeHtml(subject),
+				}, {
+					escape: false,
+				})
+			}
+			return subject
 		},
 		/**
 		 * Link to download the whole message (.eml).
