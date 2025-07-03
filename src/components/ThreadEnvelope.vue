@@ -199,14 +199,9 @@
 							@open-mail-filter-from-envelope="showMailFilterFromEnvelope = true"
 							@print="onPrint" />
 					</NcActions>
-					<NcModal v-if="showSourceModal" class="source-modal" @close="onCloseSourceModal">
-						<div class="source-modal-content">
-							<div class="section">
-								<h2>{{ t('mail', 'Message source') }}</h2>
-								<pre class="message-source">{{ rawMessage }}</pre>
-							</div>
-						</div>
-					</NcModal>
+					<SourceModal v-if="showSourceModal"
+						:raw-message="rawMessage"
+						@close="onCloseSourceModal" />
 					<MoveModal v-if="showMoveModal"
 						:account="account"
 						:envelopes="[envelope]"
@@ -276,7 +271,7 @@
 </template>
 <script>
 import Avatar from './Avatar.vue'
-import { NcActionButton, NcButton, NcModal } from '@nextcloud/vue'
+import { NcActionButton, NcButton } from '@nextcloud/vue'
 import ConfirmModal from './ConfirmationModal.vue'
 import Error from './Error.vue'
 import importantSvg from '../../img/important.svg'
@@ -324,6 +319,7 @@ import { Text, toPlain } from '../util/text.js'
 import useMainStore from '../store/mainStore.js'
 import { mapStores } from 'pinia'
 import MailFilterFromEnvelope from './mailFilter/MailFilterFromEnvelope.vue'
+import SourceModal from './SourceModal.vue'
 
 // Ternary loading state
 const Loading = Object.seal({
@@ -336,7 +332,6 @@ export default {
 	name: 'ThreadEnvelope',
 	components: {
 		MailFilterFromEnvelope,
-		NcModal,
 		EventModal,
 		TaskModal,
 		MoveModal,
@@ -365,6 +360,7 @@ export default {
 		NcActionText,
 		ReplyIcon,
 		ReplyAllIcon,
+		SourceModal,
 	},
 	props: {
 		envelope: {
