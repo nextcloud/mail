@@ -1160,9 +1160,6 @@ export default {
 		display: flex;
 		position: relative;
 		z-index: 1;
-		padding: 2em;
-		margin: -2em;
-		margin-right: 0;
 		align-items: center;
 	}
 	.left:not(.seen) {
