@@ -194,7 +194,7 @@ export default {
 	methods: {
 		filterAttachements(node) {
 			const downloadShareAttribute = node.attributes['share-attributes'] ? JSON.parse(node.attributes['share-attributes'])?.find((shareAttribute) => shareAttribute.key === 'download') : undefined
-			const downloadPermissions = downloadShareAttribute !== undefined ? downloadShareAttribute.enabled : true
+			const downloadPermissions = downloadShareAttribute !== undefined ? downloadShareAttribute.value : true
 			return (node.permissions & OC.PERMISSION_READ) && downloadPermissions
 		},
 		openAttachementPicker() {
