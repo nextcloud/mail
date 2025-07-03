@@ -663,12 +663,6 @@ export default {
 	}
 }
 
-.message-source {
-	font-family: monospace;
-	white-space: pre-wrap;
-	user-select: text;
-}
-
 .avatar-header {
 	height: var(--default-clickable-area);
 	overflow: hidden;
