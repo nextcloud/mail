@@ -11,6 +11,9 @@
     xsi:schemaLocation="https://getpsalm.org/schema/config"
     errorBaseline="tests/psalm-baseline.xml"
 >
+    <stubs>
+        <file name="tests/stub.phpstub" preloadClasses="true" />
+    </stubs>
     <projectFiles>
         <directory name="lib" />
         <ignoreFiles>
