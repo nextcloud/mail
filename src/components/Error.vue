@@ -24,7 +24,7 @@
 import { getReportUrl } from '../util/CrashReport.js'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import NcButton from '@nextcloud/vue/components/NcButton'
-import AlertCircleIcon from 'vue-material-design-icons/AlertCircle.vue'
+import AlertCircleIcon from 'vue-material-design-icons/AlertCircleOutline.vue'
 
 export default {
 	name: 'Error',

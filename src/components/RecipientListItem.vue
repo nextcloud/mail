@@ -16,7 +16,7 @@
 
 <script>
 import { NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
-import Close from 'vue-material-design-icons/Close.vue'
+import Close from 'vue-material-design-icons/CloseOutline.vue'
 import { mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
 

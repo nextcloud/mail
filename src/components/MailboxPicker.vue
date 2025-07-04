@@ -63,12 +63,12 @@
 <script>
 import { NcModal as Modal, NcLoadingIcon as IconLoading, NcButton as ButtonVue } from '@nextcloud/vue'
 import IconBreadcrumb from 'vue-material-design-icons/ChevronRight.vue'
-import IconInbox from 'vue-material-design-icons/Home.vue'
-import IconDraft from 'vue-material-design-icons/Pencil.vue'
-import IconSent from 'vue-material-design-icons/Send.vue'
+import IconInbox from 'vue-material-design-icons/HomeOutline.vue'
+import IconDraft from 'vue-material-design-icons/PencilOutline.vue'
+import IconSent from 'vue-material-design-icons/SendOutline.vue'
 import IconArchive from 'vue-material-design-icons/PackageDown.vue'
-import IconTrash from 'vue-material-design-icons/Delete.vue'
-import IconFolder from 'vue-material-design-icons/Folder.vue'
+import IconTrash from 'vue-material-design-icons/DeleteOutline.vue'
+import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
 
 import { translate as t } from '@nextcloud/l10n'
 import { translate as translateMailboxName } from '../i18n/MailboxTranslator.js'

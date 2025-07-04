@@ -340,8 +340,8 @@ import ProvisionPreview from './ProvisionPreview.vue'
 import { loadState } from '@nextcloud/initial-state'
 import ButtonVue from '@nextcloud/vue/components/NcButton'
 
-import IconUpload from 'vue-material-design-icons/Upload.vue'
-import IconDelete from 'vue-material-design-icons/Delete.vue'
+import IconUpload from 'vue-material-design-icons/UploadOutline.vue'
+import IconDelete from 'vue-material-design-icons/DeleteOutline.vue'
 
 const ldapAliasesIntegration = loadState('mail', 'ldap_aliases_integration', false)
 

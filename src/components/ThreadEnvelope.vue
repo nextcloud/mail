@@ -139,9 +139,9 @@
 							:close-after-click="true"
 							@click.prevent="onToggleFlagged">
 							<template #icon>
-								<StarOutline v-if="showFavoriteIconVariant"
+								<IconFavorite v-if="showFavoriteIconVariant"
 									:size="16" />
-								<IconFavorite v-else
+								<StarOutline v-else
 									:size="16" />
 							</template>
 						</NcActionButton>
@@ -285,13 +285,13 @@ import Moment from './Moment.vue'
 import { smartReply } from '../service/AiIntergrationsService.js'
 import { mailboxHasRights } from '../util/acl.js'
 import StarOutline from 'vue-material-design-icons/StarOutline.vue'
-import DeleteIcon from 'vue-material-design-icons/Delete.vue'
+import DeleteIcon from 'vue-material-design-icons/DeleteOutline.vue'
 import ArchiveIcon from 'vue-material-design-icons/PackageDown.vue'
-import EmailUnread from 'vue-material-design-icons/Email.vue'
-import EmailRead from 'vue-material-design-icons/EmailOpen.vue'
-import LockIcon from 'vue-material-design-icons/Lock.vue'
-import LockPlusIcon from 'vue-material-design-icons/LockPlus.vue'
-import LockOffIcon from 'vue-material-design-icons/LockOff.vue'
+import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
+import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
+import LockIcon from 'vue-material-design-icons/LockOutline.vue'
+import LockPlusIcon from 'vue-material-design-icons/LockPlusOutline.vue'
+import LockOffIcon from 'vue-material-design-icons/LockOffOutline.vue'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
 import { hiddenTags } from './tags.js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
@@ -300,8 +300,8 @@ import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredErr
 import { isPgpText } from '../crypto/pgp.js'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionText from '@nextcloud/vue/components/NcActionText'
-import ReplyIcon from 'vue-material-design-icons/Reply.vue'
-import ReplyAllIcon from 'vue-material-design-icons/ReplyAll.vue'
+import ReplyIcon from 'vue-material-design-icons/ReplyOutline.vue'
+import ReplyAllIcon from 'vue-material-design-icons/ReplyAllOutline.vue'
 import { unsubscribe } from '../service/ListService.js'
 import TagModal from './TagModal.vue'
 import MoveModal from './MoveModal.vue'

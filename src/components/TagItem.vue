@@ -58,8 +58,8 @@
 <script>
 import { NcColorPicker, NcActions as Actions, NcActionButton, NcActionText as ActionText, NcActionInput as ActionInput, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { showInfo } from '@nextcloud/dialogs'
-import DeleteIcon from 'vue-material-design-icons/Delete.vue'
-import IconEdit from 'vue-material-design-icons/Pencil.vue'
+import DeleteIcon from 'vue-material-design-icons/DeleteOutline.vue'
+import IconEdit from 'vue-material-design-icons/PencilOutline.vue'
 import { translateTagDisplayName } from '../util/tag.js'
 import { mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'

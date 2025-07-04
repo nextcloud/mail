@@ -12,7 +12,7 @@
 				<Cloud :size="16" />
 			</span>
 			<span v-else-if="attachment.type === 'message'">
-				<EmailArrowRightOutlineIcon />
+				<EmailArrowRightIcon />
 			</span>
 		</div>
 		<div class="attachment-inner">
@@ -34,16 +34,16 @@
 
 <script>
 import { generateUrl } from '@nextcloud/router'
-import Close from 'vue-material-design-icons/Close.vue'
-import Cloud from 'vue-material-design-icons/Cloud.vue'
-import EmailArrowRightOutlineIcon from 'vue-material-design-icons/EmailArrowRightOutline.vue'
+import Close from 'vue-material-design-icons/CloseOutline.vue'
+import Cloud from 'vue-material-design-icons/CloudOutline.vue'
+import EmailArrowRightIcon from 'vue-material-design-icons/EmailArrowRightOutline.vue'
 
 export default {
 	name: 'ComposerAttachment',
 	components: {
 		Close,
 		Cloud,
-		EmailArrowRightOutlineIcon,
+		EmailArrowRightIcon,
 	},
 	props: {
 		attachment: {
