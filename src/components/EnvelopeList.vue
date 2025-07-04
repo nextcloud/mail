@@ -573,8 +573,6 @@ div {
 #load-more-mail-messages {
 	margin: 10px auto;
 	padding: 10px;
-	margin-top: 50px;
-	margin-bottom: 50px;
 }
 
 /* TODO: put this in core icons.css as general rule for buttons with icons */

@@ -31,7 +31,11 @@
 						:mailbox="mailbox"
 						:search-query="query"
 						:bus="bus"
-						:open-first="mailbox.specialRole !== 'drafts'" />
+						:open-first="mailbox.specialRole !== 'drafts'"
+						:group-envelopes="groupEnvelopes"
+						:paginate="'manual'"
+						:initial-page-size="messagesOrderBydate"
+						:collapsible="true" />
 					<template v-else>
 						<div v-show="hasFollowUpEnvelopes"
 							class="app-content-list-item">
@@ -191,6 +195,7 @@ export default {
 	},
 	computed: {
 		...mapStores(useMainStore),
+
 		layoutMode() {
 			return this.mainStore.getPreference('layout-mode', 'vertical-split')
 		},
@@ -258,6 +263,12 @@ export default {
 		/**
 		 * @return {number}
 		 */
+		messagesOrderBydate() {
+			return 10
+		},
+		/**
+		 * @return {number}
+		 */
 		followUpMessagesInitialPageSize() {
 			return 5
 		},
@@ -276,6 +287,10 @@ export default {
 		},
 		isThreadShown() {
 			return !!this.$route.params.threadId
+		},
+		groupEnvelopes() {
+			const allEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
+			return this.groupEnvelopesByDate(allEnvelopes)
 		},
 	},
 	watch: {
@@ -313,6 +328,47 @@ export default {
 		clearTimeout(this.startMailboxTimer)
 	},
 	methods: {
+		groupEnvelopesByDate(envelopes) {
+			const now = new Date()
+			const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000)
+			const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+			const startOfYesterday = new Date(startOfToday)
+			startOfYesterday.setDate(startOfYesterday.getDate() - 1)
+			const startOfLastWeek = new Date(now)
+			startOfLastWeek.setDate(startOfLastWeek.getDate() - 7)
+			const startOfLastMonth = new Date(now)
+			startOfLastMonth.setMonth(startOfLastMonth.getMonth() - 1)
+
+			const groups = {
+				[t('mail', 'Last hour')]: [],
+				[t('mail', 'Today')]: [],
+				[t('mail', 'Yesterday')]: [],
+				[t('mail', 'Last week')]: [],
+				[t('mail', 'Last month')]: [],
+				[t('mail', 'Older')]: [],
+			}
+
+			for (const envelope of envelopes) {
+				const date = new Date(envelope.dateInt * 1000)
+				if (date >= oneHourAgo) {
+					groups[t('mail', 'Last hour')].push(envelope)
+				} else if (date >= startOfToday) {
+					groups[t('mail', 'Today')].push(envelope)
+				} else if (date >= startOfYesterday && date < startOfToday) {
+					groups[t('mail', 'Yesterday')].push(envelope)
+				} else if (date >= startOfLastWeek) {
+					groups[t('mail', 'Last week')].push(envelope)
+				} else if (date >= startOfLastMonth) {
+					groups[t('mail', 'Last month')].push(envelope)
+				} else {
+					groups[t('mail', 'Older')].push(envelope)
+				}
+			}
+
+			return Object.fromEntries(
+				Object.entries(groups).filter(([_, list]) => list.length > 0),
+			)
+		},
 		async fetchEnvelopes() {
 			const existingEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery || '')
 			if (!existingEnvelopes.length) {
