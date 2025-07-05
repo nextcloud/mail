@@ -15,6 +15,7 @@ OC.L10N.register(
     "SMTP Password" : "SMTP Şifrəsi",
     "Signature" : "İmza",
     "Cancel" : "Dayandır",
+    "Accounts" : "Accounts",
     "General" : "Ümumi",
     "Archive" : "Arxiv",
     "Delete" : "Sil",

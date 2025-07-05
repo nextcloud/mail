@@ -12,6 +12,7 @@ OC.L10N.register(
     "None" : "Ingen",
     "Signature" : "Signatur",
     "Cancel" : "Avbryt",
+    "Accounts" : "Accounts",
     "General" : "Generelt",
     "Keyboard shortcuts" : "Tastatursnarvegar",
     "Delete" : "Ta bort",

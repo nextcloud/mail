@@ -62,6 +62,7 @@ OC.L10N.register(
     "Cancel" : "Cancelar",
     "Put my text to the bottom of a reply instead of on top of it." : "Ponga mi texto al final de la respuesta en vez de encima de ella.",
     "Could not update preference" : "No se pudo actualizar la preferencia",
+    "Accounts" : "Accounts",
     "Add mail account" : "Agregar cuenta de correo",
     "General" : "General",
     "Use Gravatar and favicon avatars" : "Usar Gravatar y avatares favicon",

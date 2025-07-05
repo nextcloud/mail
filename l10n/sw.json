@@ -5,6 +5,7 @@
     "Later" : "Baadaye",
     "Sign in with Google" : "Ingia kwa Google",
     "Save" : "Hifadhi",
+    "Auto" : "Auto",
     "Name" : "Jina",
     "Password" : "Nenosiri",
     "None" : "Hakuna",
@@ -89,6 +90,7 @@
     "Favorites" : "Vipendwa",
     "Error while sharing file" : "Hitilafu wakati wa kushirikisha faili",
     "Message sent" : "Ujumbe umetumwa",
+    "Redirect" : "Elekeza upya",
     "Continue to %s" : "Endelea katika %s",
     "Actions" : "Matendo"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"

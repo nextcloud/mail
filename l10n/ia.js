@@ -17,6 +17,7 @@ OC.L10N.register(
     "SMTP Password" : "Contrasigno SMTP",
     "Go back" : "Retornar",
     "Cancel" : "Cancellar",
+    "Accounts" : "Accounts",
     "General" : "General",
     "Keyboard shortcuts" : "Combinationes de claves",
     "Delete" : "Deler",

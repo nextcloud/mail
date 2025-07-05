@@ -12,6 +12,7 @@ OC.L10N.register(
     "Signature" : "අත්සන",
     "Go back" : "ආපසු යන්න",
     "Cancel" : "අවලංගු කරන්න",
+    "Accounts" : "Accounts",
     "General" : "සමාන්‍යය",
     "About" : "පිළිබඳ",
     "Archive" : "සංරක්ෂණය",

@@ -12,6 +12,7 @@ OC.L10N.register(
     "None" : "Keng",
     "Go back" : "Zeréckgoen",
     "Cancel" : "Ofbriechen",
+    "Accounts" : "Accounts",
     "General" : "Allgemeng",
     "Delete" : "Läschen",
     "Search" : "Search",

@@ -28,6 +28,7 @@ OC.L10N.register(
     "Signature" : "Firma",
     "Go back" : "Regresar",
     "Cancel" : "Cancelar",
+    "Accounts" : "Accounts",
     "Add mail account" : "Agregar cuenta de correo",
     "General" : "General",
     "Use Gravatar and favicon avatars" : "Usar Gravatar y avatares favicon",

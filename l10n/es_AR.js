@@ -29,6 +29,7 @@ OC.L10N.register(
     "Go back" : "Regresar",
     "Change name" : "Cambiar nombre",
     "Cancel" : "Cancelar",
+    "Accounts" : "Accounts",
     "Add mail account" : "Agregar cuenta de correo",
     "General" : "General",
     "Sorting" : "Orden",

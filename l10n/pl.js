@@ -577,6 +577,7 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nowa wiadomość\nod {from}","%n nowe wiadomości \nod {from}","%n nowych wiadomości \nod {from}","%n nowych wiadomości \nod {from}"],
     "Nextcloud Mail" : "Poczta Nextcloud",
+    "Discard changes" : "Odrzuć zmiany",
     "Attachments were not copied. Please add them manually." : "Załączniki nie zostały skopiowane. Dodaj je ręcznie.",
     "Message sent" : "Wiadomość wysłana",
     "Could not send message" : "Nie udało się wysłać wiadomości",
