@@ -75,6 +75,7 @@ export default {
 .mail-message-has-mdn-request {
 	white-space: normal;
 }
+
 .notify-button {
 	display: inline-block;
 }

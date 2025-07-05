@@ -176,6 +176,7 @@ export default {
 		margin-top: -5px;
 	}
 }
+
 .reply-buttons {
 	margin: 0 30px 0 50px;
 	display: flex;
@@ -191,7 +192,7 @@ export default {
 		gap: 5px;
 
 		&__button {
-			margin-right: 5px;
+			margin-inline-end: 5px;
 			border-radius: 12px;
 
 			:deep(.button-vue__text) {
@@ -201,7 +202,7 @@ export default {
 	}
 
 	&__notsuggested {
-		margin-left: auto;
+		margin-inline-start: auto;
 	}
 }
 @media screen and (max-width: 600px) {
@@ -217,7 +218,7 @@ export default {
 		}
 
 		&__notsuggested {
-			margin-left: 0;
+			margin-inline-start: 0;
 		}
 	}
 }

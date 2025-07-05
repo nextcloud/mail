@@ -59,7 +59,7 @@ export default {
 <style lang="scss" scoped>
 
 label {
-	padding-right: 12px;
+	padding-inline-end: 12px;
 }
 
 div{

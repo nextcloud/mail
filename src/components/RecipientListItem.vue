@@ -71,7 +71,7 @@ export default {
 	display: flex;
 
 	& > span.option {
-		margin-left: 0
+		margin-inline-start: 0
 	}
 }
 
@@ -83,7 +83,7 @@ export default {
 	height: 24px;
 	width: 24px;
 	min-width: 24px;
-	margin-left: 6px;
+	margin-inline-start: 6px;
 	border-radius: 50%;
 	flex-shrink: 0;
 

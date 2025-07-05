@@ -626,23 +626,25 @@ export default {
 }
 
 .minimize-button {
-	float: right;
+	float: inline-end;
 	position: absolute;
 	top: 4px;
 	inset-inline-end: 63px;
 }
 
 .maximize-button {
-	float: right;
+	float: inline-end;
 	position: absolute;
 	top: 4px;
 	inset-inline-end: 33px;
 
 }
+
 .empty-content{
 	height: 100%;
 	display: flex;
 }
+
 .modal-content {
 	display: flex;
 	height: 100%;
@@ -658,8 +660,8 @@ export default {
 .right-pane {
 	flex: 0 0 400px;
 	overflow-y: auto;
-	padding-left: 5px;
-	border-left: 1px solid #ccc;
+	padding-inline-start: 5px;
+	border-inline-start: 1px solid #ccc;
 	@media (max-width: 1024px) {
 		display: none;
 	}
@@ -668,6 +670,7 @@ export default {
 .modal-content.with-recipient .left-pane {
 	flex: 1;
 }
+
 .modal-content .left-pane {
 	width: 100%;
 }

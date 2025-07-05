@@ -134,6 +134,7 @@ export default {
 .solid {
 	margin: calc(var(--default-grid-baseline) * 4) 0 0 0;
 }
+
 .mail-filter-rows {
 	margin-bottom: calc(var(--default-grid-baseline) * 4);
 	&__row {

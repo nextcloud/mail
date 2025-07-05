@@ -436,6 +436,7 @@ export default {
 .app-description {
 		margin-bottom: 24px;
 	}
+
 .config-button {
 	display: inline-block;
 	margin-inline: 4px;

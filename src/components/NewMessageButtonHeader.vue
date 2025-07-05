@@ -95,6 +95,7 @@ export default {
 	padding: calc(var(--default-grid-baseline, 4px) * 2);
 	gap: var(--default-grid-baseline);
 }
+
 .refresh__button {
 	background-color: transparent;
 }

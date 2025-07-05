@@ -190,12 +190,12 @@ export default {
 }
 
 .primary {
-  padding-left: 26px;
+  padding-inline-start: 26px;
   background-position: 6px;
   color: var(--color-main-background);
 
   &:after {
-    left: 14px;
+    inset-inline-start: 14px;
   }
 }
 
@@ -210,18 +210,22 @@ export default {
     color: var(--color-main-text);
   }
 }
+
 .section {
   display: block;
   padding: 0;
   margin-bottom: 23px;
 }
+
 .ck-balloon-panel {
 	 z-index: 10000 !important;
  }
+
 .button-vue:deep() {
 	display: inline-block !important;
 	margin-top: 4px !important;
 }
+
 .warning-large-signature {
 	color: darkorange;
 }

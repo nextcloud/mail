@@ -607,8 +607,8 @@ export default {
 	background-color: var(--color-main-background);
 	&__input {
 		min-height: 52px;
-		margin-inline-start: calc(var(--app-navigation-padding)*2 + var(--default-clickable-area));
-		padding-right: 3px; /* matches .app-content-list */
+		margin-inline-start: calc(var(--app-navigation-padding) * 2 + var(--default-clickable-area));
+		padding-inline-end: 3px; /* matches .app-content-list */
 		position: relative;
 		display: flex;
 		align-items: center;
@@ -651,8 +651,7 @@ export default {
 
 .tag-group__bg {
 	position: absolute;
-	left: 0;
-	right: 0;
+	inset-inline: 0;
 	bottom: 0;
 	top: 0;
 	opacity: 0.4;
@@ -685,10 +684,10 @@ export default {
 			.modal-inner-inline {
 				width: calc(50% - 5px);
 				&:first-child {
-					margin-right: 5px;
+					margin-inline-end: 5px;
 				}
 				&:last-child {
-					margin-left: 5px;
+					margin-inline-start: 5px;
 				}
 			}
 		}
@@ -706,6 +705,7 @@ export default {
 		flex-direction: row;
 	}
 }
+
 .multiselect-search-tags {
 	width: 100%;
 }
@@ -749,9 +749,11 @@ export default {
 		}
 	}
 }
+
 .modal-wrapper--normal .modal-container {
 	position: relative
 }
+
 .button-vue.search-messages--filter.button-vue--icon-only {
 	position: absolute;
 	width: auto;
@@ -764,6 +766,7 @@ export default {
 	border: none !important;
 	padding: 0 !important;
 }
+
 .button-vue.search-messages--close.button-vue--icon-only {
 	position: absolute;
 	width: auto;
@@ -778,7 +781,7 @@ export default {
 }
 
 .button-reset-filter {
-	margin-right: 10px;
+	margin-inline-end: 10px;
 }
 
 .filter-changed {
@@ -791,9 +794,11 @@ export default {
 	border-radius: 50%;
 	top: 12px;
 }
+
 .mx-datepicker {
 	width:100%;
 }
+
 .filter-buttons {
 	display: flex;
 	justify-content: center;

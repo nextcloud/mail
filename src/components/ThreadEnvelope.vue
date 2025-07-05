@@ -981,7 +981,7 @@ export default {
 
 <style lang="scss" scoped>
 	.sender {
-		margin-left: calc(var(--default-grid-baseline) * 2);
+		margin-inline-start: calc(var(--default-grid-baseline) * 2);
 		&__email{
 			color: var(--color-text-maxcontrast);
 			text-overflow: ellipsis;
@@ -998,20 +998,21 @@ export default {
 		flex-direction: row;
 		align-items: center;
 		justify-content: flex-end;
-		margin-left: calc(var(--default-grid-baseline) * 2);
+		margin-inline-start: calc(var(--default-grid-baseline) * 2);
 		height: 44px;
 
 		.app-content-list-item-menu {
-			margin-left: var(--default-grid-baseline);
+			margin-inline-start: var(--default-grid-baseline);
 		}
 
 		.timestamp {
-			margin-right: calc(var(--default-grid-baseline) * 2);
+			margin-inline-end: calc(var(--default-grid-baseline) * 2);
 			color: var(--color-text-maxcontrast);
 			white-space: nowrap;
 			margin-bottom: 0;
 		}
 	}
+
 	.button {
 		color: var(--color-main-background);
 		&:not(.active):not(.primary) {
@@ -1031,8 +1032,7 @@ export default {
 		flex-direction: column;
 		border: 2px solid var(--color-border);
 		border-radius: var(--border-radius-container-large);
-		margin-left: calc(var(--default-grid-baseline) * 2);
-		margin-right: calc(var(--default-grid-baseline) * 2);
+		margin-inline: calc(var(--default-grid-baseline) * 2);
 		background-color: var(--color-main-background);
 		padding-bottom: calc(var(--default-grid-baseline) * 7);
 		animation: show 200ms 90ms cubic-bezier(.17, .67, .83, .67) forwards;
@@ -1102,7 +1102,7 @@ export default {
 						height: 16px;
 						display: flex;
 						top: 0px;
-						left: 0px;
+						inset-inline-start: 0px;
 
 						&:hover,
 						&:focus {
@@ -1118,7 +1118,7 @@ export default {
 					&.favorite-icon-style {
 						display: inline-block;
 						top: -2px;
-						right: -2px;
+						inset-inline-end: -2px;
 
 						stroke: var(--color-main-background);
 						stroke-width: 2;
@@ -1129,7 +1129,7 @@ export default {
 					&.junk-icon-style {
 						display: inline-block;
 						bottom: -2px;
-						right: -2px;
+						inset-inline-end: -2px;
 						opacity: .2;
 						&:hover {
 							opacity: .1;
@@ -1148,7 +1148,7 @@ export default {
 		}
 
 		.subline {
-			margin-left: 8px;
+			margin-inline-start: 8px;
 			color: var(--color-text-maxcontrast);
 			cursor: default;
 			overflow: hidden;
@@ -1160,6 +1160,7 @@ export default {
 			min-height: 350px;
 		}
 	}
+
 	.left {
 		flex-grow: 1;
 		min-width: 0; /* https://css-tricks.com/flexbox-truncated-text/ */
@@ -1168,30 +1169,34 @@ export default {
 		z-index: 1;
 		align-items: center;
 	}
+
 	.left:not(.seen) {
 		font-weight: bold;
 	}
+
 	.tag-group__label {
 		margin: 0 calc(var(--default-grid-baseline) * 2);
 		z-index: 2;
 		font-size: calc(var(--default-font-size) * 0.8);
 		font-weight: bold;
-		padding-left: calc(var(--default-grid-baseline) * 0.5);
-		padding-right: calc(var(--default-grid-baseline) * 0.5);
+		padding-inline: calc(var(--default-grid-baseline) * 0.5);
 	}
+
 	.tag-group__bg {
 		position: absolute;
 		width: 100%;
 		height: 100%;
 		top: 0;
-		left: 0;
+		inset-inline-start: 0;
 		opacity: 15%;
 	}
+
 	.tagline {
 		display: flex;
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}
+
 	.tag-group {
 		display: inline-block;
 		border: 1px solid transparent;
@@ -1200,12 +1205,14 @@ export default {
 		margin: 0 1px;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		left: var(--default-grid-baseline);
+		inset-inline-start: var(--default-grid-baseline);
 	}
+
 	.smime-text {
 		// same as padding-right on action-text styling
-		padding-left: calc(var(--default-grid-baseline) * 3);
+		padding-inline-start: calc(var(--default-grid-baseline) * 3);
 	}
+
 	:deep(.action-button__name) {
 		font-weight: normal;
 		display: inline;

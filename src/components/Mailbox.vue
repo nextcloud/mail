@@ -539,6 +539,7 @@ export default {
 		margin-bottom: 8px;
 	}
 }
+
 .empty-content {
 	height: 100%;
 	display: flex;

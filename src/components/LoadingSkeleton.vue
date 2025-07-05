@@ -55,7 +55,7 @@ export default {
 		animation: gradient 3s ease-in infinite;
 	}
 	.item__details {
-		padding-left: 8px;
+		padding-inline-start: 8px;
 		max-height: 70px;
 		flex-grow: 1;
 		display: flex;
