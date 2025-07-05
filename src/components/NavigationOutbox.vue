@@ -52,7 +52,7 @@ export default {
 <style lang="scss" scoped>
 .navigation-outbox {
 	&__unread-counter {
-		margin-right: calc(var(--default-grid-baseline)*2);
+		margin-inline-end: calc(var(--default-grid-baseline) * 2);
 	}
 }
 

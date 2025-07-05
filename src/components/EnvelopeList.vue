@@ -551,8 +551,9 @@ div {
 	display: inline-flex;
 	gap: 15px;
 }
+
 .plus-icon {
-	margin-left: 20px;
+	margin-inline-start: 20px;
 }
 
 .multiselect-header {
@@ -575,11 +576,7 @@ div {
 	padding: 10px;
 	margin-top: 50px;
 	margin-bottom: 50px;
-}
-
-/* TODO: put this in core icons.css as general rule for buttons with icons */
-#load-more-mail-messages {
-	padding-left: 32px;
+	padding-inline-start: 32px;
 	background-position: 9px center;
 }
 
@@ -607,6 +604,7 @@ div {
 		display: block;
 	}
 }
+
 :deep(.button-vue--text-only) {
 	padding: 0 !important;
 }

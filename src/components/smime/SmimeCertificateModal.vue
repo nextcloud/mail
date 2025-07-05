@@ -246,6 +246,7 @@ export default {
 	height: 100%;
 	display: flex;
 }
+
 .certificate-modal {
 	padding: calc(var(--default-grid-baseline) * 5);
 
@@ -288,7 +289,7 @@ export default {
 
 		&__actions {
 			margin: calc(var(--default-grid-baseline) * 3);
-			float: right;
+			float: inline-end;
 		}
 	}
 

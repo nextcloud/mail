@@ -602,32 +602,39 @@ p.app-settings span.loading-icon {
 	vertical-align: middle;
 	padding: var(--default-grid-baseline) 0;
 }
+
 p.app-settings {
 	padding: calc(var(--default-grid-baseline) * 2) 0;
 }
+
 .app-settings-button {
 	display: inline-flex;
 	background-position: 10px center;
-	text-align: left;
+	text-align: start;
 	margin-top: calc(var(--default-grid-baseline) * 2);
 }
+
 .app-settings-button.button.primary.new-button {
 	color: var(--color-primary-element-text);
 	//this style will be removed after we migrate also the  'add mail account' to material design
-	padding-left: 34px;
+	padding-inline-start: 34px;
 	gap: var(--default-grid-baseline);
 	width: fit-content;
 }
+
 .app-settings-link {
 	text-decoration: underline;
 }
+
 :deep(.button-vue__text) {
 	text-overflow: clip;
 	white-space: normal;
 }
+
 :deep(.button-vue__wrapper) {
 	justify-content: flex-start;
 }
+
 .mailvelope-section {
 	padding-top: calc(var(--default-grid-baseline) * 4);
 
@@ -644,16 +651,19 @@ p.app-settings {
 		}
 	}
 }
+
 .material-design-icon {
 	&.lock-icon {
-		margin-right: calc(var(--default-grid-baseline) * 2);
+		margin-inline-end: calc(var(--default-grid-baseline) * 2);
 	}
 
 }
+
 .section-title {
 	margin-top: calc(var(--default-grid-baseline) * 5);
 	margin-bottom: calc(var(--default-grid-baseline) * 2);
 }
+
 .sorting {
 	display: flex;
 	width: 100%;
@@ -661,19 +671,22 @@ p.app-settings {
 		width: 50%;
 	}
 }
+
 .mail-creation-button {
 	width: 100%;
 }
+
 .settings-hint {
 	margin-top: calc(var(--default-grid-baseline) * -3);
 	margin-bottom: calc(var(--default-grid-baseline) * 2);
 	color: var(--color-text-maxcontrast);
 }
+
 .app-settings-section {
 	list-style: none;
 }
 // align it with the checkbox
 .internal_address{
-	margin-left: 3px;
+	margin-inline-start: 3px;
 }
 </style>

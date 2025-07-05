@@ -195,7 +195,7 @@ export default {
 	position: fixed;
 	list-style: none;
 	top: 18px;
-	left: 15px;
+	inset-inline-start: 15px;
 
 	.color0 {
 		width: 22px !important;
@@ -207,36 +207,40 @@ export default {
 		position: relative;
 	}
 }
+
 .tag-group {
 	display: block;
 	position: relative;
 	margin: 0 1px;
 	overflow: hidden;
 }
+
 .tag-actions {
 	background-color: transparent;
 	border: none;
-	float: right;
+	float: inline-end;
 	&:hover,
 	&:focus {
 		background-color: var(--color-border-dark);
 	}
 }
+
 .tag-group__label {
 	z-index: 2;
 	font-weight: bold;
 	border: none;
 	background-color: transparent;
-	padding-left: 10px;
-	padding-right: 10px;
+	padding-inline: 10px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	max-width: 94px;
 }
+
 .action-item {
-	right: 8px;
-	float: right;
+	inset-inline-end: 8px;
+	float: inline-end;
 }
+
 :deep(.input-field) {
 	margin-top: 3px;
 }

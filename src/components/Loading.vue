@@ -62,14 +62,17 @@ export default {
 .fade-leave-active {
 	transition: opacity 0.5s;
 }
+
 .fade-enter,
 .fade-leave-to {
 	opacity: 0;
 }
+
 .empty-content {
 	height: 100%;
 	display: flex;
 }
+
 .wrapper {
 	display: flex;
 	justify-content: center;

@@ -104,7 +104,7 @@ export default {
 	.cloud-attachment-icon {
 		position:absolute;
 		z-index: 2;
-		right: 2px;
+		inset-inline-end: 2px;
 		top: 2px;
 		color: rgba(0, 0, 0, 1);
 	}
@@ -160,13 +160,13 @@ export default {
 		background: var(--color-primary-element-light);
 		position: absolute;
 		z-index: 1;
-		left: 0;
+		inset-inline-start: 0;
 		border-radius: 5px;
 	}
 }
 
 .attachments-upload-progress > div {
-	padding-left: 3px;
+	padding-inline-start: 3px;
 }
 
 .new-message-attachments-action {

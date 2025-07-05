@@ -22,14 +22,14 @@
 		z-index: 100;
 		background: var(--color-main-background);
 		width: 100%;
-		left: 0;
+		inset-inline-start: 0;
 		top: 0;
 	}
 
 	#mail-message-close {
 		display: block;
 		position: fixed;
-		right: 0;
+		inset-inline-end: 0;
 		top: 45px;
 		width: 44px;
 		height: 44px;
@@ -50,11 +50,11 @@
 	}
 
 	textarea.message-body {
-		padding-right: 12px;
+		padding-inline-end: 12px;
 	}
 
 	/* reply-forward actions align to the far right */
 	#mail-thread-header .mail-message-actions {
-		margin-right: 5px;
+		margin-inline-end: 5px;
 	}
 }

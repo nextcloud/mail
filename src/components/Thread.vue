@@ -589,7 +589,7 @@ export default {
 	// initial width
 	width: 0;
 	// while scrolling, the back button overlaps with subject on small screen
-	padding-left: calc(var(--default-grid-baseline) * 21);
+	padding-inline-start: calc(var(--default-grid-baseline) * 21);
 	// grow and try to fill 100%
 	flex: 1 1 auto;
 	h2,
@@ -626,7 +626,7 @@ export default {
 }
 
 .tooltip-inner {
-	text-align: left;
+	text-align: start;
 }
 
 #mail-content {
@@ -675,6 +675,7 @@ export default {
 		overflow: auto;
 	}
 }
+
 .avatar-more {
 	display: inline;
 	background-color: var(--color-background-dark);
@@ -697,13 +698,13 @@ export default {
 .user-bubble__wrapper {
 	height: var(--default-clickable-area);
 	padding: var(--default-grid-baseline);
-	margin-right: var(--default-grid-baseline);
+	margin-inline-end: var(--default-grid-baseline);
 	background-color: var(--color-background-dark);
 	border-radius: var(--border-radius-large);
 }
 
 .v-popper__popper--shown .user-bubble__wrapper {
-	margin-right: 0 !important;
+	margin-inline-end: 0 !important;
 
 	.user-bubble__content {
 		padding: calc(var(--default-grid-baseline));

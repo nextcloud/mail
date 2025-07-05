@@ -950,7 +950,7 @@ export default {
 <style lang="scss" scoped>
 .mail-message-account-color {
 	position: absolute;
-	left: 0px;
+	inset-inline-start: 0px;
 	width: 2px;
 	height: 69px;
 	z-index: 1;
@@ -977,7 +977,7 @@ export default {
 				&.draft {
 					line-height: 130%;
 					/* deep because there is no data attribute for the em rendered from JS output */
-					::v-deep em {
+					:deep(em) {
 						font-style: italic;
 					}
 				}
@@ -1026,7 +1026,7 @@ export default {
 	// In message list, but not the one in the action menu
 	&.app-content-list-item-star {
 		background-image: none;
-		left: 1px;
+		inset-inline-start: 1px;
 		top: 8px;
 		opacity: 1;
 
@@ -1036,16 +1036,17 @@ export default {
 		}
 	}
 }
+
 .important-one-line.app-content-list-item-star:deep() {
 	top: 4px !important;
-	left: 2px;
+	inset-inline-start: 2px;
 }
 
 .app-content-list-item-select-checkbox {
 	display: inline-block;
 	vertical-align: middle;
 	position: absolute;
-	left: 33px;
+	inset-inline-start: 33px;
 	top: 35px;
 	z-index: 50; // same as icon-starred
 }
@@ -1058,7 +1059,7 @@ export default {
 	opacity: .2;
 	display: flex;
 	top: 32px;
-	left: 32px;
+	inset-inline-start: 32px;
 	background-size: 16px;
 	height: 20px;
 	width: 20px;
@@ -1070,6 +1071,7 @@ export default {
 		opacity: .1;
 	}
 }
+
 .one-line.junk-icon-style {
 	top: 36px;
 }
@@ -1084,47 +1086,49 @@ export default {
 		margin-bottom: -14px;
 	}
 }
+
 .tag-group__label {
 	margin: 0 7px;
 	z-index: 2;
 	font-size: calc(var(--default-font-size) * 0.8);
 	font-weight: bold;
-	padding-left: 2px;
-	padding-right: 2px;
+	padding-inline: 2px;
 	white-space: nowrap;
 }
+
 .tag-group__bg {
 	position: absolute;
 	width: 100%;
 	height: 100%;
 	top: 0;
-	left: 0;
+	inset-inline-start: 0;
 	opacity: 15%;
 }
+
 .tag-group {
 	display: inline-block;
 	border-radius: var(--border-radius-pill);
 	position: relative;
-	margin-right: 1px;
+	margin-inline-end: 1px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+
 .list-item__wrapper:deep() {
 	list-style: none;
 }
-.app-content-list-item-star.favorite-icon-style {
-	display: block;
-}
+
 .icon-important.app-content-list-item-star:deep() {
 	position: absolute;
 	top: 5px;
 	z-index: 1;
 }
+
 .app-content-list-item-star.favorite-icon-style {
 	display: inline-block;
 	position: absolute;
 	top: 3px;
-	left: 30px;
+	inset-inline-start: 30px;
 	cursor: pointer;
 	stroke: var(--color-main-background);
 	stroke-width: 2;
@@ -1133,29 +1137,34 @@ export default {
 		opacity: .4;
 	}
 }
+
 .one-line.favorite-icon-style {
 	top: 3px;
-	left: 31px;
+	inset-inline-start: 31px;
 }
+
 :deep(.svg svg) {
 	height: 16px;
 	width: 16px;
 }
+
 .seen-icon-style,
 .attachment-icon-style  {
 	opacity: .6;
 	display: inline-flex;
 	align-items: center;
-	margin-right: 5px;
+	margin-inline-end: 5px;
 }
+
 :deep(.list-item__anchor) {
 	margin-top: 6px;
 	margin-bottom: 6px;
 }
+
 :deep(.line-two__subtitle) {
 	display: flex;
 	flex-basis: 100%;
-	padding-left: 40px;
+	padding-inline-start: 40px;
 	width: 450px;
 }
 
@@ -1164,6 +1173,7 @@ export default {
 	display: flex;
 	width: 200px;
 }
+
 .line-two.one-line {
 	display: flex;
 	overflow: hidden;
@@ -1189,6 +1199,7 @@ export default {
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
+
 .app-content-list-item-avatar-selected {
 	background-color: var(--color-primary-element);
 	color: var(--color-primary-light);
@@ -1199,6 +1210,7 @@ export default {
 		border-radius: 32px;
 	}
 }
+
 .hover-active {
 	&:hover {
 		color: var(--color-primary-hover);

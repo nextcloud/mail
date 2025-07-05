@@ -45,7 +45,7 @@ export default {
 		height: 12px;
 		border-radius: 50%;
 		border: none;
-		margin-right: calc(var(--default-grid-baseline) * 2);
+		margin-inline-end: calc(var(--default-grid-baseline) * 2);
 		flex-basis: calc(var(--default-grid-baseline) * 3);
 		flex-shrink: 0;
 	}

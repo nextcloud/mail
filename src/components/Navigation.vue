@@ -188,6 +188,7 @@ to {
 		transform: rotate(-360deg);
 	}
 }
+
 .outbox {
 	padding: calc(var(--default-grid-baseline, 4px) * 2);
 	padding-bottom: 0;
@@ -197,6 +198,7 @@ to {
 		border-top: 1px solid var(--color-background-darker);
 	}
 }
+
 .mail-settings {
 	padding: calc(var(--default-grid-baseline, 4px) * 2);
 	padding-top: 0;

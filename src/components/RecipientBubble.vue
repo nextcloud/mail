@@ -263,6 +263,7 @@ export default {
 	display: flex;
 	flex-wrap: wrap;
 }
+
 .contact-popover {
 	display: flex;
 
@@ -270,6 +271,7 @@ export default {
 		text-align: center;
 	}
 }
+
 .contact-wrapper {
 	padding:10px;
 	min-width: 300px;
@@ -281,6 +283,7 @@ export default {
 		opacity: 1;
 	}
 }
+
 .contact-input-wrapper {
 	margin-top: 10px;
     margin-bottom: 10px;
@@ -292,9 +295,11 @@ export default {
 .contact-existing {
 	font-size: small !important;
 }
+
 :deep(.button-vue__text) {
 	font-weight: normal !important;
 }
+
 :deep(.vs__dropdown-menu) {
 	// Make the dropdown scrollable
 	max-height: 100px;

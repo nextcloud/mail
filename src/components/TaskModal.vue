@@ -234,30 +234,38 @@ export default {
 	max-width: 490px !important;
 	max-height: 500px !important;
 }
+
 :deep(.calendar-picker-option__color-indicator){
-    margin-left: 10px !important;
+    margin-inline-start: 10px !important;
 }
+
 .modal-content {
 	padding: 30px 30px 20px !important;
 }
+
 input , textarea {
 	width: 100%;
 }
+
 :deep(input[type='text']) {
 	padding: 0 !important;
 }
+
 .all-day {
-	margin-left: -1px;
+	margin-inline-start: -1px;
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
+
 .taskTitle {
 	margin-bottom: 5px;
 }
+
 .primary {
 	height: 44px !important;
-	float: right;
+	float: inline-end;
 }
+
 :deep(.mx-datepicker) {
 	width: 213px;
 }

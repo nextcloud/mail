@@ -540,7 +540,7 @@ export default {
 	&__type {
 		display: flex;
 		gap: 5px;
-		margin-left: 36px;
+		margin-inline-start: 36px;
 	}
 
 	&__more-options {
@@ -573,7 +573,7 @@ export default {
 
 	&__actions {
 		margin-top: 15px;
-		margin-left: 36px;
+		margin-inline-start: 36px;
 
 		&--buttons {
 			display: flex;

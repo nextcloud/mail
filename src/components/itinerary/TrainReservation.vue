@@ -190,7 +190,7 @@ export default {
 }
 
 .departure {
-	text-align: right;
+	text-align: end;
 }
 
 .connection {

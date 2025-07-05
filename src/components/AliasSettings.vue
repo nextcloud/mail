@@ -170,12 +170,12 @@ export default {
 
 <style lang="scss" scoped>
 .primary {
-	padding-left: 26px;
+	padding-inline-start: 26px;
 	background-position: 6px;
 	color: var(--color-main-background);
 
 	&:after {
-		left: 14px;
+		inset-inline-start: 14px;
 	}
 }
 
@@ -194,6 +194,7 @@ export default {
 input {
 	width: 195px;
 }
+
 .button-vue:deep() {
 	display: inline-block !important;
 	margin-top: 4px !important;

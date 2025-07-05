@@ -236,19 +236,23 @@ export default {
 	max-height: calc(100vh - 210px);
 	overflow-y: auto;
 }
+
 :deep(.modal-container) {
 	width: auto !important;
 }
+
 .icon-colorpicker {
 	background-image: var(--icon-add-fff);
 }
+
 .tagButton {
 	display: inline-block;
-	margin-left: 10px;
+	margin-inline-start: 10px;
 }
+
 .tag-title {
 	margin-top: 20px;
-	margin-left: 10px;
+	margin-inline-start: 10px;
 }
 
 .create-tag {

@@ -306,13 +306,16 @@ export default {
 	max-width: 100%;
 	border-radius: var(--border-radius);
 }
+
 .attachment-import-popover {
-	right: 32px;
+	inset-inline-end: 32px;
 	top: 42px;
 }
+
 .mail-attached-image:hover {
 	opacity: 0.8;
 }
+
 .attachment-name {
 	display: inline-block;
 	width: 100%;
@@ -332,12 +335,14 @@ export default {
 
 .attachment-icon {
 	vertical-align: middle;
-	text-align: left;
+	text-align: start;
 	margin-bottom: 20px;
 }
+
 .action-item {
 	transition: 0.4s;
 }
+
 .mail-message-attachments {
 	overflow-x: auto;
 	overflow-y: auto;

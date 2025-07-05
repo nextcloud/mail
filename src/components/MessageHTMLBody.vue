@@ -160,12 +160,13 @@ export default {
 <style lang="scss" scoped>
 // account for 8px margin on iframe body
 .html-message-body {
-	margin-left: 50px;
+	margin-inline-start: 50px;
 	margin-top: 2px;
 	background-color: #FFFFFF;
 }
+
 #mail-message-has-blocked-content {
-	margin-left: 10px;
+	margin-inline-start: 10px;
 	color: var(--color-text-maxcontrast) !important;
 }
 
@@ -182,19 +183,22 @@ export default {
 		}
 	}
 }
+
 :deep(.button-vue__text) {
 	border: none !important;
 	font-weight: normal !important;
-	padding-left: 14px !important;
-	padding-right: 10px !important;
+	padding-inline: 14px 10px !important;
 	text-decoration: underline !important;
 }
+
 .message-frame {
 	width: 100%;
 }
+
 :deep(.button-vue__icon) {
 	display: none !important;
 }
+
 :deep(.button-vue--vue-tertiary) {
 	color: var(--color-text-maxcontrast);
 }

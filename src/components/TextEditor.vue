@@ -409,6 +409,7 @@ export default {
 :deep(a) {
 	color: #07d;
 }
+
 :deep(p) {
 	cursor: text;
 	margin: 0 !important;
@@ -427,6 +428,7 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 .ck-content ul, .ck-content ol {
 	padding-inline-start: 40px;
 }
+
 .ck-list__item {
 	.ck-off {
 		background:var(--color-main-background) !important;
@@ -435,13 +437,16 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 		background:var(--color-primary-element-light) !important;
 	}
 }
+
 .custom-item-username {
 	color: var(--color-main-text) !important;
  }
+
  .link-title {
 	color: var(--color-main-text) !important;
-	margin-left: var(--default-grid-baseline) !important;
+	margin-inline-start: var(--default-grid-baseline) !important;
  }
+
  .custom-item {
 	width : 100% !important;
 	border-radius : 8px !important;
@@ -449,9 +454,11 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	display :block;
 	background:var(--color-main-background)!important;
  }
+
  .custom-item:hover {
 	background:var(--color-primary-element-light)!important;
  }
+
  .link-container{
 	border-radius :8px !important;
 	padding :4px 8px !important;
@@ -463,20 +470,25 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 		height: 16px;
 	}
  }
+
  .link-container:hover {
 	background:var(--color-primary-element-light)!important;
  }
+
 :root {
 	--ck-z-default: 10000;
 	--ck-balloon-border-width:  0;
 }
+
 .ck.ck-toolbar {
 	border-radius: var(--border-radius-large) !important;
 }
+
 .ck-rounded-corners .ck.ck-dropdown__panel, .ck.ck-dropdown__panel.ck-rounded-corners {
 	border-radius: var(--border-radius-large) !important;
 	overflow: visible;
 }
+
 .ck.ck-list-styles-list {
 /* our composer is very small, having menus vertically shown is better */
 	grid-template-rows: repeat(3,auto) !important;
@@ -486,9 +498,11 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 .ck.ck-button {
 	border-radius: var(--border-radius-element) !important;
 }
+
 .ck-powered-by-balloon {
 	display: none !important;
 }
+
 .editor-wrapper {
 	display: flex;
 	flex-direction: column-reverse;
@@ -505,38 +519,43 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 		overflow-y: auto;
 	}
 }
+
 .ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable) {
+	border: none;
+	box-shadow: none;
 	width: 99%;
 	height: 97%;
 }
+
 .ck.ck-button, a.ck.ck-button {
 	font-size: small;
 	font-weight: normal;
 }
+
 .ck.ck-dropdown.ck-list-styles-dropdown {
 	width: 55px;
 }
+
 .ck-source-editing-area {
 	height: 97%;
 	overflow: scroll;
 }
+
 .ck-source-editing-area textarea {
 	border: 0;
 }
+
 .ck.ck-editor__editable_inline {
 	width: 99%;
 	height: 97%;
 	border: 0;
 }
+
 .select, button:not(.button-vue,[class^=vs__]), .button, input[type=button], input[type=submit], input[type=reset] {
 	color: var(--color-primary-element-light);
 }
+
 .ck.ck-editor__top .ck-sticky-panel .ck-sticky-panel__content {
 	border: none;
 }
-.ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable) {
-	border: none;
-	box-shadow: none;
-}
-
 </style>

@@ -92,7 +92,7 @@ export default {
 .composer-session {
 	position: fixed;
 	bottom: calc(var(--body-container-margin) + var(--default-grid-baseline));
-	right: calc(var(--body-container-margin) + var(--default-grid-baseline));
+	inset-inline-end: calc(var(--body-container-margin) + var(--default-grid-baseline));
 	z-index: 1000;
 
 	display: flex;

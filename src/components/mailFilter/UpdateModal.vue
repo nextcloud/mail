@@ -204,7 +204,7 @@ export default {
 
 .external-label label {
 	padding-top: 7px;
-	padding-right: 14px;
+	padding-inline-end: 14px;
 	white-space: nowrap;
 }
 

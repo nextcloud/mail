@@ -43,10 +43,12 @@ export default {
 :deep(.refresh__button) {
 	display: none !important;
 }
+
 .header {
 	display: grid !important;
 	justify-content: center !important;
 }
+
 .app-content {
 	display: flex;
 	height: 100%;

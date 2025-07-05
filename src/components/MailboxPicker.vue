@@ -196,7 +196,7 @@ export default {
 
 .crumbs {
 	display: inline-flex;
-	padding-right: 0;
+	padding-inline-end: 0;
 	flex-wrap: wrap;
 
 	.level {
@@ -205,7 +205,7 @@ export default {
 		min-width: 0px;
 		flex: 0 0 auto;
 		order: 1;
-		padding-right: calc(var(--default-grid-baseline) * 2);
+		padding-inline-end: calc(var(--default-grid-baseline) * 2);
 		background-position: right center;
 		background-size: auto 24px;
 		margin-top: calc(var(--default-grid-baseline) * -2.5);
@@ -286,11 +286,12 @@ export default {
 	padding-top: calc(var(--default-grid-baseline) * 2);
 
 	.spinner {
-		margin-right: var(--default-grid-baseline);
+		margin-inline-end: var(--default-grid-baseline);
 	}
 }
+
 .material-design-icon {
 	opacity: .7;
-	margin-right: calc(var(--default-grid-baseline) * 1.5);
+	margin-inline-end: calc(var(--default-grid-baseline) * 1.5);
 }
 </style>

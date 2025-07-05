@@ -111,12 +111,12 @@ textarea {
 }
 
 .primary {
-	padding-left: 26px;
+	padding-inline-start: 26px;
 	background-position: 6px;
 	color: var(--color-main-background);
 
 	&:after {
-		 left: 14px;
+		 inset-inline-start: 14px;
 	 }
 }
 </style>
