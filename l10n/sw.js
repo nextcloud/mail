@@ -7,6 +7,7 @@ OC.L10N.register(
     "Later" : "Baadaye",
     "Sign in with Google" : "Ingia kwa Google",
     "Save" : "Hifadhi",
+    "Auto" : "Auto",
     "Name" : "Jina",
     "Password" : "Nenosiri",
     "None" : "Hakuna",
@@ -91,6 +92,7 @@ OC.L10N.register(
     "Favorites" : "Vipendwa",
     "Error while sharing file" : "Hitilafu wakati wa kushirikisha faili",
     "Message sent" : "Ujumbe umetumwa",
+    "Redirect" : "Elekeza upya",
     "Continue to %s" : "Endelea katika %s",
     "Actions" : "Matendo"
 },

@@ -29,6 +29,7 @@ OC.L10N.register(
     "Go back" : "Revenir en arrière",
     "Email address" : "Adreça mail",
     "Cancel" : "Anullar",
+    "Accounts" : "Accounts",
     "General" : "Generals",
     "List" : "Tièra",
     "Register" : "S'inscriure",

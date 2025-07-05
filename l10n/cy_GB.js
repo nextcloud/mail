@@ -31,6 +31,7 @@ OC.L10N.register(
     "Go back" : "Nôl",
     "Email address" : "Cyfeiriad e-bost",
     "Cancel" : "Diddymu",
+    "Accounts" : "Accounts",
     "Add mail account" : "Ychwanegu cyfrif post",
     "General" : "Cyffredinol",
     "List" : "Rhestr",

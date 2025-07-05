@@ -54,6 +54,7 @@ OC.L10N.register(
     "Email address" : "כתובת דוא״ל",
     "Add alias" : "הוספת כינוי",
     "Cancel" : "ביטול",
+    "Accounts" : "Accounts",
     "Add mail account" : "הוספת חשבון דוא״ל",
     "General" : "כללי",
     "Sorting" : "מיון",

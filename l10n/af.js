@@ -41,6 +41,7 @@ OC.L10N.register(
     "Go back" : "Gaan terug",
     "Email address" : "E-posadres",
     "Cancel" : "Kanselleer",
+    "Accounts" : "Accounts",
     "Add mail account" : "Voeg posrekening toe",
     "General" : "Algemeen",
     "Register" : "Registreer",

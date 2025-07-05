@@ -56,6 +56,7 @@ OC.L10N.register(
     "Cancel" : "Annulla",
     "Put my text to the bottom of a reply instead of on top of it." : "Pone su testu miu a su fundu de una resposta imbetzes che a pitzus.",
     "Could not update preference" : "No at fatu a agiornare sa preferèntzia",
+    "Accounts" : "Accounts",
     "Add mail account" : "Agiunghe contu de posta",
     "General" : "Generale",
     "Sorting" : "Assentende",
