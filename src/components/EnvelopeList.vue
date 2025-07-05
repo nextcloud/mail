@@ -547,12 +547,10 @@ div {
 	text-align: center;
 	margin-top: 10px;
 	cursor: pointer;
+	margin-left: calc(var(--default-grid-baseline) * 13);
 	color: var(--color-text-maxcontrast);
 	display: inline-flex;
 	gap: 15px;
-}
-.plus-icon {
-	margin-left: 20px;
 }
 
 .multiselect-header {
