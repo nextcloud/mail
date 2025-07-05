@@ -38,13 +38,6 @@ use function json_decode;
 
 class AiIntegrationsService {
 
-	private const EVENT_DATA_PROMPT_PREAMBLE = <<<PROMPT
-I am scheduling an event based on an email thread and need an event title and agenda. Provide the result as JSON with keys for "title" and "agenda". For example ```{ "title": "Project kick-off meeting", "agenda": "* Introduction\\n* Project goals\\n* Next steps" }```.
-
-The email contents are:
-
-PROMPT;
-
 	public function __construct(
 		private ContainerInterface $container,
 		private LoggerInterface $logger,
@@ -53,6 +46,7 @@ PROMPT;
 		private IMAPClientFactory $clientFactory,
 		private IMailManager $mailManager,
 		private TaskProcessingManager $taskProcessingManager,
+		private AiIntegrationsPromptsService $promptsService,
 	) {
 	}
 
@@ -96,10 +90,7 @@ PROMPT;
 				}
 				// construct prompt and task
 				$messageBody = $message->getPlainBody();
-				$prompt = "You are tasked with formulating a helpful summary of a email message. \r\n"
-						  . "The summary should be less than 160 characters. \r\n"
-						  . "Output *ONLY* the summary itself, leave out any introduction. \r\n"
-						  . "Here is the ***E-MAIL*** for which you must generate a helpful summary: \r\n"
+				$prompt = $this->promptsService->getSummarizeEmailPrompt()
 						  . "***START_OF_E-MAIL***\r\n$messageBody\r\n***END_OF_E-MAIL***\r\n";
 				$task = new TaskProcessingTask(
 					TextToText::ID,
@@ -203,7 +194,7 @@ PROMPT;
 
 		$task = new Task(
 			FreePromptTaskType::class,
-			self::EVENT_DATA_PROMPT_PREAMBLE . implode("\n\n---\n\n", $messageBodies),
+			$this->promptsService->getEventDataPromptPreamble() . implode("\n\n---\n\n", $messageBodies),
 			'mail',
 			$currentUserId,
 			"event_data_$threadId",
@@ -248,20 +239,7 @@ PROMPT;
 			} finally {
 				$client->logout();
 			}
-			$prompt = "You are tasked with formulating helpful replies or reply templates to e-mails provided that have been sent to me. If you don't know some relevant information for answering the e-mails (like my schedule) leave blanks in the text that can later be filled by me. You must write the replies from my point of view as replies to the original sender of the provided e-mail!
-
-			Formulate two extremely succinct reply suggestions to the provided ***E-MAIL***. Please, do not invent any context for the replies but, rather, leave blanks for me to fill in with relevant information where necessary. Provide the output formatted as valid JSON with the keys 'reply1' and 'reply2' for the reply suggestions.
-
-			Each suggestion must be of 25 characters or less.
-
-			Here is the ***E-MAIL*** for which you must suggest the replies to:
-
-			***START_OF_E-MAIL***" . $messageBody . "
-
-			***END_OF_E-MAIL***
-
-			Please, output *ONLY* a valid JSON string with the keys 'reply1' and 'reply2' for the reply suggestions. Leave out any other text besides the JSON! Be extremely succinct and write the replies from my point of view.
-			 ";
+			$prompt = $this->promptsService->getSmartReplyPrompt($messageBody);
 			$task = new Task(FreePromptTaskType::class, $prompt, 'mail,', $currentUserId);
 			$manager->runTask($task);
 			$replies = $task->getOutput();
@@ -323,21 +301,7 @@ PROMPT;
 		$messageBody = $imapMessage->getPlainBody();
 		$messageBody = str_replace('"', '\"', $messageBody);
 
-		$prompt = "Consider the following TypeScript function prototype:
----
-/**
- * This function takes in an email text and returns a boolean indicating whether the email author expects a response.
- *
- * @param emailText - string with the email text
- * @returns boolean true if the email expects a reply, false if not
- */
-declare function doesEmailExpectReply(emailText: string): Promise<boolean>;
----
-Tell me what the function outputs for the following parameters.
-
-emailText: \"$messageBody\"
-The JSON output should be in the form: {\"expectsReply\": true}
-Never return null or undefined.";
+		$prompt = $this->promptsService->getRequiresFollowupPrompt($messageBody);
 		$task = new Task(FreePromptTaskType::class, $prompt, Application::APP_ID, $currentUserId);
 
 		$manager->runTask($task);

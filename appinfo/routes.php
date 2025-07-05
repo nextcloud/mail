@@ -495,6 +495,16 @@ return [
 			'url' => '/api/follow-up/check-message-ids',
 			'verb' => 'POST',
 		],
+		[
+			'name' => 'AiPrompt#getPrompts',
+			'url' => '/api/prompts',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'AiPrompt#setPrompt',
+			'url' => '/api/prompts/{key}',
+			'verb' => 'POST',
+		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],
