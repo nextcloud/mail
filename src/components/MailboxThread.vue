@@ -103,7 +103,7 @@
 			</div>
 		</template>
 
-		<Thread v-if="showThread" @delete="deleteMessage" />
+		<Thread v-if="showThread" :current-account-email="account.emailAddress" @delete="deleteMessage" />
 		<NoMessageSelected v-else-if="hasEnvelopes" />
 	</AppContent>
 </template>
