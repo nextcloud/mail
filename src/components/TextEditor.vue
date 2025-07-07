@@ -32,6 +32,9 @@ import FontPlugin from '@ckeditor/ckeditor5-font/src/font.js'
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph.js'
 import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading.js'
 import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic.js'
+import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline.js'
+import Superscript from '@ckeditor/ckeditor5-basic-styles/src/superscript.js'
+import Subscript from '@ckeditor/ckeditor5-basic-styles/src/subscript.js'
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link.js'
 import ListPlugin from '@ckeditor/ckeditor5-list/src/list.js'
 import ListProperties from '@ckeditor/ckeditor5-list/src/listproperties.js'
@@ -41,7 +44,6 @@ import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethro
 import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
 import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter.js'
 import ImagePlugin from '@ckeditor/ckeditor5-image/src/image.js'
-import Table from '@ckeditor/ckeditor5-table/src/table.js'
 import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandreplace.js'
 import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
@@ -97,7 +99,6 @@ export default {
 			PickerPlugin,
 			Mention,
 			LinkPlugin,
-			Table,
 			FindAndReplace,
 			GeneralHtmlSupport,
 		]
@@ -109,6 +110,10 @@ export default {
 				AlignmentPlugin,
 				BoldPlugin,
 				ItalicPlugin,
+				Underline,
+				StrikethroughPlugin,
+				Subscript,
+				Superscript,
 				BlockQuotePlugin,
 				ListPlugin,
 				ImagePlugin,
@@ -118,7 +123,6 @@ export default {
 				ListProperties,
 				FontPlugin,
 				RemoveFormat,
-				StrikethroughPlugin,
 				Base64UploadAdapter,
 				MailPlugin,
 				SourceEditingPlugin,
@@ -129,17 +133,19 @@ export default {
 				'fontSize',
 				'bold',
 				'italic',
+				'underline',
+				'strikethrough',
 				'fontColor',
+				'subscript',
+				'superscript',
 				'fontBackgroundColor',
 				'insertImage',
 				'alignment',
 				'bulletedList',
 				'numberedList',
 				'blockquote',
-				'strikethrough',
 				'link',
 				'removeFormat',
-				'insertTable',
 				'findAndReplace',
 			])
 		}
@@ -563,6 +569,10 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 
 .select, button:not(.button-vue,[class^=vs__]), .button, input[type=button], input[type=submit], input[type=reset] {
 	color: var(--color-main-text);
+}
+/* we need the paragraph field a bit smaller so it doesnt break the toolbar for signature */
+.ck.ck-dropdown.ck-heading-dropdown .ck-dropdown__button .ck-button__label {
+	width: 6em !important;
 }
 
 .ck.ck-editor__top .ck-sticky-panel .ck-sticky-panel__content {
