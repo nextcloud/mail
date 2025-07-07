@@ -42,7 +42,6 @@ import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
 import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter.js'
 import ImagePlugin from '@ckeditor/ckeditor5-image/src/image.js'
 import Table from '@ckeditor/ckeditor5-table/src/table.js'
-import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar.js'
 import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandreplace.js'
 import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
@@ -99,7 +98,6 @@ export default {
 			Mention,
 			LinkPlugin,
 			Table,
-			TableToolbar,
 			FindAndReplace,
 			GeneralHtmlSupport,
 		]
@@ -142,9 +140,6 @@ export default {
 				'link',
 				'removeFormat',
 				'insertTable',
-				'tableColumn',
-				'tableRow',
-				'mergeTableCells',
 				'findAndReplace',
 			])
 		}
@@ -567,7 +562,7 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 }
 
 .select, button:not(.button-vue,[class^=vs__]), .button, input[type=button], input[type=submit], input[type=reset] {
-	color: var(--color-primary-element-light);
+	color: var(--color-main-text);
 }
 
 .ck.ck-editor__top .ck-sticky-panel .ck-sticky-panel__content {
