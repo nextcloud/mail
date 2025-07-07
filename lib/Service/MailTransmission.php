@@ -104,26 +104,9 @@ class MailTransmission implements IMailTransmission {
 		}
 
 		$transport = $this->smtpClientFactory->create($account);
+
 		// build mime body
-		$headers = [
-			'From' => $from->toHorde(),
-			'To' => $to->toHorde(),
-			'Cc' => $cc->toHorde(),
-			'Bcc' => $bcc->toHorde(),
-			'Subject' => $localMessage->getSubject(),
-		];
-
-		// The table (oc_local_messages) currently only allows for a single reply to message id
-		// but we already set the 'references' header for an email so we could support multiple references
-		// Get the previous message and then concatenate all its "References" message ids with this one
-		if (($inReplyTo = $localMessage->getInReplyToMessageId()) !== null) {
-			$headers['References'] = $inReplyTo;
-			$headers['In-Reply-To'] = $inReplyTo;
-		}
-
-		if ($localMessage->getRequestMdn()) {
-			$headers[Horde_Mime_Mdn::MDN_HEADER] = $from->toHorde();
-		}
+		$headers = $this->prepareHeadersForLocalMessage($localMessage);
 
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
@@ -206,14 +189,7 @@ class MailTransmission implements IMailTransmission {
 		}
 
 		// build mime body
-		$headers = [
-			'From' => $imapMessage->getFrom()->first()->toHorde(),
-			'To' => $imapMessage->getTo()->toHorde(),
-			'Cc' => $imapMessage->getCC()->toHorde(),
-			'Bcc' => $imapMessage->getBCC()->toHorde(),
-			'Subject' => $imapMessage->getSubject(),
-			'Date' => Horde_Mime_Headers_Date::create(),
-		];
+		$headers = $this->prepareHeadersForLocalMessage($message);
 
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
@@ -413,6 +389,44 @@ class MailTransmission implements IMailTransmission {
 		} catch (Horde_Mime_Exception $e) {
 			throw new ServiceException('Unable to send mdn for message "' . $message->getId() . '" caused by: ' . $e->getMessage(), 0, $e);
 		}
+	}
+
+	private function prepareHeadersForLocalMessage(LocalMessage $message): array {
+		$from = $this->transmissionService->getAddressList($message, Recipient::TYPE_FROM);
+		$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO);
+		$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC);
+		$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC);
+
+		$headers = [
+			'From' => $from->toHorde(),
+			'Subject' => $message->getSubject(),
+		];
+
+		if ($to->count() > 0) {
+			$headers['To'] = $to->toHorde();
+		}
+
+		if ($cc->count() > 0) {
+			$headers['Cc'] = $cc->toHorde();
+		}
+
+		if ($bcc->count() > 0) {
+			$headers['Bcc'] = $bcc->toHorde();
+		}
+
+		// The table (oc_local_messages) currently only allows for a single reply to message id
+		// but we already set the 'references' header for an email so we could support multiple references
+		// Get the previous message and then concatenate all its "References" message ids with this one
+		if (($inReplyTo = $message->getInReplyToMessageId()) !== null) {
+			$headers['References'] = $inReplyTo;
+			$headers['In-Reply-To'] = $inReplyTo;
+		}
+
+		if ($message->getRequestMdn()) {
+			$headers[Horde_Mime_Mdn::MDN_HEADER] = $from->toHorde();
+		}
+
+		return $headers;
 	}
 
 }
