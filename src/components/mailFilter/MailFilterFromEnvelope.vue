@@ -82,12 +82,12 @@ export default {
 
 			const fromTest = new MailFilterCondition()
 			fromTest.field = MailFilterConditionField.From
-			fromTest.operator = MailFilterConditionOperator.Is
+			fromTest.operator = MailFilterConditionOperator.Contains
 			fromTest.values = []
 
 			const toTest = new MailFilterCondition()
 			toTest.field = MailFilterConditionField.To
-			toTest.operator = MailFilterConditionOperator.Is
+			toTest.operator = MailFilterConditionOperator.Contains
 			toTest.values = []
 
 			for (const header of headers) {
