@@ -217,6 +217,7 @@ export default {
 	max-width: 490px !important;
 	max-height: 500px !important;
 }
+
 .modal-content {
 	padding: 30px 30px 20px !important;
 
@@ -228,24 +229,30 @@ export default {
 		resize: vertical;
 	}
 }
+
 input {
 	width: 100%;
 }
+
 :deep(input[type='text']) {
 	padding: 0 !important;
 }
+
 .all-day {
-	margin-left: -1px;
+	margin-inline-start: -1px;
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
+
 .eventTitle {
 	margin-bottom: 5px;
 }
+
 .primary {
 	height: 44px !important;
-	float: right;
+	float: inline-end;
 }
+
 :deep(.mx-datepicker) {
 	width: 213px;
 }

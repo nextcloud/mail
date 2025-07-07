@@ -82,30 +82,37 @@ export default {
 	border: 0;
 	width: 250px;
 }
+
 .vue-treeselect__control-arrow-container {
 	display: none;
 }
+
 .vue-treeselect--searchable .vue-treeselect__input-container {
-	padding-left: 0;
+	padding-inline-start: 0;
 	background-color: var(--color-main-background)
 }
+
 input.vue-treeselect__input {
 	margin: 0;
 	padding: 0;
 	border: 1px solid var(--color-border-maxcontrast) !important;
 }
+
 .vue-treeselect__menu {
 	background: var(--color-main-background);
 }
+
 .vue-treeselect--single .vue-treeselect__option--selected {
 	background: var(--color-primary-element-light);
 	border-radius: var(--border-radius-large);
 }
+
 .vue-treeselect__option.vue-treeselect__option--highlight,
 .vue-treeselect__option:hover,
 .vue-treeselect__option:focus {
 	border-radius: var(--border-radius-large);
 	}
+
 .vue-treeselect__placeholder, .vue-treeselect__single-value {
 	line-height: 34px;
 	color: var(--color-main-text);

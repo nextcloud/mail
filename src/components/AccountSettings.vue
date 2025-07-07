@@ -205,19 +205,22 @@ export default {
 		opacity: 1;
 	}
 }
+
 .settings-hint {
 	margin-top: calc(var(--default-grid-baseline) * -3);
 	margin-bottom: calc(var(--default-grid-baseline) * 2);
 	color: var(--color-text-maxcontrast);
 }
+
 h2 {
 	font-weight: bold;
 	font-size: 20px;
 	margin-bottom: calc(var(--default-grid-baseline) * 3);
-	margin-left: calc(var(--default-grid-baseline) * -7);
+	margin-inline-start: calc(var(--default-grid-baseline) * -7);
 	line-height: calc(var(--default-grid-baseline) * 7);
 	color: var(--color-text-light);
 }
+
 .app-settings-section {
 	margin-bottom: calc(var(--default-grid-baseline) * 12);
 }

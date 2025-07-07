@@ -17,9 +17,8 @@
 			content: '';
 			position: absolute;
 			top: 0;
-			left: 2px;
+			inset-inline: 2px 0;
 			bottom: 0;
-			right: 0;
 			transition: .1s opacity ease-in-out;
 			border: 2px solid transparent;
 			pointer-events: none;
@@ -32,27 +31,28 @@
 			width: 0;
 			height: 0;
 			border-top: 5px solid transparent;
-			border-left: 5px solid transparent;
+			border-inline-start: 5px solid transparent;
 			border-bottom: 5px solid transparent;
-			left: 4px;
+			inset-inline-start: 4px;
 			top: 50%;
 			margin-top: -5px;
 		}
 	}
 }
+
 [droppable-mailbox="disabled"] {
 	pointer-events: none;
 	opacity: .3;
 }
+
 [droppable-mailbox="dragover"] {
 	> div > a {
 		&:before {
 			content: '';
 			position: absolute;
 			top: 0;
-			left: 2px;
+			inset-inline: 2px 0;
 			bottom: 0;
-			right: 0;
 			transition: .1s opacity ease-in-out;
 			border: 2px solid var(--color-primary-element);
 			pointer-events: none;
@@ -65,9 +65,9 @@
 			width: 0;
 			height: 0;
 			border-top: 5px solid transparent;
-			border-left: 5px solid var(--color-primary-element);
+			border-inline-start: 5px solid var(--color-primary-element);
 			border-bottom: 5px solid transparent;
-			left: 4px;
+			inset-inline-start: 4px;
 			top: 50%;
 			margin-top: -5px;
 		}

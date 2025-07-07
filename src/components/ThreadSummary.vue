@@ -101,14 +101,12 @@ export default {
                 background-color: var(--color-primary-light);
                 border-radius: var(--border-radius-pill);
                 width: fit-content;
-                padding-right: 10px;
-				padding-left: 4px;
+                padding-inline: 4px 10px;
 				margin: 8px 0 8px 0;
 
                 &__icon{
                     color:var(--color-primary-element);
-                    margin-right: 5px;
-					margin-left:5px
+                    margin-inline: 5px
                 }
             }
         }

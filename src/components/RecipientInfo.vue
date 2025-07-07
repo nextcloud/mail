@@ -112,7 +112,7 @@ export default {
 	&__avatar {
 		margin-top: 20px;
 		display: inline;
-		float: left;
+		float: inline-start;
 		padding: 20px;
 	}
 

@@ -49,7 +49,7 @@ export default {
 		flex: 1 1 100%;
 		display: flex;
 		flex-direction: column;
-		margin-left: 50px;
+		margin-inline-start: 50px;
 		&__line-one,
 		&__line-two,
 		&__line-three,

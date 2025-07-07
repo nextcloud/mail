@@ -268,6 +268,7 @@ export default {
 .oc-dialog {
 	z-index: 10000000;
 }
+
 .mail-message-attachments {
 	display:flex;
 	flex-wrap: wrap;
@@ -278,6 +279,7 @@ export default {
 	bottom:0;
 	background: linear-gradient(0deg, var(--color-main-background), var(--color-main-background) 90%, rgba(255, 255, 255, 0));
 }
+
 .mail-message-attachments--wrapper {
 	display:flex;
 	width:100%;

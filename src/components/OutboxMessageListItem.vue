@@ -192,7 +192,7 @@ export default {
 
 	.account-color {
 		position: absolute;
-		left: 0;
+		inset-inline-start: 0;
 		width: 2px;
 		height: 69px;
 		z-index: 1;

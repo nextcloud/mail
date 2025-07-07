@@ -26,13 +26,16 @@ export default {
 #priority {
 	display: inline-block;
 }
+
 .app-content-list-item {
 	opacity: .8;
 }
+
 .app-content-list-item:hover {
 	background-color: transparent;
 	opacity: 0.8;
 }
+
 h2 {
 	font-weight: normal;
 	font-size: 17px;

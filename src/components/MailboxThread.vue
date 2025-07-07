@@ -429,18 +429,24 @@ export default {
 		margin: 0 !important;
 	}
 }
+
 :deep(.app-content-list) {
 	flex: 1 1 auto;
-	overflow: hidden;
 	height: 100% !important;
 	min-height: 0;
+	position: absolute;
+	overflow: scroll;
+	width: 100% !important;
+	top: 52px;
 }
+
 :deep(.app-content-wrapper) {
 	display: flex;
 	flex-direction: column;
 	height: 100%;
 	overflow: hidden;
 }
+
 .v-popover > .trigger > * {
 	z-index: 1;
 }
@@ -458,6 +464,7 @@ export default {
 .app-content-list-item:hover {
 	background: transparent;
 }
+
 .app-content-list-item {
 	flex: 0;
 }
@@ -465,18 +472,20 @@ export default {
 .button {
 	background-color: var(--color-main-background);
 	margin-bottom: 3px;
-	right: 2px;
+	inset-inline-end: 2px;
 
 	&:hover,
 	&:focus {
 		background-color: var(--color-background-dark);
 	}
 }
+
 .envelope-list {
 	flex: 1 1 auto;
 	overflow-y: auto;
 	min-height: 0;
 }
+
 .information-icon {
 	opacity: .7;
 }
@@ -485,6 +494,7 @@ export default {
 		margin-bottom: 20px;
 	}
 }
+
 .list__wrapper {
 	display: flex;
 	flex: 1 1 auto;
@@ -492,17 +502,11 @@ export default {
 	height: 100%;
 	overflow: hidden;
 }
+
 :deep(.app-details-toggle) {
 	opacity: 1;
 }
- // temporary fix
-:deep(.app-content-list) {
-	min-height: 0;
-	position: absolute;
-	overflow: scroll;
-	width: 100% !important;
-	top: 52px;
-}
+
 :deep(.app-content-wrapper.app-content-wrapper--no-split.app-content-wrapper--show-details) {
 	overflow-y: scroll !important;
 }

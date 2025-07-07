@@ -133,7 +133,7 @@ export default {
 
 	.group-title {
 		min-width: 100px;
-		text-align: right;
+		text-align: end;
 		margin: 10px;
 		font-weight: bold;
 	}
@@ -164,6 +164,7 @@ h4 {
 		padding: 25px;
 	}
 }
+
 input[type='radio'] {
 	display: none;
 }
@@ -171,6 +172,7 @@ input[type='radio'] {
 .flex-row {
 	display: flex;
 }
+
 form {
 	label {
 		color: var(--color-text-maxcontrast);
