@@ -48,7 +48,6 @@ import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandrepl
 import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
 import SourceEditingPlugin from '@ckeditor/ckeditor5-source-editing/src/sourceediting.js'
-import ImageInsertViaUrlPlugin from '@ckeditor/ckeditor5-image/src/imageinsertviaurl.js'
 import GeneralHtmlSupport from '@ckeditor/ckeditor5-html-support/src/generalhtmlsupport.js'
 import { DropdownView } from '@ckeditor/ckeditor5-ui'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
@@ -118,7 +117,6 @@ export default {
 				ListPlugin,
 				ImagePlugin,
 				ImageUploadPlugin,
-				ImageInsertViaUrlPlugin,
 				ImageResizePlugin,
 				ListProperties,
 				FontPlugin,
@@ -498,6 +496,7 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 
 .ck.ck-toolbar {
 	border-radius: var(--border-radius-large) !important;
+	background: none;
 }
 
 .ck-rounded-corners .ck.ck-dropdown__panel, .ck.ck-dropdown__panel.ck-rounded-corners {
