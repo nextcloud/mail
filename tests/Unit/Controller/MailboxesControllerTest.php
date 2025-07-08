@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use NCU\Config\IUserConfig;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\MailboxesController;
@@ -20,12 +21,13 @@ use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IRequest;
+use OCP\IUser;
+use OCP\IUserSession;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class MailboxesControllerTest extends TestCase {
-	/** @var string */
-	private $appName = 'mail';
 
 	/** @var IRequest|MockObject */
 	private $request;
@@ -45,6 +47,10 @@ class MailboxesControllerTest extends TestCase {
 	/** @var SyncService|MockObject */
 	private $syncService;
 
+	private IUserSession|MockObject $userSession;
+	private IUserConfig|MockObject $userConfig;
+	private ITimeFactory|MockObject $timeFactory;
+
 	public function setUp(): void {
 		parent::setUp();
 
@@ -52,13 +58,26 @@ class MailboxesControllerTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->syncService = $this->createMock(SyncService::class);
+		$this->userSession = $this->createMock(IUserSession::class);
+		$this->userConfig = $this->createMock(IUserConfig::class);
+		$this->timeFactory = $this->createMock(ITimeFactory::class);
+
+		$userObject = $this->createMock(IUser::class);
+		$userObject->method('getUID')
+			->willReturn('john');
+		$this->userSession->method('getUser')
+			->willReturn($userObject);
+		$this->timeFactory->method('getTime')
+			->willReturn(1234567890);
+
 		$this->controller = new MailboxesController(
-			$this->appName,
 			$this->request,
 			$this->accountService,
-			$this->userId,
 			$this->mailManager,
-			$this->syncService
+			$this->syncService,
+			$this->userSession,
+			$this->userConfig,
+			$this->timeFactory
 		);
 	}
 
