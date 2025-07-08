@@ -192,6 +192,7 @@ export default {
 		await this.prefetchOtherMailboxes()
 
 		this.mainStore.setHasFetchedInitialEnvelopesMutation(true)
+		this.mainStore.updateSyncTimestamp()
 	},
 	destroyed() {
 		this.bus.off('load-more', this.onScroll)
