@@ -237,7 +237,12 @@ export default {
 			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery).length > 0
 		},
 		hasImportantEnvelopes() {
-			return this.mainStore.getEnvelopes(this.unifiedInbox.databaseId, this.appendToSearch(priorityImportantQuery)).length > 0
+			const map = this.mainStore.getEnvelopes(
+				this.unifiedInbox.databaseId,
+				this.appendToSearch(this.priorityImportantQuery)
+			)
+			const envelopes = Array.isArray(map) ? map : Array.from(map?.values() || [])
+			return envelopes.length > 0
 		},
 		/**
 		 * @return {boolean}
@@ -247,9 +252,9 @@ export default {
 				return false
 			}
 
-			return this.mainStore
-				.getEnvelopes(FOLLOW_UP_MAILBOX_ID, this.followUpQuery)
-				.length > 0
+			const map = this.mainStore.getEnvelopes(FOLLOW_UP_MAILBOX_ID, this.followUpQuery)
+			const envelopes = Array.isArray(map) ? map : Array.from(map?.values() || [])
+			return envelopes.length > 0
 		},
 		importantMessagesInitialPageSize() {
 			if (window.innerHeight > 1024) {
