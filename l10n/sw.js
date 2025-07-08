@@ -23,6 +23,7 @@ OC.L10N.register(
     "Register" : "Sajiri",
     "About" : "Kuhusu",
     "Keyboard shortcuts" : "Mikato ya keyboard",
+    "Archive" : "Weka kumbukumbu",
     "Delete" : "Futa",
     "Search" : "Tafuta",
     "Send" : "Tuma",
@@ -89,6 +90,8 @@ OC.L10N.register(
     "Client ID" : "Kitambulisho cha mteja",
     "Client secret" : "Siri ya mteja",
     "User" : "Mtumiaji",
+    "Host" : "Host",
+    "Port" : "Port",
     "Valid until" : "Halali mpaka",
     "Certificate" : "Cheti",
     "Submit" : "Wasilisha",
@@ -99,6 +102,7 @@ OC.L10N.register(
     "Message sent" : "Ujumbe umetumwa",
     "Redirect" : "Elekeza upya",
     "Continue to %s" : "Endelea katika %s",
-    "Actions" : "Matendo"
+    "Actions" : "Matendo",
+    "New action" : "Kitendo kipya"
 },
 "nplurals=2; plural=(n != 1);");
