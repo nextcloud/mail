@@ -105,6 +105,7 @@ OC.L10N.register(
     "Rename" : "Pārdēvēt",
     "Subscribed" : "Abonēts",
     "New message" : "Jauna ziņa",
+    "Draft" : "Melnraksts",
     "Reply" : "Atbildēt",
     "Retry" : "Mēģināt vēlreiz",
     "Autoresponder follows system settings" : "Automātiskais atbildētājs ievēro sistēmas iestatījumus",
