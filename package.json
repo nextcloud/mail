@@ -46,7 +46,7 @@
     "@iframe-resizer/child": "^5.4.7",
     "@iframe-resizer/parent": "^5.4.6",
     "@mdi/svg": "^7.4.47",
-    "@nextcloud/auth": "^2.5.1",
+    "@nextcloud/auth": "^2.5.2",
     "@nextcloud/axios": "^2.5.1",
     "@nextcloud/calendar-js": "^8.1.2",
     "@nextcloud/cdav-library": "^2.1.0",
