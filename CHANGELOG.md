@@ -1,3 +1,24 @@
+## [5.1.7](https://github.com/nextcloud/mail/compare/v5.1.6...v5.1.7) (2025-07-09)
+
+
+### Bug Fixes
+
+* **avatar:** handle null bodies ([e8ac645](https://github.com/nextcloud/mail/commit/e8ac645b3e3eaef5d829bc78ee936ecca9ba6cd4))
+* **composer:** allow attaching shared files again ([157d4da](https://github.com/nextcloud/mail/commit/157d4dadd9530f7a7f4a4a3b6ba9447c27a3dae7))
+* **imip:** hide warning about email mismatch for imip replies ([7abada6](https://github.com/nextcloud/mail/commit/7abada689dd267760261474cb3ecf10f34c073b7))
+* **l10n:** Update translations from Transifex ([5c58e72](https://github.com/nextcloud/mail/commit/5c58e72f7d19d30d5df217c3227285096abe4249))
+* **l10n:** Update translations from Transifex ([9893b41](https://github.com/nextcloud/mail/commit/9893b41fc51f0118ac084b2dae395d56787f6a94))
+* **l10n:** Update translations from Transifex ([870ab1e](https://github.com/nextcloud/mail/commit/870ab1e7177ffe787ce13e3d14fab7f50508db18))
+* **l10n:** Update translations from Transifex ([aabdcef](https://github.com/nextcloud/mail/commit/aabdceff7468b3b256ccf51425667b1cf8c8a3c7))
+* **l10n:** Update translations from Transifex ([e7c2b86](https://github.com/nextcloud/mail/commit/e7c2b867772c89662d6de334e3997f74b6afac53))
+* **l10n:** Update translations from Transifex ([2816154](https://github.com/nextcloud/mail/commit/2816154d01ac12c0cea3714305348f8351cd7c55))
+* **l10n:** Update translations from Transifex ([27ec7d1](https://github.com/nextcloud/mail/commit/27ec7d1c74ac681cc0b5c301f13d32d8da613c90))
+* remove redendant css ([3bffada](https://github.com/nextcloud/mail/commit/3bffadaef4e6ec7d7411e1b241f7c02a15e16278))
+* **ui:** make composer link attachments icon size wider ([1860d11](https://github.com/nextcloud/mail/commit/1860d11d5122e55499f7e3c58307e108ab1e3144))
+* update summarizeMessages-prompt to hide any introduction ([#11278](https://github.com/nextcloud/mail/issues/11278)) ([7be371e](https://github.com/nextcloud/mail/commit/7be371e97253e343d0c5e8891f5f7ff7426439ce))
+
+
+
 ## [5.1.6](https://github.com/nextcloud/mail/compare/v5.1.5...v5.1.6) (2025-07-01)
 
 
