@@ -5,7 +5,7 @@
 <template>
 	<div :class="isInternal?'ncselect__tag--recipient' :'ncselect__tag--recipient external'" :title="option.email">
 		<ListItemIcon :no-margin="true"
-			:name="option.label"
+			:name="option.label || option.displayName || option.email"
 			:url="option.photo"
 			:avatar-size="24" />
 		<Close class="delete-recipient"
