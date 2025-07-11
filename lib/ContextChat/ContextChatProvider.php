@@ -44,6 +44,10 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 	}
 
 	public function handle(Event $event): void {
+		if (!$this->contentManager->isContextChatAvailable()) {
+			return;
+		}
+
 		if ($event instanceof ContentProviderRegisterEvent) {
 			$event->registerContentProvider($this->getAppId(), $this->getId(), self::class);
 			return;
