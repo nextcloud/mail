@@ -98,7 +98,7 @@ export default {
 		}
 
 		if (this.$route.name === 'home' && accounts.length > 1 && startMailboxId) {
-			logger.debug('Loading start mailbox', { id: startMailboxId })
+			logger.debug('Loading start folder', { id: startMailboxId })
 			this.$router.replace({
 				name: 'mailbox',
 				params: {
@@ -135,7 +135,7 @@ export default {
 			// FIXME: this assumes that there's at least one mailbox
 			const firstMailbox = this.mainStore.getMailboxes(firstAccount.id)[0]
 
-			console.debug('loading composer with first account and mailbox', firstAccount.id, firstMailbox.id)
+			console.debug('loading composer with first account and folder', firstAccount.id, firstMailbox.id)
 
 			this.$router.replace({
 				name: 'message',

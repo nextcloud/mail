@@ -22,9 +22,9 @@
 			<ActionButton v-if="message.status === statusImapSentMailboxFail()"
 				:close-after-click="true"
 				@click="sendMessageNow">
-				{{ t('mail', 'Copy to "Sent" Mailbox') }}
+				{{ t('mail', 'Copy to "Sent" Folder') }}
 				<template #icon>
-					<Copy :title="t('mail', 'Copy to Sent Mailbox')"
+					<Copy :title="t('mail', 'Copy to Sent Folder')"
 						:size="16" />
 				</template>
 			</ActionButton>
@@ -104,7 +104,7 @@ export default {
 		},
 		details() {
 			if (this.message.status === STATUS_IMAP_SENT_MAILBOX_FAIL) {
-				return this.t('mail', 'Could not copy to "Sent" mailbox')
+				return this.t('mail', 'Could not copy to "Sent" folder')
 			} else if (this.message.status === STATUS_SMTP_ERROR) {
 				return this.t('mail', 'Mail server error')
 			} else if (this.message.status !== STATUS_RAW) {

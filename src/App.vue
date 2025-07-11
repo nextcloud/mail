@@ -67,7 +67,7 @@ export default {
 				} catch (error) {
 					matchError(error, {
 						[MailboxLockedError.name](error) {
-							logger.info('Background sync failed because a mailbox is locked', { error })
+							logger.info('Background sync failed because a folder is locked', { error })
 						},
 						default(error) {
 							logger.error('Background sync failed: ' + error.message, { error })

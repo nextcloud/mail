@@ -6,7 +6,7 @@
 	<Modal @close="onClose">
 		<div ref="content" class="modal-content">
 			<h2 class="oc-dialog-title">
-				{{ t('mail', 'Choose target mailbox') }}
+				{{ t('mail', 'Choose target folder') }}
 			</h2>
 			<span class="crumbs">
 				<div @click.prevent="onClickHome">

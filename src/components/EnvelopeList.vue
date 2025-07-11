@@ -430,7 +430,7 @@ export default {
 			})).catch(async error => {
 				showError(await matchError(error, {
 					[NoTrashMailboxConfiguredError.getName()]() {
-						return t('mail', 'No trash mailbox configured')
+						return t('mail', 'No trash folder configured')
 					},
 					default(error) {
 						logger.error('could not delete message', error)

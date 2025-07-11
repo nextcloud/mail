@@ -71,9 +71,9 @@ export default {
 			this.refreshing = true
 			try {
 				await this.mainStore.syncEnvelopes({ mailboxId: this.currentMailbox.databaseId })
-				logger.debug('Current mailbox is sync\'ing ')
+				logger.debug('Current folder is sync\'ing ')
 			} catch (error) {
-				logger.error('could not sync current mailbox', { error })
+				logger.error('could not sync current folder', { error })
 			} finally {
 				this.refreshing = false
 			}

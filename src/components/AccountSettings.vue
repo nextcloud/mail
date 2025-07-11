@@ -94,7 +94,7 @@
 					:account="account" />
 			</div>
 		</AppSettingsSection>
-		<AppSettingsSection id="mailbox_search" :name="t('mail', 'Mailbox search')">
+		<AppSettingsSection id="mailbox_search" :name="t('mail', 'Folder search')">
 			<SearchSettings :account="account" />
 		</AppSettingsSection>
 	</AppSettingsDialog>

@@ -70,7 +70,7 @@ export default {
 						})
 					}
 				} catch (error) {
-					logger.error('could not move mailbox', {
+					logger.error('could not move folder', {
 						error,
 					})
 				} finally {
