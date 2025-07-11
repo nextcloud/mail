@@ -17,6 +17,7 @@
 		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
 		<EnvelopeList v-else
 			:account="account"
+			:load-more-label="loadMoreLabel"
 			:mailbox="mailbox"
 			:search-query="searchQuery"
 			:envelopes="envelopesToShow"
@@ -61,6 +62,10 @@ export default {
 	},
 	mixins: [isMobile],
 	props: {
+		loadMoreLabel: {
+			type: String,
+			default: '',
+		},
 		account: {
 			type: Object,
 			required: true,
