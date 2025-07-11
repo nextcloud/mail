@@ -8,8 +8,8 @@
 			<input v-model="query"
 				type="text"
 				class="search-messages--input"
-				:placeholder="t('mail', 'Search in mailbox')"
-				:aria-label="t('mail', 'Search in mailbox')"
+				:placeholder="t('mail', 'Search in folder')"
+				:aria-label="t('mail', 'Search in folder')"
 				@focus="showButtons = true"
 				@blur="hideButtonsWithDelay">
 			<NcButton type="tertiary" class="search-messages--filter" @click="moreSearchActions = true">

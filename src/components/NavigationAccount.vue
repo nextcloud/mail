@@ -37,13 +37,13 @@
 					<ActionCheckbox :checked="account.showSubscribedOnly"
 						:disabled="savingShowOnlySubscribed"
 						@update:checked="changeShowSubscribedOnly">
-						{{ t('mail', 'Show only subscribed mailboxes') }}
+						{{ t('mail', 'Show only subscribed folders') }}
 					</ActionCheckbox>
 					<ActionButton v-if="!editing && nameLabel" @click="openCreateMailbox">
 						<template #icon>
 							<IconFolderAdd :size="16" />
 						</template>
-						{{ t('mail', 'Add mailbox') }}
+						{{ t('mail', 'Add folder') }}
 					</ActionButton>
 					<ActionInput v-if="editing && nameInput"
 						:value.sync="createMailboxName"
@@ -51,7 +51,7 @@
 						<template #icon>
 							<IconFolderAdd :size="16" />
 						</template>
-						{{ t('mail', 'Mailbox name') }}
+						{{ t('mail', 'Folder name') }}
 					</ActionInput>
 					<ActionText v-if="showSaving">
 						<template #icon>
@@ -196,7 +196,7 @@ export default {
 				})
 			} catch (error) {
 				showError(t('mail', 'Unable to create mailbox. The name likely contains invalid characters. Please try another name.'))
-				logger.error('could not create mailbox', { error })
+				logger.error('could not create folder', { error })
 				throw error
 			} finally {
 				this.showSaving = false
@@ -261,7 +261,7 @@ export default {
 			})
 				.then(() => {
 					this.savingShowOnlySubscribed = false
-					logger.info('show only subscribed mailboxes updated to ' + onlySubscribed)
+					logger.info('show only subscribed folders updated to ' + onlySubscribed)
 				})
 				.catch((error) => {
 					logger.error('could not update subscription mode', { error })

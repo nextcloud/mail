@@ -6,13 +6,13 @@
 <template>
 	<div :class="{'empty-content': (!hasMessages && !loadingEnvelopes) || error}">
 		<Error v-if="error"
-			:error="t('mail', 'Could not open mailbox')"
+			:error="t('mail', 'Could not open folder')"
 			message=""
 			role="alert" />
 		<LoadingSkeleton v-else-if="loadingEnvelopes" :number-of-lines="20" />
 		<Loading v-else-if="loadingCacheInitialization"
 			:hint="t('mail', 'Loading messages …')"
-			:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger mailboxes.')" />
+			:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger folders.')" />
 		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
 		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
 		<EnvelopeList v-else
@@ -131,7 +131,7 @@ export default {
 		mailbox() {
 			this.loadEnvelopes()
 				.then(() => {
-					logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.query}) after mailbox change`)
+					logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.query}) after folder change`)
 					this.sync(false)
 				})
 		},
@@ -155,7 +155,7 @@ export default {
 		}
 
 		await this.loadEnvelopes()
-		logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) after mount`)
+		logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.searchQuery}) after mount`)
 		await this.sync(false)
 
 		await this.prefetchOtherMailboxes()
@@ -174,7 +174,7 @@ export default {
 			this.loadingCacheInitialization = true
 			this.error = false
 
-			logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.query}) during cache initalization`)
+			logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.query}) during cache initalization`)
 			this.sync(true)
 				.then(() => {
 					this.loadingCacheInitialization = false
@@ -183,7 +183,7 @@ export default {
 				})
 		},
 		async loadEnvelopes() {
-			logger.debug(`Fetching envelopes for mailbox ${this.mailbox.databaseId} (${this.searchQuery})`, this.mailbox)
+			logger.debug(`Fetching envelopes for folder ${this.mailbox.databaseId} (${this.searchQuery})`, this.mailbox)
 			if (!this.syncedMailboxes.has(this.mailbox.databaseId)) {
 				// Only trigger skeleton if we didn't sync envelopes yet
 				this.loadingEnvelopes = true
@@ -223,12 +223,12 @@ export default {
 						try {
 							await this.initializeCache()
 						} catch (error) {
-							logger.error(`Could not initialize cache of mailbox ${this.mailbox.databaseId} (${this.searchQuery})`, { error })
+							logger.error(`Could not initialize cache of folder ${this.mailbox.databaseId} (${this.searchQuery})`, { error })
 							this.error = error
 						}
 					},
 					default: (error) => {
-						logger.error(`Could not fetch envelopes of mailbox ${this.mailbox.databaseId} (${this.searchQuery})`, { error })
+						logger.error(`Could not fetch envelopes of folder ${this.mailbox.databaseId} (${this.searchQuery})`, { error })
 						this.loadingEnvelopes = false
 						this.error = error
 					},
@@ -276,14 +276,14 @@ export default {
 						limit: this.initialPageSize,
 					})
 					this.syncedMailboxes.add(mailbox.databaseId)
-					logger.debug(`Prefetched ${envelopes.length} envelopes for mailbox ${mailbox.displayName} (${mailbox.databaseId})`)
+					logger.debug(`Prefetched ${envelopes.length} envelopes for folder ${mailbox.displayName} (${mailbox.databaseId})`)
 				} catch (error) {
 					if (error instanceof MailboxNotCachedError) {
 						// Just ignore
 						continue
 					}
 
-					logger.error(`Failed to prefetch envelopes for mailbox ${mailbox.displayName} (${mailbox.databaseId}): ${error}`, {
+					logger.error(`Failed to prefetch envelopes for folder ${mailbox.displayName} (${mailbox.databaseId}): ${error}`, {
 						error,
 					})
 				}
@@ -359,7 +359,7 @@ export default {
 
 					showError(await matchError(error, {
 						[NoTrashMailboxConfiguredError.getName()]() {
-							return t('mail', 'No trash mailbox configured')
+							return t('mail', 'No trash folder configured')
 						},
 						default() {
 							return t('mail', 'Could not delete message')
@@ -372,7 +372,7 @@ export default {
 				logger.debug('archiving via shortcut')
 
 				if (this.account.archiveMailboxId === null) {
-					showWarning(t('mail', 'To archive a message please configure an archive mailbox in account settings'))
+					showWarning(t('mail', 'To archive a message please configure an archive folder in account settings'))
 					return
 				}
 
@@ -382,7 +382,7 @@ export default {
 				}
 
 				if (env.mailboxId === this.account.archiveMailboxId) {
-					logger.debug('message is already in archive mailbox')
+					logger.debug('message is already in archive folder')
 					return
 				}
 
@@ -412,7 +412,7 @@ export default {
 				)
 				break
 			case 'refresh':
-				logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) per shortcut`)
+				logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.searchQuery}) per shortcut`)
 				this.sync(false)
 
 				break
@@ -441,7 +441,7 @@ export default {
 		},
 		async sync(init = false) {
 			if (this.refreshing) {
-				logger.debug(`already sync'ing mailbox ${this.mailbox.databaseId} (${this.searchQuery}), aborting`, { init })
+				logger.debug(`already sync'ing folder ${this.mailbox.databaseId} (${this.searchQuery}), aborting`, { init })
 				return
 			}
 
@@ -455,7 +455,7 @@ export default {
 			} catch (error) {
 				matchError(error, {
 					[MailboxLockedError.getName()](error) {
-						logger.info('Background sync failed because the mailbox is locked', { error, init })
+						logger.info('Background sync failed because the folder is locked', { error, init })
 					},
 					default(error) {
 						logger.error('Could not sync envelopes: ' + error.message, { error, init })
@@ -464,7 +464,7 @@ export default {
 				throw error
 			} finally {
 				this.refreshing = false
-				logger.debug(`finished sync'ing mailbox ${this.mailbox.databaseId} (${this.searchQuery})`, { init })
+				logger.debug(`finished sync'ing folder ${this.mailbox.databaseId} (${this.searchQuery})`, { init })
 			}
 		},
 		// onDelete(id): Load more message and navigate to other message if needed
@@ -517,7 +517,7 @@ export default {
 				return
 			}
 			try {
-				logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) in background`)
+				logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.searchQuery}) in background`)
 				await this.sync(false)
 			} catch (error) {
 				logger.error('Background sync failed: ' + error.message, { error })

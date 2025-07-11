@@ -468,7 +468,7 @@ export default {
 				this.error = await matchError(error, {
 					[NoSentMailboxConfiguredError.getName()]() {
 						logger.error('could not send message', { error })
-						return t('mail', 'No sent mailbox configured. Please pick one in the account settings.')
+						return t('mail', 'No sent folder configured. Please pick one in the account settings.')
 					},
 					[ManyRecipientsError.getName()]() {
 						logger.error('could not send message', { error })
