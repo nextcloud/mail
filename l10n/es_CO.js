@@ -96,6 +96,7 @@ OC.L10N.register(
     "Select tags" : "Selecciona las etiquetas",
     "Custom" : "Personalizado",
     "Add tag" : "Agregar etiqueta",
+    "Not found" : "No encontrado",
     "Recipient" : "Destinatario",
     "matches" : "coincide",
     "Priority" : "Prioridad",
