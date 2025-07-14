@@ -71,7 +71,7 @@ export default {
 				return mb.databaseId
 			},
 			async set(draftsMailboxId) {
-				logger.debug('setting drafts mailbox to ' + draftsMailboxId)
+				logger.debug('setting drafts folder to ' + draftsMailboxId)
 				this.saving = true
 				try {
 					await this.mainStore.patchAccount({
@@ -81,7 +81,7 @@ export default {
 						},
 					})
 				} catch (error) {
-					logger.error('could not set drafts mailbox', {
+					logger.error('could not set drafts folder', {
 						error,
 					})
 				} finally {
@@ -98,7 +98,7 @@ export default {
 				return mb.databaseId
 			},
 			async set(sentMailboxId) {
-				logger.debug('setting sent mailbox to ' + sentMailboxId)
+				logger.debug('setting sent folder to ' + sentMailboxId)
 				this.saving = true
 				try {
 					await this.mainStore.patchAccount({
@@ -108,7 +108,7 @@ export default {
 						},
 					})
 				} catch (error) {
-					logger.error('could not set sent mailbox', {
+					logger.error('could not set sent folder', {
 						error,
 					})
 				} finally {
@@ -125,7 +125,7 @@ export default {
 				return mb.databaseId
 			},
 			async set(trashMailboxId) {
-				logger.debug('setting trash mailbox to ' + trashMailboxId)
+				logger.debug('setting trash folder to ' + trashMailboxId)
 				this.saving = true
 				try {
 					await this.mainStore.patchAccount({
@@ -135,7 +135,7 @@ export default {
 						},
 					})
 				} catch (error) {
-					logger.error('could not set trash mailbox', {
+					logger.error('could not set trash folder', {
 						error,
 					})
 				} finally {
@@ -152,7 +152,7 @@ export default {
 				return mb.databaseId
 			},
 			async set(archiveMailboxId) {
-				logger.debug('setting archive mailbox to ' + archiveMailboxId)
+				logger.debug('setting archive folder to ' + archiveMailboxId)
 				this.saving = true
 				try {
 					await this.mainStore.patchAccount({
@@ -162,7 +162,7 @@ export default {
 						},
 					})
 				} catch (error) {
-					logger.error('could not set archive mailbox', {
+					logger.error('could not set archive folder', {
 						error,
 					})
 				} finally {
@@ -179,7 +179,7 @@ export default {
 				return mb.databaseId
 			},
 			async set(junkMailboxId) {
-				logger.debug('setting junk mailbox to ' + junkMailboxId)
+				logger.debug('setting junk folder to ' + junkMailboxId)
 				this.saving = true
 				try {
 					await this.mainStore.patchAccount({
@@ -189,7 +189,7 @@ export default {
 						},
 					})
 				} catch (error) {
-					logger.error('could not set junk mailbox', {
+					logger.error('could not set junk folder', {
 						error,
 					})
 				} finally {
@@ -206,7 +206,7 @@ export default {
 				return mb.databaseId
 			},
 			async set(snoozeMailboxId) {
-				logger.debug('setting snooze mailbox to ' + snoozeMailboxId)
+				logger.debug('setting snooze folder to ' + snoozeMailboxId)
 				this.saving = true
 				try {
 					await this.mainStore.patchAccount({
@@ -216,7 +216,7 @@ export default {
 						},
 					})
 				} catch (error) {
-					logger.error('could not set snooze mailbox', {
+					logger.error('could not set snooze folder', {
 						error,
 					})
 				} finally {

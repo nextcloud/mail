@@ -377,7 +377,7 @@ export default {
 			if (currentStartMailboxId === this.mailbox.databaseId) {
 				return
 			}
-			logger.debug(`Saving mailbox ${this.mailbox.databaseId} as start mailbox`)
+			logger.debug(`Saving folder ${this.mailbox.databaseId} as start folder`)
 
 			try {
 				await this.mainStore.savePreference({
@@ -386,7 +386,7 @@ export default {
 				})
 			} catch (error) {
 				// Catch and log. This is not critical.
-				logger.warn('Could not update start mailbox id', {
+				logger.warn('Could not update start folder id', {
 					error,
 				})
 			}

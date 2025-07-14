@@ -66,14 +66,14 @@
 				<template #icon>
 					<IconEmailCheck :size="16" />
 				</template>
-				{{ t('mail', 'Mark all messages of this mailbox as read') }}
+				{{ t('mail', 'Mark all messages of this folder as read') }}
 			</ActionButton>
 			<ActionButton v-if="!editing && !account.isUnified && hasDelimiter && mailbox.specialRole !== 'flagged' && hasSubmailboxActionAcl"
 				@click="openCreateMailbox">
 				<template #icon>
 					<IconFolderAdd :size="16" />
 				</template>
-				{{ t('mail', 'Add submailbox') }}
+				{{ t('mail', 'Add subfolder') }}
 			</ActionButton>
 			<ActionInput v-if="editing"
 				:value.sync="createMailboxName"
@@ -110,7 +110,7 @@
 				<template #icon>
 					<IconExternal :size="16" />
 				</template>
-				{{ t('mail', 'Move mailbox') }}
+				{{ t('mail', 'Move folder') }}
 			</ActionButton>
 			<ActionButton v-if="!account.isUnified && mailbox.specialRole !== 'flagged'"
 				:disabled="repairing"
@@ -118,7 +118,7 @@
 				<template #icon>
 					<IconWrench :size="16" />
 				</template>
-				{{ t('mail', 'Repair mailbox') }}
+				{{ t('mail', 'Repair folder') }}
 			</ActionButton>
 			<ActionButton v-if="debug && !account.isUnified && mailbox.specialRole !== 'flagged'"
 				:name="t('mail', 'Clear cache')"
@@ -150,7 +150,7 @@
 				<template #icon>
 					<EraserVariant :size="16" />
 				</template>
-				{{ t('mail', 'Clear mailbox') }}
+				{{ t('mail', 'Clear folder') }}
 			</ActionButton>
 
 			<ActionButton v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes && hasDeleteAcl"
@@ -158,7 +158,7 @@
 				<template #icon>
 					<IconDelete :size="16" />
 				</template>
-				{{ t('mail', 'Delete mailbox') }}
+				{{ t('mail', 'Delete folder') }}
 			</ActionButton>
 		</template>
 		<template #counter>
@@ -431,7 +431,7 @@ export default {
 		 * @return {string}
 		 */
 		genId(mailbox) {
-			return 'mailbox-' + mailbox.databaseId
+			return 'folder-' + mailbox.databaseId
 		},
 
 		/**
@@ -555,7 +555,7 @@ export default {
 				t('mail', 'Clear mailbox {name}', { name: this.mailbox.displayName }),
 				{
 					type: OC.dialogs.YES_NO_BUTTONS,
-					confirm: t('mail', 'Clear mailbox'),
+					confirm: t('mail', 'Clear folder'),
 					confirmClasses: 'error',
 					cancel: t('mail', 'Cancel'),
 				},
@@ -565,20 +565,20 @@ export default {
 							.then(() => {
 								logger.info(`mailbox ${id} cleared`)
 							})
-							.catch((error) => logger.error('could not clear mailbox', { error }))
+							.catch((error) => logger.error('could not clear folder', { error }))
 					}
 				},
 			)
 		},
 		deleteMailbox() {
 			const id = this.mailbox.databaseId
-			logger.info('delete mailbox', { mailbox: this.mailbox })
+			logger.info('delete folder', { mailbox: this.mailbox })
 			OC.dialogs.confirmDestructive(
-				t('mail', 'The mailbox and all messages in it will be deleted.'),
-				t('mail', 'Delete mailbox'),
+				t('mail', 'The folder and all messages in it will be deleted.'),
+				t('mail', 'Delete folder'),
 				{
 					type: OC.dialogs.YES_NO_BUTTONS,
-					confirm: t('mail', 'Delete mailbox {name}', { name: this.mailbox.displayName }),
+					confirm: t('mail', 'Delete folder {name}', { name: this.mailbox.displayName }),
 					confirmClasses: 'error',
 					cancel: t('mail', 'Cancel'),
 				},
@@ -596,7 +596,7 @@ export default {
 									})
 								}
 							})
-							.catch((error) => logger.error('could not delete mailbox', { error }))
+							.catch((error) => logger.error('could not delete folder', { error }))
 					}
 				},
 			)
