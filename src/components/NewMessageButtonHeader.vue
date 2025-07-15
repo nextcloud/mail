@@ -7,7 +7,6 @@
 		<ButtonVue :aria-label="t('mail', 'New message')"
 			type="secondary"
 			button-id="mail_new_message"
-			role="complementary"
 			:wide="true"
 			@click="onNewMessage">
 			<template #icon>
