@@ -12,7 +12,10 @@
 				:aria-label="t('mail', 'Search in folder')"
 				@focus="showButtons = true"
 				@blur="hideButtonsWithDelay">
-			<NcButton type="tertiary" class="search-messages--filter" @click="moreSearchActions = true">
+			<NcButton type="tertiary"
+				:aria-label="t('mail', 'Open search modal')"
+				class="search-messages--filter"
+				@click="moreSearchActions = true">
 				<template #icon>
 					<FilterVariantIcon :size="20" />
 				</template>
