@@ -47,6 +47,7 @@ OC.L10N.register(
     "Loading …" : "O Kargañ ...",
     "Remove account" : "Lemel ar c'hont",
     "Quota" : "Quota",
+    "Delete folder {name}" : "Lemel an teuliad {folderid}",
     "Rename" : "Adenvel",
     "Clear cache" : "Gwalc'hiñ ar c'hache",
     "Reply" : "Respont",

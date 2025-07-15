@@ -33,6 +33,7 @@ OC.L10N.register(
     "Move" : "Premesti",
     "Loading …" : "Učitavanje...",
     "Remove account" : "Ukloni nalog",
+    "Folder name" : "Naziv fascikle",
     "Mark all as read" : "Označi sve kao pročitano",
     "Rename" : "Preimenuj",
     "Clear cache" : "Očisti keš",

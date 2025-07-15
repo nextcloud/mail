@@ -34,6 +34,7 @@ OC.L10N.register(
     "Translate" : "පරිවර්තනය",
     "Loading …" : "පූරණය වෙමින් …",
     "Remove account" : "ගිණුම ඉවත් කරන්න",
+    "Folder name" : "බහාලුමේ නම",
     "Mark all as read" : "සියල්ල කියවූ ලෙස සලකුණු කරන්න",
     "Reply" : "පිළිතුර",
     "Retry" : "නැවත උත්සාහ කරන්න",
