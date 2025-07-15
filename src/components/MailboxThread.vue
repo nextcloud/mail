@@ -33,7 +33,6 @@
 						:bus="bus"
 						:open-first="mailbox.specialRole !== 'drafts'"
 						:group-envelopes="groupEnvelopes"
-						:paginate="'manual'"
 						:initial-page-size="messagesOrderBydate"
 						:collapsible="true" />
 					<template v-else>
