@@ -92,6 +92,8 @@ include_once __DIR__ . '/../../vendor/autoload.php';
 final class Application extends App implements IBootstrap {
 	public const APP_ID = 'mail';
 	public const CONTEXT_CHAT_MESSAGE_MAX_AGE = 60 * 60 * 24 * 365.25; // 1 year
+	public const CONTEXT_CHAT_IMPORT_MAX_ITEMS = 100;
+	public const CONTEXT_CHAT_JOB_INTERVAL = 60 * 5; // 5 minutes
 
 	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);
