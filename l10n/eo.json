@@ -75,6 +75,7 @@
     "Choose a file to add as attachment" : "Elektu dosieron aldonotan kiel kunsendaĵon",
     "Confirm" : "Konfirmi",
     "Plain text" : "Ebenaĵa teksto",
+    "No messages in this folder" : "Neniu mesaĝo en tiu dosierujo",
     "Blind copy recipients only" : "Nur blindkopiaj ricevontoj",
     "Unfavorite" : "Malpliŝatati",
     "Favorite" : "Pliŝatati",
@@ -93,8 +94,7 @@
     "Decline" : "Malakcepti",
     "Remove" : "Forigi",
     "email" : "retpoŝtadreso",
-    "Could not open mailbox" : "Ne eblis malfermi poŝtkesto",
-    "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indeksas viajn mesaĝojn. Tio eble daŭrus iom pli longe por pli grandaj poŝtkestoj.",
+    "Choose target folder" : "Elekti celan dosierujon",
     "Other" : "Alia",
     "Forward" : "Antaŭen",
     "Translate" : "Traduku",
@@ -115,6 +115,7 @@
     "Move down" : "Movi malsupren",
     "_{total} message_::_{total} messages_" : ["{total} mesaĝo","{total} mesaĝoj"],
     "Mark all as read" : "Marki ĉion kiel legita",
+    "Mark all messages of this folder as read" : "Marki ĉiujn mesaĝojn el tiu dosierujo kiel legitaj",
     "Rename" : "Alinomi",
     "Clear cache" : "Forviŝi la kaŝmemoron",
     "New message" : "Nova mesaĝo",
@@ -190,6 +191,8 @@
     "The link leads to %s" : "La ligilo iras al %s",
     "Continue to %s" : "Daŭrigi al %s",
     "Draft: " : "Malneto:",
+    "Could not open mailbox" : "Ne eblis malfermi poŝtkesto",
+    "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indeksas viajn mesaĝojn. Tio eble daŭrus iom pli longe por pli grandaj poŝtkestoj.",
     "Actions" : "Agoj"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

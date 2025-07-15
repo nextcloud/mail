@@ -25,6 +25,7 @@ OC.L10N.register(
     "Remove" : "ដកចេញ",
     "Other" : "ផ្សេងៗ",
     "Move" : "Move",
+    "Folder name" : "ឈ្មោះ​ថត",
     "Rename" : "ប្ដូរ​ឈ្មោះ",
     "Reply" : "ឆ្លើយតប",
     "Add" : "បញ្ចូល",

@@ -63,6 +63,7 @@ OC.L10N.register(
     "More options" : "Más opciones",
     "Remove" : "Borrar",
     "email" : "correo electrónico",
+    "Choose target folder" : "Elegir carpeta destino",
     "Other" : "Otro",
     "Forward" : "Reenviar",
     "Translate" : "Traducir",

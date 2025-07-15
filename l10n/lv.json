@@ -64,6 +64,7 @@
     "Choose a file to add as attachment" : "Izvēlēties datni, ko pievienot kā pielikumu",
     "Choose a file to share as a link" : "Jāizvēlas datne, ko kopīgot kā saiti",
     "Confirm" : "Apstiprināt",
+    "No messages in this folder" : "Šajā mapē nav neviens ziņojums",
     "Later today – {timeLocale}" : "Vēlāk šodien – {timeLocale}",
     "Set reminder for later today" : "Iestatīt atgādinājumu vēlākam šodien",
     "Favorite" : "Izlasē",
@@ -100,7 +101,11 @@
     "Loading …" : "Ielādē…",
     "Remove account" : "Noņemt kontu",
     "Quota" : "Kvota",
+    "Add folder" : "Pievienot mapi",
+    "Folder name" : "Mapes nosaukums",
     "Saving" : "Saglabā",
+    "Show all folders" : "Rādīt visas mapes",
+    "Delete folder" : "Izdzēst mapi",
     "An error occurred, unable to rename the mailbox." : "Atgadījās kļūda, nevar pārdēvēt pastkasti.",
     "Rename" : "Pārdēvēt",
     "Subscribed" : "Abonēts",
@@ -114,7 +119,6 @@
     "Add" : "Pievienot",
     "Show more" : "Parādīt vairāk",
     "Clear" : "Notīrīt",
-    "Search in mailbox" : "Meklēt pastkastē",
     "Close" : "Aizvērt",
     "Date" : "Datums",
     "Tags" : "Birkas",
@@ -164,6 +168,7 @@
     "Redirect" : "Novirzīt",
     "The link leads to %s" : "Saite, kas ved uz %s",
     "Continue to %s" : "Turpināt %s",
+    "Search in mailbox" : "Meklēt pastkastē",
     "Actions" : "Darbības"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);"
 }

@@ -82,6 +82,7 @@ OC.L10N.register(
     "Loading …" : "Yn llwytho …",
     "Remove account" : "Dileu cyfrif",
     "Mark all as read" : "Marcio'r cyfan wedi'u darllen",
+    "Mark all messages of this folder as read" : "Marcio'r holl negeseuon y ffolder hon fel y'u darllenwyd",
     "Rename" : "Ailenwi",
     "New message" : "Neges newydd",
     "Error sending your message" : "Gwall wrth anfon eich neges",

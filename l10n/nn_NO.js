@@ -30,6 +30,7 @@ OC.L10N.register(
     "Other" : "Anna",
     "Move" : "Move",
     "Quota" : "Kvote",
+    "Folder name" : "Katalognavn",
     "Saving" : "Lagrar",
     "Rename" : "Endra namn",
     "Reply" : "Svare",
