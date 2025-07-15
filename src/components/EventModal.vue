@@ -3,9 +3,10 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<Modal @close="onClose">
+	<Modal size="large"
+		@close="onClose">
 		<div class="modal-content">
-			<h2>{{ t('mail', 'Create event') }}</h2>
+			<h2>{{ t('mail', 'Reply with meeting') }}</h2>
 			<div class="eventTitle">
 				<input v-model="eventTitle" :disabled="generatingData" type="text">
 			</div>
@@ -35,6 +36,13 @@
 				<label for="allDay">
 					{{ t('mail', 'All day') }}
 				</label>
+			</div>
+			<div class="attendees-field">
+				<label>{{ t('mail', 'Attendees') }}</label>
+				<input type="text"
+					:disabled="true"
+					:value="attendeesList"
+					class="modal-content__attendees-input">
 			</div>
 			<NcSelect v-model="selectedCalendar"
 				class="modal-content__calendar-picker"
@@ -116,6 +124,23 @@ export default {
 		},
 		datePickerType() {
 			return this.isAllDay ? 'date' : 'datetime'
+		},
+		attendeesList() {
+			const attendees = []
+
+			if (this.envelope.from) {
+				attendees.push(this.envelope.from[0].name || this.envelope.from[0].email)
+			}
+
+			if (Array.isArray(this.envelope.to)) {
+				this.envelope.to.forEach(person => {
+					if (person.email) {
+						attendees.push(person.name || person.email)
+					}
+				})
+			}
+
+			return attendees.join(', ')
 		},
 	},
 	async created() {
