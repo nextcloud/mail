@@ -20,7 +20,7 @@
 					{{ t('mail', 'Add mail account') }}
 				</NcButton>
 
-				<h6>{{ t('mail', 'Account settings') }}</h6>
+				<h4>{{ t('mail', 'Account settings') }}</h4>
 				<p>{{ t('mail', 'Settings for:') }}</p>
 				<li v-for="account in getAccounts" :key="account.id">
 					<NcButton v-if="account && account.emailAddress"
@@ -34,7 +34,7 @@
 			</NcAppSettingsSection>
 
 			<NcAppSettingsSection id="appearance-and-accessibility" :name="t('mail', 'General')">
-				<h6>{{ t('mail', 'Layout') }}</h6>
+				<h4>{{ t('mail', 'Layout') }}</h4>
 				<NcCheckboxRadioSwitch value="no-split"
 					:button-variant="true"
 					name="mail-layout"
@@ -72,7 +72,7 @@
 					{{ t('mail', 'Horizontal split') }}
 				</NcCheckboxRadioSwitch>
 
-				<h6>{{ t('mail', 'Message View Mode') }}</h6>
+				<h4>{{ t('mail', 'Message View Mode') }}</h4>
 				<div class="sorting">
 					<NcCheckboxRadioSwitch type="radio"
 						name="message_view_mode_radio"
@@ -90,7 +90,7 @@
 					</NcCheckboxRadioSwitch>
 				</div>
 
-				<h6>{{ t('mail', 'Sorting') }}</h6>
+				<h4>{{ t('mail', 'Sorting') }}</h4>
 				<div class="sorting">
 					<NcCheckboxRadioSwitch class="sorting__switch"
 						:checked="sortOrder"
@@ -110,7 +110,7 @@
 					</NcCheckboxRadioSwitch>
 				</div>
 
-				<h6>{{ t('mail', 'Search in body') }}</h6>
+				<h4>{{ t('mail', 'Search in body') }}</h4>
 				<p v-if="loadingPrioritySettings" class="app-settings">
 					{{ prioritySettingsText }}
 				</p>
@@ -123,7 +123,7 @@
 					<label for="priority-inbox-toggle">{{ prioritySettingsText }}</label>
 				</p>
 
-				<h6>{{ t('mail', 'Reply text position') }}</h6>
+				<h4>{{ t('mail', 'Reply text position') }}</h4>
 				<p v-if="loadingReplySettings" class="app-settings reply-settings">
 					<IconLoading :size="16" />
 					{{ replySettingsText }}
@@ -137,7 +137,7 @@
 					<label for="bottom-reply-enabled">{{ replySettingsText }}</label>
 				</p>
 
-				<h6>{{ t('mail', 'Gravatar settings') }}</h6>
+				<h4>{{ t('mail', 'Gravatar settings') }}</h4>
 				<p v-if="loadingAvatarSettings" class="app-settings avatar-settings">
 					<IconLoading :size="16" />
 					{{ t('mail', 'Use Gravatar and favicon avatars') }}
@@ -151,7 +151,7 @@
 					<label for="gravatar-enabled">{{ t('mail', 'Use Gravatar and favicon avatars') }}</label>
 				</p>
 
-				<h6>{{ t('mail', 'Mailto') }}</h6>
+				<h4>{{ t('mail', 'Mailto') }}</h4>
 				<p class="settings-hint">
 					{{ t('mail', 'Register as application for mail links') }}
 				</p>
@@ -167,7 +167,7 @@
 			</NcAppSettingsSection>
 
 			<NcAppSettingsSection id="privacy-and-security" :name="t('mail', 'Privacy and security')">
-				<h6>{{ t('mail', 'Data collection consent') }}</h6>
+				<h4>{{ t('mail', 'Data collection consent') }}</h4>
 				<p class="settings-hint">
 					{{ t('mail', 'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.') }}
 				</p>
@@ -184,10 +184,10 @@
 					<label for="data-collection-toggle">{{ optOutSettingsText }}</label>
 				</p>
 
-				<h6>{{ t('mail', 'Trusted senders') }}</h6>
+				<h4>{{ t('mail', 'Trusted senders') }}</h4>
 				<TrustedSenders />
 
-				<h6>{{ t('mail', 'Internal addresses') }}</h6>
+				<h4>{{ t('mail', 'Internal addresses') }}</h4>
 				<p class="settings-hint">
 					{{ t('mail', 'Highlight external email addresses by enabling this feature, manage your internal addresses and domains to ensure recognized contacts stay unmarked.') }}
 				</p>
@@ -201,7 +201,7 @@
 				</p>
 				<InternalAddress />
 
-				<h6>{{ t('mail', 'S/MIME') }}</h6>
+				<h4>{{ t('mail', 'S/MIME') }}</h4>
 				<NcButton class="app-settings-button"
 					type="secondary"
 					:aria-label="t('mail', 'Manage S/MIME certificates')"
@@ -214,7 +214,7 @@
 				<SmimeCertificateModal v-if="displaySmimeCertificateModal"
 					@close="displaySmimeCertificateModal = false" />
 
-				<h6>{{ t('mail', 'Mailvelope') }}</h6>
+				<h4>{{ t('mail', 'Mailvelope') }}</h4>
 				<div class="mailvelope-section">
 					<div v-if="mailvelopeIsAvailable">
 						{{ t('mail', 'Mailvelope is enabled for the current domain!') }}
