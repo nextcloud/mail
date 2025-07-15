@@ -10,14 +10,14 @@ declare(strict_types=1);
 namespace OCA\Mail\ContextChat;
 
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\BackgroundJob\ContextChat\SubmitContentJob;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\NewMessagesSynchronized;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\MailManager;
-use OCP\ContextChat\ContentItem;
+use OCP\BackgroundJob\IJobList;
 use OCP\ContextChat\Events\ContentProviderRegisterEvent;
 use OCP\ContextChat\IContentManager;
 use OCP\ContextChat\IContentProvider;
@@ -34,12 +34,12 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 
 	public function __construct(
 		private AccountService $accountService,
-		private IMAPClientFactory $clientFactory,
 		private MailManager $mailManager,
 		private MessageMapper $messageMapper,
 		private IURLGenerator $urlGenerator,
 		private IUserManager $userManager,
 		private IContentManager $contentManager,
+		private IJobList $jobList,
 	) {
 	}
 
@@ -56,43 +56,38 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 		if ($event instanceof NewMessagesSynchronized) {
 			$account = $event->getAccount();
 			$mailbox = $event->getMailbox();
-			$messages = $event->getMessages();
 			$userId = $account->getUserId();
-			$client = $this->clientFactory->getClient($account);
+			$accountId = $account->getId();
+			$mailboxId = $mailbox->getId();
 
-			$items = [];
-			foreach ($messages as $message) {
-				$imapMessage = $this->mailManager->getImapMessage($client, $account, $mailbox, $message->getUid(), true);
-
-				// Skip encrypted messages
-				if ($imapMessage->isEncrypted()) {
-					continue;
+			// Check if there is a pending job for this mailbox already to avoid duplicates
+			$jobs = $this->jobList->getJobsIterator(SubmitContentJob::class, null, 0);
+			foreach ($jobs as $job) {
+				$argument = $job->getArgument();
+				if (
+					($argument['userId'] === $userId)
+					&& ($argument['accountId'] === $accountId)
+					&& ($argument['mailboxId'] === $mailboxId)
+				) {
+					return;
 				}
-
-				$fullMessage = $imapMessage->getFullMessage($imapMessage->getUid(), true);
-
-				$items[] = new ContentItem(
-					(string)$message->getId(),
-					$this->getId(),
-					$imapMessage->getSubject(),
-					$fullMessage['body'] ?? '',
-					'E-Mail',
-					$imapMessage->getSentDate(),
-					[$userId],
-				);
-
-				// Submit 100 items at a time
-				if (count($items) < 100) {
-					continue;
-				}
-				$this->contentManager->submitContent($this->getAppId(), $items);
-				$items = [];
 			}
 
-			// Submit remaining items
-			if ($items) {
-				$this->contentManager->submitContent($this->getAppId(), $items);
+			$messageIds = array_map(static fn (Message $m): int => $m->getId(), $event->getMessages());
+
+			// Check that there are messages to sync
+			if (count($messageIds) === 0) {
+				return;
 			}
+
+			$this->jobList->add(SubmitContentJob::class, [
+				'userId' => $userId,
+				'accountId' => $accountId,
+				'mailboxId' => $mailboxId,
+				'nextMessageId' => min($messageIds),
+				'startTime' => time() - Application::CONTEXT_CHAT_MESSAGE_MAX_AGE,
+			]);
+
 			return;
 		}
 
@@ -155,49 +150,18 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 
 			foreach ($userAccounts as $account) {
 				$mailboxes = $this->mailManager->getMailboxes($account);
-				$client = $this->clientFactory->getClient($account);
 
 				foreach ($mailboxes as $mailbox) {
-					$messageUids = $this->messageMapper->findAllUids($mailbox);
-					$messages = $this->messageMapper->findByUids($mailbox, $messageUids);
+					$messageIds = $this->messageMapper->findAllIds($mailbox);
 
-					$items = [];
-					foreach ($messages as $message) {
-						// Skip older messages
-						if ($message->getSentAt() < $startTime) {
-							continue;
-						}
-
-						$imapMessage = $this->mailManager->getImapMessage($client, $account, $mailbox, $message->getUid(), true);
-
-						// Skip encrypted messages
-						if ($imapMessage->isEncrypted()) {
-							continue;
-						}
-
-						$fullMessage = $imapMessage->getFullMessage($imapMessage->getUid(), true);
-
-						$items[] = new ContentItem(
-							(string)$message->getId(),
-							$this->getId(),
-							$imapMessage->getSubject(),
-							$fullMessage['body'] ?? '',
-							'E-Mail',
-							$imapMessage->getSentDate(),
-							[$userId],
-						);
-
-						// Submit 100 items at a time
-						if (count($items) < 100) {
-							continue;
-						}
-						$this->contentManager->submitContent($this->getAppId(), $items);
-						$items = [];
-					}
-
-					// Submit remaining items
-					if ($items) {
-						$this->contentManager->submitContent($this->getAppId(), $items);
+					if (count($messageIds) > 0) {
+						$this->jobList->add(SubmitContentJob::class, [
+							'userId' => $userId,
+							'accountId' => $account->getId(),
+							'mailboxId' => $mailbox->getId(),
+							'nextMessageId' => 0,
+							'startTime' => $startTime,
+						]);
 					}
 				}
 			}
