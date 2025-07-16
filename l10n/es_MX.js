@@ -321,6 +321,8 @@ OC.L10N.register(
     "Loading …" : "Cargando …",
     "Remove account" : "Eliminar cuenta",
     "Quota" : "Cuota",
+    "Add folder" : "Agregar carpeta",
+    "Folder name" : "Nombre de la carpeta",
     "Saving" : "Guardando",
     "Move up" : "Mover arriba",
     "Move down" : "Mover abajo",
