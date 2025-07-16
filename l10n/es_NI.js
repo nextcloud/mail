@@ -81,6 +81,7 @@ OC.L10N.register(
     "Move" : "Mover",
     "Remove account" : "Eliminar cuenta",
     "Quota" : "Cuota",
+    "Folder name" : "Nombre de la carpeta",
     "Saving" : "Guardando",
     "Show all folders" : "Mostrar todas las carpetas",
     "Mark all as read" : "Marcar todos como leídos",
