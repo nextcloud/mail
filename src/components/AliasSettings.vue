@@ -79,7 +79,7 @@
 
 <script>
 import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-import IconCheck from 'vue-material-design-icons/CheckOutline.vue'
+import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconRename from 'vue-material-design-icons/PencilOutline.vue'
 import logger from '../logger.js'
 import AliasForm from './AliasForm.vue'
