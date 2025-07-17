@@ -21,7 +21,7 @@
 					</ActionText>
 				</template>
 				<template v-else>
-					<ActionText v-if="!account.isUnified" :name="t('mail', 'Quota')">
+					<ActionText v-if="!account.isUnified && account.quotaPercentage !== null ">
 						<template #icon>
 							<IconInfo :size="16" />
 						</template>
@@ -170,17 +170,18 @@ export default {
 			return 'account-' + this.account.id
 		},
 		quotaText() {
-			if (this.quota === undefined) {
-				return t('mail', 'Loading …')
+			if (this.quota) {
+				return t('mail', 'Used quota: {quota}% ({limit})', {
+					quota: Math.ceil(this.quota.usage / this.quota.limit * 100),
+					limit: formatFileSize(this.quota.limit),
+				})
 			}
-			if (this.quota === false) {
-				return t('mail', 'Not supported by the server')
+			if (this.account.quotaPercentage) {
+				return t('mail', 'Used quota: {quota}%', {
+					quota: this.account.quotaPercentage,
+				})
 			}
-
-			return t('mail', '{usage} of {limit} used', {
-				usage: formatFileSize(this.quota.usage),
-				limit: formatFileSize(this.quota.limit),
-			})
+			return ''
 		},
 	},
 	methods: {
@@ -270,7 +271,7 @@ export default {
 				})
 		},
 		onMenuToggle(open) {
-			if (open) {
+			if (open && this.account.quotaPercentage !== null) {
 				console.debug('accounts menu opened, fetching quota')
 				this.fetchQuota()
 			}
