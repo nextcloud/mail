@@ -148,7 +148,7 @@
 				:close-after-click="true"
 				@click="clearMailbox">
 				<template #icon>
-					<EraserVariant :size="16" />
+					<EraserIcon :size="16" />
 				</template>
 				{{ t('mail', 'Clear folder') }}
 			</ActionButton>
@@ -201,7 +201,7 @@ import IconArchive from 'vue-material-design-icons/PackageDown.vue'
 import IconInbox from 'vue-material-design-icons/HomeOutline.vue'
 import IconJunk from 'vue-material-design-icons/Fire.vue'
 import IconAllInboxes from 'vue-material-design-icons/InboxMultipleOutline.vue'
-import EraserVariant from 'vue-material-design-icons/EraserVariant.vue'
+import EraserIcon from 'vue-material-design-icons/Eraser.vue'
 import ImportantIcon from './icons/ImportantIcon.vue'
 import IconSend from 'vue-material-design-icons/SendOutline.vue'
 import IconWrench from 'vue-material-design-icons/Wrench.vue'
@@ -246,7 +246,7 @@ export default {
 		IconJunk,
 		IconInbox,
 		IconWrench,
-		EraserVariant,
+		EraserIcon,
 		ImportantIcon,
 		IconLoading,
 		MoveMailboxModal,
