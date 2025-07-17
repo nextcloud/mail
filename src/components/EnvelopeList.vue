@@ -32,7 +32,7 @@
 						type="tertiary"
 						:title="n('mail', 'Mark {number} as unimportant', 'Mark {number} as unimportant', selection.length, { number: selection.length })"
 						@click.prevent="markSelectionUnimportant">
-						<UnImportantIcon :size="16" />
+						<ImportantOutlineIcon :size="16" />
 					</NcButton>
 
 					<NcButton v-if="isAtLeastOneSelectedFavorite"
@@ -145,8 +145,8 @@ import { NcActions as Actions, NcActionButton as ActionButton, NcButton } from '
 import { showError } from '@nextcloud/dialogs'
 import Envelope from './Envelope.vue'
 import IconDelete from 'vue-material-design-icons/DeleteOutline.vue'
-import ImportantIcon from './icons/ImportantIcon.vue'
-import UnImportantIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
+import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
+import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
 import IconUnFavorite from 'vue-material-design-icons/StarOutline.vue'
 import IconSelect from 'vue-material-design-icons/CloseThick.vue'
 import AddIcon from 'vue-material-design-icons/Plus.vue'
@@ -171,7 +171,6 @@ import { mapStores } from 'pinia'
 export default {
 	name: 'EnvelopeList',
 	components: {
-		UnImportantIcon,
 		IconUnFavorite,
 		EmailUnread,
 		EmailRead,
@@ -182,6 +181,7 @@ export default {
 		Envelope,
 		IconDelete,
 		ImportantIcon,
+		ImportantOutlineIcon,
 		IconFavorite,
 		IconSelect,
 		MoveModal,
