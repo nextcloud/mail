@@ -94,6 +94,7 @@
 					:account="account" />
 			</div>
 		</AppSettingsSection>
+		<!-- TRANSLATORS: Settings for searching in a folder -->
 		<AppSettingsSection id="mailbox_search" :name="t('mail', 'Folder search')">
 			<SearchSettings :account="account" />
 		</AppSettingsSection>
