@@ -487,6 +487,7 @@ OC.L10N.register(
     "Show more" : "Näita rohkem",
     "Clear" : "Tühjenda",
     "Search in folder" : "Otsi kaustast",
+    "Open search modal" : "Ava modaalne otsinguvaade",
     "Close" : "Sulge",
     "Search parameters" : "Otsinguparameetrid",
     "Search subject" : "Otsi teemat",

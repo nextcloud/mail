@@ -499,6 +499,7 @@ OC.L10N.register(
     "Show more" : "Прикажи више",
     "Clear" : "Очисти",
     "Search in folder" : "Претражи у фолдеру",
+    "Open search modal" : "Отвори модални дијалог за претрагу",
     "Close" : "Затвори",
     "Search parameters" : "Параметри претраге",
     "Search subject" : "Претражи тему",
