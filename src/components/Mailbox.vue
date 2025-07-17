@@ -112,7 +112,7 @@ export default {
 			return this.mainStore.getPreference('sort-order', 'DESC')
 		},
 		envelopes() {
-			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
+			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery).map(envelopes => envelopes.at(-1))
 		},
 		envelopesToShow() {
 			if (this.paginate === 'manual' && !this.expanded) {

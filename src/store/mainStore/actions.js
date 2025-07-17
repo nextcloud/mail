@@ -2355,7 +2355,7 @@ export default function mainStoreActions() {
 		},
 		getEnvelopes(mailboxId, query) {
 			const list = this.getMailbox(mailboxId).envelopeLists[normalizedEnvelopeListId(query)] || []
-			return list.map((msgId) => this.envelopes[msgId])
+			return list.map((msgId) => this.getEnvelopesByThreadRootId(this.envelopes[msgId].accountId, this.envelopes[msgId].threadRootId))
 		},
 		getEnvelopesByThreadRootId(accountId, threadRootId) {
 			return sortBy(
