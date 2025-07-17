@@ -178,7 +178,7 @@ export default {
 }
 
 .reply-buttons {
-	margin: 0 30px 0 50px;
+	margin: 26px 30px 0 50px;
 	display: flex;
 	flex-wrap: wrap;
 	gap: 5px;
@@ -203,6 +203,7 @@ export default {
 
 	&__notsuggested {
 		margin-inline-start: auto;
+		margin-inline-end: -12px;
 	}
 }
 @media screen and (max-width: 600px) {

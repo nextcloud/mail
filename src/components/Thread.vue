@@ -579,17 +579,27 @@ export default {
 	position: -webkit-sticky; // ios/safari fallback
 	position: sticky;
 	top: 0;
-	background: -webkit-linear-gradient(var(--color-main-background), var(--color-main-background) 80%, rgba(255,255,255,0));
-	background: -o-linear-gradient(var(--color-main-background), var(--color-main-background)  80%, rgba(255,255,255,0));
-	background: -moz-linear-gradient(var(--color-main-background), var(--color-main-background)  80%, rgba(255,255,255,0));
-	background: linear-gradient(var(--color-main-background), var(--color-main-background)  80%, rgba(255,255,255,0));
+	margin-bottom: 5px;
+
+	&::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		inset-inline-start: 50%;
+		transform: translateX(-50%);
+		width: 100vw;
+		height: 100%;
+		background: var(--color-main-background);
+		border-bottom: var(--border-width-input-focused) solid var(--color-border);
+		z-index: -1;
+	}
 }
 
 #mail-thread-header-fields {
 	// initial width
 	width: 0;
 	// while scrolling, the back button overlaps with subject on small screen
-	padding-inline-start: calc(var(--default-grid-baseline) * 21);
+	padding-inline-start: calc(var(--border-radius-container-large) + var(--header-height));
 	// grow and try to fill 100%
 	flex: 1 1 auto;
 	h2,
@@ -605,7 +615,6 @@ export default {
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
-
 	.transparency {
 		opacity: 0.6;
 		a {
@@ -669,7 +678,7 @@ export default {
 	display: flex;
 	align-items: stretch;
 
-	::deep(.v-popper--theme-dropdown.v-popper__popper .v-popper__inner) {
+	:deep(.v-popper--theme-dropdown.v-popper__popper .v-popper__inner) {
 		height: 300px;
 		width: 250px;
 		overflow: auto;
