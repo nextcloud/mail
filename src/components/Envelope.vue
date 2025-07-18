@@ -561,7 +561,7 @@ export default {
 				&& this.account.archiveMailboxId === this.mailbox.databaseId
 		},
 		showFavoriteIconVariant() {
-			return this.data.flags.flagged
+			return !this.data.flags.flagged
 		},
 		showImportantIconVariant() {
 			return this.data.flags.seen
