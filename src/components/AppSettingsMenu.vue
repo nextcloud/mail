@@ -228,7 +228,7 @@
 								target="_blank"
 								class="button"
 								rel="noopener noreferrer">
-								{{ t('mail', 'Install Mailvelope browser extension by clicking here') }}
+								{{ t('mail', 'Install Mailvelope browser extension') }}
 							</a>
 						</p>
 						<p>
@@ -644,6 +644,8 @@ p.app-settings {
 		line-height: normal;
 		min-height: calc(var(--default-grid-baseline) * 11);
 		font-size: unset;
+		color: var(--color-primary-element-light-text);
+		width: fit-content;
 
 		&:focus-visible,
 		&:hover {
