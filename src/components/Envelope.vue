@@ -31,12 +31,12 @@
 				:class="{ 'one-line': oneLineLayout, 'favorite-icon-style': !oneLineLayout }"
 				:data-starred="data.flags.flagged ? 'true' : 'false'"
 				@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
-			<div v-if="isImportant"
-				class="app-content-list-item-star svg icon-important"
+			<ImportantIcon v-if="isImportant"
+				:size="18"
+				class="app-content-list-item-star icon-important"
 				:class="{ 'important-one-line': oneLineLayout, 'icon-important': !oneLineLayout }"
-				:data-starred="isImportant ? 'true' : 'false'"
-				@click.prevent="hasWriteAcl ? onToggleImportant() : false"
-				v-html="importantSvg" />
+				data-starred="true"
+				@click.prevent="hasWriteAcl ? onToggleImportant() : false" />
 			<JunkIcon v-if="data.flags.$junk"
 				:size="18"
 				class="app-content-list-item-star junk-icon-style"
@@ -127,7 +127,8 @@
 					:close-after-click="true"
 					@click.prevent="onToggleImportant">
 					<template #icon>
-						<ImportantIcon :size="24" />
+						<ImportantIcon v-if="isImportant" :size="24" />
+						<ImportantOutlineIcon v-else :size="24" />
 					</template>
 					{{
 						isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
@@ -360,7 +361,8 @@ import DeleteIcon from 'vue-material-design-icons/DeleteOutline.vue'
 import ArchiveIcon from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
 import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline.vue'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
-import importantSvg from '../../img/important.svg'
+import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
+import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
 import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope/index.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
 import { shortRelativeDatetime, messageDateTime } from '../util/shortRelativeDatetime.js'
@@ -377,7 +379,6 @@ import Reply from 'vue-material-design-icons/ReplyOutline.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
 import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
 import IconAttachment from 'vue-material-design-icons/Paperclip.vue'
-import ImportantIcon from './icons/ImportantIcon.vue'
 import IconBullet from 'vue-material-design-icons/CheckboxBlankCircle.vue'
 import JunkIcon from './icons/JunkIcon.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
@@ -414,9 +415,10 @@ export default {
 		DotsHorizontalIcon,
 		EnvelopePrimaryActions,
 		EventModal,
+		ImportantIcon,
+		ImportantOutlineIcon,
 		TaskModal,
 		EnvelopeSkeleton,
-		ImportantIcon,
 		JunkIcon,
 		ActionButton,
 		MoveModal,
@@ -479,7 +481,6 @@ export default {
 	},
 	data() {
 		return {
-			importantSvg,
 			showMoveModal: false,
 			showEventModal: false,
 			showTaskModal: false,
@@ -1014,6 +1015,7 @@ export default {
 	:deep(path) {
 		fill: #ffcc00;
 		stroke: var(--color-main-background);
+		stroke-width: 2;
 	}
 	.list-item:hover &,
 	.list-item:focus &,
@@ -1120,8 +1122,10 @@ export default {
 
 .icon-important.app-content-list-item-star:deep() {
 	position: absolute;
-	top: 5px;
+	top: 3px;
 	z-index: 1;
+	stroke: var(--color-main-background);
+	stroke-width: 2;
 }
 
 .app-content-list-item-star.favorite-icon-style {
@@ -1141,11 +1145,6 @@ export default {
 .one-line.favorite-icon-style {
 	top: 3px;
 	inset-inline-start: 31px;
-}
-
-:deep(.svg svg) {
-	height: 16px;
-	width: 16px;
 }
 
 .seen-icon-style,

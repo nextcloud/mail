@@ -11,7 +11,8 @@
 				:close-after-click="true"
 				@click.prevent="onToggleImportant">
 				<template #icon>
-					<ImportantIcon :size="16" />
+					<ImportantIcon v-if="isImportant" :size="16" />
+					<ImportantOutlineIcon v-else :size="16" />
 				</template>
 				{{
 					isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
@@ -236,7 +237,8 @@ import TranslationIcon from 'vue-material-design-icons/Translate.vue'
 import { mailboxHasRights } from '../util/acl.js'
 import { generateUrl } from '@nextcloud/router'
 import InformationIcon from 'vue-material-design-icons/InformationOutline.vue'
-import ImportantIcon from './icons/ImportantIcon.vue'
+import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
+import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline.vue'
@@ -275,6 +277,7 @@ export default {
 		ShareIcon,
 		TagIcon,
 		ImportantIcon,
+		ImportantOutlineIcon,
 		TaskIcon,
 		AlarmIcon,
 		PrinterIcon,
