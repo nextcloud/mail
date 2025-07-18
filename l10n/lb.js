@@ -34,7 +34,6 @@ OC.L10N.register(
     "Unnamed" : "ouni Numm",
     "Move" : "Verschieben",
     "Remove account" : "De Kont läschen",
-    "Quota" : "Quota",
     "Folder name" : "Dossiers Numm:",
     "Saving" : "Speicheren...",
     "Rename" : "Ëmbenennen",

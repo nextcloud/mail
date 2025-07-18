@@ -33,7 +33,6 @@ OC.L10N.register(
     "Other" : "অন্যান্য",
     "Choose a folder to store the attachment in" : "সংযুক্তি সংরক্ষনের জন্য একটি ফোল্ডার নির্বাচন করুন",
     "Move" : "Move",
-    "Quota" : "কোটা",
     "Folder name" : "ফোলডারের নাম",
     "Mark all as read" : "সব পঠিত হিসেবে চিহ্নিত কর",
     "Rename" : "পূনঃনামকরণ",

@@ -52,7 +52,6 @@ OC.L10N.register(
     "Move" : "ย้าย",
     "Moving" : "กำลังย้าย",
     "Remove account" : "ลบบัญชี",
-    "Quota" : "โควต้า",
     "Folder name" : "ชื่อโฟลเดอร์",
     "Saving" : "กำลังบันทึก",
     "Show all folders" : "แสดงโฟลเดอร์ทั้งหมด",
