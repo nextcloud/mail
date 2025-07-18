@@ -76,7 +76,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Las imágenes han sido bloqueadas para proteger su privacidad. ",
     "Move" : "Mover",
     "Remove account" : "Eliminar cuenta",
-    "Quota" : "Cuota",
     "Folder name" : "Nombre de la carpeta",
     "Saving" : "Guardando",
     "Show all folders" : "Mostrar todos las carpetas",

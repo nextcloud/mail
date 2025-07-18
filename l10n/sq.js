@@ -77,7 +77,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Imazhet janë bllokuar për të mbrojtur privatësinë tuaj.",
     "Move" : "Zhvendos",
     "Remove account" : "Fshij llogarinë",
-    "Quota" : "Kuotë",
     "Folder name" : "Emër dosjeje",
     "Saving" : "Duke u ruajtur!",
     "Show all folders" : "Shfaqi krejt dosjet",

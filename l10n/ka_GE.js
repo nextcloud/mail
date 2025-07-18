@@ -79,7 +79,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "სურათები თქვენი კონფიდენციალურობის დასაცავად დაიბლოკა",
     "Move" : "გადატანა",
     "Remove account" : "ანგარიშის გაუქმება",
-    "Quota" : "კვოტა",
     "Folder name" : "დირექტორიის სახელი",
     "Saving" : "მიმდინარეობს შენახვა",
     "Show all folders" : "ყველა დირექტორიის ჩვენება",

@@ -39,7 +39,6 @@ OC.L10N.register(
     "Choose a folder to store the attachment in" : "Selectiona un dossier pro salveguardar le attachamento",
     "Move" : "Mover",
     "Remove account" : "Remover conto",
-    "Quota" : "Quota",
     "Folder name" : "Nomine de dossier",
     "Saving" : "Salveguardante",
     "Show all folders" : "Monstrar tote dossiers",

@@ -40,7 +40,6 @@ OC.L10N.register(
     "Other" : "Digər",
     "Choose a folder to store the attachment in" : "Əlavələrin saxlanılması üçün qovluğu seçin",
     "Move" : "Move",
-    "Quota" : "Norma",
     "Folder name" : "Qovluq adı",
     "Saving" : "Saxlanılır",
     "Mark all as read" : "Hamısını oxunulmuş kimi qeydə al",

@@ -47,7 +47,6 @@ OC.L10N.register(
     "Translate" : "Tarjima",
     "Move" : "Move",
     "Remove {email}" : " {email} ni o'chirish",
-    "Quota" : "kvota",
     "Folder name" : "Jild nomi",
     "Saving" : "Saving",
     "Delete folder" : "Jildni o'chirish",

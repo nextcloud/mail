@@ -29,7 +29,6 @@ OC.L10N.register(
     "Remove" : "Fjern",
     "Other" : "Anna",
     "Move" : "Move",
-    "Quota" : "Kvote",
     "Folder name" : "Katalognavn",
     "Saving" : "Lagrar",
     "Rename" : "Endra namn",
