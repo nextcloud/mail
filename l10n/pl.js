@@ -123,6 +123,7 @@ OC.L10N.register(
     "Trusted senders" : "Zaufani nadawcy",
     "Manage S/MIME certificates" : "Zarządzaj certyfikatami S/MIME",
     "Looking for a way to encrypt your emails?" : "Szukasz sposobu na szyfrowanie wiadomości e-mail?",
+    "Install Mailvelope browser extension" : "Zainstaluj rozszerzenie przeglądarki Mailvelope",
     "Assistance features" : "Asystent",
     "About" : "O aplikacji",
     "Keyboard shortcuts" : "Skróty klawiaturowe",
