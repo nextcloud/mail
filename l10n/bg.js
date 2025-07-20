@@ -102,6 +102,7 @@ OC.L10N.register(
     "Trusted senders" : "Доверени податели",
     "Manage S/MIME certificates" : "Управление на S/MIME сертификати",
     "Looking for a way to encrypt your emails?" : "Търсите ли начин да шифровате имейлите си?",
+    "Install Mailvelope browser extension" : "Инсталирайте разширението за браузър Mailvelope",
     "About" : "Относно",
     "Keyboard shortcuts" : "Бързи клавиши",
     "Compose new message" : "Създай ново съобщение",
