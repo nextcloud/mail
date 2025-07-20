@@ -396,6 +396,8 @@
     "Moving" : "Movendo",
     "Moving thread" : "Movendo fio",
     "Moving message" : "Mover mensagem",
+    "Used quota: {quota}% ({limit})" : "Cota usada: {quota}% ({limit})",
+    "Used quota: {quota}%" : "Cota usada: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Não foi possível criar a caixa de correio. O nome provavelmente contém caracteres inválidos. Tente outro nome.",
     "Remove account" : "Excluir a conta",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "A conta do e-mail {email} e os dados em cache serão removidos do Nextcloud, mas não do seu provedor de e-mail.",
