@@ -106,7 +106,7 @@ OC.L10N.register(
     "Sieve script editor" : "Editor de script do Sieve",
     "Mail server" : "Servidor de e-mail",
     "Sieve server" : "Servidor Sieve",
-    "Folder search" : "Pesquisa de pastas",
+    "Folder search" : "Pesquisa em pastas",
     "Update alias" : "Atualizar alias ",
     "Rename alias" : "Renomear alias",
     "Show update alias form" : "Mostrar formulário de atualização de alias ",
