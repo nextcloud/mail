@@ -1,3 +1,25 @@
+## [5.1.9](https://github.com/nextcloud/mail/compare/v5.1.8...v5.1.9) (2025-07-22)
+
+
+### Bug Fixes
+
+* button aria label and roles ([95ea308](https://github.com/nextcloud/mail/commit/95ea308a92f608f2d041e0501262d29f21d69bc5))
+* **l10n:** Update translations from Transifex ([349c5c1](https://github.com/nextcloud/mail/commit/349c5c1791808b748842d5663f529ed2692e78f5))
+* **l10n:** Update translations from Transifex ([fb6bc63](https://github.com/nextcloud/mail/commit/fb6bc6370eb5dc58ea7e63f1f4f042bab9b1da76))
+* **l10n:** Update translations from Transifex ([a57c9d6](https://github.com/nextcloud/mail/commit/a57c9d68a47189d8fb02c6ceec9daaead0f0ec1f))
+* **l10n:** Update translations from Transifex ([2b43c2f](https://github.com/nextcloud/mail/commit/2b43c2fe58a89f3ad5a63cc985d0f7d01a100022))
+* **l10n:** Update translations from Transifex ([b480b16](https://github.com/nextcloud/mail/commit/b480b16dc386d516144cebe97e1ecb3dedbac6b9))
+* **l10n:** Update translations from Transifex ([5668bf6](https://github.com/nextcloud/mail/commit/5668bf6474c00c2be6e48eb83b7707d28f8c4a1b))
+* **l10n:** Update translations from Transifex ([94efcc4](https://github.com/nextcloud/mail/commit/94efcc46b05b5a6341f804cfed93b12695315b70))
+* **ui:** flip unread icons for envelopes ([653507b](https://github.com/nextcloud/mail/commit/653507b0d83b7fdd08fb1e6ceda9eceed41f83d2))
+
+
+### Performance Improvements
+
+* improve quota loading for accounts ([9970072](https://github.com/nextcloud/mail/commit/99700728ee968a260bb752a8817666aaefab764f))
+
+
+
 ## [5.1.8](https://github.com/nextcloud/mail/compare/v5.1.7...v5.1.8) (2025-07-15)
 
 
