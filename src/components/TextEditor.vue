@@ -47,7 +47,6 @@ import ImagePlugin from '@ckeditor/ckeditor5-image/src/image.js'
 import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandreplace.js'
 import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
-import SourceEditingPlugin from '@ckeditor/ckeditor5-source-editing/src/sourceediting.js'
 import GeneralHtmlSupport from '@ckeditor/ckeditor5-html-support/src/generalhtmlsupport.js'
 import { DropdownView } from '@ckeditor/ckeditor5-ui'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
@@ -101,7 +100,7 @@ export default {
 			FindAndReplace,
 			GeneralHtmlSupport,
 		]
-		const toolbar = ['sourceEditing', 'undo', 'redo']
+		const toolbar = ['undo', 'redo']
 
 		if (this.html) {
 			plugins.push(...[
@@ -123,7 +122,6 @@ export default {
 				RemoveFormat,
 				Base64UploadAdapter,
 				MailPlugin,
-				SourceEditingPlugin,
 			])
 			toolbar.unshift(...[
 				'heading',
