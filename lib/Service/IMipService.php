@@ -47,7 +47,7 @@ class IMipService {
 	public function process(): void {
 		$messages = $this->messageMapper->findIMipMessagesAscending();
 		if ($messages === []) {
-			$this->logger->info('No iMIP messages to process.');
+			$this->logger->debug('No iMIP messages to process.');
 			return;
 		}
 

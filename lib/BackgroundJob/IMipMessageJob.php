@@ -20,8 +20,7 @@ class IMipMessageJob extends TimedJob {
 		IMipService $iMipService) {
 		parent::__construct($time);
 
-		// Run once per hour
-		$this->setInterval(60 * 60);
+		$this->setInterval(300);
 		$this->iMipService = $iMipService;
 	}
 
