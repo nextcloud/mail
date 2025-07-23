@@ -71,7 +71,7 @@ class IMipServiceTest extends TestCase {
 			->method('findIMipMessagesAscending')
 			->willReturn([]);
 		$this->logger->expects(self::once())
-			->method('info');
+			->method('debug');
 		$this->mailboxMapper->expects(self::never())
 			->method('findById');
 		$this->accountService->expects(self::never())
