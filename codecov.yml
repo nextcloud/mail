@@ -3,4 +3,9 @@
 comment: false
 ignore:
   - "tests"
+  - "lib/BackgroundJob/ContextChat"
+  - "lib/ContextChat"
+  - "lib/Db/ContextChat"
+  - "lib/Migration/Version5200Date20250728000000.php"
+  - "lib/Service/ContextChat"
   - "lib/Vendor"
