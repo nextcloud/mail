@@ -3,4 +3,6 @@
 comment: false
 ignore:
   - "tests"
+  - "lib/BackgroundJob/ContextChat"
+  - "lib/ContextChat"
   - "lib/Vendor"
