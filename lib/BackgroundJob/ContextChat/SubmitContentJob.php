@@ -98,7 +98,7 @@ class SubmitContentJob extends QueuedJob {
 		if ($nextMessage !== false) {
 			$newArgument = $argument;
 			$newArgument['nextMessageId'] = $nextMessage->getId();
-			$this->jobList->add(SubmitContentJob::class, $newArgument);
+			$this->jobList->scheduleAfter(SubmitContentJob::class, time() + Application::CONTEXT_CHAT_JOB_INTERVAL, $newArgument);
 		}
 	}
 }
