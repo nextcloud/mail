@@ -157,7 +157,7 @@ OC.L10N.register(
     "Mailvelope" : "Mailvelope",
     "Mailvelope is enabled for the current domain!" : "Mailvelope está habilitado para o domínio atual!",
     "Looking for a way to encrypt your emails?" : "Procurando uma maneira de criptografar seus e-mails?",
-    "Install Mailvelope browser extension" : "Instale a extensão do navegador Mailvelope",
+    "Install Mailvelope browser extension" : "Instale a extensão do navegador do Mailvelope",
     "Enable Mailvelope for the current domain" : "Habilitar o Mailvelope para o domínio atual",
     "Assistance features" : "Recursos de assistência",
     "About" : "Sobre",

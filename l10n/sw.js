@@ -87,6 +87,7 @@ OC.L10N.register(
     "Select tags" : "Chagua ukumbusho",
     "Last 7 days" : "Siku 7 zilizopita",
     "Custom" : "Mteja",
+    "Add tag" : "Add tag",
     "Not found" : "Haipatikani",
     "Mark as unread" : "Weka alama kama haijasomwa",
     "Mark as read" : "Weka alama kama iliyosomwa",
