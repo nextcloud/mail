@@ -280,7 +280,7 @@ export default function mainStoreActions() {
 					key,
 					value,
 				})
-				return await savePreference('account-settings', JSON.stringify(this.getAllAccountSettings))
+				return await savePreference('account-settings', JSON.stringify(this.allAccountSettings))
 			})
 		},
 		async deleteAccount(account) {
