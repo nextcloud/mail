@@ -96,8 +96,23 @@ class SubmitContentJob extends QueuedJob {
 
 		// Schedule next job to process remaining messages
 		if ($nextMessage !== false) {
+			// Detect and replace pendings jobs for this mailbox to avoid duplicates
+			$nextMessageIds = [$nextMessage->getId()];
+			$jobs = $this->jobList->getJobsIterator(SubmitContentJob::class, null, 0);
+			foreach ($jobs as $job) {
+				$arg = $job->getArgument();
+				if (
+					($arg['userId'] === $userId)
+					&& ($arg['accountId'] === $argument['accountId'])
+					&& ($arg['mailboxId'] === $argument['mailboxId'])
+				) {
+					$nextMessageIds[] = $arg['nextMessageId'];
+					$this->jobList->removeById($job->getId());
+				}
+			}
+
 			$newArgument = $argument;
-			$newArgument['nextMessageId'] = $nextMessage->getId();
+			$newArgument['nextMessageId'] = min($nextMessageIds);
 			$this->jobList->scheduleAfter(SubmitContentJob::class, time() + Application::CONTEXT_CHAT_JOB_INTERVAL, $newArgument);
 		}
 	}
