@@ -15,6 +15,20 @@
 			:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger folders.')" />
 		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
 		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
+		<template v-else-if="hasGroupedEnvelopes && !isPriorityInbox">
+			<div v-for="[label, group] in Object.entries(groupEnvelopes)" :key="label">
+				<SectionTitle class="section-title" :name="label" />
+				<EnvelopeList :account="account"
+					:mailbox="mailbox"
+					:search-query="searchQuery"
+					:envelopes="group"
+					:loading-more="false"
+					:load-more-button="false"
+					:skip-transition="skipListTransition"
+					@delete="onDelete"
+					@load-more="loadMore" />
+			</div>
+		</template>
 		<EnvelopeList v-else
 			:account="account"
 			:mailbox="mailbox"
@@ -30,6 +44,7 @@
 
 <script>
 import EmptyMailbox from './EmptyMailbox.vue'
+import SectionTitle from './SectionTitle.vue'
 import EnvelopeList from './EnvelopeList.vue'
 import LoadingSkeleton from './LoadingSkeleton.vue'
 import Error from './Error.vue'
@@ -58,9 +73,15 @@ export default {
 		Error,
 		Loading,
 		LoadingSkeleton,
+		SectionTitle,
 	},
 	mixins: [isMobile],
 	props: {
+		groupEnvelopes: {
+			type: Object,
+			required: false,
+			default: null,
+		},
 		account: {
 			type: Object,
 			required: true,
@@ -91,6 +112,10 @@ export default {
 			required: false,
 			default: false,
 		},
+		customEnvelopes: {
+			type: Array,
+			required: false,
+		},
 	},
 	data() {
 		return {
@@ -112,7 +137,7 @@ export default {
 			return this.mainStore.getPreference('sort-order', 'DESC')
 		},
 		envelopes() {
-			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
+			return this.customEnvelopes ?? this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
 		},
 		envelopesToShow() {
 			if (this.paginate === 'manual' && !this.expanded) {
@@ -120,8 +145,14 @@ export default {
 			}
 			return this.envelopes
 		},
+		hasGroupedEnvelopes() {
+			return this.groupEnvelopes && Object.keys(this.groupEnvelopes).length > 0
+		},
 		hasMessages() {
-			return this.envelopes.length > 0
+			if (this.hasGroupedEnvelopes) {
+				return Object.values(this.groupEnvelopes).some(group => group.length > 0)
+			}
+			return this.envelopesToShow?.length > 0
 		},
 		showLoadMore() {
 			return !this.endReached && this.paginate === 'manual'
@@ -161,6 +192,7 @@ export default {
 		await this.prefetchOtherMailboxes()
 
 		this.mainStore.setHasFetchedInitialEnvelopesMutation(true)
+		this.mainStore.updateSyncTimestamp()
 	},
 	destroyed() {
 		this.bus.off('load-more', this.onScroll)
