@@ -579,17 +579,20 @@ export default {
 	position: -webkit-sticky; // ios/safari fallback
 	position: sticky;
 	top: 0;
-	background: -webkit-linear-gradient(var(--color-main-background), var(--color-main-background) 80%, rgba(255,255,255,0));
-	background: -o-linear-gradient(var(--color-main-background), var(--color-main-background)  80%, rgba(255,255,255,0));
-	background: -moz-linear-gradient(var(--color-main-background), var(--color-main-background)  80%, rgba(255,255,255,0));
-	background: linear-gradient(var(--color-main-background), var(--color-main-background)  80%, rgba(255,255,255,0));
+	background: var(--color-main-background);
+	background: var(--color-main-background);
+	background: var(--color-main-background);
+	background: var(--color-main-background);
+	border-bottom: 2px solid var(--color-border);
+	margin-bottom: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 #mail-thread-header-fields {
 	// initial width
 	width: 0;
 	// while scrolling, the back button overlaps with subject on small screen
-	padding-inline-start: calc(var(--default-grid-baseline) * 21);
+	padding-inline-start: 68px;
 	// grow and try to fill 100%
 	flex: 1 1 auto;
 	h2,
@@ -605,7 +608,6 @@ export default {
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
-
 	.transparency {
 		opacity: 0.6;
 		a {
@@ -669,7 +671,7 @@ export default {
 	display: flex;
 	align-items: stretch;
 
-	::deep(.v-popper--theme-dropdown.v-popper__popper .v-popper__inner) {
+	:deep(.v-popper--theme-dropdown.v-popper__popper .v-popper__inner) {
 		height: 300px;
 		width: 250px;
 		overflow: auto;

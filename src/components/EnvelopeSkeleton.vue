@@ -429,7 +429,7 @@ export default {
 	--list-item-padding: calc(var(--default-grid-baseline) * 2);
 	// The content are two lines of text and respect the 1.5 line height
 	--list-item-border-radius: var(--border-radius-element, 32px);
-	--list-item-height: calc(4 * var(--default-line-height));
+	--list-item-height: 4.5lh;
 	height: var(--list-item-height);
 
 	// General styles
@@ -484,6 +484,8 @@ export default {
 			&__main {
 				flex: 0 1 auto;
 				min-width: 0;
+				line-height: var(--default-line-height);
+				min-height: var(--default-line-height);
 			}
 
 			&__subname {
@@ -511,12 +513,12 @@ export default {
 				justify-content: start;
 				align-items: end;
 				white-space: nowrap;
-				margin-inline-start: calc(var(--default-grid-baseline) * 2);
+				gap: 4px;
 				// to align details on top instead of in the center. The right way to do it would be to change the template, but that breaks one-line layout
 				margin-top: -22px;
 
 				&__details {
-					margin: 0 9px !important;
+					margin: 0 4px !important;
 					color: var(--color-text-maxcontrast);
 					height: var(--default-line-height);
 					font-weight: normal;
@@ -529,7 +531,7 @@ export default {
 					align-items: center;
 
 					&__indicator {
-						margin: 0 5px;
+						margin: 0 4px;
 					}
 				}
 			}
