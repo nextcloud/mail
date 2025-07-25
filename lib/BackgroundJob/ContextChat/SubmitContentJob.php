@@ -41,9 +41,8 @@ class SubmitContentJob extends QueuedJob {
 
 	#[\Override]
 	protected function run($argument): void {
-		$userId = $argument['userId'];
 		$account = $this->accountService->findById($argument['accountId']);
-		$mailbox = $this->mailManager->getMailbox($userId, $argument['mailboxId']);
+		$mailbox = $this->mailManager->getMailbox($argument['userId'], $argument['mailboxId']);
 		$messageIds = $this->messageMapper->findAllIds($mailbox);
 		$messageIds = array_filter($messageIds, fn (int $id): bool => $id >= $argument['nextMessageId']);
 
@@ -52,7 +51,7 @@ class SubmitContentJob extends QueuedJob {
 			return;
 		}
 
-		$messages = $this->messageMapper->findByIds($userId, $messageIds, 'asc');
+		$messages = $this->messageMapper->findByIds($argument['userId'], $messageIds, 'asc');
 		// Ensure messages are sorted by ID
 		usort($messages, static fn (Message $a, Message $b): int => $a->getId() <=> $b->getId());
 
@@ -84,7 +83,7 @@ class SubmitContentJob extends QueuedJob {
 				$fullMessage['body'] ?? '',
 				'E-Mail',
 				$imapMessage->getSentDate(),
-				[$userId],
+				[$argument['userId']],
 			);
 
 			$nextMessage = next($messages);
@@ -102,7 +101,7 @@ class SubmitContentJob extends QueuedJob {
 			foreach ($jobs as $job) {
 				$arg = $job->getArgument();
 				if (
-					($arg['userId'] === $userId)
+					($arg['userId'] === $argument['userId'])
 					&& ($arg['accountId'] === $argument['accountId'])
 					&& ($arg['mailboxId'] === $argument['mailboxId'])
 				) {
