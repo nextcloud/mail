@@ -8,6 +8,7 @@ OC.L10N.register(
     "Mail" : "Msururu wa maduka",
     "Sign in with Google" : "Ingia kwa Google",
     "Save" : "Hifadhi",
+    "Connect" : "Unganisha",
     "Auto" : "Auto",
     "Name" : "Jina",
     "Password" : "Nenosiri",
