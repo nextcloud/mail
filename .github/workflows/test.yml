@@ -6,6 +6,9 @@ on: pull_request
 permissions:
   contents: read
 
+env:
+  E2E_NODE_VERSION: "20" # TODO: Extract automatically using another action
+
 jobs:
   unit-tests:
     runs-on: ubuntu-latest
@@ -230,29 +233,26 @@ jobs:
   matrix:
     runs-on: ubuntu-latest-low
     outputs:
-      matrix: ${{ steps.versions.outputs.sparse-matrix }}
+      php-min: ${{ steps.versions.outputs.php-min }}
+      branches-min: ${{ steps.versions.outputs.branches-min }}
     steps:
       - name: Checkout app
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Get version matrix
         id: versions
         uses: icewind1991/nextcloud-version-matrix@58becf3b4bb6dc6cef677b15e2fd8e7d48c0908f # v1.3.1
-        with:
-          matrix: '{"node-versions": ["20"]}'
 
   frontend-e2e-tests:
     runs-on: ubuntu-latest
     name: Front-end E2E tests
     needs: matrix
-    strategy:
-      matrix: ${{ fromJson(needs.matrix.outputs.matrix) }}
     steps:
       - name: Set up Nextcloud env
         uses: ChristophWurst/setup-nextcloud@fc0790385c175d97e88a7cb0933490de6e990374 # v0.3.2
         with:
-          nextcloud-version: ${{ matrix.server-versions }}
-          php-version: ${{ matrix.php-versions }}
-          node-version: ${{ matrix.node-versions }}
+          nextcloud-version: ${{ needs.matrix.outputs.branches-min }}
+          php-version: ${{ needs.matrix.outputs.php-min }}
+          node-version: ${{ env.E2E_NODE_VERSION }}
           install: true
       - name: Configure Nextcloud for testing
         run: |
@@ -271,10 +271,10 @@ jobs:
         run: composer install
       - name: Install the app
         run: php -f nextcloud/occ app:enable mail
-      - name: Set up node ${{ matrix.node-version }}
+      - name: Set up node ${{ env.E2E_NODE_VERSION }}
         uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3
         with:
-          node-version: ${{ matrix.node-versions }}
+          node-version: ${{ env.E2E_NODE_VERSION }}
       - name: Install npm dependencies
         working-directory: nextcloud/apps/mail
         run: npm ci
@@ -300,7 +300,7 @@ jobs:
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
-          name: playwright-report-${{ github.event.number }}-nc${{ matrix.server-versions }}-php${{ matrix.php-versions }}-node${{ matrix.node-versions }}
+          name: playwright-report-${{ github.event.number }}-nc${{ needs.matrix.outputs.branches-min }}-php${{ needs.matrix.outputs.php-min }}-node${{ env.E2E_NODE_VERSION }}
           path: nextcloud/apps/mail/playwright-report/
           retention-days: 14
       - name: Print server logs
