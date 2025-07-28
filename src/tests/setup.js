@@ -12,6 +12,9 @@ JestFetchMock.enableMocks()
 
 global.appName = 'mail'
 
+global._nc_l10n_locale = 'en'
+global._nc_l10n_language = 'en_US'
+
 global.OC = {
 	getLocale: () => 'en',
 	getLanguage: () => 'en_US',
