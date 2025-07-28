@@ -24,6 +24,8 @@ use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\MessagesController;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message as DbMessage;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
@@ -1160,5 +1162,59 @@ class MessagesControllerTest extends TestCase {
 
 		$this->assertInstanceOf(JSONResponse::class, $actualResponse);
 		$this->assertEquals(['valid' => true], $actualResponse->getData());
+	}
+
+	public static function provideCacheBusterData(): array {
+		return [
+			[null, false],
+			['', false],
+			['abcdef123', true],
+		];
+	}
+
+	/** @dataProvider provideCacheBusterData */
+	public function testIndexCacheBuster(?string $cacheBuster, bool $expectCaching): void {
+		$mailbox = new Mailbox();
+		$mailbox->setAccountId(100);
+		$this->mailManager->expects(self::once())
+			->method('getMailbox')
+			->with($this->userId, 100)
+			->willReturn($mailbox);
+		$mailAccount = new MailAccount();
+		$account = new Account($mailAccount);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with($this->userId, 100)
+			->willReturn($account);
+
+		$this->userPreferences->expects(self::once())
+			->method('getPreference')
+			->with($this->userId, 'sort-order', 'newest')
+			->willReturnArgument(2);
+
+		$messages = [
+			new DbMessage(),
+			new DbMessage(),
+		];
+		$this->mailSearch->expects(self::once())
+			->method('findMessages')
+			->with(
+				$account,
+				$mailbox,
+				'DESC',
+				null,
+				null,
+				null,
+			)->willReturn($messages);
+
+		$actualResponse = $this->controller->index(100, null, null, null, $cacheBuster);
+
+		$cacheForHeader = $actualResponse->getHeaders()['Cache-Control'] ?? null;
+		$this->assertNotNull($cacheForHeader);
+		if ($expectCaching) {
+			$this->assertEquals('private, max-age=604800, immutable', $cacheForHeader);
+		} else {
+			$this->assertEquals('no-cache, no-store, must-revalidate', $cacheForHeader);
+		}
 	}
 }

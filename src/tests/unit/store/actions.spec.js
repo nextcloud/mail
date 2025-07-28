@@ -646,4 +646,43 @@ describe('Vuex store actions', () => {
 
 		expect(removeEnvelope).toBeFalsy()
 	})
+
+	it('includes a cache buster if requested', async() => {
+		const account = {
+			id: 13,
+			personalNamespace: 'INBOX.',
+			mailboxes: [],
+		}
+
+		store.addAccountMutation(account)
+		store.addMailboxMutation({
+			account,
+			mailbox: {
+				id: 'INBOX',
+				name: 'INBOX',
+				databaseId: 21,
+				accountId: 13,
+				specialRole: 'inbox',
+				cacheBuster: 'abcdef123',
+			},
+		})
+
+		store.addEnvelopesMutation = jest.fn()
+
+		MessageService.fetchEnvelopes.mockResolvedValueOnce([])
+
+		await store.fetchEnvelopes({
+			mailboxId: 21,
+			includeCacheBuster: true,
+		})
+
+		expect(MessageService.fetchEnvelopes).toHaveBeenCalledWith(
+			13, // account id
+			21, // mailbox id
+			undefined, // query
+			undefined, // cursor
+			20, // limit (PAGE_SIZE)
+			'abcdef123', // cache buster
+		)
+	})
 })
