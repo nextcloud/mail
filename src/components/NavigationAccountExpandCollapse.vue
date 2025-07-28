@@ -35,7 +35,7 @@ export default {
 			} else if (this.account.collapsed && !this.account.showSubscribedOnly) {
 				return t('mail', 'Show all folders')
 			}
-			return t('mail', 'Collapse mailboxes')
+			return t('mail', 'Collapse folders')
 		},
 	},
 	methods: {
