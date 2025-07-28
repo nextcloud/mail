@@ -160,7 +160,7 @@ export default {
 	},
 	data() {
 		return {
-			additionalTrapElements: ['#reference-picker'],
+			additionalTrapElements: ['#reference-picker', '#text-block-picker'],
 			original: undefined,
 			draftsPromise: Promise.resolve(),
 			attachmentsPromise: Promise.resolve(),
