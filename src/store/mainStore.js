@@ -104,6 +104,9 @@ export default defineStore('main', {
 			isTranslationEnabled: false,
 			translationInputLanguages: [],
 			translationOutputLanguages: [],
+			textBlocksFetched: false,
+			myTextBlocks: [],
+			sharedTextBlocks: [],
 		}
 	},
 	getters: {

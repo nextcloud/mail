@@ -8,6 +8,7 @@
 			id="reference-picker"
 			@submit="onPicked"
 			@cancel="closePicker" />
+		<TextBlockModal v-if="isTextBlockPickerOpen" @close="isTextBlockPickerOpen = false" @insert="onTextBlockInsert" />
 		<div class="composer-fields composer-fields__from mail-account">
 			<label class="from-label" for="from">
 				{{ t('mail', 'From') }}
@@ -178,6 +179,7 @@
 							type="search"
 							class="vs__search"
 							v-bind="attributes"
+							dir="auto"
 							v-on="events">
 					</template>
 					<template #selected-option-container="{option}">
@@ -239,6 +241,7 @@
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply || !isFirstOpen"
 				:bus="bus"
+				:text-blocks="textBlocks"
 				@input="onEditorInput"
 				@ready="onEditorReady"
 				@mention="handleMention"
@@ -339,6 +342,16 @@
 							</template>
 							{{
 								t('mail', 'Smart picker')
+							}}
+						</ActionButton>
+						<ActionButton :close-after-click="true" @click="openTextBlockPicker">
+							<template #icon>
+								<NcIconSvgWrapper :size="16"
+									:title="t('mail', 'Text blocks')"
+									:svg="textBlockSvg" />
+							</template>
+							{{
+								t('mail', 'Text blocks')
 							}}
 						</ActionButton>
 						<ActionButton v-if="!isScheduledSendingDisabled"
@@ -461,10 +474,11 @@ import trimStart from 'lodash/fp/trimCharsStart.js'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
 
-import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcSelect, NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
+import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcSelect, NcListItemIcon as ListItemIcon, NcIconSvgWrapper } from '@nextcloud/vue'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import Delete from 'vue-material-design-icons/DeleteOutline.vue'
 import ComposerAttachments from './ComposerAttachments.vue'
+import TextBlockModal from './textBlocks/TextBlockModal.vue'
 import Download from 'vue-material-design-icons/DownloadOutline.vue'
 import IconUpload from 'vue-material-design-icons/UploadOutline.vue'
 import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
@@ -477,6 +491,7 @@ import { showError, showWarning } from '@nextcloud/dialogs'
 import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
 import Vue from 'vue'
 import mitt from 'mitt'
+import textBlockSvg from './../../img/text_snippet.svg'
 
 import { findRecipient } from '../service/AutocompleteService.js'
 import { detect, html, toHtml, toPlain } from '../util/text.js'
@@ -515,6 +530,7 @@ export default {
 		ActionRadio,
 		ButtonVue,
 		ComposerAttachments,
+		TextBlockModal,
 		ChevronLeft,
 		Delete,
 		Download,
@@ -523,6 +539,7 @@ export default {
 		IconPublic,
 		IconLinkPicker,
 		NcSelect,
+		NcIconSvgWrapper,
 		Paperclip,
 		TextEditor,
 		ListItemIcon,
@@ -645,6 +662,7 @@ export default {
 
 		return {
 			sending: false,
+			textBlockSvg,
 			showCC: this.cc.length > 0,
 			showBCC: this.bcc.length > 0,
 			selectedAlias: NO_ALIAS_SET, // Fixed in `beforeMount`
@@ -689,6 +707,7 @@ export default {
 			wantsSmimeSign: this.smimeSign,
 			wantsSmimeEncrypt: this.smimeEncrypt,
 			isPickerOpen: false,
+			isTextBlockPickerOpen: false,
 			recipientSearchTerms: {},
 			smimeSignAliases: [],
 		}
@@ -888,6 +907,11 @@ export default {
 
 			return missingCertificates
 		},
+
+		textBlocks() {
+			return this.mainStore.getSharedTextBlocks()?.map(textBlock => ({ title: textBlock.title, content: textBlock.content }))
+				.concat(this.mainStore.getMyTextBlocks().map(textBlock => ({ title: textBlock.title, content: textBlock.content })))
+		},
 	},
 	watch: {
 		'$route.params.threadId'() {
@@ -995,6 +1019,10 @@ export default {
 		}
 
 		this.smimeSignAliases = this.mainStore.getPreference('smime-sign-aliases', [])
+		if (!this.mainStore.areTextBlocksFetched) {
+			this.mainStore.fetchSharedTextBlocks()
+			this.mainStore.fetchMyTextBlocks()
+		}
 	},
 	beforeDestroy() {
 		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
@@ -1011,6 +1039,9 @@ export default {
 		},
 		openPicker() {
 			this.isPickerOpen = true
+		},
+		openTextBlockPicker() {
+			this.isTextBlockPickerOpen = true
 		},
 		closePicker() {
 			this.isPickerOpen = false
@@ -1152,6 +1183,10 @@ export default {
 		onPicked(content) {
 			this.closePicker()
 			this.bus.emit('append-to-body-at-cursor', content)
+		},
+		onTextBlockInsert(content) {
+			this.isTextBlockPickerOpen = false
+			this.bus.emit('insert-text-block', content)
 		},
 		onEditorInput(text) {
 			this.bodyVal = text

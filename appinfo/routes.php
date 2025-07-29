@@ -495,6 +495,11 @@ return [
 			'url' => '/api/follow-up/check-message-ids',
 			'verb' => 'POST',
 		],
+		[
+			'name' => 'textBlockShares#getTextBlockShares',
+			'url' => '/api/textBlocks/{id}/shares',
+			'verb' => 'GET',
+		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],
@@ -507,6 +512,8 @@ return [
 		'outbox' => ['url' => '/api/outbox'],
 		'preferences' => ['url' => '/api/preferences'],
 		'smimeCertificates' => ['url' => '/api/smime/certificates'],
+		'textBlock' => ['url' => '/api/textBlocks'],
+		'textBlockShares' => ['url' => '/api/textBlockshares'],
 	],
 	'ocs' => [
 		[
