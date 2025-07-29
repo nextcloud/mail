@@ -1,3 +1,26 @@
+## [5.1.10](https://github.com/nextcloud/mail/compare/v5.1.9...v5.1.10) (2025-07-29)
+
+
+### Bug Fixes
+
+* **classification:** use global default for new messages too ([43d96fe](https://github.com/nextcloud/mail/commit/43d96fe7c1379ed6f2098746e4fc803f87ee8ebb))
+* **deps:** bump form-data to v4.0.4 ([0818830](https://github.com/nextcloud/mail/commit/0818830ff93518f038d0baead1d5fe33ef510202))
+* **imip:** process imip messages more frequently ([687182e](https://github.com/nextcloud/mail/commit/687182e33ea77b4936bca578eabf6f5e364c8112))
+* **l10n:** Update translations from Transifex ([db4dadd](https://github.com/nextcloud/mail/commit/db4dadd9011cd011064bc64dfa931b79a4f43b6b))
+* **l10n:** Update translations from Transifex ([aedbfac](https://github.com/nextcloud/mail/commit/aedbfac8cef019b5b84f741cb89a99823c52098d))
+* **l10n:** Update translations from Transifex ([85c2d95](https://github.com/nextcloud/mail/commit/85c2d95488126ed0623f8443db1ce151874d080a))
+* **l10n:** Update translations from Transifex ([e2ca147](https://github.com/nextcloud/mail/commit/e2ca1476d2942a56fc4b9b9322dc237db874cfb0))
+* **l10n:** Update translations from Transifex ([eeec0a2](https://github.com/nextcloud/mail/commit/eeec0a2fcac46dd34b4a33ed4a5e25b17dc07878))
+* **l10n:** Update translations from Transifex ([399bdab](https://github.com/nextcloud/mail/commit/399bdab9b9889ac08718b1b1596fa9415ed3a4f1))
+* make saving account settings work again ([1c58bc2](https://github.com/nextcloud/mail/commit/1c58bc27c969524cec2b89196b6dda1a8aac003d))
+
+
+### Performance Improvements
+
+* cache pre-fetched mailboxes on the HTTP level ([3971d1f](https://github.com/nextcloud/mail/commit/3971d1f6557a8666ad22cef52bbb5a3c26331130))
+
+
+
 ## [5.1.9](https://github.com/nextcloud/mail/compare/v5.1.8...v5.1.9) (2025-07-22)
 
 
