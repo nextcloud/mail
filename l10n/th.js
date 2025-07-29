@@ -55,6 +55,7 @@ OC.L10N.register(
     "Folder name" : "ชื่อโฟลเดอร์",
     "Saving" : "กำลังบันทึก",
     "Show all folders" : "แสดงโฟลเดอร์ทั้งหมด",
+    "Collapse folders" : "ยุบโฟลเดอร์",
     "Mark all as read" : "เปลี่ยนทั้งหมดเป็นอ่านแล้ว",
     "Rename" : "เปลี่ยนชื่อ",
     "Clear cache" : "ล้างแคช",

@@ -42,6 +42,7 @@ OC.L10N.register(
     "Folder name" : "Nomine de dossier",
     "Saving" : "Salveguardante",
     "Show all folders" : "Monstrar tote dossiers",
+    "Collapse folders" : "Plicar dossiers",
     "Rename" : "Renominar",
     "Reply" : "Responder",
     "Add" : "Adder",

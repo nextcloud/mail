@@ -116,6 +116,7 @@ OC.L10N.register(
     "Saving" : "Konservado",
     "Move down" : "Movi malsupren",
     "Show all folders" : "Montri ĉiujn dosierujojn",
+    "Collapse folders" : "Maletendi dosierujojn",
     "_{total} message_::_{total} messages_" : ["{total} mesaĝo","{total} mesaĝoj"],
     "Loading …" : "Ŝargas …",
     "Mark all as read" : "Marki ĉion kiel legita",

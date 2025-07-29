@@ -324,6 +324,7 @@ OC.L10N.register(
     "Move up" : "Mover arriba",
     "Move down" : "Mover abajo",
     "Show all folders" : "Mostrar todas las carpetas",
+    "Collapse folders" : "Compactar carpetas",
     "Loading …" : "Cargando …",
     "Delete folder" : "Eliminar carpeta",
     "Mark all as read" : "Marcar todos como leídos",

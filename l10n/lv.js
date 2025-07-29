@@ -105,6 +105,7 @@ OC.L10N.register(
     "Folder name" : "Mapes nosaukums",
     "Saving" : "Saglabā",
     "Show all folders" : "Rādīt visas mapes",
+    "Collapse folders" : "Sakļaut mapes",
     "Loading …" : "Ielādē…",
     "Delete folder" : "Izdzēst mapi",
     "An error occurred, unable to rename the mailbox." : "Atgadījās kļūda, nevar pārdēvēt pastkasti.",

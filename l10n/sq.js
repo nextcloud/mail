@@ -80,6 +80,7 @@ OC.L10N.register(
     "Folder name" : "Emër dosjeje",
     "Saving" : "Duke u ruajtur!",
     "Show all folders" : "Shfaqi krejt dosjet",
+    "Collapse folders" : "Tkurri dosjet",
     "Delete folder" : "Fshije dosjen",
     "Mark all as read" : "Shënoji krejt si të lexuar",
     "Rename" : "Riemërtoje",

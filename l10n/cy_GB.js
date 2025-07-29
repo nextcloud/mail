@@ -83,6 +83,7 @@ OC.L10N.register(
     "Remove account" : "Dileu cyfrif",
     "Add folder" : "Ychwanegu ffolder",
     "Show all folders" : "Dangos pob ffolder",
+    "Collapse folders" : "Cwympo ffolderi",
     "Loading …" : "Yn llwytho …",
     "Mark all as read" : "Marcio'r cyfan wedi'u darllen",
     "Mark all messages of this folder as read" : "Marcio'r holl negeseuon y ffolder hon fel y'u darllenwyd",

@@ -141,6 +141,7 @@ OC.L10N.register(
     "Folder name" : "Nombre de la carpeta",
     "Saving" : "Guardando",
     "Show all folders" : "Mostrar todas las carpetas",
+    "Collapse folders" : "Compactar carpetas",
     "Mark all as read" : "Marcar todos como leídos",
     "Rename" : "Renombrar",
     "Clear cache" : "Borrar el caché",
