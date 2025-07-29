@@ -10,12 +10,12 @@ declare(strict_types=1);
 namespace OCA\Mail\ContextChat;
 
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\BackgroundJob\ContextChat\SubmitContentJob;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\ContextChat\JobsService;
 use OCA\Mail\Service\MailManager;
 use OCP\BackgroundJob\IJobList;
 use OCP\ContextChat\Events\ContentProviderRegisterEvent;
@@ -33,6 +33,7 @@ use OCP\IUserManager;
 class ContextChatProvider implements IContentProvider, IEventListener {
 
 	public function __construct(
+		private JobsService $jobsService,
 		private AccountService $accountService,
 		private MailManager $mailManager,
 		private MessageMapper $messageMapper,
@@ -54,40 +55,18 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 		}
 
 		if ($event instanceof NewMessagesSynchronized) {
-			$account = $event->getAccount();
-			$mailbox = $event->getMailbox();
-			$userId = $account->getUserId();
-			$accountId = $account->getId();
-			$mailboxId = $mailbox->getId();
-
-			// Check if there is a pending job for this mailbox already to avoid duplicates
-			$jobs = $this->jobList->getJobsIterator(SubmitContentJob::class, null, 0);
-			foreach ($jobs as $job) {
-				$argument = $job->getArgument();
-				if (
-					($argument['userId'] === $userId)
-					&& ($argument['accountId'] === $accountId)
-					&& ($argument['mailboxId'] === $mailboxId)
-				) {
-					return;
-				}
-			}
-
 			$messageIds = array_map(static fn (Message $m): int => $m->getId(), $event->getMessages());
 
-			// Check that there are messages to sync
+			// Ensure that there are messages to sync
 			if (count($messageIds) === 0) {
 				return;
 			}
 
-			$this->jobList->add(SubmitContentJob::class, [
-				'userId' => $userId,
-				'accountId' => $accountId,
-				'mailboxId' => $mailboxId,
-				'nextMessageId' => min($messageIds),
-				'startTime' => time() - Application::CONTEXT_CHAT_MESSAGE_MAX_AGE,
-			]);
+			$userId = $event->getAccount()->getUserId();
+			$accountId = $event->getAccount()->getId();
+			$mailboxId = $event->getMailbox()->getId();
 
+			$this->jobsService->updateOrCreate($userId, $accountId, $mailboxId, min($messageIds));
 			return;
 		}
 
@@ -142,9 +121,7 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 	 * @since 5.2.0
 	 */
 	public function triggerInitialImport(): void {
-		$startTime = time() - Application::CONTEXT_CHAT_MESSAGE_MAX_AGE;
-
-		$this->userManager->callForSeenUsers(function (IUser $user) use ($startTime): void {
+		$this->userManager->callForSeenUsers(function (IUser $user): void {
 			$userId = $user->getUID();
 			$userAccounts = $this->accountService->findByUserId($userId);
 
@@ -155,13 +132,7 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 					$messageIds = $this->messageMapper->findAllIds($mailbox);
 
 					if (count($messageIds) > 0) {
-						$this->jobList->add(SubmitContentJob::class, [
-							'userId' => $userId,
-							'accountId' => $account->getId(),
-							'mailboxId' => $mailbox->getId(),
-							'nextMessageId' => 0,
-							'startTime' => $startTime,
-						]);
+						$this->jobsService->updateOrCreate($userId, $account->getId(), $mailbox->getId(), 0);
 					}
 				}
 			}
