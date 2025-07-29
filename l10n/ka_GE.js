@@ -82,6 +82,7 @@ OC.L10N.register(
     "Folder name" : "დირექტორიის სახელი",
     "Saving" : "მიმდინარეობს შენახვა",
     "Show all folders" : "ყველა დირექტორიის ჩვენება",
+    "Collapse folders" : "დირექტორიების კოლაფსი",
     "Delete folder" : "ფოლდერის წაშლა",
     "Mark all as read" : "ყველას წაკითხულად მონიშვნა",
     "Rename" : "სახელის შეცვლა",

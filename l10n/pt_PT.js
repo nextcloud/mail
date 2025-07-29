@@ -148,6 +148,7 @@ OC.L10N.register(
     "Move up" : "Mover para cima",
     "Move down" : "Mover para baixo",
     "Show all folders" : "Mostrar todas as pastas",
+    "Collapse folders" : "Ocultar pastas",
     "Loading …" : "A carregar...",
     "Delete folder" : "Apagar pasta",
     "Mark all as read" : "Marcar todas como lidas",
