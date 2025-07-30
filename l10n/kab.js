@@ -41,6 +41,8 @@ OC.L10N.register(
     "Mark as unread" : "Creḍ ur yettwaɣra ara",
     "Mark as read" : "Creḍ yettwaɣra",
     "User" : "Aseqdac",
+    "Guest" : "Inebgi",
+    "Group" : "Agraw",
     "All" : "Akk",
     "Favorites" : "Imenyafen",
     "Inbox" : "Tanaka",

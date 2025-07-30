@@ -18,6 +18,7 @@ OC.L10N.register(
     "Search" : "Search",
     "Send" : "Schécken",
     "Refresh" : "Opfrëschen",
+    "Ok" : "OK",
     "Select account" : "Account auswielen",
     "Choose" : "Auswielen",
     "Confirm" : "Konfirméieren",
@@ -48,6 +49,8 @@ OC.L10N.register(
     "User" : "User",
     "Host" : "Host",
     "Port" : "Port",
+    "Group" : "Grupp",
+    "Shared" : "Gedeelt",
     "All" : "All",
     "Favorites" : "Favoriten",
     "Actions" : "Aktiounen"

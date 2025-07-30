@@ -370,6 +370,7 @@ OC.L10N.register(
     "Private key (optional)" : "Privat nøgle (valgfrit)",
     "The private key is only required if you intend to send signed and encrypted emails using this certificate." : "Den private nøgle er kun påkrævet, hvis du har til hensigt at sende signerede og krypterede e-mails ved hjælp af dette certifikat.",
     "Submit" : "Send",
+    "Insert" : "Indsæt",
     "Account connected" : "Kontoen er tilknyttet",
     "Connect your mail account" : "Forbind din mail konto",
     "All" : "Alle",

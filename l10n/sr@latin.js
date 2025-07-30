@@ -17,6 +17,7 @@ OC.L10N.register(
     "Search" : "Search",
     "Send" : "Pošalji",
     "Refresh" : "Osveži",
+    "Ok" : "Ok",
     "Select account" : "Označite nalog",
     "Choose" : "Odaberi",
     "Favorite" : "Omiljene",
@@ -45,6 +46,7 @@ OC.L10N.register(
     "Tags" : "Oznake",
     "Not found" : "Nije nađeno",
     "User" : "Korisnik",
+    "Shared" : "Deljeno",
     "All" : "Sve",
     "Favorites" : "Omiljene",
     "Continue to %s" : "Nastavi na %s"

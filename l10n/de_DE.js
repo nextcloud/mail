@@ -767,6 +767,7 @@ OC.L10N.register(
     "Private key (optional)" : "Privater Schlüssel (optional)",
     "The private key is only required if you intend to send signed and encrypted emails using this certificate." : "Der private Schlüssel wird nur benötigt, wenn Sie beabsichtigen, signierte und verschlüsselte E-Mails mit diesem Zertifikat zu versenden.",
     "Submit" : "Übermitteln",
+    "Insert" : "Einfügen",
     "Account connected" : "Konto verbunden",
     "You can close this window" : "Sie können dieses Fenster schließen",
     "Connect your mail account" : "Verbinden Sie Ihr E-Mail-Konto",

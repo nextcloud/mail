@@ -354,6 +354,7 @@ OC.L10N.register(
     "Valid until" : "Έγκυρο έως",
     "Certificate" : "Πιστοποιητικό",
     "Submit" : "Υποβολή",
+    "Insert" : "Εισαγωγή",
     "Account connected" : "Συνδεδεμένος λογαριασμός",
     "Connect your mail account" : "Συνδέστε το λογαριασμό αλληλογραφίας σας",
     "All" : "'Ολα",
