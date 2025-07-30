@@ -46,7 +46,7 @@ class MailboxesApiController extends OCSController {
 	 * 200: Mailbox list
 	 * 404: User was not logged in or account doesn't exist
 	 */
-	#[ApiRoute(verb: 'GET', url: '/mailbox/list')]
+	#[ApiRoute(verb: 'GET', url: 'ocs/mailboxes')]
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function list(int $accountId): DataResponse {
@@ -82,7 +82,7 @@ class MailboxesApiController extends OCSController {
 	 * 403: User cannot access this mailbox
 	 * 404: User was not logged in
 	 */
-	#[ApiRoute(verb: 'GET', url: '/mailbox/messages/list')]
+	#[ApiRoute(verb: 'GET', url: 'ocs/mailboxes/messages')]
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function listMessages(int $mailboxId,
