@@ -111,6 +111,7 @@ OC.L10N.register(
     "Valid until" : "Válido hasta",
     "Certificate" : "Certificado",
     "Submit" : "Enviar",
+    "Group" : "Grupo",
     "Account connected" : "Cuenta conectada",
     "Connect your mail account" : "Conecte su cuenta de correo",
     "All" : "Todos",

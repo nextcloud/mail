@@ -160,6 +160,7 @@ OC.L10N.register(
     "Move up" : "Xubir",
     "Move down" : "Baxar",
     "Show all folders" : "Amosar toles carpetes",
+    "Collapse folders" : "Contrayer carpetes",
     "_{total} message_::_{total} messages_" : ["{total} mensaxe","{total} mensaxes"],
     "Loading …" : "Cargando…",
     "All messages in mailbox will be deleted." : "Van desaniciase tolos mensaxes d'esta bandexa.",

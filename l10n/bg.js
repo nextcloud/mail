@@ -300,6 +300,7 @@ OC.L10N.register(
     "Move up" : "Преместване нагоре",
     "Move down" : "Преместване  надолу",
     "Show all folders" : "Покажи всички папки",
+    "Collapse folders" : "Свиване на папки",
     "_{total} message_::_{total} messages_" : ["{total} съобщения","{total} съобщения"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} непрочетени от {total}","{unread} непрочетени от {total}"],
     "Loading …" : "Зарежда …",

@@ -47,6 +47,7 @@ OC.L10N.register(
     "User" : "පරිශීලක",
     "Host" : " ධාරකය",
     "Certificate" : "සහතිකය",
+    "Shares" : "බෙදාගැනීම්",
     "All" : "සියල්ල",
     "Favorites" : "ප්‍රියතම",
     "Actions" : "ක්‍රියාමාර්ග"

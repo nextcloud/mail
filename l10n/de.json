@@ -765,6 +765,7 @@
     "Private key (optional)" : "Privater Schlüssel (optional)",
     "The private key is only required if you intend to send signed and encrypted emails using this certificate." : "Der private Schlüssel wird nur benötigt, wenn Du beabsichtigst, signierte und verschlüsselte E-Mails mit diesem Zertifikat zu versenden.",
     "Submit" : "Übermitteln",
+    "Insert" : "Einfügen",
     "Account connected" : "Konto verbunden",
     "You can close this window" : "Du kannst dieses Fenster schließen.",
     "Connect your mail account" : "Verbinde dein E-Mail-Konto",

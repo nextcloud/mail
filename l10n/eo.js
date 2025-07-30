@@ -172,6 +172,7 @@ OC.L10N.register(
     "Valid until" : "Valida ĝis",
     "Certificate" : "Atestilo",
     "Submit" : "Sendi",
+    "Group" : "Grupo",
     "Account connected" : "Konto konektita",
     "Connect your mail account" : "Konekti vian retpoŝtan konton",
     "All" : "Ĉiuj",

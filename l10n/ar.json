@@ -392,6 +392,7 @@
     "Move down" : "نقلٌ للأسفل",
     "Show all subscribed folders" : "عرض جميع اشتراك المجلدات.",
     "Show all folders" : "أظهر جميع المجلدات",
+    "Collapse folders" : "طي المجلدات",
     "_{total} message_::_{total} messages_" : ["{total} رسائل","{total} رسالة","{total} رسائل","{total} رسائل","{total} رسائل","{total} رسائل"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} غير مقروءة من {total}","{unread} غير مقروءة من {total}","{unread} غير مقروءة من {total}","{unread} غير مقروءة من {total}","{unread} غير مقروءة من {total}","{unread} غير مقروءة من {total}"],
     "Loading …" : "التحميل جارٍ …",

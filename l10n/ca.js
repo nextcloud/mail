@@ -719,6 +719,7 @@ OC.L10N.register(
     "Private key (optional)" : "Clau privada (opcional)",
     "The private key is only required if you intend to send signed and encrypted emails using this certificate." : "La clau privada només és necessària si voleu enviar correus electrònics signats i encriptats mitjançant aquest certificat.",
     "Submit" : "Envia",
+    "Insert" : "Insereix",
     "Account connected" : "S'ha connectat el compte",
     "You can close this window" : "Podeu tancar aquesta finestra",
     "Connect your mail account" : "Connexió del vostre compte de correu electrònic",

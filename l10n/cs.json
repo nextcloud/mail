@@ -765,6 +765,7 @@
     "Private key (optional)" : "Soukromý klíč (volitelné)",
     "The private key is only required if you intend to send signed and encrypted emails using this certificate." : "Soukromý klíč je zapotřebí pouze pokud pomocí tohoto certifikátu zamýšlíte posílat podepsané a šifrované e-maily.",
     "Submit" : "Odeslat",
+    "Insert" : "Vložit",
     "Account connected" : "Účet připojen",
     "You can close this window" : "Toto okno je možné zavřít",
     "Connect your mail account" : "Připojit e-mailový účet",
