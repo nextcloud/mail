@@ -67,7 +67,7 @@ class TextBlockControllerTest extends TestCase {
 	public function testCreateTextBlockNoUser(): void {
 		$controller = new TextBlockController($this->request, null, $this->textBlockService);
 
-		$response = $controller->create('New TextBlock', 'New Content');
+		$response = $controller->create('New Text Block', 'New Content');
 		$expectedResponse = JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		$this->assertEquals($expectedResponse, $response);
 	}
@@ -77,12 +77,12 @@ class TextBlockControllerTest extends TestCase {
 
 		$this->textBlockService->expects($this->once())
 			->method('create')
-			->with($this->userId, 'New TextBlock', 'New Content')
+			->with($this->userId, 'New Text Block', 'New Content')
 			->willReturn($newTextBlock);
 
 		$controller = new TextBlockController($this->request, $this->userId, $this->textBlockService);
 
-		$response = $controller->create('New TextBlock', 'New Content');
+		$response = $controller->create('New Text Block', 'New Content');
 		$expectedResponse = JsonResponse::success($newTextBlock, Http::STATUS_CREATED);
 		$this->assertEquals($expectedResponse, $response);
 	}
@@ -90,7 +90,7 @@ class TextBlockControllerTest extends TestCase {
 	public function testUpdateNoUser(): void {
 		$controller = new TextBlockController($this->request, null, $this->textBlockService);
 
-		$response = $controller->update(1, 'Updated TextBlock', 'Updated Content');
+		$response = $controller->update(1, 'Updated Text Block', 'Updated Content');
 		$expectedResponse = JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		$this->assertEquals($expectedResponse, $response);
 	}
@@ -103,8 +103,8 @@ class TextBlockControllerTest extends TestCase {
 
 		$controller = new TextBlockController($this->request, $this->userId, $this->textBlockService);
 
-		$response = $controller->update(1, 'Updated TextBlock', 'Updated Content');
-		$expectedResponse = JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
+		$response = $controller->update(1, 'Updated Text Block', 'Updated Content');
+		$expectedResponse = JsonResponse::error('Text block not found', Http::STATUS_NOT_FOUND);
 		$this->assertEquals($expectedResponse, $response);
 	}
 
@@ -119,12 +119,12 @@ class TextBlockControllerTest extends TestCase {
 
 		$this->textBlockService->expects($this->once())
 			->method('update')
-			->with($textBlock, $this->userId, 'Updated TextBlock', 'Updated Content')
+			->with($textBlock, $this->userId, 'Updated Text Block', 'Updated Content')
 			->willReturn($updatedTextBlock);
 
 		$controller = new TextBlockController($this->request, $this->userId, $this->textBlockService);
 
-		$response = $controller->update(1, 'Updated TextBlock', 'Updated Content');
+		$response = $controller->update(1, 'Updated Text Block', 'Updated Content');
 		$expectedResponse = JsonResponse::success($updatedTextBlock, Http::STATUS_OK);
 		$this->assertEquals($expectedResponse, $response);
 	}
@@ -146,7 +146,7 @@ class TextBlockControllerTest extends TestCase {
 		$controller = new TextBlockController($this->request, $this->userId, $this->textBlockService);
 
 		$response = $controller->destroy(1);
-		$expectedResponse = JsonResponse::fail('TextBlock not found', Http::STATUS_NOT_FOUND);
+		$expectedResponse = JsonResponse::fail('Text block not found', Http::STATUS_NOT_FOUND);
 		$this->assertEquals($expectedResponse, $response);
 	}
 
