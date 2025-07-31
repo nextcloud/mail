@@ -110,6 +110,8 @@ OC.L10N.register(
     "Valid until" : "Válido hasta",
     "Certificate" : "Certificado",
     "Submit" : "Enviar",
+    "Shared" : "Compartido",
+    "Shares" : "Elementos compartido",
     "Connect your mail account" : "Conecta tu cuenta de correo",
     "All" : "Todos",
     "Drafts" : "Borradores",
