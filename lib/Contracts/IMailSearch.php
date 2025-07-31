@@ -13,6 +13,8 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\MailboxLockedException;
+use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\Search\SearchQuery;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -46,6 +48,8 @@ interface IMailSearch {
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
+	 * @throws MailboxLockedException
+	 * @throws MailboxNotCachedException
 	 */
 	public function findMessages(Account $account,
 		Mailbox $mailbox,

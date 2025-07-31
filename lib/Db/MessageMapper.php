@@ -793,20 +793,59 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Mailbox $mailbox
-	 * @param SearchQuery $query
-	 * @param int|null $limit
 	 * @param int[]|null $uids
-	 *
 	 * @return int[]
+	 *
+	 * @throws Exception
 	 */
 	public function findIdsByQuery(Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit, ?array $uids = null): array {
+		return array_map(
+			static fn (Message $message) => $message->getId(),
+			$this->findByQueryWithoutRelatedData(
+				$mailbox,
+				$query,
+				$sortOrder,
+				$limit,
+				$uids,
+			),
+		);
+	}
+
+	/**
+	 * @param int[]|null $uids
+	 * @return Message[]
+	 *
+	 * @throws Exception
+	 */
+	public function findByQuery(Mailbox $mailbox, string $userId, SearchQuery $query, string $sortOrder, ?int $limit, ?array $uids = null): array {
+		$messages = $this->findByQueryWithoutRelatedData(
+			$mailbox,
+			$query,
+			$sortOrder,
+			$limit,
+			$uids,
+		);
+
+		$results = [];
+		foreach (array_chunk($messages, 1000) as $chunk) {
+			$results[] = $this->findRelatedData($chunk, $userId);
+		}
+		return array_merge([], ...$results);
+	}
+
+	/**
+	 * @param int[]|null $uids
+	 * @return Message[]
+	 *
+	 * @throws Exception
+	 */
+	private function findByQueryWithoutRelatedData(Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit, ?array $uids = null): array {
 		$qb = $this->db->getQueryBuilder();
 
 		if ($this->needDistinct($query)) {
-			$select = $qb->selectDistinct(['m.id', 'm.sent_at']);
+			$select = $qb->selectDistinct('m.*');
 		} else {
-			$select = $qb->select(['m.id', 'm.sent_at']);
+			$select = $qb->select('m.*');
 		}
 
 		$select->from($this->getTableName(), 'm');
@@ -1027,16 +1066,11 @@ class MessageMapper extends QBMapper {
 		if ($uids !== null) {
 			return array_flat_map(function (array $chunk) use ($qb, $select) {
 				$qb->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-				return array_map(static function (Message $message) {
-					return $message->getId();
-				}, $this->findEntities($select));
+				return $this->findEntities($select);
 			}, array_chunk($uids, 1000));
 		}
 
-		$result = array_map(static function (Message $message) {
-			return $message->getId();
-		}, $this->findEntities($select));
-		return $result;
+		return $this->findEntities($select);
 	}
 
 	public function findIdsGloballyByQuery(IUser $user, SearchQuery $query, ?int $limit, ?array $uids = null): array {
