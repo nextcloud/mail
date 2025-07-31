@@ -115,6 +115,7 @@ OC.L10N.register(
     "Valid until" : "Geldig tot",
     "Certificate" : "Sertifikaat",
     "Submit" : "Dien in",
+    "Shared" : "Gedeel",
     "Connect your mail account" : "Koppel u posrekening",
     "All" : "Alle",
     "Drafts" : "Konsepte",

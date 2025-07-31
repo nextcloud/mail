@@ -19,6 +19,7 @@ OC.L10N.register(
     "Search" : "Search",
     "Send" : "পাঠাও",
     "Refresh" : "নবোদ্যম",
+    "Ok" : "তথাস্তু",
     "Choose" : "বেছে নিন",
     "Choose a file to add as attachment" : "সংযুক্তি দেয়ার জন্য একটি ফাইল নির্বাচন করুন",
     "Favorite" : "প্রিয়জন",
@@ -47,6 +48,9 @@ OC.L10N.register(
     "User" : "User",
     "Host" : "হোস্ট",
     "Port" : "পোর্ট",
+    "Group" : "গোষ্ঠীসমূহ",
+    "Shared" : "ভাগাভাগিকৃত",
+    "Shares" : "ভাগাভাগি",
     "All" : "সবাই",
     "Favorites" : "প্রিয়জন",
     "Actions" : "পদক্ষেপসমূহ"

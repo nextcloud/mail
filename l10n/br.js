@@ -67,6 +67,8 @@ OC.L10N.register(
     "Port" : "Porzh",
     "Valid until" : "Gwir betek",
     "Submit" : "Kinnig",
+    "Shared" : "Rannet",
+    "Shares" : "Rannañ",
     "Account connected" : "Kont kenstaged",
     "All" : "Pep tra",
     "Favorites" : "Pennrolloù",

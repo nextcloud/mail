@@ -112,6 +112,8 @@ OC.L10N.register(
     "Certificate" : "Certificado",
     "Submit" : "Enviar",
     "Group" : "Grupo",
+    "Shared" : "Compartido",
+    "Shares" : "Elementos compartido",
     "Account connected" : "Cuenta conectada",
     "Connect your mail account" : "Conecte su cuenta de correo",
     "All" : "Todos",
