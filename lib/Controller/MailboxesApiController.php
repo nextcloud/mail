@@ -82,7 +82,7 @@ class MailboxesApiController extends OCSController {
 	 * 403: User cannot access this mailbox
 	 * 404: User was not logged in
 	 */
-	#[ApiRoute(verb: 'GET', url: 'ocs/mailboxes/messages')]
+	#[ApiRoute(verb: 'GET', url: 'ocs/mailboxes/{mailboxId}/messages')]
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function listMessages(int $mailboxId,
