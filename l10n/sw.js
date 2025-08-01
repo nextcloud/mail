@@ -2,6 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Important" : "Muhimu",
+    "Work" : "Kazi",
     "Personal" : "Binafsi",
     "To Do" : "Kufanya",
     "Later" : "Baadaye",
@@ -32,6 +33,7 @@ OC.L10N.register(
     "Refresh" : "Refresh",
     "Ok" : "Sawa",
     "From" : "Tangu/ kutoka",
+    "Select account" : "Chagua akaunti",
     "To" : "Mpaka/ hadi",
     "Choose" : "Chagua",
     "Choose a file to add as attachment" : "Chagua faili kuongeza kama kiambatanisho",
@@ -69,6 +71,7 @@ OC.L10N.register(
     "Translate" : "Tafsiri",
     "Move" : "Hamisha",
     "Remove account" : "Ondoa akaunti",
+    "Remove {email}" : "Remove {email}",
     "Add folder" : "Ongeza kisanduku",
     "Folder name" : "Jina la kisanduku",
     "Loading …" : "Inapakia",

@@ -138,7 +138,7 @@ OC.L10N.register(
     "Operator" : "Operators",
     "contains" : "saturs",
     "matches" : "atbilst",
-    "Priority" : "Prioritāte",
+    "Priority" : "Svarīgums",
     "Enable classification of important mails by default" : "Pēc noklusējuma iespējot svarīgu e-pasta ziņojumu šķirošanu",
     "Reset" : "Atiestatīt",
     "Client ID" : "Klienta ID",

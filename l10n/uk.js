@@ -794,7 +794,6 @@ OC.L10N.register(
     "Search for users or groups" : "Шукати користувачів або групи",
     "Choose a text block to insert at the cursor" : "Виберіть текстовий блок, який потрібно вставити в місце курсора",
     "Insert" : "Вставити",
-    "Inset text block" : "Вставлений текстовий блок",
     "Account connected" : "Обліковий запис під’єднано",
     "You can close this window" : "Ви можете закрити це вікно",
     "Connect your mail account" : "Під'єднати вашу поштову скриньку",

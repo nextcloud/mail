@@ -113,6 +113,7 @@ OC.L10N.register(
     "Submit" : "Enviar",
     "Group" : "Grupo",
     "Shared" : "Compartido",
+    "Shares" : "Elementos compartido",
     "Connect your mail account" : "Conecta tu cuenta de correo",
     "All" : "Todos",
     "Drafts" : "Borradores",

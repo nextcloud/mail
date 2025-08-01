@@ -794,7 +794,6 @@ OC.L10N.register(
     "Search for users or groups" : "Hledat uživatele nebo skupiny",
     "Choose a text block to insert at the cursor" : "Zvolte textový blok, který vložit na pozici kurzoru",
     "Insert" : "Vložit",
-    "Inset text block" : "Vložit textový blok",
     "Account connected" : "Účet připojen",
     "You can close this window" : "Toto okno je možné zavřít",
     "Connect your mail account" : "Připojit e-mailový účet",
