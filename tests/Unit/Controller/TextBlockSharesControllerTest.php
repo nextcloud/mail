@@ -95,7 +95,7 @@ class TextBlockSharesControllerTest extends TestCase {
 		$controller = new TextBlockSharesController($this->request, $this->userId, $this->textBlockService);
 
 		$response = $controller->create(1, 'alice', 'user');
-		$expectedResponse = JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
+		$expectedResponse = JsonResponse::error('Text block not found', Http::STATUS_NOT_FOUND);
 		$this->assertEquals($expectedResponse, $response);
 	}
 
@@ -154,12 +154,12 @@ class TextBlockSharesControllerTest extends TestCase {
 		$this->textBlockService->expects($this->once())
 			->method('find')
 			->with(1, $this->userId)
-			->willThrowException(new DoesNotExistException('TextBlock not found'));
+			->willThrowException(new DoesNotExistException('Text block not found'));
 
 		$controller = new TextBlockSharesController($this->request, $this->userId, $this->textBlockService);
 
 		$response = $controller->destroy(1, 'alice');
-		$expectedResponse = JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
+		$expectedResponse = JsonResponse::error('Text block not found', Http::STATUS_NOT_FOUND);
 		$this->assertEquals($expectedResponse, $response);
 	}
 
@@ -183,12 +183,12 @@ class TextBlockSharesControllerTest extends TestCase {
 		$this->textBlockService->expects($this->once())
 			->method('find')
 			->with(1, $this->userId)
-			->willThrowException(new DoesNotExistException('TextBlock not found'));
+			->willThrowException(new DoesNotExistException('Text block not found'));
 
 		$controller = new TextBlockSharesController($this->request, $this->userId, $this->textBlockService);
 
 		$response = $controller->getTextBlockShares(1);
-		$expectedResponse = JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
+		$expectedResponse = JsonResponse::error('Text block not found', Http::STATUS_NOT_FOUND);
 		$this->assertEquals($expectedResponse, $response);
 	}
 

@@ -34,12 +34,12 @@
 			<p v-if="shared">
 				{{ localTextBlock.title }}
 			</p>
-			<NcInputField v-else :value.sync="localTextBlock.title" :label="t('mail','Title of the textBlock')" />
+			<NcInputField v-else :value.sync="localTextBlock.title" :label="t('mail','Title of the text block')" />
 			<TextEditor v-model="localTextBlock.content"
 				:is-bordered="!shared"
 				:html="true"
 				:read-only="shared"
-				:placeholder="t('mail','Content of the textBlock')"
+				:placeholder="t('mail','Content of the text block')"
 				:bus="bus" />
 			<template v-if="!shared">
 				<h3>
@@ -194,19 +194,19 @@ export default {
 	methods: {
 		async deleteTextBlock() {
 			await this.mainStore.deleteTextBlock({ id: this.textBlock.id }).then(() => {
-				showSuccess(t('mail', 'TextBlock deleted'))
+				showSuccess(t('mail', 'Text block deleted'))
 			}).catch(() => {
-				showError(t('mail', 'Failed to delete textBlock'))
+				showError(t('mail', 'Failed to delete text block'))
 			})
 		},
 		async shareTextBlock(sharee) {
 			try {
 				await shareTextBlock(this.textBlock.id, sharee.shareWith, sharee.shareType === ShareType.User ? 'user' : 'group')
 				this.shares.push({ shareWith: sharee.shareWith, type: sharee.isNoUser ? 'group' : 'user', displayName: sharee.displayName })
-				showSuccess(t('mail', 'TextBlock shared with {sharee}', { sharee: sharee.shareWith }))
+				showSuccess(t('mail', 'Text block shared with {sharee}', { sharee: sharee.shareWith }))
 				this.share = null
 			} catch (error) {
-				showError(t('mail', 'Failed to share textBlock with {sharee}', { sharee: sharee.shareWith }))
+				showError(t('mail', 'Failed to share text block with {sharee}', { sharee: sharee.shareWith }))
 			}
 		},
 		async removeShare(sharee) {
@@ -356,8 +356,8 @@ export default {
 				this.saveLoading = false
 				this.editModalOpen = false
 			} catch (error) {
-				showError(t('mail', 'Failed to save textBlock'))
-				logger.error('Failed to save textBlock', error)
+				showError(t('mail', 'Failed to save text block'))
+				logger.error('Failed to save text block', error)
 			}
 		},
 	},

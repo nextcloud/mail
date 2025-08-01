@@ -65,7 +65,7 @@ class TextBlockServiceTest extends TestCase {
 
 	public function testCreate(): void {
 		$userId = 'bob';
-		$title = 'Test TextBlock';
+		$title = 'Test Text Block';
 		$content = '<p>This is content</p>';
 		$textBlock = new TextBlock();
 
@@ -133,10 +133,10 @@ class TextBlockServiceTest extends TestCase {
 		$this->textBlockMapper->expects($this->once())
 			->method('find')
 			->with($textBlockId, $userId)
-			->willThrowException(new \OCP\AppFramework\Db\DoesNotExistException('TextBlock does not exist'));
+			->willThrowException(new \OCP\AppFramework\Db\DoesNotExistException('Text block does not exist'));
 
 		$this->expectException(\OCP\AppFramework\Db\DoesNotExistException::class);
-		$this->expectExceptionMessage('TextBlock does not exist');
+		$this->expectExceptionMessage('Text block does not exist');
 
 		$this->textBlockService->delete($textBlockId, $userId);
 	}

@@ -60,7 +60,7 @@ class TextBlockSharesController extends Controller {
 		try {
 			$this->textBlockService->find($textBlockId, $this->uid);
 		} catch (DoesNotExistException $e) {
-			return JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
+			return JsonResponse::error('Text block not found', Http::STATUS_NOT_FOUND);
 		}
 
 		switch ($type) {
@@ -84,7 +84,7 @@ class TextBlockSharesController extends Controller {
 		try {
 			$this->textBlockService->find($id, $this->uid);
 		} catch (DoesNotExistException $e) {
-			return JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
+			return JsonResponse::error('Text block not found', Http::STATUS_NOT_FOUND);
 		}
 
 		$this->textBlockService->unshare($id, $shareWith);
@@ -100,7 +100,7 @@ class TextBlockSharesController extends Controller {
 		try {
 			$this->textBlockService->find($id, $this->uid);
 		} catch (DoesNotExistException $e) {
-			return JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
+			return JsonResponse::error('Text block not found', Http::STATUS_NOT_FOUND);
 		}
 
 		$shares = $this->textBlockService->getShares($id);

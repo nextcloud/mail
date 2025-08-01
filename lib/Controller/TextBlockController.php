@@ -81,7 +81,7 @@ class TextBlockController extends Controller {
 		$textBlock = $this->textBlockService->find($id, $this->uid);
 
 		if ($textBlock === null) {
-			return JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
+			return JsonResponse::error('Text block not found', Http::STATUS_NOT_FOUND);
 		}
 
 		$textBlock = $this->textBlockService->update($textBlock, $this->uid, $title, $content);
@@ -97,7 +97,7 @@ class TextBlockController extends Controller {
 			$this->textBlockService->delete($id, $this->uid);
 			return JsonResponse::success();
 		} catch (DoesNotExistException $e) {
-			return JsonResponse::fail('TextBlock not found', Http::STATUS_NOT_FOUND);
+			return JsonResponse::fail('Text block not found', Http::STATUS_NOT_FOUND);
 		}
 	}
 
