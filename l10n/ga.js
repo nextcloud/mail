@@ -794,7 +794,6 @@ OC.L10N.register(
     "Search for users or groups" : "Cuardaigh úsáideoirí nó grúpaí",
     "Choose a text block to insert at the cursor" : "Roghnaigh bloc téacs le cur isteach ag an gcúrsóir",
     "Insert" : "cuir isteach",
-    "Inset text block" : "Bloc téacs ionchuir",
     "Account connected" : "Cuntas ceangailte",
     "You can close this window" : "Is féidir leat an fhuinneog seo a dhúnadh",
     "Connect your mail account" : "Ceangail do chuntas ríomhphoist",

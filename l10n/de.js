@@ -794,7 +794,6 @@ OC.L10N.register(
     "Search for users or groups" : "Suche nach Benutzern oder Gruppen",
     "Choose a text block to insert at the cursor" : "Textblock wählen, der am Cursor eingefügt werden soll",
     "Insert" : "Einfügen",
-    "Inset text block" : "Textblock einfügen",
     "Account connected" : "Konto verbunden",
     "You can close this window" : "Du kannst dieses Fenster schließen.",
     "Connect your mail account" : "Verbinde dein E-Mail-Konto",
