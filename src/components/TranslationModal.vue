@@ -75,6 +75,7 @@ import ContentCopy from 'vue-material-design-icons/ContentCopy.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 
 import { NcButton, NcDialog, NcLoadingIcon, NcRichText, NcSelect } from '@nextcloud/vue'
+import { getLanguage } from '@nextcloud/l10n'
 
 import { translateText } from '../service/translationService.js'
 import { mapState } from 'pinia'
@@ -123,7 +124,7 @@ export default {
 		}),
 
 		userLanguage() {
-			return navigator.language.substring(0, 2)
+			return getLanguage()
 		},
 	},
 
@@ -138,7 +139,7 @@ export default {
 
 	async mounted() {
 		this.selectedTo = this.availableOutputLanguages.find(language => language.value === this.userLanguage) || null
-
+		this.selectedFrom = this.availableInputLanguages.find(language => language.value === 'detect_language')
 		this.$nextTick(() => {
 			// FIXME trick to avoid focusTrap() from activating on NcSelect
 			this.isMounted = !!this.$refs.translateDialog.navigationId

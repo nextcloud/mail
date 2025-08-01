@@ -4,6 +4,9 @@
 -->
 <template>
 	<div id="mail-content">
+		<NeedsTranslationInfo v-if="needsTranslation"
+			:is-html="false"
+			@translate="$emit('translate')" />
 		<MdnRequest :message="message" />
 		<div id="message-container" v-html="nl2br(enhancedBody)" />
 		<details v-if="signature" class="mail-signature">
@@ -15,11 +18,15 @@
 
 <script>
 import MdnRequest from './MdnRequest.vue'
+import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
+import { needsTranslation } from '../service/AiIntergrationsService.js'
+import { loadState } from '@nextcloud/initial-state'
+
 const regFirstParagraph = /(.+\n\r?)+(\n\r?)+/
 
 export default {
 	name: 'MessagePlainTextBody',
-	components: { MdnRequest },
+	components: { MdnRequest, NeedsTranslationInfo },
 	props: {
 		body: {
 			type: String,
@@ -33,6 +40,12 @@ export default {
 			required: true,
 			type: Object,
 		},
+	},
+	data() {
+		return {
+			needsTranslation: false,
+			enabledFreePrompt: loadState('mail', 'llm_freeprompt_available', false),
+		}
 	},
 	computed: {
 		enhancedBody() {
@@ -61,6 +74,11 @@ export default {
 
 			return this.signatureSummaryAndBody.summary
 		},
+	},
+	async mounted() {
+		if (this.enabledFreePrompt && this.message) {
+			this.needsTranslation = await needsTranslation(this.message.databaseId)
+		}
 	},
 	methods: {
 		nl2br(str) {
