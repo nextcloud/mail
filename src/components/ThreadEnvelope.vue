@@ -282,7 +282,7 @@ import logger from '../logger.js'
 import Message from './Message.vue'
 import MenuEnvelope from './MenuEnvelope.vue'
 import Moment from './Moment.vue'
-import { smartReply } from '../service/AiIntergrationsService.js'
+import { smartReply, needsTranslation } from '../service/AiIntergrationsService.js'
 import { mailboxHasRights } from '../util/acl.js'
 import StarOutline from 'vue-material-design-icons/StarOutline.vue'
 import DeleteIcon from 'vue-material-design-icons/DeleteOutline.vue'
@@ -422,6 +422,8 @@ export default {
 			rawMessage: '', // Will hold the raw source of the message when requested
 			isInternal: true,
 			enabledSmartReply: loadState('mail', 'llm_freeprompt_available', false),
+			enabledLlm: loadState('mail', 'llm_processing', false),
+			needsTranslation: false,
 			loadingBodyTimeout: undefined,
 			showMailFilterFromEnvelope: false,
 		}
@@ -715,6 +717,13 @@ export default {
 			if (this.enabledSmartReply && this.message && !['trash', 'junk'].includes(this.mailbox.specialRole) && !this.showFollowUpHeader) {
 				this.smartReplies = await smartReply(this.envelope.databaseId)
 			}
+			this.needsTranslation = await needsTranslation(this.envelope.databaseId)
+			console.log(this.enabledLlm, this.needsTranslation)
+
+			if (this.enabledLlm && this.message && !['trash', 'junk'].includes(this.mailbox.specialRole)) {
+				this.needsTranslation = await needsTranslation(this.envelope.databaseId)
+			}
+
 		},
 		handleThreadScrolling() {
 			const threadId = this.envelope.threadId // Assuming each envelope has a thread ID

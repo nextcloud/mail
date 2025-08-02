@@ -20,6 +20,7 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\EventData;
 use OCA\Mail\Model\IMAPMessage;
 use OCP\IConfig;
+use OCP\IL10N;
 use OCP\TaskProcessing\IManager as TaskProcessingManager;
 use OCP\TaskProcessing\Task as TaskProcessingTask;
 use OCP\TaskProcessing\TaskTypes\TextToText;
@@ -53,6 +54,7 @@ PROMPT;
 		private IMAPClientFactory $clientFactory,
 		private IMailManager $mailManager,
 		private TaskProcessingManager $taskProcessingManager,
+		private IL10N $l,
 	) {
 	}
 
@@ -344,6 +346,84 @@ Never return null or undefined.";
 
 		// Can't use json_decode() here because the output contains additional garbage
 		return preg_match('/{\s*"expectsReply"\s*:\s*true\s*}/i', $task->getOutput()) === 1;
+	}
+
+	/**
+	 * Analyze whether an email is written in a specific language.
+	 *
+	 * @throws ServiceException
+	 */
+	public function requiresTranslation(
+		Account $account,
+		Mailbox $mailbox,
+		Message $message,
+		string $currentUserId,
+	): ?bool {
+		try {
+			$manager = $this->container->get(IManager::class);
+		} catch (ContainerExceptionInterface $e) {
+			throw new ServiceException(
+				'Text processing is not available in your current Nextcloud version',
+				0,
+				$e,
+			);
+		}
+
+		if (!in_array(FreePromptTaskType::class, $manager->getAvailableTaskTypes(), true)) {
+			throw new ServiceException('No language model available for smart replies');
+		}
+
+		$language = explode('_', $this->l->getLanguageCode())[0];
+		$cachedValue = $this->cache->getValue('needsTranslation_'. $language . $message->getId());
+		if ($cachedValue) {
+		//	return  $cachedValue === 'true' ? true : false;
+		}
+
+		$client = $this->clientFactory->getClient($account);
+		try {
+			$imapMessage = $this->mailManager->getImapMessage(
+				$client,
+				$account,
+				$mailbox,
+				$message->getUid(),
+				true,
+			);
+		} finally {
+			$client->logout();
+		}
+
+		if (!$this->isPersonalEmail($imapMessage)) {
+			return false;
+		}
+
+		$messageBody = $imapMessage->getPlainBody();
+		$messageBody = str_replace('"', '\"', $messageBody);
+
+		$prompt = "Consider the following TypeScript function prototype:
+---
+/**
+ * This function takes in an email text and returns a boolean indicating whether the email is written in a specific language.
+ *
+ * @param emailText - string with the email text
+ * @param language - the language code to check against (e.g., 'en', 'de', etc.)
+ * @returns boolean true if the email is written in language, false if not
+ */
+declare function isEmailWrittenInLanguage(emailText: string, ): Promise<boolean>;
+---
+Tell me what the function outputs for the following parameters.
+
+emailText: \"$messageBody\"
+language: \"$language\"
+The JSON output should be in the form: {\"isWrittenInLanguage\": true}
+Never return null or undefined.";
+		$task = new Task(FreePromptTaskType::class, $prompt, Application::APP_ID, $currentUserId);
+
+		$manager->runTask($task);
+
+		// Can't use json_decode() here because the output contains additional garbage
+		$result =  preg_match('/{\s*"isWrittenInLanguage"\s*:\s*true\s*}/i', $task->getOutput()) === 1; 
+		$this->cache->addValue('needsTranslation_'. $language . $message->getId(), $result ? 'true' : 'false');
+		return $result;
 	}
 
 	public function isLlmAvailable(string $taskType): bool {

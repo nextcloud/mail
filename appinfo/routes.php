@@ -276,6 +276,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'messages#needsTranslation',
+			'url' => '/api/messages/{messageId}/needsTranslation',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'avatars#url',
 			'url' => '/api/avatars/url/{email}',
 			'verb' => 'GET'

@@ -912,6 +912,32 @@ class MessagesController extends Controller {
 
 	}
 
+	public function needsTranslation(int $messageId): JSONResponse {
+		try {
+			$message = $this->mailManager->getMessage($this->currentUserId, $messageId);
+			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		if (!$this->aiIntegrationService->isLlmProcessingEnabled()) {
+			return new JSONResponse([], Http::STATUS_NOT_IMPLEMENTED);
+		}
+
+		try {
+			$requiresTranslation = $this->aiIntegrationService->requiresTranslation(
+				$account,
+				$mailbox,
+				$message,
+				$this->currentUserId
+			);
+			return new JSONResponse(['requiresTranslation' => $requiresTranslation]);
+		} catch (ServiceException $e) {
+			return new JSONResponse([], Http::STATUS_NO_CONTENT);
+		}
+	}
+
 	/**
 	 * @param int $id
 	 * @param array $attachment
