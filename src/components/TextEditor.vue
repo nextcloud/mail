@@ -47,6 +47,11 @@ import ImagePlugin from '@ckeditor/ckeditor5-image/src/image.js'
 import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandreplace.js'
 import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
+import ImageStylePlugin from '@ckeditor/ckeditor5-image/src/imagestyle.js'
+import ImageToolbarPlugin from '@ckeditor/ckeditor5-image/src/imagetoolbar';
+import ImageUtilsPlugin from '@ckeditor/ckeditor5-image/src/imageutils';
+import ImageCaptionPlugin from '@ckeditor/ckeditor5-image/src/imagecaption';
+import ImageTextAlternativePlugin from '@ckeditor/ckeditor5-image/src/imagetextalternative';
 import GeneralHtmlSupport from '@ckeditor/ckeditor5-html-support/src/generalhtmlsupport.js'
 import { DropdownView } from '@ckeditor/ckeditor5-ui'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
@@ -57,6 +62,7 @@ import PickerPlugin from '../ckeditor/smartpicker/PickerPlugin.js'
 import { autoCompleteByName } from '../service/ContactIntegrationService.js'
 import { emojiSearch, emojiAddRecent } from '@nextcloud/vue'
 import { toPlain, Text } from '../util/text.js'
+
 export default {
 	name: 'TextEditor',
 	components: {
@@ -129,6 +135,11 @@ export default {
 				ImagePlugin,
 				ImageUploadPlugin,
 				ImageResizePlugin,
+				ImageStylePlugin,
+				ImageToolbarPlugin,
+				ImageUtilsPlugin,
+				ImageCaptionPlugin,
+				ImageTextAlternativePlugin,
 				ListProperties,
 				FontPlugin,
 				RemoveFormat,
@@ -194,6 +205,18 @@ export default {
 							feed: this.getTextBlock,
 							itemRenderer: this.customRenderer,
 						},
+					],
+				},
+				image: {
+					toolbar: [
+						'imageStyle:alignLeft',
+						'imageStyle:alignCenter',
+						'imageStyle:alignRight',
+						'|',
+						'imageTextAlternative',
+					],
+					styles: [
+						'alignLeft', 'alignCenter', 'alignRight',
 					],
 				},
 			},
@@ -524,26 +547,26 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 
 .custom-item-username {
 	color: var(--color-main-text) !important;
- }
+}
 
- .link-title {
+.link-title {
 	color: var(--color-main-text) !important;
 	margin-inline-start: var(--default-grid-baseline) !important;
- }
+}
 
- .custom-item {
+.custom-item {
 	width : 100% !important;
 	border-radius : 8px !important;
 	padding : 4px 8px !important;
 	display :block;
 	background:var(--color-main-background)!important;
- }
+}
 
- .custom-item:hover {
+.custom-item:hover {
 	background:var(--color-primary-element-light)!important;
- }
+}
 
- .link-container{
+.link-container{
 	border-radius :8px !important;
 	padding :4px 8px !important;
 	display : block;
@@ -553,11 +576,11 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 		width: 16px;
 		height: 16px;
 	}
- }
+}
 
- .link-container:hover {
+.link-container:hover {
 	background:var(--color-primary-element-light)!important;
- }
+}
 
 :root {
 	--ck-z-default: 10000;
@@ -567,6 +590,8 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 .ck.ck-toolbar {
 	border-radius: var(--border-radius-large) !important;
 	background: none;
+	background: var(--color-main-background) !important;
+    color: var(--color-main-text) !important;
 }
 
 .ck-rounded-corners .ck.ck-dropdown__panel, .ck.ck-dropdown__panel.ck-rounded-corners {
@@ -617,6 +642,22 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	font-weight: normal;
 }
 
+.ck.ck-toolbar .ck-button {
+    color: var(--color-main-text) !important;
+    background: transparent !important;
+}
+
+.ck.ck-toolbar .ck-button:hover,
+.ck.ck-toolbar .ck-button.ck-on,
+.ck.ck-toolbar .ck-button:focus {
+    background: var(--color-primary-element-light) !important;
+    color: var(--color-main-text) !important;
+}
+
+.ck.ck-toolbar .ck-button .ck-button__label {
+    color: var(--color-main-text) !important;
+}
+
 .ck.ck-dropdown.ck-list-styles-dropdown {
 	width: 55px;
 }
@@ -639,7 +680,7 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 .select, button:not(.button-vue,[class^=vs__]), .button, input[type=button], input[type=submit], input[type=reset] {
 	color: var(--color-main-text);
 }
-/* we need the paragraph field a bit smaller so it doesnt break the toolbar for signature */
+/* We need the paragraph field a bit smaller so it doesnt break the toolbar for signature */
 .ck.ck-dropdown.ck-heading-dropdown .ck-dropdown__button .ck-button__label {
 	width: 6em !important;
 }
@@ -647,4 +688,45 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 .ck.ck-editor__top .ck-sticky-panel .ck-sticky-panel__content {
 	border: none;
 }
+
+/* This has to be aplied, because the message displayed in email client is all wrong */
+.ck-content .image-style-align-left {
+    float: none !important;
+    display: block !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.ck-content .image-style-align-right {
+    float: none !important;
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.ck-content .image-style-align-center {
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    float: none !important;
+    text-align: center;
+}
+
+.ck.ck-balloon-panel_visible {
+    border-radius: calc(var(--border-radius-large) + 1px) !important;
+    background: var(--color-main-background) !important;
+    color: var(--color-main-text) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.ck.ck-tooltip__text{
+	color: var(--color-main-text) !important;
+}
+
 </style>
