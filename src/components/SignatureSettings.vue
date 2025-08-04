@@ -23,11 +23,13 @@
 			label="label"
 			track-by="id"
 			@option:selected="changeIdentity" />
+		<div v-if="toolbarElement" ref="toolbarContainer" class="toolbar"></div>
 		<TextEditor v-model="signature"
 			:html="true"
 			:placeholder="t('mail', 'Signature …')"
 			:bus="bus"
-			@show-toolbar="handleShowToolbar" />
+			@show-toolbar="handleShowToolbar"
+			ref="textEditor" />
 		<p v-if="isLargeSignature" class="warning-large-signature">
 			{{ t('mail', 'Your signature is larger than 2 MB. This may affect the performance of your editor.') }}
 		</p>
@@ -84,6 +86,7 @@ export default {
 			identity: null,
 			signature: '',
 			signatureAboveQuote: this.account.signatureAboveQuote,
+			toolbarElement: null,
 		}
 	},
 	computed: {
@@ -124,6 +127,12 @@ export default {
 				this.signatureAboveQuote = oldVal
 			}
 		},
+		toolbarElement(newEl) {
+			if (newEl && this.$refs.toolbarContainer) {
+				this.$refs.toolbarContainer.innerHTML = ''
+				this.$refs.toolbarContainer.appendChild(newEl)
+			}
+		}
 	},
 	beforeMount() {
 		this.changeIdentity(this.identities[0])
@@ -145,7 +154,7 @@ export default {
 
 			const payload = {
 				account: this.account,
-				signature: this.signature,
+				signature: this.$refs.textEditor.convertImageClassesToInlineStyles(this.signature),
 			}
 
 			if (this.identity.id > -1) {
@@ -215,6 +224,8 @@ export default {
   display: block;
   padding: 0;
   margin-bottom: 23px;
+  min-height: 300px;
+  height: 100%;
 }
 
 .ck-balloon-panel {

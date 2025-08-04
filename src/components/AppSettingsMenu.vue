@@ -330,7 +330,9 @@
 				:is-form="true"
 				size="normal">
 				<NcInputField :value.sync="localTextBlock.title" :label="t('mail','Title of the text block')" />
-				<TextEditor v-model="localTextBlock.content"
+				<TextEditor 
+					ref="textEditor"
+					v-model="localTextBlock.content"
 					:is-bordered="true"
 					:html="true"
 					:placeholder="t('mail','Content of the text block')"
@@ -662,6 +664,7 @@ export default {
 			this.trapElements.push(element)
 		},
 		newTextBlock() {
+			this.localTextBlock.content = this.$refs.textEditor.convertImageClassesToInlineStyles(this.localTextBlock.content)
 			this.mainStore.createTextBlock({ ...this.localTextBlock })
 			this.textBlockDialogOpen = false
 			this.localTextBlock = {
