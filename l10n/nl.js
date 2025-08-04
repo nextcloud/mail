@@ -219,7 +219,7 @@ OC.L10N.register(
     "Move message" : "Verplaats bericht",
     "Translate" : "Vertaal",
     "View source" : "Bekijk bron",
-    "Download thread data for debugging" : "Download draadgegevens voor debuggen",
+    "Download thread data for debugging" : "Download gegevens voor foutopsporing",
     "Message body" : "Berichttekst",
     "Unnamed" : "Onbenoemd",
     "Embedded message" : "Ingebed bericht",
