@@ -277,7 +277,7 @@ class PageControllerTest extends TestCase {
 				$this->returnValue('yes'),
 				$this->returnValue('no')
 			);
-		$this->aiIntegrationsService->expects(self::exactly(3))
+		$this->aiIntegrationsService->expects(self::exactly(4))
 			->method('isLlmProcessingEnabled')
 			->willReturn(false);
 
