@@ -93,7 +93,7 @@ OC.L10N.register(
     "View source" : "Skatīt avotu",
     "Unnamed" : "Nenosaukts",
     "Choose a folder to store the attachment in" : "Izvēlieties mapi, kurā saglabāt pielikumus",
-    "Import into calendar" : "Importēt kalendārā",
+    "Import into calendar" : "Ievietot kalendārā",
     "Download attachment" : "Lejupielādēt pielikumu",
     "Save to Files" : "Saglabāt uz Datnes",
     "Save all to Files" : "Saglabāt visu uz Datnes",
