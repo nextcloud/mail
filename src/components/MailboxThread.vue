@@ -343,34 +343,43 @@ export default {
 			const startOfLastMonth = new Date(now)
 			startOfLastMonth.setMonth(startOfLastMonth.getMonth() - 1)
 
-			const groups = {
-				[t('mail', 'Last hour')]: [],
-				[t('mail', 'Today')]: [],
-				[t('mail', 'Yesterday')]: [],
-				[t('mail', 'Last week')]: [],
-				[t('mail', 'Last month')]: [],
-				[t('mail', 'Older')]: [],
+			const groupKeys = ['lastHour', 'today', 'yesterday', 'lastWeek', 'lastMonth', 'older']
+
+			const groupLabels = {
+				lastHour: t('mail', 'Last hour'),
+				today: t('mail', 'Today'),
+				yesterday: t('mail', 'Yesterday'),
+				lastWeek: t('mail', 'Last week'),
+				lastMonth: t('mail', 'Last month'),
+				older: t('mail', 'Older'),
 			}
+
+			const groups = {}
+			groupKeys.forEach(key => {
+				groups[key] = []
+			})
 
 			for (const envelope of envelopes) {
 				const date = new Date(envelope.dateInt * 1000)
 				if (date >= oneHourAgo) {
-					groups[t('mail', 'Last hour')].push(envelope)
+					groups.lastHour.push(envelope)
 				} else if (date >= startOfToday) {
-					groups[t('mail', 'Today')].push(envelope)
+					groups.today.push(envelope)
 				} else if (date >= startOfYesterday && date < startOfToday) {
-					groups[t('mail', 'Yesterday')].push(envelope)
+					groups.yesterday.push(envelope)
 				} else if (date >= startOfLastWeek) {
-					groups[t('mail', 'Last week')].push(envelope)
+					groups.lastWeek.push(envelope)
 				} else if (date >= startOfLastMonth) {
-					groups[t('mail', 'Last month')].push(envelope)
+					groups.lastMonth.push(envelope)
 				} else {
-					groups[t('mail', 'Older')].push(envelope)
+					groups.older.push(envelope)
 				}
 			}
 
 			return Object.fromEntries(
-				Object.entries(groups).filter(([_, list]) => list.length > 0),
+				Object.entries(groups)
+					.filter(([_, list]) => list.length > 0)
+					.map(([key, list]) => [groupLabels[key], list]),
 			)
 		},
 		async fetchEnvelopes() {
