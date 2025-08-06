@@ -20,7 +20,7 @@
 					:disabled="disabled"
 					@click.stop="onShowComposer">
 					<template #icon>
-						<ArrowExpandIcon :size="16" />
+						<ArrowExpandIcon :size="20" />
 					</template>
 				</NcActionButton>
 			</NcActions>
@@ -29,7 +29,7 @@
 					:disabled="disabled"
 					@click.stop="onClose">
 					<template #icon>
-						<CloseIcon :size="16" />
+						<CloseIcon :size="20" />
 					</template>
 				</NcActionButton>
 			</NcActions>
