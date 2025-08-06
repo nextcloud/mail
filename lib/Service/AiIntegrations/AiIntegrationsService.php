@@ -24,11 +24,9 @@ use OCP\TaskProcessing\IManager as TaskProcessingManager;
 use OCP\TaskProcessing\Task as TaskProcessingTask;
 use OCP\TaskProcessing\TaskTypes\TextToText;
 use OCP\TextProcessing\FreePromptTaskType;
-use OCP\TextProcessing\IManager;
+use OCP\TextProcessing\IManager as TextProcessingManager;
 use OCP\TextProcessing\SummaryTaskType;
-use OCP\TextProcessing\Task;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
+use OCP\TextProcessing\Task as TextProcessingTask;
 use Psr\Log\LoggerInterface;
 
 use function array_map;
@@ -46,13 +44,13 @@ The email contents are:
 PROMPT;
 
 	public function __construct(
-		private ContainerInterface $container,
 		private LoggerInterface $logger,
 		private IConfig $config,
 		private Cache $cache,
 		private IMAPClientFactory $clientFactory,
 		private IMailManager $mailManager,
 		private TaskProcessingManager $taskProcessingManager,
+		private TextProcessingManager $textProcessingManager,
 	) {
 	}
 
@@ -129,12 +127,7 @@ PROMPT;
 	 * @throws ServiceException
 	 */
 	public function summarizeThread(Account $account, string $threadId, array $messages, string $currentUserId): ?string {
-		try {
-			$manager = $this->container->get(IManager::class);
-		} catch (\Throwable $e) {
-			throw new ServiceException('Text processing is not available in your current Nextcloud version', 0, $e);
-		}
-		if (in_array(SummaryTaskType::class, $manager->getAvailableTaskTypes(), true)) {
+		if (in_array(SummaryTaskType::class, $this->textProcessingManager->getAvailableTaskTypes(), true)) {
 			$messageIds = array_map(function ($message) {
 				return $message->getMessageId();
 			}, $messages);
@@ -160,8 +153,8 @@ PROMPT;
 			}
 
 			$taskPrompt = implode("\n", $messagesBodies);
-			$summaryTask = new Task(SummaryTaskType::class, $taskPrompt, 'mail', $currentUserId, $threadId);
-			$manager->runTask($summaryTask);
+			$summaryTask = new TextProcessingTask(SummaryTaskType::class, $taskPrompt, 'mail', $currentUserId, $threadId);
+			$this->textProcessingManager->runTask($summaryTask);
 			$summary = $summaryTask->getOutput();
 
 			$this->cache->addValue($this->cache->buildUrlKey($messageIds), $summary);
@@ -176,13 +169,7 @@ PROMPT;
 	 * @param Message[] $messages
 	 */
 	public function generateEventData(Account $account, string $threadId, array $messages, string $currentUserId): ?EventData {
-		try {
-			/** @var IManager $manager */
-			$manager = $this->container->get(IManager::class);
-		} catch (ContainerExceptionInterface $e) {
-			return null;
-		}
-		if (!in_array(FreePromptTaskType::class, $manager->getAvailableTaskTypes(), true)) {
+		if (!in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes(), true)) {
 			return null;
 		}
 		$client = $this->clientFactory->getClient($account);
@@ -201,14 +188,14 @@ PROMPT;
 			$client->logout();
 		}
 
-		$task = new Task(
+		$task = new TextProcessingTask(
 			FreePromptTaskType::class,
 			self::EVENT_DATA_PROMPT_PREAMBLE . implode("\n\n---\n\n", $messageBodies),
 			'mail',
 			$currentUserId,
 			"event_data_$threadId",
 		);
-		$result = $manager->runTask($task);
+		$result = $this->textProcessingManager->runTask($task);
 		try {
 			$decoded = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
 			return new EventData($decoded['title'], $decoded['agenda']);
@@ -222,12 +209,7 @@ PROMPT;
 	 * @throws ServiceException
 	 */
 	public function getSmartReply(Account $account, Mailbox $mailbox, Message $message, string $currentUserId): ?array {
-		try {
-			$manager = $this->container->get(IManager::class);
-		} catch (\Throwable $e) {
-			throw new ServiceException('Text processing is not available in your current Nextcloud version', 0, $e);
-		}
-		if (in_array(FreePromptTaskType::class, $manager->getAvailableTaskTypes(), true)) {
+		if (in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes(), true)) {
 			$cachedReplies = $this->cache->getValue('smartReplies_' . $message->getId());
 			if ($cachedReplies) {
 				return json_decode($cachedReplies, true, 512);
@@ -262,8 +244,8 @@ PROMPT;
 
 			Please, output *ONLY* a valid JSON string with the keys 'reply1' and 'reply2' for the reply suggestions. Leave out any other text besides the JSON! Be extremely succinct and write the replies from my point of view.
 			 ";
-			$task = new Task(FreePromptTaskType::class, $prompt, 'mail,', $currentUserId);
-			$manager->runTask($task);
+			$task = new TextProcessingTask(FreePromptTaskType::class, $prompt, 'mail,', $currentUserId);
+			$this->textProcessingManager->runTask($task);
 			$replies = $task->getOutput();
 			try {
 				$cleaned = preg_replace('/^```json\s*|\s*```$/', '', trim($replies));
@@ -289,17 +271,7 @@ PROMPT;
 		Message $message,
 		string $currentUserId,
 	): bool {
-		try {
-			$manager = $this->container->get(IManager::class);
-		} catch (ContainerExceptionInterface $e) {
-			throw new ServiceException(
-				'Text processing is not available in your current Nextcloud version',
-				0,
-				$e,
-			);
-		}
-
-		if (!in_array(FreePromptTaskType::class, $manager->getAvailableTaskTypes(), true)) {
+		if (!in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes(), true)) {
 			throw new ServiceException('No language model available for smart replies');
 		}
 
@@ -338,21 +310,16 @@ Tell me what the function outputs for the following parameters.
 emailText: \"$messageBody\"
 The JSON output should be in the form: {\"expectsReply\": true}
 Never return null or undefined.";
-		$task = new Task(FreePromptTaskType::class, $prompt, Application::APP_ID, $currentUserId);
+		$task = new TextProcessingTask(FreePromptTaskType::class, $prompt, Application::APP_ID, $currentUserId);
 
-		$manager->runTask($task);
+		$this->textProcessingManager->runTask($task);
 
 		// Can't use json_decode() here because the output contains additional garbage
 		return preg_match('/{\s*"expectsReply"\s*:\s*true\s*}/i', $task->getOutput()) === 1;
 	}
 
 	public function isLlmAvailable(string $taskType): bool {
-		try {
-			$manager = $this->container->get(IManager::class);
-		} catch (\Throwable $e) {
-			return false;
-		}
-		return in_array($taskType, $manager->getAvailableTaskTypes(), true);
+		return in_array($taskType, $this->textProcessingManager->getAvailableTaskTypes(), true);
 	}
 
 	public function isTaskAvailable(string $taskName): bool {

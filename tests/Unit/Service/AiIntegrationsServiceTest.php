@@ -22,27 +22,20 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AiIntegrations\Cache;
-use OCP\AppFramework\QueryException;
 use OCP\IConfig;
 use OCP\TaskProcessing\IManager as TaskProcessingManager;
 use OCP\TaskProcessing\IProvider as TaskProcessingProvider;
 use OCP\TextProcessing\FreePromptTaskType;
-use OCP\TextProcessing\IManager;
+use OCP\TextProcessing\IManager as TextProcessingManager;
 use OCP\TextProcessing\SummaryTaskType;
-use OCP\TextProcessing\Task;
+use OCP\TextProcessing\Task as TextProcessingTask;
 use OCP\TextProcessing\TopicsTaskType;
-use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\MockObject\UnknownTypeException;
-use Psr\Container\ContainerInterface;
 use Psr\Log\NullLogger;
-
-use function interface_exists;
 
 class AiIntegrationsServiceTest extends TestCase {
 
-	private ContainerInterface|MockObject $container;
-	private IManager|MockObject $manager;
+	private TextProcessingManager|MockObject $textProcessingManager;
 	private IConfig|MockObject $config;
 	private NullLogger|MockObject $logger;
 	private AiIntegrationsService $aiIntegrationsService;
@@ -51,15 +44,10 @@ class AiIntegrationsServiceTest extends TestCase {
 	private IMailManager|MockObject $mailManager;
 	private TaskProcessingManager|MockObject $taskProcessingManager;
 	private TaskProcessingProvider|MockObject $taskProcessingProvider;
+	private TextProcessingProvider|MockObject $textProcessingProvider;
 
 	protected function setUp(): void {
 		parent::setUp();
-		$this->container = $this->createMock(ContainerInterface::class);
-		try {
-			$this->manager = $this->createMock(IManager::class);
-		} catch (UnknownTypeException $e) {
-			$this->manager = null;
-		}
 
 		$this->logger = $this->createMock(NullLogger::class);
 		$this->config = $this->createMock(IConfig::class);
@@ -67,14 +55,15 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->taskProcessingManager = $this->createMock(TaskProcessingManager::class);
+		$this->textProcessingManager = $this->createMock(TextProcessingManager::class);
 		$this->aiIntegrationsService = new AiIntegrationsService(
-			$this->container,
 			$this->logger,
 			$this->config,
 			$this->cache,
 			$this->clientFactory,
 			$this->mailManager,
 			$this->taskProcessingManager,
+			$this->textProcessingManager,
 		);
 
 		$this->taskProcessingProvider = $this->createMock(TaskProcessingProvider::class);
@@ -82,21 +71,10 @@ class AiIntegrationsServiceTest extends TestCase {
 
 	public function testSummarizeThreadNoBackend(): void {
 		$account = new Account(new MailAccount());
-		$mailbox = new Mailbox();
-		if ($this->manager !== null) {
-			$this->container->method('get')->willReturn($this->manager);
-			$this->manager
-				->method('getAvailableTaskTypes')
-				->willReturn([]);
-			$this->expectException(ServiceException::class);
-			$this->expectExceptionMessage('No language model available for summary');
-			$this->aiIntegrationsService->summarizeThread($account, '', [], '');
-		}
-		$this->container->method('get')->willThrowException(new ServiceException());
+		$this->textProcessingManager->method('getAvailableTaskTypes')->willReturn([]);
 		$this->expectException(ServiceException::class);
-		$this->expectExceptionMessage('Text processing is not available in your current Nextcloud version');
+		$this->expectExceptionMessage('No language model available for summary');
 		$this->aiIntegrationsService->summarizeThread($account, '', [], '');
-
 	}
 
 
@@ -104,20 +82,12 @@ class AiIntegrationsServiceTest extends TestCase {
 		$account = new Account(new MailAccount());
 		$mailbox = new Mailbox();
 		$message = new Message();
-		if ($this->manager !== null) {
-			$this->container->method('get')->willReturn($this->manager);
-			$this->manager
-				->method('getAvailableTaskTypes')
-				->willReturn([]);
-			$this->expectException(ServiceException::class);
-			$this->expectExceptionMessage('No language model available for smart replies');
-			$this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
-		}
-		$this->container->method('get')->willThrowException(new ServiceException());
+		$this->textProcessingManager
+			->method('getAvailableTaskTypes')
+			->willReturn([]);
 		$this->expectException(ServiceException::class);
-		$this->expectExceptionMessage('Text processing is not available in your current Nextcloud version');
+		$this->expectExceptionMessage('No language model available for smart replies');
 		$this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
-
 	}
 
 	public function testSmartReply(): void {
@@ -127,8 +97,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$imapMessage = $this->createMock(IMAPMessage::class);
 		$message->setUid(1);
 		$currentUserId = 'user';
-		$this->container->method('get')->willReturn($this->manager);
-		$this->manager
+		$this->textProcessingManager
 			->method('getAvailableTaskTypes')
 			->willReturn([FreePromptTaskType::class]);
 		$this->cache->method('getValue')->willReturn(false);
@@ -140,9 +109,9 @@ class AiIntegrationsServiceTest extends TestCase {
 		$imapMessage->method('getFrom')->willReturn($fromList);
 		$imapMessage->method('getPlainBody')->willReturn('This is a test message');
 
-		$this->manager->expects($this->once())
+		$this->textProcessingManager->expects($this->once())
 			->method('runTask')
-			->will($this->returnCallback(function (Task $task) {
+			->will($this->returnCallback(function (TextProcessingTask $task) {
 				$task->setOutput('{"reply1":"reply1","reply2":"reply2"}');
 				return '';
 			}));
@@ -165,8 +134,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$imapMessage = $this->createMock(IMAPMessage::class);
 		$message->setUid(1);
 		$currentUserId = 'user';
-		$this->container->method('get')->willReturn($this->manager);
-		$this->manager
+		$this->textProcessingManager
 			->method('getAvailableTaskTypes')
 			->willReturn([FreePromptTaskType::class]);
 		$this->cache->method('getValue')->willReturn(false);
@@ -178,9 +146,9 @@ class AiIntegrationsServiceTest extends TestCase {
 		$imapMessage->method('getFrom')->willReturn($fromList);
 		$imapMessage->method('getPlainBody')->willReturn('This is a test message');
 
-		$this->manager->expects($this->once())
+		$this->textProcessingManager->expects($this->once())
 			->method('runTask')
-			->will($this->returnCallback(function (Task $task) {
+			->will($this->returnCallback(function (TextProcessingTask $task) {
 				$task->setOutput('```json{"reply1":"reply1","reply2":"reply2"}```');
 				return '';
 			}));
@@ -205,60 +173,38 @@ class AiIntegrationsServiceTest extends TestCase {
 		$addessList = $this->createMock(AddressList::class);
 		$addessList->method('first')->willreturn('normal@email.com');
 		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
-		if ($this->manager !== null) {
-			$this->container->method('get')->willReturn($this->manager);
-			$this->manager
-				->method('getAvailableTaskTypes')
-				->willReturn([FreePromptTaskType::class]);
-			$imapMessage->method('isOneClickUnsubscribe')->willReturn(true);
-			$replies = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
-			$this->assertEquals($replies, []);
-			$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
-			$imapMessage->method('getUnsubscribeUrl')->willReturn('iAmAnUnsubscribeUrl');
-			$replies = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
-			$this->assertEquals($replies, []);
-			$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
-			$imapMessage->method('getUnsubscribeUrl')->willReturn(null);
-			$addessList->method('first')->willreturn('noreply@test.com');
-			$replies = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
-			$this->assertEquals($replies, []);
-		} else {
-			$this->container->method('get')->willThrowException(new ServiceException());
-			$this->expectException(ServiceException::class);
-			$this->expectExceptionMessage('Text processing is not available in your current Nextcloud version');
-			$this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
-		}
+		$this->textProcessingManager
+			->method('getAvailableTaskTypes')
+			->willReturn([FreePromptTaskType::class]);
+		$imapMessage->method('isOneClickUnsubscribe')->willReturn(true);
+		$replies = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
+		$this->assertEquals($replies, []);
+		$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
+		$imapMessage->method('getUnsubscribeUrl')->willReturn('iAmAnUnsubscribeUrl');
+		$replies = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
+		$this->assertEquals($replies, []);
+		$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
+		$imapMessage->method('getUnsubscribeUrl')->willReturn(null);
+		$addessList->method('first')->willreturn('noreply@test.com');
+		$replies = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
+		$this->assertEquals($replies, []);
 	}
 
 	public function testLlmAvailable(): void {
-		if ($this->manager !== null) {
-			$this->container->method('get')->willReturn($this->manager);
-			$this->manager
-				->method('getAvailableTaskTypes')
-				->willReturn([SummaryTaskType::class, TopicsTaskType::class, FreePromptTaskType::class]);
-			$isAvailable = $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class);
-			$this->assertTrue($isAvailable);
-		} else {
-			$this->container->method('get')->willThrowException(new Exception());
-			$isAvailable = $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class);
-			$this->assertFalse($isAvailable);
-		}
+		$this->textProcessingManager
+			->method('getAvailableTaskTypes')
+			->willReturn([SummaryTaskType::class, TopicsTaskType::class, FreePromptTaskType::class]);
+		$isAvailable = $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class);
+		$this->assertTrue($isAvailable);
 
 	}
 
 	public function testLlmUnavailable(): void {
-		if ($this->manager !== null) {
-			$this->container->method('get')->willReturn($this->manager);
-			$this->manager
-				->method('getAvailableTaskTypes')
-				->willReturn([TopicsTaskType::class, FreePromptTaskType::class]);
-			$isAvailable = $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class);
-			$this->assertFalse($isAvailable);
-		} else {
-			$this->container->method('get')->willThrowException(new Exception());
-			$isAvailable = $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class);
-			$this->assertFalse($isAvailable);
-		}
+		$this->textProcessingManager
+			->method('getAvailableTaskTypes')
+			->willReturn([TopicsTaskType::class, FreePromptTaskType::class]);
+		$isAvailable = $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class);
+		$this->assertFalse($isAvailable);
 
 	}
 
@@ -301,63 +247,25 @@ class AiIntegrationsServiceTest extends TestCase {
 		$message3->setThreadRootId('some-thread-root-id-1');
 
 		$messages = [ $message1,$message2,$message3];
-		if ($this->manager !== null) {
-			$this->container->method('get')->willReturn($this->manager);
-			$this->manager
-				->method('getAvailableTaskTypes')
-				->willReturn([SummaryTaskType::class]);
+		$this->textProcessingManager
+			->method('getAvailableTaskTypes')
+			->willReturn([SummaryTaskType::class]);
 
-			$messageIds = [ $message1->getMessageId(),$message2->getMessageId(),$message3->getMessageId()];
-			$key = $this->cache->buildUrlKey($messageIds);
-			$this->cache
-				->method('getValue')
-				->with($key)
-				->willReturn('this is a cached summary');
+		$messageIds = [ $message1->getMessageId(),$message2->getMessageId(),$message3->getMessageId()];
+		$key = $this->cache->buildUrlKey($messageIds);
+		$this->cache
+			->method('getValue')
+			->with($key)
+			->willReturn('this is a cached summary');
 
-			$this->assertEquals('this is a cached summary', $this->aiIntegrationsService->summarizeThread($account, 'some-thread-root-id-1', $messages, 'admin'));
-		} else {
-			$this->container->method('get')->willThrowException(new ServiceException());
-			$this->expectException(ServiceException::class);
-			$this->expectExceptionMessage('Text processing is not available in your current Nextcloud version');
-			$this->aiIntegrationsService->summarizeThread($account, 'some-thread-root-id-1', $messages, 'admin');
-		}
-	}
-
-	public function testGenerateEventDataLlmUnavailable(): void {
-		if (!interface_exists(IManager::class)) {
-			$this->markTestSkipped('Text processing APIs require Nextcloud 27+');
-		}
-
-		$account = $this->createMock(Account::class);
-		$message1 = new Message();
-		$message2 = new Message();
-		$this->container->expects(self::once())
-			->method('get')
-			->willThrowException($this->createMock(QueryException::class));
-
-		$result = $this->aiIntegrationsService->generateEventData(
-			$account,
-			'thread1',
-			[$message1, $message2],
-			'user123',
-		);
-
-		self::assertNull($result);
+		$this->assertEquals('this is a cached summary', $this->aiIntegrationsService->summarizeThread($account, 'some-thread-root-id-1', $messages, 'admin'));
 	}
 
 	public function testGenerateEventDataFreePromptUnavailable(): void {
-		if (!interface_exists(IManager::class)) {
-			$this->markTestSkipped('Text processing APIs require Nextcloud 27+');
-		}
-
 		$account = $this->createMock(Account::class);
 		$message1 = new Message();
 		$message2 = new Message();
-		$manager = $this->createMock(IManager::class);
-		$this->container->expects(self::once())
-			->method('get')
-			->willReturn($manager);
-		$manager->expects(self::once())
+		$this->textProcessingManager->expects(self::once())
 			->method('getAvailableTaskTypes')
 			->willReturn([]);
 
@@ -372,9 +280,6 @@ class AiIntegrationsServiceTest extends TestCase {
 	}
 
 	public function testGenerateEventDataInvalidJson(): void {
-		if (!interface_exists(IManager::class)) {
-			$this->markTestSkipped('Text processing APIs require Nextcloud 27+');
-		}
 
 		$account = $this->createMock(Account::class);
 		$message1 = new Message();
@@ -383,11 +288,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$message2 = new Message();
 		$message2->setUid(2);
 		$message2->setMailboxId(456);
-		$manager = $this->createMock(IManager::class);
-		$this->container->expects(self::once())
-			->method('get')
-			->willReturn($manager);
-		$manager->expects(self::once())
+		$this->textProcessingManager->expects(self::once())
 			->method('getAvailableTaskTypes')
 			->willReturn([FreePromptTaskType::class]);
 		$imapMessage = $this->createMock(IMAPMessage::class);
@@ -397,7 +298,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$imapMessage->expects(self::exactly(2))
 			->method('getPlainBody')
 			->willReturn('plain');
-		$manager->expects(self::once())
+		$this->textProcessingManager->expects(self::once())
 			->method('runTask')
 			->willReturn('Jason');
 
@@ -412,9 +313,6 @@ class AiIntegrationsServiceTest extends TestCase {
 	}
 
 	public function testGenerateEventData(): void {
-		if (!interface_exists(IManager::class)) {
-			$this->markTestSkipped('Text processing APIs require Nextcloud 27+');
-		}
 
 		$account = $this->createMock(Account::class);
 		$message1 = new Message();
@@ -423,11 +321,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$message2 = new Message();
 		$message2->setUid(2);
 		$message2->setMailboxId(456);
-		$manager = $this->createMock(IManager::class);
-		$this->container->expects(self::once())
-			->method('get')
-			->willReturn($manager);
-		$manager->expects(self::once())
+		$this->textProcessingManager->expects(self::once())
 			->method('getAvailableTaskTypes')
 			->willReturn([FreePromptTaskType::class]);
 		$imapMessage = $this->createMock(IMAPMessage::class);
@@ -437,7 +331,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$imapMessage->expects(self::exactly(2))
 			->method('getPlainBody')
 			->willReturn('plain');
-		$manager->expects(self::once())
+		$this->textProcessingManager->expects(self::once())
 			->method('runTask')
 			->willReturn('{"title":"Meeting", "agenda":"* Q&A"}');
 
@@ -605,5 +499,4 @@ class AiIntegrationsServiceTest extends TestCase {
 
 		$this->aiIntegrationsService->summarizeMessages($account, [$message]);
 	}
-
 }
