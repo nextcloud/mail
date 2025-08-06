@@ -31,15 +31,15 @@
 					:disabled="loadingCalendars"
 					@click.stop="loadCalendars">
 					<template #icon>
-						<IconAdd v-if="!loadingCalendars" :size="16" />
-						<IconLoading v-else-if="loadingCalendars" :size="16" />
+						<IconAdd v-if="!loadingCalendars" :size="20" />
+						<IconLoading v-else-if="loadingCalendars" :size="20" />
 					</template>
 					{{ t('mail', 'Import into calendar') }}
 				</ActionButton>
 				<ActionButton class="attachment-download"
 					@click="download">
 					<template #icon>
-						<IconDownload :size="16" />
+						<IconDownload :size="20" />
 					</template>
 					{{ t('mail', 'Download attachment') }}
 				</ActionButton>
@@ -47,8 +47,8 @@
 					:disabled="savingToCloud"
 					@click.stop="()=>isFilePickerOpen = true">
 					<template #icon>
-						<IconSave v-if="!savingToCloud" :size="16" />
-						<IconLoading v-else-if="savingToCloud" :size="16" />
+						<IconSave v-if="!savingToCloud" :size="20" />
+						<IconLoading v-else-if="savingToCloud" :size="20" />
 					</template>
 					{{ t('mail', 'Save to Files') }}
 				</ActionButton>
@@ -56,7 +56,7 @@
 			<template v-else>
 				<ActionButton @click="closeCalendarPopover">
 					<template #icon>
-						<IconArrow :size="16" />
+						<IconArrow :size="20" />
 					</template>
 					{{ t('mail', 'Go back') }}
 				</ActionButton>

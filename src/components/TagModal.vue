@@ -34,12 +34,12 @@
 				</NcButton>
 				<ActionInput v-if="editing" :disabled="showSaving" @submit="createTag">
 					<template #icon>
-						<IconTag :size="16" />
+						<IconTag :size="20" />
 					</template>
 				</ActionInput>
 				<ActionText v-if="showSaving">
 					<template #icon>
-						<IconLoading :size="16" />
+						<IconLoading :size="20" />
 					</template>
 					{{ t('mail', 'Saving tag …') }}
 				</ActionText>
