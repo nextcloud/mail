@@ -343,21 +343,14 @@ export default {
 			const startOfLastMonth = new Date(now)
 			startOfLastMonth.setMonth(startOfLastMonth.getMonth() - 1)
 
-			const groupKeys = ['lastHour', 'today', 'yesterday', 'lastWeek', 'lastMonth', 'older']
-
-			const groupLabels = {
-				lastHour: t('mail', 'Last hour'),
-				today: t('mail', 'Today'),
-				yesterday: t('mail', 'Yesterday'),
-				lastWeek: t('mail', 'Last week'),
-				lastMonth: t('mail', 'Last month'),
-				older: t('mail', 'Older'),
+			const groups = {
+				lastHour: [],
+				today: [],
+				yesterday: [],
+				lastWeek: [],
+				lastMonth: [],
+				older: [],
 			}
-
-			const groups = {}
-			groupKeys.forEach(key => {
-				groups[key] = []
-			})
 
 			for (const envelope of envelopes) {
 				const date = new Date(envelope.dateInt * 1000)
@@ -377,9 +370,7 @@ export default {
 			}
 
 			return Object.fromEntries(
-				Object.entries(groups)
-					.filter(([_, list]) => list.length > 0)
-					.map(([key, list]) => [groupLabels[key], list]),
+				Object.entries(groups).filter(([_, list]) => list.length > 0)
 			)
 		},
 		async fetchEnvelopes() {

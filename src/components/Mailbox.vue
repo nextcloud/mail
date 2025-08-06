@@ -17,7 +17,7 @@
 		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
 		<template v-else-if="hasGroupedEnvelopes && !isPriorityInbox">
 			<div v-for="[label, group] in Object.entries(groupEnvelopes)" :key="label">
-				<SectionTitle class="section-title" :name="label" />
+				<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
 				<EnvelopeList :account="account"
 					:mailbox="mailbox"
 					:search-query="searchQuery"
@@ -557,6 +557,21 @@ export default {
 		stopInterval() {
 			clearInterval(this.loadMailboxInterval)
 			this.loadMailboxInterval = undefined
+		},
+		getLabelForGroup(group) {
+			switch (group) {
+				case 'lastHour':
+					return t('mail', 'Last hour')
+				case 'today':
+					return t('mail', 'Today')
+				case 'yesterday':
+					return t('mail', 'Yesterday')
+				case 'lastWeek':
+					return t('mail', 'Last week')
+				case 'lastMonth':
+					return t('mail', 'Last month')
+			}
+			return t('mail', 'Older')
 		},
 	},
 }
