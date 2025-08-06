@@ -25,8 +25,7 @@
 					:loading-more="false"
 					:load-more-button="false"
 					:skip-transition="skipListTransition"
-					@delete="onDelete"
-					@load-more="loadMore" />
+					@delete="onDelete" />
 			</div>
 		</template>
 		<EnvelopeList v-else
