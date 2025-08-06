@@ -45,7 +45,7 @@
     "@ckeditor/ckeditor5-ui": "44.3.0",
     "@ckeditor/ckeditor5-upload": "44.3.0",
     "@ckeditor/ckeditor5-vue2": "^3.0.1",
-    "@iframe-resizer/child": "^5.5.0",
+    "@iframe-resizer/child": "^5.5.1",
     "@iframe-resizer/parent": "^5.4.7",
     "@mdi/svg": "^7.4.47",
     "@nextcloud/auth": "^2.5.2",
