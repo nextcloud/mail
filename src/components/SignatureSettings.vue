@@ -224,13 +224,8 @@ export default {
   display: block;
   padding: 0;
   margin-bottom: 23px;
-  min-height: 300px;
   height: 100%;
 }
-
-.ck-balloon-panel {
-	 z-index: 10000 !important;
- }
 
 .button-vue:deep() {
 	display: inline-block !important;
