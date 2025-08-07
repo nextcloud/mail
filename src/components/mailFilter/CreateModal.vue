@@ -25,8 +25,8 @@
 			<NcButton type="primary"
 				native-type="submit">
 				<template #icon>
-					<NcLoadingIcon v-if="loading" :size="16" />
-					<IconCheck v-else :size="16" />
+					<NcLoadingIcon v-if="loading" :size="20" />
+					<IconCheck v-else :size="20" />
 				</template>
 				{{ t('mail', 'Create mail filter') }}
 			</NcButton>

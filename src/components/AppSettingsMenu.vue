@@ -16,7 +16,7 @@
 					:aria-label="t('mail', 'Add mail account')"
 					class="app-settings-button">
 					<template #icon>
-						<IconAdd :size="16" />
+						<IconAdd :size="20" />
 					</template>
 					{{ t('mail', 'Add mail account') }}
 				</NcButton>
@@ -56,7 +56,7 @@
 					button-variant-grouped="vertical"
 					@update:checked="setLayout('vertical-split')">
 					<template #icon>
-						<VerticalSplit :size="16" />
+						<VerticalSplit :size="20" />
 					</template>
 					{{ t('mail', 'Vertical split') }}
 				</NcCheckboxRadioSwitch>
@@ -161,7 +161,7 @@
 					:aria-label="t('mail', 'Register as application for mail links')"
 					@click="registerProtocolHandler">
 					<template #icon>
-						<IconEmail :size="16" />
+						<IconEmail :size="20" />
 					</template>
 					{{ t('mail', 'Register') }}
 				</NcButton>
@@ -221,7 +221,7 @@
 					:aria-label="t('mail', 'Manage S/MIME certificates')"
 					@click.prevent.stop="displaySmimeCertificateModal = true">
 					<template #icon>
-						<IconLock :size="16" />
+						<IconLock :size="20" />
 					</template>
 					{{ t('mail', 'Manage S/MIME certificates') }}
 				</NcButton>
@@ -341,7 +341,7 @@
 						class="text-block-buttons__button"
 						@click="closeTextBlockDialog">
 						<template #icon>
-							<IconClose :size="16" />
+							<IconClose :size="20" />
 						</template>
 						{{ t('mail', 'Cancel') }}
 					</NcButton>
@@ -350,7 +350,7 @@
 						:disabled="!localTextBlock.title || !localTextBlock.content"
 						@click="newTextBlock">
 						<template #icon>
-							<IconCheck :size="16" />
+							<IconCheck :size="20" />
 						</template>
 						{{ t('mail', 'Ok') }}
 					</NcButton>

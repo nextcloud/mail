@@ -94,7 +94,7 @@
 				:aria-label="t('mail', 'Add new config')"
 				@click="addNew=true">
 				<template #icon>
-					<IconAdd :size="16" />
+					<IconAdd :size="20" />
 				</template>
 				{{ t('mail', 'Add new config') }}
 			</ButtonVue>
@@ -102,7 +102,7 @@
 				:aria-label="t('mail', 'Provision all accounts')"
 				@click="provisionAll">
 				<template #icon>
-					<IconSettings :size="16" />
+					<IconSettings :size="20" />
 				</template>
 				{{ t('mail', 'Provision all accounts') }}
 			</ButtonVue>
