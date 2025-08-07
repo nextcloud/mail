@@ -52,7 +52,7 @@
 					:aria-label="loading ? labelSelectLoading : labelSelect"
 					@click="onSelect">
 					<template #icon>
-						<IconLoading v-if="loading" :size="16" />
+						<IconLoading v-if="loading" :size="20" />
 					</template>
 					{{ loading ? labelSelectLoading : labelSelect }}
 				</ButtonVue>

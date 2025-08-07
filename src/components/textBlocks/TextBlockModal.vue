@@ -16,7 +16,7 @@
 			@click="$emit('insert', picked)">
 			{{ t('mail', 'Insert') }}
 			<template #icon>
-				<IconCheck :size="16" :name="t('mail','Insert text block')" />
+				<IconCheck :size="20" :name="t('mail','Insert text block')" />
 			</template>
 		</NcButton>
 	</NcDialog>

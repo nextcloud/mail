@@ -271,7 +271,7 @@
 					:aria-label="t('mail', 'Save draft')"
 					@click="saveDraft">
 					<template #icon>
-						<Download :size="16" :title="t('mail', 'Save draft')" />
+						<Download :size="20" :title="t('mail', 'Save draft')" />
 					</template>
 				</ButtonVue>
 				<ButtonVue v-if="!savingDraft && draftSaved"
@@ -280,7 +280,7 @@
 					:aria-label="t('mail', 'Discard & close draft')"
 					@click="$emit('discard-draft')">
 					<template #icon>
-						<Delete :size="16" :title="t('mail', 'Discard & close draft')" />
+						<Delete :size="20" :title="t('mail', 'Discard & close draft')" />
 					</template>
 				</ButtonVue>
 			</div>
@@ -290,7 +290,7 @@
 					:aria-label="t('mail', 'Enable formatting')"
 					@click="setEditorModeHtml()">
 					<template #icon>
-						<IconFormat :size="16" :title="t('mail', 'Enable formatting')" />
+						<IconFormat :size="20" :title="t('mail', 'Enable formatting')" />
 					</template>
 				</ButtonVue>
 				<ButtonVue v-if="!encrypt && !editorPlainText"
@@ -299,7 +299,7 @@
 					:aria-label="t('mail', 'Disable formatting')"
 					@click="setEditorModeText()">
 					<template #icon>
-						<IconFormat :size="16" :title="t('mail', 'Disable formatting')" />
+						<IconFormat :size="20" :title="t('mail', 'Disable formatting')" />
 					</template>
 				</ButtonVue>
 
@@ -458,7 +458,7 @@
 					@click="onSend">
 					<template #icon>
 						<Send :title="submitButtonTitle"
-							:size="16" />
+							:size="20" />
 					</template>
 					{{ submitButtonTitle }}
 				</ButtonVue>
