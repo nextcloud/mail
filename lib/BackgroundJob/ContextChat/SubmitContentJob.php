@@ -37,7 +37,7 @@ class SubmitContentJob extends TimedJob {
 		parent::__construct($time);
 
 		$this->setAllowParallelRuns(false);
-		$this->setInterval(Application::CONTEXT_CHAT_JOB_INTERVAL);
+		$this->setInterval(ContextChatProvider::CONTEXT_CHAT_JOB_INTERVAL);
 		$this->setTimeSensitivity(IJob::TIME_INSENSITIVE);
 	}
 
@@ -72,12 +72,12 @@ class SubmitContentJob extends TimedJob {
 		// Ensure messages are sorted by ID
 		usort($messages, static fn (Message $a, Message $b): int => $a->getId() <=> $b->getId());
 
-		$startTime = time() - Application::CONTEXT_CHAT_MESSAGE_MAX_AGE;
+		$startTime = time() - ContextChatProvider::CONTEXT_CHAT_MESSAGE_MAX_AGE;
 		$nextMessage = reset($messages);
 		$client = $this->clientFactory->getClient($account);
 		$items = [];
 
-		while (($nextMessage !== false) && (count($items) < Application::CONTEXT_CHAT_IMPORT_MAX_ITEMS)) {
+		while (($nextMessage !== false) && (count($items) < ContextChatProvider::CONTEXT_CHAT_IMPORT_MAX_ITEMS)) {
 			// Skip older messages
 			if ($nextMessage->getSentAt() < $startTime) {
 				$nextMessage = next($messages);

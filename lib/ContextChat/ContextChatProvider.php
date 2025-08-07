@@ -32,6 +32,10 @@ use OCP\IUserManager;
  */
 class ContextChatProvider implements IContentProvider, IEventListener {
 
+	public const CONTEXT_CHAT_MESSAGE_MAX_AGE = 60 * 60 * 24 * 365.25;
+	public const CONTEXT_CHAT_IMPORT_MAX_ITEMS = 100;
+	public const CONTEXT_CHAT_JOB_INTERVAL = 60 * 5;
+
 	public function __construct(
 		private JobsService $jobsService,
 		private AccountService $accountService,
