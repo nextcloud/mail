@@ -583,7 +583,7 @@ export default {
 	background: var(--color-main-background);
 	background: var(--color-main-background);
 	background: var(--color-main-background);
-	border-bottom: 2px solid var(--color-border);
+	border-bottom: var(--border-width-input-focused) solid var(--color-border);
 	margin-bottom: 5px;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
@@ -592,7 +592,7 @@ export default {
 	// initial width
 	width: 0;
 	// while scrolling, the back button overlaps with subject on small screen
-	padding-inline-start: 68px;
+	padding-inline-start: calc (var(--border-radius-container-large) + var ((--header-height)));
 	// grow and try to fill 100%
 	flex: 1 1 auto;
 	h2,
