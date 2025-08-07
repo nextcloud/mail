@@ -138,7 +138,7 @@
 			<template v-if="!moreActionsOpen && !snoozeOptions">
 				<ActionText>
 					<template #icon>
-						<ClockOutlineIcon :size="16" />
+						<ClockOutlineIcon :size="20" />
 					</template>
 					{{
 						messageLongDate
@@ -149,7 +149,7 @@
 					:close-after-click="true"
 					@click.prevent="onToggleJunk">
 					<template #icon>
-						<AlertOctagonIcon :size="16" />
+						<AlertOctagonIcon :size="20" />
 					</template>
 					{{
 						data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
@@ -159,7 +159,7 @@
 					:close-after-click="true"
 					@click.prevent="onOpenTagModal">
 					<template #icon>
-						<TagIcon :size="16" />
+						<TagIcon :size="20" />
 					</template>
 					{{ t('mail', 'Edit tags') }}
 				</ActionButton>
@@ -168,7 +168,7 @@
 					@click="showSnoozeOptions">
 					<template #icon>
 						<AlarmIcon :title="t('mail', 'Snooze')"
-							:size="16" />
+							:size="20" />
 					</template>
 					{{
 						t('mail', 'Snooze')
@@ -201,7 +201,7 @@
 					:disabled="disableArchiveButton"
 					@click.prevent="onArchive">
 					<template #icon>
-						<ArchiveIcon :size="16" />
+						<ArchiveIcon :size="20" />
 					</template>
 					<template v-if="layoutMessageViewThreaded">
 						{{ t('mail', 'Archive thread') }}
@@ -214,7 +214,7 @@
 					:close-after-click="true"
 					@click.prevent="onDelete">
 					<template #icon>
-						<DeleteIcon :size="16" />
+						<DeleteIcon :size="20" />
 					</template>
 					<template v-if="layoutMessageViewThreaded">
 						{{ t('mail', 'Delete thread') }}
@@ -226,7 +226,7 @@
 				<ActionButton :close-after-click="false"
 					@click="showMoreActionOptions">
 					<template #icon>
-						<DotsHorizontalIcon :size="16" />
+						<DotsHorizontalIcon :size="20" />
 					</template>
 					{{ t('mail', 'More actions') }}
 				</ActionButton>
@@ -235,7 +235,7 @@
 				<ActionButton :close-after-click="false"
 					@click="snoozeOptions = false">
 					<template #icon>
-						<ChevronLeft :size="16" />
+						<ChevronLeft :size="20" />
 					</template>
 					{{
 						t('mail', 'Back')
@@ -260,7 +260,7 @@
 					:min="new Date()"
 					@change="setCustomSnoozeDateTime">
 					<template #icon>
-						<CalendarClock :size="16" />
+						<CalendarClock :size="20" />
 					</template>
 				</NcActionInput>
 
@@ -268,7 +268,7 @@
 					close-after-click
 					@click.stop="setCustomSnooze(customSnoozeDateTime)">
 					<template #icon>
-						<CheckIcon :size="16" />
+						<CheckIcon :size="20" />
 					</template>
 					{{ t('mail', 'Set custom snooze') }}
 				</ActionButton>
@@ -277,35 +277,35 @@
 				<ActionButton :close-after-click="false"
 					@click="moreActionsOpen=false">
 					<template #icon>
-						<ChevronLeft :size="16" />
+						<ChevronLeft :size="20" />
 					</template>
 					{{ t('mail', 'More actions') }}
 				</ActionButton>
 				<ActionButton :close-after-click="true"
 					@click.prevent="onOpenEditAsNew">
 					<template #icon>
-						<PlusIcon :size="16" />
+						<PlusIcon :size="20" />
 					</template>
 					{{ t('mail', 'Edit as new message') }}
 				</ActionButton>
 				<ActionButton :close-after-click="true"
 					@click.prevent="showEventModal = true">
 					<template #icon>
-						<IconCreateEvent :size="16" />
+						<IconCreateEvent :size="20" />
 					</template>
 					{{ t('mail', 'Create event') }}
 				</ActionButton>
 				<ActionButton :close-after-click="true"
 					@click.prevent="showTaskModal = true">
 					<template #icon>
-						<TaskIcon :size="16" />
+						<TaskIcon :size="20" />
 					</template>
 					{{ t('mail', 'Create task') }}
 				</ActionButton>
 				<ActionLink :close-after-click="true"
 					:href="exportMessageLink">
 					<template #icon>
-						<DownloadIcon :size="16" />
+						<DownloadIcon :size="20" />
 					</template>
 					{{ t('mail', 'Download message') }}
 				</ActionLink>

@@ -95,13 +95,13 @@
 					<NcActions v-if="smimeData.isSigned || smimeData.isEncrypted">
 						<template #icon>
 							<LockPlusIcon v-if="smimeData.isEncrypted"
-								:size="16"
+								:size="20"
 								fill-color="#008000" />
 							<LockIcon v-else-if="smimeData.signatureIsValid"
-								:size="16"
+								:size="20"
 								fill-color="#008000" />
 							<LockOffIcon v-else
-								:size="16"
+								:size="20"
 								fill-color="red" />
 						</template>
 						<NcActionText class="smime-text" :name="smimeHeading">
@@ -115,10 +115,10 @@
 							<template #icon>
 								<ReplyAllIcon v-if="hasMultipleRecipients"
 									:title="t('mail', 'Reply all')"
-									:size="16" />
+									:size="20" />
 								<ReplyIcon v-else
 									:title="t('mail', 'Reply')"
-									:size="16" />
+									:size="20" />
 							</template>
 							{{ t('mail', 'Reply') }}
 						</NcActionButton>
@@ -127,7 +127,7 @@
 							@click="onReply('', false, true)">
 							<template #icon>
 								<ReplyIcon :title="t('mail', 'Reply to sender only')"
-									:size="16" />
+									:size="20" />
 							</template>
 							{{ t('mail', 'Reply to sender only') }}
 						</NcActionButton>
@@ -140,9 +140,9 @@
 							@click.prevent="onToggleFlagged">
 							<template #icon>
 								<IconFavorite v-if="showFavoriteIconVariant"
-									:size="16" />
+									:size="20" />
 								<StarOutline v-else
-									:size="16" />
+									:size="20" />
 							</template>
 						</NcActionButton>
 						<NcActionButton v-if="hasSeenAcl && (inlineMenuSize >= 3 || !moreActionsOpen)"
@@ -154,9 +154,9 @@
 							@click.prevent="onToggleSeen">
 							<template #icon>
 								<EmailRead v-if="showImportantIconVariant"
-									:size="16" />
+									:size="20" />
 								<EmailUnread v-else
-									:size="16" />
+									:size="20" />
 							</template>
 						</NcActionButton>
 						<NcActionButton v-if="showArchiveButton && hasArchiveAcl && (inlineMenuSize >= 4 || !moreActionsOpen)"
@@ -168,7 +168,7 @@
 							@click.prevent="onArchive">
 							<template #icon>
 								<ArchiveIcon :title="t('mail', 'Archive message')"
-									:size="16" />
+									:size="20" />
 							</template>
 						</NcActionButton>
 						<NcActionButton v-if="hasDeleteAcl && (inlineMenuSize >= 5 || !moreActionsOpen)"
@@ -179,7 +179,7 @@
 							@click.prevent="onDelete">
 							<template #icon>
 								<DeleteIcon :title="t('mail', 'Delete message')"
-									:size="16" />
+									:size="20" />
 							</template>
 						</NcActionButton>
 						<MenuEnvelope class="app-content-list-item-menu"
