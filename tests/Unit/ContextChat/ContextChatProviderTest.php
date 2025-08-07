@@ -19,7 +19,7 @@ use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\ContextChat\JobsService;
+use OCA\Mail\Service\ContextChat\TaskService;
 use OCA\Mail\Service\MailManager;
 use OCP\ContextChat\Events\ContentProviderRegisterEvent;
 use OCP\ContextChat\IContentManager;
@@ -29,7 +29,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ContextChatProviderTest extends TestCase {
-	/** @var JobsService|MockObject */
+	/** @var TaskService|MockObject */
 	private $jobsService;
 
 	/** @var AccountService|MockObject */
@@ -61,7 +61,7 @@ class ContextChatProviderTest extends TestCase {
 		}
 
 		// TODO: setup other components if needed
-		$this->jobsService = $this->createMock(JobsService::class);
+		$this->jobsService = $this->createMock(TaskService::class);
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->mailManager = $this->createMock(MailManager::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);

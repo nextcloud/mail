@@ -26,8 +26,8 @@ class Version5200Date20250728000000 extends SimpleMigrationStep {
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 		$schema = $schemaClosure();
 
-		if (!$schema->hasTable('mail_context_chat_jobs')) {
-			$table = $schema->createTable('mail_context_chat_jobs');
+		if (!$schema->hasTable('mail_context_chat_tasks')) {
+			$table = $schema->createTable('mail_context_chat_tasks');
 			$table->addColumn('id', Types::INTEGER, [
 				'autoincrement' => true,
 				'notnull' => true,
@@ -41,7 +41,7 @@ class Version5200Date20250728000000 extends SimpleMigrationStep {
 				'length' => 20,
 			]);
 			$table->setPrimaryKey(['id']);
-			$table->addUniqueIndex(['mailbox_id'], 'mail_context_chat_jobs_uniq');
+			$table->addUniqueIndex(['mailbox_id'], 'mail_context_chat_tasks_uniq');
 			if ($schema->hasTable('mail_mailboxes')) {
 				$table->addForeignKeyConstraint(
 					$schema->getTable('mail_mailboxes'),
