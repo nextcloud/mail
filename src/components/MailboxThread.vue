@@ -370,7 +370,7 @@ export default {
 			}
 
 			return Object.fromEntries(
-				Object.entries(groups).filter(([_, list]) => list.length > 0)
+				Object.entries(groups).filter(([_, list]) => list.length > 0),
 			)
 		},
 		async fetchEnvelopes() {
