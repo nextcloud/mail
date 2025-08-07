@@ -39,7 +39,7 @@
 							native-type="submit"
 							class="config-button">
 							<template #icon>
-								<IconUpload :size="16" />
+								<IconUpload :size="20" />
 							</template>
 							{{ t('mail', 'Save') }}
 						</ButtonVue>
@@ -49,7 +49,7 @@
 							type="secondary"
 							@click="resetForm()">
 							<template #icon>
-								<IconDelete :size="16" />
+								<IconDelete :size="20" />
 							</template>
 							{{ t('mail', 'Reset') }}
 						</ButtonVue>

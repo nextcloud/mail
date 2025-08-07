@@ -28,7 +28,7 @@
 					class="tagButton"
 					@click="addTagInput">
 					<template #icon>
-						<IconAdd :size="16" />
+						<IconAdd :size="20" />
 					</template>
 					{{ t('mail', 'Add tag') }}
 				</NcButton>

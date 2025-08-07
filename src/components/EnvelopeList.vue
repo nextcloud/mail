@@ -11,49 +11,49 @@
 						type="tertiary"
 						:title="n('mail', 'Mark {number} read', 'Mark {number} read', selection.length, { number: selection.length })"
 						@click.prevent="markSelectedRead">
-						<EmailRead :size="16" />
+						<EmailRead :size="20" />
 					</NcButton>
 
 					<NcButton v-if="isAtLeastOneSelectedRead"
 						type="tertiary"
 						:title="n('mail', 'Mark {number} unread', 'Mark {number} unread', selection.length, { number: selection.length })"
 						@click.prevent="markSelectedUnread">
-						<EmailUnread :size="16" />
+						<EmailUnread :size="20" />
 					</NcButton>
 
 					<NcButton v-if="isAtLeastOneSelectedUnimportant"
 						type="tertiary"
 						:title="n('mail', 'Mark {number} as important', 'Mark {number} as important', selection.length, { number: selection.length })"
 						@click.prevent="markSelectionImportant">
-						<ImportantIcon :size="16" />
+						<ImportantIcon :size="20" />
 					</NcButton>
 
 					<NcButton v-if="isAtLeastOneSelectedImportant"
 						type="tertiary"
 						:title="n('mail', 'Mark {number} as unimportant', 'Mark {number} as unimportant', selection.length, { number: selection.length })"
 						@click.prevent="markSelectionUnimportant">
-						<ImportantOutlineIcon :size="16" />
+						<ImportantOutlineIcon :size="20" />
 					</NcButton>
 
 					<NcButton v-if="isAtLeastOneSelectedFavorite"
 						type="tertiary"
 						:title="n('mail', 'Unfavorite {number}', 'Unfavorite {number}', selection.length, { number: selection.length })"
 						@click.prevent="favoriteAll">
-						<IconUnFavorite :size="16" />
+						<IconUnFavorite :size="20" />
 					</NcButton>
 
 					<NcButton v-if="isAtLeastOneSelectedUnFavorite"
 						type="tertiary"
 						:title="n('mail', 'Favorite {number}', 'Favorite {number}', selection.length, { number: selection.length })"
 						@click.prevent="unFavoriteAll">
-						<IconFavorite :size="16" />
+						<IconFavorite :size="20" />
 					</NcButton>
 
 					<NcButton type="tertiary"
 						:title="n('mail', 'Unselect {number}', 'Unselect {number}', selection.length, { number: selection.length })"
 						:close-after-click="true"
 						@click.prevent="unselectAll">
-						<IconSelect :size="16" />
+						<IconSelect :size="20" />
 					</NcButton>
 					<NcButton type="tertiary"
 						:title="n(
@@ -65,7 +65,7 @@
 						)"
 						:close-after-click="true"
 						@click.prevent="deleteAllSelected">
-						<IconDelete :size="16" />
+						<IconDelete :size="20" />
 					</NcButton>
 				</div>
 
