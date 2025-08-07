@@ -44,7 +44,7 @@ class TaskProcessingListener implements IEventListener {
 			return;
 		}
 
-		if ($task->getCustomId() !== null) {
+		if ($task->getCustomId() && strpos($task->getCustomId(), ':') !== false) {
 			[$type, $id] = explode(':', $task->getCustomId());
 		} else {
 			$this->logger->info('Error handling task processing event custom id missing', ['taskCustomId' => $task->getCustomId()]);
