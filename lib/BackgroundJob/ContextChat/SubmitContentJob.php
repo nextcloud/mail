@@ -77,34 +77,38 @@ class SubmitContentJob extends TimedJob {
 		$client = $this->clientFactory->getClient($account);
 		$items = [];
 
-		while (($nextMessage !== false) && (count($items) < ContextChatProvider::CONTEXT_CHAT_IMPORT_MAX_ITEMS)) {
-			// Skip older messages
-			if ($nextMessage->getSentAt() < $startTime) {
+		try {
+			while (($nextMessage !== false) && (count($items) < ContextChatProvider::CONTEXT_CHAT_IMPORT_MAX_ITEMS)) {
+				// Skip older messages
+				if ($nextMessage->getSentAt() < $startTime) {
+					$nextMessage = next($messages);
+					continue;
+				}
+
+				$imapMessage = $this->mailManager->getImapMessage($client, $account, $mailbox, $nextMessage->getUid(), true);
+
+				// Skip encrypted messages
+				if ($imapMessage->isEncrypted()) {
+					$nextMessage = next($messages);
+					continue;
+				}
+
+				$fullMessage = $imapMessage->getFullMessage($imapMessage->getUid(), true);
+
+				$items[] = new ContentItem(
+					(string)$nextMessage->getId(),
+					$this->contextChatProvider->getId(),
+					$imapMessage->getSubject(),
+					$fullMessage['body'] ?? '',
+					'E-Mail',
+					$imapMessage->getSentDate(),
+					[$job->getUserId()],
+				);
+
 				$nextMessage = next($messages);
-				continue;
 			}
-
-			$imapMessage = $this->mailManager->getImapMessage($client, $account, $mailbox, $nextMessage->getUid(), true);
-
-			// Skip encrypted messages
-			if ($imapMessage->isEncrypted()) {
-				$nextMessage = next($messages);
-				continue;
-			}
-
-			$fullMessage = $imapMessage->getFullMessage($imapMessage->getUid(), true);
-
-			$items[] = new ContentItem(
-				(string)$nextMessage->getId(),
-				$this->contextChatProvider->getId(),
-				$imapMessage->getSubject(),
-				$fullMessage['body'] ?? '',
-				'E-Mail',
-				$imapMessage->getSentDate(),
-				[$job->getUserId()],
-			);
-
-			$nextMessage = next($messages);
+		} finally{
+			$client->disconnect();
 		}
 
 		if (count($items) > 0) {
