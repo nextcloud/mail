@@ -82,7 +82,7 @@
 						:disabled="saveLoading"
 						@click="closeTextBlockDialog">
 						<template #icon>
-							<IconClose :size="16" />
+							<IconClose :size="20" />
 						</template>
 						{{ t('mail', 'Cancel') }}
 					</NcButton>
@@ -91,8 +91,8 @@
 						:disabled="!localTextBlock.title || !localTextBlock.content || saveLoading"
 						@click="saveTextBlock">
 						<template #icon>
-							<NcLoadingIcon v-if="saveLoading" :size="16" />
-							<IconCheck v-else :size="16" />
+							<NcLoadingIcon v-if="saveLoading" :size="20" />
+							<IconCheck v-else :size="20" />
 						</template>
 						{{ t('mail', 'Ok') }}
 					</NcButton>

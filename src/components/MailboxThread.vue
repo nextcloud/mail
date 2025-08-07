@@ -43,7 +43,7 @@
 										:aria-label="t('mail', 'Follow up info')"
 										class="button">
 										<template #icon>
-											<IconInfo :size="16" />
+											<IconInfo :size="20" />
 										</template>
 									</ButtonVue>
 								</template>
@@ -70,7 +70,7 @@
 										:aria-label="t('mail', 'Important info')"
 										class="button">
 										<template #icon>
-											<IconInfo :size="16" />
+											<IconInfo :size="20" />
 										</template>
 									</ButtonVue>
 								</template>

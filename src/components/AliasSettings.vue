@@ -18,7 +18,7 @@
 						:name="t('mail', 'Change name')"
 						@click="$emit('rename-primary-alias')">
 						<template #icon>
-							<IconRename :size="16" />
+							<IconRename :size="20" />
 						</template>
 					</ButtonVue>
 				</AliasForm>
@@ -61,8 +61,8 @@
 				:aria-label="t('mail', 'Create alias')"
 				:disabled="loading">
 				<template #icon>
-					<IconLoading v-if="loading" :size="16" />
-					<IconCheck v-else :size="16" />
+					<IconLoading v-if="loading" :size="20" />
+					<IconCheck v-else :size="20" />
 				</template>
 				{{ t('mail', 'Create alias') }}
 			</ButtonVue>
