@@ -32,14 +32,6 @@ class Version5200Date20250728000000 extends SimpleMigrationStep {
 				'autoincrement' => true,
 				'notnull' => true,
 			]);
-			$table->addColumn('user_id', Types::STRING, [
-				'notnull' => true,
-				'length' => 255,
-			]);
-			$table->addColumn('account_id', Types::INTEGER, [
-				'notnull' => true,
-				'length' => 4,
-			]);
 			$table->addColumn('mailbox_id', Types::INTEGER, [
 				'notnull' => true,
 				'length' => 20,
@@ -49,7 +41,17 @@ class Version5200Date20250728000000 extends SimpleMigrationStep {
 				'length' => 20,
 			]);
 			$table->setPrimaryKey(['id']);
-			$table->addUniqueIndex(['user_id', 'account_id', 'mailbox_id'], 'mail_context_chat_jobs_uniq');
+			$table->addUniqueIndex(['mailbox_id'], 'mail_context_chat_jobs_uniq');
+			if ($schema->hasTable('mail_mailboxes')) {
+				$table->addForeignKeyConstraint(
+					$schema->getTable('mail_mailboxes'),
+					['mailbox_id'],
+					['id'],
+					[
+						'onDelete' => 'CASCADE',
+					]
+				);
+			}
 		}
 
 		return $schema;
