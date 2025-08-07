@@ -111,10 +111,6 @@ export default {
 			required: false,
 			default: false,
 		},
-		customEnvelopes: {
-			type: Array,
-			required: false,
-		},
 	},
 	data() {
 		return {
@@ -136,7 +132,7 @@ export default {
 			return this.mainStore.getPreference('sort-order', 'DESC')
 		},
 		envelopes() {
-			return this.customEnvelopes ?? this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
+			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
 		},
 		envelopesToShow() {
 			if (this.paginate === 'manual' && !this.expanded) {
@@ -191,7 +187,6 @@ export default {
 		await this.prefetchOtherMailboxes()
 
 		this.mainStore.setHasFetchedInitialEnvelopesMutation(true)
-		this.mainStore.updateSyncTimestamp()
 	},
 	destroyed() {
 		this.bus.off('load-more', this.onScroll)
@@ -496,6 +491,8 @@ export default {
 			} finally {
 				this.refreshing = false
 				logger.debug(`finished sync'ing folder ${this.mailbox.databaseId} (${this.searchQuery})`, { init })
+
+				this.mainStore.updateSyncTimestamp()
 			}
 		},
 		// onDelete(id): Load more message and navigate to other message if needed
@@ -560,16 +557,16 @@ export default {
 		},
 		getLabelForGroup(group) {
 			switch (group) {
-				case 'lastHour':
-					return t('mail', 'Last hour')
-				case 'today':
-					return t('mail', 'Today')
-				case 'yesterday':
-					return t('mail', 'Yesterday')
-				case 'lastWeek':
-					return t('mail', 'Last week')
-				case 'lastMonth':
-					return t('mail', 'Last month')
+			case 'lastHour':
+				return t('mail', 'Last hour')
+			case 'today':
+				return t('mail', 'Today')
+			case 'yesterday':
+				return t('mail', 'Yesterday')
+			case 'lastWeek':
+				return t('mail', 'Last week')
+			case 'lastMonth':
+				return t('mail', 'Last month')
 			}
 			return t('mail', 'Older')
 		},
