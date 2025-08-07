@@ -13,7 +13,7 @@
 			</template>
 			<template v-if="shares.length > 0" #extra-actions>
 				<AccountMultiple :title="t('mail', 'Shared')"
-					:size="16" />
+					:size="20" />
 			</template>
 			<template v-if="!shared && !isViewMode" #actions>
 				<NcActionButton @click="editModalOpen = true">

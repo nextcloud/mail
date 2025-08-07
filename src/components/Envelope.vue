@@ -87,7 +87,7 @@
 		<template #indicator>
 			<!-- Color dot -->
 			<IconBullet v-if="!data.flags.seen"
-				:size="16"
+				:size="20"
 				:aria-hidden="false"
 				:aria-label="t('mail', 'This message is unread')"
 				fill-color="var(--color-primary-element)" />

@@ -25,8 +25,8 @@
 		<div v-if="hasNextLine"
 			class="show-more-attachments"
 			@click="isToggled = !isToggled">
-			<ChevronDown v-if="isToggled" :size="24" />
-			<ChevronUp v-if="!isToggled" :size="24" />
+			<ChevronDown v-if="isToggled" :size="20" />
+			<ChevronUp v-if="!isToggled" :size="20" />
 			<span v-if="isToggled">
 				{{ n('mail', 'View {count} more attachment', 'View {count} more attachments', (attachments.length - visible), { count: attachments.length - visible }) }}
 			</span>

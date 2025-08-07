@@ -7,7 +7,7 @@
 		:class="{'composer-session--disabled': disabled}"
 		@click="onShowComposer">
 		<div class="composer-session__icon">
-			<PencilIcon :size="16" />
+			<PencilIcon :size="20" />
 		</div>
 
 		<div class="composer-session__text">
