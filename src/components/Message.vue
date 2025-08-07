@@ -29,7 +29,8 @@
 			:url="htmlUrl"
 			:message="message"
 			:full-height="fullHeight"
-			@load="$emit('load', $event)" />
+			@load="$emit('load', $event)"
+			@translate="$emit('translate')" />
 		<MessageEncryptedBody v-else-if="isEncrypted || isPgpMimeEncrypted"
 			:body="message.body"
 			:from="from"
@@ -37,7 +38,8 @@
 		<MessagePlainTextBody v-else
 			:body="message.body"
 			:signature="message.signature"
-			:message="message" />
+			:message="message"
+			@translate="$emit('translate')" />
 		<MessageAttachments :attachments="message.attachments" :envelope="envelope" />
 		<div id="reply-composer" />
 		<div class="reply-buttons">

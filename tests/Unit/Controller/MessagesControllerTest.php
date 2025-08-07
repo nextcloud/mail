@@ -1219,4 +1219,133 @@ class MessagesControllerTest extends TestCase {
 			$this->assertEquals('no-cache, no-store, must-revalidate', $cacheForHeader);
 		}
 	}
+
+	public function testNeedsTranslationNoUser() {
+		$controller = new MessagesController(
+			$this->appName,
+			$this->request,
+			$this->accountService,
+			$this->mailManager,
+			$this->mailSearch,
+			$this->itineraryService,
+			null,
+			$this->userFolder,
+			$this->logger,
+			$this->l10n,
+			$this->mimeTypeDetector,
+			$this->urlGenerator,
+			$this->nonceManager,
+			$this->trustedSenderService,
+			$this->mailTransmission,
+			$this->smimeService,
+			$this->clientFactory,
+			$this->dkimService,
+			$this->userPreferences,
+			$this->snoozeService,
+			$this->aiIntegrationsService,
+		);
+
+		$actualResponse = $controller->needsTranslation(100);
+		$expectedResponse = new JSONResponse([], Http::STATUS_FORBIDDEN);
+		$this->assertEquals($expectedResponse, $actualResponse);
+	}
+	public function testNeedsTranslationNoMessage() {
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, 100)
+			->willThrowException(new DoesNotExistException(''));
+		$actualResponse = $this->controller->needsTranslation(100);
+		$expectedResponse = new JSONResponse([], Http::STATUS_FORBIDDEN);
+		$this->assertEquals($expectedResponse, $actualResponse);
+	}
+	public function testNeedsTranslationNoBackend() {
+		$message = new \OCA\Mail\Db\Message();
+		$message->setId(100);
+		$message->setMailboxId(1);
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$mailbox->setAccountId(1);
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, 100)
+			->willReturn($message);
+		$this->mailManager->expects($this->once())
+			->method(('getMailbox'))
+			->with($this->userId, $message->getMailboxId())
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->userId, $mailbox->getAccountId())
+			->willReturn(new Account(new MailAccount()));
+		$this->aiIntegrationsService->expects($this->once())
+			->method('isLlmProcessingEnabled')
+			->willReturn(false);
+		$actualResponse = $this->controller->needsTranslation(100);
+		$expectedResponse = new JSONResponse([], Http::STATUS_NOT_IMPLEMENTED);
+		$expectedResponse->cacheFor(60 * 60 * 24, false, true);
+		$this->assertEquals($expectedResponse, $actualResponse);
+
+	}
+
+	public function testNeedsTranslationNull() {
+		$message = new \OCA\Mail\Db\Message();
+		$message->setId(100);
+		$message->setMailboxId(1);
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$mailbox->setAccountId(1);
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, 100)
+			->willReturn($message);
+		$this->mailManager->expects($this->once())
+			->method(('getMailbox'))
+			->with($this->userId, $message->getMailboxId())
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->userId, $mailbox->getAccountId())
+			->willReturn(new Account(new MailAccount()));
+		$this->aiIntegrationsService->expects($this->once())
+			->method('isLlmProcessingEnabled')
+			->willReturn(true);
+		$this->aiIntegrationsService->expects($this->once())
+			->method('requiresTranslation')
+			->willReturn(null);
+		$actualResponse = $this->controller->needsTranslation(100);
+		$expectedResponse = new JSONResponse(['requiresTranslation' => false]);
+		$expectedResponse->cacheFor(60 * 60 * 24, false, true);
+		$this->assertEquals($expectedResponse, $actualResponse);
+	}
+
+	public function testNeedsTranslation() {
+		$message = new \OCA\Mail\Db\Message();
+		$message->setId(100);
+		$message->setMailboxId(1);
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$mailbox->setAccountId(1);
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, 100)
+			->willReturn($message);
+		$this->mailManager->expects($this->once())
+			->method(('getMailbox'))
+			->with($this->userId, $message->getMailboxId())
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->userId, $mailbox->getAccountId())
+			->willReturn(new Account(new MailAccount()));
+		$this->aiIntegrationsService->expects($this->once())
+			->method('isLlmProcessingEnabled')
+			->willReturn(true);
+		$this->aiIntegrationsService->expects($this->once())
+			->method('requiresTranslation')
+			->willReturn(true);
+		$actualResponse = $this->controller->needsTranslation(100);
+		$expectedResponse = new JSONResponse(['requiresTranslation' => true]);
+		$expectedResponse->cacheFor(60 * 60 * 24, false, true);
+		$this->assertEquals($expectedResponse, $actualResponse);
+	}
 }

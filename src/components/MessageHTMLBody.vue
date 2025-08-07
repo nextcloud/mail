@@ -5,6 +5,9 @@
 <template>
 	<div class="html-message-body">
 		<MdnRequest :message="message" />
+		<NeedsTranslationInfo v-if="needsTranslation"
+			:is-html="true"
+			@translate="$emit('translate')" />
 		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content" style="color: #000000">
 			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
 			<Actions type="tertiary" :menu-name="t('mail', 'Show images')">
@@ -45,10 +48,13 @@
 import iframeResize from '@iframe-resizer/parent'
 import PrintScout from 'printscout'
 import { trustSender } from '../service/TrustedSenderService.js'
+import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
 import { NcActionButton as ActionButton, NcActions as Actions } from '@nextcloud/vue'
 import IconImage from 'vue-material-design-icons/ImageSizeSelectActual.vue'
 import IconMail from 'vue-material-design-icons/EmailOutline.vue'
 import IconDomain from 'vue-material-design-icons/Domain.vue'
+import { needsTranslation } from '../service/AiIntergrationsService.js'
+import { loadState } from '@nextcloud/initial-state'
 
 import logger from '../logger.js'
 import MdnRequest from './MdnRequest.vue'
@@ -58,6 +64,7 @@ export default {
 	name: 'MessageHTMLBody',
 	components: {
 		MdnRequest,
+		NeedsTranslationInfo,
 		Actions,
 		ActionButton,
 		IconImage,
@@ -83,6 +90,8 @@ export default {
 		return {
 			hasBlockedContent: false,
 			isSenderTrusted: this.message.isSenderTrusted,
+			needsTranslation: false,
+			enabledFreePrompt: loadState('mail', 'llm_freeprompt_available', false),
 		}
 	},
 	computed: {
@@ -96,12 +105,16 @@ export default {
 	beforeMount() {
 		scout.on('beforeprint', this.onBeforePrint)
 	},
-	mounted() {
+	async mounted() {
 		iframeResize({
 			license: 'GPLv3',
 			log: false,
 			scrolling: false,
 		}, this.$refs.iframe)
+
+		if (this.enabledFreePrompt && this.message) {
+			this.needsTranslation = await needsTranslation(this.message.databaseId)
+		}
 	},
 	beforeDestroy() {
 		scout.off('beforeprint', this.onBeforePrint)

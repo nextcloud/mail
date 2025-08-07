@@ -913,6 +913,50 @@ class MessagesController extends Controller {
 	}
 
 	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $messageId
+	 *
+	 * @return JSONResponse
+	 */
+	#[TrapError]
+	public function needsTranslation(int $messageId): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		try {
+			$message = $this->mailManager->getMessage($this->currentUserId, $messageId);
+			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		if (!$this->aiIntegrationService->isLlmProcessingEnabled()) {
+			$response = new JSONResponse([], Http::STATUS_NOT_IMPLEMENTED);
+			$response->cacheFor(60 * 60 * 24, false, true);
+			return $response;
+		}
+
+		try {
+			$requiresTranslation = $this->aiIntegrationService->requiresTranslation(
+				$account,
+				$mailbox,
+				$message,
+				$this->currentUserId
+			);
+			$response = new JSONResponse(['requiresTranslation' => $requiresTranslation === true]);
+			$response->cacheFor(60 * 60 * 24, false, true);
+			return $response;
+		} catch (ServiceException $e) {
+			$this->logger->error('Translation check failed: ' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+			return new JSONResponse([], Http::STATUS_NO_CONTENT);
+		}
+	}
+
+	/**
 	 * @param int $id
 	 * @param array $attachment
 	 *

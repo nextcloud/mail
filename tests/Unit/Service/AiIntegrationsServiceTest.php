@@ -23,6 +23,7 @@ use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AiIntegrations\Cache;
 use OCP\IConfig;
+use OCP\IL10N;
 use OCP\TaskProcessing\IManager as TaskProcessingManager;
 use OCP\TaskProcessing\IProvider as TaskProcessingProvider;
 use OCP\TextProcessing\FreePromptTaskType;
@@ -45,6 +46,7 @@ class AiIntegrationsServiceTest extends TestCase {
 	private TaskProcessingManager|MockObject $taskProcessingManager;
 	private TaskProcessingProvider|MockObject $taskProcessingProvider;
 	private TextProcessingProvider|MockObject $textProcessingProvider;
+	private IL10N|MockObject $l10n;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -56,6 +58,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->taskProcessingManager = $this->createMock(TaskProcessingManager::class);
 		$this->textProcessingManager = $this->createMock(TextProcessingManager::class);
+		$this->l10n = $this->createMock(IL10N::class);
 		$this->aiIntegrationsService = new AiIntegrationsService(
 			$this->logger,
 			$this->config,
@@ -64,6 +67,7 @@ class AiIntegrationsServiceTest extends TestCase {
 			$this->mailManager,
 			$this->taskProcessingManager,
 			$this->textProcessingManager,
+			$this->l10n
 		);
 
 		$this->taskProcessingProvider = $this->createMock(TaskProcessingProvider::class);
@@ -499,4 +503,49 @@ class AiIntegrationsServiceTest extends TestCase {
 
 		$this->aiIntegrationsService->summarizeMessages($account, [$message]);
 	}
+
+	public function testRequiresTranslationNoBackend(): void {
+		$account = new Account(new MailAccount());
+		$mailbox = new Mailbox();
+		$message = new Message();
+
+		$this->textProcessingManager
+			->method('getAvailableTaskTypes')
+			->willReturn([]);
+		$result = $this->aiIntegrationsService->requiresTranslation($account, $mailbox, $message, '');
+		$this->assertNull($result);
+
+	}
+
+	public function testRequiresTranslation(): void {
+		$account = new Account(new MailAccount());
+		$mailbox = new Mailbox();
+		$message = new Message();
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$message->setUid(1);
+		$currentUserId = 'user';
+		$this->textProcessingManager
+			->method('getAvailableTaskTypes')
+			->willReturn([FreePromptTaskType::class]);
+		$this->cache->method('getValue')->willReturn(false);
+		$this->clientFactory->method('getClient')->with($account)->willReturn($this->createMock(Horde_Imap_Client_Socket::class));
+		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
+		$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
+		$imapMessage->method('getUnsubscribeUrl')->willReturn(null);
+		$fromList = new AddressList([ Address::fromRaw('personal@example.com', 'personal@example.com')]);
+		$imapMessage->method('getFrom')->willReturn($fromList);
+		$imapMessage->method('getPlainBody')->willReturn('Ceci n\'est pas un message');
+
+		$this->textProcessingManager->expects($this->once())
+			->method('runTask')
+			->will($this->returnCallback(function (TextProcessingTask $task) {
+				$task->setOutput('{"needsTranslation": true}, the message is in French that is the value returned is true ');
+				return '';
+			}));
+
+		$result = $this->aiIntegrationsService->requiresTranslation($account, $mailbox, $message, $currentUserId);
+
+		$this->assertTrue($result);
+	}
+
 }

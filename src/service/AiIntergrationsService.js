@@ -43,9 +43,28 @@ export const smartReply = async (messageId) => {
 	try {
 		const resp = await axios.get(url)
 		if (resp.status === 204) {
-			throw new Error('Thread summary failed, error in the llm service')
+			throw new Error('Smart replies failed, error in the llm service')
 		}
 		return resp.data
+	} catch (e) {
+		throw convertAxiosError(e)
+	}
+}
+
+export const needsTranslation = async (messageId) => {
+	const url = generateUrl('/apps/mail/api/messages/{messageId}/needsTranslation', {
+		messageId,
+	})
+
+	try {
+		const resp = await axios.get(url)
+		if (resp.status === 204) {
+			throw new Error('Checking whether translation is needed failed, error in the llm service')
+		}
+		if (resp.status === 501) {
+			throw new Error('Please enable llm services for groupware to use this feature')
+		}
+		return resp.data.requiresTranslation
 	} catch (e) {
 		throw convertAxiosError(e)
 	}

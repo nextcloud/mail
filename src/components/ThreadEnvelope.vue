@@ -237,6 +237,7 @@
 			:smart-replies="showFollowUpHeader ? [] : smartReplies"
 			:reply-button-label="replyButtonLabel"
 			@load="onMessageLoaded"
+			@translate="onOpenTranslationModal"
 			@reply="(body) => onReply(body, showFollowUpHeader)" />
 		<Error v-else-if="error"
 			:error="error.message || t('mail', 'Not found')"
@@ -421,7 +422,7 @@ export default {
 			plainTextBody: '',
 			rawMessage: '', // Will hold the raw source of the message when requested
 			isInternal: true,
-			enabledSmartReply: loadState('mail', 'llm_freeprompt_available', false),
+			enabledFreePrompt: loadState('mail', 'llm_freeprompt_available', false),
 			loadingBodyTimeout: undefined,
 			showMailFilterFromEnvelope: false,
 		}
@@ -712,7 +713,7 @@ export default {
 			}
 
 			// Fetch smart replies
-			if (this.enabledSmartReply && this.message && !['trash', 'junk'].includes(this.mailbox.specialRole) && !this.showFollowUpHeader) {
+			if (this.enabledFreePrompt && this.message && !['trash', 'junk'].includes(this.mailbox.specialRole) && !this.showFollowUpHeader) {
 				this.smartReplies = await smartReply(this.envelope.databaseId)
 			}
 		},
