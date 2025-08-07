@@ -10,36 +10,46 @@ declare(strict_types=1);
 namespace OCA\Mail\Db\ContextChat;
 
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
+use OCP\DB\Exception;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
 /**
- * @template-extends QBMapper<Job>
+ * @template-extends QBMapper<Task>
  */
-class JobMapper extends QBMapper {
+class TaskMapper extends QBMapper {
 	/**
 	 * @param IDBConnection $db
 	 */
 	public function __construct(IDBConnection $db) {
-		parent::__construct($db, 'mail_context_chat_jobs');
+		parent::__construct($db, 'mail_context_chat_tasks');
 	}
 
 	/**
-	 * @return Job[]
+	 * @return Task
+	 * @throws DoesNotExistException
+	 * @throws Exception
+	 * @throws MultipleObjectsReturnedException
 	 */
-	public function findNext(): array {
+	public function findNext(): Task {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
+			->orderBy('id', 'ASC')
 			->setMaxResults(1);
-		return $this->findEntities($qb);
+		return $this->findEntity($qb);
 	}
 
 	/**
+	 * @param int $id
+	 * @return Task
 	 * @throws DoesNotExistException
+	 * @throws Exception
+	 * @throws MultipleObjectsReturnedException
 	 */
-	public function findById(int $id): Job {
+	public function findById(int $id): Task {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
@@ -50,16 +60,18 @@ class JobMapper extends QBMapper {
 	}
 
 	/**
+	 * @param int $mailboxId
+	 * @return Task
 	 * @throws DoesNotExistException
+	 * @throws Exception
+	 * @throws MultipleObjectsReturnedException
 	 */
-	public function findByMailbox(string $userId, int $accountId, int $mailboxId): Job {
+	public function findByMailbox(int $mailboxId): Task {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
 			->where(
-				$qb->expr()->eq('user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR)),
-				$qb->expr()->eq('account_id', $qb->createNamedParameter($accountId, IQueryBuilder::PARAM_INT)),
-				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT)),
+				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT))
 			);
 		return $this->findEntity($qb);
 	}

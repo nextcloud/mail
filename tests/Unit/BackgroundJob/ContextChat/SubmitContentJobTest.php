@@ -16,7 +16,6 @@ use Horde_Imap_Client_Socket;
 use OC\BackgroundJob\JobList;
 use OCA\Mail\Account;
 use OCA\Mail\AddressList;
-use OCA\Mail\AppInfo\Application;
 use OCA\Mail\BackgroundJob\ContextChat\SubmitContentJob;
 use OCA\Mail\ContextChat\ContextChatProvider;
 use OCA\Mail\Db\Mailbox;

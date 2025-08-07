@@ -9,30 +9,38 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob\ContextChat;
 
-use OCA\Mail\AppInfo\Application;
 use OCA\Mail\ContextChat\ContextChatProvider;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\ContextChat\JobsService;
+use OCA\Mail\Service\ContextChat\TaskService;
 use OCA\Mail\Service\MailManager;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJob;
 use OCP\BackgroundJob\TimedJob;
 use OCP\ContextChat\ContentItem;
 use OCP\ContextChat\IContentManager;
+use OCP\DB\Exception;
+use Psr\Log\LoggerInterface;
 
 class SubmitContentJob extends TimedJob {
 	public function __construct(
 		ITimeFactory $time,
-		private JobsService $jobsService,
+		private TaskService $jobsService,
 		private AccountService $accountService,
 		private MailManager $mailManager,
 		private MessageMapper $messageMapper,
 		private IMAPClientFactory $clientFactory,
 		private ContextChatProvider $contextChatProvider,
 		private IContentManager $contentManager,
+		private LoggerInterface $logger,
+		private MailboxMapper $mailboxMapper,
 	) {
 		parent::__construct($time);
 
@@ -47,76 +55,112 @@ class SubmitContentJob extends TimedJob {
 			return;
 		}
 
-		$nextJob = $this->jobsService->findNext();
-		$job = array_pop($nextJob);
-
-		if ($job === null) {
+		try {
+			$task = $this->jobsService->findNext();
+		} catch (Exception $e) {
+			$this->logger->warning('Exception occurred when trying to fetch next task', ['exception' => $e]);
+			return;
+		} catch (DoesNotExistException $e) {
+			// nothing to be done, let's defer to the next iteration of this job
+			return;
+		} catch (MultipleObjectsReturnedException $e) {
+			$this->logger->warning('Multiple tasks found for context chat. This is unexpected.', ['exception' => $e]);
 			return;
 		}
 
-		// Remove job from the database while it is running
-		// If new messages are received while the job is running,
-		// allow the new job to be added and update it at the end if needed
-		$this->jobsService->delete($job->getId());
-
-		$account = $this->accountService->findById($job->getAccountId());
-		$mailbox = $this->mailManager->getMailbox($job->getUserId(), $job->getMailboxId());
-		$messageIds = $this->messageMapper->findAllIds($mailbox);
-		$messageIds = array_filter($messageIds, fn (int $id): bool => $id >= $job->getNextMessageId());
-
-		if (count($messageIds) === 0) {
+		try {
+			$mailbox = $this->mailboxMapper->findById($task->getMailboxId());
+		} catch (ServiceException $e) {
+			$this->logger->warning('Multiple mailboxes found for context chat task, but only one expected. ERROR!', ['exception' => $e]);
+			return;
+		} catch (DoesNotExistException $e) {
+			// mailbox does not exist, lets wait for this task to be removed
 			return;
 		}
 
-		$messages = $this->messageMapper->findByIds($job->getUserId(), $messageIds, 'asc');
-		// Ensure messages are sorted by ID
-		usort($messages, static fn (Message $a, Message $b): int => $a->getId() <=> $b->getId());
+		$processMailsAfter = time() - ContextChatProvider::CONTEXT_CHAT_MESSAGE_MAX_AGE;
+		$messageIds = $this->messageMapper->findIdsAfter($mailbox, $task->getLastMessageId(), $processMailsAfter, ContextChatProvider::CONTEXT_CHAT_IMPORT_MAX_ITEMS);
 
-		$startTime = time() - ContextChatProvider::CONTEXT_CHAT_MESSAGE_MAX_AGE;
-		$nextMessage = reset($messages);
+		if (empty($messageIds)) {
+			try {
+				$this->jobsService->delete($task->getId());
+			} catch (MultipleObjectsReturnedException|Exception $e) {
+				$this->logger->warning('Exception occurred when trying to delete task', ['exception' => $e]);
+			}
+			return;
+		}
+
+		try {
+			$account = $this->accountService->findById($mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			// well, what do you know. Then let's just skip this and wait for the next iteration of this job. tasks should be cascade deleted anyway
+			return;
+		}
+
+		$messages = $this->messageMapper->findByIds($account->getUserId(), $messageIds, 'asc', 'id');
+
+		if (empty($messages)) {
+			try {
+				$this->jobsService->delete($task->getId());
+			} catch (MultipleObjectsReturnedException|Exception $e) {
+				$this->logger->warning('Exception occurred when trying to delete task', ['exception' => $e]);
+			}
+			return;
+		}
+
+
 		$client = $this->clientFactory->getClient($account);
 		$items = [];
 
 		try {
-			while (($nextMessage !== false) && (count($items) < ContextChatProvider::CONTEXT_CHAT_IMPORT_MAX_ITEMS)) {
-				// Skip older messages
-				if ($nextMessage->getSentAt() < $startTime) {
-					$nextMessage = next($messages);
+			$startTime = $this->time->getTime();
+			foreach ($messages as $message) {
+				if ($this->time->getTime() - $startTime > ContextChatProvider::CONTEXT_CHAT_MESSAGE_MAX_AGE) {
+					break;
+				}
+				try {
+					$imapMessage = $this->mailManager->getImapMessage($client, $account, $mailbox, $message->getUid(), true);
+				} catch (ServiceException $e) {
+					// couldn't load message, let's skip it. Retrying would be too costly
+					continue;
+				} catch (SmimeDecryptException $e) {
+					// encryption problem, skip this message
 					continue;
 				}
 
-				$imapMessage = $this->mailManager->getImapMessage($client, $account, $mailbox, $nextMessage->getUid(), true);
-
 				// Skip encrypted messages
 				if ($imapMessage->isEncrypted()) {
-					$nextMessage = next($messages);
 					continue;
 				}
 
 				$fullMessage = $imapMessage->getFullMessage($imapMessage->getUid(), true);
 
 				$items[] = new ContentItem(
-					(string)$nextMessage->getId(),
+					$mailbox->getId() . ':' . $message->getId(),
 					$this->contextChatProvider->getId(),
 					$imapMessage->getSubject(),
 					$fullMessage['body'] ?? '',
 					'E-Mail',
 					$imapMessage->getSentDate(),
-					[$job->getUserId()],
+					[$account->getUserId()],
 				);
-
-				$nextMessage = next($messages);
 			}
-		} finally{
-			$client->disconnect();
+		} finally {
+			try {
+				$client->close();
+			} catch (\Horde_Imap_Client_Exception $e) {
+				// pass
+			}
 		}
 
 		if (count($items) > 0) {
 			$this->contentManager->submitContent($this->contextChatProvider->getAppId(), $items);
 		}
 
-		if ($nextMessage !== false) {
-			$this->jobsService->updateOrCreate($job->getUserId(), $job->getAccountId(), $job->getMailboxId(), $nextMessage->getId());
+		try {
+			$this->jobsService->updateOrCreate($task->getMailboxId(), $message?->getId() ?? $messageIds[0]);
+		} catch (MultipleObjectsReturnedException|Exception $e) {
+			$this->logger->warning('Exception occurred when trying to update task', ['exception' => $e]);
 		}
 	}
 }
