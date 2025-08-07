@@ -11,8 +11,8 @@
 				:close-after-click="true"
 				@click.prevent="onToggleImportant">
 				<template #icon>
-					<ImportantIcon v-if="isImportant" :size="16" />
-					<ImportantOutlineIcon v-else :size="16" />
+					<ImportantIcon v-if="isImportant" :size="20" />
+					<ImportantOutlineIcon v-else :size="20" />
 				</template>
 				{{
 					isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
@@ -22,7 +22,7 @@
 				@click="onForward">
 				<template #icon>
 					<ShareIcon :title="t('mail', 'Forward')"
-						:size="16" />
+						:size="20" />
 				</template>
 				{{ t('mail', 'Forward') }}
 			</ActionButton>
@@ -31,7 +31,7 @@
 				@click.prevent="onToggleJunk">
 				<template #icon>
 					<AlertOctagonIcon :title="envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')"
-						:size="16" />
+						:size="20" />
 				</template>
 				{{
 					envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
@@ -42,7 +42,7 @@
 				@click.prevent="$emit('open-tag-modal')">
 				<template #icon>
 					<TagIcon :title="t('mail', 'Edit tags')"
-						:size="16" />
+						:size="20" />
 				</template>
 				{{ t('mail', 'Edit tags') }}
 			</ActionButton>
@@ -51,7 +51,7 @@
 				@click.prevent="$emit('open-move-modal')">
 				<template #icon>
 					<OpenInNewIcon :title="t('mail', 'Move message')"
-						:size="16" />
+						:size="20" />
 				</template>
 				{{ t('mail', 'Move message') }}
 			</ActionButton>
@@ -60,7 +60,7 @@
 				@click="snoozeActionsOpen = true">
 				<template #icon>
 					<AlarmIcon :title="t('mail', 'Snooze')"
-						:size="16" />
+						:size="20" />
 				</template>
 				{{ t('mail', 'Snooze') }}
 			</ActionButton>
@@ -69,7 +69,7 @@
 				@click="onUnSnooze">
 				<template #icon>
 					<AlarmIcon :title="t('mail', 'Unsnooze')"
-						:size="16" />
+						:size="20" />
 				</template>
 				{{ t('mail', 'Unsnooze') }}
 			</ActionButton>
@@ -78,7 +78,7 @@
 				@click.prevent="$emit('open-translation-modal')">
 				<template #icon>
 					<TranslationIcon :title="t('mail', 'Translate')"
-						:size="16" />
+						:size="20" />
 				</template>
 				{{ t('mail', 'Translate') }}
 			</ActionButton>
@@ -86,7 +86,7 @@
 				@click="localMoreActionsOpen=true">
 				<template #icon>
 					<DotsHorizontalIcon :title="t('mail', 'More actions')"
-						:size="16" />
+						:size="20" />
 				</template>
 				{{ t('mail', 'More actions') }}
 			</ActionButton>
@@ -96,7 +96,7 @@
 				@click="localMoreActionsOpen=false">
 				<template #icon>
 					<ChevronLeft :title="t('mail', 'More actions')"
-						:size="16" />
+						:size="20" />
 					{{ t('mail', 'More actions') }}
 				</template>
 			</ActionButton>
@@ -104,7 +104,7 @@
 				@click.prevent="forwardSelectedAsAttachment">
 				<template #icon>
 					<ShareIcon :title="t('mail', 'Forward message as attachment')"
-						:size="16" />
+						:size="20" />
 				</template>
 				{{ t('mail', 'Forward message as attachment') }}
 			</ActionButton>
@@ -112,7 +112,7 @@
 				@click="onOpenEditAsNew">
 				<template #icon>
 					<PlusIcon :title="t('mail', 'Edit as new message')"
-						:size="16" />
+						:size="20" />
 				</template>
 				{{ t('mail', 'Edit as new message') }}
 			</ActionButton>
@@ -120,7 +120,7 @@
 				@click.prevent="$emit('open-event-modal')">
 				<template #icon>
 					<CalendarBlankIcon :title="t('mail', 'Create event')"
-						:size="16" />
+						:size="20" />
 				</template>
 				{{ t('mail', 'Create event') }}
 			</ActionButton>
@@ -128,7 +128,7 @@
 				@click.prevent="$emit('open-task-modal')">
 				<template #icon>
 					<TaskIcon :title="t('mail', 'Create task')"
-						:size="16" />
+						:size="20" />
 				</template>
 				{{ t('mail', 'Create task') }}
 			</ActionButton>
@@ -137,7 +137,7 @@
 				@click.prevent="$emit('show-source-modal')">
 				<template #icon>
 					<InformationIcon :title="t('mail', 'View source')"
-						:size="16" />
+						:size="20" />
 				</template>
 				{{ t('mail', 'View source') }}
 			</ActionButton>
@@ -151,7 +151,7 @@
 			<ActionLink :close-after-click="true"
 				:href="exportMessageLink">
 				<template #icon>
-					<DownloadIcon :size="16" />
+					<DownloadIcon :size="20" />
 				</template>
 				{{ t('mail', 'Download message') }}
 			</ActionLink>
@@ -160,7 +160,7 @@
 				@click.prevent="$emit('open-mail-filter-from-envelope')">
 				<template #icon>
 					<FilterIcon :title="t('mail', 'Create mail filter')"
-						:size="16" />
+						:size="20" />
 				</template>
 				{{ t('mail', 'Create mail filter') }}
 			</ActionButton>
@@ -170,7 +170,7 @@
 				:close-after-click="true">
 				<template #icon>
 					<DownloadIcon :title="t('mail', 'Download thread data for debugging')"
-						:size="16" />
+						:size="20" />
 				</template>
 				{{ t('mail', 'Download thread data for debugging') }}
 			</ActionLink>
@@ -179,7 +179,7 @@
 			<ActionButton :close-after-click="false"
 				@click="snoozeActionsOpen = false">
 				<template #icon>
-					<ChevronLeft :size="16" />
+					<ChevronLeft :size="20" />
 				</template>
 				{{
 					t('mail', 'Back')
@@ -202,7 +202,7 @@
 				:min="new Date()"
 				@change="setCustomSnoozeDateTime">
 				<template #icon>
-					<CalendarClock :size="16" />
+					<CalendarClock :size="20" />
 				</template>
 			</NcActionInput>
 
@@ -210,7 +210,7 @@
 				close-after-click
 				@click.stop="setCustomSnooze(customSnoozeDateTime)">
 				<template #icon>
-					<CheckIcon :size="16" />
+					<CheckIcon :size="20" />
 				</template>
 				{{ t('spreed', 'Set custom snooze') }}
 			</NcActionButton>

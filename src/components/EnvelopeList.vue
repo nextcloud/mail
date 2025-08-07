@@ -73,32 +73,32 @@
 					<ActionButton v-if="isAtLeastOneSelectedNotJunk"
 						@click.prevent="markSelectionJunk">
 						<template #icon>
-							<AlertOctagonIcon :size="16" />
+							<AlertOctagonIcon :size="20" />
 						</template>
 						{{ n('mail', 'Mark {number} as spam', 'Mark {number} as spam', selection.length, { number: selection.length }) }}
 					</ActionButton>
 					<ActionButton v-if="isAtLeastOneSelectedJunk"
 						@click.prevent="markSelectionNotJunk">
 						<template #icon>
-							<AlertOctagonIcon :size="16" />
+							<AlertOctagonIcon :size="20" />
 						</template>
 						{{ n('mail', 'Mark {number} as not spam', 'Mark {number} as not spam', selection.length, { number: selection.length }) }}
 					</ActionButton>
 					<ActionButton :close-after-click="true" @click.prevent="onOpenTagModal">
 						<template #icon>
-							<TagIcon :size="16" />
+							<TagIcon :size="20" />
 						</template>
 						{{ n('mail', 'Edit tags for {number}', 'Edit tags for {number}', selection.length, { number: selection.length }) }}
 					</ActionButton>
 					<ActionButton v-if="!account.isUnified" :close-after-click="true" @click.prevent="onOpenMoveModal">
 						<template #icon>
-							<OpenInNewIcon :size="16" />
+							<OpenInNewIcon :size="20" />
 						</template>
 						{{ n('mail', 'Move {number} thread', 'Move {number} threads', selection.length, { number: selection.length }) }}
 					</ActionButton>
 					<ActionButton :close-after-click="true" @click.prevent="forwardSelectedAsAttachment">
 						<template #icon>
-							<ShareIcon :size="16" />
+							<ShareIcon :size="20" />
 						</template>
 						{{ n('mail', 'Forward {number} as attachment', 'Forward {number} as attachment', selection.length, { number: selection.length }) }}
 					</ActionButton>
