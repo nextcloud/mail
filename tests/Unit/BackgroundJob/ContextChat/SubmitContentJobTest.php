@@ -18,6 +18,7 @@ use OCA\Mail\Account;
 use OCA\Mail\AddressList;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\BackgroundJob\ContextChat\SubmitContentJob;
+use OCA\Mail\ContextChat\ContextChatProvider;
 use OCA\Mail\Db\Mailbox;
 // use OCA\Mail\Db\Message;
 use OCA\Mail\Model\IMAPMessage;
@@ -58,7 +59,7 @@ class SubmitContentJobTest extends TestCase {
 			'accountId' => 1,
 			'mailboxId' => 1,
 			'nextMessageId' => 1,
-			'startTime' => time() - Application::CONTEXT_CHAT_MESSAGE_MAX_AGE,
+			'startTime' => time() - ContextChatProvider::CONTEXT_CHAT_MESSAGE_MAX_AGE,
 		]);
 		// Set a fake ID
 		$this->job->setId(99);
@@ -124,7 +125,7 @@ class SubmitContentJobTest extends TestCase {
 			'accountId' => 1,
 			'mailboxId' => 1,
 			'nextMessageId' => 1,
-			'startTime' => time() - Application::CONTEXT_CHAT_MESSAGE_MAX_AGE,
+			'startTime' => time() - ContextChatProvider::CONTEXT_CHAT_MESSAGE_MAX_AGE,
 		]);
 		$this->job->start($this->createMock(JobList::class));
 	}
