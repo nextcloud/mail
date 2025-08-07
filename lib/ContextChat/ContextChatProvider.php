@@ -15,7 +15,7 @@ use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\ContextChat\JobsService;
+use OCA\Mail\Service\ContextChat\TaskService;
 use OCA\Mail\Service\MailManager;
 use OCP\BackgroundJob\IJobList;
 use OCP\ContextChat\Events\ContentProviderRegisterEvent;
@@ -33,11 +33,11 @@ use OCP\IUserManager;
 class ContextChatProvider implements IContentProvider, IEventListener {
 
 	public const CONTEXT_CHAT_MESSAGE_MAX_AGE = 60 * 60 * 24 * 365.25;
-	public const CONTEXT_CHAT_IMPORT_MAX_ITEMS = 100;
+	public const CONTEXT_CHAT_IMPORT_MAX_ITEMS = 1000;
 	public const CONTEXT_CHAT_JOB_INTERVAL = 60 * 5;
 
 	public function __construct(
-		private JobsService $jobsService,
+		private TaskService $jobsService,
 		private AccountService $accountService,
 		private MailManager $mailManager,
 		private MessageMapper $messageMapper,
@@ -108,14 +108,8 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 	 * @since 5.2.0
 	 */
 	public function getItemUrl(string $id): string {
-		// Get mailbox ID from message ID
-		$messages = $this->messageMapper->findByIds('', [(int)$id], '');
-		if (!$messages) {
-			return '';
-		}
-		$mailboxId = $messages[0]->getMailboxId();
-
-		return $this->urlGenerator->linkToRouteAbsolute('mail.page.thread', [ 'mailboxId' => $mailboxId, 'id' => $id ]);
+		[$mailboxId, $messageId] = explode(':', $id);
+		return $this->urlGenerator->linkToRouteAbsolute('mail.page.thread', [ 'mailboxId' => $mailboxId, 'id' => $messageId ]);
 	}
 
 	/**
@@ -133,11 +127,7 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 				$mailboxes = $this->mailManager->getMailboxes($account);
 
 				foreach ($mailboxes as $mailbox) {
-					$messageIds = $this->messageMapper->findAllIds($mailbox);
-
-					if (count($messageIds) > 0) {
-						$this->jobsService->updateOrCreate($userId, $account->getId(), $mailbox->getId(), 0);
-					}
+					$this->jobsService->updateOrCreate($mailbox->getId(), 0);
 				}
 			}
 		});
