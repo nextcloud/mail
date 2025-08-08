@@ -32,7 +32,7 @@ use Psr\Log\LoggerInterface;
 class SubmitContentJob extends TimedJob {
 	public function __construct(
 		ITimeFactory $time,
-		private TaskService $jobsService,
+		private TaskService $taskService,
 		private AccountService $accountService,
 		private MailManager $mailManager,
 		private MessageMapper $messageMapper,
@@ -56,7 +56,7 @@ class SubmitContentJob extends TimedJob {
 		}
 
 		try {
-			$task = $this->jobsService->findNext();
+			$task = $this->taskService->findNext();
 		} catch (Exception $e) {
 			$this->logger->warning('Exception occurred when trying to fetch next task', ['exception' => $e]);
 			return;
@@ -78,12 +78,12 @@ class SubmitContentJob extends TimedJob {
 			return;
 		}
 
-		$processMailsAfter = time() - ContextChatProvider::CONTEXT_CHAT_MESSAGE_MAX_AGE;
+		$processMailsAfter = $this->time->getTime() - ContextChatProvider::CONTEXT_CHAT_MESSAGE_MAX_AGE;
 		$messageIds = $this->messageMapper->findIdsAfter($mailbox, $task->getLastMessageId(), $processMailsAfter, ContextChatProvider::CONTEXT_CHAT_IMPORT_MAX_ITEMS);
 
 		if (empty($messageIds)) {
 			try {
-				$this->jobsService->delete($task->getId());
+				$this->taskService->delete($task->getId());
 			} catch (MultipleObjectsReturnedException|Exception $e) {
 				$this->logger->warning('Exception occurred when trying to delete task', ['exception' => $e]);
 			}
@@ -101,7 +101,7 @@ class SubmitContentJob extends TimedJob {
 
 		if (empty($messages)) {
 			try {
-				$this->jobsService->delete($task->getId());
+				$this->taskService->delete($task->getId());
 			} catch (MultipleObjectsReturnedException|Exception $e) {
 				$this->logger->warning('Exception occurred when trying to delete task', ['exception' => $e]);
 			}
@@ -115,7 +115,7 @@ class SubmitContentJob extends TimedJob {
 		try {
 			$startTime = $this->time->getTime();
 			foreach ($messages as $message) {
-				if ($this->time->getTime() - $startTime > ContextChatProvider::CONTEXT_CHAT_MESSAGE_MAX_AGE) {
+				if ($this->time->getTime() - $startTime > ContextChatProvider::CONTEXT_CHAT_JOB_INTERVAL) {
 					break;
 				}
 				try {
@@ -158,7 +158,7 @@ class SubmitContentJob extends TimedJob {
 		}
 
 		try {
-			$this->jobsService->updateOrCreate($task->getMailboxId(), $message?->getId() ?? $messageIds[0]);
+			$this->taskService->updateOrCreate($task->getMailboxId(), $message?->getId() ?? $messageIds[0]);
 		} catch (MultipleObjectsReturnedException|Exception $e) {
 			$this->logger->warning('Exception occurred when trying to update task', ['exception' => $e]);
 		}

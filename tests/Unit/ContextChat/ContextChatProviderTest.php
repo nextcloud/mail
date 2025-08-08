@@ -21,6 +21,7 @@ use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ContextChat\TaskService;
 use OCA\Mail\Service\MailManager;
+use OCP\BackgroundJob\IJobList;
 use OCP\ContextChat\Events\ContentProviderRegisterEvent;
 use OCP\ContextChat\IContentManager;
 use OCP\IURLGenerator;
@@ -30,7 +31,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class ContextChatProviderTest extends TestCase {
 	/** @var TaskService|MockObject */
-	private $jobsService;
+	private $taskService;
 
 	/** @var AccountService|MockObject */
 	private $accountService;
@@ -60,23 +61,24 @@ class ContextChatProviderTest extends TestCase {
 			$this->markTestSkipped();
 		}
 
-		// TODO: setup other components if needed
-		$this->jobsService = $this->createMock(TaskService::class);
+		$this->taskService = $this->createMock(TaskService::class);
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->mailManager = $this->createMock(MailManager::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->contentManager = $this->createMock(IContentManager::class);
+		$this->jobList = $this->createMock(IJobList::class);
 
 		$this->contextChatProvider = new ContextChatProvider(
-			$this->jobsService,
+			$this->taskService,
 			$this->accountService,
 			$this->mailManager,
 			$this->messageMapper,
 			$this->urlGenerator,
 			$this->userManager,
 			$this->contentManager,
+			$this->jobList,
 		);
 	}
 
@@ -87,9 +89,15 @@ class ContextChatProviderTest extends TestCase {
 		$messages[] = new Message();
 		$messages[] = new Message();
 
+		if (class_exists(\OCP\ContextChat\Events\ContentProviderRegisterEvent::class)) {
+			return [
+				'handle ContentProviderRegisterEvent' => [new \OCP\ContextChat\Events\ContentProviderRegisterEvent($this->createMock(IContentManager::class))],
+				'handle NewMessagesSynchronized' => [new NewMessagesSynchronized($account, $mailbox, $messages)],
+				'handle MessageDeletedEvent' => [new MessageDeletedEvent($account, $mailbox, 1)],
+			];
+		}
+
 		return [
-			// TODO: fix the following constructor
-			// 'handle ContentProviderRegisterEvent' => [new ContentProviderRegisterEvent($this->contentManager)],
 			'handle NewMessagesSynchronized' => [new NewMessagesSynchronized($account, $mailbox, $messages)],
 			'handle MessageDeletedEvent' => [new MessageDeletedEvent($account, $mailbox, 1)],
 		];
@@ -98,23 +106,20 @@ class ContextChatProviderTest extends TestCase {
 	/**
 	 * @dataProvider provideEvents
 	 */
-	public function testHandleWithoutContextChat($event) {
-		// TODO: confirm test works after OCP\ContextChat classes are found
-		$this->markTestIncomplete();
-
+	public function testHandleWithoutContextChat($event): void {
 		$this->contentManager->expects($this->once())
 			->method('isContextChatAvailable')
 			->willReturn(false);
-		$this->assertNull($this->contextChatProvider->handle($event));
+		$this->contentManager->expects($this->never())->method('registerContentProvider');
+		$this->contentManager->expects($this->never())->method('deleteContent');
+		$this->taskService->expects($this->never())->method('updateOrCreate');
+		$this->contextChatProvider->handle($event);
 	}
 
 	/**
 	 * @dataProvider provideEvents
 	 */
 	public function testHandleWithContextChat($event) {
-		// TODO: confirm test works after OCP\ContextChat classes are found
-		$this->markTestIncomplete();
-
 		$this->contentManager->expects($this->once())
 			->method('isContextChatAvailable')
 			->willReturn(true);
@@ -125,7 +130,7 @@ class ContextChatProviderTest extends TestCase {
 		}
 
 		if ($event instanceof NewMessagesSynchronized) {
-			$this->jobsService->expects($this->once())
+			$this->taskService->expects($this->once())
 				->method('createOrUpdate');
 		}
 
@@ -134,50 +139,32 @@ class ContextChatProviderTest extends TestCase {
 				->method('deleteContent');
 		}
 
-		$this->assertNull($this->contextChatProvider->handle($event));
+		$this->contextChatProvider->handle($event);
 	}
 
-	public function testGetId() {
-		// TODO: confirm test works after OCP\ContextChat classes are found
-		$this->markTestIncomplete();
-
-		$this->assertEquals($this->contextChatProvider->getId(), 'mail');
+	public function testGetId(): void {
+		$this->assertEquals('mail', $this->contextChatProvider->getId());
 	}
 
-	public function testGetAppId() {
-		// TODO: confirm test works after OCP\ContextChat classes are found
-		$this->markTestIncomplete();
-
-		$this->assertEquals($this->contextChatProvider->getAppId(), 'mail');
+	public function testGetAppId(): void {
+		$this->assertEquals('mail', $this->contextChatProvider->getAppId());
 	}
 
-	public function testGetItemUrl() {
-		// TODO: confirm test works after OCP\ContextChat classes are found
-		$this->markTestIncomplete();
-
-		$message = new Message();
-		$message->setUid(2);
-		$message->setMailboxId(1);
-		$this->messageMapper->expects($this->once())
-			->method('findByIds')
-			->with('', [2], '')
-			->willReturn([$message]);
-		$this->urlGenerator->expects($this->once())
-			->method('linkToRouteAbsolute')
-			->with('mail.page.thread', ['mailboxId' => 1, 'id' => '2'])
-			->willReturn('http://localhost/apps/mail/box/1/thread/2');
-		$itemUrl = $this->contextChatProvider->getItemUrl('2');
-		$this->assertEquals($itemUrl, 'http://localhost/apps/mail/box/1/thread/2');
+	public function testGetItemUrl(): void {
+		$itemUrl = $this->contextChatProvider->getItemUrl('1:2');
+		$this->assertEquals('http://localhost/apps/mail/box/1/thread/2', $itemUrl);
 	}
 
-	public function testTriggerInitialImport() {
-		// TODO: finish test
-		$this->markTestIncomplete();
-
-		// $account = new Account(new MailAccount());
-		// $this->accountService->expects($this->once())
-		// 	->method('findByUserId')
-		// 	->willReturn([$account]);
-		$this->assertNull($this->contextChatProvider->triggerInitialImport());
+	public function testTriggerInitialImport(): void {
+		$user = $this->createMock(\OCP\IUser::class);
+		$user->expects($this->once())->method('getUID')->willReturn('user123');
+		$account = $this->createMock(Account::class);
+		$this->accountService->expects($this->once())->method('findByUserId')->willReturn([$account]);
+		$mailbox = $this->createMock(Mailbox::class);
+		$mailbox->expects($this->once())->method('getId')->willReturn(1);
+		$this->mailManager->expects($this->once())->method('getMailboxes')->willReturn([$mailbox]);
+		$this->userManager->expects($this->once())->method('callForSeenUsers')->willReturnCallback(fn ($fn) => $fn($user));
+		$this->taskService->expects($this->any())->method('createOrUpdate')->with(1, 0);
+		$this->contextChatProvider->triggerInitialImport();
 	}
 }
