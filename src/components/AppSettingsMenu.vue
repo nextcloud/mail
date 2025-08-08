@@ -112,44 +112,33 @@
 				</div>
 
 				<h4>{{ t('mail', 'Search in body') }}</h4>
-				<p v-if="loadingPrioritySettings" class="app-settings">
-					{{ prioritySettingsText }}
-				</p>
-				<p v-else class="app-settings">
-					<input id="priority-inbox-toggle"
-						class="checkbox"
-						type="checkbox"
+				<p class="app-settings">
+					<NcCheckboxRadioSwitch id="priority-inbox-toggle"
 						:checked="searchPriorityBody"
-						@change="onToggleSearchPriorityBody">
-					<label for="priority-inbox-toggle">{{ prioritySettingsText }}</label>
+						:loading="loadingPrioritySettings"
+						@update:checked="onToggleSearchPriorityBody">
+						{{ prioritySettingsText }}
+					</NcCheckboxRadioSwitch>
 				</p>
 
 				<h4>{{ t('mail', 'Reply text position') }}</h4>
-				<p v-if="loadingReplySettings" class="app-settings reply-settings">
-					<IconLoading :size="16" />
-					{{ replySettingsText }}
-				</p>
-				<p v-else class="app-settings">
-					<input id="bottom-reply-enabled"
-						class="checkbox"
-						type="checkbox"
+				<p class="app-settings reply-settings">
+					<NcCheckboxRadioSwitch id="bottom-reply-enabled"
 						:checked="useBottomReplies"
-						@change="onToggleButtonReplies">
-					<label for="bottom-reply-enabled">{{ replySettingsText }}</label>
+						:loading="loadingReplySettings"
+						@update:checked="onToggleButtonReplies">
+						{{ replySettingsText }}
+					</NcCheckboxRadioSwitch>
 				</p>
 
 				<h4>{{ t('mail', 'Gravatar settings') }}</h4>
-				<p v-if="loadingAvatarSettings" class="app-settings avatar-settings">
-					<IconLoading :size="16" />
-					{{ t('mail', 'Use Gravatar and favicon avatars') }}
-				</p>
-				<p v-else class="app-settings">
-					<input id="gravatar-enabled"
-						class="checkbox"
-						type="checkbox"
+				<p class="app-settings avatar-settings">
+					<NcCheckboxRadioSwitch id="gravatar-enabled"
 						:checked="useExternalAvatars"
-						@change="onToggleExternalAvatars">
-					<label for="gravatar-enabled">{{ t('mail', 'Use Gravatar and favicon avatars') }}</label>
+						:loading="loadingAvatarSettings"
+						@update:checked="onToggleExternalAvatars">
+						{{ t('mail', 'Use Gravatar and favicon avatars') }}
+					</NcCheckboxRadioSwitch>
 				</p>
 
 				<h4>{{ t('mail', 'Mailto') }}</h4>
@@ -185,17 +174,13 @@
 				<p class="settings-hint">
 					{{ t('mail', 'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.') }}
 				</p>
-				<p v-if="loadingOptOutSettings" class="app-settings">
-					<IconLoading :size="16" />
-					{{ optOutSettingsText }}
-				</p>
-				<p v-else class="app-settings">
-					<input id="data-collection-toggle"
-						class="checkbox"
-						type="checkbox"
+				<p class="app-settings">
+					<NcCheckboxRadioSwitch id="data-collection-toggle"
 						:checked="useDataCollection"
-						@change="onToggleCollectData">
-					<label for="data-collection-toggle">{{ optOutSettingsText }}</label>
+						:loading="loadingOptOutSettings"
+						@update:checked="onToggleCollectData">
+						{{ optOutSettingsText }}
+					</NcCheckboxRadioSwitch>
 				</p>
 
 				<h4>{{ t('mail', 'Trusted senders') }}</h4>
@@ -206,12 +191,12 @@
 					{{ t('mail', 'Highlight external email addresses by enabling this feature, manage your internal addresses and domains to ensure recognized contacts stay unmarked.') }}
 				</p>
 				<p class="app-settings">
-					<input id="internal-address-toggle"
-						class="checkbox"
-						type="checkbox"
+					<NcCheckboxRadioSwitch id="internal-address-toggle"
 						:checked="useInternalAddresses"
-						@change="onToggleInternalAddress">
-					<label for="internal-address-toggle">{{ internalAddressText }}</label>
+						:loading="loadingInternalAddresses"
+						@update:checked="onToggleInternalAddress">
+						{{ internalAddressText }}
+					</NcCheckboxRadioSwitch>
 				</p>
 				<InternalAddress />
 
@@ -256,24 +241,21 @@
 			</NcAppSettingsSection>
 
 			<NcAppSettingsSection id="autotagging-settings" :name="t('mail', 'Assistance features')">
-				<p v-if="toggleAutoTagging" class="app-settings">
-					<IconLoading :size="16" />
-				</p>
-				<p v-else class="app-settings">
-					<input id="auto-tagging-toggle"
-						class="checkbox"
-						type="checkbox"
+				<p class="app-settings">
+					<NcCheckboxRadioSwitch id="auto-tagging-toggle"
 						:checked="useAutoTagging"
-						@change="onToggleAutoTagging">
-					<label for="auto-tagging-toggle">{{ autoTaggingText }}</label>
+						:loading="toggleAutoTagging"
+						@update:checked="onToggleAutoTagging">
+						{{ autoTaggingText }}
+					</NcCheckboxRadioSwitch>
 				</p>
 				<p v-if="followUpFeatureAvailable" class="app-settings">
-					<input id="follow-up-reminder-toggle"
-						class="checkbox"
-						type="checkbox"
+					<NcCheckboxRadioSwitch id="follow-up-reminder-toggle"
 						:checked="useFollowUpReminders"
-						@change="onToggleFollowUpReminders">
-					<label for="follow-up-reminder-toggle">{{ followUpReminderText }}</label>
+						:loading="loadingFollowUpReminders"
+						@update:checked="onToggleFollowUpReminders">
+						{{ followUpReminderText }}
+					</NcCheckboxRadioSwitch>
 				</p>
 			</NcAppSettingsSection>
 			<NcAppSettingsSection id="about-settings" :name="t('mail', 'About')">
@@ -365,7 +347,7 @@ import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 import CompactMode from 'vue-material-design-icons/ReorderHorizontal.vue'
 
-import { NcAppSettingsSection, NcAppSettingsDialog, NcButton, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch, NcDialog, NcInputField } from '@nextcloud/vue'
+import { NcAppSettingsSection, NcAppSettingsDialog, NcButton, NcCheckboxRadioSwitch, NcDialog, NcInputField } from '@nextcloud/vue'
 import TextEditor from './TextEditor.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconEmail from 'vue-material-design-icons/EmailOutline.vue'
@@ -392,7 +374,6 @@ export default {
 		NcButton,
 		IconEmail,
 		IconAdd,
-		IconLoading,
 		IconLock,
 		IconClose,
 		IconCheck,
@@ -423,6 +404,7 @@ export default {
 			// eslint-disable-next-line
 			optOutSettingsText: t('mail', 'Activate'),
 			loadingOptOutSettings: false,
+			loadingInternalAddresses: false,
 			// eslint-disable-next-line
 			replySettingsText: t('mail', 'Put my text to the bottom of a reply instead of on top of it.'),
 			loadingReplySettings: false,
@@ -432,6 +414,7 @@ export default {
 			followUpReminderText: t('mail', 'Remind about messages that require a reply but received none'),
 			internalAddressText: t('mail', 'Use internal addresses'),
 			toggleAutoTagging: false,
+			loadingFollowUpReminders: false,
 			displaySmimeCertificateModal: false,
 			sortOrder: 'newest',
 			showSettings: false,
@@ -539,36 +522,37 @@ export default {
 		async onOpen() {
 			this.showSettings = true
 		},
-		onToggleButtonReplies(e) {
+		onToggleButtonReplies(atBottom) {
 			this.loadingReplySettings = true
 
 			this.mainStore.savePreference({
 				key: 'reply-mode',
-				value: e.target.checked ? 'bottom' : 'top',
+				value: atBottom ? 'bottom' : 'top',
 			})
 				.catch((error) => Logger.error('could not save preferences', { error }))
 				.then(() => {
 					this.loadingReplySettings = false
 				})
 		},
-		onToggleExternalAvatars(e) {
+		onToggleExternalAvatars(enabled) {
 			this.loadingAvatarSettings = true
 
 			this.mainStore.savePreference({
 				key: 'external-avatars',
-				value: e.target.checked ? 'true' : 'false',
+				value: enabled ? 'true' : 'false',
 			})
 				.catch((error) => Logger.error('could not save preferences', { error }))
 				.then(() => {
 					this.loadingAvatarSettings = false
 				})
 		},
-		async onToggleSearchPriorityBody(e) {
+		async onToggleSearchPriorityBody(enabled) {
 			this.loadingPrioritySettings = true
+
 			try {
 				await this.mainStore.savePreference({
 					key: 'search-priority-body',
-					value: e.target.checked ? 'true' : 'false',
+					value: enabled ? 'true' : 'false',
 				})
 			} catch (error) {
 				Logger.error('could not save preferences', { error })
@@ -576,12 +560,12 @@ export default {
 				this.loadingPrioritySettings = false
 			}
 		},
-		onToggleCollectData(e) {
+		onToggleCollectData(collect) {
 			this.loadingOptOutSettings = true
 
 			this.mainStore.savePreference({
 				key: 'collect-data',
-				value: e.target.checked ? 'true' : 'false',
+				value: collect ? 'true' : 'false',
 			})
 				.catch((error) => Logger.error('could not save preferences', { error }))
 				.then(() => {
@@ -603,13 +587,13 @@ export default {
 				showError(t('mail', 'Could not update preference'))
 			}
 		},
-		async onToggleAutoTagging(e) {
+		async onToggleAutoTagging(enabled) {
 			this.toggleAutoTagging = true
 
 			try {
 				await this.mainStore.savePreference({
 					key: 'tag-classified-messages',
-					value: e.target.checked ? 'true' : 'false',
+					value: enabled ? 'true' : 'false',
 				})
 			} catch (error) {
 				Logger.error('could not save preferences', { error })
@@ -619,26 +603,34 @@ export default {
 				this.toggleAutoTagging = false
 			}
 		},
-		async onToggleFollowUpReminders(e) {
+		async onToggleFollowUpReminders(enabled) {
+			this.loadingFollowUpReminders = true
+
 			try {
 				await this.mainStore.savePreference({
 					key: 'follow-up-reminders',
-					value: e.target.checked ? 'true' : 'false',
+					value: enabled ? 'true' : 'false',
 				})
 			} catch (error) {
 				Logger.error('Could not save preferences', { error })
 				showError(t('mail', 'Could not update preference'))
+			} finally {
+				this.loadingFollowUpReminders = false
 			}
 		},
-		async onToggleInternalAddress(e) {
+		async onToggleInternalAddress(enabled) {
+			this.loadingInternalAddresses = true
+
 			try {
 				await this.mainStore.savePreference({
 					key: 'internal-addresses',
-					value: e.target.checked ? 'true' : 'false',
+					value: enabled ? 'true' : 'false',
 				})
 			} catch (error) {
 				Logger.error('Could not save preferences', { error })
 				showError(t('mail', 'Could not update preference'))
+			} finally {
+				this.loadingInternalAddresses = false
 			}
 		},
 		registerProtocolHandler() {
@@ -681,12 +673,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-p.app-settings span.loading-icon {
-	display: inline-block;
-	vertical-align: middle;
-	padding: var(--default-grid-baseline) 0;
-}
-
 p.app-settings {
 	padding: calc(var(--default-grid-baseline) * 2) 0;
 }
@@ -770,10 +756,6 @@ p.app-settings {
 
 .app-settings-section {
 	list-style: none;
-}
-// align it with the checkbox
-.internal_address {
-	margin-inline-start: 3px;
 }
 
 .text-block-buttons {
