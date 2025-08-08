@@ -91,7 +91,7 @@ class ContextChatProviderTest extends TestCase {
 
 		if (class_exists(\OCP\ContextChat\Events\ContentProviderRegisterEvent::class)) {
 			return [
-				'handle ContentProviderRegisterEvent' => [new \OCP\ContextChat\Events\ContentProviderRegisterEvent($this->contentManager)],
+				'handle ContentProviderRegisterEvent' => [new \OCP\ContextChat\Events\ContentProviderRegisterEvent($this->createMock(IContentManager::class))],
 				'handle NewMessagesSynchronized' => [new NewMessagesSynchronized($account, $mailbox, $messages)],
 				'handle MessageDeletedEvent' => [new MessageDeletedEvent($account, $mailbox, 1)],
 			];
