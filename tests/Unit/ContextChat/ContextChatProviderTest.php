@@ -57,7 +57,7 @@ class ContextChatProviderTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		if (!class_exists(\OCP\ContextChat\IContentManager::class)) {
+		if (!interface_exists(\OCP\ContextChat\IContentManager::class)) {
 			$this->markTestSkipped();
 		}
 
@@ -85,9 +85,12 @@ class ContextChatProviderTest extends TestCase {
 	public function provideEvents(): array {
 		$account = new Account(new MailAccount());
 		$mailbox = new Mailbox();
+		$mailbox->setId(1);
 		$messages = [];
 		$messages[] = new Message();
+		$messages[0]->setId(1);
 		$messages[] = new Message();
+		$messages[1]->setId(2);
 
 		if (class_exists(\OCP\ContextChat\Events\ContentProviderRegisterEvent::class)) {
 			return [
@@ -131,7 +134,7 @@ class ContextChatProviderTest extends TestCase {
 
 		if ($event instanceof NewMessagesSynchronized) {
 			$this->taskService->expects($this->once())
-				->method('createOrUpdate');
+				->method('updateOrCreate');
 		}
 
 		if ($event instanceof MessageDeletedEvent) {
@@ -151,6 +154,12 @@ class ContextChatProviderTest extends TestCase {
 	}
 
 	public function testGetItemUrl(): void {
+		$this->urlGenerator->expects($this->once())->method('linkToRouteAbsolute')->willReturnCallback(function ($route, $args) {
+			$this->assertEquals('mail.page.thread', $route);
+			$this->assertEquals(1, $args['mailboxId']);
+			$this->assertEquals(2, $args['id']);
+			return 'http://localhost/apps/mail/box/1/thread/2';
+		});
 		$itemUrl = $this->contextChatProvider->getItemUrl('1:2');
 		$this->assertEquals('http://localhost/apps/mail/box/1/thread/2', $itemUrl);
 	}
@@ -160,11 +169,11 @@ class ContextChatProviderTest extends TestCase {
 		$user->expects($this->once())->method('getUID')->willReturn('user123');
 		$account = $this->createMock(Account::class);
 		$this->accountService->expects($this->once())->method('findByUserId')->willReturn([$account]);
-		$mailbox = $this->createMock(Mailbox::class);
-		$mailbox->expects($this->once())->method('getId')->willReturn(1);
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
 		$this->mailManager->expects($this->once())->method('getMailboxes')->willReturn([$mailbox]);
 		$this->userManager->expects($this->once())->method('callForSeenUsers')->willReturnCallback(fn ($fn) => $fn($user));
-		$this->taskService->expects($this->any())->method('createOrUpdate')->with(1, 0);
+		$this->taskService->expects($this->any())->method('updateOrCreate')->with(1, 0);
 		$this->contextChatProvider->triggerInitialImport();
 	}
 }
