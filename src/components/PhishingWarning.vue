@@ -5,7 +5,7 @@
 <template>
 	<div class="phishing-warning">
 		<div class="phishing-warning__title">
-			<IconAlertOutline :size="16" :title="t('mail', 'Phishing email')" />
+			<IconAlertOutline :size="20" :title="t('mail', 'Phishing email')" />
 			{{ t('mail','This email might be a phishing attempt') }}
 		</div>
 		<ul v-for="(warning,index) in warnings" :key="index" class="phishing-warning__list">

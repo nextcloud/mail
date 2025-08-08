@@ -9,7 +9,7 @@
 			<img v-else-if="attachment.hasPreview" :src="previewURL" class="attachment-preview-image">
 			<img v-else :src="getIcon" class="attachment-preview-image">
 			<span v-if="attachment.type === 'cloud'" class="cloud-attachment-icon">
-				<Cloud :size="16" />
+				<Cloud :size="20" />
 			</span>
 			<span v-else-if="attachment.type === 'message'">
 				<EmailArrowRightIcon />
@@ -27,7 +27,7 @@
 			</span>
 		</div>
 		<button @click="onDelete(attachment)">
-			<Close :size="24" />
+			<Close :size="20" />
 		</button>
 	</li>
 </template>

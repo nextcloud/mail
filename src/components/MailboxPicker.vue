@@ -10,12 +10,12 @@
 			</h2>
 			<span class="crumbs">
 				<div @click.prevent="onClickHome">
-					<IconInbox :size="16" />
+					<IconInbox :size="20" />
 				</div>
 				<div v-for="(box, index) in mailboxCrumbs"
 					:key="box.databaseId"
 					class="level">
-					<IconBreadcrumb :size="16" />
+					<IconBreadcrumb :size="20" />
 					<a @click.prevent="onClickCrumb(index)">
 						{{ getMailboxTitle(box) }}
 					</a>
@@ -26,17 +26,17 @@
 					<li v-for="box in filteredMailboxes "
 						:key="box.databaseId"
 						@click.prevent="onClickMailbox(box)">
-						<IconInbox v-if="box.specialRole === 'inbox'" :size="16" />
+						<IconInbox v-if="box.specialRole === 'inbox'" :size="20" />
 						<IconDraft v-else-if="box.specialRole === 'drafts'"
-							:size="16" />
+							:size="20" />
 						<IconSent v-else-if="box.specialRole === 'sent'"
-							:size="16" />
+							:size="20" />
 						<IconArchive v-else-if="box.specialRole === 'archive'"
-							:size="16" />
+							:size="20" />
 						<IconTrash v-else-if="box.specialRole === 'trash'"
-							:size="16" />
+							:size="20" />
 						<IconFolder v-else
-							:size="16" />
+							:size="20" />
 						<div class="mailbox-title">
 							{{ getMailboxTitle(box) }}
 						</div>

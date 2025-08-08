@@ -44,7 +44,7 @@
 					button-variant-grouped="vertical"
 					@update:checked="setLayout('no-split')">
 					<template #icon>
-						<CompactMode :size="16" />
+						<CompactMode :size="20" />
 					</template>
 					{{ t('mail', 'List') }}
 				</NcCheckboxRadioSwitch>
@@ -68,7 +68,7 @@
 					button-variant-grouped="vertical"
 					@update:checked="setLayout('horizontal-split')">
 					<template #icon>
-						<HorizontalSplit :size="16" />
+						<HorizontalSplit :size="20" />
 					</template>
 					{{ t('mail', 'Horizontal split') }}
 				</NcCheckboxRadioSwitch>

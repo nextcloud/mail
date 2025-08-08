@@ -37,12 +37,12 @@
 					<div class="recipient-info__expand-toggle" @click="toggleExpand(index)">
 						<template v-if="isExpanded(index)">
 							<div class="recipient-info__show-less">
-								<IconArrowUp :size="16" />
+								<IconArrowUp :size="20" />
 								<span>{{ t('mail', 'Show less') }}</span>
 							</div>
 						</template>
 						<template v-else>
-							<IconArrowDown :size="16" />
+							<IconArrowDown :size="20" />
 							<span>{{ t('mail', 'Show more') }}</span>
 						</template>
 					</div>

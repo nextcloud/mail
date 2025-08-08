@@ -12,8 +12,8 @@
 			<span>
 				{{ n('mail', '{count} attachment', '{count} attachments', attachments.length, { count: attachments.length }) }} ({{ formatBytes(totalSizeOfUpload()) }})
 			</span>
-			<ChevronUp v-if="isToggle" :size="24" />
-			<ChevronDown v-if="!isToggle" :size="24" />
+			<ChevronUp v-if="isToggle" :size="20" />
+			<ChevronDown v-if="!isToggle" :size="20" />
 		</div>
 		<ul class="new-message-attachments--list"
 			:class="{

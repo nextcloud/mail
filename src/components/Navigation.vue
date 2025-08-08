@@ -56,7 +56,7 @@
 					:name="t('mail', 'Mail settings')"
 					@click="showMailSettings">
 					<template #icon>
-						<IconSetting :size="16" />
+						<IconSetting :size="20" />
 					</template>
 				</AppNavigationItem>
 			</div>

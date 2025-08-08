@@ -10,7 +10,7 @@
 		</h2>
 
 		<div class="event-data__row event-data__row--date">
-			<CalendarIcon class="event-data__row__icon" :size="16" />
+			<CalendarIcon class="event-data__row__icon" :size="20" />
 			<div>
 				{{ startDate }}
 				<span v-if="startTimezone && startTimezone !== endTimezone" class="muted">
@@ -26,12 +26,12 @@
 
 		<div v-if="location"
 			class="event-data__row event-data__row--location">
-			<MapMarkerIcon class="event-data__row__icon" :size="16" />
+			<MapMarkerIcon class="event-data__row__icon" :size="20" />
 			<span>{{ location }}</span>
 		</div>
 
 		<div class="event-data__row event-data__row--participants">
-			<AccountMultipleIcon class="event-data__row__icon" :size="16" />
+			<AccountMultipleIcon class="event-data__row__icon" :size="20" />
 			<ul>
 				<li v-for="{ name, isOrganizer, key } in attendees" :key="key">
 					{{ name }}

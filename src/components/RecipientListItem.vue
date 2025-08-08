@@ -9,7 +9,7 @@
 			:url="option.photo"
 			:avatar-size="24" />
 		<Close class="delete-recipient"
-			:size="16"
+			:size="20"
 			@click.prevent="removeRecipient(option)" />
 	</div>
 </template>
