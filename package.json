@@ -73,7 +73,7 @@
     "dompurify": "^3.2.6",
     "escape-html": "^1.0.3",
     "html-to-text": "^9.0.5",
-    "ical.js": "^2.2.0",
+    "ical.js": "^2.2.1",
     "js-base64": "^3.7.7",
     "jstz": "^2.1.1",
     "lodash": "^4.17.21",
