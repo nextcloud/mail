@@ -17,7 +17,7 @@ use OCP\DB\Exception;
 
 class TaskService {
 	public function __construct(
-		private TaskMapper $jobMapper,
+		private TaskMapper $taskMapper,
 	) {
 	}
 
@@ -28,7 +28,7 @@ class TaskService {
 	 * @throws MultipleObjectsReturnedException
 	 */
 	public function findNext(): Task {
-		return $this->jobMapper->findNext();
+		return $this->taskMapper->findNext();
 	}
 
 	/**
@@ -41,13 +41,13 @@ class TaskService {
 	 */
 	public function updateOrCreate(int $mailboxId, int $lastMessageId): Task {
 		try {
-			$entity = $this->jobMapper->findByMailbox($mailboxId);
+			$entity = $this->taskMapper->findByMailbox($mailboxId);
 		} catch (DoesNotExistException) {
 			$entity = new Task();
 			$entity->setMailboxId($mailboxId);
 			$entity->setLastMessageId($lastMessageId);
 
-			return $this->jobMapper->insert($entity);
+			return $this->taskMapper->insert($entity);
 		}
 
 		if ($lastMessageId >= $entity->getLastMessageId()) {
@@ -56,7 +56,7 @@ class TaskService {
 		}
 
 		$entity->setLastMessageId($lastMessageId);
-		return $this->jobMapper->update($entity);
+		return $this->taskMapper->update($entity);
 	}
 
 	/**
@@ -67,10 +67,10 @@ class TaskService {
 	 */
 	public function delete(int $jobId): ?Task {
 		try {
-			$entity = $this->jobMapper->findById($jobId);
+			$entity = $this->taskMapper->findById($jobId);
 		} catch (DoesNotExistException) {
 			return null;
 		}
-		return $this->jobMapper->delete($entity);
+		return $this->taskMapper->delete($entity);
 	}
 }
