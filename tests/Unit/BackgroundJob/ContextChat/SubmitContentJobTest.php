@@ -26,7 +26,6 @@ use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ContextChat\TaskService;
 use OCA\Mail\Service\MailManager;
-use OCA\Settings\Settings\Admin\Mail;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\ContextChat\IContentManager;
