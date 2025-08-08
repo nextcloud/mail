@@ -30,6 +30,11 @@ class MessageMapperTest extends TestCase {
 	/** @var IDBConnection */
 	private $db;
 
+	/** @var ITimeFactory */
+	private $time;
+
+	private int $timestamp = 1234567890;
+
 	/** @var MessageMapper */
 	private $mapper;
 
@@ -37,12 +42,13 @@ class MessageMapperTest extends TestCase {
 		parent::setUp();
 
 		$this->db = \OC::$server->getDatabaseConnection();
-		$timeFactory = $this->createMock(ITimeFactory::class);
+		$this->time = $this->createMock(ITimeFactory::class);
+		$this->time->method('getTime')->willReturnCallback(fn () => $this->timestamp);
 		$tagMapper = $this->createMock(TagMapper::class);
 		$performanceLogger = $this->createMock(PerformanceLogger::class);
 		$this->mapper = new MessageMapper(
 			$this->db,
-			$timeFactory,
+			$this->time,
 			$tagMapper,
 			$performanceLogger
 		);
@@ -61,7 +67,7 @@ class MessageMapperTest extends TestCase {
 				'message_id' => $qb->createNamedParameter('<abc' . $uid . $mailbox_id . '@123.com>'),
 				'mailbox_id' => $qb->createNamedParameter($mailbox_id, IQueryBuilder::PARAM_INT),
 				'subject' => $qb->createNamedParameter('TEST'),
-				'sent_at' => $qb->createNamedParameter(time(), IQueryBuilder::PARAM_INT),
+				'sent_at' => $qb->createNamedParameter($this->time->getTime(), IQueryBuilder::PARAM_INT),
 				'in_reply_to' => $qb->createNamedParameter('<>')
 			]);
 		$insert->executeStatement();
@@ -78,7 +84,7 @@ class MessageMapperTest extends TestCase {
 					'message_id' => $qb->createNamedParameter('<abc' . $i . '@123.com>'),
 					'mailbox_id' => $qb->createNamedParameter(1, IQueryBuilder::PARAM_INT),
 					'subject' => $qb->createNamedParameter('TEST'),
-					'sent_at' => $qb->createNamedParameter(time(), IQueryBuilder::PARAM_INT),
+					'sent_at' => $qb->createNamedParameter($this->time->getTime(), IQueryBuilder::PARAM_INT),
 					'in_reply_to' => $qb->createNamedParameter('<>')
 				]);
 			$insert->executeStatement();
@@ -226,5 +232,27 @@ class MessageMapperTest extends TestCase {
 		self::assertCount(1, $this->mapper->findByUids($mailbox2, [103]));
 		self::assertCount(1, $this->mapper->findByUids($mailbox2, [104]));
 		self::assertCount(1, $this->mapper->findByUids($mailbox3, [105]));
+	}
+
+	public function testFindIdsAfter() : void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(4);
+		$this->timestamp = 1234567890;
+		array_map(function ($i) {
+			$this->insertMessage($i, 1);
+		}, range(1, 5));
+		$this->timestamp = 1234567891 + 100;
+		array_map(function ($i) {
+			$this->insertMessage($i, 1);
+		}, range(6, 10));
+
+		$mails = $this->mapper->findIdsAfter($mailbox, 2, 0, 5);
+		$this->assertEquals([3,4,5,6,7], $mails);
+
+		$mails = $this->mapper->findIdsAfter($mailbox, 2, 1234567890, 5);
+		$this->assertEquals([6,7,8,9,10], $mails);
+
+		$mails = $this->mapper->findIdsAfter($mailbox, 2, 1234567890 + 200, 5);
+		$this->assertEquals([], $mails);
 	}
 }
