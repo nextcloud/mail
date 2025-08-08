@@ -128,7 +128,7 @@
 				class="load-more"
 				@click="$emit('load-more')">
 				<AddIcon :size="16" />
-				{{ t('mail', 'Load more') }}
+				{{ loadMoreLabel }}
 			</div>
 			<div id="load-more-mail-messages" key="loadingMore" :class="{'icon-loading-small': loadingMore}" />
 		</transition-group>
@@ -195,6 +195,10 @@ export default {
 		account: {
 			type: Object,
 			required: true,
+		},
+		loadMoreLabel: {
+			type: String,
+			default: '',
 		},
 		mailbox: {
 			type: Object,
