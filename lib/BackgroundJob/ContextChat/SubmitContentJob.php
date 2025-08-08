@@ -128,12 +128,15 @@ class SubmitContentJob extends TimedJob {
 					continue;
 				}
 
+
 				// Skip encrypted messages
 				if ($imapMessage->isEncrypted()) {
 					continue;
 				}
 
+
 				$fullMessage = $imapMessage->getFullMessage($imapMessage->getUid(), true);
+
 
 				$items[] = new ContentItem(
 					$mailbox->getId() . ':' . $message->getId(),
@@ -145,6 +148,8 @@ class SubmitContentJob extends TimedJob {
 					[$account->getUserId()],
 				);
 			}
+		} catch (\Throwable $e) {
+			$this->logger->warning('Exception occurred when trying to fetch messages for context chat', ['exception' => $e]);
 		} finally {
 			try {
 				$client->close();
