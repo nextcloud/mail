@@ -37,7 +37,7 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 	public const CONTEXT_CHAT_JOB_INTERVAL = 60 * 5;
 
 	public function __construct(
-		private TaskService $jobsService,
+		private TaskService $taskService,
 		private AccountService $accountService,
 		private MailManager $mailManager,
 		private MessageMapper $messageMapper,
@@ -66,11 +66,9 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 				return;
 			}
 
-			$userId = $event->getAccount()->getUserId();
-			$accountId = $event->getAccount()->getId();
 			$mailboxId = $event->getMailbox()->getId();
 
-			$this->jobsService->updateOrCreate($userId, $accountId, $mailboxId, min($messageIds));
+			$this->taskService->updateOrCreate($mailboxId, min($messageIds));
 			return;
 		}
 
@@ -127,7 +125,7 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 				$mailboxes = $this->mailManager->getMailboxes($account);
 
 				foreach ($mailboxes as $mailbox) {
-					$this->jobsService->updateOrCreate($mailbox->getId(), 0);
+					$this->taskService->updateOrCreate($mailbox->getId(), 0);
 				}
 			}
 		});
