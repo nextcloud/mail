@@ -16,6 +16,7 @@ import {
 export default defineStore('main', {
 	state: () => {
 		return {
+			syncTimestamp: Date.now(),
 			isExpiredSession: false,
 			preferences: {},
 			accountsUnmapped: {
