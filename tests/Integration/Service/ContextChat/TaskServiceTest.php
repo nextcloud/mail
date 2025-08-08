@@ -7,18 +7,11 @@
 
 namespace OCA\Mail\Tests\Integration\Service;
 
-use Horde_Imap_Client_Socket;
-use OCA\Mail\Account;
-use OCA\Mail\Db\ContextChat\Task;
 use OCA\Mail\Db\ContextChat\TaskMapper;
-use OCA\Mail\Folder;
-use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\Service\ContextChat\TaskService;
 use OCA\Mail\Tests\Integration\TestCase;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
-use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Log\LoggerInterface;
 
 class TaskServiceTest extends TestCase {
 

@@ -12,7 +12,6 @@ namespace OCA\Mail\Tests\Integration\Db;
 use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\ContextChat\TaskMapper;
-use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
