@@ -24,7 +24,7 @@ class TaskMapper extends QBMapper {
 	 * @param IDBConnection $db
 	 */
 	public function __construct(IDBConnection $db) {
-		parent::__construct($db, 'mail_context_chat_tasks');
+		parent::__construct($db, 'mail_cc_tasks');
 	}
 
 	/**
