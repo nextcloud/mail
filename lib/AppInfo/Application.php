@@ -91,8 +91,6 @@ include_once __DIR__ . '/../../vendor/autoload.php';
 
 final class Application extends App implements IBootstrap {
 	public const APP_ID = 'mail';
-	// 1 year
-	// 5 minutes
 
 	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);
