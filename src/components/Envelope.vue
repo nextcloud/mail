@@ -179,7 +179,7 @@
 					@click="onUnSnooze">
 					<template #icon>
 						<AlarmIcon :title="t('mail', 'Unsnooze')"
-							:size="16" />
+							:size="20" />
 					</template>
 					{{ t('mail', 'Unsnooze') }}
 				</ActionButton>
@@ -187,7 +187,7 @@
 					:close-after-click="true"
 					@click.prevent="onOpenMoveModal">
 					<template #icon>
-						<OpenInNewIcon :size="16" />
+						<OpenInNewIcon :size="20" />
 					</template>
 					<template v-if="layoutMessageViewThreaded">
 						{{ t('mail', 'Move thread') }}

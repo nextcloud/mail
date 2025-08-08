@@ -305,11 +305,11 @@
 
 				<Actions :open.sync="isAddAttachmentsOpen">
 					<template #icon>
-						<Paperclip :size="16" />
+						<Paperclip :size="20" />
 					</template>
 					<ActionButton :close-after-click="true" @click="onAddLocalAttachment">
 						<template #icon>
-							<IconUpload :size="16" />
+							<IconUpload :size="20" />
 						</template>
 						{{
 							t('mail', 'Upload attachment')
@@ -317,7 +317,7 @@
 					</ActionButton>
 					<ActionButton :close-after-click="true" @click="onAddCloudAttachment">
 						<template #icon>
-							<IconFolder :size="16" />
+							<IconFolder :size="20" />
 						</template>
 						{{
 							t('mail', 'Add attachment from Files')
@@ -325,7 +325,7 @@
 					</ActionButton>
 					<ActionButton :close-after-click="true" :disabled="encrypt" @click="onAddCloudAttachmentLink">
 						<template #icon>
-							<IconPublic :size="16" />
+							<IconPublic :size="20" />
 						</template>
 						{{
 							t('mail', 'Add share link from Files')
@@ -338,7 +338,7 @@
 					<template v-if="!isMoreActionsOpen">
 						<ActionButton v-if="isPickerAvailable" :close-after-click="true" @click="openPicker">
 							<template #icon>
-								<IconLinkPicker :size="16" />
+								<IconLinkPicker :size="20" />
 							</template>
 							{{
 								t('mail', 'Smart picker')
@@ -346,7 +346,7 @@
 						</ActionButton>
 						<ActionButton :close-after-click="true" @click="openTextBlockPicker">
 							<template #icon>
-								<NcIconSvgWrapper :size="16"
+								<NcIconSvgWrapper :size="20"
 									:title="t('mail', 'Text blocks')"
 									:svg="textBlockSvg" />
 							</template>
@@ -358,7 +358,7 @@
 							:close-after-click="false"
 							@click="isMoreActionsOpen=true">
 							<template #icon>
-								<SendClock :size="16" :title="t('mail', 'Send later')" />
+								<SendClock :size="20" :title="t('mail', 'Send later')" />
 							</template>
 							{{
 								t('mail', 'Send later')
@@ -396,7 +396,7 @@
 							@click="isMoreActionsOpen=false">
 							<template #icon>
 								<ChevronLeft :title="t('mail', 'Send later')"
-									:size="16" />
+									:size="20" />
 								{{ t('mail', 'Send later') }}
 							</template>
 						</ActionButton>
