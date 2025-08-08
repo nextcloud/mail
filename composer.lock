@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c53ddfd565bf5352dc330426d95c36ec",
+    "content-hash": "83637eb41c680a699ac79685d738130d",
     "packages": [
         {
             "name": "amphp/amp",
@@ -3445,25 +3445,26 @@
         },
         {
             "name": "youthweb/urllinker",
-            "version": "2.0.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/youthweb/urllinker.git",
-                "reference": "9363e23ccdd20f6d46a8a3c8c6c3c2c0f67f6350"
+                "url": "https://github.com/Art4/urllinker.git",
+                "reference": "d72c28bd68698ebb912783bc0e5caf6a8f0904b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/youthweb/urllinker/zipball/9363e23ccdd20f6d46a8a3c8c6c3c2c0f67f6350",
-                "reference": "9363e23ccdd20f6d46a8a3c8c6c3c2c0f67f6350",
+                "url": "https://api.github.com/repos/Art4/urllinker/zipball/d72c28bd68698ebb912783bc0e5caf6a8f0904b5",
+                "reference": "d72c28bd68698ebb912783bc0e5caf6a8f0904b5",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4 || ^8.0"
+                "php": "^8.1"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.13",
-                "phpstan/phpstan": "^1.9",
-                "phpunit/phpunit": "^9"
+                "friendsofphp/php-cs-fixer": "^3.84",
+                "phpstan/phpstan": "^2.0",
+                "phpunit/phpunit": "^9.6 || ^11.0 || ^12.0",
+                "rector/rector": "^2.1"
             },
             "type": "library",
             "autoload": {
@@ -3487,12 +3488,12 @@
                 }
             ],
             "description": "Autolink URLs in text or html",
-            "homepage": "https://github.com/youthweb",
+            "homepage": "https://github.com/Art4/urllinker",
             "support": {
-                "issues": "https://github.com/youthweb/urllinker/issues",
-                "source": "https://github.com/youthweb/urllinker/tree/2.0.0"
+                "issues": "https://github.com/Art4/urllinker/issues",
+                "source": "https://github.com/Art4/urllinker/tree/2.1.0"
             },
-            "time": "2022-12-14T13:25:25+00:00"
+            "time": "2025-07-22T10:44:28+00:00"
         }
     ],
     "packages-dev": [
