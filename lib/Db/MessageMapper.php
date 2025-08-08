@@ -1733,7 +1733,7 @@ class MessageMapper extends QBMapper {
 			->where(
 				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
 				$qb->expr()->gt('id', $qb->createNamedParameter($afterId, IQueryBuilder::PARAM_INT)),
-				$qb->expr()->gt('sent_at', $qb->createNamedParameter($afterId, IQueryBuilder::PARAM_INT)),
+				$qb->expr()->gt('sent_at', $qb->createNamedParameter($sentAfter, IQueryBuilder::PARAM_INT)),
 			)
 			->orderBy('id', 'asc')
 			->setMaxResults($limit);
