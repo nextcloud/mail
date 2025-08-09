@@ -99,6 +99,7 @@ OC.L10N.register(
     "Custom" : "Mteja",
     "Add tag" : "Add tag",
     "Not found" : "Haipatikani",
+    "Unsubscribe" : "Unsubscribe",
     "Mark as unread" : "Weka alama kama haijasomwa",
     "Mark as read" : "Weka alama kama iliyosomwa",
     "Copy translated text" : "Nakili maandishi yaliyotafsiriwa",
