@@ -444,6 +444,7 @@ OC.L10N.register(
     "Subscribed" : "Inscrita",
     "Sync in background" : "Sincronizar em segundo plano",
     "Outbox" : "Caixa de saída",
+    "Translate this message to {language}" : "Traduzir esta mensagem para o {language}",
     "New message" : "Nova mensagem",
     "Edit message" : "Editar mensagem",
     "Draft" : "Rascunho",

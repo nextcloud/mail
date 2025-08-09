@@ -442,6 +442,7 @@
     "Subscribed" : "已订阅",
     "Sync in background" : "后台同步",
     "Outbox" : "发件箱",
+    "Translate this message to {language}" : "将此邮件翻译为 {language}",
     "New message" : "新邮件",
     "Edit message" : "编辑邮件",
     "Draft" : "草稿",
