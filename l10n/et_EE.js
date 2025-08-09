@@ -433,6 +433,7 @@ OC.L10N.register(
     "Subscribed" : "Tellitud",
     "Sync in background" : "Sünkroniseeri taustal",
     "Outbox" : "Saadetud kirjad",
+    "Translate this message to {language}" : "Tõlgi see e-kiri sihtkeelde: {language}",
     "New message" : "Uus kiri",
     "Edit message" : "Muuda kirja",
     "Draft" : "Kavand",
