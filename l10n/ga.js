@@ -444,6 +444,7 @@ OC.L10N.register(
     "Subscribed" : "Suibscríofa",
     "Sync in background" : "Sioncrónaigh sa chúlra",
     "Outbox" : "Bosca Amach",
+    "Translate this message to {language}" : "Aistrigh an teachtaireacht seo go {language}",
     "New message" : "Teachtaireacht nua",
     "Edit message" : "Cuir teachtaireacht in eagar",
     "Draft" : "Dréacht",
