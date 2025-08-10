@@ -444,6 +444,7 @@ OC.L10N.register(
     "Subscribed" : "Підписано",
     "Sync in background" : "Синхронізація у фоновому режимі",
     "Outbox" : "Вихідні",
+    "Translate this message to {language}" : "Перекласти це повідомлення на {language}",
     "New message" : "Нове повідомлення",
     "Edit message" : "Редагувати повідомлення",
     "Draft" : "Чернетка",
