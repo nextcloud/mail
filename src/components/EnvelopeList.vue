@@ -574,9 +574,6 @@ div {
 #load-more-mail-messages {
 	margin: 10px auto;
 	padding: 10px;
-	margin-top: 50px;
-	margin-bottom: 50px;
-	padding-inline-start: 32px;
 	background-position: 9px center;
 }
 
