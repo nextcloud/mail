@@ -89,6 +89,11 @@ class TextBlockController extends Controller {
 		return JsonResponse::success($textBlock, Http::STATUS_OK);
 	}
 
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @return JsonResponse
+	 */
 	public function destroy(int $id): JsonResponse {
 		if ($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
