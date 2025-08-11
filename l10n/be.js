@@ -5,6 +5,7 @@ OC.L10N.register(
     "Save" : "Захаваць",
     "Name" : "Назва",
     "Password" : "Пароль",
+    "None" : "Няма",
     "Go back" : "Назад",
     "Email address" : "Адрас электроннай пошты",
     "Cancel" : "Скасаваць",
