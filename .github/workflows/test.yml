@@ -272,7 +272,7 @@ jobs:
       - name: Install the app
         run: php -f nextcloud/occ app:enable mail
       - name: Set up node ${{ env.E2E_NODE_VERSION }}
-        uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: ${{ env.E2E_NODE_VERSION }}
       - name: Install npm dependencies
