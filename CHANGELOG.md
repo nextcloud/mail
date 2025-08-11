@@ -1,3 +1,20 @@
+# [5.2.0-rc.0](https://github.com/nextcloud/mail/compare/v5.2.0-beta.2...v5.2.0-rc.0) (2025-08-11)
+
+
+### Bug Fixes
+
+* avoid polluting the logs in the task processing event listner ([a3826a4](https://github.com/nextcloud/mail/commit/a3826a4ab7f9dd4e935b58ed2ffac5f7510bf2cd))
+* **deps:** bump linkifyjs to v4.3.2 ([ee7d7ba](https://github.com/nextcloud/mail/commit/ee7d7bad4db72cddb89ba30182ebff7f8c375036))
+* **l10n:** Update translations from Transifex ([c42d544](https://github.com/nextcloud/mail/commit/c42d54489295dfb3e753c7b002d9f44849c597a8))
+* **l10n:** Update translations from Transifex ([8bb6ad5](https://github.com/nextcloud/mail/commit/8bb6ad5b3acdea0161be714e1f89214c1c803c45))
+* **l10n:** Update translations from Transifex ([1e05154](https://github.com/nextcloud/mail/commit/1e05154f3dba720d12c5443aa066f130bb1a3c70))
+* **ui:** replace wrongly sized and jumping checkbox loading icon ([71f1723](https://github.com/nextcloud/mail/commit/71f17238457e861fad40b2ffbc74ab80a5560653))
+* **ui:** resize action icons from 16px to 20px ([ac76255](https://github.com/nextcloud/mail/commit/ac76255f6a8627610f1c1a191125ff76bc9e5cef))
+* **ui:** resize action icons from 16px to 20px ([58f51f6](https://github.com/nextcloud/mail/commit/58f51f6ac53b62e699cd2ff8e7eaf81a618116b4))
+* **ui:** resize button icons from 16px to 20px ([49774fc](https://github.com/nextcloud/mail/commit/49774fcfd401ff01327764ae5a7dedba3049f554))
+
+
+
 # [5.2.0-beta.2](https://github.com/nextcloud/mail/compare/v5.2.0-alpha.1...v5.2.0-beta.2) (2025-08-06)
 
 
