@@ -5,9 +5,16 @@
 <template>
 	<NcDialog id="text-block-picker" :name="t('mail','Text blocks')" @closing="handleClose">
 		<p>{{ t('mail','Choose a text block to insert at the cursor') }}</p>
-		<ListItem v-for="textBlock in textBlocks"
+		<ListItem v-for="textBlock in getMyTextBlocks()"
 			:key="textBlock.id"
 			:text-block="textBlock"
+			:is-view-mode="true"
+			:picked="textBlock.id === picked?.id"
+			@click="handleClick" />
+		<ListItem v-for="textBlock in getSharedTextBlocks()"
+			:key="textBlock.id"
+			:text-block="textBlock"
+			:shared="true"
 			:is-view-mode="true"
 			:picked="textBlock.id === picked?.id"
 			@click="handleClick" />
@@ -43,9 +50,6 @@ export default {
 	},
 	computed: {
 		...mapState(useMainStore, ['getMyTextBlocks', 'getSharedTextBlocks']),
-		textBlocks() {
-			return this.getMyTextBlocks().concat(this.getSharedTextBlocks())
-		},
 	},
 	methods: {
 		handleClick(textBlock) {

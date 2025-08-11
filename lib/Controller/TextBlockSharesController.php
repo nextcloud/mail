@@ -52,6 +52,11 @@ class TextBlockSharesController extends Controller {
 		return JsonResponse::success($textBlocks);
 	}
 
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @return JsonResponse
+	 */
 	#[TrapError]
 	public function create(int $textBlockId, string $shareWith, string $type): JsonResponse {
 		if ($this->uid === null) {
@@ -76,6 +81,11 @@ class TextBlockSharesController extends Controller {
 
 	}
 
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @return JsonResponse
+	 */
 	#[TrapError]
 	public function destroy(int $id, string $shareWith): JsonResponse {
 		if ($this->uid === null) {
@@ -92,6 +102,11 @@ class TextBlockSharesController extends Controller {
 		return JsonResponse::success();
 	}
 
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @return JsonResponse
+	 */
 	public function getTextBlockShares(int $id): JsonResponse {
 		if ($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
