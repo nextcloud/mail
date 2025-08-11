@@ -4,7 +4,7 @@
 -->
 <template>
 	<div>
-		<NcListItem :active="picked" @click="handleListItemClick">
+		<NcListItem class="text-block-list-item" :active="picked" @click="handleListItemClick">
 			<template #name>
 				{{ textBlock.title }}
 			</template>
@@ -15,14 +15,14 @@
 				<AccountMultiple :title="t('mail', 'Shared')"
 					:size="20" />
 			</template>
-			<template v-if="!shared && !isViewMode" #actions>
+			<template v-if="!shared" #actions>
 				<NcActionButton @click="editModalOpen = true">
 					<template #icon>
 						<IconPencil :size="20" />
 					</template>
 					{{ t('mail','Edit {title}', { title: textBlock.title }) }}
 				</NcActionButton>
-				<NcActionButton icon="icon-delete" @click="deleteTextBlock()">
+				<NcActionButton v-if="!isViewMode" icon="icon-delete" @click="deleteTextBlock()">
 					{{ t('mail','Delete {title}', { title: textBlock.title }) }}
 				</NcActionButton>
 			</template>
@@ -366,24 +366,10 @@ export default {
 
 <style lang="scss" scoped>
 .text-block-list-item {
-	display: grid;
-	grid-template-columns: 1fr 4fr 1fr;
-	gap: var(--default-grid-baseline);
-	padding: var(--default-grid-baseline);
-	&__title {
-		white-space: nowrap;
-		padding-inline-end: 30px;
-		width: 100px;
-		text-overflow: ellipsis;
-		overflow: hidden;
-	}
-	&__preview {
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-	&__shares {
-		width: 100%;
+	padding-inline-start: 0px !important;
+	padding-inline-end: 0px !important;
+	:deep(.list-item-content) {
+		padding: 0px !important;
 	}
 }
 
