@@ -9,7 +9,7 @@
 		class="mail-error"
 		:class="{ 'mail-error--auto-margin': autoMargin }">
 		<template #icon>
-			<AlertCircleIcon :size="24" />
+			<AlertCircleIcon />
 		</template>
 		<template v-if="data && data.debug" #action>
 			<NcButton :aria-label="t('mail', 'Report this bug')"

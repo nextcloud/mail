@@ -9,7 +9,7 @@
 			<div v-if="allowNewMailAccounts">
 				<EmptyContent :name="t('mail', 'Connect your mail account')">
 					<template #icon>
-						<IconMail :size="65" />
+						<IconMail />
 					</template>
 				</EmptyContent>
 				<AccountForm :display-name="displayName"
@@ -19,7 +19,7 @@
 			</div>
 			<EmptyContent v-else :name="t('mail', 'To add a mail account, please contact your administrator.')">
 				<template #icon>
-					<IconMail :size="65" />
+					<IconMail />
 				</template>
 			</EmptyContent>
 		</AppContent>

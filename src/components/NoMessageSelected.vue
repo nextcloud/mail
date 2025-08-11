@@ -9,7 +9,7 @@
 			:name="t('mail', 'Welcome to {productName} Mail', { productName }, null, {escape: false})"
 			:description="t('mail', 'Start writing a message by clicking below or select an existing message to display its contents')">
 			<template #icon>
-				<IconMail :size="65" />
+				<IconMail />
 			</template>
 			<template #action>
 				<NewMessageButtonHeader />
