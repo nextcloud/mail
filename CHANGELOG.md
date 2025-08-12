@@ -1,3 +1,13 @@
+# [5.2.0](https://github.com/nextcloud/mail/compare/v5.2.0-rc.0...v5.2.0) (2025-08-12)
+
+
+### Bug Fixes
+
+* **l10n:** Update translations from Transifex ([65bc297](https://github.com/nextcloud/mail/commit/65bc297cee16e5724b109711138caf5f5d9fcb8b))
+* **text-blocks:** allow editing in composer and open api for non admin users ([f6de36b](https://github.com/nextcloud/mail/commit/f6de36bda93bf8869c753797248031f9b37a0507))
+
+
+
 # [5.2.0-rc.0](https://github.com/nextcloud/mail/compare/v5.2.0-beta.2...v5.2.0-rc.0) (2025-08-11)
 
 
