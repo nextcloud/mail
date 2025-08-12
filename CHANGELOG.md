@@ -1,3 +1,27 @@
+## [5.1.11](https://github.com/nextcloud/mail/compare/v5.1.10...v5.1.11) (2025-08-12)
+
+
+### Bug Fixes
+
+* avoid polluting the logs in the task processing event listner ([c1afd2f](https://github.com/nextcloud/mail/commit/c1afd2fdf53081dad849c85478436b2cffee55dd))
+* **deps:** bump linkifyjs to v4.3.2 ([844ac45](https://github.com/nextcloud/mail/commit/844ac4566a4a522f68de0f74bb41c67758365ea5))
+* **dns:** Update public suffix list ([d7770e9](https://github.com/nextcloud/mail/commit/d7770e9e8e0ec6d5960b4434b4d730df1cc25428))
+* **l10n:** Update translations from Transifex ([73e66e8](https://github.com/nextcloud/mail/commit/73e66e857b719f30aac71730dc6b8065f374e0a4))
+* **l10n:** Update translations from Transifex ([e8eaa8a](https://github.com/nextcloud/mail/commit/e8eaa8aa43f8baab95bc59fd24abe844ea130b5d))
+* **l10n:** Update translations from Transifex ([3ec84e3](https://github.com/nextcloud/mail/commit/3ec84e3ff3cecdc349b8222b0786dd43f7726049))
+* **l10n:** Update translations from Transifex ([f1b0291](https://github.com/nextcloud/mail/commit/f1b0291e1aedd24e4f431ba7dcdb61dc31af22e8))
+* **l10n:** Update translations from Transifex ([1f57fc8](https://github.com/nextcloud/mail/commit/1f57fc8f7d8084f67c421cda01239509c45194be))
+* **l10n:** Update translations from Transifex ([1de50ed](https://github.com/nextcloud/mail/commit/1de50ed940fbeaef085d791a7230f5bb51e33a44))
+* **l10n:** Update translations from Transifex ([b0d7a93](https://github.com/nextcloud/mail/commit/b0d7a93b6e2feea958743c722ec95323b4a8c5d7))
+* **l10n:** Update translations from Transifex ([c93aa5a](https://github.com/nextcloud/mail/commit/c93aa5ae7aadde5d67d38ce4bd4ff2e2541785da))
+* **l10n:** Update translations from Transifex ([50c8a40](https://github.com/nextcloud/mail/commit/50c8a40d2c0fb42ebe190c732226f5b4bfab500b))
+* **l10n:** Update translations from Transifex ([5713430](https://github.com/nextcloud/mail/commit/5713430adf831402541f60be71f876760e7ce6ee))
+* **l10n:** Update translations from Transifex ([706f149](https://github.com/nextcloud/mail/commit/706f1492e634f626172c8fa0260a375affa6ce28))
+* **l10n:** Update translations from Transifex ([322bd96](https://github.com/nextcloud/mail/commit/322bd96e8e7ec105d9ed077d8441774a3657ec83))
+* **translation:** respect llm admin setting ([e2a2a32](https://github.com/nextcloud/mail/commit/e2a2a32de49d28a256f34e315e57d0c0394ccaf1))
+
+
+
 ## [5.1.10](https://github.com/nextcloud/mail/compare/v5.1.9...v5.1.10) (2025-07-29)
 
 
