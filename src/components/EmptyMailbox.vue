@@ -5,7 +5,7 @@
 <template>
 	<NcEmptyContent :name="t('mail', 'No messages in this folder')">
 		<template #icon>
-			<IconMail :size="65" />
+			<IconMail />
 		</template>
 	</NcEmptyContent>
 </template>
