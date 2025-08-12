@@ -24,6 +24,8 @@ OC.L10N.register(
     "Select" : "Select",
     "Comment" : "មតិ",
     "Remove" : "ដកចេញ",
+    "Today" : "ថ្ងៃ​នេះ",
+    "Yesterday" : "ម្សិលមិញ",
     "Other" : "ផ្សេងៗ",
     "Move" : "Move",
     "Folder name" : "ឈ្មោះ​ថត",

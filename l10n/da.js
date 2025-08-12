@@ -230,6 +230,8 @@ OC.L10N.register(
     "More options" : "Flere muligheder",
     "Remove" : "Fjern",
     "email" : "e-mail",
+    "Today" : "I dag",
+    "Last week" : "Seneste uge",
     "Loading messages …" : "Indlæser beskeder...",
     "Choose target folder" : "Vælg destinationsmappe",
     "No more submailboxes in here" : "Ikke flere underpostkasser herinde",

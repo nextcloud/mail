@@ -258,6 +258,7 @@ OC.L10N.register(
     "Remove" : "Elimină",
     "email" : "email",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Nu aveți permisiunea să mutați mesajul în folderul de arhivare și/sau șterge mesajul din folderul curent",
+    "Today" : "Azi",
     "Loading messages …" : "Se încarcă mesajele ...",
     "Choose target folder" : "Alege directorul destinație",
     "No more submailboxes in here" : "Nu mai sunt subfoldere",

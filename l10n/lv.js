@@ -86,6 +86,7 @@ OC.L10N.register(
     "More options" : "Vairāk iespēju",
     "Remove" : "Noņemt",
     "email" : "e-pasts",
+    "Today" : "Šodien",
     "Other" : "Cits",
     "The sender of this message has asked to be notified when you read this message." : "Šī ziņojuma sūtītājs ir norādījis, ka vēlas saņemt paziņojumu par šī ziņojuma izlasīšanu.",
     "Forward" : "Turpināt",
