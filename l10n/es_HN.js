@@ -68,6 +68,7 @@ OC.L10N.register(
     "Decline" : "Declinar",
     "Remove" : "Eliminar",
     "email" : "correo electrónico",
+    "Today" : "Hoy",
     "Other" : "Otro",
     "Forward" : "Adelante",
     "Translate" : "Traducir",

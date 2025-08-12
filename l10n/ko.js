@@ -276,6 +276,8 @@ OC.L10N.register(
     "Remove" : "삭제",
     "email" : "이메일",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "이 메시지를 보관 폴더로 옮기거나 현재 폴더에서 삭제할 수 없습니다",
+    "Today" : "오늘",
+    "Last week" : "저번 주",
     "Loading messages …" : "메시지를 불러오는 중 ...",
     "Choose target folder" : "폴더 선택",
     "No more submailboxes in here" : "더 이상의 하위 편지함 없음",

@@ -30,6 +30,7 @@ OC.L10N.register(
     "Select" : "Select",
     "Comment" : "Kommentar",
     "Remove" : "Läschen",
+    "Today" : "Haut",
     "Other" : "Aner",
     "Translate" : "Iwwersetzen",
     "Unnamed" : "ouni Numm",

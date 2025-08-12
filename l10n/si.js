@@ -30,6 +30,7 @@ OC.L10N.register(
     "Accept" : "පිළිගන්න",
     "Decline" : "ප්‍රතික්ෂේප",
     "Remove" : "ඉවත් කරන්න",
+    "Today" : "අද",
     "Other" : "වෙනත්",
     "Translate" : "පරිවර්තනය",
     "Remove account" : "ගිණුම ඉවත් කරන්න",

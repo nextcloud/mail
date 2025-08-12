@@ -248,6 +248,8 @@
     "email" : "имейл",
     "Itinerary for {type} is not supported yet" : "Маршрутът за {type} все още не се поддържа",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Нямате право да преместите това съобщение в архивната папка и/или да изтриете това съобщение от текущата папка",
+    "Last hour" : "Последния  час",
+    "Last week" : "Миналата седмица",
     "Loading messages …" : "Зареждане на съобщения ...",
     "Choose target folder" : "Избор на папка",
     "No more submailboxes in here" : "Тук няма повече допълнителни пощенски кутии",

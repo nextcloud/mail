@@ -24,6 +24,7 @@ OC.L10N.register(
     "Select" : "Fren",
     "Comment" : "Commentaire",
     "Remove" : "Kkes",
+    "Today" : "Ass-a",
     "Other" : "Wayeḍ",
     "Forward" : "Avancer",
     "Translate" : "Suqel",

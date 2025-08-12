@@ -68,6 +68,7 @@ OC.L10N.register(
     "Decline" : "ურაყოფა",
     "Remove" : "წაშლა",
     "email" : "ელ-ფოსტა",
+    "Today" : "დღეს",
     "Other" : "სხვა",
     "Forward" : "წინ",
     "Translate" : "გადათარგმნეთ",
