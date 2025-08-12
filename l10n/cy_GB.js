@@ -71,6 +71,7 @@ OC.L10N.register(
     "Accept" : "Derbyn",
     "Decline" : "Gwrthod",
     "Remove" : "Gwaredu",
+    "Today" : "Heddiw",
     "Other" : "Arall",
     "Translate" : "Cyfieithu",
     "Choose a folder to store the attachment in" : "Dewiswch ffolder i gadw'r atodiad ynddi",

@@ -28,6 +28,8 @@ OC.L10N.register(
     "Select" : "Vel",
     "Comment" : "Kommentér",
     "Remove" : "Fjern",
+    "Today" : "I dag",
+    "Yesterday" : "I går",
     "Other" : "Anna",
     "Move" : "Move",
     "Folder name" : "Katalognavn",

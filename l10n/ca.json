@@ -326,6 +326,7 @@
     "Add internal email or domain" : "Afegeix un correu electrònic intern o un domini",
     "Itinerary for {type} is not supported yet" : "Encara no s'admet l'itinerari per a {type}",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "No teniu permís per moure aquest missatge a la carpeta d'arxiu i/o suprimir-lo de la carpeta actual",
+    "Last hour" : "Última hora",
     "Loading messages …" : "S'estan carregant missatges …",
     "Choose target folder" : "Trieu la carpeta de destinació",
     "No more submailboxes in here" : "No hi ha més subbústies aquí",

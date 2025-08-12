@@ -66,6 +66,7 @@ OC.L10N.register(
     "Decline" : "Refuzo",
     "Remove" : "Hiq",
     "email" : "postë elektronike",
+    "Today" : "Sot",
     "Other" : "Tjetër",
     "Forward" : "Përpara",
     "Translate" : "Përkthe",

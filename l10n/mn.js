@@ -47,6 +47,8 @@ OC.L10N.register(
     "Decline" : "Зөвшөөрөхгүй",
     "Remove" : "Устгах",
     "email" : "цахим шуудан",
+    "Today" : "өнөөдөр",
+    "Yesterday" : "Өчигдөр",
     "Choose target folder" : "Зорилтот хавтасыг сонгох",
     "Other" : "Бусад",
     "Forward" : "дамжих",

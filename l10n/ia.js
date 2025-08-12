@@ -34,6 +34,7 @@ OC.L10N.register(
     "Comment" : "Commentario",
     "Accept" : "Acceptar",
     "Decline" : "Refusar",
+    "Today" : "Hodie",
     "Other" : "Altere",
     "Unnamed" : "Non nominate",
     "Choose a folder to store the attachment in" : "Selectiona un dossier pro salveguardar le attachamento",

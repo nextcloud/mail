@@ -13,6 +13,7 @@ OC.L10N.register(
     "Keyboard shortcuts" : "Спалучэнні клавіш",
     "Delete" : "Выдаліць",
     "Search" : "Пошук",
+    "Refresh" : "Абнавіць",
     "Ok" : "ОК",
     "Confirm" : "Пацвердзіць",
     "Favorite" : "Абранае",

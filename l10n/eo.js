@@ -97,6 +97,7 @@ OC.L10N.register(
     "Decline" : "Malakcepti",
     "Remove" : "Forigi",
     "email" : "retpoŝtadreso",
+    "Today" : "Hodiaŭ",
     "Choose target folder" : "Elekti celan dosierujon",
     "Other" : "Alia",
     "Forward" : "Antaŭen",
