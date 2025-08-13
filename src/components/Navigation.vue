@@ -4,9 +4,9 @@
 -->
 
 <template>
-	<AppNavigation>
+	<AppNavigation class="mail-navigation">
 		<template #search>
-			<NewMessageButtonHeader />
+			<NewMessageButtonHeader class="mail-navigation__new-message-button" />
 		</template>
 		<template #list>
 			<!-- Special mailboxes first -->
@@ -186,6 +186,12 @@ from {
 }
 to {
 		transform: rotate(-360deg);
+	}
+}
+
+.mail-navigation {
+	&__new-message-button {
+		padding: calc(var(--default-grid-baseline, 4px) * 2);
 	}
 }
 
