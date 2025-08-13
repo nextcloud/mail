@@ -37,6 +37,8 @@ OC.L10N.register(
     "Accept" : "Asantiñ",
     "Remove" : "Lemel",
     "email" : "postel",
+    "Today" : "Hiziv",
+    "Yesterday" : "Dec'h",
     "Choose target folder" : "Dibab an teuliad moned",
     "Important info" : "Titouroù pouezus",
     "Other" : "All",

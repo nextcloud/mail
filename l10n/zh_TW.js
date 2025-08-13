@@ -353,6 +353,7 @@ OC.L10N.register(
     "Yesterday" : "昨日",
     "Last week" : "上星期",
     "Last month" : "上個月",
+    "Older" : "較舊",
     "Could not open folder" : "無法開啟資料夾",
     "Loading messages …" : "正在載入郵件……",
     "Indexing your messages. This can take a bit longer for larger folders." : "正在索引您的郵件。對於較大的資料夾來說，這可能需要較長的時間。",
