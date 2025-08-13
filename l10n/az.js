@@ -38,6 +38,7 @@ OC.L10N.register(
     "Accept" : "Qəbul et",
     "Decline" : "İmtina",
     "Remove" : "Sil",
+    "Today" : "Bu gün",
     "Other" : "Digər",
     "Choose a folder to store the attachment in" : "Əlavələrin saxlanılması üçün qovluğu seçin",
     "Move" : "Move",

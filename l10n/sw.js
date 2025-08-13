@@ -85,6 +85,7 @@ OC.L10N.register(
     "Rename" : "Ipe jina jipya",
     "Clear cache" : "Clear cache",
     "Subscribed" : "Iliyojisajili",
+    "New message" : "Ujumbe mpya",
     "Edit message" : "Hariri ujumbe",
     "Draft" : "Draft",
     "Reply" : "Jibu",
