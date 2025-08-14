@@ -195,7 +195,6 @@ export default {
 
 :deep(.app-content-details) {
 	margin: 0 auto;
-	max-width: 900px;
 	display: flex;
 	flex-direction: column;
 	flex: 1 1 100%;
