@@ -23,8 +23,8 @@
 	"ignoreUnstable": false,
 	"baseBranches": [
 		"main",
-		"stable5.2",
-		"stable5.1"
+		"stable5.3",
+		"stable5.2"
 	],
 	"enabledManagers": [
 		"composer",
