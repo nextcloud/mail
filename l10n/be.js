@@ -10,6 +10,7 @@ OC.L10N.register(
     "Email address" : "Адрас электроннай пошты",
     "Cancel" : "Скасаваць",
     "Accounts" : "Уліковыя запісы",
+    "General" : "Агульныя",
     "Keyboard shortcuts" : "Спалучэнні клавіш",
     "Delete" : "Выдаліць",
     "Search" : "Пошук",
