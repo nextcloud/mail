@@ -88,7 +88,6 @@
     "Junk" : "хэрэггүй",
     "Sent" : "илгээсэн",
     "Trash" : "хог",
-    "Error loading message" : "алдаатай ачааллах зурвас",
-    "Actions" : "Үйл ажиллагаа"
+    "Error loading message" : "алдаатай ачааллах зурвас"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

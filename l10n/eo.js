@@ -200,10 +200,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Alklaku ĉi tie, ĉu vi ne estos aŭtomate alidirektita post kelkaj sekundoj.",
     "Redirect" : "Alidirekto",
     "The link leads to %s" : "La ligilo iras al %s",
-    "Continue to %s" : "Daŭrigi al %s",
-    "Draft: " : "Malneto:",
-    "Could not open mailbox" : "Ne eblis malfermi poŝtkesto",
-    "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indeksas viajn mesaĝojn. Tio eble daŭrus iom pli longe por pli grandaj poŝtkestoj.",
-    "Actions" : "Agoj"
+    "Continue to %s" : "Daŭrigi al %s"
 },
 "nplurals=2; plural=(n != 1);");

@@ -389,25 +389,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Κάντε κλικ εδώ εάν δεν ανακατευθυνθείτε αυτόματα μέσα σε λίγα δευτερόλεπτα.",
     "Redirect" : "Ανακατεύθυνση",
     "The link leads to %s" : "Αυτός ο σύνδεσμος οδηγεί στο %s",
-    "Continue to %s" : "Συνέχεια στο %s",
-    "No messages in this mailbox" : "Δεν υπάρχουν μηνύματα σε αυτό το γραμματοκιβώτιο.",
-    "No trash mailbox configured" : "Δεν έχει διαμορφωθεί γραμματοκιβώτιο απορριμμάτων",
-    "Draft: " : "Πρόχειρο:",
-    "Could not open mailbox" : "Δεν ήταν δυνατό το άνοιγμα του γραμματοκιβωτίου",
-    "Indexing your messages. This can take a bit longer for larger mailboxes." : "Καταλογοποίηση των μηνυμάτων σας. Αυτό μπορεί να διαρκέσει περισσότερο για μεγαλύτερα γραμματοκιβώτια.",
-    "Choose target mailbox" : "Επιλέξτε γραμματοκιβώτιο προορισμού",
-    "Show only subscribed mailboxes" : "Εμφάνιση μόνο εγγεγραμμένων γραμματοκιβωτίων",
-    "Add mailbox" : "Προσθήκη γραμματοκιβωτίου",
-    "Show all subscribed mailboxes" : "Εμφάνιση όλων των εγγεγραμμένων γραμματοκιβωτίων",
-    "Show all mailboxes" : "Εμφάνιση όλων των γραμματοκιβωτίων",
-    "Collapse mailboxes" : "Σύμπτυξη γραμματοκιβωτίων",
-    "The mailbox and all messages in it will be deleted." : "Το γραμματοκιβώτιο και όλα τα μηνύματα σε αυτό θα διαγραφούν.",
-    "Delete mailbox" : "Διαγραφή γραμματοκιβωτίου",
-    "Delete mailbox {name}" : "Διαγραφή γραμματοκιβωτίου {name}",
-    "Mark all messages of this mailbox as read" : "Επισήμανση όλων ως αναγνωσμένων",
-    "Add submailbox" : "Προσθήκη υπο-γραμματοκιβωτίου",
-    "No sent mailbox configured. Please pick one in the account settings." : "Δεν έχει διαμορφωθεί γραμματοκιβώτιο για τα απεσταλμένα μηνύματα. Επιλέξτε ένα από τις ρυθμίσεις λογαριασμού.",
-    "Actions" : "Ενέργειες",
-    "New action" : "Νέα ενέργεια"
+    "Continue to %s" : "Συνέχεια στο %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

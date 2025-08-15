@@ -554,26 +554,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Fai clic qui se non viene rediretto automaticamente entro pochi secondi.",
     "Redirect" : "Redirigi",
     "The link leads to %s" : "Il collegamento conduce a %s",
-    "Continue to %s" : "Continua su %s",
-    "No messages in this mailbox" : "Nessun messaggio in questa casella di posta",
-    "No trash mailbox configured" : "Nessuna casella del cestino configurata",
-    "Draft: " : "Bozza:",
-    "To archive a message please configure an archive mailbox in account settings" : "Per archiviare un messaggio, configura una casella di posta archivio nelle impostazioni dell'account.",
-    "Could not open mailbox" : "Impossibile aprire la casella di posta",
-    "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indicizzazione dei tuoi messaggi. Può richiedere più tempo per le caselle di posta più grandi.",
-    "Choose target mailbox" : "Scegli la casella di posta di destinazione",
-    "Show only subscribed mailboxes" : "Mostra solo le caselle di posta sottoscritte",
-    "Add mailbox" : "Aggiungi casella di posta",
-    "Show all subscribed mailboxes" : "Mostra tutte le caselle di posta sottoscritte",
-    "Show all mailboxes" : "Mostra tutte le caselle di posta",
-    "Collapse mailboxes" : "Contrai le caselle di posta",
-    "The mailbox and all messages in it will be deleted." : "La casella postale e tutti i messaggi in essa saranno eliminati.",
-    "Delete mailbox" : "Elimina casella di posta",
-    "Delete mailbox {name}" : "Elimina la casella di posta {name}",
-    "Mark all messages of this mailbox as read" : "Marca tutti i messaggi di questa casella di posta come letti",
-    "Add submailbox" : "Aggiungi sotto-casella di posta",
-    "No sent mailbox configured. Please pick one in the account settings." : "Nessuna casella di posta inviata configurata. Scegline una nelle impostazioni dell'account.",
-    "Search in mailbox" : "Cerca nella casella di posta",
-    "Actions" : "Azioni"
+    "Continue to %s" : "Continua su %s"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }
