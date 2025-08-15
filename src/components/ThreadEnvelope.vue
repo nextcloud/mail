@@ -1077,7 +1077,7 @@ export default {
 			position: relative;
 			display: flex;
 			align-items: center;
-			padding: calc(var(--default-grid-baseline) * 2);
+			padding: var(--border-radius-element) var(--border-radius-container) var(--border-radius-container) var(--border-radius-container);
 			border-radius: var(--border-radius);
 			min-height: 68px; /* prevents jumping between open/collapsed */
 

@@ -191,7 +191,6 @@ export default {
 	// TODO: collapse quoted text and remove inner scrollbar
 	@media only screen {
 		&.scroll {
-			max-height: 50vh;
 			overflow-y: auto;
 		}
 	}
