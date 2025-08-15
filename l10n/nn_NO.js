@@ -55,7 +55,6 @@ OC.L10N.register(
     "All" : "Alle",
     "Favorites" : "Favorit",
     "Sent" : "Sendt",
-    "Message sent" : "Melding sendt",
-    "Actions" : "Handlingar"
+    "Message sent" : "Melding sendt"
 },
 "nplurals=2; plural=(n != 1);");

@@ -350,26 +350,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Incarca inoghe chi no ses torradu a deretare in manera automàtica intro de pagu segundos.",
     "Redirect" : "Torra a deretare",
     "The link leads to %s" : "Su ligòngiu deretat a %s",
-    "Continue to %s" : "Sighi in %s",
-    "No messages in this mailbox" : "Perunu messàgiu in custa casella de posta",
-    "No trash mailbox configured" : "Peruna casella de àliga cunfigurada",
-    "Draft: " : "Brutacòpia:",
-    "Could not open mailbox" : "No at fatu a abèrrere sa casella de posta",
-    "Indexing your messages. This can take a bit longer for larger mailboxes." : "Inditzizende is messàgios. S'at a pòdere istentare unu pagu de prus cun casellas de posta prus mannas.",
-    "Choose target mailbox" : "Sèbera casella de posta de destinatzione",
-    "Show only subscribed mailboxes" : "Mustra isceti casellas de posta sutascritas",
-    "Add mailbox" : "Agiunghe casella de posta",
-    "Show all subscribed mailboxes" : "Mustra totu is casellas de posta sutascritas",
-    "Show all mailboxes" : "Mustra totu is casellas de posta",
-    "Collapse mailboxes" : "Istringhe is casellas de posta",
-    "The mailbox and all messages in it will be deleted." : "Sa casella de posta e is messàgios chi cuntenet ant a èssere cantzellados.",
-    "Delete mailbox" : "Cantzella casella de posta",
-    "Delete mailbox {name}" : "Cantzella casella de posta {name}",
-    "Mark all messages of this mailbox as read" : "Marca totu is messàgios de custa casella de posta comente lèghidos",
-    "Add submailbox" : "Agiunghe una sutacasella de posta",
-    "No sent mailbox configured. Please pick one in the account settings." : "Nissuna casella de posta imbiada cunfigurada. Sèbera·nde una in sa cunfiguratzione de su contu.",
-    "New test" : "Proa noa",
-    "Actions" : "Atziones",
-    "New action" : "Atzione noa"
+    "Continue to %s" : "Sighi in %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

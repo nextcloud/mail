@@ -441,25 +441,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Jeigu per artimiausias kelias sekundes nesate automatiškai nukreipiami, spustelėkite čia.",
     "Redirect" : "Peradresuoti",
     "The link leads to %s" : "Nuoroda veda į %s",
-    "Continue to %s" : "Tęsti į %s",
-    "No messages in this mailbox" : "Šioje pašto dėžutėje laiškų nėra",
-    "Draft: " : "Juodraštis: ",
-    "Could not open mailbox" : "Nepavyko atverti pašto dėžutės",
-    "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indeksuojami jūsų laiškai. Didelėse pašto dėžutėse tai gali užtrukti šiek tiek ilgiau.",
-    "Show only subscribed mailboxes" : "Rodyti tik prenumeruotas pašto dėžutes",
-    "Add mailbox" : "Pridėti pašto dėžutę",
-    "Mailbox name" : "Pašto dėžutės pavadinimas",
-    "Show all subscribed mailboxes" : "Rodyti visas prenumeruotas pašto dėžutes",
-    "Show all mailboxes" : "Rodyti visas pašto dėžutes",
-    "Collapse mailboxes" : "Suskleisti pašto dėžutes",
-    "Clear mailbox" : "Išvalyti pašto dėžutę",
-    "The mailbox and all messages in it will be deleted." : "Pašto dėžutė ir visi joje esantys laiškai bus ištrinti.",
-    "Delete mailbox" : "Ištrinti pašto dėžutę",
-    "Delete mailbox {name}" : "Ištrinti pašto dėžutę {name}",
-    "Mark all messages of this mailbox as read" : "Žymėti visus laiškus šioje pašto dėžutėje kaip skaitytus",
-    "Move mailbox" : "Perkelti pašto dėžutę",
-    "Search in mailbox" : "Ieškoti pašto dėžutėje",
-    "Actions" : "Veiksmai",
-    "New action" : "Naujas veiksmas"
+    "Continue to %s" : "Tęsti į %s"
 },"pluralForm" :"nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);"
 }

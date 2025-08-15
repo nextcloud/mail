@@ -378,24 +378,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Kliknite ovdje ako niste preusmjereni automatski unutar sljedećih nekoliko sekundi.",
     "Redirect" : "Preusmjeri",
     "The link leads to %s" : "Ova poveznica vodi do %s",
-    "Continue to %s" : "Idi do %s",
-    "No messages in this mailbox" : "Nema poruka u ovom sandučiću",
-    "No trash mailbox configured" : "Nije konfiguriran sandučić za izbrisanu poštu",
-    "Draft: " : "Skica: ",
-    "Could not open mailbox" : "Nije moguće otvoriti sandučić",
-    "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indeksiranje poruka u tijeku. Ova radnja može potrajati za veće sandučiće.",
-    "Choose target mailbox" : "Odaberi ciljni sandučić",
-    "Show only subscribed mailboxes" : "Prikaži samo pretplaćene sandučiće",
-    "Add mailbox" : "Dodaj sandučić",
-    "Show all subscribed mailboxes" : "Prikaži sve pretplaćene sandučiće",
-    "Show all mailboxes" : "Prikaži sve sandučiće",
-    "Collapse mailboxes" : "Sakrij sandučiće",
-    "The mailbox and all messages in it will be deleted." : "Izbrisat će se sandučić i sve pripadajuće poruke.",
-    "Delete mailbox" : "Izbriši sandučić",
-    "Delete mailbox {name}" : "Izbriši sandučić {name}",
-    "Mark all messages of this mailbox as read" : "Označi sve poruke u ovom sandučiću kao pročitane",
-    "Add submailbox" : "Dodaj podsandučić",
-    "No sent mailbox configured. Please pick one in the account settings." : "Nije konfiguriran sandučić za poslanu poštu. Odaberite ga u postavkama računa.",
-    "Actions" : "Radnje"
+    "Continue to %s" : "Idi do %s"
 },"pluralForm" :"nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;"
 }

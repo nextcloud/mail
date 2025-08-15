@@ -400,17 +400,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Haz click aqui si no eres redireccionado automáticamente dentro de los siguietes segundos. ",
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
-    "Continue to %s" : "Continuar a %s",
-    "Mailbox search" : "Búsqueda en el buzón de correo",
-    "Install Mailvelope browser extension by clicking here" : "Instala la extensión del navegador Mailvelope haciendo clic aquí",
-    "No messages in this mailbox" : "No hay mensajes en este buzón de correo",
-    "No trash mailbox configured" : "No se ha configurado un buzón de papelera",
-    "Draft: " : "Borrador:",
-    "To archive a message please configure an archive mailbox in account settings" : "Para archivar un mensaje, configura un buzón de archivado en las configuraciones de la cuenta",
-    "Could not open mailbox" : "No se pudo abrir el buzón",
-    "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indizando tus mensajes. Esto puede tardar un poco para buzones grandes.",
-    "Choose target mailbox" : "Escoger buzón de destino",
-    "Clear mailbox" : "Vaciar buzón",
-    "Actions" : "Acciones"
+    "Continue to %s" : "Continuar a %s"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
