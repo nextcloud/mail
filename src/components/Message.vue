@@ -180,7 +180,7 @@ export default {
 }
 
 .reply-buttons {
-	margin: 26px 30px 0 50px;
+	margin: 0 calc(var(--default-grid-baseline) * 2) 0 calc(var(--default-grid-baseline) * 14);
 	display: flex;
 	flex-wrap: wrap;
 	gap: 5px;
@@ -205,7 +205,6 @@ export default {
 
 	&__notsuggested {
 		margin-inline-start: auto;
-		margin-inline-end: -12px;
 	}
 }
 @media screen and (max-width: 600px) {
