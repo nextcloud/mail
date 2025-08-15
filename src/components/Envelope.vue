@@ -19,9 +19,14 @@
 		:name="addresses"
 		:details="formatted()"
 		:one-line="oneLineLayout"
+		:is-read="showImportantIconVariant"
+		:is-important="isImportant"
 		@click.exact="onClick"
 		@click.ctrl.exact.prevent="toggleSelected"
 		@click.shift.exact.prevent="onSelectMultiple"
+		@delete="onDelete"
+		@toggle-important="onToggleImportant"
+		@toggle-seen="onToggleSeen"
 		@update:menuOpen="closeMoreAndSnoozeOptions">
 		<template #icon>
 			<Star v-if="data.flags.flagged"
@@ -35,8 +40,7 @@
 				:size="18"
 				class="app-content-list-item-star icon-important"
 				:class="{ 'important-one-line': oneLineLayout, 'icon-important': !oneLineLayout }"
-				data-starred="true"
-				@click.prevent="hasWriteAcl ? onToggleImportant() : false" />
+				data-starred="true" />
 			<JunkIcon v-if="data.flags.$junk"
 				:size="18"
 				class="app-content-list-item-star junk-icon-style"
@@ -82,6 +86,12 @@
 					<SparkleIcon v-if="data.summary" :size="15" />
 					{{ isEncrypted ? t('mail', 'Encrypted message') : data.summary ? data.summary.trim() : data.previewText.trim() }}
 				</div>
+				<EnvelopeSingleClickActions v-if="oneLineLayout"
+					:is-read="showImportantIconVariant"
+					:is-important="isImportant"
+					@delete="onDelete"
+					@toggle-important="onToggleImportant"
+					@toggle-seen="onToggleSeen" />
 			</div>
 		</template>
 		<template #indicator>
@@ -400,6 +410,7 @@ import { mapState, mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import { translateTagDisplayName } from '../util/tag.js'
+import EnvelopeSingleClickActions from './EnvelopeSingleClickActions.vue'
 
 export default {
 	name: 'Envelope',
@@ -441,6 +452,7 @@ export default {
 		NcActionSeparator,
 		NcActionInput,
 		CalendarClock,
+		EnvelopeSingleClickActions,
 		AlarmIcon,
 	},
 	directives: {
@@ -1031,11 +1043,6 @@ export default {
 		inset-inline-start: 1px;
 		top: 8px;
 		opacity: 1;
-
-		&:hover,
-		&:focus {
-			opacity: 0.5;
-		}
 	}
 }
 
