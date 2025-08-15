@@ -119,10 +119,10 @@
 			<ActionButton :close-after-click="true"
 				@click.prevent="$emit('open-event-modal')">
 				<template #icon>
-					<CalendarBlankIcon :title="t('mail', 'Create event')"
+					<CalendarBlankIcon :title="t('mail', 'Reply with meeting')"
 						:size="20" />
 				</template>
-				{{ t('mail', 'Create event') }}
+				{{ t('mail', 'Reply with meeting') }}
 			</ActionButton>
 			<ActionButton :close-after-click="true"
 				@click.prevent="$emit('open-task-modal')">

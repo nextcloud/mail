@@ -293,7 +293,7 @@
 					<template #icon>
 						<IconCreateEvent :size="20" />
 					</template>
-					{{ t('mail', 'Create event') }}
+					{{ t('mail', 'Reply with meeting') }}
 				</ActionButton>
 				<ActionButton :close-after-click="true"
 					@click.prevent="showTaskModal = true">
