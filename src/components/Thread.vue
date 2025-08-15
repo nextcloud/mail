@@ -607,9 +607,6 @@ export default {
 	// while scrolling, the back button overlaps with subject on small screen
 	// 66px to allign with the sender Envelope -> 8px margin + 2px border+ avatar -> 40px width  + envelope__header -> 8px padding + sender-> margin 8px
 	padding-left: 66px;
-	// 70ox to allign with the message text 60px mail-content margin + 2px envelope border + 8px envelope margin
-	padding-left: 70px;
-	padding-inline-start: calc(var(--border-radius-container-large) + var(--header-height));
 	// grow and try to fill 100%
 	flex: 1 1 auto;
 	h2,
