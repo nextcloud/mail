@@ -53,7 +53,6 @@ OC.L10N.register(
     "Group" : "Grupp",
     "Shared" : "Gedeelt",
     "All" : "All",
-    "Favorites" : "Favoriten",
-    "Actions" : "Aktiounen"
+    "Favorites" : "Favoriten"
 },
 "nplurals=2; plural=(n != 1);");

@@ -135,8 +135,6 @@ OC.L10N.register(
     "Discard changes" : "Discard changes",
     "Message sent" : "Ujumbe umetumwa",
     "Redirect" : "Elekeza upya",
-    "Continue to %s" : "Endelea katika %s",
-    "Actions" : "Matendo",
-    "New action" : "Kitendo kipya"
+    "Continue to %s" : "Endelea katika %s"
 },
 "nplurals=2; plural=(n != 1);");

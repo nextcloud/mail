@@ -78,7 +78,6 @@ OC.L10N.register(
     "All" : "All",
     "Favorites" : "Favorites",
     "Error while sharing file" : "Fayl almashishda xatolik yuz berdi",
-    "Continue to %s" : " %sni davom eting",
-    "Actions" : "Faolliklar"
+    "Continue to %s" : " %sni davom eting"
 },
 "nplurals=1; plural=0;");

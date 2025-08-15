@@ -309,18 +309,6 @@ OC.L10N.register(
     "Could not load the message" : "Nun se pudo cargar el mensaxe",
     "Error loading message" : "Hebo un error al cargar el mensaxe",
     "Redirect" : "Redirixir",
-    "The link leads to %s" : "L'enllaz lleva a %s",
-    "No messages in this mailbox" : "Nun hai nengún mensaxe nesta bandexa",
-    "Draft: " : "Borrador:",
-    "Could not open mailbox" : "Nun se pudo abrir la bandexa de corréu",
-    "Add mailbox" : "Amestar una bandexa",
-    "Mailbox name" : "Nome de la bandexa",
-    "Show all mailboxes" : "Amosar toles bandexes",
-    "Collapse mailboxes" : "Contrayer toles bandexes",
-    "The mailbox and all messages in it will be deleted." : "Van desaniciase toles bandexes y tolos mensaxes que contengan.",
-    "Delete mailbox" : "Desaniciar la bandexa",
-    "Delete mailbox {name}" : "Desaniciar la bandexa «{name}»",
-    "Move mailbox" : "Mover la bandexa",
-    "Actions" : "Aiciones"
+    "The link leads to %s" : "L'enllaz lleva a %s"
 },
 "nplurals=2; plural=(n != 1);");

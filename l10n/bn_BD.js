@@ -31,6 +31,7 @@ OC.L10N.register(
     "Select" : "সিলেক্ট",
     "Comment" : "মন্তব্য",
     "Remove" : "অপসারণ",
+    "Today" : "আজ",
     "Other" : "অন্যান্য",
     "Choose a folder to store the attachment in" : "সংযুক্তি সংরক্ষনের জন্য একটি ফোল্ডার নির্বাচন করুন",
     "Move" : "Move",
@@ -52,7 +53,6 @@ OC.L10N.register(
     "Shared" : "ভাগাভাগিকৃত",
     "Shares" : "ভাগাভাগি",
     "All" : "সবাই",
-    "Favorites" : "প্রিয়জন",
-    "Actions" : "পদক্ষেপসমূহ"
+    "Favorites" : "প্রিয়জন"
 },
 "nplurals=2; plural=(n != 1);");

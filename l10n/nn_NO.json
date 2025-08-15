@@ -53,7 +53,6 @@
     "All" : "Alle",
     "Favorites" : "Favorit",
     "Sent" : "Sendt",
-    "Message sent" : "Melding sendt",
-    "Actions" : "Handlingar"
+    "Message sent" : "Melding sendt"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

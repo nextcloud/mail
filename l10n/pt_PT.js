@@ -242,11 +242,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Clique aqui se não for automaticamente redirecionado dentro de segundos.",
     "Redirect" : "Redirecionar",
     "The link leads to %s" : "A ligação aponta para %s",
-    "Continue to %s" : "Continuar para %s",
-    "Draft: " : "Rascunho:",
-    "Add mailbox" : "Adicionar caixa de",
-    "Show all mailboxes" : "Mostrar todas as caixas de entrada",
-    "Actions" : "Ações",
-    "New action" : "Nova ação"
+    "Continue to %s" : "Continuar para %s"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

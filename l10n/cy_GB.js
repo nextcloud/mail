@@ -129,8 +129,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Cliciwch yma os na chewch eich ailgyfeirio'n awtomatig o fewn yr ychydig eiliadau nesaf.",
     "Redirect" : "Ailgyfeirio",
     "The link leads to %s" : "Mae'r ddolen yn arwain at %s",
-    "Continue to %s" : "Parhau i %s",
-    "Draft: " : "Drafft:",
-    "Actions" : "Gweithredoedd"
+    "Continue to %s" : "Parhau i %s"
 },
 "nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;");

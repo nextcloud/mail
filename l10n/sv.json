@@ -382,22 +382,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Klicka här om du inte blir omdirigerad inom några sekunder.",
     "Redirect" : "Omdirigera",
     "The link leads to %s" : "Länken pekar mot %s",
-    "Continue to %s" : "Fortsätt till %s",
-    "No messages in this mailbox" : "Inga meddelanden i den här brevlådan",
-    "No trash mailbox configured" : "Ingen skräpkorg är konfigurerad",
-    "Draft: " : "Utkast:",
-    "Could not open mailbox" : "Kunde inte öppna brevlådan",
-    "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexera dina meddelanden. Det kan ta lite längre tid för större brevlådor.",
-    "Choose target mailbox" : "Välj markerad inkorg",
-    "Show only subscribed mailboxes" : "Visa endast prenumererade brevlådor",
-    "Add mailbox" : "Lägg till brevlåda",
-    "Show all subscribed mailboxes" : "Visa alla prenumererade brevlådor",
-    "Show all mailboxes" : "Visa alla brevlådor",
-    "Collapse mailboxes" : "Minimera brevlådor",
-    "Delete mailbox" : "Radera brevlåda",
-    "Mark all messages of this mailbox as read" : "Markera alla meddelanden i den här brevlådan som lästa",
-    "Search in mailbox" : "Sök i brevlådan",
-    "Actions" : "Funktioner",
-    "New action" : "Ny åtgärd"
+    "Continue to %s" : "Fortsätt till %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
