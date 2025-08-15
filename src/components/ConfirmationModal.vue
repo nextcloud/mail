@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<NcModal class="confirm-modal" @close="cancel">
+	<NcDialog class="confirm-modal" @close="cancel">
 		<div class="confirm-modal">
 			<h2>{{ title }}</h2>
 			<slot />
@@ -22,19 +22,19 @@
 				</NcButton>
 			</div>
 		</div>
-	</NcModal>
+	</NcDialog>
 </template>
 
 <script>
 
-import { NcButton, NcModal } from '@nextcloud/vue'
+import { NcButton, NcDialog } from '@nextcloud/vue'
 import { translate as t } from '@nextcloud/l10n'
 
 export default {
 	name: 'ConfirmationModal',
 	components: {
 		NcButton,
-		NcModal,
+		NcDialog,
 	},
 	props: {
 		title: {
@@ -60,6 +60,7 @@ export default {
 		},
 		cancel() {
 			this.$emit('cancel')
+			this.$emit('close')
 		},
 	},
 }
@@ -67,11 +68,15 @@ export default {
 
 <style lang="scss" scoped>
 .confirm-modal {
-	padding: 20px;
-
+	padding: 0 20px 20px 20px;
 	&__buttons {
 		display: flex;
 		justify-content: space-between;
+		margin-top: 30px;
 	}
 }
+:deep(.dialog__name){
+	display: none;
+}
+
 </style>
