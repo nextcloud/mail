@@ -119,6 +119,7 @@ OC.L10N.register(
     "More actions" : "Más acciones",
     "Back" : "Atrás",
     "All day" : "Todo el día",
+    "Attendees" : "Asistentes",
     "Description" : "Descripción",
     "Create" : "Crear",
     "Select" : "Seleccionar",

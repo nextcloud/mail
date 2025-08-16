@@ -25,6 +25,7 @@ OC.L10N.register(
     "Favorite" : "Favorit",
     "Edit tags" : "Tags editéieren",
     "Back" : "Zeréck",
+    "Attendees" : "Participanten",
     "Description" : "Beschreiwung",
     "Create" : "Erstellen",
     "Select" : "Select",

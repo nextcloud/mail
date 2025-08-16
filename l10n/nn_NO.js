@@ -23,6 +23,7 @@ OC.L10N.register(
     "Choose" : "Vel",
     "Favorite" : "Favoritt",
     "Back" : "Tilbake",
+    "Attendees" : "Deltakarar",
     "Description" : "Skildring",
     "Create" : "Lag",
     "Select" : "Vel",

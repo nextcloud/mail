@@ -39,6 +39,7 @@ OC.L10N.register(
     "Confirm" : "Батлах",
     "Favorite" : "Дуртай",
     "Back" : "буцах",
+    "Attendees" : "Оролцогчид",
     "Description" : "Тодорхойлолт",
     "Create" : "Үүсгэх",
     "Select" : "Сонгох",

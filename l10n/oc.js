@@ -53,6 +53,7 @@ OC.L10N.register(
     "More actions" : "Mai d’accions",
     "Back" : "Retorn",
     "All day" : "Tota la jornada",
+    "Attendees" : "Convidats",
     "Description" : "Descripcion",
     "Create" : "Crear",
     "Select" : "Select",
