@@ -89,6 +89,7 @@ OC.L10N.register(
     "Report this bug" : "Raporti tiun problemon",
     "Could not create event" : "Ne eblis krei okazaĵon",
     "All day" : "Tuttage",
+    "Attendees" : "Ĉeestontoj",
     "Description" : "Priskribo",
     "Create" : "Krei",
     "Select" : "Elekti",

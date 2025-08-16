@@ -60,6 +60,7 @@ OC.L10N.register(
     "More actions" : "მეტი ქმედება",
     "Back" : "უკან",
     "All day" : "მთელი დღე",
+    "Attendees" : "დამსწრეები",
     "Description" : "აღწერილობა",
     "Create" : "შექმნა",
     "Select" : "არჩევა",

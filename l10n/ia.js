@@ -28,6 +28,7 @@ OC.L10N.register(
     "Confirm" : "Confirmar",
     "Favorite" : "Favorite",
     "Back" : "Retro",
+    "Attendees" : "Participantes",
     "Description" : "Description",
     "Create" : "Crear",
     "Select" : "Selectionar",

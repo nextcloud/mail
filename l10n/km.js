@@ -19,6 +19,7 @@ OC.L10N.register(
     "Ok" : "ព្រម",
     "Choose" : "ជ្រើស",
     "Back" : "ត្រឡប់ក្រោយ",
+    "Attendees" : "អ្នក​ចូលរួម",
     "Description" : "ការ​អធិប្បាយ",
     "Create" : "បង្កើត",
     "Select" : "Select",

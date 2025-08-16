@@ -58,6 +58,7 @@ OC.L10N.register(
     "More actions" : "Më tepër veprime ",
     "Back" : "Prapa",
     "All day" : "Gjithë ditën",
+    "Attendees" : "Pjesëmarrës",
     "Description" : "Përshkrim",
     "Create" : "Krijo",
     "Select" : "Zgjidhni",

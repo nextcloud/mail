@@ -46,6 +46,7 @@ OC.L10N.register(
     "Back" : "Kembali",
     "Create event" : "Buat acara",
     "All day" : "Sepanjang hari",
+    "Attendees" : "Peserta",
     "Description" : "Deskrisi",
     "Create" : "Buat",
     "Select" : "Pilih",
