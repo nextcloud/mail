@@ -37,6 +37,7 @@ OC.L10N.register(
     "Read" : "อ่าน",
     "Edit tags" : "แก้ไขแท็ก",
     "Back" : "ย้อนกลับ",
+    "Attendees" : "ผู้เข้าร่วมกิจกรรม",
     "Description" : "คำอธิบาย",
     "Create" : "สร้าง",
     "Select" : "เลือก",

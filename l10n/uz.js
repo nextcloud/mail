@@ -35,6 +35,7 @@ OC.L10N.register(
     "Back" : "Orqaga",
     "Create event" : "Tadbir yaratish",
     "All day" : "Butun kun",
+    "Attendees" : "Ishtirokchilar",
     "Description" : "Tavsif",
     "Create" : "Yaratish",
     "Select" : "Select",
