@@ -113,6 +113,7 @@ OC.L10N.register(
     "Could not create event" : "Nun se pudo crear l'eventu",
     "Create event" : "Crear un eventu",
     "All day" : "Tol día",
+    "Attendees" : "Asistentes",
     "Description" : "Descripción",
     "Create" : "Crear",
     "This event was updated" : "Esti eventu anovóse",
