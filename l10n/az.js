@@ -31,6 +31,7 @@ OC.L10N.register(
     "Favorite" : "İstəkli",
     "Read" : "Oxu",
     "Back" : "Geri",
+    "Attendees" : "İştirakçılar",
     "Description" : "Açıqlanma",
     "Create" : "Yarat",
     "Select" : "Select",
