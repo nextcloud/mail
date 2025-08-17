@@ -77,6 +77,7 @@ OC.L10N.register(
     "Favorite" : "Gunsteling",
     "Back" : "Terug",
     "All day" : "Heeldag",
+    "Attendees" : "Bywoners",
     "Description" : "Beskrywing",
     "Create" : "Skep",
     "Select" : "Kies",
