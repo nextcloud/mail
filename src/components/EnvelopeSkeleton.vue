@@ -17,6 +17,7 @@
 				:class="{
 					'list-item--compact': compact,
 					'list-item--one-line': oneLine,
+					'list-item--multiline': !oneLine,
 				}"
 				@mouseover="handleMouseover"
 				@mouseleave="handleMouseleave">
@@ -36,7 +37,16 @@
 					<div class="list-item-content">
 						<div class="list-item-content__name">
 							<!-- @slot Slot for the first line of the component. prop 'name' is used as a fallback is no slots are provided -->
-							<slot name="name">{{ name }}</slot>
+							<span>
+								<slot name="name">{{ name }}</slot>
+							</span>
+
+							<EnvelopeSingleClickActions v-if="!oneLine"
+								:is-read="isRead"
+								:is-important="isImportant"
+								@delete="$emit('delete')"
+								@toggle-important="$emit('toggle-important')"
+								@toggle-seen="$emit('toggle-seen')" />
 						</div>
 						<div class="list-item-content__inner">
 							<div class="list-item-content__inner__main">
@@ -98,6 +108,7 @@
 
 <script>
 import { NcActions, NcCounterBubble, NcVNodes } from '@nextcloud/vue'
+import EnvelopeSingleClickActions from './EnvelopeSingleClickActions.vue'
 
 export default {
 	name: 'EnvelopeSkeleton',
@@ -106,6 +117,7 @@ export default {
 		NcActions,
 		NcCounterBubble,
 		NcVNodes,
+		EnvelopeSingleClickActions,
 	},
 
 	props: {
@@ -234,6 +246,14 @@ export default {
 		 * Show the list component layout
 		 */
 		oneLine: {
+			type: Boolean,
+			default: false,
+		},
+		isRead: {
+			type: Boolean,
+			default: false,
+		},
+		isImportant: {
 			type: Boolean,
 			default: false,
 		},
@@ -410,6 +430,10 @@ export default {
 		.list-item-details__details {
 			color: var(--color-primary-element-text);
 		}
+
+		.list-item-content__quick-actions :deep(svg) {
+			fill: var(--color-primary-element-text) !important;
+		}
 	}
 	.list-item-content__name,
 	.list-item-content__subname,
@@ -473,6 +497,13 @@ export default {
 			// we changed the time/date and actions to be alighned with the name
 			max-width: 78%;
 			line-height: var(--default-line-height);
+
+			span {
+				min-width: 0;
+				overflow: hidden;
+				flex: 1 1 auto;
+				text-overflow: ellipsis;
+			}
 		}
 
 		&__inner {
@@ -635,8 +666,33 @@ export default {
 		justify-content: center;
 		align-self: start;
 		margin-top: 0;
+
+		:deep(.button-vue__wrapper):hover {
+				opacity: 0.5;
+		}
+
+		:deep(button) {
+			// Needed to standardize the styling with the other Single Click Actions
+			// Besides, seeing as it has to be aligned with the title and is rather close to the edge
+			// The background color ends up exiting the envelope area
+			background-color: unset;
+		}
 	}
 
+	&--multiline &__actions {
+		:deep(.button-vue__wrapper) {
+			margin-top: calc(var(--default-grid-baseline) * -3);
+		}
+	}
+
+}
+
+.list-item--multiline:hover .list-item-content__name {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	max-width: unset;
+	max-height: calc(var(--default-font-size) * var(--default-line-height));
 }
 
 // Force icon to be in line with the first two lines
@@ -644,5 +700,4 @@ export default {
 	height: calc(var(--header-menu-item-height) - 4px);
 	width: calc(var(--header-menu-item-height) - 4px);
 }
-
 </style>
