@@ -617,10 +617,6 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	font-weight: normal;
 }
 
-.ck.ck-dropdown.ck-list-styles-dropdown {
-	width: 55px;
-}
-
 .ck-source-editing-area {
 	height: 97%;
 	overflow: scroll;
