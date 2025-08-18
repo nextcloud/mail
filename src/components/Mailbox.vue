@@ -580,7 +580,6 @@ export default {
 .nameimportant {
 	:deep(#load-more-mail-messages) {
 		margin-top: 0;
-		margin-bottom: 8px;
 	}
 }
 
