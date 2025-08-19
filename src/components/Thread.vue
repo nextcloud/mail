@@ -93,7 +93,7 @@ export default {
 				return [envelope]
 			}
 
-			const envelopes = this.mainStore.getEnvelopesByThreadRootId(envelope.accountId, envelope.threadRootId)
+			const envelopes = this.mainStore.getEnvelopesByThreadRootId(envelope)
 			if (envelopes.length === 0) {
 				return []
 			}

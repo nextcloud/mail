@@ -55,7 +55,9 @@ final class SyncServiceTest extends TestCase {
 			$this->messageMapper,
 			$this->createStub(PreviewEnhancer::class),
 			$this->createStub(\Psr\Log\LoggerInterface::class),
-			$this->mailboxSync
+			$this->mailboxSync,
+			$this->createStub(\OCP\IAppConfig::class),
+			$this->createStub(\OCA\Mail\Contracts\IUserPreferences::class),
 		);
 	}
 

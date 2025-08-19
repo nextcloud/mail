@@ -54,123 +54,55 @@ describe('Pinia main store getters', () => {
 		})
 	})
 	it('returns an envelope\'s empty thread', () => {
-		store.envelopes[1] = {
-			databaseId: 1,
-			uid: 101,
-			mailboxId: 13,
-		}
-
 		const thread = store.getEnvelopeThread(1)
 
 		expect(thread.length).toEqual(0)
 	})
-	it('returns an envelope\'s empty thread', () => {
-		store.envelopes[1] = {
-			databaseId: 1,
-			uid: 101,
-			mailboxId: 13,
-			thread: [
-				1,
-				2,
-				3,
-			],
-		}
-		store.envelopes[2] = {
-			databaseId: 1,
-			uid: 101,
-			mailboxId: 13,
-		}
-		store.envelopes[3] = {
-			databaseId: 1,
-			uid: 101,
-			mailboxId: 13,
-		}
+	it('returns an envelope\'s thread', () => {
+		store.$patch({
+			threads: {
+				'1:root-1': {
+					1: { accountId: 1, databaseId: 1, uid: 101, mailboxId: 13, threadRootId: 'root-1', dateInt: 1 },
+					2: { accountId: 1, databaseId: 2, uid: 102, mailboxId: 13, threadRootId: 'root-1', dateInt: 2 },
+					3: { accountId: 1, databaseId: 3, uid: 103, mailboxId: 13, threadRootId: 'root-1', dateInt: 3 },
+				},
+			},
+			messageToThreadDictionnary: { 1: '1:root-1', 2: '1:root-1', 3: '1:root-1' },
+			preferences: { 'layout-message-view': 'threaded' },
+		})
 
 		const thread = store.getEnvelopeThread(1)
 
-		expect(thread.length).toBeGreaterThanOrEqual(1)
-		expect(thread).toEqual([
-			{
-				databaseId: 1,
-				uid: 101,
-				mailboxId: 13,
-				thread: [
-					1,
-					2,
-					3,
-				],
-			},
-			{
-				databaseId: 1,
-				uid: 101,
-				mailboxId: 13,
-			},
-			{
-				databaseId: 1,
-				uid: 101,
-				mailboxId: 13,
-			},
-		])
+		expect(thread.length).toEqual(3)
+		expect(thread.map((e) => e.databaseId)).toEqual([1, 2, 3])
 	})
 
 	it('return envelopes by thread root id', () => {
-		store.envelopes[0] = {
-			accountId: 1,
-			databaseId: 1,
-			uid: 101,
-			mailboxId: 13,
-			threadRootId: '123-456-789',
-		}
-		store.envelopes[1] = {
-			accountId: 1,
-			databaseId: 2,
-			uid: 102,
-			mailboxId: 13,
-			threadRootId: '123-456-789',
-		}
-		store.envelopes[2] = {
-			accountId: 1,
-			databaseId: 3,
-			uid: 103,
-			mailboxId: 13,
-			threadRootId: '234-567-890',
-		}
-		store.envelopes[3] = {
-			accountId: 1,
-			databaseId: 4,
-			uid: 104,
-			mailboxId: 13,
-			threadRootId: '234-567-890',
-		}
-		store.envelopes[4] = {
-			accountId: 2,
-			databaseId: 5,
-			uid: 105,
-			mailboxId: 23,
-			threadRootId: '123-456-789',
-		}
+		store.$patch({
+			threads: {
+				'1:123-456-789': {
+					1: { accountId: 1, databaseId: 1, uid: 101, mailboxId: 13, threadRootId: '123-456-789', dateInt: 1 },
+					2: { accountId: 1, databaseId: 2, uid: 102, mailboxId: 13, threadRootId: '123-456-789', dateInt: 2 },
+				},
+				'1:234-567-890': {
+					3: { accountId: 1, databaseId: 3, uid: 103, mailboxId: 13, threadRootId: '234-567-890', dateInt: 3 },
+					4: { accountId: 1, databaseId: 4, uid: 104, mailboxId: 13, threadRootId: '234-567-890', dateInt: 4 },
+				},
+			},
+		})
 
-		const envelopesA = store.getEnvelopesByThreadRootId(1, '123-456-789')
+		const envelopesA = store.getEnvelopesByThreadRootId({ accountId: 1, threadRootId: '123-456-789' })
 		expect(envelopesA.length).toEqual(2)
-		expect(envelopesA).toEqual([
-			{
-				accountId: 1,
-				databaseId: 1,
-				uid: 101,
-				mailboxId: 13,
-				threadRootId: '123-456-789',
-			},
-			{
-				accountId: 1,
-				databaseId: 2,
-				uid: 102,
-				mailboxId: 13,
-				threadRootId: '123-456-789',
-			},
-		])
+		expect(envelopesA.map((e) => e.databaseId)).toEqual([1, 2])
 
-		const envelopesB = store.getEnvelopesByThreadRootId('345-678-901')
+		const envelopesB = store.getEnvelopesByThreadRootId({ accountId: 1, threadRootId: '345-678-901' })
 		expect(envelopesB.length).toEqual(0)
+	})
+
+	it('returns undefined for an envelope that is not loaded', () => {
+		store.$patch({ preferences: { 'layout-message-view': 'threaded' } })
+
+		expect(store.getEnvelope(999)).toBeUndefined()
 	})
 
 	it('find mailbox by special role: inbox', () => {

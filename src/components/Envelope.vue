@@ -820,12 +820,20 @@ export default {
 			return tags
 		},
 
+		threadAttachments() {
+			const envelopes = this.layoutMessageViewThreaded
+				? this.mainStore.getEnvelopesByThreadRootId(this.data)
+				: [this.data]
+			return envelopes
+				.flatMap((envelope) => envelope.attachments ?? [])
+		},
+
 		attachments() {
-			return this.data.attachments.filter((e) => e.fileName && e.fileName.length > 0).slice(0, this.possibleAttachmentsCount)
+			return this.threadAttachments.filter((e) => e.fileName && e.fileName.length > 0).slice(0, this.possibleAttachmentsCount)
 		},
 
 		remainingAttachements() {
-			return this.data.attachments.length - this.attachments.length
+			return this.threadAttachments.length - this.attachments.length
 		},
 
 		draggableLabel() {
@@ -1096,7 +1104,7 @@ export default {
 		async setTag(tagId) {
 			const tag = this.mainStore.getTag(tagId)
 			const threadEnvelopes = this.layoutMessageViewThreaded
-				? this.mainStore.getEnvelopesByThreadRootId(this.data.accountId, this.data.threadRootId)
+				? this.mainStore.getEnvelopesByThreadRootId(this.data)
 				: [this.data]
 			if (!tag) {
 				showWarning(t('mail', 'Could not apply tag, configured tag not found'))
@@ -1139,7 +1147,7 @@ export default {
 
 		onToggleImportantThread() {
 			const threadEnvelopes = this.layoutMessageViewThreaded
-				? this.mainStore.getEnvelopesByThreadRootId(this.data.accountId, this.data.threadRootId)
+				? this.mainStore.getEnvelopesByThreadRootId(this.data)
 				: [this.data]
 			threadEnvelopes.forEach((envelope) => {
 				this.mainStore.toggleEnvelopeImportant(envelope)
@@ -1152,7 +1160,7 @@ export default {
 
 		onToggleFlaggedThread() {
 			const threadEnvelopes = this.layoutMessageViewThreaded
-				? this.mainStore.getEnvelopesByThreadRootId(this.data.accountId, this.data.threadRootId)
+				? this.mainStore.getEnvelopesByThreadRootId(this.data)
 				: [this.data]
 			threadEnvelopes.forEach((envelope) => {
 				this.mainStore.toggleEnvelopeFlagged(envelope)
@@ -1162,7 +1170,7 @@ export default {
 		onToggleSeen() {
 			if (this.layoutMessageViewThreaded) {
 				const threadEnvelopes = this.layoutMessageViewThreaded
-					? this.mainStore.getEnvelopesByThreadRootId(this.data.accountId, this.data.threadRootId)
+					? this.mainStore.getEnvelopesByThreadRootId(this.data)
 					: [this.data]
 				threadEnvelopes.forEach((envelope) => {
 					this.mainStore.toggleEnvelopeSeen({ envelope })
@@ -1176,7 +1184,7 @@ export default {
 			const removeEnvelope = await this.mainStore.moveEnvelopeToJunk(this.data)
 
 			const threadEnvelopes = this.layoutMessageViewThreaded
-				? this.mainStore.getEnvelopesByThreadRootId(this.data.accountId, this.data.threadRootId)
+				? this.mainStore.getEnvelopesByThreadRootId(this.data)
 				: [this.data]
 			threadEnvelopes.forEach(async (envelope) => {
 				if (this.isImportant) {
