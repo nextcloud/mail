@@ -14,7 +14,7 @@
 			</template>
 			{{ t('mail', 'New message') }}
 		</ButtonVue>
-		<ButtonVue v-if="currentMailbox"
+		<ButtonVue v-if="showRefresh && currentMailbox"
 			:aria-label="t('mail', 'Refresh')"
 			type="tertiary-no-background"
 			class="refresh__button"
@@ -46,6 +46,11 @@ export default {
 		IconAdd,
 		IconRefresh,
 		IconLoading,
+	},
+	props: {
+		showRefresh: {
+			default: true,
+		},
 	},
 	data() {
 		return {
@@ -91,7 +96,6 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: calc(var(--default-grid-baseline, 4px) * 2);
 	gap: var(--default-grid-baseline);
 }
 
