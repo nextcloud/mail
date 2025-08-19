@@ -1,3 +1,19 @@
+## [5.2.1](https://github.com/nextcloud/mail/compare/v5.2.0...v5.2.1) (2025-08-19)
+
+
+### Bug Fixes
+
+* **dns:** Update public suffix list ([47ae9a4](https://github.com/nextcloud/mail/commit/47ae9a4adac17e8cda427b4fded80fd31a73cc7a))
+* **l10n:** Update translations from Transifex ([6375dfb](https://github.com/nextcloud/mail/commit/6375dfb1ee4200f324b0c23c47104207f1de6b8f))
+* **l10n:** Update translations from Transifex ([9a0cecd](https://github.com/nextcloud/mail/commit/9a0cecde93ea5510e82c4014d0b8e2982edb103c))
+* **l10n:** Update translations from Transifex ([e7753e8](https://github.com/nextcloud/mail/commit/e7753e876cf690480f28de5825ed10ac3c545677))
+* **l10n:** Update translations from Transifex ([5b6cd65](https://github.com/nextcloud/mail/commit/5b6cd65f3a56970c25f45895d7ac2317197c7677))
+* **l10n:** Update translations from Transifex ([c8f06ff](https://github.com/nextcloud/mail/commit/c8f06ff7065b123e43f49d4920e952f8ec657929))
+* **l10n:** Update translations from Transifex ([034a747](https://github.com/nextcloud/mail/commit/034a7475f2f6245774dd788200483dad9ca3adda))
+* **l10n:** Update translations from Transifex ([75b7233](https://github.com/nextcloud/mail/commit/75b7233f5215f5242a8508ea7dfca2f64c3a55b2))
+
+
+
 # [5.2.0](https://github.com/nextcloud/mail/compare/v5.2.0-rc.0...v5.2.0) (2025-08-12)
 
 
@@ -25,7 +41,18 @@
 
 
 
-# [5.2.0-beta.2](https://github.com/nextcloud/mail/compare/v5.2.0-alpha.1...v5.2.0-beta.2) (2025-08-06)
+# [5.2.0-beta.2](https://github.com/nextcloud/mail/compare/v5.2.0-beta.1...v5.2.0-beta.2) (2025-08-06)
+
+
+### Bug Fixes
+
+* **l10n:** Update translations from Transifex ([3ef4522](https://github.com/nextcloud/mail/commit/3ef4522a6c358e641e0cbb00706169859dd2ef2b))
+* **l10n:** Update translations from Transifex ([0352e73](https://github.com/nextcloud/mail/commit/0352e739a5a3cdf4f5e9f5fb9f3bea0b16d8e94d))
+* **translation:** respect llm admin setting ([d46ccf1](https://github.com/nextcloud/mail/commit/d46ccf1159572112597dd00f94018af256734b21))
+
+
+
+# [5.2.0-beta.1](https://github.com/nextcloud/mail/compare/v5.2.0-alpha.1...v5.2.0-beta.1) (2025-08-04)
 
 
 ### Bug Fixes
@@ -78,8 +105,6 @@
 * **imip:** process imip messages more frequently ([881c2a5](https://github.com/nextcloud/mail/commit/881c2a593dffa9dfe3c30cdb0a59103ed1f02623))
 * invitation title on small screen ([d268bb8](https://github.com/nextcloud/mail/commit/d268bb8f5e7e5b4c2f68020a7033f9b02fdecf8a))
 * **l10n:** remove trailing space and allow RTL for drafts ([a9acabc](https://github.com/nextcloud/mail/commit/a9acabca1240eeb2d96c32611beed708e5a958c6))
-* **l10n:** Update translations from Transifex ([3ef4522](https://github.com/nextcloud/mail/commit/3ef4522a6c358e641e0cbb00706169859dd2ef2b))
-* **l10n:** Update translations from Transifex ([0352e73](https://github.com/nextcloud/mail/commit/0352e739a5a3cdf4f5e9f5fb9f3bea0b16d8e94d))
 * **l10n:** Update translations from Transifex ([f341e23](https://github.com/nextcloud/mail/commit/f341e236d868d252d930f90d5aa407a9d775598f))
 * **l10n:** Update translations from Transifex ([7520191](https://github.com/nextcloud/mail/commit/7520191dfbc3b848bb990fd0c8dab0fcebc2ca8c))
 * **l10n:** Update translations from Transifex ([c9eb41d](https://github.com/nextcloud/mail/commit/c9eb41d382944c6293b222f9daff982836437d6f))
@@ -160,7 +185,6 @@
 * **smime:** only accept certificates and keys in file input ([9778add](https://github.com/nextcloud/mail/commit/9778addf9ce767645518c112693d5f6bd804ed46))
 * **smime:** persist sign preference per alias ([4863f96](https://github.com/nextcloud/mail/commit/4863f96d3b75d792d211f9ed28f25db049e9dca2))
 * text block wording / spelling ([891d4dd](https://github.com/nextcloud/mail/commit/891d4dd34b3ea102d6107220853d13bdbb711eb3))
-* **translation:** respect llm admin setting ([d46ccf1](https://github.com/nextcloud/mail/commit/d46ccf1159572112597dd00f94018af256734b21))
 * **uid:** switch back from unread circle to dot ([0ee8f3c](https://github.com/nextcloud/mail/commit/0ee8f3cf790b722ca49defe5856fdb7c35e0601d))
 * **uid:** use outline erasor icon for clear mailbox action ([dd27fa5](https://github.com/nextcloud/mail/commit/dd27fa5cdb6c06af2cc4d47ff6131a52d3ff115f))
 * **ui:** flip unread icons for envelopes ([3b6f756](https://github.com/nextcloud/mail/commit/3b6f75682ce5686a57d774f55d06215e6dd21574))
