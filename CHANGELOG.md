@@ -1,4 +1,71 @@
-# [5.3.0-beta.2](https://github.com/nextcloud/mail/compare/v5.2.0-alpha.1...v5.3.0-beta.2) (2025-08-14)
+# [5.3.0-rc.0](https://github.com/nextcloud/mail/compare/v5.3.0-beta.2...v5.3.0-rc.0) (2025-08-19)
+
+
+### Bug Fixes
+
+* **dns:** Update public suffix list ([5deb629](https://github.com/nextcloud/mail/commit/5deb629b2dbc7433d015aac48d8d8fa8dcd16f19))
+* **l10n:** Update translations from Transifex ([28b7233](https://github.com/nextcloud/mail/commit/28b7233ee530b2b91b8211d9401f75b83ce0d2ba))
+* **l10n:** Update translations from Transifex ([28314fd](https://github.com/nextcloud/mail/commit/28314fd13901ee157dc04ce163d738361f887049))
+* **l10n:** Update translations from Transifex ([88f8acc](https://github.com/nextcloud/mail/commit/88f8accc63460a1d212978dacdb9493641c47ceb))
+* **l10n:** Update translations from Transifex ([fc74022](https://github.com/nextcloud/mail/commit/fc740222f59670b1de22e87754dbdd04ed11dc99))
+* **l10n:** Update translations from Transifex ([4f2071b](https://github.com/nextcloud/mail/commit/4f2071b13a3f8c5a752a1b05e443a16b745b61a6))
+
+
+
+# [5.3.0-beta.2](https://github.com/nextcloud/mail/compare/v5.2.0-beta.1...v5.3.0-beta.2) (2025-08-14)
+
+
+### Bug Fixes
+
+* avoid polluting the logs in the task processing event listner ([ab9cd93](https://github.com/nextcloud/mail/commit/ab9cd9338b2de6bf6c2daee9d291c9c995ed7517))
+* **deps:** bump @iframe-resizer/child from 5.5.0 to ^5.5.1 (main) ([#11451](https://github.com/nextcloud/mail/issues/11451)) ([fbb7d7b](https://github.com/nextcloud/mail/commit/fbb7d7b61d0c666f984ec81de2da11139e1f211e))
+* **deps:** bump @iframe-resizer/child from 5.5.1 to ^5.5.2 ([ed1fbcb](https://github.com/nextcloud/mail/commit/ed1fbcb085d326fdcecdeb792f6833ca2b325967))
+* **deps:** bump @iframe-resizer/parent from 5.4.7 to ^5.5.1 (main) ([#11452](https://github.com/nextcloud/mail/issues/11452)) ([e7dd17a](https://github.com/nextcloud/mail/commit/e7dd17add842d88f5a05e2e1fcaaa92275208f07))
+* **deps:** bump @iframe-resizer/parent from 5.5.1 to ^5.5.2 (main) ([#11483](https://github.com/nextcloud/mail/issues/11483)) ([c563201](https://github.com/nextcloud/mail/commit/c563201340e02673d364e10efeef4bacc3050624))
+* **deps:** bump @nextcloud/files from 3.10.2 to ^3.12.0 ([deef58a](https://github.com/nextcloud/mail/commit/deef58a71e8801dc0c5e515295d03686ece51ff3))
+* **deps:** bump @nextcloud/initial-state from 2.2.0 to v3 ([4529411](https://github.com/nextcloud/mail/commit/452941193bd47e1deb5da403b9ef06ac12d05c25))
+* **deps:** bump @nextcloud/vue from 8.27.0 to ^8.28.0 ([88bdf89](https://github.com/nextcloud/mail/commit/88bdf891061228035dea3ddfe6d360a79a8cca33))
+* **deps:** bump core-js from 3.43.0 to ^3.45.0 ([4932f23](https://github.com/nextcloud/mail/commit/4932f23e4d0fc76c74b602a7cd7e631e77d7dab6))
+* **deps:** bump ical.js from 2.2.0 to ^2.2.1 ([13f5e61](https://github.com/nextcloud/mail/commit/13f5e61ef534906b8c7dc1ebb5cd36c1c9b85a24))
+* **deps:** bump js-base64 from 3.7.7 to ^3.7.8 (main) ([#11501](https://github.com/nextcloud/mail/issues/11501)) ([ded3bda](https://github.com/nextcloud/mail/commit/ded3bda4d340bffd12adcdd52b6253b3c9170431))
+* **deps:** bump linkifyjs to v4.3.2 ([ec06a65](https://github.com/nextcloud/mail/commit/ec06a658d8fc89369dabedb2e70dc1818f48c245))
+* **deps:** bump p-limit from 5.0.0 to v6 ([4d6501a](https://github.com/nextcloud/mail/commit/4d6501ac9952a57bf9a38b47f497113d7af7e008))
+* **deps:** bump sabberworm/php-css-parser from 8.8.0 to ^8.9.0 (main) ([#11475](https://github.com/nextcloud/mail/issues/11475)) ([a96c15d](https://github.com/nextcloud/mail/commit/a96c15d684506a68817817f0e0c3ce6af567ec2c))
+* **deps:** bump stylelint from 16.20.0 to ^16.23.1 (main) ([#11476](https://github.com/nextcloud/mail/issues/11476)) ([eac87aa](https://github.com/nextcloud/mail/commit/eac87aa75304bd0ecfda0425c84ea27477d83bf3))
+* **deps:** bump uuid from 9.0.1 to v11 ([243172c](https://github.com/nextcloud/mail/commit/243172c9c8ebaaa2e0feb3907aa4dbe21842f133))
+* **deps:** bump youthweb/urllinker from 2.0.0 to ^2.1.0 (main) ([#11477](https://github.com/nextcloud/mail/issues/11477)) ([e4cc571](https://github.com/nextcloud/mail/commit/e4cc571bef4399dbc1ec66c4238857b087db08c1))
+* **deps:** update symfony/process to 5.4.46 ([569e6b9](https://github.com/nextcloud/mail/commit/569e6b9c5ce88c2874e969d9de55e176e0043b67))
+* **l10n:** Update translations from Transifex ([cfdcf75](https://github.com/nextcloud/mail/commit/cfdcf757f2fe7a6936569d3c861bba1b1004fe05))
+* **l10n:** Update translations from Transifex ([697c69b](https://github.com/nextcloud/mail/commit/697c69b5841c01a25b8cf7b0e4fed67d3443188f))
+* **l10n:** Update translations from Transifex ([2f1c003](https://github.com/nextcloud/mail/commit/2f1c003418e40b7edad25f1f498e43e2b773a7d1))
+* **l10n:** Update translations from Transifex ([36f0e7f](https://github.com/nextcloud/mail/commit/36f0e7fd38568d944000736136c94bb1b7a261a3))
+* **l10n:** Update translations from Transifex ([e2c468f](https://github.com/nextcloud/mail/commit/e2c468fac3115bdd6d27c16b9009377421416c74))
+* **l10n:** Update translations from Transifex ([c8f646c](https://github.com/nextcloud/mail/commit/c8f646c09d5d0c405babdefa026cf6a5ac2b1d2f))
+* **l10n:** Update translations from Transifex ([3f1a40c](https://github.com/nextcloud/mail/commit/3f1a40c9b23ee7f9ba9ac3610cb877d8d8a59800))
+* **l10n:** Update translations from Transifex ([481be86](https://github.com/nextcloud/mail/commit/481be86a5abe74d2b6e11ee7823e1ff9997b7d4f))
+* **text-blocks:** allow editing in composer and open api for non admin users ([d93d974](https://github.com/nextcloud/mail/commit/d93d974bf8642e80792402c23546391e2985561d))
+* **translation:** respect llm admin setting ([0b0e279](https://github.com/nextcloud/mail/commit/0b0e27977a69a6315fca731f65f554ee758e2e9b))
+* **ui:** replace wrongly sized and jumping checkbox loading icon ([668f7b6](https://github.com/nextcloud/mail/commit/668f7b6c4b3017f0a65f486435d4ca81327d1399))
+* **ui:** resize action icons from 16px to 20px ([d6810da](https://github.com/nextcloud/mail/commit/d6810da2a5d1fc60d632234865542962acdf7ddb))
+* **ui:** resize action icons from 16px to 20px ([99fbdda](https://github.com/nextcloud/mail/commit/99fbdda306f7efd3c52bb98a4f4937f92eb2de2f))
+* **ui:** resize button icons from 16px to 20px ([9c059b8](https://github.com/nextcloud/mail/commit/9c059b85d13ca4161f793d9fc2de537de66b726b))
+* **ui:** resize inline icons from 16px to 20px ([e8a8d89](https://github.com/nextcloud/mail/commit/e8a8d89de6c92fd70fa2e1d5dbd9afe7c5837487))
+
+
+### Features
+
+* **ai-integration:** detect if message needs translation ([4a2b238](https://github.com/nextcloud/mail/commit/4a2b2389f31f084d8b7856f4a4bd84ed22c27f41))
+* make thread elements have the same space around it ([ec2173c](https://github.com/nextcloud/mail/commit/ec2173c77ab9a6266dbb3499a32350df8b7d180f))
+* split envelopes by time of arrival ([eaa7405](https://github.com/nextcloud/mail/commit/eaa740528c1284b79aa3291bcbfd20f907608f64))
+
+
+### Reverts
+
+* Revert "chore(release): v5.3.0-beta.2 [skip ci]" ([b4f1f4f](https://github.com/nextcloud/mail/commit/b4f1f4f3b1bb45db95605df0e31c1e3772744121))
+
+
+
+# [5.2.0-beta.1](https://github.com/nextcloud/mail/compare/v5.2.0-alpha.1...v5.2.0-beta.1) (2025-08-04)
 
 
 ### Bug Fixes
@@ -7,7 +74,6 @@
 * add translator note for account settings folder search ([a702a23](https://github.com/nextcloud/mail/commit/a702a233388163a3898b993bb0d5a43415e28192))
 * **avatar:** handle null bodies ([b8f452b](https://github.com/nextcloud/mail/commit/b8f452bba27a059681f33b7842aa2b5c0ab2cc57))
 * avoid invalid false return type ([d0f4b55](https://github.com/nextcloud/mail/commit/d0f4b556531a1271f11f3164093eb62699f48a28))
-* avoid polluting the logs in the task processing event listner ([ab9cd93](https://github.com/nextcloud/mail/commit/ab9cd9338b2de6bf6c2daee9d291c9c995ed7517))
 * button aria label and roles ([e38d831](https://github.com/nextcloud/mail/commit/e38d831869cbf9ef38d951b3c2d6fa3da2c0790d))
 * **caldav:** invalid import of davclient ([376942d](https://github.com/nextcloud/mail/commit/376942d81cf95b462196aca6f629f7bfc258a24c))
 * **classification:** use global default for new messages too ([d4e171b](https://github.com/nextcloud/mail/commit/d4e171bdac87390067fe5f4b0db10adef1dfcbe7))
@@ -19,44 +85,27 @@
 * **deps:** Apply npm audit fix ([f538159](https://github.com/nextcloud/mail/commit/f538159f3abf69672a4df4498862b88676bc9c92))
 * **deps:** bump @iframe-resizer/child from 5.4.6 to ^5.4.7 (main) ([#11374](https://github.com/nextcloud/mail/issues/11374)) ([41547fa](https://github.com/nextcloud/mail/commit/41547faa6bd9e9e672d49e5659e48b3f74aadf37))
 * **deps:** bump @iframe-resizer/child from 5.4.7 to ^5.5.0 (main) ([#11430](https://github.com/nextcloud/mail/issues/11430)) ([b0947e6](https://github.com/nextcloud/mail/commit/b0947e64704972de8e2229d3ad0c0c1446ce0d17))
-* **deps:** bump @iframe-resizer/child from 5.5.0 to ^5.5.1 (main) ([#11451](https://github.com/nextcloud/mail/issues/11451)) ([fbb7d7b](https://github.com/nextcloud/mail/commit/fbb7d7b61d0c666f984ec81de2da11139e1f211e))
-* **deps:** bump @iframe-resizer/child from 5.5.1 to ^5.5.2 ([ed1fbcb](https://github.com/nextcloud/mail/commit/ed1fbcb085d326fdcecdeb792f6833ca2b325967))
 * **deps:** bump @iframe-resizer/parent from 5.4.6 to ^5.4.7 (main) ([#11375](https://github.com/nextcloud/mail/issues/11375)) ([c9fc35a](https://github.com/nextcloud/mail/commit/c9fc35aad941303316dada6e9508cf98d475b2e8))
-* **deps:** bump @iframe-resizer/parent from 5.4.7 to ^5.5.1 (main) ([#11452](https://github.com/nextcloud/mail/issues/11452)) ([e7dd17a](https://github.com/nextcloud/mail/commit/e7dd17add842d88f5a05e2e1fcaaa92275208f07))
-* **deps:** bump @iframe-resizer/parent from 5.5.1 to ^5.5.2 (main) ([#11483](https://github.com/nextcloud/mail/issues/11483)) ([c563201](https://github.com/nextcloud/mail/commit/c563201340e02673d364e10efeef4bacc3050624))
 * **deps:** bump @nextcloud/auth from 2.5.1 to ^2.5.2 (main) ([#11376](https://github.com/nextcloud/mail/issues/11376)) ([c15e8c3](https://github.com/nextcloud/mail/commit/c15e8c308336cc7645934f090c70ceb069667145))
 * **deps:** bump @nextcloud/calendar-js from 8.1.2 to ^8.1.3 ([4c8363e](https://github.com/nextcloud/mail/commit/4c8363e9c3b36fef917b310e9c21092e37b52cb9))
 * **deps:** bump @nextcloud/calendar-js from 8.1.3 to ^8.1.4 ([378405e](https://github.com/nextcloud/mail/commit/378405e2a7967ad795507275a4753af0cbaaf622))
 * **deps:** bump @nextcloud/cdav-library from 1.5.3 to v2 ([08bff41](https://github.com/nextcloud/mail/commit/08bff4199ee5f1e3adfde894d4aaccbe7dafecdb))
 * **deps:** bump @nextcloud/cdav-library from 2.1.0 to ^2.1.1 (main) ([#11409](https://github.com/nextcloud/mail/issues/11409)) ([2914a63](https://github.com/nextcloud/mail/commit/2914a6312556302b179eb602888bf31921d05d4d))
 * **deps:** bump @nextcloud/dialogs from 5.3.8 to v6 ([53cfc3e](https://github.com/nextcloud/mail/commit/53cfc3ef45446903a13c70cb3dae76bc5a878195))
-* **deps:** bump @nextcloud/files from 3.10.2 to ^3.12.0 ([deef58a](https://github.com/nextcloud/mail/commit/deef58a71e8801dc0c5e515295d03686ece51ff3))
-* **deps:** bump @nextcloud/initial-state from 2.2.0 to v3 ([4529411](https://github.com/nextcloud/mail/commit/452941193bd47e1deb5da403b9ef06ac12d05c25))
 * **deps:** bump @nextcloud/l10n from 3.2.0 to ^3.3.0 (main) ([#11227](https://github.com/nextcloud/mail/issues/11227)) ([ed941e8](https://github.com/nextcloud/mail/commit/ed941e86f1dcbc8e81da99417e406eb83ebb0649))
 * **deps:** bump @nextcloud/l10n from 3.4.0 to ^3.4.0 (main) ([#11427](https://github.com/nextcloud/mail/issues/11427)) ([e9f785c](https://github.com/nextcloud/mail/commit/e9f785c9d532fe21fd77a52d288702f1cf9240e2))
 * **deps:** bump @nextcloud/moment from 1.3.4 to ^1.3.5 (main) ([#11410](https://github.com/nextcloud/mail/issues/11410)) ([29f0f8e](https://github.com/nextcloud/mail/commit/29f0f8ef908e2c70ebec94d0aac6e52795f565ef))
 * **deps:** bump @nextcloud/sharing from 0.2.4 to ^0.2.5 ([f4f3535](https://github.com/nextcloud/mail/commit/f4f35358b044213e2938a1a9bf5412fed7f94323))
 * **deps:** bump @nextcloud/vue from 8.27.0 to ^8.27.0 ([ef701cb](https://github.com/nextcloud/mail/commit/ef701cbf0c216469ee16012e50bc08759e80658d))
-* **deps:** bump @nextcloud/vue from 8.27.0 to ^8.28.0 ([88bdf89](https://github.com/nextcloud/mail/commit/88bdf891061228035dea3ddfe6d360a79a8cca33))
 * **deps:** bump amphp/parallel and amphp/process for PHP8.4 compat ([8d0ef72](https://github.com/nextcloud/mail/commit/8d0ef72c8fe3b840a7a17c31159ee18d58453438))
 * **deps:** bump core-js from 3.42.0 to ^3.43.0 (main) ([#11256](https://github.com/nextcloud/mail/issues/11256)) ([8b9a531](https://github.com/nextcloud/mail/commit/8b9a531b9c7d8dfefe221a1bff30aaac0254d87d))
-* **deps:** bump core-js from 3.43.0 to ^3.45.0 ([4932f23](https://github.com/nextcloud/mail/commit/4932f23e4d0fc76c74b602a7cd7e631e77d7dab6))
 * **deps:** bump dompurify from 3.2.5 to ^3.2.6 (main) ([#11180](https://github.com/nextcloud/mail/issues/11180)) ([fbbf4bf](https://github.com/nextcloud/mail/commit/fbbf4bfd15000113755fa37d76634683c10282d1))
 * **deps:** bump form-data to v4.0.4 ([71d52ca](https://github.com/nextcloud/mail/commit/71d52ca16c25bc19f5e84f54c41bca8433706d03))
 * **deps:** bump ical.js from 2.1.0 to ^2.2.0 (main) ([#11343](https://github.com/nextcloud/mail/issues/11343)) ([10d46f5](https://github.com/nextcloud/mail/commit/10d46f5714f081a487a84cdae353e23fb266c7fc))
-* **deps:** bump ical.js from 2.2.0 to ^2.2.1 ([13f5e61](https://github.com/nextcloud/mail/commit/13f5e61ef534906b8c7dc1ebb5cd36c1c9b85a24))
-* **deps:** bump js-base64 from 3.7.7 to ^3.7.8 (main) ([#11501](https://github.com/nextcloud/mail/issues/11501)) ([ded3bda](https://github.com/nextcloud/mail/commit/ded3bda4d340bffd12adcdd52b6253b3c9170431))
-* **deps:** bump linkifyjs to v4.3.2 ([ec06a65](https://github.com/nextcloud/mail/commit/ec06a658d8fc89369dabedb2e70dc1818f48c245))
 * **deps:** bump nextcloud/kitinerary-bin from 1.0.3 to ^1.0.4 (main) ([#11181](https://github.com/nextcloud/mail/issues/11181)) ([cc4b6af](https://github.com/nextcloud/mail/commit/cc4b6afa0dca2559be3f7253c7d41598c833b5d3))
-* **deps:** bump p-limit from 5.0.0 to v6 ([4d6501a](https://github.com/nextcloud/mail/commit/4d6501ac9952a57bf9a38b47f497113d7af7e008))
 * **deps:** bump ramda from 0.30.1 to ^0.31.3 ([0f5d1cb](https://github.com/nextcloud/mail/commit/0f5d1cba25f079fb36ca802ed37872c05b2f9d66))
-* **deps:** bump sabberworm/php-css-parser from 8.8.0 to ^8.9.0 (main) ([#11475](https://github.com/nextcloud/mail/issues/11475)) ([a96c15d](https://github.com/nextcloud/mail/commit/a96c15d684506a68817817f0e0c3ce6af567ec2c))
 * **deps:** bump stylelint from 16.19.1 to ^16.20.0 (main) ([#11248](https://github.com/nextcloud/mail/issues/11248)) ([0d95338](https://github.com/nextcloud/mail/commit/0d95338d7597d7f77d691ea921a6bc8e295cd01c))
-* **deps:** bump stylelint from 16.20.0 to ^16.23.1 (main) ([#11476](https://github.com/nextcloud/mail/issues/11476)) ([eac87aa](https://github.com/nextcloud/mail/commit/eac87aa75304bd0ecfda0425c84ea27477d83bf3))
-* **deps:** bump uuid from 9.0.1 to v11 ([243172c](https://github.com/nextcloud/mail/commit/243172c9c8ebaaa2e0feb3907aa4dbe21842f133))
 * **deps:** bump webdav from 4.11.4 to v4.11.5 (main) ([#11246](https://github.com/nextcloud/mail/issues/11246)) ([6359d2b](https://github.com/nextcloud/mail/commit/6359d2b9e6e1c7ca9fa6b40343b62b9ee4cea1b4))
-* **deps:** bump youthweb/urllinker from 2.0.0 to ^2.1.0 (main) ([#11477](https://github.com/nextcloud/mail/issues/11477)) ([e4cc571](https://github.com/nextcloud/mail/commit/e4cc571bef4399dbc1ec66c4238857b087db08c1))
-* **deps:** update symfony/process to 5.4.46 ([569e6b9](https://github.com/nextcloud/mail/commit/569e6b9c5ce88c2874e969d9de55e176e0043b67))
 * **dns:** Update public suffix list ([6096398](https://github.com/nextcloud/mail/commit/6096398a88ea3065ddf48afa895d1a70c6e9d4fd))
 * **dns:** Update public suffix list ([990031a](https://github.com/nextcloud/mail/commit/990031a8be090ff5fe55bab5647f8be921d0536f))
 * **dns:** Update public suffix list ([5ea2259](https://github.com/nextcloud/mail/commit/5ea2259e2963106d27fcdae78119b43fa322d0a5))
@@ -69,14 +118,6 @@
 * **imip:** process imip messages more frequently ([881c2a5](https://github.com/nextcloud/mail/commit/881c2a593dffa9dfe3c30cdb0a59103ed1f02623))
 * invitation title on small screen ([d268bb8](https://github.com/nextcloud/mail/commit/d268bb8f5e7e5b4c2f68020a7033f9b02fdecf8a))
 * **l10n:** remove trailing space and allow RTL for drafts ([a9acabc](https://github.com/nextcloud/mail/commit/a9acabca1240eeb2d96c32611beed708e5a958c6))
-* **l10n:** Update translations from Transifex ([cfdcf75](https://github.com/nextcloud/mail/commit/cfdcf757f2fe7a6936569d3c861bba1b1004fe05))
-* **l10n:** Update translations from Transifex ([697c69b](https://github.com/nextcloud/mail/commit/697c69b5841c01a25b8cf7b0e4fed67d3443188f))
-* **l10n:** Update translations from Transifex ([2f1c003](https://github.com/nextcloud/mail/commit/2f1c003418e40b7edad25f1f498e43e2b773a7d1))
-* **l10n:** Update translations from Transifex ([36f0e7f](https://github.com/nextcloud/mail/commit/36f0e7fd38568d944000736136c94bb1b7a261a3))
-* **l10n:** Update translations from Transifex ([e2c468f](https://github.com/nextcloud/mail/commit/e2c468fac3115bdd6d27c16b9009377421416c74))
-* **l10n:** Update translations from Transifex ([c8f646c](https://github.com/nextcloud/mail/commit/c8f646c09d5d0c405babdefa026cf6a5ac2b1d2f))
-* **l10n:** Update translations from Transifex ([3f1a40c](https://github.com/nextcloud/mail/commit/3f1a40c9b23ee7f9ba9ac3610cb877d8d8a59800))
-* **l10n:** Update translations from Transifex ([481be86](https://github.com/nextcloud/mail/commit/481be86a5abe74d2b6e11ee7823e1ff9997b7d4f))
 * **l10n:** Update translations from Transifex ([f341e23](https://github.com/nextcloud/mail/commit/f341e236d868d252d930f90d5aa407a9d775598f))
 * **l10n:** Update translations from Transifex ([7520191](https://github.com/nextcloud/mail/commit/7520191dfbc3b848bb990fd0c8dab0fcebc2ca8c))
 * **l10n:** Update translations from Transifex ([c9eb41d](https://github.com/nextcloud/mail/commit/c9eb41d382944c6293b222f9daff982836437d6f))
@@ -157,8 +198,6 @@
 * **smime:** only accept certificates and keys in file input ([9778add](https://github.com/nextcloud/mail/commit/9778addf9ce767645518c112693d5f6bd804ed46))
 * **smime:** persist sign preference per alias ([4863f96](https://github.com/nextcloud/mail/commit/4863f96d3b75d792d211f9ed28f25db049e9dca2))
 * text block wording / spelling ([891d4dd](https://github.com/nextcloud/mail/commit/891d4dd34b3ea102d6107220853d13bdbb711eb3))
-* **text-blocks:** allow editing in composer and open api for non admin users ([d93d974](https://github.com/nextcloud/mail/commit/d93d974bf8642e80792402c23546391e2985561d))
-* **translation:** respect llm admin setting ([0b0e279](https://github.com/nextcloud/mail/commit/0b0e27977a69a6315fca731f65f554ee758e2e9b))
 * **uid:** switch back from unread circle to dot ([0ee8f3c](https://github.com/nextcloud/mail/commit/0ee8f3cf790b722ca49defe5856fdb7c35e0601d))
 * **uid:** use outline erasor icon for clear mailbox action ([dd27fa5](https://github.com/nextcloud/mail/commit/dd27fa5cdb6c06af2cc4d47ff6131a52d3ff115f))
 * **ui:** flip unread icons for envelopes ([3b6f756](https://github.com/nextcloud/mail/commit/3b6f75682ce5686a57d774f55d06215e6dd21574))
@@ -166,11 +205,6 @@
 * **ui:** go back to filled icons for selection and confirmation icons ([1adecd1](https://github.com/nextcloud/mail/commit/1adecd1bd3ab449dd38b358ae8f695ba64798045))
 * **ui:** make composer link attachments icon size wider ([de6ab08](https://github.com/nextcloud/mail/commit/de6ab08dd3c3b6663872ee2c12e5e540e7c12790))
 * **ui:** replace deprecated iframe resizer attribute ([d74cf2d](https://github.com/nextcloud/mail/commit/d74cf2dd7938df3842ed5e85609a37550d55a60b))
-* **ui:** replace wrongly sized and jumping checkbox loading icon ([668f7b6](https://github.com/nextcloud/mail/commit/668f7b6c4b3017f0a65f486435d4ca81327d1399))
-* **ui:** resize action icons from 16px to 20px ([d6810da](https://github.com/nextcloud/mail/commit/d6810da2a5d1fc60d632234865542962acdf7ddb))
-* **ui:** resize action icons from 16px to 20px ([99fbdda](https://github.com/nextcloud/mail/commit/99fbdda306f7efd3c52bb98a4f4937f92eb2de2f))
-* **ui:** resize button icons from 16px to 20px ([9c059b8](https://github.com/nextcloud/mail/commit/9c059b85d13ca4161f793d9fc2de537de66b726b))
-* **ui:** resize inline icons from 16px to 20px ([e8a8d89](https://github.com/nextcloud/mail/commit/e8a8d89de6c92fd70fa2e1d5dbd9afe7c5837487))
 * **ui:** show only drafts with draft prefix ([edba111](https://github.com/nextcloud/mail/commit/edba1114aa1c223331776ea2f53ae330176105ec))
 * **ui:** use filled/outline icon for the important flag ([20c57d9](https://github.com/nextcloud/mail/commit/20c57d9cc273b52b8d0242327f8cab1cab8a96ff))
 * **ui:** use outline icon for archiving actions ([a2fb5d6](https://github.com/nextcloud/mail/commit/a2fb5d640678f3fc0f88acc910a22345abb7b46f))
@@ -181,14 +215,11 @@
 
 * add more formatting features on ckeditor ([60d0ed6](https://github.com/nextcloud/mail/commit/60d0ed637f2ac15d7af6902bd4afe23af4b13007))
 * add OCS routes for mailbox and mail listing ([0b86510](https://github.com/nextcloud/mail/commit/0b86510877a97236c5f81bbad3bb3a1deb2e657c))
-* **ai-integration:** detect if message needs translation ([4a2b238](https://github.com/nextcloud/mail/commit/4a2b2389f31f084d8b7856f4a4bd84ed22c27f41))
 * Allow disabling of threaded view ([084cc67](https://github.com/nextcloud/mail/commit/084cc6768aa3f118c4b233b68b57eee5d698818d))
 * change mailbox text to folder ([9287321](https://github.com/nextcloud/mail/commit/9287321f9bdf0e5ea9d50b38a0ea927b5061a9ee))
 * **composer:** suggest recipients from own identities ([6fc54b4](https://github.com/nextcloud/mail/commit/6fc54b4c246ce6083fe3b5755e44eb6a134f2132))
 * make message source modal larger ([e397eb3](https://github.com/nextcloud/mail/commit/e397eb385b101e8ed358f8f5fe10b965d3051c7a))
-* make thread elements have the same space around it ([ec2173c](https://github.com/nextcloud/mail/commit/ec2173c77ab9a6266dbb3499a32350df8b7d180f))
 * **sieve:** create a mail filter from a message ([11b2d07](https://github.com/nextcloud/mail/commit/11b2d070f661c852dfb4f1332e062be3f226bdbe))
-* split envelopes by time of arrival ([eaa7405](https://github.com/nextcloud/mail/commit/eaa740528c1284b79aa3291bcbfd20f907608f64))
 * start loading additional envelopes earlier ([3663164](https://github.com/nextcloud/mail/commit/36631649f354b8ff5d04cf24634de06586a067de))
 * text blocks ([fcbfc63](https://github.com/nextcloud/mail/commit/fcbfc63cca57f2f6bdb0d309b428606193ddca68))
 * thread list shouldnt reload when searching ([665b3dd](https://github.com/nextcloud/mail/commit/665b3dd000d244b450658fed64bc6231c1c25f25))
@@ -201,11 +232,6 @@
 * improve quota loading for accounts ([2a9b9ae](https://github.com/nextcloud/mail/commit/2a9b9aed4229ab702f08f966bd4cb3c2b7d53ea8))
 * prefetch other mailboxes in the background ([2957ec5](https://github.com/nextcloud/mail/commit/2957ec50b375e19633dd6ef4e0b936f160300de1))
 * reduce number of avatar requests ([9e08477](https://github.com/nextcloud/mail/commit/9e08477c5cb515edcdeed81944aca009e902b51d))
-
-
-### Reverts
-
-* Revert "chore(release): v5.3.0-beta.2 [skip ci]" ([b4f1f4f](https://github.com/nextcloud/mail/commit/b4f1f4f3b1bb45db95605df0e31c1e3772744121))
 
 
 
