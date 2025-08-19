@@ -26,6 +26,7 @@ OC.L10N.register(
     "Read" : "পড়",
     "Edit tags" : "ট্যাগ সম্পাদনা",
     "Back" : "পেছনে যাও",
+    "Attendees" : "অংশগ্রহণকারীবৃন্দ",
     "Description" : "বিবরণ",
     "Create" : "তৈরী কর",
     "Select" : "সিলেক্ট",
