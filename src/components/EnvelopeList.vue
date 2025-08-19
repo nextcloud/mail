@@ -563,7 +563,7 @@ div {
 	justify-content: center;
 	background-color: var(--color-main-background-translucent);
 	position: sticky;
-	top: 0px;
+	top: 0;
 	height: 48px;
 	z-index: 100;
 	.action-buttons {
@@ -572,8 +572,6 @@ div {
 }
 
 #load-more-mail-messages {
-	margin: 10px auto;
-	padding: 10px;
 	background-position: 9px center;
 }
 
@@ -589,7 +587,7 @@ div {
 .list-enter,
 .list-leave-to {
 	opacity: 0;
-	height: 0px;
+	height: 0;
 	transform: scaleY(0);
 }
 
