@@ -473,10 +473,47 @@ export default {
 	},
 
 	methods: {
-		getGroupedEnvelopes(envelopes, syncTimestamp) {
-			return groupEnvelopesByDate(envelopes, syncTimestamp, this.sortOrder)
-		},
+		groupEnvelopesByDate(envelopes, syncTimestamp) {
+			const now = new Date(syncTimestamp)
+			const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000)
+			const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+			const startOfYesterday = new Date(startOfToday)
+			startOfYesterday.setDate(startOfYesterday.getDate() - 1)
+			const startOfLastWeek = new Date(now)
+			startOfLastWeek.setDate(startOfLastWeek.getDate() - 7)
+			const startOfLastMonth = new Date(now)
+			startOfLastMonth.setMonth(startOfLastMonth.getMonth() - 1)
 
+			const groups = {
+				lastHour: [],
+				today: [],
+				yesterday: [],
+				lastWeek: [],
+				lastMonth: [],
+				older: [],
+			}
+
+			for (const envelope of envelopes) {
+				const date = new Date(Object.values(envelope)[0].dateInt * 1000)
+				if (date >= oneHourAgo) {
+					groups.lastHour.push(envelope)
+				} else if (date >= startOfToday) {
+					groups.today.push(envelope)
+				} else if (date >= startOfYesterday && date < startOfToday) {
+					groups.yesterday.push(envelope)
+				} else if (date >= startOfLastWeek) {
+					groups.lastWeek.push(envelope)
+				} else if (date >= startOfLastMonth) {
+					groups.lastMonth.push(envelope)
+				} else {
+					groups.older.push(envelope)
+				}
+			}
+
+			return Object.fromEntries(
+				Object.entries(groups).filter(([_, list]) => list.length > 0),
+			)
+		},
 		async fetchEnvelopes() {
 			const existingEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.query)
 			if (!existingEnvelopes.length) {

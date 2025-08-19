@@ -125,15 +125,15 @@
 		<transition-group :name="listTransitionName">
 			<Envelope
 				v-for="(env, index) in sortedEnvelops"
-				:key="env.databaseId"
-				:data="env"
+				:key="Object.keys(env)[0]"
+				:thread-list="env"
 				:mailbox="mailbox"
-				:selected="selection.includes(env.databaseId)"
+				:selected="selection.includes(Object.keys(env)[0])"
 				:select-mode="selectMode"
 				:has-multiple-accounts="hasMultipleAccounts"
 				:selected-envelopes="selectedEnvelopes"
 				:compact-mode="compactMode"
-				@delete="$emit('delete', env.databaseId)"
+				@delete="$emit('delete', Object.keys(env)[0])"
 				@update:selected="onEnvelopeSelectToggle(env, index, $event)"
 				@select-multiple="onEnvelopeSelectMultiple(env, index)"
 				@open:quick-actions-settings="showQuickActionsSettings = true" />
@@ -285,7 +285,7 @@ export default {
 		sortedEnvelops() {
 			if (this.sortOrder === 'oldest') {
 				return [...this.envelopes].sort((a, b) => {
-					return a.dateInt < b.dateInt ? -1 : 1
+					return Object.values(a)[0].dateInt < Object.values(b)[0].dateInt ? -1 : 1
 				})
 			}
 			return [...this.envelopes]
@@ -297,18 +297,18 @@ export default {
 		},
 
 		isAtLeastOneSelectedRead() {
-			return this.selectedEnvelopes.some((env) => env.flags.seen === true)
+			return this.selectedEnvelopes.some((env) => Object.values(env)[0].flags.seen === true)
 		},
 
 		isAtLeastOneSelectedUnread() {
-			return this.selectedEnvelopes.some((env) => env.flags.seen === false)
+			return this.selectedEnvelopes.some((env) => Object.values(env)[0].flags.seen === false)
 		},
 
 		isAtLeastOneSelectedImportant() {
 			// returns true if at least one selected message is marked as important
 			return this.selectedEnvelopes.some((env) => {
 				return this.mainStore
-					.getEnvelopeTags(env.databaseId)
+					.getEnvelopeTags(Object.keys(env)[0].databaseId)
 					.some((tag) => tag.imapLabel === '$label1')
 			})
 		},
@@ -317,7 +317,7 @@ export default {
 			// returns true if at least one selected message is not marked as important
 			return this.selectedEnvelopes.some((env) => {
 				return !this.mainStore
-					.getEnvelopeTags(env.databaseId)
+					.getEnvelopeTags(Object.keys(env)[0].databaseId)
 					.some((tag) => tag.imapLabel === '$label1')
 			})
 		},
@@ -325,31 +325,31 @@ export default {
 		isAtLeastOneSelectedJunk() {
 			// returns true if at least one selected message is marked as junk
 			return this.selectedEnvelopes.some((env) => {
-				return env.flags.$junk
+				return Object.values(env)[0].flags.$junk
 			})
 		},
 
 		isAtLeastOneSelectedNotJunk() {
 			// returns true if at least one selected message is not marked as not junk
 			return this.selectedEnvelopes.some((env) => {
-				return !env.flags.$junk
+				return !Object.values(env)[0].flags.$junk
 			})
 		},
 
 		isAtLeastOneSelectedFavorite() {
-			return this.selectedEnvelopes.some((env) => env.flags.flagged)
+			return this.selectedEnvelopes.some((env) => Object.values(env)[0].flags.flagged)
 		},
 
 		isAtLeastOneSelectedUnFavorite() {
-			return this.selectedEnvelopes.some((env) => !env.flags.flagged)
+			return this.selectedEnvelopes.some((env) => !Object.values(env)[0].flags.flagged)
 		},
 
 		selectedEnvelopes() {
-			return this.sortedEnvelops.filter((env) => this.selection.includes(env.databaseId))
+			return this.sortedEnvelops.filter((env) => this.selection.includes(Object.keys(env)[0].databaseId))
 		},
 
 		hasMultipleAccounts() {
-			const mailboxIds = this.sortedEnvelops.map((envelope) => envelope.mailboxId)
+			const mailboxIds = this.sortedEnvelops.map((envelope) => Object.values(envelope)[0].mailboxId)
 			return Array.from(new Set(mailboxIds)).length > 1
 		},
 
@@ -360,10 +360,12 @@ export default {
 
 	watch: {
 		sortedEnvelops(newVal, oldVal) {
+			const newEnvs = Object.values(newVal).map(thread => Object.values(thread)[0])
+			const oldEnvs = Object.values(oldVal).map(thread => Object.values(thread)[0])
 			// Unselect vanished envelopes
-			const newIds = newVal.map((env) => env.databaseId)
+			const newIds = newEnvs.map((env) => env.databaseId)
 			this.selection = this.selection.filter((id) => newIds.includes(id))
-			differenceWith((a, b) => a.databaseId === b.databaseId, oldVal, newVal)
+			differenceWith((a, b) => a.databaseId === b.databaseId, oldEnvs, newEnvs)
 				.forEach((env) => {
 					env.flags.selected = false
 				})
@@ -484,8 +486,8 @@ export default {
 
 				// one of threads is selected
 				if (indexSelectedEnvelope !== -1) {
-					const lastSelectedEnvelope = this.selectedEnvelopes[this.selectedEnvelopes.length - 1]
-					const diff = this.sortedEnvelops.filter((envelope) => envelope === lastSelectedEnvelope || !this.selectedEnvelopes.includes(envelope))
+					const lastSelectedEnvelope = this.selectedEnvelopes[this.selectedEnvelopes.length - 1][0]
+					const diff = this.sortedEnvelops.filter((envelope) => envelope[0] === lastSelectedEnvelope || !this.selectedEnvelopes.includes(envelope))
 					const lastIndex = diff.indexOf(lastSelectedEnvelope)
 					nextEnvelopeToNavigate = diff[lastIndex === 0 ? 1 : lastIndex - 1]
 				}
@@ -534,13 +536,13 @@ export default {
 		},
 
 		setEnvelopeSelected(envelope, selected) {
-			const alreadySelected = this.selection.includes(envelope.databaseId)
+			const alreadySelected = this.selection.includes(envelope[0].databaseId)
 			if (selected && !alreadySelected) {
-				envelope.flags.selected = true
-				this.selection.push(envelope.databaseId)
+				envelope[0].flags.selected = true
+				this.selection.push(envelope[0].databaseId)
 			} else if (!selected && alreadySelected) {
-				envelope.flags.selected = false
-				this.selection.splice(this.selection.indexOf(envelope.databaseId), 1)
+				envelope[0].flags.selected = false
+				this.selection.splice(this.selection.indexOf(envelope[0].databaseId), 1)
 			}
 		},
 
@@ -605,7 +607,7 @@ export default {
 		 */
 		findSelectionIndex(databaseId) {
 			for (const [index, envelope] of this.sortedEnvelops.entries()) {
-				if (envelope.databaseId === databaseId) {
+				if (envelope[0].databaseId === databaseId) {
 					return index
 				}
 			}

@@ -17,6 +17,7 @@ use Horde_Mime_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
@@ -237,8 +238,8 @@ class MailManager implements IMailManager {
 	}
 
 	#[\Override]
-	public function getThread(Account $account, string $threadRootId): array {
-		return $this->dbMessageMapper->findThread($account, $threadRootId);
+	public function getThread(Account $account, string $threadRootId, string $sortOrder = IMailSearch::ORDER_NEWEST_FIRST): array {
+		return $this->dbMessageMapper->findThread($account, $threadRootId, $sortOrder);
 	}
 
 	#[\Override]

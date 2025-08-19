@@ -656,7 +656,7 @@ export default function mainStoreActions() {
 				// Only commit if not undefined (not found)
 				if (envelope) {
 					this.addEnvelopesMutation({
-						envelopes: [envelope],
+						envelopes: [[envelope]],
 					})
 				}
 
@@ -2032,13 +2032,20 @@ export default function mainStoreActions() {
 			const listId = normalizedEnvelopeListId(query)
 			const orderByDateInt = orderBy(idToDateInt, this.preferences['sort-order'] === 'newest' ? 'desc' : 'asc')
 
-			envelopes.forEach((envelope) => {
-				const mailbox = this.mailboxes[envelope.mailboxId]
+			envelopes.forEach((envelopelist) => {
+				const mailbox = this.mailboxes[envelopelist[0].mailboxId]
 				const existing = mailbox.envelopeLists[listId] || []
-				this.normalizeTags(envelope)
-				Vue.set(this.envelopes, envelope.databaseId, { ...this.envelopes[envelope.databaseId] || {}, ...envelope })
-				Vue.set(envelope, 'accountId', mailbox.accountId)
-				Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(this.appendOrReplaceEnvelopeId(existing, envelope))))
+				envelopelist.forEach((envelope) => {
+					this.normalizeTags(envelope)
+				})
+				const envelopeListIndexed = []
+				envelopelist.forEach((envelope) => {
+					envelopeListIndexed[envelope.databaseId] = envelope
+				})
+				Vue.set(this.envelopes, envelopelist[0].databaseId, { ...this.envelopes[envelopelist[0].databaseId] || {}, ...envelopeListIndexed })
+				Vue.set(envelopelist[0], 'accountId', mailbox.accountId)
+				// TODO: Check if still neededed
+				Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(this.appendOrReplaceEnvelopeId(existing, envelopelist[0]))))
 				if (!addToUnifiedMailboxes) {
 					return
 				}
@@ -2051,7 +2058,7 @@ export default function mainStoreActions() {
 						Vue.set(
 							mailbox.envelopeLists,
 							listId,
-							uniq(orderByDateInt(existing.concat([envelope.databaseId]))),
+							uniq(orderByDateInt(existing.concat([envelopelist[0].databaseId]))),
 						)
 					})
 			})
@@ -2116,7 +2123,9 @@ export default function mainStoreActions() {
 			Vue.set(envelope, 'tags', envelope.tags.filter((id) => id !== tagId))
 		},
 		removeEnvelopeMutation({ id }) {
-			const envelope = this.envelopes[id]
+			const envelope = Object.values(this.envelopes)
+				.flatMap(envList => Object.values(envList))
+				.find(env => env.databaseId === id)
 			if (!envelope) {
 				console.warn('envelope ' + id + ' is unknown, can\'t remove it')
 				return
