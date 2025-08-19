@@ -658,7 +658,7 @@ export default {
 }
 
 .right-pane {
-	flex: 0 0 400px;
+	flex: 0 0 370px;
 	overflow-y: auto;
 	padding-inline-start: 5px;
 	border-inline-start: 1px solid #ccc;

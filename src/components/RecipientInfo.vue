@@ -105,7 +105,7 @@ export default {
 	width: 100%;
 
 	&__single {
-		width: 400px;
+		width: 370px;
 		display: inline-block;
 	}
 
