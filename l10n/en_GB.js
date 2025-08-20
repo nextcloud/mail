@@ -309,6 +309,7 @@ OC.L10N.register(
     "_Forward {number} as attachment_::_Forward {number} as attachment_" : ["Forward {number} as attachment","Forward {number} as attachment"],
     "Mark as unread" : "Mark as unread",
     "Mark as read" : "Mark as read",
+    "Mark as unimportant" : "Mark as unimportant",
     "Report this bug" : "Report this bug",
     "Event created" : "Event created",
     "Could not create event" : "Could not create event",
