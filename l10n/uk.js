@@ -309,6 +309,7 @@ OC.L10N.register(
     "_Forward {number} as attachment_::_Forward {number} as attachment_" : ["Переслати {number} як вкладення","Переслати {number} як вкладення","Переслати {number} як вкладення","Переслати {number} як вкладення"],
     "Mark as unread" : "Позначити не прочитаним",
     "Mark as read" : "Позначити прочитаним",
+    "Mark as unimportant" : "Позначити як неважливе",
     "Report this bug" : "Повідомити про помилку",
     "Event created" : "Подію створено",
     "Could not create event" : "Не вдалося створити подію",

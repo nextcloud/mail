@@ -304,6 +304,7 @@ OC.L10N.register(
     "_Forward {number} as attachment_::_Forward {number} as attachment_" : ["Edasta {number} kiri manusena","Edasta {number} kirja manusena"],
     "Mark as unread" : "Märgi mitteloetuks",
     "Mark as read" : "Märgi loetuks",
+    "Mark as unimportant" : "Märgi mitteoluliseks",
     "Report this bug" : "Teata sellest veast",
     "Event created" : "Sündmus on loodud",
     "Could not create event" : "Sündmuse loomine ei õnnestunud",
