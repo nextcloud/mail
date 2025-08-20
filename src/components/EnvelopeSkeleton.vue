@@ -453,7 +453,7 @@ export default {
 	--list-item-padding: calc(var(--default-grid-baseline) * 2);
 	// The content are two lines of text and respect the 1.5 line height
 	--list-item-border-radius: var(--border-radius-element, 32px);
-	--list-item-height: 4.5lh;
+	--list-item-height: calc(4 * var(--default-line-height));
 	height: var(--list-item-height);
 
 	// General styles
@@ -515,8 +515,6 @@ export default {
 			&__main {
 				flex: 0 1 auto;
 				min-width: 0;
-				line-height: var(--default-line-height);
-				min-height: var(--default-line-height);
 			}
 
 			&__subname {
