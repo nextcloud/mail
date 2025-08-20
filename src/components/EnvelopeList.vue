@@ -127,8 +127,8 @@
 				:key="'list-collapse-' + searchQuery"
 				class="load-more"
 				@click="$emit('load-more')">
-				<AddIcon :size="20" />
-				{{ t('mail', 'Load more') }}
+				<AddIcon :size="16" />
+				{{ loadMoreLabel }}
 			</div>
 			<div id="load-more-mail-messages" key="loadingMore" :class="{'icon-loading-small': loadingMore}" />
 		</transition-group>
@@ -145,7 +145,6 @@ import { NcActions as Actions, NcActionButton as ActionButton, NcButton } from '
 import { showError } from '@nextcloud/dialogs'
 import Envelope from './Envelope.vue'
 import IconDelete from 'vue-material-design-icons/DeleteOutline.vue'
-import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
 import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
 import IconUnFavorite from 'vue-material-design-icons/StarOutline.vue'
 import IconSelect from 'vue-material-design-icons/CloseThick.vue'
@@ -180,7 +179,6 @@ export default {
 		ActionButton,
 		Envelope,
 		IconDelete,
-		ImportantIcon,
 		ImportantOutlineIcon,
 		IconFavorite,
 		IconSelect,
@@ -195,6 +193,10 @@ export default {
 		account: {
 			type: Object,
 			required: true,
+		},
+		loadMoreLabel: {
+			type: String,
+			default: t('mail', 'Load more'),
 		},
 		mailbox: {
 			type: Object,
