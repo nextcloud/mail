@@ -5,7 +5,8 @@
 
 <template>
 	<AppContentDetails class="app-content no-message-selected"
-		:style="{ 'backgroundImage': backgroundImgSrc }">
+		:class="{ 'no-message-selected--themed': isThemed, }"
+		:style="{ 'backgroundImage': isThemed ? undefined: backgroundImgSrc, }">
 		<div class="no-message-selected__heading">
 			{{ t('mail', 'Welcome to {productName} Mail', { productName }, null, {escape: false}) }}
 		</div>
@@ -20,7 +21,7 @@
 
 <script>
 import { generateFilePath } from '@nextcloud/router'
-import { isDarkTheme } from '@nextcloud/vue/functions/isDarkTheme'
+import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
 import { NcAppContentDetails as AppContentDetails } from '@nextcloud/vue'
 
 import NewMessageButtonHeader from './NewMessageButtonHeader.vue'
@@ -32,11 +33,20 @@ export default {
 		AppContentDetails,
 	},
 
+	setup() {
+		return {
+			isDarkTheme: useIsDarkTheme(),
+		}
+	},
+
 	data() {
 		return {
-			backgroundImgSrc: isDarkTheme
+			backgroundImgSrc: this.isDarkTheme
 				? 'url("' + generateFilePath('mail', 'img', 'welcome-connection-dark.png') + '")'
 				: 'url("' + generateFilePath('mail', 'img', 'welcome-connection-light.png') + '")',
+			isThemed: this.isDarkTheme
+				? window.getComputedStyle(document.body).getPropertyValue('--color-primary-element') !== '#0091f2'
+				: window.getComputedStyle(document.body).getPropertyValue('--color-primary-element') !== '#00679e',
 		}
 	},
 
@@ -61,6 +71,14 @@ export default {
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: right 100% bottom 40%;
+
+	/** fallback gradient when the theme color isn't standard blue */
+	&--themed {
+		background: radial-gradient(100% 100% at 100% 100%, var(--color-primary-element) 0%, rgba(var(--color-main-background-rgb), 0) 100%), var(--color-main-background);
+		:deep(button) {
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2)
+		}
+	}
 
 	&__heading {
 		font-weight: bold;
