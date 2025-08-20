@@ -18,7 +18,9 @@ use OCP\IConfig;
 use OCP\Profiler\IProfiler;
 use OCP\Security\ICrypto;
 use OCP\Server;
+use OCP\ServerVersion;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 class Caching {
 	/**
@@ -28,15 +30,29 @@ class Caching {
 	 */
 	public static function getImapClientFactoryAndConfiguredCacheFactory(?ICrypto $crypto = null): array {
 		$config = Server::get(IConfig::class);
-		$cacheFactory = new Factory(
-			static fn () => 'mail-integration-tests',
-			Server::get(LoggerInterface::class),
-			Server::get(IProfiler::class),
-			$config->getSystemValue('memcache.local', null),
-			$config->getSystemValue('memcache.distributed', null),
-			$config->getSystemValue('memcache.locking', null),
-			$config->getSystemValueString('redis_log_file')
-		);
+		try {
+			// 32+ constructor
+			$cacheFactory = new Factory(
+				Server::get(LoggerInterface::class),
+				Server::get(IProfiler::class),
+				Server::get(ServerVersion::class),
+				$config->getSystemValue('memcache.local', null),
+				$config->getSystemValue('memcache.distributed', null),
+				$config->getSystemValue('memcache.locking', null),
+				$config->getSystemValueString('redis_log_file')
+			);
+		} catch (Throwable) {
+			// 31 and older constructor
+			$cacheFactory = new Factory(
+				static fn () => 'mail-integration-tests',
+				Server::get(LoggerInterface::class),
+				Server::get(IProfiler::class),
+				$config->getSystemValue('memcache.local', null),
+				$config->getSystemValue('memcache.distributed', null),
+				$config->getSystemValue('memcache.locking', null),
+				$config->getSystemValueString('redis_log_file')
+			);
+		}
 		$imapClient = new IMAPClientFactory(
 			$crypto ?? Server::get(ICrypto::class),
 			$config,
