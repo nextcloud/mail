@@ -307,6 +307,7 @@
     "_Forward {number} as attachment_::_Forward {number} as attachment_" : ["轉發 {number} 作為附件"],
     "Mark as unread" : "標為未讀",
     "Mark as read" : "標為已讀",
+    "Mark as unimportant" : "標記為不重要",
     "Report this bug" : "舉報此錯誤 ",
     "Event created" : "活動已建立",
     "Could not create event" : "無法建立活動",

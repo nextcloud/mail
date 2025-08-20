@@ -309,6 +309,7 @@ OC.L10N.register(
     "_Forward {number} as attachment_::_Forward {number} as attachment_" : ["Weiterleiten {number} als Anhang","Weiterleiten {number} als Anhang"],
     "Mark as unread" : "Als ungelesen markieren",
     "Mark as read" : "Als gelesen markieren",
+    "Mark as unimportant" : "Als unwichtig markieren",
     "Report this bug" : "Diesen Bug melden",
     "Event created" : "Termin wurde erstellt",
     "Could not create event" : "Termin konnte nicht erstellt werden",
