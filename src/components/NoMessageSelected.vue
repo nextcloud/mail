@@ -75,9 +75,6 @@ export default {
 	/** fallback gradient when the theme color isn't standard blue */
 	&--themed {
 		background: radial-gradient(100% 100% at 100% 100%, var(--color-primary-element) 0%, rgba(var(--color-main-background-rgb), 0) 100%), var(--color-main-background);
-		:deep(button) {
-			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2)
-		}
 	}
 
 	&__heading {
@@ -89,6 +86,12 @@ export default {
 	&__text {
 		text-wrap-style: balance;
 		max-width: 50%;
+	}
+
+	&__action {
+		:deep(button) {
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2)
+		}
 	}
 }
 </style>
