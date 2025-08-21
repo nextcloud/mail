@@ -678,8 +678,15 @@ export default {
 	}
 
 	&--multiline &__actions {
-		:deep(.button-vue__wrapper) {
-			margin-top: calc(var(--default-grid-baseline) * -3);
+		:deep(.button-vue__icon), :deep(.button-vue__wrapper), :deep(button) {
+			min-height: unset !important;
+			min-width: unset !important;
+			height: calc(var(--default-grid-baseline) * 8) !important;
+			width: calc(var(--default-grid-baseline) * 8 + 2px) !important;
+		}
+
+		:deep(button) {
+			margin-top: calc(var(--default-grid-baseline) * -1);
 		}
 	}
 
