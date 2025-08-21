@@ -309,6 +309,7 @@ OC.L10N.register(
     "_Forward {number} as attachment_::_Forward {number} as attachment_" : ["转发 {number} 封为附件"],
     "Mark as unread" : "标为未读",
     "Mark as read" : "标为已读",
+    "Mark as unimportant" : "标记为不重要",
     "Report this bug" : "报告此问题",
     "Event created" : "已创建事件",
     "Could not create event" : "无法创建事件",
