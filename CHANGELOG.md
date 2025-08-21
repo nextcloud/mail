@@ -1,3 +1,20 @@
+## [5.3.1](https://github.com/nextcloud/mail/compare/v5.3.0...v5.3.1) (2025-08-21)
+
+
+### Bug Fixes
+
+* ckeditor dropdown overlaping ([65d7925](https://github.com/nextcloud/mail/commit/65d7925c21a886156c94dd4ea2876ed6f51f6c4e))
+* envelope max height ([19a5a99](https://github.com/nextcloud/mail/commit/19a5a9966b5cb4a3773311e8e020ff5c9e87a3fa))
+* improve the height and width of threads ([f46738b](https://github.com/nextcloud/mail/commit/f46738bbd27b7d9384d770295b00ac73f748858d))
+* **l10n:** Update translations from Transifex ([d38699d](https://github.com/nextcloud/mail/commit/d38699d7e5b9ecf937fa2d3d0c8334057806d61c))
+* **l10n:** Update translations from Transifex ([9e36f10](https://github.com/nextcloud/mail/commit/9e36f1096d07fe2889ceae3e5897dceba84b392f))
+* specify which mailbox to load more from ([568cda9](https://github.com/nextcloud/mail/commit/568cda935f72f7186bf0e3f190cd3ca70bab2e9f))
+* **ui:** revert composer session close icon to filled variant ([da8726b](https://github.com/nextcloud/mail/commit/da8726befcc1c20b694395ebff5d9711f7aa4256))
+* **ui:** revert recipient delete icon to filled variant ([a681c33](https://github.com/nextcloud/mail/commit/a681c3352a2b7354c6a0c069439ae11d28870023))
+* white space between section titles ([80a17a9](https://github.com/nextcloud/mail/commit/80a17a904c43cf58db84056bbaf1d92815d94802))
+
+
+
 # [5.3.0](https://github.com/nextcloud/mail/compare/v5.3.0-rc.0...v5.3.0) (2025-08-19)
 
 
