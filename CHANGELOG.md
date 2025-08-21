@@ -1,3 +1,19 @@
+# [5.4.0-beta.1](https://github.com/nextcloud/mail/compare/v5.4.0-beta.0...v5.4.0-beta.1) (2025-08-21)
+
+
+### Bug Fixes
+
+* envelope max height ([b5d0285](https://github.com/nextcloud/mail/commit/b5d0285971f0c3cf6d6053b4044aabcbfc824e9d))
+* improve the height and width of threads ([0320ce2](https://github.com/nextcloud/mail/commit/0320ce282d30c65c65e928acc4b235ad1f570563))
+* **l10n:** Update translations from Transifex ([dc31667](https://github.com/nextcloud/mail/commit/dc31667d616e7dc5623a5cd787f54b6332eaa862))
+* **l10n:** Update translations from Transifex ([9466440](https://github.com/nextcloud/mail/commit/9466440b9bf5e81fe1bdfd7ba99ff023832c9fcb))
+* specify which mailbox to load more from ([7740e37](https://github.com/nextcloud/mail/commit/7740e37b604ee584d3ed6628bea4f4e7becd0826))
+* **ui:** revert composer session close icon to filled variant ([97d92d8](https://github.com/nextcloud/mail/commit/97d92d8e16b3fc3aa3b6c26c7310345b29b42c05))
+* **ui:** revert recipient delete icon to filled variant ([636fc58](https://github.com/nextcloud/mail/commit/636fc58498a72f6e6d8c1a514dbd047852eb81cb))
+* **ui:** use gradient as fallback for themed fluid design ([3d378b8](https://github.com/nextcloud/mail/commit/3d378b8f48ed00c16e8bea0a5b8e17450794326f))
+
+
+
 # [5.4.0-beta.0](https://github.com/nextcloud/mail/compare/v5.2.0-beta.1...v5.4.0-beta.0) (2025-08-19)
 
 
