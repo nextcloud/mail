@@ -93,6 +93,12 @@ export default {
 		ThreadEnvelope,
 		Popover,
 	},
+	props: {
+		currentAccountEmail: {
+			type: String,
+			required: true,
+		},
+	},
 
 	data() {
 		return {
@@ -165,7 +171,7 @@ export default {
 		threadParticipants() {
 			const recipients = this.thread.flatMap(envelope => {
 				return envelope.from.concat(envelope.to).concat(envelope.cc)
-			})
+			}).filter(participant => participant.email !== this.currentAccountEmail)
 			return uniqBy(prop('email'), recipients)
 		},
 		threadSubject() {
@@ -558,7 +564,7 @@ export default {
 
 .mail-message-body {
 	flex: 1;
-	margin-bottom: calc(var(--default-grid-baseline) * 7);
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
 	position: relative;
 }
 
@@ -599,7 +605,8 @@ export default {
 	// initial width
 	width: 0;
 	// while scrolling, the back button overlaps with subject on small screen
-	padding-inline-start: calc(var(--border-radius-container-large) + var(--header-height));
+	// 66px to allign with the sender Envelope -> 8px margin + 2px border+ avatar -> 40px width  + envelope__header -> 8px padding + sender-> margin 8px
+	padding-inline-start: 66px;
 	// grow and try to fill 100%
 	flex: 1 1 auto;
 	h2,
@@ -639,7 +646,7 @@ export default {
 }
 
 #mail-content {
-	margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 10) 0 calc(var(--default-grid-baseline) * 15);
+	margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 10) 0 calc(var(--default-grid-baseline) * 14);
 }
 
 #mail-content iframe {
