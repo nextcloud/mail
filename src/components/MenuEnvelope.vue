@@ -231,7 +231,7 @@ import CalendarBlankIcon from 'vue-material-design-icons/CalendarBlankOutline.vu
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
-import DownloadIcon from 'vue-material-design-icons/DownloadOutline.vue'
+import DownloadIcon from 'vue-material-design-icons/TrayArrowDown.vue'
 import PrinterIcon from 'vue-material-design-icons/PrinterOutline.vue'
 import TranslationIcon from 'vue-material-design-icons/Translate.vue'
 import { mailboxHasRights } from '../util/acl.js'

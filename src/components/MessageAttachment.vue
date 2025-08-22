@@ -83,7 +83,7 @@ import { NcActions as Actions, NcActionButton as ActionButton, NcLoadingIcon as 
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconArrow from 'vue-material-design-icons/ArrowLeft.vue'
 import IconSave from 'vue-material-design-icons/FolderOutline.vue'
-import IconDownload from 'vue-material-design-icons/DownloadOutline.vue'
+import IconDownload from 'vue-material-design-icons/TrayArrowDown.vue'
 import Logger from '../logger.js'
 
 import { downloadAttachment, saveAttachmentToFiles } from '../service/AttachmentService.js'
