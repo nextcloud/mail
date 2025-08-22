@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\BackgroundJob\PreviewEnhancementProcessingJob;
 use OCA\Mail\BackgroundJob\QuotaJob;
 use OCA\Mail\BackgroundJob\SyncJob;
@@ -21,7 +22,9 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
+use OCP\IConfig;
 use function array_map;
 
 class AccountService {
@@ -44,10 +47,14 @@ class AccountService {
 	/** @var IMAPClientFactory */
 	private $imapClientFactory;
 
-	public function __construct(MailAccountMapper $mapper,
+	public function __construct(
+		MailAccountMapper $mapper,
 		AliasesService $aliasesService,
 		IJobList $jobList,
-		IMAPClientFactory $imapClientFactory) {
+		IMAPClientFactory $imapClientFactory,
+		private readonly IConfig $config,
+		private readonly ITimeFactory $time,
+	) {
 		$this->mapper = $mapper;
 		$this->aliasesService = $aliasesService;
 		$this->jobList = $jobList;
@@ -173,6 +180,14 @@ class AccountService {
 		$this->jobList->add(TrainImportanceClassifierJob::class, ['accountId' => $newAccount->getId()]);
 		$this->jobList->add(PreviewEnhancementProcessingJob::class, ['accountId' => $newAccount->getId()]);
 		$this->jobList->add(QuotaJob::class, ['accountId' => $newAccount->getId()]);
+
+		// Set initial heartbeat
+		$this->config->setUserValue(
+			$newAccount->getUserId(),
+			Application::APP_ID,
+			'ui-heartbeat',
+			(string)$this->time->getTime(),
+		);
 
 		return $newAccount;
 	}

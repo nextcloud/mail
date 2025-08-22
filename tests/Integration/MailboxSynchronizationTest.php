@@ -20,6 +20,8 @@ use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCA\Mail\Service\Sync\SyncService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\IConfig;
 use OCP\IRequest;
 use OCP\Server;
 use Psr\Log\LoggerInterface;
@@ -46,7 +48,9 @@ class MailboxSynchronizationTest extends TestCase {
 			Server::get(AccountService::class),
 			$this->getTestAccountUserId(),
 			Server::get(IMailManager::class),
-			Server::get(SyncService::class)
+			Server::get(SyncService::class),
+			Server::get(IConfig::class),
+			Server::get(ITimeFactory::class),
 		);
 
 		$this->account = $this->createTestAccount('user12345');

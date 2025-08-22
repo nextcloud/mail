@@ -17,7 +17,9 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
+use OCP\IConfig;
 use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -55,6 +57,9 @@ class AccountServiceTest extends TestCase {
 	/** @var Horde_Imap_Client_Socket|MockObject */
 	private $client;
 
+	private IConfig&MockObject $config;
+	private ITimeFactory&MockObject $time;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -63,11 +68,15 @@ class AccountServiceTest extends TestCase {
 		$this->aliasesService = $this->createMock(AliasesService::class);
 		$this->jobList = $this->createMock(IJobList::class);
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->config = $this->createMock(IConfig::class);
+		$this->time = $this->createMock(ITimeFactory::class);
 		$this->accountService = new AccountService(
 			$this->mapper,
 			$this->aliasesService,
 			$this->jobList,
-			$this->imapClientFactory
+			$this->imapClientFactory,
+			$this->config,
+			$this->time,
 		);
 
 		$this->account1 = new MailAccount();
@@ -155,11 +164,19 @@ class AccountServiceTest extends TestCase {
 
 	public function testSave() {
 		$account = new MailAccount();
+		$account->setUserId('user1');
 
 		$this->mapper->expects($this->once())
 			->method('save')
 			->with($account)
 			->will($this->returnArgument(0));
+
+		$this->time->expects(self::once())
+			->method('getTime')
+			->willReturn(1755850409);
+		$this->config->expects(self::once())
+			->method('setUserValue')
+			->with('user1', 'mail', 'ui-heartbeat', 1755850409);
 
 		$actual = $this->accountService->save($account);
 
