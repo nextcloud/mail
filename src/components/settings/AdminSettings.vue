@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<SettingsSection :title="t( 'mail', 'Mail app')"
+	<SettingsSection :name="t( 'mail', 'Mail app')"
 		:description="t( 'mail', 'The mail app allows users to read mails on their IMAP accounts.')">
 		<p>
 			{{
