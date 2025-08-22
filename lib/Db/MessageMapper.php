@@ -799,16 +799,15 @@ class MessageMapper extends QBMapper {
 	 * @throws Exception
 	 */
 	public function findIdsByQuery(Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit, ?array $uids = null): array {
-		return array_map(
-			static fn (Message $message) => $message->getId(),
-			$this->findByQueryWithoutRelatedData(
-				$mailbox,
-				$query,
-				$sortOrder,
-				$limit,
-				$uids,
-			),
+		$rows = $this->findByQueryWithoutRelatedData(
+			'id',
+			$mailbox,
+			$query,
+			$sortOrder,
+			$limit,
+			$uids,
 		);
+		return array_map(static fn (array $row) => $row['id'], $rows);
 	}
 
 	/**
@@ -818,13 +817,17 @@ class MessageMapper extends QBMapper {
 	 * @throws Exception
 	 */
 	public function findByQuery(Mailbox $mailbox, string $userId, SearchQuery $query, string $sortOrder, ?int $limit, ?array $uids = null): array {
-		$messages = $this->findByQueryWithoutRelatedData(
+		$rows = $this->findByQueryWithoutRelatedData(
+			'*',
 			$mailbox,
 			$query,
 			$sortOrder,
 			$limit,
 			$uids,
 		);
+
+		/** @var Message[] $messages */
+		$messages = array_map(fn (array $row) => $this->mapRowToEntity($row), $rows);
 
 		$results = [];
 		foreach (array_chunk($messages, 1000) as $chunk) {
@@ -834,18 +837,26 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
+	 * @param string $columns Either a column from the database or * in case all columns should be fetched
 	 * @param int[]|null $uids
-	 * @return Message[]
+	 * @return array[] Raw rows as fetched from the database
 	 *
 	 * @throws Exception
 	 */
-	private function findByQueryWithoutRelatedData(Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit, ?array $uids = null): array {
+	private function findByQueryWithoutRelatedData(
+		string $columns,
+		Mailbox $mailbox,
+		SearchQuery $query,
+		string $sortOrder,
+		?int $limit,
+		?array $uids = null,
+	): array {
 		$qb = $this->db->getQueryBuilder();
 
 		if ($this->needDistinct($query)) {
-			$select = $qb->selectDistinct('m.*');
+			$select = $qb->selectDistinct("m.$columns");
 		} else {
-			$select = $qb->select('m.*');
+			$select = $qb->select("m.$columns");
 		}
 
 		$select->from($this->getTableName(), 'm');
@@ -1066,11 +1077,17 @@ class MessageMapper extends QBMapper {
 		if ($uids !== null) {
 			return array_flat_map(function (array $chunk) use ($qb, $select) {
 				$qb->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-				return $this->findEntities($select);
+				$result = $select->executeQuery();
+				$rows = $result->fetchAll();
+				$result->closeCursor();
+				return $rows;
 			}, array_chunk($uids, 1000));
 		}
 
-		return $this->findEntities($select);
+		$result = $select->executeQuery();
+		$rows = $result->fetchAll();
+		$result->closeCursor();
+		return $rows;
 	}
 
 	public function findIdsGloballyByQuery(IUser $user, SearchQuery $query, ?int $limit, ?array $uids = null): array {
