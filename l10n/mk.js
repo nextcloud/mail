@@ -251,6 +251,7 @@ OC.L10N.register(
     "Add internal email or domain" : "Додади внатрешна е-пошта или домен",
     "Itinerary for {type} is not supported yet" : "Итинерар за {type} сеуште не е поддржан",
     "Today" : "Денес",
+    "Last week" : "Минатата недела",
     "Loading messages …" : "Вчитување пораки ...",
     "Choose target folder" : "Избери папка",
     "No more submailboxes in here" : "Нема повеќе подсандачиња тука",
