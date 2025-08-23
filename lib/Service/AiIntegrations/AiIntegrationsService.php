@@ -70,7 +70,7 @@ PROMPT;
 			$this->logger->info('No text summary provider available');
 			return;
 		}
-
+		$language = explode('_', $this->l->getLanguageCode())[0];
 		$client = $this->clientFactory->getClient($account);
 		try {
 			foreach ($messages as $entry) {
@@ -97,6 +97,7 @@ PROMPT;
 				// construct prompt and task
 				$messageBody = $message->getPlainBody();
 				$prompt = "You are tasked with formulating a helpful summary of a email message. \r\n"
+						  . 'The summary should be in the language of this language code ' . $language . ". \r\n"
 						  . "The summary should be less than 160 characters. \r\n"
 						  . "Output *ONLY* the summary itself, leave out any introduction. \r\n"
 						  . "Here is the ***E-MAIL*** for which you must generate a helpful summary: \r\n"
