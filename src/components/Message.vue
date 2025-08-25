@@ -44,13 +44,13 @@
 		<div id="reply-composer" />
 		<div class="reply-buttons">
 			<div v-if="smartReplies.length > 0" class="reply-buttons__suggested">
-				<NcButton v-for="(reply,index) in smartReplies"
+				<NcAssistantButton v-for="(reply,index) in smartReplies"
 					:key="index"
 					class="reply-buttons__suggested__button"
 					type="secondary"
 					@click="onReply(reply)">
 					{{ reply }}
-				</NcButton>
+				</NcAssistantButton>
 			</div>
 			<NcButton type="primary"
 				class="reply-buttons__notsuggested"
@@ -66,7 +66,7 @@
 
 <script>
 import { generateUrl } from '@nextcloud/router'
-import { NcButton } from '@nextcloud/vue'
+import { NcButton, NcAssistantButton } from '@nextcloud/vue'
 
 import { html, plain } from '../util/text.js'
 import { isPgpgMessage } from '../crypto/pgp.js'
@@ -95,6 +95,7 @@ export default {
 		LockOffIcon,
 		ReplyIcon,
 		NcButton,
+		NcAssistantButton,
 	},
 	props: {
 		envelope: {
@@ -183,19 +184,17 @@ export default {
 	margin: 0 calc(var(--default-grid-baseline) * 4) calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 14);
 	display: flex;
 	flex-wrap: wrap;
-	gap: 5px;
+	gap: 8px;
 	justify-content: space-between;
 	align-items: center;
 
 	&__suggested {
-		justify-content: flex-start;
 		display: flex;
 		flex-wrap: wrap;
-		gap: 5px;
+		gap: 8px;
 
 		&__button {
-			margin-inline-end: 5px;
-			border-radius: 12px;
+			box-sizing: border-box;
 
 			:deep(.button-vue__text) {
 				font-weight: normal;
@@ -207,6 +206,7 @@ export default {
 		margin-inline-start: auto;
 	}
 }
+
 @media screen and (max-width: 600px) {
 	.reply-buttons {
 		display: flex;
