@@ -6,9 +6,18 @@
 	<div class="summary">
 		<div class="summary__header">
 			<div class="summary__header__actions">
-				<NcChip :icon-svg="creation" no-close>
-					{{ brand }}
-				</NcChip>
+				<div class="summary__header__info">
+					<NcIconSvgWrapper :size="20" :svg="creation" />
+					<div class="summary__header__text">
+						<div class="summary__header__title">
+							{{ t('mail', 'Thread summary') }}
+						</div>
+						<div class="summary__header__brand">
+							{{ brand }}
+						</div>
+					</div>
+				</div>
+
 				<NcButton :aria-label=" t('mail', 'Go to latest message')"
 					type="secondary"
 					@click="onScroll">
@@ -17,9 +26,6 @@
 						<ArrowDownIcon :size="20" />
 					</template>
 				</NcButton>
-			</div>
-			<div class="summary__header__title">
-				<h2>{{ t('mail', 'Thread summary') }}</h2>
 			</div>
 		</div>
 		<div class="summary__body">
@@ -32,9 +38,9 @@
 </template>
 <script>
 import ArrowDownIcon from 'vue-material-design-icons/ArrowDown.vue'
-import creation from '@mdi/svg/svg/creation-outline.svg'
+import creation from '@mdi/svg/svg/creation-outline.svg?raw'
 import NcButton from '@nextcloud/vue/components/NcButton'
-import NcChip from '@nextcloud/vue/components/NcChip'
+import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import LoadingSkeleton from './LoadingSkeleton.vue'
 
 export default {
@@ -42,7 +48,7 @@ export default {
 	components: {
 		LoadingSkeleton,
 		NcButton,
-		NcChip,
+		NcIconSvgWrapper,
 		ArrowDownIcon,
 	},
 	props: {
@@ -81,7 +87,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.summary{
+.summary {
     border: 2px solid var(--color-primary-element);
     border-radius:var( --border-radius-large) ;
     margin: 0 10px 20px 10px;
@@ -89,34 +95,45 @@ export default {
     display: flex;
     flex-direction: column;
 
-    &__header{
-        display: flex;
-        flex-direction: column;
-        &__actions{
+	&__header {
+		display: flex;
+		flex-direction: column;
+
+		&__actions {
 			display: flex;
 			justify-content: space-between;
-            &__brand{
-                display: flex;
-                align-items: center;
-                background-color: var(--color-primary-light);
-                border-radius: var(--border-radius-pill);
-                width: fit-content;
-                padding-inline: 4px 10px;
-				margin: 8px 0 8px 0;
+			align-items: center;
+			padding-bottom: 10px;
+		}
 
-                &__icon{
-                    color:var(--color-primary-element);
-                    margin-inline: 5px
-                }
-            }
-        }
+		&__info {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
 
-    }
+		&__text {
+			display: flex;
+			flex-direction: column;
+			line-height: 1.2;
+		}
+
+		&__title {
+			font-weight: bold;
+		}
+
+		&__brand {
+			color:var(--color-text-maxcontrast)
+		}
+	}
+	&__body {
+		margin-left: 40px;
+	}
 	@media only screen and (max-width: 600px) {
-		.summary{
-			&__header{
+		.summary {
+			&__header {
 				flex-direction: column;
-				&__actions{
+				&__actions {
 					flex-direction: column;
 				}
 			}
