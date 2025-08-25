@@ -465,7 +465,7 @@ export default {
 			type: Boolean,
 			default: true,
 		},
-		data: {
+		threadList: {
 			type: Object,
 			required: true,
 		},
@@ -506,14 +506,17 @@ export default {
 	},
 	mounted() {
 		this.onWindowResize()
-
 		window.addEventListener('resize', this.onWindowResize)
 	},
+	// eslint-disable-next-line vue/order-in-components
 	computed: {
 		...mapStores(useMainStore),
 		...mapState(useMainStore, [
 			'isSnoozeDisabled',
 		]),
+		data() {
+			return Object.values(this.threadList)[0]
+		},
 		messageLongDate() {
 			return messageDateTime(new Date(this.data.dateInt))
 		},
@@ -809,6 +812,7 @@ export default {
 			this.setSelected(false)
 			// Delete
 			this.$emit('delete', this.data.databaseId)
+			console.log('deleting', this.data, this.layoutMessageViewThreaded)
 
 			try {
 				if (this.layoutMessageViewThreaded) {
