@@ -48,11 +48,11 @@ namespace OCA\Mail;
  * @psalm-type MailAccountListResponse = array{
  *      id: int,
  *      email: string,
- *      aliases: array{
+ *      aliases: list<array{
  *          id: int,
  *          email: string,
  *          name: ?string,
- *      }[]
+ *      }>,
  *  }
  */
 final class ResponseDefinitions {

@@ -80,8 +80,8 @@ class MessageApiController extends OCSController {
 	 * @param string $body The message body
 	 * @param bool $isHtml If the message body contains HTML
 	 * @param list<array{ label?: string, email: string}> $to An array of "To" recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
-	 * @param array<empty>|list<array{ label?: string, email: string}> $cc An optional array of 'CC' recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
-	 * @param array<empty>|list<array{ label?: string, email: string}> $bcc An optional array of 'BCC' recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
+	 * @param list<array{ label?: string, email: string}> $cc An optional array of 'CC' recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
+	 * @param list<array{ label?: string, email: string}> $bcc An optional array of 'BCC' recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
 	 * @param ?string $references An optional string of an RFC2392 "message-id" to set the "Reply-To" and "References" header on sending
 	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_ACCEPTED|Http::STATUS_BAD_REQUEST|Http::STATUS_FORBIDDEN|Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, string, array{}>
 	 *

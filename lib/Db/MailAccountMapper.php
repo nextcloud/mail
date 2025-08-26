@@ -71,7 +71,7 @@ class MailAccountMapper extends QBMapper {
 	 *
 	 * @param string $userId the id of the user that we want to find
 	 *
-	 * @return MailAccount[]
+	 * @return list<MailAccount>
 	 */
 	public function findByUserId(string $userId): array {
 		$qb = $this->db->getQueryBuilder();

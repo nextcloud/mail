@@ -34,7 +34,7 @@ class AccountService {
 	/**
 	 * Cache accounts for multiple calls to 'findByUserId'
 	 *
-	 * @var array<string, Account[]>
+	 * @var array<string, list<Account>>
 	 */
 	private array $accounts = [];
 
@@ -63,7 +63,7 @@ class AccountService {
 
 	/**
 	 * @param string $currentUserId
-	 * @return Account[]
+	 * @return list<Account>
 	 */
 	public function findByUserId(string $currentUserId): array {
 		if (!isset($this->accounts[$currentUserId])) {

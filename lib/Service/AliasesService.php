@@ -31,7 +31,7 @@ class AliasesService {
 	/**
 	 * @param int $accountId
 	 * @param String $currentUserId
-	 * @return Alias[]
+	 * @return list<Alias>
 	 */
 	public function findAll(int $accountId, string $currentUserId): array {
 		return $this->aliasMapper->findAll($accountId, $currentUserId);
