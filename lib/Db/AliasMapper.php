@@ -71,7 +71,7 @@ class AliasMapper extends QBMapper {
 	 * @param int $accountId
 	 * @param string $currentUserId
 	 *
-	 * @return Alias[]
+	 * @return list<Alias>
 	 */
 	public function findAll(int $accountId, string $currentUserId): array {
 		$qb = $this->db->getQueryBuilder();
