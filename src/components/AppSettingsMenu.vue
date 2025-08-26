@@ -214,26 +214,26 @@
 					@close="displaySmimeCertificateModal = false" />
 
 				<h4>{{ t('mail', 'Mailvelope') }}</h4>
+				<p class="settings-hint">
+					{{ t('mail', 'Mailvelope is a browser extension that enables easy OpenPGP encryption and decryption for emails.') }}
+				</p>
 				<div class="mailvelope-section">
 					<div v-if="mailvelopeIsAvailable">
-						{{ t('mail', 'Mailvelope is enabled for the current domain!') }}
+						{{ t('mail', 'Mailvelope is enabled for the current domain.') }}
 					</div>
 					<div v-else>
-						<p>
-							{{ t('mail', 'Looking for a way to encrypt your emails?') }}
-						</p>
 						<p>
 							<a href="https://www.mailvelope.com/"
 								target="_blank"
 								class="button"
 								rel="noopener noreferrer">
-								{{ t('mail', 'Install Mailvelope browser extension') }}
+								{{ t('mail', 'Step 1: Install Mailvelope browser extension') }}
 							</a>
 						</p>
 						<p>
 							<a class="button"
 								@click="mailvelopeAuthorizeDomain">
-								{{ t('mail', 'Enable Mailvelope for the current domain') }}
+								{{ t('mail', 'Step 2: Enable Mailvelope for the current domain') }}
 							</a>
 						</p>
 					</div>
