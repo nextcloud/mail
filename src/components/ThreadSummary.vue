@@ -7,7 +7,7 @@
 		<div class="summary__header">
 			<div class="summary__header__actions">
 				<div class="summary__header__info">
-					<NcIconSvgWrapper :size="20" :svg="creation" />
+					<NcIconSvgWrapper :size="20" :svg="creationGradient" name="creation" />
 					<div class="summary__header__text">
 						<div class="summary__header__title">
 							{{ t('mail', 'Thread summary') }}
@@ -34,11 +34,14 @@
 				{{ summary }}
 			</p>
 		</div>
+		<div class="summary__notice">
+			{{ t('mail', 'This summary is AI generated and may contain mistakes.') }}
+		</div>
 	</div>
 </template>
 <script>
 import ArrowDownIcon from 'vue-material-design-icons/ArrowDown.vue'
-import creation from '@mdi/svg/svg/creation-outline.svg?raw'
+import creationGradient from '@mdi/svg/svg/creation-gradient.svg?raw'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import LoadingSkeleton from './LoadingSkeleton.vue'
@@ -63,7 +66,7 @@ export default {
 	},
 	data() {
 		return {
-			creation,
+			creationGradient,
 		}
 	},
 	computed: {
@@ -88,13 +91,29 @@ export default {
 </script>
 <style lang="scss" scoped>
 .summary {
-    border: 2px solid var(--color-primary-element);
-    border-radius:var( --border-radius-large) ;
-    margin: 0 10px 20px 10px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
+	position: relative;
+	border-radius: var(--border-radius-large);
+	margin: 0 10px 20px 10px;
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	background: #f6f5ff;
 
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		padding: 2px;
+		border-radius: inherit;
+		background: linear-gradient(120deg, #7398FE 50%, #6104A4 125%);
+
+		-webkit-mask:
+			linear-gradient(#fff 0 0) content-box,
+			linear-gradient(#fff 0 0);
+		-webkit-mask-composite: xor;
+		mask-composite: exclude;
+		pointer-events: none;
+	}
 	&__header {
 		display: flex;
 		flex-direction: column;
@@ -138,6 +157,11 @@ export default {
 				}
 			}
 		}
+	}
+	.summary__notice {
+		margin-top: 0.5rem;
+		margin-left: 40px;
+		color: var(--color-text-maxcontrast);
 	}
 }
 
