@@ -476,7 +476,7 @@ import debouncePromise from 'debounce-promise'
 
 import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcSelect, NcListItemIcon as ListItemIcon, NcIconSvgWrapper } from '@nextcloud/vue'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
-import Delete from 'vue-material-design-icons/DeleteOutline.vue'
+import Delete from 'vue-material-design-icons/TrashCanOutline.vue'
 import ComposerAttachments from './ComposerAttachments.vue'
 import TextBlockModal from './textBlocks/TextBlockModal.vue'
 import Download from 'vue-material-design-icons/TrayArrowDown.vue'

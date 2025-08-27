@@ -67,7 +67,7 @@ import IconInbox from 'vue-material-design-icons/HomeOutline.vue'
 import IconDraft from 'vue-material-design-icons/PencilOutline.vue'
 import IconSent from 'vue-material-design-icons/SendOutline.vue'
 import IconArchive from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
-import IconTrash from 'vue-material-design-icons/DeleteOutline.vue'
+import IconTrash from 'vue-material-design-icons/TrashCanOutline.vue'
 import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
 
 import { translate as t } from '@nextcloud/l10n'
