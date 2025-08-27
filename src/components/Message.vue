@@ -196,6 +196,9 @@ export default {
 		&__button {
 			margin-inline-end: 5px;
 			border-radius: 12px;
+			background: linear-gradient(#f6f5ff) padding-box,
+			linear-gradient(120deg, #7398FE 50%, #6104A4 125%) border-box;
+			border: 2px solid transparent;
 
 			:deep(.button-vue__text) {
 				font-weight: normal;
@@ -205,6 +208,17 @@ export default {
 
 	&__notsuggested {
 		margin-inline-start: auto;
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	.reply-buttons {
+		&__suggested {
+			&__button {
+				background: linear-gradient(#221D2B) padding-box,
+				linear-gradient(125deg, #0C3A65 50%, #6204A5 125%) border-box;
+			}
+		}
 	}
 }
 @media screen and (max-width: 600px) {
@@ -221,6 +235,16 @@ export default {
 
 		&__notsuggested {
 			margin-inline-start: 0;
+		}
+	}
+}
+@media (prefers-color-scheme: dark) {
+	.reply-buttons {
+		&__suggested {
+			&__button {
+				background: linear-gradient(#221D2B) padding-box,
+				linear-gradient(125deg, #0C3A65 50%, #6204A5 125%) border-box;
+			}
 		}
 	}
 }
