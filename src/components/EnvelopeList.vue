@@ -144,7 +144,7 @@
 import { NcActions as Actions, NcActionButton as ActionButton, NcButton } from '@nextcloud/vue'
 import { showError } from '@nextcloud/dialogs'
 import Envelope from './Envelope.vue'
-import IconDelete from 'vue-material-design-icons/DeleteOutline.vue'
+import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
 import IconUnFavorite from 'vue-material-design-icons/StarOutline.vue'
 import IconSelect from 'vue-material-design-icons/CloseThick.vue'

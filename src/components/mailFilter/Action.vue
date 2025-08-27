@@ -35,7 +35,7 @@ import ActionFileinto from './ActionFileinto.vue'
 import ActionAddflag from './ActionAddflag.vue'
 import ActionStop from './ActionStop.vue'
 import { NcButton, NcSelect, NcTextField } from '@nextcloud/vue'
-import DeleteIcon from 'vue-material-design-icons/DeleteOutline.vue'
+import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 
 export default {
 	name: 'Action',

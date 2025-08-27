@@ -51,7 +51,7 @@
 <script>
 import { NcListItem as ListItem, NcActionButton as ActionButton } from '@nextcloud/vue'
 import Avatar from './Avatar.vue'
-import IconDelete from 'vue-material-design-icons/DeleteOutline.vue'
+import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import { getLanguage, translate as t } from '@nextcloud/l10n'
 import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin.js'
 import moment from '@nextcloud/moment'
