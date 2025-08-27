@@ -211,16 +211,6 @@ export default {
 	}
 }
 
-@media (prefers-color-scheme: dark) {
-	.reply-buttons {
-		&__suggested {
-			&__button {
-				background: linear-gradient(#221D2B) padding-box,
-				linear-gradient(125deg, #0C3A65 50%, #6204A5 125%) border-box;
-			}
-		}
-	}
-}
 @media screen and (max-width: 600px) {
 	.reply-buttons {
 		display: flex;
@@ -238,14 +228,17 @@ export default {
 		}
 	}
 }
+</style>
+<style>
 @media (prefers-color-scheme: dark) {
-	.reply-buttons {
-		&__suggested {
-			&__button {
-				background: linear-gradient(#221D2B) padding-box,
-				linear-gradient(125deg, #0C3A65 50%, #6204A5 125%) border-box;
-			}
-		}
+	body[data-theme-default] .reply-buttons__suggested__button {
+		background: linear-gradient(#221D2B) padding-box,
+		linear-gradient(125deg, #0C3A65 50%, #6204A5 125%) border-box;
 	}
+}
+
+body[data-theme-default] .reply-buttons__suggested__button {
+	background: linear-gradient(#221D2B) padding-box,
+	linear-gradient(125deg, #0C3A65 50%, #6204A5 125%) border-box;
 }
 </style>
