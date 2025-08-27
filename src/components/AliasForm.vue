@@ -66,7 +66,7 @@
 
 <script>
 import { NcButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-import IconDelete from 'vue-material-design-icons/DeleteOutline.vue'
+import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import IconRename from 'vue-material-design-icons/PencilOutline.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 
