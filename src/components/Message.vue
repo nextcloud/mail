@@ -237,7 +237,7 @@ export default {
 	}
 }
 
-body[data-theme-default] .reply-buttons__suggested__button {
+body[data-theme-dark] .reply-buttons__suggested__button {
 	background: linear-gradient(#221D2B) padding-box,
 	linear-gradient(125deg, #0C3A65 50%, #6204A5 125%) border-box;
 }
