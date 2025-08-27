@@ -32,7 +32,7 @@
 import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
 import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
-import IconDelete from 'vue-material-design-icons/DeleteOutline.vue'
+import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
 
 export default {
