@@ -135,7 +135,7 @@ import { NcButton, NcModal, NcPasswordField, NcEmptyContent } from '@nextcloud/v
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import logger from '../../logger.js'
 import moment from '@nextcloud/moment'
-import DeleteIcon from 'vue-material-design-icons/DeleteOutline.vue'
+import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import { convertPkcs12ToPem, InvalidPkcs12CertificateError } from '../../util/pkcs12.js'
 import useMainStore from '../../store/mainStore.js'
 import { mapStores, mapState } from 'pinia'
