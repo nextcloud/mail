@@ -34,4 +34,5 @@ interface IAttachmentService {
 	 * @param int $id
 	 */
 	public function deleteAttachment(string $userId, int $id);
+
 }
