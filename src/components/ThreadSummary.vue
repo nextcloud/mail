@@ -7,7 +7,7 @@
 		<div class="summary__header">
 			<div class="summary__header__actions">
 				<div class="summary__header__info">
-					<NcIconSvgWrapper :size="20" :svg="creationGradient" name="creation" />
+					<NcIconSvgWrapper :size="20" :svg="creation" name="creation" />
 					<div class="summary__header__text">
 						<div class="summary__header__title">
 							{{ t('mail', 'Thread summary') }}
@@ -41,7 +41,7 @@
 </template>
 <script>
 import ArrowDownIcon from 'vue-material-design-icons/ArrowDown.vue'
-import creationGradient from '@mdi/svg/svg/creation-gradient.svg?raw'
+import creation from '../../img/creation-gradient.svg?raw'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import LoadingSkeleton from './LoadingSkeleton.vue'
@@ -66,7 +66,7 @@ export default {
 	},
 	data() {
 		return {
-			creationGradient,
+			creation,
 		}
 	},
 	computed: {
@@ -163,6 +163,16 @@ export default {
 		margin-left: 40px;
 		color: var(--color-text-maxcontrast);
 	}
+}
+@media (prefers-color-scheme: dark) {
+	body[data-theme-default] .summary {
+		background: linear-gradient(#221D2B) padding-box,
+		linear-gradient(125deg, #0C3A65 50%, #6204A5 125%) border-box;
+	}
+}
+body[data-theme-dark] .summary {
+	background: linear-gradient(#221D2B) padding-box,
+	linear-gradient(125deg, #0C3A65 50%, #6204A5 125%) border-box;
 }
 
 </style>
