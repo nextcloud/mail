@@ -29,14 +29,21 @@ class Address implements JsonSerializable {
 		$this->wrapped = $wrapped;
 	}
 
-	public static function fromHorde(Horde_Mail_Rfc822_Address $horde): self {
+	public static function fromHorde(Horde_Mail_Rfc822_Address $horde, bool $normalize = false): self {
+		if ($normalize) {
+			return self::fromRaw($horde->personal, $horde->bare_address, $normalize);
+		}
 		return new self($horde);
 	}
 
-	public static function fromRaw(string $label, string $email): self {
-		$wrapped = new Horde_Mail_Rfc822_Address($email);
+	public static function fromRaw(?string $label, string $email, bool $normalize = false): self {
+		if ($normalize) {
+			$wrapped = new Horde_Mail_Rfc822_Address(self::normalizeAddress($email));
+		} else {
+			$wrapped = new Horde_Mail_Rfc822_Address($email);
+		}
 		// If no label is set we use the email
-		if ($label !== $email) {
+		if ($label !== null && $label !== $email) {
 			$wrapped->personal = $label;
 		}
 		return new self($wrapped);
@@ -117,5 +124,14 @@ class Address implements JsonSerializable {
 	public function equals($object): bool {
 		return $this->getEmail() === $object->getEmail()
 			&& $this->getLabel() === $object->getLabel();
+	}
+
+	private static function normalizeAddress(string $address): string {
+		// remove single quotes and whitespace the might exist
+		// Examples:
+		// user1@example.com
+		// 'user1@example.com'
+		// ' user1@example.com'
+		return strtolower(trim(trim($address, "'")));
 	}
 }

@@ -68,4 +68,36 @@ class AddressTest extends TestCase {
 
 		$this->assertFalse($equals);
 	}
+
+	public function testNormalizedWithSingleQuotes() {
+		$address = Address::fromRaw(null, "'user1@test.com'", true)->toHorde();
+		$this->assertEquals('user1@test.com', $address->bare_address);
+
+		$address = Address::fromHorde(new Horde_Mail_Rfc822_Address("'user1@test.com'"), true)->toHorde();
+		$this->assertEquals('user1@test.com', $address->bare_address);
+	}
+
+	public function testUnnormalizedWithSingleQuotes() {
+		$address = Address::fromRaw(null, "'user1@test.com'", false)->toHorde();
+		$this->assertEquals("'user1@test.com'", $address->bare_address);
+
+		$address = Address::fromHorde(new Horde_Mail_Rfc822_Address("'user1@test.com'"), false)->toHorde();
+		$this->assertEquals("'user1@test.com'", $address->bare_address);
+	}
+
+	public function testNormalizedWithUpperCaseLetters() {
+		$address = Address::fromRaw(null, 'UserOne@test.com', true)->toHorde();
+		$this->assertEquals('userone@test.com', $address->bare_address);
+
+		$address = Address::fromHorde(new Horde_Mail_Rfc822_Address('UserOne@test.com'), true)->toHorde();
+		$this->assertEquals('userone@test.com', $address->bare_address);
+	}
+
+	public function testUnnormalizedWithUpperCaseLetters() {
+		$address = Address::fromRaw(null, 'UserOne@test.com', false)->toHorde();
+		$this->assertEquals('UserOne@test.com', $address->bare_address);
+
+		$address = Address::fromHorde(new Horde_Mail_Rfc822_Address('UserOne@test.com'), false)->toHorde();
+		$this->assertEquals('UserOne@test.com', $address->bare_address);
+	}
 }
