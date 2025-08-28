@@ -147,9 +147,6 @@ OC.L10N.register(
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Sýsla með S/MIME-skilríki",
     "Mailvelope" : "Mailvelope",
-    "Mailvelope is enabled for the current domain!" : "Mailvelope er virkt fyrir núverandi lén!",
-    "Looking for a way to encrypt your emails?" : "Ertu að leita að leið til að dulrita tölvupóstinn þinn?",
-    "Enable Mailvelope for the current domain" : "Virkja Mailvelope fyrir núverandi lén",
     "Assistance features" : "Eiginleikar aðstoðar",
     "About" : "Um",
     "Keyboard shortcuts" : "Flýtileiðir á lyklaborði",
@@ -736,6 +733,9 @@ OC.L10N.register(
     "Redirect" : "Endurbeina",
     "The link leads to %s" : "Tengillinn leiðir til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ef þú vilt ekki fara á þá síðu, geturðu farið til baka í <a href=\"%s\">póstforritið</a>.",
-    "Continue to %s" : "Halda áfram í %s"
+    "Continue to %s" : "Halda áfram í %s",
+    "Mailvelope is enabled for the current domain!" : "Mailvelope er virkt fyrir núverandi lén!",
+    "Looking for a way to encrypt your emails?" : "Ertu að leita að leið til að dulrita tölvupóstinn þinn?",
+    "Enable Mailvelope for the current domain" : "Virkja Mailvelope fyrir núverandi lén"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

@@ -139,9 +139,6 @@ OC.L10N.register(
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Administrer S/MIME-sertifikater",
     "Mailvelope" : "Mailvelope",
-    "Mailvelope is enabled for the current domain!" : "Mailvelope er aktivert for gjeldende domene!",
-    "Looking for a way to encrypt your emails?" : "Leter du etter en måte å kryptere e-postene dine på?",
-    "Enable Mailvelope for the current domain" : "Aktiver Mailvelope for gjeldende domene",
     "Assistance features" : "Assistanse funksjoner",
     "About" : "Om",
     "Keyboard shortcuts" : "Tastatursnarveier",
@@ -714,6 +711,9 @@ OC.L10N.register(
     "Redirect" : "Videresend",
     "The link leads to %s" : "Denne lenken leder til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Hvis du ikke vil besøke den siden, kan du gå tilbake til <a href=\"%s\">E-post</a>",
-    "Continue to %s" : "Fortsett til %s"
+    "Continue to %s" : "Fortsett til %s",
+    "Mailvelope is enabled for the current domain!" : "Mailvelope er aktivert for gjeldende domene!",
+    "Looking for a way to encrypt your emails?" : "Leter du etter en måte å kryptere e-postene dine på?",
+    "Enable Mailvelope for the current domain" : "Aktiver Mailvelope for gjeldende domene"
 },
 "nplurals=2; plural=(n != 1);");

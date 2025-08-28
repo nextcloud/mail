@@ -148,10 +148,6 @@ OC.L10N.register(
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Управление сертификатами S/MIME",
     "Mailvelope" : "Почтовый конверт",
-    "Mailvelope is enabled for the current domain!" : "Mailvelope включен для текущего домена!",
-    "Looking for a way to encrypt your emails?" : "Необходимо использовать шифрование электронных писем?",
-    "Install Mailvelope browser extension" : "Установите расширение для браузера Mailvelope",
-    "Enable Mailvelope for the current domain" : "Включить почтовый конверт для текущего домена",
     "Assistance features" : "Функции помощи",
     "About" : "О себе",
     "Keyboard shortcuts" : "Сочетания клавиш",
@@ -769,6 +765,10 @@ OC.L10N.register(
     "Redirect" : "Перенаправление",
     "The link leads to %s" : "Эта ссылка ведёт на %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Если вы не хотите посещать эту страницу, вы можете вернуться в <a href=\"%s\">Почту</a>",
-    "Continue to %s" : "Продолжать %s"
+    "Continue to %s" : "Продолжать %s",
+    "Mailvelope is enabled for the current domain!" : "Mailvelope включен для текущего домена!",
+    "Looking for a way to encrypt your emails?" : "Необходимо использовать шифрование электронных писем?",
+    "Install Mailvelope browser extension" : "Установите расширение для браузера Mailvelope",
+    "Enable Mailvelope for the current domain" : "Включить почтовый конверт для текущего домена"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

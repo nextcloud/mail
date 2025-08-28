@@ -156,10 +156,6 @@
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Управљање S/MIME сертификатима",
     "Mailvelope" : "Mailvelope",
-    "Mailvelope is enabled for the current domain!" : "Mailvelope је укључен за тренутни домен!",
-    "Looking for a way to encrypt your emails?" : "Тражите начин да шифрујете своје и-мејлове?",
-    "Install Mailvelope browser extension" : "Инсталирај Mailvelope проширење интернет прегледача",
-    "Enable Mailvelope for the current domain" : "Укључи Mailvelope за тренутни домен",
     "Assistance features" : "Функције помоћи",
     "About" : "О програму",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "Део ове апликације је CKEditor, едитор отвореног кода. Ауторска права © CKEditor даваоци доприноса. Лиценцирано под GPLv2.",
@@ -845,6 +841,10 @@
     "Redirect" : "Преусмеравање",
     "The link leads to %s" : "Веза води на %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желите да посетите ту страницу, можете да се вратите на <a href=\"%s\">Пошту</a>.",
-    "Continue to %s" : "Настави на %s"
+    "Continue to %s" : "Настави на %s",
+    "Mailvelope is enabled for the current domain!" : "Mailvelope је укључен за тренутни домен!",
+    "Looking for a way to encrypt your emails?" : "Тражите начин да шифрујете своје и-мејлове?",
+    "Install Mailvelope browser extension" : "Инсталирај Mailvelope проширење интернет прегледача",
+    "Enable Mailvelope for the current domain" : "Укључи Mailvelope за тренутни домен"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 }

@@ -103,7 +103,6 @@ OC.L10N.register(
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Program lahko zbira podatke o vaših pogostih dejanjih in na podlagi teh podatkov prilagaja delovanje vašemu načinu uporabe. Podatki se shranjujejo le krajevno.",
     "Trusted senders" : "Zaupanja vredni pošiljatelji",
     "Manage S/MIME certificates" : "Upravljanje s potrdili S/MIME",
-    "Looking for a way to encrypt your emails?" : "Ali iščete način za šifriranje elektronskih sporočil?",
     "About" : "O meni",
     "Keyboard shortcuts" : "Tipkovne bližnjice",
     "Compose new message" : "Novo sporočilo",
@@ -541,6 +540,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Če vas sistem v nekaj sekundah ne preusmeri samodejno, pritisnite na to mesto.",
     "Redirect" : "Preusmeri",
     "The link leads to %s" : "Povezava vodi do %s",
-    "Continue to %s" : "Nadaljuj na %s"
+    "Continue to %s" : "Nadaljuj na %s",
+    "Looking for a way to encrypt your emails?" : "Ali iščete način za šifriranje elektronskih sporočil?"
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

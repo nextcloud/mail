@@ -106,7 +106,6 @@ OC.L10N.register(
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Permiteți aplicației să colecteze date despre interacțiunile dumneavoastră. Aplicația se va adapta preferințelor dumneavoastră în funcție de aceste date. Datele sunt stocate doar local.",
     "Trusted senders" : "Expeditori de încredere",
     "Manage S/MIME certificates" : "Administrează certificatele  S/MIME",
-    "Looking for a way to encrypt your emails?" : "Doriți o modalitate de criptare a emailurilor?",
     "About" : "Despre",
     "Keyboard shortcuts" : "Scurtături din tastatură",
     "Compose new message" : "Compuneți mesaje noi",
@@ -509,6 +508,7 @@ OC.L10N.register(
     "Redirect" : "Deviere",
     "The link leads to %s" : "Link-ul duce la %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Dacă nu doriți să vizitați acea pagină, vă puteți întoarce la <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continuă către %s"
+    "Continue to %s" : "Continuă către %s",
+    "Looking for a way to encrypt your emails?" : "Doriți o modalitate de criptare a emailurilor?"
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");

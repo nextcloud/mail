@@ -112,8 +112,6 @@ OC.L10N.register(
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Engedélyezés az alkalmazásnak, hogy az adatokat gyűjtsön az interakcióiról. Az adatok alapján az alkalmazás alkalmazkodni fog a használati szokásaihoz. Az adatok helyben lesznek tárolva.",
     "Trusted senders" : "Megbízható küldők",
     "Manage S/MIME certificates" : "S/MIME tanúsítványok kezelése",
-    "Looking for a way to encrypt your emails?" : "Azt keresi, hogyan titkosíthatná a leveleit?",
-    "Install Mailvelope browser extension" : "Telepítse a Mailvelope böngészőkiegészítőt",
     "About" : "Névjegy",
     "Keyboard shortcuts" : "Gyorsbillentyűk",
     "Compose new message" : "Új üzenet írása",
@@ -642,6 +640,8 @@ OC.L10N.register(
     "Redirect" : "Átirányítás",
     "The link leads to %s" : "A hivatkozás ide mutat: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarja megnyitni azt az oldalt, akkor térjen vissza a <a href=\"%s\">Levelezéshez</a>.",
-    "Continue to %s" : "Folytatás ide: %s"
+    "Continue to %s" : "Folytatás ide: %s",
+    "Looking for a way to encrypt your emails?" : "Azt keresi, hogyan titkosíthatná a leveleit?",
+    "Install Mailvelope browser extension" : "Telepítse a Mailvelope böngészőkiegészítőt"
 },
 "nplurals=2; plural=(n != 1);");

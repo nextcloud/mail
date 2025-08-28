@@ -142,10 +142,6 @@
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Kudeatu S/MIME ziurtagiriak",
     "Mailvelope" : "Mailvelope",
-    "Mailvelope is enabled for the current domain!" : "Mailvelope gaituta dago uneko domeinurako!",
-    "Looking for a way to encrypt your emails?" : "Zure mezu elektronikoak enkriptatzeko modu bat bilatzen ari zara?",
-    "Install Mailvelope browser extension" : "Instalatu Mailvelope arakatzailearen luzapena",
-    "Enable Mailvelope for the current domain" : "Gaitu Mailvelope uneko domeinurako",
     "Assistance features" : "Laguntzailearen aukerak",
     "About" : "Honi buruz",
     "Keyboard shortcuts" : "Teklatuaren lasterbideak",
@@ -749,6 +745,10 @@
     "Redirect" : "Birbideratu",
     "The link leads to %s" : "Estekak hona bideratzen du: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Orrialde hori bisitatu nahi ez baduzu, itzul dezakezu <a href=\"%s\">Mail </a>-ra.",
-    "Continue to %s" : "Jarraitu hona: %s"
+    "Continue to %s" : "Jarraitu hona: %s",
+    "Mailvelope is enabled for the current domain!" : "Mailvelope gaituta dago uneko domeinurako!",
+    "Looking for a way to encrypt your emails?" : "Zure mezu elektronikoak enkriptatzeko modu bat bilatzen ari zara?",
+    "Install Mailvelope browser extension" : "Instalatu Mailvelope arakatzailearen luzapena",
+    "Enable Mailvelope for the current domain" : "Gaitu Mailvelope uneko domeinurako"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

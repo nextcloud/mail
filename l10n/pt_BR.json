@@ -156,10 +156,6 @@
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Gerenciar certificados S/MIME",
     "Mailvelope" : "Mailvelope",
-    "Mailvelope is enabled for the current domain!" : "Mailvelope está habilitado para o domínio atual!",
-    "Looking for a way to encrypt your emails?" : "Procurando uma maneira de criptografar seus e-mails?",
-    "Install Mailvelope browser extension" : "Instale a extensão do navegador do Mailvelope",
-    "Enable Mailvelope for the current domain" : "Habilitar o Mailvelope para o domínio atual",
     "Assistance features" : "Recursos de assistência",
     "About" : "Sobre",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "Este aplicativo inclui o CKEditor, um editor de código aberto. Direitos autorais © Colaboradores do CKEditor. Licenciado sob a GPLv2.",
@@ -306,6 +302,7 @@
     "_Forward {number} as attachment_::_Forward {number} as attachment_" : ["Encaminhar {number} como anexo","Encaminhar {number} como anexo","Encaminhar {number} como anexo"],
     "Mark as unread" : "Marcar como não lido",
     "Mark as read" : "Marcar como lido",
+    "Mark as unimportant" : "Marcar como não importante",
     "Report this bug" : "Reportar este erro",
     "Event created" : "Evento criado",
     "Could not create event" : "Não foi possível criar o evento",
@@ -354,7 +351,7 @@
     "Yesterday" : "Ontem",
     "Last week" : "Última semana",
     "Last month" : "Último mês",
-    "Older" : "Mais velho",
+    "Older" : "Mais velhos",
     "Could not open folder" : "Não foi possível abrir a pasta",
     "Loading messages …" : "Carregando mensagens …",
     "Indexing your messages. This can take a bit longer for larger folders." : "Indexação de suas mensagens. Isso pode demorar um pouco mais para pastas maiores.",
@@ -839,6 +836,10 @@
     "Redirect" : "Redirecionar",
     "The link leads to %s" : "O link leva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Se você não quiser visitar essa página, você pode voltar para <a href=\"%s\">E-Mail</a>.",
-    "Continue to %s" : "Continue para %s"
+    "Continue to %s" : "Continue para %s",
+    "Mailvelope is enabled for the current domain!" : "Mailvelope está habilitado para o domínio atual!",
+    "Looking for a way to encrypt your emails?" : "Procurando uma maneira de criptografar seus e-mails?",
+    "Install Mailvelope browser extension" : "Instale a extensão do navegador do Mailvelope",
+    "Enable Mailvelope for the current domain" : "Habilitar o Mailvelope para o domínio atual"
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

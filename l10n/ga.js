@@ -158,10 +158,6 @@ OC.L10N.register(
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Bainistigh teastais S/MIME",
     "Mailvelope" : "Mailvelope",
-    "Mailvelope is enabled for the current domain!" : "Tá Mailvelope cumasaithe don fhearann ​​reatha!",
-    "Looking for a way to encrypt your emails?" : "Ag lorg slí chun do ríomhphoist a chriptiú?",
-    "Install Mailvelope browser extension" : "Suiteáil síneadh brabhsálaí Mailvelope",
-    "Enable Mailvelope for the current domain" : "Cumasaigh Mailvelope don fhearann ​​reatha",
     "Assistance features" : "Gnéithe cúnaimh",
     "About" : "Faoi",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "Áirítear leis an bhfeidhmchlár seo CKEditor, eagarthóir foinse oscailte. Cóipcheart © ranníocóirí CKEditor. Ceadúnaithe faoi GPLv2.",
@@ -847,6 +843,10 @@ OC.L10N.register(
     "Redirect" : "Atreorú",
     "The link leads to %s" : "Téann an nasc chuig %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Mura dteastaíonn uait cuairt a thabhairt ar an leathanach sin, is féidir leat filleadh ar <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Lean ar aghaidh go %s"
+    "Continue to %s" : "Lean ar aghaidh go %s",
+    "Mailvelope is enabled for the current domain!" : "Tá Mailvelope cumasaithe don fhearann ​​reatha!",
+    "Looking for a way to encrypt your emails?" : "Ag lorg slí chun do ríomhphoist a chriptiú?",
+    "Install Mailvelope browser extension" : "Suiteáil síneadh brabhsálaí Mailvelope",
+    "Enable Mailvelope for the current domain" : "Cumasaigh Mailvelope don fhearann ​​reatha"
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

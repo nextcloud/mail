@@ -145,9 +145,6 @@ OC.L10N.register(
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "S/MIME 証明書の管理",
     "Mailvelope" : "Mailvelope",
-    "Mailvelope is enabled for the current domain!" : "現在のドメインでMailvelopeが有効になっています!",
-    "Looking for a way to encrypt your emails?" : "あなたのメールを暗号化する方法をお探しですか?",
-    "Enable Mailvelope for the current domain" : "現在のドメインのMailvelopeを有効にする",
     "Assistance features" : "アシスタンス機能",
     "About" : "Nextcloud について",
     "Keyboard shortcuts" : "キーボードショートカット",
@@ -754,6 +751,9 @@ OC.L10N.register(
     "Redirect" : "リダイレクト",
     "The link leads to %s" : "リンクが %s につながります",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ページにアクセスしたくない場合は、<a href=\"%s\">メール</a>に戻ることができます",
-    "Continue to %s" : "%s にリダイレクトする"
+    "Continue to %s" : "%s にリダイレクトする",
+    "Mailvelope is enabled for the current domain!" : "現在のドメインでMailvelopeが有効になっています!",
+    "Looking for a way to encrypt your emails?" : "あなたのメールを暗号化する方法をお探しですか?",
+    "Enable Mailvelope for the current domain" : "現在のドメインのMailvelopeを有効にする"
 },
 "nplurals=1; plural=0;");

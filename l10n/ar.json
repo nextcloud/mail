@@ -150,9 +150,6 @@
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "إدارة شهادات S/MIME",
     "Mailvelope" : "Mailvelope",
-    "Mailvelope is enabled for the current domain!" : "خدمة تشفير البريد Mailvelope مُفعّلة للنطاق الحالي!",
-    "Looking for a way to encrypt your emails?" : "هل تبحث عن طريقة لتشفير رسائل بريدك الالكتروني؟",
-    "Enable Mailvelope for the current domain" : "تمكين خدمة تشفير البريد Mailvelope للنطاق الحالي",
     "Assistance features" : "ميزات المساعدة",
     "About" : "حول",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "هذا التطبيق يشتمل على CKEditor والذي هو محرر نصوص حر مفتوح المصدر. جميع الحقوق محفوطة © لمساهمي CKEditor. مرخص وفقاً لـ GPLv2.",
@@ -761,6 +758,9 @@
     "Redirect" : "إعادة توجيه",
     "The link leads to %s" : "الرابط يؤدي إل %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "إذا لم تكن راغباً في زيارة تلك الصفحة، يمكنك العودة إلى <a href=\"%s\">البريد Mail</a>.",
-    "Continue to %s" : "إستمر نحو %s"
+    "Continue to %s" : "إستمر نحو %s",
+    "Mailvelope is enabled for the current domain!" : "خدمة تشفير البريد Mailvelope مُفعّلة للنطاق الحالي!",
+    "Looking for a way to encrypt your emails?" : "هل تبحث عن طريقة لتشفير رسائل بريدك الالكتروني؟",
+    "Enable Mailvelope for the current domain" : "تمكين خدمة تشفير البريد Mailvelope للنطاق الحالي"
 },"pluralForm" :"nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;"
 }

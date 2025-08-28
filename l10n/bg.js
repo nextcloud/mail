@@ -102,8 +102,6 @@ OC.L10N.register(
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Разрешаване на приложението да събира данни за вашите взаимодействия. Въз основа на тези данни приложението ще се адаптира към вашите предпочитания. Данните ще се съхраняват само локално.",
     "Trusted senders" : "Доверени податели",
     "Manage S/MIME certificates" : "Управление на S/MIME сертификати",
-    "Looking for a way to encrypt your emails?" : "Търсите ли начин да шифровате имейлите си?",
-    "Install Mailvelope browser extension" : "Инсталирайте разширението за браузър Mailvelope",
     "About" : "Относно",
     "Keyboard shortcuts" : "Бързи клавиши",
     "Compose new message" : "Създай ново съобщение",
@@ -565,6 +563,8 @@ OC.L10N.register(
     "Redirect" : "Пренасочване",
     "The link leads to %s" : "Връзката води до %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желаете да посетите тази страница, може да се върнете към <a href=\"%s\">Поща</a>.",
-    "Continue to %s" : "Продължи към %s"
+    "Continue to %s" : "Продължи към %s",
+    "Looking for a way to encrypt your emails?" : "Търсите ли начин да шифровате имейлите си?",
+    "Install Mailvelope browser extension" : "Инсталирайте разширението за браузър Mailvelope"
 },
 "nplurals=2; plural=(n != 1);");
