@@ -1273,14 +1273,20 @@ class MessageMapper extends QBMapper {
 				$qb->expr()->in('id', $qb->createParameter('ids'))
 			)
 			->orderBy('sent_at', $sortOrder);
+		$results = [];
 		foreach (array_chunk($ids, 1000) as $chunk) {
 			$qb->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			if ($threadingEnabled) {
 				$res = $qb->executeQuery();
 				while ($row = $res->fetch()) {
 					$message = $this->mapRowToEntity($row);
-					$results[] = $this->findThread($account, $message->getThreadRootId(), $sortOrder);
+					if ($message->getThreadRootId() === null) {
+						$results[] = [$message];
+					} else {
+						$results[] = $this->findThread($account, $message->getThreadRootId(), $sortOrder);
+					}
 				}
+				$res->closeCursor();
 			} else {
 				$results[] = array_map(fn (Message $msg) => [$msg], $this->findRelatedData($this->findEntities($qb), $userId));
 			}
@@ -1343,8 +1349,13 @@ class MessageMapper extends QBMapper {
 				$res = $qb->executeQuery();
 				while ($row = $res->fetch()) {
 					$message = $this->mapRowToEntity($row);
-					$results[] = $this->findThread($account, $message->getThreadRootId(), $sortOrder);
+					if ($message->getThreadRootId() === null) {
+						$results[] = [$message];
+					} else {
+						$results[] = $this->findThread($account, $message->getThreadRootId(), $sortOrder);
+					}
 				}
+				$res->closeCursor();
 			} else {
 				$results[] = array_map(fn (Message $msg) => [$msg], $this->findRelatedData($this->findEntities($qb), $userId));
 			}
