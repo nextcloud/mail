@@ -156,10 +156,6 @@
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Spravovat S/MIME certifikáty",
     "Mailvelope" : "Mailvelope",
-    "Mailvelope is enabled for the current domain!" : "Mailvelope je pro stávající doménu zapnuté!",
-    "Looking for a way to encrypt your emails?" : "Hledáte způsob jak šifrovat své e-maily?",
-    "Install Mailvelope browser extension" : "Nainstalovat Mailvelope – rozšíření pro webový prohlížeč",
-    "Enable Mailvelope for the current domain" : "Zapnout Mailvelope pro stávající doménu",
     "Assistance features" : "Funkce asistence",
     "About" : "O aplikaci",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "Tato aplikace obsahuje CKEditor – opensource editor. Autorská práva © přispěvatelé do projektu CKEditor. Licencováno pod GPLv2.",
@@ -836,6 +832,10 @@
     "Redirect" : "Přesměrovat",
     "The link leads to %s" : "Odkaz vede na %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Pokud nechcete tuto stránku navštívit, můžete se vrátit do <a href=\"%s\">e-mailu</a>.",
-    "Continue to %s" : "Pokračovat na %s"
+    "Continue to %s" : "Pokračovat na %s",
+    "Mailvelope is enabled for the current domain!" : "Mailvelope je pro stávající doménu zapnuté!",
+    "Looking for a way to encrypt your emails?" : "Hledáte způsob jak šifrovat své e-maily?",
+    "Install Mailvelope browser extension" : "Nainstalovat Mailvelope – rozšíření pro webový prohlížeč",
+    "Enable Mailvelope for the current domain" : "Zapnout Mailvelope pro stávající doménu"
 },"pluralForm" :"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;"
 }

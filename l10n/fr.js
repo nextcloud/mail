@@ -155,9 +155,6 @@ OC.L10N.register(
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Gérer les certificats S/MIME",
     "Mailvelope" : "Mailvelope",
-    "Mailvelope is enabled for the current domain!" : "Mailvelope est activé pour le domaine actuel !",
-    "Looking for a way to encrypt your emails?" : "Vous cherchez un moyen de chiffrer vos e-mails ?",
-    "Enable Mailvelope for the current domain" : "Activer Mailvelope pour le domaine actuel",
     "Assistance features" : "Fonctionnalités d'assistance",
     "About" : "À propos",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "Cette application utilise CKEditor, un éditeur de texte open-source. Copyright © CKEditor contributors. Licensed under GPLv2.",
@@ -798,6 +795,9 @@ OC.L10N.register(
     "Redirect" : "Redirection",
     "The link leads to %s" : "Le lien dirige vers %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si vous ne souhaitez pas visiter cette page, vous pouvez retourner à l'application <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continuer vers %s"
+    "Continue to %s" : "Continuer vers %s",
+    "Mailvelope is enabled for the current domain!" : "Mailvelope est activé pour le domaine actuel !",
+    "Looking for a way to encrypt your emails?" : "Vous cherchez un moyen de chiffrer vos e-mails ?",
+    "Enable Mailvelope for the current domain" : "Activer Mailvelope pour le domaine actuel"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

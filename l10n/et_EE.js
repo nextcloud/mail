@@ -153,10 +153,6 @@ OC.L10N.register(
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Halda S/MIME sertifikaate",
     "Mailvelope" : "Mailvelope",
-    "Mailvelope is enabled for the current domain!" : "Mailvelope on selle domeeni puhul kasutusel!",
-    "Looking for a way to encrypt your emails?" : "Kas otsid viisi oma kirjade krüptimiseks?",
-    "Install Mailvelope browser extension" : "Paigalda Mailvelope'i brauserilaiendus",
-    "Enable Mailvelope for the current domain" : "Võta Mailvelope selle domeeni puhul kasutusele!",
     "Assistance features" : "Abilise funktsionaalsused",
     "About" : "Rakenduse teave",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "Selles rakenduses sisaldub avatud lähtekoodiga CKEditor, mis on kasutusel kirjade koostamiseks. Autoriõigused: © CKEditori kaasautorid. Litsentseeritud GPLv2 alusel.",
@@ -799,6 +795,10 @@ OC.L10N.register(
     "Redirect" : "Suunamine",
     "The link leads to %s" : "Link viitab siia: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Kui sa ei taha seda lehte avada, siis mine tagasi <a href=\"%s\">E-postirakenduse</a> lehele.",
-    "Continue to %s" : "Jätka siia: %s"
+    "Continue to %s" : "Jätka siia: %s",
+    "Mailvelope is enabled for the current domain!" : "Mailvelope on selle domeeni puhul kasutusel!",
+    "Looking for a way to encrypt your emails?" : "Kas otsid viisi oma kirjade krüptimiseks?",
+    "Install Mailvelope browser extension" : "Paigalda Mailvelope'i brauserilaiendus",
+    "Enable Mailvelope for the current domain" : "Võta Mailvelope selle domeeni puhul kasutusele!"
 },
 "nplurals=2; plural=(n != 1);");

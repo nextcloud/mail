@@ -150,10 +150,6 @@
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Spravovať certifikáty S/MIME",
     "Mailvelope" : "Mailvelope",
-    "Mailvelope is enabled for the current domain!" : "Mailvelope je povolený pre aktuálnu doménu!",
-    "Looking for a way to encrypt your emails?" : "Hľadáte spôsob, ako šifrovať svoje e-maily?",
-    "Install Mailvelope browser extension" : "Nainštalovať rozšírenie pre prehliadač Mailvelope",
-    "Enable Mailvelope for the current domain" : "Povoliť Mailvelope pre aktuálnu doménu",
     "Assistance features" : "Asistenčné funkcie",
     "About" : "O vás",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "Táto aplikácia obsahuje CKEditor, editor s otvoreným zdrojovým kódom. Autorské práva © prispievatelia CKEditoru. Licencované pod GPLv2.",
@@ -775,6 +771,10 @@
     "Redirect" : "Presmerovať",
     "The link leads to %s" : "Odkaz smeruje na %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ak si neprajete navštíviť stránku, možete sa vátiť na <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Pokračovať na %s"
+    "Continue to %s" : "Pokračovať na %s",
+    "Mailvelope is enabled for the current domain!" : "Mailvelope je povolený pre aktuálnu doménu!",
+    "Looking for a way to encrypt your emails?" : "Hľadáte spôsob, ako šifrovať svoje e-maily?",
+    "Install Mailvelope browser extension" : "Nainštalovať rozšírenie pre prehliadač Mailvelope",
+    "Enable Mailvelope for the current domain" : "Povoliť Mailvelope pre aktuálnu doménu"
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);"
 }

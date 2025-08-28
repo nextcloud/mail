@@ -101,7 +101,6 @@
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Tillad, at appen indsamler data om dine interaktioner. Baseret på disse data vil appen tilpasse sig dine præferencer. Dataene gemmes kun lokalt.",
     "Trusted senders" : "Betroede afsendere",
     "Manage S/MIME certificates" : "Administrer S/MIME-certifikater",
-    "Looking for a way to encrypt your emails?" : "Leder du efter en måde at kryptere dine e-mails på?",
     "About" : "Om",
     "Keyboard shortcuts" : "Tastaturgenveje",
     "Compose new message" : "Skriv en ny meddelelse",
@@ -403,6 +402,7 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Klik her hvis du ikke automatisk bliver videre sendt i løbet af et par sekunder.",
     "Redirect" : "Omdiriger",
     "The link leads to %s" : "Linket fører til %s",
-    "Continue to %s" : "Videre til %s"
+    "Continue to %s" : "Videre til %s",
+    "Looking for a way to encrypt your emails?" : "Leder du efter en måde at kryptere dine e-mails på?"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

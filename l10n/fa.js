@@ -112,7 +112,6 @@ OC.L10N.register(
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.",
     "Trusted senders" : "Trusted senders",
     "Manage S/MIME certificates" : "Manage S/MIME certificates",
-    "Looking for a way to encrypt your emails?" : "Looking for a way to encrypt your emails?",
     "About" : "About",
     "Keyboard shortcuts" : "میان‌برهای صفحه‌کلید",
     "Compose new message" : "نوشتن پیام جدید",
@@ -607,6 +606,7 @@ OC.L10N.register(
     "Redirect" : "تغییر مسیر",
     "The link leads to %s" : "پیوند منجر به%s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "ادامه دهید%s"
+    "Continue to %s" : "ادامه دهید%s",
+    "Looking for a way to encrypt your emails?" : "Looking for a way to encrypt your emails?"
 },
 "nplurals=2; plural=(n > 1);");
