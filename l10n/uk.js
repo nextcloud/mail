@@ -158,10 +158,6 @@ OC.L10N.register(
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Керування сертифікатами S/MIME",
     "Mailvelope" : "Поштовий конверт",
-    "Mailvelope is enabled for the current domain!" : "Поштова скринька ввімкнена для поточного домену!",
-    "Looking for a way to encrypt your emails?" : "Шукаєте спосіб зашифрувати свою електронну пошту?",
-    "Install Mailvelope browser extension" : "Встановіть розширення для браузера Mailvelope",
-    "Enable Mailvelope for the current domain" : "Увімкнути Mailvelope для поточного домену",
     "Assistance features" : "Функції допомоги",
     "About" : "Про сервіс",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "До складу цієї програми входить CKEditor, редактор з відкритим вихідним кодом. Авторське право належить авторам CKEditor. Поширюється за ліцензією GPLv2.",
@@ -847,6 +843,10 @@ OC.L10N.register(
     "Redirect" : "Перенаправлення",
     "The link leads to %s" : "Посилання веде до %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Якщо ви не хочете відвідувати цю сторінку, ви можете повернутися до <a href=\"%s\">Пошти</a>.",
-    "Continue to %s" : "Перейти до %s"
+    "Continue to %s" : "Перейти до %s",
+    "Mailvelope is enabled for the current domain!" : "Поштова скринька ввімкнена для поточного домену!",
+    "Looking for a way to encrypt your emails?" : "Шукаєте спосіб зашифрувати свою електронну пошту?",
+    "Install Mailvelope browser extension" : "Встановіть розширення для браузера Mailvelope",
+    "Enable Mailvelope for the current domain" : "Увімкнути Mailvelope для поточного домену"
 },
 "nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);");

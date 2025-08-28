@@ -150,9 +150,6 @@ OC.L10N.register(
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Administració de certificats S/MIME",
     "Mailvelope" : "Mailvelope",
-    "Mailvelope is enabled for the current domain!" : "Mailvelope està habilitat per al domini actual!",
-    "Looking for a way to encrypt your emails?" : "Esteu buscant una manera de xifrar els vostres correus electrònics?",
-    "Enable Mailvelope for the current domain" : "Habilitar Mailvelope per al domini actual",
     "Assistance features" : "Característiques d'assistència",
     "About" : "Quant a",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "Aquesta aplicació inclou CKEditor, un editor de codi obert. Copyright © Col·laboradors de CKEditor. Amb llicència sota GPLv2.",
@@ -765,6 +762,9 @@ OC.L10N.register(
     "Redirect" : "Redirigeix",
     "The link leads to %s" : "L'enllaç porta a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no voleu visitar aquesta pàgina, podeu tornar a <a href=\"%s\">Correu</a>.",
-    "Continue to %s" : "Continua a %s"
+    "Continue to %s" : "Continua a %s",
+    "Mailvelope is enabled for the current domain!" : "Mailvelope està habilitat per al domini actual!",
+    "Looking for a way to encrypt your emails?" : "Esteu buscant una manera de xifrar els vostres correus electrònics?",
+    "Enable Mailvelope for the current domain" : "Habilitar Mailvelope per al domini actual"
 },
 "nplurals=2; plural=(n != 1);");

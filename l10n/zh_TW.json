@@ -156,10 +156,6 @@
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "管理 S/MIME 憑證",
     "Mailvelope" : "Mailvelope",
-    "Mailvelope is enabled for the current domain!" : "目前域名已啟用 Mailvelope！",
-    "Looking for a way to encrypt your emails?" : "正在尋找加密您的電子郵件的方法？",
-    "Install Mailvelope browser extension" : "安裝 Mailvelope 瀏覽器擴充套件",
-    "Enable Mailvelope for the current domain" : "為目前網域啟用 Mailvelope",
     "Assistance features" : "協助功能",
     "About" : "關於",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "此應用程式包含 CKEditor，這是開放原始碼的編輯器。Copyright © CKEditor 貢獻者。以 GPLv2 授權。",
@@ -845,6 +841,10 @@
     "Redirect" : "重新導向",
     "The link leads to %s" : "該連結導向至 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "若不想造訪該頁，您可以回到<a href=\"%s\">郵件</a>。",
-    "Continue to %s" : "前往 %s"
+    "Continue to %s" : "前往 %s",
+    "Mailvelope is enabled for the current domain!" : "目前域名已啟用 Mailvelope！",
+    "Looking for a way to encrypt your emails?" : "正在尋找加密您的電子郵件的方法？",
+    "Install Mailvelope browser extension" : "安裝 Mailvelope 瀏覽器擴充套件",
+    "Enable Mailvelope for the current domain" : "為目前網域啟用 Mailvelope"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

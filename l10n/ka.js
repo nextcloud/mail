@@ -119,7 +119,6 @@ OC.L10N.register(
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Manage S/MIME certificates",
     "Mailvelope" : "Mailvelope",
-    "Looking for a way to encrypt your emails?" : "Looking for a way to encrypt your emails?",
     "About" : "About",
     "Keyboard shortcuts" : "Keyboard shortcuts",
     "Compose new message" : "Compose new message",
@@ -640,6 +639,7 @@ OC.L10N.register(
     "Redirect" : "Redirect",
     "The link leads to %s" : "The link leads to %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continue to %s"
+    "Continue to %s" : "Continue to %s",
+    "Looking for a way to encrypt your emails?" : "Looking for a way to encrypt your emails?"
 },
 "nplurals=2; plural=(n!=1);");

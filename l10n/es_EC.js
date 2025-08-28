@@ -100,7 +100,6 @@ OC.L10N.register(
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Permitir que la aplicación recopile datos sobre tus interacciones. Con base en estos datos, la aplicación se adaptará a tus preferencias. Los datos se almacenarán solo localmente.",
     "Trusted senders" : "Remitentes de confianza",
     "Manage S/MIME certificates" : "Administrar certificados S/MIME",
-    "Looking for a way to encrypt your emails?" : "¿Buscas una forma de cifrar tus correos electrónicos?",
     "About" : "Acerca",
     "Keyboard shortcuts" : "Atajos del teclado",
     "Compose new message" : "Escribir mensaje nuevo",
@@ -581,6 +580,7 @@ OC.L10N.register(
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no deseas visitar esa página, puedes regresar a <a href=\"%s\">Correo</a>.",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Looking for a way to encrypt your emails?" : "¿Buscas una forma de cifrar tus correos electrónicos?"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

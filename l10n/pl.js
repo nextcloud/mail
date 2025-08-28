@@ -158,10 +158,6 @@ OC.L10N.register(
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Zarządzaj certyfikatami S/MIME",
     "Mailvelope" : "Mailvelope",
-    "Mailvelope is enabled for the current domain!" : "Mailvelope jest włączony dla bieżącej domeny!",
-    "Looking for a way to encrypt your emails?" : "Szukasz sposobu na szyfrowanie wiadomości e-mail?",
-    "Install Mailvelope browser extension" : "Zainstaluj rozszerzenie przeglądarki Mailvelope",
-    "Enable Mailvelope for the current domain" : "Włącz Mailvelope dla bieżącej domeny",
     "Assistance features" : "Asystent",
     "About" : "O aplikacji",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "Ta aplikacja zawiera CKEditor, edytor open-source. Copyright © współtwórcy CKEditor. Licencjonowane na GPLv2.",
@@ -689,6 +685,10 @@ OC.L10N.register(
     "Redirect" : "Przekieruj",
     "The link leads to %s" : "Link prowadzi do %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Jeśli nie chcesz odwiedzić tej strony, możesz powrócić do <a href=\"%s\">Poczty</a>.",
-    "Continue to %s" : "Kontynuuj do %s"
+    "Continue to %s" : "Kontynuuj do %s",
+    "Mailvelope is enabled for the current domain!" : "Mailvelope jest włączony dla bieżącej domeny!",
+    "Looking for a way to encrypt your emails?" : "Szukasz sposobu na szyfrowanie wiadomości e-mail?",
+    "Install Mailvelope browser extension" : "Zainstaluj rozszerzenie przeglądarki Mailvelope",
+    "Enable Mailvelope for the current domain" : "Włącz Mailvelope dla bieżącej domeny"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

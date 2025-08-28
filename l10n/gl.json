@@ -148,9 +148,6 @@
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "Administrar certificados S/MIME",
     "Mailvelope" : "Mailvelope",
-    "Mailvelope is enabled for the current domain!" : "Mailvelope está activado para o dominio actual!",
-    "Looking for a way to encrypt your emails?" : "Busca unha forma de cifrar os seus correos?",
-    "Enable Mailvelope for the current domain" : "Activar Mailvelope para o dominio actual",
     "Assistance features" : "Funcións de asistencia",
     "About" : "Sobre",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "Esta aplicación inclúe CKeditor, un editor de código aberto. Copyright © Colaboradores de CKEDITOR. Licenciado baixo GPLV2.",
@@ -763,6 +760,9 @@
     "Redirect" : "Redirixir",
     "The link leads to %s" : "A ligazón leva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Se non quere visitar esa páxina, pode volver a <a href=\"%s\">Correo</a>.",
-    "Continue to %s" : "Continuar para %s"
+    "Continue to %s" : "Continuar para %s",
+    "Mailvelope is enabled for the current domain!" : "Mailvelope está activado para o dominio actual!",
+    "Looking for a way to encrypt your emails?" : "Busca unha forma de cifrar os seus correos?",
+    "Enable Mailvelope for the current domain" : "Activar Mailvelope para o dominio actual"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

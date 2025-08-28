@@ -158,10 +158,6 @@ OC.L10N.register(
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "管理 S/MIME 证书",
     "Mailvelope" : "Mailvelope",
-    "Mailvelope is enabled for the current domain!" : "当前域已启用 Mailvelope！",
-    "Looking for a way to encrypt your emails?" : "正在寻找加密电子邮件的方法？",
-    "Install Mailvelope browser extension" : "安装 Mailvelope 浏览器扩展",
-    "Enable Mailvelope for the current domain" : "为当前域启用 Mailvelope",
     "Assistance features" : "辅助功能",
     "About" : "关于",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "此应用程序包括开源编辑器 CKEditor。版权所有 © CKEditor 贡献者。根据 GPLv2 许可。",
@@ -847,6 +843,10 @@ OC.L10N.register(
     "Redirect" : "重定向",
     "The link leads to %s" : "链接指向 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "如果不想访问此页面，您可以返回<a href=\"%s\">邮件</a>。",
-    "Continue to %s" : "继续 %s"
+    "Continue to %s" : "继续 %s",
+    "Mailvelope is enabled for the current domain!" : "当前域已启用 Mailvelope！",
+    "Looking for a way to encrypt your emails?" : "正在寻找加密电子邮件的方法？",
+    "Install Mailvelope browser extension" : "安装 Mailvelope 浏览器扩展",
+    "Enable Mailvelope for the current domain" : "为当前域启用 Mailvelope"
 },
 "nplurals=1; plural=0;");

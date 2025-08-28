@@ -144,9 +144,6 @@ OC.L10N.register(
     "S/MIME" : "S / MIME",
     "Manage S/MIME certificates" : "S / MIME گۇۋاھنامىسىنى باشقۇرۇش",
     "Mailvelope" : "Mailvelope",
-    "Mailvelope is enabled for the current domain!" : "خەت ساندۇقى نۆۋەتتىكى دائىرە ئۈچۈن قوزغىتىلدى!",
-    "Looking for a way to encrypt your emails?" : "ئېلېكترونلۇق خەتلىرىڭىزنى مەخپىيلەشتۈرۈشنىڭ يولىنى ئىزدەۋاتامسىز؟",
-    "Enable Mailvelope for the current domain" : "نۆۋەتتىكى دائىرە ئۈچۈن Mailvelope نى قوزغىتىڭ",
     "Assistance features" : "ياردەم ئىقتىدارلىرى",
     "About" : "ھەققىدە",
     "Keyboard shortcuts" : "كۇنۇپكا تاختىسى تېزلەتمىسى",
@@ -725,6 +722,9 @@ OC.L10N.register(
     "Redirect" : "قايتا نىشانلاش",
     "The link leads to %s" : "ئۇلىنىش% s نى كەلتۈرۈپ چىقىرىدۇ",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ئەگەر ئۇ بەتنى زىيارەت قىلىشنى خالىمىسىڭىز ، <a href = \"% s\"> خەت </a> گە قايتسىڭىز بولىدۇ.",
-    "Continue to %s" : "داۋاملىق% s"
+    "Continue to %s" : "داۋاملىق% s",
+    "Mailvelope is enabled for the current domain!" : "خەت ساندۇقى نۆۋەتتىكى دائىرە ئۈچۈن قوزغىتىلدى!",
+    "Looking for a way to encrypt your emails?" : "ئېلېكترونلۇق خەتلىرىڭىزنى مەخپىيلەشتۈرۈشنىڭ يولىنى ئىزدەۋاتامسىز؟",
+    "Enable Mailvelope for the current domain" : "نۆۋەتتىكى دائىرە ئۈچۈن Mailvelope نى قوزغىتىڭ"
 },
 "nplurals=2; plural=(n != 1);");

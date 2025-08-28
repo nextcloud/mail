@@ -95,8 +95,6 @@ OC.L10N.register(
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Salli sovelluksen kerätä tietoa vuorovaikutuksestasi. Tämän tiedon perusteella sovellus sopeutuu mieltymyksiisi. Nämä tiedot talletetaan vain paikallisesti.",
     "Trusted senders" : "Luotetut lähettäjät",
     "Manage S/MIME certificates" : "Hallitse S/MIME-varmenteita",
-    "Looking for a way to encrypt your emails?" : "Etsitkö tapaa salata sähköpostisi?",
-    "Install Mailvelope browser extension" : "Asenna Mailvelope-selainlaajennus",
     "About" : "Tietoja",
     "Keyboard shortcuts" : "Pikanäppäimet",
     "Compose new message" : "Uusi viesti",
@@ -503,6 +501,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klikkaa jos sinua ei uudelleenohjata automaattisesti muutamaan sekuntiin.",
     "Redirect" : "Uudelleenohjaus",
     "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
-    "Continue to %s" : "Jatka sivulle %s"
+    "Continue to %s" : "Jatka sivulle %s",
+    "Looking for a way to encrypt your emails?" : "Etsitkö tapaa salata sähköpostisi?",
+    "Install Mailvelope browser extension" : "Asenna Mailvelope-selainlaajennus"
 },
 "nplurals=2; plural=(n != 1);");
