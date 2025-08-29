@@ -1,3 +1,27 @@
+# [5.4.0-beta.2](https://github.com/nextcloud/mail/compare/v5.4.0-beta.1...v5.4.0-beta.2) (2025-08-29)
+
+
+### Bug Fixes
+
+* **ai-integration:** set the language explicitly for message summary ([d57f266](https://github.com/nextcloud/mail/commit/d57f266d2db4fe620fe062c4f7fec1f39dc1609a))
+* **deps:** bump sha.js from 2.4.11 to 2.4.12 ([04f4729](https://github.com/nextcloud/mail/commit/04f47297a6842b69a9e00de5a1c03791188150f7))
+* **EnvelopeSkeleton:** make action hover area square again ([6f21644](https://github.com/nextcloud/mail/commit/6f2164499efeb376cd1bddbd4ef52783cb0829b4))
+* imip cancelled icon should be filled ([44dbfba](https://github.com/nextcloud/mail/commit/44dbfba385adfa1190168fa460cd12a9db4c06e1))
+* **l10n:** Update translations from Transifex ([b03acca](https://github.com/nextcloud/mail/commit/b03accaa45f5defa32f3a1ddc99192b88d88c52a))
+* **l10n:** Update translations from Transifex ([f248e74](https://github.com/nextcloud/mail/commit/f248e74b19ee5b3faea93ac486d37b55aef9e4df))
+* **l10n:** Update translations from Transifex ([e86ac61](https://github.com/nextcloud/mail/commit/e86ac61ae993516131a6f35cce61c29274bd3049))
+* **l10n:** Update translations from Transifex ([2b19fb1](https://github.com/nextcloud/mail/commit/2b19fb17b411a401686fa3bad1a17b1fd2628806))
+* **l10n:** Update translations from Transifex ([6cacb2c](https://github.com/nextcloud/mail/commit/6cacb2ccd7b0c04eb9cea0a2737debbca8f0a153))
+* **l10n:** Update translations from Transifex ([88cdf4f](https://github.com/nextcloud/mail/commit/88cdf4f7c9b7d2d3c88254f84c8d980072c1db5b))
+* **l10n:** Update translations from Transifex ([80d6199](https://github.com/nextcloud/mail/commit/80d6199f3b919e860a28843aa8f1bb91c37460d4))
+* **l10n:** Update translations from Transifex ([fc8f96b](https://github.com/nextcloud/mail/commit/fc8f96b30c921a595324e379ead1c74e2756e998))
+* reply buttons spacing ([0e26905](https://github.com/nextcloud/mail/commit/0e2690583328ac53597843845b3ec0b954475911))
+* **settings:** add missing mail settings heading ([6241e5b](https://github.com/nextcloud/mail/commit/6241e5bc0322e29243c5c38cc7a5bb068f7d03a4))
+* thread heading alignment and participants ([99e47cd](https://github.com/nextcloud/mail/commit/99e47cdc4cc6117bbe59007856cfd43f030bbb0a))
+* **ui:** replace download/upload icons with tray icons ([897f904](https://github.com/nextcloud/mail/commit/897f904f31629ab0808f0994cfe1f0bb89b2fc9f))
+
+
+
 # [5.4.0-beta.1](https://github.com/nextcloud/mail/compare/v5.4.0-beta.0...v5.4.0-beta.1) (2025-08-21)
 
 
