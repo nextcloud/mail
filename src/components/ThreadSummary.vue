@@ -6,9 +6,18 @@
 	<div class="summary">
 		<div class="summary__header">
 			<div class="summary__header__actions">
-				<NcChip :icon-svg="creation" no-close>
-					{{ brand }}
-				</NcChip>
+				<div class="summary__header__info">
+					<NcIconSvgWrapper :size="20" :svg="creation" name="creation" />
+					<div class="summary__header__text">
+						<div class="summary__header__title">
+							{{ t('mail', 'Thread summary') }}
+						</div>
+						<div class="summary__header__brand">
+							{{ brand }}
+						</div>
+					</div>
+				</div>
+
 				<NcButton :aria-label=" t('mail', 'Go to latest message')"
 					type="secondary"
 					@click="onScroll">
@@ -18,9 +27,6 @@
 					</template>
 				</NcButton>
 			</div>
-			<div class="summary__header__title">
-				<h2>{{ t('mail', 'Thread summary') }}</h2>
-			</div>
 		</div>
 		<div class="summary__body">
 			<LoadingSkeleton v-if="loading" :number-of-lines="1" :with-avatar="false" />
@@ -28,13 +34,16 @@
 				{{ summary }}
 			</p>
 		</div>
+		<div class="summary__notice">
+			{{ t('mail', 'This summary is AI generated and may contain mistakes.') }}
+		</div>
 	</div>
 </template>
 <script>
 import ArrowDownIcon from 'vue-material-design-icons/ArrowDown.vue'
-import creation from '@mdi/svg/svg/creation-outline.svg'
+import creation from '../../img/creation-gradient.svg?raw'
 import NcButton from '@nextcloud/vue/components/NcButton'
-import NcChip from '@nextcloud/vue/components/NcChip'
+import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import LoadingSkeleton from './LoadingSkeleton.vue'
 
 export default {
@@ -42,7 +51,7 @@ export default {
 	components: {
 		LoadingSkeleton,
 		NcButton,
-		NcChip,
+		NcIconSvgWrapper,
 		ArrowDownIcon,
 	},
 	props: {
@@ -81,47 +90,89 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.summary{
-    border: 2px solid var(--color-primary-element);
-    border-radius:var( --border-radius-large) ;
-    margin: 0 10px 20px 10px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
+.summary {
+	position: relative;
+	border-radius: var(--border-radius-large);
+	margin: 0 10px 20px 10px;
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	background: #f6f5ff;
 
-    &__header{
-        display: flex;
-        flex-direction: column;
-        &__actions{
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		padding: 2px;
+		border-radius: inherit;
+		background: linear-gradient(120deg, #7398FE 50%, #6104A4 125%);
+
+		-webkit-mask:
+			linear-gradient(#fff 0 0) content-box,
+			linear-gradient(#fff 0 0);
+		-webkit-mask-composite: xor;
+		mask-composite: exclude;
+		pointer-events: none;
+	}
+	&__header {
+		display: flex;
+		flex-direction: column;
+
+		&__actions {
 			display: flex;
 			justify-content: space-between;
-            &__brand{
-                display: flex;
-                align-items: center;
-                background-color: var(--color-primary-light);
-                border-radius: var(--border-radius-pill);
-                width: fit-content;
-                padding-inline: 4px 10px;
-				margin: 8px 0 8px 0;
+			align-items: center;
+			padding-bottom: 10px;
+		}
 
-                &__icon{
-                    color:var(--color-primary-element);
-                    margin-inline: 5px
-                }
-            }
-        }
+		&__info {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
 
-    }
+		&__text {
+			display: flex;
+			flex-direction: column;
+			line-height: 1.2;
+		}
+
+		&__title {
+			font-weight: bold;
+		}
+
+		&__brand {
+			color:var(--color-text-maxcontrast)
+		}
+	}
+	&__body {
+		margin-left: 40px;
+	}
 	@media only screen and (max-width: 600px) {
-		.summary{
-			&__header{
+		.summary {
+			&__header {
 				flex-direction: column;
-				&__actions{
+				&__actions {
 					flex-direction: column;
 				}
 			}
 		}
 	}
+	.summary__notice {
+		margin-top: 0.5rem;
+		margin-left: 40px;
+		color: var(--color-text-maxcontrast);
+	}
+}
+@media (prefers-color-scheme: dark) {
+	body[data-theme-default] .summary {
+		background: linear-gradient(#221D2B) padding-box,
+		linear-gradient(125deg, #0C3A65 50%, #6204A5 125%) border-box;
+	}
+}
+body[data-theme-dark] .summary {
+	background: linear-gradient(#221D2B) padding-box,
+	linear-gradient(125deg, #0C3A65 50%, #6204A5 125%) border-box;
 }
 
 </style>
