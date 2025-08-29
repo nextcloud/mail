@@ -5,18 +5,20 @@
 <template>
 	<NcContent app-name="mail">
 		<Navigation v-if="hasAccounts" />
-		<AppContent class="container">
-			<div v-if="allowNewMailAccounts">
-				<EmptyContent :name="t('mail', 'Connect your mail account')">
-					<template #icon>
-						<IconMail />
-					</template>
-				</EmptyContent>
-				<AccountForm :display-name="displayName"
-					:email="email"
-					:error.sync="error"
-					@account-created="onAccountCreated" />
-			</div>
+		<AppContent>
+			<EmptyContent v-if="allowNewMailAccounts"
+				class="setup__form-content"
+				:name="t('mail', 'Connect your mail account')">
+				<template #icon>
+					<div class="setup__form-content__svg-wrapper" v-html="FluidMail" />
+				</template>
+				<template #action>
+					<AccountForm :display-name="displayName"
+						:email="email"
+						:error.sync="error"
+						@account-created="onAccountCreated" />
+				</template>
+			</EmptyContent>
 			<EmptyContent v-else :name="t('mail', 'To add a mail account, please contact your administrator.')">
 				<template #icon>
 					<IconMail />
@@ -31,7 +33,7 @@ import { NcContent, NcAppContent as AppContent, NcEmptyContent as EmptyContent }
 import { loadState } from '@nextcloud/initial-state'
 
 import AccountForm from '../components/AccountForm.vue'
-import IconMail from 'vue-material-design-icons/Email.vue'
+import FluidMail from '../../img/mail-fluid.svg'
 import Navigation from '../components/Navigation.vue'
 import logger from '../logger.js'
 import { mapStores } from 'pinia'
@@ -44,13 +46,13 @@ export default {
 		AccountForm,
 		NcContent,
 		EmptyContent,
-		IconMail,
 		Navigation,
 	},
 	data() {
 		return {
 			displayName: loadState('mail', 'prefill_displayName'),
 			email: loadState('mail', 'prefill_email'),
+			FluidMail,
 			allowNewMailAccounts: loadState('mail', 'allow-new-accounts', true),
 			error: null,
 		}
@@ -72,9 +74,28 @@ export default {
 }
 </script>
 
-<style>
-.container{
- display: flex;
- justify-content: center;
+<style scoped>
+.setup__form-content {
+	min-height: 100%;
 }
+
+/* overrides for custom icon size and full opacity */
+:deep(.empty-content__icon) {
+	width: 128px !important;
+	height: 128px !important;
+	opacity: 1 !important;
+
+	.setup__form-content__svg-wrapper {
+		width: 128px;
+		height: 128px;
+	}
+
+	:deep(svg) {
+		width: 128px !important;
+		height: 128px !important;
+		max-width: 128px !important;
+		max-height: 128px !important;
+	}
+}
+
 </style>
