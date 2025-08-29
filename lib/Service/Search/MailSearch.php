@@ -15,7 +15,6 @@ use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
-use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
@@ -68,29 +67,17 @@ class MailSearch implements IMailSearch {
 		return $processed[0];
 	}
 
-	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 * @param string $sortOrder
-	 * @param string|null $filter
-	 * @param int|null $cursor
-	 * @param int|null $limit
-	 * @param string|null $view
-	 *
-	 * @return Message[]
-	 *
-	 * @throws ClientException
-	 * @throws ServiceException
-	 */
 	#[\Override]
-	public function findMessages(Account $account,
+	public function findMessages(
+		Account $account,
 		Mailbox $mailbox,
 		string $sortOrder,
 		?string $filter,
 		?int $cursor,
 		?int $limit,
 		?string $userId,
-		?string $view): array {
+		?string $view,
+	): array {
 		if ($mailbox->hasLocks($this->timeFactory->getTime())) {
 			throw MailboxLockedException::from($mailbox);
 		}
@@ -114,13 +101,30 @@ class MailSearch implements IMailSearch {
 			$query->addFlag(Flag::not(Flag::DELETED));
 		}
 
+		// Need to search IMAP if the user requested to search in email bodies (since they are not
+		// cached locally)
+		$fromImap = null;
+		if (!empty($query->getBodies())) {
+			$fromImap = $this->imapSearchProvider->findMatches(
+				$account,
+				$mailbox,
+				$query
+			);
+		}
+
+		$messages = $this->messageMapper->findByQuery(
+			$mailbox,
+			$userId ?? $account->getUserId(),
+			$query,
+			$sortOrder,
+			$limit,
+			$fromImap,
+		);
+
 		return $this->previewEnhancer->process(
 			$account,
 			$mailbox,
-			$this->messageMapper->findByIds($account->getUserId(),
-				$this->getIdsLocally($account, $mailbox, $query, $sortOrder, $limit),
-				$sortOrder,
-			),
+			$messages,
 			true,
 			$userId
 		);
@@ -142,24 +146,6 @@ class MailSearch implements IMailSearch {
 			$this->getIdsGlobally($user, $query, $limit),
 			'DESC'
 		);
-	}
-
-	/**
-	 * We combine local flag and headers merge with UIDs that match the body search if necessary
-	 *
-	 * @throws ServiceException
-	 */
-	private function getIdsLocally(Account $account, Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit): array {
-		if (empty($query->getBodies())) {
-			return $this->messageMapper->findIdsByQuery($mailbox, $query, $sortOrder, $limit);
-		}
-
-		$fromImap = $this->imapSearchProvider->findMatches(
-			$account,
-			$mailbox,
-			$query
-		);
-		return $this->messageMapper->findIdsByQuery($mailbox, $query, $sortOrder, $limit, $fromImap);
 	}
 
 	/**
