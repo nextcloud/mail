@@ -652,7 +652,7 @@
     "Operator" : "İşlem",
     "If all the conditions are met, the actions will be performed" : "Tüm koşullar karşılanıyorsa işlemler yapılacak",
     "If any of the conditions are met, the actions will be performed" : "Koşullardan biri karşılanıyorsa işlemler yapılacak",
-    "is exactly" : "tam olarak",
+    "is exactly" : "tam olarak şu olan",
     "contains" : "şunu içeren",
     "matches" : "şuna uyan",
     "Delete test" : "Sınamayı sil",
