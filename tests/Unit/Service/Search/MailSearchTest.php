@@ -139,7 +139,7 @@ class MailSearchTest extends TestCase {
 			->with('my search')
 			->willReturn($query);
 		$this->messageMapper->expects($this->once())
-			->method('findByIds')
+			->method('findByQuery')
 			->willReturn([
 				$this->createMock(Message::class),
 				$this->createMock(Message::class),
@@ -185,7 +185,7 @@ class MailSearchTest extends TestCase {
 			->with($account, $mailbox, $query)
 			->willReturn([2, 3]);
 		$this->messageMapper->expects($this->once())
-			->method('findByIds')
+			->method('findByQuery')
 			->willReturn([
 				$this->createMock(Message::class),
 				$this->createMock(Message::class),
