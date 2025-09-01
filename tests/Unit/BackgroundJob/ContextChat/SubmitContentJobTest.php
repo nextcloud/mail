@@ -26,6 +26,7 @@ use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ContextChat\TaskService;
 use OCA\Mail\Service\MailManager;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\ContextChat\IContentManager;
@@ -142,6 +143,13 @@ class SubmitContentJobTest extends TestCase {
 				0,
 				// returned on first message
 				0,
+				0,
+				0,
+				0,
+				0,
+				0,
+				0,
+				0,
 			);
 		$this->messageMapper->expects($this->once())->method('findIdsAfter')
 			->with($mailbox, 0, 0, ContextChatProvider::CONTEXT_CHAT_IMPORT_MAX_ITEMS)->willReturn([2]);
@@ -191,6 +199,10 @@ class SubmitContentJobTest extends TestCase {
 				12 * 60 * 60,
 				12 * 60 * 60,
 				// returned when filtering messages
+				ContextChatProvider::CONTEXT_CHAT_MESSAGE_MAX_AGE,
+				ContextChatProvider::CONTEXT_CHAT_MESSAGE_MAX_AGE,
+				ContextChatProvider::CONTEXT_CHAT_MESSAGE_MAX_AGE,
+				ContextChatProvider::CONTEXT_CHAT_MESSAGE_MAX_AGE,
 				ContextChatProvider::CONTEXT_CHAT_MESSAGE_MAX_AGE
 			);
 		$this->messageMapper->expects($this->once())->method('findIdsAfter')
@@ -225,7 +237,12 @@ class SubmitContentJobTest extends TestCase {
 				// returned before processing messages
 				0,
 				// returned on first message -- will prevent message from being processed
-				ContextChatProvider::CONTEXT_CHAT_JOB_INTERVAL + 100);
+				ContextChatProvider::CONTEXT_CHAT_JOB_INTERVAL + 100,
+				ContextChatProvider::CONTEXT_CHAT_JOB_INTERVAL + 100,
+				ContextChatProvider::CONTEXT_CHAT_JOB_INTERVAL + 100,
+				ContextChatProvider::CONTEXT_CHAT_JOB_INTERVAL + 100,
+				ContextChatProvider::CONTEXT_CHAT_JOB_INTERVAL + 100
+			);
 		$this->messageMapper->expects($this->once())->method('findIdsAfter')
 			->with($mailbox, 0, 0, ContextChatProvider::CONTEXT_CHAT_IMPORT_MAX_ITEMS)->willReturn([1]);
 		$account = $this->createMock(Account::class);
@@ -266,6 +283,9 @@ class SubmitContentJobTest extends TestCase {
 				0,
 				// returned on first message
 				0,
+				0,
+				0,
+				0,
 			);
 		$this->messageMapper->expects($this->once())->method('findIdsAfter')
 			->with($mailbox, 0, 0, ContextChatProvider::CONTEXT_CHAT_IMPORT_MAX_ITEMS)->willReturn([1]);
@@ -283,6 +303,82 @@ class SubmitContentJobTest extends TestCase {
 		$imapMessage->expects($this->once())->method('isEncrypted')->willReturn(true);
 		$imapMessage->expects($this->never())->method('getFullMessage');
 		$client->expects($this->once())->method('close');
+
+		$this->submitContentJob->setLastRun(0);
+		$this->submitContentJob->start($this->createMock(IJobList::class));
+	}
+
+	public function testRunWithContextChatWithFindNextTaskException(): void {
+		$this->contentManager->expects($this->once())
+			->method('isContextChatAvailable')
+			->willReturn(true);
+
+		$this->time->expects($this->any())->method('getTime')->willReturn(60 * 60 * 12);
+
+		$this->taskService->expects($this->once())->method('findNext')->willThrowException(new \OCP\DB\Exception('An error'));
+		$this->contentManager->expects($this->never())->method('submitContent');
+		$this->imapClientFactory->expects($this->never())->method('getClient');
+
+		$this->submitContentJob->setLastRun(0);
+		$this->submitContentJob->start($this->createMock(IJobList::class));
+	}
+
+	public function testRunWithContextChatWithFindNextTaskException2(): void {
+		$this->contentManager->expects($this->once())
+			->method('isContextChatAvailable')
+			->willReturn(true);
+
+		$this->time->expects($this->any())->method('getTime')->willReturn(60 * 60 * 12);
+
+		$this->taskService->expects($this->once())->method('findNext')->willThrowException(new DoesNotExistException('ERROR'));
+		$this->contentManager->expects($this->never())->method('submitContent');
+		$this->imapClientFactory->expects($this->never())->method('getClient');
+
+		$this->submitContentJob->setLastRun(0);
+		$this->submitContentJob->start($this->createMock(IJobList::class));
+	}
+
+	public function testRunWithContextChatWithFindByIdException1(): void {
+		$this->contentManager->expects($this->once())
+			->method('isContextChatAvailable')
+			->willReturn(true);
+
+		$this->time->expects($this->any())->method('getTime')->willReturn(60 * 60 * 12);
+
+		$task = new Task();
+		$task->setLastMessageId(0);
+		$task->setMailboxId(1);
+		$task->setId(1);
+		$this->taskService->expects($this->once())->method('findNext')->willReturn($task);
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$mailbox->setAccountId(5);
+		$this->mailboxMapper->expects($this->once())->method('findById')->willThrowException(new \OCA\Mail\Exception\ServiceException());
+		$this->contentManager->expects($this->never())->method('submitContent');
+		$this->imapClientFactory->expects($this->never())->method('getClient');
+
+		$this->submitContentJob->setLastRun(0);
+		$this->submitContentJob->start($this->createMock(IJobList::class));
+	}
+
+	public function testRunWithContextChatWithFindByIdException2(): void {
+		$this->contentManager->expects($this->once())
+			->method('isContextChatAvailable')
+			->willReturn(true);
+
+		$this->time->expects($this->any())->method('getTime')->willReturn(60 * 60 * 12);
+
+		$task = new Task();
+		$task->setLastMessageId(0);
+		$task->setMailboxId(1);
+		$task->setId(1);
+		$this->taskService->expects($this->once())->method('findNext')->willReturn($task);
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$mailbox->setAccountId(5);
+		$this->mailboxMapper->expects($this->once())->method('findById')->willThrowException(new DoesNotExistException('ERROR'));
+		$this->contentManager->expects($this->never())->method('submitContent');
+		$this->imapClientFactory->expects($this->never())->method('getClient');
 
 		$this->submitContentJob->setLastRun(0);
 		$this->submitContentJob->start($this->createMock(IJobList::class));
