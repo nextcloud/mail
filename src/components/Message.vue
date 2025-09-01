@@ -223,6 +223,10 @@ export default {
 		margin-inline-start: auto;
 	}
 }
+body[data-theme-dark] .reply-buttons__suggested__button {
+	background: linear-gradient(#221D2B) padding-box,
+	linear-gradient(125deg, #0C3A65 50%, #6204A5 125%) border-box;
+}
 
 @media screen and (max-width: 600px) {
 	.reply-buttons {
@@ -240,11 +244,5 @@ export default {
 			margin-inline-start: 0;
 		}
 	}
-}
-</style>
-<style>
-body[data-theme-dark] .reply-buttons__suggested__button {
-	background: linear-gradient(#221D2B) padding-box,
-	linear-gradient(125deg, #0C3A65 50%, #6204A5 125%) border-box;
 }
 </style>
