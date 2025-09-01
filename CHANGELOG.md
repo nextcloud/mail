@@ -1,3 +1,14 @@
+# [5.4.0-rc.0](https://github.com/nextcloud/mail/compare/v5.4.0-beta.2...v5.4.0-rc.0) (2025-09-01)
+
+
+### Bug Fixes
+
+* **l10n:** Update translations from Transifex ([9bb0231](https://github.com/nextcloud/mail/commit/9bb02313ae4f42ebd22923c3f3ccf2e39b31605c))
+* **l10n:** Update translations from Transifex ([6ff4cb6](https://github.com/nextcloud/mail/commit/6ff4cb61ca3830fae4fbf0e019bd0025b1155326))
+* **ui:** adapt setup page to fluid logo ([d838931](https://github.com/nextcloud/mail/commit/d8389312386ac1947288b24f90670d9424af9cfd))
+
+
+
 # [5.4.0-beta.2](https://github.com/nextcloud/mail/compare/v5.4.0-beta.1...v5.4.0-beta.2) (2025-08-29)
 
 
