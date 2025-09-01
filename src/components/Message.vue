@@ -47,6 +47,7 @@
 				<NcButton v-for="(reply,index) in smartReplies"
 					:key="index"
 					class="reply-buttons__suggested__button"
+					:class="{ 'reply-buttons__suggested__button--dark': isDarkTheme }"
 					type="secondary"
 					@click="onReply(reply)">
 					{{ reply }}
@@ -81,6 +82,7 @@ import LockOffIcon from 'vue-material-design-icons/LockOffOutline.vue'
 import ReplyIcon from 'vue-material-design-icons/ReplyOutline.vue'
 import { mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
+import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
 
 export default {
 	name: 'Message',
@@ -119,6 +121,13 @@ export default {
 			required: true,
 			type: String,
 		},
+	},
+	setup() {
+		const isDarkTheme = useIsDarkTheme()
+
+		return {
+			isDarkTheme,
+		}
 	},
 	computed: {
 		...mapStores(useMainStore),
@@ -204,6 +213,10 @@ export default {
 				font-weight: normal;
 			}
 		}
+		&--dark {
+			background: linear-gradient(#221D2B) padding-box,
+			linear-gradient(125deg, #0C3A65 50%, #6204A5 125%) border-box;
+		}
 	}
 
 	&__notsuggested {
@@ -230,13 +243,6 @@ export default {
 }
 </style>
 <style>
-@media (prefers-color-scheme: dark) {
-	body[data-theme-default] .reply-buttons__suggested__button {
-		background: linear-gradient(#221D2B) padding-box,
-		linear-gradient(125deg, #0C3A65 50%, #6204A5 125%) border-box;
-	}
-}
-
 body[data-theme-dark] .reply-buttons__suggested__button {
 	background: linear-gradient(#221D2B) padding-box,
 	linear-gradient(125deg, #0C3A65 50%, #6204A5 125%) border-box;
