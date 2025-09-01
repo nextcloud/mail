@@ -123,11 +123,9 @@ export default {
 		},
 	},
 	setup() {
-		const isDarkTheme = useIsDarkTheme()
-
 		return {
-			isDarkTheme,
-		}
+			isDarkTheme: useIsDarkTheme(),
+	}
 	},
 	computed: {
 		...mapStores(useMainStore),
