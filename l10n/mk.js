@@ -230,6 +230,7 @@ OC.L10N.register(
     "All day" : "Цели денови",
     "Attendees" : "Присутни",
     "Select calendar" : "Избери календар",
+    "Description" : "Опис",
     "Create" : "Креирај",
     "This event was updated" : "Овој настан беше ажуриран",
     "{attendeeName} accepted your invitation" : "{attendeeName} ја прифати вашата покана",
