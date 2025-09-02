@@ -360,8 +360,8 @@ export default {
 
 	watch: {
 		sortedEnvelops(newVal, oldVal) {
-			const newEnvs = Object.values(newVal).map(thread => Object.values(thread)[0])
-			const oldEnvs = Object.values(oldVal).map(thread => Object.values(thread)[0])
+			const newEnvs = Object.values(newVal).map((thread) => Object.values(thread)[0])
+			const oldEnvs = Object.values(oldVal).map((thread) => Object.values(thread)[0])
 			// Unselect vanished envelopes
 			const newIds = newEnvs.map((env) => env.databaseId)
 			this.selection = this.selection.filter((id) => newIds.includes(id))

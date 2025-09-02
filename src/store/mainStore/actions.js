@@ -2124,8 +2124,8 @@ export default function mainStoreActions() {
 		},
 		removeEnvelopeMutation({ id }) {
 			const envelope = Object.values(this.envelopes)
-				.flatMap(envList => Object.values(envList))
-				.find(env => env.databaseId === id)
+				.flatMap((envList) => Object.values(envList))
+				.find((env) => env.databaseId === id)
 			if (!envelope) {
 				console.warn('envelope ' + id + ' is unknown, can\'t remove it')
 				return

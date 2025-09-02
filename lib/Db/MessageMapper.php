@@ -1265,33 +1265,54 @@ class MessageMapper extends QBMapper {
 			return [];
 		}
 
+		$base = $this->findByMailboxAndIds($mailbox, $userId, $ids, $sortOrder);
+		if ($threadingEnabled === false) {
+			return array_map(static fn (Message $m) => [$m], $base);
+		}
+
+		$threadRoots = array_unique(
+			array_map(static fn (Message $m) => $m->getThreadRootId(), $base)
+		);
+
+		$allThreadMsgs = [];
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
 			->where(
-				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailbox->getId()), IQueryBuilder::PARAM_INT),
-				$qb->expr()->in('id', $qb->createParameter('ids'))
+				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
+				$qb->expr()->in('thread_root_id', $qb->createParameter('roots')),
+				$qb->expr()->notIn('id', $qb->createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY))
 			)
 			->orderBy('sent_at', $sortOrder);
-		$results = [];
-		foreach (array_chunk($ids, 1000) as $chunk) {
-			$qb->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			if ($threadingEnabled) {
-				$res = $qb->executeQuery();
-				while ($row = $res->fetch()) {
-					$message = $this->mapRowToEntity($row);
-					if ($message->getThreadRootId() === null) {
-						$results[] = [$message];
-					} else {
-						$results[] = $this->findThread($account, $message->getThreadRootId(), $sortOrder);
-					}
-				}
-				$res->closeCursor();
-			} else {
-				$results[] = array_map(fn (Message $msg) => [$msg], $this->findRelatedData($this->findEntities($qb), $userId));
+		foreach (array_chunk($threadRoots, 1000) as $chunk) {
+			$qb->setParameter('roots', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
+			$allThreadMsgs[] = $this->findEntities($qb);
+		}
+		$allThreadMsgs = array_merge($base, ...$allThreadMsgs);
+
+		$enriched = $this->findRelatedData(array_values($allThreadMsgs), $userId);
+
+		$groups = [];
+		foreach ($enriched as $m) {
+			$root = $m->getThreadRootId();
+			$groups[$root][] = $m;
+		}
+
+		$orderKeys = [];
+		foreach ($base as $m) {
+			$key = $m->getThreadRootId();
+			if (!isset($orderKeys[$key])) {
+				$orderKeys[$key] = true;
 			}
 		}
-		return $threadingEnabled ? $results : array_merge([], ...$results);
+
+		$out = [];
+		foreach (array_keys($orderKeys) as $k) {
+			if (isset($groups[$k])) {
+				$out[] = $groups[$k];
+			}
+		}
+		return $out;
 	}
 
 	/**
@@ -1334,33 +1355,55 @@ class MessageMapper extends QBMapper {
 		if ($ids === []) {
 			return [];
 		}
-		$qb = $this->db->getQueryBuilder();
-		$qb->select('*')
-			->from($this->getTableName())
-			->where(
-				$qb->expr()->in('id', $qb->createParameter('ids'))
-			)
-			->orderBy('sent_at', $sortOrder);
 
-		$results = [];
-		foreach (array_chunk($ids, 1000) as $chunk) {
-			$qb->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			if ($threadingEnabled) {
-				$res = $qb->executeQuery();
-				while ($row = $res->fetch()) {
-					$message = $this->mapRowToEntity($row);
-					if ($message->getThreadRootId() === null) {
-						$results[] = [$message];
-					} else {
-						$results[] = $this->findThread($account, $message->getThreadRootId(), $sortOrder);
-					}
-				}
-				$res->closeCursor();
-			} else {
-				$results[] = array_map(fn (Message $msg) => [$msg], $this->findRelatedData($this->findEntities($qb), $userId));
+		$base = $this->findByIds($userId, $ids, $sortOrder);
+
+		if ($threadingEnabled === false) {
+			return array_map(static fn (Message $m) => [$m], $base);
+		}
+
+		$threadRoots = array_unique(
+			array_map(static fn (Message $m) => $m->getThreadRootId(), $base)
+		);
+
+		$allThreadMsgs = [];
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('m.*')
+			->from($this->getTableName(), 'm')
+			->join('m', 'mail_mailboxes', 'mb', $qb->expr()->eq('m.mailbox_id', 'mb.id', IQueryBuilder::PARAM_INT))
+			->where(
+				$qb->expr()->eq('mb.account_id', $qb->createNamedParameter($account->getId(), IQueryBuilder::PARAM_INT)),
+				$qb->expr()->in('m.thread_root_id', $qb->createParameter('roots')),
+				$qb->expr()->notIn('m.id', $qb->createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY))
+			)
+			->orderBy('m.sent_at', $sortOrder);
+		foreach (array_chunk($threadRoots, 1000) as $chunk) {
+			$qb->setParameter('roots', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
+			$allThreadMsgs[] = $this->findEntities($qb);
+		}
+		$allThreadMsgs = array_merge($base, ...$allThreadMsgs);
+
+		$enriched = $this->findRelatedData(array_values($allThreadMsgs), $userId);
+		$groups = [];
+		foreach ($enriched as $m) {
+			$root = $m->getThreadRootId();
+			$groups[$root][] = $m;
+		}
+		$orderKeys = [];
+		foreach ($base as $m) {
+			$key = $m->getThreadRootId();
+			if (!isset($orderKeys[$key])) {
+				$orderKeys[$key] = true;
 			}
 		}
-		return $threadingEnabled ? $results : array_merge([], ...$results);
+
+		$out = [];
+		foreach (array_keys($orderKeys) as $k) {
+			if (isset($groups[$k])) {
+				$out[] = $groups[$k];
+			}
+		}
+		return $out;
 	}
 
 	/**
