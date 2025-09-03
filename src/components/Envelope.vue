@@ -83,7 +83,7 @@
 				<div v-if="data.encrypted || data.previewText"
 					class="envelope__preview-text"
 					:title="data.summary ? t('mail', 'This summary was AI generated') : null">
-					<SparkleIcon v-if="data.summary" :size="15" />
+					<NcAssistantIcon v-if="data.summary" :size="15" class="envelope__preview-text__icon" />
 					{{ isEncrypted ? t('mail', 'Encrypted message') : data.summary ? data.summary.trim() : data.previewText.trim() }}
 				</div>
 				<EnvelopeSingleClickActions v-if="oneLineLayout"
@@ -357,13 +357,12 @@ import {
 	NcActionLink as ActionLink,
 	NcActionSeparator,
 	NcActionInput,
-	NcActionText as ActionText,
+	NcActionText as ActionText, NcAssistantIcon,
 } from '@nextcloud/vue'
 import EnvelopeSkeleton from './EnvelopeSkeleton.vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import Avatar from './Avatar.vue'
 import IconCreateEvent from 'vue-material-design-icons/CalendarOutline.vue'
-import SparkleIcon from 'vue-material-design-icons/CreationOutline.vue'
 import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline.vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
@@ -437,7 +436,6 @@ export default {
 		PlusIcon,
 		TagIcon,
 		TagModal,
-		SparkleIcon,
 		Star,
 		StarOutline,
 		EmailRead,
@@ -454,6 +452,7 @@ export default {
 		CalendarClock,
 		EnvelopeSingleClickActions,
 		AlarmIcon,
+		NcAssistantIcon,
 	},
 	directives: {
 		draggableEnvelope: DraggableEnvelopeDirective,
@@ -1013,6 +1012,9 @@ export default {
 
 			position: relative;
 			top: 2px;
+		}
+		&__icon {
+			display: inline;
 		}
 	}
 }
