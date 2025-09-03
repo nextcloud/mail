@@ -519,6 +519,8 @@ return [
 		'smimeCertificates' => ['url' => '/api/smime/certificates'],
 		'textBlock' => ['url' => '/api/textBlocks'],
 		'textBlockShares' => ['url' => '/api/textBlockshares'],
+		'quickActions' => ['url' => '/api/quickActions'],
+		'actionStep' => ['url' => '/api/actionStep'],
 	],
 	'ocs' => [
 		[
