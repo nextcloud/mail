@@ -2,6 +2,7 @@
     "Personal" : "Udmawan",
     "Mail" : "Tirawt",
     "Save" : "Sekles",
+    "Connect" : "Qqen",
     "Name" : "Nom",
     "Password" : "Awal uffir",
     "None" : "Ula d yiwen",
@@ -9,6 +10,7 @@
     "Cancel" : "Sefsex",
     "Accounts" : "Imiḍanen",
     "General" : "Amatu",
+    "List" : "Tabdart",
     "About" : "Γef",
     "Delete" : "Kkes",
     "Search" : "Nadi",
@@ -38,13 +40,17 @@
     "Copy to clipboard" : "Copier dans le presse-papiers",
     "Add" : "Rnu",
     "Close" : "Mdel",
+    "Date" : "Azemz",
     "Tags" : "Tibzimin",
+    "Translate from" : "Suqel seg",
+    "Translate to" : "Suqel ar",
     "User" : "Aseqdac",
     "Guest" : "Inebgi",
     "Group" : "Agraw",
     "All" : "Akk",
     "Favorites" : "Imenyafen",
     "Inbox" : "Tanaka",
+    "Nextcloud Mail" : "Imayl n Nextcloud",
     "Message sent" : "Izen yettwazen"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
