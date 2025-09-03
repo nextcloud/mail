@@ -62,7 +62,7 @@
     "@nextcloud/router": "^3.0.1",
     "@nextcloud/sharing": "^0.2.5",
     "@nextcloud/timezones": "^0.2.0",
-    "@nextcloud/vue": "^8.28.0",
+    "@nextcloud/vue": "^8.30.0",
     "@pinia/testing": "^0.1.7",
     "@riophae/vue-treeselect": "^0.4.0",
     "@vue/babel-preset-app": "^5.0.8",
