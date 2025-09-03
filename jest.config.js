@@ -4,7 +4,7 @@
  */
 module.exports = {
 	preset: 'ts-jest',
-	testEnvironment: 'jest-environment-jsdom',
+	testEnvironment: './src/tests/jsdom-structured-clone-env.js',
 	moduleFileExtensions: [
 		'js',
 		'jsx',
