@@ -116,6 +116,7 @@ import uniq from 'lodash/fp/uniq.js'
 import Vue from 'vue'
 
 import { sortMailboxes } from '../../imap/MailboxSorter.js'
+import { createQuickAction, deleteQuickAction, updateQuickAction } from '../../service/QuickActionsService.js'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -1810,6 +1811,20 @@ export default function mainStoreActions() {
 		async patchTextBlock(textBlock) {
 			const result = await updateTextBlock(textBlock)
 			this.patchTextBlockLocally(result)
+		},
+		async createQuickAction(name, accountId) {
+			const quickAction = await createQuickAction(name, accountId)
+			this.addQuickActionLocally(quickAction)
+			return quickAction
+		},
+		async deleteQuickAction(id) {
+			await deleteQuickAction(id)
+			this.deleteQuickActionLocally(id)
+		},
+		async patchQuickAction(id, name) {
+			const quickAction = await updateQuickAction(id, name)
+			this.patchQuickActionLocally(quickAction)
+			return quickAction
 		},
 		sortAccounts(accounts) {
 			accounts.sort((a1, a2) => a1.order - a2.order)
