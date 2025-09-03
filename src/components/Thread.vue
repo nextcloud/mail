@@ -554,6 +554,8 @@ export default {
 <style lang="scss">
 #mail-message {
 	margin-bottom: 30vh;
+	width: 100%;
+	max-width: 100%;
 
 	.icon-loading {
 		&:only-child:after {
