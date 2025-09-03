@@ -320,6 +320,30 @@
 					{{ t('mail', 'Download message') }}
 				</ActionLink>
 			</template>
+			<template v-if="quickActionMenu">
+				<ActionButton :close-after-click="false"
+					@click="closeQuickActionsMenu()">
+					<template #icon>
+						<ChevronLeft :size="20" />
+					</template>
+					{{ t('mail', 'Back to all actions') }}
+				</ActionButton>
+				<ActionButton v-for="action in filteredQuickActions"
+					:key="action.id"
+					:close-after-click="true"
+					@click="executeQuickAction(action)">
+					<template #icon>
+						<Icon :action="action?.icon" />
+					</template>
+					{{ action.name }}
+				</ActionButton>
+				<ActionButton :close-after-click="true" @click="$emit('open:quick-actions-settings')">
+					<template #icon>
+						<CogIcon :size="20" />
+					</template>
+					{{ t('mail', 'Manage quick actions') }}
+				</ActionButton>
+			</template>
 		</template>
 		<template #tags>
 			<div v-for="tag in tags"
@@ -376,7 +400,7 @@ import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.
 import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope/index.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
 import { shortRelativeDatetime, messageDateTime } from '../util/shortRelativeDatetime.js'
-import { showError, showSuccess } from '@nextcloud/dialogs'
+import { showError, showSuccess, showWarning } from '@nextcloud/dialogs'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError.js'
 import logger from '../logger.js'
@@ -739,6 +763,107 @@ export default {
 		},
 		formatted() {
 			return shortRelativeDatetime(new Date(this.data.dateInt * 1000))
+		},
+		async filterAndEnrichQuickActions() {
+			this.filteredQuickActions = []
+			const quickActions = this.mainStore.getQuickActions().filter(action => action.accountId === this.data.accountId)
+			for (const action of quickActions) {
+				const steps = await findAllStepsForAction(action.id)
+				const check = steps.every(step => {
+					if (['markAsSpam', 'applyTag', 'markAsImportant', 'markAsFavorite'].includes(step.type) && !this.hasWriteAcl) {
+						return false
+					}
+					if (['markAsRead', 'markAsUnread'].includes(step.type) && !this.hasSeenAcl) {
+						return false
+					}
+					if (['moveThread', 'deleteThread'].includes(step.type) && !this.hasDeleteAcl) {
+						return false
+					}
+					return true
+				})
+				if (check) {
+					this.filteredQuickActions.push({
+						...action,
+						steps,
+						icon: steps[0]?.name,
+					})
+				}
+			}
+		},
+		async executeQuickAction(action) {
+			this.closeQuickActionsMenu()
+			this.quickActionLoading = true
+			try {
+				for (const step of action.steps) {
+					switch (step.name) {
+					case 'markAsSpam':
+						await this.onToggleJunk()
+						break
+					case 'applyTag':
+						if (step?.tagId) {
+							await this.setTag(step.tagId)
+						} else {
+							// usually happens when the tag was deleted in the meantime
+							showWarning(t('mail', 'Could not apply tag, configured tag not found'))
+						}
+						break
+					case 'markAsImportant':
+						if (!this.isImportant) {
+							this.onToggleImportant()
+						}
+						break
+					case 'markAsFavorite':
+						if (!this.data.flags.flagged) {
+							this.onToggleFlagged()
+						}
+						break
+					case 'markAsRead':
+						if (!this.data.flags.seen) {
+							this.onToggleSeen()
+						}
+						break
+					case 'markAsUnread':
+						if (this.data.flags.seen) {
+							this.onToggleSeen()
+						}
+						break
+					case 'moveThread':
+						if (step.mailboxId) {
+							await this.moveThread(step.mailboxId)
+						} else {
+							// usually happens when the mailbox was deleted in the meantime
+							showWarning(t('mail', 'Could not move thread, destination mailbox not found'))
+						}
+						break
+					case 'deleteThread':
+						this.onDelete()
+						break
+					default:
+						logger.warn(`Unknown quick action step type: ${step.type}`)
+					}
+				}
+			} catch (error) {
+				logger.error('Could not execute quick action', error)
+				showError(t('mail', 'Could not execute quick action'))
+				this.quickActionLoading = false
+				return
+			}
+			showSuccess(t('mail', 'Quick action executed'))
+			this.quickActionLoading = false
+
+		},
+		async setTag(tagId) {
+			const tag = this.mainStore.getTag(tagId)
+			const threadEnvelopes = this.layoutMessageViewThreaded
+				? this.mainStore.getEnvelopesByThreadRootId(this.data.accountId, this.data.threadRootId)
+				: [this.data]
+			if (!tag) {
+				showWarning(t('mail', 'Could not apply tag, configured tag not found'))
+				return
+			}
+			for (const envelope of threadEnvelopes) {
+				await this.mainStore.addEnvelopeTag({ envelope, imapLabel: tag.imapLabel })
+			}
 		},
 		unselect() {
 			if (this.selected) {

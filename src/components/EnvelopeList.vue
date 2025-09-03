@@ -137,6 +137,12 @@
 			:account="account"
 			:envelopes="selectedEnvelopes"
 			@close="onCloseTagModal" />
+
+		<NcDialog v-if="showQuickActionsSettings"
+			:name="t('mail', 'Manage quick actions')"
+			@closing="showQuickActionsSettings = false">
+			<Settings :account="account" />
+		</NcDialog>
 	</div>
 </template>
 

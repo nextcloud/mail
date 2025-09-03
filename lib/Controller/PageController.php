@@ -22,6 +22,7 @@ use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\OutboxService;
+use OCA\Mail\Service\QuickActionsService;
 use OCA\Mail\Service\SmimeService;
 use OCA\Viewer\Event\LoadViewer;
 use OCP\AppFramework\Controller;
@@ -71,6 +72,7 @@ class PageController extends Controller {
 	private IAvailabilityCoordinator $availabilityCoordinator;
 	private ClassificationSettingsService $classificationSettingsService;
 	private InternalAddressService $internalAddressService;
+	private QuickActionsService $quickActionsService;
 
 	public function __construct(string $appName,
 		IRequest $request,
@@ -93,7 +95,9 @@ class PageController extends Controller {
 		IUserManager $userManager,
 		ClassificationSettingsService $classificationSettingsService,
 		InternalAddressService $internalAddressService,
-		IAvailabilityCoordinator $availabilityCoordinator) {
+		IAvailabilityCoordinator $availabilityCoordinator,
+		QuickActionsService $quickActionsService,
+	) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -116,6 +120,7 @@ class PageController extends Controller {
 		$this->classificationSettingsService = $classificationSettingsService;
 		$this->internalAddressService = $internalAddressService;
 		$this->availabilityCoordinator = $availabilityCoordinator;
+		$this->quickActionsService = $quickActionsService;
 	}
 
 	/**
@@ -228,6 +233,10 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'outbox-messages',
 			$this->outboxService->getMessages($user->getUID())
+		);
+		$this->initialStateService->provideInitialState(
+			'quick-actions',
+			$this->quickActionsService->findAll($this->currentUserId),
 		);
 		$googleOauthclientId = $this->config->getAppValue(Application::APP_ID, 'google_oauth_client_id');
 		if (!empty($googleOauthclientId)) {
