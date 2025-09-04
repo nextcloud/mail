@@ -20,19 +20,25 @@ use ReturnTypeWillChange;
  * @method int getOrder()
  * @method void setActionId(int $actionId)
  * @method int getActionId()
- * @method string getParameter()
- * @method void setParameter(string $parameter)
+ * @method ?int getTagId()
+ * @method void setTagId(?int $tagId)
+ * @method ?int getMailboxId()
+ * @method void setMailboxId(?int $mailboxId)
  */
 class ActionStep extends Entity implements JsonSerializable {
 	protected $name;
 	protected $order;
 	protected $actionId;
+	protected $tagId;
+	protected $mailboxId;
 
 	public function __construct() {
 		$this->addType('name', 'string');
 		$this->addType('order', 'integer');
 		$this->addType('actionId', 'integer');
 		$this->addType('parameter', 'string');
+		$this->addType('tagId', 'integer');
+		$this->addType('mailboxId', 'integer');
 	}
 
 	#[ReturnTypeWillChange]
@@ -42,7 +48,8 @@ class ActionStep extends Entity implements JsonSerializable {
 			'name' => $this->getName(),
 			'order' => $this->getOrder(),
 			'actionId' => $this->getActionId(),
-			'parameter' => $this->getParameter(),
+			'tagId' => $this->getTagId(),
+			'mailboxId' => $this->getMailboxId(),
 		];
 	}
 }

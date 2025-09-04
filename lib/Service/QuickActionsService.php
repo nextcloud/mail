@@ -35,10 +35,11 @@ class QuickActionsService {
 		return $this->actionsMapper->find($actionId, $userId);
 	}
 
-	public function create(string $userId, string $name): Actions {
+	public function create(string $userId, string $name, int $accountId): Actions {
 		$action = new Actions();
 		$action->setName($name);
 		$action->setOwner($userId);
+		$action->setAccountId($accountId);
 		return $this->actionsMapper->insert($action);
 	}
 

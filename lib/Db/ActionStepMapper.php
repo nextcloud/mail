@@ -32,7 +32,7 @@ class ActionStepMapper extends QBMapper {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('step.*')
 			->from($this->getTableName(), 'step')
-			->join('action', 'mail_actions', 'actions', $qb->expr()->eq('step.actionId', 'actions.id'))
+			->join('step', 'mail_actions', 'actions', $qb->expr()->eq('step.action_id', 'actions.id'))
 			->where(
 				$qb->expr()->andX(
 					$qb->expr()->eq('step.id', $qb->createNamedParameter($id)),

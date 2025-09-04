@@ -1,4 +1,3 @@
-
 <?php
 
 declare(strict_types=1);
@@ -55,11 +54,11 @@ class ActionStepController extends Controller {
 	 * @return JsonResponse
 	 */
 	#[TrapError]
-	public function create(string $name, int $order, int $actionId, string $parameter): JsonResponse {
+	public function create(string $name, int $order, int $actionId, ?int $tagId = null, ?int $mailboxId = null): JsonResponse {
 		if ($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
-		$actionStep = $this->actionStepService->create($name, $order, $actionId, $parameter);
+		$actionStep = $this->actionStepService->create($name, $order, $actionId, $tagId, $mailboxId);
 
 		return JsonResponse::success($actionStep, Http::STATUS_CREATED);
 	}
@@ -72,7 +71,7 @@ class ActionStepController extends Controller {
 	 * @return JsonResponse
 	 */
 	#[TrapError]
-	public function update(int $id, string $name, string $parameter): JsonResponse {
+	public function update(int $id, string $name, int $order, ?int $tagId, ?int $mailboxId): JsonResponse {
 
 		if ($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
@@ -84,7 +83,7 @@ class ActionStepController extends Controller {
 			return JsonResponse::error('Action step not found', Http::STATUS_NOT_FOUND);
 		}
 
-		$actionStep = $this->actionStepService->update($actionStep, $name, $parameter);
+		$actionStep = $this->actionStepService->update($actionStep, $name, $order, $tagId, $mailboxId);
 
 		return JsonResponse::success($actionStep, Http::STATUS_OK);
 	}

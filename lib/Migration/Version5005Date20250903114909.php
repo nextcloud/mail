@@ -49,9 +49,13 @@ class Version5005Date20250903114909 extends SimpleMigrationStep {
 			'notnull' => true,
 			'length' => 4,
 		]);
-		$table->addColumn('parameter', Types::STRING, [
-			'default' => '',
-			'length' => 64,
+		$table->addColumn('mailbox_id', Types::INTEGER, [
+			'notnull' => false,
+			'length' => 4,
+		]);
+		$table->addColumn('tag_id', Types::INTEGER, [
+			'notnull' => false,
+			'length' => 4,
 		]);
 
 		$table->setPrimaryKey(['id']);
@@ -59,6 +63,26 @@ class Version5005Date20250903114909 extends SimpleMigrationStep {
 			$table->addForeignKeyConstraint(
 				$schema->getTable('mail_actions'),
 				['action_id'],
+				['id'],
+				[
+					'onDelete' => 'CASCADE',
+				]
+			);
+		}
+		if ($schema->hasTable('mail_mailboxes')) {
+			$table->addForeignKeyConstraint(
+				$schema->getTable('mail_mailboxes'),
+				['mailbox_id'],
+				['id'],
+				[
+					'onDelete' => 'CASCADE',
+				]
+			);
+		}
+		if ($schema->hasTable('mail_tags')) {
+			$table->addForeignKeyConstraint(
+				$schema->getTable('mail_tags'),
+				['tag_id'],
 				['id'],
 				[
 					'onDelete' => 'CASCADE',

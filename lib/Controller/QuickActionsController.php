@@ -54,12 +54,12 @@ class QuickActionsController extends Controller {
 	 * @return JsonResponse
 	 */
 	#[TrapError]
-	public function create(string $name): JsonResponse {
+	public function create(string $name, int $accountId): JsonResponse {
 		if ($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 		try {
-			$quickAction = $this->quickActionsService->create($this->uid, $name);
+			$quickAction = $this->quickActionsService->create($this->uid, $name, $accountId);
 		} catch (ServiceException $e) {
 			return JsonResponse::fail($e->getMessage(), Http::STATUS_BAD_REQUEST);
 		}
@@ -87,7 +87,7 @@ class QuickActionsController extends Controller {
 			return JsonResponse::error('Quick action not found', Http::STATUS_NOT_FOUND);
 		}
 
-		$quickAction = $this->quickActionsService->update($quickAction, $this->uid, $name);
+		$quickAction = $this->quickActionsService->update($quickAction, $name);
 
 		return JsonResponse::success($quickAction, Http::STATUS_OK);
 	}

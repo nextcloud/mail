@@ -56,22 +56,33 @@ class ActionStepService {
 	 * @return ActionStep
 	 * @throws ServiceException
 	 */
-	public function create(string $name, int $order, int $actionId, string $parameter = ''): ActionStep {
-		$this->validateActionStep($name, $order, $actionId);
+	public function create(string $name, int $order, int $actionId, ?int $tagId = null, ?int $mailboxId = null): ActionStep {
+		$this->validateActionStep($name, $order, $actionId, $tagId, $mailboxId);
 		$action = new ActionStep();
 		$action->setName($name);
 		$action->setOrder($order);
 		$action->setActionId($actionId);
-		$action->setParameter($parameter);
+		if ($tagId !== null) {
+			$action->setTagId($tagId);
+		}
+		if ($mailboxId !== null) {
+			$action->setMailboxId($mailboxId);
+		}
 		return $this->actionStepMapper->insert($action);
 	}
 
 	/**
 	 * @throws DoesNotExistException
 	 */
-	public function update(ActionStep $action, string $name, string $parameter): ActionStep {
+	public function update(ActionStep $action, string $name, int $order, ?int $tagId, ?int $mailboxId): ActionStep {
 		$action->setName($name);
-		$action->setParameter($parameter);
+		$action->setOrder($order);
+		if ($tagId !== null) {
+			$action->setTagId($tagId);
+		}
+		if ($mailboxId !== null) {
+			$action->setMailboxId($mailboxId);
+		}
 		return $this->actionStepMapper->update($action);
 	}
 
@@ -97,7 +108,7 @@ class ActionStepService {
 	/**
 	 * @throws ServiceException
 	 */
-	private function validateActionStep(string $name, int $order, int $actionId): void {
+	private function validateActionStep(string $name, int $order, int $actionId, ?int $tagId, ?int $mailboxId): void {
 		if (!in_array($name, self::AVAILABLE_ACTION_STEPS)) {
 			throw new ServiceException('Invalid action step');
 		}
@@ -115,6 +126,14 @@ class ActionStepService {
 			if ($order > 1) {
 				throw new ServiceException('Invalid action step order');
 			}
+		}
+
+		if ($name === 'applyTag' && $tagId === null) {
+			throw new ServiceException('TagId is required for applyTag action step');
+		}
+
+		if ($name === 'moveThread' && $mailboxId === null) {
+			throw new ServiceException('MailboxId is required for moveThread action step');
 		}
 
 	}

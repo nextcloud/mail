@@ -15,9 +15,6 @@ use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
-/**
- * FIXME Auto-generated migration step: Please modify to your needs!
- */
 class Version5005Date20250903114906 extends SimpleMigrationStep {
 	/**
 	 * @param IOutput $output
@@ -47,8 +44,22 @@ class Version5005Date20250903114906 extends SimpleMigrationStep {
 			'notnull' => true,
 			'length' => 64,
 		]);
+		$table->addColumn('account_id', Types::INTEGER, [
+			'notnull' => true,
+			'length' => 4,
+		]);
 
 		$table->setPrimaryKey(['id']);
+		if ($schema->hasTable('mail_accounts')) {
+			$table->addForeignKeyConstraint(
+				$schema->getTable('mail_accounts'),
+				['account_id'],
+				['id'],
+				[
+					'onDelete' => 'CASCADE',
+				]
+			);
+		}
 		return $schema;
 	}
 

@@ -505,6 +505,16 @@ return [
 			'url' => '/api/textBlocks/{id}/shares',
 			'verb' => 'GET',
 		],
+		[
+			'name' => 'actionStep#findAllStepsForAction',
+			'url' => '/api/actionStep/{actionId}/steps',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'quickActions#swapOrder',
+			'url' => '/api/quickActions/{id}/swapOrder',
+			'verb' => 'PUT'
+		]
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],

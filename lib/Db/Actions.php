@@ -18,14 +18,18 @@ use ReturnTypeWillChange;
  * @method void setName(string $name)
  * @method void setOwner(string $owner)
  * @method string getOwner()
+ * @method int getAccountId()
+ * @method void setAccountId(int $accountId)
  */
 class Actions extends Entity implements JsonSerializable {
 	protected $name;
 	protected $owner;
+	protected $accountId;
 
 	public function __construct() {
 		$this->addType('name', 'string');
 		$this->addType('owner', 'string');
+		$this->addType('accountId', 'integer');
 	}
 
 	#[ReturnTypeWillChange]
@@ -34,6 +38,8 @@ class Actions extends Entity implements JsonSerializable {
 			'id' => $this->getId(),
 			'name' => $this->getName(),
 			'owner' => $this->getOwner(),
+			'accountId' => $this->getAccountId(),
+
 		];
 	}
 }
