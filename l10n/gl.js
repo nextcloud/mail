@@ -555,9 +555,8 @@ OC.L10N.register(
     "Send unsubscribe email" : "Enviar correo para cancelar a subscrición",
     "Unsubscribe via email" : "Cancelar a subscrición por correo",
     "{name} Assistant" : "Asistente de {name}",
-    "Go to latest message" : "Ir á última mensaxe",
-    "Go to newest message" : "Ir á mensaxe máis recente",
     "Thread summary" : "Resumo do fío",
+    "Go to latest message" : "Ir á última mensaxe",
     "Please select languages to translate to and from" : "Seleccione os idiomas desde o e ao que traducir",
     "The message could not be translated" : "Non foi posíbel traducir a mensaxe",
     "Translation copied to clipboard" : "A tradución foi copiada no portapapeis.",
@@ -765,6 +764,7 @@ OC.L10N.register(
     "Continue to %s" : "Continuar para %s",
     "Mailvelope is enabled for the current domain!" : "Mailvelope está activado para o dominio actual!",
     "Looking for a way to encrypt your emails?" : "Busca unha forma de cifrar os seus correos?",
-    "Enable Mailvelope for the current domain" : "Activar Mailvelope para o dominio actual"
+    "Enable Mailvelope for the current domain" : "Activar Mailvelope para o dominio actual",
+    "Go to newest message" : "Ir á mensaxe máis recente"
 },
 "nplurals=2; plural=(n != 1);");

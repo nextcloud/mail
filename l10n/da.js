@@ -330,7 +330,6 @@ OC.L10N.register(
     "This message contains an unverified digital S/MIME signature. The message might have been changed since it was sent or the certificate of the signer is untrusted." : "Denne meddelelse indeholder en ubekræftet digital S/MIME-signatur. Meddelelsen kan være blevet ændret, siden den blev sendt, eller der er ikke tillid til underskriverens certifikat.",
     "Reply all" : "Besvar alle",
     "Reply to sender only" : "Besvar kun afsender",
-    "Go to newest message" : "Gå til nyeste besked",
     "Translate from" : "Oversæt fra",
     "Translate to" : "Oversæt til",
     "Copy translated text" : "Kopiér oversat tekst",
@@ -405,6 +404,7 @@ OC.L10N.register(
     "Redirect" : "Omdiriger",
     "The link leads to %s" : "Linket fører til %s",
     "Continue to %s" : "Videre til %s",
-    "Looking for a way to encrypt your emails?" : "Leder du efter en måde at kryptere dine e-mails på?"
+    "Looking for a way to encrypt your emails?" : "Leder du efter en måde at kryptere dine e-mails på?",
+    "Go to newest message" : "Gå til nyeste besked"
 },
 "nplurals=2; plural=(n != 1);");

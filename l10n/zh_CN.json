@@ -604,9 +604,8 @@
     "Send unsubscribe email" : "发送取消订阅电子邮件",
     "Unsubscribe via email" : "通过电子邮件取消订阅",
     "{name} Assistant" : "{name} 助手",
-    "Go to latest message" : "转到最新邮件",
-    "Go to newest message" : "转到最新邮件",
     "Thread summary" : "线程摘要",
+    "Go to latest message" : "转到最新邮件",
     "Please select languages to translate to and from" : "请选择翻译目标语言和源语言",
     "The message could not be translated" : "无法翻译邮件",
     "Translation copied to clipboard" : "翻译已复制到剪贴板",
@@ -849,6 +848,7 @@
     "Mailvelope is enabled for the current domain!" : "当前域已启用 Mailvelope！",
     "Looking for a way to encrypt your emails?" : "正在寻找加密电子邮件的方法？",
     "Install Mailvelope browser extension" : "安装 Mailvelope 浏览器扩展",
-    "Enable Mailvelope for the current domain" : "为当前域启用 Mailvelope"
+    "Enable Mailvelope for the current domain" : "为当前域启用 Mailvelope",
+    "Go to newest message" : "转到最新邮件"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

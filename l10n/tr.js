@@ -606,9 +606,8 @@ OC.L10N.register(
     "Send unsubscribe email" : "Abonelikten ayrılma e-postası gönder",
     "Unsubscribe via email" : "E-posta ile abonelikten ayrıl",
     "{name} Assistant" : "{name} Yardımcısı",
-    "Go to latest message" : "Son iletiye git",
-    "Go to newest message" : "En yeni iletiye git",
     "Thread summary" : "Yazışma özeti",
+    "Go to latest message" : "Son iletiye git",
     "Please select languages to translate to and from" : "Lütfen çevirinin yapılacağı kaynak ve hedef dilleri seçin",
     "The message could not be translated" : "İleti çevrilemedi",
     "Translation copied to clipboard" : "Çeviri panoya kopyalandı",
@@ -851,6 +850,7 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Geçerli etki alanı için Mailvelope kullanılıyor!",
     "Looking for a way to encrypt your emails?" : "E-postalarınızı şifreleyecek bir yöntem mi arıyorsunuz?",
     "Install Mailvelope browser extension" : "Mailvelope tarayıcı eklentisini kurun",
-    "Enable Mailvelope for the current domain" : "Geçerli etki alanı için Mailvelope kullanılsın"
+    "Enable Mailvelope for the current domain" : "Geçerli etki alanı için Mailvelope kullanılsın",
+    "Go to newest message" : "En yeni iletiye git"
 },
 "nplurals=2; plural=(n > 1);");

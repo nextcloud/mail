@@ -606,9 +606,8 @@ OC.L10N.register(
     "Send unsubscribe email" : "Send unsubscribe email",
     "Unsubscribe via email" : "Unsubscribe via email",
     "{name} Assistant" : "{name} Assistant",
-    "Go to latest message" : "Go to latest message",
-    "Go to newest message" : "Go to newest message",
     "Thread summary" : "Thread summary",
+    "Go to latest message" : "Go to latest message",
     "Please select languages to translate to and from" : "Please select languages to translate to and from",
     "The message could not be translated" : "The message could not be translated",
     "Translation copied to clipboard" : "Translation copied to clipboard",
@@ -851,6 +850,7 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Mailvelope is enabled for the current domain!",
     "Looking for a way to encrypt your emails?" : "Looking for a way to encrypt your emails?",
     "Install Mailvelope browser extension" : "Install Mailvelope browser extension",
-    "Enable Mailvelope for the current domain" : "Enable Mailvelope for the current domain"
+    "Enable Mailvelope for the current domain" : "Enable Mailvelope for the current domain",
+    "Go to newest message" : "Go to newest message"
 },
 "nplurals=2; plural=(n != 1);");

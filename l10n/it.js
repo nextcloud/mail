@@ -402,7 +402,6 @@ OC.L10N.register(
     "Unsubscribe" : "Rimuovi sottoscrizione",
     "Reply to sender only" : "Rispondi solo al mittente",
     "Go to latest message" : "Vai all'ultimo messaggio",
-    "Go to newest message" : "Vai al messaggio più recente",
     "Translate from" : "Traduci da",
     "Translate to" : "Traduci in",
     "Could not remove trusted sender {sender}" : "Impossibile rimuovere il mittente fidato {sender}",
@@ -557,6 +556,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Fai clic qui se non viene rediretto automaticamente entro pochi secondi.",
     "Redirect" : "Redirigi",
     "The link leads to %s" : "Il collegamento conduce a %s",
-    "Continue to %s" : "Continua su %s"
+    "Continue to %s" : "Continua su %s",
+    "Go to newest message" : "Vai al messaggio più recente"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

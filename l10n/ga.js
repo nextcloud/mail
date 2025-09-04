@@ -606,9 +606,8 @@ OC.L10N.register(
     "Send unsubscribe email" : "Seol ríomhphost díliostáil",
     "Unsubscribe via email" : "Díliostáil trí ríomhphost",
     "{name} Assistant" : "{name} Cúntóir",
-    "Go to latest message" : "Téigh go dtí an teachtaireacht is déanaí",
-    "Go to newest message" : "Téigh go dtí an teachtaireacht is déanaí",
     "Thread summary" : "Achoimre snáithe",
+    "Go to latest message" : "Téigh go dtí an teachtaireacht is déanaí",
     "Please select languages to translate to and from" : "Roghnaigh teangacha le haistriú chucu agus uathu",
     "The message could not be translated" : "Níorbh fhéidir an teachtaireacht a aistriú",
     "Translation copied to clipboard" : "Cóipeáladh an t-aistriúchán chuig an ngearrthaisce",
@@ -851,6 +850,7 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Tá Mailvelope cumasaithe don fhearann ​​reatha!",
     "Looking for a way to encrypt your emails?" : "Ag lorg slí chun do ríomhphoist a chriptiú?",
     "Install Mailvelope browser extension" : "Suiteáil síneadh brabhsálaí Mailvelope",
-    "Enable Mailvelope for the current domain" : "Cumasaigh Mailvelope don fhearann ​​reatha"
+    "Enable Mailvelope for the current domain" : "Cumasaigh Mailvelope don fhearann ​​reatha",
+    "Go to newest message" : "Téigh go dtí an teachtaireacht is déanaí"
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

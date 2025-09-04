@@ -606,9 +606,8 @@ OC.L10N.register(
     "Send unsubscribe email" : "Пошаљи и-мејл за одјаву",
     "Unsubscribe via email" : "Одјавите се преко и-мејла",
     "{name} Assistant" : "{name} асистент",
-    "Go to latest message" : "Иди на најстарију поруку",
-    "Go to newest message" : "Иди на најновију поруку",
     "Thread summary" : "Резиме низа порука",
+    "Go to latest message" : "Иди на најстарију поруку",
     "Please select languages to translate to and from" : "Молимо вас изаберите изворишни и циљни језик за превод",
     "The message could not be translated" : "Није могла да се преведе порука",
     "Translation copied to clipboard" : "Превод је копиран у клипборд",
@@ -851,6 +850,7 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Mailvelope је укључен за тренутни домен!",
     "Looking for a way to encrypt your emails?" : "Тражите начин да шифрујете своје и-мејлове?",
     "Install Mailvelope browser extension" : "Инсталирај Mailvelope проширење интернет прегледача",
-    "Enable Mailvelope for the current domain" : "Укључи Mailvelope за тренутни домен"
+    "Enable Mailvelope for the current domain" : "Укључи Mailvelope за тренутни домен",
+    "Go to newest message" : "Иди на најновију поруку"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");
