@@ -479,7 +479,6 @@ OC.L10N.register(
     "Send unsubscribe email" : "구독 해지 이메일 보내기",
     "Unsubscribe via email" : "이메일로 구독 해지",
     "Go to latest message" : "최근 메시지로 가기",
-    "Go to newest message" : "최근 메시지로 가기",
     "The message could not be translated" : "메시지를 번역할 수 없습니다.",
     "Translation copied to clipboard" : "번역을 클립보드로 복사함",
     "Translation could not be copied" : "번역을 복사할 수 없습니다.",
@@ -662,6 +661,7 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Mailvelope이 현재 도메인에 대해 활성화되어 있습니다!",
     "Looking for a way to encrypt your emails?" : "이메일을 암호화하는 방법을 찾고 계십니까?",
     "Install Mailvelope browser extension" : "Mailvelope 브라우저 확장 설치",
-    "Enable Mailvelope for the current domain" : "현재 도메인에 Mailvelope 활성화하기"
+    "Enable Mailvelope for the current domain" : "현재 도메인에 Mailvelope 활성화하기",
+    "Go to newest message" : "최근 메시지로 가기"
 },
 "nplurals=1; plural=0;");

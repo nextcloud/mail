@@ -518,9 +518,8 @@ OC.L10N.register(
     "Send unsubscribe email" : "مۇشتەرى بولمىغان ئېلېكترونلۇق خەت ئەۋەتىڭ",
     "Unsubscribe via email" : "ئېلېكترونلۇق خەت ئارقىلىق مۇشتەرى بولۇڭ",
     "{name} Assistant" : "{name} ياردەمچى",
-    "Go to latest message" : "ئەڭ يېڭى ئۇچۇرغا بېرىڭ",
-    "Go to newest message" : "ئەڭ يېڭى ئۇچۇرغا بېرىڭ",
     "Thread summary" : "تېما خۇلاسىسى",
+    "Go to latest message" : "ئەڭ يېڭى ئۇچۇرغا بېرىڭ",
     "The message could not be translated" : "بۇ ئۇچۇرنى تەرجىمە قىلىشقا بولمىدى",
     "Translation copied to clipboard" : "تەرجىمە تاختىسىغا كۆچۈرۈلگەن",
     "Translation could not be copied" : "تەرجىمىنى كۆچۈرگىلى بولمىدى",
@@ -725,6 +724,7 @@ OC.L10N.register(
     "Continue to %s" : "داۋاملىق% s",
     "Mailvelope is enabled for the current domain!" : "خەت ساندۇقى نۆۋەتتىكى دائىرە ئۈچۈن قوزغىتىلدى!",
     "Looking for a way to encrypt your emails?" : "ئېلېكترونلۇق خەتلىرىڭىزنى مەخپىيلەشتۈرۈشنىڭ يولىنى ئىزدەۋاتامسىز؟",
-    "Enable Mailvelope for the current domain" : "نۆۋەتتىكى دائىرە ئۈچۈن Mailvelope نى قوزغىتىڭ"
+    "Enable Mailvelope for the current domain" : "نۆۋەتتىكى دائىرە ئۈچۈن Mailvelope نى قوزغىتىڭ",
+    "Go to newest message" : "ئەڭ يېڭى ئۇچۇرغا بېرىڭ"
 },
 "nplurals=2; plural=(n != 1);");

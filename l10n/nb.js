@@ -529,9 +529,8 @@ OC.L10N.register(
     "Send unsubscribe email" : "Send e-post for avmelding",
     "Unsubscribe via email" : "Avmeld via e-post",
     "{name} Assistant" : "{name} Assistent",
-    "Go to latest message" : "Gå til seneste melding",
-    "Go to newest message" : "Gå til nyeste melding",
     "Thread summary" : "Trådsammendrag",
+    "Go to latest message" : "Gå til seneste melding",
     "The message could not be translated" : "Meldingen kan ikke oversettes",
     "Translation copied to clipboard" : "Oversettelsen kopier til utklippstavlen",
     "Translation could not be copied" : "Oversettelsen kunne ikke kopieres",
@@ -714,6 +713,7 @@ OC.L10N.register(
     "Continue to %s" : "Fortsett til %s",
     "Mailvelope is enabled for the current domain!" : "Mailvelope er aktivert for gjeldende domene!",
     "Looking for a way to encrypt your emails?" : "Leter du etter en måte å kryptere e-postene dine på?",
-    "Enable Mailvelope for the current domain" : "Aktiver Mailvelope for gjeldende domene"
+    "Enable Mailvelope for the current domain" : "Aktiver Mailvelope for gjeldende domene",
+    "Go to newest message" : "Gå til nyeste melding"
 },
 "nplurals=2; plural=(n != 1);");

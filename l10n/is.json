@@ -544,9 +544,8 @@
     "Send unsubscribe email" : "Senda tölvupóst til að segja upp áskrift",
     "Unsubscribe via email" : "Hætta í áskrift með tölvupósti",
     "{name} Assistant" : "{name}-aðstoðin",
-    "Go to latest message" : "Fara á síðustu skilaboðin",
-    "Go to newest message" : "Fara á nýjustu skilaboðin",
     "Thread summary" : "Samantekt spjallþráðar",
+    "Go to latest message" : "Fara á síðustu skilaboðin",
     "Please select languages to translate to and from" : "Veldu tungumál til að þýða á milli",
     "The message could not be translated" : "Ekki var hægt að þýða skilaboðin",
     "Translation copied to clipboard" : "Þýðing afrituð á klippispjald",
@@ -734,6 +733,7 @@
     "Continue to %s" : "Halda áfram í %s",
     "Mailvelope is enabled for the current domain!" : "Mailvelope er virkt fyrir núverandi lén!",
     "Looking for a way to encrypt your emails?" : "Ertu að leita að leið til að dulrita tölvupóstinn þinn?",
-    "Enable Mailvelope for the current domain" : "Virkja Mailvelope fyrir núverandi lén"
+    "Enable Mailvelope for the current domain" : "Virkja Mailvelope fyrir núverandi lén",
+    "Go to newest message" : "Fara á nýjustu skilaboðin"
 },"pluralForm" :"nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
 }

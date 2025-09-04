@@ -566,9 +566,8 @@ OC.L10N.register(
     "Send unsubscribe email" : "Poslať e-mail pre odlásenie.",
     "Unsubscribe via email" : "Odhlásiť sa prostredníctvom e-mailu",
     "{name} Assistant" : "{name} Asistent",
-    "Go to latest message" : "Ísť na poslednú správu",
-    "Go to newest message" : "Ísť na najnovšiu správu",
     "Thread summary" : "Zhrnutie vlákna",
+    "Go to latest message" : "Ísť na poslednú správu",
     "Please select languages to translate to and from" : "Vyberte jazyky, do ktorých a z ktorých chcete prekladať",
     "The message could not be translated" : "Správa sa nedala preložiť",
     "Translation copied to clipboard" : "Preklad skopírovaný do schránky",
@@ -777,6 +776,7 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Mailvelope je povolený pre aktuálnu doménu!",
     "Looking for a way to encrypt your emails?" : "Hľadáte spôsob, ako šifrovať svoje e-maily?",
     "Install Mailvelope browser extension" : "Nainštalovať rozšírenie pre prehliadač Mailvelope",
-    "Enable Mailvelope for the current domain" : "Povoliť Mailvelope pre aktuálnu doménu"
+    "Enable Mailvelope for the current domain" : "Povoliť Mailvelope pre aktuálnu doménu",
+    "Go to newest message" : "Ísť na najnovšiu správu"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

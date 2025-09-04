@@ -364,8 +364,11 @@ OC.L10N.register(
     "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Vámi zaslané zprávy, které vyžadují odpověď, ale ani po několika dnech se tak nestalo, se zobrazí zde.",
     "Follow up" : "Pokračování",
     "Follow up info" : "Informace o pokračování",
+    "Load more follow ups" : "Načíst další následné komunikace",
     "Important info" : "Důležité informace",
+    "Load more important messages" : "Načíst další důležité zprávy",
     "Other" : "Ostatní",
+    "Load more other messages" : "Načíst další ostatní zprávy",
     "Could not send mdn" : "Mdn se nepodařilo odeslat",
     "The sender of this message has asked to be notified when you read this message." : "Odesílatel této zprávy Vás žádá o potvrzení přečtení této zprávy.",
     "Notify the sender" : "Odeslat potvrzení",
@@ -597,9 +600,8 @@ OC.L10N.register(
     "Send unsubscribe email" : "Odeslat e-mail ohledně zrušení odběru",
     "Unsubscribe via email" : "Zrušit (prostřednictvím e-mailu) přihlášení se k odběru",
     "{name} Assistant" : "{name} asistent",
-    "Go to latest message" : "Přejít na poslední zprávu",
-    "Go to newest message" : "Přejít na nejnovější zprávu",
     "Thread summary" : "Shrnutí vlákna",
+    "Go to latest message" : "Přejít na poslední zprávu",
     "Please select languages to translate to and from" : "Vyberte jazyk z kterého a do kterého překládat",
     "The message could not be translated" : "Zprávu se nepodařilo přeložit",
     "Translation copied to clipboard" : "Překlad zkopírován do schránky",
@@ -838,6 +840,7 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Mailvelope je pro stávající doménu zapnuté!",
     "Looking for a way to encrypt your emails?" : "Hledáte způsob jak šifrovat své e-maily?",
     "Install Mailvelope browser extension" : "Nainstalovat Mailvelope – rozšíření pro webový prohlížeč",
-    "Enable Mailvelope for the current domain" : "Zapnout Mailvelope pro stávající doménu"
+    "Enable Mailvelope for the current domain" : "Zapnout Mailvelope pro stávající doménu",
+    "Go to newest message" : "Přejít na nejnovější zprávu"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

@@ -33,6 +33,7 @@ OC.L10N.register(
     "Sorting" : "Сартаванне",
     "Privacy and security" : "Прыватнасць і бяспека",
     "S/MIME" : "S/MIME",
+    "About" : "Аб гэтым",
     "Keyboard shortcuts" : "Спалучэнні клавіш",
     "Archive" : "Архіў",
     "Delete" : "Выдаліць",

@@ -602,9 +602,8 @@ OC.L10N.register(
     "Send unsubscribe email" : "Надіслати електронний лист щодо відписування",
     "Unsubscribe via email" : "Відпусатися через ел.пошту",
     "{name} Assistant" : "Асистент {name}",
-    "Go to latest message" : "Перейти до останнього повідомлення",
-    "Go to newest message" : "Перейти до найновішого повідомлення",
     "Thread summary" : "Короткий зміст теми",
+    "Go to latest message" : "Перейти до останнього повідомлення",
     "Please select languages to translate to and from" : "Будь ласка, виберіть мови для перекладу на які та з яких ви хочете перекладати",
     "The message could not be translated" : "Повідомлення не вдалося перекласти",
     "Translation copied to clipboard" : "Переклад скопійовано до буфера обміну",
@@ -847,6 +846,7 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Поштова скринька ввімкнена для поточного домену!",
     "Looking for a way to encrypt your emails?" : "Шукаєте спосіб зашифрувати свою електронну пошту?",
     "Install Mailvelope browser extension" : "Встановіть розширення для браузера Mailvelope",
-    "Enable Mailvelope for the current domain" : "Увімкнути Mailvelope для поточного домену"
+    "Enable Mailvelope for the current domain" : "Увімкнути Mailvelope для поточного домену",
+    "Go to newest message" : "Перейти до найновішого повідомлення"
 },
 "nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);");

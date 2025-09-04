@@ -553,9 +553,8 @@ OC.L10N.register(
     "Send unsubscribe email" : "إرسال إيميلاً لإلغاء الاشتراك",
     "Unsubscribe via email" : "إلغاء الاشتراك عبر الإيميل",
     "{name} Assistant" : "مُساعد {name} ",
-    "Go to latest message" : "إذهَب لآخِر رسالة",
-    "Go to newest message" : "إذهَب لأحدَث رسالة",
     "Thread summary" : "ملخص الموضوع",
+    "Go to latest message" : "إذهَب لآخِر رسالة",
     "Please select languages to translate to and from" : "رجاءً، حدِّد اللغات التي ستتم الترجمة منها وإليها",
     "The message could not be translated" : "لا يمكن ترجمة الرسالة",
     "Translation copied to clipboard" : "تمّ نسخ الترجمة إلى الحافظة",
@@ -763,6 +762,7 @@ OC.L10N.register(
     "Continue to %s" : "إستمر نحو %s",
     "Mailvelope is enabled for the current domain!" : "خدمة تشفير البريد Mailvelope مُفعّلة للنطاق الحالي!",
     "Looking for a way to encrypt your emails?" : "هل تبحث عن طريقة لتشفير رسائل بريدك الالكتروني؟",
-    "Enable Mailvelope for the current domain" : "تمكين خدمة تشفير البريد Mailvelope للنطاق الحالي"
+    "Enable Mailvelope for the current domain" : "تمكين خدمة تشفير البريد Mailvelope للنطاق الحالي",
+    "Go to newest message" : "إذهَب لأحدَث رسالة"
 },
 "nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;");

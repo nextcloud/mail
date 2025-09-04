@@ -467,7 +467,6 @@ OC.L10N.register(
     "Unsubscribe via email" : "Leiratkozás e-mailben",
     "{name} Assistant" : "{name} Asszisztens",
     "Go to latest message" : "Ugrás a legrégebbi üzenethez",
-    "Go to newest message" : "Ugrás a legújabb üzenethez",
     "The message could not be translated" : "Az üzenetet nem sikerült lefordítani",
     "Translation copied to clipboard" : "A fordítás a vágólapra másolva",
     "Translation could not be copied" : "A fordítást nem lehetett másolni",
@@ -642,6 +641,7 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarja megnyitni azt az oldalt, akkor térjen vissza a <a href=\"%s\">Levelezéshez</a>.",
     "Continue to %s" : "Folytatás ide: %s",
     "Looking for a way to encrypt your emails?" : "Azt keresi, hogyan titkosíthatná a leveleit?",
-    "Install Mailvelope browser extension" : "Telepítse a Mailvelope böngészőkiegészítőt"
+    "Install Mailvelope browser extension" : "Telepítse a Mailvelope böngészőkiegészítőt",
+    "Go to newest message" : "Ugrás a legújabb üzenethez"
 },
 "nplurals=2; plural=(n != 1);");
