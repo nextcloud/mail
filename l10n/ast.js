@@ -236,7 +236,6 @@ OC.L10N.register(
     "Loading thread" : "Cargando'l filu",
     "Not found" : "Nun s'atopó",
     "Go to latest message" : "Dir al últimu mensaxe",
-    "Go to newest message" : "Dir al mensaxe más nuevu",
     "The message could not be translated" : "Nun se pudo traducir el mensaxe",
     "Translation copied to clipboard" : "La traducción copióse al cartafueyu",
     "Translation could not be copied" : "Nun se pudo copiar la traducción",
@@ -310,6 +309,7 @@ OC.L10N.register(
     "Could not load the message" : "Nun se pudo cargar el mensaxe",
     "Error loading message" : "Hebo un error al cargar el mensaxe",
     "Redirect" : "Redirixir",
-    "The link leads to %s" : "L'enllaz lleva a %s"
+    "The link leads to %s" : "L'enllaz lleva a %s",
+    "Go to newest message" : "Dir al mensaxe más nuevu"
 },
 "nplurals=2; plural=(n != 1);");

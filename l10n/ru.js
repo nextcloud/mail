@@ -323,7 +323,7 @@ OC.L10N.register(
     "Could not mark message as seen/unseen" : "Не удалось пометить сообщение как (не)прочтенное",
     "Last hour" : "Последний час",
     "Today" : "Сегодня",
-    "Last week" : "Последняя неделя",
+    "Last week" : "Прошлая неделя",
     "Last month" : "Последний месяц",
     "Could not open folder" : "Не удалось открыть папку",
     "Loading messages …" : "Загрузка сообщений...",
@@ -549,9 +549,8 @@ OC.L10N.register(
     "Send unsubscribe email" : "Отправить письмо об отказе от подписки",
     "Unsubscribe via email" : "Отписаться по эл. почте",
     "{name} Assistant" : "{name} Помощник",
-    "Go to latest message" : "Перейти к последнему сообщению",
-    "Go to newest message" : "Перейти к последнему сообщению",
     "Thread summary" : "Резюме темы",
+    "Go to latest message" : "Перейти к последнему сообщению",
     "Please select languages to translate to and from" : "Выберите языки с которых и на которые переводить",
     "The message could not be translated" : "Сообщение не может быть переведено",
     "Translation copied to clipboard" : "Перевод скопирован в буфер обмена",
@@ -773,6 +772,7 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Mailvelope включен для текущего домена!",
     "Looking for a way to encrypt your emails?" : "Необходимо использовать шифрование электронных писем?",
     "Install Mailvelope browser extension" : "Установите расширение для браузера Mailvelope",
-    "Enable Mailvelope for the current domain" : "Включить почтовый конверт для текущего домена"
+    "Enable Mailvelope for the current domain" : "Включить почтовый конверт для текущего домена",
+    "Go to newest message" : "Перейти к последнему сообщению"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

@@ -427,7 +427,6 @@
     "Unsubscribe via email" : "Dezabonare prin email",
     "{name} Assistant" : "{name} Asistent",
     "Go to latest message" : "Salt la ultimul mesaj",
-    "Go to newest message" : "Salt la cele mai recente mesaje",
     "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed." : "Dezactivați păstrarea în coș lăsând câmpul necompletat sau introducând 0. Vor fi procesate doar mailurile șterse după activarea păstrării în coș. ",
     "Could not remove trusted sender {sender}" : "Expeditorul de încredere {sender} nu poate fi șters",
     "No senders are trusted at the moment." : "Niciun expeditor de încredere în acest moment. ",
@@ -507,6 +506,7 @@
     "The link leads to %s" : "Link-ul duce la %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Dacă nu doriți să vizitați acea pagină, vă puteți întoarce la <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continuă către %s",
-    "Looking for a way to encrypt your emails?" : "Doriți o modalitate de criptare a emailurilor?"
+    "Looking for a way to encrypt your emails?" : "Doriți o modalitate de criptare a emailurilor?",
+    "Go to newest message" : "Salt la cele mai recente mesaje"
 },"pluralForm" :"nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));"
 }

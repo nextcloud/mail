@@ -543,9 +543,8 @@ OC.L10N.register(
     "Send unsubscribe email" : "Bidali harpidetza kentzeko mezu elektronikoa",
     "Unsubscribe via email" : "Harpidetza kendu mezu elektroniko bidez",
     "{name} Assistant" : "{name} laguntzailea",
-    "Go to latest message" : "Joan azken mezura",
-    "Go to newest message" : "Joan mezu berrienera",
     "Thread summary" : "Hariaren laburpena",
+    "Go to latest message" : "Joan azken mezura",
     "The message could not be translated" : "Ezin izan da mezu hau itzuli",
     "Translation copied to clipboard" : "Itzulpena arbelera kopiatu da",
     "Translation could not be copied" : "Ezin izan da itzulpena kopiatu",
@@ -751,6 +750,7 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Mailvelope gaituta dago uneko domeinurako!",
     "Looking for a way to encrypt your emails?" : "Zure mezu elektronikoak enkriptatzeko modu bat bilatzen ari zara?",
     "Install Mailvelope browser extension" : "Instalatu Mailvelope arakatzailearen luzapena",
-    "Enable Mailvelope for the current domain" : "Gaitu Mailvelope uneko domeinurako"
+    "Enable Mailvelope for the current domain" : "Gaitu Mailvelope uneko domeinurako",
+    "Go to newest message" : "Joan mezu berrienera"
 },
 "nplurals=2; plural=(n != 1);");

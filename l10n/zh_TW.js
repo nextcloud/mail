@@ -606,9 +606,8 @@ OC.L10N.register(
     "Send unsubscribe email" : "傳送取消訂閱電子郵件",
     "Unsubscribe via email" : "透過電子郵件取消訂閱",
     "{name} Assistant" : "{name} 小幫手",
-    "Go to latest message" : "到最新的郵件",
-    "Go to newest message" : "到最新的郵件",
     "Thread summary" : "討論串摘要",
+    "Go to latest message" : "到最新的郵件",
     "Please select languages to translate to and from" : "請選取要翻譯的來源與目標語言",
     "The message could not be translated" : "無法翻譯訊息",
     "Translation copied to clipboard" : "翻譯已複製到剪貼簿",
@@ -851,6 +850,7 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "目前域名已啟用 Mailvelope！",
     "Looking for a way to encrypt your emails?" : "正在尋找加密您的電子郵件的方法？",
     "Install Mailvelope browser extension" : "安裝 Mailvelope 瀏覽器擴充套件",
-    "Enable Mailvelope for the current domain" : "為目前網域啟用 Mailvelope"
+    "Enable Mailvelope for the current domain" : "為目前網域啟用 Mailvelope",
+    "Go to newest message" : "到最新的郵件"
 },
 "nplurals=1; plural=0;");

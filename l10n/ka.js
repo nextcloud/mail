@@ -471,7 +471,6 @@ OC.L10N.register(
     "Unsubscribe via email" : "Unsubscribe via email",
     "{name} Assistant" : "{name} Assistant",
     "Go to latest message" : "Go to latest message",
-    "Go to newest message" : "Go to newest message",
     "The message could not be translated" : "The message could not be translated",
     "Translation copied to clipboard" : "Translation copied to clipboard",
     "Translation could not be copied" : "Translation could not be copied",
@@ -640,6 +639,7 @@ OC.L10N.register(
     "The link leads to %s" : "The link leads to %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continue to %s",
-    "Looking for a way to encrypt your emails?" : "Looking for a way to encrypt your emails?"
+    "Looking for a way to encrypt your emails?" : "Looking for a way to encrypt your emails?",
+    "Go to newest message" : "Go to newest message"
 },
 "nplurals=2; plural=(n!=1);");

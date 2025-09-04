@@ -257,7 +257,6 @@ OC.L10N.register(
     "Not found" : "No agatadu",
     "Unsubscribe" : "Disiscrie·ti",
     "Reply to sender only" : "Responde isceti a chi at imbiadu",
-    "Go to newest message" : "Bae a su messàgiu prus nou",
     "Could not remove trusted sender {sender}" : "No at fatu a nche bogare s'imbiante afidàbile {sender}",
     "No senders are trusted at the moment." : "No b'at imbiantes afidàbiles in custu momentu.",
     "Untitled event" : "Eventu chene tìtulu",
@@ -353,6 +352,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Incarca inoghe chi no ses torradu a deretare in manera automàtica intro de pagu segundos.",
     "Redirect" : "Torra a deretare",
     "The link leads to %s" : "Su ligòngiu deretat a %s",
-    "Continue to %s" : "Sighi in %s"
+    "Continue to %s" : "Sighi in %s",
+    "Go to newest message" : "Bae a su messàgiu prus nou"
 },
 "nplurals=2; plural=(n != 1);");

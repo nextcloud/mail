@@ -604,9 +604,8 @@
     "Send unsubscribe email" : "Enviar enlace de desuscripción",
     "Unsubscribe via email" : "Desuscribirse vía correo electrónico",
     "{name} Assistant" : "{name} Asistente",
-    "Go to latest message" : "Ir al último mensaje",
-    "Go to newest message" : "Ir al mensaje más reciente",
     "Thread summary" : "Resumen del hilo",
+    "Go to latest message" : "Ir al último mensaje",
     "Please select languages to translate to and from" : "Por favor, seleccione los idiomas de los que/a los que traducir",
     "The message could not be translated" : "El mensaje no pudo ser traducido",
     "Translation copied to clipboard" : "La traducción se copió al portapapeles",
@@ -849,6 +848,7 @@
     "Mailvelope is enabled for the current domain!" : "¡Mailvelope está activado para el dominio actual!",
     "Looking for a way to encrypt your emails?" : "¿Busca una manera de cifrar sus correos?",
     "Install Mailvelope browser extension" : "Instalar la extensión del navegador Mailvelope",
-    "Enable Mailvelope for the current domain" : "Active Mailvelope para el dominio actual"
+    "Enable Mailvelope for the current domain" : "Active Mailvelope para el dominio actual",
+    "Go to newest message" : "Ir al mensaje más reciente"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

@@ -544,9 +544,8 @@ OC.L10N.register(
     "Send unsubscribe email" : "配信停止メールを送信する",
     "Unsubscribe via email" : "メールで購読を解除する",
     "{name} Assistant" : "{name}アシスタント",
-    "Go to latest message" : "最新のメッセージへ移動",
-    "Go to newest message" : "一番新しいメッセージへ移動",
     "Thread summary" : "スレッドの概要",
+    "Go to latest message" : "最新のメッセージへ移動",
     "Please select languages to translate to and from" : "翻訳する言語を選択してください",
     "The message could not be translated" : "メッセージは翻訳できませんでした",
     "Translation copied to clipboard" : "翻訳をクリップボードにコピーしました",
@@ -754,6 +753,7 @@ OC.L10N.register(
     "Continue to %s" : "%s にリダイレクトする",
     "Mailvelope is enabled for the current domain!" : "現在のドメインでMailvelopeが有効になっています!",
     "Looking for a way to encrypt your emails?" : "あなたのメールを暗号化する方法をお探しですか?",
-    "Enable Mailvelope for the current domain" : "現在のドメインのMailvelopeを有効にする"
+    "Enable Mailvelope for the current domain" : "現在のドメインのMailvelopeを有効にする",
+    "Go to newest message" : "一番新しいメッセージへ移動"
 },
 "nplurals=1; plural=0;");

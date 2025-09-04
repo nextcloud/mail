@@ -595,9 +595,8 @@ OC.L10N.register(
     "Send unsubscribe email" : "Saada loobumiskiri",
     "Unsubscribe via email" : "Saada tellimusest loobumine e-kirjana",
     "{name} Assistant" : "Abiline: {name}",
-    "Go to latest message" : "Mine vanima kirja juurde",
-    "Go to newest message" : "Mine viimase kirja juurde",
     "Thread summary" : "Jutulõnga kokkuvõte",
+    "Go to latest message" : "Mine vanima kirja juurde",
     "Please select languages to translate to and from" : "Palun vali keeled, mille vahel tahad tõlkida",
     "The message could not be translated" : "E-kirja tõlkimine ei õnnestunud",
     "Translation copied to clipboard" : "Tõlge on kopeeritud lõikelauale",
@@ -803,6 +802,7 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Mailvelope on selle domeeni puhul kasutusel!",
     "Looking for a way to encrypt your emails?" : "Kas otsid viisi oma kirjade krüptimiseks?",
     "Install Mailvelope browser extension" : "Paigalda Mailvelope'i brauserilaiendus",
-    "Enable Mailvelope for the current domain" : "Võta Mailvelope selle domeeni puhul kasutusele!"
+    "Enable Mailvelope for the current domain" : "Võta Mailvelope selle domeeni puhul kasutusele!",
+    "Go to newest message" : "Mine viimase kirja juurde"
 },
 "nplurals=2; plural=(n != 1);");
