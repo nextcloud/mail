@@ -108,6 +108,7 @@ export default defineStore('main', {
 			textBlocksFetched: false,
 			myTextBlocks: [],
 			sharedTextBlocks: [],
+			quickActions: [],
 		}
 	},
 	getters: {
