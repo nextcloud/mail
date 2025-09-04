@@ -309,7 +309,7 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch
 	from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import FilterVariantIcon from 'vue-material-design-icons/FilterVariant.vue'
-import Close from 'vue-material-design-icons/CloseOutline.vue'
+import Close from 'vue-material-design-icons/Close.vue'
 import IconClose from '@mdi/svg/svg/close.svg'
 import IconMagnify from '@mdi/svg/svg/magnify.svg'
 import { translate as t } from '@nextcloud/l10n'
