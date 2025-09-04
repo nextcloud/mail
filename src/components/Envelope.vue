@@ -679,6 +679,9 @@ export default {
 		storeActions() {
 			return this.mainStore.getQuickActions()
 		},
+		storeActions() {
+			return this.mainStore.getQuickActions()
+		},
 		/**
 		 * Link to download the whole message (.eml).
 		 *
