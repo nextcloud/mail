@@ -109,7 +109,7 @@ export default {
 		iframeResize({
 			license: 'GPLv3',
 			log: false,
-			scrolling: false,
+			scrolling: true,
 		}, this.$refs.iframe)
 
 		if (this.enabledFreePrompt && this.message) {
