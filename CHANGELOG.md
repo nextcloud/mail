@@ -1,3 +1,19 @@
+# [5.4.0-rc.1](https://github.com/nextcloud/mail/compare/v5.4.0-rc.0...v5.4.0-rc.1) (2025-09-04)
+
+
+### Bug Fixes
+
+* clear search icon should not be outline ([363c2b9](https://github.com/nextcloud/mail/commit/363c2b918694871ee5340aacd63b962ba6eef571))
+* **deps:** bump @nextcloud/vue to ^8.30.0 ([ccf36e0](https://github.com/nextcloud/mail/commit/ccf36e07feaaafe38046220a50f13a767a74044a))
+* **dns:** Update public suffix list ([e99d3bc](https://github.com/nextcloud/mail/commit/e99d3bc43169d7a319902a887c61b3da926a23fd))
+* **l10n:** Update translations from Transifex ([aa1e753](https://github.com/nextcloud/mail/commit/aa1e75330a2eae98e4e0d0bf059951ba90b6bbbb))
+* **l10n:** Update translations from Transifex ([fe81c11](https://github.com/nextcloud/mail/commit/fe81c116e5de7e15971a4eb802fe984f68936b2a))
+* **l10n:** Update translations from Transifex ([25506a6](https://github.com/nextcloud/mail/commit/25506a6668891e2d2d894c53c0b76736a3e5b34b))
+* make summary thread similar to normal thread style ([af66d88](https://github.com/nextcloud/mail/commit/af66d88fa44ef96edf258b293c6ef689df922f1c))
+* Overwrite php-stemmer dependency from RubixML for PHP 8.4 compatibility ([081b249](https://github.com/nextcloud/mail/commit/081b249dfa8597a0b8168616e56dcb60af8c41ab))
+
+
+
 # [5.4.0-rc.0](https://github.com/nextcloud/mail/compare/v5.4.0-beta.2...v5.4.0-rc.0) (2025-09-01)
 
 
