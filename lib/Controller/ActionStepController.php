@@ -10,9 +10,9 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Http\TrapError;
+use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\QuickActionsService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -27,6 +27,7 @@ class ActionStepController extends Controller {
 		IRequest $request,
 		?string $userId,
 		private QuickActionsService $quickActionsService,
+		private AccountService $accountService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->uid = $userId;
@@ -58,6 +59,19 @@ class ActionStepController extends Controller {
 		if ($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
+		try {
+			$action = $this->quickActionsService->find($actionId, $this->uid);
+			if ($action === null) {
+				return JsonResponse::fail('Action not found', Http::STATUS_BAD_REQUEST);
+			}
+			$accountId = $action->getAccountId();
+			$account = $this->accountService->findById($accountId);
+		} catch (DoesNotExistException $e) {
+			return JsonResponse::fail('Account not found', Http::STATUS_BAD_REQUEST);
+		}
+		if ($account->getUserId() !== $this->uid) {
+			return JsonResponse::fail('Account not found', Http::STATUS_BAD_REQUEST);
+		}
 		$actionStep = $this->quickActionsService->createActionStep($name, $order, $actionId, $tagId, $mailboxId);
 
 		return JsonResponse::success($actionStep, Http::STATUS_CREATED);
@@ -78,10 +92,6 @@ class ActionStepController extends Controller {
 		}
 
 		$actionStep = $this->quickActionsService->findActionStep($id, $this->uid);
-
-		if ($actionStep === null) {
-			return JsonResponse::error('Action step not found', Http::STATUS_NOT_FOUND);
-		}
 
 		$actionStep = $this->quickActionsService->updateActionStep($actionStep, $name, $order, $tagId, $mailboxId);
 
@@ -104,19 +114,4 @@ class ActionStepController extends Controller {
 			return JsonResponse::fail('Action step not found', Http::STATUS_NOT_FOUND);
 		}
 	}
-
-	public function swapOrder(int $id, int $newOrder): JsonResponse {
-		if ($this->uid === null) {
-			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
-		}
-		try {
-			$this->quickActionsService->swapOrder($id, $newOrder);
-			return JsonResponse::success();
-		} catch (DoesNotExistException $e) {
-			return JsonResponse::fail('Action step not found', Http::STATUS_NOT_FOUND);
-		} catch (ServiceException $e) {
-			return JsonResponse::fail($e->getMessage(), Http::STATUS_BAD_REQUEST);
-		}
-	}
-
 }

@@ -75,10 +75,3 @@ export async function deleteActionStep(id) {
 		await axios.delete(url)
 	})
 }
-
-export function swapOrder(id, newOrder) {
-	const url = generateUrl('/apps/mail/api/action-step/{id}/order', { id })
-	return handleHttpAuthErrors(async () => {
-		return (await axios.put(url, { order: newOrder })).data.data
-	})
-}

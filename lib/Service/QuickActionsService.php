@@ -134,17 +134,6 @@ class QuickActionsService {
 	/**
 	 * @throws ServiceException
 	 */
-	public function swapOrder(int $actionId, int $newOrder): void {
-		$highestOrderForAction = $this->actionStepMapper->findHighestOrderStep($actionId);
-		if ($highestOrderForAction && $highestOrderForAction->getOrder() <= $newOrder && $highestOrderForAction->getName() === 'deleteThread') {
-			throw new ServiceException('Cant perform actions after deleteThread');
-		}
-		$this->actionStepMapper->swapOrder($actionId, $newOrder);
-	}
-
-	/**
-	 * @throws ServiceException
-	 */
 	private function validateActionStep(string $name, int $order, int $actionId, ?int $tagId, ?int $mailboxId): void {
 		if (!in_array($name, self::AVAILABLE_ACTION_STEPS, true)) {
 			throw new ServiceException('Invalid action step');
@@ -152,11 +141,15 @@ class QuickActionsService {
 		try {
 			$highestOrderForAction = $this->actionStepMapper->findHighestOrderStep($actionId);
 
+			if ($highestOrderForAction === null && $order > 1) {
+				throw new ServiceException('Invalid action step order');
+			}
+
 			if ($highestOrderForAction && $highestOrderForAction->getName() === 'deleteThread') {
 				throw new ServiceException('Cant perform actions after deleteThread');
 			}
 
-			if ($order !== $highestOrderForAction->getOrder() + 1) {
+			if ($highestOrderForAction !== null && $order !== $highestOrderForAction->getOrder() + 1) {
 				throw new ServiceException('Invalid action step order');
 			}
 		} catch (DoesNotExistException $th) {

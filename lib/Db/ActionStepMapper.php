@@ -76,31 +76,4 @@ class ActionStepMapper extends QBMapper {
 
 		return $this->findEntity($qb);
 	}
-
-	public function swapOrder(int $actionId, int $newOrder): void {
-		$qb = $this->db->getQueryBuilder();
-		$qb->update($this->getTableName())
-			->set('order', $qb->createNamedParameter($newOrder, IQueryBuilder::PARAM_INT))
-			->where(
-				$qb->expr()->andX(
-					$qb->expr()->eq('action_id', $qb->createNamedParameter($actionId, IQueryBuilder::PARAM_INT)),
-				)
-			);
-		$qb->execute();
-
-		// update subsequent steps
-
-		$qb = $this->db->getQueryBuilder();
-		$qb->update($this->getTableName())
-			->set('order', $qb->func()->add('order', '1'))
-			->where(
-				$qb->expr()->andX(
-					$qb->expr()->eq('action_id', $qb->createNamedParameter($actionId, IQueryBuilder::PARAM_INT)),
-					$qb->expr()->gte('order', $qb->createNamedParameter($newOrder, IQueryBuilder::PARAM_INT))
-				)
-			);
-		$qb->execute();
-
-	}
-
 }

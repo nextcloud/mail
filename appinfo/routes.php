@@ -510,11 +510,6 @@ return [
 			'url' => '/api/action-step/{actionId}/steps',
 			'verb' => 'GET'
 		],
-		[
-			'name' => 'quickActions#swapOrder',
-			'url' => '/api/quick-actions/{id}/swap-order',
-			'verb' => 'PUT'
-		]
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],
