@@ -2371,6 +2371,24 @@ export default function mainStoreActions() {
 				Vue.set(this.myTextBlocks, index, textBlock)
 			}
 		},
+		setQuickActions(quickActions) {
+			this.quickActions = quickActions
+		},
+		patchQuickActionLocally(quickAction) {
+			const index = this.quickActions.findIndex(s => s.id === quickAction.id)
+			if (index !== -1) {
+				Vue.set(this.quickActions, index, quickAction)
+			}
+		},
+		deleteQuickActionLocally(id) {
+			const index = this.quickActions.findIndex(s => s.id === id)
+			if (index !== -1) {
+				this.quickActions.splice(index, 1)
+			}
+		},
+		addQuickActionLocally(quickAction) {
+			this.quickActions.push(quickAction)
+		},
 		getPreference(key, def) {
 			return defaultTo(def, this.preferences[key])
 		},
@@ -2428,6 +2446,7 @@ export default function mainStoreActions() {
 			return this.messages[id]
 		},
 		getEnvelopeThread(id) {
+			console.debug('get thread for envelope', id, this.envelopes[id], this.envelopes)
 			const thread = this.envelopes[id]?.thread ?? []
 			const envelopes = thread.map(id => this.envelopes[id])
 			return sortBy(prop('dateInt'), envelopes)
@@ -2472,6 +2491,9 @@ export default function mainStoreActions() {
 		},
 		areTextBlocksFetched() {
 			return this.textBlocksFetched
+		},
+		getQuickActions() {
+			return this.quickActions
 		},
 	}
 }

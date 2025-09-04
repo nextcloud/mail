@@ -145,7 +145,7 @@
 					}}
 				</ActionButton>
 			</EnvelopePrimaryActions>
-			<template v-if="!moreActionsOpen && !snoozeOptions">
+			<template v-if="!moreActionsOpen && !snoozeOptions && !quickActionMenu">
 				<ActionText>
 					<template #icon>
 						<ClockOutlineIcon :size="20" />
@@ -155,6 +155,12 @@
 					}}
 				</ActionText>
 				<NcActionSeparator />
+				<ActionButton :is-menu="true" @click="showQuickActionsMenu">
+					<template #icon>
+						<IconEmailFast :size="20" />
+					</template>
+					{{ t('mail', 'Quick actions') }}
+				</ActionButton>
 				<ActionButton v-if="hasWriteAcl"
 					:close-after-click="true"
 					@click.prevent="onToggleJunk">
@@ -394,9 +400,11 @@ import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import ArchiveIcon from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
 import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline.vue'
+import CogIcon from 'vue-material-design-icons/CogOutline.vue'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
 import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
 import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
+import IconEmailFast from 'vue-material-design-icons/EmailFastOutline.vue'
 import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope/index.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
 import { shortRelativeDatetime, messageDateTime } from '../util/shortRelativeDatetime.js'
@@ -435,6 +443,9 @@ import useMainStore from '../store/mainStore.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import { translateTagDisplayName } from '../util/tag.js'
 import EnvelopeSingleClickActions from './EnvelopeSingleClickActions.vue'
+import { findAllStepsForAction } from '../service/QuickActionsService.js'
+import Icon from './quickActions/Icon.vue'
+import { isRTL } from '@nextcloud/l10n'
 
 export default {
 	name: 'Envelope',
@@ -478,6 +489,9 @@ export default {
 		CalendarClock,
 		EnvelopeSingleClickActions,
 		AlarmIcon,
+		CogIcon,
+		IconEmailFast,
+		Icon,
 	},
 	directives: {
 		draggableEnvelope: DraggableEnvelopeDirective,
@@ -523,21 +537,22 @@ export default {
 			showTagModal: false,
 			moreActionsOpen: false,
 			snoozeOptions: false,
+			quickActionMenu: false,
 			customSnoozeDateTime: new Date(moment().add(2, 'hours').minute(0).second(0).valueOf()),
 			overwriteOneLineMobile: false,
 			hoveringAvatar: false,
+			filteredQuickActions: [],
+			quickActionLoading: false,
 		}
-	},
-	mounted() {
-		this.onWindowResize()
-
-		window.addEventListener('resize', this.onWindowResize)
 	},
 	computed: {
 		...mapStores(useMainStore),
 		...mapState(useMainStore, [
 			'isSnoozeDisabled',
 		]),
+		isRTL() {
+			return isRTL()
+		},
 		messageLongDate() {
 			return messageDateTime(new Date(this.data.dateInt))
 		},
@@ -670,6 +685,9 @@ export default {
 			}
 			return subject
 		},
+		storeActions() {
+			return this.mainStore.getQuickActions()
+		},
 		/**
 		 * Link to download the whole message (.eml).
 		 *
@@ -753,6 +771,18 @@ export default {
 				},
 			].filter(option => option.timestamp !== null)
 		},
+	},
+	 watch: {
+		storeActions() {
+			this.filterAndEnrichQuickActions()
+		},
+	},
+	async mounted() {
+		this.onWindowResize()
+		window.addEventListener('resize', this.onWindowResize)
+		if (this.filteredQuickActions.length === 0) {
+			await this.filterAndEnrichQuickActions()
+		}
 	},
 	methods: {
 		translateTagDisplayName,
@@ -969,6 +999,14 @@ export default {
 			this.snoozeOptions = false
 			this.moreActionsOpen = false
 		},
+		showQuickActionsMenu() {
+			this.snoozeOptions = false
+			this.moreActionsOpen = false
+			this.quickActionMenu = true
+		},
+		closeQuickActionsMenu() {
+			this.quickActionMenu = false
+		},
 		async onArchive() {
 			// Remove from selection first
 			this.setSelected(false)
@@ -1054,6 +1092,21 @@ export default {
 		},
 		onMove() {
 			this.$emit('move')
+		},
+		async moveThread(destMailboxId) {
+			if (this.layoutMessageViewThreaded) {
+				await this.mainStore.moveThread({
+					envelope: this.data,
+					destMailboxId,
+				})
+			} else {
+				await this.mainStore.moveMessage({
+					id: this.data.databaseId,
+					destMailboxId,
+				})
+			}
+			this.onMove()
+
 		},
 		onCloseMoveModal() {
 			this.showMoveModal = false
@@ -1311,6 +1364,13 @@ export default {
 	align-items: center;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+.quick-actions-button{
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .envelope__subtitle__subject.one-line {
