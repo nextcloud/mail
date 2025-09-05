@@ -283,6 +283,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		return $this->imapDate;
 	}
 
+
 	/**
 	 * @param int $id
 	 *
@@ -384,7 +385,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 */
 	#[\Override]
 	public function getAttachments(): array {
-		throw new Exception('not implemented');
+		return $this->attachments;
 	}
 
 	/**

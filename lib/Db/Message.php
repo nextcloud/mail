@@ -142,6 +142,8 @@ class Message extends Entity implements JsonSerializable {
 
 	/** @var bool */
 	private $fetchAvatarFromClient = false;
+	/** @var array */
+	private $attachments = [];
 
 	public function __construct() {
 		$this->from = new AddressList([]);
@@ -312,6 +314,14 @@ class Message extends Entity implements JsonSerializable {
 		return $this->avatar;
 	}
 
+	public function setAttachments(array $attachments): void {
+		$this->attachments = $attachments;
+	}
+
+	public function getAttachments(): array {
+		return $this->attachments;
+	}
+
 	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
@@ -359,6 +369,7 @@ class Message extends Entity implements JsonSerializable {
 			'mentionsMe' => $this->getMentionsMe(),
 			'avatar' => $this->avatar?->jsonSerialize(),
 			'fetchAvatarFromClient' => $this->fetchAvatarFromClient,
+			'attachments' => $this->getAttachments(),
 		];
 	}
 }

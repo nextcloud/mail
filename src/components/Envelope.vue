@@ -332,6 +332,9 @@
 					{{ translateTagDisplayName(tag) }}
 				</span>
 			</div>
+			<div v-for="(attachment,id) in attachments" :key="id">
+				<AttachmentTag :file-name="attachment.name" :mime-type="attachment.mime" />
+			</div>
 			<MoveModal v-if="showMoveModal"
 				:account="account"
 				:envelopes="[data]"
@@ -410,10 +413,12 @@ import useMainStore from '../store/mainStore.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import { translateTagDisplayName } from '../util/tag.js'
 import EnvelopeSingleClickActions from './EnvelopeSingleClickActions.vue'
+import AttachmentTag from './AttachmentTag.vue'
 
 export default {
 	name: 'Envelope',
 	components: {
+		AttachmentTag,
 		AlertOctagonIcon,
 		Avatar,
 		IconCreateEvent,
@@ -464,7 +469,7 @@ export default {
 			type: Boolean,
 			default: true,
 		},
-		data: {
+		threadList: {
 			type: Object,
 			required: true,
 		},
@@ -505,14 +510,17 @@ export default {
 	},
 	mounted() {
 		this.onWindowResize()
-
 		window.addEventListener('resize', this.onWindowResize)
 	},
+	// eslint-disable-next-line vue/order-in-components
 	computed: {
 		...mapStores(useMainStore),
 		...mapState(useMainStore, [
 			'isSnoozeDisabled',
 		]),
+		data() {
+			return Object.values(this.threadList)[0]
+		},
 		messageLongDate() {
 			return messageDateTime(new Date(this.data.dateInt))
 		},
@@ -615,6 +623,9 @@ export default {
 			}
 
 			return tags
+		},
+		attachments() {
+			return Object.values(this.threadList).map((envelope) => (envelope?.attachments)).flat()
 		},
 		draggableLabel() {
 			let label = this.data.subject
