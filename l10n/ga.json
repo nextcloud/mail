@@ -606,6 +606,8 @@
     "{name} Assistant" : "{name} Cúntóir",
     "Thread summary" : "Achoimre snáithe",
     "Go to latest message" : "Téigh go dtí an teachtaireacht is déanaí",
+    "Newest message" : "Teachtaireacht is nuaí",
+    "This summary is AI generated and may contain mistakes." : "Is achoimre í seo a ghintear le hintleacht shaorga agus d’fhéadfadh botúin a bheith inti.",
     "Please select languages to translate to and from" : "Roghnaigh teangacha le haistriú chucu agus uathu",
     "The message could not be translated" : "Níorbh fhéidir an teachtaireacht a aistriú",
     "Translation copied to clipboard" : "Cóipeáladh an t-aistriúchán chuig an ngearrthaisce",

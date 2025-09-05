@@ -597,6 +597,8 @@ OC.L10N.register(
     "{name} Assistant" : "Abiline: {name}",
     "Thread summary" : "Jutulõnga kokkuvõte",
     "Go to latest message" : "Mine vanima kirja juurde",
+    "Newest message" : "Viimane kiri",
+    "This summary is AI generated and may contain mistakes." : "See kokkuvõte on tehisaru koostatud ja võib sisaldada vigu.",
     "Please select languages to translate to and from" : "Palun vali keeled, mille vahel tahad tõlkida",
     "The message could not be translated" : "E-kirja tõlkimine ei õnnestunud",
     "Translation copied to clipboard" : "Tõlge on kopeeritud lõikelauale",

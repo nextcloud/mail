@@ -327,7 +327,7 @@ OC.L10N.register(
     "Add internal address" : "Engadir enderezo interno",
     "Add internal email or domain" : "Engadir correo ou dominio interno",
     "Itinerary for {type} is not supported yet" : "Aínda non é compatíbel o itinerario para {type} ",
-    "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Non ten permiso para mover esta mensaxe ao cartafol de arquivo e/ou eliminar esta mensaxe do cartafol actual",
+    "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Vde. non ten permiso para mover esta mensaxe ao cartafol de arquivo e/ou eliminar esta mensaxe do cartafol actual",
     "Last hour" : "Última hora",
     "Today" : "Hoxe",
     "Last week" : "Última semana",
