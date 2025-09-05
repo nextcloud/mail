@@ -103,7 +103,7 @@
 				fill-color="var(--color-primary-element)" />
 		</template>
 		<template #actions>
-			<EnvelopePrimaryActions v-if="!moreActionsOpen && !snoozeOptions">
+			<EnvelopePrimaryActions v-if="!moreActionsOpen && !snoozeOptions" id="primary-actions">
 				<ActionButton v-if="hasWriteAcl"
 					class="action--primary"
 					:close-after-click="true"
@@ -145,7 +145,7 @@
 					}}
 				</ActionButton>
 			</EnvelopePrimaryActions>
-			<template v-if="!moreActionsOpen && !snoozeOptions">
+			<template v-if="!moreActionsOpen && !snoozeOptions && !quickActionMenu">
 				<ActionText>
 					<template #icon>
 						<ClockOutlineIcon :size="20" />
@@ -155,6 +155,12 @@
 					}}
 				</ActionText>
 				<NcActionSeparator />
+				<ActionButton @click="showQuickActionsMenu">
+					<template #icon>
+						<IconBolt :size="20" />
+					</template>
+					{{ t('mail', 'Quick actions') }}
+				</ActionButton>
 				<ActionButton v-if="hasWriteAcl"
 					:close-after-click="true"
 					@click.prevent="onToggleJunk">
@@ -320,6 +326,24 @@
 					{{ t('mail', 'Download message') }}
 				</ActionLink>
 			</template>
+			<template v-if="quickActionMenu">
+				<ActionButton :close-after-click="false"
+					@click="closeQuickActionsMenu()">
+					<template #icon>
+						<ChevronLeft :size="20" />
+					</template>
+					{{ t('mail', 'Back to actions') }}
+				</ActionButton>
+				<ActionButton v-for="action in filteredQuickActions"
+					:key="action.id"
+					@click="executeQuickAction(action)">
+					<template #icon>
+						<component :is="quickActionIcon(action?.icon)"
+							:size="20" />
+					</template>
+					{{ action.name }}
+				</ActionButton>
+			</template>
 		</template>
 		<template #tags>
 			<div v-for="tag in tags"
@@ -358,6 +382,8 @@ import {
 	NcActionSeparator,
 	NcActionInput,
 	NcActionText as ActionText,
+	NcActionButtonGroup,
+	NcListItem,
 } from '@nextcloud/vue'
 import EnvelopeSkeleton from './EnvelopeSkeleton.vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
@@ -373,6 +399,7 @@ import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline.
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
 import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
 import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
+import IconBolt from 'vue-material-design-icons/Bolt.vue'
 import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope/index.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
 import { shortRelativeDatetime, messageDateTime } from '../util/shortRelativeDatetime.js'
@@ -411,6 +438,7 @@ import useMainStore from '../store/mainStore.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import { translateTagDisplayName } from '../util/tag.js'
 import EnvelopeSingleClickActions from './EnvelopeSingleClickActions.vue'
+import { findAllStepsForAction } from '../service/QuickActionsService.js'
 
 export default {
 	name: 'Envelope',
@@ -454,6 +482,9 @@ export default {
 		CalendarClock,
 		EnvelopeSingleClickActions,
 		AlarmIcon,
+		IconBolt,
+		NcActionButtonGroup,
+		NcListItem,
 	},
 	directives: {
 		draggableEnvelope: DraggableEnvelopeDirective,
@@ -499,15 +530,13 @@ export default {
 			showTagModal: false,
 			moreActionsOpen: false,
 			snoozeOptions: false,
+			quickActionMenu: false,
 			customSnoozeDateTime: new Date(moment().add(2, 'hours').minute(0).second(0).valueOf()),
 			overwriteOneLineMobile: false,
 			hoveringAvatar: false,
+			filteredQuickActions: [],
+			quickActionLoading: false,
 		}
-	},
-	mounted() {
-		this.onWindowResize()
-
-		window.addEventListener('resize', this.onWindowResize)
 	},
 	computed: {
 		...mapStores(useMainStore),
@@ -730,6 +759,13 @@ export default {
 			].filter(option => option.timestamp !== null)
 		},
 	},
+	async mounted() {
+		this.onWindowResize()
+		window.addEventListener('resize', this.onWindowResize)
+		if (this.filteredQuickActions.length === 0) {
+			await this.filterAndEnrichQuickActions()
+		}
+	},
 	methods: {
 		translateTagDisplayName,
 		setSelected(value) {
@@ -739,6 +775,117 @@ export default {
 		},
 		formatted() {
 			return shortRelativeDatetime(new Date(this.data.dateInt * 1000))
+		},
+		async filterAndEnrichQuickActions() {
+			this.filteredQuickActions = []
+			const quickActions = this.mainStore.getQuickActions().filter(action => action.accountId === this.data.accountId)
+			for (const action of quickActions) {
+				const steps = await findAllStepsForAction(action.id)
+				const check = steps.every(step => {
+					if (['markAsSpam', 'applyTag', 'markAsImportant', 'markAsFavorite'].includes(step.type) && !this.hasWriteAcl) {
+						return false
+					}
+					if (['markAsRead', 'markAsUnread'].includes(step.type) && !this.hasSeenAcl) {
+						return false
+					}
+					if (['moveThread', 'deleteThread'].includes(step.type) && !this.hasDeleteAcl) {
+						return false
+					}
+					return true
+				})
+				if (check) {
+					this.filteredQuickActions.push({
+						...action,
+						steps,
+						icon: steps[steps.length - 1]?.name,
+					})
+				}
+			}
+		},
+		quickActionIcon(icon) {
+			switch (icon) {
+			case 'markAsSpam':
+				return AlertOctagonIcon
+			case 'applyTag':
+				return TagIcon
+			case 'markAsImportant':
+				return ImportantIcon
+			case 'markAsFavorite':
+				return Star
+			case 'markAsRead':
+				return EmailRead
+			case 'markAsUnread':
+				return EmailUnread
+			case 'moveThread':
+				return OpenInNewIcon
+			case 'deleteThread':
+				return DeleteIcon
+			case 'snooze':
+				return AlarmIcon
+			default:
+				return IconBolt
+			}
+		},
+		async executeQuickAction(action) {
+			this.quickActionLoading = true
+			try {
+				for (const step of action.steps) {
+					console.debug('Executing quick action step', step)
+					switch (step.name) {
+					case 'markAsSpam':
+						await this.onToggleJunk()
+						break
+					case 'applyTag':
+						this.setTag(step.tagId)
+						break
+					case 'markAsImportant':
+						if (!this.isImportant) {
+							this.onToggleImportant()
+						}
+						break
+					case 'markAsFavorite':
+						if (!this.data.flags.flagged) {
+							this.onToggleFlagged()
+						}
+						break
+					case 'markAsRead':
+						if (!this.data.flags.seen) {
+							this.onToggleSeen()
+						}
+						break
+					case 'markAsUnread':
+						if (this.data.flags.seen) {
+							this.onToggleSeen()
+						}
+						break
+					case 'moveThread':
+						await this.moveThread(step.mailboxId)
+						break
+					case 'deleteThread':
+						this.onDelete()
+						break
+					default:
+						logger.warn(`Unknown quick action step type: ${step.type}`)
+					}
+				}
+			} catch (error) {
+				logger.error('Could not execute quick action', error)
+				showError(t('mail', 'Could not execute quick action'))
+				this.quickActionLoading = false
+				return
+			}
+			showSuccess(t('mail', 'Quick action executed'))
+			this.quickActionLoading = false
+
+		},
+		setTag(tagId) {
+			const tag = this.mainStore.getTag(tagId)
+			const threadEnvelopes = this.layoutMessageViewThreaded
+				? this.mainStore.getEnvelopesByThreadRootId(this.data.accountId, this.data.threadRootId)
+				: [this.data]
+			threadEnvelopes.forEach((envelope) => {
+				this.mainStore.addEnvelopeTag({ envelope, imapLabel: tag.imapLabel })
+			})
 		},
 		unselect() {
 			if (this.selected) {
@@ -844,6 +991,14 @@ export default {
 			this.snoozeOptions = false
 			this.moreActionsOpen = false
 		},
+		showQuickActionsMenu() {
+			this.snoozeOptions = false
+			this.moreActionsOpen = false
+			this.quickActionMenu = true
+		},
+		closeQuickActionsMenu() {
+			this.quickActionMenu = false
+		},
 		async onArchive() {
 			// Remove from selection first
 			this.setSelected(false)
@@ -929,6 +1084,21 @@ export default {
 		},
 		onMove() {
 			this.$emit('move')
+		},
+		async moveThread(destMailboxId) {
+			if (this.layoutMessageViewThreaded) {
+				await this.mainStore.moveThread({
+					envelope: this.data,
+					destMailboxId,
+				})
+			} else {
+				await this.mainStore.moveMessage({
+					id: this.data.databaseId,
+					destMailboxId,
+				})
+			}
+			this.onMove()
+
 		},
 		onCloseMoveModal() {
 			this.showMoveModal = false

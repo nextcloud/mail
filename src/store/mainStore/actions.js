@@ -2450,6 +2450,7 @@ export default function mainStoreActions() {
 			return this.messages[id]
 		},
 		getEnvelopeThread(id) {
+			console.debug('get thread for envelope', id, this.envelopes[id], this.envelopes)
 			const thread = this.envelopes[id]?.thread ?? []
 			const envelopes = thread.map(id => this.envelopes[id])
 			return sortBy(prop('dateInt'), envelopes)

@@ -163,7 +163,7 @@ export default {
 			return useMainStore()
 		},
 		quickActions() {
-			return this.mainStore.getQuickActions()
+			return this.mainStore.getQuickActions().filter(action => action.accountId === this.account.id)
 		},
 		modalName() {
 			return this.editMode ? this.t('mail', 'Edit quick action') : this.t('mail', 'Add quick action')
