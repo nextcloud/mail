@@ -675,6 +675,9 @@ export default {
 			}
 			return subject
 		},
+		storeActions() {
+			return this.mainStore.getQuickActions()
+		},
 		/**
 		 * Link to download the whole message (.eml).
 		 *
@@ -757,6 +760,11 @@ export default {
 					ariaLabel: t('spreed', 'Set reminder for next week'),
 				},
 			].filter(option => option.timestamp !== null)
+		},
+	},
+	 watch: {
+		storeActions() {
+			this.filterAndEnrichQuickActions()
 		},
 	},
 	async mounted() {

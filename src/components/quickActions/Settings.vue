@@ -33,7 +33,10 @@
 			<div class="modal-content">
 				<NcTextField :value.sync="localAction.name" :label="t('mail', 'Quick action name')" />
 				<Container @onDrop="onDrop">
-					<Draggable v-for="item in actions" :key="item.id" class="modal-content__action">
+					<Draggable v-for="item in actions"
+						:key="item.id"
+						class="modal-content__action"
+						:drag-not-allowed="item.name === 'deleteThread' || item.name === 'moveThread'">
 						<Action :action="item"
 							:account="account"
 							@update="(payload) => updateAction(payload,item)"
@@ -56,13 +59,13 @@
 						</template>
 						Tag
 					</NcActionButton>
-					<NcActionButton @click="addQuickAction('moveThread')">
+					<NcActionButton v-if="!deletionAndMovingDisabled" @click="addQuickAction('moveThread')">
 						<template #icon>
 							<OpenInNewIcon :size="20" />
 						</template>
 						Move thread
 					</NcActionButton>
-					<NcActionButton @click="addQuickAction('deleteThread')">
+					<NcActionButton v-if="!deletionAndMovingDisabled" @click="addQuickAction('deleteThread')">
 						<template #icon>
 							<IconDelete :size="20" />
 						</template>
@@ -171,6 +174,9 @@ export default {
 		modalName() {
 			return this.editMode ? this.t('mail', 'Edit quick action') : this.t('mail', 'Add quick action')
 		},
+		deletionAndMovingDisabled() {
+			return this.actions.some(action => ['deleteThread', 'moveThread'].includes(action.name))
+		},
 		canSave() {
 			return this.actions.length > 0 && this.localAction.name.trim().length > 0 && this.actions.every(action => {
 				if (action.name === 'moveThread' && (!action.mailboxId || action.mailboxId === null)) {
@@ -251,7 +257,11 @@ export default {
 			this.closeEditModal()
 		},
 		addQuickAction(name) {
-			this.actions.push({ name, order: ++this.highestOrder })
+			if (this.deletionAndMovingDisabled) {
+				this.actions[this.actions.length - 1].order = ++this.highestOrder
+			}
+			this.actions.push({ name, order: this.highestOrder - 1 })
+			this.actions.sort((a, b) => a.order - b.order)
 		},
 		updateAction({ id, type }, item) {
 			const index = this.actions.findIndex((action) => action.order === item.order)
@@ -268,6 +278,9 @@ export default {
 		},
 		onDrop(e) {
 			const { removedIndex, addedIndex } = e
+			if (this.deletionAndMovingDisabled && addedIndex === this.actions.length - 1) {
+				return
+			}
 			const movedItem = this.actions[removedIndex]
 			this.actions.splice(removedIndex, 1)
 			this.actions.splice(addedIndex, 0, movedItem)
