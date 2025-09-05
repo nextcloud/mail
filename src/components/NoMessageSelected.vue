@@ -58,6 +58,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@use '../../css/fluid';
+
 .no-message-selected {
 	display: flex;
 	flex-direction: column;
@@ -68,13 +70,11 @@ export default {
 	height: 100%;
 	max-width: 100% !important; /* restricted otherwise by stronger selector */
 
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: right 100% bottom 40%;
+	@include fluid.background;
 
 	/** fallback gradient when the theme color isn't standard blue */
 	&--themed {
-		background: radial-gradient(100% 100% at 100% 100%, var(--color-primary-element) 0%, rgba(var(--color-main-background-rgb), 0) 100%), var(--color-main-background);
+		@include fluid.gradient-background;
 	}
 
 	&__heading {
