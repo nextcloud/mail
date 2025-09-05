@@ -606,6 +606,8 @@
     "{name} Assistant" : "{name} Assistente",
     "Thread summary" : "Resumo do fio",
     "Go to latest message" : "Ir para a última mensagem",
+    "Newest message" : "Mensagem mais nova",
+    "This summary is AI generated and may contain mistakes." : "Este resumo foi gerado por IA e pode conter erros.",
     "Please select languages to translate to and from" : "Selecione os idiomas para os/dos quais deseja traduzir",
     "The message could not be translated" : "A mensagem não pôde ser traduzida",
     "Translation copied to clipboard" : "Tradução copiada para a área de transferência",

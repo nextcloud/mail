@@ -606,6 +606,8 @@
     "{name} Assistant" : "{name} Yardımcısı",
     "Thread summary" : "Yazışma özeti",
     "Go to latest message" : "Son iletiye git",
+    "Newest message" : "En yeni ileti",
+    "This summary is AI generated and may contain mistakes." : "Bu özet yapay zeka ile oluşturulmuştur ve hatalar olabilir",
     "Please select languages to translate to and from" : "Lütfen çevirinin yapılacağı kaynak ve hedef dilleri seçin",
     "The message could not be translated" : "İleti çevrilemedi",
     "Translation copied to clipboard" : "Çeviri panoya kopyalandı",
