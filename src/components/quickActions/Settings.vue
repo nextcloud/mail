@@ -33,7 +33,7 @@
 			<div class="modal-content">
 				<NcTextField :value.sync="localAction.name" :label="t('mail', 'Quick action name')" />
 				<Container @onDrop="onDrop">
-					<Draggable v-for="item in actions" :key="item.id">
+					<Draggable v-for="item in actions" :key="item.id" class="modal-content__action">
 						<Action :action="item"
 							:account="account"
 							@update="(payload) => updateAction(payload,item)"
@@ -93,7 +93,10 @@
 						Mark as favorite
 					</NcActionButton>
 				</NcActions>
-				<NcButton :disabled="!canSave" @click="saveQuickAction">
+				<NcButton :disabled="!canSave"
+					class="modal-content__save"
+					variant="primary"
+					@click="saveQuickAction">
 					{{ t('mail', 'Save') }}
 				</NcButton>
 			</div>
@@ -290,4 +293,19 @@ export default {
 	padding: 30px;
 }
 
+.modal-content__action{
+	padding: 9px;
+}
+
+.modal-content__save {
+	position: absolute;
+	bottom: 10px;
+	inset-inline-end: 10px;
+}
+
+:deep(.v-select){
+	display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 </style>
