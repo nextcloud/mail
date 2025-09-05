@@ -21,6 +21,8 @@ jobs:
             nextcloud-versions: 'stable30'
           - php-versions: '8.4'
             nextcloud-versions: 'stable31'
+          - php-versions: '8.4'
+            nextcloud-versions: 'stable32'
           - php-versions: '8.5'
             nextcloud-versions: 'master'
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
@@ -84,6 +86,10 @@ jobs:
                   cache: 'redis'
                 - php-versions: 8.3
                   nextcloud-versions: 'stable31'
+                  db: 'mysql'
+                  cache: 'redis'
+                - php-versions: 8.4
+                  nextcloud-versions: 'stable32'
                   db: 'mysql'
                   cache: 'redis'
                 - php-versions: 8.5
