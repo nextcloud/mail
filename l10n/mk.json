@@ -218,7 +218,7 @@
     "_Mark {number} as unimportant_::_Mark {number} as unimportant_" : ["Означи {number} како неважна","Означи {number} како неважни"],
     "_Unselect {number}_::_Unselect {number}_" : ["Од-означи {number}","Од-означи {number}"],
     "_Mark {number} as spam_::_Mark {number} as spam_" : ["Означи {number} како спам","Означи {number} како спам"],
-    "_Forward {number} as attachment_::_Forward {number} as attachment_" : ["Препрати како прилог","Препрати {number} како прилозиt"],
+    "_Forward {number} as attachment_::_Forward {number} as attachment_" : ["Препрати како {number} прилог","Препрати {number} како прилози"],
     "Mark as unread" : "Означи како непрочитано",
     "Mark as read" : "Означи како прочитано",
     "Report this bug" : "Пријави грешка",

@@ -606,6 +606,8 @@
     "{name} Assistant" : "{name} Assistent",
     "Thread summary" : "Zusammenfassung der Unterhaltung",
     "Go to latest message" : "Zur ältesten Nachricht springen",
+    "Newest message" : "Neueste Nachricht",
+    "This summary is AI generated and may contain mistakes." : "Diese Zusammenfassung wurde von KI erstellt und kann Fehler enthalten.",
     "Please select languages to translate to and from" : "Bitte die Sprachen auswählen, in die bzw. aus denen übersetzt werden soll",
     "The message could not be translated" : "Die Nachricht konnte nicht übersetzt werden",
     "Translation copied to clipboard" : "Übersetzung wurde in die Zwischenablage kopiert",
