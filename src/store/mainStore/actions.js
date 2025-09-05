@@ -116,6 +116,7 @@ import uniq from 'lodash/fp/uniq.js'
 import Vue from 'vue'
 
 import { sortMailboxes } from '../../imap/MailboxSorter.js'
+import { createQuickAction, deleteQuickAction, fetchAllQuickActions, updateQuickAction } from '../../service/QuickActionsService.js'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -1811,6 +1812,24 @@ export default function mainStoreActions() {
 			const result = await updateTextBlock(textBlock)
 			this.patchTextBlockLocally(result)
 		},
+		async fetchAllQuickActions() {
+			const quickActions = await fetchAllQuickActions()
+			this.setQuickActions(quickActions)
+		},
+		async createQuickAction(name, accountId) {
+			const quickAction = await createQuickAction(name, accountId)
+			this.addQuickActionLocally(quickAction)
+			return quickAction
+		},
+		async deleteQuickAction(id) {
+			await deleteQuickAction(id)
+			this.deleteQuickActionLocally(id)
+		},
+		async patchQuickAction(id, name) {
+			const quickAction = await updateQuickAction(id, name)
+			this.patchQuickActionLocally(quickAction)
+			return quickAction
+		},
 		sortAccounts(accounts) {
 			accounts.sort((a1, a2) => a1.order - a2.order)
 			return accounts
@@ -2356,6 +2375,24 @@ export default function mainStoreActions() {
 				Vue.set(this.myTextBlocks, index, textBlock)
 			}
 		},
+		setQuickActions(quickActions) {
+			this.quickActions = quickActions
+		},
+		patchQuickActionLocally(quickAction) {
+			const index = this.quickActions.findIndex(s => s.id === quickAction.id)
+			if (index !== -1) {
+				Vue.set(this.quickActions, index, quickAction)
+			}
+		},
+		deleteQuickActionLocally(id) {
+			const index = this.quickActions.findIndex(s => s.id === id)
+			if (index !== -1) {
+				this.quickActions.splice(index, 1)
+			}
+		},
+		addQuickActionLocally(quickAction) {
+			this.quickActions.push(quickAction)
+		},
 		getPreference(key, def) {
 			return defaultTo(def, this.preferences[key])
 		},
@@ -2457,6 +2494,9 @@ export default function mainStoreActions() {
 		},
 		areTextBlocksFetched() {
 			return this.textBlocksFetched
+		},
+		getQuickActions() {
+			return this.quickActions
 		},
 	}
 }

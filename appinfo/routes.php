@@ -505,6 +505,16 @@ return [
 			'url' => '/api/textBlocks/{id}/shares',
 			'verb' => 'GET',
 		],
+		[
+			'name' => 'actionStep#findAllStepsForAction',
+			'url' => '/api/actionStep/{actionId}/steps',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'quickActions#swapOrder',
+			'url' => '/api/quickActions/{id}/swapOrder',
+			'verb' => 'PUT'
+		]
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],
@@ -519,6 +529,8 @@ return [
 		'smimeCertificates' => ['url' => '/api/smime/certificates'],
 		'textBlock' => ['url' => '/api/textBlocks'],
 		'textBlockShares' => ['url' => '/api/textBlockshares'],
+		'quickActions' => ['url' => '/api/quickActions'],
+		'actionStep' => ['url' => '/api/actionStep'],
 	],
 	'ocs' => [
 		[
