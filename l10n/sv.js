@@ -191,6 +191,7 @@ OC.L10N.register(
     "Last hour" : "Senaste timmen",
     "Today" : "Idag",
     "Yesterday" : "I går",
+    "Last week" : "Förra veckan",
     "Loading messages …" : "Läser in meddelanden …",
     "Choose target folder" : "Välj målmapp",
     "No more submailboxes in here" : "Inga fler undermappar här",
