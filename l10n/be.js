@@ -127,6 +127,7 @@ OC.L10N.register(
     "Date" : "Дата",
     "Tags" : "Тэгі",
     "Last 7 days" : "Апошнія 7 дзён",
+    "Custom" : "Скарыстаць",
     "Not found" : "Не знойдзена",
     "Newest message" : "Апошняе паведамленне",
     "Please select languages to translate to and from" : "Выберыце, з якой мовы на якую перакладаць",
