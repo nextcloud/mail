@@ -608,6 +608,8 @@ OC.L10N.register(
     "{name} Assistant" : "{name} 小幫手",
     "Thread summary" : "討論串摘要",
     "Go to latest message" : "到最新的訊息",
+    "Newest message" : "最新的訊息",
+    "This summary is AI generated and may contain mistakes." : "此摘要為人工智能產生，可能有錯",
     "Please select languages to translate to and from" : "請選擇要翻譯的語言及其來源語言",
     "The message could not be translated" : "無法翻譯訊息",
     "Translation copied to clipboard" : "翻譯已複製到剪貼簿",
