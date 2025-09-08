@@ -201,17 +201,21 @@ export default {
 		this.stopInterval()
 	},
 	methods: {
-		initializeCache() {
+		async initializeCache() {
 			this.loadingCacheInitialization = true
 			this.error = false
 
-			logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.query}) during cache initalization`)
-			this.sync(true)
-				.then(() => {
-					this.loadingCacheInitialization = false
-
-					return this.loadEnvelopes()
-				})
+			logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.query}) during cache initialization`)
+			try {
+				await this.sync(true)
+				await wait(5000)
+				await this.loadEnvelopes()
+			} catch (error) {
+				logger.error(`Could not initialize cache of folder ${this.mailbox.databaseId} (${this.searchQuery})`, { error })
+				this.error = error
+			} finally {
+				this.loadingCacheInitialization = false
+			}
 		},
 		async loadEnvelopes() {
 			logger.debug(`Fetching envelopes for folder ${this.mailbox.databaseId} (${this.searchQuery})`, this.mailbox)
