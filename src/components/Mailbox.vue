@@ -208,7 +208,6 @@ export default {
 			logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.query}) during cache initialization`)
 			try {
 				await this.sync(true)
-				await wait(5000)
 				await this.loadEnvelopes()
 			} catch (error) {
 				logger.error(`Could not initialize cache of folder ${this.mailbox.databaseId} (${this.searchQuery})`, { error })
