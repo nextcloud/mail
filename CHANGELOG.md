@@ -1,3 +1,19 @@
+## [5.3.3](https://github.com/nextcloud/mail/compare/v5.3.2...v5.3.3) (2025-09-08)
+
+
+### Bug Fixes
+
+* **dns:** Update public suffix list ([ecabc3a](https://github.com/nextcloud/mail/commit/ecabc3a778be1fd7cec9fd8800215e5e85036a88))
+* **l10n:** Update translations from Transifex ([70a0ffa](https://github.com/nextcloud/mail/commit/70a0ffad9bd4229f690b3e1e668a5a2c32172cc9))
+* **l10n:** Update translations from Transifex ([8fbdabf](https://github.com/nextcloud/mail/commit/8fbdabfe10da26d83052a9be36e7be01d5de194d))
+* **l10n:** Update translations from Transifex ([bda754a](https://github.com/nextcloud/mail/commit/bda754af6a1eeea14c6d953ca34b91dcaaab9c72))
+* **l10n:** Update translations from Transifex ([6d53b63](https://github.com/nextcloud/mail/commit/6d53b63637386b82838aa3bf494519cc26d83f99))
+* **l10n:** Update translations from Transifex ([9180909](https://github.com/nextcloud/mail/commit/91809095ce3dd0915e65a509b7b6cff7ffe40f0e))
+* **l10n:** Update translations from Transifex ([230ebe1](https://github.com/nextcloud/mail/commit/230ebe1e635e3089b1b586332950f672e68f3486))
+* **l10n:** Update translations from Transifex ([1f22cc6](https://github.com/nextcloud/mail/commit/1f22cc618e7670736b7221825ac46c77136f8fa4))
+
+
+
 ## [5.3.2](https://github.com/nextcloud/mail/compare/v5.3.1...v5.3.2) (2025-09-01)
 
 
