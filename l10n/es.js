@@ -608,6 +608,8 @@ OC.L10N.register(
     "{name} Assistant" : "{name} Asistente",
     "Thread summary" : "Resumen del hilo",
     "Go to latest message" : "Ir al último mensaje",
+    "Newest message" : "Mensaje más reciente",
+    "This summary is AI generated and may contain mistakes." : "Este resumen se genera mediante IA y puede contener errores.",
     "Please select languages to translate to and from" : "Por favor, seleccione los idiomas de los que/a los que traducir",
     "The message could not be translated" : "El mensaje no pudo ser traducido",
     "Translation copied to clipboard" : "La traducción se copió al portapapeles",
