@@ -1,3 +1,15 @@
+# [5.4.0-rc.2](https://github.com/nextcloud/mail/compare/v5.4.0-rc.1...v5.4.0-rc.2) (2025-09-08)
+
+
+### Bug Fixes
+
+* **l10n:** Update translations from Transifex ([6d36e42](https://github.com/nextcloud/mail/commit/6d36e42f824a1a7e390ded38984a4e1024f5097c))
+* **l10n:** Update translations from Transifex ([b8dcf4e](https://github.com/nextcloud/mail/commit/b8dcf4e2a88674b228386eb4e8ccc13f5d9ca595))
+* **l10n:** Update translations from Transifex ([621715f](https://github.com/nextcloud/mail/commit/621715f58df5e8727b7129cc70fba8395ec10ff7))
+* **l10n:** Update translations from Transifex ([6020aaa](https://github.com/nextcloud/mail/commit/6020aaa2051709087cea1bcfffe8767c86cc932e))
+
+
+
 # [5.4.0-rc.1](https://github.com/nextcloud/mail/compare/v5.4.0-rc.0...v5.4.0-rc.1) (2025-09-04)
 
 
