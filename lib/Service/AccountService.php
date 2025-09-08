@@ -14,6 +14,7 @@ use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\BackgroundJob\PreviewEnhancementProcessingJob;
 use OCA\Mail\BackgroundJob\QuotaJob;
+use OCA\Mail\BackgroundJob\RepairSyncJob;
 use OCA\Mail\BackgroundJob\SyncJob;
 use OCA\Mail\BackgroundJob\TrainImportanceClassifierJob;
 use OCA\Mail\Db\MailAccount;
@@ -23,6 +24,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\BackgroundJob\IJob;
 use OCP\BackgroundJob\IJobList;
 use OCP\IConfig;
 use function array_map;
@@ -53,7 +55,7 @@ class AccountService {
 		IJobList $jobList,
 		IMAPClientFactory $imapClientFactory,
 		private readonly IConfig $config,
-		private readonly ITimeFactory $time,
+		private readonly ITimeFactory $timeFactory,
 	) {
 		$this->mapper = $mapper;
 		$this->aliasesService = $aliasesService;
@@ -176,17 +178,14 @@ class AccountService {
 		$newAccount = $this->mapper->save($newAccount);
 
 		// Insert background jobs for this account
-		$this->jobList->add(SyncJob::class, ['accountId' => $newAccount->getId()]);
-		$this->jobList->add(TrainImportanceClassifierJob::class, ['accountId' => $newAccount->getId()]);
-		$this->jobList->add(PreviewEnhancementProcessingJob::class, ['accountId' => $newAccount->getId()]);
-		$this->jobList->add(QuotaJob::class, ['accountId' => $newAccount->getId()]);
+		$this->scheduleBackgroundJobs($newAccount->getId());
 
 		// Set initial heartbeat
 		$this->config->setUserValue(
 			$newAccount->getUserId(),
 			Application::APP_ID,
 			'ui-heartbeat',
-			(string)$this->time->getTime(),
+			(string)$this->timeFactory->getTime(),
 		);
 
 		return $newAccount;
@@ -233,6 +232,32 @@ class AccountService {
 			return true;
 		} catch (\Throwable $e) {
 			return false;
+		}
+	}
+
+	public function scheduleBackgroundJobs(int $accountId): void {
+		$arguments = ['accountId' => $accountId];
+
+		$now = $this->timeFactory->getTime();
+		$this->scheduleBackgroundJob(SyncJob::class, $now, $arguments);
+		$this->scheduleBackgroundJob(TrainImportanceClassifierJob::class, $now, $arguments);
+		$this->scheduleBackgroundJob(PreviewEnhancementProcessingJob::class, $now, $arguments);
+		$this->scheduleBackgroundJob(QuotaJob::class, $now, $arguments);
+
+		$inThreeDays = $now + (3 * 86400);
+		$this->scheduleBackgroundJob(RepairSyncJob::class, $inThreeDays, $arguments);
+	}
+
+	/**
+	 * IJobList::add() / IJobList::scheduleAfter() resets last_run, last_check, and reserved_at if the job exists.
+	 * To avoid unwanted resets (e.g. when enabling debug mode), we check first if the job is already present.
+	 *
+	 * @param class-string<IJob> $job
+	 * @param mixed $argument The serializable argument to be passed to $job->run() when the job is executed
+	 */
+	private function scheduleBackgroundJob(string $job, int $runAfter, mixed $argument = null): void {
+		if (!$this->jobList->has($job, $argument)) {
+			$this->jobList->scheduleAfter($job, $runAfter, $argument);
 		}
 	}
 }
