@@ -72,15 +72,16 @@ class ManagerTest extends TestCase {
 		$config->setProvisioningDomain('batman.com');
 		$config->setEmailTemplate('%USER%@batman.com');
 		$configs = [$config];
-		$account = new MailAccount();
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
-			->willReturn($account);
+			->willReturn($mailAccount);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('update')
-			->with($account);
+			->with($mailAccount);
 
 		$result = $this->manager->provisionSingleUser($configs, $user);
 		$this->assertTrue($result);
@@ -92,7 +93,8 @@ class ManagerTest extends TestCase {
 			'getEmailAddress' => 'bruce.wayne@batman.com',
 			'getUID' => 'bruce'
 		]);
-		$account = new MailAccount();
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
 		$config = new Provisioning();
 		$config->setId(1);
 		$config->setProvisioningDomain('batman.com');
@@ -105,11 +107,11 @@ class ManagerTest extends TestCase {
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('insert')
-			->willReturn($account);
+			->willReturn($mailAccount);
 		$this->mock->getParameter('tagMapper')
 			->expects($this->once())
 			->method('createDefaultTags')
-			->with($account);
+			->with($mailAccount);
 
 		$result = $this->manager->provisionSingleUser($configs, $user);
 		$this->assertTrue($result);
@@ -121,21 +123,21 @@ class ManagerTest extends TestCase {
 			'getEmailAddress' => 'bruce.wayne@batman.com',
 			'getUID' => 'bruce.wayne'
 		]);
-		$account = new MailAccount();
 		$config = new Provisioning();
 		$config->setId(1);
 		$config->setProvisioningDomain('*');
 		$config->setEmailTemplate('%USER%@batman.com');
 		$configs = [$config];
-		$account = new MailAccount();
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
-			->willReturn($account);
+			->willReturn($mailAccount);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('update')
-			->with($account);
+			->with($mailAccount);
 
 		$result = $this->manager->provisionSingleUser($configs, $user);
 		$this->assertTrue($result);
@@ -147,7 +149,8 @@ class ManagerTest extends TestCase {
 			'getEmailAddress' => 'bruce.wayne@batman.com',
 			'getUID' => 'bruce'
 		]);
-		$account = new MailAccount();
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
 		$config = new Provisioning();
 		$config->setId(1);
 		$config->setProvisioningDomain('*');
@@ -160,11 +163,11 @@ class ManagerTest extends TestCase {
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('insert')
-			->willReturn($account);
+			->willReturn($mailAccount);
 		$this->mock->getParameter('tagMapper')
 			->expects($this->once())
 			->method('createDefaultTags')
-			->with($account);
+			->with($mailAccount);
 
 		$result = $this->manager->provisionSingleUser($configs, $user);
 		$this->assertTrue($result);
@@ -175,7 +178,6 @@ class ManagerTest extends TestCase {
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com'
 		]);
-		$account = new MailAccount();
 		$config = new Provisioning();
 		$config->setId(1);
 		$config->setProvisioningDomain('arkham-asylum.com');
@@ -224,18 +226,19 @@ class ManagerTest extends TestCase {
 	public function testUpdateLoginPassword(): void {
 		/** @var IUser|MockObject $user */
 		$user = $this->createMock(IUser::class);
-		$account = new MailAccount();
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
-			->willReturn($account);
+			->willReturn($mailAccount);
 		$config = new Provisioning();
 		$config->setProvisioningDomain(Provisioning::WILDCARD);
 		$config->setMasterPasswordEnabled(false);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('update')
-			->with($account);
+			->with($mailAccount);
 
 		$this->manager->updatePassword($user, '123456', [$config]);
 	}
@@ -243,11 +246,12 @@ class ManagerTest extends TestCase {
 	public function testUpdateMasterPasswordWithExistingLoginPassword(): void {
 		/** @var IUser|MockObject $user */
 		$user = $this->createMock(IUser::class);
-		$account = new MailAccount();
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
-			->willReturn($account);
+			->willReturn($mailAccount);
 		$config = new Provisioning();
 		$config->setProvisioningDomain(Provisioning::WILDCARD);
 		$config->setMasterPasswordEnabled(true);
@@ -260,7 +264,7 @@ class ManagerTest extends TestCase {
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('update')
-			->with($account);
+			->with($mailAccount);
 
 		$this->manager->updatePassword($user, '123456', [$config]);
 	}
@@ -268,11 +272,12 @@ class ManagerTest extends TestCase {
 	public function testUpdateMasterPasswordWithoutLoginPassword(): void {
 		/** @var IUser|MockObject $user */
 		$user = $this->createMock(IUser::class);
-		$account = new MailAccount();
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
-			->willReturn($account);
+			->willReturn($mailAccount);
 		$config = new Provisioning();
 		$config->setProvisioningDomain(Provisioning::WILDCARD);
 		$config->setMasterPasswordEnabled(true);
@@ -285,7 +290,7 @@ class ManagerTest extends TestCase {
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('update')
-			->with($account);
+			->with($mailAccount);
 
 		$this->manager->updatePassword($user, null, [$config]);
 	}
