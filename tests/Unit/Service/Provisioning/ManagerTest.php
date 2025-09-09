@@ -112,6 +112,9 @@ class ManagerTest extends TestCase {
 			->expects($this->once())
 			->method('createDefaultTags')
 			->with($mailAccount);
+		$this->mock->getParameter('accountService')
+			->expects($this->once())
+			->method('scheduleBackgroundJobs');
 
 		$result = $this->manager->provisionSingleUser($configs, $user);
 		$this->assertTrue($result);
