@@ -1,3 +1,12 @@
+# [5.4.0](https://github.com/nextcloud/mail/compare/v5.4.0-rc.2...v5.4.0) (2025-09-09)
+
+
+### Bug Fixes
+
+* **l10n:** Update translations from Transifex ([73b115f](https://github.com/nextcloud/mail/commit/73b115f452e9c5d7baced49ca1e3a732fff085d0))
+
+
+
 # [5.4.0-rc.2](https://github.com/nextcloud/mail/compare/v5.4.0-rc.1...v5.4.0-rc.2) (2025-09-08)
 
 
