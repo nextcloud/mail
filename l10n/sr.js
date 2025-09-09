@@ -608,6 +608,8 @@ OC.L10N.register(
     "{name} Assistant" : "{name} асистент",
     "Thread summary" : "Резиме низа порука",
     "Go to latest message" : "Иди на најстарију поруку",
+    "Newest message" : "Најновија порука",
+    "This summary is AI generated and may contain mistakes." : "Овај резиме је генерисала AI и може да садржи грешке.",
     "Please select languages to translate to and from" : "Молимо вас изаберите изворишни и циљни језик за превод",
     "The message could not be translated" : "Није могла да се преведе порука",
     "Translation copied to clipboard" : "Превод је копиран у клипборд",
