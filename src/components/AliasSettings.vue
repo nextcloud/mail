@@ -46,7 +46,7 @@
 			</li>
 		</ul>
 
-		<div v-if="!account.provisioningId">
+		<div v-if="!account.provisioningId" class="aliases-controls">
 			<ButtonVue v-if="!showForm"
 				type="primary"
 				:aria-label="t('mail', 'Add alias')"
@@ -189,6 +189,10 @@ export default {
 	&:focus {
 		color: var(--color-main-text);
 	}
+}
+
+.aliases-controls {
+	display: flex;
 }
 
 input {
