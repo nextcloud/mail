@@ -40,13 +40,6 @@
 							<span>
 								<slot name="name">{{ name }}</slot>
 							</span>
-
-							<EnvelopeSingleClickActions v-if="!oneLine"
-								:is-read="isRead"
-								:is-important="isImportant"
-								@delete="$emit('delete')"
-								@toggle-important="$emit('toggle-important')"
-								@toggle-seen="$emit('toggle-seen')" />
 						</div>
 						<div class="list-item-content__inner">
 							<div class="list-item-content__inner__main">
@@ -89,17 +82,29 @@
 					</div>
 				</a>
 
-				<!-- Actions -->
-				<div v-show="forceDisplayActions || displayActionsOnHoverFocus"
-					class="list-item__actions"
-					@focusout="handleBlur">
-					<NcActions ref="actions"
-						:primary="isActive || active"
-						:aria-label="computedActionsAriaLabel"
-						@update:open="handleActionsUpdateOpen">
-						<!-- @slot Provide the actions for the right side quick menu -->
-						<slot name="actions" />
-					</NcActions>
+				<div class="list-item__hoverable">
+					<EnvelopeSingleClickActions :is-read="isRead"
+						:is-important="isImportant"
+						@delete="$emit('delete')"
+						@toggle-important="$emit('toggle-important')"
+						@toggle-seen="$emit('toggle-seen')" />
+
+					<!-- Actions -->
+					<div v-show="forceDisplayActions || displayActionsOnHoverFocus"
+						class="list-item__actions"
+						@focusout="handleBlur">
+						<NcActions ref="actions"
+							:primary="isActive || active"
+							:aria-label="computedActionsAriaLabel"
+							variant="tertiary"
+							@update:open="handleActionsUpdateOpen">
+							<template #icon>
+								<DotsHorizontal :size="20" />
+							</template>
+							<!-- @slot Provide the actions for the right side quick menu -->
+							<slot name="actions" />
+						</NcActions>
+					</div>
 				</div>
 			</div>
 		</li>
@@ -109,6 +114,7 @@
 <script>
 import { NcActions, NcCounterBubble, NcVNodes } from '@nextcloud/vue'
 import EnvelopeSingleClickActions from './EnvelopeSingleClickActions.vue'
+import DotsHorizontal from 'vue-material-design-icons/DotsHorizontal.vue'
 
 export default {
 	name: 'EnvelopeSkeleton',
@@ -118,6 +124,7 @@ export default {
 		NcCounterBubble,
 		NcVNodes,
 		EnvelopeSingleClickActions,
+		DotsHorizontal,
 	},
 
 	props: {
@@ -486,6 +493,10 @@ export default {
 		box-shadow: 0 0 0 4px var(--color-main-background);
 	}
 
+	&__hoverable {
+		visibility: hidden;
+	}
+
 	.list-item-content {
 		display: flex;
 		flex-direction: column;
@@ -659,37 +670,23 @@ export default {
 		}
 	}
 
-	&__actions {
-		flex: 0 0 auto;
-		justify-content: center;
-		align-self: start;
-		margin-top: 0;
+}
 
-		:deep(.button-vue__wrapper):hover {
-				opacity: 0.5;
-		}
+.list-item:hover {
+	.list-item__hoverable {
+		visibility: visible;
+		position: absolute;
+		display: flex;
+		background: var(--color-main-background);
+		border-radius: var(--border-radius-element);
+		box-shadow: 0 0 4px 0 var(--color-box-shadow);
+		height: var(--default-clickable-area);
+		inset-inline-end: var(--default-grid-baseline);
 
-		:deep(button) {
-			// Needed to standardize the styling with the other Single Click Actions
-			// Besides, seeing as it has to be aligned with the title and is rather close to the edge
-			// The background color ends up exiting the envelope area
-			background-color: unset;
-		}
-	}
-
-	&--multiline &__actions {
-		:deep(.button-vue__icon), :deep(.button-vue__wrapper), :deep(button) {
-			min-height: unset !important;
-			min-width: unset !important;
-			height: calc(var(--default-grid-baseline) * 8) !important;
-			width: calc(var(--default-grid-baseline) * 8 + 2px) !important;
-		}
-
-		:deep(button) {
-			margin-top: calc(var(--default-grid-baseline) * -1);
+		:deep(svg) {
+			fill: var(--color-main-text) !important; // needed to not inherit active styling
 		}
 	}
-
 }
 
 .list-item--multiline:hover .list-item-content__name {
