@@ -737,7 +737,7 @@ export default {
 			this.$nextTick(() => {
 				const threadElement = document.querySelector(`[data-thread-id="${threadId}"]`)
 				if (threadElement) {
-					threadElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+					threadElement.scrollIntoView({ behavior: 'smooth', block: 'top' })
 				}
 			})
 		},
@@ -746,7 +746,7 @@ export default {
 			this.$nextTick(() => {
 				const envelopeElement = this.$refs.envelope
 				if (envelopeElement) {
-					envelopeElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+					envelopeElement.scrollIntoView({ behavior: 'smooth', block: 'top' })
 				}
 			})
 		},
