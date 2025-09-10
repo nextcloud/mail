@@ -141,6 +141,7 @@ OC.L10N.register(
     "Translate to" : "Перакласці на",
     "Translating" : "Пераклад",
     "Copy translated text" : "Скапіяваць перакладзены тэкст",
+    "Untitled event" : "Падзея без назвы",
     "Train" : "Цягнік",
     "Flag" : "Сцяг",
     "Delete filter" : "Выдаліць фільтр",
