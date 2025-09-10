@@ -12,7 +12,8 @@
 						:email="recipients[0].email"
 						:size="55"
 						:disable-tooltip="true"
-						:disable-menu="true" />
+						:disable-menu="true"
+						:avatar="getAvatarForRecipient(recipients[0])" />
 				</div>
 				<div class="recipient-info__details">
 					<DisplayContactDetails :email="recipients[0].email" />
@@ -29,7 +30,8 @@
 							:email="recipient.email"
 							:size="55"
 							:disable-tooltip="true"
-							:disable-menu="true" />
+							:disable-menu="true"
+							:avatar="getAvatarForRecipient(recipient)" />
 					</div>
 					<div v-if="!expandedRecipients[index]" class="recipient-info__name">
 						<h6>{{ recipient.email }}</h6>
@@ -95,6 +97,15 @@ export default {
 		},
 		isExpanded(index) {
 			return this.expandedRecipients[index]
+		},
+		getAvatarForRecipient(recipient) {
+			if ((recipient.source && recipient.source === 'contacts') && recipient.photo) {
+				return {
+					isExternal: false,
+					url: recipient.photo,
+				}
+			}
+			return null
 		},
 	},
 }
