@@ -49,7 +49,7 @@ class AccountService {
 		IJobList $jobList,
 		IMAPClientFactory $imapClientFactory,
 		private readonly IConfig $config,
-		private readonly ITimeFactory $time,
+		private readonly ITimeFactory $timeFactory,
 	) {
 		$this->mapper = $mapper;
 		$this->aliasesService = $aliasesService;
@@ -172,14 +172,14 @@ class AccountService {
 		$newAccount = $this->mapper->save($newAccount);
 
 		// Insert background jobs for this account
-		$newAccount->scheduleBackgroundJobs($this->jobList);
+		$newAccount->scheduleBackgroundJobs($this->jobList, $this->timeFactory);
 
 		// Set initial heartbeat
 		$this->config->setUserValue(
 			$newAccount->getUserId(),
 			Application::APP_ID,
 			'ui-heartbeat',
-			(string)$this->time->getTime(),
+			(string)$this->timeFactory->getTime(),
 		);
 
 		return $newAccount;
