@@ -8,12 +8,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Migration;
 
-use OCA\Mail\BackgroundJob\PreviewEnhancementProcessingJob;
-use OCA\Mail\BackgroundJob\QuotaJob;
-use OCA\Mail\BackgroundJob\RepairSyncJob;
-use OCA\Mail\BackgroundJob\SyncJob;
-use OCA\Mail\BackgroundJob\TrainImportanceClassifierJob;
 use OCA\Mail\Db\MailAccountMapper;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
@@ -24,7 +20,11 @@ class FixBackgroundJobs implements IRepairStep {
 	/** @var MailAccountMapper */
 	private $mapper;
 
-	public function __construct(IJobList $jobList, MailAccountMapper $mapper) {
+	public function __construct(
+		IJobList $jobList,
+		MailAccountMapper $mapper,
+		private ITimeFactory $timeFactory
+	) {
 		$this->jobList = $jobList;
 		$this->mapper = $mapper;
 	}
@@ -43,11 +43,7 @@ class FixBackgroundJobs implements IRepairStep {
 
 		$output->startProgress(count($accounts));
 		foreach ($accounts as $account) {
-			$this->jobList->add(SyncJob::class, ['accountId' => $account->getId()]);
-			$this->jobList->add(RepairSyncJob::class, ['accountId' => $account->getId()]);
-			$this->jobList->add(TrainImportanceClassifierJob::class, ['accountId' => $account->getId()]);
-			$this->jobList->add(PreviewEnhancementProcessingJob::class, ['accountId' => $account->getId()]);
-			$this->jobList->add(QuotaJob::class, ['accountId' => $account->getId()]);
+			$account->scheduleBackgroundJobs($this->jobList, $this->timeFactory);
 			$output->advance();
 		}
 		$output->finishProgress();
