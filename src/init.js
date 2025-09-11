@@ -87,6 +87,8 @@ export default function initAfterAppCreation() {
 		value: loadState('mail', 'smime-sign-aliases', []),
 	})
 
+	mainStore.setQuickActions(loadState('mail', 'quick-actions', []))
+
 	const accountSettings = loadState('mail', 'account-settings')
 	const accounts = loadState('mail', 'accounts', [])
 	const internalAddressesList = loadState('mail', 'internal-addresses-list', [])

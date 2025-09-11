@@ -122,7 +122,8 @@
 				:selected-envelopes="selectedEnvelopes"
 				@delete="$emit('delete', env.databaseId)"
 				@update:selected="onEnvelopeSelectToggle(env, index, $event)"
-				@select-multiple="onEnvelopeSelectMultiple(env, index)" />
+				@select-multiple="onEnvelopeSelectMultiple(env, index)"
+				@open:quick-actions-settings="showQuickActionsSettings = true" />
 			<div v-if="loadMoreButton && !loadingMore"
 				:key="'list-collapse-' + searchQuery"
 				class="load-more"
@@ -137,11 +138,17 @@
 			:account="account"
 			:envelopes="selectedEnvelopes"
 			@close="onCloseTagModal" />
+
+		<NcDialog v-if="showQuickActionsSettings"
+			:name="t('mail', 'Manage quick actions')"
+			@closing="showQuickActionsSettings = false">
+			<Settings :account="account" />
+		</NcDialog>
 	</div>
 </template>
 
 <script>
-import { NcActions as Actions, NcActionButton as ActionButton, NcButton } from '@nextcloud/vue'
+import { NcActions as Actions, NcActionButton as ActionButton, NcButton, NcDialog } from '@nextcloud/vue'
 import { showError } from '@nextcloud/dialogs'
 import Envelope from './Envelope.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
@@ -162,6 +169,7 @@ import ShareIcon from 'vue-material-design-icons/ShareOutline.vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import TagIcon from 'vue-material-design-icons/TagOutline.vue'
 import TagModal from './TagModal.vue'
+import Settings from '../components/quickActions/Settings.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
 import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
 import useMainStore from '../store/mainStore.js'
@@ -176,6 +184,7 @@ export default {
 		Actions,
 		AddIcon,
 		NcButton,
+		NcDialog,
 		ActionButton,
 		Envelope,
 		IconDelete,
@@ -188,6 +197,7 @@ export default {
 		AlertOctagonIcon,
 		TagIcon,
 		TagModal,
+		Settings,
 	},
 	props: {
 		account: {
@@ -232,6 +242,7 @@ export default {
 			showTagModal: false,
 			lastToggledIndex: undefined,
 			defaultView: false,
+			showQuickActionsSettings: false,
 		}
 	},
 	computed: {

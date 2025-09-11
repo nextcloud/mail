@@ -23,6 +23,7 @@ use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
+use OCA\Mail\Service\QuickActionsService;
 use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
@@ -108,6 +109,8 @@ class PageControllerTest extends TestCase {
 	/** @var InternalAddressService|MockObject */
 	private $internalAddressService;
 
+	private QuickActionsService|MockObject $quickActionsService;
+
 	private IAvailabilityCoordinator&MockObject $availabilityCoordinator;
 
 	protected function setUp(): void {
@@ -135,6 +138,7 @@ class PageControllerTest extends TestCase {
 		$this->classificationSettingsService = $this->createMock(ClassificationSettingsService::class);
 		$this->internalAddressService = $this->createMock(InternalAddressService::class);
 		$this->availabilityCoordinator = $this->createMock(IAvailabilityCoordinator::class);
+		$this->quickActionsService = $this->createMock(QuickActionsService::class);
 
 		$this->controller = new PageController(
 			$this->appName,
@@ -159,6 +163,7 @@ class PageControllerTest extends TestCase {
 			$this->classificationSettingsService,
 			$this->internalAddressService,
 			$this->availabilityCoordinator,
+			$this->quickActionsService,
 		);
 	}
 
@@ -305,7 +310,11 @@ class PageControllerTest extends TestCase {
 			->method('isEnabled')
 			->willReturn(true);
 
-		$this->initialState->expects($this->exactly(23))
+		$this->quickActionsService->expects(self::once())
+			->method('findAll')
+			->with($this->userId)
+			->willReturn([]);
+		$this->initialState->expects($this->exactly(24))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -334,6 +343,7 @@ class PageControllerTest extends TestCase {
 				['prefill_displayName', 'Jane Doe'],
 				['prefill_email', 'jane@doe.cz'],
 				['outbox-messages', []],
+				['quick-actions', []],
 				['disable-scheduled-send', false],
 				['disable-snooze', false],
 				['allow-new-accounts', true],

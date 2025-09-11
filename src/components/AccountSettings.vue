@@ -65,6 +65,11 @@
 				<MailFilters :key="account.accountId" ref="mailFilters" :account="account" />
 			</div>
 		</AppSettingsSection>
+		<AppSettingsSection v-if="account"
+			id="quick-actions-settings"
+			:name="t('mail', 'Quick actions')">
+			<Settings :key="account.accountId" ref="quickActions" :account="account" />
+		</AppSettingsSection>
 		<AppSettingsSection v-if="account && account.sieveEnabled"
 			id="sieve-filter"
 			:name="t('mail', 'Sieve script editor')">
@@ -107,6 +112,7 @@ import EditorSettings from '../components/EditorSettings.vue'
 import AccountDefaultsSettings from '../components/AccountDefaultsSettings.vue'
 import SignatureSettings from '../components/SignatureSettings.vue'
 import AliasSettings from '../components/AliasSettings.vue'
+import Settings from './quickActions/Settings.vue'
 import { NcButton, NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSettingsSection } from '@nextcloud/vue'
 import SieveAccountForm from './SieveAccountForm.vue'
 import SieveFilterForm from './SieveFilterForm.vue'
@@ -137,6 +143,7 @@ export default {
 		SearchSettings,
 		MailFilters,
 		NcButton,
+		Settings,
 	},
 	props: {
 		account: {
