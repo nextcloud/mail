@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 5.5.0 – unreleased
+### Added
+* Nextcloud 33 support
+* Quick actions
+### Changed
+* Thread summaries styling
+* Background sync intervals based on user activity
+
 ## 4.0.0 - unreleased
 
 ## 3.6.0 – unreleased
