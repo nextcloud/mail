@@ -109,14 +109,6 @@ class AdminSettings implements ISettings {
 			$this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class)
 		);
 
-		$this->initialStateService->provideLazyInitialState(
-			Application::APP_ID,
-			'ldap_aliases_integration',
-			static function () {
-				return method_exists(ILDAPProvider::class, 'getMultiValueUserAttribute');
-			}
-		);
-
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,
 			'google_oauth_client_id',
