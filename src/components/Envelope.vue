@@ -1227,10 +1227,16 @@ export default {
 	}
 }
 
+.hovering-status {
+	// Needs to be the same height as the check-icon and the avatar to prevent automatic resizing
+	// and height differences between hover state and normal state
+	height: calc(var(--default-grid-baseline) * 10);
+}
+
 .check-icon {
 	border-radius: 32px;
-	width: 40px;
-	height: 40px;
+	width: calc(var(--default-grid-baseline) * 10);
+	height: calc(var(--default-grid-baseline) * 10);
 	display: flex;
 	align-items: center;
 	justify-content: center;
