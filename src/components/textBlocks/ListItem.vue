@@ -35,7 +35,9 @@
 				{{ localTextBlock.title }}
 			</p>
 			<NcInputField v-else :value.sync="localTextBlock.title" :label="t('mail','Title of the text block')" />
-			<TextEditor v-model="localTextBlock.content"
+			<TextEditor 
+				ref="textEditor"
+				v-model="localTextBlock.content"
 				:is-bordered="!shared"
 				:html="true"
 				:read-only="shared"
@@ -352,6 +354,7 @@ export default {
 		async saveTextBlock() {
 			this.saveLoading = true
 			try {
+				this.localTextBlock.content = this.$refs.textEditor.convertImageClassesToInlineStyles(this.localTextBlock.content)
 				await this.mainStore.patchTextBlock(this.localTextBlock)
 				this.saveLoading = false
 				this.editModalOpen = false
