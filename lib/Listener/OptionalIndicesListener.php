@@ -67,39 +67,37 @@ class OptionalIndicesListener implements IEventListener {
 			['account_id']
 		);
 
-		if (method_exists($event, 'replaceIndex')) {
-			$event->replaceIndex(
-				'mail_messages',
-				['mail_messages_mb_id_uid'],
-				'mail_messages_mb_id_uid_uidx',
-				['mailbox_id', 'uid'],
-				true
-			);
+		$event->replaceIndex(
+			'mail_messages',
+			['mail_messages_mb_id_uid'],
+			'mail_messages_mb_id_uid_uidx',
+			['mailbox_id', 'uid'],
+			true
+		);
 
-			$event->replaceIndex(
-				'mail_smime_certificates',
-				['mail_smime_certs_uid_idx'],
-				'mail_smime_certs_uid_email_idx',
-				['user_id', 'email_address'],
-				false
-			);
+		$event->replaceIndex(
+			'mail_smime_certificates',
+			['mail_smime_certs_uid_idx'],
+			'mail_smime_certs_uid_email_idx',
+			['user_id', 'email_address'],
+			false
+		);
 
-			$event->replaceIndex(
-				'mail_trusted_senders',
-				['mail_trusted_senders_type'],
-				'mail_trusted_senders_idx',
-				['user_id', 'email', 'type'],
-				false
-			);
+		$event->replaceIndex(
+			'mail_trusted_senders',
+			['mail_trusted_senders_type'],
+			'mail_trusted_senders_idx',
+			['user_id', 'email', 'type'],
+			false
+		);
 
-			$event->replaceIndex(
-				'mail_coll_addresses',
-				['mail_coll_addr_userid_index', 'mail_coll_addr_email_index'],
-				'mail_coll_idx',
-				['user_id', 'email', 'display_name'],
-				false
-			);
-		}
+		$event->replaceIndex(
+			'mail_coll_addresses',
+			['mail_coll_addr_userid_index', 'mail_coll_addr_email_index'],
+			'mail_coll_idx',
+			['user_id', 'email', 'display_name'],
+			false
+		);
 	}
 
 }

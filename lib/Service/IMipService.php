@@ -141,7 +141,7 @@ class IMipService {
 				}
 
 				foreach ($imapMessage->scheduling as $schedulingInfo) { // an IMAP message could contain more than one iMIP object
-					if ($schedulingInfo['method'] === 'REQUEST' && method_exists($this->calendarManager, 'handleIMipRequest')) {
+					if ($schedulingInfo['method'] === 'REQUEST') {
 						$processed = $this->calendarManager->handleIMipRequest($principalUri, $sender, $recipient, $schedulingInfo['contents']);
 						$message->setImipProcessed($processed);
 						$message->setImipError(!$processed);
