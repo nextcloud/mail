@@ -3,10 +3,11 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="mail-filter-rows">
-		<div class="mail-filter-rows__row">
-			<div class="mail-filter-rows__row__column">
+	<div class="condition">
+		<div class="condition__value">
+			<div class="condition__value__field_operator">
 				<NcSelect input-label="field"
+					class="condition__value__field_operator__column"
 					:value="test.field"
 					:required="true"
 					:label-outside="true"
@@ -19,9 +20,8 @@
 						{{ getLabelForField(label) }}
 					</template>
 				</NcSelect>
-			</div>
-			<div class="mail-filter-rows__row__column">
 				<NcSelect input-label="operator"
+					class="condition__value__field_operator__column"
 					:value="test.operator"
 					:required="true"
 					:label-outside="true"
@@ -35,30 +35,27 @@
 					</template>
 				</NcSelect>
 			</div>
-			<div class="mail-filter-rows__row__column">
-				<NcButton aria-label="Delete action"
-					type="tertiary-no-background"
-					@click="deleteTest">
-					<template #icon>
-						<DeleteIcon :size="20" />
-					</template>
-					{{ t('mail', 'Delete test') }}
-				</NcButton>
-			</div>
-		</div>
-		<div class="mail-filter-rows__row">
 			<NcSelect v-model="localValues"
+				class="condition__value__values"
 				input-label="value"
-				class="mail-filter-rows__row__select"
 				:multiple="true"
 				:wrap="true"
 				:close-on-select="false"
 				:taggable="true"
 				:required="true"
+				:label-outside="true"
 				@option:selected="updateTest({ values: localValues })"
 				@option:deselected="updateTest({ values: localValues })" />
 		</div>
-		<hr class="solid">
+		<div class="condition__delete">
+			<NcButton aria-label="Delete action"
+				type="tertiary-no-background"
+				@click="deleteTest">
+				<template #icon>
+					<DeleteIcon :size="20" />
+				</template>
+			</NcButton>
+		</div>
 	</div>
 </template>
 <script>
@@ -131,38 +128,29 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.condition {
+	display: flex;
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
+	&__value {
+		width: 100%;
+		margin-right: var(--default-grid-baseline);
+		&__field_operator {
+			display: flex;
+			gap: var(--default-grid-baseline);
+			&__column {
+				flex: 1;
+			}
+		}
+		&__values {
+			width: 100%;
+		}
+	}
+	&__delete {
+		width: 30px;
+	}
+}
+
 .solid {
 	margin: calc(var(--default-grid-baseline) * 4) 0 0 0;
-}
-
-.mail-filter-rows {
-	margin-bottom: calc(var(--default-grid-baseline) * 4);
-	&__row {
-		display: flex;
-		gap: var(--default-grid-baseline);
-		align-items: baseline;
-		&__column {
-			display: block;
-			flex-grow: 1;
-		}
-		&__column *{
-			width: 100%;
-		}
-		&__select {
-			max-width: 100% !important;
-			width: 100%;
-		}
-
-	}
-}
-
-.values-list {
-	display: flex;
-	gap: var(--default-grid-baseline);
-	flex-wrap: wrap;
-	&__item {
-		display: flex;
-		gap: var(--default-grid-baseline);
-	}
 }
 </style>

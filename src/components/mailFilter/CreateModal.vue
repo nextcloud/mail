@@ -129,7 +129,7 @@ export default {
 
 <style lang="scss" scoped>
 .modal__content {
-	margin: 25px;
+	margin: 20px;
 }
 
 h2, .intro-text, .headers-list {
