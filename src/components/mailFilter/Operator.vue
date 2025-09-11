@@ -10,6 +10,7 @@
 			:label-outside="true"
 			:options="availableOperators"
 			:reduce="operator => operator.value"
+			:clearable="false"
 			@input="updateOperator($event)" />
 		<NcPopover class="operator__popover" :focus-trap="false">
 			<template #trigger>
@@ -21,15 +22,6 @@
 			</template>
 			<template #default>
 				<div class="operator__popover__help">
-					<p>
-						{{ t('mail', 'Tests are applied to incoming emails on your mail server, targeting fields such as subject (the email\'s subject line), from (the sender), and to (the recipient).') }}
-					</p>
-					<p>
-						{{ t('mail', 'You can use the following operators to define conditions for these fields:') }}
-					</p>
-					<p>
-						<strong>{{ t('mail', 'is exactly') }}</strong>: {{ t('mail', 'An exact match. The field must be identical to the provided value.') }}
-					</p>
 					<p>
 						<strong>{{ t('mail', 'contains') }}</strong>: {{ t('mail', 'A substring match. The field matches if the provided value is contained within it. For example, "report" would match "port".') }}
 					</p>

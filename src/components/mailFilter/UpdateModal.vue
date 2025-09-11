@@ -95,6 +95,7 @@ import { randomId } from '../../util/randomId.js'
 import Action from './Action.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconInformationOutline from 'vue-material-design-icons/InformationOutline.vue'
+import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter'
 
 export default {
 	name: 'UpdateModal',
@@ -133,7 +134,7 @@ export default {
 	},
 	methods: {
 		createTest() {
-			this.clone.tests.push({ id: randomId(), operator: null, values: [] })
+			this.clone.tests.push({ id: randomId(), field: MailFilterConditionField.Subject, operator: MailFilterConditionOperator.Is, values: [] })
 		},
 		updateTest(test) {
 			const index = this.clone.tests.findIndex((items) => items.id === test.id)

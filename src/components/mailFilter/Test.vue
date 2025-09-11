@@ -12,6 +12,7 @@
 					:required="true"
 					:label-outside="true"
 					:options="fields"
+					:clearable="false"
 					@input="updateTest({ field: $event })">
 					<template #selected-option="{ label }">
 						{{ getLabelForField(label) }}
@@ -26,6 +27,7 @@
 					:required="true"
 					:label-outside="true"
 					:options="operators"
+					:clearable="false"
 					@input="updateTest({ operator: $event })">
 					<template #selected-option="{ label }">
 						{{ getLabelForOperator(label) }}
@@ -44,6 +46,7 @@
 				:taggable="true"
 				:required="true"
 				:label-outside="true"
+				:placeholder="placeholderText"
 				@option:selected="updateTest({ values: localValues })"
 				@option:deselected="updateTest({ values: localValues })" />
 		</div>
@@ -91,6 +94,19 @@ export default {
 				MailFilterConditionOperator.Matches,
 			],
 		}
+	},
+	computed: {
+		placeholderText() {
+			switch (this.test.field) {
+			case MailFilterConditionField.Subject:
+				return t('mail', 'Enter subject')
+			case MailFilterConditionField.From:
+				return t('mail', 'Enter sender')
+			case MailFilterConditionField.To:
+				return t('mail', 'Enter recipient')
+			}
+			return ''
+		},
 	},
 	mounted() {
 		this.localValues = [...this.test.values]
