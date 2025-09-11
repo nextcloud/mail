@@ -356,7 +356,7 @@ export default {
 			}
 
 			for (const envelope of envelopes) {
-				const date = new Date(envelope.dateInt * 1000)
+				const date = new Date(Object.values(envelope)[0].dateInt * 1000)
 				if (date >= oneHourAgo) {
 					groups.lastHour.push(envelope)
 				} else if (date >= startOfToday) {
