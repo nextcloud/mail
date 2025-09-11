@@ -23,7 +23,6 @@ use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\ICacheFactory;
 use OCP\IUser;
 use OCP\IUserManager;
-use OCP\LDAP\ILDAPProvider;
 use OCP\LDAP\ILDAPProviderFactory;
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;

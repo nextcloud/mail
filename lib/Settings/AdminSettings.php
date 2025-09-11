@@ -20,7 +20,6 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Defaults;
 use OCP\IConfig;
 use OCP\IInitialStateService;
-use OCP\LDAP\ILDAPProvider;
 use OCP\Settings\ISettings;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\SummaryTaskType;
