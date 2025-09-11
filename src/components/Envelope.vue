@@ -86,12 +86,6 @@
 					<NcAssistantIcon v-if="data.summary" :size="15" class="envelope__preview-text__icon" />
 					{{ isEncrypted ? t('mail', 'Encrypted message') : data.summary ? data.summary.trim() : data.previewText.trim() }}
 				</div>
-				<EnvelopeSingleClickActions v-if="oneLineLayout"
-					:is-read="showImportantIconVariant"
-					:is-important="isImportant"
-					@delete="onDelete"
-					@toggle-important="onToggleImportant"
-					@toggle-seen="onToggleSeen" />
 			</div>
 		</template>
 		<template #indicator>
@@ -441,7 +435,6 @@ import { mapState, mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import { translateTagDisplayName } from '../util/tag.js'
-import EnvelopeSingleClickActions from './EnvelopeSingleClickActions.vue'
 import { findAllStepsForAction } from '../service/QuickActionsService.js'
 import Icon from './quickActions/Icon.vue'
 import { isRTL } from '@nextcloud/l10n'
@@ -485,7 +478,6 @@ export default {
 		NcActionSeparator,
 		NcActionInput,
 		CalendarClock,
-		EnvelopeSingleClickActions,
 		AlarmIcon,
 		NcAssistantIcon,
 		CogIcon,
