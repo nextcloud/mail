@@ -3,31 +3,30 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="mail-filter-row">
-		<div class="mail-filter-column">
-			<NcSelect :value="action.type"
+	<div class="action">
+		<div class="action__type">
+			<NcSelect class="action__type__column action__type__column__select"
+				:value="currentAction"
 				:required="true"
 				:label-outside="true"
 				:options="availableTypes"
-				@input="updateAction({ type: $event })" />
-		</div>
-		<div class="mail-filter-column">
+				:clearable="false"
+				@input="updateAction({ type: $event.id })" />
 			<component :is="componentInstance"
 				v-if="componentInstance"
+				class="action__type__column"
 				:action="action"
 				:account="account"
 				@update-action="updateAction" />
 		</div>
-		<div class="mail-filter-column">
-			<NcButton aria-label="Delete action"
-				type="tertiary-no-background"
-				@click="deleteAction">
-				{{ t('mail', 'Delete action') }}
-				<template #icon>
-					<DeleteIcon :size="20" />
-				</template>
-			</NcButton>
-		</div>
+		<NcButton :aria-label="t('mail', 'Delete action')"
+			class="action__delete"
+			type="tertiary-no-background"
+			@click="deleteAction">
+			<template #icon>
+				<DeleteIcon :size="20" />
+			</template>
+		</NcButton>
 	</div>
 </template>
 <script>
@@ -61,13 +60,25 @@ export default {
 	data() {
 		return {
 			availableTypes: [
-				'addflag',
-				'fileinto',
-				'stop',
+				{
+					id: 'addflag',
+					label: this.t('mail', 'Add flag'),
+				},
+				{
+					id: 'fileinto',
+					label: this.t('mail', 'Move into folder'),
+				},
+				{
+					id: 'stop',
+					label: this.t('mail', 'Stop'),
+				},
 			],
 		}
 	},
 	computed: {
+		currentAction() {
+			return this.availableTypes.find(type => type.id === this.action.type)
+		},
 		componentInstance() {
 			if (this.action.type === 'fileinto') {
 				return ActionFileinto
@@ -90,8 +101,26 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.mail-filter-row {
+.action {
 	display: flex;
-	gap: 5px;
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
+	&__type {
+		display: flex;
+		gap: var(--default-grid-baseline);
+		width: 100%;
+		&__column {
+			flex: 0 1 auto;
+			&__select {
+				margin: 0
+			}
+		}
+	}
+	&__delete {
+		width: 30px;
+	}
+}
+
+:deep(.vs__dropdown-toggle) {
+	height: 100%;
 }
 </style>
