@@ -65,7 +65,7 @@ import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import DeleteModal from './DeleteModal.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
-import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter'
+import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
 
 export default {
 	name: 'MailFilters',

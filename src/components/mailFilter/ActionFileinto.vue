@@ -49,7 +49,8 @@ export default {
 :deep(.vue-treeselect__control) {
 	width: 100%; /* todo: fix MailboxInlinePicker.vue styling instead */
 }
+
 :deep(.vue-treeselect__input-container) {
-	padding-right: 0; /* todo: fix MailboxInlinePicker.vue styling instead */
+	padding-inline-end: 0; /* todo: fix MailboxInlinePicker.vue styling instead */
 }
 </style>

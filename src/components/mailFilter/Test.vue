@@ -149,7 +149,7 @@ export default {
 	margin-bottom: calc(var(--default-grid-baseline) * 2);
 	&__value {
 		width: 100%;
-		margin-right: var(--default-grid-baseline);
+		margin-inline-end: var(--default-grid-baseline);
 		&__field_operator {
 			display: flex;
 			gap: var(--default-grid-baseline);
