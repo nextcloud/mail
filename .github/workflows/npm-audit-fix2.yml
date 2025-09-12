@@ -49,6 +49,6 @@ jobs:
           CYPRESS_INSTALL_BINARY: 0
         run: |
           npm ci
-          npm audit --json > audit.json
-          vulns=$(jq -r '.vulnerabilities | keys[]' "audit.json")
-          echo $vulns
+          #npm audit --json > "audit.json"
+          #vulns=$(jq -r '.vulnerabilities | keys[]' "audit.json")
+          #echo $vulns
