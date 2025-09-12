@@ -70,7 +70,7 @@
 					<NcLoadingIcon v-if="loading" :size="20" />
 					<IconCheck v-else :size="20" />
 				</template>
-				{{ t('mail', 'Save filter') }}
+				{{ t('mail', 'Save') }}
 			</NcButton>
 		</form>
 	</NcModal>
