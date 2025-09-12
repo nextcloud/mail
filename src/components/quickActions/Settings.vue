@@ -315,9 +315,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.quick-actions-settings{
-	padding: 10px;
-}
 
 .modal-content{
 	padding: 30px;
