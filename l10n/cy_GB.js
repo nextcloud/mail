@@ -104,6 +104,7 @@ OC.L10N.register(
     "Untitled event" : "Digwyddiad di-deitl",
     "(organizer)" : "(trefnydd)",
     "Recipient" : "Derbynnydd",
+    "delete" : "dileu",
     "User" : "Defnyddwyr",
     "Certificate" : "Tystysgrif",
     "Group" : "Grŵp",

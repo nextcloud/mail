@@ -108,6 +108,8 @@ OC.L10N.register(
     "Recipient" : "მიმღები",
     "matches" : "ემთხვევა",
     "Priority" : "პრიორიტეტი",
+    "delete" : "წაშლა",
+    "Edit" : "შეცვლა",
     "Reset" : "საწყის მდოგმარეობაში დაბრუნება",
     "Client ID" : "კლიენტის ID",
     "Client secret" : "კლიენტის საიდუმლო",

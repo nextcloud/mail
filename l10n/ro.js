@@ -438,6 +438,8 @@ OC.L10N.register(
     "Event imported into {calendar}" : "Eveniment importat în {calendar}",
     "Reservation {id}" : "Rezervare {id}",
     "Recipient" : "Destinatar",
+    "delete" : "ștergere",
+    "Edit" : "Editează",
     "Successfully updated config for \"{domain}\"" : "S-a actualizat configurația pentru \"{domain}\"",
     "Error saving config" : "Eroare la salvarea configurației",
     "Saved config for \"{domain}\"" : "A fost salvată configurația pentru \"{domain}\"",
@@ -508,7 +510,6 @@ OC.L10N.register(
     "The link leads to %s" : "Link-ul duce la %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Dacă nu doriți să vizitați acea pagină, vă puteți întoarce la <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continuă către %s",
-    "Looking for a way to encrypt your emails?" : "Doriți o modalitate de criptare a emailurilor?",
-    "Go to newest message" : "Salt la cele mai recente mesaje"
+    "Looking for a way to encrypt your emails?" : "Doriți o modalitate de criptare a emailurilor?"
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");

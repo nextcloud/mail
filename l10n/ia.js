@@ -54,6 +54,8 @@ OC.L10N.register(
     "Custom" : "Personalisate",
     "matches" : "corresponde",
     "Priority" : "Prioritate",
+    "delete" : "deler",
+    "Edit" : "Modificar",
     "Reset" : "Re-fixar",
     "User" : "User",
     "Host" : "Hospite",

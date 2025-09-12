@@ -840,7 +840,6 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Mailvelope je pro stávající doménu zapnuté!",
     "Looking for a way to encrypt your emails?" : "Hledáte způsob jak šifrovat své e-maily?",
     "Install Mailvelope browser extension" : "Nainstalovat Mailvelope – rozšíření pro webový prohlížeč",
-    "Enable Mailvelope for the current domain" : "Zapnout Mailvelope pro stávající doménu",
-    "Go to newest message" : "Přejít na nejnovější zprávu"
+    "Enable Mailvelope for the current domain" : "Zapnout Mailvelope pro stávající doménu"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");
