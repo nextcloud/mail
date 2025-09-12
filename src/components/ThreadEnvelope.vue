@@ -19,7 +19,9 @@
 			</div>
 		</div>
 
-		<div class="envelope__header">
+		<div
+			ref="header"
+			class="envelope__header">
 			<div class="envelope__header__avatar">
 				<Avatar v-if="envelope.from && envelope.from[0]"
 					:email="envelope.from[0].email"
@@ -748,16 +750,25 @@ export default {
 			this.$nextTick(() => {
 				const threadElement = document.querySelector(`[data-thread-id="${threadId}"]`)
 				if (threadElement) {
-					threadElement.scrollIntoView({ behavior: 'smooth', block: 'top' })
+					threadElement.scrollIntoView({
+						behavior: 'smooth',
+						block: 'start',
+					})
 				}
 			})
 		},
 
 		scrollToEnvelope() {
 			this.$nextTick(() => {
-				const envelopeElement = this.$refs.envelope
-				if (envelopeElement) {
-					envelopeElement.scrollIntoView({ behavior: 'smooth', block: 'top' })
+				const envelopeHeaderElement = this.$refs.header
+				const subjectElement = document.querySelector('#mail-thread-header')
+
+				if (envelopeHeaderElement) {
+					if (subjectElement) {
+						const subjectHeight = subjectElement.offsetHeight
+						envelopeHeaderElement.style.scrollMarginTop = `${subjectHeight}px`
+					}
+					envelopeHeaderElement.scrollIntoView({ behavior: 'smooth', block: 'start', container: 'nearest' })
 				}
 			})
 		},
