@@ -510,6 +510,8 @@ OC.L10N.register(
     "matches" : "일치함",
     "Filter name" : "필터 이름",
     "Priority" : "우선 순위",
+    "delete" : "삭제",
+    "Edit" : "편집",
     "Successfully updated config for \"{domain}\"" : "\"{domail}\"에 대한 설정을 성공적으로 갱신함",
     "Error saving config" : "설정을 저장하는 중 오류 발생",
     "Saved config for \"{domain}\"" : "\"{domail}\"에 대한 설정을 저장함",
@@ -661,7 +663,6 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Mailvelope이 현재 도메인에 대해 활성화되어 있습니다!",
     "Looking for a way to encrypt your emails?" : "이메일을 암호화하는 방법을 찾고 계십니까?",
     "Install Mailvelope browser extension" : "Mailvelope 브라우저 확장 설치",
-    "Enable Mailvelope for the current domain" : "현재 도메인에 Mailvelope 활성화하기",
-    "Go to newest message" : "최근 메시지로 가기"
+    "Enable Mailvelope for the current domain" : "현재 도메인에 Mailvelope 활성화하기"
 },
 "nplurals=1; plural=0;");

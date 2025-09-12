@@ -161,6 +161,7 @@ OC.L10N.register(
     "Recipient" : "Ricevonto",
     "matches" : "kongruas kun",
     "Priority" : "Prioritato",
+    "delete" : "forigi",
     "Mail app" : "Retpoŝtprogrameto",
     "Reset" : "Restarigi",
     "Client ID" : "Klientidentigilo",

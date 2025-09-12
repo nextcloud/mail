@@ -604,6 +604,9 @@ OC.L10N.register(
     "Priority" : "Приоритет",
     "Enable filter" : "Включить фильтр",
     "Save filter" : "Сохранить фильтр",
+    "Tag" : "Метка",
+    "delete" : "удалить",
+    "Edit" : "Редактирование",
     "Successfully updated config for \"{domain}\"" : "Конфигурация домена «{domain}» обновлена",
     "Error saving config" : "Не удалось сохранить параметры конфигурации",
     "Saved config for \"{domain}\"" : "Конфигурация домена «{domain}» сохранена",
@@ -772,7 +775,6 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Mailvelope включен для текущего домена!",
     "Looking for a way to encrypt your emails?" : "Необходимо использовать шифрование электронных писем?",
     "Install Mailvelope browser extension" : "Установите расширение для браузера Mailvelope",
-    "Enable Mailvelope for the current domain" : "Включить почтовый конверт для текущего домена",
-    "Go to newest message" : "Перейти к последнему сообщению"
+    "Enable Mailvelope for the current domain" : "Включить почтовый конверт для текущего домена"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

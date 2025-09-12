@@ -764,7 +764,6 @@ OC.L10N.register(
     "Continue to %s" : "Continua a %s",
     "Mailvelope is enabled for the current domain!" : "Mailvelope està habilitat per al domini actual!",
     "Looking for a way to encrypt your emails?" : "Esteu buscant una manera de xifrar els vostres correus electrònics?",
-    "Enable Mailvelope for the current domain" : "Habilitar Mailvelope per al domini actual",
-    "Go to newest message" : "Vés al missatge més recent"
+    "Enable Mailvelope for the current domain" : "Habilitar Mailvelope per al domini actual"
 },
 "nplurals=2; plural=(n != 1);");

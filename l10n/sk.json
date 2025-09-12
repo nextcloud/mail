@@ -622,6 +622,9 @@
     "Priority" : "Priorita",
     "Enable filter" : "Povoliť filter",
     "Save filter" : "Uložiť filter",
+    "Tag" : "Štítok",
+    "delete" : "vymazať",
+    "Edit" : "Upraviť",
     "Successfully updated config for \"{domain}\"" : "Konfigurácia pre \"{domain}\" úspešne aktualizovaná",
     "Error saving config" : "Chyba pri ukladaní konfigurácie",
     "Saved config for \"{domain}\"" : "Konfigurácia uložená pre \"{domain}\"",
@@ -774,7 +777,6 @@
     "Mailvelope is enabled for the current domain!" : "Mailvelope je povolený pre aktuálnu doménu!",
     "Looking for a way to encrypt your emails?" : "Hľadáte spôsob, ako šifrovať svoje e-maily?",
     "Install Mailvelope browser extension" : "Nainštalovať rozšírenie pre prehliadač Mailvelope",
-    "Enable Mailvelope for the current domain" : "Povoliť Mailvelope pre aktuálnu doménu",
-    "Go to newest message" : "Ísť na najnovšiu správu"
+    "Enable Mailvelope for the current domain" : "Povoliť Mailvelope pre aktuálnu doménu"
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);"
 }
