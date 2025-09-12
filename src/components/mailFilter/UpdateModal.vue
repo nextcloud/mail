@@ -38,21 +38,6 @@
 			<div class="filter-actions">
 				<h6>{{ t('mail', 'Actions') }}</h6>
 
-				<div class="help-text">
-					<p>
-						{{ t('mail', 'Actions are triggered when the specified tests are true. The following actions are available:') }}
-					</p>
-					<p>
-						<strong>fileinto</strong>: {{ t('mail', 'Moves the message into a specified folder.') }}
-					</p>
-					<p>
-						<strong>addflag</strong>: {{ t('mail', 'Adds a flag to the message.') }}
-					</p>
-					<p>
-						<strong>stop</strong>: {{ t('mail', 'Halts the execution of the filter script. No further filters with will be processed after this action.') }}
-					</p>
-				</div>
-
 				<Action v-for="action in clone.actions"
 					:key="action.id"
 					:action="action"
