@@ -165,8 +165,4 @@ export default {
 		width: 30px;
 	}
 }
-
-.solid {
-	margin: calc(var(--default-grid-baseline) * 4) 0 0 0;
-}
 </style>

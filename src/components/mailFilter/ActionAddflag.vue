@@ -4,8 +4,9 @@
 -->
 <template>
 	<NcTextField :required="true"
-		:label="t('mail', 'Flag')"
 		:value="flag"
+		:label-outside="true"
+		:placeholder="t('mail', 'Enter flag')"
 		@update:value="onInput" />
 </template>
 <script>

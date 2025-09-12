@@ -44,7 +44,8 @@
 					:account="account"
 					@update-action="updateAction"
 					@delete-action="deleteAction" />
-				<NcButton class="app-settings-button"
+
+				<NcButton class="add-action"
 					type="secondary"
 					:aria-label="t('mail', 'Add action')"
 					@click="createAction">
@@ -127,7 +128,7 @@ export default {
 			this.clone.tests = this.clone.tests.filter((item) => item.id !== test.id)
 		},
 		createAction() {
-			this.clone.actions.push({ id: randomId(), type: null })
+			this.clone.actions.push({ id: randomId(), type: 'fileinto' })
 		},
 		updateAction(action) {
 			const index = this.clone.actions.findIndex((item) => item.id === action.id)
@@ -177,7 +178,7 @@ export default {
 	white-space: nowrap;
 }
 
-.add-condition {
+.add-condition, .add-action {
 	width: calc(100% - (30px + var(--default-grid-baseline)));
 }
 </style>

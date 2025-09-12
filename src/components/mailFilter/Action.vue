@@ -3,31 +3,30 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="mail-filter-row">
-		<div class="mail-filter-column">
-			<NcSelect class="mail-filter__action"
+	<div class="action">
+		<div class="action__type">
+			<NcSelect class="action__type__column action__type__column__select"
 				:value="currentAction"
 				:required="true"
 				:label-outside="true"
 				:options="availableTypes"
+				:clearable="false"
 				@input="updateAction({ type: $event.id })" />
-		</div>
-		<div class="mail-filter-column mail-filter-column--grow">
 			<component :is="componentInstance"
 				v-if="componentInstance"
+				class="action__type__column"
 				:action="action"
 				:account="account"
 				@update-action="updateAction" />
 		</div>
-		<div class="mail-filter-column">
-			<NcButton :aria-label="t('mail', 'Delete action')"
-				type="tertiary-no-background"
-				@click="deleteAction">
-				<template #icon>
-					<DeleteIcon :size="20" />
-				</template>
-			</NcButton>
-		</div>
+		<NcButton :aria-label="t('mail', 'Delete action')"
+			class="action__delete"
+			type="tertiary-no-background"
+			@click="deleteAction">
+			<template #icon>
+				<DeleteIcon :size="20" />
+			</template>
+		</NcButton>
 	</div>
 </template>
 <script>
@@ -102,24 +101,27 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.mail-filter-row {
+.action {
 	display: flex;
-	gap: 5px;
-	align-items: flex-end;
-	margin-bottom: var(--default-grid-baseline);
-
-	.mail-filter-column {
-		&--grow {
-			flex-grow: 1;
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
+	&__type {
+		display: flex;
+		gap: var(--default-grid-baseline);
+		width: 100%;
+		&__column {
+			flex: 0 1 auto;
+			&__select {
+				margin: 0
+			}
 		}
+	}
+	&__delete {
+		width: 30px;
 	}
 }
 
-.mail-filter {
-	&__action {
-		color: red;
-		margin-bottom: 0; /* unset default grid padding */
-	}
+:deep(.vs__dropdown-toggle) {
+	height: 100%;
 }
 
 :deep(.vue-treeselect__control) {
