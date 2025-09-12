@@ -44,6 +44,8 @@ OC.L10N.register(
     "Tags" : "Emneord",
     "Recipient" : "Mottakar",
     "contains" : "inneheld",
+    "delete" : "slett",
+    "Edit" : "Rediger",
     "Client ID" : "Klient-ID",
     "User" : "Bruker",
     "Host" : "Tenar",

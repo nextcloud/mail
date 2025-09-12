@@ -574,6 +574,8 @@ OC.L10N.register(
     "Priority" : "ھەممىدىن مۇھىم",
     "Enable filter" : "سۈزگۈچنى قوزغىتىڭ",
     "Save filter" : "سۈزگۈچنى ساقلاڭ",
+    "delete" : "ئۆچۈر",
+    "Edit" : "تەھرىر",
     "Successfully updated config for \"{domain}\"" : "\"{domain}\" ئۈچۈن مۇۋەپپەقىيەتلىك يېڭىلاندى.",
     "Error saving config" : "سەپلىمە خاتا",
     "Saved config for \"{domain}\"" : "\"{domain}\" ئۈچۈن ساقلانغان سەپلىمە",
@@ -724,7 +726,6 @@ OC.L10N.register(
     "Continue to %s" : "داۋاملىق% s",
     "Mailvelope is enabled for the current domain!" : "خەت ساندۇقى نۆۋەتتىكى دائىرە ئۈچۈن قوزغىتىلدى!",
     "Looking for a way to encrypt your emails?" : "ئېلېكترونلۇق خەتلىرىڭىزنى مەخپىيلەشتۈرۈشنىڭ يولىنى ئىزدەۋاتامسىز؟",
-    "Enable Mailvelope for the current domain" : "نۆۋەتتىكى دائىرە ئۈچۈن Mailvelope نى قوزغىتىڭ",
-    "Go to newest message" : "ئەڭ يېڭى ئۇچۇرغا بېرىڭ"
+    "Enable Mailvelope for the current domain" : "نۆۋەتتىكى دائىرە ئۈچۈن Mailvelope نى قوزغىتىڭ"
 },
 "nplurals=2; plural=(n != 1);");

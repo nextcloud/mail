@@ -75,6 +75,8 @@ OC.L10N.register(
     "Custom" : "Дурын",
     "Recipient" : "Хүлээн авагч",
     "matches" : "тохируулах",
+    "delete" : "устгах",
+    "Edit" : "Өөрчлөх",
     "Reset" : "тохируулах",
     "Client ID" : "Хэрэглэгчийн ID",
     "Host" : "хост",

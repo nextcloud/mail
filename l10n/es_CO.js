@@ -106,6 +106,8 @@ OC.L10N.register(
     "Recipient" : "Destinatario",
     "matches" : "coincide",
     "Priority" : "Prioridad",
+    "delete" : "borrar",
+    "Edit" : "Editar",
     "Reset" : "Reiniciar",
     "Client ID" : "ID del cliente",
     "Client secret" : "Secreto del cliente",

@@ -498,6 +498,9 @@ OC.L10N.register(
     "matches" : "egyezik",
     "Filter name" : "Név szűrése",
     "Priority" : "Prioritás",
+    "Tag" : "Címke",
+    "delete" : "töröl",
+    "Edit" : "Szerkesztés",
     "Successfully updated config for \"{domain}\"" : "A(z) „{domain}” konfigurációja sikeresen frissítve",
     "Error saving config" : "Hiba a konfiguráció mentése során",
     "Saved config for \"{domain}\"" : "Konfiguráció mentése ehhez: „{domain}”",
@@ -641,7 +644,6 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarja megnyitni azt az oldalt, akkor térjen vissza a <a href=\"%s\">Levelezéshez</a>.",
     "Continue to %s" : "Folytatás ide: %s",
     "Looking for a way to encrypt your emails?" : "Azt keresi, hogyan titkosíthatná a leveleit?",
-    "Install Mailvelope browser extension" : "Telepítse a Mailvelope böngészőkiegészítőt",
-    "Go to newest message" : "Ugrás a legújabb üzenethez"
+    "Install Mailvelope browser extension" : "Telepítse a Mailvelope böngészőkiegészítőt"
 },
 "nplurals=2; plural=(n != 1);");

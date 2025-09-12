@@ -662,6 +662,8 @@ OC.L10N.register(
     "Priority" : "Olulisus",
     "Enable filter" : "Kasuta filtrit",
     "Save filter" : "Salvesta filter",
+    "delete" : "kustuta",
+    "Edit" : "Muuda",
     "Successfully updated config for \"{domain}\"" : "„{domain}“ domeeni seadistuste uuendamine õnnestus",
     "Error saving config" : "Viga seadistuste salvestamisel",
     "Saved config for \"{domain}\"" : "„{domain}“ domeeni seadistused on salvestatud",
@@ -804,7 +806,6 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Mailvelope on selle domeeni puhul kasutusel!",
     "Looking for a way to encrypt your emails?" : "Kas otsid viisi oma kirjade krüptimiseks?",
     "Install Mailvelope browser extension" : "Paigalda Mailvelope'i brauserilaiendus",
-    "Enable Mailvelope for the current domain" : "Võta Mailvelope selle domeeni puhul kasutusele!",
-    "Go to newest message" : "Mine viimase kirja juurde"
+    "Enable Mailvelope for the current domain" : "Võta Mailvelope selle domeeni puhul kasutusele!"
 },
 "nplurals=2; plural=(n != 1);");

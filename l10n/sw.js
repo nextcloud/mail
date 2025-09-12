@@ -131,6 +131,7 @@ OC.L10N.register(
     "contains" : "contains",
     "matches" : "matches",
     "Priority" : "Kipaumbele",
+    "Edit" : "Hariri",
     "Reset" : "Pangilia upya",
     "Client ID" : "Kitambulisho cha mteja",
     "Client secret" : "Siri ya mteja",

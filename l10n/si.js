@@ -45,6 +45,7 @@ OC.L10N.register(
     "Close" : "වසන්න",
     "Body" : "අන්තර්ගතය",
     "Date" : "දිනය",
+    "Edit" : "සංස්කරණය",
     "User" : "පරිශීලක",
     "Host" : " ධාරකය",
     "Certificate" : "සහතිකය",

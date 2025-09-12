@@ -270,6 +270,8 @@
     "New filter" : "Filtru nou",
     "matches" : "currispondèntzias",
     "Priority" : "Prioridade",
+    "delete" : "cantzella",
+    "Edit" : "Modìfica",
     "Successfully updated config for \"{domain}\"" : "Cunfiguratzione pro \"{domain}\" agiornada in manera curreta",
     "Error saving config" : "Errore sarvende sa cunfiguratzione",
     "Saved config for \"{domain}\"" : "Cunfiguratzione pro \"{domain}\" sarvada",
@@ -350,7 +352,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Incarca inoghe chi no ses torradu a deretare in manera automàtica intro de pagu segundos.",
     "Redirect" : "Torra a deretare",
     "The link leads to %s" : "Su ligòngiu deretat a %s",
-    "Continue to %s" : "Sighi in %s",
-    "Go to newest message" : "Bae a su messàgiu prus nou"
+    "Continue to %s" : "Sighi in %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

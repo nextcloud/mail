@@ -77,6 +77,8 @@ OC.L10N.register(
     "Tag already exists" : "มีแท็กอยู่แล้ว",
     "Not found" : "ไม่พบ",
     "Priority" : "ลำดับความสำคัญ",
+    "delete" : "ลบ",
+    "Edit" : "แก้ไข",
     "Reset" : "รีเซ็ต",
     "Client ID" : "รหัสไคลเอ็นต์",
     "Client secret" : "ข้อมูลลับไคลเอ็นต์",

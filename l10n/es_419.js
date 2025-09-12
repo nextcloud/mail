@@ -103,6 +103,8 @@ OC.L10N.register(
     "Operator" : "Operador",
     "matches" : "coincide",
     "Priority" : "Prioridad",
+    "delete" : "borrar",
+    "Edit" : "Editar",
     "Reset" : "Restaurar",
     "Client ID" : "ID del cliente",
     "Client secret" : "Secreto del cliente",

@@ -92,6 +92,8 @@ OC.L10N.register(
     "Untitled event" : "Eveniment sens títol",
     "Train" : "Tren",
     "Flag" : "Drapèu",
+    "delete" : "suprimir",
+    "Edit" : "Modificar",
     "Reset" : "Reïnicializar",
     "Client ID" : "ID client",
     "User" : "Utilizator",

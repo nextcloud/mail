@@ -46,6 +46,7 @@ OC.L10N.register(
     "Tags" : "Tibzimin",
     "Translate from" : "Suqel seg",
     "Translate to" : "Suqel ar",
+    "Edit" : "Ẓreg",
     "User" : "Aseqdac",
     "Guest" : "Inebgi",
     "Group" : "Agraw",

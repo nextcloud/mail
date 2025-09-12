@@ -602,6 +602,9 @@ OC.L10N.register(
     "Priority" : "優先度",
     "Enable filter" : "フィルターを有効にする",
     "Save filter" : "フィルターを保存する",
+    "Tag" : "タグ",
+    "delete" : "削除",
+    "Edit" : "編集",
     "Successfully updated config for \"{domain}\"" : " \"{domain}\"の設定が正常に更新されました",
     "Error saving config" : "設定の保存中にエラーが発生しました",
     "Saved config for \"{domain}\"" : "\"{domain}\"の設定を保存しました",
@@ -753,7 +756,6 @@ OC.L10N.register(
     "Continue to %s" : "%s にリダイレクトする",
     "Mailvelope is enabled for the current domain!" : "現在のドメインでMailvelopeが有効になっています!",
     "Looking for a way to encrypt your emails?" : "あなたのメールを暗号化する方法をお探しですか?",
-    "Enable Mailvelope for the current domain" : "現在のドメインのMailvelopeを有効にする",
-    "Go to newest message" : "一番新しいメッセージへ移動"
+    "Enable Mailvelope for the current domain" : "現在のドメインのMailvelopeを有効にする"
 },
 "nplurals=1; plural=0;");

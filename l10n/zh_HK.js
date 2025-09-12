@@ -677,6 +677,9 @@ OC.L10N.register(
     "Priority" : "優先",
     "Enable filter" : "啟用篩選器",
     "Save filter" : "儲存篩選器",
+    "Tag" : "標籤",
+    "delete" : "刪除",
+    "Edit" : "編輯",
     "Successfully updated config for \"{domain}\"" : "已成功更新 “{domain}” 的配置",
     "Error saving config" : "存儲配置時發生錯誤",
     "Saved config for \"{domain}\"" : "已成功保存 “{domain}” 的配置",
@@ -852,7 +855,6 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Mailvelope 已在目前域名啟用！",
     "Looking for a way to encrypt your emails?" : "正在尋找加密電子郵件的方法嗎？",
     "Install Mailvelope browser extension" : "安裝 Mailvelope 瀏覽器擴充套件",
-    "Enable Mailvelope for the current domain" : "為目前域名啟用 Mailvelope",
-    "Go to newest message" : "到最新的訊息"
+    "Enable Mailvelope for the current domain" : "為目前域名啟用 Mailvelope"
 },
 "nplurals=1; plural=0;");

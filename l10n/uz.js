@@ -71,6 +71,7 @@ OC.L10N.register(
     "(organizer)" : "(tashkilotchi)",
     "Operator" : "Operator",
     "contains" : "o'z ichiga oladi",
+    "Edit" : "Tahrirlash",
     "Reset" : "Qayta tiklash",
     "Client ID" : "Mijoz identifikatori",
     "Port" : "Port",

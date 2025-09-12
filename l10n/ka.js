@@ -497,6 +497,7 @@ OC.L10N.register(
     "Operator" : "ოპერატორი",
     "matches" : "matches",
     "Priority" : "Priority",
+    "Edit" : "Edit",
     "Successfully updated config for \"{domain}\"" : "Successfully updated config for \"{domain}\"",
     "Error saving config" : "Error saving config",
     "Saved config for \"{domain}\"" : "Saved config for \"{domain}\"",
@@ -639,7 +640,6 @@ OC.L10N.register(
     "The link leads to %s" : "The link leads to %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continue to %s",
-    "Looking for a way to encrypt your emails?" : "Looking for a way to encrypt your emails?",
-    "Go to newest message" : "Go to newest message"
+    "Looking for a way to encrypt your emails?" : "Looking for a way to encrypt your emails?"
 },
 "nplurals=2; plural=(n!=1);");

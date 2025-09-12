@@ -406,6 +406,8 @@ OC.L10N.register(
     "Flag" : "Знаме",
     "matches" : "се совпаѓа",
     "Priority" : "Приоритет",
+    "delete" : "избриши",
+    "Edit" : "Уреди",
     "Mail app" : "Апликација Електронска пошта",
     "The mail app allows users to read mails on their IMAP accounts." : "Апликацијата за електронска пошта дозволува на корисниците да ги читаат својте пораки од IMAP сметки.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Овде може да се пронајде поопшитно прилагодување. Специфични параметри за корисниците може да се пронајдат во самата апликација (доле-лево).",

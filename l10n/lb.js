@@ -46,6 +46,8 @@ OC.L10N.register(
     "Date" : "Date",
     "Tags" : "Tags",
     "Custom" : "Individualiséier",
+    "delete" : "läschen",
+    "Edit" : "Änneren",
     "Reset" : "Zeréck setzen",
     "Client ID" : "Client ID",
     "User" : "User",

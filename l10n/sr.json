@@ -675,6 +675,9 @@
     "Priority" : "Приоритет",
     "Enable filter" : "Укључи филтер",
     "Save filter" : "Сачувај филтер",
+    "Tag" : "Ознака",
+    "delete" : "обриши",
+    "Edit" : "Измени",
     "Successfully updated config for \"{domain}\"" : "Успешно је ажурирана конфигурација за „{domain}”",
     "Error saving config" : "Грешка приликом чувања конфигурације",
     "Saved config for \"{domain}\"" : "Сачувана је конфигурација за „{domain}”",
@@ -850,7 +853,6 @@
     "Mailvelope is enabled for the current domain!" : "Mailvelope је укључен за тренутни домен!",
     "Looking for a way to encrypt your emails?" : "Тражите начин да шифрујете своје и-мејлове?",
     "Install Mailvelope browser extension" : "Инсталирај Mailvelope проширење интернет прегледача",
-    "Enable Mailvelope for the current domain" : "Укључи Mailvelope за тренутни домен",
-    "Go to newest message" : "Иди на најновију поруку"
+    "Enable Mailvelope for the current domain" : "Укључи Mailvelope за тренутни домен"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 }

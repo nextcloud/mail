@@ -675,6 +675,9 @@
     "Priority" : "优先级",
     "Enable filter" : "启用筛选器",
     "Save filter" : "保存筛选器",
+    "Tag" : "Tag",
+    "delete" : "删除",
+    "Edit" : "编辑",
     "Successfully updated config for \"{domain}\"" : "成功更新了“{domain}”的配置",
     "Error saving config" : "保存配置时出错",
     "Saved config for \"{domain}\"" : "已保存“{domain}”的配置",
@@ -850,7 +853,6 @@
     "Mailvelope is enabled for the current domain!" : "当前域已启用 Mailvelope！",
     "Looking for a way to encrypt your emails?" : "正在寻找加密电子邮件的方法？",
     "Install Mailvelope browser extension" : "安装 Mailvelope 浏览器扩展",
-    "Enable Mailvelope for the current domain" : "为当前域启用 Mailvelope",
-    "Go to newest message" : "转到最新邮件"
+    "Enable Mailvelope for the current domain" : "为当前域启用 Mailvelope"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

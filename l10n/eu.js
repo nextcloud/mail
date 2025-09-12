@@ -598,6 +598,9 @@ OC.L10N.register(
     "Priority" : "Lehentasuna",
     "Enable filter" : "Gaitu iragazkia",
     "Save filter" : "Gorde iragazkia",
+    "Tag" : "Etiketa",
+    "delete" : "ezabatu",
+    "Edit" : "Editatu",
     "Successfully updated config for \"{domain}\"" : "\"{domain}\"-ren konfigurazioa behar bezala eguneratu da",
     "Error saving config" : "Errorea konfigurazioa gordetzean",
     "Saved config for \"{domain}\"" : "\"{domain}\"-ren konfigurazioa gorde da",
@@ -750,7 +753,6 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Mailvelope gaituta dago uneko domeinurako!",
     "Looking for a way to encrypt your emails?" : "Zure mezu elektronikoak enkriptatzeko modu bat bilatzen ari zara?",
     "Install Mailvelope browser extension" : "Instalatu Mailvelope arakatzailearen luzapena",
-    "Enable Mailvelope for the current domain" : "Gaitu Mailvelope uneko domeinurako",
-    "Go to newest message" : "Joan mezu berrienera"
+    "Enable Mailvelope for the current domain" : "Gaitu Mailvelope uneko domeinurako"
 },
 "nplurals=2; plural=(n != 1);");
