@@ -5,7 +5,7 @@
 <template>
 	<NcModal size="normal"
 		:close-on-click-outside="false"
-		:name="t('mail','Update mail filter')"
+		:name="t('mail', 'New filter')"
 		@close="closeModal">
 		<form class="modal__content" @submit.prevent="updateFilter">
 			<h2>{{ t('mail', 'New filter') }}</h2>
