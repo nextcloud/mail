@@ -660,7 +660,6 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 
 .ck.ck-toolbar .ck-button {
 	color: var(--color-main-text) !important;
-	background: transparent !important;
 }
 
 .ck.ck-toolbar .ck-button:hover,
