@@ -637,6 +637,7 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 .select, button:not(.button-vue,[class^=vs__]), .button, input[type=button], input[type=submit], input[type=reset] {
 	color: var(--color-main-text);
 }
+
 /* We need the paragraph field a bit smaller so it doesnt break the toolbar for signature */
 .ck.ck-dropdown.ck-heading-dropdown .ck-dropdown__button .ck-button__label {
 	width: 6em !important;
@@ -675,6 +676,15 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 
 .ck.ck-dropdown__panel .ck.ck-list {
 	border-radius: var(--border-radius-large) !important;
+}
+
+.ck-dropdown__panel.ck-dropdown__panel-visible {
+	border-radius: var(--border-radius-large) !important;
+}
+
+/* Needs to be set to flex, bececause else it breaks the toolbar - it is shown in 2 lines instead of 1 */
+.ck.ck-splitbutton.ck-dropdown__button{
+	display: flex !important;
 }
 
 </style>
