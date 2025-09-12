@@ -68,4 +68,4 @@ jobs:
     steps:
       - name: Print
         run: |
-          echo "${{ matrix.package"
+          echo "${{ matrix.package }}"
