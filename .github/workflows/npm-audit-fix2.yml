@@ -14,10 +14,12 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  matrix:
     runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.packages.outputs.packages }}
 
-    name: npm-audit-fix-2
+    name: 'npm audit matrix'
 
     steps:
       - name: Checkout
@@ -44,6 +46,7 @@ jobs:
         run: npm i -g 'npm@${{ steps.versions.outputs.npmVersion }}'
 
       - name: Run npm ci and npm run build
+        id: packages
         if: steps.checkout.outcome == 'success'
         env:
           CYPRESS_INSTALL_BINARY: 0
@@ -52,3 +55,17 @@ jobs:
           npm audit --json --audit-level=none > "audit.json"
           vulns=$(jq -r '.vulnerabilities | keys[]' "audit.json")
           echo $vulns
+          echo "vulns=$vulns" >> "$GITHUB_OUTPUT"
+
+  fix:
+    runs-on: ubuntu-latest
+    needs:
+      - matrix
+    strategy:
+      matrix:
+        package: ${{ fromJson(needs.matrix.outputs.packages) }}
+    name: Bump ${{ matrix.package }}
+    steps:
+      - name: Print
+        run: |
+          echo "${{ matrix.package"
