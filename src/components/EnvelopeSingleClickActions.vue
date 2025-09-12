@@ -5,25 +5,35 @@
 
 <template>
 	<div class="list-item-content__quick-actions">
-		<EmailUnread v-if="isRead"
-			:size="18"
+		<NcButton v-if="isRead"
+			type="tertiary"
 			:title="t('mail', 'Mark as unread')"
-			@click.prevent="$emit('toggle-seen')" />
-		<EmailRead v-else
-			:size="18"
+			@click.prevent="$emit('toggle-seen')">
+			<EmailUnread :size="20" />
+		</NcButton>
+		<NcButton v-else
+			type="tertiary"
 			:title="t('mail', 'Mark as read')"
-			@click.prevent="$emit('toggle-seen')" />
-		<ImportantIcon v-if="isImportant"
-			:size="18"
+			@click.prevent="$emit('toggle-seen')">
+			<EmailRead :size="20" />
+		</NcButton>
+		<NcButton v-if="isImportant"
+			type="tertiary"
 			:title="t('mail', 'Mark as unimportant')"
-			@click.prevent="$emit('toggle-important')" />
-		<ImportantOutlineIcon v-else
-			:size="18"
+			@click.prevent="$emit('toggle-important')">
+			<ImportantIcon :size="20" />
+		</NcButton>
+		<NcButton v-else
+			type="tertiary"
 			:title="t('mail', 'Mark as important')"
-			@click.prevent="$emit('toggle-important')" />
-		<IconDelete :size="18"
+			@click.prevent="$emit('toggle-important')">
+			<ImportantOutlineIcon :size="20" />
+		</NcButton>
+		<NcButton type="tertiary"
 			:title="t('mail', 'Delete thread')"
-			@click.prevent="$emit('delete')" />
+			@click.prevent="$emit('delete')">
+			<IconDelete :size="20" />
+		</NcButton>
 	</div>
 </template>
 
@@ -34,6 +44,7 @@ import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
+import { NcButton } from '@nextcloud/vue'
 
 export default {
 	name: 'EnvelopeSingleClickActions',
@@ -43,6 +54,7 @@ export default {
 		ImportantIcon,
 		ImportantOutlineIcon,
 		IconDelete,
+		NcButton,
 	},
 	props: {
 		isRead: {
@@ -65,16 +77,6 @@ export default {
 .list-item:hover {
 	.list-item-content__quick-actions {
 		display: flex;
-		gap: calc(var(--default-grid-baseline) * 2);
-		padding-inline-start: calc(var(--default-grid-baseline) * 2);
-
-		:deep(svg) {
-			fill: var(--color-main-text);
-
-			&:hover {
-				opacity: 0.5;
-			}
-		}
 	}
 }
 </style>
