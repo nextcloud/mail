@@ -65,6 +65,7 @@ import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import DeleteModal from './DeleteModal.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
+import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter'
 
 export default {
 	name: 'MailFilters',
@@ -129,8 +130,16 @@ export default {
 				name: t('mail', 'New filter'),
 				enable: true,
 				operator: 'allof',
-				tests: [],
-				actions: [],
+				tests: [{
+					id: randomId(),
+					field: MailFilterConditionField.Subject,
+					operator: MailFilterConditionOperator.Is,
+					values: [],
+				}],
+				actions: [{
+					id: randomId(),
+					type: 'fileinto',
+				}],
 				priority,
 			}
 			this.showUpdateModal = true

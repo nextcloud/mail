@@ -179,7 +179,7 @@ export default {
 	white-space: nowrap;
 }
 
-.add-condition, .add-action {
+.add-condition, .add-action, .filter-name, .filter-settings {
 	width: calc(100% - (30px + var(--default-grid-baseline)));
 }
 </style>
