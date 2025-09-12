@@ -3,7 +3,9 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<p>{{ t('mail', 'The stop action ends all processing') }}</p>
+	<p class="help-text">
+		{{ t('mail', 'Stop ends all processing') }}
+	</p>
 </template>
 <script>
 
@@ -21,3 +23,8 @@ export default {
 	},
 }
 </script>
+<style lang="scss" scoped>
+.help-text {
+	align-content: center;
+}
+</style>

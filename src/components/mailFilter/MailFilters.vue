@@ -5,32 +5,39 @@
 <template>
 	<div class="section">
 		<p>{{ t('mail', 'Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter.') }}</p>
-		<ul>
-			<NcListItem v-for="filter in filters"
-				:key="filter.id"
-				:name="filter.name"
-				:compact="true"
-				@click="openUpdateModal(filter)">
-				<template #subname>
-					<span v-if="filter.enable">{{ t('mail', 'Filter is active') }}</span>
-					<span v-else>{{ t('mail', 'Filter is not active') }}</span>
-				</template>
-				<template #actions>
-					<NcActionButton @click="openDeleteModal(filter)">
-						<template #icon>
-							<DeleteIcon :size="20" />
-						</template>
-						{{ t('mail', 'Delete filter') }}
-					</NcActionButton>
-				</template>
-			</NcListItem>
-		</ul>
-		<NcButton class="app-settings-button"
-			type="primary"
-			:aria-label="t('mail', 'New filter')"
-			@click.prevent.stop="createFilter">
-			{{ t('mail', 'New filter') }}
-		</NcButton>
+		<div v-if="loading" class="filter-list__loading">
+			<NcLoadingIcon />
+			<p>{{ t('mail', 'Hang tight while the filters load') }}</p>
+		</div>
+		<div v-else class="filter-list">
+			<ul>
+				<NcListItem v-for="filter in filters"
+					:key="filter.id"
+					:name="filter.name"
+					:compact="true"
+					@click="openUpdateModal(filter)">
+					<template #subname>
+						<span v-if="filter.enable">{{ t('mail', 'Filter is active') }}</span>
+						<span v-else>{{ t('mail', 'Filter is not active') }}</span>
+					</template>
+					<template #actions>
+						<NcActionButton @click="openDeleteModal(filter)">
+							<template #icon>
+								<DeleteIcon :size="20" />
+							</template>
+							{{ t('mail', 'Delete filter') }}
+						</NcActionButton>
+					</template>
+				</NcListItem>
+			</ul>
+			<NcButton class="app-settings-button"
+				type="primary"
+				:aria-label="t('mail', 'New filter')"
+				@click.prevent.stop="createFilter">
+				{{ t('mail', 'New filter') }}
+			</NcButton>
+		</div>
+
 		<UpdateModal v-if="showUpdateModal && currentFilter"
 			:filter="currentFilter"
 			:account="account"
@@ -57,6 +64,8 @@ import useMainStore from '../../store/mainStore.js'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import DeleteModal from './DeleteModal.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
+import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
+import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
 
 export default {
 	name: 'MailFilters',
@@ -67,6 +76,7 @@ export default {
 		UpdateModal,
 		DeleteIcon,
 		DeleteModal,
+		NcLoadingIcon,
 
 	},
 	props: {
@@ -109,6 +119,7 @@ export default {
 	},
 	async mounted() {
 		await this.mailFilterStore.fetch(this.account.id)
+		// this.loading = false
 	},
 	methods: {
 		createFilter() {
@@ -119,8 +130,16 @@ export default {
 				name: t('mail', 'New filter'),
 				enable: true,
 				operator: 'allof',
-				tests: [],
-				actions: [],
+				tests: [{
+					id: randomId(),
+					field: MailFilterConditionField.Subject,
+					operator: MailFilterConditionOperator.Is,
+					values: [],
+				}],
+				actions: [{
+					id: randomId(),
+					type: 'fileinto',
+				}],
 				priority,
 			}
 			this.showUpdateModal = true
@@ -198,5 +217,9 @@ textarea {
 	&:after {
 		 inset-inline-start: 14px;
 	 }
+}
+
+.filter-list__loading {
+	text-align: center;
 }
 </style>

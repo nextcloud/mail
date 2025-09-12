@@ -3,14 +3,16 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="mail-filter-rows">
-		<div class="mail-filter-rows__row">
-			<div class="mail-filter-rows__row__column">
+	<div class="condition">
+		<div class="condition__value">
+			<div class="condition__value__field_operator">
 				<NcSelect input-label="field"
+					class="condition__value__field_operator__column"
 					:value="test.field"
 					:required="true"
 					:label-outside="true"
 					:options="fields"
+					:clearable="false"
 					@input="updateTest({ field: $event })">
 					<template #selected-option="{ label }">
 						{{ getLabelForField(label) }}
@@ -19,13 +21,13 @@
 						{{ getLabelForField(label) }}
 					</template>
 				</NcSelect>
-			</div>
-			<div class="mail-filter-rows__row__column">
 				<NcSelect input-label="operator"
+					class="condition__value__field_operator__column"
 					:value="test.operator"
 					:required="true"
 					:label-outside="true"
 					:options="operators"
+					:clearable="false"
 					@input="updateTest({ operator: $event })">
 					<template #selected-option="{ label }">
 						{{ getLabelForOperator(label) }}
@@ -35,30 +37,28 @@
 					</template>
 				</NcSelect>
 			</div>
-			<div class="mail-filter-rows__row__column">
-				<NcButton aria-label="Delete action"
-					type="tertiary-no-background"
-					@click="deleteTest">
-					<template #icon>
-						<DeleteIcon :size="20" />
-					</template>
-					{{ t('mail', 'Delete test') }}
-				</NcButton>
-			</div>
-		</div>
-		<div class="mail-filter-rows__row">
 			<NcSelect v-model="localValues"
+				class="condition__value__values"
 				input-label="value"
-				class="mail-filter-rows__row__select"
 				:multiple="true"
 				:wrap="true"
 				:close-on-select="false"
 				:taggable="true"
 				:required="true"
+				:label-outside="true"
+				:placeholder="placeholderText"
 				@option:selected="updateTest({ values: localValues })"
 				@option:deselected="updateTest({ values: localValues })" />
 		</div>
-		<hr class="solid">
+		<div class="condition__delete">
+			<NcButton aria-label="Delete action"
+				type="tertiary-no-background"
+				@click="deleteTest">
+				<template #icon>
+					<DeleteIcon :size="20" />
+				</template>
+			</NcButton>
+		</div>
 	</div>
 </template>
 <script>
@@ -94,6 +94,19 @@ export default {
 				MailFilterConditionOperator.Matches,
 			],
 		}
+	},
+	computed: {
+		placeholderText() {
+			switch (this.test.field) {
+			case MailFilterConditionField.Subject:
+				return t('mail', 'Enter subject')
+			case MailFilterConditionField.From:
+				return t('mail', 'Enter sender')
+			case MailFilterConditionField.To:
+				return t('mail', 'Enter recipient')
+			}
+			return ''
+		},
 	},
 	mounted() {
 		this.localValues = [...this.test.values]
@@ -131,38 +144,25 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.solid {
-	margin: calc(var(--default-grid-baseline) * 4) 0 0 0;
-}
-
-.mail-filter-rows {
-	margin-bottom: calc(var(--default-grid-baseline) * 4);
-	&__row {
-		display: flex;
-		gap: var(--default-grid-baseline);
-		align-items: baseline;
-		&__column {
-			display: block;
-			flex-grow: 1;
-		}
-		&__column *{
-			width: 100%;
-		}
-		&__select {
-			max-width: 100% !important;
-			width: 100%;
-		}
-
-	}
-}
-
-.values-list {
+.condition {
 	display: flex;
-	gap: var(--default-grid-baseline);
-	flex-wrap: wrap;
-	&__item {
-		display: flex;
-		gap: var(--default-grid-baseline);
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
+	&__value {
+		width: 100%;
+		margin-inline-end: var(--default-grid-baseline);
+		&__field_operator {
+			display: flex;
+			gap: var(--default-grid-baseline);
+			&__column {
+				flex: 1;
+			}
+		}
+		&__values {
+			width: 100%;
+		}
+	}
+	&__delete {
+		width: 30px;
 	}
 }
 </style>

@@ -4,8 +4,9 @@
 -->
 <template>
 	<NcTextField :required="true"
-		:label="t('mail', 'Flag')"
 		:value="flag"
+		:label-outside="true"
+		:placeholder="t('mail', 'Enter flag')"
 		@update:value="onInput" />
 </template>
 <script>
@@ -40,6 +41,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .input-field {
-	min-width: 260px;
+	display: inline-block; /* for flex expand */
 }
 </style>
