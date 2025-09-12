@@ -40,6 +40,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .input-field {
-	min-width: 260px;
+	display: inline-block; /* for flex expand */
 }
 </style>

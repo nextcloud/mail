@@ -79,14 +79,12 @@ import Operator from './Operator.vue'
 import { randomId } from '../../util/randomId.js'
 import Action from './Action.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
-import IconInformationOutline from 'vue-material-design-icons/InformationOutline.vue'
 import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter'
 
 export default {
 	name: 'UpdateModal',
 	components: {
 		IconCheck,
-		IconInformationOutline,
 		Action,
 		Operator,
 		Test,

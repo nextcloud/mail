@@ -5,13 +5,14 @@
 <template>
 	<div class="mail-filter-row">
 		<div class="mail-filter-column">
-			<NcSelect :value="action.type"
+			<NcSelect class="mail-filter__action"
+				:value="currentAction"
 				:required="true"
 				:label-outside="true"
 				:options="availableTypes"
-				@input="updateAction({ type: $event })" />
+				@input="updateAction({ type: $event.id })" />
 		</div>
-		<div class="mail-filter-column">
+		<div class="mail-filter-column mail-filter-column--grow">
 			<component :is="componentInstance"
 				v-if="componentInstance"
 				:action="action"
@@ -19,10 +20,9 @@
 				@update-action="updateAction" />
 		</div>
 		<div class="mail-filter-column">
-			<NcButton aria-label="Delete action"
+			<NcButton :aria-label="t('mail', 'Delete action')"
 				type="tertiary-no-background"
 				@click="deleteAction">
-				{{ t('mail', 'Delete action') }}
 				<template #icon>
 					<DeleteIcon :size="20" />
 				</template>
@@ -61,13 +61,25 @@ export default {
 	data() {
 		return {
 			availableTypes: [
-				'addflag',
-				'fileinto',
-				'stop',
+				{
+					id: 'addflag',
+					label: this.t('mail', 'Add flag'),
+				},
+				{
+					id: 'fileinto',
+					label: this.t('mail', 'Move into folder'),
+				},
+				{
+					id: 'stop',
+					label: this.t('mail', 'Stop'),
+				},
 			],
 		}
 	},
 	computed: {
+		currentAction() {
+			return this.availableTypes.find(type => type.id === this.action.type)
+		},
 		componentInstance() {
 			if (this.action.type === 'fileinto') {
 				return ActionFileinto
@@ -93,5 +105,24 @@ export default {
 .mail-filter-row {
 	display: flex;
 	gap: 5px;
+	align-items: flex-end;
+	margin-bottom: var(--default-grid-baseline);
+
+	.mail-filter-column {
+		&--grow {
+			flex-grow: 1;
+		}
+	}
+}
+
+.mail-filter {
+	&__action {
+		color: red;
+		margin-bottom: 0; /* unset default grid padding */
+	}
+}
+
+:deep(.vue-treeselect__control) {
+	width: 100%; /* todo: fix MailboxInlinePicker.vue styling instead */
 }
 </style>
