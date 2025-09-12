@@ -562,6 +562,8 @@ OC.L10N.register(
     "matches" : "passer",
     "Filter name" : "Filternavn",
     "Priority" : "Prioritet",
+    "delete" : "slett",
+    "Edit" : "Rediger",
     "Successfully updated config for \"{domain}\"" : "Vellykket oppdatert konfigurasjon for «{domain}»",
     "Error saving config" : "Feil ved lagring av konfigurasjon",
     "Saved config for \"{domain}\"" : "Lagret konfigurasjon for «{domain}»",
@@ -713,7 +715,6 @@ OC.L10N.register(
     "Continue to %s" : "Fortsett til %s",
     "Mailvelope is enabled for the current domain!" : "Mailvelope er aktivert for gjeldende domene!",
     "Looking for a way to encrypt your emails?" : "Leter du etter en måte å kryptere e-postene dine på?",
-    "Enable Mailvelope for the current domain" : "Aktiver Mailvelope for gjeldende domene",
-    "Go to newest message" : "Gå til nyeste melding"
+    "Enable Mailvelope for the current domain" : "Aktiver Mailvelope for gjeldende domene"
 },
 "nplurals=2; plural=(n != 1);");

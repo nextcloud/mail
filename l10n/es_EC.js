@@ -442,6 +442,8 @@ OC.L10N.register(
     "contains" : "contiene",
     "matches" : "coincide",
     "Priority" : "Prioridad",
+    "delete" : "borrar",
+    "Edit" : "Editar",
     "Successfully updated config for \"{domain}\"" : "Configuración actualizada con éxito para \"{domain}\"",
     "Error saving config" : "Error al guardar la configuración",
     "Saved config for \"{domain}\"" : "Configuración guardada para \"{domain}\"",

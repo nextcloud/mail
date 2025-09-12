@@ -596,6 +596,9 @@ OC.L10N.register(
     "Priority" : "Forgangur",
     "Enable filter" : "Virkja síu",
     "Save filter" : "Vista síu",
+    "Tag" : "Merki",
+    "delete" : "eytt",
+    "Edit" : "Breyta",
     "Successfully updated config for \"{domain}\"" : "Tókst að uppfæra uppsetningu fyrir \"{domain}\"",
     "Error saving config" : "Villa við að vista uppsetningu",
     "Saved config for \"{domain}\"" : "Vistaði uppsetningu fyrir \"{domain}\"",
@@ -735,7 +738,6 @@ OC.L10N.register(
     "Continue to %s" : "Halda áfram í %s",
     "Mailvelope is enabled for the current domain!" : "Mailvelope er virkt fyrir núverandi lén!",
     "Looking for a way to encrypt your emails?" : "Ertu að leita að leið til að dulrita tölvupóstinn þinn?",
-    "Enable Mailvelope for the current domain" : "Virkja Mailvelope fyrir núverandi lén",
-    "Go to newest message" : "Fara á nýjustu skilaboðin"
+    "Enable Mailvelope for the current domain" : "Virkja Mailvelope fyrir núverandi lén"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

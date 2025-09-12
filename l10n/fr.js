@@ -677,6 +677,9 @@ OC.L10N.register(
     "Priority" : "Priorité",
     "Enable filter" : "Activer le filtre",
     "Save filter" : "Enregistrer le filtre",
+    "Tag" : "Étiquette",
+    "delete" : "supprimer",
+    "Edit" : "Modifier",
     "Successfully updated config for \"{domain}\"" : "La mise à jour de la configuration de \"{domain}\" a été effectuée avec succès",
     "Error saving config" : "Erreur lors de l'enregistrement de la configuration",
     "Saved config for \"{domain}\"" : "Configuration sauvegardée pour \"{domain}\"",
@@ -852,7 +855,6 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Mailvelope est activé pour le domaine actuel !",
     "Looking for a way to encrypt your emails?" : "Vous cherchez un moyen de chiffrer vos e-mails ?",
     "Install Mailvelope browser extension" : "Installer l'extension de navigateur Mailvelope",
-    "Enable Mailvelope for the current domain" : "Activer Mailvelope pour le domaine actuel",
-    "Go to newest message" : "Aller au message le plus récent"
+    "Enable Mailvelope for the current domain" : "Activer Mailvelope pour le domaine actuel"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

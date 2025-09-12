@@ -97,6 +97,8 @@ OC.L10N.register(
     "Operator" : "Operator",
     "contains" : "mengandung",
     "matches" : "cocok dengan",
+    "delete" : "hapus",
+    "Edit" : "Sunting",
     "Allow additional Mail accounts from User Settings" : "Perbolehkan akun Mail tambahan dari Setelan Pengguna",
     "Reset" : "Setel ulang",
     "Client ID" : "ID Klien",
