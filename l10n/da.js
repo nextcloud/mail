@@ -347,6 +347,7 @@ OC.L10N.register(
     "contains" : "indeholder",
     "matches" : "er lig med",
     "Priority" : "Prioritet",
+    "delete" : "Slet",
     "Reset" : "Nulstil",
     "Client ID" : "Klient ID",
     "Client secret" : "Klienthemmelighed",
@@ -406,7 +407,6 @@ OC.L10N.register(
     "Redirect" : "Omdiriger",
     "The link leads to %s" : "Linket fører til %s",
     "Continue to %s" : "Videre til %s",
-    "Looking for a way to encrypt your emails?" : "Leder du efter en måde at kryptere dine e-mails på?",
-    "Go to newest message" : "Gå til nyeste besked"
+    "Looking for a way to encrypt your emails?" : "Leder du efter en måde at kryptere dine e-mails på?"
 },
 "nplurals=2; plural=(n != 1);");

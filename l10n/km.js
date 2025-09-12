@@ -37,6 +37,8 @@ OC.L10N.register(
     "Date" : "កាលបរិច្ឆេទ",
     "Tags" : "ស្លាក",
     "contains" : "មានផ្ទុក",
+    "delete" : "លុប",
+    "Edit" : "កែប្រែ",
     "User" : "User",
     "Host" : "ម៉ាស៊ីន​ផ្ទុក",
     "Port" : "ច្រក",

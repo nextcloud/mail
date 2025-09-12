@@ -677,6 +677,9 @@ OC.L10N.register(
     "Priority" : "Öncelik",
     "Enable filter" : "Süzgeç kullanılsın",
     "Save filter" : "Süzgeci kaydet",
+    "Tag" : "Etiket",
+    "delete" : "sil",
+    "Edit" : "Düzenle",
     "Successfully updated config for \"{domain}\"" : "\"{domain}\" yapılandırması güncellendi",
     "Error saving config" : "Yapılandırma kaydedilirken sorun çıktı",
     "Saved config for \"{domain}\"" : "\"{domain}\" yapılandırması kaydedildi",
@@ -852,7 +855,6 @@ OC.L10N.register(
     "Mailvelope is enabled for the current domain!" : "Geçerli etki alanı için Mailvelope kullanılıyor!",
     "Looking for a way to encrypt your emails?" : "E-postalarınızı şifreleyecek bir yöntem mi arıyorsunuz?",
     "Install Mailvelope browser extension" : "Mailvelope tarayıcı eklentisini kurun",
-    "Enable Mailvelope for the current domain" : "Geçerli etki alanı için Mailvelope kullanılsın",
-    "Go to newest message" : "En yeni iletiye git"
+    "Enable Mailvelope for the current domain" : "Geçerli etki alanı için Mailvelope kullanılsın"
 },
 "nplurals=2; plural=(n > 1);");

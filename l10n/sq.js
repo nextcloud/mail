@@ -108,6 +108,8 @@ OC.L10N.register(
     "Recipient" : "Marrës",
     "matches" : "përputhje",
     "Priority" : "Përparësi",
+    "delete" : "fshi",
+    "Edit" : "Përpuno",
     "Reset" : "Rivendos",
     "Client ID" : "ID klienti",
     "Client secret" : "E fshehtë klienti",

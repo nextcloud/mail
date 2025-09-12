@@ -422,6 +422,9 @@ OC.L10N.register(
     "contains" : "contiene",
     "matches" : "corrisponde",
     "Priority" : "Priorità",
+    "Tag" : "Etichetta",
+    "delete" : "elimina",
+    "Edit" : "Modifica",
     "Successfully updated config for \"{domain}\"" : "Configurazione aggiornata con successo per \"{domain}\"",
     "Error saving config" : "Errore durante il salvataggio della configurazione",
     "Saved config for \"{domain}\"" : "Configurazione salvata per \"{domain}\"",
@@ -556,7 +559,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Fai clic qui se non viene rediretto automaticamente entro pochi secondi.",
     "Redirect" : "Redirigi",
     "The link leads to %s" : "Il collegamento conduce a %s",
-    "Continue to %s" : "Continua su %s",
-    "Go to newest message" : "Vai al messaggio più recente"
+    "Continue to %s" : "Continua su %s"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
