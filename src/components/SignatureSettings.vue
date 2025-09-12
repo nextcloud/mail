@@ -129,10 +129,10 @@ export default {
 		},
 	},
 	toolbarElement(newEl) {
-			if (newEl && this.$refs.toolbarContainer) {
-				this.$refs.toolbarContainer.innerHTML = ''
-				this.$refs.toolbarContainer.appendChild(newEl)
-			}
+		if (newEl && this.$refs.toolbarContainer) {
+			this.$refs.toolbarContainer.innerHTML = ''
+			this.$refs.toolbarContainer.appendChild(newEl)
+		}
 	},
 	beforeMount() {
 		this.changeIdentity(this.identities[0])

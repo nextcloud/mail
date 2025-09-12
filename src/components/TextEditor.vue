@@ -48,10 +48,10 @@ import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandrepl
 import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
 import ImageStylePlugin from '@ckeditor/ckeditor5-image/src/imagestyle.js'
-import ImageToolbarPlugin from '@ckeditor/ckeditor5-image/src/imagetoolbar';
-import ImageUtilsPlugin from '@ckeditor/ckeditor5-image/src/imageutils';
-import ImageCaptionPlugin from '@ckeditor/ckeditor5-image/src/imagecaption';
-import ImageTextAlternativePlugin from '@ckeditor/ckeditor5-image/src/imagetextalternative';
+import ImageToolbarPlugin from '@ckeditor/ckeditor5-image/src/imagetoolbar'
+import ImageUtilsPlugin from '@ckeditor/ckeditor5-image/src/imageutils'
+import ImageCaptionPlugin from '@ckeditor/ckeditor5-image/src/imagecaption'
+import ImageTextAlternativePlugin from '@ckeditor/ckeditor5-image/src/imagetextalternative'
 import GeneralHtmlSupport from '@ckeditor/ckeditor5-html-support/src/generalhtmlsupport.js'
 import { DropdownView } from '@ckeditor/ckeditor5-ui'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
@@ -301,42 +301,42 @@ export default {
 			return itemElement
 		},
 		convertImageClassesToInlineStyles(html) {
-			const div = document.createElement('div');
-			div.innerHTML = html;
+			const div = document.createElement('div')
+			div.innerHTML = html
 
 			div.querySelectorAll('figure.image').forEach(figure => {
 				// Keep the original style attribute
-				let baseStyle = figure.getAttribute('style') || '';
-				let alignmentStyle = 'display:block;margin-top:1em;margin-bottom:1em;';
+				const baseStyle = figure.getAttribute('style') || ''
+				let alignmentStyle = 'display:block;margin-top:1em;margin-bottom:1em;'
 
 				if (figure.classList.contains('image-style-align-left')) {
-					alignmentStyle += 'margin-left:0;margin-right:auto;';
+					alignmentStyle += 'margin-left:0;margin-right:auto;'
 				} else if (figure.classList.contains('image-style-align-right')) {
-					alignmentStyle += 'margin-left:auto;margin-right:0;';
+					alignmentStyle += 'margin-left:auto;margin-right:0;'
 				} else if (figure.classList.contains('image-style-align-center')) {
-					alignmentStyle += 'margin-left:auto;margin-right:auto;text-align:center;';
+					alignmentStyle += 'margin-left:auto;margin-right:auto;text-align:center;'
 				}
 
 				// Combine original styles with alignment styles
-				const combinedStyle = `${baseStyle.trim()}${!baseStyle.endsWith(';') ? ';' : ''}${alignmentStyle}`;
-				figure.setAttribute('style', combinedStyle);
+				const combinedStyle = `${baseStyle.trim()}${!baseStyle.endsWith(';') ? ';' : ''}${alignmentStyle}`
+				figure.setAttribute('style', combinedStyle)
 
 				// IMPORTANT: Do NOT remove alignment classes
 				// so CKEditor can reuse them when reopening the content
 
 				// Adjust the <img> inside the figure to ensure correct display in email clients
-				const img = figure.querySelector('img');
+				const img = figure.querySelector('img')
 				if (img) {
-					const baseImgStyle = img.getAttribute('style') || '';
-					const imgStyle = 'display:block;margin:0 auto;max-width:100%;height:auto;border:0;';
+					const baseImgStyle = img.getAttribute('style') || ''
+					const imgStyle = 'display:block;margin:0 auto;max-width:100%;height:auto;border:0;'
 					img.setAttribute(
 						'style',
-						`${baseImgStyle.trim()}${!baseImgStyle.endsWith(';') ? ';' : ''}${imgStyle}`
-					);
+						`${baseImgStyle.trim()}${!baseImgStyle.endsWith(';') ? ';' : ''}${imgStyle}`,
+					)
 				}
-			});
+			})
 
-			return div.innerHTML;
+			return div.innerHTML
 		},
 		overrideDropdownPositionsToNorth(editor, toolbarView) {
 			const {

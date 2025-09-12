@@ -35,8 +35,7 @@
 				{{ localTextBlock.title }}
 			</p>
 			<NcInputField v-else :value.sync="localTextBlock.title" :label="t('mail','Title of the text block')" />
-			<TextEditor 
-				ref="textEditor"
+			<TextEditor ref="textEditor"
 				v-model="localTextBlock.content"
 				:is-bordered="!shared"
 				:html="true"
