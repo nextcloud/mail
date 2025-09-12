@@ -23,7 +23,6 @@ use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\ICacheFactory;
 use OCP\IUser;
 use OCP\IUserManager;
-use OCP\LDAP\ILDAPProvider;
 use OCP\LDAP\ILDAPProviderFactory;
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
@@ -215,27 +214,24 @@ class Manager {
 			$this->tagMapper->createDefaultTags($mailAccount);
 		}
 
-		// @TODO: Remove method_exists once Mail requires Nextcloud 22 or above
-		if (method_exists(ILDAPProvider::class, 'getMultiValueUserAttribute')) {
-			try {
-				$provisioning = $this->ldapAliasesIntegration($provisioning, $user);
-			} catch (\Throwable $e) {
-				$this->logger->warning('Request to provision mail aliases failed', ['exception' => $e]);
-				// return here to avoid provisioning of aliases.
-				return true;
-			}
+		try {
+			$provisioning = $this->ldapAliasesIntegration($provisioning, $user);
+		} catch (\Throwable $e) {
+			$this->logger->warning('Request to provision mail aliases failed', ['exception' => $e]);
+			// return here to avoid provisioning of aliases.
+			return true;
+		}
 
-			try {
-				$this->deleteOrphanedAliases($user->getUID(), $mailAccount->getId(), $provisioning->getAliases());
-			} catch (\Throwable $e) {
-				$this->logger->warning('Deleting orphaned aliases failed', ['exception' => $e]);
-			}
+		try {
+			$this->deleteOrphanedAliases($user->getUID(), $mailAccount->getId(), $provisioning->getAliases());
+		} catch (\Throwable $e) {
+			$this->logger->warning('Deleting orphaned aliases failed', ['exception' => $e]);
+		}
 
-			try {
-				$this->createNewAliases($user->getUID(), $mailAccount->getId(), $provisioning->getAliases(), $this->userManager->getDisplayName($user->getUID()), $mailAccount->getEmail());
-			} catch (\Throwable $e) {
-				$this->logger->warning('Creating new aliases failed', ['exception' => $e]);
-			}
+		try {
+			$this->createNewAliases($user->getUID(), $mailAccount->getId(), $provisioning->getAliases(), $this->userManager->getDisplayName($user->getUID()), $mailAccount->getEmail());
+		} catch (\Throwable $e) {
+			$this->logger->warning('Creating new aliases failed', ['exception' => $e]);
 		}
 
 		return true;

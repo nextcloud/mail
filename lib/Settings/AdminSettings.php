@@ -20,7 +20,6 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Defaults;
 use OCP\IConfig;
 use OCP\IInitialStateService;
-use OCP\LDAP\ILDAPProvider;
 use OCP\Settings\ISettings;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\SummaryTaskType;
@@ -107,14 +106,6 @@ class AdminSettings implements ISettings {
 			Application::APP_ID,
 			'enabled_llm_summary_backend',
 			$this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class)
-		);
-
-		$this->initialStateService->provideLazyInitialState(
-			Application::APP_ID,
-			'ldap_aliases_integration',
-			static function () {
-				return method_exists(ILDAPProvider::class, 'getMultiValueUserAttribute');
-			}
 		);
 
 		$this->initialStateService->provideInitialState(

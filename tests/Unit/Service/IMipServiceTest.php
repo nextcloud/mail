@@ -236,12 +236,6 @@ class IMipServiceTest extends TestCase {
 	}
 
 	public function testIsRequest(): void {
-
-		// iMip Request is NC31+
-		if (!method_exists(IManager::class, 'handleImipRequest')) {
-			self::markTestIncomplete();
-		}
-
 		$message = new Message();
 		$message->setImipMessage(true);
 		$message->setUid(1);

@@ -259,7 +259,7 @@
 						</div>
 					</div>
 				</div>
-				<div v-if="ldapAliasesIntegration" class="settings-group">
+				<div class="settings-group">
 					<div class="group-title">
 						{{ t('mail', 'LDAP aliases integration') }}
 					</div>
@@ -343,8 +343,6 @@ import ButtonVue from '@nextcloud/vue/components/NcButton'
 import IconUpload from 'vue-material-design-icons/TrayArrowUp.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 
-const ldapAliasesIntegration = loadState('mail', 'ldap_aliases_integration', false)
-
 export default {
 	name: 'ProvisioningSettings',
 	components: {
@@ -401,7 +399,6 @@ export default {
 				uid: 'user321',
 				email: 'user@domain.com',
 			},
-			ldapAliasesIntegration,
 			ldapAliasesProvisioning: this.setting.ldapAliasesProvisioning || false,
 			ldapAliasesAttribute: this.setting.ldapAliasesAttribute || '',
 			loading: false,
