@@ -123,8 +123,4 @@ export default {
 :deep(.vs__dropdown-toggle) {
 	height: 100%;
 }
-
-:deep(.vue-treeselect__control) {
-	width: 100%; /* todo: fix MailboxInlinePicker.vue styling instead */
-}
 </style>
