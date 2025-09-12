@@ -53,14 +53,16 @@
 				</NcButton>
 			</div>
 
-			<NcTextField :value.sync="clone.priority"
-				type="number"
-				:label="t('mail', 'Priority')"
-				:required="true" />
+			<div class="filter-settings">
+				<NcTextField :value.sync="clone.priority"
+					type="number"
+					:label="t('mail', 'Priority')"
+					:required="true" />
 
-			<NcCheckboxRadioSwitch :checked.sync="clone.enable" type="switch">
-				{{ t('mail', 'Enable filter') }}
-			</NcCheckboxRadioSwitch>
+				<NcCheckboxRadioSwitch :checked.sync="clone.enable" type="switch">
+					{{ t('mail', 'Enable filter') }}
+				</NcCheckboxRadioSwitch>
+			</div>
 
 			<NcButton type="primary"
 				native-type="submit">
@@ -74,7 +76,7 @@
 	</NcModal>
 </template>
 <script>
-import { NcButton, NcCheckboxRadioSwitch, NcModal, NcTextField, NcLoadingIcon, NcPopover } from '@nextcloud/vue'
+import { NcButton, NcCheckboxRadioSwitch, NcModal, NcTextField, NcLoadingIcon } from '@nextcloud/vue'
 import Test from './Test.vue'
 import Operator from './Operator.vue'
 import { randomId } from '../../util/randomId.js'
@@ -94,7 +96,6 @@ export default {
 		NcLoadingIcon,
 		NcModal,
 		NcTextField,
-		NcPopover,
 	},
 	props: {
 		filter: {
@@ -155,8 +156,8 @@ export default {
 	margin: 20px;
 }
 
-.filter-name, .filter-tests, .filter-actions {
-	margin-bottom: 8px;
+.filter-name, .filter-tests, .filter-actions, .filter-settings {
+	margin-bottom: calc(var(--default-grid-baseline) * 4)
 }
 
 .form-group {
