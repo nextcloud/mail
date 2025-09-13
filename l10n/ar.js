@@ -611,6 +611,8 @@ OC.L10N.register(
     "Priority" : "الأولوية",
     "Enable filter" : "تمكين الفلتر",
     "Save filter" : "حفظ الفلتر",
+    "delete" : "حذف",
+    "Edit" : "تحرير",
     "Successfully updated config for \"{domain}\"" : "تمّ بنجاح تحديث التكوين لـ \"{domain}\"",
     "Error saving config" : "خطأ في حفظ التهيئة",
     "Saved config for \"{domain}\"" : " التكوين المحفوظ لـ\"{domain}\"",

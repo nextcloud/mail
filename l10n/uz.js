@@ -59,6 +59,7 @@ OC.L10N.register(
     "Rename" : "Nomini o'zgartirish",
     "Subscribed" : "Obuna boʻlgan",
     "Reply" : "Javob bering",
+    "Retry" : "Qayta urinish",
     "Add" : "Add",
     "Close" : "Yopish",
     "Date" : "Sana",
