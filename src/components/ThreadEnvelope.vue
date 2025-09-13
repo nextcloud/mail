@@ -55,7 +55,7 @@
 				<div class="envelope__header__left__sender-subject-tags">
 					<div class="sender">
 						{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
-						<p :class="isInternal?'sender__email':'sender__email sender__external'">
+						<p class="sender__email" :style="{ 'color': senderEmailColor }">
 							{{ envelope.from && envelope.from[0] ? envelope.from[0].email : '' }}
 						</p>
 					</div>
@@ -438,6 +438,13 @@ export default {
 		},
 		account() {
 			return this.mainStore.getAccount(this.envelope.accountId)
+		},
+		senderEmailColor() {
+			if (this.isInternal) {
+				return 'var(--color-text-maxcontrast)'
+			}
+
+			return parseInt(this.mainStore.getNcVersion) >= 32 ? 'var(--color-text-error)' : 'var(--color-error)'
 		},
 		from() {
 			if (!this.message || !this.message.from.length) {
@@ -984,14 +991,10 @@ export default {
 	.sender {
 		margin-inline-start: calc(var(--default-grid-baseline) * 2);
 		&__email{
-			color: var(--color-text-maxcontrast);
 			text-overflow: ellipsis;
 			overflow: hidden;
 		}
 
-		&__external{
-			color: var(--color-error);
-		}
 	}
 
 	.right {
