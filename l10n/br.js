@@ -63,6 +63,7 @@ OC.L10N.register(
     "Date" : "Deiz",
     "Tags" : "Klavioù",
     "Translate to" : "Treiñ e",
+    "Edit" : "Embann",
     "Client ID" : "ID kliant",
     "User" : "Implijer",
     "Host" : "Ostiz",

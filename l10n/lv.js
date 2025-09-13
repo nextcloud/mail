@@ -10,6 +10,7 @@ OC.L10N.register(
     "Mail" : "E-pasts",
     "Mails" : "E-pasta sūtījumi",
     "💌 A mail app for Nextcloud" : "Nextcloud e-pasta lietotne",
+    "Your session has expired. The page will be reloaded." : "Sesijai ir beidzies derīgums. Lapa tiks pārlādēta.",
     "Connecting" : "Savienojuma izveide",
     "Save" : "Saglabāt",
     "Connect" : "Savienoties",

@@ -45,6 +45,8 @@ OC.L10N.register(
     "Close" : "বন্ধ",
     "Date" : "Date",
     "Tags" : "ট্যাগ",
+    "delete" : "মুছে ফেল",
+    "Edit" : "সম্পাদনা",
     "Reset" : "পূণঃনির্ধানণ",
     "Client ID" : "ক্লায়েন্ট পরিচিতি",
     "User" : "User",

@@ -251,6 +251,8 @@ OC.L10N.register(
     "matches" : "concasa",
     "Filter name" : "Nome de la peñera",
     "Priority" : "Prioridá",
+    "delete" : "desaniciar",
+    "Edit" : "Editar",
     "Error saving config" : "Hebo un error al guardar la configuración",
     "Anti Spam Service" : "Serviciu de antispam",
     "Gmail integration" : "Integración con Gmail",
