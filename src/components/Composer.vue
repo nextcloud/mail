@@ -1138,8 +1138,10 @@ export default {
 				isPgpMime: this.encrypt,
 			}
 
-			if (data.isHtml) {
-				data.bodyHtml = this.bodyVal
+			if (data.isHtml && this.$refs.editor && this.$refs.editor.convertImageClassesToInlineStyles) {
+				data.bodyHtml = this.$refs.editor.convertImageClassesToInlineStyles(this.bodyVal)
+			} else if (!data.isHtml) {
+				data.bodyPlain = toPlain(html(this.bodyVal)).value
 			} else {
 				data.bodyPlain = toPlain(html(this.bodyVal)).value
 			}
