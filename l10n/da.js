@@ -348,6 +348,7 @@ OC.L10N.register(
     "matches" : "er lig med",
     "Priority" : "Prioritet",
     "delete" : "Slet",
+    "Edit" : "Redigér",
     "Reset" : "Nulstil",
     "Client ID" : "Klient ID",
     "Client secret" : "Klienthemmelighed",

@@ -105,6 +105,7 @@ OC.L10N.register(
     "(organizer)" : "(trefnydd)",
     "Recipient" : "Derbynnydd",
     "delete" : "dileu",
+    "Edit" : "Golygu",
     "User" : "Defnyddwyr",
     "Certificate" : "Tystysgrif",
     "Group" : "Grŵp",

@@ -108,6 +108,7 @@ OC.L10N.register(
     "Message source" : "Boodskapbron",
     "Recipient" : "Ontvanger",
     "Priority" : "Prioriteit",
+    "delete" : "skrap",
     "Reset" : "Herstel",
     "Client ID" : "Klant-ID",
     "User" : "Gebruiker",

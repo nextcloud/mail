@@ -55,6 +55,8 @@ OC.L10N.register(
     "Tags" : "Işarələr",
     "Not found" : "Tapılmadı",
     "Priority" : "Prioritet",
+    "delete" : "sil",
+    "Edit" : "Dəyişiklik et",
     "Reset" : "Sıfırla",
     "Client ID" : "Müştəri İD-s",
     "Client secret" : "Müxtəri sirri",
