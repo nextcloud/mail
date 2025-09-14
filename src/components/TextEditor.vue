@@ -48,10 +48,12 @@ import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandrepl
 import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
 import ImageStylePlugin from '@ckeditor/ckeditor5-image/src/imagestyle.js'
-import ImageToolbarPlugin from '@ckeditor/ckeditor5-image/src/imagetoolbar'
-import ImageUtilsPlugin from '@ckeditor/ckeditor5-image/src/imageutils'
-import ImageCaptionPlugin from '@ckeditor/ckeditor5-image/src/imagecaption'
-import ImageTextAlternativePlugin from '@ckeditor/ckeditor5-image/src/imagetextalternative'
+import {
+  ImageToolbarPlugin,
+  ImageUtilsPlugin,
+  ImageCaptionPlugin,
+  ImageTextAlternativePlugin,
+} from '@ckeditor/ckeditor5-image'
 import GeneralHtmlSupport from '@ckeditor/ckeditor5-html-support/src/generalhtmlsupport.js'
 import { DropdownView } from '@ckeditor/ckeditor5-ui'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
