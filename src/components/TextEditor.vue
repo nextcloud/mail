@@ -686,4 +686,42 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	display: flex !important;
 }
 
+.ck.ck-input.ck-input-text{
+	background: var(--color-main-background) !important;
+    color: var(--color-main-text) !important;
+	cursor: text !important;
+}
+
+.ck.ck-labeled-field-view__input-wrapper .ck.ck-label {
+	background: var(--color-main-background) !important;
+    color: var(--color-main-text) !important;
+}
+
+.ck.ck-button.ck-splitbutton__action {
+    margin: 0 !important;
+}
+
+.ck.ck-splitbutton.ck-dropdown__button:hover .ck-button,
+.ck.ck-splitbutton.ck-dropdown__button:hover .ck-splitbutton__action,
+.ck.ck-splitbutton.ck-dropdown__button:hover .ck-splitbutton__arrow {
+	background: var(--color-primary-element-light) !important;
+	color: var(--color-main-text) !important;
+}
+
+.ck.ck-splitbutton .ck-button:focus,
+.ck.ck-splitbutton .ck-button:focus-visible,
+.ck.ck-splitbutton .ck-button:active,
+.ck.ck-splitbutton .ck-button.ck-on {
+	background: var(--color-primary-element-light) !important;
+	color: var(--color-main-text) !important;
+	outline: none !important;
+}
+
+.ck.ck-splitbutton.ck-splitbutton_open .ck-button,
+.ck.ck-splitbutton.ck-splitbutton_open .ck-splitbutton__action,
+.ck.ck-splitbutton.ck-splitbutton_open .ck-splitbutton__arrow {
+    background: var(--color-primary-element-light) !important;
+    color: var(--color-main-text) !important;
+}
+
 </style>
