@@ -30,6 +30,7 @@
 					@focus="showActions"
 					@focusout="handleBlur"
 					@click="onClick($event, navigate, routerLinkHref)"
+					@contextmenu.prevent
 					@keydown.esc="hideActions">
 					<!-- @slot This slot is used for the NcAvatar or icon, the content of this slot must not be interactive -->
 					<slot name="icon" />
