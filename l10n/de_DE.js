@@ -694,7 +694,7 @@ OC.L10N.register(
     "Failed to update step in quick action" : "Schritt in Schnellaktion konnte nicht aktualisiert werden",
     "Quick action updated" : "Schnellaktion aktualisiert",
     "Failed to create quick action" : "Schnellaktion konnte nicht erstellt werden",
-    "Failed to add steps to quick action" : "Schritt in Schnellaktion konnte nicht hinzugefügt werden",
+    "Failed to add steps to quick action" : "Schritte in Schnellaktion konnten nicht hinzugefügt werden",
     "Quick action created" : "Schnellaktion erstellt",
     "Failed to delete action step" : "Aktionsschritt konnte nicht erstellt werden",
     "No quick actions yet." : "Bislang keine Schnellaktionen.",
