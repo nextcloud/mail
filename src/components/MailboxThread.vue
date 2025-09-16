@@ -297,7 +297,7 @@ export default {
 		},
 		groupEnvelopes() {
 			const allEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
-			return this.groupEnvelopesByDate(allEnvelopes, this.mainStore.syncTimestamp)
+			return this.groupEnvelopesByDate(allEnvelopes, this.mainStore.syncTimestamp, 'oldest')
 		},
 	},
 	watch: {
@@ -335,7 +335,7 @@ export default {
 		clearTimeout(this.startMailboxTimer)
 	},
 	methods: {
-		groupEnvelopesByDate(envelopes, syncTimestamp) {
+		groupEnvelopesByDate(envelopes, syncTimestamp, sortOrder = 'newest') {
 			const now = new Date(syncTimestamp)
 			const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000)
 			const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
@@ -372,8 +372,22 @@ export default {
 				}
 			}
 
+			for (const key of Object.keys(groups)) {
+				groups[key].sort((a, b) => {
+					return sortOrder === 'newest'
+						? b.dateInt - a.dateInt
+						: a.dateInt - b.dateInt
+				})
+			}
+
+			const groupOrder = sortOrder === 'newest'
+				? ['lastHour', 'today', 'yesterday', 'lastWeek', 'lastMonth', 'older']
+				: ['older', 'lastMonth', 'lastWeek', 'yesterday', 'today', 'lastHour']
+
 			return Object.fromEntries(
-				Object.entries(groups).filter(([_, list]) => list.length > 0),
+				groupOrder
+					.map(label => [label, groups[label]])
+					.filter(([_, list]) => list.length > 0),
 			)
 		},
 		async fetchEnvelopes() {
