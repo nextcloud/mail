@@ -134,7 +134,7 @@ export default {
 	computed: {
 		...mapStores(useMainStore),
 		sortOrder() {
-			return this.mainStore.getPreference('sort-order', 'DESC')
+			return this.mainStore.getPreference('sort-order', 'newest')
 		},
 		envelopes() {
 			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
