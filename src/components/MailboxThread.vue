@@ -297,7 +297,10 @@ export default {
 		},
 		groupEnvelopes() {
 			const allEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
-			return this.groupEnvelopesByDate(allEnvelopes, this.mainStore.syncTimestamp, 'oldest')
+			return this.groupEnvelopesByDate(allEnvelopes, this.mainStore.syncTimestamp, this.sortOrder)
+		},
+		sortOrder() {
+			return this.mainStore.getPreference('sort-order', 'DESC')
 		},
 	},
 	watch: {
