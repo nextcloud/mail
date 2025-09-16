@@ -1,3 +1,24 @@
+## [5.4.1](https://github.com/nextcloud/mail/compare/v5.4.0...v5.4.1) (2025-09-16)
+
+
+### Bug Fixes
+
+* **AliasSettings:** alignment ([23c8ee1](https://github.com/nextcloud/mail/commit/23c8ee17710be202a345366ccdd6e3a2a3376dda))
+* correct the default sort order value ([7f49e58](https://github.com/nextcloud/mail/commit/7f49e581dcb6aeb0f3602f89a80a0974737b5114))
+* **dns:** Update public suffix list ([7395387](https://github.com/nextcloud/mail/commit/7395387fda052df8960b08bd154edc22c8ebf3d6))
+* external address color ([53461f2](https://github.com/nextcloud/mail/commit/53461f2b9bd640e293a7e49e00e08540a690213b))
+* **l10n:** Update translations from Transifex ([3ea9ebc](https://github.com/nextcloud/mail/commit/3ea9ebc49d2fac48befa4de076b9bd2bd042daae))
+* **l10n:** Update translations from Transifex ([7dc9ae6](https://github.com/nextcloud/mail/commit/7dc9ae614b1586f149ca7fbd3c38e74c68258923))
+* **l10n:** Update translations from Transifex ([8804aba](https://github.com/nextcloud/mail/commit/8804aba3f54ea0b5e92722ae19d77a3cc038e60f))
+* **l10n:** Update translations from Transifex ([54471dc](https://github.com/nextcloud/mail/commit/54471dc720790928f373d9dfc7c1e5d9befe5c8e))
+* **l10n:** Update translations from Transifex ([42872a4](https://github.com/nextcloud/mail/commit/42872a42a947a983aeef7edda41216b1a57f2302))
+* **l10n:** Update translations from Transifex ([54f0ecc](https://github.com/nextcloud/mail/commit/54f0ecc4f5eb3c3b28a3b35aa5b144afa84528d3))
+* **l10n:** Update translations from Transifex ([46483e4](https://github.com/nextcloud/mail/commit/46483e455fff0341f62f0fb57b05cd7cc9bbd1a2))
+* show user avatar in recipient info ([299a9b4](https://github.com/nextcloud/mail/commit/299a9b4e04955170a13f612b881f59d40fbd2745))
+* thread scrolls to middle of iframe ([bd00cbd](https://github.com/nextcloud/mail/commit/bd00cbdd16e50f8864ed98d9ce6b0437ace7a192))
+
+
+
 # [5.4.0](https://github.com/nextcloud/mail/compare/v5.4.0-rc.2...v5.4.0) (2025-09-09)
 
 
