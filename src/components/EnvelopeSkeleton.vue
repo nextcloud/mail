@@ -57,7 +57,7 @@
 							</div>
 
 							<div class="list-item-content__inner__details">
-								<div v-if="showDetails" class="list-item-content__inner__details__details">
+								<div :class="['list-item-content__inner__details__details', { 'list-item-content__inner__details__details--hidden': showDetails }]">
 									<!-- @slot This slot is used for some details in form of icon (prop `details` as a fallback) -->
 									<slot name="details">{{ details }}</slot>
 								</div>
@@ -453,6 +453,10 @@ export default {
 		margin-inline-end: auto;
 		overflow: hidden;
 		text-overflow: ellipsis;
+
+		&--hidden {
+			visibility: hidden;
+		}
 	}
 }
 
@@ -483,10 +487,6 @@ export default {
 	&:has(:active),
 	&:has(:focus-visible) {
 		background-color: var(--color-background-hover);
-
-		a {
-			max-width: calc(100% - var(--default-clickable-area));
-		}
 	}
 
 	&:has(&__anchor:focus-visible) {
