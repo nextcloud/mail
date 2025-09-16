@@ -74,6 +74,8 @@ OC.L10N.register(
     "Delete message" : "Выдаліць паведамленне",
     "More actions" : "Больш дзеянняў",
     "Back" : "Назад",
+    "Mark as unread" : "Пазначыць як непрачытанае",
+    "Mark as read" : "Пазначыць як прачытанае",
     "Attendees" : "Удзельнікі",
     "Description" : "Апісанне",
     "Create" : "Стварыць",

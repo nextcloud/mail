@@ -162,6 +162,7 @@ OC.L10N.register(
     "matches" : "kongruas kun",
     "Priority" : "Prioritato",
     "delete" : "forigi",
+    "Edit" : "Modifi",
     "Mail app" : "Retpoŝtprogrameto",
     "Reset" : "Restarigi",
     "Client ID" : "Klientidentigilo",
