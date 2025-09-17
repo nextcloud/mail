@@ -138,7 +138,6 @@ OC.L10N.register(
     "Not found" : "Nav atrasts",
     "Untitled event" : "Nenosaukts notikums",
     "Recipient" : "Saņēmējs",
-    "Operator" : "Operators",
     "contains" : "saturs",
     "matches" : "atbilst",
     "Priority" : "Svarīgums",
@@ -179,6 +178,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Jāklikšķina šeit, ja nenotiek automātiska pārvirzīšana dažu sekunžu laikā.",
     "Redirect" : "Novirzīt",
     "The link leads to %s" : "Saite, kas ved uz %s",
-    "Continue to %s" : "Turpināt %s"
+    "Continue to %s" : "Turpināt %s",
+    "Operator" : "Operators"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

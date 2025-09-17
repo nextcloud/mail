@@ -94,7 +94,6 @@ OC.L10N.register(
     "Untitled event" : "Acara tanpa judul",
     "(organizer)" : "(penyelenggara)",
     "Recipient" : "Penerima",
-    "Operator" : "Operator",
     "contains" : "mengandung",
     "matches" : "cocok dengan",
     "delete" : "hapus",
@@ -127,6 +126,7 @@ OC.L10N.register(
     "Error loading message" : "Terjadi kesalahan saat memuat pesan",
     "Forwarding to %s" : "Teruskan ke %s",
     "Redirect" : "Mengalihkan",
-    "Continue to %s" : "Lanjutkan ke %s"
+    "Continue to %s" : "Lanjutkan ke %s",
+    "Operator" : "Operator"
 },
 "nplurals=1; plural=0;");

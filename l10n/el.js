@@ -333,10 +333,8 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} από {depStation} προς {arrStation}",
     "Train from {depStation} to {arrStation}" : "Τρένο από {depStation} προς {arrStation}",
     "Train" : "Τρένο",
-    "Flag" : "Σημαία",
     "Recipient" : "Παραλήπτης",
     "Delete filter" : "Διαγραφή φίλτρου",
-    "Operator" : "Διαχειριστής",
     "contains" : "περιέχει",
     "matches" : "ταιριάζει",
     "Priority" : "Προτεραιότητα",
@@ -395,6 +393,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Κάντε κλικ εδώ εάν δεν ανακατευθυνθείτε αυτόματα μέσα σε λίγα δευτερόλεπτα.",
     "Redirect" : "Ανακατεύθυνση",
     "The link leads to %s" : "Αυτός ο σύνδεσμος οδηγεί στο %s",
-    "Continue to %s" : "Συνέχεια στο %s"
+    "Continue to %s" : "Συνέχεια στο %s",
+    "Flag" : "Σημαία",
+    "Operator" : "Διαχειριστής"
 },
 "nplurals=2; plural=(n != 1);");

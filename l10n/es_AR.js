@@ -100,7 +100,6 @@ OC.L10N.register(
     "Add tag" : "Añadir etiqueta",
     "Not found" : "No encontrado",
     "Recipient" : "Recipiente",
-    "Operator" : "Operador",
     "contains" : "contiene",
     "matches" : "coincide",
     "Priority" : "Prioridad",
@@ -140,6 +139,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Haga click aqui si no es redireccionado automáticamente dentro de los siguietes segundos. ",
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "El link lleva a %s",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Operator" : "Operador"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

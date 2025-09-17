@@ -554,13 +554,10 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} fra {depStation} til {arrStation}\n ",
     "Train from {depStation} to {arrStation}" : "Tog fra {depStation} til {arrStation}\n ",
     "Train" : "Tog",
-    "Flag" : "Flagg",
     "Recipient" : "Mottaker",
     "Delete filter" : "Slett filter",
-    "Operator" : "Operator",
     "contains" : "inneholder",
     "matches" : "passer",
-    "Filter name" : "Filternavn",
     "Priority" : "Prioritet",
     "delete" : "slett",
     "Edit" : "Rediger",
@@ -715,6 +712,9 @@ OC.L10N.register(
     "Continue to %s" : "Fortsett til %s",
     "Mailvelope is enabled for the current domain!" : "Mailvelope er aktivert for gjeldende domene!",
     "Looking for a way to encrypt your emails?" : "Leter du etter en måte å kryptere e-postene dine på?",
-    "Enable Mailvelope for the current domain" : "Aktiver Mailvelope for gjeldende domene"
+    "Enable Mailvelope for the current domain" : "Aktiver Mailvelope for gjeldende domene",
+    "Flag" : "Flagg",
+    "Operator" : "Operator",
+    "Filter name" : "Filternavn"
 },
 "nplurals=2; plural=(n != 1);");

@@ -92,7 +92,6 @@
     "Untitled event" : "Acara tanpa judul",
     "(organizer)" : "(penyelenggara)",
     "Recipient" : "Penerima",
-    "Operator" : "Operator",
     "contains" : "mengandung",
     "matches" : "cocok dengan",
     "delete" : "hapus",
@@ -125,6 +124,7 @@
     "Error loading message" : "Terjadi kesalahan saat memuat pesan",
     "Forwarding to %s" : "Teruskan ke %s",
     "Redirect" : "Mengalihkan",
-    "Continue to %s" : "Lanjutkan ke %s"
+    "Continue to %s" : "Lanjutkan ke %s",
+    "Operator" : "Operator"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

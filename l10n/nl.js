@@ -349,12 +349,9 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} van {depStation} naar {arrStation}",
     "Train from {depStation} to {arrStation}" : "Trein van {depStation} naar {arrStation}",
     "Train" : "Trein",
-    "Flag" : "lag",
     "Recipient" : "Ontvanger",
-    "Operator" : "Operator",
     "contains" : "bevat",
     "matches" : "komt overeen",
-    "Filter name" : "Filternaam",
     "Priority" : "Prioriteit",
     "Tag" : "Label",
     "delete" : "verwijder",
@@ -457,6 +454,9 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klik hier als je binnen enkele seconden niet automatisch wordt doorgestuurd.",
     "Redirect" : "Omleiden",
     "The link leads to %s" : "De link verwijst naar %s",
-    "Continue to %s" : "Verder naar %s"
+    "Continue to %s" : "Verder naar %s",
+    "Flag" : "lag",
+    "Operator" : "Operator",
+    "Filter name" : "Filternaam"
 },
 "nplurals=2; plural=(n != 1);");

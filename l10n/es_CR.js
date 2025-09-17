@@ -102,7 +102,6 @@ OC.L10N.register(
     "Custom" : "Personalizado",
     "Add tag" : "Agregar etiqueta",
     "Recipient" : "Destinatario",
-    "Operator" : "Operador",
     "matches" : "coincide",
     "Priority" : "Prioridad",
     "delete" : "borrar",
@@ -141,6 +140,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Haz click aqui si no eres redireccionado automáticamente dentro de los siguietes segundos. ",
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Operator" : "Operador"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

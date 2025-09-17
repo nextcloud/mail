@@ -245,11 +245,8 @@ OC.L10N.register(
     "Untitled event" : "Eventu ensin títulu",
     "Airplane" : "Avión",
     "Train" : "Tren",
-    "Flag" : "Bandera",
-    "Operator" : "Operador",
     "contains" : "contién",
     "matches" : "concasa",
-    "Filter name" : "Nome de la peñera",
     "Priority" : "Prioridá",
     "delete" : "desaniciar",
     "Edit" : "Editar",
@@ -311,6 +308,9 @@ OC.L10N.register(
     "Could not load the message" : "Nun se pudo cargar el mensaxe",
     "Error loading message" : "Hebo un error al cargar el mensaxe",
     "Redirect" : "Redirixir",
-    "The link leads to %s" : "L'enllaz lleva a %s"
+    "The link leads to %s" : "L'enllaz lleva a %s",
+    "Flag" : "Bandera",
+    "Operator" : "Operador",
+    "Filter name" : "Nome de la peñera"
 },
 "nplurals=2; plural=(n != 1);");
