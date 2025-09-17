@@ -1,3 +1,14 @@
+# [5.5.0](https://github.com/nextcloud/mail/compare/v5.5.0-rc.2...v5.5.0) (2025-09-17)
+
+
+### Bug Fixes
+
+* **deps:** bump @nextcloud/vue to ^8.31.0 ([7c0db73](https://github.com/nextcloud/mail/commit/7c0db7317ea167152c761ab109b373e54b659b70))
+* **l10n:** Update translations from Transifex ([19affff](https://github.com/nextcloud/mail/commit/19afffff7c650a1f79f626aa6eef1112266fe428))
+* **sieve:** improve filter ui ([ec7f414](https://github.com/nextcloud/mail/commit/ec7f41400ab2f2fc162a40643d7363de69f8cf11))
+
+
+
 # [5.5.0-rc.2](https://github.com/nextcloud/mail/compare/v5.5.0-rc.1...v5.5.0-rc.2) (2025-09-16)
 
 
