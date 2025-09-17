@@ -135,6 +135,7 @@ import {
 	UNIFIED_ACCOUNT_ID,
 	UNIFIED_INBOX_ID,
 } from '../store/constants.js'
+import { groupEnvelopesByDate } from '../util/groupedEnvelopes.js'
 import {
 	priorityImportantQuery,
 	priorityOtherQuery,
@@ -297,7 +298,10 @@ export default {
 		},
 		groupEnvelopes() {
 			const allEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
-			return this.groupEnvelopesByDate(allEnvelopes, this.mainStore.syncTimestamp)
+			return this.getGroupedEnvelopes(allEnvelopes, this.mainStore.syncTimestamp, this.sortOrder)
+		},
+		sortOrder() {
+			return this.mainStore.getPreference('sort-order', 'newest')
 		},
 	},
 	watch: {
@@ -335,46 +339,8 @@ export default {
 		clearTimeout(this.startMailboxTimer)
 	},
 	methods: {
-		groupEnvelopesByDate(envelopes, syncTimestamp) {
-			const now = new Date(syncTimestamp)
-			const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000)
-			const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-			const startOfYesterday = new Date(startOfToday)
-			startOfYesterday.setDate(startOfYesterday.getDate() - 1)
-			const startOfLastWeek = new Date(now)
-			startOfLastWeek.setDate(startOfLastWeek.getDate() - 7)
-			const startOfLastMonth = new Date(now)
-			startOfLastMonth.setMonth(startOfLastMonth.getMonth() - 1)
-
-			const groups = {
-				lastHour: [],
-				today: [],
-				yesterday: [],
-				lastWeek: [],
-				lastMonth: [],
-				older: [],
-			}
-
-			for (const envelope of envelopes) {
-				const date = new Date(envelope.dateInt * 1000)
-				if (date >= oneHourAgo) {
-					groups.lastHour.push(envelope)
-				} else if (date >= startOfToday) {
-					groups.today.push(envelope)
-				} else if (date >= startOfYesterday && date < startOfToday) {
-					groups.yesterday.push(envelope)
-				} else if (date >= startOfLastWeek) {
-					groups.lastWeek.push(envelope)
-				} else if (date >= startOfLastMonth) {
-					groups.lastMonth.push(envelope)
-				} else {
-					groups.older.push(envelope)
-				}
-			}
-
-			return Object.fromEntries(
-				Object.entries(groups).filter(([_, list]) => list.length > 0),
-			)
+		getGroupedEnvelopes(envelopes, syncTimestamp) {
+			return groupEnvelopesByDate(envelopes, syncTimestamp, this.sortOrder)
 		},
 		async fetchEnvelopes() {
 			const existingEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery || '')
