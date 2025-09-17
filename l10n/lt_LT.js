@@ -363,7 +363,6 @@ OC.L10N.register(
     "matches" : "atitinka",
     "Priority" : "Pirmenybė",
     "Enable filter" : "Įjungti filtrą",
-    "Save filter" : "Įrašyti filtrą",
     "Tag" : "Žymė",
     "delete" : "ištrinti",
     "Edit" : "Taisyti",
@@ -447,6 +446,7 @@ OC.L10N.register(
     "Redirect" : "Peradresuoti",
     "The link leads to %s" : "Nuoroda veda į %s",
     "Continue to %s" : "Tęsti į %s",
-    "Looking for a way to encrypt your emails?" : "Ieškote būdo šifruoti el. laiškus?"
+    "Looking for a way to encrypt your emails?" : "Ieškote būdo šifruoti el. laiškus?",
+    "Save filter" : "Įrašyti filtrą"
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");

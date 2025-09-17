@@ -432,10 +432,8 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} iz {depStation} v {arrStation}",
     "Train from {depStation} to {arrStation}" : "Vlak iz {depStation} v {arrStation}",
     "Train" : "Vlak",
-    "Flag" : "Zastavica",
     "Recipient" : "Prejemnik",
     "Delete filter" : "Izbriši filter",
-    "Operator" : "Operator",
     "contains" : "vsebuje",
     "matches" : "se sklada z",
     "Priority" : "Prednost",
@@ -544,6 +542,8 @@ OC.L10N.register(
     "Redirect" : "Preusmeri",
     "The link leads to %s" : "Povezava vodi do %s",
     "Continue to %s" : "Nadaljuj na %s",
-    "Looking for a way to encrypt your emails?" : "Ali iščete način za šifriranje elektronskih sporočil?"
+    "Looking for a way to encrypt your emails?" : "Ali iščete način za šifriranje elektronskih sporočil?",
+    "Flag" : "Zastavica",
+    "Operator" : "Operator"
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

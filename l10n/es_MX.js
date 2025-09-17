@@ -357,7 +357,6 @@ OC.L10N.register(
     "Untitled event" : "Evento sin título",
     "(organizer)" : "(organizador)",
     "Recipient" : "Destinatario",
-    "Operator" : "Operador",
     "contains" : "contiene",
     "matches" : "coincide",
     "Priority" : "Prioridad",
@@ -403,6 +402,7 @@ OC.L10N.register(
     "Continue to %s" : "Continuar a %s",
     "Mailvelope is enabled for the current domain!" : "¡Mailvelope se encuentra habilitado para el dominio actual!",
     "Looking for a way to encrypt your emails?" : "¿Buscas una forma de cifrar tus correos electrónicos?",
-    "Enable Mailvelope for the current domain" : "Habilita Mailvelope para el dominio actual"
+    "Enable Mailvelope for the current domain" : "Habilita Mailvelope para el dominio actual",
+    "Operator" : "Operador"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

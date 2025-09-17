@@ -152,9 +152,7 @@ OC.L10N.register(
     "Copy translated text" : "Скапіяваць перакладзены тэкст",
     "Untitled event" : "Падзея без назвы",
     "Train" : "Цягнік",
-    "Flag" : "Сцяг",
     "Delete filter" : "Выдаліць фільтр",
-    "Operator" : "Аператар",
     "Tag" : "Тэг",
     "delete" : "выдаліць",
     "Edit" : "Рэдагаваць",
@@ -203,6 +201,8 @@ OC.L10N.register(
     "There was a problem loading {tag}{name}{endtag}" : "Узнікла праблема з загрузкай {tag}{name}{endtag}",
     "Could not load your message" : "Не ўдалося загрузіць ваша паведамленне",
     "Could not load the message" : "Не ўдалося загрузіць паведамленне",
-    "Error loading message" : "Памылка пры загрузцы паведамлення"
+    "Error loading message" : "Памылка пры загрузцы паведамлення",
+    "Flag" : "Сцяг",
+    "Operator" : "Аператар"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

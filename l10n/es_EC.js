@@ -436,9 +436,7 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} desde {depStation} a {arrStation}",
     "Train from {depStation} to {arrStation}" : "Tren desde {depStation} a {arrStation}",
     "Train" : "Tren",
-    "Flag" : "Bandera",
     "Recipient" : "Destinatario",
-    "Operator" : "Operador",
     "contains" : "contiene",
     "matches" : "coincide",
     "Priority" : "Prioridad",
@@ -583,6 +581,8 @@ OC.L10N.register(
     "The link leads to %s" : "La liga lleva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no deseas visitar esa página, puedes regresar a <a href=\"%s\">Correo</a>.",
     "Continue to %s" : "Continuar a %s",
-    "Looking for a way to encrypt your emails?" : "¿Buscas una forma de cifrar tus correos electrónicos?"
+    "Looking for a way to encrypt your emails?" : "¿Buscas una forma de cifrar tus correos electrónicos?",
+    "Flag" : "Bandera",
+    "Operator" : "Operador"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
