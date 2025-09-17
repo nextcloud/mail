@@ -245,6 +245,7 @@
 				@input="onEditorInput"
 				@ready="onEditorReady"
 				@mention="handleMention"
+				@submit="onEditorSubmit"
 				@show-toolbar="handleShow" />
 			<MailvelopeEditor v-else
 				ref="mailvelopeEditor"
@@ -1199,6 +1200,10 @@ export default {
 				this.bus.emit('append-to-body-at-cursor', this.smartReply)
 			}
 		},
+		onEditorSubmit(editor) {
+			this.bodyVal = editor.getData()
+			this.onSend()
+		},
 		onChangeSendLater(value) {
 			this.sendAtVal = value ? Number.parseInt(value, 10) : undefined
 		},
@@ -1342,7 +1347,7 @@ export default {
 			list.push(recipient)
 			this.saveDraftDebounced()
 		},
-		async onSend(_, force = false) {
+		async onSend() {
 			if (this.encrypt) {
 				logger.debug('get encrypted message from mailvelope')
 				await this.$refs.mailvelopeEditor.pull()
@@ -1350,7 +1355,7 @@ export default {
 
 			this.$emit('send', {
 				...this.getMessageData(),
-				force,
+				force: false,
 			})
 		},
 		reset() {
