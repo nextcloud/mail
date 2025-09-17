@@ -16,7 +16,7 @@
 		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
 		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
 		<template v-else-if="hasGroupedEnvelopes && !isPriorityInbox">
-			<div v-for="[label, group] in Object.entries(groupEnvelopes)" :key="label">
+			<div v-for="[label, group] in groupEnvelopes" :key="label">
 				<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
 				<EnvelopeList :account="account"
 					:mailbox="mailbox"
@@ -78,9 +78,9 @@ export default {
 
 	props: {
 		groupEnvelopes: {
-			type: Object,
+			type: Array,
 			required: false,
-			default: null,
+			default: () => [],
 		},
 		loadMoreLabel: {
 			type: String,
@@ -146,11 +146,11 @@ export default {
 			return this.envelopes
 		},
 		hasGroupedEnvelopes() {
-			return this.groupEnvelopes && Object.keys(this.groupEnvelopes).length > 0
+			return this.groupEnvelopes && this.groupEnvelopes.length > 0
 		},
 		hasMessages() {
 			if (this.hasGroupedEnvelopes) {
-				return Object.values(this.groupEnvelopes).some(group => group.length > 0)
+				return this.groupEnvelopes.some(([, group]) => group.length > 0)
 			}
 			return this.envelopesToShow?.length > 0
 		},
@@ -579,8 +579,9 @@ export default {
 				return t('mail', 'Last week')
 			case 'lastMonth':
 				return t('mail', 'Last month')
+			default:
+				return group
 			}
-			return t('mail', 'Older')
 		},
 	},
 }
