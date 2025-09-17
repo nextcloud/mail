@@ -403,7 +403,6 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} од {depStation} до {arrStation}",
     "Train from {depStation} to {arrStation}" : "Воз од  {depStation} до {arrStation}",
     "Train" : "Воз",
-    "Flag" : "Знаме",
     "matches" : "се совпаѓа",
     "Priority" : "Приоритет",
     "delete" : "избриши",
@@ -483,6 +482,7 @@ OC.L10N.register(
     "Redirect" : "Пренасочи",
     "The link leads to %s" : "Линкот води кон %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Доколку несакате да ја посетите страната, можете да се вратите кон <a href=\"%s\">Е-пошта</a>.",
-    "Continue to %s" : "Продолжи до %s"
+    "Continue to %s" : "Продолжи до %s",
+    "Flag" : "Знаме"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

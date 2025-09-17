@@ -129,7 +129,6 @@ OC.L10N.register(
     "Copy translated text" : "Nakili maandishi yaliyotafsiriwa",
     "Untitled event" : "Tukio lisilotajwa",
     "(organizer)" : "(Mratibu)",
-    "Operator" : "Operator",
     "contains" : "contains",
     "matches" : "matches",
     "Priority" : "Kipaumbele",
@@ -155,6 +154,7 @@ OC.L10N.register(
     "Discard changes" : "Discard changes",
     "Message sent" : "Ujumbe umetumwa",
     "Redirect" : "Elekeza upya",
-    "Continue to %s" : "Endelea katika %s"
+    "Continue to %s" : "Endelea katika %s",
+    "Operator" : "Operator"
 },
 "nplurals=2; plural=(n != 1);");

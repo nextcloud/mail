@@ -494,7 +494,6 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} from {depStation} to {arrStation}",
     "Train from {depStation} to {arrStation}" : "Train from {depStation} to {arrStation}",
     "Train" : "Train",
-    "Operator" : "ოპერატორი",
     "matches" : "matches",
     "Priority" : "Priority",
     "Edit" : "Edit",
@@ -640,6 +639,7 @@ OC.L10N.register(
     "The link leads to %s" : "The link leads to %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continue to %s",
-    "Looking for a way to encrypt your emails?" : "Looking for a way to encrypt your emails?"
+    "Looking for a way to encrypt your emails?" : "Looking for a way to encrypt your emails?",
+    "Operator" : "ოპერატორი"
 },
 "nplurals=2; plural=(n!=1);");

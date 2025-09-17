@@ -425,9 +425,7 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} от {depStation} до {arrStation}",
     "Train from {depStation} to {arrStation}" : "Влак от {depStation} до {arrStation}",
     "Train" : "Влак",
-    "Flag" : "Знаме",
     "Recipient" : "Получател",
-    "Operator" : "Оператор",
     "contains" : "съдържа",
     "matches" : "съвпадения",
     "Priority" : "Приоритет",
@@ -568,6 +566,8 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желаете да посетите тази страница, може да се върнете към <a href=\"%s\">Поща</a>.",
     "Continue to %s" : "Продължи към %s",
     "Looking for a way to encrypt your emails?" : "Търсите ли начин да шифровате имейлите си?",
-    "Install Mailvelope browser extension" : "Инсталирайте разширението за браузър Mailvelope"
+    "Install Mailvelope browser extension" : "Инсталирайте разширението за браузър Mailvelope",
+    "Flag" : "Знаме",
+    "Operator" : "Оператор"
 },
 "nplurals=2; plural=(n != 1);");

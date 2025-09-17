@@ -343,7 +343,6 @@ OC.L10N.register(
     "Train" : "Tog",
     "Recipient" : "Modtager",
     "New filter" : "Nyt filter",
-    "Operator" : "Operatør",
     "contains" : "indeholder",
     "matches" : "er lig med",
     "Priority" : "Prioritet",
@@ -408,6 +407,7 @@ OC.L10N.register(
     "Redirect" : "Omdiriger",
     "The link leads to %s" : "Linket fører til %s",
     "Continue to %s" : "Videre til %s",
-    "Looking for a way to encrypt your emails?" : "Leder du efter en måde at kryptere dine e-mails på?"
+    "Looking for a way to encrypt your emails?" : "Leder du efter en måde at kryptere dine e-mails på?",
+    "Operator" : "Operatør"
 },
 "nplurals=2; plural=(n != 1);");

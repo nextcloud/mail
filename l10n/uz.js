@@ -71,7 +71,6 @@ OC.L10N.register(
     "Not found" : "Topilmadi",
     "Untitled event" : "Nomsiz tadbir",
     "(organizer)" : "(tashkilotchi)",
-    "Operator" : "Operator",
     "contains" : "o'z ichiga oladi",
     "Edit" : "Tahrirlash",
     "Reset" : "Qayta tiklash",
@@ -83,6 +82,7 @@ OC.L10N.register(
     "All" : "All",
     "Favorites" : "Favorites",
     "Error while sharing file" : "Fayl almashishda xatolik yuz berdi",
-    "Continue to %s" : " %sni davom eting"
+    "Continue to %s" : " %sni davom eting",
+    "Operator" : "Operator"
 },
 "nplurals=1; plural=0;");
