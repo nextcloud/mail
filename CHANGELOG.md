@@ -1,3 +1,12 @@
+## [5.5.1](https://github.com/nextcloud/mail/compare/v5.5.0...v5.5.1) (2025-09-17)
+
+
+### Bug Fixes
+
+* **classification:** break large SQL IN queries into chunks ([ac201f0](https://github.com/nextcloud/mail/commit/ac201f0ea879ff69e4b0e944998e137bf7202910))
+
+
+
 # [5.5.0](https://github.com/nextcloud/mail/compare/v5.5.0-rc.2...v5.5.0) (2025-09-17)
 
 
