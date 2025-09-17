@@ -71,21 +71,6 @@ class StatisticsDao {
 		}, 0);
 	}
 
-	public function getMessagesSentTo(Mailbox $mb, string $email): int {
-		$qb = $this->db->getQueryBuilder();
-
-		$select = $qb->select($qb->func()->count('*'))
-			->from('mail_recipients', 'r')
-			->join('r', 'mail_messages', 'm', $qb->expr()->eq('m.id', 'r.message_id', IQueryBuilder::PARAM_INT))
-			->where($qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_TO), IQueryBuilder::PARAM_INT))
-			->andWhere($qb->expr()->eq('r.email', $qb->createNamedParameter($email)))
-			->andWhere($qb->expr()->eq('m.mailbox_id', $qb->createNamedParameter($mb->getId(), IQueryBuilder::PARAM_INT)));
-		$result = $select->executeQuery();
-		$cnt = $result->fetchOne();
-		$result->closeCursor();
-		return (int)$cnt;
-	}
-
 	public function getMessagesSentToGrouped(array $mailboxes, array $emails): array {
 		$qb = $this->db->getQueryBuilder();
 
@@ -110,37 +95,6 @@ class StatisticsDao {
 				return $data;
 			}, array_chunk($mailboxIds, 1000))
 		);
-	}
-
-	public function getNrOfImportantMessages(Mailbox $mb, string $email): int {
-		$qb = $this->db->getQueryBuilder();
-
-		$select = $qb->select($qb->func()->count('*'))
-			->from('mail_recipients', 'r')
-			->join('r', 'mail_messages', 'm', $qb->expr()->eq('m.id', 'r.message_id', IQueryBuilder::PARAM_INT))
-			->where($qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT))
-			->andWhere($qb->expr()->eq('m.mailbox_id', $qb->createNamedParameter($mb->getId(), IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->eq('m.flag_important', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL)))
-			->andWhere($qb->expr()->eq('r.email', $qb->createNamedParameter($email)));
-		$result = $select->executeQuery();
-		$cnt = $result->fetchOne();
-		$result->closeCursor();
-		return (int)$cnt;
-	}
-
-	public function getNumberOfMessages(Mailbox $mb, string $email): int {
-		$qb = $this->db->getQueryBuilder();
-
-		$select = $qb->select($qb->func()->count('*'))
-			->from('mail_recipients', 'r')
-			->join('r', 'mail_messages', 'm', $qb->expr()->eq('m.id', 'r.message_id', IQueryBuilder::PARAM_INT))
-			->where($qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT))
-			->andWhere($qb->expr()->eq('m.mailbox_id', $qb->createNamedParameter($mb->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT))
-			->andWhere($qb->expr()->eq('r.email', $qb->createNamedParameter($email, IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR));
-		$result = $select->executeQuery();
-		$cnt = $result->fetchOne();
-		$result->closeCursor();
-		return (int)$cnt;
 	}
 
 	/**
@@ -175,22 +129,6 @@ class StatisticsDao {
 		);
 	}
 
-	public function getNrOfReadMessages(Mailbox $mb, string $email): int {
-		$qb = $this->db->getQueryBuilder();
-
-		$select = $qb->select($qb->func()->count('*'))
-			->from('mail_recipients', 'r')
-			->join('r', 'mail_messages', 'm', $qb->expr()->eq('m.id', 'r.message_id', IQueryBuilder::PARAM_INT))
-			->where($qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT))
-			->andWhere($qb->expr()->eq('m.mailbox_id', $qb->createNamedParameter($mb->getId(), IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->eq('m.flag_seen', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL)))
-			->andWhere($qb->expr()->eq('r.email', $qb->createNamedParameter($email)));
-		$result = $select->executeQuery();
-		$cnt = $result->fetchOne();
-		$result->closeCursor();
-		return (int)$cnt;
-	}
-
 	/**
 	 * @param Mailbox[] $mailboxes
 	 * @param string $flag
@@ -223,21 +161,5 @@ class StatisticsDao {
 				return $data;
 			}, array_chunk($mailboxIds, 1000))
 		);
-	}
-
-	public function getNrOfRepliedMessages(Mailbox $mb, string $email): int {
-		$qb = $this->db->getQueryBuilder();
-
-		$select = $qb->select($qb->func()->count('*'))
-			->from('mail_recipients', 'r')
-			->join('r', 'mail_messages', 'm', $qb->expr()->eq('m.id', 'r.message_id', IQueryBuilder::PARAM_INT))
-			->where($qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT))
-			->andWhere($qb->expr()->eq('m.mailbox_id', $qb->createNamedParameter($mb->getId(), IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->eq('m.flag_answered', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL)))
-			->andWhere($qb->expr()->eq('r.email', $qb->createNamedParameter($email)));
-		$result = $select->executeQuery();
-		$cnt = $result->fetchOne();
-		$result->closeCursor();
-		return (int)$cnt;
 	}
 }
