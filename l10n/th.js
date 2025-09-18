@@ -76,6 +76,8 @@ OC.L10N.register(
     "Custom" : "กำหนดเอง",
     "Tag already exists" : "มีแท็กอยู่แล้ว",
     "Not found" : "ไม่พบ",
+    "Help" : "ช่วยเหลือ",
+    "Actions" : "การกระทำ",
     "Priority" : "ลำดับความสำคัญ",
     "delete" : "ลบ",
     "Edit" : "แก้ไข",

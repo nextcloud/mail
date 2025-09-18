@@ -26,6 +26,7 @@ OC.L10N.register(
     "List" : "Orodha",
     "Sorting" : "Sorting",
     "Register" : "Sajiri",
+    "Shared with me" : "Shared with me",
     "About" : "Kuhusu",
     "Keyboard shortcuts" : "Mikato ya keyboard",
     "Archive" : "Weka kumbukumbu",
@@ -129,8 +130,10 @@ OC.L10N.register(
     "Copy translated text" : "Nakili maandishi yaliyotafsiriwa",
     "Untitled event" : "Tukio lisilotajwa",
     "(organizer)" : "(Mratibu)",
+    "Help" : "Msaada",
     "contains" : "contains",
     "matches" : "matches",
+    "Actions" : "Matendo",
     "Priority" : "Kipaumbele",
     "Edit" : "Hariri",
     "Reset" : "Pangilia upya",
@@ -154,7 +157,6 @@ OC.L10N.register(
     "Discard changes" : "Discard changes",
     "Message sent" : "Ujumbe umetumwa",
     "Redirect" : "Elekeza upya",
-    "Continue to %s" : "Endelea katika %s",
-    "Operator" : "Operator"
+    "Continue to %s" : "Endelea katika %s"
 },
 "nplurals=2; plural=(n != 1);");

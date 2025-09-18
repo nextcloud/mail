@@ -357,8 +357,10 @@ OC.L10N.register(
     "Untitled event" : "Evento sin título",
     "(organizer)" : "(organizador)",
     "Recipient" : "Destinatario",
+    "Help" : "Ayuda",
     "contains" : "contiene",
     "matches" : "coincide",
+    "Actions" : "Acciones",
     "Priority" : "Prioridad",
     "delete" : "borrar",
     "Edit" : "Editar",
@@ -399,10 +401,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Haz click aqui si no eres redireccionado automáticamente dentro de los siguietes segundos. ",
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
-    "Continue to %s" : "Continuar a %s",
-    "Mailvelope is enabled for the current domain!" : "¡Mailvelope se encuentra habilitado para el dominio actual!",
-    "Looking for a way to encrypt your emails?" : "¿Buscas una forma de cifrar tus correos electrónicos?",
-    "Enable Mailvelope for the current domain" : "Habilita Mailvelope para el dominio actual",
-    "Operator" : "Operador"
+    "Continue to %s" : "Continuar a %s"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
