@@ -54,6 +54,8 @@ OC.L10N.register(
     "Date" : "Date",
     "Tags" : "Işarələr",
     "Not found" : "Tapılmadı",
+    "Help" : "Kömək",
+    "Actions" : "İşlər",
     "Priority" : "Prioritet",
     "delete" : "sil",
     "Edit" : "Dəyişiklik et",

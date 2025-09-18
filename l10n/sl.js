@@ -434,8 +434,10 @@ OC.L10N.register(
     "Train" : "Vlak",
     "Recipient" : "Prejemnik",
     "Delete filter" : "Izbriši filter",
+    "Help" : "Pomoč",
     "contains" : "vsebuje",
     "matches" : "se sklada z",
+    "Actions" : "Dejanja",
     "Priority" : "Prednost",
     "Tag" : "Oznaka",
     "delete" : "izbriši",
@@ -541,9 +543,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Če vas sistem v nekaj sekundah ne preusmeri samodejno, pritisnite na to mesto.",
     "Redirect" : "Preusmeri",
     "The link leads to %s" : "Povezava vodi do %s",
-    "Continue to %s" : "Nadaljuj na %s",
-    "Looking for a way to encrypt your emails?" : "Ali iščete način za šifriranje elektronskih sporočil?",
-    "Flag" : "Zastavica",
-    "Operator" : "Operator"
+    "Continue to %s" : "Nadaljuj na %s"
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

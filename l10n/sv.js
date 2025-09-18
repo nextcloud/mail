@@ -324,8 +324,10 @@ OC.L10N.register(
     "Train" : "Tåg",
     "Recipient" : "Mottagare",
     "Delete filter" : "Ta bort filter",
+    "Help" : "Hjälp",
     "contains" : "innehåller",
     "matches" : "träffar",
+    "Actions" : "Funktioner",
     "Priority" : "Prioritet",
     "Tag" : "Tagg",
     "delete" : "radera",
@@ -384,11 +386,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klicka här om du inte blir omdirigerad inom några sekunder.",
     "Redirect" : "Omdirigera",
     "The link leads to %s" : "Länken pekar mot %s",
-    "Continue to %s" : "Fortsätt till %s",
-    "Looking for a way to encrypt your emails?" : "Söker du efter ett sätt att kryptera meddelanden?",
-    "Install Mailvelope browser extension" : "Installera webbläsartillägget Mailvelope",
-    "Flag" : "Flag",
-    "Operator" : "Operatör",
-    "Filter name" : "Filternamn"
+    "Continue to %s" : "Fortsätt till %s"
 },
 "nplurals=2; plural=(n != 1);");

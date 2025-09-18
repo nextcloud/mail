@@ -48,6 +48,7 @@ OC.L10N.register(
     "Date" : "Date",
     "Tags" : "Oznake",
     "Not found" : "Nije nađeno",
+    "Help" : "Pomoć",
     "delete" : "obriši",
     "Edit" : "Izmeni",
     "User" : "Korisnik",

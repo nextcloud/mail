@@ -490,10 +490,13 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} vonat {depStation} és {arrStation} között",
     "Train from {depStation} to {arrStation}" : "Vonat {depStation} és {arrStation} között",
     "Train" : "Vonat",
+    "Stop" : "Leállítás",
     "Recipient" : "Címzett",
     "Delete filter" : "Szűrő törlése",
+    "Help" : "Súgó",
     "contains" : "tartalmazza",
     "matches" : "egyezik",
+    "Actions" : "Műveletek",
     "Priority" : "Prioritás",
     "Tag" : "Címke",
     "delete" : "töröl",
@@ -639,11 +642,6 @@ OC.L10N.register(
     "Redirect" : "Átirányítás",
     "The link leads to %s" : "A hivatkozás ide mutat: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarja megnyitni azt az oldalt, akkor térjen vissza a <a href=\"%s\">Levelezéshez</a>.",
-    "Continue to %s" : "Folytatás ide: %s",
-    "Looking for a way to encrypt your emails?" : "Azt keresi, hogyan titkosíthatná a leveleit?",
-    "Install Mailvelope browser extension" : "Telepítse a Mailvelope böngészőkiegészítőt",
-    "Flag" : "Zászló",
-    "Operator" : "Állapot",
-    "Filter name" : "Név szűrése"
+    "Continue to %s" : "Folytatás ide: %s"
 },
 "nplurals=2; plural=(n != 1);");

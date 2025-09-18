@@ -71,7 +71,9 @@ OC.L10N.register(
     "Not found" : "Topilmadi",
     "Untitled event" : "Nomsiz tadbir",
     "(organizer)" : "(tashkilotchi)",
+    "Help" : "Yordam",
     "contains" : "o'z ichiga oladi",
+    "Actions" : "Faolliklar",
     "Edit" : "Tahrirlash",
     "Reset" : "Qayta tiklash",
     "Client ID" : "Mijoz identifikatori",
@@ -82,7 +84,6 @@ OC.L10N.register(
     "All" : "All",
     "Favorites" : "Favorites",
     "Error while sharing file" : "Fayl almashishda xatolik yuz berdi",
-    "Continue to %s" : " %sni davom eting",
-    "Operator" : "Operator"
+    "Continue to %s" : " %sni davom eting"
 },
 "nplurals=1; plural=0;");

@@ -107,6 +107,8 @@ OC.L10N.register(
     "Custom" : "Eie",
     "Message source" : "Boodskapbron",
     "Recipient" : "Ontvanger",
+    "Help" : "Hulp",
+    "Actions" : "Aksies",
     "Priority" : "Prioriteit",
     "delete" : "skrap",
     "Reset" : "Herstel",

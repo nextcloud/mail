@@ -91,6 +91,8 @@ OC.L10N.register(
     "Translating" : "Traduccion",
     "Untitled event" : "Eveniment sens títol",
     "Train" : "Tren",
+    "Help" : "Ajuda",
+    "Actions" : "Accions",
     "delete" : "suprimir",
     "Edit" : "Modificar",
     "Reset" : "Reïnicializar",
@@ -118,7 +120,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "Message sent" : "Messatge mandat",
     "Error loading message" : "Error al moment del cargament del messatge",
-    "Continue to %s" : "Contunhar cap a %s",
-    "Flag" : "Drapèu"
+    "Continue to %s" : "Contunhar cap a %s"
 },
 "nplurals=2; plural=(n > 1);");

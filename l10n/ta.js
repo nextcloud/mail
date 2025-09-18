@@ -37,6 +37,8 @@ OC.L10N.register(
     "Close" : "மூடுக",
     "Date" : "Date",
     "Tags" : "சீட்டுகள்",
+    "Help" : "உதவி",
+    "Actions" : "செயல்கள்",
     "delete" : "நீக்குக",
     "Edit" : "தொகுக்க",
     "User" : "User",

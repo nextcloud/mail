@@ -554,10 +554,13 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} fra {depStation} til {arrStation}\n ",
     "Train from {depStation} to {arrStation}" : "Tog fra {depStation} til {arrStation}\n ",
     "Train" : "Tog",
+    "Stop" : "Stoppe",
     "Recipient" : "Mottaker",
     "Delete filter" : "Slett filter",
+    "Help" : "Hjelp",
     "contains" : "inneholder",
     "matches" : "passer",
+    "Actions" : "Handlinger",
     "Priority" : "Prioritet",
     "delete" : "slett",
     "Edit" : "Rediger",
@@ -709,12 +712,6 @@ OC.L10N.register(
     "Redirect" : "Videresend",
     "The link leads to %s" : "Denne lenken leder til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Hvis du ikke vil besøke den siden, kan du gå tilbake til <a href=\"%s\">E-post</a>",
-    "Continue to %s" : "Fortsett til %s",
-    "Mailvelope is enabled for the current domain!" : "Mailvelope er aktivert for gjeldende domene!",
-    "Looking for a way to encrypt your emails?" : "Leter du etter en måte å kryptere e-postene dine på?",
-    "Enable Mailvelope for the current domain" : "Aktiver Mailvelope for gjeldende domene",
-    "Flag" : "Flagg",
-    "Operator" : "Operator",
-    "Filter name" : "Filternavn"
+    "Continue to %s" : "Fortsett til %s"
 },
 "nplurals=2; plural=(n != 1);");

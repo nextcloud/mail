@@ -333,10 +333,13 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} από {depStation} προς {arrStation}",
     "Train from {depStation} to {arrStation}" : "Τρένο από {depStation} προς {arrStation}",
     "Train" : "Τρένο",
+    "Stop" : "Διακοπή",
     "Recipient" : "Παραλήπτης",
     "Delete filter" : "Διαγραφή φίλτρου",
+    "Help" : "Βοήθεια",
     "contains" : "περιέχει",
     "matches" : "ταιριάζει",
+    "Actions" : "Ενέργειες",
     "Priority" : "Προτεραιότητα",
     "Tag" : "Ετικέτα",
     "delete" : "διαγραφή",
@@ -380,6 +383,7 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n νεό μήνυμα\nαπό {from}","%n νέα μηνύματα\nαπό {from}"],
     "Nextcloud Mail" : "Αλληλογραφία Nextcloud",
+    "Discard changes" : "Απόρριψη αλλαγών",
     "Attachments were not copied. Please add them manually." : "Τα συνημμένα δεν αντιγράφηκαν. Προσθέστε τα χειροκίνητα.",
     "Message sent" : "Το μήνυμα στάλθηκε",
     "Could not send message" : "Αδυναμία αποστολής μηνύματος",
@@ -393,8 +397,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Κάντε κλικ εδώ εάν δεν ανακατευθυνθείτε αυτόματα μέσα σε λίγα δευτερόλεπτα.",
     "Redirect" : "Ανακατεύθυνση",
     "The link leads to %s" : "Αυτός ο σύνδεσμος οδηγεί στο %s",
-    "Continue to %s" : "Συνέχεια στο %s",
-    "Flag" : "Σημαία",
-    "Operator" : "Διαχειριστής"
+    "Continue to %s" : "Συνέχεια στο %s"
 },
 "nplurals=2; plural=(n != 1);");
