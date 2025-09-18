@@ -297,7 +297,10 @@ export default {
 		},
 		groupEnvelopes() {
 			const allEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
-			return this.groupEnvelopesByDate(allEnvelopes, this.mainStore.syncTimestamp)
+			return this.groupEnvelopesByDate(allEnvelopes, this.mainStore.syncTimestamp, this.sortOrder)
+		},
+		sortOrder() {
+			return this.mainStore.getPreference('sort-order', 'newest')
 		},
 	},
 	watch: {
@@ -335,8 +338,9 @@ export default {
 		clearTimeout(this.startMailboxTimer)
 	},
 	methods: {
-		groupEnvelopesByDate(envelopes, syncTimestamp) {
+		groupEnvelopesByDate(envelopes, syncTimestamp, sortOrder = 'newest') {
 			const now = new Date(syncTimestamp)
+
 			const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000)
 			const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
 			const startOfYesterday = new Date(startOfToday)
@@ -352,11 +356,14 @@ export default {
 				yesterday: [],
 				lastWeek: [],
 				lastMonth: [],
-				older: [],
 			}
+
+			const monthsMap = {}
+			const yearsMap = {}
 
 			for (const envelope of envelopes) {
 				const date = new Date(envelope.dateInt * 1000)
+
 				if (date >= oneHourAgo) {
 					groups.lastHour.push(envelope)
 				} else if (date >= startOfToday) {
@@ -367,13 +374,49 @@ export default {
 					groups.lastWeek.push(envelope)
 				} else if (date >= startOfLastMonth) {
 					groups.lastMonth.push(envelope)
+				} else if (date.getFullYear() === now.getFullYear()) {
+					const m = date.getMonth()
+					monthsMap[m] = monthsMap[m] || []
+					monthsMap[m].push(envelope)
 				} else {
-					groups.older.push(envelope)
+					const y = date.getFullYear()
+					yearsMap[y] = yearsMap[y] || []
+					yearsMap[y].push(envelope)
 				}
 			}
 
+			const orderByDate = (a, b) =>
+				this.sortOrder === 'newest' ? b.dateInt - a.dateInt : a.dateInt - b.dateInt
+
+			Object.values(groups).forEach(list => list.sort(orderByDate))
+			Object.values(monthsMap).forEach(list => list.sort(orderByDate))
+			Object.values(yearsMap).forEach(list => list.sort(orderByDate))
+
+			const groupOrder = []
+
+			const fixedGroups = ['lastHour', 'today', 'yesterday', 'lastWeek', 'lastMonth']
+			groupOrder.push(...(this.sortOrder === 'newest' ? fixedGroups : fixedGroups.reverse()))
+
+			const monthOrder = Object.keys(monthsMap).map(Number)
+			monthOrder.sort((a, b) => (this.sortOrder === 'newest' ? b - a : a - b))
+			for (const m of monthOrder) {
+				const monthName = new Date(now.getFullYear(), m, 1)
+					.toLocaleString('default', { month: 'long' })
+				groups[monthName] = monthsMap[m]
+				groupOrder.push(monthName)
+			}
+
+			const yearKeys = Object.keys(yearsMap).map(Number)
+			yearKeys.sort((a, b) => (this.sortOrder === 'newest' ? b - a : a - b))
+			for (const y of yearKeys) {
+				groups[String(y)] = yearsMap[y]
+				groupOrder.push(String(y))
+			}
+
 			return Object.fromEntries(
-				Object.entries(groups).filter(([_, list]) => list.length > 0),
+				groupOrder
+					.filter(label => groups[label] && groups[label].length > 0)
+					.map(label => [label, groups[label]]),
 			)
 		},
 		async fetchEnvelopes() {
