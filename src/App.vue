@@ -52,7 +52,6 @@ export default {
 		this.sync()
 		await this.mainStore.fetchCurrentUserPrincipal()
 		await this.mainStore.loadCollections()
-		await this.mainStore.fetchAllQuickActions()
 		this.mainStore.hasCurrentUserPrincipalAndCollectionsMutation(true)
 	},
 	methods: {
