@@ -1057,7 +1057,14 @@ export default {
 				select = this.selectBcc
 			}
 
-			return (label || '').toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) > -1 && !select.some((item) => item.email === option.email)
+			if (select.some((item) => item.email === option.email)) {
+				return false // skip option if already selected
+			}
+
+			const searchInLowerCase = search.toLocaleLowerCase()
+
+			return (label || '').toLocaleLowerCase().includes(searchInLowerCase)
+				|| (option?.email || '').toLocaleLowerCase().includes(searchInLowerCase)
 		},
 		setAlias() {
 			const previous = this.selectedAlias
