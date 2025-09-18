@@ -15,7 +15,7 @@ import { NcDialog } from '@nextcloud/vue'
 // eslint-disable-next-line import/no-unresolved
 import IconCancel from '@mdi/svg/svg/cancel.svg?raw'
 // eslint-disable-next-line import/no-unresolved
-import IconCheck from '@mdi/svg/svg/check-outline.svg?raw'
+import IconCheck from '@mdi/svg/svg/check.svg?raw'
 
 export default {
 	name: 'DeleteModal',
