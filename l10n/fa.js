@@ -470,11 +470,12 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} از {depStation} تا {arrStation}",
     "Train from {depStation} to {arrStation}" : "آموزش از {depStation} تا {arrStation} Train",
     "Train" : "رشته",
-    "Flag" : "Flag",
+    "Stop" : "Stop",
     "Delete filter" : "Delete filter",
-    "Operator" : "عملگر",
+    "Help" : "راهنما",
     "contains" : "contains",
     "matches" : "مطابق است",
+    "Actions" : "کنش‌ها",
     "Priority" : "اولویت",
     "delete" : "حذف",
     "Edit" : "ویرایش",
@@ -607,7 +608,6 @@ OC.L10N.register(
     "Redirect" : "تغییر مسیر",
     "The link leads to %s" : "پیوند منجر به%s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "ادامه دهید%s",
-    "Looking for a way to encrypt your emails?" : "Looking for a way to encrypt your emails?"
+    "Continue to %s" : "ادامه دهید%s"
 },
 "nplurals=2; plural=(n > 1);");

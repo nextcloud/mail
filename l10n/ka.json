@@ -492,8 +492,9 @@
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} from {depStation} to {arrStation}",
     "Train from {depStation} to {arrStation}" : "Train from {depStation} to {arrStation}",
     "Train" : "Train",
-    "Operator" : "ოპერატორი",
+    "Help" : "Help",
     "matches" : "matches",
+    "Actions" : "Actions",
     "Priority" : "Priority",
     "Edit" : "Edit",
     "Successfully updated config for \"{domain}\"" : "Successfully updated config for \"{domain}\"",
@@ -637,7 +638,6 @@
     "Redirect" : "Redirect",
     "The link leads to %s" : "The link leads to %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continue to %s",
-    "Looking for a way to encrypt your emails?" : "Looking for a way to encrypt your emails?"
+    "Continue to %s" : "Continue to %s"
 },"pluralForm" :"nplurals=2; plural=(n!=1);"
 }

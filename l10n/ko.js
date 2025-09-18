@@ -502,13 +502,12 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{depStation}에서 {arrStation}(으)로 향하는 {trainNr}번 열차",
     "Train from {depStation} to {arrStation}" : "{depStation}에서 {arrStation}(으)로 향하는 열차",
     "Train" : "기차",
-    "Flag" : "깃발",
     "Recipient" : "받는 사람",
     "Delete filter" : "필터 삭제",
-    "Operator" : "운영자",
+    "Help" : "도움말",
     "contains" : "다음을 포함함",
     "matches" : "일치함",
-    "Filter name" : "필터 이름",
+    "Actions" : "동작",
     "Priority" : "우선 순위",
     "delete" : "삭제",
     "Edit" : "편집",
@@ -659,10 +658,6 @@ OC.L10N.register(
     "Redirect" : "넘겨주기",
     "The link leads to %s" : "이 링크가 %s을(를) 향함",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "해당 페이지를 방문하지 않으려면 <a href=\"%s\">메일</a>로 돌아갈 수 있습니다.",
-    "Continue to %s" : "%s(으)로 이동",
-    "Mailvelope is enabled for the current domain!" : "Mailvelope이 현재 도메인에 대해 활성화되어 있습니다!",
-    "Looking for a way to encrypt your emails?" : "이메일을 암호화하는 방법을 찾고 계십니까?",
-    "Install Mailvelope browser extension" : "Mailvelope 브라우저 확장 설치",
-    "Enable Mailvelope for the current domain" : "현재 도메인에 Mailvelope 활성화하기"
+    "Continue to %s" : "%s(으)로 이동"
 },
 "nplurals=1; plural=0;");

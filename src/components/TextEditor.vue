@@ -526,24 +526,24 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	color: var(--color-main-text) !important;
  }
 
- .link-title {
+.link-title {
 	color: var(--color-main-text) !important;
 	margin-inline-start: var(--default-grid-baseline) !important;
- }
+}
 
- .custom-item {
+.custom-item {
 	width : 100% !important;
 	border-radius : 8px !important;
 	padding : 4px 8px !important;
 	display :block;
 	background:var(--color-main-background)!important;
- }
+}
 
- .custom-item:hover {
+.custom-item:hover {
 	background:var(--color-primary-element-light)!important;
- }
+}
 
- .link-container{
+.link-container{
 	border-radius :8px !important;
 	padding :4px 8px !important;
 	display : block;
@@ -553,11 +553,11 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 		width: 16px;
 		height: 16px;
 	}
- }
+}
 
- .link-container:hover {
+.link-container:hover {
 	background:var(--color-primary-element-light)!important;
- }
+}
 
 :root {
 	--ck-z-default: 10000;
@@ -567,6 +567,8 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 .ck.ck-toolbar {
 	border-radius: var(--border-radius-large) !important;
 	background: none;
+	background: var(--color-main-background) !important;
+    color: var(--color-main-text) !important;
 }
 
 .ck-rounded-corners .ck.ck-dropdown__panel, .ck.ck-dropdown__panel.ck-rounded-corners {
@@ -635,7 +637,8 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 .select, button:not(.button-vue,[class^=vs__]), .button, input[type=button], input[type=submit], input[type=reset] {
 	color: var(--color-main-text);
 }
-/* we need the paragraph field a bit smaller so it doesnt break the toolbar for signature */
+
+/* We need the paragraph field a bit smaller so it doesnt break the toolbar for signature */
 .ck.ck-dropdown.ck-heading-dropdown .ck-dropdown__button .ck-button__label {
 	width: 6em !important;
 }
@@ -643,4 +646,82 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 .ck.ck-editor__top .ck-sticky-panel .ck-sticky-panel__content {
 	border: none;
 }
+
+.ck.ck-balloon-panel_visible {
+    border-radius: calc(var(--border-radius-large) + 1px) !important;
+    background: var(--color-main-background) !important;
+    color: var(--color-main-text) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.ck.ck-tooltip__text{
+	color: var(--color-main-text) !important;
+}
+
+.ck.ck-toolbar .ck-button {
+	color: var(--color-main-text) !important;
+}
+
+.ck.ck-toolbar .ck-button:hover,
+.ck.ck-toolbar .ck-button.ck-on,
+.ck.ck-toolbar .ck-button:focus {
+	background: var(--color-primary-element-light) !important;
+    color: var(--color-main-text) !important;
+}
+
+.ck.ck-toolbar .ck-button .ck-button__label {
+	color: var(--color-main-text) !important;
+}
+
+.ck.ck-dropdown__panel .ck.ck-list {
+	border-radius: var(--border-radius-large) !important;
+}
+
+.ck-dropdown__panel.ck-dropdown__panel-visible {
+	border-radius: var(--border-radius-large) !important;
+}
+
+/* Needs to be set to flex, bececause else it breaks the toolbar - it is shown in 2 lines instead of 1 */
+.ck.ck-splitbutton.ck-dropdown__button{
+	display: flex !important;
+}
+
+.ck.ck-input.ck-input-text{
+	background: var(--color-main-background) !important;
+    color: var(--color-main-text) !important;
+	cursor: text !important;
+}
+
+.ck.ck-labeled-field-view__input-wrapper .ck.ck-label {
+	background: var(--color-main-background) !important;
+    color: var(--color-main-text) !important;
+}
+
+.ck.ck-button.ck-splitbutton__action {
+    margin: 0 !important;
+}
+
+.ck.ck-splitbutton.ck-dropdown__button:hover .ck-button,
+.ck.ck-splitbutton.ck-dropdown__button:hover .ck-splitbutton__action,
+.ck.ck-splitbutton.ck-dropdown__button:hover .ck-splitbutton__arrow {
+	background: var(--color-primary-element-light) !important;
+	color: var(--color-main-text) !important;
+}
+
+.ck.ck-splitbutton .ck-button:focus,
+.ck.ck-splitbutton .ck-button:focus-visible,
+.ck.ck-splitbutton .ck-button:active,
+.ck.ck-splitbutton .ck-button.ck-on {
+	background: var(--color-primary-element-light) !important;
+	color: var(--color-main-text) !important;
+	outline: none !important;
+}
+
+.ck.ck-splitbutton.ck-splitbutton_open .ck-button,
+.ck.ck-splitbutton.ck-splitbutton_open .ck-splitbutton__action,
+.ck.ck-splitbutton.ck-splitbutton_open .ck-splitbutton__arrow {
+    background: var(--color-primary-element-light) !important;
+    color: var(--color-main-text) !important;
+}
+
 </style>
