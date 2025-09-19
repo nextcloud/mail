@@ -88,6 +88,7 @@ OC.L10N.register(
     "Remove {email}" : "Remove {email}",
     "Add folder" : "Ongeza kisanduku",
     "Folder name" : "Jina la kisanduku",
+    "Saving" : "Saving",
     "Move up" : "Move up",
     "Move down" : "Move down",
     "Loading …" : "Inapakia",
