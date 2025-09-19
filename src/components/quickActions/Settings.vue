@@ -130,6 +130,8 @@ import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import { findAllStepsForAction, createActionStep, updateActionStep, deleteActionStep } from '../../service/QuickActionsService.js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
+import logger from '../../logger.js'
+
 export default {
 	name: 'Settings',
 	components: {
@@ -200,7 +202,10 @@ export default {
 		async deleteQuickAction(id) {
 			await this.mainStore.deleteQuickAction(id).then(() => {
 				showSuccess(t('mail', 'Quick action deleted'))
-			}).catch(() => {
+			}).catch((error) => {
+				logger.error('Could not delete quick action', {
+					error,
+				})
 				showError(t('mail', 'Failed to delete quick action'))
 			})
 		},
@@ -230,13 +235,19 @@ export default {
 				let quickAction
 				try {
 					quickAction = await this.mainStore.patchQuickAction(this.localAction.id, this.localAction.name)
-				} catch (e) {
+				} catch (error) {
+					logger.error('Could not update action', {
+						error,
+					})
 					showError(t('mail', 'Failed to update quick action'))
 					return
 				}
 				for (const [index, action] of this.actions.entries()) {
 					if (action?.id !== null && action?.id !== undefined) {
-						await updateActionStep(action.id, action.name, action.order, action?.tagId, action?.mailboxId).catch(() => {
+						await updateActionStep(action.id, action.name, action.order, action?.tagId, action?.mailboxId).catch((error) => {
+							logger.error('Could not update quick action step', {
+								error,
+							})
 							showError(t('mail', 'Failed to update step in quick action'))
 						})
 					} else {
@@ -251,7 +262,10 @@ export default {
 				let quickAction
 				try {
 					quickAction = await this.mainStore.createQuickAction(this.localAction.name, this.account.id)
-				} catch (e) {
+				} catch (error) {
+					logger.error('Could not create action', {
+						error,
+					})
 					showError(t('mail', 'Failed to create quick action'))
 					return
 				}
@@ -259,7 +273,10 @@ export default {
 					for (const action of this.actions) {
 						await createActionStep(action.name, action.order, quickAction.id, action?.tagId, action?.mailboxId)
 					}
-				} catch (e) {
+				} catch (error) {
+					logger.error('Could not add step to quick action', {
+						error,
+					})
 					showError(t('mail', 'Failed to add steps to quick action'))
 					this.closeEditModal()
 				}
@@ -303,7 +320,10 @@ export default {
 			if (!this.editMode) {
 				try {
 					await deleteActionStep(item.id)
-				} catch (e) {
+				} catch (error) {
+					logger.error('Could not delete action step', {
+						error,
+					})
 					showError(t('mail', 'Failed to delete action step'))
 					return
 				}
