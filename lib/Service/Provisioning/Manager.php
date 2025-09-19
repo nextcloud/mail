@@ -20,6 +20,8 @@ use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\ValidationException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\BackgroundJob\IJobList;
 use OCP\ICacheFactory;
 use OCP\IUser;
 use OCP\IUserManager;
@@ -56,7 +58,8 @@ class Manager {
 	/** @var ICacheFactory */
 	private $cacheFactory;
 
-	public function __construct(IUserManager $userManager,
+	public function __construct(
+		IUserManager $userManager,
 		ProvisioningMapper $provisioningMapper,
 		MailAccountMapper $mailAccountMapper,
 		ICrypto $crypto,
@@ -64,7 +67,10 @@ class Manager {
 		AliasMapper $aliasMapper,
 		LoggerInterface $logger,
 		TagMapper $tagMapper,
-		ICacheFactory $cacheFactory) {
+		ICacheFactory $cacheFactory,
+		private IJobList $jobList,
+		private ITimeFactory $timeFactory
+	) {
 		$this->userManager = $userManager;
 		$this->provisioningMapper = $provisioningMapper;
 		$this->mailAccountMapper = $mailAccountMapper;
@@ -211,6 +217,7 @@ class Manager {
 				$this->updateAccount($user, $mailAccount, $provisioning)
 			);
 
+			$mailAccount->scheduleBackgroundJobs($this->jobList, $this->timeFactory);
 			$this->tagMapper->createDefaultTags($mailAccount);
 		}
 

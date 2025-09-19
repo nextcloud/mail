@@ -8,7 +8,15 @@
 
 namespace OCA\Mail\Db;
 
+use OCA\Mail\BackgroundJob\PreviewEnhancementProcessingJob;
+use OCA\Mail\BackgroundJob\QuotaJob;
+use OCA\Mail\BackgroundJob\RepairSyncJob;
+use OCA\Mail\BackgroundJob\SyncJob;
+use OCA\Mail\BackgroundJob\TrainImportanceClassifierJob;
 use OCP\AppFramework\Db\Entity;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\BackgroundJob\IJob;
+use OCP\BackgroundJob\IJobList;
 
 /**
  * Class MailAccount
@@ -283,6 +291,32 @@ class MailAccount extends Entity {
 
 	public function canAuthenticateImap(): bool {
 		return isset($this->inboundPassword) || isset($this->oauthAccessToken);
+	}
+
+	public function scheduleBackgroundJobs(IJobList $jobList, ITimeFactory $timeFactory): void {
+		$arguments = ['accountId' => $this->getId()];
+
+		$now = $timeFactory->getTime();
+		$this->scheduleBackgroundJob($jobList, SyncJob::class, $now, $arguments);
+		$this->scheduleBackgroundJob($jobList, TrainImportanceClassifierJob::class, $now, $arguments);
+		$this->scheduleBackgroundJob($jobList, PreviewEnhancementProcessingJob::class, $now, $arguments);
+		$this->scheduleBackgroundJob($jobList, QuotaJob::class, $now, $arguments);
+
+		$inThreeDays = $now + (3 * 86400);
+		$this->scheduleBackgroundJob($jobList, RepairSyncJob::class, $inThreeDays, $arguments);
+	}
+
+	/**
+	 * IJobList::add() / IJobList::scheduleAfter() resets last_run, last_check, and reserved_at if the job exists.
+	 * To avoid unwanted resets (e.g. when enabling debug mode), we check first if the job is already present.
+	 *
+	 * @param class-string<IJob> $job
+	 * @param mixed $argument The serializable argument to be passed to $job->run() when the job is executed
+	 */
+	private function scheduleBackgroundJob(IJobList $jobList, string $job, int $runAfter, mixed $argument = null): void {
+		if (!$jobList->has($job, $argument)) {
+			$jobList->scheduleAfter($job, $runAfter, $argument);
+		}
 	}
 
 	/**

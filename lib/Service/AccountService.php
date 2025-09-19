@@ -12,10 +12,6 @@ namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\BackgroundJob\PreviewEnhancementProcessingJob;
-use OCA\Mail\BackgroundJob\QuotaJob;
-use OCA\Mail\BackgroundJob\SyncJob;
-use OCA\Mail\BackgroundJob\TrainImportanceClassifierJob;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
@@ -53,7 +49,7 @@ class AccountService {
 		IJobList $jobList,
 		IMAPClientFactory $imapClientFactory,
 		private readonly IConfig $config,
-		private readonly ITimeFactory $time,
+		private readonly ITimeFactory $timeFactory,
 	) {
 		$this->mapper = $mapper;
 		$this->aliasesService = $aliasesService;
@@ -176,17 +172,14 @@ class AccountService {
 		$newAccount = $this->mapper->save($newAccount);
 
 		// Insert background jobs for this account
-		$this->jobList->add(SyncJob::class, ['accountId' => $newAccount->getId()]);
-		$this->jobList->add(TrainImportanceClassifierJob::class, ['accountId' => $newAccount->getId()]);
-		$this->jobList->add(PreviewEnhancementProcessingJob::class, ['accountId' => $newAccount->getId()]);
-		$this->jobList->add(QuotaJob::class, ['accountId' => $newAccount->getId()]);
+		$newAccount->scheduleBackgroundJobs($this->jobList, $this->timeFactory);
 
 		// Set initial heartbeat
 		$this->config->setUserValue(
 			$newAccount->getUserId(),
 			Application::APP_ID,
 			'ui-heartbeat',
-			(string)$this->time->getTime(),
+			(string)$this->timeFactory->getTime(),
 		);
 
 		return $newAccount;
