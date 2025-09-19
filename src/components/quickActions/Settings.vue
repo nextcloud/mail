@@ -200,14 +200,15 @@ export default {
 	},
 	methods: {
 		async deleteQuickAction(id) {
-			await this.mainStore.deleteQuickAction(id).then(() => {
+			try {
+				await this.mainStore.deleteQuickAction(id)
 				showSuccess(t('mail', 'Quick action deleted'))
-			}).catch((error) => {
+			} catch (error) {
 				logger.error('Could not delete quick action', {
 					error,
 				})
 				showError(t('mail', 'Failed to delete quick action'))
-			})
+			}
 		},
 		async openEditModal(action) {
 			if (!action) {
@@ -244,12 +245,14 @@ export default {
 				}
 				for (const [index, action] of this.actions.entries()) {
 					if (action?.id !== null && action?.id !== undefined) {
-						await updateActionStep(action.id, action.name, action.order, action?.tagId, action?.mailboxId).catch((error) => {
+						try {
+							await updateActionStep(action.id, action.name, action.order, action?.tagId, action?.mailboxId)
+						} catch (error) {
 							logger.error('Could not update quick action step', {
 								error,
 							})
 							showError(t('mail', 'Failed to update step in quick action'))
-						})
+						}
 					} else {
 						const createdStep = await createActionStep(action.name, action.order, quickAction.id, action?.tagId, action?.mailboxId)
 						if (createdStep) {
