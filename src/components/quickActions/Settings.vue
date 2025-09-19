@@ -300,7 +300,7 @@ export default {
 			this.actions = this.actions.map((action, index) => ({ ...action, order: index + 1 }))
 		},
 		async deleteAction(item) {
-			if (!this.editMode) {
+			if (this.editMode) {
 				try {
 					await deleteActionStep(item.id)
 				} catch (e) {
