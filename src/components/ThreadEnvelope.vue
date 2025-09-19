@@ -742,19 +742,13 @@ export default {
 		},
 		scrollToThread(threadId) {
 			this.$nextTick(() => {
-				const threadElement = document.querySelector(`[data-thread-id="${threadId}"]`)
-				if (threadElement) {
-					threadElement.scrollIntoView({ behavior: 'smooth', block: 'top' })
-				}
+				window.scrollTo({ top: 0, behavior: 'smooth' })
 			})
 		},
 
 		scrollToEnvelope() {
 			this.$nextTick(() => {
-				const envelopeElement = this.$refs.envelope
-				if (envelopeElement) {
-					envelopeElement.scrollIntoView({ behavior: 'smooth', block: 'top' })
-				}
+				window.scrollTo({ top: 0, behavior: 'smooth' })
 			})
 		},
 		async fetchItineraries() {
