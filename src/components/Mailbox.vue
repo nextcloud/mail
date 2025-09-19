@@ -217,7 +217,14 @@ export default {
 			}
 		},
 		async loadEnvelopes() {
+			// Dont fetch if cache initialization is in progress
+			if (this.loadingCacheInitialization) {
+				logger.debug('Cache initialization in progress, skipping envelope fetch')
+				return
+			}
+
 			logger.debug(`Fetching envelopes for folder ${this.mailbox.databaseId} (${this.searchQuery})`, this.mailbox)
+
 			if (!this.syncedMailboxes.has(this.mailbox.databaseId)) {
 				// Only trigger skeleton if we didn't sync envelopes yet
 				this.loadingEnvelopes = true
@@ -227,7 +234,6 @@ export default {
 					this.skipListTransition = false
 				})
 			}
-
 			this.loadingCacheInitialization = false
 			this.error = false
 
@@ -237,28 +243,35 @@ export default {
 					query: this.searchQuery,
 					limit: this.initialPageSize,
 				})
-
 				logger.debug(envelopes.length + ' envelopes fetched', { envelopes })
-
 				this.syncedMailboxes.add(this.mailbox.databaseId)
 				this.loadingEnvelopes = false
 			} catch (error) {
 				await matchError(error, {
 					[MailboxLockedError.getName()]: async (error) => {
-						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) is locked`, { error })
+						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) is locked, retrying after delay`, { error })
 						await wait(15 * 1000)
-						// Keep trying
+						// Only retry if mailbox is locked
 						await this.loadEnvelopes()
 					},
 					[MailboxNotCachedError.getName()]: async (error) => {
-						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) not cached. Triggering initialization`, { error })
+						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) not cached. Triggering initialization.`, { error })
 						this.loadingEnvelopes = false
 
+						if (this.loadingCacheInitialization) {
+							logger.debug('Cache initialization already in progress, skipping additional initialization.')
+							return
+						}
+
+						this.loadingCacheInitialization = true
 						try {
 							await this.initializeCache()
+							await this.loadEnvelopes()
 						} catch (error) {
 							logger.error(`Could not initialize cache of folder ${this.mailbox.databaseId} (${this.searchQuery})`, { error })
 							this.error = error
+						} finally {
+							this.loadingCacheInitialization = false
 						}
 					},
 					default: (error) => {
