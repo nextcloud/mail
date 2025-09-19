@@ -15,12 +15,10 @@ jobs:
     strategy:
       matrix:
         php-versions: ['8.2', '8.3']
-        nextcloud-versions: ['master', 'stable30']
+        nextcloud-versions: ['master', 'stable31']
         include:
           - php-versions: '8.1'
-            nextcloud-versions: 'stable30'
-          - php-versions: '8.4'
-            nextcloud-versions: 'stable31'
+            nextcloud-versions: 'stable32'
           - php-versions: '8.4'
             nextcloud-versions: 'stable32'
           - php-versions: '8.5'
@@ -77,15 +75,15 @@ jobs:
               cache: ['nocache']
               include:
                 - php-versions: 8.1
-                  nextcloud-versions: 'stable30'
+                  nextcloud-versions: 'stable31'
                   db: 'sqlite'
                   cache: 'redis'
                 - php-versions: 8.2
-                  nextcloud-versions: 'stable30'
+                  nextcloud-versions: 'stable31'
                   db: 'pgsql'
                   cache: 'redis'
                 - php-versions: 8.3
-                  nextcloud-versions: 'stable31'
+                  nextcloud-versions: 'stable32'
                   db: 'mysql'
                   cache: 'redis'
                 - php-versions: 8.4

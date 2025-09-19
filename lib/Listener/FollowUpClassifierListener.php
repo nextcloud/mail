@@ -75,21 +75,16 @@ class FollowUpClassifierListener implements IEventListener {
 				FollowUpClassifierJob::PARAM_MAILBOX_ID => $message->getMailboxId(),
 				FollowUpClassifierJob::PARAM_USER_ID => $userId,
 			];
-			// TODO: only use scheduleAfter() once we support >= 28.0.0
-			if (method_exists(IJobList::class, 'scheduleAfter')) {
-				// Delay job a bit because there might be some replies until then and we might be able
-				// to skip the expensive LLM task
-				$timestamp = (new DateTimeImmutable('@' . $message->getSentAt()))
-					->add(new DateInterval('P3DT12H'))
-					->getTimestamp();
-				$this->jobList->scheduleAfter(
-					FollowUpClassifierJob::class,
-					$timestamp,
-					$jobArguments,
-				);
-			} else {
-				$this->jobList->add(FollowUpClassifierJob::class, $jobArguments);
-			}
+			// Delay job a bit because there might be some replies until then and we might be able
+			// to skip the expensive LLM task
+			$timestamp = (new DateTimeImmutable('@' . $message->getSentAt()))
+				->add(new DateInterval('P3DT12H'))
+				->getTimestamp();
+			$this->jobList->scheduleAfter(
+				FollowUpClassifierJob::class,
+				$timestamp,
+				$jobArguments,
+			);
 		}
 	}
 }
