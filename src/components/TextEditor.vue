@@ -396,6 +396,11 @@ export default {
 				}
 			}, { priority: 'high' })
 
+			editor.keystrokes.set('Ctrl+Enter', (event) => {
+				logger.debug('Detected Ctrl+Enter/Cmd+Enter', event)
+				this.$emit('submit', editor)
+			})
+
 			this.editorInstance = editor
 
 			if (this.focus) {
