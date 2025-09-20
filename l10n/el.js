@@ -282,6 +282,7 @@ OC.L10N.register(
     "Error sending your message" : "Σφάλμα κατά την αποστολή του μηνύματός σας",
     "Retry" : "Δοκιμή ξανά",
     "Send anyway" : "Στείλτε ούτως ή άλλως",
+    "First day" : "Πρώτη ημέρα",
     "Message" : "Μήνυμα",
     "Could not open outbox" : "Αδυναμία ανοίγματος εξερχομένων",
     "Pending or not sent messages will show up here" : "Εδώ εμφανίζονται μηνύματα που εκκρεμούν ή δεν έχουν σταλεί",

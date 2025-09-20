@@ -288,7 +288,7 @@ OC.L10N.register(
     "Unsnooze" : "Annuler la mise en attente",
     "Move thread" : "Déplacer ce fil de discussion",
     "Move Message" : "Déplacer le message",
-    "Archive thread" : "Fil de discussion archivé",
+    "Archive thread" : "Archiver le fil de discussion",
     "Archive message" : "Archiver le message",
     "Delete thread" : "Supprimer ce fil de discussion",
     "Delete message" : "Supprimer le message",
