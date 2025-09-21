@@ -75,6 +75,7 @@ OC.L10N.register(
     "Decline" : "Kataa",
     "More options" : "Mibadala zaidi",
     "Remove" : "Ondoa",
+    "Last hour" : "Last hour",
     "Today" : "Leo",
     "Yesterday" : "Jana",
     "Last week" : "Wiki iliyopita",
