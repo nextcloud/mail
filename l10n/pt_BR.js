@@ -642,7 +642,7 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "Trem de {depStation} a {arrStation}",
     "Train" : "Trem",
     "Add flag" : "Adicionar sinalizador",
-    "Move into folder" : "Mover para a pasta",
+    "Move into folder" : "Mover para pasta",
     "Stop" : "Encerrar",
     "Delete action" : "Excluir ação",
     "Enter flag" : "Insira sinalizador",
