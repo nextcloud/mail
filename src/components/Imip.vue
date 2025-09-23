@@ -5,35 +5,50 @@
 
 <template>
 	<div class="imip">
-		<div v-if="isRequest"
-			class="imip__type">
+		<div v-if="isRequest" class="imip__type">
 			<template v-if="existingEventFetched">
-				<span v-if="wasProcessed && existingParticipationStatus === ACCEPTED">
-					{{ t('mail', 'You accepted this invitation') }}
+				<span
+					v-if="
+						wasProcessed && existingParticipationStatus === ACCEPTED
+					"
+				>
+					{{ t("mail", "You accepted this invitation") }}
 				</span>
-				<span v-else-if="wasProcessed && existingParticipationStatus === TENTATIVE">
-					{{ t('mail', 'You tentatively accepted this invitation') }}
+				<span
+					v-else-if="
+						wasProcessed &&
+						existingParticipationStatus === TENTATIVE
+					"
+				>
+					{{ t("mail", "You tentatively accepted this invitation") }}
 				</span>
-				<span v-else-if="wasProcessed && existingParticipationStatus === DECLINED">
-					{{ t('mail', 'You declined this invitation') }}
+				<span
+					v-else-if="
+						wasProcessed && existingParticipationStatus === DECLINED
+					"
+				>
+					{{ t("mail", "You declined this invitation") }}
 				</span>
-				<span v-else-if="wasProcessed && existingParticipationStatus !== NEEDS_ACTION">
-					{{ t('mail', 'You already reacted to this invitation') }}
+				<span
+					v-else-if="
+						wasProcessed &&
+						existingParticipationStatus !== NEEDS_ACTION
+					"
+				>
+					{{ t("mail", "You already reacted to this invitation") }}
 				</span>
 				<span v-else-if="userIsAttendee">
-					{{ t('mail', 'You have been invited to an event') }}
+					{{ t("mail", "You have been invited to an event") }}
 				</span>
 			</template>
 		</div>
-		<div v-else-if="isReply"
-			class="imip__type">
+		<div v-else-if="isReply" class="imip__type">
 			<CalendarIcon :size="20" />
 			<span>{{ replyStatusMessage }}</span>
 		</div>
-		<div v-else-if="isCancel"
-			class="imip__type">
+		<div v-else-if="isCancel" class="imip__type">
 			<CloseIcon :size="20" fill-color="red" />
-			<span>{{ t('mail', 'This event was cancelled') }}</span>
+			<span>{{ t("mail", "This event was cancelled") }}</span>
 		</div>
 
 		<EventData :event="attachedVEvent" />
@@ -41,16 +56,22 @@
 		<div v-if="showMoreOptions" class="imip__more-options">
 			<!-- Hide calendar picker if editing an existing event (e.g. an internal event is
 			 shared by default and thus existing even if the attendee didn't react yet). -->
-			<div v-if="!isExistingEvent"
-				class="imip__more-options__row imip__more-options__row--calendar">
-				<label for="targetCalendarPickerId">{{ t('mail', 'Save to') }}</label>
+			<div
+				v-if="!isExistingEvent"
+				class="imip__more-options__row imip__more-options__row--calendar"
+			>
+				<label for="targetCalendarPickerId">{{
+					t("mail", "Save to")
+				}}</label>
 				<div class="imip__more-options__row">
-					<NcSelect v-if="calendarsForPicker.length > 1"
+					<NcSelect
+						v-if="calendarsForPicker.length > 1"
 						:id="targetCalendarPickerId"
 						v-model="targetCalendar"
 						:aria-label-combobox="t('mail', 'Select')"
 						label="displayname"
-						:options="calendarsForPicker">
+						:options="calendarsForPicker"
+					>
 						<template #option="option">
 							<CalendarPickerOption v-bind="option" />
 						</template>
@@ -60,80 +81,113 @@
 					</NcSelect>
 				</div>
 			</div>
-			<div class="imip__more-options__row imip__more-options__row--comment">
-				<label for="commentFieldId">{{ t('mail', 'Comment') }}</label>
+			<div
+				class="imip__more-options__row imip__more-options__row--comment"
+			>
+				<label for="commentFieldId">{{ t("mail", "Comment") }}</label>
 				<textarea :id="commentFieldId" v-model="comment" rows="3" />
 			</div>
 		</div>
 
 		<template v-if="isRequest && userIsAttendee">
-			<div v-if="!wasProcessed && eventIsInFuture && existingEventFetched"
-				class="imip__actions imip__actions--buttons">
-				<NcButton type="secondary"
+			<div
+				v-if="!wasProcessed && eventIsInFuture && existingEventFetched"
+				class="imip__actions imip__actions--buttons"
+			>
+				<NcButton
+					type="secondary"
 					:disabled="loading"
 					:aria-label="t('mail', 'Accept')"
-					@click="accept">
-					{{ t('mail', 'Accept') }}
+					@click="accept"
+				>
+					{{ t("mail", "Accept") }}
 				</NcButton>
-				<NcButton type="tertiary"
+				<NcButton
+					type="tertiary"
 					:disabled="loading"
 					:aria-label="t('mail', 'Decline')"
-					@click="decline">
-					{{ t('mail', 'Decline') }}
+					@click="decline"
+				>
+					{{ t("mail", "Decline") }}
 				</NcButton>
-				<NcButton type="tertiary"
+				<NcButton
+					type="tertiary"
 					:disabled="loading"
 					:aria-label="t('mail', 'Tentatively accept')"
-					@click="acceptTentatively">
-					{{ t('mail', 'Tentatively accept') }}
+					@click="acceptTentatively"
+				>
+					{{ t("mail", "Tentatively accept") }}
 				</NcButton>
-				<NcButton v-if="!showMoreOptions"
+				<NcButton
+					v-if="!showMoreOptions"
 					type="tertiary"
 					:disabled="loading"
 					:aria-label="t('mail', 'More options')"
-					@click="showMoreOptions = true">
-					{{ t('mail', 'More options') }}
+					@click="showMoreOptions = true"
+				>
+					{{ t("mail", "More options") }}
 				</NcButton>
 				<NcLoadingIcon v-if="loading" />
 			</div>
-			<p v-else-if="!eventIsInFuture" class="imip__actions imip__actions--hint">
-				{{ t('mail', 'This message has an attached invitation but the invitation dates are in the past') }}
+			<p
+				v-else-if="!eventIsInFuture"
+				class="imip__actions imip__actions--hint"
+			>
+				{{
+					t(
+						"mail",
+						"This message has an attached invitation but the invitation dates are in the past"
+					)
+				}}
 			</p>
 		</template>
 		<div v-if="!userIsAttendee" class="imip__actions imip__actions--hint">
-			{{ t('mail', 'This message has an attached invitation but the invitation does not contain a participant that matches any configured mail account address') }}
+			{{
+				t(
+					"mail",
+					"This message has an attached invitation but the invitation does not contain a participant that matches any configured mail account address"
+				)
+			}}
 		</div>
 	</div>
 </template>
 
 <script>
-import EventData from './imip/EventData.vue'
-import { NcButton, NcSelect, NcLoadingIcon } from '@nextcloud/vue'
-import CloseIcon from 'vue-material-design-icons/Close.vue'
-import CalendarIcon from 'vue-material-design-icons/CalendarOutline.vue'
-import { getParserManager, Parameter, Property, DateTimeValue, EventComponent, AttendeeProperty, CalendarComponent } from '@nextcloud/calendar-js'
-import { removeMailtoPrefix } from '../util/eventAttendee.js'
-import logger from '../logger.js'
-import { namespaces as NS } from '@nextcloud/cdav-library'
-import CalendarPickerOption from './CalendarPickerOption.vue'
-import { uidToHexColor } from '../util/calendarColor.js'
-import { randomId } from '../util/randomId.js'
-import pLimit from 'p-limit'
-import { flatten } from 'ramda'
-import { showError } from '@nextcloud/dialogs'
-import useMainStore from '../store/mainStore.js'
-import { mapState } from 'pinia'
+import EventData from "./imip/EventData.vue";
+import { NcButton, NcSelect, NcLoadingIcon } from "@nextcloud/vue";
+import CloseIcon from "vue-material-design-icons/Close.vue";
+import CalendarIcon from "vue-material-design-icons/CalendarOutline.vue";
+import {
+	getParserManager,
+	Parameter,
+	Property,
+	DateTimeValue,
+	EventComponent,
+	AttendeeProperty,
+	CalendarComponent,
+} from "@nextcloud/calendar-js";
+import { removeMailtoPrefix } from "../util/eventAttendee.js";
+import logger from "../logger.js";
+import { namespaces as NS } from "@nextcloud/cdav-library";
+import CalendarPickerOption from "./CalendarPickerOption.vue";
+import { uidToHexColor } from "../util/calendarColor.js";
+import { randomId } from "../util/randomId.js";
+import pLimit from "p-limit";
+import { flatten } from "ramda";
+import { showError } from "@nextcloud/dialogs";
+import useMainStore from "../store/mainStore.js";
+import { mapState } from "pinia";
 
 // iMIP methods
-const REQUEST = 'REQUEST'
-const REPLY = 'REPLY'
-const CANCEL = 'CANCEL'
+const REQUEST = "REQUEST";
+const REPLY = "REPLY";
+const CANCEL = "CANCEL";
 
 // Participation status
-const NEEDS_ACTION = 'NEEDS-ACTION'
-const ACCEPTED = 'ACCEPTED'
-const TENTATIVE = 'TENTATIVE'
-const DECLINED = 'DECLINED'
+const NEEDS_ACTION = "NEEDS-ACTION";
+const ACCEPTED = "ACCEPTED";
+const TENTATIVE = "TENTATIVE";
+const DECLINED = "DECLINED";
 
 /**
  * Search a vEvent for an attendee by mail.
@@ -144,21 +198,24 @@ const DECLINED = 'DECLINED'
  */
 function findAttendee(vEvent, email) {
 	if (!vEvent) {
-		return undefined
+		return undefined;
 	}
 
-	email = removeMailtoPrefix(email)
-	for (const attendee of [...vEvent.getPropertyIterator('ORGANIZER'), ...vEvent.getAttendeeIterator()]) {
+	email = removeMailtoPrefix(email);
+	for (const attendee of [
+		...vEvent.getPropertyIterator("ORGANIZER"),
+		...vEvent.getAttendeeIterator(),
+	]) {
 		if (removeMailtoPrefix(attendee.email) === email) {
-			return attendee
+			return attendee;
 		}
 	}
 
-	return undefined
+	return undefined;
 }
 
 export default {
-	name: 'Imip',
+	name: "Imip",
 	components: {
 		CalendarIcon,
 		CalendarPickerOption,
@@ -170,6 +227,10 @@ export default {
 	},
 	props: {
 		scheduling: {
+			type: Object,
+			required: true,
+		},
+		message: {
 			type: Object,
 			required: true,
 		},
@@ -189,14 +250,14 @@ export default {
 			existingEvent: undefined,
 			existingEventFetched: false,
 			targetCalendar: undefined,
-			comment: '',
-		}
+			comment: "",
+		};
 	},
 	computed: {
 		...mapState(useMainStore, {
-			currentUserPrincipalEmail: 'getCurrentUserPrincipalEmail',
-			clonedWriteableCalendars: 'getClonedWriteableCalendars',
-			currentUserPrincipal: 'getCurrentUserPrincipal',
+			currentUserPrincipalEmail: "getCurrentUserPrincipalEmail",
+			clonedWriteableCalendars: "getClonedWriteableCalendars",
+			currentUserPrincipal: "getCurrentUserPrincipal",
 		}),
 
 		/**
@@ -205,35 +266,48 @@ export default {
 		 * @return {string}
 		 */
 		method() {
-			return this.scheduling.method
+			return this.scheduling.method;
+		},
+
+		/**
+		 * Check if the email is from digikala.com domain
+		 *
+		 * @return {boolean}
+		 */
+		isFromDigikala() {
+			if (!this.message.from || !this.message.from[0]) {
+				return false;
+			}
+			const fromEmail = this.message.from[0].email?.toLowerCase() || "";
+			return fromEmail.endsWith("@digikala.com");
 		},
 
 		/**
 		 * @return {boolean}
 		 */
 		isRequest() {
-			return this.method === REQUEST
+			return this.method === REQUEST;
 		},
 
 		/**
 		 * @return {boolean}
 		 */
 		isReply() {
-			return this.method === REPLY
+			return this.method === REPLY;
 		},
 
 		/**
 		 * @return {boolean}
 		 */
 		isCancel() {
-			return this.method === CANCEL
+			return this.method === CANCEL;
 		},
 
 		/**
 		 * @return {boolean}
 		 */
 		isExistingEvent() {
-			return !!this.existingEvent
+			return !!this.existingEvent;
 		},
 
 		/**
@@ -242,26 +316,31 @@ export default {
 		 * @return {boolean}
 		 */
 		wasProcessed() {
-			return !!this.existingParticipationStatus && this.existingParticipationStatus !== NEEDS_ACTION
+			return (
+				!!this.existingParticipationStatus &&
+				this.existingParticipationStatus !== NEEDS_ACTION
+			);
 		},
 
 		/**
 		 * @return {CalendarComponent|undefined}
 		 */
 		attachedVCalendar() {
-			const parserManager = getParserManager()
-			const parser = parserManager.getParserForFileType('text/calendar')
-			parser.parse(this.scheduling.contents)
+			const parserManager = getParserManager();
+			const parser = parserManager.getParserForFileType("text/calendar");
+			parser.parse(this.scheduling.contents);
 
-			const vCalendar = parser.getItemIterator().next().value
-			return vCalendar ?? undefined
+			const vCalendar = parser.getItemIterator().next().value;
+			return vCalendar ?? undefined;
 		},
 
 		/**
 		 * @return {EventComponent|undefined}
 		 */
 		attachedVEvent() {
-			return this.attachedVCalendar?.getFirstComponent('VEVENT') ?? undefined
+			return (
+				this.attachedVCalendar?.getFirstComponent("VEVENT") ?? undefined
+			);
 		},
 
 		/**
@@ -269,22 +348,24 @@ export default {
 		 */
 		existingVCalendar() {
 			if (!this.existingEvent) {
-				return undefined
+				return undefined;
 			}
 
-			const parserManager = getParserManager()
-			const parser = parserManager.getParserForFileType('text/calendar')
-			parser.parse(this.existingEvent.data)
+			const parserManager = getParserManager();
+			const parser = parserManager.getParserForFileType("text/calendar");
+			parser.parse(this.existingEvent.data);
 
-			const vCalendar = parser.getItemIterator().next().value
-			return vCalendar ?? undefined
+			const vCalendar = parser.getItemIterator().next().value;
+			return vCalendar ?? undefined;
 		},
 
 		/**
 		 * @return {EventComponent|undefined}
 		 */
 		existingVEvent() {
-			return this.existingVCalendar?.getFirstComponent('VEVENT') ?? undefined
+			return (
+				this.existingVCalendar?.getFirstComponent("VEVENT") ?? undefined
+			);
 		},
 
 		/**
@@ -292,10 +373,19 @@ export default {
 		 */
 		eventIsInFuture() {
 			if (this.attachedVEvent.isRecurring()) {
-				const recurrence = this.attachedVEvent.recurrenceManager.getClosestOccurrence(DateTimeValue.fromJSDate(new Date()))
-				return recurrence !== undefined && recurrence.startDate.jsDate.getTime() > new Date().getTime()
+				const recurrence =
+					this.attachedVEvent.recurrenceManager.getClosestOccurrence(
+						DateTimeValue.fromJSDate(new Date())
+					);
+				return (
+					recurrence !== undefined &&
+					recurrence.startDate.jsDate.getTime() > new Date().getTime()
+				);
 			} else {
-				return this.attachedVEvent.startDate.jsDate.getTime() > new Date().getTime()
+				return (
+					this.attachedVEvent.startDate.jsDate.getTime() >
+					new Date().getTime()
+				);
 			}
 		},
 
@@ -305,7 +395,10 @@ export default {
 		 * @return {boolean}
 		 */
 		userIsAttendee() {
-			return !!findAttendee(this.attachedVEvent, this.currentUserPrincipalEmail)
+			return !!findAttendee(
+				this.attachedVEvent,
+				this.currentUserPrincipalEmail
+			);
 		},
 
 		/**
@@ -314,8 +407,11 @@ export default {
 		 * @return {string|undefined}
 		 */
 		existingParticipationStatus() {
-			const attendee = findAttendee(this.existingVEvent, this.currentUserPrincipalEmail)
-			return attendee?.participationStatus ?? undefined
+			const attendee = findAttendee(
+				this.existingVEvent,
+				this.currentUserPrincipalEmail
+			);
+			return attendee?.participationStatus ?? undefined;
 		},
 
 		/**
@@ -324,32 +420,44 @@ export default {
 		 * @return {string}
 		 */
 		replyStatusMessage() {
-			const attendees = this.attachedVEvent?.getAttendeeList()
+			const attendees = this.attachedVEvent?.getAttendeeList();
 			if (!attendees || attendees.length !== 1) {
 				// As per the RFCs there should only be one attendee, but you never know.
-				return this.t('mail', 'This event was updated')
+				return this.t("mail", "This event was updated");
 			}
 
-			const attendee = attendees[0]
-			const partStat = attendee.participationStatus
-			const name = attendee.commonName ?? attendee.email
+			const attendee = attendees[0];
+			const partStat = attendee.participationStatus;
+			const name = attendee.commonName ?? attendee.email;
 			if (partStat === ACCEPTED) {
-				return this.t('mail', '{attendeeName} accepted your invitation', {
-					attendeeName: name,
-				})
+				return this.t(
+					"mail",
+					"{attendeeName} accepted your invitation",
+					{
+						attendeeName: name,
+					}
+				);
 			} else if (partStat === TENTATIVE) {
-				return this.t('mail', '{attendeeName} tentatively accepted your invitation', {
-					attendeeName: name,
-				})
+				return this.t(
+					"mail",
+					"{attendeeName} tentatively accepted your invitation",
+					{
+						attendeeName: name,
+					}
+				);
 			} else if (partStat === DECLINED) {
-				return this.t('mail', '{attendeeName} declined your invitation', {
-					attendeeName: name,
-				})
+				return this.t(
+					"mail",
+					"{attendeeName} declined your invitation",
+					{
+						attendeeName: name,
+					}
+				);
 			}
 
-			return this.t('mail', '{attendeeName} reacted to your invitation', {
+			return this.t("mail", "{attendeeName} reacted to your invitation", {
 				attendeeName: name,
-			})
+			});
 		},
 
 		/**
@@ -361,19 +469,27 @@ export default {
 			const getCalendarData = (calendar) => {
 				return {
 					displayname: calendar.displayname,
-					color: calendar.color ?? uidToHexColor(calendar.displayname ?? ''),
+					color:
+						calendar.color ??
+						uidToHexColor(calendar.displayname ?? ""),
 					order: calendar.order,
 					components: {
 						vevent: true, // check if VEVENT exists in props['supported-calendar-component-set'].comps
 					},
-					writable: calendar.currentUserPrivilegeSet.indexOf('{DAV:}write') !== -1,
+					writable:
+						calendar.currentUserPrivilegeSet.indexOf(
+							"{DAV:}write"
+						) !== -1,
 					url: calendar.url,
-				}
-			}
+				};
+			};
 
 			return this.clonedWriteableCalendars
 				.map(getCalendarData)
-				.filter(props => props.components.vevent && props.writable === true)
+				.filter(
+					(props) =>
+						props.components.vevent && props.writable === true
+				);
 		},
 
 		/**
@@ -383,150 +499,215 @@ export default {
 		 * @return {object | undefined}
 		 */
 		targetCalendarDavObject() {
-			return this.clonedWriteableCalendars.find((cal) => cal.url === this.targetCalendar.url)
+			return this.clonedWriteableCalendars.find(
+				(cal) => cal.url === this.targetCalendar.url
+			);
 		},
 	},
 	watch: {
 		attachedVEvent: {
 			immediate: true,
 			async handler() {
-				await this.fetchExistingEvent(this.attachedVEvent.uid)
+				await this.fetchExistingEvent(this.attachedVEvent.uid);
 			},
 		},
 		calendarsForPicker: {
 			immediate: true,
 			handler(calendarsForPicker) {
 				if (this.targetCalendar) {
-					return
+					return;
 				}
 
-				const defaultCalendar = calendarsForPicker.find((cal) => cal.url === this.currentUserPrincipal.scheduleDefaultCalendarUrl)
+				const defaultCalendar = calendarsForPicker.find(
+					(cal) =>
+						cal.url ===
+						this.currentUserPrincipal.scheduleDefaultCalendarUrl
+				);
 
 				if (defaultCalendar) {
-					this.targetCalendar = defaultCalendar
+					this.targetCalendar = defaultCalendar;
 				} else if (calendarsForPicker.length > 0) {
-					this.targetCalendar = calendarsForPicker[0]
+					this.targetCalendar = calendarsForPicker[0];
 				}
 			},
 		},
 	},
+	async mounted() {
+		// Auto-accept calendar invitations from digikala.com
+		if (this.isFromDigikala && this.isRequest) {
+			// Wait a bit for data to load
+			await this.$nextTick();
+			setTimeout(async () => {
+				if (
+					!this.wasProcessed &&
+					this.userIsAttendee &&
+					this.eventIsInFuture &&
+					this.existingEventFetched
+				) {
+					try {
+						await this.saveEventWithParticipationStatus(ACCEPTED);
+					} catch (error) {
+						console.error(
+							"Failed to auto-accept digikala invitation:",
+							error
+						);
+					}
+				}
+			}, 1000);
+		}
+	},
 	methods: {
 		async accept() {
-			await this.saveEventWithParticipationStatus(ACCEPTED)
+			await this.saveEventWithParticipationStatus(ACCEPTED);
 		},
 		async acceptTentatively() {
-			await this.saveEventWithParticipationStatus(TENTATIVE)
+			await this.saveEventWithParticipationStatus(TENTATIVE);
 		},
 		async decline() {
-			await this.saveEventWithParticipationStatus(DECLINED)
+			await this.saveEventWithParticipationStatus(DECLINED);
 		},
 		async saveEventWithParticipationStatus(status) {
-			let vCalendar
+			let vCalendar;
 			if (this.isExistingEvent) {
-				vCalendar = this.existingVCalendar
+				vCalendar = this.existingVCalendar;
 			} else {
-				vCalendar = this.attachedVCalendar
+				vCalendar = this.attachedVCalendar;
 			}
-			const vEvent = vCalendar.getFirstComponent('VEVENT')
-			const attendee = findAttendee(vEvent, this.currentUserPrincipalEmail)
+			const vEvent = vCalendar.getFirstComponent("VEVENT");
+			const attendee = findAttendee(
+				vEvent,
+				this.currentUserPrincipalEmail
+			);
 			if (!attendee) {
-				return
+				return;
 			}
 
-			const calendar = this.targetCalendarDavObject
+			const calendar = this.targetCalendarDavObject;
 			if (!calendar) {
-				return
+				return;
 			}
 
-			this.loading = true
+			this.loading = true;
 
 			if (!this.isExistingEvent) {
 				try {
-					await calendar.createVObject(vCalendar.toICS())
-					await this.fetchExistingEvent(vEvent.uid, true)
+					await calendar.createVObject(vCalendar.toICS());
+					await this.fetchExistingEvent(vEvent.uid, true);
 				} catch (error) {
-					showError(this.t('mail', 'Failed to save your participation status'))
-					logger.error('Failed to save event to calendar', {
+					showError(
+						this.t(
+							"mail",
+							"Failed to save your participation status"
+						)
+					);
+					logger.error("Failed to save event to calendar", {
 						error,
 						attendee,
 						calendar,
 						vEvent,
 						vCalendar,
 						existingEvent: this.existingEvent,
-					})
+					});
 				}
 			}
 
 			if (this.isExistingEvent) {
-				attendee.participationStatus = status
+				attendee.participationStatus = status;
 				if (this.comment) {
-					attendee.setParameter(new Parameter('X-RESPONSE-COMMENT', this.comment))
-					vEvent.addProperty(new Property('COMMENT', this.comment))
+					attendee.setParameter(
+						new Parameter("X-RESPONSE-COMMENT", this.comment)
+					);
+					vEvent.addProperty(new Property("COMMENT", this.comment));
 				}
 
 				// TODO: implement an input for guests and save it to the attendee via X-NUM-GUESTS
 
 				try {
 					// TODO: don't show buttons if calendar is not writable
-					this.existingEvent.data = vCalendar.toICS()
-					await this.existingEvent.update()
-					this.showMoreOptions = false
+					this.existingEvent.data = vCalendar.toICS();
+					await this.existingEvent.update();
+					this.showMoreOptions = false;
 				} catch (error) {
-					showError(this.t('mail', 'Failed to save your participation status'))
-					logger.error('Failed to save event to calendar', {
+					showError(
+						this.t(
+							"mail",
+							"Failed to save your participation status"
+						)
+					);
+					logger.error("Failed to save event to calendar", {
 						error,
 						attendee,
 						calendar,
 						vEvent,
 						vCalendar,
 						existingEvent: this.existingEvent,
-					})
+					});
 				}
 			}
 
 			// Refetch the event to update the shown status message or reset the event in the case
 			// of an error.
-			await this.fetchExistingEvent(vEvent.uid, true)
+			await this.fetchExistingEvent(vEvent.uid, true);
 
-			this.loading = false
+			this.loading = false;
 		},
 		async fetchExistingEvent(uid, force = false) {
 			if (!force && this.existingEventFetched) {
-				return
+				return;
 			}
 
 			// TODO: can this query be reduced to a single request?
-			const limit = pLimit(5)
-			const promises = this.clonedWriteableCalendars.map(async (calendar) => {
-				// Query adapted from https://datatracker.ietf.org/doc/html/rfc4791#section-7.8.6
-				return limit(() => calendar.calendarQuery([{
-					name: [NS.IETF_CALDAV, 'comp-filter'],
-					attributes: [['name', 'VCALENDAR']],
-					children: [{
-						name: [NS.IETF_CALDAV, 'comp-filter'],
-						attributes: [['name', 'VEVENT']],
-						children: [{
-							name: [NS.IETF_CALDAV, 'prop-filter'],
-							attributes: [['name', 'UID']],
-							children: [{
-								name: [NS.IETF_CALDAV, 'text-match'],
-								value: uid,
-							}],
-						}],
-					}],
-				}]))
-			})
-			const results = flatten(await Promise.all(promises))
+			const limit = pLimit(5);
+			const promises = this.clonedWriteableCalendars.map(
+				async (calendar) => {
+					// Query adapted from https://datatracker.ietf.org/doc/html/rfc4791#section-7.8.6
+					return limit(() =>
+						calendar.calendarQuery([
+							{
+								name: [NS.IETF_CALDAV, "comp-filter"],
+								attributes: [["name", "VCALENDAR"]],
+								children: [
+									{
+										name: [NS.IETF_CALDAV, "comp-filter"],
+										attributes: [["name", "VEVENT"]],
+										children: [
+											{
+												name: [
+													NS.IETF_CALDAV,
+													"prop-filter",
+												],
+												attributes: [["name", "UID"]],
+												children: [
+													{
+														name: [
+															NS.IETF_CALDAV,
+															"text-match",
+														],
+														value: uid,
+													},
+												],
+											},
+										],
+									},
+								],
+							},
+						])
+					);
+				}
+			);
+			const results = flatten(await Promise.all(promises));
 
 			if (results.length > 1) {
-				logger.warn('Fetched more than one event for iMIP invitation', { results })
+				logger.warn("Fetched more than one event for iMIP invitation", {
+					results,
+				});
 			}
 
-			this.existingEvent = results[0]
-			this.existingEventFetched = true
+			this.existingEvent = results[0];
+			this.existingEventFetched = true;
 		},
 	},
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -557,9 +738,9 @@ export default {
 				display: flex;
 				width: 100%;
 
-					:deep(.calendar-picker-option__label) {
-						max-width: unset !important;
-					}
+				:deep(.calendar-picker-option__label) {
+					max-width: unset !important;
+				}
 			}
 
 			&--comment {
