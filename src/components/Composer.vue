@@ -46,6 +46,16 @@
 				</ButtonVue>
 			</div>
 			<div class="composer-fields--custom">
+				<RecipientPicker
+					:value="selectTo"
+					:options="selectableRecipients.filter(recipient=>!selectTo.some(to=>to.email===recipient.email))"
+					:loading="loadingIndicatorTo"
+					@select-recipient="onNewToAddr"
+					@remove-recipient="removeRecipientTo"
+					@autocomplete="onAutocomplete($event, 'to')"
+				/>
+			</div>
+			<div class="composer-fields--custom">
 				<NcSelect id="to"
 					ref="toLabel"
 					:value="selectTo"
@@ -513,6 +523,7 @@ import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import { mapStores, mapState } from 'pinia'
 import { savePreference } from '../service/PreferenceService.js'
+import RecipientPicker from "./RecipientPicker.vue";
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -549,6 +560,7 @@ export default {
 		SendClock,
 		IconFormat,
 		NcReferencePickerModal,
+		RecipientPicker
 	},
 	props: {
 		fromAccount: {
@@ -1323,32 +1335,15 @@ export default {
 			this.onNewToAddr(option)
 		},
 		onNewToAddr(option) {
-			this.onNewAddr(option, this.selectTo, 'to')
+			this.onNewAddr(option, this.selectTo, )
 		},
 		onNewCcAddr(option) {
-			this.onNewAddr(option, this.selectCc, 'cc')
+			this.onNewAddr(option, this.selectCc, )
 		},
 		onNewBccAddr(option) {
-			this.onNewAddr(option, this.selectBcc, 'bcc')
+			this.onNewAddr(option, this.selectBcc, )
 		},
-		onNewAddr(option, list, type) {
-			if (
-				(option === null || option === undefined)
-				&& this.recipientSearchTerms[type] !== undefined
-				&& this.recipientSearchTerms[type] !== ''
-			) {
-				if (!this.recipientSearchTerms[type].includes('@')) {
-					return
-				}
-				option = {}
-				option.email = this.recipientSearchTerms[type]
-				option.label = this.recipientSearchTerms[type]
-				this.recipientSearchTerms[type] = ''
-			}
-
-			if (list.some((recipient) => recipient.email === option?.email) || !option) {
-				return
-			}
+		onNewAddr(option, list) {
 			const recipient = { ...option }
 			this.newRecipients.push(recipient)
 			list.push(recipient)
