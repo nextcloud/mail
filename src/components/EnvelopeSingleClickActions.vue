@@ -9,13 +9,13 @@
 			type="tertiary"
 			:title="t('mail', 'Mark as unread')"
 			@click.prevent="$emit('toggle-seen')">
-			<EmailUnread :size="20" />
+			<EmailRead :size="20" />
 		</NcButton>
 		<NcButton v-else
 			type="tertiary"
 			:title="t('mail', 'Mark as read')"
 			@click.prevent="$emit('toggle-seen')">
-			<EmailRead :size="20" />
+			<EmailUnread :size="20" />
 		</NcButton>
 		<NcButton v-if="isImportant"
 			type="tertiary"
