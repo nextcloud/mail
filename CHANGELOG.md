@@ -1,3 +1,28 @@
+## [5.5.2](https://github.com/nextcloud/mail/compare/v5.5.1...v5.5.2) (2025-09-23)
+
+
+### Bug Fixes
+
+* align quick action settings button properly ([895c2a1](https://github.com/nextcloud/mail/commit/895c2a1337b8fe6b3dcfb071d549c6c8968acc46))
+* check email in recipient picker ([43ae8a6](https://github.com/nextcloud/mail/commit/43ae8a6725bb5d2468cd1de7c7fe253c4ffa0870))
+* ckeditor color in darkmode ([39eb2de](https://github.com/nextcloud/mail/commit/39eb2dec88135d972d96c80ff0779331395c6a85))
+* contrast fixes for some elements ([5ec43ce](https://github.com/nextcloud/mail/commit/5ec43ce11059f4d032fa1b4035165d92081b117a))
+* **EnvelopeSkeleton:** improve accessibility of actions on mobile by disabling browser context menu overlapping our actions ([22ab629](https://github.com/nextcloud/mail/commit/22ab6293f047a90933530a712669ab35e2b2a6a9))
+* error in mounted hook ([f76c3a2](https://github.com/nextcloud/mail/commit/f76c3a2b6aeba3bf5c177c1cf0892ef414a9f946))
+* **l10n:** Update translations from Transifex ([8716055](https://github.com/nextcloud/mail/commit/871605574f60fd94814f21ff0e18716491761dc9))
+* **l10n:** Update translations from Transifex ([880ce10](https://github.com/nextcloud/mail/commit/880ce10b872a9bc7718d3abc20c484027d18fe10))
+* **l10n:** Update translations from Transifex ([4ced027](https://github.com/nextcloud/mail/commit/4ced027bc8f1300171c355392f8479728d2cc650))
+* **l10n:** Update translations from Transifex ([ba5ee6d](https://github.com/nextcloud/mail/commit/ba5ee6d73c9ebc8c7df0021cc0a8398e2239919e))
+* **l10n:** Update translations from Transifex ([ff46caa](https://github.com/nextcloud/mail/commit/ff46caa34fb3681507e1fdfcf38d9d90600201f5))
+* **l10n:** Update translations from Transifex ([d9266d9](https://github.com/nextcloud/mail/commit/d9266d9d28aeab668e949a2e132ceb5697f1025a))
+* **quickaction:** fix deleting quick action steps ([7963895](https://github.com/nextcloud/mail/commit/7963895f8809e5a64b24b49eb9edfb9e3a3c5777))
+* **quickaction:** log js error to console ([5c26e43](https://github.com/nextcloud/mail/commit/5c26e4306c02ed409c687955704ceeea901881a9))
+* restore color menu in text/background selector ([3929b7d](https://github.com/nextcloud/mail/commit/3929b7d63ba11cdb31edfac87bd0c782a4a66f70))
+* toolbar dropdown and height bug ([36dc23e](https://github.com/nextcloud/mail/commit/36dc23efd96a4231937a2dc5332a0a6cc40ebfe4))
+* **ui:** Don't outline checkmark icons ([024108f](https://github.com/nextcloud/mail/commit/024108f0ee25835342ab13714384fe3e8c815cc3)), closes [#11322](https://github.com/nextcloud/mail/issues/11322)
+
+
+
 ## [5.5.1](https://github.com/nextcloud/mail/compare/v5.5.0...v5.5.1) (2025-09-17)
 
 
