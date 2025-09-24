@@ -5,7 +5,7 @@
 
 import clone from 'lodash/fp/clone.js'
 
-const specialRolesOrder = ['all', 'inbox', 'flagged', 'drafts', 'sent', 'archive', 'junk', 'trash']
+const specialRolesOrder = ['inbox', 'flagged', 'drafts', 'sent', 'archive', 'all', 'junk', 'trash']
 
 export const sortMailboxes = (mailboxes, account) => {
 	const c = clone(mailboxes)
@@ -16,6 +16,14 @@ export const sortMailboxes = (mailboxes, account) => {
 
 			if (s1 === s2) {
 				return f1.name.localeCompare(f2.name)
+			}
+
+			// Handle invalid special uses
+			// if both are invalid it's caught at the previous if
+			if (s1 === -1) {
+				return 1
+			} else if (s2 === -1) {
+				return -1
 			}
 
 			return s1 - s2
