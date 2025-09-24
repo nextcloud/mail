@@ -363,6 +363,16 @@ class PageController extends Controller {
 	 *
 	 * @return TemplateResponse
 	 */
+	public function mailboxStarred(int $id): TemplateResponse {
+		return $this->index();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 * @return TemplateResponse
+	 */
 	public function thread(int $mailboxId, int $id): TemplateResponse {
 		return $this->index();
 	}
