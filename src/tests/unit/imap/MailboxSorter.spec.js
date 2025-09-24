@@ -28,6 +28,50 @@ describe('mailboxSorter', () => {
 		expect(sorted).toEqual([mb1, mb2])
 	})
 
+	it('puts inbox before all', () => {
+		const mbAll = {
+			name: 'All emails',
+			specialUse: ['all'],
+			databaseId: 1,
+		}
+		const inbox = {
+			name: 'INBOX',
+			specialUse: ['inbox'],
+			databaseId: 2,
+		}
+		const mailboxes = [inbox, mbAll]
+
+		const account = {
+			snoozeMailboxId: 0,
+		}
+
+		const sorted = sortMailboxes(mailboxes, account)
+
+		expect(sorted).toEqual([inbox, mbAll])
+	})
+
+	it('handles unknown special use', () => {
+		const specialMb = {
+			name: 'Special emails',
+			specialUse: ['special'],
+			databaseId: 1,
+		}
+		const inbox = {
+			name: 'INBOX',
+			specialUse: ['inbox'],
+			databaseId: 2,
+		}
+		const mailboxes = [inbox, specialMb]
+
+		const account = {
+			snoozeMailboxId: 0,
+		}
+
+		const sorted = sortMailboxes(mailboxes, account)
+
+		expect(sorted).toEqual([inbox, specialMb])
+	})
+
 	it('lists special mailboxes first', () => {
 		const mb1 = {
 			name: 'Inbox 1',
