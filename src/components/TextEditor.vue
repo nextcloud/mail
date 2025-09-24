@@ -4,61 +4,69 @@
 -->
 
 <template>
-	<div :class="{ 'editor-wrapper--bordered': isBordered }" class="editor-wrapper">
+	<div
+		:class="{ 'editor-wrapper--bordered': isBordered }"
+		class="editor-wrapper"
+	>
 		<div ref="toolbarContainer" class="toolbar" />
 
 		<div ref="editableContainer" class="editable" />
 
-		<ckeditor v-if="ready"
+		<ckeditor
+			v-if="ready"
 			:value="value"
 			:config="config"
 			:editor="editor"
 			:disabled="disabled"
 			class="editor"
 			@input="onEditorInput"
-			@ready="onEditorReady" />
+			@ready="onEditorReady"
+		/>
 	</div>
 </template>
 
 <script>
-import CKEditor from '@ckeditor/ckeditor5-vue2'
-import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment.js'
-import { Mention } from '@ckeditor/ckeditor5-mention'
-import Editor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor.js'
-import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials.js'
-import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote.js'
-import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold.js'
-import FontPlugin from '@ckeditor/ckeditor5-font/src/font.js'
-import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph.js'
-import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading.js'
-import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic.js'
-import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline.js'
-import Superscript from '@ckeditor/ckeditor5-basic-styles/src/superscript.js'
-import Subscript from '@ckeditor/ckeditor5-basic-styles/src/subscript.js'
-import LinkPlugin from '@ckeditor/ckeditor5-link/src/link.js'
-import ListPlugin from '@ckeditor/ckeditor5-list/src/list.js'
-import ListProperties from '@ckeditor/ckeditor5-list/src/listproperties.js'
-import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat.js'
-import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
-import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough.js'
-import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
-import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter.js'
-import ImagePlugin from '@ckeditor/ckeditor5-image/src/image.js'
-import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandreplace.js'
-import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
-import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
-import GeneralHtmlSupport from '@ckeditor/ckeditor5-html-support/src/generalhtmlsupport.js'
-import { DropdownView } from '@ckeditor/ckeditor5-ui'
-import MailPlugin from '../ckeditor/mail/MailPlugin.js'
-import { searchProvider, getLinkWithPicker } from '@nextcloud/vue/components/NcRichText'
-import { getLanguage } from '@nextcloud/l10n'
-import logger from '../logger.js'
-import PickerPlugin from '../ckeditor/smartpicker/PickerPlugin.js'
-import { autoCompleteByName } from '../service/ContactIntegrationService.js'
-import { emojiSearch, emojiAddRecent } from '@nextcloud/vue'
-import { toPlain, Text } from '../util/text.js'
+import CKEditor from "@ckeditor/ckeditor5-vue2";
+import AlignmentPlugin from "@ckeditor/ckeditor5-alignment/src/alignment.js";
+import { Mention } from "@ckeditor/ckeditor5-mention";
+import Editor from "@ckeditor/ckeditor5-editor-classic/src/classiceditor.js";
+import EssentialsPlugin from "@ckeditor/ckeditor5-essentials/src/essentials.js";
+import BlockQuotePlugin from "@ckeditor/ckeditor5-block-quote/src/blockquote.js";
+import BoldPlugin from "@ckeditor/ckeditor5-basic-styles/src/bold.js";
+import FontPlugin from "@ckeditor/ckeditor5-font/src/font.js";
+import ParagraphPlugin from "@ckeditor/ckeditor5-paragraph/src/paragraph.js";
+import HeadingPlugin from "@ckeditor/ckeditor5-heading/src/heading.js";
+import ItalicPlugin from "@ckeditor/ckeditor5-basic-styles/src/italic.js";
+import Underline from "@ckeditor/ckeditor5-basic-styles/src/underline.js";
+import Superscript from "@ckeditor/ckeditor5-basic-styles/src/superscript.js";
+import Subscript from "@ckeditor/ckeditor5-basic-styles/src/subscript.js";
+import LinkPlugin from "@ckeditor/ckeditor5-link/src/link.js";
+import ListPlugin from "@ckeditor/ckeditor5-list/src/list.js";
+import ListProperties from "@ckeditor/ckeditor5-list/src/listproperties.js";
+import RemoveFormat from "@ckeditor/ckeditor5-remove-format/src/removeformat.js";
+import SignaturePlugin from "../ckeditor/signature/SignaturePlugin.js";
+import StrikethroughPlugin from "@ckeditor/ckeditor5-basic-styles/src/strikethrough.js";
+import QuotePlugin from "../ckeditor/quote/QuotePlugin.js";
+import Base64UploadAdapter from "@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter.js";
+import ImagePlugin from "@ckeditor/ckeditor5-image/src/image.js";
+import FindAndReplace from "@ckeditor/ckeditor5-find-and-replace/src/findandreplace.js";
+import ImageResizePlugin from "@ckeditor/ckeditor5-image/src/imageresize.js";
+import ImageUploadPlugin from "@ckeditor/ckeditor5-image/src/imageupload.js";
+import GeneralHtmlSupport from "@ckeditor/ckeditor5-html-support/src/generalhtmlsupport.js";
+import { DropdownView } from "@ckeditor/ckeditor5-ui";
+import MailPlugin from "../ckeditor/mail/MailPlugin.js";
+import {
+	searchProvider,
+	getLinkWithPicker,
+} from "@nextcloud/vue/components/NcRichText";
+import { getLanguage } from "@nextcloud/l10n";
+import logger from "../logger.js";
+import PickerPlugin from "../ckeditor/smartpicker/PickerPlugin.js";
+import { autoCompleteByName } from "../service/ContactIntegrationService.js";
+import { emojiSearch, emojiAddRecent } from "@nextcloud/vue";
+import { toPlain, Text } from "../util/text.js";
 export default {
-	name: 'TextEditor',
+	name: "TextEditor",
 	components: {
 		ckeditor: CKEditor.component,
 	},
@@ -73,7 +81,7 @@ export default {
 		},
 		placeholder: {
 			type: String,
-			default: '',
+			default: "",
 		},
 		focus: {
 			type: Boolean,
@@ -111,51 +119,55 @@ export default {
 			LinkPlugin,
 			FindAndReplace,
 			GeneralHtmlSupport,
-		]
-		const toolbar = ['undo', 'redo']
+		];
+		const toolbar = ["undo", "redo"];
 
 		if (this.html) {
-			plugins.push(...[
-				HeadingPlugin,
-				AlignmentPlugin,
-				BoldPlugin,
-				ItalicPlugin,
-				Underline,
-				StrikethroughPlugin,
-				Subscript,
-				Superscript,
-				BlockQuotePlugin,
-				ListPlugin,
-				ImagePlugin,
-				ImageUploadPlugin,
-				ImageResizePlugin,
-				ListProperties,
-				FontPlugin,
-				RemoveFormat,
-				Base64UploadAdapter,
-				MailPlugin,
-			])
-			toolbar.unshift(...[
-				'heading',
-				'fontFamily',
-				'fontSize',
-				'bold',
-				'italic',
-				'underline',
-				'strikethrough',
-				'fontColor',
-				'subscript',
-				'superscript',
-				'fontBackgroundColor',
-				'insertImage',
-				'alignment',
-				'bulletedList',
-				'numberedList',
-				'blockquote',
-				'link',
-				'removeFormat',
-				'findAndReplace',
-			])
+			plugins.push(
+				...[
+					HeadingPlugin,
+					AlignmentPlugin,
+					BoldPlugin,
+					ItalicPlugin,
+					Underline,
+					StrikethroughPlugin,
+					Subscript,
+					Superscript,
+					BlockQuotePlugin,
+					ListPlugin,
+					ImagePlugin,
+					ImageUploadPlugin,
+					ImageResizePlugin,
+					ListProperties,
+					FontPlugin,
+					RemoveFormat,
+					Base64UploadAdapter,
+					MailPlugin,
+				]
+			);
+			toolbar.unshift(
+				...[
+					"heading",
+					"fontFamily",
+					"fontSize",
+					"bold",
+					"italic",
+					"underline",
+					"strikethrough",
+					"fontColor",
+					"subscript",
+					"superscript",
+					"fontBackgroundColor",
+					"insertImage",
+					"alignment",
+					"bulletedList",
+					"numberedList",
+					"blockquote",
+					"link",
+					"removeFormat",
+					"findAndReplace",
+				]
+			);
 		}
 
 		return {
@@ -165,147 +177,183 @@ export default {
 			ready: false,
 			editor: Editor,
 			config: {
-				licenseKey: 'GPL',
+				licenseKey: "GPL",
 				placeholder: this.placeholder,
 				plugins,
 				toolbar: {
 					items: toolbar,
 				},
-				language: 'en',
+				language: "en",
 				mention: {
 					feeds: [
 						{
-							marker: ':',
+							marker: ":",
 							feed: this.getEmoji,
 							itemRenderer: this.customEmojiRenderer,
 						},
 						{
-							marker: '/',
+							marker: "/",
 							feed: this.getLink,
 							itemRenderer: this.customLinkRenderer,
 						},
 						{
-							marker: '@',
+							marker: "@",
 							feed: this.getContact,
 							itemRenderer: this.customRenderer,
 						},
 						{
-							marker: '!',
+							marker: "!",
 							feed: this.getTextBlock,
 							itemRenderer: this.customRenderer,
 						},
 					],
 				},
 			},
-		}
+		};
 	},
 	beforeMount() {
-		this.loadEditorTranslations(getLanguage())
+		this.loadEditorTranslations(getLanguage());
+	},
+	mounted() {
+		// Add RTL support after editor is ready
+		this.$nextTick(() => {
+			this.setupRTLSupport();
+		});
 	},
 	methods: {
 		getLink(text) {
-			const results = searchProvider(text)
-			if (results.length === 1 && !results[0].title.toLowerCase().includes(text.toLowerCase())) {
-				return []
+			const results = searchProvider(text);
+			if (
+				results.length === 1 &&
+				!results[0].title.toLowerCase().includes(text.toLowerCase())
+			) {
+				return [];
 			}
-			return results
+			return results;
 		},
 		getEmoji(text) {
-			const emojiResults = emojiSearch(text)
-			if (this.textSmiles.includes(':' + text)) {
-
-				emojiResults.unshift(':' + text)
+			const emojiResults = emojiSearch(text);
+			if (this.textSmiles.includes(":" + text)) {
+				emojiResults.unshift(":" + text);
 			}
-			return emojiResults
+			return emojiResults;
 		},
 		async getContact(text) {
 			if (text.length === 0) {
-				return []
+				return [];
 			}
-			let contactResults = await autoCompleteByName(text)
-			contactResults = contactResults.filter(result => result.email.length > 0)
-			return contactResults
+			let contactResults = await autoCompleteByName(text);
+			contactResults = contactResults.filter(
+				(result) => result.email.length > 0
+			);
+			return contactResults;
 		},
 		getTextBlock(text) {
 			if (text.length === 0) {
-				return []
+				return [];
 			}
-			return this.textBlocks.filter(textBlock => textBlock.title.toLowerCase().includes(text.toLowerCase()))
+			return this.textBlocks.filter((textBlock) =>
+				textBlock.title.toLowerCase().includes(text.toLowerCase())
+			);
 		},
-		 customEmojiRenderer(item) {
-			const itemElement = document.createElement('span')
+		customEmojiRenderer(item) {
+			const itemElement = document.createElement("span");
 
-			itemElement.classList.add('custom-item')
-			itemElement.id = `mention-list-item-id-${item.colons}`
-			itemElement.textContent = `${item.native} `
-			const usernameElement = document.createElement('span')
+			itemElement.classList.add("custom-item");
+			itemElement.id = `mention-list-item-id-${item.colons}`;
+			itemElement.textContent = `${item.native} `;
+			const usernameElement = document.createElement("span");
 
-			usernameElement.classList.add('custom-item-username')
-			usernameElement.textContent = item.colons
+			usernameElement.classList.add("custom-item-username");
+			usernameElement.textContent = item.colons;
 
-			itemElement.appendChild(usernameElement)
+			itemElement.appendChild(usernameElement);
 
-			return itemElement
+			return itemElement;
 		},
 		customLinkRenderer(item) {
-			const itemElement = document.createElement('span')
-			itemElement.classList.add('link-container')
+			const itemElement = document.createElement("span");
+			itemElement.classList.add("link-container");
 
-			const icon = document.createElement('img')
-			icon.classList.add('link-icon')
-			icon.src = `${item.icon_url} `
+			const icon = document.createElement("img");
+			icon.classList.add("link-icon");
+			icon.src = `${item.icon_url} `;
 
-			const usernameElement = document.createElement('span')
+			const usernameElement = document.createElement("span");
 
-			usernameElement.classList.add('link-title')
-			usernameElement.textContent = `${item.title} `
-			itemElement.appendChild(icon)
-			itemElement.appendChild(usernameElement)
+			usernameElement.classList.add("link-title");
+			usernameElement.textContent = `${item.title} `;
+			itemElement.appendChild(icon);
+			itemElement.appendChild(usernameElement);
 
-			return itemElement
+			return itemElement;
 		},
 		customRenderer(item, type) {
-			const itemElement = document.createElement('span')
+			const itemElement = document.createElement("span");
 
-			itemElement.classList.add('custom-item')
-			itemElement.id = `mention-list-item-id-${item.id}`
-			const usernameElement = document.createElement('p')
-			const label = type === 'contact' ? item.label : item.title
-			usernameElement.classList.add('custom-item-username')
-			usernameElement.textContent = label
+			itemElement.classList.add("custom-item");
+			itemElement.id = `mention-list-item-id-${item.id}`;
+			const usernameElement = document.createElement("p");
+			const label = type === "contact" ? item.label : item.title;
+			usernameElement.classList.add("custom-item-username");
+			usernameElement.textContent = label;
 
-			itemElement.appendChild(usernameElement)
+			itemElement.appendChild(usernameElement);
 
-			return itemElement
+			return itemElement;
 		},
 		overrideDropdownPositionsToNorth(editor, toolbarView) {
 			const {
-				south, north, southEast, southWest, northEast, northWest,
-				southMiddleEast, southMiddleWest, northMiddleEast, northMiddleWest,
-			} = DropdownView.defaultPanelPositions
+				south,
+				north,
+				southEast,
+				southWest,
+				northEast,
+				northWest,
+				southMiddleEast,
+				southMiddleWest,
+				northMiddleEast,
+				northMiddleWest,
+			} = DropdownView.defaultPanelPositions;
 
-			let panelPositions
+			let panelPositions;
 
-			if (editor.locale.uiLanguageDirection !== 'rtl') {
+			if (editor.locale.uiLanguageDirection !== "rtl") {
 				panelPositions = [
-					northEast, northWest, northMiddleEast, northMiddleWest, north,
-					southEast, southWest, southMiddleEast, southMiddleWest, south,
-				]
+					northEast,
+					northWest,
+					northMiddleEast,
+					northMiddleWest,
+					north,
+					southEast,
+					southWest,
+					southMiddleEast,
+					southMiddleWest,
+					south,
+				];
 			} else {
 				panelPositions = [
-					northWest, northEast, northMiddleWest, northMiddleEast, north,
-					southWest, southEast, southMiddleWest, southMiddleEast, south,
-				]
+					northWest,
+					northEast,
+					northMiddleWest,
+					northMiddleEast,
+					north,
+					southWest,
+					southEast,
+					southMiddleWest,
+					southMiddleEast,
+					south,
+				];
 			}
 
 			for (const item of toolbarView.items) {
 				if (!(item instanceof DropdownView)) {
-					continue
+					continue;
 				}
 
-				item.on('change:isOpen', () => {
+				item.on("change:isOpen", () => {
 					if (!item.isOpen) {
-						return
+						return;
 					}
 
 					item.panelView.position = DropdownView._getOptimalPosition({
@@ -313,155 +361,280 @@ export default {
 						target: item.buttonView.element,
 						fitInViewport: true,
 						positions: panelPositions,
-					}).name
-				})
+					}).name;
+				});
 			}
 		},
 		overrideTooltipPositions(toolbarView) {
 			for (const item of toolbarView.items) {
 				if (item.buttonView) {
-					item.buttonView.tooltipPosition = 'n'
+					item.buttonView.tooltipPosition = "n";
 				} else if (item.tooltipPosition) {
-					item.tooltipPosition = 'n'
+					item.tooltipPosition = "n";
 				}
 			}
 		},
 		async loadEditorTranslations(language) {
-			if (language === 'en') {
+			if (language === "en") {
 				// The default, nothing to fetch
-				return this.showEditor('en')
+				return this.showEditor("en");
 			}
 
 			try {
-				logger.debug(`loading ${language} translations for CKEditor`)
+				logger.debug(`loading ${language} translations for CKEditor`);
 				await import(
 					/* webpackMode: "lazy-once" */
 					/* webpackPrefetch: true */
 					/* webpackPreload: true */
 					`@ckeditor/ckeditor5-build-decoupled-document/build/translations/${language}`
-				)
-				this.showEditor(language)
+				);
+				this.showEditor(language);
 			} catch (error) {
-				logger.error(`could not find CKEditor translations for "${language}"`, { error })
-				this.showEditor('en')
+				logger.error(
+					`could not find CKEditor translations for "${language}"`,
+					{ error }
+				);
+				this.showEditor("en");
 			}
 		},
 		showEditor(language) {
-			logger.debug(`using "${language}" as CKEditor language`)
-			this.config.language = language
+			logger.debug(`using "${language}" as CKEditor language`);
+			this.config.language = language;
 
-			this.ready = true
+			this.ready = true;
 		},
 		/**
 		 * @param {module:core/editor/editor~Editor} editor editor the editor instance
 		 */
 		onEditorReady(editor) {
-			logger.debug('TextEditor is ready', { editor })
+			logger.debug("TextEditor is ready", { editor });
 
 			// https://ckeditor.com/docs/ckeditor5/latest/examples/builds-custom/bottom-toolbar-editor.html
-			this.$refs.toolbarContainer.appendChild(editor.ui.view.toolbar.element)
-			this.$refs.editableContainer.appendChild(editor.ui.view.editable.element)
+			this.$refs.toolbarContainer.appendChild(
+				editor.ui.view.toolbar.element
+			);
+			this.$refs.editableContainer.appendChild(
+				editor.ui.view.editable.element
+			);
 			if (this.readOnly) {
-				editor.ui.view.toolbar.element.style.display = 'none'
-				editor.enableReadOnlyMode('text-block')
+				editor.ui.view.toolbar.element.style.display = "none";
+				editor.enableReadOnlyMode("text-block");
 			}
 			if (editor.ui) {
-				this.overrideDropdownPositionsToNorth(editor, editor.ui.view.toolbar)
-				this.overrideTooltipPositions(editor.ui.view.toolbar)
+				this.overrideDropdownPositionsToNorth(
+					editor,
+					editor.ui.view.toolbar
+				);
+				this.overrideTooltipPositions(editor.ui.view.toolbar);
 			}
-			editor.commands.get('mention')?.on('execute', (event, data) => {
-				event.stop()
-				const eventData = data[0]
-				const item = eventData.mention
-				if (eventData.marker === ':') {
-					emojiAddRecent(item)
-					this.editorInstance.execute('insertItem', item.native, ':')
-				}
-				if (eventData.marker === '/') {
-					getLinkWithPicker(item.id)
-						.then((link) => {
-							this.editorInstance.execute('insertItem', link, '/')
-							this.editorInstance.editing.view.focus()
-						})
-						.catch((error) => {
-							console.debug('Smart picker promise rejected:', error)
-						})
-				}
-				if (eventData.marker === '@') {
-					this.editorInstance.execute('insertItem', { email: item.email[0], label: item.label }, '@')
-					this.$emit('mention', { email: item.email[0], label: item.label })
-				}
-				if (eventData.marker === '!') {
-					this.insertTextBlock(item, false)
-				}
-			}, { priority: 'high' })
+			editor.commands.get("mention")?.on(
+				"execute",
+				(event, data) => {
+					event.stop();
+					const eventData = data[0];
+					const item = eventData.mention;
+					if (eventData.marker === ":") {
+						emojiAddRecent(item);
+						this.editorInstance.execute(
+							"insertItem",
+							item.native,
+							":"
+						);
+					}
+					if (eventData.marker === "/") {
+						getLinkWithPicker(item.id)
+							.then((link) => {
+								this.editorInstance.execute(
+									"insertItem",
+									link,
+									"/"
+								);
+								this.editorInstance.editing.view.focus();
+							})
+							.catch((error) => {
+								console.debug(
+									"Smart picker promise rejected:",
+									error
+								);
+							});
+					}
+					if (eventData.marker === "@") {
+						this.editorInstance.execute(
+							"insertItem",
+							{ email: item.email[0], label: item.label },
+							"@"
+						);
+						this.$emit("mention", {
+							email: item.email[0],
+							label: item.label,
+						});
+					}
+					if (eventData.marker === "!") {
+						this.insertTextBlock(item, false);
+					}
+				},
+				{ priority: "high" }
+			);
 
-			editor.keystrokes.set('Ctrl+Enter', (event) => {
-				logger.debug('Detected Ctrl+Enter/Cmd+Enter', event)
-				this.$emit('submit', editor)
-			})
+			editor.keystrokes.set("Ctrl+Enter", (event) => {
+				logger.debug("Detected Ctrl+Enter/Cmd+Enter", event);
+				this.$emit("submit", editor);
+			});
 
-			this.editorInstance = editor
+			this.editorInstance = editor;
 
 			if (this.focus) {
-				logger.debug('focusing TextEditor')
-				editor.editing.view.focus()
+				logger.debug("focusing TextEditor");
+				editor.editing.view.focus();
 			}
 
 			if (this.html) {
-				this.$emit('show-toolbar', editor.ui._focusableToolbarDefinitions[0].toolbarView.element)
+				this.$emit(
+					"show-toolbar",
+					editor.ui._focusableToolbarDefinitions[0].toolbarView
+						.element
+				);
 			}
 
-			this.bus.on('append-to-body-at-cursor', this.appendToBodyAtCursor)
-			this.bus.on('insert-text-block', this.insertTextBlock)
-			this.$emit('ready', editor)
+			this.bus.on("append-to-body-at-cursor", this.appendToBodyAtCursor);
+			this.bus.on("insert-text-block", this.insertTextBlock);
+			this.$emit("ready", editor);
 		},
 		onEditorInput(text) {
 			if (text !== this.value) {
-				logger.debug(`TextEditor input changed to <${text}>`)
-				this.$emit('input', text)
+				logger.debug(`TextEditor input changed to <${text}>`);
+				this.$emit("input", text);
 			}
 		},
 		appendToBodyAtCursor(toAppend) {
 			// https://ckeditor.com/docs/ckeditor5/latest/builds/guides/faq.html#where-are-the-editorinserthtml-and-editorinserttext-methods-how-to-insert-some-content
-			const viewFragment = this.editorInstance.data.processor.toView(toAppend)
-			const modelFragment = this.editorInstance.data.toModel(viewFragment)
-			this.editorInstance.model.insertContent(modelFragment)
+			const viewFragment =
+				this.editorInstance.data.processor.toView(toAppend);
+			const modelFragment =
+				this.editorInstance.data.toModel(viewFragment);
+			this.editorInstance.model.insertContent(modelFragment);
 		},
 		editorExecute(commandName, ...args) {
 			if (this.editorInstance) {
-				this.editorInstance.execute(commandName, ...args)
+				this.editorInstance.execute(commandName, ...args);
 			} else {
-				throw new Error('Impossible to execute a command before editor is ready.')
+				throw new Error(
+					"Impossible to execute a command before editor is ready."
+				);
 			}
 		},
 		insertTextBlock(textBlock, addTriggrer = true) {
 			if (addTriggrer) {
-				this.appendToBodyAtCursor('!')
+				this.appendToBodyAtCursor("!");
 			}
-			let content = textBlock.content
+			let content = textBlock.content;
 			if (!this.html) {
-				const text = new Text('html', content)
-				content = toPlain(text).value
+				const text = new Text("html", content);
+				content = toPlain(text).value;
 			}
-			this.editorInstance.execute('insertItem', { content, isHtml: this.html }, '!')
+			this.editorInstance.execute(
+				"insertItem",
+				{ content, isHtml: this.html },
+				"!"
+			);
+		},
+		setupRTLSupport() {
+			// Function to detect RTL characters
+			const isRTL = (text) => {
+				const rtlChars = /[\u0591-\u07FF\uFB1D-\uFDFD\uFE70-\uFEFC]/;
+				return rtlChars.test(text);
+			};
+
+			// Wait for editor to be ready
+			setTimeout(() => {
+				const editorElement = this.$el?.querySelector(
+					".ck-editor__editable"
+				);
+				if (!editorElement) return;
+
+				// Add input event listener for auto RTL/LTR detection
+				editorElement.addEventListener("input", (e) => {
+					const selection = window.getSelection();
+					if (!selection.rangeCount) return;
+
+					const range = selection.getRangeAt(0);
+					const container = range.commonAncestorContainer;
+					const textNode =
+						container.nodeType === Node.TEXT_NODE
+							? container
+							: container.firstChild;
+
+					if (textNode && textNode.textContent) {
+						const text = textNode.textContent;
+						const parentElement =
+							textNode.parentElement || textNode.parentNode;
+
+						if (isRTL(text)) {
+							parentElement.style.direction = "rtl";
+							parentElement.style.textAlign = "right";
+							parentElement.style.unicodeBidi = "embed";
+						} else if (
+							/^[a-zA-Z0-9\s.,!?;:'"()\-_+=<>{}[\]|\\/@#$%^&*`~]+$/.test(
+								text
+							)
+						) {
+							parentElement.style.direction = "ltr";
+							parentElement.style.textAlign = "left";
+							parentElement.style.unicodeBidi = "embed";
+						}
+					}
+				});
+
+				// Set initial direction based on content
+				const observer = new MutationObserver((mutations) => {
+					mutations.forEach((mutation) => {
+						if (mutation.type === "childList") {
+							mutation.addedNodes.forEach((node) => {
+								if (
+									node.nodeType === Node.TEXT_NODE &&
+									node.textContent
+								) {
+									const text = node.textContent;
+									const parentElement =
+										node.parentElement || node.parentNode;
+
+									if (isRTL(text)) {
+										parentElement.style.direction = "rtl";
+										parentElement.style.textAlign = "right";
+										parentElement.style.unicodeBidi =
+											"embed";
+									}
+								}
+							});
+						}
+					});
+				});
+
+				observer.observe(editorElement, {
+					childList: true,
+					subtree: true,
+					characterData: true,
+				});
+			}, 1000);
 		},
 	},
-}
+};
 </script>
 
 <style lang="scss" scoped>
-.editor-wrapper--bordered{
-	--border-offset: calc(var(--border-width-input-focused, 2px) - var(--border-width-input, 2px));
+.editor-wrapper--bordered {
+	--border-offset: calc(
+		var(--border-width-input-focused, 2px) - var(--border-width-input, 2px)
+	);
 	margin-top: var(--default-grid-baseline);
 	border: var(--border-width-input, 2px) solid var(--color-border-maxcontrast);
-	border-radius:var(--border-radius-large);
+	border-radius: var(--border-radius-large);
 	height: 200px;
 	// to align with the text input in the text block modal
 	padding: 9px;
 
 	:deep(.ck.ck-editor__editable_inline) {
-		padding:0 !important;
+		padding: 0 !important;
 	}
 	&:focus {
 		padding: calc(9px - var(--border-offset));
@@ -503,11 +676,12 @@ export default {
 Overwrite the default z-index for CKEditor
 https://github.com/ckeditor/ckeditor5/issues/1142
  */
- .ck .ck-reset {
+.ck .ck-reset {
 	background: var(--color-main-background) !important;
- }
+}
 /* Default ckeditor value of padding-inline-start, to overwrite the global styling from server */
-.ck-content ul, .ck-content ol {
+.ck-content ul,
+.ck-content ol {
 	padding-inline-start: 40px;
 }
 
@@ -520,16 +694,16 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 
 .ck-list__item {
 	.ck-off {
-		background:var(--color-main-background) !important;
+		background: var(--color-main-background) !important;
 	}
 	.ck-on {
-		background:var(--color-primary-element-light) !important;
+		background: var(--color-primary-element-light) !important;
 	}
 }
 
 .custom-item-username {
 	color: var(--color-main-text) !important;
- }
+}
 
 .link-title {
 	color: var(--color-main-text) !important;
@@ -537,23 +711,23 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 }
 
 .custom-item {
-	width : 100% !important;
-	border-radius : 8px !important;
-	padding : 4px 8px !important;
-	display :block;
-	background:var(--color-main-background)!important;
+	width: 100% !important;
+	border-radius: 8px !important;
+	padding: 4px 8px !important;
+	display: block;
+	background: var(--color-main-background) !important;
 }
 
 .custom-item:hover {
-	background:var(--color-primary-element-light)!important;
+	background: var(--color-primary-element-light) !important;
 }
 
-.link-container{
-	border-radius :8px !important;
-	padding :4px 8px !important;
-	display : block;
-	width : 100% !important;
-	background:var(--color-main-background)!important;
+.link-container {
+	border-radius: 8px !important;
+	padding: 4px 8px !important;
+	display: block;
+	width: 100% !important;
+	background: var(--color-main-background) !important;
 	img.link-icon {
 		width: 16px;
 		height: 16px;
@@ -561,29 +735,30 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 }
 
 .link-container:hover {
-	background:var(--color-primary-element-light)!important;
+	background: var(--color-primary-element-light) !important;
 }
 
 :root {
 	--ck-z-default: 10000;
-	--ck-balloon-border-width:  0;
+	--ck-balloon-border-width: 0;
 }
 
 .ck.ck-toolbar {
 	border-radius: var(--border-radius-large) !important;
 	background: none;
 	background: var(--color-main-background) !important;
-    color: var(--color-main-text) !important;
+	color: var(--color-main-text) !important;
 }
 
-.ck-rounded-corners .ck.ck-dropdown__panel, .ck.ck-dropdown__panel.ck-rounded-corners {
+.ck-rounded-corners .ck.ck-dropdown__panel,
+.ck.ck-dropdown__panel.ck-rounded-corners {
 	border-radius: var(--border-radius-large) !important;
 	overflow: visible;
 }
 
 .ck.ck-list-styles-list {
-/* our composer is very small, having menus vertically shown is better */
-	grid-template-rows: repeat(3,auto) !important;
+	/* our composer is very small, having menus vertically shown is better */
+	grid-template-rows: repeat(3, auto) !important;
 	grid-template-columns: unset !important;
 }
 
@@ -619,7 +794,8 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	height: 97%;
 }
 
-.ck.ck-button, a.ck.ck-button {
+.ck.ck-button,
+a.ck.ck-button {
 	font-size: small;
 	font-weight: normal;
 }
@@ -639,7 +815,12 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	border: 0;
 }
 
-.select, button:not(.button-vue,[class^=vs__]), .button, input[type=button], input[type=submit], input[type=reset] {
+.select,
+button:not(.button-vue, [class^="vs__"]),
+.button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
 	color: var(--color-main-text);
 }
 
@@ -653,13 +834,13 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 }
 
 .ck.ck-balloon-panel_visible {
-    border-radius: calc(var(--border-radius-large) + 1px) !important;
-    background: var(--color-main-background) !important;
-    color: var(--color-main-text) !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+	border-radius: calc(var(--border-radius-large) + 1px) !important;
+	background: var(--color-main-background) !important;
+	color: var(--color-main-text) !important;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.ck.ck-tooltip__text{
+.ck.ck-tooltip__text {
 	color: var(--color-main-text) !important;
 }
 
@@ -671,7 +852,7 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 .ck.ck-toolbar .ck-button.ck-on,
 .ck.ck-toolbar .ck-button:focus {
 	background: var(--color-primary-element-light) !important;
-    color: var(--color-main-text) !important;
+	color: var(--color-main-text) !important;
 }
 
 .ck.ck-toolbar .ck-button .ck-button__label {
@@ -687,23 +868,23 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 }
 
 /* Needs to be set to flex, bececause else it breaks the toolbar - it is shown in 2 lines instead of 1 */
-.ck.ck-splitbutton.ck-dropdown__button{
+.ck.ck-splitbutton.ck-dropdown__button {
 	display: flex !important;
 }
 
-.ck.ck-input.ck-input-text{
+.ck.ck-input.ck-input-text {
 	background: var(--color-main-background) !important;
-    color: var(--color-main-text) !important;
+	color: var(--color-main-text) !important;
 	cursor: text !important;
 }
 
 .ck.ck-labeled-field-view__input-wrapper .ck.ck-label {
 	background: var(--color-main-background) !important;
-    color: var(--color-main-text) !important;
+	color: var(--color-main-text) !important;
 }
 
 .ck.ck-button.ck-splitbutton__action {
-    margin: 0 !important;
+	margin: 0 !important;
 }
 
 .ck.ck-splitbutton.ck-dropdown__button:hover .ck-button,
@@ -725,8 +906,37 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 .ck.ck-splitbutton.ck-splitbutton_open .ck-button,
 .ck.ck-splitbutton.ck-splitbutton_open .ck-splitbutton__action,
 .ck.ck-splitbutton.ck-splitbutton_open .ck-splitbutton__arrow {
-    background: var(--color-primary-element-light) !important;
-    color: var(--color-main-text) !important;
+	background: var(--color-primary-element-light) !important;
+	color: var(--color-main-text) !important;
 }
 
+/* RTL Support for mixed content */
+.ck-editor__editable {
+	unicode-bidi: plaintext !important;
+	text-align: start !important;
+}
+
+/* Better RTL handling for mixed Persian/English text */
+.ck-editor__editable p,
+.ck-editor__editable div,
+.ck-editor__editable span {
+	unicode-bidi: isolate !important;
+	text-align: start !important;
+}
+
+/* Ensure proper text flow for mixed content */
+.ck-editor__editable * {
+	unicode-bidi: isolate !important;
+}
+
+/* Force proper direction for text nodes */
+.ck-editor__editable [style*="direction: rtl"] {
+	direction: rtl !important;
+	text-align: right !important;
+}
+
+.ck-editor__editable [style*="direction: ltr"] {
+	direction: ltr !important;
+	text-align: left !important;
+}
 </style>
