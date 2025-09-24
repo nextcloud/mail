@@ -2,6 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Work" : "Праца",
+    "Personal" : "Асабістыя",
     "Mail" : "Пошта",
     "You are reaching your mailbox quota limit for {account_email}" : "Вы дасягаеце ліміту квоты вашай паштовай скрынкі для {account_email} ",
     "Save" : "Захаваць",
