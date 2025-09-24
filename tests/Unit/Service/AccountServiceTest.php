@@ -11,6 +11,8 @@ namespace OCA\Mail\Tests\Unit\Service;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\BackgroundJob\QuotaJob;
+use OCA\Mail\BackgroundJob\SyncJob;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
@@ -163,24 +165,31 @@ class AccountServiceTest extends TestCase {
 	}
 
 	public function testSave() {
-		$account = new MailAccount();
-		$account->setUserId('user1');
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
+		$mailAccount->setUserId('user1');
 
 		$this->mapper->expects($this->once())
 			->method('save')
-			->with($account)
+			->with($mailAccount)
 			->will($this->returnArgument(0));
 
-		$this->time->expects(self::once())
+		$this->time->expects(self::exactly(2))
 			->method('getTime')
 			->willReturn(1755850409);
+
+		$this->jobList->method('has')
+			->willReturn(false);
+		$this->jobList->expects($this->exactly(5))
+			->method('scheduleAfter');
+
 		$this->config->expects(self::once())
 			->method('setUserValue')
 			->with('user1', 'mail', 'ui-heartbeat', 1755850409);
 
-		$actual = $this->accountService->save($account);
+		$actual = $this->accountService->save($mailAccount);
 
-		$this->assertEquals($account, $actual);
+		$this->assertEquals($mailAccount, $actual);
 	}
 
 	public function testUpdateSignature() {
@@ -227,5 +236,20 @@ class AccountServiceTest extends TestCase {
 			->willReturn($this->account1);
 		$connected = $this->accountService->testAccountConnection($this->user, $accountId);
 		$this->assertTrue($connected);
+	}
+
+	public function testScheduleBackgroundJobs(): void {
+		$mailAccountId = 1000;
+		$this->time->expects(self::once())
+			->method('getTime')
+			->willReturn(1755850409);
+		$this->jobList->method('has')
+			->willReturnCallback(function ($job) {
+				return $job === SyncJob::class || $job === QuotaJob::class;
+			});
+		$this->jobList->expects($this->exactly(3))
+			->method('scheduleAfter');
+
+		$this->accountService->scheduleBackgroundJobs($mailAccountId);
 	}
 }
