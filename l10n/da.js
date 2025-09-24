@@ -287,6 +287,7 @@ OC.L10N.register(
     "Sync in background" : "Synkroniser i baggrunden",
     "Outbox" : "Udbakke",
     "New message" : "Ny besked",
+    "Edit message" : "Rediger besked",
     "Draft" : "Kladde",
     "Reply" : "Besvar",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Du prøver at sende til mange modtagere i Til og/eller Cc. Overvej at bruge Bcc til at skjule modtageradresser.",
