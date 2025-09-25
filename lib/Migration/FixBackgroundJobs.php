@@ -12,6 +12,7 @@ use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Service\AccountService;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
+use function method_exists;
 
 class FixBackgroundJobs implements IRepairStep {
 	public function __construct(
@@ -30,6 +31,11 @@ class FixBackgroundJobs implements IRepairStep {
 	 */
 	#[\Override]
 	public function run(IOutput $output) {
+		// Skip if method does not exist yet during upgrade
+		if (!method_exists($this->accountService, 'scheduleBackgroundJobs')) {
+			return;
+		}
+
 		$accounts = $this->mapper->getAllAccounts();
 
 		$output->startProgress(count($accounts));
