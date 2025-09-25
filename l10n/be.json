@@ -203,6 +203,7 @@
     "Priority inbox" : "Прыярытэтныя",
     "Inbox" : "Уваходныя",
     "Sent" : "Адпраўленыя",
+    "Error while sharing file" : "Памылка пры абагульванні файла",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n новае паведамленне \nад {from}","%n новыя паведамленні \nад {from}","%n новых паведамленняў \nад {from}","%n новых паведамленняў \nад {from}"],
     "Discard changes" : "Адхіліць змены",
     "Discard unsaved changes" : "Адхіліць незахаваныя змены",
