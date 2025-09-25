@@ -135,33 +135,36 @@
 							type="tertiary-no-background"
 							class="action--primary"
 							:aria-label="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
-							:name="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
 							:close-after-click="true"
 							@click.prevent="onToggleFlagged">
 							<template #icon>
 								<IconFavorite v-if="showFavoriteIconVariant"
+									:title="t('mail', 'Mark as unfavorite')"
 									:size="20" />
 								<StarOutline v-else
+									:title="t('mail', 'Mark as favorite')"
 									:size="20" />
 							</template>
+							{{ envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite') }}
 						</NcActionButton>
 						<NcActionButton v-if="hasSeenAcl && (inlineMenuSize >= 3 || !moreActionsOpen)"
 							type="tertiary-no-background"
 							class="action--primary"
 							:aria-label="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
-							:name="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
 							:close-after-click="true"
 							@click.prevent="onToggleSeen">
 							<template #icon>
 								<EmailRead v-if="showImportantIconVariant"
+									:title="t('mail', 'Mark as unread')"
 									:size="20" />
 								<EmailUnread v-else
+									:title="t('mail', 'Mark as read')"
 									:size="20" />
 							</template>
+							{{ envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read') }}
 						</NcActionButton>
 						<NcActionButton v-if="showArchiveButton && hasArchiveAcl && (inlineMenuSize >= 4 || !moreActionsOpen)"
 							:close-after-click="true"
-							:name="t('mail', 'Archive message')"
 							:disabled="disableArchiveButton"
 							:aria-label="t('mail', 'Archive message')"
 							type="tertiary-no-background"
@@ -170,10 +173,10 @@
 								<ArchiveIcon :title="t('mail', 'Archive message')"
 									:size="20" />
 							</template>
+							{{ t('mail', 'Archive message') }}
 						</NcActionButton>
 						<NcActionButton v-if="hasDeleteAcl && (inlineMenuSize >= 5 || !moreActionsOpen)"
 							:close-after-click="true"
-							:name="t('mail', 'Delete message')"
 							:aria-label="t('mail', 'Delete message')"
 							type="tertiary-no-background"
 							@click.prevent="onDelete">
@@ -181,6 +184,7 @@
 								<DeleteIcon :title="t('mail', 'Delete message')"
 									:size="20" />
 							</template>
+							{{ t('mail', 'Delete message') }}
 						</NcActionButton>
 						<MenuEnvelope class="app-content-list-item-menu"
 							:envelope="envelope"
