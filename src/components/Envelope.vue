@@ -674,7 +674,7 @@ export default {
 					escape: false,
 				})
 			}
-			return subject
+			return escapeHtml(subject)
 		},
 		storeActions() {
 			return this.mainStore.getQuickActions()
