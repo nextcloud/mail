@@ -1,3 +1,19 @@
+## [5.5.3](https://github.com/nextcloud/mail/compare/v5.5.2...v5.5.3) (2025-09-25)
+
+
+### Bug Fixes
+
+* **deps:** Fix npm audit ([c1dbf23](https://github.com/nextcloud/mail/commit/c1dbf233d91d81ebc5282838a65cd7658357b493))
+* flip email open and email icon in evelope actions ([98f6993](https://github.com/nextcloud/mail/commit/98f6993dc2c8a8068f6b445b35346f2c7c69dd2d))
+* **l10n:** Update translations from Transifex ([539ec83](https://github.com/nextcloud/mail/commit/539ec83bd22f724ea598fd6c810ef892e3c9bb30))
+* **l10n:** Update translations from Transifex ([1069e7c](https://github.com/nextcloud/mail/commit/1069e7ca421b341c8dfdf061ce4230b352664768))
+* schedule jobs on account provisioning ([5ec7a12](https://github.com/nextcloud/mail/commit/5ec7a121847c2a110f94d929508caa143c5011a5))
+* schedule repair sync job when adding an account ([60536a0](https://github.com/nextcloud/mail/commit/60536a0ffe838c36e9127339e5962a41c89ba148))
+* **ui:** escape envelope subject line ([8339f91](https://github.com/nextcloud/mail/commit/8339f9110c4c6eb50bb1d56d2f2c00da90ed852b))
+* **ui:** handle mailbox sorting of 'all' and unknown special use ([1a8ba2c](https://github.com/nextcloud/mail/commit/1a8ba2ca6340cc74b6cf78aaa3061a77cdf818a4))
+
+
+
 ## [5.5.2](https://github.com/nextcloud/mail/compare/v5.5.1...v5.5.2) (2025-09-23)
 
 
