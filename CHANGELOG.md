@@ -1,3 +1,12 @@
+## [5.5.4](https://github.com/nextcloud/mail/compare/v5.5.3...v5.5.4) (2025-09-25)
+
+
+### Bug Fixes
+
+* **migration:** check if account service method exists ([c58f9a4](https://github.com/nextcloud/mail/commit/c58f9a48a53508effe2c6900fd2b8753a7f638b1))
+
+
+
 ## [5.5.3](https://github.com/nextcloud/mail/compare/v5.5.2...v5.5.3) (2025-09-25)
 
 
