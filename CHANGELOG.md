@@ -1,3 +1,16 @@
+## [5.5.5](https://github.com/nextcloud/mail/compare/v5.5.4...v5.5.5) (2025-09-26)
+
+
+### Bug Fixes
+
+* allow reloading the INBOX favorites page ([f1b608d](https://github.com/nextcloud/mail/commit/f1b608d1bdae85f98d85b3ecc451879c2096532b))
+* display tooltip correctly ([266f33f](https://github.com/nextcloud/mail/commit/266f33f617fb5f93c974ba18cf36a224312b69ea))
+* **l10n:** Update translations from Transifex ([265568d](https://github.com/nextcloud/mail/commit/265568df6aba02a57e0b47bb8ef6a6d8536d47a4))
+* **migration:** guard repair stop for possibly missing method ([16ce02c](https://github.com/nextcloud/mail/commit/16ce02c31790a04b50e7db3dc5b474ca80a536d6))
+* validate email address in recipient picker ([7756055](https://github.com/nextcloud/mail/commit/775605548f91086b2e5db433b10e60f49187e927))
+
+
+
 ## [5.5.4](https://github.com/nextcloud/mail/compare/v5.5.3...v5.5.4) (2025-09-25)
 
 
