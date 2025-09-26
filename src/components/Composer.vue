@@ -512,6 +512,7 @@ import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import { mapStores, mapState } from 'pinia'
 import { savePreference } from '../service/PreferenceService.js'
+import addressParser from 'address-rfc2822'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -1028,9 +1029,20 @@ export default {
 		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
 	},
 	methods: {
+		/**
+		 * Called once a user leaves the recipient picker.
+		 *
+		 * If the user is typing something that looks like a valid email address, we clear the input (return true)
+		 * because the related code in onNewAddr will add the value as a recipient.
+		 *
+		 * Otherwise, the user is still typing and we don't clear the input.
+		 *
+		 * @param {string} event usually to, cc or bcc
+		 * @return {boolean}
+		 */
 		clearOnBlur(event) {
 			if (this.recipientSearchTerms[event]) {
-				return this.recipientSearchTerms[event].includes('@')
+				return this.seemsValidEmailAddress(this.recipientSearchTerms[event])
 			}
 			return false
 		},
@@ -1332,7 +1344,7 @@ export default {
 				&& this.recipientSearchTerms[type] !== undefined
 				&& this.recipientSearchTerms[type] !== ''
 			) {
-				if (!this.recipientSearchTerms[type].includes('@')) {
+				if (!this.seemsValidEmailAddress(this.recipientSearchTerms[type])) {
 					return
 				}
 				option = {}
@@ -1503,6 +1515,9 @@ export default {
 		 * @return {{email: string, label: string}} The new option
 		 */
 		createRecipientOption(value) {
+			if (!this.seemsValidEmailAddress(value)) {
+				throw new Error('Skipping because it does not look like a valid email address')
+			}
 			return { email: value, label: value }
 		},
 
@@ -1525,6 +1540,21 @@ export default {
 			}
 
 			return option.email
+		},
+
+		/**
+		 * True when value looks like a valid email address
+		 *
+		 * @param {string} value to check if email address
+		 * @return {boolean}
+		 */
+		seemsValidEmailAddress(value) {
+			try {
+				addressParser.parse(value)
+				return true
+			} catch (error) {
+				return false
+			}
 		},
 	},
 }
