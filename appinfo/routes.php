@@ -26,6 +26,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'page#mailboxStarred',
+			'url' => '/box/starred/{id}',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'page#thread',
 			'url' => '/box/{mailboxId}/thread/{id}',
 			'verb' => 'GET'
