@@ -104,6 +104,7 @@ OC.L10N.register(
     "Draft" : "Draft",
     "Reply" : "Jibu",
     "Retry" : "Jaribu tene",
+    "First day" : "First day",
     "Message" : "Message",
     "Copy to clipboard" : "Nakili kwenye ubao wa kunakili",
     "Add" : "Ongeza",
