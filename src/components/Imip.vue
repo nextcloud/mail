@@ -157,6 +157,22 @@ function findAttendee(vEvent, email) {
 	return undefined
 }
 
+function findAttendeeByEmails(vEvent, emails) {
+	if (!vEvent || !Array.isArray(emails) || emails.length === 0) {
+		return undefined
+	}
+
+	const emailSet = new Set(emails.map(e => removeMailtoPrefix(e).toLowerCase()))
+	for (const attendee of [...vEvent.getPropertyIterator('ORGANIZER'), ...vEvent.getAttendeeIterator()]) {
+		const normalized = removeMailtoPrefix(attendee.email).toLowerCase()
+		if (emailSet.has(normalized)) {
+			return attendee
+		}
+	}
+
+	return undefined
+}
+
 export default {
 	name: 'Imip',
 	components: {
@@ -170,6 +186,10 @@ export default {
 	},
 	props: {
 		scheduling: {
+			type: Object,
+			required: true,
+		},
+		message: {
 			type: Object,
 			required: true,
 		},
@@ -197,6 +217,7 @@ export default {
 			currentUserPrincipalEmail: 'getCurrentUserPrincipalEmail',
 			clonedWriteableCalendars: 'getClonedWriteableCalendars',
 			currentUserPrincipal: 'getCurrentUserPrincipal',
+			accounts: 'getAccounts',
 		}),
 
 		/**
@@ -206,6 +227,14 @@ export default {
 		 */
 		method() {
 			return this.scheduling.method
+		},
+
+		isFromDigikala() {
+			if (!this.message.from || !this.message.from[0]) {
+				return false
+			}
+			const fromEmail = this.message.from[0].email?.toLowerCase() || ''
+			return fromEmail.endsWith('@digikala.com')
 		},
 
 		/**
@@ -305,7 +334,7 @@ export default {
 		 * @return {boolean}
 		 */
 		userIsAttendee() {
-			return !!findAttendee(this.attachedVEvent, this.currentUserPrincipalEmail)
+			return !!findAttendeeByEmails(this.attachedVEvent, this.allUserEmails)
 		},
 
 		/**
@@ -314,8 +343,36 @@ export default {
 		 * @return {string|undefined}
 		 */
 		existingParticipationStatus() {
-			const attendee = findAttendee(this.existingVEvent, this.currentUserPrincipalEmail)
+			const attendee = findAttendeeByEmails(this.existingVEvent, this.allUserEmails)
 			return attendee?.participationStatus ?? undefined
+		},
+
+		/**
+		 * All user's email addresses (principal + all mail account addresses and aliases)
+		 *
+		 * @return {string[]}
+		 */
+		allUserEmails() {
+			const emails = new Set()
+			if (this.currentUserPrincipalEmail) {
+				emails.add(this.currentUserPrincipalEmail.toLowerCase())
+			}
+			if (Array.isArray(this.accounts)) {
+				for (const account of this.accounts) {
+					if (account?.emailAddress) {
+						emails.add(String(account.emailAddress).toLowerCase())
+					}
+					if (Array.isArray(account?.aliases)) {
+						for (const alias of account.aliases) {
+							const address = alias?.alias || alias?.emailAddress
+							if (address) {
+								emails.add(String(address).toLowerCase())
+							}
+						}
+					}
+				}
+			}
+			return Array.from(emails)
 		},
 
 		/**
@@ -350,6 +407,14 @@ export default {
 			return this.t('mail', '{attendeeName} reacted to your invitation', {
 				attendeeName: name,
 			})
+		},
+
+		existingEventFetched: {
+			immediate: false,
+			async handler(fetched) {
+				if (!fetched) return
+				await this.autoCreateTentativeIfNeeded()
+			},
 		},
 
 		/**
@@ -410,6 +475,14 @@ export default {
 			},
 		},
 	},
+
+	async mounted() {
+		// If data already fetched on mount, attempt auto-create once
+		if (this.existingEventFetched) {
+			await this.autoCreateTentativeIfNeeded()
+		}
+	},
+
 	methods: {
 		async accept() {
 			await this.saveEventWithParticipationStatus(ACCEPTED)
@@ -420,6 +493,22 @@ export default {
 		async decline() {
 			await this.saveEventWithParticipationStatus(DECLINED)
 		},
+		async autoCreateTentativeIfNeeded() {
+			try {
+				if (
+					this.isRequest
+					&& !this.wasProcessed
+					&& this.userIsAttendee
+					&& this.eventIsInFuture
+					&& this.existingEventFetched
+					&& !this.isExistingEvent
+				) {
+					await this.saveEventWithParticipationStatus(TENTATIVE)
+				}
+			} catch (e) {
+				// ignore auto-create failures
+			}
+		},
 		async saveEventWithParticipationStatus(status) {
 			let vCalendar
 			if (this.isExistingEvent) {
@@ -428,7 +517,7 @@ export default {
 				vCalendar = this.attachedVCalendar
 			}
 			const vEvent = vCalendar.getFirstComponent('VEVENT')
-			const attendee = findAttendee(vEvent, this.currentUserPrincipalEmail)
+			const attendee = findAttendeeByEmails(vEvent, this.allUserEmails)
 			if (!attendee) {
 				return
 			}
