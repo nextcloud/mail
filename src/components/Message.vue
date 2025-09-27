@@ -181,7 +181,7 @@ export default {
 }
 
 .reply-buttons {
-	margin: 0 calc(var(--default-grid-baseline) * 4) calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 14);
+	margin: 5px calc(var(--default-grid-baseline) * 3) calc(var(--default-grid-baseline) * 3) calc(var(--default-grid-baseline) * 14);
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
@@ -205,6 +205,11 @@ export default {
 	&__notsuggested {
 		margin-inline-start: auto;
 	}
+
+	@media (max-width: 500px) {
+        margin-left: calc(var(--default-grid-baseline) * 3);
+        margin-right: calc(var(--default-grid-baseline) * 3);
+    }
 }
 
 @media screen and (max-width: 600px) {

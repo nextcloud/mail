@@ -206,6 +206,13 @@ export default {
 		window.addEventListener('resize', this.resizeDebounced)
 		window.addEventListener('keydown', this.handleKeyDown)
 	},
+	mounted() {
+		this.setHeaderHeight()
+		window.addEventListener('resize', this.setHeaderHeight)
+	},
+	updated() {
+		this.setHeaderHeight()
+	},
 	beforeDestroy() {
 		window.removeEventListener('resize', this.resizeDebounced)
 		window.removeEventListener('keydown', this.handleKeyDown)
@@ -224,6 +231,15 @@ export default {
 			} finally {
 				this.summaryLoading = false
 			}
+		},
+		setHeaderHeight() {
+			this.$nextTick(() => {
+				const header = this.$el.querySelector('#mail-thread-header')
+				if (header) {
+					const offset = -header.offsetHeight + 52
+					document.documentElement.style.setProperty('--mail-thread-header-offset', `${offset}px`)
+				}
+			})
 		},
 		updateParticipantsToDisplay() {
 			// Wait until everything is in place
@@ -553,7 +569,6 @@ export default {
 
 <style lang="scss">
 #mail-message {
-	margin-bottom: 30vh;
 	width: 100%;
 	max-width: 100%;
 
@@ -566,8 +581,9 @@ export default {
 
 .mail-message-body {
 	flex: 1;
-	margin-bottom: calc(var(--default-grid-baseline) * 2);
+	margin-bottom: 0;
 	position: relative;
+	border-radius: 5px;
 }
 
 #mail-thread-header {
@@ -603,6 +619,13 @@ export default {
 	}
 }
 
+@media only screen and (max-width: 500px) {
+    #mail-thread-header {
+        position: sticky !important;
+        top: var(--mail-thread-header-offset, -25px) !important;;
+    }
+}
+
 #mail-thread-header-fields {
 	// initial width
 	width: 0;
@@ -631,9 +654,14 @@ export default {
 		}
 	}
 }
+@media only screen and (max-width: 500px) {
+    #mail-thread-header-fields {
+        padding-inline-start: 48px;
+    }
+}
 @media only screen and (max-width: 1024px) {
 	#mail-thread-header-fields {
-		margin-top: -20px;
+		margin-top: -32px;
 	}
 }
 
@@ -649,6 +677,12 @@ export default {
 
 #mail-content {
 	margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 10) 0 calc(var(--default-grid-baseline) * 14);
+}
+
+@media only screen and (max-width: 500px) {
+    #mail-content {
+        margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 3) 0 calc(var(--default-grid-baseline) * 3);
+    }
 }
 
 #mail-content iframe {
