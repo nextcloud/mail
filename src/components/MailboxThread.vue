@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<AppContent pane-config-key="mail"
+	<AppContent :pane-config-key="'mail-' + layoutMode"
 		:layout="layoutMode"
 		:show-details="isThreadShown"
 		:list-min-width="horizontalListMinWidth"
