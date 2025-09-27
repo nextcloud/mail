@@ -20,31 +20,49 @@
 		:to="to"
 		:open.sync="showSubMailboxes"
 		@update:menuOpen="onMenuToggle">
-		<template #icon>
+		<template #icon="{ active }">
 			<div>
 				<ImportantIcon v-if="mailbox.isPriorityInbox"
 					:size="20" />
-				<IconAllInboxes v-else-if="mailbox.id === UNIFIED_INBOX_ID"
+				<IconAllInboxes v-else-if="mailbox.id === UNIFIED_INBOX_ID && active"
 					:size="20" />
-				<IconInbox v-else-if="mailbox.specialRole === 'inbox' && !mailbox.isPriorityInbox && filter !=='starred'"
+				<IconAllInboxesOutline v-else-if="mailbox.id === UNIFIED_INBOX_ID"
 					:size="20" />
-				<IconFavorite v-else-if="filter === 'starred'"
+				<IconInbox v-else-if="mailbox.specialRole === 'inbox' && !mailbox.isPriorityInbox && filter !=='starred' && active"
 					:size="20" />
-				<IconDraft v-else-if="mailbox.databaseId === account.draftsMailboxId"
+				<IconInboxOutline v-else-if="mailbox.specialRole === 'inbox' && !mailbox.isPriorityInbox && filter !=='starred'"
 					:size="20" />
-				<IconSend v-else-if="mailbox.databaseId === account.sentMailboxId"
+				<IconFavorite v-else-if="filter === 'starred' && active"
 					:size="20" />
-				<IconArchive v-else-if="mailbox.databaseId === account.archiveMailboxId"
+				<IconFavoriteOutline v-else-if="filter === 'starred'"
 					:size="20" />
-				<IconDelete v-else-if="mailbox.databaseId === account.trashMailboxId"
+				<IconDraft v-else-if="mailbox.databaseId === account.draftsMailboxId && active"
+					:size="20" />
+				<IconDraftOutline v-else-if="mailbox.databaseId === account.draftsMailboxId"
+					:size="20" />
+				<IconSend v-else-if="mailbox.databaseId === account.sentMailboxId && active"
+					:size="20" />
+				<IconSendOutline v-else-if="mailbox.databaseId === account.sentMailboxId"
+					:size="20" />
+				<IconArchive v-else-if="mailbox.databaseId === account.archiveMailboxId && active"
+					:size="20" />
+				<IconArchiveOutline v-else-if="mailbox.databaseId === account.archiveMailboxId"
+					:size="20" />
+				<IconDelete v-else-if="mailbox.databaseId === account.trashMailboxId && active"
+					:size="20" />
+				<IconDeleteOutline v-else-if="mailbox.databaseId === account.trashMailboxId"
 					:size="20" />
 				<IconJunk v-else-if="mailbox.databaseId === account.junkMailboxId"
 					:size="20" />
 				<AlarmIcon v-else-if="mailbox.databaseId === account.snoozeMailboxId"
 					:size="20" />
-				<IconFolderShared v-else-if="mailbox.shared"
+				<IconFolderShared v-else-if="mailbox.shared && active"
 					:size="20" />
-				<IconFolder v-else
+				<IconFolderSharedOutline v-else-if="mailbox.shared"
+					:size="20" />
+				<IconFolder v-else-if="active"
+					:size="20" />
+				<IconFolderOutline v-else
 					:size="20" />
 			</div>
 		</template>
@@ -188,22 +206,31 @@
 import { NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconEmailCheck from 'vue-material-design-icons/EmailCheckOutline.vue'
 import IconExternal from 'vue-material-design-icons/OpenInNew.vue'
-import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
-import IconFolderShared from 'vue-material-design-icons/FolderAccountOutline.vue'
+import IconFolder from 'vue-material-design-icons/Folder.vue'
+import IconFolderOutline from 'vue-material-design-icons/FolderOutline.vue'
+import IconFolderShared from 'vue-material-design-icons/FolderAccount.vue'
+import IconFolderSharedOutline from 'vue-material-design-icons/FolderAccountOutline.vue'
 import IconFolderAdd from 'vue-material-design-icons/FolderMultipleOutline.vue'
-import IconFavorite from 'vue-material-design-icons/StarOutline.vue'
+import IconFavorite from 'vue-material-design-icons/Star.vue'
+import IconFavoriteOutline from 'vue-material-design-icons/StarOutline.vue'
 import IconFolderRename from 'vue-material-design-icons/FolderEditOutline.vue'
 import IconFolderSync from 'vue-material-design-icons/FolderSyncOutline.vue'
-import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
+import IconDelete from 'vue-material-design-icons/TrashCan.vue'
+import IconDeleteOutline from 'vue-material-design-icons/TrashCanOutline.vue'
 import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
-import IconDraft from 'vue-material-design-icons/PencilOutline.vue'
-import IconArchive from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
-import IconInbox from 'vue-material-design-icons/HomeOutline.vue'
+import IconDraft from 'vue-material-design-icons/Pencil.vue'
+import IconDraftOutline from 'vue-material-design-icons/PencilOutline.vue'
+import IconArchive from 'vue-material-design-icons/ArchiveArrowDown.vue'
+import IconArchiveOutline from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
+import IconInbox from 'vue-material-design-icons/Home.vue'
+import IconInboxOutline from 'vue-material-design-icons/HomeOutline.vue'
 import IconJunk from 'vue-material-design-icons/Fire.vue'
-import IconAllInboxes from 'vue-material-design-icons/InboxMultipleOutline.vue'
+import IconAllInboxes from 'vue-material-design-icons/InboxMultiple.vue'
+import IconAllInboxesOutline from 'vue-material-design-icons/InboxMultipleOutline.vue'
 import EraserIcon from 'vue-material-design-icons/Eraser.vue'
 import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
-import IconSend from 'vue-material-design-icons/SendOutline.vue'
+import IconSend from 'vue-material-design-icons/Send.vue'
+import IconSendOutline from 'vue-material-design-icons/SendOutline.vue'
 import IconWrench from 'vue-material-design-icons/Wrench.vue'
 import MoveMailboxModal from './MoveMailboxModal.vue'
 import { PRIORITY_INBOX_ID, UNIFIED_INBOX_ID } from '../store/constants.js'
@@ -230,7 +257,9 @@ export default {
 		ActionCheckbox,
 		ActionInput,
 		IconSend,
+		IconSendOutline,
 		IconDelete,
+		IconDeleteOutline,
 		IconEmailCheck,
 		IconExternal,
 		IconFolderAdd,
@@ -238,13 +267,20 @@ export default {
 		IconFolderSync,
 		IconInfo,
 		IconAllInboxes,
+		IconAllInboxesOutline,
 		IconFavorite,
+		IconFavoriteOutline,
 		IconFolder,
+		IconFolderOutline,
 		IconFolderShared,
+		IconFolderSharedOutline,
 		IconDraft,
+		IconDraftOutline,
 		IconArchive,
+		IconArchiveOutline,
 		IconJunk,
 		IconInbox,
+		IconInboxOutline,
 		IconWrench,
 		EraserIcon,
 		ImportantIcon,
