@@ -202,6 +202,11 @@ export default {
 	beforeMount() {
 		this.loadEditorTranslations(getLanguage())
 	},
+	mounted() {
+		this.$nextTick(() => {
+			this.setupRTLSupport()
+		})
+	},
 	methods: {
 		getLink(text) {
 			const results = searchProvider(text)
@@ -445,6 +450,70 @@ export default {
 				content = toPlain(text).value
 			}
 			this.editorInstance.execute('insertItem', { content, isHtml: this.html }, '!')
+		},
+		setupRTLSupport() {
+			// Function to detect RTL characters
+			const isRTL = (text) => {
+				const rtlChars = /[\u0591-\u07FF\uFB1D-\uFDFD\uFE70-\uFEFC]/
+				return rtlChars.test(text)
+			}
+
+			// Wait for editor to be ready
+			setTimeout(() => {
+				const editorElement = this.$el?.querySelector('.ck-editor__editable')
+				if (!editorElement) return
+
+				// Add input event listener for auto RTL/LTR detection
+				editorElement.addEventListener('input', (e) => {
+					const selection = window.getSelection()
+					if (!selection.rangeCount) return
+
+					const range = selection.getRangeAt(0)
+					const container = range.commonAncestorContainer
+					const textNode = container.nodeType === Node.TEXT_NODE ? container : container.firstChild
+
+					if (textNode && textNode.textContent) {
+						const text = textNode.textContent
+						const parentElement = textNode.parentElement || textNode.parentNode
+
+						if (isRTL(text)) {
+							parentElement.style.direction = 'rtl'
+							parentElement.style.textAlign = 'right'
+							parentElement.style.unicodeBidi = 'embed'
+						} else if (/^[a-zA-Z0-9\s.,!?;:'"()\-_+=<>{}[\]|\\/@#$%^&*`~]+$/.test(text)) {
+							parentElement.style.direction = 'ltr'
+							parentElement.style.textAlign = 'left'
+							parentElement.style.unicodeBidi = 'embed'
+						}
+					}
+				})
+
+				// Set initial direction based on content
+				const observer = new MutationObserver((mutations) => {
+					mutations.forEach((mutation) => {
+						if (mutation.type === 'childList') {
+							mutation.addedNodes.forEach((node) => {
+								if (node.nodeType === Node.TEXT_NODE && node.textContent) {
+									const text = node.textContent
+									const parentElement = node.parentElement || node.parentNode
+
+									if (isRTL(text)) {
+										parentElement.style.direction = 'rtl'
+										parentElement.style.textAlign = 'right'
+										parentElement.style.unicodeBidi = 'embed'
+									}
+								}
+							})
+						}
+					})
+				})
+
+				observer.observe(editorElement, {
+					childList: true,
+					subtree: true,
+					characterData: true
+				})
+			}, 1000)
 		},
 	},
 }
@@ -727,6 +796,35 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 .ck.ck-splitbutton.ck-splitbutton_open .ck-splitbutton__arrow {
     background: var(--color-primary-element-light) !important;
     color: var(--color-main-text) !important;
+}
+/* RTL Support for mixed content */
+.ck-editor__editable {
+	unicode-bidi: plaintext !important;
+	text-align: start !important;
+}
+
+/* Better RTL handling for mixed Persian/English text */
+.ck-editor__editable p,
+.ck-editor__editable div,
+.ck-editor__editable span {
+	unicode-bidi: isolate !important;
+	text-align: start !important;
+}
+
+/* Ensure proper text flow for mixed content */
+.ck-editor__editable * {
+	unicode-bidi: isolate !important;
+}
+
+/* Force proper direction for text nodes */
+.ck-editor__editable [style*="direction: rtl"] {
+	direction: rtl !important;
+	text-align: right !important;
+}
+
+.ck-editor__editable [style*="direction: ltr"] {
+	direction: ltr !important;
+	text-align: left !important;
 }
 
 </style>
