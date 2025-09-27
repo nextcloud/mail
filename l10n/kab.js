@@ -41,6 +41,7 @@ OC.L10N.register(
     "Loading …" : "Asali ...",
     "Delete folder" : "Kkes akaram",
     "Rename" : "Beddel isem",
+    "Draft" : "Arewway",
     "Reply" : "Err",
     "Retry" : "Ɛreḍ tikkelt-nniḍen",
     "Message" : "Izen",

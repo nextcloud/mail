@@ -427,7 +427,7 @@
     "Moving message" : "Movendo a mensaxe",
     "Used quota: {quota}% ({limit})" : "Cota utilizada: {quota}% ({limit})",
     "Used quota: {quota}%" : "Cota utilizada: {quota}%",
-    "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Non foi posíbel crear unha caixa de correo. É probable que o nome conteña caracteres non válidos. Probe con outro nome.",
+    "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Non foi posíbel crear unha caixa de correo. É probábel que o nome conteña caracteres non válidos. Probe con outro nome.",
     "Remove account" : "Retirar a conta",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "A conta de {email} e os datos de correo na memoria tobo retiraranse de Nextcloud, mais non do seu provedor de correo.",
     "Remove {email}" : "Retirar {email}",
