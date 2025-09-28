@@ -62,6 +62,7 @@ OC.L10N.register(
     "Bcc" : "Bcc",
     "Subject" : "Тэма",
     "Subject …" : "Тэма …",
+    "Write message …" : "Напішыце паведамленне …",
     "Saving draft …" : "Захаванне чарнавіка …",
     "Error saving draft" : "Памылка пры захаванні чарнавіка",
     "Draft saved" : "Чарнавік захаваны",
