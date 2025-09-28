@@ -35,6 +35,7 @@
     "Testing authentication" : "Test af autentificering",
     "Awaiting user consent" : "Afventer brugerens samtykke",
     "Account created. Please follow the pop-up instructions to link your Google account" : "Konto oprettet. Følg venligst pop-up-instruktionerne for at linke din Google-konto.",
+    "Loading account" : "Indlæser konto",
     "Account updated. Please follow the pop-up instructions to reconnect your Google account" : "Konto opdateret. Følg venligst pop-up-instruktionerne for at genoprette forbindelsen til din Google-konto.",
     "Account updated" : "Konto opdateret",
     "IMAP server is not reachable" : "IMAP server er ikke tilgængelig",
