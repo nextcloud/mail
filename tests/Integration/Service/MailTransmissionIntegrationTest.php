@@ -13,6 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestUser;
 use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
+use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
@@ -140,6 +141,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 			Server::get(PerformanceLogger::class),
 			Server::get(AliasesService::class),
 			Server::get(TransmissionService::class),
+			Server::get(IMailManager::class)
 		);
 	}
 
