@@ -62,6 +62,7 @@ class MailTransmissionTest extends TestCase {
 		$this->performanceLogger = $this->createMock(PerformanceLogger::class);
 		$this->aliasService = $this->createMock(AliasesService::class);
 		$this->transmissionService = $this->createMock(TransmissionService::class);
+		$this->mailManager = $this->createMock(IMailManager::class);
 
 		$this->transmission = new MailTransmission(
 			$this->imapClientFactory,
@@ -73,6 +74,7 @@ class MailTransmissionTest extends TestCase {
 			$this->performanceLogger,
 			$this->aliasService,
 			$this->transmissionService,
+			$this->mailManager,
 		);
 	}
 
@@ -397,6 +399,35 @@ class MailTransmissionTest extends TestCase {
 		$replyMessage = new DbMessage();
 		$replyMessage->setMessageId('abc');
 
+		$this->messageMapper->expects(self::once())
+			->method('save');
+
+		$this->transmission->saveLocalDraft(new Account($mailAccount), $localMessage);
+	}
+
+	public function testCreateDraftsMailboxAndSave(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(10);
+		$mailAccount->setUserId('alice');
+		$mailAccount->setName('Alice');
+		$mailAccount->setEmail('alice@mail.example');
+		$mailAccount->setDraftsMailboxId(null);
+		$localMessage = new LocalMessage();
+		$localMessage->setType(LocalMessage::TYPE_DRAFT);
+		$localMessage->setAccountId($mailAccount->getId());
+		$localMessage->setAliasId(1);
+		$localMessage->setSendAt(1000);
+		$localMessage->setSubject('Subject');
+		$localMessage->setBodyHtml('<p>Body</p>');
+		$localMessage->setHtml(true);
+		$to = new Recipient();
+		$to->setLabel('Bob');
+		$to->setEmail('bob@mail.example');
+		$to->setType(Recipient::TYPE_TO);
+		$localMessage->setRecipients([$to]);
+
+		$this->mailManager->expects(self::once())
+			->method('createMailbox');
 		$this->messageMapper->expects(self::once())
 			->method('save');
 

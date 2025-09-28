@@ -28,6 +28,7 @@ use Horde_Smtp_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
+use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Mailbox;
@@ -67,6 +68,7 @@ class MailTransmission implements IMailTransmission {
 		private PerformanceLogger $performanceLogger,
 		private AliasesService $aliasesService,
 		private TransmissionService $transmissionService,
+		private IMailManager $mailManager,
 	) {
 	}
 
@@ -231,12 +233,7 @@ class MailTransmission implements IMailTransmission {
 			$transport = new Horde_Mail_Transport_Null();
 			$mail->send($transport, false, false);
 			$perfLogger->step('create IMAP draft message');
-			// save the message in the drafts folder
-			$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
-			if ($draftsMailboxId === null) {
-				throw new ClientException('No drafts mailbox configured');
-			}
-			$draftsMailbox = $this->mailboxMapper->findById($draftsMailboxId);
+			$draftsMailbox = $this->findOrCreateDraftsMailbox($account);
 			$this->messageMapper->save(
 				$client,
 				$draftsMailbox,
@@ -256,6 +253,20 @@ class MailTransmission implements IMailTransmission {
 		$perfLogger->step('emit post local draft save event');
 
 		$perfLogger->end();
+	}
+
+	private function findOrCreateDraftsMailbox(Account $account): Mailbox {
+		$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
+
+		if ($draftsMailboxId === null) {
+			return $this->mailManager->createMailbox(
+				$account,
+				'Drafts',
+				[Horde_Imap_Client::SPECIALUSE_DRAFTS]
+			);
+		}
+
+		return $this->mailboxMapper->findById($draftsMailboxId);
 	}
 
 	/**
