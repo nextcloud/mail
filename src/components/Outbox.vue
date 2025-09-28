@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<AppContent pane-config-key="mail"
+	<AppContent pane-config-key="mail-outbox"
 		:show-details="isMessageShown"
 		@update:showDetails="hideMessage">
 		<OutboxMessageContent />
