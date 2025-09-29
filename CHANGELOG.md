@@ -1,3 +1,15 @@
+## [5.5.6](https://github.com/nextcloud/mail/compare/v5.5.5...v5.5.6) (2025-09-29)
+
+
+### Bug Fixes
+
+* **l10n:** Update translations from Transifex ([d4780e8](https://github.com/nextcloud/mail/commit/d4780e8de4585aeb4565384555f2b36ce7cb2efd))
+* **l10n:** Update translations from Transifex ([abb458c](https://github.com/nextcloud/mail/commit/abb458c7d5166a08c87773540b0c00994bad3720))
+* mail pane resetting between layout changes ([92a6b3d](https://github.com/nextcloud/mail/commit/92a6b3dc648477bdfde5033d3e481f6b6235e504))
+* **ui:** use filled icons for active navigation mailboxes ([fa8546d](https://github.com/nextcloud/mail/commit/fa8546d53a45ba003f39b634db4cba08fef2cb2f))
+
+
+
 ## [5.5.5](https://github.com/nextcloud/mail/compare/v5.5.4...v5.5.5) (2025-09-26)
 
 
