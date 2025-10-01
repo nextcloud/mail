@@ -279,7 +279,7 @@ export default {
 	bottom:0;
 	background: linear-gradient(0deg, var(--color-main-background), var(--color-main-background) 90%, rgba(255, 255, 255, 0));
 
-	@media (max-width: 500px) {
+	@media (max-width: 600px) {
         padding: 10px 12px 10px 12px;
     }
 }

@@ -206,7 +206,7 @@ export default {
 		margin-inline-start: auto;
 	}
 
-	@media (max-width: 500px) {
+	@media (max-width: 600px) {
         margin-left: calc(var(--default-grid-baseline) * 3);
         margin-right: calc(var(--default-grid-baseline) * 3);
     }

@@ -236,7 +236,7 @@ export default {
 			this.$nextTick(() => {
 				const header = this.$el.querySelector('#mail-thread-header')
 				if (header) {
-					const offset = -header.offsetHeight + 52
+					const offset = -header.offsetHeight + 51
 					document.documentElement.style.setProperty('--mail-thread-header-offset', `${offset}px`)
 				}
 			})
@@ -619,7 +619,7 @@ export default {
 	}
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 1024px) {
     #mail-thread-header {
         position: sticky !important;
         top: var(--mail-thread-header-offset, -25px) !important;;
@@ -654,7 +654,7 @@ export default {
 		}
 	}
 }
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 600px) {
     #mail-thread-header-fields {
         padding-inline-start: 48px;
     }
@@ -679,7 +679,7 @@ export default {
 	margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 10) 0 calc(var(--default-grid-baseline) * 14);
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 600px) {
     #mail-content {
         margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 3) 0 calc(var(--default-grid-baseline) * 3);
     }
@@ -729,9 +729,10 @@ export default {
 }
 
 .avatar-more {
-	display: inline;
+	display: flex;
 	background-color: var(--color-background-dark);
 	border-radius: var(--border-radius-large);
+	align-items: center;
 	cursor: pointer;
 }
 

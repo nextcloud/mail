@@ -438,6 +438,11 @@ export default {
 			const { envelope } = this.$refs
 			const envelopeWidth = (envelope && envelope.clientWidth) || 250
 			const spaceToFill = envelopeWidth - 500 + this.recomputeMenuSize
+
+			if (envelopeWidth < 400) {
+				return 0
+			}
+
 			return Math.floor(spaceToFill / 44)
 		},
 		account() {
@@ -998,7 +1003,6 @@ export default {
 			text-overflow: ellipsis;
 			overflow: hidden;
 		}
-
 	}
 
 	.right {
@@ -1182,6 +1186,39 @@ export default {
 		font-weight: bold;
 	}
 
+	.envelope__header {
+		display: flex;
+		align-items: center;
+
+		.left {
+			display: flex;
+			align-items: center;
+			min-width: 0;     /* umožní textu správně zkrátit */
+			flex: 1 1 auto;  /* roztáhne se co to jde */
+			gap: 8px;        /* mezera mezi textem a unsubscribe */
+		}
+
+		.envelope__header__left__sender-subject-tags {
+			min-width: 0;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		.envelope__header__left__unsubscribe {
+			flex-shrink: 0;   /* aby se nikdy nezmenšovalo */
+		}
+
+		.right {
+			flex-shrink: 0;
+			margin-left: auto; /* drží se vpravo */
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+	}
+
+
 	.tag-group__label {
 		margin: 0 calc(var(--default-grid-baseline) * 2);
 		z-index: 2;
@@ -1226,11 +1263,5 @@ export default {
 		display: inline;
 		align-items: center;
 	}
-	@media only screen and (max-width: 400px) {
-		.sender {
-			text-overflow: ellipsis;
-			overflow: hidden;
-			width: 180px;
-		}
-	}
+
 </style>
