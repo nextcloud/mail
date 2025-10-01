@@ -264,45 +264,45 @@
 			<NcAppSettingsSection id="keyboard-shortcut-settings" :name="t('mail', 'Keyboard shortcuts')">
 				<dl>
 					<div>
-						<dt><kbd>C</kbd></dt>
+						<dt><NcKbd symbol="C" /></dt>
 						<dd>{{ t('mail', 'Compose new message') }}</dd>
 					</div>
 					<div>
-						<dt><kbd>←</kbd></dt>
+						<dt><NcKbd symbol="←" /></dt>
 						<dd>{{ t('mail', 'Newer message') }}</dd>
 					</div>
 					<div>
-						<dt><kbd>→</kbd></dt>
+						<dt><NcKbd symbol="→" /></dt>
 						<dd>{{ t('mail', 'Older message') }}</dd>
 					</div>
 
 					<div>
-						<dt><kbd>S</kbd></dt>
+						<dt><NcKbd symbol="S" /></dt>
 						<dd>{{ t('mail', 'Toggle star') }}</dd>
 					</div>
 					<div>
-						<dt><kbd>U</kbd></dt>
+						<dt><NcKbd symbol="U" /></dt>
 						<dd>{{ t('mail', 'Toggle unread') }}</dd>
 					</div>
 					<div>
-						<dt><kbd>A</kbd></dt>
+						<dt><NcKbd symbol="A" /></dt>
 						<dd>{{ t('mail', 'Archive') }}</dd>
 					</div>
 					<div>
-						<dt><kbd>Del</kbd></dt>
+						<dt><NcKbd symbol="Del" /></dt>
 						<dd>{{ t('mail', 'Delete') }}</dd>
 					</div>
 
 					<div>
-						<dt><kbd>Ctrl</kbd> + <kbd>F</kbd></dt>
+						<dt><NcKbd symbol="Ctrl" /><NcKbd symbol="F" /></dt>
 						<dd>{{ t('mail', 'Search') }}</dd>
 					</div>
 					<div>
-						<dt><kbd>Ctrl</kbd> + <kbd>Enter</kbd></dt>
+						<dt><NcKbd symbol="Ctrl" /><NcKbd symbol="Enter" /></dt>
 						<dd>{{ t('mail', 'Send') }}</dd>
 					</div>
 					<div>
-						<dt><kbd>R</kbd></dt>
+						<dt><NcKbd symbol="R" /></dt>
 						<dd>{{ t('mail', 'Refresh') }}</dd>
 					</div>
 				</dl>
@@ -348,6 +348,7 @@ import { showError } from '@nextcloud/dialogs'
 import CompactMode from 'vue-material-design-icons/ReorderHorizontal.vue'
 
 import { NcAppSettingsSection, NcAppSettingsDialog, NcButton, NcCheckboxRadioSwitch, NcDialog, NcInputField } from '@nextcloud/vue'
+import NcKbd from '@nextcloud/vue/dist/Components/NcKbd.js'
 import TextEditor from './TextEditor.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconEmail from 'vue-material-design-icons/EmailOutline.vue'
@@ -381,6 +382,7 @@ export default {
 		NcCheckboxRadioSwitch,
 		NcAppSettingsDialog,
 		NcAppSettingsSection,
+		NcKbd,
 		CompactMode,
 		VerticalSplit,
 		HorizontalSplit,
