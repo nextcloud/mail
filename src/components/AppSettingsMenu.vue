@@ -343,29 +343,30 @@
 </template>
 
 <script>
-import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
-import CompactMode from 'vue-material-design-icons/ReorderHorizontal.vue'
-
-import { NcAppSettingsSection, NcAppSettingsDialog, NcButton, NcCheckboxRadioSwitch, NcDialog, NcInputField } from '@nextcloud/vue'
+import { generateUrl } from '@nextcloud/router'
+import { NcAppSettingsDialog, NcAppSettingsSection, NcButton, NcCheckboxRadioSwitch, NcDialog, NcInputField } from '@nextcloud/vue'
 import NcKbd from '@nextcloud/vue/dist/Components/NcKbd.js'
-import TextEditor from './TextEditor.vue'
-import IconAdd from 'vue-material-design-icons/Plus.vue'
-import IconEmail from 'vue-material-design-icons/EmailOutline.vue'
-import IconLock from 'vue-material-design-icons/LockOutline.vue'
-import IconClose from 'vue-material-design-icons/Close.vue'
-import IconCheck from 'vue-material-design-icons/Check.vue'
-import VerticalSplit from 'vue-material-design-icons/FormatColumns.vue'
-import HorizontalSplit from 'vue-material-design-icons/ViewSplitHorizontal.vue'
-import Logger from '../logger.js'
-import SmimeCertificateModal from './smime/SmimeCertificateModal.vue'
-import TrustedSenders from './TrustedSenders.vue'
-import InternalAddress from './InternalAddress.vue'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
-import useMainStore from '../store/mainStore.js'
-import { mapStores, mapState } from 'pinia'
-import List from './textBlocks/List.vue'
 import mitt from 'mitt'
+import { mapState, mapStores } from 'pinia'
+import IconCheck from 'vue-material-design-icons/Check.vue'
+import IconClose from 'vue-material-design-icons/Close.vue'
+import IconEmail from 'vue-material-design-icons/EmailOutline.vue'
+import VerticalSplit from 'vue-material-design-icons/FormatColumns.vue'
+import IconLock from 'vue-material-design-icons/LockOutline.vue'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
+import CompactMode from 'vue-material-design-icons/ReorderHorizontal.vue'
+import HorizontalSplit from 'vue-material-design-icons/ViewSplitHorizontal.vue'
+
+import Logger from '../logger.js'
+
+import InternalAddress from './InternalAddress.vue'
+import SmimeCertificateModal from './smime/SmimeCertificateModal.vue'
+import TextEditor from './TextEditor.vue'
+import useMainStore from '../store/mainStore.js'
+import List from './textBlocks/List.vue'
+import TrustedSenders from './TrustedSenders.vue'
 
 export default {
 	name: 'AppSettingsMenu',

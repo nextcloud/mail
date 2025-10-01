@@ -5,6 +5,7 @@
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
+
 import useMainStore from '../store/mainStore.js'
 
 const fetchAvailableLanguages = async function() {

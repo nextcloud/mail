@@ -79,12 +79,13 @@
 
 <script>
 import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconRename from 'vue-material-design-icons/PencilOutline.vue'
+
 import logger from '../logger.js'
 import AliasForm from './AliasForm.vue'
 import useMainStore from '../store/mainStore.js'
-import { mapStores } from 'pinia'
 
 export default {
 	name: 'AliasSettings',

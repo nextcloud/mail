@@ -15,9 +15,10 @@
 </template>
 
 <script>
+import { mapStores } from 'pinia'
+
 import logger from '../logger.js'
 import MailboxPicker from './MailboxPicker.vue'
-import { mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
 
 export default {

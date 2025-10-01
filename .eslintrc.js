@@ -25,5 +25,18 @@ module.exports = {
 		'perfectionist/sort-enums': 'error',
 		'perfectionist/sort-interfaces': 'error',
 		'perfectionist/sort-object-types': 'error',
+		'sort-imports': [
+			'error',
+			{
+				'ignoreDeclarationSort': true
+			}
+		],
+		'import/order': [
+			'error',
+			{
+				'groups': ['builtin', 'external', 'internal'],
+				'alphabetize': { 'order': 'asc', 'caseInsensitive': true }
+			}
+		]
 	},
 }

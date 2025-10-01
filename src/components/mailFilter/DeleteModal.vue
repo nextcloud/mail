@@ -11,11 +11,11 @@
 </template>
 
 <script>
-import { NcDialog } from '@nextcloud/vue'
 // eslint-disable-next-line import/no-unresolved
 import IconCancel from '@mdi/svg/svg/cancel.svg?raw'
 // eslint-disable-next-line import/no-unresolved
 import IconCheck from '@mdi/svg/svg/check.svg?raw'
+import { NcDialog } from '@nextcloud/vue'
 
 export default {
 	name: 'DeleteModal',

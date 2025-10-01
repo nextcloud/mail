@@ -30,11 +30,13 @@
 </template>
 
 <script>
-import ListItem from './ListItem.vue'
-import { NcDialog, NcButton } from '@nextcloud/vue'
+import { NcButton, NcDialog } from '@nextcloud/vue'
 import { mapState } from 'pinia'
 import IconCheck from 'vue-material-design-icons/Check.vue'
+
+import ListItem from './ListItem.vue'
 import useMainStore from '../../store/mainStore.js'
+
 export default {
 	name: 'TextBlockModal',
 	components: {

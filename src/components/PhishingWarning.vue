@@ -28,8 +28,8 @@
 	</div>
 </template>
 <script>
-import IconAlertOutline from 'vue-material-design-icons/AlertOutline.vue'
 import { NcButton } from '@nextcloud/vue'
+import IconAlertOutline from 'vue-material-design-icons/AlertOutline.vue'
 
 export default {
 

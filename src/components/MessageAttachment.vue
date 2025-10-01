@@ -72,20 +72,18 @@
 
 <script>
 
-import { formatFileSize } from '@nextcloud/files'
-import { translate as t } from '@nextcloud/l10n'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
-import { mixin as onClickOutside } from 'vue-on-click-outside'
-
-import { NcActions as Actions, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-
-import IconAdd from 'vue-material-design-icons/Plus.vue'
+import { formatFileSize } from '@nextcloud/files'
+import { translate as t } from '@nextcloud/l10n'
+import { NcActionButton as ActionButton, NcActions as Actions, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconArrow from 'vue-material-design-icons/ArrowLeft.vue'
 import IconSave from 'vue-material-design-icons/FolderOutline.vue'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconDownload from 'vue-material-design-icons/TrayArrowDown.vue'
-import Logger from '../logger.js'
+import { mixin as onClickOutside } from 'vue-on-click-outside'
 
+import Logger from '../logger.js'
 import { downloadAttachment, saveAttachmentToFiles } from '../service/AttachmentService.js'
 import { getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
 

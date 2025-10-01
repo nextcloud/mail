@@ -20,22 +20,23 @@
 </template>
 
 <script>
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import { mapStores } from 'pinia'
+
+import CreateModal from './CreateModal.vue'
 import UpdateModal from './UpdateModal.vue'
 import logger from '../../logger.js'
-import { mapStores } from 'pinia'
-import useMailFilterStore from '../../store/mailFilterStore.ts'
-import useMainStore from '../../store/mainStore.js'
-import { showError, showSuccess } from '@nextcloud/dialogs'
 import {
 	MailFilter,
 	MailFilterActionMailbox,
 	MailFilterActionStop,
-	MailFilterOperator,
 	MailFilterCondition,
 	MailFilterConditionField,
 	MailFilterConditionOperator,
+	MailFilterOperator,
 } from '../../models/mailFilter.ts'
-import CreateModal from './CreateModal.vue'
+import useMailFilterStore from '../../store/mailFilterStore.ts'
+import useMainStore from '../../store/mainStore.js'
 
 export default {
 	name: 'MailFilterFromEnvelope',

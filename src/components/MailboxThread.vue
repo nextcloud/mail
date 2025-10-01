@@ -116,18 +116,18 @@
 
 <script>
 import { NcAppContent as AppContent, NcAppContentList as AppContentList, NcButton as ButtonVue, NcPopover as Popover } from '@nextcloud/vue'
-
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
-import SectionTitle from './SectionTitle.vue'
-import mitt from 'mitt'
 import addressParser from 'address-rfc2822'
+import mitt from 'mitt'
+import { mapStores } from 'pinia'
+import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
 
 import infiniteScroll from '../directives/infinite-scroll.js'
-import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
 import logger from '../logger.js'
 import Mailbox from './Mailbox.vue'
-import SearchMessages from './SearchMessages.vue'
 import NoMessageSelected from './NoMessageSelected.vue'
+import SearchMessages from './SearchMessages.vue'
+import SectionTitle from './SectionTitle.vue'
 import Thread from './Thread.vue'
 import {
 	FOLLOW_UP_MAILBOX_ID,
@@ -135,13 +135,12 @@ import {
 	UNIFIED_ACCOUNT_ID,
 	UNIFIED_INBOX_ID,
 } from '../store/constants.js'
+import useMainStore from '../store/mainStore.js'
 import {
 	priorityImportantQuery,
 	priorityOtherQuery,
 } from '../util/priorityInbox.js'
 import { detect, html } from '../util/text.js'
-import useMainStore from '../store/mainStore.js'
-import { mapStores } from 'pinia'
 
 const START_MAILBOX_DEBOUNCE = 5 * 1000
 

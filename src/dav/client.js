@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import * as webdav from 'webdav'
-import axios from '@nextcloud/axios'
-import memoize from 'lodash/fp/memoize.js'
-import { generateRemoteUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'
+import axios from '@nextcloud/axios'
+import { generateRemoteUrl } from '@nextcloud/router'
+import memoize from 'lodash/fp/memoize.js'
+import * as webdav from 'webdav'
 
 export const getClient = memoize((service) => {
 	// Add this so the server knows it is an request from the browser

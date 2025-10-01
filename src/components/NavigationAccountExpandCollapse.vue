@@ -9,9 +9,10 @@
 
 <script>
 import { NcAppNavigationItem as AppNavigationItem } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
+
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
-import { mapStores } from 'pinia'
 
 export default {
 	name: 'NavigationAccountExpandCollapse',

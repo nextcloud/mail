@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import logger from '../logger.js'
 import { isPgpgMessage } from '../crypto/pgp.js'
+import logger from '../logger.js'
 
 export default {
 	name: 'MailvelopeEditor',

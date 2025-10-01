@@ -64,6 +64,7 @@
 <script>
 import { NcButton, NcSelect } from '@nextcloud/vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
+
 import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
 
 export default {

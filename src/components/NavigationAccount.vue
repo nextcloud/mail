@@ -85,21 +85,21 @@
 </template>
 
 <script>
-import { NcAppNavigationCaption, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { DialogBuilder, showError } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
+import { NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading, NcAppNavigationCaption } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
 import { Fragment } from 'vue-frag'
+import MenuDown from 'vue-material-design-icons/ChevronDown.vue'
+import MenuUp from 'vue-material-design-icons/ChevronUp.vue'
+import IconSettings from 'vue-material-design-icons/CogOutline.vue'
+import IconFolderAdd from 'vue-material-design-icons/FolderOutline.vue'
+import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
+import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 
 import logger from '../logger.js'
 import { fetchQuota } from '../service/AccountService.js'
-import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
-import IconSettings from 'vue-material-design-icons/CogOutline.vue'
-import IconFolderAdd from 'vue-material-design-icons/FolderOutline.vue'
-import MenuDown from 'vue-material-design-icons/ChevronDown.vue'
-import MenuUp from 'vue-material-design-icons/ChevronUp.vue'
-import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
-import { DialogBuilder, showError } from '@nextcloud/dialogs'
-import { mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
 
 export default {

@@ -69,16 +69,14 @@
 </template>
 
 <script>
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import { getLanguage } from '@nextcloud/l10n'
+import { NcButton, NcDialog, NcLoadingIcon, NcRichText, NcSelect } from '@nextcloud/vue'
+import { mapState } from 'pinia'
 import ArrowRight from 'vue-material-design-icons/ArrowRight.vue'
 import ContentCopy from 'vue-material-design-icons/ContentCopy.vue'
 
-import { showError, showSuccess } from '@nextcloud/dialogs'
-
-import { NcButton, NcDialog, NcLoadingIcon, NcRichText, NcSelect } from '@nextcloud/vue'
-import { getLanguage } from '@nextcloud/l10n'
-
 import { translateText } from '../service/translationService.js'
-import { mapState } from 'pinia'
 import useMainStore from '../store/mainStore.js'
 
 export default {

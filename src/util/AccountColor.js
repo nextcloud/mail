@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import md5 from 'md5'
 import conv from 'color-convert'
+import md5 from 'md5'
 
 export const calculateAccountColor = (name) => {
 	const hashed = md5(name)

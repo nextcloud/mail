@@ -2,14 +2,14 @@
  * SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import curry from 'lodash/fp/curry.js'
-import ical from 'ical.js'
-import { getClient } from '../dav/client.js'
-import Axios from '@nextcloud/axios'
-
-import Logger from '../logger.js'
-import { generateRemoteUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'
+import Axios from '@nextcloud/axios'
+import { generateRemoteUrl } from '@nextcloud/router'
+import ical from 'ical.js'
+import curry from 'lodash/fp/curry.js'
+
+import { getClient } from '../dav/client.js'
+import Logger from '../logger.js'
 import { uidToHexColor } from '../util/calendarColor.js'
 
 const canWrite = (properties) => {

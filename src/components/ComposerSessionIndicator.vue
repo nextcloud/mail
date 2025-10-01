@@ -38,12 +38,13 @@
 </template>
 
 <script>
-import { NcActions, NcActionButton } from '@nextcloud/vue'
-import PencilIcon from 'vue-material-design-icons/PencilOutline.vue'
+import { NcActionButton, NcActions } from '@nextcloud/vue'
+import { mapState, mapStores } from 'pinia'
 import ArrowExpandIcon from 'vue-material-design-icons/ArrowExpand.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
+import PencilIcon from 'vue-material-design-icons/PencilOutline.vue'
+
 import useMainStore from '../store/mainStore.js'
-import { mapStores, mapState } from 'pinia'
 
 export default {
 	name: 'ComposerSessionIndicator',

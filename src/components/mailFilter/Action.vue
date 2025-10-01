@@ -30,11 +30,12 @@
 	</div>
 </template>
 <script>
-import ActionFileinto from './ActionFileinto.vue'
-import ActionAddflag from './ActionAddflag.vue'
-import ActionStop from './ActionStop.vue'
 import { NcButton, NcSelect, NcTextField } from '@nextcloud/vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
+
+import ActionAddflag from './ActionAddflag.vue'
+import ActionFileinto from './ActionFileinto.vue'
+import ActionStop from './ActionStop.vue'
 
 export default {
 	name: 'Action',

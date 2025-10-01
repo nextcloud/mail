@@ -46,18 +46,19 @@
 
 <script>
 import iframeResize from '@iframe-resizer/parent'
-import PrintScout from 'printscout'
-import { trustSender } from '../service/TrustedSenderService.js'
-import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
-import { NcActionButton as ActionButton, NcActions as Actions } from '@nextcloud/vue'
-import IconImage from 'vue-material-design-icons/ImageSizeSelectActual.vue'
-import IconMail from 'vue-material-design-icons/EmailOutline.vue'
-import IconDomain from 'vue-material-design-icons/Domain.vue'
-import { needsTranslation } from '../service/AiIntergrationsService.js'
 import { loadState } from '@nextcloud/initial-state'
+import { NcActionButton as ActionButton, NcActions as Actions } from '@nextcloud/vue'
+import PrintScout from 'printscout'
+import IconDomain from 'vue-material-design-icons/Domain.vue'
+import IconMail from 'vue-material-design-icons/EmailOutline.vue'
+import IconImage from 'vue-material-design-icons/ImageSizeSelectActual.vue'
 
 import logger from '../logger.js'
 import MdnRequest from './MdnRequest.vue'
+import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
+import { needsTranslation } from '../service/AiIntergrationsService.js'
+import { trustSender } from '../service/TrustedSenderService.js'
+
 const scout = new PrintScout()
 
 export default {

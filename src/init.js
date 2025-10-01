@@ -2,12 +2,12 @@
  * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-import { fixAccountId } from './service/AccountService.js'
 import { loadState } from '@nextcloud/initial-state'
-import { fetchAvailableLanguages } from './service/translationService.js'
 
-import useOutboxStore from './store/outboxStore.js'
+import { fixAccountId } from './service/AccountService.js'
+import { fetchAvailableLanguages } from './service/translationService.js'
 import useMainStore from './store/mainStore.js'
+import useOutboxStore from './store/outboxStore.js'
 
 export default function initAfterAppCreation() {
 	console.debug('Init after app creation')

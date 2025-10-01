@@ -101,20 +101,20 @@
 </template>
 
 <script>
-import { createEvent, DateTimeValue, TextProperty, AttendeeProperty } from '@nextcloud/calendar-js'
-import { getTimezoneManager } from '@nextcloud/timezones'
-import { NcDateTimePicker as DatetimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
-import RecipientListItem from './RecipientListItem.vue'
-import jstz from 'jstz'
-
-import { getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
-import logger from '../logger.js'
-import CalendarPickerOption from './CalendarPickerOption.vue'
+import { AttendeeProperty, DateTimeValue, TextProperty, createEvent } from '@nextcloud/calendar-js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
+import { getTimezoneManager } from '@nextcloud/timezones'
+import { NcDateTimePicker as DatetimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
+import jstz from 'jstz'
 import { mapState, mapStores } from 'pinia'
-import useMainStore from '../store/mainStore.js'
+
+import logger from '../logger.js'
+import CalendarPickerOption from './CalendarPickerOption.vue'
+import RecipientListItem from './RecipientListItem.vue'
 import { generateEventData } from '../service/AiIntergrationsService.js'
+import { getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'EventModal',

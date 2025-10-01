@@ -16,8 +16,9 @@
 
 <script>
 import debounce from 'lodash/fp/debounce.js'
-import useMainStore from '../store/mainStore.js'
 import { mapStores } from 'pinia'
+
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'TrashRetentionSettings',

@@ -54,18 +54,19 @@
 </template>
 
 <script>
-import { NcActionButton, NcListItem, NcButton } from '@nextcloud/vue'
-import UpdateModal from './UpdateModal.vue'
-import { randomId } from '../../util/randomId.js'
-import logger from '../../logger.js'
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import { NcActionButton, NcButton, NcListItem } from '@nextcloud/vue'
+import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 import { mapStores } from 'pinia'
+import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
+
+import DeleteModal from './DeleteModal.vue'
+import UpdateModal from './UpdateModal.vue'
+import logger from '../../logger.js'
+import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
 import useMailFilterStore from '../../store/mailFilterStore.ts'
 import useMainStore from '../../store/mainStore.js'
-import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
-import DeleteModal from './DeleteModal.vue'
-import { showError, showSuccess } from '@nextcloud/dialogs'
-import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
-import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
+import { randomId } from '../../util/randomId.js'
 
 export default {
 	name: 'MailFilters',

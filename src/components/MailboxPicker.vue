@@ -61,20 +61,20 @@
 	</Modal>
 </template>
 <script>
-import { NcModal as Modal, NcLoadingIcon as IconLoading, NcButton as ButtonVue } from '@nextcloud/vue'
+import { translate as t } from '@nextcloud/l10n'
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcModal as Modal } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
+import IconArchive from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
 import IconBreadcrumb from 'vue-material-design-icons/ChevronRight.vue'
+import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
 import IconInbox from 'vue-material-design-icons/HomeOutline.vue'
 import IconDraft from 'vue-material-design-icons/PencilOutline.vue'
 import IconSent from 'vue-material-design-icons/SendOutline.vue'
-import IconArchive from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
 import IconTrash from 'vue-material-design-icons/TrashCanOutline.vue'
-import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
 
-import { translate as t } from '@nextcloud/l10n'
 import { translate as translateMailboxName } from '../i18n/MailboxTranslator.js'
-import { mailboxHasRights } from '../util/acl.js'
-import { mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
+import { mailboxHasRights } from '../util/acl.js'
 
 export default {
 	name: 'MailboxPicker',

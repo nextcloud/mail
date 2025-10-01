@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { FOLLOW_UP_TAG_LABEL } from '../constants.js'
 import { getCalendarHome } from '../../service/caldavService.js'
 import toCalendar from '../../util/calendar.js'
+import { FOLLOW_UP_TAG_LABEL } from '../constants.js'
 
 export default function mainStore() {
 	return {

@@ -4,10 +4,11 @@
  */
 
 import { defineStore } from 'pinia'
-import * as MailFilterService from '../service/MailFilterService.js'
-import { randomId } from '../util/randomId.js'
+
 import logger from '../logger'
 import { MailFilter } from '../models/mailFilter'
+import * as MailFilterService from '../service/MailFilterService.js'
+import { randomId } from '../util/randomId.js'
 
 export default defineStore('mailFilter', {
 	state: () => {

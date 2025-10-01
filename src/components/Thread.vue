@@ -63,24 +63,24 @@
 </template>
 
 <script>
-import { NcAppContentDetails as AppContentDetails, NcPopover as Popover } from '@nextcloud/vue'
 import { showError } from '@nextcloud/dialogs'
-
-import { prop, uniqBy } from 'ramda'
-import debounce from 'lodash/fp/debounce.js'
 import { loadState } from '@nextcloud/initial-state'
+import moment from '@nextcloud/moment'
+import { NcAppContentDetails as AppContentDetails, NcPopover as Popover } from '@nextcloud/vue'
+import debounce from 'lodash/fp/debounce.js'
+import { mapStores } from 'pinia'
+import { prop, uniqBy } from 'ramda'
 
-import { summarizeThread } from '../service/AiIntergrationsService.js'
-import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory.js'
-import Loading from './Loading.vue'
 import logger from '../logger.js'
+
 import Error from './Error.vue'
+import Loading from './Loading.vue'
 import RecipientBubble from './RecipientBubble.vue'
 import ThreadEnvelope from './ThreadEnvelope.vue'
 import ThreadSummary from './ThreadSummary.vue'
-import { mapStores } from 'pinia'
+import { summarizeThread } from '../service/AiIntergrationsService.js'
 import useMainStore from '../store/mainStore.js'
-import moment from '@nextcloud/moment'
+import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory.js'
 
 export default {
 	name: 'Thread',

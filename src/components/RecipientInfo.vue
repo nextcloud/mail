@@ -61,6 +61,7 @@
 import { mapGetters } from 'pinia'
 import IconArrowDown from 'vue-material-design-icons/ArrowDown.vue'
 import IconArrowUp from 'vue-material-design-icons/ArrowUp.vue'
+
 import Avatar from './Avatar.vue'
 import DisplayContactDetails from './DisplayContactDetails.vue'
 import useMainStore from '../store/mainStore.js'

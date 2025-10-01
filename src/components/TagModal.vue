@@ -49,14 +49,15 @@
 </template>
 
 <script>
-import { NcModal as Modal, NcActionText as ActionText, NcActionInput as ActionInput, NcLoadingIcon as IconLoading, NcButton } from '@nextcloud/vue'
+import { showError, showInfo } from '@nextcloud/dialogs'
+import { NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading, NcModal as Modal, NcButton } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
+import IconTag from 'vue-material-design-icons/TagOutline.vue'
+
 import DeleteTagModal from './DeleteTagModal.vue'
 import TagItem from './TagItem.vue'
-import IconTag from 'vue-material-design-icons/TagOutline.vue'
-import IconAdd from 'vue-material-design-icons/Plus.vue'
-import { showError, showInfo } from '@nextcloud/dialogs'
 import { hiddenTags } from './tags.js'
-import { mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
 
 function randomColor() {

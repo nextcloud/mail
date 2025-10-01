@@ -15,9 +15,10 @@
 </template>
 
 <script>
-import { NcButton } from '@nextcloud/vue'
 import { getLanguage } from '@nextcloud/l10n'
+import { NcButton } from '@nextcloud/vue'
 import { mapState } from 'pinia'
+
 import useMainStore from '../store/mainStore.js'
 
 export default {

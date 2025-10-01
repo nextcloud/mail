@@ -43,26 +43,27 @@
 </template>
 
 <script>
-import EmptyMailbox from './EmptyMailbox.vue'
-import SectionTitle from './SectionTitle.vue'
-import EnvelopeList from './EnvelopeList.vue'
-import LoadingSkeleton from './LoadingSkeleton.vue'
-import Error from './Error.vue'
-import { findIndex, propEq } from 'ramda'
+import { showError, showWarning } from '@nextcloud/dialogs'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
+import { mapStores } from 'pinia'
+import { findIndex, propEq } from 'ramda'
+
+import EmptyMailbox from './EmptyMailbox.vue'
+import EmptyMailboxSection from './EmptyMailboxSection.vue'
+import EnvelopeList from './EnvelopeList.vue'
+import Error from './Error.vue'
 import Loading from './Loading.vue'
-import logger from '../logger.js'
+import LoadingSkeleton from './LoadingSkeleton.vue'
+import SectionTitle from './SectionTitle.vue'
 import MailboxLockedError from '../errors/MailboxLockedError.js'
 import MailboxNotCachedError from '../errors/MailboxNotCachedError.js'
 import { matchError } from '../errors/match.js'
-import { wait } from '../util/wait.js'
-import { mailboxHasRights } from '../util/acl.js'
-import EmptyMailboxSection from './EmptyMailboxSection.vue'
-import { showError, showWarning } from '@nextcloud/dialogs'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError.js'
-import { mapStores } from 'pinia'
+import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
+import { mailboxHasRights } from '../util/acl.js'
+import { wait } from '../util/wait.js'
 
 export default {
 	name: 'Mailbox',

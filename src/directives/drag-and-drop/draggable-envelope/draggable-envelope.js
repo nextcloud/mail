@@ -2,8 +2,9 @@
  * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-import dragEventBus from '../util/dragEventBus.js'
 import defer from 'lodash/defer.js'
+
+import dragEventBus from '../util/dragEventBus.js'
 
 export class DraggableEnvelope {
 

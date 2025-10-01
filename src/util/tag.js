@@ -4,6 +4,7 @@
  */
 
 import { translate as t } from '@nextcloud/l10n'
+
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 
 /**

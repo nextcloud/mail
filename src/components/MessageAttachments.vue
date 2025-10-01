@@ -59,20 +59,20 @@
 </template>
 
 <script>
-import { basename } from '@nextcloud/paths'
-import { NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
+import { basename } from '@nextcloud/paths'
 import { generateUrl } from '@nextcloud/router'
-import { saveAttachmentsToFiles } from '../service/AttachmentService.js'
-
-import MessageAttachment from './MessageAttachment.vue'
-import Logger from '../logger.js'
-
-import Download from 'vue-material-design-icons/TrayArrowDown.vue'
-import CloudDownload from 'vue-material-design-icons/CloudDownloadOutline.vue'
+import { NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import ChevronDown from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
+import CloudDownload from 'vue-material-design-icons/CloudDownloadOutline.vue'
+import Download from 'vue-material-design-icons/TrayArrowDown.vue'
+
+import Logger from '../logger.js'
+
+import MessageAttachment from './MessageAttachment.vue'
+import { saveAttachmentsToFiles } from '../service/AttachmentService.js'
 
 export default {
 	name: 'MessageAttachments',

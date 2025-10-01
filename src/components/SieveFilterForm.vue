@@ -28,8 +28,9 @@
 
 <script>
 import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-import IconCheck from 'vue-material-design-icons/Check.vue'
 import { mapStores } from 'pinia'
+import IconCheck from 'vue-material-design-icons/Check.vue'
+
 import useMainStore from '../store/mainStore.js'
 
 export default {

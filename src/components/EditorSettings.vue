@@ -27,9 +27,10 @@
 </template>
 
 <script>
+import { mapStores } from 'pinia'
+
 import Logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
-import { mapStores } from 'pinia'
 
 export default {
 	name: 'EditorSettings',

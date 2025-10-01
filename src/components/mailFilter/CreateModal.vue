@@ -37,15 +37,16 @@
 <script>
 import {
 	NcButton,
-	NcLoadingIcon,
 	NcCheckboxRadioSwitch,
+	NcLoadingIcon,
 	NcModal,
 } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import IconCheck from 'vue-material-design-icons/Check.vue'
+
+import { MailFilterConditionField } from '../../models/mailFilter.ts'
 import useMailFilterStore from '../../store/mailFilterStore.ts'
 import useMainStore from '../../store/mainStore.js'
-import IconCheck from 'vue-material-design-icons/Check.vue'
-import { MailFilterConditionField } from '../../models/mailFilter.ts'
 
 export default {
 	name: 'CreateModal',

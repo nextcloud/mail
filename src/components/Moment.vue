@@ -8,6 +8,7 @@
 
 <script>
 import moment from '@nextcloud/moment'
+
 import { shortRelativeDatetime } from '../util/shortRelativeDatetime.js'
 
 export default {

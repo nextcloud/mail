@@ -47,16 +47,16 @@
 </template>
 
 <script>
-import AirplaneIcon from 'vue-material-design-icons/Airplane.vue'
-import ArrowIcon from 'vue-material-design-icons/ArrowRight.vue'
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import moment from '@nextcloud/moment'
 import ical from 'ical.js'
 import md5 from 'md5'
-import moment from '@nextcloud/moment'
-import { showError, showSuccess } from '@nextcloud/dialogs'
+import AirplaneIcon from 'vue-material-design-icons/Airplane.vue'
+import ArrowIcon from 'vue-material-design-icons/ArrowRight.vue'
 
 import CalendarImport from './CalendarImport.vue'
-import { importCalendarEvent } from '../../service/DAVService.js'
 import logger from '../../logger.js'
+import { importCalendarEvent } from '../../service/DAVService.js'
 
 export default {
 	name: 'FlightReservation',

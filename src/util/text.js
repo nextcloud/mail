@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import { convert } from 'html-to-text'
 import isString from 'lodash/fp/isString.js'
 import { curry } from 'ramda'
-import { convert } from 'html-to-text'
 
 /**
  * @type {Text}
