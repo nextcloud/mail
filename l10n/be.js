@@ -119,6 +119,7 @@ OC.L10N.register(
     "Forward message as attachment" : "Пераслаць паведамленне як далучэнне",
     "Unnamed" : "Без назвы",
     "Download Zip" : "Спампаваць Zip",
+    "Quoted text" : "Цытаваны тэкст",
     "Move" : "Перамясціць",
     "Used quota: {quota}% ({limit})" : "Выкарыстана квота: {quota}% ({limit})",
     "Used quota: {quota}%" : "Выкарыстана квота: {quota}%",
