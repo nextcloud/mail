@@ -35,81 +35,44 @@
 			</NcAppSettingsSection>
 
 			<NcAppSettingsSection id="appearance-and-accessibility" :name="t('mail', 'General')">
-				<h4>{{ t('mail', 'Layout') }}</h4>
-				<NcCheckboxRadioSwitch value="no-split"
-					:button-variant="true"
-					name="mail-layout"
-					type="radio"
-					:checked="layoutMode"
-					button-variant-grouped="vertical"
-					@update:checked="setLayout('no-split')">
-					<template #icon>
-						<CompactMode :size="20" />
-					</template>
-					{{ t('mail', 'List') }}
-				</NcCheckboxRadioSwitch>
-				<NcCheckboxRadioSwitch value="vertical-split"
-					:button-variant="true"
-					name="mail-layout"
-					type="radio"
-					:checked="layoutMode"
-					button-variant-grouped="vertical"
-					@update:checked="setLayout('vertical-split')">
-					<template #icon>
-						<VerticalSplit :size="20" />
-					</template>
-					{{ t('mail', 'Vertical split') }}
-				</NcCheckboxRadioSwitch>
-				<NcCheckboxRadioSwitch value="horizontal-split"
-					:button-variant="true"
-					name="mail-layout"
-					type="radio"
-					:checked="layoutMode"
-					button-variant-grouped="vertical"
-					@update:checked="setLayout('horizontal-split')">
-					<template #icon>
-						<HorizontalSplit :size="20" />
-					</template>
-					{{ t('mail', 'Horizontal split') }}
-				</NcCheckboxRadioSwitch>
+				<NcRadioGroup v-model="layoutMode" :label="t('mail', 'Layout')">
+					<NcRadioGroupButton :label="t('mail', 'List')" value="no-split">
+						<template #icon>
+							<CompactMode :size="20" />
+						</template>
+					</NcRadioGroupButton>
+					<NcRadioGroupButton :label="t('mail', 'Horizontal split')" value="vertical-split">
+						<template #icon>
+							<VerticalSplit :size="20" />
+						</template>
+					</NcRadioGroupButton>
+					<NcRadioGroupButton :label="t('mail', 'Horizontal split')" value="horizontal-split">
+						<template #icon>
+							<HorizontalSplit :size="20" />
+						</template>
+					</NcRadioGroupButton>
+				</NcRadioGroup>
 
-				<h4>{{ t('mail', 'Message View Mode') }}</h4>
-				<div class="sorting">
-					<NcCheckboxRadioSwitch type="radio"
-						name="message_view_mode_radio"
-						value="threaded"
-						:checked="layoutMessageView"
-						@update:checked="setLayoutMessageView('threaded')">
-						{{ t('mail', 'Show all messages in thread') }}
-					</NcCheckboxRadioSwitch>
-					<NcCheckboxRadioSwitch type="radio"
-						name="message_view_mode_radio"
-						value="singleton"
-						:checked="layoutMessageView"
-						@update:checked="setLayoutMessageView('singleton')">
-						{{ t('mail', 'Show only the selected message') }}
-					</NcCheckboxRadioSwitch>
-				</div>
+				<br>
 
-				<h4>{{ t('mail', 'Sorting') }}</h4>
-				<div class="sorting">
-					<NcCheckboxRadioSwitch class="sorting__switch"
-						:checked="sortOrder"
-						value="newest"
-						name="order_radio"
-						type="radio"
-						@update:checked="onSortByDate">
-						{{ t('mail', 'Newest') }}
-					</NcCheckboxRadioSwitch>
-					<NcCheckboxRadioSwitch class="sorting__switch"
-						:checked="sortOrder"
-						value="oldest"
-						name="order_radio"
-						type="radio"
-						@update:checked="onSortByDate">
-						{{ t('mail', 'Oldest') }}
-					</NcCheckboxRadioSwitch>
-				</div>
+				<NcRadioGroup :model-value="sortOrder" :label="t('mail', 'Sorting')" @update:modelValue="onSortByDate">
+					<NcRadioGroupButton :label="t('mail', 'Newest')" value="newest" />
+					<NcRadioGroupButton :label="t('mail', 'Oldest')" value="oldest" />
+				</NcRadioGroup>
+
+				<br>
+
+				<NcRadioGroup v-model="layoutMessageView" :label="t('mail', 'Message view mode')">
+					<NcRadioGroupButton :label="t('mail', 'Show all messages in thread')" value="threaded" />
+					<NcRadioGroupButton :label="t('mail', 'Show only the selected message')" value="singleton" />
+				</NcRadioGroup>
+
+				<br>
+
+				<NcRadioGroup :model-value="useBottomReplies" :label="t('mail', 'Reply text position')" @update:modelValue="onToggleButtonReplies">
+					<NcRadioGroupButton :label="t('mail', 'Top')" :value="false" />
+					<NcRadioGroupButton :label="t('mail', 'Bottom')" :value="true" />
+				</NcRadioGroup>
 
 				<h4>{{ t('mail', 'Search in body') }}</h4>
 				<p class="app-settings">
@@ -118,16 +81,6 @@
 						:loading="loadingPrioritySettings"
 						@update:checked="onToggleSearchPriorityBody">
 						{{ prioritySettingsText }}
-					</NcCheckboxRadioSwitch>
-				</p>
-
-				<h4>{{ t('mail', 'Reply text position') }}</h4>
-				<p class="app-settings reply-settings">
-					<NcCheckboxRadioSwitch id="bottom-reply-enabled"
-						:checked="useBottomReplies"
-						:loading="loadingReplySettings"
-						@update:checked="onToggleButtonReplies">
-						{{ replySettingsText }}
 					</NcCheckboxRadioSwitch>
 				</p>
 
@@ -345,7 +298,7 @@
 <script>
 import { showError } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
-import { NcAppSettingsDialog, NcAppSettingsSection, NcButton, NcCheckboxRadioSwitch, NcDialog, NcInputField } from '@nextcloud/vue'
+import { NcAppSettingsDialog, NcAppSettingsSection, NcButton, NcCheckboxRadioSwitch, NcDialog, NcInputField, NcRadioGroup, NcRadioGroupButton } from '@nextcloud/vue'
 import NcKbd from '@nextcloud/vue/dist/Components/NcKbd.js'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 import mitt from 'mitt'
@@ -384,6 +337,8 @@ export default {
 		NcAppSettingsDialog,
 		NcAppSettingsSection,
 		NcKbd,
+		NcRadioGroup,
+		NcRadioGroupButton,
 		CompactMode,
 		VerticalSplit,
 		HorizontalSplit,
@@ -408,8 +363,6 @@ export default {
 			optOutSettingsText: t('mail', 'Activate'),
 			loadingOptOutSettings: false,
 			loadingInternalAddresses: false,
-			// eslint-disable-next-line
-			replySettingsText: t('mail', 'Put my text to the bottom of a reply instead of on top of it.'),
 			loadingReplySettings: false,
 			// eslint-disable-next-line
 			autoTaggingText: t('mail', 'Mark as important'),
@@ -461,11 +414,21 @@ export default {
 		allowNewMailAccounts() {
 			return this.mainStore.getPreference('allow-new-accounts', true)
 		},
-		layoutMode() {
-			return this.mainStore.getPreference('layout-mode', 'vertical-split')
+		layoutMode: {
+			get() {
+				return this.mainStore.getPreference('layout-mode', 'vertical-split')
+			},
+			set(value) {
+				this.setLayout(value)
+			},
 		},
-		layoutMessageView() {
-			return this.mainStore.getPreference('layout-message-view')
+		layoutMessageView: {
+			get() {
+				return this.mainStore.getPreference('layout-message-view')
+			},
+			set(value) {
+				this.setLayoutMessageView(value)
+			},
 		},
 	},
 	watch: {
@@ -575,13 +538,13 @@ export default {
 					this.loadingOptOutSettings = false
 				})
 		},
-		async onSortByDate(e) {
+		async onSortByDate(value) {
 			const previousValue = this.sortOrder
 			try {
-				this.sortOrder = e
+				this.sortOrder = value
 				await this.mainStore.savePreference({
 					key: 'sort-order',
-					value: e,
+					value,
 				})
 				this.mainStore.removeAllEnvelopesMutation()
 			} catch (error) {
@@ -737,14 +700,6 @@ p.app-settings {
 .section-title {
 	margin-top: calc(var(--default-grid-baseline) * 5);
 	margin-bottom: calc(var(--default-grid-baseline) * 2);
-}
-
-.sorting {
-	display: flex;
-	width: 100%;
-	&__switch{
-		width: 50%;
-	}
 }
 
 .mail-creation-button {
