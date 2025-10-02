@@ -298,7 +298,7 @@
 <script>
 import { showError } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
-import { NcAppSettingsDialog, NcAppSettingsSection, NcButton, NcCheckboxRadioSwitch, NcDialog, NcRadioGroup, NcRadioGroupButton, NcInputField } from '@nextcloud/vue'
+import { NcAppSettingsDialog, NcAppSettingsSection, NcButton, NcCheckboxRadioSwitch, NcDialog, NcInputField, NcRadioGroup, NcRadioGroupButton } from '@nextcloud/vue'
 import NcKbd from '@nextcloud/vue/dist/Components/NcKbd.js'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 import mitt from 'mitt'
