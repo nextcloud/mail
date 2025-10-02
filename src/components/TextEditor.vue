@@ -572,9 +572,9 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 
 .ck.ck-toolbar {
 	border-radius: var(--border-radius-large) !important;
-	background: none;
 	background: var(--color-main-background) !important;
     color: var(--color-main-text) !important;
+	border: 1px solid var(--color-text-maxcontrast) !important;
 }
 
 .ck-rounded-corners .ck.ck-dropdown__panel, .ck.ck-dropdown__panel.ck-rounded-corners {
