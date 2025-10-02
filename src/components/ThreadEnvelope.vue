@@ -746,21 +746,17 @@ export default {
 			}
 		},
 		scrollToThread(threadId) {
-			this.$nextTick(() => {
-				const threadElement = document.querySelector(`[data-thread-id="${threadId}"]`)
-				if (threadElement) {
-					threadElement.scrollIntoView({ behavior: 'smooth', block: 'top' })
-				}
-			})
+			const threadElement = document.querySelector(`[data-thread-id="${threadId}"]`)
+			if (threadElement) {
+				threadElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+			}
 		},
 
 		scrollToEnvelope() {
-			this.$nextTick(() => {
-				const envelopeElement = this.$refs.envelope
-				if (envelopeElement) {
-					envelopeElement.scrollIntoView({ behavior: 'smooth', block: 'top' })
-				}
-			})
+			const envelopeElement = this.$refs.envelope
+			if (envelopeElement) {
+				envelopeElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+			}
 		},
 		async fetchItineraries() {
 			// Sanity check before actually making the request
