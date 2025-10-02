@@ -16,10 +16,11 @@
 </template>
 
 <script>
-import NcAvatar from '@nextcloud/vue/components/NcAvatar'
 import { generateUrl } from '@nextcloud/router'
-import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
+import NcAvatar from '@nextcloud/vue/components/NcAvatar'
+
 import logger from '../logger.js'
+import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
 
 export default {
 	name: 'Avatar',

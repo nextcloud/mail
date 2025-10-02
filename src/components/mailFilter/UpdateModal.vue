@@ -76,13 +76,14 @@
 	</NcModal>
 </template>
 <script>
-import { NcButton, NcCheckboxRadioSwitch, NcModal, NcTextField, NcLoadingIcon } from '@nextcloud/vue'
-import Test from './Test.vue'
-import Operator from './Operator.vue'
-import { randomId } from '../../util/randomId.js'
-import Action from './Action.vue'
+import { NcButton, NcCheckboxRadioSwitch, NcLoadingIcon, NcModal, NcTextField } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
+
+import Action from './Action.vue'
+import Operator from './Operator.vue'
+import Test from './Test.vue'
 import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
+import { randomId } from '../../util/randomId.js'
 
 export default {
 	name: 'UpdateModal',

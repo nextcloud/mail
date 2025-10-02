@@ -107,23 +107,25 @@
 </template>
 
 <script>
-import AccountForm from '../components/AccountForm.vue'
-import EditorSettings from '../components/EditorSettings.vue'
-import AccountDefaultsSettings from '../components/AccountDefaultsSettings.vue'
-import SignatureSettings from '../components/SignatureSettings.vue'
-import AliasSettings from '../components/AliasSettings.vue'
-import Settings from './quickActions/Settings.vue'
-import { NcButton, NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSettingsSection } from '@nextcloud/vue'
+import { NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSettingsSection, NcButton } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
+
+import CertificateSettings from './CertificateSettings.vue'
+import OutOfOfficeForm from './OutOfOfficeForm.vue'
+import SearchSettings from './SearchSettings.vue'
 import SieveAccountForm from './SieveAccountForm.vue'
 import SieveFilterForm from './SieveFilterForm.vue'
-import OutOfOfficeForm from './OutOfOfficeForm.vue'
-import CertificateSettings from './CertificateSettings.vue'
-import SearchSettings from './SearchSettings.vue'
 import TrashRetentionSettings from './TrashRetentionSettings.vue'
+import AccountDefaultsSettings from '../components/AccountDefaultsSettings.vue'
+import AccountForm from '../components/AccountForm.vue'
+import AliasSettings from '../components/AliasSettings.vue'
+import EditorSettings from '../components/EditorSettings.vue'
+import SignatureSettings from '../components/SignatureSettings.vue'
 import logger from '../logger.js'
-import MailFilters from './mailFilter/MailFilters.vue'
 import useMainStore from '../store/mainStore.js'
-import { mapStores } from 'pinia'
+
+import MailFilters from './mailFilter/MailFilters.vue'
+import Settings from './quickActions/Settings.vue'
 
 export default {
 	name: 'AccountSettings',

@@ -34,13 +34,14 @@
 </template>
 
 <script>
-import { NcSelect, NcButton, NcNoteCard } from '@nextcloud/vue'
-import { compareSmimeCertificates } from '../util/smime.js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import Logger from '../logger.js'
 import moment from '@nextcloud/moment'
+import { NcButton, NcNoteCard, NcSelect } from '@nextcloud/vue'
+import { mapState, mapStores } from 'pinia'
+
+import Logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
-import { mapStores, mapState } from 'pinia'
+import { compareSmimeCertificates } from '../util/smime.js'
 
 export default {
 	name: 'CertificateSettings',

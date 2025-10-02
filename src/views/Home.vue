@@ -20,17 +20,17 @@
 <script>
 import { NcContent } from '@nextcloud/vue'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
+import { mapState, mapStores } from 'pinia'
 
 import '../../css/mail.scss'
 import '../../css/mobile.scss'
 
-import { testAccountConnection } from '../service/AccountService.js'
-import logger from '../logger.js'
+import ComposerSessionIndicator from '../components/ComposerSessionIndicator.vue'
 import MailboxThread from '../components/MailboxThread.vue'
 import Navigation from '../components/Navigation.vue'
 import Outbox from '../components/Outbox.vue'
-import ComposerSessionIndicator from '../components/ComposerSessionIndicator.vue'
-import { mapState, mapStores } from 'pinia'
+import logger from '../logger.js'
+import { testAccountConnection } from '../service/AccountService.js'
 import useMainStore from '../store/mainStore.js'
 
 export default {

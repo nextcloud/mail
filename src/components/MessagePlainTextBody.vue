@@ -17,10 +17,11 @@
 </template>
 
 <script>
+import { loadState } from '@nextcloud/initial-state'
+
 import MdnRequest from './MdnRequest.vue'
 import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
 import { needsTranslation } from '../service/AiIntergrationsService.js'
-import { loadState } from '@nextcloud/initial-state'
 
 const regFirstParagraph = /(.+\n\r?)+(\n\r?)+/
 

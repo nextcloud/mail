@@ -114,8 +114,9 @@
 
 <script>
 import { NcActions, NcCounterBubble, NcVNodes } from '@nextcloud/vue'
-import EnvelopeSingleClickActions from './EnvelopeSingleClickActions.vue'
 import DotsHorizontal from 'vue-material-design-icons/DotsHorizontal.vue'
+
+import EnvelopeSingleClickActions from './EnvelopeSingleClickActions.vue'
 
 export default {
 	name: 'EnvelopeSkeleton',

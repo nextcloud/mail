@@ -300,25 +300,24 @@
 </template>
 
 <script>
-import moment from '@nextcloud/moment'
-
-import NcDialog from '@nextcloud/vue/components/NcDialog'
-import NcSelect from '@nextcloud/vue/components/NcSelect'
-import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
-import NcButton from '@nextcloud/vue/components/NcButton'
-import NcCheckboxRadioSwitch
-	from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
-import FilterVariantIcon from 'vue-material-design-icons/FilterVariant.vue'
-import Close from 'vue-material-design-icons/Close.vue'
 import IconClose from '@mdi/svg/svg/close.svg'
 import IconMagnify from '@mdi/svg/svg/magnify.svg'
 import { translate as t } from '@nextcloud/l10n'
-
+import moment from '@nextcloud/moment'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch
+	from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import debouncePromise from 'debounce-promise'
-import { findRecipient } from '../service/AutocompleteService.js'
 import uniqBy from 'lodash/fp/uniqBy.js'
-import { hiddenTags } from './tags.js'
 import { mapStores } from 'pinia'
+import Close from 'vue-material-design-icons/Close.vue'
+import FilterVariantIcon from 'vue-material-design-icons/FilterVariant.vue'
+
+import { hiddenTags } from './tags.js'
+import { findRecipient } from '../service/AutocompleteService.js'
 import useMainStore from '../store/mainStore.js'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)

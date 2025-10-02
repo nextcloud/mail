@@ -270,28 +270,29 @@
 </template>
 
 <script>
-import ButtonVue from '@nextcloud/vue/components/NcButton'
-import GmailAdminOauthSettings from './GmailAdminOauthSettings.vue'
-import logger from '../../logger.js'
-import MicrosoftAdminOauthSettings from './MicrosoftAdminOauthSettings.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import ProvisioningSettings from './ProvisioningSettings.vue'
-import AntiSpamSettings from './AntiSpamSettings.vue'
-import IconAdd from 'vue-material-design-icons/Plus.vue'
-import IconSettings from 'vue-material-design-icons/CogOutline.vue'
-import SettingsSection from '@nextcloud/vue/components/NcSettingsSection'
+import ButtonVue from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import SettingsSection from '@nextcloud/vue/components/NcSettingsSection'
+import IconSettings from 'vue-material-design-icons/CogOutline.vue'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
+
+import AntiSpamSettings from './AntiSpamSettings.vue'
+import GmailAdminOauthSettings from './GmailAdminOauthSettings.vue'
+import MicrosoftAdminOauthSettings from './MicrosoftAdminOauthSettings.vue'
+import ProvisioningSettings from './ProvisioningSettings.vue'
+import logger from '../../logger.js'
 import {
-	disableProvisioning,
 	createProvisioningSettings,
-	updateProvisioningSettings,
+	disableProvisioning,
 	provisionAll,
-	updateAllowNewMailAccounts,
-	updateLlmEnabled,
-	updateEnabledSmartReply,
 	setImportanceClassificationEnabledByDefault,
 	setLayoutMessageView,
+	updateAllowNewMailAccounts,
+	updateEnabledSmartReply,
+	updateLlmEnabled,
+	updateProvisioningSettings,
 } from '../../service/SettingsService.js'
 
 const googleOauthClientId = loadState('mail', 'google_oauth_client_id', null) ?? undefined

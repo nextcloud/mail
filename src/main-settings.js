@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { generateFilePath } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
 import { loadState } from '@nextcloud/initial-state'
+import { generateFilePath } from '@nextcloud/router'
 import '@nextcloud/dialogs/style.css'
 import Vue from 'vue'
 

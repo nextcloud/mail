@@ -56,13 +56,14 @@
 </template>
 
 <script>
-import { NcColorPicker, NcActions as Actions, NcActionButton, NcActionText as ActionText, NcActionInput as ActionInput, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { showInfo } from '@nextcloud/dialogs'
-import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
-import IconEdit from 'vue-material-design-icons/PencilOutline.vue'
-import { translateTagDisplayName } from '../util/tag.js'
+import { NcActionInput as ActionInput, NcActionText as ActionText, NcActions as Actions, NcLoadingIcon as IconLoading, NcActionButton, NcColorPicker } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import IconEdit from 'vue-material-design-icons/PencilOutline.vue'
+import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
+
 import useMainStore from '../store/mainStore.js'
+import { translateTagDisplayName } from '../util/tag.js'
 
 export default {
 	name: 'TagItem',

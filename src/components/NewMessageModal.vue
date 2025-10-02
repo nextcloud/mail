@@ -113,30 +113,30 @@
 	</Modal>
 </template>
 <script>
-import {
-	NcButton,
-	NcEmptyContent as EmptyContent,
-	NcModal as Modal,
-} from '@nextcloud/vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
+import {
+	NcEmptyContent as EmptyContent,
+	NcModal as Modal,
+	NcButton,
+} from '@nextcloud/vue'
+import { mapActions, mapState, mapStores } from 'pinia'
+import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
+import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
+import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
 
-import logger from '../logger.js'
-import Composer from './Composer.vue'
-import { UNDO_DELAY } from '../store/constants.js'
+import RecipientInfo from './RecipientInfo.vue'
+import AttachmentMissingError from '../errors/AttachmentMissingError.js'
+import ManyRecipientsError from '../errors/ManyRecipientsError.js'
 import { matchError } from '../errors/match.js'
 import NoSentMailboxConfiguredError from '../errors/NoSentMailboxConfiguredError.js'
-import ManyRecipientsError from '../errors/ManyRecipientsError.js'
-import AttachmentMissingError from '../errors/AttachmentMissingError.js'
 import SubjectMissingError from '../errors/SubjectMissingError.js'
-import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
-import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
-import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
+import logger from '../logger.js'
+import Composer from './Composer.vue'
 import { deleteDraft, saveDraft, updateDraft } from '../service/DraftService.js'
-import useOutboxStore from '../store/outboxStore.js'
-import { mapStores, mapState, mapActions } from 'pinia'
-import RecipientInfo from './RecipientInfo.vue'
+import { UNDO_DELAY } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
+import useOutboxStore from '../store/outboxStore.js'
 import { messageBodyToTextInstance } from '../util/message.js'
 import { toPlain } from '../util/text.js'
 

@@ -27,8 +27,8 @@
 
 <script>
 
-import { NcButton, NcModal } from '@nextcloud/vue'
 import { translate as t } from '@nextcloud/l10n'
+import { NcButton, NcModal } from '@nextcloud/vue'
 
 export default {
 	name: 'ConfirmationModal',

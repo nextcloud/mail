@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import memoize from 'lodash/fp/memoize.js'
 import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
+import memoize from 'lodash/fp/memoize.js'
 
 export const fetchAvatarUrl = (email) => {
 	if (email === null) {

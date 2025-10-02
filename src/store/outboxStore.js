@@ -3,15 +3,16 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
+import { translate as t } from '@nextcloud/l10n'
 import { defineStore } from 'pinia'
 import Vue from 'vue'
 
-import * as OutboxService from '../service/OutboxService.js'
 import logger from '../logger.js'
-import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
-import { translate as t } from '@nextcloud/l10n'
+
 import { UNDO_DELAY } from './constants.js'
 import useMainStore from './mainStore.js'
+import * as OutboxService from '../service/OutboxService.js'
 
 export default defineStore('outbox', {
 	state: () => {

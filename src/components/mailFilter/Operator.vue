@@ -35,8 +35,9 @@
 </template>
 <script>
 import { NcButton, NcPopover, NcSelect } from '@nextcloud/vue'
-import { MailFilterOperator } from '../../models/mailFilter.ts'
 import IconInformationOutline from 'vue-material-design-icons/InformationOutline.vue'
+
+import { MailFilterOperator } from '../../models/mailFilter.ts'
 
 export default {
 	name: 'Operator',

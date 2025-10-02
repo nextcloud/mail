@@ -51,15 +51,16 @@
 
 <script>
 
+import IconCancel from '@mdi/svg/svg/cancel.svg'
+import IconCheck from '@mdi/svg/svg/check.svg'
+import { showError } from '@nextcloud/dialogs'
 import { NcButton as ButtonVue, NcDialog, NcTextField } from '@nextcloud/vue'
 import prop from 'lodash/fp/prop.js'
 import sortBy from 'lodash/fp/sortBy.js'
-import IconAdd from 'vue-material-design-icons/Plus.vue'
-import IconCancel from '@mdi/svg/svg/cancel.svg'
-import IconCheck from '@mdi/svg/svg/check.svg'
-import logger from '../logger.js'
-import { showError } from '@nextcloud/dialogs'
 import { mapStores } from 'pinia'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
+
+import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 
 const sortByAddress = sortBy(prop('address'))

@@ -34,15 +34,15 @@
 </template>
 
 <script>
-import { generateFilePath } from '@nextcloud/router'
-import { NcContent, NcAppContent as AppContent, NcEmptyContent as EmptyContent } from '@nextcloud/vue'
 import { loadState } from '@nextcloud/initial-state'
+import { generateFilePath } from '@nextcloud/router'
+import { NcAppContent as AppContent, NcEmptyContent as EmptyContent, NcContent } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
 
-import AccountForm from '../components/AccountForm.vue'
 import FluidMail from '../../img/mail-fluid.svg'
+import AccountForm from '../components/AccountForm.vue'
 import Navigation from '../components/Navigation.vue'
 import logger from '../logger.js'
-import { mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
 
 export default {

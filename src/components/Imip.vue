@@ -107,22 +107,24 @@
 </template>
 
 <script>
-import EventData from './imip/EventData.vue'
-import { NcButton, NcSelect, NcLoadingIcon } from '@nextcloud/vue'
-import CloseIcon from 'vue-material-design-icons/Close.vue'
-import CalendarIcon from 'vue-material-design-icons/CalendarOutline.vue'
-import { getParserManager, Parameter, Property, DateTimeValue, EventComponent, AttendeeProperty, CalendarComponent } from '@nextcloud/calendar-js'
-import { removeMailtoPrefix } from '../util/eventAttendee.js'
-import logger from '../logger.js'
+import { AttendeeProperty, CalendarComponent, DateTimeValue, EventComponent, Parameter, Property, getParserManager } from '@nextcloud/calendar-js'
 import { namespaces as NS } from '@nextcloud/cdav-library'
-import CalendarPickerOption from './CalendarPickerOption.vue'
-import { uidToHexColor } from '../util/calendarColor.js'
-import { randomId } from '../util/randomId.js'
-import pLimit from 'p-limit'
-import { flatten } from 'ramda'
 import { showError } from '@nextcloud/dialogs'
-import useMainStore from '../store/mainStore.js'
+import { NcButton, NcLoadingIcon, NcSelect } from '@nextcloud/vue'
+import pLimit from 'p-limit'
 import { mapState } from 'pinia'
+import { flatten } from 'ramda'
+import CalendarIcon from 'vue-material-design-icons/CalendarOutline.vue'
+import CloseIcon from 'vue-material-design-icons/Close.vue'
+
+import logger from '../logger.js'
+
+import CalendarPickerOption from './CalendarPickerOption.vue'
+import useMainStore from '../store/mainStore.js'
+import { uidToHexColor } from '../util/calendarColor.js'
+import { removeMailtoPrefix } from '../util/eventAttendee.js'
+import { randomId } from '../util/randomId.js'
+import EventData from './imip/EventData.vue'
 
 // iMIP methods
 const REQUEST = 'REQUEST'

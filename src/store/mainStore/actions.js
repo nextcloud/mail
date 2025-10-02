@@ -3,28 +3,46 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import Axios from '@nextcloud/axios'
+import { showError, showWarning } from '@nextcloud/dialogs'
+import { translate as t } from '@nextcloud/l10n'
+import { generateUrl } from '@nextcloud/router'
+import DOMPurify from 'dompurify'
+import escapeRegExp from 'lodash/fp/escapeRegExp.js'
 import flatMapDeep from 'lodash/fp/flatMapDeep.js'
 import orderBy from 'lodash/fp/orderBy.js'
+import uniq from 'lodash/fp/uniq.js'
 import {
 	andThen,
 	complement,
 	curry,
+	defaultTo,
 	filter,
 	flatten,
 	gt,
-	lt,
+	head,
 	identity,
 	last,
+	lt,
 	map,
 	pipe,
 	prop,
 	propEq,
-	slice,
-	tap,
-	where, defaultTo, head, sortBy,
+	slice, sortBy, tap, where,
 } from 'ramda'
+import Vue from 'vue'
 
-import { savePreference } from '../../service/PreferenceService.js'
+import MailboxLockedError from '../../errors/MailboxLockedError.js'
+import { matchError } from '../../errors/match.js'
+import SyncIncompleteError from '../../errors/SyncIncompleteError.js'
+import { handleHttpAuthErrors } from '../../http/sessionExpiryHandler.js'
+import { sortMailboxes } from '../../imap/MailboxSorter.js'
+import logger from '../../logger.js'
+import {
+	buildForwardSubject,
+	buildRecipients as buildReplyRecipients,
+	buildReplySubject,
+} from '../../ReplyBuilder.js'
 import {
 	create as createAccount,
 	deleteAccount,
@@ -32,12 +50,21 @@ import {
 	fetchAll as fetchAllAccounts,
 	patch as patchAccount,
 	update as updateAccount,
-	updateSignature,
 	updateSmimeCertificate as updateAccountSmimeCertificate,
+	updateSignature,
 } from '../../service/AccountService.js'
+import * as AliasService from '../../service/AliasService.js'
 import {
-	create as createMailbox,
+	findAll,
+	getCurrentUserPrincipal,
+	initializeClientForUserView,
+} from '../../service/caldavService.js'
+import { moveDraft, updateDraft } from '../../service/DraftService.js'
+import * as FollowUpService from '../../service/FollowUpService.js'
+import { addInternalAddress, removeInternalAddress } from '../../service/InternalAddressService.js'
+import {
 	clearMailbox,
+	create as createMailbox,
 	deleteMailbox,
 	fetchAll as fetchAllMailboxes,
 	markMailboxRead,
@@ -46,6 +73,7 @@ import {
 import {
 	createEnvelopeTag,
 	deleteMessage,
+	deleteTag,
 	fetchEnvelope,
 	fetchEnvelopes,
 	fetchMessage,
@@ -60,63 +88,33 @@ import {
 	syncEnvelopes as syncEnvelopesExternal,
 	unSnoozeMessage,
 	updateEnvelopeTag,
-	deleteTag,
 } from '../../service/MessageService.js'
-import { moveDraft, updateDraft } from '../../service/DraftService.js'
-import * as AliasService from '../../service/AliasService.js'
-import logger from '../../logger.js'
-import { normalizedEnvelopeListId } from '../../util/normalization.js'
 import { showNewMessagesNotification } from '../../service/NotificationService.js'
-import { matchError } from '../../errors/match.js'
-import SyncIncompleteError from '../../errors/SyncIncompleteError.js'
-import MailboxLockedError from '../../errors/MailboxLockedError.js'
-import { wait } from '../../util/wait.js'
+import { savePreference } from '../../service/PreferenceService.js'
+import { createQuickAction, deleteQuickAction, updateQuickAction } from '../../service/QuickActionsService.js'
 import {
 	getActiveScript,
-	updateAccount as updateSieveAccount,
 	updateActiveScript,
+	updateAccount as updateSieveAccount,
 } from '../../service/SieveService.js'
-import {
-	FOLLOW_UP_TAG_LABEL,
-	PAGE_SIZE,
-	UNIFIED_INBOX_ID,
-	FOLLOW_UP_MAILBOX_ID,
-	UNIFIED_ACCOUNT_ID,
-} from '../constants.js'
+import * as SmimeCertificateService from '../../service/SmimeCertificateService.js'
+import { createTextBlock, deleteTextBlock, fetchMyTextBlocks, fetchSharedTextBlocks, updateTextBlock } from '../../service/TextBlockService.js'
 import * as ThreadService from '../../service/ThreadService.js'
+import { normalizedEnvelopeListId } from '../../util/normalization.js'
 import {
 	getPrioritySearchQueries,
 	priorityImportantQuery,
 	priorityOtherQuery,
 } from '../../util/priorityInbox.js'
-import Axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
-import { handleHttpAuthErrors } from '../../http/sessionExpiryHandler.js'
-import { showError, showWarning } from '@nextcloud/dialogs'
-import { translate as t } from '@nextcloud/l10n'
+import { wait } from '../../util/wait.js'
 import {
-	buildForwardSubject,
-	buildRecipients as buildReplyRecipients,
-	buildReplySubject,
-} from '../../ReplyBuilder.js'
-import DOMPurify from 'dompurify'
-import {
-	getCurrentUserPrincipal,
-	initializeClientForUserView,
-	findAll,
-} from '../../service/caldavService.js'
-import * as SmimeCertificateService from '../../service/SmimeCertificateService.js'
+	FOLLOW_UP_MAILBOX_ID,
+	FOLLOW_UP_TAG_LABEL,
+	PAGE_SIZE,
+	UNIFIED_ACCOUNT_ID,
+	UNIFIED_INBOX_ID,
+} from '../constants.js'
 import useOutboxStore from '../outboxStore.js'
-import * as FollowUpService from '../../service/FollowUpService.js'
-import { addInternalAddress, removeInternalAddress } from '../../service/InternalAddressService.js'
-import { createTextBlock, fetchMyTextBlocks, fetchSharedTextBlocks, deleteTextBlock, updateTextBlock } from '../../service/TextBlockService.js'
-
-import escapeRegExp from 'lodash/fp/escapeRegExp.js'
-import uniq from 'lodash/fp/uniq.js'
-import Vue from 'vue'
-
-import { sortMailboxes } from '../../imap/MailboxSorter.js'
-import { createQuickAction, deleteQuickAction, updateQuickAction } from '../../service/QuickActionsService.js'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 

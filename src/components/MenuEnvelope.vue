@@ -219,41 +219,42 @@
 </template>
 
 <script>
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import moment from '@nextcloud/moment'
+import { generateUrl } from '@nextcloud/router'
 import {
-	NcActionButton,
 	NcActionButton as ActionButton,
 	NcActionLink as ActionLink,
+	NcActionButton,
 } from '@nextcloud/vue'
-import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
+import NcActionInput from '@nextcloud/vue/components/NcActionInput'
+import NcActionSeparator from '@nextcloud/vue/components/NcActionSeparator'
 import { Base64 } from 'js-base64'
-import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
+import { mapState, mapStores } from 'pinia'
+import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
+import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import CalendarBlankIcon from 'vue-material-design-icons/CalendarBlankOutline.vue'
+import CalendarClock from 'vue-material-design-icons/CalendarClockOutline.vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
+import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline.vue'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
-import DownloadIcon from 'vue-material-design-icons/TrayArrowDown.vue'
-import PrinterIcon from 'vue-material-design-icons/PrinterOutline.vue'
-import TranslationIcon from 'vue-material-design-icons/Translate.vue'
-import { mailboxHasRights } from '../util/acl.js'
-import { generateUrl } from '@nextcloud/router'
+import FilterIcon from 'vue-material-design-icons/FilterOutline.vue'
 import InformationIcon from 'vue-material-design-icons/InformationOutline.vue'
 import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
 import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
-import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline.vue'
+import PrinterIcon from 'vue-material-design-icons/PrinterOutline.vue'
 import ShareIcon from 'vue-material-design-icons/ShareOutline.vue'
-import { showError, showSuccess } from '@nextcloud/dialogs'
 import TagIcon from 'vue-material-design-icons/TagOutline.vue'
-import CalendarClock from 'vue-material-design-icons/CalendarClockOutline.vue'
-import NcActionSeparator from '@nextcloud/vue/components/NcActionSeparator'
-import NcActionInput from '@nextcloud/vue/components/NcActionInput'
-import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
+import TranslationIcon from 'vue-material-design-icons/Translate.vue'
+import DownloadIcon from 'vue-material-design-icons/TrayArrowDown.vue'
+
 import logger from '../logger.js'
-import moment from '@nextcloud/moment'
-import { mapStores, mapState } from 'pinia'
+import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
 import useMainStore from '../store/mainStore.js'
-import FilterIcon from 'vue-material-design-icons/FilterOutline.vue'
+import { mailboxHasRights } from '../util/acl.js'
 
 export default {
 	name: 'MenuEnvelope',

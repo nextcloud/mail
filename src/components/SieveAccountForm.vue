@@ -61,9 +61,10 @@
 </template>
 
 <script>
-import { NcButton as ButtonVue, NcTextField, NcPasswordField, NcCheckboxRadioSwitch } from '@nextcloud/vue'
-import useMainStore from '../store/mainStore.js'
+import { NcButton as ButtonVue, NcCheckboxRadioSwitch, NcPasswordField, NcTextField } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'SieveAccountForm',

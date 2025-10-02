@@ -36,16 +36,16 @@
 </template>
 
 <script>
-import ArrowIcon from 'vue-material-design-icons/ArrowRight.vue'
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import moment from '@nextcloud/moment'
 import ical from 'ical.js'
 import md5 from 'md5'
-import moment from '@nextcloud/moment'
-import { showError, showSuccess } from '@nextcloud/dialogs'
+import ArrowIcon from 'vue-material-design-icons/ArrowRight.vue'
 import TrainIcon from 'vue-material-design-icons/Train.vue'
 
 import CalendarImport from './CalendarImport.vue'
-import { importCalendarEvent } from '../../service/DAVService.js'
 import logger from '../../logger.js'
+import { importCalendarEvent } from '../../service/DAVService.js'
 
 export default {
 	name: 'TrainReservation',

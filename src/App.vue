@@ -10,13 +10,13 @@
 <script>
 import { showError } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
+import { mapState, mapStores } from 'pinia'
 
-import logger from './logger.js'
-import { matchError } from './errors/match.js'
 import MailboxLockedError from './errors/MailboxLockedError.js'
-import { mapStores, mapState } from 'pinia'
-import useMainStore from './store/mainStore.js'
+import { matchError } from './errors/match.js'
 import initAfterAppCreation from './init.js'
+import logger from './logger.js'
+import useMainStore from './store/mainStore.js'
 
 export default {
 	name: 'App',

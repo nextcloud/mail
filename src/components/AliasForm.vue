@@ -65,10 +65,10 @@
 </template>
 
 <script>
-import { NcButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
-import IconRename from 'vue-material-design-icons/PencilOutline.vue'
+import { NcLoadingIcon as IconLoading, NcButton } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
+import IconRename from 'vue-material-design-icons/PencilOutline.vue'
+import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 
 export default {
 	name: 'AliasForm',

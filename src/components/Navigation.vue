@@ -67,18 +67,18 @@
 
 <script>
 import { NcAppNavigation as AppNavigation, NcAppNavigationItem as AppNavigationItem } from '@nextcloud/vue'
-import NewMessageButtonHeader from './NewMessageButtonHeader.vue'
+import { mapStores } from 'pinia'
+import IconSetting from 'vue-material-design-icons/CogOutline.vue'
 
 import NavigationAccount from './NavigationAccount.vue'
 import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse.vue'
 import NavigationMailbox from './NavigationMailbox.vue'
 import NavigationOutbox from './NavigationOutbox.vue'
-import IconSetting from 'vue-material-design-icons/CogOutline.vue'
+import NewMessageButtonHeader from './NewMessageButtonHeader.vue'
 import AppSettingsMenu from '../components/AppSettingsMenu.vue'
 import { UNIFIED_ACCOUNT_ID } from '../store/constants.js'
-import useOutboxStore from '../store/outboxStore.js'
 import useMainStore from '../store/mainStore.js'
-import { mapStores } from 'pinia'
+import useOutboxStore from '../store/outboxStore.js'
 
 export default {
 	name: 'Navigation',

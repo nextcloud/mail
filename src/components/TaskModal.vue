@@ -68,17 +68,18 @@
 </template>
 
 <script>
-import { NcDateTimePicker as DatetimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
-import jstz from 'jstz'
-
-import logger from '../logger.js'
-import ICAL from 'ical.js'
-import Task from '../task.js'
-import CalendarPickerOption from './CalendarPickerOption.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import moment from '@nextcloud/moment'
+import { NcDateTimePicker as DatetimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
+import ICAL from 'ical.js'
+import jstz from 'jstz'
 import { mapStores } from 'pinia'
+
+import logger from '../logger.js'
+
+import CalendarPickerOption from './CalendarPickerOption.vue'
 import useMainStore from '../store/mainStore.js'
+import Task from '../task.js'
 
 export default {
 	name: 'TaskModal',

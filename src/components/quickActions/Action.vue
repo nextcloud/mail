@@ -26,12 +26,14 @@
 </template>
 
 <script>
-import useMainStore from '../../store/mainStore.js'
-import { NcSelect, NcButton } from '@nextcloud/vue'
-import { hiddenTags } from '../tags.js'
-import Icon from './Icon.vue'
+import { NcButton, NcSelect } from '@nextcloud/vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import DragIcon from 'vue-material-design-icons/Drag.vue'
+
+import useMainStore from '../../store/mainStore.js'
+import { hiddenTags } from '../tags.js'
+
+import Icon from './Icon.vue'
 
 export default {
 	name: 'Action',

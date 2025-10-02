@@ -49,26 +49,27 @@
 </template>
 
 <script>
-import { NcListItem as ListItem, NcActionButton as ActionButton } from '@nextcloud/vue'
-import Avatar from './Avatar.vue'
-import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
-import { getLanguage, translate as t } from '@nextcloud/l10n'
-import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin.js'
-import moment from '@nextcloud/moment'
-import logger from '../logger.js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { matchError } from '../errors/match.js'
-import Send from 'vue-material-design-icons/SendOutline.vue'
+import { getLanguage, translate as t } from '@nextcloud/l10n'
+import moment from '@nextcloud/moment'
+import { NcActionButton as ActionButton, NcListItem as ListItem } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
 import Copy from 'vue-material-design-icons/ContentCopy.vue'
+import Send from 'vue-material-design-icons/SendOutline.vue'
+import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
+
+import { matchError } from '../errors/match.js'
+import logger from '../logger.js'
+import Avatar from './Avatar.vue'
+import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin.js'
 import {
-	STATUS_RAW,
 	STATUS_IMAP_SENT_MAILBOX_FAIL,
+	STATUS_RAW,
 	STATUS_SMTP_ERROR,
 	UNDO_DELAY,
 } from '../store/constants.js'
-import useOutboxStore from '../store/outboxStore.js'
 import useMainStore from '../store/mainStore.js'
-import { mapStores } from 'pinia'
+import useOutboxStore from '../store/outboxStore.js'
 
 export default {
 	name: 'OutboxMessageListItem',

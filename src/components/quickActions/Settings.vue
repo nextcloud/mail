@@ -113,24 +113,25 @@
 </template>
 
 <script>
-import { NcModal, NcListItem, NcActionButton, NcActions, NcButton, NcTextField, NcLoadingIcon } from '@nextcloud/vue'
-import { Container, Draggable } from 'vue-dndrop'
-import Action from './Action.vue'
-import useMainStore from '../../store/mainStore.js'
-import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
-import IconEdit from 'vue-material-design-icons/PencilOutline.vue'
-import IconEmailFast from 'vue-material-design-icons/EmailFastOutline.vue'
-import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
-import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
-import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
-import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
-import TagIcon from 'vue-material-design-icons/TagOutline.vue'
-import IconFavorite from 'vue-material-design-icons/Star.vue'
-import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
-import PlusIcon from 'vue-material-design-icons/Plus.vue'
-import { findAllStepsForAction, createActionStep, updateActionStep, deleteActionStep } from '../../service/QuickActionsService.js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
+import { NcActionButton, NcActions, NcButton, NcListItem, NcLoadingIcon, NcModal, NcTextField } from '@nextcloud/vue'
+import { Container, Draggable } from 'vue-dndrop'
+import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
+import IconEmailFast from 'vue-material-design-icons/EmailFastOutline.vue'
+import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
+import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
+import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
+import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
+import IconEdit from 'vue-material-design-icons/PencilOutline.vue'
+import PlusIcon from 'vue-material-design-icons/Plus.vue'
+import IconFavorite from 'vue-material-design-icons/Star.vue'
+import TagIcon from 'vue-material-design-icons/TagOutline.vue'
+import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
+
+import Action from './Action.vue'
 import logger from '../../logger.js'
+import { createActionStep, deleteActionStep, findAllStepsForAction, updateActionStep } from '../../service/QuickActionsService.js'
+import useMainStore from '../../store/mainStore.js'
 
 export default {
 	name: 'Settings',

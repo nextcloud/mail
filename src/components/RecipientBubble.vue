@@ -104,22 +104,21 @@
 </template>
 
 <script>
-import { generateUrl } from '@nextcloud/router'
-
-import { NcUserBubble as UserBubble, NcPopover as Popover, NcSelect, NcButton as ButtonVue } from '@nextcloud/vue'
-
-import IconReply from 'vue-material-design-icons/ReplyOutline.vue'
-import IconAdd from 'vue-material-design-icons/Plus.vue'
-import IconClose from 'vue-material-design-icons/CloseOutline.vue'
-import IconClipboard from 'vue-material-design-icons/ClipboardTextOutline.vue'
-import IconDetails from 'vue-material-design-icons/InformationOutline.vue'
-import IconCheck from 'vue-material-design-icons/Check.vue'
-import IconUser from 'vue-material-design-icons/AccountOutline.vue'
-import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
-import { addToContact, findMatches, newContact, autoCompleteByName } from '../service/ContactIntegrationService.js'
-import uniqBy from 'lodash/fp/uniqBy.js'
-import debouncePromise from 'debounce-promise'
 import { showError, showSuccess } from '@nextcloud/dialogs'
+import { generateUrl } from '@nextcloud/router'
+import { NcButton as ButtonVue, NcSelect, NcPopover as Popover, NcUserBubble as UserBubble } from '@nextcloud/vue'
+import debouncePromise from 'debounce-promise'
+import uniqBy from 'lodash/fp/uniqBy.js'
+import IconUser from 'vue-material-design-icons/AccountOutline.vue'
+import IconCheck from 'vue-material-design-icons/Check.vue'
+import IconClipboard from 'vue-material-design-icons/ClipboardTextOutline.vue'
+import IconClose from 'vue-material-design-icons/CloseOutline.vue'
+import IconDetails from 'vue-material-design-icons/InformationOutline.vue'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
+import IconReply from 'vue-material-design-icons/ReplyOutline.vue'
+
+import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
+import { addToContact, autoCompleteByName, findMatches, newContact } from '../service/ContactIntegrationService.js'
 
 const debouncedSearch = debouncePromise(autoCompleteByName, 500)
 

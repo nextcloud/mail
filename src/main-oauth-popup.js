@@ -7,8 +7,8 @@ import { getRequestToken } from '@nextcloud/auth'
 import { generateFilePath } from '@nextcloud/router'
 import Vue from 'vue'
 
-import OauthDone from './views/OauthDone.vue'
 import Nextcloud from './mixins/Nextcloud.js'
+import OauthDone from './views/OauthDone.vue'
 
 __webpack_nonce__ = btoa(getRequestToken())
 // eslint-disable-next-line camelcase

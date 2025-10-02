@@ -11,10 +11,11 @@
 	</ConfirmationModal>
 </template>
 <script>
-import { showSuccess, showInfo } from '@nextcloud/dialogs'
+import { showInfo, showSuccess } from '@nextcloud/dialogs'
+import { mapStores } from 'pinia'
+
 import ConfirmationModal from './ConfirmationModal.vue'
 import useMainStore from '../store/mainStore.js'
-import { mapStores } from 'pinia'
 
 export default {
 	name: 'DeleteTagModal',

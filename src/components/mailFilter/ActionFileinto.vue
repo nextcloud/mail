@@ -8,6 +8,7 @@
 <script>
 
 import { mapStores } from 'pinia'
+
 import useMainStore from '../../store/mainStore.js'
 import MailboxInlinePicker from '../MailboxInlinePicker.vue'
 

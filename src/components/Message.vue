@@ -66,21 +66,22 @@
 
 <script>
 import { generateUrl } from '@nextcloud/router'
-import { NcButton, NcAssistantButton } from '@nextcloud/vue'
+import { NcAssistantButton, NcButton } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
+import LockOffIcon from 'vue-material-design-icons/LockOffOutline.vue'
+import ReplyIcon from 'vue-material-design-icons/ReplyOutline.vue'
 
-import { html, plain } from '../util/text.js'
-import { isPgpgMessage } from '../crypto/pgp.js'
+import Imip from './Imip.vue'
 import Itinerary from './Itinerary.vue'
+
 import MessageAttachments from './MessageAttachments.vue'
-import PhishingWarning from './PhishingWarning.vue'
 import MessageEncryptedBody from './MessageEncryptedBody.vue'
 import MessageHTMLBody from './MessageHTMLBody.vue'
 import MessagePlainTextBody from './MessagePlainTextBody.vue'
-import Imip from './Imip.vue'
-import LockOffIcon from 'vue-material-design-icons/LockOffOutline.vue'
-import ReplyIcon from 'vue-material-design-icons/ReplyOutline.vue'
-import { mapStores } from 'pinia'
+import PhishingWarning from './PhishingWarning.vue'
+import { isPgpgMessage } from '../crypto/pgp.js'
 import useMainStore from '../store/mainStore.js'
+import { html, plain } from '../util/text.js'
 
 export default {
 	name: 'Message',

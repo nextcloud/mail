@@ -48,27 +48,25 @@
 </template>
 
 <script>
-import map from 'lodash/fp/map.js'
-import trimStart from 'lodash/fp/trimCharsStart.js'
 import { getRequestToken } from '@nextcloud/auth'
-import { formatFileSize } from '@nextcloud/files'
-import prop from 'lodash/fp/prop.js'
 import { showWarning } from '@nextcloud/dialogs'
 import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
+import { formatFileSize } from '@nextcloud/files'
+import { translatePlural as n, translate as t } from '@nextcloud/l10n'
+import map from 'lodash/fp/map.js'
+import prop from 'lodash/fp/prop.js'
 import sumBy from 'lodash/fp/sumBy.js'
-import { translate as t, translatePlural as n } from '@nextcloud/l10n'
-
+import trimStart from 'lodash/fp/trimCharsStart.js'
 import Vue from 'vue'
-
-import logger from '../logger.js'
-import { getFileData } from '../service/FileService.js'
-import { shareFile } from '../service/FileSharingService.js'
-import { uploadLocalAttachment } from '../service/AttachmentService.js'
-
-import ComposerAttachment from './ComposerAttachment.vue'
-
 import ChevronDown from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
+
+import logger from '../logger.js'
+
+import ComposerAttachment from './ComposerAttachment.vue'
+import { uploadLocalAttachment } from '../service/AttachmentService.js'
+import { getFileData } from '../service/FileService.js'
+import { shareFile } from '../service/FileSharingService.js'
 
 const mimes = [
 	'image/gif',

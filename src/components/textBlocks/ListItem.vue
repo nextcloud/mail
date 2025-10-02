@@ -103,24 +103,24 @@
 </template>
 
 <script>
-import { NcActionButton, NcSelect, NcDialog, NcInputField, NcAvatar, NcListItem, NcButton, NcLoadingIcon } from '@nextcloud/vue'
-import { mapStores } from 'pinia'
-import mitt from 'mitt'
-import useMainStore from '../../store/mainStore.js'
-import { getShares, shareTextBlock, unshareTextBlock } from '../../service/TextBlockService.js'
-import TextEditor from '../TextEditor.vue'
-import { showError, showSuccess } from '@nextcloud/dialogs'
-import AccountMultiple from 'vue-material-design-icons/AccountMultiple.vue'
-import IconClose from 'vue-material-design-icons/Close.vue'
-import IconCheck from 'vue-material-design-icons/Check.vue'
-import IconPencil from 'vue-material-design-icons/Pencil.vue'
-import debounce from 'lodash/fp/debounce.js'
-import { ShareType } from '@nextcloud/sharing'
-import { generateOcsUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'
-import logger from '../../logger.js'
-
 import axios from '@nextcloud/axios'
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import { generateOcsUrl } from '@nextcloud/router'
+import { ShareType } from '@nextcloud/sharing'
+import { NcActionButton, NcAvatar, NcButton, NcDialog, NcInputField, NcListItem, NcLoadingIcon, NcSelect } from '@nextcloud/vue'
+import debounce from 'lodash/fp/debounce.js'
+import mitt from 'mitt'
+import { mapStores } from 'pinia'
+import AccountMultiple from 'vue-material-design-icons/AccountMultiple.vue'
+import IconCheck from 'vue-material-design-icons/Check.vue'
+import IconClose from 'vue-material-design-icons/Close.vue'
+import IconPencil from 'vue-material-design-icons/Pencil.vue'
+
+import logger from '../../logger.js'
+import { getShares, shareTextBlock, unshareTextBlock } from '../../service/TextBlockService.js'
+import useMainStore from '../../store/mainStore.js'
+import TextEditor from '../TextEditor.vue'
 
 export default {
 	name: 'ListItem',

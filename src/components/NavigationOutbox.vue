@@ -23,10 +23,10 @@
 
 <script>
 import { NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
 import IconOutbox from 'vue-material-design-icons/InboxArrowUp.vue'
 
 import useOutboxStore from '../store/outboxStore.js'
-import { mapStores } from 'pinia'
 
 export default {
 	name: 'NavigationOutbox',

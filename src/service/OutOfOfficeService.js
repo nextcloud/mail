@@ -2,8 +2,8 @@
  * SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
 
 /**
  * @typedef {{ enabled: boolean, start: string, end: string, subject: string, message: string }} OutOfOfficeState

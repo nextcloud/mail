@@ -11,12 +11,12 @@
 		:disabled="disabled" />
 </template>
 <script>
-import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-import { mailboxHasRights } from '../util/acl.js'
-
+import Treeselect from '@riophae/vue-treeselect'
 import { mapStores } from 'pinia'
+
 import useMainStore from '../store/mainStore.js'
+import { mailboxHasRights } from '../util/acl.js'
 
 export default {
 	name: 'MailboxInlinePicker',

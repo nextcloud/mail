@@ -28,14 +28,16 @@
 
 <script>
 import { NcAppContent as AppContent, NcAppContentList as AppContentList } from '@nextcloud/vue'
-import LoadingSkeleton from './LoadingSkeleton.vue'
-import Error from './Error.vue'
+import { mapStores } from 'pinia'
+
+import logger from '../logger.js'
+
 import EmptyMailbox from './EmptyMailbox.vue'
+import Error from './Error.vue'
+import LoadingSkeleton from './LoadingSkeleton.vue'
 import OutboxMessageContent from './OutboxMessageContent.vue'
 import OutboxMessageListItem from './OutboxMessageListItem.vue'
-import logger from '../logger.js'
 import useOutboxStore from '../store/outboxStore.js'
-import { mapStores } from 'pinia'
 
 export default {
 	name: 'Outbox',

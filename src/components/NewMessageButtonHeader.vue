@@ -32,11 +32,12 @@
 
 <script>
 import { NcButton as ButtonVue } from '@nextcloud/vue'
+import IconLoading from '@nextcloud/vue/components/NcLoadingIcon'
+import { mapStores } from 'pinia'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconRefresh from 'vue-material-design-icons/Refresh.vue'
-import IconLoading from '@nextcloud/vue/components/NcLoadingIcon'
+
 import logger from '../logger.js'
-import { mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
 
 export default {

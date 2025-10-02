@@ -13,10 +13,11 @@
 </template>
 
 <script>
+import { mapStores } from 'pinia'
+
 import logger from '../logger.js'
 import MailboxPicker from './MailboxPicker.vue'
 import useMainStore from '../store/mainStore.js'
-import { mapStores } from 'pinia'
 
 export default {
 	name: 'MoveModal',

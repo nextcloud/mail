@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import md5 from 'md5'
 import convert from 'color-convert'
+import md5 from 'md5'
 
 /**
  * Generates a hex color based on RGB string

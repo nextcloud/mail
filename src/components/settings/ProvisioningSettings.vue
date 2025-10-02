@@ -335,12 +335,12 @@
 	</div>
 </template>
 <script>
-import logger from '../../logger.js'
-import ProvisionPreview from './ProvisionPreview.vue'
 import ButtonVue from '@nextcloud/vue/components/NcButton'
-
-import IconUpload from 'vue-material-design-icons/TrayArrowUp.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
+import IconUpload from 'vue-material-design-icons/TrayArrowUp.vue'
+
+import ProvisionPreview from './ProvisionPreview.vue'
+import logger from '../../logger.js'
 
 export default {
 	name: 'ProvisioningSettings',

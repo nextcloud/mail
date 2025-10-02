@@ -42,10 +42,11 @@
 	</NcAssistantContent>
 </template>
 <script>
-import ArrowDownIcon from 'vue-material-design-icons/ArrowDown.vue'
-import NcButton from '@nextcloud/vue/components/NcButton'
 import NcAssistantContent from '@nextcloud/vue/components/NcAssistantContent'
 import NcAssistantIcon from '@nextcloud/vue/components/NcAssistantIcon'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import ArrowDownIcon from 'vue-material-design-icons/ArrowDown.vue'
+
 import LoadingSkeleton from './LoadingSkeleton.vue'
 
 export default {

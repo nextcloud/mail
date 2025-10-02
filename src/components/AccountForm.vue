@@ -238,20 +238,20 @@
 </template>
 
 <script>
-import { Tab, Tabs } from 'vue-tabs-component'
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcPasswordField, NcInputField, NcCheckboxRadioSwitch } from '@nextcloud/vue'
-import IconCheck from 'vue-material-design-icons/Check.vue'
 import { translate as t } from '@nextcloud/l10n'
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch, NcInputField, NcPasswordField } from '@nextcloud/vue'
+import { mapState, mapStores } from 'pinia'
+import IconCheck from 'vue-material-design-icons/Check.vue'
+import { Tab, Tabs } from 'vue-tabs-component'
 
+import { CONSENT_ABORTED, getUserConsent } from '../integration/oauth.js'
 import logger from '../logger.js'
 import {
 	queryIspdb,
 	queryMx,
 	testConnectivity,
 } from '../service/AutoConfigService.js'
-import { CONSENT_ABORTED, getUserConsent } from '../integration/oauth.js'
 import useMainStore from '../store/mainStore.js'
-import { mapStores, mapState } from 'pinia'
 
 export default {
 	name: 'AccountForm',

@@ -21,10 +21,11 @@
 </template>
 
 <script>
-import { getReportUrl } from '../util/CrashReport.js'
-import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import NcButton from '@nextcloud/vue/components/NcButton'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import AlertCircleIcon from 'vue-material-design-icons/AlertCircleOutline.vue'
+
+import { getReportUrl } from '../util/CrashReport.js'
 
 export default {
 	name: 'Error',

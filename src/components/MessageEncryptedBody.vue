@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import { getMailvelope } from '../crypto/mailvelope.js'
 import MdnRequest from './MdnRequest.vue'
+import { getMailvelope } from '../crypto/mailvelope.js'
 
 export default {
 	name: 'MessageEncryptedBody',

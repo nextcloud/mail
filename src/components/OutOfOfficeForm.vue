@@ -110,17 +110,18 @@
 </template>
 
 <script>
-import { NcDateTimePicker as DatetimePicker, NcButton as ButtonVue } from '@nextcloud/vue'
-import TextEditor from './TextEditor.vue'
-import CheckIcon from 'vue-material-design-icons/Check.vue'
-import { html, plain, toHtml, toPlain } from '../util/text.js'
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
-import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
-import * as OutOfOfficeService from '../service/OutOfOfficeService.js'
+import { NcButton as ButtonVue, NcDateTimePicker as DatetimePicker } from '@nextcloud/vue'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
+import CheckIcon from 'vue-material-design-icons/Check.vue'
+import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
+
+import TextEditor from './TextEditor.vue'
+import * as OutOfOfficeService from '../service/OutOfOfficeService.js'
 import useMainStore from '../store/mainStore.js'
+import { html, plain, toHtml, toPlain } from '../util/text.js'
 
 const OOO_DISABLED = 'disabled'
 const OOO_ENABLED = 'enabled'
