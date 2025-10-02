@@ -172,21 +172,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// account for 8px margin on iframe body
+// account for 12px (was 8) margin on iframe body
+// should be 12px so it maches the rest of the content
 .html-message-body {
-	margin : 2px calc(var(--default-grid-baseline) * 2) 0 calc(var(--default-grid-baseline) * 14);
+	margin : 2px calc(var(--default-grid-baseline) * 3) 0 calc(var(--default-grid-baseline) * 14);
 	background-color: #FFFFFF;
+	border-radius: var(--border-radius-element);
+
+	@media (max-width: 600px) {
+        margin-left: calc(var(--default-grid-baseline) * 3);
+        margin-right: calc(var(--default-grid-baseline) * 3);
+    }
 }
 
 #mail-message-has-blocked-content {
 	margin-inline-start: 10px;
-	color: var(--color-text-maxcontrast) !important;
+	color: #000000 !important;
+	padding-top: 5px;
 }
 
 #message-container {
 	flex: 1;
 	display: flex;
 	background-color: #FFFFFF;
+	border-radius: var(--border-radius-element);
 
 	// TODO: collapse quoted text and remove inner scrollbar
 	@media only screen {
@@ -205,6 +214,7 @@ export default {
 
 .message-frame {
 	width: 100%;
+	border-radius: var(--border-radius-element);
 }
 
 :deep(.button-vue__icon) {
