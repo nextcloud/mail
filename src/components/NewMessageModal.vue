@@ -661,7 +661,7 @@ export default {
 	flex: 0 0 370px;
 	overflow-y: auto;
 	padding-inline-start: 5px;
-	border-inline-start: 1px solid #ccc;
+	border-inline-start: 1px solid var(--color-text-maxcontrast);
 	@media (max-width: 1024px) {
 		display: none;
 	}
