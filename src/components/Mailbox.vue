@@ -580,8 +580,9 @@ export default {
 				return t('mail', 'Last week')
 			case 'lastMonth':
 				return t('mail', 'Last month')
+			default:
+				return group
 			}
-			return t('mail', 'Older')
 		},
 	},
 }
