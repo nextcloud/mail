@@ -118,9 +118,7 @@ class MailboxSync {
 			$mailboxes = $this->atomic(function () use ($account, $folders, $namespaces) {
 				$old = $this->mailboxMapper->findAll($account);
 				$indexedOld = array_combine(
-					array_map(static function (Mailbox $mb) {
-						return $mb->getName();
-					}, $old),
+					array_map(static fn (Mailbox $mb) => $mb->getName(), $old),
 					$old
 				);
 
@@ -277,9 +275,7 @@ class MailboxSync {
 		shuffle($doNotSync);
 		/** @var Mailbox[] $syncStatus */
 		$syncStatus = [...$sync, ...array_slice($doNotSync, 0, 5)];
-		$statuses = $this->folderMapper->getFoldersStatusAsObject($client, array_map(function (Mailbox $mailbox) {
-			return $mailbox->getName();
-		}, $syncStatus));
+		$statuses = $this->folderMapper->getFoldersStatusAsObject($client, array_map(fn (Mailbox $mailbox) => $mailbox->getName(), $syncStatus));
 		foreach ($syncStatus as $mailbox) {
 			$status = $statuses[$mailbox->getName()] ?? null;
 			if ($status !== null) {

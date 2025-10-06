@@ -40,9 +40,7 @@ class AvatarControllerTest extends TestCase {
 			->method('getTime')
 			->willReturn(10000);
 		$this->oldFactory = \OC::$server->offsetGet(ITimeFactory::class);
-		\OC::$server->registerService(ITimeFactory::class, function () use ($timeFactory) {
-			return $timeFactory;
-		});
+		\OC::$server->registerService(ITimeFactory::class, fn () => $timeFactory);
 
 		$this->controller = new AvatarsController('mail', $request, $this->avatarService, 'jane');
 	}

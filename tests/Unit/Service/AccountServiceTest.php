@@ -244,9 +244,7 @@ class AccountServiceTest extends TestCase {
 			->method('getTime')
 			->willReturn(1755850409);
 		$this->jobList->method('has')
-			->willReturnCallback(function ($job) {
-				return $job === SyncJob::class || $job === QuotaJob::class;
-			});
+			->willReturnCallback(fn ($job) => $job === SyncJob::class || $job === QuotaJob::class);
 		$this->jobList->expects($this->exactly(3))
 			->method('scheduleAfter');
 

@@ -131,9 +131,7 @@ PROMPT;
 	 */
 	public function summarizeThread(Account $account, string $threadId, array $messages, string $currentUserId): ?string {
 		if (in_array(SummaryTaskType::class, $this->textProcessingManager->getAvailableTaskTypes(), true)) {
-			$messageIds = array_map(function ($message) {
-				return $message->getMessageId();
-			}, $messages);
+			$messageIds = array_map(fn ($message) => $message->getMessageId(), $messages);
 			$cachedSummary = $this->cache->getValue($this->cache->buildUrlKey($messageIds));
 			if ($cachedSummary) {
 				return $cachedSummary;

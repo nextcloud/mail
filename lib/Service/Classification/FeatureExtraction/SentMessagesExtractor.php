@@ -35,11 +35,7 @@ class SentMessagesExtractor implements IExtractor {
 		array $incomingMailboxes,
 		array $outgoingMailboxes,
 		array $messages): void {
-		$senders = array_unique(array_map(static function (Message $message) {
-			return $message->getFrom()->first()->getEmail();
-		}, array_filter($messages, static function (Message $message) {
-			return $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null;
-		})));
+		$senders = array_unique(array_map(static fn (Message $message) => $message->getFrom()->first()->getEmail(), array_filter($messages, static fn (Message $message) => $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null)));
 
 		$this->messagesSentTotal = $this->statisticsDao->getMessagesTotal(...$outgoingMailboxes);
 		$this->messagesSent = $this->statisticsDao->getMessagesSentToGrouped($outgoingMailboxes, $senders);

@@ -25,9 +25,7 @@ class FunctionsTest extends TestCase {
 	}
 
 	public function testFlatMap(): void {
-		$double = function ($x) {
-			return [$x, $x];
-		};
+		$double = (fn ($x) => [$x, $x]);
 		$data = [
 			1,
 			2,

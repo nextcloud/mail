@@ -37,9 +37,7 @@ class IMAPMessageTest extends TestCase {
 		//linkToRoute 'mail.proxy.proxy'
 		$urlGenerator->expects($this->any())
 			->method('linkToRoute')
-			->will($this->returnCallback(function ($url) {
-				return "https://docs.example.com/server/go.php?to=$url";
-			}));
+			->will($this->returnCallback(fn ($url) => "https://docs.example.com/server/go.php?to=$url"));
 		$request = $this->getMockBuilder(IRequest::class)
 			->disableOriginalConstructor()
 			->getMock();

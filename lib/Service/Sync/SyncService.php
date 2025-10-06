@@ -180,9 +180,7 @@ class SyncService {
 		}
 		$changed = $this->messageMapper->findByMailboxAndIds($mailbox, $account->getUserId(), $changedIds);
 
-		$stillKnownIds = array_map(static function (Message $msg) {
-			return $msg->getId();
-		}, $changed);
+		$stillKnownIds = array_map(static fn (Message $msg) => $msg->getId(), $changed);
 		$vanished = array_values(array_diff($knownIds, $stillKnownIds));
 
 		return new Response(

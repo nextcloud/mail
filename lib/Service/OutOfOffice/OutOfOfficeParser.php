@@ -128,9 +128,7 @@ class OutOfOfficeParser {
 		];
 
 		if (!empty($allowedRecipients)) {
-			$formattedRecipients = array_map(static function (string $recipient) {
-				return "\"$recipient\"";
-			}, $allowedRecipients);
+			$formattedRecipients = array_map(static fn (string $recipient) => "\"$recipient\"", $allowedRecipients);
 			$joinedRecipients = implode(', ', $formattedRecipients);
 			$vacation[] = ":addresses [$joinedRecipients]";
 		}

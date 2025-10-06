@@ -313,9 +313,7 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'smime-certificates',
 			array_map(
-				function (SmimeCertificate $certificate) {
-					return $this->smimeService->enrichCertificate($certificate);
-				},
+				fn (SmimeCertificate $certificate) => $this->smimeService->enrichCertificate($certificate),
 				$this->smimeService->findAllCertificates($user->getUID()),
 			),
 		);

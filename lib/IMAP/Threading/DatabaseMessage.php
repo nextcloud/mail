@@ -81,9 +81,7 @@ final class DatabaseMessage extends Message implements JsonSerializable {
 			$this->databaseId,
 			$this->hasReSubject() ? 'Re: ' . $hash($this->getSubject()) : $hash($this->getSubject()),
 			$hash($this->getId()),
-			array_map(static function (string $ref) use ($hash) {
-				return $hash($ref);
-			}, $this->getReferences()),
+			array_map(static fn (string $ref) => $hash($ref), $this->getReferences()),
 			$this->threadRootId === null ? null : $hash($this->threadRootId)
 		);
 	}

@@ -36,14 +36,12 @@ class AutoCompleteService {
 		$fromCollector = $this->addressCollector->searchAddress($userId, $term);
 
 		// Convert collected addresses into same format as CI creates
-		$recipientsFromCollector = array_map(static function (CollectedAddress $address) {
-			return [
-				'id' => $address->getId(),
-				'label' => $address->getDisplayName(),
-				'email' => $address->getEmail(),
-				'source' => 'collector',
-			];
-		}, $fromCollector);
+		$recipientsFromCollector = array_map(static fn (CollectedAddress $address) => [
+			'id' => $address->getId(),
+			'label' => $address->getDisplayName(),
+			'email' => $address->getEmail(),
+			'source' => 'collector',
+		], $fromCollector);
 
 		return array_merge($recipientsFromContacts, $recipientsFromCollector, $recipientGroups);
 	}

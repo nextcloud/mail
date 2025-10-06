@@ -566,9 +566,7 @@ class MailManagerTest extends TestCase {
 			->willThrowException(new DoesNotExistException('Computer says no'));
 		$this->tagMapper->expects($this->once())
 			->method('insert')
-			->willReturnCallback(static function (Tag $tag) {
-				return $tag;
-			});
+			->willReturnCallback(static fn (Tag $tag) => $tag);
 
 		$tag = $this->manager->createTag('Hello Hello 👋', '#0082c9', 'admin');
 
@@ -634,9 +632,7 @@ class MailManagerTest extends TestCase {
 			->willReturn($existingTag);
 		$this->tagMapper->expects($this->once())
 			->method('update')
-			->willReturnCallback(static function (Tag $tag) {
-				return $tag;
-			});
+			->willReturnCallback(static fn (Tag $tag) => $tag);
 
 		$tag = $this->manager->updateTag(100, 'Hello Hello 👋', '#0082c9', 'admin');
 

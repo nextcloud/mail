@@ -515,9 +515,7 @@ class MailManager implements IMailManager {
 	 */
 	public function tagMessagesWithClient(Horde_Imap_Client_Socket $client, Account $account, Mailbox $mailbox, array $messages, Tag $tag, bool $value):void {
 		if ($this->isPermflagsEnabled($client, $account, $mailbox->getName()) === true) {
-			$messageIds = array_map(static function (Message $message) {
-				return $message->getUid();
-			}, $messages);
+			$messageIds = array_map(static fn (Message $message) => $message->getUid(), $messages);
 			try {
 				if ($value) {
 					// imap keywords and flags work the same way
@@ -589,9 +587,7 @@ class MailManager implements IMailManager {
 		 */
 		$client = $this->imapClientFactory->getClient($account);
 		try {
-			$quotas = array_map(static function (Folder $mb) use ($client) {
-				return $client->getQuotaRoot($mb->getMailbox());
-			}, $this->folderMapper->getFolders($account, $client));
+			$quotas = array_map(static fn (Folder $mb) => $client->getQuotaRoot($mb->getMailbox()), $this->folderMapper->getFolders($account, $client));
 		} catch (Horde_Imap_Client_Exception_NoSupportExtension $ex) {
 			return null;
 		} finally {
@@ -605,12 +601,10 @@ class MailManager implements IMailManager {
 		 *
 		 * @see https://tools.ietf.org/html/rfc2087#section-3
 		 */
-		$storageQuotas = array_map(static function (array $root) {
-			return $root['storage'] ?? [
-				'usage' => 0,
-				'limit' => 0,
-			];
-		}, array_merge(...array_values($quotas)));
+		$storageQuotas = array_map(static fn (array $root) => $root['storage'] ?? [
+			'usage' => 0,
+			'limit' => 0,
+		], array_merge(...array_values($quotas)));
 
 		if ($storageQuotas === []) {
 			// Nothing left to do, and array_merge doesn't like to be called with zero arguments.
@@ -890,9 +884,7 @@ class MailManager implements IMailManager {
 	public function deleteTagForAccount(int $id, string $userId, Tag $tag, Account $account) :void {
 		try {
 			$messageTags = $this->messageTagsMapper->getMessagesByTag($id);
-			$messages = array_merge(... array_map(function ($messageTag) use ($account) {
-				return $this->getByMessageId($account, $messageTag->getImapMessageId());
-			}, array_values($messageTags)));
+			$messages = array_merge(... array_map(fn ($messageTag) => $this->getByMessageId($account, $messageTag->getImapMessageId()), array_values($messageTags)));
 		} catch (DoesNotExistException $e) {
 			throw new ClientException('Messages not found', 0, $e);
 		}
