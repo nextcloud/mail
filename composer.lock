@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "13c344bb512ef2b578e4ac07c3a11d7f",
+    "content-hash": "8166adf72825d3dd1e2c6066a3ede6c0",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2352,16 +2352,16 @@
         },
         {
             "name": "rubix/ml",
-            "version": "2.5.2",
+            "version": "2.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/ML.git",
-                "reference": "59782a24bd09f0faa00e7df335fd58ca288d1eab"
+                "reference": "e0960dcb19c9722ccbc4826f5b9417a75fa01613"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/ML/zipball/59782a24bd09f0faa00e7df335fd58ca288d1eab",
-                "reference": "59782a24bd09f0faa00e7df335fd58ca288d1eab",
+                "url": "https://api.github.com/repos/RubixML/ML/zipball/e0960dcb19c9722ccbc4826f5b9417a75fa01613",
+                "reference": "e0960dcb19c9722ccbc4826f5b9417a75fa01613",
                 "shasum": ""
             },
             "require": {
@@ -2375,7 +2375,7 @@
                 "symfony/polyfill-php80": "^1.17",
                 "symfony/polyfill-php82": "^1.27",
                 "symfony/polyfill-php83": "^1.27",
-                "wamania/php-stemmer": "^3.0"
+                "wamania/php-stemmer": "^4.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.0",
@@ -2416,7 +2416,7 @@
                 }
             ],
             "description": "A high-level machine learning and deep learning library for the PHP language.",
-            "homepage": "https://rubixml.com",
+            "homepage": "https://rubixml.github.io/ML/latest/",
             "keywords": [
                 "Algorithm",
                 "Deep learning",
@@ -2499,7 +2499,7 @@
             ],
             "support": {
                 "chat": "https://t.me/RubixML",
-                "docs": "https://docs.rubixml.com",
+                "docs": "https://rubixml.github.io/ML/latest/",
                 "issues": "https://github.com/RubixML/ML/issues",
                 "source": "https://github.com/RubixML/ML"
             },
@@ -2509,7 +2509,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-09T23:02:27+00:00"
+            "time": "2025-10-01T17:52:15+00:00"
         },
         {
             "name": "rubix/tensor",
@@ -2773,8 +2773,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -2847,8 +2847,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -2927,8 +2927,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -3003,8 +3003,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
