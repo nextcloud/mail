@@ -39,7 +39,7 @@
 		"nextcloud/kitinerary-sys": "^2.0.0",
 		"phpmailer/dkimvalidator": "^0.3.0",
 		"psr/log": "^3.0.2",
-		"rubix/ml": "2.5.2",
+		"rubix/ml": "2.5.3",
 		"sabberworm/php-css-parser": "^8.9.0",
 		"wamania/php-stemmer": "4.0 as 3.0",
 		"youthweb/urllinker": "^2.1.0"
