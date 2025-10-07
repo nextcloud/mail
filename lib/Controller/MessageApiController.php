@@ -191,9 +191,7 @@ class MessageApiController extends OCSController {
 			}
 		}
 
-		$localAttachments = array_map(static function ($messageAttachment) {
-			return ['type' => 'local', 'id' => $messageAttachment->getId()];
-		}, $messageAttachments);
+		$localAttachments = array_map(static fn ($messageAttachment) => ['type' => 'local', 'id' => $messageAttachment->getId()], $messageAttachments);
 		$localMessage = $this->outboxService->saveMessage($mailAccount, $message, $to, $cc, $bcc, $localAttachments);
 
 		try {
@@ -275,12 +273,10 @@ class MessageApiController extends OCSController {
 		if ($itineraries) {
 			$json['itineraries'] = $itineraries->jsonSerialize();
 		}
-		$json['attachments'] = array_map(function ($a) use ($id) {
-			return $this->enrichDownloadUrl(
-				$id,
-				$a
-			);
-		}, $json['attachments']);
+		$json['attachments'] = array_map(fn ($a) => $this->enrichDownloadUrl(
+			$id,
+			$a
+		), $json['attachments']);
 		$json['id'] = $message->getId();
 		$json['isSenderTrusted'] = $this->trustedSenderService->isSenderTrusted($this->userId, $message);
 

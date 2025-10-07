@@ -173,16 +173,12 @@ class ImportanceClassifier {
 		$logger->debug('found ' . count($outgoingMailboxes) . ' outgoing mailbox(es)');
 		$perf->step('find outgoing mailboxes');
 
-		$mailboxIds = array_map(static function (Mailbox $mailbox) {
-			return $mailbox->getId();
-		}, $incomingMailboxes);
+		$mailboxIds = array_map(static fn (Mailbox $mailbox) => $mailbox->getId(), $incomingMailboxes);
 		$messages = array_filter(
 			$this->messageMapper->findLatestMessages($account->getUserId(), $mailboxIds, self::MAX_TRAINING_SET_SIZE),
 			[$this, 'filterMessageHasSenderEmail']
 		);
-		$importantMessages = array_filter($messages, static function (Message $message) {
-			return ($message->getFlagImportant() === true);
-		});
+		$importantMessages = array_filter($messages, static fn (Message $message) => $message->getFlagImportant() === true);
 		$logger->debug('found ' . count($messages) . ' messages of which ' . count($importantMessages) . ' are important');
 		if (count($importantMessages) < self::COLD_START_THRESHOLD) {
 			$logger->info('not enough messages to train a classifier');
@@ -457,12 +453,8 @@ class ImportanceClassifier {
 				$messages
 			);
 			return array_combine(
-				array_map(static function (Message $m) {
-					return $m->getUid();
-				}, $messages),
-				array_map(static function (Message $m) use ($predictions) {
-					return ($predictions[$m->getUid()] ?? false) === true;
-				}, $messages)
+				array_map(static fn (Message $m) => $m->getUid(), $messages),
+				array_map(static fn (Message $m) => ($predictions[$m->getUid()] ?? false) === true, $messages)
 			);
 		}
 
@@ -478,12 +470,8 @@ class ImportanceClassifier {
 			Unlabeled::build(array_column($features, 'features'))
 		);
 		return array_combine(
-			array_map(static function (Message $m) {
-				return $m->getUid();
-			}, $messagesWithSender),
-			array_map(static function ($p) {
-				return $p === self::LABEL_IMPORTANT;
-			}, $predictions)
+			array_map(static fn (Message $m) => $m->getUid(), $messagesWithSender),
+			array_map(static fn ($p) => $p === self::LABEL_IMPORTANT, $predictions)
 		);
 	}
 

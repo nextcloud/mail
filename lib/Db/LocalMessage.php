@@ -177,24 +177,16 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'inReplyToMessageId' => $this->getInReplyToMessageId(),
 			'attachments' => $this->getAttachments(),
 			'from' => array_values(
-				array_filter($this->getRecipients(), static function (Recipient $recipient) {
-					return $recipient->getType() === Recipient::TYPE_FROM;
-				})
+				array_filter($this->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === Recipient::TYPE_FROM)
 			),
 			'to' => array_values(
-				array_filter($this->getRecipients(), static function (Recipient $recipient) {
-					return $recipient->getType() === Recipient::TYPE_TO;
-				})
+				array_filter($this->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === Recipient::TYPE_TO)
 			),
 			'cc' => array_values(
-				array_filter($this->getRecipients(), static function (Recipient $recipient) {
-					return $recipient->getType() === Recipient::TYPE_CC;
-				})
+				array_filter($this->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === Recipient::TYPE_CC)
 			),
 			'bcc' => array_values(
-				array_filter($this->getRecipients(), static function (Recipient $recipient) {
-					return $recipient->getType() === Recipient::TYPE_BCC;
-				})
+				array_filter($this->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === Recipient::TYPE_BCC)
 			),
 			'failed' => $this->isFailed() === true,
 			'smimeCertificateId' => $this->getSmimeCertificateId(),

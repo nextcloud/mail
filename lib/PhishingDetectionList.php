@@ -40,9 +40,7 @@ class PhishingDetectionList implements JsonSerializable {
 	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
-		$result = array_map(static function (PhishingDetectionResult $check) {
-			return $check->jsonSerialize();
-		}, $this->checks);
+		$result = array_map(static fn (PhishingDetectionResult $check) => $check->jsonSerialize(), $this->checks);
 		return [
 			'checks' => $result,
 			'warning' => $this->isWarning(),

@@ -219,16 +219,13 @@ class MessageMapper {
 		}
 		$uidCandidates = array_filter(
 			array_map(
-				static function (Horde_Imap_Client_Data_Fetch $data) {
-					return $data->getUid();
-				},
+				static fn (Horde_Imap_Client_Data_Fetch $data) => $data->getUid(),
 				iterator_to_array($fetchResult)
 			),
 
-			static function (int $uid) use ($highestKnownUid) {
+			static fn (int $uid)
 				// Don't load the ones we already know
-				return $uid > $highestKnownUid;
-			}
+				=> $uid > $highestKnownUid
 		);
 		$uidsToFetch = array_slice(
 			$uidCandidates,
@@ -293,11 +290,9 @@ class MessageMapper {
 		if (is_array($ids)) {
 			// Chunk to prevent overly long IMAP commands
 			/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
-			$fetchResults = array_flat_map(function ($ids) use ($query, $mailbox, $client) {
-				return iterator_to_array($client->fetch($mailbox, $query, [
-					'ids' => $ids,
-				]), false);
-			}, chunk_uid_sequence($ids, 10000));
+			$fetchResults = array_flat_map(fn ($ids) => iterator_to_array($client->fetch($mailbox, $query, [
+				'ids' => $ids,
+			]), false), chunk_uid_sequence($ids, 10000));
 		} else {
 			/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
 			$fetchResults = iterator_to_array($client->fetch($mailbox, $query, [
@@ -305,9 +300,7 @@ class MessageMapper {
 			]), false);
 		}
 
-		$fetchResults = array_values(array_filter($fetchResults, static function (Horde_Imap_Client_Data_Fetch $fetchResult) {
-			return $fetchResult->exists(Horde_Imap_Client::FETCH_ENVELOPE);
-		}));
+		$fetchResults = array_values(array_filter($fetchResults, static fn (Horde_Imap_Client_Data_Fetch $fetchResult) => $fetchResult->exists(Horde_Imap_Client::FETCH_ENVELOPE)));
 
 		if ($fetchResults === []) {
 			$this->logger->debug("findByIds in $mailbox got " . count($ids) . ' UIDs but found none');
@@ -322,18 +315,16 @@ class MessageMapper {
 			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs ($range) and found " . count($fetchResults) . ". minFetched=$minFetched maxFetched=$maxFetched");
 		}
 
-		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchResult) use ($client, $mailbox, $loadBody, $userId, $runPhishingCheck) {
-			return $this->imapMessageFactory
-				->build(
-					$fetchResult->getUid(),
-					$mailbox,
-					$client,
-					$userId,
-				)
-				->withBody($loadBody)
-				->withPhishingCheck($runPhishingCheck)
-				->fetchMessage($fetchResult);
-		}, $fetchResults);
+		return array_map(fn (Horde_Imap_Client_Data_Fetch $fetchResult) => $this->imapMessageFactory
+			->build(
+				$fetchResult->getUid(),
+				$mailbox,
+				$client,
+				$userId,
+			)
+			->withBody($loadBody)
+			->withPhishingCheck($runPhishingCheck)
+			->fetchMessage($fetchResult), $fetchResults);
 	}
 
 	/**
@@ -624,9 +615,7 @@ class MessageMapper {
 		string $userId,
 		?array $attachmentIds = []): array {
 		$attachments = $this->getAttachments($client, $mailbox, $uid, $userId, $attachmentIds);
-		return array_map(static function (Attachment $attachment) {
-			return $attachment->getContent();
-		}, $attachments);
+		return array_map(static fn (Attachment $attachment) => $attachment->getContent(), $attachments);
 	}
 
 	/**

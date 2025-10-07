@@ -109,9 +109,7 @@ class TagMapper extends QBMapper {
 	 * @return Tag[][]
 	 */
 	public function getAllTagsForMessages(array $messages, string $userId): array {
-		$ids = array_map(static function (Message $message) {
-			return $message->getMessageId();
-		}, $messages);
+		$ids = array_map(static fn (Message $message) => $message->getMessageId(), $messages);
 
 		$tags = [];
 		$qb = $this->db->getQueryBuilder();
@@ -136,9 +134,7 @@ class TagMapper extends QBMapper {
 				// Construct a Tag instance but omit any other joined columns
 				$tags[$messageId][] = Tag::fromRow(array_filter(
 					$row,
-					static function (string $key) {
-						return $key !== 'imap_message_id';
-					},
+					static fn (string $key) => $key !== 'imap_message_id',
 					ARRAY_FILTER_USE_KEY
 				));
 			}
@@ -154,9 +150,7 @@ class TagMapper extends QBMapper {
 	 * @return string[]
 	 */
 	public function getTaggedMessageIdsForMessages(array $messages, string $userId, string $imapLabel): array {
-		$ids = array_map(static function (Message $message) {
-			return $message->getMessageId();
-		}, $messages);
+		$ids = array_map(static fn (Message $message) => $message->getMessageId(), $messages);
 
 		$qb = $this->db->getQueryBuilder();
 		$tagsQuery = $qb->selectDistinct(['t.*', 'mt.imap_message_id'])
@@ -228,9 +222,7 @@ class TagMapper extends QBMapper {
 			$tags[] = $tag;
 		}
 		$dbTags = $this->getAllTagsForUser($account->getUserId());
-		$toInsert = array_udiff($tags, $dbTags, static function (Tag $a, Tag $b) {
-			return strcmp($a->getImapLabel(), $b->getImapLabel());
-		});
+		$toInsert = array_udiff($tags, $dbTags, static fn (Tag $a, Tag $b) => strcmp($a->getImapLabel(), $b->getImapLabel()));
 		foreach ($toInsert as $entity) {
 			$this->insert($entity);
 		}
@@ -249,9 +241,7 @@ class TagMapper extends QBMapper {
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
-		$ids = array_unique(array_map(static function ($row) {
-			return $row['id'];
-		}, $rows));
+		$ids = array_unique(array_map(static fn ($row) => $row['id'], $rows));
 
 		$deleteQB = $this->db->getQueryBuilder();
 		$deleteQB->delete('mail_message_tags')
@@ -280,9 +270,7 @@ class TagMapper extends QBMapper {
 		$rows = $result->fetchAll();
 		$result->closeCursor();
 
-		$ids = array_map(static function (array $row) {
-			return $row['id'];
-		}, $rows);
+		$ids = array_map(static fn (array $row) => $row['id'], $rows);
 
 		$deleteMT = $this->db->getQueryBuilder();
 		$deleteMT->delete('mail_message_tags')
@@ -304,9 +292,7 @@ class TagMapper extends QBMapper {
 		$rows = $result->fetchAll();
 		$result->closeCursor();
 
-		$user_ids = array_map(static function (array $row) {
-			return $row['user_id'];
-		}, $rows);
+		$user_ids = array_map(static fn (array $row) => $row['user_id'], $rows);
 
 		$deleteT = $this->db->getQueryBuilder();
 		$deleteT->delete('mail_tags')

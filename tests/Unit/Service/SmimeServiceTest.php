@@ -104,9 +104,7 @@ class SmimeServiceTest extends TestCase {
 			]);
 		$this->tempManager->expects(self::exactly(3))
 			->method('getTemporaryFile')
-			->willReturnCallback(function () {
-				return $this->createTempFile();
-			});
+			->willReturnCallback(fn () => $this->createTempFile());
 		$this->certificateManager->expects(self::once())
 			->method('getAbsoluteBundlePath')
 			->willReturn(__DIR__ . '/../../data/smime-certs/imap.localhost.ca.crt');
@@ -153,9 +151,7 @@ class SmimeServiceTest extends TestCase {
 			]);
 		$this->tempManager->expects(self::exactly(3))
 			->method('getTemporaryFile')
-			->willReturnCallback(function () {
-				return $this->createTempFile();
-			});
+			->willReturnCallback(fn () => $this->createTempFile());
 		$this->certificateManager->expects(self::once())
 			->method('getAbsoluteBundlePath')
 			->willReturn(__DIR__ . '/../../data/smime-certs/imap.localhost.ca.crt');
@@ -200,9 +196,7 @@ class SmimeServiceTest extends TestCase {
 			]);
 		$this->tempManager->expects(self::exactly(5))
 			->method('getTemporaryFile')
-			->willReturnCallback(function () {
-				return $this->createTempFile();
-			});
+			->willReturnCallback(fn () => $this->createTempFile());
 		$this->certificateManager->expects(self::exactly(2))
 			->method('getAbsoluteBundlePath')
 			->willReturn(__DIR__ . '/../../data/smime-certs/imap.localhost.ca.crt');
@@ -340,9 +334,7 @@ class SmimeServiceTest extends TestCase {
 			->will($this->returnArgument(0));
 		$this->tempManager
 			->method('getTemporaryFile')
-			->willReturnCallback(function () {
-				return $this->createTempFile();
-			});
+			->willReturnCallback(fn () => $this->createTempFile());
 
 		$encryptedMimePart = $this->smimeService->encryptMimePart($mimePart, $certificates);
 		$encryptedText = $encryptedMimePart->toString([
@@ -463,9 +455,7 @@ class SmimeServiceTest extends TestCase {
 			->will($this->returnArgument(0));
 		$this->tempManager
 			->method('getTemporaryFile')
-			->willReturnCallback(function () {
-				return $this->createTempFile();
-			});
+			->willReturnCallback(fn () => $this->createTempFile());
 
 		// Can't compare to serialized part as the boundaries inside the signed MIME message are
 		// generated randomly each time. => Verify the signed part instead.
@@ -496,9 +486,7 @@ class SmimeServiceTest extends TestCase {
 			->will($this->returnArgument(0));
 		$this->tempManager
 			->method('getTemporaryFile')
-			->willReturnCallback(function () {
-				return $this->createTempFile();
-			});
+			->willReturnCallback(fn () => $this->createTempFile());
 		$this->certificateManager->expects(self::once())
 			->method('getAbsoluteBundlePath')
 			->willReturn(__DIR__ . '/../../data/smime-certs/imap.localhost.ca.crt');

@@ -70,11 +70,9 @@ class DateCheckTest extends TestCase {
 
 		$this->time->expects($this->exactly(2))
 			->method('getDateTime')
-			->willReturnCallback(function ($argument): DateTime {
-				return match ($argument) {
-					'now' => new \DateTime('now'),
-					'invalid date' => throw new \DateException()
-				};
+			->willReturnCallback(fn ($argument): DateTime => match ($argument) {
+				'now' => new \DateTime('now'),
+				'invalid date' => throw new \DateException()
 			});
 
 		$result = $this->service->run('invalid date');

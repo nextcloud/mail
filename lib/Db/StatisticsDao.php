@@ -29,9 +29,7 @@ class StatisticsDao {
 	private function emailCountResultToIndexedArray(array $rows): array {
 		return array_combine(
 			array_column($rows, 'email'),
-			array_map(static function (string $val) {
-				return (int)$val;
-			}, array_column($rows, 'count'))
+			array_map(static fn (string $val) => (int)$val, array_column($rows, 'count'))
 		);
 	}
 
@@ -54,9 +52,7 @@ class StatisticsDao {
 	public function getMessagesTotal(Mailbox ...$mb): int {
 		$qb = $this->db->getQueryBuilder();
 
-		$mailboxIds = array_map(static function (Mailbox $mb) {
-			return $mb->getId();
-		}, $mb);
+		$mailboxIds = array_map(static fn (Mailbox $mb) => $mb->getId(), $mb);
 		$select = $qb->select($qb->func()->count('*'))
 			->from('mail_recipients', 'r')
 			->join('r', 'mail_messages', 'm', $qb->expr()->eq('m.id', 'r.message_id'))
@@ -74,9 +70,7 @@ class StatisticsDao {
 	public function getMessagesSentToGrouped(array $mailboxes, array $emails): array {
 		$qb = $this->db->getQueryBuilder();
 
-		$mailboxIds = array_map(static function (Mailbox $mb) {
-			return $mb->getId();
-		}, $mailboxes);
+		$mailboxIds = array_map(static fn (Mailbox $mb) => $mb->getId(), $mailboxes);
 		$select = $qb->selectAlias('r.email', 'email')
 			->selectAlias($qb->func()->count('*'), 'count')
 			->from('mail_recipients', 'r')
@@ -106,9 +100,7 @@ class StatisticsDao {
 	public function getNumberOfMessagesGrouped(array $mailboxes, array $emails): array {
 		$qb = $this->db->getQueryBuilder();
 
-		$mailboxIds = array_map(static function (Mailbox $mb) {
-			return $mb->getId();
-		}, $mailboxes);
+		$mailboxIds = array_map(static fn (Mailbox $mb) => $mb->getId(), $mailboxes);
 		$select = $qb->selectAlias('r.email', 'email')
 			->selectAlias($qb->func()->count('*'), 'count')
 			->from('mail_recipients', 'r')
@@ -139,9 +131,7 @@ class StatisticsDao {
 	public function getNumberOfMessagesWithFlagGrouped(array $mailboxes, string $flag, array $emails): array {
 		$qb = $this->db->getQueryBuilder();
 
-		$mailboxIds = array_map(static function (Mailbox $mb) {
-			return $mb->getId();
-		}, $mailboxes);
+		$mailboxIds = array_map(static fn (Mailbox $mb) => $mb->getId(), $mailboxes);
 		$select = $qb->selectAlias('r.email', 'email')
 			->selectAlias($qb->func()->count('*'), 'count')
 			->from('mail_recipients', 'r')

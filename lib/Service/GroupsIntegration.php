@@ -87,20 +87,16 @@ class GroupsIntegration {
 						$recipient->getEmail(),
 						mb_strlen($this->servicePrefix($service))
 					);
-					$members = array_filter($service->getUsers($groupId), static function (array $member) {
-						return !empty($member['email']);
-					});
+					$members = array_filter($service->getUsers($groupId), static fn (array $member) => !empty($member['email']));
 					if ($members === []) {
 						throw new ServiceException($groupId . " ({$service->getNamespace()}) has no members with email addresses");
 					}
-					return array_map(static function (array $member) use ($recipient) {
-						return Recipient::fromParams([
-							'messageId' => $recipient->getMessageId(),
-							'type' => $recipient->getType(),
-							'label' => $member['name'] ?? $member['email'],
-							'email' => $member['email'],
-						]);
-					}, $members);
+					return array_map(static fn (array $member) => Recipient::fromParams([
+						'messageId' => $recipient->getMessageId(),
+						'type' => $recipient->getType(),
+						'label' => $member['name'] ?? $member['email'],
+						'email' => $member['email'],
+					]), $members);
 				}
 			}
 
