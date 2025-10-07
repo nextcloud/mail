@@ -94,7 +94,6 @@ OC.L10N.register(
     "Add alias" : "Add alias",
     "Create alias" : "Create alias",
     "Cancel" : "لغو",
-    "Put my text to the bottom of a reply instead of on top of it." : "Put my text to the bottom of a reply instead of on top of it.",
     "Could not update preference" : "Could not update preference",
     "Mail settings" : "Mail settings",
     "Accounts" : "حساب‌ها",
@@ -608,6 +607,7 @@ OC.L10N.register(
     "Redirect" : "تغییر مسیر",
     "The link leads to %s" : "پیوند منجر به%s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "ادامه دهید%s"
+    "Continue to %s" : "ادامه دهید%s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Put my text to the bottom of a reply instead of on top of it."
 },
 "nplurals=2; plural=(n > 1);");

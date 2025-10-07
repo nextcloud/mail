@@ -118,7 +118,6 @@ OC.L10N.register(
     "Cancel" : "إلغاء",
     "Search in the body of messages in priority Inbox" : "البحث في متون الرسائل في صندوق أسبقيات الوارد",
     "Activate" : "تفعيل",
-    "Put my text to the bottom of a reply instead of on top of it." : "ضع نصي في أسفل الرد بدلاً من وضعه فوقه.",
     "Mark as important" : "ميِّز كـ\"مُهم\"",
     "Remind about messages that require a reply but received none" : "ذكِّرني بالرسائل التي تتطلب ردّاً لكن لم يتم ",
     "Use internal addresses" : "استعمل عناوين داخلية",
@@ -130,13 +129,12 @@ OC.L10N.register(
     "General" : "العامة",
     "Layout" : "تنسيق",
     "List" : "قائمة",
-    "Vertical split" : "تقسيم عمودي",
     "Horizontal split" : "تقسيم أفقي",
     "Sorting" : "ترتيب",
     "Newest" : "الأحدث",
     "Oldest" : "الأقدم",
-    "Search in body" : "البحث في المتن",
     "Reply text position" : "موضع نَصّ الرّد",
+    "Search in body" : "البحث في المتن",
     "Gravatar settings" : "إعدادات الرموز التجسيدية Gravatar",
     "Use Gravatar and favicon avatars" : "استخدم الرموز التجسيدية Gravatar و favicon",
     "Mailto" : "إيميل إلى",
@@ -751,6 +749,8 @@ OC.L10N.register(
     "Redirect" : "إعادة توجيه",
     "The link leads to %s" : "الرابط يؤدي إل %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "إذا لم تكن راغباً في زيارة تلك الصفحة، يمكنك العودة إلى <a href=\"%s\">البريد Mail</a>.",
-    "Continue to %s" : "إستمر نحو %s"
+    "Continue to %s" : "إستمر نحو %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "ضع نصي في أسفل الرد بدلاً من وضعه فوقه.",
+    "Vertical split" : "تقسيم عمودي"
 },
 "nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;");

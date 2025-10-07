@@ -95,7 +95,6 @@ OC.L10N.register(
     "Cancel" : "취소",
     "Search in the body of messages in priority Inbox" : "우선 편지함에서 메시지 본문 검색",
     "Activate" : "활성화",
-    "Put my text to the bottom of a reply instead of on top of it." : "내 텍스트를 답장 위가 아니라 답장 맨 아래에 놓기",
     "Could not update preference" : "환경설정을 업데이트할 수 없습니다.",
     "Mail settings" : "메일 설정",
     "Accounts" : "계정",
@@ -103,13 +102,12 @@ OC.L10N.register(
     "General" : "일반",
     "Layout" : "레이아웃",
     "List" : "목록",
-    "Vertical split" : "수직 분할",
     "Horizontal split" : "수평 분할",
     "Sorting" : "정렬",
     "Newest" : "최신순",
     "Oldest" : "과거순",
-    "Search in body" : "본문 검색",
     "Reply text position" : "답장 문구 위치",
+    "Search in body" : "본문 검색",
     "Gravatar settings" : "Gravatar 설정",
     "Use Gravatar and favicon avatars" : "Gravatar 및 파비콘 아바타 사용",
     "Register as application for mail links" : "메일 링크를 어플리케이션으로 등록",
@@ -658,6 +656,8 @@ OC.L10N.register(
     "Redirect" : "넘겨주기",
     "The link leads to %s" : "이 링크가 %s을(를) 향함",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "해당 페이지를 방문하지 않으려면 <a href=\"%s\">메일</a>로 돌아갈 수 있습니다.",
-    "Continue to %s" : "%s(으)로 이동"
+    "Continue to %s" : "%s(으)로 이동",
+    "Put my text to the bottom of a reply instead of on top of it." : "내 텍스트를 답장 위가 아니라 답장 맨 아래에 놓기",
+    "Vertical split" : "수직 분할"
 },
 "nplurals=1; plural=0;");

@@ -105,7 +105,6 @@
     "Cancel" : "Avbryt",
     "Search in the body of messages in priority Inbox" : "Søke i meldingsteksten i prioritert innboks",
     "Activate" : "Aktiver",
-    "Put my text to the bottom of a reply instead of on top of it." : "Legg teksten min nederst i et svar i stedet for på toppen av det.",
     "Mark as important" : "Merk som viktig",
     "Remind about messages that require a reply but received none" : "Påminnelse om meldinger som krever svar, men ikke har mottatt noen",
     "Use internal addresses" : "Bruk interne adresser",
@@ -116,13 +115,12 @@
     "General" : "Generell",
     "Layout" : "Utforming",
     "List" : "Liste",
-    "Vertical split" : "Loddrett deling",
     "Horizontal split" : "Horisontal deling",
     "Sorting" : "Sorter",
     "Newest" : "Nyeste",
     "Oldest" : "Eldst",
-    "Search in body" : "Søk i innholdstekst",
     "Reply text position" : "Svartekstposisjon",
+    "Search in body" : "Søk i innholdstekst",
     "Gravatar settings" : "Gravatar-innstillinger",
     "Use Gravatar and favicon avatars" : "Bruk Gravatar- og favikon-avatarer",
     "Mailto" : "Mailto",
@@ -710,6 +708,8 @@
     "Redirect" : "Videresend",
     "The link leads to %s" : "Denne lenken leder til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Hvis du ikke vil besøke den siden, kan du gå tilbake til <a href=\"%s\">E-post</a>",
-    "Continue to %s" : "Fortsett til %s"
+    "Continue to %s" : "Fortsett til %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Legg teksten min nederst i et svar i stedet for på toppen av det.",
+    "Vertical split" : "Loddrett deling"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

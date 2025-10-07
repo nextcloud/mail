@@ -47,7 +47,6 @@ OC.L10N.register(
     "Email address" : "Địa chỉ thư điện tử",
     "Add alias" : "Thêm bí danh",
     "Cancel" : "Hủy bỏ",
-    "Put my text to the bottom of a reply instead of on top of it." : "Đặt văn bản ở cuối thư trả lời thay vì ở đầu thư.",
     "Accounts" : "Tài khoản",
     "Add mail account" : "Thêm tài khoản mail",
     "General" : "Tổng hợp",
@@ -285,6 +284,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Nhấp vào đây nếu bạn không được chuyển hướng tự động trong vòng vài giây tới",
     "Redirect" : "Chuyển hướng",
     "The link leads to %s" : "Liên kết dẫn đến %s",
-    "Continue to %s" : "Tiếp tục %s"
+    "Continue to %s" : "Tiếp tục %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Đặt văn bản ở cuối thư trả lời thay vì ở đầu thư."
 },
 "nplurals=1; plural=0;");

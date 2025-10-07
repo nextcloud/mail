@@ -110,7 +110,6 @@ OC.L10N.register(
     "Cancel" : "ۋاز كەچ",
     "Search in the body of messages in priority Inbox" : "مۇھىم خەت ساندۇقىدىكى ئۇچۇرلارنىڭ گەۋدىسىدىن ئىزدەڭ",
     "Activate" : "ئاكتىپلاش",
-    "Put my text to the bottom of a reply instead of on top of it." : "تېكىستنى ئۇنىڭ ئورنىغا جاۋابنىڭ ئاستىغا قويۇڭ.",
     "Mark as important" : "مۇھىم دەپ بەلگە قويۇڭ",
     "Remind about messages that require a reply but received none" : "جاۋاب تەلەپ قىلىدىغان ، ئەمما تاپشۇرۇۋالمىغان ئۇچۇرلارنى ئەسكەرتىڭ",
     "Use internal addresses" : "ئىچكى ئادرېسنى ئىشلىتىڭ",
@@ -122,13 +121,12 @@ OC.L10N.register(
     "General" : "ئادەتتىكى",
     "Layout" : "Layout",
     "List" : "تىزىملىك",
-    "Vertical split" : "ۋېرتىكال بۆلۈنۈش",
     "Horizontal split" : "توغرىسىغا بۆلۈنگەن",
     "Sorting" : "تەرتىپلەش",
     "Newest" : "ئەڭ يېڭى",
     "Oldest" : "ئەڭ كونا",
-    "Search in body" : "بەدەندە ئىزدەش",
     "Reply text position" : "تېكىست ئورنىغا جاۋاب بېرىڭ",
+    "Search in body" : "بەدەندە ئىزدەش",
     "Gravatar settings" : "Gravatar settings",
     "Use Gravatar and favicon avatars" : "Gravatar ۋە favicon باش سۈرىتىنى ئىشلىتىڭ",
     "Mailto" : "Mailto",
@@ -713,6 +711,8 @@ OC.L10N.register(
     "Redirect" : "قايتا نىشانلاش",
     "The link leads to %s" : "ئۇلىنىش% s نى كەلتۈرۈپ چىقىرىدۇ",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ئەگەر ئۇ بەتنى زىيارەت قىلىشنى خالىمىسىڭىز ، <a href = \"% s\"> خەت </a> گە قايتسىڭىز بولىدۇ.",
-    "Continue to %s" : "داۋاملىق% s"
+    "Continue to %s" : "داۋاملىق% s",
+    "Put my text to the bottom of a reply instead of on top of it." : "تېكىستنى ئۇنىڭ ئورنىغا جاۋابنىڭ ئاستىغا قويۇڭ.",
+    "Vertical split" : "ۋېرتىكال بۆلۈنۈش"
 },
 "nplurals=2; plural=(n != 1);");

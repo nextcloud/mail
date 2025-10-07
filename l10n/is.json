@@ -113,7 +113,6 @@
     "Cancel" : "Hætta við",
     "Search in the body of messages in priority Inbox" : "Leita í meginmáli skilaboða í forgangspósthólfi",
     "Activate" : "Virkja",
-    "Put my text to the bottom of a reply instead of on top of it." : "Setja texta neðst í svari frekar en efst.",
     "Mark as important" : "Merkja sem áríðandi",
     "Remind about messages that require a reply but received none" : "Minna á skilaboð sem þarfnast svars en hafa ekki enn fengið svar",
     "Use internal addresses" : "Nota innri vistföng",
@@ -125,13 +124,12 @@
     "General" : "Almennt",
     "Layout" : "Framsetning",
     "List" : "Listi",
-    "Vertical split" : "Lóðrétt skipting",
     "Horizontal split" : "Lárétt skipting",
     "Sorting" : "Röðun",
     "Newest" : "Nýjast",
     "Oldest" : "Elsta",
-    "Search in body" : "Leita í meginmáli",
     "Reply text position" : "Staðsetning texta í svari",
+    "Search in body" : "Leita í meginmáli",
     "Gravatar settings" : "Stillingar Gravatar-auðkennismyndar",
     "Use Gravatar and favicon avatars" : "Nota Gravatar og veftáknmyndir (favicon)",
     "Mailto" : "Senda til",
@@ -725,6 +723,8 @@
     "Redirect" : "Endurbeina",
     "The link leads to %s" : "Tengillinn leiðir til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ef þú vilt ekki fara á þá síðu, geturðu farið til baka í <a href=\"%s\">póstforritið</a>.",
-    "Continue to %s" : "Halda áfram í %s"
+    "Continue to %s" : "Halda áfram í %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Setja texta neðst í svari frekar en efst.",
+    "Vertical split" : "Lóðrétt skipting"
 },"pluralForm" :"nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
 }

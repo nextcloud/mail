@@ -339,6 +339,7 @@ OC.L10N.register(
     "Reply to sender only" : "Atsakyti tik siuntėjui",
     "Unsubscribe via link" : "Atsisakyti prenumeratos per nuorodą",
     "Unsubscribe via email" : "Atsisakyti prenumeratos per el. paštą",
+    "Newest message" : "Naujausia žinutė",
     "Could not remove trusted sender {sender}" : "Nepavyko pašalinti patikimo siuntėjo {sender}",
     "No senders are trusted at the moment." : "Šiuo metu nėra patikimų siuntėjų.",
     "Untitled event" : "Įvykis be pavadinimo",

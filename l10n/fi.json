@@ -83,7 +83,6 @@
     "Add alias" : "Lisää alias",
     "Create alias" : "Luo alias",
     "Cancel" : "Peruuta",
-    "Put my text to the bottom of a reply instead of on top of it." : "Aseta tekstini vastauksen alaosaan yläosan sijaan",
     "Could not update preference" : "Asetuksia ei voitu päivittää",
     "Mail settings" : "Sähköpostin asetukset",
     "Accounts" : "Tilit",
@@ -91,14 +90,12 @@
     "General" : "Yleiset",
     "Layout" : "Asettelu",
     "List" : "Lista",
-    "Vertical split" : "Pystysuunnan jako",
     "Horizontal split" : "Vaakasuunnan jako",
-    "Message View Mode" : "Viestin näyttötapa",
-    "Show all messages in thread" : "Näytä kaikki viestit ketjussa",
-    "Show only the selected message" : "Näytä vain valittu viesti",
     "Sorting" : "Lajittelu",
     "Newest" : "Uusimmat",
     "Oldest" : "Vanhimmat",
+    "Show all messages in thread" : "Näytä kaikki viestit ketjussa",
+    "Show only the selected message" : "Näytä vain valittu viesti",
     "Search in body" : "Etsi sisällöstä",
     "Gravatar settings" : "Gravatar-asetukset",
     "Use Gravatar and favicon avatars" : "Käytä Gravatar- ja favicon-avatareja",
@@ -520,6 +517,7 @@
     "Anti Spam Service" : "Roskapostin estopalvelu",
     "Gmail integration" : "Gmail-integraatio",
     "Microsoft integration" : "Microsoft-integraatio",
+    "Message View Mode" : "Viestin näyttötapa",
     "Anti Spam" : "Roskapostin esto",
     "The original message will be attached as a \"message/rfc822\" attachment." : "Alkuperäinen viesti asetetaan \"message/rfc822\"-liitteeksi.",
     "Reset" : "Palauta",
@@ -607,6 +605,8 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Klikkaa jos sinua ei uudelleenohjata automaattisesti muutamaan sekuntiin.",
     "Redirect" : "Uudelleenohjaus",
     "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
-    "Continue to %s" : "Jatka sivulle %s"
+    "Continue to %s" : "Jatka sivulle %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Aseta tekstini vastauksen alaosaan yläosan sijaan",
+    "Vertical split" : "Pystysuunnan jako"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

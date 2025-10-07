@@ -64,7 +64,6 @@ OC.L10N.register(
     "Add alias" : "Lägg till alias",
     "Create alias" : "Skapa alias",
     "Cancel" : "Avbryt",
-    "Put my text to the bottom of a reply instead of on top of it." : "Infoga min text längst ner i ett svar i stället för längst upp.",
     "Could not update preference" : "Kunde inte uppdatera inställningar",
     "Mail settings" : "E-postinställningar",
     "Accounts" : "Konton",
@@ -386,6 +385,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klicka här om du inte blir omdirigerad inom några sekunder.",
     "Redirect" : "Omdirigera",
     "The link leads to %s" : "Länken pekar mot %s",
-    "Continue to %s" : "Fortsätt till %s"
+    "Continue to %s" : "Fortsätt till %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Infoga min text längst ner i ett svar i stället för längst upp."
 },
 "nplurals=2; plural=(n != 1);");

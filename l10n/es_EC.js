@@ -85,7 +85,6 @@ OC.L10N.register(
     "Add alias" : "Agregar alias",
     "Create alias" : "Crear alias",
     "Cancel" : "Cancelar",
-    "Put my text to the bottom of a reply instead of on top of it." : "Colocar mi texto en la parte inferior de una respuesta en lugar de en la parte superior.",
     "Could not update preference" : "No se pudo actualizar la preferencia",
     "Mail settings" : "Configuración de correo",
     "Accounts" : "Cuentas",
@@ -583,6 +582,7 @@ OC.L10N.register(
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no deseas visitar esa página, puedes regresar a <a href=\"%s\">Correo</a>.",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Colocar mi texto en la parte inferior de una respuesta en lugar de en la parte superior."
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

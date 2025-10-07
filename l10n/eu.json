@@ -108,7 +108,6 @@
     "Cancel" : "Utzi",
     "Search in the body of messages in priority Inbox" : "Bilatu sarrera-ontziko mezuetan",
     "Activate" : "Aktibatu",
-    "Put my text to the bottom of a reply instead of on top of it." : "Jarri nire testua erantzunaren behealdean, goian jarri beharrean.",
     "Mark as important" : "Markatu garrantzizko gisa",
     "Remind about messages that require a reply but received none" : "Oroitarazi erantzun bat behar zuten baina jaso ez zuten mezuak",
     "Use internal addresses" : "Erabili barneko helbideak",
@@ -120,13 +119,12 @@
     "General" : "Orokorra",
     "Layout" : "Diseinua",
     "List" : "Zerrenda",
-    "Vertical split" : "Banaketa bertikala",
     "Horizontal split" : "Banaketa horizontala",
     "Sorting" : "Antolaketa",
     "Newest" : "Berrienak",
     "Oldest" : "Zaharrenak",
-    "Search in body" : "Bilatu testuan",
     "Reply text position" : "Erantzun testuaren posizioa",
+    "Search in body" : "Bilatu testuan",
     "Gravatar settings" : "Gravatar ezarpenak",
     "Use Gravatar and favicon avatars" : "Erabili Gravatar eta favicon avatarrak",
     "Mailto" : "Mailto",
@@ -737,6 +735,8 @@
     "Redirect" : "Birbideratu",
     "The link leads to %s" : "Estekak hona bideratzen du: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Orrialde hori bisitatu nahi ez baduzu, itzul dezakezu <a href=\"%s\">Mail </a>-ra.",
-    "Continue to %s" : "Jarraitu hona: %s"
+    "Continue to %s" : "Jarraitu hona: %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Jarri nire testua erantzunaren behealdean, goian jarri beharrean.",
+    "Vertical split" : "Banaketa bertikala"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
