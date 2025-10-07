@@ -79,7 +79,6 @@
     "Create alias" : "Crea alias",
     "Cancel" : "Annulla",
     "Activate" : "Attiva",
-    "Put my text to the bottom of a reply instead of on top of it." : "Inserisci il mio testo in fondo alla risposta invece che sopra.",
     "Could not update preference" : "Impossibile aggiornare la preferenza",
     "Mail settings" : "Impostazioni Posta",
     "Accounts" : "Account",
@@ -566,6 +565,7 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Fai clic qui se non viene rediretto automaticamente entro pochi secondi.",
     "Redirect" : "Redirigi",
     "The link leads to %s" : "Il collegamento conduce a %s",
-    "Continue to %s" : "Continua su %s"
+    "Continue to %s" : "Continua su %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Inserisci il mio testo in fondo alla risposta invece che sopra."
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

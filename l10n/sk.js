@@ -118,7 +118,6 @@ OC.L10N.register(
     "Cancel" : "Zrušiť",
     "Search in the body of messages in priority Inbox" : "Vyhľadávať v tele prioritných správ",
     "Activate" : "Aktivovať",
-    "Put my text to the bottom of a reply instead of on top of it." : "Umiestniť môj text odpovede na koniec správy.",
     "Mark as important" : "Označiť ako dôležité",
     "Remind about messages that require a reply but received none" : "Pripomenúť správy, ktoré vyžadujú odpoveď, ale žiadnu nedostali",
     "Use internal addresses" : "Použiť interné adresy",
@@ -130,13 +129,12 @@ OC.L10N.register(
     "General" : "Všeobecné",
     "Layout" : "Usporiadanie",
     "List" : "Zoznam",
-    "Vertical split" : "Vertikálne rozdelenie",
     "Horizontal split" : "Horizontálne rozdelenie",
     "Sorting" : "Triedenie",
     "Newest" : "Najnovšie",
     "Oldest" : "Najstaršie",
-    "Search in body" : "Vyhľadať v tele",
     "Reply text position" : "Pozícia textu odpovede",
+    "Search in body" : "Vyhľadať v tele",
     "Gravatar settings" : "Nastavenia Gravatar",
     "Use Gravatar and favicon avatars" : "Použiť Gravatar a favicon avatary",
     "Mailto" : "Správa pre",
@@ -765,6 +763,8 @@ OC.L10N.register(
     "Redirect" : "Presmerovať",
     "The link leads to %s" : "Odkaz smeruje na %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ak si neprajete navštíviť stránku, možete sa vátiť na <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Pokračovať na %s"
+    "Continue to %s" : "Pokračovať na %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Umiestniť môj text odpovede na koniec správy.",
+    "Vertical split" : "Vertikálne rozdelenie"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

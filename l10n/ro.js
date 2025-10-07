@@ -90,7 +90,6 @@ OC.L10N.register(
     "Create alias" : "Creează alias",
     "Cancel" : "Anulează",
     "Search in the body of messages in priority Inbox" : "Caută în conținutul mesajelor din Inboxul prioritar",
-    "Put my text to the bottom of a reply instead of on top of it." : "Pune textul la sfârșitul răspunsului în loc de deasupra.",
     "Could not update preference" : "Preferințele nu au putut fi actualizate",
     "Mail settings" : "Setări Mail",
     "Accounts" : "Conturi",
@@ -511,6 +510,7 @@ OC.L10N.register(
     "Redirect" : "Deviere",
     "The link leads to %s" : "Link-ul duce la %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Dacă nu doriți să vizitați acea pagină, vă puteți întoarce la <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continuă către %s"
+    "Continue to %s" : "Continuă către %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Pune textul la sfârșitul răspunsului în loc de deasupra."
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");

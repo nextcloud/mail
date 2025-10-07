@@ -115,7 +115,6 @@ OC.L10N.register(
     "Cancel" : "キャンセル",
     "Search in the body of messages in priority Inbox" : "優先受信箱のメッセージ本文を検索します",
     "Activate" : "有効化する",
-    "Put my text to the bottom of a reply instead of on top of it." : "返信をメール本文の先頭ではなく最後に挿入します。",
     "Mark as important" : "重要としてマークをつける",
     "Remind about messages that require a reply but received none" : "返信を必要とするが受信しなかったメッセージについて通知する",
     "Use internal addresses" : "内部アドレスを使う",
@@ -127,13 +126,12 @@ OC.L10N.register(
     "General" : "一般",
     "Layout" : "レーアウト",
     "List" : "リスト",
-    "Vertical split" : "垂直分割",
     "Horizontal split" : "水平分割",
     "Sorting" : "並べ替え",
     "Newest" : "最新",
     "Oldest" : "最古",
-    "Search in body" : "本文を検索",
     "Reply text position" : "返信テキストの位置",
+    "Search in body" : "本文を検索",
     "Gravatar settings" : "グラバター設定",
     "Use Gravatar and favicon avatars" : "Gravatarとfaviconのアバターを使用する",
     "Mailto" : "メールアドレス",
@@ -752,6 +750,8 @@ OC.L10N.register(
     "Redirect" : "リダイレクト",
     "The link leads to %s" : "リンクが %s につながります",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ページにアクセスしたくない場合は、<a href=\"%s\">メール</a>に戻ることができます",
-    "Continue to %s" : "%s にリダイレクトする"
+    "Continue to %s" : "%s にリダイレクトする",
+    "Put my text to the bottom of a reply instead of on top of it." : "返信をメール本文の先頭ではなく最後に挿入します。",
+    "Vertical split" : "垂直分割"
 },
 "nplurals=1; plural=0;");

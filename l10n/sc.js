@@ -54,7 +54,6 @@ OC.L10N.register(
     "Add alias" : "Agiunghe identidade",
     "Create alias" : "Crea identidade",
     "Cancel" : "Annulla",
-    "Put my text to the bottom of a reply instead of on top of it." : "Pone su testu miu a su fundu de una resposta imbetzes che a pitzus.",
     "Could not update preference" : "No at fatu a agiornare sa preferèntzia",
     "Accounts" : "Accounts",
     "Add mail account" : "Agiunghe contu de posta",
@@ -356,6 +355,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Incarca inoghe chi no ses torradu a deretare in manera automàtica intro de pagu segundos.",
     "Redirect" : "Torra a deretare",
     "The link leads to %s" : "Su ligòngiu deretat a %s",
-    "Continue to %s" : "Sighi in %s"
+    "Continue to %s" : "Sighi in %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Pone su testu miu a su fundu de una resposta imbetzes che a pitzus."
 },
 "nplurals=2; plural=(n != 1);");

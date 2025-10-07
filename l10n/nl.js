@@ -94,7 +94,6 @@ OC.L10N.register(
     "Add alias" : "Voeg bijnaam toe",
     "Create alias" : "Aanmaken alias",
     "Cancel" : "Annuleren",
-    "Put my text to the bottom of a reply instead of on top of it." : "Zet mijn tekst onderaan een antwoord in plaats van erboven.",
     "Could not update preference" : "Kon voorkeuren niet bijwerken",
     "Accounts" : "Accounts",
     "Add mail account" : "Voeg e-mailaccount toe",
@@ -456,6 +455,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klik hier als je binnen enkele seconden niet automatisch wordt doorgestuurd.",
     "Redirect" : "Omleiden",
     "The link leads to %s" : "De link verwijst naar %s",
-    "Continue to %s" : "Verder naar %s"
+    "Continue to %s" : "Verder naar %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Zet mijn tekst onderaan een antwoord in plaats van erboven."
 },
 "nplurals=2; plural=(n != 1);");

@@ -110,7 +110,6 @@ OC.L10N.register(
     "Cancel" : "Cancelar",
     "Search in the body of messages in priority Inbox" : "Busca en el cuerpo de los mensajes de la bandeja de entrada prioritaria",
     "Activate" : "Activar",
-    "Put my text to the bottom of a reply instead of on top of it." : "Pon el texto al fondo de una respuesta, en lugar de arriba.",
     "Mark as important" : "Marcar como importante",
     "Remind about messages that require a reply but received none" : "Recordar mensajes que requieren una respuesta pero no han recibido ninguna",
     "Use internal addresses" : "Usar direcciones internas",
@@ -122,13 +121,12 @@ OC.L10N.register(
     "General" : "General",
     "Layout" : "Disposición",
     "List" : "Lista",
-    "Vertical split" : "División vertical",
     "Horizontal split" : "División horizontal",
     "Sorting" : "Ordenando",
     "Newest" : "Más recientes",
     "Oldest" : "Más antiguo",
-    "Search in body" : "Buscar cuerpo",
     "Reply text position" : "Posisión de respuesta del texto",
+    "Search in body" : "Buscar cuerpo",
     "Gravatar settings" : "Ajustes de Gravatar",
     "Use Gravatar and favicon avatars" : "Usar Gravatar y avatares favicon",
     "Mailto" : "Mailto",
@@ -402,6 +400,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Haz click aqui si no eres redireccionado automáticamente dentro de los siguietes segundos. ",
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Pon el texto al fondo de una respuesta, en lugar de arriba.",
+    "Vertical split" : "División vertical"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

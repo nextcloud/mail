@@ -117,7 +117,6 @@ OC.L10N.register(
     "Cancel" : "Cancel·la",
     "Search in the body of messages in priority Inbox" : "Cerca al cos dels missatges a la safata d'entrada prioritària",
     "Activate" : "Activa",
-    "Put my text to the bottom of a reply instead of on top of it." : "Posa el meu text al final d'una resposta en lloc d'amunt.",
     "Mark as important" : "Marca com a important",
     "Remind about messages that require a reply but received none" : "Recorda els missatges que requereixen una resposta però que no n'han rebut cap",
     "Use internal addresses" : "Utilitzeu adreces internes",
@@ -129,13 +128,12 @@ OC.L10N.register(
     "General" : "General",
     "Layout" : "Disposició",
     "List" : "Llista",
-    "Vertical split" : "Divisió vertical",
     "Horizontal split" : "Divisió horitzontal",
     "Sorting" : "Ordenació",
     "Newest" : "Més nou",
     "Oldest" : "Més antic",
-    "Search in body" : "Busca al cos",
     "Reply text position" : "Posició del text de resposta",
+    "Search in body" : "Busca al cos",
     "Gravatar settings" : "Paràmetres de Gravatar",
     "Use Gravatar and favicon avatars" : "Fes servir avatars de Gravatar i icona de web",
     "Mailto" : "Mailto",
@@ -753,6 +751,8 @@ OC.L10N.register(
     "Redirect" : "Redirigeix",
     "The link leads to %s" : "L'enllaç porta a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no voleu visitar aquesta pàgina, podeu tornar a <a href=\"%s\">Correu</a>.",
-    "Continue to %s" : "Continua a %s"
+    "Continue to %s" : "Continua a %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Posa el meu text al final d'una resposta en lloc d'amunt.",
+    "Vertical split" : "Divisió vertical"
 },
 "nplurals=2; plural=(n != 1);");

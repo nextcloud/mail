@@ -84,7 +84,6 @@ OC.L10N.register(
     "Add alias" : "Dodaj vzdevek",
     "Create alias" : "Ustvari vzdevek",
     "Cancel" : "Prekliči",
-    "Put my text to the bottom of a reply instead of on top of it." : "Dodaj besedilo odgovora pod izvorno sporočilo in ne nad.",
     "Could not update preference" : "Lastnosti ni mogoče posodobiti",
     "Mail settings" : "Nastavitve pošte",
     "Accounts" : "Računi",
@@ -543,6 +542,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Če vas sistem v nekaj sekundah ne preusmeri samodejno, pritisnite na to mesto.",
     "Redirect" : "Preusmeri",
     "The link leads to %s" : "Povezava vodi do %s",
-    "Continue to %s" : "Nadaljuj na %s"
+    "Continue to %s" : "Nadaljuj na %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Dodaj besedilo odgovora pod izvorno sporočilo in ne nad."
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

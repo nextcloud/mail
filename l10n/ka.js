@@ -96,7 +96,6 @@ OC.L10N.register(
     "Cancel" : "Cancel",
     "Search in the body of messages in priority Inbox" : "Search in the body of messages in priority Inbox",
     "Activate" : "Activate",
-    "Put my text to the bottom of a reply instead of on top of it." : "Put my text to the bottom of a reply instead of on top of it.",
     "Could not update preference" : "Could not update preference",
     "Mail settings" : "Mail settings",
     "Accounts" : "Accounts",
@@ -640,6 +639,7 @@ OC.L10N.register(
     "Redirect" : "Redirect",
     "The link leads to %s" : "The link leads to %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continue to %s"
+    "Continue to %s" : "Continue to %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Put my text to the bottom of a reply instead of on top of it."
 },
 "nplurals=2; plural=(n!=1);");

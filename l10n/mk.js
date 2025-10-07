@@ -87,7 +87,6 @@ OC.L10N.register(
     "Cancel" : "Откажи",
     "Search in the body of messages in priority Inbox" : "Барај во пораката во приоритетното сандаче",
     "Activate" : "Активирај",
-    "Put my text to the bottom of a reply instead of on top of it." : "Стави го мојот текст на дното од одговорот наместо врз него.",
     "Mark as important" : "Ознали како важна",
     "Use internal addresses" : "Користи внатрешни адреси",
     "Could not update preference" : "Неможе да се ажурираат параметрите",
@@ -98,13 +97,12 @@ OC.L10N.register(
     "General" : "Општо",
     "Layout" : "Распоред",
     "List" : "Листа",
-    "Vertical split" : "Вертикална поделба",
     "Horizontal split" : "Хоризонтална поделба",
     "Sorting" : "Сортирање",
     "Newest" : "Најнови",
     "Oldest" : "Најстари",
-    "Search in body" : "Барај по пораката",
     "Reply text position" : "Позиција на одговорот",
+    "Search in body" : "Барај по пораката",
     "Gravatar settings" : "Параметри за Gravatar ",
     "Use Gravatar and favicon avatars" : "Користете Граватар и Фавикон аватари",
     "Register as application for mail links" : "Регистрирај како апликација за отварање на е-пошта линкови ",
@@ -486,6 +484,8 @@ OC.L10N.register(
     "Redirect" : "Пренасочи",
     "The link leads to %s" : "Линкот води кон %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Доколку несакате да ја посетите страната, можете да се вратите кон <a href=\"%s\">Е-пошта</a>.",
-    "Continue to %s" : "Продолжи до %s"
+    "Continue to %s" : "Продолжи до %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Стави го мојот текст на дното од одговорот наместо врз него.",
+    "Vertical split" : "Вертикална поделба"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

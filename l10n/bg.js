@@ -86,7 +86,6 @@ OC.L10N.register(
     "Add alias" : "Добавяне на псевдоним",
     "Create alias" : "Създаване на псевдоним",
     "Cancel" : "Отказ",
-    "Put my text to the bottom of a reply instead of on top of it." : "Поставяне на моя текст в долната част на отговора, вместо над него.",
     "Could not update preference" : "Предпочитанието не можа да се актуализира",
     "Mail settings" : "Настройки на пощата",
     "Accounts" : "Профили",
@@ -567,6 +566,7 @@ OC.L10N.register(
     "Redirect" : "Пренасочване",
     "The link leads to %s" : "Връзката води до %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желаете да посетите тази страница, може да се върнете към <a href=\"%s\">Поща</a>.",
-    "Continue to %s" : "Продължи към %s"
+    "Continue to %s" : "Продължи към %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Поставяне на моя текст в долната част на отговора, вместо над него."
 },
 "nplurals=2; plural=(n != 1);");

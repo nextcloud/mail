@@ -95,7 +95,6 @@ OC.L10N.register(
     "Add alias" : "Álnév hozzáadása",
     "Create alias" : "Álnév létrehozása",
     "Cancel" : "Mégse",
-    "Put my text to the bottom of a reply instead of on top of it." : "A szöveg a válasz aljára helyezése a teteje helyett.",
     "Could not update preference" : "Nem sikerült frissíteni a beállítást",
     "Mail settings" : "Levelezési beállítások",
     "Accounts" : "Fiókok",
@@ -642,6 +641,7 @@ OC.L10N.register(
     "Redirect" : "Átirányítás",
     "The link leads to %s" : "A hivatkozás ide mutat: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarja megnyitni azt az oldalt, akkor térjen vissza a <a href=\"%s\">Levelezéshez</a>.",
-    "Continue to %s" : "Folytatás ide: %s"
+    "Continue to %s" : "Folytatás ide: %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "A szöveg a válasz aljára helyezése a teteje helyett."
 },
 "nplurals=2; plural=(n != 1);");

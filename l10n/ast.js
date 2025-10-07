@@ -41,7 +41,6 @@ OC.L10N.register(
     "Accounts" : "Cuentes",
     "General" : "Xeneral",
     "List" : "Llista",
-    "Vertical split" : "DIxebra verical",
     "Horizontal split" : "Dixebra horizontal",
     "Sorting" : "Orde",
     "Gravatar settings" : "Configuración de Gravatar",
@@ -310,6 +309,7 @@ OC.L10N.register(
     "Could not load the message" : "Nun se pudo cargar el mensaxe",
     "Error loading message" : "Hebo un error al cargar el mensaxe",
     "Redirect" : "Redirixir",
-    "The link leads to %s" : "L'enllaz lleva a %s"
+    "The link leads to %s" : "L'enllaz lleva a %s",
+    "Vertical split" : "DIxebra verical"
 },
 "nplurals=2; plural=(n != 1);");

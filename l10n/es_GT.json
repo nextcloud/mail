@@ -58,7 +58,6 @@
     "Add alias" : "Añadir alias",
     "Create alias" : "Crear alias",
     "Cancel" : "Cancelar",
-    "Put my text to the bottom of a reply instead of on top of it." : "Ponga mi texto al final de la respuesta en vez de encima de ella.",
     "Could not update preference" : "No se pudo actualizar la preferencia",
     "Accounts" : "Accounts",
     "Add mail account" : "Agregar cuenta de correo",
@@ -203,6 +202,7 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Haz click aqui si no eres redireccionado automáticamente dentro de los siguietes segundos. ",
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Put my text to the bottom of a reply instead of on top of it." : "Ponga mi texto al final de la respuesta en vez de encima de ella."
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }
