@@ -147,7 +147,7 @@
     "style-loader": "^4.0.0",
     "svg-inline-loader": "^0.8.2",
     "ts-jest": "^29.4.4",
-    "ts-loader": "^9.5.2",
+    "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
     "url-loader": "^4.1.1",
     "vue-loader": "^15.11.1",
