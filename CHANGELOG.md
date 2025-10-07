@@ -1,3 +1,18 @@
+## [5.5.7](https://github.com/nextcloud/mail/compare/v5.5.6...v5.5.7) (2025-10-07)
+
+
+### Bug Fixes
+
+* **dns:** Update public suffix list ([928ca34](https://github.com/nextcloud/mail/commit/928ca3402abcef567a5ba8c5f7e2c124d6e34480))
+* **l10n:** Update translations from Transifex ([ece8ffc](https://github.com/nextcloud/mail/commit/ece8ffcf81d472647cc103dd51e1e4cfb41efa57))
+* **l10n:** Update translations from Transifex ([3e87978](https://github.com/nextcloud/mail/commit/3e879781edbef305cf5fe6042b4dc7e7ac72936d))
+* **l10n:** Update translations from Transifex ([a7fd4cf](https://github.com/nextcloud/mail/commit/a7fd4cf4fd3bfe486a7b06908654714c7eaf357b))
+* leftover design changes ([936dee6](https://github.com/nextcloud/mail/commit/936dee64119875051a8f44d4a4ec488cf3ac66bb))
+* migrate mail_accounts.oauth_refresh_token to Types::TEXT ([3f1dc90](https://github.com/nextcloud/mail/commit/3f1dc908919b34b612b6bd5ff6674a7ab7cee787))
+* **ui:** use new NcKbd component ([7504250](https://github.com/nextcloud/mail/commit/75042509ac830e42ad138bd3bd1162deaefafc0e))
+
+
+
 ## [5.5.6](https://github.com/nextcloud/mail/compare/v5.5.5...v5.5.6) (2025-09-29)
 
 
