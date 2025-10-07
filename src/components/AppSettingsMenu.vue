@@ -211,9 +211,6 @@
 					</NcCheckboxRadioSwitch>
 				</p>
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="about-settings" :name="t('mail', 'About')">
-				<p>{{ t('mail', 'This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2.') }}</p>
-			</NcAppSettingsSection>
 			<NcAppSettingsSection id="keyboard-shortcut-settings" :name="t('mail', 'Keyboard shortcuts')">
 				<dl>
 					<div>
@@ -260,6 +257,13 @@
 					</div>
 				</dl>
 			</NcAppSettingsSection>
+			<NcAppSettingsSection id="about-settings" :name="t('mail', 'About')">
+				<p>{{ t('mail', 'This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2.') }}</p>
+			</NcAppSettingsSection>
+			<p
+				class="app-settings-section__version">
+				{{ t('mail', 'Mail version: {version}', { version: mailVersion }) }}
+			</p>
 			<NcDialog :open.sync="textBlockDialogOpen"
 				:name="t('mail','New text block')"
 				:is-form="true"
@@ -413,6 +417,9 @@ export default {
 		},
 		allowNewMailAccounts() {
 			return this.mainStore.getPreference('allow-new-accounts', true)
+		},
+		mailVersion() {
+			return this.mainStore.getPreference('mailVersion', '0.0.0')
 		},
 		layoutMode: {
 			get() {
@@ -714,6 +721,12 @@ p.app-settings {
 
 .app-settings-section {
 	list-style: none;
+
+	&__version {
+		margin-block-end: calc(2 * var(--default-grid-baseline));
+		text-align: center;
+		color: var(--color-text-maxcontrast);
+	}
 }
 
 .text-block-buttons {
@@ -725,4 +738,6 @@ p.app-settings {
 		margin: var(--default-grid-baseline);
 	}
 }
+
+
 </style>
