@@ -4,9 +4,8 @@
  */
 
 import { defineStore } from 'pinia'
-
-import logger from '../logger'
-import { MailFilter } from '../models/mailFilter'
+import logger from '../logger.js'
+import { MailFilter } from '../models/mailFilter.ts'
 import * as MailFilterService from '../service/MailFilterService.js'
 import { randomId } from '../util/randomId.js'
 

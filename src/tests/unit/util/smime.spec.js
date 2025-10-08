@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { compareSmimeCertificates } from '../../../util/smime'
+import { compareSmimeCertificates } from '../../../util/smime.js'
 
 describe('smime', () => {
 	describe('compareSmimeCertificates', () => {
