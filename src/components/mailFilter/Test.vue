@@ -42,7 +42,7 @@
 				input-label="value"
 				:multiple="true"
 				:wrap="true"
-				:close-on-select="false"
+				:keep-open="true"
 				:taggable="true"
 				:required="true"
 				:label-outside="true"
