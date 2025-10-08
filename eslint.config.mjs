@@ -4,23 +4,28 @@
 */
 
 import { recommendedVue2 } from '@nextcloud/eslint-config'
-import importPlugin from 'eslint-plugin-import'
-import perfectionistPlugin from 'eslint-plugin-perfectionist'
+import pluginImport from 'eslint-plugin-import'
+import pluginJest from 'eslint-plugin-jest'
+import pluginPerfectionist from 'eslint-plugin-perfectionist'
 import { defineConfig } from 'eslint/config'
 
 export default defineConfig([
 	...recommendedVue2,
 	{
 		plugins: {
-			perfectionist: perfectionistPlugin,
-			import: importPlugin,
+			perfectionist: pluginPerfectionist,
+			import: pluginImport,
+			jest: pluginJest,
+		},
+		languageOptions: {
+			globals: pluginJest.environments.globals.globals,
 		},
 		rules: {
 			// 'comma-dangle': 'error',
 
 			// 'jsdoc/no-undefined-types': 'error',
 			'jsdoc/require-jsdoc': 'off',
-			// 'jsdoc/require-param': 'off',
+			'jsdoc/require-param': 'off',
 
 			'perfectionist/sort-enums': 'error',
 			'perfectionist/sort-interfaces': 'error',
@@ -29,15 +34,15 @@ export default defineConfig([
 			// 'sort-imports': ['error', {
 			// 	ignoreDeclarationSort: true,
 			// }],
-
-			'import/order': ['error', {
-				groups: ['builtin', 'external', 'internal'],
-
-				alphabetize: {
-					order: 'asc',
-					caseInsensitive: true,
-				},
-			}],
+			//
+			// 'import/order': ['error', {
+			// 	groups: ['builtin', 'external', 'internal'],
+			//
+			// 	alphabetize: {
+			// 		order: 'asc',
+			// 		caseInsensitive: true,
+			// 	},
+			// }],
 
 			// // Relax some rules for now. Can be improved later one (baseline).
 			// 'no-console': 'off',
