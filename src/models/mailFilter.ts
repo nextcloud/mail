@@ -2,7 +2,7 @@
  * SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-import { randomId } from '../util/randomId'
+import { randomId } from '../util/randomId.js'
 
 export enum MailFilterOperator {
 	All = 'allof',

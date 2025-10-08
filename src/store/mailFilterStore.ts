@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import type { MailFilter } from '../models/mailFilter'
+import type { MailFilter } from '../models/mailFilter.ts'
 
 import { defineStore } from 'pinia'
-import logger from '../logger'
+import logger from '../logger.js'
 import * as MailFilterService from '../service/MailFilterService.js'
 import { randomId } from '../util/randomId.js'
 
