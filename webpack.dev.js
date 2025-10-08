@@ -2,6 +2,10 @@
  * SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
+/* global module */
+/* global require */
+
 const { merge } = require('webpack-merge')
 const common = require('./webpack.common.js')
 

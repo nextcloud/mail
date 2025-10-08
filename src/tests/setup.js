@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+/* global readTestDataRaw */
+
 import { readFileSync } from 'fs'
 import JestFetchMock from 'jest-fetch-mock'
 import { join } from 'path'

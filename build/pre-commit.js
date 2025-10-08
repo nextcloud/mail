@@ -3,6 +3,9 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+/* global exports */
+/* global require */
+
 const fs = require('fs')
 
 exports.preCommit = (props) => {
