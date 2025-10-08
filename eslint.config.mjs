@@ -3,44 +3,41 @@
 * SPDX-License-Identifier: AGPL-3.0-or-later
 */
 
+import { recommendedVue2 } from '@nextcloud/eslint-config'
+import importPlugin from 'eslint-plugin-import'
+import perfectionistPlugin from 'eslint-plugin-perfectionist'
 import { defineConfig } from 'eslint/config'
 
-// TODO: replace with recommended when migrating to Vue 3
-import { recommended } from '@nextcloud/eslint-config'
-import perfectionistPlugin from 'eslint-plugin-perfectionist'
-import importPlugin from "eslint-plugin-import";
-
 export default defineConfig([
-	...recommended,
+	...recommendedVue2,
 	{
 		plugins: {
 			perfectionist: perfectionistPlugin,
-			import: importPlugin
+			import: importPlugin,
 		},
 		rules: {
-			"comma-dangle": "error",
+			// 'comma-dangle': 'error',
 
-			"jsdoc/no-undefined-types": "error",
-			"jsdoc/require-jsdoc": "off",
+			// 'jsdoc/no-undefined-types': 'error',
+			'jsdoc/require-jsdoc': 'off',
 			// 'jsdoc/require-param': 'off',
 
-			"perfectionist/sort-enums": "error",
-			"perfectionist/sort-interfaces": "error",
-			"perfectionist/sort-object-types": "error",
+			'perfectionist/sort-enums': 'error',
+			'perfectionist/sort-interfaces': 'error',
+			'perfectionist/sort-object-types': 'error',
 
-			"sort-imports": ["error", {
-				"ignoreDeclarationSort": true,
-			}],
+			// 'sort-imports': ['error', {
+			// 	ignoreDeclarationSort: true,
+			// }],
 
-			"import/order": ["error", {
-				"groups": ["builtin", "external", "internal"],
+			'import/order': ['error', {
+				groups: ['builtin', 'external', 'internal'],
 
-				"alphabetize": {
-					"order": "asc",
-					"caseInsensitive": true,
+				alphabetize: {
+					order: 'asc',
+					caseInsensitive: true,
 				},
 			}],
-
 
 			// // Relax some rules for now. Can be improved later one (baseline).
 			// 'no-console': 'off',
