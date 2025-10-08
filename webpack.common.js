@@ -2,6 +2,11 @@
  * SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
+/* global __dirname */
+/* global module */
+/* global require */
+
 const path = require('path')
 const webpack = require('webpack')
 const { VueLoaderPlugin } = require('vue-loader')
