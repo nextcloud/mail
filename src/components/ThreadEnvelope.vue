@@ -1218,7 +1218,6 @@ export default {
 		}
 	}
 
-
 	.tag-group__label {
 		margin: 0 calc(var(--default-grid-baseline) * 2);
 		z-index: 2;

@@ -160,6 +160,13 @@ export default {
 
 .message-imip {
 	padding: 5px 10px;
+	margin-left: calc(var(--default-grid-baseline) * 11);
+}
+
+@media (max-width: 600px) {
+	.message-imip {
+		margin-left: 0;
+	}
 }
 
 .invalid-signature-warning {
