@@ -23,11 +23,15 @@
 			label="label"
 			track-by="id"
 			@option:selected="changeIdentity" />
-		<TextEditor v-model="signature"
-			:html="true"
-			:placeholder="t('mail', 'Signature …')"
-			:bus="bus"
-			@show-toolbar="handleShowToolbar" />
+		<!-- Added wrapper to give the signature editor a clear input-style border -->
+		<div class="signature-editor-wrapper">
+			<TextEditor v-model="signature"
+				:html="true"
+				:placeholder="t('mail', 'Signature …')"
+				:bus="bus"
+				class="signature-editor-wrapper__editor"
+				@show-toolbar="handleShowToolbar" />
+		</div>
 		<p v-if="isLargeSignature" class="warning-large-signature">
 			{{ t('mail', 'Your signature is larger than 2 MB. This may affect the performance of your editor.') }}
 		</p>
@@ -187,6 +191,30 @@ export default {
   border-radius: var(--border-radius) !important;
   border: 1px solid var(--color-border) !important;
   box-shadow: none !important;
+}
+
+/* Wrapper to visually delimit the signature editor area from surrounding settings */
+.signature-editor-wrapper {
+	margin-top: 8px;
+	padding: 4px; /* room for focus ring */
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius);
+	background: var(--color-main-background);
+	transition: border-color 120ms ease, box-shadow 120ms ease;
+
+	&:focus-within {
+		border-color: var(--color-primary-element);
+		box-shadow: 0 0 0 2px var(--color-primary-element-light);
+	}
+
+	&__editor {
+		/* remove internal border since wrapper provides it */
+		:deep(.ck.ck-editor__editable_inline) {
+			border: none !important;
+			box-shadow: none !important;
+			min-height: 120px;
+		}
+	}
 }
 
 .primary {
