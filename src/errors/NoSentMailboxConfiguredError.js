@@ -4,7 +4,6 @@
  */
 
 export default class NoSentMailboxConfiguredError extends Error {
-
 	constructor(message) {
 		super(message)
 		this.name = NoSentMailboxConfiguredError.getName()
@@ -14,5 +13,4 @@ export default class NoSentMailboxConfiguredError extends Error {
 	static getName() {
 		return 'NoSentMailboxConfiguredError'
 	}
-
 }

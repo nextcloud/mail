@@ -18,25 +18,30 @@ export default {
 			type: String,
 			required: true,
 		},
+
 		recipients: {
 			type: Array,
 			required: true,
 		},
+
 		quotedText: {
 			type: Object,
 			required: false,
 			default: () => undefined,
 		},
+
 		isReplyOrForward: {
 			type: Boolean,
 			default: false,
 		},
 	},
+
 	data() {
 		return {
 			editor: undefined,
 		}
 	},
+
 	async mounted() {
 		const isEncrypted = this.quotedText ? isPgpgMessage(this.quotedText) : false
 		const quotedMail = this.isReplyOrForward ? this.quotedText?.value : undefined
@@ -45,6 +50,7 @@ export default {
 			quotedMail: isEncrypted ? quotedMail : undefined,
 		})
 	},
+
 	methods: {
 		async pull() {
 			const recipients = this.recipients.map((r) => r.email)

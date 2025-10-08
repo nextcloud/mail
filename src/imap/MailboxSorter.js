@@ -7,7 +7,7 @@ import clone from 'lodash/fp/clone.js'
 
 const specialRolesOrder = ['inbox', 'flagged', 'drafts', 'sent', 'archive', 'all', 'junk', 'trash']
 
-export const sortMailboxes = (mailboxes, account) => {
+export function sortMailboxes(mailboxes, account) {
 	const c = clone(mailboxes)
 	c.sort((f1, f2) => {
 		if (f1.specialUse.length && f2.specialUse.length) {

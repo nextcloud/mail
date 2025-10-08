@@ -40,10 +40,8 @@ export function convertPkcs12ToPem(pkcs12Der, password) {
 }
 
 export class InvalidPkcs12CertificateError extends Error {
-
 	constructor() {
 		super()
 		this.name = InvalidPkcs12CertificateError.name
 	}
-
 }

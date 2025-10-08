@@ -3,14 +3,16 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template functional>
-	<span :aria-hidden="!props.title"
+	<span
+		:aria-hidden="!props.title"
 		:aria-label="props.title"
 		:class="[data.class, data.staticClass]"
 		class="material-design-icon junk-icon"
 		role="img"
 		v-bind="data.attrs"
 		v-on="listeners">
-		<svg :fill="props.fillColor"
+		<svg
+			:fill="props.fillColor"
 			class="material-design-icon__svg"
 			:width="props.size"
 			:height="props.size"
@@ -29,10 +31,12 @@ export default {
 			type: String,
 			default: '',
 		},
+
 		size: {
 			type: Number,
 			default: 20,
 		},
+
 		fillColor: {
 			type: String,
 			default: 'currentColor',

@@ -3,12 +3,14 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcTextField :required="true"
+	<NcTextField
+		:required="true"
 		:value="flag"
 		:label-outside="true"
 		:placeholder="t('mail', 'Enter flag')"
 		@update:value="onInput" />
 </template>
+
 <script>
 import { NcTextField } from '@nextcloud/vue'
 
@@ -17,21 +19,25 @@ export default {
 	components: {
 		NcTextField,
 	},
+
 	props: {
 		action: {
 			type: Object,
 			required: true,
 		},
+
 		account: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	computed: {
 		flag() {
 			return this.action.flag ?? ''
 		},
 	},
+
 	methods: {
 		onInput(value) {
 			this.$emit('update-action', { flag: value })
@@ -39,6 +45,7 @@ export default {
 	},
 }
 </script>
+
 <style lang="scss" scoped>
 .input-field {
 	display: inline-block; /* for flex expand */

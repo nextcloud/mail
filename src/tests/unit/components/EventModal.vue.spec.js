@@ -3,12 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import { createTestingPinia } from '@pinia/testing'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { PiniaVuePlugin, setActivePinia } from 'pinia'
-import { createTestingPinia } from '@pinia/testing'
-
-import Nextcloud from '../../../mixins/Nextcloud.js'
 import EventModal from '../../../components/EventModal.vue'
+import Nextcloud from '../../../mixins/Nextcloud.js'
 
 const localVue = createLocalVue()
 localVue.use(PiniaVuePlugin)

@@ -4,7 +4,8 @@
 -->
 
 <template>
-	<NcDialog ref="translateDialog"
+	<NcDialog
+		ref="translateDialog"
 		class="translate-dialog"
 		:name="t('mail', 'Translate message')"
 		size="large"
@@ -12,7 +13,8 @@
 		@update:open="$emit('close')">
 		<template v-if="isMounted" #default>
 			<div class="translate-dialog__wrapper">
-				<NcSelect v-model="selectedFrom"
+				<NcSelect
+					v-model="selectedFrom"
 					class="translate-dialog__select"
 					input-id="from"
 					label="name"
@@ -23,7 +25,8 @@
 
 				<ArrowRight />
 
-				<NcSelect v-model="selectedTo"
+				<NcSelect
+					v-model="selectedTo"
 					class="translate-dialog__select"
 					input-id="to"
 					label="name"
@@ -32,7 +35,8 @@
 					:options="availableOutputLanguages"
 					no-wrap />
 
-				<NcButton type="primary"
+				<NcButton
+					variant="primary"
 					:disabled="isLoading"
 					class="translate-dialog__button"
 					@click="handleTranslate">
@@ -43,13 +47,15 @@
 				</NcButton>
 			</div>
 
-			<NcRichText class="translate-dialog__message translate-dialog__message-source"
+			<NcRichText
+				class="translate-dialog__message translate-dialog__message-source"
 				:text="message"
 				:arguments="richParameters"
 				:use-markdown="true"
 				:reference-limit="0" />
 
-			<NcRichText v-if="translatedMessage"
+			<NcRichText
+				v-if="translatedMessage"
 				class="translate-dialog__message translate-dialog__message-translation"
 				:text="translatedMessage"
 				:arguments="richParameters"
@@ -75,7 +81,6 @@ import { NcButton, NcDialog, NcLoadingIcon, NcRichText, NcSelect } from '@nextcl
 import { mapState } from 'pinia'
 import ArrowRight from 'vue-material-design-icons/ArrowRight.vue'
 import ContentCopy from 'vue-material-design-icons/ContentCopy.vue'
-
 import { translateText } from '../service/translationService.js'
 import useMainStore from '../store/mainStore.js'
 
@@ -97,6 +102,7 @@ export default {
 			type: String,
 			required: true,
 		},
+
 		richParameters: {
 			type: Object,
 			required: true,
@@ -130,14 +136,15 @@ export default {
 		selectedTo() {
 			this.translatedMessage = ''
 		},
+
 		selectedFrom() {
 			this.translatedMessage = ''
 		},
 	},
 
 	async mounted() {
-		this.selectedTo = this.availableOutputLanguages.find(language => language.value === this.userLanguage) || null
-		this.selectedFrom = this.availableInputLanguages.find(language => language.value === 'detect_language')
+		this.selectedTo = this.availableOutputLanguages.find((language) => language.value === this.userLanguage) || null
+		this.selectedFrom = this.availableInputLanguages.find((language) => language.value === 'detect_language')
 		this.$nextTick(() => {
 			// FIXME trick to avoid focusTrap() from activating on NcSelect
 			this.isMounted = !!this.$refs.translateDialog.navigationId

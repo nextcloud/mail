@@ -6,7 +6,8 @@
 <template>
 	<div class="section">
 		<div>
-			<input id="signature-above-quote-toggle"
+			<input
+				id="signature-above-quote-toggle"
 				v-model="signatureAboveQuote"
 				type="checkbox"
 				class="checkbox">
@@ -14,24 +15,27 @@
 				{{ t("mail", "Place signature above quoted text") }}
 			</label>
 		</div>
-		<NcSelect v-if="identities.length > 1"
+		<NcSelect
+			v-if="identities.length > 1"
 			:allow-empty="false"
 			:options="identities"
-			:aria-label-combobox="t('mail','Select an alias')"
+			:aria-label-combobox="t('mail', 'Select an alias')"
 			:searchable="false"
 			:value="identity"
 			label="label"
 			track-by="id"
 			@option:selected="changeIdentity" />
-		<TextEditor v-model="signature"
+		<TextEditor
+			v-model="signature"
 			:html="true"
-			:placeholder="t('mail', 'Signature …')"
+			:placeholder="t('mail', 'Signature …')"
 			:bus="bus"
 			@show-toolbar="handleShowToolbar" />
 		<p v-if="isLargeSignature" class="warning-large-signature">
 			{{ t('mail', 'Your signature is larger than 2 MB. This may affect the performance of your editor.') }}
 		</p>
-		<ButtonVue type="primary"
+		<ButtonVue
+			type="primary"
 			:disabled="loading"
 			:aria-label="t('mail', 'Save signature')"
 			@click="saveSignature">
@@ -41,7 +45,8 @@
 			</template>
 			{{ t('mail', 'Save signature') }}
 		</ButtonVue>
-		<ButtonVue v-if="signature"
+		<ButtonVue
+			v-if="signature"
 			:aria-label="t('mail', 'Delete')"
 			type="tertiary-no-background"
 			class="button-text"
@@ -56,9 +61,8 @@ import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcSelect } from '@
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
 import IconCheck from 'vue-material-design-icons/Check.vue'
-
-import logger from '../logger.js'
 import TextEditor from './TextEditor.vue'
+import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 import { detect, toHtml } from '../util/text.js'
 
@@ -71,12 +75,14 @@ export default {
 		IconLoading,
 		IconCheck,
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			loading: false,
@@ -86,6 +92,7 @@ export default {
 			signatureAboveQuote: this.account.signatureAboveQuote,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		identities() {
@@ -105,10 +112,12 @@ export default {
 
 			return identities
 		},
+
 		isLargeSignature() {
 			return (new Blob([this.signature])).size > 2 * 1024 * 1024
 		},
 	},
+
 	watch: {
 		async signatureAboveQuote(val, oldVal) {
 			try {
@@ -125,9 +134,11 @@ export default {
 			}
 		},
 	},
+
 	beforeMount() {
 		this.changeIdentity(this.identities[0])
 	},
+
 	methods: {
 		changeIdentity(identity) {
 			logger.debug('select identity', { identity })
@@ -136,10 +147,12 @@ export default {
 				? toHtml(detect(identity.signature)).value
 				: ''
 		},
+
 		async deleteSignature() {
 			this.signature = null
 			await this.saveSignature()
 		},
+
 		async saveSignature() {
 			this.loading = true
 
@@ -171,6 +184,7 @@ export default {
 					throw error
 				})
 		},
+
 		handleShowToolbar(event) {
 			this.$emit('show-toolbar', event)
 		},

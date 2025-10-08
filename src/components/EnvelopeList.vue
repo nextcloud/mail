@@ -7,61 +7,69 @@
 		<transition name="multiselect-header">
 			<div v-if="selectMode" key="multiselect-header" class="multiselect-header">
 				<div class="action-buttons">
-					<NcButton v-if="isAtLeastOneSelectedUnread"
-						type="tertiary"
+					<NcButton
+						v-if="isAtLeastOneSelectedUnread"
+						variant="tertiary"
 						:title="n('mail', 'Mark {number} read', 'Mark {number} read', selection.length, { number: selection.length })"
 						@click.prevent="markSelectedRead">
 						<EmailRead :size="20" />
 					</NcButton>
 
-					<NcButton v-if="isAtLeastOneSelectedRead"
-						type="tertiary"
+					<NcButton
+						v-if="isAtLeastOneSelectedRead"
+						variant="tertiary"
 						:title="n('mail', 'Mark {number} unread', 'Mark {number} unread', selection.length, { number: selection.length })"
 						@click.prevent="markSelectedUnread">
 						<EmailUnread :size="20" />
 					</NcButton>
 
-					<NcButton v-if="isAtLeastOneSelectedUnimportant"
-						type="tertiary"
+					<NcButton
+						v-if="isAtLeastOneSelectedUnimportant"
+						variant="tertiary"
 						:title="n('mail', 'Mark {number} as important', 'Mark {number} as important', selection.length, { number: selection.length })"
 						@click.prevent="markSelectionImportant">
 						<ImportantIcon :size="20" />
 					</NcButton>
 
-					<NcButton v-if="isAtLeastOneSelectedImportant"
-						type="tertiary"
+					<NcButton
+						v-if="isAtLeastOneSelectedImportant"
+						variant="tertiary"
 						:title="n('mail', 'Mark {number} as unimportant', 'Mark {number} as unimportant', selection.length, { number: selection.length })"
 						@click.prevent="markSelectionUnimportant">
 						<ImportantOutlineIcon :size="20" />
 					</NcButton>
 
-					<NcButton v-if="isAtLeastOneSelectedFavorite"
-						type="tertiary"
+					<NcButton
+						v-if="isAtLeastOneSelectedFavorite"
+						variant="tertiary"
 						:title="n('mail', 'Unfavorite {number}', 'Unfavorite {number}', selection.length, { number: selection.length })"
 						@click.prevent="favoriteAll">
 						<IconUnFavorite :size="20" />
 					</NcButton>
 
-					<NcButton v-if="isAtLeastOneSelectedUnFavorite"
-						type="tertiary"
+					<NcButton
+						v-if="isAtLeastOneSelectedUnFavorite"
+						variant="tertiary"
 						:title="n('mail', 'Favorite {number}', 'Favorite {number}', selection.length, { number: selection.length })"
 						@click.prevent="unFavoriteAll">
 						<IconFavorite :size="20" />
 					</NcButton>
 
-					<NcButton type="tertiary"
+					<NcButton
+						variant="tertiary"
 						:title="n('mail', 'Unselect {number}', 'Unselect {number}', selection.length, { number: selection.length })"
 						:close-after-click="true"
 						@click.prevent="unselectAll">
 						<IconSelect :size="20" />
 					</NcButton>
-					<NcButton type="tertiary"
+					<NcButton
+						variant="tertiary"
 						:title="n(
 							'mail',
 							'Delete {number} thread',
 							'Delete {number} threads',
 							selection.length,
-							{ number: selection.length }
+							{ number: selection.length },
 						)"
 						:close-after-click="true"
 						@click.prevent="deleteAllSelected">
@@ -70,14 +78,16 @@
 				</div>
 
 				<Actions class="app-content-list-item-menu" menu-align="right">
-					<ActionButton v-if="isAtLeastOneSelectedNotJunk"
+					<ActionButton
+						v-if="isAtLeastOneSelectedNotJunk"
 						@click.prevent="markSelectionJunk">
 						<template #icon>
 							<AlertOctagonIcon :size="20" />
 						</template>
 						{{ n('mail', 'Mark {number} as spam', 'Mark {number} as spam', selection.length, { number: selection.length }) }}
 					</ActionButton>
-					<ActionButton v-if="isAtLeastOneSelectedJunk"
+					<ActionButton
+						v-if="isAtLeastOneSelectedJunk"
 						@click.prevent="markSelectionNotJunk">
 						<template #icon>
 							<AlertOctagonIcon :size="20" />
@@ -103,7 +113,8 @@
 						{{ n('mail', 'Forward {number} as attachment', 'Forward {number} as attachment', selection.length, { number: selection.length }) }}
 					</ActionButton>
 				</Actions>
-				<MoveModal v-if="showMoveModal"
+				<MoveModal
+					v-if="showMoveModal"
 					:account="account"
 					:envelopes="selectedEnvelopes"
 					:move-thread="true"
@@ -112,7 +123,8 @@
 		</transition>
 
 		<transition-group :name="listTransitionName">
-			<Envelope v-for="(env, index) in sortedEnvelops"
+			<Envelope
+				v-for="(env, index) in sortedEnvelops"
 				:key="env.databaseId"
 				:data="env"
 				:mailbox="mailbox"
@@ -124,22 +136,25 @@
 				@update:selected="onEnvelopeSelectToggle(env, index, $event)"
 				@select-multiple="onEnvelopeSelectMultiple(env, index)"
 				@open:quick-actions-settings="showQuickActionsSettings = true" />
-			<div v-if="loadMoreButton && !loadingMore"
+			<div
+				v-if="loadMoreButton && !loadingMore"
 				:key="'list-collapse-' + searchQuery"
 				class="load-more"
 				@click="$emit('load-more')">
 				<AddIcon :size="16" />
 				{{ loadMoreLabel }}
 			</div>
-			<div id="load-more-mail-messages" key="loadingMore" :class="{'icon-loading-small': loadingMore}" />
+			<div id="load-more-mail-messages" key="loadingMore" :class="{ 'icon-loading-small': loadingMore }" />
 		</transition-group>
 
-		<TagModal v-if="showTagModal"
+		<TagModal
+			v-if="showTagModal"
 			:account="account"
 			:envelopes="selectedEnvelopes"
 			@close="onCloseTagModal" />
 
-		<NcDialog v-if="showQuickActionsSettings"
+		<NcDialog
+			v-if="showQuickActionsSettings"
 			:name="t('mail', 'Manage quick actions')"
 			@closing="showQuickActionsSettings = false">
 			<Settings :account="account" />
@@ -164,11 +179,10 @@ import IconFavorite from 'vue-material-design-icons/Star.vue'
 import IconUnFavorite from 'vue-material-design-icons/StarOutline.vue'
 import TagIcon from 'vue-material-design-icons/TagOutline.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
-
+import Settings from '../components/quickActions/Settings.vue'
 import Envelope from './Envelope.vue'
 import MoveModal from './MoveModal.vue'
 import TagModal from './TagModal.vue'
-import Settings from '../components/quickActions/Settings.vue'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus.js'
 import { matchError } from '../errors/match.js'
 import NoTrashMailboxConfiguredError
@@ -200,42 +214,51 @@ export default {
 		TagModal,
 		Settings,
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
+
 		loadMoreLabel: {
 			type: String,
 			default: t('mail', 'Load more'),
 		},
+
 		mailbox: {
 			type: Object,
 			required: true,
 		},
+
 		envelopes: {
 			type: Array,
 			required: true,
 		},
+
 		searchQuery: {
 			type: String,
 			required: false,
 			default: undefined,
 		},
+
 		loadingMore: {
 			type: Boolean,
 			required: true,
 		},
+
 		loadMoreButton: {
 			type: Boolean,
 			required: false,
 			default: false,
 		},
+
 		skipTransition: {
 			type: Boolean,
 			default: false,
 		},
 	},
+
 	data() {
 		return {
 			selection: [],
@@ -246,11 +269,13 @@ export default {
 			showQuickActionsSettings: false,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		sortOrder() {
 			return this.mainStore.getPreference('sort-order', 'newest')
 		},
+
 		sortedEnvelops() {
 			if (this.sortOrder === 'oldest') {
 				return [...this.envelopes].sort((a, b) => {
@@ -259,16 +284,20 @@ export default {
 			}
 			return [...this.envelopes]
 		},
+
 		selectMode() {
 			// returns true when in selection mode (where the user selects several emails at once)
 			return this.selection.length > 0
 		},
+
 		isAtLeastOneSelectedRead() {
 			return this.selectedEnvelopes.some((env) => env.flags.seen === true)
 		},
+
 		isAtLeastOneSelectedUnread() {
 			return this.selectedEnvelopes.some((env) => env.flags.seen === false)
 		},
+
 		isAtLeastOneSelectedImportant() {
 			// returns true if at least one selected message is marked as important
 			return this.selectedEnvelopes.some((env) => {
@@ -277,6 +306,7 @@ export default {
 					.some((tag) => tag.imapLabel === '$label1')
 			})
 		},
+
 		isAtLeastOneSelectedUnimportant() {
 			// returns true if at least one selected message is not marked as important
 			return this.selectedEnvelopes.some((env) => {
@@ -285,35 +315,43 @@ export default {
 					.some((tag) => tag.imapLabel === '$label1')
 			})
 		},
+
 		isAtLeastOneSelectedJunk() {
 			// returns true if at least one selected message is marked as junk
 			return this.selectedEnvelopes.some((env) => {
 				return env.flags.$junk
 			})
 		},
+
 		isAtLeastOneSelectedNotJunk() {
 			// returns true if at least one selected message is not marked as not junk
 			return this.selectedEnvelopes.some((env) => {
 				return !env.flags.$junk
 			})
 		},
+
 		isAtLeastOneSelectedFavorite() {
 			return this.selectedEnvelopes.some((env) => env.flags.flagged)
 		},
+
 		isAtLeastOneSelectedUnFavorite() {
 			return this.selectedEnvelopes.some((env) => !env.flags.flagged)
 		},
+
 		selectedEnvelopes() {
 			return this.sortedEnvelops.filter((env) => this.selection.includes(env.databaseId))
 		},
+
 		hasMultipleAccounts() {
-			const mailboxIds = this.sortedEnvelops.map(envelope => envelope.mailboxId)
+			const mailboxIds = this.sortedEnvelops.map((envelope) => envelope.mailboxId)
 			return Array.from(new Set(mailboxIds)).length > 1
 		},
+
 		listTransitionName() {
 			return this.skipTransition ? 'disabled' : 'list'
 		},
 	},
+
 	watch: {
 		sortedEnvelops(newVal, oldVal) {
 			// Unselect vanished envelopes
@@ -325,12 +363,15 @@ export default {
 				})
 		},
 	},
+
 	mounted() {
 		dragEventBus.on('envelopes-dropped', this.unselectAll)
 	},
+
 	beforeDestroy() {
 		dragEventBus.off('envelopes-dropped', this.unselectAll)
 	},
+
 	methods: {
 		isEnvelopeSelected(idx) {
 			if (this.selection.length === 0) {
@@ -339,6 +380,7 @@ export default {
 
 			return this.selection.includes(idx)
 		},
+
 		markSelectedRead() {
 			this.selectedEnvelopes.forEach((envelope) => {
 				this.mainStore.toggleEnvelopeSeen({
@@ -348,6 +390,7 @@ export default {
 			})
 			this.unselectAll()
 		},
+
 		markSelectedUnread() {
 			this.selectedEnvelopes.forEach((envelope) => {
 				this.mainStore.toggleEnvelopeSeen({
@@ -357,6 +400,7 @@ export default {
 			})
 			this.unselectAll()
 		},
+
 		markSelectionImportant() {
 			this.selectedEnvelopes.forEach((envelope) => {
 				this.mainStore.markEnvelopeImportantOrUnimportant({
@@ -366,6 +410,7 @@ export default {
 			})
 			this.unselectAll()
 		},
+
 		markSelectionUnimportant() {
 			this.selectedEnvelopes.forEach((envelope) => {
 				this.mainStore.markEnvelopeImportantOrUnimportant({
@@ -375,6 +420,7 @@ export default {
 			})
 			this.unselectAll()
 		},
+
 		async markSelectionJunk() {
 			for (const envelope of this.selectedEnvelopes) {
 				if (!envelope.flags.$junk) {
@@ -386,6 +432,7 @@ export default {
 			}
 			this.unselectAll()
 		},
+
 		async markSelectionNotJunk() {
 			for (const envelope of this.selectedEnvelopes) {
 				if (envelope.flags.$junk) {
@@ -397,6 +444,7 @@ export default {
 			}
 			this.unselectAll()
 		},
+
 		favoriteAll() {
 			const favFlag = !this.isAtLeastOneSelectedUnFavorite
 			this.selectedEnvelopes.forEach((envelope) => {
@@ -407,6 +455,7 @@ export default {
 			})
 			this.unselectAll()
 		},
+
 		unFavoriteAll() {
 			const favFlag = !this.isAtLeastOneSelectedFavorite
 			this.selectedEnvelopes.forEach((envelope) => {
@@ -417,6 +466,7 @@ export default {
 			})
 			this.unselectAll()
 		},
+
 		async deleteAllSelected() {
 			let nextEnvelopeToNavigate
 			let isAllSelected
@@ -424,13 +474,12 @@ export default {
 			if (this.selectedEnvelopes.length === this.sortedEnvelops.length) {
 				isAllSelected = true
 			} else {
-				const indexSelectedEnvelope = this.selectedEnvelopes.findIndex((selectedEnvelope) =>
-					selectedEnvelope.databaseId === this.$route.params.threadId)
+				const indexSelectedEnvelope = this.selectedEnvelopes.findIndex((selectedEnvelope) => selectedEnvelope.databaseId === this.$route.params.threadId)
 
 				// one of threads is selected
 				if (indexSelectedEnvelope !== -1) {
 					const lastSelectedEnvelope = this.selectedEnvelopes[this.selectedEnvelopes.length - 1]
-					const diff = this.sortedEnvelops.filter(envelope => envelope === lastSelectedEnvelope || !this.selectedEnvelopes.includes(envelope))
+					const diff = this.sortedEnvelops.filter((envelope) => envelope === lastSelectedEnvelope || !this.selectedEnvelopes.includes(envelope))
 					const lastIndex = diff.indexOf(lastSelectedEnvelope)
 					nextEnvelopeToNavigate = diff[lastIndex === 0 ? 1 : lastIndex - 1]
 				}
@@ -441,7 +490,7 @@ export default {
 				await this.mainStore.deleteThread({
 					envelope,
 				})
-			})).catch(async error => {
+			})).catch(async (error) => {
 				showError(await matchError(error, {
 					[NoTrashMailboxConfiguredError.getName()]() {
 						return t('mail', 'No trash folder configured')
@@ -477,6 +526,7 @@ export default {
 			}
 			this.unselectAll()
 		},
+
 		setEnvelopeSelected(envelope, selected) {
 			const alreadySelected = this.selection.includes(envelope.databaseId)
 			if (selected && !alreadySelected) {
@@ -487,10 +537,12 @@ export default {
 				this.selection.splice(this.selection.indexOf(envelope.databaseId), 1)
 			}
 		},
+
 		onEnvelopeSelectToggle(envelope, index, selected) {
 			this.lastToggledIndex = index
 			this.setEnvelopeSelected(envelope, selected)
 		},
+
 		onEnvelopeSelectMultiple(envelope, index) {
 			const lastToggledIndex = this.lastToggledIndex
 				?? this.findSelectionIndex(parseInt(this.$route.params.threadId))
@@ -507,31 +559,38 @@ export default {
 			}
 			this.lastToggledIndex = index
 		},
+
 		unselectAll() {
 			this.sortedEnvelops.forEach((env) => {
 				env.flags.selected = false
 			})
 			this.selection = []
 		},
+
 		onOpenMoveModal() {
 			this.showMoveModal = true
 		},
+
 		onOpenTagModal() {
 			this.showTagModal = true
 		},
+
 		onCloseTagModal() {
 			this.showTagModal = false
 		},
+
 		async forwardSelectedAsAttachment() {
 			await this.mainStore.startComposerSession({
 				forwardedMessages: [...this.selection],
 			})
 			this.unselectAll()
 		},
+
 		onCloseMoveModal() {
 			this.showMoveModal = false
 			this.unselectAll()
 		},
+
 		/**
 		 * Find the envelope list index of a given envelope's database id.
 		 *

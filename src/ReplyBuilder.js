@@ -5,7 +5,6 @@
 
 import moment from '@nextcloud/moment'
 import negate from 'lodash/fp/negate.js'
-
 import { html } from './util/text.js'
 
 /**
@@ -15,7 +14,7 @@ import { html } from './util/text.js'
  * @param {boolean} replyOnTop put reply on top?
  * @return {Text}
  */
-export const buildReplyBody = (original, from, date, replyOnTop = true) => {
+export function buildReplyBody(original, from, date, replyOnTop = true) {
 	const startEnd = '<p></p><p></p>'
 	const plainBody = '<br>&gt; ' + original.value.replace(/\n/g, '<br>&gt; ')
 	const htmlBody = `<blockquote>${original.value}</blockquote>`
@@ -23,28 +22,28 @@ export const buildReplyBody = (original, from, date, replyOnTop = true) => {
 	const quoteEnd = '</div>'
 
 	switch (original.format) {
-	case 'plain':
-		if (from) {
-			const dateString = moment.unix(date).format('LLL')
-			return replyOnTop
-				? html(`${startEnd}${quoteStart}"${from.label}" ${from.email} – ${dateString}` + plainBody + quoteEnd)
-				: html(`${quoteStart}"${from.label}" ${from.email} – ${dateString}` + plainBody + quoteEnd + startEnd)
-		} else {
-			return replyOnTop
-				? html(`${startEnd}${quoteStart}${plainBody}${quoteEnd}`)
-				: html(`${quoteStart}${plainBody}${quoteEnd}${startEnd}`)
-		}
-	case 'html':
-		if (from) {
-			const dateString = moment.unix(date).format('LLL')
-			return replyOnTop
-				? html(`${startEnd}${quoteStart}"${from.label}" ${from.email} – ${dateString}<br>${htmlBody}${quoteEnd}`)
-				: html(`${quoteStart}"${from.label}" ${from.email} – ${dateString}<br>${htmlBody}${quoteEnd}${startEnd}`)
-		} else {
-			return replyOnTop
-				? html(`${startEnd}${quoteStart}${htmlBody}${quoteEnd}`)
-				: html(`${quoteStart}${htmlBody}${quoteEnd}${startEnd}`)
-		}
+		case 'plain':
+			if (from) {
+				const dateString = moment.unix(date).format('LLL')
+				return replyOnTop
+					? html(`${startEnd}${quoteStart}"${from.label}" ${from.email} – ${dateString}` + plainBody + quoteEnd)
+					: html(`${quoteStart}"${from.label}" ${from.email} – ${dateString}` + plainBody + quoteEnd + startEnd)
+			} else {
+				return replyOnTop
+					? html(`${startEnd}${quoteStart}${plainBody}${quoteEnd}`)
+					: html(`${quoteStart}${plainBody}${quoteEnd}${startEnd}`)
+			}
+		case 'html':
+			if (from) {
+				const dateString = moment.unix(date).format('LLL')
+				return replyOnTop
+					? html(`${startEnd}${quoteStart}"${from.label}" ${from.email} – ${dateString}<br>${htmlBody}${quoteEnd}`)
+					: html(`${quoteStart}"${from.label}" ${from.email} – ${dateString}<br>${htmlBody}${quoteEnd}${startEnd}`)
+			} else {
+				return replyOnTop
+					? html(`${startEnd}${quoteStart}${htmlBody}${quoteEnd}`)
+					: html(`${quoteStart}${htmlBody}${quoteEnd}${startEnd}`)
+			}
 	}
 
 	throw new Error(`can't build a reply for the format ${original.format}`)
@@ -56,7 +55,7 @@ const RecipientType = Object.seal({
 	Cc: 2,
 })
 
-export const buildRecipients = (envelope, ownAddress, replyTo) => {
+export function buildRecipients(envelope, ownAddress, replyTo) {
 	let recipientType = RecipientType.None
 	const isOwnAddress = (a) => a.email === ownAddress.email
 	const isNotOwnAddress = negate(isOwnAddress)
@@ -140,7 +139,7 @@ const replyPrepends = [
 /*
  * Ref https://tools.ietf.org/html/rfc5322#section-3.6.5
  */
-export const buildReplySubject = (original) => {
+export function buildReplySubject(original) {
 	if (replyPrepends.some((prepend) => original.toLowerCase().startsWith(`${prepend}:`))) {
 		return original
 	}
@@ -175,7 +174,7 @@ const forwardPrepends = [
 	'转发',
 ]
 
-export const buildForwardSubject = (original) => {
+export function buildForwardSubject(original) {
 	if (forwardPrepends.some((prepend) => original.toLowerCase().startsWith(`${prepend}:`))) {
 		return original
 	}

@@ -4,7 +4,8 @@
 -->
 <template>
 	<div class="header">
-		<ButtonVue :aria-label="t('mail', 'New message')"
+		<ButtonVue
+			:aria-label="t('mail', 'New message')"
 			type="secondary"
 			button-id="mail_new_message"
 			:wide="true"
@@ -14,16 +15,19 @@
 			</template>
 			{{ t('mail', 'New message') }}
 		</ButtonVue>
-		<ButtonVue v-if="showRefresh && currentMailbox"
+		<ButtonVue
+			v-if="showRefresh && currentMailbox"
 			:aria-label="t('mail', 'Refresh')"
 			type="tertiary-no-background"
 			class="refresh__button"
 			:disabled="refreshing"
 			@click="refreshMailbox">
 			<template #icon>
-				<IconRefresh v-if="!refreshing"
+				<IconRefresh
+					v-if="!refreshing"
 					:size="20" />
-				<IconLoading v-if="refreshing"
+				<IconLoading
+					v-if="refreshing"
 					:size="20" />
 			</template>
 		</ButtonVue>
@@ -32,11 +36,10 @@
 
 <script>
 import { NcButton as ButtonVue } from '@nextcloud/vue'
-import IconLoading from '@nextcloud/vue/components/NcLoadingIcon'
 import { mapStores } from 'pinia'
+import IconLoading from '@nextcloud/vue/components/NcLoadingIcon'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconRefresh from 'vue-material-design-icons/Refresh.vue'
-
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 
@@ -48,16 +51,19 @@ export default {
 		IconRefresh,
 		IconLoading,
 	},
+
 	props: {
 		showRefresh: {
 			default: true,
 		},
 	},
+
 	data() {
 		return {
 			refreshing: false,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		currentMailbox() {
@@ -67,6 +73,7 @@ export default {
 			return undefined
 		},
 	},
+
 	methods: {
 		async refreshMailbox() {
 			if (this.refreshing === true) {
@@ -83,6 +90,7 @@ export default {
 				this.refreshing = false
 			}
 		},
+
 		async onNewMessage() {
 			await this.mainStore.startComposerSession({
 				isBlankMessage: true,

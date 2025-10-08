@@ -4,7 +4,8 @@
 -->
 <template>
 	<div id="mail-content">
-		<NeedsTranslationInfo v-if="needsTranslation"
+		<NeedsTranslationInfo
+			v-if="needsTranslation"
 			:is-html="false"
 			@translate="$emit('translate')" />
 		<MdnRequest :message="message" />
@@ -18,7 +19,6 @@
 
 <script>
 import { loadState } from '@nextcloud/initial-state'
-
 import MdnRequest from './MdnRequest.vue'
 import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
 import { needsTranslation } from '../service/AiIntergrationsService.js'
@@ -33,27 +33,32 @@ export default {
 			type: String,
 			required: true,
 		},
+
 		signature: {
 			type: String,
 			default: () => undefined,
 		},
+
 		message: {
 			required: true,
 			type: Object,
 		},
 	},
+
 	data() {
 		return {
 			needsTranslation: false,
 			enabledFreePrompt: loadState('mail', 'llm_freeprompt_available', false),
 		}
 	},
+
 	computed: {
 		enhancedBody() {
 			return this.body.replace(/(^&gt;.*\n)+/gm, (match) => {
 				return `<details class="quoted-text"><summary>${t('mail', 'Quoted text')}</summary>${match}</details>`
 			})
 		},
+
 		signatureSummaryAndBody() {
 			const matches = this.signature.trim().match(regFirstParagraph)
 
@@ -70,17 +75,20 @@ export default {
 				body: lines.slice(1).join('\n'),
 			}
 		},
+
 		signatureSummary() {
 			console.info(this.signature.match(regFirstParagraph))
 
 			return this.signatureSummaryAndBody.summary
 		},
 	},
+
 	async mounted() {
 		if (this.enabledFreePrompt && this.message) {
 			this.needsTranslation = await needsTranslation(this.message.databaseId)
 		}
 	},
+
 	methods: {
 		nl2br(str) {
 			return str.replace(/(\r\n|\n\r|\n|\r)/g, '<br />')
@@ -98,6 +106,7 @@ export default {
 	}
 }
 </style>
+
 <style lang="scss" scoped>
 .message-container,
 .mail-signature {

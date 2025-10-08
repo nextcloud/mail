@@ -4,7 +4,6 @@
  */
 
 export default class NoTrashMailboxConfiguredError extends Error {
-
 	constructor(message) {
 		super(message)
 		this.name = NoTrashMailboxConfiguredError.getName()
@@ -14,5 +13,4 @@ export default class NoTrashMailboxConfiguredError extends Error {
 	static getName() {
 		return 'NoTrashMailboxConfiguredError'
 	}
-
 }

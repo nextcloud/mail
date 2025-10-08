@@ -8,14 +8,15 @@
 		<template #icon>
 			<IconAdd :size="20" />
 		</template>
-		<ActionButton v-for="(calendar, idx) in cals"
+		<ActionButton
+			v-for="(calendar, idx) in cals"
 			:key="idx"
 			@click="onImport(calendar)">
 			<template #icon>
 				<IconLoading v-if="calendar.loading" :size="20" />
 				<IconAdd v-else :size="20" />
 			</template>
-			{{ t('mail', 'Import into {calendar}', {calendar: calendar.displayname}) }}
+			{{ t('mail', 'Import into {calendar}', { calendar: calendar.displayname }) }}
 		</ActionButton>
 	</Actions>
 </template>
@@ -35,16 +36,19 @@ export default {
 		IconAdd,
 		IconLoading,
 	},
+
 	props: {
 		calendars: {
 			type: Array,
 			required: true,
 		},
+
 		handler: {
 			type: Function,
 			required: true,
 		},
 	},
+
 	computed: {
 		cals() {
 			return this.calendars.map((original) => {
@@ -53,6 +57,7 @@ export default {
 			})
 		},
 	},
+
 	methods: {
 		onImport(calendar) {
 			calendar.loading = true

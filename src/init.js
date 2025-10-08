@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 import { loadState } from '@nextcloud/initial-state'
-
 import { fixAccountId } from './service/AccountService.js'
 import { fetchAvailableLanguages } from './service/translationService.js'
 import useMainStore from './store/mainStore.js'
@@ -101,7 +100,7 @@ export default function initAfterAppCreation() {
 	const followUpFeatureAvailable = loadState('mail', 'llm_followup_available', false)
 
 	accounts.map(fixAccountId).forEach((account) => {
-		const settings = accountSettings.find(settings => settings.accountId === account.id)
+		const settings = accountSettings.find((settings) => settings.accountId === account.id)
 		if (settings) {
 			delete settings.accountId
 			Object.entries(settings).forEach(([key, value]) => {
@@ -115,8 +114,8 @@ export default function initAfterAppCreation() {
 		mainStore.addAccountMutation({ ...account, ...settings })
 	})
 
-	tags.forEach(tag => mainStore.addTagMutation({ tag }))
-	internalAddressesList.forEach(internalAddress => mainStore.addInternalAddressMutation(internalAddress))
+	tags.forEach((tag) => mainStore.addTagMutation({ tag }))
+	internalAddressesList.forEach((internalAddress) => mainStore.addInternalAddressMutation(internalAddress))
 
 	mainStore.setScheduledSendingDisabledMutation(disableScheduledSend)
 	mainStore.setSnoozeDisabledMutation(disableSnooze)
@@ -128,7 +127,7 @@ export default function initAfterAppCreation() {
 	mainStore.setSmimeCertificatesMutation(smimeCertificates)
 
 	const outboxStore = useOutboxStore()
-	outboxMessages.forEach(message => outboxStore.addMessageMutation({ message }))
+	outboxMessages.forEach((message) => outboxStore.addMessageMutation({ message }))
 
 	const llmTranslationEnabled = loadState('mail', 'llm_translation_enabled', false)
 	mainStore.isTranslationEnabled = llmTranslationEnabled

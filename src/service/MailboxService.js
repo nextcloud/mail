@@ -43,7 +43,7 @@ export function markMailboxRead(id) {
 	return axios.post(url).then((resp) => resp.data)
 }
 
-export const deleteMailbox = async (id) => {
+export async function deleteMailbox(id) {
 	const url = generateUrl('/apps/mail/api/mailboxes/{id}', {
 		id,
 	})
@@ -59,7 +59,7 @@ export async function patchMailbox(id, data) {
 	return response.data
 }
 
-export const clearMailbox = async (id) => {
+export async function clearMailbox(id) {
 	const url = generateUrl('/apps/mail/api/mailboxes/{id}/clear', {
 		id,
 	})
@@ -73,7 +73,7 @@ export const clearMailbox = async (id) => {
  * @param {number} id Mailbox database id
  * @return {Promise<void>}
  */
-export const repairMailbox = async (id) => {
+export async function repairMailbox(id) {
 	const url = generateUrl('/apps/mail/api/mailboxes/{id}/repair', {
 		id,
 	})
