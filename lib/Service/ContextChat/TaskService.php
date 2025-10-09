@@ -60,14 +60,14 @@ class TaskService {
 	}
 
 	/**
-	 * @param int $jobId
+	 * @param int $mailboxId
 	 * @return Task|null
 	 * @throws Exception
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function delete(int $jobId): ?Task {
+	public function delete(int $mailboxId): ?Task {
 		try {
-			$entity = $this->taskMapper->findById($jobId);
+			$entity = $this->taskMapper->findByMailbox($mailboxId);
 		} catch (DoesNotExistException) {
 			return null;
 		}

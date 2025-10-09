@@ -83,7 +83,7 @@ class SubmitContentJob extends TimedJob {
 
 		if (empty($messageIds)) {
 			try {
-				$this->taskService->delete($task->getId());
+				$this->taskService->delete($task->getMailboxId());
 			} catch (MultipleObjectsReturnedException|Exception $e) {
 				$this->logger->warning('Exception occurred when trying to delete task', ['exception' => $e]);
 			}
@@ -101,7 +101,7 @@ class SubmitContentJob extends TimedJob {
 
 		if (empty($messages)) {
 			try {
-				$this->taskService->delete($task->getId());
+				$this->taskService->delete($task->getMailboxId());
 			} catch (MultipleObjectsReturnedException|Exception $e) {
 				$this->logger->warning('Exception occurred when trying to delete task', ['exception' => $e]);
 			}

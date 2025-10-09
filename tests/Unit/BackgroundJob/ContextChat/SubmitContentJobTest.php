@@ -207,7 +207,7 @@ class SubmitContentJobTest extends TestCase {
 			);
 		$this->messageMapper->expects($this->once())->method('findIdsAfter')
 			->with($mailbox, 0, 0, ContextChatProvider::CONTEXT_CHAT_IMPORT_MAX_ITEMS)->willReturn([]);
-		$this->taskService->expects($this->once())->method('delete')->with($task->getId());
+		$this->taskService->expects($this->once())->method('delete')->with($task->getMailboxId());
 		$this->messageMapper->expects($this->never())->method('findByIds');
 
 		$this->submitContentJob->setLastRun(0);
