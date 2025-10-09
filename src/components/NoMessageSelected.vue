@@ -4,11 +4,12 @@
 -->
 
 <template>
-	<AppContentDetails class="app-content no-message-selected"
-		:class="{ 'no-message-selected--themed': isThemed, }"
-		:style="{ 'backgroundImage': isThemed ? undefined: backgroundImgSrc, }">
+	<AppContentDetails
+		class="app-content no-message-selected"
+		:class="{ 'no-message-selected--themed': isThemed }"
+		:style="{ backgroundImage: isThemed ? undefined : backgroundImgSrc }">
 		<div class="no-message-selected__heading">
-			{{ t('mail', 'Welcome to {productName} Mail', { productName }, null, {escape: false}) }}
+			{{ t('mail', 'Welcome to {productName} Mail', { productName }, null, { escape: false }) }}
 		</div>
 		<div class="no-message-selected__text">
 			{{ t('mail', 'Start writing a message by clicking below or select an existing message to display its contents') }}
@@ -23,7 +24,6 @@
 import { generateFilePath } from '@nextcloud/router'
 import { NcAppContentDetails as AppContentDetails } from '@nextcloud/vue'
 import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
-
 import NewMessageButtonHeader from './NewMessageButtonHeader.vue'
 
 export default {
@@ -44,6 +44,7 @@ export default {
 			backgroundImgSrc: this.isDarkTheme
 				? 'url("' + generateFilePath('mail', 'img', 'welcome-connection-dark.png') + '")'
 				: 'url("' + generateFilePath('mail', 'img', 'welcome-connection-light.png') + '")',
+
 			isThemed: this.isDarkTheme
 				? window.getComputedStyle(document.body).getPropertyValue('--color-primary-element') !== '#0091f2'
 				: window.getComputedStyle(document.body).getPropertyValue('--color-primary-element') !== '#00679e',
@@ -57,6 +58,7 @@ export default {
 	},
 }
 </script>
+
 <style lang="scss" scoped>
 @use '../../css/fluid';
 

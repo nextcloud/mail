@@ -6,17 +6,20 @@
 	<NcContent app-name="mail">
 		<Navigation v-if="hasAccounts" />
 		<AppContent>
-			<div class="setup"
-				:class="{ 'setup--themed': isThemed, }"
-				:style="{ 'backgroundImage': isThemed ? undefined: backgroundImgSrc, }">
-				<EmptyContent v-if="allowNewMailAccounts"
+			<div
+				class="setup"
+				:class="{ 'setup--themed': isThemed }"
+				:style="{ backgroundImage: isThemed ? undefined : backgroundImgSrc }">
+				<EmptyContent
+					v-if="allowNewMailAccounts"
 					class="setup__form-content"
 					:name="t('mail', 'Connect your mail account')">
 					<template #icon>
 						<div class="setup__form-content__svg-wrapper" v-html="FluidMail" />
 					</template>
 					<template #action>
-						<AccountForm :display-name="displayName"
+						<AccountForm
+							:display-name="displayName"
 							:email="email"
 							:error.sync="error"
 							class="setup__form-content__form"
@@ -38,10 +41,9 @@ import { loadState } from '@nextcloud/initial-state'
 import { generateFilePath } from '@nextcloud/router'
 import { NcAppContent as AppContent, NcEmptyContent as EmptyContent, NcContent } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
-
-import FluidMail from '../../img/mail-fluid.svg'
 import AccountForm from '../components/AccountForm.vue'
 import Navigation from '../components/Navigation.vue'
+import FluidMail from '../../img/mail-fluid.svg'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 
@@ -54,6 +56,7 @@ export default {
 		EmptyContent,
 		Navigation,
 	},
+
 	data() {
 		return {
 			displayName: loadState('mail', 'prefill_displayName'),
@@ -64,20 +67,23 @@ export default {
 			backgroundImgSrc: this.isDarkTheme
 				? 'url("' + generateFilePath('mail', 'img', 'welcome-connection-dark.png') + '")'
 				: 'url("' + generateFilePath('mail', 'img', 'welcome-connection-light.png') + '")',
+
 			isThemed: this.isDarkTheme
 				? window.getComputedStyle(document.body).getPropertyValue('--color-primary-element') !== '#0091f2'
 				: window.getComputedStyle(document.body).getPropertyValue('--color-primary-element') !== '#00679e',
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		hasAccounts() {
 			return this.mainStore.getAccounts.length > 1
 		},
 	},
+
 	methods: {
 		onAccountCreated() {
-			logger.info('account successfully created, redirecting …')
+			logger.info('account successfully created, redirecting …')
 			this.$router.push({
 				name: 'home',
 			})

@@ -3,12 +3,10 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import {createLocalVue, shallowMount} from '@vue/test-utils'
-
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createPinia, PiniaVuePlugin } from 'pinia'
 import Composer from '../../../components/Composer.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
-import { createPinia, PiniaVuePlugin } from 'pinia'
-
 import useMainStore from '../../../store/mainStore.js'
 
 const localVue = createLocalVue()
@@ -18,7 +16,6 @@ localVue.use(PiniaVuePlugin)
 const pinia = createPinia()
 
 describe('Composer', () => {
-
 	let store
 
 	beforeEach(() => {
@@ -263,7 +260,7 @@ describe('Composer', () => {
 
 	it('generate title for submit button', () => {
 		const view = shallowMount(Composer, {
-            propsData: {
+			propsData: {
 				isFirstOpen: true,
 				accounts: [
 					{
@@ -273,11 +270,10 @@ describe('Composer', () => {
 						aliases: [],
 					},
 				],
-            },
+			},
 			store,
 			localVue,
 		})
-
 
 		expect(view.vm.submitButtonTitle).toEqual('Send')
 
@@ -293,8 +289,8 @@ describe('Composer', () => {
 
 	it('generate title for submit button (send later)', () => {
 		const view = shallowMount(Composer, {
-            propsData: {
-                isFirstOpen: true,
+			propsData: {
+				isFirstOpen: true,
 				accounts: [
 					{
 						id: 123,
@@ -303,7 +299,7 @@ describe('Composer', () => {
 						aliases: [],
 					},
 				],
-            },
+			},
 			store,
 			localVue,
 		})
@@ -321,6 +317,4 @@ describe('Composer', () => {
 
 		expect(view.vm.submitButtonTitle).toEqual('Encrypt with Mailvelope and send later Jan 1, 02:00 PM')
 	})
-
-
 })

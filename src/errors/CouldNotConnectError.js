@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 export default class CouldNotConnectError extends Error {
-
 	constructor(message) {
 		super(message)
 		this.name = CouldNotConnectError.getName()
@@ -12,5 +11,4 @@ export default class CouldNotConnectError extends Error {
 	static getName() {
 		return 'CouldNotConnectError'
 	}
-
 }

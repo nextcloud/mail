@@ -6,20 +6,22 @@
 <template>
 	<div>
 		<p>
-			<input id="plaintext"
+			<input
+				id="plaintext"
 				v-model="mode"
 				type="radio"
 				class="radio"
 				value="plaintext">
-			<label :class="{primary: mode === 'plaintext'}" for="plaintext">
+			<label :class="{ primary: mode === 'plaintext' }" for="plaintext">
 				{{ t('mail', 'Plain text') }}
 			</label>
-			<input id="richtext"
+			<input
+				id="richtext"
 				v-model="mode"
 				type="radio"
 				class="radio"
 				value="richtext">
-			<label :class="{primary: mode === 'richtext'}" for="richtext">
+			<label :class="{ primary: mode === 'richtext' }" for="richtext">
 				{{ t('mail', 'Rich text') }}
 			</label>
 		</p>
@@ -28,7 +30,6 @@
 
 <script>
 import { mapStores } from 'pinia'
-
 import Logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 
@@ -40,14 +41,17 @@ export default {
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			mode: this.account.editorMode,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 	},
+
 	watch: {
 		mode(val, oldVal) {
 			this.mainStore.patchAccount({

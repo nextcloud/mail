@@ -4,7 +4,6 @@
  */
 
 import { defineStore } from 'pinia'
-
 import {
 	FOLLOW_UP_MAILBOX_ID,
 	PRIORITY_INBOX_ID,

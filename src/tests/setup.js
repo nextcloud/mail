@@ -3,9 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+/* global readTestDataRaw */
+
 import { readFileSync } from 'fs'
-import { join } from 'path'
 import JestFetchMock from 'jest-fetch-mock'
+import { join } from 'path'
 
 // Required for @nextcloud/files
 JestFetchMock.enableMocks()

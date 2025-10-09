@@ -5,7 +5,7 @@
 
 import { translate as t } from '@nextcloud/l10n'
 
-const translateSpecial = (mailbox) => {
+function translateSpecial(mailbox) {
 	if (mailbox.specialUse.includes('all')) {
 		// TRANSLATORS: translated mail box name
 		return t('mail', 'All')
@@ -49,7 +49,7 @@ const translateSpecial = (mailbox) => {
 	throw new Error(`unknown special use ${mailbox.specialUse}`)
 }
 
-export const translate = (mailbox) => {
+export function translate(mailbox) {
 	if (mailbox.specialUse.length > 0) {
 		try {
 			return translateSpecial(mailbox)

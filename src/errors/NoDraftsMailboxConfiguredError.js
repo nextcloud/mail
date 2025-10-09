@@ -4,7 +4,6 @@
  */
 
 export default class NoDraftsMailboxConfiguredError extends Error {
-
 	constructor(message) {
 		super(message)
 		this.name = NoDraftsMailboxConfiguredError.getName()
@@ -14,5 +13,4 @@ export default class NoDraftsMailboxConfiguredError extends Error {
 	static getName() {
 		return 'NoDraftsMailboxConfiguredError'
 	}
-
 }

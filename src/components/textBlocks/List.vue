@@ -4,7 +4,8 @@
 -->
 <template>
 	<div>
-		<ListItem v-for="textBlock in textBlocks"
+		<ListItem
+			v-for="textBlock in textBlocks"
 			:key="textBlock.id"
 			:text-block="textBlock"
 			:shared="shared" />
@@ -19,16 +20,19 @@ export default {
 	components: {
 		ListItem,
 	},
+
 	props: {
 		shared: {
 			type: Boolean,
 			default: false,
 		},
+
 		textBlocks: {
 			type: Array,
 			required: true,
 		},
 	},
+
 	methods: {
 	},
 }

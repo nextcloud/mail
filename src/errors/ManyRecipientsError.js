@@ -4,7 +4,6 @@
  */
 
 export default class ManyRecipientsError extends Error {
-
 	constructor(message) {
 		super(message)
 		this.name = ManyRecipientsError.getName()
@@ -14,5 +13,4 @@ export default class ManyRecipientsError extends Error {
 	static getName() {
 		return 'ManyRecipientsError'
 	}
-
 }

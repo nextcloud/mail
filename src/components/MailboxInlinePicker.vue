@@ -3,51 +3,59 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<Treeselect ref="Treeselect"
+	<Treeselect
+		ref="Treeselect"
 		v-model="selected"
 		:options="mailboxes"
 		:multiple="false"
 		:clearable="false"
 		:disabled="disabled" />
 </template>
+
 <script>
-import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import Treeselect from '@riophae/vue-treeselect'
 import { mapStores } from 'pinia'
-
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
+
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 export default {
 	name: 'MailboxInlinePicker',
 	components: {
 		Treeselect,
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
+
 		disabled: {
 			type: Boolean,
 			default: false,
 		},
+
 		value: {
 			type: Number,
 			default: undefined,
 		},
 	},
+
 	data() {
 		return {
 			selected: this.value,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		mailboxes() {
 			return this.getMailboxes()
 		},
 	},
+
 	watch: {
 		selected(val) {
 			if (val !== this.value) {
@@ -56,6 +64,7 @@ export default {
 			}
 		},
 	},
+
 	methods: {
 		getMailboxes(mailboxId) {
 			let mailboxes = []
@@ -64,9 +73,9 @@ export default {
 			} else {
 				mailboxes = this.mainStore.getSubMailboxes(mailboxId)
 			}
-			mailboxes = mailboxes.filter(mailbox => mailboxHasRights(mailbox, 'i'))
+			mailboxes = mailboxes.filter((mailbox) => mailboxHasRights(mailbox, 'i'))
 			return mailboxes.map((mailbox) => {
-				 return {
+				return {
 					id: mailbox.databaseId,
 					label: mailbox.displayName,
 					children: mailbox.mailboxes.length > 0 ? this.getMailboxes(mailbox.databaseId) : '',
@@ -76,6 +85,7 @@ export default {
 	},
 }
 </script>
+
 <style>
 .vue-treeselect__control {
 	padding: 0;

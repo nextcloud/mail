@@ -6,7 +6,6 @@ import logger from '../../../logger.js'
 import dragEventBus from '../util/dragEventBus.js'
 
 export class DroppableMailbox {
-
 	constructor(el, componentInstance, options) {
 		this.el = el
 		this.options = options
@@ -124,7 +123,7 @@ export class DroppableMailbox {
 		dragEventBus.emit('envelopes-dropped', { envelopes: envelopesBeingDragged })
 
 		try {
-			const processedEnvelopes = envelopesBeingDragged.map(async envelope => {
+			const processedEnvelopes = envelopesBeingDragged.map(async (envelope) => {
 				const processed = await this.processDroppedItem(envelope)
 				return processed
 			})
@@ -160,5 +159,4 @@ export class DroppableMailbox {
 			logger.error('could not move messages', error)
 		}
 	}
-
 }

@@ -19,12 +19,14 @@ export default {
 	components: {
 		NcModal,
 	},
+
 	props: {
 		rawMessage: {
 			type: String,
 			required: true,
 		},
 	},
+
 	methods: {
 		onClose() {
 			this.$emit('close')

@@ -23,21 +23,25 @@ export default {
 			type: String,
 			required: true,
 		},
+
 		from: {
 			type: String,
 			required: false,
 			default: undefined,
 		},
+
 		message: {
 			required: true,
 			type: Object,
 		},
 	},
+
 	data() {
 		return {
 			mailvelope: false,
 		}
 	},
+
 	async mounted() {
 		this.mailvelope = await getMailvelope()
 		this.mailvelope.createDisplayContainer('#mail-content', this.body, undefined, {

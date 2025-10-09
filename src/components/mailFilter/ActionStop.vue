@@ -7,6 +7,7 @@
 		{{ t('mail', 'Stop ends all processing') }}
 	</p>
 </template>
+
 <script>
 
 export default {
@@ -16,6 +17,7 @@ export default {
 			type: Object,
 			required: true,
 		},
+
 		account: {
 			type: Object,
 			required: true,
@@ -23,6 +25,7 @@ export default {
 	},
 }
 </script>
+
 <style lang="scss" scoped>
 .help-text {
 	align-content: center;

@@ -4,7 +4,7 @@
  */
 module.exports = {
 	plugins: [
-		'@babel/plugin-syntax-dynamic-import'
+		'@babel/plugin-syntax-dynamic-import',
 	],
 	presets: [
 		[
@@ -12,8 +12,8 @@ module.exports = {
 			{
 				modules: process.env.NODE_ENV === 'testing' ? 'commonjs' : undefined,
 				useBuiltIns: process.env.NODE_ENV === 'testing' ? 'usage' : 'entry',
-				corejs: 3
-			}
-		]
-	]
-};
+				corejs: 3,
+			},
+		],
+	],
+}

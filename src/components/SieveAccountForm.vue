@@ -16,15 +16,18 @@
 			<NcTextField :label="t('mail', 'Sieve host')" :value.sync="sieveConfig.sieveHost" />
 			<h4>{{ t('mail', 'Sieve security') }}</h4>
 			<div class="flex-row">
-				<ButtonVue :pressed="sieveConfig.sieveSslMode === 'none'"
+				<ButtonVue
+					:pressed="sieveConfig.sieveSslMode === 'none'"
 					@click="updateSslMode('none')">
 					{{ t('mail', 'None') }}
 				</ButtonVue>
-				<ButtonVue :pressed="sieveConfig.sieveSslMode === 'ssl'"
+				<ButtonVue
+					:pressed="sieveConfig.sieveSslMode === 'ssl'"
 					@click="updateSslMode('ssl')">
 					{{ t('mail', 'SSL/TLS') }}
 				</ButtonVue>
-				<ButtonVue :pressed="sieveConfig.sieveSslMode === 'tls'"
+				<ButtonVue
+					:pressed="sieveConfig.sieveSslMode === 'tls'"
 					@click="updateSslMode('tls')">
 					{{ t('mail', 'STARTTLS') }}
 				</ButtonVue>
@@ -32,11 +35,13 @@
 			<NcTextField :label="t('mail', 'Sieve Port')" :value.sync="sieveConfig.sievePort" />
 			<h4>{{ t('mail', 'Sieve credentials') }}</h4>
 			<div class="flex-row">
-				<ButtonVue :pressed="useImapCredentials"
+				<ButtonVue
+					:pressed="useImapCredentials"
 					@click="updateCredentials(true)">
 					{{ t('mail', 'IMAP credentials') }}
 				</ButtonVue>
-				<ButtonVue :pressed="!useImapCredentials"
+				<ButtonVue
+					:pressed="!useImapCredentials"
 					@click="updateCredentials(false)">
 					{{ t('mail', 'Custom') }}
 				</ButtonVue>
@@ -51,7 +56,8 @@
 			{{ t('mail', 'Oh snap!') }}
 			{{ errorMessage }}
 		</p>
-		<ButtonVue type="primary"
+		<ButtonVue
+			type="primary"
 			:disabled="loading"
 			:aria-label="t('mail', 'Save sieve settings')"
 			@click.prevent="onSubmit">
@@ -63,7 +69,6 @@
 <script>
 import { NcButton as ButtonVue, NcCheckboxRadioSwitch, NcPasswordField, NcTextField } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
-
 import useMainStore from '../store/mainStore.js'
 
 export default {
@@ -74,12 +79,14 @@ export default {
 		NcPasswordField,
 		NcCheckboxRadioSwitch,
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			sieveConfig: {
@@ -90,21 +97,26 @@ export default {
 				sievePassword: '',
 				sieveSslMode: this.account.sieveSslMode || 'tls',
 			},
+
 			loading: false,
 			useImapCredentials: !this.account.sieveUser,
 			errorMessage: '',
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 	},
+
 	methods: {
 		updateSslMode(value) {
 			this.sieveConfig.sieveSslMode = value
 		},
+
 		updateCredentials(value) {
 			this.useImapCredentials = value
 		},
+
 		async onSubmit() {
 			this.loading = true
 			this.errorMessage = ''
