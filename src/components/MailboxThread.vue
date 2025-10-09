@@ -128,8 +128,7 @@
 </template>
 
 <script>
-import { NcAppContent as AppContent, NcAppContentList as AppContentList, NcButton as ButtonVue, NcPopover as Popover } from '@nextcloud/vue'
-import isMobile from '@nextcloud/vue/mixins/isMobile'
+import { NcAppContent as AppContent, NcAppContentList as AppContentList, NcButton as ButtonVue, isMobile, NcPopover as Popover } from '@nextcloud/vue'
 import addressParser from 'address-rfc2822'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
