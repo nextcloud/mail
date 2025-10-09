@@ -5,10 +5,7 @@
 
 import { readFileSync } from 'fs'
 import { join } from 'path'
-import JestFetchMock from 'jest-fetch-mock'
-
-// Required for @nextcloud/files
-JestFetchMock.enableMocks()
+import { vi } from 'vitest'
 
 global.appName = 'mail'
 
@@ -31,6 +28,9 @@ global.OC = {
 		version: '9999.0.0',
 	},
 }
+
+global.t = vi.fn().mockImplementation((msg) => msg)
+global.n = vi.fn().mockImplementation((msg) => msg)
 
 /**
  * @param {string} path Path to file relative to src/tests/data/

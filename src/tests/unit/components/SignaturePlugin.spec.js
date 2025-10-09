@@ -4,7 +4,7 @@
  */
 
 import VirtualTestEditor from '../../virtualtesteditor.js'
-import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
+import { Paragraph } from 'ckeditor5'
 import SignaturePlugin from '../../../ckeditor/signature/SignaturePlugin.js'
 import QuotePlugin from '../../../ckeditor/quote/QuotePlugin.js'
 
@@ -24,7 +24,7 @@ describe('SignaturePlugin', () => {
 			const editor = await VirtualTestEditor.create({
 				licenseKey: 'GPL',
 				initialData: text,
-				plugins: [ParagraphPlugin, SignaturePlugin],
+				plugins: [Paragraph, SignaturePlugin],
 			})
 
 			editor.execute('insertSignature',
@@ -42,7 +42,7 @@ describe('SignaturePlugin', () => {
 			const editor = await VirtualTestEditor.create({
 				licenseKey: 'GPL',
 				initialData: text,
-				plugins: [ParagraphPlugin, SignaturePlugin],
+				plugins: [Paragraph, SignaturePlugin],
 			})
 
 			editor.execute('insertSignature',
@@ -61,7 +61,7 @@ describe('SignaturePlugin', () => {
 			const editor = await VirtualTestEditor.create({
 				licenseKey: 'GPL',
 				initialData: text,
-				plugins: [ParagraphPlugin, QuotePlugin, SignaturePlugin],
+				plugins: [Paragraph, QuotePlugin, SignaturePlugin],
 			})
 
 			editor.execute('insertSignature',
@@ -84,7 +84,7 @@ describe('SignaturePlugin', () => {
 			const editor = await VirtualTestEditor.create({
 				licenseKey: 'GPL',
 				initialData: text,
-				plugins: [ParagraphPlugin, SignaturePlugin],
+				plugins: [Paragraph, SignaturePlugin],
 			})
 
 			editor.execute('insertSignature',

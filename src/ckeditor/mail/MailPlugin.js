@@ -3,8 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import Plugin from '@ckeditor/ckeditor5-core/src/plugin.js'
-import { Paragraph } from '@ckeditor/ckeditor5-paragraph'
+import { Paragraph, Plugin } from 'ckeditor5'
 
 export default class Mail extends Plugin {
 

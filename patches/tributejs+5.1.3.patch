@@ -1,0 +1,12 @@
+diff --git a/node_modules/tributejs/package.json b/node_modules/tributejs/package.json
+index 6f35f6b..b379ad7 100644
+--- a/node_modules/tributejs/package.json
++++ b/node_modules/tributejs/package.json
+@@ -6,6 +6,7 @@
+   "module": "dist/tribute.esm.js",
+   "browser": "dist/tribute.min.js",
+   "types": "tributejs.d.ts",
++  "type": "module",
+   "devDependencies": {
+     "@babel/core": "^7.5.5",
+     "@babel/preset-env": "^7.5.5",

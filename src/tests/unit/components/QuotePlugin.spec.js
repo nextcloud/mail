@@ -4,7 +4,7 @@
  */
 
 import VirtualTestEditor from '../../virtualtesteditor.js'
-import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
+import { Paragraph } from 'ckeditor5'
 import QuotePlugin from '../../../ckeditor/quote/QuotePlugin.js'
 
 describe('QuotePlugin', () => {
@@ -16,7 +16,7 @@ describe('QuotePlugin', () => {
 		const editor = await VirtualTestEditor.create({
 			licenseKey: 'GPL',
 			initialData: text,
-			plugins: [ParagraphPlugin, QuotePlugin],
+			plugins: [Paragraph, QuotePlugin],
 		})
 
 		expect(editor.getData()).toEqual(expected)
@@ -29,7 +29,7 @@ describe('QuotePlugin', () => {
 		const editor = await VirtualTestEditor.create({
 			licenseKey: 'GPL',
 			initialData: text,
-			plugins: [ParagraphPlugin],
+			plugins: [Paragraph],
 		})
 
 		expect(editor.getData()).toEqual(expected)
@@ -41,7 +41,7 @@ describe('QuotePlugin', () => {
 		const editor = await VirtualTestEditor.create({
 			licenseKey: 'GPL',
 			initialData: text,
-			plugins: [ParagraphPlugin, QuotePlugin],
+			plugins: [Paragraph, QuotePlugin],
 		})
 
 		const range = editor.model.createRangeIn(
