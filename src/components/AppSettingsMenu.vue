@@ -319,7 +319,6 @@
 import { showError } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
 import { NcAppSettingsDialog, NcAppSettingsSection, NcButton, NcCheckboxRadioSwitch, NcDialog, NcInputField, NcRadioGroup, NcRadioGroupButton } from '@nextcloud/vue'
-import isMobile from '@nextcloud/vue/mixins/isMobile'
 import mitt from 'mitt'
 import { mapState, mapStores } from 'pinia'
 import NcKbd from '@nextcloud/vue/components/NcKbd'
@@ -366,7 +365,6 @@ export default {
 		TextEditor,
 	},
 
-	mixins: [isMobile],
 	props: {
 		open: {
 			required: true,

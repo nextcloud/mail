@@ -48,7 +48,6 @@
 
 <script>
 import { showError, showWarning } from '@nextcloud/dialogs'
-import isMobile from '@nextcloud/vue/mixins/isMobile'
 import { mapStores } from 'pinia'
 import { findIndex, propEq } from 'ramda'
 import EmptyMailbox from './EmptyMailbox.vue'
@@ -80,7 +79,6 @@ export default {
 		SectionTitle,
 	},
 
-	mixins: [isMobile],
 	props: {
 		groupEnvelopes: {
 			type: Object,
