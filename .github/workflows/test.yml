@@ -55,7 +55,7 @@ jobs:
       env:
         XDEBUG_MODE: off
     - name: Report coverage
-      uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
+      uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
       if: ${{ always() && matrix.php-versions == '8.3' }}
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
@@ -201,7 +201,7 @@ jobs:
             if: ${{ always() }}
             run: cat nextcloud/data/mail-*-*-imap.log
           - name: Report coverage
-            uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
+            uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
             if: ${{ always() && matrix.db == 'mysql' }}
             with:
               token: ${{ secrets.CODECOV_TOKEN }}
