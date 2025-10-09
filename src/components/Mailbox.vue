@@ -44,7 +44,6 @@
 
 <script>
 import { showError, showWarning } from '@nextcloud/dialogs'
-import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 import { mapStores } from 'pinia'
 import { findIndex, propEq } from 'ramda'
 
@@ -76,7 +75,7 @@ export default {
 		LoadingSkeleton,
 		SectionTitle,
 	},
-	mixins: [isMobile],
+
 	props: {
 		groupEnvelopes: {
 			type: Object,

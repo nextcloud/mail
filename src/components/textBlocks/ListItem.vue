@@ -45,12 +45,11 @@
 				<h3>
 					{{ t('mail','Shares') }}
 				</h3>
-				<NcSelect v-model="share"
+				<NcSelectUsers v-model="share"
 					class="text-block-list-item__shares"
 					:placeholder="t('mail','Search for users or groups')"
 					:label-outside="true"
 					:loading="loading"
-					:user-select="true"
 					:options="options"
 					:get-option-label="option => option.displayName"
 					@option:selecting="shareTextBlock"
@@ -108,7 +107,7 @@ import axios from '@nextcloud/axios'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'
 import { ShareType } from '@nextcloud/sharing'
-import { NcActionButton, NcAvatar, NcButton, NcDialog, NcInputField, NcListItem, NcLoadingIcon, NcSelect } from '@nextcloud/vue'
+import { NcActionButton, NcAvatar, NcButton, NcDialog, NcInputField, NcListItem, NcLoadingIcon, NcSelectUsers } from '@nextcloud/vue'
 import debounce from 'lodash/fp/debounce.js'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
@@ -127,7 +126,7 @@ export default {
 	components: {
 		NcActionButton,
 		NcLoadingIcon,
-		NcSelect,
+		NcSelectUsers,
 		NcDialog,
 		TextEditor,
 		NcButton,

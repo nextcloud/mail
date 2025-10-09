@@ -98,7 +98,6 @@
 								:aria-label-combobox="t('mail', 'Select senders')"
 								:multiple="true"
 								:taggable="true"
-								:close-on-select="true"
 								:show-no-options="false"
 								:preserve-search="true"
 								:max="1"
@@ -123,7 +122,6 @@
 								:aria-label-combobox="t('mail', 'Select recipients')"
 								:multiple="true"
 								:taggable="true"
-								:close-on-select="true"
 								:show-no-options="false"
 								:preserve-search="true"
 								@option:selecting="addTag($event,'to')"
@@ -147,7 +145,6 @@
 								:aria-label-combobox="t('mail', 'Select CC recipients')"
 								:multiple="true"
 								:taggable="true"
-								:close-on-select="true"
 								:show-no-options="false"
 								:preserve-search="true"
 								@option:selecting="addTag($event,'cc')"
@@ -171,7 +168,6 @@
 								:aria-label-combobox="t('mail', 'Select BCC recipients')"
 								:multiple="true"
 								:taggable="true"
-								:close-on-select="true"
 								:show-no-options="false"
 								:preserve-search="true"
 								@option:selecting="addTag($event,'bcc')"
@@ -196,8 +192,7 @@
 								:aria-label-combobox="t('mail', 'Select tags')"
 								track-by="displayName"
 								:multiple="true"
-								:auto-limit="false"
-								:close-on-select="false">
+								:auto-limit="false">
 								<template #selected-option="option">
 									<div class="tag-group__search">
 										<div class="tag-group__bg"

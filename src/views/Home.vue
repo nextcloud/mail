@@ -19,7 +19,6 @@
 
 <script>
 import { NcContent } from '@nextcloud/vue'
-import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 import { mapState, mapStores } from 'pinia'
 
 import '../../css/mail.scss'
@@ -43,7 +42,7 @@ export default {
 		Outbox,
 		ComposerSessionIndicator,
 	},
-	mixins: [isMobile],
+
 	data() {
 		return {
 			hasComposerSession: false,
