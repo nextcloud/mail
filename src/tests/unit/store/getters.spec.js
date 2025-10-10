@@ -176,7 +176,7 @@ describe('Pinia main store getters', () => {
 	})
 
 	it('find mailbox by special role: inbox', () => {
-		store.getMailboxes = vi.fn().mockReturnValue([
+		store.getMailboxes = jest.fn().mockReturnValue([
 			{
 				name: 'Test',
 				specialRole: 0,
@@ -200,7 +200,7 @@ describe('Pinia main store getters', () => {
 	})
 
 	it('find mailbox by special role: undefined', () => {
-		store.getMailboxes = vi.fn().mockReturnValue([
+		store.getMailboxes = jest.fn().mockReturnValue([
 			{
 				name: 'Test',
 				specialRole: 0,

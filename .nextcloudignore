@@ -16,6 +16,7 @@ codecov.yml
 .gitignore
 .hg
 /issue_template.md
+/jest.config.js
 /krankerl.toml
 /l10n/no-php
 /.php-cs-fixer.dist.php
@@ -41,5 +42,3 @@ codecov.yml
 /vendor/*/*/tests
 /vendor/*/*/test_data
 /webpack.*
-/vitest.config.*
-/patches

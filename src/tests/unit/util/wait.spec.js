@@ -6,7 +6,7 @@
 import { wait } from '../../../util/wait.js'
 
 describe('wait', () => {
-	it('waits', () => new Promise(done => {
+	it('waits', (done) => {
 		wait(0).then(done)
-	}))
+	})
 })

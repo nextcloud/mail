@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Command } from 'ckeditor5'
+import Command from '@ckeditor/ckeditor5-core/src/command.js'
 
 export const TRIGGER_CHANGE_ALIAS = 'change_alias'
 export const TRIGGER_EDITOR_READY = 'editor_ready'

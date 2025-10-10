@@ -9,7 +9,7 @@ import mitt from 'mitt'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import TextEditor from '../../../components/TextEditor.vue'
 import VirtualTestEditor from '../../virtualtesteditor.js'
-import { Paragraph } from 'ckeditor5'
+import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
 import MailPlugin from '../../../ckeditor/mail/MailPlugin.js'
 
 const localVue = createLocalVue()
@@ -74,7 +74,7 @@ describe('TextEditor', () => {
 		const editor = await VirtualTestEditor.create({
 			licenseKey: 'GPL',
 			initialData: '<p>bonjour bonjour</p>',
-			plugins: [Paragraph],
+			plugins: [ParagraphPlugin],
 		})
 
 		editor.ui = {
@@ -108,7 +108,7 @@ describe('TextEditor', () => {
 		const editor = await VirtualTestEditor.create({
 			licenseKey: 'GPL',
 			initialData: '<p>bonjour bonjour</p>',
-			plugins: [Paragraph, MailPlugin],
+			plugins: [ParagraphPlugin, MailPlugin],
 		})
 
 		editor.ui = {

@@ -2,10 +2,12 @@
  * SPDX-FileCopyrightText: 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
  * SPDX-License-Identifier: GPL-2.0-or-later
  *
- * For licensing, see https://github.com/ckeditor/ckeditor5/blob/master/LICENSE.md
+ * For licensing, see https://github.com/ckeditor/ckeditor5/blob/master/LICENSE.md 
  * or https://ckeditor.com/legal/ckeditor-oss-license
  */
-import { Editor, DataApiMixin, mix } from 'ckeditor5';
+import Editor from '@ckeditor/ckeditor5-core/src/editor/editor';
+import DataApiMixin from '@ckeditor/ckeditor5-core/src/editor/utils/dataapimixin';
+import mix from '@ckeditor/ckeditor5-utils/src/mix';
 
 /**
  * A simple editor implementation useful for testing the engine part of the features.

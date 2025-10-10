@@ -13,7 +13,7 @@ import useMainStore from '../../store/mainStore.js'
 const localVue = createLocalVue()
 localVue.mixin(Nextcloud)
 
-vi.mock('../../service/AutoConfigService.js')
+jest.mock('../../service/AutoConfigService.js')
 
 describe('App', () => {
 
@@ -34,7 +34,7 @@ describe('App', () => {
 
 	it('handles session expiry', async() => {
 		// Stub and prevent the actual reload
-		view.vm.reload = vi.fn()
+		view.vm.reload = jest.fn()
 
 		expect(view.vm.isExpiredSession).toBe(false)
 		store.isExpiredSession = true
