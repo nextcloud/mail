@@ -592,7 +592,7 @@ class MessagesController extends Controller {
 					$html,
 					$this->nonceManager->getNonce(),
 					$this->urlGenerator->getAbsoluteURL(
-						$this->urlGenerator->linkTo('mail', 'js/htmlresponse.js')
+						$this->urlGenerator->linkTo('mail', 'js/nextcloud-mail-htmlresponse.js')
 					)
 				);
 
