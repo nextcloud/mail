@@ -7,12 +7,12 @@ import * as MessageService from '../../../service/MessageService.js'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 
-vi.mock('@nextcloud/axios')
-vi.mock('@nextcloud/router')
+jest.mock('@nextcloud/axios')
+jest.mock('@nextcloud/router')
 
 describe('service/MessageService test suite', () => {
 	afterEach(() => {
-		vi.clearAllMocks()
+		jest.clearAllMocks()
 	})
 
 	it('should include a given cache buster as a URL parameter', async () => {

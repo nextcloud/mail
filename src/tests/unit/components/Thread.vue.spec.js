@@ -22,7 +22,7 @@ describe('Thread', () => {
 		setActivePinia(createPinia())
 
 		store = useMainStore()
-		store.getEnvelope = vi.fn().mockImplementation((id) => {
+		store.getEnvelope = jest.fn().mockImplementation((id) => {
 			if (id === 200) {
 				return {
 					accountId: 100,
@@ -54,7 +54,7 @@ describe('Thread', () => {
 			return undefined
 		})
 
-		store.getEnvelopesByThreadRootId = vi.fn().mockImplementation((accountId, threadRootId) => {
+		store.getEnvelopesByThreadRootId = jest.fn().mockImplementation((accountId, threadRootId) => {
 			if (threadRootId === '123-456-789') {
 				return [
 					{
@@ -139,7 +139,7 @@ describe('Thread', () => {
 
 		})
 
-		store.getMailbox = vi.fn().mockImplementation((id) => {
+		store.getMailbox = jest.fn().mockImplementation((id) => {
 			if (id === 10) {
 				return {
 					databaseId: 10,
@@ -175,7 +175,7 @@ describe('Thread', () => {
 			return undefined
 		})
 
-		store.getMailboxes = vi.fn().mockImplementation((accountId) => {
+		store.getMailboxes = jest.fn().mockImplementation((accountId) => {
 			if (accountId === 100) {
 				return [
 					{

@@ -21,36 +21,35 @@
 </template>
 
 <script>
+import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment.js'
+import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold.js'
+import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic.js'
+import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough.js'
+import Subscript from '@ckeditor/ckeditor5-basic-styles/src/subscript.js'
+import Superscript from '@ckeditor/ckeditor5-basic-styles/src/superscript.js'
+import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline.js'
+import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote.js'
+import Editor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor.js'
+import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials.js'
+import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandreplace.js'
+import FontPlugin from '@ckeditor/ckeditor5-font/src/font.js'
+import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading.js'
+import GeneralHtmlSupport from '@ckeditor/ckeditor5-html-support/src/generalhtmlsupport.js'
+import ImagePlugin from '@ckeditor/ckeditor5-image/src/image.js'
+import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
+import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
+import LinkPlugin from '@ckeditor/ckeditor5-link/src/link.js'
+import ListPlugin from '@ckeditor/ckeditor5-list/src/list.js'
+import ListProperties from '@ckeditor/ckeditor5-list/src/listproperties.js'
+import { Mention } from '@ckeditor/ckeditor5-mention'
+import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph.js'
+import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat.js'
+import { DropdownView } from '@ckeditor/ckeditor5-ui'
+import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter.js'
 import CKEditor from '@ckeditor/ckeditor5-vue2'
 import { getLanguage } from '@nextcloud/l10n'
 import { emojiAddRecent, emojiSearch } from '@nextcloud/vue'
 import { getLinkWithPicker, searchProvider } from '@nextcloud/vue/components/NcRichText'
-import {
-	Alignment,
-	Base64UploadAdapter,
-	BlockQuote,
-	Bold,
-	DecoupledEditor,
-	DropdownView,
-	Essentials,
-	FindAndReplace,
-	Font,
-	GeneralHtmlSupport,
-	Heading,
-	Image,
-	ImageResize,
-	ImageUpload,
-	Italic,
-	Link,
-	List,
-	Mention,
-	Paragraph,
-	RemoveFormat,
-	Strikethrough,
-	Subscript,
-	Superscript,
-	Underline,
-} from 'ckeditor5'
 
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
@@ -59,9 +58,6 @@ import PickerPlugin from '../ckeditor/smartpicker/PickerPlugin.js'
 import logger from '../logger.js'
 import { autoCompleteByName } from '../service/ContactIntegrationService.js'
 import { Text, toPlain } from '../util/text.js'
-
-import 'ckeditor5/ckeditor5.css'
-
 export default {
 	name: 'TextEditor',
 	components: {
@@ -107,13 +103,13 @@ export default {
 	},
 	data() {
 		const plugins = [
-			Essentials,
-			Paragraph,
+			EssentialsPlugin,
+			ParagraphPlugin,
 			SignaturePlugin,
 			QuotePlugin,
 			PickerPlugin,
 			Mention,
-			Link,
+			LinkPlugin,
 			FindAndReplace,
 			GeneralHtmlSupport,
 		]
@@ -121,20 +117,21 @@ export default {
 
 		if (this.html) {
 			plugins.push(...[
-				Heading,
-				Alignment,
-				Bold,
-				Italic,
+				HeadingPlugin,
+				AlignmentPlugin,
+				BoldPlugin,
+				ItalicPlugin,
 				Underline,
-				Strikethrough,
+				StrikethroughPlugin,
 				Subscript,
 				Superscript,
-				BlockQuote,
-				List,
-				Image,
-				ImageUpload,
-				ImageResize,
-				Font,
+				BlockQuotePlugin,
+				ListPlugin,
+				ImagePlugin,
+				ImageUploadPlugin,
+				ImageResizePlugin,
+				ListProperties,
+				FontPlugin,
 				RemoveFormat,
 				Base64UploadAdapter,
 				MailPlugin,
@@ -167,14 +164,15 @@ export default {
 			emojiTribute: null,
 			textSmiles: [],
 			ready: false,
-			editor: DecoupledEditor,
+			editor: Editor,
 			config: {
 				licenseKey: 'GPL',
 				placeholder: this.placeholder,
 				plugins,
-				toolbar,
+				toolbar: {
+					items: toolbar,
+				},
 				language: 'en',
-				translations: [], // Will be loaded later
 				mention: {
 					feeds: [
 						{
@@ -337,21 +335,20 @@ export default {
 
 			try {
 				logger.debug(`loading ${language} translations for CKEditor`)
-				const { default: coreTranslations } = await import(
+				await import(
 					/* webpackMode: "lazy-once" */
 					/* webpackPrefetch: true */
 					/* webpackPreload: true */
-					`ckeditor5/translations/${language}.js`
+					`@ckeditor/ckeditor5-build-decoupled-document/build/translations/${language}`
 				)
-				this.showEditor(language, [coreTranslations])
+				this.showEditor(language)
 			} catch (error) {
 				logger.error(`could not find CKEditor translations for "${language}"`, { error })
 				this.showEditor('en')
 			}
 		},
-		showEditor(language, translations = []) {
+		showEditor(language) {
 			logger.debug(`using "${language}" as CKEditor language`)
-			this.config.translations = translations
 			this.config.language = language
 
 			this.ready = true

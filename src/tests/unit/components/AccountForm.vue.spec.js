@@ -19,7 +19,7 @@ localVue.use(PiniaVuePlugin)
 const pinia = createPinia()
 
 
-vi.mock('../../../service/AutoConfigService.js')
+jest.mock('../../../service/AutoConfigService.js')
 
 describe('AccountForm', () => {
 
@@ -28,7 +28,7 @@ describe('AccountForm', () => {
 	let view
 
 	beforeEach(() => {
-		save = vi.fn()
+		save = jest.fn()
 
 		view = shallowMount(AccountForm, {
 			propsData: {

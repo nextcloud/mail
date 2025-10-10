@@ -4,7 +4,7 @@
  */
 
 import VirtualTestEditor from '../../virtualtesteditor.js'
-import { Paragraph } from 'ckeditor5'
+import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
 import PickerPlugin from '../../../ckeditor/smartpicker/PickerPlugin.js'
 
 describe('PickerPlugin', () => {
@@ -16,7 +16,7 @@ describe('PickerPlugin', () => {
 		const editor = await VirtualTestEditor.create({
 			licenseKey: 'GPL',
 			initialData: text,
-			plugins: [Paragraph, PickerPlugin],
+			plugins: [ParagraphPlugin, PickerPlugin],
 		})
 
 		editor.model.change(writer => {
