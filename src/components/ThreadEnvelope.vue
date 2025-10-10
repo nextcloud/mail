@@ -18,7 +18,6 @@
 				</NcButton>
 			</div>
 		</div>
-
 		<div class="envelope__header">
 			<div class="envelope__header__avatar">
 				<Avatar v-if="envelope.from && envelope.from[0]"
@@ -46,7 +45,6 @@
 					:data-starred="envelope.flags.$junk ? 'true' : 'false'"
 					@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
 			</div>
-
 			<router-link :to="route"
 				event=""
 				class="left"
@@ -232,46 +230,48 @@
 				</template>
 			</div>
 		</div>
-		<MessageLoadingSkeleton v-if="loading === Loading.Skeleton" />
-		<Message v-if="message"
-			v-show="loading === Loading.Done"
-			:envelope="envelope"
-			:message="message"
-			:full-height="fullHeight"
-			:smart-replies="showFollowUpHeader ? [] : smartReplies"
-			:reply-button-label="replyButtonLabel"
-			@load="onMessageLoaded"
-			@translate="onOpenTranslationModal"
-			@reply="(body) => onReply(body, showFollowUpHeader)" />
-		<Error v-else-if="error"
-			:error="error.message || t('mail', 'Not found')"
-			message=""
-			:data="error"
-			:auto-margin="true"
-			role="alert" />
-		<ConfirmModal v-if="message && message.unsubscribeUrl && message.isOneClickUnsubscribe && showListUnsubscribeConfirmation"
-			:confirm-text="t('mail', 'Unsubscribe')"
-			:title="t('mail', 'Unsubscribe via link')"
-			@cancel="showListUnsubscribeConfirmation = false"
-			@confirm="unsubscribeViaOneClick">
-			{{ t('mail', 'Unsubscribing will stop all messages from the mailing list {sender}', { sender: from }) }}
-		</ConfirmModal>
-		<ConfirmModal v-else-if="message && message.unsubscribeUrl && showListUnsubscribeConfirmation"
-			:confirm-text="t('mail', 'Unsubscribe')"
-			:confirm-url="message.unsubscribeUrl"
-			:title="t('mail', 'Unsubscribe via link')"
-			@cancel="showListUnsubscribeConfirmation = false"
-			@confirm="showListUnsubscribeConfirmation = false">
-			{{ t('mail', 'Unsubscribing will stop all messages from the mailing list {sender}', { sender: from }) }}
-		</ConfirmModal>
-		<ConfirmModal v-else-if="message && message.unsubscribeMailto && showListUnsubscribeConfirmation"
-			:confirm-text="t('mail', 'Send unsubscribe email')"
-			:title="t('mail', 'Unsubscribe via email')"
-			:disabled="unsubscribing"
-			@cancel="showListUnsubscribeConfirmation = false"
-			@confirm="unsubscribeViaMailto">
-			{{ t('mail', 'Unsubscribing will stop all messages from the mailing list {sender}', { sender: from }) }}
-		</ConfirmModal>
+		<div class="envelope__body-container">
+			<MessageLoadingSkeleton v-if="loading === Loading.Skeleton" />
+			<Message v-if="message"
+				v-show="loading === Loading.Done"
+				:envelope="envelope"
+				:message="message"
+				:full-height="fullHeight"
+				:smart-replies="showFollowUpHeader ? [] : smartReplies"
+				:reply-button-label="replyButtonLabel"
+				@load="onMessageLoaded"
+				@translate="onOpenTranslationModal"
+				@reply="(body) => onReply(body, showFollowUpHeader)" />
+			<Error v-else-if="error"
+				:error="error.message || t('mail', 'Not found')"
+				message=""
+				:data="error"
+				:auto-margin="true"
+				role="alert" />
+			<ConfirmModal v-if="message && message.unsubscribeUrl && message.isOneClickUnsubscribe && showListUnsubscribeConfirmation"
+				:confirm-text="t('mail', 'Unsubscribe')"
+				:title="t('mail', 'Unsubscribe via link')"
+				@cancel="showListUnsubscribeConfirmation = false"
+				@confirm="unsubscribeViaOneClick">
+				{{ t('mail', 'Unsubscribing will stop all messages from the mailing list {sender}', { sender: from }) }}
+			</ConfirmModal>
+			<ConfirmModal v-else-if="message && message.unsubscribeUrl && showListUnsubscribeConfirmation"
+				:confirm-text="t('mail', 'Unsubscribe')"
+				:confirm-url="message.unsubscribeUrl"
+				:title="t('mail', 'Unsubscribe via link')"
+				@cancel="showListUnsubscribeConfirmation = false"
+				@confirm="showListUnsubscribeConfirmation = false">
+				{{ t('mail', 'Unsubscribing will stop all messages from the mailing list {sender}', { sender: from }) }}
+			</ConfirmModal>
+			<ConfirmModal v-else-if="message && message.unsubscribeMailto && showListUnsubscribeConfirmation"
+				:confirm-text="t('mail', 'Send unsubscribe email')"
+				:title="t('mail', 'Unsubscribe via email')"
+				:disabled="unsubscribing"
+				@cancel="showListUnsubscribeConfirmation = false"
+				@confirm="unsubscribeViaMailto">
+				{{ t('mail', 'Unsubscribing will stop all messages from the mailing list {sender}', { sender: from }) }}
+			</ConfirmModal>
+		</div>
 	</div>
 </template>
 <script>
@@ -746,21 +746,17 @@ export default {
 			}
 		},
 		scrollToThread(threadId) {
-			this.$nextTick(() => {
-				const threadElement = document.querySelector(`[data-thread-id="${threadId}"]`)
-				if (threadElement) {
-					threadElement.scrollIntoView({ behavior: 'smooth', block: 'top' })
-				}
-			})
+			const threadElement = document.querySelector(`[data-thread-id="${threadId}"]`)
+			if (threadElement) {
+				threadElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+			}
 		},
 
 		scrollToEnvelope() {
-			this.$nextTick(() => {
-				const envelopeElement = this.$refs.envelope
-				if (envelopeElement) {
-					envelopeElement.scrollIntoView({ behavior: 'smooth', block: 'top' })
-				}
-			})
+			const envelopeElement = this.$refs.envelope
+			if (envelopeElement) {
+				envelopeElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+			}
 		},
 		async fetchItineraries() {
 			// Sanity check before actually making the request
@@ -1052,6 +1048,11 @@ export default {
 				opacity: 1;
 				transform: none;
 			}
+		}
+		&__body-container {
+			flex: 1;
+			overflow-y: auto;
+			overflow-x: hidden;
 		}
 
 		& + .envelope {
