@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-script(\OCA\Mail\AppInfo\Application::APP_ID, 'settings');
+script(\OCA\Mail\AppInfo\Application::APP_ID, 'nextcloud-mail-settings');
 
 ?>
 <div id="mail-admin-settings">

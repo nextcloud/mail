@@ -8,7 +8,7 @@ style('mail', 'redirect');
 ?>
 <?php /** @var array $_ */ ?>
 <?php if (isset($_['authorizedRedirect']) && ($_['authorizedRedirect'])): ?>
-	<?php script('mail', 'autoredirect'); ?>
+	<?php script('mail', 'nextcloud-mail-autoredirect'); ?>
 	<div class="error">
 		<div class="icon-loading-dark"
 		     style="height: 60px;"></div>
