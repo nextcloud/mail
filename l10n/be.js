@@ -98,6 +98,7 @@ OC.L10N.register(
     "_Forward {number} as attachment_::_Forward {number} as attachment_" : ["Пераслаць {number} як далучэнне","Пераслаць {number} як далучэнне","Пераслаць {number} як далучэнне","Пераслаць {number} як далучэнне"],
     "Mark as unread" : "Пазначыць як непрачытанае",
     "Mark as read" : "Пазначыць як прачытанае",
+    "All day" : "Увесь дзень",
     "Attendees" : "Удзельнікі",
     "Description" : "Апісанне",
     "Create" : "Стварыць",
