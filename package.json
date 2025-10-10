@@ -41,7 +41,6 @@
     "@nextcloud/vue": "^8.30.0",
     "@pinia/testing": "^0.1.7",
     "@riophae/vue-treeselect": "^0.4.0",
-    "@vue/babel-preset-app": "^5.0.9",
     "address-rfc2822": "^2.2.3",
     "ckeditor5": "^45.2.2",
     "color-convert": "^2.0.1",
@@ -88,11 +87,7 @@
     "npm": "^10.5.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.0",
-    "@babel/eslint-parser": "^7.28.0",
-    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@babel/preset-env": "^7.28.0",
-    "@babel/preset-typescript": "^7.27.1",
+    "@nextcloud/babel-config": "^1.2.0",
     "@nextcloud/browserslist-config": "^3.0.1",
     "@nextcloud/eslint-config": "^8.4.2",
     "@nextcloud/eslint-plugin": "^2.2.1",
