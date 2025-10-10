@@ -87,7 +87,7 @@
   "devDependencies": {
     "@nextcloud/babel-config": "^1.2.0",
     "@nextcloud/browserslist-config": "^3.0.1",
-    "@nextcloud/eslint-config": "^6.1.0",
+    "@nextcloud/eslint-config": "^8.4.2",
     "@nextcloud/stylelint-config": "^3.1.1",
     "@nextcloud/webpack-vue-config": "^6.3.0",
     "@playwright/test": "^1.56.0",
