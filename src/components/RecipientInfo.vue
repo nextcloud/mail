@@ -49,7 +49,7 @@
 						</template>
 					</div>
 				</div>
-				<div v-show="expandedRecipients[index]" class="recipient-info__details">
+				<div v-if="expandedRecipients[index]" class="recipient-info__details">
 					<DisplayContactDetails :email="recipient.email" />
 				</div>
 			</div>
