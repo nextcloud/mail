@@ -23,7 +23,9 @@
 		<div v-if="hasCurrentUserPrincipalAndCollections && message.scheduling.length > 0" class="message-imip">
 			<Imip v-for="scheduling in message.scheduling"
 				:key="scheduling.id"
-				:scheduling="scheduling" />
+				:scheduling="scheduling"
+				:message="message"
+				 />
 		</div>
 		<MessageHTMLBody v-if="message.hasHtmlBody"
 			:url="htmlUrl"

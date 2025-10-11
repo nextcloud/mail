@@ -1290,7 +1290,7 @@ export default {
 					|| account.name.toLowerCase().indexOf(term.toLowerCase()) !== -1,
 				)
 				.map(account => ({
-					email: account.emailAddress,
+					email: account.emailAddress.toLowerCase(),
 					label: account.name,
 				}))
 			this.autocompleteRecipients = uniqBy('email')(this.autocompleteRecipients.concat(selfRecipients))
@@ -1348,7 +1348,7 @@ export default {
 					return
 				}
 				option = {}
-				option.email = this.recipientSearchTerms[type]
+				option.email = this.recipientSearchTerms[type].toLowerCase()
 				option.label = this.recipientSearchTerms[type]
 				this.recipientSearchTerms[type] = ''
 			}
@@ -1518,7 +1518,7 @@ export default {
 			if (!this.seemsValidEmailAddress(value)) {
 				throw new Error('Skipping because it does not look like a valid email address')
 			}
-			return { email: value, label: value }
+			return { email: value.toLowerCase(), label: value }
 		},
 
 		/**

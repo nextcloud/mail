@@ -51,7 +51,7 @@ export default {
 	computed: {
 		enhancedBody() {
 			return this.body.replace(/(^&gt;.*\n)+/gm, (match) => {
-				return `<details class="quoted-text"><summary>${t('mail', 'Quoted text')}</summary>${match}</details>`
+				return `<details class="quoted-text" open><summary>${t('mail', 'Quoted text')}</summary>${match}</details>`
 			})
 		},
 		signatureSummaryAndBody() {
