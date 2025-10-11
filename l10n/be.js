@@ -43,6 +43,7 @@ OC.L10N.register(
     "Accounts" : "Уліковыя запісы",
     "General" : "Агульныя",
     "Layout" : "Макет",
+    "List" : "Спіс",
     "Sorting" : "Сартаванне",
     "Privacy and security" : "Прыватнасць і бяспека",
     "S/MIME" : "S/MIME",
