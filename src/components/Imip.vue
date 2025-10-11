@@ -139,17 +139,20 @@ const DECLINED = 'DECLINED'
  * Search a vEvent for an attendee by mail.
  *
  * @param {EventComponent|undefined|null} vEvent The event providing the attendee haystack.
- * @param {string} email The email address (with or without a mailto prefix) to use as the needle.
+ * @param {Array<string>} addresses The email address (with or without a mailto prefix) to use as the needle.
  * @return {AttendeeProperty|undefined} The attendee property or undefined if the given email is not matching an attendee.
  */
-function findAttendee(vEvent, email) {
-	if (!vEvent) {
+function findAttendee(vEvent, addresses) {
+	if (!vEvent || !addresses || addresses.length === 0) {
 		return undefined
 	}
 
-	email = removeMailtoPrefix(email)
+	addresses = addresses
+		.map(addr => addr.toLowerCase())
+		.filter(addr => addr.startsWith('mailto:'))
+		.map(removeMailtoPrefix)
 	for (const attendee of [...vEvent.getPropertyIterator('ORGANIZER'), ...vEvent.getAttendeeIterator()]) {
-		if (removeMailtoPrefix(attendee.email) === email) {
+		if (addresses.includes(removeMailtoPrefix(attendee.email.toLowerCase()))) {
 			return attendee
 		}
 	}
@@ -305,7 +308,10 @@ export default {
 		 * @return {boolean}
 		 */
 		userIsAttendee() {
-			return !!findAttendee(this.attachedVEvent, this.currentUserPrincipalEmail)
+			return !!findAttendee(
+				this.attachedVEvent,
+				this.currentUserPrincipal.calendarUserAddressSet?.length ? this.currentUserPrincipal.calendarUserAddressSet : [this.currentUserPrincipalEmail],
+			)
 		},
 
 		/**
@@ -314,7 +320,10 @@ export default {
 		 * @return {string|undefined}
 		 */
 		existingParticipationStatus() {
-			const attendee = findAttendee(this.existingVEvent, this.currentUserPrincipalEmail)
+			const attendee = findAttendee(
+				this.existingVEvent,
+				this.currentUserPrincipal.calendarUserAddressSet?.length ? this.currentUserPrincipal.calendarUserAddressSet : [this.currentUserPrincipalEmail],
+			)
 			return attendee?.participationStatus ?? undefined
 		},
 
@@ -428,7 +437,10 @@ export default {
 				vCalendar = this.attachedVCalendar
 			}
 			const vEvent = vCalendar.getFirstComponent('VEVENT')
-			const attendee = findAttendee(vEvent, this.currentUserPrincipalEmail)
+			const attendee = findAttendee(
+				vEvent,
+				this.currentUserPrincipal.calendarUserAddressSet?.length ? this.currentUserPrincipal.calendarUserAddressSet : [this.currentUserPrincipalEmail],
+			)
 			if (!attendee) {
 				return
 			}
