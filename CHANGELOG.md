@@ -1,3 +1,19 @@
+## [5.5.8](https://github.com/nextcloud/mail/compare/v5.5.7...v5.5.8) (2025-10-13)
+
+
+### Bug Fixes
+
+* allow storing longer mailbox names ([095dc16](https://github.com/nextcloud/mail/commit/095dc16c12be4834fae515c6cee3efcae3f6097a))
+* **deps:** update axios ([3d78ef7](https://github.com/nextcloud/mail/commit/3d78ef75699c9e3ea1347af141050975740c81dd))
+* **l10n:** Update translations from Transifex ([6e94ce5](https://github.com/nextcloud/mail/commit/6e94ce502d5f088537e61f094b7e2793e01c187a))
+* **l10n:** Update translations from Transifex ([c0d94a8](https://github.com/nextcloud/mail/commit/c0d94a8a196b7d851a123db84906a95b48f21bec))
+* **l10n:** Update translations from Transifex ([8e4f87d](https://github.com/nextcloud/mail/commit/8e4f87d00a7443e5b007cdff83ae4394b72622e4))
+* **l10n:** Update translations from Transifex ([5d83889](https://github.com/nextcloud/mail/commit/5d8388974291f337d0aa94035c56f2ca45df3d9c))
+* **l10n:** Update translations from Transifex ([5963b59](https://github.com/nextcloud/mail/commit/5963b593eccb0cc29fd6a12a1cc05c6564442ea5))
+* render recipient info later ([1756f26](https://github.com/nextcloud/mail/commit/1756f26e2d2b51125583f0b5ef2828cb5482bc5b))
+
+
+
 ## [5.5.7](https://github.com/nextcloud/mail/compare/v5.5.6...v5.5.7) (2025-10-07)
 
 
