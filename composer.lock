@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8166adf72825d3dd1e2c6066a3ede6c0",
+    "content-hash": "bff918a2e9af377a42b621976b29bf75",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2301,16 +2301,16 @@
         },
         {
             "name": "phpmailer/dkimvalidator",
-            "version": "v0.3",
+            "version": "v0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/DKIMValidator.git",
-                "reference": "49b65b1c0e022afdbac7afa89c997d74606fc881"
+                "reference": "ce691bdbb8a2f122cdfa315169bc0e1cd1965b77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/DKIMValidator/zipball/49b65b1c0e022afdbac7afa89c997d74606fc881",
-                "reference": "49b65b1c0e022afdbac7afa89c997d74606fc881",
+                "url": "https://api.github.com/repos/PHPMailer/DKIMValidator/zipball/ce691bdbb8a2f122cdfa315169bc0e1cd1965b77",
+                "reference": "ce691bdbb8a2f122cdfa315169bc0e1cd1965b77",
                 "shasum": ""
             },
             "require": {
@@ -2318,6 +2318,12 @@
                 "ext-mbstring": "*",
                 "ext-openssl": "*",
                 "php": ">=7.2.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.15",
+                "nunomaduro/phpinsights": "^v1.9.0",
+                "phpunit/phpunit": "8.4.1",
+                "roave/security-advisories": "dev-master"
             },
             "type": "library",
             "autoload": {
@@ -2346,9 +2352,9 @@
             "description": "A DKIM signature validator in PHP.",
             "support": {
                 "issues": "https://github.com/PHPMailer/DKIMValidator/issues",
-                "source": "https://github.com/PHPMailer/DKIMValidator/tree/v0.3"
+                "source": "https://github.com/PHPMailer/DKIMValidator/tree/v0.3.1"
             },
-            "time": "2019-10-10T17:19:06+00:00"
+            "time": "2025-10-09T12:29:49+00:00"
         },
         {
             "name": "rubix/ml",
