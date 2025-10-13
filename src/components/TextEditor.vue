@@ -174,7 +174,6 @@ export default {
 				plugins,
 				toolbar,
 				language: 'en',
-				translations: [], // Will be loaded later
 				mention: {
 					feeds: [
 						{
@@ -349,9 +348,11 @@ export default {
 				this.showEditor('en')
 			}
 		},
-		showEditor(language, translations = []) {
+		showEditor(language, translations) {
 			logger.debug(`using "${language}" as CKEditor language`)
-			this.config.translations = translations
+			if (translations) {
+				this.config.translations = translations
+			}
 			this.config.language = language
 
 			this.ready = true
