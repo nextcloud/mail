@@ -124,10 +124,7 @@ class AddressList implements Countable, JsonSerializable {
 		return new AddressList($addresses);
 	}
 
-	/**
-	 * @return Horde_Mail_Rfc822_List
-	 */
-	public function toHorde() {
+	public function toHorde(): Horde_Mail_Rfc822_List {
 		$hordeAddresses = array_map(static fn (Address $address) => $address->toHorde(), $this->addresses);
 		return new Horde_Mail_Rfc822_List($hordeAddresses);
 	}
