@@ -71,6 +71,7 @@ OC.L10N.register(
     "Discard & close draft" : "Адхіліць і закрыць чарнавік",
     "Enable formatting" : "Уключыць фарматаванне",
     "Disable formatting" : "Выключыць фарматаванне",
+    "Smart picker" : "Smart picker",
     "Tomorrow morning" : "Заўтра ранкам",
     "Tomorrow afternoon" : "Заўтра ў другой палове дня",
     "Enter a date" : "Увядзіце дату",
