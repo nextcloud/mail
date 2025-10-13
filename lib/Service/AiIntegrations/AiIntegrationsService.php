@@ -21,6 +21,8 @@ use OCA\Mail\Model\EventData;
 use OCA\Mail\Model\IMAPMessage;
 use OCP\IConfig;
 use OCP\IL10N;
+use OCP\IUserManager;
+use OCP\L10N\IFactory;
 use OCP\TaskProcessing\IManager as TaskProcessingManager;
 use OCP\TaskProcessing\Task as TaskProcessingTask;
 use OCP\TaskProcessing\TaskTypes\TextToText;
@@ -53,6 +55,8 @@ PROMPT;
 		private TaskProcessingManager $taskProcessingManager,
 		private TextProcessingManager $textProcessingManager,
 		private IL10N $l,
+		private IFactory $l10nFactory,
+		private IUserManager $userManager,
 	) {
 	}
 
@@ -70,7 +74,8 @@ PROMPT;
 			$this->logger->info('No text summary provider available');
 			return;
 		}
-		$language = explode('_', $this->l->getLanguageCode())[0];
+		$user = $this->userManager->get($account->getUserId());
+		$language = explode('_', $this->l10nFactory->getUserLanguage($user))[0];
 		$client = $this->clientFactory->getClient($account);
 		try {
 			foreach ($messages as $entry) {

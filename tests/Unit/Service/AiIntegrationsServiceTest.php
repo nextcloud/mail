@@ -24,6 +24,9 @@ use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AiIntegrations\Cache;
 use OCP\IConfig;
 use OCP\IL10N;
+use OCP\IUser;
+use OCP\IUserManager;
+use OCP\L10N\IFactory;
 use OCP\TaskProcessing\IManager as TaskProcessingManager;
 use OCP\TaskProcessing\IProvider as TaskProcessingProvider;
 use OCP\TextProcessing\FreePromptTaskType;
@@ -47,6 +50,8 @@ class AiIntegrationsServiceTest extends TestCase {
 	private TaskProcessingProvider|MockObject $taskProcessingProvider;
 	private TextProcessingProvider|MockObject $textProcessingProvider;
 	private IL10N|MockObject $l10n;
+	private IFactory|MockObject $l10nFactory;
+	private IUserManager|MockObject $userManager;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -59,6 +64,8 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->taskProcessingManager = $this->createMock(TaskProcessingManager::class);
 		$this->textProcessingManager = $this->createMock(TextProcessingManager::class);
 		$this->l10n = $this->createMock(IL10N::class);
+		$this->l10nFactory = $this->createMock(IFactory::class);
+		$this->userManager = $this->createMock(IUserManager::class);
 		$this->aiIntegrationsService = new AiIntegrationsService(
 			$this->logger,
 			$this->config,
@@ -67,7 +74,9 @@ class AiIntegrationsServiceTest extends TestCase {
 			$this->mailManager,
 			$this->taskProcessingManager,
 			$this->textProcessingManager,
-			$this->l10n
+			$this->l10n,
+			$this->l10nFactory,
+			$this->userManager
 		);
 
 		$this->taskProcessingProvider = $this->createMock(TaskProcessingProvider::class);
@@ -367,6 +376,7 @@ class AiIntegrationsServiceTest extends TestCase {
 	public function testSummarizeMessagesContainsSummary(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(123);
+		$mailAccount->setUserId('user');
 		$mailAccount->setEmail('user@domain.tld');
 		$mailAccount->setInboundHost('127.0.0.1');
 		$mailAccount->setInboundPort(993);
@@ -376,6 +386,17 @@ class AiIntegrationsServiceTest extends TestCase {
 		$account = new Account($mailAccount);
 		$message = new Message();
 		$message->setSummary('Test Summary');
+		$user = $this->createMock(IUser::class);
+
+		$this->userManager->expects(self::once())
+			->method('get')
+			->with($account->getUserId())
+			->willReturn($user);
+
+		$this->l10nFactory->expects(self::once())
+			->method('getUserLanguage')
+			->with($user)
+			->willReturn('en');
 
 		$this->taskProcessingManager->expects(self::once())
 			->method('getAvailableTaskTypes')
@@ -405,7 +426,17 @@ class AiIntegrationsServiceTest extends TestCase {
 		$message->setId(1);
 		$message->setUid(100);
 		$message->setMailboxId(1);
+		$user = $this->createMock(IUser::class);
 
+		$this->userManager->expects(self::once())
+			->method('get')
+			->with($account->getUserId())
+			->willReturn($user);
+
+		$this->l10nFactory->expects(self::once())
+			->method('getUserLanguage')
+			->with($user)
+			->willReturn('en');
 		$imapClient = $this->clientFactory->getClient($account);
 
 		$imapMessage = $this->createMock(IMAPMessage::class);
@@ -464,6 +495,18 @@ class AiIntegrationsServiceTest extends TestCase {
 		$message->setId(1);
 		$message->setUid(100);
 		$message->setMailboxId(1);
+
+		$user = $this->createMock(IUser::class);
+
+		$this->userManager->expects(self::once())
+			->method('get')
+			->with($account->getUserId())
+			->willReturn($user);
+
+		$this->l10nFactory->expects(self::once())
+			->method('getUserLanguage')
+			->with($user)
+			->willReturn('en');
 
 		$imapClient = $this->clientFactory->getClient($account);
 
