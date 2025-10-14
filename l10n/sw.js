@@ -38,6 +38,7 @@ OC.L10N.register(
     "From" : "Tangu/ kutoka",
     "Select account" : "Chagua akaunti",
     "To" : "Mpaka/ hadi",
+    "Cc" : "Cc",
     "Subject" : "Subject",
     "Smart picker" : "Smart picker",
     "Choose" : "Chagua",
