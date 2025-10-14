@@ -1,3 +1,15 @@
+## [5.5.9](https://github.com/nextcloud/mail/compare/v5.5.8...v5.5.9) (2025-10-14)
+
+
+### Bug Fixes
+
+* **ai-integration:** get user language for message summary ([9e0721f](https://github.com/nextcloud/mail/commit/9e0721f711ee39a0cf00929b2cae1466e8d8d14b))
+* **deps:** bump phpmailer/dkimvalidator from 0.3 to ^0.3.1 ([1440f7a](https://github.com/nextcloud/mail/commit/1440f7a60f323de7416855e7fe56a00765bf6d5b))
+* imip aliases and capitalization ([1a14acd](https://github.com/nextcloud/mail/commit/1a14acd95117cfe195e6516795de7766b1a5a601))
+* **l10n:** Update translations from Transifex ([70c7320](https://github.com/nextcloud/mail/commit/70c7320e0561ac575125be958b35f8fd208d7c19))
+
+
+
 ## [5.5.8](https://github.com/nextcloud/mail/compare/v5.5.7...v5.5.8) (2025-10-13)
 
 
