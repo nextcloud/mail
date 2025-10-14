@@ -138,6 +138,8 @@ OC.L10N.register(
     "Show all messages in thread" : "Zobrazit veškeré zprávy ve vláknu",
     "Show only the selected message" : "Zobrazit pouze označenou zprávu",
     "Reply text position" : "Pozice textu odpovědi",
+    "Top" : "Nahoře",
+    "Bottom" : "Dole",
     "Search in body" : "Hledat v těle",
     "Gravatar settings" : "Nastavení pro gravatar",
     "Use Gravatar and favicon avatars" : "Použít Gravatar a favicon avatary",
