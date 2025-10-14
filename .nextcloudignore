@@ -40,6 +40,10 @@ codecov.yml
 /vendor/*/*/test
 /vendor/*/*/tests
 /vendor/*/*/test_data
-/webpack.*
+/webpack.config.js
 /vitest.config.*
 /patches
+/tsconfig.json*
+/playwright.config.js
+/stylelint.config.js
+/openapi.json
