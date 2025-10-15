@@ -26,6 +26,17 @@ class Version5006Date20250927130132 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$mailboxes = $schema->getTable('mail_mailboxes');
+
+		/**
+		 * Make sure the old account_id+name index is gone. The DB won't allow
+		 * the name length increase otherwise
+		 *
+		 * @see \OCA\Mail\Migration\Version3500Date20231115184458::changeSchema
+		 */
+		if ($mailboxes->hasIndex('UNIQ_45754FF89B6B5FBA5E237E06')) {
+			$mailboxes->dropIndex('UNIQ_45754FF89B6B5FBA5E237E06');
+		}
+
 		$mailboxes->modifyColumn(
 			'name',
 			['length' => 1024]
