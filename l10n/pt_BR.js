@@ -135,6 +135,7 @@ OC.L10N.register(
     "Sorting" : "Ordenação",
     "Newest" : "Mais novo",
     "Oldest" : "Mais antigo",
+    "Message view mode" : "Modo de visualização de mensagens",
     "Show all messages in thread" : "Mostrar todas as mensagens no fio",
     "Show only the selected message" : "Mostrar apenas a mensagem selecionada",
     "Reply text position" : "Posição do texto de resposta",
