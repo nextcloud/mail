@@ -221,6 +221,10 @@ class OutboxController extends Controller {
 		$message->setSmimeEncrypt($smimeEncrypt);
 		$message->setRequestMdn($requestMdn);
 
+		// Updating the message should reset its status. Else it's impossible to
+		// retry an erroneous one.
+		$message->setStatus(LocalMessage::STATUS_RAW);
+
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);
 			$message->setSmimeCertificateId($smimeCertificate->getId());
