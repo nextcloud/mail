@@ -26,7 +26,6 @@ class Version4001Date20241017155914 extends SimpleMigrationStep {
 	 * @return ISchemaWrapper
 	 */
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
-		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 		if ($schema->hasTable('mail_blocks_shares')) {
 			return null;

@@ -79,7 +79,6 @@ class IMipService {
 			}
 		}, $accountIds));
 
-		/** @var Mailbox $mailbox */
 		foreach ($existingMailboxes as $mailbox) {
 			/** @var Account $account */
 			$account = $accounts[$mailbox->getAccountId()];
