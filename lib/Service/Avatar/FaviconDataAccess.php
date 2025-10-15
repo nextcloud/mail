@@ -20,6 +20,9 @@ class FaviconDataAccess extends DataAccess {
 	) {
 	}
 
+	/**
+	 * @return false|null|resource|string
+	 */
 	#[\Override]
 	public function retrieveUrl($url) {
 		$client = $this->clientService->newClient();
@@ -32,6 +35,11 @@ class FaviconDataAccess extends DataAccess {
 		return $response->getBody();
 	}
 
+	/**
+	 * @return (mixed|string)[]|false
+	 *
+	 * @psalm-return array{0: mixed|string,...}|false
+	 */
 	#[\Override]
 	public function retrieveHeader($url) {
 		$client = $this->clientService->newClient();

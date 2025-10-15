@@ -62,7 +62,7 @@ class MicrosoftIntegration {
 		);
 	}
 
-	public function unlink() {
+	public function unlink(): void {
 		$this->config->deleteAppValue(
 			Application::APP_ID,
 			'microsoft_oauth_tenant_id',
