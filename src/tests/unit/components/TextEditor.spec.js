@@ -1,37 +1,19 @@
-/*
- * @copyright 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 import {createLocalVue, shallowMount} from '@vue/test-utils'
-import Vue from 'vue'
-import Vuex from 'vuex'
+import mitt from 'mitt'
 
-import Nextcloud from '../../../mixins/Nextcloud'
-import TextEditor from '../../../components/TextEditor'
-import VirtualTestEditor from '../../virtualtesteditor'
-import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
-import MailPlugin from '../../../ckeditor/mail/MailPlugin'
+import Nextcloud from '../../../mixins/Nextcloud.js'
+import TextEditor from '../../../components/TextEditor.vue'
+import VirtualTestEditor from '../../virtualtesteditor.js'
+import { Paragraph } from 'ckeditor5'
+import MailPlugin from '../../../ckeditor/mail/MailPlugin.js'
 
 const localVue = createLocalVue()
 
-localVue.use(Vuex)
 localVue.mixin(Nextcloud)
 
 describe('TextEditor', () => {
@@ -41,7 +23,7 @@ describe('TextEditor', () => {
 			localVue,
 			propsData: {
 				value: 'bonjour',
-				bus: new Vue(),
+				bus: mitt(),
 			},
 		})
 	})
@@ -51,7 +33,7 @@ describe('TextEditor', () => {
 			localVue,
 			propsData: {
 				value: 'bonjour',
-				bus: new Vue(),
+				bus: mitt(),
 			},
 		})
 
@@ -66,7 +48,7 @@ describe('TextEditor', () => {
 			localVue,
 			propsData: {
 				value: 'bonjour',
-				bus: new Vue(),
+				bus: mitt(),
 			},
 		})
 
@@ -76,45 +58,73 @@ describe('TextEditor', () => {
 		expect(wrapper.emitted().input[0]).toEqual(['bonjour bonjour'])
 	})
 
-	it('emit event on ready', async() => {
+	it('emit event on ready', async () => {
 		const wrapper = shallowMount(TextEditor, {
 			localVue,
 			propsData: {
 				value: 'bonjour',
-				bus: new Vue(),
+				bus: mitt(),
 			},
 		})
 
+		// Mock DOM refs
+		wrapper.vm.$refs.toolbarContainer = document.createElement('div')
+		wrapper.vm.$refs.editableContainer = document.createElement('div')
+
 		const editor = await VirtualTestEditor.create({
+			licenseKey: 'GPL',
 			initialData: '<p>bonjour bonjour</p>',
-			plugins: [ParagraphPlugin],
+			plugins: [Paragraph],
 		})
+
+		editor.ui = {
+			view: {
+				toolbar: {
+					// eslint-disable-next-line no-mixed-spaces-and-tabs
+ 					element: document.createElement('div'),
+					items: [],
+				},
+				editable: { element: document.createElement('div') },
+			},
+		}
 
 		wrapper.vm.onEditorReady(editor)
 
 		expect(wrapper.emitted().ready[0]).toBeTruthy()
 	})
-
-	it('register conversion to add margin: 0px to every <p> element',
-		async() => {
-			const wrapper = shallowMount(TextEditor, {
-				localVue,
-				propsData: {
-					value: '',
-					bus: new Vue(),
-				},
-			})
-
-			const editor = await VirtualTestEditor.create({
-				initialData: '<p>bonjour bonjour</p>',
-				plugins: [ParagraphPlugin, MailPlugin],
-			})
-
-			wrapper.vm.onEditorReady(editor)
-
-			expect(wrapper.emitted().ready[0]).toBeTruthy()
-			expect(wrapper.emitted().ready[0][0].getData()).
-				toEqual('<p style="margin:0;">bonjour bonjour</p>')
+	it('register conversion to add margin: 0px to every <p> element', async () => {
+		const wrapper = shallowMount(TextEditor, {
+			localVue,
+			propsData: {
+				value: '',
+				bus: mitt(),
+			},
 		})
+
+		// Mock DOM refs
+		wrapper.vm.$refs.toolbarContainer = document.createElement('div')
+		wrapper.vm.$refs.editableContainer = document.createElement('div')
+
+		const editor = await VirtualTestEditor.create({
+			licenseKey: 'GPL',
+			initialData: '<p>bonjour bonjour</p>',
+			plugins: [Paragraph, MailPlugin],
+		})
+
+		editor.ui = {
+			view: {
+				toolbar: { element: document.createElement('div'),
+					items: [],
+				},
+				editable: { element: document.createElement('div') },
+			},
+		}
+
+		wrapper.vm.onEditorReady(editor)
+
+		expect(wrapper.emitted().ready[0]).toBeTruthy()
+		expect(wrapper.emitted().ready[0][0].getData())
+			.toEqual('<p style="margin:0;">bonjour bonjour</p>')
+	})
 
 })

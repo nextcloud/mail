@@ -1,9 +1,14 @@
+/**
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+import { generateUrl } from '@nextcloud/router'
 import Vue from 'vue'
 import Router from 'vue-router'
-import { generateUrl } from '@nextcloud/router'
 
-const Home = () => import('./views/Home')
-const Setup = () => import('./views/Setup')
+const Home = () => import('./views/Home.vue')
+const Setup = () => import('./views/Setup.vue')
 
 Vue.use(Router)
 

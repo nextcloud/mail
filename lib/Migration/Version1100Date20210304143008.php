@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+/**
+ * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
 namespace OCA\Mail\Migration;
 
 use Closure;
@@ -20,6 +25,7 @@ class Version1100Date20210304143008 extends SimpleMigrationStep {
 	 * @param array $options
 	 * @return null|ISchemaWrapper
 	 */
+	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 		$schema = $schemaClosure();
 
@@ -45,14 +51,15 @@ class Version1100Date20210304143008 extends SimpleMigrationStep {
 			$tagsTable->addColumn('color', Types::STRING, [
 				'notnull' => false,
 				'length' => 9,
-				'default' => "#fff"
+				'default' => '#fff'
 			]);
 			$tagsTable->addColumn('is_default_tag', Types::BOOLEAN, [
 				'notnull' => false,
 				'default' => false
 			]);
 			$tagsTable->setPrimaryKey(['id']);
-			$tagsTable->addIndex(['user_id'], 'mail_msg_tags_usr_id_index');
+			// Dropped in Version3600Date20240205180726 because mail_msg_tags_usr_id_index is redundant with mail_msg_tags_usr_lbl_idx
+			// $tagsTable->addIndex(['user_id'], 'mail_msg_tags_usr_id_index');
 			$tagsTable->addUniqueIndex(
 				[
 					'user_id',

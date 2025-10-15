@@ -3,22 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Anna Larch <anna.larch@nextcloud.com>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Integration\IMAP;
@@ -26,7 +12,6 @@ namespace OCA\Mail\Tests\Integration\IMAP;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
-use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MessageMapper;
@@ -34,6 +19,7 @@ use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Service\Sync\SyncService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
+use OCP\Server;
 
 class MessageMapperTest extends TestCase {
 	use ImapTest,
@@ -53,13 +39,13 @@ class MessageMapperTest extends TestCase {
 		$this->resetImapAccount();
 		$account = $this->createTestAccount();
 		/** @var SyncService $syncService */
-		$syncService = OC::$server->get(SyncService::class);
+		$syncService = Server::get(SyncService::class);
 		/** @var ImapMessageMapper $imapMessageMapper */
-		$imapMessageMapper = OC::$server->get(ImapMessageMapper::class);
+		$imapMessageMapper = Server::get(ImapMessageMapper::class);
 		/** @var MessageMapper $messageMapper */
-		$messageMapper = OC::$server->get(MessageMapper::class);
+		$messageMapper = Server::get(MessageMapper::class);
 		/** @var IMailManager $mailManager */
-		$mailManager = OC::$server->get(IMailManager::class);
+		$mailManager = Server::get(IMailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -91,8 +77,9 @@ class MessageMapperTest extends TestCase {
 			new Account($account),
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+			false,
 			null,
-			false
+			null
 		);
 
 		// Let's retrieve the DB to see if we have this tag!
@@ -120,8 +107,9 @@ class MessageMapperTest extends TestCase {
 			new Account($account),
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+			true,
 			null,
-			true
+			null
 		);
 
 		$messages = $messageMapper->findByUids($inbox, [$newUid]);
@@ -138,9 +126,9 @@ class MessageMapperTest extends TestCase {
 
 		$account = $this->createTestAccount();
 		/** @var ImapMessageMapper $messageMapper */
-		$imapMessageMapper = OC::$server->get(ImapMessageMapper::class);
+		$imapMessageMapper = Server::get(ImapMessageMapper::class);
 		/** @var IMailManager $mailManager */
-		$mailManager = OC::$server->get(IMailManager::class);
+		$mailManager = Server::get(IMailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {

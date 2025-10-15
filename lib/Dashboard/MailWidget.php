@@ -3,26 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright Copyright (c) 2020 Julius Härtl <jus@bitgrid.net>
- *
- * @author Julius Härtl <jus@bitgrid.net>
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Dashboard;
@@ -33,18 +15,22 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\Search\SearchQuery;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\Dashboard\IAPIWidget;
+use OCP\Dashboard\IAPIWidgetV2;
+use OCP\Dashboard\IButtonWidget;
 use OCP\Dashboard\IIconWidget;
 use OCP\Dashboard\IOptionWidget;
+use OCP\Dashboard\Model\WidgetButton;
 use OCP\Dashboard\Model\WidgetItem;
+use OCP\Dashboard\Model\WidgetItems;
 use OCP\Dashboard\Model\WidgetOptions;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
-use OCP\Util;
 
-abstract class MailWidget implements IAPIWidget, IIconWidget, IOptionWidget {
+abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOptionWidget, IButtonWidget {
 	protected IURLGenerator $urlGenerator;
 	protected IUserManager $userManager;
 	protected AccountService $accountService;
@@ -72,6 +58,7 @@ abstract class MailWidget implements IAPIWidget, IIconWidget, IOptionWidget {
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getOrder(): int {
 		return 4;
 	}
@@ -79,6 +66,7 @@ abstract class MailWidget implements IAPIWidget, IIconWidget, IOptionWidget {
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getIconClass(): string {
 		return 'icon-mail';
 	}
@@ -86,15 +74,17 @@ abstract class MailWidget implements IAPIWidget, IIconWidget, IOptionWidget {
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getIconUrl(): string {
 		return $this->urlGenerator->getAbsoluteURL(
-			$this->urlGenerator->imagePath(Application::APP_ID, 'mail.svg')
+			$this->urlGenerator->imagePath(Application::APP_ID, 'mail-dark.svg')
 		);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getUrl(): ?string {
 		return $this->urlGenerator->getAbsoluteURL($this->urlGenerator->linkToRoute('mail.page.index'));
 	}
@@ -102,20 +92,12 @@ abstract class MailWidget implements IAPIWidget, IIconWidget, IOptionWidget {
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function load(): void {
-		Util::addScript(Application::APP_ID, 'dashboard');
-
-		$this->initialState->provideInitialState(
-			'mail-accounts',
-			$this->accountService->findByUserId($this->userId)
-		);
+		// No assets need to be loaded anymore as the widget is rendered from the API
 	}
 
-	/**
-	 * Get widget-specific search filter
-	 * @return string
-	 */
-	abstract public function getSearchFilter(): string;
+	abstract public function getSearchQuery(string $userId): SearchQuery;
 
 	/**
 	 * @param string $userId
@@ -130,25 +112,35 @@ abstract class MailWidget implements IAPIWidget, IIconWidget, IOptionWidget {
 		if ($user === null) {
 			return [];
 		}
-		$filter = $this->getSearchFilter();
-		$emails = $this->mailSearch->findMessagesGlobally($user, $filter, null, $limit);
 
+		$query = $this->getSearchQuery($userId);
 		if ($minTimestamp !== null) {
-			return array_filter($emails, static function (Message $email) use ($minTimestamp) {
-				return $email->getSentAt() > $minTimestamp;
-			});
+			$query->setStart((string)$minTimestamp);
 		}
 
-		return $emails;
+		return $this->mailSearch->findMessagesGlobally($user, $query, $limit);
+	}
+
+	protected function getMailboxIdsToExclude(string $userId): array {
+		$mailboxIdsToExclude = [];
+
+		foreach ($this->accountService->findByUserId($userId) as $account) {
+			$mailboxIdsToExclude[] = $account->getMailAccount()->getJunkMailboxId();
+			$mailboxIdsToExclude[] = $account->getMailAccount()->getTrashMailboxId();
+		}
+
+		return array_values(array_filter($mailboxIdsToExclude));
 	}
 
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getItems(string $userId, ?string $since = null, int $limit = 7): array {
-		$intSince = $since === null ? null : (int) $since;
+		$intSince = $since === null ? null : (int)$since;
 		$emails = $this->getEmails($userId, $intSince, $limit);
 
+		/** @var list<WidgetItem> */
 		return array_map(function (Message $email) {
 			$firstFrom = $email->getFrom()->first();
 			return new WidgetItem(
@@ -161,13 +153,13 @@ abstract class MailWidget implements IAPIWidget, IIconWidget, IOptionWidget {
 					$this->urlGenerator->linkToRoute('core.GuestAvatar.getAvatar', [
 						'guestName' => $firstFrom
 							? ($firstFrom->getLabel()
-								? $firstFrom->getLabel()
+								? str_replace('/', '-', $firstFrom->getLabel())
 								: $firstFrom->getEmail())
 							: '',
 						'size' => 44,
 					])
 				),
-				(string) $email->getSentAt()
+				(string)$email->getSentAt()
 			);
 		}, $emails);
 	}
@@ -175,7 +167,41 @@ abstract class MailWidget implements IAPIWidget, IIconWidget, IOptionWidget {
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
+	public function getItemsV2(string $userId, ?string $since = null, int $limit = 7): WidgetItems {
+		$items = $this->getItems($userId, $since, $limit);
+		return new WidgetItems(
+			$items,
+			empty($items) ? $this->l10n->t('No message found yet') : '',
+		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	#[\Override]
 	public function getWidgetOptions(): WidgetOptions {
 		return new WidgetOptions(true);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	#[\Override]
+	public function getWidgetButtons(string $userId): array {
+		$buttons = [];
+
+		if ($this->userId !== null) {
+			$accounts = $this->accountService->findByUserId($this->userId);
+			if (empty($accounts)) {
+				$buttons[] = new WidgetButton(
+					WidgetButton::TYPE_SETUP,
+					$this->urlGenerator->linkToRouteAbsolute('mail.page.setup'),
+					$this->l10n->t('Set up an account'),
+				);
+			}
+		}
+
+		return $buttons;
 	}
 }

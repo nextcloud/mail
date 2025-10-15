@@ -1,57 +1,36 @@
 <!--
-  - @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
-  - @copyright 2020 Greta Doci <gretadoci@gmail.com>
-  -
-  - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
-  - @author 2020 Greta Doci <gretadoci@gmail.com>
-  - @author 2022 Richard Steinmetz <richard@steinmetz.cloud>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
+  - SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 <template>
 	<AppSettingsDialog id="app-settings-dialog"
 		:open="open"
 		:show-navigation="true"
 		:additional-trap-elements="trapElements"
-		:title="t('mail', 'Account settings')"
+		:name="t('mail', 'Account settings')"
 		@update:open="updateOpen">
-		<AppSettingsSection
-			id="alias-settings"
-			:title="t('mail', 'Aliases')">
+		<AppSettingsSection id="alias-settings"
+			:name="t('mail', 'Aliases')">
 			<AliasSettings :account="account" @rename-primary-alias="scrollToAccountSettings" />
 		</AppSettingsSection>
-		<AppSettingsSection
-			id="certificate-settings"
-			:title="t('mail', 'Alias to S/MIME certificate mapping')">
+		<AppSettingsSection id="certificate-settings"
+			:name="t('mail', 'Alias to S/MIME certificate mapping')">
 			<CertificateSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection id="signature" :title="t('mail', 'Signature')">
+		<AppSettingsSection id="signature" :name="t('mail', 'Signature')">
 			<p class="settings-hint">
 				{{ t('mail', 'A signature is added to the text of new messages and replies.') }}
 			</p>
 			<SignatureSettings :account="account" @show-toolbar="handleShowToolbar" />
 		</AppSettingsSection>
-		<AppSettingsSection id="writing-mode" :title="t('mail', 'Writing mode')">
+		<AppSettingsSection id="writing-mode" :name="t('mail', 'Writing mode')">
 			<p class="settings-hint">
 				{{ t('mail', 'Preferred writing mode for new messages and replies.') }}
 			</p>
 			<EditorSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection id="default-folders" :title=" t('mail', 'Default folders')">
+		<AppSettingsSection id="default-folders" :name=" t('mail', 'Default folders')">
 			<p class="settings-hint">
 				{{
 					t('mail', 'The folders to use for drafts, sent messages, deleted messages, archived messages and junk messages.')
@@ -59,43 +38,52 @@
 			</p>
 			<AccountDefaultsSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection id="trash-retention" :title=" t('mail', 'Automatic trash deletion')">
+		<AppSettingsSection id="trash-retention" :name=" t('mail', 'Automatic trash deletion')">
 			<p class="settings-hint">
 				{{ t('mail', 'Days after which messages in Trash will automatically be deleted:') }}
 			</p>
 			<TrashRetentionSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection
-			v-if="account"
+		<AppSettingsSection v-if="account"
 			id="out-of-office-replies"
-			:title="t('mail', 'Autoresponder')">
+			:name="t('mail', 'Autoresponder')">
 			<p class="settings-hint">
 				{{ t('mail', 'Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days.') }}
 			</p>
 			<OutOfOfficeForm v-if="account.sieveEnabled" :account="account" />
-			<p v-else>
-				{{ t('mail', 'Please connect to a sieve server first.') }}
-			</p>
+			<div v-else>
+				<p>{{ t('mail', 'The autoresponder uses Sieve, a scripting language supported by many email providers. If you\'re unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it.') }}</p>
+				<NcButton type="secondary" :aria-label="t('mail', 'Go to Sieve settings')" href="#sieve-form">
+					{{ t('mail', 'Go to Sieve settings') }}
+				</NcButton>
+			</div>
+		</AppSettingsSection>
+		<AppSettingsSection v-if="account && account.sieveEnabled"
+			id="mail-filters"
+			:name="t('mail', 'Filters')">
+			<div id="mail-filters">
+				<MailFilters :key="account.accountId" ref="mailFilters" :account="account" />
+			</div>
+		</AppSettingsSection>
+		<AppSettingsSection v-if="account"
+			id="quick-actions-settings"
+			:name="t('mail', 'Quick actions')">
+			<Settings :key="account.accountId" ref="quickActions" :account="account" />
 		</AppSettingsSection>
 		<AppSettingsSection v-if="account && account.sieveEnabled"
 			id="sieve-filter"
-			:title="t('mail', 'Sieve filter rules')">
+			:name="t('mail', 'Sieve script editor')">
 			<div id="sieve-filter">
-				<SieveFilterForm
-					:key="account.accountId"
+				<SieveFilterForm :key="account.accountId"
 					ref="sieveFilterForm"
 					:account="account" />
 			</div>
 		</AppSettingsSection>
-		<AppSettingsSection id="trusted-sender" :title="t('mail', 'Trusted senders')">
-			<TrustedSenders />
-		</AppSettingsSection>
 		<AppSettingsSection v-if="account && !account.provisioningId"
 			id="mail-server"
-			:title="t('mail', 'Mail server')">
+			:name="t('mail', 'Mail server')">
 			<div id="mail-settings">
-				<AccountForm
-					:key="account.accountId"
+				<AccountForm :key="account.accountId"
 					ref="accountForm"
 					:display-name="displayName"
 					:email="email"
@@ -104,37 +92,46 @@
 		</AppSettingsSection>
 		<AppSettingsSection v-if="account && !account.provisioningId"
 			id="sieve-settings"
-			:title="t('mail', 'Sieve filter server')">
+			:name="t('mail', 'Sieve server')">
 			<div id="sieve-settings">
-				<SieveAccountForm
-					:key="account.accountId"
+				<SieveAccountForm :key="account.accountId"
 					ref="sieveAccountForm"
 					:account="account" />
 			</div>
+		</AppSettingsSection>
+		<!-- TRANSLATORS: Settings for searching in a folder -->
+		<AppSettingsSection id="mailbox_search" :name="t('mail', 'Folder search')">
+			<SearchSettings :account="account" />
 		</AppSettingsSection>
 	</AppSettingsDialog>
 </template>
 
 <script>
-import AccountForm from '../components/AccountForm'
-import EditorSettings from '../components/EditorSettings'
-import AccountDefaultsSettings from '../components/AccountDefaultsSettings'
-import SignatureSettings from '../components/SignatureSettings'
-import AliasSettings from '../components/AliasSettings'
-import { NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSettingsSection } from '@nextcloud/vue'
-import TrustedSenders from './TrustedSenders'
-import SieveAccountForm from './SieveAccountForm'
-import SieveFilterForm from './SieveFilterForm'
-import OutOfOfficeForm from './OutOfOfficeForm'
-import CertificateSettings from './CertificateSettings'
-import TrashRetentionSettings from './TrashRetentionSettings'
+import { NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSettingsSection, NcButton } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
+
+import CertificateSettings from './CertificateSettings.vue'
+import OutOfOfficeForm from './OutOfOfficeForm.vue'
+import SearchSettings from './SearchSettings.vue'
+import SieveAccountForm from './SieveAccountForm.vue'
+import SieveFilterForm from './SieveFilterForm.vue'
+import TrashRetentionSettings from './TrashRetentionSettings.vue'
+import AccountDefaultsSettings from '../components/AccountDefaultsSettings.vue'
+import AccountForm from '../components/AccountForm.vue'
+import AliasSettings from '../components/AliasSettings.vue'
+import EditorSettings from '../components/EditorSettings.vue'
+import SignatureSettings from '../components/SignatureSettings.vue'
+import logger from '../logger.js'
+import useMainStore from '../store/mainStore.js'
+
+import MailFilters from './mailFilter/MailFilters.vue'
+import Settings from './quickActions/Settings.vue'
 
 export default {
 	name: 'AccountSettings',
 	components: {
 		SieveAccountForm,
 		SieveFilterForm,
-		TrustedSenders,
 		AccountForm,
 		AliasSettings,
 		EditorSettings,
@@ -145,6 +142,10 @@ export default {
 		OutOfOfficeForm,
 		CertificateSettings,
 		TrashRetentionSettings,
+		SearchSettings,
+		MailFilters,
+		NcButton,
+		Settings,
 	},
 	props: {
 		account: {
@@ -159,12 +160,11 @@ export default {
 	data() {
 		return {
 			trapElements: [],
+			fetchActiveSieveScript: this.account.sieveEnabled,
 		}
 	},
 	computed: {
-		menu() {
-			return this.buildMenu()
-		},
+		...mapStores(useMainStore),
 		displayName() {
 			return this.account.name
 		},
@@ -172,10 +172,16 @@ export default {
 			return this.account.emailAddress
 		},
 	},
-	mounted() {
-		this.$store.dispatch('fetchActiveSieveScript', {
-			accountId: this.account.id,
-		})
+	watch: {
+		open(newState, oldState) {
+			if (newState === true && this.fetchActiveSieveScript === true) {
+				logger.debug(`Load active sieve script for account ${this.account.accountId}`)
+				this.fetchActiveSieveScript = false
+				this.mainStore.fetchActiveSieveScript({
+					accountId: this.account.id,
+				})
+			}
+		},
 	},
 	methods: {
 		scrollToAccountSettings() {
@@ -209,25 +215,23 @@ export default {
 		opacity: 1;
 	}
 }
+
 .settings-hint {
-	margin-top: -12px;
-	margin-bottom: 6px;
+	margin-top: calc(var(--default-grid-baseline) * -3);
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
 	color: var(--color-text-maxcontrast);
 }
+
 h2 {
 	font-weight: bold;
 	font-size: 20px;
-	margin-bottom: 12px;
-	margin-left: -30px;
-	line-height: 30px;
+	margin-bottom: calc(var(--default-grid-baseline) * 3);
+	margin-inline-start: calc(var(--default-grid-baseline) * -7);
+	line-height: calc(var(--default-grid-baseline) * 7);
 	color: var(--color-text-light);
 }
+
 .app-settings-section {
-margin-bottom: 45px;
-}
-// Fix weird modal glitches on Firefox when toggling autoresponder
-:deep(.modal-container),
-:deep(.app-settings__wrapper) {
-	position: unset !important;
+	margin-bottom: calc(var(--default-grid-baseline) * 12);
 }
 </style>

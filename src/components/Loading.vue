@@ -1,9 +1,14 @@
+<!--
+  - SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<div class="wrapper">
 		<EmptyContent v-if="hint"
-			:title="hint">
+			class="empty-content"
+			:name="hint">
 			<template #icon>
-				<IconLoading :size="20" />
+				<IconLoading />
 			</template>
 			<transition name="fade">
 				<em v-if="slowHint && slow">{{ slowHint }}</em>
@@ -14,7 +19,7 @@
 </template>
 
 <script>
-import { NcLoadingIcon as IconLoading, NcEmptyContent as EmptyContent } from '@nextcloud/vue'
+import { NcEmptyContent as EmptyContent, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 export default {
 	name: 'Loading',
 	components: {
@@ -57,15 +62,23 @@ export default {
 .fade-leave-active {
 	transition: opacity 0.5s;
 }
+
 .fade-enter,
 .fade-leave-to {
 	opacity: 0;
 }
 
+.empty-content {
+	height: 100%;
+	display: flex;
+}
+
 .wrapper {
 	display: flex;
-	justify-content: space-around;
+	justify-content: center;
 	flex-direction: column;
 	flex: 1 auto;
+	align-items: center;
+	height: 100vh;
 }
 </style>

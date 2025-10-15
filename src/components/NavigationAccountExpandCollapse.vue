@@ -1,31 +1,18 @@
 <!--
-  - @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
-  -
-  - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
+  - SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 <template>
-	<AppNavigationItem :title="title" @click="toggleCollapse" />
+	<AppNavigationItem :name="title" @click="toggleCollapse" />
 </template>
 
 <script>
 import { NcAppNavigationItem as AppNavigationItem } from '@nextcloud/vue'
-import logger from '../logger'
+import { mapStores } from 'pinia'
+
+import logger from '../logger.js'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'NavigationAccountExpandCollapse',
@@ -39,29 +26,29 @@ export default {
 		},
 	},
 	computed: {
+		...mapStores(useMainStore),
 		id() {
 			return 'collapse-' + this.account.id
 		},
 		title() {
 			if (this.account.collapsed && this.account.showSubscribedOnly) {
-				return t('mail', 'Show all subscribed mailboxes')
+				return t('mail', 'Show all subscribed folders')
 			} else if (this.account.collapsed && !this.account.showSubscribedOnly) {
-				return t('mail', 'Show all mailboxes')
+				return t('mail', 'Show all folders')
 			}
-			return t('mail', 'Collapse mailboxes')
+			return t('mail', 'Collapse folders')
 		},
 	},
 	methods: {
 		async toggleCollapse() {
 			logger.debug('toggling collapsed mailboxes for account ' + this.account.id)
 			try {
-				await this.$store.commit('toggleAccountCollapsed', this.account.id)
-				await this.$store
-					.dispatch('setAccountSetting', {
-						accountId: this.account.id,
-						key: 'collapsed',
-						value: this.account.collapsed,
-					})
+				await this.mainStore.toggleAccountCollapsedMutation(this.account.id)
+				await this.mainStore.setAccountSetting({
+					accountId: this.account.id,
+					key: 'collapsed',
+					value: this.account.collapsed,
+				})
 			} catch (error) {
 				logger.error('could not update account settings', {
 					error,

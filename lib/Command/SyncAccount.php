@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Command;
@@ -42,7 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use function memory_get_peak_usage;
 use function memory_get_usage;
 
-class SyncAccount extends Command {
+final class SyncAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 	public const OPTION_FORCE = 'force';
 
@@ -108,7 +92,7 @@ class SyncAccount extends Command {
 			}
 
 			$mbs = (int)(memory_get_usage() / 1024 / 1024);
-			$output->writeln("<info>Batch of new messages sync'ed. " . $mbs . "MB of memory in use</info>");
+			$output->writeln("<info>Batch of new messages sync'ed. " . $mbs . 'MB of memory in use</info>');
 			$this->sync($account, $force, $output);
 		}
 	}

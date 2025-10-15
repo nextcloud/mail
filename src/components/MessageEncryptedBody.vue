@@ -1,3 +1,7 @@
+<!--
+  - SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<div>
 		<div v-if="mailvelope" id="mail-content">
@@ -8,8 +12,8 @@
 </template>
 
 <script>
-import { getMailvelope } from '../crypto/mailvelope'
-import MdnRequest from './MdnRequest'
+import MdnRequest from './MdnRequest.vue'
+import { getMailvelope } from '../crypto/mailvelope.js'
 
 export default {
 	name: 'MessageEncryptedBody',

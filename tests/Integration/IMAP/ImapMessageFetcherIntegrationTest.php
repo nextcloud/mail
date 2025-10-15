@@ -3,30 +3,12 @@
 declare(strict_types=1);
 
 /**
- * @copyright Copyright (c) 2023 Richard Steinmetz <richard@steinmetz.cloud>
- *
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Integration\IMAP;
 
-use OC;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\SmimeCertificateMapper;
@@ -36,10 +18,13 @@ use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
 use OCA\Mail\Tests\Integration\TestCase;
 use OCP\ICertificateManager;
 use OCP\Security\ICrypto;
+use OCP\Server;
 
 class ImapMessageFetcherIntegrationTest extends TestCase {
 	use ImapTest,
 		ImapTestAccount;
+
+	private const LOREM = 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.';
 
 	private MailAccount $account;
 	private ImapMessageFetcherFactory $fetcherFactory;
@@ -52,28 +37,23 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 
 		$this->account = $this->createTestAccount();
-		$this->fetcherFactory = OC::$server->get(ImapMessageFetcherFactory::class);
-		$this->certificateMapper = OC::$server->get(SmimeCertificateMapper::class);
-		$this->crypto = OC::$server->get(ICrypto::class);
-		$this->certificateManager = OC::$server->get(ICertificateManager::class);
+		$this->fetcherFactory = Server::get(ImapMessageFetcherFactory::class);
+		$this->certificateMapper = Server::get(SmimeCertificateMapper::class);
+		$this->crypto = Server::get(ICrypto::class);
+		$this->certificateManager = Server::get(ICertificateManager::class);
 
-		$this->certificateManager->addCertificate(
-			file_get_contents(__DIR__ . '/../../data/smime-certs/domain.tld.ca.crt'),
-			'domain.tld.ca.crt'
-		);
 		$this->certificateManager->addCertificate(
 			file_get_contents(__DIR__ . '/../../data/smime-certs/imap.localhost.ca.crt'),
 			'imap.localhost.ca.crt'
 		);
 
 		$this->importCertificate('user@imap.localhost');
-		$this->importCertificate('user@domain.tld');
+		$this->importCertificate('debug@imap.localhost');
 	}
 
 	protected function tearDown(): void {
 		parent::tearDown();
 
-		$this->certificateManager->removeCertificate('domain.tld.ca.crt');
 		$this->certificateManager->removeCertificate('imap.localhost.ca.crt');
 		$this->clearCertificates();
 	}
@@ -117,8 +97,8 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 		$message = $fetcher->fetchMessage();
 
-		$this->assertEquals("Just some encrypted test images.\n\n", $message->getPlainBody());
-		$this->assertCount(3, $message->attachments);
+		$this->assertEquals(self::LOREM . "\n\n", $message->getPlainBody());
+		$this->assertCount(1, $message->attachments);
 		$this->assertTrue($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
 		$this->assertTrue($message->isSignatureValid());
@@ -141,8 +121,8 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 		$message = $fetcher->fetchMessage();
 
-		$this->assertEquals("Just some encrypted test images.\n\n", $message->getPlainBody());
-		$this->assertCount(3, $message->attachments);
+		$this->assertEquals(self::LOREM . "\n\n", $message->getPlainBody());
+		$this->assertCount(1, $message->attachments);
 		$this->assertTrue($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
 		$this->assertFalse($message->isSignatureValid());
@@ -162,7 +142,7 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 		$message = $fetcher->fetchMessage();
 
-		$this->assertEquals("hoi\n\n", $message->getPlainBody());
+		$this->assertEquals(self::LOREM . "\n\n", $message->getPlainBody());
 		$this->assertTrue($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
 		$this->assertTrue($message->isSignatureValid());
@@ -182,7 +162,7 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 		$message = $fetcher->fetchMessage();
 
-		$this->assertEquals("This is a signed message.\n\n", $message->getPlainBody());
+		$this->assertEquals(self::LOREM . "\n\n", $message->getPlainBody());
 		$this->assertFalse($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
 		$this->assertTrue($message->isSignatureValid());
@@ -202,7 +182,7 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 		$message = $fetcher->fetchMessage();
 
-		$this->assertEquals("hoi\n\n", $message->getPlainBody());
+		$this->assertEquals(self::LOREM . "\n\n", $message->getPlainBody());
 		$this->assertFalse($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
 		$this->assertTrue($message->isSignatureValid());

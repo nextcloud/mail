@@ -4,25 +4,78 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "732681616f5e054266349b991bf14ae9",
+    "content-hash": "5673bac46506f6c9140d055f69f84c9c",
     "packages": [],
     "packages-dev": [
         {
-            "name": "nextcloud/coding-standard",
-            "version": "v1.1.1",
+            "name": "kubawerlos/php-cs-fixer-custom-fixers",
+            "version": "v3.27.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nextcloud/coding-standard.git",
-                "reference": "55def702fb9a37a219511e1d8c6fe8e37164c1fb"
+                "url": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers.git",
+                "reference": "d860473d16b906c7945206177edc7d112357a706"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud/coding-standard/zipball/55def702fb9a37a219511e1d8c6fe8e37164c1fb",
-                "reference": "55def702fb9a37a219511e1d8c6fe8e37164c1fb",
+                "url": "https://api.github.com/repos/kubawerlos/php-cs-fixer-custom-fixers/zipball/d860473d16b906c7945206177edc7d112357a706",
+                "reference": "d860473d16b906c7945206177edc7d112357a706",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.3|^8.0",
+                "ext-filter": "*",
+                "ext-tokenizer": "*",
+                "friendsofphp/php-cs-fixer": "^3.61.1",
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.6.22 || 10.5.45 || ^11.5.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpCsFixerCustomFixers\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kuba Werłos",
+                    "email": "werlos@gmail.com"
+                }
+            ],
+            "description": "A set of custom fixers for PHP CS Fixer",
+            "support": {
+                "issues": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers/issues",
+                "source": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers/tree/v3.27.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/kubawerlos",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-06-10T20:53:07+00:00"
+        },
+        {
+            "name": "nextcloud/coding-standard",
+            "version": "v1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nextcloud/coding-standard.git",
+                "reference": "8e06808c1423e9208d63d1bd205b9a38bd400011"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nextcloud/coding-standard/zipball/8e06808c1423e9208d63d1bd205b9a38bd400011",
+                "reference": "8e06808c1423e9208d63d1bd205b9a38bd400011",
+                "shasum": ""
+            },
+            "require": {
+                "kubawerlos/php-cs-fixer-custom-fixers": "^3.22",
+                "php": "^8.0",
                 "php-cs-fixer/shim": "^3.17"
             },
             "type": "library",
@@ -42,24 +95,27 @@
                 }
             ],
             "description": "Nextcloud coding standards for the php cs fixer",
+            "keywords": [
+                "dev"
+            ],
             "support": {
                 "issues": "https://github.com/nextcloud/coding-standard/issues",
-                "source": "https://github.com/nextcloud/coding-standard/tree/v1.1.1"
+                "source": "https://github.com/nextcloud/coding-standard/tree/v1.4.0"
             },
-            "time": "2023-06-01T12:05:01+00:00"
+            "time": "2025-06-19T12:27:27+00:00"
         },
         {
             "name": "php-cs-fixer/shim",
-            "version": "v3.20.0",
+            "version": "v3.88.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/shim.git",
-                "reference": "3253acf5cdb96383bb37ce7052e5dbf49a660f1e"
+                "reference": "b70300670e5a37dd3a9cb0f188e186c8c206f70f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/shim/zipball/3253acf5cdb96383bb37ce7052e5dbf49a660f1e",
-                "reference": "3253acf5cdb96383bb37ce7052e5dbf49a660f1e",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/shim/zipball/b70300670e5a37dd3a9cb0f188e186c8c206f70f",
+                "reference": "b70300670e5a37dd3a9cb0f188e186c8c206f70f",
                 "shasum": ""
             },
             "require": {
@@ -96,20 +152,20 @@
             "description": "A tool to automatically fix PHP code style",
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/shim/issues",
-                "source": "https://github.com/PHP-CS-Fixer/shim/tree/v3.20.0"
+                "source": "https://github.com/PHP-CS-Fixer/shim/tree/v3.88.2"
             },
-            "time": "2023-06-27T20:23:49+00:00"
+            "time": "2025-09-27T00:25:01+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
+    "platform": {},
+    "platform-dev": {},
     "platform-overrides": {
-        "php": "8.0"
+        "php": "8.1"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

@@ -3,29 +3,14 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Listener;
 
 use Generator;
+use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Events\SynchronizationEvent;
 use OCA\Mail\IMAP\Threading\Container;
@@ -33,7 +18,9 @@ use OCA\Mail\IMAP\Threading\DatabaseMessage;
 use OCA\Mail\IMAP\Threading\ThreadBuilder;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
+
 use function array_chunk;
+use function gc_collect_cycles;
 use function iterator_to_array;
 
 /**
@@ -42,24 +29,27 @@ use function iterator_to_array;
 class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 	private const WRITE_IDS_CHUNK_SIZE = 500;
 
-	/** @var MessageMapper */
-	private $mapper;
-
-	/** @var ThreadBuilder */
-	private $builder;
-
-	public function __construct(MessageMapper $mapper,
-		ThreadBuilder $builder) {
-		$this->mapper = $mapper;
-		$this->builder = $builder;
+	public function __construct(
+		private IUserPreferences $preferences,
+		private MessageMapper $mapper,
+		private ThreadBuilder $builder,
+	) {
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		if (!($event instanceof SynchronizationEvent)) {
 			// Unrelated
 			return;
 		}
 		$logger = $event->getLogger();
+		$userId = $event->getAccount()->getUserId();
+
+		if ($this->preferences->getPreference($userId, 'layout-message-view', 'threaded') !== 'threaded') {
+			$event->getLogger()->debug('Skipping threading as the user prefers a flat view');
+			return;
+		}
+
 		if (!$event->isRebuildThreads()) {
 			$event->getLogger()->debug('Skipping threading as there were no significant changes');
 			return;
@@ -68,17 +58,21 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 		$accountId = $event->getAccount()->getId();
 		$logger->debug("Building threads for account $accountId");
 		$messages = $this->mapper->findThreadingData($event->getAccount());
-		$logger->debug("Account $accountId has " . count($messages) . " messages with threading information");
+		$logger->debug("Account $accountId has " . count($messages) . ' messages with threading information');
 		$threads = $this->builder->build($messages, $logger);
-		$logger->debug("Account $accountId has " . count($threads) . " threads");
+		$logger->debug("Account $accountId has " . count($threads) . ' threads');
 		/** @var DatabaseMessage[] $flattened */
 		$flattened = iterator_to_array($this->flattenThreads($threads), false);
-		$logger->debug("Account $accountId has " . count($flattened) . " messages with a new thread IDs");
+		$logger->debug("Account $accountId has " . count($flattened) . ' messages with a new thread IDs');
 		foreach (array_chunk($flattened, self::WRITE_IDS_CHUNK_SIZE) as $chunk) {
 			$this->mapper->writeThreadIds($chunk);
 
-			$logger->debug("Chunk of " . self::WRITE_IDS_CHUNK_SIZE . " messages updated");
+			$logger->debug('Chunk of ' . self::WRITE_IDS_CHUNK_SIZE . ' messages updated');
 		}
+
+		// Free memory
+		unset($flattened, $threads, $messages);
+		gc_collect_cycles();
 	}
 
 	/**

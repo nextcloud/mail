@@ -2,30 +2,14 @@
 
 declare(strict_types=1);
 /**
- * @copyright Copyright (c) 2019, Roeland Jago Douma <roeland@famdouma.nl>
- *
- * @author Roeland Jago Douma <roeland@famdouma.nl>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\BackgroundJob;
 
 use Horde_Imap_Client_Exception;
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\MailboxSync;
@@ -43,21 +27,26 @@ use function max;
 use function sprintf;
 
 class SyncJob extends TimedJob {
+	private const DEFAULT_SYNC_INTERVAL = 3600;
+
 	private IUserManager $userManager;
 	private AccountService $accountService;
 	private ImapToDbSynchronizer $syncService;
 	private MailboxSync $mailboxSync;
 	private LoggerInterface $logger;
 	private IJobList $jobList;
+	private readonly bool $forcedSyncInterval;
 
-	public function __construct(ITimeFactory $time,
+	public function __construct(
+		ITimeFactory $time,
 		IUserManager $userManager,
 		AccountService $accountService,
 		MailboxSync $mailboxSync,
 		ImapToDbSynchronizer $syncService,
 		LoggerInterface $logger,
 		IJobList $jobList,
-		IConfig $config) {
+		private readonly IConfig $config,
+	) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;
@@ -67,18 +56,22 @@ class SyncJob extends TimedJob {
 		$this->logger = $logger;
 		$this->jobList = $jobList;
 
-		$this->setInterval(
-			max(
-				5 * 60,
-				$config->getSystemValueInt('app.mail.background-sync-interval', 3600)
-			),
-		);
+		$configuredSyncInterval = $config->getSystemValueInt('app.mail.background-sync-interval');
+		if ($configuredSyncInterval > 0) {
+			$this->forcedSyncInterval = true;
+		} else {
+			$this->forcedSyncInterval = false;
+			$configuredSyncInterval = self::DEFAULT_SYNC_INTERVAL;
+		}
+
+		$this->setInterval(max(5 * 60, $configuredSyncInterval));
 		$this->setTimeSensitivity(self::TIME_SENSITIVE);
 	}
 
 	/**
 	 * @return void
 	 */
+	#[\Override]
 	protected function run($argument) {
 		$accountId = (int)$argument['accountId'];
 
@@ -90,6 +83,36 @@ class SyncJob extends TimedJob {
 			return;
 		}
 
+		if (!$account->getMailAccount()->canAuthenticateImap()) {
+			$this->logger->debug('No authentication on IMAP possible, skipping background sync job');
+			return;
+		}
+
+		// If an admin configured a custom sync interval, always abide by it
+		if (!$this->forcedSyncInterval) {
+			$now = $this->time->getTime();
+			$heartbeat = (int)$this->config->getUserValue(
+				$account->getUserId(),
+				Application::APP_ID,
+				'ui-heartbeat',
+				$now + 1, // Force negative value for $lastUsed in case of no heartbeat
+			);
+			$lastUsed = $now - $heartbeat;
+			if ($lastUsed > 3 * 24 * 3600) {
+				// User did not open the app in more than three days -> defer sync
+				$this->setInterval(6 * 3600);
+			} elseif ($lastUsed > 24 * 3600) {
+				// User opened the app at least once within the last three days -> default sync
+				$this->setInterval(self::DEFAULT_SYNC_INTERVAL);
+			} elseif ($lastUsed > 0) {
+				// User opened the app at least once within the last 24 hours -> sync more often
+				$this->setInterval(15 * 60);
+			} else {
+				// Default to the hourly interval in case there is no heartbeat
+				$this->setInterval(self::DEFAULT_SYNC_INTERVAL);
+			}
+		}
+
 		$user = $this->userManager->get($account->getUserId());
 		if ($user === null || !$user->isEnabled()) {
 			$this->logger->debug(sprintf(
@@ -97,12 +120,6 @@ class SyncJob extends TimedJob {
 				$account->getId(),
 				$account->getUserId()
 			));
-			return;
-		}
-
-		$dbAccount = $account->getMailAccount();
-		if (!is_null($dbAccount->getProvisioningId()) && $dbAccount->getInboundPassword() === null) {
-			$this->logger->info("Ignoring cron sync for provisioned account that has no password set yet");
 			return;
 		}
 

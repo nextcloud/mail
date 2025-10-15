@@ -3,22 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Matthias Rella <mrella@pisys.eu>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Service;
@@ -63,9 +49,9 @@ class GroupsIntegration {
 				$gid = $this->servicePrefix($gs) . $g['id'];
 				$receivers[] = [
 					'id' => $gid,
-					'label' => $g['name'] . " (" . $gs->getNamespace() . ")",
+					'label' => $g['name'] . ' (' . $gs->getNamespace() . ')',
 					'email' => $gid,
-					'photo' => null,
+					'source' => 'groups',
 				];
 			}
 		}
@@ -83,7 +69,7 @@ class GroupsIntegration {
 		if (empty($gs->getNamespace())) {
 			throw new ServiceException('GroupService has no namespace');
 		}
-		return strtolower($gs->getNamespace()) . ":";
+		return strtolower($gs->getNamespace()) . ':';
 	}
 
 	/**
@@ -101,20 +87,16 @@ class GroupsIntegration {
 						$recipient->getEmail(),
 						mb_strlen($this->servicePrefix($service))
 					);
-					$members = array_filter($service->getUsers($groupId), static function (array $member) {
-						return !empty($member['email']);
-					});
+					$members = array_filter($service->getUsers($groupId), static fn (array $member) => !empty($member['email']));
 					if ($members === []) {
 						throw new ServiceException($groupId . " ({$service->getNamespace()}) has no members with email addresses");
 					}
-					return array_map(static function (array $member) use ($recipient) {
-						return Recipient::fromParams([
-							'messageId' => $recipient->getMessageId(),
-							'type' => $recipient->getType(),
-							'label' => $member['name'] ?? $member['email'],
-							'email' => $member['email'],
-						]);
-					}, $members);
+					return array_map(static fn (array $member) => Recipient::fromParams([
+						'messageId' => $recipient->getMessageId(),
+						'type' => $recipient->getType(),
+						'label' => $member['name'] ?? $member['email'],
+						'email' => $member['email'],
+					]), $members);
 				}
 			}
 

@@ -1,62 +1,36 @@
-/*
- * @copyright 2022 Greta Doci <gretadoci@gmail.com>
- *
- * @author 2022 Greta Doci <gretadoci@gmail.com>
- * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
- *
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import {createLocalVue, shallowMount} from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 
-import Nextcloud from '../../../mixins/Nextcloud'
-import Envelope from '../../../components/Envelope'
-import Vuex from 'vuex';
+import Nextcloud from '../../../mixins/Nextcloud.js'
+import Envelope from '../../../components/Envelope.vue'
+
+import useMainStore from '../../../store/mainStore.js'
 
 const localVue = createLocalVue()
 const $route = {
 	params: {
-		id: 1
-	}
+		id: 1,
+	},
 }
 
-localVue.use(Vuex)
+const pinia = createPinia()
+
 localVue.mixin(Nextcloud)
 
 describe('Envelope', () => {
-	let actions
-	let getters
 	let store
 
 	beforeEach(() => {
-		actions = {}
-		getters = {
-			accounts: () => [
-				{
-					id: 123,
-				},
-			],
-			getAccount: () => (id) => ({}),
-			getEnvelopeTags: () => (id) => ([]),
-			getMailbox: () => (id) => ({}),
-		}
-		store = new Vuex.Store({
-			actions,
-			getters,
-		})
+		setActivePinia(createPinia())
+
+		store = useMainStore()
+
+		store.accountsUnmapped[123] = { sentMailboxId: '1' }
 	})
 	it('allows toggling seen flag without ACLs', () => {
 		const view = shallowMount(Envelope, {
@@ -66,14 +40,14 @@ describe('Envelope', () => {
 			propsData: {
 				data: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
-				account: {sentMailboxId:'1'},
+				account: { sentMailboxId: '1' },
 				mailbox: {
 					myAcls: undefined,
-					databaseId:'3',
-					specialRole:''
+					databaseId: '3',
+					specialRole: '',
 				},
 			},
 			store,
@@ -84,24 +58,25 @@ describe('Envelope', () => {
 	})
 
 	it('disallows toggling seen flag without s ACL right', () => {
+
 		const view = shallowMount(Envelope, {
 			mocks: {
 				$route,
 			},
 			propsData: {
-				account: {sentMailboxId:'1'},
 				mailbox: {
-					specialRole:'',
-					databaseId:'3',
+					specialRole: '',
+					databaseId: '3',
 					myAcls: 'x',
 				},
 				data: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
 			store,
+			pinia,
 			localVue,
 		})
 
@@ -114,16 +89,15 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {sentMailboxId:'1'},
 				mailbox: {
-					specialRole:'',
-					databaseId:'3',
+					specialRole: '',
+					databaseId: '3',
 					myAcls: 's',
 				},
 				data: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
 			store,
@@ -138,16 +112,15 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {sentMailboxId:'1'},
 				mailbox: {
-					specialRole:'',
-					databaseId:'3',
+					specialRole: '',
+					databaseId: '3',
 					myAcls: undefined,
 				},
 				data: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
 			computed: {
@@ -168,16 +141,15 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {sentMailboxId:'1'},
 				mailbox: {
-					specialRole:'',
-					databaseId:'3',
+					specialRole: '',
+					databaseId: '3',
 					myAcls: 'te',
 				},
 				data: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
 			computed: {
@@ -198,16 +170,15 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {sentMailboxId:'1'},
 				mailbox: {
-					specialRole:'',
-					databaseId:'3',
+					specialRole: '',
+					databaseId: '3',
 					myAcls: 'te',
 				},
 				data: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
 			computed: {
@@ -228,16 +199,15 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {sentMailboxId:'1'},
 				mailbox: {
-					specialRole:'',
-					databaseId:'3',
+					specialRole: '',
+					databaseId: '3',
 					myAcls: undefined,
 				},
 				data: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
 			computed: {
@@ -258,16 +228,15 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {sentMailboxId:'1'},
 				mailbox: {
-					specialRole:'',
-					databaseId:'3',
+					specialRole: '',
+					databaseId: '3',
 					myAcls: 'x',
 				},
 				data: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
 			store,
@@ -277,23 +246,21 @@ describe('Envelope', () => {
 		expect(view.vm.hasArchiveAcl).toBe(false)
 	})
 
-
 	it('allows toggling delete action without ACLs', () => {
 		const view = shallowMount(Envelope, {
 			mocks: {
 				$route,
 			},
 			propsData: {
-				account: {sentMailboxId:'1'},
 				mailbox: {
-					specialRole:'',
-					databaseId:'3',
+					specialRole: '',
+					databaseId: '3',
 					myAcls: undefined,
 				},
 				data: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 
 				},
 			},
@@ -309,16 +276,15 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {sentMailboxId:'1'},
 				mailbox: {
-					specialRole:'',
-					databaseId:'3',
+					specialRole: '',
+					databaseId: '3',
 					myAcls: 's',
 				},
 				data: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 
 				},
 			},
@@ -334,16 +300,15 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {sentMailboxId:'1'},
 				mailbox: {
-					specialRole:'',
-					databaseId:'3',
-					sentMailboxId:'1'
+					specialRole: '',
+					databaseId: '3',
+					sentMailboxId: '1',
 				},
 				data: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
 			store,
@@ -358,16 +323,15 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {sentMailboxId:'1'},
 				mailbox: {
-					specialRole:'',
-					databaseId:'3',
+					specialRole: '',
+					databaseId: '3',
 					myAcls: 'w',
 				},
 				data: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
 			store,
@@ -382,16 +346,15 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {sentMailboxId:'1'},
 				mailbox: {
-					specialRole:'',
-					databaseId:'3',
+					specialRole: '',
+					databaseId: '3',
 					myAcls: 's',
 				},
 				data: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
 			store,
@@ -406,16 +369,15 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {sentMailboxId:'1'},
 				mailbox: {
-					specialRole:'',
-					databaseId:'3',
+					specialRole: '',
+					databaseId: '3',
 					myAcls: undefined,
 				},
 				data: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
 			store,

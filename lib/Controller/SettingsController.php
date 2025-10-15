@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Controller;
@@ -29,34 +13,37 @@ use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Exception\ValidationException;
 use OCA\Mail\Http\JsonResponse as HttpJsonResponse;
 use OCA\Mail\Service\AntiSpamService;
+use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IConfig;
 use OCP\IRequest;
-use OCP\TextProcessing\IManager;
-use OCP\TextProcessing\SummaryTaskType;
 use Psr\Container\ContainerInterface;
 
 use function array_merge;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class SettingsController extends Controller {
 	private ProvisioningManager $provisioningManager;
 	private AntiSpamService $antiSpamService;
 	private ContainerInterface $container;
-
 	private IConfig $config;
+	private ClassificationSettingsService $classificationSettingsService;
 
 	public function __construct(IRequest $request,
 		ProvisioningManager $provisioningManager,
 		AntiSpamService $antiSpamService,
 		IConfig $config,
-		ContainerInterface $container) {
+		ContainerInterface $container,
+		ClassificationSettingsService $classificationSettingsService) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->provisioningManager = $provisioningManager;
 		$this->antiSpamService = $antiSpamService;
 		$this->config = $config;
 		$this->container = $container;
+		$this->classificationSettingsService = $classificationSettingsService;
 	}
 
 	public function index(): JSONResponse {
@@ -123,20 +110,23 @@ class SettingsController extends Controller {
 		return new JSONResponse([]);
 	}
 
-	public function setAllowNewMailAccounts(bool $allowed) {
+	public function setAllowNewMailAccounts(bool $allowed): void {
 		$this->config->setAppValue('mail', 'allow_new_mail_accounts', $allowed ? 'yes' : 'no');
 	}
 
-	public function setEnabledThreadSummary(bool $enabled) {
-		$this->config->setAppValue('mail', 'enabled_thread_summary', $enabled ? 'yes' : 'no');
+	public function setEnabledLlmProcessing(bool $enabled): JSONResponse {
+		$this->config->setAppValue('mail', 'llm_processing', $enabled ? 'yes' : 'no');
+		return new JSONResponse([]);
 	}
 
-	public function isLlmConfigured() {
-		try {
-			$manager = $this->container->get(IManager::class);
-		} catch (\Throwable $e) {
-			return new JSONResponse(['data' => false]);
-		}
-		return new JSONResponse(['data' => in_array(SummaryTaskType::class, $manager->getAvailableTaskTypes(), true)]);
+	public function setImportanceClassificationEnabledByDefault(bool $enabledByDefault): JSONResponse {
+		$this->classificationSettingsService->setClassificationEnabledByDefault($enabledByDefault);
+		return new JSONResponse([]);
 	}
+
+	public function setLayoutMessageView(string $value): JSONResponse {
+		$this->config->setAppValue('mail', 'layout_message_view', $value);
+		return new JSONResponse([]);
+	}
+
 }

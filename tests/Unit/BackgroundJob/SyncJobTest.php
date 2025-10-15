@@ -2,25 +2,9 @@
 
 declare(strict_types=1);
 
-/*
- * @copyright 2021 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2021 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Unit\BackgroundJob;
@@ -30,12 +14,12 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC\BackgroundJob\JobList;
 use OCA\Mail\Account;
 use OCA\Mail\BackgroundJob\SyncJob;
+use OCA\Mail\Db\MailAccount;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\ILogger;
 use OCP\IUser;
 
 class SyncJobTest extends TestCase {
-	/** @var ServiceMockObject*/
+	/** @var ServiceMockObject */
 	private $serviceMock;
 
 	/** @var SyncJob */
@@ -84,16 +68,51 @@ class SyncJobTest extends TestCase {
 			'accountId' => 123,
 		]);
 		$this->job->setLastRun(0);
-		$this->job->execute(
-			$this->createMock(JobList::class),
-			$this->createMock(ILogger::class)
-		);
+		$this->job->start($this->createMock(JobList::class));
 	}
 
-	public function testUserDoesntExist(): void {
+	public function testNoAuthentication(): void {
+		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
+			'canAuthenticateImap' => false,
+		]);
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(123);
 		$account->method('getUserId')->willReturn('user123');
+		$account->method('getMailAccount')->willReturn($mailAccount);
+
+		$this->serviceMock->getParameter('accountService')
+			->expects(self::once())
+			->method('findById')
+			->with(123)
+			->willReturn($account);
+		$this->serviceMock->getParameter('logger')
+			->expects(self::once())
+			->method('debug')
+			->with('No authentication on IMAP possible, skipping background sync job');
+		$this->serviceMock->getParameter('userManager')
+			->expects(self::never())
+			->method('get');
+		$this->serviceMock->getParameter('mailboxSync')
+			->expects(self::never())
+			->method('sync');
+		$this->serviceMock->getParameter('syncService')
+			->expects(self::never())
+			->method('syncAccount');
+
+		$this->job->setArgument([
+			'accountId' => 123,
+		]);
+		$this->job->start($this->createMock(JobList::class));
+	}
+
+	public function testUserDoesntExist(): void {
+		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
+			'canAuthenticateImap' => true,
+		]);
+		$account = $this->createMock(Account::class);
+		$account->method('getId')->willReturn(123);
+		$account->method('getUserId')->willReturn('user123');
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$this->serviceMock->getParameter('accountService')
 			->expects(self::once())
 			->method('findById')
@@ -119,9 +138,6 @@ class SyncJobTest extends TestCase {
 		$this->job->setArgument([
 			'accountId' => 123,
 		]);
-		$this->job->execute(
-			$this->createMock(JobList::class),
-			$this->createMock(ILogger::class)
-		);
+		$this->job->start($this->createMock(JobList::class));
 	}
 }

@@ -1,41 +1,23 @@
 <!--
-  - @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
-  -
-  - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
-  - @author 2022 Richard Steinmetz <richard@steinmetz.cloud>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
+  - SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 <template>
-	<AppNavigation>
-		<NewMessageButtonHeader />
+	<AppNavigation class="mail-navigation">
+		<template #search>
+			<NewMessageButtonHeader class="mail-navigation__new-message-button" />
+		</template>
 		<template #list>
 			<!-- Special mailboxes first -->
-			<NavigationMailbox
-				v-for="mailbox in unifiedMailboxes"
+			<NavigationMailbox v-for="mailbox in unifiedMailboxes"
 				:key="'mailbox-' + mailbox.databaseId"
 				:account="unifiedAccount"
 				:mailbox="mailbox" />
-			<AppNavigationSpacer />
 
 			<!-- All other mailboxes grouped by their account -->
 			<template v-for="group in menu">
-				<NavigationAccount
-					v-if="group.account"
+				<NavigationAccount v-if="group.account"
 					:key="group.account.id"
 					:account="group.account"
 					:first-mailbox="group.mailboxes[0]"
@@ -44,8 +26,7 @@
 					:is-disabled="isDisabled(group.account)" />
 				<template v-if="!isDisabled(group.account)">
 					<template v-for="item in group.mailboxes">
-						<NavigationMailbox
-							v-show="
+						<NavigationMailbox v-show="
 								!group.isCollapsible ||
 									!group.account.collapsed ||
 									!isCollapsed(group.account, item)
@@ -53,18 +34,15 @@
 							:key="'mailbox-' + item.databaseId"
 							:account="group.account"
 							:mailbox="item" />
-						<NavigationMailbox
-							v-if="!group.account.isUnified && item.specialRole === 'inbox'"
+						<NavigationMailbox v-if="!group.account.isUnified && item.specialRole === 'inbox'"
 							:key="item.databaseId + '-starred'"
 							:account="group.account"
 							:mailbox="item"
 							filter="starred" />
 					</template>
-					<NavigationAccountExpandCollapse
-						v-if="!group.account.isUnified && group.isCollapsible"
+					<NavigationAccountExpandCollapse v-if="!group.account.isUnified && group.isCollapsible"
 						:key="'collapse-' + group.account.id"
 						:account="group.account" />
-					<AppNavigationSpacer :key="'spacer-' + group.account.id" />
 				</template>
 			</template>
 		</template>
@@ -72,34 +50,40 @@
 			<div v-if="outboxMessages.length !== 0" class="outbox__border">
 				<NavigationOutbox class="outbox" />
 			</div>
-			<AppNavigationSettings :title="t('mail', 'Mail settings')">
-				<template #icon>
-					<IconSetting :size="20" />
-				</template>
-				<AppSettingsMenu />
-			</AppNavigationSettings>
+			<div class="mail-settings">
+				<AppNavigationItem class="mail-settings__button"
+					:close-after-click="true"
+					:name="t('mail', 'Mail settings')"
+					@click="showMailSettings">
+					<template #icon>
+						<IconSetting :size="20" />
+					</template>
+				</AppNavigationItem>
+			</div>
 		</template>
+		<AppSettingsMenu :open.sync="showSettings" />
 	</AppNavigation>
 </template>
 
 <script>
-import { NcAppNavigation as AppNavigation, NcAppNavigationSettings as AppNavigationSettings, NcAppNavigationSpacer as AppNavigationSpacer } from '@nextcloud/vue'
-import NewMessageButtonHeader from './NewMessageButtonHeader'
+import { NcAppNavigation as AppNavigation, NcAppNavigationItem as AppNavigationItem } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
+import IconSetting from 'vue-material-design-icons/CogOutline.vue'
 
-import NavigationAccount from './NavigationAccount'
-import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse'
-import NavigationMailbox from './NavigationMailbox'
-import NavigationOutbox from './NavigationOutbox'
-import IconSetting from 'vue-material-design-icons/Cog'
-import AppSettingsMenu from '../components/AppSettingsMenu'
-import { UNIFIED_ACCOUNT_ID } from '../store/constants'
+import NavigationAccount from './NavigationAccount.vue'
+import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse.vue'
+import NavigationMailbox from './NavigationMailbox.vue'
+import NavigationOutbox from './NavigationOutbox.vue'
+import NewMessageButtonHeader from './NewMessageButtonHeader.vue'
+import AppSettingsMenu from '../components/AppSettingsMenu.vue'
+import { UNIFIED_ACCOUNT_ID } from '../store/constants.js'
+import useMainStore from '../store/mainStore.js'
+import useOutboxStore from '../store/outboxStore.js'
 
 export default {
 	name: 'Navigation',
 	components: {
 		AppNavigation,
-		AppNavigationSettings,
-		AppNavigationSpacer,
 		AppSettingsMenu,
 		NavigationAccount,
 		NavigationAccountExpandCollapse,
@@ -107,20 +91,23 @@ export default {
 		NavigationOutbox,
 		NewMessageButtonHeader,
 		IconSetting,
+		AppNavigationItem,
 	},
 	data() {
 		return {
 			refreshing: false,
+			showSettings: false,
 		}
 	},
 	computed: {
+		...mapStores(useOutboxStore, useMainStore),
 		menu() {
-			return this.$store.getters.accounts
+			return this.mainStore.getAccounts
 				.filter(account => account.id !== UNIFIED_ACCOUNT_ID)
 				.map(account => {
-					const mailboxes = this.$store.getters.getMailboxes(account.id)
+					const mailboxes = this.mainStore.getMailboxes(account.id)
 					const nonSpecialRoleMailboxes = mailboxes.filter(
-						(mailbox) => this.isCollapsed(account, mailbox)
+						(mailbox) => this.isCollapsed(account, mailbox),
 					)
 					const isCollapsible = nonSpecialRoleMailboxes.length > 1
 
@@ -133,10 +120,10 @@ export default {
 				})
 		},
 		unifiedAccount() {
-			return this.$store.getters.getAccount(UNIFIED_ACCOUNT_ID)
+			return this.mainStore.getAccount(UNIFIED_ACCOUNT_ID)
 		},
 		unifiedMailboxes() {
-			return this.$store.getters.getMailboxes(UNIFIED_ACCOUNT_ID)
+			return this.mainStore.getMailboxes(UNIFIED_ACCOUNT_ID)
 		},
 		/**
 		 * Whether the current session is using passwordless authentication.
@@ -144,13 +131,16 @@ export default {
 		 * @return {boolean}
 		 */
 		passwordIsUnavailable() {
-			return this.$store.getters.getPreference('password-is-unavailable', false)
+			return this.mainStore.getPreference('password-is-unavailable', false)
 		},
 		outboxMessages() {
-			return this.$store.getters['outbox/getAllMessages']
+			return this.outboxStore.getAllMessages
 		},
 	},
 	methods: {
+		showMailSettings() {
+			this.showSettings = true
+		},
 		isCollapsed(account, mailbox) {
 			if (mailbox.specialRole === 'inbox') {
 				// INBOX is always visible
@@ -167,11 +157,11 @@ export default {
 			return true
 		},
 		isFirst(account) {
-			const accounts = this.$store.getters.accounts
+			const accounts = this.mainStore.getAccounts
 			return account === accounts[1]
 		},
 		isLast(account) {
-			const accounts = this.$store.getters.accounts
+			const accounts = this.mainStore.getAccounts
 			return account === accounts[accounts.length - 1]
 		},
 		/**
@@ -182,38 +172,14 @@ export default {
 		 * @return {boolean} True if the account should be disabled
 		 */
 		isDisabled(account) {
-			return this.passwordIsUnavailable && !!account.provisioningId
+
+			return (this.passwordIsUnavailable && !!account.provisioningId) && !!this.mainStore.masterPasswordEnabled
 		},
 	},
 }
 </script>
 
 <style lang="scss" scoped>
-.button {
-	width: 44px;
-	height: 44px;
-	background-color: var(--color-main-background);
-	border: none;
-	display: inline-block;
-	position: absolute;
-	margin-left: 254px;
-	margin-top: 13px;
-	opacity: .7;
-	&:hover,
-	&:focus {
-		opacity: 1;
-		background-color:var(--color-background-hover);
-	}
-	&:disabled {
-		cursor: not-allowed;
-		opacity: .5;
-		animation: rotation 2s linear;
-	}
-}
-:deep(.app-navigation-new button) {
-	width: 240px !important;
-	height: 44px;
-}
 @keyframes rotation {
 from {
 	transform: rotate(-0deg);
@@ -222,24 +188,36 @@ to {
 		transform: rotate(-360deg);
 	}
 }
-.app-navigation-spacer {
-	order: 0 !important;
+
+.mail-navigation {
+	&__new-message-button {
+		padding: calc(var(--default-grid-baseline, 4px) * 2);
+	}
 }
-:deep(.settings-button) {
-	font-weight: bold !important;
-	z-index: 1;
-}
+
 .outbox {
-	margin-left: 6px;
+	padding: calc(var(--default-grid-baseline, 4px) * 2);
+	padding-bottom: 0;
+
 	width: auto;
 	&__border {
 		border-top: 1px solid var(--color-background-darker);
 	}
-	:deep(.app-navigation-entry) {
-		&.active {
-			background-color: transparent !important;
-		}
+}
+
+.mail-settings {
+	padding: calc(var(--default-grid-baseline, 4px) * 2);
+	padding-top: 0;
+
+	&__button {
+		display: flex;
+		width: 100% !important;
+		justify-content: start !important;
 	}
+}
+
+.v-popper__inner {
+	height: unset !important;
 }
 
 </style>

@@ -3,23 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\IMAP;
@@ -35,12 +20,15 @@ use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Socket;
 use Horde_Mime_Exception;
 use Horde_Mime_Headers;
-use Horde_Mime_Mail;
+use Horde_Mime_Headers_ContentParam_ContentType;
+use Horde_Mime_Headers_ContentTransferEncoding;
 use Horde_Mime_Part;
 use Html2Text\Html2Text;
 use OCA\Mail\Attachment;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Html\Parser;
+use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Support\PerformanceLoggerTask;
@@ -66,9 +54,12 @@ class MessageMapper {
 	private SMimeService $smimeService;
 	private ImapMessageFetcherFactory $imapMessageFactory;
 
-	public function __construct(LoggerInterface           $logger,
-		SmimeService              $smimeService,
-		ImapMessageFetcherFactory $imapMessageFactory) {
+	public function __construct(
+		LoggerInterface $logger,
+		SmimeService $smimeService,
+		ImapMessageFetcherFactory $imapMessageFactory,
+		private Converter $converter,
+	) {
 		$this->logger = $logger;
 		$this->smimeService = $smimeService;
 		$this->imapMessageFactory = $imapMessageFactory;
@@ -84,10 +75,10 @@ class MessageMapper {
 		int $id,
 		string $userId,
 		bool $loadBody = false): IMAPMessage {
-		$result = $this->findByIds($client, $mailbox, new Horde_Imap_Client_Ids([$id]), $userId, $loadBody);
+		$result = $this->findByIds($client, $mailbox, new Horde_Imap_Client_Ids([$id]), $userId, $loadBody, true);
 
 		if (count($result) === 0) {
-			throw new DoesNotExistException("Message does not exist");
+			throw new DoesNotExistException('Message does not exist');
 		}
 
 		return $result[0];
@@ -133,11 +124,11 @@ class MessageMapper {
 			]
 		);
 		$perf->step('mailbox meta search');
-		$min = (int) $metaResults['min'];
-		$max = (int) $metaResults['max'];
-		$total = (int) $metaResults['count'];
+		$min = (int)$metaResults['min'];
+		$total = (int)$metaResults['count'];
 
 		if ($total === 0) {
+			$perf->step('No data in mailbox');
 			// Nothing to fetch for this mailbox
 			return [
 				'messages' => [],
@@ -145,6 +136,18 @@ class MessageMapper {
 				'total' => $total,
 			];
 		}
+
+		// This can happen for iCloud
+		if ($metaResults['max'] === null) {
+			$uidnext = $client->status(
+				$mailbox
+			);
+			$perf->step('mailbox meta search for UIDNEXT');
+			$max = (int)$uidnext['uidnext'] - 1; // We need to subtract one for the last used UID
+		} else {
+			$max = ((int)$metaResults['max']);
+		}
+		unset($metaResults);
 
 		// The inclusive range of UIDs
 		$totalRange = $max - $min + 1;
@@ -160,7 +163,8 @@ class MessageMapper {
 		// Determine max UID to fetch, but don't exceed the known maximum
 		$upper = min(
 			$max,
-			$lower + $estimatedPageSize
+			$lower + $estimatedPageSize,
+			$lower + 1_000_000, // Somewhat sensible number of UIDs that fit into memory (Horde_Imap_ClientId bloat)
 		);
 		if ($lower > $upper) {
 			$logger->debug("Range for findAll did not find any (not already known) messages and all messages of mailbox $mailbox have been fetched.");
@@ -171,7 +175,22 @@ class MessageMapper {
 			];
 		}
 
-		$logger->debug("Built range for findAll: min=$min max=$max total=$total totalRange=$totalRange estimatedPageSize=$estimatedPageSize lower=$lower upper=$upper highestKnownUid=$highestKnownUid");
+		$idsToFetch = new Horde_Imap_Client_Ids($lower . ':' . $upper);
+		$actualPageSize = $this->getPageSize($client, $mailbox, $idsToFetch);
+		$logger->debug("Built range for findAll: min=$min max=$max total=$total totalRange=$totalRange estimatedPageSize=$estimatedPageSize actualPageSize=$actualPageSize lower=$lower upper=$upper highestKnownUid=$highestKnownUid");
+		while ($actualPageSize > $maxResults) {
+			$logger->debug("Range for findAll matches too many messages: min=$min max=$max total=$total estimatedPageSize=$estimatedPageSize actualPageSize=$actualPageSize");
+
+			$estimatedPageSize = (int)($estimatedPageSize / 2);
+
+			$upper = min(
+				$max,
+				$lower + $estimatedPageSize,
+				$lower + 1_000_000, // Somewhat sensible number of UIDs that fit into memory (Horde_Imap_ClientId bloat)
+			);
+			$idsToFetch = new Horde_Imap_Client_Ids($lower . ':' . $upper);
+			$actualPageSize = $this->getPageSize($client, $mailbox, $idsToFetch);
+		}
 
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
@@ -179,7 +198,7 @@ class MessageMapper {
 			$mailbox,
 			$query,
 			[
-				'ids' => new Horde_Imap_Client_Ids($lower . ':' . $upper)
+				'ids' => $idsToFetch
 			]
 		);
 		$perf->step('fetch UIDs');
@@ -192,21 +211,21 @@ class MessageMapper {
 			 * We take $upper as the lowest known UID as we just found out that
 			 * there is nothing to fetch in $highestKnownUid:$upper
 			 */
-			$logger->debug("Range for findAll did not find any messages. Trying again with a succeeding range");
+			$logger->debug('Range for findAll did not find any messages. Trying again with a succeeding range');
+			// Clean up some unused variables before recursion
+			unset($fetchResult, $idsToFetch, $query);
+			$perf->step('free memory before recursion');
 			return $this->findAll($client, $mailbox, $maxResults, $upper, $logger, $perf, $userId);
 		}
 		$uidCandidates = array_filter(
 			array_map(
-				static function (Horde_Imap_Client_Data_Fetch $data) {
-					return $data->getUid();
-				},
+				static fn (Horde_Imap_Client_Data_Fetch $data) => $data->getUid(),
 				iterator_to_array($fetchResult)
 			),
 
-			static function (int $uid) use ($highestKnownUid) {
+			static fn (int $uid)
 				// Don't load the ones we already know
-				return $uid > $highestKnownUid;
-			}
+				=> $uid > $highestKnownUid
 		);
 		$uidsToFetch = array_slice(
 			$uidCandidates,
@@ -254,7 +273,8 @@ class MessageMapper {
 		string $mailbox,
 		$ids,
 		string $userId,
-		bool $loadBody = false): array {
+		bool $loadBody = false,
+		bool $runPhishingCheck = false): array {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->envelope();
 		$query->flags();
@@ -270,11 +290,9 @@ class MessageMapper {
 		if (is_array($ids)) {
 			// Chunk to prevent overly long IMAP commands
 			/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
-			$fetchResults = array_flat_map(function ($ids) use ($query, $mailbox, $client) {
-				return iterator_to_array($client->fetch($mailbox, $query, [
-					'ids' => $ids,
-				]), false);
-			}, chunk_uid_sequence($ids, 10000));
+			$fetchResults = array_flat_map(fn ($ids) => iterator_to_array($client->fetch($mailbox, $query, [
+				'ids' => $ids,
+			]), false), chunk_uid_sequence($ids, 10000));
 		} else {
 			/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
 			$fetchResults = iterator_to_array($client->fetch($mailbox, $query, [
@@ -282,12 +300,10 @@ class MessageMapper {
 			]), false);
 		}
 
-		$fetchResults = array_values(array_filter($fetchResults, static function (Horde_Imap_Client_Data_Fetch $fetchResult) {
-			return $fetchResult->exists(Horde_Imap_Client::FETCH_ENVELOPE);
-		}));
+		$fetchResults = array_values(array_filter($fetchResults, static fn (Horde_Imap_Client_Data_Fetch $fetchResult) => $fetchResult->exists(Horde_Imap_Client::FETCH_ENVELOPE)));
 
 		if ($fetchResults === []) {
-			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs but found none");
+			$this->logger->debug("findByIds in $mailbox got " . count($ids) . ' UIDs but found none');
 		} else {
 			$minFetched = $fetchResults[0]->getUid();
 			$maxFetched = $fetchResults[count($fetchResults) - 1]->getUid();
@@ -299,17 +315,16 @@ class MessageMapper {
 			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs ($range) and found " . count($fetchResults) . ". minFetched=$minFetched maxFetched=$maxFetched");
 		}
 
-		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchResult) use ($client, $mailbox, $loadBody, $userId) {
-			return $this->imapMessageFactory
-				->build(
-					$fetchResult->getUid(),
-					$mailbox,
-					$client,
-					$userId,
-				)
-				->withBody($loadBody)
-				->fetchMessage($fetchResult);
-		}, $fetchResults);
+		return array_map(fn (Horde_Imap_Client_Data_Fetch $fetchResult) => $this->imapMessageFactory
+			->build(
+				$fetchResult->getUid(),
+				$mailbox,
+				$client,
+				$userId,
+			)
+			->withBody($loadBody)
+			->withPhishingCheck($runPhishingCheck)
+			->fetchMessage($fetchResult), $fetchResults);
 	}
 
 	/**
@@ -317,12 +332,12 @@ class MessageMapper {
 	 * @param string $sourceFolderId
 	 * @param int $messageId
 	 * @param string $destFolderId
-	 * @return int the new UID
+	 * @return ?int the new UID (or null if couldn't be determined)
 	 */
 	public function move(Horde_Imap_Client_Base $client,
 		string $sourceFolderId,
 		int $messageId,
-		string $destFolderId): int {
+		string $destFolderId): ?int {
 		try {
 			$mapping = $client->copy($sourceFolderId, $destFolderId,
 				[
@@ -331,7 +346,9 @@ class MessageMapper {
 					'force_map' => true,
 				]);
 
-			return $mapping[$messageId];
+			// There won't be a mapping if the IMAP server does not support UIDPLUS and the message
+			// has no Message-ID header. This is extremely rare, but this case needs to be handled.
+			return $mapping[$messageId] ?? null;
 		} catch (Horde_Imap_Client_Exception $e) {
 			$this->logger->debug($e->getMessage(),
 				[
@@ -351,7 +368,7 @@ class MessageMapper {
 		string $mailbox): void {
 		$client->store($mailbox, [
 			'add' => [
-				Horde_Imap_Client::FLAG_SEEN,
+				[Horde_Imap_Client::FLAG_SEEN],
 			],
 		]);
 	}
@@ -387,7 +404,7 @@ class MessageMapper {
 	 */
 	public function save(Horde_Imap_Client_Socket $client,
 		Mailbox $mailbox,
-		Horde_Mime_Mail $mail,
+		string $mail,
 		array $flags = []): int {
 		$flags = array_merge([
 			Horde_Imap_Client::FLAG_SEEN,
@@ -397,7 +414,7 @@ class MessageMapper {
 			$mailbox->getName(),
 			[
 				[
-					'data' => $mail->getRaw(),
+					'data' => $mail,
 					'flags' => $flags,
 				]
 			]
@@ -484,7 +501,7 @@ class MessageMapper {
 			]);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
-				"Could not fetch message source: " . $e->getMessage(),
+				'Could not fetch message source: ' . $e->getMessage(),
 				$e->getCode(),
 				$e
 			);
@@ -515,9 +532,9 @@ class MessageMapper {
 	 * @throws ServiceException
 	 */
 	public function getHtmlBody(Horde_Imap_Client_Socket $client,
-		string                   $mailbox,
-		int                      $uid,
-		string                   $userId): ?string {
+		string $mailbox,
+		int $uid,
+		string $userId): ?string {
 		$messageQuery = new Horde_Imap_Client_Fetch_Query();
 		$messageQuery->envelope();
 		$messageQuery->structure();
@@ -598,9 +615,7 @@ class MessageMapper {
 		string $userId,
 		?array $attachmentIds = []): array {
 		$attachments = $this->getAttachments($client, $mailbox, $uid, $userId, $attachmentIds);
-		return array_map(static function (Attachment $attachment) {
-			return $attachment->getContent();
-		}, $attachments);
+		return array_map(static fn (Attachment $attachment) => $attachment->getContent(), $attachments);
 	}
 
 	/**
@@ -861,7 +876,8 @@ class MessageMapper {
 	 */
 	public function getBodyStructureData(Horde_Imap_Client_Socket $client,
 		string $mailbox,
-		array $uids): array {
+		array $uids,
+		string $emailAddress): array {
 		$structureQuery = new Horde_Imap_Client_Fetch_Query();
 		$structureQuery->structure();
 		$structureQuery->headerText([
@@ -873,8 +889,7 @@ class MessageMapper {
 		$structures = $client->fetch($mailbox, $structureQuery, [
 			'ids' => new Horde_Imap_Client_Ids($uids),
 		]);
-
-		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client) {
+		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client, $emailAddress) {
 			$hasAttachments = false;
 			$text = '';
 			$isImipMessage = false;
@@ -887,15 +902,13 @@ class MessageMapper {
 			$structure = $fetchData->getStructure();
 
 			/** @var Horde_Mime_Part $part */
-			foreach ($structure->getParts() as $part) {
+			foreach ($structure->partIterator() as $part) {
 				if ($part->isAttachment()) {
 					$hasAttachments = true;
 				}
-				$bodyParts = $part->getParts();
-				/** @var Horde_Mime_Part $bodyPart */
-				foreach ($bodyParts as $bodyPart) {
-					$contentParameters = $bodyPart->getAllContentTypeParameters();
-					if ($bodyPart->getType() === 'text/calendar' && isset($contentParameters['method'])) {
+
+				if ($part->getType() === 'text/calendar') {
+					if ($part->getContentTypeParameter('method') !== null) {
 						$isImipMessage = true;
 					}
 				}
@@ -904,7 +917,7 @@ class MessageMapper {
 			$textBodyId = $structure->findBody() ?? $structure->findBody('text');
 			$htmlBodyId = $structure->findBody('html');
 			if ($textBodyId === null && $htmlBodyId === null) {
-				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted);
+				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
 			}
 			$partsQuery = new Horde_Imap_Client_Fetch_Query();
 			if ($htmlBodyId !== null) {
@@ -930,43 +943,97 @@ class MessageMapper {
 			$part = $parts[$fetchData->getUid()];
 			// This is sus - why does this even happen? A delete / move in the middle of this processing?
 			if ($part === null) {
-				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted);
+				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
 			}
+
+			// Convert a given binary body to utf-8 according to the transfer encoding and content
+			// type headers of the underlying MIME part
+			$convertBody = function (string $body, Horde_Mime_Headers $mimeHeaders) use ($structure): string {
+				/** @var Horde_Mime_Headers_ContentParam_ContentType $contentType */
+				$contentType = $mimeHeaders->getHeader('content-type');
+				/** @var Horde_Mime_Headers_ContentTransferEncoding $transferEncoding */
+				$transferEncoding = $mimeHeaders->getHeader('content-transfer-encoding');
+
+				if (!$contentType && !$transferEncoding) {
+					// Nothing to convert here ...
+					return $body;
+				}
+
+				if ($transferEncoding) {
+					$structure->setTransferEncoding($transferEncoding->value_single);
+				}
+
+				if ($contentType) {
+					$structure->setType($contentType->value_single);
+					if (isset($contentType['charset'])) {
+						$structure->setCharset($contentType['charset']);
+					}
+				}
+
+				$structure->setContents($body);
+				return $this->converter->convert($structure);
+			};
 
 
 			$htmlBody = ($htmlBodyId !== null) ? $part->getBodyPart($htmlBodyId) : null;
 			if (!empty($htmlBody)) {
 				$mimeHeaders = $part->getMimeHeader($htmlBodyId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
-					$structure->setTransferEncoding($enc);
-					$structure->setContents($htmlBody);
-					$htmlBody = $structure->getContents();
-				}
-				$html = new Html2Text($htmlBody, array('do_links' => 'none','alt_image' => 'hide'));
+				$htmlBody = $convertBody($htmlBody, $mimeHeaders);
+				$mentionsUser = $this->checkLinks($htmlBody, $emailAddress);
+				$html = new Html2Text($htmlBody, ['do_links' => 'none','alt_image' => 'hide']);
 				return new MessageStructureData(
 					$hasAttachments,
 					trim($html->getText()),
 					$isImipMessage,
 					$isEncrypted,
+					$mentionsUser,
 				);
 			}
 			$textBody = $part->getBodyPart($textBodyId);
 
 			if (!empty($textBody)) {
 				$mimeHeaders = $part->getMimeHeader($textBodyId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
-					$structure->setTransferEncoding($enc);
-					$structure->setContents($textBody);
-					$textBody = $structure->getContents();
-				}
+				$textBody = $convertBody($textBody, $mimeHeaders);
 				return new MessageStructureData(
 					$hasAttachments,
 					$textBody,
 					$isImipMessage,
 					$isEncrypted,
+					false,
 				);
 			}
-			return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted);
+			return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
 		}, iterator_to_array($structures->getIterator()));
+	}
+	private function checkLinks(string $body, string $mailAddress) : bool {
+		if (empty($body)) {
+			return false;
+		}
+		$dom = Parser::parseToDomDocument($body);
+		$anchors = $dom->getElementsByTagName('a');
+		foreach ($anchors as $anchor) {
+			$href = $anchor->getAttribute('href');
+			if ($href === 'mailto:' . $mailAddress) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private function getPageSize(Horde_Imap_Client_Socket $client,
+		string $mailbox,
+		Horde_Imap_Client_Ids $idsToFetch): int {
+		$rangeSearchQuery = new Horde_Imap_Client_Search_Query();
+		$rangeSearchQuery->ids($idsToFetch);
+		$rangeSearchResult = $client->search(
+			$mailbox,
+			$rangeSearchQuery,
+			[
+				'results' => [
+					Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+				],
+			]
+		);
+		return (int)$rangeSearchResult['count'];
 	}
 }

@@ -3,25 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright Copyright (c) 2022 Anna Larch <anna.larch@gmx.net>
- *
- * @author Anna Larch <anna.larch@gmx.net>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Migration;
@@ -58,6 +41,7 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
 	 * @param array $options
 	 */
+	#[\Override]
 	public function preSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
 		// Keep recipients backup
 		$qb1 = $this->connection->getQueryBuilder();
@@ -114,6 +98,7 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 	 * @param array $options
 	 * @return null|ISchemaWrapper
 	 */
+	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
@@ -167,7 +152,16 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 		// Add named indices
 		$messagesTable->addIndex(['mailbox_id', 'flag_important', 'flag_deleted', 'flag_seen'], 'mail_messages_id_flags');
 		$messagesTable->addIndex(['mailbox_id', 'flag_deleted', 'flag_flagged'], 'mail_messages_id_flags2');
-		$messagesTable->addIndex(['mailbox_id'], 'mail_messages_mailbox_id');
+		// Dropped in Version3600Date20240205180726 because mail_messages_mailbox_id is redundant with mail_messages_mb_id_uid
+		// $messagesTable->addIndex(['mailbox_id'], 'mail_messages_mailbox_id');
+
+		// mail_messages_msgid_idx was added later and may not exist until optional indices are created
+		$messagesTable->addIndex(
+			['message_id'],
+			'mail_messages_msgid_idx',
+			[],
+			['lengths' => [128]],
+		);
 
 		// Postgres doesn't allow for shortened indices, so let's skip the last index.
 		if ($this->connection->getDatabasePlatform() instanceof PostgreSQL94Platform) {
@@ -183,7 +177,10 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
 	 * @param array $options
+	 *
+	 * @return void
 	 */
+	#[\Override]
 	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
 		$qb1 = $this->connection->getQueryBuilder();
 		$qb1->insert('mail_recipients')

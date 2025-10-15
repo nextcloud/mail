@@ -1,50 +1,62 @@
+<!--
+  - SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
-	<div class="summary">
-		<div class="summary__header">
-			<div class="summary__header__actions">
-				<span class="summary__header__actions__brand">
-					<CreationIcon class="summary__header__actions__brand__icon" />
-					<p>{{ brand }}</p>
-				</span>
-				<NcActions />
-				<NcButton
-					:aria-label=" t('mail', 'Go to latest message')"
-					type="secondary"
-					@click="onScroll">
-					{{ t('mail', 'Go to newest message') }}
-					<template #icon>
-						<ArrowDownIcon
-							:size="20" />
-					</template>
-				</NcButton>
+	<NcAssistantContent class="wrapper">
+		<div class="summary">
+			<div class="summary__header">
+				<div class="summary__header__actions">
+					<div class="summary__header__info">
+						<NcAssistantIcon class="summary__header__icon" />
+						<div class="summary__header__text">
+							<div class="summary__header__title">
+								{{ t('mail', 'Thread summary') }}
+							</div>
+							<div class="summary__header__brand">
+								{{ brand }}
+							</div>
+						</div>
+					</div>
+
+					<NcButton :aria-label=" t('mail', 'Go to latest message')"
+						type="tertiary-no-background"
+						@click="onScroll">
+						{{ t('mail', 'Newest message') }}
+						<template #icon>
+							<ArrowDownIcon :size="20" />
+						</template>
+					</NcButton>
+				</div>
 			</div>
-			<div class="summary__header__title">
-				<h2>{{ t('mail', 'Thread Summary') }}</h2>
+			<div class="summary__body">
+				<LoadingSkeleton v-if="loading" :number-of-lines="1" :with-avatar="false" />
+				<p v-else>
+					{{ summary }}
+				</p>
+			</div>
+			<div class="summary__notice">
+				{{ t('mail', 'This summary is AI generated and may contain mistakes.') }}
 			</div>
 		</div>
-		<div class="summary__body">
-			<LoadingSkeleton v-if="loading" :number-of-lines="1" :with-avatar="false" />
-			<p v-else>
-				{{ summary }}
-			</p>
-		</div>
-	</div>
+	</NcAssistantContent>
 </template>
 <script>
-import NcButton from '@nextcloud/vue/dist/Components/NcButton'
-import NcActions from '@nextcloud/vue/dist/Components/NcActions'
-import CreationIcon from 'vue-material-design-icons/Creation'
-import ArrowDownIcon from 'vue-material-design-icons/ArrowDown'
-import LoadingSkeleton from './LoadingSkeleton'
+import NcAssistantContent from '@nextcloud/vue/components/NcAssistantContent'
+import NcAssistantIcon from '@nextcloud/vue/components/NcAssistantIcon'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import ArrowDownIcon from 'vue-material-design-icons/ArrowDown.vue'
+
+import LoadingSkeleton from './LoadingSkeleton.vue'
 
 export default {
 	name: 'ThreadSummary',
 	components: {
 		LoadingSkeleton,
 		NcButton,
-		NcActions,
-		CreationIcon,
 		ArrowDownIcon,
+		NcAssistantContent,
+		NcAssistantIcon,
 	},
 	props: {
 		summary: {
@@ -77,54 +89,69 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.summary{
-    border: 2px solid var(--color-primary-element);
-    border-radius:var( --border-radius-large) ;
-    margin: 0 10px 20px 10px;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
+.wrapper {
+	max-width: calc(100% - 20px);
+	margin: 0 auto;
+	width: 100%;
+}
 
-    &__header{
-        display: flex;
-        flex-direction: column;
-        &__actions{
+.summary {
+	position: relative;
+	border-radius: var(--border-radius-large);
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	&__header {
+		display: flex;
+		flex-direction: column;
+
+		&__actions {
 			display: flex;
 			justify-content: space-between;
-			margin-bottom: 10px;
-            &__brand{
-                display: flex;
-                align-items: center;
-                background-color: var(--color-primary-light);
-                border-radius: var(--border-radius-pill);
-                width: fit-content;
-                padding-right: 10px;
-				padding-left: 4px;
-				margin: 8px 0 8px 0;
+			align-items: center;
+			padding-bottom: 10px;
+		}
 
-                &__icon{
-                    color:var(--color-primary-element);
-                    margin-right: 5px;
-					margin-left:5px
-                }
-            }
-        }
+		&__info {
+			display: flex;
+			align-items: center;
+			gap: var(--default-grid-baseline);
+		}
 
-    }
+		&__text {
+			display: flex;
+			flex-direction: column;
+			line-height: 1.2;
+		}
+
+		&__title {
+			font-weight: bold;
+		}
+
+		&__brand {
+			color: var(--color-text-maxcontrast);
+		}
+		&__icon {
+			padding-inline-end: 14px;
+		}
+	}
+	&__body {
+		margin-inline-start: 35px;
+	}
 	@media only screen and (max-width: 600px) {
-		.summary{
-			&__header{
+		.summary {
+			&__header {
 				flex-direction: column;
-				&__actions{
+				&__actions {
 					flex-direction: column;
-					&__brand{
-						flex-wrap: nowrap;
-						margin-bottom: 10px;
-					}
 				}
 			}
 		}
 	}
+	.summary__notice {
+		margin-top: 0.5rem;
+		margin-inline-start: 35px;
+		color: var(--color-text-maxcontrast);
+	}
 }
-
 </style>

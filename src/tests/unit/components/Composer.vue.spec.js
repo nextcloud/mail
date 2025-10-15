@@ -1,66 +1,41 @@
-/*
- * @copyright 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
- *
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 import {createLocalVue, shallowMount} from '@vue/test-utils'
-import Vuex from 'vuex'
 
-import Composer from '../../../components/Composer'
-import Nextcloud from '../../../mixins/Nextcloud'
+import Composer from '../../../components/Composer.vue'
+import Nextcloud from '../../../mixins/Nextcloud.js'
+import { createPinia, PiniaVuePlugin } from 'pinia'
+
+import useMainStore from '../../../store/mainStore.js'
 
 const localVue = createLocalVue()
 
-localVue.use(Vuex)
 localVue.mixin(Nextcloud)
+localVue.use(PiniaVuePlugin)
+const pinia = createPinia()
 
 describe('Composer', () => {
 
-	let actions
-	let getters
 	let store
 
 	beforeEach(() => {
-		Object.defineProperty(window, "firstDay", {
-			value: 0
+		Object.defineProperty(window, 'firstDay', {
+			value: 0,
 		})
 
-		actions = {}
-		getters = {
-			accounts: () => [
-				{
-					id: 123,
-					editorMode: 'plaintext',
-					isUnified: false,
-					aliases: [],
-				},
-			],
-			getPreference: () => (key, fallback) => fallback,
-			getAccount: () => ({}),
-			isScheduledSendingDisabled: () => false,
-			getSmimeCertificates: () => [],
-		}
-		store = new Vuex.Store({
-			actions,
-			getters,
+		shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				accounts: [],
+			},
+			localVue,
+			pinia,
+			store,
 		})
+		store = useMainStore()
 	})
 
 	it('does not drop the reply message ID', () => {
@@ -68,6 +43,14 @@ describe('Composer', () => {
 			propsData: {
 				inReplyToMessageId: 'abc123',
 				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
 			},
 			store,
 			localVue,
@@ -83,6 +66,14 @@ describe('Composer', () => {
 			propsData: {
 				inReplyToMessageId: 'abc123',
 				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
 			},
 			store,
 			localVue,
@@ -101,6 +92,14 @@ describe('Composer', () => {
 					{ label: 'test', email: 'test@domain.tld' },
 				],
 				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
 			},
 			store,
 			localVue,
@@ -115,11 +114,19 @@ describe('Composer', () => {
 		const view = shallowMount(Composer, {
 			propsData: {
 				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
 			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
 					return undefined
-				}
+				},
 			},
 			store,
 			localVue,
@@ -136,11 +143,19 @@ describe('Composer', () => {
 		const view = shallowMount(Composer, {
 			propsData: {
 				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
 			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
 					return { foo: 'bar' }
-				}
+				},
 			},
 			store,
 			localVue,
@@ -157,11 +172,19 @@ describe('Composer', () => {
 		const view = shallowMount(Composer, {
 			propsData: {
 				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
 			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
 					return undefined
-				}
+				},
 			},
 			store,
 			localVue,
@@ -178,6 +201,14 @@ describe('Composer', () => {
 		const view = shallowMount(Composer, {
 			propsData: {
 				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
 			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
@@ -185,7 +216,7 @@ describe('Composer', () => {
 				},
 				missingSmimeCertificatesForRecipients() {
 					return ['john@foo.bar']
-				}
+				},
 			},
 			store,
 			localVue,
@@ -202,6 +233,14 @@ describe('Composer', () => {
 		const view = shallowMount(Composer, {
 			propsData: {
 				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
 			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
@@ -209,7 +248,7 @@ describe('Composer', () => {
 				},
 				missingSmimeCertificatesForRecipients() {
 					return []
-				}
+				},
 			},
 			store,
 			localVue,
@@ -226,6 +265,14 @@ describe('Composer', () => {
 		const view = shallowMount(Composer, {
             propsData: {
 				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
             },
 			store,
 			localVue,
@@ -248,6 +295,14 @@ describe('Composer', () => {
 		const view = shallowMount(Composer, {
             propsData: {
                 isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
             },
 			store,
 			localVue,

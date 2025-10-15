@@ -3,23 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Thomas Müller <thomas.mueller@tmit.eu>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Unit\Service;
@@ -29,6 +15,7 @@ use OC;
 use OCA\Mail\Service\Html;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\Server;
 
 class HtmlTest extends TestCase {
 	/**
@@ -37,8 +24,8 @@ class HtmlTest extends TestCase {
 	 * @param $text
 	 */
 	public function testLinkDetection(string $expected, string $text) {
-		$urlGenerator = OC::$server->get(IURLGenerator::class);
-		$request = OC::$server->get(IRequest::class);
+		$urlGenerator = Server::get(IURLGenerator::class);
+		$request = Server::get(IRequest::class);
 
 		$html = new Html($urlGenerator, $request);
 		$withLinks = $html->convertLinks($text);
@@ -98,7 +85,7 @@ class HtmlTest extends TestCase {
 			->method('imagePath')
 			->with('mail', 'blocked-image.png')
 			->willReturn($blockedUrl);
-		$request = OC::$server->get(IRequest::class);
+		$request = Server::get(IRequest::class);
 
 		$styleSheet = implode(' ', [
 			'big { background-image: url(https://tracker.com/script.png); }',

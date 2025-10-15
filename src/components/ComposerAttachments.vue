@@ -1,24 +1,7 @@
 <!--
-  - @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
-  - @copyright 2020 Gary Kim <gary@garykim.dev>
-  -
-  - @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
+  - SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 <template>
 	<div class="new-message-attachments">
@@ -29,19 +12,17 @@
 			<span>
 				{{ n('mail', '{count} attachment', '{count} attachments', attachments.length, { count: attachments.length }) }} ({{ formatBytes(totalSizeOfUpload()) }})
 			</span>
-			<ChevronUp v-if="isToggle" :size="24" />
-			<ChevronDown v-if="!isToggle" :size="24" />
+			<ChevronUp v-if="isToggle" :size="20" />
+			<ChevronDown v-if="!isToggle" :size="20" />
 		</div>
 		<ul class="new-message-attachments--list"
 			:class="{
 				hide: isToggle,
 				active: !isToggle && hasNextLine,
 			}">
-			<ComposerAttachment
-				v-for="attachment in attachments"
+			<ComposerAttachment v-for="attachment in attachments"
 				ref="attachments"
 				:key="attachment.id"
-				:bus="bus"
 				:attachment="attachment"
 				:uploading="uploading"
 				@on-delete-attachment="onDelete(attachment)" />
@@ -52,30 +33,40 @@
 			multiple
 			style="display: none;"
 			@change="onLocalAttachmentSelected">
+		<FilePicker v-if="isAttachementPickerOpen"
+			:name="t('mail','Choose a file to add as attachment')"
+			:buttons="attachementPickerButtons"
+			:filter-fn="filterAttachements"
+			@close="()=>isAttachementPickerOpen = false" />
+		<FilePicker v-if="isLinkPickerOpen"
+			:name="t('mail','Choose a file to share as a link')"
+			:multiselect="false"
+			:buttons="linkPickerButtons"
+			:filter-fn="filterAttachements"
+			@close="()=>isLinkPickerOpen = false" />
 	</div>
 </template>
 
 <script>
-import map from 'lodash/fp/map'
-import trimStart from 'lodash/fp/trimCharsStart'
 import { getRequestToken } from '@nextcloud/auth'
+import { showWarning } from '@nextcloud/dialogs'
+import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import { formatFileSize } from '@nextcloud/files'
-import prop from 'lodash/fp/prop'
-import { getFilePickerBuilder, showWarning } from '@nextcloud/dialogs'
-import sumBy from 'lodash/fp/sumBy'
-import { translate as t, translatePlural as n } from '@nextcloud/l10n'
-
+import { translatePlural as n, translate as t } from '@nextcloud/l10n'
+import map from 'lodash/fp/map.js'
+import prop from 'lodash/fp/prop.js'
+import sumBy from 'lodash/fp/sumBy.js'
+import trimStart from 'lodash/fp/trimCharsStart.js'
 import Vue from 'vue'
+import ChevronDown from 'vue-material-design-icons/ChevronDown.vue'
+import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
 
-import logger from '../logger'
-import { getFileData } from '../service/FileService'
-import { shareFile } from '../service/FileSharingService'
-import { uploadLocalAttachment } from '../service/AttachmentService'
+import logger from '../logger.js'
 
 import ComposerAttachment from './ComposerAttachment.vue'
-
-import ChevronDown from 'vue-material-design-icons/ChevronDown'
-import ChevronUp from 'vue-material-design-icons/ChevronUp'
+import { uploadLocalAttachment } from '../service/AttachmentService.js'
+import { getFileData } from '../service/FileService.js'
+import { shareFile } from '../service/FileSharingService.js'
 
 const mimes = [
 	'image/gif',
@@ -88,6 +79,7 @@ const mimes = [
 export default {
 	name: 'ComposerAttachments',
 	components: {
+		FilePicker,
 		ComposerAttachment,
 		ChevronDown,
 		ChevronUp,
@@ -114,6 +106,23 @@ export default {
 			attachments: [],
 			isToggle: false,
 			hasNextLine: false,
+			isAttachementPickerOpen: false,
+			isLinkPickerOpen: false,
+			attachementPickerButtons: [
+				{
+					label: t('mail', 'Choose'),
+					callback: this.onAddCloudAttachment,
+					type: 'primary',
+				},
+			],
+			linkPickerButtons: [
+				{
+					label: t('mail', 'Choose'),
+					callback: this.onAddCloudAttachmentLink,
+					type: 'primary',
+				},
+			],
+
 		}
 	},
 	computed: {
@@ -163,9 +172,10 @@ export default {
 		},
 	},
 	created() {
-		this.bus.$on('on-add-local-attachment', this.onAddLocalAttachment)
-		this.bus.$on('on-add-cloud-attachment', this.onAddCloudAttachment)
-		this.bus.$on('on-add-cloud-attachment-link', this.onAddCloudAttachmentLink)
+		this.bus.on('on-add-local-attachment', this.onAddLocalAttachment)
+		this.bus.on('on-add-cloud-attachment', this.openAttachementPicker)
+		this.bus.on('on-add-cloud-attachment-link', this.OpenLinkPicker)
+		this.bus.on('on-add-message-as-attachment', this.onAddMessageAsAttachment)
 		this.value.map(attachment => {
 			this.attachments.push({
 				id: attachment.id,
@@ -180,6 +190,17 @@ export default {
 		})
 	},
 	methods: {
+		filterAttachements(node) {
+			const downloadShareAttribute = node.attributes['share-attributes'] ? JSON.parse(node.attributes['share-attributes'])?.find((shareAttribute) => shareAttribute.key === 'download') : undefined
+			const downloadPermissions = downloadShareAttribute !== undefined ? downloadShareAttribute.value : true
+			return (node.permissions & OC.PERMISSION_READ) && downloadPermissions
+		},
+		openAttachementPicker() {
+			this.isAttachementPickerOpen = true
+		},
+		OpenLinkPicker() {
+			this.isLinkPickerOpen = true
+		},
 		onAddLocalAttachment() {
 			this.$refs.localAttachments.click()
 		},
@@ -229,7 +250,7 @@ export default {
 			// TODO bug: cancel axios on close or delete attachment
 			const promises = map((file) => {
 				const controller = new AbortController()
-				this.attachments.push({
+				const attachment = {
 					fileName: file.name,
 					fileType: file.type,
 					imageBlobURL: this.generatePreview(file),
@@ -241,7 +262,8 @@ export default {
 					error: false,
 					hasPreview: false,
 					controller,
-				})
+				}
+				this.attachments.push(attachment)
 
 				Vue.set(this.uploads, file.name, {
 					total: file.size,
@@ -260,6 +282,8 @@ export default {
 						})
 						.then(({ file, id }) => {
 							logger.info('local attachment uploaded', { file, id })
+
+							attachment.id = id
 
 							this.emitNewAttachments([{
 								fileName: file.name,
@@ -282,11 +306,10 @@ export default {
 
 			return done
 		},
-		async onAddCloudAttachment() {
-			const picker = getFilePickerBuilder(t('mail', 'Choose a file to add as attachment')).setMultiSelect(true).build()
-
+		async onAddCloudAttachment(nodes) {
 			try {
-				const paths = await picker.pick(t('mail', 'Choose a file to add as attachment'))
+				const paths = nodes.map(node => node.path)
+				this.cloudAttachement = false
 				// maybe fiiled front with placeholder loader...?
 				const filesFromCloud = await Promise.all(paths.map(getFileData))
 
@@ -329,17 +352,34 @@ export default {
 				logger.error('could not choose a file as attachment', { error })
 			}
 		},
-		async onAddCloudAttachmentLink() {
-			const picker = getFilePickerBuilder(t('mail', 'Choose a file to share as a link')).build()
-
+		async onAddCloudAttachmentLink(nodes) {
 			try {
-				const path = await picker.pick(t('mail', 'Choose a file to share as a link'))
-				const url = await shareFile(path, getRequestToken())
+				this.cloudAttachementLink = false
+				const url = await shareFile(nodes[0].path, getRequestToken())
 
 				this.appendToBodyAtCursor(`<a href="${url}">${url}</a>`)
 			} catch (error) {
 				logger.error('could not choose a file as attachment link', { error })
 			}
+		},
+		/**
+		 * Add a forwarded message as an attachment
+		 *
+		 * @param {object} data Payload
+		 * @param {number} data.id Database id of the message to forward as an attachment
+		 * @param {string} data.fileName File name of the attachment
+		 */
+		onAddMessageAsAttachment({ id, fileName }) {
+			const attachment = {
+				type: 'message',
+				id,
+				fileName,
+			}
+			this.attachments.push({
+				...attachment,
+				finished: true,
+			})
+			this.emitNewAttachments([attachment])
 		},
 		showAttachmentFileSizeWarning(num) {
 			showWarning(n(
@@ -349,13 +389,15 @@ export default {
 				num,
 				{
 					size: formatFileSize(this.uploadSizeLimit),
-				}
+				},
 			))
 		},
 		onDelete(attachment) {
-			if (!attachment.finished) {
+			// If the attachment is still uploading, abort the upload
+			if (!attachment.finished && attachment.controller) {
 				attachment.controller.abort()
 			}
+
 			const val = {
 				fileName: attachment.fileName,
 				displayName: attachment.displayName,
@@ -363,25 +405,33 @@ export default {
 				size: attachment.total,
 				type: attachment.type,
 			}
-			const _att = this.attachments.filter((a) => {
-				return a !== attachment
-			})
-			this.attachments = _att
+
+			this.attachments = this.attachments.filter(a => a !== attachment)
 
 			this.$emit(
 				'input',
-				this.value.filter((a) => {
+				this.value.filter(a => {
 					if (val.type === 'cloud') {
 						return a.fileName !== val.fileName
 					} else {
 						return a.id !== val.id
 					}
-
-				})
+				}),
 			)
+
+			const updatedUploads = Object.keys(this.uploads)
+				.filter(fileName => fileName !== attachment.fileName)
+				.reduce((acc, fileName) => {
+					acc[fileName] = this.uploads[fileName]
+					return acc
+				}, {})
+
+			this.uploads = updatedUploads
+
+			this.$emit('on-delete-attachment', attachment)
 		},
 		appendToBodyAtCursor(toAppend) {
-			this.bus.$emit('append-to-body-at-cursor', toAppend)
+			this.bus.emit('append-to-body-at-cursor', toAppend)
 		},
 		formatBytes(bytes, decimals = 2) {
 			if (bytes === 0) return '0 B'

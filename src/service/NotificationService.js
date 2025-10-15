@@ -1,31 +1,13 @@
 /**
- * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
- *
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import uniq from 'lodash/fp/uniq'
-import { translate as t, translatePlural as n } from '@nextcloud/l10n'
+import { translatePlural as n, translate as t } from '@nextcloud/l10n'
 import { generateFilePath } from '@nextcloud/router'
+import uniq from 'lodash/fp/uniq.js'
 
-import Logger from '../logger'
+import Logger from '../logger.js'
 
 /**
  * @todo use Notification.requestPermission().then once all browsers support promise API
@@ -64,6 +46,8 @@ const showNotification = async (title, body, icon) => {
 	})
 	notification.onclick = () => {
 		window.focus()
+		// Close the notification when clicked
+		notification.close()
 	}
 }
 
@@ -80,6 +64,9 @@ const getNotificationBody = (messages) => {
 		return t('mail', '{from}\n{subject}', {
 			from: from.join(),
 			subject: messages[0].subject,
+		}, undefined, {
+			escape: false,
+			sanitize: false,
 		})
 	} else {
 		return n('mail', '%n new message \nfrom {from}', '%n new messages \nfrom {from}', messages.length, {
@@ -92,6 +79,6 @@ export const showNewMessagesNotification = (messages) => {
 	showNotification(
 		t('mail', 'Nextcloud Mail'),
 		getNotificationBody(messages),
-		generateFilePath('mail', 'img', 'mail-notification.png')
+		generateFilePath('mail', 'img', 'mail-notification.png'),
 	)
 }

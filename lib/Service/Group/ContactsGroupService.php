@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Matthias Rella <mrella@pisys.eu>
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Boris Fritscher <boris.fritscher@gmail.com>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Service\Group;
@@ -40,17 +24,19 @@ class ContactsGroupService implements IGroupService {
 	 *
 	 * @var string
 	 */
-	private $namespace = "Contacts";
+	private $namespace = 'Contacts';
 
 	public function __construct(IManager $contactsManager, IConfig $config) {
 		$this->contactsManager = $contactsManager;
 		$this->config = $config;
 	}
 
+	#[\Override]
 	public function getNamespace(): string {
 		return $this->namespace;
 	}
 
+	#[\Override]
 	public function search(string $term): array {
 		if (!$this->contactsManager->isEnabled()) {
 			return [];
@@ -79,6 +65,7 @@ class ContactsGroupService implements IGroupService {
 		return array_unique($receivers, SORT_REGULAR);
 	}
 
+	#[\Override]
 	public function getUsers(string $groupId): array {
 		if (!$this->contactsManager->isEnabled()) {
 			return [];

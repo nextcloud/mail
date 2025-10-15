@@ -1,52 +1,45 @@
-/*
- * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import mutations from '../../../store/mutations'
 import {
 	PRIORITY_INBOX_ID,
 	UNIFIED_ACCOUNT_ID,
 	UNIFIED_INBOX_ID,
-} from '../../../store/constants'
+} from '../../../store/constants.js'
 
-describe('Vuex store mutations', () => {
-	it('adds an account with no mailboxes', () => {
-		const state = {
+import { setActivePinia } from 'pinia'
+import { createTestingPinia } from '@pinia/testing'
+import useMainStore from '../../../store/mainStore.js'
+
+describe('Pinia store mutations', () => {
+	let store
+
+	beforeEach(() => {
+		setActivePinia(createTestingPinia({ stubActions: false }))
+		store = useMainStore()
+		store.$patch({
 			accountList: [],
 			accounts: {},
 			envelopes: {},
 			mailboxes: {},
 			tagList: [],
 			tags: {},
-		}
+		})
+	})
 
-		mutations.addAccount(state, {
+	it('adds an account with no mailboxes', () => {
+		store.addAccountMutation({
 			accountId: 13,
 			id: 13,
 			mailboxes: [],
 			aliases: [],
 		})
 
-		expect(state).toEqual({
+		expect(store).toMatchObject({
 			accountList: [13],
-			accounts: {
+			accountsUnmapped: {
 				13: {
 					accountId: 13,
 					id: 13,
@@ -63,16 +56,7 @@ describe('Vuex store mutations', () => {
 	})
 
 	it('adds an account with one level of mailboxes', () => {
-		const state = {
-			accountList: [],
-			accounts: {},
-			envelopes: {},
-			mailboxes: {},
-			tagList: [],
-			tags: {},
-		}
-
-		mutations.addAccount(state, {
+		store.addAccountMutation({
 			accountId: 13,
 			id: 13,
 			mailboxes: [
@@ -82,12 +66,12 @@ describe('Vuex store mutations', () => {
 					delimiter: '.',
 				},
 			],
-			aliases: []
+			aliases: [],
 		})
 
-		expect(state).toEqual({
+		expect(store).toMatchObject({
 			accountList: [13],
-			accounts: {
+			accountsUnmapped: {
 				13: {
 					accountId: 13,
 					id: 13,
@@ -117,16 +101,7 @@ describe('Vuex store mutations', () => {
 	})
 
 	it('adds an account with a personal namespace', () => {
-		const state = {
-			accountList: [],
-			accounts: {},
-			envelopes: {},
-			mailboxes: {},
-			tagList: [],
-			tags: {},
-		}
-
-		mutations.addAccount(state, {
+		store.addAccountMutation({
 			accountId: 13,
 			id: 13,
 			mailboxes: [
@@ -149,9 +124,9 @@ describe('Vuex store mutations', () => {
 			personalNamespace: 'INBOX.',
 		})
 
-		expect(state).toEqual({
+		expect(store).toMatchObject({
 			accountList: [13],
-			accounts: {
+			accountsUnmapped: {
 				13: {
 					accountId: 13,
 					id: 13,
@@ -197,16 +172,7 @@ describe('Vuex store mutations', () => {
 	})
 
 	it('adds an account with two levels of mailboxes', () => {
-		const state = {
-			accountList: [],
-			accounts: {},
-			envelopes: {},
-			mailboxes: {},
-			tagList: [],
-			tags: {},
-		}
-
-		mutations.addAccount(state, {
+		store.addAccountMutation({
 			accountId: 13,
 			id: 13,
 			mailboxes: [
@@ -225,12 +191,12 @@ describe('Vuex store mutations', () => {
 					specialRole: 'archive',
 				},
 			],
-			aliases: []
+			aliases: [],
 		})
 
-		expect(state).toEqual({
+		expect(store).toMatchObject({
 			accountList: [13],
-			accounts: {
+			accountsUnmapped: {
 				13: {
 					accountId: 13,
 					id: 13,
@@ -276,16 +242,7 @@ describe('Vuex store mutations', () => {
 	})
 
 	it('adds an account with three levels of mailboxes', () => {
-		const state = {
-			accountList: [],
-			accounts: {},
-			envelopes: {},
-			mailboxes: {},
-			tagList: [],
-			tags: {},
-		}
-
-		mutations.addAccount(state, {
+		store.addAccountMutation({
 			accountId: 13,
 			id: 13,
 			mailboxes: [
@@ -311,12 +268,12 @@ describe('Vuex store mutations', () => {
 					specialRole: 'archive',
 				},
 			],
-			aliases: []
+			aliases: [],
 		})
 
-		expect(state).toEqual({
+		expect(store).toMatchObject({
 			accountList: [13],
-			accounts: {
+			accountsUnmapped: {
 				13: {
 					accountId: 13,
 					id: 13,
@@ -384,9 +341,9 @@ describe('Vuex store mutations', () => {
 			],
 			collapsed: true,
 		}
-		const state = {
+		store.$patch({
 			accountList: [13],
-			accounts: {
+			accountsUnmapped: {
 				13: account,
 			},
 			envelopes: {},
@@ -406,10 +363,9 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
-		}
+		})
 
-		mutations.addMailbox(
-			state,
+		store.addMailboxMutation(
 			{
 				account,
 				mailbox: {
@@ -421,9 +377,9 @@ describe('Vuex store mutations', () => {
 				},
 			})
 
-		expect(state).toEqual({
+		expect(store).toMatchObject({
 			accountList: [13],
-			accounts: {
+			accountsUnmapped: {
 				13: {
 					accountId: 13,
 					id: 13,
@@ -475,9 +431,9 @@ describe('Vuex store mutations', () => {
 			],
 			collapsed: true,
 		}
-		const state = {
+		store.$patch({
 			accountList: [13],
-			accounts: {
+			accountsUnmapped: {
 				13: account,
 			},
 			envelopes: {},
@@ -497,24 +453,22 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
-		}
+		})
 
-		mutations.addMailbox(
-			state,
-			{
-				account,
-				mailbox: {
-					databaseId: 346,
-					name: 'Archive.2020',
-					delimiter: '.',
-					specialUse: ['archive'],
-					specialRole: 'archive',
-				},
-			})
+		store.addMailboxMutation({
+			account,
+			mailbox: {
+				databaseId: 346,
+				name: 'Archive.2020',
+				delimiter: '.',
+				specialUse: ['archive'],
+				specialRole: 'archive',
+			},
+		})
 
-		expect(state).toEqual({
+		expect(store).toMatchObject({
 			accountList: [13],
-			accounts: {
+			accountsUnmapped: {
 				13: {
 					accountId: 13,
 					id: 13,
@@ -559,8 +513,8 @@ describe('Vuex store mutations', () => {
 	})
 
 	it('removes a mailbox', () => {
-		const state = {
-			accounts: {
+		store.$patch({
+			accountsUnmapped: {
 				13: {
 					accountId: 13,
 					id: 13,
@@ -577,14 +531,14 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
-		}
+		})
 
-		mutations.removeMailbox(state, {
+		store.removeMailboxMutation({
 			id: 27,
 		})
 
-		expect(state).toEqual({
-			accounts: {
+		expect(store).toMatchObject({
+			accountsUnmapped: {
 				13: {
 					accountId: 13,
 					id: 13,
@@ -598,8 +552,8 @@ describe('Vuex store mutations', () => {
 	})
 
 	it('removes a sub-mailbox', () => {
-		const state = {
-			accounts: {
+		store.$patch({
+			accountsUnmapped: {
 				13: {
 					accountId: 13,
 					id: 13,
@@ -622,14 +576,14 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
-		}
+		})
 
-		mutations.removeMailbox(state, {
+		store.removeMailboxMutation({
 			id: 28,
 		})
 
-		expect(state).toEqual({
-			accounts: {
+		expect(store).toMatchObject({
+			accountsUnmapped: {
 				13: {
 					accountId: 13,
 					id: 13,
@@ -650,8 +604,8 @@ describe('Vuex store mutations', () => {
 	})
 
 	it('adds envelopes', () => {
-		const state = {
-			accounts: {
+		store.$patch({
+			accountsUnmapped: {
 				[UNIFIED_ACCOUNT_ID]: {
 					accountId: UNIFIED_ACCOUNT_ID,
 					id: UNIFIED_ACCOUNT_ID,
@@ -668,21 +622,22 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
-		}
+			preferences: { 'sort-order': 'newest' },
+		})
 
-		mutations.addEnvelope(state, {
+		store.addEnvelopesMutation({
 			query: undefined,
-			envelope: {
+			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12345,
 				id: 123,
 				subject: 'henlo',
 				uid: 321,
-			},
+			}],
 		})
 
-		expect(state).toEqual({
-			accounts: {
+		expect(store).toMatchObject({
+			accountsUnmapped: {
 				[UNIFIED_ACCOUNT_ID]: {
 					accountId: UNIFIED_ACCOUNT_ID,
 					id: UNIFIED_ACCOUNT_ID,
@@ -710,12 +665,13 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences: { 'sort-order': 'newest' },
 		})
 	})
 
 	it('adds envelopes with overlapping timestamps', () => {
-		const state = {
-			accounts: {
+		store.$patch({
+			accountsUnmapped: {
 				[UNIFIED_ACCOUNT_ID]: {
 					accountId: UNIFIED_ACCOUNT_ID,
 					id: UNIFIED_ACCOUNT_ID,
@@ -732,33 +688,34 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
-		}
+			preferences: { 'sort-order': 'newest' },
+		})
 
-		mutations.addEnvelope(state, {
+		store.addEnvelopesMutation({
 			query: undefined,
-			envelope: {
+			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12345,
 				id: 123,
 				subject: 'henlo',
 				uid: 321,
 				threadRootId: '123-456-789',
-			},
+			}],
 		})
-		mutations.addEnvelope(state, {
+		store.addEnvelopesMutation({
 			query: undefined,
-			envelope: {
+			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12346,
 				id: 124,
 				subject: 'henlo 2',
 				uid: 322,
 				threadRootId: '234-567-890',
-			},
+			}],
 		})
 
-		expect(state).toEqual({
-			accounts: {
+		expect(store).toMatchObject({
+			accountsUnmapped: {
 				[UNIFIED_ACCOUNT_ID]: {
 					accountId: UNIFIED_ACCOUNT_ID,
 					id: UNIFIED_ACCOUNT_ID,
@@ -796,12 +753,13 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences: { 'sort-order': 'newest' },
 		})
 	})
 
 	it('adds new envelopes to the unified inbox as well', () => {
-		const state = {
-			accounts: {
+		store.$patch({
+			accountsUnmapped: {
 				[UNIFIED_ACCOUNT_ID]: {
 					accountId: UNIFIED_ACCOUNT_ID,
 					id: UNIFIED_ACCOUNT_ID,
@@ -824,20 +782,21 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
-		}
+			preferences: { 'sort-order': 'newest' },
+		})
 
-		mutations.addEnvelope(state, {
+		store.addEnvelopesMutation({
 			query: undefined,
-			envelope: {
+			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12345,
 				subject: 'henlo',
 				uid: 321,
-			},
+			}],
 		})
 
-		expect(state).toEqual({
-			accounts: {
+		expect(store).toMatchObject({
+			accountsUnmapped: {
 				[UNIFIED_ACCOUNT_ID]: {
 					accountId: UNIFIED_ACCOUNT_ID,
 					id: UNIFIED_ACCOUNT_ID,
@@ -872,12 +831,13 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences: { 'sort-order': 'newest' },
 		})
 	})
 
 	it('removes an envelope', () => {
-		const state = {
-			accounts: {
+		store.$patch({
+			accountsUnmapped: {
 				[UNIFIED_ACCOUNT_ID]: {
 					accountId: UNIFIED_ACCOUNT_ID,
 					id: UNIFIED_ACCOUNT_ID,
@@ -924,14 +884,14 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
-		}
+		})
 
-		mutations.removeEnvelope(state, {
+		store.removeEnvelopeMutation({
 			id: 12345,
 		})
 
-		expect(state).toEqual({
-			accounts: {
+		expect(store).toMatchObject({
+			accountsUnmapped: {
 				[UNIFIED_ACCOUNT_ID]: {
 					accountId: UNIFIED_ACCOUNT_ID,
 					id: UNIFIED_ACCOUNT_ID,
@@ -982,7 +942,7 @@ describe('Vuex store mutations', () => {
 			mailboxId: 27,
 			uid: 12345,
 		}
-		const state = {
+		store.$patch({
 			mailboxes: {
 				27: {
 					databaseId: 27,
@@ -994,9 +954,9 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
-		}
+		})
 
-		mutations.addEnvelopeThread(state, {
+		store.addEnvelopeThreadMutation({
 			id: 123,
 			thread: [
 				{
@@ -1017,7 +977,7 @@ describe('Vuex store mutations', () => {
 			],
 		})
 
-		expect(state).toEqual({
+		expect(store).toMatchObject({
 			mailboxes: {
 				27: {
 					databaseId: 27,
@@ -1058,8 +1018,8 @@ describe('Vuex store mutations', () => {
 	})
 
 	it('normalizes tags from envelopes', () => {
-		const state = {
-			accounts: {
+		store.$patch({
+			accountsUnmapped: {
 				[UNIFIED_ACCOUNT_ID]: {
 					accountId: UNIFIED_ACCOUNT_ID,
 					id: UNIFIED_ACCOUNT_ID,
@@ -1076,11 +1036,12 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
-		}
+			preferences: { 'sort-order': 'newest' },
+		})
 
-		mutations.addEnvelope(state, {
+		store.addEnvelopesMutation({
 			query: undefined,
-			envelope: {
+			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12345,
 				id: 123,
@@ -1096,11 +1057,11 @@ describe('Vuex store mutations', () => {
 						isDefaultTag: true,
 					},
 				},
-			},
+			}],
 		})
 
-		expect(state).toEqual({
-			accounts: {
+		expect(store).toMatchObject({
+			accountsUnmapped: {
 				[UNIFIED_ACCOUNT_ID]: {
 					accountId: UNIFIED_ACCOUNT_ID,
 					id: UNIFIED_ACCOUNT_ID,
@@ -1139,6 +1100,7 @@ describe('Vuex store mutations', () => {
 					isDefaultTag: true,
 				},
 			},
+			preferences: { 'sort-order': 'newest' },
 		})
 	})
 
@@ -1156,7 +1118,7 @@ describe('Vuex store mutations', () => {
 			mailboxId: 27,
 			uid: 12345,
 		}
-		const state = {
+		store.$patch({
 			mailboxes: {
 				27: {
 					databaseId: 27,
@@ -1169,9 +1131,9 @@ describe('Vuex store mutations', () => {
 			// State contains old version of envelope with no label
 			tagList: [],
 			tags: {},
-		}
+		})
 
-		mutations.addEnvelopeThread(state, {
+		store.addEnvelopeThreadMutation({
 			id: 123,
 			thread: [
 				{
@@ -1193,7 +1155,7 @@ describe('Vuex store mutations', () => {
 			],
 		})
 
-		expect(state).toEqual({
+		expect(store).toMatchObject({
 			mailboxes: {
 				27: {
 					databaseId: 27,
@@ -1243,7 +1205,7 @@ describe('Vuex store mutations', () => {
 			uid: 12345,
 			accountId: 1,
 		}
-		const state = {
+		store.$patch({
 			mailboxes: {
 				27: {
 					databaseId: 27,
@@ -1256,9 +1218,9 @@ describe('Vuex store mutations', () => {
 			// State contains old version of envelope with no label
 			tagList: [],
 			tags: {},
-		}
+		})
 
-		mutations.updateEnvelope(state, {
+		store.updateEnvelopeMutation({
 			envelope: {
 				...envelope,
 				tags: {
@@ -1274,7 +1236,7 @@ describe('Vuex store mutations', () => {
 			},
 		})
 
-		expect(state).toEqual({
+		expect(store).toMatchObject({
 			mailboxes: {
 				27: {
 					databaseId: 27,
@@ -1324,21 +1286,21 @@ describe('Vuex store mutations', () => {
 			uid: 321,
 			tags: [tag.id],
 		}
-		const state = {
+		store.$patch({
 			envelopes: {
 				[envelope.databaseId]: envelope,
 			},
 			tags: {
 				[tag.id]: tag,
 			},
-		}
+		})
 
-		mutations.removeEnvelopeTag(state, {
+		store.removeEnvelopeTagMutation({
 			envelope,
 			tagId: tag.id,
 		})
 
-		expect(state).toEqual({
+		expect(store).toMatchObject({
 			envelopes: {
 				12345: {
 					mailboxId: 27,
@@ -1372,21 +1334,21 @@ describe('Vuex store mutations', () => {
 			uid: 321,
 			tags: [],
 		}
-		const state = {
+		store.$patch({
 			envelopes: {
 				[envelope.databaseId]: envelope,
 			},
 			tags: {
 				[tag.id]: tag,
 			},
-		}
+		})
 
-		mutations.addEnvelopeTag(state, {
+		store.addEnvelopeTagMutation({
 			envelope,
 			tagId: tag.id,
 		})
 
-		expect(state).toEqual({
+		expect(store).toMatchObject({
 			envelopes: {
 				12345: {
 					mailboxId: 27,
@@ -1404,12 +1366,12 @@ describe('Vuex store mutations', () => {
 	})
 
 	it('adds a global tag', () => {
-		const state = {
+		store.$patch({
 			tagList: [],
 			tags: {},
-		}
+		})
 
-		mutations.addTag(state, {
+		store.addTagMutation({
 			tag: {
 				id: 1,
 				userId: 'user',
@@ -1420,7 +1382,7 @@ describe('Vuex store mutations', () => {
 			},
 		})
 
-		expect(state).toEqual({
+		expect(store).toMatchObject({
 			tagList: [
 				1,
 			],
@@ -1438,7 +1400,7 @@ describe('Vuex store mutations', () => {
 	})
 
 	it('replace envelope for existing thread root id', () => {
-		const state = {
+		store.$patch({
 			accounts: {
 				[UNIFIED_ACCOUNT_ID]: {
 					accountId: UNIFIED_ACCOUNT_ID,
@@ -1456,34 +1418,35 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
-		}
+			preferences: { 'sort-order': 'newest' },
+		})
 
-		mutations.addEnvelope(state, {
+		store.addEnvelopesMutation({
 			query: undefined,
-			envelope: {
+			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12345,
 				id: 123,
 				subject: 'henlo',
 				uid: 321,
 				threadRootId: '123-456-789',
-			},
+			}],
 		})
 
-		expect(state.mailboxes[27].envelopeLists[''].length).toEqual(1)
+		expect(store.mailboxes[27].envelopeLists[''].length).toEqual(1)
 
-		mutations.addEnvelope(state, {
+		store.addEnvelopesMutation({
 			query: undefined,
-			envelope: {
+			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12347,
 				id: 234,
 				subject: 'henlo',
 				uid: 432,
 				threadRootId: '123-456-789',
-			},
+			}],
 		})
 
-		expect(state.mailboxes[27].envelopeLists[''].length).toEqual(1)
+		expect(store.mailboxes[27].envelopeLists[''].length).toEqual(1)
 	})
 })

@@ -3,22 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Unit\IMAP;
@@ -32,15 +18,21 @@ use OCA\Mail\Account;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\MailboxStats;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class FolderMapperTest extends TestCase {
 	/** @var FolderMapper */
 	private $mapper;
 
+	/** @var LoggerInterface|MockObject */
+	private $logger;
+
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->mapper = new FolderMapper();
+		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->mapper = new FolderMapper($this->logger);
 	}
 
 	public function testGetFoldersEmtpyAccount(): void {
@@ -88,7 +80,7 @@ class FolderMapperTest extends TestCase {
 				],
 			]);
 		$expected = [
-			new Folder(27, new Horde_Imap_Client_Mailbox('INBOX'), [], '.', null),
+			new Folder(new Horde_Imap_Client_Mailbox('INBOX'), [], '.', null),
 		];
 
 		$folders = $this->mapper->getFolders($account, $client);
@@ -123,8 +115,8 @@ class FolderMapperTest extends TestCase {
 				],
 			]);
 		$expected = [
-			new Folder(27, new Horde_Imap_Client_Mailbox('INBOX'), [], '.', null),
-			new Folder(27, new Horde_Imap_Client_Mailbox('Sent'), ['\sent'], '.', null),
+			new Folder(new Horde_Imap_Client_Mailbox('INBOX'), [], '.', null),
+			new Folder(new Horde_Imap_Client_Mailbox('Sent'), ['\sent'], '.', null),
 		];
 
 		$folders = $this->mapper->getFolders($account, $client);
@@ -159,9 +151,9 @@ class FolderMapperTest extends TestCase {
 				],
 			]);
 
-		$created = $this->mapper->createFolder($client, $account, 'new');
+		$created = $this->mapper->createFolder($client, 'new');
 
-		$expected = new Folder(42, new Horde_Imap_Client_Mailbox('new'), [], '.', ['unseen' => 0]);
+		$expected = new Folder(new Horde_Imap_Client_Mailbox('new'), [], '.', ['unseen' => 0]);
 		$this->assertEquals($expected, $created);
 	}
 
@@ -230,6 +222,31 @@ class FolderMapperTest extends TestCase {
 		self::assertArrayHasKey('INBOX', $stats);
 		$expected = new MailboxStats(123, 2);
 		self::assertEquals($expected, $stats['INBOX']);
+	}
+
+	public function testGetFoldersStatusAsObjectNullStats(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client->expects($this->once())
+			->method('status')
+			->with(['INBOX'])
+			->willReturn([
+				'INBOX' => [
+					'messages' => null,
+					'unseen' => 2,
+				],
+				'Company' => [
+					'messages' => 123,
+					'unseen' => 2,
+				],
+			]);
+
+		$stats = $this->mapper->getFoldersStatusAsObject($client, ['INBOX']);
+
+		self::assertArrayNotHasKey('INBOX', $stats);
+		self::assertArrayHasKey('Company', $stats);
+		$expected = new MailboxStats(123, 2);
+		self::assertEquals($expected, $stats['Company']);
+
 	}
 
 	public function testDetectSpecialUseFromAttributes() {

@@ -1,31 +1,16 @@
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
-
-import curry from 'lodash/fp/curry'
-import ical from 'ical.js'
-import { getClient } from '../dav/client'
-import Axios from '@nextcloud/axios'
-
-import Logger from '../logger'
-import { generateRemoteUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'
-import { uidToHexColor } from '../util/calendarColor'
+import Axios from '@nextcloud/axios'
+import { generateRemoteUrl } from '@nextcloud/router'
+import ical from 'ical.js'
+import curry from 'lodash/fp/curry.js'
+
+import { getClient } from '../dav/client.js'
+import Logger from '../logger.js'
+import { uidToHexColor } from '../util/calendarColor.js'
 
 const canWrite = (properties) => {
 	let acls = properties?.acl?.ace
@@ -172,8 +157,8 @@ export const importCalendarEvent = curry((url, data) => {
 						headers: {
 							'Content-Type': 'text/calendar; charset=utf-8',
 						},
-					})
-				)
+					}),
+				),
 			)
 		}
 	})

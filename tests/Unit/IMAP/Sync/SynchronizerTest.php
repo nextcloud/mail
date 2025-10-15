@@ -3,23 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Unit\IMAP\Sync;
@@ -27,7 +12,6 @@ namespace OCA\Mail\Tests\Unit\IMAP\Sync;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Base;
-use Horde_Imap_Client_Data_Capability;
 use Horde_Imap_Client_Data_Sync;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
@@ -55,23 +39,8 @@ class SynchronizerTest extends TestCase {
 
 	public function testSyncWithQresync(): void {
 		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
-		$request = $this->createMock(Request::class);
-		$request->expects($this->any())
-			->method('getMailbox')
-			->willReturn('inbox');
-		$request->expects($this->once())
-			->method('getToken')
-			->willReturn('123456');
+		$request = new Request('abcdef', 'inbox', '123456', []);
 		$hordeSync = $this->createMock(Horde_Imap_Client_Data_Sync::class);
-		$capabilities = $this->createMock(Horde_Imap_Client_Data_Capability::class);
-		$imapClient->expects(self::once())
-			->method('__get')
-			->with('capability')
-			->willReturn($capabilities);
-		$capabilities->expects(self::once())
-			->method('isEnabled')
-			->with('QRESYNC')
-			->willReturn(true);
 		$imapClient->expects($this->once())
 			->method('sync')
 			->with($this->equalTo(new Horde_Imap_Client_Mailbox('inbox')), $this->equalTo('123456'))
@@ -79,40 +48,50 @@ class SynchronizerTest extends TestCase {
 		$newMessages = [];
 		$changedMessages = [];
 		$vanishedMessageUids = [4, 5];
-		$hordeSync->expects($this->once())
+		$hordeSync->expects($this->exactly(3))
 			->method('__get')
-			->with('vanisheduids')
-			->willReturn(new Horde_Imap_Client_Ids($vanishedMessageUids));
+			->willReturnMap([
+				['newmsgsuids', new Horde_Imap_Client_Ids($newMessages)],
+				['flagsuids', new Horde_Imap_Client_Ids($changedMessages)],
+				['vanisheduids', new Horde_Imap_Client_Ids($vanishedMessageUids)],
+			]);
 		$expected = new Response($newMessages, $changedMessages, $vanishedMessageUids);
 
-		$response = $this->synchronizer->sync(
+		$newResponse = $this->synchronizer->sync(
 			$imapClient,
 			$request,
 			'user',
+			true,
+			Horde_Imap_Client::SYNC_NEWMSGSUIDS,
+		);
+		$changedResponse = $this->synchronizer->sync(
+			$imapClient,
+			$request,
+			'user',
+			true,
+			Horde_Imap_Client::SYNC_FLAGSUIDS,
+		);
+		$vanishedResponse = $this->synchronizer->sync(
+			$imapClient,
+			$request,
+			'user',
+			true,
 			Horde_Imap_Client::SYNC_VANISHEDUIDS
 		);
 
-		$this->assertEquals($expected, $response);
+		$this->assertEquals($expected, $newResponse);
+		$this->assertEquals($expected, $changedResponse);
+		$this->assertEquals($expected, $vanishedResponse);
 	}
 
 	public function testSyncChunked(): void {
 		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
-		$request = $this->createMock(Request::class);
-		$request->method('getMailbox')
-			->willReturn('inbox');
-		$request->method('getToken')
-			->willReturn('123456');
-		$request->method('getUids')
-			->willReturn(range(1, 8000, 2)); // 19444 bytes
-		$capabilities = $this->createMock(Horde_Imap_Client_Data_Capability::class);
-		$imapClient->expects(self::once())
-			->method('__get')
-			->with('capability')
-			->willReturn($capabilities);
-		$capabilities->expects(self::once())
-			->method('isEnabled')
-			->with('QRESYNC')
-			->willReturn(false);
+		$request = new Request(
+			'abcdef',
+			'inbox',
+			'123456',
+			range(1, 8000, 2), // 19444 bytes
+		);
 		$hordeSync = $this->createMock(Horde_Imap_Client_Data_Sync::class);
 		$imapClient->expects($this->exactly(3))
 			->method('sync')
@@ -128,6 +107,7 @@ class SynchronizerTest extends TestCase {
 			$imapClient,
 			$request,
 			'user',
+			false,
 			Horde_Imap_Client::SYNC_VANISHEDUIDS
 		);
 

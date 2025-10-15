@@ -1,3 +1,7 @@
+<!--
+  - SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<li class="composer-attachment" :class="{'composer-attachment--with-error' : attachment.error }">
 		<div class="attachment-preview">
@@ -5,7 +9,10 @@
 			<img v-else-if="attachment.hasPreview" :src="previewURL" class="attachment-preview-image">
 			<img v-else :src="getIcon" class="attachment-preview-image">
 			<span v-if="attachment.type === 'cloud'" class="cloud-attachment-icon">
-				<Cloud :size="16" />
+				<Cloud :size="20" />
+			</span>
+			<span v-else-if="attachment.type === 'message'">
+				<EmailArrowRightIcon />
 			</span>
 		</div>
 		<div class="attachment-inner">
@@ -15,30 +22,30 @@
 			<span v-if="!attachment.finished" class="attachments-upload-progress">
 				<span class="attachments-upload-progress--bar" :style="&quot;width:&quot; + attachment.percent + &quot;%&quot;" />
 			</span>
-			<span v-else class="new-message-attachment-size">{{ attachment.sizeString }}</span>
+			<span v-else-if="attachment.sizeString" class="new-message-attachment-size">
+				{{ attachment.sizeString }}
+			</span>
 		</div>
 		<button @click="onDelete(attachment)">
-			<Close :size="24" />
+			<Close :size="20" />
 		</button>
 	</li>
 </template>
 
 <script>
 import { generateUrl } from '@nextcloud/router'
-import Close from 'vue-material-design-icons/Close'
-import Cloud from 'vue-material-design-icons/Cloud'
+import Close from 'vue-material-design-icons/Close.vue'
+import Cloud from 'vue-material-design-icons/CloudOutline.vue'
+import EmailArrowRightIcon from 'vue-material-design-icons/EmailArrowRightOutline.vue'
 
 export default {
 	name: 'ComposerAttachment',
 	components: {
 		Close,
 		Cloud,
+		EmailArrowRightIcon,
 	},
 	props: {
-		bus: {
-			type: Object,
-			required: true,
-		},
 		attachment: {
 			type: Object,
 			required: true,
@@ -97,7 +104,7 @@ export default {
 	.cloud-attachment-icon {
 		position:absolute;
 		z-index: 2;
-		right: 2px;
+		inset-inline-end: 2px;
 		top: 2px;
 		color: rgba(0, 0, 0, 1);
 	}
@@ -153,13 +160,13 @@ export default {
 		background: var(--color-primary-element-light);
 		position: absolute;
 		z-index: 1;
-		left: 0;
+		inset-inline-start: 0;
 		border-radius: 5px;
 	}
 }
 
 .attachments-upload-progress > div {
-	padding-left: 3px;
+	padding-inline-start: 3px;
 }
 
 .new-message-attachments-action {

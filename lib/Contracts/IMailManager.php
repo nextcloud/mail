@@ -3,23 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Contracts;
@@ -131,7 +116,7 @@ interface IMailManager {
 	 * @param int $uid
 	 * @param Account $destinationAccount
 	 * @param string $destFolderId
-	 * @return int the new UID
+	 * @return ?int the new UID (or null if it couldn't be determined)
 	 *
 	 * @throws ServiceException
 	 */
@@ -139,7 +124,7 @@ interface IMailManager {
 		string $sourceFolderId,
 		int $uid,
 		Account $destinationAccount,
-		string $destFolderId): int;
+		string $destFolderId): ?int;
 
 	/**
 	 * @param Account $account
@@ -318,12 +303,25 @@ interface IMailManager {
 	public function updateTag(int $id, string $displayName, string $color, string $userId): Tag;
 
 	/**
+	 * Delete a mail tag
+	 *
+	 * @throws ClientException
+	 */
+	public function deleteTag(int $id, string $userId, array $accounts): Tag;
+
+	/**
+	 * Delete message Tags and untagged messages on Imap
+	 *
+	 * @throws ClientException
+	 */
+	public function deleteTagForAccount(int $id, string $userId, Tag $tag, Account $account): void;
+	/**
 	 * @param Account $srcAccount
 	 * @param Mailbox $srcMailbox
 	 * @param Account $dstAccount
 	 * @param Mailbox $dstMailbox
 	 * @param string $threadRootId
-	 * @return int[] the new UIDs
+	 * @return int[] the new UIDs (not guaranteed to have an entry for each message of the thread)
 	 * @throws ServiceException
 	 */
 	public function moveThread(Account $srcAccount, Mailbox $srcMailbox, Account $dstAccount, Mailbox $dstMailbox, string $threadRootId): array;

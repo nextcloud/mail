@@ -1,29 +1,12 @@
 /**
- * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 import moment from '@nextcloud/moment'
-import negate from 'lodash/fp/negate'
+import negate from 'lodash/fp/negate.js'
 
-import { html } from './util/text'
+import { html } from './util/text.js'
 
 /**
  * @param {Text} original original
@@ -73,10 +56,14 @@ const RecipientType = Object.seal({
 	Cc: 2,
 })
 
-export const buildRecipients = (envelope, ownAddress) => {
+export const buildRecipients = (envelope, ownAddress, replyTo) => {
 	let recipientType = RecipientType.None
 	const isOwnAddress = (a) => a.email === ownAddress.email
 	const isNotOwnAddress = negate(isOwnAddress)
+
+	// The Reply-To header has higher precedence than the From header.
+	// This re-uses Horde's handling of the reply_to field directly.
+	const from = replyTo !== undefined ? replyTo : envelope.from
 
 	// Locate why we received this envelope
 	// Can be in 'to', 'cc' or unknown
@@ -97,20 +84,20 @@ export const buildRecipients = (envelope, ownAddress) => {
 	if (recipientType === RecipientType.To) {
 		// Send to everyone except yourself, plus the original sender if not ourself
 		to = envelope.to.filter(isNotOwnAddress)
-		to = to.concat(envelope.from.filter(isNotOwnAddress))
+		to = to.concat(from.filter(isNotOwnAddress))
 
 		// CC remains the same
 		cc = envelope.cc
 	} else if (recipientType === RecipientType.Cc) {
 		// Send to the same people, plus the sender if not ourself
-		to = envelope.to.concat(envelope.from.filter(isNotOwnAddress))
+		to = envelope.to.concat(from.filter(isNotOwnAddress))
 
 		// All CC values are being kept except the replying address
 		cc = envelope.cc.filter(isNotOwnAddress)
 	} else {
 		// Send to the same recipient and the sender (if not ourself) -> answer all
 		to = envelope.to
-		to = to.concat(envelope.from.filter(isNotOwnAddress))
+		to = to.concat(from.filter(isNotOwnAddress))
 
 		// Keep CC values
 		cc = envelope.cc
@@ -118,7 +105,7 @@ export const buildRecipients = (envelope, ownAddress) => {
 
 	// edge case: pure self-sent email
 	if (to.length === 0) {
-		to = envelope.from
+		to = from
 	}
 
 	return {

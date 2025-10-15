@@ -1,345 +1,385 @@
+<!--
+  - SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<div class="search-messages">
-		<input
-			v-model="query"
-			type="text"
-			class="search-messages--input"
-			:placeholder="t('mail', 'Search in mailbox')">
-		<NcButton v-if="filterChanged"
-			:aria-label="t('mail', 'Close')"
-			class="search-messages--close"
-			@click="resetFilter()">
-			<template #icon>
-				<Close :size="24" />
-			</template>
-		</NcButton>
-
-		<span
-			v-if="filterChanged"
-			class="filter-changed" />
-
-		<NcActions>
-			<NcActionButton @click="moreSearchActions = true">
+		<div class="search-messages__input">
+			<input v-model="query"
+				type="text"
+				class="search-messages--input"
+				:placeholder="t('mail', 'Search in folder')"
+				:aria-label="t('mail', 'Search in folder')"
+				@focus="showButtons = true"
+				@blur="hideButtonsWithDelay">
+			<NcButton type="tertiary"
+				:aria-label="t('mail', 'Open search modal')"
+				class="search-messages--filter"
+				@click="moreSearchActions = true">
 				<template #icon>
-					<Tune :size="24" />
+					<FilterVariantIcon :size="20" />
 				</template>
-				{{ t("mail", "Search parameters") }}
-			</NcActionButton>
-		</NcActions>
-		<NcModal
-			v-if="moreSearchActions"
-			:title="t('mail', 'Search parameters')"
-			class="search-modal"
-			@close="closeSearchModal">
-			<h2 class="modal-title">
-				{{ t('mail', 'Search in mailbox') }}
-			</h2>
-			<div class="modal-inner--content">
-				<div class="modal-inner--field">
-					<label class="modal-inner--label" for="fromId">
-						{{ t('mail','Search term') }}
-					</label>
-					<div class="modal-inner--container">
-						<input
-							v-model="modalQuery"
-							type="text"
-							class="search-input"
-							:placeholder="t('mail', 'Search in mailbox')">
-					</div>
-				</div>
-				<div class="modal-inner--field">
-					<label class="modal-inner--label" for="fromId">
-						{{ t("mail", "Date") }}
-					</label>
-					<div class="modal-inner--container range">
-						<div class="modal-inner-inline">
-							<NcDatetimePicker
-								v-model="startDate"
-								type="date"
-								:placeholder="t('mail', 'Pick a start date')"
-								confirm />
-						</div>
-						<div class="modal-inner-inline">
-							<NcDatetimePicker
-								v-model="endDate"
-								type="date"
-								:disabled="startDate === null"
-								:placeholder="t('mail', 'Pick an end date')"
-								confirm />
+			</NcButton>
+			<NcButton v-if="filterChanged"
+				:aria-label="t('mail', 'Close')"
+				class="search-messages--close"
+				@click="resetFilter()">
+				<template #icon>
+					<Close :size="24" />
+				</template>
+			</NcButton>
+
+			<span v-if="filterChanged"
+				class="filter-changed" />
+
+			<NcDialog v-if="moreSearchActions"
+				:name="t('mail', 'Search parameters')"
+				size="normal"
+				class="search-modal"
+				:buttons="dialogButtons"
+				@closing="closeSearchModal">
+				<div class="modal-inner--content">
+					<div class="modal-inner--field">
+						<label class="modal-inner--label" for="subjectId">
+							{{ t('mail','Subject') }}
+						</label>
+						<div class="modal-inner--container">
+							<input id="subjectId"
+								v-model="searchInSubject"
+								type="text"
+								class="search-input"
+								:placeholder="t('mail', 'Search subject')">
 						</div>
 					</div>
-				</div>
-				<div class="modal-inner--field">
-					<label class="modal-inner--label" for="fromId">
-						{{ t("mail", "From") }}
-					</label>
-					<div class="modal-inner--container">
-						<NcMultiselect
-							id="fromId"
-							v-model="searchInFrom"
-							label="label"
-							track-by="email"
-							:options="autocompleteRecipients"
-							:value="searchInFrom"
-							:placeholder="t('mail', 'Select senders')"
-							:multiple="true"
-							:taggable="true"
-							:close-on-select="true"
-							:show-no-options="false"
-							:preserve-search="true"
-							:max="1"
-							@tag="addTag($event,'from')"
-							@search-change="searchRecipients($event)" />
+					<div class="modal-inner--field">
+						<label class="modal-inner--label" for="bodyId">
+							{{ t('mail','Body') }}
+						</label>
+						<div class="modal-inner--container">
+							<input id="bodyId"
+								v-model="searchInMessageBody"
+								type="text"
+								class="search-input"
+								:placeholder="t('mail', 'Search body')">
+						</div>
 					</div>
-				</div>
-
-				<div class="modal-inner--field">
-					<label class="modal-inner--label" for="toId">
-						{{ t('mail', 'To') }}
-					</label>
-					<div class="modal-inner--container">
-						<NcMultiselect
-							id="toId"
-							v-model="searchInTo"
-							label="label"
-							track-by="email"
-							:options="autocompleteRecipients"
-							:value="searchInTo"
-							:placeholder="t('mail', 'Select recipients')"
-							:multiple="true"
-							:taggable="true"
-							:close-on-select="true"
-							:show-no-options="false"
-							:preserve-search="true"
-							:max="1"
-							@tag="addTag($event,'to')"
-							@search-change="searchRecipients($event)" />
+					<div class="modal-inner--field">
+						<label class="modal-inner--label" for="fromId">
+							{{ t('mail', 'Date') }}
+						</label>
+						<div class="modal-inner--container range">
+							<div class="modal-inner-inline">
+								<NcDateTimePickerNative v-model="startDate"
+									type="date"
+									:label="t('mail', 'Pick a start date')"
+									confirm />
+							</div>
+							<div class="modal-inner-inline">
+								<NcDateTimePickerNative v-model="endDate"
+									type="date"
+									:disabled="startDate === null"
+									:label="t('mail', 'Pick an end date')"
+									confirm />
+							</div>
+						</div>
 					</div>
-				</div>
-
-				<div class="modal-inner--field">
-					<label class="modal-inner--label" for="ccId">
-						{{ t('mail', 'Cc') }}
-					</label>
-					<div class="modal-inner--container">
-						<NcMultiselect
-							id="ccId"
-							v-model="searchInCc"
-							label="label"
-							track-by="email"
-							:options="autocompleteRecipients"
-							:value="searchInCc"
-							:placeholder="t('mail', 'Select CC recipients')"
-							:multiple="true"
-							:taggable="true"
-							:close-on-select="true"
-							:show-no-options="false"
-							:preserve-search="true"
-							:max="1"
-							@tag="addTag($event,'cc')"
-							@search-change="searchRecipients($event)" />
+					<div class="modal-inner--field">
+						<label class="modal-inner--label" for="fromId">
+							{{ t('mail', 'From') }}
+						</label>
+						<div class="modal-inner--container">
+							<NcSelect id="fromId"
+								class="modal-inner--container__select"
+								label="label"
+								track-by="email"
+								:options="autocompleteRecipients"
+								:value="searchInFrom"
+								:placeholder="t('mail', 'Select senders')"
+								:aria-label-combobox="t('mail', 'Select senders')"
+								:multiple="true"
+								:taggable="true"
+								:show-no-options="false"
+								:preserve-search="true"
+								:max="1"
+								@option:selecting="addTag($event,'from')"
+								@option:deselecting="removeTag($event,'from')"
+								@search="searchRecipients($event)" />
+						</div>
 					</div>
-				</div>
 
-				<div class="modal-inner--field">
-					<label class="modal-inner--label" for="bccId">
-						{{ t('mail', 'Bcc') }}
-					</label>
-					<div class="modal-inner--container">
-						<NcMultiselect
-							id="bccId"
-							v-model="searchInBcc"
-							label="label"
-							track-by="email"
-							:options="autocompleteRecipients"
-							:value="searchInCc"
-							:placeholder="t('mail', 'Select BCC recipients')"
-							:multiple="true"
-							:taggable="true"
-							:close-on-select="true"
-							:show-no-options="false"
-							:preserve-search="true"
-							:max="1"
-							@tag="addTag($event,'bcc')"
-							@search-change="searchRecipients($event)" />
+					<div class="modal-inner--field">
+						<label class="modal-inner--label" for="toId">
+							{{ t('mail', 'To') }}
+						</label>
+						<div class="modal-inner--container">
+							<NcSelect id="toId"
+								class="modal-inner--container__select"
+								label="label"
+								track-by="email"
+								:options="autocompleteRecipients"
+								:value="searchInTo"
+								:placeholder="t('mail', 'Select recipients')"
+								:aria-label-combobox="t('mail', 'Select recipients')"
+								:multiple="true"
+								:taggable="true"
+								:show-no-options="false"
+								:preserve-search="true"
+								@option:selecting="addTag($event,'to')"
+								@option:deselecting="removeTag($event,'to')"
+								@search="searchRecipients($event)" />
+						</div>
 					</div>
-				</div>
 
-				<div v-if="tags.length > 0" class="modal-inner--field">
-					<label for="tagsId">
-						{{ t('mail', 'Tags') }}
-					</label>
-					<div class="modal-inner--container">
-						<NcMultiselect
-							v-if="tags.length > 0"
-							id="tagsId"
-							v-model="selectedTags"
-							class="multiselect-search-tags"
-							:options="tags"
-							label="displayName"
-							:value="selectedTags"
-							:placeholder="t('mail', 'Select tags')"
-							track-by="displayName"
-							:multiple="true"
-							:auto-limit="false"
-							:close-on-select="false">
-							<template #tag="{ option }">
-								<div class="tag-group__search">
-									<div
-										class="tag-group__bg"
-										:style="
-											'background-color:' +
-												(option.color !== '#fff'
-													? option.color
-													: '#333')" />
-									<div
-										class="tag-group__label"
-										:style="'color:' + option.color">
-										{{ option.displayName }}
+					<div class="modal-inner--field">
+						<label class="modal-inner--label" for="ccId">
+							{{ t('mail', 'Cc') }}
+						</label>
+						<div class="modal-inner--container">
+							<NcSelect id="ccId"
+								class="modal-inner--container__select"
+								label="label"
+								track-by="email"
+								:options="autocompleteRecipients"
+								:value="searchInCc"
+								:placeholder="t('mail', 'Select CC recipients')"
+								:aria-label-combobox="t('mail', 'Select CC recipients')"
+								:multiple="true"
+								:taggable="true"
+								:show-no-options="false"
+								:preserve-search="true"
+								@option:selecting="addTag($event,'cc')"
+								@option:deselecting="removeTag($event,'cc')"
+								@search="searchRecipients($event)" />
+						</div>
+					</div>
+
+					<div class="modal-inner--field">
+						<label class="modal-inner--label" for="bccId">
+							{{ t('mail', 'Bcc') }}
+						</label>
+						<div class="modal-inner--container">
+							<NcSelect id="bccId"
+								class="modal-inner--container__select"
+								label="label"
+								track-by="email"
+								:options="autocompleteRecipients"
+								:value="searchInBcc"
+								:placeholder="t('mail', 'Select BCC recipients')"
+								:aria-label-combobox="t('mail', 'Select BCC recipients')"
+								:multiple="true"
+								:taggable="true"
+								:show-no-options="false"
+								:preserve-search="true"
+								@option:selecting="addTag($event,'bcc')"
+								@option:deselecting="removeTag($event,'bcc')"
+								@search="searchRecipients($event)" />
+						</div>
+					</div>
+
+					<div v-if="tags.length > 0" class="modal-inner--field">
+						<label for="tagsId">
+							{{ t('mail', 'Tags') }}
+						</label>
+						<div class="modal-inner--container">
+							<NcSelect v-if="tags.length > 0"
+								id="tagsId"
+								v-model="selectedTags"
+								class="multiselect-search-tags "
+								:options="tags"
+								label="displayName"
+								:value="selectedTags"
+								:placeholder="t('mail', 'Select tags')"
+								:aria-label-combobox="t('mail', 'Select tags')"
+								track-by="displayName"
+								:multiple="true"
+								:auto-limit="false">
+								<template #selected-option="option">
+									<div class="tag-group__search">
+										<div class="tag-group__bg"
+											:style="
+												'background-color:' +
+													(option.color !== '#fff'
+														? option.color
+														: '#333')" />
+										<div class="tag-group__label"
+											:style="'color:' + option.color">
+											{{ option.displayName }}
+										</div>
 									</div>
-								</div>
-							</template>
-							<template #option="{ option }">
-								{{ option.displayName }}
-							</template>
-						</NcMultiselect>
-					</div>
-				</div>
-
-				<div class="modal-inner--field">
-					<label class="modal-inner--label" for="fromId">
-						{{ t('mail', 'Marked as') }}
-					</label>
-					<div class="modal-inner--container marked-as">
-						<div class="modal-inner-inline">
-							<NcCheckboxRadioSwitch
-								:checked.sync="searchFlags"
-								value="is_important"
-								name="flags[]"
-								type="checkbox">
-								{{ t('mail', 'Important') }}
-							</NcCheckboxRadioSwitch>
-						</div>
-						<div class="modal-inner-inline">
-							<NcCheckboxRadioSwitch
-								:checked.sync="searchFlags"
-								value="starred"
-								name="flags[]"
-								type="checkbox">
-								{{ t('mail', 'Favorite') }}
-							</NcCheckboxRadioSwitch>
-						</div>
-						<div class="modal-inner-inline">
-							<NcCheckboxRadioSwitch
-								:checked.sync="searchFlags"
-								value="unread"
-								name="flags[]"
-								type="checkbox">
-								{{ t('mail', 'Unread') }}
-							</NcCheckboxRadioSwitch>
-						</div>
-						<div class="modal-inner-inline">
-							<NcCheckboxRadioSwitch
-								:checked.sync="searchFlags"
-								value="attachments"
-								name="flags[]"
-								type="checkbox">
-								{{ t('mail', 'Has attachments') }}
-							</NcCheckboxRadioSwitch>
+								</template>
+								<template #option="option">
+									{{ option.displayName }}
+								</template>
+							</NcSelect>
 						</div>
 					</div>
-				</div>
 
-				<div class="modal-inner-field--right">
-					<NcButton
-						class="button-reset-filter"
-						:aria-label="t('mail', 'Clear')"
-						@click="resetFilter()">
-						<template #icon>
-							<Close :size="24" />
-						</template>
-						{{ t('mail', 'Clear') }}
-					</NcButton>
-					<NcButton
-						type="primary"
-						:aria-label="t('mail', 'Search')"
-						@click="closeSearchModal()">
-						<template #icon>
-							<Magnify :size="24" />
-						</template>
-						{{ t('mail', 'Search') }}
-					</NcButton>
+					<div class="modal-inner--field">
+						<label class="modal-inner--label" for="fromId">
+							{{ t('mail', 'Marked as') }}
+						</label>
+						<div class="modal-inner--container marked-as">
+							<div class="modal-inner-inline">
+								<NcCheckboxRadioSwitch :checked.sync="searchFlags"
+									value="is_important"
+									name="flags[]"
+									type="checkbox">
+									{{ t('mail', 'Important') }}
+								</NcCheckboxRadioSwitch>
+							</div>
+							<div class="modal-inner-inline">
+								<NcCheckboxRadioSwitch :checked.sync="searchFlags"
+									value="starred"
+									name="flags[]"
+									type="checkbox">
+									{{ t('mail', 'Favorite') }}
+								</NcCheckboxRadioSwitch>
+							</div>
+							<div class="modal-inner-inline">
+								<NcCheckboxRadioSwitch :checked.sync="searchFlags"
+									value="unread"
+									name="flags[]"
+									type="checkbox">
+									{{ t('mail', 'Unread') }}
+								</NcCheckboxRadioSwitch>
+							</div>
+							<div class="modal-inner-inline">
+								<NcCheckboxRadioSwitch :checked.sync="searchFlags"
+									value="attachments"
+									name="flags[]"
+									type="checkbox">
+									{{ t('mail', 'Has attachments') }}
+								</NcCheckboxRadioSwitch>
+							</div>
+							<div class="modal-inner-inline">
+								<NcCheckboxRadioSwitch :checked.sync="mentionsMe">
+									{{ t('mail', 'Mentions me') }}
+								</NcCheckboxRadioSwitch>
+							</div>
+						</div>
+					</div>
 				</div>
-			</div>
-		</NcModal>
+			</NcDialog>
+		</div>
+		<!-- Filter buttons -->
+		<div v-if="showButtons" class="filter-buttons">
+			<NcButton type="secondary"
+				class="shortcut"
+				:aria-label="t('mail', 'Has attachment')"
+				:title="t('mail', 'Has attachment')"
+				:pressed="hasAttachmentActive"
+				@update:pressed="hasAttachmentActive = !hasAttachmentActive"
+				@click="toggleGetAttachments">
+				{{ t('mail', 'Has attachment') }}
+			</NcButton>
+			<NcButton type="secondary"
+				class="shortcut"
+				:pressed="hasLast7daysActive"
+				:aria-label="t('mail', 'Last 7 days')"
+				:title="t('mail', 'Last 7 days')"
+				@update:pressed="hasLast7daysActive = !hasLast7daysActive"
+				@click="toggleLastWeekFilter">
+				{{ t('mail', 'Last 7 days') }}
+			</NcButton>
+			<NcButton type="secondary"
+				class="shortcut"
+				:pressed="hasFromMeActive"
+				:aria-label="t('mail', 'From me')"
+				:title="t('mail', 'From me')"
+				@update:pressed="hasFromMeActive = !hasFromMeActive"
+				@click="toggleCurrentUser">
+				{{ t('mail', 'From me') }}
+			</NcButton>
+		</div>
 	</div>
 </template>
 
 <script>
+import IconClose from '@mdi/svg/svg/close.svg'
+import IconMagnify from '@mdi/svg/svg/magnify.svg'
+import { translate as t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
-
-import NcModal from '@nextcloud/vue/dist/Components/NcModal'
-import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
-import NcDatetimePicker from '@nextcloud/vue/dist/Components/NcDatetimePicker'
-import NcActions from '@nextcloud/vue/dist/Components/NcActions'
-import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch
-	from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
-import Tune from 'vue-material-design-icons/Tune'
-import Close from 'vue-material-design-icons/Close'
-import Magnify from 'vue-material-design-icons/Magnify'
-
+	from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import debouncePromise from 'debounce-promise'
-import { findRecipient } from '../service/AutocompleteService'
-import uniqBy from 'lodash/fp/uniqBy'
-import { hiddenTags } from './tags'
+import uniqBy from 'lodash/fp/uniqBy.js'
+import { mapStores } from 'pinia'
+import Close from 'vue-material-design-icons/Close.vue'
+import FilterVariantIcon from 'vue-material-design-icons/FilterVariant.vue'
+
+import { hiddenTags } from './tags.js'
+import { findRecipient } from '../service/AutocompleteService.js'
+import useMainStore from '../store/mainStore.js'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
 export default {
 	name: 'SearchMessages',
 	components: {
-		NcModal,
-		NcMultiselect,
-		NcDatetimePicker,
-		NcActions,
-		NcActionButton,
+		NcDialog,
+		NcSelect,
+		NcDateTimePickerNative,
 		NcButton,
 		NcCheckboxRadioSwitch,
-		Tune,
+		FilterVariantIcon,
 		Close,
-		Magnify,
 	},
 	props: {
 		mailbox: {
 			type: Object,
 			required: true,
 		},
+		accountId: {
+			type: Number,
+			required: true,
+		},
 	},
 	data() {
 		return {
-			modalQuery: '',
+			showButtons: false,
+			match: 'allof',
 			query: '',
 			debouncedSearchQuery: debouncePromise(this.sendQueryEvent, 700),
 			autocompleteRecipients: [],
 			selectedTags: [],
 			moreSearchActions: false,
-			searchInFrom: null,
-			searchInTo: null,
-			searchInCc: null,
-			searchInBcc: null,
-			searchInSubject: true,
-			searchInMessageBody: false,
+			searchInFrom: [],
+			searchInTo: [],
+			searchInCc: [],
+			searchInBcc: [],
+			searchInSubject: null,
+			searchInMessageBody: null,
 			searchFlags: [],
-			hasAttachments: false,
+			mentionsMe: false,
+			hasAttachmentActive: false,
+			hasLast7daysActive: false,
+			hasFromMeActive: false,
 			startDate: null,
 			endDate: null,
+			dialogButtons: [
+				{
+					label: t('mail', 'Clear'),
+					callback: () => this.resetFilter(),
+					type: 'secondary',
+					icon: IconClose,
+				},
+				{
+					label: t('mail', 'Search'),
+					callback: () => this.closeSearchModal(),
+					type: 'primary',
+					icon: IconMagnify,
+				},
+			],
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		tags() {
-			return this.$store.getters.getTags.filter((tag) => !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
+			return this.mainStore.getTags.filter((tag) => !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
 				if (a.isDefaultTag && !b.isDefaultTag) {
 					return -1
 				}
@@ -357,44 +397,112 @@ export default {
 		},
 		filterChanged() {
 			return Object.entries(this.filterData).filter(([key, val]) => {
-				return val !== ''
+				return val !== '' && val !== null && val.length > 0
 			}).length > 0
+		},
+		searchBody() {
+			return this.mainStore.getAccount(this.accountId)?.searchBody || (this.mailbox.databaseId === 'priority' && this.mainStore.getPreference('search-priority-body', 'false') === 'true')
+		},
+		account() {
+			return this.mainStore.getAccount(this.accountId)
 		},
 		filterData() {
 			return {
-				to: this.searchInTo !== null && this.searchInTo.length > 0 ? this.searchInTo[0].email : '',
-				from: this.searchInFrom !== null && this.searchInFrom.length > 0 ? this.searchInFrom[0].email : '',
-				cc: this.searchInCc !== null && this.searchInCc.length > 0 ? this.searchInCc[0].email : '',
-				bcc: this.searchInBcc !== null && this.searchInBcc.length > 0 ? this.searchInBcc[0].email : '',
-				subject: this.searchInSubject && this.query.length > 1 ? this.query : '',
+				to: this.searchInTo.length > 0 ? this.searchInTo.map(address => address.email) : null,
+				from: this.searchInFrom.length > 0 ? this.searchInFrom.map(address => address.email) : null,
+				cc: this.searchInCc.length > 0 ? this.searchInCc.map(address => address.email) : null,
+				bcc: this.searchInBcc.length > 0 ? this.searchInBcc.map(address => address.email) : null,
+				subject: this.searchInSubject !== null && this.searchInSubject.length > 1 ? this.searchInSubject : '',
+				body: this.searchInMessageBody !== null && this.searchInMessageBody.length > 1 ? this.searchInMessageBody : '',
 				tags: this.selectedTags.length > 0 ? this.selectedTags.map(item => item.id) : '',
 				flags: this.searchFlags.length > 0 ? this.searchFlags.map(item => item) : '',
+				mentions: this.mentionsMe,
 				start: this.prepareStart(),
 				end: this.prepareEnd(),
-				attachments: this.hasAttachments ? this.hasAttachments.toString() : '',
 			}
 		},
 		searchQuery() {
 			let _search = ''
 			Object.entries(this.filterData).filter(([key, val]) => {
-				if (val !== '' && val !== null) {
+				if (['to', 'from', 'cc', 'bcc'].includes(key)) {
+					val?.forEach((address) => {
+						_search += `${key}:${encodeURI(address)} `
+					})
+				} else if (key === 'body') {
+					val.split(' ').forEach((word) => {
+						if (word !== '' && val !== null) {
+							_search += `${key}:${encodeURI(word)} `
+						}
+					})
+				} else if (val !== '' && val !== null) {
 					_search += `${key}:${encodeURI(val)} `
 				}
 				return val
 			})
+			_search += `match:${encodeURI(this.match)} `
 
 			return _search.trim()
 		},
 	},
 	watch: {
 		query() {
-			if (this.query !== this.modalQuery) {
-				this.modalQuery = this.query
+			if (this.query.length === 0) {
+				return
 			}
+
+			this.match = 'anyof'
+			this.searchInMessageBody = this.searchBody ? this.query : null
+			this.searchInSubject = this.query
+			this.searchInFrom = [{ email: this.query, label: this.query }]
+			this.searchInTo = [{ email: this.query, label: this.query }]
 			this.debouncedSearchQuery()
 		},
 	},
 	methods: {
+		hideButtonsWithDelay() {
+			setTimeout(() => {
+				this.showButtons = false
+			}, 100)
+		},
+		toggleGetAttachments() {
+			if (this.hasAttachmentActive) {
+				this.searchFlags.push('attachments')
+			} else {
+				this.searchFlags = this.searchFlags.filter((flag) => flag !== 'attachments')
+			}
+			this.$nextTick(() => {
+				this.sendQueryEvent()
+			})
+		},
+		toggleCurrentUser() {
+			if (this.hasFromMeActive) {
+				this.searchInFrom = [{
+					email: this.account.emailAddress,
+					label: this.account.emailAddress,
+				}]
+			} else {
+				this.searchInFrom = null
+			}
+			this.$nextTick(() => {
+				this.sendQueryEvent()
+			})
+		},
+		toggleLastWeekFilter() {
+			if (this.hasLast7daysActive) {
+				const endDate = new Date()
+				const startDate = new Date()
+				startDate.setDate(startDate.getDate() - 7)
+
+				this.startDate = startDate
+				this.endDate = endDate
+			} else {
+				this.startDate = null
+				this.endDate = null
+			}
+			this.$nextTick(() => {
+				this.sendQueryEvent()
+			})
+		},
 		prepareStart() {
 			if (this.startDate !== null) {
 				if (this.endDate !== null && this.startDate > this.endDate) {
@@ -409,14 +517,10 @@ export default {
 		},
 		closeSearchModal() {
 			this.moreSearchActions = false
+			this.match = 'allof'
 			this.$nextTick(() => {
-				if (this.query !== this.modalQuery) {
-					this.query = this.modalQuery
-				} else {
-					this.sendQueryEvent()
-				}
+				this.sendQueryEvent()
 			})
-
 		},
 		sendQueryEvent() {
 			this.$emit('search-changed', this.searchQuery)
@@ -427,48 +531,64 @@ export default {
 			}
 			debouncedSearch(term).then(results => {
 				this.autocompleteRecipients = uniqBy('email')(
-					this.autocompleteRecipients.concat(results)
+					this.autocompleteRecipients.concat(results),
 				)
 			})
 		},
 		resetFilter() {
-			const prevQuery = this.query
+			this.match = 'allof'
 			this.query = ''
 			this.selectedTags = []
 			this.moreSearchActions = false
-			this.searchInFrom = null
-			this.searchInTo = null
-			this.searchInCc = null
-			this.searchInBcc = null
-			this.searchInSubject = true
-			this.searchInMessageBody = false
+			this.searchInFrom = []
+			this.searchInTo = []
+			this.searchInCc = []
+			this.searchInBcc = []
+			this.searchInSubject = null
+			this.searchInMessageBody = null
 			this.searchFlags = []
 			this.startDate = null
 			this.endDate = null
-			// Need if there is only tag filter or recipients filter
-			if (prevQuery === '') {
-				this.sendQueryEvent()
-			}
+			this.mentionsMe = false
+			this.sendQueryEvent()
 		},
 		addTag(tag, type) {
-			const _tag = [{
-				label: tag,
-				email: tag,
-			}]
+			if (typeof tag === 'string') {
+				tag = { email: tag, label: tag }
+			}
 			switch (type) {
 			case 'to':
-				this.searchInTo = _tag
+				this.searchInTo.push(tag)
 				break
 			case 'from':
-				this.searchInFrom = _tag
+				this.searchInFrom.push(tag)
 				break
 			case 'cc':
-				this.searchInCc = _tag
+				this.searchInCc.push(tag)
 				break
 			case 'bcc':
-				this.searchInBcc = _tag
+				this.searchInBcc.push(tag)
 				break
 			}
+		},
+		removeTag(tag, type) {
+			switch (type) {
+			case 'to':
+				this.searchInTo = this.removeAddress(tag, this.searchInTo)
+				break
+			case 'from':
+				this.searchInFrom = this.removeAddress(tag, this.searchInFrom)
+				break
+			case 'cc':
+				this.searchInCc = this.removeAddress(tag, this.searchInCc)
+				break
+			case 'bcc':
+				this.searchInBcc = this.removeAddress(tag, this.searchInBcc)
+				break
+			}
+		},
+		removeAddress(tag, addresses) {
+			return addresses.filter((address) => address.email !== tag.email)
 		},
 	},
 }
@@ -476,30 +596,36 @@ export default {
 
 <style lang="scss">
 .search-messages {
-	min-height: 52px;
-	margin: 3px 0 0 52px;
-	border-right: 1px solid var(--color-border);
-	position: relative;
-	display: flex;
-	align-items: center;
-	//important info icon overlaps it while scrolling
-	z-index: 1;
+	border-bottom: 1px solid var(--color-border);
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	height: 52px;
+	background-color: var(--color-main-background);
+	&__input {
+		min-height: 52px;
+		margin-inline-start: calc(var(--app-navigation-padding) * 2 + var(--default-clickable-area));
+		padding-inline-end: 3px; /* matches .app-content-list */
+		position: relative;
+		display: flex;
+		align-items: center;
+		//important info icon overlaps it while scrolling
+		z-index: 1;
 
-	input {
-		width: calc(100% - 45px);
-		margin: 4px 6px;
-	}
+		input {
+			flex-grow: 1;
+		}
 
-	.action-item--single {
-		border-radius: var(--border-radius-pill);
-		border: none;
-		background: none;
-		transition: 0.4s;
-	}
+		.action-item--single {
+			border: none;
+			background: none;
+			transition: 0.4s;
+		}
 
-	.action-item--single:hover {
-		transition: 0.4s;
-		background: var(--color-primary-element);
+		.action-item--single:hover {
+			transition: 0.4s;
+			background: var(--color-primary-element);
+		}
 	}
 }
 
@@ -522,8 +648,7 @@ export default {
 
 .tag-group__bg {
 	position: absolute;
-	left: 0;
-	right: 0;
+	inset-inline: 0;
 	bottom: 0;
 	top: 0;
 	opacity: 0.4;
@@ -538,20 +663,7 @@ export default {
 	z-index: 2;
 }
 
-.search-modal .modal-container {
-	min-height: auto;
-	overflow: visible !important;
-	position: relative;
-	display: flex !important;
-	flex-direction: column;
-
-	.modal-title {
-		padding: 16px 30px 0 30px;
-		position: relative;
-		/* needs while modal-container__close not set */
-		display: inline-block;
-	}
-
+.search-modal {
 	.modal-inner--content {
 		padding: 16px 0 36px 0;
 		overflow-y: scroll;
@@ -561,9 +673,6 @@ export default {
 			display: inline-block;
 			width: 32%;
 
-			&:last-child {
-				width: 100%;
-			}
 		}
 		.range {
 			display: flex;
@@ -572,13 +681,25 @@ export default {
 			.modal-inner-inline {
 				width: calc(50% - 5px);
 				&:first-child {
-					margin-right: 5px;
+					margin-inline-end: 5px;
 				}
 				&:last-child {
-					margin-left: 5px;
+					margin-inline-start: 5px;
 				}
 			}
 		}
+	}
+}
+@media (max-width: 420px) {
+	.modal-inner--container {
+		width: 100%;
+		flex-wrap: nowrap;
+		flex-direction: column;
+	}
+}
+@media (max-width: 420px) {
+	.search-modal .modal-inner--content .range {
+		flex-direction: row;
 	}
 }
 
@@ -617,8 +738,10 @@ export default {
 
 	.modal-inner--container {
 		width: calc(100% - 120px);
+		display: flex;
+		flex-wrap: wrap;
 
-		.multiselect {
+		.select {
 			width: 100%;
 		}
 	}
@@ -628,22 +751,34 @@ export default {
 	position: relative
 }
 
+.button-vue.search-messages--filter.button-vue--icon-only {
+	position: absolute;
+	width: auto;
+	height: auto;
+	z-index: 5;
+	inset-inline-end: 7px; /* same spacing to the input border as top/bottom */
+	inset-inline-start: auto;
+	box-shadow: none !important;
+	background: transparent !important;
+	border: none !important;
+	padding: 0 !important;
+}
+
 .button-vue.search-messages--close.button-vue--icon-only {
 	position: absolute;
 	width: auto;
 	height: auto;
 	z-index: 5;
-	right: 45px;
-	left: auto;
+	inset-inline-end: 35px;
+	inset-inline-start: auto;
 	box-shadow: none !important;
 	background: transparent !important;
 	border: none !important;
 	padding: 0 !important;
-	top: 5px
 }
 
 .button-reset-filter {
-	margin-right: 10px;
+	margin-inline-end: 10px;
 }
 
 .filter-changed {
@@ -652,11 +787,23 @@ export default {
 	background: var(--color-error);
 	position: absolute;
 	z-index: 10;
-	right: 9px;
+	inset-inline-end: 12px;
 	border-radius: 50%;
-	top: 10px;
+	top: 12px;
 }
+
 .mx-datepicker {
 	width:100%;
+}
+
+.filter-buttons {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: nowrap;
+	gap: 4px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 0 5px 5px 5px;
 }
 </style>

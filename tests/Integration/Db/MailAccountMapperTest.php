@@ -3,22 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @author Thomas Müller <thomas.mueller@tmit.eu>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2014-2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Integration\Db;
@@ -28,10 +15,13 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IDBConnection;
+use function random_int;
 
 /**
  * @group DB
+ * @covers \OCA\Mail\Db\MailAccountMapper
  */
 class MailAccountMapperTest extends TestCase {
 	use DatabaseTransaction;
@@ -105,5 +95,15 @@ class MailAccountMapperTest extends TestCase {
 		$this->assertNotNull($c->getId());
 		$this->assertNotNull($b->getId());
 		$this->assertEquals($b->getId(), $c->getId());
+	}
+
+	public function testDeleteProvisionedOrphans(): void {
+		$this->account->setProvisioningId(random_int(1, 10000));
+		$this->mapper->insert($this->account);
+
+		$this->mapper->deleteProvisionedOrphanAccounts();
+
+		$this->expectException(DoesNotExistException::class);
+		$this->mapper->findById($this->account->getId());
 	}
 }

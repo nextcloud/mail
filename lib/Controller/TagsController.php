@@ -3,22 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Daniel Kesselberg <mail@danielkesselberg.de>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Controller;
@@ -27,21 +13,31 @@ use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Http\TrapError;
+use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class TagsController extends Controller {
 	private string $currentUserId;
 	private IMailManager $mailManager;
 
+	private AccountService $accountService;
+
+
 	public function __construct(IRequest $request,
 		string $UserId,
-		IMailManager $mailManager
+		IMailManager $mailManager,
+		AccountService $accountService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->currentUserId = $UserId;
 		$this->mailManager = $mailManager;
+		$this->accountService = $accountService;
 	}
 
 	/**
@@ -79,6 +75,22 @@ class TagsController extends Controller {
 
 		$tag = $this->mailManager->updateTag($id, $displayName, $color, $this->currentUserId);
 		return new JSONResponse($tag);
+	}
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @throws ClientException
+	 */
+	#[TrapError]
+	public function delete(int $id, int $accountId): JSONResponse {
+		try {
+			$accounts = $this->accountService->findByUserId($this->currentUserId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$this->mailManager->deleteTag($id, $this->currentUserId, $accounts);
+
+		return new JSONResponse([$id]);
 	}
 
 	/**

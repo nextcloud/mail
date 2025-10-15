@@ -3,25 +3,8 @@
 declare(strict_types=1);
 
 /**
- * Mail App
- *
- * @copyright 2022 Anna Larch <anna.larch@gmx.net>
- *
- * @author Anna Larch <anna.larch@gmx.net>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
- *
- * You should have received a copy of the GNU Affero General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Unit\Service;
@@ -36,9 +19,9 @@ use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
-use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\OutboxService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -47,9 +30,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class OutboxServiceTest extends TestCase {
-	/** @var MailTransmission|MockObject */
-	private $transmission;
-
 	/** @var LocalMessageMapper|MockObject */
 	private $mapper;
 
@@ -79,11 +59,11 @@ class OutboxServiceTest extends TestCase {
 
 	/** @var MockObject|LoggerInterface */
 	private $logger;
+	private MockObject|Chain $chain;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->transmission = $this->createMock(MailTransmission::class);
 		$this->mapper = $this->createMock(LocalMessageMapper::class);
 		$this->attachmentService = $this->createMock(AttachmentService::class);
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
@@ -91,8 +71,8 @@ class OutboxServiceTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->chain = $this->createMock(Chain::class);
 		$this->outboxService = new OutboxService(
-			$this->transmission,
 			$this->mapper,
 			$this->attachmentService,
 			$this->createMock(EventDispatcher::class),
@@ -101,6 +81,7 @@ class OutboxServiceTest extends TestCase {
 			$this->accountService,
 			$this->timeFactory,
 			$this->logger,
+			$this->chain,
 		);
 		$this->userId = 'linus';
 		$this->time = $this->createMock(ITimeFactory::class);
@@ -121,8 +102,9 @@ class OutboxServiceTest extends TestCase {
 					'body' => 'Test',
 					'html' => false,
 					'reply_to_id' => null,
-					'draft_id' => 99
-
+					'draft_id' => 99,
+					'status' => 0,
+					'raw' => 'Test',
 				],
 				[
 					'id' => 2,
@@ -134,7 +116,9 @@ class OutboxServiceTest extends TestCase {
 					'body' => 'Second Test',
 					'html' => true,
 					'reply_to_id' => null,
-					'draft_id' => null
+					'draft_id' => null,
+					'status' => 0,
+					'raw' => 'Second Test',
 				]
 			]);
 
@@ -156,7 +140,7 @@ class OutboxServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 
@@ -184,7 +168,7 @@ class OutboxServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 
@@ -203,7 +187,7 @@ class OutboxServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$to = [
@@ -253,7 +237,7 @@ class OutboxServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$to = [
@@ -299,7 +283,7 @@ class OutboxServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$old = Recipient::fromParams([
@@ -356,7 +340,7 @@ class OutboxServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$old = Recipient::fromParams([
@@ -385,6 +369,7 @@ class OutboxServiceTest extends TestCase {
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => $this->userId
 		]);
+
 		$this->mapper->expects(self::once())
 			->method('updateWithRecipients')
 			->with($message, [$rTo], $cc, $bcc)
@@ -396,6 +381,7 @@ class OutboxServiceTest extends TestCase {
 			->method('getClient');
 		$this->attachmentService->expects(self::never())
 			->method('handleAttachments');
+
 		$result = $this->outboxService->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
 		$this->assertEmpty($result->getAttachments());
 	}
@@ -405,7 +391,7 @@ class OutboxServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('laskdjhsakjh33233928@startdewvalley.com');
 		$to = [
@@ -436,6 +422,7 @@ class OutboxServiceTest extends TestCase {
 	public function testSendMessage(): void {
 		$message = new LocalMessage();
 		$message->setId(1);
+		$message->setStatus(LocalMessage::STATUS_RAW);
 		$recipient = new Recipient();
 		$recipient->setEmail('museum@startdewvalley.com');
 		$recipient->setLabel('Gunther');
@@ -452,15 +439,36 @@ class OutboxServiceTest extends TestCase {
 			'getUserId' => $this->userId
 		]);
 
-		$this->transmission->expects(self::once())
-			->method('sendLocalMessage')
+		$this->chain->expects(self::once())
+			->method('process')
 			->with($account, $message);
-		$this->attachmentService->expects(self::once())
-			->method('deleteLocalMessageAttachments')
-			->with($account->getUserId(), $message->getId());
-		$this->mapper->expects(self::once())
-			->method('deleteWithRecipients')
-			->with($message);
+
+		$this->outboxService->sendMessage($message, $account);
+	}
+
+	public function testSendMessageAlreadyProcessed(): void {
+		$message = new LocalMessage();
+		$message->setId(1);
+		$message->setStatus(LocalMessage::STATUS_PROCESSED);
+		$recipient = new Recipient();
+		$recipient->setEmail('museum@startdewvalley.com');
+		$recipient->setLabel('Gunther');
+		$recipient->setType(Recipient::TYPE_TO);
+		$recipients = [$recipient];
+		$attachment = new LocalAttachment();
+		$attachment->setMimeType('image/png');
+		$attachment->setFileName('SlimesInTheMines.png');
+		$attachment->setCreatedAt($this->time->getTime());
+		$attachments = [$attachment];
+		$message->setRecipients($recipients);
+		$message->setAttachments($attachments);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getUserId' => $this->userId
+		]);
+
+		$this->chain->expects(self::once())
+			->method('process')
+			->with($account, $message);
 
 		$this->outboxService->sendMessage($message, $account);
 	}
@@ -468,6 +476,7 @@ class OutboxServiceTest extends TestCase {
 	public function testSendMessageTransmissionError(): void {
 		$message = new LocalMessage();
 		$message->setId(1);
+		$message->setStatus(LocalMessage::STATUS_NO_SENT_MAILBOX);
 		$recipient = new Recipient();
 		$recipient->setEmail('museum@startdewvalley.com');
 		$recipient->setLabel('Gunther');
@@ -484,17 +493,12 @@ class OutboxServiceTest extends TestCase {
 			'getUserId' => $this->userId
 		]);
 
-		$this->transmission->expects(self::once())
-			->method('sendLocalMessage')
-			->with($account, $message)
-			->willThrowException(new ClientException());
-		$this->attachmentService->expects(self::never())
-			->method('deleteLocalMessageAttachments');
-		$this->mapper->expects(self::never())
-			->method('deleteWithRecipients');
+		$this->chain->expects(self::once())
+			->method('process')
+			->with($account, $message);
 
-		$this->expectException(ClientException::class);
 		$this->outboxService->sendMessage($message, $account);
+		$this->assertEquals(LocalMessage::STATUS_NO_SENT_MAILBOX, $message->getStatus());
 	}
 
 	public function testConvertToOutboxMessageNoRecipients(): void {
@@ -504,7 +508,7 @@ class OutboxServiceTest extends TestCase {
 		$sentAt = $this->time->getTime();
 		$message->setSendAt($sentAt);
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$message->setType(LocalMessage::TYPE_DRAFT);

@@ -2,25 +2,9 @@
 
 declare(strict_types=1);
 
-/*
- * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Integration\Db;
@@ -31,6 +15,7 @@ use ChristophWurst\Nextcloud\Testing\TestUser;
 use OCA\Mail\Db\TrustedSenderMapper;
 use OCP\IDBConnection;
 use OCP\IUser;
+use OCP\Server;
 
 class TrustedSenderMapperTest extends TestCase {
 	use DatabaseTransaction, TestUser;
@@ -48,7 +33,7 @@ class TrustedSenderMapperTest extends TestCase {
 		parent::setUp();
 
 		/** @var IDBConnection $db */
-		$this->db = \OC::$server->get(IDBConnection::class);
+		$this->db = Server::get(IDBConnection::class);
 		$this->user = $this->createTestUser();
 
 		$this->mapper = new TrustedSenderMapper(
@@ -57,7 +42,7 @@ class TrustedSenderMapperTest extends TestCase {
 	}
 
 	public function testExistsButDoesNot(): void {
-		$exists = $this->mapper->exists($this->user->getUID(), "christoph@next.cloud");
+		$exists = $this->mapper->exists($this->user->getUID(), 'christoph@next.cloud');
 
 		$this->assertFalse($exists);
 	}
@@ -72,7 +57,7 @@ class TrustedSenderMapperTest extends TestCase {
 			])
 			->executeStatement();
 
-		$exists = $this->mapper->exists($uid, "christoph@next.cloud");
+		$exists = $this->mapper->exists($uid, 'christoph@next.cloud');
 
 		$this->assertTrue($exists);
 	}
@@ -89,7 +74,7 @@ class TrustedSenderMapperTest extends TestCase {
 			])
 			->executeStatement();
 
-		$exists = $this->mapper->exists($uid, "christoph@next.cloud");
+		$exists = $this->mapper->exists($uid, 'christoph@next.cloud');
 
 		$this->assertTrue($exists);
 	}
@@ -98,7 +83,7 @@ class TrustedSenderMapperTest extends TestCase {
 		$uid = $this->user->getUID();
 		$this->mapper->create(
 			$uid,
-			"christoph@next.cloud",
+			'christoph@next.cloud',
 			'individual'
 		);
 
@@ -107,7 +92,7 @@ class TrustedSenderMapperTest extends TestCase {
 			->from('mail_trusted_senders')
 			->where(
 				$qb->expr()->eq('user_id', $qb->createNamedParameter($uid)),
-				$qb->expr()->eq('email', $qb->createNamedParameter("christoph@next.cloud"))
+				$qb->expr()->eq('email', $qb->createNamedParameter('christoph@next.cloud'))
 			);
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
@@ -135,7 +120,7 @@ class TrustedSenderMapperTest extends TestCase {
 
 		$this->mapper->remove(
 			$uid,
-			"christoph@next.cloud",
+			'christoph@next.cloud',
 			'individual'
 		);
 
@@ -144,8 +129,8 @@ class TrustedSenderMapperTest extends TestCase {
 			->from('mail_trusted_senders')
 			->where(
 				$qb->expr()->eq('user_id', $qb->createNamedParameter($uid)),
-				$qb->expr()->eq('email', $qb->createNamedParameter("christoph@next.cloud")),
-				$qb->expr()->eq('type', $qb->createNamedParameter("individual"))
+				$qb->expr()->eq('email', $qb->createNamedParameter('christoph@next.cloud')),
+				$qb->expr()->eq('type', $qb->createNamedParameter('individual'))
 			);
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
@@ -173,7 +158,7 @@ class TrustedSenderMapperTest extends TestCase {
 
 		$this->mapper->remove(
 			$uid,
-			"next.cloud",
+			'next.cloud',
 			'domain'
 		);
 
@@ -182,8 +167,8 @@ class TrustedSenderMapperTest extends TestCase {
 			->from('mail_trusted_senders')
 			->where(
 				$qb->expr()->eq('user_id', $qb->createNamedParameter($uid)),
-				$qb->expr()->eq('email', $qb->createNamedParameter("next.cloud")),
-				$qb->expr()->eq('type', $qb->createNamedParameter("domain"))
+				$qb->expr()->eq('email', $qb->createNamedParameter('next.cloud')),
+				$qb->expr()->eq('type', $qb->createNamedParameter('domain'))
 			);
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();

@@ -3,25 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Service\Classification\FeatureExtraction;
@@ -47,25 +30,23 @@ class RepliedMessagesExtractor implements IExtractor {
 		$this->statisticsDao = $statisticsDao;
 	}
 
+	#[\Override]
 	public function prepare(Account $account,
 		array $incomingMailboxes,
 		array $outgoingMailboxes,
 		array $messages): void {
 		/** @var string[] $senders */
-		$senders = array_unique(array_map(static function (Message $message) {
-			return $message->getFrom()->first()->getEmail();
-		}, array_filter($messages, static function (Message $message) {
-			return $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null;
-		})));
+		$senders = array_unique(array_map(static fn (Message $message) => $message->getFrom()->first()->getEmail(), array_filter($messages, static fn (Message $message) => $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null)));
 
 		$this->totalMessages = $this->statisticsDao->getNumberOfMessagesGrouped($incomingMailboxes, $senders);
 		$this->repliedMessages = $this->statisticsDao->getNumberOfMessagesWithFlagGrouped($incomingMailboxes, 'answered', $senders);
 	}
 
+	#[\Override]
 	public function extract(Message $message): array {
 		$sender = $message->getFrom()->first();
 		if ($sender === null) {
-			throw new RuntimeException("This should not happen");
+			throw new RuntimeException('This should not happen');
 		}
 
 		$email = $sender->getEmail();

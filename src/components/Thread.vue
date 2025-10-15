@@ -1,15 +1,18 @@
+<!--
+  - SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<AppContentDetails id="mail-message">
 		<!-- Show outer loading screen only if we have no data about the thread -->
 		<Loading v-if="loading && thread.length === 0" :hint="t('mail', 'Loading thread')" />
-		<Error
-			v-else-if="error"
-			:error="error && error.message ? error.message : t('mail', 'Not found')"
+		<Error v-else-if="errorTitle || errorMessage"
+			:error="errorTitle ? errorTitle : t('mail', 'Not found')"
 			:message="errorMessage" />
 		<template v-else>
 			<div id="mail-thread-header">
 				<div id="mail-thread-header-fields">
-					<h2 :title="threadSubject">
+					<h2 dir="auto" :title="threadSubject">
 						{{ threadSubject }}
 					</h2>
 					<div v-if="thread.length" ref="avatarHeader" class="avatar-header">
@@ -21,11 +24,14 @@
 						<!-- Indicator to show that there are more participants than displayed -->
 						<Popover v-if="threadParticipants.length > participantsToDisplay"
 							class="avatar-more">
-							<span slot="trigger" class="avatar-more">
-								{{ moreParticipantsString }}
-							</span>
+							<template #trigger>
+								<span class="avatar-more">
+									{{ moreParticipantsString }}
+								</span>
+							</template>
 							<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
 								:key="participant.email"
+								:title="participant.email"
 								:email="participant.email"
 								:label="participant.label" />
 						</Popover>
@@ -39,36 +45,42 @@
 				</div>
 			</div>
 			<ThreadSummary v-if="showSummaryBox" :loading="summaryLoading" :summary="summaryText" />
-			<ThreadEnvelope v-for="env in thread"
+			<ThreadEnvelope v-for="(env, index) in thread"
 				:key="env.databaseId"
 				:envelope="env"
 				:mailbox-id="$route.params.mailboxId"
 				:thread-subject="threadSubject"
 				:expanded="expandedThreads.includes(env.databaseId)"
 				:full-height="thread.length === 1"
+				:thread-index="index"
 				@delete="$emit('delete', env.databaseId)"
+				@loaded="addLoadedThread"
 				@move="onMove(env.databaseId)"
-				@toggle-expand="toggleExpand(env.databaseId)" />
+				@toggle-expand="toggleExpand(env.databaseId)"
+				@print="print" />
 		</template>
 	</AppContentDetails>
 </template>
 
 <script>
-import { NcAppContentDetails as AppContentDetails, NcPopover as Popover } from '@nextcloud/vue'
 import { showError } from '@nextcloud/dialogs'
-
-import { prop, uniqBy } from 'ramda'
-import debounce from 'lodash/fp/debounce'
 import { loadState } from '@nextcloud/initial-state'
+import moment from '@nextcloud/moment'
+import { NcAppContentDetails as AppContentDetails, NcPopover as Popover } from '@nextcloud/vue'
+import debounce from 'lodash/fp/debounce.js'
+import { mapStores } from 'pinia'
+import { prop, uniqBy } from 'ramda'
 
-import { summarizeThread } from '../service/AiIntergrationsService'
-import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory'
-import Loading from './Loading'
-import logger from '../logger'
-import Error from './Error'
-import RecipientBubble from './RecipientBubble'
-import ThreadEnvelope from './ThreadEnvelope'
-import ThreadSummary from './ThreadSummary'
+import logger from '../logger.js'
+
+import Error from './Error.vue'
+import Loading from './Loading.vue'
+import RecipientBubble from './RecipientBubble.vue'
+import ThreadEnvelope from './ThreadEnvelope.vue'
+import ThreadSummary from './ThreadSummary.vue'
+import { summarizeThread } from '../service/AiIntergrationsService.js'
+import useMainStore from '../store/mainStore.js'
+import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory.js'
 
 export default {
 	name: 'Thread',
@@ -81,6 +93,12 @@ export default {
 		ThreadEnvelope,
 		Popover,
 	},
+	props: {
+		currentAccountEmail: {
+			type: String,
+			required: true,
+		},
+	},
 
 	data() {
 		return {
@@ -88,17 +106,19 @@ export default {
 			loading: true,
 			message: undefined,
 			errorMessage: '',
-			error: undefined,
+			errorTitle: '',
 			expandedThreads: [],
 			participantsToDisplay: 999,
 			resizeDebounced: debounce(500, this.updateParticipantsToDisplay),
-			enabledThreadSummary: loadState('mail', 'enabled_thread_summary', false),
+			enabledThreadSummary: loadState('mail', 'llm_summaries_available', false),
 			summaryText: '',
 			summaryError: false,
+			loadedThreads: 0,
 		}
 	},
 
 	computed: {
+		...mapStores(useMainStore),
 		moreParticipantsString() {
 			// Returns a number showing the number of thread participants that are not shown in the avatar-header
 			return `+${this.threadParticipants.length - this.participantsToDisplay}`
@@ -107,19 +127,23 @@ export default {
 			return parseInt(this.$route.params.threadId, 10)
 		},
 		thread() {
-			const envelope = this.$store.getters.getEnvelope(this.threadId)
+			const envelope = this.mainStore.getEnvelope(this.threadId)
 			if (envelope === undefined) {
 				return []
 			}
 
-			const envelopes = this.$store.getters.getEnvelopesByThreadRootId(envelope.accountId, envelope.threadRootId)
+			if (this.mainStore.getPreference('layout-message-view', 'threaded') === 'singleton') {
+				return [envelope]
+			}
+
+			const envelopes = this.mainStore.getEnvelopesByThreadRootId(envelope.accountId, envelope.threadRootId)
 			if (envelopes.length === 0) {
 				return []
 			}
 
-			const currentMailbox = this.$store.getters.getMailbox(envelope.mailboxId)
-			const trashMailbox = this.$store.getters.getMailboxes(envelope.accountId).find(mailbox => mailbox.specialRole === 'trash')
-			const junkMailbox = this.$store.getters.getMailboxes(envelope.accountId).find(mailbox => mailbox.specialRole === 'junk')
+			const currentMailbox = this.mainStore.getMailbox(envelope.mailboxId)
+			const trashMailbox = this.mainStore.getMailboxes(envelope.accountId).find(mailbox => mailbox.specialRole === 'trash')
+			const junkMailbox = this.mainStore.getMailboxes(envelope.accountId).find(mailbox => mailbox.specialRole === 'junk')
 
 			let limitEnvelopesToCurrentMailbox = false
 			const mailboxesToIgnore = []
@@ -147,7 +171,7 @@ export default {
 		threadParticipants() {
 			const recipients = this.thread.flatMap(envelope => {
 				return envelope.from.concat(envelope.to).concat(envelope.cc)
-			})
+			}).filter(participant => participant.email !== this.currentAccountEmail)
 			return uniqBy(prop('email'), recipients)
 		},
 		threadSubject() {
@@ -180,13 +204,15 @@ export default {
 	created() {
 		this.resetThread()
 		window.addEventListener('resize', this.resizeDebounced)
+		window.addEventListener('keydown', this.handleKeyDown)
 	},
 	beforeDestroy() {
 		window.removeEventListener('resize', this.resizeDebounced)
+		window.removeEventListener('keydown', this.handleKeyDown)
 	},
 	methods: {
 		async updateSummary() {
-			if (this.thread.length < 2 || !this.enabledThreadSummary) return
+			if (this.thread.length <= 2 || !this.enabledThreadSummary) return
 
 			this.summaryLoading = true
 			try {
@@ -264,20 +290,22 @@ export default {
 		async resetThread() {
 			this.expandedThreads = [this.threadId]
 			this.errorMessage = ''
-			this.error = undefined
-			await this.fetchThread()
+			this.errorTitle = ''
+			if (this.mainStore.getPreference('layout-message-view', 'threaded') === 'threaded') {
+				await this.fetchThread()
+			}
 			this.updateParticipantsToDisplay()
 			this.updateSummary()
-
+			this.loadedThreads = 0
 		},
 		async fetchThread() {
 			this.loading = true
 			this.errorMessage = ''
-			this.error = undefined
+			this.errorTitle = ''
 			const threadId = this.threadId
 
 			try {
-				const thread = await this.$store.dispatch('fetchThread', threadId)
+				const thread = await this.mainStore.fetchThread(threadId)
 				logger.debug(`thread for envelope ${threadId} fetched`, { thread })
 				// TODO: add timeout so that envelope isn't flagged when only viewed
 				//       for a few seconds
@@ -300,13 +328,224 @@ export default {
 			} catch (error) {
 				logger.error('could not load envelope thread', { threadId, error })
 				if (error?.response?.status === 403) {
-					this.error = t('mail', 'Could not load your message thread')
+					this.errorTitle = t('mail', 'Could not load your message thread')
 					this.errorMessage = t('mail', 'The thread doesn\'t exist or has been deleted')
+					this.loading = false
+				} else if (error?.response?.status === 500) {
+					this.error = { message: t('mail', 'Email was not able to be opened') }
 					this.loading = false
 				} else {
 					this.errorMessage = t('mail', 'Could not load your message thread')
 				}
 			}
+		},
+		async handleKeyDown(event) {
+			if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
+				event.preventDefault()
+
+				this.thread.forEach((thread) => {
+					if (!this.expandedThreads.includes(thread.databaseId)) this.expandedThreads.push(thread.databaseId)
+				})
+
+				while (true) {
+					if (this.loadedThreads === this.thread.length) {
+						break
+					}
+					await new Promise(resolve => setTimeout(resolve, 100))
+				}
+
+				const virtualIframe = document.createElement('iframe')
+				virtualIframe.style.display = 'none'
+				document.body.appendChild(virtualIframe)
+				const virtualIframeDocument = virtualIframe.contentDocument || virtualIframe.contentWindow.document
+				virtualIframeDocument.open()
+				virtualIframeDocument.write(`<html><head><title>${t('mail', 'Print')}</title></head><body></body></html>`)
+				virtualIframeDocument.close()
+
+				virtualIframeDocument.body.appendChild(this.addThreadInfo(virtualIframeDocument))
+
+				const messageContainers = document.querySelectorAll('#message-container')
+				for (const [index, messageContainer] of messageContainers.entries()) {
+					const iframe = messageContainer.querySelector('iframe')
+
+					this.addMessageInfo(virtualIframeDocument, index)
+
+					if (!iframe) {
+						const div = virtualIframeDocument.createElement('div')
+						div.innerHTML = messageContainer.innerHTML
+						virtualIframeDocument.body.appendChild(div)
+						continue
+					}
+
+					iframe.setAttribute('data-iframe-size', 'true')
+
+					if (!iframe.contentWindow.document.readyState === 'complete') {
+						await new Promise((resolve) => {
+							iframe.contentWindow.onload = resolve
+						})
+					}
+
+					const iframeDocument = iframe.contentDocument || iframe.contentWindow.document
+					const iframeContent = iframeDocument.body.innerHTML
+					const div = virtualIframeDocument.createElement('div')
+
+					div.innerHTML = iframeContent
+					virtualIframeDocument.body.appendChild(div)
+				}
+
+				const images = virtualIframeDocument.querySelectorAll('img')
+				let imagesLoaded = 0
+
+				images.forEach((img) => {
+					img.addEventListener('load', () => {
+						imagesLoaded++
+						if (imagesLoaded === images.length) {
+							virtualIframe.contentWindow.print()
+							this.removeIframe(virtualIframe)
+						}
+					})
+					img.addEventListener('error', () => {
+						imagesLoaded++
+						if (imagesLoaded === images.length) {
+							virtualIframe.contentWindow.print()
+							this.removeIframe(virtualIframe)
+						}
+					})
+				})
+
+				if (images.length === 0) {
+					virtualIframe.contentWindow.print()
+					this.removeIframe(virtualIframe)
+				}
+
+			}
+		},
+		removeIframe(virtualIframe) {
+			setTimeout(() => {
+				document.body.removeChild(virtualIframe)
+			}, 500)
+		},
+		addMessageInfo(virtualIframeDocument, index) {
+			const hr = virtualIframeDocument.createElement('hr')
+			hr.style.border = '1px solid black'
+
+			const subjectSpan = virtualIframeDocument.createElement('p')
+			subjectSpan.style.fontWeight = 'bold'
+			subjectSpan.textContent = t('mail', 'Subject') + ': ' + this.thread[index].subject
+
+			const senderSpan = virtualIframeDocument.createElement('p')
+			senderSpan.style.fontWeight = 'bold'
+			senderSpan.textContent = t('mail', 'From') + ': ' + this.thread[index].from[0].label + ' <' + this.thread[index].from[0].email + '>'
+
+			const dateSpan = virtualIframeDocument.createElement('p')
+			dateSpan.style.fontWeight = 'bold'
+			dateSpan.textContent = t('mail', 'Date') + ': ' + moment.unix(this.thread[index].dateInt).format('LLL')
+
+			const recipientSpan = virtualIframeDocument.createElement('p')
+			recipientSpan.style.fontWeight = 'bold'
+			recipientSpan.textContent = t('mail', 'To') + ': ' + this.thread[index].to[0].label + this.thread[index].to[0].email
+
+			virtualIframeDocument.body.appendChild(hr)
+			virtualIframeDocument.body.appendChild(subjectSpan)
+			virtualIframeDocument.body.appendChild(senderSpan)
+			virtualIframeDocument.body.appendChild(dateSpan)
+			virtualIframeDocument.body.appendChild(recipientSpan)
+		},
+		addThreadInfo(document) {
+			const threadInfo = document.createElement('div')
+			threadInfo.style.marginTop = '20px'
+			threadInfo.style.marginBottom = '20px'
+			threadInfo.className = 'mail-thread-info'
+
+			const subjectLine = document.createElement('h2')
+			subjectLine.textContent = `${this.threadSubject}`
+			threadInfo.appendChild(subjectLine)
+
+			const participantsLine = document.createElement('p')
+			participantsLine.textContent = this.threadParticipants
+				.map(participant => `${participant.label} <${participant.email}>`)
+				.join(', ')
+			threadInfo.appendChild(participantsLine)
+
+			return threadInfo
+		},
+		addLoadedThread() {
+			this.loadedThreads++
+		},
+		print(threadIndex) {
+			setTimeout(() => {
+				try {
+					const messages = Array.from(document.querySelectorAll('.html-message-body, .mail-message-body'))
+
+					let message
+
+					if (threadIndex !== undefined) {
+						message = messages[threadIndex * 2] ?? messages.pop()
+					} else {
+						// By default, we print the last opened message in the thread
+						message = messages.pop()
+					}
+
+					const iframe = message.querySelector('iframe')
+
+					if (iframe === null) {
+						// Handle plain text messages
+						const messageContainer = message.querySelector('#message-container')
+
+						if (messageContainer) {
+							// Create a new iframe
+							const newIframe = document.createElement('iframe')
+							newIframe.style.display = 'none' // Hide the iframe
+							document.body.appendChild(newIframe)
+
+							// Insert the message content into the iframe
+							const iframeDocument = newIframe.contentDocument || newIframe.contentWindow.document
+							iframeDocument.open()
+							iframeDocument.write(`
+								<html>
+									<head>
+										<title>${this.threadSubject}</title>
+									</head>
+									<body>
+										<div class="message-container">${messageContainer.innerHTML}</div>
+									</body>
+								</html>
+							`)
+
+							const threadInfo = this.addThreadInfo(iframeDocument)
+							iframeDocument.body.insertBefore(threadInfo, iframeDocument.body.firstChild)
+
+							setTimeout(() => {
+								threadInfo.remove()
+							}, 5000)
+
+							iframeDocument.close()
+
+							newIframe.contentWindow.print()
+
+							// Clean up: remove the iframe after printing
+							setTimeout(() => {
+								document.body.removeChild(newIframe)
+							}, 500)
+						}
+
+						return
+					}
+
+					const iframeDocument = iframe.contentDocument || iframe.contentWindow.document
+
+					const threadInfo = this.addThreadInfo(iframeDocument)
+					iframeDocument.body.insertBefore(threadInfo, iframeDocument.body.firstChild)
+
+					setTimeout(() => {
+						threadInfo.remove()
+					}, 200)
+
+					iframe.contentWindow.print()
+				} catch (error) {
+					showError(t('mail', 'Could not print message'))
+				}
+			}, 100)
 		},
 	},
 }
@@ -315,17 +554,19 @@ export default {
 <style lang="scss">
 #mail-message {
 	margin-bottom: 30vh;
+	width: 100%;
+	max-width: 100%;
 
 	.icon-loading {
 		&:only-child:after {
-			margin-top: 20px;
+			margin-top: calc(var(--default-line-height) - var(--default-grid-baseline));
 		}
 	}
 }
 
 .mail-message-body {
 	flex: 1;
-	margin-bottom: 30px;
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
 	position: relative;
 }
 
@@ -334,7 +575,7 @@ export default {
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
-	padding: 30px 0;
+	padding: 0 0 calc(var(--default-grid-baseline) * 2) 0;
 	// somehow ios doesn't care about this !important rule
 	// so we have to manually set left/right padding to chidren
 	// for 100% to be used
@@ -346,22 +587,36 @@ export default {
 	position: -webkit-sticky; // ios/safari fallback
 	position: sticky;
 	top: 0;
-	background: -webkit-linear-gradient(var(--color-main-background), var(--color-main-background) 80%, rgba(255,255,255,0));
-	background: -o-linear-gradient(var(--color-main-background), var(--color-main-background)  80%, rgba(255,255,255,0));
-	background: -moz-linear-gradient(var(--color-main-background), var(--color-main-background)  80%, rgba(255,255,255,0));
-	background: linear-gradient(var(--color-main-background), var(--color-main-background)  80%, rgba(255,255,255,0));
+	margin-bottom: 5px;
+
+	&::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		inset-inline-start: 50%;
+		transform: translateX(-50%);
+		width: 100vw;
+		height: 100%;
+		background: var(--color-main-background);
+		border-bottom: var(--border-width-input-focused) solid var(--color-border);
+		z-index: -1;
+	}
 }
 
 #mail-thread-header-fields {
 	// initial width
 	width: 0;
-	padding-left: 70px;
+	// while scrolling, the back button overlaps with subject on small screen
+	// 66px to allign with the sender Envelope -> 8px margin + 2px border+ avatar -> 40px width  + envelope__header -> 8px padding + sender-> margin 8px
+	padding-inline-start: 66px;
 	// grow and try to fill 100%
 	flex: 1 1 auto;
 	h2,
 	p {
-		padding-bottom: 7px;
+		padding-bottom: calc(var(--default-grid-baseline) * 2);
 		margin-bottom: 0;
+		// some h2 styling coming from server add some space on top
+		margin-top: var(--default-grid-baseline);
 	}
 
 	p {
@@ -369,7 +624,6 @@ export default {
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
-
 	.transparency {
 		opacity: 0.6;
 		a {
@@ -378,24 +632,23 @@ export default {
 	}
 }
 @media only screen and (max-width: 1024px) {
-	#mail-thread-header-fields,
-	h2 {
+	#mail-thread-header-fields {
 		margin-top: -20px;
 	}
 }
 
 .attachment-popover {
 	position: sticky;
-	bottom: 12px;
+	bottom: calc(var(--default-grid-baseline) * 3);
 	text-align: center;
 }
 
 .tooltip-inner {
-	text-align: left;
+	text-align: start;
 }
 
 #mail-content {
-	margin: 10px 38px 0 59px;
+	margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 10) 0 calc(var(--default-grid-baseline) * 14);
 }
 
 #mail-content iframe {
@@ -409,7 +662,7 @@ export default {
 #mail-content a,
 .mail-signature a {
 	color: #07d;
-	border-bottom: 1px dotted #07d;
+	border-bottom: var(--border-width-input) dotted #07d;
 	text-decoration: none;
 	word-wrap: break-word;
 }
@@ -424,68 +677,62 @@ export default {
 @media only screen and (min-width: 600px) {
 	.icon-reply-white,
 	.icon-reply-all-white {
-		background-position: 12px center;
+		background-position: calc(var(--default-grid-baseline) * 3) center;
 	}
-}
-
-@media print {
-	#mail-thread-header-fields {
-		position: relative;
-	}
-	.app-content-details,
-	.splitpanes__pane-details {
-		max-width: unset !important;
-		width: 100% !important;
-	}
-	#header,
-	.app-navigation,
-	#reply-composer,
-	#forward-button,
-	#mail-message-has-blocked-content,
-	.app-content-list,
-	.message-composer,
-	.splitpanes__pane-list,
-	.mail-message-attachments {
-		display: none !important;
-	}
-	.app-content {
-		margin-left: 0 !important;
-	}
-	.mail-message-body {
-		margin-bottom: 0 !important;
-	}
-}
-
-.message-source {
-	font-family: monospace;
-	white-space: pre-wrap;
-	user-select: text;
 }
 
 .avatar-header {
-	max-height: 24px;
+	height: var(--default-clickable-area);
 	overflow: hidden;
+	display: flex;
+	align-items: stretch;
+
+	:deep(.v-popper--theme-dropdown.v-popper__popper .v-popper__inner) {
+		height: 300px;
+		width: 250px;
+		overflow: auto;
+	}
 }
+
 .avatar-more {
 	display: inline;
 	background-color: var(--color-background-dark);
-	padding: 0px 0px 1px 1px;
-	border-radius: 10px;
+	border-radius: var(--border-radius-large);
 	cursor: pointer;
 }
+
+.v-popper.avatar-more {
+	padding: calc(var(--default-grid-baseline) * 2);
+}
+
 .avatar-hidden {
 	visibility: hidden;
-}
-.popover__wrapper {
-	max-width: 500px;
 }
 
 .app-content-list-item-star.icon-starred {
 	display: none;
 }
+
 .user-bubble__wrapper {
-	margin-right: 4px;
+	height: var(--default-clickable-area);
+	padding: var(--default-grid-baseline);
+	margin-inline-end: var(--default-grid-baseline);
+	background-color: var(--color-background-dark);
+	border-radius: var(--border-radius-large);
 }
+
+.v-popper__popper--shown .user-bubble__wrapper {
+	margin-inline-end: 0 !important;
+
+	.user-bubble__content {
+		padding: calc(var(--default-grid-baseline));
+	}
+
+	.user-bubble__wrapper {
+		padding: 0;
+	}
+}
+
 .user-bubble__title {
 	cursor: pointer;
 }

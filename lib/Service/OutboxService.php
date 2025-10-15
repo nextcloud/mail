@@ -3,32 +3,14 @@
 declare(strict_types=1);
 
 /**
- * Mail App
- *
- * @copyright 2022 Anna Larch <anna.larch@gmx.net>
- *
- * @author Anna Larch <anna.larch@gmx.net>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
- *
- * You should have received a copy of the GNU Affero General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
@@ -36,16 +18,17 @@ use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\DB\Exception;
 use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
 class OutboxService {
-	/** @var IMailTransmission */
-	private $transmission;
+
 
 	/** @var LocalMessageMapper */
 	private $mapper;
@@ -71,16 +54,17 @@ class OutboxService {
 	/** @var LoggerInterface */
 	private $logger;
 
-	public function __construct(IMailTransmission  $transmission,
+	public function __construct(
 		LocalMessageMapper $mapper,
-		AttachmentService  $attachmentService,
-		IEventDispatcher    $eventDispatcher,
+		AttachmentService $attachmentService,
+		IEventDispatcher $eventDispatcher,
 		IMAPClientFactory $clientFactory,
 		IMailManager $mailManager,
 		AccountService $accountService,
 		ITimeFactory $timeFactory,
-		LoggerInterface $logger) {
-		$this->transmission = $transmission;
+		LoggerInterface $logger,
+		private Chain $sendChain,
+	) {
 		$this->mapper = $mapper;
 		$this->attachmentService = $attachmentService;
 		$this->eventDispatcher = $eventDispatcher;
@@ -92,7 +76,7 @@ class OutboxService {
 	}
 
 	/**
-	 * @param array $recipients
+	 * @param array<int, array{email: string, label?: string}> $recipients
 	 * @param int $type
 	 * @return Recipient[]
 	 */
@@ -131,31 +115,20 @@ class OutboxService {
 	}
 
 	/**
-	 * @param LocalMessage $message
-	 * @param Account $account
-	 * @return void
-	 * @throws ClientException
+	 * @throws Throwable
+	 * @throws Exception
 	 * @throws ServiceException
 	 */
-	public function sendMessage(LocalMessage $message, Account $account): void {
-		try {
-			$this->transmission->sendLocalMessage($account, $message);
-		} catch (ClientException|ServiceException $e) {
-			// Mark as failed so the message is not sent repeatedly in background
-			$message->setFailed(true);
-			$this->mapper->update($message);
-			throw $e;
-		}
-		$this->attachmentService->deleteLocalMessageAttachments($account->getUserId(), $message->getId());
-		$this->mapper->deleteWithRecipients($message);
+	public function sendMessage(LocalMessage $message, Account $account): LocalMessage {
+		return $this->sendChain->process($account, $message);
 	}
 
 	/**
 	 * @param Account $account
 	 * @param LocalMessage $message
-	 * @param array<int, string[]> $to
-	 * @param array<int, string[]> $cc
-	 * @param array<int, string[]> $bcc
+	 * @param array<int, array{email: string, label?: string}> $to
+	 * @param array<int, array{email: string, label?: string}> $cc
+	 * @param array<int, array{email: string, label?: string}> $bcc
 	 * @param array $attachments
 	 * @return LocalMessage
 	 */
@@ -166,7 +139,7 @@ class OutboxService {
 		$message = $this->mapper->saveWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
 		if ($attachments === []) {
-			$message->setAttachments($attachments);
+			$message->setAttachments([]);
 			return $message;
 		}
 
@@ -184,9 +157,9 @@ class OutboxService {
 	/**
 	 * @param Account $account
 	 * @param LocalMessage $message
-	 * @param array<int, string[]> $to
-	 * @param array<int, string[]> $cc
-	 * @param array<int, string[]> $bcc
+	 * @param array<int, array{email: string, label?: string}> $to
+	 * @param array<int, array{email: string, label?: string}> $cc
+	 * @param array<int, array{email: string, label?: string}> $bcc
 	 * @param array $attachments
 	 * @return LocalMessage
 	 */
@@ -194,6 +167,7 @@ class OutboxService {
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
+
 		$message = $this->mapper->updateWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
 		if ($attachments === []) {
@@ -236,9 +210,7 @@ class OutboxService {
 			return;
 		}
 
-		$accountIds = array_unique(array_map(static function ($message) {
-			return $message->getAccountId();
-		}, $messages));
+		$accountIds = array_unique(array_map(static fn ($message) => $message->getAccountId(), $messages));
 
 		$accounts = array_combine($accountIds, array_map(function ($accountId) {
 			try {
@@ -251,16 +223,13 @@ class OutboxService {
 		}, $accountIds));
 
 		foreach ($messages as $message) {
+			$account = $accounts[$message->getAccountId()];
+			if ($account === null) {
+				// Ignore message of non-existent account
+				continue;
+			}
 			try {
-				$account = $accounts[$message->getAccountId()];
-				if ($account === null) {
-					// Ignore message of non-existent account
-					continue;
-				}
-				$this->sendMessage(
-					$message,
-					$account,
-				);
+				$this->sendChain->process($account, $message);
 				$this->logger->debug('Outbox message {id} sent', [
 					'id' => $message->getId(),
 				]);

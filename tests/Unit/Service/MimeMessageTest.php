@@ -3,22 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Daniel Kesselberg <mail@danielkesselberg.de>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Unit\Service;
@@ -42,7 +28,7 @@ class MimeMessageTest extends TestCase {
 
 		$this->uriParser = new DataUriParser();
 		$this->mimeMessage = new MimeMessage($this->uriParser);
-		$this->account = new Account($this->createMock(MailAccount::class));
+		$this->account = new Account(new MailAccount());
 	}
 
 	public function testTextPlain() {
@@ -59,8 +45,8 @@ class MimeMessageTest extends TestCase {
 		);
 
 		$part = $this->mimeMessage->build(
-			$messageData->isHtml(),
 			$messageData->getBody(),
+			null,
 			[],
 		);
 
@@ -81,7 +67,7 @@ class MimeMessageTest extends TestCase {
 		);
 
 		$part = $this->mimeMessage->build(
-			$messageData->isHtml(),
+			$messageData->getBody(),
 			$messageData->getBody(),
 			[],
 		);
@@ -109,7 +95,7 @@ class MimeMessageTest extends TestCase {
 		);
 
 		$part = $this->mimeMessage->build(
-			$messageData->isHtml(),
+			$messageData->getBody(),
 			$messageData->getBody(),
 			[],
 		);
@@ -143,7 +129,7 @@ class MimeMessageTest extends TestCase {
 		);
 
 		$part = $this->mimeMessage->build(
-			$messageData->isHtml(),
+			$messageData->getBody(),
 			$messageData->getBody(),
 			[$attachment1],
 		);
@@ -194,7 +180,7 @@ class MimeMessageTest extends TestCase {
 		);
 
 		$part = $this->mimeMessage->build(
-			$messageData->isHtml(),
+			$messageData->getBody(),
 			$messageData->getBody(),
 			[$attachment1, $attachment2],
 		);
@@ -252,7 +238,7 @@ class MimeMessageTest extends TestCase {
 		);
 
 		$part = $this->mimeMessage->build(
-			$messageData->isHtml(),
+			null,
 			$messageData->getBody(),
 			[],
 		);
@@ -267,12 +253,12 @@ class MimeMessageTest extends TestCase {
 		$this->assertEquals('text/html', $subParts[1]->getType());
 
 		$this->assertStringContainsString(
-			"Όλοι οι άνθρωποι γεννιούνται ελεύθεροι
+			'Όλοι οι άνθρωποι γεννιούνται ελεύθεροι
 και ίσοι στην αξιοπρέπεια και τα
 δικαιώματα. Είναι προικισμένοι με λογική
 και συνείδηση, και οφείλουν να
 συμπεριφέρονται μεταξύ τους με πνεύμα
-αδελφοσύνης.",
+αδελφοσύνης.',
 			$subParts[0]->getContents(),
 		);
 		$this->assertStringContainsString(

@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Anna Larch <anna.larch@gmx.net>
- *
- * @copyright 2022 Anna Larch <anna.larch@gmx.net>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Unit\Controller;
@@ -210,13 +194,16 @@ class DraftsControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
 		$message->setType(LocalMessage::TYPE_DRAFT);
 		$message->setSendAt(null);
 		$message->setUpdatedAt(123456);
+		$message->setRequestMdn(false);
+		$message->setPgpMime(false);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
@@ -236,7 +223,8 @@ class DraftsControllerTest extends TestCase {
 		$actual = $this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			null,
@@ -257,13 +245,16 @@ class DraftsControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
 		$message->setType(LocalMessage::TYPE_DRAFT);
 		$message->setSendAt(null);
 		$message->setUpdatedAt(123456);
+		$message->setRequestMdn(false);
+		$message->setPgpMime(false);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
@@ -285,7 +276,8 @@ class DraftsControllerTest extends TestCase {
 		$actual = $this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			null,
@@ -298,7 +290,8 @@ class DraftsControllerTest extends TestCase {
 			$message->getInReplyToMessageId(),
 			null,
 			null,
-			1
+			1,
+			false
 		);
 
 		$this->assertEquals($expected, $actual);
@@ -309,13 +302,16 @@ class DraftsControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
 		$message->setType(LocalMessage::TYPE_DRAFT);
 		$message->setSendAt(null);
 		$message->setUpdatedAt(123456);
+		$message->setRequestMdn(false);
+		$message->setPgpMime(false);
 
 		$account = new Account(new MailAccount());
 		$this->accountService->expects(self::once())
@@ -333,7 +329,8 @@ class DraftsControllerTest extends TestCase {
 		$actual = $this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			null,
@@ -354,7 +351,8 @@ class DraftsControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
@@ -374,7 +372,8 @@ class DraftsControllerTest extends TestCase {
 		$actual = $this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			null,
@@ -393,7 +392,8 @@ class DraftsControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
@@ -412,7 +412,8 @@ class DraftsControllerTest extends TestCase {
 		$this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			null,
@@ -432,7 +433,8 @@ class DraftsControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
@@ -460,7 +462,8 @@ class DraftsControllerTest extends TestCase {
 			$message->getId(),
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			null,
@@ -483,7 +486,8 @@ class DraftsControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
@@ -512,7 +516,8 @@ class DraftsControllerTest extends TestCase {
 			$message->getId(),
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			null,
@@ -537,7 +542,8 @@ class DraftsControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
@@ -560,7 +566,8 @@ class DraftsControllerTest extends TestCase {
 			$message->getId(),
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			null,
@@ -583,7 +590,8 @@ class DraftsControllerTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setAliasId(2);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyPlain(null);
+		$message->setBodyHtml('<p>message</p>');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
@@ -611,7 +619,8 @@ class DraftsControllerTest extends TestCase {
 			$message->getId(),
 			$message->getAccountId(),
 			$message->getSubject(),
-			$message->getBody(),
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
 			'<p>message</p>',
 			$message->isHtml(),
 			null,

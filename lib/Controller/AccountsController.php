@@ -3,34 +3,15 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Christoph Wurst <wurst.christoph@gmail.com>
- * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
- * @author Lukas Reschke <lukas@owncloud.com>
- * @author Robin McCorkell <rmccorkell@karoshi.org.uk>
- * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Matthias Rella <mrella@pisys.eu>
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2014-2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
+use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
@@ -48,6 +29,7 @@ use OCA\Mail\Service\SetupService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IConfig;
 use OCP\IL10N;
@@ -55,6 +37,7 @@ use OCP\IRequest;
 use OCP\Security\IRemoteHostValidator;
 use Psr\Log\LoggerInterface;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AccountsController extends Controller {
 	private AccountService $accountService;
 	private string $currentUserId;
@@ -82,7 +65,7 @@ class AccountsController extends Controller {
 		SyncService $syncService,
 		IConfig $config,
 		IRemoteHostValidator $hostValidator,
-		MailboxSync $mailboxSync
+		MailboxSync $mailboxSync,
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
@@ -155,16 +138,16 @@ class AccountsController extends Controller {
 	public function update(int $id,
 		string $accountName,
 		string $emailAddress,
-		string $imapHost = null,
-		int $imapPort = null,
-		string $imapSslMode = null,
-		string $imapUser = null,
-		string $imapPassword = null,
-		string $smtpHost = null,
-		int $smtpPort = null,
-		string $smtpSslMode = null,
-		string $smtpUser = null,
-		string $smtpPassword = null,
+		?string $imapHost = null,
+		?int $imapPort = null,
+		?string $imapSslMode = null,
+		?string $imapUser = null,
+		?string $imapPassword = null,
+		?string $smtpHost = null,
+		?int $smtpPort = null,
+		?string $smtpSslMode = null,
+		?string $smtpUser = null,
+		?string $smtpPassword = null,
 		string $authMethod = 'password'): JSONResponse {
 		try {
 			// Make sure the account actually exists
@@ -235,17 +218,18 @@ class AccountsController extends Controller {
 	 */
 	#[TrapError]
 	public function patchAccount(int $id,
-		string $editorMode = null,
-		int $order = null,
-		bool $showSubscribedOnly = null,
-		int $draftsMailboxId = null,
-		int $sentMailboxId = null,
-		int $trashMailboxId = null,
-		int $archiveMailboxId = null,
-		int $snoozeMailboxId = null,
-		bool $signatureAboveQuote = null,
-		int $trashRetentionDays = null,
-		int $junkMailboxId = null): JSONResponse {
+		?string $editorMode = null,
+		?int $order = null,
+		?bool $showSubscribedOnly = null,
+		?int $draftsMailboxId = null,
+		?int $sentMailboxId = null,
+		?int $trashMailboxId = null,
+		?int $archiveMailboxId = null,
+		?int $snoozeMailboxId = null,
+		?bool $signatureAboveQuote = null,
+		?int $trashRetentionDays = null,
+		?int $junkMailboxId = null,
+		?bool $searchBody = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $id);
 
 		$dbAccount = $account->getMailAccount();
@@ -290,8 +274,11 @@ class AccountsController extends Controller {
 			$this->mailManager->getMailbox($this->currentUserId, $junkMailboxId);
 			$dbAccount->setJunkMailboxId($junkMailboxId);
 		}
+		if ($searchBody !== null) {
+			$dbAccount->setSearchBody($searchBody);
+		}
 		return new JSONResponse(
-			$this->accountService->save($dbAccount)
+			new Account($this->accountService->save($dbAccount))
 		);
 	}
 
@@ -307,7 +294,7 @@ class AccountsController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
-	public function updateSignature(int $id, string $signature = null): JSONResponse {
+	public function updateSignature(int $id, ?string $signature = null): JSONResponse {
 		$this->accountService->updateSignature($id, $this->currentUserId, $signature);
 		return new JSONResponse();
 	}
@@ -349,15 +336,15 @@ class AccountsController extends Controller {
 	#[TrapError]
 	public function create(string $accountName,
 		string $emailAddress,
-		string $imapHost = null,
-		int $imapPort = null,
-		string $imapSslMode = null,
-		string $imapUser = null,
+		?string $imapHost = null,
+		?int $imapPort = null,
+		?string $imapSslMode = null,
+		?string $imapUser = null,
 		?string $imapPassword = null,
-		string $smtpHost = null,
-		int $smtpPort = null,
-		string $smtpSslMode = null,
-		string $smtpUser = null,
+		?string $smtpHost = null,
+		?int $smtpPort = null,
+		?string $smtpSslMode = null,
+		?string $smtpUser = null,
 		?string $smtpPassword = null,
 		string $authMethod = 'password'): JSONResponse {
 		if ($this->config->getAppValue(Application::APP_ID, 'allow_new_mail_accounts', 'yes') === 'no') {
@@ -431,7 +418,7 @@ class AccountsController extends Controller {
 		string $cc,
 		string $bcc,
 		bool $isHtml = true,
-		int $draftId = null): JSONResponse {
+		?int $draftId = null): JSONResponse {
 		if ($draftId === null) {
 			$this->logger->info("Saving a new draft in account <$id>");
 		} else {
@@ -444,10 +431,10 @@ class AccountsController extends Controller {
 			try {
 				$previousDraft = $this->mailManager->getMessage($this->currentUserId, $draftId);
 			} catch (ClientException $e) {
-				$this->logger->info("Draft " . $draftId . " could not be loaded: " . $e->getMessage());
+				$this->logger->info('Draft ' . $draftId . ' could not be loaded: ' . $e->getMessage());
 			}
 		}
-		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, [], $isHtml);
+		$messageData = NewMessageData::fromRequest($account, $subject, $body, $to, $cc, $bcc, [], $isHtml);
 
 		try {
 			/** @var Mailbox $draftsMailbox */
@@ -456,13 +443,14 @@ class AccountsController extends Controller {
 				$account,
 				$draftsMailbox,
 				Horde_Imap_Client::SYNC_NEWMSGSUIDS,
-				[],
-				false
+				false,
+				null,
+				[]
 			);
 			return new JSONResponse([
 				'id' => $this->mailManager->getMessageIdForUid($draftsMailbox, $newUID)
 			]);
-		} catch (ClientException | ServiceException $ex) {
+		} catch (ClientException|ServiceException $ex) {
 			$this->logger->error('Saving draft failed: ' . $ex->getMessage());
 			throw $ex;
 		}
@@ -501,4 +489,19 @@ class AccountsController extends Controller {
 		$this->accountService->update($account);
 		return MailJsonResponse::success();
 	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $id Account id
+	 * @return JSONResponse
+	 *
+	 * @throws ClientException
+	 */
+	public function testAccountConnection(int $id) {
+		return new JSONResponse([
+			'data' => $this->accountService->testAccountConnection($this->currentUserId, $id),
+		]);
+	}
+
 }

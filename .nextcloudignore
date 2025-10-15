@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
 /babel.config.js
 /.babelrc
 /build
@@ -8,18 +10,15 @@ codecov.yml
 /.editorconfig
 /.eslintrc.js
 .git
+.git-blame-ignore-revs
 .gitattributes
 .github
 .gitignore
 .hg
 /issue_template.md
-/jest.config.js
-/.jscsrc
-/.jshintignore
-/.jshintrc
-/karma.conf.js
 /krankerl.toml
 /l10n/no-php
+/.php-cs-fixer.dist.php
 /.tx
 /Makefile
 /.nextcloudignore
@@ -27,7 +26,6 @@ codecov.yml
 /package.json
 /package-lock.json
 /phpunit*xml
-/postcss.config.js
 /psalm.xml
 /rector.php
 /renovate.json
@@ -38,4 +36,10 @@ codecov.yml
 /vendor/bin
 /vendor-bin
 /vendor/cerdic/css-tidy/css_optimiser.php
+/vendor/*/*/e2e
+/vendor/*/*/test
+/vendor/*/*/tests
+/vendor/*/*/test_data
 /webpack.*
+/vitest.config.*
+/patches

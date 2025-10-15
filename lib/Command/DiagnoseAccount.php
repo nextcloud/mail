@@ -3,22 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Command;
@@ -39,7 +25,7 @@ use function array_reduce;
 use function json_decode;
 use function sort;
 
-class DiagnoseAccount extends Command {
+final class DiagnoseAccount extends Command {
 	private const ARGUMENT_ACCOUNT_ID = 'account-id';
 
 	private AccountService $accountService;
@@ -86,7 +72,7 @@ class DiagnoseAccount extends Command {
 			$this->logger->error('Could not get account statistics: ' . $e, [
 				'exception' => $e,
 			]);
-			$output->writeln("<error>Horde error occurred: " . $e->getMessage() . ". See nextcloud.log for more details.</error>");
+			$output->writeln('<error>Horde error occurred: ' . $e->getMessage() . '. See nextcloud.log for more details.</error>');
 			return 2;
 		} finally {
 			$imapClient->logout();
@@ -103,7 +89,7 @@ class DiagnoseAccount extends Command {
 	 */
 	private function printCapabilitiesStats(OutputInterface $output,
 		Horde_Imap_Client_Socket $imapClient): void {
-		$output->writeln("IMAP capabilities:");
+		$output->writeln('IMAP capabilities:');
 		// Once logged in more capabilities are advertised
 		$imapClient->login();
 		$capabilities = array_keys(
@@ -116,7 +102,7 @@ class DiagnoseAccount extends Command {
 		foreach ($capabilities as $capability) {
 			$output->writeln("- $capability");
 		}
-		$output->writeln("");
+		$output->writeln('');
 	}
 
 	/**
@@ -134,6 +120,6 @@ class DiagnoseAccount extends Command {
 			$status = $imapClient->status($mb, Horde_Imap_Client::STATUS_MESSAGES);
 			return $c + $status['messages'];
 		}, 0);
-		$output->writeln("Account has " . $messages . " messages in " . count($mailboxes) . " mailboxes");
+		$output->writeln('Account has ' . $messages . ' messages in ' . count($mailboxes) . ' mailboxes');
 	}
 }

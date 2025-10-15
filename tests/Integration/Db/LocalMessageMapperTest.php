@@ -3,28 +3,13 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2022 Anna Larch <anna.larch@gmx.net>
- *
- * @author 2022 Anna Larch <anna.larch@gmx.net>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Integration\Db;
 
+use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
@@ -39,6 +24,7 @@ use OCP\IDBConnection;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class LocalMessageMapperTest extends TestCase {
+	use DatabaseTransaction;
 	use ImapTestAccount;
 
 	/** @var IDBConnection */
@@ -81,7 +67,7 @@ class LocalMessageMapperTest extends TestCase {
 		$message->setAliasId(2);
 		$message->setSendAt(123);
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
 		$this->entity = $this->mapper->insert($message);
@@ -96,7 +82,7 @@ class LocalMessageMapperTest extends TestCase {
 		$this->assertEquals(2, $row->getAliasId());
 		$this->assertEquals($this->account->getId(), $row->getAccountId());
 		$this->assertEquals('subject', $row->getSubject());
-		$this->assertEquals('message', $row->getBody());
+		$this->assertEquals('message', $row->getBodyHtml());
 		$this->assertEquals('abc', $row->getInReplyToMessageId());
 		$this->assertTrue($row->isHtml());
 		$this->assertEmpty($row->getAttachments());
@@ -113,7 +99,7 @@ class LocalMessageMapperTest extends TestCase {
 		$this->assertEquals(2, $row->getAliasId());
 		$this->assertEquals($this->account->getId(), $row->getAccountId());
 		$this->assertEquals('subject', $row->getSubject());
-		$this->assertEquals('message', $row->getBody());
+		$this->assertEquals('message', $row->getBodyHtml());
 		$this->assertEquals('abc', $row->getInReplyToMessageId());
 		$this->assertTrue($row->isHtml());
 		$this->assertEmpty($row->getAttachments());
@@ -148,7 +134,7 @@ class LocalMessageMapperTest extends TestCase {
 		$message->setAliasId(3);
 		$message->setSendAt(3);
 		$message->setSubject('savedWithRelated');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcdefg');
 		$recipient = new Recipient();
@@ -165,14 +151,14 @@ class LocalMessageMapperTest extends TestCase {
 		$this->assertEquals(3, $row->getAliasId());
 		$this->assertEquals($this->account->getId(), $row->getAccountId());
 		$this->assertEquals('savedWithRelated', $row->getSubject());
-		$this->assertEquals('message', $row->getBody());
+		$this->assertEquals('message', $row->getBodyHtml());
 		$this->assertEquals('abcdefg', $row->getInReplyToMessageId());
 		$this->assertTrue($row->isHtml());
 		$this->assertEmpty($row->getAttachments());
 		$this->assertCount(1, $row->getRecipients());
 	}
 
-	public function testUpdateWithRecipient(): void {
+	public function testUpdateWithRecipients(): void {
 		$results = $this->mapper->getAllForUser($this->account->getUserId());
 		$this->assertEmpty($results[0]->getRecipients());
 		// cleanup
@@ -199,7 +185,7 @@ class LocalMessageMapperTest extends TestCase {
 		$message->setAliasId(3);
 		$message->setSendAt(3);
 		$message->setSubject('savedWithRelated');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcdefg');
 		$recipient = new Recipient();

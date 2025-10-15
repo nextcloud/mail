@@ -1,3 +1,7 @@
+<!--
+  - SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<div class="reservation">
 		<div class="departure">
@@ -32,16 +36,16 @@
 </template>
 
 <script>
-import ArrowIcon from 'vue-material-design-icons/ArrowRight'
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import moment from '@nextcloud/moment'
 import ical from 'ical.js'
 import md5 from 'md5'
-import moment from '@nextcloud/moment'
-import { showError, showSuccess } from '@nextcloud/dialogs'
-import TrainIcon from 'vue-material-design-icons/Train'
+import ArrowIcon from 'vue-material-design-icons/ArrowRight.vue'
+import TrainIcon from 'vue-material-design-icons/Train.vue'
 
-import CalendarImport from './CalendarImport'
-import { importCalendarEvent } from '../../service/DAVService'
-import logger from '../../logger'
+import CalendarImport from './CalendarImport.vue'
+import logger from '../../logger.js'
+import { importCalendarEvent } from '../../service/DAVService.js'
 
 export default {
 	name: 'TrainReservation',
@@ -112,7 +116,7 @@ export default {
 						trainNr: this.data.reservationFor.trainNumber,
 						depStation: this.data.reservationFor.departureStation.name,
 						arrStation: this.data.reservationFor.arrivalStation.name,
-					})
+					}),
 				)
 			} else {
 				event.updatePropertyWithValue(
@@ -120,7 +124,7 @@ export default {
 					t('mail', 'Train from {depStation} to {arrStation}', {
 						depStation: this.data.reservationFor.departureStation.name,
 						arrStation: this.data.reservationFor.arrivalStation.name,
-					})
+					}),
 				)
 			}
 
@@ -186,7 +190,7 @@ export default {
 }
 
 .departure {
-	text-align: right;
+	text-align: end;
 }
 
 .connection {

@@ -1,63 +1,97 @@
 <!--
-  - @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
-  -
-  - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
+  - SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 <template>
-	<AppContentDetails>
-		<NcEmptyContent
-			:title="welcomeMessage">
-			<template #icon>
-				<IconMail :size="65" />
-			</template>
-		</NcEmptyContent>
-		<NewMessageButtonHeader />
+	<AppContentDetails class="app-content no-message-selected"
+		:class="{ 'no-message-selected--themed': isThemed, }"
+		:style="{ 'backgroundImage': isThemed ? undefined: backgroundImgSrc, }">
+		<div class="no-message-selected__heading">
+			{{ t('mail', 'Welcome to {productName} Mail', { productName }, null, {escape: false}) }}
+		</div>
+		<div class="no-message-selected__text">
+			{{ t('mail', 'Start writing a message by clicking below or select an existing message to display its contents') }}
+		</div>
+		<div class="no-message-selected__action">
+			<NewMessageButtonHeader :show-refresh="false" />
+		</div>
 	</AppContentDetails>
 </template>
 
 <script>
-import { NcAppContentDetails as AppContentDetails, NcEmptyContent } from '@nextcloud/vue'
-import IconMail from 'vue-material-design-icons/Email'
-import NewMessageButtonHeader from './NewMessageButtonHeader'
+import { generateFilePath } from '@nextcloud/router'
+import { NcAppContentDetails as AppContentDetails } from '@nextcloud/vue'
+import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
+
+import NewMessageButtonHeader from './NewMessageButtonHeader.vue'
 
 export default {
 	name: 'NoMessageSelected',
 	components: {
 		NewMessageButtonHeader,
 		AppContentDetails,
-		NcEmptyContent,
-		IconMail,
+	},
+
+	setup() {
+		return {
+			isDarkTheme: useIsDarkTheme(),
+		}
+	},
+
+	data() {
+		return {
+			backgroundImgSrc: this.isDarkTheme
+				? 'url("' + generateFilePath('mail', 'img', 'welcome-connection-dark.png') + '")'
+				: 'url("' + generateFilePath('mail', 'img', 'welcome-connection-light.png') + '")',
+			isThemed: this.isDarkTheme
+				? window.getComputedStyle(document.body).getPropertyValue('--color-primary-element') !== '#0091f2'
+				: window.getComputedStyle(document.body).getPropertyValue('--color-primary-element') !== '#00679e',
+		}
 	},
 
 	computed: {
-		welcomeMessage() {
-			return t('mail', 'Welcome to {cloudName} Mail', { cloudName: window?.OC?.theme?.name ?? 'Nextcloud' })
+		productName() {
+			return window?.OC?.theme?.name ?? 'Nextcloud'
 		},
 	},
 }
 </script>
 <style lang="scss" scoped>
-::v-deep .refresh__button {
-	display: none !important;
-}
-.header {
-	display: grid !important;
-	justify-content: center !important;
+@use '../../css/fluid';
+
+.no-message-selected {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	gap: calc(var(--default-grid-baseline, 4px) * 2);
+	padding-inline-start: 50px;
+	height: 100%;
+	max-width: 100% !important; /* restricted otherwise by stronger selector */
+
+	@include fluid.background;
+
+	/** fallback gradient when the theme color isn't standard blue */
+	&--themed {
+		@include fluid.gradient-background;
+	}
+
+	&__heading {
+		font-weight: bold;
+		font-size: 20px;
+		line-height: 30px;
+	}
+
+	&__text {
+		text-wrap-style: balance;
+		max-width: 50%;
+	}
+
+	&__action {
+		:deep(button) {
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2)
+		}
+	}
 }
 </style>

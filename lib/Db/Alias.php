@@ -3,23 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @author Jakob Sack <mail@jakobsack.de>
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Db;
@@ -31,8 +17,8 @@ use ReturnTypeWillChange;
 /**
  * @method void setAccountId(int $accountId)
  * @method int getAccountId()
- * @method void setName(string $name)
- * @method string getName()
+ * @method void setName(string|null $name)
+ * @method string|null getName()
  * @method void setAlias(string $alias)
  * @method string getAlias()
  * @method void setSignature(string|null $signature)
@@ -51,7 +37,7 @@ class Alias extends Entity implements JsonSerializable {
 	/** @var int */
 	protected $accountId;
 
-	/** @var string */
+	/** @var string|null */
 	protected $name;
 
 	/** @var string */
@@ -70,18 +56,19 @@ class Alias extends Entity implements JsonSerializable {
 	protected $smimeCertificateId;
 
 	public function __construct() {
-		$this->addType('accountId', 'int');
+		$this->addType('accountId', 'integer');
 		$this->addType('name', 'string');
 		$this->addType('alias', 'string');
-		$this->addType('provisioningId', 'int');
-		$this->addType('signatureMode', 'int');
-		$this->addType('smimeCertificateId', 'int');
+		$this->addType('provisioningId', 'integer');
+		$this->addType('signatureMode', 'integer');
+		$this->addType('smimeCertificateId', 'integer');
 	}
 
 	public function isProvisioned(): bool {
 		return $this->getProvisioningId() !== null;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

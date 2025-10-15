@@ -2,25 +2,9 @@
 
 declare(strict_types=1);
 
-/*
- * @copyright 2023 Anna Larch <anna.larch@gmx.net>
- *
- * @author 2023 Anna Larch <anna.larch@gmx.net>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Unit\BackgroundJob;
@@ -38,7 +22,7 @@ use OCP\IUser;
 use OCP\Notification\INotification;
 
 class QuotaJobTest extends TestCase {
-	/** @var ServiceMockObject*/
+	/** @var ServiceMockObject */
 	private $serviceMock;
 
 	/** @var SyncJob */
@@ -91,9 +75,13 @@ class QuotaJobTest extends TestCase {
 	}
 
 	public function testUserDoesntExist(): void {
+		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
+			'canAuthenticateImap' => true,
+		]);
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(123);
 		$account->method('getUserId')->willReturn('user123');
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$this->serviceMock->getParameter('accountService')
 			->expects(self::once())
 			->method('findById')
@@ -121,11 +109,13 @@ class QuotaJobTest extends TestCase {
 		);
 	}
 
-	public function testQuotaTooLow(): void {
+	public function testQuotaNoAuthentication(): void {
 		$oldQuota = 10;
 		$newQuota = 20;
 		$quotaDTO = new Quota(20, 100);
-		$mailAccount = $this->createMock(MailAccount::class);
+		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
+			'canAuthenticateImap' => false,
+		]);
 		$account = $this->createConfiguredMock(Account::class, [
 			'getId' => 123,
 			'getUserId' => 'user123',
@@ -140,6 +130,62 @@ class QuotaJobTest extends TestCase {
 			->method('findById')
 			->with(123)
 			->willReturn($account);
+		$account->expects(self::once())
+			->method('getMailAccount')
+			->willReturn($mailAccount);
+		$mailAccount->expects(self::once())
+			->method('canAuthenticateImap');
+		$this->serviceMock->getParameter('userManager')
+			->expects(self::never())
+			->method('get');
+		$this->serviceMock->getParameter('logger')
+			->expects(self::once())
+			->method('debug');
+		$this->serviceMock->getParameter('mailManager')
+			->expects(self::never())
+			->method('getQuota');
+		$account->expects(self::never())
+			->method('calculateAndSetQuotaPercentage')
+			->with($quotaDTO);
+		$account->expects(self::never())
+			->method('getQuotaPercentage')
+			->willReturn($newQuota);
+		$this->serviceMock->getParameter('accountService')
+			->expects(self::never())
+			->method('update')
+			->with($mailAccount);
+
+		$this->job->setArgument([
+			'accountId' => 123,
+		]);
+		$this->job->start(
+			$this->createMock(JobList::class),
+		);
+	}
+
+	public function testQuotaTooLow(): void {
+		$oldQuota = 10;
+		$newQuota = 20;
+		$quotaDTO = new Quota(20, 100);
+		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
+			'canAuthenticateImap' => true,
+		]);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getId' => 123,
+			'getUserId' => 'user123',
+			'getMailAccount' => $mailAccount,
+		]);
+		$user = $this->createConfiguredMock(IUser::class, [
+			'isEnabled' => true,
+		]);
+
+		$this->serviceMock->getParameter('accountService')
+			->expects(self::once())
+			->method('findById')
+			->with(123)
+			->willReturn($account);
+		$mailAccount->expects(self::once())
+			->method('canAuthenticateImap');
 		$this->serviceMock->getParameter('userManager')
 			->expects(self::once())
 			->method('get')
@@ -155,7 +201,7 @@ class QuotaJobTest extends TestCase {
 		$account->expects(self::once())
 			->method('calculateAndSetQuotaPercentage')
 			->with($quotaDTO);
-		$account->expects(self::exactly(2))
+		$account->expects(self::exactly(3))
 			->method('getMailAccount')
 			->willReturn($mailAccount);
 		$account->expects(self::once())
@@ -178,7 +224,9 @@ class QuotaJobTest extends TestCase {
 		$oldQuota = 85;
 		$newQuota = 95;
 		$quotaDTO = new Quota(95, 100);
-		$mailAccount = $this->createMock(MailAccount::class);
+		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
+			'canAuthenticateImap' => true,
+		]);
 		$account = $this->createConfiguredMock(Account::class, [
 			'getId' => 123,
 			'getUserId' => 'user123',
@@ -207,7 +255,7 @@ class QuotaJobTest extends TestCase {
 		$account->expects(self::once())
 			->method('calculateAndSetQuotaPercentage')
 			->with($quotaDTO);
-		$account->expects(self::exactly(2))
+		$account->expects(self::exactly(3))
 			->method('getMailAccount')
 			->willReturn($mailAccount);
 		$account->expects(self::once())
@@ -269,6 +317,61 @@ class QuotaJobTest extends TestCase {
 			->expects(self::once())
 			->method('notify')
 			->with($notification);
+
+		$this->job->setArgument([
+			'accountId' => 123,
+		]);
+		$this->job->start(
+			$this->createMock(JobList::class),
+		);
+	}
+
+	public function testQuotaZero(): void {
+		$oldQuota = 0;
+		$newQuota = 0;
+		$quotaDTO = new Quota(0, 0);
+		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
+			'canAuthenticateImap' => true,
+		]);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getId' => 123,
+			'getUserId' => 'user123',
+			'getMailAccount' => $mailAccount,
+		]);
+		$user = $this->createConfiguredMock(IUser::class, [
+			'isEnabled' => true,
+		]);
+
+		$this->serviceMock->getParameter('accountService')
+			->expects(self::once())
+			->method('findById')
+			->with(123)
+			->willReturn($account);
+		$this->serviceMock->getParameter('userManager')
+			->expects(self::once())
+			->method('get')
+			->with('user123')
+			->willReturn($user);
+		$this->serviceMock->getParameter('logger')
+			->expects(self::never())
+			->method('debug');
+		$this->serviceMock->getParameter('mailManager')
+			->expects(self::once())
+			->method('getQuota')
+			->willReturn($quotaDTO);
+		$account->expects(self::once())
+			->method('calculateAndSetQuotaPercentage')
+			->with($quotaDTO);
+		$account->expects(self::exactly(3))
+			->method('getMailAccount')
+			->willReturn($mailAccount);
+		$account->expects(self::once())
+			->method('getQuotaPercentage')
+			->willReturn($newQuota);
+		$this->serviceMock->getParameter('accountService')
+			->expects(self::once())
+			->method('update')
+			->with($mailAccount);
 
 		$this->job->setArgument([
 			'accountId' => 123,

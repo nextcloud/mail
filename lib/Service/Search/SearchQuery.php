@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Service\Search;
@@ -28,6 +12,8 @@ namespace OCA\Mail\Service\Search;
 class SearchQuery {
 	/** @var int|null */
 	private $cursor;
+
+	private bool $threaded = true;
 
 	/** @var Flag[] */
 	private $flags = [];
@@ -51,7 +37,7 @@ class SearchQuery {
 	private $subjects = [];
 
 	/** @var string[] */
-	private $textTokens = [];
+	private $bodies = [];
 
 	/** @var array[] */
 	private $tags = [];
@@ -64,6 +50,11 @@ class SearchQuery {
 
 	/** @var bool */
 	private $hasAttachments = false;
+
+	/** @var bool */
+	private $mentionsMe = false;
+
+	private string $match = 'allof';
 
 	/**
 	 * @return int|null
@@ -78,6 +69,22 @@ class SearchQuery {
 	 */
 	public function setCursor(int $cursor): void {
 		$this->cursor = $cursor;
+	}
+
+	public function getThreaded(): bool {
+		return $this->threaded;
+	}
+
+	public function setThreaded(bool $threaded): void {
+		$this->threaded = $threaded;
+	}
+
+	public function getMatch(): string {
+		return $this->match;
+	}
+
+	public function setMatch(string $match): void {
+		$this->match = $match;
 	}
 
 	/**
@@ -154,16 +161,12 @@ class SearchQuery {
 	public function addSubject(string $subject): void {
 		$this->subjects[] = $subject;
 	}
-
-	/**
-	 * @return string[]
-	 */
-	public function getTextTokens(): array {
-		return $this->textTokens;
+	public function getBodies(): array {
+		return $this->bodies;
 	}
 
-	public function addTextToken(string $textToken): void {
-		$this->textTokens[] = $textToken;
+	public function addBody(string $body): void {
+		$this->bodies[] = $body;
 	}
 
 	/**
@@ -236,5 +239,19 @@ class SearchQuery {
 	 */
 	public function setHasAttachments(bool $hasAttachments): void {
 		$this->hasAttachments = $hasAttachments;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getMentionsMe(): bool {
+		return $this->mentionsMe;
+	}
+
+	/**
+	 * @param bool $hasAttachments
+	 */
+	public function setMentionsMe(bool $mentionsMe): void {
+		$this->mentionsMe = $mentionsMe;
 	}
 }

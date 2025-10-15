@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2021 Anna Larch <anna@nextcloud.com>
- *
- * @author 2021 Anna Larch <anna@nextcloud.com>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Db;
@@ -101,8 +85,8 @@ class TagMapper extends QBMapper {
 
 		$qb = $this->db->getQueryBuilder();
 		$qb->insert('mail_message_tags')
-		   ->setValue('imap_message_id', $qb->createNamedParameter($messageId))
-		   ->setValue('tag_id', $qb->createNamedParameter($tag->getId(), IQueryBuilder::PARAM_INT));
+			->setValue('imap_message_id', $qb->createNamedParameter($messageId))
+			->setValue('tag_id', $qb->createNamedParameter($tag->getId(), IQueryBuilder::PARAM_INT));
 		$qb->executeStatement();
 	}
 
@@ -125,9 +109,7 @@ class TagMapper extends QBMapper {
 	 * @return Tag[][]
 	 */
 	public function getAllTagsForMessages(array $messages, string $userId): array {
-		$ids = array_map(static function (Message $message) {
-			return $message->getMessageId();
-		}, $messages);
+		$ids = array_map(static fn (Message $message) => $message->getMessageId(), $messages);
 
 		$tags = [];
 		$qb = $this->db->getQueryBuilder();
@@ -152,9 +134,7 @@ class TagMapper extends QBMapper {
 				// Construct a Tag instance but omit any other joined columns
 				$tags[$messageId][] = Tag::fromRow(array_filter(
 					$row,
-					static function (string $key) {
-						return $key !== 'imap_message_id';
-					},
+					static fn (string $key) => $key !== 'imap_message_id',
 					ARRAY_FILTER_USE_KEY
 				));
 			}
@@ -170,9 +150,7 @@ class TagMapper extends QBMapper {
 	 * @return string[]
 	 */
 	public function getTaggedMessageIdsForMessages(array $messages, string $userId, string $imapLabel): array {
-		$ids = array_map(static function (Message $message) {
-			return $message->getMessageId();
-		}, $messages);
+		$ids = array_map(static fn (Message $message) => $message->getMessageId(), $messages);
 
 		$qb = $this->db->getQueryBuilder();
 		$tagsQuery = $qb->selectDistinct(['t.*', 'mt.imap_message_id'])
@@ -244,9 +222,7 @@ class TagMapper extends QBMapper {
 			$tags[] = $tag;
 		}
 		$dbTags = $this->getAllTagsForUser($account->getUserId());
-		$toInsert = array_udiff($tags, $dbTags, static function (Tag $a, Tag $b) {
-			return strcmp($a->getImapLabel(), $b->getImapLabel());
-		});
+		$toInsert = array_udiff($tags, $dbTags, static fn (Tag $a, Tag $b) => strcmp($a->getImapLabel(), $b->getImapLabel()));
 		foreach ($toInsert as $entity) {
 			$this->insert($entity);
 		}
@@ -255,19 +231,17 @@ class TagMapper extends QBMapper {
 	public function deleteDuplicates(): void {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('mt2.id')
-		->from('mail_message_tags', 'mt2')
-		->join('mt2', 'mail_message_tags', 'mt1', $qb->expr()->andX(
-			$qb->expr()->gt('mt1.id', 'mt2.id'),
-			$qb->expr()->eq('mt1.imap_message_id', 'mt2.imap_message_id'),
-			$qb->expr()->eq('mt1.tag_id', 'mt2.tag_id')
-		)
-		);
+			->from('mail_message_tags', 'mt2')
+			->join('mt2', 'mail_message_tags', 'mt1', $qb->expr()->andX(
+				$qb->expr()->gt('mt1.id', 'mt2.id'),
+				$qb->expr()->eq('mt1.imap_message_id', 'mt2.imap_message_id'),
+				$qb->expr()->eq('mt1.tag_id', 'mt2.tag_id')
+			)
+			);
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
-		$ids = array_unique(array_map(static function ($row) {
-			return $row['id'];
-		}, $rows));
+		$ids = array_unique(array_map(static fn ($row) => $row['id'], $rows));
 
 		$deleteQB = $this->db->getQueryBuilder();
 		$deleteQB->delete('mail_message_tags')
@@ -278,27 +252,57 @@ class TagMapper extends QBMapper {
 		}
 	}
 
+	/**
+	 * Deletes orphans in the table mail_message_tags.
+	 *
+	 * Also deletes all tags (mail_tags) associated with a user if the user no longer exists.
+	 * Otherwise, the tags will be kept for other mail accounts of the user.
+	 */
 	public function deleteOrphans(): void {
+		// Deletes orphans in the table mail_message_tags
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('mt.id')
-		->from('mail_message_tags', 'mt')
-		->leftJoin('mt', $this->getTableName(), 't', $qb->expr()->eq('t.id', 'mt.tag_id'))
-		->where($qb->expr()->isNull('t.id'));
+			->from('mail_messages', 'm')
+			->rightJoin('m', 'mail_message_tags', 'mt', $qb->expr()->eq('m.message_id', 'mt.imap_message_id'))
+			->where($qb->expr()->isNull('m.message_id'));
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
 
-		$ids = array_map(static function (array $row) {
-			return $row['id'];
-		}, $rows);
+		$ids = array_map(static fn (array $row) => $row['id'], $rows);
 
-		$deleteQB = $this->db->getQueryBuilder();
-		$deleteQB->delete('mail_message_tags')
-			->where($deleteQB->expr()->in('id', $deleteQB->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
+		$deleteMT = $this->db->getQueryBuilder();
+		$deleteMT->delete('mail_message_tags')
+			->where($deleteMT->expr()->in('id', $deleteMT->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
 		foreach (array_chunk($ids, 1000) as $chunk) {
-			$deleteQB->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$deleteQB->executeStatement();
+			$deleteMT->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+			$deleteMT->executeStatement();
 		}
+
+		// Deletes all tags associated with a user if the user no longer exists
+		$qb2 = $this->db->getQueryBuilder();
+
+		$qb2->select('tags.user_id')
+			->from('mail_tags', 'tags')
+			->leftJoin('tags', 'accounts', 'user', $qb2->expr()->eq('tags.user_id', 'user.uid'))
+			->where($qb2->expr()->isNull('user.uid'))
+			->groupBy('user_id');
+		$result = $qb2->executeQuery();
+		$rows = $result->fetchAll();
+		$result->closeCursor();
+
+		$user_ids = array_map(static fn (array $row) => $row['user_id'], $rows);
+
+		$deleteT = $this->db->getQueryBuilder();
+		$deleteT->delete('mail_tags')
+			->where(
+				$deleteT->expr()->in('user_id', $deleteT->createParameter('user_ids'), IQueryBuilder::PARAM_STR_ARRAY)
+			);
+		foreach (array_chunk($user_ids, 1000) as $chunk) {
+			$deleteT->setParameter('user_ids', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
+			$deleteT->executeStatement();
+		}
+
 	}
 }

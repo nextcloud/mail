@@ -3,25 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Db;
@@ -29,6 +12,7 @@ namespace OCA\Mail\Db;
 use Horde_Mail_Rfc822_Identification;
 use JsonSerializable;
 use OCA\Mail\AddressList;
+use OCA\Mail\Service\Avatar\Avatar;
 use OCP\AppFramework\Db\Entity;
 use ReturnTypeWillChange;
 use function in_array;
@@ -75,6 +59,8 @@ use function json_encode;
  * @method bool|null getFlagMdnsent()
  * @method void setPreviewText(?string $subject)
  * @method null|string getPreviewText()
+ * @method void setSummary(?string $summary)
+ * @method null|string getSummary()
  * @method void setUpdatedAt(int $time)
  * @method int getUpdatedAt()
  * @method bool isImipMessage()
@@ -85,6 +71,8 @@ use function json_encode;
  * @method void setImipError(bool $imipError)
  * @method bool|null isEncrypted()
  * @method void setEncrypted(bool|null $encrypted)
+ * @method bool getMentionsMe()
+ * @method void setMentionsMe(bool $isMentionned)
  */
 class Message extends Entity implements JsonSerializable {
 	private const MUTABLE_FLAGS = [
@@ -123,9 +111,11 @@ class Message extends Entity implements JsonSerializable {
 	protected $flagImportant = false;
 	protected $flagMdnsent;
 	protected $previewText;
+	protected $summary;
 	protected $imipMessage = false;
 	protected $imipProcessed = false;
 	protected $imipError = false;
+	protected $mentionsMe = false;
 
 	/**
 	 * @var bool|null
@@ -146,6 +136,12 @@ class Message extends Entity implements JsonSerializable {
 
 	/** @var Tag[] */
 	private $tags = [];
+
+	/** @var Avatar|null */
+	private $avatar;
+
+	/** @var bool */
+	private $fetchAvatarFromClient = false;
 
 	public function __construct() {
 		$this->from = new AddressList([]);
@@ -297,15 +293,32 @@ class Message extends Entity implements JsonSerializable {
 			);
 		}
 	}
+	/**
+	 * @param Avatar|null $avatar
+	 * @return void
+	 */
+	public function setAvatar(?Avatar $avatar): void {
+		$this->avatar = $avatar;
+	}
 
+	public function setFetchAvatarFromClient(bool $fetchAvatarFromClient): void {
+		$this->fetchAvatarFromClient = $fetchAvatarFromClient;
+	}
+
+	/**
+	 * @return ?Avatar
+	 */
+	public function getAvatar(): ?Avatar {
+		return $this->avatar;
+	}
+
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		$tags = $this->getTags();
 		$indexed = array_combine(
 			array_map(
-				static function (Tag $tag) {
-					return $tag->getImapLabel();
-				}, $tags),
+				static fn (Tag $tag) => $tag->getImapLabel(), $tags),
 			$tags
 		);
 
@@ -339,7 +352,11 @@ class Message extends Entity implements JsonSerializable {
 			'threadRootId' => $this->getThreadRootId(),
 			'imipMessage' => $this->isImipMessage(),
 			'previewText' => $this->getPreviewText(),
+			'summary' => $this->getSummary(),
 			'encrypted' => ($this->isEncrypted() === true),
+			'mentionsMe' => $this->getMentionsMe(),
+			'avatar' => $this->avatar?->jsonSerialize(),
+			'fetchAvatarFromClient' => $this->fetchAvatarFromClient,
 		];
 	}
 }

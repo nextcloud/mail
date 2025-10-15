@@ -1,9 +1,15 @@
+<!--
+  - SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-FileCopyrightText: 2013-2016 ownCloud, Inc.
+  - SPDX-License-Identifier: AGPL-3.0-only
+-->
 # Nextcloud Mail
 
 ![Downloads](https://img.shields.io/github/downloads/nextcloud/mail/total.svg)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/nextcloud/mail/Test)
+[![REUSE status](https://api.reuse.software/badge/github.com/nextcloud/mail)](https://api.reuse.software/info/github.com/nextcloud/mail)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/nextcloud/mail/test.yml)
 [![Codecov](https://img.shields.io/codecov/c/github/nextcloud/mail)](https://codecov.io/gh/nextcloud/mail)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=nextcloud/mail)](https://dependabot.com)
+[![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://github.com/nextcloud/mail/issues/7948)
 
 **💌 A mail app for [Nextcloud](https://nextcloud.com)**
 
@@ -12,13 +18,13 @@
 
 ## Why is this so awesome?
 
-* **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.
+* **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar, Files & Tasks – more to come.
 * **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.
-* **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.
+* **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension or the built-in support for S/MIME encryption and signatures.
 * **📑 Message threads!** Now we have proper grouping of message threads.
 * **🗄️ Mailbox management!** You can edit, delete, add submailboxes and more.
 * **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://www.horde.org) libraries.
-* **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!
+* **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email), [Stalwart](https://stalw.art) or [Dovecot](https://www.dovecot.org)!
 
 If you experience any issues or have any suggestions for improvement, use the [issue tracker](https://github.com/nextcloud/mail/issues). Please follow the [issue template chooser](https://github.com/nextcloud/mail/issues/new/choose) so we get the info needed to debug and fix the problem. Thanks!
 
@@ -41,6 +47,12 @@ The rating depends on the installed text processing backend. See [the rating ove
 
 Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).
 
+## Maintainers
+
+* [@ChristophWurst](https://github.com/ChristophWurst)
+* [@GretaD](https://github.com/GretaD)
+* [@kesselb](https://github.com/kesselb)
+
 ## Installation
 
 The app is distributed through the [app store](https://apps.nextcloud.com/apps/mail) and you can install it [right from your Nextcloud installation](https://docs.nextcloud.com/server/stable/admin_manual/apps_management.html).
@@ -60,7 +72,7 @@ Once npm and Node.js are installed, PHP and JavaScript dependencies can be insta
 make dev-setup
 ```
 
-We are also available on [our public Mail development chat](https://cloud.nextcloud.com/call/89474m7g), if you want to join the development discussion. Please report bugs [here on Github](https://github.com/nextcloud/mail/issues/new/choose) and open any questions and support tickets at [the community forum](https://help.nextcloud.com/c/apps/mail).
+We are also available on [our public Mail development chat](https://cloud.nextcloud.com/call/5qb8fujz), if you want to join the development discussion. Please report bugs [here on Github](https://github.com/nextcloud/mail/issues/new/choose) and open any questions and support tickets at [the community forum](https://help.nextcloud.com/c/apps/mail).
 
 ## Documentation
 
@@ -68,3 +80,6 @@ Need help? Check out our documentation. It's split into three parts.
 * [Admin documentation](doc/admin.md) (installation, configuration, troubleshooting)
 * [Developer documentation](doc/developer.md) (developer setup, nightly builds)
 * [User documentation](doc/user.md) (usage, keyboard shortcuts)
+
+## Credits
+This project uses [CKEditor](https://ckeditor.com), which is licensed under the [GPLv2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).

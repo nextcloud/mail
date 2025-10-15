@@ -1,25 +1,8 @@
 <?php
 
 /**
- * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Unit\Controller;
@@ -57,9 +40,7 @@ class AvatarControllerTest extends TestCase {
 			->method('getTime')
 			->willReturn(10000);
 		$this->oldFactory = \OC::$server->offsetGet(ITimeFactory::class);
-		\OC::$server->registerService(ITimeFactory::class, function () use ($timeFactory) {
-			return $timeFactory;
-		});
+		\OC::$server->registerService(ITimeFactory::class, fn () => $timeFactory);
 
 		$this->controller = new AvatarsController('mail', $request, $this->avatarService, 'jane');
 	}
@@ -95,7 +76,7 @@ class AvatarControllerTest extends TestCase {
 
 		$resp = $this->controller->url($email);
 
-		$expected = new JSONResponse([], Http::STATUS_NOT_FOUND);
+		$expected = new JSONResponse([], Http::STATUS_NO_CONTENT);
 		$expected->cacheFor(24 * 60 * 60, false, true);
 		$this->assertEquals($expected, $resp);
 	}

@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Service\Classification;
@@ -76,9 +60,7 @@ class ImportanceRulesClassifier {
 		$this->sentMessagesExtractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 
 		return array_combine(
-			array_map(static function (Message $m) {
-				return $m->getUid();
-			}, $messages),
+			array_map(static fn (Message $m) => $m->getUid(), $messages),
 			array_map(function (Message $m) {
 				$from = $m->getFrom()->first();
 				if ($from === null || $from->getEmail() === null) {

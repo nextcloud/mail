@@ -1,23 +1,9 @@
 <?php
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Thomas Müller <thomas.mueller@tmit.eu>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Integration\Db;
@@ -59,50 +45,31 @@ class CollectedAddressMapperTest extends TestCase {
 		$this->db = OC::$server->getDatabaseConnection();
 		$this->mapper = new CollectedAddressMapper($this->db);
 
-		$this->address1 = new CollectedAddress();
-		$this->address1->setEmail('user1@example.com');
-		$this->address1->setDisplayName('User 1');
-		$this->address1->setUserId($this->userId);
-
-		$this->address2 = new CollectedAddress();
-		$this->address2->setEmail('user2@example.com');
-		$this->address2->setDisplayName('User 2');
-		$this->address2->setUserId($this->userId);
-
-		$this->address3 = new CollectedAddress();
-		$this->address3->setEmail('"User 3" <user3@domain.com>');
-		$this->address3->setDisplayName('User 3');
-		$this->address3->setUserId($this->userId);
-
-		$sql = 'INSERT INTO *PREFIX*mail_coll_addresses (`email`, `display_name`, `user_id`) VALUES (?, ?, ?)';
-		$stmt = $this->db->prepare($sql);
-
 		// Empty DB
 		$qb = $this->db->getQueryBuilder();
 		$qb->delete($this->mapper->getTableName());
 		$qb->executeStatement();
 
-		$stmt->execute([
-			$this->address1->getEmail(),
-			$this->address1->getDisplayName(),
-			$this->address1->getUserId(),
-		]);
-		$this->address1->setId($this->db->lastInsertId('PREFIX*mail_coll_addresses'));
-		$stmt->execute([
-			$this->address2->getEmail(),
-			$this->address2->getDisplayName(),
-			$this->address2->getUserId(),
-		]);
-		$this->address2->setId($this->db->lastInsertId('PREFIX*mail_coll_addresses'));
-		$stmt->execute([
-			$this->address3->getEmail(),
-			$this->address3->getDisplayName(),
-			$this->address3->getUserId(),
-		]);
-		$this->address3->setId($this->db->lastInsertId('PREFIX*mail_coll_addresses'));
+		$this->address1 = new CollectedAddress();
+		$this->address1->setEmail('user1@example.com');
+		$this->address1->setDisplayName('User 1');
+		$this->address1->setUserId($this->userId);
+		$this->address1 = $this->mapper->insert($this->address1);
+
+		$this->address2 = new CollectedAddress();
+		$this->address2->setEmail('user2@example.com');
+		$this->address2->setDisplayName('User 2');
+		$this->address2->setUserId($this->userId);
+		$this->address2 = $this->mapper->insert($this->address2);
+
+		$this->address3 = new CollectedAddress();
+		$this->address3->setEmail('"User 3" <user3@domain.com>');
+		$this->address3->setDisplayName('User 3');
+		$this->address3->setUserId($this->userId);
+		$this->address3 = $this->mapper->insert($this->address3);
 	}
 
-	public function matchingData() {
+	public function matchingData(): array {
 		return [
 			['user1@example.com', ['user1@example.com']],
 			['examp', ['user1@example.com', 'user2@example.com']],
@@ -118,25 +85,25 @@ class CollectedAddressMapperTest extends TestCase {
 		$this->assertCount(\count($result), $matches);
 		$i = 0;
 		foreach ($matches as $match) {
-			$this->assertInstanceOf('\OCA\Mail\Db\CollectedAddress', $match);
+			$this->assertInstanceOf(\OCA\Mail\Db\CollectedAddress::class, $match);
 			$this->assertContains($match->getEmail(), $result);
 			$this->assertEquals($this->userId, $match->getUserId());
 			$i++;
 		}
 	}
 
-	public function existsData() {
+	public function insertIfNewData(): array {
 		return [
-			['user1@example.com', true],
-			['user3@example.com', false],
+			['user1@example.com', false],
+			['user3@example.com', true],
 		];
 	}
 
 	/**
-	 * @dataProvider existsData
+	 * @dataProvider insertIfNewData
 	 */
-	public function testExists($email, $expected) {
-		$actual = $this->mapper->exists($this->userId, $email);
+	public function testExists($email, $expected): void {
+		$actual = $this->mapper->insertIfNew($this->userId, $email, null);
 
 		$this->assertSame($expected, $actual);
 	}

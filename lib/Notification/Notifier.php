@@ -1,26 +1,10 @@
 <?php
 
 declare(strict_types=1);
+
 /**
- * Calendar App
- *
- * @copyright 2023 Anna Larch <anna.larch@gmx.net>
- *
- * @author Anna Larch <anna.larch@gmx.net>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
- *
- * You should have received a copy of the GNU Affero General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Notification;
@@ -30,6 +14,7 @@ use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
 use OCP\Notification\INotification;
 use OCP\Notification\INotifier;
+use OCP\Notification\UnknownNotificationException;
 
 class Notifier implements INotifier {
 	private IFactory $factory;
@@ -41,6 +26,7 @@ class Notifier implements INotifier {
 		$this->url = $url;
 	}
 
+	#[\Override]
 	public function getID(): string {
 		return Application::APP_ID;
 	}
@@ -49,15 +35,17 @@ class Notifier implements INotifier {
 	 * Human-readable name describing the notifier
 	 * @return string
 	 */
+	#[\Override]
 	public function getName(): string {
 		return $this->factory->get(Application::APP_ID)->t('Mail');
 	}
 
 
+	#[\Override]
 	public function prepare(INotification $notification, string $languageCode): INotification {
 		if ($notification->getApp() !== Application::APP_ID) {
 			// Not my app => throw
-			throw new \InvalidArgumentException();
+			throw new UnknownNotificationException();
 		}
 
 		// Read the language from the notification
@@ -67,15 +55,13 @@ class Notifier implements INotifier {
 			// Deal with known subjects
 			case 'quota_depleted':
 				$parameters = $notification->getSubjectParameters();
-				$notification->setRichSubject($l->t('You are reaching your mailbox quota limit for {account}'), [
-					'account' => [
+				$notification->setRichSubject($l->t('You are reaching your mailbox quota limit for {account_email}'), [
+					'account_email' => [
 						'type' => 'highlight',
 						'id' => $parameters['id'],
 						'name' => $parameters['account_email']
 					]
 				]);
-				$notification->setParsedSubject($notification->getRichSubject());
-
 				$messageParameters = $notification->getMessageParameters();
 				$notification->setRichMessage($l->t('You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails.'),
 					[
@@ -85,10 +71,9 @@ class Notifier implements INotifier {
 							'name' => (string)$messageParameters['quota_percentage'] . '%',
 						]
 					]);
-				$notification->setParsedMessage($notification->getParsedMessage());
 				break;
 			default:
-				throw  new \InvalidArgumentException();
+				throw  new UnknownNotificationException();
 		}
 
 		return $notification;

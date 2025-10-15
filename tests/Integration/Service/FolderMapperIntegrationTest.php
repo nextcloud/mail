@@ -1,22 +1,8 @@
 <?php
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Integration\Service;
@@ -26,15 +12,21 @@ use OCA\Mail\Account;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\Tests\Integration\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class FolderMapperIntegrationTest extends TestCase {
 	/** @var FolderMapper */
 	private $mapper;
 
+	/** @var LoggerInterface|MockObject */
+	private $logger;
+
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->mapper = new FolderMapper();
+		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->mapper = new FolderMapper($this->logger);
 	}
 
 	/**
@@ -58,8 +50,6 @@ class FolderMapperIntegrationTest extends TestCase {
 		$folders = $this->mapper->getFolders($account, $client);
 
 		$this->assertGreaterThan(1, count($folders));
-		foreach ($folders as $folder) {
-			$this->assertInstanceOf(Folder::class, $folder);
-		}
+		$this->assertContainsOnlyInstancesOf(Folder::class, $folders);
 	}
 }

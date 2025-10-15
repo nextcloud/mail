@@ -3,22 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\IMAP;
@@ -29,12 +15,20 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
+use Psr\Log\LoggerInterface;
 use function array_filter;
 use function array_map;
 use function in_array;
 use function reset;
 
 class FolderMapper {
+
+	/** @var LoggerInterface */
+	private $logger;
+
+	public function __construct(LoggerInterface $logger) {
+		$this->logger = $logger;
+	}
 	/**
 	 * This is a temporary workaround for when the sieve folder is a subfolder of
 	 * INBOX. Once "#386 Subfolders and Dovecot" has been resolved, we can go back
@@ -69,19 +63,15 @@ class FolderMapper {
 			// This is a special folder that must not be shown
 			return !in_array($mailbox['mailbox']->utf8, self::DOVECOT_SIEVE_FOLDERS, true);
 		});
-		return array_map(static function (array $mailbox) use ($account) {
-			return new Folder(
-				$account->getId(),
-				$mailbox['mailbox'],
-				$mailbox['attributes'],
-				$mailbox['delimiter'],
-				null,
-			);
-		}, $toPersist);
+		return array_map(static fn (array $mailbox) => new Folder(
+			$mailbox['mailbox'],
+			$mailbox['attributes'],
+			$mailbox['delimiter'],
+			null,
+		), $toPersist);
 	}
 
 	public function createFolder(Horde_Imap_Client_Socket $client,
-		Account $account,
 		string $name): Folder {
 		$client->createMailbox($name);
 
@@ -94,11 +84,10 @@ class FolderMapper {
 		$mb = reset($list);
 
 		if ($mb === null) {
-			throw new ServiceException("Created mailbox does not exist");
+			throw new ServiceException('Created mailbox does not exist');
 		}
 
 		return new Folder(
-			$account->getId(),
 			$mb['mailbox'],
 			$mb['attributes'],
 			$mb['delimiter'],
@@ -142,10 +131,17 @@ class FolderMapper {
 
 		$statuses = [];
 		foreach ($multiStatus as $mailbox => $status) {
-			$statuses[$mailbox] = new MailboxStats(
-				$status['messages'],
-				$status['unseen'],
-			);
+			try {
+				if (!isset($status['messages'], $status['unseen'])) {
+					throw new ServiceException('Could not fetch stats of mailbox: ' . $mailbox);
+				}
+				$statuses[$mailbox] = new MailboxStats(
+					$status['messages'],
+					$status['unseen'],
+				);
+			} catch (ServiceException $e) {
+				$this->logger->warning($e->getMessage());
+			}
 		}
 		return $statuses;
 	}
@@ -203,9 +199,7 @@ class FolderMapper {
 			strtolower(Horde_Imap_Client::SPECIALUSE_TRASH)
 		];
 
-		$attributes = array_map(static function ($n) {
-			return strtolower($n);
-		}, $folder->getAttributes());
+		$attributes = array_map(static fn ($n) => strtolower($n), $folder->getAttributes());
 
 		foreach ($specialUseAttributes as $attr) {
 			if (in_array($attr, $attributes)) {
@@ -258,7 +252,7 @@ class FolderMapper {
 		try {
 			$client->deleteMailbox($folderId);
 		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException('Could not delete mailbox: '.$e->getMessage(), 0, $e);
+			throw new ServiceException('Could not delete mailbox: ' . $e->getMessage(), 0, $e);
 		}
 	}
 }

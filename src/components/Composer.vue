@@ -1,73 +1,94 @@
+<!--
+  - SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<div class="message-composer">
-		<NcReferencePickerModal v-if="isPickerAvailable && isPickerOpen" @submit="onPicked" @cancel="closePicker" />
+		<NcReferencePickerModal v-if="isPickerAvailable && isPickerOpen"
+			id="reference-picker"
+			@submit="onPicked"
+			@cancel="closePicker" />
+		<TextBlockModal v-if="isTextBlockPickerOpen" @close="isTextBlockPickerOpen = false" @insert="onTextBlockInsert" />
 		<div class="composer-fields composer-fields__from mail-account">
 			<label class="from-label" for="from">
 				{{ t('mail', 'From') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Multiselect
-					id="from"
+				<NcSelect id="from"
 					:value="selectedAlias"
 					:options="aliases"
 					label="name"
-					track-by="selectId"
+					:get-option-key="(option)=>option.selectId"
 					:searchable="false"
-					:custom-label="formatAliases"
 					:placeholder="t('mail', 'Select account')"
+					:aria-label-combobox="t('mail', 'Select account')"
 					:clear-on-select="false"
-					@select="onAliasChange" />
+					:append-to-body="false"
+					:selectable="(option)=>option.selectable"
+					@option:selected="onAliasChange">
+					<template #option="option">
+						{{ formatAliases(option) }}
+					</template>
+
+					<template #selected-option="option">
+						{{ formatAliases(option) }}
+					</template>
+				</NcSelect>
 			</div>
 		</div>
 		<div class="composer-fields">
-			<label class="to-label" for="to">
-				{{ t('mail', 'To') }}
-			</label>
+			<div class="composer-fields__label">
+				<label class="to-label" for="to">
+					{{ t('mail', 'To') }}
+				</label>
+				<ButtonVue size="small" type="tertiary-no-background" @click.prevent="toggleViewMode">
+					{{ t('mail','Cc/Bcc') }}
+				</ButtonVue>
+			</div>
 			<div class="composer-fields--custom">
-				<Multiselect id="to"
+				<NcSelect id="to"
 					ref="toLabel"
-					v-model="selectTo"
-					:class="{'opened': !autoLimit}"
-					:options="selectableRecipients"
+					:value="selectTo"
+					:options="selectableRecipients.filter(recipient=>!selectTo.some(to=>to.email===recipient.email))"
+					:get-option-key="(option) => option.email"
 					:taggable="true"
-					label="label"
-					track-by="email"
+					:aria-label-combobox="t('mail', 'Select recipient')"
+					:filter-by="(option, label, search)=>filterOption(option, label, search,'to')"
 					:multiple="true"
-					:placeholder="t('mail', 'Contact or email address …')"
-					:clear-on-select="true"
-					:close-on-select="false"
-					:show-no-options="false"
-					:preserve-search="true"
-					:hide-selected="true"
+					:clear-search-on-select="true"
 					:loading="loadingIndicatorTo"
-					:auto-limit="autoLimit"
-					:options-limit="30"
+					:reducible="true"
+					:clearable="true"
+					:no-wrap="false"
+					:append-to-body="false"
+					:create-option="createRecipientOption"
+					:clear-search-on-blur="() => clearOnBlur('to')"
 					@input="saveDraftDebounced"
-					@tag="onNewToAddr"
-					@search-change="onAutocomplete($event, 'to')">
-					<template #tag="{ option }">
-						<RecipientListItem
-							:option="option"
+					@option:selecting="onNewToAddr"
+					@search:blur="onNewToAddr"
+					@search="onAutocomplete($event, 'to')">
+					<template #search="{ events, attributes }">
+						<input :placeholder="t('mail', 'Contact or email address …')"
+							type="search"
+							class="vs__search"
+							v-bind="attributes"
+							v-on="events">
+					</template>
+					<template #selected-option-container="{option}">
+						<RecipientListItem :option="option"
+							class="vs__selected selected"
 							@remove-recipient="onRemoveRecipient(option, 'to')" />
 					</template>
-					<template #option="{ option }">
-						<div class="multiselect__tag multiselect__tag-custom">
-							<ListItemIcon
-								:no-margin="true"
-								:title="option.label"
-								:subtitle="option.email"
-								:url="option.photo"
-								:avatar-size="24" />
+					<template #option="option">
+						<div>
+							<ListItemIcon :no-margin="true"
+								:name="option.label"
+								:subname="getSubnameForRecipient(option)"
+								:icon-class="!option.id ? 'icon-user' : null"
+								:url="option.photo" />
 						</div>
 					</template>
-				</Multiselect>
-				<button
-					:title="t('mail','Toggle recipients list mode')"
-					:class="{'active':!autoLimit}"
-					@click.prevent="toggleViewMode">
-					<UnfoldMoreHorizontal v-if="autoLimit" :size="24" />
-					<UnfoldLessHorizontal v-else :size="24" />
-				</button>
+				</NcSelect>
 			</div>
 		</div>
 		<div v-if="showCC" class="composer-fields">
@@ -75,42 +96,51 @@
 				{{ t('mail', 'Cc') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Multiselect id="cc"
-					v-model="selectCc"
-					:class="{'opened': !autoLimit}"
-					:options="selectableRecipients"
+				<NcSelect id="cc"
+					ref="toLabel"
+					:value="selectCc"
+					:class="{'opened': !autoLimit,'select':true}"
+					:options="selectableRecipients.filter(recipient=>!selectCc.some(cc=>cc.email===recipient.email))"
+					:get-option-key="(option) => option.email"
+					:no-wrap="false"
+					:filter-by="(option, label, search)=>filterOption(option, label, search,'cc')"
 					:taggable="true"
-					label="label"
-					track-by="email"
+					:clear-search-on-blur="() => clearOnBlur('cc')"
+					:append-to-body="false"
 					:multiple="true"
 					:placeholder="t('mail', 'Contact or email address …')"
-					:clear-on-select="true"
-					:show-no-options="false"
-					:preserve-search="true"
+					:aria-label-combobox="t('mail', 'Contact or email address …')"
+					:clear-search-on-select="true"
 					:loading="loadingIndicatorCc"
-					:auto-limit="autoLimit"
-					:hide-selected="true"
-					:options-limit="30"
+					:reducible="true"
+					:clearable="true"
+					:create-option="createRecipientOption"
 					@input="saveDraftDebounced"
-					@tag="onNewCcAddr"
-					@search-change="onAutocomplete($event, 'cc')">
-					<template #tag="{ option }">
-						<RecipientListItem
-							:option="option"
+					@option:selecting="onNewCcAddr"
+					@search:blur="onNewCcAddr"
+					@search="onAutocomplete($event, 'cc')">
+					<template #search="{ events, attributes }">
+						<input :placeholder="t('mail', 'Contact or email address …')"
+							type="search"
+							class="vs__search"
+							v-bind="attributes"
+							v-on="events">
+					</template>
+					<template #selected-option-container="{option}">
+						<RecipientListItem :option="option"
+							class="vs__selected"
 							@remove-recipient="onRemoveRecipient(option, 'cc')" />
 					</template>
-					<template #option="{ option }">
-						<div class="multiselect__tag multiselect__tag-custom">
-							<ListItemIcon
-								:no-margin="true"
-								:title="option.label"
-								:subtitle="option.email"
+					<template #option="option">
+						<div>
+							<ListItemIcon :no-margin="true"
+								:name="option.label"
+								:subname="getSubnameForRecipient(option)"
 								:url="option.photo"
-								:avatar-size="24" />
+								:icon-class="!option.id ? 'icon-user' : null" />
 						</div>
 					</template>
-					<span slot="noOptions">{{ t('mail', '') }}</span>
-				</Multiselect>
+				</NcSelect>
 			</div>
 		</div>
 		<div v-if="showBCC" class="composer-fields">
@@ -118,49 +148,59 @@
 				{{ t('mail', 'Bcc') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Multiselect id="bcc"
-					v-model="selectBcc"
-					:class="{'opened': !autoLimit}"
-					:options="selectableRecipients"
+				<NcSelect id="bcc"
+					ref="toLabel"
+					:value="selectBcc"
+					:class="{'opened': !autoLimit,'select':true}"
+					:no-wrap="false"
+					:filter-by="(option, label, search)=>filterOption(option, label, search,'bcc')"
+					:options="selectableRecipients.filter(recipient=>!selectBcc.some(bcc=>bcc.email===recipient.email))"
+					:get-option-key="(option) => option.email"
 					:taggable="true"
-					label="label"
-					track-by="email"
+					:clear-search-on-blur="() => clearOnBlur('bcc')"
+					:append-to-body="false"
 					:multiple="true"
 					:placeholder="t('mail', 'Contact or email address …')"
-					:show-no-options="false"
-					:clear-on-select="true"
-					:preserve-search="true"
+					:aria-label-combobox="t('mail', 'Contact or email address …')"
+					:clear-search-on-select="true"
+					:reset-on-options-change="true"
 					:loading="loadingIndicatorBcc"
-					:hide-selected="true"
-					:options-limit="30"
+					:clearable="true"
+					:create-option="createRecipientOption"
 					@input="saveDraftDebounced"
-					@tag="onNewBccAddr"
-					@search-change="onAutocomplete($event, 'bcc')">
-					<template #tag="{ option }">
-						<RecipientListItem
-							:option="option"
+					@option:selecting="onNewBccAddr"
+					@search:blur="onNewBccAddr"
+					@search="onAutocomplete($event, 'bcc')">
+					<template #search="{ events, attributes }">
+						<input :placeholder="t('mail', 'Contact or email address …')"
+							type="search"
+							class="vs__search"
+							v-bind="attributes"
+							dir="auto"
+							v-on="events">
+					</template>
+					<template #selected-option-container="{option}">
+						<RecipientListItem :option="option"
+							class="vs__selected"
 							@remove-recipient="onRemoveRecipient(option, 'bcc')" />
 					</template>
-					<template #option="{ option }">
-						<div class="multiselect__tag multiselect__tag-custom">
-							<ListItemIcon
-								:no-margin="true"
-								:title="option.label"
-								:subtitle="option.email"
+					<template #option="option">
+						<div>
+							<ListItemIcon :no-margin="true"
+								:name="option.label"
+								:subname="getSubnameForRecipient(option)"
 								:url="option.photo"
-								:avatar-size="24" />
+								:icon-class="!option.id ? 'icon-user' : null" />
 						</div>
 					</template>
-					<span slot="noOptions">{{ t('mail', 'No contacts found.') }}</span>
-				</Multiselect>
+				</NcSelect>
 			</div>
 		</div>
 		<div class="composer-fields">
 			<label for="subject" class="subject-label hidden-visually">
 				{{ t('mail', 'Subject') }}
 			</label>
-			<input
-				id="subject"
+			<input id="subject"
 				v-model="subjectVal"
 				type="text"
 				name="subject"
@@ -188,8 +228,7 @@
 		</div>
 		<div class="composer-fields message-editor">
 			<!--@keypress="onBodyKeyPress"-->
-			<TextEditor
-				v-if="!encrypt"
+			<TextEditor v-if="!encrypt"
 				ref="editor"
 				:key="editorMode"
 				:value="bodyVal"
@@ -199,11 +238,13 @@
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply || !isFirstOpen"
 				:bus="bus"
+				:text-blocks="textBlocks"
 				@input="onEditorInput"
 				@ready="onEditorReady"
+				@mention="handleMention"
+				@submit="onEditorSubmit"
 				@show-toolbar="handleShow" />
-			<MailvelopeEditor
-				v-else
+			<MailvelopeEditor v-else
 				ref="mailvelopeEditor"
 				:value="bodyVal"
 				:recipients="allRecipients"
@@ -242,33 +283,57 @@
 				</ButtonVue>
 			</div>
 			<div class="composer-actions--secondary-actions">
+				<ButtonVue v-if="!encrypt && editorPlainText"
+					type="tertiary"
+					:aria-label="t('mail', 'Enable formatting')"
+					@click="setEditorModeHtml()">
+					<template #icon>
+						<IconFormat :size="20" :title="t('mail', 'Enable formatting')" />
+					</template>
+				</ButtonVue>
+				<ButtonVue v-if="!encrypt && !editorPlainText"
+					type="tertiary"
+					:pressed="true"
+					:aria-label="t('mail', 'Disable formatting')"
+					@click="setEditorModeText()">
+					<template #icon>
+						<IconFormat :size="20" :title="t('mail', 'Disable formatting')" />
+					</template>
+				</ButtonVue>
+
+				<Actions :open.sync="isAddAttachmentsOpen">
+					<template #icon>
+						<Paperclip :size="20" />
+					</template>
+					<ActionButton :close-after-click="true" @click="onAddLocalAttachment">
+						<template #icon>
+							<IconUpload :size="20" />
+						</template>
+						{{
+							t('mail', 'Upload attachment')
+						}}
+					</ActionButton>
+					<ActionButton :close-after-click="true" @click="onAddCloudAttachment">
+						<template #icon>
+							<IconFolder :size="20" />
+						</template>
+						{{
+							t('mail', 'Add attachment from Files')
+						}}
+					</ActionButton>
+					<ActionButton :close-after-click="true" :disabled="encrypt" @click="onAddCloudAttachmentLink">
+						<template #icon>
+							<IconPublic :size="20" />
+						</template>
+						{{
+							t('mail', 'Add share link from Files')
+						}}
+					</ActionButton>
+				</Actions>
+
 				<Actions :open.sync="isActionsOpen"
 					@close="isMoreActionsOpen = false">
 					<template v-if="!isMoreActionsOpen">
-						<ActionButton @click="onAddLocalAttachment">
-							<template #icon>
-								<IconUpload :size="20" />
-							</template>
-							{{
-								t('mail', 'Upload attachment')
-							}}
-						</ActionButton>
-						<ActionButton @click="onAddCloudAttachment">
-							<template #icon>
-								<IconFolder :size="20" />
-							</template>
-							{{
-								t('mail', 'Add attachment from Files')
-							}}
-						</ActionButton>
-						<ActionButton :disabled="encrypt" @click="onAddCloudAttachmentLink">
-							<template #icon>
-								<IconPublic :size="20" />
-							</template>
-							{{
-								addShareLink
-							}}
-						</ActionButton>
 						<ActionButton v-if="isPickerAvailable" :close-after-click="true" @click="openPicker">
 							<template #icon>
 								<IconLinkPicker :size="20" />
@@ -277,8 +342,17 @@
 								t('mail', 'Smart picker')
 							}}
 						</ActionButton>
-						<ActionButton
-							v-if="!isScheduledSendingDisabled"
+						<ActionButton :close-after-click="true" @click="openTextBlockPicker">
+							<template #icon>
+								<NcIconSvgWrapper :size="20"
+									:title="t('mail', 'Text blocks')"
+									:svg="textBlockSvg" />
+							</template>
+							{{
+								t('mail', 'Text blocks')
+							}}
+						</ActionButton>
+						<ActionButton v-if="!isScheduledSendingDisabled"
 							:close-after-click="false"
 							@click="isMoreActionsOpen=true">
 							<template #icon>
@@ -288,32 +362,15 @@
 								t('mail', 'Send later')
 							}}
 						</ActionButton>
-						<ActionButton
-							v-if="!encrypt && editorPlainText"
-							@click="setEditorModeHtml()">
-							<template #icon>
-								<IconHtml :size="20" />
-							</template>
-							{{ t('mail', 'Enable formatting') }}
-						</ActionButton>
-						<ActionButton
-							v-if="!encrypt && !editorPlainText"
-							@click="setEditorModeText()">
-							<template #icon>
-								<IconClose :size="20" />
-							</template>
-							{{ t('mail', 'Disable formatting') }}
-						</ActionButton>
-						<ActionCheckbox
-							:checked="requestMdnVal"
+						<ActionCheckbox :checked="requestMdnVal"
 							@check="requestMdnVal = true"
 							@uncheck="requestMdnVal = false">
 							{{ t('mail', 'Request a read receipt') }}
 						</ActionCheckbox>
 						<ActionCheckbox v-if="smimeCertificateForCurrentAlias"
 							:checked="wantsSmimeSign"
-							@check="wantsSmimeSign = true"
-							@uncheck="wantsSmimeSign = false">
+							@check="smimeSignCheck(true)"
+							@uncheck="smimeSignCheck(false)">
 							{{ t('mail', 'Sign message with S/MIME') }}
 						</ActionCheckbox>
 						<ActionCheckbox v-if="smimeCertificateForCurrentAlias"
@@ -323,8 +380,7 @@
 							@uncheck="wantsSmimeEncrypt = false">
 							{{ t('mail', 'Encrypt message with S/MIME') }}
 						</ActionCheckbox>
-						<ActionCheckbox
-							v-if="mailvelope.available"
+						<ActionCheckbox v-if="mailvelope.available"
 							:checked="encrypt"
 							:disabled="wantsSmimeEncrypt"
 							@change="isActionsOpen = false"
@@ -337,8 +393,7 @@
 						<ActionButton :close-after-click="false"
 							@click="isMoreActionsOpen=false">
 							<template #icon>
-								<ChevronLeft
-									:title="t('mail', 'Send later')"
+								<ChevronLeft :title="t('mail', 'Send later')"
 									:size="20" />
 								{{ t('mail', 'Send later') }}
 							</template>
@@ -394,14 +449,13 @@
 					</template>
 				</Actions>
 
-				<ButtonVue :disabled="!canSend"
+				<ButtonVue :disabled="!canSend || sending"
 					native-type="submit"
 					type="primary"
 					:aria-label="submitButtonTitle"
 					@click="onSend">
 					<template #icon>
-						<Send
-							:title="submitButtonTitle"
+						<Send :title="submitButtonTitle"
 							:size="20" />
 					</template>
 					{{ submitButtonTitle }}
@@ -412,48 +466,49 @@
 </template>
 
 <script>
-import debounce from 'lodash/fp/debounce'
-import uniqBy from 'lodash/fp/uniqBy'
-import isArray from 'lodash/fp/isArray'
-import trimStart from 'lodash/fp/trimCharsStart'
-import Autosize from 'vue-autosize'
-import debouncePromise from 'debounce-promise'
-
-import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcMultiselect as Multiselect, NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
-import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
-import Delete from 'vue-material-design-icons/Delete'
-import ComposerAttachments from './ComposerAttachments'
-import Download from 'vue-material-design-icons/Download'
-import IconUpload from 'vue-material-design-icons/Upload'
-import IconFolder from 'vue-material-design-icons/Folder'
-import IconPublic from 'vue-material-design-icons/Link'
-import IconLinkPicker from 'vue-material-design-icons/Shape'
-import RecipientListItem from './RecipientListItem'
-import UnfoldMoreHorizontal from 'vue-material-design-icons/UnfoldMoreHorizontal'
-import UnfoldLessHorizontal from 'vue-material-design-icons/UnfoldLessHorizontal'
-import IconHtml from 'vue-material-design-icons/ImageSizeSelectActual'
-import IconClose from 'vue-material-design-icons/Close'
 import { showError, showWarning } from '@nextcloud/dialogs'
 import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
-import Vue from 'vue'
-
-import { findRecipient } from '../service/AutocompleteService'
-import { detect, html, plain, toHtml, toPlain } from '../util/text'
-import logger from '../logger'
-import TextEditor from './TextEditor'
-import { buildReplyBody } from '../ReplyBuilder'
-import MailvelopeEditor from './MailvelopeEditor'
-import { getMailvelope } from '../crypto/mailvelope'
-import { isPgpgMessage } from '../crypto/pgp'
-
-import { NcReferencePickerModal } from '@nextcloud/vue/dist/Components/NcRichText.js'
-
-import Send from 'vue-material-design-icons/Send'
-import SendClock from 'vue-material-design-icons/SendClock'
 import moment from '@nextcloud/moment'
-import { mapGetters } from 'vuex'
-import { TRIGGER_CHANGE_ALIAS, TRIGGER_EDITOR_READY } from '../ckeditor/signature/InsertSignatureCommand'
-import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants'
+import { NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcActions as Actions, NcButton as ButtonVue, NcListItemIcon as ListItemIcon, NcIconSvgWrapper, NcSelect } from '@nextcloud/vue'
+import { NcReferencePickerModal } from '@nextcloud/vue/components/NcRichText'
+import addressParser from 'address-rfc2822'
+import debouncePromise from 'debounce-promise'
+import debounce from 'lodash/fp/debounce.js'
+import trimStart from 'lodash/fp/trimCharsStart.js'
+import uniqBy from 'lodash/fp/uniqBy.js'
+import mitt from 'mitt'
+import { mapState, mapStores } from 'pinia'
+import Vue from 'vue'
+import Autosize from 'vue-autosize'
+import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
+import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
+import IconFormat from 'vue-material-design-icons/FormatSize.vue'
+import IconPublic from 'vue-material-design-icons/Link.vue'
+import Paperclip from 'vue-material-design-icons/Paperclip.vue'
+import SendClock from 'vue-material-design-icons/SendClockOutline.vue'
+import Send from 'vue-material-design-icons/SendOutline.vue'
+import IconLinkPicker from 'vue-material-design-icons/ShapeOutline.vue'
+import Delete from 'vue-material-design-icons/TrashCanOutline.vue'
+import Download from 'vue-material-design-icons/TrayArrowDown.vue'
+import IconUpload from 'vue-material-design-icons/TrayArrowUp.vue'
+
+import ComposerAttachments from './ComposerAttachments.vue'
+import MailvelopeEditor from './MailvelopeEditor.vue'
+import RecipientListItem from './RecipientListItem.vue'
+import { TRIGGER_CHANGE_ALIAS, TRIGGER_EDITOR_READY } from '../ckeditor/signature/InsertSignatureCommand.js'
+import { getMailvelope } from '../crypto/mailvelope.js'
+import { isPgpgMessage } from '../crypto/pgp.js'
+import logger from '../logger.js'
+import { buildReplyBody } from '../ReplyBuilder.js'
+import TextEditor from './TextEditor.vue'
+import { findRecipient } from '../service/AutocompleteService.js'
+import { savePreference } from '../service/PreferenceService.js'
+import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants.js'
+import useMainStore from '../store/mainStore.js'
+import { detect, html, toHtml, toPlain } from '../util/text.js'
+
+import textBlockSvg from './../../img/text_snippet.svg'
+import TextBlockModal from './textBlocks/TextBlockModal.vue'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -472,6 +527,7 @@ export default {
 		ActionRadio,
 		ButtonVue,
 		ComposerAttachments,
+		TextBlockModal,
 		ChevronLeft,
 		Delete,
 		Download,
@@ -479,16 +535,15 @@ export default {
 		IconFolder,
 		IconPublic,
 		IconLinkPicker,
-		Multiselect,
+		NcSelect,
+		NcIconSvgWrapper,
+		Paperclip,
 		TextEditor,
 		ListItemIcon,
 		RecipientListItem,
 		Send,
 		SendClock,
-		UnfoldMoreHorizontal,
-		UnfoldLessHorizontal,
-		IconHtml,
-		IconClose,
+		IconFormat,
 		NcReferencePickerModal,
 	},
 	props: {
@@ -543,6 +598,11 @@ export default {
 			required: false,
 			default: () => [],
 		},
+		smartReply: {
+			type: String,
+			required: false,
+			default: undefined,
+		},
 		sendAt: {
 			type: Number,
 			default: undefined,
@@ -587,6 +647,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		accounts: {
+			type: Array,
+			required: true,
+		},
 	},
 	data() {
 		// Set default custom date time picker value to now + 1 hour
@@ -594,6 +658,8 @@ export default {
 		selectedDate.setHours(selectedDate.getHours() + 1)
 
 		return {
+			sending: false,
+			textBlockSvg,
 			showCC: this.cc.length > 0,
 			showBCC: this.bcc.length > 0,
 			selectedAlias: NO_ALIAS_SET, // Fixed in `beforeMount`
@@ -607,7 +673,7 @@ export default {
 			selectTo: this.to,
 			selectCc: this.cc,
 			selectBcc: this.bcc,
-			bus: new Vue(),
+			bus: mitt(),
 			encrypt: false,
 			mailvelope: {
 				available: false,
@@ -615,12 +681,12 @@ export default {
 				keysMissing: [],
 			},
 			editorMode: (this.body?.format !== 'html') ? EDITOR_MODE_TEXT : EDITOR_MODE_HTML,
-			addShareLink: t('mail', 'Add share link from {productName} Files', { productName: OC?.theme?.name ?? 'Nextcloud' }),
 			requestMdnVal: this.requestMdn,
 			changeSignature: false,
 			loadingIndicatorTo: false,
 			loadingIndicatorCc: false,
 			loadingIndicatorBcc: false,
+			isAddAttachmentsOpen: false,
 			isActionsOpen: false,
 			isMoreActionsOpen: false,
 			selectedDate,
@@ -638,18 +704,20 @@ export default {
 			wantsSmimeSign: this.smimeSign,
 			wantsSmimeEncrypt: this.smimeEncrypt,
 			isPickerOpen: false,
+			isTextBlockPickerOpen: false,
+			recipientSearchTerms: {},
+			smimeSignAliases: [],
 		}
 	},
 	computed: {
-		...mapGetters([
-			'isScheduledSendingDisabled',
-		]),
+		...mapStores(useMainStore),
+		...mapState(useMainStore, ['isScheduledSendingDisabled']),
 		isPickerAvailable() {
-			return parseInt(this.$store.getters.getNcVersion) >= 26
+			return parseInt(this.mainStore.getNcVersion) >= 26
 		},
 		aliases() {
 			let cnt = 0
-			const accounts = this.$store.getters.accounts.filter((a) => !a.isUnified)
+			const accounts = this.accounts.filter((a) => !a.isUnified)
 			const aliases = accounts.flatMap((account) => [
 				{
 					id: account.id,
@@ -661,6 +729,7 @@ export default {
 					emailAddress: account.emailAddress,
 					signatureAboveQuote: account.signatureAboveQuote,
 					smimeCertificateId: account.smimeCertificateId,
+					selectable: account.connectionStatus,
 				},
 				account.aliases.map((alias) => {
 					return {
@@ -673,6 +742,7 @@ export default {
 						emailAddress: alias.alias,
 						signatureAboveQuote: account.signatureAboveQuote,
 						smimeCertificateId: alias.smimeCertificateId,
+						selectable: account.connectionStatus,
 					}
 				}),
 			])
@@ -685,12 +755,12 @@ export default {
 			return new Date(new Date().setDate(new Date().getDate()))
 		},
 		attachmentSizeLimit() {
-			return this.$store.getters.getPreference('attachment-size-limit')
+			return this.mainStore.getPreference('attachment-size-limit')
 		},
 		selectableRecipients() {
-			return this.newRecipients
+			return uniqBy('email')(this.newRecipients
 				.concat(this.autocompleteRecipients)
-				.map((recipient) => ({ ...recipient, label: recipient.label || recipient.email }))
+				.map((recipient) => ({ ...recipient, label: recipient.label || recipient.email })))
 		},
 		isForward() {
 			return this.forwardFrom !== undefined
@@ -826,13 +896,18 @@ export default {
 			const missingCertificates = []
 
 			this.allRecipients.forEach((recipient) => {
-				const recipientCertificate = this.$store.getters.getSmimeCertificateByEmail(recipient.email)
+				const recipientCertificate = this.mainStore.getSmimeCertificateByEmail(recipient.email)
 				if (!recipientCertificate) {
 					missingCertificates.push(recipient.email)
 				}
 			})
 
 			return missingCertificates
+		},
+
+		textBlocks() {
+			return this.mainStore.getSharedTextBlocks()?.map(textBlock => ({ title: textBlock.title, content: textBlock.content }))
+				.concat(this.mainStore.getMyTextBlocks().map(textBlock => ({ title: textBlock.title, content: textBlock.content })))
 		},
 	},
 	watch: {
@@ -887,6 +962,13 @@ export default {
 		requestMdnVal(val) {
 			this.$emit('update:request-mdn', val)
 		},
+		selectedAlias: {
+			handler() {
+				const aliasEmailAddress = this.selectedAlias.emailAddress
+				this.wantsSmimeSign = this.smimeSignAliases.indexOf(aliasEmailAddress) !== -1
+			},
+			immediate: true,
+		},
 	},
 	async beforeMount() {
 		this.setAlias()
@@ -910,47 +992,87 @@ export default {
 				})
 			})
 		}
+
 		// Add messages forwarded as attachments
-		let forwards = []
-		if (this.forwardedMessages && !isArray(this.forwardedMessages)) {
-			forwards = [this.forwardedMessages]
-		} else if (this.forwardedMessages && isArray(this.forwardedMessages)) {
-			forwards = this.forwardedMessages
-		}
-		forwards.forEach(id => {
-			const env = this.$store.getters.getEnvelope(id)
+		for (const id of this.forwardedMessages) {
+			const env = this.mainStore.getEnvelope(id)
 			if (!env) {
 				// TODO: also happens when the composer page is reloaded
 				showError(t('mail', 'Message {id} could not be found', {
 					id,
 				}))
-				return
+				continue
 			}
 
-			this.attachments.push({
-				displayName: env.subject + '.eml',
+			this.bus.emit('on-add-message-as-attachment', {
 				id,
-				type: 'message',
+				fileName: env.subject + '.eml',
 			})
-		})
+		}
 
 		// Set custom date and time picker value if initialized with custom send at value
 		if (this.sendAt && this.isSendAtCustom) {
 			this.selectedDate = new Date(this.sendAt)
+		}
+
+		this.smimeSignAliases = this.mainStore.getPreference('smime-sign-aliases', [])
+		if (!this.mainStore.areTextBlocksFetched) {
+			this.mainStore.fetchSharedTextBlocks()
+			this.mainStore.fetchMyTextBlocks()
 		}
 	},
 	beforeDestroy() {
 		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
 	},
 	methods: {
+		/**
+		 * Called once a user leaves the recipient picker.
+		 *
+		 * If the user is typing something that looks like a valid email address, we clear the input (return true)
+		 * because the related code in onNewAddr will add the value as a recipient.
+		 *
+		 * Otherwise, the user is still typing and we don't clear the input.
+		 *
+		 * @param {string} event usually to, cc or bcc
+		 * @return {boolean}
+		 */
+		clearOnBlur(event) {
+			if (this.recipientSearchTerms[event]) {
+				return this.seemsValidEmailAddress(this.recipientSearchTerms[event])
+			}
+			return false
+		},
 		handleShow(event) {
 			this.$emit('show-toolbar', event)
 		},
 		openPicker() {
 			this.isPickerOpen = true
 		},
+		openTextBlockPicker() {
+			this.isTextBlockPickerOpen = true
+		},
 		closePicker() {
 			this.isPickerOpen = false
+		},
+		filterOption(option, label, search, list) {
+			let select = []
+			if (list === 'to') {
+				select = this.selectTo
+			} else if (list === 'cc') {
+				select = this.selectCc
+
+			} else if (list === 'bcc') {
+				select = this.selectBcc
+			}
+
+			if (select.some((item) => item.email === option.email)) {
+				return false // skip option if already selected
+			}
+
+			const searchInLowerCase = search.toLocaleLowerCase()
+
+			return (label || '').toLocaleLowerCase().includes(searchInLowerCase)
+				|| (option?.email || '').toLocaleLowerCase().includes(searchInLowerCase)
 		},
 		setAlias() {
 			const previous = this.selectedAlias
@@ -964,7 +1086,7 @@ export default {
 					return alias.id === this.fromAccount && !alias.aliasId
 				})
 			} else {
-				const currentAccountId = this.$store.getters.getMailbox(this.$route.params.mailboxId)?.accountId
+				const currentAccountId = this.mainStore.getMailbox(this.$route.params.mailboxId)?.accountId
 				if (currentAccountId) {
 					this.selectedAlias = this.aliases.find((alias) => {
 						return alias.id === currentAccountId
@@ -996,14 +1118,14 @@ export default {
 					this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
 					this.replyTo.from[0],
 					this.replyTo.dateInt,
-					this.$store.getters.getPreference('reply-mode', 'top') === 'top'
+					this.mainStore.getPreference('reply-mode', 'top') === 'top',
 				).value
 			} else if (this.forwardFrom && this.isFirstOpen) {
 				body = buildReplyBody(
 					this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
 					this.forwardFrom.from[0],
 					this.forwardFrom.dateInt,
-					this.$store.getters.getPreference('reply-mode', 'top') === 'top'
+					this.mainStore.getPreference('reply-mode', 'top') === 'top',
 				).value
 			} else {
 				body = this.bodyVal
@@ -1011,7 +1133,7 @@ export default {
 			this.bodyVal = html(body).value
 		},
 		getMessageData() {
-			return {
+			const data = {
 				// TODO: Rename account to accountId
 				account: this.selectedAlias.id,
 				accountId: this.selectedAlias.id,
@@ -1020,7 +1142,6 @@ export default {
 				cc: this.selectCc,
 				bcc: this.selectBcc,
 				subject: this.subjectVal,
-				body: this.encrypt ? plain(this.bodyVal) : html(this.bodyVal),
 				attachments: this.attachments,
 				inReplyToMessageId: this.inReplyToMessageId ?? (this.replyTo ? this.replyTo.messageId : undefined),
 				isHtml: !this.encrypt && !this.editorPlainText,
@@ -1029,7 +1150,16 @@ export default {
 				smimeSign: this.shouldSmimeSign,
 				smimeEncrypt: this.shouldSmimeEncrypt,
 				smimeCertificateId: this.smimeCertificateForCurrentAlias?.id,
+				isPgpMime: this.encrypt,
 			}
+
+			if (data.isHtml) {
+				data.bodyHtml = this.bodyVal
+			} else {
+				data.bodyPlain = toPlain(html(this.bodyVal)).value
+			}
+
+			return data
 		},
 		saveDraft() {
 			const draftData = this.getMessageData()
@@ -1060,14 +1190,18 @@ export default {
 			this.$refs.editor.editorExecute('insertSignature',
 				trigger,
 				toHtml(detect(this.selectedAlias.signature)).value,
-				this.selectedAlias.signatureAboveQuote
+				this.selectedAlias.signatureAboveQuote,
 			)
 
 			this.changeSignature = false
 		},
 		onPicked(content) {
 			this.closePicker()
-			this.bus.$emit('append-to-body-at-cursor', content)
+			this.bus.emit('append-to-body-at-cursor', content)
+		},
+		onTextBlockInsert(content) {
+			this.isTextBlockPickerOpen = false
+			this.bus.emit('insert-text-block', content)
 		},
 		onEditorInput(text) {
 			this.bodyVal = text
@@ -1076,6 +1210,13 @@ export default {
 		onEditorReady(editor) {
 			this.bodyVal = editor.getData()
 			this.insertSignature()
+			if (this.smartReply) {
+				this.bus.emit('append-to-body-at-cursor', this.smartReply)
+			}
+		},
+		onEditorSubmit(editor) {
+			this.bodyVal = editor.getData()
+			this.onSend()
 		},
 		onChangeSendLater(value) {
 			this.sendAtVal = value ? Number.parseInt(value, 10) : undefined
@@ -1122,29 +1263,44 @@ export default {
 			}
 		},
 		onAddLocalAttachment() {
-			this.bus.$emit('on-add-local-attachment')
+			this.bus.emit('on-add-local-attachment')
 			this.saveDraftDebounced()
 		},
 		onAddCloudAttachment() {
-			this.bus.$emit('on-add-cloud-attachment')
+			this.bus.emit('on-add-cloud-attachment')
 			this.saveDraftDebounced()
 		},
 		onAddCloudAttachmentLink() {
-			this.bus.$emit('on-add-cloud-attachment-link')
+			this.bus.emit('on-add-cloud-attachment-link')
 		},
-		onAutocomplete(term, loadingIndicator) {
+		onAutocomplete(term, addressType) {
 			if (term === undefined || term === '') {
 				return
 			}
-			this.loadingIndicatorTo = loadingIndicator === 'to'
-			this.loadingIndicatorCc = loadingIndicator === 'cc'
-			this.loadingIndicatorBcc = loadingIndicator === 'bcc'
+			this.loadingIndicatorTo = addressType === 'to'
+			this.loadingIndicatorCc = addressType === 'cc'
+			this.loadingIndicatorBcc = addressType === 'bcc'
+			this.recipientSearchTerms[addressType] = term
+
+			// Autocomplete from own identifies (useful for testing)
+			const accounts = this.accounts.filter((a) => !a.isUnified)
+			const selfRecipients = accounts
+				.filter(
+					account => account.emailAddress.toLowerCase().indexOf(term.toLowerCase()) !== -1
+					|| account.name.toLowerCase().indexOf(term.toLowerCase()) !== -1,
+				)
+				.map(account => ({
+					email: account.emailAddress,
+					label: account.name,
+				}))
+			this.autocompleteRecipients = uniqBy('email')(this.autocompleteRecipients.concat(selfRecipients))
+
 			debouncedSearch(term).then((results) => {
-				if (loadingIndicator === 'to') {
+				if (addressType === 'to') {
 					this.loadingIndicatorTo = false
-				} else if (loadingIndicator === 'cc') {
+				} else if (addressType === 'cc') {
 					this.loadingIndicatorCc = false
-				} else if (loadingIndicator === 'bcc') {
+				} else if (addressType === 'bcc') {
 					this.loadingIndicatorBcc = false
 				}
 
@@ -1169,30 +1325,43 @@ export default {
 			this.mailvelope.keyRing = await mailvelope.getKeyring()
 			await this.checkRecipientsKeys()
 		},
-		onNewToAddr(addr) {
-			this.onNewAddr(addr, this.selectTo)
+		handleMention(option) {
+			this.editorMode = EDITOR_MODE_HTML
+			this.onNewToAddr(option)
 		},
-		onNewCcAddr(addr) {
-			this.onNewAddr(addr, this.selectCc)
+		onNewToAddr(option) {
+			this.onNewAddr(option, this.selectTo, 'to')
 		},
-		onNewBccAddr(addr) {
-			this.onNewAddr(addr, this.selectBcc)
+		onNewCcAddr(option) {
+			this.onNewAddr(option, this.selectCc, 'cc')
 		},
-		onNewAddr(addr, list) {
-			// Autocomplete search results are passed as objects
-			let res = addr
-			if (typeof addr === 'string') {
-				res = {
-					label: addr, // TODO: parse if possible
-					email: addr, // TODO: parse if possible
+		onNewBccAddr(option) {
+			this.onNewAddr(option, this.selectBcc, 'bcc')
+		},
+		onNewAddr(option, list, type) {
+			if (
+				(option === null || option === undefined)
+				&& this.recipientSearchTerms[type] !== undefined
+				&& this.recipientSearchTerms[type] !== ''
+			) {
+				if (!this.seemsValidEmailAddress(this.recipientSearchTerms[type])) {
+					return
 				}
+				option = {}
+				option.email = this.recipientSearchTerms[type]
+				option.label = this.recipientSearchTerms[type]
+				this.recipientSearchTerms[type] = ''
 			}
 
-			this.newRecipients.push(res)
-			list.push(res)
+			if (list.some((recipient) => recipient.email === option?.email) || !option) {
+				return
+			}
+			const recipient = { ...option }
+			this.newRecipients.push(recipient)
+			list.push(recipient)
 			this.saveDraftDebounced()
 		},
-		async onSend(_, force = false) {
+		async onSend() {
 			if (this.encrypt) {
 				logger.debug('get encrypted message from mailvelope')
 				await this.$refs.mailvelopeEditor.pull()
@@ -1200,7 +1369,7 @@ export default {
 
 			this.$emit('send', {
 				...this.getMessageData(),
-				force,
+				force: false,
 			})
 		},
 		reset() {
@@ -1325,7 +1494,67 @@ export default {
 			if (!certificateId) {
 				return undefined
 			}
-			return this.$store.getters.getSmimeCertificate(certificateId)
+			return this.mainStore.getSmimeCertificate(certificateId)
+		},
+
+		smimeSignCheck(value) {
+			this.wantsSmimeSign = value
+			if (value) {
+				this.smimeSignAliases.push(this.selectedAlias.emailAddress)
+			} else {
+				this.smimeSignAliases = this.smimeSignAliases
+					.filter((alias) => alias !== this.selectedAlias.emailAddress)
+			}
+			savePreference('smime-sign-aliases', JSON.stringify(this.smimeSignAliases))
+		},
+
+		/**
+		 * Create a new option for the to, cc and bcc selects.
+		 *
+		 * @param {string} value The string (email) typed by the user
+		 * @return {{email: string, label: string}} The new option
+		 */
+		createRecipientOption(value) {
+			if (!this.seemsValidEmailAddress(value)) {
+				throw new Error('Skipping because it does not look like a valid email address')
+			}
+			return { email: value, label: value }
+		},
+
+		/**
+		 * Return the subname for recipient suggestion.
+		 *
+		 * Empty if label and email are the same or
+		 * if the suggestion is a group.
+		 *
+		 * @param {{email: string, label: string}} option object
+		 * @return {string}
+		 */
+		getSubnameForRecipient(option) {
+			if (option.source && option.source === 'groups') {
+				return ''
+			}
+
+			if (option.label === option.email) {
+				return ''
+			}
+
+			return option.email
+		},
+
+		/**
+		 * True when value looks like a valid email address
+		 *
+		 * @param {string} value to check if email address
+		 * @return {boolean}
+		 */
+		seemsValidEmailAddress(value) {
+			try {
+				addressParser.parse(value)
+				return true
+			} catch (error) {
+				return false
+			}
 		},
 	},
 }
@@ -1333,7 +1562,6 @@ export default {
 
 <style lang="scss" scoped>
 .message-composer {
-	margin: 0;
 	z-index: 100;
 	display: flex;
 	flex-direction: column;
@@ -1347,75 +1575,25 @@ export default {
 }
 
 .composer-fields {
-	display: flex;
-	border-top: 1px solid var(--color-border);
-	align-items: flex-start;
+	padding: var(--default-grid-baseline) calc(var(--default-grid-baseline) * 2) 0 calc(var(--default-grid-baseline) * 2);
 
-	label {
-		padding: 11px 20px 11px 0;
-	}
+	&__label {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: flex-end;
 
-	:deep(.multiselect--multiple .multiselect__tags) {
-		display: grid;
-		grid-template-columns: calc(100% - 18px) 18px 100%;
-
-		.multiselect__limit {
-			margin-right: 0;
-			margin-left: 8px
+		/** NcButton does not allow font weight styling */
+		:deep(.button-vue__text) {
+			font-weight: normal;
 		}
-	}
-
-	:deep(.multiselect__content-wrapper) {
-		border-bottom: 1px solid var(--color-border);
-		margin-top: 0;
-
-		& li > span::before {
-			display: none
-		}
-	}
-
-	:deep(.multiselect__input) {
-		position: relative !important;
-		top: 0;
-		grid-column-start: 1;
-		grid-column-end: 3;
-	}
-
-	:deep(.multiselect--active input:focus-visible) {
-		box-shadow: none;
-	}
-
-	:deep(.multiselect__tags) {
-		box-sizing: border-box;
-		height: auto;
-	}
-
-	&__from {
-		margin-right: 102px; /* for the modal close and minimize buttons */
-	}
-
-	.multiselect.multiselect--multiple::after {
-		position: absolute;
-		right: 0;
-		top: auto;
-		bottom: 8px
-	}
-
-	.multiselect__tag {
-		position: relative;
 	}
 
 	&.mail-account {
 		border-top: none;
-		padding-top: 10px;
-
-		& > .multiselect {
-			max-width: none;
-			min-height: auto;
-		}
+		padding-top: calc(var(--default-grid-baseline) * 2);
 	}
 
-	.multiselect,
 	input,
 	TextEditor {
 		flex-grow: 1;
@@ -1427,9 +1605,8 @@ export default {
 	.composer-fields--custom {
 		display: flex;
 		align-items: flex-start;
-		flex-wrap: wrap;
-		padding-top: 2px;
-		width: calc(100% - 120px);
+		justify-content: space-between;
+		padding-top: calc(var(--default-grid-baseline) * 0.5);
 
 		button {
 			margin-top: 0;
@@ -1437,27 +1614,26 @@ export default {
 			background-color: transparent;
 			border: none;
 			opacity: 0.5;
-			padding: 10px 16px;
+			padding: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 4);
 		}
 
-		button.active, button:active {
-			opacity: 1;
+		.select {
+			width: 100%;
 		}
-
-		.multiselect {
-			width: calc(100% - 150px);
+		.vs__search{
+			width: 100%;
 		}
-	}
-
-	.multiselect {
-		margin-right: 12px;
+		.v-select{
+			flex-grow: 0.95;
+		}
 	}
 
 	.subject {
 		font-size: 15px;
 		font-weight: bold;
-		margin: 3px 0 !important;
-		padding: 0 12px !important;
+		margin: var(--default-grid-baseline) 0 !important;
+		padding: 0 !important;
+		width: 100%;
 
 		&:focus-visible {
 			box-shadow: none !important;
@@ -1471,7 +1647,6 @@ export default {
 		border: none !important;
 		outline: none !important;
 		box-shadow: none !important;
-		padding: 12px;
 
 		// Fix contenteditable not becoming focused upon clichint within it's
 		// boundaries in safari
@@ -1484,10 +1659,11 @@ export default {
 .message-editor {
 	flex: 1 1 100%;
 	min-height: 0;
+	border-top: 1px solid var(--color-border);
 }
 
 .draft-status {
-	padding: 2px;
+	padding: calc(var(--default-grid-baseline) * 0.5);
 	opacity: 0.5;
 	font-size: small;
 	display: block;
@@ -1498,17 +1674,10 @@ export default {
 .copy-toggle,
 .cc-label,
 .bcc-label {
-	padding-top: 12px;
-	padding-bottom: 12px;
-	padding-right: 20px;
-	cursor: text;
 	color: var(--color-text-maxcontrast);
-	width: 100px;
-	text-align: right;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	font-weight: bold;
 }
 
 .bcc-label {
@@ -1530,63 +1699,95 @@ export default {
 	min-height: 100px;
 }
 
-:deep(.multiselect .multiselect__tags), .subject {
+.subject {
 	border: none !important;
 }
+
 :deep([data-select="create"] .avatardiv--unknown) {
 	background: var(--color-text-maxcontrast) !important;
 }
-:deep(.multiselect.opened .multiselect__tags .multiselect__tags-wrap) {
-	flex-wrap: wrap;
+
+#from{
+	width: 100%;
+	cursor: pointer;
+}
+
+:deep(.vs__actions){
+	display: none;
+}
+
+:deep(.v-select.select){
+	inset-inline-start: 0 !important;
+}
+
+:deep(.vs__dropdown-menu){
+	padding: 0 !important;
+}
+
+:deep(.vs__dropdown-option){
+	border-radius: 0  !important;
 }
 
 .submit-message.send.primary.icon-confirm-white {
 	color: var(--color-main-background);
 }
+
 .button {
 	background-color: transparent;
 	border: none;
 }
+
 .send-button {
 	display: flex;
 	align-items: center;
-	padding: 10px 15px;
-	margin-left: 5px;
+	padding: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 4);
+	margin-inline-start: var(--default-grid-baseline);
 }
+
 .send-button .send-icon {
-	padding-right: 5px;
+	padding-inline-end: var(--default-grid-baseline);
 }
+
 .centered-content {
 	margin-top: 0 !important;
 }
+
 .composer-actions-right {
 	display: flex;
 	align-items: center;
 	flex-direction: row;
 	justify-content: space-between;
-	bottom: 5px;
+	bottom: var(--default-grid-baseline);
 }
+
 .composer-actions--primary-actions {
 	display: flex;
 	flex-direction: row;
-	padding-left: 10px;
+	padding-inline-start: calc(var(--default-grid-baseline) * 2);
 	align-items: center;
 }
+
 .composer-actions--secondary-actions {
 	display: flex;
 	flex-direction: row;
 	padding: 12px;
 	gap: 5px;
 }
+
 .composer-actions--primary-actions .button {
 	padding: 2px;
 }
+
 .composer-actions--secondary-actions .button{
 	flex-shrink: 0;
 }
 
 .composer-actions-draft-status {
-	padding-left: 10px;
+	padding-inline-start: 10px;
+}
+
+:deep(.vs__selected-options .vs__dropdown-toggle .vs--multiple ){
+	width: 100%;
 }
 
 @media only screen and (max-width: 580px) {
@@ -1596,10 +1797,10 @@ export default {
 	}
 	.composer-actions-draft-status {
 		text-align: end;
-		padding-right: 15px;
+		padding-inline-end: 15px;
 	}
 	.composer-actions--primary-actions {
-		padding-right: 5px;
+		padding-inline-end: 5px;
 	}
 }
 

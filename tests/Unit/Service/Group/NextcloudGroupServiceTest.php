@@ -1,23 +1,8 @@
 <?php
 
 /**
- * @author Matthias Rella <mrella@pisys.eu>
- * @author Thomas Citharel <nextcloud@tcit.fr>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Unit\Service\Group;
@@ -83,7 +68,7 @@ class NextcloudGroupServiceTest extends TestCase {
 
 	public function dataForTestSearch(): array {
 		return [
-			['yes', [
+			['yes', 'no', [
 				[
 					'id' => 'testgroup',
 					'name' => 'first test group',
@@ -93,7 +78,9 @@ class NextcloudGroupServiceTest extends TestCase {
 					'name' => 'second test group',
 				]
 			]],
-			['no', []]
+			['no', 'yes', []],
+			['no', 'no', []],
+			['yes', 'yes', []],
 		];
 	}
 
@@ -103,22 +90,24 @@ class NextcloudGroupServiceTest extends TestCase {
 	 * @param string $allowGroupSharing
 	 * @param array $expected
 	 */
-	public function testSearch(string $allowGroupSharing, array $expected): void {
+	public function testSearch(string $allowGroupSharing, string $restrictSharingToGroups, array $expected): void {
 		$term = 'te'; // searching for: John Doe
 		$searchResult = [
 			$this->createTestGroup('testgroup', 'first test group'),
 			$this->createTestGroup('testgroup2', 'second test group'),
 		];
 
-		$this->groupsManager->expects($allowGroupSharing === 'yes' ? self::once() : self::never())
+		$this->groupsManager->expects(($allowGroupSharing === 'yes' && $restrictSharingToGroups === 'no') ? self::once() : self::never())
 			->method('search')
 			->with($term)
 			->willReturn($searchResult);
 
-		$this->config->expects(self::once())
+		$this->config->expects(self::exactly(2))
 			->method('getAppValue')
-			->with('core', 'shareapi_allow_group_sharing', 'yes')
-			->willReturn($allowGroupSharing);
+			->willReturnMap([
+				['core', 'shareapi_allow_group_sharing', 'yes', $allowGroupSharing],
+				['core', 'shareapi_only_share_with_group_members', 'no', $restrictSharingToGroups],
+			]);
 
 
 		$actual = $this->groupService->search($term);
@@ -131,8 +120,7 @@ class NextcloudGroupServiceTest extends TestCase {
 			$this->createTestUser('bob', 'Bobby', 'bob@smith.net'),
 			$this->createTestUser('alice', 'Alice', 'alice@smith.net')
 		];
-		$group =
-			$this->createTestGroup('testgroup', 'first test group', $users);
+		$group = $this->createTestGroup('testgroup', 'first test group', $users);
 
 		$this->groupsManager->expects($this->once())
 			->method('groupExists')

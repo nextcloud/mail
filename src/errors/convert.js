@@ -1,33 +1,16 @@
 /**
- * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import MailboxLockedError from './MailboxLockedError'
-import MailboxNotCachedError from './MailboxNotCachedError'
-import NoDraftsMailboxConfiguredError from './NoDraftsMailboxConfiguredError'
-import NoSentMailboxConfiguredError from './NoSentMailboxConfiguredError'
-import NoTrashMailboxConfiguredError from './NoTrashMailboxConfiguredError'
-import CouldNotConnectError from './CouldNotConnectError'
-import ManageSieveError from './ManageSieveError'
-import ManyRecipientsError from './ManyRecipientsError'
+import CouldNotConnectError from './CouldNotConnectError.js'
+import MailboxLockedError from './MailboxLockedError.js'
+import MailboxNotCachedError from './MailboxNotCachedError.js'
+import ManageSieveError from './ManageSieveError.js'
+import ManyRecipientsError from './ManyRecipientsError.js'
+import NoDraftsMailboxConfiguredError from './NoDraftsMailboxConfiguredError.js'
+import NoSentMailboxConfiguredError from './NoSentMailboxConfiguredError.js'
+import NoTrashMailboxConfiguredError from './NoTrashMailboxConfiguredError.js'
 
 const map = {
 	'OCA\\Mail\\Exception\\DraftsMailboxNotSetException': NoDraftsMailboxConfiguredError,

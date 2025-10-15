@@ -1,12 +1,16 @@
-import store from '../../../store'
-import logger from '../../../logger'
-import dragEventBus from '../util/dragEventBus'
+/**
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+import logger from '../../../logger.js'
+import dragEventBus from '../util/dragEventBus.js'
 
 export class DroppableMailbox {
 
 	constructor(el, componentInstance, options) {
 		this.el = el
 		this.options = options
+		this.mainStore = options.mainStore
 		this.registerListeners.bind(this)(el)
 		this.setInitialAttributes()
 	}
@@ -22,8 +26,8 @@ export class DroppableMailbox {
 	}
 
 	registerListeners(el) {
-		dragEventBus.$on('drag-start', this.onDragStart.bind(this))
-		dragEventBus.$on('drag-end', this.onDragEnd.bind(this))
+		dragEventBus.on('drag-start', this.onDragStart.bind(this))
+		dragEventBus.on('drag-end', this.onDragEnd.bind(this))
 
 		// event listeners need to be attached to the first child element
 		// (a button or an anchor tag) instead of the root el, because there
@@ -34,8 +38,8 @@ export class DroppableMailbox {
 	}
 
 	removeListeners(el) {
-		dragEventBus.$off('drag-start', this.onDragStart)
-		dragEventBus.$off('drag-end', this.onDragEnd)
+		dragEventBus.off('drag-start', this.onDragStart)
+		dragEventBus.off('drag-end', this.onDragEnd)
 
 		el.firstChild.removeEventListener('dragover', this.onDragOver)
 		el.firstChild.removeEventListener('dragleave', this.onDragLeave)
@@ -62,11 +66,24 @@ export class DroppableMailbox {
 		return this.draggableInfo.accountId === this.options.accountId
 	}
 
+	/**
+	 * Is the user currently dragging a valid object?
+	 *
+	 * @return {boolean}
+	 */
+	get isCurrentlyDragging() {
+		return Object.keys(this.draggableInfo).length > 0
+	}
+
 	onDragEnd() {
 		this.setInitialAttributes()
 	}
 
 	onDragOver(event) {
+		if (!this.isCurrentlyDragging) {
+			return
+		}
+
 		event.preventDefault()
 
 		// Prevent dropping into current folder
@@ -82,11 +99,19 @@ export class DroppableMailbox {
 	}
 
 	onDragLeave(event) {
+		if (!this.isCurrentlyDragging) {
+			return
+		}
+
 		event.preventDefault()
 		this.setStatus('enabled')
 	}
 
 	async onDrop(event) {
+		if (!this.isCurrentlyDragging) {
+			return
+		}
+
 		event.preventDefault()
 
 		// Prevent dropping into current folder
@@ -96,33 +121,40 @@ export class DroppableMailbox {
 
 		this.setInitialAttributes()
 		const envelopesBeingDragged = JSON.parse(event.dataTransfer.getData('text'))
-		dragEventBus.$emit('envelopes-dropped', { envelopes: envelopesBeingDragged })
+		dragEventBus.emit('envelopes-dropped', { envelopes: envelopesBeingDragged })
 
 		try {
 			const processedEnvelopes = envelopesBeingDragged.map(async envelope => {
-				const processed = await this.processDroppedItem(parseInt(envelope.envelopeId))
+				const processed = await this.processDroppedItem(envelope)
 				return processed
 			})
 			await Promise.all(processedEnvelopes)
 		} catch (error) {
 			logger.error('could not process dropped messages', error)
 		} finally {
-			dragEventBus.$emit('envelopes-moved', {
+			dragEventBus.emit('envelopes-moved', {
 				mailboxId: this.options.mailboxId,
 				movedEnvelopes: envelopesBeingDragged,
 			})
 		}
 	}
 
-	async processDroppedItem(envelopeId) {
-		const item = document.querySelector(`[data-envelope-id="${envelopeId}"]`)
+	async processDroppedItem(envelope) {
+		const item = document.querySelector(`[data-envelope-id="${envelope.databaseId}"]`)
 		item.setAttribute('draggable-envelope', 'pending')
 
 		try {
-			await store.dispatch('moveMessage', {
-				id: envelopeId,
-				destMailboxId: this.options.mailboxId,
-			})
+			if (this.mainStore.getPreference('layout-message-view') === 'threaded') {
+				await this.mainStore.moveThread({
+					envelope,
+					destMailboxId: this.options.mailboxId,
+				})
+			} else {
+				await this.mainStore.moveMessage({
+					id: envelope.databaseId,
+					destMailboxId: this.options.mailboxId,
+				})
+			}
 		} catch (error) {
 			item.removeAttribute('draggable-envelope')
 			logger.error('could not move messages', error)

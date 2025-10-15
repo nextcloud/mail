@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\IMAP\Threading;
@@ -31,7 +15,7 @@ use function array_map;
 use function array_merge;
 use function json_decode;
 
-class DatabaseMessage extends Message implements JsonSerializable {
+final class DatabaseMessage extends Message implements JsonSerializable {
 	/** @var int */
 	private $databaseId;
 
@@ -95,15 +79,14 @@ class DatabaseMessage extends Message implements JsonSerializable {
 	public function redact(callable $hash): DatabaseMessage {
 		return new self(
 			$this->databaseId,
-			$this->hasReSubject() ? "Re: " . $hash($this->getSubject()) : $hash($this->getSubject()),
+			$this->hasReSubject() ? 'Re: ' . $hash($this->getSubject()) : $hash($this->getSubject()),
 			$hash($this->getId()),
-			array_map(static function (string $ref) use ($hash) {
-				return $hash($ref);
-			}, $this->getReferences()),
+			array_map(static fn (string $ref) => $hash($ref), $this->getReferences()),
 			$this->threadRootId === null ? null : $hash($this->threadRootId)
 		);
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return array_merge(

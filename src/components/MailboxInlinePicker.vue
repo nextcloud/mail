@@ -1,6 +1,9 @@
+<!--
+  - SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
-	<Treeselect
-		ref="Treeselect"
+	<Treeselect ref="Treeselect"
 		v-model="selected"
 		:options="mailboxes"
 		:multiple="false"
@@ -8,9 +11,12 @@
 		:disabled="disabled" />
 </template>
 <script>
-import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-import { mailboxHasRights } from '../util/acl'
+import Treeselect from '@riophae/vue-treeselect'
+import { mapStores } from 'pinia'
+
+import useMainStore from '../store/mainStore.js'
+import { mailboxHasRights } from '../util/acl.js'
 
 export default {
 	name: 'MailboxInlinePicker',
@@ -37,6 +43,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		mailboxes() {
 			return this.getMailboxes()
 		},
@@ -53,9 +60,9 @@ export default {
 		getMailboxes(mailboxId) {
 			let mailboxes = []
 			if (!mailboxId) {
-				mailboxes = this.$store.getters.getMailboxes(this.account.accountId)
+				mailboxes = this.mainStore.getMailboxes(this.account.accountId)
 			} else {
-				mailboxes = this.$store.getters.getSubMailboxes(mailboxId)
+				mailboxes = this.mainStore.getSubMailboxes(mailboxId)
 			}
 			mailboxes = mailboxes.filter(mailbox => mailboxHasRights(mailbox, 'i'))
 			return mailboxes.map((mailbox) => {
@@ -75,31 +82,40 @@ export default {
 	border: 0;
 	width: 250px;
 }
+
 .vue-treeselect__control-arrow-container {
 	display: none;
 }
+
 .vue-treeselect--searchable .vue-treeselect__input-container {
-	padding-left: 0;
+	padding-inline-start: 0;
 	background-color: var(--color-main-background)
 }
+
 input.vue-treeselect__input {
 	margin: 0;
 	padding: 0;
+	border: 1px solid var(--color-border-maxcontrast) !important;
 }
+
 .vue-treeselect__menu {
 	background: var(--color-main-background);
 }
+
 .vue-treeselect--single .vue-treeselect__option--selected {
 	background: var(--color-primary-element-light);
 	border-radius: var(--border-radius-large);
 }
+
 .vue-treeselect__option.vue-treeselect__option--highlight,
 .vue-treeselect__option:hover,
 .vue-treeselect__option:focus {
 	border-radius: var(--border-radius-large);
 	}
+
 .vue-treeselect__placeholder, .vue-treeselect__single-value {
-	line-height: 44px;
+	line-height: 34px;
+	color: var(--color-main-text);
 }
 
 </style>

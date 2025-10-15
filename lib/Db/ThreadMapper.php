@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2021 Daniel Kesselberg <mail@danielkesselberg.de>
- *
- * @author 2021 Daniel Kesselberg <mail@danielkesselberg.de>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Db;
@@ -60,12 +44,59 @@ class ThreadMapper extends QBMapper {
 		}
 
 		$result = $qb->executeQuery();
-		$rows = array_map(static function (array $row) {
-			return [
-				'messageUid' => (int)$row[0],
-				'mailboxName' => (string)$row[1]
-			];
-		}, $result->fetchAll(\PDO::FETCH_NUM));
+		$rows = array_map(static fn (array $row) => [
+			'messageUid' => (int)$row[0],
+			'mailboxName' => (string)$row[1]
+		], $result->fetchAll(\PDO::FETCH_NUM));
+		$result->closeCursor();
+
+		return $rows;
+	}
+
+	/**
+	 * Find message entity ids of a thread than have been sent after the given message.
+	 * Can be used to find out if a message has been replied to or followed up.
+	 *
+	 * @return array<array-key, array{id: int}>
+	 *
+	 * @throws \OCP\DB\Exception
+	 */
+	public function findNewerMessageIdsInThread(int $accountId, Message $message): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('messages.id')
+			->from($this->tableName, 'messages')
+			->join('messages', 'mail_mailboxes', 'mailboxes', 'messages.mailbox_id = mailboxes.id')
+			->where(
+				// Not the message itself
+				$qb->expr()->neq(
+					'messages.message_id',
+					$qb->createNamedParameter($message->getMessageId(), IQueryBuilder::PARAM_STR),
+					IQueryBuilder::PARAM_STR,
+				),
+				// Are part of the same thread
+				$qb->expr()->eq(
+					'messages.thread_root_id',
+					$qb->createNamedParameter($message->getThreadRootId(), IQueryBuilder::PARAM_STR),
+					IQueryBuilder::PARAM_STR,
+				),
+				// Are sent after the message
+				$qb->expr()->gte(
+					'messages.sent_at',
+					$qb->createNamedParameter($message->getSentAt(), IQueryBuilder::PARAM_INT),
+					IQueryBuilder::PARAM_INT,
+				),
+				// Belong to the same account
+				$qb->expr()->eq(
+					'mailboxes.account_id',
+					$qb->createNamedParameter($accountId, IQueryBuilder::PARAM_INT),
+					IQueryBuilder::PARAM_INT,
+				),
+			);
+
+		$result = $qb->executeQuery();
+		$rows = array_map(static fn (array $row) => [
+			'id' => (int)$row[0],
+		], $result->fetchAll(\PDO::FETCH_NUM));
 		$result->closeCursor();
 
 		return $rows;

@@ -3,33 +3,18 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2021 Richard Steinmetz <richard@steinmetz.cloud>
- *
- * @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Unit\Service\Sync;
 
+use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
-use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\MailboxNotCachedException;
+use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\PreviewEnhancer;
@@ -37,24 +22,20 @@ use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\Service\Search\FilterStringParser;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCA\Mail\Service\Sync\SyncService;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 class SyncServiceTest extends TestCase {
+
+	private IMAPClientFactory&MockObject $clientFactory;
+	private Horde_Imap_Client_Socket&MockObject $client;
+
 	/** @var ImapToDbSynchronizer */
 	private $synchronizer;
 
-	/** @var FilterStringParser */
-	private $filterStringParser;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
 	/** @var MessageMapper */
 	private $messageMapper;
-
-	/** @var PreviewEnhancer */
-	private $previewEnhancer;
 
 	/** @var LoggerInterface */
 	private $loggerInterface;
@@ -68,26 +49,27 @@ class SyncServiceTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
+		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$this->synchronizer = $this->createMock(ImapToDbSynchronizer::class);
-		$this->filterStringParser = $this->createMock(FilterStringParser::class);
-		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
+		$filterStringParser = $this->createMock(FilterStringParser::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
-		$this->previewEnhancer = $this->createMock(PreviewEnhancer::class);
+		$previewEnhancer = $this->createMock(PreviewEnhancer::class);
 		$this->loggerInterface = $this->createMock(LoggerInterface::class);
 		$this->mailboxSync = $this->createMock(MailboxSync::class);
 
 		$this->syncService = new SyncService(
+			$this->clientFactory,
 			$this->synchronizer,
-			$this->filterStringParser,
-			$this->mailboxMapper,
+			$filterStringParser,
 			$this->messageMapper,
-			$this->previewEnhancer,
+			$previewEnhancer,
 			$this->loggerInterface,
 			$this->mailboxSync
 		);
 	}
 
-	public function testPartialSyncOnUncachedMailbox() {
+	public function testPartialSyncOnUncachedMailbox(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
 		$mailbox->expects($this->once())
@@ -99,12 +81,14 @@ class SyncServiceTest extends TestCase {
 			$account,
 			$mailbox,
 			42,
+			true,
+			null,
 			[],
-			true
+			'DESC'
 		);
 	}
 
-	public function testSyncMailboxReturnsFolderStats() {
+	public function testSyncMailboxReturnsFolderStats(): void {
 		$account = $this->createMock(Account::class);
 		$account->method('getUserId')->willReturn('user');
 		$mailbox = new Mailbox();
@@ -116,7 +100,10 @@ class SyncServiceTest extends TestCase {
 			[],
 			new MailboxStats(42, 10, null)
 		);
-
+		$this->clientFactory
+			->method('getClient')
+			->with($account)
+			->willReturn($this->client);
 		$this->messageMapper
 			->method('findUidsForIds')
 			->with($mailbox, [])
@@ -125,6 +112,7 @@ class SyncServiceTest extends TestCase {
 			->method('sync')
 			->with(
 				$account,
+				$this->client,
 				$mailbox,
 				$this->loggerInterface,
 				0,
@@ -133,14 +121,15 @@ class SyncServiceTest extends TestCase {
 			);
 		$this->mailboxSync->expects($this->once())
 			->method('syncStats')
-			->with($account, $mailbox);
+			->with($this->client, $mailbox);
 
 		$response = $this->syncService->syncMailbox(
 			$account,
 			$mailbox,
 			0,
-			[],
-			false
+			false,
+			null,
+			[]
 		);
 
 		$this->assertEquals($expectedResponse, $response);

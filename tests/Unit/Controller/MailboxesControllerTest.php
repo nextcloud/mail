@@ -3,22 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Unit\Controller;
@@ -34,6 +20,8 @@ use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\IConfig;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -59,6 +47,9 @@ class MailboxesControllerTest extends TestCase {
 	/** @var SyncService|MockObject */
 	private $syncService;
 
+	private IConfig|MockObject $config;
+	private ITimeFactory|MockObject $timeFactory;
+
 	public function setUp(): void {
 		parent::setUp();
 
@@ -66,13 +57,18 @@ class MailboxesControllerTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->syncService = $this->createMock(SyncService::class);
+		$this->config = $this->createMock(IConfig::class);
+		$this->timeFactory = $this->createMock(ITimeFactory::class);
+
 		$this->controller = new MailboxesController(
 			$this->appName,
 			$this->request,
 			$this->accountService,
 			$this->userId,
 			$this->mailManager,
-			$this->syncService
+			$this->syncService,
+			$this->config,
+			$this->timeFactory
 		);
 	}
 

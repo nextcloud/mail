@@ -1,3 +1,7 @@
+<!--
+  - SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<div class="reservation">
 		<div class="departure">
@@ -43,16 +47,16 @@
 </template>
 
 <script>
-import AirplaneIcon from 'vue-material-design-icons/Airplane'
-import ArrowIcon from 'vue-material-design-icons/ArrowRight'
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import moment from '@nextcloud/moment'
 import ical from 'ical.js'
 import md5 from 'md5'
-import moment from '@nextcloud/moment'
-import { showError, showSuccess } from '@nextcloud/dialogs'
+import AirplaneIcon from 'vue-material-design-icons/Airplane.vue'
+import ArrowIcon from 'vue-material-design-icons/ArrowRight.vue'
 
-import CalendarImport from './CalendarImport'
-import { importCalendarEvent } from '../../service/DAVService'
-import logger from '../../logger'
+import CalendarImport from './CalendarImport.vue'
+import logger from '../../logger.js'
+import { importCalendarEvent } from '../../service/DAVService.js'
 
 export default {
 	name: 'FlightReservation',
@@ -122,7 +126,7 @@ export default {
 					flightNr: this.flightNumber,
 					depAirport: this.data.reservationFor.departureAirport.iataCode,
 					arrAirport: this.data.reservationFor.arrivalAirport.iataCode,
-				})
+				}),
 			)
 
 			CalendarImport.addIcalTimeProperty(event, this.data.reservationFor.departureTime, 'DTSTART')
@@ -186,7 +190,7 @@ export default {
 }
 
 .departure {
-	text-align: right;
+	text-align: end;
 }
 
 .connection {

@@ -3,30 +3,17 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Thomas Imbreckx <zinks@iozero.be>
- * @author Thomas Müller <thomas.mueller@tmit.eu>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2014-2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\MailboxNotCachedException;
@@ -37,29 +24,31 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
+use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\IConfig;
 use OCP\IRequest;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class MailboxesController extends Controller {
 	private AccountService $accountService;
-	private ?string $currentUserId;
 	private IMailManager $mailManager;
 	private SyncService $syncService;
+	private ?string $currentUserId;
 
-	/**
-	 * @param string $appName
-	 * @param IRequest $request
-	 * @param AccountService $accountService
-	 * @param string|null $UserId
-	 * @param IMailManager $mailManager
-	 * @param SyncService $syncService
-	 */
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
 		AccountService $accountService,
 		?string $UserId,
 		IMailManager $mailManager,
-		SyncService $syncService) {
+		SyncService $syncService,
+		private readonly IConfig $config,
+		private readonly ITimeFactory $timeFactory,
+	) {
 		parent::__construct($appName, $request);
 
 		$this->accountService = $accountService;
@@ -145,19 +134,27 @@ class MailboxesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
-	public function sync(int $id, array $ids = [], bool $init = false, string $query = null): JSONResponse {
+	public function sync(int $id, array $ids = [], ?int $lastMessageTimestamp = null, bool $init = false, string $sortOrder = 'newest', ?string $query = null): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		$order = $sortOrder === 'newest' ? IMailSearch::ORDER_NEWEST_FIRST: IMailSearch::ORDER_OLDEST_FIRST;
+
+		$this->config->setUserValue(
+			$this->currentUserId,
+			Application::APP_ID,
+			'ui-heartbeat',
+			(string)$this->timeFactory->getTime(),
+		);
 
 		try {
 			$syncResponse = $this->syncService->syncMailbox(
 				$account,
 				$mailbox,
 				Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
-				array_map(static function ($id) {
-					return (int)$id;
-				}, $ids),
 				!$init,
+				$lastMessageTimestamp,
+				array_map(static fn ($id) => (int)$id, $ids),
+				$order,
 				$query
 			);
 		} catch (MailboxNotCachedException $e) {
@@ -294,5 +291,23 @@ class MailboxesController extends Controller {
 
 		$this->mailManager->clearMailbox($account, $mailbox);
 		return new JSONResponse();
+	}
+
+	/**
+	 * Delete all vanished mails that are still cached.
+	 */
+	#[TrapError]
+	#[NoAdminRequired]
+	#[UserRateLimit(limit: 10, period: 600)]
+	public function repair(int $id): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
+		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+
+		$this->syncService->repairSync($account, $mailbox);
+		return new JsonResponse();
 	}
 }

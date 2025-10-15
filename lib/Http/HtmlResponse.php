@@ -3,24 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <wurst.christoph@gmail.com>
- * @author Lukas Reschke <lukas@owncloud.com>
- * @author Thomas Müller <thomas.mueller@tmit.eu>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2014-2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Http;
@@ -52,8 +37,8 @@ class HtmlResponse extends Response {
 	 */
 	private function __construct(string $content,
 		bool $plain = false,
-		string $nonce = null,
-		string $scriptUrl = null) {
+		?string $nonce = null,
+		?string $scriptUrl = null) {
 		parent::__construct();
 		$this->content = $content;
 		$this->plain = $plain;
@@ -81,11 +66,12 @@ class HtmlResponse extends Response {
 	 *
 	 * @return string message html content
 	 */
+	#[\Override]
 	public function render(): string {
 		if ($this->plain) {
 			return $this->content;
 		}
 
-		return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><script nonce="' . $this->nonce . '" src="' . $this->scriptUrl . '"></script></head><body>' . $this->content . '<div data-iframe-height></div></body></html>';
+		return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><script nonce="' . $this->nonce . '" src="' . $this->scriptUrl . '"></script></head><body>' . $this->content . '<div data-iframe-size></div></body></html>';
 	}
 }

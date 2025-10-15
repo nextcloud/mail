@@ -3,25 +3,8 @@
 declare(strict_types=1);
 
 /**
- * Mail App
- *
- * @copyright 2022 Anna Larch <anna.larch@gmx.net>
- *
- * @author Anna Larch <anna.larch@gmx.net>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
- *
- * You should have received a copy of the GNU Affero General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Service;
@@ -54,10 +37,10 @@ class DraftsService {
 	private AccountService $accountService;
 	private ITimeFactory $time;
 
-	public function __construct(IMailTransmission  $transmission,
+	public function __construct(IMailTransmission $transmission,
 		LocalMessageMapper $mapper,
-		AttachmentService  $attachmentService,
-		IEventDispatcher    $eventDispatcher,
+		AttachmentService $attachmentService,
+		IEventDispatcher $eventDispatcher,
 		IMAPClientFactory $clientFactory,
 		IMailManager $mailManager,
 		LoggerInterface $logger,
@@ -118,6 +101,10 @@ class DraftsService {
 		if ($message->getType() === LocalMessage::TYPE_OUTGOING && $toRecipients === []) {
 			throw new ClientException('Cannot convert message to outbox message without at least one recipient');
 		}
+
+		// Explicitly reset the status, so we can try sending from scratch again
+		// in case the user has updated a failing component
+		$message->setStatus(LocalMessage::STATUS_RAW);
 
 		$message = $this->mapper->saveWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
@@ -215,9 +202,7 @@ class DraftsService {
 			return;
 		}
 
-		$accountIds = array_unique(array_map(static function ($message) {
-			return $message->getAccountId();
-		}, $messages));
+		$accountIds = array_unique(array_map(static fn ($message) => $message->getAccountId(), $messages));
 
 		$accounts = array_combine($accountIds, array_map(function ($accountId) {
 			try {

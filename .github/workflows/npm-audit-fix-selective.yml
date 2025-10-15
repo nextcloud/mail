@@ -1,0 +1,124 @@
+# This workflow is provided via the organization template repository
+#
+# https://github.com/nextcloud/.github
+# https://docs.github.com/en/actions/learn-github-actions/sharing-workflows-with-your-organization
+#
+# SPDX-FileCopyrightText: 2023-2024 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: MIT
+
+name: Selective npm audit fix
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to run audit on'
+        required: true
+        default: main
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.packages.outputs.vulns }}
+
+    name: 'npm audit matrix'
+
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.inputs.branch }}
+        continue-on-error: true
+
+      - name: Read package.json node and npm engines version
+        uses: skjnldsv/read-package-engines-version-actions@06d6baf7d8f41934ab630e97d9e6c0bc9c9ac5e4 # v3
+        id: versions
+        with:
+          fallbackNode: '^20'
+          fallbackNpm: '^10'
+
+      - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: ${{ steps.versions.outputs.nodeVersion }}
+
+      - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
+        run: npm i -g 'npm@${{ steps.versions.outputs.npmVersion }}'
+
+      - name: Run npm ci and npm run build
+        id: packages
+        if: steps.checkout.outcome == 'success'
+        env:
+          CYPRESS_INSTALL_BINARY: 0
+        run: |
+          npm ci
+          npm audit --json --audit-level=none > "audit.json"
+          vulns=$(jq -c '[.vulnerabilities | to_entries[] | select(.value.fixAvailable != false) | .key]' "audit.json")
+          echo $vulns
+          echo "vulns<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$vulns" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+  fix:
+    runs-on: ubuntu-latest
+
+    needs:
+      - matrix
+    strategy:
+      matrix:
+        package: ${{ fromJson(needs.matrix.outputs.packages) }}
+        branch:
+          - ${{ github.event.inputs.branch }}
+
+    name: npm-audit-fix-${{ matrix.package }}
+
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.inputs.branch }}
+        continue-on-error: true
+
+      - name: Read package.json node and npm engines version
+        uses: skjnldsv/read-package-engines-version-actions@06d6baf7d8f41934ab630e97d9e6c0bc9c9ac5e4 # v3
+        id: versions
+        with:
+          fallbackNode: '^20'
+          fallbackNpm: '^10'
+
+      - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: ${{ steps.versions.outputs.nodeVersion }}
+
+      - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
+        run: npm i -g 'npm@${{ steps.versions.outputs.npmVersion }}'
+
+      - name: Run npm ci and npm run build
+        if: steps.checkout.outcome == 'success'
+        env:
+          CYPRESS_INSTALL_BINARY: 0
+        run: |
+          npm ci
+          npm update ${{ matrix.package }}
+
+      - name: Create Pull Request
+        if: steps.checkout.outcome == 'success'
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
+        with:
+          token: ${{ secrets.COMMAND_BOT_PAT }}
+          commit-message: 'fix(deps): update ${{ matrix.package }}'
+          committer: GitHub <noreply@github.com>
+          author: nextcloud-command <nextcloud-command@users.noreply.github.com>
+          signoff: true
+          branch: fix/deps/${{ matrix.package }}-${{ matrix.branch }}-npm-audit
+          title: '[${{ matrix.branch }}] fix(deps): update ${{ matrix.package }}'
+          body: 'Automated npm audit fix'
+          labels: |
+            dependencies
+            3. to review

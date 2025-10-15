@@ -1,24 +1,7 @@
 <!--
-  - @copyright Copyright (c) 2022 Richard Steinmetz <richard@steinmetz.cloud>
-  -
-  - @author Richard Steinmetz <richard@steinmetz.cloud>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program. If not, see <http://www.gnu.org/licenses/>.
-  -
-  -->
+  - SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 <template>
 	<NcModal @close="$emit('close')">
@@ -37,17 +20,21 @@
 					</thead>
 					<tbody>
 						<tr v-for="certificate in certificates" :key="certificate.id">
-							<td>{{ certificate.info.commonName }}</td>
-							<td>{{ certificate.info.emailAddress }}</td>
-							<td>{{ moment.unix(certificate.info.notAfter).format('LL') }}</td>
+							<td :title="certificate.info.commonName">
+								{{ certificate.info.commonName }}
+							</td>
+							<td :title="certificate.info.emailAddress">
+								{{ certificate.info.emailAddress }}
+							</td>
+							<td :title="moment.unix(certificate.info.notAfter).format('LL')">
+								{{ moment.unix(certificate.info.notAfter).format('LL') }}
+							</td>
 							<td>
-								<NcButton
-									type="tertiary-no-background"
+								<NcButton type="tertiary-no-background"
 									:aria-label="t('mail', 'Delete certificate')"
 									@click="deleteCertificate(certificate.id)">
 									<template #icon>
-										<DeleteIcon
-											:title="t('mail', 'Delete certificate')"
+										<DeleteIcon :title="t('mail', 'Delete certificate')"
 											:size="20" />
 									</template>
 								</NcButton>
@@ -57,26 +44,23 @@
 				</table>
 				<NcEmptyContent v-if="certificates.length === 0"
 					class="certificate__empty"
-					:title="t('mail', 'No certificate imported yet')" />
+					:name="t('mail', 'No certificate imported yet')" />
 				<div class="certificate-modal__list__actions">
-					<NcButton
-						type="primary"
+					<NcButton type="primary"
 						:aria-label="t('mail', 'Import certificate')"
 						@click="showImportScreen = true">
 						{{ t('mail', 'Import certificate') }}
 					</NcButton>
 				</div>
 			</div>
-			<form
-				v-else
+			<form v-else
 				class="certificate-modal__import"
 				@submit.prevent="uploadCertificate">
 				<h2>{{ t('mail', 'Import S/MIME certificate') }}</h2>
 
 				<fieldset class="certificate-modal__import__type">
 					<div>
-						<input
-							id="certificate-type-pkcs12"
+						<input id="certificate-type-pkcs12"
 							v-model="certificateType"
 							name="certificate-type"
 							type="radio"
@@ -87,8 +71,7 @@
 					</div>
 
 					<div>
-						<input
-							id="certificate-type-pem"
+						<input id="certificate-type-pem"
 							v-model="certificateType"
 							name="certificate-type"
 							type="radio"
@@ -101,20 +84,20 @@
 
 				<fieldset>
 					<label for="certificate">{{ t('mail', 'Certificate') }}</label>
-					<input
-						id="certificate"
+					<input id="certificate"
 						ref="certificate"
 						type="file"
+						accept=".p12,.crt,.pem"
 						required
 						@change="certificate = $event.target.files[0]">
 				</fieldset>
 
 				<fieldset v-if="certificateType === TYPE_PEM">
 					<label for="private-key">{{ t('mail', 'Private key (optional)') }}</label>
-					<input
-						id="private-key"
+					<input id="private-key"
 						ref="privateKey"
 						type="file"
+						accept=".key,.pem"
 						@change="privateKey = $event.target.files[0]">
 				</fieldset>
 
@@ -130,14 +113,12 @@
 				</div>
 
 				<div class="certificate-modal__import__actions">
-					<NcButton
-						type="tertiary-no-background"
+					<NcButton type="tertiary-no-background"
 						:aria-label="t('mail', 'Back')"
 						@click="resetImportForm">
 						{{ t('mail', 'Back') }}
 					</NcButton>
-					<NcButton
-						type="primary"
+					<NcButton type="primary"
 						:aria-label="t('mail', 'Submit')"
 						native-type="submit"
 						:disabled="loading || !inputFormIsValid">
@@ -150,13 +131,15 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { NcButton, NcModal, NcPasswordField, NcEmptyContent } from '@nextcloud/vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import logger from '../../logger'
 import moment from '@nextcloud/moment'
-import DeleteIcon from 'vue-material-design-icons/Delete'
-import { convertPkcs12ToPem, InvalidPkcs12CertificateError } from '../../util/pkcs12'
+import { NcButton, NcEmptyContent, NcModal, NcPasswordField } from '@nextcloud/vue'
+import { mapState, mapStores } from 'pinia'
+import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
+
+import logger from '../../logger.js'
+import useMainStore from '../../store/mainStore.js'
+import { InvalidPkcs12CertificateError, convertPkcs12ToPem } from '../../util/pkcs12.js'
 
 const TYPE_PKCS12 = 'pkcs12'
 const TYPE_PEM = 'pem'
@@ -185,7 +168,8 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters({
+		...mapStores(useMainStore),
+		...mapState(useMainStore, {
 			certificates: 'getSmimeCertificates',
 		}),
 		inputFormIsValid() {
@@ -194,11 +178,11 @@ export default {
 	},
 	async mounted() {
 		// Refresh S/MIME certificates for good measure
-		await this.$store.dispatch('fetchSmimeCertificates')
+		await this.mainStore.fetchSmimeCertificates()
 	},
 	methods: {
 		async deleteCertificate(id) {
-			await this.$store.dispatch('deleteSmimeCertificate', id)
+			await this.mainStore.deleteSmimeCertificate(id)
 		},
 		async uploadCertificate() {
 			let certificate = this.$refs.certificate.files[0]
@@ -227,7 +211,7 @@ export default {
 
 			this.loading = true
 			try {
-				await this.$store.dispatch('createSmimeCertificate', {
+				await this.mainStore.createSmimeCertificate({
 					certificate,
 					privateKey,
 				})
@@ -259,11 +243,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.empty-content{
+	height: 100%;
+	display: flex;
+}
+
 .certificate-modal {
-	padding: 20px;
+	padding: calc(var(--default-grid-baseline) * 5);
 
 	&__list {
 		table {
+			table-layout: fixed;
 			width: 100%;
 
 			th {
@@ -271,7 +261,25 @@ export default {
 			}
 
 			th, td {
-				padding: 2.5px;
+				padding: calc(var(--default-grid-baseline) * 0.5);
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+				flex: 5 1 0px;
+			}
+
+			th:last-child, td:last-child {
+				flex: 1 1 0px;
+			}
+
+			span {
+				text-overflow: ellipsis;
+			}
+
+			tr {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
 			}
 
 			// Disable default hover style
@@ -281,15 +289,15 @@ export default {
 		}
 
 		&__actions {
-			margin: 12px;
-			float: right;
+			margin: calc(var(--default-grid-baseline) * 3);
+			float: inline-end;
 		}
 	}
 
 	&__import {
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
+		gap: calc(var(--default-grid-baseline) * 2);
 
 		input[type=file] {
 			display: flex;
@@ -298,12 +306,12 @@ export default {
 
 		&__type {
 			display: flex;
-			gap: 0 20px;
+			gap: 0 calc(var(--default-grid-baseline) * 5);
 			flex-wrap: wrap;
 
 			> div {
 				display: flex;
-				gap: 5px;
+				gap: var(--default-grid-baseline);
 				align-items: center;
 			}
 		}
@@ -315,7 +323,7 @@ export default {
 		&__actions {
 			display: flex;
 			justify-content: space-between;
-			gap: 15px;
+			gap: calc(var(--default-grid-baseline) * 4);
 		}
 	}
 }

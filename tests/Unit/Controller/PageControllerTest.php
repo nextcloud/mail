@@ -3,23 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2015-2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Unit\Controller;
@@ -33,8 +19,11 @@ use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\Classification\ClassificationSettingsService;
+use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
+use OCA\Mail\Service\QuickActionsService;
 use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
@@ -49,8 +38,10 @@ use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\IUserSession;
+use OCP\User\IAvailabilityCoordinator;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
+use function urlencode;
 
 class PageControllerTest extends TestCase {
 	/** @var string */
@@ -112,6 +103,16 @@ class PageControllerTest extends TestCase {
 
 	private SmimeService $smimeService;
 
+	/** @var ClassificationSettingsService|MockObject */
+	private $classificationSettingsService;
+
+	/** @var InternalAddressService|MockObject */
+	private $internalAddressService;
+
+	private QuickActionsService|MockObject $quickActionsService;
+
+	private IAvailabilityCoordinator&MockObject $availabilityCoordinator;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -134,6 +135,10 @@ class PageControllerTest extends TestCase {
 		$this->credentialStore = $this->createMock(ICredentialStore::class);
 		$this->smimeService = $this->createMock(SmimeService::class);
 		$this->userManager = $this->createMock(IUserManager::class);
+		$this->classificationSettingsService = $this->createMock(ClassificationSettingsService::class);
+		$this->internalAddressService = $this->createMock(InternalAddressService::class);
+		$this->availabilityCoordinator = $this->createMock(IAvailabilityCoordinator::class);
+		$this->quickActionsService = $this->createMock(QuickActionsService::class);
 
 		$this->controller = new PageController(
 			$this->appName,
@@ -155,6 +160,10 @@ class PageControllerTest extends TestCase {
 			$this->smimeService,
 			$this->aiIntegrationsService,
 			$this->userManager,
+			$this->classificationSettingsService,
+			$this->internalAddressService,
+			$this->availabilityCoordinator,
+			$this->quickActionsService,
 		);
 	}
 
@@ -162,16 +171,26 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
-		$this->preferences->expects($this->exactly(6))
+		$this->preferences->expects($this->exactly(12))
 			->method('getPreference')
 			->willReturnMap([
 				[$this->userId, 'account-settings', '[]', json_encode([])],
+				[$this->userId, 'sort-order', 'newest', 'newest'],
 				[$this->userId, 'external-avatars', 'true', 'true'],
 				[$this->userId, 'reply-mode', 'top', 'bottom'],
 				[$this->userId, 'collect-data', 'true', 'true'],
+				[$this->userId, 'search-priority-body', 'false', 'false'],
 				[$this->userId, 'start-mailbox-id', null, '123'],
-				[$this->userId, 'tag-classified-messages', 'true', 'true'],
+				[$this->userId, 'layout-mode', 'vertical-split', 'vertical-split'],
+				[$this->userId, 'layout-message-view', 'threaded', 'threaded'],
+				[$this->userId, 'follow-up-reminders', 'true', 'true'],
+				[$this->userId, 'internal-addresses', 'false', 'false'],
+				[$this->userId, 'smime-sign-aliases', '[]', '[]'],
 			]);
+		$this->classificationSettingsService->expects(self::once())
+			->method('isClassificationEnabled')
+			->with($this->userId)
+			->willReturn(false);
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
 			->with($this->userId)
@@ -247,14 +266,15 @@ class PageControllerTest extends TestCase {
 			->method('getAppValue')
 			->withConsecutive(
 				[ 'mail', 'installed_version' ],
+				['mail', 'layout_message_view' ],
 				['mail', 'google_oauth_client_id' ],
 				['mail', 'microsoft_oauth_client_id' ],
 				['mail', 'microsoft_oauth_tenant_id' ],
 				['core', 'backgroundjobs_mode', 'ajax' ],
 				['mail', 'allow_new_mail_accounts', 'yes'],
-				['mail', 'enabled_thread_summary', 'no'],
 			)->willReturnOnConsecutiveCalls(
 				$this->returnValue('1.2.3'),
+				$this->returnValue('threaded'),
 				$this->returnValue(''),
 				$this->returnValue(''),
 				$this->returnValue(''),
@@ -262,14 +282,16 @@ class PageControllerTest extends TestCase {
 				$this->returnValue('yes'),
 				$this->returnValue('no')
 			);
-
+		$this->aiIntegrationsService->expects(self::exactly(4))
+			->method('isLlmProcessingEnabled')
+			->willReturn(false);
 
 		$user->method('getUID')
 			->will($this->returnValue('jane'));
 		$this->userManager->expects($this->once())
-		->method('getDisplayName')
-		->with($this->equalTo('jane'))
-		->will($this->returnValue('Jane Doe'));
+			->method('getDisplayName')
+			->with($this->equalTo('jane'))
+			->will($this->returnValue('Jane Doe'));
 		$this->config->expects($this->once())
 			->method('getUserValue')
 			->with($this->equalTo('jane'), $this->equalTo('settings'),
@@ -284,7 +306,15 @@ class PageControllerTest extends TestCase {
 			->method('getLoginCredentials')
 			->willReturn($loginCredentials);
 
-		$this->initialState->expects($this->exactly(14))
+		$this->availabilityCoordinator->expects(self::once())
+			->method('isEnabled')
+			->willReturn(true);
+
+		$this->quickActionsService->expects(self::once())
+			->method('findAll')
+			->with($this->userId)
+			->willReturn([]);
+		$this->initialState->expects($this->exactly(24))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -292,26 +322,40 @@ class PageControllerTest extends TestCase {
 				['accounts', $accountsJson],
 				['account-settings', []],
 				['tags', []],
+				['internal-addresses-list', []],
+				['internal-addresses', false],
+				['smime-sign-aliases',[]],
+				['sort-order', 'newest'],
 				['password-is-unavailable', true],
+				['preferences', [
+					'attachment-size-limit' => 123,
+					'external-avatars' => 'true',
+					'reply-mode' => 'bottom',
+					'app-version' => '1.2.3',
+					'collect-data' => 'true',
+					'start-mailbox-id' => '123',
+					'tag-classified-messages' => 'false',
+					'search-priority-body' => 'false',
+					'layout-mode' => 'vertical-split',
+					'layout-message-view' => 'threaded',
+					'follow-up-reminders' => 'true',
+				]],
 				['prefill_displayName', 'Jane Doe'],
 				['prefill_email', 'jane@doe.cz'],
 				['outbox-messages', []],
+				['quick-actions', []],
 				['disable-scheduled-send', false],
 				['disable-snooze', false],
 				['allow-new-accounts', true],
-				['enabled_thread_summary', false],
+				['llm_summaries_available', false],
+				['llm_translation_enabled', false],
+				['llm_freeprompt_available', false],
+				['llm_followup_available', false],
 				['smime-certificates', []],
+				['enable-system-out-of-office', true],
 			);
 
-		$expected = new TemplateResponse($this->appName, 'index', [
-			'attachment-size-limit' => 123,
-			'external-avatars' => 'true',
-			'reply-mode' => 'bottom',
-			'app-version' => '1.2.3',
-			'collect-data' => 'true',
-			'start-mailbox-id' => '123',
-			'tag-classified-messages' => 'true',
-		]);
+		$expected = new TemplateResponse($this->appName, 'index');
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');
 		$expected->setContentSecurityPolicy($csp);
@@ -352,6 +396,17 @@ class PageControllerTest extends TestCase {
 
 		$expected = new RedirectResponse('?to=' . urlencode($address)
 			. '&cc=' . urlencode($cc));
+
+		$response = $this->controller->compose($uri);
+
+		$this->assertEquals($expected, $response);
+	}
+
+	public function testComposeBcc() {
+		$bcc = 'blind@example.com';
+		$uri = "mailto:?bcc=$bcc";
+
+		$expected = new RedirectResponse('?bcc=' . urlencode($bcc));
 
 		$response = $this->controller->compose($uri);
 

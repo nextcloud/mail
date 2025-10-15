@@ -2,25 +2,9 @@
 
 declare(strict_types=1);
 
-/*
- * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Command;
@@ -38,7 +22,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use function json_encode;
 
-class ExportAccountThreads extends Command {
+final class ExportAccountThreads extends Command {
 	private const ARGUMENT_ACCOUNT_ID = 'account-id';
 	private const OPTION_REDACT = 'redact';
 
@@ -80,13 +64,9 @@ class ExportAccountThreads extends Command {
 		if ($input->getOption(self::OPTION_REDACT)) {
 			$salt = $this->random->generate(32);
 			$output->writeln(json_encode(
-				array_map(static function (DatabaseMessage $message) use ($salt) {
-					return $message->redact(
-						static function (string $str) use ($salt) {
-							return hash('md5', $str . $salt) . "@redacted";
-						}
-					);
-				}, $threads),
+				array_map(static fn (DatabaseMessage $message) => $message->redact(
+					static fn (string $str) => hash('md5', $str . $salt) . '@redacted'
+				), $threads),
 				JSON_PRETTY_PRINT
 			));
 		} else {

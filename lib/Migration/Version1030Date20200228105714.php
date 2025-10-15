@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+/**
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
 namespace OCA\Mail\Migration;
 
 use OCP\IDBConnection;
@@ -19,6 +24,7 @@ class Version1030Date20200228105714 extends SimpleMigrationStep {
 	/**
 	 * @return void
 	 */
+	#[\Override]
 	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
 		// Force a re-sync, so the old favorites inbox vanishes
 		$update = $this->connection->getQueryBuilder();

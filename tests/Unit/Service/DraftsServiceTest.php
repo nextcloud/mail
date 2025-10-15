@@ -3,25 +3,8 @@
 declare(strict_types=1);
 
 /**
- * Mail App
- *
- * @copyright 2022 Anna Larch <anna.larch@gmx.net>
- *
- * @author Anna Larch <anna.larch@gmx.net>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
- *
- * You should have received a copy of the GNU Affero General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Unit\Service;
@@ -118,7 +101,7 @@ class DraftsServiceTest extends TestCase {
 		$message->setSendAt(null);
 		$message->setUpdatedAt(123456);
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 
@@ -146,7 +129,7 @@ class DraftsServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt(null);
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 
@@ -165,7 +148,7 @@ class DraftsServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt(null);
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$message->setType(LocalMessage::TYPE_DRAFT);
@@ -216,7 +199,7 @@ class DraftsServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt(null);
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$message->setType(LocalMessage::TYPE_DRAFT);
@@ -263,7 +246,7 @@ class DraftsServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt(null);
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$message->setType(LocalMessage::TYPE_DRAFT);
@@ -321,7 +304,7 @@ class DraftsServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$message->setType(LocalMessage::TYPE_OUTGOING);
@@ -379,7 +362,7 @@ class DraftsServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt(null);
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
 		$message->setType(LocalMessage::TYPE_DRAFT);
@@ -429,7 +412,7 @@ class DraftsServiceTest extends TestCase {
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
+		$message->setBodyHtml('<p>message</p>');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('laskdjhsakjh33233928@startdewvalley.com');
 		$message->setType(LocalMessage::TYPE_OUTGOING);

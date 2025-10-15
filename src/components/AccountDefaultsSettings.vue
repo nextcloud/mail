@@ -1,23 +1,7 @@
 <!--
-  - @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
-  -
-  - @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
+  - SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 <template>
 	<div>
@@ -55,8 +39,11 @@
 </template>
 
 <script>
-import logger from '../logger'
-import MailboxInlinePicker from './MailboxInlinePicker'
+import { mapStores } from 'pinia'
+
+import logger from '../logger.js'
+import MailboxInlinePicker from './MailboxInlinePicker.vue'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'AccountDefaultsSettings',
@@ -75,26 +62,27 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		draftsMailbox: {
 			get() {
-				const mb = this.$store.getters.getMailbox(this.account.draftsMailboxId)
+				const mb = this.mainStore.getMailbox(this.account.draftsMailboxId)
 				if (!mb) {
 					return
 				}
 				return mb.databaseId
 			},
 			async set(draftsMailboxId) {
-				logger.debug('setting drafts mailbox to ' + draftsMailboxId)
+				logger.debug('setting drafts folder to ' + draftsMailboxId)
 				this.saving = true
 				try {
-					await this.$store.dispatch('patchAccount', {
+					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
 							draftsMailboxId,
 						},
 					})
 				} catch (error) {
-					logger.error('could not set drafts mailbox', {
+					logger.error('could not set drafts folder', {
 						error,
 					})
 				} finally {
@@ -104,24 +92,24 @@ export default {
 		},
 		sentMailbox: {
 			get() {
-				const mb = this.$store.getters.getMailbox(this.account.sentMailboxId)
+				const mb = this.mainStore.getMailbox(this.account.sentMailboxId)
 				if (!mb) {
 					return
 				}
 				return mb.databaseId
 			},
 			async set(sentMailboxId) {
-				logger.debug('setting sent mailbox to ' + sentMailboxId)
+				logger.debug('setting sent folder to ' + sentMailboxId)
 				this.saving = true
 				try {
-					await this.$store.dispatch('patchAccount', {
+					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
 							sentMailboxId,
 						},
 					})
 				} catch (error) {
-					logger.error('could not set sent mailbox', {
+					logger.error('could not set sent folder', {
 						error,
 					})
 				} finally {
@@ -131,24 +119,24 @@ export default {
 		},
 		trashMailbox: {
 			get() {
-				const mb = this.$store.getters.getMailbox(this.account.trashMailboxId)
+				const mb = this.mainStore.getMailbox(this.account.trashMailboxId)
 				if (!mb) {
 					return
 				}
 				return mb.databaseId
 			},
 			async set(trashMailboxId) {
-				logger.debug('setting trash mailbox to ' + trashMailboxId)
+				logger.debug('setting trash folder to ' + trashMailboxId)
 				this.saving = true
 				try {
-					await this.$store.dispatch('patchAccount', {
+					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
 							trashMailboxId,
 						},
 					})
 				} catch (error) {
-					logger.error('could not set trash mailbox', {
+					logger.error('could not set trash folder', {
 						error,
 					})
 				} finally {
@@ -158,24 +146,24 @@ export default {
 		},
 		archiveMailbox: {
 			get() {
-				const mb = this.$store.getters.getMailbox(this.account.archiveMailboxId)
+				const mb = this.mainStore.getMailbox(this.account.archiveMailboxId)
 				if (!mb) {
 					return
 				}
 				return mb.databaseId
 			},
 			async set(archiveMailboxId) {
-				logger.debug('setting archive mailbox to ' + archiveMailboxId)
+				logger.debug('setting archive folder to ' + archiveMailboxId)
 				this.saving = true
 				try {
-					await this.$store.dispatch('patchAccount', {
+					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
 							archiveMailboxId,
 						},
 					})
 				} catch (error) {
-					logger.error('could not set archive mailbox', {
+					logger.error('could not set archive folder', {
 						error,
 					})
 				} finally {
@@ -185,24 +173,24 @@ export default {
 		},
 		junkMailbox: {
 			get() {
-				const mb = this.$store.getters.getMailbox(this.account.junkMailboxId)
+				const mb = this.mainStore.getMailbox(this.account.junkMailboxId)
 				if (!mb) {
 					return
 				}
 				return mb.databaseId
 			},
 			async set(junkMailboxId) {
-				logger.debug('setting junk mailbox to ' + junkMailboxId)
+				logger.debug('setting junk folder to ' + junkMailboxId)
 				this.saving = true
 				try {
-					await this.$store.dispatch('patchAccount', {
+					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
 							junkMailboxId,
 						},
 					})
 				} catch (error) {
-					logger.error('could not set junk mailbox', {
+					logger.error('could not set junk folder', {
 						error,
 					})
 				} finally {
@@ -212,24 +200,24 @@ export default {
 		},
 		snoozeMailbox: {
 			get() {
-				const mb = this.$store.getters.getMailbox(this.account.snoozeMailboxId)
+				const mb = this.mainStore.getMailbox(this.account.snoozeMailboxId)
 				if (!mb) {
 					return
 				}
 				return mb.databaseId
 			},
 			async set(snoozeMailboxId) {
-				logger.debug('setting snooze mailbox to ' + snoozeMailboxId)
+				logger.debug('setting snooze folder to ' + snoozeMailboxId)
 				this.saving = true
 				try {
-					await this.$store.dispatch('patchAccount', {
+					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
 							snoozeMailboxId,
 						},
 					})
 				} catch (error) {
-					logger.error('could not set snooze mailbox', {
+					logger.error('could not set snooze folder', {
 						error,
 					})
 				} finally {

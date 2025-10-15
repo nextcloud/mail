@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Http;
@@ -42,6 +26,9 @@ use function get_class;
  * @todo spec template with 28+
  */
 class JsonResponse extends Base {
+	/**
+	 * @param Http::STATUS_* $statusCode
+	 */
 	public function __construct($data = [],
 		int $statusCode = Http::STATUS_OK) {
 		parent::__construct($data, $statusCode);
@@ -51,7 +38,7 @@ class JsonResponse extends Base {
 
 	/**
 	 * @param array|JsonSerializable|bool|string $data
-	 * @param int $status
+	 * @param Http::STATUS_* $status
 	 *
 	 * @return static
 	 */
@@ -68,7 +55,7 @@ class JsonResponse extends Base {
 
 	/**
 	 * @param array|JsonSerializable|bool|string $data
-	 * @param int $status
+	 * @param Http::STATUS_* $status
 	 *
 	 * @return static
 	 */
@@ -93,9 +80,16 @@ class JsonResponse extends Base {
 		);
 	}
 
+	/**
+	 * @param string $message
+	 * @param Http::STATUS_* $status
+	 * @param array|JsonSerializable|bool|string $data
+	 *
+	 * @return static
+	 */
 	public static function error(string $message,
 		int $status = Http::STATUS_INTERNAL_SERVER_ERROR,
-		array $data = [],
+		$data = [],
 		int $code = 0): self {
 		return new self(
 			[
@@ -109,11 +103,18 @@ class JsonResponse extends Base {
 	}
 
 	/**
-	 * @param mixed[] $data
+	 * @param Throwable $error
+	 * @param Http::STATUS_* $status
+	 * @param array|JsonSerializable|bool|string $data
+	 *
+	 * @return static
 	 */
 	public static function errorFromThrowable(Throwable $error,
 		int $status = Http::STATUS_INTERNAL_SERVER_ERROR,
-		array $data = []): self {
+		$data = []): self {
+		if (!is_array($data)) {
+			$data = [$data];
+		}
 		return self::error(
 			$error->getMessage(),
 			$status,
@@ -139,9 +140,7 @@ class JsonResponse extends Base {
 	}
 
 	private static function filterTrace(array $original): array {
-		return array_map(static function (array $row) {
-			return array_intersect_key($row,
-				array_flip(['file', 'line', 'function', 'class']));
-		}, $original);
+		return array_map(static fn (array $row) => array_intersect_key($row,
+			array_flip(['file', 'line', 'function', 'class'])), $original);
 	}
 }

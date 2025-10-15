@@ -1,25 +1,7 @@
 <!--
-  - @copyright Copyright (c) 2023 Richard Steinmetz <richard@steinmetz.cloud>
-  -
-  - @author Richard Steinmetz <richard@steinmetz.cloud>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU General Public License as published by
-  - the Free Software Foundation, either version 3 of the License, or
-  - (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU General Public License for more details.
-  -
-  - You should have received a copy of the GNU General Public License
-  - along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -
-  -->
-
+  - SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<div class="composer-session"
 		:class="{'composer-session--disabled': disabled}"
@@ -34,8 +16,7 @@
 
 		<div class="composer-session__actions">
 			<NcActions>
-				<NcActionButton
-					:aria-label="t('mail', 'Expand composer')"
+				<NcActionButton :aria-label="t('mail', 'Expand composer')"
 					:disabled="disabled"
 					@click.stop="onShowComposer">
 					<template #icon>
@@ -57,11 +38,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { NcActions, NcActionButton } from '@nextcloud/vue'
-import PencilIcon from 'vue-material-design-icons/Pencil.vue'
+import { NcActionButton, NcActions } from '@nextcloud/vue'
+import { mapState, mapStores } from 'pinia'
 import ArrowExpandIcon from 'vue-material-design-icons/ArrowExpand.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
+import PencilIcon from 'vue-material-design-icons/PencilOutline.vue'
+
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'ComposerSessionIndicator',
@@ -78,7 +61,8 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['composerMessage']),
+		...mapStores(useMainStore),
+		...mapState(useMainStore, ['composerMessage']),
 		title() {
 			return this.composerMessage?.data.subject || t('mail', 'Untitled message')
 		},
@@ -92,7 +76,7 @@ export default {
 				return
 			}
 
-			await this.$store.dispatch('showMessageComposer')
+			await this.mainStore.showMessageComposerMutation()
 		},
 		onClose() {
 			if (this.disabled) {
@@ -109,21 +93,18 @@ export default {
 .composer-session {
 	position: fixed;
 	bottom: calc(var(--body-container-margin) + var(--default-grid-baseline));
-	right: calc(var(--body-container-margin) + var(--default-grid-baseline));
+	inset-inline-end: calc(var(--body-container-margin) + var(--default-grid-baseline));
 	z-index: 1000;
 
 	display: flex;
 	align-items: center;
-	gap: 5px;
+	gap: var(--default-grid-baseline);
 
 	width: 360px;
-	padding: 0 8px;
+	padding: 0 calc(var(--default-grid-baseline) * 2);
 
 	// Retain border radius from outer body container for visual consistency
-	height: calc(var(--body-container-radius) * 2);
 	border-radius: var(--body-container-radius);
-	//height: 44px;
-	//border-radius: var(--border-radius-pill);
 
 	// Mobile
 	@media (max-width: 1024px) {
@@ -157,6 +138,7 @@ export default {
 	}
 
 	&__actions {
+		display: flex;
 		flex-shrink: 0;
 	}
 }

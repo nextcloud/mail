@@ -1,23 +1,8 @@
 <?php
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Maadix
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Command;
@@ -31,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UpdateAccount extends Command {
+final class UpdateAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 	public const ARGUMENT_NAME = 'name';
 	public const ARGUMENT_EMAIL = 'email';
@@ -113,8 +98,8 @@ class UpdateAccount extends Command {
 			return 1;
 		}
 
-		$output->writeLn("<info>Found account with email: " . $mailAccount->getEmail() . "</info>");
-			
+		$output->writeLn('<info>Found account with email: ' . $mailAccount->getEmail() . '</info>');
+
 		//AUTH METHOD
 		if ($input->getOption(self::ARGUMENT_AUTH_METHOD)) {
 			$mailAccount->setAuthMethod($authMethod);
@@ -134,7 +119,7 @@ class UpdateAccount extends Command {
 		}
 
 		if ($input->getOption(self::ARGUMENT_IMAP_PORT)) {
-			$mailAccount->setInboundPort((int) $imapPort);
+			$mailAccount->setInboundPort((int)$imapPort);
 		}
 
 		if ($input->getOption(self::ARGUMENT_IMAP_SSL_MODE)) {
@@ -156,7 +141,7 @@ class UpdateAccount extends Command {
 		}
 
 		if ($input->getOption(self::ARGUMENT_SMTP_PORT)) {
-			$mailAccount->setOutboundPort((int) $smtpPort);
+			$mailAccount->setOutboundPort((int)$smtpPort);
 		}
 
 		if ($input->getOption(self::ARGUMENT_SMTP_SSL_MODE)) {
@@ -173,7 +158,7 @@ class UpdateAccount extends Command {
 
 		$this->mapper->save($mailAccount);
 
-		$output->writeln("<info>Account " . $mailAccount->getEmail() . " with ID  $accountId  succesfully updated </info>");
+		$output->writeln('<info>Account ' . $mailAccount->getEmail() . " with ID  $accountId  succesfully updated </info>");
 		return 0;
 	}
 }

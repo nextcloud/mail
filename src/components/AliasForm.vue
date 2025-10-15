@@ -1,24 +1,7 @@
 <!--
-  - @copyright 2021 Daniel Kesselberg <mail@danielkesselberg.de>
-  -
-  - @author 2021 Daniel Kesselberg <mail@danielkesselberg.de>
-  - @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
+  - SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 <template>
 	<div class="alias-form">
@@ -46,7 +29,7 @@
 					:aria-label="t('mail', 'Update alias')"
 					native-type="submit"
 					:form="formId"
-					:title="t('mail', 'Update alias')">
+					:name="t('mail', 'Update alias')">
 					<template #icon>
 						<IconLoading v-if="loading" :size="20" />
 						<IconCheck v-else :size="20" />
@@ -60,7 +43,7 @@
 				<NcButton v-if="enableUpdate"
 					type="tertiary-no-background"
 					:aria-label="t('mail', 'Rename alias')"
-					:title="t('mail', 'Show update alias form')"
+					:name="t('mail', 'Show update alias form')"
 					@click.prevent="showForm = true">
 					<template #icon>
 						<IconRename :size="20" />
@@ -69,7 +52,7 @@
 				<NcButton v-if="enableDelete && !alias.provisioned"
 					type="tertiary-no-background"
 					:aria-label="t('mail', 'Delete alias')"
-					:title="t('mail', 'Delete alias')"
+					:name="t('mail', 'Delete alias')"
 					@click.prevent="deleteAlias">
 					<template #icon>
 						<IconLoading v-if="loading" :size="20" />
@@ -82,10 +65,10 @@
 </template>
 
 <script>
-import { NcButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-import IconDelete from 'vue-material-design-icons/Delete'
-import IconRename from 'vue-material-design-icons/Pencil'
-import IconCheck from 'vue-material-design-icons/Check'
+import { NcLoadingIcon as IconLoading, NcButton } from '@nextcloud/vue'
+import IconCheck from 'vue-material-design-icons/Check.vue'
+import IconRename from 'vue-material-design-icons/PencilOutline.vue'
+import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 
 export default {
 	name: 'AliasForm',

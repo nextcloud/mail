@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Db;
@@ -70,6 +54,8 @@ use function strtolower;
  * @method void setMyAcls(string|null $acls)
  * @method bool|null isShared()
  * @method void setShared(bool $shared)
+ * @method string getNameHash()
+ * @method void setNameHash(string $nameHash)
  */
 class Mailbox extends Entity implements JsonSerializable {
 	protected $name;
@@ -89,10 +75,11 @@ class Mailbox extends Entity implements JsonSerializable {
 	protected $syncInBackground;
 	protected $myAcls;
 	protected $shared;
+	protected $nameHash;
 
 	/**
 	 * @var int
-	 * Lock timeout for sync (5 minutes)
+	 *          Lock timeout for sync (5 minutes)
 	 */
 	public const LOCK_TIMEOUT = 300;
 
@@ -123,7 +110,7 @@ class Mailbox extends Entity implements JsonSerializable {
 				strtolower($specialUse),
 				'\\'
 			),
-			array_map("strtolower", $this->getSpecialUseParsed()),
+			array_map('strtolower', $this->getSpecialUseParsed()),
 			true
 		);
 	}
@@ -154,6 +141,16 @@ class Mailbox extends Entity implements JsonSerializable {
 		return new MailboxStats($this->getMessages(), $this->getUnseen());
 	}
 
+	public function getCacheBuster(): string {
+		return hash('md5', implode('|', [
+			(string)$this->getId(),
+			$this->getSyncNewToken() ?? 'null',
+			$this->getSyncChangedToken() ?? 'null',
+			$this->getSyncVanishedToken() ?? 'null',
+		]));
+	}
+
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		$specialUse = $this->getSpecialUseParsed();
@@ -172,6 +169,7 @@ class Mailbox extends Entity implements JsonSerializable {
 			'unread' => $this->unseen,
 			'myAcls' => $this->myAcls,
 			'shared' => $this->shared === true,
+			'cacheBuster' => $this->getCacheBuster(),
 		];
 	}
 }

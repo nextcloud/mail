@@ -3,22 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Jakob Sack <mail@jakobsack.de>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Service;
@@ -30,7 +16,6 @@ use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\Cache as AvatarCache;
 use OCA\Mail\Service\Avatar\CompositeAvatarSource;
 use OCA\Mail\Service\Avatar\Downloader;
-use OCP\IURLGenerator;
 
 class AvatarService implements IAvatarService {
 	/** @var AvatarCache */
@@ -42,9 +27,6 @@ class AvatarService implements IAvatarService {
 	/** @var CompositeAvatarSource */
 	private $source;
 
-	/** @var IURLGenerator */
-	private $urlGenerator;
-
 	/** @var AvatarFactory */
 	private $avatarFactory;
 
@@ -55,19 +37,16 @@ class AvatarService implements IAvatarService {
 	 * @param CompositeAvatarSource $source
 	 * @param Downloader $downloader
 	 * @param AvatarCache $cache
-	 * @param IURLGenerator $urlGenerator
 	 * @param AvatarFactory $avatarFactory
 	 * @param IUserPreferences $preferences
 	 */
 	public function __construct(CompositeAvatarSource $source,
 		Downloader $downloader,
 		AvatarCache $cache,
-		IURLGenerator $urlGenerator,
 		AvatarFactory $avatarFactory,
 		IUserPreferences $preferences) {
 		$this->source = $source;
 		$this->cache = $cache;
-		$this->urlGenerator = $urlGenerator;
 		$this->downloader = $downloader;
 		$this->avatarFactory = $avatarFactory;
 		$this->preferences = $preferences;
@@ -92,6 +71,7 @@ class AvatarService implements IAvatarService {
 					'image/jpeg',
 					'image/png',
 					'image/x-icon',
+					'image/vnd.microsoft.icon',
 				]);
 		} else {
 			// We trust internal URLs by default
@@ -99,11 +79,16 @@ class AvatarService implements IAvatarService {
 		}
 	}
 
+	public function getCachedAvatar(string $email, string $uid): Avatar|false|null {
+		return $this->cache->get($email, $uid);
+	}
+
 	/**
 	 * @param string $email
 	 * @param string $uid
 	 * @return Avatar|null
 	 */
+	#[\Override]
 	public function getAvatar(string $email, string $uid): ?Avatar {
 		$cachedAvatar = $this->cache->get($email, $uid);
 		if ($cachedAvatar) {
@@ -134,6 +119,7 @@ class AvatarService implements IAvatarService {
 	 * @param string $uid
 	 * @return array|null image data
 	 */
+	#[\Override]
 	public function getAvatarImage(string $email, string $uid) {
 		$avatar = $this->getAvatar($email, $uid);
 		if (is_null($avatar)) {

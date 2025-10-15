@@ -1,25 +1,9 @@
-/*
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { sortMailboxes } from '../../../imap/MailboxSorter'
+import { sortMailboxes } from '../../../imap/MailboxSorter.js'
 
 describe('mailboxSorter', () => {
 	it('sorts ordinary mailboxes', () => {
@@ -42,6 +26,50 @@ describe('mailboxSorter', () => {
 		const sorted = sortMailboxes(mailboxes, account)
 
 		expect(sorted).toEqual([mb1, mb2])
+	})
+
+	it('puts inbox before all', () => {
+		const mbAll = {
+			name: 'All emails',
+			specialUse: ['all'],
+			databaseId: 1,
+		}
+		const inbox = {
+			name: 'INBOX',
+			specialUse: ['inbox'],
+			databaseId: 2,
+		}
+		const mailboxes = [inbox, mbAll]
+
+		const account = {
+			snoozeMailboxId: 0,
+		}
+
+		const sorted = sortMailboxes(mailboxes, account)
+
+		expect(sorted).toEqual([inbox, mbAll])
+	})
+
+	it('handles unknown special use', () => {
+		const specialMb = {
+			name: 'Special emails',
+			specialUse: ['special'],
+			databaseId: 1,
+		}
+		const inbox = {
+			name: 'INBOX',
+			specialUse: ['inbox'],
+			databaseId: 2,
+		}
+		const mailboxes = [inbox, specialMb]
+
+		const account = {
+			snoozeMailboxId: 0,
+		}
+
+		const sorted = sortMailboxes(mailboxes, account)
+
+		expect(sorted).toEqual([inbox, specialMb])
 	})
 
 	it('lists special mailboxes first', () => {

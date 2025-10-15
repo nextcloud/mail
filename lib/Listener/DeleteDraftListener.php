@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Listener;
@@ -74,6 +58,7 @@ class DeleteDraftListener implements IEventListener {
 		$this->eventDispatcher = $eventDispatcher;
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		if (($event instanceof DraftSavedEvent || $event instanceof OutboxMessageCreatedEvent || $event instanceof DraftMessageCreatedEvent) && $event->getDraft() !== null) {
 			$this->deleteDraft($event->getAccount(), $event->getDraft());
@@ -127,7 +112,7 @@ class DeleteDraftListener implements IEventListener {
 	private function getDraftsMailbox(Account $account): Mailbox {
 		$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
 		if ($draftsMailboxId === null) {
-			throw new DoesNotExistException("No drafts mailbox ID set");
+			throw new DoesNotExistException('No drafts mailbox ID set');
 		}
 		return $this->mailboxMapper->findById($draftsMailboxId);
 	}

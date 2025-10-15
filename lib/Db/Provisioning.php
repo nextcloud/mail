@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2021 Anna Larch <anna@nextcloud.com>
- *
- * @author 2021 Anna Larch <anna@nextcloud.com>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Db;
@@ -51,6 +35,10 @@ use ReturnTypeWillChange;
  * @method void setSmtpPort(int $smtpPort)
  * @method string getSmtpSslMode()
  * @method void setSmtpSslMode(string $smtpSslMode)
+ * @method bool|null getMasterPasswordEnabled()
+ * @method void setMasterPasswordEnabled(bool $masterPasswordEnabled)
+ * @method string|null getMasterPassword()
+ * @method void setMasterPassword(string $masterPassword)
  * @method bool|null getSieveEnabled()
  * @method void setSieveEnabled(bool $sieveEnabled)
  * @method string|null getSieveHost()
@@ -70,6 +58,7 @@ use ReturnTypeWillChange;
  */
 class Provisioning extends Entity implements JsonSerializable {
 	public const WILDCARD = '*';
+	public const MASTER_PASSWORD_PLACEHOLDER = '********';
 
 	protected $provisioningDomain;
 	protected $emailTemplate;
@@ -81,6 +70,8 @@ class Provisioning extends Entity implements JsonSerializable {
 	protected $smtpHost;
 	protected $smtpPort;
 	protected $smtpSslMode;
+	protected $masterPasswordEnabled;
+	protected $masterPassword;
 	protected $sieveEnabled;
 	protected $sieveUser;
 	protected $sieveHost;
@@ -93,11 +84,14 @@ class Provisioning extends Entity implements JsonSerializable {
 	public function __construct() {
 		$this->addType('imapPort', 'integer');
 		$this->addType('smtpPort', 'integer');
+		$this->addType('masterPasswordEnabled', 'boolean');
+		$this->addType('masterPassword', 'string');
 		$this->addType('sieveEnabled', 'boolean');
 		$this->addType('sievePort', 'integer');
 		$this->addType('ldapAliasesProvisioning', 'boolean');
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [
@@ -112,6 +106,8 @@ class Provisioning extends Entity implements JsonSerializable {
 			'smtpHost' => $this->getSmtpHost(),
 			'smtpPort' => $this->getSmtpPort(),
 			'smtpSslMode' => $this->getSmtpSslMode(),
+			'masterPasswordEnabled' => $this->getMasterPasswordEnabled(),
+			'masterPassword' => !empty($this->getMasterPassword()) ? self::MASTER_PASSWORD_PLACEHOLDER : null,
 			'sieveEnabled' => $this->getSieveEnabled(),
 			'sieveUser' => $this->getSieveUser(),
 			'sieveHost' => $this->getSieveHost(),

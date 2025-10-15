@@ -1,23 +1,9 @@
 <?php
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Thomas Müller <thomas.mueller@tmit.eu>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2014-2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Db;
@@ -60,11 +46,7 @@ class CollectedAddressMapper extends QBMapper {
 		return $this->findEntities($dbQuery);
 	}
 
-	/**
-	 * @param null|string $email
-	 * @return bool
-	 */
-	public function exists(string $userId, ?string $email) {
+	public function insertIfNew(string $userId, string $email, ?string $label): bool {
 		$qb = $this->db->getQueryBuilder();
 		$dbQuery = $qb
 			->select('*')
@@ -72,7 +54,18 @@ class CollectedAddressMapper extends QBMapper {
 			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)))
 			->andWhere($qb->expr()->iLike('email', $qb->createNamedParameter($email)));
 
-		return count($this->findEntities($dbQuery)) > 0;
+		if (!empty($this->findEntities($dbQuery))) {
+			return false;
+		}
+
+		$entity = new CollectedAddress();
+		$entity->setUserId($userId);
+		if ($label !== $email) {
+			$entity->setDisplayName($label);
+		}
+		$entity->setEmail($email);
+		$this->insert($entity);
+		return true;
 	}
 
 	public function getTotal(): int {
@@ -116,9 +109,7 @@ class CollectedAddressMapper extends QBMapper {
 			->leftJoin('c', 'mail_accounts', 'a', $qb1->expr()->eq('c.user_id', 'a.user_id'))
 			->where($qb1->expr()->isNull('a.id'));
 		$result = $idsQuery->executeQuery();
-		$ids = array_map(static function (array $row) {
-			return (int)$row['id'];
-		}, $result->fetchAll());
+		$ids = array_map(static fn (array $row) => (int)$row['id'], $result->fetchAll());
 		$result->closeCursor();
 
 		$qb2 = $this->db->getQueryBuilder();

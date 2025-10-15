@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Unit\IMAP;
@@ -124,6 +108,7 @@ class MailboxSyncTest extends TestCase {
 		$folders = [
 			$this->createMock(Folder::class),
 			$this->createMock(Folder::class),
+			$this->createMock(Folder::class),
 		];
 		$status = [
 			'unseen' => 10,
@@ -133,24 +118,27 @@ class MailboxSyncTest extends TestCase {
 		$folders[0]->method('getMailbox')->willReturn('mb1');
 		$folders[1]->method('getStatus')->willReturn($status);
 		$folders[1]->method('getMailbox')->willReturn('mb2');
+		$folders[2]->method('getStatus')->willReturn($status);
+		$folders[2]->method('getMailbox')->willReturn('mb3');
 		$this->folderMapper->expects($this->once())
 			->method('getFolders')
 			->with($account, $client)
 			->willReturn($folders);
 		$this->folderMapper->expects($this->once())
 			->method('getFoldersStatusAsObject')
-			->with($client, self::equalToCanonicalizing(['mb1', 'mb2',]))
+			->with($client, self::equalToCanonicalizing(['mb1', 'mb2', 'mb3',]))
 			->willReturn([
 				'mb1' => new MailboxStats(1, 2),
 				'mb2' => new MailboxStats(1, 2),
+				/* no status for mb3 */
 			]);
 		$this->folderMapper->expects($this->once())
 			->method('detectFolderSpecialUse')
 			->with($folders);
-		$this->mailboxMapper->expects(self::exactly(2))
+		$this->mailboxMapper->expects(self::exactly(3))
 			->method('insert')
 			->willReturnArgument(0);
-		$this->mailboxMapper->expects(self::exactly(2))
+		$this->mailboxMapper->expects(self::exactly(3))
 			->method('update')
 			->willReturnArgument(0);
 		$this->dispatcher
@@ -225,12 +213,7 @@ class MailboxSyncTest extends TestCase {
 	}
 
 	public function testSyncStats(): void {
-		$account = $this->createMock(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->with($account)
-			->willReturn($client);
 		$stats = new MailboxStats(42, 10, null);
 		$mailbox = new Mailbox();
 		$mailbox->setName('mailbox');
@@ -242,9 +225,29 @@ class MailboxSyncTest extends TestCase {
 			->method('update')
 			->with($mailbox);
 
-		$this->sync->syncStats($account, $mailbox);
+		$this->sync->syncStats($client, $mailbox);
 
 		$this->assertEquals(42, $mailbox->getMessages());
 		$this->assertEquals(10, $mailbox->getUnseen());
+	}
+
+	public function testSyncStatsWithNoStats(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$stats = new MailboxStats(42, 10, null);
+		$mailbox = new Mailbox();
+		$mailbox->setMessages(10);
+		$mailbox->setUnseen(6);
+		$mailbox->setName('mailbox');
+		$this->folderMapper->expects(self::once())
+			->method('getFoldersStatusAsObject')
+			->with($client, [$mailbox->getName()])
+			->willReturn(['otherMailbox' => $stats]);
+		$this->mailboxMapper->expects(self::never())
+			->method('update');
+
+		$this->sync->syncStats($client, $mailbox);
+
+		$this->assertEquals(10, $mailbox->getMessages());
+		$this->assertEquals(6, $mailbox->getUnseen());
 	}
 }

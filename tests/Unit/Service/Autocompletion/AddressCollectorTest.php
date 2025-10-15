@@ -3,22 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Unit\Service\Autocompletion;
@@ -48,7 +35,7 @@ class AddressCollectorTest extends TestCase {
 		);
 	}
 
-	public function testAddAddresses() {
+	public function testAddAddresses(): void {
 		$addresses = [
 			'"User" <user@example.com>',
 			'Example <example@user.com>',
@@ -64,37 +51,29 @@ class AddressCollectorTest extends TestCase {
 		$address2->setUserId($this->userId);
 
 		$this->mapper->expects($this->exactly(2))
-			->method('exists')
+			->method('insertIfNew')
 			->withConsecutive(
 				[$this->userId, 'user@example.com'],
 				[$this->userId, 'example@user.com']
 			)
 			->willReturnOnConsecutiveCalls(
-				false,
-				false
-			);
-		$this->mapper->expects($this->exactly(2))
-			->method('insert')
-			->withConsecutive(
-				[$address1],
-				[$address2]
+				true,
+				true,
 			);
 
 		$this->collector->addAddresses($this->userId, $addressList);
 	}
 
-	public function testAddDuplicateAddresses() {
+	public function testAddDuplicateAddresses(): void {
 		$addresses = [
 			'user@example.com',
 		];
 		$addressList = AddressList::parse($addresses);
 
 		$this->mapper->expects($this->once())
-			->method('exists')
+			->method('insertIfNew')
 			->with($this->userId, $addresses[0])
-			->will($this->returnValue(true));
-		$this->mapper->expects($this->never())
-			->method('insert');
+			->willReturn(false);
 
 		$this->collector->addAddresses($this->userId, $addressList);
 	}

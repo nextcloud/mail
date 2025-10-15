@@ -1,49 +1,10 @@
 <?php
-/*
- * *
- *  * {$app} App
- *  *
- *  * @copyright 2022 Anna Larch <anna.larch@gmx.net>
- *  *
- *  * @author Anna Larch <anna.larch@gmx.net>
- *  *
- *  * This library is free software; you can redistribute it and/or
- *  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
- *  * License as published by the Free Software Foundation; either
- *  * version 3 of the License, or any later version.
- *  *
- *  * This library is distributed in the hope that it will be useful,
- *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
- *  *
- *  * You should have received a copy of the GNU Affero General Public
- *  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
- *  *
- *
- */
 
 declare(strict_types=1);
 
 /**
- * @copyright 2022 Anna Larch <anna.larch@gm.net>
- *
- * @author 2022 Anna Larch <anna.larch@gm.net>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Service;
@@ -77,22 +38,16 @@ class IMipServiceTest extends TestCase {
 	private $accountService;
 	private IManager $calendarManager;
 
-	/** @var MailManager|MockObject  */
+	/** @var MailManager|MockObject */
 	private $mailManager;
 
-	/** @var MockObject|LoggerInterface  */
+	/** @var MockObject|LoggerInterface */
 	private $logger;
 
 	private IMipService $service;
 
 	protected function setUp(): void {
 		parent::setUp();
-
-		// iMIP is NC25+
-		if (!method_exists(IManager::class, 'handleImipReply')) {
-			self::markTestIncomplete();
-		}
-
 
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->calendarManager = $this->createMock(IManager::class);
@@ -116,7 +71,7 @@ class IMipServiceTest extends TestCase {
 			->method('findIMipMessagesAscending')
 			->willReturn([]);
 		$this->logger->expects(self::once())
-			->method('info');
+			->method('debug');
 		$this->mailboxMapper->expects(self::never())
 			->method('findById');
 		$this->accountService->expects(self::never())
@@ -291,9 +246,10 @@ class IMipServiceTest extends TestCase {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(200);
 		$mailAccount->setEmail('vincent@stardew-valley.edu');
+		$mailAccount->setUserId('vincent');
 		$account = new Account($mailAccount);
 		$imapMessage = $this->createMock(IMAPMessage::class);
-		$imapMessage->scheduling[] = ['method' => 'REQUEST'];
+		$imapMessage->scheduling[] = ['method' => 'REQUEST', 'contents' => 'VCALENDAR'];
 		$addressList = $this->createMock(AddressList::class);
 		$address = $this->createMock(Address::class);
 
@@ -321,15 +277,17 @@ class IMipServiceTest extends TestCase {
 			->willReturn($address);
 		$address->expects(self::once())
 			->method('getEmail')
-			->willReturn('pam@stardew-bus-company.com');
+			->willReturn('pam@stardew-bus-service.com');
 		$this->logger->expects(self::never())
 			->method('info');
-		$this->calendarManager->expects(self::never())
-			->method('handleIMipReply');
-		$this->calendarManager->expects(self::never())
-			->method('handleIMipCancel');
-		$this->messageMapper->expects(self::never())
-			->method('updateBulk');
+		$this->calendarManager->expects(self::once())
+			->method('handleIMipRequest')
+			->with('principals/users/vincent',
+				'pam@stardew-bus-service.com',
+				$account->getEmail(),
+				$imapMessage->scheduling[0]['contents']);
+		$this->messageMapper->expects(self::once())
+			->method('updateImipData');
 
 		$this->service->process();
 	}
@@ -388,8 +346,6 @@ class IMipServiceTest extends TestCase {
 				'pam@stardew-bus-service.com',
 				$account->getEmail(),
 				$imapMessage->scheduling[0]['contents']);
-		$this->calendarManager->expects(self::never())
-			->method('handleIMipCancel');
 		$this->messageMapper->expects(self::once())
 			->method('updateImipData');
 

@@ -2,25 +2,9 @@
 
 declare(strict_types=1);
 
-/*
- * @copyright 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Controller;
@@ -32,12 +16,14 @@ use OCA\Mail\Integration\MicrosoftIntegration;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\StandaloneTemplateResponse;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 use function filter_var;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class MicrosoftIntegrationController extends Controller {
 	private ?string $userId;
 	private AccountService $accountService;
@@ -135,7 +121,7 @@ class MicrosoftIntegrationController extends Controller {
 		try {
 			$account = $this->accountService->find(
 				$this->userId,
-				(int) $state,
+				(int)$state,
 			);
 		} catch (ClientException $e) {
 			$this->logger->warning('Attempted Microsoft authentication redirect for account: ' . $e->getMessage(), [

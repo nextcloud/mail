@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Service\Search;
@@ -29,7 +13,6 @@ use Horde_Imap_Client;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\Mailbox;
-use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClientException;
@@ -46,9 +29,6 @@ class MailSearch implements IMailSearch {
 	/** @var FilterStringParser */
 	private $filterStringParser;
 
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
 	/** @var ImapSearchProvider */
 	private $imapSearchProvider;
 
@@ -62,19 +42,18 @@ class MailSearch implements IMailSearch {
 	private $timeFactory;
 
 	public function __construct(FilterStringParser $filterStringParser,
-		MailboxMapper $mailboxMapper,
 		ImapSearchProvider $imapSearchProvider,
 		MessageMapper $messageMapper,
 		PreviewEnhancer $previewEnhancer,
 		ITimeFactory $timeFactory) {
 		$this->filterStringParser = $filterStringParser;
-		$this->mailboxMapper = $mailboxMapper;
 		$this->imapSearchProvider = $imapSearchProvider;
 		$this->messageMapper = $messageMapper;
 		$this->previewEnhancer = $previewEnhancer;
 		$this->timeFactory = $timeFactory;
 	}
 
+	#[\Override]
 	public function findMessage(Account $account,
 		Mailbox $mailbox,
 		Message $message): Message {
@@ -84,7 +63,7 @@ class MailSearch implements IMailSearch {
 			[$message]
 		);
 		if ($processed === []) {
-			throw new DoesNotExistException("Message does not exist");
+			throw new DoesNotExistException('Message does not exist');
 		}
 		return $processed[0];
 	}
@@ -92,20 +71,26 @@ class MailSearch implements IMailSearch {
 	/**
 	 * @param Account $account
 	 * @param Mailbox $mailbox
+	 * @param string $sortOrder
 	 * @param string|null $filter
 	 * @param int|null $cursor
 	 * @param int|null $limit
+	 * @param string|null $view
 	 *
 	 * @return Message[]
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[\Override]
 	public function findMessages(Account $account,
 		Mailbox $mailbox,
+		string $sortOrder,
 		?string $filter,
 		?int $cursor,
-		?int $limit): array {
+		?int $limit,
+		?string $userId,
+		?string $view): array {
 		if ($mailbox->hasLocks($this->timeFactory->getTime())) {
 			throw MailboxLockedException::from($mailbox);
 		}
@@ -116,6 +101,9 @@ class MailSearch implements IMailSearch {
 		$query = $this->filterStringParser->parse($filter);
 		if ($cursor !== null) {
 			$query->setCursor($cursor);
+		}
+		if ($view !== null) {
+			$query->setThreaded($view === self::VIEW_THREADED);
 		}
 		// In flagged we don't want anything but flagged messages
 		if ($mailbox->isSpecialUse(Horde_Imap_Client::SPECIALUSE_FLAGGED)) {
@@ -130,32 +118,29 @@ class MailSearch implements IMailSearch {
 			$account,
 			$mailbox,
 			$this->messageMapper->findByIds($account->getUserId(),
-				$this->getIdsLocally($account, $mailbox, $query, $limit)
-			)
+				$this->getIdsLocally($account, $mailbox, $query, $sortOrder, $limit),
+				$sortOrder,
+			),
+			true,
+			$userId
 		);
 	}
 
 	/**
-	 * @param IUser $user
-	 * @param string|null $filter
-	 * @param int|null $cursor
+	 * Find messages across all mailboxes for a user
 	 *
 	 * @return Message[]
 	 *
-	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function findMessagesGlobally(IUser $user,
-		?string $filter,
-		?int $cursor,
+	#[\Override]
+	public function findMessagesGlobally(
+		IUser $user,
+		SearchQuery $query,
 		?int $limit): array {
-		$query = $this->filterStringParser->parse($filter);
-		if ($cursor !== null) {
-			$query->setCursor($cursor);
-		}
-
 		return $this->messageMapper->findByIds($user->getUID(),
-			$this->getIdsGlobally($user, $query, $limit)
+			$this->getIdsGlobally($user, $query, $limit),
+			'DESC'
 		);
 	}
 
@@ -164,9 +149,9 @@ class MailSearch implements IMailSearch {
 	 *
 	 * @throws ServiceException
 	 */
-	private function getIdsLocally(Account $account, Mailbox $mailbox, SearchQuery $query, ?int $limit): array {
-		if (empty($query->getTextTokens())) {
-			return $this->messageMapper->findIdsByQuery($mailbox, $query, $limit);
+	private function getIdsLocally(Account $account, Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit): array {
+		if (empty($query->getBodies())) {
+			return $this->messageMapper->findIdsByQuery($mailbox, $query, $sortOrder, $limit);
 		}
 
 		$fromImap = $this->imapSearchProvider->findMatches(
@@ -174,7 +159,7 @@ class MailSearch implements IMailSearch {
 			$mailbox,
 			$query
 		);
-		return $this->messageMapper->findIdsByQuery($mailbox, $query, $limit, $fromImap);
+		return $this->messageMapper->findIdsByQuery($mailbox, $query, $sortOrder, $limit, $fromImap);
 	}
 
 	/**

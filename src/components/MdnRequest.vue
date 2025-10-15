@@ -1,11 +1,17 @@
+<!--
+  - SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<div v-if="hasMdnRequest && !mdnSent" class="mail-message-has-mdn-request">
 		{{
 			t('mail', 'The sender of this message has asked to be notified when you read this message.')
 		}}
-		<button :disabled="loading" @click="sendMdn">
-			{{ t('mail', 'Notify the sender') }}
-		</button>
+		<div class="notify-button">
+			<NcButton type="secondary" :disabled="loading" @click="sendMdn">
+				{{ t('mail', 'Notify the sender') }}
+			</NcButton>
+		</div>
 	</div>
 	<div v-else-if="mdnSent" class="mail-message-has-mdn-request">
 		{{
@@ -15,12 +21,19 @@
 </template>
 
 <script>
-import logger from '../logger'
-import { sendMdn } from '../service/MessageService'
 import { showError } from '@nextcloud/dialogs'
+import { NcButton } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
+
+import logger from '../logger.js'
+import { sendMdn } from '../service/MessageService.js'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'MdnRequest',
+	components: {
+		NcButton,
+	},
 	props: {
 		message: {
 			required: true,
@@ -34,6 +47,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		mdnSent() {
 			return this.message.flags.mdnsent
 		},
@@ -45,7 +59,7 @@ export default {
 
 			try {
 				await sendMdn(this.message.databaseId)
-				this.$store.commit('flagEnvelope', { envelope: this.message, flag: 'mdnsent', value: true })
+				this.mainStore.flagEnvelopeMutation({ envelope: this.message, flag: 'mdnsent', value: true })
 			} catch (error) {
 				logger.error('could not send mdn', error)
 				showError(t('mail', 'Could not send mdn'))
@@ -60,5 +74,9 @@ export default {
 <style lang="scss" scoped>
 .mail-message-has-mdn-request {
 	white-space: normal;
+}
+
+.notify-button {
+	display: inline-block;
 }
 </style>

@@ -1,11 +1,17 @@
+<!--
+  - SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<div class="html-message-body">
 		<MdnRequest :message="message" />
+		<NeedsTranslationInfo v-if="needsTranslation"
+			:is-html="true"
+			@translate="$emit('translate')" />
 		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content" style="color: #000000">
 			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
-			<Actions type="tertiary" :menu-title="t('mail', 'Show images')">
-				<ActionButton
-					@click="displayIframe">
+			<Actions type="tertiary" :menu-name="t('mail', 'Show images')">
+				<ActionButton @click="displayIframe">
 					<template #icon>
 						<IconImage :size="20" />
 					</template>
@@ -39,22 +45,27 @@
 </template>
 
 <script>
-import { iframeResizer } from 'iframe-resizer'
-import PrintScout from 'printscout'
-import { trustSender } from '../service/TrustedSenderService'
+import iframeResize from '@iframe-resizer/parent'
+import { loadState } from '@nextcloud/initial-state'
 import { NcActionButton as ActionButton, NcActions as Actions } from '@nextcloud/vue'
-import IconImage from 'vue-material-design-icons/ImageSizeSelectActual'
-import IconMail from 'vue-material-design-icons/Email'
-import IconDomain from 'vue-material-design-icons/Domain'
+import PrintScout from 'printscout'
+import IconDomain from 'vue-material-design-icons/Domain.vue'
+import IconMail from 'vue-material-design-icons/EmailOutline.vue'
+import IconImage from 'vue-material-design-icons/ImageSizeSelectActual.vue'
 
-import logger from '../logger'
-import MdnRequest from './MdnRequest'
+import logger from '../logger.js'
+import MdnRequest from './MdnRequest.vue'
+import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
+import { needsTranslation } from '../service/AiIntergrationsService.js'
+import { trustSender } from '../service/TrustedSenderService.js'
+
 const scout = new PrintScout()
 
 export default {
 	name: 'MessageHTMLBody',
 	components: {
 		MdnRequest,
+		NeedsTranslationInfo,
 		Actions,
 		ActionButton,
 		IconImage,
@@ -80,6 +91,8 @@ export default {
 		return {
 			hasBlockedContent: false,
 			isSenderTrusted: this.message.isSenderTrusted,
+			needsTranslation: false,
+			enabledFreePrompt: loadState('mail', 'llm_freeprompt_available', false),
 		}
 	},
 	computed: {
@@ -93,8 +106,16 @@ export default {
 	beforeMount() {
 		scout.on('beforeprint', this.onBeforePrint)
 	},
-	mounted() {
-		iframeResizer({ log: false, heightCalculationMethod: 'taggedElement' }, this.$refs.iframe)
+	async mounted() {
+		iframeResize({
+			license: 'GPLv3',
+			log: false,
+			scrolling: true,
+		}, this.$refs.iframe)
+
+		if (this.enabledFreePrompt && this.message) {
+			this.needsTranslation = await needsTranslation(this.message.databaseId)
+		}
 	},
 	beforeDestroy() {
 		scout.off('beforeprint', this.onBeforePrint)
@@ -118,7 +139,7 @@ export default {
 			}
 		},
 		onBeforePrint() {
-			this.$refs.iframe.style.setProperty('height', `${this.getIframeDoc().body.scrollHeight}px`, 'important')
+			// this.$refs.iframe.style.setProperty('height', `${this.getIframeDoc().body.scrollHeight}px`, 'important')
 		},
 		displayIframe() {
 			const iframeDoc = this.getIframeDoc()
@@ -153,15 +174,12 @@ export default {
 <style lang="scss" scoped>
 // account for 8px margin on iframe body
 .html-message-body {
-	margin-left: 50px;
-	margin-top: 2px;
-	display: flex;
-	flex-direction: column;
-	height: 100%;
+	margin : 2px calc(var(--default-grid-baseline) * 2) 0 calc(var(--default-grid-baseline) * 14);
 	background-color: #FFFFFF;
 }
+
 #mail-message-has-blocked-content {
-	margin-left: 10px;
+	margin-inline-start: 10px;
 	color: var(--color-text-maxcontrast) !important;
 }
 
@@ -171,22 +189,29 @@ export default {
 	background-color: #FFFFFF;
 
 	// TODO: collapse quoted text and remove inner scrollbar
-	&.scroll {
-		max-height: 50vh;
-		overflow-y: auto;
+	@media only screen {
+		&.scroll {
+			overflow-y: auto;
+		}
 	}
 }
+
 :deep(.button-vue__text) {
 	border: none !important;
 	font-weight: normal !important;
-	padding-left: 14px !important;
-	padding-right: 10px !important;
+	padding-inline: 14px 10px !important;
 	text-decoration: underline !important;
 }
+
 .message-frame {
 	width: 100%;
 }
+
 :deep(.button-vue__icon) {
 	display: none !important;
+}
+
+:deep(.button-vue--vue-tertiary) {
+	color: var(--color-text-maxcontrast);
 }
 </style>

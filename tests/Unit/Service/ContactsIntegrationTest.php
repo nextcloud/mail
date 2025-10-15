@@ -1,22 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2015-2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Unit\Service;
@@ -66,7 +55,7 @@ class ContactsIntegrationTest extends TestCase {
 			->method('search');
 
 		$expected = [];
-		$actual = $this->contactsIntegration->getMatchingRecipient("", "abc");
+		$actual = $this->contactsIntegration->getMatchingRecipient('', 'abc');
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -101,25 +90,28 @@ class ContactsIntegrationTest extends TestCase {
 		$expected = [
 			[
 				'id' => 'jf',
-				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
+				'label' => 'Jonathan Frakes',
 				'email' => 'jonathan@frakes.com',
 				'photo' => null,
+				'source' => 'contacts'
 			],
 			[
 				'id' => 'jd',
-				'label' => 'John Doe (john@doe.info)',
+				'label' => 'John Doe',
 				'email' => 'john@doe.info',
 				'photo' => null,
+				'source' => 'contacts'
 			],
 			[
 				'id' => 'jd',
-				'label' => 'John Doe (doe@john.info)',
+				'label' => 'John Doe',
 				'email' => 'doe@john.info',
 				'photo' => null,
+				'source' => 'contacts'
 			],
 		];
 
-		$actual = $this->contactsIntegration->getMatchingRecipient("", $term);
+		$actual = $this->contactsIntegration->getMatchingRecipient('', $term);
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -168,25 +160,28 @@ class ContactsIntegrationTest extends TestCase {
 		$expected = [
 			[
 				'id' => 'jd',
-				'label' => 'John Doe (john@doe.info)',
+				'label' => 'John Doe',
 				'email' => 'john@doe.info',
 				'photo' => null,
+				'source' => 'contacts'
 			],
 			[
 				'id' => 'jd',
-				'label' => 'John Doe (doe@john.info)',
+				'label' => 'John Doe',
 				'email' => 'doe@john.info',
 				'photo' => null,
+				'source' => 'contacts',
 			],
 			[
 				'id' => 'js',
-				'label' => 'Johann Strauss II (johann@strauss.com)',
+				'label' => 'Johann Strauss II',
 				'email' => 'johann@strauss.com',
 				'photo' => null,
+				'source' => 'contacts',
 			],
 		];
 
-		$actual = $this->contactsIntegration->getMatchingRecipient("auser", $term);
+		$actual = $this->contactsIntegration->getMatchingRecipient('auser', $term);
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -220,13 +215,14 @@ class ContactsIntegrationTest extends TestCase {
 		$expected = [
 			[
 				'id' => 'jf',
-				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
+				'label' => 'Jonathan Frakes',
 				'email' => 'jonathan@frakes.com',
 				'photo' => null,
+				'source' => 'contacts',
 			],
 		];
 
-		$actual = $this->contactsIntegration->getMatchingRecipient("auser", $term);
+		$actual = $this->contactsIntegration->getMatchingRecipient('auser', $term);
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -260,13 +256,14 @@ class ContactsIntegrationTest extends TestCase {
 		$expected = [
 			[
 				'id' => 'jf',
-				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
+				'label' => 'Jonathan Frakes',
 				'email' => 'jonathan@frakes.com',
 				'photo' => null,
+				'source' => 'contacts',
 			],
 		];
 
-		$actual = $this->contactsIntegration->getMatchingRecipient("auser", $term);
+		$actual = $this->contactsIntegration->getMatchingRecipient('auser', $term);
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -300,13 +297,14 @@ class ContactsIntegrationTest extends TestCase {
 		$expected = [
 			[
 				'id' => 'jf',
-				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
+				'label' => 'Jonathan Frakes',
 				'email' => 'jonathan@frakes.com',
 				'photo' => null,
+				'source' => 'contacts',
 			],
 		];
 
-		$actual = $this->contactsIntegration->getMatchingRecipient("auser", $term);
+		$actual = $this->contactsIntegration->getMatchingRecipient('auser', $term);
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -341,7 +339,7 @@ class ContactsIntegrationTest extends TestCase {
 
 		$expected = [];
 
-		$actual = $this->contactsIntegration->getMatchingRecipient("auser", $term);
+		$actual = $this->contactsIntegration->getMatchingRecipient('auser', $term);
 		$this->assertEquals($expected, $actual);
 	}
 
@@ -356,17 +354,24 @@ class ContactsIntegrationTest extends TestCase {
 				['core', 'shareapi_restrict_user_enumeration_full_match_email', 'yes'],
 			)
 			->willReturnOnConsecutiveCalls(
-				$allowSystemUsers ? "yes" : " no",
-				$allowSystemUsersInGroupOnly ? "yes" : " no",
-				$shareeEnumerationFullMatch ? "yes" : " no",
-				$shareeEnumerationFullMatchUserId ? "yes" : "no",
-				$shareeEnumerationFullMatchEmail ? "yes" : " no");
+				$allowSystemUsers ? 'yes' : ' no',
+				$allowSystemUsersInGroupOnly ? 'yes' : ' no',
+				$shareeEnumerationFullMatch ? 'yes' : ' no',
+				$shareeEnumerationFullMatchUserId ? 'yes' : 'no',
+				$shareeEnumerationFullMatchEmail ? 'yes' : ' no');
 		$this->contactsManager->expects($this->once())
 			->method('isEnabled')
 			->will($this->returnValue(true));
 		$this->contactsManager->expects($this->once())
 			->method('search')
-			->with($term, ['UID', 'FN', 'EMAIL'], ['enumeration' => $allowSystemUsers, 'fullmatch' => $shareeEnumerationFullMatch])
+			->with(
+				$term,
+				['UID', 'FN', 'EMAIL'],
+				[
+					'enumeration' => $allowSystemUsers,
+					'fullmatch' => $shareeEnumerationFullMatch,
+					'limit' => 20,
+				])
 			->will($this->returnValue($searchResult));
 	}
 

@@ -3,35 +3,19 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Unit\Listener;
 
 use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OCA\Mail\Address;
-use OCA\Mail\AddressList;
+use OCA\Mail\Account;
+use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Listener\InteractionListener;
-use OCA\Mail\Model\IMessage;
 use OCP\Contacts\Events\ContactInteractedWithEvent;
 use OCP\EventDispatcher\Event;
 use OCP\IUser;
@@ -66,31 +50,38 @@ class InteractionListenerTest extends TestCase {
 			return;
 		}
 
-		$to = new AddressList([
-			Address::fromRaw('rec 1', 'u1@domain.tld'),
-			Address::fromRaw('rec 1', 'u2@domain.tld'),
+		$message = new LocalMessage();
+		$message->setRecipients([
+			Recipient::fromParams([
+				'label' => 'rec 1',
+				'email' => 'u1@domain.tld',
+				'type' => Recipient::TYPE_TO,
+			]),
+			Recipient::fromParams([
+				'label' => 'rec 1',
+				'email' => 'u2@domain.tld',
+				'type' => Recipient::TYPE_TO,
+			]),
+			Recipient::fromParams([
+				'label' => 'rec 1',
+				'email' => 'u3@domain.tld',
+				'type' => Recipient::TYPE_CC,
+			]),
+			Recipient::fromParams([
+				'label' => 'rec 1',
+				'email' => 'u4@domain.tld',
+				'type' => Recipient::TYPE_BCC,
+			]),
+			Recipient::fromParams([
+				'label' => 'rec 1',
+				'email' => 'u2@domain.tld',
+				'type' => Recipient::TYPE_CC,
+			]),
 		]);
-		$cc = new AddressList([
-			Address::fromRaw('rec 1', 'u3@domain.tld'),
-		]);
-		$bcc = new AddressList([
-			Address::fromRaw('rec 1', 'u4@domain.tld'),
-			Address::fromRaw('rec 1', 'u2@domain.tld'), // intentional duplicate
-		]);
-		$event = $this->createMock(MessageSentEvent::class);
-		$message = $this->createMock(IMessage::class);
-		$event
-			->method('getMessage')
-			->willReturn($message);
-		$message
-			->method('getTo')
-			->willReturn($to);
-		$message
-			->method('getCC')
-			->willReturn($cc);
-		$message
-			->method('getBCC')
-			->willReturn($bcc);
+		$event = new MessageSentEvent(
+			$this->createMock(Account::class),
+			$message,
+		);
 		$user = $this->createMock(IUser::class);
 		$this->serviceMock->getParameter('userSession')
 			->method('getUser')

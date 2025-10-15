@@ -1,22 +1,8 @@
 <?php
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Integration\Framework;
@@ -26,6 +12,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Service\AccountService;
+use OCP\Server;
 use Psr\Log\NullLogger;
 
 trait ImapTestAccount {
@@ -41,9 +28,9 @@ trait ImapTestAccount {
 	 *
 	 * @return MailAccount
 	 */
-	public function createTestAccount(string $userId = null) {
+	public function createTestAccount(?string $userId = null) {
 		/* @var $accountService AccountService */
-		$accountService = OC::$server->query(AccountService::class);
+		$accountService = Server::get(AccountService::class);
 
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId($userId ?? $this->getTestAccountUserId());
@@ -60,10 +47,11 @@ trait ImapTestAccount {
 		$mailAccount->setOutboundUser('user@domain.tld');
 		$mailAccount->setOutboundPassword(OC::$server->getCrypto()->encrypt('mypassword'));
 		$mailAccount->setOutboundSslMode('none');
+		$mailAccount->setDebug(false);
 		$acc = $accountService->save($mailAccount);
 
 		/** @var MailboxSync $mbSync */
-		$mbSync = OC::$server->query(MailboxSync::class);
+		$mbSync = Server::get(MailboxSync::class);
 		$mbSync->sync(new Account($mailAccount), new NullLogger());
 
 		return $acc;

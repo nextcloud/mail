@@ -1,36 +1,41 @@
+/**
+ * SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
 const path = require('path')
-const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin')
-const { styles } = require('@ckeditor/ckeditor5-dev-utils')
+const webpack = require('webpack')
 const { VueLoaderPlugin } = require('vue-loader')
 const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-modules-except')
-const { ProvidePlugin } = require('webpack')
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+const { IgnorePlugin } = require('webpack')
 
-function getPostCssConfig(ckEditorOpts) {
-	// CKEditor is not compatbile with postcss@8 and postcss-loader@4 despite stating so.
-	// Adapted from https://github.com/ckeditor/ckeditor5/issues/8112#issuecomment-960579351
-	const { plugins, ...rest } = styles.getPostCssConfig(ckEditorOpts);
-	return { postcssOptions: { plugins }, ...rest };
-};
+const appName = 'mail'
+const appVersion = require('./package.json').version
 
 const plugins = [
-	// CKEditor needs its own plugin to be built using webpack.
-	new CKEditorWebpackPlugin({
-		// See https://ckeditor.com/docs/ckeditor5/latest/features/ui-language.html
-		language: 'en',
-	}),
 	new VueLoaderPlugin(),
-	new ProvidePlugin({
-		// Make a global `process` variable that points to the `process` package,
-		// because the `util` package expects there to be a global variable named `process`.
-		// Thanks to https://stackoverflow.com/a/65018686/14239942
-		process: 'process/browser.js',
+
+	// Make sure we auto-inject node polyfills on demand
+	// https://webpack.js.org/blog/2020-10-10-webpack-5-release/#automatic-nodejs-polyfills-removed
+	new NodePolyfillPlugin({
+		// Console is available in the web-browser
+		excludeAliases: ['console'],
+	}),
+
+	// Fix warning when bundling moment locales
+	new IgnorePlugin({
+		resourceRegExp: /^\.\/locale$/,
+		contextRegExp: /moment\/min$/,
+	}),
+	new webpack.DefinePlugin({
+		appName: JSON.stringify(appName),
+		appVersion: JSON.stringify(appVersion),
 	}),
 ]
 
-module.exports = {
+module.exports = async () => ({
 	entry: {
 		autoredirect: path.join(__dirname, 'src/autoredirect.js'),
-		dashboard: path.join(__dirname, 'src/main-dashboard.js'),
 		mail: path.join(__dirname, 'src/main.js'),
 		oauthpopup: path.join(__dirname, 'src/main-oauth-popup.js'),
 		settings: path.join(__dirname, 'src/main-settings'),
@@ -56,10 +61,14 @@ module.exports = {
 				loader: 'vue-loader',
 			},
 			{
+				test: /\.tsx?$/,
+				use: 'ts-loader',
+				exclude: /node_modules/,
+			},
+			{
 				test: /\.js$/,
 				loader: 'babel-loader',
 				exclude: BabelLoaderExcludeNodeModulesExcept([
-					'@ckeditor',
 					'js-base64',
 				]),
 			},
@@ -91,26 +100,11 @@ module.exports = {
 				test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
 				loader: 'raw-loader',
 			},
-			{
-				test: /ckeditor5-[^/\\]+[/\\].+\.css$/,
-				loader: 'postcss-loader',
-				options: getPostCssConfig({
-					themeImporter: {
-						themePath: require.resolve('@ckeditor/ckeditor5-theme-lark'),
-					},
-					minify: true,
-				}),
-			},
 		],
 	},
 	plugins,
 	resolve: {
-		extensions: ['*', '.js', '.vue', '.json'],
+		extensions: ['*', '.tsx', '.ts', '.js', '.vue', '.json'],
 		symlinks: false,
-		fallback: {
-			buffer: require.resolve('buffer/'),
-			stream: require.resolve('stream-browserify'),
-			util: require.resolve('util/'),
-		},
 	},
-}
+})

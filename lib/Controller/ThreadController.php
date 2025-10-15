@@ -3,22 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Daniel Kesselberg <mail@danielkesselberg.de>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Controller;
@@ -33,10 +19,12 @@ use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ThreadController extends Controller {
 	private string $currentUserId;
 	private AccountService $accountService;
@@ -167,6 +155,7 @@ class ThreadController extends Controller {
 		$thread = $this->mailManager->getThread($account, $message->getThreadRootId());
 		try {
 			$summary = $this->aiIntergrationsService->summarizeThread(
+				$account,
 				$message->getThreadRootId(),
 				$thread,
 				$this->currentUserId,
@@ -179,6 +168,31 @@ class ThreadController extends Controller {
 		}
 
 		return new JSONResponse(['data' => $summary]);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 */
+	public function generateEventData(int $id): JSONResponse {
+		try {
+			$message = $this->mailManager->getMessage($this->currentUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		if (empty($message->getThreadRootId())) {
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
+		}
+		$thread = $this->mailManager->getThread($account, $message->getThreadRootId());
+		$data = $this->aiIntergrationsService->generateEventData(
+			$account,
+			$message->getThreadRootId(),
+			$thread,
+			$this->currentUserId,
+		);
+
+		return new JSONResponse(['data' => $data]);
 	}
 
 	/**

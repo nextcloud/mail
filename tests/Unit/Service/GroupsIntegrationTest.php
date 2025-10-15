@@ -3,22 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Matthias Rella <mrella@pisys.eu>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Unit\Service;
@@ -59,7 +45,7 @@ class GroupsIntegrationTest extends TestCase {
 		$searchResult1 = [
 			[
 				'id' => 'testgroup',
-				'name' => "first test group"
+				'name' => 'first test group'
 			]
 		];
 		$this->groupService1->expects($this->once())
@@ -75,7 +61,7 @@ class GroupsIntegrationTest extends TestCase {
 					'id' => 'namespace1:testgroup',
 					'label' => 'first test group (Namespace1)',
 					'email' => 'namespace1:testgroup',
-					'photo' => null,
+					'source' => 'groups',
 				]
 			],
 			$actual
@@ -104,8 +90,8 @@ class GroupsIntegrationTest extends TestCase {
 		$members = [
 			[
 				'id' => 'bob',
-				'name' => "Bobby",
-				'email' => "bob@smith.net"
+				'name' => 'Bobby',
+				'email' => 'bob@smith.net'
 			],
 			[
 				'id' => 'mary',
@@ -139,8 +125,8 @@ class GroupsIntegrationTest extends TestCase {
 		$members = [
 			[
 				'id' => 'bob',
-				'name' => "Bobby",
-				'email' => "bob@smith.net"
+				'name' => 'Bobby',
+				'email' => 'bob@smith.net'
 			],
 			[
 				'id' => 'mary',
@@ -173,8 +159,8 @@ class GroupsIntegrationTest extends TestCase {
 		$members = [
 			[
 				'id' => 'bob',
-				'name' => "Bobby",
-				'email' => "bob@smith.net"
+				'name' => 'Bobby',
+				'email' => 'bob@smith.net'
 			],
 			[
 				'id' => 'mary',

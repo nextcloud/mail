@@ -3,33 +3,21 @@
 declare(strict_types=1);
 
 /**
- * @copyright Copyright (c) 2020 Richard Steinmetz <richard@steinmetz.cloud>
- *
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Dashboard;
+
+use OCA\Mail\Service\Search\Flag;
+use OCA\Mail\Service\Search\GlobalSearchQuery;
+use OCA\Mail\Service\Search\SearchQuery;
 
 class UnreadMailWidget extends MailWidget {
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getId(): string {
 		return 'mail-unread';
 	}
@@ -37,14 +25,16 @@ class UnreadMailWidget extends MailWidget {
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function getTitle(): string {
 		return $this->l10n->t('Unread mail');
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	public function getSearchFilter(): string {
-		return 'is:unread';
+	#[\Override]
+	public function getSearchQuery(string $userId): SearchQuery {
+		$query = new GlobalSearchQuery();
+		$query->addFlag(Flag::not(Flag::SEEN));
+		$query->setExcludeMailboxIds($this->getMailboxIdsToExclude($userId));
+		return $query;
 	}
 }

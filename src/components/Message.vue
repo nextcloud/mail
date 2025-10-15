@@ -1,33 +1,16 @@
 <!--
-  - @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
-  -
-  - @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
-  - @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
+  - SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 <template>
 	<div :class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']"
 		role="region"
 		:aria-label="t('mail','Message body')">
+		<PhishingWarning v-if="message.phishingDetails.warning" :phishing-data="message.phishingDetails.checks" />
 		<div v-if="message.smime.isSigned && !message.smime.signatureIsValid"
 			class="invalid-signature-warning">
-			<LockOffIcon
-				:size="20"
+			<LockOffIcon :size="20"
 				fill-color="red"
 				class="invalid-signature-warning__icon" />
 			<p>
@@ -37,9 +20,8 @@
 		<div v-if="itineraries.length > 0" class="message-itinerary">
 			<Itinerary :entries="itineraries" :message-id="message.messageId" />
 		</div>
-		<div v-if="message.scheduling.length > 0" class="message-imip">
-			<Imip
-				v-for="scheduling in message.scheduling"
+		<div v-if="hasCurrentUserPrincipalAndCollections && message.scheduling.length > 0" class="message-imip">
+			<Imip v-for="scheduling in message.scheduling"
 				:key="scheduling.id"
 				:scheduling="scheduling" />
 		</div>
@@ -47,32 +29,59 @@
 			:url="htmlUrl"
 			:message="message"
 			:full-height="fullHeight"
-			@load="$emit('load', $event)" />
-		<MessageEncryptedBody v-else-if="isEncrypted"
+			@load="$emit('load', $event)"
+			@translate="$emit('translate')" />
+		<MessageEncryptedBody v-else-if="isEncrypted || isPgpMimeEncrypted"
 			:body="message.body"
 			:from="from"
 			:message="message" />
 		<MessagePlainTextBody v-else
 			:body="message.body"
 			:signature="message.signature"
-			:message="message" />
+			:message="message"
+			@translate="$emit('translate')" />
 		<MessageAttachments :attachments="message.attachments" :envelope="envelope" />
 		<div id="reply-composer" />
+		<div class="reply-buttons">
+			<div v-if="smartReplies.length > 0" class="reply-buttons__suggested">
+				<NcAssistantButton v-for="(reply,index) in smartReplies"
+					:key="index"
+					class="reply-buttons__suggested__button"
+					type="secondary"
+					@click="onReply(reply)">
+					{{ reply }}
+				</NcAssistantButton>
+			</div>
+			<NcButton type="primary"
+				class="reply-buttons__notsuggested"
+				@click="onReply('')">
+				<template #icon>
+					<ReplyIcon />
+				</template>
+				{{ replyButtonLabel }}
+			</NcButton>
+		</div>
 	</div>
 </template>
 
 <script>
 import { generateUrl } from '@nextcloud/router'
+import { NcAssistantButton, NcButton } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
+import LockOffIcon from 'vue-material-design-icons/LockOffOutline.vue'
+import ReplyIcon from 'vue-material-design-icons/ReplyOutline.vue'
 
-import { html, plain } from '../util/text'
-import { isPgpgMessage } from '../crypto/pgp'
-import Itinerary from './Itinerary'
-import MessageAttachments from './MessageAttachments'
-import MessageEncryptedBody from './MessageEncryptedBody'
-import MessageHTMLBody from './MessageHTMLBody'
-import MessagePlainTextBody from './MessagePlainTextBody'
-import Imip from './Imip'
-import LockOffIcon from 'vue-material-design-icons/LockOff'
+import Imip from './Imip.vue'
+import Itinerary from './Itinerary.vue'
+
+import MessageAttachments from './MessageAttachments.vue'
+import MessageEncryptedBody from './MessageEncryptedBody.vue'
+import MessageHTMLBody from './MessageHTMLBody.vue'
+import MessagePlainTextBody from './MessagePlainTextBody.vue'
+import PhishingWarning from './PhishingWarning.vue'
+import { isPgpgMessage } from '../crypto/pgp.js'
+import useMainStore from '../store/mainStore.js'
+import { html, plain } from '../util/text.js'
 
 export default {
 	name: 'Message',
@@ -82,8 +91,12 @@ export default {
 		MessageEncryptedBody,
 		MessageHTMLBody,
 		MessagePlainTextBody,
+		PhishingWarning,
 		Imip,
 		LockOffIcon,
+		ReplyIcon,
+		NcButton,
+		NcAssistantButton,
 	},
 	props: {
 		envelope: {
@@ -99,8 +112,18 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		smartReplies: {
+			required: false,
+			type: Array,
+			default: () => [],
+		},
+		replyButtonLabel: {
+			required: true,
+			type: String,
+		},
 	},
 	computed: {
+		...mapStores(useMainStore),
 		from() {
 			return this.message.from.length === 0 ? '?' : this.message.from[0].label || this.message.from[0].email
 		},
@@ -112,8 +135,19 @@ export default {
 		isEncrypted() {
 			return isPgpgMessage(this.message.hasHtmlBody ? html(this.message.body) : plain(this.message.body))
 		},
+		isPgpMimeEncrypted() {
+			return this.message.isPgpMimeEncrypted
+		},
 		itineraries() {
 			return this.message.itineraries ?? []
+		},
+		hasCurrentUserPrincipalAndCollections() {
+			return this.mainStore.hasCurrentUserPrincipalAndCollections
+		},
+	},
+	methods: {
+		onReply(replyBody) {
+			this.$emit('reply', replyBody)
 		},
 	},
 }
@@ -144,6 +178,51 @@ export default {
 	&__icon {
 		// Fix alignment with message
 		margin-top: -5px;
+	}
+}
+
+.reply-buttons {
+	margin: 0 calc(var(--default-grid-baseline) * 4) calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 14);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	justify-content: space-between;
+	align-items: center;
+
+	&__suggested {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+
+		&__button {
+			box-sizing: border-box;
+
+			:deep(.button-vue__text) {
+				font-weight: normal;
+			}
+		}
+	}
+
+	&__notsuggested {
+		margin-inline-start: auto;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.reply-buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 5px;
+
+		&__suggested {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 5px;
+		}
+
+		&__notsuggested {
+			margin-inline-start: 0;
+		}
 	}
 }
 </style>

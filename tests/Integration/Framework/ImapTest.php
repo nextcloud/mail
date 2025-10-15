@@ -1,28 +1,13 @@
 <?php
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Integration\Framework;
 
 use Horde_Imap_Client;
-use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
@@ -35,10 +20,11 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCP\AppFramework\QueryException;
+use OCP\Server;
 use function in_array;
 
 trait ImapTest {
-	/**  @var Horde_Imap_Client_Socket */
+	/** @var Horde_Imap_Client_Socket */
 	private $client;
 
 	/** @var array<string> */
@@ -94,7 +80,7 @@ trait ImapTest {
 	/**
 	 * @return array<string>
 	 */
-	public function getMailboxes(Horde_Imap_Client_Socket $client = null) {
+	public function getMailboxes(?Horde_Imap_Client_Socket $client = null) {
 		if ($client === null) {
 			$client = $this->getTestClient();
 		}
@@ -107,9 +93,7 @@ trait ImapTest {
 	 * @return array<string>
 	 */
 	private function listMailboxes(Horde_Imap_Client_Socket $client) {
-		return array_map(function ($mailbox) {
-			return $mailbox['mailbox'];
-		}, $client->listMailboxes('*'));
+		return array_map(fn ($mailbox) => $mailbox['mailbox'], $client->listMailboxes('*'));
 	}
 
 	/**
@@ -135,7 +119,7 @@ trait ImapTest {
 	 *
 	 * @return int id of the new message
 	 */
-	public function saveMessage(string $mailbox, SimpleMessage $message, MailAccount $account = null) {
+	public function saveMessage(string $mailbox, SimpleMessage $message, ?MailAccount $account = null) {
 		$headers = [
 			'From' => new Horde_Mail_Rfc822_Address($message->getFrom()),
 			'To' => new Horde_Mail_Rfc822_Address($message->getTo()),
@@ -198,7 +182,7 @@ trait ImapTest {
 		}
 	}
 
-	public function flagMessage($mailbox, $id, MailAccount $account = null) {
+	public function flagMessage($mailbox, $id, ?MailAccount $account = null) {
 		$client = $this->getClient($account);
 		try {
 			$client->store($mailbox, [
@@ -212,9 +196,34 @@ trait ImapTest {
 		}
 	}
 
-	public function deleteMessage($mailbox, $id, MailAccount $account = null) {
+	public function deleteMessage($mailbox, $id, ?MailAccount $account = null) {
 		$client = $this->getClient($account);
 		$ids = new Horde_Imap_Client_Ids([$id]);
+		try {
+			$client->expunge($mailbox, [
+				'ids' => $ids,
+				'delete' => true,
+			]);
+		} finally {
+			$client->logout();
+		}
+	}
+
+	/**
+	 * Delete a message without informing Horde or the db cache. This simulates another client
+	 * deleting a message on IMAP.
+	 *
+	 * @param int[] $uids
+	 */
+	public function deleteMessagesExternally(string $mailbox, array $uids): void {
+		$client = new Horde_Imap_Client_Socket([
+			'username' => 'user@domain.tld',
+			'password' => 'mypassword',
+			'hostspec' => '127.0.0.1',
+			'port' => 993,
+			'secure' => 'ssl',
+		]);
+		$ids = new Horde_Imap_Client_Ids($uids);
 		try {
 			$client->expunge($mailbox, [
 				'ids' => $ids,
@@ -298,7 +307,7 @@ trait ImapTest {
 	protected function getClient(?MailAccount $account): Horde_Imap_Client_Socket {
 		if ($account !== null) {
 			/** @var IMAPClientFactory $clientFactory */
-			$clientFactory = \OC::$server->query(IMAPClientFactory::class);
+			$clientFactory = Server::get(IMAPClientFactory::class);
 			$client = $clientFactory->getClient(new Account($account));
 		} else {
 			$client = $this->getTestClient();

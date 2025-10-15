@@ -3,23 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Jakob Sack <mail@jakobsack.de>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Service\Avatar;
@@ -58,6 +43,7 @@ class FaviconSource implements IAvatarSource {
 	 *
 	 * @return bool
 	 */
+	#[\Override]
 	public function isExternal(): bool {
 		return true;
 	}
@@ -67,6 +53,7 @@ class FaviconSource implements IAvatarSource {
 	 * @param AvatarFactory $factory
 	 * @return Avatar|null avatar URL if one can be found
 	 */
+	#[\Override]
 	public function fetch(string $email, AvatarFactory $factory) {
 		$horde = new Horde_Mail_Rfc822_Address($email);
 		// TODO: fall back to insecure HTTP?

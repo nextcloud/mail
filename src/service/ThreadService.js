@@ -1,6 +1,11 @@
-import { generateUrl } from '@nextcloud/router'
+/**
+ * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
 import axios from '@nextcloud/axios'
-import { convertAxiosError } from '../errors/convert'
+import { generateUrl } from '@nextcloud/router'
+
+import { convertAxiosError } from '../errors/convert.js'
 
 export async function deleteThread(id) {
 	const url = generateUrl('/apps/mail/api/thread/{id}', {

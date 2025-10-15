@@ -3,25 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2022 Anna Larch <anna@nextcloud.com>
- *
- * @author 2022 Anna Larch <anna@nextcloud.com>
- * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Db;
@@ -42,10 +25,12 @@ use function array_filter;
  * @method void setSendAt(?int $sendAt)
  * @method string getSubject()
  * @method void setSubject(string $subject)
- * @method string getBody()
- * @method void setBody(?string $body)
+ * @method string getBodyPlain()
+ * @method void setBodyPlain(?string $bodyPlain)
+ * @method string getBodyHtml()
+ * @method void setBodyHtml(?string $bodyHtml)
  * @method string|null getEditorBody()
- * @method void setEditorBody(string $body)
+ * @method void setEditorBody(?string $body)
  * @method bool isHtml()
  * @method void setHtml(bool $html)
  * @method bool|null isFailed()
@@ -54,19 +39,41 @@ use function array_filter;
  * @method void setInReplyToMessageId(?string $inReplyToId)
  * @method int|null getUpdatedAt()
  * @method setUpdatedAt(?int $updatedAt)
+ * @method bool|null isPgpMime()
+ * @method setPgpMime(bool $pgpMime)
  * @method bool|null getSmimeSign()
  * @method setSmimeSign(bool $smimeSign)
  * @method int|null getSmimeCertificateId()
  * @method setSmimeCertificateId(?int $smimeCertificateId)
  * @method bool|null getSmimeEncrypt()
- * @method setSmimeEncrypt (bool $smimeEncryt)
+ * @method setSmimeEncrypt(bool $smimeEncryt)
+ * @method int|null getStatus();
+ * @method setStatus(?int $status);
+ * @method string|null getRaw()
+ * @method setRaw(string|null $raw)
+ * @method bool getRequestMdn()
+ * @method setRequestMdn(bool $mdn)
  */
 class LocalMessage extends Entity implements JsonSerializable {
 	public const TYPE_OUTGOING = 0;
 	public const TYPE_DRAFT = 1;
 
+	public const STATUS_RAW = 0;
+	public const STATUS_NO_SENT_MAILBOX = 1;
+	public const STATUS_SMIME_SIGN_NO_CERT_ID = 2;
+	public const STATUS_SMIME_SIGN_CERT = 3;
+	public const STATUS_SMIME_SIGN_FAIL = 4;
+	public const STATUS_SMIME_ENCRYPT_NO_CERT_ID = 5;
+	public const STATUS_SMIME_ENCRYPT_CERT = 6;
+	public const STATUS_SMIME_ENCRYT_FAIL = 7;
+	public const STATUS_TOO_MANY_RECIPIENTS = 8;
+	public const STATUS_RATELIMIT = 9;
+	public const STATUS_SMPT_SEND_FAIL = 10;
+	public const STATUS_IMAP_SENT_MAILBOX_FAIL = 11;
+	public const STATUS_PROCESSED = 12;
+	public const STATUS_ERROR = 13;
 	/**
-	 * @var int
+	 * @var int<1,13>
 	 * @psalm-var self::TYPE_*
 	 */
 	protected $type;
@@ -83,8 +90,11 @@ class LocalMessage extends Entity implements JsonSerializable {
 	/** @var string */
 	protected $subject;
 
-	/** @var string */
-	protected $body;
+	/** @var string|null */
+	protected $bodyPlain;
+
+	/** @var string|null */
+	protected $bodyHtml;
 
 	/** @var string|null */
 	protected $editorBody;
@@ -108,6 +118,9 @@ class LocalMessage extends Entity implements JsonSerializable {
 	protected $updatedAt;
 
 	/** @var bool|null */
+	protected $pgpMime;
+
+	/** @var bool|null */
 	protected $smimeSign;
 
 	/** @var int|null */
@@ -115,6 +128,18 @@ class LocalMessage extends Entity implements JsonSerializable {
 
 	/** @var bool|null */
 	protected $smimeEncrypt;
+
+	/**
+	 * @var int|null
+	 * @psalm-var int-mask-of<self::STATUS_*>
+	 */
+	protected $status;
+
+	/** @var string|null */
+	protected $raw;
+
+	/** @var bool */
+	protected $requestMdn;
 
 	public function __construct() {
 		$this->addType('type', 'integer');
@@ -124,11 +149,16 @@ class LocalMessage extends Entity implements JsonSerializable {
 		$this->addType('html', 'boolean');
 		$this->addType('failed', 'boolean');
 		$this->addType('updatedAt', 'integer');
+		$this->addType('pgpMime', 'boolean');
 		$this->addType('smimeSign', 'boolean');
 		$this->addType('smimeCertificateId', 'integer');
 		$this->addType('smimeEncrypt', 'boolean');
+		$this->addType('status', 'integer');
+		$this->addType('requestMdn', 'boolean');
+
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [
@@ -139,35 +169,32 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'sendAt' => $this->getSendAt(),
 			'updatedAt' => $this->getUpdatedAt(),
 			'subject' => $this->getSubject(),
-			'body' => $this->getBody(),
+			'bodyPlain' => $this->getBodyPlain(),
+			'bodyHtml' => $this->getBodyHtml(),
 			'editorBody' => $this->getEditorBody(),
 			'isHtml' => ($this->isHtml() === true),
+			'isPgpMime' => ($this->isPgpMime() === true),
 			'inReplyToMessageId' => $this->getInReplyToMessageId(),
 			'attachments' => $this->getAttachments(),
 			'from' => array_values(
-				array_filter($this->getRecipients(), static function (Recipient $recipient) {
-					return $recipient->getType() === Recipient::TYPE_FROM;
-				})
+				array_filter($this->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === Recipient::TYPE_FROM)
 			),
 			'to' => array_values(
-				array_filter($this->getRecipients(), static function (Recipient $recipient) {
-					return $recipient->getType() === Recipient::TYPE_TO;
-				})
+				array_filter($this->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === Recipient::TYPE_TO)
 			),
 			'cc' => array_values(
-				array_filter($this->getRecipients(), static function (Recipient $recipient) {
-					return $recipient->getType() === Recipient::TYPE_CC;
-				})
+				array_filter($this->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === Recipient::TYPE_CC)
 			),
 			'bcc' => array_values(
-				array_filter($this->getRecipients(), static function (Recipient $recipient) {
-					return $recipient->getType() === Recipient::TYPE_BCC;
-				})
+				array_filter($this->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === Recipient::TYPE_BCC)
 			),
 			'failed' => $this->isFailed() === true,
 			'smimeCertificateId' => $this->getSmimeCertificateId(),
 			'smimeSign' => $this->getSmimeSign() === true,
 			'smimeEncrypt' => $this->getSmimeEncrypt() === true,
+			'status' => $this->getStatus(),
+			'raw' => $this->getRaw(),
+			'requestMdn' => $this->getRequestMdn(),
 		];
 	}
 

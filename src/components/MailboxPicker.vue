@@ -1,15 +1,18 @@
+<!--
+  - SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<Modal @close="onClose">
 		<div ref="content" class="modal-content">
 			<h2 class="oc-dialog-title">
-				{{ t('mail', 'Choose target mailbox') }}
+				{{ t('mail', 'Choose target folder') }}
 			</h2>
 			<span class="crumbs">
 				<div @click.prevent="onClickHome">
 					<IconInbox :size="20" />
 				</div>
-				<div
-					v-for="(box, index) in mailboxCrumbs"
+				<div v-for="(box, index) in mailboxCrumbs"
 					:key="box.databaseId"
 					class="level">
 					<IconBreadcrumb :size="20" />
@@ -20,22 +23,17 @@
 			</span>
 			<div class="mailbox-list">
 				<ul v-if="filteredMailboxes.length > 0">
-					<li
-						v-for="box in filteredMailboxes "
+					<li v-for="box in filteredMailboxes "
 						:key="box.databaseId"
 						@click.prevent="onClickMailbox(box)">
 						<IconInbox v-if="box.specialRole === 'inbox'" :size="20" />
-						<IconDraft
-							v-else-if="box.specialRole === 'drafts'"
+						<IconDraft v-else-if="box.specialRole === 'drafts'"
 							:size="20" />
-						<IconSent
-							v-else-if="box.specialRole === 'sent'"
+						<IconSent v-else-if="box.specialRole === 'sent'"
 							:size="20" />
-						<IconArchive
-							v-else-if="box.specialRole === 'archive'"
+						<IconArchive v-else-if="box.specialRole === 'archive'"
 							:size="20" />
-						<IconTrash
-							v-else-if="box.specialRole === 'trash'"
+						<IconTrash v-else-if="box.specialRole === 'trash'"
 							:size="20" />
 						<IconFolder v-else
 							:size="20" />
@@ -49,8 +47,7 @@
 				<h2>{{ t('mail', 'No more submailboxes in here') }}</h2>
 			</div>
 			<div class="buttons">
-				<ButtonVue
-					type="primary"
+				<ButtonVue type="primary"
 					:disabled="loading || (!allowRoot && !selectedMailboxId)"
 					:aria-label="loading ? labelSelectLoading : labelSelect"
 					@click="onSelect">
@@ -64,18 +61,20 @@
 	</Modal>
 </template>
 <script>
-import { NcModal as Modal, NcLoadingIcon as IconLoading, NcButton as ButtonVue } from '@nextcloud/vue'
-import IconBreadcrumb from 'vue-material-design-icons/ChevronRight'
-import IconInbox from 'vue-material-design-icons/Home'
-import IconDraft from 'vue-material-design-icons/Pencil'
-import IconSent from 'vue-material-design-icons/Send'
-import IconArchive from 'vue-material-design-icons/PackageDown'
-import IconTrash from 'vue-material-design-icons/Delete'
-import IconFolder from 'vue-material-design-icons/Folder'
-
 import { translate as t } from '@nextcloud/l10n'
-import { translate as translateMailboxName } from '../i18n/MailboxTranslator'
-import { mailboxHasRights } from '../util/acl'
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcModal as Modal } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
+import IconArchive from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
+import IconBreadcrumb from 'vue-material-design-icons/ChevronRight.vue'
+import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
+import IconInbox from 'vue-material-design-icons/HomeOutline.vue'
+import IconDraft from 'vue-material-design-icons/PencilOutline.vue'
+import IconSent from 'vue-material-design-icons/SendOutline.vue'
+import IconTrash from 'vue-material-design-icons/TrashCanOutline.vue'
+
+import { translate as translateMailboxName } from '../i18n/MailboxTranslator.js'
+import useMainStore from '../store/mainStore.js'
+import { mailboxHasRights } from '../util/acl.js'
 
 export default {
 	name: 'MailboxPicker',
@@ -131,11 +130,12 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		mailboxes() {
 			if (!this.selectedMailboxId) {
-				return this.$store.getters.getMailboxes(this.account.accountId)
+				return this.mainStore.getMailboxes(this.account.accountId)
 			} else {
-				return this.$store.getters.getSubMailboxes(this.selectedMailboxId)
+				return this.mainStore.getSubMailboxes(this.selectedMailboxId)
 			}
 		},
 		filteredMailboxes() {
@@ -191,12 +191,12 @@ export default {
 	width: 100%;
 	height: 100%;
 	flex-direction: column;
-	padding: 15px;
+	padding: calc(var(--default-grid-baseline) * 4);
 }
 
 .crumbs {
 	display: inline-flex;
-	padding-right: 0px;
+	padding-inline-end: 0;
 	flex-wrap: wrap;
 
 	.level {
@@ -205,15 +205,15 @@ export default {
 		min-width: 0px;
 		flex: 0 0 auto;
 		order: 1;
-		padding-right: 7px;
+		padding-inline-end: calc(var(--default-grid-baseline) * 2);
 		background-position: right center;
 		background-size: auto 24px;
-		margin-top: -10px;
+		margin-top: calc(var(--default-grid-baseline) * -2.5);
 	}
 
 	a {
 		position: relative;
-		padding: 12px;
+		padding: calc(var(--default-grid-baseline) * 3);
 		opacity: 0.5;
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -249,7 +249,7 @@ export default {
 		}
 
 		&:not(:last-child) {
-			border-bottom: 1px solid var(--color-border);
+			border-bottom: var(--border-width-input) solid var(--color-border);
 		}
 	}
 
@@ -266,13 +266,13 @@ export default {
 	.mailbox-icon {
 		width: 24px;
 		height: 24px;
-		padding: 14px;
+		padding: calc(var(--default-grid-baseline) * 3);
 		opacity: 0.9;
 		background-size: 24px;
 	}
 
 	.mailbox-title {
-		padding: 14px 14px 14px 0;
+		padding: calc(var(--default-grid-baseline) * 3) calc(var(--default-grid-baseline) * 3) calc(var(--default-grid-baseline) * 3) 0;
 		flex: 1;
 		overflow: hidden;
 		white-space: nowrap;
@@ -283,14 +283,15 @@ export default {
 .buttons {
 	display: flex;
 	justify-content: flex-end;
-	padding-top: 10px;
+	padding-top: calc(var(--default-grid-baseline) * 2);
 
 	.spinner {
-		margin-right: 5px;
+		margin-inline-end: var(--default-grid-baseline);
 	}
 }
+
 .material-design-icon {
 	opacity: .7;
-	margin-right: 6px;
+	margin-inline-end: calc(var(--default-grid-baseline) * 1.5);
 }
 </style>

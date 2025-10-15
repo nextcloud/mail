@@ -1,3 +1,7 @@
+<!--
+  - SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<div class="message-loading-skeleton">
 		<div class="message-loading-skeleton__body">
@@ -45,7 +49,7 @@ export default {
 		flex: 1 1 100%;
 		display: flex;
 		flex-direction: column;
-		margin-left: 50px;
+		margin-inline-start: 50px;
 		&__line-one,
 		&__line-two,
 		&__line-three,

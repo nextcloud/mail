@@ -1,4 +1,9 @@
 <?xml version="1.0"?>
+<!--
+  - SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-FileCopyrightText: 2013-2016 ownCloud, Inc.
+  - SPDX-License-Identifier: AGPL-3.0-only
+-->
 <info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 	<id>mail</id>
@@ -9,7 +14,7 @@
 - **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.
 - **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.
 - **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.
-- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.
+- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://www.horde.org) libraries.
 - **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!
 
 ## Ethical AI Rating
@@ -29,10 +34,11 @@ The rating depends on the installed text processing backend. See [the rating ove
 
 Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).
 	]]></description>
-	<version>3.5.0-alpha.2</version>
+	<version>5.6.0-alpha.3</version>
 	<licence>agpl</licence>
-	<author>Greta Doçi</author>
-	<author homepage="https://github.com/nextcloud/groupware">Nextcloud Groupware Team</author>
+	<author homepage="https://github.com/ChristophWurst">Christoph Wurst</author>
+	<author homepage="https://github.com/GretaD">GretaD</author>
+	<author homepage="https://github.com/kesselb">kesselb</author>
 	<namespace>Mail</namespace>
 	<documentation>
 		<user>https://github.com/nextcloud/mail/blob/main/doc/user.md</user>
@@ -46,8 +52,8 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 	<repository type="git">https://github.com/nextcloud/mail.git</repository>
 	<screenshot>https://user-images.githubusercontent.com/12728974/266270227-86b99bbb-03ea-468b-8408-e248e1730bed.png</screenshot>
 	<dependencies>
-		<php min-version="8.0" max-version="8.2" />
-		<nextcloud min-version="26" max-version="28" />
+		<php min-version="8.1" max-version="8.4" />
+		<nextcloud min-version="31" max-version="33" />
 	</dependencies>
 	<background-jobs>
 		<job>OCA\Mail\BackgroundJob\CleanupJob</job>
@@ -66,6 +72,7 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 			<step>OCA\Mail\Migration\MakeItineraryExtractorExecutable</step>
 			<step>OCA\Mail\Migration\ProvisionAccounts</step>
 			<step>OCA\Mail\Migration\RepairMailTheads</step>
+			<step>OCA\Mail\Migration\DeleteDuplicateUids</step>
 		</post-migration>
 	</repair-steps>
 	<commands>
@@ -73,6 +80,7 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 		<command>OCA\Mail\Command\CleanUp</command>
 		<command>OCA\Mail\Command\CreateAccount</command>
 		<command>OCA\Mail\Command\CreateTagMigrationJobEntry</command>
+		<command>OCA\Mail\Command\DebugAccount</command>
 		<command>OCA\Mail\Command\DeleteAccount</command>
 		<command>OCA\Mail\Command\DiagnoseAccount</command>
 		<command>OCA\Mail\Command\ExportAccount</command>
@@ -82,6 +90,8 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 		<command>OCA\Mail\Command\Thread</command>
 		<command>OCA\Mail\Command\TrainAccount</command>
 		<command>OCA\Mail\Command\UpdateAccount</command>
+		<command>OCA\Mail\Command\UpdateSystemAutoresponders</command>
+		<command>OCA\Mail\Command\RunMetaEstimator</command>
 	</commands>
 	<settings>
 		<admin>OCA\Mail\Settings\AdminSettings</admin>

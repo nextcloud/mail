@@ -1,11 +1,12 @@
 {
 	"config": {
 		"platform": {
-			"php": "8.0"
+			"php": "8.1"
 		},
 		"sort-packages": true
 	},
     "require-dev": {
-        "nextcloud/coding-standard": "^1.1.1"
-    }
+		"nextcloud/coding-standard": "^1.4.0",
+		"php-cs-fixer/shim": "^3.88.2"
+	}
 }

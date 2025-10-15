@@ -3,31 +3,13 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\SMTP;
 
 use Horde_Mail_Transport;
-use Horde_Mail_Transport_Mail;
 use Horde_Mail_Transport_Smtphorde;
 use Horde_Smtp_Password_Xoauth2;
 use OCA\Mail\Account;
@@ -60,10 +42,6 @@ class SmtpClientFactory {
 	 */
 	public function create(Account $account): Horde_Mail_Transport {
 		$mailAccount = $account->getMailAccount();
-		$transport = $this->config->getSystemValue('app.mail.transport', 'smtp');
-		if ($transport === 'php-mail') {
-			return new Horde_Mail_Transport_Mail();
-		}
 
 		$decryptedPassword = null;
 		if ($mailAccount->getOutboundPassword() !== null) {
@@ -77,7 +55,7 @@ class SmtpClientFactory {
 			'port' => $mailAccount->getOutboundPort(),
 			'username' => $mailAccount->getOutboundUser(),
 			'secure' => $security === 'none' ? false : $security,
-			'timeout' => (int)$this->config->getSystemValue('app.mail.smtp.timeout', 5),
+			'timeout' => (int)$this->config->getSystemValue('app.mail.smtp.timeout', 20),
 			'context' => [
 				'ssl' => [
 					'verify_peer' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
@@ -94,8 +72,9 @@ class SmtpClientFactory {
 				$decryptedAccessToken,
 			);
 		}
-		if ($this->config->getSystemValue('debug', false)) {
-			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_smtp.log';
+		if ($account->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
+			$fn = 'mail-' . $account->getUserId() . '-' . $account->getId() . '-smtp.log';
+			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;
 		}
 		return new Horde_Mail_Transport_Smtphorde($params);
 	}

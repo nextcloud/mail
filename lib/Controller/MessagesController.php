@@ -3,30 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @author Alexander Weidinger <alexwegoo@gmail.com>
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Christoph Wurst <wurst.christoph@gmail.com>
- * @author Jakob Sack <jakob@owncloud.org>
- * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
- * @author Lukas Reschke <lukas@owncloud.com>
- * @author Thomas Imbreckx <zinks@iozero.be>
- * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2014-2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Controller;
@@ -39,6 +18,7 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\ITrustedSenderService;
+use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
@@ -48,12 +28,14 @@ use OCA\Mail\Http\TrapError;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\SmimeData;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\ItineraryService;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
@@ -70,6 +52,7 @@ use OCP\Lock\LockedException;
 use Psr\Log\LoggerInterface;
 use function array_map;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class MessagesController extends Controller {
 	private AccountService $accountService;
 	private IMailManager $mailManager;
@@ -87,7 +70,9 @@ class MessagesController extends Controller {
 	private SmimeService $smimeService;
 	private IMAPClientFactory $clientFactory;
 	private IDkimService $dkimService;
+	private IUserPreferences $preferences;
 	private SnoozeService $snoozeService;
+	private AiIntegrationsService $aiIntegrationService;
 
 	public function __construct(string $appName,
 		IRequest $request,
@@ -107,7 +92,9 @@ class MessagesController extends Controller {
 		SmimeService $smimeService,
 		IMAPClientFactory $clientFactory,
 		IDkimService $dkimService,
-		SnoozeService $snoozeService) {
+		IUserPreferences $preferences,
+		SnoozeService $snoozeService,
+		AiIntegrationsService $aiIntegrationService) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->mailManager = $mailManager;
@@ -125,7 +112,9 @@ class MessagesController extends Controller {
 		$this->smimeService = $smimeService;
 		$this->clientFactory = $clientFactory;
 		$this->dkimService = $dkimService;
+		$this->preferences = $preferences;
 		$this->snoozeService = $snoozeService;
+		$this->aiIntegrationService = $aiIntegrationService;
 	}
 
 	/**
@@ -135,6 +124,8 @@ class MessagesController extends Controller {
 	 * @param int $cursor
 	 * @param string $filter
 	 * @param int|null $limit
+	 * @param string $view returns messages in requested view ('singleton' or 'threaded')
+	 * @param string|null $v Cache buster version to guarantee unique urls (will trigger HTTP caching if set)
 	 *
 	 * @return JSONResponse
 	 *
@@ -143,9 +134,11 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function index(int $mailboxId,
-		int $cursor = null,
-		string $filter = null,
-		int $limit = null): JSONResponse {
+		?int $cursor = null,
+		?string $filter = null,
+		?int $limit = null,
+		?string $view = null,
+		?string $v = null): JSONResponse {
 		try {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $mailboxId);
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
@@ -153,17 +146,27 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$this->logger->debug("loading messages of folder <$mailboxId>");
+		$this->logger->debug("loading messages of mailbox <$mailboxId>");
+		$sort = $this->preferences->getPreference($this->currentUserId, 'sort-order', 'newest') === 'newest' ? IMailSearch::ORDER_NEWEST_FIRST : IMailSearch::ORDER_OLDEST_FIRST;
 
-		return new JSONResponse(
-			$this->mailSearch->findMessages(
-				$account,
-				$mailbox,
-				$filter === '' ? null : $filter,
-				$cursor,
-				$limit
-			)
+		$view = $view === 'singleton' ? IMailSearch::VIEW_SINGLETON : IMailSearch::VIEW_THREADED;
+
+		$messages = $this->mailSearch->findMessages(
+			$account,
+			$mailbox,
+			$sort,
+			$filter === '' ? null : $filter,
+			$cursor,
+			$limit,
+			$this->currentUserId,
+			$view
 		);
+
+		$response = new JSONResponse($messages);
+		if ($v !== null && $v !== '') {
+			$response->cacheFor(7 * 24 * 3600, false, true);
+		}
+		return $response;
 	}
 
 	/**
@@ -232,12 +235,10 @@ class MessagesController extends Controller {
 		if ($itineraries) {
 			$json['itineraries'] = $itineraries;
 		}
-		$json['attachments'] = array_map(function ($a) use ($id) {
-			return $this->enrichDownloadUrl(
-				$id,
-				$a
-			);
-		}, $json['attachments']);
+		$json['attachments'] = array_map(fn ($a) => $this->enrichDownloadUrl(
+			$id,
+			$a
+		), $json['attachments']);
 		$json['accountId'] = $account->getId();
 		$json['mailboxId'] = $mailbox->getId();
 		$json['databaseId'] = $message->getId();
@@ -585,9 +586,9 @@ class MessagesController extends Controller {
 				$client->logout();
 			}
 
-			$htmlResponse = $plain ?
-				HtmlResponse::plain($html) :
-				HtmlResponse::withResizer(
+			$htmlResponse = $plain
+				? HtmlResponse::plain($html)
+				: HtmlResponse::withResizer(
 					$html,
 					$this->nonceManager->getNonce(),
 					$this->urlGenerator->getAbsoluteURL(
@@ -691,7 +692,7 @@ class MessagesController extends Controller {
 
 		foreach ($attachments as $attachment) {
 			$fileName = $attachment->getName();
-			$fh = fopen("php://temp", 'r+');
+			$fh = fopen('php://temp', 'r+');
 			fputs($fh, $attachment->getContent());
 			$size = $attachment->getSize();
 			rewind($fh);
@@ -879,6 +880,78 @@ class MessagesController extends Controller {
 			$message->getUid()
 		);
 		return new JSONResponse();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $messageId
+	 *
+	 * @return JSONResponse
+	 */
+	#[TrapError]
+	public function smartReply(int $messageId):JSONResponse {
+		try {
+			$message = $this->mailManager->getMessage($this->currentUserId, $messageId);
+			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		try {
+			$replies = array_values($this->aiIntegrationService->getSmartReply($account, $mailbox, $message, $this->currentUserId));
+		} catch (ServiceException $e) {
+			$this->logger->error('Smart reply failed: ' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+			return new JSONResponse([], Http::STATUS_NO_CONTENT);
+		}
+		return new JSONResponse($replies);
+
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $messageId
+	 *
+	 * @return JSONResponse
+	 */
+	#[TrapError]
+	public function needsTranslation(int $messageId): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		try {
+			$message = $this->mailManager->getMessage($this->currentUserId, $messageId);
+			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		if (!$this->aiIntegrationService->isLlmProcessingEnabled()) {
+			$response = new JSONResponse([], Http::STATUS_NOT_IMPLEMENTED);
+			$response->cacheFor(60 * 60 * 24, false, true);
+			return $response;
+		}
+
+		try {
+			$requiresTranslation = $this->aiIntegrationService->requiresTranslation(
+				$account,
+				$mailbox,
+				$message,
+				$this->currentUserId
+			);
+			$response = new JSONResponse(['requiresTranslation' => $requiresTranslation === true]);
+			$response->cacheFor(60 * 60 * 24, false, true);
+			return $response;
+		} catch (ServiceException $e) {
+			$this->logger->error('Translation check failed: ' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+			return new JSONResponse([], Http::STATUS_NO_CONTENT);
+		}
 	}
 
 	/**

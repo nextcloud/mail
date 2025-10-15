@@ -1,26 +1,9 @@
 <?php
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
- * @author Lukas Reschke <lukas@owncloud.com>
- * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2014-2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Db;
@@ -65,7 +48,7 @@ use OCP\AppFramework\Db\Entity;
  * @method string getEditorMode()
  * @method void setEditorMode(string $editorMode)
  * @method int|null getProvisioningId()
- * @method void setProvisioningId(int $provisioningId)
+ * @method void setProvisioningId(int|null $provisioningId)
  * @method int getOrder()
  * @method void setOrder(int $order)
  * @method bool|null getShowSubscribedOnly()
@@ -114,6 +97,12 @@ use OCP\AppFramework\Db\Entity;
  * @method void setTrashRetentionDays(int|null $trashRetentionDays)
  * @method int|null getJunkMailboxId()
  * @method void setJunkMailboxId(?int $id)
+ * @method bool getSearchBody()
+ * @method void setSearchBody(bool $searchBody)
+ * @method bool|null getOooFollowsSystem()
+ * @method void setOooFollowsSystem(bool $oooFollowsSystem)
+ * @method bool getDebug()
+ * @method void setDebug(bool $debug)
  */
 class MailAccount extends Entity {
 	public const SIGNATURE_MODE_PLAIN = 0;
@@ -190,6 +179,14 @@ class MailAccount extends Entity {
 
 	protected ?int $junkMailboxId = null;
 
+	/** @var bool */
+	protected $searchBody = false;
+
+	/** @var bool|null */
+	protected $oooFollowsSystem;
+
+	protected bool $debug = false;
+
 	/**
 	 * @param array $params
 	 */
@@ -244,6 +241,12 @@ class MailAccount extends Entity {
 		if (isset($params['trashRetentionDays'])) {
 			$this->setTrashRetentionDays($params['trashRetentionDays']);
 		}
+		if (isset($params['outOfOfficeFollowsSystem'])) {
+			$this->setOutOfOfficeFollowsSystem($params['outOfOfficeFollowsSystem']);
+		}
+		if (isset($params['debug'])) {
+			$this->setDebug($params['debug']);
+		}
 
 		$this->addType('inboundPort', 'integer');
 		$this->addType('outboundPort', 'integer');
@@ -260,11 +263,26 @@ class MailAccount extends Entity {
 		$this->addType('sieveEnabled', 'boolean');
 		$this->addType('sievePort', 'integer');
 		$this->addType('signatureAboveQuote', 'boolean');
-		$this->addType('signatureMode', 'int');
+		$this->addType('signatureMode', 'integer');
 		$this->addType('smimeCertificateId', 'integer');
 		$this->addType('quotaPercentage', 'integer');
 		$this->addType('trashRetentionDays', 'integer');
 		$this->addType('junkMailboxId', 'integer');
+		$this->addType('searchBody', 'boolean');
+		$this->addType('oooFollowsSystem', 'boolean');
+		$this->addType('debug', 'boolean');
+	}
+
+	public function getOutOfOfficeFollowsSystem(): bool {
+		return $this->getOooFollowsSystem() === true;
+	}
+
+	public function setOutOfOfficeFollowsSystem(bool $outOfOfficeFollowsSystem): void {
+		$this->setOooFollowsSystem($outOfOfficeFollowsSystem);
+	}
+
+	public function canAuthenticateImap(): bool {
+		return isset($this->inboundPassword) || isset($this->oauthAccessToken);
 	}
 
 	/**
@@ -298,6 +316,9 @@ class MailAccount extends Entity {
 			'quotaPercentage' => $this->getQuotaPercentage(),
 			'trashRetentionDays' => $this->getTrashRetentionDays(),
 			'junkMailboxId' => $this->getJunkMailboxId(),
+			'searchBody' => $this->getSearchBody(),
+			'outOfOfficeFollowsSystem' => $this->getOutOfOfficeFollowsSystem(),
+			'debug' => $this->getDebug(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {

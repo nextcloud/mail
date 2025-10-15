@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright Copyright (c) 2023 Daniel Kesselberg <mail@danielkesselberg.de>
- *
- * @author Daniel Kesselberg <mail@danielkesselberg.de>
- *
- * @license AGPL-3.0-or-later
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Service;
@@ -54,7 +38,7 @@ class DkimService implements IDkimService {
 		IMAPClientFactory $clientFactory,
 		MessageMapper $messageMapper,
 		ICacheFactory $cacheFactory,
-		IDkimValidator $dkimValidator
+		IDkimValidator $dkimValidator,
 	) {
 		$this->clientFactory = $clientFactory;
 		$this->messageMapper = $messageMapper;
@@ -62,6 +46,7 @@ class DkimService implements IDkimService {
 		$this->dkimValidator = $dkimValidator;
 	}
 
+	#[\Override]
 	public function validate(Account $account, Mailbox $mailbox, int $id): bool {
 		$cached = $this->getCached($account, $mailbox, $id);
 		if (is_bool($cached)) {
@@ -93,6 +78,7 @@ class DkimService implements IDkimService {
 		return $result;
 	}
 
+	#[\Override]
 	public function getCached(Account $account, Mailbox $mailbox, int $id): ?bool {
 		return $this->cache->get($this->buildCacheKey($account, $mailbox, $id));
 	}

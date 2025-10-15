@@ -1,28 +1,9 @@
 <?php
-/*
- * *
- *  * Mail App
- *  *
- *  * @copyright 2022 Anna Larch <anna.larch@gmx.net>
- *  *
- *  * @author Anna Larch <anna.larch@gmx.net>
- *  *
- *  * This library is free software; you can redistribute it and/or
- *  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
- *  * License as published by the Free Software Foundation; either
- *  * version 3 of the License, or any later version.
- *  *
- *  * This library is distributed in the hope that it will be useful,
- *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
- *  *
- *  * You should have received a copy of the GNU Affero General Public
- *  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
- *  *
- *
- */
 
+/**
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
 namespace OCA\Mail\Tests\Unit\Job;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
@@ -36,30 +17,29 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\IUser;
 use OCP\IUserManager;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class PreviewEnhancementProcessingJobTest extends TestCase {
-	/** @var ITimeFactory|ITimeFactory&MockObject|MockObject  */
+	/** @var ITimeFactory|ITimeFactory&MockObject|MockObject */
 	private $time;
 
-	/** @var IUserManager|IUserManager&MockObject|MockObject  */
+	/** @var IUserManager|IUserManager&MockObject|MockObject */
 	private $manager;
 
-	/** @var AccountService|AccountService&MockObject|MockObject  */
+	/** @var AccountService|AccountService&MockObject|MockObject */
 	private $accountService;
 
-	/** @var PreprocessingService|PreprocessingService&MockObject|MockObject  */
+	/** @var PreprocessingService|PreprocessingService&MockObject|MockObject */
 	private $preprocessingService;
 
-	/** @var MockObject|LoggerInterface|LoggerInterface&MockObject  */
+	/** @var MockObject|LoggerInterface|LoggerInterface&MockObject */
 	private $logger;
 
-	/** @var IJobList|IJobList&MockObject|MockObject  */
+	/** @var IJobList|IJobList&MockObject|MockObject */
 	private $jobList;
 	private PreviewEnhancementProcessingJob $job;
 
-	/** @var int[]  */
+	/** @var int[] */
 	private static $argument;
 
 	public function setUp(): void {
@@ -97,17 +77,17 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 
 	public function testNoUser(): void {
 		$mailAccount = new MailAccount();
-		$mailAccount->setUserId(1);
-		$account = new Account($mailAccount);
+		$mailAccount->setInboundPassword('pass');
+		$account = $this->createMock(Account::class);
+		$account->method('getUserId')->willReturn('user123');
+		$account->method('getMailAccount')->willReturn($mailAccount);
 
 		$this->accountService->expects(self::once())
 			->method('findById')
 			->with(self::$argument['accountId'])
 			->willReturn($account);
 		$this->manager->expects(self::once())
-			->method('get')
-			->with($account->getUserId())
-			->willReturn(null);
+			->method('get');
 		$this->logger->expects(self::once())
 			->method('debug');
 
@@ -116,24 +96,15 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 
 	public function testProvisionedNoPassword(): void {
 		$mailAccount = new MailAccount();
-		$mailAccount->setUserId(1);
-		$mailAccount->setProvisioningId(1);
 		$mailAccount->setInboundPassword(null);
 		$account = new Account($mailAccount);
-		$user = $this->createMock(IUser::class);
-		$user->setEnabled();
 
 		$this->accountService->expects(self::once())
 			->method('findById')
 			->with(self::$argument['accountId'])
 			->willReturn($account);
-		$this->manager->expects(self::once())
-			->method('get')
-			->with($account->getUserId())
-			->willReturn($user);
-		$user->expects(self::once())
-			->method('isEnabled')
-			->willReturn(true);
+		$this->manager->expects(self::never())
+			->method('get');
 		$this->logger->expects(self::once())
 			->method('info');
 
@@ -142,8 +113,10 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 
 	public function testProcessing(): void {
 		$mailAccount = new MailAccount();
-		$mailAccount->setUserId(1);
-		$account = new Account($mailAccount);
+		$mailAccount->setInboundPassword('pass');
+		$account = $this->createMock(Account::class);
+		$account->method('getUserId')->willReturn('user123');
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$time = time();
 		$user = $this->createMock(IUser::class);
 		$user->setEnabled();

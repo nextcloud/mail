@@ -3,30 +3,14 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\BackgroundJob;
 
-use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -39,30 +23,31 @@ class TrainImportanceClassifierJob extends TimedJob {
 	private AccountService $accountService;
 	private ImportanceClassifier $classifier;
 	private IJobList $jobList;
-	private IUserPreferences $preferences;
 	private LoggerInterface $logger;
+	private ClassificationSettingsService $classificationSettingsService;
 
 	public function __construct(ITimeFactory $time,
 		AccountService $accountService,
 		ImportanceClassifier $classifier,
 		IJobList $jobList,
-		IUserPreferences $preferences,
-		LoggerInterface $logger) {
+		LoggerInterface $logger,
+		ClassificationSettingsService $classificationSettingsService) {
 		parent::__construct($time);
 
 		$this->accountService = $accountService;
 		$this->classifier = $classifier;
 		$this->jobList = $jobList;
 		$this->logger = $logger;
+		$this->classificationSettingsService = $classificationSettingsService;
 
 		$this->setInterval(24 * 60 * 60);
 		$this->setTimeSensitivity(self::TIME_INSENSITIVE);
-		$this->preferences = $preferences;
 	}
 
 	/**
 	 * @return void
 	 */
+	#[\Override]
 	protected function run($argument) {
 		$accountId = (int)$argument['accountId'];
 
@@ -74,21 +59,18 @@ class TrainImportanceClassifierJob extends TimedJob {
 			return;
 		}
 
-		$dbAccount = $account->getMailAccount();
-		if (!is_null($dbAccount->getProvisioningId()) && $dbAccount->getInboundPassword() === null) {
-			$this->logger->info("Ignoring cron training for provisioned account that has no password set yet");
+		if (!$account->getMailAccount()->canAuthenticateImap()) {
+			$this->logger->debug('Cron importance classifier training not possible: no authentication on IMAP possible');
 			return;
 		}
-		if ($this->preferences->getPreference($account->getUserId(), 'tag-classified-messages') === 'false') {
+
+		if (!$this->classificationSettingsService->isClassificationEnabled($account->getUserId())) {
 			$this->logger->debug("classification is turned off for account $accountId");
 			return;
 		}
 
 		try {
-			$this->classifier->train(
-				$account,
-				$this->logger
-			);
+			$this->classifier->train($account, $this->logger);
 		} catch (Throwable $e) {
 			$this->logger->error('Cron importance classifier training failed: ' . $e->getMessage(), [
 				'exception' => $e,

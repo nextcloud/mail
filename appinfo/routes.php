@@ -3,24 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Lukas Reschke <lukas@statuscode.ch>
- * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2013-2016 ownCloud Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  */
 return [
@@ -38,6 +23,11 @@ return [
 		[
 			'name' => 'page#mailbox',
 			'url' => '/box/{id}',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'page#mailboxStarred',
+			'url' => '/box/starred/{id}',
 			'verb' => 'GET'
 		],
 		[
@@ -106,8 +96,13 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'accounts#testAccountConnection',
+			'url' => '/api/accounts/{id}/test',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'autoConfig#queryIspdb',
-			'url' => '/api/autoconfig/ispdb/{email}',
+			'url' => '/api/autoconfig/ispdb/{host}/{email}',
 			'verb' => 'GET',
 		],
 		[
@@ -129,6 +124,11 @@ return [
 			'name' => 'tags#update',
 			'url' => '/api/tags/{id}',
 			'verb' => 'PUT'
+		],
+		[
+			'name' => 'tags#delete',
+			'url' => '/api/tags/{accountId}/delete/{id}',
+			'verb' => 'DELETE'
 		],
 		[
 			'name' => 'aliases#updateSignature',
@@ -184,6 +184,11 @@ return [
 			'name' => 'mailboxes#stats',
 			'url' => '/api/mailboxes/{id}/stats',
 			'verb' => 'GET'
+		],
+		[
+			'name' => 'mailboxes#repair',
+			'url' => '/api/mailboxes/{id}/repair',
+			'verb' => 'POST'
 		],
 		[
 			'name' => 'messages#downloadAttachment',
@@ -271,6 +276,16 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'messages#smartReply',
+			'url' => '/api/messages/{messageId}/smartreply',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'messages#needsTranslation',
+			'url' => '/api/messages/{messageId}/needsTranslation',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'avatars#url',
 			'url' => '/api/avatars/url/{email}',
 			'verb' => 'GET'
@@ -331,8 +346,18 @@ return [
 			'verb' => 'POST'
 		],
 		[
-			'name' => 'settings#setEnabledThreadSummary',
-			'url' => '/api/settings/threadsummary',
+			'name' => 'settings#setEnabledLlmProcessing',
+			'url' => '/api/settings/llm',
+			'verb' => 'PUT'
+		],
+		[
+			'name' => 'settings#setImportanceClassificationEnabledByDefault',
+			'url' => '/api/settings/importance-classification-default',
+			'verb' => 'PUT'
+		],
+		[
+			'name' => 'settings#setLayoutMessageView',
+			'url' => '/api/settings/layout-message-view',
 			'verb' => 'PUT'
 		],
 		[
@@ -348,6 +373,21 @@ return [
 		[
 			'name' => 'trusted_senders#list',
 			'url' => '/api/trustedsenders',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'internal_address#setAddress',
+			'url' => '/api/internalAddress/{address}',
+			'verb' => 'PUT'
+		],
+		[
+			'name' => 'internal_address#removeAddress',
+			'url' => '/api/internalAddress/{address}',
+			'verb' => 'DELETE'
+		],
+		[
+			'name' => 'internal_address#list',
+			'url' => '/api/internalAddress',
 			'verb' => 'GET'
 		],
 		[
@@ -388,6 +428,11 @@ return [
 		[
 			'name' => 'thread#summarize',
 			'url' => '/api/thread/{id}/summary',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'thread#generateEventData',
+			'url' => '/api/thread/{id}/eventdata',
 			'verb' => 'GET'
 		],
 		[
@@ -440,7 +485,36 @@ return [
 			'url' => '/api/drafts/move/{id}',
 			'verb' => 'POST',
 		],
-
+		[
+			'name' => 'outOfOffice#getState',
+			'url' => '/api/out-of-office/{accountId}',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'outOfOffice#update',
+			'url' => '/api/out-of-office/{accountId}',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'outOfOffice#followSystem',
+			'url' => '/api/out-of-office/{accountId}/follow-system',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'followUp#checkMessageIds',
+			'url' => '/api/follow-up/check-message-ids',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'textBlockShares#getTextBlockShares',
+			'url' => '/api/textBlocks/{id}/shares',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'actionStep#findAllStepsForAction',
+			'url' => '/api/action-step/{actionId}/steps',
+			'verb' => 'GET'
+		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],
@@ -453,5 +527,26 @@ return [
 		'outbox' => ['url' => '/api/outbox'],
 		'preferences' => ['url' => '/api/preferences'],
 		'smimeCertificates' => ['url' => '/api/smime/certificates'],
-	]
+		'textBlock' => ['url' => '/api/textBlocks'],
+		'textBlockShares' => ['url' => '/api/textBlockshares'],
+		'quickActions' => ['url' => '/api/quick-actions'],
+		'actionStep' => ['url' => '/api/action-step'],
+	],
+	'ocs' => [
+		[
+			'name' => 'messageApi#get',
+			'url' => '/message/{id}',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'messageApi#getRaw',
+			'url' => '/message/{id}/raw',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'messageApi#getAttachment',
+			'url' => '/message/{id}/attachment/{attachmentId}',
+			'verb' => 'GET',
+		],
+	],
 ];

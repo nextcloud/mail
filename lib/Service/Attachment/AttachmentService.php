@@ -3,30 +3,15 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Luc Calaresu <dev@calaresu.com>
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2017-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Service\Attachment;
 
 use finfo;
 use InvalidArgumentException;
+use OCA\Files_Sharing\SharedStorage;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
@@ -89,6 +74,7 @@ class AttachmentService implements IAttachmentService {
 	 * @param UploadedFile $file
 	 * @return LocalAttachment
 	 */
+	#[\Override]
 	public function addFile(string $userId, UploadedFile $file): LocalAttachment {
 		$attachment = new LocalAttachment();
 		$attachment->setUserId($userId);
@@ -133,6 +119,7 @@ class AttachmentService implements IAttachmentService {
 	 *
 	 * @throws AttachmentNotFoundException
 	 */
+	#[\Override]
 	public function getAttachment(string $userId, int $id): array {
 		try {
 			$attachment = $this->mapper->find($userId, $id);
@@ -149,6 +136,7 @@ class AttachmentService implements IAttachmentService {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	public function deleteAttachment(string $userId, int $id) {
 		try {
 			$attachment = $this->mapper->find($userId, $id);
@@ -206,9 +194,7 @@ class AttachmentService implements IAttachmentService {
 			return $this->mapper->findByLocalMessageId($userId, $message->getId());
 		}
 
-		$oldAttachmentIds = array_map(static function ($attachment) {
-			return $attachment->getId();
-		}, $message->getAttachments());
+		$oldAttachmentIds = array_map(static fn ($attachment) => $attachment->getId(), $message->getAttachments());
 
 		$add = array_diff($newAttachmentIds, $oldAttachmentIds);
 		if ($add !== []) {
@@ -343,6 +329,23 @@ class AttachmentService implements IAttachmentService {
 		return $localAttachment->getId();
 	}
 
+	private function hasDownloadPermissions(File $file, string $fileName): bool {
+		$storage = $file->getStorage();
+		if ($storage->instanceOfStorage(SharedStorage::class)) {
+
+			/** @var SharedStorage $storage */
+			$share = $storage->getShare();
+			$attributes = $share->getAttributes();
+
+			if ($attributes->getAttribute('permissions', 'download') === false) {
+				$this->logger->warning('Could not create attachment, no download permission for file: ' . $fileName);
+				return false;
+
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * @param Account $account
 	 * @param array $attachment
@@ -360,6 +363,9 @@ class AttachmentService implements IAttachmentService {
 
 		$file = $this->userFolder->get($fileName);
 		if (!$file instanceof File) {
+			return null;
+		}
+		if (!$this->hasDownloadPermissions($file, $fileName)) {
 			return null;
 		}
 

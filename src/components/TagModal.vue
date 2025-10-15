@@ -1,87 +1,43 @@
 <!--
-  - @copyright 2021 Greta Doci <gretadoci@gmail.com>
-  -
-  - @author 2021 Greta Doci <gretadoci@gmail.com>
-  - @author 2022 Jonas Sulzer <jonas@violoncello.ch>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
+  - SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 <template>
-	<Modal size="large" @close="onClose">
+	<DeleteTagModal v-if="deleteTagModal"
+		:tag="tagToDelete"
+		:envelopes="envelopes"
+		:account-id="envelopes[0].accountId"
+		@close="closeDeleteModal" />
+	<Modal v-else size="large" @close="onClose">
 		<div class="modal-content">
 			<h2 class="tag-title">
 				{{ t('mail', 'Add default tags') }}
 			</h2>
-			<div v-for="tag in tags" :key="tag.id" class="tag-group">
-				<button class="tag-group__label"
-					:style="{
-						color: convertHex(tag.color, 1),
-						'background-color': convertHex(tag.color, 0.15)
-					}">
-					{{ tag.displayName }}
-				</button>
-				<Actions :force-menu="true">
-					<ActionButton v-if="renameTagLabel"
-						@click="openEditTag">
-						<template #icon>
-							<IconRename :size="17" />
-						</template>
-						{{ t('mail','Rename tag') }}
-					</ActionButton>
-					<ActionInput v-if="renameTagInput"
-						:value="tag.displayName"
-						@submit="renameTag(tag, $event)">
-						<template #icon>
-							<IconTag :size="20" />
-						</template>
-					</ActionInput>
-					<ActionText
-						v-if="showSaving">
-						<template #icon>
-							<IconLoading :size="20" />
-						</template>
-						{{ t('mail', 'Saving new tag name …') }}
-					</ActionText>
-				</Actions>
-				<button v-if="!isSet(tag.imapLabel)"
-					class="tag-actions"
-					@click="addTag(tag.imapLabel)">
-					{{ t('mail','Set tag') }}
-				</button>
-				<button v-else
-					class="tag-actions"
-					@click="removeTag(tag.imapLabel)">
-					{{ t('mail','Unset tag') }}
-				</button>
-			</div>
+			<TagItem v-for="tag in tags"
+				:key="tag.id"
+				:tag="tag"
+				:envelopes="envelopes"
+				@delete-tag="deleteTag" />
+
 			<h2 class="tag-title">
 				{{ t('mail', 'Add tag') }}
 			</h2>
 			<div class="create-tag">
-				<button v-if="!editing"
+				<NcButton v-if="!editing"
 					class="tagButton"
 					@click="addTagInput">
+					<template #icon>
+						<IconAdd :size="20" />
+					</template>
 					{{ t('mail', 'Add tag') }}
-				</button>
-				<ActionInput v-if="editing" @submit="createTag">
-					<IconTag :size="20" />
+				</NcButton>
+				<ActionInput v-if="editing" :disabled="showSaving" @submit="createTag">
+					<template #icon>
+						<IconTag :size="20" />
+					</template>
 				</ActionInput>
-				<ActionText
-					v-if="showSaving">
+				<ActionText v-if="showSaving">
 					<template #icon>
 						<IconLoading :size="20" />
 					</template>
@@ -93,11 +49,16 @@
 </template>
 
 <script>
-import { NcModal as Modal, NcActions as Actions, NcActionText as ActionText, NcActionInput as ActionInput, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-import IconRename from 'vue-material-design-icons/Pencil'
-import IconTag from 'vue-material-design-icons/Tag'
 import { showError, showInfo } from '@nextcloud/dialogs'
+import { NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading, NcModal as Modal, NcButton } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
+import IconTag from 'vue-material-design-icons/TagOutline.vue'
+
+import DeleteTagModal from './DeleteTagModal.vue'
+import TagItem from './TagItem.vue'
 import { hiddenTags } from './tags.js'
+import useMainStore from '../store/mainStore.js'
 
 function randomColor() {
 	let randomHexColor = ((1 << 24) * Math.random() | 0).toString(16)
@@ -110,13 +71,14 @@ export default {
 	name: 'TagModal',
 	components: {
 		Modal,
-		Actions,
 		ActionText,
 		ActionInput,
-		ActionButton,
-		IconRename,
+		DeleteTagModal,
 		IconTag,
 		IconLoading,
+		TagItem,
+		NcButton,
+		IconAdd,
 	},
 	props: {
 		envelopes: {
@@ -134,12 +96,16 @@ export default {
 			showSaving: false,
 			renameTagLabel: true,
 			renameTagInput: false,
+			deleteTagModal: false,
+			tagToDelete: null,
 			color: randomColor(),
+			editColor: '',
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		tags() {
-			return this.$store.getters.getTags.filter((tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
+			return this.mainStore.getTags.filter((tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
 				if (a.isDefaultTag && !b.isDefaultTag) {
 					return -1
 				}
@@ -166,26 +132,17 @@ export default {
 		onClose() {
 			this.$emit('close')
 		},
+		closeDeleteModal() {
+			this.deleteTagModal = false
+		},
 		isSet(imapLabel) {
 			return this.envelopes.some(
 				(envelope) => (
-					this.$store.getters.getEnvelopeTags(envelope.databaseId).some(
-						tag => tag.imapLabel === imapLabel
+					this.mainStore.getEnvelopeTags(envelope.databaseId).some(
+						tag => tag.imapLabel === imapLabel,
 					)
-				)
+				),
 			)
-		},
-		addTag(imapLabel) {
-			this.isAdded = true
-			this.envelopes.forEach((envelope) => {
-				this.$store.dispatch('addEnvelopeTag', { envelope, imapLabel })
-			})
-		},
-		removeTag(imapLabel) {
-			this.isAdded = false
-			this.envelopes.forEach((envelope) => {
-				this.$store.dispatch('removeEnvelopeTag', { envelope, imapLabel })
-			})
 		},
 		addTagInput() {
 			this.editing = true
@@ -193,17 +150,25 @@ export default {
 		},
 		async createTag(event) {
 			this.editing = true
+			if (this.showSaving) {
+				return
+			}
+
 			const displayName = event.target.querySelector('input[type=text]').value
 			if (displayName.toLowerCase() in hiddenTags) {
 				showError(this.t('mail', 'Tag name is a hidden system tag'))
 				return
 			}
-			if (this.$store.getters.getTags.some(tag => tag.displayName === displayName)) {
+			if (this.mainStore.getTags.some(tag => tag.displayName === displayName)) {
 				showError(this.t('mail', 'Tag already exists'))
 				return
 			}
+			if (displayName.trim() === '') {
+				showError(this.t('mail', 'Tag name cannot be empty'))
+				return
+			}
 			try {
-				await this.$store.dispatch('createTag', {
+				await this.mainStore.createTag({
 					displayName,
 					color: randomColor(displayName),
 				})
@@ -240,7 +205,7 @@ export default {
 			const displayName = event.target.querySelector('input[type=text]').value
 
 			try {
-				await this.$store.dispatch('updateTag', {
+				await this.mainStore.updateTag({
 					tag,
 					displayName,
 					color: tag.color,
@@ -256,6 +221,10 @@ export default {
 				this.showSaving = true
 			}
 		},
+		deleteTag(tag) {
+			this.tagToDelete = tag
+			this.deleteTagModal = true
+		},
 
 	},
 }
@@ -264,77 +233,32 @@ export default {
 
 <style lang="scss" scoped>
 :deep(.modal-content) {
-	padding: 0 20px 20px 20px;
+	padding: 20px 20px 20px 20px;
 	max-height: calc(100vh - 210px);
 	overflow-y: auto;
 }
+
 :deep(.modal-container) {
 	width: auto !important;
 }
-.tag-title {
-	margin-top: 20px;
-	margin-left: 10px;
-}
-.tag-group {
-	display: block;
-	position: relative;
-	margin: 0 1px;
-	overflow: hidden;
-	left: 4px;
-}
-.tag-actions {
-	background-color: transparent;
-	border: none;
-	float: right;
-	&:hover,
-	&:focus {
-		background-color: var(--color-border-dark);
-	}
-}
-.tag-group__label {
-	z-index: 2;
-	font-weight: bold;
-	border: none;
-	background-color: transparent;
-	padding-left: 10px;
-	padding-right: 10px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	max-width: 94px;
-}
-.app-navigation-entry-bullet-wrapper {
-	width: 44px;
-	height: 44px;
-	display: inline-block;
-	position: absolute;
-	list-style: none;
 
-	.color0 {
-		width: 30px !important;
-		height: 30px;
-		border-radius: 50%;
-		background-size: 14px;
-		margin-top: -65px;
-		margin-left: 180px;
-		z-index: 2;
-		display: flex;
-		position: relative;
-	}
-}
 .icon-colorpicker {
 	background-image: var(--icon-add-fff);
 }
+
 .tagButton {
 	display: inline-block;
-	margin-left: 10px;
+	margin-inline-start: 10px;
 }
 
-.action-item {
-	right: 8px;
-	float: right;
+.tag-title {
+	margin-top: 20px;
+	margin-inline-start: 10px;
 }
+
 .create-tag {
 	list-style: none;
+	margin-bottom:12px;
 }
 @media only screen and (max-width: 512px) {
 	:deep(.modal-container) {

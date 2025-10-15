@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Service\Search;
@@ -35,19 +19,14 @@ class FilterStringParser {
 		}
 		$tokens = explode(' ', $filter);
 		foreach ($tokens as $token) {
-			if (!$this->parseFilterToken($query, $token)) {
-				$query->addTextToken($token);
-
-				// Always look into the subject as well
-				$query->addSubject($token);
-			}
+			$this->parseFilterToken($query, $token);
 		}
 
 		return $query;
 	}
 
 	private function parseFilterToken(SearchQuery $query, string $token): bool {
-		if (strpos($token, ':') === false) {
+		if (!str_contains($token, ':')) {
 			return false;
 		}
 
@@ -107,6 +86,9 @@ class FilterStringParser {
 			case 'subject':
 				$query->addSubject($param);
 				return true;
+			case 'body':
+				$query->addBody($param);
+				return true;
 			case 'tags':
 				$tags = explode(',', $param);
 				$query->setTags($tags);
@@ -119,6 +101,14 @@ class FilterStringParser {
 			case 'end':
 				if (!empty($param)) {
 					$query->setEnd($param);
+				}
+				return true;
+			case 'match':
+				$query->setMatch($param);
+				return true;
+			case 'mentions':
+				if ($param === 'true') {
+					$query->setMentionsMe(true);
 				}
 				return true;
 			case 'flags':

@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Command;
@@ -29,6 +13,7 @@ use OCA\Mail\AddressList;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
+use OCA\Mail\Support\ConsoleLoggerDecorator;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IConfig;
 use Psr\Log\LoggerInterface;
@@ -38,9 +23,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use function memory_get_peak_usage;
 
-class PredictImportance extends Command {
+final class PredictImportance extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 	public const ARGUMENT_SENDER = 'sender';
+	public const ARGUMENT_SUBJECT = 'subject';
 
 	private AccountService $accountService;
 	private ImportanceClassifier $classifier;
@@ -59,26 +45,27 @@ class PredictImportance extends Command {
 		$this->config = $config;
 	}
 
-	/**
-	 * @return void
-	 */
-	protected function configure() {
+	protected function configure(): void {
 		$this->setName('mail:predict-importance');
 		$this->setDescription('Predict importance of an incoming message');
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::REQUIRED);
 		$this->addArgument(self::ARGUMENT_SENDER, InputArgument::REQUIRED);
+		$this->addArgument(self::ARGUMENT_SUBJECT, InputArgument::OPTIONAL);
 	}
 
-	public function isEnabled() {
+	public function isEnabled(): bool {
 		return $this->config->getSystemValueBool('debug');
 	}
 
-	/**
-	 * @return int
-	 */
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$accountId = (int)$input->getArgument(self::ARGUMENT_ACCOUNT_ID);
 		$sender = $input->getArgument(self::ARGUMENT_SENDER);
+		$subject = $input->getArgument(self::ARGUMENT_SUBJECT) ?? '';
+
+		$consoleLogger = new ConsoleLoggerDecorator(
+			$this->logger,
+			$output
+		);
 
 		try {
 			$account = $this->accountService->findById($accountId);
@@ -89,9 +76,11 @@ class PredictImportance extends Command {
 		$fakeMessage = new Message();
 		$fakeMessage->setUid(0);
 		$fakeMessage->setFrom(AddressList::parse("Name <$sender>"));
+		$fakeMessage->setSubject($subject);
 		[$prediction] = $this->classifier->classifyImportance(
 			$account,
-			[$fakeMessage]
+			[$fakeMessage],
+			$consoleLogger
 		);
 		if ($prediction) {
 			$output->writeln('Message is important');

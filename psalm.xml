@@ -1,11 +1,16 @@
 <?xml version="1.0"?>
+<!--
+  - SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <psalm
-    errorLevel="4"
+    errorLevel="3"
     resolveFromConfigFile="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config"
     errorBaseline="tests/psalm-baseline.xml"
+    phpVersion="8.1"
 >
     <projectFiles>
         <directory name="lib" />
@@ -17,6 +22,7 @@
     <extraFiles>
         <directory name="vendor" />
 		<directory name="lib/Vendor" />
+		<directory name="vendor-bin/psalm-stubs" />
     </extraFiles>
 	<issueHandlers>
 		<UndefinedAttributeClass>
@@ -46,6 +52,7 @@
 				<referencedClass name="OCP\TextProcessing\SummaryTaskType" />
 				<referencedClass name="OCP\TextProcessing\Task" />
 				<referencedClass name="OCP\TextProcessing\SummaryTaskType" />
+				<referencedClass name="OCP\TextProcessing\FreePromptTaskType" />
 			</errorLevel>
 		</UndefinedClass>
 		<UndefinedDocblockClass>

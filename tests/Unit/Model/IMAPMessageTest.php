@@ -3,24 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2014-2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Unit\Model;
@@ -52,9 +37,7 @@ class IMAPMessageTest extends TestCase {
 		//linkToRoute 'mail.proxy.proxy'
 		$urlGenerator->expects($this->any())
 			->method('linkToRoute')
-			->will($this->returnCallback(function ($url) {
-				return "https://docs.example.com/server/go.php?to=$url";
-			}));
+			->will($this->returnCallback(fn ($url) => "https://docs.example.com/server/go.php?to=$url"));
 		$request = $this->getMockBuilder(IRequest::class)
 			->disableOriginalConstructor()
 			->getMock();
@@ -87,6 +70,7 @@ class IMAPMessageTest extends TestCase {
 			'',
 			'disposition',
 			false,
+			[],
 			null,
 			false,
 			'',
@@ -95,6 +79,7 @@ class IMAPMessageTest extends TestCase {
 			false,
 			false,
 			$htmlService,
+			false,
 		);
 
 		$actualHtmlBody = $message->getHtmlBody(123);
@@ -128,6 +113,7 @@ class IMAPMessageTest extends TestCase {
 			'',
 			'disposition',
 			false,
+			[],
 			null,
 			false,
 			null,
@@ -136,6 +122,7 @@ class IMAPMessageTest extends TestCase {
 			false,
 			false,
 			$this->htmlService,
+			false,
 		);
 
 		$json = $m->jsonSerialize();
@@ -147,6 +134,7 @@ class IMAPMessageTest extends TestCase {
 			'to' => [ [ 'label' => 'to@mail.com', 'email' => 'to@mail.com' ] ],
 			'cc' => [ [ 'label' => 'cc@mail.com', 'email' => 'cc@mail.com' ] ],
 			'bcc' => [ [ 'label' => 'bcc@mail.com', 'email' => 'bcc@mail.com' ] ],
+			'replyTo' => [ [ 'label' => 'reply-to@mail.com', 'email' => 'reply-to@mail.com' ] ],
 			'subject' => 'subject',
 			'dateInt' => 1451606400,
 			'flags' => [
@@ -166,7 +154,9 @@ class IMAPMessageTest extends TestCase {
 			'hasHtmlBody' => true,
 			'dispositionNotificationTo' => 'disposition',
 			'hasDkimSignature' => false,
+			'phishingDetails' => [],
 			'scheduling' => [],
+			'isPgpMimeEncrypted' => false,
 		], $json);
 		$this->assertEquals(1234, $json['uid']);
 	}

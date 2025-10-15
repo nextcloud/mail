@@ -3,22 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Daniel Kesselberg <mail@danielkesselberg.de>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Sieve;
@@ -29,26 +15,16 @@ use OCP\IConfig;
 use OCP\Security\ICrypto;
 
 class SieveClientFactory {
-	/** @var ICrypto */
-	private $crypto;
+	private ICrypto $crypto;
+	private IConfig $config;
+	private array $cache = [];
 
-	/** @var IConfig */
-	private $config;
-
-	private $cache = [];
-
-	/**
-	 * @param ICrypto $crypto
-	 * @param IConfig $config
-	 */
 	public function __construct(ICrypto $crypto, IConfig $config) {
 		$this->crypto = $crypto;
 		$this->config = $config;
 	}
 
 	/**
-	 * @param Account $account
-	 * @return ManageSieve
 	 * @throws ManageSieve\Exception
 	 */
 	public function getClient(Account $account): ManageSieve {
@@ -62,12 +38,19 @@ class SieveClientFactory {
 				$password = $account->getMailAccount()->getInboundPassword();
 			}
 
+			if ($account->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
+				$logFile = $this->config->getSystemValue('datadirectory') . '/mail-' . $account->getUserId() . '-' . $account->getId() . '-sieve.log';
+			} else {
+				$logFile = null;
+			}
+
 			$this->cache[$account->getId()] = $this->createClient(
 				$account->getMailAccount()->getSieveHost(),
 				$account->getMailAccount()->getSievePort(),
 				$user,
-				$password,
-				$account->getMailAccount()->getSieveSslMode()
+				$this->crypto->decrypt($password),
+				$account->getMailAccount()->getSieveSslMode(),
+				$logFile,
 			);
 		}
 
@@ -75,15 +58,11 @@ class SieveClientFactory {
 	}
 
 	/**
-	 * @param string $host
-	 * @param int $port
-	 * @param string $user
-	 * @param string $password
-	 * @param string $sslMode
-	 * @return ManageSieve
+	 * @param string $sslMode possible values: '', 'none', 'ssl' or 'tls'
+	 * @param ?string $logFile absolute path for logFile or null to disable logging
 	 * @throws ManageSieve\Exception
 	 */
-	public function createClient(string $host, int $port, string $user, string $password, string $sslMode): ManageSieve {
+	public function createClient(string $host, int $port, string $user, string $password, string $sslMode, ?string $logFile): ManageSieve {
 		if (empty($sslMode)) {
 			$sslMode = true;
 		} elseif ($sslMode === 'none') {
@@ -94,9 +73,9 @@ class SieveClientFactory {
 			'host' => $host,
 			'port' => $port,
 			'user' => $user,
-			'password' => $this->crypto->decrypt($password),
+			'password' => $password,
 			'secure' => $sslMode,
-			'timeout' => (int)$this->config->getSystemValue('app.mail.sieve.timeout', 5),
+			'timeout' => $this->config->getSystemValueInt('app.mail.sieve.timeout', 5),
 			'context' => [
 				'ssl' => [
 					'verify_peer' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
@@ -106,8 +85,8 @@ class SieveClientFactory {
 			],
 		];
 
-		if ($this->config->getSystemValue('debug', false)) {
-			$params['logger'] = new SieveLogger($this->config->getSystemValue('datadirectory') . '/horde_sieve.log');
+		if ($logFile !== null) {
+			$params['logger'] = new SieveLogger($logFile);
 		}
 
 		return new ManageSieve($params);

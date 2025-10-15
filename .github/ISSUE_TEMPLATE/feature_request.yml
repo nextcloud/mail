@@ -1,5 +1,6 @@
 name: "Feature request"
 description: "You have a neat idea that should be implemented?"
+type: "Enhancement"
 labels: ["enhancement", "0. to triage"]
 body:
   - type: textarea

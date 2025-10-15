@@ -1,0 +1,162 @@
+# SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+version = 1
+SPDX-PackageName = "mail"
+SPDX-PackageSupplier = "Nextcloud <info@nextcloud.com>"
+SPDX-PackageDownloadLocation = "https://github.com/nextcloud/mail"
+
+[[annotations]]
+path = ["l10n/**.js", "l10n/**.json", "js/**.js.map", "js/**.js"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2013-2016 ownCloud, Inc., 2016-2024 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = ["composer.json", "composer.lock"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2013-2016 ownCloud, Inc., 2016-2024 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = ".jshintrc"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2014-2015 ownCloud, Inc., 2017-2018 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "img/blocked-image.png"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2015 ownCloud, Inc."
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "tests/data/mail-message-123.txt"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2015 ownCloud, Inc., 2016 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = ["package-lock.json", "package.json"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2015-2016 ownCloud, Inc., 2016-2024 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "tests/resources/autoconfig-freenet.xml"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2016 ownCloud, Inc."
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "screenshots/mail.png"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2016 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = ".tx/config"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2018 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = ["tests/phpunit.integration.xml", "tests/phpunit.unit.xml", "tests/psalm-baseline.xml"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2019 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = "img/newsletter.svg"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2020-2024 Katerina Limpitsouni"
+SPDX-License-Identifier = "LicenseRef-unDrawLicense"
+
+[[annotations]]
+path = ["doc/ckeditor_inspector.png", "doc/ldap_ldapadmin.png", "doc/ldap_nc1.png", "doc/ldap_nc2.png", "doc/ldap_nc3.png", "doc/ldap_nc4.png", "doc/ldap_nc5.png", "doc/ldap_nc6.png", "doc/ldap_nc7.png", "tests/resources/autoconfig-gmx.xml", "tests/resources/autoconfig-outlook.xml", "tests/resources/autoconfig-posteo.xml"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2021 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = ["vendor-bin/*/composer.json", "vendor-bin/*/composer.lock"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2021-2024 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = ["src/tests/data/.editorconfig", "tests/data/mime-html.txt", "tests/data/mime-html-greek.txt", "tests/data/mime-html-image.txt", "tests/data/mime-text.txt", "tests/data/test.txt"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2022 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = ["src/tests/data/user@imap.localhost.chain.p12", "src/tests/data/user@imap.localhost.crt", "src/tests/data/user@imap.localhost.key", "src/tests/data/user@imap.localhost.p12", "tests/data/smime-certs/cn-only@imap.localhost.crt", "tests/data/smime-certs/cn-only@imap.localhost.key", "tests/data/smime-certs/imap.localhost.ca.crt", "tests/data/smime-certs/domain.tld.ca.crt", "tests/data/smime-certs/user@domain.tld.crt", "tests/data/smime-certs/user@domain.tld.key", "tests/data/smime-certs/user@imap.localhost.crt", "tests/data/smime-certs/user@imap.localhost.key", "tests/data/decrypted-message-body.txt", "tests/data/decrypted-signed-opaque-message-body.txt", "tests/data/encrypted-message.txt", "tests/data/encrypted-signed-opaque-message.txt", "tests/data/sieve-vacation-cleaned.sieve", "tests/data/sieve-vacation-off.sieve", "tests/data/sieve-vacation-on-no-end-date.sieve", "tests/data/sieve-vacation-on-no-tz.sieve", "tests/data/sieve-vacation-on-special-chars-message.sieve", "tests/data/sieve-vacation-on-special-chars-subject.sieve", "tests/data/sieve-vacation-on-subject-placeholder.sieve", "tests/data/sieve-vacation-on.sieve", "tests/data/signed-message.txt", "tests/data/signed-opaque-message.txt"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2023 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = ["src/tests/data/user@imap.localhost.chain.crt", "tests/data/smime-certs/chain-leaf-only@imap.localhost.crt", "tests/data/smime-certs/chain-partial@imap.localhost.crt", "tests/data/smime-certs/chain@imap.localhost.crt", "tests/data/smime-certs/debug@imap.localhost.crt", "tests/data/smime-certs/debug@imap.localhost.key"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2024 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = ["tests/data/mail-filter/*"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2024 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = ["tests/data/imip/*", "tests/data/html-with-signature.txt"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = ".github/CODEOWNERS"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2023 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = "renovate.json"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2024 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = "tests/data/nextcloud.png"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2016-2024 Nextcloud GmbH"
+SPDX-License-Identifier = "LicenseRef-NextcloudTrademarks"
+
+[[annotations]]
+path = ["img/favicon-mask.svg", "img/favicon-touch.png", "img/favicon-touch.svg", "img/favicon.ico", "img/favicon.png", "img/favicon.svg"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2018-2024 Google LLC, 2016-2024 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = ["img/mail.png", "img/mail.svg", "img/mail-dark.svg", "img/important.svg", "img/star.png", "img/star.svg", "img/mail-notification.png", "img/mail-notification.svg", "img/text_snippet.svg"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2018-2025 Google LLC"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = ["img/favicon-notification.png", "img/favicon-notification.svg", "img/favicon-touch-notification.png", "img/favicon-touch-notification.svg"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2018-2024 Google LLC, 2022 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = "composer/autoload.php"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Nils Adermann, Jordi Boggiano"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = [".tx/backport"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "none"
+SPDX-License-Identifier = "CC0-1.0"

@@ -1,22 +1,6 @@
-/*
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 import axios from '@nextcloud/axios'
@@ -77,10 +61,43 @@ export const updateAllowNewMailAccounts = (allowed) => {
 	return axios.post(url, data).then((resp) => resp.data)
 }
 
-export const updateEnabledThreadSummary = async (enabled) => {
-	const url = generateUrl('/apps/mail/api/settings/threadsummary')
+export const updateLlmEnabled = async (enabled) => {
+	const url = generateUrl('/apps/mail/api/settings/llm')
 	const data = {
 		enabled,
+	}
+	const resp = await axios.put(url, data)
+	return resp.data
+}
+
+export const updateEnabledSmartReply = async (enabled) => {
+	const url = generateUrl('/apps/mail/api/settings/smartreply')
+	const data = {
+		enabled,
+	}
+	const resp = await axios.put(url, data)
+	return resp.data
+}
+
+/**
+ * @param {boolean} enabledByDefault
+ * @return {Promise<void>}
+ */
+export const setImportanceClassificationEnabledByDefault = async (enabledByDefault) => {
+	const url = generateUrl('/apps/mail/api/settings/importance-classification-default')
+	await axios.put(url, {
+		enabledByDefault,
+	})
+}
+
+/**
+ * @param {boolean} value
+ * @return {Promise<void>}
+ */
+export const setLayoutMessageView = async (value) => {
+	const url = generateUrl('/apps/mail/api/settings/layout-message-view')
+	const data = {
+		value,
 	}
 	const resp = await axios.put(url, data)
 	return resp.data

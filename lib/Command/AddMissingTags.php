@@ -3,22 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Anna Larch <anna.larch@nextcloud.com>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Command;
@@ -33,7 +19,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class AddMissingTags extends Command {
+final class AddMissingTags extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 
 	private LoggerInterface $logger;
@@ -73,7 +59,7 @@ class AddMissingTags extends Command {
 			try {
 				$account = $this->mapper->findById($accountId);
 				$accounts = [$account];
-				$output->writeLn("<info>Found account with email: " . $account->getEmail() . "</info>");
+				$output->writeLn('<info>Found account with email: ' . $account->getEmail() . '</info>');
 			} catch (DoesNotExistException $e) {
 				$output->writeLn('<info>This account does not exist</info>');
 			}

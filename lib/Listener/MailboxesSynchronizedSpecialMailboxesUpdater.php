@@ -2,25 +2,9 @@
 
 declare(strict_types=1);
 
-/*
- * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Listener;
@@ -64,6 +48,7 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 	/**
 	 * @param Event $event
 	 */
+	#[\Override]
 	public function handle(Event $event): void {
 		/** @var MailboxesSynchronizedEvent $event */
 		$account = $event->getAccount();
@@ -77,7 +62,7 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 				$draftsMailbox = $this->findSpecial($mailboxes, 'drafts');
 				$mailAccount->setDraftsMailboxId($draftsMailbox->getId());
 			} catch (DoesNotExistException $e) {
-				$this->logger->info("Account " . $account->getId() . " does not have a drafts mailbox");
+				$this->logger->info('Account ' . $account->getId() . ' does not have a drafts mailbox');
 
 				$mailAccount->setDraftsMailboxId(null);
 			}
@@ -87,7 +72,7 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 				$sentMailbox = $this->findSpecial($mailboxes, 'sent');
 				$mailAccount->setSentMailboxId($sentMailbox->getId());
 			} catch (DoesNotExistException $e) {
-				$this->logger->info("Account " . $account->getId() . " does not have a sent mailbox");
+				$this->logger->info('Account ' . $account->getId() . ' does not have a sent mailbox');
 
 				$mailAccount->setSentMailboxId(null);
 			}
@@ -97,7 +82,7 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 				$trashMailbox = $this->findSpecial($mailboxes, 'trash');
 				$mailAccount->setTrashMailboxId($trashMailbox->getId());
 			} catch (DoesNotExistException $e) {
-				$this->logger->info("Account " . $account->getId() . " does not have a trash mailbox");
+				$this->logger->info('Account ' . $account->getId() . ' does not have a trash mailbox');
 
 				$mailAccount->setTrashMailboxId(null);
 			}
@@ -107,7 +92,7 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 				$archiveMailbox = $this->findSpecial($mailboxes, 'archive');
 				$mailAccount->setArchiveMailboxId($archiveMailbox->getId());
 			} catch (DoesNotExistException $e) {
-				$this->logger->info("Account " . $account->getId() . " does not have an archive mailbox");
+				$this->logger->info('Account ' . $account->getId() . ' does not have an archive mailbox');
 
 				$mailAccount->setArchiveMailboxId(null);
 			}
@@ -117,7 +102,7 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 				$junkMailbox = $this->findSpecial($mailboxes, 'junk');
 				$mailAccount->setJunkMailboxId($junkMailbox->getId());
 			} catch (DoesNotExistException) {
-				$this->logger->info("Account " . $account->getId() . " does not have an junk mailbox");
+				$this->logger->info('Account ' . $account->getId() . ' does not have an junk mailbox');
 				$mailAccount->setJunkMailboxId(null);
 			}
 		}
@@ -126,7 +111,7 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 				$snoozeMailbox = $this->findSpecial($mailboxes, 'snooze');
 				$mailAccount->setSnoozeMailboxId($snoozeMailbox->getId());
 			} catch (DoesNotExistException $e) {
-				$this->logger->info("Account " . $account->getId() . " does not have an snooze mailbox");
+				$this->logger->info('Account ' . $account->getId() . ' does not have an snooze mailbox');
 
 				$mailAccount->setSnoozeMailboxId(null);
 			}
@@ -137,9 +122,7 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 
 	private function indexMailboxes(array $mailboxes): array {
 		return array_combine(
-			array_map(static function (Mailbox $mb) : int {
-				return $mb->getId();
-			}, $mailboxes),
+			array_map(static fn (Mailbox $mb): int => $mb->getId(), $mailboxes),
 			$mailboxes
 		);
 	}

@@ -2,30 +2,12 @@
 
 declare(strict_types=1);
 /**
- * @copyright Copyright (c) 2023 Anna Larch <anna.larch@gmx.net>
- *
- * @author Anna Larch <anna.larch@gmx.net>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\BackgroundJob;
 
-use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -68,14 +50,19 @@ class QuotaJob extends TimedJob {
 	/**
 	 * @return void
 	 */
+	#[\Override]
 	protected function run($argument): void {
 		$accountId = (int)$argument['accountId'];
 		try {
-			/** @var Account $account */
 			$account = $this->accountService->findById($accountId);
 		} catch (DoesNotExistException $e) {
 			$this->logger->debug('Could not find account <' . $accountId . '> removing from jobs');
 			$this->jobList->remove(self::class, $argument);
+			return;
+		}
+
+		if (!$account->getMailAccount()->canAuthenticateImap()) {
+			$this->logger->debug('No authentication on IMAP possible, skipping quota job');
 			return;
 		}
 
@@ -90,7 +77,7 @@ class QuotaJob extends TimedJob {
 		}
 
 		$quota = $this->mailManager->getQuota($account);
-		if($quota === null) {
+		if ($quota === null) {
 			$this->logger->debug('Could not get quota information for account <' . $account->getEmail() . '>', ['app' => 'mail']);
 			return;
 		}

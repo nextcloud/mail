@@ -1,32 +1,14 @@
 <?php
 
 /**
- * @copyright 2021 Anna Larch <anna@nextcloud.com>
- *
- * @copyright 2021 Anna Larch <anna@nextcloud.com>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Integration\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client;
-use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MessageMapper;
@@ -35,6 +17,7 @@ use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
+use OCP\Server;
 
 class AntiSpamServiceIntegrationTest extends TestCase {
 	use ImapTest,
@@ -45,7 +28,7 @@ class AntiSpamServiceIntegrationTest extends TestCase {
 
 	public function setUp():void {
 		parent::setUp();
-		$this->service = OC::$server->get(AntiSpamService::class);
+		$this->service = Server::get(AntiSpamService::class);
 		$this->service->setSpamEmail('spam@domain.tld');
 		$this->service->setHamEmail('notspam@domain.tld');
 	}
@@ -63,13 +46,13 @@ class AntiSpamServiceIntegrationTest extends TestCase {
 		$account = $this->createTestAccount();
 
 		/** @var SyncService $syncService */
-		$syncService = OC::$server->get(SyncService::class);
+		$syncService = Server::get(SyncService::class);
 		/** @var ImapMessageMapper $imapMessageMapper */
-		$imapMessageMapper = OC::$server->get(ImapMessageMapper::class);
+		$imapMessageMapper = Server::get(ImapMessageMapper::class);
 		/** @var MessageMapper $messageMapper */
-		$messageMapper = OC::$server->get(MessageMapper::class);
+		$messageMapper = Server::get(MessageMapper::class);
 		/** @var IMailManager $mailManager */
-		$mailManager = OC::$server->get(IMailManager::class);
+		$mailManager = Server::get(IMailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -91,8 +74,9 @@ class AntiSpamServiceIntegrationTest extends TestCase {
 			new Account($account),
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+			false,
 			null,
-			false
+			null
 		);
 
 		// now we flag this message as junk

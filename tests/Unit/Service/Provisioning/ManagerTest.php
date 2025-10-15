@@ -1,23 +1,8 @@
 <?php
+
 /**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Unit\Service\Provisioning;
@@ -46,14 +31,34 @@ class ManagerTest extends TestCase {
 		$this->manager = $this->mock->getService();
 	}
 
-	public function testProvision() {
+	public function testProvision(): void {
+		$config = new Provisioning();
+		$config->setId(1);
+		$config->setProvisioningDomain('batman.com');
+		$config->setEmailTemplate('%USER%@batman.com');
+
+		$this->mock->getParameter('provisioningMapper')
+			->expects($this->once())
+			->method('getAll')
+			->willReturn([$config]);
+
 		$this->mock->getParameter('userManager')
 			->expects($this->once())
 			->method('callForAllUsers');
 
-		$cnt = $this->manager->provision();
+		$count = $this->manager->provision();
 
-		$this->assertEquals(0, $cnt);
+		$this->assertEquals(0, $count);
+	}
+
+	public function testProvisionSkipWithoutConfigurations(): void {
+		$this->mock->getParameter('userManager')
+			->expects($this->never())
+			->method('callForAllUsers');
+
+		$count = $this->manager->provision();
+
+		$this->assertEquals(0, $count);
 	}
 
 	public function testUpdateProvisionSingleUser() {
@@ -67,15 +72,16 @@ class ManagerTest extends TestCase {
 		$config->setProvisioningDomain('batman.com');
 		$config->setEmailTemplate('%USER%@batman.com');
 		$configs = [$config];
-		$account = new MailAccount();
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
-			->willReturn($account);
+			->willReturn($mailAccount);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('update')
-			->with($account);
+			->with($mailAccount);
 
 		$result = $this->manager->provisionSingleUser($configs, $user);
 		$this->assertTrue($result);
@@ -87,7 +93,8 @@ class ManagerTest extends TestCase {
 			'getEmailAddress' => 'bruce.wayne@batman.com',
 			'getUID' => 'bruce'
 		]);
-		$account = new MailAccount();
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
 		$config = new Provisioning();
 		$config->setId(1);
 		$config->setProvisioningDomain('batman.com');
@@ -100,11 +107,14 @@ class ManagerTest extends TestCase {
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('insert')
-			->willReturn($account);
+			->willReturn($mailAccount);
 		$this->mock->getParameter('tagMapper')
 			->expects($this->once())
 			->method('createDefaultTags')
-			->with($account);
+			->with($mailAccount);
+		$this->mock->getParameter('accountService')
+			->expects($this->once())
+			->method('scheduleBackgroundJobs');
 
 		$result = $this->manager->provisionSingleUser($configs, $user);
 		$this->assertTrue($result);
@@ -116,21 +126,21 @@ class ManagerTest extends TestCase {
 			'getEmailAddress' => 'bruce.wayne@batman.com',
 			'getUID' => 'bruce.wayne'
 		]);
-		$account = new MailAccount();
 		$config = new Provisioning();
 		$config->setId(1);
 		$config->setProvisioningDomain('*');
 		$config->setEmailTemplate('%USER%@batman.com');
 		$configs = [$config];
-		$account = $this->createMock(MailAccount::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
-			->willReturn($account);
+			->willReturn($mailAccount);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('update')
-			->with($account);
+			->with($mailAccount);
 
 		$result = $this->manager->provisionSingleUser($configs, $user);
 		$this->assertTrue($result);
@@ -142,7 +152,8 @@ class ManagerTest extends TestCase {
 			'getEmailAddress' => 'bruce.wayne@batman.com',
 			'getUID' => 'bruce'
 		]);
-		$account = new MailAccount();
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
 		$config = new Provisioning();
 		$config->setId(1);
 		$config->setProvisioningDomain('*');
@@ -155,11 +166,11 @@ class ManagerTest extends TestCase {
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('insert')
-			->willReturn($account);
+			->willReturn($mailAccount);
 		$this->mock->getParameter('tagMapper')
 			->expects($this->once())
 			->method('createDefaultTags')
-			->with($account);
+			->with($mailAccount);
 
 		$result = $this->manager->provisionSingleUser($configs, $user);
 		$this->assertTrue($result);
@@ -170,7 +181,6 @@ class ManagerTest extends TestCase {
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com'
 		]);
-		$account = new MailAccount();
 		$config = new Provisioning();
 		$config->setId(1);
 		$config->setProvisioningDomain('arkham-asylum.com');
@@ -204,7 +214,7 @@ class ManagerTest extends TestCase {
 		$this->manager->deprovision($config);
 	}
 
-	public function testUpdatePasswordNotProvisioned() {
+	public function testUpdatePasswordNotProvisioned(): void {
 		/** @var IUser|MockObject $user */
 		$user = $this->createMock(IUser::class);
 		$this->mock->getParameter('mailAccountMapper')
@@ -213,23 +223,79 @@ class ManagerTest extends TestCase {
 			->with($user)
 			->willThrowException($this->createMock(DoesNotExistException::class));
 
-		$this->manager->updatePassword($user, '123456');
+		$this->manager->updatePassword($user, '123456', []);
 	}
 
-	public function testUpdatePassword() {
+	public function testUpdateLoginPassword(): void {
 		/** @var IUser|MockObject $user */
 		$user = $this->createMock(IUser::class);
-		$account = $this->createMock(MailAccount::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
-			->willReturn($account);
+			->willReturn($mailAccount);
+		$config = new Provisioning();
+		$config->setProvisioningDomain(Provisioning::WILDCARD);
+		$config->setMasterPasswordEnabled(false);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('update')
-			->with($account);
+			->with($mailAccount);
 
-		$this->manager->updatePassword($user, '123456');
+		$this->manager->updatePassword($user, '123456', [$config]);
+	}
+
+	public function testUpdateMasterPasswordWithExistingLoginPassword(): void {
+		/** @var IUser|MockObject $user */
+		$user = $this->createMock(IUser::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
+		$this->mock->getParameter('mailAccountMapper')
+			->expects($this->once())
+			->method('findProvisionedAccount')
+			->willReturn($mailAccount);
+		$config = new Provisioning();
+		$config->setProvisioningDomain(Provisioning::WILDCARD);
+		$config->setMasterPasswordEnabled(true);
+		$config->setMasterPassword('topsecret');
+		$this->mock->getParameter('crypto')
+			->expects(self::atLeast(1))
+			->method('encrypt')
+			->with('topsecret')
+			->willReturn('tercespot');
+		$this->mock->getParameter('mailAccountMapper')
+			->expects($this->once())
+			->method('update')
+			->with($mailAccount);
+
+		$this->manager->updatePassword($user, '123456', [$config]);
+	}
+
+	public function testUpdateMasterPasswordWithoutLoginPassword(): void {
+		/** @var IUser|MockObject $user */
+		$user = $this->createMock(IUser::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
+		$this->mock->getParameter('mailAccountMapper')
+			->expects($this->once())
+			->method('findProvisionedAccount')
+			->willReturn($mailAccount);
+		$config = new Provisioning();
+		$config->setProvisioningDomain(Provisioning::WILDCARD);
+		$config->setMasterPasswordEnabled(true);
+		$config->setMasterPassword('topsecret');
+		$this->mock->getParameter('crypto')
+			->expects(self::atLeast(1))
+			->method('encrypt')
+			->with('topsecret')
+			->willReturn('tercespot');
+		$this->mock->getParameter('mailAccountMapper')
+			->expects($this->once())
+			->method('update')
+			->with($mailAccount);
+
+		$this->manager->updatePassword($user, null, [$config]);
 	}
 
 	public function testNewProvisioning(): void {

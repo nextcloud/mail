@@ -1,29 +1,12 @@
 <!--
-  - @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
-  -
-  - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
+  - SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 <template>
 	<div class="section">
 		<div>
-			<input
-				id="signature-above-quote-toggle"
+			<input id="signature-above-quote-toggle"
 				v-model="signatureAboveQuote"
 				type="checkbox"
 				class="checkbox">
@@ -31,17 +14,16 @@
 				{{ t("mail", "Place signature above quoted text") }}
 			</label>
 		</div>
-		<Multiselect
-			v-if="identities.length > 1"
+		<NcSelect v-if="identities.length > 1"
 			:allow-empty="false"
 			:options="identities"
+			:aria-label-combobox="t('mail','Select an alias')"
 			:searchable="false"
 			:value="identity"
 			label="label"
 			track-by="id"
-			@select="changeIdentity" />
-		<TextEditor
-			v-model="signature"
+			@option:selected="changeIdentity" />
+		<TextEditor v-model="signature"
 			:html="true"
 			:placeholder="t('mail', 'Signature …')"
 			:bus="bus"
@@ -49,8 +31,7 @@
 		<p v-if="isLargeSignature" class="warning-large-signature">
 			{{ t('mail', 'Your signature is larger than 2 MB. This may affect the performance of your editor.') }}
 		</p>
-		<ButtonVue
-			type="primary"
+		<ButtonVue type="primary"
 			:disabled="loading"
 			:aria-label="t('mail', 'Save signature')"
 			@click="saveSignature">
@@ -71,19 +52,21 @@
 </template>
 
 <script>
-import logger from '../logger'
-import TextEditor from './TextEditor'
-import { detect, toHtml } from '../util/text'
-import Vue from 'vue'
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcSelect } from '@nextcloud/vue'
+import mitt from 'mitt'
+import { mapStores } from 'pinia'
+import IconCheck from 'vue-material-design-icons/Check.vue'
 
-import { NcMultiselect as Multiselect, NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-import IconCheck from 'vue-material-design-icons/Check'
+import logger from '../logger.js'
+import TextEditor from './TextEditor.vue'
+import useMainStore from '../store/mainStore.js'
+import { detect, toHtml } from '../util/text.js'
 
 export default {
 	name: 'SignatureSettings',
 	components: {
 		TextEditor,
-		Multiselect,
+		NcSelect,
 		ButtonVue,
 		IconLoading,
 		IconCheck,
@@ -97,13 +80,14 @@ export default {
 	data() {
 		return {
 			loading: false,
-			bus: new Vue(),
+			bus: mitt(),
 			identity: null,
 			signature: '',
 			signatureAboveQuote: this.account.signatureAboveQuote,
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		identities() {
 			const identities = this.account.aliases.map((alias) => {
 				return {
@@ -128,7 +112,7 @@ export default {
 	watch: {
 		async signatureAboveQuote(val, oldVal) {
 			try {
-				await this.$store.dispatch('patchAccount', {
+				await this.mainStore.patchAccount({
 					account: this.account,
 					data: {
 						signatureAboveQuote: val,
@@ -159,19 +143,25 @@ export default {
 		async saveSignature() {
 			this.loading = true
 
-			let dispatchType = 'updateAccountSignature'
 			const payload = {
 				account: this.account,
 				signature: this.signature,
 			}
 
 			if (this.identity.id > -1) {
-				dispatchType = 'updateAliasSignature'
 				payload.aliasId = this.identity.id
+				return this.mainStore.updateAliasSignature(payload)
+					.then(() => {
+						logger.info('signature updated')
+						this.loading = false
+					})
+					.catch((error) => {
+						logger.error('could not update account signature', { error })
+						throw error
+					})
 			}
 
-			return this.$store
-				.dispatch(dispatchType, payload)
+			return this.mainStore.updateAccountSignature(payload)
 				.then(() => {
 					logger.info('signature updated')
 					this.loading = false
@@ -200,12 +190,12 @@ export default {
 }
 
 .primary {
-  padding-left: 26px;
+  padding-inline-start: 26px;
   background-position: 6px;
   color: var(--color-main-background);
 
   &:after {
-    left: 14px;
+    inset-inline-start: 14px;
   }
 }
 
@@ -220,22 +210,28 @@ export default {
     color: var(--color-main-text);
   }
 }
+
 .section {
   display: block;
   padding: 0;
   margin-bottom: 23px;
 }
-.multiselect--single {
-  width: 100%;
-}
+
 .ck-balloon-panel {
 	 z-index: 10000 !important;
  }
+
 .button-vue:deep() {
 	display: inline-block !important;
 	margin-top: 4px !important;
 }
+
 .warning-large-signature {
 	color: darkorange;
 }
+
+:deep(.ck.ck-toolbar-dropdown>.ck-dropdown__panel) {
+	max-width: 34vw;
+}
+
 </style>

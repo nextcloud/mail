@@ -1,29 +1,11 @@
 <!--
-  - @copyright Copyright (c) 2022 Richard Steinmetz <richard@steinmetz.cloud>
-  -
-  - @author Richard Steinmetz <richard@steinmetz.cloud>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program. If not, see <http://www.gnu.org/licenses/>.
-  -
-  -->
+  - SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 <template>
 	<div class="imip">
-		<div
-			v-if="isRequest"
+		<div v-if="isRequest"
 			class="imip__type">
 			<template v-if="existingEventFetched">
 				<span v-if="wasProcessed && existingParticipationStatus === ACCEPTED">
@@ -43,14 +25,12 @@
 				</span>
 			</template>
 		</div>
-		<div
-			v-else-if="isReply"
+		<div v-else-if="isReply"
 			class="imip__type">
 			<CalendarIcon :size="20" />
 			<span>{{ replyStatusMessage }}</span>
 		</div>
-		<div
-			v-else-if="isCancel"
+		<div v-else-if="isCancel"
 			class="imip__type">
 			<CloseIcon :size="20" fill-color="red" />
 			<span>{{ t('mail', 'This event was cancelled') }}</span>
@@ -61,26 +41,23 @@
 		<div v-if="showMoreOptions" class="imip__more-options">
 			<!-- Hide calendar picker if editing an existing event (e.g. an internal event is
 			 shared by default and thus existing even if the attendee didn't react yet). -->
-			<div
-				v-if="!isExistingEvent"
+			<div v-if="!isExistingEvent"
 				class="imip__more-options__row imip__more-options__row--calendar">
 				<label for="targetCalendarPickerId">{{ t('mail', 'Save to') }}</label>
-				<div class="imip__more-options__row--calendar__multiselect">
-					<Multiselect
-						v-if="calendarsForPicker.length > 1"
+				<div class="imip__more-options__row">
+					<NcSelect v-if="calendarsForPicker.length > 1"
 						:id="targetCalendarPickerId"
 						v-model="targetCalendar"
+						:aria-label-combobox="t('mail', 'Select')"
 						label="displayname"
-						track-by="url"
-						:allow-empty="false"
 						:options="calendarsForPicker">
-						<template #option="{option}">
+						<template #option="option">
 							<CalendarPickerOption v-bind="option" />
 						</template>
-						<template #singleLabel="{option}">
-							<CalendarPickerOption :display-icon="true" v-bind="option" />
+						<template #selected-option="option">
+							<CalendarPickerOption v-bind="option" />
 						</template>
-					</Multiselect>
+					</NcSelect>
 				</div>
 			</div>
 			<div class="imip__more-options__row imip__more-options__row--comment">
@@ -90,61 +67,64 @@
 		</div>
 
 		<template v-if="isRequest && userIsAttendee">
-			<div
-				v-if="!wasProcessed && eventIsInFuture && existingEventFetched"
+			<div v-if="!wasProcessed && eventIsInFuture && existingEventFetched"
 				class="imip__actions imip__actions--buttons">
-				<Button
-					type="secondary"
-					:loading="loading"
+				<NcButton type="secondary"
+					:disabled="loading"
 					:aria-label="t('mail', 'Accept')"
 					@click="accept">
 					{{ t('mail', 'Accept') }}
-				</Button>
-				<Button
-					type="tertiary"
-					:loading="loading"
+				</NcButton>
+				<NcButton type="tertiary"
+					:disabled="loading"
 					:aria-label="t('mail', 'Decline')"
 					@click="decline">
 					{{ t('mail', 'Decline') }}
-				</Button>
-				<Button
-					type="tertiary"
-					:loading="loading"
+				</NcButton>
+				<NcButton type="tertiary"
+					:disabled="loading"
 					:aria-label="t('mail', 'Tentatively accept')"
 					@click="acceptTentatively">
 					{{ t('mail', 'Tentatively accept') }}
-				</Button>
-				<Button
-					v-if="!showMoreOptions"
+				</NcButton>
+				<NcButton v-if="!showMoreOptions"
 					type="tertiary"
+					:disabled="loading"
 					:aria-label="t('mail', 'More options')"
 					@click="showMoreOptions = true">
 					{{ t('mail', 'More options') }}
-				</Button>
+				</NcButton>
+				<NcLoadingIcon v-if="loading" />
 			</div>
 			<p v-else-if="!eventIsInFuture" class="imip__actions imip__actions--hint">
-				{{ t('mail', 'This event is in the past.') }}
+				{{ t('mail', 'This message has an attached invitation but the invitation dates are in the past') }}
 			</p>
 		</template>
+		<div v-if="!userIsAttendee" class="imip__actions imip__actions--hint">
+			{{ t('mail', 'This message has an attached invitation but the invitation does not contain a participant that matches any configured mail account address') }}
+		</div>
 	</div>
 </template>
 
 <script>
-import EventData from './imip/EventData'
-import { NcButton as Button, NcMultiselect as Multiselect } from '@nextcloud/vue'
-import CloseIcon from 'vue-material-design-icons/Close'
-import CalendarIcon from 'vue-material-design-icons/Calendar'
-import { getParserManager, Parameter, Property } from '@nextcloud/calendar-js'
-import { mapGetters } from 'vuex'
-import { removeMailtoPrefix } from '../util/eventAttendee'
-import logger from '../logger'
+import { AttendeeProperty, CalendarComponent, DateTimeValue, EventComponent, Parameter, Property, getParserManager } from '@nextcloud/calendar-js'
 import { namespaces as NS } from '@nextcloud/cdav-library'
-import CalendarPickerOption from './CalendarPickerOption'
-import { uidToHexColor } from '../util/calendarColor'
-import { randomId } from '../util/randomId'
-import pLimit from 'p-limit'
-import { flatten } from 'ramda'
 import { showError } from '@nextcloud/dialogs'
+import { NcButton, NcLoadingIcon, NcSelect } from '@nextcloud/vue'
+import pLimit from 'p-limit'
+import { mapState } from 'pinia'
+import { flatten } from 'ramda'
+import CalendarIcon from 'vue-material-design-icons/CalendarOutline.vue'
+import CloseIcon from 'vue-material-design-icons/Close.vue'
+
+import logger from '../logger.js'
+
+import CalendarPickerOption from './CalendarPickerOption.vue'
+import useMainStore from '../store/mainStore.js'
+import { uidToHexColor } from '../util/calendarColor.js'
+import { removeMailtoPrefix } from '../util/eventAttendee.js'
+import { randomId } from '../util/randomId.js'
+import EventData from './imip/EventData.vue'
 
 // iMIP methods
 const REQUEST = 'REQUEST'
@@ -161,17 +141,20 @@ const DECLINED = 'DECLINED'
  * Search a vEvent for an attendee by mail.
  *
  * @param {EventComponent|undefined|null} vEvent The event providing the attendee haystack.
- * @param {string} email The email address (with or without a mailto prefix) to use as the needle.
+ * @param {Array<string>} addresses The email address (with or without a mailto prefix) to use as the needle.
  * @return {AttendeeProperty|undefined} The attendee property or undefined if the given email is not matching an attendee.
  */
-function findAttendee(vEvent, email) {
-	if (!vEvent) {
+function findAttendee(vEvent, addresses) {
+	if (!vEvent || !addresses || addresses.length === 0) {
 		return undefined
 	}
 
-	email = removeMailtoPrefix(email)
-	for (const attendee of vEvent.getAttendeeIterator()) {
-		if (removeMailtoPrefix(attendee.email) === email) {
+	addresses = addresses
+		.map(addr => addr.toLowerCase())
+		.filter(addr => addr.startsWith('mailto:'))
+		.map(removeMailtoPrefix)
+	for (const attendee of [...vEvent.getPropertyIterator('ORGANIZER'), ...vEvent.getAttendeeIterator()]) {
+		if (addresses.includes(removeMailtoPrefix(attendee.email.toLowerCase()))) {
 			return attendee
 		}
 	}
@@ -182,12 +165,13 @@ function findAttendee(vEvent, email) {
 export default {
 	name: 'Imip',
 	components: {
-		EventData,
-		Button,
-		CloseIcon,
 		CalendarIcon,
 		CalendarPickerOption,
-		Multiselect,
+		CloseIcon,
+		EventData,
+		NcButton,
+		NcLoadingIcon,
+		NcSelect,
 	},
 	props: {
 		scheduling: {
@@ -214,9 +198,10 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters({
+		...mapState(useMainStore, {
 			currentUserPrincipalEmail: 'getCurrentUserPrincipalEmail',
-			clonedCalendars: 'getClonedCalendars',
+			clonedWriteableCalendars: 'getClonedWriteableCalendars',
+			currentUserPrincipal: 'getCurrentUserPrincipal',
 		}),
 
 		/**
@@ -311,7 +296,12 @@ export default {
 		 * @return {boolean}
 		 */
 		eventIsInFuture() {
-			return this.attachedVEvent.startDate.jsDate.getTime() > new Date().getTime()
+			if (this.attachedVEvent.isRecurring()) {
+				const recurrence = this.attachedVEvent.recurrenceManager.getClosestOccurrence(DateTimeValue.fromJSDate(new Date()))
+				return recurrence !== undefined && recurrence.startDate.jsDate.getTime() > new Date().getTime()
+			} else {
+				return this.attachedVEvent.startDate.jsDate.getTime() > new Date().getTime()
+			}
 		},
 
 		/**
@@ -320,7 +310,10 @@ export default {
 		 * @return {boolean}
 		 */
 		userIsAttendee() {
-			return !!findAttendee(this.attachedVEvent, this.currentUserPrincipalEmail)
+			return !!findAttendee(
+				this.attachedVEvent,
+				this.currentUserPrincipal.calendarUserAddressSet?.length ? this.currentUserPrincipal.calendarUserAddressSet : [this.currentUserPrincipalEmail],
+			)
 		},
 
 		/**
@@ -329,7 +322,10 @@ export default {
 		 * @return {string|undefined}
 		 */
 		existingParticipationStatus() {
-			const attendee = findAttendee(this.existingVEvent, this.currentUserPrincipalEmail)
+			const attendee = findAttendee(
+				this.existingVEvent,
+				this.currentUserPrincipal.calendarUserAddressSet?.length ? this.currentUserPrincipal.calendarUserAddressSet : [this.currentUserPrincipalEmail],
+			)
 			return attendee?.participationStatus ?? undefined
 		},
 
@@ -383,13 +379,22 @@ export default {
 					},
 					writable: calendar.currentUserPrivilegeSet.indexOf('{DAV:}write') !== -1,
 					url: calendar.url,
-					dav: calendar,
 				}
 			}
 
-			return this.clonedCalendars
+			return this.clonedWriteableCalendars
 				.map(getCalendarData)
 				.filter(props => props.components.vevent && props.writable === true)
+		},
+
+		/**
+		 * Get the DAV object of the picked target calendar.
+		 * It can't be included in the option as it contains cyclic references.
+		 *
+		 * @return {object | undefined}
+		 */
+		targetCalendarDavObject() {
+			return this.clonedWriteableCalendars.find((cal) => cal.url === this.targetCalendar.url)
 		},
 	},
 	watch: {
@@ -399,16 +404,18 @@ export default {
 				await this.fetchExistingEvent(this.attachedVEvent.uid)
 			},
 		},
-		clonedCalendars: {
-			immediate: true,
-			async handler() {
-				await this.fetchExistingEvent(this.attachedVEvent.uid)
-			},
-		},
 		calendarsForPicker: {
 			immediate: true,
 			handler(calendarsForPicker) {
-				if (calendarsForPicker.length > 0 && !this.targetCalendar) {
+				if (this.targetCalendar) {
+					return
+				}
+
+				const defaultCalendar = calendarsForPicker.find((cal) => cal.url === this.currentUserPrincipal.scheduleDefaultCalendarUrl)
+
+				if (defaultCalendar) {
+					this.targetCalendar = defaultCalendar
+				} else if (calendarsForPicker.length > 0) {
 					this.targetCalendar = calendarsForPicker[0]
 				}
 			},
@@ -432,60 +439,79 @@ export default {
 				vCalendar = this.attachedVCalendar
 			}
 			const vEvent = vCalendar.getFirstComponent('VEVENT')
-			const attendee = findAttendee(vEvent, this.currentUserPrincipalEmail)
+			const attendee = findAttendee(
+				vEvent,
+				this.currentUserPrincipal.calendarUserAddressSet?.length ? this.currentUserPrincipal.calendarUserAddressSet : [this.currentUserPrincipalEmail],
+			)
 			if (!attendee) {
 				return
 			}
 
-			const calendar = this.targetCalendar?.dav
+			const calendar = this.targetCalendarDavObject
 			if (!calendar) {
 				return
 			}
 
-			attendee.participationStatus = status
-			if (this.comment) {
-				attendee.setParameter(new Parameter('X-RESPONSE-COMMENT', this.comment))
-				vEvent.addProperty(new Property('COMMENT', this.comment))
-			}
-			// TODO: implement an input for guests and save it to the attendee via X-NUM-GUESTS
-
 			this.loading = true
-			try {
-				if (this.isExistingEvent) {
+
+			if (!this.isExistingEvent) {
+				try {
+					await calendar.createVObject(vCalendar.toICS())
+					await this.fetchExistingEvent(vEvent.uid, true)
+				} catch (error) {
+					showError(this.t('mail', 'Failed to save your participation status'))
+					logger.error('Failed to save event to calendar', {
+						error,
+						attendee,
+						calendar,
+						vEvent,
+						vCalendar,
+						existingEvent: this.existingEvent,
+					})
+				}
+			}
+
+			if (this.isExistingEvent) {
+				attendee.participationStatus = status
+				if (this.comment) {
+					attendee.setParameter(new Parameter('X-RESPONSE-COMMENT', this.comment))
+					vEvent.addProperty(new Property('COMMENT', this.comment))
+				}
+
+				// TODO: implement an input for guests and save it to the attendee via X-NUM-GUESTS
+
+				try {
 					// TODO: don't show buttons if calendar is not writable
 					this.existingEvent.data = vCalendar.toICS()
 					await this.existingEvent.update()
-				} else {
-					await calendar.createVObject(vCalendar.toICS())
+					this.showMoreOptions = false
+				} catch (error) {
+					showError(this.t('mail', 'Failed to save your participation status'))
+					logger.error('Failed to save event to calendar', {
+						error,
+						attendee,
+						calendar,
+						vEvent,
+						vCalendar,
+						existingEvent: this.existingEvent,
+					})
 				}
-				this.showMoreOptions = false
-			} catch (error) {
-				showError(this.t('mail', 'Failed to save your participation status'))
-				logger.error('Failed to save event to calendar', {
-					error,
-					attendee,
-					calendar,
-					vEvent,
-					vCalendar,
-					existingEvent: this.existingEvent,
-				})
-			} finally {
-				this.loading = false
 			}
 
 			// Refetch the event to update the shown status message or reset the event in the case
 			// of an error.
-			this.existingEventFetched = false
-			await this.fetchExistingEvent(vEvent.uid)
+			await this.fetchExistingEvent(vEvent.uid, true)
+
+			this.loading = false
 		},
-		async fetchExistingEvent(uid) {
-			if (this.existingEventFetched) {
+		async fetchExistingEvent(uid, force = false) {
+			if (!force && this.existingEventFetched) {
 				return
 			}
 
 			// TODO: can this query be reduced to a single request?
 			const limit = pLimit(5)
-			const promises = this.clonedCalendars.map(async (calendar) => {
+			const promises = this.clonedWriteableCalendars.map(async (calendar) => {
 				// Query adapted from https://datatracker.ietf.org/doc/html/rfc4791#section-7.8.6
 				return limit(() => calendar.calendarQuery([{
 					name: [NS.IETF_CALDAV, 'comp-filter'],
@@ -528,7 +554,7 @@ export default {
 	&__type {
 		display: flex;
 		gap: 5px;
-		margin-left: 36px;
+		margin-inline-start: 36px;
 	}
 
 	&__more-options {
@@ -545,13 +571,9 @@ export default {
 				display: flex;
 				width: 100%;
 
-				&__multiselect {
-					width: 100%;
-
 					:deep(.calendar-picker-option__label) {
 						max-width: unset !important;
 					}
-				}
 			}
 
 			&--comment {
@@ -565,7 +587,7 @@ export default {
 
 	&__actions {
 		margin-top: 15px;
-		margin-left: 36px;
+		margin-inline-start: 36px;
 
 		&--buttons {
 			display: flex;

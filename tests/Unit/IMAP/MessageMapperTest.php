@@ -3,23 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Unit\IMAP;
@@ -30,8 +15,10 @@ use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Fetch_Results;
 use Horde_Imap_Client_Ids;
+use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\IMAP\ImapMessageFetcher;
 use OCA\Mail\IMAP\ImapMessageFetcherFactory;
 use OCA\Mail\IMAP\MessageMapper;
@@ -55,17 +42,21 @@ class MessageMapperTest extends TestCase {
 	/** @var ImapMessageFetcherFactory|MockObject */
 	private $imapMessageFactory;
 
+	private Converter|MockObject $converter;
+
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->sMimeService = $this->createMock(SmimeService::class);
 		$this->imapMessageFactory = $this->createMock(ImapMessageFetcherFactory::class);
+		$this->converter = $this->createMock(Converter::class);
 
 		$this->mapper = new MessageMapper(
 			$this->logger,
 			$this->sMimeService,
 			$this->imapMessageFactory,
+			$this->converter,
 		);
 	}
 
@@ -76,6 +67,7 @@ class MessageMapperTest extends TestCase {
 		$ids = [1, 3];
 		$userId = 'user';
 		$loadBody = false;
+		$runPhishingCheck = false;
 
 		$imapMessageFetcher1 = $this->createMock(ImapMessageFetcher::class);
 		$imapMessageFetcher2 = $this->createMock(ImapMessageFetcher::class);
@@ -114,12 +106,20 @@ class MessageMapperTest extends TestCase {
 			->with($loadBody)
 			->willReturnSelf();
 		$imapMessageFetcher1->expects(self::once())
+			->method('withPhishingCheck')
+			->with($runPhishingCheck)
+			->willReturnSelf();
+		$imapMessageFetcher1->expects(self::once())
 			->method('fetchMessage')
 			->with($fetchResult1)
 			->willReturn($message1);
 		$imapMessageFetcher2->expects(self::once())
 			->method('withBody')
 			->with($loadBody)
+			->willReturnSelf();
+		$imapMessageFetcher2->expects(self::once())
+			->method('withPhishingCheck')
+			->with($runPhishingCheck)
 			->willReturnSelf();
 		$imapMessageFetcher2->expects(self::once())
 			->method('fetchMessage')
@@ -182,6 +182,7 @@ class MessageMapperTest extends TestCase {
 		$ids = [1, 3];
 		$userId = 'user';
 		$loadBody = false;
+		$runPhishingCheck = false;
 
 		$imapMessageFetcher1 = $this->createMock(ImapMessageFetcher::class);
 		$message1 = $this->createMock(IMAPMessage::class);
@@ -215,6 +216,10 @@ class MessageMapperTest extends TestCase {
 		$imapMessageFetcher1->expects(self::once())
 			->method('withBody')
 			->with($loadBody)
+			->willReturnSelf();
+		$imapMessageFetcher1->expects(self::once())
+			->method('withPhishingCheck')
+			->with($runPhishingCheck)
 			->willReturnSelf();
 		$imapMessageFetcher1->expects(self::once())
 			->method('fetchMessage')
@@ -285,24 +290,42 @@ class MessageMapperTest extends TestCase {
 		/** @var Horde_Imap_Client_Socket|MockObject $client */
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = 'inbox';
-		$client->expects(self::once())
+		$rangeSearchQuery = new Horde_Imap_Client_Search_Query();
+		$rangeSearchQuery->ids(new Horde_Imap_Client_Ids('123:321'));
+		$client->expects(self::exactly(2))
 			->method('search')
-			->with(
-				$mailbox,
-				null,
+			->withConsecutive(
 				[
-					'results' => [
-						Horde_Imap_Client::SEARCH_RESULTS_MIN,
-						Horde_Imap_Client::SEARCH_RESULTS_MAX,
-						Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+					$mailbox,
+					null,
+					[
+						'results' => [
+							Horde_Imap_Client::SEARCH_RESULTS_MIN,
+							Horde_Imap_Client::SEARCH_RESULTS_MAX,
+							Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+						]
 					]
-				]
+				],
+				[
+					$mailbox,
+					($rangeSearchQuery),
+					[
+						'results' => [
+							Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+						]
+					],
+				],
 			)
-			->willReturn([
-				'min' => 123,
-				'max' => 321,
-				'count' => 50,
-			]);
+			->willReturnOnConsecutiveCalls(
+				[
+					'min' => 123,
+					'max' => 321,
+					'count' => 50,
+				],
+				[
+					'count' => 50,
+				],
+			);
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
 		$uidResults = new Horde_Imap_Client_Fetch_Results();
@@ -350,24 +373,42 @@ class MessageMapperTest extends TestCase {
 		/** @var Horde_Imap_Client_Socket|MockObject $client */
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = 'inbox';
-		$client->expects(self::once())
+		$rangeSearchQuery = new Horde_Imap_Client_Search_Query();
+		$rangeSearchQuery->ids(new Horde_Imap_Client_Ids('301:321'));
+		$client->expects(self::exactly(2))
 			->method('search')
-			->with(
-				$mailbox,
-				null,
+			->withConsecutive(
 				[
-					'results' => [
-						Horde_Imap_Client::SEARCH_RESULTS_MIN,
-						Horde_Imap_Client::SEARCH_RESULTS_MAX,
-						Horde_Imap_Client::SEARCH_RESULTS_COUNT,
-					]
-				]
+					$mailbox,
+					null,
+					[
+						'results' => [
+							Horde_Imap_Client::SEARCH_RESULTS_MIN,
+							Horde_Imap_Client::SEARCH_RESULTS_MAX,
+							Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+						],
+					],
+				],
+				[
+					$mailbox,
+					$rangeSearchQuery,
+					[
+						'results' => [
+							Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+						],
+					],
+				],
 			)
-			->willReturn([
-				'min' => 123,
-				'max' => 321,
-				'count' => 50,
-			]);
+			->willReturnOnConsecutiveCalls(
+				[
+					'min' => 123,
+					'max' => 321,
+					'count' => 50,
+				],
+				[
+					'count' => 50,
+				],
+			);
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
 		$uidResults = new Horde_Imap_Client_Fetch_Results();
@@ -422,24 +463,42 @@ class MessageMapperTest extends TestCase {
 		/** @var Horde_Imap_Client_Socket|MockObject $client */
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = 'inbox';
-		$client->expects(self::once())
+		$rangeSearchQuery = new Horde_Imap_Client_Search_Query();
+		$rangeSearchQuery->ids(new Horde_Imap_Client_Ids('92001:99999'));
+		$client->expects(self::exactly(2))
 			->method('search')
-			->with(
-				$mailbox,
-				null,
+			->withConsecutive(
 				[
-					'results' => [
-						Horde_Imap_Client::SEARCH_RESULTS_MIN,
-						Horde_Imap_Client::SEARCH_RESULTS_MAX,
-						Horde_Imap_Client::SEARCH_RESULTS_COUNT,
-					]
-				]
+					$mailbox,
+					null,
+					[
+						'results' => [
+							Horde_Imap_Client::SEARCH_RESULTS_MIN,
+							Horde_Imap_Client::SEARCH_RESULTS_MAX,
+							Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+						],
+					],
+				],
+				[
+					$mailbox,
+					$rangeSearchQuery,
+					[
+						'results' => [
+							Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+						],
+					],
+				],
 			)
-			->willReturn([
-				'min' => 10000,
-				'max' => 99999,
-				'count' => 50000,
-			]);
+			->willReturnOnConsecutiveCalls(
+				[
+					'min' => 10000,
+					'max' => 99999,
+					'count' => 50000,
+				],
+				[
+					'count' => 50,
+				],
+			);
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
 		$uidResults = new Horde_Imap_Client_Fetch_Results();
@@ -588,5 +647,46 @@ class MessageMapperTest extends TestCase {
 
 		$result = $this->mapper->getFlagged($imapClient, $mailbox, $flag);
 		$this->assertEquals($result, []);
+	}
+
+	/**
+	 * This test ensures that we correctly identify iMIP messages from various
+	 * sources as valid iMIP messages. The test cases are based on original
+	 * iMIP messages from different vendors. The focus is on the MIME message
+	 * structure and verifying that we traverse the MIME tree properly.
+	 *
+	 * @dataProvider isImipMessageProvider
+	 */
+	public function testGetBodyStructureIsImipMessage(string $filename, bool $expected): void {
+		$text = file_get_contents(__DIR__ . '/../../data/imip/' . $filename . '.txt');
+		$part = \Horde_Mime_Part::parseMessage($text);
+
+		$fetchData = new Horde_Imap_Client_Data_Fetch();
+		$fetchData->setStructure($part);
+		$fetchData->setUid(100);
+
+		$fetchResult = new Horde_Imap_Client_Fetch_Results();
+		$fetchResult[0] = $fetchData;
+
+		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
+		$imapClient->method('fetch')
+			->willReturn($fetchResult);
+
+		$data = $this->mapper->getBodyStructureData(
+			$imapClient,
+			'INBOX',
+			[100],
+			'alice@example.org'
+		);
+
+		$this->assertCount(1, $data);
+		$this->assertEquals($expected, $data[0]->isImipMessage());
+	}
+
+	public function isImipMessageProvider(): array {
+		return [
+			'google request' => ['request_google', true],
+			'outlook.com request' => ['request_outlook_com', true],
+		];
 	}
 }

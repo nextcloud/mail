@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\IMAP;
@@ -29,6 +13,7 @@ use Horde_Imap_Client;
 use Horde_Imap_Client_Data_Namespace;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Namespace_List;
+use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\Mailbox;
@@ -96,7 +81,7 @@ class MailboxSync {
 		LoggerInterface $logger,
 		bool $force = false): void {
 		if (!$force && $account->getMailAccount()->getLastMailboxSync() >= ($this->timeFactory->getTime() - 7200)) {
-			$logger->debug("account is up to date, skipping mailbox sync");
+			$logger->debug('account is up to date, skipping mailbox sync');
 			return;
 		}
 
@@ -123,7 +108,7 @@ class MailboxSync {
 				$this->folderMapper->fetchFolderAcls($folders, $client);
 			} catch (Horde_Imap_Client_Exception $e) {
 				throw new ServiceException(
-					sprintf("IMAP error synchronizing account %d: %s", $account->getId(), $e->getMessage()),
+					sprintf('IMAP error synchronizing account %d: %s', $account->getId(), $e->getMessage()),
 					$e->getCode(),
 					$e
 				);
@@ -133,9 +118,7 @@ class MailboxSync {
 			$mailboxes = $this->atomic(function () use ($account, $folders, $namespaces) {
 				$old = $this->mailboxMapper->findAll($account);
 				$indexedOld = array_combine(
-					array_map(static function (Mailbox $mb) {
-						return $mb->getName();
-					}, $old),
+					array_map(static fn (Mailbox $mb) => $mb->getName(), $old),
 					$old
 				);
 
@@ -155,15 +138,13 @@ class MailboxSync {
 	/**
 	 * Sync unread and total message statistics.
 	 *
-	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 *
 	 * @throws ServiceException
 	 */
-	public function syncStats(Account $account, Mailbox $mailbox): void {
-		$client = $this->imapClientFactory->getClient($account);
+	public function syncStats(Horde_Imap_Client_Socket $client, Mailbox $mailbox): void {
 		try {
-			$stats = $this->folderMapper->getFoldersStatusAsObject($client, [$mailbox->getName()])[$mailbox->getName()];
+			$allStats = $this->folderMapper->getFoldersStatusAsObject($client, [$mailbox->getName()]);
 		} catch (Horde_Imap_Client_Exception $e) {
 			$id = $mailbox->getId();
 			throw new ServiceException(
@@ -171,10 +152,13 @@ class MailboxSync {
 				$e->getCode(),
 				$e
 			);
-		} finally {
-			$client->logout();
 		}
 
+		if (!isset($allStats[$mailbox->getName()])) {
+			return;
+		}
+
+		$stats = $allStats[$mailbox->getName()];
 		$mailbox->setMessages($stats->getTotal());
 		$mailbox->setUnseen($stats->getUnread());
 		$this->mailboxMapper->update($mailbox);
@@ -220,7 +204,7 @@ class MailboxSync {
 		foreach ($namespaces as $namespace) {
 			/** @var Horde_Imap_Client_Data_Namespace $namespace */
 			if ($namespace->type === Horde_Imap_Client::NS_PERSONAL) {
-				return $namespace->name !== "" ? $namespace->name : null;
+				return $namespace->name !== '' ? $namespace->name : null;
 			}
 		}
 		return null;
@@ -254,6 +238,7 @@ class MailboxSync {
 		$mailbox->setSpecialUse(json_encode($folder->getSpecialUse()));
 		$mailbox->setMyAcls($folder->getMyAcls());
 		$mailbox->setShared($this->isMailboxShared($namespaces, $mailbox));
+		$mailbox->setNameHash(md5($folder->getMailbox()));
 		return $this->mailboxMapper->insert($mailbox);
 	}
 
@@ -270,14 +255,15 @@ class MailboxSync {
 	private function syncMailboxStatus(mixed $mailboxes, ?string $personalNamespace, \Horde_Imap_Client_Socket $client): void {
 		/** @var array{0: Mailbox[], 1: Mailbox[]} */
 		[$sync, $doNotSync] = array_reduce($mailboxes, function (array $carry, Mailbox $mailbox) use ($personalNamespace): array {
-			/** @var array{0: Mailbox[], 1: Mailbox[]} $carry */
 			[$sync, $doNotSync] = $carry;
-			$inboxName = $personalNamespace === null ? "INBOX" : ($personalNamespace . $mailbox->getDelimiter() . "INBOX");
+			$inboxName = $personalNamespace === null ? 'INBOX' : ($personalNamespace . $mailbox->getDelimiter() . 'INBOX');
 			if ($inboxName === $mailbox->getName() || $mailbox->getSyncInBackground()) {
 				return [
 					array_merge($sync, [$mailbox]),
 					$doNotSync,
 				];
+			} elseif ($mailbox->getSelectable() === false) {
+				return [$sync, $doNotSync];
 			}
 			return [
 				$sync,
@@ -289,13 +275,13 @@ class MailboxSync {
 		shuffle($doNotSync);
 		/** @var Mailbox[] $syncStatus */
 		$syncStatus = [...$sync, ...array_slice($doNotSync, 0, 5)];
-		$statuses = $this->folderMapper->getFoldersStatusAsObject($client, array_map(function (Mailbox $mailbox) {
-			return $mailbox->getName();
-		}, $syncStatus));
+		$statuses = $this->folderMapper->getFoldersStatusAsObject($client, array_map(fn (Mailbox $mailbox) => $mailbox->getName(), $syncStatus));
 		foreach ($syncStatus as $mailbox) {
-			$status = $statuses[$mailbox->getName()];
-			$mailbox->setMessages($status->getTotal());
-			$mailbox->setUnseen($status->getUnread());
+			$status = $statuses[$mailbox->getName()] ?? null;
+			if ($status !== null) {
+				$mailbox->setMessages($status->getTotal());
+				$mailbox->setUnseen($status->getUnread());
+			}
 		}
 		$this->atomic(function () use ($syncStatus) {
 			foreach ($syncStatus as $mailbox) {

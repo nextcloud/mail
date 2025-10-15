@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2022 Anna Larch <anna@nextcloud.com>
- *
- * @author 2022 Anna Larch <anna@nextcloud.com>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Db;
@@ -64,7 +48,8 @@ class LocalMessageMapper extends QBMapper {
 			->join('a', $this->getTableName(), 'm', $qb->expr()->eq('m.account_id', 'a.id'))
 			->where(
 				$qb->expr()->eq('a.user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR),
-				$qb->expr()->eq('m.type', $qb->createNamedParameter($type, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
+				$qb->expr()->eq('m.type', $qb->createNamedParameter($type, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$qb->expr()->neq('m.status', $qb->createNamedParameter(LocalMessage::STATUS_PROCESSED, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
 			);
 		$rows = $qb->executeQuery();
 
@@ -134,10 +119,6 @@ class LocalMessageMapper extends QBMapper {
 				$qb->expr()->isNotNull('send_at'),
 				$qb->expr()->eq('type', $qb->createNamedParameter($type, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$qb->expr()->lte('send_at', $qb->createNamedParameter($time, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
-				$qb->expr()->orX(
-					$qb->expr()->isNull('failed'),
-					$qb->expr()->eq('failed', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
-				)
 			)
 			->orderBy('send_at', 'asc');
 		$messages = $this->findEntities($select);
@@ -146,9 +127,7 @@ class LocalMessageMapper extends QBMapper {
 			return [];
 		}
 
-		$ids = array_map(static function (LocalMessage $message) {
-			return $message->getId();
-		}, $messages);
+		$ids = array_map(static fn (LocalMessage $message) => $message->getId(), $messages);
 
 		$attachments = $this->attachmentMapper->findByLocalMessageIds($ids);
 		$recipients = $this->recipientMapper->findByLocalMessageIds($ids);
@@ -197,9 +176,7 @@ class LocalMessageMapper extends QBMapper {
 			return [];
 		}
 
-		$ids = array_map(static function (LocalMessage $message) {
-			return $message->getId();
-		}, $messages);
+		$ids = array_map(static fn (LocalMessage $message) => $message->getId(), $messages);
 
 		$attachments = $this->attachmentMapper->findByLocalMessageIds($ids);
 		$recipients = $this->recipientMapper->findByLocalMessageIds($ids);
@@ -256,14 +233,14 @@ class LocalMessageMapper extends QBMapper {
 			$message = $this->update($message);
 
 			$this->recipientMapper->updateRecipients($message->getId(), $message->getRecipients(), $to, $cc, $bcc);
+			$recipients = $this->recipientMapper->findByLocalMessageId($message->getId());
+			$message->setRecipients($recipients);
 			$this->db->commit();
+			return $message;
 		} catch (Throwable $e) {
 			$this->db->rollBack();
 			throw $e;
 		}
-		$recipients = $this->recipientMapper->findByLocalMessageId($message->getId());
-		$message->setRecipients($recipients);
-		return $message;
 	}
 
 	public function deleteWithRecipients(LocalMessage $message): void {

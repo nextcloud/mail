@@ -1,5 +1,10 @@
-import dragEventBus from '../util/dragEventBus'
-import defer from 'lodash/defer'
+/**
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+import defer from 'lodash/defer.js'
+
+import dragEventBus from '../util/dragEventBus.js'
 
 export class DraggableEnvelope {
 
@@ -45,20 +50,20 @@ export class DraggableEnvelope {
 				envelopes.push({
 					accountId,
 					mailboxId,
-					envelopeId: envelope.databaseId,
+					databaseId: envelope.databaseId,
 					draggableLabel: `${envelope.subject} (${envelope.from[0].label})`,
 				})
 			})
 		} else {
 			// handle single dragged item
-			const { envelopeId, draggableLabel } = this.options
-			envelopes.push({ accountId, mailboxId, envelopeId, draggableLabel })
+			const { databaseId, draggableLabel } = this.options
+			envelopes.push({ accountId, mailboxId, databaseId, draggableLabel })
 		}
 
 		event.dataTransfer.setData('text/plain', JSON.stringify(envelopes))
 		this.attachGhost({ event, envelopes })
 
-		dragEventBus.$emit('drag-start', {
+		dragEventBus.emit('drag-start', {
 			accountId,
 			mailboxId,
 			itemCount: envelopes.length,
@@ -66,7 +71,7 @@ export class DraggableEnvelope {
 	}
 
 	onDragEnd(event) {
-		dragEventBus.$emit('drag-end', { accountId: this.options.accountId })
+		dragEventBus.emit('drag-end', { accountId: this.options.accountId })
 	}
 
 	attachGhost({ event, envelopes }) {

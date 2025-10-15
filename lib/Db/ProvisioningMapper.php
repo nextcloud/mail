@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2021 Anna Larch <anna@nextcloud.com>
- *
- * @author 2021 Anna Larch <anna@nextcloud.com>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Db;
@@ -125,6 +109,11 @@ class ProvisioningMapper extends QBMapper {
 		$provisioning->setSmtpPort((int)$data['smtpPort']);
 		$provisioning->setSmtpSslMode($data['smtpSslMode']);
 
+		$provisioning->setMasterPasswordEnabled((bool)($data['masterPasswordEnabled'] ?? false));
+		if (isset($data['masterPassword']) && $data['masterPassword'] !== Provisioning::MASTER_PASSWORD_PLACEHOLDER) {
+			$provisioning->setMasterPassword($data['masterPassword']);
+		}
+
 		$provisioning->setSieveEnabled((bool)$data['sieveEnabled']);
 		$provisioning->setSieveHost($data['sieveHost'] ?? '');
 		$provisioning->setSieveUser($data['sieveUser'] ?? '');
@@ -148,5 +137,20 @@ class ProvisioningMapper extends QBMapper {
 			$this->logger->error('Could not find entry with ID #' . $id);
 			return null;
 		}
+	}
+
+	/**
+	 * @since 4.2.0
+	 *
+	 * @return array<int,string>
+	 */
+	public function findUniqueImapHosts(): array {
+		$query = $this->db->getQueryBuilder();
+		$query->selectDistinct('imap_host')
+			->from('mail_provisionings');
+		$result = $query->executeQuery();
+		$data = $result->fetchAll(\PDO::FETCH_COLUMN);
+		$result->closeCursor();
+		return $data;
 	}
 }

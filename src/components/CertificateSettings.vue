@@ -1,67 +1,54 @@
 <!--
-  - @copyright 2023 Richard Steinmetz <richard@steinmetz.cloud>
-  -
-  - @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
-  - @author 2023 Hamza Mahjoubi <hamzamahjoubi221@gmail.com>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
+  - SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 <template>
-	<div>
-		<Multiselect
-			:allow-empty="false"
+	<div class="certificate-settings">
+		<NcSelect v-model="alias"
+			class="certificate-settings__alias"
 			:options="aliases"
 			:searchable="false"
-			:value="alias"
 			:placeholder="t('mail', 'Select an alias')"
+			:aria-label-combobox="t('mail','Select an alias')"
 			label="name"
-			track-by="id"
-			@select="handleAlias" />
-		<Multiselect
-			v-if="alias !== null"
+			@input="savedCertificate = null" />
+		<NcSelect v-if="alias !== null"
 			v-model="savedCertificate"
+			class="certificate-settings__certificate"
 			:options="smimeCertOptions"
-			:searchable="false"
-			label="label"
-			track-by="id"
-			@select="selectCertificate" />
-		<Button
-			type="primary"
+			:aria-label-combobox="t('mail', 'Select certificates')"
+			:searchable="false" />
+		<NcButton type="primary"
+			class="certificate-settings__submit"
 			:disabled="certificate === null"
 			:aria-label="t('mail', 'Update Certificate')"
 			@click="updateSmimeCertificate">
 			{{ t('mail', 'Update Certificate') }}
-		</Button>
+		</NcButton>
+		<NcNoteCard v-if="alias && !savedCertificate.isChainVerified"
+			type="warning">
+			<p>{{ t('mail', 'The selected certificate is not trusted by the server. Recipients might not be able to verify your signature.') }}</p>
+		</NcNoteCard>
 	</div>
 </template>
 
 <script>
-import { NcMultiselect as Multiselect, NcButton as Button } from '@nextcloud/vue'
-import { compareSmimeCertificates } from '../util/smime'
-import { mapGetters } from 'vuex'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import Logger from '../logger'
 import moment from '@nextcloud/moment'
+import { NcButton, NcNoteCard, NcSelect } from '@nextcloud/vue'
+import { mapState, mapStores } from 'pinia'
+
+import Logger from '../logger.js'
+import useMainStore from '../store/mainStore.js'
+import { compareSmimeCertificates } from '../util/smime.js'
 
 export default {
 	name: 'CertificateSettings',
 	components: {
-		Multiselect,
-		Button,
+		NcSelect,
+		NcButton,
+		NcNoteCard,
 	},
 	props: {
 		account: {
@@ -76,7 +63,8 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters({
+		...mapStores(useMainStore),
+		...mapState(useMainStore, {
 			smimeCertificates: 'getSmimeCertificates',
 		}),
 		savedCertificate: {
@@ -85,7 +73,7 @@ export default {
 					return this.certificate
 				}
 				const saved = this.smimeCertOptions.find(certificate => this.alias.smimeCertificateId === certificate.id)
-				return saved || { label: t('mail', 'No certificate') }
+				return saved || this.noCertificateOption
 			},
 			set(newVal) {
 				this.certificate = newVal
@@ -122,29 +110,33 @@ export default {
 					return cert.hasKey
 						&& cert.emailAddress === this.alias.alias
 						&& cert.info.notAfter >= now
-						&& cert.purposes.sign
-						&& cert.purposes.encrypt
+						&& cert.info.purposes.sign
+						&& cert.info.purposes.encrypt
 						// TODO: select a separate certificate for encryption?!
 				})
 				.map(this.mapCertificateToOption)
 				.sort(compareSmimeCertificates)
-			certs.push({ label: t('mail', 'No certificate') })
+			certs.push(this.noCertificateOption)
 
 			return certs
+		},
+		/**
+		 * The select option for no certificate
+		 *
+		 * @return {{label: string, isChainVerified: boolean}}
+		 */
+		noCertificateOption() {
+			return {
+				label: this.t('mail', 'No certificate'),
+				isChainVerified: true,
+			}
 		},
 	},
 
 	methods: {
-		selectCertificate(certificate) {
-			this.certificate = certificate
-		},
-		handleAlias(alias) {
-			this.alias = alias
-			this.savedCertificate = null
-		},
 		async updateSmimeCertificate() {
 			if (this.alias.isAccountCertificate) {
-				await this.$store.dispatch('updateAccountSmimeCertificate', {
+				await this.mainStore.updateAccountSmimeCertificate({
 					account: this.account,
 					smimeCertificateId: this.certificate.id,
 				}).then(() => {
@@ -152,10 +144,10 @@ export default {
 				}).catch((error) => {
 					Logger.error('could not update account Smime ceritificate', { error })
 					showError(t('mail', 'Could not update certificate'))
-				}
+				},
 				)
 			} else {
-				await this.$store.dispatch('updateAlias', {
+				await this.mainStore.updateAlias({
 					account: this.account,
 					aliasId: this.alias.id,
 					alias: this.alias.alias,
@@ -166,7 +158,7 @@ export default {
 				}).catch((error) => {
 					Logger.error('could not update alias Smime ceritificate', { error })
 					showError(t('mail', 'Could not update certificate'))
-				}
+				},
 				)
 			}
 
@@ -182,19 +174,29 @@ export default {
 				commonName: cert.info.commonName ?? cert.info.emailAddress,
 				expiryDate: moment.unix(cert.info.notAfter).format('LL'),
 			})
-			return { ...cert, label }
+			return {
+				...cert,
+				label,
+				isChainVerified: cert.info.isChainVerified,
+			}
 		},
 	},
 }
 </script>
 
 <style lang="scss" scoped>
-.multiselect--single {
-  width: 100%;
-  margin-bottom: 4px;
-}
+.certificate-settings {
+	&__alias,
+	&__certificate {
+		width: 100%;
+	}
 
-.button-vue {
-	margin-top: 4px !important;
+	&__alias + &__certificate {
+		margin-top: 5px
+	}
+
+	&__submit {
+		margin-top: 1rem;
+	}
 }
 </style>

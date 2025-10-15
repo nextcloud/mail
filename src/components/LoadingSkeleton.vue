@@ -1,3 +1,7 @@
+<!--
+  - SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<div>
 		<div v-for="i in numberOfLines" :key="i" class="item-list__entry">
@@ -51,7 +55,7 @@ export default {
 		animation: gradient 3s ease-in infinite;
 	}
 	.item__details {
-		padding-left: 8px;
+		padding-inline-start: 8px;
 		max-height: 70px;
 		flex-grow: 1;
 		display: flex;

@@ -3,22 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail;
@@ -26,8 +12,6 @@ namespace OCA\Mail;
 use Horde_Imap_Client_Mailbox;
 
 class Folder {
-	/** @var int */
-	private $accountId;
 
 	/** @var Horde_Imap_Client_Mailbox */
 	private $mailbox;
@@ -46,12 +30,10 @@ class Folder {
 
 	private ?string $myAcls;
 
-	public function __construct(int $accountId,
-		Horde_Imap_Client_Mailbox $mailbox,
+	public function __construct(Horde_Imap_Client_Mailbox $mailbox,
 		array $attributes,
 		?string $delimiter,
 		?array $status) {
-		$this->accountId = $accountId;
 		$this->mailbox = $mailbox;
 		$this->attributes = $attributes;
 		$this->delimiter = $delimiter;
@@ -107,7 +89,7 @@ class Folder {
 		return $this->specialUse;
 	}
 
-	public function setMyAcls(?string $acls) {
+	public function setMyAcls(?string $acls): void {
 		$this->myAcls = $acls;
 	}
 

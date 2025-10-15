@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright Copyright (c) 2022 Richard Steinmetz <richard@steinmetz.cloud>
- *
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * @license AGPL-3.0-or-later
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Controller;
@@ -35,15 +19,17 @@ use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\IRequest;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class SmimeCertificatesController extends Controller {
 	private ?string $userId;
 	private SmimeService $certificateService;
 
-	public function __construct(string       $appName,
-		IRequest     $request,
-		?string      $userId,
+	public function __construct(string $appName,
+		IRequest $request,
+		?string $userId,
 		SmimeService $certificateService) {
 		parent::__construct($appName, $request);
 		$this->userId = $userId;
@@ -59,9 +45,7 @@ class SmimeCertificatesController extends Controller {
 	#[TrapError]
 	public function index(): JsonResponse {
 		$certificates = $this->certificateService->findAllCertificates($this->userId);
-		$certificates = array_map(function (SmimeCertificate $certificate) {
-			return $this->certificateService->enrichCertificate($certificate);
-		}, $certificates);
+		$certificates = array_map(fn (SmimeCertificate $certificate) => $this->certificateService->enrichCertificate($certificate), $certificates);
 		return JsonResponse::success($certificates);
 	}
 

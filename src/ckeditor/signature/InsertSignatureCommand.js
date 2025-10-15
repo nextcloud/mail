@@ -1,23 +1,9 @@
 /**
- * @author Daniel Kesselberg <mail@danielkesselberg.de>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import Command from '@ckeditor/ckeditor5-core/src/command'
+import { Command } from 'ckeditor5'
 
 export const TRIGGER_CHANGE_ALIAS = 'change_alias'
 export const TRIGGER_EDITOR_READY = 'editor_ready'
@@ -33,7 +19,7 @@ export default class InsertSignatureCommand extends Command {
 	removeSignatureElement(editor, writer) {
 		// Create a range spanning over the entire root content:
 		const range = editor.model.createRangeIn(
-			editor.model.document.getRoot()
+			editor.model.document.getRoot(),
 		)
 
 		// Iterate over all items in this range:
@@ -98,7 +84,7 @@ export default class InsertSignatureCommand extends Command {
 		if (signatureAboveQuote) {
 			// Create a range spanning over the entire root content:
 			const range = editor.model.createRangeIn(
-				editor.model.document.getRoot()
+				editor.model.document.getRoot(),
 			)
 
 			// Iterate over all items in this range:
@@ -121,7 +107,7 @@ export default class InsertSignatureCommand extends Command {
 	hasSignatureElement(editor) {
 		// Create a range spanning over the entire root content:
 		const range = editor.model.createRangeIn(
-			editor.model.document.getRoot()
+			editor.model.document.getRoot(),
 		)
 
 		// Iterate over all items in this range:

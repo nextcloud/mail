@@ -1,31 +1,14 @@
 <!--
-  - @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
-  -
-  - @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
-  - @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
+  - SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 <template>
-	<BaseAvatar v-if="loading || !hasAvatar"
+	<NcAvatar v-if="loading || !hasAvatar"
 		:display-name="displayName"
 		:size="size"
 		:disable-tooltip="disableTooltip" />
-	<BaseAvatar v-else
+	<NcAvatar v-else
 		:display-name="displayName"
 		:url="avatarUrl"
 		:size="size"
@@ -33,19 +16,29 @@
 </template>
 
 <script>
-import BaseAvatar from '@nextcloud/vue/dist/Components/NcAvatar'
-import { fetchAvatarUrlMemoized } from '../service/AvatarService'
-import logger from '../logger'
+import { generateUrl } from '@nextcloud/router'
+import NcAvatar from '@nextcloud/vue/components/NcAvatar'
+
+import logger from '../logger.js'
+import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
 
 export default {
 	name: 'Avatar',
 	components: {
-		BaseAvatar,
+		NcAvatar,
 	},
 	props: {
 		displayName: {
 			type: String,
 			required: true,
+		},
+		avatar: {
+			type: Object,
+			default: null,
+		},
+		fetchAvatar: {
+			type: Boolean,
+			default: false,
 		},
 		email: {
 			type: String,
@@ -72,14 +65,21 @@ export default {
 		},
 	},
 	async mounted() {
-		if (this.email !== '') {
-			try {
-				this.avatarUrl = await fetchAvatarUrlMemoized(this.email)
-			} catch {
-				logger.debug('Could not fetch avatar', { email: this.email })
+		if (this.avatar) {
+			this.avatarUrl = this.avatar.isExternal
+				? generateUrl('/apps/mail/api/avatars/image/{email}', {
+					email: this.email,
+				})
+				: this.avatar.url
+		} else if (this.fetchAvatar) {
+			if (this.email !== '') {
+				try {
+					this.avatarUrl = await fetchAvatarUrlMemoized(this.email)
+				} catch {
+					logger.debug('Could not fetch avatar', { email: this.email })
+				}
 			}
 		}
-
 		this.loading = false
 	},
 }

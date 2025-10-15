@@ -3,23 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Model;
@@ -105,11 +90,11 @@ class NewMessageData {
 
 	/**
 	 * @param Account $account
+	 * @param string $subject
+	 * @param string $body
 	 * @param string|null $to
 	 * @param string|null $cc
 	 * @param string|null $bcc
-	 * @param string $subject
-	 * @param string $body
 	 * @param array $attachments
 	 * @param bool $isHtml
 	 * @param bool $requestMdn
@@ -118,11 +103,11 @@ class NewMessageData {
 	 * @return NewMessageData
 	 */
 	public static function fromRequest(Account $account,
-		string $to = null,
-		string $cc = null,
-		string $bcc = null,
 		string $subject,
 		string $body,
+		?string $to = null,
+		?string $cc = null,
+		?string $bcc = null,
 		array $attachments = [],
 		bool $isHtml = true,
 		bool $requestMdn = false,

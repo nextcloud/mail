@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Unit\Settings;
@@ -53,7 +37,7 @@ class AdminSettingsTest extends TestCase {
 	}
 
 	public function testGetForm() {
-		$this->serviceMock->getParameter('initialStateService')->expects($this->exactly(10))
+		$this->serviceMock->getParameter('initialStateService')->expects($this->exactly(14))
 			->method('provideInitialState')
 			->withConsecutive(
 				[
@@ -73,12 +57,22 @@ class AdminSettingsTest extends TestCase {
 				],
 				[
 					Application::APP_ID,
-					'enabled_thread_summary',
+					'layout_message_view',
 					$this->anything()
 				],
 				[
 					Application::APP_ID,
-					'enabled_llm_backend',
+					'llm_processing',
+					$this->anything()
+				],
+				[
+					Application::APP_ID,
+					'enabled_llm_free_prompt_backend',
+					$this->anything()
+				],
+				[
+					Application::APP_ID,
+					'enabled_llm_summary_backend',
 					$this->anything()
 				],
 				[
@@ -104,6 +98,16 @@ class AdminSettingsTest extends TestCase {
 				[
 					Application::APP_ID,
 					'microsoft_oauth_redirect_url',
+					$this->anything()
+				],
+				[
+					Application::APP_ID,
+					'microsoft_oauth_docs',
+					$this->anything()
+				],
+				[
+					Application::APP_ID,
+					'importance_classification_default',
 					$this->anything()
 				],
 			);

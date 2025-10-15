@@ -1,27 +1,16 @@
-/*
- * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author 2022 Richard Steinmetz <richard@steinmetz.cloud>
- *
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 import { readFileSync } from 'fs'
 import { join } from 'path'
+import { vi } from 'vitest'
+
+global.appName = 'mail'
+
+global._nc_l10n_locale = 'en'
+global._nc_l10n_language = 'en_US'
 
 global.OC = {
 	getLocale: () => 'en',
@@ -35,7 +24,13 @@ global.OC = {
 		},
 	},
 	isUserAdmin: () => false,
+	config: {
+		version: '9999.0.0',
+	},
 }
+
+global.t = vi.fn().mockImplementation((msg) => msg)
+global.n = vi.fn().mockImplementation((msg) => msg)
 
 /**
  * @param {string} path Path to file relative to src/tests/data/

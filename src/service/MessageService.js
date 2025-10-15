@@ -1,10 +1,14 @@
-import { generateUrl } from '@nextcloud/router'
+/**
+ * SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
 import axios from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
 import { curry } from 'ramda'
 
-import { parseErrorResponse } from '../http/ErrorResponseParser'
-import { convertAxiosError } from '../errors/convert'
-import SyncIncompleteError from '../errors/SyncIncompleteError'
+import { convertAxiosError } from '../errors/convert.js'
+import SyncIncompleteError from '../errors/SyncIncompleteError.js'
+import { parseErrorResponse } from '../http/ErrorResponseParser.js'
 
 const amendEnvelopeWithIds = curry((accountId, envelope) => ({
 	accountId,
@@ -28,7 +32,7 @@ export function fetchEnvelope(accountId, id) {
 		})
 }
 
-export function fetchEnvelopes(accountId, mailboxId, query, cursor, limit) {
+export function fetchEnvelopes(accountId, mailboxId, query, cursor, limit, sort, view, cacheBuster) {
 	const url = generateUrl('/apps/mail/api/messages')
 	const params = {
 		mailboxId,
@@ -42,6 +46,15 @@ export function fetchEnvelopes(accountId, mailboxId, query, cursor, limit) {
 	}
 	if (cursor) {
 		params.cursor = cursor
+	}
+	if (sort) {
+		params.sort = sort
+	}
+	if (view) {
+		params.view = view
+	}
+	if (cacheBuster) {
+		params.v = cacheBuster
 	}
 
 	return axios
@@ -62,7 +75,7 @@ export const fetchThread = async (id) => {
 	return resp.data
 }
 
-export async function syncEnvelopes(accountId, id, ids, query, init = false) {
+export async function syncEnvelopes(accountId, id, ids, lastMessageTimestamp, query, init = false, sortOrder) {
 	const url = generateUrl('/apps/mail/api/mailboxes/{id}/sync', {
 		id,
 	})
@@ -70,8 +83,10 @@ export async function syncEnvelopes(accountId, id, ids, query, init = false) {
 	try {
 		const response = await axios.post(url, {
 			ids,
-			query,
+			lastMessageTimestamp,
 			init,
+			sortOrder,
+			query,
 		})
 
 		if (response.status === 202) {
@@ -109,7 +124,7 @@ export async function clearCache(accountId, id) {
 /**
  * Set flags for envelope
  *
- * @param {int} id
+ * @param {number} id
  * @param {object} flags
  */
 export async function setEnvelopeFlags(id, flags) {
@@ -143,6 +158,14 @@ export async function updateEnvelopeTag(id, displayName, color) {
 	})
 
 	await axios.put(url, { displayName, color })
+}
+
+export async function deleteTag(id, accountId) {
+	const url = generateUrl('/apps/mail/api/tags/{accountId}/delete/{id}', {
+		accountId, id,
+	})
+
+	await axios.delete(url)
 }
 
 export async function removeEnvelopeTag(id, imapLabel) {

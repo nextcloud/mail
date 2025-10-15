@@ -3,33 +3,17 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Integration\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestUser;
 use Horde_Imap_Client;
-use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
@@ -37,6 +21,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Attachment\AttachmentStorage;
@@ -49,8 +34,10 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder;
+use OCP\IDBConnection;
 use OCP\IServerContainer;
 use OCP\IUser;
+use OCP\Server;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -68,9 +55,6 @@ class OutboxServiceIntegrationTest extends TestCase {
 
 	/** @var IAttachmentService */
 	private $attachmentService;
-
-	/** @var IMailTransmission */
-	private $transmission;
 
 	/** @var OutboxService */
 	private $outbox;
@@ -92,6 +76,8 @@ class OutboxServiceIntegrationTest extends TestCase {
 
 	/** @var ITimeFactory */
 	private $timeFactory;
+	private \PHPUnit\Framework\MockObject\MockObject|Chain $chain;
+	private \OCP\IDBConnection $db;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -101,33 +87,32 @@ class OutboxServiceIntegrationTest extends TestCase {
 
 		$this->user = $this->createTestUser();
 		$this->account = $this->createTestAccount($this->user->getUID());
-		$c = OC::$server->get(ContainerInterface::class);
+		$c = Server::get(ContainerInterface::class);
 		$userContainer = $c->get(IServerContainer::class);
 		$this->userFolder = $userContainer->getUserFolder($this->account->getUserId());
-		$mailManager = OC::$server->get(IMailManager::class);
+		$mailManager = Server::get(IMailManager::class);
 		$this->attachmentService = new AttachmentService(
 			$this->userFolder,
-			OC::$server->get(LocalAttachmentMapper::class),
-			OC::$server->get(AttachmentStorage::class),
+			Server::get(LocalAttachmentMapper::class),
+			Server::get(AttachmentStorage::class),
 			$mailManager,
-			OC::$server->get(\OCA\Mail\IMAP\MessageMapper::class),
+			Server::get(\OCA\Mail\IMAP\MessageMapper::class),
 			new NullLogger()
 		);
 		$this->client = $this->getClient($this->account);
-		$this->mapper = OC::$server->get(LocalMessageMapper::class);
-		$this->transmission = OC::$server->get(IMailTransmission::class);
-		$this->eventDispatcher = OC::$server->get(IEventDispatcher::class);
-		$this->clientFactory = OC::$server->get(IMAPClientFactory::class);
-		$this->accountService = OC::$server->get(AccountService::class);
-		$this->timeFactory = OC::$server->get(ITimeFactory::class);
+		$this->mapper = Server::get(LocalMessageMapper::class);
+		$this->eventDispatcher = Server::get(IEventDispatcher::class);
+		$this->clientFactory = Server::get(IMAPClientFactory::class);
+		$this->accountService = Server::get(AccountService::class);
+		$this->timeFactory = Server::get(ITimeFactory::class);
+		$this->chain = Server::get(Chain::class);
 
-		$this->db = \OC::$server->getDatabaseConnection();
+		$this->db = Server::get(IDBConnection::class);
 		$qb = $this->db->getQueryBuilder();
 		$delete = $qb->delete($this->mapper->getTableName());
-		$delete->execute();
+		$delete->executeStatement();
 
 		$this->outbox = new OutboxService(
-			$this->transmission,
 			$this->mapper,
 			$this->attachmentService,
 			$this->eventDispatcher,
@@ -135,7 +120,8 @@ class OutboxServiceIntegrationTest extends TestCase {
 			$mailManager,
 			$this->accountService,
 			$this->timeFactory,
-			$this->createMock(LoggerInterface::class)
+			$this->createMock(LoggerInterface::class),
+			$this->chain
 		);
 	}
 
@@ -144,7 +130,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		$to = [[
@@ -168,7 +154,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		$saved = $this->outbox->saveMessage(new Account($this->account), $message, [], [], []);
@@ -179,7 +165,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		$saved = $this->outbox->saveMessage(new Account($this->account), $message, [], [], []);
@@ -195,7 +181,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		/** @var \Horde_Imap_Client_Mailbox[] $mailBoxes */
@@ -213,19 +199,20 @@ class OutboxServiceIntegrationTest extends TestCase {
 			->finish();
 		$newUid = $this->saveMessage($inbox->__toString(), $imapMessage, $this->account);
 		/** @var MailboxMapper $mailBoxMapper */
-		$mailBoxMapper = OC::$server->query(MailboxMapper::class);
+		$mailBoxMapper = Server::get(MailboxMapper::class);
 		$dbInbox = $mailBoxMapper->find(new Account($this->account), $inbox->__toString());
 		/** @var SyncService $syncService */
-		$syncService = OC::$server->query(SyncService::class);
+		$syncService = Server::get(SyncService::class);
 		$syncService->syncMailbox(
 			new Account($this->account),
 			$dbInbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
-			[],
-			false
+			false,
+			null,
+			[]
 		);
 		/** @var MessageMapper $messageMapper */
-		$messageMapper = OC::$server->query(MessageMapper::class);
+		$messageMapper = Server::get(MessageMapper::class);
 		$dbMessages = $messageMapper->findByUids($dbInbox, [$newUid]);
 		$attachments = [
 			[
@@ -257,7 +244,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 		$this->userFolder->newFile('/test.txt', file_get_contents(__DIR__ . '/../../data/test.txt'));
 		$attachments = [
@@ -289,7 +276,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		$to = [[
@@ -312,7 +299,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		$to = [[
@@ -342,7 +329,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 
 		$to = [[
@@ -355,7 +342,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$this->assertCount(1, $saved->getRecipients());
 		$this->assertEmpty($message->getAttachments());
 
-		$this->outbox->sendMessage($saved, new Account($this->account));
+		$actual = $this->outbox->sendMessage($saved, new Account($this->account));
 
 		$this->expectException(DoesNotExistException::class);
 		$this->outbox->getMessage($message->getId(), $this->user->getUID());
@@ -366,7 +353,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setAccountId($this->account->getId());
 		$message->setSubject('subject');
-		$message->setBody('message');
+		$message->setBodyHtml('message');
 		$message->setHtml(true);
 		$message->setSendAt(100);
 

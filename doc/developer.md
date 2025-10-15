@@ -1,3 +1,8 @@
+<!--
+  - SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-FileCopyrightText: 2013-2016 ownCloud, Inc.
+  - SPDX-License-Identifier: AGPL-3.0-only
+-->
 # Nextcloud Mail Developer Documentation
 
 ## Resetting the app
@@ -7,17 +12,20 @@ DELETE FROM oc_appconfig WHERE appid = 'mail';
 DELETE FROM oc_migrations WHERE app = 'mail';
 DROP TABLE oc_mail_accounts;
 DROP TABLE oc_mail_aliases;
-DROP TABLE oc_mail_coll_addresses;
 DROP TABLE oc_mail_attachments;
-DROP TABLE oc_mail_mailboxes;
-DROP TABLE oc_mail_messages;
-DROP TABLE oc_mail_recipients;
 DROP TABLE oc_mail_classifiers;
-DROP TABLE oc_mail_trusted_senders;
-DROP TABLE oc_mail_tags;
-DROP TABLE oc_mail_message_tags;
-DROP TABLE oc_mail_provisionings;
+DROP TABLE oc_mail_coll_addresses;
 DROP TABLE oc_mail_local_messages;
+DROP TABLE oc_mail_mailboxes;
+DROP TABLE oc_mail_message_tags;
+DROP TABLE oc_mail_messages;
+DROP TABLE oc_mail_messages_retention;
+DROP TABLE oc_mail_messages_snoozed;
+DROP TABLE oc_mail_provisionings;
+DROP TABLE oc_mail_recipients;
+DROP TABLE oc_mail_smime_certificates;
+DROP TABLE oc_mail_tags;
+DROP TABLE oc_mail_trusted_senders;
 ```
 
 ## Enable CKEditor Inspector
@@ -147,7 +155,7 @@ To create a IMAP account for Amy and Bender add to MAIL_ACCOUNTS.
 `32657d7a-582d-103b-83a4-c7ccb54ec103@planetexpress.com,amy 3268b904-582d-103b-83a5-c7ccb54ec103@planetexpress.com,bender`
 
 The password is (for our sample data) the display name in lowercase.
-Note that accounts are seperated by a space.
+Note that accounts are separated by a space.
 
 ### A provisioning configuration for Mail
 
@@ -166,7 +174,7 @@ to a user:
 - Click Add new attribute -> Select mailAlias -> Enter rodriquez@planetexpress.com -> Press Enter -> Click Update Object
 
 Now login to Nextcloud as Bender and go to Mail. See rodriquez@planetexpress.com
-as Alias in the Account settings for the provisoned mail account.
+as Alias in the Account settings for the provisioned mail account.
 
 ## Generate self signed S/MIME CA and user certificates
 

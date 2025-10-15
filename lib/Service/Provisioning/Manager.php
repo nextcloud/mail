@@ -3,22 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Service\Provisioning;
@@ -32,12 +18,12 @@ use OCA\Mail\Db\Provisioning;
 use OCA\Mail\Db\ProvisioningMapper;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\ValidationException;
+use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\ICacheFactory;
 use OCP\IUser;
 use OCP\IUserManager;
-use OCP\LDAP\ILDAPProvider;
 use OCP\LDAP\ILDAPProviderFactory;
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
@@ -71,7 +57,8 @@ class Manager {
 	/** @var ICacheFactory */
 	private $cacheFactory;
 
-	public function __construct(IUserManager $userManager,
+	public function __construct(
+		IUserManager $userManager,
 		ProvisioningMapper $provisioningMapper,
 		MailAccountMapper $mailAccountMapper,
 		ICrypto $crypto,
@@ -79,7 +66,9 @@ class Manager {
 		AliasMapper $aliasMapper,
 		LoggerInterface $logger,
 		TagMapper $tagMapper,
-		ICacheFactory $cacheFactory) {
+		ICacheFactory $cacheFactory,
+		private AccountService $accountService,
+	) {
 		$this->userManager = $userManager;
 		$this->provisioningMapper = $provisioningMapper;
 		$this->mailAccountMapper = $mailAccountMapper;
@@ -114,14 +103,20 @@ class Manager {
 	}
 
 	public function provision(): int {
-		$cnt = 0;
+		$counter = 0;
+
 		$configs = $this->getConfigs();
-		$this->userManager->callForAllUsers(function (IUser $user) use ($configs, &$cnt) {
-			if ($this->provisionSingleUser($configs, $user) === true) {
-				$cnt++;
+		if (count($configs) === 0) {
+			return $counter;
+		}
+
+		$this->userManager->callForAllUsers(function (IUser $user) use ($configs, &$counter) {
+			if ($this->provisionSingleUser($configs, $user)) {
+				$counter++;
 			}
 		});
-		return $cnt;
+
+		return $counter;
 	}
 
 	/**
@@ -204,7 +199,7 @@ class Manager {
 			$mailAccount = $this->mailAccountMapper->update(
 				$this->updateAccount($user, $mailAccount, $provisioning)
 			);
-		} catch (DoesNotExistException | MultipleObjectsReturnedException $e) {
+		} catch (DoesNotExistException|MultipleObjectsReturnedException $e) {
 			if ($e instanceof MultipleObjectsReturnedException) {
 				// This is unlikely to happen but not impossible.
 				// Let's wipe any existing accounts and start fresh
@@ -220,30 +215,28 @@ class Manager {
 				$this->updateAccount($user, $mailAccount, $provisioning)
 			);
 
+			$this->accountService->scheduleBackgroundJobs($mailAccount->getId());
 			$this->tagMapper->createDefaultTags($mailAccount);
 		}
 
-		// @TODO: Remove method_exists once Mail requires Nextcloud 22 or above
-		if (method_exists(ILDAPProvider::class, 'getMultiValueUserAttribute')) {
-			try {
-				$provisioning = $this->ldapAliasesIntegration($provisioning, $user);
-			} catch (\Throwable $e) {
-				$this->logger->warning('Request to provision mail aliases failed', ['exception' => $e]);
-				// return here to avoid provisioning of aliases.
-				return true;
-			}
+		try {
+			$provisioning = $this->ldapAliasesIntegration($provisioning, $user);
+		} catch (\Throwable $e) {
+			$this->logger->warning('Request to provision mail aliases failed', ['exception' => $e]);
+			// return here to avoid provisioning of aliases.
+			return true;
+		}
 
-			try {
-				$this->deleteOrphanedAliases($user->getUID(), $mailAccount->getId(), $provisioning->getAliases());
-			} catch (\Throwable $e) {
-				$this->logger->warning('Deleting orphaned aliases failed', ['exception' => $e]);
-			}
+		try {
+			$this->deleteOrphanedAliases($user->getUID(), $mailAccount->getId(), $provisioning->getAliases());
+		} catch (\Throwable $e) {
+			$this->logger->warning('Deleting orphaned aliases failed', ['exception' => $e]);
+		}
 
-			try {
-				$this->createNewAliases($user->getUID(), $mailAccount->getId(), $provisioning->getAliases(), $this->userManager->getDisplayName($user->getUID()), $mailAccount->getEmail());
-			} catch (\Throwable $e) {
-				$this->logger->warning('Creating new aliases failed', ['exception' => $e]);
-			}
+		try {
+			$this->createNewAliases($user->getUID(), $mailAccount->getId(), $provisioning->getAliases(), $this->userManager->getDisplayName($user->getUID()), $mailAccount->getEmail());
+		} catch (\Throwable $e) {
+			$this->logger->warning('Creating new aliases failed', ['exception' => $e]);
 		}
 
 		return true;
@@ -316,9 +309,30 @@ class Manager {
 		}
 	}
 
-	public function updatePassword(IUser $user, string $password): void {
+	/**
+	 * @param Provisioning[] $provisionings
+	 */
+	public function updatePassword(IUser $user, ?string $password, array $provisionings): void {
 		try {
 			$account = $this->mailAccountMapper->findProvisionedAccount($user);
+
+			$provisioning = $this->findMatchingConfig($provisionings, $user);
+			if ($provisioning === null) {
+				return;
+			}
+
+			// FIXME: Need to check for an empty string here too?
+			// The password is empty (and not null) when using WebAuthn passwordless login.
+			// Maybe research other providers as well.
+			// Ref \OCA\Mail\Controller\PageController::index()
+			//     -> inital state for password-is-unavailable
+			if ($provisioning->getMasterPasswordEnabled() === true && $provisioning->getMasterPassword() !== null) {
+				$password = $provisioning->getMasterPassword();
+				$this->logger->debug('Password set to master password for ' . $user->getUID());
+			} elseif ($password === null) {
+				$this->logger->debug('No password set for ' . $user->getUID());
+				return;
+			}
 
 			if (!empty($account->getInboundPassword())
 				&& $this->crypto->decrypt($account->getInboundPassword()) === $password

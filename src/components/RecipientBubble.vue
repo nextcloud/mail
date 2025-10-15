@@ -1,148 +1,124 @@
 <!--
-  - @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
-  -
-  - @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
+  - SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 <template>
-	<Popover ref="popover" trigger="click" class="contact-popover">
-		<UserBubble slot="trigger"
-			:display-name="label"
-			:avatar-image="avatarUrlAbsolute"
-			@click="onClickOpenContactDialog" />
-		<div class="contact-wrapper">
-			<p class="contact-popover__email">
-				{{ email }}
-			</p>
-			<ButtonVue
-				v-if="contactsWithEmail && contactsWithEmail.length > 0"
-				type="tertiary-no-background"
-				:aria-label="t('mail', 'Contacts with this address')"
-				class="contact-existing">
-				<template #icon>
-					<IconDetails :size="20" />
-				</template>
-				{{ t('mail', 'Contacts with this address') }}:
-				<span>
-					{{ contactsWithEmailComputed }}
-				</span>
-			</ButtonVue>
-			<div v-if="selection === ContactSelectionStateEnum.select" class="contact-menu">
-				<ButtonVue
-					:aria-label="t('mail', 'Reply')"
+	<Popover popup-role="dialog" class="contact-popover">
+		<template #trigger="{ attrs }">
+			<UserBubble v-bind="attrs"
+				:display-name="label"
+				:size="26"
+				:avatar-image="avatarUrlAbsolute"
+				@click="onClickOpenContactDialog" />
+		</template>
+		<template>
+			<div class="contact-wrapper">
+				<p class="contact-popover__email">
+					{{ email }}
+				</p>
+				<ButtonVue v-if="contactsWithEmail && contactsWithEmail.length > 0"
 					type="tertiary-no-background"
-					@click="onClickReply">
+					:aria-label="t('mail', 'Contacts with this address')"
+					class="contact-existing">
 					<template #icon>
-						<IconReply :size="20" />
+						<IconDetails :size="20" />
 					</template>
-					{{ t('mail', 'Reply') }}
+					{{ t('mail', 'Contacts with this address') }}: {{ contactsWithEmailComputed }}
 				</ButtonVue>
-				<ButtonVue
-					type="tertiary-no-background"
-					:aria-label="t('mail', 'Add to Contact')"
-					@click="selection = ContactSelectionStateEnum.existing">
-					<template #icon>
-						<IconUser :size="20" />
-					</template>
-					{{ t('mail', 'Add to Contact') }}
-				</ButtonVue>
-				<ButtonVue
-					type="tertiary-no-background"
-					:aria-label="t('mail', 'New Contact')"
-					@click="selection = ContactSelectionStateEnum.new">
-					<template #icon>
-						<IconAdd :size="20" />
-					</template>
-					{{ t('mail', 'New Contact') }}
-				</ButtonVue>
-				<ButtonVue
-					type="tertiary-no-background"
-					:aria-label="t('mail', 'Copy to clipboard')"
-					@click="onClickCopyToClipboard">
-					<template #icon>
-						<IconClipboard :size="20" />
-					</template>
-					{{ t('mail', 'Copy to clipboard') }}
-				</ButtonVue>
-			</div>
-			<div v-else class="contact-input-wrapper">
-				<Multiselect
-					v-if="selection === ContactSelectionStateEnum.existing"
-					id="contact-selection"
-					ref="contact-selection-label"
-					v-model="selectedContact"
-					:options="selectableContacts"
-					:taggable="true"
-					label="label"
-					track-by="label"
-					:multiple="false"
-					:placeholder="t('name', 'Contact name …')"
-					:clear-on-select="false"
-					:show-no-options="false"
-					:preserve-search="true"
-					@search-change="onAutocomplete" />
+				<div v-if="selection === ContactSelectionStateEnum.select" class="contact-menu">
+					<ButtonVue :aria-label="t('mail', 'Reply')"
+						type="tertiary-no-background"
+						@click="onClickReply">
+						<template #icon>
+							<IconReply :size="20" />
+						</template>
+						{{ t('mail', 'Reply') }}
+					</ButtonVue>
+					<ButtonVue type="tertiary-no-background"
+						:aria-label="t('mail', 'Add to Contact')"
+						@click="selection = ContactSelectionStateEnum.existing">
+						<template #icon>
+							<IconUser :size="20" />
+						</template>
+						{{ t('mail', 'Add to Contact') }}
+					</ButtonVue>
+					<ButtonVue type="tertiary-no-background"
+						:aria-label="t('mail', 'New Contact')"
+						@click="selection = ContactSelectionStateEnum.new">
+						<template #icon>
+							<IconAdd :size="20" />
+						</template>
+						{{ t('mail', 'New Contact') }}
+					</ButtonVue>
+					<ButtonVue type="tertiary-no-background"
+						:aria-label="t('mail', 'Copy to clipboard')"
+						@click="onClickCopyToClipboard">
+						<template #icon>
+							<IconClipboard :size="20" />
+						</template>
+						{{ t('mail', 'Copy to clipboard') }}
+					</ButtonVue>
+				</div>
+				<div v-else class="contact-input-wrapper">
+					<NcSelect v-if="selection === ContactSelectionStateEnum.existing"
+						id="contact-selection"
+						ref="contact-selection-label"
+						v-model="selectedContact"
+						:options="selectableContacts"
+						:taggable="true"
+						track-by="label"
+						:multiple="false"
+						:placeholder="t('name', 'Contact name …')"
+						:clear-search-on-select="true"
+						:show-no-options="false"
+						:append-to-body="false"
+						@search="onAutocomplete" />
 
-				<input v-else-if="selection === ContactSelectionStateEnum.new" v-model="newContactName">
-			</div>
-			<div v-if="selection !== ContactSelectionStateEnum.select">
-				<ButtonVue
-					type="tertiary-no-background"
-					:aria-label="t('mail', 'Go back')"
-					@click="selection = ContactSelectionStateEnum.select">
-					<template #icon>
-						<IconClose :size="20" />
-					</template>
-					{{ t('mail', 'Go back') }}
-				</ButtonVue>
+					<input v-else-if="selection === ContactSelectionStateEnum.new" v-model="newContactName">
+				</div>
+				<div v-if="selection !== ContactSelectionStateEnum.select">
+					<ButtonVue type="tertiary-no-background"
+						:aria-label="t('mail', 'Go back')"
+						@click="selection = ContactSelectionStateEnum.select">
+						<template #icon>
+							<IconClose :size="20" />
+						</template>
+						{{ t('mail', 'Go back') }}
+					</ButtonVue>
 
-				<ButtonVue
-					v-close-popover
-					:disabled="addButtonDisabled"
-					type="tertiary-no-background"
-					:aria-label="t('mail', 'Add')"
-					@click="onClickAddToContact">
-					<template #icon>
-						<IconCheck :size="20" />
-					</template>
-					{{ t('mail', 'Add') }}
-				</ButtonVue>
+					<ButtonVue v-close-popover
+						:disabled="addButtonDisabled"
+						type="tertiary-no-background"
+						:aria-label="t('mail', 'Add')"
+						@click="onClickAddToContact">
+						<template #icon>
+							<IconCheck :size="20" />
+						</template>
+						{{ t('mail', 'Add') }}
+					</ButtonVue>
+				</div>
 			</div>
-		</div>
+		</template>
 	</Popover>
 </template>
 
 <script>
-import { generateUrl } from '@nextcloud/router'
-
-import { NcUserBubble as UserBubble, NcPopover as Popover, NcMultiselect as Multiselect, NcButton as ButtonVue } from '@nextcloud/vue'
-
-import IconReply from 'vue-material-design-icons/Reply'
-import IconAdd from 'vue-material-design-icons/Plus'
-import IconClose from 'vue-material-design-icons/Close'
-import IconClipboard from 'vue-material-design-icons/ClipboardText'
-import IconDetails from 'vue-material-design-icons/Information'
-import IconCheck from 'vue-material-design-icons/Check'
-import IconUser from 'vue-material-design-icons/Account'
-import { fetchAvatarUrlMemoized } from '../service/AvatarService'
-import { addToContact, findMatches, newContact, autoCompleteByName } from '../service/ContactIntegrationService'
-import uniqBy from 'lodash/fp/uniqBy'
-import debouncePromise from 'debounce-promise'
 import { showError, showSuccess } from '@nextcloud/dialogs'
+import { generateUrl } from '@nextcloud/router'
+import { NcButton as ButtonVue, NcSelect, NcPopover as Popover, NcUserBubble as UserBubble } from '@nextcloud/vue'
+import debouncePromise from 'debounce-promise'
+import uniqBy from 'lodash/fp/uniqBy.js'
+import IconUser from 'vue-material-design-icons/AccountOutline.vue'
+import IconCheck from 'vue-material-design-icons/Check.vue'
+import IconClipboard from 'vue-material-design-icons/ClipboardTextOutline.vue'
+import IconClose from 'vue-material-design-icons/CloseOutline.vue'
+import IconDetails from 'vue-material-design-icons/InformationOutline.vue'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
+import IconReply from 'vue-material-design-icons/ReplyOutline.vue'
+
+import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
+import { addToContact, autoCompleteByName, findMatches, newContact } from '../service/ContactIntegrationService.js'
 
 const debouncedSearch = debouncePromise(autoCompleteByName, 500)
 
@@ -154,7 +130,7 @@ export default {
 		ButtonVue,
 		UserBubble,
 		Popover,
-		Multiselect,
+		NcSelect,
 		IconReply,
 		IconUser,
 		IconAdd,
@@ -179,7 +155,7 @@ export default {
 			loadingContacts: false,
 			contactsWithEmail: [],
 			autoCompleteContacts: [],
-			selectedContact: '',
+			selectedContact: null,
 			newContactName: '',
 			ContactSelectionStateEnum,
 			selection: ContactSelectionStateEnum.select,
@@ -286,13 +262,15 @@ export default {
 	display: flex;
 	flex-wrap: wrap;
 }
+
 .contact-popover {
-	display: inline-block;
+	display: flex;
 
 	&__email {
 		text-align: center;
 	}
 }
+
 .contact-wrapper {
 	padding:10px;
 	min-width: 300px;
@@ -304,11 +282,11 @@ export default {
 		opacity: 1;
 	}
 }
+
 .contact-input-wrapper {
 	margin-top: 10px;
     margin-bottom: 10px;
-	input,
-	.multiselect {
+	input {
 		width: 100%;
 	}
 }
@@ -316,7 +294,13 @@ export default {
 .contact-existing {
 	font-size: small !important;
 }
+
 :deep(.button-vue__text) {
 	font-weight: normal !important;
+}
+
+:deep(.vs__dropdown-menu) {
+	// Make the dropdown scrollable
+	max-height: 100px;
 }
 </style>

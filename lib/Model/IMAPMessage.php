@@ -3,29 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @author Alexander Weidinger <alexwegoo@gmail.com>
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Christoph Wurst <wurst.christoph@gmail.com>
- * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
- * @author Robin McCorkell <rmccorkell@karoshi.org.uk>
- * @author Thomas Mueller <thomas.mueller@tmit.eu>
- * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Model;
@@ -41,6 +21,7 @@ use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
+use OCA\Mail\ResponseDefinitions;
 use OCA\Mail\Service\Html;
 use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
@@ -50,6 +31,9 @@ use function mb_convert_encoding;
 use function mb_strcut;
 use function trim;
 
+/**
+ * @psalm-import-type MailIMAPFullMessage from ResponseDefinitions
+ */
 class IMAPMessage implements IMessage, JsonSerializable {
 	use ConvertAddresses;
 
@@ -77,6 +61,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	private string $rawReferences;
 	private string $dispositionNotificationTo;
 	private bool $hasDkimSignature;
+	private array $phishingDetails;
 	private ?string $unsubscribeUrl;
 	private bool $isOneClickUnsubscribe;
 	private ?string $unsubscribeMailto;
@@ -84,6 +69,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	private bool $isEncrypted;
 	private bool $isSigned;
 	private bool $signatureIsValid;
+	private bool $isPgpMimeEncrypted;
 
 	public function __construct(int $uid,
 		string $messageId,
@@ -105,6 +91,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		string $rawReferences,
 		string $dispositionNotificationTo,
 		bool $hasDkimSignature,
+		array $phishingDetails,
 		?string $unsubscribeUrl,
 		bool $isOneClickUnsubscribe,
 		?string $unsubscribeMailto,
@@ -112,7 +99,8 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		bool $isEncrypted,
 		bool $isSigned,
 		bool $signatureIsValid,
-		Html $htmlService) {
+		Html $htmlService,
+		bool $isPgpMimeEncrypted) {
 		$this->messageId = $uid;
 		$this->realMessageId = $messageId;
 		$this->flags = $flags;
@@ -133,6 +121,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$this->rawReferences = $rawReferences;
 		$this->dispositionNotificationTo = $dispositionNotificationTo;
 		$this->hasDkimSignature = $hasDkimSignature;
+		$this->phishingDetails = $phishingDetails;
 		$this->unsubscribeUrl = $unsubscribeUrl;
 		$this->isOneClickUnsubscribe = $isOneClickUnsubscribe;
 		$this->unsubscribeMailto = $unsubscribeMailto;
@@ -141,6 +130,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$this->isSigned = $isSigned;
 		$this->signatureIsValid = $signatureIsValid;
 		$this->htmlService = $htmlService;
+		$this->isPgpMimeEncrypted = $isPgpMimeEncrypted;
 	}
 
 	public static function generateMessageId(): string {
@@ -158,6 +148,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * @deprecated  Seems unused
 	 * @return array
 	 */
+	#[\Override]
 	public function getFlags(): array {
 		return [
 			'seen' => in_array(Horde_Imap_Client::FLAG_SEEN, $this->flags),
@@ -180,6 +171,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	public function setFlags(array $flags) {
 		// TODO: implement
 		throw new Exception('Not implemented');
@@ -197,6 +189,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		return $this->dispositionNotificationTo;
 	}
 
+	#[\Override]
 	public function getFrom(): AddressList {
 		return $this->from;
 	}
@@ -208,10 +201,12 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	public function setFrom(AddressList $from) {
 		throw new Exception('IMAP message is immutable');
 	}
 
+	#[\Override]
 	public function getTo(): AddressList {
 		return $this->to;
 	}
@@ -223,10 +218,12 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	public function setTo(AddressList $to) {
 		throw new Exception('IMAP message is immutable');
 	}
 
+	#[\Override]
 	public function getCC(): AddressList {
 		return $this->cc;
 	}
@@ -238,10 +235,12 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	public function setCC(AddressList $cc) {
 		throw new Exception('IMAP message is immutable');
 	}
 
+	#[\Override]
 	public function getBCC(): AddressList {
 		return $this->bcc;
 	}
@@ -253,14 +252,17 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	public function setBcc(AddressList $bcc) {
 		throw new Exception('IMAP message is immutable');
 	}
 
+	#[\Override]
 	public function getMessageId(): string {
 		return $this->realMessageId;
 	}
 
+	#[\Override]
 	public function getSubject(): string {
 		return $this->subject;
 	}
@@ -272,6 +274,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	public function setSubject(string $subject) {
 		throw new Exception('IMAP message is immutable');
 	}
@@ -283,26 +286,33 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	/**
 	 * @param int $id
 	 *
-	 * @return array
+	 * @return MailIMAPFullMessage
 	 */
-	public function getFullMessage(int $id): array {
+	public function getFullMessage(int $id, bool $loadBody = true): array {
 		$mailBody = $this->plainMessage;
 		$data = $this->jsonSerialize();
-		if ($this->hasHtmlMessage) {
-			$data['hasHtmlBody'] = true;
+
+		if ($this->hasHtmlMessage && $loadBody) {
 			$data['body'] = $this->getHtmlBody($id);
-			$data['attachments'] = $this->attachments;
-		} else {
-			$mailBody = $this->htmlService->convertLinks($mailBody);
-			[$mailBody, $signature] = $this->htmlService->parseMailBody($mailBody);
-			$data['body'] = $mailBody;
-			$data['signature'] = $signature;
-			$data['attachments'] = array_merge($this->attachments, $this->inlineAttachments);
 		}
 
+		if ($this->hasHtmlMessage) {
+			$data['hasHtmlBody'] = true;
+			$data['attachments'] = $this->attachments;
+			return $data;
+		}
+
+		$mailBody = $this->htmlService->convertLinks($mailBody);
+		[$mailBody, $signature] = $this->htmlService->parseMailBody($mailBody);
+		$data['signature'] = $signature;
+		$data['attachments'] = array_merge($this->attachments, $this->inlineAttachments);
+		if ($loadBody) {
+			$data['body'] = $mailBody;
+		}
 		return $data;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [
@@ -310,6 +320,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'messageId' => $this->getMessageId(),
 			'from' => $this->getFrom()->jsonSerialize(),
 			'to' => $this->getTo()->jsonSerialize(),
+			'replyTo' => $this->getReplyTo()->jsonSerialize(),
 			'cc' => $this->getCC()->jsonSerialize(),
 			'bcc' => $this->getBCC()->jsonSerialize(),
 			'subject' => $this->getSubject(),
@@ -318,10 +329,12 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'hasHtmlBody' => $this->hasHtmlMessage,
 			'dispositionNotificationTo' => $this->getDispositionNotificationTo(),
 			'hasDkimSignature' => $this->hasDkimSignature,
+			'phishingDetails' => $this->phishingDetails,
 			'unsubscribeUrl' => $this->unsubscribeUrl,
 			'isOneClickUnsubscribe' => $this->isOneClickUnsubscribe,
 			'unsubscribeMailto' => $this->unsubscribeMailto,
 			'scheduling' => $this->scheduling,
+			'isPgpMimeEncrypted' => $this->isPgpMimeEncrypted,
 		];
 	}
 
@@ -335,9 +348,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'id' => $id,
 		], function ($cid) {
 			$match = array_filter($this->inlineAttachments,
-				static function ($a) use ($cid) {
-					return $a['cid'] === $cid;
-				});
+				static fn ($a) => $a['cid'] === $cid);
 			$match = array_shift($match);
 			if ($match === null) {
 				return null;
@@ -353,6 +364,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		return $this->plainMessage;
 	}
 
+	#[\Override]
 	public function getContent(): string {
 		return $this->getPlainBody();
 	}
@@ -360,6 +372,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	/**
 	 * @return void
 	 */
+	#[\Override]
 	public function setContent(string $content) {
 		throw new Exception('IMAP message is immutable');
 	}
@@ -367,6 +380,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	/**
 	 * @return Horde_Mime_Part[]
 	 */
+	#[\Override]
 	public function getAttachments(): array {
 		throw new Exception('not implemented');
 	}
@@ -377,6 +391,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	public function addRawAttachment(string $name, string $content): void {
 		throw new Exception('IMAP message is immutable');
 	}
@@ -387,6 +402,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	public function addEmbeddedMessageAttachment(string $name, string $content): void {
 		throw new Exception('IMAP message is immutable');
 	}
@@ -396,6 +412,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	public function addAttachmentFromFiles(File $file) {
 		throw new Exception('IMAP message is immutable');
 	}
@@ -406,6 +423,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	public function addLocalAttachment(LocalAttachment $attachment, ISimpleFile $file) {
 		throw new Exception('IMAP message is immutable');
 	}
@@ -413,6 +431,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	/**
 	 * @return string|null
 	 */
+	#[\Override]
 	public function getInReplyTo() {
 		throw new Exception('not implemented');
 	}
@@ -422,21 +441,29 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	public function setInReplyTo(string $id) {
 		throw new Exception('not implemented');
 	}
 
+	/**
+	 * @return AddressList
+	 */
+	#[\Override]
 	public function getReplyTo(): AddressList {
 		return $this->replyTo;
 	}
 
 	/**
-	 * @param string $id
+	 * @param AddressList $replyTo
+	 *
+	 * @throws Exception
 	 *
 	 * @return void
 	 */
-	public function setReplyTo(string $id) {
-		throw new Exception('not implemented');
+	#[\Override]
+	public function setReplyTo(AddressList $replyTo) {
+		throw new Exception('IMAP message is immutable');
 	}
 
 	public function isEncrypted(): bool {
@@ -457,6 +484,10 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 	public function isOneClickUnsubscribe(): bool {
 		return $this->isOneClickUnsubscribe;
+	}
+
+	public function isPgpMimeEncrypted(): bool {
+		return $this->isPgpMimeEncrypted;
 	}
 
 	/**
@@ -498,8 +529,8 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$msg->setFlagSeen(in_array(Horde_Imap_Client::FLAG_SEEN, $flags, true));
 		$msg->setFlagForwarded(in_array(Horde_Imap_Client::FLAG_FORWARDED, $flags, true));
 		$msg->setFlagJunk(
-			in_array(Horde_Imap_Client::FLAG_JUNK, $flags, true) ||
-			in_array('junk', $flags, true)
+			in_array(Horde_Imap_Client::FLAG_JUNK, $flags, true)
+			|| in_array('junk', $flags, true)
 		);
 		$msg->setFlagNotjunk(in_array(Horde_Imap_Client::FLAG_NOTJUNK, $flags, true) || in_array('nonjunk', $flags, true));// While this is not a standard IMAP Flag, Thunderbird uses it to mark "not junk"
 		// @todo remove this as soon as possible @link https://github.com/nextcloud/mail/issues/25
@@ -525,9 +556,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		];
 
 		// remove all standard IMAP flags from $filters
-		$tags = array_filter($flags, static function ($flag) use ($allowed) {
-			return in_array($flag, $allowed, true) === false;
-		});
+		$tags = array_filter($flags, static fn ($flag) => in_array($flag, $allowed, true) === false);
 
 		if (($tags === []) === true) {
 			return $msg;

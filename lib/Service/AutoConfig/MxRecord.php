@@ -3,29 +3,18 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Service\AutoConfig;
 
 use Psr\Log\LoggerInterface;
+use function array_combine;
+use function asort;
 
-class MxRecord {
+final class MxRecord {
 	/** @var LoggerInterface */
 	private $logger;
 
@@ -38,19 +27,21 @@ class MxRecord {
 	 * @return string[]
 	 */
 	public function query(string $host) {
-		if (getmxrr($host, $mxRecords, $mxWeight) === false) {
+		if (getmxrr($host, $mxRecords, $mxWeights) === false) {
 			$this->logger->debug("no MX records for host <$host> found");
 			return [];
 		}
-		$mxRecords = array_filter($mxRecords, static function ($record) {
-			return !empty($record);
-		});
-		$this->logger->debug("found " . count($mxRecords) . " MX records for host <$host>");
+
+		// Sort MX records by weight
+		$sortedRecords = array_combine($mxRecords, $mxWeights);
+		asort($sortedRecords, SORT_NUMERIC);
+
+		$mxRecords = array_filter(array_keys($sortedRecords), static fn ($record) => !empty($record));
+		$this->logger->debug('found ' . count($sortedRecords) . " MX records for host <$host>");
 		if (empty(($mxRecords))) {
 			return [];
 		}
 
-		// TODO: sort by weight
 		return $this->sanitizedRecords($mxRecords);
 	}
 

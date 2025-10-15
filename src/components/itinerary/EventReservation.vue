@@ -1,23 +1,7 @@
 <!--
-  - @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
-  -
-  - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
+  - SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 <template>
 	<div class="reservation">
@@ -40,14 +24,14 @@
 </template>
 
 <script>
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import moment from '@nextcloud/moment'
 import ical from 'ical.js'
 import md5 from 'md5'
-import moment from '@nextcloud/moment'
-import { showError, showSuccess } from '@nextcloud/dialogs'
 
-import CalendarImport from './CalendarImport'
-import { importCalendarEvent } from '../../service/DAVService'
-import logger from '../../logger'
+import CalendarImport from './CalendarImport.vue'
+import logger from '../../logger.js'
+import { importCalendarEvent } from '../../service/DAVService.js'
 
 export default {
 	name: 'EventReservation',
@@ -117,7 +101,7 @@ export default {
 					// https://www.kanzaki.com/docs/ical/geo.html
 					event.updatePropertyWithValue(
 						'GEO',
-						`${this.data.reservationFor.location.geo.latitude};${this.data.reservationFor.location.geo.longitude}`
+						`${this.data.reservationFor.location.geo.latitude};${this.data.reservationFor.location.geo.longitude}`,
 					)
 				}
 			}

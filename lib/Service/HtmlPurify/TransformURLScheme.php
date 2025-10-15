@@ -3,23 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Thomas Müller <thomas.mueller@tmit.eu>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Service\HtmlPurify;
@@ -68,8 +54,8 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	 * @param \HTMLPurifier_Context $context
 	 * @return bool
 	 */
+	#[\Override]
 	public function filter(&$uri, $config, $context) {
-		/** @var \HTMLPurifier_Context $context */
 
 		if ($uri->scheme === null) {
 			$uri->scheme = 'https';
@@ -105,10 +91,10 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 		$originalURL = urlencode($uri->scheme . '://' . $uri->host);
 
 		// Add the port if it's not a default port
-		if ($uri->port !== null &&
-			!($uri->scheme === 'http' && $uri->port === 80) &&
-			!($uri->scheme === 'https' && $uri->port === 443) &&
-			!($uri->scheme === 'ftp' && $uri->port === 21)) {
+		if ($uri->port !== null
+			&& !($uri->scheme === 'http' && $uri->port === 80)
+			&& !($uri->scheme === 'https' && $uri->port === 443)
+			&& !($uri->scheme === 'ftp' && $uri->port === 21)) {
 			$originalURL = $originalURL . urlencode(':' . $uri->port);
 		}
 

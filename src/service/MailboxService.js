@@ -1,5 +1,9 @@
-import { generateUrl } from '@nextcloud/router'
+/**
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
 import axios from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
 
 export async function fetchAll(accountId) {
 	const url = generateUrl('/apps/mail/api/mailboxes?accountId={accountId}', {
@@ -57,6 +61,20 @@ export async function patchMailbox(id, data) {
 
 export const clearMailbox = async (id) => {
 	const url = generateUrl('/apps/mail/api/mailboxes/{id}/clear', {
+		id,
+	})
+
+	await axios.post(url)
+}
+
+/**
+ * Delete all vanished emails that are still cached.
+ *
+ * @param {number} id Mailbox database id
+ * @return {Promise<void>}
+ */
+export const repairMailbox = async (id) => {
+	const url = generateUrl('/apps/mail/api/mailboxes/{id}/repair', {
 		id,
 	})
 

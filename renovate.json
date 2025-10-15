@@ -1,7 +1,7 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
 	"extends": [
-		"config:base",
+		"config:recommended",
 		"helpers:pinGitHubActionDigests",
 		":dependencyDashboard",
 		":semanticCommits",
@@ -23,9 +23,7 @@
 	"ignoreUnstable": false,
 	"baseBranches": [
 		"main",
-		"stable3.1",
-		"stable2.2",
-		"stable1.15"
+		"stable5.5"
 	],
 	"enabledManagers": [
 		"composer",
@@ -41,15 +39,69 @@
 	"packageRules": [
 		{
 			"description": "Request JavaScript reviews",
-			"matchManagers": ["npm"],
+			"matchManagers": [
+				"npm"
+			],
 			"reviewers": [
 				"@ChristophWurst",
 				"@GretaD"
 			]
 		},
 		{
+			"description": "Ignore Vue 3 packages",
+			"matchManagers": [
+				"npm"
+			],
+			"matchPackageNames": [
+				"vue"
+			],
+			"allowedVersions": "<3.0"
+		},
+		{
+			"description": "Ignore Vue 3 packages",
+			"matchManagers": [
+				"npm"
+			],
+			"matchPackageNames": [
+				"vue-router"
+			],
+			"allowedVersions": "<4.0"
+		},
+		{
+			"description": "Ignore Vue 3 packages",
+			"matchManagers": [
+				"npm"
+			],
+			"matchPackageNames": [
+				"@vue/test-utils"
+			],
+			"allowedVersions": "<2.0"
+		},
+		{
+			"description": "Ignore Vue 3 packages",
+			"matchManagers": [
+				"npm"
+			],
+			"matchPackageNames": [
+				"vuex"
+			],
+			"allowedVersions": "<4.1.0"
+		},
+		{
+			"description": "Ignore Vue 3 packages",
+			"matchManagers": [
+				"npm"
+			],
+			"matchPackageNames": [
+				"vue-loader"
+			],
+			"allowedVersions": "<16.0.0"
+		},
+		{
 			"description": "Request PHP reviews",
-			"matchManagers": ["composer"],
+			"matchManagers": [
+				"composer"
+			],
 			"reviewers": [
 				"@ChristophWurst",
 				"@kesselb"
@@ -57,15 +109,22 @@
 		},
 		{
 			"description": "Bump Github actions monthly and request reviews",
-			"matchManagers": ["github-actions"],
-			"extends": ["schedule:monthly"],
+			"matchManagers": [
+				"github-actions"
+			],
+			"extends": [
+				"schedule:monthly"
+			],
 			"reviewers": [
 				"ChristophWurst",
 				"kesselb"
 			]
 		},
 		{
-			"matchUpdateTypes": ["minor", "patch"],
+			"matchUpdateTypes": [
+				"minor",
+				"patch"
+			],
 			"matchCurrentVersion": "!/^0/",
 			"automerge": true,
 			"automergeType": "pr",
@@ -78,7 +137,11 @@
 		},
 		{
 			"description": "Only automerge packages that follow semver",
-			"matchPackageNames": ["@nextcloud/vue", "friendsofphp/php-cs-fixer"],
+			"matchPackageNames": [
+				"@nextcloud/vue",
+				"friendsofphp/php-cs-fixer",
+				"php-cs-fixer/shim"
+			],
 			"automerge": false,
 			"labels": [
 				"dependencies",
@@ -94,43 +157,23 @@
 			"matchBaseBranches": "/^stable(.)+/"
 		},
 		{
-			"matchBaseBranches": ["main"],
-			"matchDepTypes": ["devDependencies"],
-			"extends": ["schedule:monthly"]
+			"matchBaseBranches": [
+				"main"
+			],
+			"matchDepTypes": [
+				"devDependencies"
+			],
+			"extends": [
+				"schedule:monthly"
+			]
 		},
 		{
-			"groupName": "CKEditor family",
+			"groupName": "calendar-js and timezones",
 			"matchPackageNames": [
-				"@ckeditor/ckeditor5-alignment",
-				"@ckeditor/ckeditor5-basic-styles",
-				"@ckeditor/ckeditor5-block-quote",
-				"@ckeditor/ckeditor5-build-balloon",
-				"@ckeditor/ckeditor5-core",
-				"@ckeditor/ckeditor5-editor-balloon",
-				"@ckeditor/ckeditor5-essentials",
-				"@ckeditor/ckeditor5-font",
-				"@ckeditor/ckeditor5-heading",
-				"@ckeditor/ckeditor5-image",
-				"@ckeditor/ckeditor5-link",
-				"@ckeditor/ckeditor5-list",
-				"@ckeditor/ckeditor5-paragraph",
-				"@ckeditor/ckeditor5-remove-format",
-				"@ckeditor/ckeditor5-theme-lark",
-				"@ckeditor/ckeditor5-upload"
+				"@nextcloud/calendar-js",
+				"@nextcloud/timezones"
 			],
-			"rangeStrategy": "pin",
 			"automerge": false
-		},
-		{
-			"groupName": "Jest family",
-			"matchPackageNames": [
-				"jest",
-				"jest-environment-jsdom",
-				"babel-jest",
-				"@vue/vue2-jest",
-				"@types/jest"
-			],
-			"automerge": true
 		}
 	],
 	"vulnerabilityAlerts": {

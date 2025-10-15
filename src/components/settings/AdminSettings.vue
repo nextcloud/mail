@@ -1,27 +1,10 @@
 <!--
-  - @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
-  -
-  - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
+  - SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 <template>
-	<SettingsSection
-		:title="t( 'mail', 'Mail app')"
+	<SettingsSection :name="t( 'mail', 'Mail app')"
 		:description="t( 'mail', 'The mail app allows users to read mails on their IMAP accounts.')">
 		<p>
 			{{
@@ -107,24 +90,22 @@
 			}}
 		</h3>
 		<p>
-			<Button
-				class="config-button"
+			<ButtonVue class="config-button"
 				:aria-label="t('mail', 'Add new config')"
 				@click="addNew=true">
 				<template #icon>
 					<IconAdd :size="20" />
 				</template>
 				{{ t('mail', 'Add new config') }}
-			</Button>
-			<Button
-				class="config-button"
+			</ButtonVue>
+			<ButtonVue class="config-button"
 				:aria-label="t('mail', 'Provision all accounts')"
 				@click="provisionAll">
 				<template #icon>
 					<IconSettings :size="20" />
 				</template>
 				{{ t('mail', 'Provision all accounts') }}
-			</Button>
+			</ButtonVue>
 			<ProvisioningSettings v-if="addNew"
 				:key="formKey"
 				:setting="preview"
@@ -141,8 +122,7 @@
 			<h3>{{ t('mail', 'Allow additional mail accounts') }}</h3>
 			<article>
 				<p>
-					<NcCheckboxRadioSwitch
-						:checked.sync="allowNewMailAccounts"
+					<NcCheckboxRadioSwitch :checked.sync="allowNewMailAccounts"
 						type="switch"
 						@update:checked="updateAllowNewMailAccounts">
 						{{ t('mail','Allow additional Mail accounts from User Settings') }}
@@ -150,16 +130,33 @@
 				</p>
 			</article>
 		</div>
-		<div v-if="isLlmConfigured"
+		<div v-if="isLlmSummaryConfigured"
 			class="app-description">
-			<h3>{{ t('mail', 'Enable thread summary') }}</h3>
+			<h3>{{ t('mail', 'Enable text processing through LLMs') }}</h3>
 			<article>
 				<p>
-					<NcCheckboxRadioSwitch
-						:checked.sync="enabledThreadSummary"
+					{{ t('mail', 'The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas.') }}
+				</p>
+				<p>
+					<NcCheckboxRadioSwitch :checked.sync="isLlmEnabled"
 						type="switch"
-						@update:checked="updateEnabledThreadSummary">
-						{{ t('mail','Enable thread summaries') }}
+						@update:checked="updateLlmEnabled">
+						{{ t('mail', 'Enable LLM processing') }}
+					</NcCheckboxRadioSwitch>
+				</p>
+			</article>
+		</div>
+		<div class="app-description">
+			<h3>{{ t('mail', 'Enable classification by importance by default') }}</h3>
+			<article>
+				<p>
+					{{ t('mail', 'The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts.') }}
+				</p>
+				<p>
+					<NcCheckboxRadioSwitch type="switch"
+						:checked="isImportanceClassificationEnabledByDefault"
+						@update:checked="setImportanceClassificationEnabledByDefault">
+						{{ t('mail', 'Enable classification of important mails by default') }}
 					</NcCheckboxRadioSwitch>
 				</p>
 			</article>
@@ -226,60 +223,77 @@
 		</div>
 		<div class="app-description">
 			<h3>
-				{{
-					t(
-						'mail',
-						'Microsoft integration'
-					)
-				}}
+				{{ t('mail', 'Microsoft integration') }}
 			</h3>
 			<article>
 				<p>
-					{{
-						t(
-							'mail',
-							'Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection.'
-						)
-					}}
+					{{ t('mail', 'Microsoft requires you to access your emails via IMAP using OAuth 2.0 authentication. To do this, you need to register an app with Microsoft Entra ID, formerly known as Microsoft Azure Active Directory.') }}
 				</p>
 				<p>
-					{{
-						t(
-							'mail',
-							'You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI.',
-							{
-								url: microsoftOauthRedirectUrl,
-							}
-						)
-					}}
+					{{ t('mail', 'Redirect URI') }}: <code>{{ microsoftOauthRedirectUrl }}</code>
 				</p>
+				<a :href="microsoftOauthDocs" target="_blank" rel="noopener noreferrer">{{ t('mail', 'For more details, please click here to open our documentation.') }}</a>
 			</article>
 			<MicrosoftAdminOauthSettings :tenant-id="microsoftOauthTenantId" :client-id="microsoftOauthClientId" />
+		</div>
+		<div class="app-description">
+			<h3>{{ t('mail', 'User Interface Preference Defaults') }}</h3>
+			<article>
+				<p>
+					{{ t('mail', 'These settings are used to pre-configure the user interface preferences they can be overridden by the user in the mail settings') }}
+				</p>
+			</article>
+			<br>
+			<article>
+				<p>
+					{{ t('mail', 'Message View Mode') }}
+				</p>
+				<p>
+					<NcCheckboxRadioSwitch type="radio"
+						name="message_view_mode_radio"
+						value="threaded"
+						:checked.sync="layoutMessageView"
+						@update:checked="setLayoutMessageView('threaded')">
+						{{ t('mail', 'Show all messages in thread') }}
+					</NcCheckboxRadioSwitch>
+					<NcCheckboxRadioSwitch type="radio"
+						name="message_view_mode_radio"
+						value="singleton"
+						:checked.sync="layoutMessageView"
+						@update:checked="setLayoutMessageView('singleton')">
+						{{ t('mail', 'Show only the selected message') }}
+					</NcCheckboxRadioSwitch>
+				</p>
+			</article>
 		</div>
 	</SettingsSection>
 </template>
 
 <script>
-import Button from '@nextcloud/vue/dist/Components/NcButton'
-import GmailAdminOauthSettings from './GmailAdminOauthSettings'
-import logger from '../../logger'
-import MicrosoftAdminOauthSettings from './MicrosoftAdminOauthSettings'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import ProvisioningSettings from './ProvisioningSettings'
-import AntiSpamSettings from './AntiSpamSettings'
-import IconAdd from 'vue-material-design-icons/Plus'
-import IconSettings from 'vue-material-design-icons/Cog'
-import SettingsSection from '@nextcloud/vue/dist/Components/NcSettingsSection'
-import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
+import ButtonVue from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import SettingsSection from '@nextcloud/vue/components/NcSettingsSection'
+import IconSettings from 'vue-material-design-icons/CogOutline.vue'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
+
+import AntiSpamSettings from './AntiSpamSettings.vue'
+import GmailAdminOauthSettings from './GmailAdminOauthSettings.vue'
+import MicrosoftAdminOauthSettings from './MicrosoftAdminOauthSettings.vue'
+import ProvisioningSettings from './ProvisioningSettings.vue'
+import logger from '../../logger.js'
 import {
-	disableProvisioning,
 	createProvisioningSettings,
-	updateProvisioningSettings,
+	disableProvisioning,
 	provisionAll,
+	setImportanceClassificationEnabledByDefault,
+	setLayoutMessageView,
 	updateAllowNewMailAccounts,
-	updateEnabledThreadSummary,
-} from '../../service/SettingsService'
+	updateEnabledSmartReply,
+	updateLlmEnabled,
+	updateProvisioningSettings,
+} from '../../service/SettingsService.js'
 
 const googleOauthClientId = loadState('mail', 'google_oauth_client_id', null) ?? undefined
 const googleOauthRedirectUrl = loadState('mail', 'google_oauth_redirect_url', null)
@@ -295,7 +309,7 @@ export default {
 		MicrosoftAdminOauthSettings,
 		ProvisioningSettings,
 		SettingsSection,
-		Button,
+		ButtonVue,
 		IconAdd,
 		IconSettings,
 		NcCheckboxRadioSwitch,
@@ -315,6 +329,7 @@ export default {
 			googleOauthRedirectUrl,
 			microsoftOauthTenantId,
 			microsoftOauthClientId,
+			microsoftOauthDocs: loadState('mail', 'microsoft_oauth_docs'),
 			microsoftOauthRedirectUrl,
 			preview: {
 				provisioningDomain: '',
@@ -338,8 +353,12 @@ export default {
 				loading: false,
 			},
 			allowNewMailAccounts: loadState('mail', 'allow_new_mail_accounts', true),
-			enabledThreadSummary: loadState('mail', 'enabled_thread_summary', false),
-			isLlmConfigured: loadState('mail', 'enabled_llm_backend'),
+			isLlmSummaryConfigured: loadState('mail', 'enabled_llm_summary_backend'),
+			isLlmEnabled: loadState('mail', 'llm_processing', true),
+			isLlmFreePromptConfigured: loadState('mail', 'enabled_llm_free_prompt_backend'),
+			isClassificationEnabledByDefault: loadState('mail', 'llm_processing', true),
+			isImportanceClassificationEnabledByDefault: loadState('mail', 'importance_classification_default', true),
+			layoutMessageView: loadState('mail', 'layout_message_view'),
 		}
 	},
 	methods: {
@@ -393,8 +412,23 @@ export default {
 		async updateAllowNewMailAccounts(checked) {
 			await updateAllowNewMailAccounts(checked)
 		},
-		async updateEnabledThreadSummary(checked) {
-			await updateEnabledThreadSummary(checked)
+		async updateLlmEnabled(checked) {
+			await updateLlmEnabled(checked)
+		},
+		async updateEnabledSmartReply(checked) {
+			await updateEnabledSmartReply(checked)
+		},
+		async setImportanceClassificationEnabledByDefault(enabledByDefault) {
+			try {
+				await setImportanceClassificationEnabledByDefault(enabledByDefault)
+				this.isImportanceClassificationEnabledByDefault = !this.isImportanceClassificationEnabledByDefault
+			} catch (error) {
+				showError(t('mail', 'Could not save default classification setting'))
+				logger.error('Could not save default classification setting', { error })
+			}
+		},
+		async setLayoutMessageView(value) {
+			await setLayoutMessageView(value)
 		},
 	},
 }
@@ -403,6 +437,7 @@ export default {
 .app-description {
 		margin-bottom: 24px;
 	}
+
 .config-button {
 	display: inline-block;
 	margin-inline: 4px;

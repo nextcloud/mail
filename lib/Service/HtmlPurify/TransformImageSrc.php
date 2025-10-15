@@ -3,23 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @author Jakob Sack <jakob@owncloud.org>
- * @author Jakob Sack <mail@jakobsack.de>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Service\HtmlPurify;
@@ -52,15 +38,16 @@ class TransformImageSrc extends HTMLPurifier_AttrTransform {
 	 * @param HTMLPurifier_Context $context
 	 * @return array
 	 */
+	#[\Override]
 	public function transform($attr, $config, $context) {
-		if ($context->get('CurrentToken')->name !== 'img' ||
-			!isset($attr['src'])) {
+		if ($context->get('CurrentToken')->name !== 'img'
+			|| !isset($attr['src'])) {
 			return $attr;
 		}
 
 		// Block tracking pixels
-		if (isset($attr['width']) && isset($attr['height']) &&
-			(int)$attr['width'] < 5 && (int)$attr['height'] < 5) {
+		if (isset($attr['width']) && isset($attr['height'])
+			&& (int)$attr['width'] < 5 && (int)$attr['height'] < 5) {
 			// Replace with a transparent png in case it's important for the layout
 			$attr['src'] = $this->urlGenerator->imagePath('mail', 'blocked-image.png');
 			$attr = $this->setDisplayNone($attr);

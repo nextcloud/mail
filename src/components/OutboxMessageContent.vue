@@ -1,15 +1,18 @@
+<!--
+  - SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
-	<NcEmptyContent
-		:title="t('mail', 'Pending or not sent messages will show up here')">
+	<NcEmptyContent :name="t('mail', 'Pending or not sent messages will show up here')" class="empty-content">
 		<template #icon>
-			<IconMail :size="65" />
+			<IconMail />
 		</template>
 	</NcEmptyContent>
 </template>
 
 <script>
-import IconMail from 'vue-material-design-icons/Email'
-import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
+import IconMail from 'vue-material-design-icons/EmailOutline.vue'
 
 export default {
 	name: 'OutboxMessageContent',
@@ -21,5 +24,8 @@ export default {
 </script>
 
 <style scoped>
-
+.empty-content{
+	height: 100%;
+	display: flex;
+}
 </style>

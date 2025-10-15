@@ -3,25 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright Copyright (c) 2023 Richard Steinmetz <richard@steinmetz.cloud>
- *
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\IMAP;
@@ -34,14 +17,16 @@ use Horde_Imap_Client_Exception_NoSupportExtension;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_ListHeaders;
-use Horde_ListHeaders_Base;
 use Horde_Mime_Exception;
 use Horde_Mime_Headers;
 use Horde_Mime_Part;
 use OCA\Mail\AddressList;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\SmimeDecryptException;
+use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Html;
+use OCA\Mail\Service\PhishingDetection\PhishingDetectionService;
 use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use function str_starts_with;
@@ -53,8 +38,10 @@ class ImapMessageFetcher {
 
 	private Html $htmlService;
 	private SmimeService $smimeService;
+	private PhishingDetectionService $phishingDetectionService;
 	private string $userId;
 
+	private bool $runPhishingCheck = false;
 	// Conditional fetching/parsing
 	private bool $loadBody = false;
 
@@ -71,22 +58,29 @@ class ImapMessageFetcher {
 	private string $rawReferences = '';
 	private string $dispositionNotificationTo = '';
 	private bool $hasDkimSignature = false;
+	private array $phishingDetails = [];
 	private ?string $unsubscribeUrl = null;
 	private bool $isOneClickUnsubscribe = false;
 	private ?string $unsubscribeMailto = null;
+	private bool $isPgpMimeEncrypted = false;
 
-	public function __construct(int $uid,
+	public function __construct(
+		int $uid,
 		string $mailbox,
 		Horde_Imap_Client_Base $client,
 		string $userId,
 		Html $htmlService,
-		SmimeService $smimeService) {
+		SmimeService $smimeService,
+		private Converter $converter,
+		PhishingDetectionService $phishingDetectionService,
+	) {
 		$this->uid = $uid;
 		$this->mailbox = $mailbox;
 		$this->client = $client;
 		$this->userId = $userId;
 		$this->htmlService = $htmlService;
 		$this->smimeService = $smimeService;
+		$this->phishingDetectionService = $phishingDetectionService;
 	}
 
 
@@ -102,10 +96,21 @@ class ImapMessageFetcher {
 	}
 
 	/**
+	 * Configure the fetcher to check for phishing.
+	 *
+	 * @param bool $value
+	 * @return $this
+	 */
+	public function withPhishingCheck(bool $value): ImapMessageFetcher {
+		$this->runPhishingCheck = $value;
+		return $this;
+	}
+
+	/**
 	 * @param Horde_Imap_Client_Data_Fetch|null $fetch
-	 * Will be reused if no body is requested.
-	 * It should at least contain envelope, flags, imapDate and headerText.
-	 * Otherwise, some data might not be parsed correctly.
+	 *                                                 Will be reused if no body is requested.
+	 *                                                 It should at least contain envelope, flags, imapDate and headerText.
+	 *                                                 Otherwise, some data might not be parsed correctly.
 	 * @return IMAPMessage
 	 *
 	 * @throws DoesNotExistException
@@ -113,6 +118,7 @@ class ImapMessageFetcher {
 	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
 	 * @throws Horde_Mime_Exception
 	 * @throws ServiceException
+	 * @throws SmimeDecryptException
 	 */
 	public function fetchMessage(?Horde_Imap_Client_Data_Fetch $fetch = null): IMAPMessage {
 		$ids = new Horde_Imap_Client_Ids($this->uid);
@@ -143,6 +149,13 @@ class ImapMessageFetcher {
 
 			// analyse the body part
 			$structure = $fetch->getStructure();
+
+			$this->isPgpMimeEncrypted = ($structure->getType() === 'multipart/encrypted'
+				&& $structure->getContentTypeParameter('protocol') === 'application/pgp-encrypted');
+			if ($this->isPgpMimeEncrypted) {
+				$this->plainMessage = $this->loadBodyData($structure, '2', false);
+				$this->attachmentsToIgnore[] = $structure->getPartByIndex(1)->getName();
+			}
 
 			$this->hasAnyAttachment = $this->hasAttachments($structure);
 
@@ -254,6 +267,7 @@ class ImapMessageFetcher {
 			$this->rawReferences,
 			$this->dispositionNotificationTo,
 			$this->hasDkimSignature,
+			$this->phishingDetails,
 			$this->unsubscribeUrl,
 			$this->isOneClickUnsubscribe,
 			$this->unsubscribeMailto,
@@ -262,6 +276,7 @@ class ImapMessageFetcher {
 			$isSigned,
 			$signatureIsValid,
 			$this->htmlService, // TODO: drop the html service dependency
+			$this->isPgpMimeEncrypted,
 		);
 	}
 
@@ -314,8 +329,11 @@ class ImapMessageFetcher {
 			}
 		}
 
+		$isAttachment = ($p->isAttachment() || $p->getType() === 'message/rfc822')
+			&& !in_array($p->getType(), ['application/pgp-signature', 'application/pkcs7-signature', 'application/x-pkcs7-signature']);
+
 		// Regular attachments
-		if ($p->isAttachment() || $p->getType() === 'message/rfc822') {
+		if ($isAttachment) {
 			$this->attachments[] = [
 				'id' => $p->getMimeId(),
 				'messageId' => $this->uid,
@@ -420,7 +438,7 @@ class ImapMessageFetcher {
 	private function handleHtmlMessage(Horde_Mime_Part $p, string $partNo, bool $isFetched): void {
 		$this->hasHtmlMessage = true;
 		$data = $this->loadBodyData($p, $partNo, $isFetched);
-		$this->htmlMessage .= $data . "<br><br>";
+		$this->htmlMessage .= $data . '<br><br>';
 	}
 
 	/**
@@ -432,6 +450,7 @@ class ImapMessageFetcher {
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
 	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 * @throws ServiceException
 	 */
 	private function loadBodyData(Horde_Mime_Part $p, string $partNo, bool $isFetched): string {
 		if (!$isFetched) {
@@ -441,7 +460,6 @@ class ImapMessageFetcher {
 			$fetch_query->bodyPart($partNo, [
 				'peek' => true
 			]);
-			$fetch_query->bodyPartSize($partNo);
 			$fetch_query->mimeHeader($partNo, [
 				'peek' => true
 			]);
@@ -459,22 +477,10 @@ class ImapMessageFetcher {
 			}
 
 			$data = $fetch->getBodyPart($partNo);
-
 			$p->setContents($data);
 		}
 
-		$data = $p->getContents();
-		if ($data === null) {
-			return '';
-		}
-
-		// Only convert encoding if it is explicitly specified in the header because text/calendar
-		// data is utf-8 by default.
-		$charset = $p->getContentTypeParameter('charset');
-		if ($charset !== null && strtoupper($charset) !== 'UTF-8') {
-			$data = mb_convert_encoding($data, 'UTF-8', $charset);
-		}
-		return (string)$data;
+		return $this->converter->convert($p);
 	}
 
 	private function hasAttachments(Horde_Mime_Part $part): bool {
@@ -498,7 +504,12 @@ class ImapMessageFetcher {
 		if ($utf8 !== false) {
 			return $utf8;
 		}
-		return iconv("UTF-8", "UTF-8//IGNORE", $subject);
+		$utf8Ignored = iconv('UTF-8', 'UTF-8//IGNORE', $subject);
+		if ($utf8Ignored === false) {
+			// Give up
+			return $subject;
+		}
+		return $utf8Ignored;
 	}
 
 	private function parseHeaders(Horde_Imap_Client_Data_Fetch $fetch): void {
@@ -520,11 +531,18 @@ class ImapMessageFetcher {
 		$dkimSignatureHeader = $parsedHeaders->getHeader('dkim-signature');
 		$this->hasDkimSignature = $dkimSignatureHeader !== null;
 
+		if ($this->runPhishingCheck) {
+			$this->phishingDetails = $this->phishingDetectionService->checkHeadersForPhishing($parsedHeaders, $this->hasHtmlMessage, $this->htmlMessage);
+		}
+
 		$listUnsubscribeHeader = $parsedHeaders->getHeader('list-unsubscribe');
 		if ($listUnsubscribeHeader !== null) {
 			$listHeaders = new Horde_ListHeaders();
-			/** @var Horde_ListHeaders_Base[] $headers */
 			$headers = $listHeaders->parse($listUnsubscribeHeader->name, $listUnsubscribeHeader->value_single);
+			if (!$headers) {
+				// Unable to parse headers
+				return;
+			}
 			foreach ($headers as $header) {
 				if (str_starts_with($header->url, 'http')) {
 					$this->unsubscribeUrl = $header->url;

@@ -3,25 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright Copyright (c) 2023 Johannes Merkel <mail@johannesgge.de>
- *
- * @author Johannes Merkel <mail@johannesgge.de>
- *
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Service;
@@ -100,7 +83,7 @@ class SnoozeService {
 		Account $srcAccount,
 		Mailbox $srcMailbox,
 		Account $dstAccount,
-		Mailbox $dstMailbox
+		Mailbox $dstMailbox,
 	): void {
 		$newUid = $this->mailManager->moveMessage(
 			$srcAccount,
@@ -109,6 +92,13 @@ class SnoozeService {
 			$dstAccount,
 			$dstMailbox->getName()
 		);
+
+		// TODO: This is bad - we should handle this case more gracefully!
+		//       Perhaps disable the snooze feature if the IMAP server does not support UIDPLUS?
+		if ($newUid === null) {
+			return;
+		}
+
 		$snoozedMessage = clone $message;
 		$snoozedMessage->setMailboxId($dstMailbox->getId());
 		$snoozedMessage->setUid($newUid);
@@ -178,7 +168,7 @@ class SnoozeService {
 		Account $srcAccount,
 		Mailbox $srcMailbox,
 		Account $dstAccount,
-		Mailbox $dstMailbox
+		Mailbox $dstMailbox,
 	): void {
 		$newUids = $this->mailManager->moveThread(
 			$srcAccount,
@@ -187,6 +177,8 @@ class SnoozeService {
 			$dstMailbox,
 			$selectedMessage->getThreadRootId()
 		);
+		// TODO: We will miss some UIDs here on some servers. The new uid array may not contain all
+		//       uids (or none at all) depending on the IMAP server and Message-ID headers.
 		$this->snoozeThreadDB($newUids, $dstMailbox, $unixTimestamp, $srcMailbox);
 	}
 

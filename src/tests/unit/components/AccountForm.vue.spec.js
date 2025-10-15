@@ -1,53 +1,35 @@
-/*
- * @copyright 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { testConnectivity, queryIspdb, queryMx } from '../../../service/AutoConfigService'
-import {createLocalVue, shallowMount} from '@vue/test-utils'
-import Vuex from 'vuex'
+import { testConnectivity, queryIspdb, queryMx } from '../../../service/AutoConfigService.js'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createPinia, PiniaVuePlugin } from 'pinia'
 
-import AccountForm from '../../../components/AccountForm'
-import Nextcloud from '../../../mixins/Nextcloud'
+import useMainStore from '../../../store/mainStore.js'
+
+import AccountForm from '../../../components/AccountForm.vue'
+import Nextcloud from '../../../mixins/Nextcloud.js'
 
 const localVue = createLocalVue()
 
-localVue.use(Vuex)
 localVue.mixin(Nextcloud)
+localVue.use(PiniaVuePlugin)
+const pinia = createPinia()
 
-jest.mock('../../../service/AutoConfigService')
+
+vi.mock('../../../service/AutoConfigService.js')
 
 describe('AccountForm', () => {
 
 	let save
-	let getters
 	let store
 	let view
 
 	beforeEach(() => {
-		save = jest.fn()
-		getters = {
-			googleOauthUrl: () => () => 'https://google.oauth',
-		}
-		store = new Vuex.Store({
-			getters,
-		})
+		save = vi.fn()
+
 		view = shallowMount(AccountForm, {
 			propsData: {
 				displayName: 'Tom Turbo',
@@ -55,8 +37,12 @@ describe('AccountForm', () => {
 				save,
 			},
 			localVue,
+			pinia,
 			store,
 		})
+
+		store = useMainStore()
+		store.googleOauthUrl = 'https://google.oauth'
 	})
 
 	it('uses name and email from nextcloud account', () => {

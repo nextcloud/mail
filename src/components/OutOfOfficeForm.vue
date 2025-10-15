@@ -1,108 +1,103 @@
 <!--
-  - @copyright Copyright (c) 2022 Richard Steinmetz <richard@steinmetz.cloud>
-  -
-  - @author Richard Steinmetz <richard@steinmetz.cloud>
-  -
-  - @license AGPL-3.0-or-later
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program. If not, see <http://www.gnu.org/licenses/>.
-  -
-  -->
+  - SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 <template>
-	<!-- Wait until sieve script has been fetched before showing form. -->
-	<form v-if="sieveScriptData" class="form" @submit.prevent="submit">
+	<form class="form" @submit.prevent="submit">
 		<div class="form__multi-row">
 			<fieldset class="form__fieldset">
-				<input
-					id="ooo-disabled"
+				<input id="ooo-disabled"
 					class="radio"
 					type="radio"
 					name="enabled"
-					:checked="!enabled"
-					@change="enabled = false">
+					:checked="enabled === OOO_DISABLED"
+					@change="enabled = OOO_DISABLED">
 				<label for="ooo-disabled">{{ t('mail', 'Autoresponder off') }}</label>
 			</fieldset>
 
 			<fieldset class="form__fieldset">
-				<input
-					id="ooo-enabled"
+				<input id="ooo-enabled"
 					class="radio"
 					type="radio"
 					name="enabled"
-					:checked="enabled"
-					@change="enabled = true">
+					:checked="enabled === OOO_ENABLED"
+					@change="enabled = OOO_ENABLED">
 				<label for="ooo-enabled">{{ t('mail', 'Autoresponder on') }}</label>
 			</fieldset>
-		</div>
 
-		<div class="form__multi-row">
-			<fieldset class="form__fieldset">
-				<label for="ooo-first-day">{{ t('mail', 'First day') }}</label>
-				<DatetimePicker
-					id="ooo-first-day"
-					v-model="firstDay"
-					:disabled="!enabled" />
-			</fieldset>
-
-			<fieldset class="form__fieldset">
-				<div class="form__fieldset__label">
-					<input
-						id="ooo-enable-last-day"
-						v-model="enableLastDay"
-						type="checkbox"
-						:disabled="!enabled">
-					<label for="ooo-enable-last-day">
-						{{ t('mail', 'Last day (optional)') }}
-					</label>
-				</div>
-				<DatetimePicker
-					id="ooo-last-day"
-					v-model="lastDay"
-					:disabled="!enabled || !enableLastDay" />
+			<fieldset v-if="hasPersonalAbsenceSettings" class="form__fieldset">
+				<input id="ooo-follow-system"
+					class="radio"
+					type="radio"
+					name="enabled"
+					:checked="enabled === OOO_FOLLOW_SYSTEM"
+					@change="enabled = OOO_FOLLOW_SYSTEM">
+				<label for="ooo-follow-system">{{ t('mail', 'Autoresponder follows system settings') }}</label>
 			</fieldset>
 		</div>
 
-		<fieldset class="form__fieldset">
-			<label for="ooo-subject">{{ t('mail', 'Subject') }}</label>
-			<input
-				id="ooo-subject"
-				v-model="subject"
-				type="text"
-				:disabled="!enabled">
-			<p class="form__fieldset__description">
-				{{ t('mail', '${subject} will be replaced with the subject of the message you are responding to') }}
-			</p>
-		</fieldset>
+		<template v-if="followingSystem">
+			<p>{{ t('mail', 'The autoresponder follows your personal absence period settings.') }}</p>
+			<ButtonVue :href="personalAbsenceSettingsUrl" target="_blank" rel="noopener noreferrer">
+				<template #icon>
+					<OpenInNewIcon :size="20" />
+				</template>
+				{{ t('mail', 'Edit absence settings') }}
+			</ButtonVue>
+		</template>
+		<template v-else>
+			<div class="form__multi-row">
+				<fieldset class="form__fieldset">
+					<label for="ooo-first-day">{{ t('mail', 'First day') }}</label>
+					<DatetimePicker id="ooo-first-day"
+						v-model="firstDay"
+						:disabled="!enabled" />
+				</fieldset>
 
-		<fieldset class="form__fieldset">
-			<label for="ooo-message">{{ t('mail', 'Message') }}</label>
-			<TextEditor
-				id="ooo-message"
-				v-model="message"
-				:html="false"
-				:disabled="!enabled"
-				:bus="{ '$on': () => { /* noop */ } }" />
-		</fieldset>
+				<fieldset class="form__fieldset">
+					<div class="form__fieldset__label">
+						<input id="ooo-enable-last-day"
+							v-model="enableLastDay"
+							type="checkbox"
+							:disabled="!enabled">
+						<label for="ooo-enable-last-day">
+							{{ t('mail', 'Last day (optional)') }}
+						</label>
+					</div>
+					<DatetimePicker id="ooo-last-day"
+						v-model="lastDay"
+						:disabled="!enabled || !enableLastDay" />
+				</fieldset>
+			</div>
+
+			<fieldset class="form__fieldset">
+				<label for="ooo-subject">{{ t('mail', 'Subject') }}</label>
+				<input id="ooo-subject"
+					v-model="subject"
+					type="text"
+					:disabled="followingSystem">
+				<p class="form__fieldset__description">
+					{{ t('mail', '${subject} will be replaced with the subject of the message you are responding to') }}
+				</p>
+			</fieldset>
+
+			<fieldset class="form__fieldset">
+				<label for="ooo-message">{{ t('mail', 'Message') }}</label>
+				<TextEditor id="ooo-message"
+					v-model="message"
+					:html="false"
+					:disabled="followingSystem"
+					:bus="textEditorDummyBus" />
+			</fieldset>
+		</template>
 
 		<p v-if="errorMessage">
 			{{ t('mail', 'Oh Snap!') }}
 			{{ errorMessage }}
 		</p>
 
-		<Button
-			type="primary"
+		<ButtonVue type="primary"
 			native-type="submit"
 			:aria-label="t('mail', 'Save autoresponder')"
 			:disabled="loading || !valid">
@@ -110,25 +105,36 @@
 				<CheckIcon :size="20" />
 			</template>
 			{{ t('mail', 'Save autoresponder') }}
-		</Button>
+		</ButtonVue>
 	</form>
 </template>
 
 <script>
-import { NcDatetimePicker as DatetimePicker, NcButton as Button } from '@nextcloud/vue'
-import TextEditor from './TextEditor'
-import CheckIcon from 'vue-material-design-icons/Check'
-import { buildOutOfOfficeSieveScript, parseOutOfOfficeState } from '../util/outOfOffice'
-import logger from '../logger'
-import { html, plain, toHtml, toPlain } from '../util/text'
+import { loadState } from '@nextcloud/initial-state'
+import { generateUrl } from '@nextcloud/router'
+import { NcButton as ButtonVue, NcDateTimePicker as DatetimePicker } from '@nextcloud/vue'
+import mitt from 'mitt'
+import { mapStores } from 'pinia'
+import CheckIcon from 'vue-material-design-icons/Check.vue'
+import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
+
+import TextEditor from './TextEditor.vue'
+import * as OutOfOfficeService from '../service/OutOfOfficeService.js'
+import useMainStore from '../store/mainStore.js'
+import { html, plain, toHtml, toPlain } from '../util/text.js'
+
+const OOO_DISABLED = 'disabled'
+const OOO_ENABLED = 'enabled'
+const OOO_FOLLOW_SYSTEM = 'system'
 
 export default {
 	name: 'OutOfOfficeForm',
 	components: {
 		DatetimePicker,
 		TextEditor,
-		Button,
+		ButtonVue,
 		CheckIcon,
+		OpenInNewIcon,
 	},
 	props: {
 		account: {
@@ -137,8 +143,15 @@ export default {
 		},
 	},
 	data() {
+		const nextcloudVersion = parseInt(OC.config.version.split('.')[0])
+		const enableSystemOutOfOffice = loadState('mail', 'enable-system-out-of-office', false)
+
 		return {
-			enabled: false,
+			OOO_DISABLED,
+			OOO_ENABLED,
+			OOO_FOLLOW_SYSTEM,
+			initialized: false,
+			enabled: this.account.outOfOfficeFollowsSystem ? OOO_FOLLOW_SYSTEM : OOO_DISABLED,
 			enableLastDay: false,
 			firstDay: new Date(),
 			lastDay: null,
@@ -146,42 +159,30 @@ export default {
 			message: '',
 			loading: false,
 			errorMessage: '',
+			hasPersonalAbsenceSettings: nextcloudVersion >= 28 && enableSystemOutOfOffice,
+			personalAbsenceSettingsUrl: generateUrl('/settings/user/availability'),
+			textEditorDummyBus: mitt(),
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		/**
 		 * @return {boolean}
 		 */
 		valid() {
+			if (this.followingSystem) {
+				return true
+			}
+
+			if (this.enabled === OOO_DISABLED) {
+				return true
+			}
+
 			return !!(this.firstDay
 				&& (!this.enableLastDay || (this.enableLastDay && this.lastDay))
 				&& (!this.enableLastDay || (this.lastDay >= this.firstDay))
 				&& this.subject
 				&& this.message)
-		},
-
-		/**
-		 * @return {{script: string, scriptName: string}|undefined}
-		 */
-		sieveScriptData() {
-			return this.$store.getters.getActiveSieveScript(this.account.id)
-		},
-
-		/**
-		 * @return {object|undefined}
-		 */
-		parsedState() {
-			if (!this.sieveScriptData?.script) {
-				return undefined
-			}
-
-			try {
-				return parseOutOfOfficeState(this.sieveScriptData.script).data
-			} catch (error) {
-				logger.warn('Failed to parse OOO state', { error })
-			}
-
-			return undefined
 		},
 
 		/**
@@ -198,21 +199,20 @@ export default {
 				 ...this.account.aliases,
 			 ].map(({ name, alias }) => `${name} <${alias}>`)
 		},
+
+		/**
+		 * @return {boolean}
+		 */
+		followingSystem() {
+			return this.hasPersonalAbsenceSettings && this.enabled === OOO_FOLLOW_SYSTEM
+		},
 	},
 	watch: {
-		parsedState: {
-			immediate: true,
-			handler(state) {
-				state ??= {}
-				this.enabled = !!state.enabled ?? false
-				this.firstDay = state.start ?? new Date()
-				this.lastDay = state.end ?? null
-				this.enableLastDay = !!this.lastDay
-				this.subject = state.subject ?? ''
-				this.message = toHtml(plain(state.message ?? '')).value
-			},
-		},
 		enableLastDay(enableLastDay) {
+			if (!this.initialized) {
+				return
+			}
+
 			if (enableLastDay) {
 				this.lastDay = new Date(this.firstDay)
 				this.lastDay.setDate(this.lastDay.getDate() + 6)
@@ -221,6 +221,10 @@ export default {
 			}
 		},
 		firstDay(firstDay, previousFirstDay) {
+			if (!this.initialized) {
+				return
+			}
+
 			if (!this.enableLastDay) {
 				return
 			}
@@ -235,37 +239,81 @@ export default {
 			this.lastDay.setDate(firstDay.getDate() + diffDays)
 		},
 	},
+	async mounted() {
+		await this.fetchState()
+		this.initialized = true
+	},
 	methods: {
+		async fetchState() {
+			const { state } = await OutOfOfficeService.fetch(this.account.id)
+
+			if (this.account.outOfOfficeFollowsSystem) {
+				this.enabled = OOO_FOLLOW_SYSTEM
+			} else {
+				this.enabled = state.enabled ? OOO_ENABLED : OOO_DISABLED
+			}
+
+			if (state.enabled && state.start) {
+				this.firstDay = new Date(state.start)
+			}
+			if (state.enabled && state.end) {
+				this.lastDay = new Date(state.end)
+				// FIXME: The dav automation adds 23:59 and mail adds 24:00 hours to the last day.
+				//        Subtract 23 hours to get the actual date.
+				this.lastDay.setHours(this.lastDay.getHours() - 23, 0, 0, 0)
+				this.enableLastDay = true
+			}
+
+			this.subject = state.subject
+			this.message = toHtml(plain(state.message)).value
+		},
 		async submit() {
 			this.loading = true
 			this.errorMessage = ''
 
-			const state = parseOutOfOfficeState(this.sieveScriptData.script)
-			const originalScript = state.sieveScript
-
-			const enrichedScript = buildOutOfOfficeSieveScript(originalScript, {
-				enabled: this.enabled,
-				start: this.firstDay,
-				end: this.lastDay,
-				subject: this.subject,
-				message: toPlain(html(this.message)).value, // CKEditor always returns html data
-				allowedRecipients: this.aliases,
-			})
-
 			try {
-				await this.$store.dispatch('updateActiveSieveScript', {
-					accountId: this.account.id,
-					scriptData: {
-						...this.sieveScriptData,
-						script: enrichedScript,
-					},
-				})
+				if (this.followingSystem) {
+					await OutOfOfficeService.followSystem(this.account.id)
+					this.mainStore.patchAccountMutation({
+						account: this.account,
+						data: {
+							outOfOfficeFollowsSystem: true,
+						},
+					})
+				} else {
+					const firstDay = new Date(this.firstDay)
+					firstDay.setHours(0, 0, 0, 0)
+
+					let lastDay = null
+					if (this.lastDay) {
+						// Add 24 hours to the last day to include the whole day
+						lastDay = new Date(this.lastDay)
+						lastDay.setHours(24, 0, 0, 0)
+					}
+
+					// Date.toISOString() always returns the date in UTC
+					await OutOfOfficeService.update(this.account.id, {
+						enabled: this.enabled === OOO_ENABLED,
+						start: firstDay.toISOString(),
+						end: lastDay?.toISOString() ?? null,
+						subject: this.subject,
+						message: toPlain(html(this.message)).value, // CKEditor always returns html data
+						allowedRecipients: this.aliases,
+					})
+
+					this.mainStore.patchAccountMutation({
+						account: this.account,
+						data: {
+							outOfOfficeFollowsSystem: false,
+						},
+					})
+				}
+				await this.mainStore.fetchActiveSieveScript({ accountId: this.account.id })
 			} catch (error) {
 				this.errorMessage = error.message
 			} finally {
 				this.loading = false
 			}
-
 		},
 	},
 }

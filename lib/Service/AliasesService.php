@@ -3,23 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @author Tahaa Karim <tahaalibra@gmail.com>
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Service;
@@ -45,7 +31,7 @@ class AliasesService {
 	/**
 	 * @param int $accountId
 	 * @param String $currentUserId
-	 * @return Alias[]
+	 * @return list<Alias>
 	 */
 	public function findAll(int $accountId, string $currentUserId): array {
 		return $this->aliasMapper->findAll($accountId, $currentUserId);
@@ -59,6 +45,16 @@ class AliasesService {
 	 */
 	public function find(int $aliasId, string $currentUserId): Alias {
 		return $this->aliasMapper->find($aliasId, $currentUserId);
+	}
+
+	/**
+	 * @param string $aliasEmail
+	 * @param string $userId
+	 * @return Alias
+	 * @throws DoesNotExistException
+	 */
+	public function findByAliasAndUserId(string $aliasEmail, string $userId): Alias {
+		return $this->aliasMapper->findByAlias($aliasEmail, $userId);
 	}
 
 	/**
@@ -132,7 +128,7 @@ class AliasesService {
 	 *
 	 * @throws DoesNotExistException
 	 */
-	public function updateSignature(string $userId, int $aliasId, string $signature = null): Alias {
+	public function updateSignature(string $userId, int $aliasId, ?string $signature = null): Alias {
 		$entity = $this->find($aliasId, $userId);
 		$entity->setSignature($signature);
 		return $this->aliasMapper->update($entity);

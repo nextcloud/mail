@@ -1,3 +1,7 @@
+<!--
+  - SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<MailboxPicker :account="account"
 		:selected.sync="destMailboxId"
@@ -11,8 +15,11 @@
 </template>
 
 <script>
-import logger from '../logger'
-import MailboxPicker from './MailboxPicker'
+import { mapStores } from 'pinia'
+
+import logger from '../logger.js'
+import MailboxPicker from './MailboxPicker.vue'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'MoveMailboxModal',
@@ -35,6 +42,9 @@ export default {
 			destMailboxId: undefined,
 		}
 	},
+	computed: {
+		...mapStores(useMainStore),
+	},
 	methods: {
 		onClose() {
 			this.$emit('close')
@@ -45,23 +55,23 @@ export default {
 				try {
 					if (!this.destMailboxId) {
 						const newName = this.mailbox.displayName
-						await this.$store.dispatch('renameMailbox', {
+						await this.mainStore.renameMailbox({
 							account: this.account,
 							mailbox: this.mailbox,
 							newName,
 						})
 
 					} else {
-						const destMailbox = this.$store.getters.getMailbox(this.destMailboxId)
-						const newName = destMailbox.name + this.mailbox.delimiter + this.mailbox.name
-						await this.$store.dispatch('renameMailbox', {
+						const destMailbox = this.mainStore.getMailbox(this.destMailboxId)
+						const newName = destMailbox.name + this.mailbox.delimiter + this.mailbox.displayName
+						await this.mainStore.renameMailbox({
 							account: this.account,
 							mailbox: this.mailbox,
 							newName,
 						})
 					}
 				} catch (error) {
-					logger.error('could not move mailbox', {
+					logger.error('could not move folder', {
 						error,
 					})
 				} finally {

@@ -1,23 +1,9 @@
 <?php
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Matthias Rella <mrella@pisys.eu>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 namespace OCA\Mail\Tests\Unit\Service\Autocompletion;
@@ -51,8 +37,8 @@ class AutoCompleteServiceTest extends TestCase {
 		$term = 'jo';
 
 		$contactsResult = [
-			['id' => 12, 'label' => '"john doe" <john@doe.cz>', 'email' => 'john@doe.cz'],
-			['id' => 13, 'label' => '"joe doe" <joe@doe.se>', 'email' => 'joe@doe.se'],
+			['id' => 12, 'label' => '"john doe" <john@doe.cz>', 'email' => 'john@doe.cz', 'source' => 'contacts'],
+			['id' => 13, 'label' => '"joe doe" <joe@doe.se>', 'email' => 'joe@doe.se', 'source' => 'contacts'],
 		];
 		$john = new CollectedAddress();
 		$john->setId(1234);
@@ -64,7 +50,7 @@ class AutoCompleteServiceTest extends TestCase {
 		];
 
 		$groupsResult = [
-			['id' => 20, 'label' => 'Journalists', 'email' => 'Journalists']
+			['id' => 20, 'label' => 'Journalists', 'email' => 'Journalists', 'source' => 'groups']
 		];
 
 		$this->contactsIntegration->expects($this->once())
@@ -86,10 +72,10 @@ class AutoCompleteServiceTest extends TestCase {
 		$response = $this->service->findMatches('testuser', $term);
 
 		$expected = [
-			['id' => 12, 'label' => '"john doe" <john@doe.cz>', 'email' => 'john@doe.cz'],
-			['id' => 13, 'label' => '"joe doe" <joe@doe.se>', 'email' => 'joe@doe.se'],
-			['id' => 1234, 'label' => 'John Doe', 'email' => 'john@doe.com'],
-			['id' => 20, 'label' => 'Journalists', 'email' => 'Journalists'],
+			['id' => 12, 'label' => '"john doe" <john@doe.cz>', 'email' => 'john@doe.cz', 'source' => 'contacts'],
+			['id' => 13, 'label' => '"joe doe" <joe@doe.se>', 'email' => 'joe@doe.se', 'source' => 'contacts'],
+			['id' => 1234, 'label' => 'John Doe', 'email' => 'john@doe.com', 'source' => 'collector'],
+			['id' => 20, 'label' => 'Journalists', 'email' => 'Journalists', 'source' => 'groups'],
 		];
 		$this->assertEquals($expected, $response);
 	}

@@ -3,24 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Settings;
@@ -30,12 +14,15 @@ use OCA\Mail\Integration\GoogleIntegration;
 use OCA\Mail\Integration\MicrosoftIntegration;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AntiSpamService;
+use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\Defaults;
 use OCP\IConfig;
 use OCP\IInitialStateService;
-use OCP\LDAP\ILDAPProvider;
 use OCP\Settings\ISettings;
+use OCP\TextProcessing\FreePromptTaskType;
+use OCP\TextProcessing\SummaryTaskType;
 
 class AdminSettings implements ISettings {
 	/** @var IInitialStateService */
@@ -51,14 +38,19 @@ class AdminSettings implements ISettings {
 	private MicrosoftIntegration $microsoftIntegration;
 	private IConfig $config;
 	private AiIntegrationsService $aiIntegrationsService;
+	private ClassificationSettingsService $classificationSettingsService;
 
-	public function __construct(IInitialStateService $initialStateService,
+	public function __construct(
+		IInitialStateService $initialStateService,
 		ProvisioningManager $provisioningManager,
 		AntiSpamService $antiSpamService,
 		GoogleIntegration $googleIntegration,
 		MicrosoftIntegration $microsoftIntegration,
 		IConfig $config,
-		AiIntegrationsService $aiIntegrationsService) {
+		AiIntegrationsService $aiIntegrationsService,
+		ClassificationSettingsService $classificationSettingsService,
+		private Defaults $themingDefaults,
+	) {
 		$this->initialStateService = $initialStateService;
 		$this->provisioningManager = $provisioningManager;
 		$this->antiSpamService = $antiSpamService;
@@ -66,8 +58,10 @@ class AdminSettings implements ISettings {
 		$this->microsoftIntegration = $microsoftIntegration;
 		$this->config = $config;
 		$this->aiIntegrationsService = $aiIntegrationsService;
+		$this->classificationSettingsService = $classificationSettingsService;
 	}
 
+	#[\Override]
 	public function getForm() {
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,
@@ -92,22 +86,26 @@ class AdminSettings implements ISettings {
 
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,
-			'enabled_thread_summary',
-			$this->config->getAppValue('mail', 'enabled_thread_summary', 'no') === 'yes'
+			'layout_message_view',
+			$this->config->getAppValue('mail', 'layout_message_view', 'threaded')
 		);
 
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,
-			'enabled_llm_backend',
-			$this->aiIntegrationsService->isLlmAvailable()
+			'llm_processing',
+			$this->aiIntegrationsService->isLlmProcessingEnabled(),
 		);
 
-		$this->initialStateService->provideLazyInitialState(
+		$this->initialStateService->provideInitialState(
 			Application::APP_ID,
-			'ldap_aliases_integration',
-			static function () {
-				return method_exists(ILDAPProvider::class, 'getMultiValueUserAttribute');
-			}
+			'enabled_llm_free_prompt_backend',
+			$this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
+		);
+
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'enabled_llm_summary_backend',
+			$this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class)
 		);
 
 		$this->initialStateService->provideInitialState(
@@ -135,14 +133,27 @@ class AdminSettings implements ISettings {
 			'microsoft_oauth_redirect_url',
 			$this->microsoftIntegration->getRedirectUrl(),
 		);
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'microsoft_oauth_docs',
+			$this->themingDefaults->buildDocLinkToKey('admin-groupware-oauth-microsoft'),
+		);
+
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'importance_classification_default',
+			$this->classificationSettingsService->isClassificationEnabledByDefault(),
+		);
 
 		return new TemplateResponse(Application::APP_ID, 'settings-admin');
 	}
 
+	#[\Override]
 	public function getSection() {
 		return 'groupware';
 	}
 
+	#[\Override]
 	public function getPriority() {
 		return 90;
 	}

@@ -3,30 +3,15 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2021 Anna Larch <anna.larch@gmx.net>
- *
- * @author 2021 Anna Larch <anna.larch@gmx.net>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Integration\Db;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Service\Avatar\Avatar;
 
 class MessageTest extends TestCase {
 	protected function setUp(): void {
@@ -124,5 +109,26 @@ class MessageTest extends TestCase {
 		$this->assertNotNull($message->getThreadRootId());
 		$this->assertEquals($expected, $message->getThreadRootId());
 		$this->assertNull($message->getInReplyTo());
+	}
+
+	public function testSetAvatar(): void {
+		$expected = new Avatar(
+			'http://example.com/avatar.png',
+			'image/png',
+			true
+		);
+		$message = new Message();
+
+		$message->setAvatar($expected);
+
+		$this->assertEquals($expected, $message->getAvatar());
+	}
+
+	public function testSetFetchAvatarFromClient(): void {
+		$message = new Message();
+
+		$message->setFetchAvatarFromClient(true);
+
+		$this->assertTrue($message->jsonSerialize()['fetchAvatarFromClient']);
 	}
 }

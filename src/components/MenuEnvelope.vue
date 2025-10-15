@@ -1,3 +1,7 @@
+<!--
+  - SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <!-- Standard Actions menu for Envelopes -->
 <template>
 	<div>
@@ -7,41 +11,17 @@
 				:close-after-click="true"
 				@click.prevent="onToggleImportant">
 				<template #icon>
-					<ImportantIcon
-						:size="20" />
+					<ImportantIcon v-if="isImportant" :size="20" />
+					<ImportantOutlineIcon v-else :size="20" />
 				</template>
 				{{
 					isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
 				}}
 			</ActionButton>
-			<ActionButton v-if="withReply"
-				:close-after-click="true"
-				@click="onReply">
-				<template #icon>
-					<ReplyAllIcon v-if="hasMultipleRecipients"
-						:title="t('mail', 'Reply all')"
-						:size="20" />
-					<ReplyIcon v-else
-						:title="t('mail', 'Reply')"
-						:size="20" />
-				</template>
-				{{ t('mail', 'Reply') }}
-			</ActionButton>
-			<ActionButton v-if="hasMultipleRecipients"
-				:close-after-click="true"
-				@click="onReply(true)">
-				<template #icon>
-					<ReplyIcon
-						:title="t('mail', 'Reply to sender only')"
-						:size="20" />
-				</template>
-				{{ t('mail', 'Reply to sender only') }}
-			</ActionButton>
 			<ActionButton :close-after-click="true"
 				@click="onForward">
 				<template #icon>
-					<ShareIcon
-						:title="t('mail', 'Forward')"
+					<ShareIcon :title="t('mail', 'Forward')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Forward') }}
@@ -50,8 +30,7 @@
 				:close-after-click="true"
 				@click.prevent="onToggleJunk">
 				<template #icon>
-					<AlertOctagonIcon
-						:title="envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')"
+					<AlertOctagonIcon :title="envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')"
 						:size="20" />
 				</template>
 				{{
@@ -60,33 +39,18 @@
 			</ActionButton>
 			<ActionButton v-if="hasWriteAcl"
 				:close-after-click="true"
-				@click.prevent="onOpenTagModal">
+				@click.prevent="$emit('open-tag-modal')">
 				<template #icon>
-					<TagIcon
-						:title="t('mail', 'Edit tags')"
+					<TagIcon :title="t('mail', 'Edit tags')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Edit tags') }}
 			</ActionButton>
-			<ActionButton v-if="withSelect"
+			<ActionButton v-if="hasDeleteAcl"
 				:close-after-click="true"
-				@click.prevent="toggleSelected">
+				@click.prevent="$emit('open-move-modal')">
 				<template #icon>
-					<CheckIcon
-						:title="isSelected ? t('mail', 'Unselect') : t('mail', 'Select')"
-						:size="20" />
-				</template>
-				{{
-					isSelected ? t('mail', 'Unselect') : t('mail', 'Select')
-				}}
-			</ActionButton>
-			<ActionButton
-				v-if="hasDeleteAcl"
-				:close-after-click="true"
-				@click.prevent="onOpenMoveModal">
-				<template #icon>
-					<OpenInNewIcon
-						:title="t('mail', 'Move message')"
+					<OpenInNewIcon :title="t('mail', 'Move message')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Move message') }}
@@ -109,11 +73,19 @@
 				</template>
 				{{ t('mail', 'Unsnooze') }}
 			</ActionButton>
+			<ActionButton v-if="isTranslationEnabled ?? false"
+				:close-after-click="true"
+				@click.prevent="$emit('open-translation-modal')">
+				<template #icon>
+					<TranslationIcon :title="t('mail', 'Translate')"
+						:size="20" />
+				</template>
+				{{ t('mail', 'Translate') }}
+			</ActionButton>
 			<ActionButton :close-after-click="false"
 				@click="localMoreActionsOpen=true">
 				<template #icon>
-					<DotsHorizontalIcon
-						:title="t('mail', 'More actions')"
+					<DotsHorizontalIcon :title="t('mail', 'More actions')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'More actions') }}
@@ -123,8 +95,7 @@
 			<ActionButton :close-after-click="false"
 				@click="localMoreActionsOpen=false">
 				<template #icon>
-					<ChevronLeft
-						:title="t('mail', 'More actions')"
+					<ChevronLeft :title="t('mail', 'More actions')"
 						:size="20" />
 					{{ t('mail', 'More actions') }}
 				</template>
@@ -132,8 +103,7 @@
 			<ActionButton :close-after-click="true"
 				@click.prevent="forwardSelectedAsAttachment">
 				<template #icon>
-					<ShareIcon
-						:title="t('mail', 'Forward message as attachment')"
+					<ShareIcon :title="t('mail', 'Forward message as attachment')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Forward message as attachment') }}
@@ -141,67 +111,75 @@
 			<ActionButton :close-after-click="true"
 				@click="onOpenEditAsNew">
 				<template #icon>
-					<PlusIcon
-						:title="t('mail', 'Edit as new message')"
+					<PlusIcon :title="t('mail', 'Edit as new message')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Edit as new message') }}
 			</ActionButton>
 			<ActionButton :close-after-click="true"
-				@click.prevent="showEventModal = true">
+				@click.prevent="$emit('open-event-modal')">
 				<template #icon>
-					<CalendarBlankIcon
-						:title="t('mail', 'Create event')"
+					<CalendarBlankIcon :title="t('mail', 'Reply with meeting')"
 						:size="20" />
 				</template>
-				{{ t('mail', 'Create event') }}
+				{{ t('mail', 'Reply with meeting') }}
 			</ActionButton>
 			<ActionButton :close-after-click="true"
-				@click.prevent="showTaskModal = true">
+				@click.prevent="$emit('open-task-modal')">
 				<template #icon>
-					<TaskIcon
-						:title="t('mail', 'Create task')"
+					<TaskIcon :title="t('mail', 'Create task')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Create task') }}
 			</ActionButton>
 			<ActionButton v-if="withShowSource"
 				:close-after-click="true"
-				@click.prevent="onShowSourceModal">
+				@click.prevent="$emit('show-source-modal')">
 				<template #icon>
-					<InformationIcon
-						:title="t('mail', 'View source')"
+					<InformationIcon :title="t('mail', 'View source')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'View source') }}
 			</ActionButton>
-			<ActionLink
-				:close-after-click="true"
+			<ActionButton :close-after-click="true"
+				@click="onPrint">
+				<template #icon>
+					<PrinterIcon :size="20" />
+				</template>
+				{{ t('mail', 'Print message') }}
+			</ActionButton>
+			<ActionLink :close-after-click="true"
 				:href="exportMessageLink">
 				<template #icon>
 					<DownloadIcon :size="20" />
 				</template>
 				{{ t('mail', 'Download message') }}
 			</ActionLink>
+			<ActionButton v-if="isSieveEnabled"
+				:close-after-click="true"
+				@click.prevent="$emit('open-mail-filter-from-envelope')">
+				<template #icon>
+					<FilterIcon :title="t('mail', 'Create mail filter')"
+						:size="20" />
+				</template>
+				{{ t('mail', 'Create mail filter') }}
+			</ActionButton>
 			<ActionLink v-if="debug"
 				:download="threadingFileName"
 				:href="threadingFile"
 				:close-after-click="true">
 				<template #icon>
-					<DownloadIcon
-						:title="t('mail', 'Download thread data for debugging')"
+					<DownloadIcon :title="t('mail', 'Download thread data for debugging')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Download thread data for debugging') }}
 			</ActionLink>
 		</template>
 		<template v-if="snoozeActionsOpen">
-			<ActionButton
-				:close-after-click="false"
+			<ActionButton :close-after-click="false"
 				@click="snoozeActionsOpen = false">
 				<template #icon>
-					<ChevronLeft
-						:size="20" />
+					<ChevronLeft :size="20" />
 				</template>
 				{{
 					t('mail', 'Back')
@@ -237,73 +215,46 @@
 				{{ t('spreed', 'Set custom snooze') }}
 			</NcActionButton>
 		</template>
-		<Modal v-if="showSourceModal" class="source-modal" @close="onCloseSourceModal">
-			<div class="source-modal-content">
-				<div class="section">
-					<h2>{{ t('mail', 'Message source') }}</h2>
-					<pre class="message-source">{{ rawMessage }}</pre>
-				</div>
-			</div>
-		</Modal>
-		<MoveModal v-if="showMoveModal"
-			:account="account"
-			:envelopes="[envelope]"
-			@move="onMove"
-			@close="onCloseMoveModal" />
-		<EventModal v-if="showEventModal"
-			:envelope="envelope"
-			@close="showEventModal = false" />
-		<TaskModal v-if="showTaskModal"
-			:envelope="envelope"
-			@close="showTaskModal = false" />
-		<TagModal
-			v-if="showTagModal"
-			:account="account"
-			:envelopes="[envelope]"
-			@close="onCloseTagModal" />
 	</div>
 </template>
 
 <script>
-import axios from '@nextcloud/axios'
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import moment from '@nextcloud/moment'
+import { generateUrl } from '@nextcloud/router'
 import {
-	NcActionButton,
 	NcActionButton as ActionButton,
 	NcActionLink as ActionLink,
-	NcModal as Modal,
+	NcActionButton,
 } from '@nextcloud/vue'
-import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon'
+import NcActionInput from '@nextcloud/vue/components/NcActionInput'
+import NcActionSeparator from '@nextcloud/vue/components/NcActionSeparator'
 import { Base64 } from 'js-base64'
-import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
-import CalendarBlankIcon from 'vue-material-design-icons/CalendarBlank'
-import CheckIcon from 'vue-material-design-icons/Check'
-import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
-import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal'
-import DownloadIcon from 'vue-material-design-icons/Download'
-import EventModal from './EventModal'
-import TaskModal from './TaskModal'
-import { mailboxHasRights } from '../util/acl'
-import { generateUrl } from '@nextcloud/router'
-import InformationIcon from 'vue-material-design-icons/Information'
-import ImportantIcon from './icons/ImportantIcon'
-import MoveModal from './MoveModal'
-import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
-import PlusIcon from 'vue-material-design-icons/Plus'
-import ReplyIcon from 'vue-material-design-icons/Reply'
-import ReplyAllIcon from 'vue-material-design-icons/ReplyAll'
-import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline'
-import ShareIcon from 'vue-material-design-icons/Share'
-import { showError, showSuccess } from '@nextcloud/dialogs'
+import { mapState, mapStores } from 'pinia'
+import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
+import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
+import CalendarBlankIcon from 'vue-material-design-icons/CalendarBlankOutline.vue'
+import CalendarClock from 'vue-material-design-icons/CalendarClockOutline.vue'
+import CheckIcon from 'vue-material-design-icons/Check.vue'
+import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline.vue'
+import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
+import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
+import FilterIcon from 'vue-material-design-icons/FilterOutline.vue'
+import InformationIcon from 'vue-material-design-icons/InformationOutline.vue'
+import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
+import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
+import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
+import PlusIcon from 'vue-material-design-icons/Plus.vue'
+import PrinterIcon from 'vue-material-design-icons/PrinterOutline.vue'
+import ShareIcon from 'vue-material-design-icons/ShareOutline.vue'
+import TagIcon from 'vue-material-design-icons/TagOutline.vue'
+import TranslationIcon from 'vue-material-design-icons/Translate.vue'
+import DownloadIcon from 'vue-material-design-icons/TrayArrowDown.vue'
 
-import TagIcon from 'vue-material-design-icons/Tag'
-import TagModal from './TagModal'
-import CalendarClock from 'vue-material-design-icons/CalendarClock.vue'
-import NcActionSeparator from '@nextcloud/vue/dist/Components/NcActionSeparator'
-import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
-import AlarmIcon from 'vue-material-design-icons/Alarm'
-import logger from '../logger'
-import moment from '@nextcloud/moment'
-import { mapGetters } from 'vuex'
+import logger from '../logger.js'
+import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
+import useMainStore from '../store/mainStore.js'
+import { mailboxHasRights } from '../util/acl.js'
 
 export default {
 	name: 'MenuEnvelope',
@@ -319,22 +270,19 @@ export default {
 		ChevronLeft,
 		CheckIcon,
 		DotsHorizontalIcon,
+		TranslationIcon,
 		DownloadIcon,
-		EventModal,
 		InformationIcon,
-		Modal,
-		MoveModal,
 		OpenInNewIcon,
 		PlusIcon,
-		ReplyIcon,
-		ReplyAllIcon,
 		ShareIcon,
 		TagIcon,
-		TagModal,
 		ImportantIcon,
+		ImportantOutlineIcon,
 		TaskIcon,
-		TaskModal,
 		AlarmIcon,
+		PrinterIcon,
+		FilterIcon,
 	},
 	props: {
 		envelope: {
@@ -351,17 +299,6 @@ export default {
 			type: Boolean,
 			required: false,
 		},
-		isSelected: {
-			// Indicates if the envelope is currently selected
-			type: Boolean,
-			default: false,
-		},
-		withReply: {
-			// "Reply" action should only appear in envelopes from the envelope list
-			// (Because in thread envelopes, this action is already set as primary button of this menu)
-			type: Boolean,
-			default: true,
-		},
 		withSelect: {
 			// "Select" action should only appear in envelopes from the envelope list
 			type: Boolean,
@@ -372,16 +309,15 @@ export default {
 			type: Boolean,
 			default: true,
 		},
+		isTranslationAvailable: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
 	},
 	data() {
 		return {
 			debug: window?.OC?.debug || false,
-			rawMessage: '', // Will hold the raw source of the message when requested
-			showSourceModal: false,
-			showMoveModal: false,
-			showEventModal: false,
-			showTaskModal: false,
-			showTagModal: false,
 			localMoreActionsOpen: false,
 			snoozeActionsOpen: false,
 			forwardMessages: this.envelope.databaseId,
@@ -389,12 +325,14 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters([
+		...mapStores(useMainStore),
+		...mapState(useMainStore, [
 			'isSnoozeDisabled',
+			'isTranslationEnabled',
 		]),
 		account() {
 			const accountId = this.envelope.accountId ?? this.mailbox.accountId
-			return this.$store.getters.getAccount(accountId)
+			return this.mainStore.getAccount(accountId)
 		},
 		hasMultipleRecipients() {
 			if (!this.account) {
@@ -427,7 +365,7 @@ export default {
 			return this.envelope.flags.seen
 		},
 		isImportant() {
-			return this.$store.getters
+			return this.mainStore
 				.getEnvelopeTags(this.envelope.databaseId)
 				.some((tag) => tag.imapLabel === '$label1')
 		},
@@ -504,7 +442,7 @@ export default {
 	},
 	methods: {
 		onForward() {
-			this.$store.dispatch('startComposerSession', {
+			this.mainStore.startComposerSession({
 				reply: {
 					mode: 'forward',
 					data: this.envelope,
@@ -520,11 +458,11 @@ export default {
 			logger.info(`snoozing message ${this.envelope.databaseId}`)
 
 			if (!this.account.snoozeMailboxId) {
-				await this.$store.dispatch('createAndSetSnoozeMailbox', this.account)
+				await this.mainStore.createAndSetSnoozeMailbox(this.account)
 			}
 
 			try {
-				await this.$store.dispatch('snoozeMessage', {
+				await this.mainStore.snoozeMessage({
 					id: this.envelope.databaseId,
 					unixTimestamp: timestamp / 1000,
 					destMailboxId: this.account.snoozeMailboxId,
@@ -544,7 +482,7 @@ export default {
 			logger.info(`unSnoozing message ${this.envelope.databaseId}`)
 
 			try {
-				await this.$store.dispatch('unSnoozeMessage', {
+				await this.mainStore.unSnoozeMessage({
 					id: this.envelope.databaseId,
 				})
 				showSuccess(t('mail', 'Message was unsnoozed'))
@@ -554,16 +492,16 @@ export default {
 			}
 		},
 		onToggleFlagged() {
-			this.$store.dispatch('toggleEnvelopeFlagged', this.envelope)
+			this.mainStore.toggleEnvelopeFlagged(this.envelope)
 		},
 		onToggleImportant() {
-			this.$store.dispatch('toggleEnvelopeImportant', this.envelope)
+			this.mainStore.toggleEnvelopeImportant(this.envelope)
 		},
 		onToggleSeen() {
-			this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.envelope })
+			this.mainStore.toggleEnvelopeSeen({ envelope: this.envelope })
 		},
 		async onToggleJunk() {
-			const removeEnvelope = await this.$store.dispatch('moveEnvelopeToJunk', this.envelope)
+			const removeEnvelope = await this.mainStore.moveEnvelopeToJunk(this.envelope)
 
 			/**
 			 * moveEnvelopeToJunk returns true if the envelope should be moved to a different mailbox.
@@ -582,7 +520,7 @@ export default {
 				await this.$emit('delete', this.envelope.databaseId)
 			}
 
-			await this.$store.dispatch('toggleEnvelopeJunk', {
+			await this.mainStore.toggleEnvelopeJunk({
 				envelope: this.envelope,
 				removeEnvelope,
 			})
@@ -591,52 +529,20 @@ export default {
 			this.$emit('update:selected')
 		},
 		async forwardSelectedAsAttachment() {
-			this.forwardedMessages = [this.envelope.databaseId]
-			await this.$store.dispatch('showMessageComposer', {
-				forwardedMessages: this.forwardedMessages,
+			await this.mainStore.startComposerSession({
+				forwardedMessages: [this.envelope.databaseId],
 			})
 		},
-		async onShowSourceModal() {
-			const resp = await axios.get(
-				generateUrl('/apps/mail/api/messages/{id}/source', {
-					id: this.envelope.databaseId,
-				})
-			)
-
-			this.rawMessage = resp.data.source
-			this.showSourceModal = true
-		},
-		onCloseSourceModal() {
-			this.showSourceModal = false
-		},
-		onMove() {
-			this.$emit('move')
-		},
-		onOpenMoveModal() {
-			this.showMoveModal = true
-		},
-		onCloseMoveModal() {
-			this.showMoveModal = false
-		},
-		onOpenEventModal() {
-			this.showEventModal = true
-		},
-		onOpenTagModal() {
-			this.showTagModal = true
-		},
 		onReply(onlySender = false) {
-			this.$store.dispatch('startComposerSession', {
+			this.mainStore.startComposerSession({
 				reply: {
 					mode: onlySender ? 'reply' : 'replyAll',
 					data: this.envelope,
 				},
 			})
 		},
-		onCloseTagModal() {
-			this.showTagModal = false
-		},
 		async onOpenEditAsNew() {
-			await this.$store.dispatch('startComposerSession', {
+			await this.mainStore.startComposerSession({
 				templateMessageId: this.envelope.databaseId,
 				data: this.envelope,
 			})
@@ -649,6 +555,12 @@ export default {
 		},
 		setCustomSnooze() {
 			this.onSnooze(this.customSnoozeDateTime.valueOf())
+		},
+		onPrint() {
+			this.$emit('print')
+		},
+		isSieveEnabled() {
+			return this.account.sieveEnabled
 		},
 	},
 }

@@ -3,25 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @author Jakob Sack <jakob@owncloud.org>
- * @author Jakob Sack <mail@jakobsack.de>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2021-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
-
 
 namespace OCA\Mail\Service\HtmlPurify;
 
@@ -47,8 +31,9 @@ class TransformStyleURLs extends HTMLPurifier_AttrTransform {
 	 * @param HTMLPurifier_Context $context
 	 * @return array
 	 */
+	#[\Override]
 	public function transform($attr, $config, $context) {
-		if (!isset($attr['style']) || strpos($attr['style'], 'url(') === false) {
+		if (!isset($attr['style']) || !str_contains($attr['style'], 'url(')) {
 			return $attr;
 		}
 
@@ -62,7 +47,7 @@ class TransformStyleURLs extends HTMLPurifier_AttrTransform {
 			}
 
 			[$name, $value] = explode(':', $cssAttribute, 2);
-			if (strpos($value, 'url(') !== false) {
+			if (str_contains($value, 'url(')) {
 				// Replace image URL
 				$value = preg_replace('/url\(("|\')?http.*\)/i',
 					'url(' . $this->urlGenerator->imagePath('mail', 'blocked-image.png') . ')',

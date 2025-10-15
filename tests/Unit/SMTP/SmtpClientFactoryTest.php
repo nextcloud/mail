@@ -3,31 +3,13 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @author 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Unit\Smtp;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use Horde_Mail_Transport_Mail;
 use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
@@ -60,19 +42,6 @@ class SmtpClientFactoryTest extends TestCase {
 		$this->factory = new SmtpClientFactory($this->config, $this->crypto, $this->hostNameFactory);
 	}
 
-	public function testPhpMailTransport() {
-		$account = $this->createMock(Account::class);
-		$this->config->expects($this->once())
-			->method('getSystemValue')
-			->with('app.mail.transport', 'smtp')
-			->willReturn('php-mail');
-
-		$transport = $this->factory->create($account);
-
-		$this->assertNotNull($transport);
-		$this->assertInstanceOf(Horde_Mail_Transport_Mail::class, $transport);
-	}
-
 	public function testSmtpTransport() {
 		$mailAccount = new MailAccount([
 			'smtpHost' => 'smtp.domain.tld',
@@ -86,13 +55,14 @@ class SmtpClientFactoryTest extends TestCase {
 			->method('getSystemValue')
 			->willReturnMap([
 				['app.mail.transport', 'smtp', 'smtp'],
-				['debug', false, false],
-				['app.mail.smtp.timeout', 5, 2],
+				['app.mail.smtp.timeout', 20, 2],
 			]);
 		$this->config->expects($this->any())
 			->method('getSystemValueBool')
-			->with('app.mail.verify-tls-peer', true)
-			->willReturn(true);
+			->willReturnMap([
+				['app.mail.verify-tls-peer', true, true],
+				['app.mail.debug', false, false],
+			]);
 		$this->crypto->expects($this->once())
 			->method('decrypt')
 			->with('obenc')

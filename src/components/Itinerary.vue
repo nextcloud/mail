@@ -1,20 +1,21 @@
+<!--
+  - SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<div>
 		<template v-for="(entry, idx) in entries">
-			<EventReservation
-				v-if="entry['@type'] === 'EventReservation'"
+			<EventReservation v-if="entry['@type'] === 'EventReservation'"
 				:key="idx"
 				:data="entry"
 				:calendars="calendars"
 				:message-id="messageId" />
-			<FlightReservation
-				v-else-if="entry['@type'] === 'FlightReservation'"
+			<FlightReservation v-else-if="entry['@type'] === 'FlightReservation'"
 				:key="idx"
 				:data="entry"
 				:calendars="calendars"
 				:message-id="messageId" />
-			<TrainReservation
-				v-else-if="entry['@type'] === 'TrainReservation'"
+			<TrainReservation v-else-if="entry['@type'] === 'TrainReservation'"
 				:key="idx"
 				:data="entry"
 				:calendars="calendars"
@@ -27,13 +28,14 @@
 </template>
 
 <script>
-import once from 'lodash/fp/once'
+import once from 'lodash/fp/once.js'
 
-import { getUserCalendars } from '../service/DAVService'
-import logger from '../logger'
-import EventReservation from './itinerary/EventReservation'
-import FlightReservation from './itinerary/FlightReservation'
-import TrainReservation from './itinerary/TrainReservation'
+import logger from '../logger.js'
+import { getUserCalendars } from '../service/DAVService.js'
+
+import EventReservation from './itinerary/EventReservation.vue'
+import FlightReservation from './itinerary/FlightReservation.vue'
+import TrainReservation from './itinerary/TrainReservation.vue'
 
 const getUserCalendarsOnce = once(getUserCalendars)
 
