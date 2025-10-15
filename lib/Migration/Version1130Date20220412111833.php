@@ -177,6 +177,8 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
 	 * @param array $options
+	 *
+	 * @return void
 	 */
 	#[\Override]
 	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {

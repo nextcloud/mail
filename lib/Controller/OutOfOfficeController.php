@@ -61,7 +61,7 @@ class OutOfOfficeController extends Controller {
 	 * @NoAdminRequired
 	 */
 	#[TrapError]
-	public function followSystem(int $accountId) {
+	public function followSystem(int $accountId): JsonResponse {
 		if (!$this->container->has(IAvailabilityCoordinator::class)) {
 			return JsonResponse::fail([], Http::STATUS_NOT_IMPLEMENTED);
 		}

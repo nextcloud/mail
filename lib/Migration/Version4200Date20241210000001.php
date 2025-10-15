@@ -32,8 +32,11 @@ class Version4200Date20241210000001 extends SimpleMigrationStep {
 	/**
 	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @psalm-param Closure():ISchemaWrapper $schemaClosure
 	 * @param array $options
+	 *
+	 * @psalm-param Closure():ISchemaWrapper $schemaClosure
+	 *
+	 * @return void
 	 */
 	#[\Override]
 	public function preSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
