@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Integration\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestUser;
-use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
@@ -33,6 +32,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder;
+use OCP\IDBConnection;
 use OCP\IServerContainer;
 use OCP\IUser;
 use OCP\Server;
@@ -106,10 +106,10 @@ class DraftServiceIntegrationTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 
-		$db = OC::$server->getDatabaseConnection();
+		$db = Server::get(IDBConnection::class);
 		$qb = $db->getQueryBuilder();
 		$delete = $qb->delete($this->mapper->getTableName());
-		$delete->execute();
+		$delete->executeStatement();
 
 		$this->service = new DraftsService(
 			$this->transmission,
