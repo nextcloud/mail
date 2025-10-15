@@ -11,7 +11,6 @@ namespace OCA\Mail\Tests\Integration\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestUser;
 use Horde_Imap_Client;
-use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
@@ -35,6 +34,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder;
+use OCP\IDBConnection;
 use OCP\IServerContainer;
 use OCP\IUser;
 use OCP\Server;
@@ -107,10 +107,10 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$this->timeFactory = Server::get(ITimeFactory::class);
 		$this->chain = Server::get(Chain::class);
 
-		$this->db = OC::$server->getDatabaseConnection();
+		$this->db = Server::get(IDBConnection::class);
 		$qb = $this->db->getQueryBuilder();
 		$delete = $qb->delete($this->mapper->getTableName());
-		$delete->execute();
+		$delete->executeStatement();
 
 		$this->outbox = new OutboxService(
 			$this->mapper,
