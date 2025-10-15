@@ -75,11 +75,14 @@ class Version0161Date20190902103701 extends SimpleMigrationStep {
 			'default' => true,
 		]);
 		$mailboxTable->setPrimaryKey(['id']);
-		// We allow each mailbox name just once
-		$mailboxTable->addUniqueIndex([
-			'account_id',
-			'name',
-		]);
+		/*
+		 * We allow each mailbox name just once
+		 * @see \OCA\Mail\Migration\Version3500Date20231115184458::changeSchema
+		 */
+		// $mailboxTable->addUniqueIndex([
+		// 	'account_id',
+		// 	'name',
+		// ]);
 
 		return $schema;
 	}

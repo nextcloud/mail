@@ -28,11 +28,20 @@ class Version3500Date20231115184458 extends SimpleMigrationStep {
 
 		$mailboxesTable = $schema->getTable('mail_mailboxes');
 
-		$indexOld = 'UNIQ_22DEBD839B6B5FBA5E237E06';
 		$indexNew = 'mail_mb_account_id_name_hash';
 
-		if ($mailboxesTable->hasIndex($indexOld)) {
-			$mailboxesTable->dropIndex($indexOld);
+		/**
+		 * Variant 1 - with table prefix
+		 */
+		if ($mailboxesTable->hasIndex('UNIQ_22DEBD839B6B5FBA5E237E06')) {
+			$mailboxesTable->dropIndex('UNIQ_22DEBD839B6B5FBA5E237E06');
+		}
+		/**
+		 * Variant 2 - without table prefix
+		 * @see \OCA\Mail\Migration\Version5006Date20250927130132::changeSchema
+		 */
+		if ($mailboxesTable->hasIndex('UNIQ_45754FF89B6B5FBA5E237E06')) {
+			$mailboxesTable->dropIndex('UNIQ_45754FF89B6B5FBA5E237E06');
 		}
 
 		if (!$mailboxesTable->hasIndex($indexNew)) {
