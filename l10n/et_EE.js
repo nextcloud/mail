@@ -358,7 +358,6 @@ OC.L10N.register(
     "Yesterday" : "Eile",
     "Last week" : "Eelmisel nädalal",
     "Last month" : "Eelmisel kuul",
-    "Older" : "Vanemad",
     "Could not open folder" : "Kausta avamine ei õnnestunud",
     "Loading messages …" : "Laadin kirju…",
     "Indexing your messages. This can take a bit longer for larger folders." : "Indekseerin sinu kirju. Kui kaustad on väga suured, siis võib kuluda natuke aega.",
@@ -823,6 +822,7 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Kui sa ei taha seda lehte avada, siis mine tagasi <a href=\"%s\">E-postirakenduse</a> lehele.",
     "Continue to %s" : "Jätka siia: %s",
     "Put my text to the bottom of a reply instead of on top of it." : "Sisesta minu tekst vastuse alla, mitte tema kohale",
-    "Vertical split" : "Püstjoones jagamine"
+    "Vertical split" : "Püstjoones jagamine",
+    "Older" : "Vanemad"
 },
 "nplurals=2; plural=(n != 1);");

@@ -366,7 +366,6 @@ OC.L10N.register(
     "Yesterday" : "Inné",
     "Last week" : "An tseachtain seo caite",
     "Last month" : "An mhí seo caite",
-    "Older" : "Níos sine",
     "Could not open folder" : "Níorbh fhéidir an fillteán a oscailt",
     "Loading messages …" : "Teachtaireachtaí á lódáil…",
     "Indexing your messages. This can take a bit longer for larger folders." : "Ag innéacsú do theachtaireachtaí. D’fhéadfadh sé seo beagán níos faide a thógáil i gcás fillteáin níos mó.",
@@ -872,6 +871,7 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Mura dteastaíonn uait cuairt a thabhairt ar an leathanach sin, is féidir leat filleadh ar <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Lean ar aghaidh go %s",
     "Put my text to the bottom of a reply instead of on top of it." : "Cuir mo théacs go bun freagra in áit ar a bharr.",
-    "Vertical split" : "Scoilt ingearach"
+    "Vertical split" : "Scoilt ingearach",
+    "Older" : "Níos sine"
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

@@ -365,7 +365,6 @@ OC.L10N.register(
     "Yesterday" : "Včera",
     "Last week" : "Uplynulý týden",
     "Last month" : "Uplynulý měsíc",
-    "Older" : "Starší",
     "Could not open folder" : "Složku nebylo možné otevřít",
     "Loading messages …" : "Načítání zpráv…",
     "Indexing your messages. This can take a bit longer for larger folders." : "Vytváření rejstříku vašich zpráv. V případě rozsáhlejších složek toto může trvat poněkud déle.",
@@ -871,6 +870,7 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Pokud nechcete tuto stránku navštívit, můžete se vrátit do <a href=\"%s\">e-mailu</a>.",
     "Continue to %s" : "Pokračovat na %s",
     "Put my text to the bottom of a reply instead of on top of it." : "Můj text umístit na konec odpovědi namísto na její začátek.",
-    "Vertical split" : "Svislé rozdělení"
+    "Vertical split" : "Svislé rozdělení",
+    "Older" : "Starší"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

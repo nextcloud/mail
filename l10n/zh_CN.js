@@ -363,7 +363,6 @@ OC.L10N.register(
     "Yesterday" : "昨天",
     "Last week" : "上周",
     "Last month" : "上月",
-    "Older" : "更早",
     "Could not open folder" : "无法打开文件夹",
     "Loading messages …" : "正在加载邮件…",
     "Indexing your messages. This can take a bit longer for larger folders." : "正在索引您的邮件。对于较大的文件夹，这可能需要更长时间。",
@@ -869,6 +868,7 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "如果不想访问此页面，您可以返回<a href=\"%s\">邮件</a>。",
     "Continue to %s" : "继续 %s",
     "Put my text to the bottom of a reply instead of on top of it." : "把我的文字放在回复的底部，而不是顶部。 ",
-    "Vertical split" : "垂直分割"
+    "Vertical split" : "垂直分割",
+    "Older" : "更早"
 },
 "nplurals=1; plural=0;");

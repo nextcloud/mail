@@ -366,7 +366,6 @@ OC.L10N.register(
     "Yesterday" : "Onte",
     "Last week" : "Na última semana",
     "Last month" : "No último mes",
-    "Older" : "Antiga",
     "Could not open folder" : "Non foi posíbel abrir o cartafol",
     "Loading messages …" : "Cargando as mensaxes…",
     "Indexing your messages. This can take a bit longer for larger folders." : "Indexación das súas mensaxes. Isto pode levar un pouco máis en cartafoles máis grandes.",
@@ -872,6 +871,7 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Se non quere visitar esa páxina, pode volver a <a href=\"%s\">Correo</a>.",
     "Continue to %s" : "Continuar para %s",
     "Put my text to the bottom of a reply instead of on top of it." : "Colocar o meu texto ao final dunha resposta en troques de enriba.",
-    "Vertical split" : "División vertical"
+    "Vertical split" : "División vertical",
+    "Older" : "Antiga"
 },
 "nplurals=2; plural=(n != 1);");

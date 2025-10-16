@@ -366,7 +366,6 @@ OC.L10N.register(
     "Yesterday" : "Dün",
     "Last week" : "Önceki hafta",
     "Last month" : "Önceki ay",
-    "Older" : "Daha eski",
     "Could not open folder" : "Klasör açılamadı",
     "Loading messages …" : "İletiler yükleniyor…",
     "Indexing your messages. This can take a bit longer for larger folders." : "İletileriniz dizine ekleniyor. Çok sayıda ileti bulunan e-posta klasörlerinde bu işlem biraz zaman alabilir.",
@@ -872,6 +871,7 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Bu sayfayı ziyaret etmek istemiyorsanız, <a href=\"%s\">E-posta</a> uygulamasına geri dönebilirsiniz.",
     "Continue to %s" : "%s sayfasına ilerle",
     "Put my text to the bottom of a reply instead of on top of it." : "Yanıtlarken yazacağım yazı en üst yerine en alta eklensin.",
-    "Vertical split" : "Dikey bölme"
+    "Vertical split" : "Dikey bölme",
+    "Older" : "Daha eski"
 },
 "nplurals=2; plural=(n > 1);");

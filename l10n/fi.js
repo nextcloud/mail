@@ -276,7 +276,6 @@ OC.L10N.register(
     "Yesterday" : "Eilen",
     "Last week" : "Viime viikko",
     "Last month" : "Viime kuukausi",
-    "Older" : "Vanhempi",
     "Could not open folder" : "Kansiota ei voitu avata",
     "Loading messages …" : "Ladataan viestejä …",
     "Choose target folder" : "Valitse kohdekansio",
@@ -609,6 +608,7 @@ OC.L10N.register(
     "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
     "Continue to %s" : "Jatka sivulle %s",
     "Put my text to the bottom of a reply instead of on top of it." : "Aseta tekstini vastauksen alaosaan yläosan sijaan",
-    "Vertical split" : "Pystysuunnan jako"
+    "Vertical split" : "Pystysuunnan jako",
+    "Older" : "Vanhempi"
 },
 "nplurals=2; plural=(n != 1);");
