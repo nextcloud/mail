@@ -1,3 +1,17 @@
+## [5.5.10](https://github.com/nextcloud/mail/compare/v5.5.9...v5.5.10) (2025-10-16)
+
+
+### Bug Fixes
+
+* **db:** clean-up old mailboxes account_id+name index ([467a76b](https://github.com/nextcloud/mail/commit/467a76bcd902c081c2db2c5d317b0b9000a3115b))
+* **deps:** Fix npm audit ([574eb45](https://github.com/nextcloud/mail/commit/574eb458db191b7ea05c95770724a9af995a5e3c))
+* **dns:** Update public suffix list ([b25e839](https://github.com/nextcloud/mail/commit/b25e8390d99748a3a345acdfaf97900eece319a7))
+* **l10n:** Update translations from Transifex ([8b4a8a7](https://github.com/nextcloud/mail/commit/8b4a8a725208c2a4b2a973c7eb49ad52167aaf2b))
+* **l10n:** Update translations from Transifex ([e273858](https://github.com/nextcloud/mail/commit/e2738589c13d751e659016211d73aad3b26ea75e))
+* list separators depending on sort by date ([df29758](https://github.com/nextcloud/mail/commit/df29758718cc9259a55c62e24eb16c12d653736b))
+
+
+
 ## [5.5.9](https://github.com/nextcloud/mail/compare/v5.5.8...v5.5.9) (2025-10-14)
 
 
