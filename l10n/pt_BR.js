@@ -261,7 +261,7 @@ OC.L10N.register(
     "Next week – {timeLocale}" : "Próxima semana – {timeLocale}",
     "Set reminder for next week" : "Definir lembrete para próxima semana",
     "Could not apply tag, configured tag not found" : "Não foi possível aplicar a etiqueta, etiqueta configurada não encontrada",
-    "Could not move thread, destination mailbox not found" : "Não foi possível mover o tópico, caixa de correio de destino não encontrada",
+    "Could not move thread, destination mailbox not found" : "Não foi possível mover o fio, caixa de correio de destino não encontrada",
     "Could not execute quick action" : "Não foi possível executar a ação rápida",
     "Quick action executed" : "Ação rápida executada",
     "No trash folder configured" : "Nenhuma pasta \"lixeira\" configurada",
@@ -364,7 +364,6 @@ OC.L10N.register(
     "Yesterday" : "Ontem",
     "Last week" : "Última semana",
     "Last month" : "Último mês",
-    "Older" : "Mais velhos",
     "Could not open folder" : "Não foi possível abrir a pasta",
     "Loading messages …" : "Carregando mensagens …",
     "Indexing your messages. This can take a bit longer for larger folders." : "Indexação de suas mensagens. Isso pode demorar um pouco mais para pastas maiores.",
@@ -870,6 +869,7 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Se você não quiser visitar essa página, você pode voltar para <a href=\"%s\">E-Mail</a>.",
     "Continue to %s" : "Continue para %s",
     "Put my text to the bottom of a reply instead of on top of it." : "Coloque meu texto no final de uma resposta, em vez de no topo dela.",
-    "Vertical split" : "Divisão vertical"
+    "Vertical split" : "Divisão vertical",
+    "Older" : "Mais velhos"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

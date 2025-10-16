@@ -348,7 +348,6 @@ OC.L10N.register(
     "Yesterday" : "I går",
     "Last week" : "Seneste uge",
     "Last month" : "Sidste måned",
-    "Older" : "Ældre",
     "Could not open folder" : "Kunne ikke åbne mappe",
     "Loading messages …" : "Indlæser beskeder...",
     "Indexing your messages. This can take a bit longer for larger folders." : "Indekserer dine beskeder. Dette kan tage en smule længere for større mapper.",
@@ -438,7 +437,7 @@ OC.L10N.register(
     "Outbox" : "Udbakke",
     "Translate this message to {language}" : "Oversæt denne besked til {language}",
     "New message" : "Ny besked",
-    "Edit message" : "Rediger besked",
+    "Edit message" : "Redigér besked",
     "Draft" : "Kladde",
     "Reply" : "Besvar",
     "Message saved" : "Besked gemt",
@@ -605,6 +604,7 @@ OC.L10N.register(
     "The link leads to %s" : "Linket fører til %s",
     "Continue to %s" : "Videre til %s",
     "Put my text to the bottom of a reply instead of on top of it." : "Sæt min tekst til bunden af et svar i stedet for oven på den.",
-    "Vertical split" : "Vertikal opdeling"
+    "Vertical split" : "Vertikal opdeling",
+    "Older" : "Ældre"
 },
 "nplurals=2; plural=(n != 1);");

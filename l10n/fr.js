@@ -365,7 +365,6 @@ OC.L10N.register(
     "Yesterday" : "Hier",
     "Last week" : "Semaine dernière",
     "Last month" : "Mois dernier",
-    "Older" : "Plus ancien",
     "Could not open folder" : "Impossible d'ouvrir le dossier",
     "Loading messages …" : "Chargement des messages ...",
     "Indexing your messages. This can take a bit longer for larger folders." : "Indexation de vos messages. Cela peut prendre un peu plus de temps pour les dossiers volumineux.",
@@ -871,6 +870,7 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si vous ne souhaitez pas visiter cette page, vous pouvez retourner à l'application <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continuer vers %s",
     "Put my text to the bottom of a reply instead of on top of it." : "Mettre mon texte en bas d'une réponse au lieu de le mettre au-dessus.",
-    "Vertical split" : "Séparation verticale"
+    "Vertical split" : "Séparation verticale",
+    "Older" : "Plus ancien"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

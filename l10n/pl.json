@@ -361,7 +361,6 @@
     "Yesterday" : "Wczoraj",
     "Last week" : "W zeszłym tygodniu",
     "Last month" : "W zeszłym miesiącu",
-    "Older" : "Starsze",
     "Could not open folder" : "Nie można otworzyć folderu",
     "Loading messages …" : "Wczytywanie wiadomości…",
     "Indexing your messages. This can take a bit longer for larger folders." : "Indeksowanie twoich wiadomości. Może to zająć trochę więcej czasu dla większych folderów",
@@ -867,6 +866,7 @@
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Jeśli nie chcesz odwiedzić tej strony, możesz powrócić do <a href=\"%s\">Poczty</a>.",
     "Continue to %s" : "Kontynuuj do %s",
     "Put my text to the bottom of a reply instead of on top of it." : "Umieść mój tekst na dole odpowiedzi, zamiast nad nią.",
-    "Vertical split" : "Podział pionowy"
+    "Vertical split" : "Podział pionowy",
+    "Older" : "Starsze"
 },"pluralForm" :"nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);"
 }

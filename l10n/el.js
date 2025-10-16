@@ -363,7 +363,6 @@ OC.L10N.register(
     "Yesterday" : "Χθες",
     "Last week" : "Προηγούμενη εβδομάδα",
     "Last month" : "Προηγούμενος μήνας",
-    "Older" : "Παλαιότερα",
     "Could not open folder" : "Δεν ήταν δυνατό το άνοιγμα του φακέλου",
     "Loading messages …" : "Φόρτωση μηνυμάτων ...",
     "Indexing your messages. This can take a bit longer for larger folders." : "Δημιουργία ευρετηρίου για τα μηνύματά σας. Αυτό μπορεί να πάρει λίγο περισσότερο χρόνο για μεγαλύτερους φακέλους.",
@@ -869,6 +868,7 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Εάν δεν θέλετε να επισκεφτείτε αυτή τη σελίδα, μπορείτε να επιστρέψετε στο <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Συνέχεια στο %s",
     "Put my text to the bottom of a reply instead of on top of it." : "Το κείμενό μου στο κάτω μέρος μιας απάντησης αντί στο επάνω μέρος της.",
-    "Vertical split" : "Κάθετη διαίρεση"
+    "Vertical split" : "Κάθετη διαίρεση",
+    "Older" : "Παλαιότερα"
 },
 "nplurals=2; plural=(n != 1);");

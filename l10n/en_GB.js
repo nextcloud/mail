@@ -363,7 +363,6 @@ OC.L10N.register(
     "Yesterday" : "Yesterday",
     "Last week" : "Last week",
     "Last month" : "Last month",
-    "Older" : "Older",
     "Could not open folder" : "Could not open folder",
     "Loading messages …" : "Loading messages …",
     "Indexing your messages. This can take a bit longer for larger folders." : "Indexing your messages. This can take a bit longer for larger folders.",
@@ -869,6 +868,7 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continue to %s",
     "Put my text to the bottom of a reply instead of on top of it." : "Put my text to the bottom of a reply instead of on top of it.",
-    "Vertical split" : "Vertical split"
+    "Vertical split" : "Vertical split",
+    "Older" : "Older"
 },
 "nplurals=2; plural=(n != 1);");
