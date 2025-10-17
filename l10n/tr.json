@@ -869,7 +869,6 @@
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Bu sayfayı ziyaret etmek istemiyorsanız, <a href=\"%s\">E-posta</a> uygulamasına geri dönebilirsiniz.",
     "Continue to %s" : "%s sayfasına ilerle",
     "Put my text to the bottom of a reply instead of on top of it." : "Yanıtlarken yazacağım yazı en üst yerine en alta eklensin.",
-    "Vertical split" : "Dikey bölme",
-    "Older" : "Daha eski"
+    "Vertical split" : "Dikey bölme"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

@@ -822,7 +822,6 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Kui sa ei taha seda lehte avada, siis mine tagasi <a href=\"%s\">E-postirakenduse</a> lehele.",
     "Continue to %s" : "Jätka siia: %s",
     "Put my text to the bottom of a reply instead of on top of it." : "Sisesta minu tekst vastuse alla, mitte tema kohale",
-    "Vertical split" : "Püstjoones jagamine",
-    "Older" : "Vanemad"
+    "Vertical split" : "Püstjoones jagamine"
 },
 "nplurals=2; plural=(n != 1);");

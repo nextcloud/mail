@@ -868,7 +868,6 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Εάν δεν θέλετε να επισκεφτείτε αυτή τη σελίδα, μπορείτε να επιστρέψετε στο <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Συνέχεια στο %s",
     "Put my text to the bottom of a reply instead of on top of it." : "Το κείμενό μου στο κάτω μέρος μιας απάντησης αντί στο επάνω μέρος της.",
-    "Vertical split" : "Κάθετη διαίρεση",
-    "Older" : "Παλαιότερα"
+    "Vertical split" : "Κάθετη διαίρεση"
 },
 "nplurals=2; plural=(n != 1);");

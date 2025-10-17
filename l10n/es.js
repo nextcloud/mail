@@ -868,7 +868,6 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no quiere visitar esa página puede regresar a <a href=\"%s\">Correo</a>.",
     "Continue to %s" : "Continuar a %s",
     "Put my text to the bottom of a reply instead of on top of it." : "Ponga mi texto al final de la respuesta en vez de encima de ella.",
-    "Vertical split" : "División vertical",
-    "Older" : "Más antiguo"
+    "Vertical split" : "División vertical"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

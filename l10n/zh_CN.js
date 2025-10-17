@@ -135,9 +135,12 @@ OC.L10N.register(
     "Sorting" : "排序",
     "Newest" : "最新",
     "Oldest" : "最旧",
+    "Message view mode" : "邮件视图模式",
     "Show all messages in thread" : "显示线程中的所有邮件",
     "Show only the selected message" : "仅显示所选邮件",
     "Reply text position" : "回复文本位置",
+    "Top" : "顶部",
+    "Bottom" : "底部",
     "Search in body" : "在正文中搜索",
     "Gravatar settings" : "Gravatar 设置",
     "Use Gravatar and favicon avatars" : "使用 Gravatar 和 favicon 头像",
@@ -868,7 +871,6 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "如果不想访问此页面，您可以返回<a href=\"%s\">邮件</a>。",
     "Continue to %s" : "继续 %s",
     "Put my text to the bottom of a reply instead of on top of it." : "把我的文字放在回复的底部，而不是顶部。 ",
-    "Vertical split" : "垂直分割",
-    "Older" : "更早"
+    "Vertical split" : "垂直分割"
 },
 "nplurals=1; plural=0;");
