@@ -868,7 +868,6 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "若不想造訪該頁，您可以回到<a href=\"%s\">Mail</a>。",
     "Continue to %s" : "前往 %s",
     "Put my text to the bottom of a reply instead of on top of it." : "將我的文字放在回覆的底部而不是頂部。",
-    "Vertical split" : "垂直分割",
-    "Older" : "較舊的"
+    "Vertical split" : "垂直分割"
 },
 "nplurals=1; plural=0;");

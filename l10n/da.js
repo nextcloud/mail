@@ -604,7 +604,6 @@ OC.L10N.register(
     "The link leads to %s" : "Linket fører til %s",
     "Continue to %s" : "Videre til %s",
     "Put my text to the bottom of a reply instead of on top of it." : "Sæt min tekst til bunden af et svar i stedet for oven på den.",
-    "Vertical split" : "Vertikal opdeling",
-    "Older" : "Ældre"
+    "Vertical split" : "Vertikal opdeling"
 },
 "nplurals=2; plural=(n != 1);");

@@ -608,7 +608,6 @@ OC.L10N.register(
     "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
     "Continue to %s" : "Jatka sivulle %s",
     "Put my text to the bottom of a reply instead of on top of it." : "Aseta tekstini vastauksen alaosaan yläosan sijaan",
-    "Vertical split" : "Pystysuunnan jako",
-    "Older" : "Vanhempi"
+    "Vertical split" : "Pystysuunnan jako"
 },
 "nplurals=2; plural=(n != 1);");

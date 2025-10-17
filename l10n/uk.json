@@ -869,7 +869,6 @@
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Якщо ви не хочете відвідувати цю сторінку, ви можете повернутися до <a href=\"%s\">Пошти</a>.",
     "Continue to %s" : "Перейти до %s",
     "Put my text to the bottom of a reply instead of on top of it." : "Розташовувати мій текст під відповіддю, а не над нею.",
-    "Vertical split" : "Розділено по вертикалі",
-    "Older" : "Старіші"
+    "Vertical split" : "Розділено по вертикалі"
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);"
 }
