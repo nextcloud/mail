@@ -554,7 +554,7 @@ export default {
 	&__type {
 		display: flex;
 		gap: 5px;
-		margin-inline-start: 36px;
+		margin-inline-start: 8px;
 	}
 
 	&__more-options {
@@ -587,7 +587,7 @@ export default {
 
 	&__actions {
 		margin-top: 15px;
-		margin-inline-start: 36px;
+		margin-inline-start: 8px;
 
 		&--buttons {
 			display: flex;
