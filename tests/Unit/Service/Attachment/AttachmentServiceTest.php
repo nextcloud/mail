@@ -24,6 +24,7 @@ use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Attachment\AttachmentStorage;
 use OCA\Mail\Service\Attachment\UploadedFile;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\Folder;
 use OCP\Files\NotPermittedException;
 use OCP\Share\IAttributes;
@@ -53,6 +54,9 @@ class AttachmentServiceTest extends TestCase {
 	/** @var MockObject|LoggerInterface */
 	private $logger;
 
+	/** @var ITimeFactory|MockObject */
+	private $timeFactory;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -62,6 +66,8 @@ class AttachmentServiceTest extends TestCase {
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->userFolder = $this->createMock(Folder::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->timeFactory = $this->createMock(ITimeFactory::class);
+		$this->timeFactory->method('getTime')->willReturn(123456);
 
 		$this->service = new AttachmentService(
 			$this->userFolder,
@@ -69,7 +75,8 @@ class AttachmentServiceTest extends TestCase {
 			$this->storage,
 			$this->mailManager,
 			$this->messageMapper,
-			$this->logger
+			$this->logger,
+			$this->timeFactory
 		);
 	}
 
@@ -82,6 +89,7 @@ class AttachmentServiceTest extends TestCase {
 		$attachment = LocalAttachment::fromParams([
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
+			'createdAt' => 123456,
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
@@ -113,7 +121,8 @@ class AttachmentServiceTest extends TestCase {
 			->willReturn('cat.jpg');
 		$attachment = LocalAttachment::fromParams([
 			'userId' => $userId,
-			'fileName' => 'cat.jpg'
+			'fileName' => 'cat.jpg',
+			'createdAt' => 123456
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
@@ -138,6 +147,7 @@ class AttachmentServiceTest extends TestCase {
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'image/jpg',
+			'createdAt' => 123456,
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
@@ -168,6 +178,7 @@ class AttachmentServiceTest extends TestCase {
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'image/jpg',
+			'createdAt' => 123456,
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
@@ -283,6 +294,7 @@ class AttachmentServiceTest extends TestCase {
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'text/plain',
+			'createdAt' => 123456,
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
@@ -334,6 +346,7 @@ class AttachmentServiceTest extends TestCase {
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'text/plain',
+			'createdAt' => 123456,
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
