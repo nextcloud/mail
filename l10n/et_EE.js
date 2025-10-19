@@ -745,6 +745,7 @@ OC.L10N.register(
     "LDAP attribute for aliases" : "LDAP-i omadused aliaste jaoks",
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Mitmeväärtuseline e-posti aliaste eelkoostamise lahendus. Iga väärtuse kohta luuakse alias. Nexctcloudis leiduvate aliaste puhul, millel pole LDAP-i serveris vastet, kustutakse e-posti teenusest.",
     "Save Config" : "Salvesta seadistus",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% ja %EMAIL% asendatakse kasutajatunnuse (UID) ja e-posti aadressiga",
     "With the settings above, the app will create account settings in the following way:" : "Ülalmääratud seadistuste alusel loob rakendus kasutajakonto seadistused alljärgneval viisil:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Lisatud PKCS #12 sertifikaadis peab olema vähemalt üks sertifikaat ning ainult üks privaatvõti.",
     "Failed to import the certificate. Please check the password." : "Sertifikaadi importimine ei õnnestunud. Palun kontrolli, kas salasõna on õige.",
