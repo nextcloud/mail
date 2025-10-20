@@ -40,14 +40,6 @@ export async function deleteQuickAction(id) {
 	})
 }
 
-export async function findAllStepsForAction(actionId) {
-	const url = generateUrl('/apps/mail/api/action-step/{id}/steps', { id: actionId })
-	return handleHttpAuthErrors(async () => {
-		const response = await axios.get(url)
-		return response.data.data
-	})
-}
-
 export async function createActionStep(name, order, actionId, tagId = null, mailboxId = null) {
 	const url = generateUrl('/apps/mail/api/action-step')
 	return handleHttpAuthErrors(async () => {

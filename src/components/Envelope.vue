@@ -479,7 +479,6 @@ import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError.js'
 import logger from '../logger.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
-import { findAllStepsForAction } from '../service/QuickActionsService.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
@@ -589,7 +588,6 @@ export default {
 			customSnoozeDateTime: new Date(moment().add(2, 'hours').minute(0).second(0).valueOf()),
 			overwriteOneLineMobile: false,
 			hoveringAvatar: false,
-			filteredQuickActions: [],
 			quickActionLoading: false,
 		}
 	},
@@ -846,20 +844,36 @@ export default {
 				},
 			].filter((option) => option.timestamp !== null)
 		},
-	},
 
-	watch: {
-		storeActions() {
-			this.filterAndEnrichQuickActions()
+		filteredQuickActions() {
+			const filteredQuickActions = []
+			const quickActions = this.mainStore.getQuickActions().filter((action) => action.accountId === this.data.accountId)
+			for (const action of quickActions) {
+				const check = action.actionSteps.every((step) => {
+					if (['markAsSpam', 'applyTag', 'markAsImportant', 'markAsFavorite'].includes(step.name) && !this.hasWriteAcl) {
+						return false
+					}
+					if (['markAsRead', 'markAsUnread'].includes(step.name) && !this.hasSeenAcl) {
+						return false
+					}
+					if (['moveThread', 'deleteThread'].includes(step.name) && !this.hasDeleteAcl) {
+						return false
+					}
+					return true
+				})
+				if (check) {
+					filteredQuickActions.push({
+						...action,
+					})
+				}
+			}
+			return filteredQuickActions
 		},
 	},
 
-	async mounted() {
+	mounted() {
 		this.onWindowResize()
 		window.addEventListener('resize', this.onWindowResize)
-		if (this.filteredQuickActions.length === 0) {
-			await this.filterAndEnrichQuickActions()
-		}
 	},
 
 	methods: {
@@ -874,38 +888,11 @@ export default {
 			return shortRelativeDatetime(new Date(this.data.dateInt * 1000))
 		},
 
-		async filterAndEnrichQuickActions() {
-			this.filteredQuickActions = []
-			const quickActions = this.mainStore.getQuickActions().filter((action) => action.accountId === this.data.accountId)
-			for (const action of quickActions) {
-				const steps = await findAllStepsForAction(action.id)
-				const check = steps.every((step) => {
-					if (['markAsSpam', 'applyTag', 'markAsImportant', 'markAsFavorite'].includes(step.type) && !this.hasWriteAcl) {
-						return false
-					}
-					if (['markAsRead', 'markAsUnread'].includes(step.type) && !this.hasSeenAcl) {
-						return false
-					}
-					if (['moveThread', 'deleteThread'].includes(step.type) && !this.hasDeleteAcl) {
-						return false
-					}
-					return true
-				})
-				if (check) {
-					this.filteredQuickActions.push({
-						...action,
-						steps,
-						icon: steps[0]?.name,
-					})
-				}
-			}
-		},
-
 		async executeQuickAction(action) {
 			this.closeQuickActionsMenu()
 			this.quickActionLoading = true
 			try {
-				for (const step of action.steps) {
+				for (const step of action.actionSteps) {
 					switch (step.name) {
 						case 'markAsSpam':
 							if (this.layoutMessageViewThreaded) {
