@@ -123,6 +123,7 @@ import { flatten } from 'ramda'
 import { showError } from '@nextcloud/dialogs'
 import useMainStore from '../store/mainStore.js'
 import { mapState } from 'pinia'
+import { loadState } from '@nextcloud/initial-state'
 
 // iMIP methods
 const REQUEST = 'REQUEST'
@@ -210,6 +211,7 @@ export default {
 			existingEventFetched: false,
 			targetCalendar: undefined,
 			comment: '',
+			digikalaDomain: loadState('mail', 'digikala_domain', '@digikala.com'),
 		}
 	},
 	computed: {
@@ -234,7 +236,7 @@ export default {
 				return false
 			}
 			const fromEmail = this.message.from[0].email?.toLowerCase() || ''
-			return fromEmail.endsWith('@digikala.com')
+			return fromEmail.endsWith(this.digikalaDomain)
 		},
 
 		/**

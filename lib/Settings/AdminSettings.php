@@ -145,6 +145,12 @@ class AdminSettings implements ISettings {
 			$this->classificationSettingsService->isClassificationEnabledByDefault(),
 		);
 
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'digikala_domain',
+			$this->config->getAppValue('mail', 'digikala_domain', '@digikala.com'),
+		);
+
 		return new TemplateResponse(Application::APP_ID, 'settings-admin');
 	}
 
