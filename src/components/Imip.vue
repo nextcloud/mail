@@ -506,7 +506,7 @@ export default {
 					await this.saveEventWithParticipationStatus(TENTATIVE)
 				}
 			} catch (e) {
-				// ignore auto-create failures
+				console.log("error", e)
 			}
 		},
 		async saveEventWithParticipationStatus(status) {
