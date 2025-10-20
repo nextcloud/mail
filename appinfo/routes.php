@@ -238,7 +238,7 @@ return [
 		[
 			'name' => 'messages#getThread',
 			'url' => '/api/messages/{id}/thread',
-			'verb' => 'GET'
+			'verb' => 'POST'
 		],
 		[
 			'name' => 'messages#setFlags',
