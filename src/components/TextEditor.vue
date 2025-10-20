@@ -203,9 +203,6 @@ export default {
 		this.loadEditorTranslations(getLanguage())
 	},
 	mounted() {
-		this.$nextTick(() => {
-			this.setupRTLSupport()
-		})
 	},
 	methods: {
 		getLink(text) {
@@ -420,6 +417,7 @@ export default {
 			this.bus.on('append-to-body-at-cursor', this.appendToBodyAtCursor)
 			this.bus.on('insert-text-block', this.insertTextBlock)
 			this.$emit('ready', editor)
+			this.setupRTLSupport(editor.ui.view.editable.element)
 		},
 		onEditorInput(text) {
 			if (text !== this.value) {
@@ -451,20 +449,17 @@ export default {
 			}
 			this.editorInstance.execute('insertItem', { content, isHtml: this.html }, '!')
 		},
-		setupRTLSupport() {
+		setupRTLSupport(editorElement) {
 			// Function to detect RTL characters
 			const isRTL = (text) => {
 				const rtlChars = /[\u0591-\u07FF\uFB1D-\uFDFD\uFE70-\uFEFC]/
 				return rtlChars.test(text)
 			}
 
-			// Wait for editor to be ready
-			setTimeout(() => {
-				const editorElement = this.$el?.querySelector('.ck-editor__editable')
-				if (!editorElement) return
+			if (!editorElement) return
 
-				// Add input event listener for auto RTL/LTR detection
-				editorElement.addEventListener('input', (e) => {
+			// Add input event listener for auto RTL/LTR detection
+			editorElement.addEventListener('input', () => {
 					const selection = window.getSelection()
 					if (!selection.rangeCount) return
 
@@ -488,8 +483,8 @@ export default {
 					}
 				})
 
-				// Set initial direction based on content
-				const observer = new MutationObserver((mutations) => {
+			// Set initial direction based on content
+			const observer = new MutationObserver((mutations) => {
 					mutations.forEach((mutation) => {
 						if (mutation.type === 'childList') {
 							mutation.addedNodes.forEach((node) => {
@@ -506,14 +501,13 @@ export default {
 							})
 						}
 					})
-				})
+			})
 
-				observer.observe(editorElement, {
-					childList: true,
-					subtree: true,
-					characterData: true
-				})
-			}, 1000)
+			observer.observe(editorElement, {
+				childList: true,
+				subtree: true,
+				characterData: true
+			})
 		},
 	},
 }
