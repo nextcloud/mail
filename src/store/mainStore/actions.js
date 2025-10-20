@@ -2322,6 +2322,14 @@ export default function mainStoreActions() {
 				Vue.set(this.quickActions, index, quickAction)
 			}
 		},
+		patchActionStepsLocally(id, steps) {
+			const index = this.quickActions.findIndex((s) => s.id === id)
+			if (index !== -1) {
+				const updatedQuickAction = this.quickActions[index]
+				updatedQuickAction.actionSteps = steps
+				Vue.set(this.quickActions, index, updatedQuickAction)
+			}
+		},
 		deleteQuickActionLocally(id) {
 			const index = this.quickActions.findIndex((s) => s.id === id)
 			if (index !== -1) {

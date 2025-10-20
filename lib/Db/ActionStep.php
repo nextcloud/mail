@@ -36,7 +36,6 @@ class ActionStep extends Entity implements JsonSerializable {
 		$this->addType('name', 'string');
 		$this->addType('order', 'integer');
 		$this->addType('actionId', 'integer');
-		$this->addType('parameter', 'string');
 		$this->addType('tagId', 'integer');
 		$this->addType('mailboxId', 'integer');
 	}
