@@ -139,6 +139,8 @@ OC.L10N.register(
     "Show all messages in thread" : "Mostrar todas as mensagens no fio",
     "Show only the selected message" : "Mostrar apenas a mensagem selecionada",
     "Reply text position" : "Posição do texto de resposta",
+    "Top" : "Acima",
+    "Bottom" : "Abaixo",
     "Search in body" : "Pesquisar no corpo",
     "Gravatar settings" : "Configurações do Gravatar",
     "Use Gravatar and favicon avatars" : "Usar Gravatar e avatares para favicon",
