@@ -43,17 +43,35 @@ class QuickActionsServiceTest extends TestCase {
 
 	public function testFindAll(): void {
 		$userId = 'user123';
+		$action = new Actions();
+		$action->setId(1);
+		$action->setName('Test Action');
+		$action->setAccountId(1);
+		$actionStep = new ActionStep();
+		$actionStep->setName('markAsUnread');
+		$actionStep->setOrder(1);
+		$actionStep->setActionId(1);
+
 
 		$this->actionsMapper->expects($this->once())
 			->method('findAll')
 			->with($userId)
-			->willReturn([]);
+			->willReturn([$action]);
+
+		$this->actionStepMapper->expects($this->once())
+			->method('findStepsByActionIds')
+			->with([$action->getId()], $userId)
+			->willReturn([$actionStep]);
 
 		$result = $this->quickActionsService->findAll($userId);
 
+		$action->setActionSteps([$actionStep]);
+
+		$this->assertEquals($result, [$action]);
 		$this->assertIsArray($result);
-		$this->assertCount(0, $result);
+		$this->assertCount(1, $result);
 	}
+
 
 	public function testFind(): void {
 		$actionId = 1;
@@ -152,18 +170,6 @@ class QuickActionsServiceTest extends TestCase {
 			->with($action);
 
 		$this->quickActionsService->delete($actionId, $userId);
-	}
-
-	public function testFindAllActionSteps(): void {
-		$actionId = 1;
-		$userId = 'user123';
-		$this->actionStepMapper->expects($this->once())
-			->method('findAllStepsForOneAction')
-			->with($actionId, $userId)
-			->willReturn([]);
-		$result = $this->quickActionsService->findAllActionSteps($actionId, $userId);
-		$this->assertIsArray($result);
-		$this->assertCount(0, $result);
 	}
 
 	public function testFindActionStep(): void {
