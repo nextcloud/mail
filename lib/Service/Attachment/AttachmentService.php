@@ -53,10 +53,7 @@ class AttachmentService implements IAttachmentService {
 	 */
 	private $logger;
 
-	/**
-	 * @var ITimeFactory
-	 */
-	private $timeFactory;
+	private ITimeFactory $timeFactory;
 
 	/**
 	 * @param Folder $userFolder
@@ -88,8 +85,8 @@ class AttachmentService implements IAttachmentService {
 		$attachment->setUserId($userId);
 		$attachment->setFileName($file->getFileName());
 		$attachment->setMimeType($file->getMimeType());
-        // set createdAt timestamp for cleanup/retention
-        $attachment->setCreatedAt($this->timeFactory->getTime());
+		// set createdAt timestamp for cleanup/retention
+		$attachment->setCreatedAt($this->timeFactory->getTime());
 
 		$persisted = $this->mapper->insert($attachment);
 		try {
@@ -108,8 +105,8 @@ class AttachmentService implements IAttachmentService {
 		$attachment->setUserId($userId);
 		$attachment->setFileName($name);
 		$attachment->setMimeType($mime);
-        // set createdAt timestamp for consistency with uploaded attachments
-        $attachment->setCreatedAt($this->timeFactory->getTime());
+		// set createdAt timestamp for consistency with uploaded attachments
+		$attachment->setCreatedAt($this->timeFactory->getTime());
 
 		$persisted = $this->mapper->insert($attachment);
 		try {

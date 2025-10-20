@@ -15,31 +15,31 @@ use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
 class Version5007Date20251019000000 extends SimpleMigrationStep {
-    /**
-     * @param IOutput $output
-     * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-     * @param array $options
-     * @return null|ISchemaWrapper
-     */
-    #[\Override]
-    public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
-        /** @var ISchemaWrapper $schema */
-        $schema = $schemaClosure();
+	/**
+	 * @param IOutput $output
+	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
+	 * @param array $options
+	 * @return null|ISchemaWrapper
+	 */
+	#[\Override]
+	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
+		/** @var ISchemaWrapper $schema */
+		$schema = $schemaClosure();
 
-        if (!$schema->hasTable('mail_attachments')) {
-            return $schema;
-        }
+		if (!$schema->hasTable('mail_attachments')) {
+			return $schema;
+		}
 
-        $attachments = $schema->getTable('mail_attachments');
+		$attachments = $schema->getTable('mail_attachments');
 
-        // Ensure created_at is NOT NULL and has no default, so app must set it.
-        if ($attachments->hasColumn('created_at')) {
-            $attachments->changeColumn('created_at', [
-                'notnull' => true,
-                'default' => null,
-            ]);
-        }
+		// Ensure created_at is NOT NULL and has no default, so app must set it.
+		if ($attachments->hasColumn('created_at')) {
+			$attachments->changeColumn('created_at', [
+				'notnull' => true,
+				'default' => null,
+			]);
+		}
 
-        return $schema;
-    }
+		return $schema;
+	}
 }
