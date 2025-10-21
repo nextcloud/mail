@@ -35,7 +35,6 @@ class Version5007Date20251019000000 extends SimpleMigrationStep {
 		// Ensure created_at is NOT NULL and has no default, so app must set it.
 		if ($attachments->hasColumn('created_at')) {
 			$attachments->changeColumn('created_at', [
-				'notnull' => true,
 				'default' => null,
 			]);
 		}
