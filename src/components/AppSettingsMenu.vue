@@ -9,7 +9,7 @@
 			:show-navigation="true"
 			:additional-trap-elements="trapElements"
 			:open.sync="showSettings">
-			<NcAppSettingsSection id="account-creation" :name="t('mail', 'Accounts')">
+			<NcAppSettingsSection id="account-creation" :name="t('mail', 'General')">
 				<NcButton v-if="allowNewMailAccounts"
 					type="primary"
 					to="/setup"
@@ -24,7 +24,7 @@
 				<h4>{{ t('mail', 'Account settings') }}</h4>
 				<p>{{ t('mail', 'Settings for:') }}</p>
 				<li v-for="account in getAccounts" :key="account.id">
-					<NcButton v-if="account && account.emailAddress"
+					<NcButton v-if=" account && account.emailAddress"
 						class="app-settings-button"
 						type="secondary"
 						:aria-label="t('mail', 'Account settings')"
@@ -34,14 +34,14 @@
 				</li>
 			</NcAppSettingsSection>
 
-			<NcAppSettingsSection id="appearance-and-accessibility" :name="t('mail', 'General')">
+			<NcAppSettingsSection id="appearance-and-accessibility" :name="t('mail', 'Appearance')">
 				<NcRadioGroup v-model="layoutMode" :label="t('mail', 'Layout')">
 					<NcRadioGroupButton :label="t('mail', 'List')" value="no-split">
 						<template #icon>
 							<CompactMode :size="20" />
 						</template>
 					</NcRadioGroupButton>
-					<NcRadioGroupButton :label="t('mail', 'Horizontal split')" value="vertical-split">
+					<NcRadioGroupButton :label="t('mail', 'Vertical split')" value="vertical-split">
 						<template #icon>
 							<VerticalSplit :size="20" />
 						</template>
@@ -56,20 +56,20 @@
 				<br>
 
 				<NcRadioGroup :model-value="sortOrder" :label="t('mail', 'Sorting')" @update:modelValue="onSortByDate">
-					<NcRadioGroupButton :label="t('mail', 'Newest')" value="newest" />
-					<NcRadioGroupButton :label="t('mail', 'Oldest')" value="oldest" />
+					<NcRadioGroupButton :label="t('mail', 'Newest first')" value="newest" />
+					<NcRadioGroupButton :label="t('mail', 'Oldest first')" value="oldest" />
 				</NcRadioGroup>
 
 				<br>
 
 				<NcRadioGroup v-model="layoutMessageView" :label="t('mail', 'Message view mode')">
 					<NcRadioGroupButton :label="t('mail', 'Show all messages in thread')" value="threaded" />
-					<NcRadioGroupButton :label="t('mail', 'Show only the selected message')" value="singleton" />
+					<NcRadioGroupButton :label="t('mail', 'When off, only the selected message will be shown')" value="singleton" />
 				</NcRadioGroup>
 
 				<br>
 
-				<NcRadioGroup :model-value="useBottomReplies" :label="t('mail', 'Reply text position')" @update:modelValue="onToggleButtonReplies">
+				<NcRadioGroup :model-value="useBottomReplies" :label="t('mail', 'Reply position')" @update:modelValue="onToggleButtonReplies">
 					<NcRadioGroupButton :label="t('mail', 'Top')" :value="false" />
 					<NcRadioGroupButton :label="t('mail', 'Bottom')" :value="true" />
 				</NcRadioGroup>
@@ -90,17 +90,17 @@
 						:checked="useExternalAvatars"
 						:loading="loadingAvatarSettings"
 						@update:checked="onToggleExternalAvatars">
-						{{ t('mail', 'Use Gravatar and favicon avatars') }}
+						{{ t('mail', 'Avatars from Gravatar and favicons') }}
 					</NcCheckboxRadioSwitch>
 				</p>
 
 				<h4>{{ t('mail', 'Mailto') }}</h4>
 				<p class="settings-hint">
-					{{ t('mail', 'Register as application for mail links') }}
+					{{ t('mail', 'Set as default mail app') }}
 				</p>
 				<NcButton type="secondary"
 					class="app-settings-button"
-					:aria-label="t('mail', 'Register as application for mail links')"
+					:aria-label="t('mail', 'Set as default mail app')"
 					@click="registerProtocolHandler">
 					<template #icon>
 						<IconEmail :size="20" />
@@ -109,10 +109,11 @@
 				</NcButton>
 			</NcAppSettingsSection>
 			<NcAppSettingsSection id="text-blocks" :name="t('mail', 'Text blocks')">
+				<span class="settings-hint">{{ t('mail', 'Reusable pieces of text that can be inserted in messages') }}</span>
 				<List :text-blocks="getMyTextBlocks()"
 					@show-toolbar="handleShowToolbar" />
 				<NcButton type="primary" @click="() => textBlockDialogOpen = true">
-					{{ t('mail', 'Create a new text block') }}
+					{{ t('mail', 'New text block') }}
 				</NcButton>
 				<template v-if="getSharedTextBlocks().length > 0">
 					<h6>{{ t('mail','Shared with me') }}</h6>
@@ -123,9 +124,9 @@
 			</NcAppSettingsSection>
 
 			<NcAppSettingsSection id="privacy-and-security" :name="t('mail', 'Privacy and security')">
-				<h4>{{ t('mail', 'Data collection consent') }}</h4>
+				<h4>{{ t('mail', 'Data collection') }}</h4>
 				<p class="settings-hint">
-					{{ t('mail', 'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.') }}
+					{{ t('mail', 'Allow the app to collect and process data locally to adapt to your preferences.') }}
 				</p>
 				<p class="app-settings">
 					<NcCheckboxRadioSwitch id="data-collection-toggle"
@@ -136,10 +137,10 @@
 					</NcCheckboxRadioSwitch>
 				</p>
 
-				<h4>{{ t('mail', 'Trusted senders') }}</h4>
+				<h4>{{ t('mail', 'Always show images from') }}</h4>
 				<TrustedSenders />
 
-				<h4>{{ t('mail', 'Internal addresses') }}</h4>
+				<h4>{{ t('mail', 'Security') }}</h4>
 				<p class="settings-hint">
 					{{ t('mail', 'Highlight external email addresses by enabling this feature, manage your internal addresses and domains to ensure recognized contacts stay unmarked.') }}
 				</p>
@@ -156,19 +157,19 @@
 				<h4>{{ t('mail', 'S/MIME') }}</h4>
 				<NcButton class="app-settings-button"
 					type="secondary"
-					:aria-label="t('mail', 'Manage S/MIME certificates')"
+					:aria-label="t('mail', 'Manage certificates')"
 					@click.prevent.stop="displaySmimeCertificateModal = true">
 					<template #icon>
 						<IconLock :size="20" />
 					</template>
-					{{ t('mail', 'Manage S/MIME certificates') }}
+					{{ t('mail', 'Manage certificates') }}
 				</NcButton>
 				<SmimeCertificateModal v-if="displaySmimeCertificateModal"
 					@close="displaySmimeCertificateModal = false" />
 
 				<h4>{{ t('mail', 'Mailvelope') }}</h4>
 				<p class="settings-hint">
-					{{ t('mail', 'Mailvelope is a browser extension that enables easy OpenPGP encryption and decryption for emails.') }}
+					{{ t('mail', 'A browser extension that enables easy OpenPGP encryption and decryption of emails') }}
 				</p>
 				<div class="mailvelope-section">
 					<div v-if="mailvelopeIsAvailable">
@@ -180,13 +181,15 @@
 								target="_blank"
 								class="button"
 								rel="noopener noreferrer">
-								{{ t('mail', 'Step 1: Install Mailvelope browser extension') }}
+								{{ t('mail', 'Step 1') }}:
+								{{ t('mail', 'Install the browser extension') }}
 							</a>
 						</p>
 						<p>
 							<a class="button"
 								@click="mailvelopeAuthorizeDomain">
-								{{ t('mail', 'Step 2: Enable Mailvelope for the current domain') }}
+								{{ t('mail', 'Step 2') }}:
+								{{ t('mail', 'Enable for the current domain') }}
 							</a>
 						</p>
 					</div>
@@ -356,7 +359,7 @@ export default {
 	data() {
 		return {
 			loadingAvatarSettings: false,
-			prioritySettingsText: t('mail', 'Search in the body of messages in priority Inbox'),
+			prioritySettingsText: t('mail', 'Search the body of messages in priority Inbox'),
 			loadingPrioritySettings: false,
 			// eslint-disable-next-line
 			optOutSettingsText: t('mail', 'Activate'),
@@ -364,10 +367,10 @@ export default {
 			loadingInternalAddresses: false,
 			loadingReplySettings: false,
 			// eslint-disable-next-line
-			autoTaggingText: t('mail', 'Mark as important'),
+			autoTaggingText: t('mail', 'Determine importance using machine learning'),
 			// eslint-disable-next-line
 			followUpReminderText: t('mail', 'Remind about messages that require a reply but received none'),
-			internalAddressText: t('mail', 'Use internal addresses'),
+			internalAddressText: t('mail', 'Highlight external addresses'),
 			toggleAutoTagging: false,
 			loadingFollowUpReminders: false,
 			displaySmimeCertificateModal: false,
@@ -706,7 +709,6 @@ p.app-settings {
 }
 
 .settings-hint {
-	margin-top: calc(var(--default-grid-baseline) * -3);
 	margin-bottom: calc(var(--default-grid-baseline) * 2);
 	color: var(--color-text-maxcontrast);
 }
