@@ -6,7 +6,7 @@
 import conv from 'color-convert'
 import md5 from 'md5'
 
-export const calculateAccountColor = (name) => {
+export function calculateAccountColor(name) {
 	const hashed = md5(name)
 	const hsl = conv.hex.hsl(hashed)
 	const fixedHsl = [Math.round(hsl[0] / 40) * 40, hsl[1], hsl[2]]

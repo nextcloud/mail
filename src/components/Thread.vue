@@ -6,7 +6,8 @@
 	<AppContentDetails id="mail-message">
 		<!-- Show outer loading screen only if we have no data about the thread -->
 		<Loading v-if="loading && thread.length === 0" :hint="t('mail', 'Loading thread')" />
-		<Error v-else-if="errorTitle || errorMessage"
+		<Error
+			v-else-if="errorTitle || errorMessage"
 			:error="errorTitle ? errorTitle : t('mail', 'Not found')"
 			:message="errorMessage" />
 		<template v-else>
@@ -17,26 +18,30 @@
 					</h2>
 					<div v-if="thread.length" ref="avatarHeader" class="avatar-header">
 						<!-- Participants that can fit in the parent div -->
-						<RecipientBubble v-for="participant in threadParticipants.slice(0, participantsToDisplay)"
+						<RecipientBubble
+							v-for="participant in threadParticipants.slice(0, participantsToDisplay)"
 							:key="participant.email"
 							:email="participant.email"
 							:label="participant.label" />
 						<!-- Indicator to show that there are more participants than displayed -->
-						<Popover v-if="threadParticipants.length > participantsToDisplay"
+						<Popover
+							v-if="threadParticipants.length > participantsToDisplay"
 							class="avatar-more">
 							<template #trigger>
 								<span class="avatar-more">
 									{{ moreParticipantsString }}
 								</span>
 							</template>
-							<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
+							<RecipientBubble
+								v-for="participant in threadParticipants.slice(participantsToDisplay)"
 								:key="participant.email"
 								:title="participant.email"
 								:email="participant.email"
 								:label="participant.label" />
 						</Popover>
 						<!-- Remaining participants, if any (Needed to have avatarHeader reactive) -->
-						<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
+						<RecipientBubble
+							v-for="participant in threadParticipants.slice(participantsToDisplay)"
 							:key="participant.email"
 							class="avatar-hidden"
 							:email="participant.email"
@@ -45,7 +50,8 @@
 				</div>
 			</div>
 			<ThreadSummary v-if="showSummaryBox" :loading="summaryLoading" :summary="summaryText" />
-			<ThreadEnvelope v-for="(env, index) in thread"
+			<ThreadEnvelope
+				v-for="(env, index) in thread"
 				:key="env.databaseId"
 				:envelope="env"
 				:mailbox-id="$route.params.mailboxId"
@@ -70,14 +76,12 @@ import { NcAppContentDetails as AppContentDetails, NcPopover as Popover } from '
 import debounce from 'lodash/fp/debounce.js'
 import { mapStores } from 'pinia'
 import { prop, uniqBy } from 'ramda'
-
-import logger from '../logger.js'
-
 import Error from './Error.vue'
 import Loading from './Loading.vue'
 import RecipientBubble from './RecipientBubble.vue'
 import ThreadEnvelope from './ThreadEnvelope.vue'
 import ThreadSummary from './ThreadSummary.vue'
+import logger from '../logger.js'
 import { summarizeThread } from '../service/AiIntergrationsService.js'
 import useMainStore from '../store/mainStore.js'
 import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory.js'
@@ -93,6 +97,7 @@ export default {
 		ThreadEnvelope,
 		Popover,
 	},
+
 	props: {
 		currentAccountEmail: {
 			type: String,
@@ -123,9 +128,11 @@ export default {
 			// Returns a number showing the number of thread participants that are not shown in the avatar-header
 			return `+${this.threadParticipants.length - this.participantsToDisplay}`
 		},
+
 		threadId() {
 			return parseInt(this.$route.params.threadId, 10)
 		},
+
 		thread() {
 			const envelope = this.mainStore.getEnvelope(this.threadId)
 			if (envelope === undefined) {
@@ -142,8 +149,8 @@ export default {
 			}
 
 			const currentMailbox = this.mainStore.getMailbox(envelope.mailboxId)
-			const trashMailbox = this.mainStore.getMailboxes(envelope.accountId).find(mailbox => mailbox.specialRole === 'trash')
-			const junkMailbox = this.mainStore.getMailboxes(envelope.accountId).find(mailbox => mailbox.specialRole === 'junk')
+			const trashMailbox = this.mainStore.getMailboxes(envelope.accountId).find((mailbox) => mailbox.specialRole === 'trash')
+			const junkMailbox = this.mainStore.getMailboxes(envelope.accountId).find((mailbox) => mailbox.specialRole === 'junk')
 
 			let limitEnvelopesToCurrentMailbox = false
 			const mailboxesToIgnore = []
@@ -163,17 +170,19 @@ export default {
 			}
 
 			if (limitEnvelopesToCurrentMailbox) {
-				return envelopes.filter(envelope => envelope.mailboxId === currentMailbox.databaseId)
+				return envelopes.filter((envelope) => envelope.mailboxId === currentMailbox.databaseId)
 			} else {
-				return envelopes.filter(envelope => !mailboxesToIgnore.includes(envelope.mailboxId))
+				return envelopes.filter((envelope) => !mailboxesToIgnore.includes(envelope.mailboxId))
 			}
 		},
+
 		threadParticipants() {
-			const recipients = this.thread.flatMap(envelope => {
+			const recipients = this.thread.flatMap((envelope) => {
 				return envelope.from.concat(envelope.to).concat(envelope.cc)
-			}).filter(participant => participant.email !== this.currentAccountEmail)
+			}).filter((participant) => participant.email !== this.currentAccountEmail)
 			return uniqBy(prop('email'), recipients)
 		},
+
 		threadSubject() {
 			const thread = this.thread
 			if (thread.length === 0) {
@@ -182,10 +191,12 @@ export default {
 			}
 			return thread[0].subject || this.t('mail', 'No subject')
 		},
+
 		showSummaryBox() {
 			return this.thread.length > 2 && this.enabledThreadSummary && !this.summaryError
 		},
 	},
+
 	watch: {
 		$route(to, from) {
 			if (
@@ -201,15 +212,18 @@ export default {
 			this.resetThread()
 		},
 	},
+
 	created() {
 		this.resetThread()
 		window.addEventListener('resize', this.resizeDebounced)
 		window.addEventListener('keydown', this.handleKeyDown)
 	},
+
 	beforeDestroy() {
 		window.removeEventListener('resize', this.resizeDebounced)
 		window.removeEventListener('keydown', this.handleKeyDown)
 	},
+
 	methods: {
 		async updateSummary() {
 			if (this.thread.length <= 2 || !this.enabledThreadSummary) {
@@ -227,6 +241,7 @@ export default {
 				this.summaryLoading = false
 			}
 		},
+
 		updateParticipantsToDisplay() {
 			// Wait until everything is in place
 			if (!this.$refs.avatarHeader || !this.threadParticipants) {
@@ -264,6 +279,7 @@ export default {
 				this.participantsToDisplay = this.threadParticipants.length
 			}
 		},
+
 		toggleExpand(threadId) {
 			if (this.thread.length === 1) {
 				return
@@ -273,9 +289,10 @@ export default {
 				this.expandedThreads.push(threadId)
 			} else {
 				console.debug(`collapse thread ${threadId}`)
-				this.expandedThreads = this.expandedThreads.filter(t => t !== threadId)
+				this.expandedThreads = this.expandedThreads.filter((t) => t !== threadId)
 			}
 		},
+
 		onMove(threadId) {
 			if (threadId === this.threadId) {
 				this.$router.replace({
@@ -289,6 +306,7 @@ export default {
 				this.fetchThread()
 			}
 		},
+
 		async resetThread() {
 			this.expandedThreads = [this.threadId]
 			this.errorMessage = ''
@@ -300,6 +318,7 @@ export default {
 			this.updateSummary()
 			this.loadedThreads = 0
 		},
+
 		async fetchThread() {
 			this.loading = true
 			this.errorMessage = ''
@@ -341,6 +360,7 @@ export default {
 				}
 			}
 		},
+
 		async handleKeyDown(event) {
 			if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
 				event.preventDefault()
@@ -355,7 +375,7 @@ export default {
 					if (this.loadedThreads === this.thread.length) {
 						break
 					}
-					await new Promise(resolve => setTimeout(resolve, 100))
+					await new Promise((resolve) => setTimeout(resolve, 100))
 				}
 
 				const virtualIframe = document.createElement('iframe')
@@ -421,14 +441,15 @@ export default {
 					virtualIframe.contentWindow.print()
 					this.removeIframe(virtualIframe)
 				}
-
 			}
 		},
+
 		removeIframe(virtualIframe) {
 			setTimeout(() => {
 				document.body.removeChild(virtualIframe)
 			}, 500)
 		},
+
 		addMessageInfo(virtualIframeDocument, index) {
 			const hr = virtualIframeDocument.createElement('hr')
 			hr.style.border = '1px solid black'
@@ -455,6 +476,7 @@ export default {
 			virtualIframeDocument.body.appendChild(dateSpan)
 			virtualIframeDocument.body.appendChild(recipientSpan)
 		},
+
 		addThreadInfo(document) {
 			const threadInfo = document.createElement('div')
 			threadInfo.style.marginTop = '20px'
@@ -467,15 +489,17 @@ export default {
 
 			const participantsLine = document.createElement('p')
 			participantsLine.textContent = this.threadParticipants
-				.map(participant => `${participant.label} <${participant.email}>`)
+				.map((participant) => `${participant.label} <${participant.email}>`)
 				.join(', ')
 			threadInfo.appendChild(participantsLine)
 
 			return threadInfo
 		},
+
 		addLoadedThread() {
 			this.loadedThreads++
 		},
+
 		print(threadIndex) {
 			setTimeout(() => {
 				try {

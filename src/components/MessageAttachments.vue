@@ -7,7 +7,8 @@
 	<div v-if="attachments.length > 0" class="mail-message-attachments" :class="hasNextLine ? 'has-next-line' : ''">
 		<div class="mail-message-attachments--wrapper" :class="(hasNextLine === true && isToggled === true) ? 'hide' : ''">
 			<div class="attachments">
-				<MessageAttachment v-for="(attachment, idx) in attachments"
+				<MessageAttachment
+					v-for="(attachment, idx) in attachments"
 					:id="attachment.id"
 					ref="attachments"
 					:key="attachment.id"
@@ -22,7 +23,8 @@
 					@open="showViewer(fileInfos[idx])" />
 			</div>
 		</div>
-		<div v-if="hasNextLine"
+		<div
+			v-if="hasNextLine"
 			class="show-more-attachments"
 			@click="isToggled = !isToggled">
 			<ChevronDown v-if="isToggled" :size="20" />
@@ -35,21 +37,24 @@
 			</span>
 		</div>
 		<p v-if="moreThanOne" class="attachments-button-wrapper">
-			<FilePicker v-if="isFilePickerOpen"
+			<FilePicker
+				v-if="isFilePickerOpen"
 				:name="t('mail', 'Choose a folder to store the attachments in')"
 				:buttons="saveAttachementButtons"
 				:allow-pick-directory="true"
 				:multiselect="false"
 				:mimetype-filter="['httpd/unix-directory']"
-				@close="()=>isFilePickerOpen = false" />
-			<span class="attachment-link"
+				@close="() => isFilePickerOpen = false" />
+			<span
+				class="attachment-link"
 				:disabled="savingToCloud"
 				@click="() => isFilePickerOpen = true">
 				<CloudDownload v-if="!savingToCloud" :size="18" />
 				<IconLoading v-else class="spin" :size="18" />
 				{{ t('mail', 'Save all to Files') }}
 			</span>
-			<span class="attachment-link"
+			<span
+				class="attachment-link"
 				@click="downloadZip">
 				<Download :size="18" />
 				{{ t('mail', 'Download Zip') }}
@@ -68,10 +73,8 @@ import ChevronDown from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
 import CloudDownload from 'vue-material-design-icons/CloudDownloadOutline.vue'
 import Download from 'vue-material-design-icons/TrayArrowDown.vue'
-
-import Logger from '../logger.js'
-
 import MessageAttachment from './MessageAttachment.vue'
+import Logger from '../logger.js'
 import { saveAttachmentsToFiles } from '../service/AttachmentService.js'
 
 export default {
@@ -85,16 +88,19 @@ export default {
 		ChevronUp,
 		FilePicker,
 	},
+
 	props: {
 		envelope: {
 			required: true,
 			type: Object,
 		},
+
 		attachments: {
 			type: Array,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			visible: 0,
@@ -110,12 +116,14 @@ export default {
 					type: 'primary',
 				},
 			],
+
 			isFilePickerOpen: false,
 		}
 	},
+
 	computed: {
 		fileInfos() {
-			return this.attachments.map(attachment => ({
+			return this.attachments.map((attachment) => ({
 				filename: attachment.downloadUrl,
 				source: attachment.downloadUrl,
 				basename: basename(attachment.downloadUrl),
@@ -125,22 +133,26 @@ export default {
 				fileid: parseInt(attachment.id, 10),
 			}))
 		},
+
 		previewableFileInfos() {
-			return this.fileInfos.filter(fileInfo => (fileInfo.mime.startsWith('image/')
-					|| fileInfo.mime.startsWith('video/')
-					|| fileInfo.mime.startsWith('audio/')
-					|| fileInfo.mime === 'application/pdf')
-				&& OCA.Viewer.mimetypes.includes(fileInfo.mime))
+			return this.fileInfos.filter((fileInfo) => (fileInfo.mime.startsWith('image/')
+				|| fileInfo.mime.startsWith('video/')
+				|| fileInfo.mime.startsWith('audio/')
+				|| fileInfo.mime === 'application/pdf')
+			&& OCA.Viewer.mimetypes.includes(fileInfo.mime))
 		},
+
 		moreThanOne() {
 			return this.attachments.length > 1
 		},
+
 		zipUrl() {
 			return generateUrl('/apps/mail/api/messages/{id}/attachments', {
 				id: this.envelope.databaseId,
 			})
 		},
 	},
+
 	mounted() {
 		let prevTop = null
 		this.visible = 0
@@ -160,12 +172,13 @@ export default {
 				})
 			}
 		})
-
 	},
+
 	methods: {
 		canPreview(fileInfo) {
 			return this.previewableFileInfos.includes(fileInfo)
 		},
+
 		saveAll(dest) {
 			const path = dest[0].path
 			this.savingToCloud = true
@@ -181,9 +194,11 @@ export default {
 				this.savingToCloud = false
 			})
 		},
+
 		downloadZip() {
 			window.location = this.zipUrl
 		},
+
 		showViewer(fileInfo) {
 			if (!this.canPreview(fileInfo)) {
 				return

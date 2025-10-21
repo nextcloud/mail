@@ -10,16 +10,16 @@ describe('smime', () => {
 		it('correctly sorts certificates', () => {
 			let a, b
 
-			a = {info: { notAfter: 200 }}
-			b = {info: { notAfter: 100 }}
+			a = { info: { notAfter: 200 } }
+			b = { info: { notAfter: 100 } }
 			expect(compareSmimeCertificates(a, b)).toEqual(-1)
 
-			a = {info: { notAfter: 100 }}
-			b = {info: { notAfter: 100 }}
+			a = { info: { notAfter: 100 } }
+			b = { info: { notAfter: 100 } }
 			expect(compareSmimeCertificates(a, b)).toEqual(0)
 
-			a = {info: { notAfter: 100 }}
-			b = {info: { notAfter: 200 }}
+			a = { info: { notAfter: 100 } }
+			b = { info: { notAfter: 200 } }
 			expect(compareSmimeCertificates(a, b)).toEqual(1)
 		})
 	})

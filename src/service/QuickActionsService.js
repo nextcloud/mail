@@ -5,7 +5,6 @@
 
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-
 import { handleHttpAuthErrors } from '../http/sessionExpiryHandler.js'
 
 /**
@@ -17,7 +16,6 @@ export async function fetchAllQuickActions() {
 		const response = await axios.get(url)
 		return response.data.data
 	})
-
 }
 
 export async function createQuickAction(name, accountId) {
@@ -26,14 +24,12 @@ export async function createQuickAction(name, accountId) {
 		const response = await axios.post(url, { name, accountId })
 		return response.data.data
 	})
-
 }
 
 export async function updateQuickAction(id, name) {
 	const url = generateUrl('/apps/mail/api/quick-actions/{id}', { id })
 	return handleHttpAuthErrors(async () => {
 		return (await axios.put(url, { name })).data.data
-
 	})
 }
 
@@ -50,7 +46,6 @@ export async function findAllStepsForAction(actionId) {
 		const response = await axios.get(url)
 		return response.data.data
 	})
-
 }
 
 export async function createActionStep(name, order, actionId, tagId = null, mailboxId = null) {
@@ -59,14 +54,12 @@ export async function createActionStep(name, order, actionId, tagId = null, mail
 		const response = await axios.post(url, { name, order, actionId, tagId, mailboxId })
 		return response.data.data
 	})
-
 }
 
 export async function updateActionStep(id, name, order, tagId, mailboxId) {
 	const url = generateUrl('/apps/mail/api/action-step/{id}', { id })
 	return handleHttpAuthErrors(async () => {
 		return (await axios.put(url, { name, order, tagId, mailboxId })).data.data
-
 	})
 }
 

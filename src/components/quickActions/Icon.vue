@@ -24,27 +24,28 @@ export default {
 			default: '',
 		},
 	},
+
 	computed: {
 		quickActionIcon() {
 			switch (this.action) {
-			case 'markAsSpam':
-				return AlertOctagonIcon
-			case 'applyTag':
-				return TagIcon
-			case 'markAsImportant':
-				return ImportantIcon
-			case 'markAsFavorite':
-				return IconFavorite
-			case 'markAsRead':
-				return EmailRead
-			case 'markAsUnread':
-				return EmailUnread
-			case 'moveThread':
-				return OpenInNewIcon
-			case 'deleteThread':
-				return IconDelete
-			default:
-				return IconEmailFast
+				case 'markAsSpam':
+					return AlertOctagonIcon
+				case 'applyTag':
+					return TagIcon
+				case 'markAsImportant':
+					return ImportantIcon
+				case 'markAsFavorite':
+					return IconFavorite
+				case 'markAsRead':
+					return EmailRead
+				case 'markAsUnread':
+					return EmailUnread
+				case 'moveThread':
+					return OpenInNewIcon
+				case 'deleteThread':
+					return IconDelete
+				default:
+					return IconEmailFast
 			}
 		},
 	},

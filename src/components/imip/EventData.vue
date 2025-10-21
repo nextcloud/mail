@@ -24,7 +24,8 @@
 			</div>
 		</div>
 
-		<div v-if="location"
+		<div
+			v-if="location"
 			class="event-data__row event-data__row--location">
 			<MapMarkerIcon class="event-data__row__icon" :size="20" />
 			<span>{{ location }}</span>
@@ -49,7 +50,6 @@ import { getReadableTimezoneName } from '@nextcloud/timezones'
 import AccountMultipleIcon from 'vue-material-design-icons/AccountMultipleOutline.vue'
 import CalendarIcon from 'vue-material-design-icons/CalendarOutline.vue'
 import MapMarkerIcon from 'vue-material-design-icons/MapMarkerOutline.vue'
-
 import { removeMailtoPrefix } from '../../util/eventAttendee.js'
 
 /**
@@ -88,12 +88,14 @@ export default {
 		CalendarIcon,
 		MapMarkerIcon,
 	},
+
 	props: {
 		event: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	computed: {
 		/**
 		 * @return {string}

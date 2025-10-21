@@ -11,7 +11,6 @@ import { curry } from 'ramda'
  * @type {Text}
  */
 export class Text {
-
 	constructor(format, value) {
 		this.format = format
 		this.value = value
@@ -28,7 +27,6 @@ export class Text {
 
 		return new Text(this.format, this.value + other.value)
 	}
-
 }
 
 /**
@@ -53,7 +51,7 @@ export const plain = wrap('plain')
  */
 export const html = wrap('html')
 
-export const detect = (str) => {
+export function detect(str) {
 	if (!isString(str)) {
 		// Fall back to a hopefully sane default
 		return plain('')
@@ -93,14 +91,14 @@ export const isHtml = isFormat('html')
  * @param {Text} text text
  * @return {Text}
  */
-export const toPlain = (text) => {
+export function toPlain(text) {
 	if (text.format === 'plain') {
 		return text
 	}
 
 	// Build shared options for all block tags
 	const blockTags = ['p', 'div', 'header', 'footer', 'form', 'article', 'aside', 'main', 'nav', 'section']
-	const blockSelectors = blockTags.map(tag => ({
+	const blockSelectors = blockTags.map((tag) => ({
 		selector: tag,
 		format: 'customBlock',
 		options: {
@@ -119,7 +117,7 @@ export const toPlain = (text) => {
 				walk(elem.children, builder)
 				builder.closeBlock({
 					trailingLineBreaks: 0,
-					blockTransform: text => text
+					blockTransform: (text) => text
 						.replace(/^ {2,}/gm, ' '), // merge leading spaces
 				})
 				// Don't rely on the built-in leading/trailing line break feature.
@@ -135,7 +133,7 @@ export const toPlain = (text) => {
 				walk(elem.children, builder)
 				builder.closeBlock({
 					trailingLineBreaks: formatOptions.trailingLineBreaks,
-					blockTransform: text => text
+					blockTransform: (text) => text
 						.replace(/\n{3,}/g, '\n\n') // merge 3 or more line breaks
 						.replace(/^/gm, '> '), // add quote marker at the start of each line
 				})
@@ -180,7 +178,7 @@ export const toPlain = (text) => {
  * @param {Text} text text
  * @return {Text}
  */
-export const toHtml = (text) => {
+export function toHtml(text) {
 	if (text.format === 'html') {
 		return text
 	}

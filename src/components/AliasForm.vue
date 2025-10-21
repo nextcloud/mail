@@ -5,15 +5,18 @@
 
 <template>
 	<div class="alias-form">
-		<form v-if="showForm"
+		<form
+			v-if="showForm"
 			:id="formId"
 			class="alias-form__form"
 			@submit.prevent="updateAlias">
-			<input v-model="changeName"
+			<input
+				v-model="changeName"
 				type="text"
 				class="alias-form__form__input"
 				required>
-			<input v-model="changeAlias"
+			<input
+				v-model="changeAlias"
 				:disabled="alias.provisioned"
 				type="email"
 				class="alias-form__form__input"
@@ -25,9 +28,10 @@
 
 		<div class="alias-form__actions">
 			<template v-if="showForm">
-				<NcButton type="tertiary-no-background"
+				<NcButton
+					variant="tertiary-no-background"
 					:aria-label="t('mail', 'Update alias')"
-					native-type="submit"
+					type="submit"
 					:form="formId"
 					:name="t('mail', 'Update alias')">
 					<template #icon>
@@ -40,8 +44,9 @@
 				<!-- Extra buttons -->
 				<slot />
 
-				<NcButton v-if="enableUpdate"
-					type="tertiary-no-background"
+				<NcButton
+					v-if="enableUpdate"
+					variant="tertiary-no-background"
 					:aria-label="t('mail', 'Rename alias')"
 					:name="t('mail', 'Show update alias form')"
 					@click.prevent="showForm = true">
@@ -49,8 +54,9 @@
 						<IconRename :size="20" />
 					</template>
 				</NcButton>
-				<NcButton v-if="enableDelete && !alias.provisioned"
-					type="tertiary-no-background"
+				<NcButton
+					v-if="enableDelete && !alias.provisioned"
+					variant="tertiary-no-background"
 					:aria-label="t('mail', 'Delete alias')"
 					:name="t('mail', 'Delete alias')"
 					@click.prevent="deleteAlias">
@@ -79,32 +85,39 @@ export default {
 		IconDelete,
 		IconCheck,
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
+
 		alias: {
 			type: Object,
 			required: true,
 		},
+
 		enableUpdate: {
 			type: Boolean,
 			default: true,
 		},
+
 		enableDelete: {
 			type: Boolean,
 			default: true,
 		},
+
 		onUpdateAlias: {
 			type: Function,
 			default: async (aliasId, { alias, name }) => {},
 		},
+
 		onDelete: {
 			type: Function,
 			default: async (aliasId) => {},
 		},
 	},
+
 	data() {
 		return {
 			changeAlias: this.alias.alias,
@@ -113,11 +126,13 @@ export default {
 			loading: false,
 		}
 	},
+
 	computed: {
 		formId() {
 			return `alias-form-${this.alias.id}`
 		},
 	},
+
 	methods: {
 		/**
 		 * Call alias update event handler of parent.
@@ -133,6 +148,7 @@ export default {
 			this.showForm = false
 			this.loading = false
 		},
+
 		/**
 		 * Call alias deletion event handler of parent.
 		 *

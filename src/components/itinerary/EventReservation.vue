@@ -28,7 +28,6 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import moment from '@nextcloud/moment'
 import ical from 'ical.js'
 import md5 from 'md5'
-
 import CalendarImport from './CalendarImport.vue'
 import logger from '../../logger.js'
 import { importCalendarEvent } from '../../service/DAVService.js'
@@ -41,41 +40,49 @@ export default {
 			type: Object,
 			required: true,
 		},
+
 		calendars: {
 			type: Array,
 			required: true,
 		},
+
 		messageId: {
 			type: String,
 			required: true,
 		},
 	},
+
 	computed: {
 		eventName() {
 			return this.data.reservationFor.name
 		},
+
 		time() {
 			if (!('startDate' in this.data.reservationFor)) {
 				return
 			}
 			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.startDate)).format('LT')
 		},
+
 		date() {
 			if (!('startDate' in this.data.reservationFor)) {
 				return
 			}
 			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.startDate)).format('L')
 		},
+
 		location() {
 			if (!('location' in this.data.reservationFor) || !('name' in this.data.reservationFor.location)) {
 				return
 			}
 			return this.data.reservationFor.location.name
 		},
+
 		canImport() {
 			return 'startDate' in this.data.reservationFor
 		},
 	},
+
 	methods: {
 		getEndDateTime(event) {
 			if ('endDate' in this.data.reservationFor) {
@@ -86,6 +93,7 @@ export default {
 				return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.startDate)).add(2, 'hours').format()
 			}
 		},
+
 		handleImport(calendar) {
 			const event = new ical.Component('VEVENT')
 			event.updatePropertyWithValue('SUMMARY', this.eventName)

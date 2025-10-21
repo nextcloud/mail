@@ -40,9 +40,8 @@
 
 <script>
 import { mapStores } from 'pinia'
-
-import logger from '../logger.js'
 import MailboxInlinePicker from './MailboxInlinePicker.vue'
+import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 
 export default {
@@ -50,17 +49,20 @@ export default {
 	components: {
 		MailboxInlinePicker,
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			saving: false,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		draftsMailbox: {
@@ -71,6 +73,7 @@ export default {
 				}
 				return mb.databaseId
 			},
+
 			async set(draftsMailboxId) {
 				logger.debug('setting drafts folder to ' + draftsMailboxId)
 				this.saving = true
@@ -90,6 +93,7 @@ export default {
 				}
 			},
 		},
+
 		sentMailbox: {
 			get() {
 				const mb = this.mainStore.getMailbox(this.account.sentMailboxId)
@@ -98,6 +102,7 @@ export default {
 				}
 				return mb.databaseId
 			},
+
 			async set(sentMailboxId) {
 				logger.debug('setting sent folder to ' + sentMailboxId)
 				this.saving = true
@@ -117,6 +122,7 @@ export default {
 				}
 			},
 		},
+
 		trashMailbox: {
 			get() {
 				const mb = this.mainStore.getMailbox(this.account.trashMailboxId)
@@ -125,6 +131,7 @@ export default {
 				}
 				return mb.databaseId
 			},
+
 			async set(trashMailboxId) {
 				logger.debug('setting trash folder to ' + trashMailboxId)
 				this.saving = true
@@ -144,6 +151,7 @@ export default {
 				}
 			},
 		},
+
 		archiveMailbox: {
 			get() {
 				const mb = this.mainStore.getMailbox(this.account.archiveMailboxId)
@@ -152,6 +160,7 @@ export default {
 				}
 				return mb.databaseId
 			},
+
 			async set(archiveMailboxId) {
 				logger.debug('setting archive folder to ' + archiveMailboxId)
 				this.saving = true
@@ -171,6 +180,7 @@ export default {
 				}
 			},
 		},
+
 		junkMailbox: {
 			get() {
 				const mb = this.mainStore.getMailbox(this.account.junkMailboxId)
@@ -179,6 +189,7 @@ export default {
 				}
 				return mb.databaseId
 			},
+
 			async set(junkMailboxId) {
 				logger.debug('setting junk folder to ' + junkMailboxId)
 				this.saving = true
@@ -198,6 +209,7 @@ export default {
 				}
 			},
 		},
+
 		snoozeMailbox: {
 			get() {
 				const mb = this.mainStore.getMailbox(this.account.snoozeMailboxId)
@@ -206,6 +218,7 @@ export default {
 				}
 				return mb.databaseId
 			},
+
 			async set(snoozeMailboxId) {
 				logger.debug('setting snooze folder to ' + snoozeMailboxId)
 				this.saving = true

@@ -6,20 +6,19 @@
 import { getRequestToken } from '@nextcloud/auth'
 import { registerDavProperty } from '@nextcloud/files'
 import { generateFilePath } from '@nextcloud/router'
-import '@nextcloud/dialogs/style.css'
-import './directives/drag-and-drop/styles/drag-and-drop.scss'
-import { PiniaVuePlugin, createPinia } from 'pinia'
+import { createPinia, PiniaVuePlugin } from 'pinia'
 import vToolTip from 'v-tooltip'
 import Vue from 'vue'
 import VueShortKey from 'vue-shortkey'
-
 import App from './App.vue'
 import Nextcloud from './mixins/Nextcloud.js'
 import router from './router.js'
 
-// eslint-disable-next-line camelcase
+import '@nextcloud/dialogs/style.css'
+import './directives/drag-and-drop/styles/drag-and-drop.scss'
+
 __webpack_nonce__ = btoa(getRequestToken())
-// eslint-disable-next-line camelcase
+
 __webpack_public_path__ = generateFilePath('mail', '', 'js/')
 
 Vue.use(PiniaVuePlugin)

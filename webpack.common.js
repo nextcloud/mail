@@ -7,11 +7,11 @@
 /* global module */
 /* global require */
 
-const path = require('path')
-const webpack = require('webpack')
-const { VueLoaderPlugin } = require('vue-loader')
 const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-modules-except')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+const path = require('path')
+const { VueLoaderPlugin } = require('vue-loader')
+const webpack = require('webpack')
 const { IgnorePlugin } = require('webpack')
 
 const appName = 'mail'

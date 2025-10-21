@@ -10,7 +10,7 @@ describe('mailvelope', () => {
 		delete window.mailvelope
 	})
 
-	it('loads statically', async() => {
+	it('loads statically', async () => {
 		window.mailvelope = {
 			mock: 3,
 		}
@@ -20,7 +20,7 @@ describe('mailvelope', () => {
 		expect(mailvelope).toEqual(window.mailvelope)
 	})
 
-	it('loads dynamically', async() => {
+	it('loads dynamically', async () => {
 		const p = getMailvelope()
 		window.mailvelope = {
 			mock: 3,
