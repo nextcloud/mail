@@ -820,7 +820,11 @@ export default {
 				for (const step of action.steps) {
 					switch (step.name) {
 					case 'markAsSpam':
-						this.layoutMessageViewThreaded ? await this.onToggleJunkThread() : this.onToggleJunk()
+						if (this.layoutMessageViewThreaded) {
+							await this.onToggleJunkThread()
+						} else {
+							await this.onToggleJunk()
+						}
 						break
 					case 'applyTag':
 						if (step?.tagId) {
