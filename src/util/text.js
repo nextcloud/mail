@@ -165,13 +165,15 @@ export const toPlain = (text) => {
 		],
 	})
 
-	return plain(
-		converted
-			.replace(/^\n+/, '') // trim leading line breaks
-			.replace(/\n+$/, '') // trim trailing line breaks
-			.replace(/ +$/gm, '') // trim trailing spaces of each line
-			.replace(/^--$/gm, '-- '), // hack to create the correct email signature separator
-	)
+	return plain(converted
+		// trim leading line breaks
+		.replace(/^\n+/, '')
+		// trim trailing line breaks
+		.replace(/\n+$/, '')
+		// trim trailing spaces of each line
+		.replace(/ +$/gm, '')
+		// hack to create the correct email signature separator
+		.replace(/^--$/gm, '-- '))
 }
 
 /**
