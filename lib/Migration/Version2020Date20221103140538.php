@@ -35,7 +35,7 @@ class Version2020Date20221103140538 extends SimpleMigrationStep {
 				'length' => 4,
 			]);
 		}
-		$localMessagesTable->changeColumn('send_at', [
+		$localMessagesTable->modifyColumn('send_at', [
 			'notnull' => false
 		]);
 		return $schema;

@@ -73,7 +73,7 @@ class Version1120Date20220223094709 extends SimpleMigrationStep {
 			'notnull' => false,
 			'length' => 4,
 		]);
-		$recipientsTable->changeColumn('message_id', [
+		$recipientsTable->modifyColumn('message_id', [
 			'notnull' => false
 		]);
 		$recipientsTable->addForeignKeyConstraint($localMessageTable, ['local_message_id'], ['id'], ['onDelete' => 'CASCADE']);

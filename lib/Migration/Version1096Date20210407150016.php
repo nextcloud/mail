@@ -28,16 +28,16 @@ class Version1096Date20210407150016 extends SimpleMigrationStep {
 
 		if ($schema->hasTable('mail_accounts')) {
 			$table = $schema->getTable('mail_accounts');
-			$table->changeColumn('provisioned', [
+			$table->modifyColumn('provisioned', [
 				'notnull' => false,
 				'default' => false
 			]);
-			$table->changeColumn('show_subscribed_only', [
+			$table->modifyColumn('show_subscribed_only', [
 				'notnull' => false,
 				'default' => false
 			]);
 			$table = $schema->getTable('mail_accounts');
-			$table->changeColumn('sieve_enabled', [
+			$table->modifyColumn('sieve_enabled', [
 				'notnull' => false,
 				'default' => false
 			]);
@@ -45,7 +45,7 @@ class Version1096Date20210407150016 extends SimpleMigrationStep {
 
 		if ($schema->hasTable('mail_classifiers')) {
 			$table = $schema->getTable('mail_classifiers');
-			$table->changeColumn('active', [
+			$table->modifyColumn('active', [
 				'notnull' => false,
 				'default' => false
 			]);
@@ -53,11 +53,11 @@ class Version1096Date20210407150016 extends SimpleMigrationStep {
 
 		if ($schema->hasTable('mail_mailboxes')) {
 			$table = $schema->getTable('mail_mailboxes');
-			$table->changeColumn('selectable', [
+			$table->modifyColumn('selectable', [
 				'notnull' => false,
 				'default' => false
 			]);
-			$table->changeColumn('sync_in_background', [
+			$table->modifyColumn('sync_in_background', [
 				'notnull' => false,
 				'default' => false
 			]);
@@ -65,47 +65,47 @@ class Version1096Date20210407150016 extends SimpleMigrationStep {
 
 		if ($schema->hasTable('mail_messages')) {
 			$table = $schema->getTable('mail_messages');
-			$table->changeColumn('flag_answered', [
+			$table->modifyColumn('flag_answered', [
 				'notnull' => false,
 				'default' => false
 			]);
-			$table->changeColumn('flag_deleted', [
+			$table->modifyColumn('flag_deleted', [
 				'notnull' => false,
 				'default' => false
 			]);
-			$table->changeColumn('flag_draft', [
+			$table->modifyColumn('flag_draft', [
 				'notnull' => false,
 				'default' => false
 			]);
-			$table->changeColumn('flag_flagged', [
+			$table->modifyColumn('flag_flagged', [
 				'notnull' => false,
 				'default' => false
 			]);
-			$table->changeColumn('flag_seen', [
+			$table->modifyColumn('flag_seen', [
 				'notnull' => false,
 				'default' => false
 			]);
-			$table->changeColumn('flag_forwarded', [
+			$table->modifyColumn('flag_forwarded', [
 				'notnull' => false,
 				'default' => false
 			]);
-			$table->changeColumn('flag_junk', [
+			$table->modifyColumn('flag_junk', [
 				'notnull' => false,
 				'default' => false
 			]);
-			$table->changeColumn('flag_notjunk', [
+			$table->modifyColumn('flag_notjunk', [
 				'notnull' => false,
 				'default' => false
 			]);
-			$table->changeColumn('flag_important', [
+			$table->modifyColumn('flag_important', [
 				'notnull' => false,
 				'default' => false
 			]);
-			$table->changeColumn('flag_mdnsent', [
+			$table->modifyColumn('flag_mdnsent', [
 				'notnull' => false,
 				'default' => false
 			]);
-			$table->changeColumn('structure_analyzed', [
+			$table->modifyColumn('structure_analyzed', [
 				'notnull' => false,
 				'default' => false
 			]);

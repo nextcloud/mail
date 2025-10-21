@@ -121,7 +121,7 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 
 		if (!$isSqlite) {
 			// Change primary column to bigint
-			$recipientsTable->changeColumn('id', [
+			$recipientsTable->modifyColumn('id', [
 				'type' => Type::getType(Types::BIGINT),
 				'length' => 20,
 			]);
@@ -135,7 +135,7 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 
 		if (!$isSqlite) {
 			// Change primary column to bigint
-			$messagesTable->changeColumn('id', [
+			$messagesTable->modifyColumn('id', [
 				'type' => Type::getType(Types::BIGINT),
 				'length' => 20,
 			]);
