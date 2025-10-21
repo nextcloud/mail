@@ -820,7 +820,7 @@ export default {
 				for (const step of action.steps) {
 					switch (step.name) {
 					case 'markAsSpam':
-						await this.onToggleJunk()
+						this.layoutMessageViewThreaded ? await this.onToggleJunkThread() : this.onToggleJunk()
 						break
 					case 'applyTag':
 						if (step?.tagId) {
@@ -832,22 +832,22 @@ export default {
 						break
 					case 'markAsImportant':
 						if (!this.isImportant) {
-							this.onToggleImportant()
+							this.layoutMessageViewThreaded ? this.onToggleImportantThread() : this.onToggleImportant()
 						}
 						break
 					case 'markAsFavorite':
 						if (!this.data.flags.flagged) {
-							this.onToggleFlagged()
+							this.layoutMessageViewThreaded ? this.onToggleFlaggedThread() : this.onToggleFlagged()
 						}
 						break
 					case 'markAsRead':
 						if (!this.data.flags.seen) {
-							this.onToggleSeen()
+							this.layoutMessageViewThreaded ? this.onToggleSeenThread() : this.onToggleSeen()
 						}
 						break
 					case 'markAsUnread':
 						if (this.data.flags.seen) {
-							this.onToggleSeen()
+							this.layoutMessageViewThreaded ? this.onToggleSeenThread() : this.onToggleSeen()
 						}
 						break
 					case 'moveThread':
@@ -913,11 +913,73 @@ export default {
 		onToggleImportant() {
 			this.mainStore.toggleEnvelopeImportant(this.data)
 		},
+		onToggleImportantThread() {
+			const threadEnvelopes = this.layoutMessageViewThreaded
+				? this.mainStore.getEnvelopesByThreadRootId(this.data.accountId, this.data.threadRootId)
+				: [this.data]
+			threadEnvelopes.forEach((envelope) => {
+				this.mainStore.toggleEnvelopeImportant(envelope)
+			})
+		},
 		onToggleFlagged() {
 			this.mainStore.toggleEnvelopeFlagged(this.data)
 		},
+		onToggleFlaggedThread() {
+			const threadEnvelopes = this.layoutMessageViewThreaded
+				? this.mainStore.getEnvelopesByThreadRootId(this.data.accountId, this.data.threadRootId)
+				: [this.data]
+			threadEnvelopes.forEach((envelope) => {
+				this.mainStore.toggleEnvelopeFlagged(envelope)
+			})
+		},
 		onToggleSeen() {
 			this.mainStore.toggleEnvelopeSeen({ envelope: this.data })
+		},
+		onToggleSeenThread() {
+			const threadEnvelopes = this.layoutMessageViewThreaded
+				? this.mainStore.getEnvelopesByThreadRootId(this.data.accountId, this.data.threadRootId)
+				: [this.data]
+			threadEnvelopes.forEach((envelope) => {
+				this.mainStore.toggleEnvelopeSeen({ envelope })
+			})
+		},
+		async onToggleJunkThread() {
+			const removeEnvelope = await this.mainStore.moveEnvelopeToJunk(this.data)
+
+			const threadEnvelopes = this.layoutMessageViewThreaded
+				? this.mainStore.getEnvelopesByThreadRootId(this.data.accountId, this.data.threadRootId)
+				: [this.data]
+			threadEnvelopes.forEach(async (envelope) => {
+				if (this.isImportant) {
+					await this.mainStore.toggleEnvelopeImportant(envelope)
+				}
+
+				if (!envelope.flags.seen) {
+					await this.mainStore.toggleEnvelopeSeen({ envelope })
+				}
+
+				/**
+				 * moveEnvelopeToJunk returns true if the envelope should be moved to a different mailbox.
+				 *
+				 * Our backend (MessageMapper.move) implemented move as copy and delete.
+				 * The message is copied to another mailbox and gets a new UID; the message in the current folder is deleted.
+				 *
+				 * Trigger the delete event here to open the next envelope and remove the current envelope from the list.
+				 * The delete event bubbles up to Mailbox.onDelete to the actual implementation.
+				 *
+				 * In Mailbox.onDelete, fetchNextEnvelopes requires the current envelope to find the next envelope.
+				 * Therefore, it must run before removing the envelope.
+			 	 */
+
+				if (removeEnvelope) {
+					this.$emit('delete', envelope)
+				}
+
+				await this.mainStore.toggleEnvelopeJunk({
+					envelope,
+					removeEnvelope,
+				})
+			})
 		},
 		async onToggleJunk() {
 			const removeEnvelope = await this.mainStore.moveEnvelopeToJunk(this.data)
