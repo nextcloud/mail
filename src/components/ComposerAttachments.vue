@@ -434,7 +434,9 @@ export default {
 			this.bus.emit('append-to-body-at-cursor', toAppend)
 		},
 		formatBytes(bytes, decimals = 2) {
-			if (bytes === 0) return '0 B'
+			if (bytes === 0) {
+				return '0 B'
+			}
 			const k = 1024
 			const dm = decimals < 0 ? 0 : decimals
 			const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
