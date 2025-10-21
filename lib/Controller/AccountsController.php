@@ -352,6 +352,9 @@ class AccountsController extends Controller {
 			return MailJsonResponse::error('Could not create account');
 		}
 		if (!$this->hostValidator->isValid($imapHost)) {
+			$this->logger->debug('Prevented access to invalid IMAP host', [
+				'host' => $imapHost,
+			]);
 			return MailJsonResponse::fail(
 				[
 					'error' => 'CONNECTION_ERROR',
@@ -362,6 +365,9 @@ class AccountsController extends Controller {
 			);
 		}
 		if (!$this->hostValidator->isValid($smtpHost)) {
+			$this->logger->debug('Prevented access to invalid SMTP host', [
+				'host' => $smtpHost,
+			]);
 			return MailJsonResponse::fail(
 				[
 					'error' => 'CONNECTION_ERROR',
