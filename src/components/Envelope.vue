@@ -836,22 +836,38 @@ export default {
 						break
 					case 'markAsImportant':
 						if (!this.isImportant) {
-							this.layoutMessageViewThreaded ? this.onToggleImportantThread() : this.onToggleImportant()
+							if (this.layoutMessageViewThreaded) {
+								this.onToggleImportantThread()
+							} else {
+								this.onToggleImportant()
+							}
 						}
 						break
 					case 'markAsFavorite':
 						if (!this.data.flags.flagged) {
-							this.layoutMessageViewThreaded ? this.onToggleFlaggedThread() : this.onToggleFlagged()
+							if (this.layoutMessageViewThreaded) {
+								this.onToggleFlaggedThread()
+							} else {
+								this.onToggleFlagged()
+							}
 						}
 						break
 					case 'markAsRead':
 						if (!this.data.flags.seen) {
-							this.layoutMessageViewThreaded ? this.onToggleSeenThread() : this.onToggleSeen()
+							if (this.layoutMessageViewThreaded) {
+								this.onToggleSeenThread()
+							} else {
+								this.onToggleSeen()
+							}
 						}
 						break
 					case 'markAsUnread':
 						if (this.data.flags.seen) {
-							this.layoutMessageViewThreaded ? this.onToggleSeenThread() : this.onToggleSeen()
+							if (this.layoutMessageViewThreaded) {
+								this.onToggleSeenThread()
+							} else {
+								this.onToggleSeen()
+							}
 						}
 						break
 					case 'moveThread':
