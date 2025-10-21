@@ -456,6 +456,7 @@ class AttachmentServiceTest extends TestCase {
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'text/plain',
+			'createdAt' => 123456,
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,

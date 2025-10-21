@@ -22,12 +22,12 @@ use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\UploadException;
 use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use Psr\Log\LoggerInterface;
-use OCP\AppFramework\Utility\ITimeFactory;
 
 class AttachmentService implements IAttachmentService {
 	/** @var LocalAttachmentMapper */
