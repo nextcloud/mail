@@ -474,7 +474,6 @@ export default {
 						logger.error('could not send message', { error })
 						return t('mail', 'You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses.')
 					},
-					// eslint-disable-next-line n/handle-callback-err
 					default(error) {
 						logger.error('could not send message', { error })
 					},
@@ -488,7 +487,6 @@ export default {
 						logger.info('showing the did you forgot an attachment warning', { error })
 						return t('mail', 'You mentioned an attachment. Did you forget to add it?')
 					},
-					// eslint-disable-next-line n/handle-callback-err
 					default(error) {
 						logger.warn('could not send message', { error })
 					},
