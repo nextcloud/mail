@@ -336,12 +336,16 @@ export default {
 
 			try {
 				logger.debug(`loading ${language} translations for CKEditor`)
+
+				/* eslint-disable @stylistic/comma-dangle, @stylistic/function-paren-newline */
 				const { default: coreTranslations } = await import(
 					/* webpackMode: "lazy-once" */
 					/* webpackPrefetch: true */
 					/* webpackPreload: true */
 					`ckeditor5/translations/${language}.js`
 				)
+				/* eslint-enable @stylistic/comma-dangle, @stylistic/function-paren-newline */
+
 				this.showEditor(language, [coreTranslations])
 			} catch (error) {
 				logger.error(`could not find CKEditor translations for "${language}"`, { error })
