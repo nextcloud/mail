@@ -32,7 +32,6 @@ Vue.use(vToolTip)
 
 registerDavProperty('nc:share-attributes', { nc: 'http://nextcloud.org/ns' })
 
-/* eslint-disable vue/match-component-file-name */
 export default new Vue({
 	el: '#content',
 	name: 'Mail',
