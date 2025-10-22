@@ -276,7 +276,7 @@ export default {
 	margin-top: 4px;
 	margin-bottom: 0;
 	position:sticky;
-	bottom: -1px;
+	bottom: -2px;
 	background: linear-gradient(0deg, var(--color-main-background), var(--color-main-background) 90%, rgba(255, 255, 255, 0));
 
 	@media (max-width: 600px) {

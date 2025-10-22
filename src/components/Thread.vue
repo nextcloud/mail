@@ -12,7 +12,7 @@
 		<template v-else>
 			<div id="mail-thread-header">
 				<div id="mail-thread-header-fields">
-					<h2 dir="auto" :title="threadSubject">
+					<h2 dir="auto" :title="threadSubject" :class="{ 'text-collapsed': isTextCollapsed }">
 						{{ threadSubject }}
 					</h2>
 					<div v-if="thread.length" ref="avatarHeader" class="avatar-header">
@@ -114,6 +114,12 @@ export default {
 			summaryText: '',
 			summaryError: false,
 			loadedThreads: 0,
+			isTextCollapsed: false,
+			_fullHeight: 0,
+			_singleHeight: 0,
+			_threshold: 0,
+			_scrollEl: null,
+			_transitionEndHandler: null,
 		}
 	},
 
@@ -207,15 +213,26 @@ export default {
 		window.addEventListener('keydown', this.handleKeyDown)
 	},
 	mounted() {
-		this.setHeaderHeight()
-		window.addEventListener('resize', this.setHeaderHeight)
-	},
-	updated() {
-		this.setHeaderHeight()
+		this._scrollEl = this.$el.closest('.app-content-wrapper') || window
+		this.$nextTick(() => {
+			if (document.fonts && document.fonts.ready) {
+			document.fonts.ready.then(() => this._measureHeightsOnce())
+				.catch(() => this._measureHeightsOnce())
+			} else {
+			this._measureHeightsOnce()
+			}
+		})
+		this._scrollEl.addEventListener('scroll', this.onScroll, { passive: true })
 	},
 	beforeDestroy() {
 		window.removeEventListener('resize', this.resizeDebounced)
 		window.removeEventListener('keydown', this.handleKeyDown)
+		this._scrollEl?.removeEventListener('scroll', this.onScroll)
+		if (this._transitionEndHandler) {
+			const h2 = this.$el.querySelector('#mail-thread-header-fields h2')
+			h2 && h2.removeEventListener('transitionend', this._transitionEndHandler)
+			this._transitionEndHandler = null
+		}
 	},
 	methods: {
 		async updateSummary() {
@@ -232,14 +249,104 @@ export default {
 				this.summaryLoading = false
 			}
 		},
-		setHeaderHeight() {
-			this.$nextTick(() => {
-				const header = this.$el.querySelector('#mail-thread-header')
-				if (header) {
-					const offset = -header.offsetHeight + 51
-					document.documentElement.style.setProperty('--mail-thread-header-offset', `${offset}px`)
-				}
+		_measureHeightsOnce() {
+			const h2 = this.$el.querySelector('#mail-thread-header-fields h2')
+			if (!h2) return
+
+			const clone = h2.cloneNode(true)
+			Object.assign(clone.style, {
+				position: 'absolute',
+				visibility: 'hidden',
+				whiteSpace: 'normal',
+				width: `${h2.offsetWidth}px`,
+				pointerEvents: 'none',
+				overflow: 'visible',
+				top: '0',
+				left: '-9999px'
 			})
+			document.body.appendChild(clone)
+			const full = clone.scrollHeight
+
+			clone.style.whiteSpace = 'nowrap'
+			const single = clone.scrollHeight
+			document.body.removeChild(clone)
+
+			this._fullHeight = full
+			this._singleHeight = single
+
+			this._threshold = Math.max(0, this._fullHeight - this._singleHeight)
+
+			this.onScroll()
+		},
+		onScroll() {
+			const scrolled = this._scrollEl.scrollTop
+			const shouldCollapse = scrolled > this._threshold
+
+			if (shouldCollapse === this.isTextCollapsed) return
+
+			if (shouldCollapse) {
+				this._animateCollapse()
+			} else {
+				this._animateExpand()
+			}
+		},
+		_animateCollapse() {
+			const h2 = this.$el.querySelector('#mail-thread-header-fields h2')
+			if (!h2) return
+
+			h2.classList.remove('text-collapsed')
+			h2.style.overflow = 'hidden'
+			h2.style.height = `${this._fullHeight}px`
+
+			// force reflow
+			// eslint-disable-next-line no-unused-expressions
+			h2.offsetHeight
+
+			h2.style.height = `${this._singleHeight}px`
+
+			const onEnd = (ev) => {
+				if (ev.propertyName !== 'height') return
+				h2.removeEventListener('transitionend', onEnd)
+				this._transitionEndHandler = null
+
+				this.isTextCollapsed = true
+				h2.classList.add('text-collapsed')
+
+				h2.style.height = ''
+				h2.style.overflow = ''
+			}
+
+			this._transitionEndHandler = onEnd
+			h2.addEventListener('transitionend', onEnd)
+		},
+
+		_animateExpand() {
+			const h2 = this.$el.querySelector('#mail-thread-header-fields h2')
+			if (!h2) return
+
+			h2.style.height = `${this._singleHeight}px`
+			h2.style.overflow = 'hidden'
+
+			h2.classList.remove('text-collapsed')
+
+			// force reflow
+			// eslint-disable-next-line no-unused-expressions
+			h2.offsetHeight
+
+			h2.style.height = `${this._fullHeight}px`
+
+			const onEnd = (ev) => {
+				if (ev.propertyName !== 'height') return
+				h2.removeEventListener('transitionend', onEnd)
+				this._transitionEndHandler = null
+
+				this.isTextCollapsed = false
+				h2.style.height = ''
+				h2.style.overflow = ''
+			}
+
+			this._transitionEndHandler = onEnd
+			h2.addEventListener('transitionend', onEnd)
 		},
 		updateParticipantsToDisplay() {
 			// Wait until everything is in place
@@ -622,7 +729,7 @@ export default {
 @media only screen and (max-width: 1024px) {
     #mail-thread-header {
         position: sticky !important;
-        top: var(--mail-thread-header-offset, -25px) !important;;
+        top: 29px !important;;
     }
 }
 
@@ -634,12 +741,29 @@ export default {
 	padding-inline-start: 66px;
 	// grow and try to fill 100%
 	flex: 1 1 auto;
+	background: var(--color-main-background);
 	h2,
 	p {
 		padding-bottom: calc(var(--default-grid-baseline) * 2);
 		margin-bottom: 0;
 		// some h2 styling coming from server add some space on top
 		margin-top: var(--default-grid-baseline);
+	}
+
+	h2 {
+		white-space: normal;
+		overflow: visible;
+		text-overflow: clip;
+		margin-right: calc(var(--default-grid-baseline) * 2);
+
+		transition: height 200ms ease;
+		will-change: height;
+	}
+
+	h2.text-collapsed {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	p {
