@@ -32,11 +32,9 @@ class Version1040Date20200506111214 extends SimpleMigrationStep {
 		$table->addColumn('id', Types::INTEGER, [
 			'autoincrement' => true,
 			'notnull' => true,
-			'length' => 20,
 		]);
 		$table->addColumn('account_id', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 20,
 		]);
 		$table->addColumn('type', Types::STRING, [
 			'notnull' => true,
@@ -52,11 +50,9 @@ class Version1040Date20200506111214 extends SimpleMigrationStep {
 		]);
 		$table->addColumn('training_set_size', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$table->addColumn('validation_set_size', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$table->addColumn('recall_important', Types::DECIMAL, [
 			'notnull' => true,
@@ -75,7 +71,6 @@ class Version1040Date20200506111214 extends SimpleMigrationStep {
 		]);
 		$table->addColumn('duration', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$table->addColumn('active', Types::BOOLEAN, [
 			'notnull' => false,
@@ -83,7 +78,6 @@ class Version1040Date20200506111214 extends SimpleMigrationStep {
 		]);
 		$table->addColumn('created_at', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 4,
 		]);
 
 		$table->setPrimaryKey(['id']);

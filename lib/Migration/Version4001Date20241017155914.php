@@ -35,7 +35,6 @@ class Version4001Date20241017155914 extends SimpleMigrationStep {
 		$table->addColumn('id', Types::INTEGER, [
 			'autoincrement' => true,
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$table->addColumn('type', Types::STRING, [
 			'notnull' => true,
@@ -47,7 +46,6 @@ class Version4001Date20241017155914 extends SimpleMigrationStep {
 		]);
 		$table->addColumn('text_block_id', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$table->setPrimaryKey(['id']);
 		$table->addUniqueIndex(['text_block_id', 'share_with'], 'mail_blocks_shares_tbid_sw_idx');

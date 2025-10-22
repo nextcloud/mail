@@ -39,17 +39,14 @@ class Version1060Date20201015084952 extends SimpleMigrationStep {
 		$accountsTable->addColumn('drafts_mailbox_id', Types::INTEGER, [
 			'notnull' => false,
 			'default' => null,
-			'length' => 20,
 		]);
 		$accountsTable->addColumn('sent_mailbox_id', Types::INTEGER, [
 			'notnull' => false,
 			'default' => null,
-			'length' => 20,
 		]);
 		$accountsTable->addColumn('trash_mailbox_id', Types::INTEGER, [
 			'notnull' => false,
 			'default' => null,
-			'length' => 20,
 		]);
 
 		return $schema;
