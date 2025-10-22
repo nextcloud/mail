@@ -1,3 +1,20 @@
+## [5.5.11](https://github.com/nextcloud/mail/compare/v5.5.10...v5.5.11) (2025-10-22)
+
+
+### Bug Fixes
+
+* also await onToggleJunk ([b1c9511](https://github.com/nextcloud/mail/commit/b1c95116d43c2387277b0a98734e61936dd46296))
+* **l10n:** Update translations from Transifex ([923d4da](https://github.com/nextcloud/mail/commit/923d4da5d5f50cac359ca868fbae379031aeb29b))
+* **l10n:** Update translations from Transifex ([0458af6](https://github.com/nextcloud/mail/commit/0458af61360eefe3b4f299c411f3384c27b053cf))
+* **l10n:** Update translations from Transifex ([f0c7aab](https://github.com/nextcloud/mail/commit/f0c7aabb1a66dea3aa4208d870a48f4ddb9bc104))
+* **l10n:** Update translations from Transifex ([73f521e](https://github.com/nextcloud/mail/commit/73f521e08f01ffacab8a9b3a2b37639a1d711917))
+* **l10n:** Update translations from Transifex ([a7fc2fe](https://github.com/nextcloud/mail/commit/a7fc2fe52af18e939fdcbfba6c1f232ac89f70e6))
+* **quick-actions:** apply action to all messages in a thread ([777da08](https://github.com/nextcloud/mail/commit/777da08d7c13ee90550dc3d8a0b692133a6a5d70))
+* **quick-actions:** delete local steps ([40cc7ac](https://github.com/nextcloud/mail/commit/40cc7ac41786674f84c624b1fd9427fc2bcb124e))
+* **setup:** log when invalid hosts are used ([9def37a](https://github.com/nextcloud/mail/commit/9def37a0bdc5465aef39c39ef6ec0e507b84b954))
+
+
+
 ## [5.5.10](https://github.com/nextcloud/mail/compare/v5.5.9...v5.5.10) (2025-10-16)
 
 
