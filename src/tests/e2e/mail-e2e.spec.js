@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { test, expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 import { login } from './login.js'
 
 test.beforeEach(async ({ page }) => {
@@ -13,8 +13,8 @@ test.beforeEach(async ({ page }) => {
 test('render setup page', async ({ page }) => {
 	await page.goto('./index.php/apps/mail')
 
-	await expect(page.getByText('Connect your mail account')).toBeVisible();
-	await expect(page.locator('#account-form')).toBeVisible();
+	await expect(page.getByText('Connect your mail account')).toBeVisible()
+	await expect(page.locator('#account-form')).toBeVisible()
 })
 
 // we might need these in the future

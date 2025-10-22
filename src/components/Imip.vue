@@ -5,7 +5,8 @@
 
 <template>
 	<div class="imip">
-		<div v-if="isRequest"
+		<div
+			v-if="isRequest"
 			class="imip__type">
 			<template v-if="existingEventFetched">
 				<span v-if="wasProcessed && existingParticipationStatus === ACCEPTED">
@@ -25,12 +26,14 @@
 				</span>
 			</template>
 		</div>
-		<div v-else-if="isReply"
+		<div
+			v-else-if="isReply"
 			class="imip__type">
 			<CalendarIcon :size="20" />
 			<span>{{ replyStatusMessage }}</span>
 		</div>
-		<div v-else-if="isCancel"
+		<div
+			v-else-if="isCancel"
 			class="imip__type">
 			<CloseIcon :size="20" fill-color="red" />
 			<span>{{ t('mail', 'This event was cancelled') }}</span>
@@ -41,11 +44,13 @@
 		<div v-if="showMoreOptions" class="imip__more-options">
 			<!-- Hide calendar picker if editing an existing event (e.g. an internal event is
 			 shared by default and thus existing even if the attendee didn't react yet). -->
-			<div v-if="!isExistingEvent"
+			<div
+				v-if="!isExistingEvent"
 				class="imip__more-options__row imip__more-options__row--calendar">
 				<label for="targetCalendarPickerId">{{ t('mail', 'Save to') }}</label>
 				<div class="imip__more-options__row">
-					<NcSelect v-if="calendarsForPicker.length > 1"
+					<NcSelect
+						v-if="calendarsForPicker.length > 1"
 						:id="targetCalendarPickerId"
 						v-model="targetCalendar"
 						:aria-label-combobox="t('mail', 'Select')"
@@ -67,28 +72,33 @@
 		</div>
 
 		<template v-if="isRequest && userIsAttendee">
-			<div v-if="!wasProcessed && eventIsInFuture && existingEventFetched"
+			<div
+				v-if="!wasProcessed && eventIsInFuture && existingEventFetched"
 				class="imip__actions imip__actions--buttons">
-				<NcButton type="secondary"
+				<NcButton
+					variant="secondary"
 					:disabled="loading"
 					:aria-label="t('mail', 'Accept')"
 					@click="accept">
 					{{ t('mail', 'Accept') }}
 				</NcButton>
-				<NcButton type="tertiary"
+				<NcButton
+					variant="tertiary"
 					:disabled="loading"
 					:aria-label="t('mail', 'Decline')"
 					@click="decline">
 					{{ t('mail', 'Decline') }}
 				</NcButton>
-				<NcButton type="tertiary"
+				<NcButton
+					variant="tertiary"
 					:disabled="loading"
 					:aria-label="t('mail', 'Tentatively accept')"
 					@click="acceptTentatively">
 					{{ t('mail', 'Tentatively accept') }}
 				</NcButton>
-				<NcButton v-if="!showMoreOptions"
-					type="tertiary"
+				<NcButton
+					v-if="!showMoreOptions"
+					variant="tertiary"
 					:disabled="loading"
 					:aria-label="t('mail', 'More options')"
 					@click="showMoreOptions = true">
@@ -107,7 +117,7 @@
 </template>
 
 <script>
-import { AttendeeProperty, CalendarComponent, DateTimeValue, EventComponent, Parameter, Property, getParserManager } from '@nextcloud/calendar-js'
+import { AttendeeProperty, CalendarComponent, DateTimeValue, EventComponent, getParserManager, Parameter, Property } from '@nextcloud/calendar-js'
 import { namespaces as NS } from '@nextcloud/cdav-library'
 import { showError } from '@nextcloud/dialogs'
 import { NcButton, NcLoadingIcon, NcSelect } from '@nextcloud/vue'
@@ -116,15 +126,13 @@ import { mapState } from 'pinia'
 import { flatten } from 'ramda'
 import CalendarIcon from 'vue-material-design-icons/CalendarOutline.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
-
-import logger from '../logger.js'
-
 import CalendarPickerOption from './CalendarPickerOption.vue'
+import EventData from './imip/EventData.vue'
+import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 import { uidToHexColor } from '../util/calendarColor.js'
 import { removeMailtoPrefix } from '../util/eventAttendee.js'
 import { randomId } from '../util/randomId.js'
-import EventData from './imip/EventData.vue'
 
 // iMIP methods
 const REQUEST = 'REQUEST'
@@ -150,8 +158,8 @@ function findAttendee(vEvent, addresses) {
 	}
 
 	addresses = addresses
-		.map(addr => addr.toLowerCase())
-		.filter(addr => addr.startsWith('mailto:'))
+		.map((addr) => addr.toLowerCase())
+		.filter((addr) => addr.startsWith('mailto:'))
 		.map(removeMailtoPrefix)
 	for (const attendee of [...vEvent.getPropertyIterator('ORGANIZER'), ...vEvent.getAttendeeIterator()]) {
 		if (addresses.includes(removeMailtoPrefix(attendee.email.toLowerCase()))) {
@@ -173,12 +181,14 @@ export default {
 		NcLoadingIcon,
 		NcSelect,
 	},
+
 	props: {
 		scheduling: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			NEEDS_ACTION,
@@ -197,6 +207,7 @@ export default {
 			comment: '',
 		}
 	},
+
 	computed: {
 		...mapState(useMainStore, {
 			currentUserPrincipalEmail: 'getCurrentUserPrincipalEmail',
@@ -377,6 +388,7 @@ export default {
 					components: {
 						vevent: true, // check if VEVENT exists in props['supported-calendar-component-set'].comps
 					},
+
 					writable: calendar.currentUserPrivilegeSet.indexOf('{DAV:}write') !== -1,
 					url: calendar.url,
 				}
@@ -384,7 +396,7 @@ export default {
 
 			return this.clonedWriteableCalendars
 				.map(getCalendarData)
-				.filter(props => props.components.vevent && props.writable === true)
+				.filter((props) => props.components.vevent && props.writable === true)
 		},
 
 		/**
@@ -397,6 +409,7 @@ export default {
 			return this.clonedWriteableCalendars.find((cal) => cal.url === this.targetCalendar.url)
 		},
 	},
+
 	watch: {
 		attachedVEvent: {
 			immediate: true,
@@ -404,6 +417,7 @@ export default {
 				await this.fetchExistingEvent(this.attachedVEvent.uid)
 			},
 		},
+
 		calendarsForPicker: {
 			immediate: true,
 			handler(calendarsForPicker) {
@@ -421,16 +435,20 @@ export default {
 			},
 		},
 	},
+
 	methods: {
 		async accept() {
 			await this.saveEventWithParticipationStatus(ACCEPTED)
 		},
+
 		async acceptTentatively() {
 			await this.saveEventWithParticipationStatus(TENTATIVE)
 		},
+
 		async decline() {
 			await this.saveEventWithParticipationStatus(DECLINED)
 		},
+
 		async saveEventWithParticipationStatus(status) {
 			let vCalendar
 			if (this.isExistingEvent) {
@@ -504,6 +522,7 @@ export default {
 
 			this.loading = false
 		},
+
 		async fetchExistingEvent(uid, force = false) {
 			if (!force && this.existingEventFetched) {
 				return

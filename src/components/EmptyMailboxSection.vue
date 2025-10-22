@@ -21,6 +21,7 @@ export default {
 	},
 }
 </script>
+
 <style lang="scss" scoped>
 .empty-content {
 	height: 100%;

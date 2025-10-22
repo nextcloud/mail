@@ -4,11 +4,9 @@
  */
 
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-
-import Nextcloud from '../../../mixins/Nextcloud.js'
-import Thread from '../../../components/Thread.vue'
 import { createPinia, setActivePinia } from 'pinia'
-
+import Thread from '../../../components/Thread.vue'
+import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
 
 const localVue = createLocalVue()
@@ -136,7 +134,6 @@ describe('Thread', () => {
 				]
 			}
 			return []
-
 		})
 
 		store.getMailbox = vi.fn().mockImplementation((id) => {

@@ -7,7 +7,7 @@ import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import memoize from 'lodash/fp/memoize.js'
 
-export const fetchAvatarUrl = (email) => {
+export function fetchAvatarUrl(email) {
 	if (email === null) {
 		return Promise.resolve(undefined)
 	}
@@ -17,7 +17,7 @@ export const fetchAvatarUrl = (email) => {
 	})
 
 	return Axios.get(url, { adapter: 'fetch', fetchOptions: { priority: 'low' } })
-		.then(res => {
+		.then((res) => {
 			if (res.status === 204) {
 				return undefined
 			}

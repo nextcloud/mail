@@ -17,7 +17,5 @@ export const getClient = memoize((service) => {
 	const patcher = webdav.getPatcher()
 	patcher.patch('request', axios)
 
-	return webdav.createClient(
-		generateRemoteUrl(`dav/${service}/${getCurrentUser().uid}`),
-	)
+	return webdav.createClient(generateRemoteUrl(`dav/${service}/${getCurrentUser().uid}`))
 })

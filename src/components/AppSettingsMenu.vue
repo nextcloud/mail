@@ -4,14 +4,16 @@
 -->
 <template>
 	<div class="app-settings">
-		<NcAppSettingsDialog id="app-settings-dialog"
+		<NcAppSettingsDialog
+			id="app-settings-dialog"
 			:name="t('mail', 'Mail settings')"
 			:show-navigation="true"
 			:additional-trap-elements="trapElements"
 			:open.sync="showSettings">
 			<NcAppSettingsSection id="account-creation" :name="t('mail', 'General')">
-				<NcButton v-if="allowNewMailAccounts"
-					type="primary"
+				<NcButton
+					v-if="allowNewMailAccounts"
+					variant="primary"
 					to="/setup"
 					:aria-label="t('mail', 'Add mail account')"
 					class="app-settings-button">
@@ -24,9 +26,10 @@
 				<h4>{{ t('mail', 'Account settings') }}</h4>
 				<p>{{ t('mail', 'Settings for:') }}</p>
 				<li v-for="account in getAccounts" :key="account.id">
-					<NcButton v-if=" account && account.emailAddress"
+					<NcButton
+						v-if=" account && account.emailAddress"
 						class="app-settings-button"
-						type="secondary"
+						variant="secondary"
 						:aria-label="t('mail', 'Account settings')"
 						@click="openAccountSettings(account.id)">
 						{{ account.emailAddress }}
@@ -76,7 +79,8 @@
 
 				<h4>{{ t('mail', 'Search in body') }}</h4>
 				<p class="app-settings">
-					<NcCheckboxRadioSwitch id="priority-inbox-toggle"
+					<NcCheckboxRadioSwitch
+						id="priority-inbox-toggle"
 						:checked="searchPriorityBody"
 						:loading="loadingPrioritySettings"
 						@update:checked="onToggleSearchPriorityBody">
@@ -86,7 +90,8 @@
 
 				<h4>{{ t('mail', 'Gravatar settings') }}</h4>
 				<p class="app-settings avatar-settings">
-					<NcCheckboxRadioSwitch id="gravatar-enabled"
+					<NcCheckboxRadioSwitch
+						id="gravatar-enabled"
 						:checked="useExternalAvatars"
 						:loading="loadingAvatarSettings"
 						@update:checked="onToggleExternalAvatars">
@@ -98,7 +103,8 @@
 				<p class="settings-hint">
 					{{ t('mail', 'Set as default mail app') }}
 				</p>
-				<NcButton type="secondary"
+				<NcButton
+					variant="secondary"
 					class="app-settings-button"
 					:aria-label="t('mail', 'Set as default mail app')"
 					@click="registerProtocolHandler">
@@ -110,14 +116,16 @@
 			</NcAppSettingsSection>
 			<NcAppSettingsSection id="text-blocks" :name="t('mail', 'Text blocks')">
 				<span class="settings-hint">{{ t('mail', 'Reusable pieces of text that can be inserted in messages') }}</span>
-				<List :text-blocks="getMyTextBlocks()"
+				<List
+					:text-blocks="getMyTextBlocks()"
 					@show-toolbar="handleShowToolbar" />
-				<NcButton type="primary" @click="() => textBlockDialogOpen = true">
+				<NcButton variant="primary" @click="() => textBlockDialogOpen = true">
 					{{ t('mail', 'New text block') }}
 				</NcButton>
 				<template v-if="getSharedTextBlocks().length > 0">
-					<h6>{{ t('mail','Shared with me') }}</h6>
-					<List :text-blocks="getSharedTextBlocks()"
+					<h6>{{ t('mail', 'Shared with me') }}</h6>
+					<List
+						:text-blocks="getSharedTextBlocks()"
 						:shared="true"
 						@show-toolbar="handleShowToolbar" />
 				</template>
@@ -129,7 +137,8 @@
 					{{ t('mail', 'Allow the app to collect and process data locally to adapt to your preferences.') }}
 				</p>
 				<p class="app-settings">
-					<NcCheckboxRadioSwitch id="data-collection-toggle"
+					<NcCheckboxRadioSwitch
+						id="data-collection-toggle"
 						:checked="useDataCollection"
 						:loading="loadingOptOutSettings"
 						@update:checked="onToggleCollectData">
@@ -145,7 +154,8 @@
 					{{ t('mail', 'Highlight external email addresses by enabling this feature, manage your internal addresses and domains to ensure recognized contacts stay unmarked.') }}
 				</p>
 				<p class="app-settings">
-					<NcCheckboxRadioSwitch id="internal-address-toggle"
+					<NcCheckboxRadioSwitch
+						id="internal-address-toggle"
 						:checked="useInternalAddresses"
 						:loading="loadingInternalAddresses"
 						@update:checked="onToggleInternalAddress">
@@ -155,8 +165,9 @@
 				<InternalAddress />
 
 				<h4>{{ t('mail', 'S/MIME') }}</h4>
-				<NcButton class="app-settings-button"
-					type="secondary"
+				<NcButton
+					class="app-settings-button"
+					variant="secondary"
 					:aria-label="t('mail', 'Manage certificates')"
 					@click.prevent.stop="displaySmimeCertificateModal = true">
 					<template #icon>
@@ -164,7 +175,8 @@
 					</template>
 					{{ t('mail', 'Manage certificates') }}
 				</NcButton>
-				<SmimeCertificateModal v-if="displaySmimeCertificateModal"
+				<SmimeCertificateModal
+					v-if="displaySmimeCertificateModal"
 					@close="displaySmimeCertificateModal = false" />
 
 				<h4>{{ t('mail', 'Mailvelope') }}</h4>
@@ -177,7 +189,8 @@
 					</div>
 					<div v-else>
 						<p>
-							<a href="https://www.mailvelope.com/"
+							<a
+								href="https://www.mailvelope.com/"
 								target="_blank"
 								class="button"
 								rel="noopener noreferrer">
@@ -186,7 +199,8 @@
 							</a>
 						</p>
 						<p>
-							<a class="button"
+							<a
+								class="button"
 								@click="mailvelopeAuthorizeDomain">
 								{{ t('mail', 'Step 2') }}:
 								{{ t('mail', 'Enable for the current domain') }}
@@ -198,7 +212,8 @@
 
 			<NcAppSettingsSection id="autotagging-settings" :name="t('mail', 'Assistance features')">
 				<p class="app-settings">
-					<NcCheckboxRadioSwitch id="auto-tagging-toggle"
+					<NcCheckboxRadioSwitch
+						id="auto-tagging-toggle"
 						:checked="useAutoTagging"
 						:loading="toggleAutoTagging"
 						@update:checked="onToggleAutoTagging">
@@ -206,7 +221,8 @@
 					</NcCheckboxRadioSwitch>
 				</p>
 				<p v-if="followUpFeatureAvailable" class="app-settings">
-					<NcCheckboxRadioSwitch id="follow-up-reminder-toggle"
+					<NcCheckboxRadioSwitch
+						id="follow-up-reminder-toggle"
 						:checked="useFollowUpReminders"
 						:loading="loadingFollowUpReminders"
 						@update:checked="onToggleFollowUpReminders">
@@ -263,19 +279,22 @@
 					</div>
 				</dl>
 			</NcAppSettingsSection>
-			<NcDialog :open.sync="textBlockDialogOpen"
-				:name="t('mail','New text block')"
+			<NcDialog
+				:open.sync="textBlockDialogOpen"
+				:name="t('mail', 'New text block')"
 				:is-form="true"
 				size="normal">
-				<NcInputField :value.sync="localTextBlock.title" :label="t('mail','Title of the text block')" />
-				<TextEditor v-model="localTextBlock.content"
+				<NcInputField :value.sync="localTextBlock.title" :label="t('mail', 'Title of the text block')" />
+				<TextEditor
+					v-model="localTextBlock.content"
 					:is-bordered="true"
 					:html="true"
-					:placeholder="t('mail','Content of the text block')"
+					:placeholder="t('mail', 'Content of the text block')"
 					:bus="bus"
 					:show-toolbar="handleShowToolbar" />
 				<div class="text-block-buttons">
-					<NcButton type="tertiary"
+					<NcButton
+						variant="tertiary"
 						class="text-block-buttons__button"
 						@click="closeTextBlockDialog">
 						<template #icon>
@@ -283,7 +302,8 @@
 						</template>
 						{{ t('mail', 'Cancel') }}
 					</NcButton>
-					<NcButton type="primary"
+					<NcButton
+						variant="primary"
 						class="text-block-buttons__button"
 						:disabled="!localTextBlock.title || !localTextBlock.content"
 						@click="newTextBlock">
@@ -302,9 +322,9 @@
 import { showError } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
 import { NcAppSettingsDialog, NcAppSettingsSection, NcButton, NcCheckboxRadioSwitch, NcDialog, NcInputField, NcRadioGroup, NcRadioGroupButton } from '@nextcloud/vue'
-import NcKbd from '@nextcloud/vue/dist/Components/NcKbd.js'
 import mitt from 'mitt'
 import { mapState, mapStores } from 'pinia'
+import NcKbd from '@nextcloud/vue/components/NcKbd'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconClose from 'vue-material-design-icons/Close.vue'
 import IconEmail from 'vue-material-design-icons/EmailOutline.vue'
@@ -313,15 +333,13 @@ import IconLock from 'vue-material-design-icons/LockOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import CompactMode from 'vue-material-design-icons/ReorderHorizontal.vue'
 import HorizontalSplit from 'vue-material-design-icons/ViewSplitHorizontal.vue'
-
-import Logger from '../logger.js'
-
 import InternalAddress from './InternalAddress.vue'
 import SmimeCertificateModal from './smime/SmimeCertificateModal.vue'
-import TextEditor from './TextEditor.vue'
-import useMainStore from '../store/mainStore.js'
 import List from './textBlocks/List.vue'
+import TextEditor from './TextEditor.vue'
 import TrustedSenders from './TrustedSenders.vue'
+import Logger from '../logger.js'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'AppSettingsMenu',
@@ -356,19 +374,20 @@ export default {
 			type: Boolean,
 		},
 	},
+
 	data() {
 		return {
 			loadingAvatarSettings: false,
 			prioritySettingsText: t('mail', 'Search the body of messages in priority Inbox'),
 			loadingPrioritySettings: false,
-			// eslint-disable-next-line
+
 			optOutSettingsText: t('mail', 'Activate'),
 			loadingOptOutSettings: false,
 			loadingInternalAddresses: false,
 			loadingReplySettings: false,
-			// eslint-disable-next-line
+
 			autoTaggingText: t('mail', 'Determine importance using machine learning'),
-			// eslint-disable-next-line
+
 			followUpReminderText: t('mail', 'Remind about messages that require a reply but received none'),
 			internalAddressText: t('mail', 'Highlight external addresses'),
 			toggleAutoTagging: false,
@@ -389,62 +408,77 @@ export default {
 			},
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		...mapState(useMainStore, ['getAccounts', 'followUpFeatureAvailable', 'getMyTextBlocks', 'getSharedTextBlocks']),
 		searchPriorityBody() {
 			return this.mainStore.getPreference('search-priority-body', 'false') === 'true'
 		},
+
 		useBottomReplies() {
 			return this.mainStore.getPreference('reply-mode', 'top') === 'bottom'
 		},
+
 		useExternalAvatars() {
 			return this.mainStore.getPreference('external-avatars', 'true') === 'true'
 		},
+
 		useDataCollection() {
 			return this.mainStore.getPreference('collect-data', 'true') === 'true'
 		},
+
 		useAutoTagging() {
 			return this.mainStore.getPreference('tag-classified-messages', 'true') === 'true'
 		},
+
 		useInternalAddresses() {
 			return this.mainStore.getPreference('internal-addresses', 'false') === 'true'
 		},
+
 		useFollowUpReminders() {
 			return this.mainStore.getPreference('follow-up-reminders', 'true') === 'true'
 		},
+
 		allowNewMailAccounts() {
 			return this.mainStore.getPreference('allow-new-accounts', true)
 		},
+
 		layoutMode: {
 			get() {
 				return this.mainStore.getPreference('layout-mode', 'vertical-split')
 			},
+
 			set(value) {
 				this.setLayout(value)
 			},
 		},
+
 		layoutMessageView: {
 			get() {
 				return this.mainStore.getPreference('layout-message-view')
 			},
+
 			set(value) {
 				this.setLayoutMessageView(value)
 			},
 		},
 	},
+
 	watch: {
 		showSettings(value) {
 			if (!value) {
 				this.$emit('update:open', value)
 			}
 		},
+
 		async open(value) {
 			if (value) {
 				await this.onOpen()
 			}
 		},
 	},
+
 	mounted() {
 		this.sortOrder = this.mainStore.getPreference('sort-order', 'newest')
 		document.addEventListener.call(window, 'mailvelope', () => this.checkMailvelope())
@@ -453,20 +487,25 @@ export default {
 			this.mainStore.fetchSharedTextBlocks()
 		}
 	},
+
 	updated() {
 		this.checkMailvelope()
 	},
+
 	methods: {
 		closeAccountSettings() {
 			this.showAccountSettings = false
 		},
+
 		openAccountSettings(accountId) {
 			this.mainStore.showSettingsForAccountMutation(accountId)
 			this.showSettings = false
 		},
+
 		checkMailvelope() {
 			this.mailvelopeIsAvailable = !!window.mailvelope
 		},
+
 		async setLayout(layoutMode) {
 			try {
 				await this.mainStore.savePreference({
@@ -477,6 +516,7 @@ export default {
 				Logger.error('Could not save preferences', { error })
 			}
 		},
+
 		async setLayoutMessageView(value) {
 			try {
 				await this.mainStore.savePreference({
@@ -487,9 +527,11 @@ export default {
 				Logger.error('Could not save preferences', { error })
 			}
 		},
+
 		async onOpen() {
 			this.showSettings = true
 		},
+
 		onToggleButtonReplies(atBottom) {
 			this.loadingReplySettings = true
 
@@ -502,6 +544,7 @@ export default {
 					this.loadingReplySettings = false
 				})
 		},
+
 		onToggleExternalAvatars(enabled) {
 			this.loadingAvatarSettings = true
 
@@ -514,6 +557,7 @@ export default {
 					this.loadingAvatarSettings = false
 				})
 		},
+
 		async onToggleSearchPriorityBody(enabled) {
 			this.loadingPrioritySettings = true
 
@@ -528,6 +572,7 @@ export default {
 				this.loadingPrioritySettings = false
 			}
 		},
+
 		onToggleCollectData(collect) {
 			this.loadingOptOutSettings = true
 
@@ -540,6 +585,7 @@ export default {
 					this.loadingOptOutSettings = false
 				})
 		},
+
 		async onSortByDate(value) {
 			const previousValue = this.sortOrder
 			try {
@@ -555,6 +601,7 @@ export default {
 				showError(t('mail', 'Could not update preference'))
 			}
 		},
+
 		async onToggleAutoTagging(enabled) {
 			this.toggleAutoTagging = true
 
@@ -571,6 +618,7 @@ export default {
 				this.toggleAutoTagging = false
 			}
 		},
+
 		async onToggleFollowUpReminders(enabled) {
 			this.loadingFollowUpReminders = true
 
@@ -586,6 +634,7 @@ export default {
 				this.loadingFollowUpReminders = false
 			}
 		},
+
 		async onToggleInternalAddress(enabled) {
 			this.loadingInternalAddresses = true
 
@@ -601,6 +650,7 @@ export default {
 				this.loadingInternalAddresses = false
 			}
 		},
+
 		registerProtocolHandler() {
 			if (window.navigator.registerProtocolHandler) {
 				const url
@@ -612,15 +662,18 @@ export default {
 				}
 			}
 		},
+
 		mailvelopeAuthorizeDomain() {
 			const iframe = document.createElement('iframe')
 			iframe.style = 'display: none'
 			iframe.src = 'https://api.mailvelope.com/authorize-domain/?api=true'
 			document.body.append(iframe)
 		},
+
 		handleShowToolbar(element) {
 			this.trapElements.push(element)
 		},
+
 		newTextBlock() {
 			this.mainStore.createTextBlock({ ...this.localTextBlock })
 			this.textBlockDialogOpen = false
@@ -629,6 +682,7 @@ export default {
 				content: '',
 			}
 		},
+
 		closeTextBlockDialog() {
 			this.textBlockDialogOpen = false
 			this.localTextBlock = {

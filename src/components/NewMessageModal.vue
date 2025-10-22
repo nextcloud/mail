@@ -3,15 +3,17 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<Modal v-if="showMessageComposer"
+	<Modal
+		v-if="showMessageComposer"
 		:size="modalSize"
 		:name="modalTitle"
 		:additional-trap-elements="additionalTrapElements"
 		@close="$event.type === 'click' ? onClose() : onMinimize()">
 		<div class="modal-content">
 			<div class="left-pane">
-				<NcButton class="maximize-button"
-					type="tertiary-no-background"
+				<NcButton
+					class="maximize-button"
+					variant="tertiary-no-background"
 					:aria-label="t('mail', 'Maximize composer')"
 					:title="largerModal ? t('mail', 'Show recipient details') : t('mail', 'Hide recipient details')"
 					@click="onMaximize">
@@ -20,8 +22,9 @@
 						<DefaultComposerIcon v-else :size="20" />
 					</template>
 				</NcButton>
-				<NcButton class="minimize-button"
-					type="tertiary-no-background"
+				<NcButton
+					class="minimize-button"
+					variant="tertiary-no-background"
 					:aria-label="t('mail', 'Minimize composer')"
 					:title="t('mail', 'Minimize composer')"
 					@click="onMinimize">
@@ -31,21 +34,23 @@
 				</NcButton>
 
 				<KeepAlive>
-					<EmptyContent v-if="error"
+					<EmptyContent
+						v-if="error"
 						:name="t('mail', 'Error sending your message')"
 						class="empty-content"
 						role="alert">
 						<p>{{ error }}</p>
 						<template #action>
-							<NcButton type="tertiary" :aria-label="t('mail', 'Go back')" @click="error = undefined">
+							<NcButton variant="tertiary" :aria-label="t('mail', 'Go back')" @click="error = undefined">
 								{{ t('mail', 'Go back') }}
 							</NcButton>
-							<NcButton type="tertiary" :aria-label="t('mail', 'Retry')" @click="onSend">
+							<NcButton variant="tertiary" :aria-label="t('mail', 'Retry')" @click="onSend">
 								{{ t('mail', 'Retry') }}
 							</NcButton>
 						</template>
 					</EmptyContent>
-					<EmptyContent v-else-if="warning"
+					<EmptyContent
+						v-else-if="warning"
 						:name="t('mail', 'Warning sending your message')"
 						class="empty-content"
 						role="alert">
@@ -53,16 +58,17 @@
 							{{ warning }}
 						</template>
 						<template #action>
-							<NcButton type="tertiary" :aria-label="t('mail', 'Go back')" @click="warning = undefined">
+							<NcButton variant="tertiary" :aria-label="t('mail', 'Go back')" @click="warning = undefined">
 								{{ t('mail', 'Go back') }}
 							</NcButton>
-							<NcButton type="tertiary" :aria-label="t('mail', 'Send anyway')" @click="onForceSend">
+							<NcButton variant="tertiary" :aria-label="t('mail', 'Send anyway')" @click="onForceSend">
 								{{ t('mail', 'Send anyway') }}
 							</NcButton>
 						</template>
 					</EmptyContent>
 
-					<Composer ref="composer"
+					<Composer
+						ref="composer"
 						:from-account="composerData.accountId"
 						:from-alias="composerData.aliasId"
 						:to="composerData.to"
@@ -112,6 +118,7 @@
 		</div>
 	</Modal>
 </template>
+
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
@@ -124,7 +131,7 @@ import { mapActions, mapState, mapStores } from 'pinia'
 import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
 import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
 import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
-
+import Composer from './Composer.vue'
 import RecipientInfo from './RecipientInfo.vue'
 import AttachmentMissingError from '../errors/AttachmentMissingError.js'
 import ManyRecipientsError from '../errors/ManyRecipientsError.js'
@@ -132,7 +139,6 @@ import { matchError } from '../errors/match.js'
 import NoSentMailboxConfiguredError from '../errors/NoSentMailboxConfiguredError.js'
 import SubjectMissingError from '../errors/SubjectMissingError.js'
 import logger from '../logger.js'
-import Composer from './Composer.vue'
 import { deleteDraft, saveDraft, updateDraft } from '../service/DraftService.js'
 import { UNDO_DELAY } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
@@ -152,12 +158,14 @@ export default {
 		DefaultComposerIcon,
 		RecipientInfo,
 	},
+
 	props: {
 		accounts: {
 			type: Array,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			additionalTrapElements: ['#reference-picker', '#text-block-picker'],
@@ -183,6 +191,7 @@ export default {
 			},
 		}
 	},
+
 	computed: {
 		...mapStores(useOutboxStore, useMainStore),
 		...mapState(useMainStore, ['showMessageComposer']),
@@ -190,6 +199,7 @@ export default {
 		composerDataBodyAsTextInstance() {
 			return messageBodyToTextInstance(this.composerData)
 		},
+
 		modalTitle() {
 			if (this.composerMessage.type === 'outbox') {
 				return t('mail', 'Edit message')
@@ -205,33 +215,41 @@ export default {
 			}
 			return t('mail', 'New message')
 		},
+
 		hasContactDetailsApi() {
 			return !!window.OCA?.Contacts?.mountContactDetails
 		},
+
 		showRecipientPane() {
 			return this.hasContactDetailsApi
 				&& this.composerData.to
 				&& this.composerData.to.length > 0
 				&& !this.largerModal
 		},
+
 		composerMessage() {
 			return this.mainStore.composerMessage
 		},
+
 		composerData() {
 			return this.mainStore.composerMessage?.data ?? {}
 		},
+
 		forwardedMessages() {
 			return this.composerMessage?.options?.forwardedMessages ?? []
 		},
+
 		smartReply() {
 			return this.composerData?.smartReply ?? null
 		},
+
 		modalSize() {
 			return this.isLargeScreen && this.hasContactDetailsApi && this.composerData.to && this.composerData.to.length > 0
 				? 'large'
 				: (this.largerModal ? 'large' : 'normal')
 		},
 	},
+
 	created() {
 		const id = this.composerData?.id
 		if (id) {
@@ -239,20 +257,24 @@ export default {
 		}
 		window.addEventListener('beforeunload', this.onBeforeUnload)
 	},
+
 	async mounted() {
 		await this.$nextTick()
 		this.updateCookedComposerData()
 		await this.openModalSize()
 		window.addEventListener('resize', this.checkScreenSize)
 	},
+
 	beforeDestroy() {
 		window.removeEventListener('beforeunload', this.onBeforeUnload)
 		window.removeEventListener('resize', this.checkScreenSize)
 	},
+
 	methods: {
 		checkScreenSize() {
 			this.isLargeScreen = window.innerWidth >= 1024
 		},
+
 		async openModalSize() {
 			try {
 				const sizePreference = this.mainStore.getPreference('modalSize')
@@ -261,6 +283,7 @@ export default {
 				console.error('Error getting modal size preference', error)
 			}
 		},
+
 		async onMaximize() {
 			this.isMaximized = !this.isMaximized
 			this.largerModal = !this.largerModal
@@ -273,6 +296,7 @@ export default {
 				console.error('Failed to save preference', error)
 			}
 		},
+
 		async onMinimize() {
 			this.isMaximized = false
 			this.modalFirstOpen = false
@@ -281,11 +305,12 @@ export default {
 			if (!this.mainStore.composerMessageIsSaved && this.changed) {
 				await this.onDraft(this.cookedComposerData, { showToast: true })
 			}
-
 		},
+
 		handleShow(element) {
 			this.additionalTrapElements.push(element)
 		},
+
 		/**
 		 * @param {object} data Message data
 		 * @param {object=} opts Options
@@ -354,6 +379,7 @@ export default {
 
 			return this.draftsPromise
 		},
+
 		getDataForServer(data) {
 			const dataForServer = {
 				...data,
@@ -377,6 +403,7 @@ export default {
 
 			return dataForServer
 		},
+
 		onAttachmentUploading(done, data) {
 			this.attachmentsPromise = this.attachmentsPromise
 				.then(done)
@@ -384,6 +411,7 @@ export default {
 				.then(() => logger.debug('attachments uploaded'))
 				.catch((error) => logger.error('could not upload attachments', { error }))
 		},
+
 		async onSend(data, force = false) {
 			logger.debug('sending message', { data })
 
@@ -474,7 +502,6 @@ export default {
 						logger.error('could not send message', { error })
 						return t('mail', 'You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses.')
 					},
-					// eslint-disable-next-line n/handle-callback-err
 					default(error) {
 						logger.error('could not send message', { error })
 					},
@@ -488,7 +515,6 @@ export default {
 						logger.info('showing the did you forgot an attachment warning', { error })
 						return t('mail', 'You mentioned an attachment. Did you forget to add it?')
 					},
-					// eslint-disable-next-line n/handle-callback-err
 					default(error) {
 						logger.warn('could not send message', { error })
 					},
@@ -513,6 +539,7 @@ export default {
 		async onForceSend() {
 			await this.onSend(this.cookedComposerData, true)
 		},
+
 		recipientToRfc822(recipient) {
 			if (recipient.email === recipient.label) {
 				// From mailto or sender without proper label
@@ -528,6 +555,7 @@ export default {
 				return `"${recipient.label}" <${recipient.email}>`
 			}
 		},
+
 		async discardDraft() {
 			let id = await this.draftsPromise
 			const isOutbox = this.composerMessage.type === 'outbox'
@@ -551,6 +579,7 @@ export default {
 				showError(t('mail', 'Could not discard message'))
 			}
 		},
+
 		convertEditorBody(composerData) {
 			if (composerData.isHtml) {
 				return composerData.bodyHtml
@@ -558,6 +587,7 @@ export default {
 
 			return composerData.bodyPlain
 		},
+
 		patchEditorBody(editorBody) {
 			if (this.composerData.isHtml) {
 				this.patchComposerData({ bodyHtml: editorBody })
@@ -565,6 +595,7 @@ export default {
 				this.patchComposerData({ bodyPlain: editorBody })
 			}
 		},
+
 		updateCookedComposerData() {
 			if (!this.$refs.composer) {
 				// Composer is not rendered yet
@@ -575,11 +606,13 @@ export default {
 			// This is hacky but there is no other way for now.
 			this.cookedComposerData = this.$refs.composer.getMessageData()
 		},
+
 		async patchComposerData(data) {
 			this.changed = true
 			this.updateCookedComposerData()
 			await this.mainStore.patchComposerData(data)
 		},
+
 		onBeforeUnload(e) {
 			if (this.canSaveDraft && this.changed) {
 				e.preventDefault()
@@ -589,6 +622,7 @@ export default {
 				console.info('No unsaved changes. See you!')
 			}
 		},
+
 		async onClose() {
 			this.mainStore.setComposerIndicatorDisabledMutation(true)
 			await this.onMinimize()
@@ -601,7 +635,6 @@ export default {
 					moveToImap: this.changed,
 					id: this.composerData.id,
 				})
-
 			}
 		},
 	},

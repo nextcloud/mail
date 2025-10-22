@@ -9,7 +9,8 @@
 
 		<div ref="editableContainer" class="editable" />
 
-		<ckeditor v-if="ready"
+		<ckeditor
+			v-if="ready"
 			:value="value"
 			:config="config"
 			:editor="editor"
@@ -24,7 +25,6 @@
 import CKEditor from '@ckeditor/ckeditor5-vue2'
 import { getLanguage } from '@nextcloud/l10n'
 import { emojiAddRecent, emojiSearch } from '@nextcloud/vue'
-import { getLinkWithPicker, searchProvider } from '@nextcloud/vue/components/NcRichText'
 import {
 	Alignment,
 	Base64UploadAdapter,
@@ -51,7 +51,7 @@ import {
 	Superscript,
 	Underline,
 } from 'ckeditor5'
-
+import { getLinkWithPicker, searchProvider } from '@nextcloud/vue/components/NcRichText'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
@@ -67,44 +67,54 @@ export default {
 	components: {
 		ckeditor: CKEditor.component,
 	},
+
 	props: {
 		value: {
 			type: String,
 			required: true,
 		},
+
 		html: {
 			type: Boolean,
 			default: false,
 		},
+
 		placeholder: {
 			type: String,
 			default: '',
 		},
+
 		focus: {
 			type: Boolean,
 			default: false,
 		},
+
 		bus: {
 			type: Object,
 			required: true,
 		},
+
 		disabled: {
 			type: Boolean,
 			default: false,
 		},
+
 		textBlocks: {
 			type: Array,
 			default: () => [],
 		},
+
 		isBordered: {
 			type: Boolean,
 			default: false,
 		},
+
 		readOnly: {
 			type: Boolean,
 			default: false,
 		},
 	},
+
 	data() {
 		const plugins = [
 			Essentials,
@@ -201,9 +211,11 @@ export default {
 			},
 		}
 	},
+
 	beforeMount() {
 		this.loadEditorTranslations(getLanguage())
 	},
+
 	methods: {
 		getLink(text) {
 			const results = searchProvider(text)
@@ -212,29 +224,32 @@ export default {
 			}
 			return results
 		},
+
 		getEmoji(text) {
 			const emojiResults = emojiSearch(text)
 			if (this.textSmiles.includes(':' + text)) {
-
 				emojiResults.unshift(':' + text)
 			}
 			return emojiResults
 		},
+
 		async getContact(text) {
 			if (text.length === 0) {
 				return []
 			}
 			let contactResults = await autoCompleteByName(text)
-			contactResults = contactResults.filter(result => result.email.length > 0)
+			contactResults = contactResults.filter((result) => result.email.length > 0)
 			return contactResults
 		},
+
 		getTextBlock(text) {
 			if (text.length === 0) {
 				return []
 			}
-			return this.textBlocks.filter(textBlock => textBlock.title.toLowerCase().includes(text.toLowerCase()))
+			return this.textBlocks.filter((textBlock) => textBlock.title.toLowerCase().includes(text.toLowerCase()))
 		},
-		 customEmojiRenderer(item) {
+
+		customEmojiRenderer(item) {
 			const itemElement = document.createElement('span')
 
 			itemElement.classList.add('custom-item')
@@ -249,6 +264,7 @@ export default {
 
 			return itemElement
 		},
+
 		customLinkRenderer(item) {
 			const itemElement = document.createElement('span')
 			itemElement.classList.add('link-container')
@@ -266,6 +282,7 @@ export default {
 
 			return itemElement
 		},
+
 		customRenderer(item, type) {
 			const itemElement = document.createElement('span')
 
@@ -280,6 +297,7 @@ export default {
 
 			return itemElement
 		},
+
 		overrideDropdownPositionsToNorth(editor, toolbarView) {
 			const {
 				south, north, southEast, southWest, northEast, northWest,
@@ -290,13 +308,29 @@ export default {
 
 			if (editor.locale.uiLanguageDirection !== 'rtl') {
 				panelPositions = [
-					northEast, northWest, northMiddleEast, northMiddleWest, north,
-					southEast, southWest, southMiddleEast, southMiddleWest, south,
+					northEast,
+					northWest,
+					northMiddleEast,
+					northMiddleWest,
+					north,
+					southEast,
+					southWest,
+					southMiddleEast,
+					southMiddleWest,
+					south,
 				]
 			} else {
 				panelPositions = [
-					northWest, northEast, northMiddleWest, northMiddleEast, north,
-					southWest, southEast, southMiddleWest, southMiddleEast, south,
+					northWest,
+					northEast,
+					northMiddleWest,
+					northMiddleEast,
+					north,
+					southWest,
+					southEast,
+					southMiddleWest,
+					southMiddleEast,
+					south,
 				]
 			}
 
@@ -319,6 +353,7 @@ export default {
 				})
 			}
 		},
+
 		overrideTooltipPositions(toolbarView) {
 			for (const item of toolbarView.items) {
 				if (item.buttonView) {
@@ -328,6 +363,7 @@ export default {
 				}
 			}
 		},
+
 		async loadEditorTranslations(language) {
 			if (language === 'en') {
 				// The default, nothing to fetch
@@ -336,18 +372,23 @@ export default {
 
 			try {
 				logger.debug(`loading ${language} translations for CKEditor`)
+
+				/* eslint-disable @stylistic/comma-dangle, @stylistic/function-paren-newline */
 				const { default: coreTranslations } = await import(
 					/* webpackMode: "lazy-once" */
 					/* webpackPrefetch: true */
 					/* webpackPreload: true */
 					`ckeditor5/translations/${language}.js`
 				)
+				/* eslint-enable @stylistic/comma-dangle, @stylistic/function-paren-newline */
+
 				this.showEditor(language, [coreTranslations])
 			} catch (error) {
 				logger.error(`could not find CKEditor translations for "${language}"`, { error })
 				this.showEditor('en')
 			}
 		},
+
 		showEditor(language, translations) {
 			logger.debug(`using "${language}" as CKEditor language`)
 			if (translations) {
@@ -357,6 +398,7 @@ export default {
 
 			this.ready = true
 		},
+
 		/**
 		 * @param {module:core/editor/editor~Editor} editor editor the editor instance
 		 */
@@ -421,18 +463,21 @@ export default {
 			this.bus.on('insert-text-block', this.insertTextBlock)
 			this.$emit('ready', editor)
 		},
+
 		onEditorInput(text) {
 			if (text !== this.value) {
 				logger.debug(`TextEditor input changed to <${text}>`)
 				this.$emit('input', text)
 			}
 		},
+
 		appendToBodyAtCursor(toAppend) {
 			// https://ckeditor.com/docs/ckeditor5/latest/builds/guides/faq.html#where-are-the-editorinserthtml-and-editorinserttext-methods-how-to-insert-some-content
 			const viewFragment = this.editorInstance.data.processor.toView(toAppend)
 			const modelFragment = this.editorInstance.data.toModel(viewFragment)
 			this.editorInstance.model.insertContent(modelFragment)
 		},
+
 		editorExecute(commandName, ...args) {
 			if (this.editorInstance) {
 				this.editorInstance.execute(commandName, ...args)
@@ -440,6 +485,7 @@ export default {
 				throw new Error('Impossible to execute a command before editor is ready.')
 			}
 		},
+
 		insertTextBlock(textBlock, addTriggrer = true) {
 			if (addTriggrer) {
 				this.appendToBodyAtCursor('!')

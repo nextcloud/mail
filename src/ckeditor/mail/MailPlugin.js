@@ -6,7 +6,6 @@
 import { Paragraph, Plugin } from 'ckeditor5'
 
 export default class Mail extends Plugin {
-
 	static get requires() {
 		return [Paragraph]
 	}
@@ -34,5 +33,4 @@ export default class Mail extends Plugin {
 			converterPriority: 'high',
 		})
 	}
-
 }

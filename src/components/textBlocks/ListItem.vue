@@ -12,7 +12,8 @@
 				{{ textBlock.preview }}
 			</template>
 			<template v-if="shares.length > 0" #extra-actions>
-				<AccountMultiple :title="t('mail', 'Shared')"
+				<AccountMultiple
+					:title="t('mail', 'Shared')"
 					:size="20" />
 			</template>
 			<template v-if="!shared" #actions>
@@ -20,34 +21,37 @@
 					<template #icon>
 						<IconPencil :size="20" />
 					</template>
-					{{ t('mail','Edit {title}', { title: textBlock.title }) }}
+					{{ t('mail', 'Edit {title}', { title: textBlock.title }) }}
 				</NcActionButton>
 				<NcActionButton v-if="!isViewMode" icon="icon-delete" @click="deleteTextBlock()">
-					{{ t('mail','Delete {title}', { title: textBlock.title }) }}
+					{{ t('mail', 'Delete {title}', { title: textBlock.title }) }}
 				</NcActionButton>
 			</template>
 		</NcListItem>
-		<NcDialog :open.sync="editModalOpen"
-			:name="t('mail','Edit text block')"
+		<NcDialog
+			:open.sync="editModalOpen"
+			:name="t('mail', 'Edit text block')"
 			size="normal"
 			:is-form="true">
 			<p v-if="shared">
 				{{ localTextBlock.title }}
 			</p>
-			<NcInputField v-else :value.sync="localTextBlock.title" :label="t('mail','Title of the text block')" />
-			<TextEditor v-model="localTextBlock.content"
+			<NcInputField v-else :value.sync="localTextBlock.title" :label="t('mail', 'Title of the text block')" />
+			<TextEditor
+				v-model="localTextBlock.content"
 				:is-bordered="!shared"
 				:html="true"
 				:read-only="shared"
-				:placeholder="t('mail','Content of the text block')"
+				:placeholder="t('mail', 'Content of the text block')"
 				:bus="bus" />
 			<template v-if="!shared">
 				<h3>
-					{{ t('mail','Shares') }}
+					{{ t('mail', 'Shares') }}
 				</h3>
-				<NcSelectUsers v-model="share"
+				<NcSelectUsers
+					v-model="share"
 					class="text-block-list-item__shares"
-					:placeholder="t('mail','Search for users or groups')"
+					:placeholder="t('mail', 'Search for users or groups')"
 					:label-outside="true"
 					:loading="loading"
 					:options="options"
@@ -55,7 +59,8 @@
 					@option:selecting="shareTextBlock"
 					@search="asyncFind" />
 
-				<NcListItem v-for="user in sortedShares"
+				<NcListItem
+					v-for="user in sortedShares"
 					:key="user.shareWith"
 					:name="user.displayName"
 					:compact="true">
@@ -68,7 +73,7 @@
 						<NcAvatar v-else :user="user.shareWith" :display-name="user.displayName" />
 					</template>
 					<template #extra-actions>
-						<NcButton type="tertiary-no-background" @click="removeShare(user)">
+						<NcButton variant="tertiary-no-background" @click="removeShare(user)">
 							<template #icon>
 								<IconClose :size="20" />
 							</template>
@@ -76,7 +81,8 @@
 					</template>
 				</NcListItem>
 				<div class="text-block-buttons">
-					<NcButton type="tertiary"
+					<NcButton
+						variant="tertiary"
 						class="text-block-buttons__button"
 						:disabled="saveLoading"
 						@click="closeTextBlockDialog">
@@ -85,7 +91,8 @@
 						</template>
 						{{ t('mail', 'Cancel') }}
 					</NcButton>
-					<NcButton type="primary"
+					<NcButton
+						variant="primary"
 						class="text-block-buttons__button"
 						:disabled="!localTextBlock.title || !localTextBlock.content || saveLoading"
 						@click="saveTextBlock">
@@ -115,11 +122,10 @@ import AccountMultiple from 'vue-material-design-icons/AccountMultiple.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconClose from 'vue-material-design-icons/Close.vue'
 import IconPencil from 'vue-material-design-icons/Pencil.vue'
-
+import TextEditor from '../TextEditor.vue'
 import logger from '../../logger.js'
 import { getShares, shareTextBlock, unshareTextBlock } from '../../service/TextBlockService.js'
 import useMainStore from '../../store/mainStore.js'
-import TextEditor from '../TextEditor.vue'
 
 export default {
 	name: 'ListItem',
@@ -138,24 +144,29 @@ export default {
 		IconCheck,
 		NcListItem,
 	},
+
 	props: {
 		textBlock: {
 			type: Object,
 			required: true,
 		},
+
 		shared: {
 			type: Boolean,
 			default: false,
 		},
+
 		isViewMode: {
 			type: Boolean,
 			default: false,
 		},
+
 		picked: {
 			type: Boolean,
 			default: false,
 		},
 	},
+
 	data() {
 		return {
 			shares: [],
@@ -168,11 +179,13 @@ export default {
 			bus: mitt(),
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		options() {
-			return this.suggestions.filter(suggestion => !this.shares.find(share => share.name === suggestion.shareWith) && suggestion.shareWith !== getCurrentUser().uid)
+			return this.suggestions.filter((suggestion) => !this.shares.find((share) => share.name === suggestion.shareWith) && suggestion.shareWith !== getCurrentUser().uid)
 		},
+
 		sortedShares() {
 			return [...this.shares].sort((a, b) => {
 				if (a.type === 'user' && b.type === 'group') {
@@ -185,11 +198,13 @@ export default {
 			})
 		},
 	},
+
 	async mounted() {
 		if (!this.shared && !this.isViewMode) {
 			this.shares = await getShares(this.textBlock.id)
 		}
 	},
+
 	methods: {
 		async deleteTextBlock() {
 			await this.mainStore.deleteTextBlock({ id: this.textBlock.id }).then(() => {
@@ -198,6 +213,7 @@ export default {
 				showError(t('mail', 'Failed to delete text block'))
 			})
 		},
+
 		async shareTextBlock(sharee) {
 			try {
 				await shareTextBlock(this.textBlock.id, sharee.shareWith, sharee.shareType === ShareType.User ? 'user' : 'group')
@@ -208,10 +224,11 @@ export default {
 				showError(t('mail', 'Failed to share text block with {sharee}', { sharee: sharee.shareWith }))
 			}
 		},
+
 		async removeShare(sharee) {
 			try {
 				await unshareTextBlock(this.textBlock.id, sharee.shareWith)
-				this.shares = this.shares.filter(share => share.shareWith !== sharee.shareWith)
+				this.shares = this.shares.filter((share) => share.shareWith !== sharee.shareWith)
 				showSuccess(t('mail', 'Share deleted for {name}', { name: sharee.shareWith }))
 			} catch (error) {
 				showError(t('mail', 'Failed to delete share with {name}', { name: sharee.shareWith }))
@@ -222,12 +239,13 @@ export default {
 			this.loading = true
 			await this.debounceGetSuggestions(query.trim())
 		},
+
 		/**
 		 * Get suggestions
 		 *
 		 * @param {string} search the search query
 		 */
-		 async getSuggestions(search) {
+		async getSuggestions(search) {
 			this.loading = true
 
 			const shareTypes = [
@@ -257,8 +275,8 @@ export default {
 			const rawExactSuggestions = exact.users.concat(exact.groups)
 			const rawSuggestions = data.users.concat(data.groups)
 			// remove invalid data and format to user-select layout
-			const exactSuggestions = rawExactSuggestions.map(share => this.formatForMultiselect(share))
-			const suggestions = rawSuggestions.map(share => this.formatForMultiselect(share)).sort((a, b) => a.shareType - b.shareType)
+			const exactSuggestions = rawExactSuggestions.map((share) => this.formatForMultiselect(share))
+			const suggestions = rawSuggestions.map((share) => this.formatForMultiselect(share)).sort((a, b) => a.shareType - b.shareType)
 
 			const allSuggestions = exactSuggestions.concat(suggestions).sort((a, b) => a.shareType - b.shareType)
 
@@ -274,7 +292,7 @@ export default {
 				return nameCounts
 			}, {})
 
-			this.suggestions = allSuggestions.map(item => {
+			this.suggestions = allSuggestions.map((item) => {
 				// Make sure that items with duplicate displayName get the shareWith applied as a description
 				if (nameCounts[item.displayName] > 1 && !item.desc) {
 					return { ...item, desc: item.shareWithDisplayNameUnique }
@@ -285,30 +303,31 @@ export default {
 			this.loading = false
 			logger.info('suggestions', this.suggestions)
 		},
+
 		/**
 		 * Get the icon based on the share type
 		 *
 		 * @param {number} type the share type
 		 * @return {string} the icon class
 		 */
-		 shareTypeToIcon(type) {
+		shareTypeToIcon(type) {
 			switch (type) {
-			case ShareType.User:
+				case ShareType.User:
 				// default is a user, other icons are here to differentiate
 				// themselves from it, so let's not display the user icon
 				// case this.SHARE_TYPES.SHARE_TYPE_REMOTE:
 				// case this.SHARE_TYPES.SHARE_TYPE_USER:
-				return {
-					icon: 'icon-user',
-					iconTitle: t('files_sharing', 'Guest'),
-				}
-			case ShareType.Group:
-				return {
-					icon: 'icon-group',
-					iconTitle: t('files_sharing', 'Group'),
-				}
-			default:
-				return {}
+					return {
+						icon: 'icon-user',
+						iconTitle: t('files_sharing', 'Guest'),
+					}
+				case ShareType.Group:
+					return {
+						icon: 'icon-group',
+						iconTitle: t('files_sharing', 'Group'),
+					}
+				default:
+					return {}
 			}
 		},
 
@@ -329,14 +348,16 @@ export default {
 				...this.shareTypeToIcon(result.value.shareType),
 			}
 		},
+
 		/**
 		 * Debounce getSuggestions
 		 *
 		 * @param {...*} args the arguments
 		 */
-		 debounceGetSuggestions: debounce(300, function(...args) {
+		debounceGetSuggestions: debounce(300, function(...args) {
 			this.getSuggestions(...args)
 		}),
+
 		handleListItemClick() {
 			if (!this.isViewMode) {
 				this.editModalOpen = true
@@ -344,10 +365,12 @@ export default {
 			}
 			this.$emit('click', this.textBlock)
 		},
+
 		closeTextBlockDialog() {
 			this.editModalOpen = false
 			this.localTextBlock = JSON.parse(JSON.stringify(this.textBlock))
 		},
+
 		async saveTextBlock() {
 			this.saveLoading = true
 			try {

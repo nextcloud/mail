@@ -3,13 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import {createLocalVue, shallowMount} from '@vue/test-utils'
-import { PiniaVuePlugin, setActivePinia } from 'pinia'
 import { createTestingPinia } from '@pinia/testing'
-
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { PiniaVuePlugin, setActivePinia } from 'pinia'
 import NavigationMailbox from '../../../components/NavigationMailbox.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
-
 import useMainStore from '../../../store/mainStore.js'
 
 const localVue = createLocalVue()
@@ -18,7 +16,6 @@ localVue.use(PiniaVuePlugin)
 localVue.mixin(Nextcloud)
 
 describe('NavigationMailbox', () => {
-
 	const subMailboxes = []
 	let store
 
@@ -258,7 +255,6 @@ describe('NavigationMailbox', () => {
 
 		expect(view.vm.hasSubmailboxActionAcl).toBe(true)
 	})
-
 
 	it('allows toggling delete action without ACLs', () => {
 		const view = shallowMount(NavigationMailbox, {

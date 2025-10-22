@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { setActivePinia } from 'pinia'
 import { createTestingPinia } from '@pinia/testing'
+import { setActivePinia } from 'pinia'
 import useMainStore from '../../../store/mainStore.js'
 
 describe('Pinia main store getters', () => {
@@ -37,11 +37,9 @@ describe('Pinia main store getters', () => {
 
 		const accounts = store.accountsUnmapped
 
-		expect(accounts['13']).toEqual(
-			{
-				accountId: 13,
-			},
-		)
+		expect(accounts['13']).toEqual({
+			accountId: 13,
+		})
 	})
 	it('gets a specific account', () => {
 		store.accountList.push('13')
