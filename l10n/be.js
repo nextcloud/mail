@@ -40,7 +40,6 @@ OC.L10N.register(
     "Go back" : "Назад",
     "Email address" : "Адрас электроннай пошты",
     "Cancel" : "Скасаваць",
-    "Accounts" : "Уліковыя запісы",
     "General" : "Агульныя",
     "Layout" : "Макет",
     "List" : "Спіс",
@@ -242,6 +241,7 @@ OC.L10N.register(
     "Could not load your message" : "Не ўдалося загрузіць ваша паведамленне",
     "Could not load the message" : "Не ўдалося загрузіць паведамленне",
     "Error loading message" : "Памылка пры загрузцы паведамлення",
-    "Forwarding to %s" : "Перасыланне да %s"
+    "Forwarding to %s" : "Перасыланне да %s",
+    "Accounts" : "Уліковыя запісы"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

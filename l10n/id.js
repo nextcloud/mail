@@ -21,12 +21,15 @@ OC.L10N.register(
     "Go back" : "Kembali",
     "Email address" : "Alamat email",
     "Cancel" : "Membatalkan",
-    "Accounts" : "Accounts",
-    "Add mail account" : "Tambahkan akun email",
     "General" : "Umum",
+    "Add mail account" : "Tambahkan akun email",
+    "Appearance" : "Tampilan",
     "List" : "Daftar",
+    "Newest first" : "Terbaru",
+    "Oldest first" : "Paling lama",
     "Register" : "Daftar",
     "Shared with me" : "Dibagikan dengan saya",
+    "Security" : "Keamanan",
     "About" : "Tentang",
     "Keyboard shortcuts" : "Pintasan keyboard",
     "Archive" : "Arsip",
@@ -128,6 +131,7 @@ OC.L10N.register(
     "Error loading message" : "Terjadi kesalahan saat memuat pesan",
     "Forwarding to %s" : "Teruskan ke %s",
     "Redirect" : "Mengalihkan",
-    "Continue to %s" : "Lanjutkan ke %s"
+    "Continue to %s" : "Lanjutkan ke %s",
+    "Accounts" : "Accounts"
 },
 "nplurals=1; plural=0;");

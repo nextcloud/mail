@@ -41,9 +41,8 @@ OC.L10N.register(
     "Go back" : "Gaan terug",
     "Email address" : "E-posadres",
     "Cancel" : "Kanselleer",
-    "Accounts" : "Accounts",
-    "Add mail account" : "Voeg posrekening toe",
     "General" : "Algemeen",
+    "Add mail account" : "Voeg posrekening toe",
     "Register" : "Registreer",
     "About" : "Aangaande",
     "Keyboard shortcuts" : "Sneltoetse",
@@ -133,6 +132,7 @@ OC.L10N.register(
     "Forwarding to %s" : "Stuur aan na %s",
     "Click here if you are not automatically redirected within the next few seconds." : "Klik hier indien u nie binne die volgende paar sekondes outomaties herverwys word nie.",
     "Redirect" : "Herverwys",
-    "The link leads to %s" : "Die skakel lei na %s"
+    "The link leads to %s" : "Die skakel lei na %s",
+    "Accounts" : "Accounts"
 },
 "nplurals=2; plural=(n != 1);");

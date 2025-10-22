@@ -31,12 +31,12 @@ OC.L10N.register(
     "Go back" : "Nôl",
     "Email address" : "Cyfeiriad e-bost",
     "Cancel" : "Diddymu",
-    "Accounts" : "Accounts",
-    "Add mail account" : "Ychwanegu cyfrif post",
     "General" : "Cyffredinol",
+    "Add mail account" : "Ychwanegu cyfrif post",
     "List" : "Rhestr",
-    "Use Gravatar and favicon avatars" : "Defnyddiwch Gravatar ac afatarau favicon",
+    "Newest first" : "Diweddaraf gyntaf",
     "Register" : "Cofrestru",
+    "Security" : "Diogelwch",
     "About" : "Ynglyn â",
     "Keyboard shortcuts" : "Llwybrau byr bysellfwrdd",
     "Compose new message" : "Ysgrifennu Neges _Newydd",
@@ -134,6 +134,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Cliciwch yma os na chewch eich ailgyfeirio'n awtomatig o fewn yr ychydig eiliadau nesaf.",
     "Redirect" : "Ailgyfeirio",
     "The link leads to %s" : "Mae'r ddolen yn arwain at %s",
-    "Continue to %s" : "Parhau i %s"
+    "Continue to %s" : "Parhau i %s",
+    "Accounts" : "Accounts",
+    "Use Gravatar and favicon avatars" : "Defnyddiwch Gravatar ac afatarau favicon"
 },
 "nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;");

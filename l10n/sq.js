@@ -28,10 +28,13 @@ OC.L10N.register(
     "Signature" : "Nënshkrimi",
     "Go back" : "Shko prapa",
     "Cancel" : "Anullo",
-    "Accounts" : "Llogari",
-    "Add mail account" : "Shto llogarinë e postës elektronike",
     "General" : "Të përgjithshme",
+    "Add mail account" : "Shto llogarinë e postës elektronike",
+    "Newest first" : "Më i riu i pari",
+    "Oldest first" : "Më i vjetri i pari",
     "Register" : "Regjistrohu",
+    "Security" : "Siguria",
+    "Manage certificates" : "Menaxhoni certifikatat",
     "About" : "Rreth",
     "Keyboard shortcuts" : "Shkurtoret e tastierës",
     "Newer message" : "Mesazhe më të reja",
@@ -142,6 +145,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klikoni këtu nëse nuk ridrejtoheni automatikisht brenda disa sekondave",
     "Redirect" : "Ridrejtoje",
     "The link leads to %s" : "Lidhja shpie te %s",
-    "Continue to %s" : "Vazhdo te %s"
+    "Continue to %s" : "Vazhdo te %s",
+    "Accounts" : "Llogari"
 },
 "nplurals=2; plural=(n != 1);");

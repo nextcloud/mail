@@ -12,7 +12,6 @@ OC.L10N.register(
     "Signature" : "අත්සන",
     "Go back" : "ආපසු යන්න",
     "Cancel" : "අවලංගු කරන්න",
-    "Accounts" : "Accounts",
     "General" : "සමාන්‍යය",
     "About" : "පිළිබඳ",
     "Archive" : "සංරක්ෂණය",
@@ -53,6 +52,7 @@ OC.L10N.register(
     "Certificate" : "සහතිකය",
     "Shares" : "බෙදාගැනීම්",
     "All" : "සියල්ල",
-    "Favorites" : "ප්‍රියතම"
+    "Favorites" : "ප්‍රියතම",
+    "Accounts" : "Accounts"
 },
 "nplurals=2; plural=(n != 1);");

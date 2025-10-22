@@ -38,9 +38,9 @@ OC.L10N.register(
     "Change name" : "Camudar el nome",
     "Email address" : "Direición de corréu electrónicu",
     "Cancel" : "Encaboxar",
-    "Accounts" : "Cuentes",
     "General" : "Xeneral",
     "List" : "Llista",
+    "Vertical split" : "DIxebra verical",
     "Horizontal split" : "Dixebra horizontal",
     "Sorting" : "Orde",
     "Gravatar settings" : "Configuración de Gravatar",
@@ -310,6 +310,6 @@ OC.L10N.register(
     "Error loading message" : "Hebo un error al cargar el mensaxe",
     "Redirect" : "Redirixir",
     "The link leads to %s" : "L'enllaz lleva a %s",
-    "Vertical split" : "DIxebra verical"
+    "Accounts" : "Cuentes"
 },
 "nplurals=2; plural=(n != 1);");

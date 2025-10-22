@@ -20,13 +20,16 @@ OC.L10N.register(
     "Go back" : "Rudi nyuma",
     "Email address" : "Anwani ya barua pepe",
     "Cancel" : "Cancel",
-    "Accounts" : "Akaunti",
     "General" : "Kuu",
+    "Appearance" : "Mwonekano",
     "Layout" : "Mpangilio",
     "List" : "Orodha",
     "Sorting" : "Sorting",
+    "Newest first" : "Mpya kwanza",
+    "Oldest first" : "Ya zamani kwanza",
     "Register" : "Sajiri",
     "Shared with me" : "Shared with me",
+    "Security" : "Ulinzi",
     "About" : "Kuhusu",
     "Keyboard shortcuts" : "Mikato ya keyboard",
     "Archive" : "Weka kumbukumbu",
@@ -161,6 +164,7 @@ OC.L10N.register(
     "Discard changes" : "Discard changes",
     "Message sent" : "Ujumbe umetumwa",
     "Redirect" : "Elekeza upya",
-    "Continue to %s" : "Endelea katika %s"
+    "Continue to %s" : "Endelea katika %s",
+    "Accounts" : "Akaunti"
 },
 "nplurals=2; plural=(n != 1);");

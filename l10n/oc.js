@@ -29,10 +29,10 @@ OC.L10N.register(
     "Go back" : "Revenir en arrière",
     "Email address" : "Adreça mail",
     "Cancel" : "Anullar",
-    "Accounts" : "Accounts",
     "General" : "Generals",
     "List" : "Tièra",
     "Register" : "S'inscriure",
+    "Security" : "Seguretat",
     "About" : "A prepaus",
     "Keyboard shortcuts" : "Acorchis de clavièr",
     "Archive" : "Archius",
@@ -120,6 +120,7 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "Message sent" : "Messatge mandat",
     "Error loading message" : "Error al moment del cargament del messatge",
-    "Continue to %s" : "Contunhar cap a %s"
+    "Continue to %s" : "Contunhar cap a %s",
+    "Accounts" : "Accounts"
 },
 "nplurals=2; plural=(n > 1);");

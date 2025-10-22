@@ -12,7 +12,6 @@ OC.L10N.register(
     "None" : "কোনটিই নয়",
     "Go back" : "ফিরে যাও",
     "Cancel" : "বাতির",
-    "Accounts" : "Accounts",
     "General" : "সাধারণ",
     "Keyboard shortcuts" : "কী-বোর্ড শর্টকাট",
     "Delete" : "মুছে",
@@ -58,6 +57,7 @@ OC.L10N.register(
     "Shared" : "ভাগাভাগিকৃত",
     "Shares" : "ভাগাভাগি",
     "All" : "সবাই",
-    "Favorites" : "প্রিয়জন"
+    "Favorites" : "প্রিয়জন",
+    "Accounts" : "Accounts"
 },
 "nplurals=2; plural=(n != 1);");

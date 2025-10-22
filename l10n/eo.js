@@ -42,12 +42,11 @@ OC.L10N.register(
     "Change name" : "Ŝanĝi nomon",
     "Email address" : "Retpoŝtadreso",
     "Cancel" : "Nuligi",
-    "Accounts" : "Kontoj",
-    "Add mail account" : "Aldoni retpoŝtan konton",
     "General" : "Ĝenerala",
-    "Use Gravatar and favicon avatars" : "Uzi servon „Gravatar“ kaj avatarojn en retpaĝsimbolo",
-    "Register as application for mail links" : "Registriĝi kiel programeto por retpoŝtligiloj",
+    "Add mail account" : "Aldoni retpoŝtan konton",
+    "Newest first" : "Pli novaj unue",
     "Register" : "Registriĝi",
+    "Security" : "Sekurigo",
     "Keyboard shortcuts" : "Fulmoklavoj",
     "Compose new message" : "Krei novan mesaĝon",
     "Newer message" : "Pli nova mesaĝo",
@@ -205,6 +204,9 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Alklaku ĉi tie, ĉu vi ne estos aŭtomate alidirektita post kelkaj sekundoj.",
     "Redirect" : "Alidirekto",
     "The link leads to %s" : "La ligilo iras al %s",
-    "Continue to %s" : "Daŭrigi al %s"
+    "Continue to %s" : "Daŭrigi al %s",
+    "Accounts" : "Kontoj",
+    "Use Gravatar and favicon avatars" : "Uzi servon „Gravatar“ kaj avatarojn en retpaĝsimbolo",
+    "Register as application for mail links" : "Registriĝi kiel programeto por retpoŝtligiloj"
 },
 "nplurals=2; plural=(n != 1);");
