@@ -12,8 +12,10 @@ OC.L10N.register(
     "None" : "Ingen",
     "Signature" : "Signatur",
     "Cancel" : "Avbryt",
-    "Accounts" : "Accounts",
     "General" : "Generelt",
+    "Appearance" : "Utsjånad",
+    "Newest first" : "Nyaste fyrst",
+    "Oldest first" : "Eldste fyrst",
     "Keyboard shortcuts" : "Tastatursnarvegar",
     "Delete" : "Ta bort",
     "Search" : "Search",
@@ -60,6 +62,7 @@ OC.L10N.register(
     "All" : "Alle",
     "Favorites" : "Favorit",
     "Sent" : "Sendt",
-    "Message sent" : "Melding sendt"
+    "Message sent" : "Melding sendt",
+    "Accounts" : "Accounts"
 },
 "nplurals=2; plural=(n != 1);");

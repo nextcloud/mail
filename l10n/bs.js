@@ -11,7 +11,6 @@ OC.L10N.register(
     "None" : "Ništa",
     "SMTP Password" : "SMPT Lozinka",
     "Cancel" : "Otkaži",
-    "Accounts" : "Accounts",
     "Keyboard shortcuts" : "Tipkovni prečaci",
     "Delete" : "Obriši",
     "Search" : "Search",
@@ -45,6 +44,7 @@ OC.L10N.register(
     "Group" : "Grupa",
     "Shared" : "Podijeljen",
     "All" : "Sve",
-    "Favorites" : "Favoriti"
+    "Favorites" : "Favoriti",
+    "Accounts" : "Accounts"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

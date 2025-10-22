@@ -10,7 +10,6 @@
     "None" : "Keng",
     "Go back" : "Zeréckgoen",
     "Cancel" : "Ofbriechen",
-    "Accounts" : "Accounts",
     "General" : "Allgemeng",
     "Delete" : "Läschen",
     "Search" : "Search",
@@ -56,6 +55,7 @@
     "Group" : "Grupp",
     "Shared" : "Gedeelt",
     "All" : "All",
-    "Favorites" : "Favoriten"
+    "Favorites" : "Favoriten",
+    "Accounts" : "Accounts"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

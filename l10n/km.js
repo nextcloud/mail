@@ -11,7 +11,6 @@ OC.L10N.register(
     "Password" : "ពាក្យសម្ងាត់",
     "None" : "គ្មាន",
     "Cancel" : "បោះបង់",
-    "Accounts" : "Accounts",
     "General" : "ទូទៅ",
     "Delete" : "លុប",
     "Search" : "Search",
@@ -51,6 +50,7 @@ OC.L10N.register(
     "Inbox" : "ក្នុង​ប្រអប់សារ",
     "Junk" : "ព្រៃ",
     "Sent" : "ផ្ញើ",
-    "Trash" : "ធុង​សំរាម"
+    "Trash" : "ធុង​សំរាម",
+    "Accounts" : "Accounts"
 },
 "nplurals=1; plural=0;");

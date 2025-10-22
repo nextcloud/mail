@@ -12,10 +12,11 @@ OC.L10N.register(
     "None" : "Yo'q",
     "Email address" : "E-pochta manzili",
     "Cancel" : "Bekor qilish",
-    "Accounts" : "Akkaunt",
     "General" : "Umumiy",
+    "Appearance" : "Tashqi ko'rinish",
     "List" : "Ro`yxat",
     "Register" : "Roʻyxatdan oʻtish",
+    "Security" : "Xavfsizlik",
     "About" : "About",
     "Keyboard shortcuts" : "Klaviatura yorliqlari",
     "Archive" : "Arxiv",
@@ -84,6 +85,7 @@ OC.L10N.register(
     "All" : "All",
     "Favorites" : "Favorites",
     "Error while sharing file" : "Fayl almashishda xatolik yuz berdi",
-    "Continue to %s" : " %sni davom eting"
+    "Continue to %s" : " %sni davom eting",
+    "Accounts" : "Akkaunt"
 },
 "nplurals=1; plural=0;");
