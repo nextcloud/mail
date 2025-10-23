@@ -28,7 +28,7 @@ class Version5006Date20251023224608 extends SimpleMigrationStep {
 
 		$attachments = $schema->getTable('mail_attachments');
 
-		// Ensure created_at is NOT NULL and has no default, so app must set it.
+		// Drop default value for created_at column
 		if ($attachments->hasColumn('created_at')) {
 			$attachments->modifyColumn('created_at', [
 				'default' => null,
