@@ -428,7 +428,7 @@
     "Loading …" : "Chargement...",
     "All messages in mailbox will be deleted." : "Tous les messages du dossier seront supprimés.",
     "Clear mailbox {name}" : "Vider le dossier {name}",
-    "Clear folder" : "Effacer le dossier",
+    "Clear folder" : "Vider le dossier",
     "The folder and all messages in it will be deleted." : "Le dossier et tous les messages qu'il contient vont être supprimés.",
     "Delete folder" : "Supprimer ce dossier",
     "Delete folder {name}" : "Supprimer le dossier {name}",
