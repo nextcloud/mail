@@ -21,12 +21,12 @@ import { generateUrl } from '@nextcloud/router'
  * @param {string} aliasName new alias name
  * @return {Promise<Alias>}
  */
-export const createAlias = async (accountId, alias, aliasName) => {
+export async function createAlias(accountId, alias, aliasName) {
 	const url = generateUrl('/apps/mail/api/accounts/{id}/aliases', {
 		id: accountId,
 	})
 
-	return axios.post(url, { alias, aliasName }).then(resp => resp.data)
+	return axios.post(url, { alias, aliasName }).then((resp) => resp.data)
 }
 
 /**
@@ -34,7 +34,7 @@ export const createAlias = async (accountId, alias, aliasName) => {
  * @param {number} aliasId if of alias
  * @return {Promise<Alias>}
  */
-export const deleteAlias = async (accountId, aliasId) => {
+export async function deleteAlias(accountId, aliasId) {
 	const url = generateUrl('/apps/mail/api/accounts/{id}/aliases/{aliasId}', {
 		id: accountId,
 		aliasId,
@@ -51,14 +51,13 @@ export const deleteAlias = async (accountId, aliasId) => {
  * @param {number?} smimeCertificateId new S/Mime certificate id
  * @return {Promise<Alias>}
  */
-export const updateAlias = async (accountId, aliasId, alias, aliasName, smimeCertificateId) => {
-	const url = generateUrl(
-		'/apps/mail/api/accounts/{id}/aliases/{aliasId}', {
-			id: accountId,
-			aliasId,
-		})
+export async function updateAlias(accountId, aliasId, alias, aliasName, smimeCertificateId) {
+	const url = generateUrl('/apps/mail/api/accounts/{id}/aliases/{aliasId}', {
+		id: accountId,
+		aliasId,
+	})
 
-	return axios.put(url, { alias, aliasName, smimeCertificateId }).then(resp => resp.data)
+	return axios.put(url, { alias, aliasName, smimeCertificateId }).then((resp) => resp.data)
 }
 
 /**
@@ -67,12 +66,11 @@ export const updateAlias = async (accountId, aliasId, alias, aliasName, smimeCer
  * @param {string} signature new signature
  * @return {Promise<Alias>}
  */
-export const updateSignature = async (accountId, aliasId, signature) => {
-	const url = generateUrl(
-		'/apps/mail/api/accounts/{id}/aliases/{aliasId}/signature', {
-			id: accountId,
-			aliasId,
-		})
+export async function updateSignature(accountId, aliasId, signature) {
+	const url = generateUrl('/apps/mail/api/accounts/{id}/aliases/{aliasId}/signature', {
+		id: accountId,
+		aliasId,
+	})
 
-	return axios.put(url, { signature }).then(resp => resp.data)
+	return axios.put(url, { signature }).then((resp) => resp.data)
 }

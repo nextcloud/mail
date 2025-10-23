@@ -4,13 +4,14 @@
 -->
 
 <template>
-	<SettingsSection :name="t( 'mail', 'Mail app')"
-		:description="t( 'mail', 'The mail app allows users to read mails on their IMAP accounts.')">
+	<SettingsSection
+		:name="t('mail', 'Mail app')"
+		:description="t('mail', 'The mail app allows users to read mails on their IMAP accounts.')">
 		<p>
 			{{
 				t(
 					'mail',
-					'Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner).'
+					'Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner).',
 				)
 			}}
 		</p>
@@ -19,7 +20,7 @@
 				{{
 					t(
 						'mail',
-						'Account provisioning'
+						'Account provisioning',
 					)
 				}}
 			</h3>
@@ -28,54 +29,54 @@
 					{{
 						t(
 							'mail',
-							'A provisioning configuration will provision all accounts with a matching email address.'
+							'A provisioning configuration will provision all accounts with a matching email address.',
 						)
 					}}
 					{{
 						t(
 							'mail',
-							'Using the wildcard (*) in the provisioning domain field will create a configuration that applies to all users, provided they do not match another configuration.'
-						)
-					}}
-					<br>
-					{{
-						t(
-							'mail',
-							'The provisioning mechanism will prioritise specific domain configurations over the wildcard domain configuration.'
-						)
-					}}
-					{{
-						t(
-							'mail',
-							'Should a new matching configuration be found after the user was already provisioned with another configuration, the new configuration will take precedence and the user will be reprovisioned with the configuration.'
+							'Using the wildcard (*) in the provisioning domain field will create a configuration that applies to all users, provided they do not match another configuration.',
 						)
 					}}
 					<br>
 					{{
 						t(
 							'mail',
-							'There can only be one configuration per domain and only one wildcard domain configuration.'
+							'The provisioning mechanism will prioritise specific domain configurations over the wildcard domain configuration.',
+						)
+					}}
+					{{
+						t(
+							'mail',
+							'Should a new matching configuration be found after the user was already provisioned with another configuration, the new configuration will take precedence and the user will be reprovisioned with the configuration.',
 						)
 					}}
 					<br>
 					{{
 						t(
 							'mail',
-							'These settings can be used in conjunction with each other.'
+							'There can only be one configuration per domain and only one wildcard domain configuration.',
 						)
 					}}
 					<br>
 					{{
 						t(
 							'mail',
-							'If you only want to provision one domain for all users, use the wildcard (*).'
+							'These settings can be used in conjunction with each other.',
 						)
 					}}
 					<br>
 					{{
 						t(
 							'mail',
-							'This setting only makes most sense if you use the same user back-end for your Nextcloud and mail server of your organization.'
+							'If you only want to provision one domain for all users, use the wildcard (*).',
+						)
+					}}
+					<br>
+					{{
+						t(
+							'mail',
+							'This setting only makes most sense if you use the same user back-end for your Nextcloud and mail server of your organization.',
 						)
 					}}
 				</p>
@@ -85,20 +86,22 @@
 			{{
 				t(
 					'mail',
-					'Provisioning Configurations'
+					'Provisioning Configurations',
 				)
 			}}
 		</h3>
 		<p>
-			<ButtonVue class="config-button"
+			<ButtonVue
+				class="config-button"
 				:aria-label="t('mail', 'Add new config')"
-				@click="addNew=true">
+				@click="addNew = true">
 				<template #icon>
 					<IconAdd :size="20" />
 				</template>
 				{{ t('mail', 'Add new config') }}
 			</ButtonVue>
-			<ButtonVue class="config-button"
+			<ButtonVue
+				class="config-button"
 				:aria-label="t('mail', 'Provision all accounts')"
 				@click="provisionAll">
 				<template #icon>
@@ -106,12 +109,14 @@
 				</template>
 				{{ t('mail', 'Provision all accounts') }}
 			</ButtonVue>
-			<ProvisioningSettings v-if="addNew"
+			<ProvisioningSettings
+				v-if="addNew"
 				:key="formKey"
 				:setting="preview"
 				:submit="saveNewSettings"
 				:delete-button="false" />
-			<ProvisioningSettings v-for="setting in configs"
+			<ProvisioningSettings
+				v-for="setting in configs"
 				:id="setting.id"
 				:key="setting.id"
 				:setting="setting"
@@ -122,15 +127,17 @@
 			<h3>{{ t('mail', 'Allow additional mail accounts') }}</h3>
 			<article>
 				<p>
-					<NcCheckboxRadioSwitch :checked.sync="allowNewMailAccounts"
+					<NcCheckboxRadioSwitch
+						:checked.sync="allowNewMailAccounts"
 						type="switch"
 						@update:checked="updateAllowNewMailAccounts">
-						{{ t('mail','Allow additional Mail accounts from User Settings') }}
+						{{ t('mail', 'Allow additional Mail accounts from User Settings') }}
 					</NcCheckboxRadioSwitch>
 				</p>
 			</article>
 		</div>
-		<div v-if="isLlmSummaryConfigured"
+		<div
+			v-if="isLlmSummaryConfigured"
 			class="app-description">
 			<h3>{{ t('mail', 'Enable text processing through LLMs') }}</h3>
 			<article>
@@ -138,7 +145,8 @@
 					{{ t('mail', 'The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas.') }}
 				</p>
 				<p>
-					<NcCheckboxRadioSwitch :checked.sync="isLlmEnabled"
+					<NcCheckboxRadioSwitch
+						:checked.sync="isLlmEnabled"
 						type="switch"
 						@update:checked="updateLlmEnabled">
 						{{ t('mail', 'Enable LLM processing') }}
@@ -153,7 +161,8 @@
 					{{ t('mail', 'The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts.') }}
 				</p>
 				<p>
-					<NcCheckboxRadioSwitch type="switch"
+					<NcCheckboxRadioSwitch
+						type="switch"
 						:checked="isImportanceClassificationEnabledByDefault"
 						@update:checked="setImportanceClassificationEnabledByDefault">
 						{{ t('mail', 'Enable classification of important mails by default') }}
@@ -166,7 +175,7 @@
 				{{
 					t(
 						'mail',
-						'Anti Spam Service'
+						'Anti Spam Service',
 					)
 				}}
 			</h3>
@@ -175,14 +184,14 @@
 					{{
 						t(
 							'mail',
-							'You can set up an anti spam service email address here.'
+							'You can set up an anti spam service email address here.',
 						)
 					}}
 					<br>
 					{{
 						t(
 							'mail',
-							'Any email that is marked as spam will be sent to the anti spam service.'
+							'Any email that is marked as spam will be sent to the anti spam service.',
 						)
 					}}
 				</p>
@@ -194,7 +203,7 @@
 				{{
 					t(
 						'mail',
-						'Gmail integration'
+						'Gmail integration',
 					)
 				}}
 			</h3>
@@ -203,7 +212,7 @@
 					{{
 						t(
 							'mail',
-							'Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords.'
+							'Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords.',
 						)
 					}}
 				</p>
@@ -214,7 +223,7 @@
 							'You have to register a new Client ID for a "Web application" in the Google Cloud console. Add the URL {url} as authorized redirect URI.',
 							{
 								url: googleOauthRedirectUrl,
-							}
+							},
 						)
 					}}
 				</p>
@@ -249,14 +258,16 @@
 					{{ t('mail', 'Message View Mode') }}
 				</p>
 				<p>
-					<NcCheckboxRadioSwitch type="radio"
+					<NcCheckboxRadioSwitch
+						type="radio"
 						name="message_view_mode_radio"
 						value="threaded"
 						:checked.sync="layoutMessageView"
 						@update:checked="setLayoutMessageView('threaded')">
 						{{ t('mail', 'Show all messages in thread') }}
 					</NcCheckboxRadioSwitch>
-					<NcCheckboxRadioSwitch type="radio"
+					<NcCheckboxRadioSwitch
+						type="radio"
 						name="message_view_mode_radio"
 						value="singleton"
 						:checked.sync="layoutMessageView"
@@ -277,7 +288,6 @@ import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwit
 import SettingsSection from '@nextcloud/vue/components/NcSettingsSection'
 import IconSettings from 'vue-material-design-icons/CogOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
-
 import AntiSpamSettings from './AntiSpamSettings.vue'
 import GmailAdminOauthSettings from './GmailAdminOauthSettings.vue'
 import MicrosoftAdminOauthSettings from './MicrosoftAdminOauthSettings.vue'
@@ -314,12 +324,14 @@ export default {
 		IconSettings,
 		NcCheckboxRadioSwitch,
 	},
+
 	props: {
 		provisioningSettings: {
 			type: Array,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			addNew: false,
@@ -346,12 +358,15 @@ export default {
 					uid: 'user123',
 					email: '',
 				},
+
 				previewData2: {
 					uid: 'user321',
 					email: 'user@domain.com',
 				},
+
 				loading: false,
 			},
+
 			allowNewMailAccounts: loadState('mail', 'allow_new_mail_accounts', true),
 			isLlmSummaryConfigured: loadState('mail', 'enabled_llm_summary_backend'),
 			isLlmEnabled: loadState('mail', 'llm_processing', true),
@@ -361,6 +376,7 @@ export default {
 			layoutMessageView: loadState('mail', 'layout_message_view'),
 		}
 	},
+
 	methods: {
 		async saveSettings(settings) {
 			try {
@@ -371,6 +387,7 @@ export default {
 				logger.error('Could not save provisioning setting', { error })
 			}
 		},
+
 		async saveNewSettings(settings) {
 			try {
 				const config = await createProvisioningSettings(settings)
@@ -384,40 +401,46 @@ export default {
 				logger.error('Could not save provisioning setting', { error })
 			}
 		},
+
 		resetForm() {
 			this.formKey = Math.random()
 		},
+
 		async provisionAll() {
 			try {
 				const count = await provisionAll()
 				showSuccess(n('mail', 'Successfully provisioned {count} account.', 'Successfully provisioned {count} accounts.', count.count, { count: count.count }))
-
 			} catch (error) {
 				showError(t('mail', 'There was an error when provisioning accounts.'))
 				logger.error('Could not provision accounts', { error })
 			}
 		},
+
 		async deleteProvisioning(id) {
-			const deleted = this.configs.find(c => c.id === id)
+			const deleted = this.configs.find((c) => c.id === id)
 			try {
 				await disableProvisioning(id)
 				logger.info('Deprovisioned successfully')
-				this.configs = this.configs.filter(c => c.id !== id)
+				this.configs = this.configs.filter((c) => c.id !== id)
 				showSuccess(t('mail', 'Successfully deleted and deprovisioned accounts for "{domain}"', { domain: deleted.provisioningDomain }))
 			} catch (error) {
 				showError(t('mail', 'Error when deleting and deprovisioning accounts for "{domain}"', { domain: deleted.provisioningDomain }))
 				logger.error('Could not delete provisioning config', { error })
 			}
 		},
+
 		async updateAllowNewMailAccounts(checked) {
 			await updateAllowNewMailAccounts(checked)
 		},
+
 		async updateLlmEnabled(checked) {
 			await updateLlmEnabled(checked)
 		},
+
 		async updateEnabledSmartReply(checked) {
 			await updateEnabledSmartReply(checked)
 		},
+
 		async setImportanceClassificationEnabledByDefault(enabledByDefault) {
 			try {
 				await setImportanceClassificationEnabledByDefault(enabledByDefault)
@@ -427,12 +450,14 @@ export default {
 				logger.error('Could not save default classification setting', { error })
 			}
 		},
+
 		async setLayoutMessageView(value) {
 			await setLayoutMessageView(value)
 		},
 	},
 }
 </script>
+
 <style lang="scss" scoped>
 .app-description {
 		margin-bottom: 24px;

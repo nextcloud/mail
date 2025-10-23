@@ -19,8 +19,9 @@
 						</div>
 					</div>
 
-					<NcButton :aria-label=" t('mail', 'Go to latest message')"
-						type="tertiary-no-background"
+					<NcButton
+						:aria-label=" t('mail', 'Go to latest message')"
+						variant="tertiary-no-background"
 						@click="onScroll">
 						{{ t('mail', 'Newest message') }}
 						<template #icon>
@@ -41,12 +42,12 @@
 		</div>
 	</NcAssistantContent>
 </template>
+
 <script>
 import NcAssistantContent from '@nextcloud/vue/components/NcAssistantContent'
 import NcAssistantIcon from '@nextcloud/vue/components/NcAssistantIcon'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import ArrowDownIcon from 'vue-material-design-icons/ArrowDown.vue'
-
 import LoadingSkeleton from './LoadingSkeleton.vue'
 
 export default {
@@ -58,16 +59,19 @@ export default {
 		NcAssistantContent,
 		NcAssistantIcon,
 	},
+
 	props: {
 		summary: {
 			type: String,
 			required: true,
 		},
+
 		loading: {
 			type: Boolean,
 			required: true,
 		},
 	},
+
 	computed: {
 		brand() {
 			if (OCA.Theming) {
@@ -76,6 +80,7 @@ export default {
 			return t('mail', '{name} Assistant', { name: 'Nextcloud' })
 		},
 	},
+
 	methods: {
 		onScroll() {
 			let container = document.querySelector('.splitpanes__pane-details')
@@ -88,6 +93,7 @@ export default {
 
 }
 </script>
+
 <style lang="scss" scoped>
 .wrapper {
 	max-width: calc(100% - 20px);

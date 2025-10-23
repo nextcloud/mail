@@ -30,7 +30,6 @@ class Version0210Date20191212144925 extends SimpleMigrationStep {
 		$accountsTable = $schema->getTable('mail_accounts');
 		$accountsTable->addColumn('order', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 4,
 			'default' => 1,
 		]);
 

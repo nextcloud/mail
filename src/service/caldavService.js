@@ -8,7 +8,7 @@ import DavClient, { CalendarHome, Collection, Principal } from '@nextcloud/cdav-
 import { generateRemoteUrl } from '@nextcloud/router'
 
 let client = null
-const getClient = () => {
+function getClient() {
 	if (client) {
 		return client
 	}
@@ -34,7 +34,7 @@ const getClient = () => {
 			return result
 		}
 
-		OC.registerXHRForErrorProcessing(xhr) // eslint-disable-line no-undef
+		OC.registerXHRForErrorProcessing(xhr)
 		return xhr
 	})
 

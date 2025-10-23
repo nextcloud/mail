@@ -12,7 +12,6 @@ OC.L10N.register(
     "Signature" : "අත්සන",
     "Go back" : "ආපසු යන්න",
     "Cancel" : "අවලංගු කරන්න",
-    "Accounts" : "Accounts",
     "General" : "සමාන්‍යය",
     "About" : "පිළිබඳ",
     "Archive" : "සංරක්ෂණය",
@@ -35,7 +34,6 @@ OC.L10N.register(
     "Translate" : "පරිවර්තනය",
     "Remove account" : "ගිණුම ඉවත් කරන්න",
     "Folder name" : "බහාලුමේ නම",
-    "Loading …" : "පූරණය වෙමින් …",
     "Mark all as read" : "සියල්ල කියවූ ලෙස සලකුණු කරන්න",
     "Reply" : "පිළිතුර",
     "Retry" : "නැවත උත්සාහ කරන්න",
@@ -53,6 +51,8 @@ OC.L10N.register(
     "Certificate" : "සහතිකය",
     "Shares" : "බෙදාගැනීම්",
     "All" : "සියල්ල",
-    "Favorites" : "ප්‍රියතම"
+    "Favorites" : "ප්‍රියතම",
+    "Accounts" : "Accounts",
+    "Loading …" : "පූරණය වෙමින් …"
 },
 "nplurals=2; plural=(n != 1);");

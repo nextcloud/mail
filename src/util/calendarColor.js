@@ -24,7 +24,7 @@ export function uidToHexColor(uid) {
  * This is copied from nextcloud-vue for now, until it is exposed upstream.
  */
 
-export const uidToColor = (uid) => {
+export function uidToColor(uid) {
 	// Normalize hash
 	let hash = uid.toLowerCase()
 

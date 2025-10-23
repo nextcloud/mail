@@ -9,7 +9,7 @@
 const ctx = '@@InfiniteScroll';
 
 var throttle = function (fn, delay) {
-  var now, lastExec, timer, context, args; //eslint-disable-line
+  var now, lastExec, timer, context, args;  
 
   var execute = function () {
     fn.apply(context, args);
@@ -95,7 +95,7 @@ var isAttached = function (element) {
 };
 
 var doBind = function () {
-  if (this.binded) return; // eslint-disable-line
+  if (this.binded) return;  
   this.binded = true;
 
   var directive = this;
@@ -169,7 +169,7 @@ var doCheck = function (force) {
   var element = this.el;
   var distance = this.distance;
 
-  if (force !== true && this.disabled) return; //eslint-disable-line
+  if (force !== true && this.disabled) return;  
   var viewportScrollTop = getScrollTop(scrollEventTarget);
   var viewportBottom = viewportScrollTop + getVisibleHeight(scrollEventTarget);
 
@@ -205,7 +205,7 @@ export default {
       el[ctx].bindTryCount = 0;
 
       var tryBind = function () {
-        if (el[ctx].bindTryCount > 10) return; //eslint-disable-line
+        if (el[ctx].bindTryCount > 10) return;  
         el[ctx].bindTryCount++;
         if (isAttached(el)) {
           doBind.call(el[ctx], args);

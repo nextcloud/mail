@@ -5,10 +5,9 @@
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
-
 import useMainStore from '../store/mainStore.js'
 
-const fetchAvailableLanguages = async function() {
+async function fetchAvailableLanguages() {
 	const mainStore = useMainStore()
 	try {
 		const response = await axios.get(generateOcsUrl('taskprocessing/tasktypes'))
@@ -28,7 +27,7 @@ const fetchAvailableLanguages = async function() {
 	}
 }
 
-const translateText = async function(text, fromLanguage, toLanguage) {
+async function translateText(text, fromLanguage, toLanguage) {
 	const scheduleResponse = await axios.post(generateOcsUrl('taskprocessing/schedule'), {
 		input: {
 			origin_language: fromLanguage ?? null,
@@ -43,7 +42,7 @@ const translateText = async function(text, fromLanguage, toLanguage) {
 		if (task.output) {
 			return task.output.output
 		}
-		await new Promise(resolve => setTimeout(resolve, 2000))
+		await new Promise((resolve) => setTimeout(resolve, 2000))
 		const taskResponse = await axios.get(generateOcsUrl(`taskprocessing/task/${task.id}`))
 		return getTaskOutput(taskResponse.data.ocs.data.task)
 	}

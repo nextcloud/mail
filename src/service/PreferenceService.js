@@ -6,7 +6,7 @@
 import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 
-export const savePreference = (key, value) => {
+export function savePreference(key, value) {
 	const url = generateUrl('/apps/mail/api/preferences/{key}', {
 		key,
 	})
@@ -18,7 +18,7 @@ export const savePreference = (key, value) => {
 	return Axios.put(url, data).then((resp) => resp.data)
 }
 
-export const getPreference = (key) => {
+export function getPreference(key) {
 	const url = generateUrl('/apps/mail/api/preferences/{key}', {
 		key,
 	})

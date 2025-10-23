@@ -14,7 +14,7 @@ export const DraggableEnvelopeDirective = {
 	componentUpdated(el, binding) {
 		const options = binding.value
 		setTimeout(() => {
-			instances.forEach(instance => {
+			instances.forEach((instance) => {
 				instance.options.selectedEnvelopes = options.selectedEnvelopes
 				instance.update(el, instance)
 			})

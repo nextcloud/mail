@@ -17,7 +17,6 @@ OC.L10N.register(
     "SMTP Password" : "Contrasigno SMTP",
     "Go back" : "Retornar",
     "Cancel" : "Cancellar",
-    "Accounts" : "Accounts",
     "General" : "General",
     "Keyboard shortcuts" : "Combinationes de claves",
     "Delete" : "Deler",
@@ -70,6 +69,7 @@ OC.L10N.register(
     "Favorites" : "Favoritos",
     "All inboxes" : "Tote cassas de entrata",
     "Could not load {tag}{name}{endtag}" : "Impossibile cargar {tag}{name}{endtag}",
-    "There was a problem loading {tag}{name}{endtag}" : "Un problema occurreva durante le carga de {tag}{name}{endtag}"
+    "There was a problem loading {tag}{name}{endtag}" : "Un problema occurreva durante le carga de {tag}{name}{endtag}",
+    "Accounts" : "Accounts"
 },
 "nplurals=2; plural=(n != 1);");

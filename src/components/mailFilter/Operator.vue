@@ -4,7 +4,8 @@
 -->
 <template>
 	<div class="operator">
-		<NcSelect :value="filter.operator"
+		<NcSelect
+			:value="filter.operator"
 			class="operator__select"
 			:required="true"
 			:label-outside="true"
@@ -14,7 +15,7 @@
 			@input="updateOperator($event)" />
 		<NcPopover class="operator__popover" :no-focus-trap="true" popup-role="dialog">
 			<template #trigger>
-				<NcButton type="tertiary-no-background" :aria-label="t('mail', 'Help')">
+				<NcButton variant="tertiary-no-background" :aria-label="t('mail', 'Help')">
 					<template #icon>
 						<IconInformationOutline :size="20" />
 					</template>
@@ -33,10 +34,10 @@
 		</NcPopover>
 	</div>
 </template>
+
 <script>
 import { NcButton, NcPopover, NcSelect } from '@nextcloud/vue'
 import IconInformationOutline from 'vue-material-design-icons/InformationOutline.vue'
-
 import { MailFilterOperator } from '../../models/mailFilter.ts'
 
 export default {
@@ -47,12 +48,14 @@ export default {
 		NcButton,
 		NcSelect,
 	},
+
 	props: {
 		filter: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			availableOperators: [
@@ -61,6 +64,7 @@ export default {
 			],
 		}
 	},
+
 	methods: {
 		updateOperator(operator) {
 			this.$emit('update:operator', operator)

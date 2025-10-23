@@ -3,22 +3,20 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import {createLocalVue, shallowMount} from '@vue/test-utils'
-import mitt from 'mitt'
-
-import Nextcloud from '../../../mixins/Nextcloud.js'
-import TextEditor from '../../../components/TextEditor.vue'
-import VirtualTestEditor from '../../virtualtesteditor.js'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { Paragraph } from 'ckeditor5'
+import mitt from 'mitt'
+import TextEditor from '../../../components/TextEditor.vue'
 import MailPlugin from '../../../ckeditor/mail/MailPlugin.js'
+import Nextcloud from '../../../mixins/Nextcloud.js'
+import VirtualTestEditor from '../../virtualtesteditor.js'
 
 const localVue = createLocalVue()
 
 localVue.mixin(Nextcloud)
 
 describe('TextEditor', () => {
-
-	it('shallow mounts', async() => {
+	it('shallow mounts', async () => {
 		const wrapper = shallowMount(TextEditor, {
 			localVue,
 			propsData: {
@@ -28,7 +26,7 @@ describe('TextEditor', () => {
 		})
 	})
 
-	it('throw when editor not ready', async() => {
+	it('throw when editor not ready', async () => {
 		const wrapper = shallowMount(TextEditor, {
 			localVue,
 			propsData: {
@@ -37,13 +35,12 @@ describe('TextEditor', () => {
 			},
 		})
 
-		const error = new Error(
-			'Impossible to execute a command before editor is ready.')
-		expect(() => wrapper.vm.editorExecute('insertSignature', {})).
-			toThrowError(error)
+		const error = new Error('Impossible to execute a command before editor is ready.')
+		expect(() => wrapper.vm.editorExecute('insertSignature', {}))
+			.toThrowError(error)
 	})
 
-	it('emit event on input', async() => {
+	it('emit event on input', async () => {
 		const wrapper = shallowMount(TextEditor, {
 			localVue,
 			propsData: {
@@ -80,8 +77,8 @@ describe('TextEditor', () => {
 		editor.ui = {
 			view: {
 				toolbar: {
-					// eslint-disable-next-line no-mixed-spaces-and-tabs
- 					element: document.createElement('div'),
+
+					element: document.createElement('div'),
 					items: [],
 				},
 				editable: { element: document.createElement('div') },
@@ -113,7 +110,8 @@ describe('TextEditor', () => {
 
 		editor.ui = {
 			view: {
-				toolbar: { element: document.createElement('div'),
+				toolbar: {
+					element: document.createElement('div'),
 					items: [],
 				},
 				editable: { element: document.createElement('div') },
@@ -126,5 +124,4 @@ describe('TextEditor', () => {
 		expect(wrapper.emitted().ready[0][0].getData())
 			.toEqual('<p style="margin:0;">bonjour bonjour</p>')
 	})
-
 })

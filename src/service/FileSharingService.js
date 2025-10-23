@@ -17,7 +17,7 @@ import { generateOcsUrl } from '@nextcloud/router'
  * @param {string} token The conversation's token
  * @return {string} url share link
  */
-const shareFile = async function(path, token) {
+async function shareFile(path, token) {
 	try {
 		const res = await axios.post(generateOcsUrl('apps/files_sharing/api/v1/', 2) + 'shares', {
 			shareType: 3, // OC.Share.SHARE_TYPE_LINK,

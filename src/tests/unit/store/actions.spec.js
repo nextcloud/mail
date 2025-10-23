@@ -3,17 +3,14 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import { createPinia, setActivePinia } from 'pinia'
 import { curry, range, reverse } from 'ramda'
-
 import * as MailboxService from '../../../service/MailboxService.js'
 import * as MessageService from '../../../service/MessageService.js'
 import * as NotificationService from '../../../service/NotificationService.js'
-import { UNIFIED_INBOX_ID, PAGE_SIZE } from '../../../store/constants.js'
-import { normalizedEnvelopeListId } from '../../../util/normalization.js'
-
-import { createPinia, setActivePinia } from 'pinia'
-
+import { PAGE_SIZE, UNIFIED_INBOX_ID } from '../../../store/constants.js'
 import useMainStore from '../../../store/mainStore.js'
+import { normalizedEnvelopeListId } from '../../../util/normalization.js'
 
 vi.mock('../../../service/MailboxService.js')
 vi.mock('../../../service/MessageService.js')
@@ -129,7 +126,7 @@ describe('Vuex store actions', () => {
 		expect(MailboxService.create).toHaveBeenCalledWith(13, 'INBOX.Archive.2020')
 	})
 
-	it('combines unified inbox even if no inboxes are present', async() => {
+	it('combines unified inbox even if no inboxes are present', async () => {
 		const envelopes = await store.fetchEnvelopes({
 			mailboxId: UNIFIED_INBOX_ID,
 		})
@@ -137,7 +134,7 @@ describe('Vuex store actions', () => {
 		expect(envelopes).toEqual([])
 	})
 
-	it('creates a unified page from one mailbox', async() => {
+	it('creates a unified page from one mailbox', async () => {
 		const account = {
 			id: 13,
 			personalNamespace: 'INBOX.',
@@ -198,7 +195,7 @@ describe('Vuex store actions', () => {
 		})
 	})
 
-	it('fetches the next individual page', async() => {
+	it('fetches the next individual page', async () => {
 		const msgs1 = reverse(range(30, 40))
 		const page1 = reverse(range(10, 30))
 
@@ -249,24 +246,20 @@ describe('Vuex store actions', () => {
 		expect(MessageService.fetchEnvelopes).toHaveBeenCalledTimes(1)
 		expect(MessageService.fetchEnvelopes)
 			.toHaveBeenNthCalledWith(1, 13, 11, undefined, 300000, PAGE_SIZE, 'newest')
-		expect(store.mailboxes[UNIFIED_INBOX_ID].envelopeLists[''].toSorted()).toEqual(
-			[
-				// Initial envelopes
-				...msgs1.map(mockEnvelope(11)),
+		expect(store.mailboxes[UNIFIED_INBOX_ID].envelopeLists[''].toSorted()).toEqual([
+			// Initial envelopes
+			...msgs1.map(mockEnvelope(11)),
 
-				// Fetched page for mailbox 11
-				...page1.map(mockEnvelope(11)),
-			].map(e => e.databaseId).sort(),
-		)
-		expect(store.mailboxes[11].envelopeLists[''].toSorted()).toEqual(
-			[
-				// Initial envelopes
-				...msgs1.map(mockEnvelope(11)),
+			// Fetched page for mailbox 11
+			...page1.map(mockEnvelope(11)),
+		].map((e) => e.databaseId).sort())
+		expect(store.mailboxes[11].envelopeLists[''].toSorted()).toEqual([
+			// Initial envelopes
+			...msgs1.map(mockEnvelope(11)),
 
-				// Fetched page for mailbox 11
-				...page1.map(mockEnvelope(11)),
-			].map(e => e.databaseId).sort(),
-		)
+			// Fetched page for mailbox 11
+			...page1.map(mockEnvelope(11)),
+		].map((e) => e.databaseId).sort())
 	})
 
 	it('builds the next unified page with local data', async () => {
@@ -320,15 +313,13 @@ describe('Vuex store actions', () => {
 		})
 
 		expect(MessageService.fetchEnvelopes).not.toHaveBeenCalled()
-		expect(store.mailboxes[UNIFIED_INBOX_ID].envelopeLists[''].toSorted()).toEqual(
-			[
-				// Initial envelopes
-				...page1.map(mockEnvelope(11)),
+		expect(store.mailboxes[UNIFIED_INBOX_ID].envelopeLists[''].toSorted()).toEqual([
+			// Initial envelopes
+			...page1.map(mockEnvelope(11)),
 
-				// Envelopes loaded from local state
-				...range(30, 50).map(mockEnvelope(11)),
-			].map(e => e.databaseId).sort(),
-		)
+			// Envelopes loaded from local state
+			...range(30, 50).map(mockEnvelope(11)),
+		].map((e) => e.databaseId).sort())
 	})
 
 	it('builds the next unified page with partial fetch', async () => {
@@ -389,23 +380,21 @@ describe('Vuex store actions', () => {
 		})
 
 		// Mock fetching next pages
-		MessageService.fetchEnvelopes.mockImplementation(
-			async (
-				accountId,
-				mailboxId,
-				query,
-				cursor,
-				limit,
-				sortOrder,
-			) => {
-				if (accountId !== 13 || mailboxId !== 11) {
-					return []
-				}
+		MessageService.fetchEnvelopes.mockImplementation(async (
+			accountId,
+			mailboxId,
+			query,
+			cursor,
+			limit,
+			sortOrder,
+		) => {
+			if (accountId !== 13 || mailboxId !== 11) {
+				return []
+			}
 
-				expect(sortOrder).toBe('newest')
-				return page2.map(mockEnvelope(11)).filter(e => e.dateInt < cursor).slice(0, limit)
-			},
-		)
+			expect(sortOrder).toBe('newest')
+			return page2.map(mockEnvelope(11)).filter((e) => e.dateInt < cursor).slice(0, limit)
+		})
 
 		await store.fetchNextEnvelopePage({
 			mailboxId: UNIFIED_INBOX_ID,
@@ -417,27 +406,23 @@ describe('Vuex store actions', () => {
 			.toHaveBeenNthCalledWith(1, 13, 11, undefined, 300000, PAGE_SIZE, 'newest')
 		expect(MessageService.fetchEnvelopes)
 			.toHaveBeenNthCalledWith(2, 26, 21, undefined, 600000, PAGE_SIZE, 'newest')
-		expect(store.mailboxes[UNIFIED_INBOX_ID].envelopeLists[''].toSorted()).toEqual(
-			[
-				// Initial envelopes
-				...page1.map(mockEnvelope(11)),
-				...msgs2.map(mockEnvelope(21)),
+		expect(store.mailboxes[UNIFIED_INBOX_ID].envelopeLists[''].toSorted()).toEqual([
+			// Initial envelopes
+			...page1.map(mockEnvelope(11)),
+			...msgs2.map(mockEnvelope(21)),
 
-				// Fetched page for mailbox 11
-				...page2.map(mockEnvelope(11)),
-			].map(e => e.databaseId).sort(),
-		)
-		expect(store.mailboxes[11].envelopeLists[''].toSorted()).toEqual(
-			[
-				// Initial envelopes
-				...page1.map(mockEnvelope(11)),
+			// Fetched page for mailbox 11
+			...page2.map(mockEnvelope(11)),
+		].map((e) => e.databaseId).sort())
+		expect(store.mailboxes[11].envelopeLists[''].toSorted()).toEqual([
+			// Initial envelopes
+			...page1.map(mockEnvelope(11)),
 
-				// Fetched page for mailbox 11
-				...page2.map(mockEnvelope(11)),
-			].map(e => e.databaseId).sort(),
-		)
+			// Fetched page for mailbox 11
+			...page2.map(mockEnvelope(11)),
+		].map((e) => e.databaseId).sort())
 		expect(store.mailboxes[21].envelopeLists[''].toSorted())
-			.toEqual(msgs2.map(mockEnvelope(21)).map(e => e.databaseId).toSorted())
+			.toEqual(msgs2.map(mockEnvelope(21)).map((e) => e.databaseId).toSorted())
 	})
 
 	describe('inbox sync', () => {
@@ -647,7 +632,7 @@ describe('Vuex store actions', () => {
 		expect(removeEnvelope).toBeFalsy()
 	})
 
-	it('includes a cache buster if requested', async() => {
+	it('includes a cache buster if requested', async () => {
 		const account = {
 			id: 13,
 			personalNamespace: 'INBOX.',

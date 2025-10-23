@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { defineConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue2'
+import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
 	plugins: [vue()],
@@ -16,4 +16,4 @@ export default defineConfig({
 		// Required for transforming CSS files
 		pool: 'vmForks',
 	},
-});
+})

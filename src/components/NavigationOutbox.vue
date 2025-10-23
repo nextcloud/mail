@@ -4,16 +4,19 @@
 -->
 
 <template>
-	<AppNavigationItem id="navigation-outbox"
+	<AppNavigationItem
+		id="navigation-outbox"
 		key="navigation-outbox"
 		:name="t('mail', 'Outbox')"
 		:to="to">
 		<template #icon>
-			<IconOutbox class="outbox-opacity-icon"
+			<IconOutbox
+				class="outbox-opacity-icon"
 				:size="20" />
 		</template>
 		<template #counter>
-			<CounterBubble v-if="count"
+			<CounterBubble
+				v-if="count"
 				class="navigation-outbox__unread-counter">
 				{{ count }}
 			</CounterBubble>
@@ -25,7 +28,6 @@
 import { NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import IconOutbox from 'vue-material-design-icons/InboxArrowUp.vue'
-
 import useOutboxStore from '../store/outboxStore.js'
 
 export default {
@@ -35,11 +37,13 @@ export default {
 		CounterBubble,
 		IconOutbox,
 	},
+
 	computed: {
 		...mapStores(useOutboxStore),
 		count() {
 			return this.outboxStore.getAllMessages.length
 		},
+
 		to() {
 			return {
 				name: 'outbox',

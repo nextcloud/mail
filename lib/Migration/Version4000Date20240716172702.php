@@ -31,7 +31,6 @@ class Version4000Date20240716172702 extends SimpleMigrationStep {
 			$table->addColumn('id', Types::INTEGER, [
 				'autoincrement' => true,
 				'notnull' => true,
-				'length' => 4,
 			]);
 			$table->addColumn('address', Types::STRING, [
 				'notnull' => true,

@@ -107,12 +107,10 @@ describe('text', () => {
 
 		it('produces a single line break after each block element', () => {
 			const selectors = ['p', 'div', 'header', 'footer', 'form', 'article', 'aside', 'main', 'nav', 'section']
-			const source = html(
-				selectors
-					.map(tag => `<${tag}>foobar</${tag}>`)
-					.join('')
-			)
-			const expected = plain(selectors.map(tag => 'foobar').join('\n'))
+			const source = html(selectors
+				.map((tag) => `<${tag}>foobar</${tag}>`)
+				.join(''))
+			const expected = plain(selectors.map((tag) => 'foobar').join('\n'))
 
 			const actual = toPlain(source)
 
@@ -121,15 +119,12 @@ describe('text', () => {
 
 		it('produces exactly one line break for each closing block element', () => {
 			const selectors = ['p', 'div', 'header', 'footer', 'form', 'article', 'aside', 'main', 'nav', 'section']
-			const source = html(
-				selectors
-					.map(tag => `<${tag}><${tag}>foobar</${tag}></${tag}>`)
-					.join('')
-			)
-			const expected = plain(selectors.map(tag => 'foobar').join('\n\n'))
+			const source = html(selectors
+				.map((tag) => `<${tag}><${tag}>foobar</${tag}></${tag}>`)
+				.join(''))
+			const expected = plain(selectors.map((tag) => 'foobar').join('\n\n'))
 
 			const actual = toPlain(source)
-
 
 			expect(actual).toEqual(expected)
 		})
@@ -144,11 +139,9 @@ describe('text', () => {
 		})
 
 		it('converts deeply nested elements to text', () => {
-			const source = html(
-				'<html>'
-					+ '<body><p>Hello!</p><p>this <i>is</i> <b>some</b> random <strong>text</strong></p></body>'
-					+ '</html>'
-			)
+			const source = html('<html>'
+				+ '<body><p>Hello!</p><p>this <i>is</i> <b>some</b> random <strong>text</strong></p></body>'
+				+ '</html>')
 			const expected = plain('Hello!\nthis is some random text')
 
 			const actual = toPlain(source)
@@ -166,9 +159,7 @@ describe('text', () => {
 		})
 
 		it('preserves quotes', () => {
-			const source = html(
-				'<blockquote><div><b>yes.</b></div><div><br /></div><div>Am Montag, den 21.10.2019, 16:51 +0200 schrieb Christoph Wurst:</div><blockquote style="margin:0 0 0 .8ex;border-left:2px #729fcf solid;padding-left:1ex;"><div>ok cool</div><div><br /></div><div>Am Montag, den 21.10.2019, 16:51 +0200 schrieb Christoph Wurst:</div><blockquote style="margin:0 0 0 .8ex;border-left:2px #729fcf solid;padding-left:1ex;"><div>Hello</div><div><br /></div><div>this is some t<i>e</i>xt</div><div><br /></div><div>yes</div><div><br /></div><div>cheers</div><br></blockquote><br></blockquote></blockquote>'
-			)
+			const source = html('<blockquote><div><b>yes.</b></div><div><br /></div><div>Am Montag, den 21.10.2019, 16:51 +0200 schrieb Christoph Wurst:</div><blockquote style="margin:0 0 0 .8ex;border-left:2px #729fcf solid;padding-left:1ex;"><div>ok cool</div><div><br /></div><div>Am Montag, den 21.10.2019, 16:51 +0200 schrieb Christoph Wurst:</div><blockquote style="margin:0 0 0 .8ex;border-left:2px #729fcf solid;padding-left:1ex;"><div>Hello</div><div><br /></div><div>this is some t<i>e</i>xt</div><div><br /></div><div>yes</div><div><br /></div><div>cheers</div><br></blockquote><br></blockquote></blockquote>')
 			const expected = plain(`> yes.
 >
 > Am Montag, den 21.10.2019, 16:51 +0200 schrieb Christoph Wurst:

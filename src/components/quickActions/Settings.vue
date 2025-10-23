@@ -35,13 +35,15 @@
 				<NcTextField :value.sync="localAction.name" :label="t('mail', 'Quick action name')" />
 				<h3>{{ t('mail', 'Do the following actions') }}</h3>
 				<Container @onDrop="onDrop">
-					<Draggable v-for="item in actions"
+					<Draggable
+						v-for="item in actions"
 						:key="item.id"
 						class="modal-content__action"
 						:drag-not-allowed="item.name === 'deleteThread' || item.name === 'moveThread'">
-						<Action :action="item"
+						<Action
+							:action="item"
 							:account="account"
-							@update="(payload) => updateAction(payload,item)"
+							@update="(payload) => updateAction(payload, item)"
 							@delete="deleteAction(item)" />
 					</Draggable>
 				</Container>
@@ -59,7 +61,7 @@
 						<template #icon>
 							<TagIcon :size="20" />
 						</template>
-						{{ t('mail','Tag') }}
+						{{ t('mail', 'Tag') }}
 					</NcActionButton>
 					<NcActionButton v-if="!deletionAndMovingDisabled" :close-after-click="true" @click="addQuickAction('moveThread')">
 						<template #icon>
@@ -98,7 +100,8 @@
 						{{ t('mail', 'Mark as favorite') }}
 					</NcActionButton>
 				</NcActions>
-				<NcButton :disabled="!canSave || loading"
+				<NcButton
+					:disabled="!canSave || loading"
 					class="modal-content__save"
 					variant="primary"
 					@click="saveQuickAction">
@@ -127,7 +130,6 @@ import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import IconFavorite from 'vue-material-design-icons/Star.vue'
 import TagIcon from 'vue-material-design-icons/TagOutline.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
-
 import Action from './Action.vue'
 import logger from '../../logger.js'
 import { createActionStep, deleteActionStep, findAllStepsForAction, updateActionStep } from '../../service/QuickActionsService.js'
@@ -158,12 +160,14 @@ export default {
 		PlusIcon,
 		NcLoadingIcon,
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			editModal: false,
@@ -174,21 +178,26 @@ export default {
 			loading: false,
 		}
 	},
+
 	computed: {
 		mainStore() {
 			return useMainStore()
 		},
+
 		quickActions() {
-			return this.mainStore.getQuickActions().filter(action => action.accountId === this.account.id)
+			return this.mainStore.getQuickActions().filter((action) => action.accountId === this.account.id)
 		},
+
 		modalName() {
 			return this.editMode ? this.t('mail', 'Edit quick action') : this.t('mail', 'Add quick action')
 		},
+
 		deletionAndMovingDisabled() {
-			return this.actions.some(action => ['deleteThread', 'moveThread'].includes(action.name))
+			return this.actions.some((action) => ['deleteThread', 'moveThread'].includes(action.name))
 		},
+
 		canSave() {
-			return this.actions.length > 0 && this.localAction.name.trim().length > 0 && this.actions.every(action => {
+			return this.actions.length > 0 && this.localAction.name.trim().length > 0 && this.actions.every((action) => {
 				if (action.name === 'moveThread' && (!action.mailboxId || action.mailboxId === null)) {
 					return false
 				}
@@ -199,6 +208,7 @@ export default {
 			})
 		},
 	},
+
 	methods: {
 		async deleteQuickAction(id) {
 			try {
@@ -211,6 +221,7 @@ export default {
 				showError(t('mail', 'Failed to delete quick action'))
 			}
 		},
+
 		async openEditModal(action) {
 			if (!action) {
 				this.editMode = false
@@ -219,11 +230,12 @@ export default {
 			} else {
 				this.localAction = { ...action }
 				this.actions = await findAllStepsForAction(action.id)
-				this.highestOrder = Math.max(...this.actions.map(a => a.order), 0)
+				this.highestOrder = Math.max(...this.actions.map((a) => a.order), 0)
 				this.editMode = true
 			}
 			this.editModal = true
 		},
+
 		closeEditModal() {
 			this.loading = false
 			this.editModal = false
@@ -231,6 +243,7 @@ export default {
 			this.actions = []
 			this.highestOrder = 0
 		},
+
 		async saveQuickAction() {
 			this.loading = true
 			if (this.editMode) {
@@ -288,6 +301,7 @@ export default {
 			}
 			this.closeEditModal()
 		},
+
 		addQuickAction(name) {
 			if (this.deletionAndMovingDisabled) {
 				this.actions[this.actions.length - 1].order = ++this.highestOrder
@@ -297,6 +311,7 @@ export default {
 			}
 			this.actions.sort((a, b) => a.order - b.order)
 		},
+
 		updateAction({ id, type }, item) {
 			const index = this.actions.findIndex((action) => action.order === item.order)
 			if (index === -1) {
@@ -310,6 +325,7 @@ export default {
 			}
 			this.actions.splice(index, 1, updated)
 		},
+
 		onDrop(e) {
 			const { removedIndex, addedIndex } = e
 			if (this.deletionAndMovingDisabled && addedIndex === this.actions.length - 1) {
@@ -320,6 +336,7 @@ export default {
 			this.actions.splice(addedIndex, 0, movedItem)
 			this.actions = this.actions.map((action, index) => ({ ...action, order: index + 1 }))
 		},
+
 		async deleteAction(item) {
 			if (item.id) {
 				try {
@@ -332,12 +349,13 @@ export default {
 					return
 				}
 			}
-			this.actions = this.actions.filter(action => action.order !== item.order).map((action, index) => ({ ...action, order: index + 1 }))
-			this.highestOrder = Math.max(...this.actions.map(a => a.order), 0)
+			this.actions = this.actions.filter((action) => action.order !== item.order).map((action, index) => ({ ...action, order: index + 1 }))
+			this.highestOrder = Math.max(...this.actions.map((a) => a.order), 0)
 		},
 	},
 }
 </script>
+
 <style lang="scss" scoped>
 
 .modal-content{

@@ -4,10 +4,9 @@
  */
 
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-
+import { createPinia, setActivePinia } from 'pinia'
 import App from '../../App.vue'
 import Nextcloud from '../../mixins/Nextcloud.js'
-import { createPinia, setActivePinia } from 'pinia'
 import useMainStore from '../../store/mainStore.js'
 
 const localVue = createLocalVue()
@@ -16,7 +15,6 @@ localVue.mixin(Nextcloud)
 vi.mock('../../service/AutoConfigService.js')
 
 describe('App', () => {
-
 	let store
 	let view
 
@@ -32,7 +30,7 @@ describe('App', () => {
 		})
 	})
 
-	it('handles session expiry', async() => {
+	it('handles session expiry', async () => {
 		// Stub and prevent the actual reload
 		view.vm.reload = vi.fn()
 
@@ -40,5 +38,4 @@ describe('App', () => {
 		store.isExpiredSession = true
 		expect(view.vm.isExpiredSession).toBe(true)
 	})
-
 })

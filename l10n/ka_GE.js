@@ -28,11 +28,12 @@ OC.L10N.register(
     "Signature" : "ხელმოწერა",
     "Go back" : "უკან დაბრუნება",
     "Cancel" : "უარყოფა",
-    "Accounts" : "ანგარიში",
-    "Add mail account" : "საფოსტო ანგარიშის დამატება",
     "General" : "ზოგადი",
-    "Use Gravatar and favicon avatars" : "მოიხმარეთ Gravatar და favicon ავატარები",
+    "Add mail account" : "საფოსტო ანგარიშის დამატება",
+    "Newest first" : "ჯერ ახალი",
+    "Oldest first" : "ჯერ ძველი",
     "Register" : "რეგისტრაცია",
+    "Security" : "უსაფრთხოება",
     "About" : "ჩვენს შესახებ",
     "Keyboard shortcuts" : "კლავიატურის კომბინაციები",
     "Compose new message" : "ახალი წერილის შედგენა",
@@ -145,6 +146,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "იმ შემთხვევაში, თუ რამდენიმე წამის განმავლობაში არ მოხდება ავტომატური გადამისამართება დააწკაპუნეთ აქ.",
     "Redirect" : "გადამისამართება",
     "The link leads to %s" : "ბმულს მიყევხართ %s-ისკენ",
-    "Continue to %s" : "%s-ისკენ გაგრძელება"
+    "Continue to %s" : "%s-ისკენ გაგრძელება",
+    "Accounts" : "ანგარიში",
+    "Use Gravatar and favicon avatars" : "მოიხმარეთ Gravatar და favicon ავატარები"
 },
 "nplurals=2; plural=(n!=1);");

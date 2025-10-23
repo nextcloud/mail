@@ -5,7 +5,6 @@
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { curry } from 'ramda'
-
 import { convertAxiosError } from '../errors/convert.js'
 import SyncIncompleteError from '../errors/SyncIncompleteError.js'
 import { parseErrorResponse } from '../http/ErrorResponseParser.js'
@@ -62,12 +61,12 @@ export function fetchEnvelopes(accountId, mailboxId, query, cursor, limit, sort,
 			params,
 		})
 		.then((resp) => resp.data)
-		.then(envelopes => envelopes.map(amendEnvelopeWithIds(accountId)))
+		.then((envelopes) => envelopes.map(amendEnvelopeWithIds(accountId)))
 		.catch((error) => {
 			throw convertAxiosError(error)
 		})
 }
-export const fetchThread = async (id) => {
+export async function fetchThread(id) {
 	const url = generateUrl('apps/mail/api/messages/{id}/thread', {
 		id,
 	})

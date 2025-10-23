@@ -29,10 +29,10 @@ OC.L10N.register(
     "Go back" : "Revenir en arrière",
     "Email address" : "Adreça mail",
     "Cancel" : "Anullar",
-    "Accounts" : "Accounts",
     "General" : "Generals",
     "List" : "Tièra",
     "Register" : "S'inscriure",
+    "Security" : "Seguretat",
     "About" : "A prepaus",
     "Keyboard shortcuts" : "Acorchis de clavièr",
     "Archive" : "Archius",
@@ -41,7 +41,6 @@ OC.L10N.register(
     "Send" : "Mandar",
     "Refresh" : "Refrescar",
     "From" : "De",
-    "Write message …" : "Escriure un messatge…",
     "Monday morning" : "Diluns matin",
     "Choose" : "Causir",
     "Choose a file to add as attachment" : "Causissètz un fichièr de jónher al messatge",
@@ -72,7 +71,6 @@ OC.L10N.register(
     "Move" : "Move",
     "Folder name" : "Nom del dorsièr",
     "_{total} message_::_{total} messages_" : ["{total} messatge","{total} messatges"],
-    "Loading …" : "Cargament…",
     "Delete folder" : "Suprimir dossièr",
     "Mark all as read" : "Marcar totes coma legits",
     "Rename" : "Tornar nommar",
@@ -120,6 +118,9 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "Message sent" : "Messatge mandat",
     "Error loading message" : "Error al moment del cargament del messatge",
-    "Continue to %s" : "Contunhar cap a %s"
+    "Continue to %s" : "Contunhar cap a %s",
+    "Accounts" : "Accounts",
+    "Write message …" : "Escriure un messatge…",
+    "Loading …" : "Cargament…"
 },
 "nplurals=2; plural=(n > 1);");

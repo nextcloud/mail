@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { handleHttpAuthErrors } from '../../../http/sessionExpiryHandler.js'
 import { createPinia, setActivePinia } from 'pinia'
+import { handleHttpAuthErrors } from '../../../http/sessionExpiryHandler.js'
 import useMainStore from '../../../store/mainStore.js'
 
 describe('sessionExpiryHandler', () => {

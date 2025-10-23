@@ -29,11 +29,13 @@ OC.L10N.register(
     "Go back" : "Regresar",
     "Change name" : "Cambiar nombre",
     "Cancel" : "Cancelar",
-    "Accounts" : "Accounts",
-    "Add mail account" : "Agregar cuenta de correo",
     "General" : "General",
+    "Add mail account" : "Agregar cuenta de correo",
     "Sorting" : "Orden",
+    "Newest first" : "El más reciente primero",
+    "Oldest first" : "Los más viejos primero",
     "Register" : "Registrar",
+    "Security" : "Seguridad",
     "Keyboard shortcuts" : "Atajos de teclado",
     "Compose new message" : "Redactar nuevo mensaje",
     "Newer message" : "Mensaje mas nuevo",
@@ -141,6 +143,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Haga click aqui si no es redireccionado automáticamente dentro de los siguietes segundos. ",
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "El link lleva a %s",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Accounts" : "Accounts"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

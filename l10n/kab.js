@@ -11,9 +11,11 @@ OC.L10N.register(
     "Go back" : "Tuɣalin",
     "Email address" : "Tansa imayl",
     "Cancel" : "Sefsex",
-    "Accounts" : "Imiḍanen",
     "General" : "Amatu",
+    "Appearance" : "Udem",
     "List" : "Tabdart",
+    "Newest first" : "Imaynuten d imezwura",
+    "Oldest first" : "Iqbuṛen d imezwura",
     "About" : "Γef",
     "Keyboard shortcuts" : "Inegzumen n unasiw",
     "Delete" : "Kkes",
@@ -43,7 +45,6 @@ OC.L10N.register(
     "Remove account" : "Kkes amiḍan",
     "Add folder" : "Rnu akaram",
     "Folder name" : "Isem n ukaram",
-    "Loading …" : "Asali ...",
     "Delete folder" : "Kkes akaram",
     "Rename" : "Beddel isem",
     "Draft" : "Arewway",
@@ -72,6 +73,8 @@ OC.L10N.register(
     "Inbox" : "Tanaka",
     "Nextcloud Mail" : "Imayl n Nextcloud",
     "Message sent" : "Izen yettwazen",
-    "Continue to %s" : "Kemmel ar %s"
+    "Continue to %s" : "Kemmel ar %s",
+    "Accounts" : "Imiḍanen",
+    "Loading …" : "Asali ..."
 },
 "nplurals=2; plural=(n != 1);");
