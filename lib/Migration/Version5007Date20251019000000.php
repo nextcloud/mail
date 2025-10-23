@@ -20,7 +20,6 @@ class Version5006Date20251019000000 extends SimpleMigrationStep {
 	 */
 	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
-		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
 		if (!$schema->hasTable('mail_attachments')) {
