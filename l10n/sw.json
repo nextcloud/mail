@@ -94,7 +94,7 @@
     "Saving" : "Saving",
     "Move up" : "Move up",
     "Move down" : "Move down",
-    "Loading …" : "Inapakia",
+    "Loading …" : "Inapakia  …",
     "Delete folder" : "Futa kisanduku",
     "Mark all as read" : "Mark all as read",
     "Rename" : "Ipe jina jipya",
@@ -163,6 +163,7 @@
     "Message sent" : "Ujumbe umetumwa",
     "Redirect" : "Elekeza upya",
     "Continue to %s" : "Endelea katika %s",
-    "Accounts" : "Akaunti"
+    "Accounts" : "Akaunti",
+    "Loading …" : "Inapakia"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

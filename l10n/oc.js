@@ -41,7 +41,6 @@ OC.L10N.register(
     "Send" : "Mandar",
     "Refresh" : "Refrescar",
     "From" : "De",
-    "Write message …" : "Escriure un messatge…",
     "Monday morning" : "Diluns matin",
     "Choose" : "Causir",
     "Choose a file to add as attachment" : "Causissètz un fichièr de jónher al messatge",
@@ -72,7 +71,6 @@ OC.L10N.register(
     "Move" : "Move",
     "Folder name" : "Nom del dorsièr",
     "_{total} message_::_{total} messages_" : ["{total} messatge","{total} messatges"],
-    "Loading …" : "Cargament…",
     "Delete folder" : "Suprimir dossièr",
     "Mark all as read" : "Marcar totes coma legits",
     "Rename" : "Tornar nommar",
@@ -121,6 +119,8 @@ OC.L10N.register(
     "Message sent" : "Messatge mandat",
     "Error loading message" : "Error al moment del cargament del messatge",
     "Continue to %s" : "Contunhar cap a %s",
-    "Accounts" : "Accounts"
+    "Accounts" : "Accounts",
+    "Write message …" : "Escriure un messatge…",
+    "Loading …" : "Cargament…"
 },
 "nplurals=2; plural=(n > 1);");

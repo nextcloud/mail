@@ -96,7 +96,7 @@ OC.L10N.register(
     "Saving" : "Saving",
     "Move up" : "Move up",
     "Move down" : "Move down",
-    "Loading …" : "Inapakia",
+    "Loading …" : "Inapakia  …",
     "Delete folder" : "Futa kisanduku",
     "Mark all as read" : "Mark all as read",
     "Rename" : "Ipe jina jipya",
@@ -165,6 +165,7 @@ OC.L10N.register(
     "Message sent" : "Ujumbe umetumwa",
     "Redirect" : "Elekeza upya",
     "Continue to %s" : "Endelea katika %s",
-    "Accounts" : "Akaunti"
+    "Accounts" : "Akaunti",
+    "Loading …" : "Inapakia"
 },
 "nplurals=2; plural=(n != 1);");

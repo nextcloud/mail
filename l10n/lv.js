@@ -64,7 +64,6 @@ OC.L10N.register(
     "Select account" : "Atlasīt kontu",
     "To" : "Līdz",
     "Subject" : "Temats",
-    "Write message …" : "Rakstiet ziņu...",
     "Add attachment from Files" : "Pievienot pielikumu no Datnēm",
     "Enter a date" : "Ievadiet datumu",
     "Choose" : "Izvēlēties",
@@ -113,7 +112,6 @@ OC.L10N.register(
     "Saving" : "Saglabā",
     "Show all folders" : "Rādīt visas mapes",
     "Collapse folders" : "Sakļaut mapes",
-    "Loading …" : "Ielādē…",
     "Delete folder" : "Izdzēst mapi",
     "An error occurred, unable to rename the mailbox." : "Atgadījās kļūda, nevar pārdēvēt pastkasti.",
     "Rename" : "Pārdēvēt",
@@ -184,6 +182,8 @@ OC.L10N.register(
     "Redirect" : "Novirzīt",
     "The link leads to %s" : "Saite, kas ved uz %s",
     "Continue to %s" : "Turpināt %s",
-    "Accounts" : "Konti"
+    "Accounts" : "Konti",
+    "Write message …" : "Rakstiet ziņu...",
+    "Loading …" : "Ielādē…"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

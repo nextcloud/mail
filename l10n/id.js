@@ -74,7 +74,6 @@ OC.L10N.register(
     "Remove account" : "Hapus akun",
     "Folder name" : "Nama folder",
     "Saving" : "Menyimpan",
-    "Loading …" : "Memuat …",
     "Mark all as read" : "Tandai semua telah dibaca",
     "Rename" : "Ubah nama",
     "Clear cache" : "Bersihkan cache",
@@ -132,6 +131,7 @@ OC.L10N.register(
     "Forwarding to %s" : "Teruskan ke %s",
     "Redirect" : "Mengalihkan",
     "Continue to %s" : "Lanjutkan ke %s",
-    "Accounts" : "Accounts"
+    "Accounts" : "Accounts",
+    "Loading …" : "Memuat …"
 },
 "nplurals=1; plural=0;");

@@ -35,8 +35,10 @@ OC.L10N.register(
     "Add mail account" : "Ychwanegu cyfrif post",
     "List" : "Rhestr",
     "Newest first" : "Diweddaraf gyntaf",
+    "Oldest first" : "Hynaf gyntaf",
     "Register" : "Cofrestru",
     "Security" : "Diogelwch",
+    "Manage certificates" : "Rheoli tystysgrifau",
     "About" : "Ynglyn â",
     "Keyboard shortcuts" : "Llwybrau byr bysellfwrdd",
     "Compose new message" : "Ysgrifennu Neges _Newydd",
@@ -51,7 +53,6 @@ OC.L10N.register(
     "Refresh" : "Ail-lwytho",
     "Ok" : "Iawn",
     "Subject" : "Pwnc",
-    "Saving draft …" : "Yn cadw drafft …",
     "Draft saved" : "Cadwyd y drafft",
     "Upload attachment" : "Llwytho atodiad",
     "Add attachment from Files" : "Ychwanegwch atodiad o'r Ffeiliau",
@@ -87,7 +88,6 @@ OC.L10N.register(
     "Add folder" : "Ychwanegu ffolder",
     "Show all folders" : "Dangos pob ffolder",
     "Collapse folders" : "Cwympo ffolderi",
-    "Loading …" : "Yn llwytho …",
     "Mark all as read" : "Marcio'r cyfan wedi'u darllen",
     "Mark all messages of this folder as read" : "Marcio'r holl negeseuon y ffolder hon fel y'u darllenwyd",
     "Add subfolder" : "Ychwanegu is-ffolder",
@@ -136,6 +136,8 @@ OC.L10N.register(
     "The link leads to %s" : "Mae'r ddolen yn arwain at %s",
     "Continue to %s" : "Parhau i %s",
     "Accounts" : "Accounts",
-    "Use Gravatar and favicon avatars" : "Defnyddiwch Gravatar ac afatarau favicon"
+    "Use Gravatar and favicon avatars" : "Defnyddiwch Gravatar ac afatarau favicon",
+    "Saving draft …" : "Yn cadw drafft …",
+    "Loading …" : "Yn llwytho …"
 },
 "nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;");
