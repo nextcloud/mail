@@ -8,7 +8,9 @@ declare(strict_types=1);
  */
 namespace OCA\Mail\Provider;
 
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Provider\Command\MessageSend;
+use OCA\Mail\TaskProcessing\MailSendTask;
 use OCP\Mail\Provider\Address;
 use OCP\Mail\Provider\Exception\SendException;
 use OCP\Mail\Provider\IAddress;
@@ -16,7 +18,8 @@ use OCP\Mail\Provider\IMessage;
 use OCP\Mail\Provider\IMessageSend;
 use OCP\Mail\Provider\IService;
 use OCP\Mail\Provider\Message;
-
+use OCP\TaskProcessing\IManager as TaskProcessingManager;
+use OCP\TaskProcessing\Task;
 use Psr\Container\ContainerInterface;
 
 class MailService implements IService, IMessageSend {
@@ -184,6 +187,25 @@ class MailService implements IService, IMessageSend {
 	 */
 	#[\Override]
 	public function sendMessage(IMessage $message, array $options = []): void {
+		$taskProcessingManager = $this->container->get(TaskProcessingManager::class);
+		$availableTaskTypes = $taskProcessingManager->getAvailableTaskTypes();
+		// if task processing is available use it
+		if (isset($availableTaskTypes[MailSendTask::ID])) {
+			$task = new Task(
+				MailSendTask::ID,
+				[
+					'userId' => $this->userId,
+					'serviceId' => $this->serviceId,
+					'message' => $message,
+					'options' => $options,
+				],
+				Application::APP_ID,
+				null
+			);
+			$taskProcessingManager->scheduleTask($task);
+			return;
+		}
+		// fallback to direct send
 		/** @var MessageSend $cmd */
 		$cmd = $this->container->get(MessageSend::class);
 		// perform action
