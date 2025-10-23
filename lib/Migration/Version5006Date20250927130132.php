@@ -20,6 +20,9 @@ use Override;
 #[ModifyColumn(table: 'mail_mailboxes', name: 'name', type: ColumnType::STRING, description: 'Increase the column length from 255 to 1024')]
 class Version5006Date20250927130132 extends SimpleMigrationStep {
 
+	/**
+	 * @psalm-param Closure():ISchemaWrapper $schemaClosure
+	 */
 	#[Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 		/** @var ISchemaWrapper $schema */
@@ -28,13 +31,23 @@ class Version5006Date20250927130132 extends SimpleMigrationStep {
 		$mailboxes = $schema->getTable('mail_mailboxes');
 
 		/**
-		 * Make sure the old account_id+name index is gone. The DB won't allow
-		 * the name length increase otherwise
+		 * The migration "Version0161Date20190902103701" created a unique index for account_id and name without
+		 * specifying a name. Unfortunately, this resulted in different index names depending on the table
+		 * prefix, which means we now have to loop through the indexes to find the correct one.
 		 *
+		 * The index on account_id and name were supposed to be dropped in "Version3500Date20231115184458",
+		 * but this did not work on every setup due to the name mismatch caused by different table prefixes.
+		 *
+		 * Although it is not recommended to change migrations after release,
+		 * we are updating this one with a safeguard to drop any existing index on account_id and name.
+		 *
+		 * @see \OCA\Mail\Migration\Version0161Date20190902103701::changeSchema
 		 * @see \OCA\Mail\Migration\Version3500Date20231115184458::changeSchema
 		 */
-		if ($mailboxes->hasIndex('UNIQ_45754FF89B6B5FBA5E237E06')) {
-			$mailboxes->dropIndex('UNIQ_45754FF89B6B5FBA5E237E06');
+		foreach ($mailboxes->getIndexes() as $index) {
+			if ($index->isUnique() && $index->spansColumns(['account_id', 'name'])) {
+				$mailboxes->dropIndex($index->getName());
+			}
 		}
 
 		$mailboxes->modifyColumn(
