@@ -66,7 +66,6 @@ OC.L10N.register(
     "Folder name" : "Хавтасны нэр",
     "Saving" : "хадгаламж",
     "Show all folders" : "Бүх хавтас харуулах",
-    "Loading …" : "Уншиж байна...",
     "Rename" : "Нэрлэнэ үү",
     "New message" : "шинэ зурвас",
     "Reply" : "хариулт",
@@ -98,6 +97,7 @@ OC.L10N.register(
     "Sent" : "илгээсэн",
     "Trash" : "хог",
     "Error loading message" : "алдаатай ачааллах зурвас",
-    "Accounts" : "Accounts"
+    "Accounts" : "Accounts",
+    "Loading …" : "Уншиж байна..."
 },
 "nplurals=2; plural=(n != 1);");

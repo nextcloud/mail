@@ -84,15 +84,11 @@ OC.L10N.register(
     "From" : "De",
     "Select account" : "Selecciona la cuenta",
     "To" : "Para",
-    "Contact or email address …" : "Contacto o dirección de correo electrónico ...",
     "Cc" : "Cc",
     "Bcc" : "Cco",
     "Subject" : "Asunto",
-    "Subject …" : "Asunto…",
     "This message came from a noreply address so your reply will probably not be read." : "Este correo viene de una dirección no responder , por lo que probablemente su respuesta no será leída.",
     "The following recipients do not have a PGP key: {recipients}." : "Los siguientes destinatarios no tienen una clave PGP: {recipients}",
-    "Write message …" : "Escribir mensaje …",
-    "Saving draft …" : "Guardando borrador…",
     "Draft saved" : "Borrador guardado",
     "Discard & close draft" : "Descartar y cerrar borrador",
     "Enable formatting" : "Habilitar formato",
@@ -208,6 +204,10 @@ OC.L10N.register(
     "Use Gravatar and favicon avatars" : "Usar Gravatar y avatares favicon",
     "Register as application for mail links" : "Usar aplicación para abrir enlaces de correo",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Permitir a la app recolectar datos sobre sus interacciones. Basándose en estos datos, la app se adaptará mejor a sus preferencias. Estos datos sólo se almacenan localmente.",
-    "Trusted senders" : "Remitentes de confianza"
+    "Trusted senders" : "Remitentes de confianza",
+    "Contact or email address …" : "Contacto o dirección de correo electrónico ...",
+    "Subject …" : "Asunto…",
+    "Write message …" : "Escribir mensaje …",
+    "Saving draft …" : "Guardando borrador…"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

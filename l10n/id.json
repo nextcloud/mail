@@ -72,7 +72,6 @@
     "Remove account" : "Hapus akun",
     "Folder name" : "Nama folder",
     "Saving" : "Menyimpan",
-    "Loading …" : "Memuat …",
     "Mark all as read" : "Tandai semua telah dibaca",
     "Rename" : "Ubah nama",
     "Clear cache" : "Bersihkan cache",
@@ -130,6 +129,7 @@
     "Forwarding to %s" : "Teruskan ke %s",
     "Redirect" : "Mengalihkan",
     "Continue to %s" : "Lanjutkan ke %s",
-    "Accounts" : "Accounts"
+    "Accounts" : "Accounts",
+    "Loading …" : "Memuat …"
 },"pluralForm" :"nplurals=1; plural=0;"
 }
