@@ -78,18 +78,6 @@ export async function updateEnabledSmartReply(enabled) {
 	const resp = await axios.put(url, data)
 	return resp.data
 }
-
-/**
- * @param {boolean} enabledByDefault
- * @return {Promise<void>}
- */
-export async function setImportanceClassificationEnabledByDefault(enabledByDefault) {
-	const url = generateUrl('/apps/mail/api/settings/importance-classification-default')
-	await axios.put(url, {
-		enabledByDefault,
-	})
-}
-
 /**
  * @param {boolean} value
  * @return {Promise<void>}
