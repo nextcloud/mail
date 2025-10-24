@@ -13,7 +13,6 @@ use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Exception\ValidationException;
 use OCA\Mail\Http\JsonResponse as HttpJsonResponse;
 use OCA\Mail\Service\AntiSpamService;
-use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
@@ -30,20 +29,17 @@ class SettingsController extends Controller {
 	private AntiSpamService $antiSpamService;
 	private ContainerInterface $container;
 	private IConfig $config;
-	private ClassificationSettingsService $classificationSettingsService;
 
 	public function __construct(IRequest $request,
 		ProvisioningManager $provisioningManager,
 		AntiSpamService $antiSpamService,
 		IConfig $config,
-		ContainerInterface $container,
-		ClassificationSettingsService $classificationSettingsService) {
+		ContainerInterface $container) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->provisioningManager = $provisioningManager;
 		$this->antiSpamService = $antiSpamService;
 		$this->config = $config;
 		$this->container = $container;
-		$this->classificationSettingsService = $classificationSettingsService;
 	}
 
 	public function index(): JSONResponse {
@@ -118,12 +114,6 @@ class SettingsController extends Controller {
 		$this->config->setAppValue('mail', 'llm_processing', $enabled ? 'yes' : 'no');
 		return new JSONResponse([]);
 	}
-
-	public function setImportanceClassificationEnabledByDefault(bool $enabledByDefault): JSONResponse {
-		$this->classificationSettingsService->setClassificationEnabledByDefault($enabledByDefault);
-		return new JSONResponse([]);
-	}
-
 	public function setLayoutMessageView(string $value): JSONResponse {
 		$this->config->setAppValue('mail', 'layout_message_view', $value);
 		return new JSONResponse([]);

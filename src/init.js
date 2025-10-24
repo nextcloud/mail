@@ -58,10 +58,6 @@ export default function initAfterAppCreation() {
 		value: startMailboxId ? parseInt(startMailboxId, 10) : null,
 	})
 	mainStore.savePreferenceMutation({
-		key: 'tag-classified-messages',
-		value: preferences['tag-classified-messages'],
-	})
-	mainStore.savePreferenceMutation({
 		key: 'allow-new-accounts',
 		value: loadState('mail', 'allow-new-accounts', true),
 	})
