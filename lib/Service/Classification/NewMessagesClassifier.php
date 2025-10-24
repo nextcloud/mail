@@ -34,7 +34,6 @@ class NewMessagesClassifier {
 		private TagMapper $tagMapper,
 		private LoggerInterface $logger,
 		private IMailManager $mailManager,
-		private ClassificationSettingsService $classificationSettingsService,
 	) {
 	}
 
@@ -58,7 +57,7 @@ class NewMessagesClassifier {
 		Account $account,
 		Tag $importantTag,
 	): void {
-		if (!$this->classificationSettingsService->isClassificationEnabled($account->getUserId())) {
+		if (!$account->getClassificationEnabled()) {
 			return;
 		}
 

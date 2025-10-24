@@ -211,6 +211,7 @@ class AccountsController extends Controller {
 	 * @param int|null $archiveMailboxId
 	 * @param int|null $snoozeMailboxId
 	 * @param bool|null $signatureAboveQuote
+	 * @param bool|null $classificationEnabled
 	 *
 	 * @return JSONResponse
 	 *
@@ -229,7 +230,8 @@ class AccountsController extends Controller {
 		?bool $signatureAboveQuote = null,
 		?int $trashRetentionDays = null,
 		?int $junkMailboxId = null,
-		?bool $searchBody = null): JSONResponse {
+		?bool $searchBody = null,
+		?bool $classificationEnabled = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $id);
 
 		$dbAccount = $account->getMailAccount();
@@ -276,6 +278,9 @@ class AccountsController extends Controller {
 		}
 		if ($searchBody !== null) {
 			$dbAccount->setSearchBody($searchBody);
+		}
+		if ($classificationEnabled !== null) {
+			$dbAccount->setClassificationEnabled($classificationEnabled);
 		}
 		return new JSONResponse(
 			new Account($this->accountService->save($dbAccount))
@@ -330,6 +335,7 @@ class AccountsController extends Controller {
 	 * @param string|null $smtpUser
 	 * @param string|null $smtpPassword
 	 * @param string $authMethod
+	 * @param bool|null $classificationEnabled
 	 *
 	 * @return JSONResponse
 	 */
@@ -346,7 +352,8 @@ class AccountsController extends Controller {
 		?string $smtpSslMode = null,
 		?string $smtpUser = null,
 		?string $smtpPassword = null,
-		string $authMethod = 'password'): JSONResponse {
+		string $authMethod = 'password',
+		?bool $classificationEnabled = null): JSONResponse {
 		if ($this->config->getAppValue(Application::APP_ID, 'allow_new_mail_accounts', 'yes') === 'no') {
 			$this->logger->info('Creating account disabled by admin.');
 			return MailJsonResponse::error('Could not create account');
@@ -378,7 +385,7 @@ class AccountsController extends Controller {
 			);
 		}
 		try {
-			$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $authMethod);
+			$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $authMethod, null, $classificationEnabled);
 		} catch (CouldNotConnectException $e) {
 			$data = [
 				'error' => $e->getReason(),

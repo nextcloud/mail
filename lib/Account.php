@@ -86,4 +86,8 @@ class Account implements JsonSerializable {
 	public function getQuotaPercentage(): ?int {
 		return $this->account->getQuotaPercentage();
 	}
+
+	public function getClassificationEnabled(): bool {
+		return $this->account->getClassificationEnabled();
+	}
 }

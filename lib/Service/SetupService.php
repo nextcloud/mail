@@ -77,7 +77,8 @@ class SetupService {
 		?string $smtpPassword,
 		string $uid,
 		string $authMethod,
-		?int $accountId = null): Account {
+		?int $accountId = null,
+		?bool $classificationEnabled = null): Account {
 		$this->logger->info('Setting up manually configured account');
 		$newAccount = new MailAccount([
 			'accountId' => $accountId,
@@ -91,6 +92,7 @@ class SetupService {
 			'smtpPort' => $smtpPort,
 			'smtpSslMode' => $smtpSslMode,
 			'smtpUser' => $smtpUser,
+			'classificationEnabled' => $classificationEnabled,
 		]);
 		$newAccount->setUserId($uid);
 		if ($authMethod === 'password' && $imapPassword !== null) {
