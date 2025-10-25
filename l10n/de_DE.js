@@ -181,6 +181,7 @@ OC.L10N.register(
     "Refresh" : "Aktualisieren",
     "About" : "Über",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "Diese Anwendung enthält CKEditor, einen Open-Source-Editor. Copyright © CKEditor Mitwirkende. Lizensiert unter GPLv2.",
+    "Mail version: {version}" : "Mail Version: {version}",
     "Title of the text block" : "Titel des neuen Textblocks",
     "Content of the text block" : "Inhalt des Textblocks",
     "Ok" : "Ok",

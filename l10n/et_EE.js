@@ -176,6 +176,7 @@ OC.L10N.register(
     "Refresh" : "Värskenda",
     "About" : "Rakenduse teave",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "Selles rakenduses sisaldub avatud lähtekoodiga CKEditor, mis on kasutusel kirjade koostamiseks. Autoriõigused: © CKEditori kaasautorid. Litsentseeritud GPLv2 alusel.",
+    "Mail version: {version}" : "E-postirakenduse versioon: {version}",
     "Title of the text block" : "Tekstiploki pealkiri",
     "Content of the text block" : "Tekstiploki sisu",
     "Ok" : "Sobib",
