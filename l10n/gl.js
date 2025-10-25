@@ -181,6 +181,7 @@ OC.L10N.register(
     "Refresh" : "Actualizar",
     "About" : "Sobre",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "Esta aplicación inclúe CKeditor, un editor de código aberto. Copyright © Colaboradores de CKEDITOR. Licenciado baixo GPLV2.",
+    "Mail version: {version}" : "Versión do correo: {version}",
     "Title of the text block" : "Título do bloque de texto",
     "Content of the text block" : "Contido do bloque de texto",
     "Ok" : "Aceptar",
