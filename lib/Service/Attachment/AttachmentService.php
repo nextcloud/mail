@@ -18,7 +18,10 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\AttachmentNotFoundException;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\UploadException;
 use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -26,6 +29,7 @@ use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
+use OCP\ICacheFactory;
 use Psr\Log\LoggerInterface;
 
 class AttachmentService implements IAttachmentService {
@@ -51,6 +55,10 @@ class AttachmentService implements IAttachmentService {
 	 * @var LoggerInterface
 	 */
 	private $logger;
+	/**
+	 * @var ICache
+	 */
+	private $cache;
 
 	/**
 	 * @param Folder $userFolder
@@ -60,6 +68,7 @@ class AttachmentService implements IAttachmentService {
 		AttachmentStorage $storage,
 		IMailManager $mailManager,
 		MessageMapper $imapMessageMapper,
+		ICacheFactory $cacheFactory,
 		LoggerInterface $logger) {
 		$this->mapper = $mapper;
 		$this->storage = $storage;
@@ -67,6 +76,7 @@ class AttachmentService implements IAttachmentService {
 		$this->messageMapper = $imapMessageMapper;
 		$this->userFolder = $userFolder;
 		$this->logger = $logger;
+		$this->cache = $cacheFactory->createLocal('mail.attachment_names');
 	}
 
 	/**
@@ -245,6 +255,32 @@ class AttachmentService implements IAttachmentService {
 			$attachmentIds[] = $this->handleCloudAttachment($account, $attachment);
 		}
 		return array_values(array_filter($attachmentIds));
+	}
+
+	public function getAttachmentNames(Account $account, Mailbox $mailbox, Message $message, \Horde_Imap_Client_Socket $client): array {
+		$attachments = [];
+		$uniqueCacheId = $account->getUserId() . $account->getId() . $mailbox->getId() . $message->getUid();
+		$cached = $this->cache->get($uniqueCacheId);
+		if ($cached) {
+			return $cached;
+		}
+		try {
+			$imapMessage = $this->mailManager->getImapMessage(
+				$client,
+				$account,
+				$mailbox,
+				$message->getUid(),
+				true
+			);
+			$attachments = $imapMessage->getAttachments();
+		} catch (ServiceException $e) {
+			$this->logger->error('Could not get attachment names', ['exception' => $e, 'messageId' => $message->getUid()]);
+		}
+		$result = array_map(static function (array $attachment) {
+			return ['name' => $attachment['fileName'],'mime' => $attachment['mime']];
+		}, $attachments);
+		$this->cache->set($uniqueCacheId, $result);
+		return $result;
 	}
 
 	/**
