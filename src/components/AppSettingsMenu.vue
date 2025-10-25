@@ -210,16 +210,7 @@
 				</div>
 			</NcAppSettingsSection>
 
-			<NcAppSettingsSection id="autotagging-settings" :name="t('mail', 'Assistance features')">
-				<p class="app-settings">
-					<NcCheckboxRadioSwitch
-						id="auto-tagging-toggle"
-						:checked="useAutoTagging"
-						:loading="toggleAutoTagging"
-						@update:checked="onToggleAutoTagging">
-						{{ autoTaggingText }}
-					</NcCheckboxRadioSwitch>
-				</p>
+			<NcAppSettingsSection v-if="followUpFeatureAvailable" id="autotagging-settings" :name="t('mail', 'Assistance features')">
 				<p v-if="followUpFeatureAvailable" class="app-settings">
 					<NcCheckboxRadioSwitch
 						id="follow-up-reminder-toggle"
@@ -432,10 +423,6 @@ export default {
 			return this.mainStore.getPreference('collect-data', 'true') === 'true'
 		},
 
-		useAutoTagging() {
-			return this.mainStore.getPreference('tag-classified-messages', 'true') === 'true'
-		},
-
 		useInternalAddresses() {
 			return this.mainStore.getPreference('internal-addresses', 'false') === 'true'
 		},
@@ -607,23 +594,6 @@ export default {
 				Logger.error('could not save preferences', { error })
 				this.sortOrder = previousValue
 				showError(t('mail', 'Could not update preference'))
-			}
-		},
-
-		async onToggleAutoTagging(enabled) {
-			this.toggleAutoTagging = true
-
-			try {
-				await this.mainStore.savePreference({
-					key: 'tag-classified-messages',
-					value: enabled ? 'true' : 'false',
-				})
-			} catch (error) {
-				Logger.error('could not save preferences', { error })
-
-				showError(t('mail', 'Could not update preference'))
-			} finally {
-				this.toggleAutoTagging = false
 			}
 		},
 

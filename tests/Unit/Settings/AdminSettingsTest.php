@@ -105,11 +105,6 @@ class AdminSettingsTest extends TestCase {
 					'microsoft_oauth_docs',
 					$this->anything()
 				],
-				[
-					Application::APP_ID,
-					'importance_classification_default',
-					$this->anything()
-				],
 			);
 		$expected = new TemplateResponse(Application::APP_ID, 'settings-admin');
 

@@ -103,6 +103,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setOooFollowsSystem(bool $oooFollowsSystem)
  * @method bool getDebug()
  * @method void setDebug(bool $debug)
+ * @method bool getClassificationEnabled()
+ * @method void setClassificationEnabled(bool $classificationEnabled)
  */
 class MailAccount extends Entity {
 	public const SIGNATURE_MODE_PLAIN = 0;
@@ -186,6 +188,7 @@ class MailAccount extends Entity {
 	protected $oooFollowsSystem;
 
 	protected bool $debug = false;
+	protected bool $classificationEnabled = true;
 
 	/**
 	 * @param array $params
@@ -247,6 +250,9 @@ class MailAccount extends Entity {
 		if (isset($params['debug'])) {
 			$this->setDebug($params['debug']);
 		}
+		if (isset($params['classificationEnabled'])) {
+			$this->setClassificationEnabled($params['classificationEnabled']);
+		}
 
 		$this->addType('inboundPort', 'integer');
 		$this->addType('outboundPort', 'integer');
@@ -271,6 +277,7 @@ class MailAccount extends Entity {
 		$this->addType('searchBody', 'boolean');
 		$this->addType('oooFollowsSystem', 'boolean');
 		$this->addType('debug', 'boolean');
+		$this->addType('classificationEnabled', 'boolean');
 	}
 
 	public function getOutOfOfficeFollowsSystem(): bool {
@@ -319,6 +326,7 @@ class MailAccount extends Entity {
 			'searchBody' => $this->getSearchBody(),
 			'outOfOfficeFollowsSystem' => $this->getOutOfOfficeFollowsSystem(),
 			'debug' => $this->getDebug(),
+			'classificationEnabled' => $this->getClassificationEnabled(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {

@@ -63,6 +63,18 @@
 			</div>
 		</AppSettingsSection>
 		<AppSettingsSection
+			v-if="account"
+			id="classification"
+			:name="t('mail', 'Classification settings')">
+			<NcCheckboxRadioSwitch
+				id="auto-classification-enabled"
+				:checked="account.classificationEnabled"
+				:disabled="loadingClassificationToggle"
+				@update:checked="onToggleClassification">
+				{{ t('mail', 'Enable mark as important classification') }}
+			</NcCheckboxRadioSwitch>
+		</AppSettingsSection>
+		<AppSettingsSection
 			v-if="account && account.sieveEnabled"
 			id="mail-filters"
 			:name="t('mail', 'Filters')">
@@ -119,7 +131,7 @@
 </template>
 
 <script>
-import { NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSettingsSection, NcButton } from '@nextcloud/vue'
+import { NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSettingsSection, NcButton, NcCheckboxRadioSwitch } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import AccountDefaultsSettings from '../components/AccountDefaultsSettings.vue'
 import AccountForm from '../components/AccountForm.vue'
@@ -156,6 +168,7 @@ export default {
 		MailFilters,
 		NcButton,
 		Settings,
+		NcCheckboxRadioSwitch,
 	},
 
 	props: {
@@ -174,6 +187,7 @@ export default {
 		return {
 			trapElements: [],
 			fetchActiveSieveScript: this.account.sieveEnabled,
+			loadingClassificationToggle: false,
 		}
 	},
 
@@ -213,6 +227,12 @@ export default {
 
 		handleShowToolbar(element) {
 			this.trapElements.push(element)
+		},
+
+		async onToggleClassification(classificationEnabled) {
+			this.loadingClassificationToggle = true
+			await this.mainStore.patchAccount({ account: this.account, data: { classificationEnabled } })
+			this.loadingClassificationToggle = false
 		},
 	},
 }
