@@ -179,6 +179,7 @@
     "Refresh" : "重新整理",
     "About" : "關於",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "此應用程式包含 CKEditor，這是開放原始碼的編輯器。Copyright © CKEditor 貢獻者。以 GPLv2 授權。",
+    "Mail version: {version}" : "郵件版本：{version}",
     "Title of the text block" : "文字區塊標題",
     "Content of the text block" : "文字區塊內容",
     "Ok" : "確定",
