@@ -12,6 +12,7 @@ namespace OCA\Mail\IMAP;
 use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Data_Envelope;
 use Horde_Imap_Client_Data_Fetch;
+use Horde_Imap_Client_DateTime;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Exception_NoSupportExtension;
 use Horde_Imap_Client_Fetch_Query;
@@ -63,6 +64,7 @@ class ImapMessageFetcher {
 	private bool $isOneClickUnsubscribe = false;
 	private ?string $unsubscribeMailto = null;
 	private bool $isPgpMimeEncrypted = false;
+	private ?Horde_Imap_Client_DateTime $messageDate = null;
 
 	public function __construct(
 		int $uid,
@@ -263,7 +265,7 @@ class ImapMessageFetcher {
 			$this->inlineAttachments,
 			$this->hasAnyAttachment,
 			$this->scheduling,
-			$fetch->getImapDate(),
+			$this->messageDate ?? $fetch->getImapDate(),
 			$this->rawReferences,
 			$this->dispositionNotificationTo,
 			$this->hasDkimSignature,
@@ -531,6 +533,8 @@ class ImapMessageFetcher {
 		$dkimSignatureHeader = $parsedHeaders->getHeader('dkim-signature');
 		$this->hasDkimSignature = $dkimSignatureHeader !== null;
 
+		$this->messageDate = $this->resolveMessageDate($fetch, $parsedHeaders);
+
 		if ($this->runPhishingCheck) {
 			$this->phishingDetails = $this->phishingDetectionService->checkHeadersForPhishing($parsedHeaders, $this->hasHtmlMessage, $this->htmlMessage);
 		}
@@ -559,5 +563,26 @@ class ImapMessageFetcher {
 				}
 			}
 		}
+	}
+
+	private function resolveMessageDate(Horde_Imap_Client_Data_Fetch $fetch, Horde_Mime_Headers $parsedHeaders): Horde_Imap_Client_DateTime {
+		$dateHeader = $parsedHeaders->getHeader('Date');
+		if ($dateHeader !== null) {
+			$dateValue = $dateHeader->value ?? null;
+			if (!empty($dateValue)) {
+				try {
+					return new Horde_Imap_Client_DateTime($dateValue);
+				} catch (\Throwable $e) {
+					// Ignore invalid header value and fall back to the internal date
+				}
+			}
+		}
+
+		$internalDate = $fetch->getImapDate();
+		if ($internalDate instanceof Horde_Imap_Client_DateTime) {
+			return $internalDate;
+		}
+
+		return new Horde_Imap_Client_DateTime('now');
 	}
 }
