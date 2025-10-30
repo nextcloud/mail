@@ -312,6 +312,7 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} från {depStation} till {arrStation}",
     "Train from {depStation} to {arrStation}" : "Tåg från {depStation} till {arrStation}",
     "Train" : "Tåg",
+    "Stop" : "Avsluta",
     "Recipient" : "Mottagare",
     "Delete filter" : "Ta bort filter",
     "Help" : "Hjälp",
