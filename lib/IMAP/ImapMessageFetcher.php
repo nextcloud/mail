@@ -567,7 +567,7 @@ class ImapMessageFetcher {
 
 	private function resolveMessageDate(Horde_Imap_Client_Data_Fetch $fetch, Horde_Mime_Headers $parsedHeaders): Horde_Imap_Client_DateTime {
 		$dateHeader = $parsedHeaders->getHeader('Date');
-		if ($dateHeader !== null) {
+		if ($dateHeader instanceof \Horde_Mime_Headers_Date) {
 			$dateValue = $dateHeader->value ?? null;
 			if (!empty($dateValue)) {
 				try {
