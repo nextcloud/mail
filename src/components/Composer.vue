@@ -1243,7 +1243,7 @@ export default {
 			} else {
 				body = this.bodyVal
 			}
-			this.bodyVal = html(body).value
+			this.bodyVal = toHtml(detect(body)).value
 		},
 
 		getMessageData() {
