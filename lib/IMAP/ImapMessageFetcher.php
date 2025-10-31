@@ -571,8 +571,11 @@ class ImapMessageFetcher {
 			$dateValue = $dateHeader->value ?? null;
 			if (!empty($dateValue)) {
 				try {
-					return new Horde_Imap_Client_DateTime($dateValue);
-				} catch (\Throwable $e) {
+					$date = new Horde_Imap_Client_DateTime($dateValue);
+					if ($date->getTimestamp() > 0) {
+						return $date;
+					}
+				} catch (\Throwable) {
 					// Ignore invalid header value and fall back to the internal date
 				}
 			}
