@@ -22,6 +22,10 @@ export default function initAfterAppCreation() {
 		key: 'ncVersion',
 		value: loadState('mail', 'ncVersion'),
 	})
+	mainStore.savePreferenceMutation({
+		key: 'mailVersion',
+		value: loadState('mail', 'mailVersion'),
+	})
 
 	mainStore.savePreferenceMutation({
 		key: 'sort-order',
