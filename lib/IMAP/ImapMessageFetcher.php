@@ -583,6 +583,6 @@ class ImapMessageFetcher {
 			return $internalDate;
 		}
 
-		return new Horde_Imap_Client_DateTime('now');
+		return new Horde_Imap_Client_DateTime();
 	}
 }
