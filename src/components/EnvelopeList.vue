@@ -4,124 +4,6 @@
 -->
 <template>
 	<div>
-		<transition name="multiselect-header">
-			<div v-if="selectMode" key="multiselect-header" class="multiselect-header">
-				<div class="action-buttons">
-					<NcButton
-						v-if="isAtLeastOneSelectedUnread"
-						variant="tertiary"
-						:title="n('mail', 'Mark {number} read', 'Mark {number} read', selection.length, { number: selection.length })"
-						@click.prevent="markSelectedRead">
-						<EmailRead :size="20" />
-					</NcButton>
-
-					<NcButton
-						v-if="isAtLeastOneSelectedRead"
-						variant="tertiary"
-						:title="n('mail', 'Mark {number} unread', 'Mark {number} unread', selection.length, { number: selection.length })"
-						@click.prevent="markSelectedUnread">
-						<EmailUnread :size="20" />
-					</NcButton>
-
-					<NcButton
-						v-if="isAtLeastOneSelectedUnimportant"
-						variant="tertiary"
-						:title="n('mail', 'Mark {number} as important', 'Mark {number} as important', selection.length, { number: selection.length })"
-						@click.prevent="markSelectionImportant">
-						<ImportantIcon :size="20" />
-					</NcButton>
-
-					<NcButton
-						v-if="isAtLeastOneSelectedImportant"
-						variant="tertiary"
-						:title="n('mail', 'Mark {number} as unimportant', 'Mark {number} as unimportant', selection.length, { number: selection.length })"
-						@click.prevent="markSelectionUnimportant">
-						<ImportantOutlineIcon :size="20" />
-					</NcButton>
-
-					<NcButton
-						v-if="isAtLeastOneSelectedFavorite"
-						variant="tertiary"
-						:title="n('mail', 'Unfavorite {number}', 'Unfavorite {number}', selection.length, { number: selection.length })"
-						@click.prevent="favoriteAll">
-						<IconUnFavorite :size="20" />
-					</NcButton>
-
-					<NcButton
-						v-if="isAtLeastOneSelectedUnFavorite"
-						variant="tertiary"
-						:title="n('mail', 'Favorite {number}', 'Favorite {number}', selection.length, { number: selection.length })"
-						@click.prevent="unFavoriteAll">
-						<IconFavorite :size="20" />
-					</NcButton>
-
-					<NcButton
-						variant="tertiary"
-						:title="n('mail', 'Unselect {number}', 'Unselect {number}', selection.length, { number: selection.length })"
-						:close-after-click="true"
-						@click.prevent="unselectAll">
-						<IconSelect :size="20" />
-					</NcButton>
-					<NcButton
-						variant="tertiary"
-						:title="n(
-							'mail',
-							'Delete {number} thread',
-							'Delete {number} threads',
-							selection.length,
-							{ number: selection.length },
-						)"
-						:close-after-click="true"
-						@click.prevent="deleteAllSelected">
-						<IconDelete :size="20" />
-					</NcButton>
-				</div>
-
-				<Actions class="app-content-list-item-menu" menu-align="right">
-					<ActionButton
-						v-if="isAtLeastOneSelectedNotJunk"
-						@click.prevent="markSelectionJunk">
-						<template #icon>
-							<AlertOctagonIcon :size="20" />
-						</template>
-						{{ n('mail', 'Mark {number} as spam', 'Mark {number} as spam', selection.length, { number: selection.length }) }}
-					</ActionButton>
-					<ActionButton
-						v-if="isAtLeastOneSelectedJunk"
-						@click.prevent="markSelectionNotJunk">
-						<template #icon>
-							<AlertOctagonIcon :size="20" />
-						</template>
-						{{ n('mail', 'Mark {number} as not spam', 'Mark {number} as not spam', selection.length, { number: selection.length }) }}
-					</ActionButton>
-					<ActionButton :close-after-click="true" @click.prevent="onOpenTagModal">
-						<template #icon>
-							<TagIcon :size="20" />
-						</template>
-						{{ n('mail', 'Edit tags for {number}', 'Edit tags for {number}', selection.length, { number: selection.length }) }}
-					</ActionButton>
-					<ActionButton v-if="!account.isUnified" :close-after-click="true" @click.prevent="onOpenMoveModal">
-						<template #icon>
-							<OpenInNewIcon :size="20" />
-						</template>
-						{{ n('mail', 'Move {number} thread', 'Move {number} threads', selection.length, { number: selection.length }) }}
-					</ActionButton>
-					<ActionButton :close-after-click="true" @click.prevent="forwardSelectedAsAttachment">
-						<template #icon>
-							<ShareIcon :size="20" />
-						</template>
-						{{ n('mail', 'Forward {number} as attachment', 'Forward {number} as attachment', selection.length, { number: selection.length }) }}
-					</ActionButton>
-				</Actions>
-				<MoveModal
-					v-if="showMoveModal"
-					:account="account"
-					:envelopes="selectedEnvelopes"
-					:move-thread="true"
-					@close="onCloseMoveModal" />
-			</div>
-		</transition>
-
 		<transition-group :name="listTransitionName">
 			<Envelope
 				v-for="(env, index) in sortedEnvelops"
@@ -163,7 +45,6 @@
 </template>
 
 <script>
-import { showError } from '@nextcloud/dialogs'
 import { NcActionButton as ActionButton, NcActions as Actions, NcButton, NcDialog } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import { differenceWith } from 'ramda'
@@ -184,10 +65,6 @@ import Envelope from './Envelope.vue'
 import MoveModal from './MoveModal.vue'
 import TagModal from './TagModal.vue'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus.js'
-import { matchError } from '../errors/match.js'
-import NoTrashMailboxConfiguredError
-	from '../errors/NoTrashMailboxConfiguredError.js'
-import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 
 export default {
@@ -290,54 +167,6 @@ export default {
 			return this.selection.length > 0
 		},
 
-		isAtLeastOneSelectedRead() {
-			return this.selectedEnvelopes.some((env) => env.flags.seen === true)
-		},
-
-		isAtLeastOneSelectedUnread() {
-			return this.selectedEnvelopes.some((env) => env.flags.seen === false)
-		},
-
-		isAtLeastOneSelectedImportant() {
-			// returns true if at least one selected message is marked as important
-			return this.selectedEnvelopes.some((env) => {
-				return this.mainStore
-					.getEnvelopeTags(env.databaseId)
-					.some((tag) => tag.imapLabel === '$label1')
-			})
-		},
-
-		isAtLeastOneSelectedUnimportant() {
-			// returns true if at least one selected message is not marked as important
-			return this.selectedEnvelopes.some((env) => {
-				return !this.mainStore
-					.getEnvelopeTags(env.databaseId)
-					.some((tag) => tag.imapLabel === '$label1')
-			})
-		},
-
-		isAtLeastOneSelectedJunk() {
-			// returns true if at least one selected message is marked as junk
-			return this.selectedEnvelopes.some((env) => {
-				return env.flags.$junk
-			})
-		},
-
-		isAtLeastOneSelectedNotJunk() {
-			// returns true if at least one selected message is not marked as not junk
-			return this.selectedEnvelopes.some((env) => {
-				return !env.flags.$junk
-			})
-		},
-
-		isAtLeastOneSelectedFavorite() {
-			return this.selectedEnvelopes.some((env) => env.flags.flagged)
-		},
-
-		isAtLeastOneSelectedUnFavorite() {
-			return this.selectedEnvelopes.some((env) => !env.flags.flagged)
-		},
-
 		selectedEnvelopes() {
 			return this.sortedEnvelops.filter((env) => this.selection.includes(env.databaseId))
 		},
@@ -373,159 +202,6 @@ export default {
 	},
 
 	methods: {
-		isEnvelopeSelected(idx) {
-			if (this.selection.length === 0) {
-				return false
-			}
-
-			return this.selection.includes(idx)
-		},
-
-		markSelectedRead() {
-			this.selectedEnvelopes.forEach((envelope) => {
-				this.mainStore.toggleEnvelopeSeen({
-					envelope,
-					seen: true,
-				})
-			})
-			this.unselectAll()
-		},
-
-		markSelectedUnread() {
-			this.selectedEnvelopes.forEach((envelope) => {
-				this.mainStore.toggleEnvelopeSeen({
-					envelope,
-					seen: false,
-				})
-			})
-			this.unselectAll()
-		},
-
-		markSelectionImportant() {
-			this.selectedEnvelopes.forEach((envelope) => {
-				this.mainStore.markEnvelopeImportantOrUnimportant({
-					envelope,
-					addTag: true,
-				})
-			})
-			this.unselectAll()
-		},
-
-		markSelectionUnimportant() {
-			this.selectedEnvelopes.forEach((envelope) => {
-				this.mainStore.markEnvelopeImportantOrUnimportant({
-					envelope,
-					addTag: false,
-				})
-			})
-			this.unselectAll()
-		},
-
-		async markSelectionJunk() {
-			for (const envelope of this.selectedEnvelopes) {
-				if (!envelope.flags.$junk) {
-					await this.mainStore.toggleEnvelopeJunk({
-						envelope,
-						removeEnvelope: await this.mainStore.moveEnvelopeToJunk(envelope),
-					})
-				}
-			}
-			this.unselectAll()
-		},
-
-		async markSelectionNotJunk() {
-			for (const envelope of this.selectedEnvelopes) {
-				if (envelope.flags.$junk) {
-					await this.mainStore.toggleEnvelopeJunk({
-						envelope,
-						removeEnvelope: await this.mainStore.moveEnvelopeToJunk(envelope),
-					})
-				}
-			}
-			this.unselectAll()
-		},
-
-		favoriteAll() {
-			const favFlag = !this.isAtLeastOneSelectedUnFavorite
-			this.selectedEnvelopes.forEach((envelope) => {
-				this.mainStore.markEnvelopeFavoriteOrUnfavorite({
-					envelope,
-					favFlag,
-				})
-			})
-			this.unselectAll()
-		},
-
-		unFavoriteAll() {
-			const favFlag = !this.isAtLeastOneSelectedFavorite
-			this.selectedEnvelopes.forEach((envelope) => {
-				this.mainStore.markEnvelopeFavoriteOrUnfavorite({
-					envelope,
-					favFlag,
-				})
-			})
-			this.unselectAll()
-		},
-
-		async deleteAllSelected() {
-			let nextEnvelopeToNavigate
-			let isAllSelected
-
-			if (this.selectedEnvelopes.length === this.sortedEnvelops.length) {
-				isAllSelected = true
-			} else {
-				const indexSelectedEnvelope = this.selectedEnvelopes.findIndex((selectedEnvelope) => selectedEnvelope.databaseId === this.$route.params.threadId)
-
-				// one of threads is selected
-				if (indexSelectedEnvelope !== -1) {
-					const lastSelectedEnvelope = this.selectedEnvelopes[this.selectedEnvelopes.length - 1]
-					const diff = this.sortedEnvelops.filter((envelope) => envelope === lastSelectedEnvelope || !this.selectedEnvelopes.includes(envelope))
-					const lastIndex = diff.indexOf(lastSelectedEnvelope)
-					nextEnvelopeToNavigate = diff[lastIndex === 0 ? 1 : lastIndex - 1]
-				}
-			}
-
-			await Promise.all(this.selectedEnvelopes.map(async (envelope) => {
-				logger.info(`deleting thread ${envelope.threadRootId}`)
-				await this.mainStore.deleteThread({
-					envelope,
-				})
-			})).catch(async (error) => {
-				showError(await matchError(error, {
-					[NoTrashMailboxConfiguredError.getName()]() {
-						return t('mail', 'No trash folder configured')
-					},
-					default(error) {
-						logger.error('could not delete message', error)
-						return t('mail', 'Could not delete message')
-					},
-				}))
-			})
-			if (nextEnvelopeToNavigate) {
-				await this.$router.push({
-					name: 'message',
-					params: {
-						mailboxId: this.$route.params.mailboxId,
-						threadId: nextEnvelopeToNavigate.databaseId,
-					},
-				})
-
-				// Get new messages
-				await this.mainStore.fetchNextEnvelopes({
-					mailboxId: this.mailbox.databaseId,
-					query: this.searchQuery,
-					quantity: this.selectedEnvelopes.length,
-				})
-			} else if (isAllSelected) {
-				await this.$router.push({
-					name: 'mailbox',
-					params: {
-						mailboxId: this.$route.params.mailboxId,
-					},
-				})
-			}
-			this.unselectAll()
-		},
 
 		setEnvelopeSelected(envelope, selected) {
 			const alreadySelected = this.selection.includes(envelope.databaseId)
@@ -567,28 +243,8 @@ export default {
 			this.selection = []
 		},
 
-		onOpenMoveModal() {
-			this.showMoveModal = true
-		},
-
-		onOpenTagModal() {
-			this.showTagModal = true
-		},
-
 		onCloseTagModal() {
 			this.showTagModal = false
-		},
-
-		async forwardSelectedAsAttachment() {
-			await this.mainStore.startComposerSession({
-				forwardedMessages: [...this.selection],
-			})
-			this.unselectAll()
-		},
-
-		onCloseMoveModal() {
-			this.showMoveModal = false
-			this.unselectAll()
 		},
 
 		/**
@@ -627,41 +283,6 @@ div {
 	.plus-icon{
 		transform: translateX(-8px);
 	}
-}
-
-.multiselect-header {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	background-color: var(--color-main-background-translucent);
-	position: sticky;
-	top: 0;
-	height: 48px;
-	z-index: 100;
-	.action-buttons {
-		display: flex;
-	}
-}
-
-#load-more-mail-messages {
-	background-position: 9px center;
-}
-
-.multiselect-header-enter-active,
-.multiselect-header-leave-active,
-.list-enter-active,
-.list-leave-active {
-	transition: all calc(var(--animation-slow) / 2);
-}
-
-.multiselect-header-enter,
-.multiselect-header-leave-to,
-.list-enter,
-.list-leave-to {
-	opacity: 0;
-	height: 0;
-	transform: scaleY(0);
 }
 
 #action-label {
