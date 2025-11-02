@@ -4,6 +4,124 @@
 -->
 <template>
 	<div>
+		<transition name="multiselect-header">
+			<div v-if="selectMode" key="multiselect-header" class="multiselect-header">
+				<div class="action-buttons">
+					<NcButton
+						v-if="isAtLeastOneSelectedUnread"
+						variant="tertiary"
+						:title="n('mail', 'Mark {number} read', 'Mark {number} read', selection.length, { number: selection.length })"
+						@click.prevent="markSelectedRead">
+						<EmailRead :size="20" />
+					</NcButton>
+
+					<NcButton
+						v-if="isAtLeastOneSelectedRead"
+						variant="tertiary"
+						:title="n('mail', 'Mark {number} unread', 'Mark {number} unread', selection.length, { number: selection.length })"
+						@click.prevent="markSelectedUnread">
+						<EmailUnread :size="20" />
+					</NcButton>
+
+					<NcButton
+						v-if="isAtLeastOneSelectedUnimportant"
+						variant="tertiary"
+						:title="n('mail', 'Mark {number} as important', 'Mark {number} as important', selection.length, { number: selection.length })"
+						@click.prevent="markSelectionImportant">
+						<ImportantIcon :size="20" />
+					</NcButton>
+
+					<NcButton
+						v-if="isAtLeastOneSelectedImportant"
+						variant="tertiary"
+						:title="n('mail', 'Mark {number} as unimportant', 'Mark {number} as unimportant', selection.length, { number: selection.length })"
+						@click.prevent="markSelectionUnimportant">
+						<ImportantOutlineIcon :size="20" />
+					</NcButton>
+
+					<NcButton
+						v-if="isAtLeastOneSelectedFavorite"
+						variant="tertiary"
+						:title="n('mail', 'Unfavorite {number}', 'Unfavorite {number}', selection.length, { number: selection.length })"
+						@click.prevent="favoriteAll">
+						<IconUnFavorite :size="20" />
+					</NcButton>
+
+					<NcButton
+						v-if="isAtLeastOneSelectedUnFavorite"
+						variant="tertiary"
+						:title="n('mail', 'Favorite {number}', 'Favorite {number}', selection.length, { number: selection.length })"
+						@click.prevent="unFavoriteAll">
+						<IconFavorite :size="20" />
+					</NcButton>
+
+					<NcButton
+						variant="tertiary"
+						:title="n('mail', 'Unselect {number}', 'Unselect {number}', selection.length, { number: selection.length })"
+						:close-after-click="true"
+						@click.prevent="unselectAll">
+						<IconSelect :size="20" />
+					</NcButton>
+					<NcButton
+						variant="tertiary"
+						:title="n(
+							'mail',
+							'Delete {number} thread',
+							'Delete {number} threads',
+							selection.length,
+							{ number: selection.length },
+						)"
+						:close-after-click="true"
+						@click.prevent="deleteAllSelected">
+						<IconDelete :size="20" />
+					</NcButton>
+				</div>
+
+				<Actions class="app-content-list-item-menu" menu-align="right">
+					<ActionButton
+						v-if="isAtLeastOneSelectedNotJunk"
+						@click.prevent="markSelectionJunk">
+						<template #icon>
+							<AlertOctagonIcon :size="20" />
+						</template>
+						{{ n('mail', 'Mark {number} as spam', 'Mark {number} as spam', selection.length, { number: selection.length }) }}
+					</ActionButton>
+					<ActionButton
+						v-if="isAtLeastOneSelectedJunk"
+						@click.prevent="markSelectionNotJunk">
+						<template #icon>
+							<AlertOctagonIcon :size="20" />
+						</template>
+						{{ n('mail', 'Mark {number} as not spam', 'Mark {number} as not spam', selection.length, { number: selection.length }) }}
+					</ActionButton>
+					<ActionButton :close-after-click="true" @click.prevent="onOpenTagModal">
+						<template #icon>
+							<TagIcon :size="20" />
+						</template>
+						{{ n('mail', 'Edit tags for {number}', 'Edit tags for {number}', selection.length, { number: selection.length }) }}
+					</ActionButton>
+					<ActionButton v-if="!account.isUnified" :close-after-click="true" @click.prevent="onOpenMoveModal">
+						<template #icon>
+							<OpenInNewIcon :size="20" />
+						</template>
+						{{ n('mail', 'Move {number} thread', 'Move {number} threads', selection.length, { number: selection.length }) }}
+					</ActionButton>
+					<ActionButton :close-after-click="true" @click.prevent="forwardSelectedAsAttachment">
+						<template #icon>
+							<ShareIcon :size="20" />
+						</template>
+						{{ n('mail', 'Forward {number} as attachment', 'Forward {number} as attachment', selection.length, { number: selection.length }) }}
+					</ActionButton>
+				</Actions>
+				<MoveModal
+					v-if="showMoveModal"
+					:account="account"
+					:envelopes="selectedEnvelopes"
+					:move-thread="true"
+					@close="onCloseMoveModal" />
+			</div>
+		</transition>
+
 		<transition-group :name="listTransitionName">
 			<Envelope
 				v-for="(env, index) in sortedEnvelops"
@@ -45,6 +163,7 @@
 </template>
 
 <script>
+import { showError } from '@nextcloud/dialogs'
 import { NcActionButton as ActionButton, NcActions as Actions, NcButton, NcDialog } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import { differenceWith } from 'ramda'
@@ -65,7 +184,10 @@ import Envelope from './Envelope.vue'
 import MoveModal from './MoveModal.vue'
 import TagModal from './TagModal.vue'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus.js'
-import useMainStore from '../store/mainStore.js'
+import { matchError } from '../errors/match.js'
+import NoTrashMailboxConfiguredError
+	from '../errors/NoTrashMailboxConfiguredError.js'
+import logger from '../logger.js'
 
 export default {
 	name: 'EnvelopeList',
@@ -138,47 +260,12 @@ export default {
 
 	data() {
 		return {
-			selection: [],
-			showMoveModal: false,
-			showTagModal: false,
-			lastToggledIndex: undefined,
-			defaultView: false,
-			showQuickActionsSettings: false,
+
 		}
 	},
 
 	computed: {
-		...mapStores(useMainStore),
-		sortOrder() {
-			return this.mainStore.getPreference('sort-order', 'newest')
-		},
 
-		sortedEnvelops() {
-			if (this.sortOrder === 'oldest') {
-				return [...this.envelopes].sort((a, b) => {
-					return a.dateInt < b.dateInt ? -1 : 1
-				})
-			}
-			return [...this.envelopes]
-		},
-
-		selectMode() {
-			// returns true when in selection mode (where the user selects several emails at once)
-			return this.selection.length > 0
-		},
-
-		selectedEnvelopes() {
-			return this.sortedEnvelops.filter((env) => this.selection.includes(env.databaseId))
-		},
-
-		hasMultipleAccounts() {
-			const mailboxIds = this.sortedEnvelops.map((envelope) => envelope.mailboxId)
-			return Array.from(new Set(mailboxIds)).length > 1
-		},
-
-		listTransitionName() {
-			return this.skipTransition ? 'disabled' : 'list'
-		},
 	},
 
 	watch: {
@@ -203,65 +290,6 @@ export default {
 
 	methods: {
 
-		setEnvelopeSelected(envelope, selected) {
-			const alreadySelected = this.selection.includes(envelope.databaseId)
-			if (selected && !alreadySelected) {
-				envelope.flags.selected = true
-				this.selection.push(envelope.databaseId)
-			} else if (!selected && alreadySelected) {
-				envelope.flags.selected = false
-				this.selection.splice(this.selection.indexOf(envelope.databaseId), 1)
-			}
-		},
-
-		onEnvelopeSelectToggle(envelope, index, selected) {
-			this.lastToggledIndex = index
-			this.setEnvelopeSelected(envelope, selected)
-		},
-
-		onEnvelopeSelectMultiple(envelope, index) {
-			const lastToggledIndex = this.lastToggledIndex
-				?? this.findSelectionIndex(parseInt(this.$route.params.threadId))
-				?? undefined
-			if (lastToggledIndex === undefined) {
-				return
-			}
-
-			const start = Math.min(lastToggledIndex, index)
-			const end = Math.max(lastToggledIndex, index)
-			const selected = this.selection.includes(envelope.databaseId)
-			for (let i = start; i <= end; i++) {
-				this.setEnvelopeSelected(this.sortedEnvelops[i], !selected)
-			}
-			this.lastToggledIndex = index
-		},
-
-		unselectAll() {
-			this.sortedEnvelops.forEach((env) => {
-				env.flags.selected = false
-			})
-			this.selection = []
-		},
-
-		onCloseTagModal() {
-			this.showTagModal = false
-		},
-
-		/**
-		 * Find the envelope list index of a given envelope's database id.
-		 *
-		 * @param {number} databaseId of the given envelope
-		 * @return {number|undefined} Index or undefined if not found in the envelope list
-		 */
-		findSelectionIndex(databaseId) {
-			for (const [index, envelope] of this.sortedEnvelops.entries()) {
-				if (envelope.databaseId === databaseId) {
-					return index
-				}
-			}
-
-			return undefined
-		},
 	},
 }
 </script>
@@ -283,6 +311,41 @@ div {
 	.plus-icon{
 		transform: translateX(-8px);
 	}
+}
+
+.multiselect-header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--color-main-background-translucent);
+	position: sticky;
+	top: 0;
+	height: 48px;
+	z-index: 100;
+	.action-buttons {
+		display: flex;
+	}
+}
+
+#load-more-mail-messages {
+	background-position: 9px center;
+}
+
+.multiselect-header-enter-active,
+.multiselect-header-leave-active,
+.list-enter-active,
+.list-leave-active {
+	transition: all calc(var(--animation-slow) / 2);
+}
+
+.multiselect-header-enter,
+.multiselect-header-leave-to,
+.list-enter,
+.list-leave-to {
+	opacity: 0;
+	height: 0;
+	transform: scaleY(0);
 }
 
 #action-label {
