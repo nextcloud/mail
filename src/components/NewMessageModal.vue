@@ -610,7 +610,7 @@ export default {
 		async patchComposerData(data) {
 			this.changed = true
 			this.updateCookedComposerData()
-			await this.mainStore.patchComposerData(data)
+			await this.mainStore.patchComposerData({ ...data, isHtml: this.cookedComposerData.isHtml })
 		},
 
 		onBeforeUnload(e) {
