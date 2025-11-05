@@ -1,3 +1,14 @@
+## [5.5.13](https://github.com/nextcloud/mail/compare/v5.5.12...v5.5.13) (2025-11-05)
+
+
+### Bug Fixes
+
+* **db:** drop index on mail_mailboxes by columns instead of name ([86a693f](https://github.com/nextcloud/mail/commit/86a693f3c49a22d83a7146882df3eb9529201127))
+* **l10n:** Update translations from Transifex ([0303882](https://github.com/nextcloud/mail/commit/03038829fce0054e521cac0e83fde602d86ad7ff))
+* **NewMessageModal:** keep formatting after minimizing ([9d11a84](https://github.com/nextcloud/mail/commit/9d11a84882744d24e227f43eb2dcc4c3368837cf))
+
+
+
 ## [5.5.12](https://github.com/nextcloud/mail/compare/v5.5.11...v5.5.12) (2025-11-04)
 
 
