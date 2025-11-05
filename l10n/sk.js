@@ -395,6 +395,7 @@ OC.L10N.register(
     "Collapse folders" : "Zvinúť priečinky",
     "_{total} message_::_{total} messages_" : ["{total} správa","{total} správy","{total} správy","{total} správ"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} neprečítanú z {total}","{unread} neprečítaných z {total}","{unread} neprečítaných z {total}","{unread} neprečítaných z {total}"],
+    "Loading …" : "Načítava sa …",
     "All messages in mailbox will be deleted." : "Všetky správy v schránke budú vymazané.",
     "Clear mailbox {name}" : "Vyčistiť schránku {name}",
     "The folder and all messages in it will be deleted." : "Priečinok a všetky správy v ňom budú odstránené.",
