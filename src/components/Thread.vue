@@ -115,11 +115,14 @@ export default {
 			summaryError: false,
 			loadedThreads: 0,
 			isTextCollapsed: false,
-			_fullHeight: 0,
-			_singleHeight: 0,
-			_threshold: 0,
-			_scrollEl: null,
-			_transitionEndHandler: null,
+			fullHeight: 0,
+			singleHeight: 0,
+			threshold: 0,
+			// pixel hysteresis to prevent toggling when scroll is near the threshold
+			hysteresis: 0,
+			scrollEl: null,
+			transitionEndHandler: null,
+			isAnimating: false,
 		}
 	},
 
@@ -213,25 +216,25 @@ export default {
 		window.addEventListener('keydown', this.handleKeyDown)
 	},
 	mounted() {
-		this._scrollEl = this.$el.closest('.app-content-wrapper') || window
+		this.scrollEl = this.$el.closest('.app-content-wrapper') || window
 		this.$nextTick(() => {
 			if (document.fonts && document.fonts.ready) {
-			document.fonts.ready.then(() => this._measureHeightsOnce())
-				.catch(() => this._measureHeightsOnce())
+				document.fonts.ready.then(() => this._measureHeightsOnce())
+					.catch(() => this._measureHeightsOnce())
 			} else {
-			this._measureHeightsOnce()
+				this._measureHeightsOnce()
 			}
 		})
-		this._scrollEl.addEventListener('scroll', this.onScroll, { passive: true })
+		this.scrollEl.addEventListener('scroll', this.onScroll, { passive: true })
 	},
 	beforeDestroy() {
 		window.removeEventListener('resize', this.resizeDebounced)
 		window.removeEventListener('keydown', this.handleKeyDown)
-		this._scrollEl?.removeEventListener('scroll', this.onScroll)
-		if (this._transitionEndHandler) {
+		this.scrollEl?.removeEventListener('scroll', this.onScroll)
+		if (this.transitionEndHandler) {
 			const h2 = this.$el.querySelector('#mail-thread-header-fields h2')
-			h2 && h2.removeEventListener('transitionend', this._transitionEndHandler)
-			this._transitionEndHandler = null
+			h2 && h2.removeEventListener('transitionend', this.transitionEndHandler)
+			this.transitionEndHandler = null
 		}
 	},
 	methods: {
@@ -262,7 +265,7 @@ export default {
 				pointerEvents: 'none',
 				overflow: 'visible',
 				top: '0',
-				left: '-9999px'
+				left: '-9999px',
 			})
 			document.body.appendChild(clone)
 			const full = clone.scrollHeight
@@ -271,20 +274,44 @@ export default {
 			const single = clone.scrollHeight
 			document.body.removeChild(clone)
 
-			this._fullHeight = full
-			this._singleHeight = single
+			this.fullHeight = full
+			this.singleHeight = single
 
-			this._threshold = Math.max(0, this._fullHeight - this._singleHeight)
+			this.threshold = Math.max(0, this.fullHeight - this.singleHeight)
+			this.hysteresis = Math.max(10, Math.round(this.singleHeight * 0.5))
 
 			this.onScroll()
 		},
 		onScroll() {
-			const scrolled = this._scrollEl.scrollTop
-			const shouldCollapse = scrolled > this._threshold
+			if (this.isAnimating) return
 
-			if (shouldCollapse === this.isTextCollapsed) return
+			let scrolled = 0
+			if (this.scrollEl === window) {
+				scrolled = window.pageYOffset || document.documentElement.scrollTop || 0
+			} else {
+				scrolled = this.scrollEl.scrollTop
+			}
 
-			if (shouldCollapse) {
+			// Use hysteresis: only collapse when scrolled > threshold + hysteresis,
+			// and only expand when scrolled < threshold - hysteresis.
+			const collapsePoint = this.threshold + this.hysteresis
+			const expandPoint = Math.max(0, this.threshold - this.hysteresis)
+
+			// Determine desired collapsed state. If scrolled is within the
+			// hysteresis band, keep current state (no toggle).
+			let desiredCollapsed = this.isTextCollapsed
+			if (scrolled > collapsePoint) {
+				desiredCollapsed = true
+			} else if (scrolled < expandPoint) {
+				desiredCollapsed = false
+			} else {
+				// inside hysteresis band -> don't change
+				return
+			}
+
+			if (desiredCollapsed === this.isTextCollapsed) return
+
+			if (desiredCollapsed) {
 				this._animateCollapse()
 			} else {
 				this._animateExpand()
@@ -293,38 +320,55 @@ export default {
 		_animateCollapse() {
 			const h2 = this.$el.querySelector('#mail-thread-header-fields h2')
 			if (!h2) return
+			if (this.isAnimating) return
+
+			if (this.transitionEndHandler) {
+				h2.removeEventListener('transitionend', this.transitionEndHandler)
+				this.transitionEndHandler = null
+			}
+
+			this.isAnimating = true
 
 			h2.classList.remove('text-collapsed')
 			h2.style.overflow = 'hidden'
-			h2.style.height = `${this._fullHeight}px`
+			h2.style.height = `${this.fullHeight}px`
 
 			// force reflow
 			// eslint-disable-next-line no-unused-expressions
 			h2.offsetHeight
 
-			h2.style.height = `${this._singleHeight}px`
+			h2.style.height = `${this.singleHeight}px`
 
 			const onEnd = (ev) => {
 				if (ev.propertyName !== 'height') return
 				h2.removeEventListener('transitionend', onEnd)
-				this._transitionEndHandler = null
+				this.transitionEndHandler = null
 
 				this.isTextCollapsed = true
 				h2.classList.add('text-collapsed')
 
 				h2.style.height = ''
 				h2.style.overflow = ''
+				this.isAnimating = false
 			}
 
-			this._transitionEndHandler = onEnd
+			this.transitionEndHandler = onEnd
 			h2.addEventListener('transitionend', onEnd)
 		},
 
 		_animateExpand() {
 			const h2 = this.$el.querySelector('#mail-thread-header-fields h2')
 			if (!h2) return
+			if (this.isAnimating) return
 
-			h2.style.height = `${this._singleHeight}px`
+			if (this.transitionEndHandler) {
+				h2.removeEventListener('transitionend', this.transitionEndHandler)
+				this.transitionEndHandler = null
+			}
+
+			this.isAnimating = true
+
+			h2.style.height = `${this.singleHeight}px`
 			h2.style.overflow = 'hidden'
 
 			h2.classList.remove('text-collapsed')
@@ -333,19 +377,20 @@ export default {
 			// eslint-disable-next-line no-unused-expressions
 			h2.offsetHeight
 
-			h2.style.height = `${this._fullHeight}px`
+			h2.style.height = `${this.fullHeight}px`
 
 			const onEnd = (ev) => {
 				if (ev.propertyName !== 'height') return
 				h2.removeEventListener('transitionend', onEnd)
-				this._transitionEndHandler = null
+				this.transitionEndHandler = null
 
 				this.isTextCollapsed = false
 				h2.style.height = ''
 				h2.style.overflow = ''
+				this.isAnimating = false
 			}
 
-			this._transitionEndHandler = onEnd
+			this.transitionEndHandler = onEnd
 			h2.addEventListener('transitionend', onEnd)
 		},
 		updateParticipantsToDisplay() {
@@ -756,7 +801,7 @@ export default {
 		text-overflow: clip;
 		margin-right: calc(var(--default-grid-baseline) * 2);
 
-		transition: height 200ms ease;
+		transition: height 250ms ease;
 		will-change: height;
 	}
 
