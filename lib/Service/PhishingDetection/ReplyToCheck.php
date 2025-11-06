@@ -27,7 +27,7 @@ class ReplyToCheck {
 			return new PhishingDetectionResult(PhishingDetectionResult::REPLYTO_CHECK, false);
 		}
 
-		return new PhishingDetectionResult(PhishingDetectionResult::REPLYTO_CHECK, true, $this->l10n->t('Reply-To email: %1$s  is different from the sender email: %2$s', [$replyToEmail, $fromEmail]));
+		return new PhishingDetectionResult(PhishingDetectionResult::REPLYTO_CHECK, true, $this->l10n->t('Reply-To email: %1$s is different from sender email: %2$s', [$replyToEmail, $fromEmail]));
 
 	}
 
