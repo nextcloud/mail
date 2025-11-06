@@ -381,8 +381,8 @@ export default {
 			this.attachmentsPromise = this.attachmentsPromise
 				.then(done)
 				.then(() => this.onDraft(data))
-				.then(() => logger.debug('attachments uploaded'))
-				.catch((error) => logger.error('could not upload attachments', { error }))
+				.then(() => logger.debug('Attachments uploaded'))
+				.catch((error) => logger.error('Could not upload attachments', { error }))
 		},
 		async onSend(data, force = false) {
 			logger.debug('sending message', { data })
@@ -468,7 +468,7 @@ export default {
 				this.error = await matchError(error, {
 					[NoSentMailboxConfiguredError.getName()]() {
 						logger.error('could not send message', { error })
-						return t('mail', 'No sent folder configured. Please pick one in the account settings.')
+						return t('mail', 'No "sent" folder configured. Please pick one in the account settings.')
 					},
 					[ManyRecipientsError.getName()]() {
 						logger.error('could not send message', { error })
@@ -490,7 +490,7 @@ export default {
 					},
 					// eslint-disable-next-line n/handle-callback-err
 					default(error) {
-						logger.warn('could not send message', { error })
+						logger.warn('Could not send message', { error })
 					},
 				})
 			} finally {
