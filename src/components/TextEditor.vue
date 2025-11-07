@@ -335,9 +335,7 @@ export default {
 			try {
 				logger.debug(`loading ${language} translations for CKEditor`)
 				await import(
-					/* webpackMode: "lazy-once" */
-					/* webpackPrefetch: true */
-					/* webpackPreload: true */
+					/* webpackMode: "lazy" */
 					`@ckeditor/ckeditor5-build-decoupled-document/build/translations/${language}`
 				)
 				this.showEditor(language)
