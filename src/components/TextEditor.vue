@@ -226,6 +226,10 @@ export default {
 		},
 
 		getEmoji(text) {
+			// Disable the emoji picker if a [space] is the first character after the colon ':'
+			if (text[0] === ' ') {
+				return []
+			}
 			const emojiResults = emojiSearch(text)
 			if (this.textSmiles.includes(':' + text)) {
 				emojiResults.unshift(':' + text)
