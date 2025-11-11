@@ -3,7 +3,8 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcModal size="normal"
+	<NcModal
+		size="normal"
 		:close-on-click-outside="false"
 		@close="closeModal">
 		<form class="modal__content" @submit.prevent="createFilter">
@@ -14,7 +15,8 @@
 			</p>
 
 			<div class="headers-list">
-				<NcCheckboxRadioSwitch v-for="header in headers"
+				<NcCheckboxRadioSwitch
+					v-for="header in headers"
 					:key="header.key"
 					v-model="header.enable"
 					type="switch">
@@ -22,8 +24,9 @@
 				</NcCheckboxRadioSwitch>
 			</div>
 
-			<NcButton type="primary"
-				native-type="submit">
+			<NcButton
+				variant="primary"
+				type="submit">
 				<template #icon>
 					<NcLoadingIcon v-if="loading" :size="20" />
 					<IconCheck v-else :size="20" />
@@ -37,15 +40,15 @@
 <script>
 import {
 	NcButton,
-	NcLoadingIcon,
 	NcCheckboxRadioSwitch,
+	NcLoadingIcon,
 	NcModal,
 } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
-import useMailFilterStore from '../../store/mailFilterStore.ts'
-import useMainStore from '../../store/mainStore.js'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import { MailFilterConditionField } from '../../models/mailFilter.ts'
+import useMailFilterStore from '../../store/mailFilterStore.ts'
+import useMainStore from '../../store/mainStore.js'
 
 export default {
 	name: 'CreateModal',
@@ -57,32 +60,39 @@ export default {
 		NcButton,
 
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
+
 		envelope: {
 			type: Object,
 			required: true,
 		},
+
 		loading: {
 			type: Boolean,
 			required: false,
 		},
 	},
+
 	data() {
 		return {
 			currentFilter: null,
 			headers: [],
 		}
 	},
+
 	computed: {
 		...mapStores(useMailFilterStore, useMainStore),
 	},
+
 	async mounted() {
 		this.prepareHeaders()
 	},
+
 	methods: {
 		prepareHeaders() {
 			this.headers = []
@@ -115,10 +125,12 @@ export default {
 				})
 			}
 		},
+
 		createFilter() {
 			const headers = structuredClone(this.headers).filter((header) => header.enable)
 			this.$emit('create-filter', headers)
 		},
+
 		closeModal() {
 			this.headers = []
 			this.$emit('close')

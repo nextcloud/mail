@@ -3,9 +3,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import Command from '@ckeditor/ckeditor5-core/src/command.js'
+import { Command } from 'ckeditor5'
 export default class InsertItemCommand extends Command {
-
 	/**
 	 * @param {module:core/editor/editor~Editor} editor instance
 	 * @param {module:engine/model/writer~Writer} writer instance
@@ -68,7 +67,7 @@ export default class InsertItemCommand extends Command {
 	 * @param {string} trigger the character to replace
 	 */
 	execute(item, trigger) {
-		this.editor.model.change(writer => {
+		this.editor.model.change((writer) => {
 			this.insertItem(this.editor, writer, item, trigger)
 		})
 	}
@@ -76,5 +75,4 @@ export default class InsertItemCommand extends Command {
 	refresh() {
 		this.isEnabled = true
 	}
-
 }

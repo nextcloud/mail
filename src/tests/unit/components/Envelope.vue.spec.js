@@ -5,10 +5,8 @@
 
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-
-import Nextcloud from '../../../mixins/Nextcloud.js'
 import Envelope from '../../../components/Envelope.vue'
-
+import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
 
 const localVue = createLocalVue()
@@ -58,7 +56,6 @@ describe('Envelope', () => {
 	})
 
 	it('disallows toggling seen flag without s ACL right', () => {
-
 		const view = shallowMount(Envelope, {
 			mocks: {
 				$route,

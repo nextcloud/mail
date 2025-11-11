@@ -12,7 +12,6 @@ OC.L10N.register(
     "None" : "Keng",
     "Go back" : "Zeréckgoen",
     "Cancel" : "Ofbriechen",
-    "Accounts" : "Accounts",
     "General" : "Allgemeng",
     "Delete" : "Läschen",
     "Search" : "Search",
@@ -58,6 +57,7 @@ OC.L10N.register(
     "Group" : "Grupp",
     "Shared" : "Gedeelt",
     "All" : "All",
-    "Favorites" : "Favoriten"
+    "Favorites" : "Favoriten",
+    "Accounts" : "Accounts"
 },
 "nplurals=2; plural=(n != 1);");

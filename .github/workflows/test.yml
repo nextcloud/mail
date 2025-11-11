@@ -35,7 +35,7 @@ jobs:
         node-version: 'false'
         install: true
     - name: Checkout Mail
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
       with:
         path: nextcloud/apps/mail
         fetch-depth: 2
@@ -55,7 +55,7 @@ jobs:
       env:
         XDEBUG_MODE: off
     - name: Report coverage
-      uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
+      uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
       if: ${{ always() && matrix.php-versions == '8.3' }}
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
@@ -160,7 +160,7 @@ jobs:
               php -f nextcloud/occ config:system:set memcache.local --value='\OC\Memcache\Redis'
               php -f nextcloud/occ config:system:set memcache.distributed --value='\OC\Memcache\Redis'
           - name: Checkout Mail
-            uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+            uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
             with:
                 path: nextcloud/apps/mail
                 fetch-depth: 2
@@ -201,7 +201,7 @@ jobs:
             if: ${{ always() }}
             run: cat nextcloud/data/mail-*-*-imap.log
           - name: Report coverage
-            uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
+            uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
             if: ${{ always() && matrix.db == 'mysql' }}
             with:
               token: ${{ secrets.CODECOV_TOKEN }}
@@ -214,7 +214,7 @@ jobs:
       runs-on: ubuntu-latest
       name: Front-end unit tests
       steps:
-          - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+          - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
           - name: Read package.json node and npm engines version
             uses: skjnldsv/read-package-engines-version-actions@8205673bab74a63eb9b8093402fd9e0e018663a1 # v2.2
             id: versions
@@ -241,7 +241,7 @@ jobs:
       branches-min: ${{ steps.versions.outputs.branches-min }}
     steps:
       - name: Checkout app
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
       - name: Get version matrix
         id: versions
         uses: icewind1991/nextcloud-version-matrix@58becf3b4bb6dc6cef677b15e2fd8e7d48c0908f # v1.3.1
@@ -267,7 +267,7 @@ jobs:
           php -f nextcloud/occ config:system:set app.mail.debug --type=bool --value=true
           php -f nextcloud/occ config:system:set app.mail.verify-tls-peer --type=bool --value=false
       - name: Check out the app
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
         with:
           path: nextcloud/apps/mail
       - name: Install php dependencies

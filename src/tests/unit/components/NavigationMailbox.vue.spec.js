@@ -3,13 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import {createLocalVue, shallowMount} from '@vue/test-utils'
-import { PiniaVuePlugin, setActivePinia } from 'pinia'
 import { createTestingPinia } from '@pinia/testing'
-
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { PiniaVuePlugin, setActivePinia } from 'pinia'
 import NavigationMailbox from '../../../components/NavigationMailbox.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
-
 import useMainStore from '../../../store/mainStore.js'
 
 const localVue = createLocalVue()
@@ -18,7 +16,6 @@ localVue.use(PiniaVuePlugin)
 localVue.mixin(Nextcloud)
 
 describe('NavigationMailbox', () => {
-
 	const subMailboxes = []
 	let store
 
@@ -26,7 +23,7 @@ describe('NavigationMailbox', () => {
 		setActivePinia(createTestingPinia())
 		store = useMainStore()
 
-		store.getSubMailboxes = jest.fn().mockReturnValue([])
+		store.getSubMailboxes = vi.fn().mockReturnValue([])
 	})
 
 	it('shows no counter', () => {
@@ -72,7 +69,7 @@ describe('NavigationMailbox', () => {
 		subMailboxes.push({
 			unread: 0,
 		})
-		store.getSubMailboxes = jest.fn().mockReturnValue(subMailboxes)
+		store.getSubMailboxes = vi.fn().mockReturnValue(subMailboxes)
 		const view = shallowMount(NavigationMailbox, {
 			propsData: {
 				account: {},
@@ -102,7 +99,7 @@ describe('NavigationMailbox', () => {
 	})
 
 	it('allows rename with missing ACLs on parent', () => {
-		store.getParentMailbox = jest.fn().mockReturnValue({
+		store.getParentMailbox = vi.fn().mockReturnValue({
 			myAcls: undefined,
 		})
 		const view = shallowMount(NavigationMailbox, {
@@ -147,7 +144,7 @@ describe('NavigationMailbox', () => {
 	})
 
 	it('disallows rename without k ACL right on parent', () => {
-		store.getParentMailbox = jest.fn().mockReturnValue({
+		store.getParentMailbox = vi.fn().mockReturnValue({
 			myAcls: 'x',
 		})
 
@@ -258,7 +255,6 @@ describe('NavigationMailbox', () => {
 
 		expect(view.vm.hasSubmailboxActionAcl).toBe(true)
 	})
-
 
 	it('allows toggling delete action without ACLs', () => {
 		const view = shallowMount(NavigationMailbox, {

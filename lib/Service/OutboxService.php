@@ -210,9 +210,7 @@ class OutboxService {
 			return;
 		}
 
-		$accountIds = array_unique(array_map(static function ($message) {
-			return $message->getAccountId();
-		}, $messages));
+		$accountIds = array_unique(array_map(static fn ($message) => $message->getAccountId(), $messages));
 
 		$accounts = array_combine($accountIds, array_map(function ($accountId) {
 			try {

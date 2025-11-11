@@ -161,12 +161,10 @@ class Synchronizer {
 		return array_merge(
 			[], // for php<7.4 https://www.php.net/manual/en/function.array-merge.php
 			...array_map(
-				static function (Horde_Imap_Client_Ids $uids) use ($imapClient, $mailbox, $request) {
-					return $imapClient->sync($mailbox, $request->getToken(), [
-						'criteria' => Horde_Imap_Client::SYNC_FLAGSUIDS,
-						'ids' => $uids,
-					])->flagsuids->ids;
-				},
+				static fn (Horde_Imap_Client_Ids $uids) => $imapClient->sync($mailbox, $request->getToken(), [
+					'criteria' => Horde_Imap_Client::SYNC_FLAGSUIDS,
+					'ids' => $uids,
+				])->flagsuids->ids,
 				chunk_uid_sequence($request->getUids(), self::UID_CHUNK_MAX_BYTES)
 			)
 		);
@@ -185,12 +183,10 @@ class Synchronizer {
 		return array_merge(
 			[], // for php<7.4 https://www.php.net/manual/en/function.array-merge.php
 			...array_map(
-				static function (Horde_Imap_Client_Ids $uids) use ($imapClient, $mailbox, $request) {
-					return $imapClient->sync($mailbox, $request->getToken(), [
-						'criteria' => Horde_Imap_Client::SYNC_VANISHEDUIDS,
-						'ids' => $uids,
-					])->vanisheduids->ids;
-				},
+				static fn (Horde_Imap_Client_Ids $uids) => $imapClient->sync($mailbox, $request->getToken(), [
+					'criteria' => Horde_Imap_Client::SYNC_VANISHEDUIDS,
+					'ids' => $uids,
+				])->vanisheduids->ids,
 				chunk_uid_sequence($request->getUids(), self::UID_CHUNK_MAX_BYTES)
 			)
 		);

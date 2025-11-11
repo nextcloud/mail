@@ -4,17 +4,20 @@
 -->
 
 <template>
-	<AppSettingsDialog id="app-settings-dialog"
+	<AppSettingsDialog
+		id="app-settings-dialog"
 		:open="open"
 		:show-navigation="true"
 		:additional-trap-elements="trapElements"
 		:name="t('mail', 'Account settings')"
 		@update:open="updateOpen">
-		<AppSettingsSection id="alias-settings"
+		<AppSettingsSection
+			id="alias-settings"
 			:name="t('mail', 'Aliases')">
 			<AliasSettings :account="account" @rename-primary-alias="scrollToAccountSettings" />
 		</AppSettingsSection>
-		<AppSettingsSection id="certificate-settings"
+		<AppSettingsSection
+			id="certificate-settings"
 			:name="t('mail', 'Alias to S/MIME certificate mapping')">
 			<CertificateSettings :account="account" />
 		</AppSettingsSection>
@@ -44,7 +47,8 @@
 			</p>
 			<TrashRetentionSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection v-if="account"
+		<AppSettingsSection
+			v-if="account"
 			id="out-of-office-replies"
 			:name="t('mail', 'Autoresponder')">
 			<p class="settings-hint">
@@ -53,48 +57,56 @@
 			<OutOfOfficeForm v-if="account.sieveEnabled" :account="account" />
 			<div v-else>
 				<p>{{ t('mail', 'The autoresponder uses Sieve, a scripting language supported by many email providers. If you\'re unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it.') }}</p>
-				<NcButton type="secondary" :aria-label="t('mail', 'Go to Sieve settings')" href="#sieve-form">
+				<NcButton variant="secondary" :aria-label="t('mail', 'Go to Sieve settings')" href="#sieve-form">
 					{{ t('mail', 'Go to Sieve settings') }}
 				</NcButton>
 			</div>
 		</AppSettingsSection>
-		<AppSettingsSection v-if="account && account.sieveEnabled"
+		<AppSettingsSection
+			v-if="account && account.sieveEnabled"
 			id="mail-filters"
 			:name="t('mail', 'Filters')">
 			<div id="mail-filters">
 				<MailFilters :key="account.accountId" ref="mailFilters" :account="account" />
 			</div>
 		</AppSettingsSection>
-		<AppSettingsSection v-if="account"
+		<AppSettingsSection
+			v-if="account"
 			id="quick-actions-settings"
 			:name="t('mail', 'Quick actions')">
 			<Settings :key="account.accountId" ref="quickActions" :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection v-if="account && account.sieveEnabled"
+		<AppSettingsSection
+			v-if="account && account.sieveEnabled"
 			id="sieve-filter"
 			:name="t('mail', 'Sieve script editor')">
 			<div id="sieve-filter">
-				<SieveFilterForm :key="account.accountId"
+				<SieveFilterForm
+					:key="account.accountId"
 					ref="sieveFilterForm"
 					:account="account" />
 			</div>
 		</AppSettingsSection>
-		<AppSettingsSection v-if="account && !account.provisioningId"
+		<AppSettingsSection
+			v-if="account && !account.provisioningId"
 			id="mail-server"
 			:name="t('mail', 'Mail server')">
 			<div id="mail-settings">
-				<AccountForm :key="account.accountId"
+				<AccountForm
+					:key="account.accountId"
 					ref="accountForm"
 					:display-name="displayName"
 					:email="email"
 					:account="account" />
 			</div>
 		</AppSettingsSection>
-		<AppSettingsSection v-if="account && !account.provisioningId"
+		<AppSettingsSection
+			v-if="account && !account.provisioningId"
 			id="sieve-settings"
 			:name="t('mail', 'Sieve server')">
 			<div id="sieve-settings">
-				<SieveAccountForm :key="account.accountId"
+				<SieveAccountForm
+					:key="account.accountId"
 					ref="sieveAccountForm"
 					:account="account" />
 			</div>
@@ -107,23 +119,23 @@
 </template>
 
 <script>
-import AccountForm from '../components/AccountForm.vue'
-import EditorSettings from '../components/EditorSettings.vue'
+import { NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSettingsSection, NcButton } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
 import AccountDefaultsSettings from '../components/AccountDefaultsSettings.vue'
-import SignatureSettings from '../components/SignatureSettings.vue'
+import AccountForm from '../components/AccountForm.vue'
 import AliasSettings from '../components/AliasSettings.vue'
+import EditorSettings from '../components/EditorSettings.vue'
+import SignatureSettings from '../components/SignatureSettings.vue'
+import CertificateSettings from './CertificateSettings.vue'
+import MailFilters from './mailFilter/MailFilters.vue'
+import OutOfOfficeForm from './OutOfOfficeForm.vue'
 import Settings from './quickActions/Settings.vue'
-import { NcButton, NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSettingsSection } from '@nextcloud/vue'
+import SearchSettings from './SearchSettings.vue'
 import SieveAccountForm from './SieveAccountForm.vue'
 import SieveFilterForm from './SieveFilterForm.vue'
-import OutOfOfficeForm from './OutOfOfficeForm.vue'
-import CertificateSettings from './CertificateSettings.vue'
-import SearchSettings from './SearchSettings.vue'
 import TrashRetentionSettings from './TrashRetentionSettings.vue'
 import logger from '../logger.js'
-import MailFilters from './mailFilter/MailFilters.vue'
 import useMainStore from '../store/mainStore.js'
-import { mapStores } from 'pinia'
 
 export default {
 	name: 'AccountSettings',
@@ -145,31 +157,37 @@ export default {
 		NcButton,
 		Settings,
 	},
+
 	props: {
 		account: {
 			required: true,
 			type: Object,
 		},
+
 		open: {
 			type: Boolean,
 			default: false,
 		},
 	},
+
 	data() {
 		return {
 			trapElements: [],
 			fetchActiveSieveScript: this.account.sieveEnabled,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		displayName() {
 			return this.account.name
 		},
+
 		email() {
 			return this.account.emailAddress
 		},
 	},
+
 	watch: {
 		open(newState, oldState) {
 			if (newState === true && this.fetchActiveSieveScript === true) {
@@ -181,15 +199,18 @@ export default {
 			}
 		},
 	},
+
 	methods: {
 		scrollToAccountSettings() {
 			this.$refs.accountForm.$el.scrollIntoView({
 				behavior: 'smooth',
 			})
 		},
+
 		updateOpen() {
 			this.$emit('update:open')
 		},
+
 		handleShowToolbar(element) {
 			this.trapElements.push(element)
 		},

@@ -3,7 +3,8 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<Modal size="large"
+	<Modal
+		size="large"
 		:name="t('mail', 'Create event')"
 		@close="onClose">
 		<div class="modal-content">
@@ -12,7 +13,8 @@
 				<input v-model="eventTitle" :disabled="generatingData" type="text">
 			</div>
 			<div class="dateTimePicker">
-				<DatetimePicker v-model="startDate"
+				<DatetimePicker
+					v-model="startDate"
 					:format="dateFormat"
 					:clearable="false"
 					:minute-step="5"
@@ -20,7 +22,8 @@
 					:type="datePickerType"
 					:show-timezone-select="true"
 					:timezone-id="startTimezoneId" />
-				<DatetimePicker v-model="endDate"
+				<DatetimePicker
+					v-model="endDate"
 					:format="dateFormat"
 					:clearable="false"
 					:minute-step="5"
@@ -30,7 +33,8 @@
 					:timezone-id="endTimezoneId" />
 			</div>
 			<div class="all-day">
-				<input id="allDay"
+				<input
+					id="allDay"
 					v-model="isAllDay"
 					type="checkbox"
 					class="checkbox">
@@ -43,7 +47,8 @@
 				<span v-if="!organizerEmail" class="attendees-disabled-msg">
 					{{ t('mail', 'You can only invite attendees if your account has an email address set') }}
 				</span>
-				<NcSelect v-else
+				<NcSelect
+					v-else
 					id="attendee"
 					:value="attendeesList"
 					class="select-users"
@@ -60,20 +65,23 @@
 					:create-option="createRecipientOption"
 					@option:selecting="addAttendee">
 					<template #search="{ events, attributes }">
-						<input :placeholder="t('mail', 'Contact or email address …')"
+						<input
+							:placeholder="t('mail', 'Contact or email address …')"
 							type="search"
 							class="vs__search"
 							v-bind="attributes"
 							v-on="events">
 					</template>
-					<template #selected-option-container="{option}">
-						<RecipientListItem :option="option"
+					<template #selected-option-container="{ option }">
+						<RecipientListItem
+							:option="option"
 							class="vs__selected selected"
 							@remove-recipient="removeAttendee(option)" />
 					</template>
 				</NcSelect>
 			</div>
-			<NcSelect v-model="selectedCalendar"
+			<NcSelect
+				v-model="selectedCalendar"
 				class="modal-content__calendar-picker"
 				label="displayname"
 				:aria-label-combobox="t('mail', 'Select calendar')"
@@ -82,12 +90,14 @@
 					<CalendarPickerOption v-bind="option" />
 				</template>
 				<template #singleLabel="option">
-					<CalendarPickerOption :display-icon="true"
+					<CalendarPickerOption
+						:display-icon="true"
 						v-bind="option" />
 				</template>
 			</NcSelect>
 			<label for="description">{{ t('mail', 'Description') }}</label>
-			<textarea id="description"
+			<textarea
+				id="description"
 				v-model="description"
 				:disabled="generatingData"
 				class="modal-content__description-input"
@@ -101,20 +111,19 @@
 </template>
 
 <script>
-import { createEvent, DateTimeValue, TextProperty, AttendeeProperty } from '@nextcloud/calendar-js'
-import { getTimezoneManager } from '@nextcloud/timezones'
-import { NcDateTimePicker as DatetimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
-import RecipientListItem from './RecipientListItem.vue'
-import jstz from 'jstz'
-
-import { getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
-import logger from '../logger.js'
-import CalendarPickerOption from './CalendarPickerOption.vue'
+import { AttendeeProperty, createEvent, DateTimeValue, TextProperty } from '@nextcloud/calendar-js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
+import { getTimezoneManager } from '@nextcloud/timezones'
+import { NcDateTimePicker as DatetimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
+import jstz from 'jstz'
 import { mapState, mapStores } from 'pinia'
-import useMainStore from '../store/mainStore.js'
+import CalendarPickerOption from './CalendarPickerOption.vue'
+import RecipientListItem from './RecipientListItem.vue'
+import logger from '../logger.js'
 import { generateEventData } from '../service/AiIntergrationsService.js'
+import { getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'EventModal',
@@ -125,12 +134,14 @@ export default {
 		Modal,
 		NcSelect,
 	},
+
 	props: {
 		envelope: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	data() {
 		// Try to determine the current timezone, and fall back to UTC otherwise
 		const defaultTimezone = jstz.determine()
@@ -153,17 +164,21 @@ export default {
 			attendeesOptions: [],
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		...mapState(useMainStore, {
 			organizerEmail: 'getCurrentUserPrincipalEmail',
 		}),
+
 		dateFormat() {
 			return this.isAllDay ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm'
 		},
+
 		datePickerType() {
 			return this.isAllDay ? 'date' : 'datetime'
 		},
+
 		prefilledAttendees() {
 			const attendees = []
 			if (this.envelope.from) {
@@ -173,7 +188,7 @@ export default {
 				})
 			}
 			if (Array.isArray(this.envelope.to)) {
-				this.envelope.to.forEach(person => {
+				this.envelope.to.forEach((person) => {
 					if (person.email) {
 						attendees.push({
 							displayName: person.name || person.email,
@@ -185,6 +200,7 @@ export default {
 			return attendees
 		},
 	},
+
 	async created() {
 		logger.debug('creating event from envelope', {
 			envelope: this.envelope,
@@ -194,13 +210,15 @@ export default {
 
 		await this.generateEventData()
 	},
+
 	async mounted() {
-		this.calendars = (await getUserCalendars()).filter(c => c.writable)
+		this.calendars = (await getUserCalendars()).filter((c) => c.writable)
 
 		if (this.calendars.length) {
 			this.selectedCalendar = this.calendars[0]
 		}
 	},
+
 	methods: {
 		addAttendee(option) {
 			if (option === undefined || option === null || option === '') {
@@ -210,11 +228,11 @@ export default {
 			this.attendeesOptions.push(attendee)
 			this.attendeesList.push(attendee)
 		},
+
 		removeAttendee(option) {
-			this.attendeesList = this.attendeesList.filter(
-				attendee => attendee.email !== option.email,
-			)
+			this.attendeesList = this.attendeesList.filter((attendee) => attendee.email !== option.email)
 		},
+
 		async generateEventData() {
 			if (!this.llmProcessingEnabled) {
 				return
@@ -229,12 +247,15 @@ export default {
 				this.generatingData = false
 			}
 		},
+
 		createRecipientOption(value) {
 			return { email: value, displayName: value }
 		},
+
 		onClose() {
 			this.$emit('close')
 		},
+
 		async onSave() {
 			this.saving = true
 
@@ -275,10 +296,10 @@ export default {
 
 				if (organizerEmail && this.attendeesList.length > 0) {
 					const filteredAttendees = this.attendeesList
-						.map(a => a.email || a.displayName)
-						.filter(email => email && email.toLowerCase() !== organizerEmail)
+						.map((a) => a.email || a.displayName)
+						.filter((email) => email && email.toLowerCase() !== organizerEmail)
 
-					filteredAttendees.forEach(att => {
+					filteredAttendees.forEach((att) => {
 						event.addProperty(new AttendeeProperty('ATTENDEE', `mailto:${att}`))
 					})
 

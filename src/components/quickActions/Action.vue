@@ -10,7 +10,8 @@
 			<p v-if="!needsSelection">
 				{{ actionTitle }}
 			</p>
-			<NcSelect v-else
+			<NcSelect
+				v-else
 				:input-label="actionTitle"
 				:options="options"
 				label="value"
@@ -26,12 +27,12 @@
 </template>
 
 <script>
-import useMainStore from '../../store/mainStore.js'
-import { NcSelect, NcButton } from '@nextcloud/vue'
-import { hiddenTags } from '../tags.js'
-import Icon from './Icon.vue'
+import { NcButton, NcSelect } from '@nextcloud/vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import DragIcon from 'vue-material-design-icons/Drag.vue'
+import Icon from './Icon.vue'
+import useMainStore from '../../store/mainStore.js'
+import { hiddenTags } from '../tags.js'
 
 export default {
 	name: 'Action',
@@ -42,31 +43,37 @@ export default {
 		Icon,
 		DragIcon,
 	},
+
 	props: {
 		action: {
 			type: Object,
 			required: true,
 		},
+
 		account: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	computed: {
 		mainStore() {
 			return useMainStore()
 		},
+
 		needsSelection() {
 			return ['applyTag', 'moveThread'].includes(this.action.name)
 		},
+
 		selectedOption() {
 			if (this.action.name === 'applyTag') {
-				return this.options.find(option => option.id === this.action.tagId) || null
+				return this.options.find((option) => option.id === this.action.tagId) || null
 			} else if (this.action.name === 'moveThread') {
-				return this.options.find(option => option.id === this.action.mailboxId) || null
+				return this.options.find((option) => option.id === this.action.mailboxId) || null
 			}
 			return null
 		},
+
 		options() {
 			if (this.action.name === 'applyTag') {
 				return this.mainStore.getTags.filter((tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)).map((tag) => ({
@@ -82,29 +89,31 @@ export default {
 			}
 			return []
 		},
+
 		actionTitle() {
 			switch (this.action.name) {
-			case 'markAsSpam':
-				return this.t('mail', 'Mark as spam')
-			case 'applyTag':
-				return this.t('mail', 'Tag')
-			case 'moveThread':
-				return this.t('mail', 'Move thread')
-			case 'deleteThread':
-				return this.t('mail', 'Delete thread')
-			case 'markAsRead':
-				return this.t('mail', 'Mark as read')
-			case 'markAsUnread':
-				return this.t('mail', 'Mark as unread')
-			case 'markAsImportant':
-				return this.t('mail', 'Mark as important')
-			case 'markAsFavorite':
-				return this.t('mail', 'Mark as favorite')
-			default:
-				return this.action.name
+				case 'markAsSpam':
+					return this.t('mail', 'Mark as spam')
+				case 'applyTag':
+					return this.t('mail', 'Tag')
+				case 'moveThread':
+					return this.t('mail', 'Move thread')
+				case 'deleteThread':
+					return this.t('mail', 'Delete thread')
+				case 'markAsRead':
+					return this.t('mail', 'Mark as read')
+				case 'markAsUnread':
+					return this.t('mail', 'Mark as unread')
+				case 'markAsImportant':
+					return this.t('mail', 'Mark as important')
+				case 'markAsFavorite':
+					return this.t('mail', 'Mark as favorite')
+				default:
+					return this.action.name
 			}
 		},
 	},
+
 	methods: {
 		update(value) {
 			this.$emit('update', { id: value.id, type: this.action.name })
@@ -112,6 +121,7 @@ export default {
 	},
 }
 </script>
+
 <style lang="scss" scoped>
 .action {
 	display: flex;

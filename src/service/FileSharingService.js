@@ -7,8 +7,8 @@
 // Slightly modified for use in Mail
 
 import axios from '@nextcloud/axios'
-import { generateOcsUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
+import { generateOcsUrl } from '@nextcloud/router'
 
 /**
  * Makes a share link for a given file or directory.
@@ -17,7 +17,7 @@ import { showError } from '@nextcloud/dialogs'
  * @param {string} token The conversation's token
  * @return {string} url share link
  */
-const shareFile = async function(path, token) {
+async function shareFile(path, token) {
 	try {
 		const res = await axios.post(generateOcsUrl('apps/files_sharing/api/v1/', 2) + 'shares', {
 			shareType: 3, // OC.Share.SHARE_TYPE_LINK,

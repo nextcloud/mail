@@ -6,7 +6,8 @@
 	<NcContent app-name="mail" class="mail-content">
 		<Navigation />
 		<Outbox v-if="$route.name === 'outbox'" />
-		<MailboxThread v-else-if="activeAccount"
+		<MailboxThread
+			v-else-if="activeAccount"
 			:account="activeAccount"
 			:mailbox="activeMailbox" />
 
@@ -19,19 +20,17 @@
 
 <script>
 import { NcContent } from '@nextcloud/vue'
-import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
-
-import '../../css/mail.scss'
-import '../../css/mobile.scss'
-
-import { testAccountConnection } from '../service/AccountService.js'
-import logger from '../logger.js'
+import { mapState, mapStores } from 'pinia'
+import ComposerSessionIndicator from '../components/ComposerSessionIndicator.vue'
 import MailboxThread from '../components/MailboxThread.vue'
 import Navigation from '../components/Navigation.vue'
 import Outbox from '../components/Outbox.vue'
-import ComposerSessionIndicator from '../components/ComposerSessionIndicator.vue'
-import { mapState, mapStores } from 'pinia'
+import logger from '../logger.js'
+import { testAccountConnection } from '../service/AccountService.js'
 import useMainStore from '../store/mainStore.js'
+
+import '../../css/mail.scss'
+import '../../css/mobile.scss'
 
 export default {
 	name: 'Home',
@@ -43,25 +42,29 @@ export default {
 		Outbox,
 		ComposerSessionIndicator,
 	},
-	mixins: [isMobile],
+
 	data() {
 		return {
 			hasComposerSession: false,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		...mapState(useMainStore, ['composerSessionId']),
 		accounts() {
 			return this.mainStore.getAccounts.filter((a) => !a.isUnified)
 		},
+
 		activeAccount() {
 			return this.mainStore.getAccount(this.activeMailbox?.accountId)
 		},
+
 		activeMailbox() {
 			return this.mainStore.getMailbox(this.$route.params.mailboxId)
 		},
 	},
+
 	watch: {
 		async composerSessionId(id) {
 			// Session was closed or discarded
@@ -81,6 +84,7 @@ export default {
 			this.hasComposerSession = true
 		},
 	},
+
 	async beforeMount() {
 		for (const account of this.accounts) {
 			await this.mainStore.patchAccountMutation({
@@ -89,6 +93,7 @@ export default {
 			})
 		}
 	},
+
 	created() {
 		const accounts = this.mainStore.getAccounts
 		let startMailboxId = this.mainStore.getPreference('start-mailbox-id')
@@ -153,6 +158,7 @@ export default {
 			})
 		}
 	},
+
 	methods: {
 		hideMessage() {
 			this.$router.replace({
@@ -163,6 +169,7 @@ export default {
 				},
 			})
 		},
+
 		async onCloseMessageModal() {
 			await this.$refs.newMessageModal.onClose()
 		},

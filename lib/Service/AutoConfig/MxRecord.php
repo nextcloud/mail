@@ -36,9 +36,7 @@ final class MxRecord {
 		$sortedRecords = array_combine($mxRecords, $mxWeights);
 		asort($sortedRecords, SORT_NUMERIC);
 
-		$mxRecords = array_filter(array_keys($sortedRecords), static function ($record) {
-			return !empty($record);
-		});
+		$mxRecords = array_filter(array_keys($sortedRecords), static fn ($record) => !empty($record));
 		$this->logger->debug('found ' . count($sortedRecords) . " MX records for host <$host>");
 		if (empty(($mxRecords))) {
 			return [];

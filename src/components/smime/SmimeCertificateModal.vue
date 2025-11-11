@@ -30,11 +30,13 @@
 								{{ moment.unix(certificate.info.notAfter).format('LL') }}
 							</td>
 							<td>
-								<NcButton type="tertiary-no-background"
+								<NcButton
+									variant="tertiary-no-background"
 									:aria-label="t('mail', 'Delete certificate')"
 									@click="deleteCertificate(certificate.id)">
 									<template #icon>
-										<DeleteIcon :title="t('mail', 'Delete certificate')"
+										<DeleteIcon
+											:title="t('mail', 'Delete certificate')"
 											:size="20" />
 									</template>
 								</NcButton>
@@ -42,25 +44,29 @@
 						</tr>
 					</tbody>
 				</table>
-				<NcEmptyContent v-if="certificates.length === 0"
+				<NcEmptyContent
+					v-if="certificates.length === 0"
 					class="certificate__empty"
 					:name="t('mail', 'No certificate imported yet')" />
 				<div class="certificate-modal__list__actions">
-					<NcButton type="primary"
+					<NcButton
+						variant="primary"
 						:aria-label="t('mail', 'Import certificate')"
 						@click="showImportScreen = true">
 						{{ t('mail', 'Import certificate') }}
 					</NcButton>
 				</div>
 			</div>
-			<form v-else
+			<form
+				v-else
 				class="certificate-modal__import"
 				@submit.prevent="uploadCertificate">
 				<h2>{{ t('mail', 'Import S/MIME certificate') }}</h2>
 
 				<fieldset class="certificate-modal__import__type">
 					<div>
-						<input id="certificate-type-pkcs12"
+						<input
+							id="certificate-type-pkcs12"
 							v-model="certificateType"
 							name="certificate-type"
 							type="radio"
@@ -71,7 +77,8 @@
 					</div>
 
 					<div>
-						<input id="certificate-type-pem"
+						<input
+							id="certificate-type-pem"
 							v-model="certificateType"
 							name="certificate-type"
 							type="radio"
@@ -84,7 +91,8 @@
 
 				<fieldset>
 					<label for="certificate">{{ t('mail', 'Certificate') }}</label>
-					<input id="certificate"
+					<input
+						id="certificate"
 						ref="certificate"
 						type="file"
 						accept=".p12,.crt,.pem"
@@ -94,7 +102,8 @@
 
 				<fieldset v-if="certificateType === TYPE_PEM">
 					<label for="private-key">{{ t('mail', 'Private key (optional)') }}</label>
-					<input id="private-key"
+					<input
+						id="private-key"
 						ref="privateKey"
 						type="file"
 						accept=".key,.pem"
@@ -113,14 +122,16 @@
 				</div>
 
 				<div class="certificate-modal__import__actions">
-					<NcButton type="tertiary-no-background"
+					<NcButton
+						variant="tertiary-no-background"
 						:aria-label="t('mail', 'Back')"
 						@click="resetImportForm">
 						{{ t('mail', 'Back') }}
 					</NcButton>
-					<NcButton type="primary"
+					<NcButton
+						variant="primary"
 						:aria-label="t('mail', 'Submit')"
-						native-type="submit"
+						type="submit"
 						:disabled="loading || !inputFormIsValid">
 						{{ t('mail', 'Submit') }}
 					</NcButton>
@@ -131,14 +142,14 @@
 </template>
 
 <script>
-import { NcButton, NcModal, NcPasswordField, NcEmptyContent } from '@nextcloud/vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import logger from '../../logger.js'
 import moment from '@nextcloud/moment'
+import { NcButton, NcEmptyContent, NcModal, NcPasswordField } from '@nextcloud/vue'
+import { mapState, mapStores } from 'pinia'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
-import { convertPkcs12ToPem, InvalidPkcs12CertificateError } from '../../util/pkcs12.js'
+import logger from '../../logger.js'
 import useMainStore from '../../store/mainStore.js'
-import { mapStores, mapState } from 'pinia'
+import { convertPkcs12ToPem, InvalidPkcs12CertificateError } from '../../util/pkcs12.js'
 
 const TYPE_PKCS12 = 'pkcs12'
 const TYPE_PEM = 'pem'
@@ -152,6 +163,7 @@ export default {
 		NcEmptyContent,
 		DeleteIcon,
 	},
+
 	data() {
 		return {
 			TYPE_PKCS12,
@@ -166,23 +178,28 @@ export default {
 			password: '',
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		...mapState(useMainStore, {
 			certificates: 'getSmimeCertificates',
 		}),
+
 		inputFormIsValid() {
 			return !!this.certificate
 		},
 	},
+
 	async mounted() {
 		// Refresh S/MIME certificates for good measure
 		await this.mainStore.fetchSmimeCertificates()
 	},
+
 	methods: {
 		async deleteCertificate(id) {
 			await this.mainStore.deleteSmimeCertificate(id)
 		},
+
 		async uploadCertificate() {
 			let certificate = this.$refs.certificate.files[0]
 			let privateKey
@@ -230,6 +247,7 @@ export default {
 				this.loading = false
 			}
 		},
+
 		resetImportForm() {
 			this.certificateType = TYPE_PKCS12
 			this.showImportScreen = false

@@ -3,17 +3,16 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import uniq from 'lodash/fp/uniq.js'
-import { translate as t, translatePlural as n } from '@nextcloud/l10n'
+import { translatePlural as n, translate as t } from '@nextcloud/l10n'
 import { generateFilePath } from '@nextcloud/router'
-
+import uniq from 'lodash/fp/uniq.js'
 import Logger from '../logger.js'
 
 /**
  * @todo use Notification.requestPermission().then once all browsers support promise API
  * @return {Promise}
  */
-const request = () => {
+function request() {
 	if (!('Notification' in window)) {
 		Logger.info('browser does not support desktop notifications')
 		return Promise.reject(new Error('browser does not support desktop notifications'))
@@ -28,7 +27,7 @@ const request = () => {
 	return Notification.requestPermission()
 }
 
-const showNotification = async (title, body, icon) => {
+async function showNotification(title, body, icon) {
 	try {
 		await request()
 	} catch (error) {
@@ -51,7 +50,7 @@ const showNotification = async (title, body, icon) => {
 	}
 }
 
-const getNotificationBody = (messages) => {
+function getNotificationBody(messages) {
 	const labels = messages.filter((m) => m.from.length > 0).map((m) => m.from[0].label)
 	let from = uniq(labels)
 	if (from.length > 2) {
@@ -75,7 +74,7 @@ const getNotificationBody = (messages) => {
 	}
 }
 
-export const showNewMessagesNotification = (messages) => {
+export function showNewMessagesNotification(messages) {
 	showNotification(
 		t('mail', 'Nextcloud Mail'),
 		getNotificationBody(messages),

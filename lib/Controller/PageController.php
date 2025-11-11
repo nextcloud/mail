@@ -25,6 +25,7 @@ use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\QuickActionsService;
 use OCA\Mail\Service\SmimeService;
 use OCA\Viewer\Event\LoadViewer;
+use OCP\App\IAppManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
@@ -74,7 +75,8 @@ class PageController extends Controller {
 	private InternalAddressService $internalAddressService;
 	private QuickActionsService $quickActionsService;
 
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
 		IURLGenerator $urlGenerator,
 		IConfig $config,
@@ -97,6 +99,7 @@ class PageController extends Controller {
 		InternalAddressService $internalAddressService,
 		IAvailabilityCoordinator $availabilityCoordinator,
 		QuickActionsService $quickActionsService,
+		private IAppManager $appManager,
 	) {
 		parent::__construct($appName, $request);
 
@@ -142,6 +145,11 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'ncVersion',
 			$this->config->getSystemValue('version', '0.0.0')
+		);
+
+		$this->initialStateService->provideInitialState(
+			'mailVersion',
+			$this->appManager->getAppVersion('mail'),
 		);
 
 		$mailAccounts = $this->accountService->findByUserId($this->currentUserId);
@@ -313,9 +321,7 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'smime-certificates',
 			array_map(
-				function (SmimeCertificate $certificate) {
-					return $this->smimeService->enrichCertificate($certificate);
-				},
+				fn (SmimeCertificate $certificate) => $this->smimeService->enrichCertificate($certificate),
 				$this->smimeService->findAllCertificates($user->getUID()),
 			),
 		);

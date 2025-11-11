@@ -71,12 +71,10 @@ class TextBlockServiceTest extends TestCase {
 
 		$this->textBlockMapper->expects($this->once())
 			->method('insert')
-			->with($this->callback(function (TextBlock $s) use ($userId, $title, $content) {
-				return $s->getOwner() === $userId
+			->with($this->callback(fn (TextBlock $s) => $s->getOwner() === $userId
 					   && $s->getTitle() === $title
 					   && $s->getContent() === $content
-					   && $s->getPreview() === 'This is content';
-			}))
+					   && $s->getPreview() === 'This is content'))
 			->willReturn($textBlock);
 
 		$result = $this->textBlockService->create($userId, $title, $content);
@@ -94,9 +92,7 @@ class TextBlockServiceTest extends TestCase {
 		$textBlock->setOwner($userId);
 		$this->textBlockMapper->expects($this->once())
 			->method('update')
-			->with($this->callback(function (TextBlock $s) use ($title, $content) {
-				return $s->getTitle() === $title && $s->getContent() === $content;
-			}))
+			->with($this->callback(fn (TextBlock $s) => $s->getTitle() === $title && $s->getContent() === $content))
 			->willReturn($textBlock);
 
 		$result = $this->textBlockService->update($textBlock, $userId, $title, $content);
@@ -157,11 +153,9 @@ class TextBlockServiceTest extends TestCase {
 
 		$this->textBlockShareMapper->expects($this->once())
 			->method('insert')
-			->with($this->callback(function (TextBlockShare $s) use ($textBlockId, $shareWith) {
-				return $s->getTextBlockId() === $textBlockId
+			->with($this->callback(fn (TextBlockShare $s) => $s->getTextBlockId() === $textBlockId
 					   && $s->getShareWith() === $shareWith
-					   && $s->getType() === TextBlockShare::TYPE_USER;
-			}));
+					   && $s->getType() === TextBlockShare::TYPE_USER));
 
 		$this->textBlockService->share($textBlockId, $shareWith);
 	}
@@ -250,11 +244,9 @@ class TextBlockServiceTest extends TestCase {
 
 		$this->textBlockShareMapper->expects($this->once())
 			->method('insert')
-			->with($this->callback(function (TextBlockShare $share) use ($textBlockId, $groupId) {
-				return $share->getTextBlockId() === $textBlockId
+			->with($this->callback(fn (TextBlockShare $share) => $share->getTextBlockId() === $textBlockId
 					   && $share->getShareWith() === $groupId
-					   && $share->getType() === TextBlockShare::TYPE_GROUP;
-			}));
+					   && $share->getType() === TextBlockShare::TYPE_GROUP));
 
 		$this->textBlockService->shareWithGroup($textBlockId, $groupId);
 	}

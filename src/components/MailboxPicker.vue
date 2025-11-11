@@ -12,7 +12,8 @@
 				<div @click.prevent="onClickHome">
 					<IconInbox :size="20" />
 				</div>
-				<div v-for="(box, index) in mailboxCrumbs"
+				<div
+					v-for="(box, index) in mailboxCrumbs"
 					:key="box.databaseId"
 					class="level">
 					<IconBreadcrumb :size="20" />
@@ -23,19 +24,25 @@
 			</span>
 			<div class="mailbox-list">
 				<ul v-if="filteredMailboxes.length > 0">
-					<li v-for="box in filteredMailboxes "
+					<li
+						v-for="box in filteredMailboxes "
 						:key="box.databaseId"
 						@click.prevent="onClickMailbox(box)">
 						<IconInbox v-if="box.specialRole === 'inbox'" :size="20" />
-						<IconDraft v-else-if="box.specialRole === 'drafts'"
+						<IconDraft
+							v-else-if="box.specialRole === 'drafts'"
 							:size="20" />
-						<IconSent v-else-if="box.specialRole === 'sent'"
+						<IconSent
+							v-else-if="box.specialRole === 'sent'"
 							:size="20" />
-						<IconArchive v-else-if="box.specialRole === 'archive'"
+						<IconArchive
+							v-else-if="box.specialRole === 'archive'"
 							:size="20" />
-						<IconTrash v-else-if="box.specialRole === 'trash'"
+						<IconTrash
+							v-else-if="box.specialRole === 'trash'"
 							:size="20" />
-						<IconFolder v-else
+						<IconFolder
+							v-else
 							:size="20" />
 						<div class="mailbox-title">
 							{{ getMailboxTitle(box) }}
@@ -47,7 +54,8 @@
 				<h2>{{ t('mail', 'No more submailboxes in here') }}</h2>
 			</div>
 			<div class="buttons">
-				<ButtonVue type="primary"
+				<ButtonVue
+					type="primary"
 					:disabled="loading || (!allowRoot && !selectedMailboxId)"
 					:aria-label="loading ? labelSelectLoading : labelSelect"
 					@click="onSelect">
@@ -60,21 +68,21 @@
 		</div>
 	</Modal>
 </template>
+
 <script>
-import { NcModal as Modal, NcLoadingIcon as IconLoading, NcButton as ButtonVue } from '@nextcloud/vue'
+import { translate as t } from '@nextcloud/l10n'
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcModal as Modal } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
+import IconArchive from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
 import IconBreadcrumb from 'vue-material-design-icons/ChevronRight.vue'
+import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
 import IconInbox from 'vue-material-design-icons/HomeOutline.vue'
 import IconDraft from 'vue-material-design-icons/PencilOutline.vue'
 import IconSent from 'vue-material-design-icons/SendOutline.vue'
-import IconArchive from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
 import IconTrash from 'vue-material-design-icons/TrashCanOutline.vue'
-import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
-
-import { translate as t } from '@nextcloud/l10n'
 import { translate as translateMailboxName } from '../i18n/MailboxTranslator.js'
-import { mailboxHasRights } from '../util/acl.js'
-import { mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
+import { mailboxHasRights } from '../util/acl.js'
 
 export default {
 	name: 'MailboxPicker',
@@ -90,45 +98,54 @@ export default {
 		IconBreadcrumb,
 		IconLoading,
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
+
 		selected: {
 			type: Number,
 			required: false,
 			default: undefined,
 		},
+
 		loading: {
 			type: Boolean,
 			required: false,
 			default: false,
 		},
+
 		labelSelect: {
 			type: String,
 			default: t('mail', 'Choose'),
 		},
+
 		labelSelectLoading: {
 			type: String,
 			default: t('mail', 'Choose'),
 		},
+
 		pickedMailbox: {
 			type: Object,
 			required: false,
 			default: () => undefined,
 		},
+
 		allowRoot: {
 			type: Boolean,
 			default: false,
 		},
 	},
+
 	data() {
 		return {
 			selectedMailboxId: undefined,
 			mailboxCrumbs: [],
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		mailboxes() {
@@ -138,38 +155,46 @@ export default {
 				return this.mainStore.getSubMailboxes(this.selectedMailboxId)
 			}
 		},
+
 		filteredMailboxes() {
 			if (this.pickedMailbox) {
-				return this.mailboxes.filter(mailbox => mailbox.databaseId !== this.pickedMailbox.databaseId && mailboxHasRights(mailbox, 'k'))
+				return this.mailboxes.filter((mailbox) => mailbox.databaseId !== this.pickedMailbox.databaseId && mailboxHasRights(mailbox, 'k'))
 			}
-			return this.mailboxes.filter(mailbox => mailboxHasRights(mailbox, 'i'))
+			return this.mailboxes.filter((mailbox) => mailboxHasRights(mailbox, 'i'))
 		},
 	},
+
 	methods: {
 		getMailboxIcon(mailbox) {
 			return mailbox.specialRole ? 'icon-' + mailbox.specialRole : 'icon-folder'
 		},
+
 		getMailboxTitle(mailbox) {
 			return translateMailboxName(mailbox)
 		},
+
 		onClickHome() {
 			this.selectedMailboxId = undefined
 			this.$emit('update:selected', undefined)
 			this.mailboxCrumbs = []
 		},
+
 		onClickCrumb(index) {
 			this.selectedMailboxId = this.mailboxCrumbs[index].databaseId
 			this.$emit('update:selected', this.selectedMailboxId)
 			this.mailboxCrumbs = this.mailboxCrumbs.slice(0, index + 1)
 		},
+
 		onClickMailbox(mailbox) {
 			this.selectedMailboxId = mailbox.databaseId
 			this.$emit('update:selected', this.selectedMailboxId)
 			this.mailboxCrumbs.push(mailbox)
 		},
+
 		onSelect() {
 			this.$emit('select', this.selectedMailboxId)
 		},
+
 		onClose() {
 			this.$emit('close')
 		},

@@ -6,7 +6,8 @@
 	<div class="condition">
 		<div class="condition__value">
 			<div class="condition__value__field_operator">
-				<NcSelect input-label="field"
+				<NcSelect
+					input-label="field"
 					class="condition__value__field_operator__column"
 					:value="test.field"
 					:required="true"
@@ -21,7 +22,8 @@
 						{{ getLabelForField(label) }}
 					</template>
 				</NcSelect>
-				<NcSelect input-label="operator"
+				<NcSelect
+					input-label="operator"
 					class="condition__value__field_operator__column"
 					:value="test.operator"
 					:required="true"
@@ -37,12 +39,13 @@
 					</template>
 				</NcSelect>
 			</div>
-			<NcSelect v-model="localValues"
+			<NcSelect
+				v-model="localValues"
 				class="condition__value__values"
 				input-label="value"
 				:multiple="true"
 				:wrap="true"
-				:close-on-select="false"
+				:keep-open="true"
 				:taggable="true"
 				:required="true"
 				:label-outside="true"
@@ -51,8 +54,9 @@
 				@option:deselected="updateTest({ values: localValues })" />
 		</div>
 		<div class="condition__delete">
-			<NcButton aria-label="Delete action"
-				type="tertiary-no-background"
+			<NcButton
+				aria-label="Delete action"
+				variant="tertiary-no-background"
 				@click="deleteTest">
 				<template #icon>
 					<DeleteIcon :size="20" />
@@ -61,6 +65,7 @@
 		</div>
 	</div>
 </template>
+
 <script>
 import { NcButton, NcSelect } from '@nextcloud/vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
@@ -73,12 +78,14 @@ export default {
 		NcSelect,
 		DeleteIcon,
 	},
+
 	props: {
 		test: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			inputValue: '',
@@ -88,6 +95,7 @@ export default {
 				MailFilterConditionField.From,
 				MailFilterConditionField.To,
 			],
+
 			operators: [
 				MailFilterConditionOperator.Is,
 				MailFilterConditionOperator.Contains,
@@ -95,54 +103,61 @@ export default {
 			],
 		}
 	},
+
 	computed: {
 		placeholderText() {
 			switch (this.test.field) {
-			case MailFilterConditionField.Subject:
-				return t('mail', 'Enter subject')
-			case MailFilterConditionField.From:
-				return t('mail', 'Enter sender')
-			case MailFilterConditionField.To:
-				return t('mail', 'Enter recipient')
+				case MailFilterConditionField.Subject:
+					return t('mail', 'Enter subject')
+				case MailFilterConditionField.From:
+					return t('mail', 'Enter sender')
+				case MailFilterConditionField.To:
+					return t('mail', 'Enter recipient')
 			}
 			return ''
 		},
 	},
+
 	mounted() {
 		this.localValues = [...this.test.values]
 	},
+
 	methods: {
 		updateTest(properties) {
 			this.$emit('update-test', { ...this.test, ...properties })
 		},
+
 		deleteTest() {
 			this.$emit('delete-test', this.test)
 		},
+
 		getLabelForField(field) {
 			switch (field) {
-			case MailFilterConditionField.Subject:
-				return t('mail', 'Subject')
-			case MailFilterConditionField.From:
-				return t('mail', 'Sender')
-			case MailFilterConditionField.To:
-				return t('mail', 'Recipient')
+				case MailFilterConditionField.Subject:
+					return t('mail', 'Subject')
+				case MailFilterConditionField.From:
+					return t('mail', 'Sender')
+				case MailFilterConditionField.To:
+					return t('mail', 'Recipient')
 			}
 			return field
 		},
+
 		getLabelForOperator(field) {
 			switch (field) {
-			case MailFilterConditionOperator.Is:
-				return t('mail', 'is exactly')
-			case MailFilterConditionOperator.Contains:
-				return t('mail', 'contains')
-			case MailFilterConditionOperator.Matches:
-				return t('mail', 'matches')
+				case MailFilterConditionOperator.Is:
+					return t('mail', 'is exactly')
+				case MailFilterConditionOperator.Contains:
+					return t('mail', 'contains')
+				case MailFilterConditionOperator.Matches:
+					return t('mail', 'matches')
 			}
 			return field
 		},
 	},
 }
 </script>
+
 <style lang="scss" scoped>
 .condition {
 	display: flex;

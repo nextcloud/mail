@@ -64,13 +64,9 @@ final class ExportAccountThreads extends Command {
 		if ($input->getOption(self::OPTION_REDACT)) {
 			$salt = $this->random->generate(32);
 			$output->writeln(json_encode(
-				array_map(static function (DatabaseMessage $message) use ($salt) {
-					return $message->redact(
-						static function (string $str) use ($salt) {
-							return hash('md5', $str . $salt) . '@redacted';
-						}
-					);
-				}, $threads),
+				array_map(static fn (DatabaseMessage $message) => $message->redact(
+					static fn (string $str) => hash('md5', $str . $salt) . '@redacted'
+				), $threads),
 				JSON_PRETTY_PRINT
 			));
 		} else {

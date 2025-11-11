@@ -8,7 +8,8 @@
 		<div v-if="recipients && recipients.length === 1" class="recipient-info__single">
 			<div class="recipient-info__header">
 				<div class="recipient-info__avatar">
-					<Avatar :display-name="recipients[0].label"
+					<Avatar
+						:display-name="recipients[0].label"
 						:email="recipients[0].email"
 						:size="55"
 						:disable-tooltip="true"
@@ -26,7 +27,8 @@
 			<div v-for="(recipient, index) in recipients" :key="recipient.email" class="recipient-info__item">
 				<div class="recipient-info__header">
 					<div class="recipient-info__avatar">
-						<Avatar :display-name="recipient.label"
+						<Avatar
+							:display-name="recipient.label"
 							:email="recipient.email"
 							:size="55"
 							:disable-tooltip="true"
@@ -49,7 +51,7 @@
 						</template>
 					</div>
 				</div>
-				<div v-show="expandedRecipients[index]" class="recipient-info__details">
+				<div v-if="expandedRecipients[index]" class="recipient-info__details">
 					<DisplayContactDetails :email="recipient.email" />
 				</div>
 			</div>
@@ -72,17 +74,20 @@ export default {
 		IconArrowUp,
 		DisplayContactDetails,
 	},
+
 	data() {
 		return {
 			expandedRecipients: [],
 		}
 	},
+
 	computed: {
 		...mapGetters(useMainStore, ['composerMessage']),
 		recipients() {
 			return Array.isArray(this.composerMessage.data.to) ? this.composerMessage.data.to : []
 		},
 	},
+
 	watch: {
 		recipients: {
 			immediate: true,
@@ -91,13 +96,16 @@ export default {
 			},
 		},
 	},
+
 	methods: {
 		toggleExpand(index) {
 			this.$set(this.expandedRecipients, index, !this.expandedRecipients[index])
 		},
+
 		isExpanded(index) {
 			return this.expandedRecipients[index]
 		},
+
 		getAvatarForRecipient(recipient) {
 			if ((recipient.source && recipient.source === 'contacts') && recipient.photo) {
 				return {
@@ -110,6 +118,7 @@ export default {
 	},
 }
 </script>
+
 <style scoped lang="scss">
 .recipient-info {
 	display: inline;

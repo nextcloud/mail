@@ -194,9 +194,7 @@ class AttachmentService implements IAttachmentService {
 			return $this->mapper->findByLocalMessageId($userId, $message->getId());
 		}
 
-		$oldAttachmentIds = array_map(static function ($attachment) {
-			return $attachment->getId();
-		}, $message->getAttachments());
+		$oldAttachmentIds = array_map(static fn ($attachment) => $attachment->getId(), $message->getAttachments());
 
 		$add = array_diff($newAttachmentIds, $oldAttachmentIds);
 		if ($add !== []) {

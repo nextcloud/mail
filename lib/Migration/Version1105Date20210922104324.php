@@ -44,9 +44,7 @@ class Version1105Date20210922104324 extends SimpleMigrationStep {
 			return;
 		}
 
-		$accountIds = array_map(static function ($row) {
-			return (int)$row['id'];
-		}, $result->fetchAll());
+		$accountIds = array_map(static fn ($row) => (int)$row['id'], $result->fetchAll());
 		$result->closeCursor();
 
 		if (count($accountIds) === 0) {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "13c344bb512ef2b578e4ac07c3a11d7f",
+    "content-hash": "0c378a810afcba5c732066ab12c1a8e5",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2301,16 +2301,16 @@
         },
         {
             "name": "phpmailer/dkimvalidator",
-            "version": "v0.3",
+            "version": "v0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/DKIMValidator.git",
-                "reference": "49b65b1c0e022afdbac7afa89c997d74606fc881"
+                "reference": "ce691bdbb8a2f122cdfa315169bc0e1cd1965b77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/DKIMValidator/zipball/49b65b1c0e022afdbac7afa89c997d74606fc881",
-                "reference": "49b65b1c0e022afdbac7afa89c997d74606fc881",
+                "url": "https://api.github.com/repos/PHPMailer/DKIMValidator/zipball/ce691bdbb8a2f122cdfa315169bc0e1cd1965b77",
+                "reference": "ce691bdbb8a2f122cdfa315169bc0e1cd1965b77",
                 "shasum": ""
             },
             "require": {
@@ -2318,6 +2318,12 @@
                 "ext-mbstring": "*",
                 "ext-openssl": "*",
                 "php": ">=7.2.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.15",
+                "nunomaduro/phpinsights": "^v1.9.0",
+                "phpunit/phpunit": "8.4.1",
+                "roave/security-advisories": "dev-master"
             },
             "type": "library",
             "autoload": {
@@ -2346,22 +2352,22 @@
             "description": "A DKIM signature validator in PHP.",
             "support": {
                 "issues": "https://github.com/PHPMailer/DKIMValidator/issues",
-                "source": "https://github.com/PHPMailer/DKIMValidator/tree/v0.3"
+                "source": "https://github.com/PHPMailer/DKIMValidator/tree/v0.3.1"
             },
-            "time": "2019-10-10T17:19:06+00:00"
+            "time": "2025-10-09T12:29:49+00:00"
         },
         {
             "name": "rubix/ml",
-            "version": "2.5.2",
+            "version": "2.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/ML.git",
-                "reference": "59782a24bd09f0faa00e7df335fd58ca288d1eab"
+                "reference": "e0960dcb19c9722ccbc4826f5b9417a75fa01613"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/ML/zipball/59782a24bd09f0faa00e7df335fd58ca288d1eab",
-                "reference": "59782a24bd09f0faa00e7df335fd58ca288d1eab",
+                "url": "https://api.github.com/repos/RubixML/ML/zipball/e0960dcb19c9722ccbc4826f5b9417a75fa01613",
+                "reference": "e0960dcb19c9722ccbc4826f5b9417a75fa01613",
                 "shasum": ""
             },
             "require": {
@@ -2375,7 +2381,7 @@
                 "symfony/polyfill-php80": "^1.17",
                 "symfony/polyfill-php82": "^1.27",
                 "symfony/polyfill-php83": "^1.27",
-                "wamania/php-stemmer": "^3.0"
+                "wamania/php-stemmer": "^4.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.0",
@@ -2416,7 +2422,7 @@
                 }
             ],
             "description": "A high-level machine learning and deep learning library for the PHP language.",
-            "homepage": "https://rubixml.com",
+            "homepage": "https://rubixml.github.io/ML/latest/",
             "keywords": [
                 "Algorithm",
                 "Deep learning",
@@ -2499,7 +2505,7 @@
             ],
             "support": {
                 "chat": "https://t.me/RubixML",
-                "docs": "https://docs.rubixml.com",
+                "docs": "https://rubixml.github.io/ML/latest/",
                 "issues": "https://github.com/RubixML/ML/issues",
                 "source": "https://github.com/RubixML/ML"
             },
@@ -2509,7 +2515,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-09T23:02:27+00:00"
+            "time": "2025-10-01T17:52:15+00:00"
         },
         {
             "name": "rubix/tensor",
@@ -2773,8 +2779,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -2847,8 +2853,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -2927,8 +2933,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -3003,8 +3009,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -3164,16 +3170,16 @@
     "packages-dev": [
         {
             "name": "fig/log-test",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log-test.git",
-                "reference": "02d6eaf8b09784b7adacf57a3c951bad95229a7f"
+                "reference": "a6c6d97e289f6a50ae9ce34f34e8536cbeda6486"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log-test/zipball/02d6eaf8b09784b7adacf57a3c951bad95229a7f",
-                "reference": "02d6eaf8b09784b7adacf57a3c951bad95229a7f",
+                "url": "https://api.github.com/repos/php-fig/log-test/zipball/a6c6d97e289f6a50ae9ce34f34e8536cbeda6486",
+                "reference": "a6c6d97e289f6a50ae9ce34f34e8536cbeda6486",
                 "shasum": ""
             },
             "require": {
@@ -3181,7 +3187,7 @@
                 "psr/log": "^2.0 | ^3.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^8.0 | ^9.0",
+                "phpunit/phpunit": "^8.0 || ^9.0 || ^10.0 || ^11.0",
                 "squizlabs/php_codesniffer": "^3.6"
             },
             "type": "library",
@@ -3202,11 +3208,14 @@
                 }
             ],
             "description": "Test utilities for the psr/log package that backs the PSR-3 specification.",
+            "keywords": [
+                "testing"
+            ],
             "support": {
                 "issues": "https://github.com/php-fig/log-test/issues",
-                "source": "https://github.com/php-fig/log-test/tree/1.1.0"
+                "source": "https://github.com/php-fig/log-test/tree/1.2.0"
             },
-            "time": "2022-10-18T05:33:27+00:00"
+            "time": "2025-10-27T14:03:49+00:00"
         },
         {
             "name": "psalm/phar",

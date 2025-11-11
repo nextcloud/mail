@@ -45,9 +45,7 @@ class SmimeCertificatesController extends Controller {
 	#[TrapError]
 	public function index(): JsonResponse {
 		$certificates = $this->certificateService->findAllCertificates($this->userId);
-		$certificates = array_map(function (SmimeCertificate $certificate) {
-			return $this->certificateService->enrichCertificate($certificate);
-		}, $certificates);
+		$certificates = array_map(fn (SmimeCertificate $certificate) => $this->certificateService->enrichCertificate($certificate), $certificates);
 		return JsonResponse::success($certificates);
 	}
 

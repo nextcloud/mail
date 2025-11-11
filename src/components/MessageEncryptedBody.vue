@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import { getMailvelope } from '../crypto/mailvelope.js'
 import MdnRequest from './MdnRequest.vue'
+import { getMailvelope } from '../crypto/mailvelope.js'
 
 export default {
 	name: 'MessageEncryptedBody',
@@ -23,21 +23,25 @@ export default {
 			type: String,
 			required: true,
 		},
+
 		from: {
 			type: String,
 			required: false,
 			default: undefined,
 		},
+
 		message: {
 			required: true,
 			type: Object,
 		},
 	},
+
 	data() {
 		return {
 			mailvelope: false,
 		}
 	},
+
 	async mounted() {
 		this.mailvelope = await getMailvelope()
 		this.mailvelope.createDisplayContainer('#mail-content', this.body, undefined, {

@@ -9,7 +9,8 @@
 
 		<div ref="editableContainer" class="editable" />
 
-		<ckeditor v-if="ready"
+		<ckeditor
+			v-if="ready"
 			:value="value"
 			:config="config"
 			:editor="editor"
@@ -22,93 +23,107 @@
 
 <script>
 import CKEditor from '@ckeditor/ckeditor5-vue2'
-import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment.js'
-import { Mention } from '@ckeditor/ckeditor5-mention'
-import Editor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor.js'
-import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials.js'
-import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote.js'
-import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold.js'
-import FontPlugin from '@ckeditor/ckeditor5-font/src/font.js'
-import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph.js'
-import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading.js'
-import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic.js'
-import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline.js'
-import Superscript from '@ckeditor/ckeditor5-basic-styles/src/superscript.js'
-import Subscript from '@ckeditor/ckeditor5-basic-styles/src/subscript.js'
-import LinkPlugin from '@ckeditor/ckeditor5-link/src/link.js'
-import ListPlugin from '@ckeditor/ckeditor5-list/src/list.js'
-import ListProperties from '@ckeditor/ckeditor5-list/src/listproperties.js'
-import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat.js'
-import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
-import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough.js'
-import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
-import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter.js'
-import ImagePlugin from '@ckeditor/ckeditor5-image/src/image.js'
-import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandreplace.js'
-import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
-import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
-import GeneralHtmlSupport from '@ckeditor/ckeditor5-html-support/src/generalhtmlsupport.js'
-import { DropdownView } from '@ckeditor/ckeditor5-ui'
-import MailPlugin from '../ckeditor/mail/MailPlugin.js'
-import { searchProvider, getLinkWithPicker } from '@nextcloud/vue/components/NcRichText'
 import { getLanguage } from '@nextcloud/l10n'
-import logger from '../logger.js'
+import { emojiAddRecent, emojiSearch } from '@nextcloud/vue'
+import {
+	Alignment,
+	Base64UploadAdapter,
+	BlockQuote,
+	Bold,
+	DecoupledEditor,
+	DropdownView,
+	Essentials,
+	FindAndReplace,
+	Font,
+	GeneralHtmlSupport,
+	Heading,
+	Image,
+	ImageResize,
+	ImageUpload,
+	Italic,
+	Link,
+	List,
+	Mention,
+	Paragraph,
+	RemoveFormat,
+	Strikethrough,
+	Subscript,
+	Superscript,
+	Underline,
+} from 'ckeditor5'
+import { getLinkWithPicker, searchProvider } from '@nextcloud/vue/components/NcRichText'
+import MailPlugin from '../ckeditor/mail/MailPlugin.js'
+import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
+import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
 import PickerPlugin from '../ckeditor/smartpicker/PickerPlugin.js'
+import logger from '../logger.js'
 import { autoCompleteByName } from '../service/ContactIntegrationService.js'
-import { emojiSearch, emojiAddRecent } from '@nextcloud/vue'
-import { toPlain, Text } from '../util/text.js'
+import { Text, toPlain } from '../util/text.js'
+
+import 'ckeditor5/ckeditor5.css'
+
 export default {
 	name: 'TextEditor',
 	components: {
 		ckeditor: CKEditor.component,
 	},
+
 	props: {
 		value: {
 			type: String,
 			required: true,
 		},
+
 		html: {
 			type: Boolean,
 			default: false,
 		},
+
 		placeholder: {
 			type: String,
 			default: '',
 		},
+
 		focus: {
 			type: Boolean,
 			default: false,
 		},
+
 		bus: {
 			type: Object,
 			required: true,
 		},
+
 		disabled: {
 			type: Boolean,
 			default: false,
 		},
+
 		textBlocks: {
 			type: Array,
 			default: () => [],
 		},
+
 		isBordered: {
 			type: Boolean,
 			default: false,
 		},
+
 		readOnly: {
 			type: Boolean,
 			default: false,
 		},
 	},
+
 	data() {
 		const plugins = [
-			EssentialsPlugin,
-			ParagraphPlugin,
+			Essentials,
+			Paragraph,
 			SignaturePlugin,
 			QuotePlugin,
 			PickerPlugin,
 			Mention,
-			LinkPlugin,
+			Link,
 			FindAndReplace,
 			GeneralHtmlSupport,
 		]
@@ -116,21 +131,20 @@ export default {
 
 		if (this.html) {
 			plugins.push(...[
-				HeadingPlugin,
-				AlignmentPlugin,
-				BoldPlugin,
-				ItalicPlugin,
+				Heading,
+				Alignment,
+				Bold,
+				Italic,
 				Underline,
-				StrikethroughPlugin,
+				Strikethrough,
 				Subscript,
 				Superscript,
-				BlockQuotePlugin,
-				ListPlugin,
-				ImagePlugin,
-				ImageUploadPlugin,
-				ImageResizePlugin,
-				ListProperties,
-				FontPlugin,
+				BlockQuote,
+				List,
+				Image,
+				ImageUpload,
+				ImageResize,
+				Font,
 				RemoveFormat,
 				Base64UploadAdapter,
 				MailPlugin,
@@ -163,14 +177,12 @@ export default {
 			emojiTribute: null,
 			textSmiles: [],
 			ready: false,
-			editor: Editor,
+			editor: DecoupledEditor,
 			config: {
 				licenseKey: 'GPL',
 				placeholder: this.placeholder,
 				plugins,
-				toolbar: {
-					items: toolbar,
-				},
+				toolbar,
 				language: 'en',
 				mention: {
 					feeds: [
@@ -199,9 +211,11 @@ export default {
 			},
 		}
 	},
+
 	beforeMount() {
 		this.loadEditorTranslations(getLanguage())
 	},
+
 	methods: {
 		getLink(text) {
 			const results = searchProvider(text)
@@ -210,29 +224,36 @@ export default {
 			}
 			return results
 		},
+
 		getEmoji(text) {
+			// Disable the emoji picker if a [space] is the first character after the colon ':'
+			if (text[0] === ' ') {
+				return []
+			}
 			const emojiResults = emojiSearch(text)
 			if (this.textSmiles.includes(':' + text)) {
-
 				emojiResults.unshift(':' + text)
 			}
 			return emojiResults
 		},
+
 		async getContact(text) {
 			if (text.length === 0) {
 				return []
 			}
 			let contactResults = await autoCompleteByName(text)
-			contactResults = contactResults.filter(result => result.email.length > 0)
+			contactResults = contactResults.filter((result) => result.email.length > 0)
 			return contactResults
 		},
+
 		getTextBlock(text) {
 			if (text.length === 0) {
 				return []
 			}
-			return this.textBlocks.filter(textBlock => textBlock.title.toLowerCase().includes(text.toLowerCase()))
+			return this.textBlocks.filter((textBlock) => textBlock.title.toLowerCase().includes(text.toLowerCase()))
 		},
-		 customEmojiRenderer(item) {
+
+		customEmojiRenderer(item) {
 			const itemElement = document.createElement('span')
 
 			itemElement.classList.add('custom-item')
@@ -247,6 +268,7 @@ export default {
 
 			return itemElement
 		},
+
 		customLinkRenderer(item) {
 			const itemElement = document.createElement('span')
 			itemElement.classList.add('link-container')
@@ -264,6 +286,7 @@ export default {
 
 			return itemElement
 		},
+
 		customRenderer(item, type) {
 			const itemElement = document.createElement('span')
 
@@ -278,6 +301,7 @@ export default {
 
 			return itemElement
 		},
+
 		overrideDropdownPositionsToNorth(editor, toolbarView) {
 			const {
 				south, north, southEast, southWest, northEast, northWest,
@@ -288,13 +312,29 @@ export default {
 
 			if (editor.locale.uiLanguageDirection !== 'rtl') {
 				panelPositions = [
-					northEast, northWest, northMiddleEast, northMiddleWest, north,
-					southEast, southWest, southMiddleEast, southMiddleWest, south,
+					northEast,
+					northWest,
+					northMiddleEast,
+					northMiddleWest,
+					north,
+					southEast,
+					southWest,
+					southMiddleEast,
+					southMiddleWest,
+					south,
 				]
 			} else {
 				panelPositions = [
-					northWest, northEast, northMiddleWest, northMiddleEast, north,
-					southWest, southEast, southMiddleWest, southMiddleEast, south,
+					northWest,
+					northEast,
+					northMiddleWest,
+					northMiddleEast,
+					north,
+					southWest,
+					southEast,
+					southMiddleWest,
+					southMiddleEast,
+					south,
 				]
 			}
 
@@ -317,6 +357,7 @@ export default {
 				})
 			}
 		},
+
 		overrideTooltipPositions(toolbarView) {
 			for (const item of toolbarView.items) {
 				if (item.buttonView) {
@@ -326,6 +367,7 @@ export default {
 				}
 			}
 		},
+
 		async loadEditorTranslations(language) {
 			if (language === 'en') {
 				// The default, nothing to fetch
@@ -334,24 +376,31 @@ export default {
 
 			try {
 				logger.debug(`loading ${language} translations for CKEditor`)
-				await import(
-					/* webpackMode: "lazy-once" */
-					/* webpackPrefetch: true */
-					/* webpackPreload: true */
-					`@ckeditor/ckeditor5-build-decoupled-document/build/translations/${language}`
+
+				/* eslint-disable @stylistic/comma-dangle, @stylistic/function-paren-newline */
+				const { default: coreTranslations } = await import(
+					/* webpackMode: "lazy" */
+					`ckeditor5/translations/${language}.js`
 				)
-				this.showEditor(language)
+				/* eslint-enable @stylistic/comma-dangle, @stylistic/function-paren-newline */
+
+				this.showEditor(language, [coreTranslations])
 			} catch (error) {
 				logger.error(`could not find CKEditor translations for "${language}"`, { error })
 				this.showEditor('en')
 			}
 		},
-		showEditor(language) {
+
+		showEditor(language, translations) {
 			logger.debug(`using "${language}" as CKEditor language`)
+			if (translations) {
+				this.config.translations = translations
+			}
 			this.config.language = language
 
 			this.ready = true
 		},
+
 		/**
 		 * @param {module:core/editor/editor~Editor} editor editor the editor instance
 		 */
@@ -416,18 +465,21 @@ export default {
 			this.bus.on('insert-text-block', this.insertTextBlock)
 			this.$emit('ready', editor)
 		},
+
 		onEditorInput(text) {
 			if (text !== this.value) {
 				logger.debug(`TextEditor input changed to <${text}>`)
 				this.$emit('input', text)
 			}
 		},
+
 		appendToBodyAtCursor(toAppend) {
 			// https://ckeditor.com/docs/ckeditor5/latest/builds/guides/faq.html#where-are-the-editorinserthtml-and-editorinserttext-methods-how-to-insert-some-content
 			const viewFragment = this.editorInstance.data.processor.toView(toAppend)
 			const modelFragment = this.editorInstance.data.toModel(viewFragment)
 			this.editorInstance.model.insertContent(modelFragment)
 		},
+
 		editorExecute(commandName, ...args) {
 			if (this.editorInstance) {
 				this.editorInstance.execute(commandName, ...args)
@@ -435,6 +487,7 @@ export default {
 				throw new Error('Impossible to execute a command before editor is ready.')
 			}
 		},
+
 		insertTextBlock(textBlock, addTriggrer = true) {
 			if (addTriggrer) {
 				this.appendToBodyAtCursor('!')
@@ -571,9 +624,9 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 
 .ck.ck-toolbar {
 	border-radius: var(--border-radius-large) !important;
-	background: none;
 	background: var(--color-main-background) !important;
     color: var(--color-main-text) !important;
+	border: 1px solid var(--color-text-maxcontrast) !important;
 }
 
 .ck-rounded-corners .ck.ck-dropdown__panel, .ck.ck-dropdown__panel.ck-rounded-corners {

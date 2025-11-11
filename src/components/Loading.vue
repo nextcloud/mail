@@ -4,7 +4,8 @@
 -->
 <template>
 	<div class="wrapper">
-		<EmptyContent v-if="hint"
+		<EmptyContent
+			v-if="hint"
 			class="empty-content"
 			:name="hint">
 			<template #icon>
@@ -19,31 +20,35 @@
 </template>
 
 <script>
-import { NcLoadingIcon as IconLoading, NcEmptyContent as EmptyContent } from '@nextcloud/vue'
+import { NcEmptyContent as EmptyContent, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 export default {
 	name: 'Loading',
 	components: {
 		IconLoading,
 		EmptyContent,
 	},
+
 	props: {
 		hint: {
 			type: String,
 			default: '',
 			required: false,
 		},
+
 		slowHint: {
 			type: String,
 			default: '',
 			required: false,
 		},
 	},
+
 	data() {
 		return {
 			slow: false,
 			slowTimer: undefined,
 		}
 	},
+
 	mounted() {
 		clearTimeout(this.slowTimer)
 
@@ -51,6 +56,7 @@ export default {
 			this.slow = true
 		}, 3500)
 	},
+
 	beforeDestroy() {
 		clearTimeout(this.slowTimer)
 	},

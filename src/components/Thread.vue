@@ -6,8 +6,9 @@
 	<AppContentDetails id="mail-message">
 		<!-- Show outer loading screen only if we have no data about the thread -->
 		<Loading v-if="loading && thread.length === 0" :hint="t('mail', 'Loading thread')" />
-		<Error v-else-if="error"
-			:error="error && error.message ? error.message : t('mail', 'Not found')"
+		<Error
+			v-else-if="errorTitle || errorMessage"
+			:error="errorTitle ? errorTitle : t('mail', 'Not found')"
 			:message="errorMessage" />
 		<template v-else>
 			<div id="mail-thread-header">
@@ -17,26 +18,30 @@
 					</h2>
 					<div v-if="thread.length" ref="avatarHeader" class="avatar-header">
 						<!-- Participants that can fit in the parent div -->
-						<RecipientBubble v-for="participant in threadParticipants.slice(0, participantsToDisplay)"
+						<RecipientBubble
+							v-for="participant in threadParticipants.slice(0, participantsToDisplay)"
 							:key="participant.email"
 							:email="participant.email"
 							:label="participant.label" />
 						<!-- Indicator to show that there are more participants than displayed -->
-						<Popover v-if="threadParticipants.length > participantsToDisplay"
+						<Popover
+							v-if="threadParticipants.length > participantsToDisplay"
 							class="avatar-more">
 							<template #trigger>
 								<span class="avatar-more">
 									{{ moreParticipantsString }}
 								</span>
 							</template>
-							<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
+							<RecipientBubble
+								v-for="participant in threadParticipants.slice(participantsToDisplay)"
 								:key="participant.email"
 								:title="participant.email"
 								:email="participant.email"
 								:label="participant.label" />
 						</Popover>
 						<!-- Remaining participants, if any (Needed to have avatarHeader reactive) -->
-						<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
+						<RecipientBubble
+							v-for="participant in threadParticipants.slice(participantsToDisplay)"
 							:key="participant.email"
 							class="avatar-hidden"
 							:email="participant.email"
@@ -45,7 +50,8 @@
 				</div>
 			</div>
 			<ThreadSummary v-if="showSummaryBox" :loading="summaryLoading" :summary="summaryText" />
-			<ThreadEnvelope v-for="(env, index) in thread"
+			<ThreadEnvelope
+				v-for="(env, index) in thread"
 				:key="env.databaseId"
 				:envelope="env"
 				:mailbox-id="$route.params.mailboxId"
@@ -63,24 +69,22 @@
 </template>
 
 <script>
-import { NcAppContentDetails as AppContentDetails, NcPopover as Popover } from '@nextcloud/vue'
 import { showError } from '@nextcloud/dialogs'
-
-import { prop, uniqBy } from 'ramda'
-import debounce from 'lodash/fp/debounce.js'
 import { loadState } from '@nextcloud/initial-state'
-
-import { summarizeThread } from '../service/AiIntergrationsService.js'
-import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory.js'
-import Loading from './Loading.vue'
-import logger from '../logger.js'
+import moment from '@nextcloud/moment'
+import { NcAppContentDetails as AppContentDetails, NcPopover as Popover } from '@nextcloud/vue'
+import debounce from 'lodash/fp/debounce.js'
+import { mapStores } from 'pinia'
+import { prop, uniqBy } from 'ramda'
 import Error from './Error.vue'
+import Loading from './Loading.vue'
 import RecipientBubble from './RecipientBubble.vue'
 import ThreadEnvelope from './ThreadEnvelope.vue'
 import ThreadSummary from './ThreadSummary.vue'
-import { mapStores } from 'pinia'
+import logger from '../logger.js'
+import { summarizeThread } from '../service/AiIntergrationsService.js'
 import useMainStore from '../store/mainStore.js'
-import moment from '@nextcloud/moment'
+import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory.js'
 
 export default {
 	name: 'Thread',
@@ -93,6 +97,7 @@ export default {
 		ThreadEnvelope,
 		Popover,
 	},
+
 	props: {
 		currentAccountEmail: {
 			type: String,
@@ -106,7 +111,7 @@ export default {
 			loading: true,
 			message: undefined,
 			errorMessage: '',
-			error: undefined,
+			errorTitle: '',
 			expandedThreads: [],
 			participantsToDisplay: 999,
 			resizeDebounced: debounce(500, this.updateParticipantsToDisplay),
@@ -132,9 +137,11 @@ export default {
 			// Returns a number showing the number of thread participants that are not shown in the avatar-header
 			return `+${this.threadParticipants.length - this.participantsToDisplay}`
 		},
+
 		threadId() {
 			return parseInt(this.$route.params.threadId, 10)
 		},
+
 		thread() {
 			const envelope = this.mainStore.getEnvelope(this.threadId)
 			if (envelope === undefined) {
@@ -151,8 +158,8 @@ export default {
 			}
 
 			const currentMailbox = this.mainStore.getMailbox(envelope.mailboxId)
-			const trashMailbox = this.mainStore.getMailboxes(envelope.accountId).find(mailbox => mailbox.specialRole === 'trash')
-			const junkMailbox = this.mainStore.getMailboxes(envelope.accountId).find(mailbox => mailbox.specialRole === 'junk')
+			const trashMailbox = this.mainStore.getMailboxes(envelope.accountId).find((mailbox) => mailbox.specialRole === 'trash')
+			const junkMailbox = this.mainStore.getMailboxes(envelope.accountId).find((mailbox) => mailbox.specialRole === 'junk')
 
 			let limitEnvelopesToCurrentMailbox = false
 			const mailboxesToIgnore = []
@@ -172,17 +179,19 @@ export default {
 			}
 
 			if (limitEnvelopesToCurrentMailbox) {
-				return envelopes.filter(envelope => envelope.mailboxId === currentMailbox.databaseId)
+				return envelopes.filter((envelope) => envelope.mailboxId === currentMailbox.databaseId)
 			} else {
-				return envelopes.filter(envelope => !mailboxesToIgnore.includes(envelope.mailboxId))
+				return envelopes.filter((envelope) => !mailboxesToIgnore.includes(envelope.mailboxId))
 			}
 		},
+
 		threadParticipants() {
-			const recipients = this.thread.flatMap(envelope => {
+			const recipients = this.thread.flatMap((envelope) => {
 				return envelope.from.concat(envelope.to).concat(envelope.cc)
-			}).filter(participant => participant.email !== this.currentAccountEmail)
+			}).filter((participant) => participant.email !== this.currentAccountEmail)
 			return uniqBy(prop('email'), recipients)
 		},
+
 		threadSubject() {
 			const thread = this.thread
 			if (thread.length === 0) {
@@ -191,10 +200,12 @@ export default {
 			}
 			return thread[0].subject || this.t('mail', 'No subject')
 		},
+
 		showSummaryBox() {
 			return this.thread.length > 2 && this.enabledThreadSummary && !this.summaryError
 		},
 	},
+
 	watch: {
 		$route(to, from) {
 			if (
@@ -210,11 +221,13 @@ export default {
 			this.resetThread()
 		},
 	},
+
 	created() {
 		this.resetThread()
 		window.addEventListener('resize', this.resizeDebounced)
 		window.addEventListener('keydown', this.handleKeyDown)
 	},
+
 	mounted() {
 		this.scrollEl = this.$el.closest('.app-content-wrapper') || window
 		this.$nextTick(() => {
@@ -227,6 +240,7 @@ export default {
 		})
 		this.scrollEl.addEventListener('scroll', this.onScroll, { passive: true })
 	},
+
 	beforeDestroy() {
 		window.removeEventListener('resize', this.resizeDebounced)
 		window.removeEventListener('keydown', this.handleKeyDown)
@@ -237,9 +251,12 @@ export default {
 			this.transitionEndHandler = null
 		}
 	},
+
 	methods: {
 		async updateSummary() {
-			if (this.thread.length <= 2 || !this.enabledThreadSummary) return
+			if (this.thread.length <= 2 || !this.enabledThreadSummary) {
+				return
+			}
 
 			this.summaryLoading = true
 			try {
@@ -252,6 +269,7 @@ export default {
 				this.summaryLoading = false
 			}
 		},
+
 		_measureHeightsOnce() {
 			const h2 = this.$el.querySelector('#mail-thread-header-fields h2')
 			if (!h2) return
@@ -282,6 +300,7 @@ export default {
 
 			this.onScroll()
 		},
+
 		onScroll() {
 			if (this.isAnimating) return
 
@@ -317,6 +336,7 @@ export default {
 				this._animateExpand()
 			}
 		},
+
 		_animateCollapse() {
 			const h2 = this.$el.querySelector('#mail-thread-header-fields h2')
 			if (!h2) return
@@ -393,6 +413,7 @@ export default {
 			this.transitionEndHandler = onEnd
 			h2.addEventListener('transitionend', onEnd)
 		},
+
 		updateParticipantsToDisplay() {
 			// Wait until everything is in place
 			if (!this.$refs.avatarHeader || !this.threadParticipants) {
@@ -430,6 +451,7 @@ export default {
 				this.participantsToDisplay = this.threadParticipants.length
 			}
 		},
+
 		toggleExpand(threadId) {
 			if (this.thread.length === 1) {
 				return
@@ -439,9 +461,10 @@ export default {
 				this.expandedThreads.push(threadId)
 			} else {
 				console.debug(`collapse thread ${threadId}`)
-				this.expandedThreads = this.expandedThreads.filter(t => t !== threadId)
+				this.expandedThreads = this.expandedThreads.filter((t) => t !== threadId)
 			}
 		},
+
 		onMove(threadId) {
 			if (threadId === this.threadId) {
 				this.$router.replace({
@@ -455,10 +478,11 @@ export default {
 				this.fetchThread()
 			}
 		},
+
 		async resetThread() {
 			this.expandedThreads = [this.threadId]
 			this.errorMessage = ''
-			this.error = undefined
+			this.errorTitle = ''
 			if (this.mainStore.getPreference('layout-message-view', 'threaded') === 'threaded') {
 				await this.fetchThread()
 			}
@@ -466,10 +490,11 @@ export default {
 			this.updateSummary()
 			this.loadedThreads = 0
 		},
+
 		async fetchThread() {
 			this.loading = true
 			this.errorMessage = ''
-			this.error = undefined
+			this.errorTitle = ''
 			const threadId = this.threadId
 
 			try {
@@ -496,7 +521,7 @@ export default {
 			} catch (error) {
 				logger.error('could not load envelope thread', { threadId, error })
 				if (error?.response?.status === 403) {
-					this.error = t('mail', 'Could not load your message thread')
+					this.errorTitle = t('mail', 'Could not load your message thread')
 					this.errorMessage = t('mail', 'The thread doesn\'t exist or has been deleted')
 					this.loading = false
 				} else if (error?.response?.status === 500) {
@@ -507,19 +532,22 @@ export default {
 				}
 			}
 		},
+
 		async handleKeyDown(event) {
 			if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
 				event.preventDefault()
 
 				this.thread.forEach((thread) => {
-					if (!this.expandedThreads.includes(thread.databaseId)) this.expandedThreads.push(thread.databaseId)
+					if (!this.expandedThreads.includes(thread.databaseId)) {
+						this.expandedThreads.push(thread.databaseId)
+					}
 				})
 
 				while (true) {
 					if (this.loadedThreads === this.thread.length) {
 						break
 					}
-					await new Promise(resolve => setTimeout(resolve, 100))
+					await new Promise((resolve) => setTimeout(resolve, 100))
 				}
 
 				const virtualIframe = document.createElement('iframe')
@@ -585,14 +613,15 @@ export default {
 					virtualIframe.contentWindow.print()
 					this.removeIframe(virtualIframe)
 				}
-
 			}
 		},
+
 		removeIframe(virtualIframe) {
 			setTimeout(() => {
 				document.body.removeChild(virtualIframe)
 			}, 500)
 		},
+
 		addMessageInfo(virtualIframeDocument, index) {
 			const hr = virtualIframeDocument.createElement('hr')
 			hr.style.border = '1px solid black'
@@ -619,6 +648,7 @@ export default {
 			virtualIframeDocument.body.appendChild(dateSpan)
 			virtualIframeDocument.body.appendChild(recipientSpan)
 		},
+
 		addThreadInfo(document) {
 			const threadInfo = document.createElement('div')
 			threadInfo.style.marginTop = '20px'
@@ -631,15 +661,17 @@ export default {
 
 			const participantsLine = document.createElement('p')
 			participantsLine.textContent = this.threadParticipants
-				.map(participant => `${participant.label} <${participant.email}>`)
+				.map((participant) => `${participant.label} <${participant.email}>`)
 				.join(', ')
 			threadInfo.appendChild(participantsLine)
 
 			return threadInfo
 		},
+
 		addLoadedThread() {
 			this.loadedThreads++
 		},
+
 		print(threadIndex) {
 			setTimeout(() => {
 				try {

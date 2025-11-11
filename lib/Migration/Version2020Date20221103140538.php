@@ -32,10 +32,9 @@ class Version2020Date20221103140538 extends SimpleMigrationStep {
 		if (!$localMessagesTable->hasColumn('updated_at')) {
 			$localMessagesTable->addColumn('updated_at', Types::INTEGER, [
 				'notnull' => false,
-				'length' => 4,
 			]);
 		}
-		$localMessagesTable->changeColumn('send_at', [
+		$localMessagesTable->modifyColumn('send_at', [
 			'notnull' => false
 		]);
 		return $schema;

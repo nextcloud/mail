@@ -22,10 +22,12 @@ OC.L10N.register(
     "Signature" : "Гарын үсэг",
     "Go back" : "Буцах",
     "Cancel" : "болиулах",
-    "Accounts" : "Accounts",
-    "Add mail account" : "шуудангийн хаяг нэмэх",
     "General" : "Ерөнхий",
+    "Add mail account" : "шуудангийн хаяг нэмэх",
     "List" : "Жагсаалт",
+    "Newest first" : "Шинийг урд нь",
+    "Oldest first" : "Хуучныг урд нь",
+    "Security" : "Хамгаалалт",
     "Archive" : "архив",
     "Delete" : "Устгах",
     "Search" : "Хайх",
@@ -64,7 +66,6 @@ OC.L10N.register(
     "Folder name" : "Хавтасны нэр",
     "Saving" : "хадгаламж",
     "Show all folders" : "Бүх хавтас харуулах",
-    "Loading …" : "Уншиж байна...",
     "Rename" : "Нэрлэнэ үү",
     "New message" : "шинэ зурвас",
     "Reply" : "хариулт",
@@ -95,6 +96,8 @@ OC.L10N.register(
     "Junk" : "хэрэггүй",
     "Sent" : "илгээсэн",
     "Trash" : "хог",
-    "Error loading message" : "алдаатай ачааллах зурвас"
+    "Error loading message" : "алдаатай ачааллах зурвас",
+    "Accounts" : "Accounts",
+    "Loading …" : "Уншиж байна..."
 },
 "nplurals=2; plural=(n != 1);");

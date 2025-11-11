@@ -4,29 +4,33 @@
 -->
 
 <template>
-	<div class="attachment" :class="{'message-attachment--can-preview': canPreview }">
+	<div class="attachment" :class="{ 'message-attachment--can-preview': canPreview }">
 		<div class="mail-attachment-img--wrapper" @click="$emit('open', $event)">
-			<img v-if="isImage"
+			<img
+				v-if="isImage"
 				class="mail-attached-image"
 				:src="url">
 			<img v-else class="attachment-icon" :src="mimeUrl">
 		</div>
 		<div class="mail-attached--content" @click="$emit('open', $event)">
-			<span class="attachment-name"
+			<span
+				class="attachment-name"
 				:title="label">{{ name }}
 			</span>
 			<span class="attachment-size">{{ humanReadable(size) }}</span>
 		</div>
-		<FilePicker v-if="isFilePickerOpen"
+		<FilePicker
+			v-if="isFilePickerOpen"
 			:name="t('mail', 'Choose a folder to store the attachment in')"
 			:buttons="saveAttachementButtons"
 			:allow-pick-directory="true"
 			:multiselect="false"
 			:mimetype-filter="['httpd/unix-directory']"
-			@close="()=>isFilePickerOpen = false" />
+			@close="() => isFilePickerOpen = false" />
 		<Actions :boundaries-element="boundariesElement">
 			<template v-if="!showCalendarPopover">
-				<ActionButton v-if="isCalendarEvent"
+				<ActionButton
+					v-if="isCalendarEvent"
 					class="attachment-import calendar"
 					:disabled="loadingCalendars"
 					@click.stop="loadCalendars">
@@ -36,16 +40,18 @@
 					</template>
 					{{ t('mail', 'Import into calendar') }}
 				</ActionButton>
-				<ActionButton class="attachment-download"
+				<ActionButton
+					class="attachment-download"
 					@click="download">
 					<template #icon>
 						<IconDownload :size="20" />
 					</template>
 					{{ t('mail', 'Download attachment') }}
 				</ActionButton>
-				<ActionButton class="attachment-save-to-cloud"
+				<ActionButton
+					class="attachment-save-to-cloud"
 					:disabled="savingToCloud"
-					@click.stop="()=>isFilePickerOpen = true">
+					@click.stop="() => isFilePickerOpen = true">
 					<template #icon>
 						<IconSave v-if="!savingToCloud" :size="20" />
 						<IconLoading v-else-if="savingToCloud" :size="20" />
@@ -60,7 +66,8 @@
 					</template>
 					{{ t('mail', 'Go back') }}
 				</ActionButton>
-				<ActionButton v-for="entry in calendarMenuEntries"
+				<ActionButton
+					v-for="entry in calendarMenuEntries"
 					:key="entry.text"
 					@click="entry.action">
 					{{ entry.text }}
@@ -72,20 +79,17 @@
 
 <script>
 
-import { formatFileSize } from '@nextcloud/files'
-import { translate as t } from '@nextcloud/l10n'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
+import { formatFileSize } from '@nextcloud/files'
+import { translate as t } from '@nextcloud/l10n'
+import { NcActionButton as ActionButton, NcActions as Actions, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { mixin as onClickOutside } from 'vue-on-click-outside'
-
-import { NcActions as Actions, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-
-import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconArrow from 'vue-material-design-icons/ArrowLeft.vue'
 import IconSave from 'vue-material-design-icons/FolderOutline.vue'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconDownload from 'vue-material-design-icons/TrayArrowDown.vue'
 import Logger from '../logger.js'
-
 import { downloadAttachment, saveAttachmentToFiles } from '../service/AttachmentService.js'
 import { getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
 
@@ -101,46 +105,56 @@ export default {
 		IconSave,
 		IconDownload,
 	},
+
 	mixins: [onClickOutside],
 	props: {
 		id: {
 			type: String,
 			required: true,
 		},
+
 		fileName: {
 			type: String,
 			default: t('mail', 'Unnamed'),
 			required: false,
 		},
+
 		url: {
 			type: String,
 			required: true,
 		},
+
 		size: {
 			type: Number,
 			required: true,
 		},
+
 		mime: {
 			type: String,
 			required: true,
 		},
+
 		mimeUrl: {
 			type: String,
 			required: true,
 		},
+
 		isImage: {
 			type: Boolean,
 			default: false,
 		},
+
 		isCalendarEvent: {
 			type: Boolean,
 			default: false,
 		},
+
 		canPreview: {
 			type: Boolean,
 			default: false,
 		},
 	},
+
 	data() {
 		return {
 			savingToCloud: false,
@@ -154,9 +168,11 @@ export default {
 					type: 'primary',
 				},
 			],
+
 			isFilePickerOpen: false,
 		}
 	},
+
 	computed: {
 		name() {
 			if (this.mime === 'message/rfc822') {
@@ -164,12 +180,14 @@ export default {
 			}
 			return this.fileName
 		},
+
 		label() {
 			if (this.mime === 'message/rfc822') {
 				return t('mail', 'Embedded message') + ' (' + formatFileSize(this.size) + ')'
 			}
 			return this.fileName + ' (' + formatFileSize(this.size) + ')'
 		},
+
 		calendarMenuEntries() {
 			return this.calendars.map((cal) => {
 				return {
@@ -178,14 +196,17 @@ export default {
 				}
 			})
 		},
+
 		boundariesElement() {
 			return document.querySelector('#content-vue')
 		},
 	},
+
 	methods: {
 		humanReadable(size) {
 			return formatFileSize(size)
 		},
+
 		async saveToCloud(dest) {
 			const path = dest[0].path
 			this.savingToCloud = true
@@ -202,9 +223,11 @@ export default {
 				this.savingToCloud = false
 			}
 		},
+
 		download() {
 			window.location = this.url
 		},
+
 		loadCalendars() {
 			this.loadingCalendars = true
 			getUserCalendars().then((calendars) => {
@@ -213,9 +236,11 @@ export default {
 				this.loadingCalendars = false
 			})
 		},
+
 		closeCalendarPopover() {
 			this.showCalendarPopover = false
 		},
+
 		importCalendar(url) {
 			return () => {
 				downloadAttachment(this.url)

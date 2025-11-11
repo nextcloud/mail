@@ -3,16 +3,16 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import * as MessageService from '../../../service/MessageService.js'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
+import * as MessageService from '../../../service/MessageService.js'
 
-jest.mock('@nextcloud/axios')
-jest.mock('@nextcloud/router')
+vi.mock('@nextcloud/axios')
+vi.mock('@nextcloud/router')
 
 describe('service/MessageService test suite', () => {
 	afterEach(() => {
-		jest.clearAllMocks()
+		vi.clearAllMocks()
 	})
 
 	it('should include a given cache buster as a URL parameter', async () => {

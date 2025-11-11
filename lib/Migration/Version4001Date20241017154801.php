@@ -26,7 +26,6 @@ class Version4001Date20241017154801 extends SimpleMigrationStep {
 	 * @return ISchemaWrapper
 	 */
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
-		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 		if ($schema->hasTable('mail_text_blocks')) {
 			return null;
@@ -36,7 +35,6 @@ class Version4001Date20241017154801 extends SimpleMigrationStep {
 		$table->addColumn('id', Types::INTEGER, [
 			'autoincrement' => true,
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$table->addColumn('owner', Types::STRING, [
 			'notnull' => true,

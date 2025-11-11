@@ -4,7 +4,8 @@
 -->
 <template>
 	<div>
-		<input v-model="trashRetentionDays"
+		<input
+			v-model="trashRetentionDays"
 			type="number"
 			min="0"
 			@input="debouncedSave()">
@@ -16,8 +17,8 @@
 
 <script>
 import debounce from 'lodash/fp/debounce.js'
-import useMainStore from '../store/mainStore.js'
 import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'TrashRetentionSettings',
@@ -27,15 +28,18 @@ export default {
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			trashRetentionDays: this.account.trashRetentionDays,
 			debouncedSave: debounce(1000, this.save),
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 	},
+
 	methods: {
 		async save() {
 			let trashRetentionDays = parseInt(this.trashRetentionDays)

@@ -10,13 +10,12 @@
 <script>
 import { showError } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
-
-import logger from './logger.js'
-import { matchError } from './errors/match.js'
+import { mapState, mapStores } from 'pinia'
 import MailboxLockedError from './errors/MailboxLockedError.js'
-import { mapStores, mapState } from 'pinia'
-import useMainStore from './store/mainStore.js'
+import { matchError } from './errors/match.js'
 import initAfterAppCreation from './init.js'
+import logger from './logger.js'
+import useMainStore from './store/mainStore.js'
 
 export default {
 	name: 'App',
@@ -25,10 +24,12 @@ export default {
 		...mapState(useMainStore, [
 			'isExpiredSession',
 		]),
+
 		hasMailAccounts() {
 			return !!this.mainStore.getAccounts.find((account) => !account.isUnified)
 		},
 	},
+
 	watch: {
 		isExpiredSession(expired) {
 			if (expired) {
@@ -40,6 +41,7 @@ export default {
 			}
 		},
 	},
+
 	async mounted() {
 		initAfterAppCreation()
 		// Redirect to setup page if no accounts are configured
@@ -54,10 +56,12 @@ export default {
 		await this.mainStore.loadCollections()
 		this.mainStore.hasCurrentUserPrincipalAndCollectionsMutation(true)
 	},
+
 	methods: {
 		reload() {
 			window.location.reload()
 		},
+
 		sync() {
 			setTimeout(async () => {
 				try {

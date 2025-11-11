@@ -40,13 +40,9 @@ class TransmissionService {
 	public function getAddressList(LocalMessage $message, int $type): AddressList {
 		return new AddressList(
 			array_map(
-				static function ($recipient) use ($type) {
-					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
-				},
+				static fn ($recipient) => Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail()),
 				$this->groupsIntegration->expand(
-					array_filter($message->getRecipients(), static function (Recipient $recipient) use ($type) {
-						return $recipient->getType() === $type;
-					})
+					array_filter($message->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === $type)
 				)
 			)
 		);
@@ -60,13 +56,12 @@ class TransmissionService {
 		if (empty($message->getAttachments())) {
 			return [];
 		}
-		return array_map(static function (LocalAttachment $attachment) {
+		return array_map(static fn (LocalAttachment $attachment)
 			// Convert to the untyped nested array used in \OCA\Mail\Controller\AccountsController::send
-			return [
+			=> [
 				'type' => 'local',
 				'id' => $attachment->getId(),
-			];
-		}, $message->getAttachments());
+			], $message->getAttachments());
 	}
 
 	/**

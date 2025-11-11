@@ -186,6 +186,9 @@ final class Message implements IMessage {
 		return $this->inReplyTo;
 	}
 
+	/**
+	 * @return void
+	 */
 	#[\Override]
 	public function setInReplyTo(string $id) {
 		$this->inReplyTo = $id;

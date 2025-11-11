@@ -54,12 +54,10 @@ class NextcloudGroupService implements IGroupService {
 		$groups = $this->groupManager->search($term);
 
 		return array_map(
-			static function ($g) {
-				return [
-					'id' => $g->getGID(),
-					'name' => $g->getDisplayName()
-				];
-			},
+			static fn ($g) => [
+				'id' => $g->getGID(),
+				'name' => $g->getDisplayName()
+			],
 			$groups
 		);
 	}
@@ -71,13 +69,11 @@ class NextcloudGroupService implements IGroupService {
 		}
 		$users = $this->groupManager->get($groupId)->getUsers();
 		return array_map(
-			static function ($user) {
-				return [
-					'id' => $user->getUID(),
-					'name' => $user->getDisplayName(),
-					'email' => $user->getEMailAddress()
-				];
-			},
+			static fn ($user) => [
+				'id' => $user->getUID(),
+				'name' => $user->getDisplayName(),
+				'email' => $user->getEMailAddress()
+			],
 			$users
 		);
 	}

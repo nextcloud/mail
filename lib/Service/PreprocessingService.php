@@ -38,9 +38,7 @@ class PreprocessingService {
 			$this->logger->debug('No mailboxes found.');
 			return;
 		}
-		$mailboxIds = array_unique(array_map(static function (Mailbox $mailbox) {
-			return $mailbox->getId();
-		}, $mailboxes));
+		$mailboxIds = array_unique(array_map(static fn (Mailbox $mailbox) => $mailbox->getId(), $mailboxes));
 
 		$messages = [];
 		foreach (array_chunk($mailboxIds, 1000) as $chunk) {
@@ -52,9 +50,7 @@ class PreprocessingService {
 		}
 
 		foreach ($mailboxes as $mailbox) {
-			$filteredMessages = array_filter($messages, static function ($message) use ($mailbox) {
-				return $message->getMailboxId() === $mailbox->getId();
-			});
+			$filteredMessages = array_filter($messages, static fn ($message) => $message->getMailboxId() === $mailbox->getId());
 
 			if ($filteredMessages === []) {
 				continue;

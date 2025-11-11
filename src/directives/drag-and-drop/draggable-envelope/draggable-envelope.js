@@ -2,11 +2,10 @@
  * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-import dragEventBus from '../util/dragEventBus.js'
 import defer from 'lodash/defer.js'
+import dragEventBus from '../util/dragEventBus.js'
 
 export class DraggableEnvelope {
-
 	constructor(el, componentInstance, options) {
 		this.el = el
 		this.options = options
@@ -87,7 +86,7 @@ export class DraggableEnvelope {
 		const labelWrapperNode = document.createElement('div')
 		labelWrapperNode.classList.add(`${baseClass}--label-wrapper`)
 
-		envelopes.forEach(envelope => {
+		envelopes.forEach((envelope) => {
 			const labelNode = document.createElement('div')
 			labelNode.classList.add(`${baseClass}--label-wrapper--label`)
 			const textLabelNode = document.createTextNode(envelope.draggableLabel)
@@ -107,5 +106,4 @@ export class DraggableEnvelope {
 			document.body.removeChild(dragNode)
 		})
 	}
-
 }

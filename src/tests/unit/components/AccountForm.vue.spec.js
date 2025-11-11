@@ -3,14 +3,12 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { testConnectivity, queryIspdb, queryMx } from '../../../service/AutoConfigService.js'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { createPinia, PiniaVuePlugin } from 'pinia'
-
-import useMainStore from '../../../store/mainStore.js'
-
 import AccountForm from '../../../components/AccountForm.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
+import { queryIspdb, queryMx, testConnectivity } from '../../../service/AutoConfigService.js'
+import useMainStore from '../../../store/mainStore.js'
 
 const localVue = createLocalVue()
 
@@ -18,17 +16,15 @@ localVue.mixin(Nextcloud)
 localVue.use(PiniaVuePlugin)
 const pinia = createPinia()
 
-
-jest.mock('../../../service/AutoConfigService.js')
+vi.mock('../../../service/AutoConfigService.js')
 
 describe('AccountForm', () => {
-
 	let save
 	let store
 	let view
 
 	beforeEach(() => {
-		save = jest.fn()
+		save = vi.fn()
 
 		view = shallowMount(AccountForm, {
 			propsData: {
@@ -50,7 +46,7 @@ describe('AccountForm', () => {
 		expect(view.vm.emailAddress).toBe('tom@tom.turbo')
 	})
 
-	it('applies server ISP DB config', async() => {
+	it('applies server ISP DB config', async () => {
 		queryIspdb.mockImplementation(() => Promise.resolve({
 			imapConfig: {
 				host: 'imap.tom.turbo',
@@ -84,7 +80,7 @@ describe('AccountForm', () => {
 		expect(view.vm.manualConfig.smtpPassword).toBe('secret')
 	})
 
-	it('fails to find auto config', async() => {
+	it('fails to find auto config', async () => {
 		queryIspdb.mockImplementation(() => Promise.resolve(undefined))
 		queryMx.mockImplementation(() => Promise.resolve(['mx.tom.turbo']))
 		testConnectivity.mockImplementation(() => Promise.resolve(false))
@@ -99,7 +95,7 @@ describe('AccountForm', () => {
 		expect(view.vm.error).not.toBe(null)
 	})
 
-	it('applies server MX config', async() => {
+	it('applies server MX config', async () => {
 		queryIspdb.mockImplementation(() => Promise.resolve(undefined))
 		queryMx.mockImplementation(() => Promise.resolve(['mx.tom.turbo']))
 		testConnectivity.mockImplementation((host, port) => Promise.resolve(host === 'mx.tom.turbo' && [993, 465].includes(port)))
@@ -122,5 +118,4 @@ describe('AccountForm', () => {
 		expect(view.vm.manualConfig.smtpSslMode).toBe('ssl')
 		expect(view.vm.manualConfig.smtpPassword).toBe('secret')
 	})
-
 })

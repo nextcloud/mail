@@ -10,12 +10,11 @@
     "Signature" : "අත්සන",
     "Go back" : "ආපසු යන්න",
     "Cancel" : "අවලංගු කරන්න",
-    "Accounts" : "Accounts",
     "General" : "සමාන්‍යය",
-    "About" : "පිළිබඳ",
     "Archive" : "සංරක්ෂණය",
     "Search" : "සොයන්න",
     "Send" : "යවන්න",
+    "About" : "පිළිබඳ",
     "Choose" : "තෝරන්න",
     "Confirm" : "තහවුරු කරන්න",
     "Favorite" : "ප්‍රියතම",
@@ -33,7 +32,6 @@
     "Translate" : "පරිවර්තනය",
     "Remove account" : "ගිණුම ඉවත් කරන්න",
     "Folder name" : "බහාලුමේ නම",
-    "Loading …" : "පූරණය වෙමින් …",
     "Mark all as read" : "සියල්ල කියවූ ලෙස සලකුණු කරන්න",
     "Reply" : "පිළිතුර",
     "Retry" : "නැවත උත්සාහ කරන්න",
@@ -51,6 +49,8 @@
     "Certificate" : "සහතිකය",
     "Shares" : "බෙදාගැනීම්",
     "All" : "සියල්ල",
-    "Favorites" : "ප්‍රියතම"
+    "Favorites" : "ප්‍රියතම",
+    "Accounts" : "Accounts",
+    "Loading …" : "පූරණය වෙමින් …"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

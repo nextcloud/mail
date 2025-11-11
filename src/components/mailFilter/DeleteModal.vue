@@ -3,7 +3,8 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcDialog :name="t('mail', 'Delete mail filter {filterName}?', {filterName: filter.name})"
+	<NcDialog
+		:name="t('mail', 'Delete mail filter {filterName}?', { filterName: filter.name })"
 		:open="open"
 		:message="t('mail', 'Are you sure to delete the mail filter?')"
 		:buttons="buttons"
@@ -11,27 +12,29 @@
 </template>
 
 <script>
-import { NcDialog } from '@nextcloud/vue'
-// eslint-disable-next-line import/no-unresolved
+
 import IconCancel from '@mdi/svg/svg/cancel.svg?raw'
-// eslint-disable-next-line import/no-unresolved
 import IconCheck from '@mdi/svg/svg/check.svg?raw'
+import { NcDialog } from '@nextcloud/vue'
 
 export default {
 	name: 'DeleteModal',
 	components: {
 		NcDialog,
 	},
+
 	props: {
 		filter: {
 			type: Object,
 			required: true,
 		},
+
 		open: {
 			type: Boolean,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			buttons: [
@@ -49,10 +52,12 @@ export default {
 			],
 		}
 	},
+
 	methods: {
 		deleteFilter() {
 			this.$emit('delete-filter', this.filter)
 		},
+
 		closeModal() {
 			this.$emit('close')
 		},

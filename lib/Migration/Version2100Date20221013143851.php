@@ -44,7 +44,6 @@ class Version2100Date20221013143851 extends SimpleMigrationStep {
 				Types::INTEGER,
 				[
 					'notnull' => false,
-					'length' => 8,
 				],
 			);
 		}

@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import curry from 'lodash/fp/curry.js'
 import moment from '@nextcloud/moment'
+import curry from 'lodash/fp/curry.js'
 
 export const shortDatetime = curry((ref, date) => {
 	const momentDate = moment(date)
@@ -26,7 +26,7 @@ export const shortDatetime = curry((ref, date) => {
 	return momentDate.format('MMM D, YYYY')
 })
 
-export const messageDateTime = (date) => {
+export function messageDateTime(date) {
 	return moment(date * 1000).format('lll')
 }
 

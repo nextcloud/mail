@@ -33,9 +33,12 @@ class FilterController extends Controller {
 	}
 
 
+	/**
+	 * @psalm-return JSONResponse<200|404, array, array<never, never>>
+	 */
 	#[Route(Route::TYPE_FRONTPAGE, verb: 'GET', url: '/api/filter/{accountId}', requirements: ['accountId' => '[\d]+'])]
 	#[NoAdminRequired]
-	public function getFilters(int $accountId) {
+	public function getFilters(int $accountId): JSONResponse {
 		$account = $this->accountService->findById($accountId);
 
 		if ($account->getUserId() !== $this->currentUserId) {
@@ -47,9 +50,12 @@ class FilterController extends Controller {
 		return new JSONResponse($result->getFilters());
 	}
 
+	/**
+	 * @psalm-return JSONResponse<200|404, array<never, never>, array<never, never>>
+	 */
 	#[Route(Route::TYPE_FRONTPAGE, verb: 'PUT', url: '/api/filter/{accountId}', requirements: ['accountId' => '[\d]+'])]
 	#[NoAdminRequired]
-	public function updateFilters(int $accountId, array $filters) {
+	public function updateFilters(int $accountId, array $filters): JSONResponse {
 		$account = $this->accountService->findById($accountId);
 
 		if ($account->getUserId() !== $this->currentUserId) {

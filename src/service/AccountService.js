@@ -2,17 +2,17 @@
  * SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
 
-export const fixAccountId = (original) => {
+export function fixAccountId(original) {
 	return {
 		id: original.accountId,
 		...original,
 	}
 }
 
-export const create = (data) => {
+export function create(data) {
 	const url = generateUrl('/apps/mail/api/accounts')
 
 	return axios
@@ -28,7 +28,7 @@ export const create = (data) => {
 		})
 }
 
-export const patch = (account, data) => {
+export function patch(account, data) {
 	const url = generateUrl('/apps/mail/api/accounts/{id}', {
 		id: account.accountId,
 	})
@@ -39,7 +39,7 @@ export const patch = (account, data) => {
 		.then(fixAccountId)
 }
 
-export const update = (data) => {
+export function update(data) {
 	const url = generateUrl('/apps/mail/api/accounts/{id}', {
 		id: data.accountId,
 	})
@@ -57,7 +57,7 @@ export const update = (data) => {
 		})
 }
 
-export const updateSignature = (account, signature) => {
+export function updateSignature(account, signature) {
 	const url = generateUrl('/apps/mail/api/accounts/{id}/signature', {
 		id: account.id,
 	})
@@ -71,13 +71,13 @@ export const updateSignature = (account, signature) => {
 		.then(fixAccountId)
 }
 
-export const fetchAll = () => {
+export function fetchAll() {
 	const url = generateUrl('/apps/mail/api/accounts')
 
 	return axios.get(url).then((resp) => resp.data.map(fixAccountId))
 }
 
-export const fetch = (id) => {
+export function fetch(id) {
 	const url = generateUrl('/apps/mail/api/accounts/{id}', {
 		id,
 	})
@@ -85,7 +85,7 @@ export const fetch = (id) => {
 	return axios.get(url).then((resp) => fixAccountId(resp.data))
 }
 
-export const fetchQuota = async (id) => {
+export async function fetchQuota(id) {
 	const url = generateUrl('/apps/mail/api/accounts/{id}/quota', {
 		id,
 	})
@@ -104,7 +104,7 @@ export const fetchQuota = async (id) => {
 	}
 }
 
-export const deleteAccount = (id) => {
+export function deleteAccount(id) {
 	const url = generateUrl('/apps/mail/api/accounts/{id}', {
 		id,
 	})
@@ -112,7 +112,7 @@ export const deleteAccount = (id) => {
 	return axios.delete(url).then((resp) => fixAccountId(resp.data))
 }
 
-export const updateSmimeCertificate = async (id, smimeCertificateId) => {
+export async function updateSmimeCertificate(id, smimeCertificateId) {
 	const url = generateUrl('/apps/mail/api/accounts/{id}/smime-certificate', {
 		id,
 	})
@@ -121,7 +121,7 @@ export const updateSmimeCertificate = async (id, smimeCertificateId) => {
 	return response.data.data
 }
 
-export const testAccountConnection = async (id) => {
+export async function testAccountConnection(id) {
 	const url = generateUrl('/apps/mail/api/accounts/{id}/test', {
 		id,
 	})

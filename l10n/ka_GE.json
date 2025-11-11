@@ -26,12 +26,12 @@
     "Signature" : "ხელმოწერა",
     "Go back" : "უკან დაბრუნება",
     "Cancel" : "უარყოფა",
-    "Accounts" : "ანგარიში",
-    "Add mail account" : "საფოსტო ანგარიშის დამატება",
     "General" : "ზოგადი",
-    "Use Gravatar and favicon avatars" : "მოიხმარეთ Gravatar და favicon ავატარები",
+    "Add mail account" : "საფოსტო ანგარიშის დამატება",
+    "Newest first" : "ჯერ ახალი",
+    "Oldest first" : "ჯერ ძველი",
     "Register" : "რეგისტრაცია",
-    "About" : "ჩვენს შესახებ",
+    "Security" : "უსაფრთხოება",
     "Keyboard shortcuts" : "კლავიატურის კომბინაციები",
     "Compose new message" : "ახალი წერილის შედგენა",
     "Newer message" : "უფრო ახალი წერილი",
@@ -43,6 +43,7 @@
     "Search" : "ძიება",
     "Send" : "გაგზავნა",
     "Refresh" : "განახლება",
+    "About" : "ჩვენს შესახებ",
     "Ok" : "კარგი",
     "Select account" : "აირჩიეთ ანგარიში",
     "Subject" : "სათაური",
@@ -143,6 +144,8 @@
     "Click here if you are not automatically redirected within the next few seconds." : "იმ შემთხვევაში, თუ რამდენიმე წამის განმავლობაში არ მოხდება ავტომატური გადამისამართება დააწკაპუნეთ აქ.",
     "Redirect" : "გადამისამართება",
     "The link leads to %s" : "ბმულს მიყევხართ %s-ისკენ",
-    "Continue to %s" : "%s-ისკენ გაგრძელება"
+    "Continue to %s" : "%s-ისკენ გაგრძელება",
+    "Accounts" : "ანგარიში",
+    "Use Gravatar and favicon avatars" : "მოიხმარეთ Gravatar და favicon ავატარები"
 },"pluralForm" :"nplurals=2; plural=(n!=1);"
 }

@@ -4,10 +4,12 @@
 -->
 
 <template>
-	<div ref="envelope"
+	<div
+		ref="envelope"
 		class="envelope"
-		:class="{'envelope--expanded' : expanded }">
-		<div v-if="showFollowUpHeader"
+		:class="{ 'envelope--expanded': expanded }">
+		<div
+			v-if="showFollowUpHeader"
 			class="envelope__follow-up-header">
 			<span class="envelope__follow-up-header__date">
 				{{ t('mail', "You've sent this message on {date}", { date: formattedSentAt }) }}
@@ -21,7 +23,8 @@
 
 		<div class="envelope__header">
 			<div class="envelope__header__avatar">
-				<Avatar v-if="envelope.from && envelope.from[0]"
+				<Avatar
+					v-if="envelope.from && envelope.from[0]"
 					:email="envelope.from[0].email"
 					:display-name="envelope.from[0].label"
 					:disable-tooltip="true"
@@ -29,33 +32,37 @@
 					:fetch-avatar="envelope.fetchAvatarFromClient"
 					:avatar="envelope.avatar"
 					class="envelope__header__avatar-avatar" />
-				<div v-if="isImportant"
+				<div
+					v-if="isImportant"
 					class="app-content-list-item-star icon-important"
 					:data-starred="isImportant ? 'true' : 'false'"
 					@click.prevent="hasWriteAcl ? onToggleImportant() : false"
 					v-html="importantSvg" />
-				<IconFavorite v-if="envelope.flags.flagged"
+				<IconFavorite
+					v-if="envelope.flags.flagged"
 					fill-color="#f9cf3d"
 					:size="18"
 					class="app-content-list-item-star favorite-icon-style"
 					:data-starred="envelope.flags.flagged ? 'true' : 'false'"
 					@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
-				<JunkIcon v-if="envelope.flags.$junk"
+				<JunkIcon
+					v-if="envelope.flags.$junk"
 					:size="18"
 					class="app-content-list-item-star junk-icon-style"
 					:data-starred="envelope.flags.$junk ? 'true' : 'false'"
 					@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
 			</div>
 
-			<router-link :to="route"
+			<router-link
+				:to="route"
 				event=""
 				class="left"
-				:class="{seen: envelope.flags.seen}"
+				:class="{ seen: envelope.flags.seen }"
 				@click.native.prevent="$emit('toggle-expand', $event)">
 				<div class="envelope__header__left__sender-subject-tags">
 					<div class="sender">
 						{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
-						<p class="sender__email" :style="{ 'color': senderEmailColor }">
+						<p class="sender__email" :style="{ color: senderEmailColor }">
 							{{ envelope.from && envelope.from[0] ? envelope.from[0].email : '' }}
 						</p>
 					</div>
@@ -68,21 +75,25 @@
 						</span>
 					</div>
 					<div class="tagline">
-						<div v-for="tag in tags"
+						<div
+							v-for="tag in tags"
 							:key="tag.id"
 							class="tag-group">
-							<div class="tag-group__bg"
-								:style="{'background-color': tag.color}" />
-							<span class="tag-group__label"
-								:style="{color: tag.color}">
+							<div
+								class="tag-group__bg"
+								:style="{ 'background-color': tag.color }" />
+							<span
+								class="tag-group__label"
+								:style="{ color: tag.color }">
 								{{ translateTagDisplayName(tag) }}
 							</span>
 						</div>
 					</div>
 				</div>
 				<div class="envelope__header__left__unsubscribe">
-					<NcButton v-if="message && message.dkimValid && (message.unsubscribeUrl || message.unsubscribeMailto)"
-						type="tertiary"
+					<NcButton
+						v-if="message && message.dkimValid && (message.unsubscribeUrl || message.unsubscribeMailto)"
+						variant="tertiary"
 						class="envelope__header__unsubscribe"
 						@click="showListUnsubscribeConfirmation = true">
 						{{ t('mail', 'Unsubscribe') }}
@@ -94,13 +105,16 @@
 				<template v-if="expanded">
 					<NcActions v-if="smimeData.isSigned || smimeData.isEncrypted">
 						<template #icon>
-							<LockPlusIcon v-if="smimeData.isEncrypted"
+							<LockPlusIcon
+								v-if="smimeData.isEncrypted"
 								:size="20"
 								fill-color="#008000" />
-							<LockIcon v-else-if="smimeData.signatureIsValid"
+							<LockIcon
+								v-else-if="smimeData.signatureIsValid"
 								:size="20"
 								fill-color="#008000" />
-							<LockOffIcon v-else
+							<LockOffIcon
+								v-else
 								:size="20"
 								fill-color="red" />
 						</template>
@@ -110,90 +124,106 @@
 						<!-- TODO: display information about signer and/or CA certificate -->
 					</NcActions>
 					<NcActions :inline="inlineMenuSize">
-						<NcActionButton :close-after-click="true"
+						<NcActionButton
+							:close-after-click="true"
 							@click="onReply('', false)">
 							<template #icon>
-								<ReplyAllIcon v-if="hasMultipleRecipients"
+								<ReplyAllIcon
+									v-if="hasMultipleRecipients"
 									:title="t('mail', 'Reply all')"
 									:size="20" />
-								<ReplyIcon v-else
+								<ReplyIcon
+									v-else
 									:title="t('mail', 'Reply')"
 									:size="20" />
 							</template>
 							{{ t('mail', 'Reply') }}
 						</NcActionButton>
-						<NcActionButton v-if="hasMultipleRecipients"
+						<NcActionButton
+							v-if="hasMultipleRecipients"
 							:close-after-click="true"
 							@click="onReply('', false, true)">
 							<template #icon>
-								<ReplyIcon :title="t('mail', 'Reply to sender only')"
+								<ReplyIcon
+									:title="t('mail', 'Reply to sender only')"
 									:size="20" />
 							</template>
 							{{ t('mail', 'Reply to sender only') }}
 						</NcActionButton>
-						<NcActionButton v-if="hasWriteAcl && (inlineMenuSize >= 2 || !moreActionsOpen)"
+						<NcActionButton
+							v-if="hasWriteAcl && (inlineMenuSize >= 2 || !moreActionsOpen)"
 							type="tertiary-no-background"
 							class="action--primary"
 							:aria-label="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
 							:close-after-click="true"
 							@click.prevent="onToggleFlagged">
 							<template #icon>
-								<IconFavorite v-if="showFavoriteIconVariant"
+								<IconFavorite
+									v-if="showFavoriteIconVariant"
 									:title="t('mail', 'Mark as unfavorite')"
 									:size="20" />
-								<StarOutline v-else
+								<StarOutline
+									v-else
 									:title="t('mail', 'Mark as favorite')"
 									:size="20" />
 							</template>
 							{{ envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite') }}
 						</NcActionButton>
-						<NcActionButton v-if="hasSeenAcl && (inlineMenuSize >= 3 || !moreActionsOpen)"
+						<NcActionButton
+							v-if="hasSeenAcl && (inlineMenuSize >= 3 || !moreActionsOpen)"
 							type="tertiary-no-background"
 							class="action--primary"
 							:aria-label="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
 							:close-after-click="true"
 							@click.prevent="onToggleSeen">
 							<template #icon>
-								<EmailRead v-if="showImportantIconVariant"
+								<EmailRead
+									v-if="showImportantIconVariant"
 									:title="t('mail', 'Mark as unread')"
 									:size="20" />
-								<EmailUnread v-else
+								<EmailUnread
+									v-else
 									:title="t('mail', 'Mark as read')"
 									:size="20" />
 							</template>
 							{{ envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read') }}
 						</NcActionButton>
-						<NcActionButton v-if="showArchiveButton && hasArchiveAcl && (inlineMenuSize >= 4 || !moreActionsOpen)"
+						<NcActionButton
+							v-if="showArchiveButton && hasArchiveAcl && (inlineMenuSize >= 4 || !moreActionsOpen)"
 							:close-after-click="true"
 							:disabled="disableArchiveButton"
 							:aria-label="t('mail', 'Archive message')"
 							type="tertiary-no-background"
 							@click.prevent="onArchive">
 							<template #icon>
-								<ArchiveIcon :title="t('mail', 'Archive message')"
+								<ArchiveIcon
+									:title="t('mail', 'Archive message')"
 									:size="20" />
 							</template>
 							{{ t('mail', 'Archive message') }}
 						</NcActionButton>
-						<NcActionButton v-if="hasDeleteAcl && (inlineMenuSize >= 5 || !moreActionsOpen)"
+						<NcActionButton
+							v-if="hasDeleteAcl && (inlineMenuSize >= 5 || !moreActionsOpen)"
 							:close-after-click="true"
 							:aria-label="t('mail', 'Delete message')"
 							type="tertiary-no-background"
 							@click.prevent="onDelete">
 							<template #icon>
-								<DeleteIcon :title="t('mail', 'Delete message')"
+								<DeleteIcon
+									:title="t('mail', 'Delete message')"
 									:size="20" />
 							</template>
 							{{ t('mail', 'Delete message') }}
 						</NcActionButton>
-						<MenuEnvelope class="app-content-list-item-menu"
+						<MenuEnvelope
+							class="app-content-list-item-menu"
 							:envelope="envelope"
 							:mailbox="mailbox"
 							:with-select="false"
 							:with-show-source="true"
 							:more-actions-open.sync="moreActionsOpen"
 							@reply="onReply('', false, false)"
-							@delete="$emit('delete',envelope.databaseId)"
+							@delete="$emit('delete', envelope.databaseId)"
 							@show-source-modal="onShowSourceModal"
 							@open-tag-modal="onOpenTagModal"
 							@open-move-modal="onOpenMoveModal"
@@ -203,29 +233,36 @@
 							@open-mail-filter-from-envelope="showMailFilterFromEnvelope = true"
 							@print="onPrint" />
 					</NcActions>
-					<SourceModal v-if="showSourceModal"
+					<SourceModal
+						v-if="showSourceModal"
 						:raw-message="rawMessage"
 						@close="onCloseSourceModal" />
-					<MoveModal v-if="showMoveModal"
+					<MoveModal
+						v-if="showMoveModal"
 						:account="account"
 						:envelopes="[envelope]"
 						@move="onMove"
 						@close="onCloseMoveModal" />
-					<EventModal v-if="showEventModal"
+					<EventModal
+						v-if="showEventModal"
 						:envelope="envelope"
 						@close="onCloseEventModal" />
-					<TaskModal v-if="showTaskModal"
+					<TaskModal
+						v-if="showTaskModal"
 						:envelope="envelope"
 						@close="onCloseTaskModal" />
-					<TagModal v-if="showTagModal"
+					<TagModal
+						v-if="showTagModal"
 						:account="account"
 						:envelopes="[envelope]"
 						@close="onCloseTagModal" />
-					<TranslationModal v-if="showTranslationModal"
+					<TranslationModal
+						v-if="showTranslationModal"
 						:rich-parameters="{}"
 						:message="plainTextBody"
 						@close="onCloseTranslationModal" />
-					<MailFilterFromEnvelope v-if="showMailFilterFromEnvelope"
+					<MailFilterFromEnvelope
+						v-if="showMailFilterFromEnvelope"
 						:account="account"
 						:envelope="envelope"
 						@close="showMailFilterFromEnvelope = false" />
@@ -233,7 +270,8 @@
 			</div>
 		</div>
 		<MessageLoadingSkeleton v-if="loading === Loading.Skeleton" />
-		<Message v-if="message"
+		<Message
+			v-if="message"
 			v-show="loading === Loading.Done"
 			:envelope="envelope"
 			:message="message"
@@ -243,20 +281,23 @@
 			@load="onMessageLoaded"
 			@translate="onOpenTranslationModal"
 			@reply="(body) => onReply(body, showFollowUpHeader)" />
-		<Error v-else-if="error"
+		<Error
+			v-else-if="error"
 			:error="error.message || t('mail', 'Not found')"
 			message=""
 			:data="error"
 			:auto-margin="true"
 			role="alert" />
-		<ConfirmModal v-if="message && message.unsubscribeUrl && message.isOneClickUnsubscribe && showListUnsubscribeConfirmation"
+		<ConfirmModal
+			v-if="message && message.unsubscribeUrl && message.isOneClickUnsubscribe && showListUnsubscribeConfirmation"
 			:confirm-text="t('mail', 'Unsubscribe')"
 			:title="t('mail', 'Unsubscribe via link')"
 			@cancel="showListUnsubscribeConfirmation = false"
 			@confirm="unsubscribeViaOneClick">
 			{{ t('mail', 'Unsubscribing will stop all messages from the mailing list {sender}', { sender: from }) }}
 		</ConfirmModal>
-		<ConfirmModal v-else-if="message && message.unsubscribeUrl && showListUnsubscribeConfirmation"
+		<ConfirmModal
+			v-else-if="message && message.unsubscribeUrl && showListUnsubscribeConfirmation"
 			:confirm-text="t('mail', 'Unsubscribe')"
 			:confirm-url="message.unsubscribeUrl"
 			:title="t('mail', 'Unsubscribe via link')"
@@ -264,7 +305,8 @@
 			@confirm="showListUnsubscribeConfirmation = false">
 			{{ t('mail', 'Unsubscribing will stop all messages from the mailing list {sender}', { sender: from }) }}
 		</ConfirmModal>
-		<ConfirmModal v-else-if="message && message.unsubscribeMailto && showListUnsubscribeConfirmation"
+		<ConfirmModal
+			v-else-if="message && message.unsubscribeMailto && showListUnsubscribeConfirmation"
 			:confirm-text="t('mail', 'Send unsubscribe email')"
 			:title="t('mail', 'Unsubscribe via email')"
 			:disabled="unsubscribing"
@@ -274,57 +316,58 @@
 		</ConfirmModal>
 	</div>
 </template>
+
 <script>
-import Avatar from './Avatar.vue'
-import { NcActionButton, NcButton } from '@nextcloud/vue'
-import ConfirmModal from './ConfirmationModal.vue'
-import Error from './Error.vue'
-import importantSvg from '../../img/important.svg'
-import IconFavorite from 'vue-material-design-icons/Star.vue'
-import JunkIcon from './icons/JunkIcon.vue'
-import MessageLoadingSkeleton from './MessageLoadingSkeleton.vue'
-import logger from '../logger.js'
-import Message from './Message.vue'
-import MenuEnvelope from './MenuEnvelope.vue'
-import Moment from './Moment.vue'
-import { smartReply } from '../service/AiIntergrationsService.js'
-import { mailboxHasRights } from '../util/acl.js'
-import StarOutline from 'vue-material-design-icons/StarOutline.vue'
-import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
-import ArchiveIcon from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
-import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
-import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
-import LockIcon from 'vue-material-design-icons/LockOutline.vue'
-import LockPlusIcon from 'vue-material-design-icons/LockPlusOutline.vue'
-import LockOffIcon from 'vue-material-design-icons/LockOffOutline.vue'
-import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
-import { hiddenTags } from './tags.js'
+import axios from '@nextcloud/axios'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { matchError } from '../errors/match.js'
-import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredError.js'
-import { isPgpText } from '../crypto/pgp.js'
+import { loadState } from '@nextcloud/initial-state'
+import moment from '@nextcloud/moment'
+import { generateUrl } from '@nextcloud/router'
+import { NcActionButton, NcButton } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionText from '@nextcloud/vue/components/NcActionText'
-import ReplyIcon from 'vue-material-design-icons/ReplyOutline.vue'
+import ArchiveIcon from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
+import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
+import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
+import LockOffIcon from 'vue-material-design-icons/LockOffOutline.vue'
+import LockIcon from 'vue-material-design-icons/LockOutline.vue'
+import LockPlusIcon from 'vue-material-design-icons/LockPlusOutline.vue'
 import ReplyAllIcon from 'vue-material-design-icons/ReplyAllOutline.vue'
-import { unsubscribe } from '../service/ListService.js'
-import TagModal from './TagModal.vue'
-import MoveModal from './MoveModal.vue'
-import TaskModal from './TaskModal.vue'
+import ReplyIcon from 'vue-material-design-icons/ReplyOutline.vue'
+import IconFavorite from 'vue-material-design-icons/Star.vue'
+import StarOutline from 'vue-material-design-icons/StarOutline.vue'
+import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
+import Avatar from './Avatar.vue'
+import ConfirmModal from './ConfirmationModal.vue'
+import Error from './Error.vue'
 import EventModal from './EventModal.vue'
-import TranslationModal from './TranslationModal.vue'
-import axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
-import { loadState } from '@nextcloud/initial-state'
-import useOutboxStore from '../store/outboxStore.js'
-import moment from '@nextcloud/moment'
-import { translateTagDisplayName } from '../util/tag.js'
-import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
-import { Text, toPlain } from '../util/text.js'
-import useMainStore from '../store/mainStore.js'
-import { mapStores } from 'pinia'
+import JunkIcon from './icons/JunkIcon.vue'
 import MailFilterFromEnvelope from './mailFilter/MailFilterFromEnvelope.vue'
+import MenuEnvelope from './MenuEnvelope.vue'
+import Message from './Message.vue'
+import MessageLoadingSkeleton from './MessageLoadingSkeleton.vue'
+import Moment from './Moment.vue'
+import MoveModal from './MoveModal.vue'
 import SourceModal from './SourceModal.vue'
+import TagModal from './TagModal.vue'
+import TaskModal from './TaskModal.vue'
+import TranslationModal from './TranslationModal.vue'
+import importantSvg from '../../img/important.svg'
+import { isPgpText } from '../crypto/pgp.js'
+import { matchError } from '../errors/match.js'
+import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredError.js'
+import logger from '../logger.js'
+import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
+import { smartReply } from '../service/AiIntergrationsService.js'
+import { unsubscribe } from '../service/ListService.js'
+import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
+import useMainStore from '../store/mainStore.js'
+import useOutboxStore from '../store/outboxStore.js'
+import { mailboxHasRights } from '../util/acl.js'
+import { translateTagDisplayName } from '../util/tag.js'
+import { Text, toPlain } from '../util/text.js'
+import { hiddenTags } from './tags.js'
 
 // Ternary loading state
 const Loading = Object.seal({
@@ -367,43 +410,52 @@ export default {
 		ReplyAllIcon,
 		SourceModal,
 	},
+
 	props: {
 		envelope: {
 			required: true,
 			type: Object,
 		},
+
 		mailboxId: {
 			required: false,
 			type: [
 				String,
 				Number,
 			],
+
 			default: undefined,
 		},
+
 		expanded: {
 			required: false,
 			type: Boolean,
 			default: false,
 		},
+
 		fullHeight: {
 			required: false,
 			type: Boolean,
 			default: false,
 		},
+
 		withSelect: {
 			// "Select" action should only appear in envelopes from the envelope list
 			type: Boolean,
 			default: true,
 		},
+
 		threadSubject: {
 			required: true,
 			type: String,
 		},
+
 		threadIndex: {
 			required: true,
 			type: Number,
 		},
 	},
+
 	data() {
 		return {
 			loading: Loading.Done,
@@ -431,10 +483,10 @@ export default {
 			showMailFilterFromEnvelope: false,
 		}
 	},
+
 	computed: {
 		...mapStores(useOutboxStore, useMainStore),
 		inlineMenuSize() {
-			// eslint-disable-next-line no-unused-expressions
 			const { envelope } = this.$refs
 			const envelopeWidth = (envelope && envelope.clientWidth) || 250
 			const spaceToFill = envelopeWidth - 500 + this.recomputeMenuSize
@@ -445,9 +497,11 @@ export default {
 
 			return Math.floor(spaceToFill / 44)
 		},
+
 		account() {
 			return this.mainStore.getAccount(this.envelope.accountId)
 		},
+
 		senderEmailColor() {
 			if (this.isInternal) {
 				return 'var(--color-text-maxcontrast)'
@@ -455,6 +509,7 @@ export default {
 
 			return parseInt(this.mainStore.getNcVersion) >= 32 ? 'var(--color-text-error)' : 'var(--color-error)'
 		},
+
 		from() {
 			if (!this.message || !this.message.from.length) {
 				return '?'
@@ -464,6 +519,7 @@ export default {
 			}
 			return this.message.from[0].email
 		},
+
 		hasMultipleRecipients() {
 			if (!this.account) {
 				console.error('account is undefined', {
@@ -476,6 +532,7 @@ export default {
 			})
 			return recipients.to.concat(recipients.cc).length > 1
 		},
+
 		route() {
 			return {
 				name: 'message',
@@ -485,51 +542,63 @@ export default {
 				},
 			}
 		},
+
 		isEncrypted() {
 			return this.envelope.previewText
 				&& isPgpText(this.envelope.previewText)
 		},
+
 		isImportant() {
 			return this.mainStore
 				.getEnvelopeTags(this.envelope.databaseId)
 				.find((tag) => tag.imapLabel === '$label1')
 		},
+
 		tags() {
-			return this.mainStore.getEnvelopeTags(this.envelope.databaseId).filter(
-				(tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags),
-			)
+			return this.mainStore.getEnvelopeTags(this.envelope.databaseId).filter((tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags))
 		},
+
 		hasChangedSubject() {
 			return this.cleanSubject !== this.cleanThreadSubject
 		},
+
 		cleanSubject() {
 			return this.filterSubject(this.envelope.subject)
 		},
+
 		cleanThreadSubject() {
 			return this.filterSubject(this.threadSubject)
 		},
+
 		showSubline() {
 			return !this.expanded && !!this.envelope.previewText
 		},
+
 		showArchiveButton() {
 			return this.account.archiveMailboxId !== null
 		},
+
 		disableArchiveButton() {
 			return this.account.archiveMailboxId !== null
 				&& this.account.archiveMailboxId === this.mailbox.databaseId
 		},
+
 		junkFavoritePosition() {
 			return this.showSubline && this.tags.length > 0
 		},
+
 		showFavoriteIconVariant() {
 			return this.envelope.flags.flagged
 		},
+
 		showImportantIconVariant() {
 			return this.envelope.flags.seen
 		},
+
 		hasSeenAcl() {
 			return mailboxHasRights(this.mailbox, 's')
 		},
+
 		hasArchiveAcl() {
 			const hasDeleteSourceAcl = () => {
 				return mailboxHasRights(this.mailbox, 'te')
@@ -541,24 +610,30 @@ export default {
 
 			return hasDeleteSourceAcl() && hasCreateDestinationAcl()
 		},
+
 		hasDeleteAcl() {
 			return mailboxHasRights(this.mailbox, 'te')
 		},
+
 		hasWriteAcl() {
 			return mailboxHasRights(this.mailbox, 'w')
 		},
+
 		mailbox() {
 			return this.mainStore.getMailbox(this.mailboxId)
 		},
+
 		archiveMailbox() {
 			return this.mainStore.getMailbox(this.account.archiveMailboxId)
 		},
+
 		/**
 		 * @return {{isSigned: (boolean|undefined), signatureIsValid: (boolean|undefined)}}
 		 */
 		smimeData() {
 			return this.message?.smime ?? {}
 		},
+
 		smimeHeading() {
 			if (this.smimeData.isEncrypted) {
 				return t('mail', 'Encrypted & verified ')
@@ -570,6 +645,7 @@ export default {
 
 			return t('mail', 'Signature unverified ')
 		},
+
 		smimeMessage() {
 			if (this.smimeData.isEncrypted) {
 				return t('mail', 'This message was encrypted by the sender before it was sent.')
@@ -581,6 +657,7 @@ export default {
 
 			return t('mail', 'This message contains an unverified digital S/MIME signature. The message might have been changed since it was sent or the certificate of the signer is untrusted.')
 		},
+
 		/**
 		 * A human readable representation of envelope's sent date (without the time).
 		 *
@@ -589,6 +666,7 @@ export default {
 		formattedSentAt() {
 			return moment(this.envelope.dateInt * 1000).format('LL')
 		},
+
 		/**
 		 * @return {boolean}
 		 */
@@ -596,6 +674,7 @@ export default {
 			const tags = this.mainStore.getEnvelopeTags(this.envelope.databaseId)
 			return tags.some((tag) => tag.imapLabel === FOLLOW_UP_TAG_LABEL)
 		},
+
 		/**
 		 * Translated label for the reply button.
 		 *
@@ -613,6 +692,7 @@ export default {
 			return t('mail', 'Reply')
 		},
 	},
+
 	watch: {
 		expanded(expanded) {
 			if (expanded) {
@@ -622,12 +702,14 @@ export default {
 				this.loading = Loading.Done
 			}
 		},
+
 		loading(loading) {
 			if (loading === Loading.Done) {
 				this.$emit('loaded')
 			}
 		},
 	},
+
 	async mounted() {
 		window.addEventListener('resize', this.redrawMenuBar)
 		if (this.expanded) {
@@ -649,6 +731,7 @@ export default {
 			}
 		}, 100)
 	},
+
 	beforeDestroy() {
 		if (this.seenTimer !== undefined) {
 			logger.info('Navigating away before seenTimer delay, will not mark message as seen/read')
@@ -656,6 +739,7 @@ export default {
 		}
 		window.removeEventListener('resize', this.redrawMenuBar)
 	},
+
 	methods: {
 		translateTagDisplayName,
 		redrawMenuBar() {
@@ -663,9 +747,11 @@ export default {
 				this.recomputeMenuSize++
 			})
 		},
+
 		filterSubject(value) {
 			return value.replace(/((?:[\t ]*(?:R|RE|F|FW|FWD):[\t ]*)*)/i, '')
 		},
+
 		onMessageLoaded() {
 			if (this.loadingBodyTimeout) {
 				clearTimeout(this.loadingBodyTimeout)
@@ -674,6 +760,7 @@ export default {
 
 			this.loading = Loading.Done
 		},
+
 		async fetchMessage() {
 			let loadingTimeout
 			const isCached = !!this.mainStore.getMessage(this.envelope.databaseId)
@@ -733,6 +820,7 @@ export default {
 				this.smartReplies = await smartReply(this.envelope.databaseId)
 			}
 		},
+
 		handleThreadScrolling() {
 			const threadId = this.envelope.threadId // Assuming each envelope has a thread ID
 
@@ -749,6 +837,7 @@ export default {
 				this.scrollToEnvelope()
 			}
 		},
+
 		scrollToThread(threadId) {
 			this.$nextTick(() => {
 				const threadElement = document.querySelector(`[data-thread-id="${threadId}"]`)
@@ -766,6 +855,7 @@ export default {
 				}
 			})
 		},
+
 		async fetchItineraries() {
 			// Sanity check before actually making the request
 			if (!this.message.hasHtmlBody && this.message.attachments.length === 0) {
@@ -781,6 +871,7 @@ export default {
 				logger.error(`Could not fetch itineraries of message ${this.envelope.databaseId}`, { error })
 			}
 		},
+
 		async fetchDkim() {
 			if (this.message.hasDkimSignature === false) {
 				return
@@ -795,6 +886,7 @@ export default {
 				logger.error(`Could not fetch DKIM of message ${this.envelope.databaseId}`, { error })
 			}
 		},
+
 		onReply(body = '', followUp = false, replySenderOnly = false) {
 			this.mainStore.startComposerSession({
 				reply: {
@@ -805,18 +897,23 @@ export default {
 				},
 			})
 		},
+
 		onToggleImportant() {
 			this.mainStore.toggleEnvelopeImportant(this.envelope)
 		},
+
 		onToggleFlagged() {
 			this.mainStore.toggleEnvelopeFlagged(this.envelope)
 		},
+
 		onToggleJunk() {
 			this.mainStore.toggleEnvelopeJunk(this.envelope)
 		},
+
 		onToggleSeen() {
 			this.mainStore.toggleEnvelopeSeen({ envelope: this.envelope })
 		},
+
 		async onDelete() {
 			// Remove from selection first
 			if (this.withSelect) {
@@ -844,6 +941,7 @@ export default {
 				}))
 			}
 		},
+
 		async onArchive() {
 			// Remove from selection first
 			if (this.withSelect) {
@@ -865,11 +963,13 @@ export default {
 				return t('mail', 'Could not archive message')
 			}
 		},
+
 		async onDisableFollowUpReminder() {
 			await this.mainStore.clearFollowUpReminder({
 				envelope: this.envelope,
 			})
 		},
+
 		async unsubscribeViaOneClick() {
 			try {
 				this.unsubscribing = true
@@ -884,13 +984,14 @@ export default {
 				this.showListUnsubscribeConfirmation = false
 			}
 		},
+
 		async unsubscribeViaMailto() {
 			const mailto = this.message.unsubscribeMailto
 			const [email, paramString] = mailto.replace(/^mailto:/, '').split('?')
 			let params = {}
 			const now = new Date().getTime() / 1000
 			if (paramString) {
-				params = paramString.split('&').map(encoded => ({
+				params = paramString.split('&').map((encoded) => ({
 					key: encoded.split('=')[0].toLowerCase(),
 					value: decodeURIComponent(encoded.split('=')[1]),
 				}))
@@ -931,33 +1032,43 @@ export default {
 				this.showListUnsubscribeConfirmation = false
 			}
 		},
+
 		onMove() {
 			this.$emit('move')
 		},
+
 		onOpenMoveModal() {
 			this.showMoveModal = true
 		},
+
 		onCloseMoveModal() {
 			this.showMoveModal = false
 		},
+
 		onOpenEventModal() {
 			this.showEventModal = true
 		},
+
 		onCloseEventModal() {
 			this.showEventModal = false
 		},
+
 		onOpenTaskModal() {
 			this.showTaskModal = true
 		},
+
 		onCloseTaskModal() {
 			this.showTaskModal = false
 		},
+
 		onOpenTagModal() {
 			this.showTagModal = true
 		},
+
 		onCloseTagModal() {
 			this.showTagModal = false
 		},
+
 		onOpenTranslationModal() {
 			try {
 				if (this.message.hasHtmlBody) {
@@ -972,23 +1083,25 @@ export default {
 				showError(t('mail', 'Please wait for the message to load'))
 			}
 		},
+
 		onCloseTranslationModal() {
 			this.showTranslationModal = false
 		},
+
 		async onShowSourceModal() {
 			if (this.rawMessage.length === 0) {
-				const resp = await axios.get(
-					generateUrl('/apps/mail/api/messages/{id}/source', {
-						id: this.envelope.databaseId,
-					}),
-				)
+				const resp = await axios.get(generateUrl('/apps/mail/api/messages/{id}/source', {
+					id: this.envelope.databaseId,
+				}))
 				this.rawMessage = resp.data.source
 			}
 			this.showSourceModal = true
 		},
+
 		onCloseSourceModal() {
 			this.showSourceModal = false
 		},
+
 		onPrint() {
 			this.$emit('print', this.threadIndex)
 		},

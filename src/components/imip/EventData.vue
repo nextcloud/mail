@@ -24,7 +24,8 @@
 			</div>
 		</div>
 
-		<div v-if="location"
+		<div
+			v-if="location"
 			class="event-data__row event-data__row--location">
 			<MapMarkerIcon class="event-data__row__icon" :size="20" />
 			<span>{{ location }}</span>
@@ -43,13 +44,13 @@
 </template>
 
 <script>
+import { DateTimeValue } from '@nextcloud/calendar-js'
+import moment from '@nextcloud/moment'
+import { getReadableTimezoneName } from '@nextcloud/timezones'
 import AccountMultipleIcon from 'vue-material-design-icons/AccountMultipleOutline.vue'
 import CalendarIcon from 'vue-material-design-icons/CalendarOutline.vue'
 import MapMarkerIcon from 'vue-material-design-icons/MapMarkerOutline.vue'
-import { getReadableTimezoneName } from '@nextcloud/timezones'
-import moment from '@nextcloud/moment'
 import { removeMailtoPrefix } from '../../util/eventAttendee.js'
-import { DateTimeValue } from '@nextcloud/calendar-js'
 
 /**
  * Check whether two dates are on the exact same day, month and year.
@@ -87,12 +88,14 @@ export default {
 		CalendarIcon,
 		MapMarkerIcon,
 	},
+
 	props: {
 		event: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	computed: {
 		/**
 		 * @return {string}

@@ -63,14 +63,12 @@ class FolderMapper {
 			// This is a special folder that must not be shown
 			return !in_array($mailbox['mailbox']->utf8, self::DOVECOT_SIEVE_FOLDERS, true);
 		});
-		return array_map(static function (array $mailbox) use ($account) {
-			return new Folder(
-				$mailbox['mailbox'],
-				$mailbox['attributes'],
-				$mailbox['delimiter'],
-				null,
-			);
-		}, $toPersist);
+		return array_map(static fn (array $mailbox) => new Folder(
+			$mailbox['mailbox'],
+			$mailbox['attributes'],
+			$mailbox['delimiter'],
+			null,
+		), $toPersist);
 	}
 
 	public function createFolder(Horde_Imap_Client_Socket $client,
@@ -201,9 +199,7 @@ class FolderMapper {
 			strtolower(Horde_Imap_Client::SPECIALUSE_TRASH)
 		];
 
-		$attributes = array_map(static function ($n) {
-			return strtolower($n);
-		}, $folder->getAttributes());
+		$attributes = array_map(static fn ($n) => strtolower($n), $folder->getAttributes());
 
 		foreach ($specialUseAttributes as $attr) {
 			if (in_array($attr, $attributes)) {

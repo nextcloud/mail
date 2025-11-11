@@ -66,15 +66,13 @@ final class Thread extends Command {
 		$consoleLogger->debug(strlen($json) . 'B read');
 		$parsed = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 		$consoleLogger->debug(count($parsed) . ' data sets loaded');
-		$threadData = array_map(static function ($serialized) {
-			return new DatabaseMessage(
-				$serialized['databaseId'],
-				$serialized['subject'],
-				$serialized['id'],
-				$serialized['references'],
-				$serialized['threadRootId'] ?? null
-			);
-		}, $parsed);
+		$threadData = array_map(static fn ($serialized) => new DatabaseMessage(
+			$serialized['databaseId'],
+			$serialized['subject'],
+			$serialized['id'],
+			$serialized['references'],
+			$serialized['threadRootId'] ?? null
+		), $parsed);
 
 		$threads = $this->builder->build($threadData, $consoleLogger);
 		$output->writeln(count($threads) . ' threads built from ' . count($threadData) . ' messages');

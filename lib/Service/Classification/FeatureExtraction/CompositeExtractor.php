@@ -51,9 +51,7 @@ class CompositeExtractor implements IExtractor {
 
 	#[\Override]
 	public function extract(Message $message): array {
-		return array_flat_map(static function (IExtractor $extractor) use ($message) {
-			return $extractor->extract($message);
-		}, $this->extractors);
+		return array_flat_map(static fn (IExtractor $extractor) => $extractor->extract($message), $this->extractors);
 	}
 
 	public function getSubjectExtractor(): SubjectExtractor {

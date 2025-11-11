@@ -4,13 +4,16 @@
 -->
 
 <template>
-	<div :class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']"
+	<div
+		:class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']"
 		role="region"
-		:aria-label="t('mail','Message body')">
+		:aria-label="t('mail', 'Message body')">
 		<PhishingWarning v-if="message.phishingDetails.warning" :phishing-data="message.phishingDetails.checks" />
-		<div v-if="message.smime.isSigned && !message.smime.signatureIsValid"
+		<div
+			v-if="message.smime.isSigned && !message.smime.signatureIsValid"
 			class="invalid-signature-warning">
-			<LockOffIcon :size="20"
+			<LockOffIcon
+				:size="20"
 				fill-color="red"
 				class="invalid-signature-warning__icon" />
 			<p>
@@ -21,21 +24,25 @@
 			<Itinerary :entries="itineraries" :message-id="message.messageId" />
 		</div>
 		<div v-if="hasCurrentUserPrincipalAndCollections && message.scheduling.length > 0" class="message-imip">
-			<Imip v-for="scheduling in message.scheduling"
+			<Imip
+				v-for="scheduling in message.scheduling"
 				:key="scheduling.id"
 				:scheduling="scheduling" />
 		</div>
-		<MessageHTMLBody v-if="message.hasHtmlBody"
+		<MessageHTMLBody
+			v-if="message.hasHtmlBody"
 			:url="htmlUrl"
 			:message="message"
 			:full-height="fullHeight"
 			@load="$emit('load', $event)"
 			@translate="$emit('translate')" />
-		<MessageEncryptedBody v-else-if="isEncrypted || isPgpMimeEncrypted"
+		<MessageEncryptedBody
+			v-else-if="isEncrypted || isPgpMimeEncrypted"
 			:body="message.body"
 			:from="from"
 			:message="message" />
-		<MessagePlainTextBody v-else
+		<MessagePlainTextBody
+			v-else
 			:body="message.body"
 			:signature="message.signature"
 			:message="message"
@@ -44,7 +51,8 @@
 		<div id="reply-composer" />
 		<div class="reply-buttons">
 			<div v-if="smartReplies.length > 0" class="reply-buttons__suggested">
-				<NcAssistantButton v-for="(reply,index) in smartReplies"
+				<NcAssistantButton
+					v-for="(reply, index) in smartReplies"
 					:key="index"
 					class="reply-buttons__suggested__button"
 					type="secondary"
@@ -52,7 +60,8 @@
 					{{ reply }}
 				</NcAssistantButton>
 			</div>
-			<NcButton type="primary"
+			<NcButton
+				variant="primary"
 				class="reply-buttons__notsuggested"
 				@click="onReply('')">
 				<template #icon>
@@ -66,21 +75,20 @@
 
 <script>
 import { generateUrl } from '@nextcloud/router'
-import { NcButton, NcAssistantButton } from '@nextcloud/vue'
-
-import { html, plain } from '../util/text.js'
-import { isPgpgMessage } from '../crypto/pgp.js'
+import { NcAssistantButton, NcButton } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
+import LockOffIcon from 'vue-material-design-icons/LockOffOutline.vue'
+import ReplyIcon from 'vue-material-design-icons/ReplyOutline.vue'
+import Imip from './Imip.vue'
 import Itinerary from './Itinerary.vue'
 import MessageAttachments from './MessageAttachments.vue'
-import PhishingWarning from './PhishingWarning.vue'
 import MessageEncryptedBody from './MessageEncryptedBody.vue'
 import MessageHTMLBody from './MessageHTMLBody.vue'
 import MessagePlainTextBody from './MessagePlainTextBody.vue'
-import Imip from './Imip.vue'
-import LockOffIcon from 'vue-material-design-icons/LockOffOutline.vue'
-import ReplyIcon from 'vue-material-design-icons/ReplyOutline.vue'
-import { mapStores } from 'pinia'
+import PhishingWarning from './PhishingWarning.vue'
+import { isPgpgMessage } from '../crypto/pgp.js'
 import useMainStore from '../store/mainStore.js'
+import { html, plain } from '../util/text.js'
 
 export default {
 	name: 'Message',
@@ -97,53 +105,65 @@ export default {
 		NcButton,
 		NcAssistantButton,
 	},
+
 	props: {
 		envelope: {
 			required: true,
 			type: Object,
 		},
+
 		message: {
 			required: true,
 			type: Object,
 		},
+
 		fullHeight: {
 			required: false,
 			type: Boolean,
 			default: false,
 		},
+
 		smartReplies: {
 			required: false,
 			type: Array,
 			default: () => [],
 		},
+
 		replyButtonLabel: {
 			required: true,
 			type: String,
 		},
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		from() {
 			return this.message.from.length === 0 ? '?' : this.message.from[0].label || this.message.from[0].email
 		},
+
 		htmlUrl() {
 			return generateUrl('/apps/mail/api/messages/{id}/html', {
 				id: this.envelope.databaseId,
 			})
 		},
+
 		isEncrypted() {
 			return isPgpgMessage(this.message.hasHtmlBody ? html(this.message.body) : plain(this.message.body))
 		},
+
 		isPgpMimeEncrypted() {
 			return this.message.isPgpMimeEncrypted
 		},
+
 		itineraries() {
 			return this.message.itineraries ?? []
 		},
+
 		hasCurrentUserPrincipalAndCollections() {
 			return this.mainStore.hasCurrentUserPrincipalAndCollections
 		},
 	},
+
 	methods: {
 		onReply(replyBody) {
 			this.$emit('reply', replyBody)

@@ -541,11 +541,6 @@
     </PossiblyUndefinedArrayOffset>
   </file>
   <file src="lib/Service/IMipService.php">
-    <PossiblyInvalidArgument>
-      <code><![CDATA[static function (Mailbox $mailbox) {
-			return $mailbox->getAccountId();
-		}]]></code>
-    </PossiblyInvalidArgument>
     <PossiblyNullArgument>
       <code><![CDATA[$sender]]></code>
       <code><![CDATA[$sender]]></code>

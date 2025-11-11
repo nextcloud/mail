@@ -97,57 +97,39 @@ class RecipientMapper extends QBMapper {
 		}
 
 		// Get old Recipients split per their types
-		$oldTo = array_filter($oldRecipients, static function ($recipient) {
-			return $recipient->getType() === Recipient::TYPE_TO;
-		});
-		$oldCc = array_filter($oldRecipients, static function ($recipient) {
-			return $recipient->getType() === Recipient::TYPE_CC;
-		});
-		$oldBcc = array_filter($oldRecipients, static function ($recipient) {
-			return $recipient->getType() === Recipient::TYPE_BCC;
-		});
+		$oldTo = array_filter($oldRecipients, static fn ($recipient) => $recipient->getType() === Recipient::TYPE_TO);
+		$oldCc = array_filter($oldRecipients, static fn ($recipient) => $recipient->getType() === Recipient::TYPE_CC);
+		$oldBcc = array_filter($oldRecipients, static fn ($recipient) => $recipient->getType() === Recipient::TYPE_BCC);
 
 		// To - add
-		$newTo = array_udiff($to, $oldTo, static function (Recipient $a, Recipient $b) {
-			return strcmp($a->getEmail(), $b->getEmail());
-		});
+		$newTo = array_udiff($to, $oldTo, static fn (Recipient $a, Recipient $b) => strcmp($a->getEmail(), $b->getEmail()));
 		if ($newTo !== []) {
 			$this->saveRecipients($localMessageId, $newTo);
 		}
 
-		$toRemove = array_udiff($oldTo, $to, static function (Recipient $a, Recipient $b) {
-			return strcmp($a->getEmail(), $b->getEmail());
-		});
+		$toRemove = array_udiff($oldTo, $to, static fn (Recipient $a, Recipient $b) => strcmp($a->getEmail(), $b->getEmail()));
 		foreach ($toRemove as $r) {
 			$this->delete($r);
 		}
 
 		// CC
-		$newCC = array_udiff($cc, $oldCc, static function (Recipient $a, Recipient $b) {
-			return strcmp($a->getEmail(), $b->getEmail());
-		});
+		$newCC = array_udiff($cc, $oldCc, static fn (Recipient $a, Recipient $b) => strcmp($a->getEmail(), $b->getEmail()));
 		if ($newCC !== []) {
 			$this->saveRecipients($localMessageId, $newCC);
 		}
 
-		$ccRemove = array_udiff($oldCc, $cc, static function (Recipient $a, Recipient $b) {
-			return strcmp($a->getEmail(), $b->getEmail());
-		});
+		$ccRemove = array_udiff($oldCc, $cc, static fn (Recipient $a, Recipient $b) => strcmp($a->getEmail(), $b->getEmail()));
 		foreach ($ccRemove as $r) {
 			$this->delete($r);
 		}
 
 		// BCC
-		$newBcc = array_udiff($bcc, $oldBcc, static function (Recipient $a, Recipient $b) {
-			return strcmp($a->getEmail(), $b->getEmail());
-		});
+		$newBcc = array_udiff($bcc, $oldBcc, static fn (Recipient $a, Recipient $b) => strcmp($a->getEmail(), $b->getEmail()));
 		if ($newBcc !== []) {
 			$this->saveRecipients($localMessageId, $newBcc);
 		}
 
-		$bccRemove = array_udiff($oldBcc, $bcc, static function (Recipient $a, Recipient $b) {
-			return strcmp($a->getEmail(), $b->getEmail());
-		});
+		$bccRemove = array_udiff($oldBcc, $bcc, static fn (Recipient $a, Recipient $b) => strcmp($a->getEmail(), $b->getEmail()));
 		foreach ($bccRemove as $r) {
 			$this->delete($r);
 		}

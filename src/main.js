@@ -3,23 +3,22 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import Vue from 'vue'
 import { getRequestToken } from '@nextcloud/auth'
 import { registerDavProperty } from '@nextcloud/files'
 import { generateFilePath } from '@nextcloud/router'
-import '@nextcloud/dialogs/style.css'
-import './directives/drag-and-drop/styles/drag-and-drop.scss'
-import VueShortKey from 'vue-shortkey'
+import { createPinia, PiniaVuePlugin } from 'pinia'
 import vToolTip from 'v-tooltip'
-
+import Vue from 'vue'
+import VueShortKey from 'vue-shortkey'
 import App from './App.vue'
 import Nextcloud from './mixins/Nextcloud.js'
 import router from './router.js'
-import { createPinia, PiniaVuePlugin } from 'pinia'
 
-// eslint-disable-next-line camelcase
+import '@nextcloud/dialogs/style.css'
+import './directives/drag-and-drop/styles/drag-and-drop.scss'
+
 __webpack_nonce__ = btoa(getRequestToken())
-// eslint-disable-next-line camelcase
+
 __webpack_public_path__ = generateFilePath('mail', '', 'js/')
 
 Vue.use(PiniaVuePlugin)
@@ -32,7 +31,6 @@ Vue.use(vToolTip)
 
 registerDavProperty('nc:share-attributes', { nc: 'http://nextcloud.org/ns' })
 
-/* eslint-disable vue/match-component-file-name */
 export default new Vue({
 	el: '#content',
 	name: 'Mail',

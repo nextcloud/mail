@@ -127,9 +127,7 @@ class LocalMessageMapper extends QBMapper {
 			return [];
 		}
 
-		$ids = array_map(static function (LocalMessage $message) {
-			return $message->getId();
-		}, $messages);
+		$ids = array_map(static fn (LocalMessage $message) => $message->getId(), $messages);
 
 		$attachments = $this->attachmentMapper->findByLocalMessageIds($ids);
 		$recipients = $this->recipientMapper->findByLocalMessageIds($ids);
@@ -178,9 +176,7 @@ class LocalMessageMapper extends QBMapper {
 			return [];
 		}
 
-		$ids = array_map(static function (LocalMessage $message) {
-			return $message->getId();
-		}, $messages);
+		$ids = array_map(static fn (LocalMessage $message) => $message->getId(), $messages);
 
 		$attachments = $this->attachmentMapper->findByLocalMessageIds($ids);
 		$recipients = $this->recipientMapper->findByLocalMessageIds($ids);

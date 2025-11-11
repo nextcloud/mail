@@ -3,12 +3,12 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import DavClient, { CalendarHome, Principal, Collection } from '@nextcloud/cdav-library'
-import { generateRemoteUrl } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
+import DavClient, { CalendarHome, Collection, Principal } from '@nextcloud/cdav-library'
+import { generateRemoteUrl } from '@nextcloud/router'
 
 let client = null
-const getClient = () => {
+function getClient() {
 	if (client) {
 		return client
 	}
@@ -34,7 +34,7 @@ const getClient = () => {
 			return result
 		}
 
-		OC.registerXHRForErrorProcessing(xhr) // eslint-disable-line no-undef
+		OC.registerXHRForErrorProcessing(xhr)
 		return xhr
 	})
 

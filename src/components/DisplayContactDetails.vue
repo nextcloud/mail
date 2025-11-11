@@ -17,11 +17,13 @@ export default {
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			vm: null,
 		}
 	},
+
 	async mounted() {
 		const mountContactDetails = window.OCA?.Contacts?.mountContactDetails
 		if (mountContactDetails) {
@@ -32,6 +34,7 @@ export default {
 			}
 		}
 	},
+
 	async beforeDestroy() {
 		if (this.vm) {
 			this.vm.$destroy()

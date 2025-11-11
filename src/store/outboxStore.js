@@ -3,13 +3,12 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { defineStore } from 'pinia'
-import Vue from 'vue'
-
-import * as OutboxService from '../service/OutboxService.js'
-import logger from '../logger.js'
 import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
+import { defineStore } from 'pinia'
+import Vue from 'vue'
+import logger from '../logger.js'
+import * as OutboxService from '../service/OutboxService.js'
 import { UNDO_DELAY } from './constants.js'
 import useMainStore from './mainStore.js'
 
@@ -22,7 +21,7 @@ export default defineStore('outbox', {
 		}
 	},
 	getters: {
-		getAllMessages: (state) => state.messageList.map(id => state.messages[id]),
+		getAllMessages: (state) => state.messageList.map((id) => state.messages[id]),
 	},
 	actions: {
 		getMessage(id) {
@@ -31,7 +30,7 @@ export default defineStore('outbox', {
 
 		addMessageMutation({ message }) {
 			const existing = this.messages[message.id] ?? {}
-			Vue.set(this.messages, message.id, Object.assign({}, existing, message))
+			Vue.set(this.messages, message.id, { ...existing, ...message })
 			// Add the message only if it's new
 			if (this.messageList.indexOf(message.id) === -1) {
 				this.messageList.unshift(message.id)
@@ -39,7 +38,7 @@ export default defineStore('outbox', {
 		},
 
 		deleteMessageMutation({ id }) {
-			this.messageList = this.messageList.filter(i => i !== id)
+			this.messageList = this.messageList.filter((i) => i !== id)
 			Vue.delete(this.messages, id)
 		},
 
@@ -57,7 +56,7 @@ export default defineStore('outbox', {
 		},
 
 		async fetchMessages() {
-			const existingMessageIds = this.getAllMessages.map(msg => msg.id)
+			const existingMessageIds = this.getAllMessages.map((msg) => msg.id)
 			const { messages } = await OutboxService.fetchMessages()
 
 			for (const message of messages) {
@@ -69,7 +68,7 @@ export default defineStore('outbox', {
 			}
 
 			for (const existingMessageId of existingMessageIds) {
-				if (!messages.find(msg => msg.id === existingMessageId)) {
+				if (!messages.find((msg) => msg.id === existingMessageId)) {
 					this.deleteMessageMutation({ id: existingMessageId })
 				}
 			}

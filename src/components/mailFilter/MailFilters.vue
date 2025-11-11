@@ -11,7 +11,8 @@
 		</div>
 		<div v-else class="filter-list">
 			<ul>
-				<NcListItem v-for="filter in filters"
+				<NcListItem
+					v-for="filter in filters"
 					:key="filter.id"
 					:name="filter.name"
 					:compact="true"
@@ -30,21 +31,24 @@
 					</template>
 				</NcListItem>
 			</ul>
-			<NcButton class="app-settings-button"
-				type="primary"
+			<NcButton
+				class="app-settings-button"
+				variant="primary"
 				:aria-label="t('mail', 'New filter')"
 				@click.prevent.stop="createFilter">
 				{{ t('mail', 'New filter') }}
 			</NcButton>
 		</div>
 
-		<UpdateModal v-if="showUpdateModal && currentFilter"
+		<UpdateModal
+			v-if="showUpdateModal && currentFilter"
 			:filter="currentFilter"
 			:account="account"
 			:loading="loading"
 			@update-filter="updateFilter"
 			@close="closeModal" />
-		<DeleteModal v-if="showDeleteModal && currentFilter"
+		<DeleteModal
+			v-if="showDeleteModal && currentFilter"
 			:filter="currentFilter"
 			:open="showDeleteModal"
 			:loading="loading"
@@ -54,18 +58,18 @@
 </template>
 
 <script>
-import { NcActionButton, NcListItem, NcButton } from '@nextcloud/vue'
-import UpdateModal from './UpdateModal.vue'
-import { randomId } from '../../util/randomId.js'
-import logger from '../../logger.js'
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import { NcActionButton, NcButton, NcListItem } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
-import useMailFilterStore from '../../store/mailFilterStore.ts'
-import useMainStore from '../../store/mainStore.js'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import DeleteModal from './DeleteModal.vue'
-import { showError, showSuccess } from '@nextcloud/dialogs'
-import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
+import UpdateModal from './UpdateModal.vue'
+import logger from '../../logger.js'
 import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
+import useMailFilterStore from '../../store/mailFilterStore.ts'
+import useMainStore from '../../store/mainStore.js'
+import { randomId } from '../../util/randomId.js'
 
 export default {
 	name: 'MailFilters',
@@ -79,12 +83,14 @@ export default {
 		NcLoadingIcon,
 
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			showUpdateModal: false,
@@ -95,15 +101,18 @@ export default {
 			currentFilter: null,
 		}
 	},
+
 	computed: {
 		...mapStores(useMailFilterStore, useMainStore),
 		filters() {
 			return this.mailFilterStore.filters
 		},
+
 		scriptData() {
 			return this.mainStore.getActiveSieveScript(this.account.id)
 		},
 	},
+
 	watch: {
 		scriptData: {
 			immediate: true,
@@ -117,10 +126,12 @@ export default {
 			},
 		},
 	},
+
 	async mounted() {
 		await this.mailFilterStore.fetch(this.account.id)
 		// this.loading = false
 	},
+
 	methods: {
 		createFilter() {
 			const priority = Math.max(0, ...this.filters.map((item) => item.priority ?? 0)) + 10
@@ -136,24 +147,28 @@ export default {
 					operator: MailFilterConditionOperator.Is,
 					values: [],
 				}],
+
 				actions: [{
 					id: randomId(),
 					type: 'fileinto',
 				}],
+
 				priority,
 			}
 			this.showUpdateModal = true
 			this.loading = false
 		},
+
 		openUpdateModal(filter) {
 			this.currentFilter = filter
 			this.showUpdateModal = true
 		},
+
 		openDeleteModal(filter) {
 			this.currentFilter = filter
 			this.showDeleteModal = true
-
 		},
+
 		async updateFilter(filter) {
 			this.loading = true
 
@@ -171,6 +186,7 @@ export default {
 				this.loading = false
 			}
 		},
+
 		async deleteFilter(filter) {
 			this.loading = true
 
@@ -189,6 +205,7 @@ export default {
 
 			await this.mainStore.fetchActiveSieveScript({ accountId: this.account.id })
 		},
+
 		closeModal() {
 			this.currentFilter = null
 			this.showUpdateModal = false

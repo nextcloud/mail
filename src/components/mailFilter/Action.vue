@@ -5,23 +5,26 @@
 <template>
 	<div class="action">
 		<div class="action__type">
-			<NcSelect class="action__type__column action__type__column__select"
+			<NcSelect
+				class="action__type__column action__type__column__select"
 				:value="currentAction"
 				:required="true"
 				:label-outside="true"
 				:options="availableTypes"
 				:clearable="false"
 				@input="updateAction({ type: $event.id })" />
-			<component :is="componentInstance"
+			<component
+				:is="componentInstance"
 				v-if="componentInstance"
 				class="action__type__column"
 				:action="action"
 				:account="account"
 				@update-action="updateAction" />
 		</div>
-		<NcButton :aria-label="t('mail', 'Delete action')"
+		<NcButton
+			:aria-label="t('mail', 'Delete action')"
 			class="action__delete"
-			type="tertiary-no-background"
+			variant="tertiary-no-background"
 			@click="deleteAction">
 			<template #icon>
 				<DeleteIcon :size="20" />
@@ -29,12 +32,13 @@
 		</NcButton>
 	</div>
 </template>
+
 <script>
-import ActionFileinto from './ActionFileinto.vue'
-import ActionAddflag from './ActionAddflag.vue'
-import ActionStop from './ActionStop.vue'
 import { NcButton, NcSelect, NcTextField } from '@nextcloud/vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
+import ActionAddflag from './ActionAddflag.vue'
+import ActionFileinto from './ActionFileinto.vue'
+import ActionStop from './ActionStop.vue'
 
 export default {
 	name: 'Action',
@@ -47,16 +51,19 @@ export default {
 		ActionStop,
 		DeleteIcon,
 	},
+
 	props: {
 		action: {
 			type: Object,
 			required: true,
 		},
+
 		account: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			availableTypes: [
@@ -75,10 +82,12 @@ export default {
 			],
 		}
 	},
+
 	computed: {
 		currentAction() {
-			return this.availableTypes.find(type => type.id === this.action.type)
+			return this.availableTypes.find((type) => type.id === this.action.type)
 		},
+
 		componentInstance() {
 			if (this.action.type === 'fileinto') {
 				return ActionFileinto
@@ -90,16 +99,19 @@ export default {
 			return null
 		},
 	},
+
 	methods: {
 		updateAction(properties) {
 			this.$emit('update-action', { ...this.action, ...properties })
 		},
+
 		deleteAction() {
 			this.$emit('delete-action', this.action)
 		},
 	},
 }
 </script>
+
 <style lang="scss" scoped>
 .action {
 	display: flex;

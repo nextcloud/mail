@@ -7,7 +7,8 @@
 	<form class="form" @submit.prevent="submit">
 		<div class="form__multi-row">
 			<fieldset class="form__fieldset">
-				<input id="ooo-disabled"
+				<input
+					id="ooo-disabled"
 					class="radio"
 					type="radio"
 					name="enabled"
@@ -17,7 +18,8 @@
 			</fieldset>
 
 			<fieldset class="form__fieldset">
-				<input id="ooo-enabled"
+				<input
+					id="ooo-enabled"
 					class="radio"
 					type="radio"
 					name="enabled"
@@ -27,7 +29,8 @@
 			</fieldset>
 
 			<fieldset v-if="hasPersonalAbsenceSettings" class="form__fieldset">
-				<input id="ooo-follow-system"
+				<input
+					id="ooo-follow-system"
 					class="radio"
 					type="radio"
 					name="enabled"
@@ -50,14 +53,16 @@
 			<div class="form__multi-row">
 				<fieldset class="form__fieldset">
 					<label for="ooo-first-day">{{ t('mail', 'First day') }}</label>
-					<DatetimePicker id="ooo-first-day"
+					<DatetimePicker
+						id="ooo-first-day"
 						v-model="firstDay"
 						:disabled="!enabled" />
 				</fieldset>
 
 				<fieldset class="form__fieldset">
 					<div class="form__fieldset__label">
-						<input id="ooo-enable-last-day"
+						<input
+							id="ooo-enable-last-day"
 							v-model="enableLastDay"
 							type="checkbox"
 							:disabled="!enabled">
@@ -65,7 +70,8 @@
 							{{ t('mail', 'Last day (optional)') }}
 						</label>
 					</div>
-					<DatetimePicker id="ooo-last-day"
+					<DatetimePicker
+						id="ooo-last-day"
 						v-model="lastDay"
 						:disabled="!enabled || !enableLastDay" />
 				</fieldset>
@@ -73,7 +79,8 @@
 
 			<fieldset class="form__fieldset">
 				<label for="ooo-subject">{{ t('mail', 'Subject') }}</label>
-				<input id="ooo-subject"
+				<input
+					id="ooo-subject"
 					v-model="subject"
 					type="text"
 					:disabled="followingSystem">
@@ -84,7 +91,8 @@
 
 			<fieldset class="form__fieldset">
 				<label for="ooo-message">{{ t('mail', 'Message') }}</label>
-				<TextEditor id="ooo-message"
+				<TextEditor
+					id="ooo-message"
 					v-model="message"
 					:html="false"
 					:disabled="followingSystem"
@@ -97,7 +105,8 @@
 			{{ errorMessage }}
 		</p>
 
-		<ButtonVue type="primary"
+		<ButtonVue
+			type="primary"
 			native-type="submit"
 			:aria-label="t('mail', 'Save autoresponder')"
 			:disabled="loading || !valid">
@@ -110,17 +119,17 @@
 </template>
 
 <script>
-import { NcDateTimePicker as DatetimePicker, NcButton as ButtonVue } from '@nextcloud/vue'
-import TextEditor from './TextEditor.vue'
-import CheckIcon from 'vue-material-design-icons/Check.vue'
-import { html, plain, toHtml, toPlain } from '../util/text.js'
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
-import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
-import * as OutOfOfficeService from '../service/OutOfOfficeService.js'
+import { NcButton as ButtonVue, NcDateTimePicker as DatetimePicker } from '@nextcloud/vue'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
+import CheckIcon from 'vue-material-design-icons/Check.vue'
+import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
+import TextEditor from './TextEditor.vue'
+import * as OutOfOfficeService from '../service/OutOfOfficeService.js'
 import useMainStore from '../store/mainStore.js'
+import { html, plain, toHtml, toPlain } from '../util/text.js'
 
 const OOO_DISABLED = 'disabled'
 const OOO_ENABLED = 'enabled'
@@ -135,12 +144,14 @@ export default {
 		CheckIcon,
 		OpenInNewIcon,
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	data() {
 		const nextcloudVersion = parseInt(OC.config.version.split('.')[0])
 		const enableSystemOutOfOffice = loadState('mail', 'enable-system-out-of-office', false)
@@ -163,6 +174,7 @@ export default {
 			textEditorDummyBus: mitt(),
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		/**
@@ -190,13 +202,13 @@ export default {
 		 * @return {string[]}
 		 */
 		aliases() {
-			 return [
-				 {
-					 name: this.account.name,
-					 alias: this.account.emailAddress,
-				 },
-				 ...this.account.aliases,
-			 ].map(({ name, alias }) => `${name} <${alias}>`)
+			return [
+				{
+					name: this.account.name,
+					alias: this.account.emailAddress,
+				},
+				...this.account.aliases,
+			].map(({ name, alias }) => `${name} <${alias}>`)
 		},
 
 		/**
@@ -206,6 +218,7 @@ export default {
 			return this.hasPersonalAbsenceSettings && this.enabled === OOO_FOLLOW_SYSTEM
 		},
 	},
+
 	watch: {
 		enableLastDay(enableLastDay) {
 			if (!this.initialized) {
@@ -219,6 +232,7 @@ export default {
 				this.lastDay = null
 			}
 		},
+
 		firstDay(firstDay, previousFirstDay) {
 			if (!this.initialized) {
 				return
@@ -238,10 +252,12 @@ export default {
 			this.lastDay.setDate(firstDay.getDate() + diffDays)
 		},
 	},
+
 	async mounted() {
 		await this.fetchState()
 		this.initialized = true
 	},
+
 	methods: {
 		async fetchState() {
 			const { state } = await OutOfOfficeService.fetch(this.account.id)
@@ -266,6 +282,7 @@ export default {
 			this.subject = state.subject
 			this.message = toHtml(plain(state.message)).value
 		},
+
 		async submit() {
 			this.loading = true
 			this.errorMessage = ''

@@ -9,26 +9,29 @@
 
 <script>
 import { NcAppNavigationItem as AppNavigationItem } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
-import { mapStores } from 'pinia'
 
 export default {
 	name: 'NavigationAccountExpandCollapse',
 	components: {
 		AppNavigationItem,
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		id() {
 			return 'collapse-' + this.account.id
 		},
+
 		title() {
 			if (this.account.collapsed && this.account.showSubscribedOnly) {
 				return t('mail', 'Show all subscribed folders')
@@ -38,6 +41,7 @@ export default {
 			return t('mail', 'Collapse folders')
 		},
 	},
+
 	methods: {
 		async toggleCollapse() {
 			logger.debug('toggling collapsed mailboxes for account ' + this.account.id)

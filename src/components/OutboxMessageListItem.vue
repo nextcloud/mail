@@ -4,13 +4,15 @@
 -->
 
 <template>
-	<ListItem class="outbox-message"
+	<ListItem
+		class="outbox-message"
 		:class="{ selected }"
 		:name="title"
 		:details="details"
 		@click="openModal">
 		<template #icon>
-			<Avatar :display-name="avatarDisplayName"
+			<Avatar
+				:display-name="avatarDisplayName"
 				:email="avatarEmail"
 				:fetch-avatar="false"
 				:avatar="message.avatar" />
@@ -19,25 +21,30 @@
 			{{ subjectForSubtitle }}
 		</template>
 		<template #actions>
-			<ActionButton v-if="message.status === statusImapSentMailboxFail()"
+			<ActionButton
+				v-if="message.status === statusImapSentMailboxFail()"
 				:close-after-click="true"
 				@click="sendMessageNow">
 				{{ t('mail', 'Copy to "Sent" Folder') }}
 				<template #icon>
-					<Copy :title="t('mail', 'Copy to Sent Folder')"
+					<Copy
+						:title="t('mail', 'Copy to Sent Folder')"
 						:size="20" />
 				</template>
 			</ActionButton>
-			<ActionButton v-if="message.status !== statusImapSentMailboxFail() && message.status !== statusSmtpError()"
+			<ActionButton
+				v-if="message.status !== statusImapSentMailboxFail() && message.status !== statusSmtpError()"
 				:close-after-click="true"
 				@click="sendMessageNow">
 				{{ t('mail', 'Send now') }}
 				<template #icon>
-					<Send :title="t('mail', 'Send now')"
+					<Send
+						:title="t('mail', 'Send now')"
 						:size="20" />
 				</template>
 			</ActionButton>
-			<ActionButton :close-after-click="true"
+			<ActionButton
+				:close-after-click="true"
 				@click="deleteMessage">
 				<template #icon>
 					<IconDelete :size="24" />
@@ -49,26 +56,26 @@
 </template>
 
 <script>
-import { NcListItem as ListItem, NcActionButton as ActionButton } from '@nextcloud/vue'
-import Avatar from './Avatar.vue'
-import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
-import { getLanguage, translate as t } from '@nextcloud/l10n'
-import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin.js'
-import moment from '@nextcloud/moment'
-import logger from '../logger.js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { matchError } from '../errors/match.js'
-import Send from 'vue-material-design-icons/SendOutline.vue'
+import { getLanguage, translate as t } from '@nextcloud/l10n'
+import moment from '@nextcloud/moment'
+import { NcActionButton as ActionButton, NcListItem as ListItem } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
 import Copy from 'vue-material-design-icons/ContentCopy.vue'
+import Send from 'vue-material-design-icons/SendOutline.vue'
+import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
+import Avatar from './Avatar.vue'
+import { matchError } from '../errors/match.js'
+import logger from '../logger.js'
+import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin.js'
 import {
-	STATUS_RAW,
 	STATUS_IMAP_SENT_MAILBOX_FAIL,
+	STATUS_RAW,
 	STATUS_SMTP_ERROR,
 	UNDO_DELAY,
 } from '../store/constants.js'
-import useOutboxStore from '../store/outboxStore.js'
 import useMainStore from '../store/mainStore.js'
-import { mapStores } from 'pinia'
+import useOutboxStore from '../store/outboxStore.js'
 
 export default {
 	name: 'OutboxMessageListItem',
@@ -80,28 +87,33 @@ export default {
 		Send,
 		Copy,
 	},
+
 	mixins: [
 		OutboxAvatarMixin,
 	],
+
 	props: {
 		message: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	computed: {
 		...mapStores(useOutboxStore, useMainStore),
 		selected() {
 			return this.$route.params.messageId === this.message.id
 		},
+
 		title() {
-			const recipientToString = recipient => recipient.label
+			const recipientToString = (recipient) => recipient.label
 			const recipients = this.message.to.map(recipientToString)
 				.concat(this.message.cc.map(recipientToString))
 				.concat(this.message.bcc.map(recipientToString))
 			const formatter = new Intl.ListFormat(getLanguage(), { type: 'conjunction' })
 			return formatter.format(recipients)
 		},
+
 		details() {
 			if (this.message.status === STATUS_IMAP_SENT_MAILBOX_FAIL) {
 				return this.t('mail', 'Could not copy to "Sent" folder')
@@ -115,6 +127,7 @@ export default {
 			}
 			return moment.unix(this.message.sendAt).fromNow()
 		},
+
 		/**
 		 * Subject of message or "No Subject".
 		 *
@@ -126,13 +139,16 @@ export default {
 			return this.message.subject || this.t('mail', 'No subject')
 		},
 	},
+
 	methods: {
 		statusImapSentMailboxFail() {
 			return STATUS_IMAP_SENT_MAILBOX_FAIL
 		},
+
 		statusSmtpError() {
 			return STATUS_SMTP_ERROR
 		},
+
 		async deleteMessage() {
 			try {
 				await this.outboxStore.deleteMessage({
@@ -148,6 +164,7 @@ export default {
 				}))
 			}
 		},
+
 		async sendMessageNow() {
 			const message = {
 				...this.message,
@@ -166,9 +183,9 @@ export default {
 				if (error.data !== undefined) {
 					await this.outboxStore.updateMessage({ message: error.data[0], id: message.id })
 				}
-
 			}
 		},
+
 		async openModal() {
 			if (this.message.status === STATUS_IMAP_SENT_MAILBOX_FAIL) {
 				return

@@ -91,9 +91,7 @@ class CreateAccountTest extends TestCase {
 
 		$input = $this->createMock(InputInterface::class);
 		$input->method('getArgument')
-			->willReturnCallback(function ($arg) use ($data) {
-				return $data[$arg] ?? null;
-			});
+			->willReturnCallback(fn ($arg) => $data[$arg] ?? null);
 		$output = $this->createMock(OutputInterface::class);
 		$output->expects($this->once())
 			->method('writeln')

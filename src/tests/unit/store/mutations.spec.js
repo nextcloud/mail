@@ -3,14 +3,13 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import { createTestingPinia } from '@pinia/testing'
+import { setActivePinia } from 'pinia'
 import {
 	PRIORITY_INBOX_ID,
 	UNIFIED_ACCOUNT_ID,
 	UNIFIED_INBOX_ID,
 } from '../../../store/constants.js'
-
-import { setActivePinia } from 'pinia'
-import { createTestingPinia } from '@pinia/testing'
 import useMainStore from '../../../store/mainStore.js'
 
 describe('Pinia store mutations', () => {
@@ -365,17 +364,16 @@ describe('Pinia store mutations', () => {
 			tags: {},
 		})
 
-		store.addMailboxMutation(
-			{
-				account,
-				mailbox: {
-					databaseId: 346,
-					name: 'Brchive',
-					delimiter: '.',
-					specialUse: ['archive'],
-					specialRole: 'archive',
-				},
-			})
+		store.addMailboxMutation({
+			account,
+			mailbox: {
+				databaseId: 346,
+				name: 'Brchive',
+				delimiter: '.',
+				specialUse: ['archive'],
+				specialRole: 'archive',
+			},
+		})
 
 		expect(store).toMatchObject({
 			accountList: [13],

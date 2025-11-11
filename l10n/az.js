@@ -15,7 +15,6 @@ OC.L10N.register(
     "SMTP Password" : "SMTP Şifrəsi",
     "Signature" : "İmza",
     "Cancel" : "Dayandır",
-    "Accounts" : "Accounts",
     "General" : "Ümumi",
     "Archive" : "Arxiv",
     "Delete" : "Sil",
@@ -76,6 +75,7 @@ OC.L10N.register(
     "Junk" : "Önəmsiz",
     "Sent" : "Göndərildi",
     "Trash" : "Zibil",
-    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi"
+    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi",
+    "Accounts" : "Accounts"
 },
 "nplurals=2; plural=(n != 1);");

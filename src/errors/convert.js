@@ -3,14 +3,14 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import CouldNotConnectError from './CouldNotConnectError.js'
 import MailboxLockedError from './MailboxLockedError.js'
 import MailboxNotCachedError from './MailboxNotCachedError.js'
+import ManageSieveError from './ManageSieveError.js'
+import ManyRecipientsError from './ManyRecipientsError.js'
 import NoDraftsMailboxConfiguredError from './NoDraftsMailboxConfiguredError.js'
 import NoSentMailboxConfiguredError from './NoSentMailboxConfiguredError.js'
 import NoTrashMailboxConfiguredError from './NoTrashMailboxConfiguredError.js'
-import CouldNotConnectError from './CouldNotConnectError.js'
-import ManageSieveError from './ManageSieveError.js'
-import ManyRecipientsError from './ManyRecipientsError.js'
 
 const map = {
 	'OCA\\Mail\\Exception\\DraftsMailboxNotSetException': NoDraftsMailboxConfiguredError,
@@ -27,7 +27,7 @@ const map = {
  * @param {object} axiosError the axios Error
  * @return {Error}
  */
-export const convertAxiosError = (axiosError) => {
+export function convertAxiosError(axiosError) {
 	if (!('response' in axiosError)) {
 		// No conversion
 		return axiosError

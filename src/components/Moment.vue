@@ -17,15 +17,18 @@ export default {
 			type: Number,
 			required: true,
 		},
+
 		format: {
 			type: String,
 			default: 'LLL',
 		},
 	},
+
 	computed: {
 		title() {
 			return moment.unix(this.timestamp).format(this.format)
 		},
+
 		formatted() {
 			return shortRelativeDatetime(new Date(this.timestamp * 1000))
 		},

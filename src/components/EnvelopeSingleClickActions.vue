@@ -5,31 +5,36 @@
 
 <template>
 	<div class="list-item-content__quick-actions">
-		<NcButton v-if="isRead"
-			type="tertiary"
+		<NcButton
+			v-if="isRead"
+			variant="tertiary"
 			:title="t('mail', 'Mark as unread')"
 			@click.prevent="$emit('toggle-seen')">
 			<EmailRead :size="20" />
 		</NcButton>
-		<NcButton v-else
-			type="tertiary"
+		<NcButton
+			v-else
+			variant="tertiary"
 			:title="t('mail', 'Mark as read')"
 			@click.prevent="$emit('toggle-seen')">
 			<EmailUnread :size="20" />
 		</NcButton>
-		<NcButton v-if="isImportant"
-			type="tertiary"
+		<NcButton
+			v-if="isImportant"
+			variant="tertiary"
 			:title="t('mail', 'Mark as unimportant')"
 			@click.prevent="$emit('toggle-important')">
 			<ImportantIcon :size="20" />
 		</NcButton>
-		<NcButton v-else
-			type="tertiary"
+		<NcButton
+			v-else
+			variant="tertiary"
 			:title="t('mail', 'Mark as important')"
 			@click.prevent="$emit('toggle-important')">
 			<ImportantOutlineIcon :size="20" />
 		</NcButton>
-		<NcButton type="tertiary"
+		<NcButton
+			variant="tertiary"
 			:title="t('mail', 'Delete thread')"
 			@click.prevent="$emit('delete')">
 			<IconDelete :size="20" />
@@ -39,12 +44,12 @@
 
 <script>
 
-import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
-import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
-import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
-import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
-import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
 import { NcButton } from '@nextcloud/vue'
+import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
+import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
+import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
+import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
+import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 
 export default {
 	name: 'EnvelopeSingleClickActions',
@@ -56,11 +61,13 @@ export default {
 		IconDelete,
 		NcButton,
 	},
+
 	props: {
 		isRead: {
 			type: Boolean,
 			default: false,
 		},
+
 		isImportant: {
 			type: Boolean,
 			default: false,

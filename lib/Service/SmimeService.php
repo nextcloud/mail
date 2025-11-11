@@ -570,9 +570,7 @@ class SmimeService {
 	 */
 	public function encryptMimePart(Horde_Mime_Part $part, array $certificates): Horde_Mime_Part {
 		try {
-			$decryptedCertificates = array_map(function (SmimeCertificate $certificate) {
-				return $this->crypto->decrypt($certificate->getCertificate());
-			}, $certificates);
+			$decryptedCertificates = array_map(fn (SmimeCertificate $certificate) => $this->crypto->decrypt($certificate->getCertificate()), $certificates);
 		} catch (Exception $e) {
 			throw new ServiceException('Failed to decrypt certificate: ' . $e->getMessage(), 0, $e);
 		}

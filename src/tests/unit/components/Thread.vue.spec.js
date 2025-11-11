@@ -4,11 +4,9 @@
  */
 
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-
-import Nextcloud from '../../../mixins/Nextcloud.js'
-import Thread from '../../../components/Thread.vue'
 import { createPinia, setActivePinia } from 'pinia'
-
+import Thread from '../../../components/Thread.vue'
+import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
 
 const localVue = createLocalVue()
@@ -22,7 +20,7 @@ describe('Thread', () => {
 		setActivePinia(createPinia())
 
 		store = useMainStore()
-		store.getEnvelope = jest.fn().mockImplementation((id) => {
+		store.getEnvelope = vi.fn().mockImplementation((id) => {
 			if (id === 200) {
 				return {
 					accountId: 100,
@@ -54,7 +52,7 @@ describe('Thread', () => {
 			return undefined
 		})
 
-		store.getEnvelopesByThreadRootId = jest.fn().mockImplementation((accountId, threadRootId) => {
+		store.getEnvelopesByThreadRootId = vi.fn().mockImplementation((accountId, threadRootId) => {
 			if (threadRootId === '123-456-789') {
 				return [
 					{
@@ -136,10 +134,9 @@ describe('Thread', () => {
 				]
 			}
 			return []
-
 		})
 
-		store.getMailbox = jest.fn().mockImplementation((id) => {
+		store.getMailbox = vi.fn().mockImplementation((id) => {
 			if (id === 10) {
 				return {
 					databaseId: 10,
@@ -175,7 +172,7 @@ describe('Thread', () => {
 			return undefined
 		})
 
-		store.getMailboxes = jest.fn().mockImplementation((accountId) => {
+		store.getMailboxes = vi.fn().mockImplementation((accountId) => {
 			if (accountId === 100) {
 				return [
 					{

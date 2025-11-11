@@ -60,9 +60,7 @@ class ImportanceRulesClassifier {
 		$this->sentMessagesExtractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 
 		return array_combine(
-			array_map(static function (Message $m) {
-				return $m->getUid();
-			}, $messages),
+			array_map(static fn (Message $m) => $m->getUid(), $messages),
 			array_map(function (Message $m) {
 				$from = $m->getFrom()->first();
 				if ($from === null || $from->getEmail() === null) {

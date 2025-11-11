@@ -6,18 +6,21 @@
 <template>
 	<form @submit.prevent="onSubmit">
 		<label for="mail-microsoft-oauth-tenant-id"> {{ t('mail', 'Tenant ID (optional)') }} </label>
-		<input id="mail-microsoft-oauth-tenant-id"
+		<input
+			id="mail-microsoft-oauth-tenant-id"
 			v-model="tenantIdVal"
 			:disabled="loading"
 			type="text">
 		<label for="mail-microsoft-oauth-client-id"> {{ t('mail', 'Client ID') }} </label>
-		<input id="mail-microsoft-oauth-client-id"
+		<input
+			id="mail-microsoft-oauth-client-id"
 			v-model="clientIdVal"
 			:disabled="loading"
 			type="text"
 			required>
 		<label for="mail-microsoft-oauth-client-secret"> {{ t('mail', 'Client secret') }} </label>
-		<input id="mail-microsoft-oauth-client-secret"
+		<input
+			id="mail-microsoft-oauth-client-secret"
 			v-model="clientSecret"
 			:disabled="loading"
 			type="password"
@@ -34,9 +37,8 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
-
-import { configure, unlink } from '../../service/MicrosoftIntegrationService.js'
 import logger from '../../logger.js'
+import { configure, unlink } from '../../service/MicrosoftIntegrationService.js'
 
 const PASSWORD_PLACEHOLDER = '*****'
 
@@ -47,11 +49,13 @@ export default {
 			type: String,
 			default: '',
 		},
+
 		clientId: {
 			type: String,
 			default: '',
 		},
 	},
+
 	data() {
 		return {
 			loading: false,
@@ -61,6 +65,7 @@ export default {
 			PASSWORD_PLACEHOLDER,
 		}
 	},
+
 	methods: {
 		async onSubmit() {
 			this.loading = true
@@ -74,6 +79,7 @@ export default {
 				this.loading = false
 			}
 		},
+
 		async onUnlink() {
 			this.loading = true
 			try {

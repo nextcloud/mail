@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import md5 from 'md5'
 import convert from 'color-convert'
+import md5 from 'md5'
 
 /**
  * Generates a hex color based on RGB string
@@ -24,7 +24,7 @@ export function uidToHexColor(uid) {
  * This is copied from nextcloud-vue for now, until it is exposed upstream.
  */
 
-export const uidToColor = (uid) => {
+export function uidToColor(uid) {
 	// Normalize hash
 	let hash = uid.toLowerCase()
 

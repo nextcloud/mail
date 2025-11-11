@@ -12,11 +12,14 @@ OC.L10N.register(
     "Signature" : "Potpis",
     "Cancel" : "Otkaži",
     "General" : "Opšte",
-    "About" : "O programu",
+    "Appearance" : "Izgled",
+    "Newest first" : "Prvo novije",
+    "Oldest first" : "prvo starije",
     "Delete" : "Delete",
     "Search" : "Search",
     "Send" : "Pošalji",
     "Refresh" : "Osveži",
+    "About" : "O programu",
     "Ok" : "Ok",
     "Select account" : "Označite nalog",
     "Choose" : "Odaberi",
@@ -37,7 +40,6 @@ OC.L10N.register(
     "Move" : "Premesti",
     "Remove account" : "Ukloni nalog",
     "Folder name" : "Naziv fascikle",
-    "Loading …" : "Učitavanje...",
     "Mark all as read" : "Označi sve kao pročitano",
     "Rename" : "Preimenuj",
     "Clear cache" : "Očisti keš",
@@ -55,6 +57,7 @@ OC.L10N.register(
     "Shared" : "Deljeno",
     "All" : "Sve",
     "Favorites" : "Omiljene",
-    "Continue to %s" : "Nastavi na %s"
+    "Continue to %s" : "Nastavi na %s",
+    "Loading …" : "Učitavanje..."
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

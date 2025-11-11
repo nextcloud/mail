@@ -9,12 +9,13 @@ let mailvelope
 
 const loadMailvelopeStatically = () => window.mailvelope
 
-const loadMailvelopeDynamically = () =>
-	new Promise((resolve) => {
+function loadMailvelopeDynamically() {
+	return new Promise((resolve) => {
 		window.addEventListener('mailvelope', () => resolve(window.mailvelope), false)
 	})
+}
 
-export const getMailvelope = async () => {
+export async function getMailvelope() {
 	if (mailvelope) {
 		return mailvelope
 	}

@@ -10,7 +10,6 @@ OC.L10N.register(
     "Password" : "கடவுச்சொல்",
     "None" : "ஒன்றுமில்லை",
     "Cancel" : "இரத்து செய்க",
-    "Accounts" : "Accounts",
     "General" : "பொதுவான",
     "Keyboard shortcuts" : "விசைப்பலகை குறுக்குவழிகள்",
     "Delete" : "நீக்குக",
@@ -46,6 +45,7 @@ OC.L10N.register(
     "Port" : "துறை ",
     "Group" : "Group",
     "All" : "எல்லாம்",
-    "Favorites" : "விருப்பங்கள்"
+    "Favorites" : "விருப்பங்கள்",
+    "Accounts" : "Accounts"
 },
 "nplurals=2; plural=(n != 1);");

@@ -5,15 +5,17 @@
 
 <template>
 	<div>
-		<div v-for="sender in sortedSenders"
+		<div
+			v-for="sender in sortedSenders"
 			:key="sender.email">
 			{{ sender.email }}
 			{{ senderType(sender.type) }}
-			<ButtonVue type="tertiary"
+			<ButtonVue
+				type="tertiary"
 				class="button"
-				:aria-label="t('mail','Remove')"
+				:aria-label="t('mail', 'Remove')"
 				@click="removeSender(sender)">
-				{{ t('mail','Remove') }}
+				{{ t('mail', 'Remove') }}
 			</ButtonVue>
 		</div>
 		<span v-if="!sortedSenders.length"> {{ t('mail', 'No senders are trusted at the moment.') }}</span>
@@ -22,12 +24,12 @@
 
 <script>
 
-import { fetchTrustedSenders, trustSender } from '../service/TrustedSenderService.js'
+import { showError } from '@nextcloud/dialogs'
 import { NcButton as ButtonVue } from '@nextcloud/vue'
 import prop from 'lodash/fp/prop.js'
 import sortBy from 'lodash/fp/sortBy.js'
 import logger from '../logger.js'
-import { showError } from '@nextcloud/dialogs'
+import { fetchTrustedSenders, trustSender } from '../service/TrustedSenderService.js'
 
 const sortByEmail = sortBy(prop('email'))
 
@@ -42,18 +44,21 @@ export default {
 			list: [],
 		}
 	},
+
 	computed: {
 		sortedSenders() {
 			return sortByEmail(this.list)
 		},
 	},
+
 	async mounted() {
 		this.list = await fetchTrustedSenders()
 	},
+
 	methods: {
 		async removeSender(sender) {
 			// Remove the item immediately
-			this.list = this.list.filter(s => s.id !== sender.id)
+			this.list = this.list.filter((s) => s.id !== sender.id)
 			try {
 				await trustSender(
 					sender.email,
@@ -71,12 +76,13 @@ export default {
 				this.list.push(sender)
 			}
 		},
+
 		senderType(type) {
 			switch (type) {
-			case 'individual':
-				return t('mail', 'individual')
-			case 'domain':
-				return t('mail', 'domain')
+				case 'individual':
+					return t('mail', 'individual')
+				case 'domain':
+					return t('mail', 'domain')
 			}
 			return type
 		},

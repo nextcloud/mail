@@ -131,11 +131,9 @@ class MessageSend {
 	 * @return array<int, array{email: string, label?: string}> collection of addresses and labels
 	 */
 	protected function convertAddressArray(array $addresses): array {
-		return array_map(static function (IAddress $address) {
-			return !empty($address->getLabel())
+		return array_map(static fn (IAddress $address) => !empty($address->getLabel())
 				? ['email' => (string)$address->getAddress(), 'label' => (string)$address->getLabel()]
-				: ['email' => (string)$address->getAddress()];
-		}, $addresses);
+				: ['email' => (string)$address->getAddress()], $addresses);
 	}
 
 	/**

@@ -7,15 +7,15 @@
 </template>
 
 <script>
-import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
-import IconEmailFast from 'vue-material-design-icons/EmailFastOutline.vue'
-import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
-import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
+import IconEmailFast from 'vue-material-design-icons/EmailFastOutline.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
-import TagIcon from 'vue-material-design-icons/TagOutline.vue'
-import IconFavorite from 'vue-material-design-icons/Star.vue'
+import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
+import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
+import IconFavorite from 'vue-material-design-icons/Star.vue'
+import TagIcon from 'vue-material-design-icons/TagOutline.vue'
+import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 export default {
 	name: 'Icon',
 	props: {
@@ -24,27 +24,28 @@ export default {
 			default: '',
 		},
 	},
+
 	computed: {
 		quickActionIcon() {
 			switch (this.action) {
-			case 'markAsSpam':
-				return AlertOctagonIcon
-			case 'applyTag':
-				return TagIcon
-			case 'markAsImportant':
-				return ImportantIcon
-			case 'markAsFavorite':
-				return IconFavorite
-			case 'markAsRead':
-				return EmailRead
-			case 'markAsUnread':
-				return EmailUnread
-			case 'moveThread':
-				return OpenInNewIcon
-			case 'deleteThread':
-				return IconDelete
-			default:
-				return IconEmailFast
+				case 'markAsSpam':
+					return AlertOctagonIcon
+				case 'applyTag':
+					return TagIcon
+				case 'markAsImportant':
+					return ImportantIcon
+				case 'markAsFavorite':
+					return IconFavorite
+				case 'markAsRead':
+					return EmailRead
+				case 'markAsUnread':
+					return EmailUnread
+				case 'moveThread':
+					return OpenInNewIcon
+				case 'deleteThread':
+					return IconDelete
+				default:
+					return IconEmailFast
 			}
 		},
 	},

@@ -75,9 +75,7 @@ class NewMessagesClassifier {
 			$account->getUserId(),
 			Tag::LABEL_IMPORTANT
 		);
-		$messages = array_filter($messages, static function ($message) use ($doNotReclassify) {
-			return ($message->getFlagImportant() === false || in_array($message->getMessageId(), $doNotReclassify, true));
-		});
+		$messages = array_filter($messages, static fn ($message) => $message->getFlagImportant() === false || in_array($message->getMessageId(), $doNotReclassify, true));
 
 		try {
 			$predictions = $this->classifier->classifyImportance(

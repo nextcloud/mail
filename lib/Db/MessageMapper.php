@@ -76,9 +76,7 @@ class MessageMapper extends QBMapper {
 	 */
 	private function findUids(IQueryBuilder $query): array {
 		$result = $query->executeQuery();
-		$uids = array_map(static function (array $row) {
-			return (int)$row['uid'];
-		}, $result->fetchAll());
+		$uids = array_map(static fn (array $row) => (int)$row['uid'], $result->fetchAll());
 		$result->closeCursor();
 
 		return $uids;
@@ -91,9 +89,7 @@ class MessageMapper extends QBMapper {
 	 */
 	private function findIds(IQueryBuilder $query): array {
 		$result = $query->executeQuery();
-		$uids = array_map(static function (array $row) {
-			return (int)$row['id'];
-		}, $result->fetchAll());
+		$uids = array_map(static fn (array $row) => (int)$row['id'], $result->fetchAll());
 		$result->closeCursor();
 
 		return $uids;
@@ -542,9 +538,7 @@ class MessageMapper extends QBMapper {
 			return;
 		}
 
-		$toAdd = array_udiff($imapTags, $dbTags, static function (Tag $a, Tag $b) {
-			return strcmp($a->getImapLabel(), $b->getImapLabel());
-		});
+		$toAdd = array_udiff($imapTags, $dbTags, static fn (Tag $a, Tag $b) => strcmp($a->getImapLabel(), $b->getImapLabel()));
 		foreach ($toAdd as $tag) {
 			$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
 		}
@@ -555,9 +549,7 @@ class MessageMapper extends QBMapper {
 			return;
 		}
 
-		$toRemove = array_udiff($dbTags, $imapTags, static function (Tag $a, Tag $b) {
-			return strcmp($a->getImapLabel(), $b->getImapLabel());
-		});
+		$toRemove = array_udiff($dbTags, $imapTags, static fn (Tag $a, Tag $b) => strcmp($a->getImapLabel(), $b->getImapLabel()));
 		foreach ($toRemove as $tag) {
 			$this->tagMapper->untagMessage($tag, $message->getMessageId());
 		}
@@ -689,9 +681,7 @@ class MessageMapper extends QBMapper {
 		$messageIds = $cursor->fetchAll();
 		$cursor->closeCursor();
 
-		$messageIds = array_map(static function (array $row) {
-			return (int)$row['id'];
-		}, $messageIds);
+		$messageIds = array_map(static fn (array $row) => (int)$row['id'], $messageIds);
 
 		$deleteRecipientsQuery = $this->db->getQueryBuilder();
 		$deleteRecipientsQuery->delete('mail_recipients')
@@ -856,24 +846,16 @@ class MessageMapper extends QBMapper {
 			if ($query->getMatch() === 'anyof') {
 				$textOrs[] = $qb->expr()->andX(
 					$qb->expr()->orX(
-						...array_map(function (string $email) use ($qb) {
-							return $qb->expr()->iLike('r0.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR));
-						}, $query->getFrom()),
-						...array_map(function (string $label) use ($qb) {
-							return $qb->expr()->iLike('r0.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR));
-						}, $query->getFrom()),
+						...array_map(fn (string $email) => $qb->expr()->iLike('r0.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR)), $query->getFrom()),
+						...array_map(fn (string $label) => $qb->expr()->iLike('r0.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR)), $query->getFrom()),
 					),
 					$qb->expr()->eq('r0.type', $qb->createNamedParameter(Recipient::TYPE_FROM, IQueryBuilder::PARAM_INT)),
 				);
 			} else {
 				$select->andWhere(
 					$qb->expr()->orX(
-						...array_map(function (string $email) use ($qb) {
-							return $qb->expr()->iLike('r0.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR));
-						}, $query->getFrom()),
-						...array_map(function (string $label) use ($qb) {
-							return $qb->expr()->iLike('r0.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR));
-						}, $query->getFrom()),
+						...array_map(fn (string $email) => $qb->expr()->iLike('r0.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR)), $query->getFrom()),
+						...array_map(fn (string $label) => $qb->expr()->iLike('r0.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR)), $query->getFrom()),
 					),
 					$qb->expr()->eq('r0.type', $qb->createNamedParameter(Recipient::TYPE_FROM, IQueryBuilder::PARAM_INT)),
 				);
@@ -885,12 +867,8 @@ class MessageMapper extends QBMapper {
 			if ($query->getMatch() === 'anyof') {
 				$textOrs[] = $qb->expr()->andX(
 					$qb->expr()->orX(
-						...array_map(function (string $email) use ($qb) {
-							return $qb->expr()->iLike('r1.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR));
-						}, $query->getTo()),
-						...array_map(function (string $label) use ($qb) {
-							return $qb->expr()->iLike('r1.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR));
-						}, $query->getTo()),
+						...array_map(fn (string $email) => $qb->expr()->iLike('r1.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR)), $query->getTo()),
+						...array_map(fn (string $label) => $qb->expr()->iLike('r1.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR)), $query->getTo()),
 					),
 					$qb->expr()->eq('r1.type', $qb->createNamedParameter(Recipient::TYPE_TO, IQueryBuilder::PARAM_INT)),
 				);
@@ -898,12 +876,8 @@ class MessageMapper extends QBMapper {
 
 				$select->andWhere(
 					$qb->expr()->orX(
-						...array_map(function (string $email) use ($qb) {
-							return $qb->expr()->iLike('r1.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR));
-						}, $query->getTo()),
-						...array_map(function (string $label) use ($qb) {
-							return $qb->expr()->iLike('r1.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR));
-						}, $query->getTo()),
+						...array_map(fn (string $email) => $qb->expr()->iLike('r1.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR)), $query->getTo()),
+						...array_map(fn (string $label) => $qb->expr()->iLike('r1.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR)), $query->getTo()),
 					),
 					$qb->expr()->eq('r1.type', $qb->createNamedParameter(Recipient::TYPE_TO, IQueryBuilder::PARAM_INT)),
 				);
@@ -913,12 +887,8 @@ class MessageMapper extends QBMapper {
 		if (!empty($query->getCc())) {
 			$select->andWhere(
 				$qb->expr()->orX(
-					...array_map(function (string $email) use ($qb) {
-						return $qb->expr()->iLike('r2.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR));
-					}, $query->getCc()),
-					...array_map(function (string $label) use ($qb) {
-						return $qb->expr()->iLike('r2.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR));
-					}, $query->getCc()),
+					...array_map(fn (string $email) => $qb->expr()->iLike('r2.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR)), $query->getCc()),
+					...array_map(fn (string $label) => $qb->expr()->iLike('r2.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR)), $query->getCc()),
 				),
 				$qb->expr()->eq('r2.type', $qb->createNamedParameter(Recipient::TYPE_CC, IQueryBuilder::PARAM_INT)),
 			);
@@ -926,12 +896,8 @@ class MessageMapper extends QBMapper {
 		if (!empty($query->getBcc())) {
 			$select->andWhere(
 				$qb->expr()->orX(
-					...array_map(function (string $email) use ($qb) {
-						return $qb->expr()->iLike('r3.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR));
-					}, $query->getBcc()),
-					...array_map(function (string $label) use ($qb) {
-						return $qb->expr()->iLike('r3.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR));
-					}, $query->getBcc()),
+					...array_map(fn (string $email) => $qb->expr()->iLike('r3.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR)), $query->getBcc()),
+					...array_map(fn (string $label) => $qb->expr()->iLike('r3.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR)), $query->getBcc()),
 				),
 				$qb->expr()->eq('r3.type', $qb->createNamedParameter(Recipient::TYPE_BCC, IQueryBuilder::PARAM_INT)),
 			);
@@ -939,13 +905,11 @@ class MessageMapper extends QBMapper {
 
 		if (!empty($query->getSubjects())) {
 			$textOrs[] = $qb->expr()->orX(
-				...array_map(function (string $subject) use ($qb) {
-					return $qb->expr()->iLike(
-						'm.subject',
-						$qb->createNamedParameter('%' . $this->db->escapeLikeParameter($subject) . '%', IQueryBuilder::PARAM_STR),
-						IQueryBuilder::PARAM_STR
-					);
-				}, $query->getSubjects())
+				...array_map(fn (string $subject) => $qb->expr()->iLike(
+					'm.subject',
+					$qb->createNamedParameter('%' . $this->db->escapeLikeParameter($subject) . '%', IQueryBuilder::PARAM_STR),
+					IQueryBuilder::PARAM_STR
+				), $query->getSubjects())
 			);
 		}
 		// createParameter
@@ -1004,9 +968,7 @@ class MessageMapper extends QBMapper {
 		}
 		if (!empty($query->getFlagExpressions())) {
 			$select->andWhere(
-				...array_map(function (FlagExpression $expr) use ($select) {
-					return $this->flagExpressionToQuery($expr, $select, 'm');
-				}, $query->getFlagExpressions())
+				...array_map(fn (FlagExpression $expr) => $this->flagExpressionToQuery($expr, $select, 'm'), $query->getFlagExpressions())
 			);
 		}
 
@@ -1027,15 +989,11 @@ class MessageMapper extends QBMapper {
 		if ($uids !== null) {
 			return array_flat_map(function (array $chunk) use ($qb, $select) {
 				$qb->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-				return array_map(static function (Message $message) {
-					return $message->getId();
-				}, $this->findEntities($select));
+				return array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
 			}, array_chunk($uids, 1000));
 		}
 
-		$result = array_map(static function (Message $message) {
-			return $message->getId();
-		}, $this->findEntities($select));
+		$result = array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
 		return $result;
 	}
 
@@ -1119,13 +1077,11 @@ class MessageMapper extends QBMapper {
 		if (!empty($query->getSubjects())) {
 			$select->andWhere(
 				$qb->expr()->orX(
-					...array_map(function (string $subject) use ($qb) {
-						return $qb->expr()->iLike(
-							'm.subject',
-							$qb->createNamedParameter('%' . $this->db->escapeLikeParameter($subject) . '%', IQueryBuilder::PARAM_STR),
-							IQueryBuilder::PARAM_STR
-						);
-					}, $query->getSubjects())
+					...array_map(fn (string $subject) => $qb->expr()->iLike(
+						'm.subject',
+						$qb->createNamedParameter('%' . $this->db->escapeLikeParameter($subject) . '%', IQueryBuilder::PARAM_STR),
+						IQueryBuilder::PARAM_STR
+					), $query->getSubjects())
 				)
 			);
 		}
@@ -1157,9 +1113,7 @@ class MessageMapper extends QBMapper {
 		}
 		if (!empty($query->getFlagExpressions())) {
 			$select->andWhere(
-				...array_map(function (FlagExpression $expr) use ($select) {
-					return $this->flagExpressionToQuery($expr, $select, 'm');
-				}, $query->getFlagExpressions())
+				...array_map(fn (FlagExpression $expr) => $this->flagExpressionToQuery($expr, $select, 'm'), $query->getFlagExpressions())
 			);
 		}
 
@@ -1174,15 +1128,11 @@ class MessageMapper extends QBMapper {
 		if ($uids !== null) {
 			return array_flat_map(function (array $chunk) use ($select) {
 				$select->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-				return array_map(static function (Message $message) {
-					return $message->getId();
-				}, $this->findEntities($select));
+				return array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
 			}, array_chunk($uids, 1000));
 		}
 
-		return array_map(static function (Message $message) {
-			return $message->getId();
-		}, $this->findEntities($select));
+		return array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
 	}
 
 	/**
@@ -1333,9 +1283,7 @@ class MessageMapper extends QBMapper {
 	private function findRecipients(array $messages): array {
 		/** @var Message[] $indexedMessages */
 		$indexedMessages = array_combine(
-			array_map(static function (Message $msg) {
-				return $msg->getId();
-			}, $messages),
+			array_map(static fn (Message $msg) => $msg->getId(), $messages),
 			$messages
 		);
 

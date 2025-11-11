@@ -37,9 +37,9 @@
 		"nextcloud/kitinerary-bin": "^1.0.4",
 		"nextcloud/kitinerary-flatpak": "^1.0",
 		"nextcloud/kitinerary-sys": "^2.0.0",
-		"phpmailer/dkimvalidator": "^0.3.0",
+		"phpmailer/dkimvalidator": "^0.3.1",
 		"psr/log": "^3.0.2",
-		"rubix/ml": "2.5.2",
+		"rubix/ml": "2.5.3",
 		"sabberworm/php-css-parser": "^8.9.0",
 		"wamania/php-stemmer": "4.0 as 3.0",
 		"youthweb/urllinker": "^2.1.0"
@@ -48,7 +48,7 @@
 		"psr/log": "^1.0.4|^2|^3"
 	},
 	"require-dev": {
-		"fig/log-test": "^1.1",
+		"fig/log-test": "^1.2.0",
 		"psalm/phar": "^5.26.1",
 		"roave/security-advisories": "dev-master"
 	},

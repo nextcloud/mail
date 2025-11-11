@@ -4,7 +4,8 @@
 -->
 
 <template>
-	<DeleteTagModal v-if="deleteTagModal"
+	<DeleteTagModal
+		v-if="deleteTagModal"
 		:tag="tagToDelete"
 		:envelopes="envelopes"
 		:account-id="envelopes[0].accountId"
@@ -14,7 +15,8 @@
 			<h2 class="tag-title">
 				{{ t('mail', 'Add default tags') }}
 			</h2>
-			<TagItem v-for="tag in tags"
+			<TagItem
+				v-for="tag in tags"
 				:key="tag.id"
 				:tag="tag"
 				:envelopes="envelopes"
@@ -24,7 +26,8 @@
 				{{ t('mail', 'Add tag') }}
 			</h2>
 			<div class="create-tag">
-				<NcButton v-if="!editing"
+				<NcButton
+					v-if="!editing"
 					class="tagButton"
 					@click="addTagInput">
 					<template #icon>
@@ -41,7 +44,7 @@
 					<template #icon>
 						<IconLoading :size="20" />
 					</template>
-					{{ t('mail', 'Saving tag …') }}
+					{{ t('mail', 'Saving tag …') }}
 				</ActionText>
 			</div>
 		</div>
@@ -49,15 +52,15 @@
 </template>
 
 <script>
-import { NcModal as Modal, NcActionText as ActionText, NcActionInput as ActionInput, NcLoadingIcon as IconLoading, NcButton } from '@nextcloud/vue'
+import { showError, showInfo } from '@nextcloud/dialogs'
+import { NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading, NcModal as Modal, NcButton } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
+import IconTag from 'vue-material-design-icons/TagOutline.vue'
 import DeleteTagModal from './DeleteTagModal.vue'
 import TagItem from './TagItem.vue'
-import IconTag from 'vue-material-design-icons/TagOutline.vue'
-import IconAdd from 'vue-material-design-icons/Plus.vue'
-import { showError, showInfo } from '@nextcloud/dialogs'
-import { hiddenTags } from './tags.js'
-import { mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
+import { hiddenTags } from './tags.js'
 
 function randomColor() {
 	let randomHexColor = ((1 << 24) * Math.random() | 0).toString(16)
@@ -79,6 +82,7 @@ export default {
 		NcButton,
 		IconAdd,
 	},
+
 	props: {
 		envelopes: {
 			// The envelopes on which this menu will act
@@ -86,6 +90,7 @@ export default {
 			type: Array,
 		},
 	},
+
 	data() {
 		return {
 			isAdded: false,
@@ -101,6 +106,7 @@ export default {
 			editColor: '',
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		tags() {
@@ -127,26 +133,27 @@ export default {
 			})
 		},
 	},
+
 	methods: {
 		onClose() {
 			this.$emit('close')
 		},
+
 		closeDeleteModal() {
 			this.deleteTagModal = false
 		},
+
 		isSet(imapLabel) {
-			return this.envelopes.some(
-				(envelope) => (
-					this.mainStore.getEnvelopeTags(envelope.databaseId).some(
-						tag => tag.imapLabel === imapLabel,
-					)
-				),
-			)
+			return this.envelopes.some((envelope) => (
+				this.mainStore.getEnvelopeTags(envelope.databaseId).some((tag) => tag.imapLabel === imapLabel)
+			))
 		},
+
 		addTagInput() {
 			this.editing = true
 			this.showSaving = false
 		},
+
 		async createTag(event) {
 			this.editing = true
 			if (this.showSaving) {
@@ -158,7 +165,7 @@ export default {
 				showError(this.t('mail', 'Tag name is a hidden system tag'))
 				return
 			}
-			if (this.mainStore.getTags.some(tag => tag.displayName === displayName)) {
+			if (this.mainStore.getTags.some((tag) => tag.displayName === displayName)) {
 				showError(this.t('mail', 'Tag already exists'))
 				return
 			}
@@ -179,6 +186,7 @@ export default {
 				this.tagLabel = true
 			}
 		},
+
 		convertHex(color, opacity) {
 			if (color.length === 4) {
 				const r = parseInt(color.substring(1, 2), 16)
@@ -192,12 +200,13 @@ export default {
 				return `rgba(${r}, ${g}, ${b}, ${opacity})`
 			}
 		},
+
 		openEditTag() {
 			this.renameTagLabel = false
 			this.renameTagInput = true
 			this.showSaving = false
-
 		},
+
 		async renameTag(tag, event) {
 			this.renameTagInput = false
 			this.showSaving = false
@@ -220,6 +229,7 @@ export default {
 				this.showSaving = true
 			}
 		},
+
 		deleteTag(tag) {
 			this.tagToDelete = tag
 			this.deleteTagModal = true

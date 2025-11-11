@@ -48,12 +48,9 @@ class AddressList implements Countable, JsonSerializable {
 	 * @return AddressList
 	 */
 	public static function fromHorde(Horde_Mail_Rfc822_List $hordeList) {
-		$addresses = array_map(static function (Horde_Mail_Rfc822_Address $addr) {
-			return Address::fromHorde($addr);
-		}, array_filter(iterator_to_array($hordeList), static function (Horde_Mail_Rfc822_Object $obj) {
+		$addresses = array_map(static fn (Horde_Mail_Rfc822_Address $addr) => Address::fromHorde($addr), array_filter(iterator_to_array($hordeList), static fn (Horde_Mail_Rfc822_Object $obj)
 			// TODO: how to handle non-addresses? This doesn't seem right …
-			return $obj instanceof Horde_Mail_Rfc822_Address;
-		}));
+			=> $obj instanceof Horde_Mail_Rfc822_Address));
 		return new AddressList($addresses);
 	}
 
@@ -81,9 +78,7 @@ class AddressList implements Countable, JsonSerializable {
 	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
-		return array_map(static function (Address $address) {
-			return $address->jsonSerialize();
-		}, $this->addresses);
+		return array_map(static fn (Address $address) => $address->jsonSerialize(), $this->addresses);
 	}
 
 	/**
@@ -116,10 +111,9 @@ class AddressList implements Countable, JsonSerializable {
 		$addresses = $this->addresses;
 
 		foreach ($other->addresses as $address) {
-			$same = array_filter($addresses, static function (Address $our) use ($address) {
+			$same = array_filter($addresses, static fn (Address $our)
 				// Check whether our array contains the other address
-				return $our->equals($address);
-			});
+				=> $our->equals($address));
 			if ($same === []) {
 				// No dup found, hence the address is new and we
 				// have to add it
@@ -130,13 +124,8 @@ class AddressList implements Countable, JsonSerializable {
 		return new AddressList($addresses);
 	}
 
-	/**
-	 * @return Horde_Mail_Rfc822_List
-	 */
-	public function toHorde() {
-		$hordeAddresses = array_map(static function (Address $address) {
-			return $address->toHorde();
-		}, $this->addresses);
+	public function toHorde(): Horde_Mail_Rfc822_List {
+		$hordeAddresses = array_map(static fn (Address $address) => $address->toHorde(), $this->addresses);
 		return new Horde_Mail_Rfc822_List($hordeAddresses);
 	}
 }

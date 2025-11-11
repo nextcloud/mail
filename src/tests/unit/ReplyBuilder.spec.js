@@ -30,7 +30,7 @@ describe('ReplyBuilder', () => {
 				label: 'Test User',
 				email: 'test@user.ru',
 			},
-			1541426237
+			1541426237,
 		)
 		const replyBodyBottom = buildReplyBody(
 			body,
@@ -39,7 +39,7 @@ describe('ReplyBuilder', () => {
 				email: 'test@user.ru',
 			},
 			1541426237,
-			false
+			false,
 		)
 
 		expect(replyBodyTop.value.startsWith(html('<p></p><p></p><div class="quote">"Test User" test@user.ru – November 5, 2018 ').value)).toEqual(true)
