@@ -1,3 +1,21 @@
+## [5.5.14](https://github.com/nextcloud/mail/compare/v5.5.13...v5.5.14) (2025-11-11)
+
+
+### Bug Fixes
+
+* **emoji-picker:** ignore if first character is a space ([7369665](https://github.com/nextcloud/mail/commit/7369665a4a6cf9a53a11db00feddfc73c9572ca4))
+* **l10n:** Update translations from Transifex ([70470e1](https://github.com/nextcloud/mail/commit/70470e1e42b5cc25c9a5c91c73efd36934004220))
+* **l10n:** Update translations from Transifex ([a8e726b](https://github.com/nextcloud/mail/commit/a8e726baf9618a973f8eff9b21fc81963d1d298b))
+* **l10n:** Update translations from Transifex ([edcf222](https://github.com/nextcloud/mail/commit/edcf222f1b2296a075c0f9784d3a8acf317fb8ad))
+* **l10n:** Update translations from Transifex ([7f8eb08](https://github.com/nextcloud/mail/commit/7f8eb08023d9b060f30f6daaf6f8ecc684c5f5ae))
+
+
+### Performance Improvements
+
+* switch webpack mode to lazy ([aa5795a](https://github.com/nextcloud/mail/commit/aa5795a51b518bb1e47111f3d92ebd77fb398cf6))
+
+
+
 ## [5.5.13](https://github.com/nextcloud/mail/compare/v5.5.12...v5.5.13) (2025-11-05)
 
 
