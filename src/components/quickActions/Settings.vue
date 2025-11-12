@@ -51,7 +51,7 @@
 					<template #icon>
 						<PlusIcon :size="20" />
 					</template>
-					<NcActionButton :close-after-click="true" @click="addQuickAction('markAsSpam')">
+					<NcActionButton v-if="!deletionAndMovingDisabled" :close-after-click="true" @click="addQuickAction('markAsSpam')">
 						<template #icon>
 							<AlertOctagonIcon :size="20" />
 						</template>
@@ -193,7 +193,7 @@ export default {
 		},
 
 		deletionAndMovingDisabled() {
-			return this.actions.some((action) => ['deleteThread', 'moveThread'].includes(action.name))
+			return this.actions.some((action) => ['deleteThread', 'moveThread', 'markAsSpam'].includes(action.name))
 		},
 
 		canSave() {
@@ -328,7 +328,7 @@ export default {
 
 		onDrop(e) {
 			const { removedIndex, addedIndex } = e
-			if (this.deletionAndMovingDisabled && addedIndex === this.actions.length - 1) {
+			if (this.deletionAndMovingDisabled && (addedIndex === this.actions.length - 1 || removedIndex === this.actions.length - 1)) {
 				return
 			}
 			const movedItem = this.actions[removedIndex]
