@@ -85,8 +85,8 @@ class QuickActionsService {
 	/**
 	 * @throws DoesNotExistException
 	 */
-	public function findActionStep(int $actionId, string $userId): ActionStep {
-		return $this->actionStepMapper->find($actionId, $userId);
+	public function findActionStep(int $stepId, string $userId): ActionStep {
+		return $this->actionStepMapper->find($stepId, $userId);
 	}
 
 	/**
@@ -145,8 +145,8 @@ class QuickActionsService {
 				throw new ServiceException('Invalid action step order');
 			}
 
-			if ($highestOrderForAction && $highestOrderForAction->getName() === 'deleteThread') {
-				throw new ServiceException('Cant perform actions after deleteThread');
+			if ($highestOrderForAction && in_array($highestOrderForAction->getName(), ['deleteThread', 'moveThread', 'markAsSpam'], true)) {
+				throw new ServiceException('Cant perform actions after ' . $highestOrderForAction->getName());
 			}
 
 			if ($highestOrderForAction !== null && $order !== $highestOrderForAction->getOrder() + 1) {
