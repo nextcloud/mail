@@ -19,7 +19,6 @@
     "Sender is using a custom email: %1$s instead of the sender email: %2$s" : "El remitente está usando una dirección de correo personalizada: %1$s en lugar de su dirección por defecto: %2$s",
     "Sent date is in the future" : "La fecha de envío es en el futuro",
     "Some addresses in this message are not matching the link text" : "Algunas direcciones en este mensaje no coinciden con el texto del enlace",
-    "Reply-To email: %1$s  is different from the sender email: %2$s" : "Responder a: %1$s es diferente de la dirección del remitente: %2$s",
     "💌 A mail app for Nextcloud" : "💌 Una aplicación de correo para Nextcloud",
     "Your session has expired. The page will be reloaded." : "Tu sesión ha expirado. La página se recargará.",
     "Drafts are saved in:" : "Los borradores se guardan en:",

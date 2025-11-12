@@ -19,7 +19,6 @@
     "Sender is using a custom email: %1$s instead of the sender email: %2$s" : "يستعمل المرسل عنوان مخصص للبريد الإلكتروني: %1$s بدلاً عن عنوان بريد المرسل: %2$s",
     "Sent date is in the future" : "تاريخ الإرسال في المستقبل و لم يحن بعدُ",
     "Some addresses in this message are not matching the link text" : "بعض العناوين في هذا الإيميل لا تتطابق مع نص الرابط",
-    "Reply-To email: %1$s  is different from the sender email: %2$s" : "عنوان الإيميل المردود عليه: %1$s  يختلف عن عنوان إيميل المُرسِل: %2$s",
     "Mail connection performance" : "سرعة أداء الاتصال بالبريد الالكتروني ",
     "Slow mail service detected (%1$s) an attempt to connect to several accounts took an average of %2$s seconds per account" : "تم اكتشاف بطء في سرعة خدمة البريد (%1$s) محاولة الاتصال بعدة حسابات استغرقت في المتوسط %2$s ثانية لكل حساب.",
     "Slow mail service detected (%1$s) an attempt to perform a mail box list operation on several accounts took an average of %2$s seconds per account" : "تمّ اكتشاف بطء في سرعة خدمة البريد (%1$s)  محاولة عرض صندوق البريد لعدة حسابات استغرقت في المتوسط %2$s ثانية لكل حساب.",

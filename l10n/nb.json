@@ -18,7 +18,6 @@
     "Sender is using a custom email: %1$s instead of the sender email: %2$s" : "Avsender bruker en egendefinert e-postadresse: %1$s i stedet for avsenderens e-postadresse: %2$s",
     "Sent date is in the future" : "Sendt dato er i fremtiden",
     "Some addresses in this message are not matching the link text" : "Noen adresser i denne meldingen samsvarer ikke med lenketeksten",
-    "Reply-To email: %1$s  is different from the sender email: %2$s" : "Svar på e-post: %1$s er forskjellig fra avsenderens e-post: %2$s",
     "💌 A mail app for Nextcloud" : "💌 En e-postapp for Nextcloud",
     "Your session has expired. The page will be reloaded." : "Økten din er utløpt. Siden lastes inn på nytt.",
     "Drafts are saved in:" : "Utkast lagres i:",
