@@ -85,6 +85,7 @@ OC.L10N.register(
     "Tomorrow afternoon" : "Заўтра ў другой палове дня",
     "Enter a date" : "Увядзіце дату",
     "Choose" : "Выбраць",
+    "_{count} attachment_::_{count} attachments_" : ["{count} далучэнне","{count} далучэнні","{count} далучэнняў","{count} далучэнняў"],
     "Confirm" : "Пацвердзіць",
     "Rich text" : "Фарматаваны тэкст",
     "No messages in this folder" : "У гэтай папцы няма паведамленняў",

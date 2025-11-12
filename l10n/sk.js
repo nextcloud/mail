@@ -21,7 +21,6 @@ OC.L10N.register(
     "Sender is using a custom email: %1$s instead of the sender email: %2$s" : "Odosielateľ používa vlastný e-mail: %1$s namiesto e-mailu odosielateľa: %2$s",
     "Sent date is in the future" : "Dátum odoslania je v budúcnosti",
     "Some addresses in this message are not matching the link text" : "Niektoré adresy v tejto správe nezodpovedajú textu odkazu",
-    "Reply-To email: %1$s  is different from the sender email: %2$s" : "Reply-To email: %1$s sa líši od e-mailu odosielateľa: %2$s",
     "Mail connection performance" : "Výkon pripojenia k e-mailu",
     "Slow mail service detected (%1$s) an attempt to connect to several accounts took an average of %2$s seconds per account" : "Zistila pomalá e-mailová služba (%1$s) pokus o pripojenie k niekoľkým účtom trval v priemere %2$s sekúnd na účet",
     "Slow mail service detected (%1$s) an attempt to perform a mail box list operation on several accounts took an average of %2$s seconds per account" : "Bola zistená pomalá e-mailová služba (%1$s), pokus o vykonanie operácie zoznamu poštových schránok na niekoľkých účtoch trval v priemere %2$s sekúnd na účet",
