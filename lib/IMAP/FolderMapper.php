@@ -142,7 +142,11 @@ class FolderMapper {
 					$status['unseen'],
 				);
 			} catch (ServiceException $e) {
-				$this->logger->warning($e->getMessage());
+				$this->logger->warning($e->getMessage(), [
+					'exception' => $e,
+					'mailboxes' => $mailboxes,
+					'statuses' => $multiStatus,
+				]);
 			}
 		}
 		return $statuses;
