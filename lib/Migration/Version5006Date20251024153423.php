@@ -44,30 +44,32 @@ class Version5006Date20251024153423 extends SimpleMigrationStep {
 
 	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
 		$qb = $this->db->getQueryBuilder();
-		$qb->select('userid', 'configvalue')
+		$qb->select('userid')
 			->from('preferences')
-			->where($qb->expr()->eq('appid', $qb->createNamedParameter('mail')))
-			->andWhere($qb->expr()->eq('configkey', $qb->createNamedParameter('tag-classified-messages')));
+			->where(
+				$qb->expr()->andx(
+					$qb->expr()->eq('appid', $qb->createNamedParameter('mail')),
+					$qb->expr()->eq('configkey', $qb->createNamedParameter('tag-classified-messages')),
+					$qb->expr()->eq('configvalue', $qb->createNamedParameter('false'))
+				)
+			);
 
 		$res = $qb->executeQuery();
-
-		$falseUsers = [];
-		while ($row = $res->fetch()) {
-			if ($row['configvalue'] === 'false') {
-				$falseUsers[] = $row['userid'];
-			}
-		}
+		$users = $res->fetch();
 
 		$res->closeCursor();
-
+		$output->info('Migrating classification user preferences to mail_accounts table');
+		$output->startProgress();
 		$qb = $this->db->getQueryBuilder();
 		$qb->update('mail_accounts')
 			->set('classification_enabled', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL))
 			->where($qb->expr()->in('user_id', $qb->createParameter('users')));
-		foreach (array_chunk($falseUsers, 1000) as $chunk) {
+		foreach (array_chunk($users, 1000) as $chunk) {
+			$output->advance();
 			$qb->setParameter('users', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
 			$qb->executeStatement();
 		}
+		$output->finishProgress();
 
 	}
 }
