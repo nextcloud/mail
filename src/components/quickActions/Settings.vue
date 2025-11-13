@@ -228,7 +228,8 @@ export default {
 				this.localAction = { id: null, name: '' }
 				this.actions = []
 			} else {
-				this.localAction = { id: action.id, name: action.name, accountId: action.accountId }
+				this.localAction = { ...action }
+				delete this.localAction.actionSteps
 				this.actions = action.actionSteps
 				this.highestOrder = Math.max(...this.actions.map((a) => a.order), 0)
 				this.editMode = true
