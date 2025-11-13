@@ -26,7 +26,10 @@
 					:is-first="isFirst(group.account)"
 					:is-last="isLast(group.account)"
 					:is-disabled="isDisabled(group.account)" />
-				<template v-if="!isDisabled(group.account)">
+				<template v-if="group.account.error">
+					{{ t('mail', 'Connection failed. Please verify your information and try again') }}
+				</template>
+				<template v-else-if="!isDisabled(group.account)">
 					<template v-for="item in group.mailboxes">
 						<NavigationMailbox
 							v-show="
