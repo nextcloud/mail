@@ -16,6 +16,7 @@ use OCP\DB\Types;
 use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
+use Override;
 
 class Version5006Date20251024153423 extends SimpleMigrationStep {
 
