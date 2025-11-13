@@ -1,3 +1,18 @@
+## [5.5.15](https://github.com/nextcloud/mail/compare/v5.5.14...v5.5.15) (2025-11-13)
+
+
+### Bug Fixes
+
+* **i18n:** fix l10n strings ([#12010](https://github.com/nextcloud/mail/issues/12010)) ([66eb006](https://github.com/nextcloud/mail/commit/66eb0066f52765039c1644467d8d892a14c8b52b))
+* **imap:** make mailbox status errors debuggable ([6e5ac6c](https://github.com/nextcloud/mail/commit/6e5ac6c4b577cc189b4d514f50b5d106ce442822))
+* **l10n:** Update translations from Transifex ([bd6518f](https://github.com/nextcloud/mail/commit/bd6518fcc1a9733464f6a4fcdc9b60b65728a293))
+* **l10n:** Update translations from Transifex ([b908cd6](https://github.com/nextcloud/mail/commit/b908cd6ccf9913098e4c50a8bc01432b6a97914f))
+* **quick-actions:** adjust backend check for pinned actions order ([83572d9](https://github.com/nextcloud/mail/commit/83572d95024e420fc5f26e7cbc765f474771a3d4))
+* **quick-actions:** pin mark as spam as a last actions step ([33b9e89](https://github.com/nextcloud/mail/commit/33b9e8975518945974d4ee719c093f7a0b5e4db0))
+* wrong height for html email body ([afd55d2](https://github.com/nextcloud/mail/commit/afd55d21380cccc3f3e3ae5812d2f254c732c232))
+
+
+
 ## [5.5.14](https://github.com/nextcloud/mail/compare/v5.5.13...v5.5.14) (2025-11-11)
 
 
