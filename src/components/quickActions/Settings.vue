@@ -49,7 +49,7 @@
 					<template #icon>
 						<PlusIcon :size="20" />
 					</template>
-					<NcActionButton :close-after-click="true" @click="addQuickAction('markAsSpam')">
+					<NcActionButton v-if="!deletionAndMovingDisabled" :close-after-click="true" @click="addQuickAction('markAsSpam')">
 						<template #icon>
 							<AlertOctagonIcon :size="20" />
 						</template>
@@ -184,7 +184,7 @@ export default {
 			return this.editMode ? this.t('mail', 'Edit quick action') : this.t('mail', 'Add quick action')
 		},
 		deletionAndMovingDisabled() {
-			return this.actions.some(action => ['deleteThread', 'moveThread'].includes(action.name))
+			return this.actions.some(action => ['deleteThread', 'moveThread', 'markAsSpam'].includes(action.name))
 		},
 		canSave() {
 			return this.actions.length > 0 && this.localAction.name.trim().length > 0 && this.actions.every(action => {
@@ -308,7 +308,7 @@ export default {
 		},
 		onDrop(e) {
 			const { removedIndex, addedIndex } = e
-			if (this.deletionAndMovingDisabled && addedIndex === this.actions.length - 1) {
+			if (this.deletionAndMovingDisabled && (addedIndex === this.actions.length - 1 || removedIndex === this.actions.length - 1)) {
 				return
 			}
 			const movedItem = this.actions[removedIndex]
