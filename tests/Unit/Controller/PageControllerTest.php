@@ -19,7 +19,6 @@ use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
-use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
@@ -104,9 +103,6 @@ class PageControllerTest extends TestCase {
 
 	private SmimeService $smimeService;
 
-	/** @var ClassificationSettingsService|MockObject */
-	private $classificationSettingsService;
-
 	/** @var InternalAddressService|MockObject */
 	private $internalAddressService;
 
@@ -137,7 +133,6 @@ class PageControllerTest extends TestCase {
 		$this->credentialStore = $this->createMock(ICredentialStore::class);
 		$this->smimeService = $this->createMock(SmimeService::class);
 		$this->userManager = $this->createMock(IUserManager::class);
-		$this->classificationSettingsService = $this->createMock(ClassificationSettingsService::class);
 		$this->internalAddressService = $this->createMock(InternalAddressService::class);
 		$this->availabilityCoordinator = $this->createMock(IAvailabilityCoordinator::class);
 		$this->quickActionsService = $this->createMock(QuickActionsService::class);
@@ -164,7 +159,6 @@ class PageControllerTest extends TestCase {
 			$this->smimeService,
 			$this->aiIntegrationsService,
 			$this->userManager,
-			$this->classificationSettingsService,
 			$this->internalAddressService,
 			$this->availabilityCoordinator,
 			$this->quickActionsService,
@@ -192,10 +186,6 @@ class PageControllerTest extends TestCase {
 				[$this->userId, 'internal-addresses', 'false', 'false'],
 				[$this->userId, 'smime-sign-aliases', '[]', '[]'],
 			]);
-		$this->classificationSettingsService->expects(self::once())
-			->method('isClassificationEnabled')
-			->with($this->userId)
-			->willReturn(false);
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
 			->with($this->userId)
@@ -340,7 +330,6 @@ class PageControllerTest extends TestCase {
 					'app-version' => '1.2.3',
 					'collect-data' => 'true',
 					'start-mailbox-id' => '123',
-					'tag-classified-messages' => 'false',
 					'search-priority-body' => 'false',
 					'layout-mode' => 'vertical-split',
 					'layout-message-view' => 'threaded',
