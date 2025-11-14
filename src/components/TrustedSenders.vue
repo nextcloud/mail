@@ -5,19 +5,27 @@
 
 <template>
 	<div>
-		<div
+		<NcListItem
 			v-for="sender in sortedSenders"
 			:key="sender.email">
-			{{ sender.email }}
-			{{ senderType(sender.type) }}
-			<ButtonVue
-				type="tertiary"
-				class="button"
-				:aria-label="t('mail', 'Remove')"
-				@click="removeSender(sender)">
-				{{ t('mail', 'Remove') }}
-			</ButtonVue>
-		</div>
+			<template #name>
+				{{ sender.email }}
+			</template>
+			<template #icon>
+				<IconDomain v-if="sender.type === 'domain'" :size="20" :title="senderType(sender.type)" />
+				<IconEmail v-if="sender.type === 'individual'" :size="20" :title="senderType(sender.type)" />
+			</template>
+			<template #extra-actions>
+				<NcActionButton
+					:title="t('mail', 'Remove')"
+					:aria-label="t('mail', 'Remove')"
+					@click="removeSender(sender)">
+					<template #icon>
+						<IconDelete :size="20" />
+					</template>
+				</NcActionButton>
+			</template>
+		</NcListItem>
 		<span v-if="!sortedSenders.length"> {{ t('mail', 'No senders are trusted at the moment.') }}</span>
 	</div>
 </template>
@@ -25,9 +33,12 @@
 <script>
 
 import { showError } from '@nextcloud/dialogs'
-import { NcButton as ButtonVue } from '@nextcloud/vue'
+import { NcActionButton, NcListItem } from '@nextcloud/vue'
 import prop from 'lodash/fp/prop.js'
 import sortBy from 'lodash/fp/sortBy.js'
+import IconDomain from 'vue-material-design-icons/Domain.vue'
+import IconEmail from 'vue-material-design-icons/EmailOutline.vue'
+import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import logger from '../logger.js'
 import { fetchTrustedSenders, trustSender } from '../service/TrustedSenderService.js'
 
@@ -36,7 +47,11 @@ const sortByEmail = sortBy(prop('email'))
 export default {
 	name: 'TrustedSenders',
 	components: {
-		ButtonVue,
+		NcActionButton,
+		NcListItem,
+		IconDelete,
+		IconDomain,
+		IconEmail,
 	},
 
 	data() {
@@ -89,9 +104,3 @@ export default {
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-.button-vue:deep() {
-	display: inline-block !important;
-}
-</style>
