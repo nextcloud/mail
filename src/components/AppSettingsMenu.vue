@@ -9,35 +9,44 @@
 			:name="t('mail', 'Mail settings')"
 			:show-navigation="true"
 			:additional-trap-elements="trapElements"
+			:legacy="false"
 			:open.sync="showSettings">
-			<NcAppSettingsSection id="account-creation" :name="t('mail', 'General')">
+			<NcAppSettingsSection id="general" :name="t('mail', 'General')">
 				<NcButton
-					v-if="allowNewMailAccounts"
-					variant="primary"
-					to="/setup"
-					:aria-label="t('mail', 'Add mail account')"
-					class="app-settings-button">
-					<template #icon>
-						<IconAdd :size="20" />
-					</template>
-					{{ t('mail', 'Add mail account') }}
-				</NcButton>
+					variant="secondary"
+					:text="t('mail', 'Set as default mail app')"
+					:aria-label="t('mail', 'Set as default mail app')"
+					wide
+					@click="registerProtocolHandler" />
 
-				<h4>{{ t('mail', 'Account settings') }}</h4>
-				<p>{{ t('mail', 'Settings for:') }}</p>
-				<li v-for="account in getAccounts" :key="account.id">
-					<NcButton
-						v-if=" account && account.emailAddress"
-						class="app-settings-button"
-						variant="secondary"
-						:aria-label="t('mail', 'Account settings')"
-						@click="openAccountSettings(account.id)">
-						{{ account.emailAddress }}
-					</NcButton>
-				</li>
+				<NcFormGroup :label="t('mail', 'Account settings')">
+					<NcFormBox>
+						<NcFormBoxButton
+							v-for="account in accountsWithEmail"
+							:key="account.id"
+							:aria-label="t('mail', 'Account settings')"
+							@click="openAccountSettings(account.id)">
+							<template #icon>
+								<IconLink :size="20" />
+							</template>
+							{{ account.emailAddress }}
+						</NcFormBoxButton>
+						<NcButton
+							v-if="allowNewMailAccounts"
+							variant="primary"
+							to="/setup"
+							:aria-label="t('mail', 'Add mail account')"
+							wide>
+							<template #icon>
+								<IconAdd :size="20" />
+							</template>
+							{{ t('mail', 'Add mail account') }}
+						</NcButton>
+					</NcFormBox>
+				</NcFormGroup>
 			</NcAppSettingsSection>
 
-			<NcAppSettingsSection id="appearance-and-accessibility" :name="t('mail', 'Appearance')">
+			<NcAppSettingsSection id="appearance" :name="t('mail', 'Appearance')">
 				<NcRadioGroup v-model="layoutMode" :label="t('mail', 'Layout')">
 					<NcRadioGroupButton :label="t('mail', 'List')" value="no-split">
 						<template #icon>
@@ -98,21 +107,6 @@
 						{{ t('mail', 'Avatars from Gravatar and favicons') }}
 					</NcCheckboxRadioSwitch>
 				</p>
-
-				<h4>{{ t('mail', 'Mailto') }}</h4>
-				<p class="settings-hint">
-					{{ t('mail', 'Set as default mail app') }}
-				</p>
-				<NcButton
-					variant="secondary"
-					class="app-settings-button"
-					:aria-label="t('mail', 'Set as default mail app')"
-					@click="registerProtocolHandler">
-					<template #icon>
-						<IconEmail :size="20" />
-					</template>
-					{{ t('mail', 'Register') }}
-				</NcButton>
 			</NcAppSettingsSection>
 			<NcAppSettingsSection id="text-blocks" :name="t('mail', 'Text blocks')">
 				<span class="settings-hint">{{ t('mail', 'Reusable pieces of text that can be inserted in messages') }}</span>
@@ -325,10 +319,11 @@
 <script>
 import { showError } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
-import { NcAppSettingsDialog, NcAppSettingsSection, NcButton, NcCheckboxRadioSwitch, NcDialog, NcInputField, NcRadioGroup, NcRadioGroupButton } from '@nextcloud/vue'
+import { NcAppSettingsDialog, NcAppSettingsSection, NcButton, NcCheckboxRadioSwitch, NcDialog, NcFormBox, NcFormBoxButton, NcFormBoxSwitch, NcFormGroup, NcInputField, NcRadioGroup, NcRadioGroupButton } from '@nextcloud/vue'
 import mitt from 'mitt'
 import { mapState, mapStores } from 'pinia'
 import NcKbd from '@nextcloud/vue/components/NcKbd'
+import IconLink from 'vue-material-design-icons/ArrowTopRight.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconClose from 'vue-material-design-icons/Close.vue'
 import IconEmail from 'vue-material-design-icons/EmailOutline.vue'
@@ -370,6 +365,11 @@ export default {
 		NcDialog,
 		NcInputField,
 		TextEditor,
+		NcFormBox,
+		NcFormBoxButton,
+		NcFormBoxSwitch,
+		NcFormGroup,
+		IconLink,
 	},
 
 	props: {
@@ -450,6 +450,10 @@ export default {
 
 		mailVersion() {
 			return this.mainStore.getPreference('mailVersion', '0.0.0')
+		},
+
+		accountsWithEmail() {
+			return this.getAccounts.filter((account) => account && account.emailAddress)
 		},
 
 		layoutMode: {
