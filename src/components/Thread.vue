@@ -13,7 +13,7 @@
 		<template v-else>
 			<div id="mail-thread-header">
 				<div id="mail-thread-header-fields">
-					<h2 dir="auto" :title="threadSubject">
+					<h2 dir="auto" :title="threadSubject" :class="{ 'text-collapsed': isTextCollapsed }">
 						{{ threadSubject }}
 					</h2>
 					<div v-if="thread.length" ref="avatarHeader" class="avatar-header">
@@ -119,6 +119,15 @@ export default {
 			summaryText: '',
 			summaryError: false,
 			loadedThreads: 0,
+			isTextCollapsed: false,
+			fullHeight: 0,
+			singleHeight: 0,
+			threshold: 0,
+			// pixel hysteresis to prevent toggling when scroll is near the threshold
+			hysteresis: 0,
+			scrollEl: null,
+			transitionEndHandler: null,
+			isAnimating: false,
 		}
 	},
 
@@ -219,9 +228,28 @@ export default {
 		window.addEventListener('keydown', this.handleKeyDown)
 	},
 
+	mounted() {
+		this.scrollEl = this.$el.closest('.app-content-wrapper') || window
+		this.$nextTick(() => {
+			if (document.fonts && document.fonts.ready) {
+				document.fonts.ready.then(() => this._measureHeightsOnce())
+					.catch(() => this._measureHeightsOnce())
+			} else {
+				this._measureHeightsOnce()
+			}
+		})
+		this.scrollEl.addEventListener('scroll', this.onScroll, { passive: true })
+	},
+
 	beforeDestroy() {
 		window.removeEventListener('resize', this.resizeDebounced)
 		window.removeEventListener('keydown', this.handleKeyDown)
+		this.scrollEl?.removeEventListener('scroll', this.onScroll)
+		if (this.transitionEndHandler) {
+			const h2 = this.$el.querySelector('#mail-thread-header-fields h2')
+			h2 && h2.removeEventListener('transitionend', this.transitionEndHandler)
+			this.transitionEndHandler = null
+		}
 	},
 
 	methods: {
@@ -240,6 +268,150 @@ export default {
 			} finally {
 				this.summaryLoading = false
 			}
+		},
+
+		_measureHeightsOnce() {
+			const h2 = this.$el.querySelector('#mail-thread-header-fields h2')
+			if (!h2) return
+
+			const clone = h2.cloneNode(true)
+			Object.assign(clone.style, {
+				position: 'absolute',
+				visibility: 'hidden',
+				whiteSpace: 'normal',
+				width: `${h2.offsetWidth}px`,
+				pointerEvents: 'none',
+				overflow: 'visible',
+				top: '0',
+				left: '-9999px',
+			})
+			document.body.appendChild(clone)
+			const full = clone.scrollHeight
+
+			clone.style.whiteSpace = 'nowrap'
+			const single = clone.scrollHeight
+			document.body.removeChild(clone)
+
+			this.fullHeight = full
+			this.singleHeight = single
+
+			this.threshold = Math.max(0, this.fullHeight - this.singleHeight)
+			this.hysteresis = Math.max(10, Math.round(this.singleHeight * 0.5))
+
+			this.onScroll()
+		},
+
+		onScroll() {
+			if (this.isAnimating) return
+
+			let scrolled = 0
+			if (this.scrollEl === window) {
+				scrolled = window.pageYOffset || document.documentElement.scrollTop || 0
+			} else {
+				scrolled = this.scrollEl.scrollTop
+			}
+
+			// Use hysteresis: only collapse when scrolled > threshold + hysteresis,
+			// and only expand when scrolled < threshold - hysteresis.
+			const collapsePoint = this.threshold + this.hysteresis
+			const expandPoint = Math.max(0, this.threshold - this.hysteresis)
+
+			// Determine desired collapsed state. If scrolled is within the
+			// hysteresis band, keep current state (no toggle).
+			let desiredCollapsed = this.isTextCollapsed
+			if (scrolled > collapsePoint) {
+				desiredCollapsed = true
+			} else if (scrolled < expandPoint) {
+				desiredCollapsed = false
+			} else {
+				// inside hysteresis band -> don't change
+				return
+			}
+
+			if (desiredCollapsed === this.isTextCollapsed) return
+
+			if (desiredCollapsed) {
+				this._animateCollapse()
+			} else {
+				this._animateExpand()
+			}
+		},
+
+		_animateCollapse() {
+			const h2 = this.$el.querySelector('#mail-thread-header-fields h2')
+			if (!h2) return
+			if (this.isAnimating) return
+
+			if (this.transitionEndHandler) {
+				h2.removeEventListener('transitionend', this.transitionEndHandler)
+				this.transitionEndHandler = null
+			}
+
+			this.isAnimating = true
+
+			h2.classList.remove('text-collapsed')
+			h2.style.overflow = 'hidden'
+			h2.style.height = `${this.fullHeight}px`
+
+			// force reflow
+			// eslint-disable-next-line no-unused-expressions
+			h2.offsetHeight
+
+			h2.style.height = `${this.singleHeight}px`
+
+			const onEnd = (ev) => {
+				if (ev.propertyName !== 'height') return
+				h2.removeEventListener('transitionend', onEnd)
+				this.transitionEndHandler = null
+
+				this.isTextCollapsed = true
+				h2.classList.add('text-collapsed')
+
+				h2.style.height = ''
+				h2.style.overflow = ''
+				this.isAnimating = false
+			}
+
+			this.transitionEndHandler = onEnd
+			h2.addEventListener('transitionend', onEnd)
+		},
+
+		_animateExpand() {
+			const h2 = this.$el.querySelector('#mail-thread-header-fields h2')
+			if (!h2) return
+			if (this.isAnimating) return
+
+			if (this.transitionEndHandler) {
+				h2.removeEventListener('transitionend', this.transitionEndHandler)
+				this.transitionEndHandler = null
+			}
+
+			this.isAnimating = true
+
+			h2.style.height = `${this.singleHeight}px`
+			h2.style.overflow = 'hidden'
+
+			h2.classList.remove('text-collapsed')
+
+			// force reflow
+			// eslint-disable-next-line no-unused-expressions
+			h2.offsetHeight
+
+			h2.style.height = `${this.fullHeight}px`
+
+			const onEnd = (ev) => {
+				if (ev.propertyName !== 'height') return
+				h2.removeEventListener('transitionend', onEnd)
+				this.transitionEndHandler = null
+
+				this.isTextCollapsed = false
+				h2.style.height = ''
+				h2.style.overflow = ''
+				this.isAnimating = false
+			}
+
+			this.transitionEndHandler = onEnd
+			h2.addEventListener('transitionend', onEnd)
 		},
 
 		updateParticipantsToDisplay() {
@@ -581,7 +753,6 @@ export default {
 
 <style lang="scss">
 #mail-message {
-	margin-bottom: 30vh;
 	width: 100%;
 	max-width: 100%;
 
@@ -594,8 +765,9 @@ export default {
 
 .mail-message-body {
 	flex: 1;
-	margin-bottom: calc(var(--default-grid-baseline) * 2);
+	margin-bottom: 0;
 	position: relative;
+	border-radius: 5px;
 }
 
 #mail-thread-header {
@@ -631,6 +803,13 @@ export default {
 	}
 }
 
+@media only screen and (max-width: 1024px) {
+    #mail-thread-header {
+        position: sticky !important;
+        top: 29px !important;;
+    }
+}
+
 #mail-thread-header-fields {
 	// initial width
 	width: 0;
@@ -639,12 +818,29 @@ export default {
 	padding-inline-start: 66px;
 	// grow and try to fill 100%
 	flex: 1 1 auto;
+	background: var(--color-main-background);
 	h2,
 	p {
 		padding-bottom: calc(var(--default-grid-baseline) * 2);
 		margin-bottom: 0;
 		// some h2 styling coming from server add some space on top
 		margin-top: var(--default-grid-baseline);
+	}
+
+	h2 {
+		white-space: normal;
+		overflow: visible;
+		text-overflow: clip;
+		margin-right: calc(var(--default-grid-baseline) * 2);
+
+		transition: height 250ms ease;
+		will-change: height;
+	}
+
+	h2.text-collapsed {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	p {
@@ -659,9 +855,14 @@ export default {
 		}
 	}
 }
+@media only screen and (max-width: 600px) {
+    #mail-thread-header-fields {
+        padding-inline-start: 48px;
+    }
+}
 @media only screen and (max-width: 1024px) {
 	#mail-thread-header-fields {
-		margin-top: -20px;
+		margin-top: -32px;
 	}
 }
 
@@ -677,6 +878,12 @@ export default {
 
 #mail-content {
 	margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 10) 0 calc(var(--default-grid-baseline) * 14);
+}
+
+@media only screen and (max-width: 600px) {
+    #mail-content {
+        margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 3) 0 calc(var(--default-grid-baseline) * 3);
+    }
 }
 
 #mail-content iframe {
@@ -723,9 +930,10 @@ export default {
 }
 
 .avatar-more {
-	display: inline;
+	display: flex;
 	background-color: var(--color-background-dark);
 	border-radius: var(--border-radius-large);
+	align-items: center;
 	cursor: pointer;
 }
 
