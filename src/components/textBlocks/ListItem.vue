@@ -11,21 +11,21 @@
 			<template #subname>
 				{{ textBlock.preview }}
 			</template>
-			<template v-if="shares.length > 0" #extra-actions>
+			<template v-if="!shared" #extra-actions>
 				<AccountMultiple
+					v-if="shares.length > 0"
 					:title="t('mail', 'Shared')"
 					:size="20" />
-			</template>
-			<template v-if="!shared" #actions>
-				<NcActionButton @click="editModalOpen = true">
+				<NcActionButton :title="t('mail', 'Edit {title}', { title: textBlock.title })" @click="editModalOpen = true">
 					<template #icon>
 						<IconPencil :size="20" />
 					</template>
-					{{ t('mail', 'Edit {title}', { title: textBlock.title }) }}
 				</NcActionButton>
-				<NcActionButton v-if="!isViewMode" icon="icon-delete" @click="deleteTextBlock()">
-					{{ t('mail', 'Delete {title}', { title: textBlock.title }) }}
-				</NcActionButton>
+				<NcActionButton
+					v-if="!isViewMode"
+					icon="icon-delete"
+					:title="t('mail', 'Delete {title}', { title: textBlock.title })"
+					@click="deleteTextBlock()" />
 			</template>
 		</NcListItem>
 		<NcDialog
@@ -121,7 +121,7 @@ import { mapStores } from 'pinia'
 import AccountMultiple from 'vue-material-design-icons/AccountMultiple.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconClose from 'vue-material-design-icons/Close.vue'
-import IconPencil from 'vue-material-design-icons/Pencil.vue'
+import IconPencil from 'vue-material-design-icons/PencilOutline.vue'
 import TextEditor from '../TextEditor.vue'
 import logger from '../../logger.js'
 import { getShares, shareTextBlock, unshareTextBlock } from '../../service/TextBlockService.js'
