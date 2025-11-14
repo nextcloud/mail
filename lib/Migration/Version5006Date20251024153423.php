@@ -37,6 +37,7 @@ class Version5006Date20251024153423 extends SimpleMigrationStep {
 		if (!$accountsTable->hasColumn('classification_enabled')) {
 			$accountsTable->addColumn('classification_enabled', Types::BOOLEAN, [
 				'default' => true,
+				'notnull' => true,
 			]);
 		}
 		return $schema;

@@ -41,7 +41,7 @@
 					id="auto-classification-enabled"
 					v-model="classificationEnabled"
 					:disabled="loading">
-					{{ t('mail', 'Enable classification') }}
+					{{ t('mail', 'Enable mark as important classification') }}
 				</NcCheckboxRadioSwitch>
 			</Tab>
 			<Tab id="manual" key="manual" :name="t('mail', 'Manual')">
