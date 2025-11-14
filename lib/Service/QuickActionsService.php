@@ -35,13 +35,18 @@ class QuickActionsService {
 		private ActionStepMapper $actionStepMapper,
 	) {
 	}
-
 	/**
 	 * @param string $userId
 	 * @return Actions[]
 	 */
 	public function findAll(string $userId): array {
-		return $this->actionsMapper->findAll($userId);
+		$actions = $this->actionsMapper->findAll($userId);
+		foreach ($actions as $action) {
+			$actionSteps = $this->actionStepMapper->findAllStepsForOneAction($action->getId(), $userId);
+			$action->setActionSteps($actionSteps);
+			$action->setIcon($actionSteps[0]->getName());
+		}
+		return $actions;
 	}
 
 	/**
@@ -72,14 +77,6 @@ class QuickActionsService {
 	public function delete(int $actionId, string $userId): void {
 		$action = $this->actionsMapper->find($actionId, $userId);
 		$this->actionsMapper->delete($action);
-	}
-
-	/**
-	 * @param string $userId
-	 * @return ActionStep[]
-	 */
-	public function findAllActionSteps(int $actionId, string $userId): array {
-		return $this->actionStepMapper->findAllStepsForOneAction($actionId, $userId);
 	}
 
 	/**

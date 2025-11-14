@@ -510,11 +510,6 @@ return [
 			'url' => '/api/textBlocks/{id}/shares',
 			'verb' => 'GET',
 		],
-		[
-			'name' => 'actionStep#findAllStepsForAction',
-			'url' => '/api/action-step/{actionId}/steps',
-			'verb' => 'GET'
-		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],
