@@ -380,6 +380,7 @@
     "Collapse folders" : "Свернуть папки",
     "_{total} message_::_{total} messages_" : ["{total} письмо","{total} письма","{total} писем","{total} письма"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["Непрочитано {unread} из {total}","Непрочитано {unread} из {total}","Непрочитано {unread} из {total}","Непрочитано {unread} из {total}"],
+    "Loading …" : "Загрузка …",
     "All messages in mailbox will be deleted." : "Все сообщения в почтовом ящике будут удалены.",
     "Clear mailbox {name}" : "Очистить почтовый ящик {name}",
     "Clear folder" : "Очистить папку",
