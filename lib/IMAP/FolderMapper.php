@@ -127,10 +127,9 @@ class FolderMapper {
 	 */
 	public function getFoldersStatusAsObject(Horde_Imap_Client_Socket $client,
 		array $mailboxes): array {
-		$multiStatus = $client->status($mailboxes);
-
 		$statuses = [];
-		foreach ($multiStatus as $mailbox => $status) {
+		foreach ($mailboxes as $mailbox) {
+			$status = $client->status($mailbox);
 			try {
 				if (!isset($status['messages'], $status['unseen'])) {
 					throw new ServiceException('Could not fetch stats of mailbox: ' . $mailbox);
@@ -143,7 +142,7 @@ class FolderMapper {
 				$this->logger->warning($e->getMessage(), [
 					'exception' => $e,
 					'mailboxes' => $mailboxes,
-					'statuses' => $multiStatus,
+					'status' => $status,
 				]);
 			}
 		}

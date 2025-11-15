@@ -209,12 +209,10 @@ class FolderMapperTest extends TestCase {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('status')
-			->with(['INBOX'])
+			->with('INBOX')
 			->willReturn([
-				'INBOX' => [
-					'messages' => 123,
-					'unseen' => 2,
-				],
+				'messages' => 123,
+				'unseen' => 2,
 			]);
 
 		$stats = $this->mapper->getFoldersStatusAsObject($client, ['INBOX']);
@@ -228,25 +226,15 @@ class FolderMapperTest extends TestCase {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('status')
-			->with(['INBOX'])
+			->with('INBOX')
 			->willReturn([
-				'INBOX' => [
-					'messages' => null,
-					'unseen' => 2,
-				],
-				'Company' => [
-					'messages' => 123,
-					'unseen' => 2,
-				],
+				'messages' => null,
+				'unseen' => 2,
 			]);
 
 		$stats = $this->mapper->getFoldersStatusAsObject($client, ['INBOX']);
 
 		self::assertArrayNotHasKey('INBOX', $stats);
-		self::assertArrayHasKey('Company', $stats);
-		$expected = new MailboxStats(123, 2);
-		self::assertEquals($expected, $stats['Company']);
-
 	}
 
 	public function testDetectSpecialUseFromAttributes() {
