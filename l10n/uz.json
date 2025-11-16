@@ -84,6 +84,7 @@
     "Favorites" : "Favorites",
     "Error while sharing file" : "Fayl almashishda xatolik yuz berdi",
     "Continue to %s" : " %sni davom eting",
-    "Accounts" : "Akkaunt"
+    "Accounts" : "Akkaunt",
+    "Loading …" : "Yuklanmoqda…"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

@@ -21,7 +21,6 @@ OC.L10N.register(
     "Sender is using a custom email: %1$s instead of the sender email: %2$s" : "Sendandinn er að nota sérsniðið tölvupóstfang: %1$s í staðinn fyrir tölvupóstfang sendanda: %2$s",
     "Sent date is in the future" : "Dagsetning sendingar er í framtíðinni",
     "Some addresses in this message are not matching the link text" : "Sum tölvupóstföng í þessum skilaboðum samsvara ekki texta tengilsins",
-    "Reply-To email: %1$s  is different from the sender email: %2$s" : "Svara-til tölvupóstfang: %1$s er ólíkt tölvupóstfangi sendanda: %2$s",
     "Mail connection performance" : "Afköst pósttengingar",
     "Slow mail service detected (%1$s) an attempt to connect to several accounts took an average of %2$s seconds per account" : "Hægvirk póstþjónusta greindi (%1$s) tilraun til að tengjast mörgum aðgöngum sem tók að meðaltali %2$s sekúndur á hvern aðgang",
     "Slow mail service detected (%1$s) an attempt to perform a mail box list operation on several accounts took an average of %2$s seconds per account" : "Hægvirk póstþjónusta greindi (%1$s) tilraun til að framkvæma listunaraðgerð pósthólfs á mörgum aðgöngum sem tók að meðaltali %2$s sekúndur á hvern aðgang",

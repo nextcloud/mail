@@ -21,7 +21,6 @@ OC.L10N.register(
     "Sender is using a custom email: %1$s instead of the sender email: %2$s" : "Bidaltzailea %1$s email pertsonalizatua erabiltzen ari da, %2$s emailetik beharrean.",
     "Sent date is in the future" : "Bidaltze data etorkizunekoa da",
     "Some addresses in this message are not matching the link text" : "Mezu honetako helbide batzuk ez datoz bat estekako testuarekin",
-    "Reply-To email: %1$s  is different from the sender email: %2$s" : "Erantzuteko %1$s emaila eta %2$s email bidaltzailea ez dira berbera.",
     "💌 A mail app for Nextcloud" : "💌 Posta elektroniko zerbitzu bat Nextcloudekin",
     "Your session has expired. The page will be reloaded." : "Zure saioa iraungi da. Orria berriro kargatuko da.",
     "Drafts are saved in:" : "Zirriborroak hemen gordetzen dira:",
