@@ -431,6 +431,7 @@ OC.L10N.register(
     "Moving" : "Moving",
     "Moving thread" : "Moving thread",
     "Moving message" : "Moving message",
+    "Connection failed. Please verify your information and try again" : "Connection failed. Please verify your information and try again",
     "Used quota: {quota}% ({limit})" : "Used quota: {quota}% ({limit})",
     "Used quota: {quota}%" : "Used quota: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Unable to create mailbox. The name likely contains invalid characters. Please try another name.",

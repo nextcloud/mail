@@ -357,6 +357,7 @@ OC.L10N.register(
     "Saving" : "تېجەش",
     "Move up" : "يۆتكەڭ",
     "Move down" : "تۆۋەنگە يۆتكەڭ",
+    "Loading …" : "يۈكلەۋاتىدۇ ...",
     "All messages in mailbox will be deleted." : "خەت ساندۇقىدىكى بارلىق ئۇچۇرلار ئۆچۈرۈلىدۇ.",
     "Clear mailbox {name}" : "خەت ساندۇقىنى تازىلاش {name}",
     "Delete folder" : "ھۆججەت قىسقۇچنى ئۆچۈرۈڭ",

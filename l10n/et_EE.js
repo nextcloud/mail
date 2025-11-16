@@ -421,6 +421,7 @@ OC.L10N.register(
     "Moving" : "Teisaldan",
     "Moving thread" : "Teisaldan jutulõnga mujale",
     "Moving message" : "Teisaldan kirja",
+    "Connection failed. Please verify your information and try again" : "Ühendamine ei õnnestunud. Palun kontrolli, kas kõik sisestatud teave on õige ja proovi uuesti",
     "Used quota: {quota}% ({limit})" : "Kasutatud kvoot: {quota}% ({limit})",
     "Used quota: {quota}%" : "Kasutatud kvoot: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Postkasti pole võimalik luua. Ilmselt on nimes keelatud tähemärke. Palun proovi mõnda muud nime.",
