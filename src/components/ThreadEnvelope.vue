@@ -1306,9 +1306,9 @@ export default {
 		.left {
 			display: flex;
 			align-items: center;
-			min-width: 0;     /* umožní textu správně zkrátit */
-			flex: 1 1 auto;  /* roztáhne se co to jde */
-			gap: 8px;        /* mezera mezi textem a unsubscribe */
+			min-width: 0;
+			flex: 1 1 auto;
+			gap: 8px;
 		}
 
 		.envelope__header__left__sender-subject-tags {
@@ -1319,12 +1319,12 @@ export default {
 		}
 
 		.envelope__header__left__unsubscribe {
-			flex-shrink: 0;   /* aby se nikdy nezmenšovalo */
+			flex-shrink: 0;
 		}
 
 		.right {
 			flex-shrink: 0;
-			margin-left: auto; /* drží se vpravo */
+			margin-left: auto;
 			display: flex;
 			align-items: center;
 			gap: 4px;

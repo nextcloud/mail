@@ -13,7 +13,7 @@
 		<template v-else>
 			<div id="mail-thread-header">
 				<div id="mail-thread-header-fields">
-					<h2 dir="auto" :title="threadSubject" :class="{ 'text-collapsed': isTextCollapsed }">
+					<h2 ref="mailThreadHeaderH2" dir="auto" :title="threadSubject" :class="{ 'text-collapsed': isTextCollapsed }">
 						{{ threadSubject }}
 					</h2>
 					<div v-if="thread.length" ref="avatarHeader" class="avatar-header">
@@ -246,8 +246,10 @@ export default {
 		window.removeEventListener('keydown', this.handleKeyDown)
 		this.scrollEl?.removeEventListener('scroll', this.onScroll)
 		if (this.transitionEndHandler) {
-			const h2 = this.$el.querySelector('#mail-thread-header-fields h2')
-			h2 && h2.removeEventListener('transitionend', this.transitionEndHandler)
+			const h2 = this.$refs.mailThreadHeaderH2
+			if (h2) {
+				h2.removeEventListener('transitionend', this.transitionEndHandler)
+			}
 			this.transitionEndHandler = null
 		}
 	},
@@ -271,8 +273,10 @@ export default {
 		},
 
 		_measureHeightsOnce() {
-			const h2 = this.$el.querySelector('#mail-thread-header-fields h2')
-			if (!h2) return
+			const h2 = this.$refs.mailThreadHeaderH2
+			if (!h2) {
+				return
+			}
 
 			const clone = h2.cloneNode(true)
 			Object.assign(clone.style, {
@@ -296,13 +300,15 @@ export default {
 			this.singleHeight = single
 
 			this.threshold = Math.max(0, this.fullHeight - this.singleHeight)
-			this.hysteresis = Math.max(10, Math.round(this.singleHeight * 0.5))
+			this.hysteresis = Math.max(10, Math.round(this.singleHeight * 0.6))
 
 			this.onScroll()
 		},
 
 		onScroll() {
-			if (this.isAnimating) return
+			if (this.isAnimating) {
+				return
+			}
 
 			let scrolled = 0
 			if (this.scrollEl === window) {
@@ -328,7 +334,9 @@ export default {
 				return
 			}
 
-			if (desiredCollapsed === this.isTextCollapsed) return
+			if (desiredCollapsed === this.isTextCollapsed) {
+				return
+			}
 
 			if (desiredCollapsed) {
 				this._animateCollapse()
@@ -338,9 +346,13 @@ export default {
 		},
 
 		_animateCollapse() {
-			const h2 = this.$el.querySelector('#mail-thread-header-fields h2')
-			if (!h2) return
-			if (this.isAnimating) return
+			const h2 = this.$refs.mailThreadHeaderH2
+			if (!h2) {
+				return
+			}
+			if (this.isAnimating) {
+				return
+			}
 
 			if (this.transitionEndHandler) {
 				h2.removeEventListener('transitionend', this.transitionEndHandler)
@@ -354,13 +366,15 @@ export default {
 			h2.style.height = `${this.fullHeight}px`
 
 			// force reflow
-			// eslint-disable-next-line no-unused-expressions
+			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 			h2.offsetHeight
 
 			h2.style.height = `${this.singleHeight}px`
 
 			const onEnd = (ev) => {
-				if (ev.propertyName !== 'height') return
+				if (ev.propertyName !== 'height') {
+					return
+				}
 				h2.removeEventListener('transitionend', onEnd)
 				this.transitionEndHandler = null
 
@@ -377,9 +391,13 @@ export default {
 		},
 
 		_animateExpand() {
-			const h2 = this.$el.querySelector('#mail-thread-header-fields h2')
-			if (!h2) return
-			if (this.isAnimating) return
+			const h2 = this.$refs.mailThreadHeaderH2
+			if (!h2) {
+				return
+			}
+			if (this.isAnimating) {
+				return
+			}
 
 			if (this.transitionEndHandler) {
 				h2.removeEventListener('transitionend', this.transitionEndHandler)
@@ -394,13 +412,16 @@ export default {
 			h2.classList.remove('text-collapsed')
 
 			// force reflow
-			// eslint-disable-next-line no-unused-expressions
+			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 			h2.offsetHeight
 
 			h2.style.height = `${this.fullHeight}px`
 
 			const onEnd = (ev) => {
-				if (ev.propertyName !== 'height') return
+				if (ev.propertyName !== 'height') {
+					return
+				}
+
 				h2.removeEventListener('transitionend', onEnd)
 				this.transitionEndHandler = null
 
@@ -803,7 +824,7 @@ export default {
 	}
 }
 
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: var(--breakpoint-mobile)) {
     #mail-thread-header {
         position: sticky !important;
         top: 29px !important;;
@@ -860,7 +881,7 @@ export default {
         padding-inline-start: 48px;
     }
 }
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: var(--breakpoint-mobile)) {
 	#mail-thread-header-fields {
 		margin-top: -32px;
 	}
