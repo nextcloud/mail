@@ -388,7 +388,7 @@ OC.L10N.register(
     "Loading …" : "読み込み中…",
     "All messages in mailbox will be deleted." : "メールボックスにある全てのメッセージが削除されます。",
     "Clear mailbox {name}" : "メールボックス{name}を削除する",
-    "Clear folder" : "フィルターをクリア",
+    "Clear folder" : "フォルダを空にする",
     "Delete folder" : "フォルダーを削除",
     "An error occurred, unable to rename the mailbox." : "エラー:メールボックスの名前を変更できませんでした。",
     "Please wait 10 minutes before repairing again" : "再度修復する前に10分間お待ちください。",

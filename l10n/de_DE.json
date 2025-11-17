@@ -429,6 +429,7 @@
     "Moving" : "Verschiebe",
     "Moving thread" : "Verschiebe Unterhaltung",
     "Moving message" : "Verschiebe Nachricht",
+    "This account cannot connect" : "Dieses Konto kann keine Verbindung herstellen",
     "Connection failed. Please verify your information and try again" : "Verbindung fehlgeschlagen. Bitte Ihre Daten überprüfen und es erneut versuchen",
     "Used quota: {quota}% ({limit})" : "Benutztes Kontingent: {quota}% ({limit})",
     "Used quota: {quota}%" : "Benutztes Kontingent: {quota}%",
