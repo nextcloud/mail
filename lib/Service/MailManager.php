@@ -130,13 +130,14 @@ class MailManager implements IMailManager {
 
 	/**
 	 * @param Account $account
+	 * @param bool $forceSync
 	 *
 	 * @return Mailbox[]
 	 * @throws ServiceException
 	 */
 	#[\Override]
-	public function getMailboxes(Account $account): array {
-		$this->mailboxSync->sync($account, $this->logger);
+	public function getMailboxes(Account $account, bool $forceSync = false): array {
+		$this->mailboxSync->sync($account, $this->logger, $forceSync);
 
 		return $this->mailboxMapper->findAll($account);
 	}

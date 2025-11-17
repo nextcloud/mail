@@ -5,8 +5,8 @@
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 
-export async function fetchAll(accountId) {
-	const url = generateUrl('/apps/mail/api/mailboxes?accountId={accountId}', {
+export async function fetchAll(accountId, forceSync = false) {
+	const url = generateUrl(`/apps/mail/api/mailboxes?accountId={accountId}&forceSync=${forceSync}`, {
 		accountId,
 	})
 

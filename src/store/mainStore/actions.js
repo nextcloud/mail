@@ -219,6 +219,13 @@ export default function mainStoreActions() {
 			logger.debug(`account ${account.id} created`, { account })
 			return account
 		},
+		async syncMailboxesForAccount(account) {
+			logger.debug(`Fetching mailboxes for account ${account.id},  …`, { account })
+			account.mailboxes = await fetchAllMailboxes(account.id, true)
+			const mailboxes = sortMailboxes(account.mailboxes || [], account)
+			Vue.set(account, 'mailboxes', [])
+			mailboxes.map(addMailboxToState(this.mailboxes, account))
+		},
 		async finishAccountSetup({ account }) {
 			logger.debug(`Fetching mailboxes for account ${account.id},  …`, { account })
 			account.mailboxes = await fetchAllMailboxes(account.id)
