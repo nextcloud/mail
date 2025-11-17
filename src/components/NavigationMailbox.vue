@@ -109,13 +109,12 @@
 				<template #icon>
 					<IconEmailCheck :size="20" />
 				</template>
-				{{ t('mail', 'Mark all messages of this folder as read') }}
 			</ActionButton>
 			<ActionButton
 				v-if="!editing && !account.isUnified && hasDelimiter && mailbox.specialRole !== 'flagged' && hasSubmailboxActionAcl"
 				@click="openCreateMailbox">
 				<template #icon>
-					<IconFolderAdd :size="20" />
+					<IconAdd :size="20" />
 				</template>
 				{{ t('mail', 'Add subfolder') }}
 			</ActionButton>
@@ -124,14 +123,14 @@
 				:value.sync="createMailboxName"
 				@submit.prevent.stop="createMailbox">
 				<template #icon>
-					<IconFolderAdd :size="20" />
+					<IconAdd :size="20" />
 				</template>
 			</ActionInput>
 			<ActionButton
 				v-if="renameLabel && !hasSubMailboxes && !account.isUnified && hasRenameAcl"
 				@click.prevent.stop="openRenameInput">
 				<template #icon>
-					<IconFolderRename :size="20" />
+					<IconEdit :size="20" />
 				</template>
 				{{ t('mail', 'Rename') }}
 			</ActionButton>
@@ -140,7 +139,7 @@
 				:value.sync="mailboxName"
 				@submit.prevent.stop="renameMailbox">
 				<template #icon>
-					<IconFolderRename
+					<IconEdit
 						:title="t('mail', 'Rename')"
 						:size="20" />
 				</template>
@@ -202,16 +201,16 @@
 				:close-after-click="true"
 				@click="clearMailbox">
 				<template #icon>
-					<EraserIcon :size="20" />
+					<IconDeleteOutline :size="20" />
 				</template>
-				{{ t('mail', 'Clear folder') }}
+				{{ t('mail', 'Delete all messages') }}
 			</ActionButton>
 
 			<ActionButton
 				v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes && hasDeleteAcl"
 				@click="deleteMailbox">
 				<template #icon>
-					<IconDelete :size="20" />
+					<IconDeleteOutline :size="20" />
 				</template>
 				{{ t('mail', 'Delete folder') }}
 			</ActionButton>
@@ -250,13 +249,10 @@ import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
 import IconArchive from 'vue-material-design-icons/ArchiveArrowDown.vue'
 import IconArchiveOutline from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
 import IconEmailCheck from 'vue-material-design-icons/EmailCheckOutline.vue'
-import EraserIcon from 'vue-material-design-icons/Eraser.vue'
 import IconJunk from 'vue-material-design-icons/Fire.vue'
 import IconFolder from 'vue-material-design-icons/Folder.vue'
 import IconFolderShared from 'vue-material-design-icons/FolderAccount.vue'
 import IconFolderSharedOutline from 'vue-material-design-icons/FolderAccountOutline.vue'
-import IconFolderRename from 'vue-material-design-icons/FolderEditOutline.vue'
-import IconFolderAdd from 'vue-material-design-icons/FolderMultipleOutline.vue'
 import IconFolderOutline from 'vue-material-design-icons/FolderOutline.vue'
 import IconFolderSync from 'vue-material-design-icons/FolderSyncOutline.vue'
 import IconInbox from 'vue-material-design-icons/Home.vue'
@@ -267,7 +263,9 @@ import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
 import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
 import IconExternal from 'vue-material-design-icons/OpenInNew.vue'
 import IconDraft from 'vue-material-design-icons/Pencil.vue'
+import IconEdit from 'vue-material-design-icons/PencilOutline.vue'
 import IconDraftOutline from 'vue-material-design-icons/PencilOutline.vue'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconSend from 'vue-material-design-icons/Send.vue'
 import IconSendOutline from 'vue-material-design-icons/SendOutline.vue'
 import IconFavorite from 'vue-material-design-icons/Star.vue'
@@ -301,8 +299,8 @@ export default {
 		IconDeleteOutline,
 		IconEmailCheck,
 		IconExternal,
-		IconFolderAdd,
-		IconFolderRename,
+		IconAdd,
+		IconEdit,
 		IconFolderSync,
 		IconInfo,
 		IconAllInboxes,
@@ -321,7 +319,6 @@ export default {
 		IconInbox,
 		IconInboxOutline,
 		IconWrench,
-		EraserIcon,
 		ImportantIcon,
 		IconLoading,
 		MoveMailboxModal,
@@ -826,5 +823,9 @@ export default {
 <style lang="scss" scoped>
 .counter-bubble__counter {
 	max-width: initial;
+}
+
+:deep(.action-item__menutoggle) {
+	background-color: transparent !important;
 }
 </style>
