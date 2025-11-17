@@ -942,20 +942,12 @@ export default {
 							break
 						case 'markAsRead':
 							if (!this.data.flags.seen) {
-								if (this.layoutMessageViewThreaded) {
-									this.onToggleSeenThread()
-								} else {
-									this.onToggleSeen()
-								}
+								this.onToggleSeen()
 							}
 							break
 						case 'markAsUnread':
 							if (this.data.flags.seen) {
-								if (this.layoutMessageViewThreaded) {
-									this.onToggleSeenThread()
-								} else {
-									this.onToggleSeen()
-								}
+								this.onToggleSeen()
 							}
 							break
 						case 'moveThread':
@@ -1050,16 +1042,16 @@ export default {
 		},
 
 		onToggleSeen() {
-			this.mainStore.toggleEnvelopeSeen({ envelope: this.data })
-		},
-
-		onToggleSeenThread() {
-			const threadEnvelopes = this.layoutMessageViewThreaded
-				? this.mainStore.getEnvelopesByThreadRootId(this.data.accountId, this.data.threadRootId)
-				: [this.data]
-			threadEnvelopes.forEach((envelope) => {
-				this.mainStore.toggleEnvelopeSeen({ envelope })
-			})
+			if (this.layoutMessageViewThreaded) {
+				const threadEnvelopes = this.layoutMessageViewThreaded
+					? this.mainStore.getEnvelopesByThreadRootId(this.data.accountId, this.data.threadRootId)
+					: [this.data]
+				threadEnvelopes.forEach((envelope) => {
+					this.mainStore.toggleEnvelopeSeen({ envelope })
+				})
+			} else {
+				this.mainStore.toggleEnvelopeSeen({ envelope: this.data })
+			}
 		},
 
 		async onToggleJunkThread() {
