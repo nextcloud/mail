@@ -431,6 +431,7 @@ OC.L10N.register(
     "Moving" : "Movendo",
     "Moving thread" : "Movendo o fío",
     "Moving message" : "Movendo a mensaxe",
+    "This account cannot connect" : "Non é posíbel conectar esta conta",
     "Connection failed. Please verify your information and try again" : "Produciuse un fallo na conexión. Comprobe os seus datos e ténteo de novo",
     "Used quota: {quota}% ({limit})" : "Cota utilizada: {quota}% ({limit})",
     "Used quota: {quota}%" : "Cota utilizada: {quota}%",

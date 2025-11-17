@@ -419,6 +419,7 @@
     "Moving" : "Teisaldan",
     "Moving thread" : "Teisaldan jutulõnga mujale",
     "Moving message" : "Teisaldan kirja",
+    "This account cannot connect" : "Selle kasutajakonto ühendamine ei õnnestu",
     "Connection failed. Please verify your information and try again" : "Ühendamine ei õnnestunud. Palun kontrolli, kas kõik sisestatud teave on õige ja proovi uuesti",
     "Used quota: {quota}% ({limit})" : "Kasutatud kvoot: {quota}% ({limit})",
     "Used quota: {quota}%" : "Kasutatud kvoot: {quota}%",

@@ -431,6 +431,7 @@ OC.L10N.register(
     "Moving" : "Přesouvání",
     "Moving thread" : "Přesouvá se vlákno",
     "Moving message" : "Přesouvá se zpráva",
+    "This account cannot connect" : "Tento účet se nemůže připojit",
     "Connection failed. Please verify your information and try again" : "Připojení se nezdařilo. Ověřte své informace a zkuste to znovu",
     "Used quota: {quota}% ({limit})" : "Využitá kvóta: {quota}% ({limit})",
     "Used quota: {quota}%" : "Využitá kvóta: {quota}%",
