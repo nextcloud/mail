@@ -35,12 +35,13 @@ interface IMailManager {
 
 	/**
 	 * @param Account $account
+	 * @param bool $forceSync
 	 *
 	 * @return Mailbox[]
 	 *
 	 * @throws ServiceException
 	 */
-	public function getMailboxes(Account $account): array;
+	public function getMailboxes(Account $account, bool $forceSync = false): array;
 
 	/**
 	 * @param Account $account
