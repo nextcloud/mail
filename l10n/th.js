@@ -23,15 +23,14 @@ OC.L10N.register(
     "Appearance" : "ลักษณะที่ปรากฏ",
     "Newest first" : "ใหม่ที่สุดก่อน",
     "Oldest first" : "เก่าที่สุดก่อน",
-    "Register" : "ลงทะเบียน",
+    "Privacy" : "ความเป็นส่วนตัว",
     "Security" : "ความปลอดภัย",
-    "Keyboard shortcuts" : "แป้นพิมพ์ลัด",
+    "About" : "เกี่ยวกับ",
     "Archive" : "ที่เก็บถาวร",
     "Delete" : "ลบ",
     "Search" : "ค้นหา",
     "Send" : "ส่ง",
     "Refresh" : "รีเฟรช",
-    "About" : "เกี่ยวกับ",
     "Ok" : "ตกลง",
     "Choose" : "เลือก",
     "Choose a file to add as attachment" : "เลือกไฟล์ที่ต้องการแนบ",
@@ -110,6 +109,8 @@ OC.L10N.register(
     "Redirect" : "เปลี่ยนเส้นทาง",
     "The link leads to %s" : "ลิงก์จะนำไปยัง %s",
     "Continue to %s" : "ดำเนินการต่อไปที่ %s",
-    "Accounts" : "บัญชี"
+    "Accounts" : "บัญชี",
+    "Register" : "ลงทะเบียน",
+    "Keyboard shortcuts" : "แป้นพิมพ์ลัด"
 },
 "nplurals=1; plural=0;");

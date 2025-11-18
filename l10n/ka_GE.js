@@ -32,9 +32,8 @@ OC.L10N.register(
     "Add mail account" : "საფოსტო ანგარიშის დამატება",
     "Newest first" : "ჯერ ახალი",
     "Oldest first" : "ჯერ ძველი",
-    "Register" : "რეგისტრაცია",
     "Security" : "უსაფრთხოება",
-    "Keyboard shortcuts" : "კლავიატურის კომბინაციები",
+    "About" : "ჩვენს შესახებ",
     "Compose new message" : "ახალი წერილის შედგენა",
     "Newer message" : "უფრო ახალი წერილი",
     "Older message" : "ძველი წერილი",
@@ -45,7 +44,6 @@ OC.L10N.register(
     "Search" : "ძიება",
     "Send" : "გაგზავნა",
     "Refresh" : "განახლება",
-    "About" : "ჩვენს შესახებ",
     "Ok" : "კარგი",
     "Select account" : "აირჩიეთ ანგარიში",
     "Subject" : "სათაური",
@@ -71,7 +69,6 @@ OC.L10N.register(
     "Accept" : "მიღება",
     "Decline" : "ურაყოფა",
     "Remove" : "წაშლა",
-    "email" : "ელ-ფოსტა",
     "Today" : "დღეს",
     "Other" : "სხვა",
     "Forward" : "წინ",
@@ -148,6 +145,9 @@ OC.L10N.register(
     "The link leads to %s" : "ბმულს მიყევხართ %s-ისკენ",
     "Continue to %s" : "%s-ისკენ გაგრძელება",
     "Accounts" : "ანგარიში",
-    "Use Gravatar and favicon avatars" : "მოიხმარეთ Gravatar და favicon ავატარები"
+    "Use Gravatar and favicon avatars" : "მოიხმარეთ Gravatar და favicon ავატარები",
+    "Register" : "რეგისტრაცია",
+    "Keyboard shortcuts" : "კლავიატურის კომბინაციები",
+    "email" : "ელ-ფოსტა"
 },
 "nplurals=2; plural=(n!=1);");

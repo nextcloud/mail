@@ -14,12 +14,12 @@
     "List" : "Tabdart",
     "Newest first" : "Imaynuten d imezwura",
     "Oldest first" : "Iqbuṛen d imezwura",
-    "Keyboard shortcuts" : "Inegzumen n unasiw",
+    "Privacy" : "Vie privée",
+    "About" : "Γef",
     "Delete" : "Kkes",
     "Search" : "Nadi",
     "Send" : "Tuzna",
     "Refresh" : "Sismeḍ",
-    "About" : "Γef",
     "Ok" : "Ih",
     "Choose" : "Fren",
     "Confirm" : "Serggeg",
@@ -73,6 +73,7 @@
     "Message sent" : "Izen yettwazen",
     "Continue to %s" : "Kemmel ar %s",
     "Accounts" : "Imiḍanen",
+    "Keyboard shortcuts" : "Inegzumen n unasiw",
     "Loading …" : "Asali ..."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

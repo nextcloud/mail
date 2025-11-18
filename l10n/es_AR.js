@@ -34,9 +34,7 @@ OC.L10N.register(
     "Sorting" : "Orden",
     "Newest first" : "El más reciente primero",
     "Oldest first" : "Los más viejos primero",
-    "Register" : "Registrar",
     "Security" : "Seguridad",
-    "Keyboard shortcuts" : "Atajos de teclado",
     "Compose new message" : "Redactar nuevo mensaje",
     "Newer message" : "Mensaje mas nuevo",
     "Older message" : "Mensaje anterior",
@@ -65,7 +63,6 @@ OC.L10N.register(
     "Decline" : "Declinar",
     "More options" : "Más opciones",
     "Remove" : "Borrar",
-    "email" : "correo electrónico",
     "Today" : "Hoy",
     "Choose target folder" : "Elegir carpeta destino",
     "Other" : "Otro",
@@ -144,6 +141,9 @@ OC.L10N.register(
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "El link lleva a %s",
     "Continue to %s" : "Continuar a %s",
-    "Accounts" : "Accounts"
+    "Accounts" : "Accounts",
+    "Register" : "Registrar",
+    "Keyboard shortcuts" : "Atajos de teclado",
+    "email" : "correo electrónico"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

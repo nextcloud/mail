@@ -52,8 +52,8 @@ OC.L10N.register(
     "Appearance" : "Izskats",
     "Newest first" : "Jaunākie pirms",
     "Oldest first" : "Vecākie pirms",
+    "Privacy" : "Privātums",
     "Security" : "Drošība",
-    "Keyboard shortcuts" : "Tastatūras saīsnes",
     "Archive" : "Arhīvi",
     "Delete" : "Izdzēst",
     "Search" : "Meklēt",
@@ -89,7 +89,6 @@ OC.L10N.register(
     "Decline" : "Noraidīt",
     "More options" : "Vairāk iespēju",
     "Remove" : "Noņemt",
-    "email" : "e-pasts",
     "Today" : "Šodien",
     "Could not open folder" : "Nevarēja atvērt mapi",
     "Other" : "Cits",
@@ -185,7 +184,9 @@ OC.L10N.register(
     "The link leads to %s" : "Saite, kas ved uz %s",
     "Continue to %s" : "Turpināt %s",
     "Accounts" : "Konti",
+    "Keyboard shortcuts" : "Tastatūras saīsnes",
     "Write message …" : "Rakstiet ziņu...",
+    "email" : "e-pasts",
     "Loading …" : "Ielādē…"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

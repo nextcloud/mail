@@ -16,12 +16,12 @@ OC.L10N.register(
     "List" : "Tabdart",
     "Newest first" : "Imaynuten d imezwura",
     "Oldest first" : "Iqbuṛen d imezwura",
-    "Keyboard shortcuts" : "Inegzumen n unasiw",
+    "Privacy" : "Vie privée",
+    "About" : "Γef",
     "Delete" : "Kkes",
     "Search" : "Nadi",
     "Send" : "Tuzna",
     "Refresh" : "Sismeḍ",
-    "About" : "Γef",
     "Ok" : "Ih",
     "Choose" : "Fren",
     "Confirm" : "Serggeg",
@@ -75,6 +75,7 @@ OC.L10N.register(
     "Message sent" : "Izen yettwazen",
     "Continue to %s" : "Kemmel ar %s",
     "Accounts" : "Imiḍanen",
+    "Keyboard shortcuts" : "Inegzumen n unasiw",
     "Loading …" : "Asali ..."
 },
 "nplurals=2; plural=(n != 1);");

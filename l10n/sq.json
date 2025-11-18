@@ -30,10 +30,10 @@
     "Add mail account" : "Shto llogarinë e postës elektronike",
     "Newest first" : "Më i riu i pari",
     "Oldest first" : "Më i vjetri i pari",
-    "Register" : "Regjistrohu",
+    "Privacy" : "Privatësi",
     "Security" : "Siguria",
     "Manage certificates" : "Menaxhoni certifikatat",
-    "Keyboard shortcuts" : "Shkurtoret e tastierës",
+    "About" : "Rreth",
     "Newer message" : "Mesazhe më të reja",
     "Older message" : "Mesazhe më të vjetra",
     "Toggle star" : "Toggle star",
@@ -43,7 +43,6 @@
     "Search" : "Kërko",
     "Send" : "Dërgo",
     "Refresh" : "Rifresko",
-    "About" : "Rreth",
     "Ok" : "Në rregull",
     "Select account" : "Përzgjidhni llogari",
     "Subject" : "Temë",
@@ -69,7 +68,6 @@
     "Accept" : "Prano",
     "Decline" : "Refuzo",
     "Remove" : "Hiq",
-    "email" : "postë elektronike",
     "Today" : "Sot",
     "Other" : "Tjetër",
     "Forward" : "Përpara",
@@ -144,6 +142,9 @@
     "Redirect" : "Ridrejtoje",
     "The link leads to %s" : "Lidhja shpie te %s",
     "Continue to %s" : "Vazhdo te %s",
-    "Accounts" : "Llogari"
+    "Accounts" : "Llogari",
+    "Register" : "Regjistrohu",
+    "Keyboard shortcuts" : "Shkurtoret e tastierës",
+    "email" : "postë elektronike"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
