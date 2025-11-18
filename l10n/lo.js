@@ -13,13 +13,13 @@ OC.L10N.register(
     "General" : "ທົ່ວໄປ",
     "Newest first" : "ໃໝ່ທີ່ສຸດກ່ອນ",
     "Oldest first" : "ເກົ່າທີ່ສຸດກ່ອນ",
-    "Register" : "ລົງທະບຽນ",
+    "Privacy" : "ຄວາມເປັນສ່ວນຕົວ",
+    "About" : "ກ່ຽວກັບ",
     "Archive" : "ບ່ອນເກັບ",
     "Delete" : "ລຶບ",
     "Search" : "ຄົ້ນຫາ",
     "Send" : "ສົ່ງ",
     "Refresh" : "Refresh",
-    "About" : "ກ່ຽວກັບ",
     "Ok" : "ຕົກລົງ",
     "From" : "ຈາກ",
     "To" : "ເຖິງ",
@@ -61,6 +61,7 @@ OC.L10N.register(
     "Account connected" : "ບັນຊີທີ່ຕິດພັນ",
     "Favorites" : "ລາຍການທີ່ມັກ",
     "Accounts" : "ບັນຊີ",
+    "Register" : "ລົງທະບຽນ",
     "Loading …" : "ກຳລັງໂຫຼດ"
 },
 "nplurals=1; plural=0;");

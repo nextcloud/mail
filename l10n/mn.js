@@ -49,7 +49,6 @@ OC.L10N.register(
     "Accept" : "Хүлээн зөвшөөрөх",
     "Decline" : "Зөвшөөрөхгүй",
     "Remove" : "Устгах",
-    "email" : "цахим шуудан",
     "Today" : "өнөөдөр",
     "Yesterday" : "Өчигдөр",
     "Choose target folder" : "Зорилтот хавтасыг сонгох",
@@ -98,6 +97,7 @@ OC.L10N.register(
     "Trash" : "хог",
     "Error loading message" : "алдаатай ачааллах зурвас",
     "Accounts" : "Accounts",
+    "email" : "цахим шуудан",
     "Loading …" : "Уншиж байна..."
 },
 "nplurals=2; plural=(n != 1);");

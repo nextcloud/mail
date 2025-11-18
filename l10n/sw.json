@@ -25,16 +25,15 @@
     "Sorting" : "Sorting",
     "Newest first" : "Mpya kwanza",
     "Oldest first" : "Ya zamani kwanza",
-    "Register" : "Sajiri",
     "Shared with me" : "Shared with me",
+    "Privacy" : "Faragha",
     "Security" : "Ulinzi",
-    "Keyboard shortcuts" : "Mikato ya keyboard",
+    "About" : "Kuhusu",
     "Archive" : "Weka kumbukumbu",
     "Delete" : "Futa",
     "Search" : "Tafuta",
     "Send" : "Tuma",
     "Refresh" : "Refresh",
-    "About" : "Kuhusu",
     "Ok" : "Sawa",
     "From" : "Tangu/ kutoka",
     "Select account" : "Chagua akaunti",
@@ -164,6 +163,8 @@
     "Redirect" : "Elekeza upya",
     "Continue to %s" : "Endelea katika %s",
     "Accounts" : "Akaunti",
+    "Register" : "Sajiri",
+    "Keyboard shortcuts" : "Mikato ya keyboard",
     "Loading …" : "Inapakia"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

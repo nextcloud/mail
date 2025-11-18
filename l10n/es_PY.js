@@ -32,9 +32,8 @@ OC.L10N.register(
     "Add mail account" : "Agregar cuenta de correo",
     "Newest first" : "Más reciente primero",
     "Oldest first" : "Más antiguo primero",
-    "Register" : "Registrar",
     "Security" : "Seguridad",
-    "Keyboard shortcuts" : "Atajos del teclado",
+    "About" : "Acerca de",
     "Compose new message" : "Escribir mensaje nuevo",
     "Newer message" : "Mensaje más nuevo",
     "Older message" : "Mensaje más antiguo",
@@ -45,7 +44,6 @@ OC.L10N.register(
     "Search" : "Buscar",
     "Send" : "Enviar",
     "Refresh" : "Actualizar",
-    "About" : "Acerca de",
     "Ok" : "Ok",
     "Select account" : "Selecciona la cuenta",
     "Subject" : "Asunto",
@@ -69,7 +67,6 @@ OC.L10N.register(
     "Accept" : "Aceptar",
     "Decline" : "Declinar",
     "Remove" : "Eliminar",
-    "email" : "correo electrónico",
     "Today" : "Hoy",
     "Choose target folder" : "Seleccionar carpeta destino",
     "Other" : "Otro",
@@ -142,6 +139,9 @@ OC.L10N.register(
     "The link leads to %s" : "La liga lleva a %s",
     "Continue to %s" : "Continuar a %s",
     "Accounts" : "Accounts",
-    "Use Gravatar and favicon avatars" : "Usar Gravatar y avatares favicon"
+    "Use Gravatar and favicon avatars" : "Usar Gravatar y avatares favicon",
+    "Register" : "Registrar",
+    "Keyboard shortcuts" : "Atajos del teclado",
+    "email" : "correo electrónico"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

@@ -47,7 +47,6 @@
     "Accept" : "Хүлээн зөвшөөрөх",
     "Decline" : "Зөвшөөрөхгүй",
     "Remove" : "Устгах",
-    "email" : "цахим шуудан",
     "Today" : "өнөөдөр",
     "Yesterday" : "Өчигдөр",
     "Choose target folder" : "Зорилтот хавтасыг сонгох",
@@ -96,6 +95,7 @@
     "Trash" : "хог",
     "Error loading message" : "алдаатай ачааллах зурвас",
     "Accounts" : "Accounts",
+    "email" : "цахим шуудан",
     "Loading …" : "Уншиж байна..."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -13,7 +13,6 @@ OC.L10N.register(
     "Go back" : "ফিরে যাও",
     "Cancel" : "বাতির",
     "General" : "সাধারণ",
-    "Keyboard shortcuts" : "কী-বোর্ড শর্টকাট",
     "Delete" : "মুছে",
     "Search" : "Search",
     "Send" : "পাঠাও",
@@ -58,6 +57,7 @@ OC.L10N.register(
     "Shares" : "ভাগাভাগি",
     "All" : "সবাই",
     "Favorites" : "প্রিয়জন",
-    "Accounts" : "Accounts"
+    "Accounts" : "Accounts",
+    "Keyboard shortcuts" : "কী-বোর্ড শর্টকাট"
 },
 "nplurals=2; plural=(n != 1);");

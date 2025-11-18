@@ -34,10 +34,9 @@
     "List" : "Rhestr",
     "Newest first" : "Diweddaraf gyntaf",
     "Oldest first" : "Hynaf gyntaf",
-    "Register" : "Cofrestru",
     "Security" : "Diogelwch",
     "Manage certificates" : "Rheoli tystysgrifau",
-    "Keyboard shortcuts" : "Llwybrau byr bysellfwrdd",
+    "About" : "Ynglyn â",
     "Compose new message" : "Ysgrifennu Neges _Newydd",
     "Newer message" : "Neges diweddarach",
     "Older message" : "Neges hyn",
@@ -48,7 +47,6 @@
     "Search" : "Chwilio",
     "Send" : "Anfon",
     "Refresh" : "Ail-lwytho",
-    "About" : "Ynglyn â",
     "Ok" : "Iawn",
     "Subject" : "Pwnc",
     "Draft saved" : "Cadwyd y drafft",
@@ -135,6 +133,8 @@
     "Continue to %s" : "Parhau i %s",
     "Accounts" : "Accounts",
     "Use Gravatar and favicon avatars" : "Defnyddiwch Gravatar ac afatarau favicon",
+    "Register" : "Cofrestru",
+    "Keyboard shortcuts" : "Llwybrau byr bysellfwrdd",
     "Saving draft …" : "Yn cadw drafft …",
     "Loading …" : "Yn llwytho …"
 },"pluralForm" :"nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;"

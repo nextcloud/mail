@@ -18,7 +18,6 @@ OC.L10N.register(
     "Go back" : "Retornar",
     "Cancel" : "Cancellar",
     "General" : "General",
-    "Keyboard shortcuts" : "Combinationes de claves",
     "Delete" : "Deler",
     "Search" : "Cercar",
     "Send" : "Inviar",
@@ -70,6 +69,7 @@ OC.L10N.register(
     "All inboxes" : "Tote cassas de entrata",
     "Could not load {tag}{name}{endtag}" : "Impossibile cargar {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Un problema occurreva durante le carga de {tag}{name}{endtag}",
-    "Accounts" : "Accounts"
+    "Accounts" : "Accounts",
+    "Keyboard shortcuts" : "Combinationes de claves"
 },
 "nplurals=2; plural=(n != 1);");
