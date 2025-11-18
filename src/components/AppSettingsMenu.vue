@@ -28,7 +28,7 @@
 							:aria-label="t('mail', 'Account settings')"
 							@click="openAccountSettings(account.id)">
 							<template #icon>
-								<IconLink :size="20" />
+								<IconArrow :size="20" />
 							</template>
 							{{ account.emailAddress }}
 						</NcFormBoxButton>
@@ -112,7 +112,10 @@
 						<List
 							:text-blocks="getMyTextBlocks()"
 							@show-toolbar="handleShowToolbar" />
-						<NcButton variant="secondary" @click="() => textBlockDialogOpen = true" wide>
+						<NcButton variant="secondary" wide @click="() => textBlockDialogOpen = true">
+							<template #icon>
+								<IconAdd :size="20" />
+							</template>
 							{{ t('mail', 'New text block') }}
 						</NcButton>
 						<template v-if="getSharedTextBlocks().length > 0">
@@ -129,7 +132,7 @@
 					<NcFormBoxSwitch
 						v-model="useDataCollection"
 						:label="t('mail', 'Data collection')"
-						:description="t('mail', 'Allow the app to collect and process data locally to adapt to your preferences.')"
+						:description="t('mail', 'Allow the app to collect and process data locally to adapt to your preferences')"
 						@update:modelValue="onToggleCollectData" />
 
 					<NcFormGroup :label="t('mail', 'Always show images from')">
@@ -141,7 +144,7 @@
 						v-model="useInternalAddresses"
 						:disabled="loadingInternalAddresses"
 						:label="internalAddressText"
-						:description="t('mail', 'Highlight external email addresses by enabling this feature, manage your internal addresses and domains to ensure recognized contacts stay unmarked.')"
+						:description="t('mail', 'Manage your internal addresses and domains to ensure recognized contacts stay unmarked')"
 						@update:modelValue="onToggleInternalAddress" />
 					<InternalAddress />
 
@@ -279,7 +282,7 @@ import {
 } from '@nextcloud/vue'
 import mitt from 'mitt'
 import { mapState, mapStores } from 'pinia'
-import IconLink from 'vue-material-design-icons/ArrowTopRight.vue'
+import IconArrow from 'vue-material-design-icons/ArrowRight.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconClose from 'vue-material-design-icons/Close.vue'
 import HorizontalSplit from 'vue-material-design-icons/DockBottom.vue'
@@ -323,11 +326,11 @@ export default {
 		NcFormBoxButton,
 		NcFormBoxSwitch,
 		NcFormGroup,
-		IconLink,
 		IconDomain,
 		NcNoteCard,
 		NcHotkeyList,
 		NcHotkey,
+		IconArrow,
 	},
 
 	props: {

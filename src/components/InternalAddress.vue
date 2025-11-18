@@ -53,6 +53,9 @@
 			type="secondary"
 			wide
 			@click="openDialog = true">
+			<template #icon>
+				<IconAdd :size="20" />
+			</template>
 			{{ t('mail', 'Add internal address') }}
 		</ButtonVue>
 		<NcDialog
@@ -76,6 +79,7 @@ import sortBy from 'lodash/fp/sortBy.js'
 import { mapStores } from 'pinia'
 import IconDomain from 'vue-material-design-icons/Domain.vue'
 import IconEmail from 'vue-material-design-icons/EmailOutline.vue'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
@@ -93,6 +97,7 @@ export default {
 		IconDomain,
 		IconEmail,
 		IconDelete,
+		IconAdd,
 	},
 
 	data() {
