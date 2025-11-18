@@ -824,10 +824,10 @@ export default {
 	}
 }
 
-@media only screen and (max-width: var(--breakpoint-mobile)) {
+@media only screen and (max-width: 1024px) {
     #mail-thread-header {
         position: sticky !important;
-        top: 29px !important;;
+        top: 29px !important;
     }
 }
 
@@ -881,7 +881,7 @@ export default {
         padding-inline-start: 48px;
     }
 }
-@media only screen and (max-width: var(--breakpoint-mobile)) {
+@media only screen and (max-width: 1024px) {
 	#mail-thread-header-fields {
 		margin-top: -32px;
 	}
