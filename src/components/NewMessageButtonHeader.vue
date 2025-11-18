@@ -72,6 +72,10 @@ export default {
 			}
 			return undefined
 		},
+
+		account() {
+			return this.mainStore.getAccount(this.currentMailbox.accountId)
+		},
 	},
 
 	methods: {
@@ -83,6 +87,7 @@ export default {
 			this.refreshing = true
 			try {
 				await this.mainStore.syncEnvelopes({ mailboxId: this.currentMailbox.databaseId })
+				await this.mainStore.syncMailboxesForAccount(this.account)
 				logger.debug('Current folder is sync\'ing ')
 			} catch (error) {
 				logger.error('could not sync current folder', { error })

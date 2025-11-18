@@ -112,7 +112,7 @@
 						<List
 							:text-blocks="getMyTextBlocks()"
 							@show-toolbar="handleShowToolbar" />
-						<NcButton variant="secondary" @click="() => textBlockDialogOpen = true" wide>
+						<NcButton variant="secondary" wide @click="() => textBlockDialogOpen = true">
 							{{ t('mail', 'New text block') }}
 						</NcButton>
 						<template v-if="getSharedTextBlocks().length > 0">
