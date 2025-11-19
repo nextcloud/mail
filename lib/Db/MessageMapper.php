@@ -1108,7 +1108,7 @@ class MessageMapper extends QBMapper {
 	 *
 	 * Unfortunately a self-join on a larger table has a significant
 	 * performance impact. An database index (e.g. on thread_root_id)
-	 * could improve the query performance but adding an index is blocked by
+	 * could improve tthe query performance but adding an index is blocked by
 	 * - https://github.com/nextcloud/server/pull/25471
 	 * - https://github.com/nextcloud/mail/issues/4735
 	 *
@@ -1135,11 +1135,11 @@ class MessageMapper extends QBMapper {
 			return $this->flagExpressionToQuery($operand, $qb, $tableAlias);
 		}, $expr->getOperands());
 
-		return match ($expr->getOperator()) {
+		return (string)match ($expr->getOperator()) {
 			/** @psalm-suppress InvalidCast */
-			'and' => (string)$qb->expr()->andX(...$operands),
+			'and' => $qb->expr()->andX(...$operands),
 			/** @psalm-suppress InvalidCast */
-			'or' => (string)$qb->expr()->orX(...$operands),
+			'or' => $qb->expr()->orX(...$operands),
 			default => throw new RuntimeException('Unknown operator ' . $expr->getOperator()),
 		};
 	}

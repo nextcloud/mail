@@ -134,9 +134,6 @@ class ContactsIntegration {
 		return $receivers;
 	}
 
-	/**
-	 * @return false|null|string
-	 */
 	public function getPhoto(string $email): ?string {
 		$result = $this->contactsManager->search($email, ['EMAIL']);
 		foreach ($result as $contact) {
@@ -148,9 +145,6 @@ class ContactsIntegration {
 		return null;
 	}
 
-	/**
-	 * @return false|null|string
-	 */
 	private function getPhotoUri(string $raw): ?string {
 		$uriPrefix = 'VALUE=uri:';
 		if (str_starts_with($raw, $uriPrefix)) {

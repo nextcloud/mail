@@ -107,6 +107,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 			return $uri;
 		}
 
+		/** @psalm-ignore NullArgument \HTMLPurifier_URI does handle null values */
 		return new \HTMLPurifier_URI(
 			$this->request->getServerProtocol(),
 			null, $this->request->getServerHost(),

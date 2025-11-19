@@ -11,16 +11,11 @@ namespace OCA\Mail\Service\Search;
 
 class FlagExpression {
 	/**
-	 * @psalm-param "and"|"or" $operator
+	 * @param "and"|"or" $operator
+	 * @param (Flag|FlagExpression)[] $operands
 	 */
 	private function __construct(
-		/**
-		 * @psalm-var "and"|"or"
-		 */
 		private readonly string $operator,
-		/**
-		 * @psalm-var (Flag|FlagExpression)[]
-		 */
 		private readonly array $operands,
 	) {
 	}
@@ -43,6 +38,9 @@ class FlagExpression {
 		return new self('or', $operands);
 	}
 
+	/**
+	 * @return "and"|"or" $operator
+	 */
 	public function getOperator(): string {
 		return $this->operator;
 	}
