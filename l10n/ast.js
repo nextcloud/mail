@@ -47,6 +47,7 @@ OC.L10N.register(
     "Newest first" : "Primero lo nuevo",
     "Oldest first" : "Primero lo antiguo",
     "Shared with me" : "Compartióse conmigo",
+    "Privacy" : "Privacidá",
     "Security" : "Seguranza",
     "S/MIME" : "S/MIME",
     "About" : "Tocante a",
