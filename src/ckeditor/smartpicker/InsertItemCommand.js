@@ -46,7 +46,7 @@ export default class InsertItemCommand extends Command {
 						editor.model.insertContent(modelFragment)
 					} else {
 						const lines = item.content.split('\n')
-						const htmlContent = lines.map(line => `<p>${line}</p>`).join('')
+						const htmlContent = lines.map((line) => `<p>${line}</p>`).join('')
 						const viewFragment = editor.data.processor.toView(htmlContent)
 						const modelFragment = editor.data.toModel(viewFragment)
 						editor.model.insertContent(modelFragment)
