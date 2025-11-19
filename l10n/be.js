@@ -47,6 +47,7 @@ OC.L10N.register(
     "Sorting" : "Сартаванне",
     "Newest first" : "Спачатку новыя",
     "Oldest first" : "Спачатку старыя",
+    "Privacy" : "Прыватнасць",
     "Security" : "Бяспека",
     "S/MIME" : "S/MIME",
     "Manage certificates" : "Кіраванне сертыфікатамі",
