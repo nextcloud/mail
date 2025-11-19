@@ -338,6 +338,7 @@ import MessageLoadingSkeleton from './MessageLoadingSkeleton.vue'
 import Moment from './Moment.vue'
 import MoveModal from './MoveModal.vue'
 import SourceModal from './SourceModal.vue'
+import Tag from './Tag.vue'
 import TagModal from './TagModal.vue'
 import TaskModal from './TaskModal.vue'
 import TranslationModal from './TranslationModal.vue'
@@ -355,7 +356,6 @@ import useOutboxStore from '../store/outboxStore.js'
 import { mailboxHasRights } from '../util/acl.js'
 import { Text, toPlain } from '../util/text.js'
 import { hiddenTags } from './tags.js'
-import Tag from './Tag.vue'
 
 // Ternary loading state
 const Loading = Object.seal({
