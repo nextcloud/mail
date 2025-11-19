@@ -17,9 +17,9 @@ use Psr\Log\LoggerInterface;
 class AntiAbuseHandler extends AHandler {
 
 	public function __construct(
-		private IUserManager $userManager,
-		private AntiAbuseService $service,
-		private LoggerInterface $logger,
+		private readonly IUserManager $userManager,
+		private readonly AntiAbuseService $service,
+		private readonly LoggerInterface $logger,
 	) {
 	}
 

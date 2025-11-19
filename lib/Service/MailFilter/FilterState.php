@@ -16,7 +16,7 @@ final class FilterState implements JsonSerializable {
 	public const DEFAULT_VERSION = 1;
 
 	public function __construct(
-		private array $filters,
+		private readonly array $filters,
 	) {
 	}
 

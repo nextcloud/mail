@@ -25,38 +25,32 @@ use Psr\Log\LoggerInterface;
 class TransmissionService {
 
 	public function __construct(
-		private GroupsIntegration $groupsIntegration,
-		private AttachmentService $attachmentService,
-		private LoggerInterface $logger,
-		private SmimeService $smimeService,
+		private readonly GroupsIntegration $groupsIntegration,
+		private readonly AttachmentService $attachmentService,
+		private readonly LoggerInterface $logger,
+		private readonly SmimeService $smimeService,
 	) {
 	}
 
-	/**
-	 * @param LocalMessage $message
-	 * @param int $type
-	 * @return AddressList
-	 */
 	public function getAddressList(LocalMessage $message, int $type): AddressList {
 		return new AddressList(
 			array_map(
-				static fn ($recipient) => Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail()),
+				static fn (\OCA\Mail\Db\Recipient $recipient): \OCA\Mail\Address => Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail()),
 				$this->groupsIntegration->expand(
-					array_filter($message->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === $type)
+					array_filter($message->getRecipients(), static fn (Recipient $recipient): bool => $recipient->getType() === $type)
 				)
 			)
 		);
 	}
 
 	/**
-	 * @param LocalMessage $message
 	 * @return array|array[]
 	 */
 	public function getAttachments(LocalMessage $message): array {
 		if (empty($message->getAttachments())) {
 			return [];
 		}
-		return array_map(static fn (LocalAttachment $attachment)
+		return array_map(static fn (LocalAttachment $attachment): array
 			// Convert to the untyped nested array used in \OCA\Mail\Controller\AccountsController::send
 			=> [
 				'type' => 'local',
@@ -64,11 +58,6 @@ class TransmissionService {
 			], $message->getAttachments());
 	}
 
-	/**
-	 * @param Account $account
-	 * @param array $attachment
-	 * @return \Horde_Mime_Part|null
-	 */
 	public function handleAttachment(Account $account, array $attachment): ?Horde_Mime_Part {
 		if (!isset($attachment['id'])) {
 			$this->logger->warning('ignoring local attachment because its id is unknown');
@@ -107,10 +96,6 @@ class TransmissionService {
 	}
 
 	/**
-	 * @param LocalMessage $localMessage
-	 * @param Account $account
-	 * @param \Horde_Mime_Part $mimePart
-	 * @return \Horde_Mime_Part
 	 * @throws ServiceException
 	 */
 	public function getSignMimePart(LocalMessage $localMessage, Account $account, \Horde_Mime_Part $mimePart): \Horde_Mime_Part {
@@ -146,13 +131,6 @@ class TransmissionService {
 	}
 
 	/**
-	 * @param LocalMessage $localMessage
-	 * @param AddressList $to
-	 * @param AddressList $cc
-	 * @param AddressList $bcc
-	 * @param Account $account
-	 * @param \Horde_Mime_Part $mimePart
-	 * @return \Horde_Mime_Part
 	 * @throws ServiceException
 	 */
 	public function getEncryptMimePart(LocalMessage $localMessage, AddressList $to, AddressList $cc, AddressList $bcc, Account $account, \Horde_Mime_Part $mimePart): \Horde_Mime_Part {

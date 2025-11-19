@@ -15,7 +15,6 @@ use Horde_Mail_Rfc822_Address;
 use OCA\Mail\Dns\Resolver;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
-use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use function explode;
 use function str_replace;
@@ -24,10 +23,6 @@ use function strtolower;
 class IspDb {
 	/** @var IClient */
 	private $client;
-
-	/** @var LoggerInterface */
-	private $logger;
-	private Resolver $dnsResolver;
 
 	/** @returns string[] */
 	public function getUrls(): array {
@@ -40,12 +35,12 @@ class IspDb {
 		];
 	}
 
-	public function __construct(IClientService $clientService,
-		Resolver $dnsResolver,
-		LoggerInterface $logger) {
+	public function __construct(
+		IClientService $clientService,
+		private readonly Resolver $dnsResolver,
+		private readonly \Psr\Log\LoggerInterface $logger
+	) {
 		$this->client = $clientService->newClient();
-		$this->dnsResolver = $dnsResolver;
-		$this->logger = $logger;
 	}
 
 	/**
@@ -64,7 +59,7 @@ class IspDb {
 		}
 
 		libxml_use_internal_errors(true);
-		$data = simplexml_load_string($xml);
+		$data = simplexml_load_string((string)$xml);
 
 		if ($data === false || !property_exists($data, 'emailProvider')) {
 			$errors = libxml_get_errors();
@@ -154,7 +149,7 @@ class IspDb {
 		if ($tryMx && ($dns = $this->dnsResolver->resolve($domain, DNS_MX))) {
 			$domain = $dns[0]['target'];
 			if (!($config = $this->query($domain, $email, false))) {
-				[, $domain] = explode('.', $domain, 2);
+				[, $domain] = explode('.', (string)$domain, 2);
 				// Only try second-level domains and deeper
 				if (!$this->dnsResolver->isSuffix($domain)) {
 					$config = $this->query($domain, $email, false);

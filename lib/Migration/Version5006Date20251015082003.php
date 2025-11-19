@@ -18,10 +18,7 @@ use Override;
 class Version5006Date20251015082003 extends SimpleMigrationStep {
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure(): ISchemaWrapper $schemaClosure
-	 * @param array $options
-	 * @return null|ISchemaWrapper
 	 */
 	#[Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {

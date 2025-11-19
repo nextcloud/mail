@@ -15,8 +15,8 @@ use OCP\IConfig;
 
 class ClassificationSettingsService {
 	public function __construct(
-		private IUserPreferences $preferences,
-		private IConfig $config,
+		private readonly IUserPreferences $preferences,
+		private readonly IConfig $config,
 	) {
 	}
 

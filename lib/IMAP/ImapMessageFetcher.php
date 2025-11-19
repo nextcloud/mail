@@ -36,17 +36,9 @@ class ImapMessageFetcher {
 	/** @var string[] */
 	private array $attachmentsToIgnore = ['signature.asc', 'smime.p7s'];
 
-	private Html $htmlService;
-	private SmimeService $smimeService;
-	private PhishingDetectionService $phishingDetectionService;
-	private string $userId;
-
 	private bool $runPhishingCheck = false;
 	// Conditional fetching/parsing
 	private bool $loadBody = false;
-
-	private int $uid;
-	private Horde_Imap_Client_Base $client;
 	private string $htmlMessage = '';
 	private string $plainMessage = '';
 	private array $attachments = [];
@@ -54,7 +46,6 @@ class ImapMessageFetcher {
 	private bool $hasAnyAttachment = false;
 	private array $scheduling = [];
 	private bool $hasHtmlMessage = false;
-	private string $mailbox;
 	private string $rawReferences = '';
 	private string $dispositionNotificationTo = '';
 	private bool $hasDkimSignature = false;
@@ -65,30 +56,20 @@ class ImapMessageFetcher {
 	private bool $isPgpMimeEncrypted = false;
 
 	public function __construct(
-		int $uid,
-		string $mailbox,
-		Horde_Imap_Client_Base $client,
-		string $userId,
-		Html $htmlService,
-		SmimeService $smimeService,
-		private Converter $converter,
-		PhishingDetectionService $phishingDetectionService,
+		private readonly int $uid,
+		private readonly string $mailbox,
+		private readonly Horde_Imap_Client_Base $client,
+		private readonly string $userId,
+		private readonly Html $htmlService,
+		private readonly SmimeService $smimeService,
+		private readonly Converter $converter,
+		private readonly PhishingDetectionService $phishingDetectionService
 	) {
-		$this->uid = $uid;
-		$this->mailbox = $mailbox;
-		$this->client = $client;
-		$this->userId = $userId;
-		$this->htmlService = $htmlService;
-		$this->smimeService = $smimeService;
-		$this->phishingDetectionService = $phishingDetectionService;
 	}
 
 
 	/**
 	 * Configure the fetcher to fetch the body of the message.
-	 *
-	 * @param bool $value
-	 * @return $this
 	 */
 	public function withBody(bool $value): ImapMessageFetcher {
 		$this->loadBody = $value;
@@ -97,9 +78,6 @@ class ImapMessageFetcher {
 
 	/**
 	 * Configure the fetcher to check for phishing.
-	 *
-	 * @param bool $value
-	 * @return $this
 	 */
 	public function withPhishingCheck(bool $value): ImapMessageFetcher {
 		$this->runPhishingCheck = $value;
@@ -111,7 +89,6 @@ class ImapMessageFetcher {
 	 *                                                 Will be reused if no body is requested.
 	 *                                                 It should at least contain envelope, flags, imapDate and headerText.
 	 *                                                 Otherwise, some data might not be parsed correctly.
-	 * @return IMAPMessage
 	 *
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
@@ -281,10 +258,7 @@ class ImapMessageFetcher {
 	}
 
 	/**
-	 * @param Horde_Mime_Part $p
-	 * @param string $partNo
 	 * @param bool $isFetched Body is already fetched and contained within the mime part object
-	 * @return void
 	 *
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
@@ -393,10 +367,7 @@ class ImapMessageFetcher {
 	}
 
 	/**
-	 * @param Horde_Mime_Part $part
-	 * @param string $partNo
 	 * @param bool $isFetched Body is already fetched and contained within the mime part object
-	 * @return void
 	 *
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
@@ -411,10 +382,7 @@ class ImapMessageFetcher {
 	}
 
 	/**
-	 * @param Horde_Mime_Part $p
-	 * @param string $partNo
 	 * @param bool $isFetched Body is already fetched and contained within the mime part object
-	 * @return void
 	 *
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
@@ -426,10 +394,7 @@ class ImapMessageFetcher {
 	}
 
 	/**
-	 * @param Horde_Mime_Part $p
-	 * @param string $partNo
 	 * @param bool $isFetched Body is already fetched and contained within the mime part object
-	 * @return void
 	 *
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
@@ -442,10 +407,7 @@ class ImapMessageFetcher {
 	}
 
 	/**
-	 * @param Horde_Mime_Part $p
-	 * @param string $partNo
 	 * @param bool $isFetched Body is already fetched and contained within the mime part object
-	 * @return string
 	 *
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
@@ -544,7 +506,7 @@ class ImapMessageFetcher {
 				return;
 			}
 			foreach ($headers as $header) {
-				if (str_starts_with($header->url, 'http')) {
+				if (str_starts_with((string)$header->url, 'http')) {
 					$this->unsubscribeUrl = $header->url;
 
 					$unsubscribePostHeader = $parsedHeaders->getHeader('List-Unsubscribe-Post');
@@ -553,7 +515,7 @@ class ImapMessageFetcher {
 					}
 					break;
 				}
-				if (str_starts_with($header->url, 'mailto')) {
+				if (str_starts_with((string)$header->url, 'mailto')) {
 					$this->unsubscribeMailto = $header->url;
 					break;
 				}

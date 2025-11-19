@@ -17,7 +17,6 @@ interface IInternalAddressService {
 	public function add(string $uid, string $address, string $type, ?bool $trust = true);
 
 	/**
-	 * @param string $uid
 	 * @return InternalAddress[]
 	 */
 	public function getInternalAddresses(string $uid): array;

@@ -23,41 +23,27 @@ use OCP\BackgroundJob\QueuedJob;
 use Psr\Log\LoggerInterface;
 
 class MigrateImportantJob extends QueuedJob {
-	private MailboxMapper $mailboxMapper;
-	private MailAccountMapper $mailAccountMapper;
-	private MailManager $mailManager;
-	private MigrateImportantFromImapAndDb $migration;
-	private LoggerInterface $logger;
-	private IMAPClientFactory $imapClientFactory;
-
-	public function __construct(MailboxMapper $mailboxMapper,
-		MailAccountMapper $mailAccountMapper,
-		MailManager $mailManager,
-		MigrateImportantFromImapAndDb $migration,
-		LoggerInterface $logger,
+	public function __construct(
+		private readonly MailboxMapper $mailboxMapper,
+		private readonly MailAccountMapper $mailAccountMapper,
+		private readonly MailManager $mailManager,
+		private readonly MigrateImportantFromImapAndDb $migration,
+		private readonly LoggerInterface $logger,
 		ITimeFactory $timeFactory,
-		IMAPClientFactory $imapClientFactory,
+		private readonly IMAPClientFactory $imapClientFactory,
 	) {
 		parent::__construct($timeFactory);
-		$this->mailboxMapper = $mailboxMapper;
-		$this->mailAccountMapper = $mailAccountMapper;
-		$this->mailManager = $mailManager;
-		$this->migration = $migration;
-		$this->logger = $logger;
-		$this->imapClientFactory = $imapClientFactory;
 	}
 
 	/**
 	 * @param array $argument
-	 *
-	 * @return void
 	 */
 	#[\Override]
-	public function run($argument) {
+	public function run($argument): void {
 		$mailboxId = (int)$argument['mailboxId'];
 		try {
 			$mailbox = $this->mailboxMapper->findById($mailboxId);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			$this->logger->debug('Could not find mailbox <' . $mailboxId . '>');
 			return;
 		}
@@ -65,7 +51,7 @@ class MigrateImportantJob extends QueuedJob {
 		$accountId = $mailbox->getAccountId();
 		try {
 			$mailAccount = $this->mailAccountMapper->findById($accountId);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			$this->logger->debug('Could not find account <' . $accountId . '>');
 			return;
 		}
@@ -81,13 +67,13 @@ class MigrateImportantJob extends QueuedJob {
 
 			try {
 				$this->migration->migrateImportantOnImap($client, $account, $mailbox);
-			} catch (ServiceException $e) {
+			} catch (ServiceException) {
 				$this->logger->debug('Could not flag messages on IMAP for mailbox <' . $mailboxId . '>.');
 			}
 
 			try {
 				$this->migration->migrateImportantFromDb($client, $account, $mailbox);
-			} catch (ServiceException $e) {
+			} catch (ServiceException) {
 				$this->logger->debug('Could not flag messages from DB on IMAP for mailbox <' . $mailboxId . '>.');
 			}
 		} finally {

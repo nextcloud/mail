@@ -20,15 +20,11 @@ use OCP\EventDispatcher\IEventListener;
  * @template-implements IEventListener<Event|BeforeImapClientCreated>
  */
 class OauthTokenRefreshListener implements IEventListener {
-	private GoogleIntegration $googleIntegration;
-	private MicrosoftIntegration $microsoftIntegration;
-	private AccountService $accountService;
-	public function __construct(GoogleIntegration $googleIntegration,
-		MicrosoftIntegration $microsoftIntegration,
-		AccountService $accountService) {
-		$this->googleIntegration = $googleIntegration;
-		$this->accountService = $accountService;
-		$this->microsoftIntegration = $microsoftIntegration;
+	public function __construct(
+		private readonly GoogleIntegration $googleIntegration,
+		private readonly MicrosoftIntegration $microsoftIntegration,
+		private readonly AccountService $accountService
+	) {
 	}
 
 	#[\Override]

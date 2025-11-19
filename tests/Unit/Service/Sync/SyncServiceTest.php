@@ -26,29 +26,26 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-class SyncServiceTest extends TestCase {
+final class SyncServiceTest extends TestCase {
 
 	private IMAPClientFactory&MockObject $clientFactory;
 	private Horde_Imap_Client_Socket&MockObject $client;
 
 	/** @var ImapToDbSynchronizer */
-	private $synchronizer;
+	private \PHPUnit\Framework\MockObject\MockObject $synchronizer;
 
 	/** @var MessageMapper */
-	private $messageMapper;
+	private \PHPUnit\Framework\MockObject\MockObject $messageMapper;
 
 	/** @var LoggerInterface */
-	private $loggerInterface;
+	private \PHPUnit\Framework\MockObject\MockObject $loggerInterface;
 
 	/** @var MailboxSync */
-	private $mailboxSync;
+	private \PHPUnit\Framework\MockObject\MockObject $mailboxSync;
 
-	/** @var SyncService */
-	private $syncService;
+	private \OCA\Mail\Service\Sync\SyncService $syncService;
 
 	protected function setUp(): void {
-		parent::setUp();
-
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$this->synchronizer = $this->createMock(ImapToDbSynchronizer::class);

@@ -13,48 +13,30 @@ use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
-use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Events\DraftMessageCreatedEvent;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
-use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\IEventListener;
-use Psr\Log\LoggerInterface;
 
 /**
  * @template-implements IEventListener<Event|DraftSavedEvent|OutboxMessageCreatedEvent|DraftMessageCreatedEvent>
  */
 class DeleteDraftListener implements IEventListener {
-	/** @var IMAPClientFactory */
-	private $imapClientFactory;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
-	public function __construct(IMAPClientFactory $imapClientFactory,
-		MailboxMapper $mailboxMapper,
-		MessageMapper $messageMapper,
-		LoggerInterface $logger,
-		IEventDispatcher $eventDispatcher) {
-		$this->imapClientFactory = $imapClientFactory;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->messageMapper = $messageMapper;
-		$this->logger = $logger;
+	public function __construct(
+		private readonly \OCA\Mail\IMAP\IMAPClientFactory $imapClientFactory,
+		private readonly \OCA\Mail\Db\MailboxMapper $mailboxMapper,
+		private readonly \OCA\Mail\IMAP\MessageMapper $messageMapper,
+		private readonly \Psr\Log\LoggerInterface $logger,
+		IEventDispatcher $eventDispatcher
+	) {
 		$this->eventDispatcher = $eventDispatcher;
 	}
 
@@ -65,10 +47,6 @@ class DeleteDraftListener implements IEventListener {
 		}
 	}
 
-	/**
-	 * @param Account $account
-	 * @param Message $draft
-	 */
 	private function deleteDraft(Account $account, Message $draft): void {
 		$client = $this->imapClientFactory->getClient($account);
 		try {

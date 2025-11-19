@@ -30,16 +30,15 @@ use Psr\Log\LoggerInterface;
 
 class AntiSpamService {
 	private const NAME = 'antispam_reporting';
-	private const MESSAGE_TYPE = 'message/rfc822';
 
 	public function __construct(
-		private IConfig $config,
-		private MessageMapper $dbMessageMapper,
-		private MailManager $mailManager,
-		private IMAPClientFactory $imapClientFactory,
-		private SmtpClientFactory $smtpClientFactory,
-		private ImapMessageMapper $messageMapper,
-		private LoggerInterface $logger,
+		private readonly IConfig $config,
+		private readonly MessageMapper $dbMessageMapper,
+		private readonly MailManager $mailManager,
+		private readonly IMAPClientFactory $imapClientFactory,
+		private readonly SmtpClientFactory $smtpClientFactory,
+		private readonly ImapMessageMapper $messageMapper,
+		private readonly LoggerInterface $logger,
 	) {
 	}
 
@@ -73,10 +72,6 @@ class AntiSpamService {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 * @param int $uid
-	 * @param string $flag
 	 * @throws ServiceException
 	 */
 	public function sendReportEmail(Account $account, Mailbox $mailbox, int $uid, string $flag): void {

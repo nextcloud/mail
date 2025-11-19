@@ -14,14 +14,12 @@ use ReturnTypeWillChange;
 
 class PhishingDetectionList implements JsonSerializable {
 
-	/** @var PhishingDetectionResult[] */
-	private array $checks;
-
 	/**
 	 * @param PhishingDetectionResult[] $checks
 	 */
-	public function __construct(array $checks = []) {
-		$this->checks = $checks;
+	public function __construct(
+		private array $checks = []
+	) {
 	}
 
 	public function addCheck(PhishingDetectionResult $check): void {

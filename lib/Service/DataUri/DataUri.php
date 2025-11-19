@@ -10,16 +10,12 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\DataUri;
 
 final class DataUri {
-	private string $mediaType;
-	private array $parameters;
-	private bool $base64;
-	private string $data;
-
-	public function __construct(string $mediaType, array $parameters, bool $base64, $data) {
-		$this->mediaType = $mediaType;
-		$this->parameters = $parameters;
-		$this->base64 = $base64;
-		$this->data = $data;
+	public function __construct(
+		private readonly string $mediaType,
+		private readonly array $parameters,
+		private readonly bool $base64,
+		private readonly string $data
+	) {
 	}
 
 	public function getMediaType(): string {

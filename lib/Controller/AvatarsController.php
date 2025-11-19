@@ -21,25 +21,18 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AvatarsController extends Controller {
-	private IAvatarService $avatarService;
-	private string $uid;
-
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		IAvatarService $avatarService,
-		string $UserId) {
+		private readonly IAvatarService $avatarService,
+		private readonly string $uid
+	) {
 		parent::__construct($appName, $request);
-
-		$this->avatarService = $avatarService;
-		$this->uid = $UserId;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 *
-	 * @param string $email
-	 * @return JSONResponse
 	 */
 	#[TrapError]
 	public function url(string $email): JSONResponse {
@@ -74,9 +67,6 @@ class AvatarsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 *
-	 * @param string $email
-	 * @return Response
 	 */
 	#[TrapError]
 	public function image(string $email): Response {

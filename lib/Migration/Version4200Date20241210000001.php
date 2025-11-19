@@ -25,21 +25,18 @@ class Version4200Date20241210000001 extends SimpleMigrationStep {
 	 * @param IDBConnection $connection
 	 */
 	public function __construct(
-		private IDBConnection $db,
+		private readonly IDBConnection $db,
 	) {
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array $options
 	 *
 	 * @psalm-param Closure():ISchemaWrapper $schemaClosure
 	 *
-	 * @return void
 	 */
 	#[\Override]
-	public function preSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
+	public function preSchemaChange(IOutput $output, \Closure $schemaClosure, array $options): void {
 		$schema = $schemaClosure();
 
 		$outboxTable = $schema->getTable('mail_local_messages');
@@ -67,10 +64,7 @@ class Version4200Date20241210000001 extends SimpleMigrationStep {
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure(): ISchemaWrapper $schemaClosure
-	 * @param array $options
-	 * @return null|ISchemaWrapper
 	 */
 	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {

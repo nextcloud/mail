@@ -29,7 +29,6 @@ trait ConvertAddresses {
 	/**
 	 * Convert horde mail address list to array of strings
 	 *
-	 * @param Horde_Mail_Rfc822_List $list
 	 * @return string[]
 	 */
 	protected function hordeListToStringArray(Horde_Mail_Rfc822_List $list): array {
@@ -42,7 +41,6 @@ trait ConvertAddresses {
 
 	/**
 	 * @param Horde_Imap_Client_Data_Envelope|Horde_Mail_Rfc822_List $envelope
-	 * @return array
 	 */
 	protected function convertAddressList($envelope): array {
 		$list = [];

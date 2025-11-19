@@ -20,8 +20,6 @@ use OCP\Util;
 class HostNameFactory {
 	/**
 	 * Determine the host's name (without any port numbers)
-	 *
-	 * @return string
 	 */
 	public function getHostName(): string {
 		return Util::getServerHostName();

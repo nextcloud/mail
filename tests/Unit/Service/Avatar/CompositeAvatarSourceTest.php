@@ -26,8 +26,7 @@ class CompositeAvatarSourceTest extends TestCase {
 	/** @var FaviconSource|PHPUnit_Framework_MockObject_MockObject */
 	private $faviconSource;
 
-	/** @var CompositeAvatarSource */
-	private $source;
+	private ?\OCA\Mail\Service\Avatar\CompositeAvatarSource $source = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -39,7 +38,7 @@ class CompositeAvatarSourceTest extends TestCase {
 		$this->source = new CompositeAvatarSource($this->addressbookSource, $this->faviconSource, $this->gravatarSource);
 	}
 
-	public function testFetchNoneFound() {
+	public function testFetchNoneFound(): void {
 		$email = 'jane@doe.com';
 		$avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->addressbookSource->expects($this->any())
@@ -69,7 +68,7 @@ class CompositeAvatarSourceTest extends TestCase {
 		$this->assertNull($actualAvatar);
 	}
 
-	public function testFetchNoneFoundQueryOnlyInternal() {
+	public function testFetchNoneFoundQueryOnlyInternal(): void {
 		$email = 'jane@doe.com';
 		$avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->addressbookSource->expects($this->once())
@@ -99,7 +98,7 @@ class CompositeAvatarSourceTest extends TestCase {
 		$this->assertNull($actualAvatar);
 	}
 
-	public function testFetchFromGravatar() {
+	public function testFetchFromGravatar(): void {
 		$email = 'jane@doe.com';
 		$avatar = new Avatar('https://gravatar.com', 'image/jpeg');
 		$avatarFactory = $this->createMock(AvatarFactory::class);

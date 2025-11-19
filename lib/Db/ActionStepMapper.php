@@ -18,9 +18,6 @@ use OCP\IDBConnection;
  * @template-extends QBMapper<ActionStep>
  */
 class ActionStepMapper extends QBMapper {
-	/**
-	 * @param IDBConnection $db
-	 */
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'mail_action_step');
 	}

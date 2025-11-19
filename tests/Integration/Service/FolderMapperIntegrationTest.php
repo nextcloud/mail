@@ -16,8 +16,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class FolderMapperIntegrationTest extends TestCase {
-	/** @var FolderMapper */
-	private $mapper;
+	private ?\OCA\Mail\IMAP\FolderMapper $mapper = null;
 
 	/** @var LoggerInterface|MockObject */
 	private $logger;
@@ -29,10 +28,7 @@ class FolderMapperIntegrationTest extends TestCase {
 		$this->mapper = new FolderMapper($this->logger);
 	}
 
-	/**
-	 * @return Horde_Imap_Client_Socket
-	 */
-	private function getTestClient() {
+	private function getTestClient(): \Horde_Imap_Client_Socket {
 		return new Horde_Imap_Client_Socket([
 			'username' => 'user@domain.tld',
 			'password' => 'mypassword',
@@ -42,7 +38,7 @@ class FolderMapperIntegrationTest extends TestCase {
 		]);
 	}
 
-	public function testGetFolders() {
+	public function testGetFolders(): void {
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(13);
 		$client = $this->getTestClient();

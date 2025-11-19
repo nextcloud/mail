@@ -18,7 +18,6 @@ use OCA\Mail\Service\Search\Flag;
 use OCA\Mail\Service\Search\FlagExpression;
 use OCA\Mail\Service\Search\GlobalSearchQuery;
 use OCA\Mail\Service\Search\SearchQuery;
-use OCA\Mail\Support\PerformanceLogger;
 use OCA\Mail\Support\PerformanceLoggerTask;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\QBMapper;
@@ -36,7 +35,6 @@ use function array_keys;
 use function array_map;
 use function array_merge;
 use function array_udiff;
-use function get_class;
 use function ltrim;
 use function mb_convert_encoding;
 use function mb_strcut;
@@ -53,43 +51,33 @@ class MessageMapper extends QBMapper {
 	/** @var ITimeFactory */
 	private $timeFactory;
 
-	/** @var TagMapper */
-	private $tagMapper;
-
-	/** @var PerformanceLogger */
-	private $performanceLogger;
-
-	public function __construct(IDBConnection $db,
+	public function __construct(
+		IDBConnection $db,
 		ITimeFactory $timeFactory,
-		TagMapper $tagMapper,
-		PerformanceLogger $performanceLogger) {
+		private \OCA\Mail\Db\TagMapper $tagMapper,
+		private \OCA\Mail\Support\PerformanceLogger $performanceLogger
+	) {
 		parent::__construct($db, 'mail_messages');
 		$this->timeFactory = $timeFactory;
-		$this->tagMapper = $tagMapper;
-		$this->performanceLogger = $performanceLogger;
 	}
 
 	/**
-	 * @param IQueryBuilder $query
-	 *
 	 * @return int[]
 	 */
 	private function findUids(IQueryBuilder $query): array {
 		$result = $query->executeQuery();
-		$uids = array_map(static fn (array $row) => (int)$row['uid'], $result->fetchAll());
+		$uids = array_map(static fn (array $row): int => (int)$row['uid'], $result->fetchAll());
 		$result->closeCursor();
 
 		return $uids;
 	}
 
 	/**
-	 * @param IQueryBuilder $query
-	 *
 	 * @return int[]
 	 */
 	private function findIds(IQueryBuilder $query): array {
 		$result = $query->executeQuery();
-		$uids = array_map(static fn (array $row) => (int)$row['id'], $result->fetchAll());
+		$uids = array_map(static fn (array $row): int => (int)$row['id'], $result->fetchAll());
 		$result->closeCursor();
 
 		return $uids;
@@ -152,9 +140,7 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Mailbox $mailbox
 	 * @param int[] $ids
-	 *
 	 * @return int[]
 	 */
 	public function findUidsForIds(Mailbox $mailbox, array $ids) {
@@ -171,15 +157,13 @@ class MessageMapper extends QBMapper {
 				$query->expr()->in('id', $query->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY)
 			);
 
-		return array_flat_map(function (array $chunk) use ($query) {
+		return array_flat_map(function (array $chunk) use ($query): array {
 			$query->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			return $this->findUids($query);
 		}, array_chunk($ids, 1000));
 	}
 
 	/**
-	 * @param Account $account
-	 *
 	 * @return DatabaseMessage[]
 	 */
 	public function findThreadingData(Account $account): array {
@@ -252,8 +236,6 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Message ...$messages
-	 * @return void
 	 * @throws Exception
 	 */
 	public function insertBulk(Account $account, Message ...$messages): void {
@@ -327,7 +309,7 @@ class MessageMapper extends QBMapper {
 
 						$qb2->setParameter('message_id', $message->getId(), IQueryBuilder::PARAM_INT);
 						$qb2->setParameter('type', $type, IQueryBuilder::PARAM_INT);
-						$qb2->setParameter('label', mb_strcut($recipient->getLabel(), 0, 255), IQueryBuilder::PARAM_STR);
+						$qb2->setParameter('label', mb_strcut((string)$recipient->getLabel(), 0, 255), IQueryBuilder::PARAM_STR);
 						$qb2->setParameter('email', mb_strcut($recipient->getEmail(), 0, 255), IQueryBuilder::PARAM_STR);
 
 						$qb2->executeStatement();
@@ -362,8 +344,6 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param bool $permflagsEnabled
 	 * @param Message[] $messages
 	 * @return Message[]
 	 */
@@ -524,10 +504,7 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param Message $message
 	 * @param Tag[][] $tags
-	 * @param PerformanceLoggerTask $perf
 	 */
 	private function updateTags(Account $account, Message $message, array $tags, PerformanceLoggerTask $perf): void {
 		$imapTags = $message->getTags();
@@ -538,7 +515,7 @@ class MessageMapper extends QBMapper {
 			return;
 		}
 
-		$toAdd = array_udiff($imapTags, $dbTags, static fn (Tag $a, Tag $b) => strcmp($a->getImapLabel(), $b->getImapLabel()));
+		$toAdd = array_udiff($imapTags, $dbTags, static fn (Tag $a, Tag $b): int => strcmp($a->getImapLabel(), $b->getImapLabel()));
 		foreach ($toAdd as $tag) {
 			$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
 		}
@@ -549,7 +526,7 @@ class MessageMapper extends QBMapper {
 			return;
 		}
 
-		$toRemove = array_udiff($dbTags, $imapTags, static fn (Tag $a, Tag $b) => strcmp($a->getImapLabel(), $b->getImapLabel()));
+		$toRemove = array_udiff($dbTags, $imapTags, static fn (Tag $a, Tag $b): int => strcmp($a->getImapLabel(), $b->getImapLabel()));
 		foreach ($toRemove as $tag) {
 			$this->tagMapper->untagMessage($tag, $message->getMessageId());
 		}
@@ -557,8 +534,6 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Message ...$messages
-	 *
 	 * @return Message[]
 	 */
 	public function updatePreviewDataBulk(Message ...$messages): array {
@@ -592,7 +567,7 @@ class MessageMapper extends QBMapper {
 				if ($message->getPreviewText() !== null) {
 					$convertedText = mb_convert_encoding($message->getPreviewText(), 'UTF-8', 'UTF-8');
 					//converting the spaces is necessary for ltrim to work
-					$previewText = mb_strcut(ltrim(preg_replace('/\s/u', ' ', $convertedText)), 0, 255);
+					$previewText = mb_strcut(ltrim((string)preg_replace('/\s/u', ' ', $convertedText)), 0, 255);
 
 					// Make sure modifications are visible when these objects are used right away
 					$message->setPreviewText($previewText);
@@ -621,8 +596,6 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Message ...$messages
-	 *
 	 * @return Message[]
 	 */
 	public function updateImipData(Message ...$messages): array {
@@ -681,7 +654,7 @@ class MessageMapper extends QBMapper {
 		$messageIds = $cursor->fetchAll();
 		$cursor->closeCursor();
 
-		$messageIds = array_map(static fn (array $row) => (int)$row['id'], $messageIds);
+		$messageIds = array_map(static fn (array $row): int => (int)$row['id'], $messageIds);
 
 		$deleteRecipientsQuery = $this->db->getQueryBuilder();
 		$deleteRecipientsQuery->delete('mail_recipients')
@@ -722,10 +695,10 @@ class MessageMapper extends QBMapper {
 			);
 
 		foreach (array_chunk($uids, 1000) as $chunk) {
-			$this->atomic(function () use ($selectMessageIdsQuery, $deleteRecipientsQuery, $deleteMessagesQuery, $chunk) {
+			$this->atomic(function () use ($selectMessageIdsQuery, $deleteRecipientsQuery, $deleteMessagesQuery, $chunk): void {
 				$selectMessageIdsQuery->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 				$selectResult = $selectMessageIdsQuery->executeQuery();
-				$ids = array_map('intval', $selectResult->fetchAll(\PDO::FETCH_COLUMN));
+				$ids = array_map(intval(...), $selectResult->fetchAll(\PDO::FETCH_COLUMN));
 				$selectResult->closeCursor();
 				if (empty($ids)) {
 					// Avoid useless queries
@@ -744,8 +717,6 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param string $threadRootId
 	 *
 	 * @return Message[]
 	 */
@@ -764,8 +735,6 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param string $messageId
 	 *
 	 * @return Message[]
 	 */
@@ -783,9 +752,6 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Mailbox $mailbox
-	 * @param SearchQuery $query
-	 * @param int|null $limit
 	 * @param int[]|null $uids
 	 *
 	 * @return int[]
@@ -968,7 +934,7 @@ class MessageMapper extends QBMapper {
 		}
 		if (!empty($query->getFlagExpressions())) {
 			$select->andWhere(
-				...array_map(fn (FlagExpression $expr) => $this->flagExpressionToQuery($expr, $select, 'm'), $query->getFlagExpressions())
+				...array_map(fn (FlagExpression $expr): string => $this->flagExpressionToQuery($expr, $select, 'm'), $query->getFlagExpressions())
 			);
 		}
 
@@ -987,14 +953,12 @@ class MessageMapper extends QBMapper {
 		}
 
 		if ($uids !== null) {
-			return array_flat_map(function (array $chunk) use ($qb, $select) {
+			return array_flat_map(function (array $chunk) use ($qb, $select): array {
 				$qb->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 				return array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
 			}, array_chunk($uids, 1000));
 		}
-
-		$result = array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
-		return $result;
+		return array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
 	}
 
 	public function findIdsGloballyByQuery(IUser $user, SearchQuery $query, ?int $limit, ?array $uids = null): array {
@@ -1113,7 +1077,7 @@ class MessageMapper extends QBMapper {
 		}
 		if (!empty($query->getFlagExpressions())) {
 			$select->andWhere(
-				...array_map(fn (FlagExpression $expr) => $this->flagExpressionToQuery($expr, $select, 'm'), $query->getFlagExpressions())
+				...array_map(fn (FlagExpression $expr): string => $this->flagExpressionToQuery($expr, $select, 'm'), $query->getFlagExpressions())
 			);
 		}
 
@@ -1126,7 +1090,7 @@ class MessageMapper extends QBMapper {
 		}
 
 		if ($uids !== null) {
-			return array_flat_map(function (array $chunk) use ($select) {
+			return array_flat_map(function (array $chunk) use ($select): array {
 				$select->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 				return array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
 			}, array_chunk($uids, 1000));
@@ -1151,9 +1115,6 @@ class MessageMapper extends QBMapper {
 	 * We noticed a better query performance without distinct. As distinct is
 	 * only necessary when a search query is present (e.g. search for mail with
 	 * two recipients) it's reasonable to use distinct only for those requests.
-	 *
-	 * @param SearchQuery $query
-	 * @return bool
 	 */
 	private function needDistinct(SearchQuery $query): bool {
 		return !empty($query->getFrom())
@@ -1171,23 +1132,16 @@ class MessageMapper extends QBMapper {
 					IQueryBuilder::PARAM_BOOL
 				);
 			}
-			if ($operand instanceof FlagExpression) {
-				return $this->flagExpressionToQuery($operand, $qb, $tableAlias);
-			}
-
-			throw new RuntimeException('Invalid operand type ' . get_class($operand));
+			return $this->flagExpressionToQuery($operand, $qb, $tableAlias);
 		}, $expr->getOperands());
 
-		switch ($expr->getOperator()) {
-			case 'and':
-				/** @psalm-suppress InvalidCast */
-				return (string)$qb->expr()->andX(...$operands);
-			case 'or':
-				/** @psalm-suppress InvalidCast */
-				return (string)$qb->expr()->orX(...$operands);
-			default:
-				throw new RuntimeException('Unknown operator ' . $expr->getOperator());
-		}
+		return match ($expr->getOperator()) {
+			/** @psalm-suppress InvalidCast */
+			'and' => (string)$qb->expr()->andX(...$operands),
+			/** @psalm-suppress InvalidCast */
+			'or' => (string)$qb->expr()->orX(...$operands),
+			default => throw new RuntimeException('Unknown operator ' . $expr->getOperator()),
+		};
 	}
 
 	private function flagToColumnName(Flag $flag): string {
@@ -1200,9 +1154,7 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Mailbox $mailbox
 	 * @param int[] $uids
-	 *
 	 * @return Message[]
 	 */
 	public function findByUids(Mailbox $mailbox, array $uids): array {
@@ -1220,8 +1172,6 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Mailbox $mailbox
-	 * @param string $userId
 	 * @param int[] $ids
 	 *
 	 * @return Message[]
@@ -1249,9 +1199,7 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param string $userId
 	 * @param int[] $ids
-	 * @param string $sortOrder
 	 *
 	 * @return Message[]
 	 */
@@ -1339,7 +1287,7 @@ class MessageMapper extends QBMapper {
 		$messages = $this->findRecipients($messages);
 		$tags = $this->tagMapper->getAllTagsForMessages($messages, $userId);
 		/** @var Message $message */
-		$messages = array_map(static function ($message) use ($tags) {
+		$messages = array_map(static function (\OCA\Mail\Db\Message $message) use ($tags): \OCA\Mail\Db\Message {
 			$message->setTags($tags[$message->getMessageId()] ?? []);
 			return $message;
 		}, $messages);
@@ -1347,9 +1295,6 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Mailbox $mailbox
-	 * @param array $ids
-	 * @param int|null $lastMessageTimestamp
 	 * @param IMailSearch::ORDER_* $sortOrder
 	 *
 	 * @return int[]
@@ -1431,8 +1376,6 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param array $mailboxIds
-	 * @param int $limit
 	 *
 	 * @return Message[]
 	 */
@@ -1583,9 +1526,7 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param int $mailboxId
 	 * @param int $before UNIX timestamp (seconds)
-	 *
 	 * @return Message[]
 	 */
 	public function findMessagesKnownSinceBefore(int $mailboxId, int $before): array {
@@ -1624,9 +1565,7 @@ class MessageMapper extends QBMapper {
 	/**
 	 * Finds snoozed messages that are ready to wake since $time
 	 *
-	 * @param int $mailboxId
 	 * @param int $time UNIX timestamp (seconds)
-	 *
 	 * @return Message[]
 	 */
 	public function findMessagesToUnSnooze(int $mailboxId, int $time): array {

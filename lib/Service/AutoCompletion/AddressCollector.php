@@ -14,23 +14,15 @@ use Horde_Mail_Exception;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\CollectedAddress;
-use OCA\Mail\Db\CollectedAddressMapper;
 use OCP\AppFramework\Db\TTransactional;
-use Psr\Log\LoggerInterface;
 
 class AddressCollector {
 	use TTransactional;
 
-	/** @var CollectedAddressMapper */
-	private $mapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(CollectedAddressMapper $mapper,
-		LoggerInterface $logger) {
-		$this->mapper = $mapper;
-		$this->logger = $logger;
+	public function __construct(
+		private \OCA\Mail\Db\CollectedAddressMapper $mapper,
+		private \Psr\Log\LoggerInterface $logger
+	) {
 	}
 
 	/**
@@ -38,10 +30,7 @@ class AddressCollector {
 	 *
 	 * Duplicates are ignored
 	 *
-	 * @param string $userId
-	 * @param AddressList $addressList
 	 *
-	 * @return void
 	 */
 	public function addAddresses(string $userId, AddressList $addressList): void {
 		$this->logger->debug('collecting ' . count($addressList) . ' email addresses');
@@ -51,19 +40,13 @@ class AddressCollector {
 		}
 	}
 
-	/**
-	 * @param string $userId
-	 * @param Address $address
-	 *
-	 * @return void
-	 */
 	private function saveAddress(string $userId, Address $address): void {
 		try {
 			$hordeAddress = $address->toHorde();
 			if (!$hordeAddress->valid) {
 				throw new Horde_Mail_Exception();
 			}
-		} catch (Horde_Mail_Exception $ex) {
+		} catch (Horde_Mail_Exception) {
 			// Ignore it
 			$this->logger->debug('<' . $address->getEmail() . '> is not a valid RFC822 mail address');
 			return;
@@ -76,7 +59,6 @@ class AddressCollector {
 	/**
 	 * Find and return all known and matching email addresses
 	 *
-	 * @param string $term
 	 * @return CollectedAddress[]
 	 */
 	public function searchAddress(string $userId, string $term): array {

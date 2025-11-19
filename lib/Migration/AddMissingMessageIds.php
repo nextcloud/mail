@@ -9,29 +9,20 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Migration;
 
-use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Model\IMAPMessage;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
-use Psr\Log\LoggerInterface;
 use function method_exists;
 use function sprintf;
 
 class AddMissingMessageIds implements IRepairStep {
-	/** @var MessageMapper */
-	private $mapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(MessageMapper $mapper,
-		LoggerInterface $logger) {
-		$this->mapper = $mapper;
-		$this->logger = $logger;
+	public function __construct(
+		private readonly \OCA\Mail\Db\MessageMapper $mapper
+	) {
 	}
 
 	#[\Override]
-	public function getName() {
+	public function getName(): string {
 		return 'Add a generated message-id to all Mail messages that have none';
 	}
 

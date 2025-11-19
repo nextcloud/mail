@@ -15,11 +15,9 @@ class UserPreferenceServiceTest extends TestCase {
 	/** @var IConfig */
 	private $config;
 
-	/** @var string */
-	private $userId = 'claire';
+	private string $userId = 'claire';
 
-	/** @var UserPreferenceService */
-	private $service;
+	private ?\OCA\Mail\Service\UserPreferenceService $service = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -28,7 +26,7 @@ class UserPreferenceServiceTest extends TestCase {
 		$this->service = new UserPreferenceService($this->config, $this->userId);
 	}
 
-	public function testGetPreference() {
+	public function testGetPreference(): void {
 		$this->config->expects($this->once())
 			->method('getUserValue')
 			->with($this->userId, 'mail', 'test', null)
@@ -40,7 +38,7 @@ class UserPreferenceServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testSetPreference() {
+	public function testSetPreference(): void {
 		$this->config->expects($this->once())
 			->method('setUserValue')
 			->with($this->userId, 'mail', 'test', '123')

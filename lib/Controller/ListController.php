@@ -25,28 +25,20 @@ use Psr\Log\LoggerInterface;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ListController extends Controller {
-	private IMailManager $mailManager;
-	private AccountService $accountService;
-	private IMAPClientFactory $clientFactory;
-	private IClientService $httpClientService;
-	private LoggerInterface $logger;
-	private ?string $currentUserId;
+	private readonly IClientService $httpClientService;
 
-	public function __construct(IRequest $request,
-		IMailManager $mailManager,
-		AccountService $accountService,
-		IMAPClientFactory $clientFactory,
+	public function __construct(
+		IRequest $request,
+		private readonly IMailManager $mailManager,
+		private readonly AccountService $accountService,
+		private readonly IMAPClientFactory $clientFactory,
 		IClientService $httpClientService,
-		LoggerInterface $logger,
-		?string $userId) {
+		private readonly LoggerInterface $logger,
+		private readonly ?string $currentUserId
+	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->mailManager = $mailManager;
-		$this->accountService = $accountService;
-		$this->clientFactory = $clientFactory;
 		$this->request = $request;
 		$this->httpClientService = $httpClientService;
-		$this->logger = $logger;
-		$this->currentUserId = $userId;
 	}
 
 	/**

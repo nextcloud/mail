@@ -30,13 +30,12 @@ class MessageMapperTest extends TestCase {
 	/** @var IDBConnection */
 	private $db;
 
-	/** @var MessageMapper */
-	private $mapper;
+	private ?\OCA\Mail\Db\MessageMapper $mapper = null;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->db = \OC::$server->getDatabaseConnection();
+		$this->db = \OCP\Server::get(\OCP\IDBConnection::class);
 		$timeFactory = $this->createMock(ITimeFactory::class);
 		$tagMapper = $this->createMock(TagMapper::class);
 		$performanceLogger = $this->createMock(PerformanceLogger::class);
@@ -70,7 +69,7 @@ class MessageMapperTest extends TestCase {
 	public function testResetInReplyTo() : void {
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(13);
-		array_map(function ($i) {
+		array_map(function (int $i): void {
 			$qb = $this->db->getQueryBuilder();
 			$insert = $qb->insert($this->mapper->getTableName())
 				->values([
@@ -84,7 +83,7 @@ class MessageMapperTest extends TestCase {
 			$insert->executeStatement();
 		}, range(1, 10));
 
-		array_map(function ($i) {
+		array_map(function (int $i): void {
 			$qb = $this->db->getQueryBuilder();
 			$insert = $qb->insert($this->mapper->getTableName())
 				->values([
@@ -182,7 +181,7 @@ class MessageMapperTest extends TestCase {
 			$insert->executeStatement();
 		}
 
-		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, $sortOrder, 3, null);
+		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, $sortOrder, 3);
 
 		self::assertEquals([3,2,1], $result);
 	}
@@ -190,7 +189,7 @@ class MessageMapperTest extends TestCase {
 	public function testDeleteByUid(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setId(1);
-		array_map(function ($i) {
+		array_map(function (int $i): void {
 			$this->insertMessage($i, 1);
 		}, range(1, 10));
 

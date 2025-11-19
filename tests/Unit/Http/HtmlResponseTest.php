@@ -18,7 +18,7 @@ class HtmlResponseTest extends TestCase {
 	 * @param $filename
 	 * @param $contentType
 	 */
-	public function testIt($content) {
+	public function testIt($content): void {
 		$nonce = 'abc123';
 		$scriptUrl = 'next.cloud/script.js';
 		$plainResp = HtmlResponse::plain($content);

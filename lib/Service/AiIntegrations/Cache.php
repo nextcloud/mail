@@ -24,10 +24,6 @@ class Cache {
 		$this->cache = $cacheFactory->createLocal('mail.ai');
 	}
 
-	/**
-	 * @param array $ids
-	 * @return string
-	 */
 	public function buildUrlKey(array $ids): string {
 		return base64_encode(json_encode($ids));
 	}
@@ -48,12 +44,6 @@ class Cache {
 		return $cached;
 	}
 
-	/**
-	 * @param string $key
-	 * @param string|null $value
-	 *
-	 * @return void
-	 */
 	public function addValue(string $key, ?string $value): void {
 		$this->cache->set($key, $value ?? false, self::CACHE_TTL);
 	}

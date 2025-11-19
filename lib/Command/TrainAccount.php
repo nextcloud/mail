@@ -27,21 +27,13 @@ final class TrainAccount extends Command {
 	public const ARGUMENT_DRY_RUN = 'dry-run';
 	public const ARGUMENT_FORCE = 'force';
 
-	private AccountService $accountService;
-	private ImportanceClassifier $classifier;
-	private LoggerInterface $logger;
-	private ClassificationSettingsService $classificationSettingsService;
-
-	public function __construct(AccountService $service,
-		ImportanceClassifier $classifier,
-		ClassificationSettingsService $classificationSettingsService,
-		LoggerInterface $logger) {
+	public function __construct(
+		private readonly AccountService $accountService,
+		private readonly ImportanceClassifier $classifier,
+		private readonly ClassificationSettingsService $classificationSettingsService,
+		private readonly LoggerInterface $logger
+	) {
 		parent::__construct();
-
-		$this->accountService = $service;
-		$this->classifier = $classifier;
-		$this->logger = $logger;
-		$this->classificationSettingsService = $classificationSettingsService;
 	}
 
 	protected function configure(): void {
@@ -71,7 +63,7 @@ final class TrainAccount extends Command {
 
 		try {
 			$account = $this->accountService->findById($accountId);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			$output->writeln("<error>account $accountId does not exist</error>");
 			return 1;
 		}

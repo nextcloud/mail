@@ -34,8 +34,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class AccountsControllerTest extends TestCase {
-	/** @var string */
-	private $appName;
+	private ?string $appName = null;
 
 	/** @var IRequest|MockObject */
 	private $request;
@@ -43,8 +42,7 @@ class AccountsControllerTest extends TestCase {
 	/** @var AccountService|MockObject */
 	private $accountService;
 
-	/** @var string */
-	private $userId;
+	private ?string $userId = null;
 
 	/** @var LoggerInterface|MockObject */
 	private $logger;
@@ -52,11 +50,9 @@ class AccountsControllerTest extends TestCase {
 	/** @var IL10N|MockObject */
 	private $l10n;
 
-	/** @var AccountsController */
-	private $controller;
+	private ?\OCA\Mail\Controller\AccountsController $controller = null;
 
-	/** @var int */
-	private $accountId;
+	private ?int $accountId = null;
 
 	/** @var Account|MockObject */
 	private $account;
@@ -79,7 +75,6 @@ class AccountsControllerTest extends TestCase {
 	/** @var MailboxSync|MockObject */
 	private $mailboxSync;
 
-	/** @var IConfig|(IConfig&MockObject)|MockObject */
 	private IConfig|MockObject $config;
 	/** @var IRemoteHostValidator|MockObject */
 	private $hostValidator;
@@ -190,7 +185,7 @@ class AccountsControllerTest extends TestCase {
 			->method('updateSignature')
 			->with(self::equalTo($this->accountId), self::equalTo($this->userId), null);
 
-		$response = $this->controller->updateSignature($this->accountId, null);
+		$response = $this->controller->updateSignature($this->accountId);
 
 		$expectedResponse = new JSONResponse();
 		self::assertEquals($expectedResponse, $response);

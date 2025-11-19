@@ -22,8 +22,8 @@ use Psr\Log\LoggerInterface;
  */
 class MoveJunkListener implements IEventListener {
 	public function __construct(
-		private IMailManager $mailManager,
-		private LoggerInterface $logger,
+		private readonly IMailManager $mailManager,
+		private readonly LoggerInterface $logger,
 	) {
 	}
 

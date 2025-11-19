@@ -33,7 +33,7 @@ class MessageCacheUpdaterListenerTest extends TestCase {
 		$this->listener = $this->serviceMock->getService();
 	}
 
-	public function testHandleUnrelated() {
+	public function testHandleUnrelated(): void {
 		$event = new Event();
 		$this->serviceMock->getParameter('mapper')
 			->expects($this->never())
@@ -42,7 +42,7 @@ class MessageCacheUpdaterListenerTest extends TestCase {
 		$this->listener->handle($event);
 	}
 
-	public function testHandleMessageFlaggedNotCached() {
+	public function testHandleMessageFlaggedNotCached(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
 		$event = new MessageFlaggedEvent(
@@ -64,7 +64,7 @@ class MessageCacheUpdaterListenerTest extends TestCase {
 		$this->listener->handle($event);
 	}
 
-	public function testHandleMessageFlagged() {
+	public function testHandleMessageFlagged(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
 		$event = new MessageFlaggedEvent(

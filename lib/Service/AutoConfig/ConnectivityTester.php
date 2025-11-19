@@ -10,23 +10,14 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\AutoConfig;
 
-use Psr\Log\LoggerInterface;
-
 class ConnectivityTester {
 	public const CONNECTION_TIMEOUT = 5;
 
-	/** @var LoggerInterface */
-	protected $logger;
-
-	public function __construct(LoggerInterface $logger) {
-		$this->logger = $logger;
+	public function __construct(
+		protected \Psr\Log\LoggerInterface $logger
+	) {
 	}
 
-	/**
-	 * @param string $url
-	 * @param integer $port
-	 * @return bool
-	 */
 	public function canConnect(string $url, int $port): bool {
 		$this->logger->debug("attempting to connect to <$url> on port <$port>");
 		$fp = @fsockopen($url, $port, $error, $errorstr, self::CONNECTION_TIMEOUT);

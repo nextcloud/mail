@@ -23,9 +23,9 @@ use Psr\Log\LoggerInterface;
 class NewMessagesSummarizeListener implements IEventListener {
 
 	public function __construct(
-		private LoggerInterface $logger,
-		private AiIntegrationsService $aiService,
-		private IAppConfig $appConfig,
+		private readonly LoggerInterface $logger,
+		private readonly AiIntegrationsService $aiService,
+		private readonly IAppConfig $appConfig,
 	) {
 	}
 

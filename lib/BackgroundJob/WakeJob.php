@@ -16,7 +16,7 @@ use OCP\BackgroundJob\TimedJob;
 class WakeJob extends TimedJob {
 	public function __construct(
 		ITimeFactory $time,
-		private SnoozeService $snoozeService,
+		private readonly SnoozeService $snoozeService,
 	) {
 		parent::__construct($time);
 

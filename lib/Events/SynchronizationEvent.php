@@ -14,23 +14,12 @@ use OCP\EventDispatcher\Event;
 use Psr\Log\LoggerInterface;
 
 class SynchronizationEvent extends Event {
-	/** @var Account */
-	private $account;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var bool */
-	private $rebuildThreads;
-
-	public function __construct(Account $account,
-		LoggerInterface $logger,
-		bool $rebuildThreads) {
+	public function __construct(
+		private readonly \OCA\Mail\Account $account,
+		private readonly \Psr\Log\LoggerInterface $logger,
+		private readonly bool $rebuildThreads
+	) {
 		parent::__construct();
-
-		$this->account = $account;
-		$this->logger = $logger;
-		$this->rebuildThreads = $rebuildThreads;
 	}
 
 	public function getAccount(): Account {

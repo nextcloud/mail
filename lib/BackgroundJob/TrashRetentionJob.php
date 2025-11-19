@@ -26,13 +26,13 @@ use Psr\Log\LoggerInterface;
 class TrashRetentionJob extends TimedJob {
 	public function __construct(
 		ITimeFactory $time,
-		private LoggerInterface $logger,
-		private IMAPClientFactory $clientFactory,
-		private MessageMapper $messageMapper,
-		private MessageRetentionMapper $messageRetentionMapper,
-		private MailAccountMapper $accountMapper,
-		private MailboxMapper $mailboxMapper,
-		private IMailManager $mailManager,
+		private readonly LoggerInterface $logger,
+		private readonly IMAPClientFactory $clientFactory,
+		private readonly MessageMapper $messageMapper,
+		private readonly MessageRetentionMapper $messageRetentionMapper,
+		private readonly MailAccountMapper $accountMapper,
+		private readonly MailboxMapper $mailboxMapper,
+		private readonly IMailManager $mailManager,
 	) {
 		parent::__construct($time);
 
@@ -44,7 +44,7 @@ class TrashRetentionJob extends TimedJob {
 	 * @inheritDoc
 	 */
 	#[\Override]
-	public function run($argument) {
+	public function run($argument): void {
 		$accounts = $this->accountMapper->getAllAccounts();
 		foreach ($accounts as $account) {
 			$account = new Account($account);
@@ -82,7 +82,7 @@ class TrashRetentionJob extends TimedJob {
 
 		try {
 			$trashMailbox = $this->mailboxMapper->findById($trashMailboxId);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return;
 		}
 

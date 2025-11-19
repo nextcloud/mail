@@ -21,23 +21,18 @@ use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\IRequest;
 
 class ActionStepController extends Controller {
-	private ?string $uid;
-
 	public function __construct(
 		IRequest $request,
-		?string $userId,
-		private QuickActionsService $quickActionsService,
-		private AccountService $accountService,
+		private readonly ?string $uid,
+		private readonly QuickActionsService $quickActionsService,
+		private readonly AccountService $accountService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->uid = $userId;
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @param string $name
 	 *
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function create(string $name, int $order, int $actionId, ?int $tagId = null, ?int $mailboxId = null): JsonResponse {
@@ -51,7 +46,7 @@ class ActionStepController extends Controller {
 			}
 			$accountId = $action->getAccountId();
 			$account = $this->accountService->findById($accountId);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return JsonResponse::fail('Account not found', Http::STATUS_BAD_REQUEST);
 		}
 		if ($account->getUserId() !== $this->uid) {
@@ -64,10 +59,7 @@ class ActionStepController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @param int $id
-	 * @param string $name
 	 *
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function update(int $id, string $name, int $order, ?int $tagId, ?int $mailboxId): JsonResponse {
@@ -85,8 +77,6 @@ class ActionStepController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @return JsonResponse
 	 */
 	public function destroy(int $id): JsonResponse {
 		if ($this->uid === null) {
@@ -95,7 +85,7 @@ class ActionStepController extends Controller {
 		try {
 			$this->quickActionsService->deleteActionStep($id, $this->uid);
 			return JsonResponse::success();
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return JsonResponse::fail('Action step not found', Http::STATUS_NOT_FOUND);
 		}
 	}

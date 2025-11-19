@@ -21,28 +21,22 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ContactIntegrationController extends Controller {
-	private ContactIntegrationService $service;
-	private ICache $cache;
-	private string $uid;
+	private readonly ICache $cache;
 
 
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		ContactIntegrationService $service,
+		private readonly ContactIntegrationService $service,
 		ICacheFactory $cacheFactory,
-		string $UserId) {
+		private readonly string $uid
+	) {
 		parent::__construct($appName, $request);
-
-		$this->service = $service;
 		$this->cache = $cacheFactory->createLocal('mail.contacts');
-		$this->uid = $UserId;
 	}
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @param string $mail
-	 * @return JSONResponse
 	 */
 	#[TrapError]
 	public function match(string $mail): JSONResponse {
@@ -54,7 +48,6 @@ class ContactIntegrationController extends Controller {
 	 *
 	 * @param string $uid
 	 * @param string $mail
-	 * @return JSONResponse
 	 */
 	#[TrapError]
 	public function addMail(?string $uid = null, ?string $mail = null): JSONResponse {
@@ -79,9 +72,6 @@ class ContactIntegrationController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @param string $term
-	 * @return JSONResponse
 	 */
 	#[TrapError]
 	public function autoComplete(string $term): JSONResponse {

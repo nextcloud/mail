@@ -16,45 +16,24 @@ use ReturnTypeWillChange;
  * @psalm-immutable
  */
 final class Avatar implements JsonSerializable {
-	/** @var string */
-	private $url;
-
-	/** @var string|null */
-	private $mime;
-
-	/** @var bool */
-	private $isExternal;
-
-	/**
-	 * @param string $url
-	 * @param string|null $mime
-	 * @param bool $isExternal
-	 */
-	public function __construct(string $url, ?string $mime = null, bool $isExternal = true) {
-		$this->url = $url;
-		$this->mime = $mime;
-		$this->isExternal = $isExternal;
+	public function __construct(
+		private readonly string $url,
+		private readonly ?string $mime = null,
+		private readonly bool $isExternal = true,
+	) {
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getUrl(): string {
 		return $this->url;
 	}
 
 	/**
 	 * Get the MIME type of this avatar
-	 *
-	 * @return string|null
 	 */
-	public function getMime() {
+	public function getMime(): ?string {
 		return $this->mime;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function isExternal(): bool {
 		return $this->isExternal;
 	}

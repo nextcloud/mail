@@ -16,8 +16,8 @@ use function method_exists;
 
 class FixBackgroundJobs implements IRepairStep {
 	public function __construct(
-		private MailAccountMapper $mapper,
-		private AccountService $accountService,
+		private readonly MailAccountMapper $mapper,
+		private readonly AccountService $accountService,
 	) {
 	}
 
@@ -26,11 +26,8 @@ class FixBackgroundJobs implements IRepairStep {
 		return 'Insert background jobs for all accounts';
 	}
 
-	/**
-	 * @return void
-	 */
 	#[\Override]
-	public function run(IOutput $output) {
+	public function run(IOutput $output): void {
 		// Skip if method does not exist yet during upgrade
 		if (!method_exists($this->accountService, 'scheduleBackgroundJobs')) {
 			return;

@@ -18,15 +18,12 @@ use OCP\Migration\SimpleMigrationStep;
 class Version3600Date20240227172825 extends SimpleMigrationStep {
 
 	public function __construct(
-		private IAppConfig $appConfig,
+		private readonly IAppConfig $appConfig,
 	) {
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure(): ISchemaWrapper $schemaClosure
-	 * @param array $options
-	 * @return null|ISchemaWrapper
 	 */
 	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {

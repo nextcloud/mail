@@ -22,27 +22,17 @@ use Psr\Log\LoggerInterface;
 use function array_filter;
 
 class IMipService {
-	private AccountService $accountService;
-	private IManager $calendarManager;
-	private LoggerInterface $logger;
-	private MailboxMapper $mailboxMapper;
-	private MailManager $mailManager;
-	private MessageMapper $messageMapper;
+	private readonly IManager $calendarManager;
 
 	public function __construct(
-		AccountService $accountService,
+		private readonly AccountService $accountService,
 		IManager $manager,
-		LoggerInterface $logger,
-		MailboxMapper $mailboxMapper,
-		MailManager $mailManager,
-		MessageMapper $messageMapper,
+		private readonly LoggerInterface $logger,
+		private readonly MailboxMapper $mailboxMapper,
+		private readonly MailManager $mailManager,
+		private readonly MessageMapper $messageMapper,
 	) {
-		$this->accountService = $accountService;
 		$this->calendarManager = $manager;
-		$this->logger = $logger;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->mailManager = $mailManager;
-		$this->messageMapper = $messageMapper;
 	}
 
 	public function process(): void {
@@ -59,10 +49,10 @@ class IMipService {
 		// since there are very few messages to process
 		$mailboxIds = array_unique(array_map(static fn (Message $message) => $message->getMailboxId(), $messages));
 
-		$mailboxes = array_map(function (int $mailboxId) {
+		$mailboxes = array_map(function (int $mailboxId): ?\OCA\Mail\Db\Mailbox {
 			try {
 				return $this->mailboxMapper->findById($mailboxId);
-			} catch (DoesNotExistException|ServiceException $e) {
+			} catch (DoesNotExistException|ServiceException) {
 				return null;
 			}
 		}, $mailboxIds);
@@ -71,10 +61,10 @@ class IMipService {
 		// Collect all accounts in memory
 		$accountIds = array_unique(array_map(static fn (Mailbox $mailbox) => $mailbox->getAccountId(), $existingMailboxes));
 
-		$accounts = array_combine($accountIds, array_map(function (int $accountId) {
+		$accounts = array_combine($accountIds, array_map(function (int $accountId): ?\OCA\Mail\Account {
 			try {
 				return $this->accountService->findById($accountId);
-			} catch (DoesNotExistException $e) {
+			} catch (DoesNotExistException) {
 				return null;
 			}
 		}, $accountIds));
@@ -82,7 +72,7 @@ class IMipService {
 		foreach ($existingMailboxes as $mailbox) {
 			/** @var Account $account */
 			$account = $accounts[$mailbox->getAccountId()];
-			$filteredMessages = array_filter($messages, static fn ($message) => $message->getMailboxId() === $mailbox->getId());
+			$filteredMessages = array_filter($messages, static fn ($message): bool => $message->getMailboxId() === $mailbox->getId());
 
 			if ($filteredMessages === []) {
 				continue;
@@ -98,7 +88,7 @@ class IMipService {
 				|| $account->getMailAccount()->getDraftsMailboxId() === $mailbox->getId()
 				|| $mailbox->isSpecialUse(\Horde_Imap_Client::SPECIALUSE_ARCHIVE)
 			) {
-				$processedMessages = array_map(static function (Message $message) {
+				$processedMessages = array_map(static function (Message $message): \OCA\Mail\Db\Message {
 					$message->setImipProcessed(true);
 					return $message;
 				}, $filteredMessages); // Silently drop from passing to DAV and mark as processed, so we won't run into these messages again.
@@ -118,7 +108,7 @@ class IMipService {
 
 			foreach ($filteredMessages as $message) {
 				/** @var IMAPMessage $imapMessage */
-				$imapMessage = current(array_filter($imapMessages, static fn (IMAPMessage $imapMessage) => $message->getUid() === $imapMessage->getUid()));
+				$imapMessage = current(array_filter($imapMessages, static fn (IMAPMessage $imapMessage): bool => $message->getUid() === $imapMessage->getUid()));
 				if (empty($imapMessage->scheduling)) {
 					// No scheduling info, maybe the DB is wrong
 					$message->setImipError(true);

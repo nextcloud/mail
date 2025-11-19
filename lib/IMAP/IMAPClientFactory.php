@@ -39,21 +39,21 @@ class IMAPClientFactory {
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
-	private ITimeFactory $timeFactory;
-	private HordeCacheFactory $hordeCacheFactory;
+	private readonly ITimeFactory $timeFactory;
 
-	public function __construct(ICrypto $crypto,
+	public function __construct(
+		ICrypto $crypto,
 		IConfig $config,
 		ICacheFactory $cacheFactory,
 		IEventDispatcher $eventDispatcher,
 		ITimeFactory $timeFactory,
-		HordeCacheFactory $hordeCacheFactory) {
+		private readonly HordeCacheFactory $hordeCacheFactory
+	) {
 		$this->crypto = $crypto;
 		$this->config = $config;
 		$this->cacheFactory = $cacheFactory;
 		$this->eventDispatcher = $eventDispatcher;
 		$this->timeFactory = $timeFactory;
-		$this->hordeCacheFactory = $hordeCacheFactory;
 	}
 
 	/**
@@ -63,10 +63,7 @@ class IMAPClientFactory {
 	 * responsible to log out as soon as possible to keep the number of open
 	 * (and stale) connections at a minimum.
 	 *
-	 * @param Account $account
-	 * @param bool $useCache
 	 *
-	 * @return Horde_Imap_Client_Socket
 	 * @throws ServiceException
 	 */
 	public function getClient(Account $account, bool $useCache = true): Horde_Imap_Client_Socket {

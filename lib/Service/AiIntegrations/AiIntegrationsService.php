@@ -47,26 +47,24 @@ The email contents are:
 PROMPT;
 
 	public function __construct(
-		private LoggerInterface $logger,
-		private IConfig $config,
-		private Cache $cache,
-		private IMAPClientFactory $clientFactory,
-		private IMailManager $mailManager,
-		private TaskProcessingManager $taskProcessingManager,
-		private TextProcessingManager $textProcessingManager,
-		private IL10N $l,
-		private IFactory $l10nFactory,
-		private IUserManager $userManager,
+		private readonly LoggerInterface $logger,
+		private readonly IConfig $config,
+		private readonly Cache $cache,
+		private readonly IMAPClientFactory $clientFactory,
+		private readonly IMailManager $mailManager,
+		private readonly TaskProcessingManager $taskProcessingManager,
+		private readonly TextProcessingManager $textProcessingManager,
+		private readonly IL10N $l,
+		private readonly IFactory $l10nFactory,
+		private readonly IUserManager $userManager,
 	) {
 	}
 
 	/**
 	 * generates summary for each message
 	 *
-	 * @param Account $account
 	 * @param array<Message> $messages
 	 *
-	 * @return void
 	 */
 	public function summarizeMessages(Account $account, array $messages): void {
 		$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
@@ -115,7 +113,7 @@ PROMPT;
 					],
 					Application::APP_ID,
 					$userId,
-					'message:' . (string)$messageLocalId
+					'message:' . $messageLocalId
 				);
 				$this->taskProcessingManager->scheduleTask($task);
 			}
@@ -125,12 +123,7 @@ PROMPT;
 	}
 
 	/**
-	 * @param Account $account
-	 * @param string $threadId
-	 * @param array $messages
-	 * @param string $currentUserId
 	 *
-	 * @return null|string
 	 *
 	 * @throws ServiceException
 	 */
@@ -143,7 +136,7 @@ PROMPT;
 			}
 			$client = $this->clientFactory->getClient($account);
 			try {
-				$messagesBodies = array_map(function ($message) use ($client, $account, $currentUserId) {
+				$messagesBodies = array_map(function ($message) use ($client, $account, $currentUserId): string {
 					$mailbox = $this->mailManager->getMailbox($currentUserId, $message->getMailboxId());
 					$imapMessage = $this->mailManager->getImapMessage(
 						$client,
@@ -180,7 +173,7 @@ PROMPT;
 		}
 		$client = $this->clientFactory->getClient($account);
 		try {
-			$messageBodies = array_map(function ($message) use ($client, $account, $currentUserId) {
+			$messageBodies = array_map(function (\OCA\Mail\Db\Message $message) use ($client, $account, $currentUserId): string {
 				$mailbox = $this->mailManager->getMailbox($currentUserId, $message->getMailboxId());
 				$imapMessage = $this->mailManager->getImapMessage(
 					$client,
@@ -205,7 +198,7 @@ PROMPT;
 		try {
 			$decoded = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
 			return new EventData($decoded['title'], $decoded['agenda']);
-		} catch (JsonException $e) {
+		} catch (JsonException) {
 			return null;
 		}
 	}
@@ -255,7 +248,7 @@ PROMPT;
 			$replies = $task->getOutput();
 			try {
 				$cleaned = preg_replace('/^```json\s*|\s*```$/', '', trim($replies));
-				$decoded = json_decode($cleaned, true, 512, JSON_THROW_ON_ERROR);
+				$decoded = json_decode((string)$cleaned, true, 512, JSON_THROW_ON_ERROR);
 				$this->cache->addValue('smartReplies_' . $message->getId(), $replies);
 				return $decoded;
 			} catch (JsonException $e) {

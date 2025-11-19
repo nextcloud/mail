@@ -14,7 +14,7 @@ use OCP\AppFramework\Http;
 
 class ValidationException extends Exception {
 	/** @var bool[] */
-	private $fields;
+	private array $fields;
 
 	public function __construct() {
 		$this->fields = [];

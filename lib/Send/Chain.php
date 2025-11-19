@@ -17,14 +17,14 @@ use OCP\DB\Exception;
 
 class Chain {
 	public function __construct(
-		private SentMailboxHandler $sentMailboxHandler,
-		private AntiAbuseHandler $antiAbuseHandler,
-		private SendHandler $sendHandler,
-		private CopySentMessageHandler $copySentMessageHandler,
-		private FlagRepliedMessageHandler $flagRepliedMessageHandler,
-		private AttachmentService $attachmentService,
-		private LocalMessageMapper $localMessageMapper,
-		private IMAPClientFactory $clientFactory,
+		private readonly SentMailboxHandler $sentMailboxHandler,
+		private readonly AntiAbuseHandler $antiAbuseHandler,
+		private readonly SendHandler $sendHandler,
+		private readonly CopySentMessageHandler $copySentMessageHandler,
+		private readonly FlagRepliedMessageHandler $flagRepliedMessageHandler,
+		private readonly AttachmentService $attachmentService,
+		private readonly LocalMessageMapper $localMessageMapper,
+		private readonly IMAPClientFactory $clientFactory,
 	) {
 	}
 

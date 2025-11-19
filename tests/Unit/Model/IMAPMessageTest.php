@@ -30,14 +30,14 @@ class IMAPMessageTest extends TestCase {
 		$this->htmlService = $this->createMock(Html::class);
 	}
 
-	public function testIconvHtmlMessage() {
+	public function testIconvHtmlMessage(): void {
 		$urlGenerator = $this->getMockBuilder(IURLGenerator::class)
 			->disableOriginalConstructor()
 			->getMock();
 		//linkToRoute 'mail.proxy.proxy'
 		$urlGenerator->expects($this->any())
 			->method('linkToRoute')
-			->will($this->returnCallback(fn ($url) => "https://docs.example.com/server/go.php?to=$url"));
+			->will($this->returnCallback(fn ($url): string => "https://docs.example.com/server/go.php?to=$url"));
 		$request = $this->getMockBuilder(IRequest::class)
 			->disableOriginalConstructor()
 			->getMock();
@@ -48,7 +48,7 @@ class IMAPMessageTest extends TestCase {
 		$plainTextBody = $part[$part->findBody('plain')]->getContents();
 		$htmlBody = $part[$part->findBody('html')]->getContents();
 
-		$inlineAttachmentPart = $part->getPart(2);
+		$part->getPart(2);
 		$message = new IMAPMessage(
 			1234,
 			'<1576747741.9.1432038946316.JavaMail.root@ip-172-32-11-10>',
@@ -89,7 +89,7 @@ class IMAPMessageTest extends TestCase {
 		$this->assertEquals($plainTextBody, $actualPlainTextBody);
 	}
 
-	public function testSerialize() {
+	public function testSerialize(): void {
 		$data = new Horde_Imap_Client_Data_Fetch();
 		$data->setUid(1234);
 		$m = new IMAPMessage(

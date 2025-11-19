@@ -19,25 +19,18 @@ use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\IRequest;
 
 class InternalAddressController extends Controller {
-	private ?string $uid;
-
 	public function __construct(
 		IRequest $request,
-		?string $userId,
+		private readonly ?string $uid,
 		private InternalAddressService $internalAddressService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
 
 		$this->internalAddressService = $internalAddressService;
-		$this->uid = $userId;
 	}
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @param string $address
-	 * @param string $type
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function setAddress(string $address, string $type): JsonResponse {
@@ -52,10 +45,6 @@ class InternalAddressController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @param string $address
-	 * @param string $type
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function removeAddress(string $address, string $type): JsonResponse {
@@ -75,8 +64,6 @@ class InternalAddressController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function list(): JsonResponse {

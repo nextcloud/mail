@@ -14,7 +14,6 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Send\AntiAbuseHandler;
 use OCA\Mail\Send\Chain;
@@ -32,7 +31,6 @@ class ChainTest extends TestCase {
 	private SendHandler|MockObject $sendHandler;
 	private MockObject|CopySentMessageHandler $copySentMessageHandler;
 	private MockObject|FlagRepliedMessageHandler $flagRepliedMessageHandler;
-	private MockObject|MessageMapper $messageMapper;
 	private AttachmentService|MockObject $attachmentService;
 	private MockObject|LocalMessageMapper $localMessageMapper;
 	private MockObject&IMAPClientFactory $clientFactory;
@@ -93,7 +91,7 @@ class ChainTest extends TestCase {
 		$this->chain->process($account, $localMessage);
 	}
 
-	public function testProcessNotProcessed() {
+	public function testProcessNotProcessed(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setSentMailboxId(1);
 		$mailAccount->setUserId('bob');

@@ -35,8 +35,7 @@ class PreviewEnhancerTest extends TestCase {
 	private $logger;
 	/** @var AvatarService|MockObject */
 	private $avatarService;
-	/** @var PreviewEnhancer */
-	private $previewEnhancer;
+	private ?\OCA\Mail\IMAP\PreviewEnhancer $previewEnhancer = null;
 
 	protected function setUp(): void {
 		parent::setUp();

@@ -31,11 +31,9 @@ class LocalAttachmentMapperTest extends TestCase {
 	/** @var MailAccount */
 	private $account;
 
-	/** @var LocalAttachmentMapper */
-	private $mapper;
+	private ?\OCA\Mail\Db\LocalAttachmentMapper $mapper = null;
 
-	/** @var LocalMessageMapper */
-	private $localMessageMapper;
+	private ?\OCA\Mail\Db\LocalMessageMapper $localMessageMapper = null;
 
 	/** @var ITimeFactory|MockObject */
 	private $timeFactory;
@@ -43,17 +41,15 @@ class LocalAttachmentMapperTest extends TestCase {
 	/** @var array */
 	private $attachments;
 
-	/** @var string */
-	private $user1 = 'user45678';
-	/** @var string */
-	private $user2 = 'dontFindMe';
+	private string $user1 = 'user45678';
+	private string $user2 = 'dontFindMe';
 	private array $localMessageIds;
 	private array $attachmentIds;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->db = \OC::$server->getDatabaseConnection();
+		$this->db = \OCP\Server::get(\OCP\IDBConnection::class);
 		$this->mapper = new LocalAttachmentMapper(
 			$this->db
 		);

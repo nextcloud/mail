@@ -11,7 +11,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Http\AvatarDownloadResponse;
 
 class AvatarDownloadResponseTest extends TestCase {
-	public function testResponse() {
+	public function testResponse(): void {
 		$response = new AvatarDownloadResponse('data');
 
 		$this->assertEquals('application/octet-stream', $response->getHeaders()['Content-Type']);

@@ -10,10 +10,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Command;
 
 use OCA\Mail\Account;
-use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Db\DoesNotExistException;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,21 +20,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class DeleteAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 
-	private AccountService $accountService;
-	private LoggerInterface $logger;
-
-	public function __construct(AccountService $service,
-		LoggerInterface $logger) {
+	public function __construct(
+		private readonly AccountService $accountService
+	) {
 		parent::__construct();
-
-		$this->accountService = $service;
-		$this->logger = $logger;
 	}
 
-	/**
-	 * @return void
-	 */
-	protected function configure() {
+	protected function configure(): void {
 		$this->setName('mail:account:delete');
 		$this->setDescription('Delete an IMAP account');
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::REQUIRED);
@@ -47,7 +37,7 @@ final class DeleteAccount extends Command {
 
 		try {
 			$account = $this->accountService->findById($accountId);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			$output->writeLn('<error>This account does not exist</error>');
 			return 1;
 		}
@@ -65,11 +55,7 @@ final class DeleteAccount extends Command {
 
 	private function delete(Account $account, OutputInterface $output): void {
 		$id = $account->getId();
-		try {
-			$this->accountService->deleteByAccountId($account->getId());
-		} catch (ClientException $e) {
-			throw $e;
-		}
+		$this->accountService->deleteByAccountId($account->getId());
 		$output->writeLn("<info>Deleted account $id </info>");
 	}
 }

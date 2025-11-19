@@ -27,12 +27,6 @@ class Version2300Date20221215143450 extends SimpleMigrationStep {
 		$this->connection = $connection;
 	}
 
-	/**
-	 * @param IOutput $output
-	 * @param Closure $schemaClosure
-	 * @param array $options
-	 * @return null|ISchemaWrapper
-	 */
 	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 		/** @var ISchemaWrapper $schema */
@@ -54,12 +48,9 @@ class Version2300Date20221215143450 extends SimpleMigrationStep {
 		return $schema;
 	}
 
-	/**
-	 * @return void
-	 */
 	#[\Override]
-	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
-		$this->atomic(function () {
+	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options): void {
+		$this->atomic(function (): void {
 			// Migrate old data to the new column
 			$qb1 = $this->connection->getQueryBuilder();
 			$qb1->update('mail_accounts')

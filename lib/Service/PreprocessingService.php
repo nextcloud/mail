@@ -15,21 +15,12 @@ use OCA\Mail\IMAP\PreviewEnhancer;
 use Psr\Log\LoggerInterface;
 
 class PreprocessingService {
-	private MailboxMapper $mailboxMapper;
-	private MessageMapper $messageMapper;
-	private LoggerInterface $logger;
-	private PreviewEnhancer $previewEnhancer;
-
 	public function __construct(
-		MessageMapper $messageMapper,
-		LoggerInterface $logger,
-		MailboxMapper $mailboxMapper,
-		PreviewEnhancer $previewEnhancer,
+		private readonly MessageMapper $messageMapper,
+		private readonly LoggerInterface $logger,
+		private readonly MailboxMapper $mailboxMapper,
+		private readonly PreviewEnhancer $previewEnhancer
 	) {
-		$this->messageMapper = $messageMapper;
-		$this->logger = $logger;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->previewEnhancer = $previewEnhancer;
 	}
 
 	public function process(int $limitTimestamp, Account $account): void {
@@ -50,7 +41,7 @@ class PreprocessingService {
 		}
 
 		foreach ($mailboxes as $mailbox) {
-			$filteredMessages = array_filter($messages, static fn ($message) => $message->getMailboxId() === $mailbox->getId());
+			$filteredMessages = array_filter($messages, static fn ($message): bool => $message->getMailboxId() === $mailbox->getId());
 
 			if ($filteredMessages === []) {
 				continue;

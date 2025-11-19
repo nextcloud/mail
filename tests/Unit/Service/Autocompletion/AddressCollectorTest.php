@@ -19,9 +19,9 @@ use Psr\Log\LoggerInterface;
 
 class AddressCollectorTest extends TestCase {
 	private $mapper;
-	private $userId = 'testuser';
+	private string $userId = 'testuser';
 	private $logger;
-	private $collector;
+	private ?\OCA\Mail\Service\AutoCompletion\AddressCollector $collector = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -78,7 +78,7 @@ class AddressCollectorTest extends TestCase {
 		$this->collector->addAddresses($this->userId, $addressList);
 	}
 
-	public function testSearchAddress() {
+	public function testSearchAddress(): void {
 		$term = 'john';
 		$mapperResult = ['some', 'data'];
 

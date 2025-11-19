@@ -20,17 +20,11 @@ use OCP\IDBConnection;
  * @template-extends QBMapper<SmimeCertificate>
  */
 class SmimeCertificateMapper extends QBMapper {
-	/**
-	 * @param IDBConnection $db
-	 */
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'mail_smime_certificates');
 	}
 
 	/**
-	 * @param int $id
-	 * @param string $userId
-	 * @return SmimeCertificate
 	 *
 	 * @throws DoesNotExistException
 	 */
@@ -50,7 +44,6 @@ class SmimeCertificateMapper extends QBMapper {
 	}
 
 	/**
-	 * @param string $userId
 	 * @return SmimeCertificate[]
 	 */
 	public function findAll(string $userId): array {
@@ -67,8 +60,6 @@ class SmimeCertificateMapper extends QBMapper {
 	/**
 	 * Find all S/MIME certificates by email address.
 	 *
-	 * @param string $userId
-	 * @param string $emailAddress
 	 * @return SmimeCertificate[]
 	 *
 	 * @throws \OCP\DB\Exception
@@ -88,10 +79,8 @@ class SmimeCertificateMapper extends QBMapper {
 	/**
 	 * Find all S/MIME certificates by email addresses
 	 *
-	 * @param string $userId
 	 * @param string[] $emailAddresses
 	 * @return SmimeCertificate[]
-	 *
 	 * @throws \OCP\DB\Exception
 	 */
 	public function findAllByEmailAddresses(string $userId, array $emailAddresses): array {

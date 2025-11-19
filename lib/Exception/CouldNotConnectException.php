@@ -13,17 +13,13 @@ use Horde_Imap_Client_Exception;
 use Throwable;
 
 class CouldNotConnectException extends ServiceException {
-	/** @var string */
-	private $service;
+	private readonly string $service;
 
-	/** @var string */
-	private $host;
+	private readonly string $host;
 
-	/** @var int */
-	private $port;
+	private readonly int $port;
 
-	/** @var Throwable */
-	private $previous;
+	private readonly \Throwable $previous;
 
 	public function __construct(Throwable $previous, string $service, string $host, int $port) {
 		parent::__construct(
@@ -37,23 +33,14 @@ class CouldNotConnectException extends ServiceException {
 		$this->previous = $previous;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getService(): string {
 		return $this->service;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getHost(): string {
 		return $this->host;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getPort(): int {
 		return $this->port;
 	}
@@ -63,14 +50,10 @@ class CouldNotConnectException extends ServiceException {
 			return 'OTHER';
 		}
 
-		switch ($this->previous->getCode()) {
-			case Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED:
-				return 'AUTHENTICATION';
-			case Horde_Imap_Client_Exception::SERVER_CONNECT:
-			case Horde_Imap_Client_Exception::SERVER_READERROR:
-				return 'CONNECTION_ERROR';
-			default:
-				return 'OTHER';
-		}
+		return match ($this->previous->getCode()) {
+			Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED => 'AUTHENTICATION',
+			Horde_Imap_Client_Exception::SERVER_CONNECT, Horde_Imap_Client_Exception::SERVER_READERROR => 'CONNECTION_ERROR',
+			default => 'OTHER',
+		};
 	}
 }

@@ -40,7 +40,6 @@ class MessageSend {
 	 * @param IMessage $message mail message object with all required parameters to send a message
 	 * @param array $options array of options reserved for future use
 	 *
-	 * @return LocalMessage
 	 *
 	 * @throws SendException on failure, check message for reason
 	 *
@@ -52,14 +51,14 @@ class MessageSend {
 		}
 		// validate that all To, CC and BCC have email address
 		$entries = array_merge($message->getTo(), $message->getCc(), $message->getBcc());
-		array_walk($entries, function ($entry) {
+		array_walk($entries, function ($entry): void {
 			if (empty($entry->getAddress())) {
 				throw new SendException('Invalid Message Parameter: All TO, CC and BCC addresses MUST contain at least an email address');
 			}
 		});
 		// validate that all attachments have a name, type, and contents
 		$entries = $message->getAttachments();
-		array_walk($entries, function ($entry) {
+		array_walk($entries, function ($entry): void {
 			if (empty($entry->getType()) || empty($entry->getContents())) {
 				throw new SendException('Invalid Attachment Parameter: MUST contain values for Type and Contents');
 			}
@@ -131,7 +130,7 @@ class MessageSend {
 	 * @return array<int, array{email: string, label?: string}> collection of addresses and labels
 	 */
 	protected function convertAddressArray(array $addresses): array {
-		return array_map(static fn (IAddress $address) => !empty($address->getLabel())
+		return array_map(static fn (IAddress $address): array => !empty($address->getLabel())
 				? ['email' => (string)$address->getAddress(), 'label' => (string)$address->getLabel()]
 				: ['email' => (string)$address->getAddress()], $addresses);
 	}

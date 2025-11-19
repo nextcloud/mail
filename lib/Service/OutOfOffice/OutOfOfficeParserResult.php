@@ -14,9 +14,9 @@ use ReturnTypeWillChange;
 
 class OutOfOfficeParserResult implements JsonSerializable {
 	public function __construct(
-		private ?OutOfOfficeState $state,
-		private string $sieveScript,
-		private string $untouchedSieveScript,
+		private readonly ?OutOfOfficeState $state,
+		private readonly string $sieveScript,
+		private readonly string $untouchedSieveScript,
 	) {
 	}
 

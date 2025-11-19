@@ -10,26 +10,18 @@ declare(strict_types=1);
 namespace OCA\Mail\Listener;
 
 use OCA\Mail\Exception\ClientException;
-use OCA\Mail\Service\AccountService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\User\Events\UserDeletedEvent;
-use Psr\Log\LoggerInterface;
 
 /**
  * @template-implements IEventListener<Event|UserDeletedEvent>
  */
 class UserDeletedListener implements IEventListener {
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(AccountService $accountService,
-		LoggerInterface $logger) {
-		$this->accountService = $accountService;
-		$this->logger = $logger;
+	public function __construct(
+		private readonly \OCA\Mail\Service\AccountService $accountService,
+		private readonly \Psr\Log\LoggerInterface $logger
+	) {
 	}
 
 	#[\Override]

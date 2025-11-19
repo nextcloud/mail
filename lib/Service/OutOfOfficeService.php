@@ -29,12 +29,12 @@ use Psr\Log\LoggerInterface;
 class OutOfOfficeService {
 
 	public function __construct(
-		private OutOfOfficeParser $outOfOfficeParser,
-		private SieveService $sieveService,
-		private LoggerInterface $logger,
-		private ITimeFactory $timeFactory,
-		private AllowedRecipientsService $allowedRecipientsService,
-		private IAvailabilityCoordinator $availabilityCoordinator,
+		private readonly OutOfOfficeParser $outOfOfficeParser,
+		private readonly SieveService $sieveService,
+		private readonly LoggerInterface $logger,
+		private readonly ITimeFactory $timeFactory,
+		private readonly AllowedRecipientsService $allowedRecipientsService,
+		private readonly IAvailabilityCoordinator $availabilityCoordinator,
 	) {
 	}
 

@@ -10,14 +10,9 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Attachment;
 
 class UploadedFile {
-	/** @var array */
-	private $fileData;
-
-	/**
-	 * @param array $fileData
-	 */
-	public function __construct(array $fileData) {
-		$this->fileData = $fileData;
+	public function __construct(
+		private array $fileData
+	) {
 	}
 
 	/**

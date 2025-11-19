@@ -32,7 +32,7 @@ class RubixMemoryPersister implements Persister {
 		return new Encoding($this->data);
 	}
 
-	public function __toString() {
+	public function __toString(): string {
 		return self::class;
 	}
 }

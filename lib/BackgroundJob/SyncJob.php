@@ -29,31 +29,23 @@ use function sprintf;
 class SyncJob extends TimedJob {
 	private const DEFAULT_SYNC_INTERVAL = 3600;
 
-	private IUserManager $userManager;
-	private AccountService $accountService;
-	private ImapToDbSynchronizer $syncService;
-	private MailboxSync $mailboxSync;
-	private LoggerInterface $logger;
-	private IJobList $jobList;
+	private readonly IUserManager $userManager;
+	private readonly IJobList $jobList;
 	private readonly bool $forcedSyncInterval;
 
 	public function __construct(
 		ITimeFactory $time,
 		IUserManager $userManager,
-		AccountService $accountService,
-		MailboxSync $mailboxSync,
-		ImapToDbSynchronizer $syncService,
-		LoggerInterface $logger,
+		private readonly AccountService $accountService,
+		private readonly MailboxSync $mailboxSync,
+		private readonly ImapToDbSynchronizer $syncService,
+		private readonly LoggerInterface $logger,
 		IJobList $jobList,
 		private readonly IConfig $config,
 	) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;
-		$this->accountService = $accountService;
-		$this->syncService = $syncService;
-		$this->mailboxSync = $mailboxSync;
-		$this->logger = $logger;
 		$this->jobList = $jobList;
 
 		$configuredSyncInterval = $config->getSystemValueInt('app.mail.background-sync-interval');

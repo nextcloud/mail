@@ -15,53 +15,29 @@ use Horde_Mail_Transport_Smtphorde;
 use InvalidArgumentException;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\Security\ICrypto;
-use Psr\Log\LoggerInterface;
 use function in_array;
 
 class SetupService {
-	/** @var AccountService */
-	private $accountService;
-
 	/** @var ICrypto */
 	private $crypto;
 
-	/** @var SmtpClientFactory */
-	private $smtpClientFactory;
-
-	/** @var IMAPClientFactory */
-	private $imapClientFactory;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var TagMapper */
-	private $tagMapper;
-
-	public function __construct(AccountService $accountService,
+	public function __construct(
+		private readonly \OCA\Mail\Service\AccountService $accountService,
 		ICrypto $crypto,
-		SmtpClientFactory $smtpClientFactory,
-		IMAPClientFactory $imapClientFactory,
-		LoggerInterface $logger,
-		TagMapper $tagMapper) {
-		$this->accountService = $accountService;
+		private readonly \OCA\Mail\SMTP\SmtpClientFactory $smtpClientFactory,
+		private readonly \OCA\Mail\IMAP\IMAPClientFactory $imapClientFactory,
+		private readonly \Psr\Log\LoggerInterface $logger,
+		private readonly \OCA\Mail\Db\TagMapper $tagMapper
+	) {
 		$this->crypto = $crypto;
-		$this->smtpClientFactory = $smtpClientFactory;
-		$this->imapClientFactory = $imapClientFactory;
-		$this->logger = $logger;
-		$this->tagMapper = $tagMapper;
 	}
 
 	/**
 	 * @throws CouldNotConnectException
 	 * @throws ServiceException
-	 *
-	 * @return Account
 	 */
 	public function createNewAccount(string $accountName,
 		string $emailAddress,
@@ -119,7 +95,6 @@ class SetupService {
 	}
 
 	/**
-	 * @param Account $account
 	 * @throws CouldNotConnectException
 	 */
 	protected function testConnectivity(Account $account): void {

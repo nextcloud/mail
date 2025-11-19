@@ -28,11 +28,11 @@ class FollowUpClassifierJob extends QueuedJob {
 
 	public function __construct(
 		ITimeFactory $time,
-		private LoggerInterface $logger,
-		private AccountService $accountService,
-		private IMailManager $mailManager,
-		private AiIntegrationsService $aiService,
-		private ThreadMapper $threadMapper,
+		private readonly LoggerInterface $logger,
+		private readonly AccountService $accountService,
+		private readonly IMailManager $mailManager,
+		private readonly AiIntegrationsService $aiService,
+		private readonly ThreadMapper $threadMapper,
 	) {
 		parent::__construct($time);
 	}
@@ -57,7 +57,7 @@ class FollowUpClassifierJob extends QueuedJob {
 		$messages = $this->mailManager->getByMessageId($account, $messageId);
 		$messages = array_filter(
 			$messages,
-			static fn (Message $message) => $message->getMailboxId() === $mailboxId,
+			static fn (Message $message): bool => $message->getMailboxId() === $mailboxId,
 		);
 		if (count($messages) === 0) {
 			return;

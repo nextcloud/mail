@@ -23,8 +23,6 @@ class MessageRetentionMapper extends QBMapper {
 
 	/**
 	 * @param string[] $messageIds
-	 *
-	 * @return void
 	 */
 	public function deleteByMailboxIdAndUid(int $mailboxId, int $uid): void {
 		$qb = $this->db->getQueryBuilder();

@@ -31,22 +31,19 @@ class QuickActionsService {
 	];
 
 	public function __construct(
-		private ActionsMapper $actionsMapper,
-		private ActionStepMapper $actionStepMapper,
+		private readonly ActionsMapper $actionsMapper,
+		private readonly ActionStepMapper $actionStepMapper,
 	) {
 	}
 	/**
-	 * @param string $userId
 	 * @return Actions[]
 	 */
 	public function findAll(string $userId): array {
 		$actions = $this->actionsMapper->findAll($userId);
 		$actionIds = array_map(fn (Actions $action) => $action->getId(), $actions);
 		$actionSteps = $this->actionStepMapper->findStepsByActionIds($actionIds, $userId);
-		return array_map(function (Actions $action) use ($actionSteps) {
-			$steps = array_values(array_filter($actionSteps, function (ActionStep $step) use ($action) {
-				return $step->getActionId() === $action->getId();
-			}));
+		return array_map(function (Actions $action) use ($actionSteps): \OCA\Mail\Db\Actions {
+			$steps = array_values(array_filter($actionSteps, fn (ActionStep $step): bool => $step->getActionId() === $action->getId()));
 			$action->setActionSteps($steps);
 			if (!empty($steps)) {
 				$action->setIcon($steps[0]->getName());
@@ -93,11 +90,7 @@ class QuickActionsService {
 	}
 
 	/**
-	 * @param string $name
-	 * @param int $order
-	 * @param int $actionId
 	 * @param string $parameter If the steps needs a parameter
-	 * @return ActionStep
 	 * @throws ServiceException
 	 */
 	public function createActionStep(string $name, int $order, int $actionId, ?int $tagId = null, ?int $mailboxId = null): ActionStep {
@@ -155,7 +148,7 @@ class QuickActionsService {
 			if ($highestOrderForAction !== null && $order !== $highestOrderForAction->getOrder() + 1) {
 				throw new ServiceException('Invalid action step order');
 			}
-		} catch (DoesNotExistException $th) {
+		} catch (DoesNotExistException) {
 			if ($order > 1) {
 				throw new ServiceException('Invalid action step order');
 			}

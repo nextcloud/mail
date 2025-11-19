@@ -29,10 +29,10 @@ use Psr\Container\ContainerInterface;
 class OutOfOfficeController extends Controller {
 	public function __construct(
 		IRequest $request,
-		private ContainerInterface $container,
-		private IUserSession $userSession,
-		private AccountService $accountService,
-		private OutOfOfficeService $outOfOfficeService,
+		private readonly ContainerInterface $container,
+		private readonly IUserSession $userSession,
+		private readonly AccountService $accountService,
+		private readonly OutOfOfficeService $outOfOfficeService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
 	}

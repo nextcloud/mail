@@ -18,8 +18,7 @@ class TrustedSenderServiceTest extends TestCase {
 	/** @var TrustedSenderMapper|MockObject */
 	private $mapper;
 
-	/** @var TrustedSenderService */
-	private $service;
+	private ?\OCA\Mail\Service\TrustedSenderService $service = null;
 
 	protected function setUp(): void {
 		$this->mapper = $this->createMock(TrustedSenderMapper::class);

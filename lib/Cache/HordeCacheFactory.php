@@ -15,9 +15,9 @@ use OCA\Mail\Db\MessageMapper;
 
 class HordeCacheFactory {
 	public function __construct(
-		private MailboxMapper $mailboxMapper,
-		private MessageMapper $messageMapper,
-		private HordeSyncTokenParser $syncTokenParser,
+		private readonly MailboxMapper $mailboxMapper,
+		private readonly MessageMapper $messageMapper,
+		private readonly HordeSyncTokenParser $syncTokenParser,
 	) {
 	}
 

@@ -12,7 +12,7 @@ namespace OCA\Mail\SetupChecks;
 class MicroTime {
 
 	public function getNumeric(): float {
-		return (float)microtime(true);
+		return microtime(true);
 	}
 
 }

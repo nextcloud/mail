@@ -16,15 +16,11 @@ class UserPreferenceService implements IUserPreferences {
 	/** @var IConfig */
 	private $config;
 
-	/**
-	 * @param IConfig $config
-	 */
 	public function __construct(IConfig $config) {
 		$this->config = $config;
 	}
 
 	/**
-	 * @param string $userId
 	 * @param string $key
 	 * @param mixed $value
 	 * @return mixed new value
@@ -36,7 +32,6 @@ class UserPreferenceService implements IUserPreferences {
 	}
 
 	/**
-	 * @param string $userId
 	 * @param string $key
 	 * @param mixed|null $default
 	 * @return string

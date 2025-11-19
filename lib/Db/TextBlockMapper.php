@@ -18,9 +18,6 @@ use OCP\IDBConnection;
  * @template-extends QBMapper<TextBlock>
  */
 class TextBlockMapper extends QBMapper {
-	/**
-	 * @param IDBConnection $db
-	 */
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'mail_text_blocks');
 	}

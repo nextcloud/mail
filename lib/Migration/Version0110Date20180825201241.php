@@ -20,22 +20,16 @@ class Version0110Date20180825201241 extends SimpleMigrationStep {
 	/** @var IDBConnection */
 	protected $connection;
 
-	/**
-	 * @param IDBConnection $connection
-	 */
 	public function __construct(IDBConnection $connection) {
 		$this->connection = $connection;
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param \Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array $options
 	 *
-	 * @return void
 	 */
 	#[\Override]
-	public function preSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
+	public function preSchemaChange(IOutput $output, \Closure $schemaClosure, array $options): void {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
@@ -79,9 +73,7 @@ class Version0110Date20180825201241 extends SimpleMigrationStep {
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param \Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array $options
 	 * @return null|ISchemaWrapper
 	 */
 	#[\Override]
@@ -100,9 +92,7 @@ class Version0110Date20180825201241 extends SimpleMigrationStep {
 	 * 	 * Insert collected addresses to new table
 	 * 	 *
 	 *
-	 * @param CollectedAddress $address
 	 *
-	 * @return void
 	 */
 	private function insertAddress(CollectedAddress $address): void {
 		$this->connection->getQueryBuilder()

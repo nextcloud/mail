@@ -27,43 +27,29 @@ use Psr\Log\LoggerInterface;
 use Throwable;
 
 class DraftsService {
-	private IMailTransmission $transmission;
-	private LocalMessageMapper $mapper;
-	private AttachmentService $attachmentService;
-	private IEventDispatcher $eventDispatcher;
-	private IMAPClientFactory $clientFactory;
-	private IMailManager $mailManager;
-	private LoggerInterface $logger;
-	private AccountService $accountService;
-	private ITimeFactory $time;
+	private readonly IEventDispatcher $eventDispatcher;
+	private readonly ITimeFactory $time;
 
-	public function __construct(IMailTransmission $transmission,
-		LocalMessageMapper $mapper,
-		AttachmentService $attachmentService,
+	public function __construct(
+		private readonly IMailTransmission $transmission,
+		private readonly LocalMessageMapper $mapper,
+		private readonly AttachmentService $attachmentService,
 		IEventDispatcher $eventDispatcher,
-		IMAPClientFactory $clientFactory,
-		IMailManager $mailManager,
-		LoggerInterface $logger,
-		AccountService $accountService,
-		ITimeFactory $time) {
-		$this->transmission = $transmission;
-		$this->mapper = $mapper;
-		$this->attachmentService = $attachmentService;
+		private readonly IMAPClientFactory $clientFactory,
+		private readonly IMailManager $mailManager,
+		private readonly LoggerInterface $logger,
+		private readonly AccountService $accountService,
+		ITimeFactory $time
+	) {
 		$this->eventDispatcher = $eventDispatcher;
-		$this->clientFactory = $clientFactory;
-		$this->mailManager = $mailManager;
-		$this->logger = $logger;
-		$this->accountService = $accountService;
 		$this->time = $time;
 	}
 
 	/**
-	 * @param array $recipients
-	 * @param int $type
 	 * @return Recipient[]
 	 */
 	private static function convertToRecipient(array $recipients, int $type): array {
-		return array_map(static function ($recipient) use ($type) {
+		return array_map(static function (array $recipient) use ($type): \OCA\Mail\Db\Recipient {
 			$r = new Recipient();
 			$r->setType($type);
 			$r->setLabel($recipient['label'] ?? $recipient['email']);
@@ -72,24 +58,15 @@ class DraftsService {
 		}, $recipients);
 	}
 
-	/**
-	 * @param string $userId
-	 * @param LocalMessage $message
-	 * @return void
-	 */
 	public function deleteMessage(string $userId, LocalMessage $message): void {
 		$this->attachmentService->deleteLocalMessageAttachments($userId, $message->getId());
 		$this->mapper->deleteWithRecipients($message);
 	}
 
 	/**
-	 * @param Account $account
-	 * @param LocalMessage $message
 	 * @param array<int, string[]> $to
 	 * @param array<int, string[]> $cc
 	 * @param array<int, string[]> $bcc
-	 * @param array $attachments
-	 * @return LocalMessage
 	 */
 	public function saveMessage(Account $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
@@ -125,13 +102,9 @@ class DraftsService {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param LocalMessage $message
 	 * @param array<int, string[]> $to
 	 * @param array<int, string[]> $cc
 	 * @param array<int, string[]> $bcc
-	 * @param array $attachments
-	 * @return LocalMessage
 	 */
 	public function updateMessage(Account $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
@@ -163,10 +136,6 @@ class DraftsService {
 
 	/**
 	 * "Send" the message
-	 *
-	 * @param LocalMessage $message
-	 * @param Account $account
-	 * @return void
 	 */
 	public function sendMessage(LocalMessage $message, Account $account): void {
 		try {
@@ -184,19 +153,13 @@ class DraftsService {
 
 	/**
 	 *
-	 * @param int $id
-	 * @param string $userId
-	 * @return LocalMessage
 	 * @throws DoesNotExistException
 	 */
 	public function getMessage(int $id, string $userId): LocalMessage {
 		return $this->mapper->findById($id, $userId, LocalMessage::TYPE_DRAFT);
 	}
 
-	/**
-	 * @return void
-	 */
-	public function flush() {
+	public function flush(): void {
 		$messages = $this->mapper->findDueDrafts($this->time->getTime());
 		if ($messages === []) {
 			return;
@@ -204,10 +167,10 @@ class DraftsService {
 
 		$accountIds = array_unique(array_map(static fn ($message) => $message->getAccountId(), $messages));
 
-		$accounts = array_combine($accountIds, array_map(function ($accountId) {
+		$accounts = array_combine($accountIds, array_map(function (int $accountId): ?\OCA\Mail\Account {
 			try {
 				return $this->accountService->findById($accountId);
-			} catch (DoesNotExistException $e) {
+			} catch (DoesNotExistException) {
 				// The message belongs to a deleted account
 				return null;
 			}

@@ -19,40 +19,33 @@ use Psr\Log\LoggerInterface;
 use function sprintf;
 
 class PreviewEnhancementProcessingJob extends TimedJob {
-	private IUserManager $userManager;
-	private AccountService $accountService;
-	private LoggerInterface $logger;
-	private IJobList $jobList;
-	private PreprocessingService $preprocessingService;
+	private readonly IUserManager $userManager;
+	private readonly IJobList $jobList;
 
-	public function __construct(ITimeFactory $time,
+	public function __construct(
+		ITimeFactory $time,
 		IUserManager $userManager,
-		AccountService $accountService,
-		PreprocessingService $preprocessingService,
-		LoggerInterface $logger,
-		IJobList $jobList) {
+		private readonly AccountService $accountService,
+		private readonly PreprocessingService $preprocessingService,
+		private readonly LoggerInterface $logger,
+		IJobList $jobList
+	) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;
-		$this->accountService = $accountService;
-		$this->logger = $logger;
 		$this->jobList = $jobList;
-		$this->preprocessingService = $preprocessingService;
 
 		$this->setInterval(3600);
 		$this->setTimeSensitivity(self::TIME_SENSITIVE);
 	}
 
-	/**
-	 * @return void
-	 */
 	#[\Override]
-	public function run($argument) {
+	public function run($argument): void {
 		$accountId = (int)$argument['accountId'];
 
 		try {
 			$account = $this->accountService->findById($accountId);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			$this->logger->debug('Could not find account <' . $accountId . '> removing from jobs');
 			$this->jobList->remove(self::class, $argument);
 			return;

@@ -20,18 +20,12 @@ use function array_map;
  * @template-extends QBMapper<Alias>
  */
 class AliasMapper extends QBMapper {
-	/**
-	 * @param IDBConnection $db
-	 */
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'mail_aliases');
 	}
 
 	/**
-	 * @param int $aliasId
-	 * @param string $currentUserId
 	 *
-	 * @return Alias
 	 * @throws DoesNotExistException
 	 */
 	public function find(int $aliasId, string $currentUserId): Alias {
@@ -68,8 +62,6 @@ class AliasMapper extends QBMapper {
 	}
 
 	/**
-	 * @param int $accountId
-	 * @param string $currentUserId
 	 *
 	 * @return list<Alias>
 	 */
@@ -90,8 +82,6 @@ class AliasMapper extends QBMapper {
 
 	/**
 	 * @param int $accountId the account whose aliases will be deleted
-	 *
-	 * @return void
 	 */
 	public function deleteAll($accountId): void {
 		$qb = $this->db->getQueryBuilder();
@@ -133,7 +123,7 @@ class AliasMapper extends QBMapper {
 			->leftJoin('a', 'mail_accounts', 'ac', $qb1->expr()->eq('a.account_id', 'ac.id'))
 			->where($qb1->expr()->isNull('ac.id'));
 		$result = $idsQuery->executeQuery();
-		$ids = array_map(static fn (array $row) => (int)$row['id'], $result->fetchAll());
+		$ids = array_map(static fn (array $row): int => (int)$row['id'], $result->fetchAll());
 		$result->closeCursor();
 
 		$qb2 = $this->db->getQueryBuilder();

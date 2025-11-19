@@ -18,9 +18,6 @@ use OCP\AppFramework\Http\DownloadResponse;
  * @todo spec template with 28+
  */
 class ProxyDownloadResponse extends DownloadResponse {
-	/** @var string */
-	private $content;
-
 	/**
 	 * Creates a response that prompts the user to download a file which
 	 * contains the passed string
@@ -31,10 +28,12 @@ class ProxyDownloadResponse extends DownloadResponse {
 	 * @param string $filename the name that the downloaded file should have
 	 * @param string $contentType the mimetype that the downloaded file should have
 	 */
-	public function __construct(string $content, string $filename, string $contentType) {
+	public function __construct(
+		private readonly string $content,
+		string $filename,
+		string $contentType
+	) {
 		parent::__construct($filename, $contentType);
-
-		$this->content = $content;
 
 		$now = (new DateTime('now'))->getTimestamp();
 		$expires = (new DateTime('now + 11 months'))->getTimestamp();

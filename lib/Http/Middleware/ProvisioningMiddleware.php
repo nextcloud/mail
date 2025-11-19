@@ -9,33 +9,25 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Http\Middleware;
 
-use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Middleware;
 use OCP\Authentication\Exceptions\CredentialsUnavailableException;
 use OCP\Authentication\Exceptions\PasswordUnavailableException;
-use OCP\Authentication\LoginCredentials\IStore as ICredentialStore;
 use OCP\IUserSession;
 
 class ProvisioningMiddleware extends Middleware {
 	/** @var IUserSession */
 	private $userSession;
 
-	/** @var ICredentialStore */
-	private $credentialStore;
-
-	/** @var ProvisioningManager */
-	private $provisioningManager;
-
-	public function __construct(IUserSession $userSession,
-		ICredentialStore $credentialStore,
-		ProvisioningManager $provisioningManager) {
+	public function __construct(
+		IUserSession $userSession,
+		private readonly \OCP\Authentication\LoginCredentials\IStore $credentialStore,
+		private readonly \OCA\Mail\Service\Provisioning\Manager $provisioningManager
+	) {
 		$this->userSession = $userSession;
-		$this->credentialStore = $credentialStore;
-		$this->provisioningManager = $provisioningManager;
 	}
 
 	#[\Override]
-	public function beforeController($controller, $methodName) {
+	public function beforeController($controller, $methodName): void {
 		$user = $this->userSession->getUser();
 		if ($user === null) {
 			// Nothing to update
@@ -53,7 +45,7 @@ class ProvisioningMiddleware extends Middleware {
 				$password,
 				$configs
 			);
-		} catch (CredentialsUnavailableException|PasswordUnavailableException $e) {
+		} catch (CredentialsUnavailableException|PasswordUnavailableException) {
 			// Nothing to update
 			return;
 		}

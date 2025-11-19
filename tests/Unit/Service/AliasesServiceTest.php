@@ -16,11 +16,9 @@ use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Db\DoesNotExistException;
 
 class AliasesServiceTest extends TestCase {
-	/** @var AliasesService */
-	private $service;
+	private ?\OCA\Mail\Service\AliasesService $service = null;
 
-	/** @var string */
-	private $user = 'herbert';
+	private string $user = 'herbert';
 
 	/** @var AliasMapper */
 	private $aliasMapper;
@@ -85,7 +83,7 @@ class AliasesServiceTest extends TestCase {
 
 		$this->aliasMapper->expects(self::once())
 			->method('insert')
-			->willReturnCallback(static function (Alias $alias) {
+			->willReturnCallback(static function (Alias $alias): \OCA\Mail\Db\Alias {
 				$alias->setId(100);
 				return $alias;
 			});

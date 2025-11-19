@@ -12,23 +12,21 @@ use OCA\Mail\Folder;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class FolderTest extends TestCase {
-	/** @var int */
-	private $accountId;
+	private ?int $accountId = null;
 
 	/** @var Horde_Imap_Client_Mailbox|PHPUnit_Framework_MockObject_MockObject */
 	private $mailbox;
 
-	/** @var Folder */
-	private $folder;
+	private ?\OCA\Mail\Folder $folder = null;
 
-	private function mockFolder(array $attributes = [], $delimiter = '.') {
+	private function mockFolder(array $attributes = [], ?string $delimiter = '.'): void {
 		$this->accountId = 15;
 		$this->mailbox = $this->createMock(Horde_Imap_Client_Mailbox::class);
 
 		$this->folder = new Folder($this->accountId, $this->mailbox, $attributes, $delimiter, []);
 	}
 
-	public function testGetMailbox() {
+	public function testGetMailbox(): void {
 		$this->mockFolder();
 		$this->mailbox->expects($this->once())
 			->method('__get')
@@ -38,7 +36,7 @@ class FolderTest extends TestCase {
 		$this->assertSame('Sent', $this->folder->getMailbox());
 	}
 
-	public function testGetDelimiter() {
+	public function testGetDelimiter(): void {
 		$this->mockFolder([], ',');
 
 		$this->assertSame(',', $this->folder->getDelimiter());
@@ -50,13 +48,13 @@ class FolderTest extends TestCase {
 		$this->assertNull($this->folder->getDelimiter());
 	}
 
-	public function testGetAttributes() {
+	public function testGetAttributes(): void {
 		$this->mockFolder(['\noselect']);
 
 		$this->assertSame(['\noselect'], $this->folder->getAttributes());
 	}
 
-	public function testSetStatus() {
+	public function testSetStatus(): void {
 		$this->mockFolder();
 
 		$this->folder->setStatus([
@@ -66,7 +64,7 @@ class FolderTest extends TestCase {
 		$this->addToAssertionCount(1);
 	}
 
-	public function testSpecialUse() {
+	public function testSpecialUse(): void {
 		$this->mockFolder();
 
 		$this->folder->addSpecialUse('flagged');

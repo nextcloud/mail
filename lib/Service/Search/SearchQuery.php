@@ -10,63 +10,54 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Search;
 
 class SearchQuery {
-	/** @var int|null */
-	private $cursor;
+	private ?int $cursor = null;
 
 	private bool $threaded = true;
 
 	/** @var Flag[] */
-	private $flags = [];
+	private array $flags = [];
 
 	/** @var FlagExpression[] */
-	private $flagExpressions = [];
+	private array $flagExpressions = [];
 
 	/** @var string[] */
-	private $to = [];
+	private array $to = [];
 
 	/** @var string[] */
-	private $from = [];
+	private array $from = [];
 
 	/** @var string[] */
-	private $cc = [];
+	private array $cc = [];
 
 	/** @var string[] */
-	private $bcc = [];
+	private array $bcc = [];
 
 	/** @var string[] */
-	private $subjects = [];
+	private array $subjects = [];
 
 	/** @var string[] */
-	private $bodies = [];
+	private array $bodies = [];
 
 	/** @var array[] */
-	private $tags = [];
+	private array $tags = [];
 
-	/** @var string|null */
-	private $start;
+	private ?string $start = null;
 
-	/** @var string|null */
-	private $end;
+	private ?string $end = null;
 
-	/** @var bool */
-	private $hasAttachments = false;
+	private bool $hasAttachments = false;
 
-	/** @var bool */
-	private $mentionsMe = false;
+	private bool $mentionsMe = false;
 
 	private string $match = 'allof';
 
 	/**
-	 * @return int|null
 	 * @psalm-mutation-free
 	 */
 	public function getCursor(): ?int {
 		return $this->cursor;
 	}
 
-	/**
-	 * @param int $cursor
-	 */
 	public function setCursor(int $cursor): void {
 		$this->cursor = $cursor;
 	}
@@ -171,8 +162,6 @@ class SearchQuery {
 
 	/**
 	 * Get tags to search query
-	 *
-	 * @return array
 	 */
 	public function getTags(): array {
 		return $this->tags;
@@ -180,9 +169,6 @@ class SearchQuery {
 
 	/**
 	 * Set tags to search query
-	 *
-	 * @param array $tags
-	 * @return void
 	 */
 	public function setTags(array $tags): void {
 		$this->tags = $tags;
@@ -190,8 +176,6 @@ class SearchQuery {
 
 	/**
 	 * Get start date to search query
-	 *
-	 * @return string|null
 	 */
 	public function getStart(): ?string {
 		return $this->start;
@@ -199,9 +183,6 @@ class SearchQuery {
 
 	/**
 	 * Set start date to search query
-	 *
-	 * @param string $start
-	 * @return void
 	 */
 	public function setStart(string $start): void {
 		$this->start = $start;
@@ -209,8 +190,6 @@ class SearchQuery {
 
 	/**
 	 * Get start date to search query
-	 *
-	 * @return string|null
 	 */
 	public function getEnd(): ?string {
 		return $this->end;
@@ -218,32 +197,22 @@ class SearchQuery {
 
 	/**
 	 * Set end date to search query
-	 *
-	 * @param string $end
-	 * @return void
 	 */
 	public function setEnd(string $end): void {
 		$this->end = $end;
 	}
 
 	/**
-	 * @return bool|null
 	 * @psalm-mutation-free
 	 */
 	public function getHasAttachments(): ?bool {
 		return $this->hasAttachments;
 	}
 
-	/**
-	 * @param bool $hasAttachments
-	 */
 	public function setHasAttachments(bool $hasAttachments): void {
 		$this->hasAttachments = $hasAttachments;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function getMentionsMe(): bool {
 		return $this->mentionsMe;
 	}

@@ -17,7 +17,6 @@ use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use OCA\Mail\Exception\MailboxDoesNotSupportModSequencesException;
 use OCA\Mail\Exception\UidValidityChangedException;
-use OCA\Mail\IMAP\MessageMapper;
 use function array_merge;
 use function OCA\Mail\chunk_uid_sequence;
 
@@ -31,22 +30,16 @@ class Synchronizer {
 	 */
 	private const UID_CHUNK_MAX_BYTES = 10000;
 
-	/** @var MessageMapper */
-	private $messageMapper;
-
 	private ?string $requestId = null;
 	private ?Response $response = null;
 
-	public function __construct(MessageMapper $messageMapper) {
-		$this->messageMapper = $messageMapper;
+	public function __construct(
+		private readonly \OCA\Mail\IMAP\MessageMapper $messageMapper
+	) {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Base $imapClient
-	 * @param Request $request
-	 * @param int $criteria
 	 *
-	 * @return Response
 	 * @throws Horde_Imap_Client_Exception
 	 * @throws Horde_Imap_Client_Exception_Sync
 	 * @throws UidValidityChangedException
@@ -86,7 +79,7 @@ class Synchronizer {
 		$vanishedMessageUids = $vanishedUids;
 
 		$this->requestId = $request->getId();
-		$this->response = new Response($newMessages, $changedMessages, $vanishedMessageUids, null);
+		$this->response = new Response($newMessages, $changedMessages, $vanishedMessageUids);
 		return $this->response;
 	}
 
@@ -133,28 +126,16 @@ class Synchronizer {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Base $imapClient
-	 * @param Horde_Imap_Client_Mailbox $mailbox
-	 * @param Request $request
 	 *
-	 * @return array
 	 * @throws Horde_Imap_Client_Exception
 	 * @throws Horde_Imap_Client_Exception_Sync
 	 */
 	private function getNewMessageUids(Horde_Imap_Client_Base $imapClient, Horde_Imap_Client_Mailbox $mailbox, Request $request): array {
-		$newUids = $imapClient->sync($mailbox, $request->getToken(), [
+		return $imapClient->sync($mailbox, $request->getToken(), [
 			'criteria' => Horde_Imap_Client::SYNC_NEWMSGSUIDS,
 		])->newmsgsuids->ids;
-		return $newUids;
 	}
 
-	/**
-	 * @param Horde_Imap_Client_Base $imapClient
-	 * @param Horde_Imap_Client_Mailbox $mailbox
-	 * @param Request $request
-	 *
-	 * @return array
-	 */
 	private function getChangedMessageUids(Horde_Imap_Client_Base $imapClient, Horde_Imap_Client_Mailbox $mailbox, Request $request): array {
 		// Without QRESYNC we need to specify the known ids and in oder to avoid
 		// overly long IMAP commands they have to be chunked.
@@ -170,13 +151,6 @@ class Synchronizer {
 		);
 	}
 
-	/**
-	 * @param Horde_Imap_Client_Base $imapClient
-	 * @param Horde_Imap_Client_Mailbox $mailbox
-	 * @param Request $request
-	 *
-	 * @return array
-	 */
 	private function getVanishedMessageUids(Horde_Imap_Client_Base $imapClient, Horde_Imap_Client_Mailbox $mailbox, Request $request): array {
 		// Without QRESYNC we need to specify the known ids and in oder to avoid
 		// overly long IMAP commands they have to be chunked.

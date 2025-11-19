@@ -19,15 +19,12 @@ use OCP\Migration\SimpleMigrationStep;
 class Version3500Date20231115182612 extends SimpleMigrationStep {
 
 	public function __construct(
-		private IDBConnection $connection,
+		private readonly IDBConnection $connection,
 	) {
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure(): ISchemaWrapper $schemaClosure
-	 * @param array $options
-	 * @return null|ISchemaWrapper
 	 */
 	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
@@ -42,9 +39,7 @@ class Version3500Date20231115182612 extends SimpleMigrationStep {
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure(): ISchemaWrapper $schemaClosure
-	 * @param array $options
 	 */
 	#[\Override]
 	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
@@ -82,7 +77,7 @@ class Version3500Date20231115182612 extends SimpleMigrationStep {
 			$queryCount++;
 
 			$updateQb->setParameter('id', $row['id']);
-			$updateQb->setParameter('name_hash', md5($row['name']));
+			$updateQb->setParameter('name_hash', md5((string)$row['name']));
 			$updateQb->executeStatement();
 
 			if ($queryCount === 50000) {

@@ -30,11 +30,11 @@ class NewMessagesClassifier {
 	];
 
 	public function __construct(
-		private ImportanceClassifier $classifier,
-		private TagMapper $tagMapper,
-		private LoggerInterface $logger,
-		private IMailManager $mailManager,
-		private ClassificationSettingsService $classificationSettingsService,
+		private readonly ImportanceClassifier $classifier,
+		private readonly TagMapper $tagMapper,
+		private readonly LoggerInterface $logger,
+		private readonly IMailManager $mailManager,
+		private readonly ClassificationSettingsService $classificationSettingsService,
 	) {
 	}
 
@@ -47,10 +47,6 @@ class NewMessagesClassifier {
 	 * This is up to the caller (e.g. MessageMapper->insertBulk()).
 	 *
 	 * @param Message[] $messages
-	 * @param Mailbox $mailbox
-	 * @param Account $account
-	 * @param Tag $importantTag
-	 * @return void
 	 */
 	public function classifyNewMessages(
 		array $messages,
@@ -75,7 +71,7 @@ class NewMessagesClassifier {
 			$account->getUserId(),
 			Tag::LABEL_IMPORTANT
 		);
-		$messages = array_filter($messages, static fn ($message) => $message->getFlagImportant() === false || in_array($message->getMessageId(), $doNotReclassify, true));
+		$messages = array_filter($messages, static fn (\OCA\Mail\Db\Message $message): bool => $message->getFlagImportant() === false || in_array($message->getMessageId(), $doNotReclassify, true));
 
 		try {
 			$predictions = $this->classifier->classifyImportance(

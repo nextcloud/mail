@@ -25,30 +25,16 @@ use function filter_var;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class MicrosoftIntegrationController extends Controller {
-	private ?string $userId;
-	private AccountService $accountService;
-	private MicrosoftIntegration $microsoftIntegration;
-	private LoggerInterface $logger;
-
-	public function __construct(IRequest $request,
-		?string $UserId,
-		AccountService $accountService,
-		MicrosoftIntegration $microsoftIntegration,
-		LoggerInterface $logger) {
+	public function __construct(
+		IRequest $request,
+		private readonly ?string $userId,
+		private readonly AccountService $accountService,
+		private readonly MicrosoftIntegration $microsoftIntegration,
+		private readonly LoggerInterface $logger
+	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->userId = $UserId;
-		$this->accountService = $accountService;
-		$this->microsoftIntegration = $microsoftIntegration;
-		$this->logger = $logger;
 	}
 
-	/**
-	 * @param string|null $tenantId
-	 * @param string $clientId
-	 * @param string $clientSecret
-	 *
-	 * @return JsonResponse
-	 */
 	public function configure(?string $tenantId, string $clientId, string $clientSecret): JsonResponse {
 		if (empty($clientId) || empty($clientSecret)) {
 			return JsonResponse::fail(null, Http::STATUS_UNPROCESSABLE_ENTITY);
@@ -75,15 +61,10 @@ class MicrosoftIntegrationController extends Controller {
 	}
 
 	/**
-	 * @param string|null $code
-	 * @param string|null $state
-	 * @param string|null $session_state
-	 * @param string|null $error
 	 *
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @return Response
 	 */
 	public function oauthRedirect(?string $code, ?string $state, ?string $session_state, ?string $error): Response {
 		if ($this->userId === null) {

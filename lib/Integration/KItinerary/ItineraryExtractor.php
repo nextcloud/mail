@@ -10,38 +10,19 @@ declare(strict_types=1);
 namespace OCA\Mail\Integration\KItinerary;
 
 use Nextcloud\KItinerary\Adapter;
-use Nextcloud\KItinerary\Bin\BinaryAdapter;
 use Nextcloud\KItinerary\Exception\KItineraryRuntimeException;
-use Nextcloud\KItinerary\Flatpak\FlatpakAdapter;
 use Nextcloud\KItinerary\Itinerary;
 use Nextcloud\KItinerary\ItineraryExtractor as Extractor;
-use Nextcloud\KItinerary\Sys\SysAdapter;
-use Psr\Log\LoggerInterface;
 
 class ItineraryExtractor {
-	/** @var BinaryAdapter */
-	private $binAdapter;
+	private \Nextcloud\KItinerary\Adapter|bool|null $adapter = null;
 
-	/** @var FlatpakAdapter */
-	private $flatpakAdapter;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var SysAdapter */
-	private $sysAdapter;
-
-	/** @var Adapter */
-	private $adapter;
-
-	public function __construct(BinaryAdapter $binAdapter,
-		FlatpakAdapter $flatpakAdapter,
-		SysAdapter $sysAdapter,
-		LoggerInterface $logger) {
-		$this->binAdapter = $binAdapter;
-		$this->flatpakAdapter = $flatpakAdapter;
-		$this->sysAdapter = $sysAdapter;
-		$this->logger = $logger;
+	public function __construct(
+		private readonly \Nextcloud\KItinerary\Bin\BinaryAdapter $binAdapter,
+		private readonly \Nextcloud\KItinerary\Flatpak\FlatpakAdapter $flatpakAdapter,
+		private readonly \Nextcloud\KItinerary\Sys\SysAdapter $sysAdapter,
+		private readonly \Psr\Log\LoggerInterface $logger
+	) {
 	}
 
 	private function findAvailableAdapter(): ?Adapter {

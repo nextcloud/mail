@@ -27,14 +27,12 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class ThreadControllerTest extends TestCase {
-	/** @var string */
-	private $appName;
+	private ?string $appName = null;
 
 	/** @var IRequest|MockObject */
 	private $request;
 
-	/** @var string */
-	private $userId;
+	private ?string $userId = null;
 
 	/** @var AccountService|MockObject */
 	private $accountService;
@@ -48,8 +46,7 @@ class ThreadControllerTest extends TestCase {
 	/** @var AiIntegrationsService|MockObject */
 	private $aiIntergrationsService;
 
-	/** @var ThreadController */
-	private $controller;
+	private ?\OCA\Mail\Controller\ThreadController $controller = null;
 
 	/** @var LoggerInterface|MockObject */
 	private $logger;
@@ -78,7 +75,7 @@ class ThreadControllerTest extends TestCase {
 		);
 	}
 
-	public function testMoveForbidden() {
+	public function testMoveForbidden(): void {
 		$this->mailManager
 			->method('getMessage')
 			->willThrowException(new DoesNotExistException('for some reason there is no such record'));

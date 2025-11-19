@@ -19,7 +19,7 @@ class AutoCompleteServiceTest extends TestCase {
 	private $contactsIntegration;
 	private $groupsIntegration;
 	private $addressCollector;
-	private $service;
+	private ?\OCA\Mail\Service\AutoCompletion\AutoCompleteService $service = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -33,7 +33,7 @@ class AutoCompleteServiceTest extends TestCase {
 			$this->addressCollector);
 	}
 
-	public function testFindMatches() {
+	public function testFindMatches(): void {
 		$term = 'jo';
 
 		$contactsResult = [

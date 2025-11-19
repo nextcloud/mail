@@ -28,7 +28,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class MessageSendTest extends TestCase {
 
-	private IConfig&MockObject $config;
 	private ITimeFactory&MockObject $time;
 	private AccountService&MockObject $accountService;
 	private OutboxService&MockObject $outboxService;

@@ -16,7 +16,6 @@ use OCP\IConfig;
 use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
-use Psr\Log\LoggerInterface;
 
 /**
  * @codeCoverageIgnore
@@ -28,20 +27,17 @@ class Version3500Date20231005091430 extends SimpleMigrationStep {
 	/** @var IDBConnection */
 	protected $connection;
 
-	/** @var LoggerInterface */
-	protected $logger;
-
-	public function __construct(IConfig $config, IDBConnection $connection, LoggerInterface $logger) {
+	public function __construct(
+		IConfig $config,
+		IDBConnection $connection,
+		protected \Psr\Log\LoggerInterface $logger
+	) {
 		$this->config = $config;
 		$this->connection = $connection;
-		$this->logger = $logger;
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array $options
-	 * @return null|ISchemaWrapper
 	 */
 	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {

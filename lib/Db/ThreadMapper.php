@@ -44,7 +44,7 @@ class ThreadMapper extends QBMapper {
 		}
 
 		$result = $qb->executeQuery();
-		$rows = array_map(static fn (array $row) => [
+		$rows = array_map(static fn (array $row): array => [
 			'messageUid' => (int)$row[0],
 			'mailboxName' => (string)$row[1]
 		], $result->fetchAll(\PDO::FETCH_NUM));
@@ -94,7 +94,7 @@ class ThreadMapper extends QBMapper {
 			);
 
 		$result = $qb->executeQuery();
-		$rows = array_map(static fn (array $row) => [
+		$rows = array_map(static fn (array $row): array => [
 			'id' => (int)$row[0],
 		], $result->fetchAll(\PDO::FETCH_NUM));
 		$result->closeCursor();

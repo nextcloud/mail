@@ -11,14 +11,11 @@ namespace OCA\Mail\Service;
 
 use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Db\Message;
-use OCA\Mail\Db\TrustedSenderMapper;
 
 class TrustedSenderService implements ITrustedSenderService {
-	/** @var TrustedSenderMapper */
-	private $mapper;
-
-	public function __construct(TrustedSenderMapper $mapper) {
-		$this->mapper = $mapper;
+	public function __construct(
+		private readonly \OCA\Mail\Db\TrustedSenderMapper $mapper
+	) {
 	}
 
 	#[\Override]

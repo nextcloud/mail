@@ -12,7 +12,6 @@ namespace OCA\Mail\Command;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\TagMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -22,24 +21,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class AddMissingTags extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 
-	private LoggerInterface $logger;
-	private TagMapper $tagMapper;
-	private MailAccountMapper $mapper;
-
-	public function __construct(MailAccountMapper $mapper,
-		TagMapper $tagMapper,
-		LoggerInterface $logger) {
+	public function __construct(
+		private readonly MailAccountMapper $mapper,
+		private readonly TagMapper $tagMapper
+	) {
 		parent::__construct();
-
-		$this->mapper = $mapper;
-		$this->tagMapper = $tagMapper;
-		$this->logger = $logger;
 	}
 
-	/**
-	 * @return void
-	 */
-	protected function configure() {
+	protected function configure(): void {
 		$this->setName('mail:repair:tags');
 		$this->setDescription('Create default tags for account. If no account ID given, all tag entries will be repaired');
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::OPTIONAL);
@@ -60,7 +49,7 @@ final class AddMissingTags extends Command {
 				$account = $this->mapper->findById($accountId);
 				$accounts = [$account];
 				$output->writeLn('<info>Found account with email: ' . $account->getEmail() . '</info>');
-			} catch (DoesNotExistException $e) {
+			} catch (DoesNotExistException) {
 				$output->writeLn('<info>This account does not exist</info>');
 			}
 		}

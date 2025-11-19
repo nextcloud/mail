@@ -75,7 +75,6 @@ class InternalAddressMapper extends QBMapper {
 	}
 
 	/**
-	 * @param string $uid
 	 * @return InternalAddress[]
 	 */
 	public function findAll(string $uid): array {
@@ -96,7 +95,7 @@ class InternalAddressMapper extends QBMapper {
 			);
 		try {
 			return $this->findEntity($select);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return null;
 		}
 	}

@@ -48,12 +48,10 @@ class MailboxSyncTest extends TestCase {
 	/** @var TimeFactory|MockObject */
 	private $timeFactory;
 
-	/** @var MailboxSync */
-	private $sync;
+	private ?\OCA\Mail\IMAP\MailboxSync $sync = null;
 
 	/** @var IEventDispatcher|MockObject */
 	private $dispatcher;
-	/** @var IDBConnection|(IDBConnection&MockObject)|MockObject */
 	private IDBConnection|MockObject $dbConnection;
 
 	protected function setUp(): void {
@@ -78,7 +76,7 @@ class MailboxSyncTest extends TestCase {
 		);
 	}
 
-	public function testSyncSkipped() {
+	public function testSyncSkipped(): void {
 		$account = $this->createMock(Account::class);
 		$mailAccount = new MailAccount();
 		$mailAccount->setLastMailboxSync(100000 - 2000);

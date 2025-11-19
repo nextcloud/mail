@@ -38,8 +38,7 @@ class AttachmentServiceTest extends TestCase {
 	/** @var AttachmentStorage|MockObject */
 	private $storage;
 
-	/** @var AttachmentService */
-	private $service;
+	private ?\OCA\Mail\Service\Attachment\AttachmentService $service = null;
 
 	/** @var Folder|MockObject */
 	private $userFolder;
@@ -73,7 +72,7 @@ class AttachmentServiceTest extends TestCase {
 		);
 	}
 
-	public function testAddFileWithUploadException() {
+	public function testAddFileWithUploadException(): void {
 		$userId = 'jan';
 		$uploadedFile = $this->createMock(UploadedFile::class);
 		$uploadedFile->expects($this->once())
@@ -105,7 +104,7 @@ class AttachmentServiceTest extends TestCase {
 		$this->service->addFile($userId, $uploadedFile);
 	}
 
-	public function testAddFile() {
+	public function testAddFile(): void {
 		$userId = 'jan';
 		$uploadedFile = $this->createMock(UploadedFile::class);
 		$uploadedFile->expects($this->once())
@@ -132,7 +131,7 @@ class AttachmentServiceTest extends TestCase {
 		$this->service->addFile($userId, $uploadedFile);
 	}
 
-	public function testAddFileFromStringWithUploadException() {
+	public function testAddFileFromStringWithUploadException(): void {
 		$userId = 'jan';
 		$attachment = LocalAttachment::fromParams([
 			'userId' => $userId,
@@ -162,7 +161,7 @@ class AttachmentServiceTest extends TestCase {
 		$this->service->addFileFromString($userId, 'cat.jpg', 'image/jpg', 'sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds');
 	}
 
-	public function testAddFileFromString() {
+	public function testAddFileFromString(): void {
 		$userId = 'jan';
 		$attachment = LocalAttachment::fromParams([
 			'userId' => $userId,

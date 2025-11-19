@@ -16,19 +16,12 @@ use OCA\Mail\Service\PhishingDetection\PhishingDetectionService;
 use OCA\Mail\Service\SmimeService;
 
 class ImapMessageFetcherFactory {
-	private Html $htmlService;
-	private SmimeService $smimeService;
-	private Converter $charsetConverter;
-	private PhishingDetectionService $phishingDetectionService;
-
-	public function __construct(Html $htmlService,
-		SmimeService $smimeService,
-		Converter $charsetConverter,
-		PhishingDetectionService $phishingDetectionService) {
-		$this->htmlService = $htmlService;
-		$this->smimeService = $smimeService;
-		$this->charsetConverter = $charsetConverter;
-		$this->phishingDetectionService = $phishingDetectionService;
+	public function __construct(
+		private readonly Html $htmlService,
+		private readonly SmimeService $smimeService,
+		private readonly Converter $charsetConverter,
+		private readonly PhishingDetectionService $phishingDetectionService
+	) {
 	}
 
 	public function build(int $uid,

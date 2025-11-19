@@ -73,7 +73,6 @@ class TrustedSenderMapper extends QBMapper {
 	}
 
 	/**
-	 * @param string $uid
 	 * @return TrustedSender[]
 	 */
 	public function findAll(string $uid): array {

@@ -44,7 +44,7 @@ class Caching {
 		} catch (Throwable) {
 			// 31 and older constructor
 			$cacheFactory = new Factory(
-				static fn () => 'mail-integration-tests',
+				static fn (): string => 'mail-integration-tests',
 				Server::get(LoggerInterface::class),
 				Server::get(IProfiler::class),
 				$config->getSystemValue('memcache.local', null),

@@ -34,25 +34,20 @@ final class CreateAccount extends Command {
 	public const ARGUMENT_SMTP_SSL_MODE = 'smtp-ssl-mode';
 	public const ARGUMENT_SMTP_USER = 'smtp-user';
 	public const ARGUMENT_SMTP_PASSWORD = 'smtp-password';
+	private readonly ICrypto $crypto;
+	private readonly IUserManager $userManager;
 
-	private AccountService $accountService;
-	private ICrypto $crypto;
-	private IUserManager $userManager;
-
-	public function __construct(AccountService $service,
+	public function __construct(
+		private readonly AccountService $accountService,
 		ICrypto $crypto,
-		IUserManager $userManager) {
+		IUserManager $userManager
+	) {
 		parent::__construct();
-
-		$this->accountService = $service;
 		$this->crypto = $crypto;
 		$this->userManager = $userManager;
 	}
 
-	/**
-	 * @return void
-	 */
-	protected function configure() {
+	protected function configure(): void {
 		$this->setName('mail:account:create');
 		$this->setDescription('creates IMAP account');
 		$this->addArgument(self::ARGUMENT_USER_ID, InputArgument::REQUIRED);

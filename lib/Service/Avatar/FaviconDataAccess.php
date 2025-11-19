@@ -16,7 +16,7 @@ use function array_merge;
 class FaviconDataAccess extends DataAccess {
 
 	public function __construct(
-		private IClientService $clientService,
+		private readonly IClientService $clientService,
 	) {
 	}
 
@@ -28,7 +28,7 @@ class FaviconDataAccess extends DataAccess {
 		$client = $this->clientService->newClient();
 		try {
 			$response = $client->get($url);
-		} catch (Exception $e) {
+		} catch (Exception) {
 			// Ignore any error, like the parent method
 			return false;
 		}
@@ -41,7 +41,7 @@ class FaviconDataAccess extends DataAccess {
 	 * @psalm-return array{0: mixed|string,...}|false
 	 */
 	#[\Override]
-	public function retrieveHeader($url) {
+	public function retrieveHeader($url): false|array {
 		$client = $this->clientService->newClient();
 		try {
 			$response = $client->get($url, [
@@ -49,7 +49,7 @@ class FaviconDataAccess extends DataAccess {
 					'max' => 1,
 				],
 			]);
-		} catch (Exception $e) {
+		} catch (Exception) {
 			// Ignore any error, like the parent method
 			return false;
 		}

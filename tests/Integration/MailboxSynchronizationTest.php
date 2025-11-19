@@ -30,8 +30,7 @@ class MailboxSynchronizationTest extends TestCase {
 	use ImapTest,
 		ImapTestAccount;
 
-	/** @var MailboxesController */
-	private $foldersController;
+	private ?\OCA\Mail\Controller\MailboxesController $foldersController = null;
 
 	/** @var \OCA\Mail\Db\MailAccount */
 	private $account;
@@ -62,7 +61,7 @@ class MailboxSynchronizationTest extends TestCase {
 		$this->client->logout();
 	}
 
-	public function testSyncEmptyMailbox() {
+	public function testSyncEmptyMailbox(): void {
 		/** @var IMailManager $mailManager */
 		$mailManager = Server::get(IMailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($this->account));
@@ -86,8 +85,7 @@ class MailboxSynchronizationTest extends TestCase {
 
 		$jsonResponse = $this->foldersController->sync(
 			$inbox->getId(),
-			[],
-			null
+			[]
 		);
 
 		$data = $jsonResponse->getData()->jsonSerialize();
@@ -100,7 +98,7 @@ class MailboxSynchronizationTest extends TestCase {
 		self::assertEmpty($data['vanishedMessages']);
 	}
 
-	public function testSyncNewMessage() {
+	public function testSyncNewMessage(): void {
 		/** @var SyncService $syncService */
 		$syncService = Server::get(SyncService::class);
 		/** @var IMailManager $mailManager */
@@ -130,8 +128,7 @@ class MailboxSynchronizationTest extends TestCase {
 
 		$jsonResponse = $this->foldersController->sync(
 			$inbox->getId(),
-			[],
-			null
+			[]
 		);
 
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
@@ -142,7 +139,7 @@ class MailboxSynchronizationTest extends TestCase {
 		self::assertCount(0, $syncJson['vanishedMessages']);
 	}
 
-	public function testSyncChangedMessage() {
+	public function testSyncChangedMessage(): void {
 		/** @var SyncService $syncService */
 		$syncService = Server::get(SyncService::class);
 		$mailbox = 'INBOX';
@@ -176,8 +173,7 @@ class MailboxSynchronizationTest extends TestCase {
 			$inbox->getId(),
 			[
 				$id
-			],
-			null);
+			]);
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
 		self::assertCount(0, $syncJson['newMessages']);
@@ -185,7 +181,7 @@ class MailboxSynchronizationTest extends TestCase {
 		self::assertCount(0, $syncJson['vanishedMessages']);
 	}
 
-	public function testSyncVanishedMessage() {
+	public function testSyncVanishedMessage(): void {
 		$mailbox = 'INBOX';
 		$message = $this->getMessageBuilder()
 			->from('ralph@buffington@domain.tld')
@@ -218,8 +214,7 @@ class MailboxSynchronizationTest extends TestCase {
 			$inbox->getId(),
 			[
 				$uid // This will only work if UID and database ID are equal (1 on a clean setup), otherwise this fails
-			],
-			null);
+			]);
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
 		self::assertCount(0, $syncJson['newMessages']);
@@ -228,7 +223,7 @@ class MailboxSynchronizationTest extends TestCase {
 		//		self::assertCount(1, $syncJson['vanishedMessages'], 'Message does not show as vanished, possibly because UID and ID are mixed up above.');
 	}
 
-	public function testUnsolicitedVanishedMessage() {
+	public function testUnsolicitedVanishedMessage(): void {
 		$mailbox = 'INBOX';
 		$message = $this->getMessageBuilder()
 			->from('ralph@buffington@domain.tld')

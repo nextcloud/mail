@@ -10,58 +10,22 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Contracts\IAvatarService;
-use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Service\Avatar\Avatar;
-use OCA\Mail\Service\Avatar\AvatarFactory;
-use OCA\Mail\Service\Avatar\Cache as AvatarCache;
-use OCA\Mail\Service\Avatar\CompositeAvatarSource;
-use OCA\Mail\Service\Avatar\Downloader;
 
 class AvatarService implements IAvatarService {
-	/** @var AvatarCache */
-	private $cache;
-
-	/** @var Downloader */
-	private $downloader;
-
-	/** @var CompositeAvatarSource */
-	private $source;
-
-	/** @var AvatarFactory */
-	private $avatarFactory;
-
-	/** @var IUserPreferences */
-	private $preferences;
-
-	/**
-	 * @param CompositeAvatarSource $source
-	 * @param Downloader $downloader
-	 * @param AvatarCache $cache
-	 * @param AvatarFactory $avatarFactory
-	 * @param IUserPreferences $preferences
-	 */
-	public function __construct(CompositeAvatarSource $source,
-		Downloader $downloader,
-		AvatarCache $cache,
-		AvatarFactory $avatarFactory,
-		IUserPreferences $preferences) {
-		$this->source = $source;
-		$this->cache = $cache;
-		$this->downloader = $downloader;
-		$this->avatarFactory = $avatarFactory;
-		$this->preferences = $preferences;
+	public function __construct(
+		private readonly \OCA\Mail\Service\Avatar\CompositeAvatarSource $source,
+		private readonly \OCA\Mail\Service\Avatar\Downloader $downloader,
+		private readonly \OCA\Mail\Service\Avatar\Cache $cache,
+		private readonly \OCA\Mail\Service\Avatar\AvatarFactory $avatarFactory,
+		private readonly \OCA\Mail\Contracts\IUserPreferences $preferences
+	) {
 	}
 
-	/**
-	 * @return bool
-	 */
 	private function externalAvatarsAllowed(string $uid): bool {
 		return $this->preferences->getPreference($uid, 'external-avatars', 'true') === 'true';
 	}
 
-	/**
-	 * @param Avatar $avatar
-	 */
 	private function hasAllowedMime(Avatar $avatar): bool {
 		if ($avatar->isExternal()) {
 			$mime = $avatar->getMime();
@@ -83,11 +47,6 @@ class AvatarService implements IAvatarService {
 		return $this->cache->get($email, $uid);
 	}
 
-	/**
-	 * @param string $email
-	 * @param string $uid
-	 * @return Avatar|null
-	 */
 	#[\Override]
 	public function getAvatar(string $email, string $uid): ?Avatar {
 		$cachedAvatar = $this->cache->get($email, $uid);
@@ -115,12 +74,10 @@ class AvatarService implements IAvatarService {
 	}
 
 	/**
-	 * @param string $email
-	 * @param string $uid
 	 * @return array|null image data
 	 */
 	#[\Override]
-	public function getAvatarImage(string $email, string $uid) {
+	public function getAvatarImage(string $email, string $uid): ?array {
 		$avatar = $this->getAvatar($email, $uid);
 		if (is_null($avatar)) {
 			return null;

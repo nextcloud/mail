@@ -14,10 +14,9 @@ use OCA\Mail\Db\InternalAddress;
 use OCA\Mail\Db\InternalAddressMapper;
 
 class InternalAddressService implements IInternalAddressService {
-	private InternalAddressMapper $mapper;
-
-	public function __construct(InternalAddressMapper $mapper) {
-		$this->mapper = $mapper;
+	public function __construct(
+		private readonly InternalAddressMapper $mapper
+	) {
 	}
 
 	#[\Override]

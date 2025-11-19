@@ -26,7 +26,6 @@ use Rubix\ML\Transformers\TfIdfTransformer;
 use Rubix\ML\Transformers\Transformer;
 use Rubix\ML\Transformers\WordCountVectorizer;
 use RuntimeException;
-use function get_class;
 
 class PersistenceService {
 	// Increment the version when changing the classifier or transformer pipeline
@@ -117,7 +116,7 @@ class PersistenceService {
 		}
 
 		$serializer = new RBX();
-		$transformers = array_map(function (string $serializedTransformer) use ($serializer) {
+		$transformers = array_map(function (string $serializedTransformer) use ($serializer): \Rubix\ML\Transformers\Transformer&\Rubix\ML\Persistable {
 			try {
 				$persister = new RubixMemoryPersister($serializedTransformer);
 				$transformer = $persister->load()->deserializeWith($serializer);
@@ -133,7 +132,7 @@ class PersistenceService {
 				throw new ServiceException(sprintf(
 					'Transformer is not an instance of %s: Got %s',
 					Transformer::class,
-					get_class($transformer),
+					$transformer::class,
 				));
 			}
 
@@ -156,7 +155,7 @@ class PersistenceService {
 			throw new ServiceException(sprintf(
 				'Failed to load persisted transformer: Expected %s, got %s',
 				WordCountVectorizer::class,
-				get_class($wordCountVectorizer),
+				$wordCountVectorizer::class,
 			));
 		}
 
@@ -165,7 +164,7 @@ class PersistenceService {
 			throw new ServiceException(sprintf(
 				'Failed to load persisted transformer: Expected %s, got %s',
 				TfIdfTransformer::class,
-				get_class($tfidfTransformer),
+				$tfidfTransformer::class,
 			));
 		}
 

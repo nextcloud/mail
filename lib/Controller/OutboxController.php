@@ -25,28 +25,19 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class OutboxController extends Controller {
-	private OutboxService $service;
-	private string $userId;
-	private AccountService $accountService;
-	private SmimeService $smimeService;
-
-	public function __construct(string $appName,
-		$UserId,
+	public function __construct(
+		string $appName,
+		private readonly string $userId,
 		IRequest $request,
-		OutboxService $service,
-		AccountService $accountService,
-		SmimeService $smimeService) {
+		private readonly OutboxService $service,
+		private readonly AccountService $accountService,
+		private readonly SmimeService $smimeService
+	) {
 		parent::__construct($appName, $request);
-		$this->userId = $UserId;
-		$this->service = $service;
-		$this->accountService = $accountService;
-		$this->smimeService = $smimeService;
 	}
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function index(): JsonResponse {
@@ -55,9 +46,6 @@ class OutboxController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @param int $id
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function show(int $id): JsonResponse {
@@ -68,21 +56,12 @@ class OutboxController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $accountId
-	 * @param string $subject
 	 * @param string $body
 	 * @param string $editorBody
-	 * @param bool $isHtml
 	 * @param array<int, string[]> $to i. e. [['label' => 'Linus', 'email' => 'tent@stardewvalley.com'], ['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']]
 	 * @param array<int, string[]> $cc
 	 * @param array<int, string[]> $bcc
-	 * @param array $attachments
-	 * @param int|null $draftId
-	 * @param int|null $aliasId
-	 * @param string|null $inReplyToMessageId
-	 * @param int|null $sendAt
 	 *
-	 * @return JsonResponse
 	 * @throws DoesNotExistException
 	 * @throws ClientException
 	 */
@@ -142,8 +121,6 @@ class OutboxController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function createFromDraft(DraftsService $draftsService, int $id, ?int $sendAt = null): JsonResponse {
@@ -162,21 +139,9 @@ class OutboxController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @param int $accountId
-	 * @param string $subject
 	 * @param string $body
 	 * @param string $editorBody
-	 * @param bool $isHtml
-	 * @param bool $failed
 	 * @param array $to i. e. [['label' => 'Linus', 'email' => 'tent@stardewvalley.com'], ['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']]
-	 * @param array $cc
-	 * @param array $bcc
-	 * @param array $attachments
-	 * @param int|null $aliasId
-	 * @param string|null $inReplyToMessageId
-	 * @param int|null $sendAt
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function update(
@@ -233,9 +198,6 @@ class OutboxController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @param int $id
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function send(int $id): JsonResponse {
@@ -254,9 +216,6 @@ class OutboxController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @param int $id
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function destroy(int $id): JsonResponse {

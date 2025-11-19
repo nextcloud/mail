@@ -45,14 +45,12 @@ use Psr\Log\LoggerInterface;
 use function urlencode;
 
 class PageControllerTest extends TestCase {
-	/** @var string */
-	private $appName;
+	private ?string $appName = null;
 
 	/** @var IRequest|MockObject */
 	private $request;
 
-	/** @var string */
-	private $userId;
+	private ?string $userId = null;
 
 	/** @var IURLGenerator|MockObject */
 	private $urlGenerator;
@@ -99,8 +97,7 @@ class PageControllerTest extends TestCase {
 	/** @var ICredentialStore|MockObject */
 	private $credentialStore;
 
-	/** @var PageController */
-	private $controller;
+	private ?\OCA\Mail\Controller\PageController $controller = null;
 
 	private SmimeService $smimeService;
 
@@ -371,7 +368,7 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testComposeSimple() {
+	public function testComposeSimple(): void {
 		$address = 'user@example.com';
 		$uri = "mailto:$address";
 
@@ -382,7 +379,7 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testComposeWithSubject() {
+	public function testComposeWithSubject(): void {
 		$address = 'user@example.com';
 		$subject = 'hello there';
 		$uri = "mailto:$address?subject=$subject";
@@ -395,7 +392,7 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testComposeWithCc() {
+	public function testComposeWithCc(): void {
 		$address = 'user@example.com';
 		$cc = 'other@example.com';
 		$uri = "mailto:$address?cc=$cc";
@@ -408,7 +405,7 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testComposeBcc() {
+	public function testComposeBcc(): void {
 		$bcc = 'blind@example.com';
 		$uri = "mailto:?bcc=$bcc";
 
@@ -419,7 +416,7 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testComposeWithBcc() {
+	public function testComposeWithBcc(): void {
 		$address = 'user@example.com';
 		$bcc = 'blind@example.com';
 		$uri = "mailto:$address?bcc=$bcc";
@@ -432,7 +429,7 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testComposeWithMultilineBody() {
+	public function testComposeWithMultilineBody(): void {
 		$address = 'user@example.com';
 		$body = 'Hi!\nWhat\'s up?\nAnother line';
 		$uri = "mailto:$address?body=$body";

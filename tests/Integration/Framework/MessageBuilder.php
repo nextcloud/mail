@@ -10,17 +10,13 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Integration\Framework;
 
 class MessageBuilder {
-	/** @var string */
-	private $from;
+	private ?string $from = null;
 
-	/** @var string */
-	private $to;
+	private ?string $to = null;
 
-	/** @var string|null */
-	private $cc;
+	private ?string $cc = null;
 
-	/** @var string|null */
-	private $bcc;
+	private ?string $bcc = null;
 
 	/** @var string|null */
 	private $date;
@@ -31,77 +27,55 @@ class MessageBuilder {
 	/** @var string */
 	private $body;
 
-	/**
-	 * @return MessageBuilder
-	 */
-	public static function create() {
+	public static function create(): static {
 		return new static;
 	}
 
-	/**
-	 * @param string $from
-	 * @return MessageBuilder
-	 */
-	public function from(string $from) {
+	public function from(string $from): static {
 		$this->from = $from;
 		return $this;
 	}
 
-	/**
-	 * @param string $to
-	 * @return MessageBuilder
-	 */
-	public function to(string $to) {
+	public function to(string $to): static {
 		$this->to = $to;
 		return $this;
 	}
 
-	/**
-	 * @param string $cc
-	 * @return MessageBuilder
-	 */
-	public function cc(string $cc) {
+	public function cc(string $cc): static {
 		$this->cc = $cc;
 		return $this;
 	}
 
-	/**
-	 * @param string $bcc
-	 * @return MessageBuilder
-	 */
-	public function bcc(string $bcc) {
+	public function bcc(string $bcc): static {
 		$this->bcc = $bcc;
 		return $this;
 	}
 
 	/**
 	 * @param string $date
-	 * @return MessageBuilder
 	 */
-	public function date($date) {
+	public function date($date): static {
 		$this->date = $date;
 		return $this;
 	}
 
 	/**
 	 * @param string $subject
-	 * @return MessageBuilder
 	 */
-	public function subject($subject) {
+	public function subject($subject): static {
 		$this->subject = $subject;
 		return $this;
 	}
 
 	/**
 	 * @param string $body
-	 * @return MessageBuilder
 	 */
-	public function body($body) {
+	public function body($body): static {
 		$this->body = $body;
 		return $this;
 	}
 
-	public function finish() {
+	public function finish(): \OCA\Mail\Tests\Integration\Framework\SimpleMessage {
 		return new SimpleMessage($this->from, $this->to, $this->cc, $this->bcc, $this->date, $this->subject, $this->body);
 	}
 }

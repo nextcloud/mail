@@ -47,10 +47,8 @@ class AntiSpamServiceIntegrationTest extends TestCase {
 
 		/** @var SyncService $syncService */
 		$syncService = Server::get(SyncService::class);
-		/** @var ImapMessageMapper $imapMessageMapper */
-		$imapMessageMapper = Server::get(ImapMessageMapper::class);
-		/** @var MessageMapper $messageMapper */
-		$messageMapper = Server::get(MessageMapper::class);
+		Server::get(ImapMessageMapper::class);
+		Server::get(MessageMapper::class);
 		/** @var IMailManager $mailManager */
 		$mailManager = Server::get(IMailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($account));
@@ -75,7 +73,6 @@ class AntiSpamServiceIntegrationTest extends TestCase {
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			false,
-			null,
 			null
 		);
 

@@ -22,45 +22,26 @@ final class SmimeData implements JsonSerializable {
 		$this->isEncrypted = false;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function isSigned(): bool {
 		return $this->isSigned;
 	}
 
-	/**
-	 * @param bool $isSigned
-	 */
 	public function setIsSigned(bool $isSigned): void {
 		$this->isSigned = $isSigned;
 	}
 
-	/**
-	 * @return bool|null
-	 */
 	public function getSignatureIsValid(): ?bool {
 		return $this->signatureIsValid;
 	}
 
-	/**
-	 * @param bool|null $signatureIsValid
-	 */
 	public function setSignatureIsValid(?bool $signatureIsValid): void {
 		$this->signatureIsValid = $signatureIsValid;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function isEncrypted(): bool {
 		return $this->isEncrypted;
 	}
 
-	/**
-	 * @param bool $isEncrypted
-	 * @return void
-	 */
 	public function setIsEncrypted(bool $isEncrypted): void {
 		$this->isEncrypted = $isEncrypted;
 	}

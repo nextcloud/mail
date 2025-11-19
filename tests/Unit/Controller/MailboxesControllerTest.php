@@ -26,8 +26,7 @@ use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class MailboxesControllerTest extends TestCase {
-	/** @var string */
-	private $appName = 'mail';
+	private string $appName = 'mail';
 
 	/** @var IRequest|MockObject */
 	private $request;
@@ -35,14 +34,12 @@ class MailboxesControllerTest extends TestCase {
 	/** @var AccountService|MockObject */
 	private $accountService;
 
-	/** @var string */
-	private $userId = 'john';
+	private string $userId = 'john';
 
 	/** @var IMailManager|MockObject */
 	private $mailManager;
 
-	/** @var MailboxesController */
-	private $controller;
+	private ?\OCA\Mail\Controller\MailboxesController $controller = null;
 
 	/** @var SyncService|MockObject */
 	private $syncService;
@@ -72,7 +69,7 @@ class MailboxesControllerTest extends TestCase {
 		);
 	}
 
-	public function testIndex() {
+	public function testIndex(): void {
 		$account = $this->createMock(Account::class);
 		$folder = $this->createMock(Folder::class);
 		$accountId = 28;
@@ -106,13 +103,13 @@ class MailboxesControllerTest extends TestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-	public function testShow() {
+	public function testShow(): void {
 		$this->expectException(NotImplemented::class);
 
 		$this->controller->show();
 	}
 
-	public function testCreate() {
+	public function testCreate(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = new Mailbox();
 		$accountId = 28;
@@ -148,7 +145,7 @@ class MailboxesControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testUpdate() {
+	public function testUpdate(): void {
 		$this->expectException(NotImplemented::class);
 
 		$this->controller->update();

@@ -11,7 +11,6 @@ namespace OCA\Mail\Tests\Integration\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestUser;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalAttachmentMapper;
@@ -24,7 +23,6 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Attachment\AttachmentStorage;
 use OCA\Mail\Service\DraftsService;
-use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
 use OCA\Mail\Tests\Integration\TestCase;
@@ -51,14 +49,12 @@ class DraftServiceIntegrationTest extends TestCase {
 	/** @var IUser */
 	private $user;
 
-	/** @var IAttachmentService */
-	private $attachmentService;
+	private ?\OCA\Mail\Service\Attachment\AttachmentService $attachmentService = null;
 
 	/** @var IMailTransmission */
 	private $transmission;
 
-	/** @var OutboxService */
-	private $service;
+	private ?\OCA\Mail\Service\DraftsService $service = null;
 
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
@@ -137,7 +133,7 @@ class DraftServiceIntegrationTest extends TestCase {
 			'email' => 'library@stardewvalley.com'
 		]];
 
-		$saved = $this->service->saveMessage(new Account($this->account), $message, $to, [], []);
+		$this->service->saveMessage(new Account($this->account), $message, $to, [], []);
 		$this->assertNotEmpty($message->getRecipients());
 		$this->assertEmpty($message->getAttachments());
 

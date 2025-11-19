@@ -11,23 +11,20 @@ namespace OCA\Mail\Service\Classification\FeatureExtraction;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\Message;
-use OCA\Mail\Db\StatisticsDao;
 use RuntimeException;
 use function array_map;
 use function array_unique;
 
 class ReadMessagesExtractor implements IExtractor {
-	/** @var StatisticsDao */
-	private $statisticsDao;
+	/** @var int[] */
+	private ?array $totalMessages = null;
 
 	/** @var int[] */
-	private $totalMessages;
+	private ?array $readMessages = null;
 
-	/** @var int[] */
-	private $readMessages;
-
-	public function __construct(StatisticsDao $statisticsDao) {
-		$this->statisticsDao = $statisticsDao;
+	public function __construct(
+		private readonly \OCA\Mail\Db\StatisticsDao $statisticsDao,
+	) {
 	}
 
 	#[\Override]
@@ -36,7 +33,7 @@ class ReadMessagesExtractor implements IExtractor {
 		array $outgoingMailboxes,
 		array $messages): void {
 		/** @var string[] $senders */
-		$senders = array_unique(array_map(static fn (Message $message) => $message->getFrom()->first()->getEmail(), array_filter($messages, static fn (Message $message) => $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null)));
+		$senders = array_unique(array_map(static fn (Message $message): ?string => $message->getFrom()->first()->getEmail(), array_filter($messages, static fn (Message $message): bool => $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null)));
 
 		$this->totalMessages = $this->statisticsDao->getNumberOfMessagesGrouped($incomingMailboxes, $senders);
 		$this->readMessages = $this->statisticsDao->getNumberOfMessagesWithFlagGrouped($incomingMailboxes, 'seen', $senders);

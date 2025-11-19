@@ -70,7 +70,6 @@ use OCA\Mail\SetupChecks\MailConnectionPerformance;
 use OCA\Mail\SetupChecks\MailTransport;
 use OCA\Mail\Vendor\Favicon\Favicon;
 use OCP\AppFramework\App;
-use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\DB\Events\AddMissingIndicesEvent;
@@ -104,7 +103,7 @@ final class Application extends App implements IBootstrap {
 
 			return $userContainer->getUserFolder($uid);
 		});
-		$context->registerService(Favicon::class, function (ContainerInterface $c) {
+		$context->registerService(Favicon::class, function (ContainerInterface $c): \OCA\Mail\Vendor\Favicon\Favicon {
 			$favicon = new Favicon();
 			$favicon->setDataAccess(
 				$c->get(FaviconDataAccess::class),
@@ -168,9 +167,5 @@ final class Application extends App implements IBootstrap {
 		Horde_Translation::setHandler('Horde_Imap_Client', new HordeTranslationHandler());
 		Horde_Translation::setHandler('Horde_Mime', new HordeTranslationHandler());
 		Horde_Translation::setHandler('Horde_Smtp', new HordeTranslationHandler());
-	}
-
-	#[\Override]
-	public function boot(IBootContext $context): void {
 	}
 }

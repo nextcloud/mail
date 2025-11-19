@@ -23,15 +23,14 @@ use OCP\IUserManager;
 class TextBlockService {
 
 	public function __construct(
-		private TextBlockMapper $textBlockMapper,
-		private TextBlockShareMapper $textBlockShareMapper,
-		private IGroupManager $groupManager,
-		private IUserManager $userManager,
+		private readonly TextBlockMapper $textBlockMapper,
+		private readonly TextBlockShareMapper $textBlockShareMapper,
+		private readonly IGroupManager $groupManager,
+		private readonly IUserManager $userManager,
 	) {
 	}
 
 	/**
-	 * @param string $userId
 	 * @return TextBlock[]
 	 */
 	public function findAll(string $userId): array {

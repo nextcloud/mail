@@ -26,20 +26,14 @@ use function memory_get_peak_usage;
 final class Thread extends Command {
 	public const ARGUMENT_INPUT_FILE = 'thread-file';
 
-	private ThreadBuilder $builder;
-	private LoggerInterface $logger;
-
-	public function __construct(ThreadBuilder $builder,
-		LoggerInterface $logger) {
+	public function __construct(
+		private readonly ThreadBuilder $builder,
+		private readonly LoggerInterface $logger
+	) {
 		parent::__construct();
-		$this->builder = $builder;
-		$this->logger = $logger;
 	}
 
-	/**
-	 * @return void
-	 */
-	protected function configure() {
+	protected function configure(): void {
 		$this->setName('mail:thread');
 		$this->setDescription('Build threads from the exported data of an account');
 		$this->addArgument(self::ARGUMENT_INPUT_FILE, InputArgument::REQUIRED);
@@ -66,7 +60,7 @@ final class Thread extends Command {
 		$consoleLogger->debug(strlen($json) . 'B read');
 		$parsed = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 		$consoleLogger->debug(count($parsed) . ' data sets loaded');
-		$threadData = array_map(static fn ($serialized) => new DatabaseMessage(
+		$threadData = array_map(static fn (array $serialized): \OCA\Mail\IMAP\Threading\DatabaseMessage => new DatabaseMessage(
 			$serialized['databaseId'],
 			$serialized['subject'],
 			$serialized['id'],

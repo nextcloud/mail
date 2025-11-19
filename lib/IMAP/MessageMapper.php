@@ -48,25 +48,15 @@ use function OCA\Mail\chunk_uid_sequence;
 use function sprintf;
 
 class MessageMapper {
-	/** @var LoggerInterface */
-	private $logger;
-
-	private SMimeService $smimeService;
-	private ImapMessageFetcherFactory $imapMessageFactory;
-
 	public function __construct(
-		LoggerInterface $logger,
-		SmimeService $smimeService,
-		ImapMessageFetcherFactory $imapMessageFactory,
-		private Converter $converter,
+		private readonly \Psr\Log\LoggerInterface $logger,
+		private readonly SMimeService $smimeService,
+		private readonly ImapMessageFetcherFactory $imapMessageFactory,
+		private readonly Converter $converter
 	) {
-		$this->logger = $logger;
-		$this->smimeService = $smimeService;
-		$this->imapMessageFactory = $imapMessageFactory;
 	}
 
 	/**
-	 * @return IMAPMessage
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
 	 */
@@ -85,14 +75,7 @@ class MessageMapper {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
-	 * @param string $mailbox
 	 *
-	 * @param int $maxResults
-	 * @param int $highestKnownUid
-	 * @param PerformanceLoggerTask $perf
-	 *
-	 * @return array
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function findAll(Horde_Imap_Client_Socket $client,
@@ -223,7 +206,7 @@ class MessageMapper {
 				iterator_to_array($fetchResult)
 			),
 
-			static fn (int $uid)
+			static fn (int $uid): bool
 				// Don't load the ones we already know
 				=> $uid > $highestKnownUid
 		);
@@ -256,11 +239,7 @@ class MessageMapper {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Base $client
-	 * @param string $mailbox
 	 * @param int[]|Horde_Imap_Client_Ids $ids
-	 * @param string $userId
-	 * @param bool $loadBody
 	 * @return IMAPMessage[]
 	 *
 	 * @throws DoesNotExistException
@@ -290,7 +269,7 @@ class MessageMapper {
 		if (is_array($ids)) {
 			// Chunk to prevent overly long IMAP commands
 			/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
-			$fetchResults = array_flat_map(fn ($ids) => iterator_to_array($client->fetch($mailbox, $query, [
+			$fetchResults = array_flat_map(fn ($ids): array => iterator_to_array($client->fetch($mailbox, $query, [
 				'ids' => $ids,
 			]), false), chunk_uid_sequence($ids, 10000));
 		} else {
@@ -315,7 +294,7 @@ class MessageMapper {
 			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs ($range) and found " . count($fetchResults) . ". minFetched=$minFetched maxFetched=$maxFetched");
 		}
 
-		return array_map(fn (Horde_Imap_Client_Data_Fetch $fetchResult) => $this->imapMessageFactory
+		return array_map(fn (Horde_Imap_Client_Data_Fetch $fetchResult): \OCA\Mail\Model\IMAPMessage => $this->imapMessageFactory
 			->build(
 				$fetchResult->getUid(),
 				$mailbox,
@@ -328,10 +307,6 @@ class MessageMapper {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Base $client
-	 * @param string $sourceFolderId
-	 * @param int $messageId
-	 * @param string $destFolderId
 	 * @return ?int the new UID (or null if couldn't be determined)
 	 */
 	public function move(Horde_Imap_Client_Base $client,
@@ -456,9 +431,6 @@ class MessageMapper {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
-	 * @param Mailbox $mailbox
-	 * @param string $flag
 	 * @return int[]
 	 *
 	 * @throws Horde_Imap_Client_Exception
@@ -473,12 +445,6 @@ class MessageMapper {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
-	 * @param string $mailbox
-	 * @param int $uid
-	 * @param string $userId
-	 * @param bool $decrypt
-	 * @return string|null
 	 *
 	 * @throws ServiceException
 	 */
@@ -519,12 +485,6 @@ class MessageMapper {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
-	 * @param string $mailbox
-	 * @param int $uid
-	 * @param string $userId
-	 * @return string|null
-	 *
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
 	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
@@ -596,12 +556,6 @@ class MessageMapper {
 	/**
 	 * @deprecated Use getAttachments() instead
 	 *
-	 * @param Horde_Imap_Client_Socket $client
-	 * @param string $mailbox
-	 * @param int $uid
-	 * @param string $userId
-	 * @param array|null $attachmentIds
-	 * @return array
 	 *
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
@@ -615,19 +569,13 @@ class MessageMapper {
 		string $userId,
 		?array $attachmentIds = []): array {
 		$attachments = $this->getAttachments($client, $mailbox, $uid, $userId, $attachmentIds);
-		return array_map(static fn (Attachment $attachment) => $attachment->getContent(), $attachments);
+		return array_map(static fn (Attachment $attachment): string => $attachment->getContent(), $attachments);
 	}
 
 	/**
 	 * Get Attachments with size, content and name properties
 	 *
-	 * @param Horde_Imap_Client_Socket $client
-	 * @param string $mailbox
-	 * @param integer $uid
-	 * @param string $userId
-	 * @param array|null $attachmentIds
 	 * @return Attachment[]
-	 *
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
 	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
@@ -733,12 +681,6 @@ class MessageMapper {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Base $client
-	 * @param string $mailbox
-	 * @param int $messageUid
-	 * @param string $attachmentId
-	 * @param string $userId
-	 * @return Attachment
 	 *
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
@@ -836,10 +778,6 @@ class MessageMapper {
 
 	/**
 	 * Build the parts query for attachments
-	 *
-	 * @param Horde_Mime_Part $structure
-	 * @param array $attachmentIds
-	 * @return Horde_Imap_Client_Fetch_Query
 	 */
 	private function buildAttachmentsPartsQuery(Horde_Mime_Part $structure, array $attachmentIds) : Horde_Imap_Client_Fetch_Query {
 		$partsQuery = new Horde_Imap_Client_Fetch_Query();
@@ -868,7 +806,6 @@ class MessageMapper {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
 	 * @param int[] $uids
 	 *
 	 * @return MessageStructureData[]
@@ -889,7 +826,7 @@ class MessageMapper {
 		$structures = $client->fetch($mailbox, $structureQuery, [
 			'ids' => new Horde_Imap_Client_Ids($uids),
 		]);
-		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client, $emailAddress) {
+		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client, $emailAddress): \OCA\Mail\IMAP\MessageStructureData {
 			$hasAttachments = false;
 			$text = '';
 			$isImipMessage = false;

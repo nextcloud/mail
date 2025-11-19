@@ -16,19 +16,12 @@ use ReturnTypeWillChange;
  * @psalm-immutable
  */
 final class ServerConfiguration implements JsonSerializable {
-	private string $username;
-	private string $host;
-	private int $port;
-	private string $security;
-
-	public function __construct(string $username,
-		string $host,
-		int $port,
-		string $security) {
-		$this->username = $username;
-		$this->host = $host;
-		$this->port = $port;
-		$this->security = $security;
+	public function __construct(
+		private readonly string $username,
+		private readonly string $host,
+		private readonly int $port,
+		private readonly string $security
+	) {
 	}
 
 	#[\Override]

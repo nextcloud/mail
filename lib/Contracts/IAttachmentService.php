@@ -29,9 +29,6 @@ interface IAttachmentService {
 
 	/**
 	 * Delete an attachment if it exists
-	 *
-	 * @param string $userId
-	 * @param int $id
 	 */
 	public function deleteAttachment(string $userId, int $id);
 }

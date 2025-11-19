@@ -130,7 +130,6 @@ class Provisioning extends Entity implements JsonSerializable {
 	}
 
 	/**
-	 * @param IUser $user
 	 * @return string
 	 */
 	public function buildEmail(IUser $user) {
@@ -140,11 +139,9 @@ class Provisioning extends Entity implements JsonSerializable {
 	/**
 	 * Replace %USERID% and %EMAIL% to allow special configurations
 	 *
-	 * @param string $original
-	 * @param IUser $user
 	 * @return string
 	 */
-	private function buildUserEmail(string $original, IUser $user) {
+	private function buildUserEmail(string $original, IUser $user): string|array {
 		if ($user->getUID() !== null) {
 			$original = str_replace('%USERID%', $user->getUID(), $original);
 		}
@@ -155,7 +152,6 @@ class Provisioning extends Entity implements JsonSerializable {
 	}
 
 	/**
-	 * @param IUser $user
 	 * @return string
 	 */
 	public function buildSmtpUser(IUser $user) {
@@ -166,7 +162,6 @@ class Provisioning extends Entity implements JsonSerializable {
 	}
 
 	/**
-	 * @param IUser $user
 	 * @return string
 	 */
 	public function buildSieveUser(IUser $user) {

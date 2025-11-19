@@ -21,15 +21,12 @@ use OCP\Migration\SimpleMigrationStep;
 class Version3700Date20240430115406 extends SimpleMigrationStep {
 
 	public function __construct(
-		private IDBConnection $connection,
+		private readonly IDBConnection $connection,
 	) {
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure(): ISchemaWrapper $schemaClosure
-	 * @param array $options
-	 * @return null|ISchemaWrapper
 	 */
 	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
@@ -53,14 +50,11 @@ class Version3700Date20240430115406 extends SimpleMigrationStep {
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure(): ISchemaWrapper $schemaClosure
-	 * @param array $options
 	 *
-	 * @return void
 	 */
 	#[\Override]
-	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
+	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options): void {
 		// Let's buffer this a bit
 		$aMinuteAgo = time() - 60;
 		$query = $this->connection->getQueryBuilder();

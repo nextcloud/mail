@@ -18,7 +18,6 @@ use function array_flip;
 use function array_intersect_key;
 use function array_map;
 use function array_merge;
-use function get_class;
 
 /**
  * @see https://github.com/omniti-labs/jsend
@@ -74,17 +73,15 @@ class JsonResponse extends Base {
 		return self::fail(
 			[
 				'message' => $exception->getMessage(),
-				'type' => get_class($exception),
+				'type' => $exception::class,
 			],
 			$exception->getHttpCode()
 		);
 	}
 
 	/**
-	 * @param string $message
 	 * @param Http::STATUS_* $status
 	 * @param array|JsonSerializable|bool|string $data
-	 *
 	 * @return static
 	 */
 	public static function error(string $message,
@@ -103,10 +100,8 @@ class JsonResponse extends Base {
 	}
 
 	/**
-	 * @param Throwable $error
 	 * @param Http::STATUS_* $status
 	 * @param array|JsonSerializable|bool|string $data
-	 *
 	 * @return static
 	 */
 	public static function errorFromThrowable(Throwable $error,
@@ -131,7 +126,7 @@ class JsonResponse extends Base {
 			return null;
 		}
 		return [
-			'type' => get_class($throwable),
+			'type' => $throwable::class,
 			'message' => $throwable->getMessage(),
 			'code' => $throwable->getCode(),
 			'trace' => self::filterTrace($throwable->getTrace()),
@@ -140,7 +135,7 @@ class JsonResponse extends Base {
 	}
 
 	private static function filterTrace(array $original): array {
-		return array_map(static fn (array $row) => array_intersect_key($row,
+		return array_map(static fn (array $row): array => array_intersect_key($row,
 			array_flip(['file', 'line', 'function', 'class'])), $original);
 	}
 }

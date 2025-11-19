@@ -15,7 +15,6 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
-use Psr\Log\LoggerInterface;
 use function array_filter;
 use function array_map;
 use function in_array;
@@ -23,11 +22,9 @@ use function reset;
 
 class FolderMapper {
 
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(LoggerInterface $logger) {
-		$this->logger = $logger;
+	public function __construct(
+		private readonly \Psr\Log\LoggerInterface $logger
+	) {
 	}
 	/**
 	 * This is a temporary workaround for when the sieve folder is a subfolder of
@@ -40,9 +37,6 @@ class FolderMapper {
 	];
 
 	/**
-	 * @param Account $account
-	 * @param Horde_Imap_Client_Socket $client
-	 * @param string $pattern
 	 *
 	 * @return Folder[]
 	 * @throws Horde_Imap_Client_Exception
@@ -54,8 +48,8 @@ class FolderMapper {
 			'attributes' => true,
 			'special_use' => true,
 		]);
-		$toPersist = array_filter($mailboxes, function (array $mailbox) {
-			$attributes = array_flip(array_map('strtolower', $mailbox['attributes']));
+		$toPersist = array_filter($mailboxes, function (array $mailbox): bool {
+			$attributes = array_flip(array_map(strtolower(...), $mailbox['attributes']));
 			if (isset($attributes['\\nonexistent'])) {
 				// Ignore mailbox that does not exist, similar to \Horde_Imap_Client::MBOX_SUBSCRIBED_EXISTS mode
 				return false;
@@ -63,7 +57,7 @@ class FolderMapper {
 			// This is a special folder that must not be shown
 			return !in_array($mailbox['mailbox']->utf8, self::DOVECOT_SIEVE_FOLDERS, true);
 		});
-		return array_map(static fn (array $mailbox) => new Folder(
+		return array_map(static fn (array $mailbox): \OCA\Mail\Folder => new Folder(
 			$mailbox['mailbox'],
 			$mailbox['attributes'],
 			$mailbox['delimiter'],
@@ -97,11 +91,9 @@ class FolderMapper {
 
 	/**
 	 * @param Folder[] $folders
-	 * @param Horde_Imap_Client_Socket $client
 	 *
 	 * @throws Horde_Imap_Client_Exception
 	 *
-	 * @return void
 	 */
 	public function fetchFolderAcls(array $folders,
 		Horde_Imap_Client_Socket $client): void {
@@ -109,7 +101,7 @@ class FolderMapper {
 
 		foreach ($folders as $folder) {
 			$acls = null;
-			if ($hasAcls && !in_array('\\noselect', array_map('strtolower', $folder->getAttributes()), true)) {
+			if ($hasAcls && !in_array('\\noselect', array_map(strtolower(...), $folder->getAttributes()), true)) {
 				$acls = (string)$client->getMyACLRights($folder->getMailbox());
 			}
 
@@ -118,11 +110,9 @@ class FolderMapper {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
 	 * @param string $mailbox
 	 *
 	 * @throws Horde_Imap_Client_Exception
-	 *
 	 * @return MailboxStats[]
 	 */
 	public function getFoldersStatusAsObject(Horde_Imap_Client_Socket $client,
@@ -150,9 +140,6 @@ class FolderMapper {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
-	 * @param string $oldName
-	 * @param string $newName
 	 *
 	 * @throws Horde_Imap_Client_Exception
 	 */
@@ -164,8 +151,6 @@ class FolderMapper {
 
 	/**
 	 * @param Folder[] $folders
-	 *
-	 * @return void
 	 */
 	public function detectFolderSpecialUse(array $folders): void {
 		foreach ($folders as $folder) {
@@ -178,9 +163,7 @@ class FolderMapper {
 	 *
 	 * This method reads the attributes sent by the server
 	 *
-	 * @param Folder $folder
 	 *
-	 * @return void
 	 */
 	protected function detectSpecialUse(Folder $folder): void {
 		/*
@@ -202,7 +185,7 @@ class FolderMapper {
 			strtolower(Horde_Imap_Client::SPECIALUSE_TRASH)
 		];
 
-		$attributes = array_map(static fn ($n) => strtolower($n), $folder->getAttributes());
+		$attributes = array_map(strtolower(...), $folder->getAttributes());
 
 		foreach ($specialUseAttributes as $attr) {
 			if (in_array($attr, $attributes)) {
@@ -218,9 +201,7 @@ class FolderMapper {
 	/**
 	 * Assign a special use based on the name
 	 *
-	 * @param Folder $folder
 	 *
-	 * @return void
 	 */
 	protected function guessSpecialUse(Folder $folder): void {
 		$specialFoldersDict = [
@@ -247,8 +228,6 @@ class FolderMapper {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
-	 * @param string $folderId
 	 * @throws ServiceException
 	 */
 	public function delete(Horde_Imap_Client_Socket $client, string $folderId): void {

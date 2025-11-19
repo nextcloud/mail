@@ -17,33 +17,17 @@ use OCP\AppFramework\Http\Response;
  * @todo spec template with 28+
  */
 class HtmlResponse extends Response {
-	/** @var string */
-	private $content;
-
-	/** @var bool */
-	private $plain;
-
-	/** @var string|null */
-	private $nonce;
-
-	/** @var string|null */
-	private $scriptUrl;
-
 	/**
 	 * @param string $content message html content
 	 * @param bool $plain do not inject scripts if true (default=false)
-	 * @param string|null $nonce
-	 * @param string|null $scriptUrl
 	 */
-	private function __construct(string $content,
-		bool $plain = false,
-		?string $nonce = null,
-		?string $scriptUrl = null) {
+	private function __construct(
+		private readonly string $content,
+		private readonly bool $plain = false,
+		private readonly ?string $nonce = null,
+		private readonly ?string $scriptUrl = null
+	) {
 		parent::__construct();
-		$this->content = $content;
-		$this->plain = $plain;
-		$this->nonce = $nonce;
-		$this->scriptUrl = $scriptUrl;
 	}
 
 	public static function plain(string $content): self {

@@ -14,16 +14,13 @@ use Horde_Imap_Client_Search_Query;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\Search\SearchQuery;
 use function array_reduce;
 
 class Provider {
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	public function __construct(IMAPClientFactory $clientFactory) {
-		$this->clientFactory = $clientFactory;
+	public function __construct(
+		private readonly \OCA\Mail\IMAP\IMAPClientFactory $clientFactory
+	) {
 	}
 
 	/**
@@ -49,11 +46,9 @@ class Provider {
 	}
 
 	/**
-	 * @param SearchQuery $searchQuery
 	 *
 	 * @todo possible optimization: filter flags here as well as it might speed up IMAP search
 	 *
-	 * @return Horde_Imap_Client_Search_Query
 	 */
 	private function convertMailQueryToHordeQuery(SearchQuery $searchQuery): Horde_Imap_Client_Search_Query {
 		return array_reduce(

@@ -20,42 +20,35 @@ use Psr\Log\LoggerInterface;
 use function sprintf;
 
 class QuotaJob extends TimedJob {
-	private IUserManager $userManager;
-	private AccountService $accountService;
-	private IMailManager $mailManager;
-	private LoggerInterface $logger;
-	private IJobList $jobList;
-	private IManager $notificationManager;
+	private readonly IUserManager $userManager;
+	private readonly IJobList $jobList;
+	private readonly IManager $notificationManager;
 
-	public function __construct(ITimeFactory $time,
+	public function __construct(
+		ITimeFactory $time,
 		IUserManager $userManager,
-		AccountService $accountService,
-		IMailManager $mailManager,
+		private readonly AccountService $accountService,
+		private readonly IMailManager $mailManager,
 		IManager $notificationManager,
-		LoggerInterface $logger,
-		IJobList $jobList) {
+		private readonly LoggerInterface $logger,
+		IJobList $jobList
+	) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;
-		$this->accountService = $accountService;
-		$this->logger = $logger;
 		$this->jobList = $jobList;
-		$this->mailManager = $mailManager;
 
 		$this->setInterval(60 * 60 * 24 * 7);
 		$this->setTimeSensitivity(self::TIME_INSENSITIVE);
 		$this->notificationManager = $notificationManager;
 	}
 
-	/**
-	 * @return void
-	 */
 	#[\Override]
 	protected function run($argument): void {
 		$accountId = (int)$argument['accountId'];
 		try {
 			$account = $this->accountService->findById($accountId);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			$this->logger->debug('Could not find account <' . $accountId . '> removing from jobs');
 			$this->jobList->remove(self::class, $argument);
 			return;

@@ -8,7 +8,6 @@
 namespace OCA\Mail\Command;
 
 use OCA\Mail\Service\AccountService;
-use OCP\Security\ICrypto;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,27 +18,23 @@ final class ExportAccount extends Command {
 	public const ARGUMENT_USER_ID = 'user-id';
 	public const ARGUMENT_OUTPUT_FORMAT = 'output';
 
-	private AccountService $accountService;
-	private ICrypto $crypto;
-
-	public function __construct(AccountService $service, ICrypto $crypto) {
+	public function __construct(
+		private readonly AccountService $accountService
+	) {
 		parent::__construct();
-
-		$this->accountService = $service;
-		$this->crypto = $crypto;
 	}
 
-	/**
-	 * @return void
-	 */
-	protected function configure() {
+	protected function configure(): void {
 		$this->setName('mail:account:export');
 		$this->setDescription('Exports a user\'s IMAP account(s)');
 		$this->addArgument(self::ARGUMENT_USER_ID, InputArgument::REQUIRED);
 		$this->addOption(self::ARGUMENT_OUTPUT_FORMAT, '', InputOption::VALUE_OPTIONAL);
 	}
 
-	private function getAccountsData($accounts) {
+	/**
+	 * @return array{id: mixed, email: mixed, name: mixed, provision: array{status: ('none' | 'set'), id: mixed}, imap: array{user: mixed, host: mixed, port: mixed, security: mixed}, smtp: array{user: mixed, host: mixed, port: mixed, security: mixed}}[]
+	 */
+	private function getAccountsData(array $accounts): array {
 		$accountsData = [];
 
 		foreach ($accounts as $account) {

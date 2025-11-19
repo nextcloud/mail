@@ -20,7 +20,7 @@ use OCP\IDBConnection;
 class MessageSnoozeMapper extends QBMapper {
 	public function __construct(
 		IDBConnection $db,
-		private ITimeFactory $time,
+		private readonly ITimeFactory $time,
 	) {
 		parent::__construct($db, 'mail_messages_snoozed', MessageSnooze::class);
 	}
@@ -30,8 +30,6 @@ class MessageSnoozeMapper extends QBMapper {
 	 * Return null if no entry for message or srcMailboxId is null
 	 *
 	 * @param string $messageId
-	 *
-	 * @return int|null
 	 */
 	public function getSrcMailboxId(int $mailboxId, int $uid): ?int {
 		$qb = $this->db->getQueryBuilder();

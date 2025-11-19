@@ -21,11 +21,8 @@ class Version1030Date20200228105714 extends SimpleMigrationStep {
 		$this->connection = $connection;
 	}
 
-	/**
-	 * @return void
-	 */
 	#[\Override]
-	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
+	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options): void {
 		// Force a re-sync, so the old favorites inbox vanishes
 		$update = $this->connection->getQueryBuilder();
 		$update->update('mail_accounts')

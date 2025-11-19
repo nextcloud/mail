@@ -11,7 +11,6 @@ namespace OCA\Mail\Command;
 
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Db\DoesNotExistException;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,15 +23,11 @@ final class DebugAccount extends Command {
 	protected const OPTION_DEBUG_OFF = 'off';
 
 	public function __construct(
-		private AccountService $accountService,
-		private LoggerInterface $logger,
+		private readonly AccountService $accountService,
 	) {
 		parent::__construct();
 	}
 
-	/**
-	 * @return void
-	 */
 	protected function configure(): void {
 		$this->setName('mail:account:debug');
 		$this->setDescription('Enable or Disable IMAP/SMTP debugging for an account');
@@ -49,7 +44,7 @@ final class DebugAccount extends Command {
 
 		try {
 			$account = $this->accountService->findById($accountId)->getMailAccount();
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			$output->writeln("<error>Account $accountId does not exist</error>");
 			return 1;
 		}

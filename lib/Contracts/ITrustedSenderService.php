@@ -17,7 +17,6 @@ interface ITrustedSenderService {
 	public function trust(string $uid, string $email, string $type, ?bool $trust = true);
 
 	/**
-	 * @param string $uid
 	 * @return TrustedSender[]
 	 */
 	public function getTrusted(string $uid): array;

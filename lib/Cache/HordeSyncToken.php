@@ -11,9 +11,9 @@ namespace OCA\Mail\Cache;
 
 final class HordeSyncToken {
 	public function __construct(
-		private ?int $nextUid,
-		private ?int $uidValidity,
-		private ?int $highestModSeq,
+		private readonly ?int $nextUid,
+		private readonly ?int $uidValidity,
+		private readonly ?int $highestModSeq,
 	) {
 	}
 

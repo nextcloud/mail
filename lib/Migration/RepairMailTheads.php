@@ -9,23 +9,15 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Migration;
 
-use OCA\Mail\Db\MessageMapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
-use Psr\Log\LoggerInterface;
 use function method_exists;
 
 class RepairMailTheads implements IRepairStep {
-	/** @var MessageMapper */
-	private $mapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(MessageMapper $mapper,
-		LoggerInterface $logger) {
-		$this->mapper = $mapper;
-		$this->logger = $logger;
+	public function __construct(
+		private readonly \OCA\Mail\Db\MessageMapper $mapper,
+		private readonly \Psr\Log\LoggerInterface $logger
+	) {
 	}
 
 	#[\Override]

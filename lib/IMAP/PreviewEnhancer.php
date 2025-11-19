@@ -13,42 +13,20 @@ use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
-use OCA\Mail\Db\MessageMapper as DbMapper;
-use OCA\Mail\IMAP\MessageMapper as ImapMapper;
 use OCA\Mail\Service\Avatar\Avatar;
-use OCA\Mail\Service\AvatarService;
-use Psr\Log\LoggerInterface;
 use function array_key_exists;
 use function array_map;
 use function array_merge;
 use function array_reduce;
 
 class PreviewEnhancer {
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var ImapMapper */
-	private $imapMapper;
-
-	/** @var DbMapper */
-	private $mapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var AvatarService */
-	private $avatarService;
-
-	public function __construct(IMAPClientFactory $clientFactory,
-		ImapMapper $imapMapper,
-		DbMapper $dbMapper,
-		LoggerInterface $logger,
-		AvatarService $avatarService) {
-		$this->clientFactory = $clientFactory;
-		$this->imapMapper = $imapMapper;
-		$this->mapper = $dbMapper;
-		$this->logger = $logger;
-		$this->avatarService = $avatarService;
+	public function __construct(
+		private readonly \OCA\Mail\IMAP\IMAPClientFactory $clientFactory,
+		private readonly \OCA\Mail\IMAP\MessageMapper $imapMapper,
+		private readonly \OCA\Mail\Db\MessageMapper $mapper,
+		private readonly \Psr\Log\LoggerInterface $logger,
+		private readonly \OCA\Mail\Service\AvatarService $avatarService
+	) {
 	}
 
 	/**
@@ -57,7 +35,7 @@ class PreviewEnhancer {
 	 * @return Message[]
 	 */
 	public function process(Account $account, Mailbox $mailbox, array $messages, bool $preLoadAvatars = false, ?string $userId = null): array {
-		$needAnalyze = array_reduce($messages, static function (array $carry, Message $message) {
+		$needAnalyze = array_reduce($messages, static function (array $carry, Message $message): array {
 			if ($message->getStructureAnalyzed()) {
 				// Nothing to do
 				return $carry;
@@ -106,7 +84,7 @@ class PreviewEnhancer {
 			$client->logout();
 		}
 
-		return $this->mapper->updatePreviewDataBulk(...array_map(static function (Message $message) use ($data) {
+		return $this->mapper->updatePreviewDataBulk(...array_map(static function (Message $message) use ($data): \OCA\Mail\Db\Message {
 			if (!array_key_exists($message->getUid(), $data)) {
 				// Nothing to do
 				return $message;

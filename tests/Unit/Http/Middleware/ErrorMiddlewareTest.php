@@ -33,8 +33,7 @@ class ErrorMiddlewareTest extends TestCase {
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 
-	/** @var ErrorMiddleware */
-	private $middleware;
+	private ?\OCA\Mail\Http\Middleware\ErrorMiddleware $middleware = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -48,7 +47,7 @@ class ErrorMiddlewareTest extends TestCase {
 		);
 	}
 
-	public function testDoesNotChangeSuccessfulResponses() {
+	public function testDoesNotChangeSuccessfulResponses(): void {
 		$response = new JSONResponse();
 		$controller = $this->createMock(Controller::class);
 
@@ -57,13 +56,13 @@ class ErrorMiddlewareTest extends TestCase {
 		$this->assertSame($response, $after);
 	}
 
-	public function testDoesNotChangeUntaggedMethodResponses() {
+	public function testDoesNotChangeUntaggedMethodResponses(): void {
 		$request = $this->createMock(IRequest::class);
 		$controller = new class($request) extends Controller {
 			public function __construct(IRequest $request) {
 				parent::__construct('myapp', $request);
 			}
-			public function foo() {
+			public function foo(): void {
 			}
 		};
 		$exception = new DoesNotExistException('nope');
@@ -83,14 +82,14 @@ class ErrorMiddlewareTest extends TestCase {
 	/**
 	 * @dataProvider trappedErrorsData
 	 */
-	public function testTrapsErrors($exception, $shouldLog, $expectedStatus) {
+	public function testTrapsErrors($exception, $shouldLog, $expectedStatus): void {
 		$request = $this->createMock(IRequest::class);
 		$controller = new class($request) extends Controller {
 			public function __construct(IRequest $request) {
 				parent::__construct('myapp', $request);
 			}
 			#[TrapError]
-			public function foo() {
+			public function foo(): void {
 			}
 		};
 		$this->logger->expects($this->exactly($shouldLog ? 1 : 0))
@@ -105,7 +104,7 @@ class ErrorMiddlewareTest extends TestCase {
 		$this->assertEquals($expectedStatus, $response->getStatus());
 	}
 
-	public function testSerializesRecursively() {
+	public function testSerializesRecursively(): void {
 		$inner = new Exception();
 		$outer = new ServiceException('Test', 0, $inner);
 		$request = $this->createMock(IRequest::class);
@@ -115,7 +114,7 @@ class ErrorMiddlewareTest extends TestCase {
 			}
 
 			#[TrapError]
-			public function foo() {
+			public function foo(): void {
 			}
 		};
 		$this->logger->expects($this->once())
@@ -151,7 +150,7 @@ class ErrorMiddlewareTest extends TestCase {
 			}
 
 			#[TrapError]
-			public function foo() {
+			public function foo(): void {
 			}
 		};
 		$this->logger->expects($this->once())

@@ -15,27 +15,15 @@ use OCA\Mail\Db\Message;
 use OCP\EventDispatcher\Event;
 
 class NewMessagesSynchronized extends Event {
-	/** @var Account */
-	private $account;
-
-	/** @var Mailbox */
-	private $mailbox;
-
-	/** @var array|Message[] */
-	private $messages;
-
 	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
 	 * @param Message[] $messages
 	 */
-	public function __construct(Account $account,
-		Mailbox $mailbox,
-		array $messages) {
+	public function __construct(
+		private readonly \OCA\Mail\Account $account,
+		private readonly \OCA\Mail\Db\Mailbox $mailbox,
+		private readonly array $messages
+	) {
 		parent::__construct();
-		$this->account = $account;
-		$this->mailbox = $mailbox;
-		$this->messages = $messages;
 	}
 
 	public function getAccount(): Account {

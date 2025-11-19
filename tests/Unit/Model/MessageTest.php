@@ -25,7 +25,7 @@ class MessageTest extends TestCase {
 		$this->message = new Message();
 	}
 
-	public function testFlags() {
+	public function testFlags(): void {
 		$flags = [
 			'seen',
 			'flagged',
@@ -36,7 +36,7 @@ class MessageTest extends TestCase {
 		$this->assertSame($flags, $this->message->getFlags());
 	}
 
-	public function testFrom() {
+	public function testFrom(): void {
 		$from = new AddressList([
 			Address::fromRaw('Fritz', 'fritz@domain.tld'),
 		]);
@@ -46,7 +46,7 @@ class MessageTest extends TestCase {
 		$this->assertSame($from, $this->message->getFrom());
 	}
 
-	public function testTo() {
+	public function testTo(): void {
 		$expected = [
 			'alice@example.com',
 			'Bob <bob@example.com>',
@@ -58,11 +58,11 @@ class MessageTest extends TestCase {
 		$this->assertEquals($to, $this->message->getTo());
 	}
 
-	public function testEmptyTo() {
+	public function testEmptyTo(): void {
 		$this->assertEquals(new AddressList(), $this->message->getTo());
 	}
 
-	public function testCC() {
+	public function testCC(): void {
 		$raw = [
 			'alice@example.com',
 			'Bob <bob@example.com>',
@@ -74,11 +74,11 @@ class MessageTest extends TestCase {
 		$this->assertEquals($cc, $this->message->getCC());
 	}
 
-	public function testEmptyCC() {
+	public function testEmptyCC(): void {
 		$this->assertEquals(new AddressList(), $this->message->getCC());
 	}
 
-	public function testBCC() {
+	public function testBCC(): void {
 		$raw = [
 			'alice@example.com',
 			'Bob <bob@example.com>',
@@ -90,11 +90,11 @@ class MessageTest extends TestCase {
 		$this->assertEquals($bcc, $this->message->getBCC());
 	}
 
-	public function testEmptyBCC() {
+	public function testEmptyBCC(): void {
 		$this->assertEquals(new AddressList(), $this->message->getBCC());
 	}
 
-	public function testRepliedMessage() {
+	public function testRepliedMessage(): void {
 		$reply = '9609171955.AA24342@cmstex2.maths.umanitoba.ca';
 
 		$this->message->setInReplyTo($reply);
@@ -103,7 +103,7 @@ class MessageTest extends TestCase {
 		$this->assertSame($reply, $actual);
 	}
 
-	public function testSubject() {
+	public function testSubject(): void {
 		$subject = 'test message';
 
 		$this->message->setSubject($subject);
@@ -111,11 +111,11 @@ class MessageTest extends TestCase {
 		$this->assertSame($subject, $this->message->getSubject());
 	}
 
-	public function testEmptySubject() {
+	public function testEmptySubject(): void {
 		$this->assertSame('', $this->message->getSubject());
 	}
 
-	public function testContent() {
+	public function testContent(): void {
 		$content = 'hello!';
 
 		$this->message->setContent($content);
@@ -123,7 +123,7 @@ class MessageTest extends TestCase {
 		$this->assertSame($content, $this->message->getContent());
 	}
 
-	public function testAttachments() {
+	public function testAttachments(): void {
 		$name = 'coffee.jpg';
 		$mimeType = 'image/jpeg';
 		$contents = 'file content';

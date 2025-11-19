@@ -13,16 +13,10 @@ use JsonSerializable;
 use ReturnTypeWillChange;
 
 final class Quota implements JsonSerializable {
-	/** @var int */
-	private $usage;
-
-	/** @var int */
-	private $limit;
-
-	public function __construct(int $usage,
-		int $limit) {
-		$this->usage = $usage;
-		$this->limit = $limit;
+	public function __construct(
+		private readonly int $usage,
+		private readonly int $limit
+	) {
 	}
 
 	public function getUsage(): int {

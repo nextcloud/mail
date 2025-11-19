@@ -369,7 +369,7 @@ class DraftsControllerTest extends TestCase {
 			->method('saveMessage');
 
 		$this->expectException(ClientException::class);
-		$actual = $this->controller->create(
+		$this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
 			$message->getBodyPlain(),

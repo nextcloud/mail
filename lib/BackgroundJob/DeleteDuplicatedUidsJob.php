@@ -16,7 +16,7 @@ use OCP\BackgroundJob\QueuedJob;
 class DeleteDuplicatedUidsJob extends QueuedJob {
 	public function __construct(
 		ITimeFactory $time,
-		private MessageMapper $messageMapper,
+		private readonly MessageMapper $messageMapper,
 	) {
 		parent::__construct($time);
 	}

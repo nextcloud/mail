@@ -27,21 +27,15 @@ final class PredictImportance extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 	public const ARGUMENT_SENDER = 'sender';
 	public const ARGUMENT_SUBJECT = 'subject';
+	private readonly IConfig $config;
 
-	private AccountService $accountService;
-	private ImportanceClassifier $classifier;
-	private IConfig $config;
-	private LoggerInterface $logger;
-
-	public function __construct(AccountService $service,
-		ImportanceClassifier $classifier,
+	public function __construct(
+		private readonly AccountService $accountService,
+		private readonly ImportanceClassifier $classifier,
 		IConfig $config,
-		LoggerInterface $logger) {
+		private readonly LoggerInterface $logger
+	) {
 		parent::__construct();
-
-		$this->accountService = $service;
-		$this->classifier = $classifier;
-		$this->logger = $logger;
 		$this->config = $config;
 	}
 
@@ -69,7 +63,7 @@ final class PredictImportance extends Command {
 
 		try {
 			$account = $this->accountService->findById($accountId);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			$output->writeln("<error>account $accountId does not exist</error>");
 			return 1;
 		}

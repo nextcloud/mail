@@ -20,8 +20,8 @@ class CreateAccountTest extends TestCase {
 	private $service;
 	private $crypto;
 	private $userManager;
-	private $command;
-	private $args = [
+	private ?\OCA\Mail\Command\CreateAccount $command = null;
+	private array $args = [
 		'user-id',
 		'name',
 		'email',
@@ -50,15 +50,15 @@ class CreateAccountTest extends TestCase {
 		$this->command = new CreateAccount($this->service, $this->crypto, $this->userManager);
 	}
 
-	public function testName() {
+	public function testName(): void {
 		$this->assertSame('mail:account:create', $this->command->getName());
 	}
 
-	public function testDescription() {
+	public function testDescription(): void {
 		$this->assertSame('creates IMAP account', $this->command->getDescription());
 	}
 
-	public function testArguments() {
+	public function testArguments(): void {
 		$actual = $this->command->getDefinition()->getArguments();
 
 		foreach ($actual as $actArg) {
@@ -71,7 +71,7 @@ class CreateAccountTest extends TestCase {
 		}
 	}
 
-	public function testInvalidUserId() {
+	public function testInvalidUserId(): void {
 		$userId = 'invalidUser';
 		$data = [
 			'user-id' => $userId,
@@ -91,7 +91,7 @@ class CreateAccountTest extends TestCase {
 
 		$input = $this->createMock(InputInterface::class);
 		$input->method('getArgument')
-			->willReturnCallback(fn ($arg) => $data[$arg] ?? null);
+			->willReturnCallback(fn ($arg): string|int|null => $data[$arg] ?? null);
 		$output = $this->createMock(OutputInterface::class);
 		$output->expects($this->once())
 			->method('writeln')

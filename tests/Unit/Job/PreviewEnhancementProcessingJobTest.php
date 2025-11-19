@@ -40,7 +40,7 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 	private PreviewEnhancementProcessingJob $job;
 
 	/** @var int[] */
-	private static $argument;
+	private static ?array $argument = null;
 
 	public function setUp(): void {
 		parent::setUp();

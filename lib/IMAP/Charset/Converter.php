@@ -17,8 +17,6 @@ use function is_string;
 class Converter {
 
 	/**
-	 * @param Horde_Mime_Part $p
-	 * @return string
 	 * @throws ServiceException
 	 */
 	public function convert(Horde_Mime_Part $p): string {

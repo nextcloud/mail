@@ -9,35 +9,19 @@ declare(strict_types=1);
 
 namespace OCA\Mail;
 
-use Horde_Imap_Client_Mailbox;
-
 class Folder {
 
-	/** @var Horde_Imap_Client_Mailbox */
-	private $mailbox;
-
-	/** @var array */
-	private $attributes;
-
-	/** @var string */
-	private $delimiter;
-
-	/** @var null|array */
-	private $status;
-
 	/** @var string[] */
-	private $specialUse;
+	private array $specialUse;
 
 	private ?string $myAcls;
 
-	public function __construct(Horde_Imap_Client_Mailbox $mailbox,
-		array $attributes,
-		?string $delimiter,
-		?array $status) {
-		$this->mailbox = $mailbox;
-		$this->attributes = $attributes;
-		$this->delimiter = $delimiter;
-		$this->status = $status;
+	public function __construct(
+		private readonly \Horde_Imap_Client_Mailbox $mailbox,
+		private readonly array $attributes,
+		private readonly ?string $delimiter,
+		private ?array $status
+	) {
 		$this->specialUse = [];
 		$this->myAcls = null;
 	}
@@ -57,26 +41,16 @@ class Folder {
 		return $this->attributes;
 	}
 
-	/**
-	 * @return null|array
-	 */
 	public function getStatus(): ?array {
 		return $this->status;
 	}
 
-	/**
-	 * @param array $status
-	 *
-	 * @return void
-	 */
 	public function setStatus(array $status): void {
 		$this->status = $status;
 	}
 
 	/**
 	 * @param string $use
-	 *
-	 * @return void
 	 */
 	public function addSpecialUse($use): void {
 		$this->specialUse[] = $use;
@@ -85,7 +59,7 @@ class Folder {
 	/**
 	 * @return string[]
 	 */
-	public function getSpecialUse() {
+	public function getSpecialUse(): array {
 		return $this->specialUse;
 	}
 

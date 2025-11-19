@@ -11,8 +11,8 @@ namespace OCA\Mail\Sieve;
 
 final class NamedSieveScript {
 	public function __construct(
-		private ?string $name,
-		private string $script,
+		private readonly ?string $name,
+		private readonly string $script,
 	) {
 	}
 

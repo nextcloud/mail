@@ -33,11 +33,9 @@ class OutboxServiceTest extends TestCase {
 	/** @var LocalMessageMapper|MockObject */
 	private $mapper;
 
-	/** @var OutboxService */
-	private $outboxService;
+	private ?\OCA\Mail\Service\OutboxService $outboxService = null;
 
-	/** @var string */
-	private $userId;
+	private ?string $userId = null;
 
 	/** @var ITimeFactory|MockObject */
 	private $time;

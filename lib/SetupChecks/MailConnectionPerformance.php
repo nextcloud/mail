@@ -22,12 +22,12 @@ use Throwable;
 
 class MailConnectionPerformance implements ISetupCheck {
 	public function __construct(
-		private IL10N $l10n,
-		private LoggerInterface $logger,
-		private ProvisioningMapper $provisioningMapper,
-		private MailAccountMapper $accountMapper,
-		private IMAPClientFactory $clientFactory,
-		private MicroTime $microtime,
+		private readonly IL10N $l10n,
+		private readonly LoggerInterface $logger,
+		private readonly ProvisioningMapper $provisioningMapper,
+		private readonly MailAccountMapper $accountMapper,
+		private readonly IMAPClientFactory $clientFactory,
+		private readonly MicroTime $microtime,
 	) {
 	}
 
@@ -78,7 +78,7 @@ class MailConnectionPerformance implements ISetupCheck {
 					$tOperation = $this->microtime->getNumeric();
 
 					$tests[$host][$accountId] = ['start' => $tStart, 'login' => $tLogin, 'operation' => $tOperation];
-				} catch (Throwable $e) {
+				} catch (Throwable) {
 					$this->logger->warning('Error occurred while performing system check on mail account: ' . $account->getId());
 				} finally {
 					$client->close();

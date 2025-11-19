@@ -10,19 +10,12 @@ declare(strict_types=1);
 namespace OCA\Mail\Model;
 
 final class SmimeDecryptionResult {
-	private string $decryptedMessage;
-	private bool $isEncrypted;
-	private bool $isSigned;
-	private bool $isSignatureValid;
-
-	public function __construct(string $decryptedMessage,
-		bool $isEncrypted,
-		bool $isSigned,
-		bool $isSignatureValid) {
-		$this->isEncrypted = $isEncrypted;
-		$this->isSigned = $isSigned;
-		$this->isSignatureValid = $isSignatureValid;
-		$this->decryptedMessage = $decryptedMessage;
+	public function __construct(
+		private readonly string $decryptedMessage,
+		private readonly bool $isEncrypted,
+		private readonly bool $isSigned,
+		private readonly bool $isSignatureValid
+	) {
 	}
 
 	public static function fromPlain(string $plainMessage): self {

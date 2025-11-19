@@ -14,32 +14,14 @@ use OCA\Mail\Db\Mailbox;
 use OCP\EventDispatcher\Event;
 
 class MessageFlaggedEvent extends Event {
-	/** @var Account */
-	private $account;
-
-	/** @var Mailbox */
-	private $mailbox;
-
-	/** @var int */
-	private $uid;
-
-	/** @var string */
-	private $flag;
-
-	/** @var bool */
-	private $set;
-
-	public function __construct(Account $account,
-		Mailbox $mailbox,
-		int $uid,
-		string $flag,
-		bool $set) {
+	public function __construct(
+		private readonly \OCA\Mail\Account $account,
+		private readonly \OCA\Mail\Db\Mailbox $mailbox,
+		private readonly int $uid,
+		private readonly string $flag,
+		private readonly bool $set
+	) {
 		parent::__construct();
-		$this->account = $account;
-		$this->mailbox = $mailbox;
-		$this->uid = $uid;
-		$this->flag = $flag;
-		$this->set = $set;
 	}
 
 	public function getAccount(): Account {

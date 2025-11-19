@@ -30,33 +30,17 @@ use function filter_var;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class GoogleIntegrationController extends Controller {
-	private ?string $userId;
-	private GoogleIntegration $googleIntegration;
-	private AccountService $accountService;
-	private LoggerInterface $logger;
-	private MailboxSync $mailboxSync;
-
-
-	public function __construct(IRequest $request,
-		?string $UserId,
-		GoogleIntegration $googleIntegration,
-		AccountService $accountService,
-		LoggerInterface $logger,
-		MailboxSync $mailboxSync) {
+	public function __construct(
+		IRequest $request,
+		private readonly ?string $userId,
+		private readonly GoogleIntegration $googleIntegration,
+		private readonly AccountService $accountService,
+		private readonly LoggerInterface $logger,
+		private readonly MailboxSync $mailboxSync
+	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->userId = $UserId;
-		$this->googleIntegration = $googleIntegration;
-		$this->accountService = $accountService;
-		$this->logger = $logger;
-		$this->mailboxSync = $mailboxSync;
 	}
 
-	/**
-	 * @param string $clientId
-	 * @param string $clientSecret
-	 *
-	 * @return JsonResponse
-	 */
 	public function configure(string $clientId, string $clientSecret): JsonResponse {
 		if (empty($clientId) || empty($clientSecret)) {
 			return JsonResponse::fail(null, Http::STATUS_UNPROCESSABLE_ENTITY);
@@ -84,8 +68,6 @@ class GoogleIntegrationController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 *
-	 * @return Response
 	 */
 	public function oauthRedirect(?string $code, ?string $state, ?string $scope, ?string $error): Response {
 		if ($this->userId === null) {

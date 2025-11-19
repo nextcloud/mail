@@ -48,27 +48,24 @@ use function array_merge;
  */
 class MessageApiController extends OCSController {
 
-	private ?string $userId;
-
 	public function __construct(
 		string $appName,
-		?string $userId,
+		private readonly ?string $userId,
 		IRequest $request,
-		private AccountService $accountService,
-		private AliasesService $aliasesService,
-		private AttachmentService $attachmentService,
-		private OutboxService $outboxService,
-		private MailManager $mailManager,
-		private IMAPClientFactory $clientFactory,
-		private LoggerInterface $logger,
-		private ITimeFactory $time,
-		private IURLGenerator $urlGenerator,
-		private IDkimService $dkimService,
-		private ItineraryService $itineraryService,
-		private TrustedSenderService $trustedSenderService,
+		private readonly AccountService $accountService,
+		private readonly AliasesService $aliasesService,
+		private readonly AttachmentService $attachmentService,
+		private readonly OutboxService $outboxService,
+		private readonly MailManager $mailManager,
+		private readonly IMAPClientFactory $clientFactory,
+		private readonly LoggerInterface $logger,
+		private readonly ITimeFactory $time,
+		private readonly IURLGenerator $urlGenerator,
+		private readonly IDkimService $dkimService,
+		private readonly ItineraryService $itineraryService,
+		private readonly TrustedSenderService $trustedSenderService,
 	) {
 		parent::__construct($appName, $request);
-		$this->userId = $userId;
 	}
 
 	/**
@@ -191,7 +188,7 @@ class MessageApiController extends OCSController {
 			}
 		}
 
-		$localAttachments = array_map(static fn ($messageAttachment) => ['type' => 'local', 'id' => $messageAttachment->getId()], $messageAttachments);
+		$localAttachments = array_map(static fn ($messageAttachment): array => ['type' => 'local', 'id' => $messageAttachment->getId()], $messageAttachments);
 		$localMessage = $this->outboxService->saveMessage($mailAccount, $message, $to, $cc, $bcc, $localAttachments);
 
 		try {
@@ -273,7 +270,7 @@ class MessageApiController extends OCSController {
 		if ($itineraries) {
 			$json['itineraries'] = $itineraries->jsonSerialize();
 		}
-		$json['attachments'] = array_map(fn ($a) => $this->enrichDownloadUrl(
+		$json['attachments'] = array_map(fn (array $a): array => $this->enrichDownloadUrl(
 			$id,
 			$a
 		), $json['attachments']);
@@ -350,9 +347,7 @@ class MessageApiController extends OCSController {
 
 	/**
 	 * @param int $id the id of the message
-	 * @param array $attachment
 	 *
-	 * @return array
 	 */
 	private function enrichDownloadUrl(int $id, array $attachment): array {
 		$downloadUrl = $this->urlGenerator->linkToOCSRouteAbsolute('mail.messageApi.getAttachment',
@@ -424,7 +419,6 @@ class MessageApiController extends OCSController {
 	}
 
 	/**
-	 * @return array
 	 * @throws UploadException
 	 */
 	private function handleAttachments(): array {

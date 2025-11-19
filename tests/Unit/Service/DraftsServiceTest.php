@@ -26,7 +26,6 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\DraftsService;
 use OCA\Mail\Service\MailTransmission;
-use OCA\Mail\Service\OutboxService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\Exception;
@@ -41,11 +40,9 @@ class DraftsServiceTest extends TestCase {
 	/** @var LocalMessageMapper|MockObject */
 	private $mapper;
 
-	/** @var OutboxService */
-	private $draftsService;
+	private ?\OCA\Mail\Service\DraftsService $draftsService = null;
 
-	/** @var string */
-	private $userId;
+	private ?string $userId = null;
 
 	/** @var ITimeFactory|MockObject */
 	private $time;

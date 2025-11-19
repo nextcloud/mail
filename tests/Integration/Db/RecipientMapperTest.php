@@ -29,8 +29,7 @@ class RecipientMapperTest extends TestCase {
 	/** @var IDBConnection */
 	private $db;
 
-	/** @var RecipientMapper */
-	private $mapper;
+	private ?\OCA\Mail\Db\RecipientMapper $mapper = null;
 
 	private LocalMessageMapper $localMessageMapper;
 
@@ -48,7 +47,7 @@ class RecipientMapperTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->db = \OC::$server->getDatabaseConnection();
+		$this->db = \OCP\Server::get(\OCP\IDBConnection::class);
 		$this->mapper = new RecipientMapper(
 			$this->db
 		);

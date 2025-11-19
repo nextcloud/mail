@@ -27,8 +27,7 @@ class CacheTest extends TestCase {
 	/** @var AvatarFactory|PHPUnit_Framework_MockObject_MockObject */
 	private $avatarFactory;
 
-	/** @var Cache */
-	private $cache;
+	private ?\OCA\Mail\Service\Avatar\Cache $cache = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -43,7 +42,7 @@ class CacheTest extends TestCase {
 		$this->cache = new Cache($this->cacheFactory, $this->avatarFactory);
 	}
 
-	public function testGetNonCachedAvatar() {
+	public function testGetNonCachedAvatar(): void {
 		$email = 'john@doe.com';
 		$uid = 'jane';
 		$this->cacheImpl->expects($this->once())
@@ -56,7 +55,7 @@ class CacheTest extends TestCase {
 		$this->assertNull($cachedAvatar);
 	}
 
-	public function testGetCachedAvatar() {
+	public function testGetCachedAvatar(): void {
 		$email = 'john@doe.com';
 		$uid = 'jane';
 		$this->cacheImpl->expects($this->once())
@@ -74,7 +73,7 @@ class CacheTest extends TestCase {
 		$this->assertEquals($expected, $cachedAvatar);
 	}
 
-	public function testSetAvatar() {
+	public function testSetAvatar(): void {
 		$email = 'john@doe.com';
 		$uid = 'jane';
 		$avatar = new Avatar('https://…', 'image/jpeg');
@@ -85,7 +84,7 @@ class CacheTest extends TestCase {
 		$this->cache->add($email, $uid, $avatar);
 	}
 
-	public function testGetImage() {
+	public function testGetImage(): void {
 		$uid = 'jane';
 		$this->cacheImpl->expects($this->once())
 			->method('get')
@@ -97,7 +96,7 @@ class CacheTest extends TestCase {
 		$this->assertEquals(self::BLACK_DOT_BASE64, $image);
 	}
 
-	public function testGetNonCachedImage() {
+	public function testGetNonCachedImage(): void {
 		$uid = 'jane';
 		$this->cacheImpl->expects($this->once())
 			->method('get')
@@ -109,7 +108,7 @@ class CacheTest extends TestCase {
 		$this->assertNull($image);
 	}
 
-	public function testAddImage() {
+	public function testAddImage(): void {
 		$uid = 'jane';
 		$this->cacheImpl->expects($this->once())
 			->method('set')

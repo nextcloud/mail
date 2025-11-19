@@ -27,7 +27,7 @@ class Downloader {
 
 		try {
 			$resp = $client->get($url);
-		} catch (Exception $e) {
+		} catch (Exception) {
 			return null;
 		}
 

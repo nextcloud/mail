@@ -30,27 +30,16 @@ final class SyncAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 	public const OPTION_FORCE = 'force';
 
-	private AccountService $accountService;
-	private MailboxSync $mailboxSync;
-	private ImapToDbSynchronizer $syncService;
-	private LoggerInterface $logger;
-
-	public function __construct(AccountService $service,
-		MailboxSync $mailboxSync,
-		ImapToDbSynchronizer $messageSync,
-		LoggerInterface $logger) {
+	public function __construct(
+		private readonly AccountService $accountService,
+		private readonly MailboxSync $mailboxSync,
+		private readonly ImapToDbSynchronizer $syncService,
+		private readonly LoggerInterface $logger
+	) {
 		parent::__construct();
-
-		$this->accountService = $service;
-		$this->mailboxSync = $mailboxSync;
-		$this->syncService = $messageSync;
-		$this->logger = $logger;
 	}
 
-	/**
-	 * @return void
-	 */
-	protected function configure() {
+	protected function configure(): void {
 		$this->setName('mail:account:sync');
 		$this->setDescription('Synchronize an IMAP account');
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::REQUIRED);
@@ -63,7 +52,7 @@ final class SyncAccount extends Command {
 
 		try {
 			$account = $this->accountService->findById($accountId);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			$output->writeln("<error>Account $accountId does not exist</error>");
 
 			return 1;

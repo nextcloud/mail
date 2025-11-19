@@ -13,12 +13,10 @@ use JsonSerializable;
 use ReturnTypeWillChange;
 
 final class MailboxStats implements JsonSerializable {
-	private int $total;
-	private int $unread;
-
-	public function __construct(int $total, int $unread) {
-		$this->total = $total;
-		$this->unread = $unread;
+	public function __construct(
+		private readonly int $total,
+		private readonly int $unread
+	) {
 	}
 
 	public function getTotal(): int {

@@ -11,7 +11,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\AppInfo\Application;
 
 class ApplicationTest extends TestCase {
-	public function testConstrucor() {
+	public function testConstrucor(): void {
 		// Not really a test – it's just about code coverage
 		new Application();
 

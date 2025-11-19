@@ -19,7 +19,7 @@ use OCP\Migration\SimpleMigrationStep;
 class Version3800Date20240628163133 extends SimpleMigrationStep {
 
 	public function __construct(
-		private IDBConnection $connection,
+		private readonly IDBConnection $connection,
 	) {
 	}
 
@@ -45,11 +45,8 @@ class Version3800Date20240628163133 extends SimpleMigrationStep {
 		return null;
 	}
 
-	/**
-	 * @return void
-	 */
 	#[\Override]
-	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options) {
+	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
 		$qb = $this->connection->getQueryBuilder();
 		$qb->update('mail_accounts')
 			->set('inbound_password', $qb->createNamedParameter(null, IQueryBuilder::PARAM_NULL))

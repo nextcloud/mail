@@ -13,31 +13,17 @@ use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
-use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\MessageMapper;
-use Psr\Log\LoggerInterface;
 
 class MigrateImportantFromImapAndDb {
 
 
-	/** @var MessageMapper */
-	private $messageMapper;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(MessageMapper $messageMapper,
-		MailboxMapper $mailboxMapper,
-		LoggerInterface $logger,
+	public function __construct(
+		private readonly \OCA\Mail\IMAP\MessageMapper $messageMapper,
+		private readonly \OCA\Mail\Db\MailboxMapper $mailboxMapper,
+		private readonly \Psr\Log\LoggerInterface $logger
 	) {
-		$this->messageMapper = $messageMapper;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->logger = $logger;
 	}
 
 	public function migrateImportantOnImap(Horde_Imap_Client_Socket $client, Account $account, Mailbox $mailbox): void {

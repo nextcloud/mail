@@ -18,90 +18,22 @@ use OCA\Mail\AddressList;
  * @psalm-immutable
  */
 class NewMessageData {
-	private ?int $smimeCertificateId;
-	private bool $smimeSign;
-	private bool $smimeEncrypt;
-
-	/** @var Account */
-	private $account;
-
-	/** @var AddressList */
-	private $to;
-
-	/** @var AddressList */
-	private $cc;
-
-	/** @var AddressList */
-	private $bcc;
-
-	/** @var string */
-	private $subject;
-
-	/** @var string */
-	private $body;
-
-	/** @var array */
-	private $attachments;
-
-	/** @var bool */
-	private $isHtml;
-
-	/** @var bool */
-	private $isMdnRequested;
-
-	/**
-	 * @param Account $account
-	 * @param AddressList $to
-	 * @param AddressList $cc
-	 * @param AddressList $bcc
-	 * @param string $subject
-	 * @param string $body
-	 * @param array $attachments
-	 * @param bool $isHtml
-	 * @param int|null $smimeCertificateId
-	 * @param bool $smimeSign
-	 * @param bool $isMdnRequested
-	 */
-	public function __construct(Account $account,
-		AddressList $to,
-		AddressList $cc,
-		AddressList $bcc,
-		string $subject,
-		string $body,
-		array $attachments = [],
-		bool $isHtml = true,
-		bool $isMdnRequested = false,
-		?int $smimeCertificateId = null,
-		bool $smimeSign = false,
-		bool $smimeEncrypt = false) {
-		$this->account = $account;
-		$this->to = $to;
-		$this->cc = $cc;
-		$this->bcc = $bcc;
-		$this->subject = $subject;
-		$this->body = $body;
-		$this->attachments = $attachments;
-		$this->isHtml = $isHtml;
-		$this->isMdnRequested = $isMdnRequested;
-		$this->smimeCertificateId = $smimeCertificateId;
-		$this->smimeSign = $smimeSign;
-		$this->smimeEncrypt = $smimeEncrypt;
+	public function __construct(
+		private readonly \OCA\Mail\Account $account,
+		private readonly \OCA\Mail\AddressList $to,
+		private readonly \OCA\Mail\AddressList $cc,
+		private readonly \OCA\Mail\AddressList $bcc,
+		private readonly string $subject,
+		private readonly string $body,
+		private readonly array $attachments = [],
+		private readonly bool $isHtml = true,
+		private readonly bool $isMdnRequested = false,
+		private readonly ?int $smimeCertificateId = null,
+		private readonly bool $smimeSign = false,
+		private readonly bool $smimeEncrypt = false
+	) {
 	}
 
-	/**
-	 * @param Account $account
-	 * @param string $subject
-	 * @param string $body
-	 * @param string|null $to
-	 * @param string|null $cc
-	 * @param string|null $bcc
-	 * @param array $attachments
-	 * @param bool $isHtml
-	 * @param bool $requestMdn
-	 * @param int|null $smimeCertificateId
-	 * @param bool $smimeSign
-	 * @return NewMessageData
-	 */
 	public static function fromRequest(Account $account,
 		string $subject,
 		string $body,
@@ -134,51 +66,30 @@ class NewMessageData {
 		);
 	}
 
-	/**
-	 * @return Account
-	 */
 	public function getAccount(): Account {
 		return $this->account;
 	}
 
-	/**
-	 * @return AddressList
-	 */
 	public function getTo(): AddressList {
 		return $this->to;
 	}
 
-	/**
-	 * @return AddressList
-	 */
 	public function getCc(): AddressList {
 		return $this->cc;
 	}
 
-	/**
-	 * @return AddressList
-	 */
 	public function getBcc(): AddressList {
 		return $this->bcc;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getSubject(): string {
 		return $this->subject;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getBody(): string {
 		return $this->body;
 	}
 
-	/**
-	 * @return array
-	 */
 	public function getAttachments(): array {
 		return $this->attachments;
 	}

@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Search;
 
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Service\Search\FilterStringParser;
 use OCP\IDateTimeFormatter;
@@ -24,9 +23,6 @@ use OCP\Search\SearchResultEntry;
 use function array_map;
 
 class Provider implements IProvider {
-	/** @var IMailSearch */
-	private $mailSearch;
-
 	/** @var IL10N */
 	private $l10n;
 
@@ -37,13 +33,12 @@ class Provider implements IProvider {
 	private $urlGenerator;
 
 	public function __construct(
-		IMailSearch $mailSearch,
+		private readonly \OCA\Mail\Contracts\IMailSearch $mailSearch,
 		IL10N $l10n,
 		IDateTimeFormatter $dateTimeFormatter,
 		IURLGenerator $urlGenerator,
-		private FilterStringParser $filterStringParser,
+		private readonly FilterStringParser $filterStringParser,
 	) {
-		$this->mailSearch = $mailSearch;
 		$this->l10n = $l10n;
 		$this->dateTimeFormatter = $dateTimeFormatter;
 		$this->urlGenerator = $urlGenerator;
@@ -98,7 +93,7 @@ class Provider implements IProvider {
 
 		return SearchResult::paginated(
 			$this->getName(),
-			array_map(function (Message $message) {
+			array_map(function (Message $message): \OCP\Search\SearchResultEntry {
 				$formattedDate = $this->dateTimeFormatter->formatDateTimeRelativeDay($message->getSentAt(), 'short');
 				$sender = $message->getFrom()->first();
 

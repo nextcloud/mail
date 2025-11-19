@@ -29,7 +29,7 @@ class SettingsControllerTest extends TestCase {
 		$this->controller = $this->mock->getService();
 	}
 
-	public function testProvisioning() {
+	public function testProvisioning(): void {
 		$this->mock->getParameter('provisioningManager')
 			->expects($this->once())
 			->method('provision')
@@ -52,7 +52,7 @@ class SettingsControllerTest extends TestCase {
 		self::assertEquals(new JSONResponse($provisioning), $response);
 	}
 
-	public function testDeprovision() {
+	public function testDeprovision(): void {
 		$provisioning = new Provisioning();
 		$this->mock->getParameter('provisioningManager')
 			->expects($this->once())

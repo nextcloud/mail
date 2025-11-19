@@ -12,12 +12,8 @@ namespace OCA\Mail\Service;
 use Nextcloud\KItinerary\Itinerary;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
-use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MessageMapper;
-use OCA\Mail\Integration\KItinerary\ItineraryExtractor;
 use OCP\ICache;
 use OCP\ICacheFactory;
-use Psr\Log\LoggerInterface;
 use function array_reduce;
 use function count;
 use function json_encode;
@@ -26,31 +22,17 @@ class ItineraryService {
 	private const CACHE_PREFIX = 'mail_itinerary';
 	private const CACHE_TTL = 7 * 24 * 3600;
 
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
-	/** @var ItineraryExtractor */
-	private $extractor;
-
 	/** @var ICache */
 	private $cache;
 
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(IMAPClientFactory $clientFactory,
-		MessageMapper $messageMapper,
-		ItineraryExtractor $extractor,
+	public function __construct(
+		private readonly \OCA\Mail\IMAP\IMAPClientFactory $clientFactory,
+		private readonly \OCA\Mail\IMAP\MessageMapper $messageMapper,
+		private readonly \OCA\Mail\Integration\KItinerary\ItineraryExtractor $extractor,
 		ICacheFactory $cacheFactory,
-		LoggerInterface $logger) {
-		$this->clientFactory = $clientFactory;
-		$this->messageMapper = $messageMapper;
-		$this->extractor = $extractor;
+		private readonly \Psr\Log\LoggerInterface $logger
+	) {
 		$this->cache = $cacheFactory->createLocal(self::CACHE_PREFIX);
-		$this->logger = $logger;
 	}
 
 	private function buildCacheKey(Account $account, Mailbox $mailbox, int $id): string {
@@ -86,7 +68,7 @@ class ItineraryService {
 		} finally {
 			$client->logout();
 		}
-		$itinerary = array_reduce($attachments, function (Itinerary $combined, string $attachment) {
+		$itinerary = array_reduce($attachments, function (Itinerary $combined, string $attachment): \Nextcloud\KItinerary\Itinerary {
 			$extracted = $this->extractor->extract($attachment);
 			$this->logger->debug('Extracted ' . count($extracted) . ' itinerary entries from an attachment');
 			return $combined->merge($extracted);

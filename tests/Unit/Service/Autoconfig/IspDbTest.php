@@ -31,7 +31,6 @@ class IspDbTest extends TestCase {
 	/** @var IClient|MockObject */
 	private $client;
 
-	/** @var MockObject|Resolver */
 	private MockObject|Resolver $dnsResolver;
 
 	/** @var LoggerInterface|MockObject */
@@ -147,7 +146,7 @@ class IspDbTest extends TestCase {
 			->willReturn(false);
 		$contactedServer = false;
 		$this->client->method('get')
-			->willReturnCallback(function ($url) use (&$contactedServer) {
+			->willReturnCallback(function ($url) use (&$contactedServer): void {
 				if (str_starts_with($url, 'https://autoconfig.company.org')) {
 					$contactedServer = true;
 				}
@@ -176,7 +175,7 @@ class IspDbTest extends TestCase {
 			->willReturn(true);
 		$contactedServer = false;
 		$this->client->method('get')
-			->willReturnCallback(function ($url) use (&$contactedServer) {
+			->willReturnCallback(function ($url) use (&$contactedServer): void {
 				if (str_starts_with($url, 'https://autoconfig.org')) {
 					$contactedServer = true;
 				}

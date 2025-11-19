@@ -10,78 +10,48 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalMessage;
-use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Send\Chain;
-use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\Exception;
 use OCP\EventDispatcher\IEventDispatcher;
-use Psr\Log\LoggerInterface;
 use Throwable;
 
 class OutboxService {
 
 
-	/** @var LocalMessageMapper */
-	private $mapper;
-
-	/** @var AttachmentService */
-	private $attachmentService;
-
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
-
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var IMailManager */
-	private $mailManager;
-
-	/** @var AccountService */
-	private $accountService;
 
 	/** @var ITimeFactory */
 	private $timeFactory;
 
-	/** @var LoggerInterface */
-	private $logger;
-
 	public function __construct(
-		LocalMessageMapper $mapper,
-		AttachmentService $attachmentService,
+		private readonly \OCA\Mail\Db\LocalMessageMapper $mapper,
+		private readonly \OCA\Mail\Service\Attachment\AttachmentService $attachmentService,
 		IEventDispatcher $eventDispatcher,
-		IMAPClientFactory $clientFactory,
-		IMailManager $mailManager,
-		AccountService $accountService,
+		private readonly \OCA\Mail\IMAP\IMAPClientFactory $clientFactory,
+		private readonly \OCA\Mail\Contracts\IMailManager $mailManager,
+		private readonly \OCA\Mail\Service\AccountService $accountService,
 		ITimeFactory $timeFactory,
-		LoggerInterface $logger,
-		private Chain $sendChain,
+		private readonly \Psr\Log\LoggerInterface $logger,
+		private readonly Chain $sendChain,
 	) {
-		$this->mapper = $mapper;
-		$this->attachmentService = $attachmentService;
 		$this->eventDispatcher = $eventDispatcher;
-		$this->clientFactory = $clientFactory;
-		$this->mailManager = $mailManager;
 		$this->timeFactory = $timeFactory;
-		$this->logger = $logger;
-		$this->accountService = $accountService;
 	}
 
 	/**
 	 * @param array<int, array{email: string, label?: string}> $recipients
-	 * @param int $type
 	 * @return Recipient[]
 	 */
 	private static function convertToRecipient(array $recipients, int $type): array {
-		return array_map(static function ($recipient) use ($type) {
+		return array_map(static function (array $recipient) use ($type): \OCA\Mail\Db\Recipient {
 			$r = new Recipient();
 			$r->setType($type);
 			$r->setLabel($recipient['label'] ?? $recipient['email']);
@@ -104,11 +74,6 @@ class OutboxService {
 		return $this->mapper->findById($id, $userId, LocalMessage::TYPE_OUTGOING);
 	}
 
-	/**
-	 * @param string $userId
-	 * @param LocalMessage $message
-	 * @return void
-	 */
 	public function deleteMessage(string $userId, LocalMessage $message): void {
 		$this->attachmentService->deleteLocalMessageAttachments($userId, $message->getId());
 		$this->mapper->deleteWithRecipients($message);
@@ -124,13 +89,9 @@ class OutboxService {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param LocalMessage $message
 	 * @param array<int, array{email: string, label?: string}> $to
 	 * @param array<int, array{email: string, label?: string}> $cc
 	 * @param array<int, array{email: string, label?: string}> $bcc
-	 * @param array $attachments
-	 * @return LocalMessage
 	 */
 	public function saveMessage(Account $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
@@ -155,13 +116,9 @@ class OutboxService {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param LocalMessage $message
 	 * @param array<int, array{email: string, label?: string}> $to
 	 * @param array<int, array{email: string, label?: string}> $cc
 	 * @param array<int, array{email: string, label?: string}> $bcc
-	 * @param array $attachments
-	 * @return LocalMessage
 	 */
 	public function updateMessage(Account $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
@@ -185,11 +142,6 @@ class OutboxService {
 		return $message;
 	}
 
-	/**
-	 * @param Account $account
-	 * @param int $draftId
-	 * @return void
-	 */
 	public function handleDraft(Account $account, int $draftId): void {
 		$message = $this->mailManager->getMessage($account->getUserId(), $draftId);
 		$this->eventDispatcher->dispatch(
@@ -198,9 +150,6 @@ class OutboxService {
 		);
 	}
 
-	/**
-	 * @return void
-	 */
 	public function flush(): void {
 		$messages = $this->mapper->findDue(
 			$this->timeFactory->getTime()
@@ -212,10 +161,10 @@ class OutboxService {
 
 		$accountIds = array_unique(array_map(static fn ($message) => $message->getAccountId(), $messages));
 
-		$accounts = array_combine($accountIds, array_map(function ($accountId) {
+		$accounts = array_combine($accountIds, array_map(function (int $accountId): ?\OCA\Mail\Account {
 			try {
 				return $this->accountService->findById($accountId);
-			} catch (DoesNotExistException $e) {
+			} catch (DoesNotExistException) {
 				// The message belongs to a deleted account
 
 				return null;

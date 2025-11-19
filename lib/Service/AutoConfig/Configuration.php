@@ -16,13 +16,10 @@ use ReturnTypeWillChange;
  * @psalm-immutable
  */
 final class Configuration implements JsonSerializable {
-	private ?ServerConfiguration $imapConfig;
-	private ?ServerConfiguration $smtpConfig;
-
-	public function __construct(?ServerConfiguration $imapConfig,
-		?ServerConfiguration $smtpConfig) {
-		$this->imapConfig = $imapConfig;
-		$this->smtpConfig = $smtpConfig;
+	public function __construct(
+		private readonly ?ServerConfiguration $imapConfig,
+		private readonly ?ServerConfiguration $smtpConfig
+	) {
 	}
 
 	#[\Override]

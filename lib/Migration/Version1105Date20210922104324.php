@@ -15,15 +15,15 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
-use Psr\Log\LoggerInterface;
 
 class Version1105Date20210922104324 extends SimpleMigrationStep {
 	private $connection;
-	private $logger;
 
-	public function __construct(IDBConnection $connection, LoggerInterface $logger) {
+	public function __construct(
+		IDBConnection $connection,
+		private readonly \Psr\Log\LoggerInterface $logger
+	) {
 		$this->connection = $connection;
-		$this->logger = $logger;
 	}
 
 	#[\Override]
@@ -44,7 +44,7 @@ class Version1105Date20210922104324 extends SimpleMigrationStep {
 			return;
 		}
 
-		$accountIds = array_map(static fn ($row) => (int)$row['id'], $result->fetchAll());
+		$accountIds = array_map(static fn (array $row): int => (int)$row['id'], $result->fetchAll());
 		$result->closeCursor();
 
 		if (count($accountIds) === 0) {

@@ -33,8 +33,7 @@ class MessageMapperTest extends TestCase {
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 
-	/** @var MessageMapper */
-	private $mapper;
+	private ?\OCA\Mail\IMAP\MessageMapper $mapper = null;
 
 	/** @var SmimeService|MockObject */
 	private $sMimeService;
@@ -585,7 +584,7 @@ class MessageMapperTest extends TestCase {
 		self::assertEmpty($result['messages']);
 	}
 
-	public function testGetFlagged() {
+	public function testGetFlagged(): void {
 		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
 		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = new Mailbox();
@@ -609,7 +608,7 @@ class MessageMapperTest extends TestCase {
 		$this->assertEquals($result, [1]);
 	}
 
-	public function testGetFlaggedNoMatches() {
+	public function testGetFlaggedNoMatches(): void {
 		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
 		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = new Mailbox();
@@ -632,7 +631,7 @@ class MessageMapperTest extends TestCase {
 		$this->assertEquals($result, []);
 	}
 
-	public function testGetFlaggedSearchResultUnexpectedStructure() {
+	public function testGetFlaggedSearchResultUnexpectedStructure(): void {
 		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
 		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = new Mailbox();

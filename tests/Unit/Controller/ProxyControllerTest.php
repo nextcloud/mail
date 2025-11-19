@@ -22,12 +22,10 @@ use OCP\IRequest;
 use OCP\ISession;
 use OCP\IURLGenerator;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 class ProxyControllerTest extends TestCase {
-	/** @var string */
-	private $appName;
+	private ?string $appName = null;
 
 	/** @var IRequest|MockObject */
 	private $request;
@@ -41,11 +39,9 @@ class ProxyControllerTest extends TestCase {
 	/** @var IClientService|MockObject */
 	private $clientService;
 
-	/** @var LoggerInterface */
-	private $logger;
+	private ?\Psr\Log\NullLogger $logger = null;
 
-	/** @var ProxyController */
-	private $controller;
+	private ?\OCA\Mail\Controller\ProxyController $controller = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -98,7 +94,7 @@ class ProxyControllerTest extends TestCase {
 	 */
 	public function testRedirect(string $url,
 		bool $passesTest,
-		bool $authorized) {
+		bool $authorized): void {
 		$this->urlGenerator->expects($this->once())
 			->method('linkToRoute')
 			->with('mail.page.index')
@@ -131,7 +127,7 @@ class ProxyControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testRedirectInvalidUrl() {
+	public function testRedirectInvalidUrl(): void {
 		$this->controller = new ProxyController(
 			$this->appName,
 			$this->request,

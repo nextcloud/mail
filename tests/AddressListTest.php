@@ -15,7 +15,7 @@ use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 
 class AddressListTest extends TestCase {
-	public function testSerialize() {
+	public function testSerialize(): void {
 		$list = new AddressList([
 			Address::fromRaw('User 1', 'user1@domain.tld'),
 			Address::fromRaw('User 2', 'user2@domain.tld'),
@@ -37,7 +37,7 @@ class AddressListTest extends TestCase {
 		$this->assertEquals($expected, $json);
 	}
 
-	public function testParseSingleAddress() {
+	public function testParseSingleAddress(): void {
 		$source = 'a@b.c';
 		$expected = new AddressList([
 			Address::fromRaw('a@b.c', 'a@b.c'),
@@ -48,7 +48,7 @@ class AddressListTest extends TestCase {
 		$this->assertEquals($expected, $list);
 	}
 
-	public function testFromHordeList() {
+	public function testFromHordeList(): void {
 		$hordeList = new Horde_Mail_Rfc822_List([
 			new Horde_Mail_Rfc822_Address(),
 			new Horde_Mail_Rfc822_Group(),
@@ -59,7 +59,7 @@ class AddressListTest extends TestCase {
 		$this->assertCount(1, $list);
 	}
 
-	public function testToHorde() {
+	public function testToHorde(): void {
 		$list = new AddressList([
 			Address::fromRaw('A', 'a@domain.tld'),
 			Address::fromRaw('B', 'b@domain.tld'),
@@ -78,7 +78,7 @@ class AddressListTest extends TestCase {
 		$this->assertEquals($expected, $hordeList);
 	}
 
-	public function testFromAndToHorde() {
+	public function testFromAndToHorde(): void {
 		$add1 = new Horde_Mail_Rfc822_Address('a@domain.tld');
 		$add1->personal = 'A';
 		$add2 = new Horde_Mail_Rfc822_Address('b@domain.tld');
@@ -98,7 +98,7 @@ class AddressListTest extends TestCase {
 		$this->assertEquals($expected, $hordeList);
 	}
 
-	public function testMergeIdentical() {
+	public function testMergeIdentical(): void {
 		$a = new AddressList([
 			Address::fromRaw('A', 'a@b.c'),
 		]);
@@ -111,7 +111,7 @@ class AddressListTest extends TestCase {
 		$this->assertCount(1, $c);
 	}
 
-	public function testMergeNonIdentical() {
+	public function testMergeNonIdentical(): void {
 		$a = new AddressList([
 			Address::fromRaw('A', 'a@b.c'),
 		]);
@@ -126,7 +126,7 @@ class AddressListTest extends TestCase {
 		$this->assertCount(2, $c);
 	}
 
-	public function testMergeMixed() {
+	public function testMergeMixed(): void {
 		$a = new AddressList([
 			Address::fromRaw('A', 'a@b.c'),
 			Address::fromRaw('B', 'b@b.c'),
@@ -140,7 +140,7 @@ class AddressListTest extends TestCase {
 		$this->assertCount(2, $c);
 	}
 
-	public function testMergeEmpty() {
+	public function testMergeEmpty(): void {
 		$a = new AddressList([
 			Address::fromRaw('A', 'a@b.c'),
 			Address::fromRaw('B', 'b@b.c'),
@@ -152,7 +152,7 @@ class AddressListTest extends TestCase {
 		$this->assertCount(2, $c);
 	}
 
-	public function testMergeToEmpty() {
+	public function testMergeToEmpty(): void {
 		$a = new AddressList([
 		]);
 		$b = new AddressList([

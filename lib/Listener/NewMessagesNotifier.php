@@ -21,8 +21,8 @@ use OCP\IURLGenerator;
 class NewMessagesNotifier implements IEventListener {
 
 	public function __construct(
-		private IEventDispatcher $eventDispatcher,
-		private IURLGenerator $urlGenerator,
+		private readonly IEventDispatcher $eventDispatcher,
+		private readonly IURLGenerator $urlGenerator,
 	) {
 	}
 	/**

@@ -25,50 +25,33 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class DraftsController extends Controller {
-	private DraftsService $service;
-	private string $userId;
-	private AccountService $accountService;
-	private ITimeFactory $timeFactory;
-	private SmimeService $smimeService;
+	private readonly ITimeFactory $timeFactory;
 
 
-	public function __construct(string $appName,
-		$UserId,
+	public function __construct(
+		string $appName,
+		private readonly string $userId,
 		IRequest $request,
-		DraftsService $service,
-		AccountService $accountService,
+		private readonly DraftsService $service,
+		private readonly AccountService $accountService,
 		ITimeFactory $timeFactory,
-		SmimeService $smimeService) {
+		private readonly SmimeService $smimeService
+	) {
 		parent::__construct($appName, $request);
-		$this->userId = $UserId;
-		$this->service = $service;
-		$this->accountService = $accountService;
 		$this->timeFactory = $timeFactory;
-		$this->smimeService = $smimeService;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $accountId
-	 * @param string $subject
 	 * @param string $body
 	 * @param string $editorBody
-	 * @param bool $isHtml
-	 * @param bool $isPgpMime
 	 * @param bool $smimeSign
 	 * @param bool $smimeEncrypt
 	 * @param array<int, string[]> $to i. e. [['label' => 'Linus', 'email' => 'tent@stardewvalley.com'], ['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']]
 	 * @param array<int, string[]> $cc
 	 * @param array<int, string[]> $bcc
-	 * @param array $attachments
-	 * @param int|null $aliasId
-	 * @param string|null $inReplyToMessageId
-	 * @param int|null $smimeCertificateId
-	 * @param int|null $sendAt
-	 * @param int|null $draftId
 	 *
-	 * @return JsonResponse
 	 * @throws DoesNotExistException
 	 * @throws ClientException
 	 */
@@ -127,22 +110,11 @@ class DraftsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @param int $accountId
-	 * @param string $subject
 	 * @param string $body
 	 * @param string $editorBody
-	 * @param bool $isHtml
-	 * @param bool $isPgpMime
-	 * @param bool $failed
 	 * @param array<int, string[]> $to i. e. [['label' => 'Linus', 'email' => 'tent@stardewvalley.com'], ['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']]
 	 * @param array<int, string[]> $cc
 	 * @param array<int, string[]> $bcc
-	 * @param array $attachments
-	 * @param int|null $aliasId
-	 * @param string|null $inReplyToMessageId
-	 * @param int|null $sendAt
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function update(int $id,
@@ -196,9 +168,6 @@ class DraftsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @param int $id
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function destroy(int $id): JsonResponse {
@@ -211,9 +180,6 @@ class DraftsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @param int $id
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function move(int $id): JsonResponse {

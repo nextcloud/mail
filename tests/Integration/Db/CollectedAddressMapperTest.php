@@ -10,7 +10,6 @@ namespace OCA\Mail\Tests\Integration\Db;
 
 use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OC;
 use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Db\CollectedAddressMapper;
 use OCP\IDBConnection;
@@ -24,11 +23,9 @@ class CollectedAddressMapperTest extends TestCase {
 	/** @var IDBConnection */
 	private $db;
 
-	/** @var string */
-	private $userId = 'testuser';
+	private string $userId = 'testuser';
 
-	/** @var CollectedAddressMapper */
-	private $mapper;
+	private ?\OCA\Mail\Db\CollectedAddressMapper $mapper = null;
 
 	/** @var CollectedAddress */
 	private $address1;
@@ -42,7 +39,7 @@ class CollectedAddressMapperTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->db = OC::$server->getDatabaseConnection();
+		$this->db = \OCP\Server::get(\OCP\IDBConnection::class);
 		$this->mapper = new CollectedAddressMapper($this->db);
 
 		// Empty DB
@@ -79,7 +76,7 @@ class CollectedAddressMapperTest extends TestCase {
 	/**
 	 * @dataProvider matchingData
 	 */
-	public function testFindMatching($query, $result) {
+	public function testFindMatching($query, $result): void {
 		$matches = $this->mapper->findMatching($this->userId, $query);
 
 		$this->assertCount(\count($result), $matches);
@@ -108,19 +105,19 @@ class CollectedAddressMapperTest extends TestCase {
 		$this->assertSame($expected, $actual);
 	}
 
-	public function testGetTotal() {
+	public function testGetTotal(): void {
 		$total = $this->mapper->getTotal();
 
 		$this->assertSame(3, $total);
 	}
 
-	public function testGetChunk() {
+	public function testGetChunk(): void {
 		$chunk = $this->mapper->getChunk();
 
 		$this->assertCount(3, $chunk);
 	}
 
-	public function testGetChunkWithOffset() {
+	public function testGetChunkWithOffset(): void {
 		$chunk = $this->mapper->getChunk($this->address2->getId());
 
 		$this->assertCount(2, $chunk);

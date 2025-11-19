@@ -25,7 +25,7 @@ class OutOfOfficeParser {
 	private const STATE_COPY = 0;
 	private const STATE_SKIP = 1;
 
-	private DateTimeZone $utc;
+	private readonly DateTimeZone $utc;
 
 	public function __construct() {
 		$this->utc = new DateTimeZone('UTC');
@@ -128,7 +128,7 @@ class OutOfOfficeParser {
 		];
 
 		if (!empty($allowedRecipients)) {
-			$formattedRecipients = array_map(static fn (string $recipient) => "\"$recipient\"", $allowedRecipients);
+			$formattedRecipients = array_map(static fn (string $recipient): string => "\"$recipient\"", $allowedRecipients);
 			$joinedRecipients = implode(', ', $formattedRecipients);
 			$vacation[] = ":addresses [$joinedRecipients]";
 		}

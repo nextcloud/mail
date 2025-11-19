@@ -26,13 +26,11 @@ class InternalAddressMapperTest extends TestCase {
 	/** @var IUser */
 	private $user;
 
-	/** @var InternalAddressMapper */
-	private $mapper;
+	private ?\OCA\Mail\Db\InternalAddressMapper $mapper = null;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		/** @var IDBConnection $db */
 		$this->db = Server::get(IDBConnection::class);
 		$this->user = $this->createTestUser();
 

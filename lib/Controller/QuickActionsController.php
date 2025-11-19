@@ -22,22 +22,17 @@ use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\IRequest;
 
 class QuickActionsController extends Controller {
-	private ?string $uid;
-
 	public function __construct(
 		IRequest $request,
-		?string $userId,
-		private QuickActionsService $quickActionsService,
-		private AccountService $accountService,
+		private readonly ?string $uid,
+		private readonly QuickActionsService $quickActionsService,
+		private readonly AccountService $accountService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->uid = $userId;
 	}
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function index(): JsonResponse {
@@ -51,9 +46,7 @@ class QuickActionsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @param string $name
 	 *
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function create(string $name, int $accountId): JsonResponse {
@@ -79,10 +72,7 @@ class QuickActionsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @param int $id
-	 * @param string $name
 	 *
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function update(int $id, string $name): JsonResponse {
@@ -104,8 +94,6 @@ class QuickActionsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @return JsonResponse
 	 */
 	public function destroy(int $id): JsonResponse {
 		if ($this->uid === null) {
@@ -114,7 +102,7 @@ class QuickActionsController extends Controller {
 		try {
 			$this->quickActionsService->delete($id, $this->uid);
 			return JsonResponse::success();
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return JsonResponse::fail('Quick action not found', Http::STATUS_NOT_FOUND);
 		}
 	}

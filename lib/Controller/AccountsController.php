@@ -39,53 +39,32 @@ use Psr\Log\LoggerInterface;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AccountsController extends Controller {
-	private AccountService $accountService;
-	private string $currentUserId;
-	private LoggerInterface $logger;
-	private IL10N $l10n;
-	private AliasesService $aliasesService;
-	private IMailTransmission $mailTransmission;
-	private SetupService $setup;
-	private IMailManager $mailManager;
-	private SyncService $syncService;
-	private IConfig $config;
-	private IRemoteHostValidator $hostValidator;
-	private MailboxSync $mailboxSync;
+	private readonly IConfig $config;
+	private readonly IRemoteHostValidator $hostValidator;
 
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		AccountService $accountService,
-		$UserId,
-		LoggerInterface $logger,
+		private readonly AccountService $accountService,
+		private readonly string $currentUserId,
+		private readonly LoggerInterface $logger,
 		IL10N $l10n,
-		AliasesService $aliasesService,
-		IMailTransmission $mailTransmission,
-		SetupService $setup,
-		IMailManager $mailManager,
-		SyncService $syncService,
+		private readonly AliasesService $aliasesService,
+		private readonly IMailTransmission $mailTransmission,
+		private readonly SetupService $setup,
+		private readonly IMailManager $mailManager,
+		private readonly SyncService $syncService,
 		IConfig $config,
 		IRemoteHostValidator $hostValidator,
-		MailboxSync $mailboxSync,
+		private readonly MailboxSync $mailboxSync,
 	) {
 		parent::__construct($appName, $request);
-		$this->accountService = $accountService;
-		$this->currentUserId = $UserId;
-		$this->logger = $logger;
-		$this->l10n = $l10n;
-		$this->aliasesService = $aliasesService;
-		$this->mailTransmission = $mailTransmission;
-		$this->setup = $setup;
-		$this->mailManager = $mailManager;
-		$this->syncService = $syncService;
 		$this->config = $config;
 		$this->hostValidator = $hostValidator;
-		$this->mailboxSync = $mailboxSync;
 	}
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @return JSONResponse
 	 */
 	#[TrapError]
 	public function index(): JSONResponse {
@@ -103,9 +82,7 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 *
-	 * @return JSONResponse
 	 * @throws ClientException
 	 */
 	#[TrapError]
@@ -116,9 +93,6 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @param string $accountName
-	 * @param string $emailAddress
 	 * @param string $imapHost
 	 * @param int $imapPort
 	 * @param string $imapSslMode
@@ -129,9 +103,7 @@ class AccountsController extends Controller {
 	 * @param string $smtpSslMode
 	 * @param string $smtpUser
 	 * @param string $smtpPassword
-	 * @param string $authMethod
 	 *
-	 * @return JSONResponse
 	 * @throws ClientException
 	 */
 	#[TrapError]
@@ -201,18 +173,7 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @param string|null $editorMode
-	 * @param int|null $order
-	 * @param bool|null $showSubscribedOnly
-	 * @param int|null $draftsMailboxId
-	 * @param int|null $sentMailboxId
-	 * @param int|null $trashMailboxId
-	 * @param int|null $archiveMailboxId
-	 * @param int|null $snoozeMailboxId
-	 * @param bool|null $signatureAboveQuote
 	 *
-	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 */
@@ -285,10 +246,7 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @param string|null $signature
 	 *
-	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -302,9 +260,7 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 *
-	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 */
@@ -317,21 +273,7 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param string $accountName
-	 * @param string $emailAddress
-	 * @param string|null $imapHost
-	 * @param int|null $imapPort
-	 * @param string|null $imapSslMode
-	 * @param string|null $imapUser
-	 * @param string|null $imapPassword
-	 * @param string|null $smtpHost
-	 * @param int|null $smtpPort
-	 * @param string|null $smtpSslMode
-	 * @param string|null $smtpUser
-	 * @param string|null $smtpPassword
-	 * @param string $authMethod
 	 *
-	 * @return JSONResponse
 	 */
 	#[TrapError]
 	public function create(string $accountName,
@@ -412,7 +354,6 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 */
@@ -465,9 +406,7 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 *
-	 * @return JSONResponse
 	 * @throws ClientException
 	 */
 	public function getQuota(int $id): JSONResponse {
@@ -484,9 +423,7 @@ class AccountsController extends Controller {
 	 * @NoAdminRequired
 	 *
 	 * @param int $id Account id
-	 * @param ?int $smimeCertificateId
 	 * @return JSONResponse
-	 *
 	 * @throws ClientException
 	 */
 	public function updateSmimeCertificate(int $id, ?int $smimeCertificateId = null) {

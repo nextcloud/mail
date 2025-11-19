@@ -25,22 +25,16 @@ use function json_encode;
 final class ExportAccountThreads extends Command {
 	private const ARGUMENT_ACCOUNT_ID = 'account-id';
 	private const OPTION_REDACT = 'redact';
+	private readonly ISecureRandom $random;
 
-	private AccountService $accountService;
-	private ISecureRandom $random;
-	private IHasher $hasher;
-	private MessageMapper $messageMapper;
-
-	public function __construct(AccountService $service,
+	public function __construct(
+		private readonly AccountService $accountService,
 		ISecureRandom $random,
 		IHasher $hasher,
-		MessageMapper $messageMapper) {
+		private readonly MessageMapper $messageMapper
+	) {
 		parent::__construct();
-
-		$this->accountService = $service;
 		$this->random = $random;
-		$this->hasher = $hasher;
-		$this->messageMapper = $messageMapper;
 	}
 
 	protected function configure(): void {
@@ -55,7 +49,7 @@ final class ExportAccountThreads extends Command {
 
 		try {
 			$account = $this->accountService->findById($accountId);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			$output->writeln("<error>Account $accountId does not exist</error>");
 			return 1;
 		}
@@ -64,8 +58,8 @@ final class ExportAccountThreads extends Command {
 		if ($input->getOption(self::OPTION_REDACT)) {
 			$salt = $this->random->generate(32);
 			$output->writeln(json_encode(
-				array_map(static fn (DatabaseMessage $message) => $message->redact(
-					static fn (string $str) => hash('md5', $str . $salt) . '@redacted'
+				array_map(static fn (DatabaseMessage $message): \OCA\Mail\IMAP\Threading\DatabaseMessage => $message->redact(
+					static fn (string $str): string => hash('md5', $str . $salt) . '@redacted'
 				), $threads),
 				JSON_PRETTY_PRINT
 			));

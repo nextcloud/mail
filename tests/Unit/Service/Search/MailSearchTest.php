@@ -29,8 +29,7 @@ class MailSearchTest extends TestCase {
 	/** @var FilterStringParser|MockObject */
 	private $filterStringParser;
 
-	/** @var MailSearch */
-	private $search;
+	private ?\OCA\Mail\Service\Search\MailSearch $search = null;
 
 	/** @var Provider|MockObject */
 	private $imapSearchProvider;
@@ -62,7 +61,7 @@ class MailSearchTest extends TestCase {
 		);
 	}
 
-	public function testFindMessagesNotCached() {
+	public function testFindMessagesNotCached(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setSyncNewToken('abc');
@@ -81,7 +80,7 @@ class MailSearchTest extends TestCase {
 		);
 	}
 
-	public function testFindMessagesLocked() {
+	public function testFindMessagesLocked(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setSyncNewLock(123);
@@ -99,7 +98,7 @@ class MailSearchTest extends TestCase {
 		);
 	}
 
-	public function testNoFindMessages() {
+	public function testNoFindMessages(): void {
 		$account = $this->createMock(Account::class);
 		$account->expects($this->once())
 			->method('getUserId')
@@ -123,7 +122,7 @@ class MailSearchTest extends TestCase {
 		$this->assertEmpty($messages);
 	}
 
-	public function testFindFlagsLocally() {
+	public function testFindFlagsLocally(): void {
 		$account = $this->createMock(Account::class);
 		$account->expects($this->once())
 			->method('getUserId')
@@ -164,7 +163,7 @@ class MailSearchTest extends TestCase {
 		$this->assertCount(2, $messages);
 	}
 
-	public function testFindText() {
+	public function testFindText(): void {
 		$account = $this->createMock(Account::class);
 		$account->expects($this->once())
 			->method('getUserId')

@@ -74,7 +74,7 @@ class FilteringProviderTest extends TestCase {
 		$message1->setFrom(AddressList::parse('Sender <sender@domain.tld>'));
 		$this->mailSearch->expects($this->once())
 			->method('findMessagesGlobally')
-			->with($user, $this->callback(function (MailSearchQuery $query) {
+			->with($user, $this->callback(function (MailSearchQuery $query): bool {
 				self::assertCount(1, $query->getSubjects());
 				self::assertEquals('spam', $query->getSubjects()[0]);
 				return true;
@@ -133,7 +133,7 @@ class FilteringProviderTest extends TestCase {
 		$message1->setFrom(AddressList::parse('Other <other@domain.tld>'));
 		$this->mailSearch->expects($this->once())
 			->method('findMessagesGlobally')
-			->with($user, $this->callback(function (MailSearchQuery $query) {
+			->with($user, $this->callback(function (MailSearchQuery $query): bool {
 				self::assertCount(1, $query->getFrom());
 				self::assertCount(1, $query->getTo());
 				self::assertCount(1, $query->getCc());
@@ -171,7 +171,7 @@ class FilteringProviderTest extends TestCase {
 		$message1->setFrom(AddressList::parse('Other <other@domain.tld>'));
 		$this->mailSearch->expects($this->once())
 			->method('findMessagesGlobally')
-			->with($user, $this->callback(function (MailSearchQuery $query) {
+			->with($user, $this->callback(function (MailSearchQuery $query): bool {
 				self::assertCount(1, $query->getFrom());
 				self::assertCount(1, $query->getTo());
 				self::assertCount(1, $query->getCc());

@@ -12,14 +12,11 @@ namespace OCA\Mail\Service\Avatar;
 interface IAvatarSource {
 	/**
 	 * Does this source query external services?
-	 *
-	 * @return bool
 	 */
 	public function isExternal():bool ;
 
 	/**
 	 * @param string $email sender email address
-	 * @param AvatarFactory $factory
 	 * @return Avatar|null avatar URL if one can be found
 	 */
 	public function fetch(string $email, AvatarFactory $factory);

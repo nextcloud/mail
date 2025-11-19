@@ -9,17 +9,14 @@ declare(strict_types=1);
 
 namespace OCA\Mail\IMAP\Threading;
 
-use OCA\Mail\Support\PerformanceLogger;
 use Psr\Log\LoggerInterface;
 use function array_key_exists;
 use function count;
 
 class ThreadBuilder {
-	/** @var PerformanceLogger */
-	private $performanceLogger;
-
-	public function __construct(PerformanceLogger $performanceLogger) {
-		$this->performanceLogger = $performanceLogger;
+	public function __construct(
+		private readonly \OCA\Mail\Support\PerformanceLogger $performanceLogger
+	) {
 	}
 
 	/**
@@ -105,8 +102,6 @@ class ThreadBuilder {
 
 	/**
 	 * @param Container[] $idTable
-	 *
-	 * @return Container
 	 */
 	private function buildRootContainer(array $idTable): Container {
 		$rootContainer = Container::empty();
@@ -146,9 +141,6 @@ class ThreadBuilder {
 		}
 	}
 
-	/**
-	 * @param Container $root
-	 */
 	private function groupBySubject(Container $root): void {
 		// Step 5.A
 		/** @var Container[] $subjectTable */
@@ -192,7 +184,6 @@ class ThreadBuilder {
 			} elseif ($subjectContainer->hasMessage() && !$subjectContainer->getMessage()->hasReSubject()
 				&& $container->hasMessage() && $container->getMessage()->hasReSubject()) {
 				$container->setParent($subjectContainer);
-				$subjectTable[$subject];
 			}
 			/*
 			 * According to RFC5256 we would have to combine two messages with the same subject

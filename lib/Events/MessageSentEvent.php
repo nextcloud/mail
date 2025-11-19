@@ -17,15 +17,11 @@ use OCP\EventDispatcher\Event;
  * @psalm-immutable
  */
 class MessageSentEvent extends Event {
-	/** @var Account */
-	private $account;
-
 	public function __construct(
-		Account $account,
-		private LocalMessage $localMessage,
+		private readonly \OCA\Mail\Account $account,
+		private readonly LocalMessage $localMessage,
 	) {
 		parent::__construct();
-		$this->account = $account;
 	}
 
 	public function getAccount(): Account {

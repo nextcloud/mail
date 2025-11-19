@@ -16,27 +16,16 @@ use function array_key_exists;
 use function spl_object_id;
 
 final class Container implements JsonSerializable {
-	/** @var Message|null */
-	private $message;
-
-	/** @var string|null */
-	private $id;
-
-	/** @var bool */
-	private $root;
-
-	/** @var Container|null */
-	private $parent;
+	private ?\OCA\Mail\IMAP\Threading\Container $parent = null;
 
 	/** @var Container[] */
-	private $children = [];
+	private array $children = [];
 
-	private function __construct(?Message $message,
-		?string $id = null,
-		bool $root = false) {
-		$this->message = $message;
-		$this->id = $id;
-		$this->root = $root;
+	private function __construct(
+		private ?\OCA\Mail\IMAP\Threading\Message $message,
+		private readonly ?string $id = null,
+		private readonly bool $root = false
+	) {
 	}
 
 	public static function root(): self {

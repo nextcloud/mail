@@ -16,11 +16,11 @@ use OCA\Mail\PhishingDetectionList;
 
 class PhishingDetectionService {
 	public function __construct(
-		private ContactCheck $contactCheck,
-		private CustomEmailCheck $customEmailCheck,
-		private DateCheck $dateCheck,
-		private ReplyToCheck $replyToCheck,
-		private LinkCheck $linkCheck,
+		private readonly ContactCheck $contactCheck,
+		private readonly CustomEmailCheck $customEmailCheck,
+		private readonly DateCheck $dateCheck,
+		private readonly ReplyToCheck $replyToCheck,
+		private readonly LinkCheck $linkCheck,
 	) {
 	}
 

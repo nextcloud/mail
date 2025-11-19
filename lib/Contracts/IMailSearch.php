@@ -33,14 +33,6 @@ interface IMailSearch {
 		Message $message): Message;
 
 	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 * @param string $sortOrder
-	 * @param string|null $filter
-	 * @param int|null $cursor
-	 * @param int|null $limit
-	 * @param string|null $userId
-	 * @param string|null $view
 	 *
 	 * @return Message[]
 	 *

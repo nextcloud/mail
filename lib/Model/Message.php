@@ -20,35 +20,27 @@ use OCP\Files\SimpleFS\ISimpleFile;
 final class Message implements IMessage {
 	use ConvertAddresses;
 
-	/** @var string */
-	private $subject = '';
+	private string $subject = '';
 
-	/** @var AddressList */
-	private $from;
+	private \OCA\Mail\AddressList $from;
 
-	/** @var AddressList */
-	private $to;
+	private \OCA\Mail\AddressList $to;
 
-	/** @var AddressList */
-	private $replyTo;
+	private \OCA\Mail\AddressList $replyTo;
 
-	/** @var AddressList */
-	private $cc;
+	private \OCA\Mail\AddressList $cc;
 
-	/** @var AddressList */
-	private $bcc;
+	private \OCA\Mail\AddressList $bcc;
 
-	/** @var string|null */
-	private $inReplyTo = null;
+	private ?string $inReplyTo = null;
 
 	/** @var string[] */
-	private $flags = [];
+	private array $flags = [];
 
-	/** @var string */
-	private $content = '';
+	private string $content = '';
 
 	/** @var Horde_Mime_Part[] */
-	private $attachments = [];
+	private array $attachments = [];
 
 	public function __construct() {
 		$this->from = new AddressList();
@@ -80,153 +72,89 @@ final class Message implements IMessage {
 
 	/**
 	 * @param string[] $flags
-	 *
-	 * @return void
 	 */
 	#[\Override]
-	public function setFlags(array $flags) {
+	public function setFlags(array $flags): void {
 		$this->flags = $flags;
 	}
 
-	/**
-	 * @return AddressList
-	 */
 	#[\Override]
 	public function getFrom(): AddressList {
 		return $this->from;
 	}
 
-	/**
-	 * @param AddressList $from
-	 *
-	 * @return void
-	 */
 	#[\Override]
-	public function setFrom(AddressList $from) {
+	public function setFrom(AddressList $from): void {
 		$this->from = $from;
 	}
 
-	/**
-	 * @return AddressList
-	 */
 	#[\Override]
 	public function getTo(): AddressList {
 		return $this->to;
 	}
 
-	/**
-	 * @param AddressList $to
-	 *
-	 * @return void
-	 */
 	#[\Override]
-	public function setTo(AddressList $to) {
+	public function setTo(AddressList $to): void {
 		$this->to = $to;
 	}
 
-	/**
-	 * @return AddressList
-	 */
 	#[\Override]
 	public function getReplyTo(): AddressList {
 		return $this->replyTo;
 	}
 
-	/**
-	 * @param AddressList $replyTo
-	 *
-	 * @return void
-	 */
 	#[\Override]
-	public function setReplyTo(AddressList $replyTo) {
+	public function setReplyTo(AddressList $replyTo): void {
 		$this->replyTo = $replyTo;
 	}
 
-	/**
-	 * @return AddressList
-	 */
 	#[\Override]
 	public function getCC(): AddressList {
 		return $this->cc;
 	}
 
-	/**
-	 * @param AddressList $cc
-	 *
-	 * @return void
-	 */
 	#[\Override]
-	public function setCC(AddressList $cc) {
+	public function setCC(AddressList $cc): void {
 		$this->cc = $cc;
 	}
 
-	/**
-	 * @return AddressList
-	 */
 	#[\Override]
 	public function getBCC(): AddressList {
 		return $this->bcc;
 	}
 
-	/**
-	 * @param AddressList $bcc
-	 *
-	 * @return void
-	 */
 	#[\Override]
-	public function setBcc(AddressList $bcc) {
+	public function setBcc(AddressList $bcc): void {
 		$this->bcc = $bcc;
 	}
 
-	/**
-	 * @return string|null
-	 */
 	#[\Override]
-	public function getInReplyTo() {
+	public function getInReplyTo(): ?string {
 		return $this->inReplyTo;
 	}
 
-	/**
-	 * @return void
-	 */
 	#[\Override]
-	public function setInReplyTo(string $id) {
+	public function setInReplyTo(string $id): void {
 		$this->inReplyTo = $id;
 	}
 
-	/**
-	 * @return string
-	 */
 	#[\Override]
 	public function getSubject(): string {
 		return $this->subject;
 	}
 
-	/**
-	 * @param string $subject
-	 *
-	 * @return void
-	 */
 	#[\Override]
-	public function setSubject(string $subject) {
+	public function setSubject(string $subject): void {
 		$this->subject = $subject;
 	}
 
-	/**
-	 * @return string
-	 */
 	#[\Override]
 	public function getContent(): string {
 		return $this->content;
 	}
 
-	/**
-	 * @param string $content
-	 *
-	 * @return void
-	 */
 	#[\Override]
-	public function setContent(string $content) {
+	public function setContent(string $content): void {
 		$this->content = $content;
 	}
 
@@ -256,44 +184,21 @@ final class Message implements IMessage {
 		$this->createAttachmentDetails($name, $content, $mime);
 	}
 
-	/**
-	 * @param string $name
-	 * @param string $content
-	 *
-	 * @return void
-	 */
 	#[\Override]
 	public function addEmbeddedMessageAttachment(string $name, string $content): void {
 		$this->createAttachmentDetails($name, $content, 'message/rfc822');
 	}
 
-	/**
-	 * @param File $file
-	 *
-	 * @return void
-	 */
 	#[\Override]
 	public function addAttachmentFromFiles(File $file): void {
 		$this->createAttachmentDetails($file->getName(), $file->getContent(), $file->getMimeType());
 	}
 
-	/**
-	 * @param LocalAttachment $attachment
-	 * @param ISimpleFile $file
-	 *
-	 * @return void
-	 */
 	#[\Override]
 	public function addLocalAttachment(LocalAttachment $attachment, ISimpleFile $file): void {
 		$this->createAttachmentDetails($attachment->getFileName(), $file->getContent(), $attachment->getMimeType());
 	}
 
-	/**
-	 * @param string $name
-	 * @param string $content
-	 * @param string $mime
-	 * @return void
-	 */
 	private function createAttachmentDetails(string $name, string $content, string $mime): void {
 		$part = new Horde_Mime_Part();
 		$part->setCharset('us-ascii');

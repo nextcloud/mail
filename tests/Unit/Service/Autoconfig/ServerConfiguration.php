@@ -14,7 +14,7 @@ use OCA\Mail\Service\AutoConfig\ServerConfiguration;
 
 class ServerConfigurationTest extends TestCase {
 	public function testCreateObject(): void {
-		$cfg = new ServerConfiguration(
+		new ServerConfiguration(
 			'username',
 			'host',
 			123,

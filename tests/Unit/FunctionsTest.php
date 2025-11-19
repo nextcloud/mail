@@ -16,7 +16,7 @@ use function OCA\Mail\chunk_uid_sequence;
 
 class FunctionsTest extends TestCase {
 	public function testFlatMapEmpty(): void {
-		$map = function () {
+		$map = function (): void {
 		};
 
 		$result = array_flat_map($map, []);
@@ -25,7 +25,7 @@ class FunctionsTest extends TestCase {
 	}
 
 	public function testFlatMap(): void {
-		$double = (fn ($x) => [$x, $x]);
+		$double = (fn ($x): array => [$x, $x]);
 		$data = [
 			1,
 			2,

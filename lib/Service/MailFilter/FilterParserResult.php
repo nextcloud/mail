@@ -14,9 +14,9 @@ use ReturnTypeWillChange;
 
 class FilterParserResult implements JsonSerializable {
 	public function __construct(
-		private array $filters,
-		private string $sieveScript,
-		private string $untouchedSieveScript,
+		private readonly array $filters,
+		private readonly string $sieveScript,
+		private readonly string $untouchedSieveScript,
 	) {
 	}
 

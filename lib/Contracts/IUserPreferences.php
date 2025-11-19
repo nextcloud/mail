@@ -11,7 +11,6 @@ namespace OCA\Mail\Contracts;
 
 interface IUserPreferences {
 	/**
-	 * @param string $userId
 	 * @param string $key
 	 * @param mixed $value
 	 * @return mixed new value
@@ -19,7 +18,6 @@ interface IUserPreferences {
 	public function setPreference(string $userId, $key, $value);
 
 	/**
-	 * @param string $userId
 	 * @param string $key
 	 * @param mixed|null $default
 	 */

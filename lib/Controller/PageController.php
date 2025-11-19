@@ -14,7 +14,6 @@ use OCA\Contacts\Event\LoadContactsOcaApiEvent;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IUserPreferences;
-use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
@@ -53,77 +52,49 @@ use function json_decode;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class PageController extends Controller {
-	private IURLGenerator $urlGenerator;
-	private IConfig $config;
-	private AccountService $accountService;
-	private AliasesService $aliasesService;
-	private ?string $currentUserId;
-	private IUserSession $userSession;
-	private IUserPreferences $preferences;
-	private IMailManager $mailManager;
-	private TagMapper $tagMapper;
-	private IInitialState $initialStateService;
-	private LoggerInterface $logger;
-	private OutboxService $outboxService;
-	private IEventDispatcher $dispatcher;
-	private ICredentialstore $credentialStore;
-	private SmimeService $smimeService;
-	private AiIntegrationsService $aiIntegrationsService;
-	private IUserManager $userManager;
-	private IAvailabilityCoordinator $availabilityCoordinator;
-	private ClassificationSettingsService $classificationSettingsService;
-	private InternalAddressService $internalAddressService;
-	private QuickActionsService $quickActionsService;
+	private readonly IURLGenerator $urlGenerator;
+	private readonly IConfig $config;
+	private readonly IUserSession $userSession;
+	private readonly IInitialState $initialStateService;
+	private readonly IEventDispatcher $dispatcher;
+	private readonly IUserManager $userManager;
+	private readonly IAvailabilityCoordinator $availabilityCoordinator;
 
 	public function __construct(
 		string $appName,
 		IRequest $request,
 		IURLGenerator $urlGenerator,
 		IConfig $config,
-		AccountService $accountService,
-		AliasesService $aliasesService,
-		?string $UserId,
+		private readonly AccountService $accountService,
+		private readonly AliasesService $aliasesService,
+		private readonly ?string $currentUserId,
 		IUserSession $userSession,
-		IUserPreferences $preferences,
-		IMailManager $mailManager,
-		TagMapper $tagMapper,
+		private readonly IUserPreferences $preferences,
+		private readonly IMailManager $mailManager,
+		private readonly TagMapper $tagMapper,
 		IInitialState $initialStateService,
-		LoggerInterface $logger,
-		OutboxService $outboxService,
+		private readonly LoggerInterface $logger,
+		private readonly OutboxService $outboxService,
 		IEventDispatcher $dispatcher,
-		ICredentialStore $credentialStore,
-		SmimeService $smimeService,
-		AiIntegrationsService $aiIntegrationsService,
+		private readonly ICredentialstore $credentialStore,
+		private readonly SmimeService $smimeService,
+		private readonly AiIntegrationsService $aiIntegrationsService,
 		IUserManager $userManager,
-		ClassificationSettingsService $classificationSettingsService,
-		InternalAddressService $internalAddressService,
+		private readonly ClassificationSettingsService $classificationSettingsService,
+		private readonly InternalAddressService $internalAddressService,
 		IAvailabilityCoordinator $availabilityCoordinator,
-		QuickActionsService $quickActionsService,
-		private IAppManager $appManager,
+		private readonly QuickActionsService $quickActionsService,
+		private readonly IAppManager $appManager,
 	) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
 		$this->config = $config;
-		$this->accountService = $accountService;
-		$this->aliasesService = $aliasesService;
-		$this->currentUserId = $UserId;
 		$this->userSession = $userSession;
-		$this->preferences = $preferences;
-		$this->mailManager = $mailManager;
-		$this->tagMapper = $tagMapper;
 		$this->initialStateService = $initialStateService;
-		$this->logger = $logger;
-		$this->outboxService = $outboxService;
 		$this->dispatcher = $dispatcher;
-		$this->credentialStore = $credentialStore;
-		$this->smimeService = $smimeService;
-		$this->aiIntegrationsService = $aiIntegrationsService;
 		$this->userManager = $userManager;
-		$this->classificationSettingsService = $classificationSettingsService;
-		$this->internalAddressService = $internalAddressService;
 		$this->availabilityCoordinator = $availabilityCoordinator;
-		$this->quickActionsService = $quickActionsService;
 	}
 
 	/**
@@ -176,7 +147,7 @@ class PageController extends Controller {
 		);
 		$this->initialStateService->provideInitialState(
 			'account-settings',
-			json_decode($this->preferences->getPreference($this->currentUserId, 'account-settings', '[]'), true, 512, JSON_THROW_ON_ERROR) ?? []
+			json_decode((string)$this->preferences->getPreference($this->currentUserId, 'account-settings', '[]'), true, 512, JSON_THROW_ON_ERROR) ?? []
 		);
 		$this->initialStateService->provideInitialState(
 			'tags',
@@ -195,7 +166,7 @@ class PageController extends Controller {
 
 		$this->initialStateService->provideInitialState(
 			'smime-sign-aliases',
-			json_decode($this->preferences->getPreference($this->currentUserId, 'smime-sign-aliases', '[]'), true, 512, JSON_THROW_ON_ERROR) ?? []
+			json_decode((string)$this->preferences->getPreference($this->currentUserId, 'smime-sign-aliases', '[]'), true, 512, JSON_THROW_ON_ERROR) ?? []
 		);
 
 		$this->initialStateService->provideInitialState(
@@ -206,7 +177,7 @@ class PageController extends Controller {
 		try {
 			$password = $this->credentialStore->getLoginCredentials()->getPassword();
 			$passwordIsUnavailable = $password === null || $password === '';
-		} catch (CredentialsUnavailableException|PasswordUnavailableException $e) {
+		} catch (CredentialsUnavailableException|PasswordUnavailableException) {
 			$passwordIsUnavailable = true;
 		}
 		$this->initialStateService->provideInitialState(
@@ -321,7 +292,7 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'smime-certificates',
 			array_map(
-				fn (SmimeCertificate $certificate) => $this->smimeService->enrichCertificate($certificate),
+				$this->smimeService->enrichCertificate(...),
 				$this->smimeService->findAllCertificates($user->getUID()),
 			),
 		);
@@ -346,8 +317,6 @@ class PageController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 *
-	 * @return TemplateResponse
 	 */
 	public function setup(): TemplateResponse {
 		return $this->index();
@@ -356,8 +325,6 @@ class PageController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 *
-	 * @return TemplateResponse
 	 */
 	public function mailbox(int $id): TemplateResponse {
 		return $this->index();
@@ -366,8 +333,6 @@ class PageController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 *
-	 * @return TemplateResponse
 	 */
 	public function mailboxStarred(int $id): TemplateResponse {
 		return $this->index();
@@ -376,8 +341,6 @@ class PageController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 *
-	 * @return TemplateResponse
 	 */
 	public function thread(int $mailboxId, int $id): TemplateResponse {
 		return $this->index();
@@ -386,8 +349,6 @@ class PageController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 *
-	 * @return TemplateResponse
 	 */
 	public function filteredThread(string $filter, int $mailboxId, int $id): TemplateResponse {
 		return $this->index();
@@ -396,8 +357,6 @@ class PageController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 *
-	 * @return TemplateResponse
 	 */
 	public function outbox(): TemplateResponse {
 		return $this->index();
@@ -406,8 +365,6 @@ class PageController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 *
-	 * @return TemplateResponse
 	 */
 	public function outboxMessage(int $messageId): TemplateResponse {
 		return $this->index();
@@ -416,8 +373,6 @@ class PageController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 *
-	 * @return TemplateResponse
 	 */
 	public function draft(int $mailboxId, int $draftId): TemplateResponse {
 		return $this->index();
@@ -426,8 +381,6 @@ class PageController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 *
-	 * @return TemplateResponse
 	 */
 	public function filteredDraft(string $filter, int $mailboxId, int $draftId): TemplateResponse {
 		return $this->index();
@@ -437,9 +390,7 @@ class PageController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @param string $uri
 	 *
-	 * @return RedirectResponse
 	 */
 	public function compose(string $uri): RedirectResponse {
 		$parts = parse_url($uri);
@@ -456,7 +407,7 @@ class PageController extends Controller {
 		}
 
 		array_walk($params,
-			static function (&$value, $key) {
+			static function (&$value, $key): void {
 				$value = "$key=" . urlencode($value);
 			});
 		$name = '?' . implode('&', $params);
@@ -466,8 +417,6 @@ class PageController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 *
-	 * @return TemplateResponse
 	 */
 	public function mailto(): TemplateResponse {
 		return $this->index();

@@ -29,8 +29,7 @@ class SmtpClientFactoryTest extends TestCase {
 	/** @var HostNameFactory|MockObject */
 	private $hostNameFactory;
 
-	/** @var SmtpClientFactory */
-	private $factory;
+	private ?\OCA\Mail\SMTP\SmtpClientFactory $factory = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -42,7 +41,7 @@ class SmtpClientFactoryTest extends TestCase {
 		$this->factory = new SmtpClientFactory($this->config, $this->crypto, $this->hostNameFactory);
 	}
 
-	public function testSmtpTransport() {
+	public function testSmtpTransport(): void {
 		$mailAccount = new MailAccount([
 			'smtpHost' => 'smtp.domain.tld',
 			'smtpPort' => 25,

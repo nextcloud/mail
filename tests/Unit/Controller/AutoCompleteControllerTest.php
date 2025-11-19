@@ -15,7 +15,7 @@ use OCP\AppFramework\Http\JSONResponse;
 class AutoCompleteControllerTest extends TestCase {
 	private $request;
 	private $service;
-	private $controller;
+	private ?\OCA\Mail\Controller\AutoCompleteController $controller = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -32,7 +32,7 @@ class AutoCompleteControllerTest extends TestCase {
 		);
 	}
 
-	public function testAutoComplete() {
+	public function testAutoComplete(): void {
 		$term = 'john d';
 		$result = [
 			'id' => 13,

@@ -30,9 +30,9 @@ class MailboxesApiController extends OCSController {
 		string $appName,
 		IRequest $request,
 		private readonly ?string $userId,
-		private IMailManager $mailManager,
+		private readonly IMailManager $mailManager,
 		private readonly AccountService $accountService,
-		private IMailSearch $mailSearch,
+		private readonly IMailSearch $mailSearch,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -57,7 +57,7 @@ class MailboxesApiController extends OCSController {
 
 		try {
 			$account = $this->accountService->find($userId, $accountId);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new DataResponse([], Http::STATUS_NOT_FOUND);
 		}
 
@@ -97,7 +97,7 @@ class MailboxesApiController extends OCSController {
 		try {
 			$mailbox = $this->mailManager->getMailbox($userId, $mailboxId);
 			$account = $this->accountService->find($userId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new DataResponse([], Http::STATUS_FORBIDDEN);
 		}
 

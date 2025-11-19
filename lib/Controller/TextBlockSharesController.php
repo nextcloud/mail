@@ -22,21 +22,16 @@ use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\IRequest;
 
 class TextBlockSharesController extends Controller {
-	private ?string $uid;
-
 	public function __construct(
 		IRequest $request,
-		?string $userId,
-		private TextBlockService $textBlockService,
+		private readonly ?string $uid,
+		private readonly TextBlockService $textBlockService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->uid = $userId;
 	}
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function index(): JsonResponse {
@@ -45,7 +40,7 @@ class TextBlockSharesController extends Controller {
 		}
 		try {
 			$textBlocks = $this->textBlockService->findAllSharedWithMe($this->uid);
-		} catch (UserNotFoundException $e) {
+		} catch (UserNotFoundException) {
 			return JsonResponse::error('Sharee not found', Http::STATUS_UNAUTHORIZED);
 		}
 
@@ -54,8 +49,6 @@ class TextBlockSharesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function create(int $textBlockId, string $shareWith, string $type): JsonResponse {
@@ -64,7 +57,7 @@ class TextBlockSharesController extends Controller {
 		}
 		try {
 			$this->textBlockService->find($textBlockId, $this->uid);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return JsonResponse::error('Text block not found', Http::STATUS_NOT_FOUND);
 		}
 
@@ -83,8 +76,6 @@ class TextBlockSharesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function destroy(int $id, string $shareWith): JsonResponse {
@@ -93,7 +84,7 @@ class TextBlockSharesController extends Controller {
 		}
 		try {
 			$this->textBlockService->find($id, $this->uid);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return JsonResponse::error('Text block not found', Http::STATUS_NOT_FOUND);
 		}
 
@@ -104,8 +95,6 @@ class TextBlockSharesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @return JsonResponse
 	 */
 	public function getTextBlockShares(int $id): JsonResponse {
 		if ($this->uid === null) {
@@ -114,7 +103,7 @@ class TextBlockSharesController extends Controller {
 
 		try {
 			$this->textBlockService->find($id, $this->uid);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return JsonResponse::error('Text block not found', Http::STATUS_NOT_FOUND);
 		}
 

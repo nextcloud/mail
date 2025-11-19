@@ -20,8 +20,7 @@ use Psr\Log\LoggerInterface;
 
 class TaskProcessingListenerTest extends TestCase {
 
-	/** @var TaskProcessingListener */
-	private $listener;
+	private ?\OCA\Mail\Listener\TaskProcessingListener $listener = null;
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 	/** @var MessageMapper|MockObject */

@@ -40,10 +40,6 @@ class ContactsIntegration {
 
 	/**
 	 * Extracts all matching contacts with email address and name
-	 *
-	 * @param string $userId
-	 * @param string $term
-	 * @return array
 	 */
 	public function getMatchingRecipient(string $userId, string $term): array {
 		if (!$this->contactsManager->isEnabled()) {
@@ -116,9 +112,9 @@ class ContactsIntegration {
 				if ($isSystemUser && $shareeEnumerationInGroupOnly && !$isInSameGroup) {
 					// Check for full match. If full match is disabled, matching results already filtered out
 					if (!($lowerTerm !== '' && (
-						($shareeEnumerationFullMatch && !empty($fn) && $lowerTerm === strtolower($fn))
-						|| ($shareeEnumerationFullMatchUserId && $lowerTerm === strtolower($id))
-						|| ($shareeEnumerationFullMatchEmail && $lowerTerm === strtolower($e))))) {
+						($shareeEnumerationFullMatch && !empty($fn) && $lowerTerm === strtolower((string)$fn))
+						|| ($shareeEnumerationFullMatchUserId && $lowerTerm === strtolower((string)$id))
+						|| ($shareeEnumerationFullMatchEmail && $lowerTerm === strtolower((string)$e))))) {
 						// Not a full Match
 						continue;
 					}
@@ -139,11 +135,9 @@ class ContactsIntegration {
 	}
 
 	/**
-	 * @param string $email
-	 *
 	 * @return false|null|string
 	 */
-	public function getPhoto(string $email) {
+	public function getPhoto(string $email): ?string {
 		$result = $this->contactsManager->search($email, ['EMAIL']);
 		foreach ($result as $contact) {
 			if (!isset($contact['PHOTO']) || empty($contact['PHOTO'])) {
@@ -157,7 +151,7 @@ class ContactsIntegration {
 	/**
 	 * @return false|null|string
 	 */
-	private function getPhotoUri(string $raw) {
+	private function getPhotoUri(string $raw): ?string {
 		$uriPrefix = 'VALUE=uri:';
 		if (str_starts_with($raw, $uriPrefix)) {
 			return substr($raw, strpos($raw, 'http'));
@@ -171,9 +165,6 @@ class ContactsIntegration {
 	/**
 	 * Adds a new email to an existing Contact
 	 *
-	 * @param string $uid
-	 * @param string $mailAddr
-	 * @param string $type
 	 * @return array|null
 	 */
 	public function addEmailToContact(string $uid, string $mailAddr, string $type = 'HOME') {
@@ -199,9 +190,7 @@ class ContactsIntegration {
 		}
 		$email[] = $newEntry;
 		$match['EMAIL'] = $email;
-
-		$updatedContact = $this->contactsManager->createOrUpdate($match, $match['addressbook-key']);
-		return $updatedContact;
+		return $this->contactsManager->createOrUpdate($match, $match['addressbook-key']);
 	}
 
 	/**
@@ -225,8 +214,7 @@ class ContactsIntegration {
 				]
 			]
 		];
-		$createdContact = $this->contactsManager->createOrUpdate($contact, $addressbook);
-		return $createdContact;
+		return $this->contactsManager->createOrUpdate($contact, $addressbook);
 	}
 
 	/**
@@ -258,11 +246,8 @@ class ContactsIntegration {
 
 	/**
 	 * Extracts all Contacts with the specified mail address
-	 *
-	 * @param string $mailAddr
-	 * @return array
 	 */
-	public function getContactsWithMail(string $mailAddr) {
+	public function getContactsWithMail(string $mailAddr): array {
 		return $this->doSearch($mailAddr, ['EMAIL'], true);
 	}
 

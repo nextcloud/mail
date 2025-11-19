@@ -30,7 +30,7 @@ class FaviconDataAccessTest extends TestCase {
 		);
 	}
 
-	public function testRetrieveUrl() {
+	public function testRetrieveUrl(): void {
 		$client = $this->createMock(IClient::class);
 		$this->clientService->expects(self::once())
 			->method('newClient')
@@ -49,7 +49,7 @@ class FaviconDataAccessTest extends TestCase {
 		self::assertSame('html', $body);
 	}
 
-	public function testRetrieveHeader() {
+	public function testRetrieveHeader(): void {
 		$client = $this->createMock(IClient::class);
 		$this->clientService->expects(self::once())
 			->method('newClient')

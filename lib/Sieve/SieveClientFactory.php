@@ -15,8 +15,8 @@ use OCP\IConfig;
 use OCP\Security\ICrypto;
 
 class SieveClientFactory {
-	private ICrypto $crypto;
-	private IConfig $config;
+	private readonly ICrypto $crypto;
+	private readonly IConfig $config;
 	private array $cache = [];
 
 	public function __construct(ICrypto $crypto, IConfig $config) {

@@ -15,9 +15,7 @@ use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Namespace_List;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
-use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\Mailbox;
-use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
@@ -39,18 +37,6 @@ use function str_starts_with;
 class MailboxSync {
 	use TTransactional;
 
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var FolderMapper */
-	private $folderMapper;
-
-	/** @var MailAccountMapper */
-	private $mailAccountMapper;
-
-	/** @var IMAPClientFactory */
-	private $imapClientFactory;
-
 	/** @var ITimeFactory */
 	private $timeFactory;
 
@@ -58,17 +44,15 @@ class MailboxSync {
 	private $dispatcher;
 	private IDBConnection $dbConnection;
 
-	public function __construct(MailboxMapper $mailboxMapper,
-		FolderMapper $folderMapper,
-		MailAccountMapper $mailAccountMapper,
-		IMAPClientFactory $imapClientFactory,
+	public function __construct(
+		private \OCA\Mail\Db\MailboxMapper $mailboxMapper,
+		private \OCA\Mail\IMAP\FolderMapper $folderMapper,
+		private \OCA\Mail\Db\MailAccountMapper $mailAccountMapper,
+		private \OCA\Mail\IMAP\IMAPClientFactory $imapClientFactory,
 		ITimeFactory $timeFactory,
 		IEventDispatcher $dispatcher,
-		IDBConnection $dbConnection) {
-		$this->mailboxMapper = $mailboxMapper;
-		$this->folderMapper = $folderMapper;
-		$this->mailAccountMapper = $mailAccountMapper;
-		$this->imapClientFactory = $imapClientFactory;
+		IDBConnection $dbConnection
+	) {
 		$this->timeFactory = $timeFactory;
 		$this->dispatcher = $dispatcher;
 		$this->dbConnection = $dbConnection;
@@ -115,7 +99,7 @@ class MailboxSync {
 			}
 			$this->folderMapper->detectFolderSpecialUse($folders);
 
-			$mailboxes = $this->atomic(function () use ($account, $folders, $namespaces) {
+			$mailboxes = $this->atomic(function () use ($account, $folders, $namespaces): array {
 				$old = $this->mailboxMapper->findAll($account);
 				$indexedOld = array_combine(
 					array_map(static fn (Mailbox $mb) => $mb->getName(), $old),
@@ -138,7 +122,6 @@ class MailboxSync {
 	/**
 	 * Sync unread and total message statistics.
 	 *
-	 * @param Mailbox $mailbox
 	 *
 	 * @throws ServiceException
 	 */
@@ -253,7 +236,6 @@ class MailboxSync {
 	}
 
 	private function syncMailboxStatus(mixed $mailboxes, ?string $personalNamespace, \Horde_Imap_Client_Socket $client): void {
-		/** @var array{0: Mailbox[], 1: Mailbox[]} */
 		[$sync, $doNotSync] = array_reduce($mailboxes, function (array $carry, Mailbox $mailbox) use ($personalNamespace): array {
 			[$sync, $doNotSync] = $carry;
 			$inboxName = $personalNamespace === null ? 'INBOX' : ($personalNamespace . $mailbox->getDelimiter() . 'INBOX');
@@ -283,7 +265,7 @@ class MailboxSync {
 				$mailbox->setUnseen($status->getUnread());
 			}
 		}
-		$this->atomic(function () use ($syncStatus) {
+		$this->atomic(function () use ($syncStatus): void {
 			foreach ($syncStatus as $mailbox) {
 				$this->mailboxMapper->update($mailbox);
 			}

@@ -57,7 +57,7 @@ class AddressCollectionListenerTest extends TestCase {
 		);
 	}
 
-	public function testHandleUnrelated() {
+	public function testHandleUnrelated(): void {
 		$event = new Event();
 		$this->addressCollector->expects($this->never())
 			->method('addAddresses');
@@ -68,7 +68,7 @@ class AddressCollectionListenerTest extends TestCase {
 		$this->addToAssertionCount(1);
 	}
 
-	public function testHandleOptOut() {
+	public function testHandleOptOut(): void {
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => 'test'
 		]);
@@ -83,7 +83,7 @@ class AddressCollectionListenerTest extends TestCase {
 		$this->listener->handle($event);
 	}
 
-	public function testHandle() {
+	public function testHandle(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => 'test'

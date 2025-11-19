@@ -14,8 +14,7 @@ use OCA\Mail\Support\HostNameFactory;
 use OCP\Util;
 
 class HostNameFactoryTest extends TestCase {
-	/** @var HostNameFactory */
-	private $factory;
+	private ?\OCA\Mail\Support\HostNameFactory $factory = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -23,7 +22,7 @@ class HostNameFactoryTest extends TestCase {
 		$this->factory = new HostNameFactory();
 	}
 
-	public function testGetHostName() {
+	public function testGetHostName(): void {
 		$expected = Util::getServerHostName();
 
 		$actual = $this->factory->getHostName();

@@ -11,12 +11,8 @@ namespace OCA\Mail\Service\Provisioning;
 
 use Horde_Mail_Rfc822_Address;
 use OCA\Mail\Db\Alias;
-use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\Provisioning;
-use OCA\Mail\Db\ProvisioningMapper;
-use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\ValidationException;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -26,18 +22,11 @@ use OCP\IUser;
 use OCP\IUserManager;
 use OCP\LDAP\ILDAPProviderFactory;
 use OCP\Security\ICrypto;
-use Psr\Log\LoggerInterface;
 
 class Manager {
 	public const MAIL_PROVISIONINGS = 'mail_provisionings';
 	/** @var IUserManager */
 	private $userManager;
-
-	/** @var ProvisioningMapper */
-	private $provisioningMapper;
-
-	/** @var MailAccountMapper */
-	private $mailAccountMapper;
 
 	/** @var ICrypto */
 	private $crypto;
@@ -45,38 +34,24 @@ class Manager {
 	/** @var ILDAPProviderFactory */
 	private $ldapProviderFactory;
 
-	/** @var AliasMapper */
-	private $aliasMapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var TagMapper */
-	private $tagMapper;
-
 	/** @var ICacheFactory */
 	private $cacheFactory;
 
 	public function __construct(
 		IUserManager $userManager,
-		ProvisioningMapper $provisioningMapper,
-		MailAccountMapper $mailAccountMapper,
+		private readonly \OCA\Mail\Db\ProvisioningMapper $provisioningMapper,
+		private readonly \OCA\Mail\Db\MailAccountMapper $mailAccountMapper,
 		ICrypto $crypto,
 		ILDAPProviderFactory $ldapProviderFactory,
-		AliasMapper $aliasMapper,
-		LoggerInterface $logger,
-		TagMapper $tagMapper,
+		private readonly \OCA\Mail\Db\AliasMapper $aliasMapper,
+		private readonly \Psr\Log\LoggerInterface $logger,
+		private readonly \OCA\Mail\Db\TagMapper $tagMapper,
 		ICacheFactory $cacheFactory,
-		private AccountService $accountService,
+		private readonly AccountService $accountService,
 	) {
 		$this->userManager = $userManager;
-		$this->provisioningMapper = $provisioningMapper;
-		$this->mailAccountMapper = $mailAccountMapper;
 		$this->crypto = $crypto;
 		$this->ldapProviderFactory = $ldapProviderFactory;
-		$this->aliasMapper = $aliasMapper;
-		$this->logger = $logger;
-		$this->tagMapper = $tagMapper;
 		$this->cacheFactory = $cacheFactory;
 	}
 
@@ -110,7 +85,7 @@ class Manager {
 			return $counter;
 		}
 
-		$this->userManager->callForAllUsers(function (IUser $user) use ($configs, &$counter) {
+		$this->userManager->callForAllUsers(function (IUser $user) use ($configs, &$counter): void {
 			if ($this->provisionSingleUser($configs, $user)) {
 				$counter++;
 			}
@@ -149,7 +124,7 @@ class Manager {
 
 			try {
 				$this->aliasMapper->findByAlias($newAlias, $userId);
-			} catch (DoesNotExistException $e) {
+			} catch (DoesNotExistException) {
 				$alias = new Alias();
 				$alias->setAccountId($accountId);
 				$alias->setName($displayName);
@@ -347,7 +322,7 @@ class Manager {
 			$this->mailAccountMapper->update($account);
 
 			$this->logger->debug('Provisioned account password udpated');
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			// Nothing to update
 		}
 	}

@@ -9,19 +9,14 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\ContactIntegration;
 
-use OCA\Mail\Service\ContactsIntegration;
-
 class ContactIntegrationService {
-	/** @var ContactsIntegration */
-	private $contactsIntegration;
-
-	public function __construct(ContactsIntegration $ci) {
-		$this->contactsIntegration = $ci;
+	public function __construct(
+		private readonly \OCA\Mail\Service\ContactsIntegration $contactsIntegration
+	) {
 	}
 
 	public function findMatches(string $mail): array {
-		$matches = $this->contactsIntegration->getContactsWithMail($mail);
-		return $matches;
+		return $this->contactsIntegration->getContactsWithMail($mail);
 	}
 
 	public function addEMailToContact(string $uid, string $mail): ?array {

@@ -35,9 +35,6 @@ trait ImapTest {
 		'Trash',
 	];
 
-	/**
-	 * @return Horde_Imap_Client_Socket
-	 */
 	private function getTestClient(): Horde_Imap_Client_Socket {
 		if ($this->client === null) {
 			$this->client = new Horde_Imap_Client_Socket([
@@ -56,7 +53,7 @@ trait ImapTest {
 	 * Reset the testing account to empty default mailboxes and delete any
 	 * other mailboxes that have been created
 	 */
-	public function resetImapAccount() {
+	public function resetImapAccount(): void {
 		$client = $this->getTestClient();
 		$mailboxes = $this->listMailboxes($client);
 
@@ -89,33 +86,26 @@ trait ImapTest {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
 	 * @return array<string>
 	 */
-	private function listMailboxes(Horde_Imap_Client_Socket $client) {
-		return array_map(fn ($mailbox) => $mailbox['mailbox'], $client->listMailboxes('*'));
+	private function listMailboxes(Horde_Imap_Client_Socket $client): array {
+		return array_map(fn (array $mailbox) => $mailbox['mailbox'], $client->listMailboxes('*'));
 	}
 
 	/**
 	 * @param string $mailbox
 	 */
-	public function createImapMailbox($mailbox) {
+	public function createImapMailbox($mailbox): void {
 		$client = $this->getTestClient();
 
 		$client->createMailbox($mailbox);
 	}
 
-	/**
-	 * @return MessageBuilder
-	 */
-	public function getMessageBuilder() {
+	public function getMessageBuilder(): \OCA\Mail\Tests\Integration\Framework\MessageBuilder {
 		return MessageBuilder::create();
 	}
 
 	/**
-	 * @param string $mailbox
-	 * @param SimpleMessage $message
-	 * @param MailAccount|null $account
 	 *
 	 * @return int id of the new message
 	 */
@@ -156,9 +146,6 @@ trait ImapTest {
 	}
 
 	/**
-	 * @param string $mailbox
-	 * @param string $mimeText
-	 * @param MailAccount|null $account
 	 * @return int Uid of the new message
 	 */
 	public function saveMimeMessage(string $mailbox, string $mimeText, ?MailAccount $account = null): int {
@@ -169,7 +156,7 @@ trait ImapTest {
 		$mail->addHeaders($headers);
 		$mail->setBasePart($mimePart);
 
-		$data = $mail->getRaw(false);
+		$mail->getRaw(false);
 		$client = $this->getClient($account);
 		try {
 			return $client->append($mailbox, [
@@ -182,7 +169,7 @@ trait ImapTest {
 		}
 	}
 
-	public function flagMessage($mailbox, $id, ?MailAccount $account = null) {
+	public function flagMessage($mailbox, $id, ?MailAccount $account = null): void {
 		$client = $this->getClient($account);
 		try {
 			$client->store($mailbox, [
@@ -196,7 +183,7 @@ trait ImapTest {
 		}
 	}
 
-	public function deleteMessage($mailbox, $id, ?MailAccount $account = null) {
+	public function deleteMessage($mailbox, $id, ?MailAccount $account = null): void {
 		$client = $this->getClient($account);
 		$ids = new Horde_Imap_Client_Ids([$id]);
 		try {
@@ -235,10 +222,9 @@ trait ImapTest {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
 	 * @param string $mailbox
 	 */
-	private function emptyMailbox(Horde_Imap_Client_Socket $client, $mailbox) {
+	private function emptyMailbox(Horde_Imap_Client_Socket $client, $mailbox): void {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
 		$ids = new Horde_Imap_Client_Ids($client->fetch($mailbox, $query)->ids());
@@ -250,20 +236,16 @@ trait ImapTest {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
 	 * @param string $mailbox
 	 */
-	private function deleteMailbox(Horde_Imap_Client_Socket $client, $mailbox) {
+	private function deleteMailbox(Horde_Imap_Client_Socket $client, $mailbox): void {
 		$client->deleteMailbox($mailbox);
 	}
 
 	/**
 	 * Assert that a mailbox has a certain number of messages in it
-	 *
-	 * @param int $number
-	 * @param string $mailbox
 	 */
-	public function assertMessageCount(int $number, string $mailbox) {
+	public function assertMessageCount(int $number, string $mailbox): void {
 		$client = $this->getTestClient();
 
 		$query = new Horde_Imap_Client_Fetch_Query();
@@ -276,12 +258,12 @@ trait ImapTest {
 	 *
 	 * @param string $mailbox
 	 */
-	public function assertMailboxExists($mailbox) {
+	public function assertMailboxExists($mailbox): void {
 		$mailboxes = $this->getMailboxes();
 		$this->assertArrayHasKey($mailbox, $mailboxes);
 	}
 
-	public function assertMessageContent($mailbox, $uid, $content) {
+	public function assertMessageContent($mailbox, $uid, $content): void {
 		$client = $this->getTestClient();
 
 		$query = new Horde_Imap_Client_Fetch_Query();
@@ -299,9 +281,6 @@ trait ImapTest {
 	}
 
 	/**
-	 * @param MailAccount|null $account
-	 *
-	 * @return Horde_Imap_Client_Socket
 	 * @throws QueryException
 	 */
 	protected function getClient(?MailAccount $account): Horde_Imap_Client_Socket {

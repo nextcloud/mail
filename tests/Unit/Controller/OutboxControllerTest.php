@@ -219,7 +219,7 @@ class OutboxControllerTest extends TestCase {
 		$message = new LocalMessage();
 		$message->setId(1);
 		$message->setAccountId(1);
-		$account = new Account(new MailAccount());
+		new Account(new MailAccount());
 
 		$this->service->expects(self::once())
 			->method('getMessage')
@@ -326,7 +326,7 @@ class OutboxControllerTest extends TestCase {
 			->method('saveMessage');
 
 		$this->expectException(ClientException::class);
-		$actual = $this->controller->create(
+		$this->controller->create(
 			$message->getAccountId(),
 			$message->getSubject(),
 			$message->getBodyPlain(),

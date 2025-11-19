@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeCertificateParserException;
 use OCA\Mail\Http\JsonResponse;
@@ -24,16 +23,13 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class SmimeCertificatesController extends Controller {
-	private ?string $userId;
-	private SmimeService $certificateService;
-
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		?string $userId,
-		SmimeService $certificateService) {
+		private readonly ?string $userId,
+		private readonly SmimeService $certificateService
+	) {
 		parent::__construct($appName, $request);
-		$this->userId = $userId;
-		$this->certificateService = $certificateService;
 	}
 
 	/**
@@ -45,15 +41,13 @@ class SmimeCertificatesController extends Controller {
 	#[TrapError]
 	public function index(): JsonResponse {
 		$certificates = $this->certificateService->findAllCertificates($this->userId);
-		$certificates = array_map(fn (SmimeCertificate $certificate) => $this->certificateService->enrichCertificate($certificate), $certificates);
+		$certificates = array_map($this->certificateService->enrichCertificate(...), $certificates);
 		return JsonResponse::success($certificates);
 	}
 
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @return JsonResponse
 	 *
 	 * @throws DoesNotExistException
 	 */
@@ -66,7 +60,6 @@ class SmimeCertificatesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @return JsonResponse
 	 *
 	 * @throws ServiceException
 	 * @throws SmimeCertificateParserException

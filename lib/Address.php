@@ -22,11 +22,9 @@ class Address implements JsonSerializable {
 	public const TYPE_CC = 2;
 	public const TYPE_BCC = 3;
 
-	/** @var Horde_Mail_Rfc822_Address */
-	private $wrapped;
-
-	private function __construct(Horde_Mail_Rfc822_Address $wrapped) {
-		$this->wrapped = $wrapped;
+	private function __construct(
+		private readonly \Horde_Mail_Rfc822_Address $wrapped
+	) {
 	}
 
 	public static function fromHorde(Horde_Mail_Rfc822_Address $horde): self {
@@ -42,22 +40,15 @@ class Address implements JsonSerializable {
 		return new self($wrapped);
 	}
 
-	/**
-	 * @return string|null
-	 */
 	public function getLabel(): ?string {
 		$personal = $this->wrapped->personal;
 		if ($personal === null) {
 			// Fallback
 			return $this->getEmail();
-		}
-		$personal = trim(explode('<', $personal)[0]); // Remove the email part if present
-		return $personal;
+		} // Remove the email part if present
+		return trim(explode('<', $personal)[0]);
 	}
 
-	/**
-	 * @return string|null
-	 */
 	public function getCustomEmail(): ?string {
 		$personal = $this->wrapped->personal;
 		if ($personal === null) {
@@ -68,13 +59,9 @@ class Address implements JsonSerializable {
 		if (count($parts) === 1) {
 			return null;
 		}
-		$customEmail = trim($parts[1], '>');
-		return $customEmail;
+		return trim($parts[1], '>');
 	}
 
-	/**
-	 * @return string|null
-	 */
 	public function getEmail(): ?string {
 		$email = $this->wrapped->bare_address;
 		if ($email === null) {
@@ -94,9 +81,6 @@ class Address implements JsonSerializable {
 		return $utf8;
 	}
 
-	/**
-	 * @return Horde_Mail_Rfc822_Address
-	 */
 	public function toHorde(): Horde_Mail_Rfc822_Address {
 		return $this->wrapped;
 	}
@@ -112,7 +96,6 @@ class Address implements JsonSerializable {
 
 	/**
 	 * @param Address $object
-	 * @return boolean
 	 */
 	public function equals($object): bool {
 		return $this->getEmail() === $object->getEmail()

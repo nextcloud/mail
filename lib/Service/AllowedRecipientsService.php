@@ -14,7 +14,7 @@ use OCA\Mail\Db\MailAccount;
 class AllowedRecipientsService {
 
 	public function __construct(
-		private AliasesService $aliasesService,
+		private readonly AliasesService $aliasesService,
 	) {
 	}
 
@@ -25,7 +25,7 @@ class AllowedRecipientsService {
 	 */
 	public function get(MailAccount $mailAccount): array {
 		$aliases = array_map(
-			static fn ($alias) => $alias->getAlias(),
+			static fn (\OCA\Mail\Db\Alias $alias) => $alias->getAlias(),
 			$this->aliasesService->findAll($mailAccount->getId(), $mailAccount->getUserId())
 		);
 

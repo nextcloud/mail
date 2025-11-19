@@ -9,59 +9,27 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
-use OCA\Mail\Db\AliasMapper;
-use OCA\Mail\Db\CollectedAddressMapper;
 use OCA\Mail\Db\MailAccountMapper;
-use OCA\Mail\Db\MailboxMapper;
-use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\MessageRetentionMapper;
 use OCA\Mail\Db\MessageSnoozeMapper;
-use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Utility\ITimeFactory;
 use Psr\Log\LoggerInterface;
 
 class CleanupService {
-	private MailAccountMapper $mailAccountMapper;
+	private readonly ITimeFactory $timeFactory;
 
-	/** @var AliasMapper */
-	private $aliasMapper;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
-	/** @var CollectedAddressMapper */
-	private $collectedAddressMapper;
-
-	/** @var TagMapper */
-	private $tagMapper;
-
-	private MessageRetentionMapper $messageRetentionMapper;
-
-	private MessageSnoozeMapper $messageSnoozeMapper;
-
-	private ITimeFactory $timeFactory;
-
-	public function __construct(MailAccountMapper $mailAccountMapper,
-		AliasMapper $aliasMapper,
-		MailboxMapper $mailboxMapper,
-		MessageMapper $messageMapper,
-		CollectedAddressMapper $collectedAddressMapper,
-		TagMapper $tagMapper,
-		MessageRetentionMapper $messageRetentionMapper,
-		MessageSnoozeMapper $messageSnoozeMapper,
-		ITimeFactory $timeFactory) {
-		$this->aliasMapper = $aliasMapper;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->messageMapper = $messageMapper;
-		$this->collectedAddressMapper = $collectedAddressMapper;
-		$this->tagMapper = $tagMapper;
-		$this->messageRetentionMapper = $messageRetentionMapper;
-		$this->messageSnoozeMapper = $messageSnoozeMapper;
-		$this->mailAccountMapper = $mailAccountMapper;
+	public function __construct(
+		private readonly MailAccountMapper $mailAccountMapper,
+		private readonly \OCA\Mail\Db\AliasMapper $aliasMapper,
+		private readonly \OCA\Mail\Db\MailboxMapper $mailboxMapper,
+		private readonly \OCA\Mail\Db\MessageMapper $messageMapper,
+		private readonly \OCA\Mail\Db\CollectedAddressMapper $collectedAddressMapper,
+		private readonly \OCA\Mail\Db\TagMapper $tagMapper,
+		private readonly MessageRetentionMapper $messageRetentionMapper,
+		private readonly MessageSnoozeMapper $messageSnoozeMapper,
+		ITimeFactory $timeFactory
+	) {
 		$this->timeFactory = $timeFactory;
 	}
 

@@ -21,8 +21,7 @@ use OCP\Util;
  * Adds copies src to data-src on all img tags.
  */
 class TransformImageSrc extends HTMLPurifier_AttrTransform {
-	/** @var HTMLPurifier_URIParser */
-	private $parser;
+	private readonly \HTMLPurifier_URIParser $parser;
 
 	/** @var IURLGenerator */
 	private $urlGenerator;
@@ -50,8 +49,7 @@ class TransformImageSrc extends HTMLPurifier_AttrTransform {
 			&& (int)$attr['width'] < 5 && (int)$attr['height'] < 5) {
 			// Replace with a transparent png in case it's important for the layout
 			$attr['src'] = $this->urlGenerator->imagePath('mail', 'blocked-image.png');
-			$attr = $this->setDisplayNone($attr);
-			return $attr;
+			return $this->setDisplayNone($attr);
 		}
 
 		// Do not block images attached to the email
@@ -65,7 +63,6 @@ class TransformImageSrc extends HTMLPurifier_AttrTransform {
 	}
 
 	/**
-	 * @param array $attr
 	 * @return array
 	 *
 	 * Sets html attribute style="display: none;", keeps old style

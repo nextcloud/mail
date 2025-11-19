@@ -37,8 +37,7 @@ class ItineraryServiceTest extends TestCase {
 
 	private ICache $cache;
 
-	/** @var ItineraryService */
-	private $service;
+	private ?\OCA\Mail\Service\ItineraryService $service = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -61,7 +60,7 @@ class ItineraryServiceTest extends TestCase {
 		);
 	}
 
-	public function testExtractNoBodyNoAttachments() {
+	public function testExtractNoBodyNoAttachments(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(100);
 		$mailAccount->setUserId('1');
@@ -79,7 +78,7 @@ class ItineraryServiceTest extends TestCase {
 		$this->assertEquals([], $itinerary->jsonSerialize());
 	}
 
-	public function testExtractFromBody() {
+	public function testExtractFromBody(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(100);
 		$mailAccount->setUserId('1');
@@ -108,7 +107,7 @@ class ItineraryServiceTest extends TestCase {
 		$this->assertEquals(['datafrombody'], $itinerary->jsonSerialize());
 	}
 
-	public function testExtractFromAttachments() {
+	public function testExtractFromAttachments(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(100);
 		$mailAccount->setUserId('1');

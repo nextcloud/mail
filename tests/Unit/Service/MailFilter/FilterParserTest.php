@@ -15,7 +15,7 @@ use OCA\Mail\Service\MailFilter\FilterParser;
 class FilterParserTest extends TestCase {
 	private FilterParser $filterParser;
 
-	private string $testFolder;
+	private readonly string $testFolder;
 
 	public function __construct(?string $name = null, array $data = [], $dataName = '') {
 		parent::__construct($name, $data, $dataName);

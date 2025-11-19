@@ -15,18 +15,15 @@ use OCA\Mail\IMAP\Threading\Message;
 use OCA\Mail\IMAP\Threading\ThreadBuilder;
 use OCA\Mail\Support\PerformanceLogger;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 class ThreadBuilderTest extends TestCase {
 	/** @var PerformanceLogger|MockObject */
 	private $performanceLogger;
 
-	/** @var LoggerInterface */
-	private $logger;
+	private ?\Psr\Log\NullLogger $logger = null;
 
-	/** @var ThreadBuilder */
-	private $builder;
+	private ?\OCA\Mail\IMAP\Threading\ThreadBuilder $builder = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -41,11 +38,9 @@ class ThreadBuilderTest extends TestCase {
 
 	/**
 	 * @param Container[] $set
-	 *
-	 * @return array
 	 */
 	private function abstract(array $set): array {
-		return array_map(fn (Container $container) => [
+		return array_map(fn (Container $container): array => [
 			'id' => (($message = $container->getMessage()) !== null ? $message->getId() : null),
 			'children' => $this->abstract($container->getChildren()),
 		], array_values($set));

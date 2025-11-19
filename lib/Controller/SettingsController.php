@@ -26,24 +26,18 @@ use function array_merge;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class SettingsController extends Controller {
-	private ProvisioningManager $provisioningManager;
-	private AntiSpamService $antiSpamService;
-	private ContainerInterface $container;
-	private IConfig $config;
-	private ClassificationSettingsService $classificationSettingsService;
+	private readonly IConfig $config;
 
-	public function __construct(IRequest $request,
-		ProvisioningManager $provisioningManager,
-		AntiSpamService $antiSpamService,
+	public function __construct(
+		IRequest $request,
+		private readonly ProvisioningManager $provisioningManager,
+		private readonly AntiSpamService $antiSpamService,
 		IConfig $config,
 		ContainerInterface $container,
-		ClassificationSettingsService $classificationSettingsService) {
+		private readonly ClassificationSettingsService $classificationSettingsService
+	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->provisioningManager = $provisioningManager;
-		$this->antiSpamService = $antiSpamService;
 		$this->config = $config;
-		$this->container = $container;
-		$this->classificationSettingsService = $classificationSettingsService;
 	}
 
 	public function index(): JSONResponse {
@@ -90,10 +84,6 @@ class SettingsController extends Controller {
 		return new JSONResponse([]);
 	}
 
-	/**
-	 *
-	 * @return JSONResponse
-	 */
 	public function setAntiSpamEmail(string $spam, string $ham): JSONResponse {
 		$this->antiSpamService->setSpamEmail($spam);
 		$this->antiSpamService->setHamEmail($ham);
@@ -102,8 +92,6 @@ class SettingsController extends Controller {
 
 	/**
 	 * Store the credentials used for SMTP in the config
-	 *
-	 * @return JSONResponse
 	 */
 	public function deleteAntiSpamEmail(): JSONResponse {
 		$this->antiSpamService->deleteConfig();

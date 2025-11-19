@@ -33,7 +33,6 @@ use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\IMAPMessage;
-use OCA\Mail\Model\Message;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\ItineraryService;
@@ -56,8 +55,7 @@ use Psr\Log\LoggerInterface;
 use ReflectionObject;
 
 class MessagesControllerTest extends TestCase {
-	/** @var string */
-	private $appName;
+	private ?string $appName = null;
 
 	/** @var MockObject|IRequest */
 	private $request;
@@ -74,8 +72,7 @@ class MessagesControllerTest extends TestCase {
 	/** @var ItineraryService|MockObject */
 	private $itineraryService;
 
-	/** @var string */
-	private $userId;
+	private ?string $userId = null;
 
 	/** @var MockObject|Folder */
 	private $userFolder;
@@ -86,14 +83,10 @@ class MessagesControllerTest extends TestCase {
 	/** @var MockObject|IL10N */
 	private $l10n;
 
-	/** @var MessagesController */
-	private $controller;
+	private ?\OCA\Mail\Controller\MessagesController $controller = null;
 
 	/** @var MockObject|Account */
 	private $account;
-
-	/** @var MockObject|Message */
-	private $message;
 
 	/** @var MockObject|Attachment */
 	private $attachment;
@@ -188,7 +181,6 @@ class MessagesControllerTest extends TestCase {
 		);
 
 		$this->account = $this->createMock(Account::class);
-		$this->message = $this->createMock(IMAPMessage::class);
 		$this->attachment = $this->createMock(Attachment::class);
 	}
 
@@ -274,7 +266,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expectedRichResponse, $actualRichResponse);
 	}
 
-	public function testDownloadAttachment() {
+	public function testDownloadAttachment(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -326,7 +318,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testSaveSingleAttachment() {
+	public function testSaveSingleAttachment(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -387,7 +379,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testSaveAllAttachments() {
+	public function testSaveAllAttachments(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -400,7 +392,7 @@ class MessagesControllerTest extends TestCase {
 		$mailbox = new \OCA\Mail\Db\Mailbox();
 		$mailbox->setName('INBOX');
 		$mailbox->setAccountId($accountId);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$this->createMock(Horde_Imap_Client_Socket::class);
 		$this->mailManager->expects($this->once())
 			->method('getMessage')
 			->with($this->userId, $id)
@@ -450,7 +442,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testDownloadAttachments() {
+	public function testDownloadAttachments(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -509,11 +501,9 @@ class MessagesControllerTest extends TestCase {
 		// Reflection is needed to get private properties
 		$refZip = new ReflectionObject($zip);
 		$prop = $refZip->getProperty('resources');
-		$prop->setAccessible(true);
 		$zipValues = $prop->getValue($zip);
 		$refResponse = new ReflectionObject($response);
 		$prop = $refResponse->getProperty('resources');
-		$prop->setAccessible(true);
 		$responseValues = $prop->getValue($zip);
 
 		$this->assertTrue(is_resource($zipValues[0]['resource']));
@@ -527,7 +517,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($zipValues, $responseValues);
 	}
 
-	public function testDownloadAttachmentsNoAccountError() {
+	public function testDownloadAttachmentsNoAccountError(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -560,7 +550,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertInstanceOf(JSONResponse::class, $response);
 	}
 
-	public function testDownloadAttachmentsNoMailboxError() {
+	public function testDownloadAttachmentsNoMailboxError(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -589,7 +579,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertInstanceOf(JSONResponse::class, $response);
 	}
 
-	public function testDownloadAttachmentsNoMessageError() {
+	public function testDownloadAttachmentsNoMessageError(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -614,7 +604,7 @@ class MessagesControllerTest extends TestCase {
 	}
 
 
-	public function testSetFlagsUnseen() {
+	public function testSetFlagsUnseen(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -652,7 +642,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testSetTagFailing() {
+	public function testSetTagFailing(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 1;
@@ -683,7 +673,7 @@ class MessagesControllerTest extends TestCase {
 		$this->controller->setTag($id, Tag::LABEL_IMPORTANT);
 	}
 
-	public function testSetTagNotFound() {
+	public function testSetTagNotFound(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 1;
@@ -717,7 +707,7 @@ class MessagesControllerTest extends TestCase {
 		$this->controller->setTag($id, $imapLabel);
 	}
 
-	public function testSetTag() {
+	public function testSetTag(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 1;
@@ -753,7 +743,7 @@ class MessagesControllerTest extends TestCase {
 		$this->controller->setTag($id, $tag->getImapLabel());
 	}
 
-	public function testRemoveTagFailing() {
+	public function testRemoveTagFailing(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 1;
@@ -784,7 +774,7 @@ class MessagesControllerTest extends TestCase {
 		$this->controller->removeTag($id, Tag::LABEL_IMPORTANT);
 	}
 
-	public function testRemoveTagNotFound() {
+	public function testRemoveTagNotFound(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 1;
@@ -818,7 +808,7 @@ class MessagesControllerTest extends TestCase {
 		$this->controller->removeTag($id, $imapLabel);
 	}
 
-	public function testRemoveTag() {
+	public function testRemoveTag(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 1;
@@ -854,7 +844,7 @@ class MessagesControllerTest extends TestCase {
 		$this->controller->removeTag($id, $tag->getImapLabel());
 	}
 
-	public function testSetFlagsFlagged() {
+	public function testSetFlagsFlagged(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -892,7 +882,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testDestroy() {
+	public function testDestroy(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -924,7 +914,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-	public function testDestroyWithAccountNotFound() {
+	public function testDestroyWithAccountNotFound(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -952,7 +942,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expected, $this->controller->destroy($id));
 	}
 
-	public function testDestroyWithFolderOrMessageNotFound() {
+	public function testDestroyWithFolderOrMessageNotFound(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -1074,7 +1064,7 @@ class MessagesControllerTest extends TestCase {
 		$this->controller->getThread($id);
 	}
 
-	public function testExport() {
+	public function testExport(): void {
 		$accountId = 17;
 		$mailboxId = 13;
 		$folderId = 'testfolder';
@@ -1121,7 +1111,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expectedResponse, $actualResponse);
 	}
 
-	public function testGetDkim() {
+	public function testGetDkim(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(100);
 		$mailAccount->setUserId($this->userId);
@@ -1218,7 +1208,7 @@ class MessagesControllerTest extends TestCase {
 		}
 	}
 
-	public function testNeedsTranslationNoUser() {
+	public function testNeedsTranslationNoUser(): void {
 		$controller = new MessagesController(
 			$this->appName,
 			$this->request,
@@ -1247,7 +1237,7 @@ class MessagesControllerTest extends TestCase {
 		$expectedResponse = new JSONResponse([], Http::STATUS_FORBIDDEN);
 		$this->assertEquals($expectedResponse, $actualResponse);
 	}
-	public function testNeedsTranslationNoMessage() {
+	public function testNeedsTranslationNoMessage(): void {
 		$this->mailManager->expects($this->once())
 			->method('getMessage')
 			->with($this->userId, 100)
@@ -1256,7 +1246,7 @@ class MessagesControllerTest extends TestCase {
 		$expectedResponse = new JSONResponse([], Http::STATUS_FORBIDDEN);
 		$this->assertEquals($expectedResponse, $actualResponse);
 	}
-	public function testNeedsTranslationNoBackend() {
+	public function testNeedsTranslationNoBackend(): void {
 		$message = new \OCA\Mail\Db\Message();
 		$message->setId(100);
 		$message->setMailboxId(1);
@@ -1285,7 +1275,7 @@ class MessagesControllerTest extends TestCase {
 
 	}
 
-	public function testNeedsTranslationNull() {
+	public function testNeedsTranslationNull(): void {
 		$message = new \OCA\Mail\Db\Message();
 		$message->setId(100);
 		$message->setMailboxId(1);
@@ -1316,7 +1306,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expectedResponse, $actualResponse);
 	}
 
-	public function testNeedsTranslation() {
+	public function testNeedsTranslation(): void {
 		$message = new \OCA\Mail\Db\Message();
 		$message->setId(100);
 		$message->setMailboxId(1);

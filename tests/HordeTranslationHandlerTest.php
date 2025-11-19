@@ -10,7 +10,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\HordeTranslationHandler;
 
 class HordeTranslationHandlerTest extends TestCase {
-	private $handler;
+	private ?\OCA\Mail\HordeTranslationHandler $handler = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -18,7 +18,7 @@ class HordeTranslationHandlerTest extends TestCase {
 		$this->handler = new HordeTranslationHandler();
 	}
 
-	public function testT() {
+	public function testT(): void {
 		$message = 'Hello';
 
 		$expected = $message;
@@ -38,7 +38,7 @@ class HordeTranslationHandlerTest extends TestCase {
 	/**
 	 * @dataProvider singularPluralDataProvider
 	 */
-	public function testNgettext($number) {
+	public function testNgettext($number): void {
 		$singular = 'mail';
 		$plural = 'mails';
 

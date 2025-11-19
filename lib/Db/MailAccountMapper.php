@@ -23,19 +23,13 @@ use OCP\IUser;
  * @template-extends QBMapper<MailAccount>
  */
 class MailAccountMapper extends QBMapper {
-	/**
-	 * @param IDBConnection $db
-	 */
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'mail_accounts');
 	}
 
 	/** Finds an Mail Account by id
 	 *
-	 * @param string $userId
-	 * @param int $accountId
 	 *
-	 * @return MailAccount
 	 *
 	 * @throws DoesNotExistException
 	 */
@@ -53,7 +47,6 @@ class MailAccountMapper extends QBMapper {
 	/**
 	 * Finds an mail account by id
 	 *
-	 * @return MailAccount
 	 * @throws DoesNotExistException
 	 */
 	public function findById(int $id): MailAccount {
@@ -148,9 +141,7 @@ class MailAccountMapper extends QBMapper {
 	/**
 	 * Saves an User Account into the database
 	 *
-	 * @param MailAccount $account
 	 *
-	 * @return MailAccount
 	 */
 	public function save(MailAccount $account): MailAccount {
 		if ($account->getId() === null) {
@@ -211,9 +202,6 @@ class MailAccountMapper extends QBMapper {
 		return $this->findEntities($query);
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getTotal(): int {
 		$qb = $this->db->getQueryBuilder();
 

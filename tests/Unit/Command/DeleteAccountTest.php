@@ -17,8 +17,8 @@ use Psr\Log\LoggerInterface;
 class DeleteAccountTest extends TestCase {
 	private $accountService;
 	private $logger;
-	private $command;
-	private $args = [
+	private ?\OCA\Mail\Command\DeleteAccount $command = null;
+	private array $args = [
 		'account-id',
 	];
 
@@ -35,15 +35,15 @@ class DeleteAccountTest extends TestCase {
 		$this->command = new DeleteAccount($this->accountService, $this->logger);
 	}
 
-	public function testName() {
+	public function testName(): void {
 		$this->assertSame('mail:account:delete', $this->command->getName());
 	}
 
-	public function testDescription() {
+	public function testDescription(): void {
 		$this->assertSame('Delete an IMAP account', $this->command->getDescription());
 	}
 
-	public function testArguments() {
+	public function testArguments(): void {
 		$actual = $this->command->getDefinition()->getArguments();
 
 		foreach ($actual as $actArg) {

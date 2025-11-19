@@ -36,20 +36,20 @@ use OCP\ITempManager;
 use OCP\Security\ICrypto;
 
 class SmimeService {
-	private ITempManager $tempManager;
-	private ICertificateManager $certificateManager;
-	private ICrypto $crypto;
-	private SmimeCertificateMapper $certificateMapper;
+	private readonly ITempManager $tempManager;
+	private readonly ICertificateManager $certificateManager;
+	private readonly ICrypto $crypto;
 
 
-	public function __construct(ITempManager $tempManager,
+	public function __construct(
+		ITempManager $tempManager,
 		ICertificateManager $certificateManager,
 		ICrypto $crypto,
-		SmimeCertificateMapper $certificateMapper) {
+		private readonly SmimeCertificateMapper $certificateMapper
+	) {
 		$this->tempManager = $tempManager;
 		$this->certificateManager = $certificateManager;
 		$this->crypto = $crypto;
-		$this->certificateMapper = $certificateMapper;
 	}
 
 	/**
@@ -58,7 +58,6 @@ class SmimeService {
 	 * Requires the openssl extension.
 	 *
 	 * @param string $message Whole message including all headers and parts as stored on IMAP
-	 * @return bool
 	 */
 	public function verifyMessage(string $message): bool {
 		// Ideally, we should use the more modern openssl cms module as it is a superset of the
@@ -179,8 +178,6 @@ class SmimeService {
 	/**
 	 * Enrich S/MIME certificate from the database with additional information.
 	 *
-	 * @param SmimeCertificate $certificate
-	 * @return EnrichedSmimeCertificate
 	 *
 	 * @throws ServiceException If decrypting the certificate fails
 	 * @throws SmimeCertificateParserException If parsing the certificate fails
@@ -216,9 +213,6 @@ class SmimeService {
 	/**
 	 * Get a single S/MIME certificate by id.
 	 *
-	 * @param int $certificateId
-	 * @param string $userId
-	 * @return SmimeCertificate
 	 *
 	 * @throws DoesNotExistException
 	 */
@@ -229,8 +223,6 @@ class SmimeService {
 	/**
 	 * Get all S/MIME certificates belonging to an email address.
 	 *
-	 * @param string $emailAddress
-	 * @param string $userId
 	 * @return SmimeCertificate[]
 	 *
 	 * @throws ServiceException If the database query fails
@@ -251,8 +243,6 @@ class SmimeService {
 	/**
 	 * Get all S/MIME certificates belonging to an address list
 	 *
-	 * @param AddressList $addressList
-	 * @param string $userId
 	 * @return SmimeCertificate[]
 	 *
 	 * @throws ServiceException If the database query fails or converting an email address failed
@@ -282,9 +272,7 @@ class SmimeService {
 	/**
 	 * Find all S/MIME certificates of the given user.
 	 *
-	 * @param string $userId
 	 * @return SmimeCertificate[]
-	 *
 	 * @throws ServiceException
 	 */
 	public function findAllCertificates(string $userId): array {
@@ -294,9 +282,6 @@ class SmimeService {
 	/**
 	 * Delete an S/MIME certificate by its id.
 	 *
-	 * @param int $id
-	 * @param string $userId
-	 * @return void
 	 *
 	 * @throws DoesNotExistException
 	 */
@@ -308,10 +293,6 @@ class SmimeService {
 	/**
 	 * Store an S/MIME certificate in the database.
 	 *
-	 * @param string $userId
-	 * @param string $certificateData
-	 * @param ?string $privateKeyData
-	 * @return SmimeCertificate
 	 *
 	 * @throws ServiceException
 	 */
@@ -336,10 +317,7 @@ class SmimeService {
 	/**
 	 * Sign a MIME part using the given certificate and private key.
 	 *
-	 * @param Horde_Mime_Part $part
-	 * @param SmimeCertificate $certificate
 	 * @return Horde_Mime_Part New MIME part containing the signed message and the signature
-	 *
 	 * @throws SmimeSignException If signing the message fails
 	 * @throws ServiceException If decrypting the certificate or private key fails or the private key is missing
 	 */
@@ -397,7 +375,6 @@ class SmimeService {
 	 * Decrypt full text of a MIME message and verify the signed message within.
 	 * This method assumes the given mime part text to be encrypted without checking.
 	 *
-	 * @param string $mimePartText
 	 * @param SmimeCertificate $certificate The certificate needs to contain a private key.
 	 * @return SmimeDecryptionResult Full text of decrypted MIME message and the signature verification status.
 	 *
@@ -481,9 +458,6 @@ class SmimeService {
 	 * This method will do nothing to the full text if the message is not encrypted.
 	 * The verification will also be skipped in that case.
 	 *
-	 * @param Horde_Imap_Client_Data_Fetch $message
-	 * @param string $userId
-	 * @return SmimeDecryptionResult
 	 *
 	 * @throws ServiceException
 	 */
@@ -508,7 +482,7 @@ class SmimeService {
 			foreach ($certs as $cert) {
 				try {
 					$decryptionResult = $this->decryptMimePartText($encryptedText, $cert);
-				} catch (ServiceException|SmimeDecryptException $e) {
+				} catch (ServiceException|SmimeDecryptException) {
 					// Certificate probably didn't match -> continue
 					// TODO: filter a real decryption error
 					// (is hard because openssl doesn't return a proper error code)
@@ -561,7 +535,6 @@ class SmimeService {
 	/**
 	 * Encrypt a MIME part using the given certificates.
 	 *
-	 * @param Horde_Mime_Part $part
 	 * @param SmimeCertificate[] $certificates
 	 * @return Horde_Mime_Part New MIME part containing the encrypted message and the signature
 	 *

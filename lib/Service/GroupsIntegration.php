@@ -26,7 +26,7 @@ class GroupsIntegration {
 	 *
 	 * @var IGroupService[]
 	 */
-	private $groupServices = [];
+	private array $groupServices = [];
 
 	public function __construct(ContactsGroupService $contactsGroupService, NextcloudGroupService $nextcloudGroupService) {
 		$this->groupServices = [
@@ -37,9 +37,6 @@ class GroupsIntegration {
 
 	/**
 	 * Extracts all matching contacts with email address and name
-	 *
-	 * @param string $term
-	 * @return array
 	 */
 	public function getMatchingGroups(string $term): array {
 		$receivers = [];
@@ -61,9 +58,6 @@ class GroupsIntegration {
 
 	/**
 	 * Returns the prefix for the group service.
-	 *
-	 * @param IGroupService $gs
-	 * @return string
 	 */
 	public function servicePrefix(IGroupService $gs): string {
 		if (empty($gs->getNamespace())) {
@@ -80,14 +74,14 @@ class GroupsIntegration {
 	 * @return Recipient[]
 	 */
 	public function expand(array $recipients): array {
-		return array_flat_map(function (Recipient $recipient) {
+		return array_flat_map(function (Recipient $recipient): array {
 			foreach ($this->groupServices as $service) {
 				if (mb_strpos($recipient->getEmail(), $this->servicePrefix($service)) !== false) {
 					$groupId = mb_substr(
 						$recipient->getEmail(),
 						mb_strlen($this->servicePrefix($service))
 					);
-					$members = array_filter($service->getUsers($groupId), static fn (array $member) => !empty($member['email']));
+					$members = array_filter($service->getUsers($groupId), static fn (array $member): bool => !empty($member['email']));
 					if ($members === []) {
 						throw new ServiceException($groupId . " ({$service->getNamespace()}) has no members with email addresses");
 					}

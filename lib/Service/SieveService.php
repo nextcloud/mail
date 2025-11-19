@@ -17,8 +17,8 @@ use OCA\Mail\Sieve\SieveClientFactory;
 
 class SieveService {
 	public function __construct(
-		private SieveClientFactory $sieveClientFactory,
-		private AccountService $accountService,
+		private readonly SieveClientFactory $sieveClientFactory,
+		private readonly AccountService $accountService,
 	) {
 	}
 

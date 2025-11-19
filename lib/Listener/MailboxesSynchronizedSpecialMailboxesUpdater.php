@@ -9,14 +9,11 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Listener;
 
-use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\Mailbox;
-use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use Psr\Log\LoggerInterface;
 use function array_combine;
 use function array_key_exists;
 use function array_map;
@@ -28,26 +25,13 @@ use function strtolower;
  * @template-implements IEventListener<Event|MailboxesSynchronizedEvent>
  */
 class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
-	/** @var MailAccountMapper */
-	private $mailAccountMapper;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(MailAccountMapper $mailAccountMapper,
-		MailboxMapper $mailboxMapper,
-		LoggerInterface $logger) {
-		$this->mailAccountMapper = $mailAccountMapper;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->logger = $logger;
+	public function __construct(
+		private readonly \OCA\Mail\Db\MailAccountMapper $mailAccountMapper,
+		private readonly \OCA\Mail\Db\MailboxMapper $mailboxMapper,
+		private readonly \Psr\Log\LoggerInterface $logger
+	) {
 	}
 
-	/**
-	 * @param Event $event
-	 */
 	#[\Override]
 	public function handle(Event $event): void {
 		/** @var MailboxesSynchronizedEvent $event */
@@ -61,7 +45,7 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 			try {
 				$draftsMailbox = $this->findSpecial($mailboxes, 'drafts');
 				$mailAccount->setDraftsMailboxId($draftsMailbox->getId());
-			} catch (DoesNotExistException $e) {
+			} catch (DoesNotExistException) {
 				$this->logger->info('Account ' . $account->getId() . ' does not have a drafts mailbox');
 
 				$mailAccount->setDraftsMailboxId(null);
@@ -71,7 +55,7 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 			try {
 				$sentMailbox = $this->findSpecial($mailboxes, 'sent');
 				$mailAccount->setSentMailboxId($sentMailbox->getId());
-			} catch (DoesNotExistException $e) {
+			} catch (DoesNotExistException) {
 				$this->logger->info('Account ' . $account->getId() . ' does not have a sent mailbox');
 
 				$mailAccount->setSentMailboxId(null);
@@ -81,7 +65,7 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 			try {
 				$trashMailbox = $this->findSpecial($mailboxes, 'trash');
 				$mailAccount->setTrashMailboxId($trashMailbox->getId());
-			} catch (DoesNotExistException $e) {
+			} catch (DoesNotExistException) {
 				$this->logger->info('Account ' . $account->getId() . ' does not have a trash mailbox');
 
 				$mailAccount->setTrashMailboxId(null);
@@ -91,7 +75,7 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 			try {
 				$archiveMailbox = $this->findSpecial($mailboxes, 'archive');
 				$mailAccount->setArchiveMailboxId($archiveMailbox->getId());
-			} catch (DoesNotExistException $e) {
+			} catch (DoesNotExistException) {
 				$this->logger->info('Account ' . $account->getId() . ' does not have an archive mailbox');
 
 				$mailAccount->setArchiveMailboxId(null);
@@ -110,7 +94,7 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 			try {
 				$snoozeMailbox = $this->findSpecial($mailboxes, 'snooze');
 				$mailAccount->setSnoozeMailboxId($snoozeMailbox->getId());
-			} catch (DoesNotExistException $e) {
+			} catch (DoesNotExistException) {
 				$this->logger->info('Account ' . $account->getId() . ' does not have an snooze mailbox');
 
 				$mailAccount->setSnoozeMailboxId(null);

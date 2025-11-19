@@ -21,24 +21,19 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AliasesController extends Controller {
-	private AliasesService $aliasService;
-	private string $currentUserId;
-
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		AliasesService $aliasesService,
-		string $UserId) {
+		private readonly AliasesService $aliasService,
+		private readonly string $currentUserId
+	) {
 		parent::__construct($appName, $request);
-		$this->aliasService = $aliasesService;
-		$this->currentUserId = $UserId;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $accountId
 	 *
-	 * @return JSONResponse
 	 */
 	#[TrapError]
 	public function index(int $accountId): JSONResponse {
@@ -77,9 +72,6 @@ class AliasesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @param int $id
-	 * @return JSONResponse
 	 */
 	#[TrapError]
 	public function destroy(int $id): JSONResponse {
@@ -89,11 +81,7 @@ class AliasesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $accountId
-	 * @param string $alias
-	 * @param string $aliasName
 	 *
-	 * @return JSONResponse
 	 * @throws DoesNotExistException
 	 */
 	#[TrapError]
@@ -107,10 +95,7 @@ class AliasesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @param string|null $signature
 	 *
-	 * @return JSONResponse
 	 * @throws DoesNotExistException
 	 */
 	#[TrapError]

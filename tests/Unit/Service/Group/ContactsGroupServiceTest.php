@@ -19,7 +19,7 @@ class ContactsGroupServiceTest extends TestCase {
 	/** @var IConfig */
 	private $config;
 
-	private $groupService;
+	private ?\OCA\Mail\Service\Group\ContactsGroupService $groupService = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -30,7 +30,7 @@ class ContactsGroupServiceTest extends TestCase {
 			$this->config);
 	}
 
-	public function testDisabledContactsManager() {
+	public function testDisabledContactsManager(): void {
 		$this->contactsManager->expects($this->once())
 			->method('isEnabled')
 			->will($this->returnValue(false));
@@ -43,7 +43,7 @@ class ContactsGroupServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testSearchGroups() {
+	public function testSearchGroups(): void {
 		$term = 'wor'; // searching for: group Work
 		$searchResult = [
 			[
@@ -105,7 +105,7 @@ class ContactsGroupServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetUsersForGroup() {
+	public function testGetUsersForGroup(): void {
 		$groupId = 'work'; // searching for: group Work
 		$searchResult = [
 			[

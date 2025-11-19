@@ -22,8 +22,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class FolderMapperTest extends TestCase {
-	/** @var FolderMapper */
-	private $mapper;
+	private ?\OCA\Mail\IMAP\FolderMapper $mapper = null;
 
 	/** @var LoggerInterface|MockObject */
 	private $logger;
@@ -237,7 +236,7 @@ class FolderMapperTest extends TestCase {
 		self::assertArrayNotHasKey('INBOX', $stats);
 	}
 
-	public function testDetectSpecialUseFromAttributes() {
+	public function testDetectSpecialUseFromAttributes(): void {
 		$folders = [
 			$this->createMock(Folder::class),
 		];

@@ -19,10 +19,9 @@ use OCA\Mail\Html\Parser;
 use OCA\Mail\Service\DataUri\DataUriParser;
 
 class MimeMessage {
-	private DataUriParser $uriParser;
-
-	public function __construct(DataUriParser $uriParser) {
-		$this->uriParser = $uriParser;
+	public function __construct(
+		private readonly DataUriParser $uriParser
+	) {
 	}
 
 	/**
@@ -31,8 +30,6 @@ class MimeMessage {
 	 * @param string $contentPlain
 	 * @param string $contentHtml
 	 * @param Horde_Mime_Part[] $attachments
-	 *
-	 * @return Horde_Mime_Part
 	 */
 	public function build(?string $contentPlain, ?string $contentHtml, array $attachments, bool $isPgpEncrypted = false): Horde_Mime_Part {
 
@@ -59,8 +56,6 @@ class MimeMessage {
 
 	/**
 	 * generates html/plain message part
-	 *
-	 * @return Horde_Mime_Part
 	 */
 	private function buildMessagePart(?string $contentPlain, ?string $contentHtml): Horde_Mime_Part {
 
@@ -87,7 +82,7 @@ class MimeMessage {
 				}
 				try {
 					$dataUri = $this->uriParser->parse($src);
-				} catch (InvalidDataUriException $e) {
+				} catch (InvalidDataUriException) {
 					continue;
 				}
 
@@ -124,7 +119,7 @@ class MimeMessage {
 			$plainPart->setType('text/plain');
 			$plainPart->setCharset('UTF-8');
 			$plainPart->setContents(
-				Horde_Text_Filter::filter($contentHtml, 'Html2text', ['callback' => [$this, 'htmlToTextCallback']])
+				Horde_Text_Filter::filter($contentHtml, 'Html2text', ['callback' => $this->htmlToTextCallback(...)])
 			);
 		}
 
@@ -165,9 +160,7 @@ class MimeMessage {
 	/**
 	 * generates pgp encrypted message part
 	 *
-	 * @param string $content
 	 *
-	 * @return Horde_Mime_Part
 	 */
 	private function buildPgpPart(string $content): Horde_Mime_Part {
 
@@ -203,11 +196,9 @@ class MimeMessage {
 	 * of html2text filter to convert <p>Hello</p> => Hello\n\n with
 	 * <p>Hello</p> => Hello\n.
 	 *
-	 * @param DOMDocument $doc
-	 * @param DOMNode $node
 	 * @return string|null non-null, add this text to the output and skip further processing of the node.
 	 */
-	public function htmlToTextCallback(DOMDocument $doc, DOMNode $node) {
+	public function htmlToTextCallback(DOMDocument $doc, DOMNode $node): ?string {
 		if ($node instanceof DOMElement && strtolower($node->tagName) === 'p') {
 			return $node->textContent . "\n";
 		}

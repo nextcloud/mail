@@ -33,8 +33,7 @@ use OCA\Mail\Service\AutoConfig\MxRecord;
 use Psr\Log\LoggerInterface;
 
 class MxRecordTest extends TestCase {
-	/** @var MxRecord */
-	private $record;
+	private ?\OCA\Mail\Service\AutoConfig\MxRecord $record = null;
 
 	protected function setUp(): void {
 		parent::setUp();

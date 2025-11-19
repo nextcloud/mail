@@ -12,16 +12,13 @@ namespace OCA\Mail\Migration;
 use Horde_Mail_Exception;
 use Horde_Mail_Rfc822_Address;
 use OCA\Mail\Db\CollectedAddress;
-use OCA\Mail\Db\CollectedAddressMapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 
 class FixCollectedAddresses implements IRepairStep {
-	/** @var CollectedAddressMapper */
-	private $mapper;
-
-	public function __construct(CollectedAddressMapper $mapper) {
-		$this->mapper = $mapper;
+	public function __construct(
+		private readonly \OCA\Mail\Db\CollectedAddressMapper $mapper
+	) {
 	}
 
 	#[\Override]
@@ -29,11 +26,8 @@ class FixCollectedAddresses implements IRepairStep {
 		return 'Purify and migrate collected mail addresses';
 	}
 
-	/**
-	 * @return void
-	 */
 	#[\Override]
-	public function run(IOutput $output) {
+	public function run(IOutput $output): void {
 		$nrOfAddresses = $this->mapper->getTotal();
 		$output->startProgress($nrOfAddresses);
 
@@ -51,10 +45,7 @@ class FixCollectedAddresses implements IRepairStep {
 		$output->finishProgress();
 	}
 
-	/**
-	 * @return void
-	 */
-	private function fixAddress(CollectedAddress $address, IOutput $output) {
+	private function fixAddress(CollectedAddress $address, IOutput $output): void {
 		if (!is_null($address->getDisplayName())) {
 			// Nothing to fix
 			return;
@@ -68,7 +59,7 @@ class FixCollectedAddresses implements IRepairStep {
 			$address->setDisplayName($hordeAddress->label);
 			$address->setEmail($hordeAddress->bare_address);
 			$this->mapper->update($address);
-		} catch (Horde_Mail_Exception $ex) {
+		} catch (Horde_Mail_Exception) {
 			$output->warning('removed invalid address <' . $address->getEmail() . '>');
 			// Invalid address, let's delete it to prevent further errors
 			$this->mapper->delete($address);

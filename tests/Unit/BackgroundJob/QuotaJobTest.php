@@ -110,7 +110,6 @@ class QuotaJobTest extends TestCase {
 	}
 
 	public function testQuotaNoAuthentication(): void {
-		$oldQuota = 10;
 		$newQuota = 20;
 		$quotaDTO = new Quota(20, 100);
 		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
@@ -121,7 +120,7 @@ class QuotaJobTest extends TestCase {
 			'getUserId' => 'user123',
 			'getMailAccount' => $mailAccount,
 		]);
-		$user = $this->createConfiguredMock(IUser::class, [
+		$this->createConfiguredMock(IUser::class, [
 			'isEnabled' => true,
 		]);
 
@@ -164,7 +163,6 @@ class QuotaJobTest extends TestCase {
 	}
 
 	public function testQuotaTooLow(): void {
-		$oldQuota = 10;
 		$newQuota = 20;
 		$quotaDTO = new Quota(20, 100);
 		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
@@ -221,7 +219,6 @@ class QuotaJobTest extends TestCase {
 	}
 
 	public function testQuotaWithNotification(): void {
-		$oldQuota = 85;
 		$newQuota = 95;
 		$quotaDTO = new Quota(95, 100);
 		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
@@ -327,7 +324,6 @@ class QuotaJobTest extends TestCase {
 	}
 
 	public function testQuotaZero(): void {
-		$oldQuota = 0;
 		$newQuota = 0;
 		$quotaDTO = new Quota(0, 0);
 		$mailAccount = $this->createConfiguredMock(MailAccount::class, [

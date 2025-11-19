@@ -16,7 +16,7 @@ use ReturnTypeWillChange;
 
 class Account implements JsonSerializable {
 	public function __construct(
-		private MailAccount $account,
+		private readonly MailAccount $account,
 	) {
 	}
 
@@ -62,17 +62,12 @@ class Account implements JsonSerializable {
 		return $this->account->getUserId();
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function getDebug(): bool {
 		return $this->account->getDebug();
 	}
 
 	/**
 	 * Set the quota percentage
-	 * @param Quota $quota
-	 * @return void
 	 */
 	public function calculateAndSetQuotaPercentage(Quota $quota): void {
 		if ($quota->getLimit() === 0) {

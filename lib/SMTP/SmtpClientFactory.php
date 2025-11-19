@@ -13,7 +13,6 @@ use Horde_Mail_Transport;
 use Horde_Mail_Transport_Smtphorde;
 use Horde_Smtp_Password_Xoauth2;
 use OCA\Mail\Account;
-use OCA\Mail\Support\HostNameFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
 
@@ -24,22 +23,15 @@ class SmtpClientFactory {
 	/** @var ICrypto */
 	private $crypto;
 
-	/** @var HostNameFactory */
-	private $hostNameFactory;
-
-	public function __construct(IConfig $config,
+	public function __construct(
+		IConfig $config,
 		ICrypto $crypto,
-		HostNameFactory $hostNameFactory) {
+		private readonly \OCA\Mail\Support\HostNameFactory $hostNameFactory
+	) {
 		$this->config = $config;
 		$this->crypto = $crypto;
-		$this->hostNameFactory = $hostNameFactory;
 	}
 
-	/**
-	 * @param Account $account
-	 *
-	 * @return Horde_Mail_Transport
-	 */
 	public function create(Account $account): Horde_Mail_Transport {
 		$mailAccount = $account->getMailAccount();
 

@@ -11,7 +11,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\IMAP\Sync\Response;
 
 class ResponseTest extends TestCase {
-	public function testJsonSerialize() {
+	public function testJsonSerialize(): void {
 		$newMessages = [];
 		$changedMessages = [];
 		$vanishedMessages = [];

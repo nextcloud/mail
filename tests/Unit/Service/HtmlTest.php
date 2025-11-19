@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OC;
 use OCA\Mail\Service\Html;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -23,7 +22,7 @@ class HtmlTest extends TestCase {
 	 * @param $expected
 	 * @param $text
 	 */
-	public function testLinkDetection(string $expected, string $text) {
+	public function testLinkDetection(string $expected, string $text): void {
 		$urlGenerator = Server::get(IURLGenerator::class);
 		$request = Server::get(IRequest::class);
 
@@ -61,9 +60,9 @@ class HtmlTest extends TestCase {
 	 * @param $expected
 	 * @param $text
 	 */
-	public function testParseMailBody($expectedBody, $expectedSignature, $text) {
-		$urlGenerator = OC::$server->getURLGenerator();
-		$request = OC::$server->getRequest();
+	public function testParseMailBody($expectedBody, $expectedSignature, $text): void {
+		$urlGenerator = \OCP\Server::get(\OCP\IURLGenerator::class);
+		$request = \OCP\Server::get(\OCP\IRequest::class);
 		$html = new Html($urlGenerator, $request);
 		[$b, $s] = $html->parseMailBody($text);
 		$this->assertSame($expectedBody, $b);
@@ -78,7 +77,7 @@ class HtmlTest extends TestCase {
 		];
 	}
 
-	public function testSanitizeStyleSheet() {
+	public function testSanitizeStyleSheet(): void {
 		$blockedUrl = '/apps/mail/img/blocked-image.png';
 		$urlGenerator = self::createMock(IURLGenerator::class);
 		$urlGenerator->expects(self::any())

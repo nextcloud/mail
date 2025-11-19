@@ -20,24 +20,16 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class TrustedSendersController extends Controller {
-	private ?string $uid;
-	private ITrustedSenderService $trustedSenderService;
-
-	public function __construct(IRequest $request,
-		?string $UserId,
-		ITrustedSenderService $trustedSenderService) {
+	public function __construct(
+		IRequest $request,
+		private readonly ?string $uid,
+		private readonly ITrustedSenderService $trustedSenderService
+	) {
 		parent::__construct(Application::APP_ID, $request);
-
-		$this->uid = $UserId;
-		$this->trustedSenderService = $trustedSenderService;
 	}
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @param string $email
-	 * @param string $type
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function setTrusted(string $email, string $type): JsonResponse {
@@ -52,10 +44,6 @@ class TrustedSendersController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @param string $email
-	 * @param string $type
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function removeTrust(string $email, string $type): JsonResponse {
@@ -66,12 +54,10 @@ class TrustedSendersController extends Controller {
 			false
 		);
 
-		return JsonResponse::success(null);
+		return JsonResponse::success();
 	}
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @return JsonResponse
 	 */
 	#[TrapError]
 	public function list(): JsonResponse {

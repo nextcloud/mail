@@ -160,7 +160,7 @@ class MailProviderTest extends TestCase {
 		// define account services find
 		$this->accountService->expects($this->any())->method('find')
 			->willReturnCallback(
-				fn (string $userId, int $serviceId) => match (true) {
+				fn (string $userId, int $serviceId): \OCA\Mail\Account => match (true) {
 					$userId === 'user1' && $serviceId === 100 => $mailAccount,
 					default => throw new ClientException()
 				}

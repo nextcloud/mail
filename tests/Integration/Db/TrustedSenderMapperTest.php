@@ -26,13 +26,11 @@ class TrustedSenderMapperTest extends TestCase {
 	/** @var IUser */
 	private $user;
 
-	/** @var TrustedSenderMapper */
-	private $mapper;
+	private ?\OCA\Mail\Db\TrustedSenderMapper $mapper = null;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		/** @var IDBConnection $db */
 		$this->db = Server::get(IDBConnection::class);
 		$this->user = $this->createTestUser();
 

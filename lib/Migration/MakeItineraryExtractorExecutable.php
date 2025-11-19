@@ -12,35 +12,28 @@ namespace OCA\Mail\Migration;
 use Exception;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
-use Psr\Log\LoggerInterface;
 use Throwable;
 use function chmod;
 use function is_executable;
 use function is_file;
 
 class MakeItineraryExtractorExecutable implements IRepairStep {
-	/** @var LoggerInterface */
-	private $logger;
+	private readonly string $file;
 
-	/** @var string */
-	private $file;
-
-	public function __construct(LoggerInterface $logger,
-		?string $file = null) {
+	public function __construct(
+		private readonly \Psr\Log\LoggerInterface $logger,
+		?string $file = null
+	) {
 		$this->file = $file ?? (__DIR__ . '/../../vendor/nextcloud/kitinerary-bin/bin/kitinerary-extractor');
-		$this->logger = $logger;
 	}
 
 	#[\Override]
-	public function getName() {
+	public function getName(): string {
 		return 'Make Mail itinerary extractor executable';
 	}
 
-	/**
-	 * @return void
-	 */
 	#[\Override]
-	public function run(IOutput $output) {
+	public function run(IOutput $output): void {
 		if (!is_file($this->file)) {
 			$this->logger->warning('itinerary file doesn\'t exist');
 			$output->info('itinerary file doesn\'t exist');

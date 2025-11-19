@@ -20,35 +20,29 @@ use ReturnTypeWillChange;
  * @psalm-immutable
  */
 class AddressList implements Countable, JsonSerializable {
-	/** @var Address[] */
-	private $addresses;
-
 	/**
 	 * @param Address[] $addresses
 	 */
-	public function __construct(array $addresses = []) {
-		$this->addresses = $addresses;
+	public function __construct(
+		private array $addresses = []
+	) {
 	}
 
 	/**
 	 * Parse an address (list) like "a@b.c" or "a@b.c, d@e.f"
 	 *
 	 * @param string|string[] $str address list string to parse
-	 * @return AddressList
 	 */
-	public static function parse($str) {
+	public static function parse($str): \OCA\Mail\AddressList {
 		$hordeList = new Horde_Mail_Rfc822_List($str);
 		return self::fromHorde($hordeList);
 	}
 
 	/**
 	 * Construct a new list from an horde list
-	 *
-	 * @param Horde_Mail_Rfc822_List $hordeList
-	 * @return AddressList
 	 */
-	public static function fromHorde(Horde_Mail_Rfc822_List $hordeList) {
-		$addresses = array_map(static fn (Horde_Mail_Rfc822_Address $addr) => Address::fromHorde($addr), array_filter(iterator_to_array($hordeList), static fn (Horde_Mail_Rfc822_Object $obj)
+	public static function fromHorde(Horde_Mail_Rfc822_List $hordeList): \OCA\Mail\AddressList {
+		$addresses = array_map(Address::fromHorde(...), array_filter(iterator_to_array($hordeList), static fn (Horde_Mail_Rfc822_Object $obj): bool
 			// TODO: how to handle non-addresses? This doesn't seem right …
 			=> $obj instanceof Horde_Mail_Rfc822_Address));
 		return new AddressList($addresses);
@@ -64,10 +58,8 @@ class AddressList implements Countable, JsonSerializable {
 	 * Get first element
 	 *
 	 * Returns null if the list is empty
-	 *
-	 * @return Address|null
 	 */
-	public function first() {
+	public function first(): ?\OCA\Mail\Address {
 		if ($this->addresses === []) {
 			return null;
 		}
@@ -93,7 +85,6 @@ class AddressList implements Countable, JsonSerializable {
 	/**
 	 * Iterate over the internal list of addresses using a generator method
 	 *
-	 * @return \Generator
 	 *
 	 * @psalm-return \Generator<int, Address, mixed, void>
 	 */
@@ -103,15 +94,11 @@ class AddressList implements Countable, JsonSerializable {
 		}
 	}
 
-	/**
-	 * @param AddressList $other
-	 * @return AddressList
-	 */
-	public function merge(AddressList $other) {
+	public function merge(AddressList $other): \OCA\Mail\AddressList {
 		$addresses = $this->addresses;
 
 		foreach ($other->addresses as $address) {
-			$same = array_filter($addresses, static fn (Address $our)
+			$same = array_filter($addresses, static fn (Address $our): bool
 				// Check whether our array contains the other address
 				=> $our->equals($address));
 			if ($same === []) {
@@ -125,7 +112,7 @@ class AddressList implements Countable, JsonSerializable {
 	}
 
 	public function toHorde(): Horde_Mail_Rfc822_List {
-		$hordeAddresses = array_map(static fn (Address $address) => $address->toHorde(), $this->addresses);
+		$hordeAddresses = array_map(static fn (Address $address): \Horde_Mail_Rfc822_Address => $address->toHorde(), $this->addresses);
 		return new Horde_Mail_Rfc822_List($hordeAddresses);
 	}
 }

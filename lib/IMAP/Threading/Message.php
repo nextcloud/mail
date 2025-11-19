@@ -14,24 +14,14 @@ use ReturnTypeWillChange;
 use function str_replace;
 
 class Message implements JsonSerializable {
-	/** @var string */
-	private $subject;
-
-	/** @var string */
-	private $id;
-
-	/** @var string[] */
-	private $references;
-
 	/**
 	 * @param string[] $references
 	 */
-	public function __construct(string $subject,
-		string $id,
-		array $references) {
-		$this->subject = $subject;
-		$this->id = $id;
-		$this->references = $references;
+	public function __construct(
+		private readonly string $subject,
+		private readonly string $id,
+		private readonly array $references
+	) {
 	}
 
 	public function hasReSubject(): bool {

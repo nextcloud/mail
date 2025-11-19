@@ -18,14 +18,14 @@ class ProxyDownloadResponseTest extends TestCase {
 	 * @param $filename
 	 * @param $contentType
 	 */
-	public function testIt($content, $filename, $contentType) {
+	public function testIt($content, $filename, $contentType): void {
 		$resp = new ProxyDownloadResponse($content, $filename, $contentType);
 		$headers = $resp->getHeaders();
 		$this->assertEquals($content, $resp->render());
 		$this->assertArrayHasKey('Content-Type', $headers);
 		$this->assertEquals($contentType, $headers['Content-Type']);
 		$this->assertArrayHasKey('Content-Disposition', $headers);
-		$pos = strpos($headers['Content-Disposition'], (string)$filename);
+		$pos = strpos((string)$headers['Content-Disposition'], (string)$filename);
 		$this->assertTrue($pos > 0);
 	}
 

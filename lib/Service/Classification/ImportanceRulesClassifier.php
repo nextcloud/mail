@@ -12,42 +12,22 @@ namespace OCA\Mail\Service\Classification;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
-use OCA\Mail\Service\Classification\FeatureExtraction\ImportantMessagesExtractor;
-use OCA\Mail\Service\Classification\FeatureExtraction\ReadMessagesExtractor;
-use OCA\Mail\Service\Classification\FeatureExtraction\RepliedMessagesExtractor;
-use OCA\Mail\Service\Classification\FeatureExtraction\SentMessagesExtractor;
 use function array_combine;
 use function array_map;
 
 class ImportanceRulesClassifier {
-	/** @var ImportantMessagesExtractor */
-	private $importantMessagesExtractor;
-
-	/** @var ReadMessagesExtractor */
-	private $readMessagesExtractor;
-
-	/** @var RepliedMessagesExtractor */
-	private $repliedMessagesExtractor;
-
-	/** @var SentMessagesExtractor */
-	private $sentMessagesExtractor;
-
-	public function __construct(ImportantMessagesExtractor $importantMessagesExtractor,
-		ReadMessagesExtractor $readMessagesExtractor,
-		RepliedMessagesExtractor $repliedMessagesExtractor,
-		SentMessagesExtractor $sentMessagesExtractor) {
-		$this->importantMessagesExtractor = $importantMessagesExtractor;
-		$this->readMessagesExtractor = $readMessagesExtractor;
-		$this->repliedMessagesExtractor = $repliedMessagesExtractor;
-		$this->sentMessagesExtractor = $sentMessagesExtractor;
+	public function __construct(
+		private readonly \OCA\Mail\Service\Classification\FeatureExtraction\ImportantMessagesExtractor $importantMessagesExtractor,
+		private readonly \OCA\Mail\Service\Classification\FeatureExtraction\ReadMessagesExtractor $readMessagesExtractor,
+		private readonly \OCA\Mail\Service\Classification\FeatureExtraction\RepliedMessagesExtractor $repliedMessagesExtractor,
+		private readonly \OCA\Mail\Service\Classification\FeatureExtraction\SentMessagesExtractor $sentMessagesExtractor
+	) {
 	}
 
 	/**
-	 * @param Account $account
 	 * @param Mailbox[] $incomingMailboxes
 	 * @param Mailbox[] $outgoingMailboxes
 	 * @param Message[] $messages
-	 *
 	 * @return bool[]
 	 */
 	public function classifyImportance(Account $account,
@@ -61,7 +41,7 @@ class ImportanceRulesClassifier {
 
 		return array_combine(
 			array_map(static fn (Message $m) => $m->getUid(), $messages),
-			array_map(function (Message $m) {
+			array_map(function (Message $m): bool {
 				$from = $m->getFrom()->first();
 				if ($from === null || $from->getEmail() === null) {
 					return false;

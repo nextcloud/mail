@@ -31,7 +31,7 @@ class MimeMessageTest extends TestCase {
 		$this->account = new Account(new MailAccount());
 	}
 
-	public function testTextPlain() {
+	public function testTextPlain(): void {
 		$messageData = new NewMessageData(
 			$this->account,
 			new AddressList(),
@@ -53,7 +53,7 @@ class MimeMessageTest extends TestCase {
 		$this->assertEquals('text/plain', $part->getType());
 	}
 
-	public function testMultipartAlternative() {
+	public function testMultipartAlternative(): void {
 		$messageData = new NewMessageData(
 			$this->account,
 			new AddressList(),
@@ -81,7 +81,7 @@ class MimeMessageTest extends TestCase {
 		$this->assertEquals('text/html', $subParts[1]->getType());
 	}
 
-	public function testMultipartAlternativeEmptyContent() {
+	public function testMultipartAlternativeEmptyContent(): void {
 		$messageData = new NewMessageData(
 			$this->account,
 			new AddressList(),
@@ -109,7 +109,7 @@ class MimeMessageTest extends TestCase {
 		$this->assertEquals('text/html', $subParts[1]->getType());
 	}
 
-	public function testMultipartMixedAlternative() {
+	public function testMultipartMixedAlternative(): void {
 		$messageData = new NewMessageData(
 			$this->account,
 			new AddressList(),
@@ -154,7 +154,7 @@ class MimeMessageTest extends TestCase {
 		$this->assertEquals('attachment', $attachmentPart->getDisposition());
 	}
 
-	public function testMultipartMixedRelated() {
+	public function testMultipartMixedRelated(): void {
 		$messageData = new NewMessageData(
 			$this->account,
 			new AddressList(),
@@ -224,7 +224,7 @@ class MimeMessageTest extends TestCase {
 		$this->assertEquals('attachment', $attachmentPart2->getDisposition());
 	}
 
-	public function testMultipartAlternativeGreek() {
+	public function testMultipartAlternativeGreek(): void {
 		$messageData = new NewMessageData(
 			$this->account,
 			new AddressList(),
@@ -269,11 +269,6 @@ class MimeMessageTest extends TestCase {
 
 	/**
 	 * OCA\Mail\Model\Message::createAttachmentDetails
-	 *
-	 * @param string $name
-	 * @param string $content
-	 * @param string $mime
-	 * @return void
 	 */
 	private function createAttachmentDetails(string $name, string $content, string $mime): Horde_Mime_Part {
 		$part = new Horde_Mime_Part();

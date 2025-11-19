@@ -34,35 +34,23 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class MailboxesController extends Controller {
-	private AccountService $accountService;
-	private IMailManager $mailManager;
-	private SyncService $syncService;
-	private ?string $currentUserId;
-
 	public function __construct(
 		string $appName,
 		IRequest $request,
-		AccountService $accountService,
-		?string $UserId,
-		IMailManager $mailManager,
-		SyncService $syncService,
+		private readonly AccountService $accountService,
+		private readonly ?string $currentUserId,
+		private readonly IMailManager $mailManager,
+		private readonly SyncService $syncService,
 		private readonly IConfig $config,
 		private readonly ITimeFactory $timeFactory,
 	) {
 		parent::__construct($appName, $request);
-
-		$this->accountService = $accountService;
-		$this->currentUserId = $UserId;
-		$this->mailManager = $mailManager;
-		$this->syncService = $syncService;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $accountId
 	 *
-	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -83,10 +71,8 @@ class MailboxesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 * @param string $name
 	 *
-	 * @return JSONResponse
 	 */
 	#[TrapError]
 	public function patch(int $id,
@@ -123,13 +109,9 @@ class MailboxesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 * @param int[] $ids
 	 *
-	 * @param bool $init
-	 * @param string|null $query
 	 *
-	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
@@ -153,13 +135,13 @@ class MailboxesController extends Controller {
 				Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 				!$init,
 				$lastMessageTimestamp,
-				array_map(static fn ($id) => (int)$id, $ids),
+				array_map(static fn (int $id): int => $id, $ids),
 				$order,
 				$query
 			);
-		} catch (MailboxNotCachedException $e) {
+		} catch (MailboxNotCachedException) {
 			return new JSONResponse([], Http::STATUS_PRECONDITION_REQUIRED);
-		} catch (IncompleteSyncException $e) {
+		} catch (IncompleteSyncException) {
 			return \OCA\Mail\Http\JsonResponse::fail([], Http::STATUS_ACCEPTED);
 		}
 
@@ -169,9 +151,7 @@ class MailboxesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 *
-	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
@@ -187,9 +167,7 @@ class MailboxesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 *
-	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 */
@@ -206,9 +184,7 @@ class MailboxesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 *
-	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -245,7 +221,6 @@ class MailboxesController extends Controller {
 	 * @NoAdminRequired
 	 *
 	 *
-	 * @return JSONResponse
 	 * @throws ServiceException
 	 * @throws ClientException
 	 */
@@ -259,9 +234,7 @@ class MailboxesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 *
-	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
@@ -277,9 +250,7 @@ class MailboxesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 *
-	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 * @throws \OCP\AppFramework\Db\DoesNotExistException

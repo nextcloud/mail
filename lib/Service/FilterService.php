@@ -26,12 +26,12 @@ use Psr\Log\LoggerInterface;
 class FilterService {
 
 	public function __construct(
-		private AllowedRecipientsService $allowedRecipientsService,
-		private OutOfOfficeParser $outOfOfficeParser,
-		private FilterParser $filterParser,
-		private FilterBuilder $filterBuilder,
-		private SieveService $sieveService,
-		private LoggerInterface $logger,
+		private readonly AllowedRecipientsService $allowedRecipientsService,
+		private readonly OutOfOfficeParser $outOfOfficeParser,
+		private readonly FilterParser $filterParser,
+		private readonly FilterBuilder $filterBuilder,
+		private readonly SieveService $sieveService,
+		private readonly LoggerInterface $logger,
 	) {
 	}
 

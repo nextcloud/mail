@@ -31,23 +31,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class RunMetaEstimator extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 	public const ARGUMENT_SHUFFLE = 'shuffle';
-
-	private AccountService $accountService;
-	private LoggerInterface $logger;
-	private ImportanceClassifier $classifier;
-	private IConfig $config;
+	private readonly IConfig $config;
 
 	public function __construct(
-		AccountService $accountService,
-		LoggerInterface $logger,
-		ImportanceClassifier $classifier,
+		private readonly AccountService $accountService,
+		private readonly LoggerInterface $logger,
+		private readonly ImportanceClassifier $classifier,
 		IConfig $config,
 	) {
 		parent::__construct();
-
-		$this->accountService = $accountService;
-		$this->logger = $logger;
-		$this->classifier = $classifier;
 		$this->config = $config;
 	}
 
@@ -68,7 +60,7 @@ final class RunMetaEstimator extends Command {
 
 		try {
 			$account = $this->accountService->findById($accountId);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			$output->writeln("<error>Account $accountId does not exist</error>");
 			return 1;
 		}
@@ -78,7 +70,7 @@ final class RunMetaEstimator extends Command {
 			$output
 		);
 
-		$estimator = static function () use ($consoleLogger) {
+		$estimator = static function () use ($consoleLogger): \Rubix\ML\GridSearch {
 			$params = [
 				[5, 10, 15, 20, 25, 30, 35, 40], // Neighbors
 				[true, false], // Weighted?

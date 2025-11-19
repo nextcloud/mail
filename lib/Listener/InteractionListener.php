@@ -15,7 +15,6 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IUserSession;
-use Psr\Log\LoggerInterface;
 use function class_exists;
 
 /**
@@ -28,15 +27,13 @@ class InteractionListener implements IEventListener {
 	/** @var IUserSession */
 	private $userSession;
 
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(IEventDispatcher $dispatcher,
+	public function __construct(
+		IEventDispatcher $dispatcher,
 		IUserSession $userSession,
-		LoggerInterface $logger) {
+		private readonly \Psr\Log\LoggerInterface $logger
+	) {
 		$this->dispatcher = $dispatcher;
 		$this->userSession = $userSession;
-		$this->logger = $logger;
 	}
 
 	/**

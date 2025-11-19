@@ -19,13 +19,12 @@ use OCP\Files\SimpleFS\ISimpleFolder;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class AttachmentStorageTest extends TestCase {
-	private $tmpFilePath = '/tmp/nc_mail_attachment_test';
+	private string $tmpFilePath = '/tmp/nc_mail_attachment_test';
 
 	/** @var IAppData|PHPUnit_Framework_MockObject_MockObject */
 	private $appData;
 
-	/** @var AttachmentStorage */
-	private $storage;
+	private ?\OCA\Mail\Service\Attachment\AttachmentStorage $storage = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -36,7 +35,7 @@ class AttachmentStorageTest extends TestCase {
 		$this->storage = new AttachmentStorage($this->appData);
 	}
 
-	public function testSaveWithFolderNotExisting() {
+	public function testSaveWithFolderNotExisting(): void {
 		$folder = $this->createMock(ISimpleFolder::class);
 		$file = $this->createMock(ISimpleFile::class);
 		$uploadedFile = $this->createMock(UploadedFile::class);
@@ -63,9 +62,9 @@ class AttachmentStorageTest extends TestCase {
 		$this->storage->save('fritz', 123, $uploadedFile);
 	}
 
-	public function testSaveWithPermissionProblems() {
-		$folder = $this->createMock(ISimpleFolder::class);
-		$file = $this->createMock(ISimpleFile::class);
+	public function testSaveWithPermissionProblems(): void {
+		$this->createMock(ISimpleFolder::class);
+		$this->createMock(ISimpleFile::class);
 		$uploadedFile = $this->createMock(UploadedFile::class);
 
 		$this->appData->expects($this->once())
@@ -81,7 +80,7 @@ class AttachmentStorageTest extends TestCase {
 		$this->storage->save('fritz', 123, $uploadedFile);
 	}
 
-	public function testSaveWithoutTempPath() {
+	public function testSaveWithoutTempPath(): void {
 		$folder = $this->createMock(ISimpleFolder::class);
 		$file = $this->createMock(ISimpleFile::class);
 		$uploadedFile = $this->createMock(UploadedFile::class);
@@ -106,7 +105,7 @@ class AttachmentStorageTest extends TestCase {
 		$this->storage->save('fritz', 123, $uploadedFile);
 	}
 
-	public function testSaveWithFileReadError() {
+	public function testSaveWithFileReadError(): void {
 		$folder = $this->createMock(ISimpleFolder::class);
 		$file = $this->createMock(ISimpleFile::class);
 		$uploadedFile = $this->createMock(UploadedFile::class);
@@ -131,7 +130,7 @@ class AttachmentStorageTest extends TestCase {
 		$this->storage->save('fritz', 123, $uploadedFile);
 	}
 
-	public function testSave() {
+	public function testSave(): void {
 		$folder = $this->createMock(ISimpleFolder::class);
 		$file = $this->createMock(ISimpleFile::class);
 		$uploadedFile = $this->createMock(UploadedFile::class);

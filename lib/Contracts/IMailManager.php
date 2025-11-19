@@ -24,57 +24,37 @@ use OCP\AppFramework\Db\DoesNotExistException;
 
 interface IMailManager {
 	/**
-	 * @param string $uid
-	 * @param int $id
-	 *
-	 * @return Mailbox
 	 *
 	 * @throws ClientException
 	 */
 	public function getMailbox(string $uid, int $id): Mailbox;
 
 	/**
-	 * @param Account $account
 	 *
 	 * @return Mailbox[]
-	 *
 	 * @throws ServiceException
 	 */
 	public function getMailboxes(Account $account): array;
 
 	/**
-	 * @param Account $account
-	 * @param string $name
-	 *
-	 * @return Mailbox
 	 *
 	 * @throws ServiceException
 	 */
 	public function createMailbox(Account $account, string $name): Mailbox;
 
 	/**
-	 * @param Mailbox $mailbox
 	 * @param $uid
 	 *
-	 * @return int|null
 	 */
 	public function getMessageIdForUid(Mailbox $mailbox, $uid): ?int;
 
 	/**
-	 * @param string $uid
-	 * @param int $id
-	 *
-	 * @return Message
 	 *
 	 * @throws DoesNotExistException
 	 */
 	public function getMessage(string $uid, int $id): Message;
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
-	 * @param Account $account
-	 * @param string $mailbox
-	 * @param int $uid
 	 *
 	 * @return string
 	 * @throws ClientException
@@ -86,13 +66,7 @@ interface IMailManager {
 		int $uid): ?string;
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 * @param int $uid
-	 * @param bool $loadBody
 	 *
-	 * @return IMAPMessage
 	 *
 	 * @throws ServiceException
 	 */
@@ -103,19 +77,12 @@ interface IMailManager {
 		bool $loadBody = false): IMAPMessage;
 
 	/**
-	 * @param Account $account
 	 * @param string $threadRootId thread root id
-	 *
 	 * @return Message[]
 	 */
 	public function getThread(Account $account, string $threadRootId): array;
 
 	/**
-	 * @param Account $sourceAccount
-	 * @param string $sourceFolderId
-	 * @param int $uid
-	 * @param Account $destinationAccount
-	 * @param string $destFolderId
 	 * @return ?int the new UID (or null if it couldn't be determined)
 	 *
 	 * @throws ServiceException
@@ -127,9 +94,6 @@ interface IMailManager {
 		string $destFolderId): ?int;
 
 	/**
-	 * @param Account $account
-	 * @param string $mailboxId
-	 * @param int $messageUid
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -137,11 +101,7 @@ interface IMailManager {
 	public function deleteMessage(Account $account, string $mailboxId, int $messageUid): void;
 
 	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 * @param int $messageUid
 	 * @param Horde_Imap_Client_Socket $client The caller is responsible to close the client.
-	 *
 	 * @throws ServiceException
 	 * @throws ClientException
 	 * @throws TrashMailboxNotSetException If no trash folder is configured for the given account.
@@ -155,18 +115,10 @@ interface IMailManager {
 
 	/**
 	 * Mark all messages of a folder as read
-	 *
-	 * @param Account $account
-	 * @param Mailbox $mailbox
 	 */
 	public function markFolderAsRead(Account $account, Mailbox $mailbox): void;
 
 	/**
-	 * @param Account $account
-	 * @param string $mailbox
-	 * @param int $uid
-	 * @param string $flag
-	 * @param bool $value
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -174,59 +126,37 @@ interface IMailManager {
 	public function flagMessage(Account $account, string $mailbox, int $uid, string $flag, bool $value): void;
 
 	/**
-	 * @param Account $account
-	 * @param string $mailbox
-	 * @param Message $message
-	 * @param Tag $tag
-	 * @param bool $value
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
 	public function tagMessage(Account $account, string $mailbox, Message $message, Tag $tag, bool $value): void;
 
-	/**
-	 * @param Account $account
-	 *
-	 * @return Quota|null
-	 */
 	public function getQuota(Account $account): ?Quota;
 
 	/**
 	 * Rename a mailbox and get the new (cached) version
 	 *
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 * @param string $name
 	 *
-	 * @return Mailbox
 	 *
 	 * @throw ServiceException
 	 */
 	public function renameMailbox(Account $account, Mailbox $mailbox, string $name): Mailbox;
 
 	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
 	 *
 	 * @throws ServiceException
 	 */
 	public function deleteMailbox(Account $account, Mailbox $mailbox): void;
 
 	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
 	 *
 	 * @throws ServiceException
 	 */
 	public function clearMailbox(Account $account, Mailbox $mailbox): void;
 
 	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 * @param bool $subscribed
 	 *
-	 * @return Mailbox
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
@@ -235,10 +165,6 @@ interface IMailManager {
 		bool $subscribed): Mailbox;
 
 	/**
-	 * @param Mailbox $mailbox
-	 * @param bool $syncInBackground
-	 *
-	 * @return Mailbox
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
@@ -246,46 +172,25 @@ interface IMailManager {
 		bool $syncInBackground): Mailbox;
 
 	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 * @param Message $message
 	 * @return Attachment[]
 	 */
 	public function getMailAttachments(Account $account, Mailbox $mailbox, Message $message) : array;
 
-	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 * @param Message $message
-	 * @param string $attachmentId
-	 * @return Attachment
-	 */
 	public function getMailAttachment(Account $account, Mailbox $mailbox, Message $message, string $attachmentId): Attachment;
 
 	/**
-	 * @param string $imapLabel
-	 * @param string $userId
-	 * @return Tag
 	 * @throws ClientException
 	 */
 	public function getTagByImapLabel(string $imapLabel, string $userId): Tag;
 
 	/**
 	 * Check IMAP server for support for PERMANENTFLAGS
-	 *
-	 * @param Account $account
-	 * @param string $mailbox
-	 * @return boolean
 	 */
 	public function isPermflagsEnabled(Horde_Imap_Client_Socket $client, Account $account, string $mailbox): bool;
 
 	/**
 	 * Create a mail tag
 	 *
-	 * @param string $userId
-	 * @param string $displayName
-	 * @param string $color
-	 * @return Tag
 	 * @throws ClientException if display name does not work as imap label
 	 */
 	public function createTag(string $displayName, string $color, string $userId): Tag;
@@ -293,11 +198,6 @@ interface IMailManager {
 	/**
 	 * Update a mail tag
 	 *
-	 * @param string $userId
-	 * @param int $id
-	 * @param string $displayName
-	 * @param string $color
-	 * @return Tag
 	 * @throws ClientException if the given tag does not exist
 	 */
 	public function updateTag(int $id, string $displayName, string $color, string $userId): Tag;
@@ -316,29 +216,18 @@ interface IMailManager {
 	 */
 	public function deleteTagForAccount(int $id, string $userId, Tag $tag, Account $account): void;
 	/**
-	 * @param Account $srcAccount
-	 * @param Mailbox $srcMailbox
-	 * @param Account $dstAccount
-	 * @param Mailbox $dstMailbox
-	 * @param string $threadRootId
 	 * @return int[] the new UIDs (not guaranteed to have an entry for each message of the thread)
 	 * @throws ServiceException
 	 */
 	public function moveThread(Account $srcAccount, Mailbox $srcMailbox, Account $dstAccount, Mailbox $dstMailbox, string $threadRootId): array;
 
 	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 * @param string $threadRootId
-	 * @return void
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
 	public function deleteThread(Account $account, Mailbox $mailbox, string $threadRootId): void;
 
 	/**
-	 * @param Account $account
-	 * @param string $messageId
 	 * @return Message[]
 	 */
 	public function getByMessageId(Account $account, string $messageId): array;

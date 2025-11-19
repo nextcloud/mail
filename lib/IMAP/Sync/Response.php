@@ -17,32 +17,17 @@ use ReturnTypeWillChange;
  * @psalm-template T
  */
 final class Response implements JsonSerializable {
-	/** @var T[] */
-	private $newMessages;
-
-	/** @var T[] */
-	private $changedMessages;
-
-	/** @var int[] */
-	private $vanishedMessageUids;
-
-	/** @var MailboxStats */
-	private $stats;
-
 	/**
 	 * @param T[] $newMessages
 	 * @param T[] $changedMessages
 	 * @param int[] $vanishedMessageUids
-	 * @param MailboxStats|null $stats
 	 */
-	public function __construct(array $newMessages,
-		array $changedMessages,
-		array $vanishedMessageUids,
-		?MailboxStats $stats = null) {
-		$this->newMessages = $newMessages;
-		$this->changedMessages = $changedMessages;
-		$this->vanishedMessageUids = $vanishedMessageUids;
-		$this->stats = $stats;
+	public function __construct(
+		private readonly array $newMessages,
+		private readonly array $changedMessages,
+		private readonly array $vanishedMessageUids,
+		private readonly ?\OCA\Mail\IMAP\MailboxStats $stats = null
+	) {
 	}
 
 	/**
@@ -66,9 +51,6 @@ final class Response implements JsonSerializable {
 		return $this->vanishedMessageUids;
 	}
 
-	/**
-	 * @return MailboxStats
-	 */
 	public function getStats(): MailboxStats {
 		return $this->stats;
 	}

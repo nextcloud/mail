@@ -19,8 +19,7 @@ class DownloaderTest extends TestCase {
 	/** @var IClientService|PHPUnit_Framework_MockObject_MockObject */
 	private $clientService;
 
-	/** @var Downloader */
-	private $downloader;
+	private ?\OCA\Mail\Service\Avatar\Downloader $downloader = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -30,7 +29,7 @@ class DownloaderTest extends TestCase {
 		$this->downloader = new Downloader($this->clientService);
 	}
 
-	public function testDownload() {
+	public function testDownload(): void {
 		$client = $this->createMock(IClient::class);
 		$this->clientService->expects($this->once())
 			->method('newClient')
@@ -49,7 +48,7 @@ class DownloaderTest extends TestCase {
 		$this->assertEquals('data', $data);
 	}
 
-	public function testDownloadError() {
+	public function testDownloadError(): void {
 		$client = $this->createMock(IClient::class);
 		$this->clientService->expects($this->once())
 			->method('newClient')

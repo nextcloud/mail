@@ -22,29 +22,21 @@ interface IMailTransmission {
 	/**
 	 * Send a new message or reply to an existing one
 	 *
-	 * @param Account $account
-	 * @param LocalMessage $localMessage
 	 * @throws SentMailboxNotSetException
 	 * @throws ServiceException
 	 */
 	public function sendMessage(Account $account, LocalMessage $localMessage): void;
 
 	/**
-	 * @param Account $account
-	 * @param LocalMessage $message
 	 * @throws ClientException
 	 * @throws ServiceException
-	 * @return void
 	 */
 	public function saveLocalDraft(Account $account, LocalMessage $message): void;
 
 	/**
 	 * Save a message draft
 	 *
-	 * @param NewMessageData $message
-	 * @param Message|null $previousDraft
 	 *
-	 * @return array
 	 *
 	 * @throws ClientException if no drafts mailbox is configured
 	 * @throws ServiceException
@@ -54,8 +46,6 @@ interface IMailTransmission {
 	/**
 	 * Send a mdn message
 	 *
-	 * @param Account $account
-	 * @param Mailbox $mailbox
 	 * @param Message $message the message to send an mdn for
 	 * @throws ServiceException
 	 */

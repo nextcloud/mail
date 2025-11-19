@@ -30,22 +30,20 @@ use Throwable;
 class SnoozeService {
 
 	public function __construct(
-		private ITimeFactory $time,
-		private LoggerInterface $logger,
-		private IMAPClientFactory $clientFactory,
-		private MessageMapper $messageMapper,
-		private MessageSnoozeMapper $messageSnoozeMapper,
-		private MailAccountMapper $accountMapper,
-		private MailboxMapper $mailboxMapper,
-		private IMailManager $mailManager,
-		private AccountService $accountService,
+		private readonly ITimeFactory $time,
+		private readonly LoggerInterface $logger,
+		private readonly IMAPClientFactory $clientFactory,
+		private readonly MessageMapper $messageMapper,
+		private readonly MessageSnoozeMapper $messageSnoozeMapper,
+		private readonly MailAccountMapper $accountMapper,
+		private readonly MailboxMapper $mailboxMapper,
+		private readonly IMailManager $mailManager,
+		private readonly AccountService $accountService,
 	) {
 	}
 
 	/**
 	 * Wakes snoozed messages (move back to INBOX and delete DB Entry)
-	 *
-	 * @return void
 	 */
 	public function wakeMessages(): void {
 		$accounts = $this->accountMapper->getAllAccounts();
@@ -66,14 +64,7 @@ class SnoozeService {
 	}
 
 	/**
-	 * @param Message $message
-	 * @param int $unixTimestamp
-	 * @param Account $srcAccount
-	 * @param Mailbox $srcMailbox
-	 * @param Account $dstAccount
-	 * @param Mailbox $dstMailbox
 	 *
-	 * @return void
 	 *
 	 * @throws Throwable
 	 */
@@ -106,9 +97,6 @@ class SnoozeService {
 	}
 
 	/**
-	 * @param Message $message
-	 * @param string|null $currentUserId
-	 * @return void
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -131,7 +119,7 @@ class SnoozeService {
 			try {
 				$originalMailbox = $this->mailboxMapper->findById($originalMailboxId);
 				$originalMailboxName = $originalMailbox->getName();
-			} catch (DoesNotExistException $e) {
+			} catch (DoesNotExistException) {
 				// Could not find mailbox, moving back to INBOX
 			}
 		}
@@ -151,14 +139,7 @@ class SnoozeService {
 	}
 
 	/**
-	 * @param Message $selectedMessage
-	 * @param int $unixTimestamp
-	 * @param Account $srcAccount
-	 * @param Mailbox $srcMailbox
-	 * @param Account $dstAccount
-	 * @param Mailbox $dstMailbox
 	 *
-	 * @return void
 	 *
 	 * @throws Throwable
 	 */
@@ -183,9 +164,6 @@ class SnoozeService {
 	}
 
 	/**
-	 * @param Message $selectedMessage
-	 * @param string|null $currentUserId
-	 * @return void
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -208,7 +186,7 @@ class SnoozeService {
 			try {
 				$originalMailbox = $this->mailboxMapper->findById($originalMailboxId);
 				$originalMailboxName = $originalMailbox->getName();
-			} catch (DoesNotExistException $e) {
+			} catch (DoesNotExistException) {
 				// Could not find mailbox, moving back to INBOX
 			}
 		}
@@ -235,11 +213,7 @@ class SnoozeService {
 	/**
 	 * Adds a DB entry for the message with a wake timestamp
 	 *
-	 * @param Message $message
-	 * @param int $unixTimestamp
-	 * @param Mailbox $srcMailbox
 	 *
-	 * @return void
 	 *
 	 * @throws Exception
 	 * @throws ServiceException
@@ -258,10 +232,7 @@ class SnoozeService {
 	 * Adds a DB entry for the messages with a wake timestamp
 	 *
 	 * @param array<int> $uids
-	 * @param int $unixTimestamp
-	 * @param Mailbox $srcMailbox
 	 *
-	 * @return void
 	 *
 	 * @throws Exception
 	 */
@@ -288,7 +259,7 @@ class SnoozeService {
 
 		try {
 			$snoozeMailbox = $this->mailboxMapper->findById($snoozeMailboxId);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return;
 		}
 
@@ -316,7 +287,7 @@ class SnoozeService {
 					try {
 						$srcMailbox = $this->mailboxMapper->findById($srcMailboxId);
 						$srcMailboxName = $srcMailbox->getName();
-					} catch (DoesNotExistException $e) {
+					} catch (DoesNotExistException) {
 						// Could not find mailbox, moving back to INBOX
 					}
 				}

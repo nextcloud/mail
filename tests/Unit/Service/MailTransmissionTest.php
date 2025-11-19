@@ -13,7 +13,6 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use Horde_Mail_Transport;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalMessage;
@@ -39,7 +38,6 @@ use Psr\Log\LoggerInterface;
 
 class MailTransmissionTest extends TestCase {
 	private IMAPClientFactory|MockObject $imapClientFactory;
-	private IMailManager|MockObject $mailManager;
 	private SmtpClientFactory|MockObject $smtpClientFactory;
 	private IEventDispatcher|MockObject $eventDispatcher;
 	private MailboxMapper|MockObject $mailboxMapper;
@@ -76,7 +74,7 @@ class MailTransmissionTest extends TestCase {
 		);
 	}
 
-	public function testSendNewMessage() {
+	public function testSendNewMessage(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
 		$mailAccount->setSentMailboxId(123);
@@ -105,7 +103,7 @@ class MailTransmissionTest extends TestCase {
 		$this->transmission->sendMessage($account, $localMessage);
 	}
 
-	public function testSendNewMessageSmimeError() {
+	public function testSendNewMessageSmimeError(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
 		$mailAccount->setSentMailboxId(123);
@@ -133,7 +131,7 @@ class MailTransmissionTest extends TestCase {
 		$this->transmission->sendMessage($account, $localMessage);
 	}
 
-	public function testSendMessageFromAlias() {
+	public function testSendMessageFromAlias(): void {
 		// Arrange
 		$mailAccount = new MailAccount();
 		$mailAccount->setName('Bob');
@@ -174,7 +172,7 @@ class MailTransmissionTest extends TestCase {
 		$this->assertStringContainsString('Disposition-Notification-To: Info <info@example.org>', $localMessage->getRaw());
 	}
 
-	public function testSendMessageAliasFallbackName() {
+	public function testSendMessageAliasFallbackName(): void {
 		// Arrange
 		$mailAccount = new MailAccount();
 		$mailAccount->setName('Bob');
@@ -214,7 +212,7 @@ class MailTransmissionTest extends TestCase {
 		$this->assertStringContainsString('Disposition-Notification-To: Bob <info@example.org>', $localMessage->getRaw());
 	}
 
-	public function testSendMessageAliasDoesNotExist() {
+	public function testSendMessageAliasDoesNotExist(): void {
 		// Arrange
 		$mailAccount = new MailAccount();
 		$mailAccount->setName('Bob');
@@ -251,7 +249,7 @@ class MailTransmissionTest extends TestCase {
 		$this->assertStringContainsString('Disposition-Notification-To: Bob <bob@example.org>', $localMessage->getRaw());
 	}
 
-	public function testSendNewMessageWithMessageAsAttachment() {
+	public function testSendNewMessageWithMessageAsAttachment(): void {
 		$userId = 'testuser';
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId($userId);
@@ -269,7 +267,7 @@ class MailTransmissionTest extends TestCase {
 		$attachment = new LocalAttachment();
 		$attachment->setId(1);
 		$localMessage->setAttachments([$attachment]);
-		$message = new Message();
+		new Message();
 		$transport = $this->createMock(Horde_Mail_Transport::class);
 		$attachmentMessage = new DbMessage();
 		$attachmentMessage->setMailboxId(1234);
@@ -303,7 +301,7 @@ class MailTransmissionTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
 	}
 
-	public function testReplyToAnExistingMessage() {
+	public function testReplyToAnExistingMessage(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
 		$mailAccount->setSentMailboxId(123);
@@ -321,7 +319,7 @@ class MailTransmissionTest extends TestCase {
 		$messageInReply = new DbMessage();
 		$messageInReply->setUid($repliedMessageUid);
 		$messageInReply->setMessageId('message@server');
-		$message = new Message();
+		new Message();
 		$transport = $this->createMock(Horde_Mail_Transport::class);
 
 		$this->smtpClientFactory->expects($this->once())
@@ -339,7 +337,7 @@ class MailTransmissionTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
 	}
 
-	public function testSaveDraft() {
+	public function testSaveDraft(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
 		$mailAccount->setDraftsMailboxId(123);
@@ -349,7 +347,7 @@ class MailTransmissionTest extends TestCase {
 		$account->method('getName')->willReturn('Test User');
 		$account->method('getEMailAddress')->willReturn('test@user');
 		$messageData = NewMessageData::fromRequest($account, 'sub', 'bod', 'to@d.com', '', '');
-		$message = new Message();
+		new Message();
 
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$this->imapClientFactory->expects($this->once())

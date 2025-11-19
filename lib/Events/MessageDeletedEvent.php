@@ -14,22 +14,12 @@ use OCA\Mail\Db\Mailbox;
 use OCP\EventDispatcher\Event;
 
 class MessageDeletedEvent extends Event {
-	/** @var Account */
-	private $account;
-
-	/** @var Mailbox */
-	private $mailbox;
-
-	/** @var int */
-	private $messageId;
-
-	public function __construct(Account $account,
-		Mailbox $mailbox,
-		int $messageId) {
+	public function __construct(
+		private readonly \OCA\Mail\Account $account,
+		private readonly \OCA\Mail\Db\Mailbox $mailbox,
+		private readonly int $messageId
+	) {
 		parent::__construct();
-		$this->account = $account;
-		$this->mailbox = $mailbox;
-		$this->messageId = $messageId;
 	}
 
 	public function getAccount(): Account {

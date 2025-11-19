@@ -31,7 +31,7 @@ class SieveUtils {
 	 * @see https://www.rfc-editor.org/rfc/rfc5228#section-2.4.2.1
 	 */
 	public static function stringList(array $values): string {
-		$values = array_map([self::class, 'escapeString'], $values);
+		$values = array_map(self::escapeString(...), $values);
 
 		return '["' . implode('", "', $values) . '"]';
 	}

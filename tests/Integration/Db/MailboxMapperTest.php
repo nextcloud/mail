@@ -25,8 +25,7 @@ class MailboxMapperTest extends TestCase {
 	/** @var IDBConnection */
 	private $db;
 
-	/** @var MailboxMapper */
-	private $mapper;
+	private ?\OCA\Mail\Db\MailboxMapper $mapper = null;
 
 	/** @var ITimeFactory| MockObject */
 	private $timeFactory;
@@ -34,7 +33,7 @@ class MailboxMapperTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->db = \OC::$server->getDatabaseConnection();
+		$this->db = \OCP\Server::get(\OCP\IDBConnection::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->mapper = new MailboxMapper(
 			$this->db,
@@ -47,7 +46,7 @@ class MailboxMapperTest extends TestCase {
 		$delete->executeStatement();
 	}
 
-	public function testFindAllNoData() {
+	public function testFindAllNoData(): void {
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(13);
 
@@ -56,7 +55,7 @@ class MailboxMapperTest extends TestCase {
 		$this->assertEmpty($result);
 	}
 
-	public function testFindAll() {
+	public function testFindAll(): void {
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(13);
 		foreach (range(1, 10) as $i) {
@@ -82,7 +81,7 @@ class MailboxMapperTest extends TestCase {
 		$this->assertCount(5, $result);
 	}
 
-	public function testNoInboxFound() {
+	public function testNoInboxFound(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(13);
@@ -91,7 +90,7 @@ class MailboxMapperTest extends TestCase {
 		$this->mapper->find($account, 'INBOX');
 	}
 
-	public function testFindInbox() {
+	public function testFindInbox(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(13);
@@ -116,7 +115,7 @@ class MailboxMapperTest extends TestCase {
 		$this->assertSame('INBOX', $result->getName());
 	}
 
-	public function testMailboxesWithTrailingSpace() {
+	public function testMailboxesWithTrailingSpace(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(13);

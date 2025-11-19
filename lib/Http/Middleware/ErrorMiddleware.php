@@ -22,31 +22,23 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Middleware;
 use OCP\IConfig;
-use Psr\Log\LoggerInterface;
 use ReflectionMethod;
 use Throwable;
 
 class ErrorMiddleware extends Middleware {
-	/** @var LoggerInterface */
-	private $logger;
-
 	/** @var IConfig */
 	private $config;
 
-	/**
-	 * @param IConfig $config
-	 * @param LoggerInterface $logger
-	 */
-	public function __construct(IConfig $config,
-		LoggerInterface $logger) {
+	public function __construct(
+		IConfig $config,
+		private readonly \Psr\Log\LoggerInterface $logger
+	) {
 		$this->config = $config;
-		$this->logger = $logger;
 	}
 
 	/**
 	 * @param Controller $controller
 	 * @param string $methodName
-	 * @param Exception $exception
 	 *
 	 * @return Response
 	 * @throws Exception

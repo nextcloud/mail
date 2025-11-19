@@ -18,9 +18,9 @@ use Psr\Log\LoggerInterface;
 
 class CopySentMessageHandler extends AHandler {
 	public function __construct(
-		private MailboxMapper $mailboxMapper,
-		private LoggerInterface $logger,
-		private MessageMapper $messageMapper,
+		private readonly MailboxMapper $mailboxMapper,
+		private readonly LoggerInterface $logger,
+		private readonly MessageMapper $messageMapper,
 	) {
 	}
 

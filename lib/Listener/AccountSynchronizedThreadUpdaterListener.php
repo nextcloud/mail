@@ -30,9 +30,9 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 	private const WRITE_IDS_CHUNK_SIZE = 500;
 
 	public function __construct(
-		private IUserPreferences $preferences,
-		private MessageMapper $mapper,
-		private ThreadBuilder $builder,
+		private readonly IUserPreferences $preferences,
+		private readonly MessageMapper $mapper,
+		private readonly ThreadBuilder $builder,
 	) {
 	}
 
@@ -78,7 +78,6 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 	/**
 	 * @param Container[] $threads
 	 *
-	 * @return Generator
 	 * @psalm-return Generator<int, DatabaseMessage>
 	 */
 	private function flattenThreads(array $threads,

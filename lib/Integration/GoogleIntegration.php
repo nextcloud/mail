@@ -22,25 +22,25 @@ use function json_decode;
 use function json_encode;
 
 class GoogleIntegration {
-	private ITimeFactory $timeFactory;
-	private IConfig $config;
-	private ICrypto $crypto;
-	private IClientService $clientService;
-	private IURLGenerator $urlGenerator;
-	private LoggerInterface $logger;
+	private readonly ITimeFactory $timeFactory;
+	private readonly IConfig $config;
+	private readonly ICrypto $crypto;
+	private readonly IClientService $clientService;
+	private readonly IURLGenerator $urlGenerator;
 
-	public function __construct(ITimeFactory $timeFactory,
+	public function __construct(
+		ITimeFactory $timeFactory,
 		IConfig $config,
 		ICrypto $crypto,
 		IClientService $clientService,
 		IURLGenerator $urlGenerator,
-		LoggerInterface $logger) {
+		private readonly LoggerInterface $logger
+	) {
 		$this->timeFactory = $timeFactory;
 		$this->clientService = $clientService;
 		$this->crypto = $crypto;
 		$this->config = $config;
 		$this->urlGenerator = $urlGenerator;
-		$this->logger = $logger;
 	}
 
 	public function configure(string $clientId, string $clientSecret): void {
@@ -109,7 +109,7 @@ class GoogleIntegration {
 			return $account;
 		}
 
-		$data = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+		$data = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 		$encryptedRefreshToken = $this->crypto->encrypt($data['refresh_token']);
 		$account->getMailAccount()->setOauthRefreshToken($encryptedRefreshToken);
 		$encryptedAccessToken = $this->crypto->encrypt($data['access_token']);
@@ -157,7 +157,7 @@ class GoogleIntegration {
 			return $account;
 		}
 
-		$data = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+		$data = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 		$encryptedAccessToken = $this->crypto->encrypt($data['access_token']);
 		$account->getMailAccount()->setOauthAccessToken($encryptedAccessToken);
 		$account->getMailAccount()->setOauthTokenTtl($this->timeFactory->getTime() + $data['expires_in']);

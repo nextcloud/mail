@@ -22,7 +22,6 @@ use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\IConfig;
-use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class AccountServiceTest extends TestCase {
@@ -32,23 +31,20 @@ class AccountServiceTest extends TestCase {
 	/** @var MailAccountMapper|MockObject */
 	private $mapper;
 
-	/** @var IL10N|MockObject */
-	private $l10n;
-
 	/** @var AccountService|MockObject */
-	private $accountService;
+	private ?\OCA\Mail\Service\AccountService $accountService = null;
 
 	/** @var AliasesService|MockObject */
 	private $aliasesService;
 
 	/** @var MailAccount|MockObject */
-	private $account1;
+	private ?\OCA\Mail\Db\MailAccount $account1 = null;
 
 	/** @var MailAccount|MockObject */
-	private $account2;
+	private ?\OCA\Mail\Db\MailAccount $account2 = null;
 
 	/** @var MailAccount|MockObject */
-	private $account3;
+	private ?\OCA\Mail\Db\MailAccount $account3 = null;
 
 	/** @var IJobList|MockObject */
 	private $jobList;
@@ -66,7 +62,6 @@ class AccountServiceTest extends TestCase {
 		parent::setUp();
 
 		$this->mapper = $this->createMock(MailAccountMapper::class);
-		$this->l10n = $this->createMock(IL10N::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);
 		$this->jobList = $this->createMock(IJobList::class);
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
@@ -87,7 +82,7 @@ class AccountServiceTest extends TestCase {
 		$this->client = $this->createMock(Horde_Imap_Client_Socket::class);
 	}
 
-	public function testFindByUserId() {
+	public function testFindByUserId(): void {
 		$this->mapper->expects(self::exactly(2))
 			->method('findByUserId')
 			->willReturnMap([
@@ -107,7 +102,7 @@ class AccountServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testFind() {
+	public function testFind(): void {
 		$accountId = 123;
 
 		$this->mapper->expects($this->once())
@@ -121,7 +116,7 @@ class AccountServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testFindById() {
+	public function testFindById(): void {
 		$accountId = 123;
 
 		$this->mapper->expects($this->once())
@@ -136,7 +131,7 @@ class AccountServiceTest extends TestCase {
 	}
 
 
-	public function testDelete() {
+	public function testDelete(): void {
 		$accountId = 33;
 
 		$this->mapper->expects($this->once())
@@ -150,7 +145,7 @@ class AccountServiceTest extends TestCase {
 		$this->accountService->delete($this->user, $accountId);
 	}
 
-	public function testDeleteByAccountId() {
+	public function testDeleteByAccountId(): void {
 		$accountId = 33;
 
 		$this->mapper->expects($this->once())
@@ -164,7 +159,7 @@ class AccountServiceTest extends TestCase {
 		$this->accountService->deleteByAccountId($accountId);
 	}
 
-	public function testSave() {
+	public function testSave(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(1000);
 		$mailAccount->setUserId('user1');
@@ -192,7 +187,7 @@ class AccountServiceTest extends TestCase {
 		$this->assertEquals($mailAccount, $actual);
 	}
 
-	public function testUpdateSignature() {
+	public function testUpdateSignature(): void {
 		$id = 3;
 		$uid = 'ian';
 		$signature = 'sig';
@@ -210,7 +205,7 @@ class AccountServiceTest extends TestCase {
 
 		$this->accountService->updateSignature($id, $uid, $signature);
 	}
-	public function testAccountsFailedConnection() {
+	public function testAccountsFailedConnection(): void {
 		$accountId = 1;
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
@@ -222,7 +217,7 @@ class AccountServiceTest extends TestCase {
 		$connected = $this->accountService->testAccountConnection($this->user, $accountId);
 		$this->assertFalse($connected);
 	}
-	public function testAccountsSuccesfulConnection() {
+	public function testAccountsSuccesfulConnection(): void {
 		$accountId = 1;
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
@@ -244,7 +239,7 @@ class AccountServiceTest extends TestCase {
 			->method('getTime')
 			->willReturn(1755850409);
 		$this->jobList->method('has')
-			->willReturnCallback(fn ($job) => $job === SyncJob::class || $job === QuotaJob::class);
+			->willReturnCallback(fn ($job): bool => $job === SyncJob::class || $job === QuotaJob::class);
 		$this->jobList->expects($this->exactly(3))
 			->method('scheduleAfter');
 

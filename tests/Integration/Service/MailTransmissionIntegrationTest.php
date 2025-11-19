@@ -13,7 +13,6 @@ use ChristophWurst\Nextcloud\Testing\TestUser;
 use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\MailAccount;
@@ -51,8 +50,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 	use ImapTest,
 		TestUser;
 
-	/** @var Account */
-	private $account;
+	private ?\OCA\Mail\Account $account = null;
 
 	/** @var IUser */
 	private $user;
@@ -60,8 +58,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 	/** @var IAttachmentService */
 	private $attachmentService;
 
-	/** @var IMailTransmission */
-	private $transmission;
+	private ?\OCA\Mail\Service\MailTransmission $transmission = null;
 	private Chain $chain;
 
 	private LocalMessageMapper $localMessageMapper;
@@ -75,7 +72,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->user = $this->createTestUser();
 
 		/** @var ICrypto $crypo */
-		$crypo = OC::$server->getCrypto();
+		$crypo = \OCP\Server::get(\OCP\Security\ICrypto::class);
 		/** @var MailAccountMapper $mapper */
 		$mapper = Server::get(MailAccountMapper::class);
 		$mailAccount = MailAccount::fromParams([
@@ -97,7 +94,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 		$this->account = new Account($mailAccount);
 		$this->attachmentService = Server::get(IAttachmentService::class);
-		$userFolder = OC::$server->getUserFolder($this->user->getUID());
+		OC::$server->getUserFolder($this->user->getUID());
 
 		$recipientMapper = Server::get(RecipientMapper::class);
 		$recipient = new Recipient();
@@ -143,13 +140,13 @@ class MailTransmissionIntegrationTest extends TestCase {
 		);
 	}
 
-	public function testSendMail() {
+	public function testSendMail(): void {
 		$this->chain->process($this->account, $this->message);
 
 		$this->addToAssertionCount(1);
 	}
 
-	public function testSendMailWithLocalAttachment() {
+	public function testSendMailWithLocalAttachment(): void {
 		$file = new UploadedFile([
 			'name' => 'text.txt',
 			'tmp_name' => __DIR__ . '/../../data/mail-message-123.txt',
@@ -164,7 +161,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->addToAssertionCount(1);
 	}
 
-	public function testSendReply() {
+	public function testSendReply(): void {
 		$mb = $this->getMessageBuilder();
 		$originalMessage = $mb->from('from@domain.tld')
 			->to('to@domain.tld')
@@ -189,7 +186,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->assertMessageCount(1, 'Sent');
 	}
 
-	public function testSendReplyWithoutSubject() {
+	public function testSendReplyWithoutSubject(): void {
 		$mb = $this->getMessageBuilder();
 		$originalMessage = $mb->from('from@domain.tld')
 			->to('to@domain.tld')
@@ -215,7 +212,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->assertMessageCount(1, 'Sent');
 	}
 
-	public function testSendReplyWithoutReplySubject() {
+	public function testSendReplyWithoutReplySubject(): void {
 		$mb = $this->getMessageBuilder();
 		$originalMessage = $mb->from('from@domain.tld')
 			->to('to@domain.tld')
@@ -241,7 +238,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->assertMessageCount(1, 'Sent');
 	}
 
-	public function testSaveNewDraft() {
+	public function testSaveNewDraft(): void {
 		$message = NewMessageData::fromRequest($this->account, 'greetings', 'hello there', 'recipient@domain.com', null, null, [], false);
 		[,,$uid] = $this->transmission->saveDraft($message);
 		// There should be a new mailbox …
@@ -252,7 +249,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->assertMessageContent('Drafts', $uid, 'hello there');
 	}
 
-	public function testReplaceDraft() {
+	public function testReplaceDraft(): void {
 		$message1 = NewMessageData::fromRequest($this->account, 'greetings', 'hello t', 'recipient@domain.com', null, null, []);
 		[,,$uid] = $this->transmission->saveDraft($message1);
 		$message2 = NewMessageData::fromRequest($this->account, 'greetings', 'hello there', 'recipient@domain.com', null, null, []);

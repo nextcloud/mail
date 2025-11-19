@@ -29,10 +29,10 @@ use Psr\Log\LoggerInterface;
  */
 class OutOfOfficeListener implements IEventListener {
 	public function __construct(
-		private AccountService $accountService,
-		private OutOfOfficeService $outOfOfficeService,
-		private LoggerInterface $logger,
-		private ITimeFactory $timeFactory,
+		private readonly AccountService $accountService,
+		private readonly OutOfOfficeService $outOfOfficeService,
+		private readonly LoggerInterface $logger,
+		private readonly ITimeFactory $timeFactory,
 	) {
 	}
 

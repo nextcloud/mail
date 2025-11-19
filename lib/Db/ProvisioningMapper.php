@@ -14,18 +14,16 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
-use Psr\Log\LoggerInterface;
 
 /**
  * @template-extends QBMapper<Provisioning>
  */
 class ProvisioningMapper extends QBMapper {
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(IDBConnection $db, LoggerInterface $logger) {
+	public function __construct(
+		IDBConnection $db,
+		private readonly \Psr\Log\LoggerInterface $logger
+	) {
 		parent::__construct($db, 'mail_provisionings');
-		$this->logger = $logger;
 	}
 
 	/**
@@ -40,15 +38,13 @@ class ProvisioningMapper extends QBMapper {
 			->orderBy('provisioning_domain', 'desc');
 		try {
 			return $this->findEntities($qb);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			$this->logger->error('No provisioning configs available');
 			return [];
 		}
 	}
 
 	/**
-	 * @param array $data
-	 * @return Provisioning
 	 * @throws ValidationException
 	 */
 	public function validate(array $data): Provisioning {
@@ -133,7 +129,7 @@ class ProvisioningMapper extends QBMapper {
 			->where($qb->expr()->eq('id', $qb->createNamedParameter($id), IQueryBuilder::PARAM_INT));
 		try {
 			return $this->findEntity($qb);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			$this->logger->error('Could not find entry with ID #' . $id);
 			return null;
 		}

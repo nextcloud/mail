@@ -23,8 +23,7 @@ class AvatarControllerTest extends TestCase {
 	/** @var IAvatarService|PHPUnit_Framework_MockObject_MockObject */
 	private $avatarService;
 
-	/** @var AvatarsController */
-	private $controller;
+	private ?\OCA\Mail\Controller\AvatarsController $controller = null;
 
 	/** @var ITimeFactory */
 	private $oldFactory;
@@ -52,7 +51,7 @@ class AvatarControllerTest extends TestCase {
 		\OC::$server->offsetSet(ITimeFactory::class, $this->oldFactory);
 	}
 
-	public function testGetUrl() {
+	public function testGetUrl(): void {
 		$email = 'john@doe.com';
 		$avatar = new Avatar('https://doe.com/favicon.ico');
 		$this->avatarService->expects($this->once())
@@ -67,7 +66,7 @@ class AvatarControllerTest extends TestCase {
 		$this->assertEquals($expected, $resp);
 	}
 
-	public function testGetUrlNoAvatarFound() {
+	public function testGetUrlNoAvatarFound(): void {
 		$email = 'john@doe.com';
 		$this->avatarService->expects($this->once())
 			->method('getAvatar')
@@ -81,7 +80,7 @@ class AvatarControllerTest extends TestCase {
 		$this->assertEquals($expected, $resp);
 	}
 
-	public function testGetImage() {
+	public function testGetImage(): void {
 		$email = 'john@doe.com';
 		$this->avatarService->expects($this->once())
 			->method('getAvatarImage')
@@ -96,7 +95,7 @@ class AvatarControllerTest extends TestCase {
 		$this->assertEquals($expected, $resp);
 	}
 
-	public function testGetImageNotFound() {
+	public function testGetImageNotFound(): void {
 		$email = 'john@doe.com';
 		$this->avatarService->expects($this->once())
 			->method('getAvatarImage')

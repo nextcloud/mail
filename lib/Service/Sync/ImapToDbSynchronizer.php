@@ -14,9 +14,7 @@ use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Ids;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
-use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper as DatabaseMessageMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
@@ -29,13 +27,9 @@ use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\UidValidityChangedException;
-use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
-use OCA\Mail\IMAP\Sync\Synchronizer;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Classification\NewMessagesClassifier;
-use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
@@ -49,59 +43,24 @@ class ImapToDbSynchronizer {
 	/** @var int */
 	public const MAX_NEW_MESSAGES = 5000;
 
-	/** @var DatabaseMessageMapper */
-	private $dbMapper;
-
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var ImapMessageMapper */
-	private $imapMapper;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var Synchronizer */
-	private $synchronizer;
-
 	/** @var IEventDispatcher */
 	private $dispatcher;
 
-	/** @var PerformanceLogger */
-	private $performanceLogger;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var IMailManager */
-	private $mailManager;
-
-	private TagMapper $tagMapper;
-	private NewMessagesClassifier $newMessagesClassifier;
-
-	public function __construct(DatabaseMessageMapper $dbMapper,
-		IMAPClientFactory $clientFactory,
-		ImapMessageMapper $imapMapper,
-		MailboxMapper $mailboxMapper,
+	public function __construct(
+		private readonly \OCA\Mail\Db\MessageMapper $dbMapper,
+		private readonly \OCA\Mail\IMAP\IMAPClientFactory $clientFactory,
+		private readonly \OCA\Mail\IMAP\MessageMapper $imapMapper,
+		private readonly \OCA\Mail\Db\MailboxMapper $mailboxMapper,
 		DatabaseMessageMapper $messageMapper,
-		Synchronizer $synchronizer,
+		private readonly \OCA\Mail\IMAP\Sync\Synchronizer $synchronizer,
 		IEventDispatcher $dispatcher,
-		PerformanceLogger $performanceLogger,
-		LoggerInterface $logger,
-		IMailManager $mailManager,
-		TagMapper $tagMapper,
-		NewMessagesClassifier $newMessagesClassifier) {
-		$this->dbMapper = $dbMapper;
-		$this->clientFactory = $clientFactory;
-		$this->imapMapper = $imapMapper;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->synchronizer = $synchronizer;
+		private readonly \OCA\Mail\Support\PerformanceLogger $performanceLogger,
+		private readonly \Psr\Log\LoggerInterface $logger,
+		private readonly \OCA\Mail\Contracts\IMailManager $mailManager,
+		private readonly TagMapper $tagMapper,
+		private readonly NewMessagesClassifier $newMessagesClassifier
+	) {
 		$this->dispatcher = $dispatcher;
-		$this->performanceLogger = $performanceLogger;
-		$this->logger = $logger;
-		$this->mailManager = $mailManager;
-		$this->tagMapper = $tagMapper;
-		$this->newMessagesClassifier = $newMessagesClassifier;
 	}
 
 	/**
@@ -158,8 +117,6 @@ class ImapToDbSynchronizer {
 	/**
 	 * Clear all cached data of a mailbox
 	 *
-	 * @param Account $account
-	 * @param Mailbox $mailbox
 	 *
 	 * @throws MailboxLockedException
 	 * @throws ServiceException
@@ -186,9 +143,6 @@ class ImapToDbSynchronizer {
 	 * Wipe all cached messages of a mailbox from the database
 	 *
 	 * Warning: the caller has to ensure the mailbox is locked
-	 *
-	 * @param Account $account
-	 * @param Mailbox $mailbox
 	 */
 	private function resetCache(Account $account, Mailbox $mailbox): void {
 		$id = $account->getId() . ':' . $mailbox->getName();
@@ -261,7 +215,7 @@ class ImapToDbSynchronizer {
 					$logger->debug('Running partial sync for ' . $mailbox->getId());
 					// Only rebuild threads if there were new or vanished messages
 					$rebuildThreads = $this->runPartialSync($client, $account, $mailbox, $logger, $hasQresync, $criteria, $knownUids);
-				} catch (UidValidityChangedException $e) {
+				} catch (UidValidityChangedException) {
 					$logger->warning('Mailbox UID validity changed. Wiping cache and performing full sync for ' . $mailbox->getId());
 					$this->resetCache($account, $mailbox);
 					$logger->debug('Running initial sync for ' . $mailbox->getId() . ' after cache reset');
@@ -343,7 +297,7 @@ class ImapToDbSynchronizer {
 		}
 
 		foreach (array_chunk($imapMessages['messages'], 500) as $chunk) {
-			$messages = array_map(static fn (IMAPMessage $imapMessage) => $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount()), $chunk);
+			$messages = array_map(static fn (IMAPMessage $imapMessage): \OCA\Mail\Db\Message => $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount()), $chunk);
 			$this->dbMapper->insertBulk($account, ...$messages);
 			$perf->step(sprintf('persist %d messages in database', count($chunk)));
 			// Free the memory
@@ -418,7 +372,7 @@ class ImapToDbSynchronizer {
 				// Filter out anything that is already in the DB. Ideally this never happens, but if there is an error
 				// during a consecutive chunk INSERT, the sync token won't be updated. In that case the same message(s)
 				// will be seen as *new* and therefore cause conflicts.
-				$newMessages = array_filter($response->getNewMessages(), static fn (IMAPMessage $imapMessage) => $imapMessage->getUid() > $highestKnownUid);
+				$newMessages = array_filter($response->getNewMessages(), static fn (IMAPMessage $imapMessage): bool => $imapMessage->getUid() > $highestKnownUid);
 			}
 
 			$importantTag = null;
@@ -431,7 +385,7 @@ class ImapToDbSynchronizer {
 			}
 
 			foreach (array_chunk($newMessages, 500) as $chunk) {
-				$dbMessages = array_map(static fn (IMAPMessage $imapMessage) => $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount()), $chunk);
+				$dbMessages = array_map(static fn (IMAPMessage $imapMessage): \OCA\Mail\Db\Message => $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount()), $chunk);
 
 				$this->dbMapper->insertBulk($account, ...$dbMessages);
 
@@ -473,7 +427,7 @@ class ImapToDbSynchronizer {
 			$permflagsEnabled = $this->mailManager->isPermflagsEnabled($client, $account, $mailbox->getName());
 
 			foreach (array_chunk($response->getChangedMessages(), 500) as $chunk) {
-				$this->dbMapper->updateBulk($account, $permflagsEnabled, ...array_map(static fn (IMAPMessage $imapMessage) => $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount()), $chunk));
+				$this->dbMapper->updateBulk($account, $permflagsEnabled, ...array_map(static fn (IMAPMessage $imapMessage): \OCA\Mail\Db\Message => $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount()), $chunk));
 			}
 			$perf->step('persist changed messages');
 

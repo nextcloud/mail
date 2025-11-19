@@ -12,7 +12,6 @@ namespace OCA\Mail\Tests\Integration\Db;
 
 use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OC;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -26,21 +25,19 @@ use function random_int;
 class MailAccountMapperTest extends TestCase {
 	use DatabaseTransaction;
 
-	/** @var MailAccountMapper */
-	private $mapper;
+	private ?\OCA\Mail\Db\MailAccountMapper $mapper = null;
 
 	/** @var IDBConnection */
 	private $db;
 
-	/** @var MailAccount */
-	private $account;
+	private ?\OCA\Mail\Db\MailAccount $account = null;
 
 	/**
 	 * Initialize Mapper
 	 */
 	public function setup(): void {
 		parent::setUp();
-		$this->db = OC::$server->getDatabaseConnection();
+		$this->db = \OCP\Server::get(\OCP\IDBConnection::class);
 		$this->mapper = new MailAccountMapper($this->db);
 
 		$this->account = new MailAccount();
@@ -62,7 +59,7 @@ class MailAccountMapperTest extends TestCase {
 		$this->account->setOrder(27);
 	}
 
-	public function testFind() {
+	public function testFind(): void {
 		/** @var MailAccount $b */
 		$b = $this->mapper->insert($this->account);
 
@@ -70,7 +67,7 @@ class MailAccountMapperTest extends TestCase {
 		$this->assertEquals($b->toJson(), $result->toJson());
 
 		$result = $this->mapper->findByUserId($b->getUserId());
-		$c = array_filter($result, function ($a) use ($b) {
+		$c = array_filter($result, function (\OCA\Mail\Db\MailAccount $a) use ($b): bool {
 			/** @var MailAccount $a */
 			return $a->getId() === $b->getId();
 		});
@@ -78,7 +75,7 @@ class MailAccountMapperTest extends TestCase {
 		$this->assertEquals($b->toJson(), $c->toJson());
 	}
 
-	public function testSave() {
+	public function testSave(): void {
 		$a = $this->account;
 
 		// test insert

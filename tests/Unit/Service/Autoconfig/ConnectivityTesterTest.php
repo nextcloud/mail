@@ -18,8 +18,7 @@ class ConnectivityTesterTest extends TestCase {
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 
-	/** @var ConnectivityTester */
-	private $tester;
+	private ?\OCA\Mail\Service\AutoConfig\ConnectivityTester $tester = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -29,13 +28,13 @@ class ConnectivityTesterTest extends TestCase {
 		$this->tester = new ConnectivityTester($this->logger);
 	}
 
-	public function testCanConnect() {
+	public function testCanConnect(): void {
 		$canConnect = $this->tester->canConnect('wikipedia.org', 80);
 
 		$this->assertTrue($canConnect);
 	}
 
-	public function testCanNotConnect() {
+	public function testCanNotConnect(): void {
 		$before = microtime(true);
 		$canConnect = $this->tester->canConnect('wikipedia.org', 90);
 		$after = microtime(true);
@@ -44,7 +43,7 @@ class ConnectivityTesterTest extends TestCase {
 		$this->assertLessThan(15, $after - $before);
 	}
 
-	public function testCanNotConnectToNonexistentDomain() {
+	public function testCanNotConnectToNonexistentDomain(): void {
 		$before = microtime(true);
 		$canConnect = $this->tester->canConnect('thisdomaindoesnotexist', 90);
 		$after = microtime(true);

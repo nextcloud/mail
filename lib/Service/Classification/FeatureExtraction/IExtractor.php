@@ -18,7 +18,6 @@ interface IExtractor {
 	 * Initialize any data that is used for all messages and return whether the
 	 * extractor is applicable for this account
 	 *
-	 * @param Account $account
 	 * @param Mailbox[] $incomingMailboxes
 	 * @param Mailbox[] $outgoingMailboxes
 	 * @param Message[] $messages
@@ -31,7 +30,6 @@ interface IExtractor {
 	/**
 	 * Return the feature value for the given message
 	 *
-	 * @param Message $message
 	 *
 	 * @return float[]
 	 */

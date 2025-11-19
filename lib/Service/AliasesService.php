@@ -11,26 +11,17 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Db\Alias;
-use OCA\Mail\Db\AliasMapper;
-use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
 use OCP\AppFramework\Db\DoesNotExistException;
 
 class AliasesService {
-	/** @var AliasMapper */
-	private $aliasMapper;
-
-	/** @var MailAccountMapper */
-	private $mailAccountMapper;
-
-	public function __construct(AliasMapper $aliasMapper, MailAccountMapper $mailAccountMapper) {
-		$this->aliasMapper = $aliasMapper;
-		$this->mailAccountMapper = $mailAccountMapper;
+	public function __construct(
+		private readonly \OCA\Mail\Db\AliasMapper $aliasMapper,
+		private readonly \OCA\Mail\Db\MailAccountMapper $mailAccountMapper
+	) {
 	}
 
 	/**
-	 * @param int $accountId
-	 * @param String $currentUserId
 	 * @return list<Alias>
 	 */
 	public function findAll(int $accountId, string $currentUserId): array {
@@ -38,9 +29,6 @@ class AliasesService {
 	}
 
 	/**
-	 * @param int $aliasId
-	 * @param string $currentUserId
-	 * @return Alias
 	 * @throws DoesNotExistException
 	 */
 	public function find(int $aliasId, string $currentUserId): Alias {
@@ -48,9 +36,6 @@ class AliasesService {
 	}
 
 	/**
-	 * @param string $aliasEmail
-	 * @param string $userId
-	 * @return Alias
 	 * @throws DoesNotExistException
 	 */
 	public function findByAliasAndUserId(string $aliasEmail, string $userId): Alias {
@@ -58,12 +43,7 @@ class AliasesService {
 	}
 
 	/**
-	 * @param string $userId
-	 * @param int $accountId
-	 * @param string $alias
-	 * @param string $aliasName
 	 *
-	 * @return Alias
 	 * @throws DoesNotExistException
 	 */
 	public function create(string $userId, int $accountId, string $alias, string $aliasName): Alias {
@@ -95,8 +75,6 @@ class AliasesService {
 	 * Deletes all aliases of an account.
 	 *
 	 * @param int $accountId the account which aliases will be deleted
-	 *
-	 * @return void
 	 */
 	public function deleteAll($accountId): void {
 		$this->aliasMapper->deleteAll($accountId);

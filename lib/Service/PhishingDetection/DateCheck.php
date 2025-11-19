@@ -26,7 +26,7 @@ class DateCheck {
 		$now = $this->timeFactory->getDateTime('now');
 		try {
 			$dt = $this->timeFactory->getDateTime($date);
-		} catch (\Exception $e) {
+		} catch (\Exception) {
 			return new PhishingDetectionResult(PhishingDetectionResult::DATE_CHECK, false);
 		}
 		if ($dt > $now) {

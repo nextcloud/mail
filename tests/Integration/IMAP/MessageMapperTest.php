@@ -66,7 +66,7 @@ class MessageMapperTest extends TestCase {
 		$client = $this->getClient($account);
 		try {
 			$imapMessageMapper->addFlag($client, $inbox, [$newUid], '$label1');
-		} catch (Horde_Imap_Client_Exception $e) {
+		} catch (Horde_Imap_Client_Exception) {
 			self::fail('Could not tag message');
 		} finally {
 			$client->logout();
@@ -78,7 +78,6 @@ class MessageMapperTest extends TestCase {
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			false,
-			null,
 			null
 		);
 
@@ -96,7 +95,7 @@ class MessageMapperTest extends TestCase {
 		$client = $this->getClient($account);
 		try {
 			$imapMessageMapper->removeFlag($client, $inbox, [$newUid], '$label1');
-		} catch (Horde_Imap_Client_Exception $e) {
+		} catch (Horde_Imap_Client_Exception) {
 			self::fail('Could not untag message');
 		} finally {
 			$client->logout();
@@ -108,7 +107,6 @@ class MessageMapperTest extends TestCase {
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			true,
-			null,
 			null
 		);
 
@@ -125,7 +123,6 @@ class MessageMapperTest extends TestCase {
 		$this->resetImapAccount();
 
 		$account = $this->createTestAccount();
-		/** @var ImapMessageMapper $messageMapper */
 		$imapMessageMapper = Server::get(ImapMessageMapper::class);
 		/** @var IMailManager $mailManager */
 		$mailManager = Server::get(IMailManager::class);

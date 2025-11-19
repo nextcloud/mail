@@ -22,8 +22,8 @@ use OCP\EventDispatcher\IEventListener;
 class MessageKnownSinceListener implements IEventListener {
 
 	public function __construct(
-		private MessageRetentionMapper $messageRetentionMapper,
-		private ITimeFactory $timeFactory,
+		private readonly MessageRetentionMapper $messageRetentionMapper,
+		private readonly ITimeFactory $timeFactory,
 	) {
 	}
 

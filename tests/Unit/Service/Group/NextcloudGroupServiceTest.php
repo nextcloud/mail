@@ -25,10 +25,7 @@ class NextcloudGroupServiceTest extends TestCase {
 	 * @var IGroupManager|MockObject
 	 */
 	private $config;
-	/**
-	 * @var NextcloudGroupService
-	 */
-	private $groupService;
+	private ?\OCA\Mail\Service\Group\NextcloudGroupService $groupService = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -38,7 +35,7 @@ class NextcloudGroupServiceTest extends TestCase {
 		$this->groupService = new NextcloudGroupService($this->groupsManager, $this->config);
 	}
 
-	private function createTestGroup($id, $name, $users = []) {
+	private function createTestGroup(string $id, string $name, array $users = []) {
 		$mockGroup = $this->createMock(IGroup::class);
 		$mockGroup->expects($this->any())
 			->method('getGID')
@@ -52,7 +49,7 @@ class NextcloudGroupServiceTest extends TestCase {
 		return $mockGroup;
 	}
 
-	private function createTestUser($id, $name, $email) {
+	private function createTestUser(string $id, string $name, string $email) {
 		$mockUser = $this->createMock(IUser::class);
 		$mockUser->expects($this->any())
 			->method('getUID')
@@ -87,8 +84,6 @@ class NextcloudGroupServiceTest extends TestCase {
 
 	/**
 	 * @dataProvider dataForTestSearch
-	 * @param string $allowGroupSharing
-	 * @param array $expected
 	 */
 	public function testSearch(string $allowGroupSharing, string $restrictSharingToGroups, array $expected): void {
 		$term = 'te'; // searching for: John Doe
@@ -115,7 +110,7 @@ class NextcloudGroupServiceTest extends TestCase {
 		self::assertEquals($expected, $actual);
 	}
 
-	public function testGetUsers() {
+	public function testGetUsers(): void {
 		$users = [
 			$this->createTestUser('bob', 'Bobby', 'bob@smith.net'),
 			$this->createTestUser('alice', 'Alice', 'alice@smith.net')
@@ -149,7 +144,7 @@ class NextcloudGroupServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetUsersWrong() {
+	public function testGetUsersWrong(): void {
 		$this->expectException(ServiceException::class);
 
 		$this->groupsManager->expects($this->once())

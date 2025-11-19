@@ -24,13 +24,13 @@ use Psr\Log\LoggerInterface;
 class RepairSyncJob extends TimedJob {
 	public function __construct(
 		ITimeFactory $time,
-		private SyncService $syncService,
-		private AccountService $accountService,
-		private IUserManager $userManager,
-		private MailboxMapper $mailboxMapper,
-		private IJobList $jobList,
-		private LoggerInterface $logger,
-		private IEventDispatcher $dispatcher,
+		private readonly SyncService $syncService,
+		private readonly AccountService $accountService,
+		private readonly IUserManager $userManager,
+		private readonly MailboxMapper $mailboxMapper,
+		private readonly IJobList $jobList,
+		private readonly LoggerInterface $logger,
+		private readonly IEventDispatcher $dispatcher,
 	) {
 		parent::__construct($time);
 
@@ -44,7 +44,7 @@ class RepairSyncJob extends TimedJob {
 
 		try {
 			$account = $this->accountService->findById($accountId);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			$this->logger->debug('Could not find account <' . $accountId . '> removing from jobs');
 			$this->jobList->remove(self::class, $argument);
 			return;

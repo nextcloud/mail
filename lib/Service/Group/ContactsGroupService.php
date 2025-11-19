@@ -21,10 +21,8 @@ class ContactsGroupService implements IGroupService {
 
 	/**
 	 * Group's namespace
-	 *
-	 * @var string
 	 */
-	private $namespace = 'Contacts';
+	private string $namespace = 'Contacts';
 
 	public function __construct(IManager $contactsManager, IConfig $config) {
 		$this->contactsManager = $contactsManager;
@@ -84,7 +82,7 @@ class ContactsGroupService implements IGroupService {
 			if (!isset($r['EMAIL'])) {
 				continue;
 			}
-			$groups = explode(',', $r['CATEGORIES']);
+			$groups = explode(',', (string)$r['CATEGORIES']);
 
 			// search matches substring but we only want full match
 			if (!in_array($groupId, $groups)) {

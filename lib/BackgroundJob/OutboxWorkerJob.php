@@ -14,16 +14,15 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
 
 class OutboxWorkerJob extends TimedJob {
-	private OutboxService $outboxService;
-
-	public function __construct(ITimeFactory $time,
-		OutboxService $outboxService) {
+	public function __construct(
+		ITimeFactory $time,
+		private readonly OutboxService $outboxService
+	) {
 		parent::__construct($time);
 
 		// Run once per five minutes
 		$this->setInterval(5 * 60);
 		$this->setTimeSensitivity(self::TIME_SENSITIVE);
-		$this->outboxService = $outboxService;
 	}
 
 	#[\Override]

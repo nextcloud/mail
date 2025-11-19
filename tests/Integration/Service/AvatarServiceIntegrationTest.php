@@ -20,7 +20,7 @@ class AvatarServiceIntegrationTest extends TestCase {
 	private $service;
 
 
-	private function clearCache() {
+	private function clearCache(): void {
 		/* @var $cacheFactory ICacheFactory */
 		$cacheFactory = Server::get(ICacheFactory::class);
 		/* @var $cache ICache */
@@ -35,14 +35,7 @@ class AvatarServiceIntegrationTest extends TestCase {
 		$this->service = Server::get(IAvatarService::class);
 	}
 
-	public function testJansGravatar() {
+	public function testJansGravatar(): void {
 		$this->markTestSkipped('Unreliable test');
-		return;
-
-		$avatar = $this->service->getAvatar('hey@jancborchardt.net', 'john');
-		$this->assertNotNull($avatar);
-		$this->assertEquals('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404', $avatar->getUrl());
-		$image = $this->service->getAvatarImage('hey@jancborchardt.net', 'john');
-		$this->assertNotNull($image);
 	}
 }

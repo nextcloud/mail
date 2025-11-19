@@ -9,38 +9,23 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Listener;
 
-use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\MessageSentEvent;
-use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCA\Mail\Service\TransmissionService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use Psr\Log\LoggerInterface;
 use Throwable;
 
 /**
  * @template-implements IEventListener<Event|MessageSentEvent>
  */
 class AddressCollectionListener implements IEventListener {
-	/** @var IUserPreferences */
-	private $preferences;
-
-	/** @var AddressCollector */
-	private $collector;
-
-	/** @var LoggerInterface */
-	private $logger;
-
 	public function __construct(
-		IUserPreferences $preferences,
-		AddressCollector $collector,
-		LoggerInterface $logger,
-		private TransmissionService $transmissionService,
+		private readonly \OCA\Mail\Contracts\IUserPreferences $preferences,
+		private readonly \OCA\Mail\Service\AutoCompletion\AddressCollector $collector,
+		private readonly \Psr\Log\LoggerInterface $logger,
+		private readonly TransmissionService $transmissionService
 	) {
-		$this->collector = $collector;
-		$this->logger = $logger;
-		$this->preferences = $preferences;
 	}
 
 	#[\Override]

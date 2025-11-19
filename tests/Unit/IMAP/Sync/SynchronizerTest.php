@@ -26,8 +26,7 @@ class SynchronizerTest extends TestCase {
 	/** @var MessageMapper|MockObject */
 	private $mapper;
 
-	/** @var Synchronizer */
-	private $synchronizer;
+	private ?\OCA\Mail\IMAP\Sync\Synchronizer $synchronizer = null;
 
 	protected function setUp(): void {
 		parent::setUp();

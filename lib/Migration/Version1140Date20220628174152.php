@@ -18,16 +18,14 @@ use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
 class Version1140Date20220628174152 extends SimpleMigrationStep {
-	private IDBConnection $connection;
+	private readonly IDBConnection $connection;
 
 	public function __construct(IDBConnection $connection) {
 		$this->connection = $connection;
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array $options
 	 */
 	#[\Override]
 	public function preSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
@@ -81,10 +79,7 @@ class Version1140Date20220628174152 extends SimpleMigrationStep {
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array $options
-	 * @return null|ISchemaWrapper
 	 */
 	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {

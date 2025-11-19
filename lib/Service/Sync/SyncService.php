@@ -19,58 +19,25 @@ use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MailboxSync;
-use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Sync\Response;
-use OCA\Mail\Service\Search\FilterStringParser;
 use OCA\Mail\Service\Search\SearchQuery;
-use Psr\Log\LoggerInterface;
 use function array_diff;
 use function array_map;
 
 class SyncService {
 
-	private IMAPClientFactory $clientFactory;
-
-	/** @var ImapToDbSynchronizer */
-	private $synchronizer;
-
-	/** @var FilterStringParser */
-	private $filterStringParser;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
-	/** @var PreviewEnhancer */
-	private $previewEnhancer;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var MailboxSync */
-	private $mailboxSync;
-
 	public function __construct(
-		IMAPClientFactory $clientFactory,
-		ImapToDbSynchronizer $synchronizer,
-		FilterStringParser $filterStringParser,
-		MessageMapper $messageMapper,
-		PreviewEnhancer $previewEnhancer,
-		LoggerInterface $logger,
-		MailboxSync $mailboxSync) {
-		$this->clientFactory = $clientFactory;
-		$this->synchronizer = $synchronizer;
-		$this->filterStringParser = $filterStringParser;
-		$this->messageMapper = $messageMapper;
-		$this->previewEnhancer = $previewEnhancer;
-		$this->logger = $logger;
-		$this->mailboxSync = $mailboxSync;
+		private readonly IMAPClientFactory $clientFactory,
+		private readonly \OCA\Mail\Service\Sync\ImapToDbSynchronizer $synchronizer,
+		private readonly \OCA\Mail\Service\Search\FilterStringParser $filterStringParser,
+		private readonly \OCA\Mail\Db\MessageMapper $messageMapper,
+		private readonly \OCA\Mail\IMAP\PreviewEnhancer $previewEnhancer,
+		private readonly \Psr\Log\LoggerInterface $logger,
+		private readonly \OCA\Mail\IMAP\MailboxSync $mailboxSync
+	) {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 *
 	 * @throws MailboxLockedException
 	 * @throws ServiceException
 	 */
@@ -90,15 +57,8 @@ class SyncService {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 * @param int $criteria
-	 * @param bool $partialOnly
-	 * @param string|null $filter
-	 *
 	 * @param int[] $knownIds
 	 *
-	 * @return Response
 	 * @throws ClientException
 	 * @throws MailboxNotCachedException
 	 * @throws ServiceException
@@ -143,12 +103,8 @@ class SyncService {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
 	 * @param int[] $knownIds
 	 * @param SearchQuery $query
-	 *
-	 * @return Response
 	 * @todo does not work with text token search queries
 	 *
 	 */

@@ -9,36 +9,24 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Migration;
 
-use OCA\Mail\Db\MailAccountMapper;
-use OCA\Mail\Db\TagMapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 use function sprintf;
 
 class AddMissingDefaultTags implements IRepairStep {
-	/** @var TagMapper */
-	private $tagMapper;
-
-	/** @var MailAccountMapper */
-	private $accountMapper;
-
-
-	public function __construct(MailAccountMapper $accountMapper,
-		TagMapper $tagMapper) {
-		$this->accountMapper = $accountMapper;
-		$this->tagMapper = $tagMapper;
+	public function __construct(
+		private readonly \OCA\Mail\Db\MailAccountMapper $accountMapper,
+		private readonly \OCA\Mail\Db\TagMapper $tagMapper
+	) {
 	}
 
 	#[\Override]
-	public function getName() {
+	public function getName(): string {
 		return 'Restore default tags that are missing';
 	}
 
-	/**
-	 * @return void
-	 */
 	#[\Override]
-	public function run(IOutput $output) {
+	public function run(IOutput $output): void {
 		$output->info('Looking up default tags');
 		$accounts = $this->accountMapper->getAllAccounts();
 

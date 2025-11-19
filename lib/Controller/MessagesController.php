@@ -54,80 +54,49 @@ use function array_map;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class MessagesController extends Controller {
-	private AccountService $accountService;
-	private IMailManager $mailManager;
-	private IMailSearch $mailSearch;
-	private ItineraryService $itineraryService;
-	private ?string $currentUserId;
-	private LoggerInterface $logger;
-	private ?Folder $userFolder;
-	private IMimeTypeDetector $mimeTypeDetector;
-	private IL10N $l10n;
-	private IURLGenerator $urlGenerator;
-	private ContentSecurityPolicyNonceManager $nonceManager;
-	private ITrustedSenderService $trustedSenderService;
-	private IMailTransmission $mailTransmission;
-	private SmimeService $smimeService;
-	private IMAPClientFactory $clientFactory;
-	private IDkimService $dkimService;
-	private IUserPreferences $preferences;
-	private SnoozeService $snoozeService;
-	private AiIntegrationsService $aiIntegrationService;
+	private readonly IMimeTypeDetector $mimeTypeDetector;
+	private readonly IL10N $l10n;
+	private readonly IURLGenerator $urlGenerator;
+	private readonly ContentSecurityPolicyNonceManager $nonceManager;
 
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		AccountService $accountService,
-		IMailManager $mailManager,
-		IMailSearch $mailSearch,
-		ItineraryService $itineraryService,
-		?string $UserId,
-		$userFolder,
-		LoggerInterface $logger,
+		private readonly AccountService $accountService,
+		private readonly IMailManager $mailManager,
+		private readonly IMailSearch $mailSearch,
+		private readonly ItineraryService $itineraryService,
+		private readonly ?string $currentUserId,
+		private readonly ?Folder $userFolder,
+		private readonly LoggerInterface $logger,
 		IL10N $l10n,
 		IMimeTypeDetector $mimeTypeDetector,
 		IURLGenerator $urlGenerator,
 		ContentSecurityPolicyNonceManager $nonceManager,
-		ITrustedSenderService $trustedSenderService,
-		IMailTransmission $mailTransmission,
+		private readonly ITrustedSenderService $trustedSenderService,
+		private readonly IMailTransmission $mailTransmission,
 		SmimeService $smimeService,
-		IMAPClientFactory $clientFactory,
-		IDkimService $dkimService,
-		IUserPreferences $preferences,
-		SnoozeService $snoozeService,
-		AiIntegrationsService $aiIntegrationService) {
+		private readonly IMAPClientFactory $clientFactory,
+		private readonly IDkimService $dkimService,
+		private readonly IUserPreferences $preferences,
+		private readonly SnoozeService $snoozeService,
+		private readonly AiIntegrationsService $aiIntegrationService,
+	) {
 		parent::__construct($appName, $request);
-		$this->accountService = $accountService;
-		$this->mailManager = $mailManager;
-		$this->mailSearch = $mailSearch;
-		$this->itineraryService = $itineraryService;
-		$this->currentUserId = $UserId;
-		$this->userFolder = $userFolder;
-		$this->logger = $logger;
 		$this->l10n = $l10n;
 		$this->mimeTypeDetector = $mimeTypeDetector;
 		$this->urlGenerator = $urlGenerator;
 		$this->nonceManager = $nonceManager;
-		$this->trustedSenderService = $trustedSenderService;
-		$this->mailTransmission = $mailTransmission;
-		$this->smimeService = $smimeService;
-		$this->clientFactory = $clientFactory;
-		$this->dkimService = $dkimService;
-		$this->preferences = $preferences;
-		$this->snoozeService = $snoozeService;
-		$this->aiIntegrationService = $aiIntegrationService;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $mailboxId
 	 * @param int $cursor
 	 * @param string $filter
-	 * @param int|null $limit
 	 * @param string $view returns messages in requested view ('singleton' or 'threaded')
 	 * @param string|null $v Cache buster version to guarantee unique urls (will trigger HTTP caching if set)
 	 *
-	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -142,7 +111,7 @@ class MessagesController extends Controller {
 		try {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $mailboxId);
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -172,7 +141,6 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -183,7 +151,7 @@ class MessagesController extends Controller {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -201,9 +169,7 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 *
-	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -214,7 +180,7 @@ class MessagesController extends Controller {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -235,7 +201,7 @@ class MessagesController extends Controller {
 		if ($itineraries) {
 			$json['itineraries'] = $itineraries;
 		}
-		$json['attachments'] = array_map(fn ($a) => $this->enrichDownloadUrl(
+		$json['attachments'] = array_map(fn (array $a): array => $this->enrichDownloadUrl(
 			$id,
 			$a
 		), $json['attachments']);
@@ -268,9 +234,7 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 *
-	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 */
@@ -280,7 +244,7 @@ class MessagesController extends Controller {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -291,15 +255,13 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @param int $id
-	 * @return JSONResponse
 	 */
 	public function getDkim(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -328,9 +290,7 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @param int $id
 	 *
-	 * @return JSONResponse
 	 * @throws ClientException
 	 */
 	#[TrapError]
@@ -339,7 +299,7 @@ class MessagesController extends Controller {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -353,10 +313,7 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @param int $destFolderId
 	 *
-	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -369,7 +326,7 @@ class MessagesController extends Controller {
 			$dstMailbox = $this->mailManager->getMailbox($this->currentUserId, $destFolderId);
 			$srcAccount = $this->accountService->find($this->currentUserId, $srcMailbox->getAccountId());
 			$dstAccount = $this->accountService->find($this->currentUserId, $dstMailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -386,11 +343,7 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @param int $unixTimestamp
-	 * @param int $destMailboxId
 	 *
-	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
@@ -402,7 +355,7 @@ class MessagesController extends Controller {
 			$dstMailbox = $this->mailManager->getMailbox($this->currentUserId, $destMailboxId);
 			$srcAccount = $this->accountService->find($this->currentUserId, $srcMailbox->getAccountId());
 			$dstAccount = $this->accountService->find($this->currentUserId, $dstMailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -414,9 +367,7 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 *
-	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
@@ -424,7 +375,7 @@ class MessagesController extends Controller {
 	public function unSnooze(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -436,9 +387,7 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 *
-	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -449,7 +398,7 @@ class MessagesController extends Controller {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -480,7 +429,7 @@ class MessagesController extends Controller {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -510,8 +459,6 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @param int $id
-	 * @return Response
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
@@ -521,7 +468,7 @@ class MessagesController extends Controller {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -548,11 +495,9 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @param int $id
 	 * @param bool $plain do not inject scripts if true (default=false)
 	 *
 	 * @return HtmlResponse|TemplateResponse
-	 *
 	 * @throws ClientException
 	 */
 	#[TrapError]
@@ -562,7 +507,7 @@ class MessagesController extends Controller {
 				$message = $this->mailManager->getMessage($this->currentUserId, $id);
 				$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 				$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-			} catch (DoesNotExistException $e) {
+			} catch (DoesNotExistException) {
 				return new TemplateResponse(
 					$this->appName,
 					'error',
@@ -623,10 +568,7 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @param int $id
-	 * @param string $attachmentId
 	 *
-	 * @return Response
 	 *
 	 * @throws ClientException
 	 */
@@ -637,7 +579,7 @@ class MessagesController extends Controller {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -683,7 +625,7 @@ class MessagesController extends Controller {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -704,9 +646,6 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @param string $attachmentId
-	 * @param string $targetPath
 	 *
 	 * @return JSONResponse
 	 *
@@ -723,7 +662,7 @@ class MessagesController extends Controller {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -767,10 +706,7 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @param array $flags
 	 *
-	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -781,7 +717,7 @@ class MessagesController extends Controller {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -795,10 +731,7 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @param string $imapLabel
 	 *
-	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -809,13 +742,13 @@ class MessagesController extends Controller {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
 		try {
 			$tag = $this->mailManager->getTagByImapLabel($imapLabel, $this->currentUserId);
-		} catch (ClientException $e) {
+		} catch (ClientException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -826,10 +759,7 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @param string $imapLabel
 	 *
-	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -840,13 +770,13 @@ class MessagesController extends Controller {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
 		try {
 			$tag = $this->mailManager->getTagByImapLabel($imapLabel, $this->currentUserId);
-		} catch (ClientException $e) {
+		} catch (ClientException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -857,7 +787,6 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -868,7 +797,7 @@ class MessagesController extends Controller {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -885,9 +814,7 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $messageId
 	 *
-	 * @return JSONResponse
 	 */
 	#[TrapError]
 	public function smartReply(int $messageId):JSONResponse {
@@ -913,9 +840,7 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $messageId
 	 *
-	 * @return JSONResponse
 	 */
 	#[TrapError]
 	public function needsTranslation(int $messageId): JSONResponse {
@@ -954,14 +879,8 @@ class MessagesController extends Controller {
 		}
 	}
 
-	/**
-	 * @param int $id
-	 * @param array $attachment
-	 *
-	 * @return array
-	 */
 	private function enrichDownloadUrl(int $id,
-		array $attachment) {
+		array $attachment): array {
 		$downloadUrl = $this->urlGenerator->linkToRoute('mail.messages.downloadAttachment',
 			[
 				'id' => $id,
@@ -980,9 +899,7 @@ class MessagesController extends Controller {
 	/**
 	 * Determines if the content of this attachment is an image
 	 *
-	 * @param array $attachment
 	 *
-	 * @return boolean
 	 */
 	private function attachmentIsImage(array $attachment): bool {
 		return in_array(
@@ -993,11 +910,6 @@ class MessagesController extends Controller {
 			]);
 	}
 
-	/**
-	 * @param array $attachment
-	 *
-	 * @return boolean
-	 */
 	private function attachmentIsCalendarEvent(array $attachment): bool {
 		return in_array($attachment['mime'], ['text/calendar', 'application/ics'], true);
 	}

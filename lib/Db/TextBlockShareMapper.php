@@ -18,9 +18,6 @@ use OCP\IDBConnection;
  * @template-extends QBMapper<TextBlockShare>
  */
 class TextBlockShareMapper extends QBMapper {
-	/**
-	 * @param IDBConnection $db
-	 */
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'mail_blocks_shares');
 	}
@@ -28,7 +25,6 @@ class TextBlockShareMapper extends QBMapper {
 	/**
 	 * @param int $id
 	 * @param string $owner
-	 * @return TextBlockShare
 	 *
 	 * @throws DoesNotExistException
 	 */
@@ -54,7 +50,7 @@ class TextBlockShareMapper extends QBMapper {
 			if ($share !== null) {
 				return true;
 			}
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return false;
 		}
 		return false;
@@ -73,8 +69,6 @@ class TextBlockShareMapper extends QBMapper {
 	}
 
 	/**
-	 * @param int $textBlockId
-	 *
 	 * @return TextBlockShare[]
 	 */
 	public function findTextBlockShares(int $textBlockId): array {

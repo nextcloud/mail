@@ -15,14 +15,14 @@ class AttachmentDownloadResponseTest extends TestCase {
 	/**
 	 * @dataProvider providesResponseData
 	 */
-	public function testIt(string $content, string $filename, string $contentType) {
+	public function testIt(string $content, string $filename, string $contentType): void {
 		$resp = new AttachmentDownloadResponse($content, $filename, $contentType);
 		$headers = $resp->getHeaders();
 		$this->assertEquals($content, $resp->render());
 		$this->assertArrayHasKey('Content-Type', $headers);
 		$this->assertEquals($contentType, $headers['Content-Type']);
 		$this->assertArrayHasKey('Content-Disposition', $headers);
-		$pos = strpos($headers['Content-Disposition'], $filename);
+		$pos = strpos((string)$headers['Content-Disposition'], $filename);
 		$this->assertTrue($pos > 0);
 	}
 

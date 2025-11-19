@@ -69,7 +69,7 @@ class ImportantMailWidgetTest extends TestCase {
 		$message2->setMailboxId(2);
 		$this->mailSearch->expects($this->once())
 			->method('findMessagesGlobally')
-			->with($user, $this->callback(function (GlobalSearchQuery $query) {
+			->with($user, $this->callback(function (GlobalSearchQuery $query): bool {
 				self::assertCount(1, $query->getFlags());
 				self::assertNull($query->getStart());
 				return true;
@@ -99,7 +99,7 @@ class ImportantMailWidgetTest extends TestCase {
 		$message2->setMailboxId(2);
 		$this->mailSearch->expects($this->once())
 			->method('findMessagesGlobally')
-			->with($user, $this->callback(function (MailSearchQuery $query) {
+			->with($user, $this->callback(function (MailSearchQuery $query): bool {
 				self::assertCount(1, $query->getFlags());
 				self::assertNotNull($query->getStart());
 				return true;

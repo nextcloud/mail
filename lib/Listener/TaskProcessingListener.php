@@ -23,8 +23,8 @@ use Psr\Log\LoggerInterface;
 class TaskProcessingListener implements IEventListener {
 
 	public function __construct(
-		private LoggerInterface $logger,
-		private MessageMapper $messageMapper,
+		private readonly LoggerInterface $logger,
+		private readonly MessageMapper $messageMapper,
 	) {
 	}
 
@@ -45,13 +45,13 @@ class TaskProcessingListener implements IEventListener {
 			return;
 		}
 
-		if ($task->getCustomId() && str_contains($task->getCustomId(), ':')) {
-			[$type, $id] = explode(':', $task->getCustomId());
+		if ($task->getCustomId() && str_contains((string)$task->getCustomId(), ':')) {
+			[$type, $id] = explode(':', (string)$task->getCustomId());
 		} else {
 			$this->logger->info('Error handling task processing event custom id missing', ['taskCustomId' => $task->getCustomId()]);
 			return;
 		}
-		if ($type === null || $id === null) {
+		if ($id === null) {
 			$this->logger->info('Error handling task processing event custom id is invalid', ['taskCustomId' => $task->getCustomId()]);
 			return;
 		}

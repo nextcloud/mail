@@ -122,26 +122,20 @@ class Message extends Entity implements JsonSerializable {
 	 */
 	protected $encrypted;
 
-	/** @var AddressList */
-	private $from;
+	private \OCA\Mail\AddressList $from;
 
-	/** @var AddressList */
-	private $to;
+	private \OCA\Mail\AddressList $to;
 
-	/** @var AddressList */
-	private $cc;
+	private \OCA\Mail\AddressList $cc;
 
-	/** @var AddressList */
-	private $bcc;
+	private \OCA\Mail\AddressList $bcc;
 
 	/** @var Tag[] */
-	private $tags = [];
+	private array $tags = [];
 
-	/** @var Avatar|null */
-	private $avatar;
+	private ?\OCA\Mail\Service\Avatar\Avatar $avatar = null;
 
-	/** @var bool */
-	private $fetchAvatarFromClient = false;
+	private bool $fetchAvatarFromClient = false;
 
 	public function __construct() {
 		$this->from = new AddressList([]);
@@ -202,30 +196,18 @@ class Message extends Entity implements JsonSerializable {
 		$this->setter($field, [$parsed->ids[0] ?? null]);
 	}
 
-	/**
-	 * @return AddressList
-	 */
 	public function getFrom(): AddressList {
 		return $this->from;
 	}
 
-	/**
-	 * @param AddressList $from
-	 */
 	public function setFrom(AddressList $from): void {
 		$this->from = $from;
 	}
 
-	/**
-	 * @return AddressList
-	 */
 	public function getTo(): AddressList {
 		return $this->to;
 	}
 
-	/**
-	 * @param AddressList $to
-	 */
 	public function setTo(AddressList $to): void {
 		$this->to = $to;
 	}
@@ -237,45 +219,27 @@ class Message extends Entity implements JsonSerializable {
 		return $this->tags;
 	}
 
-	/**
-	 * @param array $tags
-	 */
 	public function setTags(array $tags): void {
 		$this->tags = $tags;
 	}
 
-	/**
-	 * @return AddressList
-	 */
 	public function getCc(): AddressList {
 		return $this->cc;
 	}
 
-	/**
-	 * @param AddressList $cc
-	 */
 	public function setCc(AddressList $cc): void {
 		$this->cc = $cc;
 	}
 
-	/**
-	 * @return AddressList
-	 */
 	public function getBcc(): AddressList {
 		return $this->bcc;
 	}
 
-	/**
-	 * @param AddressList $bcc
-	 */
 	public function setBcc(AddressList $bcc): void {
 		$this->bcc = $bcc;
 	}
 
-	/**
-	 * @return void
-	 */
-	public function setFlag(string $flag, bool $value = true) {
+	public function setFlag(string $flag, bool $value = true): void {
 		if (!in_array($flag, self::MUTABLE_FLAGS, true)) {
 			// Ignore
 			return;
@@ -293,10 +257,6 @@ class Message extends Entity implements JsonSerializable {
 			);
 		}
 	}
-	/**
-	 * @param Avatar|null $avatar
-	 * @return void
-	 */
 	public function setAvatar(?Avatar $avatar): void {
 		$this->avatar = $avatar;
 	}
@@ -305,9 +265,6 @@ class Message extends Entity implements JsonSerializable {
 		$this->fetchAvatarFromClient = $fetchAvatarFromClient;
 	}
 
-	/**
-	 * @return ?Avatar
-	 */
 	public function getAvatar(): ?Avatar {
 		return $this->avatar;
 	}

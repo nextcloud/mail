@@ -27,15 +27,15 @@ class RequestTest extends TestCase {
 		$this->request = new Request($this->requestId, $this->mailbox, $this->syncToken, []);
 	}
 
-	public function testGetId() {
+	public function testGetId(): void {
 		$this->assertEquals($this->requestId, $this->request->getId());
 	}
 
-	public function testGetMailbox() {
+	public function testGetMailbox(): void {
 		$this->assertEquals($this->mailbox, $this->request->getMailbox());
 	}
 
-	public function testGetSyncToken() {
+	public function testGetSyncToken(): void {
 		$this->assertEquals($this->syncToken, $this->request->getToken());
 	}
 }

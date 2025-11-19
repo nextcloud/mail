@@ -14,7 +14,7 @@ namespace OCA\Mail\Service\Avatar;
  */
 class CompositeAvatarSource {
 	/** @var IAvatarSource[] */
-	private $sources;
+	private readonly array $sources;
 
 	public function __construct(AddressbookSource $addressbookSource,
 		FaviconSource $faviconSource,
@@ -29,11 +29,9 @@ class CompositeAvatarSource {
 
 	/**
 	 * @param string $email sender email address
-	 * @param AvatarFactory $factory
-	 * @param bool $queryExternal
 	 * @return Avatar|null avatar URL if one can be found
 	 */
-	public function fetch(string $email, AvatarFactory $factory, bool $queryExternal) {
+	public function fetch(string $email, AvatarFactory $factory, bool $queryExternal): ?\OCA\Mail\Service\Avatar\Avatar {
 		foreach ($this->sources as $source) {
 			if (!$queryExternal && $source->isExternal()) {
 				// Skip this one

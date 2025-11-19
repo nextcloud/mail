@@ -15,11 +15,9 @@ use OCP\IL10N;
 
 class ContactCheck {
 	public function __construct(
-		private ContactsIntegration $contactIntegration,
-		private IL10N $l10n,
+		private readonly ContactsIntegration $contactIntegration,
+		private readonly IL10N $l10n
 	) {
-		$this->l10n = $l10n;
-		$this->contactIntegration = $contactIntegration;
 	}
 
 	public function run(string $fn, string $email): PhishingDetectionResult {
@@ -31,7 +29,7 @@ class ContactCheck {
 			}
 			foreach ($contact['email'] as $contactEmail) {
 				$emails[] = $contactEmail;
-				if (strcasecmp($contactEmail, $email) == 0) {
+				if (strcasecmp((string)$contactEmail, $email) == 0) {
 					return new PhishingDetectionResult(PhishingDetectionResult::CONTACTS_CHECK, false);
 				}
 			}

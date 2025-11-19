@@ -18,15 +18,10 @@ use OCA\Mail\Db\Message;
  * @psalm-immutable
  */
 final class RepliedMessageData {
-	/** @var Account */
-	private $account;
-
-	/** @var Message */
-	private $message;
-
-	public function __construct(Account $account, Message $message) {
-		$this->account = $account;
-		$this->message = $message;
+	public function __construct(
+		private readonly \OCA\Mail\Account $account,
+		private readonly \OCA\Mail\Db\Message $message
+	) {
 	}
 
 	public function getAccount(): Account {

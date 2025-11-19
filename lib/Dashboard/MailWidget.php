@@ -33,25 +33,21 @@ use OCP\IUserManager;
 abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOptionWidget, IButtonWidget {
 	protected IURLGenerator $urlGenerator;
 	protected IUserManager $userManager;
-	protected AccountService $accountService;
-	protected IMailSearch $mailSearch;
 	protected IInitialState $initialState;
-	protected ?string $userId;
 	protected IL10N $l10n;
 
-	public function __construct(IL10N $l10n,
+	public function __construct(
+		IL10N $l10n,
 		IURLGenerator $urlGenerator,
 		IUserManager $userManager,
-		AccountService $accountService,
-		IMailSearch $mailSearch,
+		protected AccountService $accountService,
+		protected IMailSearch $mailSearch,
 		IInitialState $initialState,
-		?string $userId) {
+		protected ?string $userId
+	) {
 		$this->urlGenerator = $urlGenerator;
 		$this->userManager = $userManager;
-		$this->accountService = $accountService;
-		$this->mailSearch = $mailSearch;
 		$this->initialState = $initialState;
-		$this->userId = $userId;
 		$this->l10n = $l10n;
 	}
 
@@ -100,9 +96,6 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 	abstract public function getSearchQuery(string $userId): SearchQuery;
 
 	/**
-	 * @param string $userId
-	 * @param int|null $minTimestamp
-	 * @param int $limit
 	 * @return Message[]
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -141,7 +134,7 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 		$emails = $this->getEmails($userId, $intSince, $limit);
 
 		/** @var list<WidgetItem> */
-		return array_map(function (Message $email) {
+		return array_map(function (Message $email): \OCP\Dashboard\Model\WidgetItem {
 			$firstFrom = $email->getFrom()->first();
 			return new WidgetItem(
 				$firstFrom ? $firstFrom->getLabel() : '',

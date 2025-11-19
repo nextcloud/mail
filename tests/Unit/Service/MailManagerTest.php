@@ -58,8 +58,7 @@ class MailManagerTest extends TestCase {
 	/** @var IEventDispatcher|MockObject */
 	private $eventDispatcher;
 
-	/** @var MailManager */
-	private $manager;
+	private ?\OCA\Mail\Service\MailManager $manager = null;
 
 	/** @var MockObject|LoggerInterface */
 	private $logger;
@@ -106,7 +105,7 @@ class MailManagerTest extends TestCase {
 		);
 	}
 
-	public function testGetFolders() {
+	public function testGetFolders(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$mailboxes = [
@@ -126,7 +125,7 @@ class MailManagerTest extends TestCase {
 		$this->assertSame($mailboxes, $result);
 	}
 
-	public function testCreateFolder() {
+	public function testCreateFolder(): void {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$account = $this->createMock(Account::class);
 		$this->imapClientFactory->expects($this->once())
@@ -344,7 +343,7 @@ class MailManagerTest extends TestCase {
 		}
 	}
 
-	public function testFilterFlagsWithDefinedKeyword() {
+	public function testFilterFlagsWithDefinedKeyword(): void {
 		$account = $this->createMock(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
@@ -358,7 +357,7 @@ class MailManagerTest extends TestCase {
 		$this->assertEquals([], $this->manager->filterFlags($client, $account, '$autojunk', 'INBOX'));
 	}
 
-	public function testFilterFlagsWithCustomKeyword() {
+	public function testFilterFlagsWithCustomKeyword(): void {
 		$account = $this->createMock(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
@@ -375,7 +374,7 @@ class MailManagerTest extends TestCase {
 		$this->assertEquals([], $this->manager->filterFlags($client, $account, Tag::LABEL_IMPORTANT, 'INBOX'));
 	}
 
-	public function testFilterFlagsNoCapabilities() {
+	public function testFilterFlagsNoCapabilities(): void {
 		$account = $this->createMock(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
@@ -566,7 +565,7 @@ class MailManagerTest extends TestCase {
 			->willThrowException(new DoesNotExistException('Computer says no'));
 		$this->tagMapper->expects($this->once())
 			->method('insert')
-			->willReturnCallback(static fn (Tag $tag) => $tag);
+			->willReturnCallback(static fn (Tag $tag): \OCA\Mail\Db\Tag => $tag);
 
 		$tag = $this->manager->createTag('Hello Hello 👋', '#0082c9', 'admin');
 
@@ -603,7 +602,7 @@ class MailManagerTest extends TestCase {
 			->willThrowException(new DoesNotExistException('Computer says no'));
 		$this->tagMapper->expects(self::once())
 			->method('insert')
-			->willReturnCallback(static function (Tag $tag) {
+			->willReturnCallback(static function (Tag $tag): \OCA\Mail\Db\Tag {
 				self::assertEquals('admin', $tag->getUserId());
 				self::assertEquals('Follow up', $tag->getDisplayName());
 				self::assertEquals('$follow_up', $tag->getImapLabel());
@@ -632,7 +631,7 @@ class MailManagerTest extends TestCase {
 			->willReturn($existingTag);
 		$this->tagMapper->expects($this->once())
 			->method('update')
-			->willReturnCallback(static fn (Tag $tag) => $tag);
+			->willReturnCallback(static fn (Tag $tag): \OCA\Mail\Db\Tag => $tag);
 
 		$tag = $this->manager->updateTag(100, 'Hello Hello 👋', '#0082c9', 'admin');
 

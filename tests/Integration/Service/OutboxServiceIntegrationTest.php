@@ -12,7 +12,6 @@ namespace OCA\Mail\Tests\Integration\Service;
 use ChristophWurst\Nextcloud\Testing\TestUser;
 use Horde_Imap_Client;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
@@ -53,11 +52,9 @@ class OutboxServiceIntegrationTest extends TestCase {
 	/** @var IUser */
 	private $user;
 
-	/** @var IAttachmentService */
-	private $attachmentService;
+	private ?\OCA\Mail\Service\Attachment\AttachmentService $attachmentService = null;
 
-	/** @var OutboxService */
-	private $outbox;
+	private ?\OCA\Mail\Service\OutboxService $outbox = null;
 
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
@@ -138,7 +135,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 			'email' => 'library@stardewvalley.com'
 		]];
 
-		$saved = $this->outbox->saveMessage(new Account($this->account), $message, $to, [], []);
+		$this->outbox->saveMessage(new Account($this->account), $message, $to, [], []);
 		$this->assertNotEmpty($message->getRecipients());
 		$this->assertEmpty($message->getAttachments());
 
@@ -342,7 +339,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$this->assertCount(1, $saved->getRecipients());
 		$this->assertEmpty($message->getAttachments());
 
-		$actual = $this->outbox->sendMessage($saved, new Account($this->account));
+		$this->outbox->sendMessage($saved, new Account($this->account));
 
 		$this->expectException(DoesNotExistException::class);
 		$this->outbox->getMessage($message->getId(), $this->user->getUID());

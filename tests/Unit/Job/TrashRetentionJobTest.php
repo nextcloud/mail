@@ -87,7 +87,7 @@ class TrashRetentionJobTest extends TestCase {
 		);
 	}
 
-	public function testRun() {
+	public function testRun(): void {
 		$dbAccount = new MailAccount();
 		$dbAccount->setTrashRetentionDays(60);
 		$dbAccount->setTrashMailboxId(42);
@@ -127,7 +127,7 @@ class TrashRetentionJobTest extends TestCase {
 		$this->job->run(self::ARGUMENT);
 	}
 
-	public function testRunWithoutRetention() {
+	public function testRunWithoutRetention(): void {
 		$dbAccount = new MailAccount();
 		$dbAccount->setTrashRetentionDays(null);
 
@@ -142,7 +142,7 @@ class TrashRetentionJobTest extends TestCase {
 		$this->job->run(self::ARGUMENT);
 	}
 
-	public function testRunWith0DaysRetention() {
+	public function testRunWith0DaysRetention(): void {
 		$dbAccount = new MailAccount();
 		$dbAccount->setTrashRetentionDays(0);
 
@@ -157,7 +157,7 @@ class TrashRetentionJobTest extends TestCase {
 		$this->job->run(self::ARGUMENT);
 	}
 
-	public function testRunWithNegativeRetention() {
+	public function testRunWithNegativeRetention(): void {
 		$dbAccount = new MailAccount();
 		$dbAccount->setTrashRetentionDays(-1);
 
@@ -172,7 +172,7 @@ class TrashRetentionJobTest extends TestCase {
 		$this->job->run(self::ARGUMENT);
 	}
 
-	public function testRunWithoutTrash() {
+	public function testRunWithoutTrash(): void {
 		$dbAccount = new MailAccount();
 		$dbAccount->setTrashRetentionDays(60);
 		$dbAccount->setTrashMailboxId(null);
@@ -190,7 +190,7 @@ class TrashRetentionJobTest extends TestCase {
 		$this->job->run(self::ARGUMENT);
 	}
 
-	public function testRunWithNonExistingTrash() {
+	public function testRunWithNonExistingTrash(): void {
 		$dbAccount = new MailAccount();
 		$dbAccount->setTrashRetentionDays(60);
 		$dbAccount->setTrashMailboxId(42);

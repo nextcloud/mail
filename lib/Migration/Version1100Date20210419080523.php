@@ -19,7 +19,6 @@ use OCP\IConfig;
 use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
-use Psr\Log\LoggerInterface;
 
 class Version1100Date20210419080523 extends SimpleMigrationStep {
 	/** @var IConfig */
@@ -28,20 +27,17 @@ class Version1100Date20210419080523 extends SimpleMigrationStep {
 	/** @var IDBConnection */
 	protected $connection;
 
-	/** @var LoggerInterface */
-	protected $logger;
-
-	public function __construct(IConfig $config, IDBConnection $connection, LoggerInterface $logger) {
+	public function __construct(
+		IConfig $config,
+		IDBConnection $connection,
+		protected \Psr\Log\LoggerInterface $logger
+	) {
 		$this->config = $config;
 		$this->connection = $connection;
-		$this->logger = $logger;
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array $options
-	 * @return null|ISchemaWrapper
 	 */
 	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
@@ -139,9 +135,7 @@ class Version1100Date20210419080523 extends SimpleMigrationStep {
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array $options
 	 */
 	#[\Override]
 	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
@@ -156,7 +150,7 @@ class Version1100Date20210419080523 extends SimpleMigrationStep {
 		}
 
 		try {
-			$conf = json_decode($raw, true, 10, JSON_THROW_ON_ERROR);
+			$conf = json_decode((string)$raw, true, 10, JSON_THROW_ON_ERROR);
 		} catch (JsonException $e) {
 			$this->logger->error('Json decode for old provisioning config failed: ' . $e->getMessage() . ' - building manual config', [
 				'exception' => $e,

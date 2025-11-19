@@ -16,12 +16,10 @@ use OCP\EventDispatcher\Event;
  * @psalm-immutable
  */
 class MailboxesSynchronizedEvent extends Event {
-	/** @var Account */
-	private $account;
-
-	public function __construct(Account $account) {
+	public function __construct(
+		private readonly \OCA\Mail\Account $account
+	) {
 		parent::__construct();
-		$this->account = $account;
 	}
 
 	public function getAccount(): Account {

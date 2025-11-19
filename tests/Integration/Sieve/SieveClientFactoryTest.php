@@ -26,8 +26,7 @@ class SieveClientFactoryTest extends TestCase {
 	/** @var IConfig|MockObject */
 	private $config;
 
-	/** @var SieveClientFactory */
-	private $factory;
+	private ?\OCA\Mail\Sieve\SieveClientFactory $factory = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -49,10 +48,7 @@ class SieveClientFactoryTest extends TestCase {
 		$this->factory = new SieveClientFactory($this->crypto, $this->config);
 	}
 
-	/**
-	 * @return Account
-	 */
-	private function getTestAccount() {
+	private function getTestAccount(): \OCA\Mail\Account {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(123);
 		$mailAccount->setEmail('user@domain.tld');
@@ -69,7 +65,7 @@ class SieveClientFactoryTest extends TestCase {
 		return new Account($mailAccount);
 	}
 
-	public function testClientConnectivity() {
+	public function testClientConnectivity(): void {
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')
@@ -80,7 +76,7 @@ class SieveClientFactoryTest extends TestCase {
 		$this->assertInstanceOf(ManageSieve::class, $client);
 	}
 
-	public function testClientInstallScript() {
+	public function testClientInstallScript(): void {
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')

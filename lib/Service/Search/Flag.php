@@ -23,18 +23,13 @@ final class Flag {
 	public const IMPORTANT = Tag::LABEL_IMPORTANT;
 	public const DELETED = Horde_Imap_Client::FLAG_DELETED;
 
-	/** @var string */
-	private $flag;
-
-	/** @var bool */
-	private $isSet;
-
 	/**
 	 * @psalm-param Flag::* $flag
 	 */
-	private function __construct(string $flag, bool $isSet) {
-		$this->flag = $flag;
-		$this->isSet = $isSet;
+	private function __construct(
+		private readonly string $flag,
+		private readonly bool $isSet
+	) {
 	}
 
 	/**

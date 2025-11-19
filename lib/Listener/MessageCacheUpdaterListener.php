@@ -9,27 +9,19 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Listener;
 
-use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use Psr\Log\LoggerInterface;
 
 /**
  * @template-implements IEventListener<Event>
  */
 class MessageCacheUpdaterListener implements IEventListener {
-	/** @var MessageMapper */
-	private $mapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(MessageMapper $mapper,
-		LoggerInterface $logger) {
-		$this->mapper = $mapper;
-		$this->logger = $logger;
+	public function __construct(
+		private readonly \OCA\Mail\Db\MessageMapper $mapper,
+		private readonly \Psr\Log\LoggerInterface $logger
+	) {
 	}
 
 	#[\Override]

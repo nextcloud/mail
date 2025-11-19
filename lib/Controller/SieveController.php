@@ -30,30 +30,22 @@ use Psr\Log\LoggerInterface;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class SieveController extends Controller {
-	private MailAccountMapper $mailAccountMapper;
-	private SieveClientFactory $sieveClientFactory;
-	private string $currentUserId;
-	private ICrypto $crypto;
-	private IRemoteHostValidator $hostValidator;
-	private LoggerInterface $logger;
+	private readonly ICrypto $crypto;
+	private readonly IRemoteHostValidator $hostValidator;
 
 	public function __construct(
 		IRequest $request,
-		string $UserId,
-		MailAccountMapper $mailAccountMapper,
-		SieveClientFactory $sieveClientFactory,
+		private readonly string $currentUserId,
+		private readonly MailAccountMapper $mailAccountMapper,
+		private readonly SieveClientFactory $sieveClientFactory,
 		ICrypto $crypto,
 		IRemoteHostValidator $hostValidator,
-		LoggerInterface $logger,
-		private SieveService $sieveService,
+		private readonly LoggerInterface $logger,
+		private readonly SieveService $sieveService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->currentUserId = $UserId;
-		$this->mailAccountMapper = $mailAccountMapper;
-		$this->sieveClientFactory = $sieveClientFactory;
 		$this->crypto = $crypto;
 		$this->hostValidator = $hostValidator;
-		$this->logger = $logger;
 	}
 
 	/**
@@ -61,7 +53,6 @@ class SieveController extends Controller {
 	 *
 	 * @param int $id account id
 	 *
-	 * @return JSONResponse
 	 *
 	 * @throws CouldNotConnectException
 	 * @throws ClientException
@@ -80,9 +71,7 @@ class SieveController extends Controller {
 	 * @NoAdminRequired
 	 *
 	 * @param int $id account id
-	 * @param string $script
 	 *
-	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 * @throws CouldNotConnectException
@@ -103,14 +92,7 @@ class SieveController extends Controller {
 	 * @NoAdminRequired
 	 *
 	 * @param int $id account id
-	 * @param bool $sieveEnabled
-	 * @param string $sieveHost
-	 * @param int $sievePort
-	 * @param string $sieveUser
-	 * @param string $sievePassword
-	 * @param string $sieveSslMode
 	 *
-	 * @return JSONResponse
 	 *
 	 * @throws CouldNotConnectException
 	 * @throws DoesNotExistException

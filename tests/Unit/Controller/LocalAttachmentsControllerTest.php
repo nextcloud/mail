@@ -24,11 +24,9 @@ class LocalAttachmentsControllerTest extends TestCase {
 	/** @var IAttachmentService|PHPUnit_Framework_MockObject_MockObject */
 	private $service;
 
-	/** @var string */
-	private $userId;
+	private ?string $userId = null;
 
-	/** @var LocalAttachmentsController */
-	private $controller;
+	private ?\OCA\Mail\Controller\LocalAttachmentsController $controller = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -40,7 +38,7 @@ class LocalAttachmentsControllerTest extends TestCase {
 		$this->controller = new LocalAttachmentsController('mail', $this->request, $this->service, $this->userId);
 	}
 
-	public function testCreateWithoutFile() {
+	public function testCreateWithoutFile(): void {
 		$this->request->expects($this->once())
 			->method('getUploadedFile')
 			->with('attachment')
@@ -50,7 +48,7 @@ class LocalAttachmentsControllerTest extends TestCase {
 		$this->controller->create();
 	}
 
-	public function testCreate() {
+	public function testCreate(): void {
 		$fileData = [
 			'name' => 'cat.jpg',
 		];

@@ -23,23 +23,23 @@ use OCP\Migration\SimpleMigrationStep;
 use Psr\Log\LoggerInterface;
 
 class Version1130Date20220412111833 extends SimpleMigrationStep {
-	private IDBConnection $connection;
-	private LoggerInterface $logger;
+	private readonly IDBConnection $connection;
 	private array $recipients = [];
-	private string $backupPath;
+	private readonly string $backupPath;
 
-	public function __construct(IDBConnection $connection, LoggerInterface $logger, ITempManager $tempManager) {
+	public function __construct(
+		IDBConnection $connection,
+		private readonly LoggerInterface $logger,
+		ITempManager $tempManager
+	) {
 		$this->connection = $connection;
-		$this->logger = $logger;
 
 		$tempBaseDir = $tempManager->getTempBaseDir();
 		$this->backupPath = tempnam($tempBaseDir, 'mail_recipients_backup');
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array $options
 	 */
 	#[\Override]
 	public function preSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
@@ -93,10 +93,7 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array $options
-	 * @return null|ISchemaWrapper
 	 */
 	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
@@ -172,14 +169,11 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array $options
 	 *
-	 * @return void
 	 */
 	#[\Override]
-	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
+	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options): void {
 		$qb1 = $this->connection->getQueryBuilder();
 		$qb1->insert('mail_recipients')
 			->values([

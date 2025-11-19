@@ -26,38 +26,23 @@ use Psr\Log\LoggerInterface;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ThreadController extends Controller {
-	private string $currentUserId;
-	private AccountService $accountService;
-	private IMailManager $mailManager;
-	private SnoozeService $snoozeService;
-	private AiIntegrationsService $aiIntergrationsService;
-	private LoggerInterface $logger;
-
-
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		string $UserId,
-		AccountService $accountService,
-		IMailManager $mailManager,
-		SnoozeService $snoozeService,
-		AiIntegrationsService $aiIntergrationsService,
-		LoggerInterface $logger) {
+		private readonly string $currentUserId,
+		private readonly AccountService $accountService,
+		private readonly IMailManager $mailManager,
+		private readonly SnoozeService $snoozeService,
+		private readonly AiIntegrationsService $aiIntergrationsService,
+		private readonly LoggerInterface $logger
+	) {
 		parent::__construct($appName, $request);
-		$this->currentUserId = $UserId;
-		$this->accountService = $accountService;
-		$this->mailManager = $mailManager;
-		$this->snoozeService = $snoozeService;
-		$this->aiIntergrationsService = $aiIntergrationsService;
-		$this->logger = $logger;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @param int $destMailboxId
 	 *
-	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
@@ -69,7 +54,7 @@ class ThreadController extends Controller {
 			$srcAccount = $this->accountService->find($this->currentUserId, $srcMailbox->getAccountId());
 			$dstMailbox = $this->mailManager->getMailbox($this->currentUserId, $destMailboxId);
 			$dstAccount = $this->accountService->find($this->currentUserId, $dstMailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -87,11 +72,7 @@ class ThreadController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @param int $unixTimestamp
-	 * @param int $destMailboxId
 	 *
-	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
@@ -103,7 +84,7 @@ class ThreadController extends Controller {
 			$srcAccount = $this->accountService->find($this->currentUserId, $srcMailbox->getAccountId());
 			$dstMailbox = $this->mailManager->getMailbox($this->currentUserId, $destMailboxId);
 			$dstAccount = $this->accountService->find($this->currentUserId, $dstMailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -115,9 +96,7 @@ class ThreadController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 *
-	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
@@ -125,7 +104,7 @@ class ThreadController extends Controller {
 	public function unSnooze(int $id): JSONResponse {
 		try {
 			$selectedMessage = $this->mailManager->getMessage($this->currentUserId, $id);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -137,9 +116,7 @@ class ThreadController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 *
-	 * @return JSONResponse
 	 */
 	public function summarize(int $id): JSONResponse {
 		try {
@@ -178,7 +155,7 @@ class ThreadController extends Controller {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 		if (empty($message->getThreadRootId())) {
@@ -198,9 +175,7 @@ class ThreadController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
 	 *
-	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
@@ -210,7 +185,7 @@ class ThreadController extends Controller {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 

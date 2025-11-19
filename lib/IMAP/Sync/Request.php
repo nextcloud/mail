@@ -10,27 +10,15 @@ declare(strict_types=1);
 namespace OCA\Mail\IMAP\Sync;
 
 final class Request {
-	private string $id;
-
-	/** @var string */
-	private $mailbox;
-
-	/** @var string */
-	private $syncToken;
-
-	/** @var array */
-	private $uids;
-
 	/**
-	 * @param string $mailbox
-	 * @param string $syncToken
 	 * @param int[] $uids
 	 */
-	public function __construct(string $id, string $mailbox, string $syncToken, array $uids) {
-		$this->id = $id;
-		$this->mailbox = $mailbox;
-		$this->syncToken = $syncToken;
-		$this->uids = $uids;
+	public function __construct(
+		private readonly string $id,
+		private readonly string $mailbox,
+		private readonly string $syncToken,
+		private readonly array $uids
+	) {
 	}
 
 	/**

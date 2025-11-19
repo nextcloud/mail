@@ -46,10 +46,7 @@ final class UpdateAccount extends Command {
 		$this->crypto = $crypto;
 	}
 
-	/**
-	 * @return void
-	 */
-	protected function configure() {
+	protected function configure(): void {
 		$this->setName('mail:account:update');
 		$this->setDescription('Update a user\'s IMAP account');
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::REQUIRED);
@@ -93,7 +90,7 @@ final class UpdateAccount extends Command {
 
 		try {
 			$mailAccount = $this->mapper->findById($accountId);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			$output->writeln("<error>No Email Account found with ID $accountId </error>");
 			return 1;
 		}

@@ -20,16 +20,15 @@ use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class TextBlockControllerTest extends TestCase {
+final class TextBlockControllerTest extends TestCase {
 
 	/** @var TextBlockService|MockObject */
-	private $textBlockService;
+	private \PHPUnit\Framework\MockObject\MockObject $textBlockService;
 
 	/** @var IRequest|MockObject */
-	private $request;
+	private \PHPUnit\Framework\MockObject\MockObject $request;
 
-	/** @var string */
-	private $userId;
+	private string $userId;
 
 
 	protected function setUp(): void {
@@ -151,7 +150,7 @@ class TextBlockControllerTest extends TestCase {
 	}
 
 	public function testDeleteTextBlock(): void {
-		$textBlock = new TextBlock();
+		new TextBlock();
 
 		$this->textBlockService->expects($this->once())
 			->method('delete')

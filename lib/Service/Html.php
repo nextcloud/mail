@@ -45,18 +45,14 @@ class Html {
 		$this->request = $request;
 	}
 
-	/**
-	 * @param string $data
-	 * @return string
-	 */
 	public function convertLinks(string $data): string {
 		$linker = new UrlLinker([
 			'allowFtpAddresses' => true,
 			'allowUpperCaseUrlSchemes' => false,
-			'htmlLinkCreator' => static fn ($url)
+			'htmlLinkCreator' => static fn ($url): string
 				// Render full url for the link description. Otherwise, potentially malicious query
 				// params might be hidden.
-				=> sprintf('<a href="%1$s">%1$s</a>', htmlspecialchars($url)),
+				=> sprintf('<a href="%1$s">%1$s</a>', htmlspecialchars((string)$url)),
 		]);
 		$data = $linker->linkUrlsAndEscapeHtml($data);
 
@@ -84,9 +80,6 @@ class Html {
 
 	/**
 	 * split off the signature
-	 *
-	 * @param string $body
-	 * @return array
 	 */
 	public function parseMailBody(string $body): array {
 		$signature = null;

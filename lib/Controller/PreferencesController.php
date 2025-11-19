@@ -19,26 +19,16 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class PreferencesController extends Controller {
-	private IUserPreferences $userPreference;
-	private string $userId;
-
-	/**
-	 * @param IRequest $request
-	 * @param IUserPreferences $userPreference
-	 * @param string $UserId
-	 */
-	public function __construct(IRequest $request, IUserPreferences $userPreference, string $UserId) {
+	public function __construct(
+		IRequest $request,
+		private readonly IUserPreferences $userPreference,
+		private readonly string $userId
+	) {
 		parent::__construct('mail', $request);
-
-		$this->userPreference = $userPreference;
-		$this->userId = $UserId;
 	}
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @param string $id
-	 * @return JSONResponse
 	 */
 	#[TrapError]
 	public function show(string $id): JSONResponse {
@@ -52,7 +42,6 @@ class PreferencesController extends Controller {
 	 *
 	 * @param string $key
 	 * @param string $value
-	 * @return JSONResponse
 	 * @throws ClientException
 	 */
 	#[TrapError]

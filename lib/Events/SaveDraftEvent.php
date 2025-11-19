@@ -15,22 +15,12 @@ use OCA\Mail\Model\NewMessageData;
 use OCP\EventDispatcher\Event;
 
 class SaveDraftEvent extends Event {
-	/** @var Account */
-	private $account;
-
-	/** @var NewMessageData */
-	private $newMessageData;
-
-	/** @var Message|null */
-	private $draft;
-
-	public function __construct(Account $account,
-		NewMessageData $newMessageData,
-		?Message $draft) {
+	public function __construct(
+		private readonly \OCA\Mail\Account $account,
+		private readonly \OCA\Mail\Model\NewMessageData $newMessageData,
+		private readonly ?\OCA\Mail\Db\Message $draft
+	) {
 		parent::__construct();
-		$this->account = $account;
-		$this->newMessageData = $newMessageData;
-		$this->draft = $draft;
 	}
 
 	public function getAccount(): Account {

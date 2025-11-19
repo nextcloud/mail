@@ -21,16 +21,15 @@ use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class TextBlockSharesControllerTest extends TestCase {
+final class TextBlockSharesControllerTest extends TestCase {
 
 	/** @var TextBlockService|MockObject */
-	private $textBlockService;
+	private \PHPUnit\Framework\MockObject\MockObject $textBlockService;
 
 	/** @var IRequest|MockObject */
-	private $request;
+	private \PHPUnit\Framework\MockObject\MockObject $request;
 
-	/** @var string */
-	private $userId;
+	private string $userId;
 
 
 	protected function setUp(): void {
@@ -44,19 +43,6 @@ class TextBlockSharesControllerTest extends TestCase {
 
 		$response = $controller->index();
 		$expectedResponse = JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
-		$this->assertEquals($expectedResponse, $response);
-	}
-
-	private function testGetSharedTextBlocksShareeNotFound(): void {
-		$this->textBlockService->expects($this->once())
-			->method('findAllSharedWithMe')
-			->with($this->userId)
-			->willThrowException(new DoesNotExistException('Sharee does not exist'));
-
-		$controller = new TextBlockSharesController($this->request, $this->userId, $this->textBlockService);
-
-		$response = $controller->index();
-		$expectedResponse = JsonResponse::error('sharee not found', Http::STATUS_UNAUTHORIZED);
 		$this->assertEquals($expectedResponse, $response);
 	}
 

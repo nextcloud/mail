@@ -18,18 +18,12 @@ use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
 class Version2300Date20221205160349 extends SimpleMigrationStep {
-	private IDBConnection $db;
+	private readonly IDBConnection $db;
 
 	public function __construct(IDBConnection $db) {
 		$this->db = $db;
 	}
 
-	/**
-	 * @param IOutput $output
-	 * @param Closure $schemaClosure
-	 * @param array $options
-	 * @return null|ISchemaWrapper
-	 */
 	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 		/** @var ISchemaWrapper $schema */
@@ -46,11 +40,6 @@ class Version2300Date20221205160349 extends SimpleMigrationStep {
 		return $schema;
 	}
 
-	/**
-	 * @param IOutput $output
-	 * @param Closure $schemaClosure
-	 * @param array $options
-	 */
 	#[\Override]
 	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
 		$qb = $this->db->getQueryBuilder();

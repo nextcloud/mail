@@ -27,10 +27,10 @@ class FollowUpController extends Controller {
 	public function __construct(
 		string $appName,
 		IRequest $request,
-		private ?string $userId,
-		private ThreadMapper $threadMapper,
-		private MessageMapper $messageMapper,
-		private MailboxMapper $mailboxMapper,
+		private readonly ?string $userId,
+		private readonly ThreadMapper $threadMapper,
+		private readonly MessageMapper $messageMapper,
+		private readonly MailboxMapper $mailboxMapper,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -55,7 +55,7 @@ class FollowUpController extends Controller {
 			if (!isset($mailboxes[$mailboxId])) {
 				try {
 					$mailboxes[$mailboxId] = $this->mailboxMapper->findByUid($mailboxId, $userId);
-				} catch (DoesNotExistException $e) {
+				} catch (DoesNotExistException) {
 					continue;
 				}
 			}

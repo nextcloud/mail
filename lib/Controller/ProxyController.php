@@ -26,33 +26,31 @@ use function file_get_contents;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ProxyController extends Controller {
-	private IURLGenerator $urlGenerator;
-	private ISession $session;
-	private IClientService $clientService;
-	private LoggerInterface $logger;
+	private readonly IURLGenerator $urlGenerator;
+	private readonly ISession $session;
+	private readonly IClientService $clientService;
 
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
 		IURLGenerator $urlGenerator,
 		ISession $session,
 		IClientService $clientService,
-		LoggerInterface $logger) {
+		private readonly LoggerInterface $logger
+	) {
 		parent::__construct($appName, $request);
 		$this->request = $request;
 		$this->urlGenerator = $urlGenerator;
 		$this->session = $session;
 		$this->clientService = $clientService;
-		$this->logger = $logger;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @param string $src
 	 *
 	 * @throws \Exception If the URL is not valid.
-	 * @return TemplateResponse
 	 */
 	public function redirect(string $src): TemplateResponse {
 		$authorizedRedirect = false;
@@ -87,8 +85,6 @@ class ProxyController extends Controller {
 	 * TODO: Cache the proxied content to prevent unnecessary requests from the oC server
 	 *       The caching should also already happen in a cronjob so that the sender of the
 	 *       mail does not know whether the mail has been opened.
-	 *
-	 * @return ProxyDownloadResponse
 	 */
 	#[UserRateLimit(limit: 50, period: 60)]
 	public function proxy(string $src): ProxyDownloadResponse {

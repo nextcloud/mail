@@ -20,8 +20,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 class GroupsIntegrationTest extends TestCase {
 	private NextcloudGroupService|MockObject $groupService1;
 	private NextcloudGroupService|MockObject $groupService2;
-	/** @var GroupsIntegration */
-	private $groupsIntegration;
+	private ?\OCA\Mail\Service\GroupsIntegration $groupsIntegration = null;
 
 	protected function setUp(): void {
 		parent::setUp();

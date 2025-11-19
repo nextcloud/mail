@@ -13,15 +13,13 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ConsoleLoggerDecorator implements LoggerInterface {
-	/** @var LoggerInterface */
-	private $inner;
-
 	/** @var OutputInterface */
 	private $consoleOutput;
 
-	public function __construct(LoggerInterface $inner,
-		OutputInterface $consoleOutput) {
-		$this->inner = $inner;
+	public function __construct(
+		private readonly \Psr\Log\LoggerInterface $inner,
+		OutputInterface $consoleOutput
+	) {
 		$this->consoleOutput = $consoleOutput;
 	}
 

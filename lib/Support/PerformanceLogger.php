@@ -16,13 +16,11 @@ class PerformanceLogger {
 	/** @var ITimeFactory */
 	private $timeFactory;
 
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(ITimeFactory $timeFactory,
-		LoggerInterface $logger) {
+	public function __construct(
+		ITimeFactory $timeFactory,
+		private readonly \Psr\Log\LoggerInterface $logger
+	) {
 		$this->timeFactory = $timeFactory;
-		$this->logger = $logger;
 	}
 
 	public function start(string $task): PerformanceLoggerTask {

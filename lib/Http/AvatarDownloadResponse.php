@@ -16,13 +16,10 @@ use OCP\AppFramework\Http\DownloadResponse;
  * @todo spec template with 28+
  */
 class AvatarDownloadResponse extends DownloadResponse {
-	/** @var string */
-	private $content;
-
-	public function __construct(string $content) {
+	public function __construct(
+		private readonly string $content
+	) {
 		parent::__construct('avatar', 'application/octet-stream');
-
-		$this->content = $content;
 	}
 
 	/**

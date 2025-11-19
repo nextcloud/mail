@@ -25,9 +25,7 @@ class Version0161Date20190902103701 extends SimpleMigrationStep {
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array $options
 	 *
 	 * @return ISchemaWrapper
 	 */
@@ -83,11 +81,8 @@ class Version0161Date20190902103701 extends SimpleMigrationStep {
 		return $schema;
 	}
 
-	/**
-	 * @return void
-	 */
 	#[\Override]
-	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
+	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options): void {
 		// Force a re-sync
 		$update = $this->connection->getQueryBuilder();
 		$update->update('mail_accounts')

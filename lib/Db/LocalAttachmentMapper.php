@@ -19,9 +19,6 @@ use Throwable;
  * @template-extends QBMapper<LocalAttachment>
  */
 class LocalAttachmentMapper extends QBMapper {
-	/**
-	 * @param IDBConnection $db
-	 */
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'mail_attachments');
 	}

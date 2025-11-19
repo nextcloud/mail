@@ -16,19 +16,14 @@ use OCP\Migration\SimpleMigrationStep;
 use Psr\Log\LoggerInterface;
 
 class Version1140Date20221027171138 extends SimpleMigrationStep {
-	private LoggerInterface $logger;
-	private MessageMapper $messageMapper;
-
-	public function __construct(MessageMapper $messageMapper,
-		LoggerInterface $logger) {
-		$this->logger = $logger;
-		$this->messageMapper = $messageMapper;
+	public function __construct(
+		private readonly MessageMapper $messageMapper,
+		private readonly LoggerInterface $logger
+	) {
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array $options
 	 */
 	#[\Override]
 	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {

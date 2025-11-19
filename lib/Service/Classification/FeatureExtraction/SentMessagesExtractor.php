@@ -11,23 +11,19 @@ namespace OCA\Mail\Service\Classification\FeatureExtraction;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\Message;
-use OCA\Mail\Db\StatisticsDao;
 use RuntimeException;
 use function array_map;
 use function array_unique;
 
 class SentMessagesExtractor implements IExtractor {
-	/** @var StatisticsDao */
-	private $statisticsDao;
-
-	/** @var int */
-	private $messagesSentTotal = 0;
+	private int $messagesSentTotal = 0;
 
 	/** @var int[] */
-	private $messagesSent;
+	private ?array $messagesSent = null;
 
-	public function __construct(StatisticsDao $statisticsDao) {
-		$this->statisticsDao = $statisticsDao;
+	public function __construct(
+		private readonly \OCA\Mail\Db\StatisticsDao $statisticsDao,
+	) {
 	}
 
 	#[\Override]
@@ -35,7 +31,7 @@ class SentMessagesExtractor implements IExtractor {
 		array $incomingMailboxes,
 		array $outgoingMailboxes,
 		array $messages): void {
-		$senders = array_unique(array_map(static fn (Message $message) => $message->getFrom()->first()->getEmail(), array_filter($messages, static fn (Message $message) => $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null)));
+		$senders = array_unique(array_map(static fn (Message $message): ?string => $message->getFrom()->first()->getEmail(), array_filter($messages, static fn (Message $message): bool => $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null)));
 
 		$this->messagesSentTotal = $this->statisticsDao->getMessagesTotal(...$outgoingMailboxes);
 		$this->messagesSent = $this->statisticsDao->getMessagesSentToGrouped($outgoingMailboxes, $senders);

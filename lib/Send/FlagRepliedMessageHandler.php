@@ -20,10 +20,10 @@ use Psr\Log\LoggerInterface;
 
 class FlagRepliedMessageHandler extends AHandler {
 	public function __construct(
-		private MailboxMapper $mailboxMapper,
-		private LoggerInterface $logger,
-		private MessageMapper $messageMapper,
-		private DbMessageMapper $dbMessageMapper,
+		private readonly MailboxMapper $mailboxMapper,
+		private readonly LoggerInterface $logger,
+		private readonly MessageMapper $messageMapper,
+		private readonly DbMessageMapper $dbMessageMapper,
 	) {
 	}
 

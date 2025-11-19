@@ -16,7 +16,6 @@ use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\IMemcache;
 use OCP\IUser;
-use Psr\Log\LoggerInterface;
 use function implode;
 
 class AntiAbuseService {
@@ -29,17 +28,15 @@ class AntiAbuseService {
 	/** @var ITimeFactory */
 	private $timeFactory;
 
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(IConfig $config,
+	public function __construct(
+		IConfig $config,
 		ICacheFactory $cacheFactory,
 		ITimeFactory $timeFactory,
-		LoggerInterface $logger) {
+		private readonly \Psr\Log\LoggerInterface $logger
+	) {
 		$this->config = $config;
 		$this->cacheFactory = $cacheFactory;
 		$this->timeFactory = $timeFactory;
-		$this->logger = $logger;
 	}
 
 	public function onBeforeMessageSent(IUser $user, LocalMessage $localMessage): void {

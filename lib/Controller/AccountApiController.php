@@ -54,12 +54,12 @@ class AccountApiController extends OCSController {
 		}
 
 		$accounts = $this->accountService->findByUserId($userId);
-		return new DataResponse(array_map(function (Account $account) use ($userId) {
+		return new DataResponse(array_map(function (Account $account) use ($userId): array {
 			$aliases = $this->aliasesService->findAll($account->getId(), $userId);
 			return [
 				'id' => $account->getId(),
 				'email' => $account->getEmail(),
-				'aliases' => array_map(static fn (Alias $alias) => [
+				'aliases' => array_map(static fn (Alias $alias): array => [
 					'id' => $alias->getId(),
 					'email' => $alias->getAlias(),
 					'name' => $alias->getName(),

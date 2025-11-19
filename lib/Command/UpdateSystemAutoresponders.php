@@ -18,9 +18,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class UpdateSystemAutoresponders extends Command {
 	public function __construct(
-		private MailAccountMapper $mailAccountMapper,
-		private IUserManager $userManager,
-		private OutOfOfficeService $outOfOfficeService,
+		private readonly MailAccountMapper $mailAccountMapper,
+		private readonly IUserManager $userManager,
+		private readonly OutOfOfficeService $outOfOfficeService,
 	) {
 		parent::__construct();
 	}

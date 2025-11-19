@@ -12,7 +12,7 @@ use OCP\EventDispatcher\Event;
 
 class NewMessageReceivedEvent extends Event {
 	public function __construct(
-		private string $uri,
+		private readonly string $uri,
 	) {
 		parent::__construct();
 	}

@@ -25,8 +25,8 @@ use OCP\TextProcessing\FreePromptTaskType;
 class FollowUpClassifierListener implements IEventListener {
 
 	public function __construct(
-		private IJobList $jobList,
-		private AiIntegrationsService $aiService,
+		private readonly IJobList $jobList,
+		private readonly AiIntegrationsService $aiService,
 	) {
 	}
 

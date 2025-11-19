@@ -14,7 +14,7 @@ use OCA\Mail\Db\LocalMessage;
 
 class SendHandler extends AHandler {
 	public function __construct(
-		private IMailTransmission $transmission,
+		private readonly IMailTransmission $transmission,
 	) {
 	}
 

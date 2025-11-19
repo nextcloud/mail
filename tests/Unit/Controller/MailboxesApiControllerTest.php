@@ -53,7 +53,7 @@ class MailboxesApiControllerTest extends TestCase {
 		);
 	}
 
-	public function testListMailboxesWithoutUser() {
+	public function testListMailboxesWithoutUser(): void {
 		$controller = new MailboxesApiController(
 			'mail',
 			$this->request,
@@ -73,7 +73,7 @@ class MailboxesApiControllerTest extends TestCase {
 	}
 
 
-	public function testListMailboxes() {
+	public function testListMailboxes(): void {
 		$account = $this->createMock(Account::class);
 		$folder = $this->createMock(Folder::class);
 		$accountId = 42;
@@ -93,7 +93,7 @@ class MailboxesApiControllerTest extends TestCase {
 		$this->assertEquals([$folder], $actual->getData());
 	}
 
-	public function testListMessagesWithoutUser() {
+	public function testListMessagesWithoutUser(): void {
 		$controller = new MailboxesApiController(
 			'mail',
 			$this->request,

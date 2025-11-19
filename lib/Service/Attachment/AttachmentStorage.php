@@ -27,11 +27,9 @@ class AttachmentStorage {
 	}
 
 	/**
-	 * @param string $userId
-	 * @return ISimpleFolder
 	 * @throws NotPermittedException
 	 */
-	private function getAttachmentFolder($userId): ISimpleFolder {
+	private function getAttachmentFolder(string $userId): ISimpleFolder {
 		$folderName = implode('_', [
 			'mail',
 			$userId
@@ -39,7 +37,7 @@ class AttachmentStorage {
 
 		try {
 			return $this->appData->getFolder($folderName);
-		} catch (NotFoundException $ex) {
+		} catch (NotFoundException) {
 			return $this->appData->newFolder($folderName);
 		}
 	}
@@ -47,13 +45,9 @@ class AttachmentStorage {
 	/**
 	 * Copy uploaded file content to a app data file
 	 *
-	 * @param string $userId
-	 * @param int $attachmentId
-	 * @param UploadedFile $uploadedFile
 	 *
 	 * @throws UploadException
 	 *
-	 * @return void
 	 */
 	public function save(string $userId, int $attachmentId, UploadedFile $uploadedFile): void {
 		$folder = $this->getAttachmentFolder($userId);
@@ -66,7 +60,7 @@ class AttachmentStorage {
 
 		try {
 			$fileContent = @file_get_contents($tmpPath);
-		} catch (Throwable $ex) {
+		} catch (Throwable) {
 			$fileContent = false;
 		}
 
@@ -79,10 +73,7 @@ class AttachmentStorage {
 	/**
 	 * Copy uploaded file content to a app data file
 	 *
-	 * @param string $userId
-	 * @param int $attachmentId
 	 *
-	 * @return void
 	 * @throws NotFoundException|NotPermittedException
 	 */
 	public function saveContent(string $userId, int $attachmentId, string $fileContent): void {
@@ -95,8 +86,6 @@ class AttachmentStorage {
 
 
 	/**
-	 * @param string $userId
-	 * @param int $attachmentId
 	 * @return ISimpleFile
 	 * @throws AttachmentNotFoundException
 	 */
@@ -105,7 +94,7 @@ class AttachmentStorage {
 
 		try {
 			return $folder->getFile((string)$attachmentId);
-		} catch (NotFoundException $ex) {
+		} catch (NotFoundException) {
 			throw new AttachmentNotFoundException();
 		}
 	}
@@ -114,7 +103,7 @@ class AttachmentStorage {
 		$folder = $this->getAttachmentFolder($userId);
 		try {
 			$file = $folder->getFile((string)$attachmentId);
-		} catch (NotFoundException $e) {
+		} catch (NotFoundException) {
 			return;
 		}
 		$file->delete();

@@ -14,7 +14,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\MailAccount;
 
 class MailAccountTest extends TestCase {
-	public function testToAPI() {
+	public function testToAPI(): void {
 		$a = new MailAccount();
 		$a->setId(3);
 		$a->setName('Peter Parker');
@@ -74,7 +74,7 @@ class MailAccountTest extends TestCase {
 		], $a->toJson());
 	}
 
-	public function testMailAccountConstruct() {
+	public function testMailAccountConstruct(): void {
 		$expected = [
 			'id' => 12345,
 			'accountId' => 12345,

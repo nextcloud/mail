@@ -20,16 +20,13 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class FilterController extends Controller {
-	private string $currentUserId;
-
 	public function __construct(
 		IRequest $request,
-		string $userId,
-		private FilterService $mailFilterService,
-		private AccountService $accountService,
+		private readonly string $currentUserId,
+		private readonly FilterService $mailFilterService,
+		private readonly AccountService $accountService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->currentUserId = $userId;
 	}
 
 

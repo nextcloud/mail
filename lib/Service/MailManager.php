@@ -18,13 +18,8 @@ use OCA\Mail\Account;
 use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
-use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
-use OCA\Mail\Db\MessageMapper as DbMessageMapper;
-use OCA\Mail\Db\MessageTagsMapper;
 use OCA\Mail\Db\Tag;
-use OCA\Mail\Db\TagMapper;
-use OCA\Mail\Db\ThreadMapper;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
@@ -34,15 +29,10 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\TrashMailboxNotSetException;
 use OCA\Mail\Folder;
-use OCA\Mail\IMAP\FolderMapper;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\ImapFlag;
-use OCA\Mail\IMAP\MailboxSync;
-use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Model\IMAPMessage;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
-use Psr\Log\LoggerInterface;
 use function array_map;
 use function array_values;
 
@@ -59,64 +49,24 @@ class MailManager implements IMailManager {
 		'recent' => [Horde_Imap_Client::FLAG_RECENT],
 	];
 
-	/** @var IMAPClientFactory */
-	private $imapClientFactory;
-
-	/** @var MailboxSync */
-	private $mailboxSync;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var FolderMapper */
-	private $folderMapper;
-
-	/** @var ImapMessageMapper */
-	private $imapMessageMapper;
-
-	/** @var DbMessageMapper */
-	private $dbMessageMapper;
-
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var TagMapper */
-	private $tagMapper;
-
-	/** @var MessageTagsMapper */
-	private $messageTagsMapper;
-
-	/** @var ThreadMapper */
-	private $threadMapper;
-
 	public function __construct(
-		IMAPClientFactory $imapClientFactory,
-		MailboxMapper $mailboxMapper,
-		MailboxSync $mailboxSync,
-		FolderMapper $folderMapper,
-		ImapMessageMapper $messageMapper,
-		DbMessageMapper $dbMessageMapper,
+		private readonly \OCA\Mail\IMAP\IMAPClientFactory $imapClientFactory,
+		private readonly \OCA\Mail\Db\MailboxMapper $mailboxMapper,
+		private readonly \OCA\Mail\IMAP\MailboxSync $mailboxSync,
+		private readonly \OCA\Mail\IMAP\FolderMapper $folderMapper,
+		private readonly \OCA\Mail\IMAP\MessageMapper $imapMessageMapper,
+		private readonly \OCA\Mail\Db\MessageMapper $dbMessageMapper,
 		IEventDispatcher $eventDispatcher,
-		LoggerInterface $logger,
-		TagMapper $tagMapper,
-		MessageTagsMapper $messageTagsMapper,
-		ThreadMapper $threadMapper,
-		private ImapFlag $imapFlag,
+		private readonly \Psr\Log\LoggerInterface $logger,
+		private readonly \OCA\Mail\Db\TagMapper $tagMapper,
+		private readonly \OCA\Mail\Db\MessageTagsMapper $messageTagsMapper,
+		private readonly \OCA\Mail\Db\ThreadMapper $threadMapper,
+		private readonly ImapFlag $imapFlag,
 	) {
-		$this->imapClientFactory = $imapClientFactory;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->mailboxSync = $mailboxSync;
-		$this->folderMapper = $folderMapper;
-		$this->imapMessageMapper = $messageMapper;
-		$this->dbMessageMapper = $dbMessageMapper;
 		$this->eventDispatcher = $eventDispatcher;
-		$this->logger = $logger;
-		$this->tagMapper = $tagMapper;
-		$this->messageTagsMapper = $messageTagsMapper;
-		$this->threadMapper = $threadMapper;
 	}
 
 	#[\Override]
@@ -129,7 +79,6 @@ class MailManager implements IMailManager {
 	}
 
 	/**
-	 * @param Account $account
 	 *
 	 * @return Mailbox[]
 	 * @throws ServiceException
@@ -142,10 +91,7 @@ class MailManager implements IMailManager {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param string $name
 	 *
-	 * @return Mailbox
 	 * @throws ServiceException
 	 */
 	#[\Override]
@@ -171,13 +117,7 @@ class MailManager implements IMailManager {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 * @param int $uid
-	 * @param bool $loadBody
 	 *
-	 * @return IMAPMessage
 	 *
 	 * @throws ServiceException
 	 * @throws SmimeDecryptException
@@ -206,8 +146,6 @@ class MailManager implements IMailManager {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
 	 * @param int[] $uids
 	 * @return IMAPMessage[]
 	 * @throws ServiceException
@@ -251,10 +189,6 @@ class MailManager implements IMailManager {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
-	 * @param Account $account
-	 * @param string $mailbox
-	 * @param int $uid
 	 *
 	 * @return string
 	 *
@@ -279,11 +213,6 @@ class MailManager implements IMailManager {
 	}
 
 	/**
-	 * @param Account $sourceAccount
-	 * @param string $sourceFolderId
-	 * @param int $uid
-	 * @param Account $destinationAccount
-	 * @param string $destFolderId
 	 *
 	 * @return ?int the new UID (or null if couldn't be determined)
 	 * @throws ServiceException
@@ -393,10 +322,6 @@ class MailManager implements IMailManager {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param string $sourceFolderId
-	 * @param string $destFolderId
-	 * @param int $messageId
 	 *
 	 * @return ?int the new UID (or null if it couldn't be determined)
 	 * @throws ServiceException
@@ -546,12 +471,6 @@ class MailManager implements IMailManager {
 	/**
 	 * Tag (flag) a message on IMAP
 	 *
-	 * @param Account $account
-	 * @param string $mailbox
-	 * @param Message $message
-	 * @param Tag $tag
-	 * @param boolean $value
-	 * @return void
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -575,9 +494,6 @@ class MailManager implements IMailManager {
 	}
 
 	/**
-	 * @param Account $account
-	 *
-	 * @return Quota|null
 	 * @see https://tools.ietf.org/html/rfc2087
 	 */
 	#[\Override]
@@ -588,7 +504,7 @@ class MailManager implements IMailManager {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
 			$quotas = array_map(static fn (Folder $mb) => $client->getQuotaRoot($mb->getMailbox()), $this->folderMapper->getFolders($account, $client));
-		} catch (Horde_Imap_Client_Exception_NoSupportExtension $ex) {
+		} catch (Horde_Imap_Client_Exception_NoSupportExtension) {
 			return null;
 		} finally {
 			$client->logout();
@@ -654,8 +570,6 @@ class MailManager implements IMailManager {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
 	 *
 	 * @throws ServiceException
 	 */
@@ -674,8 +588,6 @@ class MailManager implements IMailManager {
 	/**
 	 * Clear messages in folder
 	 *
-	 * @param Account $account
-	 * @param Mailbox $mailbox
 	 *
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
@@ -706,9 +618,6 @@ class MailManager implements IMailManager {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 * @param Message $message
 	 * @return Attachment[]
 	 */
 	#[\Override]
@@ -727,12 +636,6 @@ class MailManager implements IMailManager {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 * @param Message $message
-	 * @param string $attachmentId
-	 * @return Attachment
-	 *
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
 	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
@@ -759,9 +662,6 @@ class MailManager implements IMailManager {
 	}
 
 	/**
-	 * @param string $imapLabel
-	 * @param string $userId
-	 * @return Tag
 	 * @throws ClientException
 	 */
 	#[\Override]
@@ -775,10 +675,6 @@ class MailManager implements IMailManager {
 
 	/**
 	 * Filter out IMAP flags that aren't supported by the client server
-	 *
-	 * @param string $flag
-	 * @param string $mailbox
-	 * @return array
 	 */
 	public function filterFlags(Horde_Imap_Client_Socket $client, Account $account, string $flag, string $mailbox): array {
 		// check if flag is RFC defined system flag
@@ -809,10 +705,6 @@ class MailManager implements IMailManager {
 
 	/**
 	 * Check IMAP server for support for PERMANENTFLAGS
-	 *
-	 * @param Account $account
-	 * @param string $mailbox
-	 * @return boolean
 	 */
 	#[\Override]
 	public function isPermflagsEnabled(Horde_Imap_Client_Socket $client, Account $account, string $mailbox): bool {
@@ -838,7 +730,7 @@ class MailManager implements IMailManager {
 
 		try {
 			return $this->getTagByImapLabel($imapLabel, $userId);
-		} catch (ClientException $e) {
+		} catch (ClientException) {
 			// it's valid that a tag does not exist.
 		}
 
@@ -884,7 +776,7 @@ class MailManager implements IMailManager {
 	public function deleteTagForAccount(int $id, string $userId, Tag $tag, Account $account) :void {
 		try {
 			$messageTags = $this->messageTagsMapper->getMessagesByTag($id);
-			$messages = array_merge(... array_map(fn ($messageTag) => $this->getByMessageId($account, $messageTag->getImapMessageId()), array_values($messageTags)));
+			$messages = array_merge(... array_map(fn ($messageTag): array => $this->getByMessageId($account, $messageTag->getImapMessageId()), array_values($messageTags)));
 		} catch (DoesNotExistException $e) {
 			throw new ClientException('Messages not found', 0, $e);
 		}

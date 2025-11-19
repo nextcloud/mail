@@ -29,7 +29,7 @@ class FaviconSourceTest extends TestCase {
 		$this->serverContainer = OC::$server;
 	}
 
-	public function testFetchNoCacheFiles() {
+	public function testFetchNoCacheFiles(): void {
 		$email = 'noreply@duckduckgo.com';
 		$avatarFactory = $this->serverContainer->query(AvatarFactory::class);
 		/** @var IClientService $clientService */

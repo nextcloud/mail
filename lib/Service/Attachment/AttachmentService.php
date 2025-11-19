@@ -14,66 +14,36 @@ use InvalidArgumentException;
 use OCA\Files_Sharing\SharedStorage;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalAttachment;
-use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\UploadException;
-use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
-use Psr\Log\LoggerInterface;
 
 class AttachmentService implements IAttachmentService {
-	/** @var LocalAttachmentMapper */
-	private $mapper;
-
-	/** @var AttachmentStorage */
-	private $storage;
-	/**
-	 * @var IMailManager
-	 */
-	private $mailManager;
-	/**
-	 * @var MessageMapper
-	 */
-	private $messageMapper;
-
 	/**
 	 * @var Folder
 	 */
 	private $userFolder;
-	/**
-	 * @var LoggerInterface
-	 */
-	private $logger;
 
 	/**
 	 * @param Folder $userFolder
 	 */
-	public function __construct($userFolder,
-		LocalAttachmentMapper $mapper,
-		AttachmentStorage $storage,
-		IMailManager $mailManager,
-		MessageMapper $imapMessageMapper,
-		LoggerInterface $logger) {
-		$this->mapper = $mapper;
-		$this->storage = $storage;
-		$this->mailManager = $mailManager;
-		$this->messageMapper = $imapMessageMapper;
+	public function __construct(
+		$userFolder,
+		private readonly \OCA\Mail\Db\LocalAttachmentMapper $mapper,
+		private readonly \OCA\Mail\Service\Attachment\AttachmentStorage $storage,
+		private readonly \OCA\Mail\Contracts\IMailManager $mailManager,
+		private readonly \OCA\Mail\IMAP\MessageMapper $messageMapper,
+		private readonly \Psr\Log\LoggerInterface $logger
+	) {
 		$this->userFolder = $userFolder;
-		$this->logger = $logger;
 	}
 
-	/**
-	 * @param string $userId
-	 * @param UploadedFile $file
-	 * @return LocalAttachment
-	 */
 	#[\Override]
 	public function addFile(string $userId, UploadedFile $file): LocalAttachment {
 		$attachment = new LocalAttachment();
@@ -112,8 +82,6 @@ class AttachmentService implements IAttachmentService {
 	}
 
 	/**
-	 * @param string $userId
-	 * @param int $id
 	 *
 	 * @return array of LocalAttachment and ISimpleFile
 	 *
@@ -125,23 +93,17 @@ class AttachmentService implements IAttachmentService {
 			$attachment = $this->mapper->find($userId, $id);
 			$file = $this->storage->retrieve($userId, $id);
 			return [$attachment, $file];
-		} catch (DoesNotExistException $ex) {
+		} catch (DoesNotExistException) {
 			throw new AttachmentNotFoundException();
 		}
 	}
 
-	/**
-	 * @param string $userId
-	 * @param int $id
-	 *
-	 * @return void
-	 */
 	#[\Override]
-	public function deleteAttachment(string $userId, int $id) {
+	public function deleteAttachment(string $userId, int $id): void {
 		try {
 			$attachment = $this->mapper->find($userId, $id);
 			$this->mapper->delete($attachment);
-		} catch (DoesNotExistException $ex) {
+		} catch (DoesNotExistException) {
 			// Nothing to do then
 		}
 		$this->storage->delete($userId, $id);
@@ -211,7 +173,6 @@ class AttachmentService implements IAttachmentService {
 
 
 	/**
-	 * @param array $attachments
 	 * @return int[]
 	 */
 	public function handleAttachments(Account $account, array $attachments, \Horde_Imap_Client_Socket $client): array {
@@ -250,10 +211,7 @@ class AttachmentService implements IAttachmentService {
 	/**
 	 * Add a message as attachment
 	 *
-	 * @param Account $account
 	 * @param mixed[] $attachment
-	 * @param \Horde_Imap_Client_Socket $client
-	 * @return int|null
 	 */
 	private function handleForwardedMessageAttachment(Account $account, array $attachment, \Horde_Imap_Client_Socket $client): ?int {
 		$attachmentMessage = $this->mailManager->getMessage($account->getUserId(), (int)$attachment['id']);
@@ -287,9 +245,7 @@ class AttachmentService implements IAttachmentService {
 	/**
 	 * Adds an emails attachments
 	 *
-	 * @param Account $account
 	 * @param mixed[] $attachment
-	 * @param \Horde_Imap_Client_Socket $client
 	 * @return int
 	 * @throws DoesNotExistException
 	 */
@@ -346,11 +302,6 @@ class AttachmentService implements IAttachmentService {
 		return true;
 	}
 
-	/**
-	 * @param Account $account
-	 * @param array $attachment
-	 * @return int|null
-	 */
 	private function handleCloudAttachment(Account $account, array $attachment): ?int {
 		if (!isset($attachment['fileName'])) {
 			return null;

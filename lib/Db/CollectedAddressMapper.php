@@ -17,9 +17,6 @@ use function array_map;
  * @template-extends QBMapper<CollectedAddress>
  */
 class CollectedAddressMapper extends QBMapper {
-	/**
-	 * @param IDBConnection $db
-	 */
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'mail_coll_addresses');
 	}
@@ -109,7 +106,7 @@ class CollectedAddressMapper extends QBMapper {
 			->leftJoin('c', 'mail_accounts', 'a', $qb1->expr()->eq('c.user_id', 'a.user_id'))
 			->where($qb1->expr()->isNull('a.id'));
 		$result = $idsQuery->executeQuery();
-		$ids = array_map(static fn (array $row) => (int)$row['id'], $result->fetchAll());
+		$ids = array_map(static fn (array $row): int => (int)$row['id'], $result->fetchAll());
 		$result->closeCursor();
 
 		$qb2 = $this->db->getQueryBuilder();

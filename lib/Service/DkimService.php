@@ -14,8 +14,6 @@ use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Contracts\IDkimValidator;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MessageMapper;
 use OCP\ICache;
 use OCP\ICacheFactory;
 
@@ -23,27 +21,16 @@ class DkimService implements IDkimService {
 	private const CACHE_PREFIX = 'mail_dkim';
 	private const CACHE_TTL = 7 * 24 * 3600;
 
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
 	/** @var ICache */
 	private $cache;
 
-	private IDkimValidator $dkimValidator;
-
 	public function __construct(
-		IMAPClientFactory $clientFactory,
-		MessageMapper $messageMapper,
+		private readonly \OCA\Mail\IMAP\IMAPClientFactory $clientFactory,
+		private readonly \OCA\Mail\IMAP\MessageMapper $messageMapper,
 		ICacheFactory $cacheFactory,
-		IDkimValidator $dkimValidator,
+		private readonly IDkimValidator $dkimValidator,
 	) {
-		$this->clientFactory = $clientFactory;
-		$this->messageMapper = $messageMapper;
 		$this->cache = $cacheFactory->createLocal(self::CACHE_PREFIX);
-		$this->dkimValidator = $dkimValidator;
 	}
 
 	#[\Override]

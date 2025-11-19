@@ -19,7 +19,7 @@ class FilterBuilder {
 	private const SIEVE_NEWLINE = "\r\n";
 
 	public function __construct(
-		private ImapFlag $imapFlag,
+		private readonly ImapFlag $imapFlag,
 	) {
 	}
 
@@ -97,7 +97,7 @@ class FilterBuilder {
 			}
 
 			$actions = array_map(
-				static fn ($action) => "\t" . $action,
+				static fn ($action): string => "\t" . $action,
 				$actions
 			);
 
@@ -148,13 +148,13 @@ class FilterBuilder {
 	}
 
 	private function sanitizeDefinition(array $filters): array {
-		return array_map(static function ($filter) {
+		return array_map(static function (array $filter): array {
 			unset($filter['accountId'], $filter['id']);
-			$filter['tests'] = array_map(static function ($test) {
+			$filter['tests'] = array_map(static function (array $test): array {
 				unset($test['id']);
 				return $test;
 			}, $filter['tests']);
-			$filter['actions'] = array_map(static function ($action) {
+			$filter['actions'] = array_map(static function (array $action): array {
 				unset($action['id']);
 				return $action;
 			}, $filter['actions']);

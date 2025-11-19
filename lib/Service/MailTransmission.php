@@ -58,15 +58,15 @@ class MailTransmission implements IMailTransmission {
 	];
 
 	public function __construct(
-		private IMAPClientFactory $imapClientFactory,
-		private SmtpClientFactory $smtpClientFactory,
-		private IEventDispatcher $eventDispatcher,
-		private MailboxMapper $mailboxMapper,
-		private MessageMapper $messageMapper,
-		private LoggerInterface $logger,
-		private PerformanceLogger $performanceLogger,
-		private AliasesService $aliasesService,
-		private TransmissionService $transmissionService,
+		private readonly IMAPClientFactory $imapClientFactory,
+		private readonly SmtpClientFactory $smtpClientFactory,
+		private readonly IEventDispatcher $eventDispatcher,
+		private readonly MailboxMapper $mailboxMapper,
+		private readonly MessageMapper $messageMapper,
+		private readonly LoggerInterface $logger,
+		private readonly PerformanceLogger $performanceLogger,
+		private readonly AliasesService $aliasesService,
+		private readonly TransmissionService $transmissionService,
 	) {
 	}
 
@@ -166,7 +166,7 @@ class MailTransmission implements IMailTransmission {
 			if ($transport instanceof Horde_Mail_Transport_Smtphorde) {
 				try {
 					$transport->getSMTPObject()->logout();
-				} catch (\Throwable $e) {
+				} catch (\Throwable) {
 					// Handle silently as this is a resource usage optimization
 				}
 			}
@@ -252,17 +252,14 @@ class MailTransmission implements IMailTransmission {
 			$client->logout();
 		}
 
-		$this->eventDispatcher->dispatchTyped(new DraftSavedEvent($account, null));
+		$this->eventDispatcher->dispatchTyped(new DraftSavedEvent($account));
 		$perfLogger->step('emit post local draft save event');
 
 		$perfLogger->end();
 	}
 
 	/**
-	 * @param NewMessageData $message
-	 * @param Message|null $previousDraft
 	 *
-	 * @return array
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException

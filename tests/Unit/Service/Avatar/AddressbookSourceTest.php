@@ -18,8 +18,7 @@ class AddressbookSourceTest extends TestCase {
 	/** @var ContactsIntegration|PHPUnit_Framework_MockObject_MockObject */
 	private $ci;
 
-	/** @var AddressbookSource */
-	private $source;
+	private ?\OCA\Mail\Service\Avatar\AddressbookSource $source = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -29,7 +28,7 @@ class AddressbookSourceTest extends TestCase {
 		$this->source = new AddressbookSource($this->ci);
 	}
 
-	public function testFetch() {
+	public function testFetch(): void {
 		$email = 'john@doe.com';
 		$avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->ci->expects($this->once())
@@ -46,7 +45,7 @@ class AddressbookSourceTest extends TestCase {
 		$this->assertSame($avatar, $actualAvatar);
 	}
 
-	public function testFetchNoneFound() {
+	public function testFetchNoneFound(): void {
 		$email = 'john@doe.com';
 		$avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->ci->expects($this->once())

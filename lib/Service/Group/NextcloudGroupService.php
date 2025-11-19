@@ -28,10 +28,8 @@ class NextcloudGroupService implements IGroupService {
 
 	/**
 	 * Group's namespace
-	 *
-	 * @var string
 	 */
-	private $namespace = 'Nextcloud';
+	private string $namespace = 'Nextcloud';
 
 	public function __construct(IGroupManager $groupManager, IConfig $config) {
 		$this->groupManager = $groupManager;
@@ -54,7 +52,7 @@ class NextcloudGroupService implements IGroupService {
 		$groups = $this->groupManager->search($term);
 
 		return array_map(
-			static fn ($g) => [
+			static fn ($g): array => [
 				'id' => $g->getGID(),
 				'name' => $g->getDisplayName()
 			],
@@ -69,7 +67,7 @@ class NextcloudGroupService implements IGroupService {
 		}
 		$users = $this->groupManager->get($groupId)->getUsers();
 		return array_map(
-			static fn ($user) => [
+			static fn ($user): array => [
 				'id' => $user->getUID(),
 				'name' => $user->getDisplayName(),
 				'email' => $user->getEMailAddress()

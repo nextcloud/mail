@@ -24,11 +24,8 @@ class Version1040Date20200422130220 extends SimpleMigrationStep {
 	}
 
 	/**
-	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array $options
 	 *
-	 * @return ISchemaWrapper
 	 */
 	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ISchemaWrapper {
@@ -40,11 +37,8 @@ class Version1040Date20200422130220 extends SimpleMigrationStep {
 		return $schema;
 	}
 
-	/**
-	 * @return void
-	 */
 	#[\Override]
-	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
+	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options): void {
 		// Reset locks and sync tokens
 		$qb1 = $this->connection->getQueryBuilder();
 		$updateMailboxes = $qb1->update('mail_mailboxes')

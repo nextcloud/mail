@@ -9,7 +9,6 @@ namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message as DbMessage;
@@ -34,7 +33,6 @@ class AntiSpamServiceTest extends TestCase {
 	private SmtpClientFactory|MockObject $smtpClientFactory;
 	private MockObject|ImapMessageMapper $imapMessageMapper;
 	private LoggerInterface|MockObject $logger;
-	private MockObject|IMailTransmission $transmission;
 	private MailManager|MockObject $mailManager;
 
 	protected function setUp(): void {
@@ -42,7 +40,6 @@ class AntiSpamServiceTest extends TestCase {
 
 		$this->config = $this->createMock(IConfig::class);
 		$this->dbMessageMapper = $this->createMock(DbMessageMapper::class);
-		$this->transmission = $this->createMock(IMailTransmission::class);
 		$this->mailManager = $this->createMock(MailManager::class);
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->smtpClientFactory = $this->createMock(SmtpClientFactory::class);
@@ -108,7 +105,7 @@ class AntiSpamServiceTest extends TestCase {
 			->method('getAppValue')
 			->with('mail', 'antispam_reporting_spam')
 			->willReturn('test@test.com');
-		$messageData = NewMessageData::fromRequest(
+		NewMessageData::fromRequest(
 			$event->getAccount(),
 			'Learn as Junk',
 			'Learn as Junk',
@@ -151,7 +148,7 @@ class AntiSpamServiceTest extends TestCase {
 			->method('getAppValue')
 			->with('mail', 'antispam_reporting_spam')
 			->willReturn('test@test.com');
-		$messageData = NewMessageData::fromRequest(
+		NewMessageData::fromRequest(
 			$event->getAccount(),
 			'Learn as Junk',
 			'Learn as Junk',
@@ -217,7 +214,7 @@ class AntiSpamServiceTest extends TestCase {
 			->method('getAppValue')
 			->with('mail', 'antispam_reporting_spam')
 			->willReturn('test@test.com');
-		$messageData = NewMessageData::fromRequest(
+		NewMessageData::fromRequest(
 			$event->getAccount(),
 			'Learn as Not Junk',
 			'Learn as Not Junk',

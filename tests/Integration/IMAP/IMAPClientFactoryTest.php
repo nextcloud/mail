@@ -39,8 +39,7 @@ class IMAPClientFactoryTest extends TestCase {
 	/** @var ICacheFactory|MockObject */
 	private $cacheFactory;
 
-	/** @var IMAPClientFactory */
-	private $factory;
+	private ?\OCA\Mail\IMAP\IMAPClientFactory $factory = null;
 	private IEventDispatcher|MockObject $eventDispatcher;
 	private ITimeFactory|MockObject $timeFactory;
 	private HordeCacheFactory|MockObject $hordeCacheFactory;
@@ -65,10 +64,7 @@ class IMAPClientFactoryTest extends TestCase {
 		);
 	}
 
-	/**
-	 * @return Account
-	 */
-	private function getTestAccount() {
+	private function getTestAccount(): \OCA\Mail\Account {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(123);
 		$mailAccount->setEmail('user@domain.tld');
@@ -80,7 +76,7 @@ class IMAPClientFactoryTest extends TestCase {
 		return new Account($mailAccount);
 	}
 
-	public function testGetClient() {
+	public function testGetClient(): void {
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')
@@ -103,7 +99,7 @@ class IMAPClientFactoryTest extends TestCase {
 		$this->factory->getClient($account);
 	}
 
-	public function testClientConnectivity() {
+	public function testClientConnectivity(): void {
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')

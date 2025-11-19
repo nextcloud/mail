@@ -21,8 +21,7 @@ class GravatarSourceTest extends TestCase {
 	/** @var IClientService|PHPUnit_Framework_MockObject_MockObject */
 	private $clientService;
 
-	/** @var GravatarSource */
-	private $source;
+	private ?\OCA\Mail\Service\Avatar\GravatarSource $source = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -32,7 +31,7 @@ class GravatarSourceTest extends TestCase {
 		$this->source = new GravatarSource($this->clientService);
 	}
 
-	public function testFetchExisting() {
+	public function testFetchExisting(): void {
 		$email = 'hey@jancborchardt.net';
 		$client = $this->createMock(IClient::class);
 		$avatarFactory = $this->createMock(AvatarFactory::class);
@@ -58,7 +57,7 @@ class GravatarSourceTest extends TestCase {
 		$this->assertEquals($avatar, $actualAvatar);
 	}
 
-	public function testFetchHttpError() {
+	public function testFetchHttpError(): void {
 		$email = 'hey@jancborchardt.net';
 		$client = $this->createMock(IClient::class);
 		$avatarFactory = $this->createMock(AvatarFactory::class);

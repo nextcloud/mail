@@ -15,15 +15,12 @@ use OCP\BackgroundJob\TimedJob;
 use Psr\Log\LoggerInterface;
 
 class CleanupJob extends TimedJob {
-	private CleanupService $cleanupService;
-	private LoggerInterface $logger;
-
-	public function __construct(ITimeFactory $time,
-		CleanupService $cleanupService,
-		LoggerInterface $logger) {
+	public function __construct(
+		ITimeFactory $time,
+		private readonly CleanupService $cleanupService,
+		private readonly LoggerInterface $logger
+	) {
 		parent::__construct($time);
-		$this->cleanupService = $cleanupService;
-		$this->logger = $logger;
 
 		$this->setInterval(24 * 60 * 60);
 		$this->setTimeSensitivity(self::TIME_INSENSITIVE);

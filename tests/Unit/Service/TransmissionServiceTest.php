@@ -51,7 +51,7 @@ class TransmissionServiceTest extends TestCase {
 		);
 	}
 
-	public function testGetAddressList() {
+	public function testGetAddressList(): void {
 		$expected = new AddressList([Address::fromRaw('Bob', 'bob@test.com')]);
 		$recipient = new Recipient();
 		$recipient->setLabel('Bob');
@@ -68,7 +68,7 @@ class TransmissionServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetAttachments() {
+	public function testGetAttachments(): void {
 		$id = 1;
 		$expected = [[
 			'type' => 'local',
@@ -133,7 +133,7 @@ class TransmissionServiceTest extends TestCase {
 		$this->transmissionService->handleAttachment($account, ['id' => 1, 'type' => 'local']);
 	}
 
-	public function testGetSignMimePart() {
+	public function testGetSignMimePart(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -155,7 +155,7 @@ class TransmissionServiceTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
 	}
 
-	public function testGetSignMimePartNoCertId() {
+	public function testGetSignMimePartNoCertId(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -174,7 +174,7 @@ class TransmissionServiceTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMIME_SIGN_NO_CERT_ID, $localMessage->getStatus());
 	}
 
-	public function testGetSignMimePartNoCertFound() {
+	public function testGetSignMimePartNoCertFound(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -195,7 +195,7 @@ class TransmissionServiceTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMIME_SIGN_CERT, $localMessage->getStatus());
 	}
 
-	public function testGetSignMimePartFailedSigning() {
+	public function testGetSignMimePartFailedSigning(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -219,7 +219,7 @@ class TransmissionServiceTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMIME_SIGN_FAIL, $localMessage->getStatus());
 	}
 
-	public function testGetEncryptMimePart() {
+	public function testGetEncryptMimePart(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -247,7 +247,7 @@ class TransmissionServiceTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
 	}
 
-	public function testGetEncryptMimePartNoCertId() {
+	public function testGetEncryptMimePartNoCertId(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -264,7 +264,7 @@ class TransmissionServiceTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMIME_ENCRYPT_NO_CERT_ID, $localMessage->getStatus());
 	}
 
-	public function testGetEncryptMimePartNoAddressCerts() {
+	public function testGetEncryptMimePartNoAddressCerts(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -292,7 +292,7 @@ class TransmissionServiceTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMIME_ENCRYT_FAIL, $localMessage->getStatus());
 	}
 
-	public function testGetEncryptMimePartNoCert() {
+	public function testGetEncryptMimePartNoCert(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -321,7 +321,7 @@ class TransmissionServiceTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMIME_ENCRYPT_CERT, $localMessage->getStatus());
 	}
 
-	public function testGetEncryptMimePartEncryptFail() {
+	public function testGetEncryptMimePartEncryptFail(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();

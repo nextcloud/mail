@@ -13,9 +13,7 @@ use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Integration\GoogleIntegration;
 use OCA\Mail\Integration\MicrosoftIntegration;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
-use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
-use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Defaults;
 use OCP\IConfig;
@@ -27,38 +25,21 @@ use OCP\TextProcessing\SummaryTaskType;
 class AdminSettings implements ISettings {
 	/** @var IInitialStateService */
 	private $initialStateService;
-
-	/** @var ProvisioningManager */
-	private $provisioningManager;
-
-	/** @var AntiSpamService */
-	private $antiSpamService;
-
-	private GoogleIntegration $googleIntegration;
-	private MicrosoftIntegration $microsoftIntegration;
-	private IConfig $config;
-	private AiIntegrationsService $aiIntegrationsService;
-	private ClassificationSettingsService $classificationSettingsService;
+	private readonly IConfig $config;
 
 	public function __construct(
 		IInitialStateService $initialStateService,
-		ProvisioningManager $provisioningManager,
-		AntiSpamService $antiSpamService,
-		GoogleIntegration $googleIntegration,
-		MicrosoftIntegration $microsoftIntegration,
+		private readonly \OCA\Mail\Service\Provisioning\Manager $provisioningManager,
+		private readonly \OCA\Mail\Service\AntiSpamService $antiSpamService,
+		private readonly GoogleIntegration $googleIntegration,
+		private readonly MicrosoftIntegration $microsoftIntegration,
 		IConfig $config,
-		AiIntegrationsService $aiIntegrationsService,
-		ClassificationSettingsService $classificationSettingsService,
-		private Defaults $themingDefaults,
+		private readonly AiIntegrationsService $aiIntegrationsService,
+		private readonly ClassificationSettingsService $classificationSettingsService,
+		private readonly Defaults $themingDefaults,
 	) {
 		$this->initialStateService = $initialStateService;
-		$this->provisioningManager = $provisioningManager;
-		$this->antiSpamService = $antiSpamService;
-		$this->googleIntegration = $googleIntegration;
-		$this->microsoftIntegration = $microsoftIntegration;
 		$this->config = $config;
-		$this->aiIntegrationsService = $aiIntegrationsService;
-		$this->classificationSettingsService = $classificationSettingsService;
 	}
 
 	#[\Override]
@@ -149,12 +130,12 @@ class AdminSettings implements ISettings {
 	}
 
 	#[\Override]
-	public function getSection() {
+	public function getSection(): string {
 		return 'groupware';
 	}
 
 	#[\Override]
-	public function getPriority() {
+	public function getPriority(): int {
 		return 90;
 	}
 }

@@ -31,9 +31,7 @@ class FaviconSourceTest extends TestCase {
 	/** @var IMimeTypeDetector|MockObject */
 	private $mimeDetector;
 
-	/** @var FaviconSource */
-	private $source;
-	/** @var IRemoteHostValidator|(IRemoteHostValidator&MockObject)|MockObject */
+	private ?\OCA\Mail\Service\Avatar\FaviconSource $source = null;
 	private IRemoteHostValidator|MockObject $remoteHostValidator;
 
 	protected function setUp(): void {

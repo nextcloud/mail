@@ -110,7 +110,7 @@ class SieveControllerTest extends TestCase {
 			->method('createClient')
 			->willThrowException(new Exception('Computer says no'));
 
-		$response = $this->sieveController->updateAccount(2, true, 'localhost', 4190, 'user', 'password', '');
+		$this->sieveController->updateAccount(2, true, 'localhost', 4190, 'user', 'password', '');
 	}
 
 	public function testGetActiveScript(): void {

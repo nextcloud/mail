@@ -16,8 +16,8 @@ use OCP\SetupCheck\SetupResult;
 
 class MailTransport implements ISetupCheck {
 	public function __construct(
-		private IConfig $config,
-		private IL10N $l10n,
+		private readonly IConfig $config,
+		private readonly IL10N $l10n,
 	) {
 	}
 

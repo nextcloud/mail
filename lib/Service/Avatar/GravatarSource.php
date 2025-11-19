@@ -25,8 +25,6 @@ class GravatarSource implements IAvatarSource {
 
 	/**
 	 * Does this source query external services?
-	 *
-	 * @return bool
 	 */
 	#[\Override]
 	public function isExternal(): bool {
@@ -35,11 +33,10 @@ class GravatarSource implements IAvatarSource {
 
 	/**
 	 * @param string $email sender email address
-	 * @param AvatarFactory $factory
 	 * @return Avatar|null avatar URL if one can be found
 	 */
 	#[\Override]
-	public function fetch(string $email, AvatarFactory $factory) {
+	public function fetch(string $email, AvatarFactory $factory): ?\OCA\Mail\Service\Avatar\Avatar {
 		$gravatar = new Gravatar(['size' => 128], true);
 		$avatarUrl = $gravatar->avatar($email, ['d' => 404], true);
 
@@ -47,7 +44,7 @@ class GravatarSource implements IAvatarSource {
 
 		try {
 			$response = $client->get($avatarUrl);
-		} catch (Exception $exception) {
+		} catch (Exception) {
 			return null;
 		}
 

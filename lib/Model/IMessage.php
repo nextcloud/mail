@@ -26,8 +26,6 @@ interface IMessage {
 
 	/**
 	 * Get all flags set on this message
-	 *
-	 * @return array
 	 */
 	public function getFlags(): array;
 
@@ -36,54 +34,24 @@ interface IMessage {
 	 */
 	public function setFlags(array $flags);
 
-	/**
-	 * @return AddressList
-	 */
 	public function getFrom(): AddressList;
 
-	/**
-	 * @param AddressList $from
-	 */
 	public function setFrom(AddressList $from);
 
-	/**
-	 * @return AddressList
-	 */
 	public function getTo(): AddressList;
 
-	/**
-	 * @param AddressList $to
-	 */
 	public function setTo(AddressList $to);
 
-	/**
-	 * @return AddressList
-	 */
 	public function getReplyTo(): AddressList;
 
-	/**
-	 * @param AddressList $replyTo
-	 */
 	public function setReplyTo(AddressList $replyTo);
 
-	/**
-	 * @return AddressList
-	 */
 	public function getCC(): AddressList;
 
-	/**
-	 * @param AddressList $cc
-	 */
 	public function setCC(AddressList $cc);
 
-	/**
-	 * @return AddressList
-	 */
 	public function getBCC(): AddressList;
 
-	/**
-	 * @param AddressList $bcc
-	 */
 	public function setBcc(AddressList $bcc);
 
 	/**
@@ -91,29 +59,14 @@ interface IMessage {
 	 */
 	public function getInReplyTo();
 
-	/**
-	 * @param string $id
-	 */
 	public function setInReplyTo(string $id);
 
-	/**
-	 * @return string
-	 */
 	public function getSubject(): string;
 
-	/**
-	 * @param string $subject
-	 */
 	public function setSubject(string $subject);
 
-	/**
-	 * @return string
-	 */
 	public function getContent(): string;
 
-	/**
-	 * @param string $content
-	 */
 	public function setContent(string $content);
 
 	/**
@@ -122,27 +75,17 @@ interface IMessage {
 	public function getAttachments(): array;
 
 	/**
-	 * @param string $name
 	 * @param string $content attached with mime type 'application/octet-stream'
 	 */
 	public function addRawAttachment(string $name, string $content): void;
 
 	/**
-	 * @param string $name
 	 * @param string $content attached with mime type 'message/rfc822'
 	 *
-	 * @return void
 	 */
 	public function addEmbeddedMessageAttachment(string $name, string $content): void;
 
-	/**
-	 * @param File $file
-	 */
 	public function addAttachmentFromFiles(File $file);
 
-	/**
-	 * @param LocalAttachment $attachment
-	 * @param ISimpleFile $file
-	 */
 	public function addLocalAttachment(LocalAttachment $attachment, ISimpleFile $file);
 }

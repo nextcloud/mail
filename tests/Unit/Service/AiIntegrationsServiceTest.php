@@ -48,7 +48,6 @@ class AiIntegrationsServiceTest extends TestCase {
 	private IMailManager|MockObject $mailManager;
 	private TaskProcessingManager|MockObject $taskProcessingManager;
 	private TaskProcessingProvider|MockObject $taskProcessingProvider;
-	private TextProcessingProvider|MockObject $textProcessingProvider;
 	private IL10N|MockObject $l10n;
 	private IFactory|MockObject $l10nFactory;
 	private IUserManager|MockObject $userManager;
@@ -124,7 +123,7 @@ class AiIntegrationsServiceTest extends TestCase {
 
 		$this->textProcessingManager->expects($this->once())
 			->method('runTask')
-			->will($this->returnCallback(function (TextProcessingTask $task) {
+			->will($this->returnCallback(function (TextProcessingTask $task): string {
 				$task->setOutput('{"reply1":"reply1","reply2":"reply2"}');
 				return '';
 			}));
@@ -161,7 +160,7 @@ class AiIntegrationsServiceTest extends TestCase {
 
 		$this->textProcessingManager->expects($this->once())
 			->method('runTask')
-			->will($this->returnCallback(function (TextProcessingTask $task) {
+			->will($this->returnCallback(function (TextProcessingTask $task): string {
 				$task->setOutput('```json{"reply1":"reply1","reply2":"reply2"}```');
 				return '';
 			}));
@@ -231,7 +230,7 @@ class AiIntegrationsServiceTest extends TestCase {
 	/**
 	 * @dataProvider isLlmProcessingEnabledDataProvider
 	 */
-	public function testIsLlmProcessingEnabled(string $appConfigValue, bool $expected) {
+	public function testIsLlmProcessingEnabled(string $appConfigValue, bool $expected): void {
 		$this->config->expects(self::once())
 			->method('getAppValue')
 			->with('mail', 'llm_processing', 'no')
@@ -242,7 +241,7 @@ class AiIntegrationsServiceTest extends TestCase {
 
 	public function testCached(): void {
 		$account = new Account(new MailAccount());
-		$mailbox = new Mailbox();
+		new Mailbox();
 
 		$message1 = new Message();
 		$message1->setMessageId('300');
@@ -581,7 +580,7 @@ class AiIntegrationsServiceTest extends TestCase {
 
 		$this->textProcessingManager->expects($this->once())
 			->method('runTask')
-			->will($this->returnCallback(function (TextProcessingTask $task) {
+			->will($this->returnCallback(function (TextProcessingTask $task): string {
 				$task->setOutput('{"needsTranslation": true}, the message is in French that is the value returned is true ');
 				return '';
 			}));

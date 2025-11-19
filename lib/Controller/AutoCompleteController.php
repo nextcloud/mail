@@ -19,25 +19,19 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AutoCompleteController extends Controller {
-	private AutoCompleteService $service;
-	private ?string $userId;
-
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		AutoCompleteService $service,
-		?string $userId) {
+		private readonly AutoCompleteService $service,
+		private readonly ?string $userId
+	) {
 		parent::__construct($appName, $request);
-
-		$this->service = $service;
-		$this->userId = $userId;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param string $term
 	 *
-	 * @return JSONResponse
 	 */
 	#[TrapError]
 	public function index(string $term): JSONResponse {

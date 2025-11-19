@@ -18,8 +18,7 @@ class PreferencesControllerTest extends TestCase {
 	/** @var IUserPreferences|PHPUnit_Framework_MockObject_MockObject */
 	private $preferences;
 
-	/** @var PreferencesController */
-	private $controller;
+	private ?\OCA\Mail\Controller\PreferencesController $controller = null;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -30,7 +29,7 @@ class PreferencesControllerTest extends TestCase {
 		$this->controller = new PreferencesController($request, $this->preferences, 'george');
 	}
 
-	public function testGetPreference() {
+	public function testGetPreference(): void {
 		$this->preferences->expects($this->once())
 			->method('getPreference')
 			->with('george', 'test')
@@ -42,7 +41,7 @@ class PreferencesControllerTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testSetPreference() {
+	public function testSetPreference(): void {
 		$this->preferences->expects($this->once())
 			->method('setPreference')
 			->with('george', 'test')

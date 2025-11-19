@@ -10,20 +10,16 @@ declare(strict_types=1);
 namespace OCA\Mail\Notification;
 
 use OCA\Mail\AppInfo\Application;
-use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
 use OCP\Notification\INotification;
 use OCP\Notification\INotifier;
 use OCP\Notification\UnknownNotificationException;
 
 class Notifier implements INotifier {
-	private IFactory $factory;
-	private IURLGenerator $url;
+	private readonly IFactory $factory;
 
-	public function __construct(IFactory $factory,
-		IURLGenerator $url) {
+	public function __construct(IFactory $factory) {
 		$this->factory = $factory;
-		$this->url = $url;
 	}
 
 	#[\Override]
@@ -33,7 +29,6 @@ class Notifier implements INotifier {
 
 	/**
 	 * Human-readable name describing the notifier
-	 * @return string
 	 */
 	#[\Override]
 	public function getName(): string {
@@ -68,7 +63,7 @@ class Notifier implements INotifier {
 						'percentage' => [
 							'type' => 'highlight',
 							'id' => $messageParameters['id'],
-							'name' => (string)$messageParameters['quota_percentage'] . '%',
+							'name' => $messageParameters['quota_percentage'] . '%',
 						]
 					]);
 				break;

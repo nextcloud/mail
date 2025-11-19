@@ -79,8 +79,7 @@ class DeleteDraftListenerTest extends TestCase {
 		$newMessageData = $this->createMock(NewMessageData::class);
 		$event = new DraftSavedEvent(
 			$account,
-			$newMessageData,
-			null
+			$newMessageData
 		);
 		$this->messageMapper->expects($this->never())
 			->method('addFlag');
@@ -162,8 +161,7 @@ class DeleteDraftListenerTest extends TestCase {
 		$newMessageData = $this->createMock(NewMessageData::class);
 		$event = new DraftSavedEvent(
 			$account,
-			$newMessageData,
-			null
+			$newMessageData
 		);
 		$this->messageMapper->expects($this->never())
 			->method('addFlag');

@@ -11,7 +11,6 @@ namespace OCA\Mail\Service\Avatar;
 
 use Exception;
 use Horde_Mail_Rfc822_Address;
-use OCA\Mail\Vendor\Favicon\Favicon;
 use OCP\Files\IMimeTypeDetector;
 use OCP\Http\Client\IClientService;
 use OCP\Security\IRemoteHostValidator;
@@ -20,19 +19,17 @@ class FaviconSource implements IAvatarSource {
 	/** @var IClientService */
 	private $clientService;
 
-	/** @var Favicon */
-	private $favicon;
-
 	/** @var IMimeTypeDetector */
 	private $mimeDetector;
-	private IRemoteHostValidator $remoteHostValidator;
+	private readonly IRemoteHostValidator $remoteHostValidator;
 
-	public function __construct(IClientService $clientService,
-		Favicon $favicon,
+	public function __construct(
+		IClientService $clientService,
+		private readonly \OCA\Mail\Vendor\Favicon\Favicon $favicon,
 		IMimeTypeDetector $mimeDetector,
-		IRemoteHostValidator $remoteHostValidator) {
+		IRemoteHostValidator $remoteHostValidator
+	) {
 		$this->clientService = $clientService;
-		$this->favicon = $favicon;
 		$this->favicon->setCacheTimeout(0);
 		$this->mimeDetector = $mimeDetector;
 		$this->remoteHostValidator = $remoteHostValidator;
@@ -40,8 +37,6 @@ class FaviconSource implements IAvatarSource {
 
 	/**
 	 * Does this source query external services?
-	 *
-	 * @return bool
 	 */
 	#[\Override]
 	public function isExternal(): bool {
@@ -50,11 +45,10 @@ class FaviconSource implements IAvatarSource {
 
 	/**
 	 * @param string $email sender email address
-	 * @param AvatarFactory $factory
 	 * @return Avatar|null avatar URL if one can be found
 	 */
 	#[\Override]
-	public function fetch(string $email, AvatarFactory $factory) {
+	public function fetch(string $email, AvatarFactory $factory): ?\OCA\Mail\Service\Avatar\Avatar {
 		$horde = new Horde_Mail_Rfc822_Address($email);
 		// TODO: fall back to insecure HTTP?
 		$domain = 'https://' . $horde->host;
@@ -72,13 +66,13 @@ class FaviconSource implements IAvatarSource {
 		$client = $this->clientService->newClient();
 		try {
 			$response = $client->get($iconUrl);
-		} catch (Exception $exception) {
+		} catch (Exception) {
 			return null;
 		}
 
 		// Don't save 0 byte images
 		$body = $response->getBody();
-		if (strlen($body) === 0) {
+		if (strlen((string)$body) === 0) {
 			return null;
 		}
 		$mime = $this->mimeDetector->detectString($body);

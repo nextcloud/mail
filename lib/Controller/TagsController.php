@@ -23,30 +23,19 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class TagsController extends Controller {
-	private string $currentUserId;
-	private IMailManager $mailManager;
-
-	private AccountService $accountService;
-
-
-	public function __construct(IRequest $request,
-		string $UserId,
-		IMailManager $mailManager,
-		AccountService $accountService,
+	public function __construct(
+		IRequest $request,
+		private readonly string $currentUserId,
+		private readonly IMailManager $mailManager,
+		private readonly AccountService $accountService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->currentUserId = $UserId;
-		$this->mailManager = $mailManager;
-		$this->accountService = $accountService;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param string $displayName
-	 * @param string $color
 	 *
-	 * @return JSONResponse
 	 * @throws ClientException
 	 */
 	#[TrapError]
@@ -61,11 +50,7 @@ class TagsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @param string $displayName
-	 * @param string $color
 	 *
-	 * @return JSONResponse
 	 * @throws ClientException
 	 */
 	#[TrapError]
@@ -85,7 +70,7 @@ class TagsController extends Controller {
 	public function delete(int $id, int $accountId): JSONResponse {
 		try {
 			$accounts = $this->accountService->findByUserId($this->currentUserId);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 		$this->mailManager->deleteTag($id, $this->currentUserId, $accounts);

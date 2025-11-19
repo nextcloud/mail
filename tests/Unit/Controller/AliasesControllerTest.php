@@ -20,11 +20,10 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 
 class AliasesControllerTest extends TestCase {
-	private $controller;
-	private $appName = 'mail';
+	private ?\OCA\Mail\Controller\AliasesController $controller = null;
+	private string $appName = 'mail';
 	private $request;
-	private $userId = 'user12345';
-	private $alias;
+	private string $userId = 'user12345';
 
 	/** @var AliasMapper */
 	private $aliasMapper;
@@ -32,16 +31,11 @@ class AliasesControllerTest extends TestCase {
 	/** @var MailAccountMapper */
 	private $mailAccountMapper;
 
-	/** @var AliasesService */
-	private $aliasService;
+	private ?\OCA\Mail\Service\AliasesService $aliasService = null;
 
 	public function setUp(): void {
 		parent::setUp();
 		$this->request = $this->getMockBuilder('OCP\IRequest')
-			->getMock();
-
-		$this->alias = $this->getMockBuilder(\OCA\Mail\Db\Alias::class)
-			->disableOriginalConstructor()
 			->getMock();
 
 		$this->aliasMapper = $this->createMock(AliasMapper::class);

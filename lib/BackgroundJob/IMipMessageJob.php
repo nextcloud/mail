@@ -14,14 +14,13 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
 
 class IMipMessageJob extends TimedJob {
-	private IMipService $iMipService;
-
-	public function __construct(ITimeFactory $time,
-		IMipService $iMipService) {
+	public function __construct(
+		ITimeFactory $time,
+		private readonly IMipService $iMipService
+	) {
 		parent::__construct($time);
 
 		$this->setInterval(300);
-		$this->iMipService = $iMipService;
 	}
 
 	#[\Override]

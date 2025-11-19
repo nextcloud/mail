@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\HtmlPurify;
 
-use Closure;
 use HTMLPurifier_Config;
 use HTMLPurifier_URI;
 use HTMLPurifier_URIFilter;
@@ -28,20 +27,12 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	/** @var IRequest */
 	private $request;
 
-	/**
-	 * @var \Closure
-	 */
-	private $mapCidToAttachmentId;
-
-	/** @var array */
-	private $messageParameters;
-
-	public function __construct(array $messageParameters,
-		Closure $mapCidToAttachmentId,
+	public function __construct(
+		private array $messageParameters,
+		private readonly \Closure $mapCidToAttachmentId,
 		IURLGenerator $urlGenerator,
-		IRequest $request) {
-		$this->messageParameters = $messageParameters;
-		$this->mapCidToAttachmentId = $mapCidToAttachmentId;
+		IRequest $request
+	) {
 		$this->urlGenerator = $urlGenerator;
 		$this->request = $request;
 	}
@@ -98,7 +89,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 			$originalURL = $originalURL . urlencode(':' . $uri->port);
 		}
 
-		$originalURL = $originalURL . urlencode($uri->path);
+		$originalURL = $originalURL . urlencode((string)$uri->path);
 
 		if ($uri->query !== null) {
 			$originalURL = $originalURL . urlencode('?' . $uri->query);
@@ -121,7 +112,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 			null, $this->request->getServerHost(),
 			null,
 			$this->urlGenerator->linkToRoute('mail.proxy.proxy'),
-			'src=' . $originalURL . '&requesttoken=' . \OC::$server->getSession()->get('requesttoken'),
+			'src=' . $originalURL . '&requesttoken=' . \OCP\Server::get(\OCP\ISession::class)->get('requesttoken'),
 			null
 		);
 	}

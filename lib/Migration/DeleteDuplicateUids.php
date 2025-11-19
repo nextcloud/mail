@@ -16,7 +16,7 @@ use OCP\Migration\IRepairStep;
 
 class DeleteDuplicateUids implements IRepairStep {
 	public function __construct(
-		private IJobList $jobList,
+		private readonly IJobList $jobList,
 	) {
 	}
 

@@ -21,9 +21,6 @@ use Psr\Log\LoggerInterface;
 
 class MigrateImportantFromImapAndDbTest extends TestCase {
 	/** @var MockObject */
-	private $clientFactory;
-
-	/** @var MockObject */
 	private $client;
 
 	/** @var MockObject */
@@ -35,8 +32,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 	/** @var MockObject */
 	private $logger;
 
-	/** @var MigrateImportantFromImapAndDb */
-	private $migration;
+	private ?\OCA\Mail\Migration\MigrateImportantFromImapAndDb $migration = null;
 
 	protected function setUp(): void {
 		$this->client = $this->createMock(Horde_Imap_Client_Socket::class);
@@ -51,7 +47,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		parent::setUp();
 	}
 
-	public function testMigrateImportantOnImap() {
+	public function testMigrateImportantOnImap(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
 		$uids = [1,2,3];
@@ -69,7 +65,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->migration->migrateImportantOnImap($this->client, $account, $mailbox);
 	}
 
-	public function testMigrateImportantOnImapNoUids() {
+	public function testMigrateImportantOnImapNoUids(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
 		$uids = [];
@@ -86,7 +82,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->migration->migrateImportantOnImap($this->client, $account, $mailbox);
 	}
 
-	public function testMigrateImportantOnImapExceptionGetFlagged() {
+	public function testMigrateImportantOnImapExceptionGetFlagged(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
 		$e = new Horde_Imap_Client_Exception('', 0);
@@ -104,7 +100,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->migration->migrateImportantOnImap($this->client, $account, $mailbox);
 	}
 
-	public function testMigrateImportantOnImapExceptionOnFlag() {
+	public function testMigrateImportantOnImapExceptionOnFlag(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
@@ -127,7 +123,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->migration->migrateImportantOnImap($this->client, $account, $mailbox);
 	}
 
-	public function migrateImportantFromDb() {
+	public function migrateImportantFromDb(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setId(1);
@@ -146,7 +142,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->migration->migrateImportantFromDb($this->client, $account, $mailbox);
 	}
 
-	public function testMigrateImportantFromDbNoUids() {
+	public function testMigrateImportantFromDbNoUids(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setId(1);
@@ -164,7 +160,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->migration->migrateImportantFromDb($this->client, $account, $mailbox);
 	}
 
-	public function testMigrateImportantFromDbExceptionOnFlag() {
+	public function testMigrateImportantFromDbExceptionOnFlag(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setId(1);
