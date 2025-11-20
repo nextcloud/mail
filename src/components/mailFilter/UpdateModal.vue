@@ -147,6 +147,16 @@ export default {
 
 		createAction() {
 			this.clone.actions.push({ id: randomId(), type: 'fileinto' })
+			this.clone.actions.sort((a, b) => {
+				// ensure the stop action is always last
+				if (a.type === 'stop') {
+					return 1
+				}
+				if (b.type === 'stop') {
+					return -1
+				}
+				return 0
+			})
 		},
 
 		updateAction(action) {
