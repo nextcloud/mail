@@ -97,7 +97,8 @@ class OutboxServiceIntegrationTest extends TestCase {
 			Server::get(AttachmentStorage::class),
 			$mailManager,
 			Server::get(\OCA\Mail\IMAP\MessageMapper::class),
-			new NullLogger()
+			new NullLogger(),
+			Server::get(ITimeFactory::class)
 		);
 		$this->client = $this->getClient($this->account);
 		$this->mapper = Server::get(LocalMessageMapper::class);
