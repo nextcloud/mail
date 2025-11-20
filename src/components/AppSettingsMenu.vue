@@ -87,13 +87,6 @@
 						</NcFormBoxSwitch>
 
 						<NcFormBoxSwitch
-							v-model="useAutoTagging"
-							:disabled="toggleAutoTagging"
-							@update:modelValue="onToggleAutoTagging">
-							{{ autoTaggingText }}
-						</NcFormBoxSwitch>
-
-						<NcFormBoxSwitch
 							v-model="searchPriorityBody"
 							:disabled="loadingPrioritySettings"
 							@update:modelValue="onToggleSearchPriorityBody">
@@ -351,8 +344,6 @@ export default {
 			loadingInternalAddresses: false,
 			loadingReplySettings: false,
 
-			autoTaggingText: t('mail', 'Determine importance using machine learning'),
-
 			followUpReminderText: t('mail', 'Remind about messages that require a reply but received none'),
 			internalAddressText: t('mail', 'Highlight external addresses'),
 			toggleAutoTagging: false,
@@ -400,16 +391,6 @@ export default {
 
 			set(value) {
 				this.onToggleSearchPriorityBody(value)
-			},
-		},
-
-		useAutoTagging: {
-			get() {
-				return this.mainStore.getPreference('tag-classified-messages', 'true') === 'true'
-			},
-
-			set(value) {
-				this.onToggleAutoTagging(value)
 			},
 		},
 
@@ -609,23 +590,6 @@ export default {
 				Logger.error('could not save preferences', { error })
 				this.sortOrder = previousValue
 				showError(t('mail', 'Could not update preference'))
-			}
-		},
-
-		async onToggleAutoTagging(enabled) {
-			this.toggleAutoTagging = true
-
-			try {
-				await this.mainStore.savePreference({
-					key: 'tag-classified-messages',
-					value: enabled ? 'true' : 'false',
-				})
-			} catch (error) {
-				Logger.error('could not save preferences', { error })
-
-				showError(t('mail', 'Could not update preference'))
-			} finally {
-				this.toggleAutoTagging = false
 			}
 		},
 

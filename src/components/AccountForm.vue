@@ -37,6 +37,12 @@
 					:label="t('mail', 'Password')"
 					:required="!hasPasswordAlternatives"
 					@change="clearFeedback" />
+				<NcCheckboxRadioSwitch
+					id="auto-classification-enabled"
+					v-model="classificationEnabled"
+					:disabled="loading">
+					{{ t('mail', 'Enable mark as important classification') }}
+				</NcCheckboxRadioSwitch>
 			</Tab>
 			<Tab id="manual" key="manual" :name="t('mail', 'Manual')">
 				<NcInputField
@@ -218,6 +224,12 @@
 					:disabled="loading"
 					required
 					@change="clearFeedback" />
+				<NcCheckboxRadioSwitch
+					id="auto-classification-enabled"
+					v-model="classificationEnabled"
+					:disabled="loading">
+					{{ t('mail', 'Enable mark as important classification') }}
+				</NcCheckboxRadioSwitch>
 			</Tab>
 		</Tabs>
 		<div v-if="isGoogleAccount && !googleOauthUrl" class="account-form__google-sso">
@@ -320,6 +332,7 @@ export default {
 			mode: 'auto',
 			accountName: this.displayName,
 			emailAddress: this.email,
+			classificationEnabled: true,
 			autoConfig: {
 				password: '',
 			},
@@ -595,6 +608,7 @@ export default {
 					imapHost: this.manualConfig.imapHost.trim(),
 					smtpHost: this.manualConfig.smtpHost.trim(),
 					authMethod: this.useOauth ? 'xoauth2' : 'password',
+					classificationEnabled: this.classificationEnabled,
 				}
 				if (this.useOauth) {
 					delete data.imapPassword
