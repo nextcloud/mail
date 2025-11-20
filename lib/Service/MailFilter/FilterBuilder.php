@@ -75,12 +75,14 @@ class FilterBuilder {
 						SieveUtils::escapeString($action['mailbox'])
 					);
 				}
-				if ($action['type'] === 'addflag') {
+				if ($action['type'] === 'addflag' || $action['type'] === 'addsystemflag') {
 					$extensions[] = 'imap4flags';
-					$actions[] = sprintf(
-						'addflag "%s";',
-						SieveUtils::escapeString($this->sanitizeFlag($action['flag']))
-					);
+					if ($this->isSystemFlag($action['flag'])) {
+						$flag = SieveUtils::escapeString($action['flag']);
+					} else {
+						$flag = SieveUtils::escapeString($this->sanitizeFlag($action['flag']));
+					}
+					$actions[] = sprintf('addflag "%s";', $flag);
 				}
 				if ($action['type'] === 'keep') {
 					$actions[] = 'keep;';
@@ -161,5 +163,19 @@ class FilterBuilder {
 			$filter['priority'] = (int)$filter['priority'];
 			return $filter;
 		}, $filters);
+	}
+
+	private function isSystemFlag(string $flag): bool {
+		$flags = [
+			\Horde_Imap_Client::FLAG_ANSWERED,
+			\Horde_Imap_Client::FLAG_DELETED,
+			\Horde_Imap_Client::FLAG_DRAFT,
+			\Horde_Imap_Client::FLAG_FLAGGED,
+			\Horde_Imap_Client::FLAG_RECENT,
+			\Horde_Imap_Client::FLAG_SEEN,
+		];
+
+		// Check is done in lowercase to keep the notation from the RFC (e.g. \Seen)
+		return in_array(strtolower($flag), $flags, true);
 	}
 }
