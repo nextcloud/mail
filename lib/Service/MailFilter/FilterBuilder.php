@@ -82,6 +82,14 @@ class FilterBuilder {
 						SieveUtils::escapeString($this->sanitizeFlag($action['flag']))
 					);
 				}
+				if ($action['type'] === 'addsystemflag') {
+					$this->validateSystemFlag($action['flag']);
+					$extensions[] = 'imap4flags';
+					$actions[] = sprintf(
+						'addflag "%s";',
+						SieveUtils::escapeString($action['flag'])
+					);
+				}
 				if ($action['type'] === 'keep') {
 					$actions[] = 'keep;';
 				}
@@ -161,5 +169,19 @@ class FilterBuilder {
 			$filter['priority'] = (int)$filter['priority'];
 			return $filter;
 		}, $filters);
+	}
+
+	private function validateSystemFlag(string $flag): void {
+		$flags = [
+			\Horde_Imap_Client::FLAG_ANSWERED,
+			\Horde_Imap_Client::FLAG_DELETED,
+			\Horde_Imap_Client::FLAG_DRAFT,
+			\Horde_Imap_Client::FLAG_FLAGGED,
+			\Horde_Imap_Client::FLAG_SEEN,
+		];
+
+		if (!in_array(strtolower($flag), $flags, true)) {
+			throw new InvalidFilterInputException('Invalid filter input: ' . $flag);
+		}
 	}
 }
