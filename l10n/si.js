@@ -52,8 +52,6 @@ OC.L10N.register(
     "Certificate" : "සහතිකය",
     "Shares" : "බෙදාගැනීම්",
     "All" : "සියල්ල",
-    "Favorites" : "ප්‍රියතම",
-    "Accounts" : "Accounts",
-    "Loading …" : "පූරණය වෙමින් …"
+    "Favorites" : "ප්‍රියතම"
 },
 "nplurals=2; plural=(n != 1);");

@@ -56,8 +56,6 @@ OC.L10N.register(
     "Shared" : "ভাগাভাগিকৃত",
     "Shares" : "ভাগাভাগি",
     "All" : "সবাই",
-    "Favorites" : "প্রিয়জন",
-    "Accounts" : "Accounts",
-    "Keyboard shortcuts" : "কী-বোর্ড শর্টকাট"
+    "Favorites" : "প্রিয়জন"
 },
 "nplurals=2; plural=(n != 1);");

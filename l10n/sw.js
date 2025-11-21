@@ -102,6 +102,7 @@ OC.L10N.register(
     "Move folder" : "Move folder",
     "Clear cache" : "Clear cache",
     "Subscribed" : "Iliyojisajili",
+    "Delete all messages" : "Futa jumbe zote ",
     "New message" : "Ujumbe mpya",
     "Edit message" : "Hariri ujumbe",
     "Draft" : "Draft",
@@ -163,10 +164,6 @@ OC.L10N.register(
     "Discard changes" : "Discard changes",
     "Message sent" : "Ujumbe umetumwa",
     "Redirect" : "Elekeza upya",
-    "Continue to %s" : "Endelea katika %s",
-    "Accounts" : "Akaunti",
-    "Register" : "Sajiri",
-    "Keyboard shortcuts" : "Mikato ya keyboard",
-    "Loading …" : "Inapakia"
+    "Continue to %s" : "Endelea katika %s"
 },
 "nplurals=2; plural=(n != 1);");

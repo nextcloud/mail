@@ -47,6 +47,7 @@ OC.L10N.register(
     "Newest first" : "Primero lo nuevo",
     "Oldest first" : "Primero lo antiguo",
     "Shared with me" : "Compartióse conmigo",
+    "Privacy" : "Privacidá",
     "Security" : "Seguranza",
     "S/MIME" : "S/MIME",
     "About" : "Tocante a",
@@ -307,13 +308,6 @@ OC.L10N.register(
     "Could not load the message" : "Nun se pudo cargar el mensaxe",
     "Error loading message" : "Hebo un error al cargar el mensaxe",
     "Redirect" : "Redirixir",
-    "The link leads to %s" : "L'enllaz lleva a %s",
-    "Accounts" : "Cuentes",
-    "Gravatar settings" : "Configuración de Gravatar",
-    "Register" : "Rexistrase",
-    "Keyboard shortcuts" : "Atayos del tecláu",
-    "Loading messages …" : "Cargando los mensaxes…",
-    "Loading …" : "Cargando…",
-    "Saving tag …" : "Guardando la etiqueta…"
+    "The link leads to %s" : "L'enllaz lleva a %s"
 },
 "nplurals=2; plural=(n != 1);");

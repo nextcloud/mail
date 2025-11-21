@@ -115,7 +115,6 @@ OC.L10N.register(
     "Collapse folders" : "Maletendi dosierujojn",
     "_{total} message_::_{total} messages_" : ["{total} mesaĝo","{total} mesaĝoj"],
     "Mark all as read" : "Marki ĉion kiel legita",
-    "Mark all messages of this folder as read" : "Marki ĉiujn mesaĝojn el tiu dosierujo kiel legitaj",
     "Add subfolder" : "Aldoni subdosierujon",
     "Rename" : "Alinomi",
     "Clear cache" : "Forviŝi la kaŝmemoron",
@@ -197,17 +196,6 @@ OC.L10N.register(
     "Redirect" : "Alidirekto",
     "The link leads to %s" : "La ligilo iras al %s",
     "Continue to %s" : "Daŭrigi al %s",
-    "Accounts" : "Kontoj",
-    "Use Gravatar and favicon avatars" : "Uzi servon „Gravatar“ kaj avatarojn en retpaĝsimbolo",
-    "Register as application for mail links" : "Registriĝi kiel programeto por retpoŝtligiloj",
-    "Register" : "Registriĝi",
-    "Keyboard shortcuts" : "Fulmoklavoj",
-    "Contact or email address …" : "Kontakto aŭ retpoŝtadreso …",
-    "Subject …" : "Temo …",
-    "Write message …" : "Verku mesaĝon …",
-    "Saving draft …" : "Konservado de malneto...",
-    "email" : "retpoŝtadreso",
-    "Loading …" : "Ŝargas …",
-    "Signature …" : "Subskribo …"
+    "Mark all messages of this folder as read" : "Marki ĉiujn mesaĝojn el tiu dosierujo kiel legitaj"
 },
 "nplurals=2; plural=(n != 1);");

@@ -60,8 +60,6 @@
     "All" : "Alle",
     "Favorites" : "Favorit",
     "Sent" : "Sendt",
-    "Message sent" : "Melding sendt",
-    "Accounts" : "Accounts",
-    "Keyboard shortcuts" : "Tastatursnarvegar"
+    "Message sent" : "Melding sendt"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

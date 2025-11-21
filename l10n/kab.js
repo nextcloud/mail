@@ -73,9 +73,6 @@ OC.L10N.register(
     "Inbox" : "Tanaka",
     "Nextcloud Mail" : "Imayl n Nextcloud",
     "Message sent" : "Izen yettwazen",
-    "Continue to %s" : "Kemmel ar %s",
-    "Accounts" : "Imiḍanen",
-    "Keyboard shortcuts" : "Inegzumen n unasiw",
-    "Loading …" : "Asali ..."
+    "Continue to %s" : "Kemmel ar %s"
 },
 "nplurals=2; plural=(n != 1);");

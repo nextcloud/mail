@@ -100,6 +100,7 @@
     "Move folder" : "Move folder",
     "Clear cache" : "Clear cache",
     "Subscribed" : "Iliyojisajili",
+    "Delete all messages" : "Futa jumbe zote ",
     "New message" : "Ujumbe mpya",
     "Edit message" : "Hariri ujumbe",
     "Draft" : "Draft",
@@ -161,10 +162,6 @@
     "Discard changes" : "Discard changes",
     "Message sent" : "Ujumbe umetumwa",
     "Redirect" : "Elekeza upya",
-    "Continue to %s" : "Endelea katika %s",
-    "Accounts" : "Akaunti",
-    "Register" : "Sajiri",
-    "Keyboard shortcuts" : "Mikato ya keyboard",
-    "Loading …" : "Inapakia"
+    "Continue to %s" : "Endelea katika %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

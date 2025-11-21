@@ -82,11 +82,6 @@ OC.L10N.register(
     "All" : "All",
     "Favorites" : "Favorites",
     "Error while sharing file" : "Fayl almashishda xatolik yuz berdi",
-    "Continue to %s" : " %sni davom eting",
-    "Accounts" : "Akkaunt",
-    "Register" : "Roʻyxatdan oʻtish",
-    "Keyboard shortcuts" : "Klaviatura yorliqlari",
-    "email" : "email",
-    "Loading …" : "Yuklanmoqda…"
+    "Continue to %s" : " %sni davom eting"
 },
 "nplurals=1; plural=0;");

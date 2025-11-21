@@ -129,13 +129,6 @@ OC.L10N.register(
     "Forwarding to %s" : "Stuur aan na %s",
     "Click here if you are not automatically redirected within the next few seconds." : "Klik hier indien u nie binne die volgende paar sekondes outomaties herverwys word nie.",
     "Redirect" : "Herverwys",
-    "The link leads to %s" : "Die skakel lei na %s",
-    "Accounts" : "Accounts",
-    "Register" : "Registreer",
-    "Keyboard shortcuts" : "Sneltoetse",
-    "Contact or email address …" : "Kontak of e-posadres …",
-    "Write message …" : "Skryf boodskap…",
-    "email" : "e-pos",
-    "Loading …" : "Laai …"
+    "The link leads to %s" : "Die skakel lei na %s"
 },
 "nplurals=2; plural=(n != 1);");
