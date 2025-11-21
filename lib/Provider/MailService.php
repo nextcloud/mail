@@ -8,7 +8,9 @@ declare(strict_types=1);
  */
 namespace OCA\Mail\Provider;
 
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Provider\Command\MessageSend;
+use OCA\Mail\TaskProcessing\MailSendTask;
 use OCP\Mail\Provider\Address;
 use OCP\Mail\Provider\Exception\SendException;
 use OCP\Mail\Provider\IAddress;
@@ -16,7 +18,8 @@ use OCP\Mail\Provider\IMessage;
 use OCP\Mail\Provider\IMessageSend;
 use OCP\Mail\Provider\IService;
 use OCP\Mail\Provider\Message;
-
+use OCP\TaskProcessing\IManager as TaskProcessingManager;
+use OCP\TaskProcessing\Task;
 use Psr\Container\ContainerInterface;
 
 class MailService implements IService, IMessageSend {
@@ -178,12 +181,49 @@ class MailService implements IService, IMessageSend {
 	 * @since 4.0.0
 	 *
 	 * @param IMessage $message mail message object with all required parameters to send a message
-	 * @param array $options array of options reserved for future use
+	 * @param array{sendMode?:'instant'|'queued'|'deferred',sendDelay?:int} $options array of options reserved for future use
+	 *
+	 * $options['sendMode'] can be:
+	 * - 'instant': sends the message immediately (connects to the mail service right away)
+	 * - 'queued': adds the message to the task processing queue to be sent as soon as possible
+	 * - 'deferred': adds the message to the task processing queue to be sent after a delay
+	 * $options['sendDelay'] is only applicable if 'sendMode' is 'deferred' and specifies the delay in seconds before sending the message
 	 *
 	 * @throws SendException on failure, check message for reason
 	 */
 	#[\Override]
 	public function sendMessage(IMessage $message, array $options = []): void {
+		// if send mode is not set, default to queued
+		if (!isset($options['sendMode'])) {
+			$options['sendMode'] = 'queued';
+		}
+		// if send mode is not instant use task processing this sends the message as soon as possible
+		if ($options['sendMode'] !== 'instant') {
+			$taskProcessingManager = $this->container->get(TaskProcessingManager::class);
+			$availableTaskTypes = $taskProcessingManager->getAvailableTaskTypes();
+			// if task processing is available use it
+			if (isset($availableTaskTypes[MailSendTask::ID])) {
+				$task = new Task(
+					MailSendTask::ID,
+					[
+						'userId' => $this->userId,
+						'serviceId' => $this->serviceId,
+						'message' => $message,
+						'options' => $options,
+					],
+					Application::APP_ID,
+					null
+				);
+				
+				if ($options['sendMode'] === 'deferred' && isset($options['sendDelay']) && is_int($options['sendDelay'])) {
+					$task->setScheduledAt(time() + $options['sendDelay']);
+				}
+
+				$taskProcessingManager->scheduleTask($task);
+				return;
+			}
+		}
+		// fallback to instant send
 		/** @var MessageSend $cmd */
 		$cmd = $this->container->get(MessageSend::class);
 		// perform action
