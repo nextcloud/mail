@@ -95,9 +95,6 @@ OC.L10N.register(
     "Junk" : "хэрэггүй",
     "Sent" : "илгээсэн",
     "Trash" : "хог",
-    "Error loading message" : "алдаатай ачааллах зурвас",
-    "Accounts" : "Accounts",
-    "email" : "цахим шуудан",
-    "Loading …" : "Уншиж байна..."
+    "Error loading message" : "алдаатай ачааллах зурвас"
 },
 "nplurals=2; plural=(n != 1);");

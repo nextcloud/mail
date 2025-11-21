@@ -233,22 +233,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Clique aqui se não for automaticamente redirecionado dentro de segundos.",
     "Redirect" : "Redirecionar",
     "The link leads to %s" : "A ligação aponta para %s",
-    "Continue to %s" : "Continuar para %s",
-    "Accounts" : "Contas",
-    "Newest" : "Newest",
-    "Oldest" : "Oldest",
-    "Use Gravatar and favicon avatars" : "Usar Gravatar e favicon avatars",
-    "Register as application for mail links" : "Registar como aplicação para ligações de correio",
-    "Register" : "Registar",
-    "Trusted senders" : "Remetentes confiáveis",
-    "Keyboard shortcuts" : "Atalhos de teclado",
-    "Contact or email address …" : "Contacto ou endereço de email",
-    "Subject …" : "Assunto...",
-    "Write message …" : "Nova mensagem...",
-    "Saving draft …" : "A guardar rascunho ...",
-    "email" : "email",
-    "Loading …" : "A carregar...",
-    "Contact name …" : "Nome do contacto...",
-    "Signature …" : "Assinatura..."
+    "Continue to %s" : "Continuar para %s"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

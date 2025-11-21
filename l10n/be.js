@@ -153,6 +153,7 @@ OC.L10N.register(
     "Rename" : "Перайменаваць",
     "Move folder" : "Перамясціць папку",
     "Clear cache" : "Ачысціць кэш",
+    "Delete all messages" : "Выдаліць усе паведамленні",
     "Translate this message to {language}" : "Перакласці гэта паведамленне на {language}",
     "New message" : "Новае паведамленне",
     "Edit message" : "Рэдагаваць паведамленне",
@@ -264,13 +265,6 @@ OC.L10N.register(
     "Could not load your message" : "Не ўдалося загрузіць ваша паведамленне",
     "Could not load the message" : "Не ўдалося загрузіць паведамленне",
     "Error loading message" : "Памылка пры загрузцы паведамлення",
-    "Forwarding to %s" : "Перасыланне да %s",
-    "Accounts" : "Уліковыя запісы",
-    "Privacy and security" : "Прыватнасць і бяспека",
-    "Keyboard shortcuts" : "Спалучэнні клавіш",
-    "Subject …" : "Тэма …",
-    "Write message …" : "Напішыце паведамленне …",
-    "Saving draft …" : "Захаванне чарнавіка …",
-    "Loading …" : "Загрузка …"
+    "Forwarding to %s" : "Перасыланне да %s"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

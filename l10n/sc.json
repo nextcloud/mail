@@ -339,25 +339,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Incarca inoghe chi no ses torradu a deretare in manera automàtica intro de pagu segundos.",
     "Redirect" : "Torra a deretare",
     "The link leads to %s" : "Su ligòngiu deretat a %s",
-    "Continue to %s" : "Sighi in %s",
-    "Put my text to the bottom of a reply instead of on top of it." : "Pone su testu miu a su fundu de una resposta imbetzes che a pitzus.",
-    "Accounts" : "Accounts",
-    "Newest" : "Prus nou",
-    "Use Gravatar and favicon avatars" : "Imprea Gravatar e avatar favicon",
-    "Register as application for mail links" : "Registra comente aplicatzione pro is ligòngios de posta",
-    "Register" : "Registra",
-    "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Permite a s'aplicatzione de regòllere datos subra is interatziones tuas. In sa base de custos datos, s'aplicatziones s'at a adatare a is preferèntzias tuas. Is datos ant a èssere archiviados in manera locale isceti. ",
-    "Trusted senders" : "Imbiantes afidàbiles",
-    "Keyboard shortcuts" : "Curtziadòrgios de tecladu",
-    "Contact or email address …" : "Cuntatu o indiritzu de posta ...",
-    "Subject …" : "Ogetu",
-    "Write message …" : "Iscrie messàgiu ...",
-    "Saving draft …" : "Sarvende sa brutacòpia ...",
-    "email" : "posta eletrònica",
-    "Loading …" : "Carrrighende …",
-    "Contact name …" : "Nùmene de su cuntatu ...",
-    "Signature …" : "Firma ...",
-    "Saving new tag name …" : "Sarvende nùmene de eticheta nou...",
-    "Saving tag …" : "Sarvende s'eticheta ..."
+    "Continue to %s" : "Sighi in %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

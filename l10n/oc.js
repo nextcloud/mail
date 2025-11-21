@@ -117,11 +117,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "Message sent" : "Messatge mandat",
     "Error loading message" : "Error al moment del cargament del messatge",
-    "Continue to %s" : "Contunhar cap a %s",
-    "Accounts" : "Accounts",
-    "Register" : "S'inscriure",
-    "Keyboard shortcuts" : "Acorchis de clavièr",
-    "Write message …" : "Escriure un messatge…",
-    "Loading …" : "Cargament…"
+    "Continue to %s" : "Contunhar cap a %s"
 },
 "nplurals=2; plural=(n > 1);");

@@ -44,8 +44,6 @@ OC.L10N.register(
     "Port" : "துறை ",
     "Group" : "Group",
     "All" : "எல்லாம்",
-    "Favorites" : "விருப்பங்கள்",
-    "Accounts" : "Accounts",
-    "Keyboard shortcuts" : "விசைப்பலகை குறுக்குவழிகள்"
+    "Favorites" : "விருப்பங்கள்"
 },
 "nplurals=2; plural=(n != 1);");

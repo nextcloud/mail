@@ -127,11 +127,6 @@ OC.L10N.register(
     "Error loading message" : "Terjadi kesalahan saat memuat pesan",
     "Forwarding to %s" : "Teruskan ke %s",
     "Redirect" : "Mengalihkan",
-    "Continue to %s" : "Lanjutkan ke %s",
-    "Accounts" : "Accounts",
-    "Register" : "Daftar",
-    "Keyboard shortcuts" : "Pintasan keyboard",
-    "email" : "email",
-    "Loading …" : "Memuat …"
+    "Continue to %s" : "Lanjutkan ke %s"
 },
 "nplurals=1; plural=0;");

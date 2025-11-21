@@ -87,7 +87,6 @@ OC.L10N.register(
     "Show all folders" : "Dangos pob ffolder",
     "Collapse folders" : "Cwympo ffolderi",
     "Mark all as read" : "Marcio'r cyfan wedi'u darllen",
-    "Mark all messages of this folder as read" : "Marcio'r holl negeseuon y ffolder hon fel y'u darllenwyd",
     "Add subfolder" : "Ychwanegu is-ffolder",
     "Rename" : "Ailenwi",
     "New message" : "Neges newydd",
@@ -133,11 +132,6 @@ OC.L10N.register(
     "Redirect" : "Ailgyfeirio",
     "The link leads to %s" : "Mae'r ddolen yn arwain at %s",
     "Continue to %s" : "Parhau i %s",
-    "Accounts" : "Accounts",
-    "Use Gravatar and favicon avatars" : "Defnyddiwch Gravatar ac afatarau favicon",
-    "Register" : "Cofrestru",
-    "Keyboard shortcuts" : "Llwybrau byr bysellfwrdd",
-    "Saving draft …" : "Yn cadw drafft …",
-    "Loading …" : "Yn llwytho …"
+    "Mark all messages of this folder as read" : "Marcio'r holl negeseuon y ffolder hon fel y'u darllenwyd"
 },
 "nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;");

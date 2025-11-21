@@ -167,7 +167,6 @@
     "Delete folder" : "מחק תיקייה",
     "An error occurred, unable to rename the mailbox." : "אירעה שגיאה, לא ניתן לשנות את שם תיבת הדוא״ל.",
     "Mark all as read" : "סימון הכול כנקרא",
-    "Mark all messages of this folder as read" : "סימון כל ההודעות בתיקייה הזאת כנקראו",
     "Add subfolder" : "הוספת תת־תיקייה",
     "Rename" : "שינוי שם",
     "Clear cache" : "פינוי מטמון",
@@ -269,20 +268,6 @@
     "Redirect" : "הפנייה",
     "The link leads to %s" : "הקישור מוביל אל %s",
     "Continue to %s" : "ממשיך אל %s",
-    "Accounts" : "Accounts",
-    "Use Gravatar and favicon avatars" : "להשתמש בסמלים של Gravatar ושל favicon",
-    "Register as application for mail links" : "רישום כיישום לטיפול בקישורי דוא״ל (mailto)",
-    "Register" : "רישום",
-    "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "לאפשר ליישומן לאסוף נתונים על אופן השימוש שלך. על בסיס המידע הזה, היישומון יתאים את עצמו להעדפות שלך. הנתונים יישמרו מקומית בלבד.",
-    "Trusted senders" : "שולחים מהימנים",
-    "Keyboard shortcuts" : "קיצורי מקלדת",
-    "Contact or email address …" : "איש קשר או כתובת דוא״ל…",
-    "Subject …" : "נושא…",
-    "Write message …" : "כתיבת הודעה…",
-    "Saving draft …" : "הטיוטה נשמרת…",
-    "email" : "דוא״ל",
-    "Loading …" : "בטעינה",
-    "Signature …" : "חתימה…",
-    "Saving tag …" : "התגית נשמרת…"
+    "Mark all messages of this folder as read" : "סימון כל ההודעות בתיקייה הזאת כנקראו"
 },"pluralForm" :"nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;"
 }

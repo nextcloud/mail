@@ -148,7 +148,6 @@ OC.L10N.register(
     "Tag" : "Birkas",
     "delete" : "dzēst",
     "Edit" : "Labot",
-    "Enable classification of important mails by default" : "Pēc noklusējuma iespējot svarīgu e-pasta ziņojumu šķirošanu",
     "Reset" : "Atiestatīt",
     "Client ID" : "Klienta ID",
     "User" : "Lietotājs",
@@ -183,10 +182,6 @@ OC.L10N.register(
     "Redirect" : "Novirzīt",
     "The link leads to %s" : "Saite, kas ved uz %s",
     "Continue to %s" : "Turpināt %s",
-    "Accounts" : "Konti",
-    "Keyboard shortcuts" : "Tastatūras saīsnes",
-    "Write message …" : "Rakstiet ziņu...",
-    "email" : "e-pasts",
-    "Loading …" : "Ielādē…"
+    "Enable classification of important mails by default" : "Pēc noklusējuma iespējot svarīgu e-pasta ziņojumu šķirošanu"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");
