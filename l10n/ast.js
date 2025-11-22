@@ -173,6 +173,7 @@ OC.L10N.register(
     "Delete folder" : "Desaniciar la carpeta",
     "An error occurred, unable to rename the mailbox." : "Prodúxose un error, nun ye posible renomar la bandexa de corréu.",
     "Rename" : "Renomar",
+    "Delete all messages" : "Desaniciar tolos mensaxes",
     "Outbox" : "Bandexa de salida",
     "New message" : "Mensaxe nuevu",
     "Edit message" : "Editar el mensaxe",

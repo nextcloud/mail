@@ -390,6 +390,7 @@ OC.L10N.register(
     "Clear locally cached data, in case there are issues with synchronization." : "مسح البيانات المخزنة مؤقتًا محليًا في حالة وجود مشكلات في المزامنة.",
     "Subscribed" : "مُشترِكٌ subscribed",
     "Sync in background" : "مُزامنة في الخلفية",
+    "Delete all messages" : "مسح جميع الرسائل",
     "Outbox" : "صندوق الصادر ",
     "New message" : "رسالة جديدة",
     "Edit message" : "تحرير رسالة",
