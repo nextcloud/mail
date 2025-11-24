@@ -61,6 +61,7 @@ class MailboxesController extends Controller {
 	 * @NoAdminRequired
 	 *
 	 * @param int $accountId
+	 * @param bool $forceSync
 	 *
 	 * @return JSONResponse
 	 *
@@ -68,10 +69,10 @@ class MailboxesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
-	public function index(int $accountId): JSONResponse {
+	public function index(int $accountId, bool $forceSync = false): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
-		$mailboxes = $this->mailManager->getMailboxes($account);
+		$mailboxes = $this->mailManager->getMailboxes($account, $forceSync);
 		return new JSONResponse([
 			'id' => $accountId,
 			'email' => $account->getEmail(),
