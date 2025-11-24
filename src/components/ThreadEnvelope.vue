@@ -490,6 +490,11 @@ export default {
 			const { envelope } = this.$refs
 			const envelopeWidth = (envelope && envelope.clientWidth) || 250
 			const spaceToFill = envelopeWidth - 500 + this.recomputeMenuSize
+
+			if (envelopeWidth < 400) {
+				return 0
+			}
+
 			return Math.floor(spaceToFill / 44)
 		},
 
@@ -1201,6 +1206,30 @@ export default {
 			border-radius: var(--border-radius);
 			min-height: 68px; /* prevents jumping between open/collapsed */
 
+			.left {
+				display: flex;
+				align-items: center;
+				min-width: 0;
+				flex: 1 1 auto;
+				gap: 8px;
+
+				.envelope__header__left__sender-subject-tags {
+					min-width: 0;
+					width: 100%;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
+			}
+
+			.right {
+				flex-shrink: 0;
+				margin-inline-start: auto;
+				display: flex;
+				align-items: center;
+				gap: 4px;
+			}
+
 			&__avatar {
 				position: relative;
 
@@ -1260,11 +1289,8 @@ export default {
 			}
 
 			&__unsubscribe {
+				flex-shrink: 0;
 				color: var(--color-text-maxcontrast);
-			}
-			&__left__sender-subject-tags {
-				white-space: nowrap;
-				width: 100%;
 			}
 		}
 
@@ -1338,12 +1364,5 @@ export default {
 		font-weight: normal;
 		display: inline;
 		align-items: center;
-	}
-	@media only screen and (max-width: 400px) {
-		.sender {
-			text-overflow: ellipsis;
-			overflow: hidden;
-			width: 180px;
-		}
 	}
 </style>

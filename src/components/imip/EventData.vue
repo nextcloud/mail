@@ -191,7 +191,7 @@ export default {
 	gap: 5px;
 
 	&__heading {
-		margin-inline-start: 36px;
+		margin-inline-start: 8px;
 	}
 
 	&__row {

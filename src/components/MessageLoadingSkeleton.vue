@@ -99,4 +99,10 @@ export default {
 	 }
 }
 
+@media only screen and (max-width: 1024px) {
+    .message-loading-skeleton__body {
+        margin-inline-start: 12px;
+    }
+}
+
 </style>
