@@ -18,6 +18,7 @@ OC.L10N.register(
     "Signature" : "Saini",
     "Filters" : "Filters",
     "Go back" : "Rudi nyuma",
+    "Change name" : "Change name",
     "Email address" : "Anwani ya barua pepe",
     "Cancel" : "Cancel",
     "General" : "Kuu",
