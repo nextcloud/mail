@@ -4,6 +4,7 @@
  */
 
 export function groupEnvelopesByDate(envelopes, syncTimestamp, sortOrder = 'newest') {
+	const otherEnvelopes = envelopes.filter((env) => !env.flags.flagged)
 	const now = new Date(syncTimestamp)
 
 	const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000)
@@ -26,7 +27,7 @@ export function groupEnvelopesByDate(envelopes, syncTimestamp, sortOrder = 'newe
 	const monthsMap = {}
 	const yearsMap = {}
 
-	for (const envelope of envelopes) {
+	for (const envelope of otherEnvelopes) {
 		const date = new Date(envelope.dateInt * 1000)
 
 		if (date >= oneHourAgo) {

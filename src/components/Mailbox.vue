@@ -17,13 +17,27 @@
 			:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger folders.')" />
 		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
 		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
-		<template v-else-if="hasGroupedEnvelopes && !isPriorityInbox">
+		<template v-if="pinnedEnvelopes.length > 0">
+			<SectionTitle class="section-title" :name="t('mail', 'Pinned messages')" />
+			<EnvelopeList
+				:account="account"
+				:load-more-label="t('mail', 'Load more pinned messages')"
+				:mailbox="mailbox"
+				:search-query="localSearchQuery"
+				:envelopes="pinnedEnvelopes"
+				:loading-more="loadingMore"
+				:load-more-button="showLoadMore"
+				:skip-transition="skipListTransition"
+				@delete="onDelete"
+				@load-more="loadMore" />
+		</template>
+		<template v-if="hasGroupedEnvelopes && !isPriorityInbox && hasMessages && !loadingEnvelopes && !loadingCacheInitialization ">
 			<div v-for="[label, group] in groupEnvelopes" :key="label">
 				<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
 				<EnvelopeList
 					:account="account"
 					:mailbox="mailbox"
-					:search-query="searchQuery"
+					:search-query="localSearchQuery"
 					:envelopes="group"
 					:loading-more="false"
 					:load-more-button="false"
@@ -36,7 +50,7 @@
 			:account="account"
 			:load-more-label="loadMoreLabel"
 			:mailbox="mailbox"
-			:search-query="searchQuery"
+			:search-query="localSearchQuery"
 			:envelopes="envelopesToShow"
 			:loading-more="loadingMore"
 			:load-more-button="showLoadMore"
@@ -48,6 +62,7 @@
 
 <script>
 import { showError, showWarning } from '@nextcloud/dialogs'
+import { t } from '@nextcloud/l10n'
 import { mapStores } from 'pinia'
 import { findIndex, propEq } from 'ramda'
 import EmptyMailbox from './EmptyMailbox.vue'
@@ -141,6 +156,7 @@ export default {
 			endReached: false,
 			syncedMailboxes: new Set(),
 			skipListTransition: false,
+			loadingPinned: true,
 		}
 	},
 
@@ -150,8 +166,20 @@ export default {
 			return this.mainStore.getPreference('sort-order', 'newest')
 		},
 
+		localSearchQuery() {
+			return this.loadingPinned ? (this.searchQuery ? this.searchQuery + ' is:starred' : 'is:starred') : this.searchQuery
+		},
+
+		allEnvelopes() {
+			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.localSearchQuery)
+		},
+
+		pinnedEnvelopes() {
+			return this.mainStore.getEnvelopes(this.mailbox.databaseId, 'is:starred')
+		},
+
 		envelopes() {
-			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
+			return this.allEnvelopes.filter((env) => !env.flags.flagged)
 		},
 
 		envelopesToShow() {
@@ -169,7 +197,7 @@ export default {
 			if (this.hasGroupedEnvelopes) {
 				return this.groupEnvelopes.some(([, group]) => group.length > 0)
 			}
-			return this.envelopesToShow?.length > 0
+			return this.envelopesToShow?.length > 0 || this.pinnedEnvelopes?.length > 0
 		},
 
 		showLoadMore() {
@@ -179,6 +207,7 @@ export default {
 
 	watch: {
 		mailbox() {
+			this.loadingPinned = true
 			this.loadEnvelopes()
 				.then(() => {
 					logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.query}) after folder change`)
@@ -209,7 +238,7 @@ export default {
 		}
 
 		await this.loadEnvelopes()
-		logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.searchQuery}) after mount`)
+		logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.localSearchQuery}) after mount`)
 		await this.sync(false)
 
 		await this.prefetchOtherMailboxes()
@@ -240,7 +269,7 @@ export default {
 		},
 
 		async loadEnvelopes() {
-			logger.debug(`Fetching envelopes for folder ${this.mailbox.databaseId} (${this.searchQuery})`, this.mailbox)
+			logger.debug(`Fetching envelopes for folder ${this.mailbox.databaseId} (${this.localSearchQuery})`, this.mailbox)
 			if (!this.syncedMailboxes.has(this.mailbox.databaseId)) {
 				// Only trigger skeleton if we didn't sync envelopes yet
 				this.loadingEnvelopes = true
@@ -257,7 +286,7 @@ export default {
 			try {
 				const envelopes = await this.mainStore.fetchEnvelopes({
 					mailboxId: this.mailbox.databaseId,
-					query: this.searchQuery,
+					query: this.localSearchQuery,
 					limit: this.initialPageSize,
 				})
 
@@ -268,24 +297,24 @@ export default {
 			} catch (error) {
 				await matchError(error, {
 					[MailboxLockedError.getName()]: async (error) => {
-						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) is locked`, { error })
+						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.localSearchQuery}) is locked`, { error })
 						await wait(15 * 1000)
 						// Keep trying
 						await this.loadEnvelopes()
 					},
 					[MailboxNotCachedError.getName()]: async (error) => {
-						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) not cached. Triggering initialization`, { error })
+						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.localSearchQuery}) not cached. Triggering initialization`, { error })
 						this.loadingEnvelopes = false
 
 						try {
 							await this.initializeCache()
 						} catch (error) {
-							logger.error(`Could not initialize cache of folder ${this.mailbox.databaseId} (${this.searchQuery})`, { error })
+							logger.error(`Could not initialize cache of folder ${this.mailbox.databaseId} (${this.localSearchQuery})`, { error })
 							this.error = error
 						}
 					},
 					default: (error) => {
-						logger.error(`Could not fetch envelopes of folder ${this.mailbox.databaseId} (${this.searchQuery})`, { error })
+						logger.error(`Could not fetch envelopes of folder ${this.mailbox.databaseId} (${this.localSearchQuery})`, { error })
 						this.loadingEnvelopes = false
 						this.error = error
 					},
@@ -306,9 +335,15 @@ export default {
 			try {
 				const envelopes = await this.mainStore.fetchNextEnvelopePage({
 					mailboxId: this.mailbox.databaseId,
-					query: this.searchQuery,
+					query: this.localSearchQuery,
 				})
-				if (envelopes.length === 0) {
+				if (envelopes.length === 0 && this.loadingPinned) {
+					logger.info('no more pinned envelopes, loading unpinned envelopes')
+					this.loadingPinned = false
+					this.expanded = false
+					await this.loadEnvelopes()
+					return
+				} else if (envelopes.length === 0) {
 					logger.info('envelope list end reached')
 					this.endReached = true
 				}
@@ -474,7 +509,7 @@ export default {
 					}))
 					break
 				case 'refresh':
-					logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.searchQuery}) per shortcut`)
+					logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.localSearchQuery}) per shortcut`)
 					this.sync(false)
 
 					break
@@ -504,7 +539,7 @@ export default {
 
 		async sync(init = false) {
 			if (this.refreshing) {
-				logger.debug(`already sync'ing folder ${this.mailbox.databaseId} (${this.searchQuery}), aborting`, { init })
+				logger.debug(`already sync'ing folder ${this.mailbox.databaseId} (${this.localSearchQuery}), aborting`, { init })
 				return
 			}
 
@@ -512,7 +547,7 @@ export default {
 			try {
 				await this.mainStore.syncEnvelopes({
 					mailboxId: this.mailbox.databaseId,
-					query: this.searchQuery,
+					query: this.localSearchQuery,
 					init,
 				})
 			} catch (error) {
@@ -533,7 +568,7 @@ export default {
 				throw error
 			} finally {
 				this.refreshing = false
-				logger.debug(`finished sync'ing folder ${this.mailbox.databaseId} (${this.searchQuery})`, { init })
+				logger.debug(`finished sync'ing folder ${this.mailbox.databaseId} (${this.localSearchQuery})`, { init })
 
 				this.mainStore.updateSyncTimestamp()
 			}
@@ -545,7 +580,7 @@ export default {
 			// Get a new message
 			this.mainStore.fetchNextEnvelopes({
 				mailboxId: this.mailbox.databaseId,
-				query: this.searchQuery,
+				query: this.localSearchQuery,
 				quantity: 1,
 			})
 			const idx = findIndex(propEq(id, 'databaseId'), this.envelopes)
@@ -591,7 +626,7 @@ export default {
 				return
 			}
 			try {
-				logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.searchQuery}) in background`)
+				logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.localSearchQuery}) in background`)
 				await this.sync(false)
 			} catch (error) {
 				logger.error('Background sync failed: ' + error.message, { error })
