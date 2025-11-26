@@ -156,6 +156,7 @@ OC.L10N.register(
     "Valid until" : "Derīgs līdz",
     "Certificate" : "Sertifikāts",
     "Submit" : "Iesniegt",
+    "Guest" : "Viesis",
     "Group" : "Grupa",
     "Shared" : "Koplietots",
     "Shares" : "Koplietots",
