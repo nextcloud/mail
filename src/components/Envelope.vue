@@ -386,19 +386,8 @@
 			</template>
 		</template>
 		<template #tags>
-			<div
-				v-for="tag in tags"
-				:key="tag.id"
-				class="tag-group">
-				<div
-					class="tag-group__bg"
-					:style="{ 'background-color': tag.color }" />
-				<span
-					class="tag-group__label"
-					:style="{ color: tag.color }">
-					{{ translateTagDisplayName(tag) }}
-				</span>
-			</div>
+			<Tag v-for="tag in tags" :tag="tag" />
+
 			<MoveModal
 				v-if="showMoveModal"
 				:account="account"
@@ -470,6 +459,7 @@ import EventModal from './EventModal.vue'
 import JunkIcon from './icons/JunkIcon.vue'
 import MoveModal from './MoveModal.vue'
 import Icon from './quickActions/Icon.vue'
+import Tag from './Tag.vue'
 import TagModal from './TagModal.vue'
 import TaskModal from './TaskModal.vue'
 import { isPgpText } from '../crypto/pgp.js'
@@ -483,7 +473,6 @@ import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
 import { messageDateTime, shortRelativeDatetime } from '../util/shortRelativeDatetime.js'
-import { translateTagDisplayName } from '../util/tag.js'
 import { hiddenTags } from './tags.js'
 
 export default {
@@ -530,6 +519,7 @@ export default {
 		CogIcon,
 		IconEmailFast,
 		Icon,
+		Tag,
 	},
 
 	directives: {
@@ -877,7 +867,6 @@ export default {
 	},
 
 	methods: {
-		translateTagDisplayName,
 		setSelected(value) {
 			if (this.selected !== value) {
 				this.$emit('update:selected', value)
@@ -1450,33 +1439,6 @@ export default {
 	.material-design-icon {
 		margin-bottom: -14px;
 	}
-}
-
-.tag-group__label {
-	margin: 0 7px;
-	z-index: 2;
-	font-size: calc(var(--default-font-size) * 0.8);
-	font-weight: bold;
-	padding-inline: 2px;
-	white-space: nowrap;
-}
-
-.tag-group__bg {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	inset-inline-start: 0;
-	opacity: 15%;
-}
-
-.tag-group {
-	display: inline-block;
-	border-radius: var(--border-radius-pill);
-	position: relative;
-	margin-inline-end: 1px;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 
 .list-item__wrapper:deep() {
