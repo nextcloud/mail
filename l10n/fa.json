@@ -316,6 +316,7 @@
     "Collapse folders" : "پوشه ها را جمع کنید",
     "_{total} message_::_{total} messages_" : ["{total} message","{total} messages"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} unread of {total}","{unread} unread of {total}"],
+    "Loading …" : "بارگیری",
     "All messages in mailbox will be deleted." : "All messages in mailbox will be deleted.",
     "Clear mailbox {name}" : "Clear mailbox {name}",
     "Delete folder" : "حذف پوشه",
