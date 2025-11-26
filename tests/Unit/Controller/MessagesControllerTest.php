@@ -13,6 +13,7 @@ namespace OCA\Mail\Tests\Unit\Controller;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use OC\AppFramework\Http\Request;
+use OC\Memcache\NullCache;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
@@ -48,6 +49,7 @@ use OCP\AppFramework\Http\ZipResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\Folder;
 use OCP\Files\IMimeTypeDetector;
+use OCP\ICacheFactory;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -130,6 +132,8 @@ class MessagesControllerTest extends TestCase {
 	/** @var MockObject|AiIntegrationsService */
 	private $aiIntegrationsService;
 
+	private ICacheFactory&MockObject $cacheFactory;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -155,6 +159,10 @@ class MessagesControllerTest extends TestCase {
 		$this->userPreferences = $this->createMock(IUserPreferences::class);
 		$this->snoozeService = $this->createMock(SnoozeService::class);
 		$this->aiIntegrationsService = $this->createMock(AiIntegrationsService::class);
+		$this->cacheFactory = $this->createMock(ICacheFactory::class);
+
+		$this->cacheFactory->method('createDistributed')
+			->willReturn(new NullCache());
 
 		$timeFactory = $this->createMocK(ITimeFactory::class);
 		$timeFactory->expects($this->any())
@@ -185,6 +193,7 @@ class MessagesControllerTest extends TestCase {
 			$this->userPreferences,
 			$this->snoozeService,
 			$this->aiIntegrationsService,
+			$this->cacheFactory,
 		);
 
 		$this->account = $this->createMock(Account::class);
@@ -1241,6 +1250,7 @@ class MessagesControllerTest extends TestCase {
 			$this->userPreferences,
 			$this->snoozeService,
 			$this->aiIntegrationsService,
+			$this->cacheFactory,
 		);
 
 		$actualResponse = $controller->needsTranslation(100);
