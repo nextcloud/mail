@@ -61,6 +61,7 @@ OC.L10N.register(
     "Not found" : "Ulac-it",
     "Translate from" : "Suqel seg",
     "Translate to" : "Suqel ar",
+    "Deleted" : "Yettwakkes",
     "Help" : "Tallalt",
     "Actions" : "Tigawin",
     "Edit" : "Ẓreg",

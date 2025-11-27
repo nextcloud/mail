@@ -516,6 +516,7 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} fra {depStation} til {arrStation}",
     "Train from {depStation} to {arrStation}" : "Tog fra {depStation} til {arrStation}",
     "Train" : "Tog",
+    "Deleted" : "Slettet",
     "Recipient" : "Modtager",
     "New filter" : "Nyt filter",
     "Help" : "Hjælp",

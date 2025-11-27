@@ -100,6 +100,7 @@ OC.L10N.register(
     "Not found" : "Heb ei ganfod",
     "Untitled event" : "Digwyddiad di-deitl",
     "(organizer)" : "(trefnydd)",
+    "Deleted" : "Wedi dileu",
     "Recipient" : "Derbynnydd",
     "Help" : "Cymorth",
     "Actions" : "Gweithredoedd",

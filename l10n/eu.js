@@ -539,6 +539,7 @@ OC.L10N.register(
     "Train" : "Trena",
     "Stop" : "Gelditu",
     "Delete action" : "Ezabatu ekintza",
+    "Deleted" : "Ezabatuta",
     "Recipient" : "Hartzailea",
     "Delete filter" : "Ezabatu iragazkia",
     "Delete mail filter {filterName}?" : "Ezabatu {filterName} posta-iragazkia?",

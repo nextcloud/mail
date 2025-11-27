@@ -476,6 +476,7 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "Vonat {depStation} és {arrStation} között",
     "Train" : "Vonat",
     "Stop" : "Leállítás",
+    "Deleted" : "Törölve",
     "Recipient" : "Címzett",
     "Delete filter" : "Szűrő törlése",
     "Help" : "Súgó",

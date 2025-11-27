@@ -455,6 +455,7 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "آموزش از {depStation} تا {arrStation} Train",
     "Train" : "رشته",
     "Stop" : "Stop",
+    "Deleted" : "حذف شده",
     "Delete filter" : "Delete filter",
     "Help" : "راهنما",
     "contains" : "contains",

@@ -633,6 +633,7 @@ OC.L10N.register(
     "Move into folder" : "移入文件夹",
     "Stop" : "停止",
     "Delete action" : "删除操作",
+    "Deleted" : "已删除",
     "Enter flag" : "输入标记",
     "Stop ends all processing" : "停止将结束所有处理",
     "Sender" : "发件人",

@@ -450,6 +450,7 @@ OC.L10N.register(
     "Train" : "Juna",
     "Stop" : "Pysäytä",
     "Delete action" : "Poista toiminto",
+    "Deleted" : "Poistettu",
     "Sender" : "Lähettäjä",
     "Recipient" : "Vastaanottaja",
     "Create a new mail filter" : "Luo uusi viestisuodatin",

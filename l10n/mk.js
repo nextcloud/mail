@@ -378,6 +378,7 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} од {depStation} до {arrStation}",
     "Train from {depStation} to {arrStation}" : "Воз од  {depStation} до {arrStation}",
     "Train" : "Воз",
+    "Deleted" : "Избришани",
     "Help" : "Помош",
     "matches" : "се совпаѓа",
     "Actions" : "Акции",

@@ -337,6 +337,7 @@ OC.L10N.register(
     "Train" : "Traukinys",
     "Stop" : "Stabdyti",
     "Delete action" : "Ištrinti veiksmą",
+    "Deleted" : "Ištrinta",
     "Recipient" : "Gavėjas",
     "Delete filter" : "Ištrinti filtrą",
     "Delete mail filter {filterName}?" : "Ištrinti pašto filtrą {filterName}?",

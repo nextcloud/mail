@@ -103,6 +103,7 @@ OC.L10N.register(
     "Select tags" : "აირჩიეთ ტეგები",
     "Custom" : "ინდივიდუალური",
     "Add tag" : "ტეგის დამატება",
+    "Deleted" : "გაუქმდა",
     "Recipient" : "მიმღები",
     "Help" : "დახმარება",
     "matches" : "ემთხვევა",

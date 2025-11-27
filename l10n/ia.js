@@ -50,6 +50,7 @@ OC.L10N.register(
     "Date" : "Date",
     "Tags" : "Etiquettas",
     "Custom" : "Personalisate",
+    "Deleted" : "Delite",
     "Help" : "Adjuta",
     "matches" : "corresponde",
     "Actions" : "Actiones",

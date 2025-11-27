@@ -269,6 +269,7 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} iz {depStation} do {arrStation}",
     "Train from {depStation} to {arrStation}" : "Vlak iz {depStation} do {arrStation}",
     "Train" : "Vlak",
+    "Deleted" : "Izbrisano",
     "Recipient" : "Primatelj",
     "Help" : "Pomoć",
     "matches" : "podudara se",

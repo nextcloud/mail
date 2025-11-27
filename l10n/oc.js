@@ -88,6 +88,7 @@ OC.L10N.register(
     "Translating" : "Traduccion",
     "Untitled event" : "Eveniment sens títol",
     "Train" : "Tren",
+    "Deleted" : "Suprimit",
     "Help" : "Ajuda",
     "Actions" : "Accions",
     "delete" : "suprimir",

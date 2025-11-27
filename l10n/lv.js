@@ -139,6 +139,7 @@ OC.L10N.register(
     "Tag already exists" : "Birka jau pastāv",
     "Not found" : "Nav atrasts",
     "Untitled event" : "Nenosaukts notikums",
+    "Deleted" : "Izdzēsts",
     "Recipient" : "Saņēmējs",
     "Help" : "Palīdzība",
     "contains" : "saturs",

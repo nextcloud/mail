@@ -471,6 +471,7 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} from {depStation} to {arrStation}",
     "Train from {depStation} to {arrStation}" : "Train from {depStation} to {arrStation}",
     "Train" : "Train",
+    "Deleted" : "Deleted",
     "Help" : "Help",
     "matches" : "matches",
     "Actions" : "Actions",

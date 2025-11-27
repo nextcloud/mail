@@ -332,6 +332,7 @@ OC.L10N.register(
     "Translate from" : "Traducir desde",
     "Untitled event" : "Evento sin título",
     "(organizer)" : "(organizador)",
+    "Deleted" : "Eliminado",
     "Recipient" : "Destinatario",
     "Help" : "Ayuda",
     "contains" : "contiene",

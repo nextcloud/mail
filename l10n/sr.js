@@ -634,6 +634,7 @@ OC.L10N.register(
     "Move into folder" : "Премести у фолдер",
     "Stop" : "Заустави",
     "Delete action" : "Акција брисања",
+    "Deleted" : "Обрисано",
     "Enter flag" : "Унесите заставицу",
     "Stop ends all processing" : "Стоп зауставља сву обраду",
     "Sender" : "Пошиљалац",

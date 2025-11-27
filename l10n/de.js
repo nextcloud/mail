@@ -643,6 +643,7 @@ OC.L10N.register(
     "Move into folder" : "In Ordner verschieben",
     "Stop" : "Stopp",
     "Delete action" : "Aktion löschen",
+    "Deleted" : "Gelöscht",
     "Enter flag" : "Makierung eingeben",
     "Stop ends all processing" : "Stopp-Aktion beendet die gesamte Verarbeitung",
     "Sender" : "Absender",

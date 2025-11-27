@@ -44,6 +44,7 @@ OC.L10N.register(
     "Close" : "Lat att",
     "Date" : "Dato",
     "Tags" : "Emneord",
+    "Deleted" : "Sletta",
     "Recipient" : "Mottakar",
     "Help" : "Hjelp",
     "contains" : "inneheld",

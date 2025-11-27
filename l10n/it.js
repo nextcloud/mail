@@ -409,6 +409,7 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "Treno da {depStation} a {arrStation}",
     "Train" : "Treno",
     "Stop" : "Ferma",
+    "Deleted" : "Eliminato",
     "Recipient" : "Destinatario",
     "Help" : "Assistenza",
     "contains" : "contiene",
