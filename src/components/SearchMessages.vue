@@ -256,6 +256,15 @@
 							<div class="modal-inner-inline">
 								<NcCheckboxRadioSwitch
 									:checked.sync="searchFlags"
+									value="unread"
+									name="flags[]"
+									type="checkbox">
+									{{ t('mail', 'Unread') }}
+								</NcCheckboxRadioSwitch>
+							</div>
+							<div class="modal-inner-inline">
+								<NcCheckboxRadioSwitch
+									:checked.sync="searchFlags"
 									value="attachments"
 									name="flags[]"
 									type="checkbox">
@@ -287,22 +296,22 @@
 			<NcButton
 				variant="secondary"
 				class="shortcut"
-				:pressed="hasUnreadActive"
-				:aria-label="t('mail', 'Unread')"
-				:title="t('mail', 'Unread')"
-				@update:pressed="hasUnreadActive = !hasUnreadActive"
-				@click="toggleUnread">
-				{{ t('mail', 'Unread') }}
+				:pressed="hasLast7daysActive"
+				:aria-label="t('mail', 'Last 7 days')"
+				:title="t('mail', 'Last 7 days')"
+				@update:pressed="hasLast7daysActive = !hasLast7daysActive"
+				@click="toggleLastWeekFilter">
+				{{ t('mail', 'Last 7 days') }}
 			</NcButton>
 			<NcButton
 				variant="secondary"
 				class="shortcut"
-				:pressed="hasToMeActive"
-				:aria-label="t('mail', 'To me')"
-				:title="t('mail', 'To me')"
-				@update:pressed="hasToMeActive = !hasToMeActive"
+				:pressed="hasFromMeActive"
+				:aria-label="t('mail', 'From me')"
+				:title="t('mail', 'From me')"
+				@update:pressed="hasFromMeActive = !hasFromMeActive"
 				@click="toggleCurrentUser">
-				{{ t('mail', 'To me') }}
+				{{ t('mail', 'From me') }}
 			</NcButton>
 		</div>
 	</div>
@@ -372,8 +381,8 @@ export default {
 			searchFlags: [],
 			mentionsMe: false,
 			hasAttachmentActive: false,
-			hasUnreadActive: false,
-			hasToMeActive: false,
+			hasLast7daysActive: false,
+			hasFromMeActive: false,
 			startDate: null,
 			endDate: null,
 			dialogButtons: [
@@ -501,33 +510,31 @@ export default {
 		},
 
 		toggleCurrentUser() {
-			if (this.hasToMeActive) {
-				this.searchInTo = [{
+			if (this.hasFromMeActive) {
+				this.searchInFrom = [{
 					email: this.account.emailAddress,
 					label: this.account.emailAddress,
 				}]
 			} else {
-				this.searchInTo = null
+				this.searchInFrom = null
 			}
-
 			this.$nextTick(() => {
 				this.sendQueryEvent()
 			})
 		},
 
-		toggleUnread() {
-			if (this.hasUnreadActive) {
-				if (!Array.isArray(this.searchFlags)) {
-					this.searchFlags = []
-				}
+		toggleLastWeekFilter() {
+			if (this.hasLast7daysActive) {
+				const endDate = new Date()
+				const startDate = new Date()
+				startDate.setDate(startDate.getDate() - 7)
 
-				if (!this.searchFlags.includes('unread')) {
-					this.searchFlags.push('unread')
-				}
+				this.startDate = startDate
+				this.endDate = endDate
 			} else {
-				this.searchFlags = this.searchFlags.filter((flag) => flag !== 'unread')
+				this.startDate = null
+				this.endDate = null
 			}
-
 			this.$nextTick(() => {
 				this.sendQueryEvent()
 			})
