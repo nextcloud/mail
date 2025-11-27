@@ -35,6 +35,7 @@ OC.L10N.register(
     "Close" : "បិទ",
     "Date" : "កាលបរិច្ឆេទ",
     "Tags" : "ស្លាក",
+    "Deleted" : "បាន​លុប",
     "Help" : "ជំនួយ",
     "contains" : "មានផ្ទុក",
     "delete" : "លុប",

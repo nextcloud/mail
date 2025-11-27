@@ -610,6 +610,7 @@ OC.L10N.register(
     "Move into folder" : "Μετακίνηση σε φάκελο",
     "Stop" : "Διακοπή",
     "Delete action" : "Διαγραφή ενέργειας",
+    "Deleted" : "Διαγραμμένα",
     "Enter flag" : "Εισαγωγή σημαίας",
     "Stop ends all processing" : "Η διακοπή τερματίζει όλη την επεξεργασία",
     "Sender" : "Αποστολέας",

@@ -641,6 +641,7 @@ OC.L10N.register(
     "Move into folder" : "Move into folder",
     "Stop" : "Stop",
     "Delete action" : "Delete action",
+    "Deleted" : "ລຶບແລ້ວ",
     "Enter flag" : "Enter flag",
     "Stop ends all processing" : "Stop ends all processing",
     "Sender" : "Sender",

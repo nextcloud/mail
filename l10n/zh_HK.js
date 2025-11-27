@@ -643,6 +643,7 @@ OC.L10N.register(
     "Move into folder" : "移到資料夾",
     "Stop" : "停止",
     "Delete action" : "刪除操作",
+    "Deleted" : "已刪除",
     "Enter flag" : "輸入標誌",
     "Stop ends all processing" : "停止將會結束所有處理",
     "Sender" : "寄件人",

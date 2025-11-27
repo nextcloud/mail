@@ -633,6 +633,7 @@ OC.L10N.register(
     "Move into folder" : "Klasöre taşı",
     "Stop" : "Durdur",
     "Delete action" : "İşlemi sil",
+    "Deleted" : "Silinmiş",
     "Enter flag" : "İşareti yazın",
     "Stop ends all processing" : "Bitiş işlemi tüm süreci sonlandırır",
     "Sender" : "Gönderici",

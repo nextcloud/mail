@@ -610,6 +610,7 @@ OC.L10N.register(
     "Move into folder" : "Mover a carpeta",
     "Stop" : "Detener",
     "Delete action" : "Borrar acción",
+    "Deleted" : "Eliminada",
     "Enter flag" : "Ingrese bandera",
     "Stop ends all processing" : "Detener finaliza todo el procesamiento",
     "Sender" : "Remitente",

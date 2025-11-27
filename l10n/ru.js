@@ -549,6 +549,7 @@ OC.L10N.register(
     "Train" : "Поезд",
     "Stop" : "Стоп",
     "Delete action" : "Действие удаления",
+    "Deleted" : "Удалено",
     "Sender" : "Отправитель",
     "Recipient" : "Получатель",
     "Create a new mail filter" : "Создать новый почтовый фильтр",

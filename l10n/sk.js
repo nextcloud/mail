@@ -567,6 +567,7 @@ OC.L10N.register(
     "Train" : "Vlak",
     "Stop" : "Zastaviť",
     "Delete action" : "Zmazať akciu",
+    "Deleted" : "Odstránené",
     "Recipient" : "Prijímateľ",
     "Delete filter" : "Zmazať filter",
     "Delete mail filter {filterName}?" : "Zmazať e-mail filter {filterName}?",

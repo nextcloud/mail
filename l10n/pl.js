@@ -612,6 +612,7 @@ OC.L10N.register(
     "Move into folder" : "Przenieś do folderu",
     "Stop" : "Stop",
     "Delete action" : "Usuń akcję",
+    "Deleted" : "Usunięto",
     "Enter flag" : "Wprowadź znacznik",
     "Stop ends all processing" : "Zatrzymaj kończy całe przetwarzanie",
     "Sender" : "Nadawca",

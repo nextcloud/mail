@@ -632,6 +632,7 @@ OC.L10N.register(
     "Move into folder" : "Tõsta kausta",
     "Stop" : "Lõpeta",
     "Delete action" : "Kustuta tegevus",
+    "Deleted" : "Kustutatud",
     "Enter flag" : "Sisesta tunnus",
     "Stop ends all processing" : "Peatamisel kogu töötlemine lõppeb",
     "Sender" : "Saatja",

@@ -544,6 +544,7 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "Lest frá {depStation} til {arrStation}",
     "Train" : "Lest",
     "Delete action" : "Eyða aðgerð",
+    "Deleted" : "Eytt",
     "Recipient" : "Viðtakandi",
     "Delete filter" : "Eyða síu",
     "Delete mail filter {filterName}?" : "Eyða póstsíunni {filterName}?",

@@ -634,6 +634,7 @@ OC.L10N.register(
     "Move into folder" : "Déplacer vers un dossier ",
     "Stop" : "Arrêter",
     "Delete action" : "Supprimer l'action",
+    "Deleted" : "Effacé",
     "Enter flag" : "Sélection l’indicateur",
     "Stop ends all processing" : "Arrêter l’exécution",
     "Sender" : "Expéditeur",

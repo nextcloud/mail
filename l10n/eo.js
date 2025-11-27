@@ -148,6 +148,7 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} de {depStation} al {arrStation}",
     "Train from {depStation} to {arrStation}" : "Trajno de {depStation} al {arrStation}",
     "Train" : "Trajno",
+    "Deleted" : "Forigita",
     "Recipient" : "Ricevonto",
     "Help" : "Helpo",
     "matches" : "kongruas kun",

@@ -219,6 +219,7 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} từ {depStation} đến {arrStation}",
     "Train from {depStation} to {arrStation}" : "Đi tàu từ {depStation} đến {arrStation}",
     "Train" : "Tàu hỏa",
+    "Deleted" : "Đã xoá",
     "Recipient" : "Người nhận",
     "Delete filter" : "Xóa bộ lọc ",
     "Help" : "Trợ giúp",

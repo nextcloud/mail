@@ -69,6 +69,7 @@ OC.L10N.register(
     "Not found" : "Topilmadi",
     "Untitled event" : "Nomsiz tadbir",
     "(organizer)" : "(tashkilotchi)",
+    "Deleted" : "O`chirilgan",
     "Help" : "Yordam",
     "contains" : "o'z ichiga oladi",
     "Actions" : "Faolliklar",

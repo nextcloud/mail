@@ -334,6 +334,7 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} van {depStation} naar {arrStation}",
     "Train from {depStation} to {arrStation}" : "Trein van {depStation} naar {arrStation}",
     "Train" : "Trein",
+    "Deleted" : "Verwijderd",
     "Recipient" : "Ontvanger",
     "Help" : "Hulp",
     "contains" : "bevat",

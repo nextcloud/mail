@@ -73,6 +73,7 @@ OC.L10N.register(
     "Date" : "Он сар өдөр",
     "Tags" : "Tag-үүд",
     "Custom" : "Дурын",
+    "Deleted" : "Устгагдсан",
     "Recipient" : "Хүлээн авагч",
     "Help" : "Туслах",
     "matches" : "тохируулах",

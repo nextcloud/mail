@@ -478,6 +478,7 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{depStation}에서 {arrStation}(으)로 향하는 {trainNr}번 열차",
     "Train from {depStation} to {arrStation}" : "{depStation}에서 {arrStation}(으)로 향하는 열차",
     "Train" : "기차",
+    "Deleted" : "삭제됨",
     "Recipient" : "받는 사람",
     "Delete filter" : "필터 삭제",
     "Help" : "도움말",

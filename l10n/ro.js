@@ -419,6 +419,7 @@ OC.L10N.register(
     "Import into {calendar}" : "Importă în {calendar}",
     "Event imported into {calendar}" : "Eveniment importat în {calendar}",
     "Reservation {id}" : "Rezervare {id}",
+    "Deleted" : "Șters",
     "Recipient" : "Destinatar",
     "Help" : "Ajutor",
     "Actions" : "Acțiuni",

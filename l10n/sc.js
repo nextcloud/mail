@@ -254,6 +254,7 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} dae {depStation} a {arrStation}",
     "Train from {depStation} to {arrStation}" : "Trenu dae {depStation} a {arrStation}",
     "Train" : "Trenu",
+    "Deleted" : "Cantzelladu",
     "New filter" : "Filtru nou",
     "Help" : "Agiudu",
     "matches" : "currispondèntzias",

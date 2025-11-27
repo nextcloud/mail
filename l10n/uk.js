@@ -610,6 +610,7 @@ OC.L10N.register(
     "Move into folder" : "Перемістити в папку",
     "Stop" : "Стоп",
     "Delete action" : "Видалити дію",
+    "Deleted" : "Вилучено",
     "Enter flag" : "Введіть прапор",
     "Stop ends all processing" : "Зупинка завершує всю обробку",
     "Sender" : "Передавач",

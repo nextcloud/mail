@@ -643,6 +643,7 @@ OC.L10N.register(
     "Move into folder" : "قىسقۇچقا يۆتكەڭ",
     "Stop" : "توختاڭ",
     "Delete action" : "ھەرىكەتنى ئۆچۈرۈڭ",
+    "Deleted" : "ئۆچۈرۈلدى",
     "Enter flag" : "بايراق كىرگۈز",
     "Stop ends all processing" : "توختىتىش بارلىق بىر-تەرەپ قىلىشنى ئاخىرلاشتۇردۇ",
     "Sender" : "ئەۋەتكۈچى",

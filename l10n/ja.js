@@ -554,6 +554,7 @@ OC.L10N.register(
     "Move into folder" : "フォルダに移動",
     "Stop" : "中止",
     "Delete action" : "アクションを削除",
+    "Deleted" : "削除済み",
     "Recipient" : "受信者",
     "Delete filter" : "フィルターを削除",
     "Delete mail filter {filterName}?" : "メールフィルター{filterName}を削除しますか？",

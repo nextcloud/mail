@@ -138,6 +138,7 @@ OC.L10N.register(
     "Copy translated text" : "Nakili maandishi yaliyotafsiriwa",
     "Untitled event" : "Tukio lisilotajwa",
     "(organizer)" : "(Mratibu)",
+    "Deleted" : "Vilivyofutwa",
     "Help" : "Msaada",
     "contains" : "contains",
     "matches" : "matches",

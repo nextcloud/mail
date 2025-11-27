@@ -92,6 +92,7 @@ OC.L10N.register(
     "Unsubscribe" : "Berhenti berlangganan",
     "Untitled event" : "Acara tanpa judul",
     "(organizer)" : "(penyelenggara)",
+    "Deleted" : "Dihapus",
     "Recipient" : "Penerima",
     "Help" : "Bantuan",
     "contains" : "mengandung",

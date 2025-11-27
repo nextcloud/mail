@@ -643,6 +643,7 @@ OC.L10N.register(
     "Move into folder" : "Mover para pasta",
     "Stop" : "Encerrar",
     "Delete action" : "Excluir ação",
+    "Deleted" : "Excluída",
     "Enter flag" : "Insira sinalizador",
     "Stop ends all processing" : "Parar encerra todo o processamento",
     "Sender" : "Remetente",

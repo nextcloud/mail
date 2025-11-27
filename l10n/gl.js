@@ -643,6 +643,7 @@ OC.L10N.register(
     "Move into folder" : "Mover ao cartafol",
     "Stop" : "Parar",
     "Delete action" : "Eliminar a acción",
+    "Deleted" : "Eliminada",
     "Enter flag" : "Introduza o indicador",
     "Stop ends all processing" : "A acción de parar remata todo o procesamento",
     "Sender" : "Remitente",

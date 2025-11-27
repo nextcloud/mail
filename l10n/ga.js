@@ -643,6 +643,7 @@ OC.L10N.register(
     "Move into folder" : "Bog isteach i bhfillteán",
     "Stop" : "Stad",
     "Delete action" : "Scrios gníomh",
+    "Deleted" : "Scriosta",
     "Enter flag" : "Cuir isteach bratach",
     "Stop ends all processing" : "Stop críochnaíonn gach próiseáil",
     "Sender" : "Seoltóir",
