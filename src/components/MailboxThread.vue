@@ -260,7 +260,7 @@ export default {
 				return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.appendToSearch(priorityImportantQuery)).length > 0
 					|| this.mainStore.getEnvelopes(this.mailbox.databaseId, this.appendToSearch(priorityOtherQuery)).length > 0
 			}
-			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery).length > 0
+			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.query).length > 0
 		},
 
 		hasImportantEnvelopes() {
@@ -316,10 +316,7 @@ export default {
 
 		query() {
 			if (this.$route.params.filter === 'starred') {
-				if (this.searchQuery) {
-					return this.appendToSearch('is:starred')
-				}
-				return 'is:starred'
+				return this.appendToSearch('is:starred')
 			}
 			return this.searchQuery
 		},
@@ -329,7 +326,7 @@ export default {
 		},
 
 		groupEnvelopes() {
-			const allEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
+			const allEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.query)
 			return this.getGroupedEnvelopes(allEnvelopes, this.mainStore.syncTimestamp, this.sortOrder)
 		},
 
@@ -384,11 +381,11 @@ export default {
 		},
 
 		async fetchEnvelopes() {
-			const existingEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery || '')
+			const existingEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.query)
 			if (!existingEnvelopes.length) {
 				await this.mainStore.fetchEnvelopes({
 					mailboxId: this.mailbox.databaseId,
-					query: this.searchQuery || '',
+					query: this.query,
 				})
 			}
 		},
