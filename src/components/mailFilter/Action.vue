@@ -37,8 +37,10 @@
 import { NcButton, NcSelect, NcTextField } from '@nextcloud/vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import ActionAddflag from './ActionAddflag.vue'
+import ActionAddSystemFlag from './ActionAddSystemFlag.vue'
 import ActionFileinto from './ActionFileinto.vue'
 import ActionStop from './ActionStop.vue'
+import { MailFilterActions } from '../../models/mailFilter.ts'
 
 export default {
 	name: 'Action',
@@ -68,6 +70,10 @@ export default {
 		return {
 			availableTypes: [
 				{
+					id: MailFilterActions.AddSystemFlag,
+					label: this.t('mail', 'Mark message as'),
+				},
+				{
 					id: 'addflag',
 					label: this.t('mail', 'Add flag'),
 				},
@@ -76,7 +82,7 @@ export default {
 					label: this.t('mail', 'Move into folder'),
 				},
 				{
-					id: 'stop',
+					id: MailFilterActions.Stop,
 					label: this.t('mail', 'Stop'),
 				},
 			],
@@ -93,8 +99,10 @@ export default {
 				return ActionFileinto
 			} else if (this.action.type === 'addflag') {
 				return ActionAddflag
-			} else if (this.action.type === 'stop') {
+			} else if (this.action.type === MailFilterActions.Stop) {
 				return ActionStop
+			} else if (this.action.type === MailFilterActions.AddSystemFlag) {
+				return ActionAddSystemFlag
 			}
 			return null
 		},
