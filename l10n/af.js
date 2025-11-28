@@ -102,6 +102,7 @@ OC.L10N.register(
     "Tags" : "Etikette",
     "Custom" : "Eie",
     "Message source" : "Boodskapbron",
+    "Deleted" : "Geskrap",
     "Recipient" : "Ontvanger",
     "Help" : "Hulp",
     "Actions" : "Aksies",

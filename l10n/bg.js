@@ -411,6 +411,7 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "Влак от {depStation} до {arrStation}",
     "Train" : "Влак",
     "Stop" : "Спиране /на/",
+    "Deleted" : "Изтрито",
     "Recipient" : "Получател",
     "Help" : "Помощ",
     "contains" : "съдържа",

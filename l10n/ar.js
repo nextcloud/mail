@@ -553,6 +553,7 @@ OC.L10N.register(
     "Train" : "القطار",
     "Stop" : "إيقاف",
     "Delete action" : "إجراء الحذف",
+    "Deleted" : "محذوف",
     "Recipient" : "المتلقي",
     "Delete filter" : "عامل تصفية الحذف",
     "Delete mail filter {filterName}?" : "حذف فلترة الإيميل {filterName}؟",

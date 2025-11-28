@@ -53,6 +53,7 @@ OC.L10N.register(
     "Date" : "Date",
     "Tags" : "Işarələr",
     "Not found" : "Tapılmadı",
+    "Deleted" : "Silinib",
     "Help" : "Kömək",
     "Actions" : "İşlər",
     "Priority" : "Prioritet",

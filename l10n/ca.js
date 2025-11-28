@@ -553,6 +553,7 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "Tren de {depStation} a {arrStation}",
     "Train" : "Tren",
     "Delete action" : "Suprimeix l'acció",
+    "Deleted" : "Suprimit",
     "Recipient" : "Destinatari",
     "Delete filter" : "Suprimeix el filtre",
     "Delete mail filter {filterName}?" : "Vols suprimir el filtre de correu {filterName}?",

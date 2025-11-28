@@ -43,6 +43,7 @@ OC.L10N.register(
     "Close" : "বন্ধ",
     "Date" : "Date",
     "Tags" : "ট্যাগ",
+    "Deleted" : "মুছে ফেলা",
     "Help" : "সহায়িকা",
     "Actions" : "পদক্ষেপসমূহ",
     "delete" : "মুছে ফেল",
