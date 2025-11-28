@@ -544,7 +544,7 @@ export default {
 			default: true,
 		},
 
-		threadList: {
+		data: {
 			type: Object,
 			required: true,
 		},
@@ -592,21 +592,11 @@ export default {
 		}
 	},
 
-	mounted() {
-		this.onWindowResize()
-		window.addEventListener('resize', this.onWindowResize)
-	},
-
-	// eslint-disable-next-line vue/order-in-components
 	computed: {
 		...mapStores(useMainStore),
 		...mapState(useMainStore, [
 			'isSnoozeDisabled',
 		]),
-
-		data() {
-			return Object.values(this.threadList)[0]
-		},
 
 		isRTL() {
 			return isRTL()
