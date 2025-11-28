@@ -244,6 +244,7 @@ OC.L10N.register(
     "Untitled event" : "Eventu ensin títulu",
     "Airplane" : "Avión",
     "Train" : "Tren",
+    "Deleted" : "Desanicióse",
     "Help" : "Ayuda",
     "contains" : "contién",
     "matches" : "concasa",

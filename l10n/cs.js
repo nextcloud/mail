@@ -643,6 +643,7 @@ OC.L10N.register(
     "Move into folder" : "Přesunout do složky",
     "Stop" : "Zastavit",
     "Delete action" : "Akce smazání",
+    "Deleted" : "Smazáno",
     "Enter flag" : "Zadejte příznak",
     "Stop ends all processing" : "Zastavení ukončí veškeré zpracovávání",
     "Sender" : "Odesilatel",

@@ -63,6 +63,7 @@ OC.L10N.register(
     "Date" : "Deiz",
     "Tags" : "Klavioù",
     "Translate to" : "Treiñ e",
+    "Deleted" : "Dilamet",
     "Help" : "Skoazell",
     "Actions" : "Oberoù",
     "Edit" : "Embann",
