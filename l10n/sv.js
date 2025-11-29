@@ -273,7 +273,6 @@ OC.L10N.register(
     "Pick an end date" : "Välj ett slutdatum",
     "Tags" : "Taggar",
     "Select tags" : "Välj taggar",
-    "Last 7 days" : "Senaste 7 dagarna",
     "Custom" : "Anpassad",
     "Save signature" : "Spara signatur",
     "Place signature above quoted text" : "Placera signaturen ovanför citerad text",
@@ -377,6 +376,7 @@ OC.L10N.register(
     "Redirect" : "Omdirigera",
     "The link leads to %s" : "Länken pekar mot %s",
     "Continue to %s" : "Fortsätt till %s",
-    "Mark all messages of this folder as read" : "Markera alla meddelanden i den här mappen som lästa"
+    "Mark all messages of this folder as read" : "Markera alla meddelanden i den här mappen som lästa",
+    "Last 7 days" : "Senaste 7 dagarna"
 },
 "nplurals=2; plural=(n != 1);");

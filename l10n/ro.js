@@ -369,7 +369,6 @@ OC.L10N.register(
     "Select tags" : "Selectează etichete",
     "Marked as" : "Marcat ca",
     "Has attachments" : "Are atașamente",
-    "Last 7 days" : "Ultimele 7 zile",
     "Enable mail body search" : "Activează căutarea în textul mesajelor",
     "Custom" : "Particularizat",
     "The syntax seems to be incorrect:" : "Sintaxa pare incorectă:",
@@ -494,6 +493,7 @@ OC.L10N.register(
     "Redirect" : "Deviere",
     "The link leads to %s" : "Link-ul duce la %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Dacă nu doriți să vizitați acea pagină, vă puteți întoarce la <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continuă către %s"
+    "Continue to %s" : "Continuă către %s",
+    "Last 7 days" : "Ultimele 7 zile"
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");

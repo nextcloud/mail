@@ -132,7 +132,6 @@ OC.L10N.register(
     "Date" : "Date",
     "Tags" : "Etikedoj",
     "Select tags" : "Elekti etikedojn",
-    "Last 7 days" : "Lastaj 7 tagoj",
     "Custom" : "Propra",
     "Save signature" : "Konservi subskribon",
     "Delete tag" : "Forigi etikedon",
@@ -197,6 +196,7 @@ OC.L10N.register(
     "Redirect" : "Alidirekto",
     "The link leads to %s" : "La ligilo iras al %s",
     "Continue to %s" : "Daŭrigi al %s",
-    "Mark all messages of this folder as read" : "Marki ĉiujn mesaĝojn el tiu dosierujo kiel legitaj"
+    "Mark all messages of this folder as read" : "Marki ĉiujn mesaĝojn el tiu dosierujo kiel legitaj",
+    "Last 7 days" : "Lastaj 7 tagoj"
 },
 "nplurals=2; plural=(n != 1);");

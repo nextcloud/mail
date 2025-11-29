@@ -355,7 +355,6 @@ OC.L10N.register(
     "Select tags" : "Izbor oznak",
     "Marked as" : "Označeno kot",
     "Has attachments" : "Vsebuje prilogo",
-    "Last 7 days" : "Zadnjih 7 dni",
     "Sieve Port" : "Vrata Sieve",
     "Custom" : "Po meri",
     "Sieve User" : "Uporabnik Sieve",
@@ -526,6 +525,7 @@ OC.L10N.register(
     "Redirect" : "Preusmeri",
     "The link leads to %s" : "Povezava vodi do %s",
     "Continue to %s" : "Nadaljuj na %s",
-    "Mark all messages of this folder as read" : "Označi vsa sporočila v tej mapi kot prebrana"
+    "Mark all messages of this folder as read" : "Označi vsa sporočila v tej mapi kot prebrana",
+    "Last 7 days" : "Zadnjih 7 dni"
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

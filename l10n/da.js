@@ -482,8 +482,6 @@ OC.L10N.register(
     "Has attachments" : "Har vedhæftede filer",
     "Mentions me" : "Omtalte mig",
     "Has attachment" : "Har vedhæftning",
-    "Last 7 days" : "Sidste 7 dage",
-    "From me" : "Fra mig",
     "Enable mail body search" : "Aktivér søgning i mailhovedtekst",
     "Sieve credentials" : "Sieve legitimationsoplysninger",
     "IMAP credentials" : "IMAP legitimationsoplysninger",
@@ -587,6 +585,8 @@ OC.L10N.register(
     "Redirect" : "Omdiriger",
     "The link leads to %s" : "Linket fører til %s",
     "Continue to %s" : "Videre til %s",
-    "Mark all messages of this folder as read" : "Markér alle beskeder i denne mappe som læst"
+    "Mark all messages of this folder as read" : "Markér alle beskeder i denne mappe som læst",
+    "Last 7 days" : "Sidste 7 dage",
+    "From me" : "Fra mig"
 },
 "nplurals=2; plural=(n != 1);");

@@ -384,7 +384,6 @@ OC.L10N.register(
     "Select tags" : "برچسب ها را انتخاب کنید",
     "Marked as" : "Marked as",
     "Has attachments" : "Has attachments",
-    "Last 7 days" : "۷ روز گذشته",
     "Sieve Port" : "Sieve Port",
     "Custom" : "Custom",
     "Sieve User" : "Sieve User",
@@ -594,6 +593,7 @@ OC.L10N.register(
     "The link leads to %s" : "پیوند منجر به%s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "ادامه دهید%s",
-    "Mark all messages of this folder as read" : "تمام پیام های این پوشه را به عنوان خوانده شده علامت گذاری کنید"
+    "Mark all messages of this folder as read" : "تمام پیام های این پوشه را به عنوان خوانده شده علامت گذاری کنید",
+    "Last 7 days" : "۷ روز گذشته"
 },
 "nplurals=2; plural=(n > 1);");

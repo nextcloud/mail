@@ -121,7 +121,6 @@ OC.L10N.register(
     "Date" : "Tarehe",
     "Tags" : "Maoni",
     "Select tags" : "Chagua ukumbusho",
-    "Last 7 days" : "Siku 7 zilizopita",
     "Custom" : "Mteja",
     "Add tag" : "Add tag",
     "Not found" : "Haipatikani",
@@ -166,6 +165,7 @@ OC.L10N.register(
     "Discard changes" : "Discard changes",
     "Message sent" : "Ujumbe umetumwa",
     "Redirect" : "Elekeza upya",
-    "Continue to %s" : "Endelea katika %s"
+    "Continue to %s" : "Endelea katika %s",
+    "Last 7 days" : "Siku 7 zilizopita"
 },
 "nplurals=2; plural=(n != 1);");

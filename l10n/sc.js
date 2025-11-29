@@ -226,7 +226,6 @@ OC.L10N.register(
     "Date" : "Data",
     "Tags" : "Etichetas",
     "Select tags" : "Seletziona etichetas",
-    "Last 7 days" : "Ùrtimas 7 dies",
     "Sieve Port" : "Porta Sieve",
     "Custom" : "Personaliza",
     "Sieve User" : "Utente Sieve",
@@ -342,6 +341,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Incarca inoghe chi no ses torradu a deretare in manera automàtica intro de pagu segundos.",
     "Redirect" : "Torra a deretare",
     "The link leads to %s" : "Su ligòngiu deretat a %s",
-    "Continue to %s" : "Sighi in %s"
+    "Continue to %s" : "Sighi in %s",
+    "Last 7 days" : "Ùrtimas 7 dies"
 },
 "nplurals=2; plural=(n != 1);");

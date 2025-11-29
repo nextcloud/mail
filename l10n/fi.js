@@ -382,7 +382,6 @@ OC.L10N.register(
     "Tags" : "Tunnisteet",
     "Select tags" : "Valitse tunnisteet",
     "Has attachments" : "On liitteitä",
-    "Last 7 days" : "Edelliset 7 päivää",
     "Sieve Port" : "Sieve-portti",
     "IMAP credentials" : "IMAP-tunnukset",
     "Custom" : "Omavalintainen",
@@ -587,6 +586,7 @@ OC.L10N.register(
     "Redirect" : "Uudelleenohjaus",
     "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
     "Continue to %s" : "Jatka sivulle %s",
-    "Mark all messages of this folder as read" : "Merkitse tämän kansion kaikki viestit luetuiksi"
+    "Mark all messages of this folder as read" : "Merkitse tämän kansion kaikki viestit luetuiksi",
+    "Last 7 days" : "Edelliset 7 päivää"
 },
 "nplurals=2; plural=(n != 1);");
