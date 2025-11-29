@@ -356,7 +356,6 @@ OC.L10N.register(
     "Tags" : "Etichette",
     "Select tags" : "Seleziona etichette",
     "Has attachments" : "Ha allegati",
-    "Last 7 days" : "Ultimi 7 giorni",
     "Sieve Port" : "Porta Sieve",
     "IMAP credentials" : "Credenziali IMAP",
     "Custom" : "Personalizzato",
@@ -554,6 +553,7 @@ OC.L10N.register(
     "Redirect" : "Redirigi",
     "The link leads to %s" : "Il collegamento conduce a %s",
     "Continue to %s" : "Continua su %s",
-    "Mark all messages of this folder as read" : "Marca tutti i messaggi di questa cartella come letti"
+    "Mark all messages of this folder as read" : "Marca tutti i messaggi di questa cartella come letti",
+    "Last 7 days" : "Ultimi 7 giorni"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

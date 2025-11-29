@@ -299,7 +299,6 @@ OC.L10N.register(
     "Date" : "Data",
     "Tags" : "Žymos",
     "Select tags" : "Pasirinkti žymas",
-    "Last 7 days" : "Paskutinės 7 dienos",
     "Custom" : "Tinkinti",
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Jūsų parašas yra didesnis nei 2 MB. Tai gali paveikti redaktoriaus našumą.",
     "Save signature" : "Įrašyti parašą",
@@ -434,6 +433,7 @@ OC.L10N.register(
     "Redirect" : "Peradresuoti",
     "The link leads to %s" : "Nuoroda veda į %s",
     "Continue to %s" : "Tęsti į %s",
-    "Mark all messages of this folder as read" : "Žymėti visus laiškus šiame aplanke kaip skaitytus"
+    "Mark all messages of this folder as read" : "Žymėti visus laiškus šiame aplanke kaip skaitytus",
+    "Last 7 days" : "Paskutinės 7 dienos"
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");

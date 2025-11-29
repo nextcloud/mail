@@ -404,7 +404,6 @@ OC.L10N.register(
     "Select tags" : "Címkék kiválasztása",
     "Marked as" : "Megjelölés mint",
     "Has attachments" : "Van melléklete",
-    "Last 7 days" : "Előző 7 nap",
     "Sieve Port" : "Levélszűrő port",
     "Custom" : "Egyéni",
     "Sieve User" : "Levélszűrő felhasználó",
@@ -629,6 +628,7 @@ OC.L10N.register(
     "The link leads to %s" : "A hivatkozás ide mutat: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarja megnyitni azt az oldalt, akkor térjen vissza a <a href=\"%s\">Levelezéshez</a>.",
     "Continue to %s" : "Folytatás ide: %s",
-    "Mark all messages of this folder as read" : "A mappában található összes üzenet megjelölése olvasottként"
+    "Mark all messages of this folder as read" : "A mappában található összes üzenet megjelölése olvasottként",
+    "Last 7 days" : "Előző 7 nap"
 },
 "nplurals=2; plural=(n != 1);");

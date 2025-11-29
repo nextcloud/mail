@@ -57,7 +57,6 @@ OC.L10N.register(
     "Close" : "Mdel",
     "Date" : "Azemz",
     "Tags" : "Tibzimin",
-    "Last 7 days" : "7 n wussan yezrin",
     "Not found" : "Ulac-it",
     "Translate from" : "Suqel seg",
     "Translate to" : "Suqel ar",
@@ -74,6 +73,7 @@ OC.L10N.register(
     "Inbox" : "Tanaka",
     "Nextcloud Mail" : "Imayl n Nextcloud",
     "Message sent" : "Izen yettwazen",
-    "Continue to %s" : "Kemmel ar %s"
+    "Continue to %s" : "Kemmel ar %s",
+    "Last 7 days" : "7 n wussan yezrin"
 },
 "nplurals=2; plural=(n != 1);");

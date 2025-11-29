@@ -362,7 +362,6 @@ OC.L10N.register(
     "Select tags" : "Избор на етикети",
     "Marked as" : "Маркиран/о като",
     "Has attachments" : "Има прикачени файлове",
-    "Last 7 days" : "Последни 7 дни",
     "Sieve Port" : "Порт на Сито",
     "Custom" : "Персонализиран",
     "Sieve User" : "Потребител на Сито",
@@ -556,6 +555,7 @@ OC.L10N.register(
     "The link leads to %s" : "Връзката води до %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желаете да посетите тази страница, може да се върнете към <a href=\"%s\">Поща</a>.",
     "Continue to %s" : "Продължи към %s",
-    "Mark all messages of this folder as read" : "Маркирай всички съобщения в папката като прочетени"
+    "Mark all messages of this folder as read" : "Маркирай всички съобщения в папката като прочетени",
+    "Last 7 days" : "Последни 7 дни"
 },
 "nplurals=2; plural=(n != 1);");

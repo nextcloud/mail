@@ -405,7 +405,6 @@ OC.L10N.register(
     "Select tags" : "태그 선택",
     "Marked as" : "다음으로 표시됨",
     "Has attachments" : "첨부파일 있음",
-    "Last 7 days" : "지난 7일",
     "Enable mail body search" : "메일 본문 검색 활성화",
     "Sieve Port" : "Sieve 포트",
     "Custom" : "사용자 정의",
@@ -635,6 +634,7 @@ OC.L10N.register(
     "Redirect" : "넘겨주기",
     "The link leads to %s" : "이 링크가 %s을(를) 향함",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "해당 페이지를 방문하지 않으려면 <a href=\"%s\">메일</a>로 돌아갈 수 있습니다.",
-    "Continue to %s" : "%s(으)로 이동"
+    "Continue to %s" : "%s(으)로 이동",
+    "Last 7 days" : "지난 7일"
 },
 "nplurals=1; plural=0;");

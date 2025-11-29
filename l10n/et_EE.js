@@ -534,8 +534,6 @@ OC.L10N.register(
     "Has attachments" : "Leidub manuseid",
     "Mentions me" : "Mainib mind",
     "Has attachment" : "Manusega",
-    "Last 7 days" : "Viimase 7 päeva jooksul",
-    "From me" : "Minult",
     "Enable mail body search" : "Otsi kirja sisust",
     "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it. Sieve is also required to use Autoresponder and Filters." : "Sieve on väga võimas keel, mille abil saad koostada filtreid oma postkastide jaoks. Kui sinu e-posti teenusepakkuja seda võimalust toetab, siis saad Sievet kasutada ka siin rakenduses. Sieve on vajalik rakenduse automaatvastaja ja kirjafiltrite jaoks.",
     "Enable sieve filter" : "Võta Sieve filter kasutusele",
@@ -832,6 +830,8 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Kui sa ei taha seda lehte avada, siis mine tagasi <a href=\"%s\">E-postirakenduse</a> lehele.",
     "Continue to %s" : "Jätka siia: %s",
     "Determine importance using machine learning" : "Määra olulisus masinõppe abil",
-    "Mark all messages of this folder as read" : "Märgi kõik selle kausta kirjad loetuks"
+    "Mark all messages of this folder as read" : "Märgi kõik selle kausta kirjad loetuks",
+    "Last 7 days" : "Viimase 7 päeva jooksul",
+    "From me" : "Minult"
 },
 "nplurals=2; plural=(n != 1);");

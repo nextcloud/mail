@@ -397,7 +397,6 @@ OC.L10N.register(
     "Select tags" : "Select tags",
     "Marked as" : "Marked as",
     "Has attachments" : "Has attachments",
-    "Last 7 days" : "Last 7 days",
     "Enable mail body search" : "Enable mail body search",
     "Sieve Port" : "Sieve Port",
     "Custom" : "Custom",
@@ -618,6 +617,7 @@ OC.L10N.register(
     "Redirect" : "Redirect",
     "The link leads to %s" : "The link leads to %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continue to %s"
+    "Continue to %s" : "Continue to %s",
+    "Last 7 days" : "Last 7 days"
 },
 "nplurals=2; plural=(n!=1);");

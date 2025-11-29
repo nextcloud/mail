@@ -131,7 +131,6 @@ OC.L10N.register(
     "Date" : "Datums",
     "Tags" : "Birkas",
     "Select tags" : "Atlasīt birkas",
-    "From me" : "No manis",
     "Custom" : "Pielāgots",
     "An error occurred, unable to rename the tag." : "Atgadījās kļūda, nevar pārdēvēt birku.",
     "Delete tag" : "Izdzēst birku",
@@ -184,6 +183,7 @@ OC.L10N.register(
     "Redirect" : "Novirzīt",
     "The link leads to %s" : "Saite, kas ved uz %s",
     "Continue to %s" : "Turpināt %s",
+    "From me" : "No manis",
     "Enable classification of important mails by default" : "Pēc noklusējuma iespējot svarīgu e-pasta ziņojumu šķirošanu"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

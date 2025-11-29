@@ -460,8 +460,6 @@ OC.L10N.register(
     "Has attachments" : "Er með viðhengi",
     "Mentions me" : "Minnist á mig",
     "Has attachment" : "Er með viðhengi",
-    "Last 7 days" : "Síðustu 7 daga",
-    "From me" : "Frá mér",
     "Enable mail body search" : "Virkja leit í meginmáli pósts",
     "Enable sieve filter" : "Virkja Sieve-síu",
     "Sieve host" : "Sieve-hýsing",
@@ -701,6 +699,8 @@ OC.L10N.register(
     "The link leads to %s" : "Tengillinn leiðir til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ef þú vilt ekki fara á þá síðu, geturðu farið til baka í <a href=\"%s\">póstforritið</a>.",
     "Continue to %s" : "Halda áfram í %s",
-    "Mark all messages of this folder as read" : "Merkja öll skilaboð í þessari möppu sem lesin"
+    "Mark all messages of this folder as read" : "Merkja öll skilaboð í þessari möppu sem lesin",
+    "Last 7 days" : "Síðustu 7 daga",
+    "From me" : "Frá mér"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");
