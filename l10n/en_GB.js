@@ -545,6 +545,7 @@ OC.L10N.register(
     "Has attachments" : "Has attachments",
     "Mentions me" : "Mentions me",
     "Has attachment" : "Has attachment",
+    "To me" : "To me",
     "Enable mail body search" : "Enable mail body search",
     "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it. Sieve is also required to use Autoresponder and Filters." : "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it. Sieve is also required to use Autoresponder and Filters.",
     "Enable sieve filter" : "Enable sieve filter",

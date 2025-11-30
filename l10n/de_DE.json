@@ -543,6 +543,7 @@
     "Has attachments" : "Hat Anhänge",
     "Mentions me" : "Erwähnt mich",
     "Has attachment" : "Hat einen Anhang",
+    "To me" : "An mich",
     "Enable mail body search" : "Durchsuchen des Nachrichtentextes aktivieren",
     "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it. Sieve is also required to use Autoresponder and Filters." : "Sieve ist eine leistungsstarke Sprache zum Schreiben von Filtern für Ihr Postfach. Sie können die Sieve-Skripte in Mail verwalten, wenn Ihr E-Mail-Dienst dies unterstützt. Sieve ist auch für die Verwendung von Autoresponder und Filtern erforderlich.",
     "Enable sieve filter" : "Sieve-Filter aktivieren",
