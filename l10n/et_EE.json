@@ -532,6 +532,7 @@
     "Has attachments" : "Leidub manuseid",
     "Mentions me" : "Mainib mind",
     "Has attachment" : "Manusega",
+    "To me" : "Mulle",
     "Enable mail body search" : "Otsi kirja sisust",
     "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it. Sieve is also required to use Autoresponder and Filters." : "Sieve on väga võimas keel, mille abil saad koostada filtreid oma postkastide jaoks. Kui sinu e-posti teenusepakkuja seda võimalust toetab, siis saad Sievet kasutada ka siin rakenduses. Sieve on vajalik rakenduse automaatvastaja ja kirjafiltrite jaoks.",
     "Enable sieve filter" : "Võta Sieve filter kasutusele",

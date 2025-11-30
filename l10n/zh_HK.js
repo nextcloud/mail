@@ -545,6 +545,7 @@ OC.L10N.register(
     "Has attachments" : "有附件",
     "Mentions me" : "提及我",
     "Has attachment" : "有附件",
+    "To me" : "給我",
     "Enable mail body search" : "啟用郵件正文搜尋",
     "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it. Sieve is also required to use Autoresponder and Filters." : "Sieve 是為電子信箱編寫篩選器的強大語言。若您的電子郵件服務支援，您可以在郵件中管理篩選命令稿。使用自動回覆與篩選器也需要 Sieve。",
     "Enable sieve filter" : "啟用 sieve 篩選器",
