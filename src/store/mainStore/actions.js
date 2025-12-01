@@ -2062,6 +2062,15 @@ export default function mainStoreActions() {
 					Vue.set(mailbox, 'unread', Math.max(unread - 1, 0))
 				}
 			}
+			if (flag === 'flagged') {
+				envelope.flags[flag] = value
+				this.removeEnvelopeMutation({ id: envelope.databaseId })
+				this.addEnvelopesMutation({
+					query: value ? 'is:starred' : 'not:starred',
+					envelopes: [envelope],
+				})
+				return
+			}
 			Vue.set(envelope.flags, flag, value)
 		},
 		addTagMutation({ tag }) {
