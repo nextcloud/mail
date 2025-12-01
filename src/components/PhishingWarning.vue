@@ -68,6 +68,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../../css/variables';
+
 .phishing-warning {
 	background-color: rgba(var(--color-warning-rgb), 0.2);
 	border-radius: var(--border-radius-element);
@@ -94,7 +96,7 @@ export default {
 		}
     }
 
-	@media (max-width: 1024px) {
+	@media (max-width: #{variables.$breakpoint-mobile}) {
 		margin-inline-start: calc(var(--default-grid-baseline) * 3);
 	}
 }

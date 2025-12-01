@@ -216,6 +216,8 @@ export default {
 </script>
 
 <style lang="scss">
+@use '../../css/variables';
+
 .attachments {
 	width: 100%;
     box-sizing: border-box;
@@ -294,7 +296,7 @@ export default {
 	bottom: -2px;
 	background: linear-gradient(0deg, var(--color-main-background), var(--color-main-background) 90%, rgba(255, 255, 255, 0));
 
-	@media (max-width: var(--breakpoint-mobile)) {
+	@media (max-width: #{variables.$breakpoint-mobile}) {
         padding: 10px 12px 10px 12px;
     }
 }

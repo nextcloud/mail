@@ -97,6 +97,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../../css/variables';
+
 .composer-session {
 	position: fixed;
 	bottom: calc(var(--body-container-margin) + var(--default-grid-baseline));
@@ -114,7 +116,7 @@ export default {
 	border-radius: var(--body-container-radius);
 
 	// Mobile
-	@media (max-width: 1024px) {
+	@media (max-width: #{variables.$breakpoint-mobile}) {
 		width: calc(100% - 2 * var(--default-grid-baseline));
 		height: 44px;
 		border-radius: var(--border-radius-pill);

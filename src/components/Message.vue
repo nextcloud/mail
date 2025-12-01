@@ -173,6 +173,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../../css/variables';
+
 .v-popover > .trigger > .action-item {
 	border-radius: 22px;
 	background-color: var(--color-background-darker);
@@ -233,12 +235,12 @@ export default {
 		margin-inline-start: auto;
 	}
 
-	@media (max-width: var(--breakpoint-mobile)) {
+	@media (max-width: #{variables.$breakpoint-mobile}) {
         margin-inline: calc(var(--default-grid-baseline) * 3);
     }
 }
 
-@media screen and (max-width: var(--breakpoint-mobile)) {
+@media screen and (max-width: #{variables.$breakpoint-mobile}) {
 	.reply-buttons {
 		display: flex;
 		flex-wrap: wrap;

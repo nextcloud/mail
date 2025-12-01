@@ -580,6 +580,8 @@ export default {
 </script>
 
 <style lang="scss">
+@use '../../css/variables';
+
 #mail-message {
 	width: 100%;
 	max-width: 100%;
@@ -631,7 +633,7 @@ export default {
 	}
 }
 
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
     #mail-thread-header {
         position: sticky !important;
         top: 29px !important;
@@ -669,13 +671,13 @@ export default {
 	}
 }
 
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
     #mail-thread-header-fields {
         padding-inline-start: 48px;
     }
 }
 
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
 	#mail-thread-header-fields {
 		margin-top: -32px;
 	}
@@ -695,7 +697,7 @@ export default {
 	margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 10) 0 calc(var(--default-grid-baseline) * 14);
 }
 
-@media only screen and (max-width: var(--breakpoint-mobile)) {
+@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
     #mail-content {
         margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 3) 0 calc(var(--default-grid-baseline) * 3);
     }
