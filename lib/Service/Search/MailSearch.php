@@ -77,7 +77,7 @@ class MailSearch implements IMailSearch {
 	 * @param int|null $limit
 	 * @param string|null $view
 	 *
-	 * @return Message[]
+	 * @return Message[][]
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -102,8 +102,9 @@ class MailSearch implements IMailSearch {
 		if ($cursor !== null) {
 			$query->setCursor($cursor);
 		}
+		$threadingEnabled = $view === self::VIEW_THREADED;
 		if ($view !== null) {
-			$query->setThreaded($view === self::VIEW_THREADED);
+			$query->setThreaded($threadingEnabled);
 		}
 		// In flagged we don't want anything but flagged messages
 		if ($mailbox->isSpecialUse(Horde_Imap_Client::SPECIALUSE_FLAGGED)) {
@@ -113,17 +114,23 @@ class MailSearch implements IMailSearch {
 		if (!$mailbox->isSpecialUse(Horde_Imap_Client::SPECIALUSE_TRASH)) {
 			$query->addFlag(Flag::not(Flag::DELETED));
 		}
-
-		return $this->previewEnhancer->process(
-			$account,
-			$mailbox,
-			$this->messageMapper->findByIds($account->getUserId(),
-				$this->getIdsLocally($account, $mailbox, $query, $sortOrder, $limit),
-				$sortOrder,
-			),
-			true,
-			$userId
+		$messages = $this->messageMapper->findMessageListsByIds($account, $account->getUserId(),
+			$this->getIdsLocally($account, $mailbox, $query, $sortOrder, $limit),
+			$sortOrder,
+			$threadingEnabled
 		);
+		$processedMessages = [];
+		foreach ($messages as $messageList) {
+			$processedMessages[] = $this->previewEnhancer->process(
+				$account,
+				$mailbox,
+				$messageList,
+				true,
+				$userId
+			);
+		}
+
+		return $processedMessages;
 	}
 
 	/**
