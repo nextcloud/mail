@@ -204,6 +204,7 @@ describe('Vuex store actions', () => {
 		}
 
 		store.preferences['sort-order'] = 'newest'
+		store.preferences['layout-message-view'] = 'threaded'
 
 		store.addAccountMutation(account13)
 		store.addMailboxMutation({
@@ -245,7 +246,7 @@ describe('Vuex store actions', () => {
 
 		expect(MessageService.fetchEnvelopes).toHaveBeenCalledTimes(1)
 		expect(MessageService.fetchEnvelopes)
-			.toHaveBeenNthCalledWith(1, 13, 11, undefined, 300000, PAGE_SIZE, 'newest')
+			.toHaveBeenNthCalledWith(1, 13, 11, undefined, 300000, PAGE_SIZE, 'newest', 'threaded')
 		expect(store.mailboxes[UNIFIED_INBOX_ID].envelopeLists[''].toSorted()).toEqual([
 			// Initial envelopes
 			...msgs1.map(mockEnvelope(11)),
@@ -335,6 +336,7 @@ describe('Vuex store actions', () => {
 		}
 
 		store.preferences['sort-order'] = 'newest'
+		store.preferences['layout-message-view'] = 'threaded'
 
 		store.addAccountMutation(account13)
 		store.addAccountMutation(account26)
@@ -403,9 +405,9 @@ describe('Vuex store actions', () => {
 
 		expect(MessageService.fetchEnvelopes).toHaveBeenCalledTimes(2)
 		expect(MessageService.fetchEnvelopes)
-			.toHaveBeenNthCalledWith(1, 13, 11, undefined, 300000, PAGE_SIZE, 'newest')
+			.toHaveBeenNthCalledWith(1, 13, 11, undefined, 300000, PAGE_SIZE, 'newest', 'threaded')
 		expect(MessageService.fetchEnvelopes)
-			.toHaveBeenNthCalledWith(2, 26, 21, undefined, 600000, PAGE_SIZE, 'newest')
+			.toHaveBeenNthCalledWith(2, 26, 21, undefined, 600000, PAGE_SIZE, 'newest', 'threaded')
 		expect(store.mailboxes[UNIFIED_INBOX_ID].envelopeLists[''].toSorted()).toEqual([
 			// Initial envelopes
 			...page1.map(mockEnvelope(11)),
