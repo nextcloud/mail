@@ -52,6 +52,10 @@ export default function initAfterAppCreation() {
 		key: 'search-priority-body',
 		value: preferences['search-priority-body'],
 	})
+	mainStore.savePreferenceMutation({
+		key: 'sort-favorites',
+		value: preferences['sort-favorites'],
+	})
 	const startMailboxId = preferences['start-mailbox-id']
 	mainStore.savePreferenceMutation({
 		key: 'start-mailbox-id',

@@ -343,7 +343,14 @@ export default {
 			return envelopes.length > 0
 		},
 
+		sortFavorites() {
+			return this.mainStore.getPreference('sort-favorites', 'false') === 'true'
+		},
+
 		hasFavoriteEnvelopes() {
+			if (!this.sortFavorites) {
+				return false
+			}
 			const envelopes = this.mainStore.getEnvelopes(
 				this.unifiedInbox.databaseId,
 				this.appendToSearch(this.favoriteQuery),
@@ -424,6 +431,14 @@ export default {
 			}
 		},
 
+		sortFavorites(enabled) {
+			if (enabled) {
+				this.searchQuery = this.searchQuery ? 'not:starred' : this.searchQuery + ' not:starred'
+			} else if (this.searchQuery.includes('not:starred')) {
+				this.searchQuery = this.searchQuery.replace('not:starred', '')
+			}
+		},
+
 		async hasFollowUpEnvelopes(value) {
 			if (!value) {
 				return
@@ -444,8 +459,9 @@ export default {
 	},
 
 	async mounted() {
-		// TODO: check the user preference
-		this.searchQuery = 'not:starred'
+		if (this.sortFavorites) {
+			this.searchQuery = 'not:starred'
+		}
 		setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
 		if (this.isThreadShown) {
 			await this.fetchEnvelopes()
@@ -495,8 +511,8 @@ export default {
 			if (this.searchQuery === undefined) {
 				return str
 			}
-			// Todo: adjust once we have the user prefeference
-			if (str === this.favoriteQuery && this.searchQuery.includes('not:starred')) {
+
+			if (this.sortFavorites && str === this.favoriteQuery && this.searchQuery.includes('not:starred')) {
 				return this.searchQuery.replace('not:starred', str)
 			}
 			return this.searchQuery + ' ' + str
