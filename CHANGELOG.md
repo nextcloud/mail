@@ -1,3 +1,26 @@
+## [5.6.2](https://github.com/nextcloud/mail/compare/v5.6.1...v5.6.2) (2025-12-02)
+
+
+### Bug Fixes
+
+* **deps:** bump node-forge from 1.3.1 to v1.3.2 ([3b02f7d](https://github.com/nextcloud/mail/commit/3b02f7d5844c9b483b39e0945c43ad199734b8f4))
+* **deps:** Fix npm audit ([5a72037](https://github.com/nextcloud/mail/commit/5a72037bcecd6b6495a55a5ddd83131586dff5f4))
+* **envelope:** apply read/unread for whole thread ([f438568](https://github.com/nextcloud/mail/commit/f4385683a65c539332574163e62a63c94924cd86))
+* **imap:** cache message body ([d8e2288](https://github.com/nextcloud/mail/commit/d8e22881cb7edf950061ba24b0401d61007ca4dc))
+* **l10n:** Update translations from Transifex ([dfb53d7](https://github.com/nextcloud/mail/commit/dfb53d77a3b5b66ed928b5c243e810ae07956fa4))
+* **l10n:** Update translations from Transifex ([aee2a9b](https://github.com/nextcloud/mail/commit/aee2a9bd25fb1a56fbca1cb4f731dddec541a01e))
+* **l10n:** Update translations from Transifex ([27af331](https://github.com/nextcloud/mail/commit/27af331d3c6bd7aea12e80d9a0f850dce0d37b2c))
+* **l10n:** Update translations from Transifex ([2da0f3c](https://github.com/nextcloud/mail/commit/2da0f3cb36cb62895ad352e42d12b1df02d04195))
+* **l10n:** Update translations from Transifex ([25b6084](https://github.com/nextcloud/mail/commit/25b6084210d9a02d7519860fd1d0c2dba758995e))
+* **l10n:** Update translations from Transifex ([4dedd59](https://github.com/nextcloud/mail/commit/4dedd59938e5c8ad61b5117919dd3e8a3d6ce367))
+* **l10n:** Update translations from Transifex ([09e5e5b](https://github.com/nextcloud/mail/commit/09e5e5b511c22e726b1be965e6ee499851114e3f))
+* **oauth:** close popup window in parent window ([f35dae2](https://github.com/nextcloud/mail/commit/f35dae24b74925b6b5a9b3e9e48af8c6799ed655))
+* **setup:** allow setup with ms oauth and no password ([acbd516](https://github.com/nextcloud/mail/commit/acbd516529fde2dfccbf2f79bfff684a735da3db))
+* **sieve:** allow system flags like seen ([3801cf8](https://github.com/nextcloud/mail/commit/3801cf8baed69ba1eaf43c8249c6429ad5994bf0))
+* **sieve:** ensure the stop action is always last ([557e606](https://github.com/nextcloud/mail/commit/557e6065f15585620c55f32d94ad79c5061d94b8))
+
+
+
 ## [5.6.1](https://github.com/nextcloud/mail/compare/v5.6.0...v5.6.1) (2025-11-25)
 
 
