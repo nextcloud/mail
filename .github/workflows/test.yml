@@ -17,20 +17,23 @@ jobs:
         php-versions: ['8.2', '8.3']
         nextcloud-versions: ['master', 'stable31']
         include:
+          - php-versions: '8.4'
+            nextcloud-versions: 'master'
+            coverage: true
           - php-versions: '8.1'
             nextcloud-versions: 'stable32'
           - php-versions: '8.4'
             nextcloud-versions: 'stable32'
           - php-versions: '8.5'
             nextcloud-versions: 'master'
-    name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
+    name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests ${{ matrix.coverage && '(coverage)' || ''}}
     steps:
     - name: Set up Nextcloud env
       uses: ChristophWurst/setup-nextcloud@fc0790385c175d97e88a7cb0933490de6e990374 # v0.3.2
       with:
         nextcloud-version: ${{ matrix.nextcloud-versions }}
         php-version: ${{ matrix.php-versions }}
-        php-coverage: 'xdebug'
+        php-coverage: ${{ matrix.coverage && 'xdebug' || 'none' }}
         patch-php-version-check: ${{ matrix.php-versions == '8.5' }}
         node-version: 'false'
         install: true
@@ -45,18 +48,11 @@ jobs:
     - name: Run tests
       working-directory: nextcloud/apps/mail
       run: composer run test:unit
-      if: ${{ matrix.php-versions == '8.3' }}
       env:
-        XDEBUG_MODE: coverage
-    - name: Run tests
-      working-directory: nextcloud/apps/mail
-      run: composer run test:unit
-      if: ${{ matrix.php-versions != '8.3' }}
-      env:
-        XDEBUG_MODE: off
+        XDEBUG_MODE: ${{ matrix.coverage && 'coverage' || 'off' }}
     - name: Report coverage
       uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
-      if: ${{ always() && matrix.php-versions == '8.3' }}
+      if: ${{ !cancelled() && matrix.coverage }}
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         working-directory: nextcloud/apps/mail
@@ -74,6 +70,11 @@ jobs:
               db: ['sqlite', 'mysql', 'pgsql']
               cache: ['nocache']
               include:
+                - php-versions: 8.4
+                  nextcloud-versions: 'master'
+                  db: 'mysql'
+                  cache: 'nocache'
+                  coverage: true
                 - php-versions: 8.1
                   nextcloud-versions: 'stable31'
                   db: 'sqlite'
@@ -90,11 +91,12 @@ jobs:
                   nextcloud-versions: 'stable32'
                   db: 'mysql'
                   cache: 'redis'
+                  coverage: true
                 - php-versions: 8.5
                   nextcloud-versions: 'master'
                   db: 'mysql'
                   cache: 'redis'
-      name: ${{ matrix.nextcloud-versions }} w/ php${{ matrix.php-versions }}-${{ matrix.db }}-${{ matrix.cache }} integration tests
+      name: ${{ matrix.nextcloud-versions }} w/ php${{ matrix.php-versions }}-${{ matrix.db }}-${{ matrix.cache }} integration tests ${{ matrix.coverage && '(coverage)' || ''}}
       services:
           mail-service:
               image: ghcr.io/christophwurst/docker-imap-devel:latest
@@ -149,7 +151,7 @@ jobs:
             with:
               nextcloud-version: ${{ matrix.nextcloud-versions }}
               php-version: ${{ matrix.php-versions }}
-              php-coverage: 'xdebug'
+              php-coverage: ${{ matrix.coverage && 'xdebug' || 'none' }}
               patch-php-version-check: ${{ matrix.php-versions == '8.5' }}
               install: true
               database: ${{ matrix.db }}
@@ -184,16 +186,9 @@ jobs:
               echo "SET GLOBAL log_output = 'table';" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
           - name: Run tests
             working-directory: nextcloud/apps/mail
-            if: ${{ matrix.db == 'mysql' }}
             run: composer run test:integration
             env:
-                XDEBUG_MODE: coverage
-          - name: Run tests
-            working-directory: nextcloud/apps/mail
-            if: ${{ matrix.db != 'mysql' }}
-            run: composer run test:integration
-            env:
-                XDEBUG_MODE: off
+                XDEBUG_MODE: ${{ matrix.coverage && 'coverage' || 'off' }}
           - name: Read slow queries
             if: ${{ always() }}
             run: echo "SELECT * FROM mysql.slow_log WHERE sql_text LIKE '%oc_mail%' AND sql_text NOT LIKE '%information_schema%'" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
@@ -202,7 +197,7 @@ jobs:
             run: cat nextcloud/data/mail-*-*-imap.log
           - name: Report coverage
             uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
-            if: ${{ always() && matrix.db == 'mysql' }}
+            if: ${{ !cancelled() && matrix.coverage }}
             with:
               token: ${{ secrets.CODECOV_TOKEN }}
               working-directory: nextcloud/apps/mail
