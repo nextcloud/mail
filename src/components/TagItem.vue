@@ -3,14 +3,21 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="tag-group">
+	<div class="tag-item">
+		<div class="tag-item__tag">
+			<Tag :tag="tag" />
+		</div>
 		<button
-			class="tag-group__label"
-			:style="{
-				color: convertHex(tag.color, 1),
-				'background-color': convertHex(tag.color, 0.15),
-			}">
-			{{ translateTagDisplayName(tag) }}
+			v-if="!isSet(tag.imapLabel)"
+			class="tag-actions"
+			@click="addTag(tag.imapLabel)">
+			{{ t('mail', 'Set tag') }}
+		</button>
+		<button
+			v-else
+			class="tag-actions"
+			@click="removeTag(tag.imapLabel)">
+			{{ t('mail', 'Unset tag') }}
 		</button>
 		<Actions :force-menu="true">
 			<NcActionButton
@@ -47,18 +54,6 @@
 				{{ t('mail', 'Delete tag') }}
 			</NcActionButton>
 		</Actions>
-		<button
-			v-if="!isSet(tag.imapLabel)"
-			class="tag-actions"
-			@click="addTag(tag.imapLabel)">
-			{{ t('mail', 'Set tag') }}
-		</button>
-		<button
-			v-else
-			class="tag-actions"
-			@click="removeTag(tag.imapLabel)">
-			{{ t('mail', 'Unset tag') }}
-		</button>
 	</div>
 </template>
 
@@ -69,7 +64,7 @@ import { mapStores } from 'pinia'
 import IconEdit from 'vue-material-design-icons/PencilOutline.vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import useMainStore from '../store/mainStore.js'
-import { translateTagDisplayName } from '../util/tag.js'
+import Tag from './Tag.vue'
 
 export default {
 	name: 'TagItem',
@@ -82,6 +77,7 @@ export default {
 		IconLoading,
 		DeleteIcon,
 		IconEdit,
+		Tag,
 	},
 
 	props: {
@@ -114,7 +110,6 @@ export default {
 	},
 
 	methods: {
-		translateTagDisplayName,
 		deleteTag() {
 			this.$emit('delete-tag', this.tag)
 		},
@@ -165,20 +160,6 @@ export default {
 			}
 		},
 
-		convertHex(color, opacity) {
-			if (color.length === 4) {
-				const r = parseInt(color.substring(1, 2), 16)
-				const g = parseInt(color.substring(2, 3), 16)
-				const b = parseInt(color.substring(3, 4), 16)
-				return `rgba(${r}, ${g}, ${b}, ${opacity})`
-			} else {
-				const r = parseInt(color.substring(1, 3), 16)
-				const g = parseInt(color.substring(3, 5), 16)
-				const b = parseInt(color.substring(5, 7), 16)
-				return `rgba(${r}, ${g}, ${b}, ${opacity})`
-			}
-		},
-
 		isSet(imapLabel) {
 			return this.envelopes.some((envelope) => (
 				this.mainStore.getEnvelopeTags(envelope.databaseId).some((tag) => tag.imapLabel === imapLabel)
@@ -203,6 +184,18 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.tag-item {
+	display: flex;
+	align-items: center;
+	margin: 0 1px;
+
+	&__tag {
+		flex-grow: 1;
+		display: flex;
+		align-items: center;
+	}
+}
+
 .app-navigation-entry-bullet-wrapper {
 	width: 44px;
 	height: 44px;
@@ -223,13 +216,6 @@ export default {
 	}
 }
 
-.tag-group {
-	display: block;
-	position: relative;
-	margin: 0 1px;
-	overflow: hidden;
-}
-
 .tag-actions {
 	background-color: transparent;
 	border: none;
@@ -238,17 +224,6 @@ export default {
 	&:focus {
 		background-color: var(--color-border-dark);
 	}
-}
-
-.tag-group__label {
-	z-index: 2;
-	font-weight: bold;
-	border: none;
-	background-color: transparent;
-	padding-inline: 10px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	max-width: 94px;
 }
 
 .action-item {
