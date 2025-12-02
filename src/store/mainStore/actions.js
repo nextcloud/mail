@@ -116,6 +116,7 @@ import {
 import useOutboxStore from '../outboxStore.js'
 
 const sliceToPage = slice(0, PAGE_SIZE)
+const addUniqueId = (list, id) => uniq([...(list || []), id])
 
 const findIndividualMailboxes = curry((getMailboxes, specialRole) => pipe(
 	filter(complement(prop('isUnified'))),
@@ -2063,13 +2064,24 @@ export default function mainStoreActions() {
 				}
 			}
 			if (flag === 'flagged') {
-				envelope.flags[flag] = value
-				this.removeEnvelopeMutation({ id: envelope.databaseId })
-				this.addEnvelopesMutation({
-					query: value ? 'is:starred' : 'not:starred',
-					envelopes: [envelope],
+				const starredLists = Object.keys(mailbox.envelopeLists).filter((key) => key.includes('is:starred'))
+				const notStarredLists = Object.keys(mailbox.envelopeLists).filter((key) => key.includes('not:starred'))
+
+				starredLists.forEach((key) => {
+					if (value) {
+						Vue.set(mailbox.envelopeLists, key, addUniqueId(mailbox.envelopeLists[key], envelope.databaseId))
+					} else {
+						Vue.set(mailbox.envelopeLists, key, (mailbox.envelopeLists[key] || []).filter((id) => id !== envelope.databaseId))
+					}
 				})
-				return
+				notStarredLists.forEach((key) => {
+					if (value) {
+						Vue.set(mailbox.envelopeLists, key, (mailbox.envelopeLists[key] || []).filter((id) => id !== envelope.databaseId))
+					} else {
+						Vue.set(mailbox.envelopeLists, key, addUniqueId(mailbox.envelopeLists[key], envelope.databaseId))
+					}
+				})
+				this.mailboxes[envelope.mailboxId] = mailbox
 			}
 			Vue.set(envelope.flags, flag, value)
 		},
