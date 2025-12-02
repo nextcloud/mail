@@ -35,7 +35,7 @@ jobs:
         node-version: 'false'
         install: true
     - name: Checkout Mail
-      uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+      uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
       with:
         path: nextcloud/apps/mail
         fetch-depth: 2
@@ -160,7 +160,7 @@ jobs:
               php -f nextcloud/occ config:system:set memcache.local --value='\OC\Memcache\Redis'
               php -f nextcloud/occ config:system:set memcache.distributed --value='\OC\Memcache\Redis'
           - name: Checkout Mail
-            uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+            uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
             with:
                 path: nextcloud/apps/mail
                 fetch-depth: 2
@@ -214,7 +214,7 @@ jobs:
       runs-on: ubuntu-latest
       name: Front-end unit tests
       steps:
-          - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+          - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
           - name: Read package.json node and npm engines version
             uses: skjnldsv/read-package-engines-version-actions@8205673bab74a63eb9b8093402fd9e0e018663a1 # v2.2
             id: versions
@@ -267,7 +267,7 @@ jobs:
           php -f nextcloud/occ config:system:set app.mail.debug --type=bool --value=true
           php -f nextcloud/occ config:system:set app.mail.verify-tls-peer --type=bool --value=false
       - name: Check out the app
-        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           path: nextcloud/apps/mail
       - name: Install php dependencies
