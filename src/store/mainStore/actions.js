@@ -811,7 +811,15 @@ export default function mainStoreActions() {
 					return Promise.reject(new Error('Cannot find last envelope. Required for the mailbox cursor'))
 				}
 
-				return fetchEnvelopes(mailbox.accountId, mailboxId, query, lastEnvelope.dateInt, quantity, this.getPreference('sort-order')).then((envelopes) => {
+				return fetchEnvelopes(
+					mailbox.accountId,
+					mailboxId,
+					query,
+					lastEnvelope.dateInt,
+					quantity,
+					this.getPreference('sort-order'),
+					this.getPreference('layout-message-view'),
+				).then((envelopes) => {
 					logger.debug(`fetched ${envelopes.length} messages for mailbox ${mailboxId}`, {
 						envelopes,
 						addToUnifiedMailboxes,
