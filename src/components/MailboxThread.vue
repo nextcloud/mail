@@ -599,7 +599,7 @@ export default {
 	position: absolute;
 	overflow: scroll;
 	width: 100% !important;
-	top: 52px;
+	top: 40px;
 }
 
 :deep(.app-content-wrapper) {
