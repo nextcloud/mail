@@ -68,16 +68,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../../css/variables';
+
 .phishing-warning {
-	background-color:rgba(var(--color-warning-rgb), 0.2);
-    border-radius: var(--border-radius);
-    text-align: start;
-    padding: 8px;
-    margin: calc(var(--default-grid-baseline) * 2);
+	background-color: rgba(var(--color-warning-rgb), 0.2);
+	border-radius: var(--border-radius-element);
+	text-align: start;
+	padding: 8px;
+	margin: calc(var(--default-grid-baseline) * 2);
 	// To match the html message margin
-	margin-inline-start: 50px;
+	margin-inline-start: calc(var(--default-grid-baseline) * 14);
 	&__title {
 		display: flex;
+		gap: 2px;
 	}
 	&__list {
 		list-style-position: inside;
@@ -86,11 +89,15 @@ export default {
 			word-wrap: break-word;
 		}
 	}
-    &__links {
-      margin-top: 10px;
+	&__links {
+		margin-top: 10px;
 		&__button{
 			margin-bottom: 10px;
 		}
     }
+
+	@media (max-width: #{variables.$breakpoint-mobile}) {
+		margin-inline-start: calc(var(--default-grid-baseline) * 3);
+	}
 }
 </style>
