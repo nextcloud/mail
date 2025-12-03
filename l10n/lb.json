@@ -29,6 +29,7 @@
     "Comment" : "Kommentar",
     "Remove" : "Läschen",
     "Today" : "Haut",
+    "Favorites" : "Favoriten",
     "Other" : "Aner",
     "Translate" : "Iwwersetzen",
     "Unnamed" : "ouni Numm",
@@ -55,7 +56,6 @@
     "Port" : "Port",
     "Group" : "Grupp",
     "Shared" : "Gedeelt",
-    "All" : "All",
-    "Favorites" : "Favoriten"
+    "All" : "All"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

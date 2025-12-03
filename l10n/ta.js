@@ -25,6 +25,7 @@ OC.L10N.register(
     "Remove" : "அகற்றுக",
     "Today" : "இன்று",
     "Yesterday" : "நேற்று",
+    "Favorites" : "விருப்பங்கள்",
     "Other" : "மற்றவை",
     "Translate" : "Translate",
     "Move" : "Move",
@@ -43,7 +44,6 @@ OC.L10N.register(
     "Host" : "ஓம்புனர்",
     "Port" : "துறை ",
     "Group" : "Group",
-    "All" : "எல்லாம்",
-    "Favorites" : "விருப்பங்கள்"
+    "All" : "எல்லாம்"
 },
 "nplurals=2; plural=(n != 1);");
