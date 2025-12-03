@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "69d919da4c815192436556b2bc651ad8",
+    "content-hash": "07ab6a4860913ed664a9a30b628e6876",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -81,16 +81,16 @@
         },
         {
             "name": "nextcloud/openapi-extractor",
-            "version": "v1.8.6",
+            "version": "v1.8.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-releases/openapi-extractor.git",
-                "reference": "3874ffb6817ab5b616a5e909c48c7cd13889cafa"
+                "reference": "230f61925c362779652b0038a1314ce5f931e853"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-releases/openapi-extractor/zipball/3874ffb6817ab5b616a5e909c48c7cd13889cafa",
-                "reference": "3874ffb6817ab5b616a5e909c48c7cd13889cafa",
+                "url": "https://api.github.com/repos/nextcloud-releases/openapi-extractor/zipball/230f61925c362779652b0038a1314ce5f931e853",
+                "reference": "230f61925c362779652b0038a1314ce5f931e853",
                 "shasum": ""
             },
             "require": {
@@ -101,9 +101,9 @@
                 "phpstan/phpdoc-parser": "^2.1"
             },
             "require-dev": {
-                "nextcloud/coding-standard": "^1.2",
+                "nextcloud/coding-standard": "^1.4.0",
                 "nextcloud/ocp": "dev-master",
-                "rector/rector": "^2.0"
+                "rector/rector": "^2.2.8"
             },
             "bin": [
                 "bin/generate-spec",
@@ -122,9 +122,9 @@
             "description": "A tool for extracting OpenAPI specifications from Nextcloud source code",
             "support": {
                 "issues": "https://github.com/nextcloud-releases/openapi-extractor/issues",
-                "source": "https://github.com/nextcloud-releases/openapi-extractor/tree/v1.8.6"
+                "source": "https://github.com/nextcloud-releases/openapi-extractor/tree/v1.8.7"
             },
-            "time": "2025-10-01T13:53:28+00:00"
+            "time": "2025-12-02T09:52:06+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -243,5 +243,5 @@
     "platform-overrides": {
         "php": "8.1"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
