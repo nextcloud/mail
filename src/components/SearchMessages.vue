@@ -643,7 +643,6 @@ export default {
 	position: sticky;
 	top: 0;
 	z-index: 10;
-	height: 52px;
 	background-color: var(--color-main-background);
 	&__input {
 		min-height: 52px;
