@@ -54,6 +54,13 @@
 						:label="t('mail', 'Show all messages in thread')"
 						:description="t('mail', 'When off, only the selected message will be shown')" />
 				</NcFormBox>
+				<NcFormBox>
+					<NcFormBoxSwitch
+						v-model="sortFavorites"
+						:label="t('mail', 'Sort favorites up')"
+						:disabled="loadingSortFavorites"
+						:description="t('mail', 'When on, favorite messages will be sorted to the top of folders')" />
+				</NcFormBox>
 				<NcRadioGroup v-model="layoutMode" :label="t('mail', 'Layout')">
 					<NcRadioGroupButton :label="t('mail', 'Vertical split')" value="vertical-split">
 						<template #icon>
@@ -348,6 +355,7 @@ export default {
 			internalAddressText: t('mail', 'Highlight external addresses'),
 			toggleAutoTagging: false,
 			loadingFollowUpReminders: false,
+			loadingSortFavorites: false,
 			displaySmimeCertificateModal: false,
 			sortOrder: 'newest',
 			showSettings: false,
@@ -382,6 +390,16 @@ export default {
 
 		accountsWithEmail() {
 			return this.getAccounts.filter((account) => account && account.emailAddress)
+		},
+
+		sortFavorites: {
+			get() {
+				return this.mainStore.getPreference('sort-favorites', 'false') === 'true'
+			},
+
+			set(value) {
+				this.onToggleSortFavorites(value)
+			},
 		},
 
 		searchPriorityBody: {
@@ -561,6 +579,21 @@ export default {
 				Logger.error('could not save preferences', { error })
 			} finally {
 				this.loadingPrioritySettings = false
+			}
+		},
+
+		async onToggleSortFavorites(enabled) {
+			this.loadingSortFavorites = true
+
+			try {
+				await this.mainStore.savePreference({
+					key: 'sort-favorites',
+					value: enabled ? 'true' : 'false',
+				})
+			} catch (error) {
+				Logger.error('could not save preferences', { error })
+			} finally {
+				this.loadingSortFavorites = false
 			}
 		},
 
