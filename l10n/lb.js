@@ -31,6 +31,7 @@ OC.L10N.register(
     "Comment" : "Kommentar",
     "Remove" : "Läschen",
     "Today" : "Haut",
+    "Favorites" : "Favoriten",
     "Other" : "Aner",
     "Translate" : "Iwwersetzen",
     "Unnamed" : "ouni Numm",
@@ -57,7 +58,6 @@ OC.L10N.register(
     "Port" : "Port",
     "Group" : "Grupp",
     "Shared" : "Gedeelt",
-    "All" : "All",
-    "Favorites" : "Favoriten"
+    "All" : "All"
 },
 "nplurals=2; plural=(n != 1);");
