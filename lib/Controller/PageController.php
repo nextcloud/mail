@@ -71,7 +71,6 @@ class PageController extends Controller {
 	private AiIntegrationsService $aiIntegrationsService;
 	private IUserManager $userManager;
 	private IAvailabilityCoordinator $availabilityCoordinator;
-	private ClassificationSettingsService $classificationSettingsService;
 	private InternalAddressService $internalAddressService;
 	private QuickActionsService $quickActionsService;
 	private ContextChatSettingsService $contextChatSettingsService;
@@ -96,7 +95,6 @@ class PageController extends Controller {
 		SmimeService $smimeService,
 		AiIntegrationsService $aiIntegrationsService,
 		IUserManager $userManager,
-		ClassificationSettingsService $classificationSettingsService,
 		InternalAddressService $internalAddressService,
 		IAvailabilityCoordinator $availabilityCoordinator,
 		QuickActionsService $quickActionsService,
@@ -122,7 +120,6 @@ class PageController extends Controller {
 		$this->smimeService = $smimeService;
 		$this->aiIntegrationsService = $aiIntegrationsService;
 		$this->userManager = $userManager;
-		$this->classificationSettingsService = $classificationSettingsService;
 		$this->internalAddressService = $internalAddressService;
 		$this->availabilityCoordinator = $availabilityCoordinator;
 		$this->quickActionsService = $quickActionsService;
@@ -229,7 +226,6 @@ class PageController extends Controller {
 			'collect-data' => $this->preferences->getPreference($this->currentUserId, 'collect-data', 'true'),
 			'search-priority-body' => $this->preferences->getPreference($this->currentUserId, 'search-priority-body', 'false'),
 			'start-mailbox-id' => $this->preferences->getPreference($this->currentUserId, 'start-mailbox-id'),
-			'tag-classified-messages' => $this->classificationSettingsService->isClassificationEnabled($this->currentUserId) ? 'true' : 'false',
 			'follow-up-reminders' => $this->preferences->getPreference($this->currentUserId, 'follow-up-reminders', 'true'),
 			'sort-favorites' => $this->preferences->getPreference($this->currentUserId, 'sort-favorites', 'false'),
 			'index-context-chat' => $this->contextChatSettingsService->isIndexingEnabled($this->currentUserId) ? 'true' : 'false',
