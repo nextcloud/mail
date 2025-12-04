@@ -174,7 +174,7 @@ class SubmitContentJobTest extends TestCase {
 		$this->contextChatProvider->expects($this->once())->method('getAppId')->willReturn('mail');
 		$this->contextChatProvider->expects($this->once())->method('getId')->willReturn('mail');
 		$this->contentManager->expects($this->once())->method('submitContent');
-		$this->taskService->expects($this->once())->method('updateOrCreate')->with($task->getMailboxId(), 2);
+		$this->taskService->expects($this->once())->method('setLastMessage')->with($task->getMailboxId(), 2);
 
 		$this->submitContentJob->setLastRun(0);
 		$this->submitContentJob->start($this->createMock(IJobList::class));

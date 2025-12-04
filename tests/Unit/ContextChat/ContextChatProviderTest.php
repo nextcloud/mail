@@ -163,17 +163,4 @@ class ContextChatProviderTest extends TestCase {
 		$itemUrl = $this->contextChatProvider->getItemUrl('1:2');
 		$this->assertEquals('http://localhost/apps/mail/box/1/thread/2', $itemUrl);
 	}
-
-	public function testTriggerInitialImport(): void {
-		$user = $this->createMock(\OCP\IUser::class);
-		$user->expects($this->once())->method('getUID')->willReturn('user123');
-		$account = $this->createMock(Account::class);
-		$this->accountService->expects($this->once())->method('findByUserId')->willReturn([$account]);
-		$mailbox = new Mailbox();
-		$mailbox->setId(1);
-		$this->mailManager->expects($this->once())->method('getMailboxes')->willReturn([$mailbox]);
-		$this->userManager->expects($this->once())->method('callForSeenUsers')->willReturnCallback(fn ($fn) => $fn($user));
-		$this->taskService->expects($this->any())->method('updateOrCreate')->with(1, 0);
-		$this->contextChatProvider->triggerInitialImport();
-	}
 }

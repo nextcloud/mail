@@ -19,6 +19,7 @@ use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\ContextChat\ContextChatSettingsService;
 use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
@@ -111,6 +112,8 @@ class PageControllerTest extends TestCase {
 	private IAvailabilityCoordinator&MockObject $availabilityCoordinator;
 	private IAppManager $appManager;
 
+	private ContextChatSettingsService $contextChatSettingsService;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -138,6 +141,8 @@ class PageControllerTest extends TestCase {
 		$this->quickActionsService = $this->createMock(QuickActionsService::class);
 		$this->appManager = $this->createMock(IAppManager::class);
 		$this->appManager->method('getAppVersion')->willReturn('0.0.1-dev.0');
+		$this->contextChatSettingsService = $this->createMock(ContextChatSettingsService::class);
+		$this->contextChatSettingsService->method('isIndexingEnabled')->willReturn(true);
 
 		$this->controller = new PageController(
 			$this->appName,
@@ -163,6 +168,7 @@ class PageControllerTest extends TestCase {
 			$this->availabilityCoordinator,
 			$this->quickActionsService,
 			$this->appManager,
+			$this->contextChatSettingsService,
 		);
 	}
 
@@ -294,6 +300,8 @@ class PageControllerTest extends TestCase {
 				$this->equalTo('email'), $this->equalTo(''))
 			->will($this->returnValue('jane@doe.cz'));
 
+		$this->appManager->method('isEnabledForUser')->willReturn(true);
+
 		$loginCredentials = $this->createMock(ICredentials::class);
 		$loginCredentials->expects($this->once())
 			->method('getPassword')
@@ -310,7 +318,7 @@ class PageControllerTest extends TestCase {
 			->method('findAll')
 			->with($this->userId)
 			->willReturn([]);
-		$this->initialState->expects($this->exactly(25))
+		$this->initialState->expects($this->exactly(26))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -335,7 +343,8 @@ class PageControllerTest extends TestCase {
 					'layout-mode' => 'vertical-split',
 					'layout-message-view' => 'threaded',
 					'follow-up-reminders' => 'true',
-					'sort-favorites' => 'false'
+					'sort-favorites' => 'false',
+					'index-context-chat' => 'true',
 				]],
 				['prefill_displayName', 'Jane Doe'],
 				['prefill_email', 'jane@doe.cz'],
@@ -348,6 +357,7 @@ class PageControllerTest extends TestCase {
 				['llm_translation_enabled', false],
 				['llm_freeprompt_available', false],
 				['llm_followup_available', false],
+				['context_chat_available', true],
 				['smime-certificates', []],
 				['enable-system-out-of-office', true],
 			);
