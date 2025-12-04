@@ -32,6 +32,17 @@ class TaskService {
 	}
 
 	/**
+	 * @param string $mailboxId
+	 * @return Task
+	 * @throws DoesNotExistException
+	 * @throws Exception
+	 * @throws MultipleObjectsReturnedException
+	 */
+	public function findByMailboxId(int $mailboxId): Task {
+		return $this->taskMapper->findByMailbox($mailboxId);
+	}
+
+	/**
 	 * Update job, or create it if it doesn't exist
 	 *
 	 * @param int $mailboxId
