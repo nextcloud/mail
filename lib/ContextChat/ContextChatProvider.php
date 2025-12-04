@@ -106,6 +106,9 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 	 */
 	public function getItemUrl(string $id): string {
 		[$mailboxId, $messageId] = explode(':', $id);
+		if (!$mailboxId || !$messageId) {
+			return $this->urlGenerator->linkToRouteAbsolute('mail.page.thread', [ 'mailboxId' => $mailboxId, 'id' => 'error']);
+		}
 		return $this->urlGenerator->linkToRouteAbsolute('mail.page.thread', [ 'mailboxId' => $mailboxId, 'id' => $messageId ]);
 	}
 
