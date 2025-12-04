@@ -1,3 +1,17 @@
+## [5.6.3](https://github.com/nextcloud/mail/compare/v5.6.2...v5.6.3) (2025-12-04)
+
+
+### Bug Fixes
+
+* handle imip failures properly ([09722b7](https://github.com/nextcloud/mail/commit/09722b710ae71969a05c2fd3a2cb43873802a923))
+* **l10n:** Update translations from Transifex ([470db92](https://github.com/nextcloud/mail/commit/470db9289effa78d11e4bdbbf1a66d1bf0f0b0a5))
+* **l10n:** Update translations from Transifex ([ebfda19](https://github.com/nextcloud/mail/commit/ebfda19d66c52fd4368c39cef87a0f20018c04bf))
+* **NewMessageModal:** remove null focus trap selectors ([ceff0d1](https://github.com/nextcloud/mail/commit/ceff0d125afe6ad8eca17166e307952935cb33b9))
+* search input field doesnt extend properly ([5c97b3c](https://github.com/nextcloud/mail/commit/5c97b3c9800760f4a56e700995a7a398ee5f3966))
+* **search:** apply correct search query when fetching envelopes ([fe70ebf](https://github.com/nextcloud/mail/commit/fe70ebff0852e001491c6eb4d20f54e5bf687e1a))
+
+
+
 ## [5.6.2](https://github.com/nextcloud/mail/compare/v5.6.1...v5.6.2) (2025-12-02)
 
 
