@@ -163,7 +163,7 @@ class SubmitContentJob extends TimedJob {
 		}
 
 		try {
-			$this->taskService->updateOrCreate($task->getMailboxId(), $message?->getId() ?? $messageIds[0]);
+			$this->taskService->setLastMessage($task->getMailboxId(), $message?->getId() ?? $messageIds[0]);
 		} catch (MultipleObjectsReturnedException|Exception $e) {
 			$this->logger->warning('Exception occurred when trying to update task', ['exception' => $e]);
 		}

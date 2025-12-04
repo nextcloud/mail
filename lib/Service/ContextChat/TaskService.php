@@ -60,6 +60,27 @@ class TaskService {
 	}
 
 	/**
+	 * Updates a task to set the new last message id
+	 * @param int $mailboxId
+	 * @param int $lastMessageId
+	 * @return Task
+	 */
+	public function setLastMessage(int $mailboxId, int $lastMessageId): Task {
+		try {
+			$entity = $this->taskMapper->findByMailbox($mailboxId);
+		} catch (DoesNotExistException) {
+			$entity = new Task();
+			$entity->setMailboxId($mailboxId);
+			$entity->setLastMessageId($lastMessageId);
+
+			return $this->taskMapper->insert($entity);
+		}
+
+		$entity->setLastMessageId($lastMessageId);
+		return $this->taskMapper->update($entity);
+	}
+
+	/**
 	 * @param int $jobId
 	 * @return Task|null
 	 * @throws Exception
