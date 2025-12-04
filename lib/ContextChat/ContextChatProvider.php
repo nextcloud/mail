@@ -24,7 +24,6 @@ use OCP\ContextChat\IContentProvider;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IURLGenerator;
-use OCP\IUser;
 use OCP\IUserManager;
 
 /**
@@ -117,17 +116,5 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 	 * @since 5.2.0
 	 */
 	public function triggerInitialImport(): void {
-		$this->userManager->callForSeenUsers(function (IUser $user): void {
-			$userId = $user->getUID();
-			$userAccounts = $this->accountService->findByUserId($userId);
-
-			foreach ($userAccounts as $account) {
-				$mailboxes = $this->mailManager->getMailboxes($account);
-
-				foreach ($mailboxes as $mailbox) {
-					$this->taskService->updateOrCreate($mailbox->getId(), 0);
-				}
-			}
-		});
 	}
 }
