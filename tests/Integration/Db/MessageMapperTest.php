@@ -73,6 +73,21 @@ class MessageMapperTest extends TestCase {
 		$insert->executeStatement();
 	}
 
+	private function insertMessageWithId(int $id, int $mailbox_id): void {
+		$qb = $this->db->getQueryBuilder();
+		$insert = $qb->insert($this->mapper->getTableName())
+			->values([
+				'id' => $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT),
+				'uid' => $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT),
+				'message_id' => $qb->createNamedParameter('<abc' . $id . $mailbox_id . '@123.com>'),
+				'mailbox_id' => $qb->createNamedParameter($mailbox_id, IQueryBuilder::PARAM_INT),
+				'subject' => $qb->createNamedParameter('TEST'),
+				'sent_at' => $qb->createNamedParameter($this->time->getTime(), IQueryBuilder::PARAM_INT),
+				'in_reply_to' => $qb->createNamedParameter('<>')
+			]);
+		$insert->executeStatement();
+	}
+
 	public function testResetInReplyTo() : void {
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(13);
@@ -238,12 +253,12 @@ class MessageMapperTest extends TestCase {
 		$mailbox = new Mailbox();
 		$mailbox->setId(4);
 		$this->timestamp = 1234567890;
-		array_map(function ($i) {
-			$this->insertMessage($i, 1);
+		array_map(function ($i) use ($mailbox) {
+			$this->insertMessageWithId($i, $mailbox->getId());
 		}, range(1, 5));
 		$this->timestamp = 1234567891 + 100;
-		array_map(function ($i) {
-			$this->insertMessage($i, 1);
+		array_map(function ($i) use ($mailbox) {
+			$this->insertMessageWithId($i, $mailbox->getId());
 		}, range(6, 10));
 
 		$mails = $this->mapper->findIdsAfter($mailbox, 2, 0, 5);
