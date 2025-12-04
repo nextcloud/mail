@@ -391,8 +391,9 @@ export default {
 			'followUpFeatureAvailable',
 			'contextChatFeatureAvailable',
 			'getMyTextBlocks',
-			'getSharedTextBlocks'
+			'getSharedTextBlocks',
 		]),
+
 		useBottomReplies() {
 			return this.mainStore.getPreference('reply-mode', 'top') === 'bottom'
 		},
@@ -448,6 +449,7 @@ export default {
 				this.onToggleCollectData(value)
 			},
 		},
+
 		useContextChat: {
 			get() {
 				return this.mainStore.getPreference('index-context-chat', 'true') === 'true'
@@ -457,6 +459,7 @@ export default {
 				this.onToggleContextChat(value)
 			},
 		},
+
 		useInternalAddresses: {
 			get() {
 				return this.mainStore.getPreference('internal-addresses', 'false') === 'true'
