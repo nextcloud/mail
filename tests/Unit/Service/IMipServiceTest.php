@@ -413,4 +413,69 @@ class IMipServiceTest extends TestCase {
 
 		$this->service->process();
 	}
+
+	public function testHandleImipRequestThrowsException(): void {
+		$message = new Message();
+		$message->setImipMessage(true);
+		$message->setUid(1);
+		$message->setMailboxId(100);
+		$mailbox = new Mailbox();
+		$mailbox->setId(100);
+		$mailbox->setAccountId(200);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(200);
+		$mailAccount->setEmail('vincent@stardew-valley.edu');
+		$mailAccount->setUserId('vincent');
+		$account = new Account($mailAccount);
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$imapMessage->scheduling[] = ['method' => 'REQUEST', 'contents' => 'VCALENDAR'];
+		$addressList = $this->createMock(AddressList::class);
+		$address = $this->createMock(Address::class);
+
+		$this->messageMapper->expects(self::once())
+			->method('findIMipMessagesAscending')
+			->willReturn([$message]);
+		$this->mailboxMapper->expects(self::once())
+			->method('findById')
+			->willReturn($mailbox);
+		$this->accountService->expects(self::once())
+			->method('findById')
+			->willReturn($account);
+		$this->mailManager->expects(self::once())
+			->method('getImapMessagesForScheduleProcessing')
+			->with($account, $mailbox, [$message->getUid()])
+			->willReturn([$imapMessage]);
+		$imapMessage->expects(self::once())
+			->method('getUid')
+			->willReturn(1);
+		$imapMessage->expects(self::once())
+			->method('getFrom')
+			->willReturn($addressList);
+		$addressList->expects(self::once())
+			->method('first')
+			->willReturn($address);
+		$address->expects(self::once())
+			->method('getEmail')
+			->willReturn('pam@stardew-bus-service.com');
+		$this->calendarManager->expects(self::once())
+			->method('handleIMipRequest')
+			->willThrowException(new \Exception('Calendar error'));
+		$this->logger->expects(self::once())
+			->method('error')
+			->with(
+				'iMIP message processing failed',
+				self::callback(function ($context) use ($message, $mailbox) {
+					return isset($context['exception'])
+						&& $context['messageId'] === $message->getId()
+						&& $context['mailboxId'] === $mailbox->getId();
+				})
+			);
+		$this->messageMapper->expects(self::once())
+			->method('updateImipData')
+			->with(self::callback(function (Message $msg) {
+				return $msg->isImipProcessed() === true && $msg->isImipError() === true;
+			}));
+
+		$this->service->process();
+	}
 }
