@@ -154,7 +154,7 @@ class SubmitContentJob extends TimedJob {
 			try {
 				$client->close();
 			} catch (\Horde_Imap_Client_Exception $e) {
-				// pass
+				$this->logger->debug('Failed to close IMAP client', ['exception' => $e]);
 			}
 		}
 
