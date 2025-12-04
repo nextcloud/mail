@@ -75,7 +75,6 @@ class PageController extends Controller {
 	private InternalAddressService $internalAddressService;
 	private QuickActionsService $quickActionsService;
 	private ContextChatSettingsService $contextChatSettingsService;
-	private IAppManager $appManager;
 
 	public function __construct(
 		string $appName,
