@@ -36,6 +36,24 @@
 		"php",
 		"postcss-loader"
 	],
+	"ignorePaths": [
+		".github/workflows/appstore-build-publish.yml",
+		".github/workflows/fixup.yml",
+		".github/workflows/block-unconventional-commits.yml",
+		".github/workflows/fixup.yml",
+		".github/workflows/lint-eslint.yml",
+		".github/workflows/lint-eslint-when-unrelated.yml",
+		".github/workflows/lint-info-xml.yml",
+		".github/workflows/lint-php.yml",
+		".github/workflows/lint-php-cs.yml",
+		".github/workflows/lint-stylelint.yml",
+		".github/workflows/npm-audit-fix.yml",
+		".github/workflows/npm-audit-fix-selective.yml",
+		".github/workflows/openapi.yml",
+		".github/workflows/pr-feedback.yml",
+		".github/workflows/psalm-matrix.yml",
+		".github/workflows/reuse.yml"
+	],
 	"packageRules": [
 		{
 			"description": "Request JavaScript reviews",
