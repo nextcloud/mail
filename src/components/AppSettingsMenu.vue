@@ -448,7 +448,7 @@ export default {
 				this.onToggleCollectData(value)
 			},
 		},
-		useContextChat() {
+		useContextChat: {
 			get() {
 				return this.mainStore.getPreference('index-context-chat', 'true') === 'true'
 			},
