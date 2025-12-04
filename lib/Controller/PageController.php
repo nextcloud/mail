@@ -224,6 +224,7 @@ class PageController extends Controller {
 			'start-mailbox-id' => $this->preferences->getPreference($this->currentUserId, 'start-mailbox-id'),
 			'follow-up-reminders' => $this->preferences->getPreference($this->currentUserId, 'follow-up-reminders', 'true'),
 			'sort-favorites' => $this->preferences->getPreference($this->currentUserId, 'sort-favorites', 'false'),
+			'compact-mode' => $this->preferences->getPreference($this->currentUserId, 'compact-mode', 'false'),
 		]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',

@@ -616,14 +616,22 @@ export default {
 			flex-direction: row;
 			align-content: center;
 			align-items: center;
+			min-width: 0;
 
 			&__name {
+				flex: 0 0 auto;
+				min-width: 0;
+				max-width: 40%;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
 				align-self: center;
-				min-width: 300px;
 				padding-inline-end: calc(var(--default-grid-baseline) * 2);
 			}
 
 			&__inner {
+				flex: 1 1 auto;
+				min-width: 0;
 				overflow-y: hidden;
 			}
 
