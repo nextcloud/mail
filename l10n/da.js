@@ -108,7 +108,7 @@ OC.L10N.register(
     "Email address" : "Email adresse",
     "Add alias" : "Tilføj alias",
     "Create alias" : "Opret alias",
-    "Cancel" : "Annuller",
+    "Cancel" : "Annullér",
     "Activate" : "Aktivér",
     "Remind about messages that require a reply but received none" : "Mind mig om beskeder som kræver et svar, men ikke har modtaget et",
     "Could not update preference" : "Præference kunne ikke opdateres",
