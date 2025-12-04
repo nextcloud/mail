@@ -71,16 +71,9 @@ class ScheduleJob extends TimedJob {
 
 		foreach ($mailboxes as $mailbox) {
 			try {
-				if ($this->taskService->findByMailboxId($mailbox->getId())) {
-					continue;
-				}
-			} catch (DoesNotExistException|MultipleObjectsReturnedException|Exception $e) {
-				$this->logger->debug('Could not find tasks for mailbox <' . $mailbox->getId() . '>');
-				continue;
-			}
-			try {
+				$this->taskService->findByMailboxId($mailbox->getId());
 				$this->taskService->updateOrCreate($mailbox->getId(), 0);
-			} catch (MultipleObjectsReturnedException|Exception $e) {
+			} catch (DoesNotExistException|MultipleObjectsReturnedException|Exception $e) {
 				$this->logger->warning('Could not schedule context chat indexing tasks for mailbox <' . $mailbox->getId() . '>');
 			}
 		}

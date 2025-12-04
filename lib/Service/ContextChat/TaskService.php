@@ -32,7 +32,7 @@ class TaskService {
 	}
 
 	/**
-	 * @param string $mailboxId
+	 * @param int $mailboxId
 	 * @return Task
 	 * @throws DoesNotExistException
 	 * @throws Exception
