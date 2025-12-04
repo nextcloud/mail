@@ -119,7 +119,8 @@ class GoogleIntegration {
 	}
 
 	public function refresh(Account $account): Account {
-		if ($account->getMailAccount()->getOauthTokenTtl() === null || $account->getMailAccount()->getOauthRefreshToken() === null) {
+		$oauthRefreshToken = $account->getMailAccount()->getOauthRefreshToken();
+		if ($account->getMailAccount()->getOauthTokenTtl() === null || $oauthRefreshToken === null) {
 			// Account is not authorized yet
 			return $account;
 		}
@@ -137,7 +138,7 @@ class GoogleIntegration {
 			return $account;
 		}
 
-		$refreshToken = $this->crypto->decrypt($account->getMailAccount()->getOauthRefreshToken());
+		$refreshToken = $this->crypto->decrypt($oauthRefreshToken);
 		$clientSecret = $this->crypto->decrypt($encryptedClientSecret);
 		$httpClient = $this->clientService->newClient();
 		try {

@@ -52,7 +52,8 @@ class AccountsController extends Controller {
 	private IRemoteHostValidator $hostValidator;
 	private MailboxSync $mailboxSync;
 
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
 		AccountService $accountService,
 		$UserId,
