@@ -20,6 +20,7 @@
 		:name="addresses"
 		:details="formatted()"
 		:one-line="oneLineLayout"
+		:compact="isCompactList"
 		:is-read="showImportantIconVariant"
 		:is-important="isImportant"
 		@click.exact="onClick"
@@ -608,6 +609,19 @@ export default {
 
 		oneLineLayout() {
 			return this.overwriteOneLineMobile ? false : this.mainStore.getPreference('layout-mode', 'vertical-split') === 'no-split'
+		},
+
+		isCompactList: {
+			get() {
+				return this.mainStore.getPreference('compact-list', false) === true
+			},
+
+			set(value) {
+				this.mainStore.savePreference({
+					key: 'compact-list',
+					value,
+				})
+			},
 		},
 
 		layoutMessageViewThreaded() {
