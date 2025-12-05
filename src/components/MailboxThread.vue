@@ -4,8 +4,8 @@
 -->
 <template>
 	<AppContent
-		:pane-config-key="'mail-' + safeLayout"
-		:layout="safeLayout"
+		:pane-config-key="'mail-' + layoutMode"
+		:layout="layoutMode"
 		:show-details="isThreadShown"
 		:list-min-width="horizontalListMinWidth"
 		:list-max-width="horizontalListMaxWidth"
@@ -287,18 +287,11 @@ export default {
 		...mapStores(useMainStore),
 
 		layoutMode() {
-			const baseLayout = this.mainStore.getPreference('layout-mode', 'vertical-split')
-			if (this.isCompactList) {
-				return `${baseLayout}-compact`
-			}
-			const allowed = ['vertical-split', 'horizontal-split', 'no-split']
-			return allowed.includes(baseLayout) ? baseLayout : 'vertical-split'
+			return this.mainStore.getPreference('layout-mode', 'vertical-split')
 		},
 
-		safeLayout() {
-			const baseLayout = this.mainStore.getPreference('layout-mode', 'vertical-split')
-			const allowed = ['vertical-split', 'horizontal-split', 'no-split']
-			return allowed.includes(baseLayout) ? baseLayout : 'vertical-split'
+		compactMode() {
+			return this.mainStore.getPreference('compact-mode', false)
 		},
 
 		horizontalListMinWidth() {

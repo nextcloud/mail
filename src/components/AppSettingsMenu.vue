@@ -62,63 +62,30 @@
 						:description="t('mail', 'When on, favorite messages will be sorted to the top of folders')" />
 				</NcFormBox>
 				<NcRadioGroup v-model="layoutMode" :label="t('mail', 'Layout')">
-					<!-- Vertical -->
-					<div class="vertical-layout">
-						<NcRadioGroupButton
-							:label="t('mail', 'Vertical split')"
-							value="vertical-split">
-							<template #icon>
-								<VerticalSplit :size="20" />
-							</template>
-						</NcRadioGroupButton>
-
-						<NcRadioGroupButton
-							:label="t('mail', 'Vertical compact')"
-							value="vertical-compact">
-							<template #icon>
-								<VerticalSplit :size="20" />
-							</template>
-						</NcRadioGroupButton>
-					</div>
-
-					<!-- Horizontal -->
-					<div class="horizontal-layout">
-						<NcRadioGroupButton
-							:label="t('mail', 'Horizontal split')"
-							value="horizontal-split">
-							<template #icon>
-								<HorizontalSplit :size="20" />
-							</template>
-						</NcRadioGroupButton>
-
-						<NcRadioGroupButton
-							:label="t('mail', 'Horizontal compact')"
-							value="horizontal-compact">
-							<template #icon>
-								<HorizontalSplit :size="20" />
-							</template>
-						</NcRadioGroupButton>
-					</div>
-
-					<!-- List -->
-					<div class="list-layout">
-						<NcRadioGroupButton
-							:label="t('mail', 'List')"
-							value="no-split">
-							<template #icon>
-								<CompactMode :size="20" />
-							</template>
-						</NcRadioGroupButton>
-
-						<NcRadioGroupButton
-							:label="t('mail', 'Compact list')"
-							value="no-split-compact">
-							<template #icon>
-								<CompactMode :size="20" />
-							</template>
-						</NcRadioGroupButton>
-					</div>
+					<NcRadioGroupButton :label="t('mail', 'Vertical split')" value="vertical-split">
+						<template #icon>
+							<VerticalSplit :size="20" />
+						</template>
+					</NcRadioGroupButton>
+					<NcRadioGroupButton :label="t('mail', 'Horizontal split')" value="horizontal-split">
+						<template #icon>
+							<HorizontalSplit :size="20" />
+						</template>
+					</NcRadioGroupButton>
+					<NcRadioGroupButton :label="t('mail', 'List')" value="no-split">
+						<template #icon>
+							<CompactMode :size="20" />
+						</template>
+					</NcRadioGroupButton>
 				</NcRadioGroup>
+
+				<NcAppSettingsSection id="messages" :name="t('mail', 'Compact Mode')">
+					<NcFormBoxSwitch
+						:value="compactMode"
+						:label="t('mail', 'Compact mode')"
+						:description="t('mail', 'Compact mode')"
+						@update:value="compactMode = $event" />
+				</NcAppSettingsSection>
 
 				<NcRadioGroup :model-value="sortOrder" :label="t('mail', 'Sorting')" @update:modelValue="onSortByDate">
 					<NcRadioGroupButton :label="t('mail', 'Newest first')" value="newest" />
@@ -383,7 +350,6 @@ export default {
 
 	data() {
 		return {
-			isCompactList: false,
 			loadingAvatarSettings: false,
 			prioritySettingsText: t('mail', 'Search the body of messages in priority Inbox'),
 			loadingPrioritySettings: false,
@@ -496,12 +462,21 @@ export default {
 
 		layoutMode: {
 			get() {
-				const layoutMode = this.mainStore.getPreference('layout-mode', 'vertical-split')
-				return this.isCompactList ? `${layoutMode}-compact` : layoutMode
+				return this.mainStore.getPreference('layout-mode', 'vertical-split')
 			},
 
 			set(value) {
 				this.setLayout(value)
+			},
+		},
+
+		compactMode: {
+			get() {
+				return this.mainStore.getPreference('compact-mode', false)
+			},
+
+			set(value) {
+				this.setCompactMode(value)
 			},
 		},
 
@@ -560,16 +535,20 @@ export default {
 
 		async setLayout(layoutMode) {
 			try {
-				let baseLayout = layoutMode
-				if (layoutMode.endsWith('-compact')) {
-					baseLayout = layoutMode.replace('-compact', '')
-					this.isCompactList = true
-				} else {
-					this.isCompactList = false
-				}
 				await this.mainStore.savePreference({
 					key: 'layout-mode',
-					value: baseLayout,
+					value: layoutMode,
+				})
+			} catch (error) {
+				Logger.error('Could not save preferences', { error })
+			}
+		},
+
+		async setCompactMode(value) {
+			try {
+				await this.mainStore.savePreference({
+					key: 'compact-mode',
+					value,
 				})
 			} catch (error) {
 				Logger.error('Could not save preferences', { error })
