@@ -66,7 +66,6 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
-import { basename } from '@nextcloud/paths'
 import { generateUrl } from '@nextcloud/router'
 import { NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import ChevronDown from 'vue-material-design-icons/ChevronDown.vue'
@@ -75,6 +74,7 @@ import CloudDownload from 'vue-material-design-icons/CloudDownloadOutline.vue'
 import Download from 'vue-material-design-icons/TrayArrowDown.vue'
 import MessageAttachment from './MessageAttachment.vue'
 import Logger from '../logger.js'
+import AttachementMixin from '../mixins/AttachementMixin.js'
 import { saveAttachmentsToFiles } from '../service/AttachmentService.js'
 
 export default {
@@ -89,6 +89,7 @@ export default {
 		FilePicker,
 	},
 
+	mixins: [AttachementMixin],
 	props: {
 		envelope: {
 			required: true,
@@ -122,25 +123,6 @@ export default {
 	},
 
 	computed: {
-		fileInfos() {
-			return this.attachments.map((attachment) => ({
-				filename: attachment.downloadUrl,
-				source: attachment.downloadUrl,
-				basename: basename(attachment.downloadUrl),
-				mime: attachment.mime,
-				etag: 'fixme',
-				hasPreview: false,
-				fileid: parseInt(attachment.id, 10),
-			}))
-		},
-
-		previewableFileInfos() {
-			return this.fileInfos.filter((fileInfo) => (fileInfo.mime.startsWith('image/')
-				|| fileInfo.mime.startsWith('video/')
-				|| fileInfo.mime.startsWith('audio/')
-				|| fileInfo.mime === 'application/pdf')
-			&& OCA.Viewer.mimetypes.includes(fileInfo.mime))
-		},
 
 		moreThanOne() {
 			return this.attachments.length > 1
@@ -154,6 +136,7 @@ export default {
 	},
 
 	mounted() {
+		console.log(this.attachments)
 		let prevTop = null
 		this.visible = 0
 		this.$nextTick(function() {
@@ -175,9 +158,6 @@ export default {
 	},
 
 	methods: {
-		canPreview(fileInfo) {
-			return this.previewableFileInfos.includes(fileInfo)
-		},
 
 		saveAll(dest) {
 			const path = dest[0].path
@@ -197,19 +177,6 @@ export default {
 
 		downloadZip() {
 			window.location = this.zipUrl
-		},
-
-		showViewer(fileInfo) {
-			if (!this.canPreview(fileInfo)) {
-				return
-			}
-
-			if (this.previewableFileInfos.includes(fileInfo)) {
-				OCA.Viewer.open({
-					fileInfo,
-					list: this.previewableFileInfos,
-				})
-			}
 		},
 	},
 }
