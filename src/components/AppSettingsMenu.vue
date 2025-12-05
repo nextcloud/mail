@@ -79,6 +79,14 @@
 					</NcRadioGroupButton>
 				</NcRadioGroup>
 
+				<NcAppSettingsSection id="messages" :name="t('mail', 'Compact Mode')">
+					<NcFormBoxSwitch
+						:value="compactMode"
+						:label="t('mail', 'Compact mode')"
+						:description="t('mail', 'Compact mode')"
+						@update:value="compactMode = $event" />
+				</NcAppSettingsSection>
+
 				<NcRadioGroup :model-value="sortOrder" :label="t('mail', 'Sorting')" @update:modelValue="onSortByDate">
 					<NcRadioGroupButton :label="t('mail', 'Newest first')" value="newest" />
 					<NcRadioGroupButton :label="t('mail', 'Oldest first')" value="oldest" />
@@ -462,6 +470,16 @@ export default {
 			},
 		},
 
+		compactMode: {
+			get() {
+				return this.mainStore.getPreference('compact-mode', false)
+			},
+
+			set(value) {
+				this.setCompactMode(value)
+			},
+		},
+
 		layoutMessageView: {
 			get() {
 				const preference = this.mainStore.getPreference('layout-message-view')
@@ -520,6 +538,17 @@ export default {
 				await this.mainStore.savePreference({
 					key: 'layout-mode',
 					value: layoutMode,
+				})
+			} catch (error) {
+				Logger.error('Could not save preferences', { error })
+			}
+		},
+
+		async setCompactMode(value) {
+			try {
+				await this.mainStore.savePreference({
+					key: 'compact-mode',
+					value,
 				})
 			} catch (error) {
 				Logger.error('Could not save preferences', { error })

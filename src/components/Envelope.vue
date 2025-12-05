@@ -20,6 +20,7 @@
 		:name="addresses"
 		:details="formatted()"
 		:one-line="oneLineLayout"
+		:compact="compactMode"
 		:is-read="showImportantIconVariant"
 		:is-important="isImportant"
 		@click.exact="onClick"
@@ -91,7 +92,7 @@
 					</span>
 				</div>
 				<div
-					v-if="data.encrypted || data.previewText"
+					v-if="!compactMode && (data.encrypted || data.previewText)"
 					class="envelope__preview-text"
 					:title="data.summary ? t('mail', 'This summary was AI generated') : null">
 					<NcAssistantIcon v-if="data.summary" :size="15" class="envelope__preview-text__icon" />
@@ -571,6 +572,11 @@ export default {
 		},
 
 		hasMultipleAccounts: {
+			type: Boolean,
+			default: false,
+		},
+
+		compactMode: {
 			type: Boolean,
 			default: false,
 		},

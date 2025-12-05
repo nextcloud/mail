@@ -132,6 +132,7 @@
 				:select-mode="selectMode"
 				:has-multiple-accounts="hasMultipleAccounts"
 				:selected-envelopes="selectedEnvelopes"
+				:compact-mode="false"
 				@delete="$emit('delete', env.databaseId)"
 				@update:selected="onEnvelopeSelectToggle(env, index, $event)"
 				@select-multiple="onEnvelopeSelectMultiple(env, index)"
