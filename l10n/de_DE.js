@@ -132,6 +132,8 @@ OC.L10N.register(
     "Appearance" : "Aussehen",
     "Show all messages in thread" : "Alle Nachrichten der Unterhaltung anzeigen",
     "When off, only the selected message will be shown" : "Im ausgeschalteten Zustand wird nur die ausgewählte Nachricht angezeigt",
+    "Sort favorites up" : "Favoriten oben anzeigen",
+    "When on, favorite messages will be sorted to the top of folders" : "Wenn diese Option aktiviert ist, werden favorisierte Nachrichten in den Ordnern oben angezeigt",
     "Layout" : "Layout",
     "Vertical split" : "Vertikale Aufteilung",
     "Horizontal split" : "Horizontale Aufteilung",

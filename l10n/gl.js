@@ -132,6 +132,8 @@ OC.L10N.register(
     "Appearance" : "Aparencia",
     "Show all messages in thread" : "Amosar todas as mensaxes no fío",
     "When off, only the selected message will be shown" : "Cando está desactivado, só se amosará a mensaxe seleccionada",
+    "Sort favorites up" : "Ordena os favoritos arriba",
+    "When on, favorite messages will be sorted to the top of folders" : "Cando estea activado, as mensaxes favoritas ordenaranse na parte superior dos cartafoles",
     "Layout" : "Deseño",
     "Vertical split" : "División vertical",
     "Horizontal split" : "División horizontal",
