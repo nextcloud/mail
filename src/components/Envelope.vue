@@ -575,7 +575,7 @@ export default {
 			type: Boolean,
 			default: false,
 		},
-		
+
 		compactMode: {
 			type: Boolean,
 			default: false,
@@ -614,19 +614,6 @@ export default {
 
 		oneLineLayout() {
 			return this.overwriteOneLineMobile ? false : this.mainStore.getPreference('layout-mode', 'vertical-split') === 'no-split'
-		},
-
-		isCompactList: {
-			get() {
-				return this.mainStore.getPreference('compact-list', false) === true
-			},
-
-			set(value) {
-				this.mainStore.savePreference({
-					key: 'compact-list',
-					value,
-				})
-			},
 		},
 
 		layoutMessageViewThreaded() {
