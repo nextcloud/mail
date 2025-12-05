@@ -399,8 +399,10 @@
 					{{ translateTagDisplayName(tag) }}
 				</span>
 			</div>
-			<MoveModal
-				v-if="showMoveModal"
+			<div v-for="(attachment,id) in attachments" :key="id">
+				<AttachmentTag :file-name="attachment.name" :mime-type="attachment.mime" />
+			</div>
+			<MoveModal v-if="showMoveModal"
 				:account="account"
 				:envelopes="[data]"
 				:move-thread="listViewThreaded"
@@ -485,10 +487,12 @@ import { mailboxHasRights } from '../util/acl.js'
 import { messageDateTime, shortRelativeDatetime } from '../util/shortRelativeDatetime.js'
 import { translateTagDisplayName } from '../util/tag.js'
 import { hiddenTags } from './tags.js'
+import AttachmentTag from './AttachmentTag.vue'
 
 export default {
 	name: 'Envelope',
 	components: {
+		AttachmentTag,
 		AlertOctagonIcon,
 		Avatar,
 		IconCreateEvent,
@@ -718,7 +722,9 @@ export default {
 
 			return tags
 		},
-
+		attachments() {
+			return Object.values(this.threadList).map((envelope) => (envelope?.attachments)).flat()
+		},
 		draggableLabel() {
 			let label = this.data.subject
 			const sender = this.data.from[0]?.label ?? this.data.from[0]?.email
