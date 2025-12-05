@@ -575,10 +575,11 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		
 		compactMode: {
 			type: Boolean,
 			default: false,
-		}
+		},
 	},
 
 	data() {
