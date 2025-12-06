@@ -372,6 +372,8 @@
     "Messages that your mark as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "Messages that you've marked as favourites will be displayed at the top of their respective folders. You can disable this feature in the app settings",
     "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here.",
     "Favorites" : "Favourites",
+    "Favorites info" : "Favorites info",
+    "Load more favorites" : "Load more favorites",
     "Follow up" : "Follow up",
     "Follow up info" : "Follow up info",
     "Load more follow ups" : "Load more follow ups",
