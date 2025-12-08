@@ -291,7 +291,7 @@ export default {
 		},
 
 		compactMode() {
-			return this.mainStore.getPreference('compact-mode', false)
+			return this.mainStore.getPreference('compact-mode', 'false') === 'true'
 		},
 
 		horizontalListMinWidth() {
