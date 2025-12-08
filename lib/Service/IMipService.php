@@ -115,8 +115,9 @@ class IMipService {
 				continue;
 			}
 
-			$principalUri = 'principals/users/' . $account->getUserId();
+			$userId = $account->getUserId();
 			$recipient = $account->getEmail();
+			$imipCreate = $account->getImipCreate();
 
 			foreach ($filteredMessages as $message) {
 				/** @var IMAPMessage $imapMessage */
@@ -138,20 +139,17 @@ class IMipService {
 				try {
 					// an IMAP message could contain more than one iMIP object
 					foreach ($imapMessage->scheduling as $schedulingInfo) {
-						if ($schedulingInfo['method'] === 'REQUEST') {
-							$processed = $this->calendarManager->handleIMipRequest($principalUri, $sender, $recipient, $schedulingInfo['contents']);
-							$message->setImipProcessed($processed);
-							$message->setImipError(!$processed);
-						} elseif ($schedulingInfo['method'] === 'REPLY') {
-							$processed = $this->calendarManager->handleIMipReply($principalUri, $sender, $recipient, $schedulingInfo['contents']);
-							$message->setImipProcessed($processed);
-							$message->setImipError(!$processed);
-						} elseif ($schedulingInfo['method'] === 'CANCEL') {
-							$replyTo = $imapMessage->getReplyTo()->first()?->getEmail();
-							$processed = $this->calendarManager->handleIMipCancel($principalUri, $sender, $replyTo, $recipient, $schedulingInfo['contents']);
-							$message->setImipProcessed($processed);
-							$message->setImipError(!$processed);
-						}
+						$processed = $this->calendarManager->handleIMip(
+							$userId,
+							$schedulingInfo['contents'],
+							[
+								'recipient' => $recipient,
+								'absent' => $imipCreate ? 'create' : 'ignore',
+								'absentCreateStatus' => 'tentative',
+							],
+						);
+						$message->setImipProcessed($processed);
+						$message->setImipError(!$processed);
 					}
 				} catch (Throwable $e) {
 					$this->logger->error('iMIP message processing failed', [
