@@ -79,7 +79,7 @@
 					</NcRadioGroupButton>
 				</NcRadioGroup>
 
-				<NcAppSettingsSection id="messages" :name="t('mail', 'Compact Mode')">
+				<NcAppSettingsSection id="compactMode" :name="t('mail', 'Compact Mode')">
 					<NcFormBoxSwitch
 						:value="compactMode"
 						:label="t('mail', 'Compact mode')"
