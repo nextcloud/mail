@@ -83,9 +83,7 @@
 					<NcFormBoxSwitch
 						v-model="compactMode"
 						:label="t('mail', 'Compact mode')"
-						:description="t('mail', 'Compact mode')"
-						@update:modelValue="compactMode = $event" />
-					{{ compactMode }}
+						:description="t('mail', 'Compact mode')" />
 				</NcFormBox>
 
 				<NcRadioGroup :model-value="sortOrder" :label="t('mail', 'Sorting')" @update:modelValue="onSortByDate">

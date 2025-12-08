@@ -290,10 +290,6 @@ export default {
 			return this.mainStore.getPreference('layout-mode', 'vertical-split')
 		},
 
-		compactMode() {
-			return this.mainStore.getPreference('compact-mode', 'false') === 'true'
-		},
-
 		horizontalListMinWidth() {
 			return this.layoutMode === 'horizontal-split' ? 40 : 30
 		},

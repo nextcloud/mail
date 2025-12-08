@@ -64,10 +64,15 @@
 				</template>
 				<template v-else>
 					<Avatar
+						v-if="!compactMode"
 						:display-name="addresses"
 						:email="avatarEmail"
 						:fetch-avatar="data.fetchAvatarFromClient"
 						:avatar="data.avatar" />
+					<div
+						v-else
+						class="compact-avatar-ball">
+					</div>
 				</template>
 			</div>
 		</template>
@@ -575,11 +580,6 @@ export default {
 			type: Boolean,
 			default: false,
 		},
-
-		compactMode: {
-			type: Boolean,
-			default: false,
-		},
 	},
 
 	data() {
@@ -618,6 +618,10 @@ export default {
 
 		layoutMessageViewThreaded() {
 			return this.mainStore.getPreference('layout-message-view', 'threaded') === 'threaded'
+		},
+
+		compactMode() {
+			return this.mainStore.getPreference('compact-mode', 'false') === 'true'
 		},
 
 		hasMultipleRecipients() {
@@ -1609,4 +1613,12 @@ export default {
 	justify-content: center;
 }
 
+.compact-avatar-ball {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background-color: var(--color-main-text);
+	display: inline-block;
+	vertical-align: middle;
+}
 </style>
