@@ -43,8 +43,6 @@ class QuotaJobTest extends TestCase {
 		$this->job->setArgument([
 			'accountId' => 123,
 		]);
-		// Set a fake ID
-		$this->job->setId(99);
 	}
 
 	public function testAccountDoesntExist(): void {
