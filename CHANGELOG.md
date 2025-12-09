@@ -1,3 +1,14 @@
+## [5.6.4](https://github.com/nextcloud/mail/compare/v5.6.3...v5.6.4) (2025-12-09)
+
+
+### Bug Fixes
+
+* **l10n:** Update translations from Transifex ([96b19f1](https://github.com/nextcloud/mail/commit/96b19f1516fb2a372aa9ed8d8a781f660ded23ed))
+* **l10n:** Update translations from Transifex ([542fe70](https://github.com/nextcloud/mail/commit/542fe7082d50909effca651fe7cc430d992891dc))
+* **l10n:** Update translations from Transifex ([5704c47](https://github.com/nextcloud/mail/commit/5704c47c2b102a55f2bb561180f1790ac2ba6988))
+
+
+
 ## [5.6.3](https://github.com/nextcloud/mail/compare/v5.6.2...v5.6.3) (2025-12-04)
 
 
