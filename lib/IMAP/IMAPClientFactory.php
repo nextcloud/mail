@@ -102,13 +102,12 @@ class IMAPClientFactory {
 		if ($account->getMailAccount()->getAuthMethod() === 'xoauth2') {
 			try {
 				$oauthAccessToken = $account->getMailAccount()->getOauthAccessToken();
-				if ($oauthAccessToken !== null) {
-					$decryptedAccessToken = $this->crypto->decrypt($oauthAccessToken);
-				} else {
-					$decryptedAccessToken = null;
+				if ($oauthAccessToken === null) {
+					throw new ServiceException('Missing access token for xoauth2 account');
 				}
+				$decryptedAccessToken = $this->crypto->decrypt($oauthAccessToken);
 			} catch (Exception $e) {
-				throw new ServiceException('Could not decrypt account password: ' . $e->getMessage(), 0, $e);
+				throw new ServiceException('Could not decrypt account access token: ' . $e->getMessage(), 0, $e);
 			}
 
 			$params['password'] = $decryptedAccessToken; // Not used, but Horde wants this

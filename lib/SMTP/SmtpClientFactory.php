@@ -9,10 +9,12 @@ declare(strict_types=1);
 
 namespace OCA\Mail\SMTP;
 
+use Exception;
 use Horde_Mail_Transport;
 use Horde_Mail_Transport_Smtphorde;
 use Horde_Smtp_Password_Xoauth2;
 use OCA\Mail\Account;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Support\HostNameFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
@@ -64,11 +66,14 @@ class SmtpClientFactory {
 			],
 		];
 		if ($account->getMailAccount()->getAuthMethod() === 'xoauth2') {
-			$oauthAccessToken = $account->getMailAccount()->getOauthAccessToken();
-			if ($oauthAccessToken !== null) {
+			try {
+				$oauthAccessToken = $account->getMailAccount()->getOauthAccessToken();
+				if ($oauthAccessToken === null) {
+					throw new ServiceException('Missing access token for xoauth2 account');
+				}
 				$decryptedAccessToken = $this->crypto->decrypt($oauthAccessToken);
-			} else {
-				$decryptedAccessToken = null;
+			} catch (Exception $e) {
+				throw new ServiceException('Could not decrypt account access token: ' . $e->getMessage(), 0, $e);
 			}
 
 			$params['password'] = $decryptedAccessToken; // Not used, but Horde wants this
