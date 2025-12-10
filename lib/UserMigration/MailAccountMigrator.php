@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
@@ -11,6 +11,7 @@ namespace OCA\Mail\UserMigration;
 
 use Exception;
 use OCA\Mail\Db\Alias;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCP\IL10N;
@@ -19,8 +20,10 @@ use OCP\Security\ICrypto;
 use OCP\UserMigration\IExportDestination;
 use OCP\UserMigration\IImportSource;
 use OCP\UserMigration\IMigrator;
+use OCP\UserMigration\UserMigrationException;
 use Symfony\Component\Console\Output\OutputInterface;
 use function array_map;
+use function json_decode;
 use function json_encode;
 
 class MailAccountMigrator implements IMigrator {
@@ -115,7 +118,59 @@ class MailAccountMigrator implements IMigrator {
 	}
 
 	public function import(IUser $user, IImportSource $importSource, OutputInterface $output,): void {
-		// TODO: Implement import() method.
+		$index = json_decode($importSource->getFileContents('mail/accounts/index.json'), true);
+		foreach ($index as $accountFilePath) {
+			$accountData = json_decode($importSource->getFileContents($accountFilePath), true);
+
+			// Wipe the old ID(s) to prevent overwrites
+			unset(
+				$accountData['id'],
+				$accountData['accountId'],
+			);
+
+			$newAccount = new MailAccount($accountData);
+
+			// Change UID to new owner
+			$newAccount->setUserId($user->getUID());
+			// Map the rest of the properties that are not mapped via the constructor
+			$newAccount->setName($accountData['name']);
+			$newAccount->setAuthMethod($accountData['authMethod']);
+			$newAccount->setEditorMode($accountData['editorMode'] ?? 'plain');
+			$newAccount->setSearchBody($accountData['searchBody'] ?? false);
+			$newAccount->setClassificationEnabled($accountData['classificationEnabled'] ?? false);
+			$newAccount->setSignatureAboveQuote($accountData['signatureAboveQuote'] ?? false);
+			$newAccount->setPersonalNamespace($accountData['personalNamespace'] ?? null);
+			if (isset($accountData['inboundPassword'])) {
+				$newAccount->setInboundPassword($this->crypto->encrypt($accountData['inboundPassword']));
+			}
+			if (isset($accountData['outboundPassword'])) {
+				$newAccount->setOutboundPassword($this->crypto->encrypt($accountData['outboundPassword']));
+			}
+			if (isset($accountData['oauthRefreshToken'])) {
+				$newAccount->setOauthRefreshToken($this->crypto->encrypt($accountData['oauthRefreshToken']));
+			}
+			if (isset($accountData['oauthAccessToken'])) {
+				$newAccount->setOauthAccessToken($this->crypto->encrypt($accountData['oauthAccessToken']));
+			}
+			$newAccount->setOauthTokenTtl($accountData['oauthTokenTtl'] ?? null);
+
+			$mailAccount = $this->accountService->save(
+				$newAccount
+			);
+
+			// Import aliases
+			foreach ($accountData['aliases'] as $alias) {
+				$this->aliasesService->create(
+					$user->getUID(),
+					$mailAccount->getId(),
+					$alias['alias'],
+					$alias['name'],
+				);
+
+				// TODO: smime cert
+				// TODO: signature
+			}
+		}
 	}
 
 	public function getId(): string {
@@ -131,10 +186,15 @@ class MailAccountMigrator implements IMigrator {
 	}
 
 	public function getVersion(): int {
-		return 1;
+		return 01_00_00;
 	}
 
 	public function canImport(IImportSource $importSource,): bool {
-		return false;
+		try {
+			return $importSource->getMigratorVersion($this->getId()) <= $this->getVersion();
+		} catch (UserMigrationException) {
+			return false;
+		}
 	}
+
 }
