@@ -52,6 +52,8 @@ class MailAccountMigrator implements IMigrator {
 					} catch (Exception $e) {
 						$output->writeln("Can not decrypt inbound password of account {$account->getId()}: " . $e->getMessage());
 					}
+				}
+				if ($encryptedOutboundPassword !== null) {
 					try {
 						$accountData['outboundPassword'] = $this->crypto->decrypt($encryptedOutboundPassword);
 					} catch (Exception $e) {
@@ -61,15 +63,19 @@ class MailAccountMigrator implements IMigrator {
 			} else if ($account->getMailAccount()->getAuthMethod() === 'xoauth2') {
 				$encryptedRefreshToken = $account->getMailAccount()->getOauthRefreshToken();
 				$encryptedAccessToken = $account->getMailAccount()->getOauthAccessToken();
-				try {
-					$accountData['oauthRefreshToken'] = $this->crypto->decrypt($encryptedRefreshToken);
-				} catch (Exception $e) {
-					$output->writeln("Can not decrypt oauth refresh token of account {$account->getId()}: " . $e->getMessage());
+				if ($encryptedRefreshToken !== null) {
+					try {
+						$accountData['oauthRefreshToken'] = $this->crypto->decrypt($encryptedRefreshToken);
+					} catch (Exception $e) {
+						$output->writeln("Can not decrypt oauth refresh token of account {$account->getId()}: " . $e->getMessage());
+					}
 				}
-				try {
-					$accountData['oauthAccessToken'] = $this->crypto->decrypt($encryptedAccessToken);
-				} catch (Exception $e) {
-					$output->writeln("Can not decrypt oauth access token of account {$account->getId()}: " . $e->getMessage());
+				if ($encryptedAccessToken !== null) {
+					try {
+						$accountData['oauthAccessToken'] = $this->crypto->decrypt($encryptedAccessToken);
+					} catch (Exception $e) {
+						$output->writeln("Can not decrypt oauth access token of account {$account->getId()}: " . $e->getMessage());
+					}
 				}
 				$accountData['oauthTokenTtl'] = $account->getMailAccount()->getOauthTokenTtl();
 			}
@@ -86,12 +92,12 @@ class MailAccountMigrator implements IMigrator {
 
 			$aliases = $this->aliasesService->findAll(
 				$account->getId(),
-				$account->getUserId(), // todo: this adds overhead - add dedicated method to fetch by account id only
+				$account->getUserId(), // TODO: this adds overhead - add dedicated method to fetch by account id only
 			);
 			$accountData['aliases'] = array_map(function (Alias $alias) {
 				$data = $alias->jsonSerialize();
-				// todo: smime certificate id
-				// todo: provisioning id
+				// TODO: smime certificate id
+				// TODO: provisioning id
 				return $data;
 			}, $aliases);
 
