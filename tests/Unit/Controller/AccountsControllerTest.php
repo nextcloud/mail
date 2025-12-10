@@ -26,6 +26,7 @@ use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
@@ -79,6 +80,9 @@ class AccountsControllerTest extends TestCase {
 	/** @var MailboxSync|MockObject */
 	private $mailboxSync;
 
+	/** @var ITimeFactory|MockObject */
+	private $timeFactory;
+
 	/** @var IConfig|(IConfig&MockObject)|MockObject */
 	private IConfig|MockObject $config;
 	/** @var IRemoteHostValidator|MockObject */
@@ -102,6 +106,7 @@ class AccountsControllerTest extends TestCase {
 		$this->config = $this->createMock(IConfig::class);
 		$this->hostValidator = $this->createMock(IRemoteHostValidator::class);
 		$this->hostValidator->method('isValid')->willReturn(true);
+		$this->timeFactory = $this->createMock(ITimeFactory::class);
 
 		$this->controller = new AccountsController(
 			$this->appName,
@@ -118,6 +123,7 @@ class AccountsControllerTest extends TestCase {
 			$this->config,
 			$this->hostValidator,
 			$this->mailboxSync,
+			$this->timeFactory,
 		);
 		$this->account = $this->createMock(Account::class);
 		$this->accountId = 123;
