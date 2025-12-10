@@ -136,7 +136,7 @@ class MailAccountMigratorTest extends TestCase {
 			]);
 		$exportDestination = $this->createMock(IExportDestination::class);
 		$exportDestination->method('addFileContents')
-			->willReturnCallback(function(string $path, string $content) {
+			->willReturnCallback(function (string $path, string $content) {
 				if ($path === 'mail/accounts/index.json') {
 					self::assertSame(
 						[
@@ -145,11 +145,11 @@ class MailAccountMigratorTest extends TestCase {
 						],
 						json_decode($content, true)
 					);
-				} else if ($path === 'mail/accounts/101.json') {
+				} elseif ($path === 'mail/accounts/101.json') {
 					$accountData = json_decode($content, true);
 					self::assertArrayHasKey('id', $accountData);
 					self::assertSame(101, $accountData['id']);
-				} else if ($path === 'mail/accounts/102.json') {
+				} elseif ($path === 'mail/accounts/102.json') {
 					$accountData = json_decode($content, true);
 					self::assertArrayHasKey('id', $accountData);
 					self::assertSame(102, $accountData['id']);

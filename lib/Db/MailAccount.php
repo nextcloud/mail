@@ -302,7 +302,7 @@ class MailAccount extends Entity {
 			'name' => $this->getName(),
 			'order' => $this->getOrder(),
 			'emailAddress' => $this->getEmail(),
-			'authMethod' => $this->authMethod,
+			'authMethod' => $this->getAuthMethod() ?? 'password',
 			'imapHost' => $this->getInboundHost(),
 			'imapPort' => $this->getInboundPort(),
 			'imapUser' => $this->getInboundUser(),

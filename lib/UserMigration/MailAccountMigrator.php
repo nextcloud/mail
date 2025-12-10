@@ -63,7 +63,7 @@ class MailAccountMigrator implements IMigrator {
 						$output->writeln("Can not decrypt outbound password of account {$account->getId()}: " . $e->getMessage());
 					}
 				}
-			} else if ($account->getMailAccount()->getAuthMethod() === 'xoauth2') {
+			} elseif ($account->getMailAccount()->getAuthMethod() === 'xoauth2') {
 				$encryptedRefreshToken = $account->getMailAccount()->getOauthRefreshToken();
 				$encryptedAccessToken = $account->getMailAccount()->getOauthAccessToken();
 				if ($encryptedRefreshToken !== null) {
@@ -117,7 +117,7 @@ class MailAccountMigrator implements IMigrator {
 		$exportDestination->addFileContents('mail/accounts/index.json', json_encode($index));
 	}
 
-	public function import(IUser $user, IImportSource $importSource, OutputInterface $output,): void {
+	public function import(IUser $user, IImportSource $importSource, OutputInterface $output): void {
 		$index = json_decode($importSource->getFileContents('mail/accounts/index.json'), true);
 		foreach ($index as $accountFilePath) {
 			$accountData = json_decode($importSource->getFileContents($accountFilePath), true);
@@ -189,7 +189,7 @@ class MailAccountMigrator implements IMigrator {
 		return 01_00_00;
 	}
 
-	public function canImport(IImportSource $importSource,): bool {
+	public function canImport(IImportSource $importSource): bool {
 		try {
 			return $importSource->getMigratorVersion($this->getId()) <= $this->getVersion();
 		} catch (UserMigrationException) {
