@@ -101,7 +101,12 @@ class IMAPClientFactory {
 		];
 		if ($account->getMailAccount()->getAuthMethod() === 'xoauth2') {
 			try {
-				$decryptedAccessToken = $this->crypto->decrypt($account->getMailAccount()->getOauthAccessToken());
+				$oauthAccessToken = $account->getMailAccount()->getOauthAccessToken();
+				if ($oauthAccessToken !== null) {
+					$decryptedAccessToken = $this->crypto->decrypt($oauthAccessToken);
+				} else {
+					$decryptedAccessToken = null;
+				}
 			} catch (Exception $e) {
 				throw new ServiceException('Could not decrypt account password: ' . $e->getMessage(), 0, $e);
 			}

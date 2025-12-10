@@ -88,7 +88,7 @@ use OCP\AppFramework\Db\Entity;
  * @method string|null getOauthRefreshToken()
  * @method void setOauthRefreshToken(string $token)
  * @method int|null getOauthTokenTtl()
- * @method void setOauthTokenTtl(int $ttl)
+ * @method void setOauthTokenTtl(int|null $ttl)
  * @method int|null getSmimeCertificateId()
  * @method void setSmimeCertificateId(int|null $smimeCertificateId)
  * @method int|null getQuotaPercentage()

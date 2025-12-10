@@ -64,7 +64,12 @@ class SmtpClientFactory {
 			],
 		];
 		if ($account->getMailAccount()->getAuthMethod() === 'xoauth2') {
-			$decryptedAccessToken = $this->crypto->decrypt($account->getMailAccount()->getOauthAccessToken());
+			$oauthAccessToken = $account->getMailAccount()->getOauthAccessToken();
+			if ($oauthAccessToken !== null) {
+				$decryptedAccessToken = $this->crypto->decrypt($oauthAccessToken);
+			} else {
+				$decryptedAccessToken = null;
+			}
 
 			$params['password'] = $decryptedAccessToken; // Not used, but Horde wants this
 			$params['xoauth2_token'] = new Horde_Smtp_Password_Xoauth2(
