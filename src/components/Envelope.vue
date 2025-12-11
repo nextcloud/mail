@@ -20,6 +20,7 @@
 		:name="addresses"
 		:details="formatted()"
 		:one-line="oneLineLayout"
+		:compact="compactMode"
 		:is-read="showImportantIconVariant"
 		:is-important="isImportant"
 		@click.exact="onClick"
@@ -63,10 +64,15 @@
 				</template>
 				<template v-else>
 					<Avatar
+						v-if="!compactMode"
 						:display-name="addresses"
 						:email="avatarEmail"
 						:fetch-avatar="data.fetchAvatarFromClient"
 						:avatar="data.avatar" />
+					<div
+						v-else
+						class="compact-avatar-ball">
+					</div>
 				</template>
 			</div>
 		</template>
@@ -91,7 +97,7 @@
 					</span>
 				</div>
 				<div
-					v-if="data.encrypted || data.previewText"
+					v-if="!compactMode && (data.encrypted || data.previewText)"
 					class="envelope__preview-text"
 					:title="data.summary ? t('mail', 'This summary was AI generated') : null">
 					<NcAssistantIcon v-if="data.summary" :size="15" class="envelope__preview-text__icon" />
@@ -612,6 +618,10 @@ export default {
 
 		layoutMessageViewThreaded() {
 			return this.mainStore.getPreference('layout-message-view', 'threaded') === 'threaded'
+		},
+
+		compactMode() {
+			return this.mainStore.getPreference('compact-mode', 'false') === 'true'
 		},
 
 		hasMultipleRecipients() {
@@ -1603,4 +1613,12 @@ export default {
 	justify-content: center;
 }
 
+.compact-avatar-ball {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background-color: var(--color-main-text);
+	display: inline-block;
+	vertical-align: middle;
+}
 </style>
