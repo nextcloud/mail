@@ -61,6 +61,7 @@ OC.L10N.register(
     "Favorite" : "Kipendwa",
     "Unread" : "Unread",
     "Read" : "Soma",
+    "Move thread" : "Move thread",
     "Delete message" : "Delete message",
     "More actions" : "Vitendo zaidi",
     "Back" : "Rudi",
