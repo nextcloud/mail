@@ -12,6 +12,7 @@ namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\BackgroundJob\ContextChat\ScheduleJob;
 use OCA\Mail\BackgroundJob\PreviewEnhancementProcessingJob;
 use OCA\Mail\BackgroundJob\QuotaJob;
 use OCA\Mail\BackgroundJob\RepairSyncJob;
@@ -239,6 +240,7 @@ class AccountService {
 		$this->scheduleBackgroundJob(TrainImportanceClassifierJob::class, $now, $arguments);
 		$this->scheduleBackgroundJob(PreviewEnhancementProcessingJob::class, $now, $arguments);
 		$this->scheduleBackgroundJob(QuotaJob::class, $now, $arguments);
+		$this->scheduleBackgroundJob(ScheduleJob::class, $now, $arguments);
 
 		$inThreeDays = $now + (3 * 86400);
 		$this->scheduleBackgroundJob(RepairSyncJob::class, $inThreeDays, $arguments);

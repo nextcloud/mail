@@ -19,6 +19,7 @@ use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\ContextChat\ContextChatSettingsService;
 use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\QuickActionsService;
@@ -72,6 +73,7 @@ class PageController extends Controller {
 	private IAvailabilityCoordinator $availabilityCoordinator;
 	private InternalAddressService $internalAddressService;
 	private QuickActionsService $quickActionsService;
+	private ContextChatSettingsService $contextChatSettingsService;
 
 	public function __construct(
 		string $appName,
@@ -97,6 +99,7 @@ class PageController extends Controller {
 		IAvailabilityCoordinator $availabilityCoordinator,
 		QuickActionsService $quickActionsService,
 		private IAppManager $appManager,
+		ContextChatSettingsService $contextChatSettingsService,
 	) {
 		parent::__construct($appName, $request);
 
@@ -120,6 +123,7 @@ class PageController extends Controller {
 		$this->internalAddressService = $internalAddressService;
 		$this->availabilityCoordinator = $availabilityCoordinator;
 		$this->quickActionsService = $quickActionsService;
+		$this->contextChatSettingsService = $contextChatSettingsService;
 	}
 
 	/**
@@ -224,6 +228,7 @@ class PageController extends Controller {
 			'start-mailbox-id' => $this->preferences->getPreference($this->currentUserId, 'start-mailbox-id'),
 			'follow-up-reminders' => $this->preferences->getPreference($this->currentUserId, 'follow-up-reminders', 'true'),
 			'sort-favorites' => $this->preferences->getPreference($this->currentUserId, 'sort-favorites', 'false'),
+			'index-context-chat' => $this->contextChatSettingsService->isIndexingEnabled($this->currentUserId) ? 'true' : 'false',
 		]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',
@@ -312,6 +317,11 @@ class PageController extends Controller {
 			'llm_followup_available',
 			$this->aiIntegrationsService->isLlmProcessingEnabled()
 			&& $this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
+		);
+
+		$this->initialStateService->provideInitialState(
+			'context_chat_available',
+			$this->appManager->isEnabledForUser('context_chat')
 		);
 
 		$this->initialStateService->provideInitialState(
