@@ -22,6 +22,7 @@ use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\UploadException;
 use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\NotFoundException;
@@ -52,6 +53,8 @@ class AttachmentService implements IAttachmentService {
 	 */
 	private $logger;
 
+	private ITimeFactory $timeFactory;
+
 	/**
 	 * @param Folder $userFolder
 	 */
@@ -60,13 +63,15 @@ class AttachmentService implements IAttachmentService {
 		AttachmentStorage $storage,
 		IMailManager $mailManager,
 		MessageMapper $imapMessageMapper,
-		LoggerInterface $logger) {
+		LoggerInterface $logger,
+		ITimeFactory $timeFactory) {
 		$this->mapper = $mapper;
 		$this->storage = $storage;
 		$this->mailManager = $mailManager;
 		$this->messageMapper = $imapMessageMapper;
 		$this->userFolder = $userFolder;
 		$this->logger = $logger;
+		$this->timeFactory = $timeFactory;
 	}
 
 	/**
@@ -80,6 +85,8 @@ class AttachmentService implements IAttachmentService {
 		$attachment->setUserId($userId);
 		$attachment->setFileName($file->getFileName());
 		$attachment->setMimeType($file->getMimeType());
+		// set createdAt timestamp for cleanup/retention
+		$attachment->setCreatedAt($this->timeFactory->getTime());
 
 		$persisted = $this->mapper->insert($attachment);
 		try {
@@ -98,6 +105,8 @@ class AttachmentService implements IAttachmentService {
 		$attachment->setUserId($userId);
 		$attachment->setFileName($name);
 		$attachment->setMimeType($mime);
+		// set createdAt timestamp for consistency with uploaded attachments
+		$attachment->setCreatedAt($this->timeFactory->getTime());
 
 		$persisted = $this->mapper->insert($attachment);
 		try {
