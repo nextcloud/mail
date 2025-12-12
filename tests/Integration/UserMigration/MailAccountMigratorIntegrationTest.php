@@ -53,7 +53,7 @@ class MailAccountMigratorIntegrationTest extends TestCase {
 			});
 		$importSource = $this->createMock(IImportSource::class);
 		$importSource->method('getFileContents')
-			->willReturnCallback(function(string $path) use (&$exportContents) {
+			->willReturnCallback(function (string $path) use (&$exportContents) {
 				if (!array_key_exists($path, $exportContents)) {
 					$availableFiles = join(', ', array_keys($exportContents));
 					throw new UserMigrationException("File contents for {$path} not found. Available: {$availableFiles}");
