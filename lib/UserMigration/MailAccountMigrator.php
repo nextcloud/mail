@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\UserMigration;
 
 use Exception;
+use JsonException;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AccountService;
@@ -118,9 +119,17 @@ class MailAccountMigrator implements IMigrator {
 	}
 
 	public function import(IUser $user, IImportSource $importSource, OutputInterface $output): void {
-		$index = json_decode($importSource->getFileContents('mail/accounts/index.json'), true);
+		try {
+			$index = json_decode($importSource->getFileContents('mail/accounts/index.json'), true, flags: JSON_THROW_ON_ERROR);
+		} catch (JsonException $e) {
+			throw new UserMigrationException("Invalid index content: {$e->getMessage()}", $e->getCode(), $e);
+		}
 		foreach ($index as $accountFilePath) {
-			$accountData = json_decode($importSource->getFileContents($accountFilePath), true);
+			try {
+				$accountData = json_decode($importSource->getFileContents($accountFilePath), true, flags: JSON_THROW_ON_ERROR);
+			} catch (JsonException $e) {
+				throw new UserMigrationException("Invalid account content: {$e->getMessage()}", $e->getCode(), $e);
+			}
 
 			// Wipe the old ID(s) to prevent overwrites
 			unset(

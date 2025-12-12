@@ -19,6 +19,7 @@ use OCA\Mail\UserMigration\MailAccountMigrator;
 use OCP\IUser;
 use OCP\UserMigration\IExportDestination;
 use OCP\UserMigration\IImportSource;
+use OCP\UserMigration\UserMigrationException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Output\OutputInterface;
 use function json_decode;
@@ -29,6 +30,7 @@ class MailAccountMigratorTest extends TestCase {
 
 	private MailAccountMigrator $migrator;
 
+	/** @var ServiceMockObject<MailAccountMigrator> */
 	private ServiceMockObject $serviceMock;
 	private OutputInterface|MockObject $output;
 
@@ -117,14 +119,28 @@ class MailAccountMigratorTest extends TestCase {
 	public function testExportBasicAccountInfo(): void {
 		$user = $this->createMock(IUser::class);
 		$user->method('getUID')->willReturn('user_export');
+		$mailAccount1 = new MailAccount([]);
 		$account1 = $this->createMock(Account::class);
 		$account1->method('getId')->willReturn(101);
 		$account1->method('getUserId')->willReturn('user_export');
-		$account1->method('jsonSerialize')->willReturn(['id' => 101]);
+		$account1->method('getMailAccount')->willReturn($mailAccount1);
+		$mailAccount1->setAuthMethod('password');
+		$mailAccount1->setInboundPassword('imap_pass_encrypted');
+		$account1->method('jsonSerialize')->willReturn([
+			'id' => 101,
+			'email' => 'jane@doe.org',
+		]);
+		$mailAccount2 = new MailAccount([]);
 		$account2 = $this->createMock(Account::class);
 		$account2->method('getId')->willReturn(102);
 		$account2->method('getUserId')->willReturn('user_export');
-		$account2->method('jsonSerialize')->willReturn(['id' => 102]);
+		$account2->method('getMailAccount')->willReturn($mailAccount2);
+		$mailAccount2->setAuthMethod('password');
+		$mailAccount2->setInboundPassword('imap_pass_encrypted');
+		$account2->method('jsonSerialize')->willReturn([
+			'id' => 102,
+			'email' => 'jane@doe.com',
+		]);
 		/** @var AccountService|MockObject $accountService */
 		$accountService = $this->serviceMock->getParameter('accountService');
 		$accountService->expects(self::once())
@@ -149,10 +165,14 @@ class MailAccountMigratorTest extends TestCase {
 					$accountData = json_decode($content, true);
 					self::assertArrayHasKey('id', $accountData);
 					self::assertSame(101, $accountData['id']);
+					self::assertArrayHasKey('inboundPassword', $accountData);
+					self::assertSame('imap_pass', $accountData['inboundPassword']);
 				} elseif ($path === 'mail/accounts/102.json') {
 					$accountData = json_decode($content, true);
 					self::assertArrayHasKey('id', $accountData);
 					self::assertSame(102, $accountData['id']);
+					self::assertArrayHasKey('inboundPassword', $accountData);
+					self::assertSame('imap_pass', $accountData['inboundPassword']);
 				} else {
 					$this->fail('Invalid file content path ' . $path);
 				}
@@ -161,6 +181,22 @@ class MailAccountMigratorTest extends TestCase {
 		$this->migrator->export(
 			$user,
 			$exportDestination,
+			$this->output,
+		);
+	}
+
+	public function testImportInvalidIndex(): void {
+		$this->expectException(UserMigrationException::class);
+		$user = $this->createMock(IUser::class);
+
+		$importSource = $this->createMock(IImportSource::class);
+		$importSource->method('getFileContents')
+			->with('mail/accounts/index.json')
+			->willReturn('fail');
+
+		$this->migrator->import(
+			$user,
+			$importSource,
 			$this->output,
 		);
 	}
