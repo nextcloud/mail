@@ -68,6 +68,7 @@ use OCA\Mail\Service\TrustedSenderService;
 use OCA\Mail\Service\UserPreferenceService;
 use OCA\Mail\SetupChecks\MailConnectionPerformance;
 use OCA\Mail\SetupChecks\MailTransport;
+use OCA\Mail\UserMigration\MailAccountMigrator;
 use OCA\Mail\Vendor\Favicon\Favicon;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
@@ -87,6 +88,9 @@ use Psr\Container\ContainerInterface;
 
 include_once __DIR__ . '/../../vendor/autoload.php';
 
+/**
+ * @codeCoverageIgnore
+ */
 final class Application extends App implements IBootstrap {
 	public const APP_ID = 'mail';
 
@@ -163,6 +167,8 @@ final class Application extends App implements IBootstrap {
 
 		$context->registerSetupCheck(MailTransport::class);
 		$context->registerSetupCheck(MailConnectionPerformance::class);
+
+		$context->registerUserMigrator(MailAccountMigrator::class);
 
 		// bypass Horde Translation system
 		Horde_Translation::setHandler('Horde_Imap_Client', new HordeTranslationHandler());

@@ -83,12 +83,12 @@ use OCP\AppFramework\Db\Entity;
  * @method void setAuthMethod(string $method)
  * @method int getSignatureMode()
  * @method void setSignatureMode(int $signatureMode)
- * @method string getOauthAccessToken()
+ * @method string|null getOauthAccessToken()
  * @method void setOauthAccessToken(string $token)
- * @method string getOauthRefreshToken()
+ * @method string|null getOauthRefreshToken()
  * @method void setOauthRefreshToken(string $token)
  * @method int|null getOauthTokenTtl()
- * @method void setOauthTokenTtl(int $ttl)
+ * @method void setOauthTokenTtl(int|null $ttl)
  * @method int|null getSmimeCertificateId()
  * @method void setSmimeCertificateId(int|null $smimeCertificateId)
  * @method int|null getQuotaPercentage()
@@ -302,6 +302,7 @@ class MailAccount extends Entity {
 			'name' => $this->getName(),
 			'order' => $this->getOrder(),
 			'emailAddress' => $this->getEmail(),
+			'authMethod' => $this->getAuthMethod() ?? 'password',
 			'imapHost' => $this->getInboundHost(),
 			'imapPort' => $this->getInboundPort(),
 			'imapUser' => $this->getInboundUser(),

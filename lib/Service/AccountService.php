@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
-use OCA\Mail\AppInfo\Application;
 use OCA\Mail\BackgroundJob\PreviewEnhancementProcessingJob;
 use OCA\Mail\BackgroundJob\QuotaJob;
 use OCA\Mail\BackgroundJob\RepairSyncJob;
@@ -175,14 +174,6 @@ class AccountService {
 
 		// Insert background jobs for this account
 		$this->scheduleBackgroundJobs($newAccount->getId());
-
-		// Set initial heartbeat
-		$this->config->setUserValue(
-			$newAccount->getUserId(),
-			Application::APP_ID,
-			'ui-heartbeat',
-			(string)$this->timeFactory->getTime(),
-		);
 
 		return $newAccount;
 	}
