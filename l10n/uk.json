@@ -416,6 +416,7 @@
     "Collapse folders" : "Згорнути теки",
     "_{total} message_::_{total} messages_" : ["{total} повідомлення","{total} повідомлення","{total} повідомлень","{total} повідомлень"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} непрочитано з {total}","{unread} непрочитано з {total}","{unread} непрочитано з {total}","{unread} непрочитано з {total}"],
+    "Loading …" : "Завантаження …",
     "All messages in mailbox will be deleted." : "Усі повідомлення у поштовій скриньці буде вилучено.",
     "Clear mailbox {name}" : "Очистити поштову скриньку {name}",
     "Clear folder" : "Очистити папку",
