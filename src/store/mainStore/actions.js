@@ -219,6 +219,13 @@ export default function mainStoreActions() {
 			logger.debug(`account ${account.id} created`, { account })
 			return account
 		},
+		async syncMailboxesForAccount(account) {
+			logger.debug(`Fetching mailboxes for account ${account.id},  …`, { account })
+			account.mailboxes = await fetchAllMailboxes(account.id, true)
+			const mailboxes = sortMailboxes(account.mailboxes || [], account)
+			Vue.set(account, 'mailboxes', [])
+			mailboxes.map(addMailboxToState(this.mailboxes, account))
+		},
 		async finishAccountSetup({ account }) {
 			logger.debug(`Fetching mailboxes for account ${account.id},  …`, { account })
 			account.mailboxes = await fetchAllMailboxes(account.id)
@@ -804,7 +811,15 @@ export default function mainStoreActions() {
 					return Promise.reject(new Error('Cannot find last envelope. Required for the mailbox cursor'))
 				}
 
-				return fetchEnvelopes(mailbox.accountId, mailboxId, query, lastEnvelope.dateInt, quantity, this.getPreference('sort-order')).then((envelopes) => {
+				return fetchEnvelopes(
+					mailbox.accountId,
+					mailboxId,
+					query,
+					lastEnvelope.dateInt,
+					quantity,
+					this.getPreference('sort-order'),
+					this.getPreference('layout-message-view'),
+				).then((envelopes) => {
 					logger.debug(`fetched ${envelopes.length} messages for mailbox ${mailboxId}`, {
 						envelopes,
 						addToUnifiedMailboxes,
@@ -2320,6 +2335,14 @@ export default function mainStoreActions() {
 			const index = this.quickActions.findIndex((s) => s.id === quickAction.id)
 			if (index !== -1) {
 				Vue.set(this.quickActions, index, quickAction)
+			}
+		},
+		patchActionStepsLocally(id, steps) {
+			const index = this.quickActions.findIndex((s) => s.id === id)
+			if (index !== -1) {
+				const updatedQuickAction = this.quickActions[index]
+				updatedQuickAction.actionSteps = steps
+				Vue.set(this.quickActions, index, updatedQuickAction)
 			}
 		},
 		deleteQuickActionLocally(id) {

@@ -21,6 +21,19 @@ export enum MailFilterConditionOperator {
 	Matches = 'matches',
 }
 
+export enum MailFilterActions {
+	AddSystemFlag = 'addsystemflag',
+	Stop = 'stop',
+}
+
+export enum MailFilterSystemFlag {
+	Answered = '\\Answered',
+	Deleted = '\\Deleted',
+	Draft = '\\Draft',
+	Flagged = '\\Flagged',
+	Seen = '\\Seen',
+}
+
 export class MailFilterCondition {
 	public id: number
 	public field: MailFilterConditionField

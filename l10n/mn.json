@@ -47,10 +47,10 @@
     "Accept" : "Хүлээн зөвшөөрөх",
     "Decline" : "Зөвшөөрөхгүй",
     "Remove" : "Устгах",
-    "email" : "цахим шуудан",
     "Today" : "өнөөдөр",
     "Yesterday" : "Өчигдөр",
     "Choose target folder" : "Зорилтот хавтасыг сонгох",
+    "Favorites" : "Онцолсон",
     "Other" : "Бусад",
     "Forward" : "дамжих",
     "Translate" : "Орчуулга",
@@ -72,6 +72,7 @@
     "Date" : "Он сар өдөр",
     "Tags" : "Tag-үүд",
     "Custom" : "Дурын",
+    "Deleted" : "Устгагдсан",
     "Recipient" : "Хүлээн авагч",
     "Help" : "Туслах",
     "matches" : "тохируулах",
@@ -89,13 +90,10 @@
     "Connect your mail account" : "Таны мэйл бүртгэлийг холбоно",
     "All" : "бүх",
     "Drafts" : "ноорог",
-    "Favorites" : "Онцолсон",
     "Inbox" : "ирсэн",
     "Junk" : "хэрэггүй",
     "Sent" : "илгээсэн",
     "Trash" : "хог",
-    "Error loading message" : "алдаатай ачааллах зурвас",
-    "Accounts" : "Accounts",
-    "Loading …" : "Уншиж байна..."
+    "Error loading message" : "алдаатай ачааллах зурвас"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

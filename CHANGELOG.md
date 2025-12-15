@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 5.6.0 – 2025-11-20
+### Added
+* Keyboard shortcut CTRL+Enter to send an email
+* Settings signature editor border
+### Changed
+* Translations
+
 ## 5.5.0 – unreleased
 ### Added
 * Nextcloud 33 support

@@ -71,6 +71,7 @@ class MailAccountTest extends TestCase {
 			'searchBody' => false,
 			'outOfOfficeFollowsSystem' => true,
 			'debug' => false,
+			'classificationEnabled' => true,
 		], $a->toJson());
 	}
 
@@ -109,6 +110,7 @@ class MailAccountTest extends TestCase {
 			'searchBody' => false,
 			'outOfOfficeFollowsSystem' => false,
 			'debug' => false,
+			'classificationEnabled' => true,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency

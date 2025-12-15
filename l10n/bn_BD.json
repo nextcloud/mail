@@ -11,7 +11,6 @@
     "Go back" : "ফিরে যাও",
     "Cancel" : "বাতির",
     "General" : "সাধারণ",
-    "Keyboard shortcuts" : "কী-বোর্ড শর্টকাট",
     "Delete" : "মুছে",
     "Search" : "Search",
     "Send" : "পাঠাও",
@@ -30,6 +29,7 @@
     "Comment" : "মন্তব্য",
     "Remove" : "অপসারণ",
     "Today" : "আজ",
+    "Favorites" : "প্রিয়জন",
     "Other" : "অন্যান্য",
     "Choose a folder to store the attachment in" : "সংযুক্তি সংরক্ষনের জন্য একটি ফোল্ডার নির্বাচন করুন",
     "Move" : "Move",
@@ -42,6 +42,7 @@
     "Close" : "বন্ধ",
     "Date" : "Date",
     "Tags" : "ট্যাগ",
+    "Deleted" : "মুছে ফেলা",
     "Help" : "সহায়িকা",
     "Actions" : "পদক্ষেপসমূহ",
     "delete" : "মুছে ফেল",
@@ -54,8 +55,6 @@
     "Group" : "গোষ্ঠীসমূহ",
     "Shared" : "ভাগাভাগিকৃত",
     "Shares" : "ভাগাভাগি",
-    "All" : "সবাই",
-    "Favorites" : "প্রিয়জন",
-    "Accounts" : "Accounts"
+    "All" : "সবাই"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

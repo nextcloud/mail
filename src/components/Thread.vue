@@ -580,8 +580,9 @@ export default {
 </script>
 
 <style lang="scss">
+@use '../../css/variables';
+
 #mail-message {
-	margin-bottom: 30vh;
 	width: 100%;
 	max-width: 100%;
 
@@ -594,8 +595,9 @@ export default {
 
 .mail-message-body {
 	flex: 1;
-	margin-bottom: calc(var(--default-grid-baseline) * 2);
+	margin-bottom: 0;
 	position: relative;
+	border-radius: 5px;
 }
 
 #mail-thread-header {
@@ -631,6 +633,13 @@ export default {
 	}
 }
 
+@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
+    #mail-thread-header {
+        position: sticky !important;
+        top: 29px !important;
+    }
+}
+
 #mail-thread-header-fields {
 	// initial width
 	width: 0;
@@ -639,6 +648,8 @@ export default {
 	padding-inline-start: 66px;
 	// grow and try to fill 100%
 	flex: 1 1 auto;
+	background: var(--color-main-background);
+	margin-inline-end: 5px;
 	h2,
 	p {
 		padding-bottom: calc(var(--default-grid-baseline) * 2);
@@ -659,9 +670,16 @@ export default {
 		}
 	}
 }
-@media only screen and (max-width: 1024px) {
+
+@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
+    #mail-thread-header-fields {
+        padding-inline-start: 48px;
+    }
+}
+
+@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
 	#mail-thread-header-fields {
-		margin-top: -20px;
+		margin-top: -32px;
 	}
 }
 
@@ -677,6 +695,12 @@ export default {
 
 #mail-content {
 	margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 10) 0 calc(var(--default-grid-baseline) * 14);
+}
+
+@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
+    #mail-content {
+        margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 3) 0 calc(var(--default-grid-baseline) * 3);
+    }
 }
 
 #mail-content iframe {
@@ -723,9 +747,10 @@ export default {
 }
 
 .avatar-more {
-	display: inline;
+	display: flex;
 	background-color: var(--color-background-dark);
 	border-radius: var(--border-radius-large);
+	align-items: center;
 	cursor: pointer;
 }
 

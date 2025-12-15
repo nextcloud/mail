@@ -26,6 +26,7 @@ OC.L10N.register(
     "Remove" : "ដកចេញ",
     "Today" : "ថ្ងៃ​នេះ",
     "Yesterday" : "ម្សិលមិញ",
+    "Favorites" : "Favorites",
     "Other" : "ផ្សេងៗ",
     "Move" : "Move",
     "Folder name" : "ឈ្មោះ​ថត",
@@ -35,6 +36,7 @@ OC.L10N.register(
     "Close" : "បិទ",
     "Date" : "កាលបរិច្ឆេទ",
     "Tags" : "ស្លាក",
+    "Deleted" : "បាន​លុប",
     "Help" : "ជំនួយ",
     "contains" : "មានផ្ទុក",
     "delete" : "លុប",
@@ -46,11 +48,9 @@ OC.L10N.register(
     "Shares" : "ចែក​រំលែក",
     "All" : "ទាំងអស់",
     "Drafts" : "ពង្រាង",
-    "Favorites" : "Favorites",
     "Inbox" : "ក្នុង​ប្រអប់សារ",
     "Junk" : "ព្រៃ",
     "Sent" : "ផ្ញើ",
-    "Trash" : "ធុង​សំរាម",
-    "Accounts" : "Accounts"
+    "Trash" : "ធុង​សំរាម"
 },
 "nplurals=1; plural=0;");

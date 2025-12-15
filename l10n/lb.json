@@ -29,6 +29,7 @@
     "Comment" : "Kommentar",
     "Remove" : "Läschen",
     "Today" : "Haut",
+    "Favorites" : "Favoriten",
     "Other" : "Aner",
     "Translate" : "Iwwersetzen",
     "Unnamed" : "ouni Numm",
@@ -43,6 +44,7 @@
     "Date" : "Date",
     "Tags" : "Tags",
     "Custom" : "Individualiséier",
+    "Deleted" : "Geläscht",
     "Help" : "Hëllef",
     "Actions" : "Aktiounen",
     "delete" : "läschen",
@@ -54,8 +56,6 @@
     "Port" : "Port",
     "Group" : "Grupp",
     "Shared" : "Gedeelt",
-    "All" : "All",
-    "Favorites" : "Favoriten",
-    "Accounts" : "Accounts"
+    "All" : "All"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

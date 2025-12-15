@@ -39,6 +39,7 @@ OC.L10N.register(
     "Decline" : "İmtina",
     "Remove" : "Sil",
     "Today" : "Bu gün",
+    "Favorites" : "Sevimlilər",
     "Other" : "Digər",
     "Choose a folder to store the attachment in" : "Əlavələrin saxlanılması üçün qovluğu seçin",
     "Move" : "Move",
@@ -53,6 +54,7 @@ OC.L10N.register(
     "Date" : "Date",
     "Tags" : "Işarələr",
     "Not found" : "Tapılmadı",
+    "Deleted" : "Silinib",
     "Help" : "Kömək",
     "Actions" : "İşlər",
     "Priority" : "Prioritet",
@@ -70,12 +72,10 @@ OC.L10N.register(
     "Shares" : "Yayımlanmalar",
     "All" : "Hamısı",
     "Drafts" : "Qaralamalar",
-    "Favorites" : "Sevimlilər",
     "Inbox" : "Gələn qutusu",
     "Junk" : "Önəmsiz",
     "Sent" : "Göndərildi",
     "Trash" : "Zibil",
-    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi",
-    "Accounts" : "Accounts"
+    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi"
 },
 "nplurals=2; plural=(n != 1);");

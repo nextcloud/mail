@@ -9,41 +9,59 @@
 			:name="t('mail', 'Mail settings')"
 			:show-navigation="true"
 			:additional-trap-elements="trapElements"
+			:legacy="false"
 			:open.sync="showSettings">
-			<NcAppSettingsSection id="account-creation" :name="t('mail', 'General')">
+			<NcAppSettingsSection id="general" :name="t('mail', 'General')">
 				<NcButton
-					v-if="allowNewMailAccounts"
-					variant="primary"
-					to="/setup"
-					:aria-label="t('mail', 'Add mail account')"
-					class="app-settings-button">
-					<template #icon>
-						<IconAdd :size="20" />
-					</template>
-					{{ t('mail', 'Add mail account') }}
+					variant="secondary"
+					:aria-label="t('mail', 'Set as default mail app')"
+					wide
+					@click="registerProtocolHandler">
+					{{ t('mail', 'Set as default mail app') }}
 				</NcButton>
 
-				<h4>{{ t('mail', 'Account settings') }}</h4>
-				<p>{{ t('mail', 'Settings for:') }}</p>
-				<li v-for="account in getAccounts" :key="account.id">
-					<NcButton
-						v-if=" account && account.emailAddress"
-						class="app-settings-button"
-						variant="secondary"
-						:aria-label="t('mail', 'Account settings')"
-						@click="openAccountSettings(account.id)">
-						{{ account.emailAddress }}
-					</NcButton>
-				</li>
+				<NcFormGroup :label="t('mail', 'Account settings')">
+					<NcFormBox>
+						<NcFormBoxButton
+							v-for="account in accountsWithEmail"
+							:key="account.id"
+							:aria-label="t('mail', 'Account settings')"
+							@click="openAccountSettings(account.id)">
+							<template #icon>
+								<IconArrow :size="20" />
+							</template>
+							{{ account.emailAddress }}
+						</NcFormBoxButton>
+						<NcButton
+							v-if="allowNewMailAccounts"
+							variant="secondary"
+							to="/setup"
+							:aria-label="t('mail', 'Add mail account')"
+							wide>
+							<template #icon>
+								<IconAdd :size="20" />
+							</template>
+							{{ t('mail', 'Add mail account') }}
+						</NcButton>
+					</NcFormBox>
+				</NcFormGroup>
 			</NcAppSettingsSection>
 
-			<NcAppSettingsSection id="appearance-and-accessibility" :name="t('mail', 'Appearance')">
+			<NcAppSettingsSection id="appearance" :name="t('mail', 'Appearance')">
+				<NcFormBox>
+					<NcFormBoxSwitch
+						v-model="layoutMessageView"
+						:label="t('mail', 'Show all messages in thread')"
+						:description="t('mail', 'When off, only the selected message will be shown')" />
+				</NcFormBox>
+				<NcFormBox>
+					<NcFormBoxSwitch
+						v-model="sortFavorites"
+						:label="t('mail', 'Sort favorites up')"
+						:disabled="loadingSortFavorites"
+						:description="t('mail', 'When on, favorite messages will be sorted to the top of folders')" />
+				</NcFormBox>
 				<NcRadioGroup v-model="layoutMode" :label="t('mail', 'Layout')">
-					<NcRadioGroupButton :label="t('mail', 'List')" value="no-split">
-						<template #icon>
-							<CompactMode :size="20" />
-						</template>
-					</NcRadioGroupButton>
 					<NcRadioGroupButton :label="t('mail', 'Vertical split')" value="vertical-split">
 						<template #icon>
 							<VerticalSplit :size="20" />
@@ -54,270 +72,190 @@
 							<HorizontalSplit :size="20" />
 						</template>
 					</NcRadioGroupButton>
+					<NcRadioGroupButton :label="t('mail', 'List')" value="no-split">
+						<template #icon>
+							<CompactMode :size="20" />
+						</template>
+					</NcRadioGroupButton>
 				</NcRadioGroup>
-
-				<br>
 
 				<NcRadioGroup :model-value="sortOrder" :label="t('mail', 'Sorting')" @update:modelValue="onSortByDate">
 					<NcRadioGroupButton :label="t('mail', 'Newest first')" value="newest" />
 					<NcRadioGroupButton :label="t('mail', 'Oldest first')" value="oldest" />
 				</NcRadioGroup>
 
-				<br>
+				<NcAppSettingsSection id="messages" name="Messages">
+					<NcFormBox>
+						<NcFormBoxSwitch
+							v-model="useExternalAvatars"
+							:disabled="loadingAvatarSettings"
+							@update:modelValue="onToggleExternalAvatars">
+							{{ t('mail', 'Avatars from Gravatar and favicons') }}
+						</NcFormBoxSwitch>
 
-				<NcRadioGroup v-model="layoutMessageView" :label="t('mail', 'Message view mode')">
-					<NcRadioGroupButton :label="t('mail', 'Show all messages in thread')" value="threaded" />
-					<NcRadioGroupButton :label="t('mail', 'When off, only the selected message will be shown')" value="singleton" />
-				</NcRadioGroup>
+						<NcFormBoxSwitch
+							v-model="searchPriorityBody"
+							:disabled="loadingPrioritySettings"
+							@update:modelValue="onToggleSearchPriorityBody">
+							{{ prioritySettingsText }}
+						</NcFormBoxSwitch>
+					</NcFormBox>
 
-				<br>
+					<NcRadioGroup :model-value="useBottomReplies" :label="t('mail', 'Reply position')" @update:modelValue="onToggleButtonReplies">
+						<NcRadioGroupButton :label="t('mail', 'Top')" :value="false" />
+						<NcRadioGroupButton :label="t('mail', 'Bottom')" :value="true" />
+					</NcRadioGroup>
 
-				<NcRadioGroup :model-value="useBottomReplies" :label="t('mail', 'Reply position')" @update:modelValue="onToggleButtonReplies">
-					<NcRadioGroupButton :label="t('mail', 'Top')" :value="false" />
-					<NcRadioGroupButton :label="t('mail', 'Bottom')" :value="true" />
-				</NcRadioGroup>
+					<NcFormGroup
+						:label="t('mail', 'Text blocks')"
+						:description="t('mail', 'Reusable pieces of text that can be inserted in messages')">
+						<List
+							:text-blocks="getMyTextBlocks()"
+							@show-toolbar="handleShowToolbar" />
+						<NcButton variant="secondary" wide @click="() => textBlockDialogOpen = true">
+							<template #icon>
+								<IconAdd :size="20" />
+							</template>
+							{{ t('mail', 'New text block') }}
+						</NcButton>
+						<template v-if="getSharedTextBlocks().length > 0">
+							<h6>{{ t('mail', 'Shared with me') }}</h6>
+							<List
+								:text-blocks="getSharedTextBlocks()"
+								:shared="true"
+								@show-toolbar="handleShowToolbar" />
+						</template>
+					</NcFormGroup>
+				</NcAppSettingsSection>
 
-				<h4>{{ t('mail', 'Search in body') }}</h4>
-				<p class="app-settings">
-					<NcCheckboxRadioSwitch
-						id="priority-inbox-toggle"
-						:checked="searchPriorityBody"
-						:loading="loadingPrioritySettings"
-						@update:checked="onToggleSearchPriorityBody">
-						{{ prioritySettingsText }}
-					</NcCheckboxRadioSwitch>
-				</p>
+				<NcAppSettingsSection id="privacy" :name="t('mail', 'Privacy')">
+					<NcFormBoxSwitch
+						v-model="useDataCollection"
+						:label="t('mail', 'Data collection')"
+						:description="t('mail', 'Allow the app to collect and process data locally to adapt to your preferences')"
+						@update:modelValue="onToggleCollectData" />
 
-				<h4>{{ t('mail', 'Gravatar settings') }}</h4>
-				<p class="app-settings avatar-settings">
-					<NcCheckboxRadioSwitch
-						id="gravatar-enabled"
-						:checked="useExternalAvatars"
-						:loading="loadingAvatarSettings"
-						@update:checked="onToggleExternalAvatars">
-						{{ t('mail', 'Avatars from Gravatar and favicons') }}
-					</NcCheckboxRadioSwitch>
-				</p>
+					<NcFormGroup :label="t('mail', 'Always show images from')">
+						<TrustedSenders />
+					</NcFormGroup>
+				</NcAppSettingsSection>
+				<NcAppSettingsSection id="security" :name="t('mail', 'Security')">
+					<NcFormBoxSwitch
+						v-model="useInternalAddresses"
+						:disabled="loadingInternalAddresses"
+						:label="internalAddressText"
+						:description="t('mail', 'Manage your internal addresses and domains to ensure recognized contacts stay unmarked')"
+						@update:modelValue="onToggleInternalAddress" />
+					<InternalAddress />
 
-				<h4>{{ t('mail', 'Mailto') }}</h4>
-				<p class="settings-hint">
-					{{ t('mail', 'Set as default mail app') }}
-				</p>
-				<NcButton
-					variant="secondary"
-					class="app-settings-button"
-					:aria-label="t('mail', 'Set as default mail app')"
-					@click="registerProtocolHandler">
-					<template #icon>
-						<IconEmail :size="20" />
-					</template>
-					{{ t('mail', 'Register') }}
-				</NcButton>
-			</NcAppSettingsSection>
-			<NcAppSettingsSection id="text-blocks" :name="t('mail', 'Text blocks')">
-				<span class="settings-hint">{{ t('mail', 'Reusable pieces of text that can be inserted in messages') }}</span>
-				<List
-					:text-blocks="getMyTextBlocks()"
-					@show-toolbar="handleShowToolbar" />
-				<NcButton variant="primary" @click="() => textBlockDialogOpen = true">
-					{{ t('mail', 'New text block') }}
-				</NcButton>
-				<template v-if="getSharedTextBlocks().length > 0">
-					<h6>{{ t('mail', 'Shared with me') }}</h6>
-					<List
-						:text-blocks="getSharedTextBlocks()"
-						:shared="true"
-						@show-toolbar="handleShowToolbar" />
-				</template>
-			</NcAppSettingsSection>
+					<NcFormGroup :label="t('mail', 'S/MIME')">
+						<NcButton
+							class="app-settings-button"
+							variant="secondary"
+							:aria-label="t('mail', 'Manage certificates')"
+							wide
+							@click.prevent.stop="displaySmimeCertificateModal = true">
+							<template #icon>
+								<IconMedal :size="20" />
+							</template>
+							{{ t('mail', 'Manage certificates') }}
+						</NcButton>
+						<SmimeCertificateModal
+							v-if="displaySmimeCertificateModal"
+							@close="displaySmimeCertificateModal = false" />
+					</NcFormGroup>
 
-			<NcAppSettingsSection id="privacy-and-security" :name="t('mail', 'Privacy and security')">
-				<h4>{{ t('mail', 'Data collection') }}</h4>
-				<p class="settings-hint">
-					{{ t('mail', 'Allow the app to collect and process data locally to adapt to your preferences.') }}
-				</p>
-				<p class="app-settings">
-					<NcCheckboxRadioSwitch
-						id="data-collection-toggle"
-						:checked="useDataCollection"
-						:loading="loadingOptOutSettings"
-						@update:checked="onToggleCollectData">
-						{{ optOutSettingsText }}
-					</NcCheckboxRadioSwitch>
-				</p>
+					<NcFormGroup :label="t('mail', 'Mailvelope')">
+						<NcNoteCard v-if="mailvelopeIsAvailable" type="success">
+							{{ t('mail', 'Mailvelope is enabled for the current domain.') }}
+						</NcNoteCard>
 
-				<h4>{{ t('mail', 'Always show images from') }}</h4>
-				<TrustedSenders />
-
-				<h4>{{ t('mail', 'Security') }}</h4>
-				<p class="settings-hint">
-					{{ t('mail', 'Highlight external email addresses by enabling this feature, manage your internal addresses and domains to ensure recognized contacts stay unmarked.') }}
-				</p>
-				<p class="app-settings">
-					<NcCheckboxRadioSwitch
-						id="internal-address-toggle"
-						:checked="useInternalAddresses"
-						:loading="loadingInternalAddresses"
-						@update:checked="onToggleInternalAddress">
-						{{ internalAddressText }}
-					</NcCheckboxRadioSwitch>
-				</p>
-				<InternalAddress />
-
-				<h4>{{ t('mail', 'S/MIME') }}</h4>
-				<NcButton
-					class="app-settings-button"
-					variant="secondary"
-					:aria-label="t('mail', 'Manage certificates')"
-					@click.prevent.stop="displaySmimeCertificateModal = true">
-					<template #icon>
-						<IconLock :size="20" />
-					</template>
-					{{ t('mail', 'Manage certificates') }}
-				</NcButton>
-				<SmimeCertificateModal
-					v-if="displaySmimeCertificateModal"
-					@close="displaySmimeCertificateModal = false" />
-
-				<h4>{{ t('mail', 'Mailvelope') }}</h4>
-				<p class="settings-hint">
-					{{ t('mail', 'A browser extension that enables easy OpenPGP encryption and decryption of emails') }}
-				</p>
-				<div class="mailvelope-section">
-					<div v-if="mailvelopeIsAvailable">
-						{{ t('mail', 'Mailvelope is enabled for the current domain.') }}
-					</div>
-					<div v-else>
-						<p>
-							<a
+						<NcFormBox v-else>
+							<NcFormBoxButton
 								href="https://www.mailvelope.com/"
 								target="_blank"
-								class="button"
-								rel="noopener noreferrer">
-								{{ t('mail', 'Step 1') }}:
-								{{ t('mail', 'Install the browser extension') }}
-							</a>
-						</p>
-						<p>
-							<a
-								class="button"
+								:label="t('mail', 'Step 1')"
+								:description="t('mail', 'Install the browser extension')"
+								inverted-accent />
+							<NcFormBoxButton
+								:label="t('mail', 'Step 2')"
+								:description="t('mail', 'Enable for the current domain')"
+								inverted-accent
 								@click="mailvelopeAuthorizeDomain">
-								{{ t('mail', 'Step 2') }}:
-								{{ t('mail', 'Enable for the current domain') }}
-							</a>
-						</p>
-					</div>
-				</div>
-			</NcAppSettingsSection>
+								<template #icon>
+									<IconDomain :size="20" />
+								</template>
+							</NcFormBoxButton>
+						</NcFormBox>
+					</NcFormGroup>
+				</NcAppSettingsSection>
 
-			<NcAppSettingsSection id="autotagging-settings" :name="t('mail', 'Assistance features')">
-				<p class="app-settings">
-					<NcCheckboxRadioSwitch
-						id="auto-tagging-toggle"
-						:checked="useAutoTagging"
-						:loading="toggleAutoTagging"
-						@update:checked="onToggleAutoTagging">
-						{{ autoTaggingText }}
-					</NcCheckboxRadioSwitch>
-				</p>
-				<p v-if="followUpFeatureAvailable" class="app-settings">
-					<NcCheckboxRadioSwitch
-						id="follow-up-reminder-toggle"
-						:checked="useFollowUpReminders"
-						:loading="loadingFollowUpReminders"
-						@update:checked="onToggleFollowUpReminders">
-						{{ followUpReminderText }}
-					</NcCheckboxRadioSwitch>
-				</p>
-			</NcAppSettingsSection>
-			<NcAppSettingsSection id="keyboard-shortcut-settings" :name="t('mail', 'Keyboard shortcuts')">
-				<dl>
-					<div>
-						<dt><NcKbd symbol="C" /></dt>
-						<dd>{{ t('mail', 'Compose new message') }}</dd>
-					</div>
-					<div>
-						<dt><NcKbd symbol="←" /></dt>
-						<dd>{{ t('mail', 'Newer message') }}</dd>
-					</div>
-					<div>
-						<dt><NcKbd symbol="→" /></dt>
-						<dd>{{ t('mail', 'Older message') }}</dd>
-					</div>
+				<NcAppSettingsSection v-if="followUpFeatureAvailable" id="autotagging-settings" :name="t('mail', 'Assistance features')">
+					<NcFormBox>
+						<NcFormBoxSwitch
+							:checked="useFollowUpReminders"
+							:disabled="loadingFollowUpReminders"
+							@update:modelValue="onToggleFollowUpReminders">
+							{{ followUpReminderText }}
+						</NcFormBoxSwitch>
+					</NcFormBox>
+				</NcAppSettingsSection>
+				<NcAppSettingsSection id="about-settings" :name="t('mail', 'About')">
+					<NcFormGroup
+						:label="t('mail', 'Acknowledgements')"
+						:description="t('mail', 'This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2.')" />
+				</NcAppSettingsSection>
+				<NcAppSettingsShortcutsSection>
+					<NcHotkeyList>
+						<NcHotkey :label="t('mail', 'Compose new message')" hotkey="C" />
+						<NcHotkey :label="t('mail', 'Newer message')" hotkey="ArrowLeft" />
+						<NcHotkey :label="t('mail', 'Older message')" hotkey="ArrowRight" />
+						<NcHotkey :label="t('mail', 'Toggle star')" hotkey="S" />
+						<NcHotkey :label="t('mail', 'Toggle unread')" hotkey="U" />
+						<NcHotkey :label="t('mail', 'Archive')" hotkey="A" />
+						<NcHotkey :label="t('mail', 'Delete')" hotkey="Delete" />
+						<NcHotkey :label="t('mail', 'Search')" hotkey="Control F" />
+						<NcHotkey :label="t('mail', 'Send')" hotkey="Control Enter" />
+						<NcHotkey :label="t('mail', 'Refresh')" hotkey="R" />
+					</NcHotkeyList>
+				</NcAppSettingsShortcutsSection>
 
-					<div>
-						<dt><NcKbd symbol="S" /></dt>
-						<dd>{{ t('mail', 'Toggle star') }}</dd>
+				<NcDialog
+					:open.sync="textBlockDialogOpen"
+					:name="t('mail', 'New text block')"
+					:is-form="true"
+					size="normal">
+					<NcInputField :value.sync="localTextBlock.title" :label="t('mail', 'Title of the text block')" />
+					<TextEditor
+						v-model="localTextBlock.content"
+						:is-bordered="true"
+						:html="true"
+						:placeholder="t('mail', 'Content of the text block')"
+						:bus="bus"
+						:show-toolbar="handleShowToolbar" />
+					<div class="text-block-buttons">
+						<NcButton
+							variant="tertiary"
+							class="text-block-buttons__button"
+							@click="closeTextBlockDialog">
+							<template #icon>
+								<IconClose :size="20" />
+							</template>
+							{{ t('mail', 'Cancel') }}
+						</NcButton>
+						<NcButton
+							variant="primary"
+							class="text-block-buttons__button"
+							:disabled="!localTextBlock.title || !localTextBlock.content"
+							@click="newTextBlock">
+							<template #icon>
+								<IconCheck :size="20" />
+							</template>
+							{{ t('mail', 'Ok') }}
+						</NcButton>
 					</div>
-					<div>
-						<dt><NcKbd symbol="U" /></dt>
-						<dd>{{ t('mail', 'Toggle unread') }}</dd>
-					</div>
-					<div>
-						<dt><NcKbd symbol="A" /></dt>
-						<dd>{{ t('mail', 'Archive') }}</dd>
-					</div>
-					<div>
-						<dt><NcKbd symbol="Del" /></dt>
-						<dd>{{ t('mail', 'Delete') }}</dd>
-					</div>
-
-					<div>
-						<dt><NcKbd symbol="Ctrl" /><NcKbd symbol="F" /></dt>
-						<dd>{{ t('mail', 'Search') }}</dd>
-					</div>
-					<div>
-						<dt><NcKbd symbol="Ctrl" /><NcKbd symbol="Enter" /></dt>
-						<dd>{{ t('mail', 'Send') }}</dd>
-					</div>
-					<div>
-						<dt><NcKbd symbol="R" /></dt>
-						<dd>{{ t('mail', 'Refresh') }}</dd>
-					</div>
-				</dl>
+				</NcDialog>
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="about-settings" :name="t('mail', 'About')">
-				<p>{{ t('mail', 'This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2.') }}</p>
-			</NcAppSettingsSection>
-			<p
-				class="app-settings-section__version">
-				{{ t('mail', 'Mail version: {version}', { version: mailVersion }) }}
-			</p>
-			<NcDialog
-				:open.sync="textBlockDialogOpen"
-				:name="t('mail', 'New text block')"
-				:is-form="true"
-				size="normal">
-				<NcInputField :value.sync="localTextBlock.title" :label="t('mail', 'Title of the text block')" />
-				<TextEditor
-					v-model="localTextBlock.content"
-					:is-bordered="true"
-					:html="true"
-					:placeholder="t('mail', 'Content of the text block')"
-					:bus="bus"
-					:show-toolbar="handleShowToolbar" />
-				<div class="text-block-buttons">
-					<NcButton
-						variant="tertiary"
-						class="text-block-buttons__button"
-						@click="closeTextBlockDialog">
-						<template #icon>
-							<IconClose :size="20" />
-						</template>
-						{{ t('mail', 'Cancel') }}
-					</NcButton>
-					<NcButton
-						variant="primary"
-						class="text-block-buttons__button"
-						:disabled="!localTextBlock.title || !localTextBlock.content"
-						@click="newTextBlock">
-						<template #icon>
-							<IconCheck :size="20" />
-						</template>
-						{{ t('mail', 'Ok') }}
-					</NcButton>
-				</div>
-			</NcDialog>
 		</NcAppSettingsDialog>
 	</div>
 </template>
@@ -325,18 +263,34 @@
 <script>
 import { showError } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
-import { NcAppSettingsDialog, NcAppSettingsSection, NcButton, NcCheckboxRadioSwitch, NcDialog, NcInputField, NcRadioGroup, NcRadioGroupButton } from '@nextcloud/vue'
+import {
+	NcAppSettingsDialog,
+	NcAppSettingsSection,
+	NcAppSettingsShortcutsSection,
+	NcButton,
+	NcDialog,
+	NcFormBox,
+	NcFormBoxButton,
+	NcFormBoxSwitch,
+	NcFormGroup,
+	NcHotkey,
+	NcHotkeyList,
+	NcInputField,
+	NcNoteCard,
+	NcRadioGroup,
+	NcRadioGroupButton,
+} from '@nextcloud/vue'
 import mitt from 'mitt'
 import { mapState, mapStores } from 'pinia'
-import NcKbd from '@nextcloud/vue/components/NcKbd'
+import IconArrow from 'vue-material-design-icons/ArrowRight.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconClose from 'vue-material-design-icons/Close.vue'
-import IconEmail from 'vue-material-design-icons/EmailOutline.vue'
-import VerticalSplit from 'vue-material-design-icons/FormatColumns.vue'
-import IconLock from 'vue-material-design-icons/LockOutline.vue'
+import HorizontalSplit from 'vue-material-design-icons/DockBottom.vue'
+import VerticalSplit from 'vue-material-design-icons/DockLeft.vue'
+import IconDomain from 'vue-material-design-icons/Domain.vue'
+import CompactMode from 'vue-material-design-icons/ListBoxOutline.vue'
+import IconMedal from 'vue-material-design-icons/MedalOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
-import CompactMode from 'vue-material-design-icons/ReorderHorizontal.vue'
-import HorizontalSplit from 'vue-material-design-icons/ViewSplitHorizontal.vue'
 import InternalAddress from './InternalAddress.vue'
 import SmimeCertificateModal from './smime/SmimeCertificateModal.vue'
 import List from './textBlocks/List.vue'
@@ -351,16 +305,14 @@ export default {
 		TrustedSenders,
 		InternalAddress,
 		NcButton,
-		IconEmail,
 		IconAdd,
-		IconLock,
+		IconMedal,
 		IconClose,
 		IconCheck,
 		SmimeCertificateModal,
-		NcCheckboxRadioSwitch,
 		NcAppSettingsDialog,
 		NcAppSettingsSection,
-		NcKbd,
+		NcAppSettingsShortcutsSection,
 		NcRadioGroup,
 		NcRadioGroupButton,
 		CompactMode,
@@ -370,6 +322,15 @@ export default {
 		NcDialog,
 		NcInputField,
 		TextEditor,
+		NcFormBox,
+		NcFormBoxButton,
+		NcFormBoxSwitch,
+		NcFormGroup,
+		IconDomain,
+		NcNoteCard,
+		NcHotkeyList,
+		NcHotkey,
+		IconArrow,
 	},
 
 	props: {
@@ -390,12 +351,11 @@ export default {
 			loadingInternalAddresses: false,
 			loadingReplySettings: false,
 
-			autoTaggingText: t('mail', 'Determine importance using machine learning'),
-
 			followUpReminderText: t('mail', 'Remind about messages that require a reply but received none'),
 			internalAddressText: t('mail', 'Highlight external addresses'),
 			toggleAutoTagging: false,
 			loadingFollowUpReminders: false,
+			loadingSortFavorites: false,
 			displaySmimeCertificateModal: false,
 			sortOrder: 'newest',
 			showSettings: false,
@@ -416,32 +376,8 @@ export default {
 	computed: {
 		...mapStores(useMainStore),
 		...mapState(useMainStore, ['getAccounts', 'followUpFeatureAvailable', 'getMyTextBlocks', 'getSharedTextBlocks']),
-		searchPriorityBody() {
-			return this.mainStore.getPreference('search-priority-body', 'false') === 'true'
-		},
-
 		useBottomReplies() {
 			return this.mainStore.getPreference('reply-mode', 'top') === 'bottom'
-		},
-
-		useExternalAvatars() {
-			return this.mainStore.getPreference('external-avatars', 'true') === 'true'
-		},
-
-		useDataCollection() {
-			return this.mainStore.getPreference('collect-data', 'true') === 'true'
-		},
-
-		useAutoTagging() {
-			return this.mainStore.getPreference('tag-classified-messages', 'true') === 'true'
-		},
-
-		useInternalAddresses() {
-			return this.mainStore.getPreference('internal-addresses', 'false') === 'true'
-		},
-
-		useFollowUpReminders() {
-			return this.mainStore.getPreference('follow-up-reminders', 'true') === 'true'
 		},
 
 		allowNewMailAccounts() {
@@ -450,6 +386,70 @@ export default {
 
 		mailVersion() {
 			return this.mainStore.getPreference('mailVersion', '0.0.0')
+		},
+
+		accountsWithEmail() {
+			return this.getAccounts.filter((account) => account && account.emailAddress)
+		},
+
+		sortFavorites: {
+			get() {
+				return this.mainStore.getPreference('sort-favorites', 'false') === 'true'
+			},
+
+			set(value) {
+				this.onToggleSortFavorites(value)
+			},
+		},
+
+		searchPriorityBody: {
+			get() {
+				return this.mainStore.getPreference('search-priority-body', 'false') === 'true'
+			},
+
+			set(value) {
+				this.onToggleSearchPriorityBody(value)
+			},
+		},
+
+		useExternalAvatars: {
+			get() {
+				return this.mainStore.getPreference('external-avatars', 'true') === 'true'
+			},
+
+			set(value) {
+				this.onToggleExternalAvatars(value)
+			},
+		},
+
+		useDataCollection: {
+			get() {
+				return this.mainStore.getPreference('collect-data', 'true') === 'true'
+			},
+
+			set(value) {
+				this.onToggleCollectData(value)
+			},
+		},
+
+		useInternalAddresses: {
+			get() {
+				return this.mainStore.getPreference('internal-addresses', 'false') === 'true'
+			},
+
+			set(value) {
+				this.onToggleInternalAddress(value)
+			},
+		},
+
+		useFollowUpReminders: {
+			get() {
+				return this.mainStore.getPreference('follow-up-reminders', 'true') === 'true'
+			},
+
+			set(value) {
+				this.onToggleFollowUpReminders(value)
+			},
 		},
 
 		layoutMode: {
@@ -464,11 +464,16 @@ export default {
 
 		layoutMessageView: {
 			get() {
-				return this.mainStore.getPreference('layout-message-view')
+				const preference = this.mainStore.getPreference('layout-message-view')
+				return preference === 'threaded' ? true : false
 			},
 
 			set(value) {
-				this.setLayoutMessageView(value)
+				if (value) {
+					this.setLayoutMessageView('threaded')
+				} else {
+					this.setLayoutMessageView('singleton')
+				}
 			},
 		},
 	},
@@ -501,10 +506,6 @@ export default {
 	},
 
 	methods: {
-		closeAccountSettings() {
-			this.showAccountSettings = false
-		},
-
 		openAccountSettings(accountId) {
 			this.mainStore.showSettingsForAccountMutation(accountId)
 			this.showSettings = false
@@ -581,6 +582,21 @@ export default {
 			}
 		},
 
+		async onToggleSortFavorites(enabled) {
+			this.loadingSortFavorites = true
+
+			try {
+				await this.mainStore.savePreference({
+					key: 'sort-favorites',
+					value: enabled ? 'true' : 'false',
+				})
+			} catch (error) {
+				Logger.error('could not save preferences', { error })
+			} finally {
+				this.loadingSortFavorites = false
+			}
+		},
+
 		onToggleCollectData(collect) {
 			this.loadingOptOutSettings = true
 
@@ -607,23 +623,6 @@ export default {
 				Logger.error('could not save preferences', { error })
 				this.sortOrder = previousValue
 				showError(t('mail', 'Could not update preference'))
-			}
-		},
-
-		async onToggleAutoTagging(enabled) {
-			this.toggleAutoTagging = true
-
-			try {
-				await this.mainStore.savePreference({
-					key: 'tag-classified-messages',
-					value: enabled ? 'true' : 'false',
-				})
-			} catch (error) {
-				Logger.error('could not save preferences', { error })
-
-				showError(t('mail', 'Could not update preference'))
-			} finally {
-				this.toggleAutoTagging = false
 			}
 		},
 
@@ -701,97 +700,3 @@ export default {
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-p.app-settings {
-	padding: calc(var(--default-grid-baseline) * 2) 0;
-}
-
-.app-settings-button {
-	display: inline-flex;
-	background-position: 10px center;
-	text-align: start;
-	margin-top: calc(var(--default-grid-baseline) * 2);
-}
-
-.app-settings-button.button.primary.new-button {
-	color: var(--color-primary-element-text);
-	//this style will be removed after we migrate also the  'add mail account' to material design
-	padding-inline-start: 34px;
-	gap: var(--default-grid-baseline);
-	width: fit-content;
-}
-
-.app-settings-link {
-	text-decoration: underline;
-}
-
-:deep(.button-vue__text) {
-	text-overflow: clip;
-	white-space: normal;
-}
-
-:deep(.button-vue__wrapper) {
-	justify-content: flex-start;
-}
-
-.mailvelope-section {
-	padding-top: calc(var(--default-grid-baseline) * 4);
-
-	a.button {
-		display: flex;
-		align-items: center;
-		line-height: normal;
-		min-height: calc(var(--default-grid-baseline) * 11);
-		font-size: unset;
-		color: var(--color-primary-element-light-text);
-		width: fit-content;
-
-		&:focus-visible,
-		&:hover {
-			box-shadow: 0 0 0 1px var(--color-primary-element);
-		}
-	}
-}
-
-.material-design-icon {
-	&.lock-icon {
-		margin-inline-end: calc(var(--default-grid-baseline) * 2);
-	}
-
-}
-
-.section-title {
-	margin-top: calc(var(--default-grid-baseline) * 5);
-	margin-bottom: calc(var(--default-grid-baseline) * 2);
-}
-
-.mail-creation-button {
-	width: 100%;
-}
-
-.settings-hint {
-	margin-bottom: calc(var(--default-grid-baseline) * 2);
-	color: var(--color-text-maxcontrast);
-}
-
-.app-settings-section {
-	list-style: none;
-
-	&__version {
-		margin-block-end: calc(2 * var(--default-grid-baseline));
-		text-align: center;
-		color: var(--color-text-maxcontrast);
-	}
-}
-
-.text-block-buttons {
-	width: 100%;
-	justify-self: end;
-	display: flex;
-	justify-content: flex-end;
-	&__button {
-		margin: var(--default-grid-baseline);
-	}
-}
-</style>

@@ -51,7 +51,7 @@
 					<template #icon>
 						<PlusIcon :size="20" />
 					</template>
-					<NcActionButton :close-after-click="true" @click="addQuickAction('markAsSpam')">
+					<NcActionButton v-if="!deletionAndMovingDisabled" :close-after-click="true" @click="addQuickAction('markAsSpam')">
 						<template #icon>
 							<AlertOctagonIcon :size="20" />
 						</template>
@@ -132,7 +132,7 @@ import TagIcon from 'vue-material-design-icons/TagOutline.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import Action from './Action.vue'
 import logger from '../../logger.js'
-import { createActionStep, deleteActionStep, findAllStepsForAction, updateActionStep } from '../../service/QuickActionsService.js'
+import { createActionStep, deleteActionStep, updateActionStep } from '../../service/QuickActionsService.js'
 import useMainStore from '../../store/mainStore.js'
 
 export default {
@@ -193,7 +193,7 @@ export default {
 		},
 
 		deletionAndMovingDisabled() {
-			return this.actions.some((action) => ['deleteThread', 'moveThread'].includes(action.name))
+			return this.actions.some((action) => ['deleteThread', 'moveThread', 'markAsSpam'].includes(action.name))
 		},
 
 		canSave() {
@@ -229,7 +229,8 @@ export default {
 				this.actions = []
 			} else {
 				this.localAction = { ...action }
-				this.actions = await findAllStepsForAction(action.id)
+				delete this.localAction.actionSteps
+				this.actions = action.actionSteps
 				this.highestOrder = Math.max(...this.actions.map((a) => a.order), 0)
 				this.editMode = true
 			}
@@ -260,7 +261,7 @@ export default {
 				for (const [index, action] of this.actions.entries()) {
 					if (action?.id !== null && action?.id !== undefined) {
 						try {
-							await updateActionStep(action.id, action.name, action.order, action?.tagId, action?.mailboxId)
+							this.actions[index] = await updateActionStep(action.id, action.name, action.order, action?.tagId, action?.mailboxId)
 						} catch (error) {
 							logger.error('Could not update quick action step', {
 								error,
@@ -273,10 +274,12 @@ export default {
 							this.actions[index] = createdStep
 						}
 					}
+					this.localAction = quickAction
 				}
 				showSuccess(t('mail', 'Quick action updated'))
 			} else {
 				let quickAction
+				const createdSteps = []
 				try {
 					quickAction = await this.mainStore.createQuickAction(this.localAction.name, this.account.id)
 				} catch (error) {
@@ -288,8 +291,12 @@ export default {
 				}
 				try {
 					for (const action of this.actions) {
-						await createActionStep(action.name, action.order, quickAction.id, action?.tagId, action?.mailboxId)
+						const createdStep = await createActionStep(action.name, action.order, quickAction.id, action?.tagId, action?.mailboxId)
+						if (createdStep) {
+							createdSteps.push(createdStep)
+						}
 					}
+					this.actions = createdSteps
 				} catch (error) {
 					logger.error('Could not add step to quick action', {
 						error,
@@ -297,8 +304,10 @@ export default {
 					showError(t('mail', 'Failed to add steps to quick action'))
 					this.closeEditModal()
 				}
+				this.localAction = quickAction
 				showSuccess(t('mail', 'Quick action created'))
 			}
+			this.mainStore.patchActionStepsLocally(this.localAction.id, this.actions)
 			this.closeEditModal()
 		},
 
@@ -328,7 +337,7 @@ export default {
 
 		onDrop(e) {
 			const { removedIndex, addedIndex } = e
-			if (this.deletionAndMovingDisabled && addedIndex === this.actions.length - 1) {
+			if (this.deletionAndMovingDisabled && (addedIndex === this.actions.length - 1 || removedIndex === this.actions.length - 1)) {
 				return
 			}
 			const movedItem = this.actions[removedIndex]
@@ -338,9 +347,13 @@ export default {
 		},
 
 		async deleteAction(item) {
+			this.actions = this.actions.filter((action) => action.order !== item.order).map((action, index) => ({ ...action, order: index + 1 }))
+			this.highestOrder = Math.max(...this.actions.map((a) => a.order), 0)
 			if (item.id) {
 				try {
 					await deleteActionStep(item.id)
+					const actions = this.actions.filter((action) => action.id)
+					this.mainStore.patchActionStepsLocally(this.localAction.id, actions)
 				} catch (error) {
 					logger.error('Could not delete action step', {
 						error,
@@ -349,8 +362,6 @@ export default {
 					return
 				}
 			}
-			this.actions = this.actions.filter((action) => action.order !== item.order).map((action, index) => ({ ...action, order: index + 1 }))
-			this.highestOrder = Math.max(...this.actions.map((a) => a.order), 0)
 		},
 	},
 }

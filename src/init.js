@@ -52,14 +52,14 @@ export default function initAfterAppCreation() {
 		key: 'search-priority-body',
 		value: preferences['search-priority-body'],
 	})
+	mainStore.savePreferenceMutation({
+		key: 'sort-favorites',
+		value: preferences['sort-favorites'],
+	})
 	const startMailboxId = preferences['start-mailbox-id']
 	mainStore.savePreferenceMutation({
 		key: 'start-mailbox-id',
 		value: startMailboxId ? parseInt(startMailboxId, 10) : null,
-	})
-	mainStore.savePreferenceMutation({
-		key: 'tag-classified-messages',
-		value: preferences['tag-classified-messages'],
 	})
 	mainStore.savePreferenceMutation({
 		key: 'allow-new-accounts',

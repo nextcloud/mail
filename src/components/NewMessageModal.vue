@@ -168,7 +168,6 @@ export default {
 
 	data() {
 		return {
-			additionalTrapElements: ['#reference-picker', '#text-block-picker'],
 			original: undefined,
 			draftsPromise: Promise.resolve(),
 			attachmentsPromise: Promise.resolve(),
@@ -408,8 +407,8 @@ export default {
 			this.attachmentsPromise = this.attachmentsPromise
 				.then(done)
 				.then(() => this.onDraft(data))
-				.then(() => logger.debug('attachments uploaded'))
-				.catch((error) => logger.error('could not upload attachments', { error }))
+				.then(() => logger.debug('Attachments uploaded'))
+				.catch((error) => logger.error('Could not upload attachments', { error }))
 		},
 
 		async onSend(data, force = false) {
@@ -496,7 +495,7 @@ export default {
 				this.error = await matchError(error, {
 					[NoSentMailboxConfiguredError.getName()]() {
 						logger.error('could not send message', { error })
-						return t('mail', 'No sent folder configured. Please pick one in the account settings.')
+						return t('mail', 'No "sent" folder configured. Please pick one in the account settings.')
 					},
 					[ManyRecipientsError.getName()]() {
 						logger.error('could not send message', { error })
@@ -516,7 +515,7 @@ export default {
 						return t('mail', 'You mentioned an attachment. Did you forget to add it?')
 					},
 					default(error) {
-						logger.warn('could not send message', { error })
+						logger.warn('Could not send message', { error })
 					},
 				})
 			} finally {
@@ -610,7 +609,7 @@ export default {
 		async patchComposerData(data) {
 			this.changed = true
 			this.updateCookedComposerData()
-			await this.mainStore.patchComposerData(data)
+			await this.mainStore.patchComposerData({ ...data, isHtml: this.cookedComposerData.isHtml })
 		},
 
 		onBeforeUnload(e) {
@@ -643,6 +642,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../../css/variables';
+
 @media only screen and (max-width: 600px) {
 	:deep(.modal-container) {
 		max-width: 80%;
@@ -695,7 +696,7 @@ export default {
 	overflow-y: auto;
 	padding-inline-start: 5px;
 	border-inline-start: 1px solid var(--color-text-maxcontrast);
-	@media (max-width: 1024px) {
+	@media (max-width: #{variables.$breakpoint-mobile}) {
 		display: none;
 	}
 }

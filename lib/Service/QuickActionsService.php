@@ -35,13 +35,24 @@ class QuickActionsService {
 		private ActionStepMapper $actionStepMapper,
 	) {
 	}
-
 	/**
 	 * @param string $userId
 	 * @return Actions[]
 	 */
 	public function findAll(string $userId): array {
-		return $this->actionsMapper->findAll($userId);
+		$actions = $this->actionsMapper->findAll($userId);
+		$actionIds = array_map(fn (Actions $action) => $action->getId(), $actions);
+		$actionSteps = $this->actionStepMapper->findStepsByActionIds($actionIds, $userId);
+		return array_map(function (Actions $action) use ($actionSteps) {
+			$steps = array_values(array_filter($actionSteps, function (ActionStep $step) use ($action) {
+				return $step->getActionId() === $action->getId();
+			}));
+			$action->setActionSteps($steps);
+			if (!empty($steps)) {
+				$action->setIcon($steps[0]->getName());
+			}
+			return $action;
+		}, $actions);
 	}
 
 	/**
@@ -75,18 +86,10 @@ class QuickActionsService {
 	}
 
 	/**
-	 * @param string $userId
-	 * @return ActionStep[]
-	 */
-	public function findAllActionSteps(int $actionId, string $userId): array {
-		return $this->actionStepMapper->findAllStepsForOneAction($actionId, $userId);
-	}
-
-	/**
 	 * @throws DoesNotExistException
 	 */
-	public function findActionStep(int $actionId, string $userId): ActionStep {
-		return $this->actionStepMapper->find($actionId, $userId);
+	public function findActionStep(int $stepId, string $userId): ActionStep {
+		return $this->actionStepMapper->find($stepId, $userId);
 	}
 
 	/**
@@ -145,8 +148,8 @@ class QuickActionsService {
 				throw new ServiceException('Invalid action step order');
 			}
 
-			if ($highestOrderForAction && $highestOrderForAction->getName() === 'deleteThread') {
-				throw new ServiceException('Cant perform actions after deleteThread');
+			if ($highestOrderForAction && in_array($highestOrderForAction->getName(), ['deleteThread', 'moveThread', 'markAsSpam'], true)) {
+				throw new ServiceException('Cant perform actions after ' . $highestOrderForAction->getName());
 			}
 
 			if ($highestOrderForAction !== null && $order !== $highestOrderForAction->getOrder() + 1) {

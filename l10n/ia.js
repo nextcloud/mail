@@ -18,7 +18,6 @@ OC.L10N.register(
     "Go back" : "Retornar",
     "Cancel" : "Cancellar",
     "General" : "General",
-    "Keyboard shortcuts" : "Combinationes de claves",
     "Delete" : "Deler",
     "Search" : "Cercar",
     "Send" : "Inviar",
@@ -35,6 +34,7 @@ OC.L10N.register(
     "Accept" : "Acceptar",
     "Decline" : "Refusar",
     "Today" : "Hodie",
+    "Favorites" : "Favoritos",
     "Other" : "Altere",
     "Unnamed" : "Non nominate",
     "Choose a folder to store the attachment in" : "Selectiona un dossier pro salveguardar le attachamento",
@@ -51,6 +51,7 @@ OC.L10N.register(
     "Date" : "Date",
     "Tags" : "Etiquettas",
     "Custom" : "Personalisate",
+    "Deleted" : "Delite",
     "Help" : "Adjuta",
     "matches" : "corresponde",
     "Actions" : "Actiones",
@@ -66,10 +67,8 @@ OC.L10N.register(
     "Shared" : "Compartite",
     "Shares" : "Compartimentos",
     "All" : "Tote",
-    "Favorites" : "Favoritos",
     "All inboxes" : "Tote cassas de entrata",
     "Could not load {tag}{name}{endtag}" : "Impossibile cargar {tag}{name}{endtag}",
-    "There was a problem loading {tag}{name}{endtag}" : "Un problema occurreva durante le carga de {tag}{name}{endtag}",
-    "Accounts" : "Accounts"
+    "There was a problem loading {tag}{name}{endtag}" : "Un problema occurreva durante le carga de {tag}{name}{endtag}"
 },
 "nplurals=2; plural=(n != 1);");

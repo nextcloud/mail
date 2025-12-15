@@ -19,7 +19,6 @@ use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
-use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
@@ -104,9 +103,6 @@ class PageControllerTest extends TestCase {
 
 	private SmimeService $smimeService;
 
-	/** @var ClassificationSettingsService|MockObject */
-	private $classificationSettingsService;
-
 	/** @var InternalAddressService|MockObject */
 	private $internalAddressService;
 
@@ -137,7 +133,6 @@ class PageControllerTest extends TestCase {
 		$this->credentialStore = $this->createMock(ICredentialStore::class);
 		$this->smimeService = $this->createMock(SmimeService::class);
 		$this->userManager = $this->createMock(IUserManager::class);
-		$this->classificationSettingsService = $this->createMock(ClassificationSettingsService::class);
 		$this->internalAddressService = $this->createMock(InternalAddressService::class);
 		$this->availabilityCoordinator = $this->createMock(IAvailabilityCoordinator::class);
 		$this->quickActionsService = $this->createMock(QuickActionsService::class);
@@ -164,7 +159,6 @@ class PageControllerTest extends TestCase {
 			$this->smimeService,
 			$this->aiIntegrationsService,
 			$this->userManager,
-			$this->classificationSettingsService,
 			$this->internalAddressService,
 			$this->availabilityCoordinator,
 			$this->quickActionsService,
@@ -176,7 +170,7 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
-		$this->preferences->expects($this->exactly(12))
+		$this->preferences->expects($this->exactly(13))
 			->method('getPreference')
 			->willReturnMap([
 				[$this->userId, 'account-settings', '[]', json_encode([])],
@@ -191,11 +185,8 @@ class PageControllerTest extends TestCase {
 				[$this->userId, 'follow-up-reminders', 'true', 'true'],
 				[$this->userId, 'internal-addresses', 'false', 'false'],
 				[$this->userId, 'smime-sign-aliases', '[]', '[]'],
+				[$this->userId, 'sort-favorites', 'false', 'false'],
 			]);
-		$this->classificationSettingsService->expects(self::once())
-			->method('isClassificationEnabled')
-			->with($this->userId)
-			->willReturn(false);
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
 			->with($this->userId)
@@ -340,11 +331,11 @@ class PageControllerTest extends TestCase {
 					'app-version' => '1.2.3',
 					'collect-data' => 'true',
 					'start-mailbox-id' => '123',
-					'tag-classified-messages' => 'false',
 					'search-priority-body' => 'false',
 					'layout-mode' => 'vertical-split',
 					'layout-message-view' => 'threaded',
 					'follow-up-reminders' => 'true',
+					'sort-favorites' => 'false'
 				]],
 				['prefill_displayName', 'Jane Doe'],
 				['prefill_email', 'jane@doe.cz'],

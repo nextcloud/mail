@@ -29,17 +29,85 @@
 					role="heading"
 					:aria-level="2"
 					@shortkey.native="onShortcut">
-					<Mailbox
-						v-if="!mailbox.isPriorityInbox"
-						:account="account"
-						:mailbox="mailbox"
-						:search-query="query"
-						:bus="bus"
-						:open-first="mailbox.specialRole !== 'drafts'"
-						:group-envelopes="groupEnvelopes"
-						:initial-page-size="messagesOrderBydate"
-						:collapsible="true" />
+					<template v-if="!mailbox.isPriorityInbox">
+						<div
+							v-show="hasFavoriteEnvelopes"
+							class="app-content-list-item">
+							<SectionTitle
+								class="section-title"
+								:name="t('mail', 'Favorites')" />
+							<Popover trigger="hover focus">
+								<template #trigger>
+									<ButtonVue
+										type="tertiary-no-background"
+										:aria-label="t('mail', 'Favorites info')"
+										class="button">
+										<template #icon>
+											<IconInfo :size="20" />
+										</template>
+									</ButtonVue>
+								</template>
+								<p class="section-header-info">
+									{{ favoritesInfo }}
+								</p>
+							</Popover>
+						</div>
+						<Mailbox
+							v-show="hasFavoriteEnvelopes"
+							:load-more-label="t('mail', 'Load more favorites')"
+							:account="account"
+							:mailbox="mailbox"
+							:search-query="appendToSearch(favoriteQuery)"
+							paginate="manual"
+							:is-priority-inbox="true"
+							:initial-page-size="favoriteInitialPageSize"
+							:collapsible="true"
+							:bus="bus" />
+						<Mailbox
+							:account="account"
+							:mailbox="mailbox"
+							:search-query="query"
+							:bus="bus"
+							:open-first="mailbox.specialRole !== 'drafts'"
+							:group-envelopes="groupEnvelopes"
+							:initial-page-size="messagesOrderBydate"
+							:collapsible="true" />
+					</template>
+
 					<template v-else>
+						<div
+							v-show="hasFavoriteEnvelopes"
+							class="app-content-list-item">
+							<SectionTitle
+								class="section-title"
+								:name="t('mail', 'Favorites')" />
+							<Popover trigger="hover focus">
+								<template #trigger>
+									<ButtonVue
+										type="tertiary-no-background"
+										:aria-label="t('mail', 'Favorites info')"
+										class="button">
+										<template #icon>
+											<IconInfo :size="20" />
+										</template>
+									</ButtonVue>
+								</template>
+								<p class="section-header-info">
+									{{ favoritesInfo }}
+								</p>
+							</Popover>
+						</div>
+						<Mailbox
+							v-show="hasFavoriteEnvelopes"
+							:load-more-label="t('mail', 'Load more favorites')"
+							:account="unifiedAccount"
+							:mailbox="unifiedInbox"
+							:search-query="appendToSearch(favoriteQuery)"
+							paginate="manual"
+							:is-priority-inbox="true"
+							:initial-page-size="favoriteInitialPageSize"
+							:collapsible="true"
+							:bus="bus" />
 						<div
 							v-show="hasFollowUpEnvelopes"
 							class="app-content-list-item">
@@ -192,6 +260,7 @@ export default {
 		return {
 
 			importantInfo: t('mail', 'Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time.'),
+			favoritesInfo: t('mail', 'Messages that your mark as favorite will be shown at the top of folders. You can disable this behavior in the app settings'),
 			followupInfo: t('mail', 'Messages sent by you that require a reply but did not receive one after a couple of days will be shown here.'),
 			bus: mitt(),
 			searchQuery: undefined,
@@ -207,6 +276,8 @@ export default {
 
 			priorityImportantQuery,
 			priorityOtherQuery,
+			favoriteQuery: 'is:starred',
+			favoriteInitialPageSize: 5,
 			startMailboxTimer: undefined,
 			hasContent: false,
 		}
@@ -260,7 +331,7 @@ export default {
 				return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.appendToSearch(priorityImportantQuery)).length > 0
 					|| this.mainStore.getEnvelopes(this.mailbox.databaseId, this.appendToSearch(priorityOtherQuery)).length > 0
 			}
-			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery).length > 0
+			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.query).length > 0
 		},
 
 		hasImportantEnvelopes() {
@@ -269,6 +340,21 @@ export default {
 				this.appendToSearch(this.priorityImportantQuery),
 			)
 			const envelopes = Array.isArray(map) ? map : Array.from(map?.values() || [])
+			return envelopes.length > 0
+		},
+
+		sortFavorites() {
+			return this.mainStore.getPreference('sort-favorites', 'false') === 'true'
+		},
+
+		hasFavoriteEnvelopes() {
+			if (!this.sortFavorites) {
+				return false
+			}
+			const envelopes = this.mainStore.getEnvelopes(
+				this.unifiedInbox.databaseId,
+				this.appendToSearch(this.favoriteQuery),
+			)
 			return envelopes.length > 0
 		},
 
@@ -316,10 +402,7 @@ export default {
 
 		query() {
 			if (this.$route.params.filter === 'starred') {
-				if (this.searchQuery) {
-					return this.appendToSearch('is:starred')
-				}
-				return 'is:starred'
+				return this.appendToSearch('is:starred')
 			}
 			return this.searchQuery
 		},
@@ -329,7 +412,7 @@ export default {
 		},
 
 		groupEnvelopes() {
-			const allEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
+			const allEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.query)
 			return this.getGroupedEnvelopes(allEnvelopes, this.mainStore.syncTimestamp, this.sortOrder)
 		},
 
@@ -345,6 +428,14 @@ export default {
 				await this.onPriorityMailboxOpened()
 			} else if (this.isThreadShown) {
 				await this.fetchEnvelopes()
+			}
+		},
+
+		sortFavorites(enabled) {
+			if (enabled) {
+				this.searchQuery = this.searchQuery ? 'not:starred' : this.searchQuery + ' not:starred'
+			} else if (this.searchQuery.includes('not:starred')) {
+				this.searchQuery = this.searchQuery.replace('not:starred', '')
 			}
 		},
 
@@ -368,6 +459,9 @@ export default {
 	},
 
 	async mounted() {
+		if (this.sortFavorites) {
+			this.searchQuery = 'not:starred'
+		}
 		setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
 		if (this.isThreadShown) {
 			await this.fetchEnvelopes()
@@ -384,11 +478,11 @@ export default {
 		},
 
 		async fetchEnvelopes() {
-			const existingEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery || '')
+			const existingEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.query)
 			if (!existingEnvelopes.length) {
 				await this.mainStore.fetchEnvelopes({
 					mailboxId: this.mailbox.databaseId,
-					query: this.searchQuery || '',
+					query: this.query,
 				})
 			}
 		},
@@ -416,6 +510,10 @@ export default {
 		appendToSearch(str) {
 			if (this.searchQuery === undefined) {
 				return str
+			}
+
+			if (this.sortFavorites && str === this.favoriteQuery && this.searchQuery.includes('not:starred')) {
+				return this.searchQuery.replace('not:starred', str)
 			}
 			return this.searchQuery + ' ' + str
 		},
@@ -517,7 +615,7 @@ export default {
 	position: absolute;
 	overflow: scroll;
 	width: 100% !important;
-	top: 52px;
+	top: 40px;
 }
 
 :deep(.app-content-wrapper) {

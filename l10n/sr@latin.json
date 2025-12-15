@@ -13,11 +13,11 @@
     "Appearance" : "Izgled",
     "Newest first" : "Prvo novije",
     "Oldest first" : "prvo starije",
+    "About" : "O programu",
     "Delete" : "Delete",
     "Search" : "Search",
     "Send" : "Pošalji",
     "Refresh" : "Osveži",
-    "About" : "O programu",
     "Ok" : "Ok",
     "Select account" : "Označite nalog",
     "Choose" : "Odaberi",
@@ -32,6 +32,7 @@
     "Today" : "Danas",
     "Yesterday" : "јуче",
     "Last month" : "Prošlog meseca",
+    "Favorites" : "Omiljene",
     "Other" : "Ostali",
     "Forward" : "Prosledi",
     "Translate" : "Prevedi",
@@ -48,14 +49,13 @@
     "Date" : "Date",
     "Tags" : "Oznake",
     "Not found" : "Nije nađeno",
+    "Deleted" : "Obrisano",
     "Help" : "Pomoć",
     "delete" : "obriši",
     "Edit" : "Izmeni",
     "User" : "Korisnik",
     "Shared" : "Deljeno",
     "All" : "Sve",
-    "Favorites" : "Omiljene",
-    "Continue to %s" : "Nastavi na %s",
-    "Loading …" : "Učitavanje..."
+    "Continue to %s" : "Nastavi na %s"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 }

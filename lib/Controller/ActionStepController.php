@@ -35,21 +35,6 @@ class ActionStepController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @return JsonResponse
-	 */
-	#[TrapError]
-	public function findAllStepsForAction(int $actionId): JsonResponse {
-		if ($this->uid === null) {
-			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
-		}
-		$actionSteps = $this->quickActionsService->findAllActionSteps($actionId, $this->uid);
-
-		return JsonResponse::success($actionSteps);
-	}
-
-	/**
-	 * @NoAdminRequired
 	 * @param string $name
 	 *
 	 * @return JsonResponse

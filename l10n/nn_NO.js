@@ -16,7 +16,7 @@ OC.L10N.register(
     "Appearance" : "Utsjånad",
     "Newest first" : "Nyaste fyrst",
     "Oldest first" : "Eldste fyrst",
-    "Keyboard shortcuts" : "Tastatursnarvegar",
+    "Privacy" : "Personvern",
     "Delete" : "Ta bort",
     "Search" : "Search",
     "Send" : "Send",
@@ -33,6 +33,7 @@ OC.L10N.register(
     "Remove" : "Fjern",
     "Today" : "I dag",
     "Yesterday" : "I går",
+    "Favorites" : "Favorit",
     "Other" : "Anna",
     "Move" : "Move",
     "Folder name" : "Katalognavn",
@@ -44,6 +45,7 @@ OC.L10N.register(
     "Close" : "Lat att",
     "Date" : "Dato",
     "Tags" : "Emneord",
+    "Deleted" : "Sletta",
     "Recipient" : "Mottakar",
     "Help" : "Hjelp",
     "contains" : "inneheld",
@@ -60,9 +62,7 @@ OC.L10N.register(
     "Shared" : "Delt",
     "Shares" : "Delingar",
     "All" : "Alle",
-    "Favorites" : "Favorit",
     "Sent" : "Sendt",
-    "Message sent" : "Melding sendt",
-    "Accounts" : "Accounts"
+    "Message sent" : "Melding sendt"
 },
 "nplurals=2; plural=(n != 1);");

@@ -5,40 +5,53 @@
 
 <template>
 	<div>
-		<div
+		<NcListItem
 			v-for="domain in sortedDomains"
-			:key="domain.address"
-			class="address">
-			{{ domain.address }}
-			<p class="address__type">
-				({{ t('mail', 'domain') }})
-			</p>
-			<ButtonVue
-				type="tertiary"
-				class="button"
-				:aria-label="t('mail', 'Remove')"
-				@click="removeInternalAddress(domain)">
-				{{ t('mail', 'Remove') }}
-			</ButtonVue>
-		</div>
-		<div
+			:key="domain.address">
+			<template #name>
+				{{ domain.address }}
+			</template>
+			<template #icon>
+				<IconDomain v-if="domain.type === 'domain'" :size="20" :title="senderType(domain.type)" />
+				<IconEmail v-if="domain.type === 'individual'" :size="20" :title="senderType(domain.type)" />
+			</template>
+			<template #extra-actions>
+				<NcActionButton
+					:title="t('mail', 'Remove')"
+					:aria-label="t('mail', 'Remove')"
+					@click="removeInternalAddress(domain)">
+					<template #icon>
+						<IconDelete :size="20" />
+					</template>
+				</NcActionButton>
+			</template>
+		</NcListItem>
+
+		<NcListItem
 			v-for="email in sortedEmails"
-			:key="email.address"
-			class="address">
-			{{ email.address }}
-			<p class="address__type">
-				({{ t('mail', 'email') }})
-			</p>
-			<ButtonVue
-				type="tertiary"
-				class="button"
-				:aria-label="t('mail', 'Remove')"
-				@click="removeInternalAddress(email)">
-				{{ t('mail', 'Remove') }}
-			</ButtonVue>
-		</div>
+			:key="email.address">
+			<template #name>
+				{{ email.address }}
+			</template>
+			<template #icon>
+				<IconDomain v-if="email.type === 'domain'" :size="20" :title="senderType(email.type)" />
+				<IconEmail v-if="email.type === 'individual'" :size="20" :title="senderType(email.type)" />
+			</template>
+			<template #extra-actions>
+				<NcActionButton
+					:title="t('mail', 'Remove')"
+					:aria-label="t('mail', 'Remove')"
+					@click="removeInternalAddress(email)">
+					<template #icon>
+						<IconDelete :size="20" />
+					</template>
+				</NcActionButton>
+			</template>
+		</NcListItem>
+
 		<ButtonVue
-			type="primary"
+			type="secondary"
+			wide
 			@click="openDialog = true">
 			<template #icon>
 				<IconAdd :size="20" />
@@ -60,11 +73,14 @@
 import IconCancel from '@mdi/svg/svg/cancel.svg'
 import IconCheck from '@mdi/svg/svg/check.svg'
 import { showError } from '@nextcloud/dialogs'
-import { NcButton as ButtonVue, NcDialog, NcTextField } from '@nextcloud/vue'
+import { NcButton as ButtonVue, NcActionButton, NcDialog, NcListItem, NcTextField } from '@nextcloud/vue'
 import prop from 'lodash/fp/prop.js'
 import sortBy from 'lodash/fp/sortBy.js'
 import { mapStores } from 'pinia'
+import IconDomain from 'vue-material-design-icons/Domain.vue'
+import IconEmail from 'vue-material-design-icons/EmailOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
+import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 
@@ -76,6 +92,11 @@ export default {
 		ButtonVue,
 		NcDialog,
 		NcTextField,
+		NcActionButton,
+		NcListItem,
+		IconDomain,
+		IconEmail,
+		IconDelete,
 		IconAdd,
 	},
 
@@ -174,14 +195,3 @@ export default {
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-.address {
-	display: flex;
-	align-items: center;
-	&__type{
-		color: var(--color-text-maxcontrast);
-	}
-}
-
-</style>

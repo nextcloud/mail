@@ -26,7 +26,18 @@
 					:is-first="isFirst(group.account)"
 					:is-last="isLast(group.account)"
 					:is-disabled="isDisabled(group.account)" />
-				<template v-if="!isDisabled(group.account)">
+				<div
+					v-if="group.account.error"
+					:key="group.account.error"
+					class="mail-navigation__error-message">
+					<IconAlertTriangle
+						:size="18"
+						:title="t('mail', 'This account cannot connect')" />
+					<span>
+						{{ t('mail', 'Connection failed. Please verify your information and try again') }}
+					</span>
+				</div>
+				<template v-else-if="!isDisabled(group.account)">
 					<template v-for="item in group.mailboxes">
 						<NavigationMailbox
 							v-show="
@@ -74,6 +85,7 @@
 <script>
 import { NcAppNavigation as AppNavigation, NcAppNavigationItem as AppNavigationItem } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import IconAlertTriangle from 'vue-material-design-icons/AlertOutline.vue'
 import IconSetting from 'vue-material-design-icons/CogOutline.vue'
 import AppSettingsMenu from '../components/AppSettingsMenu.vue'
 import NavigationAccount from './NavigationAccount.vue'
@@ -97,6 +109,7 @@ export default {
 		NewMessageButtonHeader,
 		IconSetting,
 		AppNavigationItem,
+		IconAlertTriangle,
 	},
 
 	data() {
@@ -205,6 +218,11 @@ to {
 .mail-navigation {
 	&__new-message-button {
 		padding: calc(var(--default-grid-baseline, 4px) * 2);
+	}
+	&__error-message {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
 	}
 }
 

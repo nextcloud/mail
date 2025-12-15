@@ -137,6 +137,10 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		return Horde_Mime_Headers_MessageId::create('nextcloud-mail-generated')->value;
 	}
 
+	public function hasHtmlMessage(): bool {
+		return $this->hasHtmlMessage;
+	}
+
 	/**
 	 * @return int
 	 */
