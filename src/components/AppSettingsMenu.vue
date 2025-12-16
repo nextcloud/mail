@@ -200,11 +200,7 @@
 						</NcFormBoxSwitch>
 					</NcFormBox>
 				</NcAppSettingsSection>
-				<NcAppSettingsSection id="about-settings" :name="t('mail', 'About')">
-					<NcFormGroup
-						:label="t('mail', 'Acknowledgements')"
-						:description="t('mail', 'This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2.')" />
-				</NcAppSettingsSection>
+
 				<NcAppSettingsShortcutsSection>
 					<NcHotkeyList>
 						<NcHotkey :label="t('mail', 'Compose new message')" hotkey="C" />
@@ -219,6 +215,12 @@
 						<NcHotkey :label="t('mail', 'Refresh')" hotkey="R" />
 					</NcHotkeyList>
 				</NcAppSettingsShortcutsSection>
+
+				<NcAppSettingsSection id="about-settings" :name="t('mail', 'About')">
+					<NcFormGroup
+						:label="t('mail', 'Acknowledgements')"
+						:description="t('mail', 'This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2.')" />
+				</NcAppSettingsSection>
 
 				<NcDialog
 					:open.sync="textBlockDialogOpen"
