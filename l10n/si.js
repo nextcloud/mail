@@ -31,6 +31,7 @@ OC.L10N.register(
     "Decline" : "ප්‍රතික්ෂේප",
     "Remove" : "ඉවත් කරන්න",
     "Today" : "අද",
+    "Favorites" : "ප්‍රියතම",
     "Other" : "වෙනත්",
     "Translate" : "පරිවර්තනය",
     "Remove account" : "ගිණුම ඉවත් කරන්න",
@@ -51,7 +52,6 @@ OC.L10N.register(
     "Host" : " ධාරකය",
     "Certificate" : "සහතිකය",
     "Shares" : "බෙදාගැනීම්",
-    "All" : "සියල්ල",
-    "Favorites" : "ප්‍රියතම"
+    "All" : "සියල්ල"
 },
 "nplurals=2; plural=(n != 1);");

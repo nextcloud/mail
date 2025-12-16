@@ -30,7 +30,6 @@ import { testAccountConnection } from '../service/AccountService.js'
 import useMainStore from '../store/mainStore.js'
 
 import '../../css/mail.scss'
-import '../../css/mobile.scss'
 
 export default {
 	name: 'Home',

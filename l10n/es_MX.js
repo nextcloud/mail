@@ -280,6 +280,7 @@ OC.L10N.register(
     "Last month" : "Mes pasado",
     "Choose target folder" : "Elegir carpeta destino",
     "No more submailboxes in here" : "No hay más sub-buzones aquí",
+    "Favorites" : "Favoritos",
     "Follow up" : "Seguimiento",
     "Follow up info" : "Información de seguimiento",
     "Important info" : "Información importante",
@@ -324,7 +325,6 @@ OC.L10N.register(
     "Date" : "Fecha",
     "Tags" : "Etiquetas",
     "Select tags" : "Selecciona las etiquetas",
-    "Last 7 days" : "Últimos 7 días",
     "Custom" : "Personalizado",
     "Tag already exists" : "La etiqueta ya existe",
     "Add tag" : "Añadir etiqueta",
@@ -358,7 +358,6 @@ OC.L10N.register(
     "Connect your mail account" : "Conecta tu cuenta de correo",
     "All" : "Todos",
     "Drafts" : "Borradores",
-    "Favorites" : "Favoritos",
     "All inboxes" : "Todos los buzones de entrada",
     "Inbox" : "Buzón de entrada",
     "Junk" : "Basura",
@@ -378,6 +377,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Haz click aqui si no eres redireccionado automáticamente dentro de los siguietes segundos. ",
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Last 7 days" : "Últimos 7 días"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

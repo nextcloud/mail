@@ -237,6 +237,7 @@ OC.L10N.register(
     "Choose target folder" : "Избери папка",
     "No more submailboxes in here" : "Нема повеќе подсандачиња тука",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Пораките автоматски ќе бидат означени како важни врз основа на кои пораки сте комуницирале или сте ги означиле како важни. На почетокот можеби ќе треба рачно да ја менувате важноста да го научите системот, но тоа ќе се подобрува со текот на времето.",
+    "Favorites" : "Омилени",
     "Important info" : "Важна информација",
     "Other" : "Останато",
     "The sender of this message has asked to be notified when you read this message." : "Испраќачот на оваа порака посака да биде известен кога ќе ја прочитате оваа порака.",
@@ -346,7 +347,6 @@ OC.L10N.register(
     "Select tags" : "Избери ознаки",
     "Marked as" : "Означено како",
     "Has attachments" : "Има прилози",
-    "Last 7 days" : "Предходни 7 дена",
     "Sieve Port" : "Sieve порта",
     "Custom" : "Прилагодено",
     "Sieve User" : "Sieve корисник",
@@ -431,7 +431,6 @@ OC.L10N.register(
     "Connect your mail account" : "Поврзете ја вашата е-пошта сметка",
     "All" : "Сите",
     "Drafts" : "Шаблони",
-    "Favorites" : "Омилени",
     "Priority inbox" : "Приоритетно сандаче",
     "All inboxes" : "Сите сандачиња",
     "Inbox" : "Сандаче",
@@ -461,6 +460,7 @@ OC.L10N.register(
     "The link leads to %s" : "Линкот води кон %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Доколку несакате да ја посетите страната, можете да се вратите кон <a href=\"%s\">Е-пошта</a>.",
     "Continue to %s" : "Продолжи до %s",
-    "Mark all messages of this folder as read" : "Означи ги сите пораки во оваа папка како прочитани"
+    "Mark all messages of this folder as read" : "Означи ги сите пораки во оваа папка како прочитани",
+    "Last 7 days" : "Предходни 7 дена"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

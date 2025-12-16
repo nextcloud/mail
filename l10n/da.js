@@ -108,7 +108,7 @@ OC.L10N.register(
     "Email address" : "Email adresse",
     "Add alias" : "Tilføj alias",
     "Create alias" : "Opret alias",
-    "Cancel" : "Annuller",
+    "Cancel" : "Annullér",
     "Activate" : "Aktivér",
     "Remind about messages that require a reply but received none" : "Mind mig om beskeder som kræver et svar, men ikke har modtaget et",
     "Could not update preference" : "Præference kunne ikke opdateres",
@@ -338,6 +338,7 @@ OC.L10N.register(
     "Choose target folder" : "Vælg destinationsmappe",
     "No more submailboxes in here" : "Ikke flere underpostkasser herinde",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Beskeder vil automatisk blive markeret som vigtige baseret på, hvilke meddelelser du har interageret med eller markeret som vigtige. I begyndelsen skal du muligvis manuelt ændre vigtigheden for at lære systemet, men det vil forbedres med tiden.",
+    "Favorites" : "Favoritter",
     "Follow up" : "Opfølgning",
     "Follow up info" : "Opfølgningsinfo",
     "Load more follow ups" : "Indlæs flere opfølgninger",
@@ -482,8 +483,6 @@ OC.L10N.register(
     "Has attachments" : "Har vedhæftede filer",
     "Mentions me" : "Omtalte mig",
     "Has attachment" : "Har vedhæftning",
-    "Last 7 days" : "Sidste 7 dage",
-    "From me" : "Fra mig",
     "Enable mail body search" : "Aktivér søgning i mailhovedtekst",
     "Sieve credentials" : "Sieve legitimationsoplysninger",
     "IMAP credentials" : "IMAP legitimationsoplysninger",
@@ -563,7 +562,6 @@ OC.L10N.register(
     "Connect your mail account" : "Forbind din mail konto",
     "All" : "Alle",
     "Drafts" : "Udkast",
-    "Favorites" : "Favoritter",
     "Priority inbox" : "Prioriteret indbakke",
     "All inboxes" : "Alle indbakker",
     "Inbox" : "Indbakke",
@@ -587,6 +585,8 @@ OC.L10N.register(
     "Redirect" : "Omdiriger",
     "The link leads to %s" : "Linket fører til %s",
     "Continue to %s" : "Videre til %s",
-    "Mark all messages of this folder as read" : "Markér alle beskeder i denne mappe som læst"
+    "Mark all messages of this folder as read" : "Markér alle beskeder i denne mappe som læst",
+    "Last 7 days" : "Sidste 7 dage",
+    "From me" : "Fra mig"
 },
 "nplurals=2; plural=(n != 1);");

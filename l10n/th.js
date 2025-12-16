@@ -52,6 +52,7 @@ OC.L10N.register(
     "Last week" : "สัปดาห์ที่แล้ว",
     "Last month" : "เดือนที่แล้ว",
     "Choose target folder" : "เลือกโฟลเดอร์เป้าหมาย",
+    "Favorites" : "รายการโปรด",
     "Other" : "อื่น ๆ",
     "Forward" : "ส่งต่อ",
     "Translate" : "แปลภาษา",
@@ -74,7 +75,6 @@ OC.L10N.register(
     "Close" : "ปิด",
     "Date" : "วันที่",
     "Tags" : "แท็ก",
-    "Last 7 days" : "ภายใน 7 วัน",
     "Custom" : "กำหนดเอง",
     "Tag already exists" : "มีแท็กอยู่แล้ว",
     "Not found" : "ไม่พบ",
@@ -99,7 +99,6 @@ OC.L10N.register(
     "Account connected" : "เชื่อมต่อบัญชีแล้ว",
     "All" : "ทั้งหมด",
     "Drafts" : "ฉบับร่าง",
-    "Favorites" : "รายการโปรด",
     "All inboxes" : "กล่องขาเข้าทั้งหมด",
     "Inbox" : "กล่องขาเข้า",
     "Junk" : "อีเมลขยะ",
@@ -109,6 +108,7 @@ OC.L10N.register(
     "Error loading message" : "เกิดข้อผิดพลาดขณะโหลดข้อความ",
     "Redirect" : "เปลี่ยนเส้นทาง",
     "The link leads to %s" : "ลิงก์จะนำไปยัง %s",
-    "Continue to %s" : "ดำเนินการต่อไปที่ %s"
+    "Continue to %s" : "ดำเนินการต่อไปที่ %s",
+    "Last 7 days" : "ภายใน 7 วัน"
 },
 "nplurals=1; plural=0;");

@@ -19,6 +19,8 @@ use OCA\Mail\Model\IMAPMessage;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Calendar\IManager;
 use Psr\Log\LoggerInterface;
+use Throwable;
+
 use function array_filter;
 
 class IMipService {
@@ -121,31 +123,44 @@ class IMipService {
 				$imapMessage = current(array_filter($imapMessages, static fn (IMAPMessage $imapMessage) => $message->getUid() === $imapMessage->getUid()));
 				if (empty($imapMessage->scheduling)) {
 					// No scheduling info, maybe the DB is wrong
+					$message->setImipProcessed(true);
 					$message->setImipError(true);
 					continue;
 				}
 
 				$sender = $imapMessage->getFrom()->first()?->getEmail();
 				if ($sender === null) {
+					$message->setImipProcessed(true);
 					$message->setImipError(true);
 					continue;
 				}
 
-				foreach ($imapMessage->scheduling as $schedulingInfo) { // an IMAP message could contain more than one iMIP object
-					if ($schedulingInfo['method'] === 'REQUEST') {
-						$processed = $this->calendarManager->handleIMipRequest($principalUri, $sender, $recipient, $schedulingInfo['contents']);
-						$message->setImipProcessed($processed);
-						$message->setImipError(!$processed);
-					} elseif ($schedulingInfo['method'] === 'REPLY') {
-						$processed = $this->calendarManager->handleIMipReply($principalUri, $sender, $recipient, $schedulingInfo['contents']);
-						$message->setImipProcessed($processed);
-						$message->setImipError(!$processed);
-					} elseif ($schedulingInfo['method'] === 'CANCEL') {
-						$replyTo = $imapMessage->getReplyTo()->first()?->getEmail();
-						$processed = $this->calendarManager->handleIMipCancel($principalUri, $sender, $replyTo, $recipient, $schedulingInfo['contents']);
-						$message->setImipProcessed($processed);
-						$message->setImipError(!$processed);
+				try {
+					// an IMAP message could contain more than one iMIP object
+					foreach ($imapMessage->scheduling as $schedulingInfo) {
+						if ($schedulingInfo['method'] === 'REQUEST') {
+							$processed = $this->calendarManager->handleIMipRequest($principalUri, $sender, $recipient, $schedulingInfo['contents']);
+							$message->setImipProcessed($processed);
+							$message->setImipError(!$processed);
+						} elseif ($schedulingInfo['method'] === 'REPLY') {
+							$processed = $this->calendarManager->handleIMipReply($principalUri, $sender, $recipient, $schedulingInfo['contents']);
+							$message->setImipProcessed($processed);
+							$message->setImipError(!$processed);
+						} elseif ($schedulingInfo['method'] === 'CANCEL') {
+							$replyTo = $imapMessage->getReplyTo()->first()?->getEmail();
+							$processed = $this->calendarManager->handleIMipCancel($principalUri, $sender, $replyTo, $recipient, $schedulingInfo['contents']);
+							$message->setImipProcessed($processed);
+							$message->setImipError(!$processed);
+						}
 					}
+				} catch (Throwable $e) {
+					$this->logger->error('iMIP message processing failed', [
+						'exception' => $e,
+						'messageId' => $message->getId(),
+						'mailboxId' => $mailbox->getId(),
+					]);
+					$message->setImipProcessed(true);
+					$message->setImipError(true);
 				}
 			}
 			$this->messageMapper->updateImipData(...$filteredMessages);

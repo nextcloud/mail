@@ -252,6 +252,7 @@ OC.L10N.register(
     "Choose target folder" : "Alege directorul destinație",
     "No more submailboxes in here" : "Nu mai sunt subfoldere",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Mesajul va fi marcat automat ca important în funcție de mesajele cu care ați interacționat sau pe care le-ați marcat ca importante. La început ar trebui să setați manual importanța pentru antrenarea sistemului, dar aceasta se va îmbunătăți în timp.",
+    "Favorites" : "Favorite",
     "Important info" : "Informații importante",
     "Other" : "Altele",
     "Could not send mdn" : "Eroare la transmiterea mdn",
@@ -369,7 +370,6 @@ OC.L10N.register(
     "Select tags" : "Selectează etichete",
     "Marked as" : "Marcat ca",
     "Has attachments" : "Are atașamente",
-    "Last 7 days" : "Ultimele 7 zile",
     "Enable mail body search" : "Activează căutarea în textul mesajelor",
     "Custom" : "Particularizat",
     "The syntax seems to be incorrect:" : "Sintaxa pare incorectă:",
@@ -467,7 +467,6 @@ OC.L10N.register(
     "To add a mail account, please contact your administrator." : "Pentru adăugarea unui cont de mail, contactați administratorul.",
     "All" : "Toate ",
     "Drafts" : "Schițe",
-    "Favorites" : "Favorite",
     "All inboxes" : "Toate inbox-urile",
     "Junk" : "Nesolicitate",
     "Sent" : "Trimise",
@@ -494,6 +493,7 @@ OC.L10N.register(
     "Redirect" : "Deviere",
     "The link leads to %s" : "Link-ul duce la %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Dacă nu doriți să vizitați acea pagină, vă puteți întoarce la <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continuă către %s"
+    "Continue to %s" : "Continuă către %s",
+    "Last 7 days" : "Ultimele 7 zile"
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");

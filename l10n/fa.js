@@ -265,6 +265,7 @@ OC.L10N.register(
     "Choose target folder" : "پوشهٔ هدف را انتخاب کنید",
     "No more submailboxes in here" : "No more submailboxes in here",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time.",
+    "Favorites" : "علاقه مندی ها",
     "Important info" : "Important info",
     "Other" : "دیگر",
     "Could not send mdn" : "Could not send mdn",
@@ -384,7 +385,6 @@ OC.L10N.register(
     "Select tags" : "برچسب ها را انتخاب کنید",
     "Marked as" : "Marked as",
     "Has attachments" : "Has attachments",
-    "Last 7 days" : "۷ روز گذشته",
     "Sieve Port" : "Sieve Port",
     "Custom" : "Custom",
     "Sieve User" : "Sieve User",
@@ -563,7 +563,6 @@ OC.L10N.register(
     "To add a mail account, please contact your administrator." : "To add a mail account, please contact your administrator.",
     "All" : "همه",
     "Drafts" : "پیش نویس",
-    "Favorites" : "علاقه مندی ها",
     "Priority inbox" : "Priority inbox",
     "All inboxes" : "همه صندوق ورودی",
     "Inbox" : "صندوق ورودی",
@@ -594,6 +593,7 @@ OC.L10N.register(
     "The link leads to %s" : "پیوند منجر به%s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "ادامه دهید%s",
-    "Mark all messages of this folder as read" : "تمام پیام های این پوشه را به عنوان خوانده شده علامت گذاری کنید"
+    "Mark all messages of this folder as read" : "تمام پیام های این پوشه را به عنوان خوانده شده علامت گذاری کنید",
+    "Last 7 days" : "۷ روز گذشته"
 },
 "nplurals=2; plural=(n > 1);");

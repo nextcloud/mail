@@ -61,6 +61,7 @@ OC.L10N.register(
     "Favorite" : "Kipendwa",
     "Unread" : "Unread",
     "Read" : "Soma",
+    "Move thread" : "Move thread",
     "Delete message" : "Delete message",
     "More actions" : "Vitendo zaidi",
     "Back" : "Rudi",
@@ -85,6 +86,7 @@ OC.L10N.register(
     "Last week" : "Wiki iliyopita",
     "Last month" : "Mwezi uliopita",
     "Choose target folder" : "Chagua kasha lililolengwa",
+    "Favorites" : "Vipendwa",
     "Other" : "Mengine",
     "Forward" : "Mbele",
     "Translate" : "Tafsiri",
@@ -121,7 +123,6 @@ OC.L10N.register(
     "Date" : "Tarehe",
     "Tags" : "Maoni",
     "Select tags" : "Chagua ukumbusho",
-    "Last 7 days" : "Siku 7 zilizopita",
     "Custom" : "Mteja",
     "Add tag" : "Add tag",
     "Not found" : "Haipatikani",
@@ -160,12 +161,12 @@ OC.L10N.register(
     "Shares" : "Shiriki",
     "Account connected" : "Akaunti imeunganishwa",
     "All" : "Zote",
-    "Favorites" : "Vipendwa",
     "Error while sharing file" : "Hitilafu wakati wa kushirikisha faili",
     "Nextcloud Mail" : "Nextcloud Mail",
     "Discard changes" : "Discard changes",
     "Message sent" : "Ujumbe umetumwa",
     "Redirect" : "Elekeza upya",
-    "Continue to %s" : "Endelea katika %s"
+    "Continue to %s" : "Endelea katika %s",
+    "Last 7 days" : "Siku 7 zilizopita"
 },
 "nplurals=2; plural=(n != 1);");

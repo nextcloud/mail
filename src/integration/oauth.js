@@ -22,6 +22,7 @@ export async function getUserConsent(redirectUrl) {
 
 			if (data === 'DONE') {
 				logger.info('OAUTH2 user consent given')
+				ssoWindow.close()
 				resolve()
 			}
 		})

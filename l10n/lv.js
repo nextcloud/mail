@@ -91,6 +91,7 @@ OC.L10N.register(
     "Remove" : "Noņemt",
     "Today" : "Šodien",
     "Could not open folder" : "Nevarēja atvērt mapi",
+    "Favorites" : "Izlases vienumi",
     "Other" : "Cits",
     "The sender of this message has asked to be notified when you read this message." : "Šī ziņojuma sūtītājs ir norādījis, ka vēlas saņemt paziņojumu par šī ziņojuma izlasīšanu.",
     "Forward" : "Turpināt",
@@ -131,7 +132,6 @@ OC.L10N.register(
     "Date" : "Datums",
     "Tags" : "Birkas",
     "Select tags" : "Atlasīt birkas",
-    "From me" : "No manis",
     "Custom" : "Pielāgots",
     "An error occurred, unable to rename the tag." : "Atgadījās kļūda, nevar pārdēvēt birku.",
     "Delete tag" : "Izdzēst birku",
@@ -166,7 +166,6 @@ OC.L10N.register(
     "Connect your mail account" : "Pievienot savu e-pasta kontu",
     "All" : "Visi",
     "Drafts" : "Melnraksti",
-    "Favorites" : "Izlases vienumi",
     "All inboxes" : "Visas iesūtnes",
     "Inbox" : "Iesūtne",
     "Junk" : "Nevēlams",
@@ -184,6 +183,7 @@ OC.L10N.register(
     "Redirect" : "Novirzīt",
     "The link leads to %s" : "Saite, kas ved uz %s",
     "Continue to %s" : "Turpināt %s",
+    "From me" : "No manis",
     "Enable classification of important mails by default" : "Pēc noklusējuma iespējot svarīgu e-pasta ziņojumu šķirošanu"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

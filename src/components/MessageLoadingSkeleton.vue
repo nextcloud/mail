@@ -35,6 +35,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../../css/variables';
 
 /* skeleton */
 .message-loading-skeleton {
@@ -97,6 +98,12 @@ export default {
 			 background-position: 0% 50%;
 		 }
 	 }
+}
+
+@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
+    .message-loading-skeleton__body {
+        margin-inline-start: 12px;
+    }
 }
 
 </style>

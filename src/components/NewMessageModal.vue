@@ -168,7 +168,6 @@ export default {
 
 	data() {
 		return {
-			additionalTrapElements: ['#reference-picker', '#text-block-picker'],
 			original: undefined,
 			draftsPromise: Promise.resolve(),
 			attachmentsPromise: Promise.resolve(),
@@ -643,6 +642,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../../css/variables';
+
 @media only screen and (max-width: 600px) {
 	:deep(.modal-container) {
 		max-width: 80%;
@@ -695,7 +696,7 @@ export default {
 	overflow-y: auto;
 	padding-inline-start: 5px;
 	border-inline-start: 1px solid var(--color-text-maxcontrast);
-	@media (max-width: 1024px) {
+	@media (max-width: #{variables.$breakpoint-mobile}) {
 		display: none;
 	}
 }

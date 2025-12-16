@@ -144,6 +144,7 @@ OC.L10N.register(
     "Last month" : "El mes anterior",
     "Choose target folder" : "Escoyer la carpeta de destín",
     "No more submailboxes in here" : "Equí nun hai más sobandexes",
+    "Favorites" : "Favoritos",
     "Important info" : "Información importante",
     "Forward" : "Avanzar",
     "Move message" : "Mover el mensaxe",
@@ -211,7 +212,6 @@ OC.L10N.register(
     "Pick an end date" : "Escoyer una data de fin",
     "Tags" : "Etiquetes",
     "Select tags" : "Seleicionar etiquetes",
-    "Last 7 days" : "Los últimos 7 díes",
     "Sieve Port" : "Puertu de sieve",
     "Custom" : "Personalizar",
     "Sieve User" : "Usuariu de sieve",
@@ -244,6 +244,7 @@ OC.L10N.register(
     "Untitled event" : "Eventu ensin títulu",
     "Airplane" : "Avión",
     "Train" : "Tren",
+    "Deleted" : "Desanicióse",
     "Help" : "Ayuda",
     "contains" : "contién",
     "matches" : "concasa",
@@ -290,7 +291,6 @@ OC.L10N.register(
     "You can close this window" : "Pues zarrar esta ventana",
     "All" : "Too",
     "Drafts" : "Borradores",
-    "Favorites" : "Favoritos",
     "All inboxes" : "Toles bandexes",
     "Inbox" : "Bandexa",
     "Junk" : "Puxarra",
@@ -309,6 +309,7 @@ OC.L10N.register(
     "Could not load the message" : "Nun se pudo cargar el mensaxe",
     "Error loading message" : "Hebo un error al cargar el mensaxe",
     "Redirect" : "Redirixir",
-    "The link leads to %s" : "L'enllaz lleva a %s"
+    "The link leads to %s" : "L'enllaz lleva a %s",
+    "Last 7 days" : "Los últimos 7 díes"
 },
 "nplurals=2; plural=(n != 1);");

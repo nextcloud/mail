@@ -20,5 +20,4 @@ new View({}).$mount('#mail-oauth-done')
 
 if (window.opener) {
 	window.opener.postMessage('DONE')
-	window.close()
 }

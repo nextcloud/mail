@@ -34,6 +34,7 @@ OC.L10N.register(
     "Accept" : "Acceptar",
     "Decline" : "Refusar",
     "Today" : "Hodie",
+    "Favorites" : "Favoritos",
     "Other" : "Altere",
     "Unnamed" : "Non nominate",
     "Choose a folder to store the attachment in" : "Selectiona un dossier pro salveguardar le attachamento",
@@ -66,7 +67,6 @@ OC.L10N.register(
     "Shared" : "Compartite",
     "Shares" : "Compartimentos",
     "All" : "Tote",
-    "Favorites" : "Favoritos",
     "All inboxes" : "Tote cassas de entrata",
     "Could not load {tag}{name}{endtag}" : "Impossibile cargar {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Un problema occurreva durante le carga de {tag}{name}{endtag}"

@@ -48,6 +48,7 @@ OC.L10N.register(
     "Yesterday" : "Kecha",
     "Last week" : "O`tgan yil",
     "Last month" : "Oxirgi oy",
+    "Favorites" : "Favorites",
     "Other" : "Boshqa",
     "Translate" : "Tarjima",
     "Move" : "Move",
@@ -63,7 +64,6 @@ OC.L10N.register(
     "Close" : "Yopish",
     "Date" : "Sana",
     "Tags" : "Tags",
-    "Last 7 days" : "Oxirgi 7 kun",
     "Custom" : "Boshqa",
     "Add tag" : "Teg qo'shing",
     "Not found" : "Topilmadi",
@@ -81,8 +81,8 @@ OC.L10N.register(
     "Shared" : "Ulashilgan",
     "Account connected" : "Akkaunt ulangan",
     "All" : "All",
-    "Favorites" : "Favorites",
     "Error while sharing file" : "Fayl almashishda xatolik yuz berdi",
-    "Continue to %s" : " %sni davom eting"
+    "Continue to %s" : " %sni davom eting",
+    "Last 7 days" : "Oxirgi 7 kun"
 },
 "nplurals=1; plural=0;");

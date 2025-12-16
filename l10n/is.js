@@ -309,6 +309,7 @@ OC.L10N.register(
     "Choose target folder" : "Veldu úttaksmöppu",
     "No more submailboxes in here" : "Engin fleiri undirpósthólf hér",
     "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Skilaboð sem þú sendir og sem þarfnast svars en hafa ekki enn fengið svar eftir nokkra daga, munu birtast hér.",
+    "Favorites" : "Eftirlæti",
     "Follow up" : "Fylgja eftir",
     "Follow up info" : "Upplýsingar um eftirfylgni",
     "Important info" : "Mikilvægar upplýsingar",
@@ -460,8 +461,6 @@ OC.L10N.register(
     "Has attachments" : "Er með viðhengi",
     "Mentions me" : "Minnist á mig",
     "Has attachment" : "Er með viðhengi",
-    "Last 7 days" : "Síðustu 7 daga",
-    "From me" : "Frá mér",
     "Enable mail body search" : "Virkja leit í meginmáli pósts",
     "Enable sieve filter" : "Virkja Sieve-síu",
     "Sieve host" : "Sieve-hýsing",
@@ -669,7 +668,6 @@ OC.L10N.register(
     "To add a mail account, please contact your administrator." : "Til að bæta við póstaðgangi skaltu hafa samband við kerfisstjórann þinn.",
     "All" : "Allt",
     "Drafts" : "Drög",
-    "Favorites" : "Eftirlæti",
     "Priority inbox" : "Forgangspósthólf",
     "All inboxes" : "Öll innhólf",
     "Inbox" : "Innhólf",
@@ -701,6 +699,8 @@ OC.L10N.register(
     "The link leads to %s" : "Tengillinn leiðir til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ef þú vilt ekki fara á þá síðu, geturðu farið til baka í <a href=\"%s\">póstforritið</a>.",
     "Continue to %s" : "Halda áfram í %s",
-    "Mark all messages of this folder as read" : "Merkja öll skilaboð í þessari möppu sem lesin"
+    "Mark all messages of this folder as read" : "Merkja öll skilaboð í þessari möppu sem lesin",
+    "Last 7 days" : "Síðustu 7 daga",
+    "From me" : "Frá mér"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

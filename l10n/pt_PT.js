@@ -151,6 +151,7 @@ OC.L10N.register(
     "Last week" : "Ultima semana",
     "Last month" : "Ultimo mês",
     "Choose target folder" : "Escolher pasta de destino",
+    "Favorites" : "Favoritos",
     "Important info" : "Informação importante",
     "Other" : "Outro",
     "Notify the sender" : "Notificar o remetente",
@@ -208,7 +209,6 @@ OC.L10N.register(
     "Date" : "Data",
     "Tags" : "Etiquetas",
     "Select tags" : "Selecione etiquetas",
-    "Last 7 days" : "Últimos 7 dias",
     "Custom" : "Personalizado",
     "Save signature" : "Guardar assinatura",
     "Message source" : "Fonte da mensagem",
@@ -256,7 +256,6 @@ OC.L10N.register(
     "Connect your mail account" : "Ligue a sua conta de e-mail",
     "All" : "Todos",
     "Drafts" : "Rascunhos",
-    "Favorites" : "Favoritos",
     "Priority inbox" : "Caixa de entrada prioritária",
     "All inboxes" : "Todas as caixas de entrada",
     "Inbox" : "Caixa de Entrada",
@@ -276,6 +275,7 @@ OC.L10N.register(
     "Redirect" : "Redirecionar",
     "The link leads to %s" : "A ligação aponta para %s",
     "Continue to %s" : "Continuar para %s",
-    "Determine importance using machine learning" : "Determinar a importância usando aprendizagem de máquina"
+    "Determine importance using machine learning" : "Determinar a importância usando aprendizagem de máquina",
+    "Last 7 days" : "Últimos 7 dias"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

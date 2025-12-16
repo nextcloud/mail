@@ -216,6 +216,8 @@ export default {
 </script>
 
 <style lang="scss">
+@use '../../css/variables';
+
 .attachments {
 	width: 100%;
     box-sizing: border-box;
@@ -287,12 +289,16 @@ export default {
 .mail-message-attachments {
 	display:flex;
 	flex-wrap: wrap;
-	padding: 10px 6px 10px 46px;
+	padding: 10px 12px 10px 46px;
 	margin-top: 4px;
 	margin-bottom: 0;
-	position:sticky;
-	bottom:0;
+	position: sticky;
+	bottom: -2px;
 	background: linear-gradient(0deg, var(--color-main-background), var(--color-main-background) 90%, rgba(255, 255, 255, 0));
+
+	@media (max-width: #{variables.$breakpoint-mobile}) {
+        padding: 10px 12px 10px 12px;
+    }
 }
 
 .mail-message-attachments--wrapper {

@@ -33,6 +33,7 @@ OC.L10N.register(
     "Remove" : "Fjern",
     "Today" : "I dag",
     "Yesterday" : "I går",
+    "Favorites" : "Favorit",
     "Other" : "Anna",
     "Move" : "Move",
     "Folder name" : "Katalognavn",
@@ -61,7 +62,6 @@ OC.L10N.register(
     "Shared" : "Delt",
     "Shares" : "Delingar",
     "All" : "Alle",
-    "Favorites" : "Favorit",
     "Sent" : "Sendt",
     "Message sent" : "Melding sendt"
 },

@@ -245,6 +245,7 @@ OC.L10N.register(
     "Choose target folder" : "Scegli la cartella di destinazione",
     "No more submailboxes in here" : "Qui non ci sono altre sotto-caselle di posta",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "I messaggi saranno automaticamente contrassegnati come importanti in base ai messaggi con cui hai interagito o contrassegnati come importanti. All'inizio potresti dover cambiare manualmente l'importanza per addestrare il sistema, ma migliorerà nel tempo.",
+    "Favorites" : "Preferiti",
     "Important info" : "Informazione importante",
     "Other" : "Altro",
     "Could not send mdn" : "Impossibile inviare mdn",
@@ -356,7 +357,6 @@ OC.L10N.register(
     "Tags" : "Etichette",
     "Select tags" : "Seleziona etichette",
     "Has attachments" : "Ha allegati",
-    "Last 7 days" : "Ultimi 7 giorni",
     "Sieve Port" : "Porta Sieve",
     "IMAP credentials" : "Credenziali IMAP",
     "Custom" : "Personalizzato",
@@ -524,7 +524,6 @@ OC.L10N.register(
     "To add a mail account, please contact your administrator." : "Per aggiungere un account di posta, contatta il tuo amministratore.",
     "All" : "Tutti",
     "Drafts" : "Bozze",
-    "Favorites" : "Preferiti",
     "Priority inbox" : "Posta in arrivo prioritaria",
     "All inboxes" : "Tutte le cartelle di posta in arrivo",
     "Inbox" : "Posta in arrivo",
@@ -554,6 +553,7 @@ OC.L10N.register(
     "Redirect" : "Redirigi",
     "The link leads to %s" : "Il collegamento conduce a %s",
     "Continue to %s" : "Continua su %s",
-    "Mark all messages of this folder as read" : "Marca tutti i messaggi di questa cartella come letti"
+    "Mark all messages of this folder as read" : "Marca tutti i messaggi di questa cartella come letti",
+    "Last 7 days" : "Ultimi 7 giorni"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

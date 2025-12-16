@@ -124,6 +124,7 @@
     "Last month" : "Мінулы месяц",
     "Loading messages …" : "Загрузка паведамленняў …",
     "Choose target folder" : "Выберыце мэтавую папку",
+    "Favorites" : "Абранае",
     "Other" : "Іншае",
     "Forward" : "Пераслаць",
     "Move message" : "Перамясціць паведамленне",
@@ -176,7 +177,6 @@
     "Pick a start date" : "Выберыце дату пачатку",
     "Pick an end date" : "Выберыце дату заканчэння",
     "Tags" : "Тэгі",
-    "Last 7 days" : "Апошнія 7 дзён",
     "Custom" : "Карыстальніцкі",
     "Signature …" : "Подпіс …",
     "Saving new tag name …" : "Захаванне новай назвы тэга …",
@@ -202,8 +202,12 @@
     "Untitled event" : "Падзея без назвы",
     "(organizer)" : "(арганізатар)",
     "Train" : "Цягнік",
+    "Mark message as" : "Пазначыць паведамленне як",
     "Move into folder" : "Перамясціць у папку",
     "Stop" : "Спыніць",
+    "Answered" : "Адказанае",
+    "Deleted" : "Выдаленае",
+    "Seen" : "Прачытанае",
     "Delete filter" : "Выдаліць фільтр",
     "New filter" : "Новы фільтр",
     "Filter is active" : "Фільтр актыўны",
@@ -245,7 +249,6 @@
     "Insert" : "Уставіць",
     "All" : "Усе",
     "Drafts" : "Чарнавікі",
-    "Favorites" : "Абранае",
     "Priority inbox" : "Прыярытэтныя",
     "Inbox" : "Уваходныя",
     "Sent" : "Адпраўленыя",
@@ -263,6 +266,7 @@
     "Could not load your message" : "Не ўдалося загрузіць ваша паведамленне",
     "Could not load the message" : "Не ўдалося загрузіць паведамленне",
     "Error loading message" : "Памылка пры загрузцы паведамлення",
-    "Forwarding to %s" : "Перасыланне да %s"
+    "Forwarding to %s" : "Перасыланне да %s",
+    "Last 7 days" : "Апошнія 7 дзён"
 },"pluralForm" :"nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);"
 }
