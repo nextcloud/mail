@@ -220,7 +220,7 @@ import {
 	priorityImportantQuery,
 	priorityOtherQuery,
 } from '../util/priorityInbox.js'
-import { detect, html } from '../util/text.js'
+import { detect, toHtml, toPlain } from '../util/text.js'
 
 const START_MAILBOX_DEBOUNCE = 5 * 1000
 
@@ -535,6 +535,9 @@ export default {
 				if (this.$route.params.accountId !== 0 && this.$route.params.accountId !== '0') {
 					accountId = parseInt(this.$route.params.accountId, 10)
 				}
+
+				const body = detect(this.$route.query.body ?? '')
+
 				this.mainStore.startComposerSession({
 					data: {
 						accountId,
@@ -542,7 +545,9 @@ export default {
 						cc: this.stringToRecipients(this.$route.query.cc),
 						bcc: this.stringToRecipients(this.$route.query.bcc),
 						subject: this.$route.query.subject || '',
-						body: this.$route.query.body ? detect(this.$route.query.body) : html(''),
+						isHtml: body.format === 'html',
+						bodyHtml: toHtml(body).value,
+						bodyPlain: toPlain(body).value,
 					},
 				})
 			}
