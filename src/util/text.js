@@ -51,6 +51,10 @@ export const plain = wrap('plain')
  */
 export const html = wrap('html')
 
+/**
+ * @param {string} str
+ * @return {Text}
+ */
 export function detect(str) {
 	if (!isString(str)) {
 		// Fall back to a hopefully sane default

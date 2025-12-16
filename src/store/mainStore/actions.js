@@ -115,6 +115,15 @@ import {
 } from '../constants.js'
 import useOutboxStore from '../outboxStore.js'
 
+/**
+ * @todo Type definition for ComposerSessionData is incomplete
+ *
+ * @typedef {object} ComposerSessionData
+ * @property {boolean} isHtml whether this is a html message
+ * @property {string} bodyHtml the body as html
+ * @property {string} bodyPlain the body as plain text
+ */
+
 const sliceToPage = slice(0, PAGE_SIZE)
 
 const findIndividualMailboxes = curry((getMailboxes, specialRole) => pipe(
@@ -1929,7 +1938,7 @@ export default function mainStoreActions() {
 		 *
 		 * @param {object} payload Data for the new message
 		 * @param payload.type
-		 * @param payload.data
+		 * @param {ComposerSessionData} payload.data
 		 * @param payload.forwardedMessages
 		 * @param payload.originalSendAt
 		 * @param payload.smartReply
