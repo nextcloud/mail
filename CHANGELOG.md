@@ -1,3 +1,20 @@
+## [5.6.5](https://github.com/nextcloud/mail/compare/v5.6.4...v5.6.5) (2025-12-16)
+
+
+### Bug Fixes
+
+* **auth:** show more specific error for denied authentication ([66f8900](https://github.com/nextcloud/mail/commit/66f8900912514ab8ca9295d2c2eeab1e06860b0f))
+* **deps:** Fix npm audit ([445299a](https://github.com/nextcloud/mail/commit/445299aa9a321e628a8c0aac4425ca8ee6ea66e6))
+* **l10n:** Update translations from Transifex ([4d8baff](https://github.com/nextcloud/mail/commit/4d8baff285d3297cb18519b24beb15fc90e6fa06))
+* **l10n:** Update translations from Transifex ([53b0be6](https://github.com/nextcloud/mail/commit/53b0be6f816c92f3305381f2f8a7b5ff7f5eab5e))
+* **l10n:** Update translations from Transifex ([f6fbb11](https://github.com/nextcloud/mail/commit/f6fbb116c585d3c714b3817fc4b67c0afc561f54))
+* **l10n:** Update translations from Transifex ([edf4959](https://github.com/nextcloud/mail/commit/edf49598ad718700f531725f7b44f3d654215e45))
+* **l10n:** Update translations from Transifex ([7c51721](https://github.com/nextcloud/mail/commit/7c5172147f6e7e1d852a2d5ca2d296843959e760))
+* lost line breaks ([a72801f](https://github.com/nextcloud/mail/commit/a72801fd73d42b6a2116e863d784b46416135274))
+* **mailto:** populate body from mailto ([032bbb8](https://github.com/nextcloud/mail/commit/032bbb8cf7399318eb9c3aabd8b1d77c538883df))
+
+
+
 ## [5.6.4](https://github.com/nextcloud/mail/compare/v5.6.3...v5.6.4) (2025-12-09)
 
 
