@@ -65,7 +65,11 @@ class CouldNotConnectException extends ServiceException {
 
 		switch ($this->previous->getCode()) {
 			case Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED:
-				return 'AUTHENTICATION';
+				return match ($this->previous->getMessage()) {
+					'Authentication failed.' => 'AUTHENTICATION_WRONG_PASSWORD',
+					'Mail server denied authentication.' => 'AUTHENTICATION_DENIED',
+					default => 'AUTHENTICATION',
+				};
 			case Horde_Imap_Client_Exception::SERVER_CONNECT:
 			case Horde_Imap_Client_Exception::SERVER_READERROR:
 				return 'CONNECTION_ERROR';
