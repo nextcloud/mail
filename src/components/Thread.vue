@@ -27,8 +27,10 @@
 						<Popover
 							v-if="threadParticipants.length > participantsToDisplay"
 							class="avatar-more">
-							<template #trigger>
-								<span class="avatar-more">
+							<template #trigger="{ attrs }">
+								<span
+									class="avatar-more"
+									v-bind="attrs">
 									{{ moreParticipantsString }}
 								</span>
 							</template>
