@@ -56,22 +56,33 @@
 				class="hovering-status"
 				:class="{ 'hover-active': hoveringAvatar && !selected }"
 				@mouseenter="hoveringAvatar = true"
-				@mouseleave="hoveringAvatar = false"
-				@click.stop.exact.prevent="toggleSelected"
-				@click.shift.exact.prevent="onSelectMultiple">
-				<template v-if="hoveringAvatar || selected">
-					<CheckIcon :size="28" class="check-icon" :class="{ 'app-content-list-item-avatar-selected': selected }" />
+				@mouseleave="hoveringAvatar = false">
+				<template v-if="compactMode">
+					<NcCheckboxRadioSwitch
+						type="checkbox"
+						class="compact-checkbox"
+						:checked="selected"
+						@update:checked="toggleSelected" />
 				</template>
+
 				<template v-else>
-					<Avatar
-						v-if="!compactMode"
-						:display-name="addresses"
-						:email="avatarEmail"
-						:fetch-avatar="data.fetchAvatarFromClient"
-						:avatar="data.avatar" />
 					<div
-						v-else
-						class="compact-avatar-ball">
+						@click.stop.exact.prevent="toggleSelected"
+						@click.shift.exact.prevent="onSelectMultiple">
+						<template v-if="hoveringAvatar || selected">
+							<CheckIcon
+								:size="28"
+								class="check-icon"
+								:class="{ 'app-content-list-item-avatar-selected': selected }" />
+						</template>
+
+						<template v-else>
+							<Avatar
+								:display-name="addresses"
+								:email="avatarEmail"
+								:fetch-avatar="data.fetchAvatarFromClient"
+								:avatar="data.avatar" />
+						</template>
 					</div>
 				</template>
 			</div>
@@ -439,7 +450,7 @@ import {
 	NcActionLink as ActionLink,
 	NcActionText as ActionText,
 	NcActionInput,
-	NcActionSeparator, NcAssistantIcon,
+	NcActionSeparator, NcAssistantIcon, NcCheckboxRadioSwitch,
 } from '@nextcloud/vue'
 import escapeHtml from 'escape-html'
 import { mapState, mapStores } from 'pinia'
@@ -512,6 +523,7 @@ export default {
 		EnvelopeSkeleton,
 		JunkIcon,
 		ActionButton,
+		NcCheckboxRadioSwitch,
 		MoveModal,
 		OpenInNewIcon,
 		PlusIcon,
@@ -878,6 +890,14 @@ export default {
 				}
 			}
 			return filteredQuickActions
+		},
+	},
+
+	watch: {
+		compactMode(enabled) {
+			if (enabled) {
+				this.hoveringAvatar = false
+			}
 		},
 	},
 
@@ -1611,14 +1631,5 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-}
-
-.compact-avatar-ball {
-	width: 10px;
-	height: 10px;
-	border-radius: 50%;
-	background-color: var(--color-main-text);
-	display: inline-block;
-	vertical-align: middle;
 }
 </style>
