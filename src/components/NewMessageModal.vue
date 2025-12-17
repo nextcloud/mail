@@ -105,6 +105,7 @@
 						@update:smime-encrypt="patchComposerData({ smimeSign: $event })"
 						@update:request-mdn="patchComposerData({ requestMdn: $event })"
 						@draft="onDraft"
+						@editor-ready="onEditorReady"
 						@discard-draft="discardDraft"
 						@upload-attachment="onAttachmentUploading"
 						@send="onSend"
@@ -168,6 +169,7 @@ export default {
 
 	data() {
 		return {
+			additionalTrapElements: [],
 			original: undefined,
 			draftsPromise: Promise.resolve(),
 			attachmentsPromise: Promise.resolve(),
@@ -377,6 +379,12 @@ export default {
 			})
 
 			return this.draftsPromise
+		},
+
+		onEditorReady({ additionalFocusTrap }) {
+			if (additionalFocusTrap && this.additionalTrapElements.indexOf() === -1) {
+				this.additionalTrapElements.push(additionalFocusTrap)
+			}
 		},
 
 		getDataForServer(data) {
