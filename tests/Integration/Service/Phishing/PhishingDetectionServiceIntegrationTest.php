@@ -15,6 +15,7 @@ use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\PhishingDetection\ContactCheck;
 use OCA\Mail\Service\PhishingDetection\CustomEmailCheck;
 use OCA\Mail\Service\PhishingDetection\DateCheck;
+use OCA\Mail\Service\PhishingDetection\ImapFlagCheck;
 use OCA\Mail\Service\PhishingDetection\LinkCheck;
 use OCA\Mail\Service\PhishingDetection\PhishingDetectionService;
 use OCA\Mail\Service\PhishingDetection\ReplyToCheck;
@@ -24,7 +25,6 @@ use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class PhishingDetectionServiceIntegrationTest extends TestCase {
-
 	private ContactsIntegration|MockObject $contactsIntegration;
 	private IL10N|MockObject $l10n;
 	private ITimeFactory $timeFactory;
@@ -33,6 +33,7 @@ class PhishingDetectionServiceIntegrationTest extends TestCase {
 	private DateCheck $dateCheck;
 	private ReplyToCheck $replyToCheck;
 	private LinkCheck $linkCheck;
+	private ImapFlagCheck $imapFlagCheck;
 	private PhishingDetectionService $service;
 
 	protected function setUp(): void {
@@ -44,10 +45,9 @@ class PhishingDetectionServiceIntegrationTest extends TestCase {
 		$this->dateCheck = new DateCheck($this->l10n, \OC::$server->get(ITimeFactory::class));
 		$this->replyToCheck = new ReplyToCheck($this->l10n);
 		$this->linkCheck = new LinkCheck($this->l10n);
-		$this->service = new PhishingDetectionService($this->contactCheck, $this->customEmailCheck, $this->dateCheck, $this->replyToCheck, $this->linkCheck);
+		$this->imapFlagCheck = new ImapFlagCheck($this->l10n);
+		$this->service = new PhishingDetectionService($this->contactCheck, $this->customEmailCheck, $this->dateCheck, $this->replyToCheck, $this->linkCheck, $this->imapFlagCheck);
 	}
-
-
 
 	public function testContactCheck(): void {
 		$this->contactsIntegration->expects(self::once())
@@ -56,7 +56,6 @@ class PhishingDetectionServiceIntegrationTest extends TestCase {
 			->willReturn([['id' => 1, 'fn' => 'John Doe', 'email' => ['jhon@example.org','Doe@example.org']]]);
 
 		$result = $this->contactCheck->run('John Doe', 'jhon.doe@example.org');
-
 		$this->assertTrue($result->isPhishing());
 	}
 
@@ -69,12 +68,12 @@ class PhishingDetectionServiceIntegrationTest extends TestCase {
 		$result = $this->replyToCheck->run('jhon@example.org', 'jhon.doe@example.org');
 		$this->assertTrue($result->isPhishing());
 	}
+
 	public function testCheckHeadersForPhishing(): void {
 		$headerStream = fopen(__DIR__ . '/../../../data/phishing-mail-headers.txt', 'r');
 		$parsedHeaders = Horde_Mime_Headers::parseHeaders($headerStream);
 		fclose($headerStream);
-		$result = $this->service->checkHeadersForPhishing($parsedHeaders, false);
+		$result = $this->service->checkHeadersForPhishing($parsedHeaders, [], false);
 		$this->assertTrue($result['warning']);
 	}
-
 }

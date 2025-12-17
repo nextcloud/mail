@@ -84,6 +84,7 @@ class Message extends Entity implements JsonSerializable {
 		'forwarded',
 		'$junk',
 		'$notjunk',
+		'$phishing',
 		'mdnsent',
 		Tag::LABEL_IMPORTANT,
 		'$important' // @todo remove this when we have removed all references on IMAP to $important @link https://github.com/nextcloud/mail/issues/25
