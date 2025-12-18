@@ -54,15 +54,20 @@
 				@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
 			<div
 				class="hovering-status"
-				:class="{ 'hover-active': hoveringAvatar && !selected }"
+				:class="{ 'hover-active': hoveringAvatar && !selected && !compactMode }"
 				@mouseenter="hoveringAvatar = true"
 				@mouseleave="hoveringAvatar = false">
 				<template v-if="compactMode">
-					<NcCheckboxRadioSwitch
-						type="checkbox"
-						class="compact-checkbox"
-						:checked="selected"
-						@update:checked="toggleSelected" />
+					<div
+						class="compact-checkbox-wrapper"
+						@mousedown.stop.prevent
+						@click.stop.prevent>
+						<NcCheckboxRadioSwitch
+							type="checkbox"
+							class="compact-checkbox"
+							:checked="selected"
+							@update:checked="toggleSelected" />
+					</div>
 				</template>
 
 				<template v-else>
@@ -1632,4 +1637,5 @@ export default {
 	align-items: center;
 	justify-content: center;
 }
+
 </style>
