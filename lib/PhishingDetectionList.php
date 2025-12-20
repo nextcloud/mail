@@ -30,7 +30,7 @@ class PhishingDetectionList implements JsonSerializable {
 
 	private function isWarning(): bool {
 		foreach ($this->checks as $check) {
-			if (in_array($check->getType(), [PhishingDetectionResult::DATE_CHECK, PhishingDetectionResult::LINK_CHECK, PhishingDetectionResult::CUSTOM_EMAIL_CHECK, PhishingDetectionResult::CONTACTS_CHECK]) && $check->isPhishing()) {
+			if (in_array($check->getType(), [PhishingDetectionResult::DATE_CHECK, PhishingDetectionResult::LINK_CHECK, PhishingDetectionResult::CUSTOM_EMAIL_CHECK, PhishingDetectionResult::CONTACTS_CHECK, PhishingDetectionResult::IMAP_FLAG_CHECK]) && $check->isPhishing()) {
 				return true;
 			}
 		}

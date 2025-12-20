@@ -21,10 +21,19 @@ class PhishingDetectionService {
 		private DateCheck $dateCheck,
 		private ReplyToCheck $replyToCheck,
 		private LinkCheck $linkCheck,
+		private ImapFlagCheck $imapFlagCheck,
 	) {
 	}
 
-	public function checkHeadersForPhishing(Horde_Mime_Headers $headers, bool $hasHtmlMessage, string $htmlMessage = ''): array {
+	/**
+	 * @param Horde_Mime_Headers $headers
+	 * @param string[] $flags
+	 * @param bool $hasHtmlMessage
+	 * @param string $htmlMessage
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function checkHeadersForPhishing(Horde_Mime_Headers $headers, array $flags, bool $hasHtmlMessage, string $htmlMessage = ''): array {
 		/** @var string|null $fromFN */
 		$fromFN = null;
 		/** @var string|null $fromEmail */
@@ -66,6 +75,9 @@ class PhishingDetectionService {
 		if ($date !== null) {
 			$list->addCheck($this->dateCheck->run($date));
 		}
+
+		$list->addCheck($this->imapFlagCheck->run($flags));
+
 		if ($hasHtmlMessage) {
 			$list->addCheck($this->linkCheck->run($htmlMessage));
 		}
