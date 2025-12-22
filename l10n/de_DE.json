@@ -18,6 +18,7 @@
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s" : "E-Mail-Adresse des Absenders %1$s ist nicht im Adressbuch, aber der Name des Absenders %2$s ist mit den folgenden E-Mail-Adressen im Adressbuch %3$s",
     "Sender is using a custom email: %1$s instead of the sender email: %2$s" : "Der Absender verwendet eine benutzerdefinierte E-Mail-Adresse: %1$s anstatt der E-Mail-Adresse: %2$s",
     "Sent date is in the future" : "Sendedatum ist in der Zukunft",
+    "Mail server marked this message as phishing attempt" : "Der Mailserver hat diese Nachricht als Phishing-Versuch markiert",
     "Some addresses in this message are not matching the link text" : "Einige Adressen in dieser Nachricht stimmen nicht mit dem Linktext überein",
     "Reply-To email: %1$s is different from sender email: %2$s" : "Antwort-E-Mail-Adresse: %1$s unterscheidet sich von der Absender-E-Mail-Adresse: %2$s ",
     "Mail connection performance" : "Leistung der E-Mail-Verbindung",
