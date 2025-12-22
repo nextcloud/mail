@@ -20,6 +20,7 @@ OC.L10N.register(
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s" : "ئەۋەتكۈچى ئېلېكترونلۇق خەت: %1$s ئادرېس دەپتىرىدە ئەمەس ، ئەمما ئەۋەتكۈچىنىڭ ئىسمى: %2$s تۆۋەندىكى ئېلېكترونلۇق خەتلەر بىلەن ئادرېس دەپتىرىدە: %3$s",
     "Sender is using a custom email: %1$s instead of the sender email: %2$s" : "ئەۋەتكۈچى ئىختىيارى ئېلېكترونلۇق خەت ئىشلىتىۋاتىدۇ: %1$sئەۋەتكۈچى ئېلېكترونلۇق خەتنىڭ ئورنىغا: %2$s",
     "Sent date is in the future" : "ئەۋەتىلگەن ۋاقىت كەلگۈسىدە",
+    "Mail server marked this message as phishing attempt" : "ئېلخەت مۇلازىمېتىرى بۇ ئۇچۇرنى تور ئالدامچىلىق ئۇرۇنۇشى دەپ بەلگە قويدى",
     "Some addresses in this message are not matching the link text" : "بۇ ئۇچۇردىكى بەزى ئادرېسلار ئۇلىنىش تېكىستىگە ماس كەلمەيدۇ",
     "Reply-To email: %1$s is different from sender email: %2$s" : "جاۋاپ خەت : %1$s بولسا ئىشلەتكۈچى ئېلىخېتىدىن پەرقلىق: %2$s",
     "Mail connection performance" : "ئېلخەت ئۇلىنىش ئىقتىدارى",

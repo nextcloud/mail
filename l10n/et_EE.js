@@ -20,6 +20,7 @@ OC.L10N.register(
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s" : "Saatja aadress %1$s pole aadressiraamatus, aga %2$s nimi on ning temaga on seotud järgnevad aadressid: %3$s",
     "Sender is using a custom email: %1$s instead of the sender email: %2$s" : "Saatja kasutab muudetud e-postiaadressi %1$s oma tavalise %2$s aadressi asemel",
     "Sent date is in the future" : "Saatmise kuupäev on tulevikus",
+    "Mail server marked this message as phishing attempt" : "E-posti server märkis selle e-kirja õngitsuskatseks",
     "Some addresses in this message are not matching the link text" : "Mõned selle kirja aadressid ei vasta lingi tekstile",
     "Reply-To email: %1$s is different from sender email: %2$s" : "Vastamiseks mõeldud e-posti aadress: %1$s on erinev saatja aadressist %2$s",
     "Mail connection performance" : "E-postiteenuse ühenduse jõudlus",
