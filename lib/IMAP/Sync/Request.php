@@ -20,17 +20,21 @@ final class Request {
 
 	/** @var array */
 	private $uids;
+	
+	/** @var bool */
+	private $full;
 
 	/**
 	 * @param string $mailbox
 	 * @param string $syncToken
 	 * @param int[] $uids
 	 */
-	public function __construct(string $id, string $mailbox, string $syncToken, array $uids) {
+	public function __construct(string $id, string $mailbox, string $syncToken, array $uids, bool $full = false) {
 		$this->id = $id;
 		$this->mailbox = $mailbox;
 		$this->syncToken = $syncToken;
 		$this->uids = $uids;
+		$this->full = $full;
 	}
 
 	/**
@@ -61,5 +65,13 @@ final class Request {
 	 */
 	public function getUids(): array {
 		return $this->uids;
+	}
+
+	public function getFull(): bool {
+		return $this->full;
+	}
+
+	public function setFull(bool $full): void {
+		$this->full = $full;
 	}
 }

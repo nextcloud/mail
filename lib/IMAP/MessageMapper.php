@@ -277,15 +277,17 @@ class MessageMapper {
 		bool $runPhishingCheck = false): array {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->envelope();
+		$query->structure();
 		$query->flags();
 		$query->uid();
 		$query->imapDate();
-		$query->headerText(
-			[
-				'cache' => true,
-				'peek' => true,
-			]
-		);
+		$query->headerText([
+			'cache' => true,
+			'peek' => true,
+		]);
+		$query->bodyText([
+			'peek' => true,
+		]);
 
 		if (is_array($ids)) {
 			// Chunk to prevent overly long IMAP commands
