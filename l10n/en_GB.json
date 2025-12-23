@@ -18,6 +18,7 @@
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s" : "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s",
     "Sender is using a custom email: %1$s instead of the sender email: %2$s" : "Sender is using a custom email: %1$s instead of the sender email: %2$s",
     "Sent date is in the future" : "Sent date is in the future",
+    "Mail server marked this message as phishing attempt" : "Mail server marked this message as phishing attempt",
     "Some addresses in this message are not matching the link text" : "Some addresses in this message are not matching the link text",
     "Reply-To email: %1$s is different from sender email: %2$s" : "Reply-To email: %1$s is different from sender email: %2$s",
     "Mail connection performance" : "Mail connection performance",
