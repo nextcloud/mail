@@ -24,6 +24,7 @@ use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\Service\Search\FilterStringParser;
 use OCA\Mail\Service\Search\SearchQuery;
+use OCP\IAppConfig;
 use Psr\Log\LoggerInterface;
 use function array_diff;
 use function array_map;
@@ -50,6 +51,9 @@ class SyncService {
 	/** @var MailboxSync */
 	private $mailboxSync;
 
+	/** @var IAppConfig */
+	private $config;
+
 	public function __construct(
 		IMAPClientFactory $clientFactory,
 		ImapToDbSynchronizer $synchronizer,
@@ -57,7 +61,9 @@ class SyncService {
 		MessageMapper $messageMapper,
 		PreviewEnhancer $previewEnhancer,
 		LoggerInterface $logger,
-		MailboxSync $mailboxSync) {
+		MailboxSync $mailboxSync,
+		IAppConfig $config,
+	) {
 		$this->clientFactory = $clientFactory;
 		$this->synchronizer = $synchronizer;
 		$this->filterStringParser = $filterStringParser;
@@ -65,6 +71,7 @@ class SyncService {
 		$this->previewEnhancer = $previewEnhancer;
 		$this->logger = $logger;
 		$this->mailboxSync = $mailboxSync;
+		$this->config = $config;
 	}
 
 	/**
@@ -129,6 +136,7 @@ class SyncService {
 
 		$this->mailboxSync->syncStats($client, $mailbox);
 
+		$threadingEnabled = $this->config->getValueString('mail', 'layout-message-view', 'threaded') === 'threaded';
 		$client->logout();
 
 		$query = $filter === null ? null : $this->filterStringParser->parse($filter);
@@ -138,7 +146,8 @@ class SyncService {
 			$knownIds ?? [],
 			$lastMessageTimestamp,
 			$sortOrder,
-			$query
+			$query,
+			$threadingEnabled
 		);
 	}
 
@@ -147,6 +156,7 @@ class SyncService {
 	 * @param Mailbox $mailbox
 	 * @param int[] $knownIds
 	 * @param SearchQuery $query
+	 * @param bool $threadingEnabled
 	 *
 	 * @return Response
 	 * @todo does not work with text token search queries
@@ -157,7 +167,8 @@ class SyncService {
 		array $knownIds,
 		?int $lastMessageTimestamp,
 		string $sortOrder,
-		?SearchQuery $query): Response {
+		?SearchQuery $query,
+		bool $threadingEnabled): Response {
 		if ($knownIds === []) {
 			$newIds = $this->messageMapper->findAllIds($mailbox);
 		} else {
@@ -169,7 +180,13 @@ class SyncService {
 			$newUids = $this->messageMapper->findUidsForIds($mailbox, $newIds);
 			$newIds = $this->messageMapper->findIdsByQuery($mailbox, $query, $order, null, $newUids);
 		}
-		$new = $this->messageMapper->findByMailboxAndIds($mailbox, $account->getUserId(), $newIds);
+
+		$new = $this->messageMapper->findMessageListsByMailboxAndIds($account, $mailbox, $account->getUserId(), $newIds, $sortOrder, $threadingEnabled);
+
+		$newMessages = [];
+		foreach ($new as $messageList) {
+			$newMessages[] = $this->previewEnhancer->process($account, $mailbox, $messageList);
+		}
 
 		// TODO: $changed = $this->messageMapper->findChanged($account, $mailbox, $uids);
 		if ($query !== null) {
@@ -178,13 +195,13 @@ class SyncService {
 		} else {
 			$changedIds = $knownIds;
 		}
-		$changed = $this->messageMapper->findByMailboxAndIds($mailbox, $account->getUserId(), $changedIds);
+		$changed = $this->messageMapper->findByMailboxAndIds($mailbox, $account->getUserId(), $changedIds, $sortOrder);
 
 		$stillKnownIds = array_map(static fn (Message $msg) => $msg->getId(), $changed);
 		$vanished = array_values(array_diff($knownIds, $stillKnownIds));
 
 		return new Response(
-			$this->previewEnhancer->process($account, $mailbox, $new),
+			$newMessages,
 			$changed,
 			$vanished,
 			$mailbox->getStats()
