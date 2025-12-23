@@ -2070,6 +2070,23 @@ export default function mainStoreActions() {
 			flag,
 			value,
 		}) {
+			const addIdToEnvelopeList = (list, id) => {
+				const dateOf = (msgId) => this.getEnvelope(msgId)?.dateInt ?? 0
+				const sortOrder = this.getPreference('sort-order')
+				const newDate = dateOf(id)
+				let idx = 0
+				if (sortOrder === 'newest') {
+					while (idx < list.length && dateOf(list[idx]) >= newDate) {
+						idx++
+					}
+				} else {
+					while (idx < list.length && dateOf(list[idx]) <= newDate) {
+						idx++
+					}
+				}
+				list.splice(idx, 0, id)
+				return list
+			}
 			const mailbox = this.mailboxes[envelope.mailboxId]
 			if (mailbox && flag === 'seen') {
 				const unread = mailbox.unread ?? 0
@@ -2078,6 +2095,27 @@ export default function mainStoreActions() {
 				} else if (!envelope.flags[flag] && value) {
 					Vue.set(mailbox, 'unread', Math.max(unread - 1, 0))
 				}
+			}
+
+			if (flag === 'flagged') {
+				const starredLists = Object.keys(mailbox.envelopeLists).filter((key) => key.includes('is:starred'))
+				const notStarredLists = Object.keys(mailbox.envelopeLists).filter((key) => key.includes('not:starred'))
+
+				starredLists.forEach((key) => {
+					if (value) {
+						Vue.set(mailbox.envelopeLists, key, addIdToEnvelopeList(mailbox.envelopeLists[key], envelope.databaseId))
+					} else {
+						Vue.set(mailbox.envelopeLists, key, (mailbox.envelopeLists[key] || []).filter((id) => id !== envelope.databaseId))
+					}
+				})
+				notStarredLists.forEach((key) => {
+					if (value) {
+						Vue.set(mailbox.envelopeLists, key, (mailbox.envelopeLists[key] || []).filter((id) => id !== envelope.databaseId))
+					} else {
+						Vue.set(mailbox.envelopeLists, key, addIdToEnvelopeList(mailbox.envelopeLists[key], envelope.databaseId))
+					}
+				})
+				this.mailboxes[envelope.mailboxId] = mailbox
 			}
 			Vue.set(envelope.flags, flag, value)
 		},
