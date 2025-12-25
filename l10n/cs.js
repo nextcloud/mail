@@ -59,6 +59,8 @@ OC.L10N.register(
     "SMTP server is not reachable" : "SMTP server není dosažitelný",
     "IMAP username or password is wrong" : "Uživatelské jméno nebo heslo pro IMAP není správné",
     "SMTP username or password is wrong" : "Uživatelské jméno nebo heslo pro SMTP není správné",
+    "IMAP authentication error" : "Chyba IMAP ověřování",
+    "SMTP authentication error" : "Chyba SMTP ověřování",
     "IMAP connection failed" : "Vytvoření IMAP připojení se nezdařilo",
     "SMTP connection failed" : "Vytvoření SMTP připojení se nezdařilo",
     "Authorization pop-up closed" : "Vyskakovací okno s autorizací zavřeno",

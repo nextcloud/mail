@@ -18,6 +18,7 @@
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s" : "Ríomhphost an tseoltóra: níl %1$s sa leabhar seoltaí, ach tá ainm an tseoltóra: %2$s sa leabhar seoltaí leis na ríomhphoist seo a leanas: %3$s",
     "Sender is using a custom email: %1$s instead of the sender email: %2$s" : "Tá an seoltóir ag úsáid ríomhphost saincheaptha: %1$s in ionad an ríomhphoist seoltóra: %2$s",
     "Sent date is in the future" : "Tá an dáta seolta amach anseo",
+    "Mail server marked this message as phishing attempt" : "Mharcáil an freastalaí ríomhphoist an teachtaireacht seo mar iarracht fioscaireachta",
     "Some addresses in this message are not matching the link text" : "Níl roinnt seoltaí sa teachtaireacht seo ag teacht leis an nasc téacs",
     "Reply-To email: %1$s is different from sender email: %2$s" : "Tá ríomhphost freagra chuig: %1$s difriúil ó ríomhphost an tseoltóra: %2$s",
     "Mail connection performance" : "Feidhmíocht nasc poist",
