@@ -85,7 +85,7 @@ class Message extends Entity implements JsonSerializable {
 		'$junk',
 		'$notjunk',
 		'$phishing',
-		'mdnsent',
+		'$mdnsent',
 		Tag::LABEL_IMPORTANT,
 		'$important' // @todo remove this when we have removed all references on IMAP to $important @link https://github.com/nextcloud/mail/issues/25
 	];
@@ -287,6 +287,8 @@ class Message extends Entity implements JsonSerializable {
 			$this->setFlagJunk($value);
 		} elseif ($flag === '$notjunk') {
 			$this->setFlagNotjunk($value);
+		} elseif ($flag === '$mdnsent') {
+			$this->setFlagMdnsent($value);
 		} else {
 			$this->setter(
 				$this->columnToProperty("flag_$flag"),
@@ -339,7 +341,7 @@ class Message extends Entity implements JsonSerializable {
 				'important' => ($this->getFlagImportant() === true),
 				'$junk' => ($this->getFlagJunk() === true),
 				'$notjunk' => ($this->getFlagNotjunk() === true),
-				'mdnsent' => ($this->getFlagMdnsent() === true),
+				'$mdnsent' => ($this->getFlagMdnsent() === true),
 			],
 			'tags' => $indexed,
 			'from' => $this->getFrom()->jsonSerialize(),
