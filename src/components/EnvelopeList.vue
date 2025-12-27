@@ -132,6 +132,7 @@
 				:select-mode="selectMode"
 				:has-multiple-accounts="hasMultipleAccounts"
 				:selected-envelopes="selectedEnvelopes"
+				:compact-mode="compactMode"
 				@delete="$emit('delete', env.databaseId)"
 				@update:selected="onEnvelopeSelectToggle(env, index, $event)"
 				@select-multiple="onEnvelopeSelectMultiple(env, index)"
@@ -254,6 +255,11 @@ export default {
 		},
 
 		skipTransition: {
+			type: Boolean,
+			default: false,
+		},
+
+		compactMode: {
 			type: Boolean,
 			default: false,
 		},

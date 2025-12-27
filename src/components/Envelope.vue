@@ -20,6 +20,7 @@
 		:name="addresses"
 		:details="formatted()"
 		:one-line="oneLineLayout"
+		:compact="compactMode"
 		:is-read="showImportantIconVariant"
 		:is-important="isImportant"
 		@click.exact="onClick"
@@ -53,20 +54,41 @@
 				@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
 			<div
 				class="hovering-status"
-				:class="{ 'hover-active': hoveringAvatar && !selected }"
+				:class="{ 'hover-active': hoveringAvatar && !selected && !compactMode }"
 				@mouseenter="hoveringAvatar = true"
-				@mouseleave="hoveringAvatar = false"
-				@click.stop.exact.prevent="toggleSelected"
-				@click.shift.exact.prevent="onSelectMultiple">
-				<template v-if="hoveringAvatar || selected">
-					<CheckIcon :size="28" class="check-icon" :class="{ 'app-content-list-item-avatar-selected': selected }" />
+				@mouseleave="hoveringAvatar = false">
+				<template v-if="compactMode">
+					<div
+						class="compact-checkbox-wrapper"
+						@mousedown.stop.prevent
+						@click.stop.prevent>
+						<NcCheckboxRadioSwitch
+							type="checkbox"
+							class="compact-checkbox"
+							:checked="selected"
+							@update:checked="toggleSelected" />
+					</div>
 				</template>
+
 				<template v-else>
-					<Avatar
-						:display-name="addresses"
-						:email="avatarEmail"
-						:fetch-avatar="data.fetchAvatarFromClient"
-						:avatar="data.avatar" />
+					<div
+						@click.stop.exact.prevent="toggleSelected"
+						@click.shift.exact.prevent="onSelectMultiple">
+						<template v-if="hoveringAvatar || selected">
+							<CheckIcon
+								:size="28"
+								class="check-icon"
+								:class="{ 'app-content-list-item-avatar-selected': selected }" />
+						</template>
+
+						<template v-else>
+							<Avatar
+								:display-name="addresses"
+								:email="avatarEmail"
+								:fetch-avatar="data.fetchAvatarFromClient"
+								:avatar="data.avatar" />
+						</template>
+					</div>
 				</template>
 			</div>
 		</template>
@@ -91,7 +113,7 @@
 					</span>
 				</div>
 				<div
-					v-if="data.encrypted || data.previewText"
+					v-if="!compactMode && (data.encrypted || data.previewText)"
 					class="envelope__preview-text"
 					:title="data.summary ? t('mail', 'This summary was AI generated') : null">
 					<NcAssistantIcon v-if="data.summary" :size="15" class="envelope__preview-text__icon" />
@@ -433,7 +455,7 @@ import {
 	NcActionLink as ActionLink,
 	NcActionText as ActionText,
 	NcActionInput,
-	NcActionSeparator, NcAssistantIcon,
+	NcActionSeparator, NcAssistantIcon, NcCheckboxRadioSwitch,
 } from '@nextcloud/vue'
 import escapeHtml from 'escape-html'
 import { mapState, mapStores } from 'pinia'
@@ -506,6 +528,7 @@ export default {
 		EnvelopeSkeleton,
 		JunkIcon,
 		ActionButton,
+		NcCheckboxRadioSwitch,
 		MoveModal,
 		OpenInNewIcon,
 		PlusIcon,
@@ -612,6 +635,10 @@ export default {
 
 		layoutMessageViewThreaded() {
 			return this.mainStore.getPreference('layout-message-view', 'threaded') === 'threaded'
+		},
+
+		compactMode() {
+			return this.mainStore.getPreference('compact-mode', 'false') === 'true'
 		},
 
 		hasMultipleRecipients() {
@@ -868,6 +895,14 @@ export default {
 				}
 			}
 			return filteredQuickActions
+		},
+	},
+
+	watch: {
+		compactMode(enabled) {
+			if (enabled) {
+				this.hoveringAvatar = false
+			}
 		},
 	},
 
