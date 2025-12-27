@@ -51,7 +51,7 @@ export default {
 	computed: {
 		...mapStores(useMainStore),
 		mdnSent() {
-			return this.message.flags.mdnsent
+			return this.message.flags.$mdnsent
 		},
 	},
 
@@ -62,7 +62,7 @@ export default {
 
 			try {
 				await sendMdn(this.message.databaseId)
-				this.mainStore.flagEnvelopeMutation({ envelope: this.message, flag: 'mdnsent', value: true })
+				this.mainStore.flagEnvelopeMutation({ envelope: this.message, flag: '$mdnsent', value: true })
 			} catch (error) {
 				logger.error('could not send mdn', error)
 				showError(t('mail', 'Could not send mdn'))
