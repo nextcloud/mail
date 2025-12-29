@@ -141,7 +141,7 @@ class MailboxesApiControllerTest extends TestCase {
 				'DESC',
 				null,
 				null,
-				null,
+				1,
 				SELF::USER_ID,
 				'threaded',
 			)->willReturn($messages);
@@ -170,6 +170,45 @@ class MailboxesApiControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_FORBIDDEN, $actual->getStatus());
 	}
 
+	public static function provideLimitData(): array {
+		return [
+			'20' => [20, 20],
+			'500' => [500, 100],
+			'null' => [null, 1],
+		];
+	}
+
+	/** @dataProvider provideLimitData */
+	public function testRestrictLimit(?int $limit, int $expectedLimit): void {
+		$accountId = 100;
+		$mailboxId = 101;
+		$mailbox = new Mailbox();
+		$mailbox->setAccountId($accountId);
+		$this->mailManager->expects(self::once())
+			->method('getMailbox')
+			->with(SELF::USER_ID, $mailboxId)
+			->willReturn($mailbox);
+		$mailAccount = new MailAccount();
+		$account = new Account($mailAccount);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with(SELF::USER_ID, $accountId)
+			->willReturn($account);
+		$this->mailSearch->expects(self::once())
+			->method('findMessages')
+			->with(
+				$account,
+				$mailbox,
+				'DESC',
+				null,
+				null,
+				$expectedLimit,
+				SELF::USER_ID,
+				'threaded',
+			)->willReturn([]);
+
+		$this->controller->listMessages($mailboxId, null, null, $limit);
+	}
 
 
 }
