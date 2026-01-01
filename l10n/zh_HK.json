@@ -18,6 +18,7 @@
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s" : "寄件人電郵地址：%1$s 不在通訊錄中，但寄件人名稱：%2$s 在通訊錄中，但其電子郵件為：%3$s",
     "Sender is using a custom email: %1$s instead of the sender email: %2$s" : "寄件人使用了自訂的電郵地址：%1$s 而非寄件者的電郵地址：%2$s",
     "Sent date is in the future" : "寄件日期是未來的日期",
+    "Mail server marked this message as phishing attempt" : "郵件伺服器已將此訊息標示為釣魚詐騙嘗試",
     "Some addresses in this message are not matching the link text" : "此訊息中的某些地址與連結文字不相符",
     "Reply-To email: %1$s is different from sender email: %2$s" : "Reply-To 電郵地址：%1$s 與寄件人的電郵地址 %2$s 不同",
     "Mail connection performance" : "郵件連線效能",
