@@ -97,7 +97,7 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 		$message = $fetcher->fetchMessage();
 
-		$this->assertEquals(self::LOREM . "\n\n", $message->getPlainBody());
+		$this->assertEquals(self::LOREM, $message->getPlainBody());
 		$this->assertCount(1, $message->attachments);
 		$this->assertTrue($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
@@ -121,7 +121,7 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 		$message = $fetcher->fetchMessage();
 
-		$this->assertEquals(self::LOREM . "\n\n", $message->getPlainBody());
+		$this->assertEquals(self::LOREM, $message->getPlainBody());
 		$this->assertCount(1, $message->attachments);
 		$this->assertTrue($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
@@ -142,7 +142,7 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 		$message = $fetcher->fetchMessage();
 
-		$this->assertEquals(self::LOREM . "\n\n", $message->getPlainBody());
+		$this->assertEquals(self::LOREM, $message->getPlainBody());
 		$this->assertTrue($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
 		$this->assertTrue($message->isSignatureValid());
@@ -162,7 +162,7 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 		$message = $fetcher->fetchMessage();
 
-		$this->assertEquals(self::LOREM . "\n\n", $message->getPlainBody());
+		$this->assertEquals(self::LOREM, $message->getPlainBody());
 		$this->assertFalse($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
 		$this->assertTrue($message->isSignatureValid());
@@ -182,7 +182,7 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 		$message = $fetcher->fetchMessage();
 
-		$this->assertEquals(self::LOREM . "\n\n", $message->getPlainBody());
+		$this->assertEquals(self::LOREM, $message->getPlainBody());
 		$this->assertFalse($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
 		$this->assertTrue($message->isSignatureValid());
