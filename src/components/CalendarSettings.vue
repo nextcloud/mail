@@ -8,6 +8,7 @@
 		<NcCheckboxRadioSwitch
 			id="imip-create"
 			:checked="imipCreate"
+			:disabled="saving"
 			@update:checked="onToggleImipCreate">
 			{{ t('mail', 'Automatically create tentative appointments in calendar') }}
 		</NcCheckboxRadioSwitch>
@@ -25,6 +26,7 @@ export default {
 	components: {
 		NcCheckboxRadioSwitch,
 	},
+
 	props: {
 		account: {
 			type: Object,
@@ -35,6 +37,7 @@ export default {
 	data() {
 		return {
 			imipCreate: this.account.imipCreate,
+			saving: false,
 		}
 	},
 
@@ -44,8 +47,13 @@ export default {
 
 	methods: {
 		async onToggleImipCreate(val) {
+			if (this.saving) {
+				return
+			}
+
 			const oldVal = this.imipCreate
 			this.imipCreate = val
+			this.saving = true
 
 			try {
 				await this.mainStore.patchAccount({
@@ -59,11 +67,10 @@ export default {
 				Logger.error(`could not ${val ? 'enable' : 'disable'} automatic calendar appointment creation`, { error })
 				this.imipCreate = oldVal
 				throw error
+			} finally {
+				this.saving = false
 			}
 		},
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-</style>
