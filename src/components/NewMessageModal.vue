@@ -183,6 +183,7 @@ export default {
 			changed: false,
 			largerModal: false,
 			isLargeScreen: window.innerWidth >= 1024,
+			additionalTrapElements: [],
 			isMaximized: false,
 			recipient: {
 				name: '',
