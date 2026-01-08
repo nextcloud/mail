@@ -209,18 +209,7 @@
 								:auto-limit="false">
 								<template #selected-option="option">
 									<div class="tag-group__search">
-										<div
-											class="tag-group__bg"
-											:style="
-												'background-color:'
-													+ (option.color !== '#fff'
-														? option.color
-														: '#333')" />
-										<div
-											class="tag-group__label"
-											:style="'color:' + option.color">
-											{{ option.displayName }}
-										</div>
+										<Tag :tag="option" />
 									</div>
 								</template>
 								<template #option="option">
@@ -327,6 +316,7 @@ import FilterVariantIcon from 'vue-material-design-icons/FilterVariant.vue'
 import { findRecipient } from '../service/AutocompleteService.js'
 import useMainStore from '../store/mainStore.js'
 import { hiddenTags } from './tags.js'
+import Tag from './Tag.vue'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -340,6 +330,7 @@ export default {
 		NcCheckboxRadioSwitch,
 		FilterVariantIcon,
 		Close,
+		Tag,
 	},
 
 	props: {
@@ -669,30 +660,6 @@ export default {
 	background: none !important;
 	padding: 0 !important;
 	margin: 0 !important;
-}
-
-.tag-group__search {
-	box-sizing: border-box;
-	position: relative;
-	margin: 3px 3px;
-	padding: 0 6px;
-}
-
-.tag-group__bg {
-	position: absolute;
-	inset-inline: 0;
-	bottom: 0;
-	top: 0;
-	opacity: 0.4;
-	border-radius: 14px;
-	z-index: 1;
-}
-
-.tag-group__label {
-	font-weight: bold;
-	font-size: 12px;
-	position: relative;
-	z-index: 2;
 }
 
 .search-modal {

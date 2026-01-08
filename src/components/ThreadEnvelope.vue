@@ -75,19 +75,7 @@
 						</span>
 					</div>
 					<div class="tagline">
-						<div
-							v-for="tag in tags"
-							:key="tag.id"
-							class="tag-group">
-							<div
-								class="tag-group__bg"
-								:style="{ 'background-color': tag.color }" />
-							<span
-								class="tag-group__label"
-								:style="{ color: tag.color }">
-								{{ translateTagDisplayName(tag) }}
-							</span>
-						</div>
+						<Tag v-for="tag in tags" :tag="tag" />
 					</div>
 				</div>
 				<div class="envelope__header__left__unsubscribe">
@@ -350,6 +338,7 @@ import MessageLoadingSkeleton from './MessageLoadingSkeleton.vue'
 import Moment from './Moment.vue'
 import MoveModal from './MoveModal.vue'
 import SourceModal from './SourceModal.vue'
+import Tag from './Tag.vue'
 import TagModal from './TagModal.vue'
 import TaskModal from './TaskModal.vue'
 import TranslationModal from './TranslationModal.vue'
@@ -365,7 +354,6 @@ import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import useOutboxStore from '../store/outboxStore.js'
 import { mailboxHasRights } from '../util/acl.js'
-import { translateTagDisplayName } from '../util/tag.js'
 import { Text, toPlain } from '../util/text.js'
 import { hiddenTags } from './tags.js'
 
@@ -409,6 +397,7 @@ export default {
 		ReplyIcon,
 		ReplyAllIcon,
 		SourceModal,
+		Tag,
 	},
 
 	props: {
@@ -741,7 +730,6 @@ export default {
 	},
 
 	methods: {
-		translateTagDisplayName,
 		redrawMenuBar() {
 			this.$nextTick(() => {
 				this.recomputeMenuSize++
@@ -1327,15 +1315,6 @@ export default {
 		font-size: calc(var(--default-font-size) * 0.8);
 		font-weight: bold;
 		padding-inline: calc(var(--default-grid-baseline) * 0.5);
-	}
-
-	.tag-group__bg {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		inset-inline-start: 0;
-		opacity: 15%;
 	}
 
 	.tagline {
