@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Provisioning;
 
 use Horde_Mail_Rfc822_Address;
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\MailAccount;
@@ -19,8 +20,10 @@ use OCA\Mail\Db\ProvisioningMapper;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\ValidationException;
 use OCA\Mail\Service\AccountService;
+use OCP\App\IAppManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
+use OCP\DB\Exception;
 use OCP\ICacheFactory;
 use OCP\IUser;
 use OCP\IUserManager;
@@ -30,6 +33,8 @@ use Psr\Log\LoggerInterface;
 
 class Manager {
 	public const MAIL_PROVISIONINGS = 'mail_provisionings';
+	/** @var IAppManager */
+	private $appManager;
 	/** @var IUserManager */
 	private $userManager;
 
@@ -58,6 +63,7 @@ class Manager {
 	private $cacheFactory;
 
 	public function __construct(
+		IAppManager $appManager,
 		IUserManager $userManager,
 		ProvisioningMapper $provisioningMapper,
 		MailAccountMapper $mailAccountMapper,
@@ -69,6 +75,7 @@ class Manager {
 		ICacheFactory $cacheFactory,
 		private AccountService $accountService,
 	) {
+		$this->appManager = $appManager;
 		$this->userManager = $userManager;
 		$this->provisioningMapper = $provisioningMapper;
 		$this->mailAccountMapper = $mailAccountMapper;
@@ -125,7 +132,7 @@ class Manager {
 	 * A alias is orphaned if not listed in newAliases anymore
 	 * (=> the provisioning configuration does contain it anymore)
 	 *
-	 * @throws \OCP\DB\Exception
+	 * @throws Exception
 	 */
 	private function deleteOrphanedAliases(string $userId, int $accountId, array $newAliases): void {
 		$existingAliases = $this->aliasMapper->findAll($accountId, $userId);
@@ -139,7 +146,7 @@ class Manager {
 	/**
 	 * Create new aliases for the given account.
 	 *
-	 * @throws \OCP\DB\Exception
+	 * @throws Exception
 	 */
 	private function createNewAliases(string $userId, int $accountId, array $newAliases, string $displayName, string $accountEmail): void {
 		foreach ($newAliases as $newAlias) {
@@ -186,6 +193,26 @@ class Manager {
 	 * @param Provisioning[] $provisionings
 	 */
 	public function provisionSingleUser(array $provisionings, IUser $user): bool {
+		$unprovisionUser = function (string $userUid) : void {
+			try {
+				/** @noinspection PhpUnhandledExceptionInspection */
+				$this->aliasMapper->deleteProvisionedAliasesByUid($userUid);
+				/** @noinspection PhpUnhandledExceptionInspection */
+				$this->mailAccountMapper->deleteProvisionedAccountsByUid($userUid);
+			} catch (Exception $e) {
+				$this->logger->warning(
+					"Error during deletion of mail provisioning profile for user with UID {$userUid}",
+					['exception' => $e]
+				);
+			}
+		};
+
+		if (!$this->appManager->isEnabledForUser(Application::APP_ID, $user)) {
+			$unprovisionUser($user->getUID());
+
+			return false;
+		}
+
 		$provisioning = $this->findMatchingConfig($provisionings, $user);
 
 		if ($provisioning === null) {
@@ -203,8 +230,7 @@ class Manager {
 			if ($e instanceof MultipleObjectsReturnedException) {
 				// This is unlikely to happen but not impossible.
 				// Let's wipe any existing accounts and start fresh
-				$this->aliasMapper->deleteProvisionedAliasesByUid($user->getUID());
-				$this->mailAccountMapper->deleteProvisionedAccountsByUid($user->getUID());
+				$unprovisionUser($user->getUID());
 			}
 
 			// Fine, then we create a new one
@@ -244,7 +270,7 @@ class Manager {
 
 	/**
 	 * @throws ValidationException
-	 * @throws \OCP\DB\Exception
+	 * @throws Exception
 	 */
 	public function newProvisioning(array $data): Provisioning {
 		$provisioning = $this->provisioningMapper->validate($data);
@@ -258,7 +284,7 @@ class Manager {
 
 	/**
 	 * @throws ValidationException
-	 * @throws \OCP\DB\Exception
+	 * @throws Exception
 	 */
 	public function updateProvisioning(array $data): void {
 		$provisioning = $this->provisioningMapper->validate($data);
