@@ -372,6 +372,7 @@ OC.L10N.register(
     "Collapse folders" : "Bildu karpetak",
     "_{total} message_::_{total} messages_" : ["Mezu {total}","{total} mezu"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} irakurri gabe {total} -etik","{unread} irakurri gabe {total} -etik"],
+    "Loading …" : "Kargatzen …",
     "All messages in mailbox will be deleted." : "Postontziko mezu guztiak ezabatuko dira.",
     "Clear mailbox {name}" : "Garbitu {name} postontzia",
     "The folder and all messages in it will be deleted." : " \nKarpeta eta bertan dauden mezu guztiak ezabatuko dira.",
