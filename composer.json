@@ -42,7 +42,8 @@
 		"rubix/ml": "2.5.3",
 		"sabberworm/php-css-parser": "^8.9.0",
 		"wamania/php-stemmer": "4.0 as 3.0",
-		"youthweb/urllinker": "^2.1.0"
+		"youthweb/urllinker": "^2.1.0",
+		"zbateson/mb-wrapper": "^1.0"
 	},
 	"provide": {
 		"psr/log": "^1.0.4|^2|^3"
