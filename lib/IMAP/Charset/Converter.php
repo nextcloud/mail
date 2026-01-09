@@ -26,10 +26,8 @@ class Converter {
         'ISO-8859-1',
         'ISO-8859-15',
         'ISO-8859-2',
-        'KOI8-R',
-        'KOI8-U',
-        'ISO-8859-5',
         // Add locale/userbase-specific encodings as needed.
+		// TODO: Make configurable and/or dynamically tailor based on user's locale/language to improve accuracy.
     ];
 
 	private MbWrapper $mbWrapper;
