@@ -20,15 +20,15 @@ class Converter {
 	 * Prioritized charsets used for detection if header is missing/wrong.
 	 * This list can be expanded/tweaked based on userbase/email sources/field experience.
 	 */
-    private const DETECTION_CHARSETS = [
-        'UTF-8',
-        'WINDOWS-1252',
-        'ISO-8859-1',
-        'ISO-8859-15',
-        'ISO-8859-2',
-        // Add locale/userbase-specific encodings as needed.
+	private const DETECTION_CHARSETS = [
+		'UTF-8',
+		'WINDOWS-1252',
+		'ISO-8859-1',
+		'ISO-8859-15',
+		'ISO-8859-2',
+		// Add locale/userbase-specific encodings as needed.
 		// TODO: Make configurable and/or dynamically tailor based on user's locale/language to improve accuracy.
-    ];
+	];
 
 	private MbWrapper $mbWrapper;
 

@@ -118,10 +118,10 @@ final class Application extends App implements IBootstrap {
 			return $favicon;
 		});
 
-		$context->registerService(MbWrapper::class, function(ContainerInterface $c) {
+		$context->registerService(MbWrapper::class, function (ContainerInterface $c) {
 			return new MbWrapper();
 		});
-		$context->registerService(Converter::class, function(ContainerInterface $c) {
+		$context->registerService(Converter::class, function (ContainerInterface $c) {
 			return new Converter($c->get(MbWrapper::class));
 		});
 
