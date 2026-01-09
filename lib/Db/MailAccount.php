@@ -105,6 +105,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setDebug(bool $debug)
  * @method bool getClassificationEnabled()
  * @method void setClassificationEnabled(bool $classificationEnabled)
+ * @method bool getImipCreate()
+ * @method void setImipCreate(bool $value)
  */
 class MailAccount extends Entity {
 	public const SIGNATURE_MODE_PLAIN = 0;
@@ -190,6 +192,8 @@ class MailAccount extends Entity {
 	protected bool $debug = false;
 	protected bool $classificationEnabled = true;
 
+	protected bool $imipCreate = false;
+
 	/**
 	 * @param array $params
 	 */
@@ -253,6 +257,9 @@ class MailAccount extends Entity {
 		if (isset($params['classificationEnabled'])) {
 			$this->setClassificationEnabled($params['classificationEnabled']);
 		}
+		if (isset($params['imipCreate'])) {
+			$this->setImipCreate($params['imipCreate']);
+		}
 
 		$this->addType('inboundPort', 'integer');
 		$this->addType('outboundPort', 'integer');
@@ -278,6 +285,7 @@ class MailAccount extends Entity {
 		$this->addType('oooFollowsSystem', 'boolean');
 		$this->addType('debug', 'boolean');
 		$this->addType('classificationEnabled', 'boolean');
+		$this->addType('imipCreate', 'boolean');
 	}
 
 	public function getOutOfOfficeFollowsSystem(): bool {
@@ -328,6 +336,7 @@ class MailAccount extends Entity {
 			'outOfOfficeFollowsSystem' => $this->getOutOfOfficeFollowsSystem(),
 			'debug' => $this->getDebug(),
 			'classificationEnabled' => $this->getClassificationEnabled(),
+			'imipCreate' => $this->getImipCreate(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {
