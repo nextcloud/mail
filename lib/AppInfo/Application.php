@@ -35,6 +35,7 @@ use OCA\Mail\Events\SynchronizationEvent;
 use OCA\Mail\HordeTranslationHandler;
 use OCA\Mail\Http\Middleware\ErrorMiddleware;
 use OCA\Mail\Http\Middleware\ProvisioningMiddleware;
+use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\Listener\AccountSynchronizedThreadUpdaterListener;
 use OCA\Mail\Listener\AddressCollectionListener;
 use OCA\Mail\Listener\DeleteDraftListener;
@@ -85,6 +86,7 @@ use OCP\User\Events\OutOfOfficeStartedEvent;
 use OCP\User\Events\UserDeletedEvent;
 use OCP\Util;
 use Psr\Container\ContainerInterface;
+use ZBateson\MbWrapper\MbWrapper;
 
 include_once __DIR__ . '/../../vendor/autoload.php';
 
@@ -114,6 +116,13 @@ final class Application extends App implements IBootstrap {
 				$c->get(FaviconDataAccess::class),
 			);
 			return $favicon;
+		});
+
+		$context->registerService(MbWrapper::class, function(ContainerInterface $c) {
+			return new MbWrapper();
+		});
+		$context->registerService(Converter::class, function(ContainerInterface $c) {
+			return new Converter($c->get(MbWrapper::class));
 		});
 
 		$context->registerServiceAlias(IAvatarService::class, AvatarService::class);
