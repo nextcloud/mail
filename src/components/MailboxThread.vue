@@ -260,7 +260,7 @@ export default {
 		return {
 
 			importantInfo: t('mail', 'Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time.'),
-			favoritesInfo: t('mail', 'Messages that your mark as favorite will be shown at the top of folders. You can disable this behavior in the app settings'),
+			favoritesInfo: t('mail', 'Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings'),
 			followupInfo: t('mail', 'Messages sent by you that require a reply but did not receive one after a couple of days will be shown here.'),
 			bus: mitt(),
 			searchQuery: undefined,
