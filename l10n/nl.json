@@ -253,6 +253,7 @@
     "Collapse folders" : "Mappen inklappen",
     "_{total} message_::_{total} messages_" : ["{total} bericht","{total} berichten"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} ongelezen van de {total}","{unread} ongelezen van de {total}"],
+    "Loading …" : "Aan het laden...",
     "The folder and all messages in it will be deleted." : "De map en alle berichten erin worden verwijderd.",
     "Delete folder" : "Map verwijderen",
     "Delete folder {name}" : "Verwijder map {naam}",
