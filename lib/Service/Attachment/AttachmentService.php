@@ -82,6 +82,10 @@ class AttachmentService implements IAttachmentService {
 		$attachment->setMimeType($file->getMimeType());
 
 		$persisted = $this->mapper->insert($attachment);
+		if ($persisted->id === null) {
+			throw new UploadException('Given attachmentId is null');
+		}
+
 		try {
 			$this->storage->save($userId, $persisted->id, $file);
 		} catch (UploadException $ex) {
@@ -100,6 +104,10 @@ class AttachmentService implements IAttachmentService {
 		$attachment->setMimeType($mime);
 
 		$persisted = $this->mapper->insert($attachment);
+		if ($persisted->id === null) {
+			throw new UploadException('Given attachmentId is null');
+		}
+
 		try {
 			$this->storage->saveContent($userId, $persisted->id, $fileContents);
 		} catch (NotFoundException|NotPermittedException $e) {

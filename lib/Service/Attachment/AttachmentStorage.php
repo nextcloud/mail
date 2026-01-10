@@ -48,14 +48,14 @@ class AttachmentStorage {
 	 * Copy uploaded file content to a app data file
 	 *
 	 * @param string $userId
-	 * @param int $attachmentId
+	 * @param int|string $attachmentId
 	 * @param UploadedFile $uploadedFile
 	 *
 	 * @throws UploadException
 	 *
 	 * @return void
 	 */
-	public function save(string $userId, int $attachmentId, UploadedFile $uploadedFile): void {
+	public function save(string $userId, int|string $attachmentId, UploadedFile $uploadedFile): void {
 		$folder = $this->getAttachmentFolder($userId);
 
 		$file = $folder->newFile((string)$attachmentId);
@@ -80,12 +80,12 @@ class AttachmentStorage {
 	 * Copy uploaded file content to a app data file
 	 *
 	 * @param string $userId
-	 * @param int $attachmentId
+	 * @param int|string $attachmentId
 	 *
 	 * @return void
 	 * @throws NotFoundException|NotPermittedException
 	 */
-	public function saveContent(string $userId, int $attachmentId, string $fileContent): void {
+	public function saveContent(string $userId, int|string $attachmentId, string $fileContent): void {
 		$folder = $this->getAttachmentFolder($userId);
 		$file = $folder->newFile((string)$attachmentId);
 		$file->putContent($fileContent);
