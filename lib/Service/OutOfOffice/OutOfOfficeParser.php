@@ -115,10 +115,12 @@ class OutOfOfficeParser {
 		$formattedStart = $this->formatDateForSieve($state->getStart());
 		if ($state->getEnd() !== null) {
 			$formattedEnd = $this->formatDateForSieve($state->getEnd());
-			$condition = "allof(currentdate :value \"ge\" \"iso8601\" \"$formattedStart\", currentdate :value \"le\" \"iso8601\" \"$formattedEnd\")";
+			$vacationCondition = "allof(currentdate :value \"ge\" \"iso8601\" \"$formattedStart\", currentdate :value \"le\" \"iso8601\" \"$formattedEnd\")";
 		} else {
-			$condition = "currentdate :value \"ge\" \"iso8601\" \"$formattedStart\"";
+			$vacationCondition = "currentdate :value \"ge\" \"iso8601\" \"$formattedStart\"";
 		}
+
+		$automaticMailCondition = 'anyof(exists "List-Id", exists "List-Unsubscribe")';
 
 		$escapedSubject = SieveUtils::escapeString($state->getSubject());
 		$vacation = [
@@ -166,8 +168,10 @@ class OutOfOfficeParser {
 			$vacationSection = array_merge($vacationSection, $subjectSection);
 		}
 		$vacationSection = array_merge($vacationSection, [
-			"if $condition {",
-			"\t$vacationCommand;",
+			"if $vacationCondition {",
+			"\tif not $automaticMailCondition {",
+			"\t\t$vacationCommand;",
+			"\t}",
 			'}',
 			self::SEPARATOR,
 		]);
