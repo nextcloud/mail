@@ -144,6 +144,7 @@ OC.L10N.register(
     "Vertical split" : "División vertical",
     "Horizontal split" : "División horizontal",
     "List" : "Lista",
+    "Use compact mode" : "Empregar o modo compacto",
     "Sorting" : "Ordenación",
     "Newest first" : "Primeiro o máis recente",
     "Oldest first" : "Primeiro o máis antigo",
