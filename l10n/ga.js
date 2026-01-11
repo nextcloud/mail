@@ -144,6 +144,7 @@ OC.L10N.register(
     "Vertical split" : "Scoilt ingearach",
     "Horizontal split" : "Scoilt chothrománach",
     "List" : "Liosta",
+    "Use compact mode" : "Úsáid mód dlúth",
     "Sorting" : "Sórtáil",
     "Newest first" : "Is nua ar dtús",
     "Oldest first" : "Is sine ar dtús",

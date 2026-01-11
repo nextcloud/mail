@@ -78,6 +78,7 @@ OC.L10N.register(
     "Client ID" : "Mijoz identifikatori",
     "Port" : "Port",
     "Submit" : "Submit",
+    "Group" : "Guruh",
     "Shared" : "Ulashilgan",
     "Account connected" : "Akkaunt ulangan",
     "All" : "All",

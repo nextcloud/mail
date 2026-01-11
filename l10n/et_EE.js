@@ -139,6 +139,7 @@ OC.L10N.register(
     "Vertical split" : "Püstjoones jagamine",
     "Horizontal split" : "Rõhtjoones jagamine",
     "List" : "Nimekiri",
+    "Use compact mode" : "Kasuta kompaktset vaadet",
     "Sorting" : "Järjestus",
     "Newest first" : "Uuemad eespool",
     "Oldest first" : "Vanemad eespool",
