@@ -81,8 +81,7 @@
 					<NcFormBox>
 						<NcFormBoxSwitch
 							v-model="useExternalAvatars"
-							:disabled="loadingAvatarSettings"
-							@update:modelValue="onToggleExternalAvatars">
+							:disabled="loadingAvatarSettings">
 							{{ t('mail', 'Avatars from Gravatar and favicons') }}
 						</NcFormBoxSwitch>
 
@@ -95,8 +94,7 @@
 
 						<NcFormBoxSwitch
 							v-model="searchPriorityBody"
-							:disabled="loadingPrioritySettings"
-							@update:modelValue="onToggleSearchPriorityBody">
+							:disabled="loadingPrioritySettings">
 							{{ prioritySettingsText }}
 						</NcFormBoxSwitch>
 					</NcFormBox>
@@ -132,8 +130,7 @@
 					<NcFormBoxSwitch
 						v-model="useDataCollection"
 						:label="t('mail', 'Data collection')"
-						:description="t('mail', 'Allow the app to collect and process data locally to adapt to your preferences')"
-						@update:modelValue="onToggleCollectData" />
+						:description="t('mail', 'Allow the app to collect and process data locally to adapt to your preferences')" />
 
 					<NcFormGroup :label="t('mail', 'Always show images from')">
 						<TrustedSenders />
@@ -144,8 +141,7 @@
 						v-model="useInternalAddresses"
 						:disabled="loadingInternalAddresses"
 						:label="internalAddressText"
-						:description="t('mail', 'Manage your internal addresses and domains to ensure recognized contacts stay unmarked')"
-						@update:modelValue="onToggleInternalAddress" />
+						:description="t('mail', 'Manage your internal addresses and domains to ensure recognized contacts stay unmarked')" />
 					<InternalAddress />
 
 					<NcFormGroup :label="t('mail', 'S/MIME')">
@@ -194,8 +190,7 @@
 					<NcFormBox>
 						<NcFormBoxSwitch
 							:checked="useFollowUpReminders"
-							:disabled="loadingFollowUpReminders"
-							@update:modelValue="onToggleFollowUpReminders">
+							:disabled="loadingFollowUpReminders">
 							{{ followUpReminderText }}
 						</NcFormBoxSwitch>
 					</NcFormBox>
