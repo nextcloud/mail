@@ -34,7 +34,7 @@ jobs:
         nextcloud-version: ${{ matrix.nextcloud-versions }}
         php-version: ${{ matrix.php-versions }}
         php-coverage: ${{ matrix.coverage && 'xdebug' || 'none' }}
-        patch-php-version-check: ${{ matrix.php-versions == '8.5' }}
+        patch-php-version-check: ${{ matrix.php-versions == '8.6' }}
         node-version: 'false'
         install: true
     - name: Checkout Mail
@@ -170,8 +170,8 @@ jobs:
             working-directory: nextcloud/apps/mail
             run: composer install
           - name: Patch version check for nightly PHP
-            if: ${{ matrix.php-versions == '8.5' }}
-            run: sed -i 's/max-version="8.4"/max-version="8.5"/' nextcloud/apps/mail/appinfo/info.xml
+            if: ${{ matrix.php-versions == '8.6' }}
+            run: sed -i 's/max-version="8.5"/max-version="8.6"/' nextcloud/apps/mail/appinfo/info.xml
           - name: Install Mail
             run: php -f nextcloud/occ app:enable mail
           - name: Configure Nextcloud for testing
