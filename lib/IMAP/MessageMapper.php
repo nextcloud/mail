@@ -954,10 +954,8 @@ class MessageMapper {
 				/** @var Horde_Mime_Headers_ContentTransferEncoding $transferEncoding */
 				$transferEncoding = $mimeHeaders->getHeader('content-transfer-encoding');
 
-				if (!$contentType && !$transferEncoding) {
-					// Nothing to convert here ...
-					return $body;
-				}
+				// Don't exit early here when neither $contentType nor $transferEncoding is set.
+				// It is possible that $structure already has a transferEncoding set and we need to convert anyway.
 
 				if ($transferEncoding) {
 					$structure->setTransferEncoding($transferEncoding->value_single);
