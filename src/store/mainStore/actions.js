@@ -683,6 +683,7 @@ export default function mainStoreActions() {
 							view: this.getPreference('layout-message-view'),
 						})),
 						Promise.all.bind(Promise),
+						andThen(map(sliceToPage)),
 					)
 					const fetchUnifiedEnvelopes = pipe(
 						findIndividualMailboxes(this.getMailboxes, mailbox.specialRole),
@@ -817,8 +818,7 @@ export default function mainStoreActions() {
 					return Promise.reject(new Error('Cannot find last envelope. Required for the mailbox cursor'))
 				}
 
-				return fetchEnvelopes(mailbox.accountId, mailboxId, query, lastEnvelope.dateInt, quantity, this.getPreference('sort-order'), this.getPreference('layout-message-view')
-					).then((threads) => {
+				return fetchEnvelopes(mailbox.accountId, mailboxId, query, lastEnvelope.dateInt, quantity, this.getPreference('sort-order'), this.getPreference('layout-message-view')).then((threads) => {
 					logger.debug(`fetched ${threads.length} messages for mailbox ${mailboxId}`, {
 						threads,
 						addToUnifiedMailboxes,
@@ -2051,8 +2051,14 @@ export default function mainStoreActions() {
 
 			const listId = normalizedEnvelopeListId(query)
 			const orderByDateInt = orderBy(idToDateInt, this.preferences['sort-order'] === 'newest' ? 'desc' : 'asc')
-
 			envelopes.forEach((envelope) => {
+				if (!Object.keys(this.threads).includes(envelope.threadRootId)) {
+					this.threads[envelope.threadRootId] = {}
+				}
+				if (!Object.keys(this.threads[envelope.threadRootId]).includes(String(envelope.databaseId))) {
+					this.threads[envelope.threadRootId][envelope.databaseId] = envelope
+					this.messageToThreadDictionnary[envelope.databaseId] = envelope.threadRootId
+				}
 				const mailbox = this.mailboxes[envelope.mailboxId]
 				const existing = mailbox.envelopeLists[listId] || []
 				this.normalizeTags(envelope)
@@ -2164,16 +2170,13 @@ export default function mainStoreActions() {
 			// Remove envelope from its thread
 			const threadRootId = envelope.threadRootId
 			if (threadRootId && this.threads[threadRootId]) {
-				const threadEnvelopes = this.threads[threadRootId]
-				const threadIdx = threadEnvelopes.indexOf(id)
-				if (threadIdx >= 0) {
-					threadEnvelopes.splice(threadIdx, 1)
-					if (threadEnvelopes.length === 0) {
-						Vue.delete(this.threads, threadRootId)
-					}
+				const thread = this.threads[threadRootId]
+				Vue.delete(thread, id)
+				Vue.delete(this.messageToThreadDictionnary, id)
+				if (Object.keys(this.threads[threadRootId]).length === 0) {
+					Vue.delete(this.threads, threadRootId)
 				}
 			}
-
 			this.accountsUnmapped[UNIFIED_ACCOUNT_ID].mailboxes
 				.map((mailboxId) => this.mailboxes[mailboxId])
 				.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
@@ -2385,7 +2388,6 @@ export default function mainStoreActions() {
 		addQuickActionLocally(quickAction) {
 			this.quickActions.push(quickAction)
 		},
-
 		getPreference(key, def) {
 			return defaultTo(def, this.preferences[key])
 		},
@@ -2437,7 +2439,7 @@ export default function mainStoreActions() {
 		},
 		getEnvelopes(mailboxId, query) {
 			const list = this.getMailbox(mailboxId).envelopeLists[normalizedEnvelopeListId(query)] || []
-			return list.map((msgId) => this.getEnvelope(msgId))
+			return list.map((msgId) => this.getEnvelope(msgId)).filter((message) => message)
 		},
 		getEnvelopesByThreadRootId(accountId, threadRootId) {
 			return sortBy(
@@ -2450,13 +2452,19 @@ export default function mainStoreActions() {
 		},
 		getEnvelopeThread(id) {
 			const envelope = this.getEnvelope[id]
-			console.debug('get thread for envelope', id, envelope, this.threads)
 			const isThreaded = this.getPreference('layout-message-view') === 'threaded'
 			const envelopes = isThreaded ? this.threads[envelope.threadRootId] : this.threads[id]
 			return sortBy(prop('dateInt'), Object.values(envelopes))
 		},
 		getEnvelopeTags(id) {
-			const tags = this.getEnvelope(id)?.tags ?? []
+			const envelope = this.getEnvelope(id)
+			if (!envelope) {
+				return []
+			}
+			if (!Array.isArray(envelope.tags)) {
+				this.normalizeTags(envelope)
+			}
+			const tags = envelope.tags
 			return tags.map((tagId) => this.tags[tagId])
 		},
 		getTag(id) {
