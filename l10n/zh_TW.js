@@ -144,6 +144,7 @@ OC.L10N.register(
     "Vertical split" : "垂直分割",
     "Horizontal split" : "水平分割",
     "List" : "清單",
+    "Use compact mode" : "使用簡潔模式",
     "Sorting" : "排序",
     "Newest first" : "新的在前",
     "Oldest first" : "舊的在前",
