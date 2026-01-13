@@ -1,0 +1,93 @@
+From 6e33cfb59d22fff20dbf1ee429308e1587c62ab3 Mon Sep 17 00:00:00 2001
+From: David Dreschner <github-2017@dreschner.net>
+Date: Tue, 13 Jan 2026 17:21:57 +0100
+Subject: [PATCH] fix: Make c= flag optional, remove requirement of two
+ canonical rules and fix broken raw message for c=simple
+
+---
+ src/DKIM.php      |  8 ++++----
+ src/Validator.php | 21 +++++++++++++++++++--
+ 2 files changed, 23 insertions(+), 6 deletions(-)
+
+diff --git a/src/DKIM.php b/src/DKIM.php
+index 616dc38..7481b14 100644
+--- a/src/DKIM.php
++++ b/src/DKIM.php
+@@ -82,7 +82,7 @@ abstract class DKIM
+      *
+      * @throws DKIMException
+      */
+-    protected function canonicalizeHeaders(array $headers, string $style = 'relaxed'): string
++    protected function canonicalizeHeaders(array $headers, string $style): string
+     {
+         if (count($headers) === 0) {
+             throw new DKIMException('Attempted to canonicalize empty header array');
+@@ -124,7 +124,7 @@ abstract class DKIM
+      *
+      * @return string
+      */
+-    protected function canonicalizeBody(string $body, string $style = 'relaxed', int $length = -1): string
++    protected function canonicalizeBody(string $body, string $style, int $length = -1): string
+     {
+         if ($body === '') {
+             return self::CRLF;
+@@ -245,7 +245,7 @@ abstract class DKIM
+                         'unfolded'   => $currentHeaderValue,
+                         'decoded'    => self::rfc2047Decode($currentHeaderValue),
+                         'rawarray'   => $currentRawHeaderLines,
+-                        'raw'        => implode(self::CRLF . ' ', $currentRawHeaderLines), //Refold lines
++                        'raw'        => implode(self::CRLF, $currentRawHeaderLines), //Refold lines
+                     ];
+                 }
+                 $currentHeaderLabel = $matches[1];
+@@ -257,7 +257,7 @@ abstract class DKIM
+                 }
+                 //This is a folded continuation of the current header
+                 $currentHeaderValue .= $matches[1];
+-                $currentRawHeaderLines[] = $matches[1];
++                $currentRawHeaderLines[] = $matches[0];
+             }
+             ++$headerLineIndex;
+             if ($headerLineIndex >= $headerLineCount) {
+diff --git a/src/Validator.php b/src/Validator.php
+index fc558c0..62b7340 100644
+--- a/src/Validator.php
++++ b/src/Validator.php
+@@ -83,8 +83,24 @@ class Validator extends DKIM
+                 ];
+             }
+ 
+-            //Validate canonicalization algorithms for header and body
+-            [$headerCA, $bodyCA] = explode('/', $dkimTags['c']);
++            //Validate optional canonicalization algorithms for header and body
++            //Use simple/simple as default unless defined differently
++            $headerCA = 'simple';
++            $bodyCA = 'simple';
++
++            if (array_key_exists('c', $dkimTags)) {
++                $containsBodyAndHeaderAlgorithm = strpos($dkimTags['c'], '/') !== false;
++
++                if ($containsBodyAndHeaderAlgorithm) {
++                    $rules = explode('/', $dkimTags['c']);
++
++                    $headerCA = $rules[0];
++                    $bodyCA = $rules[1];
++                } else {
++                    $headerCA = $dkimTags['c'];
++                }
++            }
++
+             if ($headerCA !== 'relaxed' && $headerCA !== 'simple') {
+                 $output[$signatureIndex][] = [
+                     'status' => 'PERMFAIL',
+@@ -298,6 +314,7 @@ class Validator extends DKIM
+         $host = sprintf('%s._domainkey.%s', $selector, $domain);
+         $textRecords = dns_get_record($host, DNS_TXT);
+ 
++
+         if ($textRecords === false) {
+             return false;
+         }
+-- 
+2.43.0
+

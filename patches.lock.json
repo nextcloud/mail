@@ -1,0 +1,18 @@
+{
+    "_hash": "0e361a02397cd9d8d46e434d387c107639b0c9b7541b3f9446da4e3c90758e98",
+    "patches": {
+        "phpmailer/dkimvalidator": [
+            {
+                "package": "phpmailer/dkimvalidator",
+                "description": "Fix incorrect canonicalization handling and modified message content",
+                "url": ".patches/dkimvalidator-fix-broken-canonical-handling.patch",
+                "sha256": "7d49ca7bc143d5a861cf27f01b33b16269e5f31550ec0ebb770b251bb21df316",
+                "depth": 1,
+                "extra": {
+                    "upstream-fix-url": "https://github.com/PHPMailer/DKIMValidator/pull/21",
+                    "provenance": "patches-file:patches.json"
+                }
+            }
+        ]
+    }
+}
