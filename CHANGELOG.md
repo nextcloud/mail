@@ -1,3 +1,31 @@
+## [5.6.6](https://github.com/nextcloud/mail/compare/v5.6.5...v5.6.6) (2026-01-13)
+
+
+### Bug Fixes
+
+* **ColorPicker:** Use v-model for injecting selected color to color picker ([eeea524](https://github.com/nextcloud/mail/commit/eeea5244e1081d2595912c5671a458155b67d27c))
+* **l10n:** Update translations from Transifex ([4fb694c](https://github.com/nextcloud/mail/commit/4fb694c5f28a9b4c55ae0daf52626bd6d2e6af12))
+* **l10n:** Update translations from Transifex ([25a21e3](https://github.com/nextcloud/mail/commit/25a21e32053e5da07994d9332909d3b1ca135505))
+* **l10n:** Update translations from Transifex ([aa2bce2](https://github.com/nextcloud/mail/commit/aa2bce2b33df93194f87f291cc8af9fed59fb064))
+* **l10n:** Update translations from Transifex ([5ec7fa2](https://github.com/nextcloud/mail/commit/5ec7fa2fc480cafcedf755c496cad229ad7d0688))
+* **l10n:** Update translations from Transifex ([e90d712](https://github.com/nextcloud/mail/commit/e90d71271757295ffeb425008689c52af7305031))
+* **l10n:** Update translations from Transifex ([542114e](https://github.com/nextcloud/mail/commit/542114e403145510416103e88e96dabecba58e64))
+* **l10n:** Update translations from Transifex ([7ccda1a](https://github.com/nextcloud/mail/commit/7ccda1a0d43a921ddcbac54ead42ed0d54201979))
+* **l10n:** Update translations from Transifex ([8ead219](https://github.com/nextcloud/mail/commit/8ead219c161c6000e6c4088870e6740c75b9fc3d))
+* **l10n:** Update translations from Transifex ([7c5953c](https://github.com/nextcloud/mail/commit/7c5953c788dd75f3bb2277aecc9e341c23d2bdcd))
+* **l10n:** Update translations from Transifex ([34254fd](https://github.com/nextcloud/mail/commit/34254fdf0add7d214e6e76c9dd7e47068cf52cee))
+* **l10n:** Update translations from Transifex ([3f008e0](https://github.com/nextcloud/mail/commit/3f008e0380a49f41cb773a3e1e47ee776a293d35))
+* **l10n:** Update translations from Transifex ([446a2ab](https://github.com/nextcloud/mail/commit/446a2abc5e1bb5367a68a0d785d546d52787d9c0))
+* **l10n:** Update translations from Transifex ([fea1f7c](https://github.com/nextcloud/mail/commit/fea1f7cebe7ba6f887922aaea522a77477b79204))
+* **l10n:** Update translations from Transifex ([8520576](https://github.com/nextcloud/mail/commit/85205764a73cbe691138ad30a7fecf80be842271))
+* **l10n:** Update translations from Transifex ([083b93b](https://github.com/nextcloud/mail/commit/083b93bfbd7221c3c9c737fa59a2ab4ed32a915d))
+* **l10n:** Update translations from Transifex ([16f2113](https://github.com/nextcloud/mail/commit/16f21133fe695d07ad521eafce2b0f53965e6c09))
+* **l10n:** Update translations from Transifex ([63a58f8](https://github.com/nextcloud/mail/commit/63a58f873d1c78cb91afbd144cf7b2d38c458820))
+* **l10n:** Update translations from Transifex ([6ae3543](https://github.com/nextcloud/mail/commit/6ae35434bebd07cdb8f9844d5d3aac43a0c9ac89))
+* **ui:** bind attr to popover trigger ([80a2602](https://github.com/nextcloud/mail/commit/80a2602caaf4a7d93b92f5e63c750de4b05c680b))
+
+
+
 ## [5.6.5](https://github.com/nextcloud/mail/compare/v5.6.4...v5.6.5) (2025-12-16)
 
 
