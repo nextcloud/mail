@@ -160,3 +160,15 @@ path = [".tx/backport"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "none"
 SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = ["patches.json", "patches.lock.json"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = [".patches/dkimvalidator-fix-broken-canonical-handling.patch"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "angrychimp, Teon d.o.o. - Bostjan Skufca, Marcus Bointon"
+SPDX-License-Identifier = "MIT"
