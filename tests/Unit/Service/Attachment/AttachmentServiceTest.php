@@ -26,6 +26,8 @@ use OCA\Mail\Service\Attachment\UploadedFile;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Files\Folder;
 use OCP\Files\NotPermittedException;
+use OCP\ICacheFactory;
+use OCP\IURLGenerator;
 use OCP\Share\IAttributes;
 use OCP\Share\IShare;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -50,8 +52,14 @@ class AttachmentServiceTest extends TestCase {
 	/** @var MessageMapper|MockObject */
 	private $messageMapper;
 
+	/** @var ICacheFactory|MockObject */
+	private $cacheFactory;
+
 	/** @var MockObject|LoggerInterface */
 	private $logger;
+
+	/** @var MockObject|IURLGenerator */
+	private $urlGenerator;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -61,6 +69,8 @@ class AttachmentServiceTest extends TestCase {
 		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->userFolder = $this->createMock(Folder::class);
+		$this->cacheFactory = $this->createMock(ICacheFactory::class);
+		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->service = new AttachmentService(
@@ -69,6 +79,8 @@ class AttachmentServiceTest extends TestCase {
 			$this->storage,
 			$this->mailManager,
 			$this->messageMapper,
+			$this->cacheFactory,
+			$this->urlGenerator,
 			$this->logger
 		);
 	}

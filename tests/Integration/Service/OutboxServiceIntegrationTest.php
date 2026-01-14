@@ -34,8 +34,10 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder;
+use OCP\ICacheFactory;
 use OCP\IDBConnection;
 use OCP\IServerContainer;
+use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\Server;
 use Psr\Container\ContainerInterface;
@@ -97,6 +99,8 @@ class OutboxServiceIntegrationTest extends TestCase {
 			Server::get(AttachmentStorage::class),
 			$mailManager,
 			Server::get(\OCA\Mail\IMAP\MessageMapper::class),
+			Server::get(ICacheFactory::class),
+			Server::get(IURLGenerator::class),
 			new NullLogger()
 		);
 		$this->client = $this->getClient($this->account);
