@@ -144,6 +144,8 @@ class MessagesController extends Controller {
 		?int $limit = null,
 		?string $view = null,
 		?string $v = null): JSONResponse {
+		$limit = min(100, max(1, $limit));
+
 		try {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $mailboxId);
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
