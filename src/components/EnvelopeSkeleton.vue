@@ -55,7 +55,10 @@
 									<!-- @slot Slot for the second line of the component -->
 									<slot name="subname" />
 								</div>
-								<div v-if="$slots.tags" class="list-item-content__inner__tags">
+								<div
+									v-if="$slots.tags"
+									class="list-item-content__inner__tags"
+									@click.prevent.stop>
 									<!-- @slot This slot is used for the third line of the component -->
 									<slot name="tags" />
 								</div>

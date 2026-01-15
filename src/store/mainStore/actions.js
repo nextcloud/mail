@@ -2225,7 +2225,13 @@ export default function mainStoreActions() {
 				this.normalizeTags(e)
 				const mailbox = this.mailboxes[e.mailboxId]
 				Vue.set(e, 'accountId', mailbox.accountId)
-				Vue.set(this.envelopes, e.databaseId, { ...this.envelopes[e.databaseId] || {}, ...e })
+				const existing = this.envelopes[e.databaseId] || {}
+				const merged = { ...existing, ...e }
+				// preserve attachments
+				if (existing.attachments && existing.attachments.length > 0) {
+					merged.attachments = existing.attachments
+				}
+				Vue.set(this.envelopes, e.databaseId, merged)
 			})
 
 			// Store the references

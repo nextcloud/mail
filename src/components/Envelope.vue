@@ -4,6 +4,7 @@
 -->
 <template>
 	<EnvelopeSkeleton
+		ref="component"
 		v-draggable-envelope="{
 			accountId: data.accountId ? data.accountId : mailbox.accountId,
 			mailboxId: data.mailboxId,
@@ -421,6 +422,13 @@
 					{{ translateTagDisplayName(tag) }}
 				</span>
 			</div>
+			<div v-for="(attachment, idx) in attachments" :key="`attachement-${idx}`">
+				<AttachmentTag
+					:file-name="attachment.fileName"
+					:mime-type="attachment.mime"
+					@open="showViewer(fileInfos[idx])" />
+			</div>
+			<AttachmentTag v-if="remainingAttachements > 0" :remaining="remainingAttachements" />
 			<MoveModal
 				v-if="showMoveModal"
 				:account="account"
@@ -485,6 +493,7 @@ import StarOutline from 'vue-material-design-icons/StarOutline.vue'
 import TagIcon from 'vue-material-design-icons/TagOutline.vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import DownloadIcon from 'vue-material-design-icons/TrayArrowDown.vue'
+import AttachmentTag from './AttachmentTag.vue'
 import Avatar from './Avatar.vue'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions.vue'
 import EnvelopeSkeleton from './EnvelopeSkeleton.vue'
@@ -500,6 +509,7 @@ import { matchError } from '../errors/match.js'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError.js'
 import logger from '../logger.js'
+import AttachementMixin from '../mixins/AttachementMixin.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
@@ -511,6 +521,7 @@ import { hiddenTags } from './tags.js'
 export default {
 	name: 'Envelope',
 	components: {
+		AttachmentTag,
 		AlertOctagonIcon,
 		Avatar,
 		IconCreateEvent,
@@ -558,6 +569,8 @@ export default {
 	directives: {
 		draggableEnvelope: DraggableEnvelopeDirective,
 	},
+
+	mixins: [AttachementMixin],
 
 	props: {
 		withReply: {
@@ -612,6 +625,7 @@ export default {
 			overwriteOneLineMobile: false,
 			hoveringAvatar: false,
 			quickActionLoading: false,
+			possibleAttachementsCount: 0,
 		}
 	},
 
@@ -744,6 +758,14 @@ export default {
 			}
 
 			return tags
+		},
+
+		attachments() {
+			return this.data.attachments.filter((e) => e.fileName && e.fileName.length > 0).slice(0, this.possibleAttachementsCount)
+		},
+
+		remainingAttachements() {
+			return this.data.attachments.length - this.attachments.length
 		},
 
 		draggableLabel() {
@@ -921,6 +943,20 @@ export default {
 
 		formatted() {
 			return shortRelativeDatetime(new Date(this.data.dateInt * 1000))
+		},
+
+		countPossibleAttachements() {
+			const container = this.$refs.component?.$el?.querySelector('.list-item-content')
+			if (!container) {
+				return 0 // or a default value
+			}
+			const tagsWidth = Array.from(container.querySelectorAll('.tag-group') ?? [])
+				.reduce((total, tag) => total + tag.clientWidth, 0)
+			const detailsWidth = container.querySelector('.list-item-content__inner__details')?.clientWidth ?? 0
+			const availableWidth = (container.clientWidth ?? 0) - detailsWidth - tagsWidth - 30 // 30px for the extra (+n) indicator
+
+			const attachementSize = 140 + 4 // min-width + gap
+			this.possibleAttachementsCount = Math.min(3, Math.floor(availableWidth / attachementSize))
 		},
 
 		async executeQuickAction(action) {
@@ -1343,6 +1379,7 @@ export default {
 			} else {
 				this.overwriteOneLineMobile = false
 			}
+			this.countPossibleAttachements()
 		},
 	},
 }
