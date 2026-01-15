@@ -1,3 +1,17 @@
+## [5.6.7](https://github.com/nextcloud/mail/compare/v5.6.6...v5.6.7) (2026-01-15)
+
+
+### Bug Fixes
+
+* **DKIMValidator:** Add patch from upstream against broken canonical handling ([ea06f22](https://github.com/nextcloud/mail/commit/ea06f22ede7e2ddbeb315facea9d2207c308c130))
+* ensure drafts folder exists ([764249a](https://github.com/nextcloud/mail/commit/764249a56430a1a2a7b818099457609cc9f50574))
+* **l10n:** Update translations from Transifex ([f28e729](https://github.com/nextcloud/mail/commit/f28e7294247776f058614cb6442487f82af8e4e6))
+* outbox icon opacity ([a2844df](https://github.com/nextcloud/mail/commit/a2844df374a1d0474ad46b4f78db2b1e3642d858))
+* **OutOfOfficeParser:** Exclude newsletters and mailing lists from auto responder ([42fc787](https://github.com/nextcloud/mail/commit/42fc78791326b4d4774e02a127f2a391db282a36))
+* safe-guard limit argument ([69484af](https://github.com/nextcloud/mail/commit/69484af37abe0f7bc01317a77f0715437019e293))
+
+
+
 ## [5.6.6](https://github.com/nextcloud/mail/compare/v5.6.5...v5.6.6) (2026-01-13)
 
 
