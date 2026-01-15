@@ -55,6 +55,8 @@ use ReturnTypeWillChange;
  * @method void setLdapAliasesProvisioning(bool $ldapAliasesProvisioning)
  * @method string|null getLdapAliasesAttribute()
  * @method void setLdapAliasesAttribute(?string $ldapAliasesAttribute)
+ * @method string|null getNameTemplates()
+ * @method void setNameTemplates(?string $nameTemplates)
  */
 class Provisioning extends Entity implements JsonSerializable {
 	public const WILDCARD = '*';
@@ -80,6 +82,7 @@ class Provisioning extends Entity implements JsonSerializable {
 	protected $aliases = [];
 	protected $ldapAliasesProvisioning;
 	protected $ldapAliasesAttribute;
+	protected $nameTemplates;
 
 	public function __construct() {
 		$this->addType('imapPort', 'integer');
@@ -116,6 +119,7 @@ class Provisioning extends Entity implements JsonSerializable {
 			'aliases' => $this->getAliases(),
 			'ldapAliasesProvisioning' => $this->getLdapAliasesProvisioning(),
 			'ldapAliasesAttribute' => $this->getLdapAliasesAttribute(),
+			'nameTemplates' => json_decode($this->getNameTemplates() ?? '[]', true),
 		];
 	}
 
@@ -174,5 +178,26 @@ class Provisioning extends Entity implements JsonSerializable {
 			return $this->buildUserEmail($this->getSieveUser(), $user);
 		}
 		return $this->buildEmail($user);
+	}
+
+	/**
+	 * Build account names from the name templates.
+	 *
+	 * Supports placeholders: %USERID%, %DISPLAYNAME%
+	 * @return string[]
+	 */
+	public function buildNames(IUser $user): array {
+		$displayName = $user->getDisplayName() ?? '';
+		$templates = json_decode($this->getNameTemplates() ?? '[]', true);
+		if (empty($templates)) {
+			return [$displayName];
+		}
+
+		return array_map(function ($template) use ($user, $displayName) {
+			if ($user->getUID() !== null) {
+				$template = str_replace('%USERID%', $user->getUID(), $template);
+			}
+			return str_replace('%DISPLAYNAME%', $displayName, $template);
+		}, $templates);
 	}
 }

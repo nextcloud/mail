@@ -55,7 +55,7 @@
 					</template>
 				</NcButton>
 				<NcButton
-					v-if="enableDelete && !alias.provisioned"
+					v-if="enableDelete && alias.deletable"
 					variant="tertiary-no-background"
 					:aria-label="t('mail', 'Delete alias')"
 					:name="t('mail', 'Delete alias')"

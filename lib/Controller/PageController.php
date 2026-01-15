@@ -152,7 +152,7 @@ class PageController extends Controller {
 		$accountsJson = [];
 		foreach ($mailAccounts as $mailAccount) {
 			$json = $mailAccount->jsonSerialize();
-			$json['aliases'] = $this->aliasesService->findAll($mailAccount->getId(),
+			$json['aliases'] = $this->aliasesService->findAllWithDeletable($mailAccount->getId(),
 				$this->currentUserId);
 			try {
 				$mailboxes = $this->mailManager->getMailboxes($mailAccount);

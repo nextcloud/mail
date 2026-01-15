@@ -68,6 +68,25 @@ class AliasMapper extends QBMapper {
 	}
 
 	/**
+	 * @throws DoesNotExistException
+	 */
+	public function findByAliasAndName(string $alias, string $name, string $currentUserId): Alias {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('aliases.*', 'accounts.provisioning_id')
+			->from($this->getTableName(), 'aliases')
+			->join('aliases', 'mail_accounts', 'accounts', $qb->expr()->eq('aliases.account_id', 'accounts.id'))
+			->where(
+				$qb->expr()->andX(
+					$qb->expr()->eq('accounts.user_id', $qb->createNamedParameter($currentUserId)),
+					$qb->expr()->eq('aliases.alias', $qb->createNamedParameter($alias)),
+					$qb->expr()->eq('aliases.name', $qb->createNamedParameter($name))
+				)
+			);
+
+		return $this->findEntity($qb);
+	}
+
+	/**
 	 * @param int $accountId
 	 * @param string $currentUserId
 	 *
