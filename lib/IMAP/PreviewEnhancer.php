@@ -56,9 +56,9 @@ class PreviewEnhancer {
 	}
 
 	/**
-	 * @param Message[] $messages
+	 * @param Message[][] $messages
 	 *
-	 * @return Message[]
+	 * @return Message[][]
 	 */
 	public function process(Account $account, Mailbox $mailbox, array $messages, bool $preLoadAvatars = false, ?string $userId = null): array {
 		$needAnalyze = array_reduce($messages, static function (array $carry, Message $message) {

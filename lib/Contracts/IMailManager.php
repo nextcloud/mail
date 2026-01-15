@@ -110,7 +110,7 @@ interface IMailManager {
 	 *
 	 * @return Message[]
 	 */
-	public function getThread(Account $account, string $threadRootId): array;
+	public function getThread(Account $account, string $threadRootId, string $sortOrder = IMailSearch::ORDER_NEWEST_FIRST): array;
 
 	/**
 	 * @param Account $sourceAccount

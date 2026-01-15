@@ -4,6 +4,7 @@
  */
 
 export function groupEnvelopesByDate(envelopes, syncTimestamp, sortOrder = 'newest') {
+	console.log('asba',envelopes)
 	const now = new Date(syncTimestamp)
 
 	const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000)
