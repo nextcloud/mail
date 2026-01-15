@@ -162,7 +162,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'draft' => in_array(Horde_Imap_Client::FLAG_DRAFT, $this->flags),
 			'forwarded' => in_array(Horde_Imap_Client::FLAG_FORWARDED, $this->flags),
 			'hasAttachments' => $this->hasAttachments,
-			'mdnsent' => in_array(Horde_Imap_Client::FLAG_MDNSENT, $this->flags, true),
+			'$mdnsent' => in_array(Horde_Imap_Client::FLAG_MDNSENT, $this->flags, true),
 			'important' => in_array(Tag::LABEL_IMPORTANT, $this->flags, true)
 		];
 	}
@@ -535,8 +535,11 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$msg->setFlagJunk(
 			in_array(Horde_Imap_Client::FLAG_JUNK, $flags, true)
 			|| in_array('junk', $flags, true)
-		);
-		$msg->setFlagNotjunk(in_array(Horde_Imap_Client::FLAG_NOTJUNK, $flags, true) || in_array('nonjunk', $flags, true));// While this is not a standard IMAP Flag, Thunderbird uses it to mark "not junk"
+		); // While this is not a standard IMAP Flag, Thunderbird uses it to mark "junk"
+		$msg->setFlagNotjunk(
+			in_array(Horde_Imap_Client::FLAG_NOTJUNK, $flags, true)
+			|| in_array('nonjunk', $flags, true)
+		); // While this is not a standard IMAP Flag, Thunderbird uses it to mark "not junk"
 		// @todo remove this as soon as possible @link https://github.com/nextcloud/mail/issues/25
 		$msg->setFlagImportant(in_array('$important', $flags, true) || in_array('$labelimportant', $flags, true) || in_array(Tag::LABEL_IMPORTANT, $flags, true));
 		$msg->setFlagAttachments(false);
@@ -552,6 +555,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			Horde_Imap_Client::FLAG_DELETED,
 			Horde_Imap_Client::FLAG_DRAFT,
 			Horde_Imap_Client::FLAG_JUNK,
+			'junk', // While this is not a standard IMAP Flag, Thunderbird uses it to mark "junk"
 			Horde_Imap_Client::FLAG_NOTJUNK,
 			'nonjunk', // While this is not a standard IMAP Flag, Thunderbird uses it to mark "not junk"
 			Horde_Imap_Client::FLAG_MDNSENT,
