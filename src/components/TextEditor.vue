@@ -199,7 +199,7 @@ export default {
 						{
 							marker: '@',
 							feed: this.getContact,
-							itemRenderer: this.customRenderer,
+							itemRenderer: (value) => this.customRenderer(value, 'contact'),
 						},
 						{
 							marker: '!',
@@ -242,7 +242,7 @@ export default {
 				return []
 			}
 			let contactResults = await autoCompleteByName(text)
-			contactResults = contactResults.filter((result) => result.email.length > 0)
+			contactResults = contactResults.filter((result) => result.email.filter((email) => email.length > 1).length > 0)
 			return contactResults
 		},
 
