@@ -351,6 +351,11 @@ return [
 			'verb' => 'PUT'
 		],
 		[
+			'name' => 'settings#setImportanceClassificationEnabledByDefault',
+			'url' => '/api/settings/importance-classification-default',
+			'verb' => 'PUT'
+		],
+		[
 			'name' => 'settings#setLayoutMessageView',
 			'url' => '/api/settings/layout-message-view',
 			'verb' => 'PUT'
