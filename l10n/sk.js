@@ -377,7 +377,6 @@ OC.L10N.register(
     "Choose target folder" : "Vyberte cieľový priečinok",
     "No more submailboxes in here" : "Žadne ďalšie podschránky",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Správy sa automaticky označia ako dôležité v závislosti na tom, ktorými správami ste sa zaoberali alebo označili ako dôležité. Na začiatku bude potrebné meniť dôležitosť ručne a systém tak postupne učiť, ale časom sa to zlepší.",
-    "Messages that your mark as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "Správy, ktoré označíte ako obľúbené, sa budú zobrazovať na vrchu priečinkov. Túto funkciu môžete vypnúť v nastaveniach aplikácie.",
     "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Tu sa zobrazia vami odoslané správy, ktoré vyžadujú odpoveď, no po niekoľkých dňoch ju nedostali.",
     "Favorites" : "Obľúbené",
     "Favorites info" : "Informácie o obľúbených",
