@@ -372,7 +372,6 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "Indekseerin sinu kirju. Kui kaustad on väga suured, siis võib kuluda natuke aega.",
     "Choose target folder" : "Vali sihtkaust",
     "No more submailboxes in here" : "Siin poel rohkem alampostkaste",
-    "Messages that your mark as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "Lemmikuks märgitud kirjad järjestuvad kaustas esimestena. Selle valiku saad seadistustest välja lülitada.",
     "Favorites" : "Lemmikud",
     "Favorites info" : "Lemmikute teave",
     "Load more favorites" : "Laadi veel lemmikuid",
