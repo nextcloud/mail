@@ -42,3 +42,9 @@ export default {
 	},
 }
 </script>
+
+<style scoped>
+:deep(input) {
+	box-shadow: none !important;
+}
+</style>
