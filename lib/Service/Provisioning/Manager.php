@@ -19,8 +19,10 @@ use OCA\Mail\Db\ProvisioningMapper;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\ValidationException;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
+
 use OCP\ICacheFactory;
 use OCP\IUser;
 use OCP\IUserManager;
@@ -68,6 +70,7 @@ class Manager {
 		TagMapper $tagMapper,
 		ICacheFactory $cacheFactory,
 		private AccountService $accountService,
+		private ClassificationSettingsService $classificationSettingsService,
 	) {
 		$this->userManager = $userManager;
 		$this->provisioningMapper = $provisioningMapper;
@@ -210,7 +213,7 @@ class Manager {
 			// Fine, then we create a new one
 			$mailAccount = new MailAccount();
 			$mailAccount->setUserId($user->getUID());
-
+			$mailAccount->setClassificationEnabled($this->classificationSettingsService->isClassificationEnabledByDefault());
 			$mailAccount = $this->mailAccountMapper->insert(
 				$this->updateAccount($user, $mailAccount, $provisioning)
 			);
