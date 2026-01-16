@@ -35,7 +35,7 @@ jobs:
           echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
       - name: Checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
           path: ${{ env.APP_NAME }}
@@ -65,13 +65,13 @@ jobs:
         continue-on-error: true
         with:
           path: ${{ env.APP_NAME }}
-          fallbackNode: '^20'
-          fallbackNpm: '^10'
+          fallbackNode: '^24'
+          fallbackNpm: '^11.3'
 
       - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
         # Skip if no package.json
         if: ${{ steps.versions.outputs.nodeVersion }}
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version: ${{ steps.versions.outputs.nodeVersion }}
 
@@ -87,7 +87,7 @@ jobs:
           filename: ${{ env.APP_NAME }}/appinfo/info.xml
 
       - name: Set up php ${{ steps.php-versions.outputs.php-min }}
-        uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # 2.35.5
+        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.36.0
         with:
           php-version: ${{ steps.php-versions.outputs.php-min }}
           coverage: none
@@ -140,22 +140,30 @@ jobs:
           cd ${{ env.APP_NAME }}
           make appstore
 
-      - name: Checkout server ${{ fromJSON(steps.appinfo.outputs.result).nextcloud.min-version }}
-        continue-on-error: true
-        id: server-checkout
+      - name: Check server download link for ${{ fromJSON(steps.appinfo.outputs.result).nextcloud.min-version }}
         run: |
           NCVERSION='${{ fromJSON(steps.appinfo.outputs.result).nextcloud.min-version }}'
-          wget --quiet https://download.nextcloud.com/server/releases/latest-$NCVERSION.zip
-          unzip latest-$NCVERSION.zip
+          DOWNLOAD_URL=$(curl -s "https://updates.nextcloud.com/updater_server/latest?channel=beta&version=$NCVERSION" | jq -r '.downloads.zip[0]')
+          echo "DOWNLOAD_URL=$DOWNLOAD_URL" >> $GITHUB_ENV
+
+      - name: Download server ${{ fromJSON(steps.appinfo.outputs.result).nextcloud.min-version }}
+        continue-on-error: true
+        id: server-download
+        if: ${{ env.DOWNLOAD_URL != 'null' }}
+        run: |
+          echo "Downloading release tarball from $DOWNLOAD_URL"
+          wget $DOWNLOAD_URL -O nextcloud.zip
+          unzip nextcloud.zip
 
       - name: Checkout server master fallback
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-        if: ${{ steps.server-checkout.outcome != 'success' }}
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        if: ${{ steps.server-download.outcome != 'success' }}
         with:
           persist-credentials: false
           submodules: true
           repository: nextcloud/server
           path: nextcloud
+
 
       - name: Sign app
         run: |
@@ -173,7 +181,7 @@ jobs:
           tar -zcvf ${{ env.APP_NAME }}.tar.gz ${{ env.APP_NAME }}
 
       - name: Attach tarball to github release
-        uses: svenstaro/upload-release-action@81c65b7cd4de9b2570615ce3aad67a41de5b1a13 # v2.11.2
+        uses: svenstaro/upload-release-action@6b7fa9f267e90b50a19fef07b3596790bb941741 # v2.11.3
         id: attach_to_release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
