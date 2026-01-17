@@ -378,6 +378,7 @@ OC.L10N.register(
     "Choose target folder" : "Roghnaigh fillteán sprice",
     "No more submailboxes in here" : "Níl a thuilleadh boscaí fo-phoist anseo",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Déanfar teachtaireachtaí a mharcáil go huathoibríoch mar thábhachtach, bunaithe ar na teachtaireachtaí a ndearna tú idirghníomhú leo nó a mharcáil tú a bheith tábhachtach. Ar dtús b'fhéidir go mbeadh ort an tábhacht a bhaineann leis an gcóras a mhúineadh a athrú de láimh, ach feabhsóidh sé le himeacht ama.",
+    "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "Taispeánfar teachtaireachtaí a mharcáil tú mar is fearr leat ag barr na bhfillteán. Is féidir leat an t-iompar seo a dhíchumasú i socruithe an aip.",
     "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Taispeánfar anseo teachtaireachtaí a sheol tú a dteastaíonn freagra uathu ach nach bhfuair tú tar éis cúpla lá.",
     "Favorites" : "Ceanáin",
     "Favorites info" : "Eolas faoi na cinn is ansa leat",
