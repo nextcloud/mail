@@ -278,6 +278,7 @@ OC.L10N.register(
     "Retry" : "Opnieuw proberen",
     "Warning sending your message" : "Waarschuwing bij het versturen van jouw bericht",
     "Send anyway" : "Toch verzenden",
+    "First day" : "Eerste dag",
     "Message" : "Bericht",
     "Oh Snap!" : "O nee!",
     "Contacts with this address" : "Contactpersonen met dit adres",

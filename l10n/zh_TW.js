@@ -378,6 +378,7 @@ OC.L10N.register(
     "Choose target folder" : "選擇目標資料夾",
     "No more submailboxes in here" : "這裡沒有更多子信箱",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "郵件將會以您與其互動或標記為重要的郵件為基礎來自動標記重要郵件。ㄧ開始，您可以能必須手動教導系統哪些是重要郵件，然後它就會與時俱進。",
+    "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "您標記為最愛的訊息將顯示於資料夾頂端。您可在應用程式設定中停用此功能。",
     "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "您傳送的訊息若未在幾天內收到回覆，將在此處顯示。",
     "Favorites" : "我的最愛",
     "Favorites info" : "最愛資訊",
