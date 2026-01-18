@@ -63,6 +63,12 @@
 			</div>
 		</AppSettingsSection>
 		<AppSettingsSection
+			v-if="account && systemVersion >= 33"
+			id="calendar-settings"
+			:name="t('mail', 'Calendar settings')">
+			<CalendarSettings :account="account" />
+		</AppSettingsSection>
+		<AppSettingsSection
 			v-if="account"
 			id="classification"
 			:name="t('mail', 'Classification settings')">
@@ -138,6 +144,7 @@ import AccountForm from '../components/AccountForm.vue'
 import AliasSettings from '../components/AliasSettings.vue'
 import EditorSettings from '../components/EditorSettings.vue'
 import SignatureSettings from '../components/SignatureSettings.vue'
+import CalendarSettings from './CalendarSettings.vue'
 import CertificateSettings from './CertificateSettings.vue'
 import MailFilters from './mailFilter/MailFilters.vue'
 import OutOfOfficeForm from './OutOfOfficeForm.vue'
@@ -161,6 +168,7 @@ export default {
 		AppSettingsDialog,
 		AppSettingsSection,
 		AccountDefaultsSettings,
+		CalendarSettings,
 		OutOfOfficeForm,
 		CertificateSettings,
 		TrashRetentionSettings,
@@ -188,6 +196,7 @@ export default {
 			trapElements: [],
 			fetchActiveSieveScript: this.account.sieveEnabled,
 			loadingClassificationToggle: false,
+			systemVersion: parseInt(OC.config.version.split('.')[0], 10),
 		}
 	},
 
