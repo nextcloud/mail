@@ -42,7 +42,7 @@
 				@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
 			<ImportantIcon
 				v-if="isImportant"
-				:size="compactMode ? 14 : 18"
+				:size="compactMode ? 15 : 18"
 				class="app-content-list-item-star icon-important"
 				:class="{ 'important-one-line': oneLineLayout, 'icon-important': !oneLineLayout, 'icon-important--compact': compactMode }"
 				data-starred="true" />
@@ -1675,13 +1675,33 @@ export default {
 	justify-content: center;
 }
 
+.list-item--compact:has(.favorite-icon-style--compact),
+.list-item--compact:has(.icon-important--compact) {
+	.envelope__subtitle {
+		padding-left: 12px;
+	}
+}
+
+.list-item--compact:has(.favorite-icon-style--compact):has(.icon-important--compact) {
+	.envelope__subtitle__subject {
+		margin-left: 14px;
+	}
+}
+
+.list-item--compact {
+	.envelope__subtitle__subject {
+		margin-left: 0;
+	}
+}
+
 .icon-important--compact {
-	margin-inline-start: 30px;
-	top: 7px !important;
+		margin-top: 27px;
+		margin-left: 39px;
+
 }
 
 .favorite-icon-style--compact {
-	margin-top: 25px;
+		margin-top: 25px;
+		margin-left: 23px;
 }
-
 </style>
