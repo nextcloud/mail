@@ -272,6 +272,7 @@
 </template>
 
 <script>
+import { loadState } from '@nextcloud/initial-state'
 import { translate as t } from '@nextcloud/l10n'
 import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch, NcInputField, NcPasswordField } from '@nextcloud/vue'
 import { mapState, mapStores } from 'pinia'
@@ -332,7 +333,7 @@ export default {
 			mode: 'auto',
 			accountName: this.displayName,
 			emailAddress: this.email,
-			classificationEnabled: true,
+			classificationEnabled: loadState('mail', 'importance_classification_default', true),
 			autoConfig: {
 				password: '',
 			},
