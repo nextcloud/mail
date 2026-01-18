@@ -160,6 +160,9 @@ class MailAccountMapper extends QBMapper {
 		return $this->update($account);
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function deleteProvisionedAccounts(int $provisioningId): void {
 		$qb = $this->db->getQueryBuilder();
 
@@ -169,6 +172,9 @@ class MailAccountMapper extends QBMapper {
 		$delete->executeStatement();
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function deleteProvisionedAccountsByUid(string $uid): void {
 		$qb = $this->db->getQueryBuilder();
 
