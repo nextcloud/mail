@@ -71,6 +71,7 @@
     "Default folders" : "Carpetas predeterminadas",
     "Autoresponder" : "Contestador automático",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Respuesta automática a mensajes entrantes. Si alguien te envía varios mensajes, esta respuesta automática se enviará como máximo una vez cada 4 días.",
+    "Calendar settings" : "Configuración del calendario",
     "Filters" : "Filtros",
     "Mail server" : "Servidor de correo",
     "Update alias" : "Actualizar alias",

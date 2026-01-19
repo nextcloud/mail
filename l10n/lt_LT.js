@@ -67,6 +67,7 @@ OC.L10N.register(
     "Preferred writing mode for new messages and replies." : "Pageidaujama rašymo veiksena naujuose laiškuose ir atsakant į laiškus.",
     "Default folders" : "Numatytieji aplankai",
     "Autoresponder" : "Atsakiklis",
+    "Calendar settings" : "Kalendoriaus nustatymai",
     "Filters" : "Filtrai",
     "Mail server" : "Pašto serveris",
     "Go back" : "Grįžti",

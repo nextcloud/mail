@@ -79,6 +79,7 @@
     "Days after which messages in Trash will automatically be deleted:" : "다음 일자가 지나면 휴지통의 메시지가 자동으로 삭제됩니다:",
     "Autoresponder" : "자동 응답",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "수신 메시지에 대한 자동 응답입니다. 메시지를 수신한 경우, 이 자동 응답이 최대 4일에 한 번 해당 발신자에게 발송됩니다.",
+    "Calendar settings" : "달력 설정",
     "Filters" : "필터",
     "Mail server" : "메일 서버",
     "Update alias" : "별칭 갱신",

@@ -109,6 +109,7 @@ OC.L10N.register(
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days.",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it.",
     "Go to Sieve settings" : "Go to Sieve settings",
+    "Calendar settings" : "Calendar settings",
     "Classification settings" : "Classification settings",
     "Filters" : "Filters",
     "Quick actions" : "Quick actions",

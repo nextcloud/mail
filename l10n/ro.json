@@ -75,6 +75,7 @@
     "Automatic trash deletion" : "Golirea automată a coșului",
     "Days after which messages in Trash will automatically be deleted:" : "Număr de zile după care mesajele din coș sunt șterse automat:",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Răspuns automat la mesajele primite. Dacă cineva vă trimite câteva mesaje, acest răspuns automat va fi trimis cel mult o dată la 4 zile.",
+    "Calendar settings" : "Setări calendar",
     "Filters" : "Filtre",
     "Mail server" : "Server mail",
     "Update alias" : "Actualizează aliasul",

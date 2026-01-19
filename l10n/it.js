@@ -68,6 +68,7 @@ OC.L10N.register(
     "Preferred writing mode for new messages and replies." : "Modalità di scrittura preferita per nuovi messaggi e risposte.",
     "Default folders" : "Cartelle predefinite",
     "Autoresponder" : "Risponditore automatico",
+    "Calendar settings" : "Impostazioni Calendario",
     "Filters" : "Filtri",
     "Mail server" : "Server di posta",
     "Update alias" : "Aggiorna alias",

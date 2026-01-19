@@ -90,6 +90,7 @@
     "Days after which messages in Trash will automatically be deleted:" : "Dager etter hvilke meldinger i papirkurven automatisk blir slettet:",
     "Autoresponder" : "Automatisk svartjeneste",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatisk svar på innkommende meldinger. Hvis noen sender deg flere meldinger, vil dette automatiserte svaret bli sendt maksimalt en gang hver 4. dag.",
+    "Calendar settings" : "Kalenderinnstillinger",
     "Filters" : "Filtere",
     "Mail server" : "E-postserver",
     "Update alias" : "Oppdater alias",

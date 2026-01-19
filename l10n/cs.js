@@ -109,6 +109,7 @@ OC.L10N.register(
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatická odpověď na příchozí zprávy. Pokud vám někdo pošle vícero zpráv, tato automatická odpověď bude odeslána nanejvýš co 4 dny.",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Nástroj pro automatické odpovědi používá Sieve – skriptovací jazyk podporovaný mnoho poskytovateli e-mailů. Pokud si nejste jistí, zda i ten vámi využívaný, dotažte se u něho. Pokud je Sieve k dispozici, klikněte na tlačítko pro přechod do nastavení a zapněte ho.",
     "Go to Sieve settings" : "Přejít do nastavení Sieve",
+    "Calendar settings" : "Nastavení kalendáře",
     "Classification settings" : "Nastavení klasifikace",
     "Filters" : "Filtry",
     "Quick actions" : "Rychlé akce",

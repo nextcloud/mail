@@ -93,6 +93,7 @@ OC.L10N.register(
     "Autoresponder" : "Autosvar",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatisk svar på indgående beskeder. Hvis nogen sender dig flere beskeder, sendes dette automatiske svar højst en gang hver 4. dag.",
     "Go to Sieve settings" : "Gå til Sieve indstillinger",
+    "Calendar settings" : "Kalender indstillinger",
     "Filters" : "Filtre",
     "Quick actions" : "Hurtige handlinger",
     "Sieve script editor" : "Sieve script editor",

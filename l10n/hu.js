@@ -83,6 +83,7 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "A napok száma, ami után a Szemétben lévő üzenetek automatikusan törlésre kerülnek:",
     "Autoresponder" : "Automatikus válaszoló",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatikus válasz a beérkező üzenetekre. Ha valaki több üzenetet is küld, akkor az automatikus válasz legfeljebb 4 naponta lesz elküldve.",
+    "Calendar settings" : "Naptár beállításai",
     "Filters" : "Szűrők",
     "Mail server" : "Levelezőkiszolgáló",
     "Update alias" : "Álnév frissítése",

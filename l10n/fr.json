@@ -99,6 +99,7 @@
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Réponse automatisée aux messages entrants. Si quelqu'un vous envoie plusieurs messages, cette réponse automatique sera envoyée au maximum une fois tous les 4 jours.",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Le répondeur automatique utilise Sieve, un langage de script pris en charge par de nombreux fournisseurs de messagerie. Si vous n'êtes pas sûr que le vôtre le prenne en charge, contactez votre fournisseur. Si Sieve est disponible, cliquez sur le bouton pour accéder aux paramètres et l'activer.",
     "Go to Sieve settings" : "Accédez aux paramètres de Sieve",
+    "Calendar settings" : "Paramètres de Agenda",
     "Filters" : "Filtres",
     "Quick actions" : "Actions rapides",
     "Sieve script editor" : "Editeur de script Sieve",

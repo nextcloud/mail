@@ -72,6 +72,7 @@ OC.L10N.register(
     "Writing mode" : "Način pisanja",
     "Preferred writing mode for new messages and replies." : "Prednostni način pisanja sporočil za nova sporočila in odgovore.",
     "Default folders" : "Privzete mape",
+    "Calendar settings" : "Nastavitve koledarja",
     "Filters" : "Filtri",
     "Mail server" : "Poštni strežnik",
     "Update alias" : "Posodobi vzdevek",

@@ -98,6 +98,7 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "Tíminn sem líður þar til skilaboðum í rusli verður sjálfkrafa eytt:",
     "Autoresponder" : "Sjálfvirk svörun",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Sjálfvirk svörun skilaboða sem berast. Ef einhver sendir þér mörg skilaboð, verður þetta sjálfvirka svar sent að hámarki á 4 daga fresti.",
+    "Calendar settings" : "Stillingar dagatals",
     "Filters" : "Síur",
     "Sieve script editor" : "Sieve-skrifturitill",
     "Mail server" : "Póstþjónn",
