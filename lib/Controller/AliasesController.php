@@ -42,7 +42,9 @@ class AliasesController extends Controller {
 	 */
 	#[TrapError]
 	public function index(int $accountId): JSONResponse {
-		return new JSONResponse($this->aliasService->findAll($accountId, $this->currentUserId));
+		return new JSONResponse(
+			$this->aliasService->findAllWithDeletable($accountId, $this->currentUserId)
+		);
 	}
 
 	/**

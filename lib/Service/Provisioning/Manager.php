@@ -122,15 +122,19 @@ class Manager {
 	/**
 	 * Delete orphaned aliases for the given account.
 	 *
-	 * A alias is orphaned if not listed in newAliases anymore
+	 * An alias is orphaned if its email is no longer in the valid emails list.
 	 * (=> the provisioning configuration does contain it anymore)
 	 *
 	 * @throws \OCP\DB\Exception
 	 */
-	private function deleteOrphanedAliases(string $userId, int $accountId, array $newAliases): void {
+	private function deleteOrphanedAliases(string $userId, int $accountId, array $validEmails): void {
 		$existingAliases = $this->aliasMapper->findAll($accountId, $userId);
 		foreach ($existingAliases as $existingAlias) {
-			if (!in_array($existingAlias->getAlias(), $newAliases, true)) {
+			if ($existingAlias->getProvisioningId() === null) {
+				continue;
+			}
+
+			if (!in_array($existingAlias->getAlias(), $validEmails, true)) {
 				$this->aliasMapper->delete($existingAlias);
 			}
 		}
@@ -141,20 +145,26 @@ class Manager {
 	 *
 	 * @throws \OCP\DB\Exception
 	 */
-	private function createNewAliases(string $userId, int $accountId, array $newAliases, string $displayName, string $accountEmail): void {
-		foreach ($newAliases as $newAlias) {
-			if ($newAlias === $accountEmail) {
-				continue; // skip alias when identical to account email
-			}
+	private function createNewAliases(string $userId, int $accountId, array $aliasEmails, array $names, string $accountEmail): void {
+		// Include account email for secondary name templates
+		$allEmails = array_unique(array_merge([$accountEmail], $aliasEmails));
 
-			try {
-				$this->aliasMapper->findByAlias($newAlias, $userId);
-			} catch (DoesNotExistException $e) {
-				$alias = new Alias();
-				$alias->setAccountId($accountId);
-				$alias->setName($displayName);
-				$alias->setAlias($newAlias);
-				$this->aliasMapper->insert($alias);
+		foreach ($allEmails as $email) {
+			foreach ($names as $index => $name) {
+				// Skip first name for account email (already set on account)
+				if ($email === $accountEmail && $index === 0) {
+					continue;
+				}
+
+				try {
+					$this->aliasMapper->findByAliasAndName($email, $name, $userId);
+				} catch (DoesNotExistException $e) {
+					$alias = new Alias();
+					$alias->setAccountId($accountId);
+					$alias->setName($name);
+					$alias->setAlias($email);
+					$this->aliasMapper->insert($alias);
+				}
 			}
 		}
 	}
@@ -227,14 +237,19 @@ class Manager {
 			return true;
 		}
 
+		// Include account email to preserve aliases created via name templates
+		$aliasEmails = array_unique(array_merge([$mailAccount->getEmail()], $provisioning->getAliases()));
+
+		$names = $provisioning->buildNames($user);
+
 		try {
-			$this->deleteOrphanedAliases($user->getUID(), $mailAccount->getId(), $provisioning->getAliases());
+			$this->deleteOrphanedAliases($user->getUID(), $mailAccount->getId(), $aliasEmails);
 		} catch (\Throwable $e) {
 			$this->logger->warning('Deleting orphaned aliases failed', ['exception' => $e]);
 		}
 
 		try {
-			$this->createNewAliases($user->getUID(), $mailAccount->getId(), $provisioning->getAliases(), $this->userManager->getDisplayName($user->getUID()), $mailAccount->getEmail());
+			$this->createNewAliases($user->getUID(), $mailAccount->getId(), $provisioning->getAliases(), $names, $mailAccount->getEmail());
 		} catch (\Throwable $e) {
 			$this->logger->warning('Creating new aliases failed', ['exception' => $e]);
 		}
@@ -274,7 +289,7 @@ class Manager {
 		$account->setProvisioningId($config->getId());
 
 		$account->setEmail($config->buildEmail($user));
-		$account->setName($this->userManager->getDisplayName($user->getUID()));
+		$account->setName($config->buildNames($user)[0] ?? '');
 		$account->setInboundUser($config->buildImapUser($user));
 		$account->setInboundHost($config->getImapHost());
 		$account->setInboundPort($config->getImapPort());
