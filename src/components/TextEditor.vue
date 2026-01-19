@@ -30,7 +30,7 @@ import {
 	Base64UploadAdapter,
 	BlockQuote,
 	Bold,
-	DecoupledEditor,
+	ClassicEditor,
 	DropdownView,
 	Essentials,
 	FindAndReplace,
@@ -46,6 +46,7 @@ import {
 	Mention,
 	Paragraph,
 	RemoveFormat,
+	SourceEditing,
 	Strikethrough,
 	Subscript,
 	Superscript,
@@ -127,7 +128,7 @@ export default {
 			FindAndReplace,
 			GeneralHtmlSupport,
 		]
-		const toolbar = ['undo', 'redo']
+		const toolbar = ['sourceEditing', 'undo', 'redo']
 
 		if (this.html) {
 			plugins.push(...[
@@ -148,6 +149,7 @@ export default {
 				RemoveFormat,
 				Base64UploadAdapter,
 				MailPlugin,
+				SourceEditing,
 			])
 			toolbar.unshift(...[
 				'heading',
@@ -177,7 +179,7 @@ export default {
 			emojiTribute: null,
 			textSmiles: [],
 			ready: false,
-			editor: DecoupledEditor,
+			editor: ClassicEditor,
 			config: {
 				licenseKey: 'GPL',
 				placeholder: this.placeholder,
