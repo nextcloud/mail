@@ -83,6 +83,7 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "Days after which messages in Trash will automatically be deleted:",
     "Autoresponder" : "Autoresponder",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days.",
+    "Calendar settings" : "Calendar settings",
     "Mail server" : "Mail server",
     "Update alias" : "Update alias",
     "Rename alias" : "Rename alias",

@@ -10,6 +10,7 @@ OC.L10N.register(
     "Name" : "Name",
     "Password" : "Password",
     "None" : "Yo'q",
+    "Calendar settings" : "Taqvim sozlamalari",
     "Email address" : "E-pochta manzili",
     "Cancel" : "Bekor qilish",
     "General" : "Umumiy",

@@ -93,6 +93,7 @@
     "Autoresponder" : "Автоответчик",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Автоматический ответ на входящие сообщения. Если кто-то отправит вам несколько сообщений, этот автоматический ответ будет отправляться не чаще одного раза в 4 дня.",
     "Go to Sieve settings" : "Перейти в настройки Sieve",
+    "Calendar settings" : "Параметры календаря",
     "Filters" : "Фильтры",
     "Sieve script editor" : "Редактор Sieve",
     "Mail server" : "Почтовый сервер",

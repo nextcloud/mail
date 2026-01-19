@@ -96,6 +96,7 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "ゴミ箱内のメッセージは何日後に自動的に削除されます",
     "Autoresponder" : "自動返信",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "受信メッセージへの自動返信。複数のメッセージが送信された場合、この自動返信は最大で4日に1回送信されます。",
+    "Calendar settings" : "カレンダー設定",
     "Filters" : "フィルター",
     "Quick actions" : "ファイルアクション",
     "Sieve script editor" : "Sieveスクリプトエディタ",

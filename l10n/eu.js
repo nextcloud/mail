@@ -93,6 +93,7 @@ OC.L10N.register(
     "Days after which messages in Trash will automatically be deleted:" : "Zaborrontziko mezuak automatikoki ezabatuko dira hainbat egunen ostean:",
     "Autoresponder" : "Autoerantzulea",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Sarrerako mezuei erantzun automatikoa. Norbaitek hainbat mezu bidaltzen badizu, erantzun automatizatu hau gehienez 4 egunean behin bidaliko da.",
+    "Calendar settings" : "Egutegiaren ezarpenak",
     "Filters" : "Iragazkiak",
     "Sieve script editor" : "Sieve script editorea",
     "Mail server" : "Posta-zerbitzaria",

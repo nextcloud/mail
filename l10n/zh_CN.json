@@ -107,6 +107,7 @@
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "自动回复收到的邮件。如果有人向您发送多封邮件，此自动回复最多每 4 天发送一次。",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "自动回复使用 Sieve，这是许多电子邮件提供者支持的脚本语言。如果您不确定您的邮件是否如此，请咨询您的提供者。如果 Sieve 可用，请点击按钮转到设置并启用它。",
     "Go to Sieve settings" : "转到 Sieve 设置",
+    "Calendar settings" : "日历设置",
     "Classification settings" : "分类设置",
     "Filters" : "筛选器",
     "Quick actions" : "快捷操作",

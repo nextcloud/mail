@@ -75,6 +75,7 @@ OC.L10N.register(
     "Automatic trash deletion" : "Автоматско бришење на корпата со отпадоци",
     "Days after which messages in Trash will automatically be deleted:" : "Денови по кои пораките во корпата автоматски ќе се избришат:",
     "Autoresponder" : "Автоматски одговор",
+    "Calendar settings" : "Параметри за календар",
     "Filters" : "Филтри",
     "Mail server" : "Сервер за е-пошта",
     "Update alias" : "Ажурирај алијас",

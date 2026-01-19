@@ -101,6 +101,7 @@ OC.L10N.register(
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Аутоматско одговарање на долазне поруке. Ако вам неко пошаље неколико порука, овај аутоматизовани одговор ће се слати највише једном у свака 4 дана.",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Аутоматски одговарач користи Sieve, скриптинг језик који подржавају многи пружаоци и-мејл услуге. Ако нисте сигурни да ли га ваш подржава, питајте га. Ако Sieve није доступан, кликните на дугме да одете на подешавања и да га укључите.",
     "Go to Sieve settings" : "Иди на Sieve подешавања",
+    "Calendar settings" : "Подешавања календара",
     "Filters" : "Филтери",
     "Quick actions" : "Брзе акције",
     "Sieve script editor" : "Едитор sieve скрипте",

@@ -16,6 +16,7 @@ OC.L10N.register(
     "Manual" : "Manual",
     "None" : "Hakuna",
     "Signature" : "Saini",
+    "Calendar settings" : "Mipangilio ya kalenda",
     "Filters" : "Filters",
     "Go back" : "Rudi nyuma",
     "Change name" : "Change name",

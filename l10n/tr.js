@@ -109,6 +109,7 @@ OC.L10N.register(
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Gelen iletileri otomatik yanıtlar. Birisi size birkaç ileti gönderirse, bu otomatik yanıt en fazla 4 günde bir gönderilir.",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Otomatik yanıtlayıcı, birçok e-posta hizmeti sağlayıcısı tarafından desteklenen bir betik dili olan Sieve kullanır. Kullandığınız hizmette bulunup bulunmadığından emin değilseniz, hizmet sağlayıcınıza sorun. Sieve kullanılabiliyorsa, ayarlara gitmek ve açmak için düğmeye tıklayın.",
     "Go to Sieve settings" : "Sieve ayarlarına git",
+    "Calendar settings" : "Takvim ayarları",
     "Classification settings" : "Sınıflama ayarları",
     "Filters" : "Süzgeçler",
     "Quick actions" : "Hızlı işlemler",

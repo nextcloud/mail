@@ -109,6 +109,7 @@ OC.L10N.register(
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "كەلگەن ئۇچۇرلارغا ئاپتوماتىك جاۋاب. ئەگەر بىرسى سىزگە بىر قانچە ئۇچۇر ئەۋەتسە ، بۇ ئاپتوماتىك جاۋاب ھەر 4 كۈندە بىر قېتىم ئەۋەتىلىدۇ.",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "ئاپتوماتىك جاۋاب قايتۇرغۇچ نۇرغۇن ئېلخەت تەمىنلىگۈچىلىرى قوللايدىغان سىكرىپت تىلى Sieve نى ئىشلىتىدۇ. ئەگەر سىزنىڭكىنىڭ قوللايدىغان-قوللىمايدىغانلىقىغا ئىشەنمىسىڭىز، تەمىنلىگۈچىڭىز بىلەن ئالاقىلىشىڭ. ئەگەر Sieve بار بولسا، تەڭشەكلەرگە كىرىپ ئۇنى قوزغىتىش ئۈچۈن كۇنۇپكىنى چېكىڭ.",
     "Go to Sieve settings" : "Sieve تەڭشەكلىرىگە كىرىڭ",
+    "Calendar settings" : "كالېندار تەڭشىكى",
     "Classification settings" : "تۈرگە ئايرىش تەڭشىكى",
     "Filters" : "سۈزگۈچ",
     "Quick actions" : "تېز ھەركەت",

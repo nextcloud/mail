@@ -72,6 +72,7 @@
     "Default folders" : "Папки по подразбиране",
     "Autoresponder" : "Автоматичен отговор",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Автоматичен отговор на входящите съобщения. Ако някой ви изпрати няколко съобщения, този автоматичен отговор ще бъде изпращан най-много веднъж на всеки 4 дни.",
+    "Calendar settings" : "Настройки на календар",
     "Filters" : "Филтри",
     "Mail server" : "Имейл сървър",
     "Update alias" : "Актуализиране на псевдоним",

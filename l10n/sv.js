@@ -54,6 +54,7 @@ OC.L10N.register(
     "Writing mode" : "Skrivläge",
     "Preferred writing mode for new messages and replies." : "Föredraget skrivläge för nya meddelanden och svar.",
     "Default folders" : "Standardmappar",
+    "Calendar settings" : "Kalenderinställningar",
     "Filters" : "Filter",
     "Mail server" : "E-postserver",
     "Update alias" : "Uppdatera alias",

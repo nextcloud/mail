@@ -82,6 +82,7 @@ OC.L10N.register(
     "Writing mode" : "Schrijfmodus",
     "Preferred writing mode for new messages and replies." : "Gewenste schrijfmodus voor nieuwe berichten en antwoorden.",
     "Default folders" : "Standaardmappen",
+    "Calendar settings" : "Agenda instellingen",
     "Filters" : "Filters",
     "Mail server" : "Mailserver",
     "Update alias" : "Bijwerken alias",

@@ -107,6 +107,7 @@
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Resposta automática ás mensaxes entrantes. Se alguén lle envía varias mensaxes, esta resposta automática enviarase como máximo unha vez cada 4 días.",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "A resposta automática emprega Sieve, unha linguaxe de «scripting» compatíbel con moitos provedores de correo. Se non está seguro de que o seu o sexa, consulte co seu provedor. Se Sieve está dispoñíbel, prema no botón para ir aos axustes e activalo.",
     "Go to Sieve settings" : "Ir aos axustes de Sieve",
+    "Calendar settings" : "Axustes de Calendario",
     "Classification settings" : "Axustes de clasificación",
     "Filters" : "Filtros",
     "Quick actions" : "Accións rápidas",

@@ -42,6 +42,7 @@ OC.L10N.register(
     "Account settings" : "Konta iestatījumi",
     "Aliases" : "Aizstājvārdi",
     "Signature" : "Paraksts",
+    "Calendar settings" : "Kalendāra iestatījumi",
     "Filters" : "Filtri",
     "Rename alias" : "Pārdēvēt aizstājvārdu",
     "Go back" : "Atpakaļ",

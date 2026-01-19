@@ -107,6 +107,7 @@
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatická odpoveď na prichádzajúce správy. Ak vám niekto pošle niekoľko správ, táto automatická odpoveď bude odoslaná maximálne raz za 4 dni.",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Automatická odpoveď používa Sieve, skriptovací jazyk podporovaný mnohými poskytovateľmi e-mailových služieb. Ak si nie ste istí, či ho váš poskytovateľ podporuje, overte si to u svojho poskytovateľa. Ak je Sieve k dispozícii, kliknite na tlačidlo a prejdite do nastavení, kde ho môžete povoliť.",
     "Go to Sieve settings" : "Prejisť na nastavenia Sieve",
+    "Calendar settings" : "Nastavenia kalendára",
     "Classification settings" : "Nastavenia klasifikácie",
     "Filters" : "Filtre",
     "Quick actions" : "Rýchle akcie",

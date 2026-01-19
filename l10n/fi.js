@@ -76,6 +76,7 @@ OC.L10N.register(
     "Default folders" : "Oletuskansiot",
     "Autoresponder" : "Automaattivastaukset",
     "Go to Sieve settings" : "Siirry Sieve-asetuksiin",
+    "Calendar settings" : "Kalenteriasetukset",
     "Filters" : "Suodattimet",
     "Quick actions" : "Pikatoiminnot",
     "Mail server" : "Sähköpostipalvelin",
