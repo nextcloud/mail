@@ -188,6 +188,7 @@ OC.L10N.register(
     "Title of the text block" : "Titel des neuen Textblocks",
     "Content of the text block" : "Inhalt des Textblocks",
     "Ok" : "Ok",
+    "Automatically create tentative appointments in calendar" : "Automatisch vorläufige Termine im Kalender erstellen",
     "No certificate" : "Kein Zertifikat",
     "Certificate updated" : "Zertifikat aktualisiert",
     "Could not update certificate" : "Zertifikat konnte nicht aktualisiert werden",

@@ -188,6 +188,7 @@ OC.L10N.register(
     "Title of the text block" : "文字區塊標題",
     "Content of the text block" : "文字區塊內容",
     "Ok" : "確定",
+    "Automatically create tentative appointments in calendar" : "自動在行事曆中建立暫定預約",
     "No certificate" : "無憑證",
     "Certificate updated" : "憑證已更新",
     "Could not update certificate" : "無法更新憑證",
