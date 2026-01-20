@@ -12,11 +12,13 @@ namespace OCA\Mail\Tests\Unit\IMAP;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Data_Fetch;
+use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Fetch_Results;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Socket;
+use Horde_Mime_Part;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\IMAP\ImapMessageFetcher;
@@ -666,7 +668,7 @@ class MessageMapperTest extends TestCase {
 		$fetchData->setUid(100);
 
 		$fetchResult = new Horde_Imap_Client_Fetch_Results();
-		$fetchResult[0] = $fetchData;
+		$fetchResult[100] = $fetchData;
 
 		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
 		$imapClient->method('fetch')
@@ -680,7 +682,65 @@ class MessageMapperTest extends TestCase {
 		);
 
 		$this->assertCount(1, $data);
-		$this->assertEquals($expected, $data[0]->isImipMessage());
+		$this->assertEquals($expected, $data[100]->isImipMessage());
+	}
+
+	/**
+	 * Some MDAs like Exchange or Stalwart follow the RFC for requesting
+	 * MIME headers pretty strictly. They only return headers that are
+	 * inside the MIME part. This test checks if we use the message
+	 * headers correctly as fallback mechanism in this case when
+	 * determine the Content-Type and Content-Transfer-Encoding
+	 * as described in RFC 2045 Section 6.4.
+	 *
+	 * @throws Horde_Imap_Client_Exception
+	 */
+	public function testGetBodyStructureUsesMessageHeaderFallback(): void {
+		$messageId = 100;
+		$headerText = 'Content-Type: text/plain; charset="utf-8"
+			Content-Transfer-Encoding: base64
+			MIME-Version: 1.0';
+		$bodyText = 'Lorem ipsum dolor sit';
+		$bodyTextAsBase64 = base64_encode($bodyText);
+
+		// This definition of the content-type is necessary so
+		// the Horde IMAP lib don't reject our body content when
+		// accessing the internal data structure. It's not being
+		// returned when using getHeader() inside the $convertBody
+		// function of the MessageMapper (I've tested that) and
+		// therefore being set to the default values specified in
+		// RFC 2045 Section 5.2.
+		$part = new Horde_Mime_Part();
+		$header = $part->addMimeHeaders();
+		$header->addHeader('content-type', 'text/plain; charset=us-ascii');
+
+		$fetchData = new Horde_Imap_Client_Data_Fetch();
+		$fetchData->setStructure($part);
+		$fetchData->setHeaderText('0', $headerText);
+		$fetchData->setBodyPart('1', $bodyTextAsBase64);
+		$fetchData->setUid($messageId);
+
+		$fetchResult = new Horde_Imap_Client_Fetch_Results();
+		$fetchResult[$messageId] = $fetchData;
+
+		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
+		$imapClient->method('fetch')
+			->willReturn($fetchResult);
+
+		$this->converter
+			->expects(self::once())
+			->method('convert')
+			->willReturn(base64_decode($fetchData->getBodyPart('1')));
+
+		$data = $this->mapper->getBodyStructureData(
+			$imapClient,
+			'INBOX',
+			[$messageId],
+			'alice@example.org'
+		);
+
+		$this->assertCount(1, $data);
+		$this->assertEquals($bodyText, $data[$messageId]->getPreviewText());
 	}
 
 	public function isImipMessageProvider(): array {
