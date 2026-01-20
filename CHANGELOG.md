@@ -1,3 +1,19 @@
+## [5.6.8](https://github.com/nextcloud/mail/compare/v5.6.7...v5.6.8) (2026-01-20)
+
+
+### Bug Fixes
+
+* Fix incorrect tag for MDN sent and hide junk flag used by Thunderbird ([6269d18](https://github.com/nextcloud/mail/commit/6269d18f6f62a5d480e5ecf9b69bcca3b0ad6e7c))
+* **l10n:** Update translations from Transifex ([cc38937](https://github.com/nextcloud/mail/commit/cc38937ac8c50ff112a82d1e9c9bee60b2749843))
+* **l10n:** Update translations from Transifex ([c1efe60](https://github.com/nextcloud/mail/commit/c1efe605214750d13f1186b26f0c0bf1997e1ce2))
+* **l10n:** Update translations from Transifex ([3fb983c](https://github.com/nextcloud/mail/commit/3fb983c6d1e75e64bc427b301f025e87009c4e7b))
+* **l10n:** Update translations from Transifex ([3e83dbf](https://github.com/nextcloud/mail/commit/3e83dbf9e39d19674585bd1185bf63c18546cbc5))
+* **l10n:** Update translations from Transifex ([7b103a1](https://github.com/nextcloud/mail/commit/7b103a1e4bc55a5b5d253b55c451d0b57adf9a5f))
+* revive mentioning in composer ([73977b5](https://github.com/nextcloud/mail/commit/73977b5c0e4c0c0ec59d324a1129cb36a97bdfba))
+* **smtp:** log SMTP error code ([cf33487](https://github.com/nextcloud/mail/commit/cf33487b24faa36775734ff5aab8866607abaf0b))
+
+
+
 ## [5.6.7](https://github.com/nextcloud/mail/compare/v5.6.6...v5.6.7) (2026-01-15)
 
 
