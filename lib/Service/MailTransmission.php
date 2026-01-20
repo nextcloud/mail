@@ -157,7 +157,16 @@ class MailTransmission implements IMailTransmission {
 			$localMessage->setRaw($mail->getRaw(false));
 			$localMessage->setStatus(LocalMessage::STATUS_RAW);
 		} catch (Horde_Mime_Exception $e) {
-			$this->logger->error($e->getMessage(), ['exception' => $e]);
+			if ($e->getPrevious() instanceof Horde_Smtp_Exception) {
+				/** @var Horde_Smtp_Exception $previousException */
+				$previousException = $e->getPrevious();
+				$this->logger->error('SMTP error: ' . $e->getMessage(), [
+					'exception' => $e,
+					'smtpErrorCode' => $previousException->getSmtpCode(),
+				]);
+			} else {
+				$this->logger->error($e->getMessage(), ['exception' => $e]);
+			}
 			if (in_array($e->getCode(), self::RETRIABLE_CODES, true)) {
 				$localMessage->setStatus(LocalMessage::STATUS_SMPT_SEND_FAIL);
 				return;
