@@ -154,6 +154,11 @@
 			"reviewers": []
 		},
 		{
+			"description": "Disable minimum release age checks for internal dependencies",
+			"matchPackageNames": ["@nextcloud/*"],
+			"minimumReleaseAge": null
+		},
+		{
 			"description": "Only automerge packages that follow semver",
 			"matchPackageNames": [
 				"@nextcloud/vue",
