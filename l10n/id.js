@@ -26,6 +26,7 @@ OC.L10N.register(
     "Add mail account" : "Tambahkan akun email",
     "Appearance" : "Tampilan",
     "List" : "Daftar",
+    "Sorting" : "Pengurutan",
     "Newest first" : "Terbaru",
     "Oldest first" : "Paling lama",
     "Shared with me" : "Dibagikan dengan saya",

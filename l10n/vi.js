@@ -171,6 +171,7 @@ OC.L10N.register(
     "Move down" : "Di chuyển xuống",
     "_{total} message_::_{total} messages_" : ["{total} tin nhắn"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} thư chưa đọc trong tổng số {total} thư"],
+    "Loading …" : "Đang tải …",
     "Delete folder" : "Xoá thư mục",
     "An error occurred, unable to rename the mailbox." : "Đã xảy ra lỗi, không thể đổi tên hộp thư.",
     "Mark all as read" : "Đánh dấu tất cả như đã ",
