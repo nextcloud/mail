@@ -150,7 +150,7 @@ class TextBlockService {
 		$this->textBlockShareMapper->delete($share);
 	}
 
-	public function cleanUpUserData(string $userId) : void {
-		$this->textBlockMapper->cleanUpUserData($userId);
+	public function deleteByUserId(string $userId): void {
+		$this->textBlockMapper->deleteByUserId($userId);
 	}
 }

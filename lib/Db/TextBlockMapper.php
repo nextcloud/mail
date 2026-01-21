@@ -73,7 +73,7 @@ class TextBlockMapper extends QBMapper {
 		return $this->findEntities($qb);
 	}
 
-	public function cleanUpUserData(string $userId) {
+	public function deleteByUserId(string $userId) {
 		$qb = $this->db->getQueryBuilder();
 		$delete = $qb->delete($this->getTableName())
 			->where($qb->expr()->eq('owner', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR)));

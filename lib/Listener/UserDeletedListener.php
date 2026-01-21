@@ -55,9 +55,9 @@ class UserDeletedListener implements IEventListener {
 					'exception' => $e,
 				]);
 			}
-			$this->textBlockService->cleanUpUserData(
-				$user->getUID()
-			);
 		}
+		$this->textBlockService->deleteByUserId(
+			$user->getUID()
+		);
 	}
 }
