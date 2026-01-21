@@ -15,6 +15,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Listener\UserDeletedListener;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\TextBlockService;
 use OCP\EventDispatcher\Event;
 use OCP\IUser;
 use OCP\User\Events\UserDeletedEvent;
@@ -23,6 +24,8 @@ use Psr\Log\LoggerInterface;
 
 class UserDeletedListenerTest extends TestCase {
 	private AccountService&MockObject $accountService;
+
+	private TextBlockService&MockObject $textBlockService;
 	private LoggerInterface&MockObject $logger;
 	private UserDeletedListener $listener;
 
@@ -31,9 +34,11 @@ class UserDeletedListenerTest extends TestCase {
 
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->textBlockService = $this->createMock(TextBlockService::class);
 
 		$this->listener = new UserDeletedListener(
 			$this->accountService,
+			$this->textBlockService,
 			$this->logger
 		);
 	}

@@ -149,4 +149,8 @@ class TextBlockService {
 		$share = $this->textBlockShareMapper->find($textBlockId, $shareWith);
 		$this->textBlockShareMapper->delete($share);
 	}
+
+	public function cleanUpUserData(string $userId) : void {
+		$this->textBlockMapper->cleanUpUserData($userId);
+	}
 }
