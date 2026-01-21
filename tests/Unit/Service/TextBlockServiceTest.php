@@ -338,5 +338,12 @@ class TextBlockServiceTest extends TestCase {
 		$this->assertSame($shares, $result);
 	}
 
+	public function testDeleteByUserId(): void {
+		$userId = 'toBeDeleted';
+		$this->textBlockMapper->expects($this->once())
+			->method('deleteByUserId')
+			->with($userId);
+		$this->textBlockService->deleteByUserId($userId);
+	}
 
 }
