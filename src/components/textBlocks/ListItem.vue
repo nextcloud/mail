@@ -49,14 +49,14 @@
 					{{ t('mail', 'Shares') }}
 				</h3>
 				<NcSelectUsers
-					v-model="share"
+					:model-value="share"
 					class="text-block-list-item__shares"
 					:placeholder="t('mail', 'Search for users or groups')"
 					:label-outside="true"
 					:loading="loading"
 					:options="options"
 					:get-option-label="option => option.displayName"
-					@option:selecting="shareTextBlock"
+					@update:modelValue="shareTextBlock"
 					@search="asyncFind" />
 
 				<NcListItem
@@ -183,7 +183,7 @@ export default {
 	computed: {
 		...mapStores(useMainStore),
 		options() {
-			return this.suggestions.filter((suggestion) => !this.shares.find((share) => share.name === suggestion.shareWith) && suggestion.shareWith !== getCurrentUser().uid)
+			return this.suggestions.filter((suggestion) => this.shares.find((share) => share.shareWith === suggestion.shareWith) === undefined && suggestion.shareWith !== getCurrentUser().uid)
 		},
 
 		sortedShares() {
@@ -216,6 +216,7 @@ export default {
 
 		async shareTextBlock(sharee) {
 			try {
+				this.share = sharee
 				await shareTextBlock(this.textBlock.id, sharee.shareWith, sharee.shareType === ShareType.User ? 'user' : 'group')
 				this.shares.push({ shareWith: sharee.shareWith, type: sharee.isNoUser ? 'group' : 'user', displayName: sharee.displayName })
 				showSuccess(t('mail', 'Text block shared with {sharee}', { sharee: sharee.shareWith }))
@@ -236,7 +237,6 @@ export default {
 		},
 
 		async asyncFind(query) {
-			this.loading = true
 			await this.debounceGetSuggestions(query.trim())
 		},
 
