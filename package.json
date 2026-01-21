@@ -41,7 +41,7 @@
     "@nextcloud/router": "^3.1.0",
     "@nextcloud/sharing": "^0.3.0",
     "@nextcloud/timezones": "^0.2.0",
-    "@nextcloud/vue": "^8.34.0",
+    "@nextcloud/vue": "^8.35.3",
     "@pinia/testing": "^0.1.7",
     "@riophae/vue-treeselect": "^0.4.0",
     "address-rfc2822": "^2.2.3",
