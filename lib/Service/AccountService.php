@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
-use OCA\Mail\AppInfo\Application;
 use OCA\Mail\BackgroundJob\ContextChat\ScheduleJob;
 use OCA\Mail\BackgroundJob\PreviewEnhancementProcessingJob;
 use OCA\Mail\BackgroundJob\QuotaJob;
