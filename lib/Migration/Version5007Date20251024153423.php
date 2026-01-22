@@ -56,7 +56,7 @@ class Version5007Date20251024153423 extends SimpleMigrationStep {
 			);
 
 		$res = $qb->executeQuery();
-		$users = $res->fetchAll();
+		$users = $res->fetchAll(\PDO::FETCH_COLUMN);
 
 		$res->closeCursor();
 		$output->info('Migrating classification user preferences to mail_accounts table');

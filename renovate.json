@@ -19,9 +19,10 @@
 	"commitMessageTopic": "{{depName}}",
 	"commitMessageExtra": "from {{currentVersion}} to {{#if isPinDigest}}{{{newDigestShort}}}{{else}}{{#if isMajor}}{{prettyNewMajor}}{{else}}{{#if isSingleVersion}}{{prettyNewVersion}}{{else}}{{#if newValue}}{{{newValue}}}{{else}}{{{newDigestShort}}}{{/if}}{{/if}}{{/if}}{{/if}}",
 	"rangeStrategy": "bump",
+	"minimumReleaseAge": "7 days",
 	"rebaseWhen": "conflicted",
 	"ignoreUnstable": false,
-	"baseBranches": [
+	"baseBranchPatterns": [
 		"main",
 		"stable5.6"
 	],
@@ -35,6 +36,24 @@
 		"npm",
 		"php",
 		"postcss-loader"
+	],
+	"ignorePaths": [
+		".github/workflows/appstore-build-publish.yml",
+		".github/workflows/fixup.yml",
+		".github/workflows/block-unconventional-commits.yml",
+		".github/workflows/fixup.yml",
+		".github/workflows/lint-eslint.yml",
+		".github/workflows/lint-eslint-when-unrelated.yml",
+		".github/workflows/lint-info-xml.yml",
+		".github/workflows/lint-php.yml",
+		".github/workflows/lint-php-cs.yml",
+		".github/workflows/lint-stylelint.yml",
+		".github/workflows/npm-audit-fix.yml",
+		".github/workflows/npm-audit-fix-selective.yml",
+		".github/workflows/openapi.yml",
+		".github/workflows/pr-feedback.yml",
+		".github/workflows/psalm-matrix.yml",
+		".github/workflows/reuse.yml"
 	],
 	"packageRules": [
 		{
@@ -134,6 +153,11 @@
 				"4. to release"
 			],
 			"reviewers": []
+		},
+		{
+			"description": "Disable minimum release age checks for internal dependencies",
+			"matchPackageNames": ["@nextcloud/*"],
+			"minimumReleaseAge": null
 		},
 		{
 			"description": "Only automerge packages that follow semver",

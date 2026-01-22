@@ -145,7 +145,7 @@ class IMAPMessageTest extends TestCase {
 				'draft' => false,
 				'forwarded' => false,
 				'hasAttachments' => false,
-				'mdnsent' => false,
+				'$mdnsent' => false,
 				'important' => true,
 			],
 			'unsubscribeUrl' => null,

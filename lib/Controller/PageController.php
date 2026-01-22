@@ -229,6 +229,7 @@ class PageController extends Controller {
 			'follow-up-reminders' => $this->preferences->getPreference($this->currentUserId, 'follow-up-reminders', 'true'),
 			'sort-favorites' => $this->preferences->getPreference($this->currentUserId, 'sort-favorites', 'false'),
 			'index-context-chat' => $this->contextChatSettingsService->isIndexingEnabled($this->currentUserId) ? 'true' : 'false',
+			'compact-mode' => $this->preferences->getPreference($this->currentUserId, 'compact-mode', 'false'),
 		]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',

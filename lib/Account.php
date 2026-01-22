@@ -69,6 +69,10 @@ class Account implements JsonSerializable {
 		return $this->account->getDebug();
 	}
 
+	public function getImipCreate(): bool {
+		return $this->account->getImipCreate();
+	}
+
 	/**
 	 * Set the quota percentage
 	 * @param Quota $quota

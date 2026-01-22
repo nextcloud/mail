@@ -31,6 +31,7 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
@@ -52,7 +53,8 @@ class AccountsController extends Controller {
 	private IRemoteHostValidator $hostValidator;
 	private MailboxSync $mailboxSync;
 
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
 		AccountService $accountService,
 		$UserId,
@@ -66,6 +68,7 @@ class AccountsController extends Controller {
 		IConfig $config,
 		IRemoteHostValidator $hostValidator,
 		MailboxSync $mailboxSync,
+		private ITimeFactory $timeFactory,
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
@@ -231,7 +234,9 @@ class AccountsController extends Controller {
 		?int $trashRetentionDays = null,
 		?int $junkMailboxId = null,
 		?bool $searchBody = null,
-		?bool $classificationEnabled = null): JSONResponse {
+		?bool $classificationEnabled = null,
+		?bool $imipCreate = null,
+	): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $id);
 
 		$dbAccount = $account->getMailAccount();
@@ -281,6 +286,9 @@ class AccountsController extends Controller {
 		}
 		if ($classificationEnabled !== null) {
 			$dbAccount->setClassificationEnabled($classificationEnabled);
+		}
+		if ($imipCreate !== null) {
+			$dbAccount->setImipCreate($imipCreate);
 		}
 		return new JSONResponse(
 			new Account($this->accountService->save($dbAccount))
@@ -386,6 +394,13 @@ class AccountsController extends Controller {
 		}
 		try {
 			$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $authMethod, null, $classificationEnabled);
+			// Set initial heartbeat
+			$this->config->setUserValue(
+				$account->getUserId(),
+				Application::APP_ID,
+				'ui-heartbeat',
+				(string)$this->timeFactory->getTime(),
+			);
 		} catch (CouldNotConnectException $e) {
 			$data = [
 				'error' => $e->getReason(),

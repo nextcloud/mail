@@ -17,6 +17,7 @@ use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Http\Client\IClientService;
+use OCP\Http\Client\LocalServerException;
 use OCP\IRequest;
 use OCP\ISession;
 use OCP\IURLGenerator;
@@ -107,6 +108,12 @@ class ProxyController extends Controller {
 			$content = $response->getBody();
 		} catch (ClientExceptionInterface $e) {
 			$this->logger->notice('Unable to proxy image', ['exception' => $e]);
+			$content = file_get_contents(__DIR__ . '/../../img/blocked-image.png');
+		} catch (LocalServerException $e) {
+			$this->logger->warning('Prevented image proxy access to forbidden URL', [
+				'blockedUrl' => $src,
+				'exception' => $e,
+			]);
 			$content = file_get_contents(__DIR__ . '/../../img/blocked-image.png');
 		}
 

@@ -24,11 +24,13 @@
 							:email="participant.email"
 							:label="participant.label" />
 						<!-- Indicator to show that there are more participants than displayed -->
-						<Popover
+						<NcPopover
 							v-if="threadParticipants.length > participantsToDisplay"
 							class="avatar-more">
-							<template #trigger>
-								<span class="avatar-more">
+							<template #trigger="{ attrs }">
+								<span
+									class="avatar-more"
+									v-bind="attrs">
 									{{ moreParticipantsString }}
 								</span>
 							</template>
@@ -38,7 +40,7 @@
 								:title="participant.email"
 								:email="participant.email"
 								:label="participant.label" />
-						</Popover>
+						</NcPopover>
 						<!-- Remaining participants, if any (Needed to have avatarHeader reactive) -->
 						<RecipientBubble
 							v-for="participant in threadParticipants.slice(participantsToDisplay)"
@@ -72,7 +74,7 @@
 import { showError } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
 import moment from '@nextcloud/moment'
-import { NcAppContentDetails as AppContentDetails, NcPopover as Popover } from '@nextcloud/vue'
+import { NcAppContentDetails as AppContentDetails, NcPopover } from '@nextcloud/vue'
 import debounce from 'lodash/fp/debounce.js'
 import { mapStores } from 'pinia'
 import { prop, uniqBy } from 'ramda'
@@ -95,7 +97,7 @@ export default {
 		Error,
 		Loading,
 		ThreadEnvelope,
-		Popover,
+		NcPopover,
 	},
 
 	props: {

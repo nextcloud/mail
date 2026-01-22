@@ -144,6 +144,8 @@ class MessagesController extends Controller {
 		?int $limit = null,
 		?string $view = null,
 		?string $v = null): JSONResponse {
+		$limit = min(100, max(1, $limit));
+
 		try {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $mailboxId);
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
@@ -472,7 +474,7 @@ class MessagesController extends Controller {
 
 		try {
 			$this->mailTransmission->sendMdn($account, $mailbox, $message);
-			$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), 'mdnsent', true);
+			$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), '$mdnsent', true);
 		} catch (ServiceException $ex) {
 			$this->logger->error('Sending mdn failed: ' . $ex->getMessage());
 			throw $ex;

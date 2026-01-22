@@ -115,6 +115,15 @@ import {
 } from '../constants.js'
 import useOutboxStore from '../outboxStore.js'
 
+/**
+ * @todo Type definition for ComposerSessionData is incomplete
+ *
+ * @typedef {object} ComposerSessionData
+ * @property {boolean} isHtml whether this is a html message
+ * @property {string} bodyHtml the body as html
+ * @property {string} bodyPlain the body as plain text
+ */
+
 const sliceToPage = slice(0, PAGE_SIZE)
 
 const findIndividualMailboxes = curry((getMailboxes, specialRole) => pipe(
@@ -1936,7 +1945,7 @@ export default function mainStoreActions() {
 		 *
 		 * @param {object} payload Data for the new message
 		 * @param payload.type
-		 * @param payload.data
+		 * @param {ComposerSessionData} payload.data
 		 * @param payload.forwardedMessages
 		 * @param payload.originalSendAt
 		 * @param payload.smartReply
@@ -2216,7 +2225,13 @@ export default function mainStoreActions() {
 				this.normalizeTags(e)
 				const mailbox = this.mailboxes[e.mailboxId]
 				Vue.set(e, 'accountId', mailbox.accountId)
-				Vue.set(this.envelopes, e.databaseId, { ...this.envelopes[e.databaseId] || {}, ...e })
+				const existing = this.envelopes[e.databaseId] || {}
+				const merged = { ...existing, ...e }
+				// preserve attachments
+				if (existing.attachments && existing.attachments.length > 0) {
+					merged.attachments = existing.attachments
+				}
+				Vue.set(this.envelopes, e.databaseId, merged)
 			})
 
 			// Store the references

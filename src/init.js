@@ -93,6 +93,10 @@ export default function initAfterAppCreation() {
 		key: 'smime-sign-aliases',
 		value: loadState('mail', 'smime-sign-aliases', []),
 	})
+	mainStore.savePreferenceMutation({
+		key: 'compact-mode',
+		value: preferences['compact-mode'],
+	})
 
 	mainStore.setQuickActions(loadState('mail', 'quick-actions', []))
 

@@ -177,14 +177,6 @@ class AccountService {
 		// Insert background jobs for this account
 		$this->scheduleBackgroundJobs($newAccount->getId());
 
-		// Set initial heartbeat
-		$this->config->setUserValue(
-			$newAccount->getUserId(),
-			Application::APP_ID,
-			'ui-heartbeat',
-			(string)$this->timeFactory->getTime(),
-		);
-
 		return $newAccount;
 	}
 

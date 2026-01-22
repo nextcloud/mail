@@ -21,6 +21,7 @@ final class PhishingDetectionResult implements JsonSerializable {
 	public const REPLYTO_CHECK = 'Reply-To';
 	public const CUSTOM_EMAIL_CHECK = 'Custom Email';
 	public const CONTACTS_CHECK = 'Contacts';
+	public const IMAP_FLAG_CHECK = 'IMAP Flag';
 	public const TRUSTED_CHECK = 'Trusted';
 
 	private string $message = '';

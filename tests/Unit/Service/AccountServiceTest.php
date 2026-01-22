@@ -174,7 +174,7 @@ class AccountServiceTest extends TestCase {
 			->with($mailAccount)
 			->will($this->returnArgument(0));
 
-		$this->time->expects(self::exactly(2))
+		$this->time->expects(self::once())
 			->method('getTime')
 			->willReturn(1755850409);
 
@@ -182,10 +182,6 @@ class AccountServiceTest extends TestCase {
 			->willReturn(false);
 		$this->jobList->expects($this->exactly(6))
 			->method('scheduleAfter');
-
-		$this->config->expects(self::once())
-			->method('setUserValue')
-			->with('user1', 'mail', 'ui-heartbeat', 1755850409);
 
 		$actual = $this->accountService->save($mailAccount);
 

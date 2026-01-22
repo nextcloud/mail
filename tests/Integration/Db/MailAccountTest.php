@@ -72,6 +72,8 @@ class MailAccountTest extends TestCase {
 			'outOfOfficeFollowsSystem' => true,
 			'debug' => false,
 			'classificationEnabled' => true,
+			'authMethod' => 'password',
+			'imipCreate' => false,
 		], $a->toJson());
 	}
 
@@ -111,6 +113,8 @@ class MailAccountTest extends TestCase {
 			'outOfOfficeFollowsSystem' => false,
 			'debug' => false,
 			'classificationEnabled' => true,
+			'authMethod' => 'password',
+			'imipCreate' => false,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency

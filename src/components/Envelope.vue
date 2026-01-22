@@ -4,6 +4,7 @@
 -->
 <template>
 	<EnvelopeSkeleton
+		ref="component"
 		v-draggable-envelope="{
 			accountId: data.accountId ? data.accountId : mailbox.accountId,
 			mailboxId: data.mailboxId,
@@ -20,6 +21,7 @@
 		:name="addresses"
 		:details="formatted()"
 		:one-line="oneLineLayout"
+		:compact="compactMode"
 		:is-read="showImportantIconVariant"
 		:is-important="isImportant"
 		@click.exact="onClick"
@@ -35,14 +37,14 @@
 				fill-color="#f9cf3d"
 				:size="18"
 				class="app-content-list-item-star favorite-icon-style"
-				:class="{ 'one-line': oneLineLayout, 'favorite-icon-style': !oneLineLayout }"
+				:class="{ 'one-line': oneLineLayout, 'favorite-icon-style': !oneLineLayout, 'favorite-icon-style--compact': compactMode }"
 				:data-starred="data.flags.flagged ? 'true' : 'false'"
 				@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
 			<ImportantIcon
 				v-if="isImportant"
-				:size="18"
+				:size="compactMode ? 14 : 18"
 				class="app-content-list-item-star icon-important"
-				:class="{ 'important-one-line': oneLineLayout, 'icon-important': !oneLineLayout }"
+				:class="{ 'important-one-line': oneLineLayout, 'icon-important': !oneLineLayout, 'icon-important--compact': compactMode }"
 				data-starred="true" />
 			<JunkIcon
 				v-if="data.flags.$junk"
@@ -53,20 +55,41 @@
 				@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
 			<div
 				class="hovering-status"
-				:class="{ 'hover-active': hoveringAvatar && !selected }"
+				:class="{ 'hover-active': hoveringAvatar && !selected && !compactMode }"
 				@mouseenter="hoveringAvatar = true"
-				@mouseleave="hoveringAvatar = false"
-				@click.stop.exact.prevent="toggleSelected"
-				@click.shift.exact.prevent="onSelectMultiple">
-				<template v-if="hoveringAvatar || selected">
-					<CheckIcon :size="28" class="check-icon" :class="{ 'app-content-list-item-avatar-selected': selected }" />
+				@mouseleave="hoveringAvatar = false">
+				<template v-if="compactMode">
+					<div
+						class="compact-checkbox-wrapper"
+						@mousedown.stop.prevent
+						@click.stop.prevent>
+						<NcCheckboxRadioSwitch
+							type="checkbox"
+							class="compact-checkbox"
+							:checked="selected"
+							@update:checked="toggleSelected" />
+					</div>
 				</template>
+
 				<template v-else>
-					<Avatar
-						:display-name="addresses"
-						:email="avatarEmail"
-						:fetch-avatar="data.fetchAvatarFromClient"
-						:avatar="data.avatar" />
+					<div
+						@click.stop.exact.prevent="toggleSelected"
+						@click.shift.exact.prevent="onSelectMultiple">
+						<template v-if="hoveringAvatar || selected">
+							<CheckIcon
+								:size="28"
+								class="check-icon"
+								:class="{ 'app-content-list-item-avatar-selected': selected }" />
+						</template>
+
+						<template v-else>
+							<Avatar
+								:display-name="addresses"
+								:email="avatarEmail"
+								:fetch-avatar="data.fetchAvatarFromClient"
+								:avatar="data.avatar" />
+						</template>
+					</div>
 				</template>
 			</div>
 		</template>
@@ -91,7 +114,7 @@
 					</span>
 				</div>
 				<div
-					v-if="data.encrypted || data.previewText"
+					v-if="!compactMode && (data.encrypted || data.previewText)"
 					class="envelope__preview-text"
 					:title="data.summary ? t('mail', 'This summary was AI generated') : null">
 					<NcAssistantIcon v-if="data.summary" :size="15" class="envelope__preview-text__icon" />
@@ -399,6 +422,13 @@
 					{{ translateTagDisplayName(tag) }}
 				</span>
 			</div>
+			<div v-for="(attachment, idx) in attachments" :key="`attachement-${idx}`">
+				<AttachmentTag
+					:file-name="attachment.fileName"
+					:mime-type="attachment.mime"
+					@open="showViewer(fileInfos[idx])" />
+			</div>
+			<AttachmentTag v-if="remainingAttachements > 0" :remaining="remainingAttachements" />
 			<MoveModal
 				v-if="showMoveModal"
 				:account="account"
@@ -433,7 +463,7 @@ import {
 	NcActionLink as ActionLink,
 	NcActionText as ActionText,
 	NcActionInput,
-	NcActionSeparator, NcAssistantIcon,
+	NcActionSeparator, NcAssistantIcon, NcCheckboxRadioSwitch,
 } from '@nextcloud/vue'
 import escapeHtml from 'escape-html'
 import { mapState, mapStores } from 'pinia'
@@ -463,6 +493,7 @@ import StarOutline from 'vue-material-design-icons/StarOutline.vue'
 import TagIcon from 'vue-material-design-icons/TagOutline.vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import DownloadIcon from 'vue-material-design-icons/TrayArrowDown.vue'
+import AttachmentTag from './AttachmentTag.vue'
 import Avatar from './Avatar.vue'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions.vue'
 import EnvelopeSkeleton from './EnvelopeSkeleton.vue'
@@ -478,6 +509,7 @@ import { matchError } from '../errors/match.js'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError.js'
 import logger from '../logger.js'
+import AttachementMixin from '../mixins/AttachementMixin.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
@@ -489,6 +521,7 @@ import { hiddenTags } from './tags.js'
 export default {
 	name: 'Envelope',
 	components: {
+		AttachmentTag,
 		AlertOctagonIcon,
 		Avatar,
 		IconCreateEvent,
@@ -506,6 +539,7 @@ export default {
 		EnvelopeSkeleton,
 		JunkIcon,
 		ActionButton,
+		NcCheckboxRadioSwitch,
 		MoveModal,
 		OpenInNewIcon,
 		PlusIcon,
@@ -535,6 +569,8 @@ export default {
 	directives: {
 		draggableEnvelope: DraggableEnvelopeDirective,
 	},
+
+	mixins: [AttachementMixin],
 
 	props: {
 		withReply: {
@@ -589,6 +625,7 @@ export default {
 			overwriteOneLineMobile: false,
 			hoveringAvatar: false,
 			quickActionLoading: false,
+			possibleAttachementsCount: 0,
 		}
 	},
 
@@ -612,6 +649,10 @@ export default {
 
 		layoutMessageViewThreaded() {
 			return this.mainStore.getPreference('layout-message-view', 'threaded') === 'threaded'
+		},
+
+		compactMode() {
+			return this.mainStore.getPreference('compact-mode', 'false') === 'true'
 		},
 
 		hasMultipleRecipients() {
@@ -717,6 +758,14 @@ export default {
 			}
 
 			return tags
+		},
+
+		attachments() {
+			return this.data.attachments.filter((e) => e.fileName && e.fileName.length > 0).slice(0, this.possibleAttachementsCount)
+		},
+
+		remainingAttachements() {
+			return this.data.attachments.length - this.attachments.length
 		},
 
 		draggableLabel() {
@@ -871,6 +920,14 @@ export default {
 		},
 	},
 
+	watch: {
+		compactMode(enabled) {
+			if (enabled) {
+				this.hoveringAvatar = false
+			}
+		},
+	},
+
 	mounted() {
 		this.onWindowResize()
 		window.addEventListener('resize', this.onWindowResize)
@@ -886,6 +943,20 @@ export default {
 
 		formatted() {
 			return shortRelativeDatetime(new Date(this.data.dateInt * 1000))
+		},
+
+		countPossibleAttachements() {
+			const container = this.$refs.component?.$el?.querySelector('.list-item-content')
+			if (!container) {
+				return 0 // or a default value
+			}
+			const tagsWidth = Array.from(container.querySelectorAll('.tag-group') ?? [])
+				.reduce((total, tag) => total + tag.clientWidth, 0)
+			const detailsWidth = container.querySelector('.list-item-content__inner__details')?.clientWidth ?? 0
+			const availableWidth = (container.clientWidth ?? 0) - detailsWidth - tagsWidth - 30 // 30px for the extra (+n) indicator
+
+			const attachementSize = 140 + 4 // min-width + gap
+			this.possibleAttachementsCount = Math.min(3, Math.floor(availableWidth / attachementSize))
 		},
 
 		async executeQuickAction(action) {
@@ -1308,6 +1379,7 @@ export default {
 			} else {
 				this.overwriteOneLineMobile = false
 			}
+			this.countPossibleAttachements()
 		},
 	},
 }
@@ -1601,6 +1673,15 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+.icon-important--compact {
+	margin-inline-start: 30px;
+	top: 7px !important;
+}
+
+.favorite-icon-style--compact {
+	margin-top: 25px;
 }
 
 </style>

@@ -79,6 +79,12 @@
 					</NcRadioGroupButton>
 				</NcRadioGroup>
 
+				<NcFormBox>
+					<NcFormBoxSwitch
+						v-model="compactMode"
+						:label="t('mail', 'Use compact mode')" />
+				</NcFormBox>
+
 				<NcRadioGroup :model-value="sortOrder" :label="t('mail', 'Sorting')" @update:modelValue="onSortByDate">
 					<NcRadioGroupButton :label="t('mail', 'Newest first')" value="newest" />
 					<NcRadioGroupButton :label="t('mail', 'Oldest first')" value="oldest" />
@@ -88,15 +94,13 @@
 					<NcFormBox>
 						<NcFormBoxSwitch
 							v-model="useExternalAvatars"
-							:disabled="loadingAvatarSettings"
-							@update:modelValue="onToggleExternalAvatars">
+							:disabled="loadingAvatarSettings">
 							{{ t('mail', 'Avatars from Gravatar and favicons') }}
 						</NcFormBoxSwitch>
 
 						<NcFormBoxSwitch
 							v-model="searchPriorityBody"
-							:disabled="loadingPrioritySettings"
-							@update:modelValue="onToggleSearchPriorityBody">
+							:disabled="loadingPrioritySettings">
 							{{ prioritySettingsText }}
 						</NcFormBoxSwitch>
 					</NcFormBox>
@@ -132,8 +136,7 @@
 					<NcFormBoxSwitch
 						v-model="useDataCollection"
 						:label="t('mail', 'Data collection')"
-						:description="t('mail', 'Allow the app to collect and process data locally to adapt to your preferences')"
-						@update:modelValue="onToggleCollectData" />
+						:description="t('mail', 'Allow the app to collect and process data locally to adapt to your preferences')" />
 
 					<NcFormGroup :label="t('mail', 'Always show images from')">
 						<TrustedSenders />
@@ -144,8 +147,7 @@
 						v-model="useInternalAddresses"
 						:disabled="loadingInternalAddresses"
 						:label="internalAddressText"
-						:description="t('mail', 'Manage your internal addresses and domains to ensure recognized contacts stay unmarked')"
-						@update:modelValue="onToggleInternalAddress" />
+						:description="t('mail', 'Manage your internal addresses and domains to ensure recognized contacts stay unmarked')" />
 					<InternalAddress />
 
 					<NcFormGroup :label="t('mail', 'S/MIME')">
@@ -194,8 +196,7 @@
 					<NcFormBox>
 						<NcFormBoxSwitch
 							:checked="useFollowUpReminders"
-							:disabled="loadingFollowUpReminders"
-							@update:modelValue="onToggleFollowUpReminders">
+							:disabled="loadingFollowUpReminders">
 							{{ followUpReminderText }}
 						</NcFormBoxSwitch>
 					</NcFormBox>
@@ -229,6 +230,12 @@
 						<NcHotkey :label="t('mail', 'Refresh')" hotkey="R" />
 					</NcHotkeyList>
 				</NcAppSettingsShortcutsSection>
+
+				<NcAppSettingsSection id="about-settings" :name="t('mail', 'About')">
+					<NcFormGroup
+						:label="t('mail', 'Acknowledgements')"
+						:description="t('mail', 'This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2.')" />
+				</NcAppSettingsSection>
 
 				<NcDialog
 					:open.sync="textBlockDialogOpen"
@@ -490,6 +497,16 @@ export default {
 			},
 		},
 
+		compactMode: {
+			get() {
+				return this.mainStore.getPreference('compact-mode', 'false') === 'true'
+			},
+
+			set(value) {
+				this.setCompactMode(value)
+			},
+		},
+
 		layoutMessageView: {
 			get() {
 				const preference = this.mainStore.getPreference('layout-message-view')
@@ -548,6 +565,17 @@ export default {
 				await this.mainStore.savePreference({
 					key: 'layout-mode',
 					value: layoutMode,
+				})
+			} catch (error) {
+				Logger.error('Could not save preferences', { error })
+			}
+		},
+
+		async setCompactMode(value) {
+			try {
+				await this.mainStore.savePreference({
+					key: 'compact-mode',
+					value: value ? 'true' : 'false',
 				})
 			} catch (error) {
 				Logger.error('Could not save preferences', { error })
