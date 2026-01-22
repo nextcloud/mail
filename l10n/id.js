@@ -79,6 +79,8 @@ OC.L10N.register(
     "Add folder" : "Tambah folder",
     "Folder name" : "Nama folder",
     "Saving" : "Menyimpan",
+    "Move up" : "Pindah ke atas",
+    "Move down" : "Pindah ke bawah",
     "Loading …" : "Memuat …",
     "Delete folder" : "Hapus folder",
     "Mark all as read" : "Tandai semua telah dibaca",
