@@ -12,6 +12,7 @@ namespace OCA\Mail\Db;
 
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\QBMapper;
+use OCP\DB\Exception;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use function array_map;
@@ -106,12 +107,7 @@ class AliasMapper extends QBMapper {
 	/**
 	 * Delete all provisioned aliases for the given uid
 	 *
-	 * Exception for Nextcloud 20: \Doctrine\DBAL\DBALException
-	 * Exception for Nextcloud 21 and newer: \OCP\DB\Exception
-	 *
-	 * @TODO: Change throws to \OCP\DB\Exception once Mail does not support Nextcloud 20.
-	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function deleteProvisionedAliasesByUid(string $uid): void {
 		$qb = $this->db->getQueryBuilder();
