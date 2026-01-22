@@ -186,6 +186,7 @@
     "Title of the text block" : "新文本區塊標題",
     "Content of the text block" : "文本區塊內容",
     "Ok" : "Ok",
+    "Automatically create tentative appointments in calendar" : "自動在日曆中建立暫定預約",
     "No certificate" : "沒有證書",
     "Certificate updated" : "更新了證書",
     "Could not update certificate" : "無法更新證書",
