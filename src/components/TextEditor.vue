@@ -210,6 +210,27 @@ export default {
 						},
 					],
 				},
+				htmlSupport: {
+					allow: [
+						'table',
+						'tbody',
+						'td',
+						'tfoot',
+						'th',
+						'thead',
+						'tr',
+						{
+							name: 'a',
+							attributes: true,
+							classes: true,
+							styles: true
+						},
+						{
+							name: 'img',
+							styles: true,
+						}
+					],
+				},
 			},
 		}
 	},
