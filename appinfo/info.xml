@@ -41,8 +41,8 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 	<author homepage="https://github.com/kesselb">kesselb</author>
 	<namespace>Mail</namespace>
 	<documentation>
-		<user>https://github.com/nextcloud/mail/blob/main/doc/user.md</user>
-		<admin>https://github.com/nextcloud/mail/blob/main/doc/admin.md</admin>
+		<user>https://docs.nextcloud.com/server/stable/user_manual/en/groupware/mail.html</user>
+		<admin>https://docs.nextcloud.com/server/stable/admin_manual/groupware/mail.html</admin>
 		<developer>https://github.com/nextcloud/mail/blob/main/doc/developer.md</developer>
 	</documentation>
 	<category>social</category>
