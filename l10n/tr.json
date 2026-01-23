@@ -720,6 +720,7 @@
     "There was an error when provisioning accounts." : "Hesaplar hazırlanırken bir sorun çıktı.",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "\"{domain}\" hesaplarının hazırlığı kaldırılıp silindi",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "\"{domain}\" hesaplarının hazırlığı kaldırılıp silinirken sorun çıktı",
+    "Could not save default classification setting" : "Varsayılan sınıflandırma ayarı kaydedilemedi",
     "Mail app" : "E-posta uygulaması",
     "The mail app allows users to read mails on their IMAP accounts." : "E-posta uygulaması kullanıcıların IMAP hesaplarındaki e-postaları okuyabilmesini sağlar.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Burada kopyanın tümünde geçerli olacak ayarlar bulunur. Kullanıcıya özel ayarlar uygulama içinde bulunur (sol alt köşede).",
@@ -740,6 +741,9 @@
     "Enable text processing through LLMs" : "Yazılar dil öğrenme modelleri ile işlensin",
     "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas." : "E-posta uygulaması, yapılandırılmış geniş dil modelinin yardımıyla kullanıcı verilerini işleyerek yazışma özetleri, akıllı yanıtlar ve etkinlik gündemleri gibi yardımcı özellikler sağlayabilir.",
     "Enable LLM processing" : "Dil öğrenme modeli ile işlensin",
+    "Enable classification by importance by default" : "Varsayılan olarak öneme göre sınıflandırma yapılsın",
+    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "E-posta uygulaması, makine öğrenmesini kullanarak gelen e-postaları önem sırasına göre sınıflandırabilir. Bu özellik varsayılan olarak açıktır ancak buradan kapatılabilir. Kullanıcılar kendi hesaplarında bu ayarı değiştirebilir.",
+    "Enable classification of important mails by default" : "Varsayılan olarak öneme göre sınıflandırma yapılsın",
     "Anti Spam Service" : "İstenmeyen e-posta hizmeti",
     "You can set up an anti spam service email address here." : "İstenmeyen e-posta hizmeti adresini buradan ayarlayabilirsiniz.",
     "Any email that is marked as spam will be sent to the anti spam service." : "İstenmeyen olarak işaretlenen e-postalar istenmeyen e-posta önleme hizmetine gönderilir.",
@@ -884,10 +888,6 @@
     "Determine importance using machine learning" : "Önem makine öğrenmesi ile belirlensin",
     "Mark all messages of this folder as read" : "Bu klasördeki tüm iletileri okunmuş olarak işaretle",
     "Last 7 days" : "Önceki 7 gün",
-    "From me" : "Benden",
-    "Could not save default classification setting" : "Varsayılan sınıflandırma ayarı kaydedilemedi",
-    "Enable classification by importance by default" : "Varsayılan olarak öneme göre sınıflandırma yapılsın",
-    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "E-posta uygulaması, makine öğrenmesini kullanarak gelen e-postaları önem sırasına göre sınıflandırabilir. Bu özellik varsayılan olarak açıktır ancak buradan kapatılabilir. Kullanıcılar kendi hesaplarında bu ayarı değiştirebilir.",
-    "Enable classification of important mails by default" : "Varsayılan olarak öneme göre sınıflandırma yapılsın"
+    "From me" : "Benden"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

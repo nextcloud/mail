@@ -723,6 +723,7 @@ OC.L10N.register(
     "There was an error when provisioning accounts." : "設定帳號時發生錯誤。",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "成功刪除並取消設定了「{domain}」的帳號",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "刪除並取消設定「{domain}」的帳號時發生錯誤",
+    "Could not save default classification setting" : "無法儲存預設分類設定",
     "Mail app" : "郵件應用程式",
     "The mail app allows users to read mails on their IMAP accounts." : "郵件應用程式允許使用者閱讀在他們 IMAP 帳號上的郵件。",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "您可以在此找到全站台的設定。在應用程式本身（左下角）可以找到使用者設定。",
@@ -743,6 +744,9 @@ OC.L10N.register(
     "Enable text processing through LLMs" : "透過大型語言模型啟用文字處理",
     "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas." : "Mail 應用程式可以使用已設定的大型語言模型處理使用者資料，並提供討論串摘要、智慧型回覆與活動議程等協助功能。",
     "Enable LLM processing" : "啟用大型語言模型處理",
+    "Enable classification by importance by default" : "預設啟用按重要性分類",
+    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "郵件應用程式可以使用機器學習來根據重要性將收到的電子郵件進行分類。此功能預設為啟用狀態，但可以在此處設定為預設停用。個別使用者仍然可以為其帳號啟用該功能。",
+    "Enable classification of important mails by default" : "預設啟用重要郵件分類",
     "Anti Spam Service" : "反垃圾郵件服務",
     "You can set up an anti spam service email address here." : "您可以在此設定反垃圾郵件服務的電子郵件地址。",
     "Any email that is marked as spam will be sent to the anti spam service." : "任何被標記為垃圾郵件的電子郵件都將會被傳送至反垃圾郵件服務。",
@@ -887,10 +891,6 @@ OC.L10N.register(
     "Determine importance using machine learning" : "使用機器學習判斷重要程度",
     "Mark all messages of this folder as read" : "將此資料夾中所有的訊息都標記為已讀",
     "Last 7 days" : "過去7天",
-    "From me" : "來自我",
-    "Could not save default classification setting" : "無法儲存預設分類設定",
-    "Enable classification by importance by default" : "預設啟用按重要性分類",
-    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "郵件應用程式可以使用機器學習來根據重要性將收到的電子郵件進行分類。此功能預設為啟用狀態，但可以在此處設定為預設停用。個別使用者仍然可以為其帳號啟用該功能。",
-    "Enable classification of important mails by default" : "預設啟用重要郵件分類"
+    "From me" : "來自我"
 },
 "nplurals=1; plural=0;");

@@ -672,6 +672,7 @@ OC.L10N.register(
     "There was an error when provisioning accounts." : "Hubo un error al aprovisionar las cuentas.",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "Se eliminaron y desaprovisionaron exitosamente las cuentas para \"{domain}\"",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Error al eliminar y desaprovisionar cuentas para \"{domain}\"",
+    "Could not save default classification setting" : "No se ha podido guardar el ajuste de clasificación predeterminado",
     "Mail app" : "App correo electrónico",
     "The mail app allows users to read mails on their IMAP accounts." : "La aplicación de correo electrónico permite a los usuarios leer mails de sus cuentas IMAP.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Aquí encontrará las configuraciones a nivel de instancia. Las configuraciones específicas de cada usuario se encuentran en la propia app (esquina inferior izquierda).",
@@ -692,6 +693,9 @@ OC.L10N.register(
     "Enable text processing through LLMs" : "Habilitar el procesamiento de texto a través de LLMs",
     "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas." : "La app de Correo puede procesar los datos del usuario con la ayuda del modelo de lenguaje largo configurado y proveer características de asistencia como sumarios de hilos, respuestas inteligentes y agendas para eventos.",
     "Enable LLM processing" : "Habilitar el procesamiento LLM",
+    "Enable classification by importance by default" : "Habilitar la clasificación por importancia de manera predeterminada",
+    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "La aplicación de Correo puede clasificar los correos entrantes por importancia utilizando machine learning. Esta característica está habilitada de manera predeterminada pero puede deshabilitarse aquí. Los usuarios tendrán la posibilidad de habilitarla de manera individual en sus cuentas.",
+    "Enable classification of important mails by default" : "Habilitar la clasificación por importancia de manera predeterminada",
     "Anti Spam Service" : "Servicio Anti Spam",
     "You can set up an anti spam service email address here." : "Puede configurar la dirección de correo de un servicio anti spam aquí.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Cualquier correo que sea marcado como spam será enviado al servicio anti spam.",
@@ -835,10 +839,6 @@ OC.L10N.register(
     "Continue to %s" : "Continuar a %s",
     "Mark all messages of this folder as read" : "Marcar todos los mensajes de este buzón como leídos",
     "Last 7 days" : "Últimos 7 días",
-    "From me" : "De mí",
-    "Could not save default classification setting" : "No se ha podido guardar el ajuste de clasificación predeterminado",
-    "Enable classification by importance by default" : "Habilitar la clasificación por importancia de manera predeterminada",
-    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "La aplicación de Correo puede clasificar los correos entrantes por importancia utilizando machine learning. Esta característica está habilitada de manera predeterminada pero puede deshabilitarse aquí. Los usuarios tendrán la posibilidad de habilitarla de manera individual en sus cuentas.",
-    "Enable classification of important mails by default" : "Habilitar la clasificación por importancia de manera predeterminada"
+    "From me" : "De mí"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

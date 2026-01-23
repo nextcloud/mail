@@ -723,6 +723,7 @@ OC.L10N.register(
     "There was an error when provisioning accounts." : "Ocorreu um erro ao provisionar contas.",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "Contas excluídas e desprovisionadas com sucesso para \"{domain}\"",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Erro ao excluir e desprovisionar contas para \"{domain}\"",
+    "Could not save default classification setting" : "Não foi possível salvar a configuração de classificação padrão",
     "Mail app" : "Aplicativo E-Mail",
     "The mail app allows users to read mails on their IMAP accounts." : "O aplicativo e-mail permite que os usuários leiam e-mails em suas contas IMAP.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Aqui você encontra os ajustes globais para essa instância. As configurações específicas de cada usuário podem ser encontradas no próprio aplicativo (no canto inferior esquerdo).",
@@ -743,6 +744,9 @@ OC.L10N.register(
     "Enable text processing through LLMs" : "Ativar o processamento de texto por meio de LLMs",
     "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas." : "O aplicativo E-Mail pode processar dados do usuário com a ajuda do modelo de linguagem de grande escala configurado e fornecer recursos de assistência como resumos de fios, respostas inteligentes e agendas de eventos.",
     "Enable LLM processing" : "Ativar processamento por LLM",
+    "Enable classification by importance by default" : "Ativar classificação por importância por padrão",
+    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "O aplicativo E-Mail pode classificar os e-mails recebidos por importância usando aprendizado de máquina. Este recurso está ativado por padrão, mas pode ser desativado por padrão aqui. Os usuários individuais ainda poderão alternar o recurso para suas contas.",
+    "Enable classification of important mails by default" : "Ativar a classificação de e-mails importantes por padrão",
     "Anti Spam Service" : "Serviço Anti-Spam",
     "You can set up an anti spam service email address here." : "Você pode configurar um endereço de e-mail do serviço anti-spam aqui.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Qualquer e-mail marcado como spam será enviado para o serviço anti-spam.",
@@ -887,10 +891,6 @@ OC.L10N.register(
     "Determine importance using machine learning" : "Determinar a importância usando aprendizado de máquina",
     "Mark all messages of this folder as read" : "Marcar todas as mensagens desta pasta como lidas",
     "Last 7 days" : "Últimos 7 dias",
-    "From me" : "De mim",
-    "Could not save default classification setting" : "Não foi possível salvar a configuração de classificação padrão",
-    "Enable classification by importance by default" : "Ativar classificação por importância por padrão",
-    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "O aplicativo E-Mail pode classificar os e-mails recebidos por importância usando aprendizado de máquina. Este recurso está ativado por padrão, mas pode ser desativado por padrão aqui. Os usuários individuais ainda poderão alternar o recurso para suas contas.",
-    "Enable classification of important mails by default" : "Ativar a classificação de e-mails importantes por padrão"
+    "From me" : "De mim"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

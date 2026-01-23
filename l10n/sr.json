@@ -694,6 +694,7 @@
     "There was an error when provisioning accounts." : "Дошло је до грешке приликом достављања налога.",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "Успешно су обрисани и уклоњено је достављање за налоге са „{domain}”",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Грешка приликом брисања и уклањања достављања за налоге са „{domain}”",
+    "Could not save default classification setting" : "Није могло да се сачува подешавање подразумеване класификације",
     "Mail app" : "Апликације е-поште",
     "The mail app allows users to read mails on their IMAP accounts." : "Апликације е-поште дозвољава корисницима да читају пошту на њиховим IMAP налозима.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Овде можете наћи подешавања на нивоу целе инстанце. Конкретна подешавања корисника се налазе баш у апликацији (доњи леви угао).",
@@ -714,6 +715,9 @@
     "Enable text processing through LLMs" : "Укључи обраду текста кроз LLM-ове",
     "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas." : "Апликација Пошта може да обрађује корисничке податке помоћу подешеног великог језичког модела и обезбеђује функције асистента као што су резимеи низа порука, паметни одговори и агенде догађаја.",
     "Enable LLM processing" : "Укључи LLM обраду",
+    "Enable classification by importance by default" : "Подразумевано укључи класификацију по важности",
+    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "Апликација Пошта може да класификује долазне и-мејлове по важности користећи машинско учење. Ова функција је подразумевано укључена, али овде можете да је искључите. Појединачни корисници ће и даље имати могућност да мењају стање функције за своје налоге.",
+    "Enable classification of important mails by default" : "Подразумевано укључи класификацију важних и-мејлова",
     "Anti Spam Service" : "Сервис против нежељене поште",
     "You can set up an anti spam service email address here." : "Овде можете да подесите и-мејл адресу сервиса против нежељене поште.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Сваки и-мејл који се маркира као непожељан ће се послати сервису против нежељене поште.",
@@ -858,10 +862,6 @@
     "Determine importance using machine learning" : "Одреди важносту употребом машинског учења",
     "Mark all messages of this folder as read" : "Означи све поруке из ове фасцикле као прочитане",
     "Last 7 days" : "Последњих 7 дана",
-    "From me" : "Од мене",
-    "Could not save default classification setting" : "Није могло да се сачува подешавање подразумеване класификације",
-    "Enable classification by importance by default" : "Подразумевано укључи класификацију по важности",
-    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "Апликација Пошта може да класификује долазне и-мејлове по важности користећи машинско учење. Ова функција је подразумевано укључена, али овде можете да је искључите. Појединачни корисници ће и даље имати могућност да мењају стање функције за своје налоге.",
-    "Enable classification of important mails by default" : "Подразумевано укључи класификацију важних и-мејлова"
+    "From me" : "Од мене"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 }

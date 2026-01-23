@@ -719,6 +719,7 @@
     "There was an error when provisioning accounts." : "Produciuse un erro ao fornecer as contas.",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "Elimináronse e anuláronse correctamente as contas de  «{domain}»",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Produciuse un erro ao eliminar e desaprovisionar as contas para «{domain}»",
+    "Could not save default classification setting" : "Non foi posíbel gardar o axuste de clasificación predeterminada",
     "Mail app" : "Aplicación de correo",
     "The mail app allows users to read mails on their IMAP accounts." : "A aplicación de correo permite aos usuarios ler correos nas súas contas IMAP.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Aquí pode atopar axustes para toda a instancia. Os axustes específicos do usuario atópanse na propia aplicación (canto inferior esquerdo).",
@@ -739,6 +740,9 @@
     "Enable text processing through LLMs" : "Activar o procesamento de texto mediante GML (LLM)",
     "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas." : "A aplicación Correo pode procesar os datos do usuario coa axuda do modelo de linguaxe a grande escala configurado e fornecer funcións de asistencia como resumos de conversas, respostas intelixentes e axendas de eventos.",
     "Enable LLM processing" : "Activar o procesamento de GML (LLM)",
+    "Enable classification by importance by default" : "Activa a clasificación por importancia de xeito predeterminado",
+    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "A aplicación Correo pode clasificar os correos entrantes por importancia mediante a aprendizaxe automática. Esta función está activada de xeito predeterminado, mais pódese desactivar aquí. Os usuarios individuais aínda poderán cambiar a función das súas contas.",
+    "Enable classification of important mails by default" : "Activar a clasificación de correos importantes de xeito predeterminado",
     "Anti Spam Service" : "Servizo «antispam»",
     "You can set up an anti spam service email address here." : "Pode configurar un enderezo de correo do servizo «antispam» aquí.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Calquera correo que estea marcado como lixo enviarase ao servizo «antispam».",
@@ -883,10 +887,6 @@
     "Determine importance using machine learning" : "Determinar a importancia mediante a aprendizaxe automática",
     "Mark all messages of this folder as read" : "Marcar todas as mensaxes deste cartafol como lidas",
     "Last 7 days" : "Últimos 7 días",
-    "From me" : "De min",
-    "Could not save default classification setting" : "Non foi posíbel gardar o axuste de clasificación predeterminada",
-    "Enable classification by importance by default" : "Activa a clasificación por importancia de xeito predeterminado",
-    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "A aplicación Correo pode clasificar os correos entrantes por importancia mediante a aprendizaxe automática. Esta función está activada de xeito predeterminado, mais pódese desactivar aquí. Os usuarios individuais aínda poderán cambiar a función das súas contas.",
-    "Enable classification of important mails by default" : "Activar a clasificación de correos importantes de xeito predeterminado"
+    "From me" : "De min"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

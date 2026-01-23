@@ -721,6 +721,7 @@ OC.L10N.register(
     "There was an error when provisioning accounts." : "开通账号时出错。",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "成功删除并取消配置“{domain}”的账号",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "删除和取消配置“{domain}”账号时出错",
+    "Could not save default classification setting" : "无法保存默认分类设置",
     "Mail app" : "邮件应用",
     "The mail app allows users to read mails on their IMAP accounts." : "邮件应用程序允许用户在其 IMAP 账号上阅读邮件。",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "您可以在这里找到全站范围的设置。用户指定的设置在应用程序内部（左下角）。",
@@ -741,6 +742,9 @@ OC.L10N.register(
     "Enable text processing through LLMs" : "通过大型语言模型启用文本处理",
     "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas." : "邮件应用可以在配置的大型语言模型的帮助下处理用户数据，并提供线程摘要、智能回复和活动议程等辅助功能。",
     "Enable LLM processing" : "启用大型语言模型处理",
+    "Enable classification by importance by default" : "默认启用按重要性分类",
+    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "邮件应用程序可以使用机器学习按重要性对传入电子邮件进行分类。 此功能默认启用，但可以在此处默认禁用。 个人用户仍然可以为其帐户切换该功能。",
+    "Enable classification of important mails by default" : "默认启用重要邮件分类",
     "Anti Spam Service" : "反垃圾邮件服务",
     "You can set up an anti spam service email address here." : "您可以在此设置反垃圾邮件服务的邮箱地址。",
     "Any email that is marked as spam will be sent to the anti spam service." : "任何被标记为垃圾邮件的电子邮件将被发送到反垃圾邮件服务",
@@ -885,10 +889,6 @@ OC.L10N.register(
     "Determine importance using machine learning" : "使用机器学习确定重要性",
     "Mark all messages of this folder as read" : "将此文件夹的所有邮件标记为已读",
     "Last 7 days" : "过去 7 天",
-    "From me" : "来自我",
-    "Could not save default classification setting" : "无法保存默认分类设置",
-    "Enable classification by importance by default" : "默认启用按重要性分类",
-    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "邮件应用程序可以使用机器学习按重要性对传入电子邮件进行分类。 此功能默认启用，但可以在此处默认禁用。 个人用户仍然可以为其帐户切换该功能。",
-    "Enable classification of important mails by default" : "默认启用重要邮件分类"
+    "From me" : "来自我"
 },
 "nplurals=1; plural=0;");

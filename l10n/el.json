@@ -670,6 +670,7 @@
     "There was an error when provisioning accounts." : "Παρουσιάστηκε σφάλμα κατά την προμήθεια λογαριασμών.",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "Επιτυχής διαγραφή και αποπρομήθεια λογαριασμών για \"{domain}\"",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Σφάλμα κατά τη διαγραφή και αποπρομήθεια λογαριασμών για \"{domain}\"",
+    "Could not save default classification setting" : "Δεν ήταν δυνατή η αποθήκευση προεπιλεγμένης ρύθμισης ταξινόμησης",
     "Mail app" : "Εφαρμογή αλληλογραφίας",
     "The mail app allows users to read mails on their IMAP accounts." : "Η εφαρμογή ταχυδρομείου επιτρέπει στους χρήστες να διαβάζουν μηνύματα από τους λογαριασμούς τους IMAP.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Εδώ μπορείτε να βρείτε ρυθμίσεις για το περιστατικό. Οι συγκεκριμένες ρυθμίσεις χρήστη βρίσκονται στην ίδια την εφαρμογή (κάτω αριστερή γωνία).",
@@ -690,6 +691,9 @@
     "Enable text processing through LLMs" : "Ενεργοποίηση επεξεργασίας κειμένου μέσω LLMs",
     "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas." : "Η εφαρμογή Mail μπορεί να επεξεργάζεται δεδομένα χρηστών με τη βοήθεια του διαμορφωμένου μεγάλου γλωσσικού μοντέλου και να παρέχει λειτουργίες βοήθειας όπως συνοψίσεις συζητήσεων, έξυπνες απαντήσεις και ημερήσιες εντολές συμβάντων.",
     "Enable LLM processing" : "Ενεργοποίηση επεξεργασίας LLM",
+    "Enable classification by importance by default" : "Ενεργοποίηση ταξινόμησης ανά σημασία από προεπιλογή",
+    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "Η εφαρμογή Mail μπορεί να ταξινομεί τα εισερχόμενα email ανά σημασία χρησιμοποιώντας μηχανική μάθηση. Αυτή η λειτουργία είναι ενεργοποιημένη από προεπιλογή αλλά μπορεί να απενεργοποιηθεί από προεπιλογή εδώ. Μεμονωμένοι χρήστες θα μπορούν ακόμα να ενεργοποιούν ή απενεργοποιούν τη λειτουργία για τους λογαριασμούς τους.",
+    "Enable classification of important mails by default" : "Ενεργοποίηση ταξινόμησης σημαντικών email από προεπιλογή",
     "Anti Spam Service" : "Υπηρεσία Καταπολέμησης Ανεπιθύμητων",
     "You can set up an anti spam service email address here." : "Μπορείτε να ρυθμίσετε μια διεύθυνση email υπηρεσίας καταπολέμησης ανεπιθύμητων εδώ.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Οποιοδήποτε email που σημειώνεται ως spam θα αποστέλλεται στην υπηρεσία καταπολέμησης ανεπιθύμητων.",
@@ -833,10 +837,6 @@
     "Continue to %s" : "Συνέχεια στο %s",
     "Mark all messages of this folder as read" : "Σημείωση όλων των μυνημάτων ως αναγνωσμένων",
     "Last 7 days" : "Τελευταίες 7 ημέρες",
-    "From me" : "Από εμένα",
-    "Could not save default classification setting" : "Δεν ήταν δυνατή η αποθήκευση προεπιλεγμένης ρύθμισης ταξινόμησης",
-    "Enable classification by importance by default" : "Ενεργοποίηση ταξινόμησης ανά σημασία από προεπιλογή",
-    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "Η εφαρμογή Mail μπορεί να ταξινομεί τα εισερχόμενα email ανά σημασία χρησιμοποιώντας μηχανική μάθηση. Αυτή η λειτουργία είναι ενεργοποιημένη από προεπιλογή αλλά μπορεί να απενεργοποιηθεί από προεπιλογή εδώ. Μεμονωμένοι χρήστες θα μπορούν ακόμα να ενεργοποιούν ή απενεργοποιούν τη λειτουργία για τους λογαριασμούς τους.",
-    "Enable classification of important mails by default" : "Ενεργοποίηση ταξινόμησης σημαντικών email από προεπιλογή"
+    "From me" : "Από εμένα"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

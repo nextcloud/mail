@@ -589,6 +589,7 @@ OC.L10N.register(
     "There was an error when provisioning accounts." : "アカウントのプロビジョニング時にエラーが発生しました。",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "{domain}のアカウントが正常に削除され、プロビジョニング解除されました",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "\"{domain}\"のアカウントプロビジョニングを解除と削除すする際にエラーが発生しました。",
+    "Could not save default classification setting" : "デフォルトの分類設定を保存できませんでした",
     "Mail app" : "メールアプリ",
     "The mail app allows users to read mails on their IMAP accounts." : "メールアプリで、ユーザーはIMAPアカウントでメールを読むことができます。",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "ここでは、インスタンス全体の設定を確認できます。ユーザー固有の設定は、アプリ自体 (左下隅) にあります。",
@@ -609,6 +610,9 @@ OC.L10N.register(
     "Enable text processing through LLMs" : "LLMによるテキスト処理を有効にする",
     "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas." : "Mailアプリは、設定された大規模言語モデルの助けを借りてユーザーデータを処理し、スレッドの要約、スマート返信、イベントの議題などの支援機能を提供します。",
     "Enable LLM processing" : "LLM処理を有効にする",
+    "Enable classification by importance by default" : "デフォルトでメールの重要度を仕分けする",
+    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "Mailアプリは、機械学習を利用して受信メールを重要度別に分類できます。この機能はデフォルトで有効になっていますが、ここではデフォルトで無効にできます。個々のユーザーは、自分のアカウントの機能を切り替えることができます。",
+    "Enable classification of important mails by default" : "デフォルトで重要なメールの仕分けを有効化する",
     "Anti Spam Service" : "スパム対策サービス",
     "You can set up an anti spam service email address here." : "あなたがスパム対策サービスしたいメールアドレスをここで設定できます",
     "Any email that is marked as spam will be sent to the anti spam service." : "スパムとしてマークされたメールはすべてスパム対策サービスに送信されます。",
@@ -728,10 +732,6 @@ OC.L10N.register(
     "Continue to %s" : "%s にリダイレクトする",
     "Mark all messages of this folder as read" : "このフォルダのすべてのメッセージを開封済みにする",
     "Last 7 days" : "7日以内",
-    "From me" : "私から",
-    "Could not save default classification setting" : "デフォルトの分類設定を保存できませんでした",
-    "Enable classification by importance by default" : "デフォルトでメールの重要度を仕分けする",
-    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "Mailアプリは、機械学習を利用して受信メールを重要度別に分類できます。この機能はデフォルトで有効になっていますが、ここではデフォルトで無効にできます。個々のユーザーは、自分のアカウントの機能を切り替えることができます。",
-    "Enable classification of important mails by default" : "デフォルトで重要なメールの仕分けを有効化する"
+    "From me" : "私から"
 },
 "nplurals=1; plural=0;");
