@@ -186,6 +186,7 @@
     "Title of the text block" : "Teideal an bhloic téacs",
     "Content of the text block" : "Ábhar an bhloic téacs",
     "Ok" : "Ceart go leor",
+    "Automatically create tentative appointments in calendar" : "Cruthaigh coinní sealadacha go huathoibríoch sa fhéilire",
     "No certificate" : "Gan teastas",
     "Certificate updated" : "Teastas nuashonraithe",
     "Could not update certificate" : "Níorbh fhéidir an teastas a nuashonrú",
@@ -720,6 +721,7 @@
     "There was an error when provisioning accounts." : "Tharla earráid agus cuntais á soláthar.",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "D'éirigh le scriosadh agus dísholáthar cuntais do \"{domain}\"",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Earráid agus cuntais á scriosadh agus á ndísholáthar do \"{domain}\"",
+    "Could not save default classification setting" : "Níorbh fhéidir an socrú réamhshocraithe aicmithe a shábháil",
     "Mail app" : "Aip ríomhphoist",
     "The mail app allows users to read mails on their IMAP accounts." : "Ligeann an aip ríomhphoist d’úsáideoirí ríomhphoist a léamh ar a gcuntais IMAP.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Anseo is féidir leat socruithe uile-shampla a fháil. Faightear socruithe sainiúla úsáideora san aip féin (cúinne ag bun ar chlé).",
@@ -740,6 +742,9 @@
     "Enable text processing through LLMs" : "Cumasaigh próiseáil téacs trí LLManna",
     "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas." : "Is féidir leis an aip Mail sonraí úsáideoirí a phróiseáil le cabhair ón múnla mór teanga cumraithe agus gnéithe cúnaimh a sholáthar amhail achoimrí snáithe, freagraí cliste agus cláir oibre imeachtaí.",
     "Enable LLM processing" : "Cumasaigh próiseáil LLM",
+    "Enable classification by importance by default" : "Cumasaigh aicmiú de réir tábhachta de réir réamhshocraithe",
+    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "Is féidir leis an aip Mail ríomhphoist isteach a rangú de réir tábhachta trí úsáid a bhaint as meaisínfhoghlaim. Tá an ghné seo cumasaithe de réir réamhshocraithe ach is féidir é a dhíchumasú de réir réamhshocraithe anseo. Beidh úsáideoirí aonair fós in ann an ghné dá gcuntais a scoránaigh.",
+    "Enable classification of important mails by default" : "Cumasaigh aicmiú ríomhphoist thábhachtacha de réir réamhshocraithe",
     "Anti Spam Service" : "Seirbhís Frith-Thuscair",
     "You can set up an anti spam service email address here." : "Is féidir leat seoladh ríomhphoist seirbhíse frith-thurscair a shocrú anseo.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Seolfar ríomhphost ar bith atá marcáilte mar thurscar chuig an tseirbhís frith-thurscair.",
@@ -884,10 +889,6 @@
     "Determine importance using machine learning" : "Cinntigh tábhacht trí úsáid a bhaint as foghlaim meaisín",
     "Mark all messages of this folder as read" : "Marcáil gach teachtaireacht sa fhillteán seo mar léite",
     "Last 7 days" : "7 lá seo caite",
-    "From me" : "Uaim",
-    "Could not save default classification setting" : "Níorbh fhéidir an socrú réamhshocraithe aicmithe a shábháil",
-    "Enable classification by importance by default" : "Cumasaigh aicmiú de réir tábhachta de réir réamhshocraithe",
-    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "Is féidir leis an aip Mail ríomhphoist isteach a rangú de réir tábhachta trí úsáid a bhaint as meaisínfhoghlaim. Tá an ghné seo cumasaithe de réir réamhshocraithe ach is féidir é a dhíchumasú de réir réamhshocraithe anseo. Beidh úsáideoirí aonair fós in ann an ghné dá gcuntais a scoránaigh.",
-    "Enable classification of important mails by default" : "Cumasaigh aicmiú ríomhphoist thábhachtacha de réir réamhshocraithe"
+    "From me" : "Uaim"
 },"pluralForm" :"nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);"
 }

@@ -583,6 +583,7 @@
     "There was an error when provisioning accounts." : "S'ha produït un error en aprovisionar els comptes.",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "S'han suprimit i desprovisionat els comptes correctament per a \"{domain}\"",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Error en suprimir i desaprovisionar els comptes de \"{domain}\"",
+    "Could not save default classification setting" : "No s'ha pogut desar el paràmetre de classificació predeterminada",
     "Mail app" : "Aplicació de correu",
     "The mail app allows users to read mails on their IMAP accounts." : "L'aplicació de correu permet als usuaris llegir correus en els seus comptes IMAP.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Aquí podeu trobar la configuració de tota la instància. Les paràmetres específiques de l'usuari es troben a la mateixa aplicació (cantonada inferior esquerra).",
@@ -603,6 +604,9 @@
     "Enable text processing through LLMs" : "Habilitar el processament de text mitjançant LLM",
     "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas." : "L'aplicació Mail pot processar dades d'usuari amb l'ajuda del model d'idioma gran configurat i proporcionar funcions d'assistència com ara resums de fils, respostes intel·ligents i agendes d'esdeveniments.",
     "Enable LLM processing" : "Activar el processament de LLM",
+    "Enable classification by importance by default" : "Activa la classificació per importància per defecte",
+    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "L'aplicació Mail pot classificar els correus electrònics entrants per importància mitjançant l'aprenentatge automàtic. Aquesta funció està habilitada per defecte, però es pot desactivar aquí. Els usuaris individuals encara podran canviar la funció dels seus comptes.",
+    "Enable classification of important mails by default" : "Activa la classificació de correus importants per defecte",
     "Anti Spam Service" : "Servei contra correu brossa",
     "You can set up an anti spam service email address here." : "Podeu configurar una adreça de correu electrònic del servei contra correu brossa aquí.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Qualsevol correu electrònic que estigui marcat com a correu brossa s'enviarà al servei contra correu brossa.",
@@ -722,10 +726,6 @@
     "Continue to %s" : "Continua a %s",
     "Mark all messages of this folder as read" : "Marca tots els missatges d'aquesta carpeta com a llegits",
     "Last 7 days" : "Darrers 7 dies",
-    "From me" : "De mi",
-    "Could not save default classification setting" : "No s'ha pogut desar el paràmetre de classificació predeterminada",
-    "Enable classification by importance by default" : "Activa la classificació per importància per defecte",
-    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "L'aplicació Mail pot classificar els correus electrònics entrants per importància mitjançant l'aprenentatge automàtic. Aquesta funció està habilitada per defecte, però es pot desactivar aquí. Els usuaris individuals encara podran canviar la funció dels seus comptes.",
-    "Enable classification of important mails by default" : "Activa la classificació de correus importants per defecte"
+    "From me" : "De mi"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

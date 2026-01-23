@@ -720,6 +720,7 @@ OC.L10N.register(
     "There was an error when provisioning accounts." : "Pri sprevádzkovaní služby pre účty nastala chyba.",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : " Odstraňovanie a zrušenie prístupu k účtom pre doménu \"{domain}\" bolo úspešné",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Chyba pri odstraňovaní a zrušení prístupu k účtom pre doménu \"{domain}\"",
+    "Could not save default classification setting" : "Nepodarilo sa uložiť predvolené nastavenie klasifikácie",
     "Mail app" : "E-mailová aplikácia",
     "The mail app allows users to read mails on their IMAP accounts." : "E-mailová aplikácia umožňuje používateľom čítať e-maily na svojich účtoch IMAP.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Tu nájdete nastavenia pre celú inštanciu. Nastavenia špecifické pre užívateľa sa nachádzajú v samotnej aplikácii (v ľavom dolnom rohu).",
@@ -740,6 +741,9 @@ OC.L10N.register(
     "Enable text processing through LLMs" : "Povolené spracovanie textu cez LLMs",
     "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas." : "Mailová aplikácia môže spracovávať užívateľské údaje pomocou nakonfigurovaného veľkého jazykového modelu a poskytovať funkcie pomoci, ako sú súhrny vlákien, inteligentné odpovede a plány udalostí.",
     "Enable LLM processing" : "Povoliť LLM spracovanie",
+    "Enable classification by importance by default" : "Predvolene povoliť klasifikáciu podľa dôležitosti",
+    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "Aplikácia Mail dokáže klasifikovať prichádzajúce e-maily podľa dôležitosti pomocou strojového učenia. Táto funkcia je predvolene povolená, ale tu ju môžete zakázať. Jednotliví užívatelia budú môcť túto funkciu pre svoje účty stále prepínať.",
+    "Enable classification of important mails by default" : "Predvolene povoliť klasifikáciu dôležitých e-mail správ",
     "Anti Spam Service" : "Služba Anti Spam - nevyžiadaná pošta",
     "You can set up an anti spam service email address here." : "Tu môžete nastaviť e-mailovú adresu služby proti spamu.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Každý e-mail, ktorý je označený ako nevyžiadaná pošta, bude odoslaný do antispamovej služby.",
@@ -884,10 +888,6 @@ OC.L10N.register(
     "Determine importance using machine learning" : "Určte dôležitosť pomocou strojového učenia",
     "Mark all messages of this folder as read" : "Všetky správy v tomto priečinku označiť ako prečítané",
     "Last 7 days" : "Posledných 7 dní",
-    "From me" : "Odo mňa",
-    "Could not save default classification setting" : "Nepodarilo sa uložiť predvolené nastavenie klasifikácie",
-    "Enable classification by importance by default" : "Predvolene povoliť klasifikáciu podľa dôležitosti",
-    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "Aplikácia Mail dokáže klasifikovať prichádzajúce e-maily podľa dôležitosti pomocou strojového učenia. Táto funkcia je predvolene povolená, ale tu ju môžete zakázať. Jednotliví užívatelia budú môcť túto funkciu pre svoje účty stále prepínať.",
-    "Enable classification of important mails by default" : "Predvolene povoliť klasifikáciu dôležitých e-mail správ"
+    "From me" : "Odo mňa"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

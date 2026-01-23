@@ -545,6 +545,7 @@
     "There was an error when provisioning accounts." : "Det oppsto en feil under klargjøring av kontoene.",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "Vellykket slettet og deaktivert kontoer for «{domain}»",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Feil ved sletting og deaktivering av kontoer for «{domain}»",
+    "Could not save default classification setting" : "Kan ikke lagre standard klassifiseringsinnstilling",
     "Mail app" : "E-post app",
     "The mail app allows users to read mails on their IMAP accounts." : "E-post appen lar brukere lese e-poster på IMAP-kontoene sine.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Her kan du finne innstillinger for hele instansen. Bruker spesifikke innstillinger finner du i selve appen (nederst til venstre).",
@@ -565,6 +566,9 @@
     "Enable text processing through LLMs" : "Aktiver tekstprosessering gjennom LLM-er",
     "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas." : "Mail-appen kan behandle brukerdata ved hjelp av den konfigurerte store språkmodellen og gi assistansefunksjoner som trådsammendrag, smarte svar og hendelsesagendaer.",
     "Enable LLM processing" : "Aktiver LLM-prosessering",
+    "Enable classification by importance by default" : "Aktiver klassifisering etter viktighet som standard",
+    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "E-post-appen kan klassifisere innkommende e-post etter viktighet ved hjelp av maskinlæring. Denne funksjonen er aktivert som standard, men kan deaktiveres som standard her. Enkeltbrukere vil fortsatt kunne veksle mellom funksjonen for kontoene sine.",
+    "Enable classification of important mails by default" : "Aktiver klassifisering etter viktige e-poster som standard",
     "Anti Spam Service" : "Anti spam tjeneste",
     "You can set up an anti spam service email address here." : "Du kan sette opp en e-postadresse for antispamtjeneste her.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Enhver e-post som er merket som spam vil bli sendt til anti spam-tjenesten.",
@@ -682,10 +686,6 @@
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Hvis du ikke vil besøke den siden, kan du gå tilbake til <a href=\"%s\">E-post</a>",
     "Continue to %s" : "Fortsett til %s",
     "Last 7 days" : "Siste 7 dager",
-    "From me" : "Fra meg",
-    "Could not save default classification setting" : "Kan ikke lagre standard klassifiseringsinnstilling",
-    "Enable classification by importance by default" : "Aktiver klassifisering etter viktighet som standard",
-    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "E-post-appen kan klassifisere innkommende e-post etter viktighet ved hjelp av maskinlæring. Denne funksjonen er aktivert som standard, men kan deaktiveres som standard her. Enkeltbrukere vil fortsatt kunne veksle mellom funksjonen for kontoene sine.",
-    "Enable classification of important mails by default" : "Aktiver klassifisering etter viktige e-poster som standard"
+    "From me" : "Fra meg"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

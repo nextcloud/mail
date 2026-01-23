@@ -572,6 +572,7 @@ OC.L10N.register(
     "There was an error when provisioning accounts." : "Errore bat gertatu da kontuak hornitzean.",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "\"{domain}\"-ren kontuak behar bezala ezabatu dira.",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Errorea gertatu da \"{domain}\"-ren kontuak ezabatzean.",
+    "Could not save default classification setting" : "Ezin izan da sailkapen-ezarpen lehenetsia gorde",
     "Mail app" : "Posta elektroniko aplikazioa",
     "The mail app allows users to read mails on their IMAP accounts." : "Posta elektroniko aplikazio honek aukera ematen die erabiltzaileei IMAP kontuetako mezuak irakurtzeko.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Hemen instantzia osoko ezarpenak aurkitu ditzakezu. Erabiltzailearen ezarpen espezifikoak aplikazioan bertan daude (beheko ezkerreko izkinan).",
@@ -592,6 +593,9 @@ OC.L10N.register(
     "Enable text processing through LLMs" : "Gaitu testuen prozesamendua LLMen bidez",
     "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas." : "Posta aplikazioak erabiltzailearen datuak prozesatu ditzake konfiguratutako hizkuntza-ereduaren laguntzaz eta laguntza-funtzioak eskain ditzake, hala nola harien laburpenak, erantzun adimendunak eta gertaeren agendak.",
     "Enable LLM processing" : "Gaitu LLM prozesatzea",
+    "Enable classification by importance by default" : "Gaitu garrantziaren araberako sailkapena modu lehenetsian",
+    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "Posta aplikazioak sarrerako mezu elektronikoak garrantziaren arabera sailka ditzake ikaskuntza automatikoa erabiliz. Ezaugarri hau lehenespenez gaituta dago, baina lehenespenez desgaitu daiteke hemen. Erabiltzaile indibidualek beren kontuetarako funtzioa aldatzeko aukera izango dute oraindik.",
+    "Enable classification of important mails by default" : "Gaitu mezu garrantzitsuen sailkapena modu lehenetsian",
     "Anti Spam Service" : "Anti spam zerbitzua",
     "You can set up an anti spam service email address here." : "Hemen spamaren aurkako zerbitzuaren helbide elektronikoa konfigura dezakezu.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Spam gisa markatutako edozein mezu elektroniko spamaren aurkako zerbitzura bidaliko da.",
@@ -710,10 +714,6 @@ OC.L10N.register(
     "Continue to %s" : "Jarraitu hona: %s",
     "Mark all messages of this folder as read" : "Markatu karpeta honetako mezu guztiak irakurrita bezala",
     "Last 7 days" : "Azken 7 egunetan",
-    "From me" : "Nigandik",
-    "Could not save default classification setting" : "Ezin izan da sailkapen-ezarpen lehenetsia gorde",
-    "Enable classification by importance by default" : "Gaitu garrantziaren araberako sailkapena modu lehenetsian",
-    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "Posta aplikazioak sarrerako mezu elektronikoak garrantziaren arabera sailka ditzake ikaskuntza automatikoa erabiliz. Ezaugarri hau lehenespenez gaituta dago, baina lehenespenez desgaitu daiteke hemen. Erabiltzaile indibidualek beren kontuetarako funtzioa aldatzeko aukera izango dute oraindik.",
-    "Enable classification of important mails by default" : "Gaitu mezu garrantzitsuen sailkapena modu lehenetsian"
+    "From me" : "Nigandik"
 },
 "nplurals=2; plural=(n != 1);");
