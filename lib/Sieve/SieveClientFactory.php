@@ -11,17 +11,20 @@ namespace OCA\Mail\Sieve;
 
 use Horde\ManageSieve;
 use OCA\Mail\Account;
+use OCA\Mail\Db\ProvisioningMapper;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
 
 class SieveClientFactory {
 	private ICrypto $crypto;
 	private IConfig $config;
+	private ProvisioningMapper $provisioningMapper;
 	private array $cache = [];
 
-	public function __construct(ICrypto $crypto, IConfig $config) {
+	public function __construct(ICrypto $crypto, IConfig $config, ProvisioningMapper $provisioningMapper) {
 		$this->crypto = $crypto;
 		$this->config = $config;
+		$this->provisioningMapper = $provisioningMapper;
 	}
 
 	/**
@@ -36,6 +39,16 @@ class SieveClientFactory {
 			$password = $account->getMailAccount()->getSievePassword();
 			if (empty($password)) {
 				$password = $account->getMailAccount()->getInboundPassword();
+			}
+
+			// Check for Dovecot master user authentication
+			$provisioningId = $account->getMailAccount()->getProvisioningId();
+			if ($provisioningId !== null) {
+				$provisioning = $this->provisioningMapper->get($provisioningId);
+				if ($provisioning !== null && !empty($provisioning->getMasterUser())) {
+					$separator = $provisioning->getMasterUserSeparator() ?? '*';
+					$user = $user . $separator . $provisioning->getMasterUser();
+				}
 			}
 
 			if ($account->getMailAccount()->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {

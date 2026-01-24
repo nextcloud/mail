@@ -92,6 +92,13 @@ class ProvisioningMapper extends QBMapper {
 			$exception->setField('ldapAliasesAttribute', false);
 		}
 
+		// Master password is required when master user is set
+		$masterUser = $data['masterUser'] ?? '';
+		$masterPasswordEnabled = (bool)($data['masterPasswordEnabled'] ?? false);
+		if (!empty($masterUser) && $masterUser !== Provisioning::MASTER_PASSWORD_PLACEHOLDER && !$masterPasswordEnabled) {
+			$exception->setField('masterPasswordEnabled', false);
+		}
+
 		if (!empty($exception->getFields())) {
 			throw $exception;
 		}
@@ -113,6 +120,10 @@ class ProvisioningMapper extends QBMapper {
 		if (isset($data['masterPassword']) && $data['masterPassword'] !== Provisioning::MASTER_PASSWORD_PLACEHOLDER) {
 			$provisioning->setMasterPassword($data['masterPassword']);
 		}
+		if (isset($data['masterUser']) && $data['masterUser'] !== Provisioning::MASTER_PASSWORD_PLACEHOLDER) {
+			$provisioning->setMasterUser($data['masterUser']);
+		}
+		$provisioning->setMasterUserSeparator($data['masterUserSeparator'] ?? '*');
 
 		$provisioning->setSieveEnabled((bool)$data['sieveEnabled']);
 		$provisioning->setSieveHost($data['sieveHost'] ?? '');
