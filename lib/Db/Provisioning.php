@@ -39,6 +39,8 @@ use ReturnTypeWillChange;
  * @method void setMasterPasswordEnabled(bool $masterPasswordEnabled)
  * @method string|null getMasterPassword()
  * @method void setMasterPassword(string $masterPassword)
+ * @method string|null getMasterUser()
+ * @method void setMasterUser(string $masterUser)
  * @method bool|null getSieveEnabled()
  * @method void setSieveEnabled(bool $sieveEnabled)
  * @method string|null getSieveHost()
@@ -90,6 +92,7 @@ class Provisioning extends Entity implements JsonSerializable {
 	protected $smtpSslMode;
 	protected $masterPasswordEnabled;
 	protected $masterPassword;
+	protected $masterUser;
 	protected $sieveEnabled;
 	protected $sieveUser;
 	protected $sieveHost;
@@ -104,6 +107,7 @@ class Provisioning extends Entity implements JsonSerializable {
 		$this->addType('smtpPort', 'integer');
 		$this->addType('masterPasswordEnabled', 'boolean');
 		$this->addType('masterPassword', 'string');
+		$this->addType('masterUser', 'string');
 		$this->addType('sieveEnabled', 'boolean');
 		$this->addType('sievePort', 'integer');
 		$this->addType('ldapAliasesProvisioning', 'boolean');
@@ -126,6 +130,7 @@ class Provisioning extends Entity implements JsonSerializable {
 			'smtpSslMode' => $this->getSmtpSslMode(),
 			'masterPasswordEnabled' => $this->getMasterPasswordEnabled(),
 			'masterPassword' => !empty($this->getMasterPassword()) ? self::MASTER_PASSWORD_PLACEHOLDER : null,
+			'masterUser' => $this->getMasterUser(),
 			'sieveEnabled' => $this->getSieveEnabled(),
 			'sieveUser' => $this->getSieveUser(),
 			'sieveHost' => $this->getSieveHost(),
@@ -138,15 +143,15 @@ class Provisioning extends Entity implements JsonSerializable {
 	}
 
 	/**
-	 * @param IUser $user
 	 * @param array<string, string> $ldapValues resolved %LDAP:attr% tokens, keyed by full token
-	 * @return string
 	 */
-	public function buildImapUser(IUser $user, array $ldapValues = []) {
-		if (!is_null($this->getImapUser())) {
-			return $this->buildUserEmail($this->getImapUser(), $user, $ldapValues);
+	public function buildImapUser(IUser $user, array $ldapValues = []): string {
+		if ($this->getImapUser() !== null) {
+			$imapUser = $this->buildUserEmail($this->getImapUser(), $user, $ldapValues);
+		} else {
+			$imapUser = $this->buildEmail($user, $ldapValues);
 		}
-		return $this->buildEmail($user, $ldapValues);
+		return $this->appendMasterUser($imapUser);
 	}
 
 	/**
@@ -233,26 +238,54 @@ class Provisioning extends Entity implements JsonSerializable {
 	}
 
 	/**
-	 * @param IUser $user
 	 * @param array<string, string> $ldapValues resolved %LDAP:attr% tokens, keyed by full token
-	 * @return string
 	 */
-	public function buildSmtpUser(IUser $user, array $ldapValues = []) {
-		if (!is_null($this->getSmtpUser())) {
-			return $this->buildUserEmail($this->getSmtpUser(), $user, $ldapValues);
+	public function buildSmtpUser(IUser $user, array $ldapValues = []): string {
+		if ($this->getSmtpUser() !== null) {
+			$smtpUser = $this->buildUserEmail($this->getSmtpUser(), $user, $ldapValues);
+		} else {
+			$smtpUser = $this->buildEmail($user, $ldapValues);
 		}
-		return $this->buildEmail($user, $ldapValues);
+		return $this->appendMasterUser($smtpUser);
 	}
 
 	/**
-	 * @param IUser $user
 	 * @param array<string, string> $ldapValues resolved %LDAP:attr% tokens, keyed by full token
-	 * @return string
 	 */
-	public function buildSieveUser(IUser $user, array $ldapValues = []) {
-		if (!is_null($this->getSieveUser())) {
-			return $this->buildUserEmail($this->getSieveUser(), $user, $ldapValues);
+	public function buildSieveUser(IUser $user, array $ldapValues = []): string {
+		if ($this->getSieveUser() !== null) {
+			$sieveUser = $this->buildUserEmail($this->getSieveUser(), $user, $ldapValues);
+		} else {
+			$sieveUser = $this->buildEmail($user, $ldapValues);
 		}
-		return $this->buildEmail($user, $ldapValues);
+		return $this->appendMasterUser($sieveUser);
+	}
+
+	/**
+	 * The master user contains the separator, e.g. *masteruser
+	 */
+	private function appendMasterUser(string $loginUser): string {
+		if ($this->getMasterPasswordEnabled() !== true || ($this->getMasterUser() ?? '') === '') {
+			return $loginUser;
+		}
+		return $loginUser . $this->getMasterUser();
+	}
+
+	/**
+	 * The placeholder is sent back by the settings form to keep the stored password
+	 */
+	public function enableMasterPassword(string $masterPassword, string $masterUser): void {
+		$this->setMasterPasswordEnabled(true);
+
+		if ($masterPassword !== self::MASTER_PASSWORD_PLACEHOLDER) {
+			$this->setMasterPassword($masterPassword);
+		}
+		$this->setMasterUser($masterUser);
+	}
+
+	public function disableMasterPassword(): void {
+		$this->setMasterPasswordEnabled(false);
+		$this->setMasterPassword('');
+		$this->setMasterUser('');
 	}
 }
