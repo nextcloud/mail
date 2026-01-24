@@ -197,13 +197,29 @@
 							</label>
 						</div>
 						<div>
-							<input
-								id="mail-master-password"
-								v-model="masterPassword"
-								:disabled="loading"
-								type="password"
-								:required="masterPasswordEnabled">
-							<label for="mail-master-password"> {{ t('mail', 'Master password') }} </label>
+							<label>
+								{{ t('mail', 'Master password') }}
+								<br>
+								<input
+									v-model="masterPassword"
+									:disabled="loading || !masterPasswordEnabled"
+									type="password"
+									:required="masterPasswordEnabled">
+							</label>
+							<p>{{ t('mail', 'Without a master user, all users authenticate with their normal username and this master password.') }}</p>
+						</div>
+						<div>
+							<label>
+								<!-- TRANSLATORS: Dovecot master user, an account that can log in on behalf of any other user -->
+								{{ t('mail', 'Master user') }}
+								<br>
+								<input
+									v-model="masterUser"
+									:disabled="loading || !masterPasswordEnabled"
+									type="text"
+									:placeholder="t('mail', 'e.g. {example}', { example: '*masteruser' })">
+							</label>
+							<p>{{ t('mail', 'Appended to the username. Must start with the same separator as {setting} in Dovecot.', { setting: 'auth_master_user_separator' }) }}</p>
 						</div>
 					</div>
 				</div>
@@ -426,6 +442,7 @@ export default {
 			smtpSslMode: this.setting.smtpSslMode || 'tls',
 			masterPasswordEnabled: this.setting.masterPasswordEnabled === true,
 			masterPassword: this.setting.masterPassword || '',
+			masterUser: this.setting.masterUser || '',
 			sieveEnabled: this.setting.sieveEnabled || '',
 			sieveHost: this.setting.sieveHost || '',
 			sievePort: this.setting.sievePort || '',
@@ -462,6 +479,7 @@ export default {
 				smtpSslMode: this.smtpSslMode,
 				masterPasswordEnabled: this.masterPasswordEnabled,
 				masterPassword: this.masterPassword,
+				masterUser: this.masterUser,
 				sieveEnabled: this.sieveEnabled,
 				sieveUser: this.sieveUser,
 				sieveHost: this.sieveHost,
@@ -497,6 +515,7 @@ export default {
 					smtpSslMode: this.smtpSslMode,
 					masterPasswordEnabled: this.masterPasswordEnabled,
 					masterPassword: this.masterPassword,
+					masterUser: this.masterUser,
 					sieveEnabled: this.sieveEnabled,
 					sieveUser: this.sieveUser,
 					sieveHost: this.sieveHost,
@@ -553,7 +572,8 @@ export default {
 		margin: 10px;
 		flex-grow: 1;
 
-		input[type='text'] {
+		input[type='text'],
+		input[type='password'] {
 			min-width: 200px;
 		}
 		.config-button {

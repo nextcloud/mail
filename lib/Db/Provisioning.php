@@ -38,7 +38,9 @@ use ReturnTypeWillChange;
  * @method bool|null getMasterPasswordEnabled()
  * @method void setMasterPasswordEnabled(bool $masterPasswordEnabled)
  * @method string|null getMasterPassword()
- * @method void setMasterPassword(string $masterPassword)
+ * @method void setMasterPassword(?string $masterPassword)
+ * @method string|null getMasterUser()
+ * @method void setMasterUser(?string $masterUser)
  * @method bool|null getSieveEnabled()
  * @method void setSieveEnabled(bool $sieveEnabled)
  * @method string|null getSieveHost()
@@ -72,6 +74,7 @@ class Provisioning extends Entity implements JsonSerializable {
 	protected $smtpSslMode;
 	protected $masterPasswordEnabled;
 	protected $masterPassword;
+	protected $masterUser;
 	protected $sieveEnabled;
 	protected $sieveUser;
 	protected $sieveHost;
@@ -86,6 +89,7 @@ class Provisioning extends Entity implements JsonSerializable {
 		$this->addType('smtpPort', 'integer');
 		$this->addType('masterPasswordEnabled', 'boolean');
 		$this->addType('masterPassword', 'string');
+		$this->addType('masterUser', 'string');
 		$this->addType('sieveEnabled', 'boolean');
 		$this->addType('sievePort', 'integer');
 		$this->addType('ldapAliasesProvisioning', 'boolean');
@@ -108,6 +112,7 @@ class Provisioning extends Entity implements JsonSerializable {
 			'smtpSslMode' => $this->getSmtpSslMode(),
 			'masterPasswordEnabled' => $this->getMasterPasswordEnabled(),
 			'masterPassword' => !empty($this->getMasterPassword()) ? self::MASTER_PASSWORD_PLACEHOLDER : null,
+			'masterUser' => $this->getMasterUser(),
 			'sieveEnabled' => $this->getSieveEnabled(),
 			'sieveUser' => $this->getSieveUser(),
 			'sieveHost' => $this->getSieveHost(),
@@ -119,14 +124,13 @@ class Provisioning extends Entity implements JsonSerializable {
 		];
 	}
 
-	/**
-	 * @return string
-	 */
-	public function buildImapUser(IUser $user) {
-		if (!is_null($this->getImapUser())) {
-			return $this->buildUserEmail($this->getImapUser(), $user);
+	public function buildImapUser(IUser $user): string {
+		if ($this->getImapUser() !== null) {
+			$imapUser = $this->buildUserEmail($this->getImapUser(), $user);
+		} else {
+			$imapUser = $this->buildEmail($user);
 		}
-		return $this->buildEmail($user);
+		return $this->appendMasterUser($imapUser);
 	}
 
 	/**
@@ -152,25 +156,57 @@ class Provisioning extends Entity implements JsonSerializable {
 		return $original;
 	}
 
-	/**
-	 * @param IUser $user
-	 * @return string
-	 */
-	public function buildSmtpUser(IUser $user) {
-		if (!is_null($this->getSmtpUser())) {
-			return $this->buildUserEmail($this->getSmtpUser(), $user);
+	public function buildSmtpUser(IUser $user): string {
+		if ($this->getSmtpUser() !== null) {
+			$smtpUser = $this->buildUserEmail($this->getSmtpUser(), $user);
+		} else {
+			$smtpUser = $this->buildEmail($user);
 		}
-		return $this->buildEmail($user);
+		return $this->appendMasterUser($smtpUser);
+	}
+
+	public function buildSieveUser(IUser $user): string {
+		if ($this->getSieveUser() !== null) {
+			$sieveUser = $this->buildUserEmail($this->getSieveUser(), $user);
+		} else {
+			$sieveUser = $this->buildEmail($user);
+		}
+		return $this->appendMasterUser($sieveUser);
 	}
 
 	/**
-	 * @param IUser $user
-	 * @return string
+	 * The master user contains the separator, e.g. *masteruser
 	 */
-	public function buildSieveUser(IUser $user) {
-		if (!is_null($this->getSieveUser())) {
-			return $this->buildUserEmail($this->getSieveUser(), $user);
+	private function appendMasterUser(string $loginUser): string {
+		if ($this->getMasterPasswordEnabled() !== true || empty($this->getMasterUser())) {
+			return $loginUser;
 		}
-		return $this->buildEmail($user);
+		return $loginUser . $this->getMasterUser();
+	}
+
+	/**
+	 * The placeholder is sent back by the settings form to keep the stored password
+	 */
+	public function enableMasterPassword(string $masterPassword, ?string $masterUser): void {
+		$this->setMasterPasswordEnabled(true);
+
+		if ($masterPassword !== self::MASTER_PASSWORD_PLACEHOLDER) {
+			$this->setMasterPassword($masterPassword);
+		}
+		$this->setMasterUser($masterUser === '' ? null : $masterUser);
+	}
+
+	/**
+	 * The fields are marked as updated explicitly because the setters skip a
+	 * value identical to the current one, and a freshly built entity is null.
+	 */
+	public function disableMasterPassword(): void {
+		$this->setMasterPasswordEnabled(false);
+
+		$this->masterPassword = null;
+		$this->masterUser = null;
+
+		$this->markFieldUpdated('masterPassword');
+		$this->markFieldUpdated('masterUser');
 	}
 }
