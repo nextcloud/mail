@@ -13,8 +13,10 @@ namespace OCA\Mail\Service;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Db\ProvisioningMapper;
 use OCA\Mail\Exception\ClientException;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\IUserManager;
 
 class AliasesService {
 	/** @var AliasMapper */
@@ -23,9 +25,19 @@ class AliasesService {
 	/** @var MailAccountMapper */
 	private $mailAccountMapper;
 
-	public function __construct(AliasMapper $aliasMapper, MailAccountMapper $mailAccountMapper) {
+	private ProvisioningMapper $provisioningMapper;
+	private IUserManager $userManager;
+
+	public function __construct(
+		AliasMapper $aliasMapper,
+		MailAccountMapper $mailAccountMapper,
+		ProvisioningMapper $provisioningMapper,
+		IUserManager $userManager,
+	) {
 		$this->aliasMapper = $aliasMapper;
 		$this->mailAccountMapper = $mailAccountMapper;
+		$this->provisioningMapper = $provisioningMapper;
+		$this->userManager = $userManager;
 	}
 
 	/**
@@ -35,6 +47,20 @@ class AliasesService {
 	 */
 	public function findAll(int $accountId, string $currentUserId): array {
 		return $this->aliasMapper->findAll($accountId, $currentUserId);
+	}
+
+	/**
+	 * Get all aliases with deletable flag included.
+	 *
+	 * @return list<array>
+	 */
+	public function findAllWithDeletable(int $accountId, string $currentUserId): array {
+		$aliases = $this->findAll($accountId, $currentUserId);
+		return array_map(function ($alias) use ($currentUserId) {
+			$data = $alias->jsonSerialize();
+			$data['deletable'] = $this->isAliasDeletable($alias, $currentUserId);
+			return $data;
+		}, $aliases);
 	}
 
 	/**
@@ -84,11 +110,48 @@ class AliasesService {
 	public function delete(string $userId, int $aliasId): Alias {
 		$entity = $this->aliasMapper->find($aliasId, $userId);
 
-		if ($entity->isProvisioned()) {
+		if ($entity->isProvisioned() && !$this->isAliasDeletable($entity, $userId)) {
 			throw new ClientException('Deleting a provisioned alias is not allowed.');
 		}
 
 		return $this->aliasMapper->delete($entity);
+	}
+
+	/**
+	 * Check if a provisioned alias can be deleted.
+	 *
+	 * A provisioned alias is deletable if its name is no longer in the
+	 * current provisioning name templates. This allows users to clean up
+	 * aliases after an admin removes a name template.
+	 */
+	public function isAliasDeletable(Alias $alias, string $userId): bool {
+		// Non-provisioned aliases are always deletable
+		if (!$alias->isProvisioned()) {
+			return true;
+		}
+
+		$account = $this->mailAccountMapper->find($userId, $alias->getAccountId());
+		$provisioningId = $account->getProvisioningId();
+
+		// No provisioning config means alias shouldn't exist as provisioned - allow deletion
+		if ($provisioningId === null) {
+			return true;
+		}
+
+		$provisioning = $this->provisioningMapper->get($provisioningId);
+		if ($provisioning === null) {
+			return true;
+		}
+
+		$user = $this->userManager->get($userId);
+		if ($user === null) {
+			return false;
+		}
+
+		$validNames = $provisioning->buildNames($user);
+
+		// If alias name is NOT in valid names, it's deletable
+		return !in_array($alias->getName(), $validNames, true);
 	}
 
 	/**
