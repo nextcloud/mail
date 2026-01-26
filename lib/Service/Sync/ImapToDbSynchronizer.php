@@ -436,19 +436,24 @@ class ImapToDbSynchronizer {
 				$this->dbMapper->insertBulk($account, ...$dbMessages);
 
 				if ($importantTag) {
-					$this->newMessagesClassifier->classifyNewMessages(
+					$classified = $this->newMessagesClassifier->classifyNewMessages(
 						$dbMessages,
 						$mailbox,
 						$account,
 						$importantTag,
 					);
+					if ($classified) {
+						$perf->step('classified a chunk of new messages');
+					} else {
+						$perf->step('skipped classification');
+					}
 				}
 
 				$this->dispatcher->dispatch(
 					NewMessagesSynchronized::class,
 					new NewMessagesSynchronized($account, $mailbox, $dbMessages)
 				);
-				$perf->step('classified a chunk of new messages');
+				$perf->step('emitted NewMessagesSynchronized event');
 			}
 			$perf->step('persist new messages');
 
