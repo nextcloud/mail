@@ -361,9 +361,10 @@ class ImapToDbSynchronizer {
 			throw new IncompleteSyncException("Initial sync is not complete for $loggingMailboxId ($cached of $total messages cached).");
 		}
 
-		$mailbox->setSyncNewToken($client->getSyncToken($mailbox->getName()));
-		$mailbox->setSyncChangedToken($client->getSyncToken($mailbox->getName()));
-		$mailbox->setSyncVanishedToken($client->getSyncToken($mailbox->getName()));
+		$syncToken = $client->getSyncToken($mailbox->getName());
+		$mailbox->setSyncNewToken($syncToken);
+		$mailbox->setSyncChangedToken($syncToken);
+		$mailbox->setSyncVanishedToken($syncToken);
 		$this->mailboxMapper->update($mailbox);
 
 		$perf->end();
