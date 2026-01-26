@@ -19,6 +19,7 @@ use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\ContextChat\ContextChatSettingsService;
 use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\MailManager;
@@ -114,6 +115,7 @@ class PageControllerTest extends TestCase {
 
 	private ContextChatSettingsService $contextChatSettingsService;
 
+	private ClassificationSettingsService|MockObject $classificationSettingsService;
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -144,6 +146,7 @@ class PageControllerTest extends TestCase {
 		$this->contextChatSettingsService = $this->createMock(ContextChatSettingsService::class);
 		$this->contextChatSettingsService->method('isIndexingEnabled')->willReturn(true);
 
+		$this->classificationSettingsService = $this->createMock(ClassificationSettingsService::class);
 		$this->controller = new PageController(
 			$this->appName,
 			$this->request,
@@ -169,6 +172,7 @@ class PageControllerTest extends TestCase {
 			$this->quickActionsService,
 			$this->appManager,
 			$this->contextChatSettingsService,
+			$this->classificationSettingsService
 		);
 	}
 
@@ -319,6 +323,9 @@ class PageControllerTest extends TestCase {
 			->method('findAll')
 			->with($this->userId)
 			->willReturn([]);
+		$this->classificationSettingsService->expects(($this->once()))
+			->method(('isClassificationEnabledByDefault'))
+			->willReturn(true);
 		$this->initialState->expects($this->exactly(26))
 			->method('provideInitialState')
 			->withConsecutive(
@@ -349,6 +356,7 @@ class PageControllerTest extends TestCase {
 					'compact-mode' => 'false'
 				]],
 				['prefill_displayName', 'Jane Doe'],
+				['importance_classification_default', true],
 				['prefill_email', 'jane@doe.cz'],
 				['outbox-messages', []],
 				['quick-actions', []],

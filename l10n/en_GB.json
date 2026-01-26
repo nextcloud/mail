@@ -186,6 +186,7 @@
     "Title of the text block" : "Title of the text block",
     "Content of the text block" : "Content of the text block",
     "Ok" : "OK",
+    "Automatically create tentative appointments in calendar" : "Automatically create tentative appointments in calendar",
     "No certificate" : "No certificate",
     "Certificate updated" : "Certificate updated",
     "Could not update certificate" : "Could not update certificate",
@@ -720,6 +721,7 @@
     "There was an error when provisioning accounts." : "There was an error when provisioning accounts.",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "Successfully deleted and deprovisioned accounts for \"{domain}\"",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Error when deleting and deprovisioning accounts for \"{domain}\"",
+    "Could not save default classification setting" : "Could not save default classification setting",
     "Mail app" : "Mail app",
     "The mail app allows users to read mails on their IMAP accounts." : "The mail app allows users to read mails on their IMAP accounts.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner).",
@@ -740,6 +742,9 @@
     "Enable text processing through LLMs" : "Enable text processing through LLMs",
     "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas." : "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas.",
     "Enable LLM processing" : "Enable LLM processing",
+    "Enable classification by importance by default" : "Enable classification by importance by default",
+    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts.",
+    "Enable classification of important mails by default" : "Enable classification of important mails by default",
     "Anti Spam Service" : "Anti Spam Service",
     "You can set up an anti spam service email address here." : "You can set up an anti spam service email address here.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Any email that is marked as spam will be sent to the anti spam service.",
@@ -884,10 +889,6 @@
     "Determine importance using machine learning" : "Determine importance using machine learning",
     "Mark all messages of this folder as read" : "Mark all messages of this folder as read",
     "Last 7 days" : "Last 7 days",
-    "From me" : "From me",
-    "Could not save default classification setting" : "Could not save default classification setting",
-    "Enable classification by importance by default" : "Enable classification by importance by default",
-    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts.",
-    "Enable classification of important mails by default" : "Enable classification of important mails by default"
+    "From me" : "From me"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

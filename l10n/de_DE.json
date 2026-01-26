@@ -721,6 +721,7 @@
     "There was an error when provisioning accounts." : "Beim Bereitstellen von Konten ist ein Fehler aufgetreten.",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "Konten für \"{domain}\" gelöscht und aufgehoben",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Fehler beim Löschen und Aufheben der Bereitstellung von Konten für \"{domain}\"",
+    "Could not save default classification setting" : "Die Standardklassifizierungseinstellung konnte nicht gespeichert werden",
     "Mail app" : "Mail App",
     "The mail app allows users to read mails on their IMAP accounts." : "Die Mail-App ermöglicht Benutzern, E-Mails von ihren IMAP-Konten zu lesen.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Hier finden Sie instanzweite Einstellungen. Benutzerspezifische Einstellungen finden Sie in der App selbst (linke untere Ecke).",
@@ -741,6 +742,9 @@
     "Enable text processing through LLMs" : "Textverarbeitung mittels LLMs aktivieren",
     "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas." : "Die Mail-App kann mithilfe des konfigurierten großen Sprachmodells Benutzerdaten verarbeiten und Hilfsfunktionen wie Zusammenfassungen von Unterhaltungen, intelligente Antworten und Ereignisübersichten bereitstellen.",
     "Enable LLM processing" : "LLM-Verarbeitung aktivieren",
+    "Enable classification by importance by default" : "Standardmäßig die Klassifizierung nach Wichtigkeit aktivieren",
+    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "Die Mail-App kann eingehende E-Mails mithilfe maschinellem Lernens nach Wichtigkeit klassifizieren. Diese Funktion ist standardmäßig aktiviert, kann hier jedoch standardmäßig deaktiviert werden. Benutzer können die Funktion für ihre Konten aktivieren und deaktivieren.",
+    "Enable classification of important mails by default" : "Standardmäßig die Klassifizierung wichtiger E-Mails aktivieren",
     "Anti Spam Service" : "Anti-Spam-Dienst",
     "You can set up an anti spam service email address here." : "Hier können Sie eine E-Mail-Adresse für einen Anti-Spam-Dienst einrichten.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Jede als Spam markierte E-Mail wird an den Anti-Spam-Dienst weitergeleitet.",
@@ -885,10 +889,6 @@
     "Determine importance using machine learning" : "Die Bedeutung mithilfe von maschinellem Lernen bestimmen",
     "Mark all messages of this folder as read" : "Alle Nachrichten in diesem Ordner als gelesen markieren",
     "Last 7 days" : "Die letzten 7 Tage",
-    "From me" : "Von mir",
-    "Could not save default classification setting" : "Die Standardklassifizierungseinstellung konnte nicht gespeichert werden",
-    "Enable classification by importance by default" : "Standardmäßig die Klassifizierung nach Wichtigkeit aktivieren",
-    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "Die Mail-App kann eingehende E-Mails mithilfe maschinellem Lernens nach Wichtigkeit klassifizieren. Diese Funktion ist standardmäßig aktiviert, kann hier jedoch standardmäßig deaktiviert werden. Benutzer können die Funktion für ihre Konten aktivieren und deaktivieren.",
-    "Enable classification of important mails by default" : "Standardmäßig die Klassifizierung wichtiger E-Mails aktivieren"
+    "From me" : "Von mir"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

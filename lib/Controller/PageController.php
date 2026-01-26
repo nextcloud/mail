@@ -19,6 +19,7 @@ use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\ContextChat\ContextChatSettingsService;
 use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\OutboxService;
@@ -100,6 +101,7 @@ class PageController extends Controller {
 		QuickActionsService $quickActionsService,
 		private IAppManager $appManager,
 		ContextChatSettingsService $contextChatSettingsService,
+		private ClassificationSettingsService $classificationSettingsService,
 	) {
 		parent::__construct($appName, $request);
 
@@ -234,6 +236,10 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',
 			$this->userManager->getDisplayName($this->currentUserId),
+		);
+		$this->initialStateService->provideInitialState(
+			'importance_classification_default',
+			$this->classificationSettingsService->isClassificationEnabledByDefault(),
 		);
 		$this->initialStateService->provideInitialState(
 			'prefill_email',

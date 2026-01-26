@@ -581,6 +581,7 @@ OC.L10N.register(
     "There was an error when provisioning accounts." : "Не удалось настроить учётные записи",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "Успешно удалены и отключены аккаунты для \"{домен}\"",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Возникла ошибка при удалении и отключении аккаунтов для \"{domain}\"",
+    "Could not save default classification setting" : "Не удалось сохранить настройку классификации по умолчанию.",
     "Mail app" : "Приложение Почта",
     "The mail app allows users to read mails on their IMAP accounts." : "Приложение Почта позволяет пользователям подключать свои почтовые ящики по протоколу IMAP.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Здесь могут быть заданы параметры, используемые глобально на сервере. Диалог настройки параметров пользователя открывается непосредственно в приложении из значка, расположенного в левом нижнем углу.",
@@ -601,6 +602,9 @@ OC.L10N.register(
     "Enable text processing through LLMs" : "Включить обработку текста с помощью LLM",
     "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas." : "Приложение «Почта» может обрабатывать пользовательские данные с помощью настроенной большой языковой модели и предоставлять вспомогательные функции, такие как резюме цепочек сообщений, интеллектуальные ответы и повестки событий.",
     "Enable LLM processing" : "Включить обработку LLM",
+    "Enable classification by importance by default" : "Включить классификацию по важности по умолчанию",
+    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "Приложение Mail может классифицировать входящие электронные письма по важности с помощью машинного обучения. Эта функция включена по умолчанию, но может быть отключена по умолчанию здесь. Отдельные пользователи по прежнему смогут переключать эту функцию для своих учетных записей.",
+    "Enable classification of important mails by default" : "Включить классификацию важных писем по умолчанию",
     "Anti Spam Service" : "Служба защиты от спама",
     "You can set up an anti spam service email address here." : "В этом поле возможно задать адрес эл. почты службы анти-спама.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Все письма, отмеченные как спам, будут отправлены на адрес службы анти-спама.",
@@ -736,10 +740,6 @@ OC.L10N.register(
     "Continue to %s" : "Продолжать %s",
     "Mark all messages of this folder as read" : "Пометить все сообщения в этой папке как прочитанные",
     "Last 7 days" : "Последние 7 дней",
-    "From me" : "От меня",
-    "Could not save default classification setting" : "Не удалось сохранить настройку классификации по умолчанию.",
-    "Enable classification by importance by default" : "Включить классификацию по важности по умолчанию",
-    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "Приложение Mail может классифицировать входящие электронные письма по важности с помощью машинного обучения. Эта функция включена по умолчанию, но может быть отключена по умолчанию здесь. Отдельные пользователи по прежнему смогут переключать эту функцию для своих учетных записей.",
-    "Enable classification of important mails by default" : "Включить классификацию важных писем по умолчанию"
+    "From me" : "От меня"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

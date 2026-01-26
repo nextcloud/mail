@@ -582,6 +582,7 @@
     "There was an error when provisioning accounts." : "حدث خطأ أثناء تزويد الحسابات.",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "تمّ بنجاح حذف الحسابات وإلغاء حق وصولها إلى \"{domain}\"",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "حدث خطأ أثناء حذف الحسابات وإلغاء حق وصولها إلى \"{domain}\"",
+    "Could not save default classification setting" : "تعذّر حفظ إعداد التصنيف التلقائي",
     "Mail app" : "تطبيق \"البريد\" Mail app",
     "The mail app allows users to read mails on their IMAP accounts." : "يسمح تطبيق البريد للمستخدمين بقراءة رسائل البريد على حسابات IMAP الخاصة بهم.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "هنا يمكنك العثور على الإعدادات على مستوى الخادم. توجد الإعدادات الخاصة بالمستخدم في التطبيق نفسه (في الأسفل).",
@@ -602,6 +603,9 @@
     "Enable text processing through LLMs" : "تمكين معالجة النص من خلال النماذج اللغوية الوسيعة LLMs.",
     "The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas." : "يمكن لتطبيق البريد معالجة بيانات المستخدم بمساعدة النموذج اللغوي الوسيع LLM الذي تمّ تكوينه وتوفير ميزات المساعدة مثل ملخصات نَظْمَات المحادثات والردود الذكية و أجندة الأحداث.",
     "Enable LLM processing" : "تمكين المعالجة بالنموذج اللغوي الوسيع LLM",
+    "Enable classification by importance by default" : "تمكين التصنيف بحسب الأهمية تلقائيّاً",
+    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "يمكن لتطبيق Mail تصنيف رسائل البريد الإلكتروني الواردة حسب الأهمية باستخدام التعلُّم الآلي. يتم تمكين هذه الميزة كخيار تلقائي؛ كما يمكن تعطيلها كذلك كخيار تلقائي. لكن سيظل المستخدمون الفرديون قادرون على تبديل الميزة في حساباتهم.",
+    "Enable classification of important mails by default" : "تمكين تصنيف البريد بحسب الأهمية تلقائيّاً",
     "Anti Spam Service" : "خدمة \"مكافحة البريد العَشْوَائي\" Anti Spam",
     "You can set up an anti spam service email address here." : "يمكنك إعداد عنوان بريد إلكتروني لخدمة \"مكافحة البريد العَشْوَائي\" Anti Spam هنا.",
     "Any email that is marked as spam will be sent to the anti spam service." : "سيتم إرسال أي بريد إلكتروني يتم تمييزه على أنه بريد عشوائي إلى خدمة \"مكافحة البريد العَشْوَائي\" Anti Spam.",
@@ -719,10 +723,6 @@
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "إذا لم تكن راغباً في زيارة تلك الصفحة، يمكنك العودة إلى <a href=\"%s\">البريد Mail</a>.",
     "Continue to %s" : "إستمر نحو %s",
     "Last 7 days" : "آخر 7 أيام",
-    "From me" : "مِنِّي أنا",
-    "Could not save default classification setting" : "تعذّر حفظ إعداد التصنيف التلقائي",
-    "Enable classification by importance by default" : "تمكين التصنيف بحسب الأهمية تلقائيّاً",
-    "The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts." : "يمكن لتطبيق Mail تصنيف رسائل البريد الإلكتروني الواردة حسب الأهمية باستخدام التعلُّم الآلي. يتم تمكين هذه الميزة كخيار تلقائي؛ كما يمكن تعطيلها كذلك كخيار تلقائي. لكن سيظل المستخدمون الفرديون قادرون على تبديل الميزة في حساباتهم.",
-    "Enable classification of important mails by default" : "تمكين تصنيف البريد بحسب الأهمية تلقائيّاً"
+    "From me" : "مِنِّي أنا"
 },"pluralForm" :"nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;"
 }

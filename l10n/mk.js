@@ -182,6 +182,7 @@ OC.L10N.register(
     "Set reminder for next week" : "Постави потсетник за наредната недела",
     "Could not delete message" : "Неможе да се избрише пораката",
     "This message is unread" : "Оваа порака не е прочитана",
+    "Unfavorite" : "Од-означи",
     "Favorite" : "Омилени",
     "Unread" : "Непрочитана",
     "Read" : "Прочитана",
