@@ -326,7 +326,7 @@ class PageControllerTest extends TestCase {
 		$this->classificationSettingsService->expects(($this->once()))
 			->method(('isClassificationEnabledByDefault'))
 			->willReturn(true);
-		$this->initialState->expects($this->exactly(26))
+		$this->initialState->expects($this->exactly(27))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
