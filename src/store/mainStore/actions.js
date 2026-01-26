@@ -2316,6 +2316,9 @@ export default function mainStoreActions() {
 		setFollowUpFeatureAvailableMutation(followUpFeatureAvailable) {
 			this.followUpFeatureAvailable = followUpFeatureAvailable
 		},
+		setContextChatFeatureAvailableMutation(contextChatFeatureAvailable) {
+			this.contextChatFeatureAvailable = contextChatFeatureAvailable
+		},
 		hasCurrentUserPrincipalAndCollectionsMutation(hasCurrentUserPrincipalAndCollections) {
 			this.hasCurrentUserPrincipalAndCollections = hasCurrentUserPrincipalAndCollections
 		},

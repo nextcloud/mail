@@ -201,7 +201,21 @@
 						</NcFormBoxSwitch>
 					</NcFormBox>
 				</NcAppSettingsSection>
-
+				<NcAppSettingsSection v-if="contextChatFeatureAvailable" id="context-chat-settings" :name="t('mail', 'Context Chat integration')">
+					<NcFormBox>
+						<NcFormBoxSwitch
+							:checked="useContextChat"
+							:disabled="loadingContextChat"
+							@update:modelValue="onToggleContextChat">
+							{{ contextChatText }}
+						</NcFormBoxSwitch>
+					</NcFormBox>
+				</NcAppSettingsSection>
+				<NcAppSettingsSection id="about-settings" :name="t('mail', 'About')">
+					<NcFormGroup
+						:label="t('mail', 'Acknowledgements')"
+						:description="t('mail', 'This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2.')" />
+				</NcAppSettingsSection>
 				<NcAppSettingsShortcutsSection>
 					<NcHotkeyList>
 						<NcHotkey :label="t('mail', 'Compose new message')" hotkey="C" />
@@ -353,10 +367,11 @@ export default {
 			loadingOptOutSettings: false,
 			loadingInternalAddresses: false,
 			loadingReplySettings: false,
-
+			contextChatText: t('mail', 'Make mails available to Context Chat'),
 			followUpReminderText: t('mail', 'Remind about messages that require a reply but received none'),
 			internalAddressText: t('mail', 'Highlight external addresses'),
 			toggleAutoTagging: false,
+			loadingContextChat: false,
 			loadingFollowUpReminders: false,
 			loadingSortFavorites: false,
 			displaySmimeCertificateModal: false,
@@ -378,7 +393,14 @@ export default {
 
 	computed: {
 		...mapStores(useMainStore),
-		...mapState(useMainStore, ['getAccounts', 'followUpFeatureAvailable', 'getMyTextBlocks', 'getSharedTextBlocks']),
+		...mapState(useMainStore, [
+			'getAccounts',
+			'followUpFeatureAvailable',
+			'contextChatFeatureAvailable',
+			'getMyTextBlocks',
+			'getSharedTextBlocks',
+		]),
+
 		useBottomReplies() {
 			return this.mainStore.getPreference('reply-mode', 'top') === 'bottom'
 		},
@@ -432,6 +454,16 @@ export default {
 
 			set(value) {
 				this.onToggleCollectData(value)
+			},
+		},
+
+		useContextChat: {
+			get() {
+				return this.mainStore.getPreference('index-context-chat', 'true') === 'true'
+			},
+
+			set(value) {
+				this.onToggleContextChat(value)
 			},
 		},
 
@@ -663,6 +695,22 @@ export default {
 				showError(t('mail', 'Could not update preference'))
 			} finally {
 				this.loadingFollowUpReminders = false
+			}
+		},
+
+		async onToggleContextChat(enabled) {
+			this.loadingContextChat = true
+
+			try {
+				await this.mainStore.savePreference({
+					key: 'index-context-chat',
+					value: enabled ? 'true' : 'false',
+				})
+			} catch (error) {
+				Logger.error('Could not save preferences', { error })
+				showError(t('mail', 'Could not update preference'))
+			} finally {
+				this.loadingContextChat = false
 			}
 		},
 

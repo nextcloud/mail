@@ -1255,7 +1255,7 @@ class MessageMapper extends QBMapper {
 	 *
 	 * @return Message[]
 	 */
-	public function findByIds(string $userId, array $ids, string $sortOrder): array {
+	public function findByIds(string $userId, array $ids, string $sortOrder, string $orderBy = 'sent_at'): array {
 		if ($ids === []) {
 			return [];
 		}
@@ -1265,7 +1265,7 @@ class MessageMapper extends QBMapper {
 			->where(
 				$qb->expr()->in('id', $qb->createParameter('ids'))
 			)
-			->orderBy('sent_at', $sortOrder);
+			->orderBy($orderBy, $sortOrder);
 
 		$results = [];
 		foreach (array_chunk($ids, 1000) as $chunk) {
@@ -1716,5 +1716,28 @@ class MessageMapper extends QBMapper {
 		}
 
 		$result->closeCursor();
+	}
+
+	/**
+	 * Find n message IDs that are higher than $afterId and sent after $sentAfter
+	 * @param Mailbox $mailbox
+	 * @param int $afterId
+	 * @param int $sentAfter
+	 * @param int $limit
+	 * @return int[]
+	 */
+	public function findIdsAfter(Mailbox $mailbox, int $afterId, int $sentAfter, int $limit) : array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('m.id')
+			->from($this->getTableName(), 'm')
+			->where(
+				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
+				$qb->expr()->gt('id', $qb->createNamedParameter($afterId, IQueryBuilder::PARAM_INT)),
+				$qb->expr()->gt('sent_at', $qb->createNamedParameter($sentAfter, IQueryBuilder::PARAM_INT)),
+			)
+			->orderBy('id', 'asc')
+			->setMaxResults($limit);
+
+		return $this->findIds($qb);
 	}
 }
