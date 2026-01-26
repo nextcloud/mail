@@ -333,7 +333,7 @@ export default {
 			mode: 'auto',
 			accountName: this.displayName,
 			emailAddress: this.email,
-			classificationEnabled: loadState('mail', 'importance_classification_default', true),
+			classificationEnabled: fromAccountOr('classificationEnabled', loadState('mail', 'importance_classification_default', true)),
 			autoConfig: {
 				password: '',
 			},
