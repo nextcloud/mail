@@ -13,8 +13,13 @@ use Exception;
 use JsonException;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\Sync\SyncService;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IL10N;
 use OCP\IUser;
 use OCP\Security\ICrypto;
@@ -23,6 +28,7 @@ use OCP\UserMigration\IImportSource;
 use OCP\UserMigration\IMigrator;
 use OCP\UserMigration\UserMigrationException;
 use Symfony\Component\Console\Output\OutputInterface;
+use function Amp\Iterator\concat;
 use function array_map;
 use function json_decode;
 use function json_encode;
@@ -32,6 +38,9 @@ class MailAccountMigrator implements IMigrator {
 	public function __construct(
 		private AccountService $accountService,
 		private AliasesService $aliasesService,
+		private MailboxMapper $mailboxMapper,
+		private SyncService $syncService,
+		private IEventDispatcher $eventDispatcher,
 		private IL10N $l10n,
 		private ICrypto $crypto,
 	) {
@@ -90,14 +99,10 @@ class MailAccountMigrator implements IMigrator {
 				$accountData['oauthTokenTtl'] = $account->getMailAccount()->getOauthTokenTtl();
 			}
 
-			unset(
-				$accountData['draftsMailboxId'],
-				$accountData['sentMailboxId'],
-				$accountData['trashMailboxId'],
-				$accountData['archiveMailboxId'],
-				$accountData['snoozeMailboxId'],
-				$accountData['junkMailboxId'],
-			);
+			$mailboxes = $this->mailboxMapper->findAll($account);
+			$accountData['mailboxes'] = array_map(function (Mailbox $mailbox) {
+				return $mailbox->jsonSerialize();
+			}, $mailboxes);
 
 			$aliases = $this->aliasesService->findAll(
 				$account->getId(),
@@ -116,6 +121,10 @@ class MailAccountMigrator implements IMigrator {
 	}
 
 	public function import(IUser $user, IImportSource $importSource, OutputInterface $output): void {
+		foreach($this->accountService->getAllAcounts() as $account) {
+			$this->accountService->deleteByAccountId($account->getId());
+		}
+
 		try {
 			$index = json_decode($importSource->getFileContents('mail/accounts/index.json'), true, flags: JSON_THROW_ON_ERROR);
 		} catch (JsonException $e) {
@@ -135,6 +144,7 @@ class MailAccountMigrator implements IMigrator {
 			);
 
 			$newAccount = new MailAccount($accountData);
+			print_r("Before: " . $newAccount->getId());
 
 			// Change UID to new owner
 			$newAccount->setUserId($user->getUID());
@@ -163,6 +173,48 @@ class MailAccountMigrator implements IMigrator {
 			$mailAccount = $this->accountService->save(
 				$newAccount
 			);
+
+			foreach ($accountData['mailboxes'] as $oldMailbox) {
+				$newMailbox = new Mailbox();
+
+				$newMailbox->setName($oldMailbox['name']);
+				$newMailbox->setNameHash(md5($oldMailbox['name']));
+				$newMailbox->setAccountId($mailAccount->getId());
+				$newMailbox->setAttributes($oldMailbox['attributes']);
+				$newMailbox->setDelimiter($oldMailbox['delimiter']);
+				$newMailbox->setMessages(0);
+				$newMailbox->setUnseen(0);
+				$newMailbox->setSelectable($oldMailbox['selectable'] ?? true);
+				$newMailbox->setSyncInBackground($oldMailbox['syncInBackground'] ?? false);
+				$newMailbox->setMyAcls($oldMailbox['myAcls'] ?? null);
+				$newMailbox->setShared($oldMailbox['shared'] ?? false);
+
+				/** @var Mailbox $mailbox */
+				$mailbox = $this->mailboxMapper->insert($newMailbox);
+
+				switch ($oldMailbox['databaseId']) {
+					case $accountData['draftsMailboxId']:
+						$mailAccount->setDraftsMailboxId($mailbox->getId());
+						break;
+					case $accountData['sentMailboxId']:
+						$mailAccount->setSentMailboxId($mailbox->getId());
+						break;
+					case $accountData['trashMailboxId']:
+						$mailAccount->setTrashMailboxId($mailbox->getId());
+						break;
+					case $accountData['archiveMailboxId']:
+						$mailAccount->setArchiveMailboxId($mailbox->getId());
+						break;
+					case $accountData['junkMailboxId']:
+						$mailAccount->setJunkMailboxId($mailbox->getId());
+						break;
+					case $accountData['snoozeMailboxId']:
+						$mailAccount->setSnoozeMailboxId($mailbox->getId());
+						break;
+				}
+			}
+
+			$this->accountService->update($mailAccount);
 
 			// Import aliases
 			foreach ($accountData['aliases'] as $alias) {
