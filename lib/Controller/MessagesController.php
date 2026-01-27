@@ -577,12 +577,13 @@ class MessagesController extends Controller {
 				$message = $this->mailManager->getMessage($this->currentUserId, $id);
 				$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 				$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-			} catch (DoesNotExistException $e) {
+			} catch (DoesNotExistException) {
 				return new TemplateResponse(
 					$this->appName,
 					'error',
 					['message' => 'Not allowed'],
 					TemplateResponse::RENDER_AS_BLANK,
+					Http::STATUS_NOT_FOUND,
 				);
 			}
 
@@ -637,6 +638,7 @@ class MessagesController extends Controller {
 				'error',
 				['message' => $ex->getMessage()],
 				TemplateResponse::RENDER_AS_BLANK,
+				Http::STATUS_INTERNAL_SERVER_ERROR
 			);
 		}
 	}
