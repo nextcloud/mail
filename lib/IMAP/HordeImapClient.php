@@ -42,12 +42,14 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 	public function login() {
 		parent::login();
 
-		try {
-			$this->sendID();
-			/* ID is queued - force sending the queued command. */
-			$this->_sendCmd($this->_pipeline());
-		} catch (Horde_Imap_Client_Exception_NoSupportExtension $e) {
-			// Ignore if server doesn't support ID extension.
+		if ($this->capability->query('ID')) {
+			try {
+				$this->sendID();
+				/* ID is queued - force sending the queued command. */
+				$this->_sendCmd($this->_pipeline());
+			} catch (Horde_Imap_Client_Exception_NoSupportExtension) {
+				// Ignore if server doesn't support ID extension.
+			}
 		}
 	}
 
