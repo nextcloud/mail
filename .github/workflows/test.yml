@@ -15,21 +15,21 @@ jobs:
     strategy:
       matrix:
         php-versions: ['8.2', '8.3']
-        nextcloud-versions: ['master', 'stable31']
+        nextcloud-versions: ['stable33', 'stable31']
         include:
           - php-versions: '8.4'
-            nextcloud-versions: 'master'
+            nextcloud-versions: 'stable33'
             coverage: true
           - php-versions: '8.1'
             nextcloud-versions: 'stable32'
           - php-versions: '8.4'
             nextcloud-versions: 'stable32'
           - php-versions: '8.5'
-            nextcloud-versions: 'master'
+            nextcloud-versions: 'stable33'
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests ${{ matrix.coverage && '(coverage)' || ''}}
     steps:
     - name: Set up Nextcloud env
-      uses: ChristophWurst/setup-nextcloud@fc0790385c175d97e88a7cb0933490de6e990374 # v0.3.2
+      uses: ChristophWurst/setup-nextcloud@6e38a6146b15a4c4c932ce72ed8daf75eb903d18 # v0.4.1
       with:
         nextcloud-version: ${{ matrix.nextcloud-versions }}
         php-version: ${{ matrix.php-versions }}
@@ -66,12 +66,12 @@ jobs:
       strategy:
           matrix:
               php-versions: ['8.4']
-              nextcloud-versions: ['master']
+              nextcloud-versions: ['stable33']
               db: ['sqlite', 'mysql', 'pgsql']
               cache: ['nocache']
               include:
                 - php-versions: 8.4
-                  nextcloud-versions: 'master'
+                  nextcloud-versions: 'stable33'
                   db: 'mysql'
                   cache: 'nocache'
                   coverage: true
@@ -93,7 +93,7 @@ jobs:
                   cache: 'redis'
                   coverage: true
                 - php-versions: 8.5
-                  nextcloud-versions: 'master'
+                  nextcloud-versions: 'stable33'
                   db: 'mysql'
                   cache: 'redis'
       name: ${{ matrix.nextcloud-versions }} w/ php${{ matrix.php-versions }}-${{ matrix.db }}-${{ matrix.cache }} integration tests ${{ matrix.coverage && '(coverage)' || ''}}
@@ -147,7 +147,7 @@ jobs:
                 - 6379:6379
       steps:
           - name: Set up Nextcloud env
-            uses: ChristophWurst/setup-nextcloud@fc0790385c175d97e88a7cb0933490de6e990374 # v0.3.2
+            uses: ChristophWurst/setup-nextcloud@6e38a6146b15a4c4c932ce72ed8daf75eb903d18 # v0.4.1
             with:
               nextcloud-version: ${{ matrix.nextcloud-versions }}
               php-version: ${{ matrix.php-versions }}
@@ -247,7 +247,7 @@ jobs:
     needs: matrix
     steps:
       - name: Set up Nextcloud env
-        uses: ChristophWurst/setup-nextcloud@fc0790385c175d97e88a7cb0933490de6e990374 # v0.3.2
+        uses: ChristophWurst/setup-nextcloud@6e38a6146b15a4c4c932ce72ed8daf75eb903d18 # v0.4.1
         with:
           nextcloud-version: ${{ needs.matrix.outputs.branches-min }}
           php-version: ${{ needs.matrix.outputs.php-min }}
