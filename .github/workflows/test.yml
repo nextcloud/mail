@@ -15,17 +15,17 @@ jobs:
     strategy:
       matrix:
         php-versions: ['8.2', '8.3']
-        nextcloud-versions: ['master', 'stable31']
+        nextcloud-versions: ['stable33', 'stable31']
         include:
           - php-versions: '8.4'
-            nextcloud-versions: 'master'
+            nextcloud-versions: 'stable33'
             coverage: true
           - php-versions: '8.1'
             nextcloud-versions: 'stable32'
           - php-versions: '8.4'
             nextcloud-versions: 'stable32'
           - php-versions: '8.5'
-            nextcloud-versions: 'master'
+            nextcloud-versions: 'stable33'
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests ${{ matrix.coverage && '(coverage)' || ''}}
     steps:
     - name: Set up Nextcloud env
@@ -66,12 +66,12 @@ jobs:
       strategy:
           matrix:
               php-versions: ['8.4']
-              nextcloud-versions: ['master']
+              nextcloud-versions: ['stable33']
               db: ['sqlite', 'mysql', 'pgsql']
               cache: ['nocache']
               include:
                 - php-versions: 8.4
-                  nextcloud-versions: 'master'
+                  nextcloud-versions: 'stable33'
                   db: 'mysql'
                   cache: 'nocache'
                   coverage: true
@@ -93,7 +93,7 @@ jobs:
                   cache: 'redis'
                   coverage: true
                 - php-versions: 8.5
-                  nextcloud-versions: 'master'
+                  nextcloud-versions: 'stable33'
                   db: 'mysql'
                   cache: 'redis'
       name: ${{ matrix.nextcloud-versions }} w/ php${{ matrix.php-versions }}-${{ matrix.db }}-${{ matrix.cache }} integration tests ${{ matrix.coverage && '(coverage)' || ''}}
