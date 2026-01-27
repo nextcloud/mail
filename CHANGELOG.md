@@ -1,3 +1,21 @@
+## [5.6.9](https://github.com/nextcloud/mail/compare/v5.6.8...v5.6.9) (2026-01-27)
+
+
+### Bug Fixes
+
+* **l10n:** Update translations from Transifex ([b23a16a](https://github.com/nextcloud/mail/commit/b23a16a7842053af8bc80875f14438bfb1d13672))
+* **l10n:** Update translations from Transifex ([f79b619](https://github.com/nextcloud/mail/commit/f79b6193b3b910a627187e5e685b0b938290e62c))
+* **l10n:** Update translations from Transifex ([b3f5eeb](https://github.com/nextcloud/mail/commit/b3f5eeb103bea8382e8fa4a9e512078c08bbf73f))
+* **l10n:** Update translations from Transifex ([499ca86](https://github.com/nextcloud/mail/commit/499ca86cdab003881a921cd3ba42c32d4d6ff662))
+* **l10n:** Update translations from Transifex ([3cb8818](https://github.com/nextcloud/mail/commit/3cb88183be347bc3a48e33f9bfa173e294058a07))
+* **l10n:** Update translations from Transifex ([4fbbfff](https://github.com/nextcloud/mail/commit/4fbbfffa72a8631eaae8cad3d2f754dab25b1769))
+* **l10n:** Update translations from Transifex ([e35ce40](https://github.com/nextcloud/mail/commit/e35ce406ea8b4f8a746fee498e2144759d9079e9))
+* **MessageMapper:** Use message headers as fallback when processing MIME content ([01a967d](https://github.com/nextcloud/mail/commit/01a967de12319025dab03b060a359ae07bb0d0a8))
+* **phishing:** compare links using lowercase ([7c5c403](https://github.com/nextcloud/mail/commit/7c5c4036e390705642f9179528777cf064a83efb))
+* **text-block:** revive sharing ([4c7500a](https://github.com/nextcloud/mail/commit/4c7500ade80cda3b87a1786154e3c5a02acac250))
+
+
+
 ## [5.6.8](https://github.com/nextcloud/mail/compare/v5.6.7...v5.6.8) (2026-01-20)
 
 
