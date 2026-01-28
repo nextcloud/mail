@@ -20,7 +20,7 @@ use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class TextBlockControllerTest extends TestCase {
+final class TextBlockControllerTest extends TestCase {
 
 	/** @var TextBlockService|MockObject */
 	private $textBlockService;

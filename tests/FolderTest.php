@@ -9,13 +9,13 @@ namespace OCA\Mail\Tests;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Mailbox;
 use OCA\Mail\Folder;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class FolderTest extends TestCase {
 	/** @var int */
 	private $accountId;
 
-	/** @var Horde_Imap_Client_Mailbox|PHPUnit_Framework_MockObject_MockObject */
+	/** @var Horde_Imap_Client_Mailbox|MockObject */
 	private $mailbox;
 
 	/** @var Folder */

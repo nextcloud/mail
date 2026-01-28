@@ -8,6 +8,7 @@ declare(strict_types=1);
  */
 
 use Rector\Config\RectorConfig;
+use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\TypeDeclaration\Rector\Class_\AddTestsVoidReturnTypeWhereNoReturnRector;
 
 return RectorConfig::configure()
@@ -21,6 +22,9 @@ return RectorConfig::configure()
 	->withPreparedSets(
 		phpunitCodeQuality: true,
 	)
+	->withSets([
+		PHPUnitSetList::PHPUNIT_90,
+	])
 	->withPhpSets(
 		php74: true,
 	)

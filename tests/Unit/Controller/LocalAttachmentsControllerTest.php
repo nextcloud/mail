@@ -15,13 +15,13 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Service\Attachment\UploadedFile;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class LocalAttachmentsControllerTest extends TestCase {
-	/** @var IRequest|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IRequest|MockObject */
 	private $request;
 
-	/** @var IAttachmentService|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IAttachmentService|MockObject */
 	private $service;
 
 	/** @var string */
