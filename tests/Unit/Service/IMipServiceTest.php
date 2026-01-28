@@ -683,17 +683,13 @@ class IMipServiceTest extends TestCase {
 			->method('error')
 			->with(
 				'iMIP message processing failed',
-				self::callback(function ($context) use ($message, $mailbox) {
-					return isset($context['exception'])
+				self::callback(fn ($context) => isset($context['exception'])
 						&& $context['messageId'] === $message->getId()
-						&& $context['mailboxId'] === $mailbox->getId();
-				})
+						&& $context['mailboxId'] === $mailbox->getId())
 			);
 		$this->messageMapper->expects(self::once())
 			->method('updateImipData')
-			->with(self::callback(function (Message $msg) {
-				return $msg->isImipProcessed() === true && $msg->isImipError() === true;
-			}));
+			->with(self::callback(fn (Message $msg) => $msg->isImipProcessed() === true && $msg->isImipError() === true));
 
 		$this->service->process();
 	}

@@ -26,7 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-class SyncServiceTest extends TestCase {
+final class SyncServiceTest extends TestCase {
 
 	private IMAPClientFactory&MockObject $clientFactory;
 	private Horde_Imap_Client_Socket&MockObject $client;
