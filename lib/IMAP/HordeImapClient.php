@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\IMAP;
 
 use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Exception_NoSupportExtension;
 use Horde_Imap_Client_Socket;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IMemcache;
@@ -35,6 +36,21 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 		$this->rateLimiterCache = $cache;
 		$this->timeFactory = $timeFactory;
 		$this->hash = $hash;
+	}
+
+	#[\Override]
+	public function login() {
+		parent::login();
+
+		if ($this->capability->query('ID')) {
+			try {
+				$this->sendID();
+				/* ID is queued - force sending the queued command. */
+				$this->_sendCmd($this->_pipeline());
+			} catch (Horde_Imap_Client_Exception_NoSupportExtension) {
+				// Ignore if server doesn't support ID extension.
+			}
+		}
 	}
 
 	#[\Override]
