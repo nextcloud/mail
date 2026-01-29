@@ -124,6 +124,7 @@ OC.L10N.register(
     "Cancel" : "Katkesta",
     "Search the body of messages in priority Inbox" : "Otsi esmase postkasti kirjade sisust",
     "Activate" : "Lülita sisse",
+    "Make mails available to Context Chat" : "Muuda e-kirjad loetavaks kontekstuaalses vestluses",
     "Remind about messages that require a reply but received none" : "Tuleta mulle meelde kirju, mis eeldavad vastust, kui pole seda veel saanud",
     "Highlight external addresses" : "Tõsta välised aadressid esile",
     "Could not update preference" : "Eelistust polnud võimalik muuta",
