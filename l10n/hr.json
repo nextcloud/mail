@@ -46,6 +46,7 @@
     "Writing mode" : "Način pisanja",
     "Preferred writing mode for new messages and replies." : "Željeni način pisanja za nove poruke i odgovore.",
     "Default folders" : "Zadane mape",
+    "Filters" : "Filteri",
     "Mail server" : "Poslužitelj e-pošte",
     "Update alias" : "Ažuriraj pseudonim",
     "Show update alias form" : "Prikaži obrazac za ažuriranje pseudonima",
@@ -106,6 +107,10 @@
     "No messages in this folder" : "Nema poruka u ovoj mapi",
     "No messages" : "Nema poruka",
     "Blind copy recipients only" : "Samo primatelji skrivenih kopija poruke",
+    "Set reminder for later today" : "Postavi podsjetnik za kasnije danas",
+    "Set reminder for tomorrow" : "Postavi podsjetnik za sutra",
+    "Set reminder for this weekend" : "Postavi podsjetnik za ovaj vikend",
+    "Set reminder for next week" : "Postavi podsjetnik na sljedeći tjedan",
     "Could not delete message" : "Brisanje poruke nije uspjelo",
     "Unfavorite" : "Ukloni iz favorita",
     "Favorite" : "Favorit",
@@ -150,6 +155,7 @@
     "Remove" : "Ukloni",
     "Itinerary for {type} is not supported yet" : "Raspored za {type} još uvijek nije podržan",
     "Last hour" : "Posljednji sat",
+    "Today" : "Danas",
     "Last week" : "Prošli tjedan",
     "Last month" : "Prošli mjesec",
     "Choose target folder" : "Odaberi ciljnu mapu",
@@ -203,6 +209,7 @@
     "Collapse folders" : "Sakrij mape",
     "_{total} message_::_{total} messages_" : ["{total} poruka","{total} poruka","{total} poruka"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} nepročitana od {total}","{unread} nepročitane od {total}","{unread} nepročitanih od {total}"],
+    "Loading …" : "Učitavanje …",
     "The folder and all messages in it will be deleted." : "Izbrisat će se mapa i sve poruke.",
     "Delete folder" : "Izbriši mapu",
     "Delete folder {name}" : "Izbriši mapu {name}",
@@ -360,6 +367,7 @@
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nova poruka \nod {from}","%n novih poruka \nod {from}","%n novih poruka \nod {from}"],
     "Nextcloud Mail" : "Nextcloud Mail",
+    "Discard changes" : "Odbaci promjene",
     "Attachments were not copied. Please add them manually." : "Privici nisu kopirani. Dodajte ih ručno.",
     "Message sent" : "Poruka poslana",
     "Could not load {tag}{name}{endtag}" : "Pogreška pri učitavanju {tag}{name}{endtag}",
@@ -373,6 +381,7 @@
     "Redirect" : "Preusmjeri",
     "The link leads to %s" : "Ova poveznica vodi do %s",
     "Continue to %s" : "Idi do %s",
-    "Mark all messages of this folder as read" : "Označi sve poruke u ovoj mapi kao pročitane"
+    "Mark all messages of this folder as read" : "Označi sve poruke u ovoj mapi kao pročitane",
+    "Last 7 days" : "Zadnjih 7 dana"
 },"pluralForm" :"nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;"
 }

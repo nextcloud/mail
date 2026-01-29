@@ -831,6 +831,7 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Klicka här om du inte blir omdirigerad inom några sekunder.",
     "Redirect" : "Omdirigera",
     "The link leads to %s" : "Länken pekar mot %s",
+    "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Om du inte vill besöka sidan kan du gå tillbaka till<a href=\"%s\">E-post </a>.",
     "Continue to %s" : "Fortsätt till %s",
     "Determine importance using machine learning" : "Avgör vikt med maskininlärning",
     "Mark all messages of this folder as read" : "Markera alla meddelanden i den här mappen som lästa",
