@@ -225,6 +225,7 @@
 					required
 					@change="clearFeedback" />
 				<NcCheckboxRadioSwitch
+					v-if="isSetup"
 					id="auto-classification-enabled"
 					v-model="classificationEnabled"
 					:disabled="loading">
@@ -365,6 +366,10 @@ export default {
 
 		settingsPage() {
 			return this.account !== undefined
+		},
+
+		isSetup() {
+			return this.account === undefined
 		},
 
 		isDisabledAuto() {
