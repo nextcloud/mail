@@ -582,7 +582,7 @@ class MessagesController extends Controller {
 					$this->appName,
 					'error',
 					['message' => 'Not allowed'],
-					'none'
+					''
 				);
 			}
 
@@ -636,7 +636,7 @@ class MessagesController extends Controller {
 				$this->appName,
 				'error',
 				['message' => $ex->getMessage()],
-				'none'
+				''
 			);
 		}
 	}
