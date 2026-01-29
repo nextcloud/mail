@@ -55,7 +55,7 @@
     "ical.js": "^2.2.1",
     "js-base64": "^3.7.8",
     "jstz": "^2.1.1",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "md5": "^2.3.0",
     "mitt": "^3.0.1",
     "nextcloud_issuetemplate_builder": "^0.1.0",
