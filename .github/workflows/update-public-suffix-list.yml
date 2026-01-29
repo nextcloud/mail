@@ -16,6 +16,7 @@ jobs:
       matrix:
         branches:
           - 'main'
+          - 'stable5.7'
           - 'stable5.6'
 
     name: update-public-suffix-list-${{ matrix.branches }}
