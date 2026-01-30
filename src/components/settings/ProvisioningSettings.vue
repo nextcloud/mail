@@ -31,6 +31,16 @@
 							:disabled="loading"
 							name="emailTemplate"
 							type="text">
+						<br>
+						<label :for="'mail-provision-name' + setting.id"> {{ t('mail', 'Name templates (one per line)') }}** </label>
+						<br>
+						<textarea
+							:id="'mail-provision-name' + setting.id"
+							v-model="nameTemplates"
+							:disabled="loading"
+							name="nameTemplates"
+							rows="3"
+							@keydown.enter.stop />
 					</div>
 				</div>
 				<div class="settings-group">
@@ -349,9 +359,10 @@
 							{{ t('mail', 'Unprovision & Delete Config') }}
 						</ButtonVue>
 						<br>
-						<small>{{
-							t('mail', '* %USERID% and %EMAIL% will be replaced with the user\'s UID and email')
-						}}</small>
+						<small>
+							{{ t('mail', '* %USERID% and %EMAIL% will be replaced with the user\'s UID and email') }}<br>
+							{{ t('mail', '** %USERID% and %DISPLAYNAME% will be replaced with the user\'s UID and display name') }}
+						</small>
 					</div>
 				</div>
 			</form>
@@ -416,6 +427,7 @@ export default {
 			active: !!this.setting.active,
 			provisioningDomain: this.setting.provisioningDomain || '',
 			emailTemplate: this.setting.emailTemplate || '',
+			nameTemplates: (this.setting.nameTemplates ?? ['%DISPLAYNAME%']).join('\n'),
 			imapHost: this.setting.imapHost || 'mx.domain.com',
 			imapPort: this.setting.imapPort || 993,
 			imapUser: this.setting.imapUser || '%USERID%domain.com',
@@ -434,11 +446,13 @@ export default {
 			previewData1: {
 				uid: 'user123',
 				email: '',
+				displayName: 'User One',
 			},
 
 			previewData2: {
 				uid: 'user321',
 				email: 'user@domain.com',
+				displayName: 'Jane Doe',
 			},
 
 			ldapAliasesProvisioning: this.setting.ldapAliasesProvisioning || false,
@@ -451,6 +465,7 @@ export default {
 		previewTemplates() {
 			return {
 				email: this.emailTemplate,
+				nameTemplates: this.nameTemplates.split('\n').filter(t => t.trim()),
 				provisioningDomain: this.provisioningDomain,
 				imapUser: this.imapUser,
 				imapHost: this.imapHost,
@@ -486,6 +501,7 @@ export default {
 					id: this.setting.id || null,
 					active: this.setting.active || true,
 					emailTemplate: this.emailTemplate,
+					nameTemplates: this.nameTemplates.split('\n').filter(t => t.trim()),
 					provisioningDomain: this.provisioningDomain,
 					imapUser: this.imapUser,
 					imapHost: this.imapHost,
@@ -555,6 +571,9 @@ export default {
 
 		input[type='text'] {
 			min-width: 200px;
+		}
+		textarea {
+			width: 100%;
 		}
 		.config-button {
 			display: inline-block;
