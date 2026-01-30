@@ -13,6 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\ProvisioningMapper;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\HostNameFactory;
 use OCP\IConfig;
@@ -29,6 +30,9 @@ class SmtpClientFactoryTest extends TestCase {
 	/** @var HostNameFactory|MockObject */
 	private $hostNameFactory;
 
+	/** @var ProvisioningMapper|MockObject */
+	private $provisioningMapper;
+
 	/** @var SmtpClientFactory */
 	private $factory;
 
@@ -38,8 +42,9 @@ class SmtpClientFactoryTest extends TestCase {
 		$this->config = $this->createMock(IConfig::class);
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->hostNameFactory = $this->createMock(HostNameFactory::class);
+		$this->provisioningMapper = $this->createMock(ProvisioningMapper::class);
 
-		$this->factory = new SmtpClientFactory($this->config, $this->crypto, $this->hostNameFactory);
+		$this->factory = new SmtpClientFactory($this->config, $this->crypto, $this->hostNameFactory, $this->provisioningMapper);
 	}
 
 	public function testSmtpTransport() {
