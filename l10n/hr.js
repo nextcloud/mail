@@ -231,6 +231,7 @@ OC.L10N.register(
     "Retry" : "Pokušaj ponovno",
     "Warning sending your message" : "Upozorenje pri slanju poruke",
     "Send anyway" : "Svejedno pošalji",
+    "First day" : "Prvi dan",
     "Message" : "Poruka",
     "Oh Snap!" : "Oh Snap!",
     "Contacts with this address" : "Kontakti s ovom adresom",
