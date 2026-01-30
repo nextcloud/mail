@@ -103,7 +103,7 @@
 								label="label"
 								track-by="email"
 								:options="autocompleteRecipients"
-								:value="searchInFrom"
+								:model-value="searchInFrom"
 								:placeholder="t('mail', 'Select senders')"
 								:aria-label-combobox="t('mail', 'Select senders')"
 								:multiple="true"
@@ -128,7 +128,7 @@
 								label="label"
 								track-by="email"
 								:options="autocompleteRecipients"
-								:value="searchInTo"
+								:model-value="searchInTo"
 								:placeholder="t('mail', 'Select recipients')"
 								:aria-label-combobox="t('mail', 'Select recipients')"
 								:multiple="true"
@@ -152,7 +152,7 @@
 								label="label"
 								track-by="email"
 								:options="autocompleteRecipients"
-								:value="searchInCc"
+								:model-value="searchInCc"
 								:placeholder="t('mail', 'Select CC recipients')"
 								:aria-label-combobox="t('mail', 'Select CC recipients')"
 								:multiple="true"
@@ -176,7 +176,7 @@
 								label="label"
 								track-by="email"
 								:options="autocompleteRecipients"
-								:value="searchInBcc"
+								:model-value="searchInBcc"
 								:placeholder="t('mail', 'Select BCC recipients')"
 								:aria-label-combobox="t('mail', 'Select BCC recipients')"
 								:multiple="true"
@@ -201,7 +201,7 @@
 								class="multiselect-search-tags "
 								:options="tags"
 								label="displayName"
-								:value="selectedTags"
+								:model-value="selectedTags"
 								:placeholder="t('mail', 'Select tags')"
 								:aria-label-combobox="t('mail', 'Select tags')"
 								track-by="displayName"
@@ -237,7 +237,7 @@
 						<div class="modal-inner--container marked-as">
 							<div class="modal-inner-inline">
 								<NcCheckboxRadioSwitch
-									:checked.sync="searchFlags"
+									v-model="searchFlags"
 									value="is_important"
 									name="flags[]"
 									type="checkbox">
@@ -246,7 +246,7 @@
 							</div>
 							<div class="modal-inner-inline">
 								<NcCheckboxRadioSwitch
-									:checked.sync="searchFlags"
+									v-model="searchFlags"
 									value="starred"
 									name="flags[]"
 									type="checkbox">
@@ -255,7 +255,7 @@
 							</div>
 							<div class="modal-inner-inline">
 								<NcCheckboxRadioSwitch
-									:checked.sync="searchFlags"
+									v-model="searchFlags"
 									value="attachments"
 									name="flags[]"
 									type="checkbox">
@@ -263,7 +263,7 @@
 								</NcCheckboxRadioSwitch>
 							</div>
 							<div class="modal-inner-inline">
-								<NcCheckboxRadioSwitch :checked.sync="mentionsMe">
+								<NcCheckboxRadioSwitch v-model="mentionsMe">
 									{{ t('mail', 'Mentions me') }}
 								</NcCheckboxRadioSwitch>
 							</div>

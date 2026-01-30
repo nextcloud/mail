@@ -8,12 +8,12 @@
 			{{ t('mail', 'Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it. Sieve is also required to use Autoresponder and Filters.') }}
 		</p>
 		<p>
-			<NcCheckboxRadioSwitch :checked.sync="sieveConfig.sieveEnabled">
+			<NcCheckboxRadioSwitch v-model="sieveConfig.sieveEnabled">
 				{{ t('mail', 'Enable sieve filter') }}
 			</NcCheckboxRadioSwitch>
 		</p>
 		<div v-if="sieveConfig.sieveEnabled">
-			<NcTextField :label="t('mail', 'Sieve host')" :value.sync="sieveConfig.sieveHost" />
+			<NcTextField v-model="sieveConfig.sieveHost" :label="t('mail', 'Sieve host')" />
 			<h4>{{ t('mail', 'Sieve security') }}</h4>
 			<div class="flex-row">
 				<ButtonVue
@@ -32,7 +32,7 @@
 					{{ t('mail', 'STARTTLS') }}
 				</ButtonVue>
 			</div>
-			<NcTextField :label="t('mail', 'Sieve Port')" :value.sync="sieveConfig.sievePort" />
+			<NcTextField v-model="sieveConfig.sievePort" :label="t('mail', 'Sieve Port')" />
 			<h4>{{ t('mail', 'Sieve credentials') }}</h4>
 			<div class="flex-row">
 				<ButtonVue
@@ -47,8 +47,8 @@
 				</ButtonVue>
 			</div>
 			<p v-if="!useImapCredentials" class="custom">
-				<NcTextField :label="t('mail', 'Sieve User')" :value.sync="sieveConfig.sieveUser" />
-				<NcPasswordField :label="t('mail', 'Sieve Password')" :value.sync="sieveConfig.sievePassword" />
+				<NcTextField v-model="sieveConfig.sieveUser" :label="t('mail', 'Sieve User')" />
+				<NcPasswordField v-model="sieveConfig.sievePassword" :label="t('mail', 'Sieve Password')" />
 			</p>
 		</div>
 		<slot name="feedback" />

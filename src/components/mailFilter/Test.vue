@@ -9,7 +9,7 @@
 				<NcSelect
 					input-label="field"
 					class="condition__value__field_operator__column"
-					:value="test.field"
+					:model-value="test.field"
 					:required="true"
 					:label-outside="true"
 					:options="fields"
@@ -25,7 +25,7 @@
 				<NcSelect
 					input-label="operator"
 					class="condition__value__field_operator__column"
-					:value="test.operator"
+					:model-value="test.operator"
 					:required="true"
 					:label-outside="true"
 					:options="operators"

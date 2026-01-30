@@ -237,7 +237,7 @@
 					:name="t('mail', 'New text block')"
 					:is-form="true"
 					size="normal">
-					<NcInputField :value.sync="localTextBlock.title" :label="t('mail', 'Title of the text block')" />
+					<NcInputField v-model="localTextBlock.title" :label="t('mail', 'Title of the text block')" />
 					<TextEditor
 						v-model="localTextBlock.content"
 						:is-bordered="true"

@@ -63,7 +63,7 @@
 			:buttons="buttons"
 			:name="t('mail', 'Add internal address')"
 			@close="openDialog = false">
-			<NcTextField class="input" :label="t('mail', 'Add internal email or domain')" :value.sync="newAddress" />
+			<NcTextField v-model="newAddress" class="input" :label="t('mail', 'Add internal email or domain')" />
 		</NcDialog>
 	</div>
 </template>

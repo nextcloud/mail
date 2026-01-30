@@ -17,7 +17,7 @@
 			<div class="composer-fields--custom">
 				<NcSelect
 					id="from"
-					:value="selectedAlias"
+					:model-value="selectedAlias"
 					:options="aliases"
 					label="name"
 					:get-option-key="(option) => option.selectId"
@@ -51,7 +51,7 @@
 				<NcSelect
 					id="to"
 					ref="toLabel"
-					:value="selectTo"
+					:model-value="selectTo"
 					:options="selectableRecipients.filter(recipient => !selectTo.some(to => to.email === recipient.email))"
 					:get-option-key="(option) => option.email"
 					:taggable="true"
@@ -105,7 +105,7 @@
 				<NcSelect
 					id="cc"
 					ref="toLabel"
-					:value="selectCc"
+					:model-value="selectCc"
 					class="select"
 					:class="{ opened: !autoLimit }"
 					:options="selectableRecipients.filter(recipient => !selectCc.some(cc => cc.email === recipient.email))"
@@ -162,7 +162,7 @@
 				<NcSelect
 					id="bcc"
 					ref="toLabel"
-					:value="selectBcc"
+					:model-value="selectBcc"
 					class="select"
 					:class="{ opened: !autoLimit }"
 					:no-wrap="false"

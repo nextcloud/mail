@@ -21,7 +21,7 @@
 			:options="identities"
 			:aria-label-combobox="t('mail', 'Select an alias')"
 			:searchable="false"
-			:value="identity"
+			:model-value="identity"
 			label="label"
 			track-by="id"
 			@option:selected="changeIdentity" />

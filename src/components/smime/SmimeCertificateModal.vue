@@ -112,7 +112,7 @@
 
 				<fieldset v-if="certificateType === TYPE_PKCS12">
 					<label for="password">{{ t('mail', 'Password') }}</label>
-					<NcPasswordField :value.sync="password" :label="t('mail', 'Password')" />
+					<NcPasswordField v-model="password" :label="t('mail', 'Password')" />
 				</fieldset>
 
 				<div class="certificate-modal__import__hints">
