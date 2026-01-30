@@ -5,7 +5,7 @@
 <template>
 	<div class="operator">
 		<NcSelect
-			:value="filter.operator"
+			:model-value="filter.operator"
 			class="operator__select"
 			:required="true"
 			:label-outside="true"

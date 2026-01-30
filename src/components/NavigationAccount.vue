@@ -208,7 +208,8 @@ export default {
 			this.menuOpen = false
 			try {
 				await this.mainStore.createMailbox({
-					account: this.account, name,
+					account: this.account,
+					name,
 				})
 			} catch (error) {
 				showError(t('mail', 'Unable to create mailbox. The name likely contains invalid characters. Please try another name.'))

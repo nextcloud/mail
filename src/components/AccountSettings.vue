@@ -74,7 +74,7 @@
 			:name="t('mail', 'Classification settings')">
 			<NcCheckboxRadioSwitch
 				id="auto-classification-enabled"
-				:checked="account.classificationEnabled"
+				:model-value="account.classificationEnabled"
 				:disabled="loadingClassificationToggle"
 				@update:checked="onToggleClassification">
 				{{ t('mail', 'Enable mark as important classification') }}

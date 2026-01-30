@@ -7,7 +7,7 @@
 	<div>
 		<NcCheckboxRadioSwitch
 			id="imip-create"
-			:checked="imipCreate"
+			:model-value="imipCreate"
 			:disabled="saving"
 			@update:checked="onToggleImipCreate">
 			{{ t('mail', 'Automatically create tentative appointments in calendar') }}

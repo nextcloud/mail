@@ -5,7 +5,7 @@
 <template>
 	<NcSelect
 		input-label="flag"
-		:value="flag"
+		:model-value="flag"
 		:required="true"
 		:label-outside="true"
 		:options="flags"

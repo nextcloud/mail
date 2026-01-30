@@ -36,7 +36,7 @@
 			<p v-if="shared">
 				{{ localTextBlock.title }}
 			</p>
-			<NcInputField v-else :value.sync="localTextBlock.title" :label="t('mail', 'Title of the text block')" />
+			<NcInputField v-else v-model="localTextBlock.title" :label="t('mail', 'Title of the text block')" />
 			<TextEditor
 				v-model="localTextBlock.content"
 				:is-bordered="!shared"

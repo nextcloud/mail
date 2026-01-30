@@ -13,7 +13,7 @@
 
 			<div class="filter-name">
 				<NcTextField
-					:value.sync="clone.name"
+					v-model="clone.name"
 					:label="t('mail', 'Name')"
 					:required="true" />
 			</div>
@@ -61,12 +61,12 @@
 
 			<div class="filter-settings">
 				<NcTextField
-					:value.sync="clone.priority"
+					v-model="clone.priority"
 					type="number"
 					:label="t('mail', 'Priority')"
 					:required="true" />
 
-				<NcCheckboxRadioSwitch :checked.sync="clone.enable" type="switch">
+				<NcCheckboxRadioSwitch v-model="clone.enable" type="switch">
 					{{ t('mail', 'Enable filter') }}
 				</NcCheckboxRadioSwitch>
 			</div>

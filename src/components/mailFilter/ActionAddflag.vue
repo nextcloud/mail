@@ -5,7 +5,7 @@
 <template>
 	<NcTextField
 		:required="true"
-		:value="flag"
+		:model-value="flag"
 		:label-outside="true"
 		:placeholder="t('mail', 'Enter flag')"
 		@update:value="onInput" />

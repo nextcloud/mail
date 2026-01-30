@@ -69,7 +69,7 @@
 						<NcCheckboxRadioSwitch
 							type="checkbox"
 							class="compact-checkbox"
-							:checked="selected"
+							:model-value="selected"
 							@update:checked="toggleSelected" />
 					</div>
 				</template>
@@ -377,7 +377,7 @@
 				<NcActionInput
 					type="datetime-local"
 					is-native-picker
-					:value="customSnoozeDateTime"
+					:model-value="customSnoozeDateTime"
 					:min="new Date()"
 					@change="setCustomSnoozeDateTime">
 					<template #icon>
@@ -519,7 +519,9 @@ import {
 	NcActionLink as ActionLink,
 	NcActionText as ActionText,
 	NcActionInput,
-	NcActionSeparator, NcAssistantIcon, NcCheckboxRadioSwitch,
+	NcActionSeparator,
+	NcAssistantIcon,
+	NcCheckboxRadioSwitch,
 } from '@nextcloud/vue'
 import escapeHtml from 'escape-html'
 import { mapState, mapStores } from 'pinia'

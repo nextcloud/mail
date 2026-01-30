@@ -11,7 +11,7 @@
 			<Tab id="auto" key="auto" :name="t('mail', 'Auto')">
 				<NcInputField
 					id="auto-name"
-					:value.sync="accountName"
+					v-model="accountName"
 					:label="t('mail', 'Name')"
 					type="text"
 					:placeholder="t('mail', 'Name')"
@@ -19,7 +19,7 @@
 					autofocus />
 				<NcInputField
 					id="auto-address"
-					:value.sync="emailAddress"
+					v-model="emailAddress"
 					:label="t('mail', 'Mail address')"
 					:disabled="loading"
 					:placeholder="t('mail', 'name@example.org')"
@@ -31,7 +31,7 @@
 				</p>
 				<NcPasswordField
 					id="auto-password"
-					:value.sync="autoConfig.password"
+					v-model="autoConfig.password"
 					:disabled="loading"
 					type="password"
 					:label="t('mail', 'Password')"
@@ -47,14 +47,14 @@
 			<Tab id="manual" key="manual" :name="t('mail', 'Manual')">
 				<NcInputField
 					id="man-name"
-					:value.sync="accountName"
+					v-model="accountName"
 					:label="t('mail', 'Name')"
 					type="text"
 					:placeholder="t('mail', 'Name')"
 					:disabled="loading" />
 				<NcInputField
 					id="man-address"
-					:value.sync="emailAddress"
+					v-model="emailAddress"
 					:label="t('mail', 'Mail address')"
 					type="email"
 					:placeholder="t('mail', 'name@example.org')"
@@ -68,7 +68,7 @@
 				<h3>{{ t('mail', 'IMAP Settings') }}</h3>
 				<NcInputField
 					id="man-imap-host"
-					:value.sync="manualConfig.imapHost"
+					v-model="manualConfig.imapHost"
 					:label="t('mail', 'IMAP Host')"
 					type="text"
 					:placeholder="t('mail', 'IMAP Host')"
@@ -82,7 +82,7 @@
 					<NcCheckboxRadioSwitch
 						id="man-imap-sec-none"
 						:button-variant="true"
-						:checked="manualConfig.imapSslMode"
+						:model-value="manualConfig.imapSslMode"
 						type="radio"
 						name="man-imap-sec"
 						:disabled="loading"
@@ -94,7 +94,7 @@
 					<NcCheckboxRadioSwitch
 						id="man-imap-sec-ssl"
 						:button-variant="true"
-						:checked="manualConfig.imapSslMode"
+						:model-value="manualConfig.imapSslMode"
 						type="radio"
 						name="man-imap-sec"
 						:disabled="loading"
@@ -106,7 +106,7 @@
 					<NcCheckboxRadioSwitch
 						id="man-imap-sec-tls"
 						:button-variant="true"
-						:checked="manualConfig.imapSslMode"
+						:model-value="manualConfig.imapSslMode"
 						type="radio"
 						name="man-imap-sec"
 						:disabled="loading"
@@ -118,7 +118,7 @@
 				</div>
 				<NcInputField
 					id="man-imap-port"
-					:value.sync="manualConfig.imapPort"
+					v-model="manualConfig.imapPort"
 					:label="t('mail', 'IMAP Port')"
 					type="number"
 					:placeholder="t('mail', 'IMAP Port')"
@@ -127,7 +127,7 @@
 					@change="clearFeedback" />
 				<NcInputField
 					id="man-imap-user"
-					:value.sync="manualConfig.imapUser"
+					v-model="manualConfig.imapUser"
 					:label="t('mail', 'IMAP User')"
 					type="text"
 					:placeholder="t('mail', 'IMAP User')"
@@ -137,8 +137,8 @@
 				<NcPasswordField
 					v-if="!useOauth"
 					id="man-imap-password"
+					v-model="manualConfig.imapPassword"
 					type="password"
-					:value.sync="manualConfig.imapPassword"
 					:label="t('mail', 'IMAP Password')"
 					:disabled="loading"
 					required
@@ -148,7 +148,7 @@
 				<NcInputField
 					id="man-smtp-host"
 					ref="smtpHost"
-					:value.sync="manualConfig.smtpHost"
+					v-model="manualConfig.smtpHost"
 					:label="t('mail', 'SMTP Host')"
 					type="text"
 					name="smtp-host"
@@ -163,7 +163,7 @@
 					<NcCheckboxRadioSwitch
 						id="man-imap-sec-none"
 						:button-variant="true"
-						:checked="manualConfig.smtpSslMode"
+						:model-value="manualConfig.smtpSslMode"
 						type="radio"
 						name="man-smtp-sec"
 						:disabled="loading"
@@ -175,7 +175,7 @@
 					<NcCheckboxRadioSwitch
 						id="man-imap-sec-ssl"
 						:button-variant="true"
-						:checked="manualConfig.smtpSslMode"
+						:model-value="manualConfig.smtpSslMode"
 						type="radio"
 						name="man-smtp-sec"
 						:disabled="loading"
@@ -187,7 +187,7 @@
 					<NcCheckboxRadioSwitch
 						id="man-imap-sec-tls"
 						:button-variant="true"
-						:checked="manualConfig.smtpSslMode"
+						:model-value="manualConfig.smtpSslMode"
 						type="radio"
 						name="man-smtp-sec"
 						:disabled="loading"
@@ -199,8 +199,8 @@
 				</div>
 				<NcInputField
 					id="man-smtp-port"
+					v-model="manualConfig.smtpPort"
 					:label="t('mail', 'SMTP Port')"
-					:value.sync="manualConfig.smtpPort"
 					type="number"
 					:placeholder="t('mail', 'SMTP Port')"
 					:disabled="loading"
@@ -208,7 +208,7 @@
 					@change="clearFeedback" />
 				<NcInputField
 					id="man-smtp-user"
-					:value.sync="manualConfig.smtpUser"
+					v-model="manualConfig.smtpUser"
 					:label="t('mail', 'SMTP User')"
 					type="text"
 					:placeholder="t('mail', 'SMTP User')"
@@ -218,9 +218,9 @@
 				<NcPasswordField
 					v-if="!useOauth"
 					id="man-smtp-password"
+					v-model="manualConfig.smtpPassword"
 					:label="t('mail', 'SMTP Password')"
 					type="password"
-					:value.sync="manualConfig.smtpPassword"
 					:disabled="loading"
 					required
 					@change="clearFeedback" />

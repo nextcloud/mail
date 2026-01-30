@@ -9,7 +9,7 @@
 
 		<div ref="editableContainer" class="editable" />
 
-		<ckeditor
+		<Ckeditor
 			v-if="ready"
 			:value="value"
 			:config="config"
@@ -65,7 +65,7 @@ import 'ckeditor5/ckeditor5.css'
 export default {
 	name: 'TextEditor',
 	components: {
-		ckeditor: CKEditor.component,
+		Ckeditor: CKEditor.component,
 	},
 
 	props: {
@@ -304,8 +304,16 @@ export default {
 
 		overrideDropdownPositionsToNorth(editor, toolbarView) {
 			const {
-				south, north, southEast, southWest, northEast, northWest,
-				southMiddleEast, southMiddleWest, northMiddleEast, northMiddleWest,
+				south,
+				north,
+				southEast,
+				southWest,
+				northEast,
+				northWest,
+				southMiddleEast,
+				southMiddleWest,
+				northMiddleEast,
+				northMiddleWest,
 			} = DropdownView.defaultPanelPositions
 
 			let panelPositions

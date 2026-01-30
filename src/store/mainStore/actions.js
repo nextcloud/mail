@@ -28,7 +28,10 @@ import {
 	pipe,
 	prop,
 	propEq,
-	slice, sortBy, tap, where,
+	slice,
+	sortBy,
+	tap,
+	where,
 } from 'ramda'
 import Vue from 'vue'
 import MailboxLockedError from '../../errors/MailboxLockedError.js'
