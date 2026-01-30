@@ -225,6 +225,7 @@
 					required
 					@change="clearFeedback" />
 				<NcCheckboxRadioSwitch
+					v-if="isSetup"
 					id="auto-classification-enabled"
 					v-model="classificationEnabled"
 					:disabled="loading">
@@ -333,7 +334,7 @@ export default {
 			mode: 'auto',
 			accountName: this.displayName,
 			emailAddress: this.email,
-			classificationEnabled: loadState('mail', 'importance_classification_default', true),
+			classificationEnabled: fromAccountOr('classificationEnabled', loadState('mail', 'importance_classification_default', true)),
 			autoConfig: {
 				password: '',
 			},
@@ -365,6 +366,10 @@ export default {
 
 		settingsPage() {
 			return this.account !== undefined
+		},
+
+		isSetup() {
+			return this.account === undefined
 		},
 
 		isDisabledAuto() {
