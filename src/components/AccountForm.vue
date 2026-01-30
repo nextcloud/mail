@@ -353,6 +353,10 @@ export default {
 			return this.account !== undefined
 		},
 
+		isSetup() {
+			return this.account === undefined
+		},
+
 		isDisabledAuto() {
 			if (this.loading) {
 				return true
