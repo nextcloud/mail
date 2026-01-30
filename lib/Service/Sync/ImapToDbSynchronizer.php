@@ -436,7 +436,7 @@ class ImapToDbSynchronizer {
 
 				$this->dbMapper->insertBulk($account, ...$dbMessages);
 
-				if ($importantTag) {
+				/* if ($importantTag) {
 					$classified = $this->newMessagesClassifier->classifyNewMessages(
 						$dbMessages,
 						$mailbox,
@@ -448,7 +448,7 @@ class ImapToDbSynchronizer {
 					} else {
 						$perf->step('skipped classification');
 					}
-				}
+				} */
 
 				$this->dispatcher->dispatch(
 					NewMessagesSynchronized::class,

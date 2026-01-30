@@ -57,6 +57,9 @@ class NewMessagesClassifier {
 		Account $account,
 		Tag $importantTag,
 	): bool {
+
+		return false;
+
 		if (!$account->getClassificationEnabled()) {
 			return false;
 		}
