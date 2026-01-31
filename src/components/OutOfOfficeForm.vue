@@ -387,4 +387,10 @@ export default {
 		}
 	}
 }
+
+#ooo-first-day {
+	:deep(.mx-datepicker-popup) {
+		left: 0 !important;
+	}
+}
 </style>
