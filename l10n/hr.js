@@ -354,6 +354,7 @@ OC.L10N.register(
     "Valid until" : "Vrijedi do",
     "Certificate" : "Vjerodajnica",
     "Submit" : "Šalji",
+    "Group" : "Grupa",
     "Shared" : "Dijeljeno",
     "Shares" : "Dijeljeni resursi",
     "Account connected" : "Račun povezan",

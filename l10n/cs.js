@@ -145,6 +145,7 @@ OC.L10N.register(
     "Vertical split" : "Svislé rozdělení",
     "Horizontal split" : "Vodorovné rozdělen",
     "List" : "Seznam",
+    "Use compact mode" : "Použít kompaktní režim",
     "Sorting" : "Řazení",
     "Newest first" : "Nejnovější jako první",
     "Oldest first" : "Nejstarší jako první",
