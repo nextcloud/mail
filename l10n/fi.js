@@ -165,6 +165,7 @@ OC.L10N.register(
     "Disable formatting" : "Poista muotoilu käytöstä",
     "Upload attachment" : "Lähetä liite",
     "Add attachment from Files" : "Lisää liitteitä tiedostosovelluksesta",
+    "Smart picker" : "Älykäs valitsin",
     "Request a read receipt" : "Pyydä lukukuittaus",
     "Sign message with S/MIME" : "Allekirjoita viesti S/MIME:llä",
     "Encrypt message with S/MIME" : "Salaa viesti S/MIME:llä",
