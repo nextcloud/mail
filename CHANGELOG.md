@@ -1,3 +1,28 @@
+## [5.6.10](https://github.com/nextcloud/mail/compare/v5.6.9...v5.6.10) (2026-02-02)
+
+
+### Bug Fixes
+
+* clean text blocks on user deletion ([8ea1794](https://github.com/nextcloud/mail/commit/8ea17944af3cb7a5dd798e9a4f3ed14652bb533a))
+* **deps:** bump PHPUnit to v9.6.33 ([489c0a0](https://github.com/nextcloud/mail/commit/489c0a0139c9d16c252555441681b2801e089823))
+* **dns:** Update public suffix list ([13980a4](https://github.com/nextcloud/mail/commit/13980a42ce1e9b96d689ab6f72ff64e62cd7c0a8))
+* **imap:** Add support for mail services that enforce a client id ([396221b](https://github.com/nextcloud/mail/commit/396221bd38d21dc2fd570f4de994be098915fcf9))
+* **imap:** Send ID only when capability is announced ([e5bfd72](https://github.com/nextcloud/mail/commit/e5bfd72ad0f8917c99560bf1bc7306b33afdfdd5))
+* **l10n:** Update translations from Transifex ([f1bacc3](https://github.com/nextcloud/mail/commit/f1bacc3463cf52407abc530c13b5a9c85a47a1e6))
+* **l10n:** Update translations from Transifex ([4057632](https://github.com/nextcloud/mail/commit/4057632a53bf610a4a406d63fc8f1c8100f820aa))
+* **l10n:** Update translations from Transifex ([005b406](https://github.com/nextcloud/mail/commit/005b4068ef35c5c817dfbf47acc4f41b48f41cf5))
+* **l10n:** Update translations from Transifex ([f5acd00](https://github.com/nextcloud/mail/commit/f5acd002acf4c23a407e506cfc7d4bffa89b99fc))
+* **l10n:** Update translations from Transifex ([f958923](https://github.com/nextcloud/mail/commit/f958923e320c1893aa41b7ea813d9b8dbb0c150f))
+* **l10n:** Update translations from Transifex ([58abab6](https://github.com/nextcloud/mail/commit/58abab6679c5c7ff47e17db2634ee80be0c36d9e))
+* **ui:** render HTML body error responses as blank pages ([52b7a08](https://github.com/nextcloud/mail/commit/52b7a08d7087ff7b1596a0d729831e172ed7859e))
+
+
+### Performance Improvements
+
+* **sync:** Reuse existing sync token ([b7ebe7c](https://github.com/nextcloud/mail/commit/b7ebe7c86a76c77f30a1aa10a58525ce60e171b7))
+
+
+
 ## [5.6.9](https://github.com/nextcloud/mail/compare/v5.6.8...v5.6.9) (2026-01-27)
 
 
