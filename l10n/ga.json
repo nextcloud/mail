@@ -127,6 +127,7 @@
     "Cancel" : "Cealaigh",
     "Search the body of messages in priority Inbox" : "Cuardaigh corp na dteachtaireachtaí sa Bhosca Isteach tosaíochta",
     "Activate" : "Gníomhachtaigh",
+    "Make mails available to Context Chat" : "Cuir ríomhphoist ar fáil do Chomhrá Comhthéacsúil",
     "Remind about messages that require a reply but received none" : "Cuir i gcuimhne faoi theachtaireachtaí a dteastaíonn freagra uathu ach nach bhfuarthas freagra ar bith",
     "Highlight external addresses" : "Aibhsigh seoltaí seachtracha",
     "Could not update preference" : "Níorbh fhéidir an rogha a nuashonrú",
