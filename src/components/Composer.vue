@@ -1081,7 +1081,16 @@ export default {
 
 	mounted() {
 		if (!this.isReply && this.isFirstOpen) {
-			this.$nextTick(() => this.$refs.toLabel.$el.focus())
+			this.$nextTick(() => {
+				const toField = this.$refs.toLabel
+				if (toField?.$el) {
+					// Find the search input within the NcSelect/vue-select component
+					const searchInput = toField.$el.querySelector('.vs__search')
+					if (searchInput) {
+						searchInput.focus()
+					}
+				}
+			})
 		}
 
 		// Add attachments in case of forward
