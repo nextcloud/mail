@@ -53,5 +53,22 @@ class ActionsMapper extends QBMapper {
 		return $this->findEntities($qb);
 	}
 
+	public function deleteAll(string $owner) {
+		$qb = $this->db->getQueryBuilder();
 
+		$actionIds = $this->db->getQueryBuilder()
+			->select('actions.id')
+			->from($this->getTableName(), 'actions')
+			->join('actions', 'mail_accounts', 'accounts', $qb->expr()->eq('actions.account_id', 'accounts.id'))
+			->where(
+				$qb->expr()->eq('accounts.user_id', $qb->createNamedParameter($owner, IQueryBuilder::PARAM_STR))
+			)
+			->executeQuery()->fetchAllAssociative();
+
+		$delete = $qb->delete($this->getTableName())
+			->where(
+				$qb->expr()->in('id', $qb->createNamedParameter($actionIds, IQueryBuilder::PARAM_INT_ARRAY))
+			);
+		$delete->executeStatement();
+	}
 }

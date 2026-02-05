@@ -88,6 +88,10 @@ class TextBlockService {
 		$this->textBlockShareMapper->deleteByTextBlockId($textBlockId);
 	}
 
+	public function deleteAll(string $userId): void {
+		$this->textBlockMapper->deleteAll($userId);
+	}
+
 
 	/**
 	 * @throws UserNotFoundException

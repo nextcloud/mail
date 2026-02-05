@@ -228,6 +228,15 @@ class TagMapper extends QBMapper {
 		}
 	}
 
+	public function deleteAll(string $userId): void {
+		$qb = $this->db->getQueryBuilder();
+		$delete = $qb->delete($this->getTableName())
+			->where(
+				$qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
+			);
+		$delete->executeStatement();
+	}
+
 	public function deleteDuplicates(): void {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('mt2.id')

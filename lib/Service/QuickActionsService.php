@@ -85,6 +85,14 @@ class QuickActionsService {
 		$this->actionsMapper->delete($action);
 	}
 
+	public function deleteAll(string $userId): void {
+		$allActions = $this->actionsMapper->findAll($userId);
+
+		foreach ($allActions as $action) {
+			$this->actionsMapper->delete($action);
+		}
+	}
+
 	/**
 	 * @throws DoesNotExistException
 	 */

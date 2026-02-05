@@ -11,6 +11,7 @@ namespace OCA\Mail\Db;
 
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\QBMapper;
+use OCP\DB\Exception;
 use OCP\IDBConnection;
 
 /**
@@ -99,5 +100,15 @@ class InternalAddressMapper extends QBMapper {
 		} catch (DoesNotExistException $e) {
 			return null;
 		}
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function removeAll(string $uid) : void {
+		$qb = $this->db->getQueryBuilder();
+		$delete = $qb->delete($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($uid)));
+		$delete->executeStatement();
 	}
 }

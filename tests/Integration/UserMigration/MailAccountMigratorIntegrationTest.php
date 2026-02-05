@@ -77,5 +77,4 @@ class MailAccountMigratorIntegrationTest extends TestCase {
 		$destinationAccoutns = $this->accountService->findByUserId($destinationUser->getUID());
 		self::assertCount(1, $destinationAccoutns);
 	}
-
 }

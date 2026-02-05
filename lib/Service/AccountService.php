@@ -167,13 +167,19 @@ class AccountService {
 
 	/**
 	 * @param MailAccount $newAccount
+	 * @param bool $scheduleBackgroundJobs Optional parameter to save the mail
+	 *                                     account without scheduling the corresponding background jobs. This can
+	 *                                     be useful if further database modifications must be done before
+	 *                                     running any background jobs. Defaults to `true`.
 	 * @return MailAccount
 	 */
-	public function save(MailAccount $newAccount): MailAccount {
+	public function save(MailAccount $newAccount, bool $scheduleBackgroundJobs = true): MailAccount {
 		$newAccount = $this->mapper->save($newAccount);
 
-		// Insert background jobs for this account
-		$this->scheduleBackgroundJobs($newAccount->getId());
+		if ($scheduleBackgroundJobs) {
+			// Insert background jobs for this account
+			$this->scheduleBackgroundJobs($newAccount->getId());
+		}
 
 		return $newAccount;
 	}

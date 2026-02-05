@@ -53,6 +53,11 @@ class InternalAddressService implements IInternalAddressService {
 	}
 
 	#[\Override]
+	public function removeInternalAddresses(string $uid): void {
+		$this->mapper->removeAll($uid);
+	}
+
+	#[\Override]
 	public function getInternalAddresses(string $uid): array {
 		return $this->mapper->findAll($uid);
 	}
