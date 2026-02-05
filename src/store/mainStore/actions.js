@@ -3,10 +3,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import Axios from '@nextcloud/axios'
-import { showError, showWarning } from '@nextcloud/dialogs'
+import { showError, showWarning, TOAST_DEFAULT_TIMEOUT } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
-import { generateUrl } from '@nextcloud/router'
 import DOMPurify from 'dompurify'
 import escapeRegExp from 'lodash/fp/escapeRegExp.js'
 import flatMapDeep from 'lodash/fp/flatMapDeep.js'
@@ -80,6 +78,7 @@ import {
 	fetchEnvelopes,
 	fetchMessage,
 	fetchMessageDkim,
+	fetchMessageHtmlBody,
 	fetchMessageItineraries,
 	fetchThread,
 	moveMessage,
@@ -483,16 +482,8 @@ export default function mainStoreActions() {
 
 					// Fetch and transform the body into a rich text object
 					if (original.hasHtmlBody) {
-						const resp = await Axios.get(generateUrl('/apps/mail/api/messages/{id}/html?plain=true', {
-							id: original.databaseId,
-						}))
-
-						resp.data = DOMPurify.sanitize(resp.data, {
-							FORBID_TAGS: ['style'],
-						})
-
 						data.isHtml = true
-						data.bodyHtml = resp.data
+						data.bodyHtml = await this.processHtmlBody(original.databaseId)
 						if (reply.suggestedReply) {
 							data.bodyHtml = `<p>${reply.suggestedReply}<\\p>` + data.bodyHtml
 						}
@@ -577,16 +568,8 @@ export default function mainStoreActions() {
 
 					// Fetch and transform the body into a rich text object
 					if (message.hasHtmlBody) {
-						const resp = await Axios.get(generateUrl('/apps/mail/api/messages/{id}/html?plain=true', {
-							id: templateMessageId,
-						}))
-
-						resp.data = DOMPurify.sanitize(resp.data, {
-							FORBID_TAGS: ['style'],
-						})
-
 						data.isHtml = true
-						data.bodyHtml = resp.data
+						data.bodyHtml = await this.processHtmlBody(templateMessageId)
 					} else {
 						data.isHtml = false
 						data.bodyPlain = message.body
@@ -2478,6 +2461,21 @@ export default function mainStoreActions() {
 		},
 		getQuickActions() {
 			return this.quickActions
+		},
+		async processHtmlBody(id) {
+			try {
+				const response = await handleHttpAuthErrors(async () => {
+					return await fetchMessageHtmlBody(id)
+				})
+				return DOMPurify.sanitize(response.data, {
+					FORBID_TAGS: ['style'],
+				})
+			} catch (error) {
+				if (error.response?.status === 404) {
+					showError(t('mail', 'Sorry, the message could not be loaded. The draft may no longer exist. Please refresh the page and try again.'), { timeout: TOAST_DEFAULT_TIMEOUT * 2 })
+				}
+				throw error
+			}
 		},
 	}
 }
