@@ -193,6 +193,18 @@ export async function fetchMessage(id) {
 	}
 }
 
+export async function fetchMessageHtmlBody(id) {
+	const url = generateUrl('/apps/mail/api/messages/{id}/html?plain=true', {
+		id,
+	})
+
+	try {
+		return (await axios.get(url)).data
+	} catch (e) {
+		throw convertAxiosError(e)
+	}
+}
+
 export async function fetchMessageItineraries(id) {
 	const url = generateUrl('/apps/mail/api/messages/{id}/itineraries', {
 		id,
