@@ -1337,12 +1337,13 @@ export default {
 			this.saveDraftDebounced()
 		},
 
-		onEditorReady(editor) {
+		onEditorReady({ editor, additionalFocusTrap }) {
 			this.bodyVal = editor.getData()
 			this.insertSignature()
 			if (this.smartReply) {
 				this.bus.emit('append-to-body-at-cursor', this.smartReply)
 			}
+			this.$emit('editor-ready', { editor, additionalFocusTrap })
 		},
 
 		onEditorSubmit(editor) {
