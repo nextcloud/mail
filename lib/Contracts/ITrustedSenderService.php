@@ -18,7 +18,6 @@ interface ITrustedSenderService {
 
 	public function removeTrusted(string $uid): void;
 
-
 	/**
 	 * @param string $uid
 	 * @return TrustedSender[]

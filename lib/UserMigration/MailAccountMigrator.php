@@ -217,7 +217,6 @@ class MailAccountMigrator implements IMigrator {
 	 * @throws UserMigrationException
 	 */
 	public function import(IUser $user, IImportSource $importSource, OutputInterface $output): void {
-		$this->canImport($importSource);
 		$this->deleteExistingData($user, $output);
 
 		$this->importAppConfiguration($user, $importSource);
