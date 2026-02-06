@@ -24,7 +24,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class AccountMigrationServiceTest extends TestCase {
 	private AccountMigrationService $migrator;
-
 	/** @var ServiceMockObject<AccountMigrationService> */
 	private ServiceMockObject $serviceMock;
 	private OutputInterface|MockObject $output;
@@ -52,30 +51,32 @@ class AccountMigrationServiceTest extends TestCase {
 	}
 
 	public function testExportBasicAccountInfo(): void {
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$user->method('getUID')->willReturn('user_export');
 		$mailAccount1 = new MailAccount([]);
-		$account1 = $this->createMock(Account::class);
+		$account1 = $this->createStub(Account::class);
 		$account1->method('getId')->willReturn(101);
 		$account1->method('getUserId')->willReturn('user_export');
 		$account1->method('getMailAccount')->willReturn($mailAccount1);
+		// $account1->method('jsonSerialize')->willReturnSelf();
 		$mailAccount1->setAuthMethod('password');
 		$mailAccount1->setInboundPassword('imap_pass_encrypted');
+		$mailAccount1->setOutboundPassword('smtp_pass_encrypted');
 		$account1->method('jsonSerialize')->willReturn([
 			'id' => 101,
-			'email' => 'jane@doe.org',
+			'emailAddress' => 'jane@doe.org',
 		]);
-		$mailAccount2 = new MailAccount([]);
-		$account2 = $this->createMock(Account::class);
-		$account2->method('getId')->willReturn(102);
-		$account2->method('getUserId')->willReturn('user_export');
-		$account2->method('getMailAccount')->willReturn($mailAccount2);
+		$mailAccount2 = new MailAccount();
+		$mailAccount2->setUserId('user_export');
+		$mailAccount2->setId(102);
 		$mailAccount2->setAuthMethod('password');
 		$mailAccount2->setInboundPassword('imap_pass_encrypted');
-		$account2->method('jsonSerialize')->willReturn([
-			'id' => 102,
-			'email' => 'jane@doe.com',
-		]);
+		$mailAccount2->setOutboundPassword('smtp_pass_encrypted');
+		$account2 = new Account($mailAccount2);
+		//		$account2->method('jsonSerialize')->willReturn([
+		//			'id' => 102,
+		//			'emailAddress' => 'jane@doe.com',
+		//		]);
 		/** @var AccountService|MockObject $accountService */
 		$accountService = $this->serviceMock->getParameter('accountService');
 		$accountService->expects(self::once())
@@ -101,7 +102,7 @@ class AccountMigrationServiceTest extends TestCase {
 					self::assertArrayHasKey('id', $accountData);
 					self::assertSame(101, $accountData['id']);
 					self::assertArrayHasKey('inboundPassword', $accountData);
-					self::assertSame('imap_pass', $accountData['inboundPassword']);
+					self::assertSame('imap_423pass', $accountData['inboundPassword']);
 				} elseif ($path === 'mail/accounts/102.json') {
 					$accountData = json_decode($content, true);
 					self::assertArrayHasKey('id', $accountData);
@@ -144,8 +145,10 @@ class AccountMigrationServiceTest extends TestCase {
 			'id' => 101,
 			'userId' => 'user_export',
 			'name' => 'Jane Doe',
-			'email' => 'jane@doe.org',
+			'emailAddress' => 'jane@doe.org',
 			'authMethod' => 'password',
+			'showSubscribedOnly' => null,
+			'smimeCertificateId' => null,
 			'aliases' => [],
 		];
 		$importSource = $this->createMock(IImportSource::class);

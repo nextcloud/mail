@@ -12,18 +12,10 @@ namespace OCA\Mail\Tests\Unit;
 use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Exception;
-use OCA\Mail\Account;
-use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Service\AccountService;
 use OCA\Mail\UserMigration\MailAccountMigrator;
-use OCP\IUser;
-use OCP\UserMigration\IExportDestination;
 use OCP\UserMigration\IImportSource;
-use OCP\UserMigration\UserMigrationException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Output\OutputInterface;
-use function json_decode;
-use function json_encode;
 use function substr;
 
 class MailAccountMigratorTest extends TestCase {
