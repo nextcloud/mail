@@ -871,6 +871,7 @@
     "Keep editing message" : "Seguir editando a mensaxe",
     "Attachments were not copied. Please add them manually." : "Non se copiaron os anexos. Engádaos manualmente.",
     "Could not create snooze mailbox" : "Non foi posíbel crear a caixa de correo de adiar",
+    "Sorry, the message could not be loaded. The draft may no longer exist. Please refresh the page and try again." : "Desculpe, non foi posíbel cargar a mensaxe. É posíbel que xa non exista o borrador. Actualice a páxina e ténteo de novo.",
     "Sending message…" : "Enviando a mensaxe…",
     "Message sent" : "Mensaxe enviada",
     "Could not send message" : "Non foi posíbel enviar a mensaxe",

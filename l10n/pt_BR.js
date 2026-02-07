@@ -873,6 +873,7 @@ OC.L10N.register(
     "Keep editing message" : "Continuar edição da mensagem",
     "Attachments were not copied. Please add them manually." : "Os anexos não foram copiados. Adicione-os manualmente.",
     "Could not create snooze mailbox" : "Não foi possível criar caixa de correio de adiamento",
+    "Sorry, the message could not be loaded. The draft may no longer exist. Please refresh the page and try again." : "Desculpe, não foi possível carregar a mensagem. O rascunho pode não existir mais. Atualize a página e tente novamente.",
     "Sending message…" : "Enviando mensagem…",
     "Message sent" : "Mensagem enviada",
     "Could not send message" : "Não foi possível enviar a mensagem",
