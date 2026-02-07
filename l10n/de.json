@@ -871,6 +871,7 @@
     "Keep editing message" : "Nachricht weiter bearbeiten",
     "Attachments were not copied. Please add them manually." : "Anhänge konnten nicht kopiert werden. Bitte manuell hinzufügen.",
     "Could not create snooze mailbox" : "Das Zurückstellen-Postfach konnte nicht erstellt werden",
+    "Sorry, the message could not be loaded. The draft may no longer exist. Please refresh the page and try again." : "Leider konnte die Nachricht nicht geladen werden. Der Entwurf existiert möglicherweise nicht mehr. Bitte die Seite aktualisieren und es erneut versuchen.",
     "Sending message…" : "Sende Nachricht…",
     "Message sent" : "Nachricht wurde gesendet",
     "Could not send message" : "Nachricht kann nicht versandt werden",

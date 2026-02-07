@@ -258,7 +258,7 @@ OC.L10N.register(
     "An error occurred, unable to delete the tag." : "Une erreur est survenue, impossible de supprimer l'étiquette.",
     "The tag will be deleted from all messages." : "L'étiquette sera supprimée de tous les messages.",
     "Plain text" : "Texte brut",
-    "Rich text" : "Texte riche",
+    "Rich text" : "Texte enrichi",
     "No messages in this folder" : "Aucun message dans ce dossier",
     "No messages" : "Aucun message",
     "Blind copy recipients only" : "Destinataires en copie cachée seulement",
