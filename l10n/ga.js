@@ -873,6 +873,7 @@ OC.L10N.register(
     "Keep editing message" : "Coinnigh an teachtaireacht eagarthóireachta",
     "Attachments were not copied. Please add them manually." : "Níor cóipeáladh ceangaltáin. Cuir leis de láimh iad le do thoil.",
     "Could not create snooze mailbox" : "Níorbh fhéidir an bosca ríomhphoist ar suan a chruthú",
+    "Sorry, the message could not be loaded. The draft may no longer exist. Please refresh the page and try again." : "Ár leithscéal, níorbh fhéidir an teachtaireacht a luchtú. B’fhéidir nach bhfuil an dréacht ann a thuilleadh. Athnuachan an leathanach agus déan iarracht arís.",
     "Sending message…" : "Teachtaireacht á seoladh…",
     "Message sent" : "Teachtaireacht seolta",
     "Could not send message" : "Níorbh fhéidir an teachtaireacht a sheoladh",
