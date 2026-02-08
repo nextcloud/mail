@@ -827,6 +827,7 @@
     "Keep editing message" : "Jätka kirja kirjutamist",
     "Attachments were not copied. Please add them manually." : "Manused pole kopeeritud. Palun lisa nad käsitsi.",
     "Could not create snooze mailbox" : "Postkasti saabuvate kirjade saabumist ei õnnestunud edasi lükata",
+    "Sorry, the message could not be loaded. The draft may no longer exist. Please refresh the page and try again." : "Vabandust, kirja laadimine ei õnnestunud. Kavandid ei pruugi enam olla olemas. Palun laadi leht ja proovi uuesti.",
     "Sending message…" : "Saadan kirja…",
     "Message sent" : "Kiri on saadetud",
     "Could not send message" : "Kirja saatmine ei õnnestu",

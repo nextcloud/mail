@@ -873,6 +873,7 @@ OC.L10N.register(
     "Keep editing message" : "繼續編輯訊息",
     "Attachments were not copied. Please add them manually." : "未複製附件。請手動新增它們。",
     "Could not create snooze mailbox" : "無法創建暫停郵箱",
+    "Sorry, the message could not be loaded. The draft may no longer exist. Please refresh the page and try again." : "抱歉，訊息載入失敗。草稿可能已不存在。請刷新頁面重試。",
     "Sending message…" : "傳送訊息 ...",
     "Message sent" : "已傳送訊息",
     "Could not send message" : "無法發送消息",
