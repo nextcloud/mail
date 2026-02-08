@@ -14,6 +14,7 @@ use Horde_Mail_Transport;
 use Horde_Mail_Transport_Smtphorde;
 use Horde_Smtp_Password_Xoauth2;
 use OCA\Mail\Account;
+use OCA\Mail\Db\ProvisioningMapper;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Support\HostNameFactory;
 use OCP\IConfig;
@@ -29,12 +30,16 @@ class SmtpClientFactory {
 	/** @var HostNameFactory */
 	private $hostNameFactory;
 
+	private ProvisioningMapper $provisioningMapper;
+
 	public function __construct(IConfig $config,
 		ICrypto $crypto,
-		HostNameFactory $hostNameFactory) {
+		HostNameFactory $hostNameFactory,
+		ProvisioningMapper $provisioningMapper) {
 		$this->config = $config;
 		$this->crypto = $crypto;
 		$this->hostNameFactory = $hostNameFactory;
+		$this->provisioningMapper = $provisioningMapper;
 	}
 
 	/**
@@ -50,12 +55,25 @@ class SmtpClientFactory {
 			$decryptedPassword = $this->crypto->decrypt($mailAccount->getOutboundPassword());
 		}
 		$security = $mailAccount->getOutboundSslMode();
+
+		$username = $mailAccount->getOutboundUser();
+
+		// Check for Dovecot master user authentication
+		$provisioningId = $mailAccount->getProvisioningId();
+		if ($provisioningId !== null) {
+			$provisioning = $this->provisioningMapper->get($provisioningId);
+			if ($provisioning !== null && !empty($provisioning->getMasterUser())) {
+				$separator = $provisioning->getMasterUserSeparator() ?? '*';
+				$username = $username . $separator . $provisioning->getMasterUser();
+			}
+		}
+
 		$params = [
 			'localhost' => $this->hostNameFactory->getHostName(),
 			'host' => $mailAccount->getOutboundHost(),
 			'password' => $decryptedPassword,
 			'port' => $mailAccount->getOutboundPort(),
-			'username' => $mailAccount->getOutboundUser(),
+			'username' => $username,
 			'secure' => $security === 'none' ? false : $security,
 			'timeout' => (int)$this->config->getSystemValue('app.mail.smtp.timeout', 20),
 			'context' => [

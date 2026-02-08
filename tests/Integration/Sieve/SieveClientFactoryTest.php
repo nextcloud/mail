@@ -13,6 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde\ManageSieve;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\ProvisioningMapper;
 use OCA\Mail\Sieve\SieveClientFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
@@ -26,6 +27,9 @@ class SieveClientFactoryTest extends TestCase {
 	/** @var IConfig|MockObject */
 	private $config;
 
+	/** @var ProvisioningMapper|MockObject */
+	private $provisioningMapper;
+
 	/** @var SieveClientFactory */
 	private $factory;
 
@@ -34,6 +38,7 @@ class SieveClientFactoryTest extends TestCase {
 
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->config = $this->createMock(IConfig::class);
+		$this->provisioningMapper = $this->createMock(ProvisioningMapper::class);
 
 		$this->config->method('getSystemValueInt')
 			->willReturnMap([
@@ -46,7 +51,7 @@ class SieveClientFactoryTest extends TestCase {
 				['app.mail.debug', false, false],
 			]);
 
-		$this->factory = new SieveClientFactory($this->crypto, $this->config);
+		$this->factory = new SieveClientFactory($this->crypto, $this->config, $this->provisioningMapper);
 	}
 
 	/**

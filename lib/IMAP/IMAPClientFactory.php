@@ -14,6 +14,7 @@ use Horde_Imap_Client_Password_Xoauth2;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Cache\HordeCacheFactory;
+use OCA\Mail\Db\ProvisioningMapper;
 use OCA\Mail\Events\BeforeImapClientCreated;
 use OCA\Mail\Exception\ServiceException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -41,19 +42,22 @@ class IMAPClientFactory {
 
 	private ITimeFactory $timeFactory;
 	private HordeCacheFactory $hordeCacheFactory;
+	private ProvisioningMapper $provisioningMapper;
 
 	public function __construct(ICrypto $crypto,
 		IConfig $config,
 		ICacheFactory $cacheFactory,
 		IEventDispatcher $eventDispatcher,
 		ITimeFactory $timeFactory,
-		HordeCacheFactory $hordeCacheFactory) {
+		HordeCacheFactory $hordeCacheFactory,
+		ProvisioningMapper $provisioningMapper) {
 		$this->crypto = $crypto;
 		$this->config = $config;
 		$this->cacheFactory = $cacheFactory;
 		$this->eventDispatcher = $eventDispatcher;
 		$this->timeFactory = $timeFactory;
 		$this->hordeCacheFactory = $hordeCacheFactory;
+		$this->provisioningMapper = $provisioningMapper;
 	}
 
 	/**
@@ -83,6 +87,16 @@ class IMAPClientFactory {
 		$sslMode = $account->getMailAccount()->getInboundSslMode();
 		if ($sslMode === 'none') {
 			$sslMode = false;
+		}
+
+		// Check for Dovecot master user authentication
+		$provisioningId = $account->getMailAccount()->getProvisioningId();
+		if ($provisioningId !== null) {
+			$provisioning = $this->provisioningMapper->get($provisioningId);
+			if ($provisioning !== null && !empty($provisioning->getMasterUser())) {
+				$separator = $provisioning->getMasterUserSeparator() ?? '*';
+				$user = $user . $separator . $provisioning->getMasterUser();
+			}
 		}
 
 		$params = [
