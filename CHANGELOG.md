@@ -1,3 +1,25 @@
+## [5.6.11](https://github.com/nextcloud/mail/compare/v5.6.10...v5.6.11) (2026-02-10)
+
+
+### Bug Fixes
+
+* **composer:** drop envelope from store when saving a draft ([1c86447](https://github.com/nextcloud/mail/commit/1c864478dbdc9a056e62719a00288992460d6dfb))
+* **composer:** handle missing message body gracefully ([2c1b4be](https://github.com/nextcloud/mail/commit/2c1b4bef094c5c03b5be2cc202e41a3f5b410479))
+* **Composer:** make initial focus be on to field ([20dce82](https://github.com/nextcloud/mail/commit/20dce820146ef948a7bfa47791249a9e77914fe3))
+* **deps:** bump lodash from 4.17.21 to v4.17.23 ([687b1cb](https://github.com/nextcloud/mail/commit/687b1cbfc0d2b7ec8ff1ab28bf7e413d738c4de9))
+* **deps:** bump webpack from 5.102.1 to v5.104.1 ([a806b4e](https://github.com/nextcloud/mail/commit/a806b4eb961a373d8a338f9f9fc0a5c58ae45d0a))
+* **l10n:** Update translations from Transifex ([e80e86d](https://github.com/nextcloud/mail/commit/e80e86d4d90122bc8a6a83ccfffb93fa41ae8638))
+* **l10n:** Update translations from Transifex ([b344f11](https://github.com/nextcloud/mail/commit/b344f113ab9530f0bb108ca18a889b18553ed12e))
+* **l10n:** Update translations from Transifex ([a4daa43](https://github.com/nextcloud/mail/commit/a4daa4334d7c1db5599b77f7f04defa810ca03fd))
+* **l10n:** Update translations from Transifex ([59a7b07](https://github.com/nextcloud/mail/commit/59a7b078aa24df89f602bcdde7ebb9b44c9fb38b))
+* **l10n:** Update translations from Transifex ([c4281e2](https://github.com/nextcloud/mail/commit/c4281e26b724605437d58e7f62eda55f60dcabd8))
+* **l10n:** Update translations from Transifex ([88a9b12](https://github.com/nextcloud/mail/commit/88a9b12326d225d4dd05d2ec4c586c2ee5fb9d12))
+* **l10n:** Update translations from Transifex ([45148da](https://github.com/nextcloud/mail/commit/45148da09c59c305370589fc5269fbe2f38c750a))
+* **l10n:** Update translations from Transifex ([b308fc1](https://github.com/nextcloud/mail/commit/b308fc12dd350a736200885f9e4d060b1f18849a))
+* **provisioning:** Do not provision users without access to mail app ([37d6d86](https://github.com/nextcloud/mail/commit/37d6d86819f3ab2bcbb6d0044eb6f47dd5bb2b6d))
+
+
+
 ## [5.6.10](https://github.com/nextcloud/mail/compare/v5.6.9...v5.6.10) (2026-02-02)
 
 
