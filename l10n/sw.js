@@ -77,6 +77,7 @@ OC.L10N.register(
     "Create event" : "Tengeneza matukio",
     "All day" : "Siku yote",
     "Attendees" : "Wahudhuriaji",
+    "Select calendar" : "Select calendar",
     "Description" : "Maelezo",
     "Create" : "Tengeneza",
     "This event was cancelled" : "This event was cancelled",
