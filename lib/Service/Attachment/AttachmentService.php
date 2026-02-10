@@ -278,7 +278,7 @@ class AttachmentService implements IAttachmentService {
 			);
 			$attachments = $imapMessage->getAttachments();
 		} catch (ServiceException $e) {
-			$this->logger->error('Could not get attachment names', ['exception' => $e, 'messageId' => $message->getUid()]);
+			$this->logger->warning('Could not get attachment names', ['exception' => $e, 'messageId' => $message->getUid()]);
 		}
 
 		$result = array_map(function ($attachment) use ($message) {
