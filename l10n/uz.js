@@ -57,6 +57,7 @@ OC.L10N.register(
     "Remove {email}" : " {email} ni o'chirish",
     "Folder name" : "Jild nomi",
     "Saving" : "Saving",
+    "Loading …" : "Yuklanmoqda...",
     "Delete folder" : "Jildni o'chirish",
     "Rename" : "Nomini o'zgartirish",
     "Subscribed" : "Obuna boʻlgan",
