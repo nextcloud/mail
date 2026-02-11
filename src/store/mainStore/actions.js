@@ -2461,10 +2461,10 @@ export default function mainStoreActions() {
 		},
 		async processHtmlBody(id) {
 			try {
-				const response = await handleHttpAuthErrors(async () => {
+				const body = await handleHttpAuthErrors(async () => {
 					return await fetchMessageHtmlBody(id)
 				})
-				return DOMPurify.sanitize(response.data, {
+				return DOMPurify.sanitize(body, {
 					FORBID_TAGS: ['style'],
 				})
 			} catch (error) {
