@@ -1,3 +1,14 @@
+## [5.6.12](https://github.com/nextcloud/mail/compare/v5.6.11...v5.6.12) (2026-02-12)
+
+
+### Bug Fixes
+
+* **l10n:** Update translations from Transifex ([1fa5c99](https://github.com/nextcloud/mail/commit/1fa5c99b95212a61409d6614225d2ad49507d1ba))
+* **l10n:** Update translations from Transifex ([5ab0d5b](https://github.com/nextcloud/mail/commit/5ab0d5be16f0f82bafd469927b0c47acd0cc91c2))
+* Pass actual message body to dompurify ([7913abb](https://github.com/nextcloud/mail/commit/7913abb3e69fd77e04eedfaba9e861ee3c54d59f))
+
+
+
 ## [5.6.11](https://github.com/nextcloud/mail/compare/v5.6.10...v5.6.11) (2026-02-10)
 
 
