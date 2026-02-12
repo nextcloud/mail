@@ -51,6 +51,9 @@ class ContextChatProviderTest extends TestCase {
 	/** @var IContentManager|MockObject */
 	private $contentManager;
 
+	/** @var IJobList|MockObject */
+	private $jobList;
+
 	/** @var ContextChatProvider */
 	private $contextChatProvider;
 
