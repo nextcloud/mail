@@ -65,7 +65,7 @@ class ScheduleJob extends TimedJob {
 		try {
 			$mailboxes = $this->mailManager->getMailboxes($account);
 		} catch (ServiceException $e) {
-			$this->logger->debug('Could not find mailboxes for account <' . $accountId . '>');
+			$this->logger->debug("Could not find mailboxes for account <{$accountId}>");
 			return;
 		}
 
@@ -74,7 +74,7 @@ class ScheduleJob extends TimedJob {
 				$this->taskService->findByMailboxId($mailbox->getId());
 				$this->taskService->updateOrCreate($mailbox->getId(), 0);
 			} catch (DoesNotExistException|MultipleObjectsReturnedException|Exception $e) {
-				$this->logger->warning('Could not schedule context chat indexing tasks for mailbox <' . $mailbox->getId() . '>');
+				$this->logger->warning("Could not schedule context chat indexing tasks for mailbox <{$mailbox->getId()}>");
 			}
 		}
 	}
