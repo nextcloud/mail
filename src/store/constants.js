@@ -18,6 +18,3 @@ export const STATUS_IMAP_SENT_MAILBOX_FAIL = 11
 export const STATUS_SMTP_ERROR = 13
 
 export const FOLLOW_UP_TAG_LABEL = '$follow_up'
-export const FILE_EXTENSIONS_WORD_PROCESSING = ['doc', 'docx', 'dot', 'odt', 'dotx', 'odt', 'ott']
-export const FILE_EXTENSIONS_SPREADSHEET = ['xls', 'xlsx', 'ods']
-export const FILE_EXTENSIONS_PRESENTATION = ['ppt', 'pptx', 'odp', 'otp', 'pps', 'ppsx', 'pot', 'potx']

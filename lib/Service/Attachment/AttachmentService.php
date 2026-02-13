@@ -27,6 +27,7 @@ use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Files\File;
 use OCP\Files\Folder;
+use OCP\Files\IMimeTypeDetector;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\ICache;
@@ -72,6 +73,7 @@ class AttachmentService implements IAttachmentService {
 		MessageMapper $imapMessageMapper,
 		ICacheFactory $cacheFactory,
 		private IURLGenerator $urlGenerator,
+		private IMimeTypeDetector $mimeTypeDetector,
 		LoggerInterface $logger,
 	) {
 		$this->mapper = $mapper;
@@ -288,7 +290,8 @@ class AttachmentService implements IAttachmentService {
 					'attachmentId' => $attachment['id'],
 				]);
 			$downloadUrl = $this->urlGenerator->getAbsoluteURL($downloadUrl);
-			return ['id' => $attachment['id'] , 'fileName' => $attachment['fileName'], 'mime' => $attachment['mime'], 'downloadUrl' => $downloadUrl];
+			$mimeUrl = $this->mimeTypeDetector->mimeTypeIcon($attachment['mime']);
+			return ['id' => $attachment['id'] , 'fileName' => $attachment['fileName'], 'mime' => $attachment['mime'], 'downloadUrl' => $downloadUrl, 'mimeUrl' => $mimeUrl ];
 		}, $attachments);
 		$this->cache->set($uniqueCacheId, $result);
 		return $result;
