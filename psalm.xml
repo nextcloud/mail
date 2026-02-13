@@ -25,6 +25,11 @@
 		<directory name="vendor-bin/psalm-stubs" />
     </extraFiles>
 	<issueHandlers>
+		<PossiblyUnusedMethod>
+			<errorLevel type="suppress">
+				<referencedMethod name="__construct" />
+			</errorLevel>
+		</PossiblyUnusedMethod>
 		<UndefinedAttributeClass>
 			<errorLevel type="info">
 				<referencedClass name="OCP\AppFramework\Http\Attribute\UserRateLimit" />
