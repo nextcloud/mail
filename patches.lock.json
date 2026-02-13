@@ -1,6 +1,19 @@
 {
-    "_hash": "0e361a02397cd9d8d46e434d387c107639b0c9b7541b3f9446da4e3c90758e98",
+    "_hash": "e3297c923adcdbd735cc8da9765e21e3f6bcb9f669ed228d8954814d910fc127",
     "patches": {
+        "glenscott/url-normalizer": [
+            {
+                "package": "glenscott/url-normalizer",
+                "description": "Fix to prevent deprecation warning when using PHP >= 8.5",
+                "url": ".patches/url-normalizer-fix-deprecation-warning-on-PHP-8.5.patch",
+                "sha256": "856c3bc4d3e883f86efc3a24946681a3a6e4c22afa67d7b8cb1d78391668c365",
+                "depth": 1,
+                "extra": {
+                    "upstream-fix-url": "https://github.com/glenscott/url-normalizer/pull/33",
+                    "provenance": "patches-file:patches.json"
+                }
+            }
+        ],
         "phpmailer/dkimvalidator": [
             {
                 "package": "phpmailer/dkimvalidator",

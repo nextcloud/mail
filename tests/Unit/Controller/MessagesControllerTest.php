@@ -518,11 +518,9 @@ class MessagesControllerTest extends TestCase {
 		// Reflection is needed to get private properties
 		$refZip = new ReflectionObject($zip);
 		$prop = $refZip->getProperty('resources');
-		$prop->setAccessible(true);
 		$zipValues = $prop->getValue($zip);
 		$refResponse = new ReflectionObject($response);
 		$prop = $refResponse->getProperty('resources');
-		$prop->setAccessible(true);
 		$responseValues = $prop->getValue($zip);
 
 		$this->assertTrue(is_resource($zipValues[0]['resource']));

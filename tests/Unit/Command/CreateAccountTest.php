@@ -21,6 +21,7 @@ class CreateAccountTest extends TestCase {
 	private $service;
 	private $crypto;
 	private $userManager;
+	private $classificationSettingsService;
 	private $command;
 	private $args = [
 		'user-id',

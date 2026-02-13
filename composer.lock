@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "58118b5d211447f560722687603b9e91",
+    "content-hash": "1bfa096a8f37087661d4065620d02ac2",
     "packages": [
         {
             "name": "amphp/amp",
@@ -933,16 +933,16 @@
         },
         {
             "name": "bytestream/horde-mail",
-            "version": "v2.7.1",
+            "version": "v2.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Mail.git",
-                "reference": "73f5798734caaf7c6aa3e7348ddc9e0d0b6a768e"
+                "reference": "5054666fe1a43f86a85e911111c115a133d80334"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Mail/zipball/73f5798734caaf7c6aa3e7348ddc9e0d0b6a768e",
-                "reference": "73f5798734caaf7c6aa3e7348ddc9e0d0b6a768e",
+                "url": "https://api.github.com/repos/bytestream/Mail/zipball/5054666fe1a43f86a85e911111c115a133d80334",
+                "reference": "5054666fe1a43f86a85e911111c115a133d80334",
                 "shasum": ""
             },
             "require": {
@@ -982,22 +982,22 @@
             "description": "Horde mail library",
             "homepage": "https://www.horde.org/libraries/Horde_Mail",
             "support": {
-                "source": "https://github.com/bytestream/Mail/tree/v2.7.1"
+                "source": "https://github.com/bytestream/Mail/tree/v2.7.2"
             },
-            "time": "2022-05-23T09:07:13+00:00"
+            "time": "2026-02-12T11:00:50+00:00"
         },
         {
             "name": "bytestream/horde-mime",
-            "version": "v2.13.2",
+            "version": "v2.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Mime.git",
-                "reference": "63eb21725983e437536d457135719df5a42e3cf4"
+                "reference": "5e5cfdecccf1db5db39df17028af00bb8e513b27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Mime/zipball/63eb21725983e437536d457135719df5a42e3cf4",
-                "reference": "63eb21725983e437536d457135719df5a42e3cf4",
+                "url": "https://api.github.com/repos/bytestream/Mime/zipball/5e5cfdecccf1db5db39df17028af00bb8e513b27",
+                "reference": "5e5cfdecccf1db5db39df17028af00bb8e513b27",
                 "shasum": ""
             },
             "require": {
@@ -1010,7 +1010,7 @@
                 "bytestream/horde-text-flowed": "^2",
                 "bytestream/horde-translation": "^2.2",
                 "bytestream/horde-util": "^2",
-                "php": "^7.4 || ^8.0"
+                "php": "^8.0"
             },
             "require-dev": {
                 "bytestream/horde-text-filter": "^2.4",
@@ -1046,9 +1046,9 @@
             "description": "MIME library",
             "homepage": "https://www.horde.org/libraries/Horde_Mime",
             "support": {
-                "source": "https://github.com/bytestream/Mime/tree/v2.13.2"
+                "source": "https://github.com/bytestream/Mime/tree/v2.14.0"
             },
-            "time": "2024-08-12T14:10:09+00:00"
+            "time": "2026-02-12T14:39:44+00:00"
         },
         {
             "name": "bytestream/horde-secret",
@@ -1542,16 +1542,16 @@
         },
         {
             "name": "bytestream/horde-util",
-            "version": "v2.8.0",
+            "version": "v2.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Util.git",
-                "reference": "352b5aee46e2df0b85961c1bde47c03a6b440224"
+                "reference": "45a9c3c14e70eec9df5d117a2d4941b097872672"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Util/zipball/352b5aee46e2df0b85961c1bde47c03a6b440224",
-                "reference": "352b5aee46e2df0b85961c1bde47c03a6b440224",
+                "url": "https://api.github.com/repos/bytestream/Util/zipball/45a9c3c14e70eec9df5d117a2d4941b097872672",
+                "reference": "45a9c3c14e70eec9df5d117a2d4941b097872672",
                 "shasum": ""
             },
             "require": {
@@ -1592,9 +1592,9 @@
             "description": "Horde utility library",
             "homepage": "https://www.horde.org/libraries/Horde_Util",
             "support": {
-                "source": "https://github.com/bytestream/Util/tree/v2.8.0"
+                "source": "https://github.com/bytestream/Util/tree/v2.8.1"
             },
-            "time": "2024-09-13T10:21:29+00:00"
+            "time": "2026-02-12T14:33:23+00:00"
         },
         {
             "name": "cerdic/css-tidy",
@@ -2152,16 +2152,16 @@
         },
         {
             "name": "nextcloud/horde-managesieve",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud/horde-managesieve.git",
-                "reference": "fd81621064a4b4bef74aadeffa0e610d844314aa"
+                "reference": "722bbe9de54022e7102161ab1f34d8bb8b8ae9c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud/horde-managesieve/zipball/fd81621064a4b4bef74aadeffa0e610d844314aa",
-                "reference": "fd81621064a4b4bef74aadeffa0e610d844314aa",
+                "url": "https://api.github.com/repos/nextcloud/horde-managesieve/zipball/722bbe9de54022e7102161ab1f34d8bb8b8ae9c7",
+                "reference": "722bbe9de54022e7102161ab1f34d8bb8b8ae9c7",
                 "shasum": ""
             },
             "require": {
@@ -2198,22 +2198,22 @@
             "description": "ManageSieve client library",
             "homepage": "https://www.horde.org",
             "support": {
-                "source": "https://github.com/nextcloud/horde-managesieve/tree/v1.0.0"
+                "source": "https://github.com/nextcloud/horde-managesieve/tree/v1.0.1"
             },
-            "time": "2022-04-27T16:49:35+00:00"
+            "time": "2026-02-12T15:09:05+00:00"
         },
         {
             "name": "nextcloud/horde-smtp",
-            "version": "v1.0.2",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud/horde-smtp.git",
-                "reference": "29b9a574136a067a206def77078cacc8f6acf3e5"
+                "reference": "de5281cefd271b709ffd3b64c5bf3a755283042e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud/horde-smtp/zipball/29b9a574136a067a206def77078cacc8f6acf3e5",
-                "reference": "29b9a574136a067a206def77078cacc8f6acf3e5",
+                "url": "https://api.github.com/repos/nextcloud/horde-smtp/zipball/de5281cefd271b709ffd3b64c5bf3a755283042e",
+                "reference": "de5281cefd271b709ffd3b64c5bf3a755283042e",
                 "shasum": ""
             },
             "require": {
@@ -2253,9 +2253,9 @@
             "description": "Horde SMTP client",
             "homepage": "https://www.horde.org",
             "support": {
-                "source": "https://github.com/nextcloud/horde-smtp/tree/v1.0.2"
+                "source": "https://github.com/nextcloud/horde-smtp/tree/v1.0.3"
             },
-            "time": "2022-12-14T16:39:58+00:00"
+            "time": "2026-02-09T17:25:55+00:00"
         },
         {
             "name": "nextcloud/kitinerary",
