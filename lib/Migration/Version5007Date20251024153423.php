@@ -19,6 +19,9 @@ use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 use Override;
 
+/**
+ * @psalm-api
+ */
 class Version5007Date20251024153423 extends SimpleMigrationStep {
 
 	public function __construct(

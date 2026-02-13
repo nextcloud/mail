@@ -14,6 +14,9 @@ use OCP\BackgroundJob\IJobList;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 
+/**
+ * @psalm-api
+ */
 class DeleteDuplicateUids implements IRepairStep {
 	public function __construct(
 		private IJobList $jobList,

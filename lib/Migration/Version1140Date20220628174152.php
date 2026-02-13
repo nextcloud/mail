@@ -17,6 +17,9 @@ use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
+/**
+ * @psalm-api
+ */
 class Version1140Date20220628174152 extends SimpleMigrationStep {
 	private IDBConnection $connection;
 

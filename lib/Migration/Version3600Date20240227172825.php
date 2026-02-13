@@ -15,6 +15,9 @@ use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
+/**
+ * @psalm-api
+ */
 class Version3600Date20240227172825 extends SimpleMigrationStep {
 
 	public function __construct(
