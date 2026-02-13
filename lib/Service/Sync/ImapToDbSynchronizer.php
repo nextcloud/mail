@@ -258,7 +258,7 @@ class ImapToDbSynchronizer {
 				$this->runInitialSync($client, $account, $mailbox, $logger);
 			} else {
 				try {
-					$logger->debug('Running partial sync for ' . $mailbox->getId());
+					$logger->debug('Running partial sync for ' . $mailbox->getId() . ' with criteria ' . $criteria);
 					// Only rebuild threads if there were new or vanished messages
 					$rebuildThreads = $this->runPartialSync($client, $account, $mailbox, $logger, $hasQresync, $criteria, $knownUids);
 				} catch (UidValidityChangedException $e) {
