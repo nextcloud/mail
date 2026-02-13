@@ -141,15 +141,15 @@ class AccountsController extends Controller {
 	public function update(int $id,
 		string $accountName,
 		string $emailAddress,
-		?string $imapHost = null,
-		?int $imapPort = null,
-		?string $imapSslMode = null,
-		?string $imapUser = null,
+		string $imapHost,
+		int $imapPort,
+		string $imapSslMode,
+		string $imapUser,
+		string $smtpHost,
+		int $smtpPort,
+		string $smtpSslMode,
+		string $smtpUser,
 		?string $imapPassword = null,
-		?string $smtpHost = null,
-		?int $smtpPort = null,
-		?string $smtpSslMode = null,
-		?string $smtpUser = null,
 		?string $smtpPassword = null,
 		string $authMethod = 'password'): JSONResponse {
 		try {
@@ -350,15 +350,15 @@ class AccountsController extends Controller {
 	#[TrapError]
 	public function create(string $accountName,
 		string $emailAddress,
-		?string $imapHost = null,
-		?int $imapPort = null,
-		?string $imapSslMode = null,
-		?string $imapUser = null,
+		string $imapHost,
+		int $imapPort,
+		string $imapSslMode,
+		string $imapUser,
+		string $smtpHost,
+		int $smtpPort,
+		string $smtpSslMode,
+		string $smtpUser,
 		?string $imapPassword = null,
-		?string $smtpHost = null,
-		?int $smtpPort = null,
-		?string $smtpSslMode = null,
-		?string $smtpUser = null,
 		?string $smtpPassword = null,
 		string $authMethod = 'password',
 		?bool $classificationEnabled = null): JSONResponse {
@@ -459,7 +459,7 @@ class AccountsController extends Controller {
 			try {
 				$previousDraft = $this->mailManager->getMessage($this->currentUserId, $draftId);
 			} catch (ClientException $e) {
-				$this->logger->info('Draft ' . $draftId . ' could not be loaded: ' . $e->getMessage());
+				$this->logger->info("Draft {$draftId} could not be loaded: {$e->getMessage()}");
 			}
 		}
 		$messageData = NewMessageData::fromRequest($account, $subject, $body, $to, $cc, $bcc, [], $isHtml);
