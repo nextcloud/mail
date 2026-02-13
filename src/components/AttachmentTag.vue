@@ -4,7 +4,7 @@
 -->
 <template>
 	<div class="attachment-tag" :class="{ 'attachment-tag--remaing': remaining > 0 }" @click="$emit('open')">
-		<FileIcon v-if="remaining === 0" :file-name="fileName" :mime-type="mimeType" />
+		<img v-if="remaining === 0" class="attachment-tag__icon" :src="mimeUrl">
 		<p class="attachment-tag__filename">
 			{{ remaining > 0 ? `+${remaining}` : fileName }}
 		</p>
@@ -12,10 +12,9 @@
 </template>
 
 <script>
-import FileIcon from './icons/FileIcon.vue'
+
 export default {
 	name: 'AttachmentTag',
-	components: { FileIcon },
 	props: {
 		fileName: {
 			type: String,
@@ -30,6 +29,11 @@ export default {
 		remaining: {
 			type: Number,
 			default: 0,
+		},
+
+		mimeUrl: {
+			type: String,
+			default: '',
 		},
 	},
 }
@@ -53,6 +57,10 @@ export default {
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
+	}
+
+	&__icon{
+		width: 16px;
 	}
 }
 
