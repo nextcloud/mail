@@ -18,6 +18,9 @@ use OCP\Migration\SimpleMigrationStep;
 /**
  * @codeCoverageIgnore
  */
+/**
+ * @psalm-api
+ */
 class Version4001Date20241017154801 extends SimpleMigrationStep {
 	/**
 	 * @param IOutput $output

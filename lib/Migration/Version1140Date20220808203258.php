@@ -16,6 +16,9 @@ use OCP\Migration\SimpleMigrationStep;
 use Psr\Log\LoggerInterface;
 use function method_exists;
 
+/**
+ * @psalm-api
+ */
 class Version1140Date20220808203258 extends SimpleMigrationStep {
 	private LoggerInterface $logger;
 	private MessageMapper $messageMapper;

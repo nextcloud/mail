@@ -14,6 +14,9 @@ use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
+/**
+ * @psalm-api
+ */
 class Version1096Date20210407150016 extends SimpleMigrationStep {
 	/**
 	 * @param IOutput $output
