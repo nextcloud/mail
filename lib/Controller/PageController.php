@@ -280,7 +280,6 @@ class PageController extends Controller {
 					'redirect_uri' => $this->urlGenerator->linkToRouteAbsolute('mail.microsoftIntegration.oauthRedirect'),
 					'response_type' => 'code',
 					'response_mode' => 'query',
-					'prompt' => 'consent',
 					'state' => '_accountId_', // Replaced by frontend
 					'scope' => 'offline_access https://outlook.office.com/IMAP.AccessAsUser.All https://outlook.office.com/SMTP.Send',
 					'access_type' => 'offline',
