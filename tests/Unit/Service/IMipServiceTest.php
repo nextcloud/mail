@@ -13,14 +13,19 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
+use OCA\Mail\Contracts\IMailTransmission;
+use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\IMipService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Util\ServerVersion;
@@ -44,8 +49,20 @@ class IMipServiceTest extends TestCase {
 	/** @var MailManager|MockObject */
 	private $mailManager;
 
-	/** @var MockObject|LoggerInterface */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
+
+	/** @var IMailTransmission|MockObject */
+	private $mailTransmission;
+
+	/** @var ImapMessageMapper|MockObject */
+	private $imapMessageMapper;
+
+	/** @var IMAPClientFactory|MockObject */
+	private $imapClientFactory;
+
+	/** @var AttachmentService|MockObject */
+	private $attachmentService;
 
 	private IMipService $service;
 
@@ -64,6 +81,10 @@ class IMipServiceTest extends TestCase {
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->serverVersion = $this->createMock(ServerVersion::class);
 		$this->OCPServerVersion = new OCPServerVersion();
+		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->imapMessageMapper = $this->createMock(ImapMessageMapper::class);
+		$this->mailTransmission = $this->createMock(IMailTransmission::class);
+		$this->attachmentService = $this->createMock(AttachmentService::class);
 
 		$this->service = new IMipService(
 			$this->accountService,
@@ -72,7 +93,11 @@ class IMipServiceTest extends TestCase {
 			$this->mailboxMapper,
 			$this->mailManager,
 			$this->messageMapper,
-			$this->serverVersion
+			$this->serverVersion,
+			$this->imapClientFactory,
+			$this->imapMessageMapper,
+			$this->mailTransmission,
+			$this->attachmentService
 		);
 	}
 
@@ -641,6 +666,7 @@ class IMipServiceTest extends TestCase {
 		$mailbox = new Mailbox();
 		$mailbox->setId(100);
 		$mailbox->setAccountId(200);
+		$mailbox->setName('INBOX');
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(200);
 		$mailAccount->setEmail('vincent@stardew-valley.edu');
@@ -650,6 +676,81 @@ class IMipServiceTest extends TestCase {
 		$imapMessage->scheduling[] = ['method' => 'REQUEST', 'contents' => 'VCALENDAR'];
 		$addressList = $this->createMock(AddressList::class);
 		$address = $this->createMock(Address::class);
+
+		// Create a mock IMAP client that will be returned by the factory
+		$imapClient = $this->createMock(\Horde_Imap_Client_Socket::class);
+
+		$this->messageMapper->expects(self::once())
+			->method('findIMipMessagesAscending')
+			->willReturn([$message]);
+		$this->mailboxMapper->expects(self::once())
+			->method('findById')
+			->willReturn($mailbox);
+		$this->accountService->expects(self::once())
+			->method('findById')
+			->willReturn($account);
+		$this->mailManager->expects(self::once())
+			->method('getImapMessagesForScheduleProcessing')
+			->with($account, $mailbox, [$message->getUid()])
+			->willReturn([$imapMessage]);
+		$imapMessage->expects(self::once())
+			->method('getUid')
+			->willReturn(1);
+		$imapMessage->expects(self::once())
+			->method('getFrom')
+			->willReturn($addressList);
+		$addressList->expects(self::once())
+			->method('first')
+			->willReturn($address);
+		$address->expects(self::once())
+			->method('getEmail')
+			->willReturn('pam@stardew-bus-service.com');
+		$this->calendarManager->expects(self::once())
+			->method('handleIMipRequest')
+			->willThrowException(new \Exception('Calendar error'));
+		$this->logger->expects(self::exactly(2))
+			->method('error');
+		$this->messageMapper->expects(self::once())
+			->method('updateImipData')
+			->with(self::callback(fn (Message $msg) => $msg->isImipProcessed() === true && $msg->isImipError() === true));
+
+		$this->imapClientFactory->expects(self::once())
+			->method('getClient')
+			->with($account)
+			->willReturn($imapClient);
+
+		// The error notification should fail to send due to missing raw message
+		$this->imapMessageMapper->expects(self::once())
+			->method('getFullText')
+			->willReturn(null);
+
+		$imapClient->expects(self::once())
+			->method('logout');
+
+		$this->service->process();
+	}
+
+	public function testHandleImipRequestThrowsExceptionAndSendsNotification(): void {
+		$message = new Message();
+		$message->setImipMessage(true);
+		$message->setUid(1);
+		$message->setMailboxId(100);
+		$mailbox = new Mailbox();
+		$mailbox->setId(100);
+		$mailbox->setAccountId(200);
+		$mailbox->setName('INBOX');
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(200);
+		$mailAccount->setEmail('vincent@stardew-valley.edu');
+		$mailAccount->setUserId('vincent');
+		$account = new Account($mailAccount);
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$imapMessage->scheduling[] = ['method' => 'REQUEST', 'contents' => 'VCALENDAR'];
+		$addressList = $this->createMock(AddressList::class);
+		$address = $this->createMock(Address::class);
+
+		// Create a mock IMAP client that will be returned by the factory
+		$imapClient = $this->createMock(\Horde_Imap_Client_Socket::class);
 
 		$this->messageMapper->expects(self::once())
 			->method('findIMipMessagesAscending')
@@ -680,16 +781,53 @@ class IMipServiceTest extends TestCase {
 			->method('handleIMipRequest')
 			->willThrowException(new \Exception('Calendar error'));
 		$this->logger->expects(self::once())
-			->method('error')
-			->with(
-				'iMIP message processing failed',
-				self::callback(fn ($context) => isset($context['exception'])
-						&& $context['messageId'] === $message->getId()
-						&& $context['mailboxId'] === $mailbox->getId())
-			);
+			->method('error');
 		$this->messageMapper->expects(self::once())
 			->method('updateImipData')
-			->with(self::callback(fn (Message $msg) => $msg->isImipProcessed() === true && $msg->isImipError() === true));
+			->with(self::callback(function (Message $msg) {
+				return $msg->isImipProcessed() === true && $msg->isImipError() === true;
+			}));
+
+		$this->imapClientFactory->expects(self::once())
+			->method('getClient')
+			->with($account)
+			->willReturn($imapClient);
+
+		$rawMessage = 'Raw message content';
+		$this->imapMessageMapper->expects(self::once())
+			->method('getFullText')
+			->with($imapClient, 'INBOX', 1, 'vincent', false)
+			->willReturn($rawMessage);
+
+		$imapClient->expects(self::once())
+			->method('logout');
+
+		// Mock the attachment service
+		$attachment = $this->createMock(\OCA\Mail\Db\LocalAttachment::class);
+		$this->attachmentService->expects(self::once())
+			->method('addFileFromString')
+			->with(
+				'vincent',
+				'original-message.eml',
+				'message/rfc822',
+				$rawMessage
+			)
+			->willReturn($attachment);
+
+		// Mock the mail transmission
+		$this->mailTransmission->expects(self::once())
+			->method('sendMessage')
+			->with(
+				$account,
+				self::callback(function (LocalMessage $localMessage) use ($account) {
+					return $localMessage->getType() === LocalMessage::TYPE_OUTGOING
+						&& $localMessage->getAccountId() === $account->getId()
+						&& $localMessage->getSubject() === '[ERROR] Calendar invitation processing failed: No Subject'
+						&& $localMessage->getHtml() === false
+						&& count($localMessage->getRecipients()) === 1
+						&& $localMessage->getRecipients()[0]->getEmail() === $account->getEmail();
+				})
+			);
 
 		$this->service->process();
 	}
