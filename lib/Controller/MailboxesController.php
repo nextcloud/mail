@@ -70,6 +70,10 @@ class MailboxesController extends Controller {
 	 */
 	#[TrapError]
 	public function index(int $accountId, bool $forceSync = false): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
 		$mailboxes = $this->mailManager->getMailboxes($account, $forceSync);
@@ -77,7 +81,7 @@ class MailboxesController extends Controller {
 			'id' => $accountId,
 			'email' => $account->getEmail(),
 			'mailboxes' => $mailboxes,
-			'delimiter' => reset($mailboxes)->getDelimiter(),
+			'delimiter' => $mailboxes[0]?->getDelimiter(),
 		]);
 	}
 
@@ -94,6 +98,10 @@ class MailboxesController extends Controller {
 		?string $name = null,
 		?bool $subscribed = null,
 		?bool $syncInBackground = null): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 
@@ -136,6 +144,10 @@ class MailboxesController extends Controller {
 	 */
 	#[TrapError]
 	public function sync(int $id, array $ids = [], ?int $lastMessageTimestamp = null, bool $init = false, string $sortOrder = 'newest', ?string $query = null): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 		$order = $sortOrder === 'newest' ? IMailSearch::ORDER_NEWEST_FIRST: IMailSearch::ORDER_OLDEST_FIRST;
@@ -178,6 +190,10 @@ class MailboxesController extends Controller {
 	 */
 	#[TrapError]
 	public function clearCache(int $id): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 
@@ -196,6 +212,10 @@ class MailboxesController extends Controller {
 	 */
 	#[TrapError]
 	public function markAllAsRead(int $id): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 
@@ -216,6 +236,10 @@ class MailboxesController extends Controller {
 	 */
 	#[TrapError]
 	public function stats(int $id): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		return new JSONResponse($mailbox->getStats());
 	}
@@ -252,6 +276,10 @@ class MailboxesController extends Controller {
 	 */
 	#[TrapError]
 	public function create(int $accountId, string $name): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
 		return new JSONResponse($this->mailManager->createMailbox($account, $name));
@@ -268,6 +296,10 @@ class MailboxesController extends Controller {
 	 */
 	#[TrapError]
 	public function destroy(int $id): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 
@@ -287,6 +319,10 @@ class MailboxesController extends Controller {
 	 */
 	#[TrapError]
 	public function clearMailbox(int $id): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 
