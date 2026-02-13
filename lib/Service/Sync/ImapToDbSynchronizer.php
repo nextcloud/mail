@@ -43,6 +43,7 @@ use Throwable;
 use function array_chunk;
 use function array_filter;
 use function array_map;
+use function register_shutdown_function;
 use function sprintf;
 
 class ImapToDbSynchronizer {
@@ -214,6 +215,7 @@ class ImapToDbSynchronizer {
 		?array $knownUids = null,
 		bool $force = false,
 		bool $batchSync = false): bool {
+
 		$rebuildThreads = true;
 		if ($mailbox->getSelectable() === false) {
 			return $rebuildThreads;
@@ -249,6 +251,10 @@ class ImapToDbSynchronizer {
 			$this->mailboxMapper->lockForVanishedSync($mailbox);
 		}
 
+		register_shutdown_function(function () use ($force, $criteria, $logger, $mailbox) {
+			$this->unlockMailbox($force, $criteria, $logger, $mailbox);
+		});
+
 		try {
 			if ($force
 				|| $mailbox->getSyncNewToken() === null
@@ -281,18 +287,7 @@ class ImapToDbSynchronizer {
 		} catch (Throwable $e) {
 			throw new ServiceException('Sync failed for ' . $account->getId() . ':' . $mailbox->getName() . ': ' . $e->getMessage(), 0, $e);
 		} finally {
-			if ($force || ($criteria & Horde_Imap_Client::SYNC_VANISHEDUIDS)) {
-				$logger->debug('Unlocking mailbox ' . $mailbox->getId() . ' from vanished messages sync');
-				$this->mailboxMapper->unlockFromVanishedSync($mailbox);
-			}
-			if ($force || ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS)) {
-				$logger->debug('Unlocking mailbox ' . $mailbox->getId() . ' from changed messages sync');
-				$this->mailboxMapper->unlockFromChangedSync($mailbox);
-			}
-			if ($force || ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS)) {
-				$logger->debug('Unlocking mailbox ' . $mailbox->getId() . ' from new messages sync');
-				$this->mailboxMapper->unlockFromNewSync($mailbox);
-			}
+			$this->unlockMailbox($force, $criteria, $logger, $mailbox);
 		}
 
 		if (!$batchSync) {
@@ -306,6 +301,24 @@ class ImapToDbSynchronizer {
 		}
 
 		return $rebuildThreads;
+	}
+
+	private function unlockMailbox(bool $force, int $criteria, LoggerInterface $logger, Mailbox $mailbox): void {
+		if (($force || ($criteria & Horde_Imap_Client::SYNC_VANISHEDUIDS))
+			&& $mailbox->getSyncVanishedLock() !== null) {
+			$logger->debug('Unlocking mailbox ' . $mailbox->getId() . ' from vanished messages sync');
+			$this->mailboxMapper->unlockFromVanishedSync($mailbox);
+		}
+		if (($force || ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS))
+			&& $mailbox->getSyncChangedLock() !== null) {
+			$logger->debug('Unlocking mailbox ' . $mailbox->getId() . ' from changed messages sync');
+			$this->mailboxMapper->unlockFromChangedSync($mailbox);
+		}
+		if (($force || ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS))
+			&& $mailbox->getSyncNewLock() !== null) {
+			$logger->debug('Unlocking mailbox ' . $mailbox->getId() . ' from new messages sync');
+			$this->mailboxMapper->unlockFromNewSync($mailbox);
+		}
 	}
 
 	/**
