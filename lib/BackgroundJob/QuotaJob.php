@@ -56,7 +56,7 @@ class QuotaJob extends TimedJob {
 		try {
 			$account = $this->accountService->findById($accountId);
 		} catch (DoesNotExistException $e) {
-			$this->logger->debug('Could not find account <' . $accountId . '> removing from jobs');
+			$this->logger->debug("Could not find account <{$accountId}> removing from jobs");
 			$this->jobList->remove(self::class, $argument);
 			return;
 		}
@@ -78,7 +78,7 @@ class QuotaJob extends TimedJob {
 
 		$quota = $this->mailManager->getQuota($account);
 		if ($quota === null) {
-			$this->logger->debug('Could not get quota information for account <' . $account->getEmail() . '>', ['app' => 'mail']);
+			$this->logger->debug("Could not get quota information for account <{$account->getEmail()}>", ['app' => 'mail']);
 			return;
 		}
 		$previous = $account->getMailAccount()->getQuotaPercentage();
@@ -88,7 +88,7 @@ class QuotaJob extends TimedJob {
 
 		// Only notify if we've reached the rising edge
 		if ($previous < $current && $previous <= 90 && $current > 90) {
-			$this->logger->debug('New quota information for <' . $account->getEmail() . '> - previous: ' . $previous . ', current: ' . $current);
+			$this->logger->debug("New quota information for <{$account->getEmail()}> - previous: {$previous}, current: {$current}");
 			$time = $this->time->getDateTime('now');
 			$notification = $this->notificationManager->createNotification();
 			$notification

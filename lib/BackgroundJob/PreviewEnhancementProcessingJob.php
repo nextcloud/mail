@@ -53,13 +53,13 @@ class PreviewEnhancementProcessingJob extends TimedJob {
 		try {
 			$account = $this->accountService->findById($accountId);
 		} catch (DoesNotExistException $e) {
-			$this->logger->debug('Could not find account <' . $accountId . '> removing from jobs');
+			$this->logger->debug("Could not find account <{$accountId}> removing from jobs");
 			$this->jobList->remove(self::class, $argument);
 			return;
 		}
 
 		if (!$account->getMailAccount()->canAuthenticateImap()) {
-			$this->logger->info('Ignoring preprocessing job for provisioned account as athentication on IMAP not possible');
+			$this->logger->info('Ignoring preprocessing job for provisioned account as authentication on IMAP not possible');
 			return;
 		}
 

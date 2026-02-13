@@ -52,12 +52,10 @@ class ContactIntegrationController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param string $uid
-	 * @param string $mail
 	 * @return JSONResponse
 	 */
 	#[TrapError]
-	public function addMail(?string $uid = null, ?string $mail = null): JSONResponse {
+	public function addMail(string $uid, string $mail): JSONResponse {
 		$res = $this->service->addEMailToContact($uid, $mail);
 		if ($res === null) {
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
@@ -69,7 +67,7 @@ class ContactIntegrationController extends Controller {
 	 * @NoAdminRequired
 	 */
 	#[TrapError]
-	public function newContact(?string $contactName = null, ?string $mail = null): JSONResponse {
+	public function newContact(string $contactName, string $mail): JSONResponse {
 		$res = $this->service->newContact($contactName, $mail);
 		if ($res === null) {
 			return new JSONResponse([], Http::STATUS_NOT_ACCEPTABLE);

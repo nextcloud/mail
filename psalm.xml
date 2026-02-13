@@ -11,6 +11,7 @@
     xsi:schemaLocation="https://getpsalm.org/schema/config"
     errorBaseline="tests/psalm-baseline.xml"
     phpVersion="8.1"
+	findUnusedCode="false"
 >
     <projectFiles>
         <directory name="lib" />
@@ -25,6 +26,11 @@
 		<directory name="vendor-bin/psalm-stubs" />
     </extraFiles>
 	<issueHandlers>
+		<!-- Ignore errors related to unused classes, methods... -->
+		<UnusedClass errorLevel="suppress" />
+		<PossiblyUnusedMethod errorLevel="suppress" />
+		<PossiblyUnusedReturnValue errorLevel="suppress" />
+
 		<UndefinedAttributeClass>
 			<errorLevel type="info">
 				<referencedClass name="OCP\AppFramework\Http\Attribute\UserRateLimit" />
@@ -67,10 +73,5 @@
 				<referencedClass name="Symfony\Component\Console\Output\OutputInterface" />
 			</errorLevel>
 		</UndefinedDocblockClass>
-		<UndefinedFunction>
-			<errorLevel type="suppress">
-				<referencedFunction name="str_contains" />
-			</errorLevel>
-		</UndefinedFunction>
 	</issueHandlers>
 </psalm>

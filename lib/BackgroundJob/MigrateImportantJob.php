@@ -58,7 +58,7 @@ class MigrateImportantJob extends QueuedJob {
 		try {
 			$mailbox = $this->mailboxMapper->findById($mailboxId);
 		} catch (DoesNotExistException $e) {
-			$this->logger->debug('Could not find mailbox <' . $mailboxId . '>');
+			$this->logger->debug("Could not find mailbox <{$mailboxId}>");
 			return;
 		}
 
@@ -66,7 +66,7 @@ class MigrateImportantJob extends QueuedJob {
 		try {
 			$mailAccount = $this->mailAccountMapper->findById($accountId);
 		} catch (DoesNotExistException $e) {
-			$this->logger->debug('Could not find account <' . $accountId . '>');
+			$this->logger->debug("Could not find account <{$accountId}>");
 			return;
 		}
 
@@ -75,20 +75,20 @@ class MigrateImportantJob extends QueuedJob {
 
 		try {
 			if ($this->mailManager->isPermflagsEnabled($client, $account, $mailbox->getName()) === false) {
-				$this->logger->debug('Permflags not enabled for <' . $accountId . '>');
+				$this->logger->debug("Permflags not enabled for <{$accountId}>");
 				return;
 			}
 
 			try {
 				$this->migration->migrateImportantOnImap($client, $account, $mailbox);
 			} catch (ServiceException $e) {
-				$this->logger->debug('Could not flag messages on IMAP for mailbox <' . $mailboxId . '>.');
+				$this->logger->debug("Could not flag messages on IMAP for mailbox <{$mailboxId}>.");
 			}
 
 			try {
 				$this->migration->migrateImportantFromDb($client, $account, $mailbox);
 			} catch (ServiceException $e) {
-				$this->logger->debug('Could not flag messages from DB on IMAP for mailbox <' . $mailboxId . '>.');
+				$this->logger->debug("Could not flag messages from DB on IMAP for mailbox <{$mailboxId}>.");
 			}
 		} finally {
 			$client->logout();
