@@ -256,7 +256,7 @@ class MailAccountMapper extends QBMapper {
 			if (!is_array($rids)) {
 				$rids = [$rids];
 			}
-			return array_intersect_key($ids, array_values($rids));
+			return array_intersect_key($ids, $rids);
 		}
 		return $ids;
 	}
