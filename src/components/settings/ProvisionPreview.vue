@@ -15,7 +15,7 @@
 		{{ t('mail', 'Email: {email}', { email }) }}<br>
 		{{
 			t('mail', 'IMAP: {user} on {host}:{port} ({ssl} encryption)', {
-				user: imapUser,
+				user: imapLoginUser,
 				host: imapHost,
 				port: imapPort,
 				ssl: imapSslMode,
@@ -23,7 +23,7 @@
 		}}<br>
 		{{
 			t('mail', 'SMTP: {user} on {host}:{port} ({ssl} encryption)', {
-				user: smtpUser,
+				user: smtpLoginUser,
 				host: smtpHost,
 				port: smtpPort,
 				ssl: smtpSslMode,
@@ -32,12 +32,20 @@
 		<span v-if="sieveEnabled">
 			{{
 				t('mail', 'Sieve: {user} on {host}:{port} ({ssl} encryption)', {
-					user: sieveUser,
+					user: sieveLoginUser,
 					host: sieveHost,
 					port: sievePort,
 					ssl: sieveSslMode,
 				})
 			}}<br>
+		</span>
+		<span v-if="hasMasterUser" class="master-user-info">
+			<br>
+			<em>{{ t('mail', 'Using Dovecot master user authentication') }}</em>
+		</span>
+		<span v-else-if="masterPasswordEnabled" class="master-password-info">
+			<br>
+			<em>{{ t('mail', 'Using static password for all users') }}</em>
 		</span>
 	</div>
 </template>
@@ -116,6 +124,46 @@ export default {
 
 		sieveUser() {
 			return this.templates.sieveUser.replace('%USERID%', this.data.uid).replace('%EMAIL%', this.data.email)
+		},
+
+		masterPasswordEnabled() {
+			return this.templates.masterPasswordEnabled
+		},
+
+		masterUser() {
+			return this.templates.masterUser || ''
+		},
+
+		masterUserSeparator() {
+			return this.templates.masterUserSeparator || '*'
+		},
+
+		hasMasterUser() {
+			return this.masterUser && this.masterUser !== '********' && this.masterUser.length > 0
+		},
+
+		imapLoginUser() {
+			const baseUser = this.imapUser
+			if (this.hasMasterUser) {
+				return baseUser + this.masterUserSeparator + this.masterUser
+			}
+			return baseUser
+		},
+
+		smtpLoginUser() {
+			const baseUser = this.smtpUser
+			if (this.hasMasterUser) {
+				return baseUser + this.masterUserSeparator + this.masterUser
+			}
+			return baseUser
+		},
+
+		sieveLoginUser() {
+			const baseUser = this.sieveUser
+			if (this.hasMasterUser) {
+				return baseUser + this.masterUserSeparator + this.masterUser
+			}
+			return baseUser
 		},
 	},
 }

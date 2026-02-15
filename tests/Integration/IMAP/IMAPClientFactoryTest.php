@@ -17,6 +17,7 @@ use OC\Memcache\Redis;
 use OCA\Mail\Account;
 use OCA\Mail\Cache\HordeCacheFactory;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\ProvisioningMapper;
 use OCA\Mail\IMAP\HordeImapClient;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Tests\Integration\Framework\Caching;
@@ -44,6 +45,7 @@ class IMAPClientFactoryTest extends TestCase {
 	private IEventDispatcher|MockObject $eventDispatcher;
 	private ITimeFactory|MockObject $timeFactory;
 	private HordeCacheFactory|MockObject $hordeCacheFactory;
+	private ProvisioningMapper|MockObject $provisioningMapper;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -54,6 +56,7 @@ class IMAPClientFactoryTest extends TestCase {
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->hordeCacheFactory = $this->createMock(HordeCacheFactory::class);
+		$this->provisioningMapper = $this->createMock(ProvisioningMapper::class);
 
 		$this->factory = new IMAPClientFactory(
 			$this->crypto,
@@ -62,6 +65,7 @@ class IMAPClientFactoryTest extends TestCase {
 			$this->eventDispatcher,
 			$this->timeFactory,
 			$this->hordeCacheFactory,
+			$this->provisioningMapper,
 		);
 	}
 
