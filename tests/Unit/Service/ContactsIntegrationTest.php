@@ -347,7 +347,7 @@ class ContactsIntegrationTest extends TestCase {
 		$this->config->expects(self::atLeast(3))
 			->method('getAppValue')
 			->withConsecutive(
-				['core', 'shareapi_allow_share_dialog_user_enumeration', 'no'],
+				['core', 'shareapi_allow_share_dialog_user_enumeration', 'yes'],
 				['core', 'shareapi_restrict_user_enumeration_to_group', 'no'],
 				['core', 'shareapi_restrict_user_enumeration_full_match', 'yes'],
 				['core', 'shareapi_restrict_user_enumeration_full_match_userid', 'yes'],

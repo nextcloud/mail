@@ -72,7 +72,7 @@ class ContactsGroupServiceTest extends TestCase {
 		];
 		$this->config->expects($this->once())
 			->method('getAppValue')
-			->with('core', 'shareapi_allow_share_dialog_user_enumeration', 'no')
+			->with('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes')
 			->willReturn('yes');
 		$this->contactsManager->expects($this->once())
 			->method('isEnabled')
@@ -135,7 +135,7 @@ class ContactsGroupServiceTest extends TestCase {
 		];
 		$this->config->expects($this->once())
 			->method('getAppValue')
-			->with('core', 'shareapi_allow_share_dialog_user_enumeration', 'no')
+			->with('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes')
 			->willReturn('yes');
 		$this->contactsManager->expects($this->once())
 			->method('isEnabled')
