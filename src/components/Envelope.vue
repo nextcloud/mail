@@ -482,6 +482,7 @@
 				<AttachmentTag
 					:file-name="attachment.fileName"
 					:mime-type="attachment.mime"
+					:mime-url="attachment.mimeUrl"
 					@open="showViewer(fileInfos[idx])" />
 			</div>
 			<AttachmentTag v-if="remainingAttachements > 0" :remaining="remainingAttachements" />

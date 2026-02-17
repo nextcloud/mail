@@ -25,6 +25,7 @@ use OCA\Mail\Service\Attachment\AttachmentStorage;
 use OCA\Mail\Service\Attachment\UploadedFile;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Files\Folder;
+use OCP\Files\IMimeTypeDetector;
 use OCP\Files\NotPermittedException;
 use OCP\ICacheFactory;
 use OCP\IURLGenerator;
@@ -61,6 +62,8 @@ class AttachmentServiceTest extends TestCase {
 	/** @var MockObject|IURLGenerator */
 	private $urlGenerator;
 
+	/** @var MockObject|IMimeTypeDetector */
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -72,6 +75,7 @@ class AttachmentServiceTest extends TestCase {
 		$this->cacheFactory = $this->createMock(ICacheFactory::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->mimeTypeDetector = $this->createMock(IMimeTypeDetector::class);
 
 		$this->service = new AttachmentService(
 			$this->userFolder,
@@ -81,6 +85,7 @@ class AttachmentServiceTest extends TestCase {
 			$this->messageMapper,
 			$this->cacheFactory,
 			$this->urlGenerator,
+			$this->mimeTypeDetector,
 			$this->logger
 		);
 	}
