@@ -10,10 +10,9 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Db;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Db\Provisioning;
 use OCA\Mail\Db\ProvisioningMapper;
 use OCA\Mail\Exception\ValidationException;
-use OCA\Mail\Tests\Integration\Db\Alias;
-use OCA\Mail\Tests\Integration\Db\MockObject;
 use OCP\IDBConnection;
 use Psr\Log\NullLogger;
 
@@ -152,5 +151,27 @@ class ProvisioningMapperTest extends TestCase {
 		$this->assertTrue($exceptionWasThrown);
 	}
 
+	public function testValidateKeepMasterPasswordSkipPlaceholder(): void {
+		$data = [
+			'provisioningDomain' => 'static.test',
+			'emailTemplate' => '%USERID%@static.test',
+			'imapUser' => '%EMAIL%',
+			'imapHost' => 'static.test',
+			'imapPort' => '143',
+			'imapSslMode' => 'none',
+			'smtpUser' => '%EMAIL%',
+			'smtpHost' => 'static.test',
+			'smtpPort' => '25',
+			'smtpSslMode' => 'none',
+			'sieveEnabled' => false,
+			'masterPasswordEnabled' => true,
+			'masterPassword' => Provisioning::MASTER_PASSWORD_PLACEHOLDER,
+		];
+
+		$provisioning = $this->mapper->validate($data);
+
+		$this->assertTrue($provisioning->getMasterPasswordEnabled());
+		$this->assertNull($provisioning->getMasterPassword());
+	}
 
 }
