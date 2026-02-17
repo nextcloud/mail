@@ -92,11 +92,18 @@ class ProvisioningMapper extends QBMapper {
 			$exception->setField('ldapAliasesAttribute', false);
 		}
 
-		// Master password is required when master user is set
-		$masterUser = $data['masterUser'] ?? '';
 		$masterPasswordEnabled = (bool)($data['masterPasswordEnabled'] ?? false);
-		if (!empty($masterUser) && $masterUser !== Provisioning::MASTER_PASSWORD_PLACEHOLDER && !$masterPasswordEnabled) {
-			$exception->setField('masterPasswordEnabled', false);
+		$masterPassword = $data['masterPassword'] ?? '';
+		$masterUser = $data['masterUser'] ?? '';
+		$masterUserSeparator = $data['masterUserSeparator'] ?? '';
+
+		if ($masterPasswordEnabled) {
+			if ($masterPassword === '') {
+				$exception->setField('masterPassword', false);
+			}
+			if ($masterUser !== '' && $masterUserSeparator === '') {
+				$exception->setField('masterUserSeparator', false);
+			}
 		}
 
 		if (!empty($exception->getFields())) {
@@ -115,16 +122,6 @@ class ProvisioningMapper extends QBMapper {
 		$provisioning->setSmtpHost($data['smtpHost']);
 		$provisioning->setSmtpPort((int)$data['smtpPort']);
 		$provisioning->setSmtpSslMode($data['smtpSslMode']);
-
-		$provisioning->setMasterPasswordEnabled((bool)($data['masterPasswordEnabled'] ?? false));
-		if (isset($data['masterPassword']) && $data['masterPassword'] !== Provisioning::MASTER_PASSWORD_PLACEHOLDER) {
-			$provisioning->setMasterPassword($data['masterPassword']);
-		}
-		if (isset($data['masterUser']) && $data['masterUser'] !== Provisioning::MASTER_PASSWORD_PLACEHOLDER) {
-			$provisioning->setMasterUser($data['masterUser']);
-		}
-		$provisioning->setMasterUserSeparator($data['masterUserSeparator'] ?? '*');
-
 		$provisioning->setSieveEnabled((bool)$data['sieveEnabled']);
 		$provisioning->setSieveHost($data['sieveHost'] ?? '');
 		$provisioning->setSieveUser($data['sieveUser'] ?? '');
@@ -133,6 +130,20 @@ class ProvisioningMapper extends QBMapper {
 
 		$provisioning->setLdapAliasesProvisioning($ldapAliasesProvisioning);
 		$provisioning->setLdapAliasesAttribute($ldapAliasesAttribute);
+
+		if ($masterPasswordEnabled) {
+			$provisioning->setMasterPasswordEnabled(true);
+			if ($masterPassword !== Provisioning::MASTER_PASSWORD_PLACEHOLDER) {
+				$provisioning->setMasterPassword($masterPassword);
+			}
+			$provisioning->setMasterUser($masterUser);
+			$provisioning->setMasterUserSeparator($masterUserSeparator);
+		} else {
+			$provisioning->setMasterPasswordEnabled(false);
+			$provisioning->setMasterPassword(null);
+			$provisioning->setMasterUser(null);
+			$provisioning->setMasterUserSeparator(null);
+		}
 
 		return $provisioning;
 	}
