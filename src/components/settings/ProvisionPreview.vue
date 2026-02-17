@@ -139,7 +139,7 @@ export default {
 		},
 
 		hasMasterUser() {
-			return this.masterUser && this.masterUser !== '********' && this.masterUser.length > 0
+			return this.masterUser.length > 0
 		},
 
 		imapLoginUser() {
