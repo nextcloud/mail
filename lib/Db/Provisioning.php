@@ -38,7 +38,7 @@ use ReturnTypeWillChange;
  * @method bool|null getMasterPasswordEnabled()
  * @method void setMasterPasswordEnabled(bool $masterPasswordEnabled)
  * @method string|null getMasterPassword()
- * @method void setMasterPassword(string $masterPassword)
+ * @method void setMasterPassword(?string $masterPassword)
  * @method string|null getMasterUser()
  * @method void setMasterUser(?string $masterUser)
  * @method string|null getMasterUserSeparator()
