@@ -377,26 +377,41 @@ export default {
 		},
 
 		async loadEditorTranslations(language) {
-			if (language === 'en') {
+			// CKEditor uses lowercase locale codes (e.g. "de-ch" instead of "de-CH")
+			const ckeditorLanguage = language.toLowerCase()
+
+			if (ckeditorLanguage === 'en') {
 				// The default, nothing to fetch
-				return this.showEditor('en')
-			}
-
-			try {
-				logger.debug(`loading ${language} translations for CKEditor`)
-
-				/* eslint-disable @stylistic/comma-dangle, @stylistic/function-paren-newline */
-				const { default: coreTranslations } = await import(
-					/* webpackMode: "lazy" */
-					`ckeditor5/translations/${language}.js`
-				)
-				/* eslint-enable @stylistic/comma-dangle, @stylistic/function-paren-newline */
-
-				this.showEditor(language, [coreTranslations])
-			} catch (error) {
-				logger.error(`could not find CKEditor translations for "${language}"`, { error })
 				this.showEditor('en')
+				return
 			}
+
+			// Try exact match first (e.g. "de-ch"), then language only (e.g. "de"), then fall back to "en"
+			const candidates = [ckeditorLanguage]
+			if (ckeditorLanguage.includes('-')) {
+				candidates.push(ckeditorLanguage.split('-')[0])
+			}
+
+			for (const candidate of candidates) {
+				try {
+					logger.debug(`loading "${candidate}" translations for CKEditor`)
+
+					/* eslint-disable @stylistic/comma-dangle, @stylistic/function-paren-newline */
+					const { default: coreTranslations } = await import(
+						/* webpackMode: "lazy" */
+						`ckeditor5/translations/${candidate}.js`
+					)
+					/* eslint-enable @stylistic/comma-dangle, @stylistic/function-paren-newline */
+
+					this.showEditor(candidate, [coreTranslations])
+					return
+				} catch (error) {
+					logger.debug(`no CKEditor translations for "${candidate}"`, { error })
+				}
+			}
+
+			logger.info(`no CKEditor translations found for "${language}", falling back to English`)
+			this.showEditor('en')
 		},
 
 		showEditor(language, translations) {
