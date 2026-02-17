@@ -13,6 +13,7 @@
 		{{ t('mail', 'Domain Match: {provisioningDomain}', { provisioningDomain }) }}
 		<br>
 		{{ t('mail', 'Email: {email}', { email }) }}<br>
+		{{ t('mail', 'Names: {names}', { names }) }}<br>
 		{{
 			t('mail', 'IMAP: {user} on {host}:{port} ({ssl} encryption)', {
 				user: imapUser,
@@ -60,6 +61,17 @@ export default {
 	computed: {
 		email() {
 			return this.templates.email.replace('%USERID%', this.data.uid).replace('%EMAIL%', this.data.email)
+		},
+
+		names() {
+			const templates = this.templates.nameTemplates || []
+			if (!templates.length) {
+				return this.data.displayName || 'Display Name'
+			}
+			return templates.map(t => t
+				.replace('%USERID%', this.data.uid)
+				.replace('%DISPLAYNAME%', this.data.displayName || '')
+			).join(', ')
 		},
 
 		provisioningDomain() {

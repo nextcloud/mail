@@ -122,6 +122,8 @@ class ProvisioningMapper extends QBMapper {
 
 		$provisioning->setLdapAliasesProvisioning($ldapAliasesProvisioning);
 		$provisioning->setLdapAliasesAttribute($ldapAliasesAttribute);
+		$nameTemplates = $data['nameTemplates'] ?? [];
+		$provisioning->setNameTemplates(!empty($nameTemplates) ? json_encode($nameTemplates) : null);
 
 		return $provisioning;
 	}

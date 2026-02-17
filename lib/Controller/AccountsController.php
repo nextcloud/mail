@@ -97,7 +97,7 @@ class AccountsController extends Controller {
 		$json = [];
 		foreach ($mailAccounts as $mailAccount) {
 			$conf = $mailAccount->jsonSerialize();
-			$conf['aliases'] = $this->aliasesService->findAll($conf['accountId'], $this->currentUserId);
+			$conf['aliases'] = $this->aliasesService->findAllWithDeletable($conf['accountId'], $this->currentUserId);
 			$json[] = $conf;
 		}
 		return new JSONResponse($json);
