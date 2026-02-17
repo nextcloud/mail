@@ -172,3 +172,9 @@ path = [".patches/dkimvalidator-fix-broken-canonical-handling.patch"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "angrychimp, Teon d.o.o. - Bostjan Skufca, Marcus Bointon"
 SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = [".patches/url-normalizer-fix-deprecation-warning-on-PHP-8.5.patch"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2013 Glen Scott"
+SPDX-License-Identifier = "MIT"

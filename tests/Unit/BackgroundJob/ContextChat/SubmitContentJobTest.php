@@ -60,6 +60,21 @@ class SubmitContentJobTest extends TestCase {
 	/** @var ContextChatProvider */
 	private $contextChatProvider;
 
+	/** @var ITimeFactory|MockObject */
+	private $time;
+
+	/** @var IMAPClientFactory|MockObject */
+	private $imapClientFactory;
+
+	/** @var LoggerInterface|MockObject */
+	private $logger;
+
+	/** @var MailboxMapper|MockObject */
+	private $mailboxMapper;
+
+	/** @var SubmitContentJob */
+	private $submitContentJob;
+
 	protected function setUp(): void {
 		parent::setUp();
 

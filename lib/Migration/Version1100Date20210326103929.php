@@ -17,6 +17,9 @@ use OCP\Migration\SimpleMigrationStep;
 /**
  * @link https://github.com/nextcloud/mail/issues/4833
  */
+/**
+ * @psalm-api
+ */
 class Version1100Date20210326103929 extends SimpleMigrationStep {
 	/**
 	 * @param IOutput $output
