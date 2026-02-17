@@ -43,7 +43,6 @@ class Version5007Date20260124120000 extends SimpleMigrationStep {
 			$provisioningTable->addColumn('master_user_separator', Types::STRING, [
 				'notnull' => false,
 				'length' => 8,
-				'default' => '*',
 			]);
 		}
 
