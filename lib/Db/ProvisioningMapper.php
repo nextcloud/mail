@@ -67,7 +67,7 @@ class ProvisioningMapper extends QBMapper {
 			$exception->setField('imapHost', false);
 		}
 		if (!isset($data['imapPort']) || (int)$data['imapPort'] === 0) {
-			$exception->setField('imapHost', false);
+			$exception->setField('imapPort', false);
 		}
 		if (!isset($data['imapSslMode']) || $data['imapSslMode'] === '') {
 			$exception->setField('imapSslMode', false);
