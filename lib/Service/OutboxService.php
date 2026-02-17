@@ -168,6 +168,9 @@ class OutboxService {
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
 
+		// The message is changed, so any previous error should be ignored
+		$message->setFailed(false);
+
 		$message = $this->mapper->updateWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
 		if ($attachments === []) {
