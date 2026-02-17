@@ -81,10 +81,15 @@ class QuotaJob extends TimedJob {
 			$this->logger->debug('Could not get quota information for account <' . $account->getEmail() . '>', ['app' => 'mail']);
 			return;
 		}
-		$previous = $account->getMailAccount()->getQuotaPercentage();
-		$account->calculateAndSetQuotaPercentage($quota);
-		$this->accountService->update($account->getMailAccount());
-		$current = $account->getQuotaPercentage();
+		$mailAccount = $account->getMailAccount();
+		$previous = $mailAccount->getQuotaPercentage();
+		if ($quota->getLimit() === 0) {
+			$mailAccount->setQuotaPercentage(0);
+		} else {
+			$mailAccount->setQuotaPercentage((int)round($quota->getUsage() / $quota->getLimit() * 100));
+		}
+		$this->accountService->update($mailAccount);
+		$current = $mailAccount->getQuotaPercentage();
 
 		// Only notify if we've reached the rising edge
 		if ($previous < $current && $previous <= 90 && $current > 90) {

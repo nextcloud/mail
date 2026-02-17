@@ -11,7 +11,6 @@ namespace OCA\Mail;
 
 use JsonSerializable;
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Service\Quota;
 use ReturnTypeWillChange;
 
 class Account implements JsonSerializable {
@@ -62,36 +61,4 @@ class Account implements JsonSerializable {
 		return $this->account->getUserId();
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function getDebug(): bool {
-		return $this->account->getDebug();
-	}
-
-	public function getImipCreate(): bool {
-		return $this->account->getImipCreate();
-	}
-
-	/**
-	 * Set the quota percentage
-	 * @param Quota $quota
-	 * @return void
-	 */
-	public function calculateAndSetQuotaPercentage(Quota $quota): void {
-		if ($quota->getLimit() === 0) {
-			$this->account->setQuotaPercentage(0);
-			return;
-		}
-		$percentage = (int)round($quota->getUsage() / $quota->getLimit() * 100);
-		$this->account->setQuotaPercentage($percentage);
-	}
-
-	public function getQuotaPercentage(): ?int {
-		return $this->account->getQuotaPercentage();
-	}
-
-	public function getClassificationEnabled(): bool {
-		return $this->account->getClassificationEnabled();
-	}
 }
