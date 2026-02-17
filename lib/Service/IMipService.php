@@ -121,7 +121,7 @@ class IMipService {
 
 			$userId = $account->getUserId();
 			$recipient = $account->getEmail();
-			$imipCreate = $account->getImipCreate();
+			$imipCreate = $account->getMailAccount()->getImipCreate();
 			$systemVersion = $this->serverVersion->getMajorVersion();
 
 			foreach ($filteredMessages as $message) {

@@ -142,12 +142,6 @@ class QuotaJobTest extends TestCase {
 		$this->serviceMock->getParameter('mailManager')
 			->expects(self::never())
 			->method('getQuota');
-		$account->expects(self::never())
-			->method('calculateAndSetQuotaPercentage')
-			->with($quotaDTO);
-		$account->expects(self::never())
-			->method('getQuotaPercentage')
-			->willReturn($newQuota);
 		$this->serviceMock->getParameter('accountService')
 			->expects(self::never())
 			->method('update')
@@ -162,12 +156,12 @@ class QuotaJobTest extends TestCase {
 	}
 
 	public function testQuotaTooLow(): void {
-		$oldQuota = 10;
-		$newQuota = 20;
 		$quotaDTO = new Quota(20, 100);
-		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
-			'canAuthenticateImap' => true,
-		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(123);
+		$mailAccount->setUserId('user123');
+		$mailAccount->setInboundPassword('password');
+		$mailAccount->setQuotaPercentage(10);
 		$account = $this->createConfiguredMock(Account::class, [
 			'getId' => 123,
 			'getUserId' => 'user123',
@@ -182,8 +176,6 @@ class QuotaJobTest extends TestCase {
 			->method('findById')
 			->with(123)
 			->willReturn($account);
-		$mailAccount->expects(self::once())
-			->method('canAuthenticateImap');
 		$this->serviceMock->getParameter('userManager')
 			->expects(self::once())
 			->method('get')
@@ -196,15 +188,6 @@ class QuotaJobTest extends TestCase {
 			->expects(self::once())
 			->method('getQuota')
 			->willReturn($quotaDTO);
-		$account->expects(self::once())
-			->method('calculateAndSetQuotaPercentage')
-			->with($quotaDTO);
-		$account->expects(self::exactly(3))
-			->method('getMailAccount')
-			->willReturn($mailAccount);
-		$account->expects(self::once())
-			->method('getQuotaPercentage')
-			->willReturn($newQuota);
 		$this->serviceMock->getParameter('accountService')
 			->expects(self::once())
 			->method('update')
@@ -219,12 +202,13 @@ class QuotaJobTest extends TestCase {
 	}
 
 	public function testQuotaWithNotification(): void {
-		$oldQuota = 85;
 		$newQuota = 95;
 		$quotaDTO = new Quota(95, 100);
-		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
-			'canAuthenticateImap' => true,
-		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(123);
+		$mailAccount->setUserId('user123');
+		$mailAccount->setInboundPassword('password');
+		$mailAccount->setQuotaPercentage(85);
 		$account = $this->createConfiguredMock(Account::class, [
 			'getId' => 123,
 			'getUserId' => 'user123',
@@ -250,21 +234,6 @@ class QuotaJobTest extends TestCase {
 			->expects(self::once())
 			->method('getQuota')
 			->willReturn($quotaDTO);
-		$account->expects(self::once())
-			->method('calculateAndSetQuotaPercentage')
-			->with($quotaDTO);
-		$account->expects(self::exactly(3))
-			->method('getMailAccount')
-			->willReturn($mailAccount);
-		$account->expects(self::once())
-			->method('getQuotaPercentage')
-			->willReturn($newQuota);
-		$account->expects(self::exactly(2))
-			->method('getUserId')
-			->willReturn('user123');
-		$account->expects(self::exactly(2))
-			->method('getEmail')
-			->willReturn('user123@test.com');
 		$this->serviceMock->getParameter('accountService')
 			->expects(self::once())
 			->method('update')
@@ -325,12 +294,12 @@ class QuotaJobTest extends TestCase {
 	}
 
 	public function testQuotaZero(): void {
-		$oldQuota = 0;
-		$newQuota = 0;
 		$quotaDTO = new Quota(0, 0);
-		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
-			'canAuthenticateImap' => true,
-		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(123);
+		$mailAccount->setUserId('user123');
+		$mailAccount->setInboundPassword('password');
+		$mailAccount->setQuotaPercentage(0);
 		$account = $this->createConfiguredMock(Account::class, [
 			'getId' => 123,
 			'getUserId' => 'user123',
@@ -357,15 +326,6 @@ class QuotaJobTest extends TestCase {
 			->expects(self::once())
 			->method('getQuota')
 			->willReturn($quotaDTO);
-		$account->expects(self::once())
-			->method('calculateAndSetQuotaPercentage')
-			->with($quotaDTO);
-		$account->expects(self::exactly(3))
-			->method('getMailAccount')
-			->willReturn($mailAccount);
-		$account->expects(self::once())
-			->method('getQuotaPercentage')
-			->willReturn($newQuota);
 		$this->serviceMock->getParameter('accountService')
 			->expects(self::once())
 			->method('update')

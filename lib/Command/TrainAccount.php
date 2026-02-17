@@ -72,7 +72,7 @@ final class TrainAccount extends Command {
 			return 1;
 		}
 
-		if (!$force && !$account->getClassificationEnabled()) {
+		if (!$force && !$account->getMailAccount()->getClassificationEnabled()) {
 			$output->writeln("<info>classification is turned off for account $accountId</info>");
 			return 2;
 		}
