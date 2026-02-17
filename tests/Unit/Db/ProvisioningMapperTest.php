@@ -118,7 +118,7 @@ class ProvisioningMapperTest extends TestCase {
 		$this->assertTrue($exceptionWasThrown);
 	}
 
-	public function testValidateMasterPasswordWitUserNeedsPasswordAndSeparator(): void {
+	public function testValidateMasterPasswordWithUserNeedsPasswordAndSeparator(): void {
 		$data = [
 			'provisioningDomain' => 'static.test',
 			'emailTemplate' => '%USERID%@static.test',
