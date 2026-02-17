@@ -1,3 +1,15 @@
+## [5.6.13](https://github.com/nextcloud/mail/compare/v5.6.12...v5.6.13) (2026-02-17)
+
+
+### Bug Fixes
+
+* **dns:** Update public suffix list ([7e852d1](https://github.com/nextcloud/mail/commit/7e852d1c7a3f55791b667041b6b32d7a005a62e7))
+* **imap:** log partial sync criteria ([701ca0e](https://github.com/nextcloud/mail/commit/701ca0e81985c81b70a6d00f42bf7056dc86b43f))
+* **l10n:** Update translations from Transifex ([0ef64df](https://github.com/nextcloud/mail/commit/0ef64df8e83d1c245606a551b7a28676059c1dc3))
+* **l10n:** Update translations from Transifex ([938b7df](https://github.com/nextcloud/mail/commit/938b7df85c0edb875816afe496d8555630a3ced7))
+
+
+
 ## [5.6.12](https://github.com/nextcloud/mail/compare/v5.6.11...v5.6.12) (2026-02-12)
 
 
