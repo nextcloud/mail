@@ -191,8 +191,7 @@
 								:id="'mail-master-password-enabled' + setting.id"
 								v-model="masterPasswordEnabled"
 								type="checkbox"
-								class="checkbox"
-								:required="masterUser.length > 0 && masterUser !== '********'">
+								class="checkbox">
 							<label :for="'mail-master-password-enabled' + setting.id">
 								{{ t('mail', 'Use master password') }}
 							</label>
