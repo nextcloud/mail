@@ -23,10 +23,10 @@
 
 <script>
 
-import moment from '@nextcloud/moment'
 import { NcActionButton as ActionButton, NcActions as Actions, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import ical from 'ical.js'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
+import { toISOLocalString } from '../../util/dateFormat.js'
 
 export default {
 	name: 'CalendarImport',
@@ -78,7 +78,7 @@ export default {
 	},
 
 	addIcalTimeProperty(icalEvent, itineraryDt, icalPropertyName) {
-		const t = moment(this.itineraryDateTime(itineraryDt)).format()
+		const t = toISOLocalString(new Date(this.itineraryDateTime(itineraryDt)))
 		const prop = icalEvent.updatePropertyWithValue(icalPropertyName, ical.Time.fromDateTimeString(t))
 		if (typeof itineraryDt !== 'string') {
 			prop.setParameter('TZID', itineraryDt.timezone)

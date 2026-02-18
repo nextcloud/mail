@@ -39,11 +39,11 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import moment from '@nextcloud/moment'
 import { NcButton, NcNoteCard, NcSelect } from '@nextcloud/vue'
 import { mapState, mapStores } from 'pinia'
 import Logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
+import { formatLongDate } from '../util/dateFormat.js'
 import { compareSmimeCertificates } from '../util/smime.js'
 
 export default {
@@ -182,7 +182,7 @@ export default {
 		mapCertificateToOption(cert) {
 			const label = this.t('mail', '{commonName} - Valid until {expiryDate}', {
 				commonName: cert.info.commonName ?? cert.info.emailAddress,
-				expiryDate: moment.unix(cert.info.notAfter).format('LL'),
+				expiryDate: formatLongDate(new Date(cert.info.notAfter * 1000)),
 			})
 			return {
 				...cert,

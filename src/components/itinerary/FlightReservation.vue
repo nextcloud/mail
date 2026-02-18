@@ -48,7 +48,6 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import moment from '@nextcloud/moment'
 import ical from 'ical.js'
 import md5 from 'md5'
 import AirplaneIcon from 'vue-material-design-icons/Airplane.vue'
@@ -56,6 +55,7 @@ import ArrowIcon from 'vue-material-design-icons/ArrowRight.vue'
 import CalendarImport from './CalendarImport.vue'
 import logger from '../../logger.js'
 import { importCalendarEvent } from '../../service/DAVService.js'
+import { formatShortDate, formatTime } from '../../util/dateFormat.js'
 
 export default {
 	name: 'FlightReservation',
@@ -87,28 +87,28 @@ export default {
 			if (!('departureTime' in this.data.reservationFor)) {
 				return
 			}
-			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.departureTime)).format('LT')
+			return formatTime(new Date(CalendarImport.itineraryDateTime(this.data.reservationFor.departureTime)))
 		},
 
 		departureDate() {
 			if (!('departureTime' in this.data.reservationFor)) {
 				return
 			}
-			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.departureTime)).format('L')
+			return formatShortDate(new Date(CalendarImport.itineraryDateTime(this.data.reservationFor.departureTime)))
 		},
 
 		arrivalTime() {
 			if (!('arrivalTime' in this.data.reservationFor)) {
 				return
 			}
-			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.arrivalTime)).format('LT')
+			return formatTime(new Date(CalendarImport.itineraryDateTime(this.data.reservationFor.arrivalTime)))
 		},
 
 		arrivalDate() {
 			if (!('arrivalTime' in this.data.reservationFor)) {
 				return
 			}
-			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.arrivalTime)).format('L')
+			return formatShortDate(new Date(CalendarImport.itineraryDateTime(this.data.reservationFor.arrivalTime)))
 		},
 
 		flightNumber() {

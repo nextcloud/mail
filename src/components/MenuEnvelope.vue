@@ -259,7 +259,6 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
 import {
 	NcActionButton as ActionButton,
@@ -293,6 +292,7 @@ import logger from '../logger.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
+import { formatTime, formatWeekdayTime } from '../util/dateFormat.js'
 
 export default {
 	name: 'MenuEnvelope',
@@ -366,8 +366,12 @@ export default {
 			localMoreActionsOpen: false,
 			snoozeActionsOpen: false,
 			forwardMessages: this.envelope.databaseId,
-			customSnoozeDateTime: new Date(moment().add(2, 'hours').minute(0).second(0).valueOf()),
+			customSnoozeDateTime: new Date(),
 		}
+	},
+
+	created() {
+		this.customSnoozeDateTime.setHours(this.customSnoozeDateTime.getHours() + 2, 0, 0, 0)
 	},
 
 	computed: {
@@ -447,47 +451,56 @@ export default {
 		},
 
 		reminderOptions() {
-			const currentDateTime = moment()
+			const now = new Date()
 
 			// Same day 18:00 PM (or hidden)
-			const laterTodayTime = (currentDateTime.hour() < 18)
-				? moment().hour(18)
-				: null
+			let laterTodayTime = null
+			if (now.getHours() < 18) {
+				laterTodayTime = new Date()
+				laterTodayTime.setHours(18, 0, 0, 0)
+			}
 
 			// Tomorrow 08:00 AM
-			const tomorrowTime = moment().add(1, 'days').hour(8)
+			const tomorrowTime = new Date()
+			tomorrowTime.setDate(tomorrowTime.getDate() + 1)
+			tomorrowTime.setHours(8, 0, 0, 0)
 
 			// Saturday 08:00 AM (or hidden)
-			const thisWeekendTime = (currentDateTime.day() !== 6 && currentDateTime.day() !== 0)
-				? moment().day(6).hour(8)
-				: null
+			let thisWeekendTime = null
+			if (now.getDay() !== 6 && now.getDay() !== 0) {
+				thisWeekendTime = new Date()
+				thisWeekendTime.setDate(thisWeekendTime.getDate() + (6 - thisWeekendTime.getDay()))
+				thisWeekendTime.setHours(8, 0, 0, 0)
+			}
 
 			// Next Monday 08:00 AM
-			const nextWeekTime = moment().add(1, 'weeks').day(1).hour(8)
+			const nextWeekTime = new Date()
+			nextWeekTime.setDate(nextWeekTime.getDate() + (8 - nextWeekTime.getDay()))
+			nextWeekTime.setHours(8, 0, 0, 0)
 
 			return [
 				{
 					key: 'laterToday',
 					timestamp: this.getTimestamp(laterTodayTime),
-					label: t('spreed', 'Later today – {timeLocale}', { timeLocale: laterTodayTime?.format('LT') }),
+					label: t('spreed', 'Later today – {timeLocale}', { timeLocale: laterTodayTime ? formatTime(laterTodayTime) : '' }),
 					ariaLabel: t('spreed', 'Set reminder for later today'),
 				},
 				{
 					key: 'tomorrow',
 					timestamp: this.getTimestamp(tomorrowTime),
-					label: t('spreed', 'Tomorrow – {timeLocale}', { timeLocale: tomorrowTime?.format('ddd LT') }),
+					label: t('spreed', 'Tomorrow – {timeLocale}', { timeLocale: formatWeekdayTime(tomorrowTime) }),
 					ariaLabel: t('spreed', 'Set reminder for tomorrow'),
 				},
 				{
 					key: 'thisWeekend',
 					timestamp: this.getTimestamp(thisWeekendTime),
-					label: t('spreed', 'This weekend – {timeLocale}', { timeLocale: thisWeekendTime?.format('ddd LT') }),
+					label: t('spreed', 'This weekend – {timeLocale}', { timeLocale: thisWeekendTime ? formatWeekdayTime(thisWeekendTime) : '' }),
 					ariaLabel: t('spreed', 'Set reminder for this weekend'),
 				},
 				{
 					key: 'nextWeek',
 					timestamp: this.getTimestamp(nextWeekTime),
-					label: t('spreed', 'Next week – {timeLocale}', { timeLocale: nextWeekTime?.format('ddd LT') }),
+					label: t('spreed', 'Next week – {timeLocale}', { timeLocale: formatWeekdayTime(nextWeekTime) }),
 					ariaLabel: t('spreed', 'Set reminder for next week'),
 				},
 			].filter((option) => option.timestamp !== null)
@@ -618,8 +631,13 @@ export default {
 			})
 		},
 
-		getTimestamp(momentObject) {
-			return momentObject?.minute(0).second(0).millisecond(0).valueOf() || null
+		getTimestamp(date) {
+			if (!date) {
+				return null
+			}
+			const d = new Date(date.getTime())
+			d.setMinutes(0, 0, 0)
+			return d.getTime()
 		},
 
 		setCustomSnoozeDateTime(event) {

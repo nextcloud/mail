@@ -25,12 +25,12 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import moment from '@nextcloud/moment'
 import ical from 'ical.js'
 import md5 from 'md5'
 import CalendarImport from './CalendarImport.vue'
 import logger from '../../logger.js'
 import { importCalendarEvent } from '../../service/DAVService.js'
+import { formatShortDate, formatTime, toISOLocalString } from '../../util/dateFormat.js'
 
 export default {
 	name: 'EventReservation',
@@ -61,14 +61,14 @@ export default {
 			if (!('startDate' in this.data.reservationFor)) {
 				return
 			}
-			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.startDate)).format('LT')
+			return formatTime(new Date(CalendarImport.itineraryDateTime(this.data.reservationFor.startDate)))
 		},
 
 		date() {
 			if (!('startDate' in this.data.reservationFor)) {
 				return
 			}
-			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.startDate)).format('L')
+			return formatShortDate(new Date(CalendarImport.itineraryDateTime(this.data.reservationFor.startDate)))
 		},
 
 		location() {
@@ -84,13 +84,14 @@ export default {
 	},
 
 	methods: {
-		getEndDateTime(event) {
+		getEndDateTime() {
 			if ('endDate' in this.data.reservationFor) {
-				return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.endDate)).format()
+				return toISOLocalString(new Date(CalendarImport.itineraryDateTime(this.data.reservationFor.endDate)))
 			} else if ('startDate' in this.data.reservationFor) {
 				// Assume it's 2h and user will adjust if necessary
 				// TODO: handle 'duration' https://schema.org/Event
-				return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.startDate)).add(2, 'hours').format()
+				const startDate = new Date(CalendarImport.itineraryDateTime(this.data.reservationFor.startDate))
+				return toISOLocalString(new Date(startDate.getTime() + 2 * 3600000))
 			}
 		},
 
@@ -98,9 +99,9 @@ export default {
 			const event = new ical.Component('VEVENT')
 			event.updatePropertyWithValue('SUMMARY', this.eventName)
 
-			const start = moment(CalendarImport.itineraryDateTime(this.data.reservationFor.startDate)).format()
+			const start = toISOLocalString(new Date(CalendarImport.itineraryDateTime(this.data.reservationFor.startDate)))
 			event.updatePropertyWithValue('DTSTART', ical.Time.fromDateTimeString(start))
-			const end = this.getEndDateTime(this.data.reservationFor)
+			const end = this.getEndDateTime()
 			event.updatePropertyWithValue('DTEND', ical.Time.fromDateTimeString(end))
 
 			if ('location' in this.data.reservationFor) {

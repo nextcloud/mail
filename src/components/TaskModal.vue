@@ -75,7 +75,6 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import moment from '@nextcloud/moment'
 import { NcDateTimePicker as DatetimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
 import ICAL from 'ical.js'
 import jstz from 'jstz'
@@ -84,6 +83,7 @@ import CalendarPickerOption from './CalendarPickerOption.vue'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 import Task from '../task.js'
+import { toISOLocalString } from '../util/dateFormat.js'
 
 export default {
 	name: 'TaskModal',
@@ -220,8 +220,8 @@ export default {
 			const taskData = {
 				summary: this.taskTitle,
 				calendar: this.selectedCalendar,
-				start: this.startDate ? moment(this.startDate).format().toString() : null,
-				due: this.endDate ? moment(this.endDate).set().format().toString() : null,
+				start: this.startDate ? toISOLocalString(new Date(this.startDate)) : null,
+				due: this.endDate ? toISOLocalString(new Date(this.endDate)) : null,
 				allDay: this.isAllDay,
 				note: this.note,
 			}

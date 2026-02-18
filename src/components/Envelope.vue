@@ -513,7 +513,6 @@
 <script>
 import { showError, showSuccess, showWarning } from '@nextcloud/dialogs'
 import { isRTL } from '@nextcloud/l10n'
-import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
 import {
 	NcActionButton as ActionButton,
@@ -573,7 +572,8 @@ import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
-import { messageDateTime, shortRelativeDatetime } from '../util/shortRelativeDatetime.js'
+import { formatMediumDateTime, formatTime, formatWeekdayTime } from '../util/dateFormat.js'
+import { shortRelativeDatetime } from '../util/shortRelativeDatetime.js'
 import { translateTagDisplayName } from '../util/tag.js'
 import { hiddenTags } from './tags.js'
 
@@ -680,12 +680,16 @@ export default {
 			moreActionsOpen: false,
 			snoozeOptions: false,
 			quickActionMenu: false,
-			customSnoozeDateTime: new Date(moment().add(2, 'hours').minute(0).second(0).valueOf()),
+			customSnoozeDateTime: new Date(),
 			overwriteOneLineMobile: false,
 			hoveringAvatar: false,
 			quickActionLoading: false,
 			possibleAttachementsCount: 0,
 		}
+	},
+
+	created() {
+		this.customSnoozeDateTime.setHours(this.customSnoozeDateTime.getHours() + 2, 0, 0, 0)
 	},
 
 	computed: {
@@ -699,7 +703,7 @@ export default {
 		},
 
 		messageLongDate() {
-			return messageDateTime(new Date(this.data.dateInt))
+			return formatMediumDateTime(new Date(this.data.dateInt * 1000))
 		},
 
 		oneLineLayout() {
@@ -905,49 +909,59 @@ export default {
 		},
 
 		reminderOptions() {
-			const currentDateTime = moment()
+			const now = new Date()
 
 			// Same day 18:00 PM (hidden if after 17:00 PM now)
-			const laterTodayTime = (currentDateTime.hour() < 17)
-				? moment().hour(18)
-				: null
+			let laterTodayTime = null
+			if (now.getHours() < 17) {
+				laterTodayTime = new Date()
+				laterTodayTime.setHours(18, 0, 0, 0)
+			}
 
 			// Tomorrow 08:00 AM
-			const tomorrowTime = moment().add(1, 'days').hour(8)
+			const tomorrowTime = new Date()
+			tomorrowTime.setDate(tomorrowTime.getDate() + 1)
+			tomorrowTime.setHours(8, 0, 0, 0)
 
 			// Saturday 08:00 AM (hidden if Friday, Saturday or Sunday now)
-			const thisWeekendTime = (currentDateTime.day() > 0 && currentDateTime.day() < 5)
-				? moment().day(6).hour(8)
-				: null
+			let thisWeekendTime = null
+			if (now.getDay() > 0 && now.getDay() < 5) {
+				thisWeekendTime = new Date()
+				thisWeekendTime.setDate(thisWeekendTime.getDate() + (6 - thisWeekendTime.getDay()))
+				thisWeekendTime.setHours(8, 0, 0, 0)
+			}
 
 			// Next Monday 08:00 AM (hidden if Sunday now)
-			const nextWeekTime = (currentDateTime.day() !== 0)
-				? moment().add(1, 'weeks').day(1).hour(8)
-				: null
+			let nextWeekTime = null
+			if (now.getDay() !== 0) {
+				nextWeekTime = new Date()
+				nextWeekTime.setDate(nextWeekTime.getDate() + (8 - nextWeekTime.getDay()))
+				nextWeekTime.setHours(8, 0, 0, 0)
+			}
 
 			return [
 				{
 					key: 'laterToday',
 					timestamp: this.getTimestamp(laterTodayTime),
-					label: t('spreed', 'Later today – {timeLocale}', { timeLocale: laterTodayTime?.format('LT') }),
+					label: t('spreed', 'Later today – {timeLocale}', { timeLocale: laterTodayTime ? formatTime(laterTodayTime) : '' }),
 					ariaLabel: t('spreed', 'Set reminder for later today'),
 				},
 				{
 					key: 'tomorrow',
 					timestamp: this.getTimestamp(tomorrowTime),
-					label: t('spreed', 'Tomorrow – {timeLocale}', { timeLocale: tomorrowTime?.format('ddd LT') }),
+					label: t('spreed', 'Tomorrow – {timeLocale}', { timeLocale: formatWeekdayTime(tomorrowTime) }),
 					ariaLabel: t('spreed', 'Set reminder for tomorrow'),
 				},
 				{
 					key: 'thisWeekend',
 					timestamp: this.getTimestamp(thisWeekendTime),
-					label: t('spreed', 'This weekend – {timeLocale}', { timeLocale: thisWeekendTime?.format('ddd LT') }),
+					label: t('spreed', 'This weekend – {timeLocale}', { timeLocale: thisWeekendTime ? formatWeekdayTime(thisWeekendTime) : '' }),
 					ariaLabel: t('spreed', 'Set reminder for this weekend'),
 				},
 				{
 					key: 'nextWeek',
 					timestamp: this.getTimestamp(nextWeekTime),
-					label: t('spreed', 'Next week – {timeLocale}', { timeLocale: nextWeekTime?.format('ddd LT') }),
+					label: t('spreed', 'Next week – {timeLocale}', { timeLocale: nextWeekTime ? formatWeekdayTime(nextWeekTime) : '' }),
 					ariaLabel: t('spreed', 'Set reminder for next week'),
 				},
 			].filter((option) => option.timestamp !== null)
@@ -1418,8 +1432,13 @@ export default {
 			this.showTagModal = false
 		},
 
-		getTimestamp(momentObject) {
-			return momentObject?.minute(0).second(0).millisecond(0).valueOf() || null
+		getTimestamp(date) {
+			if (!date) {
+				return null
+			}
+			const d = new Date(date.getTime())
+			d.setMinutes(0, 0, 0)
+			return d.getTime()
 		},
 
 		setCustomSnoozeDateTime(event) {

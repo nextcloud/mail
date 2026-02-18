@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import moment from '@nextcloud/moment'
 import negate from 'lodash/fp/negate.js'
+import { formatLongDateTime } from './util/dateFormat.js'
 import { html } from './util/text.js'
 
 /**
@@ -24,7 +24,7 @@ export function buildReplyBody(original, from, date, replyOnTop = true) {
 	switch (original.format) {
 		case 'plain':
 			if (from) {
-				const dateString = moment.unix(date).format('LLL')
+				const dateString = formatLongDateTime(new Date(date * 1000))
 				return replyOnTop
 					? html(`${startEnd}${quoteStart}"${from.label}" ${from.email} – ${dateString}` + plainBody + quoteEnd)
 					: html(`${quoteStart}"${from.label}" ${from.email} – ${dateString}` + plainBody + quoteEnd + startEnd)
@@ -35,7 +35,7 @@ export function buildReplyBody(original, from, date, replyOnTop = true) {
 			}
 		case 'html':
 			if (from) {
-				const dateString = moment.unix(date).format('LLL')
+				const dateString = formatLongDateTime(new Date(date * 1000))
 				return replyOnTop
 					? html(`${startEnd}${quoteStart}"${from.label}" ${from.email} – ${dateString}<br>${htmlBody}${quoteEnd}`)
 					: html(`${quoteStart}"${from.label}" ${from.email} – ${dateString}<br>${htmlBody}${quoteEnd}${startEnd}`)

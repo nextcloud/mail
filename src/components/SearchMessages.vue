@@ -312,7 +312,6 @@
 import IconClose from '@mdi/svg/svg/close.svg'
 import IconMagnify from '@mdi/svg/svg/magnify.svg'
 import { translate as t } from '@nextcloud/l10n'
-import moment from '@nextcloud/moment'
 import debouncePromise from 'debounce-promise'
 import uniqBy from 'lodash/fp/uniqBy.js'
 import { mapStores } from 'pinia'
@@ -535,13 +534,16 @@ export default {
 				if (this.endDate !== null && this.startDate > this.endDate) {
 					this.endDate = this.startDate
 				}
-				return moment(this.startDate).unix().toString()
+				return Math.floor(new Date(this.startDate).getTime() / 1000).toString()
 			}
 			return ''
 		},
 
 		prepareEnd() {
-			return this.endDate !== null ? moment(this.endDate).add(1, 'days').unix().toString() : ''
+			if (this.endDate === null) {
+				return ''
+			}
+			return Math.floor(new Date(this.endDate).getTime() / 1000 + 86400).toString()
 		},
 
 		closeSearchModal() {

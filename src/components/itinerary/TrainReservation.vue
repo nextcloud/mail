@@ -37,7 +37,6 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import moment from '@nextcloud/moment'
 import ical from 'ical.js'
 import md5 from 'md5'
 import ArrowIcon from 'vue-material-design-icons/ArrowRight.vue'
@@ -45,6 +44,7 @@ import TrainIcon from 'vue-material-design-icons/Train.vue'
 import CalendarImport from './CalendarImport.vue'
 import logger from '../../logger.js'
 import { importCalendarEvent } from '../../service/DAVService.js'
+import { formatShortDate, formatTime, toISOLocalString } from '../../util/dateFormat.js'
 
 export default {
 	name: 'TrainReservation',
@@ -76,15 +76,15 @@ export default {
 			if (!('departureTime' in this.data.reservationFor)) {
 				return
 			}
-			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.departureTime)).format('LT')
+			return formatTime(new Date(CalendarImport.itineraryDateTime(this.data.reservationFor.departureTime)))
 		},
 
 		departureDate() {
 			if ('departureTime' in this.data.reservationFor) {
-				return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.departureTime)).format('L')
+				return formatShortDate(new Date(CalendarImport.itineraryDateTime(this.data.reservationFor.departureTime)))
 			}
 			if ('departureDay' in this.data.reservationFor) {
-				return moment(this.data.reservationFor.departureDay).format('L')
+				return formatShortDate(new Date(this.data.reservationFor.departureDay))
 			}
 			return undefined
 		},
@@ -93,14 +93,14 @@ export default {
 			if (!('arrivalTime' in this.data.reservationFor)) {
 				return
 			}
-			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.arrivalTime)).format('LT')
+			return formatTime(new Date(CalendarImport.itineraryDateTime(this.data.reservationFor.arrivalTime)))
 		},
 
 		arrivalDate() {
 			if (!('arrivalTime' in this.data.reservationFor)) {
 				return
 			}
-			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.arrivalTime)).format('L')
+			return formatShortDate(new Date(CalendarImport.itineraryDateTime(this.data.reservationFor.arrivalTime)))
 		},
 
 		trainNumber() {
@@ -141,7 +141,7 @@ export default {
 				CalendarImport.addIcalTimeProperty(event, this.data.reservationFor.departureTime, 'DTSTART')
 				CalendarImport.addIcalTimeProperty(event, this.data.reservationFor.arrivalTime, 'DTEND')
 			} else if ('departureDay' in this.data.reservationFor) {
-				const date = moment(this.data.reservationFor.departureDay).format()
+				const date = toISOLocalString(new Date(this.data.reservationFor.departureDay))
 				event.updatePropertyWithValue('DTSTART', ical.Time.fromDateTimeString(date))
 			}
 

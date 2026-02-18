@@ -8,8 +8,11 @@
 		class="outbox-message"
 		:class="{ selected }"
 		:name="title"
-		:details="details"
+		:details="statusDetails"
 		@click="openModal">
+		<template v-if="!statusDetails && message.sendAt" #details>
+			<NcDateTime :timestamp="message.sendAt * 1000" />
+		</template>
 		<template #icon>
 			<Avatar
 				:display-name="avatarDisplayName"
@@ -58,8 +61,7 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { getLanguage, translate as t } from '@nextcloud/l10n'
-import moment from '@nextcloud/moment'
-import { NcActionButton as ActionButton, NcListItem as ListItem } from '@nextcloud/vue'
+import { NcActionButton as ActionButton, NcListItem as ListItem, NcDateTime } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import Copy from 'vue-material-design-icons/ContentCopy.vue'
 import Send from 'vue-material-design-icons/SendOutline.vue'
@@ -83,6 +85,7 @@ export default {
 		ListItem,
 		Avatar,
 		ActionButton,
+		NcDateTime,
 		IconDelete,
 		Send,
 		Copy,
@@ -114,7 +117,7 @@ export default {
 			return formatter.format(recipients)
 		},
 
-		details() {
+		statusDetails() {
 			if (this.message.status === STATUS_IMAP_SENT_MAILBOX_FAIL) {
 				return this.t('mail', 'Could not copy to "Sent" folder')
 			} else if (this.message.status === STATUS_SMTP_ERROR) {
@@ -122,10 +125,7 @@ export default {
 			} else if (this.message.status !== STATUS_RAW) {
 				return this.t('mail', 'Message could not be sent')
 			}
-			if (!this.message.sendAt) {
-				return ''
-			}
-			return moment.unix(this.message.sendAt).fromNow()
+			return ''
 		},
 
 		/**

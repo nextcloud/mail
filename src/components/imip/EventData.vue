@@ -45,11 +45,11 @@
 
 <script>
 import { DateTimeValue } from '@nextcloud/calendar-js'
-import moment from '@nextcloud/moment'
 import { getReadableTimezoneName } from '@nextcloud/timezones'
 import AccountMultipleIcon from 'vue-material-design-icons/AccountMultipleOutline.vue'
 import CalendarIcon from 'vue-material-design-icons/CalendarOutline.vue'
 import MapMarkerIcon from 'vue-material-design-icons/MapMarkerOutline.vue'
+import { formatMediumDate, formatMediumDateTime, formatTime } from '../../util/dateFormat.js'
 import { removeMailtoPrefix } from '../../util/eventAttendee.js'
 
 /**
@@ -110,10 +110,10 @@ export default {
 		 */
 		startDate() {
 			if (this.event.isAllDay()) {
-				return moment(this.event.startDate.jsDate).format('ll')
+				return formatMediumDate(this.event.startDate.jsDate)
 			}
 
-			return moment(this.event.startDate.jsDate).format('ll LT')
+			return formatMediumDateTime(this.event.startDate.jsDate)
 		},
 
 		/**
@@ -130,12 +130,12 @@ export default {
 				if (isSameDay(start, end)) {
 					return undefined
 				}
-				date = moment(end).format('ll')
+				date = formatMediumDate(end)
 			} else {
 				if (isSameDay(start, end)) {
-					date = moment(end).format('LT')
+					date = formatTime(end)
 				} else {
-					date = moment(end).format('ll LT')
+					date = formatMediumDateTime(end)
 				}
 			}
 

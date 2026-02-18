@@ -508,8 +508,7 @@
 
 <script>
 import { showError, showWarning } from '@nextcloud/dialogs'
-import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
-import moment from '@nextcloud/moment'
+import { getCanonicalLocale, getFirstDay, translate as t } from '@nextcloud/l10n'
 import { NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcActions as Actions, NcButton as ButtonVue, NcListItemIcon as ListItemIcon, NcIconSvgWrapper, NcSelect } from '@nextcloud/vue'
 import addressParser from 'address-rfc2822'
 import debouncePromise from 'debounce-promise'
@@ -546,6 +545,7 @@ import { findRecipient } from '../service/AutocompleteService.js'
 import { savePreference } from '../service/PreferenceService.js'
 import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
+import { formatLongDateTime } from '../util/dateFormat.js'
 import { detect, html, toHtml, toPlain } from '../util/text.js'
 import textBlockSvg from './../../img/text_snippet.svg'
 
@@ -760,11 +760,11 @@ export default {
 			firstDayDatetimePicker: getFirstDay() === 0 ? 7 : getFirstDay(),
 			formatter: {
 				stringify: (date) => {
-					return date ? moment(date).format('LLL') : ''
+					return date ? formatLongDateTime(date) : ''
 				},
 
 				parse: (value) => {
-					return value ? moment(value, 'LLL').toDate() : null
+					return value ? new Date(value) : null
 				},
 			},
 
@@ -905,10 +905,8 @@ export default {
 		},
 
 		showAmPm() {
-			const localeData = moment().locale(getLocale()).localeData()
-			const timeFormat = localeData.longDateFormat('LT').toLowerCase()
-
-			return timeFormat.indexOf('a') !== -1
+			const { hourCycle } = new Intl.DateTimeFormat(getCanonicalLocale(), { timeStyle: 'short' }).resolvedOptions()
+			return hourCycle === 'h12' || hourCycle === 'h11'
 		},
 
 		isSendAtTomorrowMorning() {

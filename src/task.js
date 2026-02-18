@@ -4,9 +4,29 @@
  *
  * Nextcloud - Tasks
  */
-import moment from '@nextcloud/moment'
 import ICAL from 'ical.js'
 import { v4 as uuid } from 'uuid'
+
+/**
+ * Parse an iCal date string (YYYYMMDDTHHmmss) into a Date object.
+ *
+ * @param {ICAL.Time|string|null} icalValue iCal time value
+ * @return {Date|null} Parsed Date or null
+ */
+function parseICalDate(icalValue) {
+	if (!icalValue) {
+		return null
+	}
+	if (icalValue.toJSDate) {
+		return icalValue.toJSDate()
+	}
+	const str = String(icalValue)
+	const m = str.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})$/)
+	if (!m) {
+		return new Date(str)
+	}
+	return new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6])
+}
 
 export default class Task {
 	/**
@@ -66,16 +86,16 @@ export default class Task {
 		const comp = this.vtodo.getFirstPropertyValue('completed')
 		this._completed = !!comp
 		this._completedDate = comp ? comp.toJSDate() : null
-		this._completedDateMoment = moment(this._completedDate, 'YYYYMMDDTHHmmss')
+		this._completedDateParsed = parseICalDate(this._completedDate)
 		this._status = this.vtodo.getFirstPropertyValue('status')
 		this._note = this.vtodo.getFirstPropertyValue('description') || ''
 		this._related = this.getParent()?.getFirstValue() || null
 		this._hideSubtaks = +this.vtodo.getFirstPropertyValue('x-oc-hidesubtasks') || 0
 		this._hideCompletedSubtaks = +this.vtodo.getFirstPropertyValue('x-oc-hidecompletedsubtasks') || 0
 		this._start = this.vtodo.getFirstPropertyValue('dtstart')
-		this._startMoment = moment(this._start, 'YYYYMMDDTHHmmss')
+		this._startParsed = parseICalDate(this._start)
 		this._due = this.vtodo.getFirstPropertyValue('due')
-		this._dueMoment = moment(this._due, 'YYYYMMDDTHHmmss')
+		this._dueParsed = parseICalDate(this._due)
 		const start = this.vtodo.getFirstPropertyValue('dtstart')
 		const due = this.vtodo.getFirstPropertyValue('due')
 		const d = due || start
@@ -83,9 +103,9 @@ export default class Task {
 		this._loaded = false
 		this._tags = this.getTags()
 		this._modified = this.vtodo.getFirstPropertyValue('last-modified')
-		this._modifiedMoment = moment(this._modified, 'YYYYMMDDTHHmmss')
+		this._modifiedParsed = parseICalDate(this._modified)
 		this._created = this.vtodo.getFirstPropertyValue('created')
-		this._createdMoment = moment(this._created, 'YYYYMMDDTHHmmss')
+		this._createdParsed = parseICalDate(this._created)
 		this._class = this.vtodo.getFirstPropertyValue('class') || 'PUBLIC'
 		this._pinned = this.vtodo.getFirstPropertyValue('x-pinned') === 'true'
 
@@ -281,7 +301,7 @@ export default class Task {
 		const comp = this.vtodo.getFirstPropertyValue('completed')
 		this._completed = !!comp
 		this._completedDate = comp ? comp.toJSDate() : null
-		this._completedDateMoment = moment(this._completedDate, 'YYYYMMDDTHHmmss')
+		this._completedDateParsed = parseICalDate(this._completedDate)
 	}
 
 	get completedDate() {
@@ -289,7 +309,7 @@ export default class Task {
 	}
 
 	get completedDateMoment() {
-		return this._completedDateMoment.clone()
+		return this._completedDateParsed ? new Date(this._completedDateParsed.getTime()) : null
 	}
 
 	get status() {
@@ -415,14 +435,14 @@ export default class Task {
 		}
 		this.updateLastModified()
 		this._start = this.vtodo.getFirstPropertyValue('dtstart')
-		this._startMoment = moment(this._start, 'YYYYMMDDTHHmmss')
+		this._startParsed = parseICalDate(this._start)
 		// Check all day setting
 		const d = this._due || this._start
 		this._allDay = d !== null && d.isDate
 	}
 
 	get startMoment() {
-		return this._startMoment.clone()
+		return this._startParsed ? new Date(this._startParsed.getTime()) : null
 	}
 
 	get due() {
@@ -437,14 +457,14 @@ export default class Task {
 		}
 		this.updateLastModified()
 		this._due = this.vtodo.getFirstPropertyValue('due')
-		this._dueMoment = moment(this._due, 'YYYYMMDDTHHmmss')
+		this._dueParsed = parseICalDate(this._due)
 		// Check all day setting
 		const d = this._due || this._start
 		this._allDay = d !== null && d.isDate
 	}
 
 	get dueMoment() {
-		return this._dueMoment.clone()
+		return this._dueParsed ? new Date(this._dueParsed.getTime()) : null
 	}
 
 	get allDay() {
@@ -551,7 +571,7 @@ export default class Task {
 		this.vtodo.updatePropertyWithValue('last-modified', now)
 		this.vtodo.updatePropertyWithValue('dtstamp', now)
 		this._modified = now
-		this._modifiedMoment = moment(this._modified, 'YYYYMMDDTHHmmss')
+		this._modifiedParsed = parseICalDate(this._modified)
 	}
 
 	get modified() {
@@ -559,7 +579,7 @@ export default class Task {
 	}
 
 	get modifiedMoment() {
-		return this._modifiedMoment.clone()
+		return this._modifiedParsed ? new Date(this._modifiedParsed.getTime()) : null
 	}
 
 	get created() {
@@ -567,14 +587,14 @@ export default class Task {
 	}
 
 	get createdMoment() {
-		return this._createdMoment.clone()
+		return this._createdParsed ? new Date(this._createdParsed.getTime()) : null
 	}
 
 	set created(createdDate) {
 		this.vtodo.updatePropertyWithValue('created', createdDate)
 		this.updateLastModified()
 		this._created = this.vtodo.getFirstPropertyValue('created')
-		this._createdMoment = moment(this._created, 'YYYYMMDDTHHmmss')
+		this._createdParsed = parseICalDate(this._created)
 		// Update the sortorder if necessary
 		if (this.vtodo.getFirstPropertyValue('x-apple-sort-order') === null) {
 			this._sortOrder = this.getSortOrder()

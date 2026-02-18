@@ -26,8 +26,8 @@
 							<td :title="certificate.info.emailAddress">
 								{{ certificate.info.emailAddress }}
 							</td>
-							<td :title="moment.unix(certificate.info.notAfter).format('LL')">
-								{{ moment.unix(certificate.info.notAfter).format('LL') }}
+							<td :title="formatLongDate(new Date(certificate.info.notAfter * 1000))">
+								{{ formatLongDate(new Date(certificate.info.notAfter * 1000)) }}
 							</td>
 							<td>
 								<NcButton
@@ -143,12 +143,12 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import moment from '@nextcloud/moment'
 import { NcButton, NcEmptyContent, NcModal, NcPasswordField } from '@nextcloud/vue'
 import { mapState, mapStores } from 'pinia'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import logger from '../../logger.js'
 import useMainStore from '../../store/mainStore.js'
+import { formatLongDate } from '../../util/dateFormat.js'
 import { convertPkcs12ToPem, InvalidPkcs12CertificateError } from '../../util/pkcs12.js'
 
 const TYPE_PKCS12 = 'pkcs12'
@@ -169,7 +169,6 @@ export default {
 			TYPE_PKCS12,
 			TYPE_PEM,
 
-			moment,
 			showImportScreen: false,
 			loading: false,
 			certificateType: TYPE_PKCS12,
@@ -196,6 +195,8 @@ export default {
 	},
 
 	methods: {
+		formatLongDate,
+
 		async deleteCertificate(id) {
 			await this.mainStore.deleteSmimeCertificate(id)
 		},
