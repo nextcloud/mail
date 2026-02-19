@@ -379,9 +379,7 @@
     "Indexing your messages. This can take a bit longer for larger folders." : "Ag innéacsú do theachtaireachtaí. D’fhéadfadh sé seo beagán níos faide a thógáil i gcás fillteáin níos mó.",
     "Choose target folder" : "Roghnaigh fillteán sprice",
     "No more submailboxes in here" : "Níl a thuilleadh boscaí fo-phoist anseo",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Déanfar teachtaireachtaí a mharcáil go huathoibríoch mar thábhachtach, bunaithe ar na teachtaireachtaí a ndearna tú idirghníomhú leo nó a mharcáil tú a bheith tábhachtach. Ar dtús b'fhéidir go mbeadh ort an tábhacht a bhaineann leis an gcóras a mhúineadh a athrú de láimh, ach feabhsóidh sé le himeacht ama.",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "Taispeánfar teachtaireachtaí a mharcáil tú mar is fearr leat ag barr na bhfillteán. Is féidir leat an t-iompar seo a dhíchumasú i socruithe an aip.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Taispeánfar anseo teachtaireachtaí a sheol tú a dteastaíonn freagra uathu ach nach bhfuair tú tar éis cúpla lá.",
     "Favorites" : "Ceanáin",
     "Favorites info" : "Eolas faoi na cinn is ansa leat",
     "Load more favorites" : "Luchtaigh níos mó is fearr leat",
@@ -890,6 +888,8 @@
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Mura dteastaíonn uait cuairt a thabhairt ar an leathanach sin, is féidir leat filleadh ar <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Lean ar aghaidh go %s",
     "Determine importance using machine learning" : "Cinntigh tábhacht trí úsáid a bhaint as foghlaim meaisín",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Déanfar teachtaireachtaí a mharcáil go huathoibríoch mar thábhachtach, bunaithe ar na teachtaireachtaí a ndearna tú idirghníomhú leo nó a mharcáil tú a bheith tábhachtach. Ar dtús b'fhéidir go mbeadh ort an tábhacht a bhaineann leis an gcóras a mhúineadh a athrú de láimh, ach feabhsóidh sé le himeacht ama.",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Taispeánfar anseo teachtaireachtaí a sheol tú a dteastaíonn freagra uathu ach nach bhfuair tú tar éis cúpla lá.",
     "Mark all messages of this folder as read" : "Marcáil gach teachtaireacht sa fhillteán seo mar léite",
     "Last 7 days" : "7 lá seo caite",
     "From me" : "Uaim"

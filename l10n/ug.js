@@ -378,8 +378,6 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "ئۇچۇرلىرىڭىز ئىندېكسلىنىۋاتىدۇ. چوڭراق قىسقۇچلار ئۈچۈن بۇ بىر ئاز ئۇزۇنراق ۋاقىت ئېلىشى مۇمكىن.",
     "Choose target folder" : "نىشان ھۆججەت قىسقۇچىنى تاللاڭ",
     "No more submailboxes in here" : "بۇ يەردە باشقا خەت ساندۇقى يوق",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "سىز قايسى ئۇچۇرلار بىلەن ئالاقە قىلغان ياكى مۇھىم دەپ بەلگە قويۇلغان ئۇچۇرلار ئاپتوماتىك ھالدا مۇھىم دەپ بەلگە قىلىنىدۇ. باشتا سىز سىستېمىنى ئوقۇتۇشنىڭ مۇھىملىقىنى قولدا ئۆزگەرتىشىڭىز مۇمكىن ، ئەمما ۋاقىتنىڭ ئۆتۈشىگە ئەگىشىپ ياخشىلىنىدۇ.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "سىز ئەۋەتكەن جاۋابنى تەلەپ قىلىدىغان ، ئەمما بىر نەچچە كۈندىن كېيىن تاپشۇرۇۋالمىغان ئۇچۇرلار بۇ يەردە كۆرسىتىلىدۇ.",
     "Favorites" : "يىغقۇچ",
     "Favorites info" : "ياقتۇردىغان ئۇچۇرلار",
     "Load more favorites" : "تېخىمۇ كۆپ ياقتۇردىغاننى يۈكلە",
@@ -887,6 +885,8 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ئەگەر ئۇ بەتنى زىيارەت قىلىشنى خالىمىسىڭىز ، <a href=\"%s\"> خەت </a> گە قايتسىڭىز بولىدۇ.",
     "Continue to %s" : "داۋاملىق %s",
     "Determine importance using machine learning" : "ماشىنىلىق ئۆگىنىش ئارقىلىق مۇھىملىقىنى بەلگىلە",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "سىز قايسى ئۇچۇرلار بىلەن ئالاقە قىلغان ياكى مۇھىم دەپ بەلگە قويۇلغان ئۇچۇرلار ئاپتوماتىك ھالدا مۇھىم دەپ بەلگە قىلىنىدۇ. باشتا سىز سىستېمىنى ئوقۇتۇشنىڭ مۇھىملىقىنى قولدا ئۆزگەرتىشىڭىز مۇمكىن ، ئەمما ۋاقىتنىڭ ئۆتۈشىگە ئەگىشىپ ياخشىلىنىدۇ.",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "سىز ئەۋەتكەن جاۋابنى تەلەپ قىلىدىغان ، ئەمما بىر نەچچە كۈندىن كېيىن تاپشۇرۇۋالمىغان ئۇچۇرلار بۇ يەردە كۆرسىتىلىدۇ.",
     "Mark all messages of this folder as read" : "بۇ قىسقۇچتىكى بارلىق ئۇچۇرلارنى ئوقۇغان قىل",
     "Last 7 days" : "ئاخىرقى 7 كۈن",
     "From me" : "مەندىن"

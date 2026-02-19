@@ -362,8 +362,6 @@
     "Indexing your messages. This can take a bit longer for larger folders." : "Ваше поруке се индексирају. Када се обрађују већи фолдери, ово може потрајати.",
     "Choose target folder" : "Одаберите одредишну фасциклу",
     "No more submailboxes in here" : "Овде нема још више нема подсандучета",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Поруке ће аутоматски бити означаване као важне на основу тога које поруке одговарати или означавате као важне. У почетку ћете можда морати ручно да мењате важност да научите систем, али ће се он поправљати временом.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Овде ће се приказати поруке које сте послали и захтевали да се одговори на њих, али за које нисте примили никакав одговор након неколико дана.",
     "Favorites" : "Омиљене",
     "Follow up" : "Дорада",
     "Follow up info" : "Информације о доради",
@@ -861,6 +859,8 @@
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желите да посетите ту страницу, можете да се вратите на <a href=\"%s\">Пошту</a>.",
     "Continue to %s" : "Настави на %s",
     "Determine importance using machine learning" : "Одреди важносту употребом машинског учења",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Поруке ће аутоматски бити означаване као важне на основу тога које поруке одговарати или означавате као важне. У почетку ћете можда морати ручно да мењате важност да научите систем, али ће се он поправљати временом.",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Овде ће се приказати поруке које сте послали и захтевали да се одговори на њих, али за које нисте примили никакав одговор након неколико дана.",
     "Mark all messages of this folder as read" : "Означи све поруке из ове фасцикле као прочитане",
     "Last 7 days" : "Последњих 7 дана",
     "From me" : "Од мене"

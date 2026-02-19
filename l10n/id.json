@@ -378,9 +378,7 @@
     "Indexing your messages. This can take a bit longer for larger folders." : "Mengindeks pesan Anda. Ini dapat memakan waktu sedikit lebih lama untuk folder yang lebih besar.",
     "Choose target folder" : "Pilih folder tujuan",
     "No more submailboxes in here" : "Tidak ada sub-kotak surat lagi di sini",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Pesan akan otomatis ditandai sebagai penting berdasarkan pesan mana yang Anda interaksikan atau tandai sebagai penting. Pada awalnya Anda mungkin perlu mengubah tingkat kepentingan secara manual untuk mengajarkan sistem, tetapi seiring waktu akan membaik.",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "Pesan yang Anda tandai sebagai favorit akan ditampilkan di bagian atas folder. Anda dapat menonaktifkan perilaku ini di pengaturan aplikasi",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Pesan yang Anda kirim yang memerlukan balasan tetapi tidak menerima balasan setelah beberapa hari akan ditampilkan di sini.",
     "Favorites" : "Favorit",
     "Favorites info" : "Info favorit",
     "Load more favorites" : "Muat lebih banyak favorit",
@@ -888,6 +886,8 @@
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Jika Anda tidak ingin mengunjungi halaman tersebut, Anda dapat kembali ke <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Lanjutkan ke %s",
     "Determine importance using machine learning" : "Tentukan tingkat kepentingan menggunakan pembelajaran mesin",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Pesan akan otomatis ditandai sebagai penting berdasarkan pesan mana yang Anda interaksikan atau tandai sebagai penting. Pada awalnya Anda mungkin perlu mengubah tingkat kepentingan secara manual untuk mengajarkan sistem, tetapi seiring waktu akan membaik.",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Pesan yang Anda kirim yang memerlukan balasan tetapi tidak menerima balasan setelah beberapa hari akan ditampilkan di sini.",
     "Mark all messages of this folder as read" : "Tandai semua pesan di folder ini sebagai dibaca",
     "Last 7 days" : "7 hari terakhir",
     "From me" : "Dari saya"

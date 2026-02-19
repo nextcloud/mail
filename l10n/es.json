@@ -342,8 +342,6 @@
     "Indexing your messages. This can take a bit longer for larger folders." : "Indexando sus mensajes. Esto puede tomar un poco más para carpetas más grandes.",
     "Choose target folder" : "Elegir carpeta de destino",
     "No more submailboxes in here" : "No hay más sub-buzones aquí",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Los mensajes se marcarán automáticamente como importantes en función de los mensajes con los que interactuó o se marcaron como importantes. Al principio puede que tengas que cambiar manualmente la importancia para enseñar el sistema, pero mejorará con el tiempo.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Los mensajes que ha enviado y requieren respuesta pero no han recibido ninguna en un par de días aparecerán aquí.",
     "Favorites" : "Favoritos",
     "Follow up" : "Seguimiento",
     "Follow up info" : "Información de seguimiento",
@@ -836,6 +834,8 @@
     "The link leads to %s" : "El enlace conduce a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no quiere visitar esa página puede regresar a <a href=\"%s\">Correo</a>.",
     "Continue to %s" : "Continuar a %s",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Los mensajes se marcarán automáticamente como importantes en función de los mensajes con los que interactuó o se marcaron como importantes. Al principio puede que tengas que cambiar manualmente la importancia para enseñar el sistema, pero mejorará con el tiempo.",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Los mensajes que ha enviado y requieren respuesta pero no han recibido ninguna en un par de días aparecerán aquí.",
     "Mark all messages of this folder as read" : "Marcar todos los mensajes de este buzón como leídos",
     "Last 7 days" : "Últimos 7 días",
     "From me" : "De mí"

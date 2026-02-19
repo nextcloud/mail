@@ -311,8 +311,6 @@ OC.L10N.register(
     "Today" : "Avui",
     "Choose target folder" : "Trieu la carpeta de destinació",
     "No more submailboxes in here" : "No hi ha més subbústies aquí",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Els missatges es marcaran automàticament com a importants en funció dels missatges amb els quals heu interaccionat o marcat com a importants. Al principi és possible que hageu de canviar manualment la importància per ensenyar el sistema, però millorarà amb el temps.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Aquí es mostraran els missatges enviats per tu que requereixen una resposta però que no n'hagis rebut cap al cap d'un parell de dies.",
     "Favorites" : "Preferits",
     "Follow up" : "Seguiment",
     "Follow up info" : "Informació de seguiment",
@@ -726,6 +724,8 @@ OC.L10N.register(
     "The link leads to %s" : "L'enllaç porta a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no voleu visitar aquesta pàgina, podeu tornar a <a href=\"%s\">Correu</a>.",
     "Continue to %s" : "Continua a %s",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Els missatges es marcaran automàticament com a importants en funció dels missatges amb els quals heu interaccionat o marcat com a importants. Al principi és possible que hageu de canviar manualment la importància per ensenyar el sistema, però millorarà amb el temps.",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Aquí es mostraran els missatges enviats per tu que requereixen una resposta però que no n'hagis rebut cap al cap d'un parell de dies.",
     "Mark all messages of this folder as read" : "Marca tots els missatges d'aquesta carpeta com a llegits",
     "Last 7 days" : "Darrers 7 dies",
     "From me" : "De mi"
