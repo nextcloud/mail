@@ -486,7 +486,10 @@ export default {
 
 			this.bus.on('append-to-body-at-cursor', this.appendToBodyAtCursor)
 			this.bus.on('insert-text-block', this.insertTextBlock)
-			this.$emit('ready', editor)
+			this.$emit('ready', {
+				editor,
+				additionalFocusTrap: '.ck-body-wrapper', // For the link picker, which is appended to the HTML body
+			})
 		},
 
 		onEditorInput(text) {
