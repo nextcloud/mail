@@ -381,9 +381,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "Indeksiranje poruka. To može potrajati nešto dulje za veće mape.",
     "Choose target folder" : "Odaberi ciljnu mapu",
     "No more submailboxes in here" : "Ovdje više nema podsandučića",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Poruke se automatski označavaju kao važne na temelju poruka kojima ste rukovali ili koje ste označili kao važne. U početku ćete možda morati ručno mijenjati važnost poruka kako bi sustav zapamtio vaše želje, ali s vremenom će se poboljšati.",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "Poruke koje ste označili kao omiljene prikazivat će se na vrhu mapa. Ovo ponašanje možete isključiti u postavkama aplikacije",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Poruke koje ste poslali i koje zahtijevaju odgovor, ali ga nisu dobile nakon nekoliko dana, prikazivat će se ovdje.",
     "Favorites" : "Favoriti",
     "Favorites info" : "Informacije o favoritima",
     "Load more favorites" : "Učitaj još favorita",
@@ -892,6 +890,8 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ako ne želite posjetiti tu stranicu, možete se vratiti na <ahref=\"%s\">Poštu</a>.",
     "Continue to %s" : "Idi do %s",
     "Determine importance using machine learning" : "Odredi važnost pomoću strojnog učenja",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Poruke se automatski označavaju kao važne na temelju poruka kojima ste rukovali ili koje ste označili kao važne. U početku ćete možda morati ručno mijenjati važnost poruka kako bi sustav zapamtio vaše želje, ali s vremenom će se poboljšati.",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Poruke koje ste poslali i koje zahtijevaju odgovor, ali ga nisu dobile nakon nekoliko dana, prikazivat će se ovdje.",
     "Mark all messages of this folder as read" : "Označi sve poruke u ovoj mapi kao pročitane",
     "Last 7 days" : "Zadnjih 7 dana",
     "From me" : "Od mene"

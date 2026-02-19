@@ -245,7 +245,6 @@ OC.L10N.register(
     "Last month" : "Zadnji mesec",
     "Choose target folder" : "Izbor ciljne mape",
     "No more submailboxes in here" : "V tem predalu ni drugih predalov",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Sporočila bodo samodejno označena kot pomembna na podlagi do sedaj označenih takih sporočil. V začetku bo verjetno treba kakšno označiti še ročno, a se bo sistem s časom izboljševal.",
     "Favorites" : "Priljubljene",
     "Important info" : "Pomembno",
     "Other" : "Drugo",
@@ -526,6 +525,7 @@ OC.L10N.register(
     "Redirect" : "Preusmeri",
     "The link leads to %s" : "Povezava vodi do %s",
     "Continue to %s" : "Nadaljuj na %s",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Sporočila bodo samodejno označena kot pomembna na podlagi do sedaj označenih takih sporočil. V začetku bo verjetno treba kakšno označiti še ročno, a se bo sistem s časom izboljševal.",
     "Mark all messages of this folder as read" : "Označi vsa sporočila v tej mapi kot prebrana",
     "Last 7 days" : "Zadnjih 7 dni"
 },

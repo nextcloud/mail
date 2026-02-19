@@ -131,7 +131,6 @@ OC.L10N.register(
     "Last month" : "Tháng trước",
     "Choose target folder" : "Chọn thư mục đích",
     "No more submailboxes in here" : "Không còn hộp thư con nào ở đây",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Tin nhắn sẽ tự động được đánh dấu là quan trọng dựa trên những tin nhắn bạn đã tương tác hoặc được đánh dấu là quan trọng. Lúc đầu, bạn có thể phải thay đổi thủ công tầm quan trọng để dạy hệ thống, nhưng nó sẽ cải thiện theo thời gian.",
     "Favorites" : "Ưa thích",
     "Important info" : "Thông tin quan trọng",
     "Other" : "Khác",
@@ -276,6 +275,7 @@ OC.L10N.register(
     "Redirect" : "Chuyển hướng",
     "The link leads to %s" : "Liên kết dẫn đến %s",
     "Continue to %s" : "Tiếp tục %s",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Tin nhắn sẽ tự động được đánh dấu là quan trọng dựa trên những tin nhắn bạn đã tương tác hoặc được đánh dấu là quan trọng. Lúc đầu, bạn có thể phải thay đổi thủ công tầm quan trọng để dạy hệ thống, nhưng nó sẽ cải thiện theo thời gian.",
     "Last 7 days" : "7 ngày trước"
 },
 "nplurals=1; plural=0;");

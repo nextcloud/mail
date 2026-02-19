@@ -381,9 +381,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "Indexación das súas mensaxes. Isto pode levar un pouco máis en cartafoles máis grandes.",
     "Choose target folder" : "Escoller o cartafol de destino",
     "No more submailboxes in here" : "Aquí non hai máis subcaixas de correo",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "As mensaxes marcaranse automaticamente como importantes en función das mensaxes coas que interactuou ou que foron marcadas como importantes. No principio, é posíbel que teña que cambiar manualmente a importancia para ensinarlle ao sistema, máis mellorará co paso do tempo",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "As mensaxes que marque como favoritas aparecerán na parte superior dos cartafoles. Pode desactivar este comportamento nos axustes da aplicación",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Aquí amosaranse as mensaxes enviadas por Vde. que requiren unha resposta mais non a recibiron após dun par de días.",
     "Favorites" : "Favoritos",
     "Favorites info" : "Información dos favoritos",
     "Load more favorites" : "Cargar máis favoritos",
@@ -892,6 +890,8 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Se non quere visitar esa páxina, pode volver a <a href=\"%s\">Correo</a>.",
     "Continue to %s" : "Continuar para %s",
     "Determine importance using machine learning" : "Determinar a importancia mediante a aprendizaxe automática",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "As mensaxes marcaranse automaticamente como importantes en función das mensaxes coas que interactuou ou que foron marcadas como importantes. No principio, é posíbel que teña que cambiar manualmente a importancia para ensinarlle ao sistema, máis mellorará co paso do tempo",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Aquí amosaranse as mensaxes enviadas por Vde. que requiren unha resposta mais non a recibiron após dun par de días.",
     "Mark all messages of this folder as read" : "Marcar todas as mensaxes deste cartafol como lidas",
     "Last 7 days" : "Últimos 7 días",
     "From me" : "De min"

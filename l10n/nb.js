@@ -312,8 +312,6 @@ OC.L10N.register(
     "Last month" : "Forrige måned",
     "Choose target folder" : "Velg målmappe",
     "No more submailboxes in here" : "Ingen flere underpostbokser her",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Meldinger blir automatisk merket som viktige basert på hvilke meldinger du har interagert med eller merket som viktige. I begynnelsen må du kanskje endre viktigheten manuelt for å lære systemet, men det vil forbedres over tid.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Meldinger sendt av deg som krever svar, men ikke mottok en etter et par dager, vises her.",
     "Favorites" : "Favoritter",
     "Follow up" : "Følg opp",
     "Follow up info" : "Følg opp info",
@@ -702,6 +700,8 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Hvis du ikke vil besøke den siden, kan du gå tilbake til <a href=\"%s\">E-post</a>",
     "Continue to %s" : "Fortsett til %s",
     "Determine importance using machine learning" : "Bestem viktighet ved hjelp av maskinlæring",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Meldinger blir automatisk merket som viktige basert på hvilke meldinger du har interagert med eller merket som viktige. I begynnelsen må du kanskje endre viktigheten manuelt for å lære systemet, men det vil forbedres over tid.",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Meldinger sendt av deg som krever svar, men ikke mottok en etter et par dager, vises her.",
     "Last 7 days" : "Siste 7 dager",
     "From me" : "Fra meg"
 },

@@ -381,9 +381,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "Indeksowanie twoich wiadomości. Może to zająć trochę więcej czasu dla większych folderów",
     "Choose target folder" : "Wybierz katalog docelowy",
     "No more submailboxes in here" : "Nie ma więcej skrzynek podrzędnych",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Wiadomości będą automatycznie oznaczane jako ważne na podstawie wiadomości, z którymi wchodziłeś w interakcję lub które oznaczałeś jako ważne. Na początku być może trzeba będzie ręcznie zmienić ważność dla uczenia systemu, ale z czasem będzie się poprawiać.",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "Wiadomości oznaczone jako ulubione będą wyświetlane na górze folderów. Możesz wyłączyć to zachowanie w ustawieniach aplikacji",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Wiadomości wysłane przez ciebie, które wymagają odpowiedzi, ale jej nie otrzymały po kilku dniach, będą wyświetlane tutaj",
     "Favorites" : "Ulubione",
     "Favorites info" : "Informacje o ulubionych",
     "Load more favorites" : "Załaduj więcej ulubionych",
@@ -892,6 +890,8 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Jeśli nie chcesz odwiedzić tej strony, możesz powrócić do <a href=\"%s\">Poczty</a>.",
     "Continue to %s" : "Kontynuuj do %s",
     "Determine importance using machine learning" : "Określ ważność przy użyciu uczenia maszynowego",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Wiadomości będą automatycznie oznaczane jako ważne na podstawie wiadomości, z którymi wchodziłeś w interakcję lub które oznaczałeś jako ważne. Na początku być może trzeba będzie ręcznie zmienić ważność dla uczenia systemu, ale z czasem będzie się poprawiać.",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Wiadomości wysłane przez ciebie, które wymagają odpowiedzi, ale jej nie otrzymały po kilku dniach, będą wyświetlane tutaj",
     "Mark all messages of this folder as read" : "Oznacz wszystkie wiadomości w tym folderze jako przeczytane",
     "Last 7 days" : "Ostatnie 7 dni",
     "From me" : "Ode mnie"

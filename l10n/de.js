@@ -381,9 +381,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "Deine Nachrichten werden indiziert. Dies kann bei größeren Ordnern etwas länger dauern.",
     "Choose target folder" : "Zielordner wählen",
     "No more submailboxes in here" : "Keine Unter-Postfächer vorhanden",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Nachrichten werden automatisch als wichtig markiert, je nachdem, mit welchen Nachrichten du interagiert, oder als wichtig markiert hast. Am Anfang musst du möglicherweise die Wichtigkeit manuell ändern, um das System anzulernen, aber es wird sich mit der Zeit verbessern.",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "Nachrichten, die als Favorit markiert sind, werden in Ordnern oben angezeigt. Dieses Verhalten kann in den App-Einstellungen deaktiviert werden",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Von dir gesendete Nachrichten, die eine Antwort erfordern, aber nach einigen Tagen noch keine erhalten haben, werden hier angezeigt.",
     "Favorites" : "Favoriten",
     "Favorites info" : "Favoriten-Info",
     "Load more favorites" : "Weitere Favoriten laden",
@@ -892,6 +890,8 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Wenn du diese Seite nicht besuchen möchtest, kannst du zu <a href=\"%s\">Mail</a> zurückkehren",
     "Continue to %s" : "Weiter nach %s",
     "Determine importance using machine learning" : "Die Bedeutung mithilfe von maschinellem Lernen bestimmen",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Nachrichten werden automatisch als wichtig markiert, je nachdem, mit welchen Nachrichten du interagiert, oder als wichtig markiert hast. Am Anfang musst du möglicherweise die Wichtigkeit manuell ändern, um das System anzulernen, aber es wird sich mit der Zeit verbessern.",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Von dir gesendete Nachrichten, die eine Antwort erfordern, aber nach einigen Tagen noch keine erhalten haben, werden hier angezeigt.",
     "Mark all messages of this folder as read" : "Alle Nachrichten in diesem Ordner als gelesen kennzeichnen",
     "Last 7 days" : "Die letzten 7 Tage",
     "From me" : "Von mir"

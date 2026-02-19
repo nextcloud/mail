@@ -303,8 +303,6 @@
     "Last month" : "Joan den hilabetean",
     "Choose target folder" : "Aukeratu helburuko karpeta",
     "No more submailboxes in here" : "Azpipostontzi gehiagorik ez hemen",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Mezuak automatikoki markatuko dira garrantzitsu bezala kontuan izanda zein mezurekin aritu zaren interakzioan edo zein markatu dituzun garratzitsu gisa. Hasieran garrantzia eskuz aldatu beharko duzu sistemari irakasteko, baina denborarekin hobetuko du.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Erantzuteko eskatuz bidali zenituen emailak, baina egun batzuen ondoren erantzunik jasotzen ez dutenak hemen erakutsiko dira.",
     "Favorites" : "Gogokoak",
     "Follow up" : "Segimendua egin",
     "Follow up info" : "Segimenduaren informazioa",
@@ -710,6 +708,8 @@
     "The link leads to %s" : "Estekak hona bideratzen du: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Orrialde hori bisitatu nahi ez baduzu, itzul dezakezu <a href=\"%s\">Mail </a>-ra.",
     "Continue to %s" : "Jarraitu hona: %s",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Mezuak automatikoki markatuko dira garrantzitsu bezala kontuan izanda zein mezurekin aritu zaren interakzioan edo zein markatu dituzun garratzitsu gisa. Hasieran garrantzia eskuz aldatu beharko duzu sistemari irakasteko, baina denborarekin hobetuko du.",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Erantzuteko eskatuz bidali zenituen emailak, baina egun batzuen ondoren erantzunik jasotzen ez dutenak hemen erakutsiko dira.",
     "Mark all messages of this folder as read" : "Markatu karpeta honetako mezu guztiak irakurrita bezala",
     "Last 7 days" : "Azken 7 egunetan",
     "From me" : "Nigandik"

@@ -307,7 +307,6 @@
     "Last month" : "Í síðasta mánuði",
     "Choose target folder" : "Veldu úttaksmöppu",
     "No more submailboxes in here" : "Engin fleiri undirpósthólf hér",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Skilaboð sem þú sendir og sem þarfnast svars en hafa ekki enn fengið svar eftir nokkra daga, munu birtast hér.",
     "Favorites" : "Eftirlæti",
     "Follow up" : "Fylgja eftir",
     "Follow up info" : "Upplýsingar um eftirfylgni",
@@ -698,6 +697,7 @@
     "The link leads to %s" : "Tengillinn leiðir til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ef þú vilt ekki fara á þá síðu, geturðu farið til baka í <a href=\"%s\">póstforritið</a>.",
     "Continue to %s" : "Halda áfram í %s",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Skilaboð sem þú sendir og sem þarfnast svars en hafa ekki enn fengið svar eftir nokkra daga, munu birtast hér.",
     "Mark all messages of this folder as read" : "Merkja öll skilaboð í þessari möppu sem lesin",
     "Last 7 days" : "Síðustu 7 daga",
     "From me" : "Frá mér"
