@@ -58,6 +58,7 @@ OC.L10N.register(
     "Close" : "Mdel",
     "Date" : "Azemz",
     "Tags" : "Tibzimin",
+    "Task created" : "Tawuri tettwarna",
     "Not found" : "Ulac-it",
     "Translate from" : "Suqel seg",
     "Translate to" : "Suqel ar",

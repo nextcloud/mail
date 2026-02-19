@@ -339,7 +339,6 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "Indekserer dine beskeder. Dette kan tage en smule længere for større mapper.",
     "Choose target folder" : "Vælg destinationsmappe",
     "No more submailboxes in here" : "Ikke flere underpostkasser herinde",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Beskeder vil automatisk blive markeret som vigtige baseret på, hvilke meddelelser du har interageret med eller markeret som vigtige. I begyndelsen skal du muligvis manuelt ændre vigtigheden for at lære systemet, men det vil forbedres med tiden.",
     "Favorites" : "Favoritter",
     "Follow up" : "Opfølgning",
     "Follow up info" : "Opfølgningsinfo",
@@ -587,6 +586,7 @@ OC.L10N.register(
     "Redirect" : "Omdiriger",
     "The link leads to %s" : "Linket fører til %s",
     "Continue to %s" : "Videre til %s",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Beskeder vil automatisk blive markeret som vigtige baseret på, hvilke meddelelser du har interageret med eller markeret som vigtige. I begyndelsen skal du muligvis manuelt ændre vigtigheden for at lære systemet, men det vil forbedres med tiden.",
     "Mark all messages of this folder as read" : "Markér alle beskeder i denne mappe som læst",
     "Last 7 days" : "Sidste 7 dage",
     "From me" : "Fra mig"

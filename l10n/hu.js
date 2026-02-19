@@ -279,7 +279,6 @@ OC.L10N.register(
     "Last month" : "Előző hónap",
     "Choose target folder" : "Válasszon célmappát",
     "No more submailboxes in here" : "Nem találhatók további alpostafiókok",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Az üzeneteket automatikusan fontosként jelöli meg az alapján, hogy mely üzenetekre reagált, vagy jelölt meg fontosként. Kezdetben lehet, hogy kézzel megváltoztatnia a fontosságot és ezzel kell tanítania a rendszert, de ez az idő múlásával javulni fog.",
     "Favorites" : "Kedvencek",
     "Follow up" : "Emlékeztető",
     "Follow up info" : "Emlékeztető információ",
@@ -632,6 +631,7 @@ OC.L10N.register(
     "The link leads to %s" : "A hivatkozás ide mutat: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarja megnyitni azt az oldalt, akkor térjen vissza a <a href=\"%s\">Levelezéshez</a>.",
     "Continue to %s" : "Folytatás ide: %s",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Az üzeneteket automatikusan fontosként jelöli meg az alapján, hogy mely üzenetekre reagált, vagy jelölt meg fontosként. Kezdetben lehet, hogy kézzel megváltoztatnia a fontosságot és ezzel kell tanítania a rendszert, de ez az idő múlásával javulni fog.",
     "Mark all messages of this folder as read" : "A mappában található összes üzenet megjelölése olvasottként",
     "Last 7 days" : "Előző 7 nap"
 },

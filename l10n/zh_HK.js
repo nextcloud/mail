@@ -381,9 +381,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "正在索引您的訊息。對於較大的資料夾來說，這可能需要較長的時間。",
     "Choose target folder" : "選擇目標資料夾",
     "No more submailboxes in here" : "這裡沒有更多子信箱",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "郵件將會以您與其互動或標記為重要的郵件為基礎來自動標記重要郵件。ㄧ開始，您可以能必須手動教導系統哪些是重要郵件，然後它就會與時俱進。",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "你標記為最愛的訊息將會顯示在各自資料夾的頂部。你可以在應用程式設置中停用此功能",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "您發送的訊息如果在幾天內未收到回覆，將在此處顯示。",
     "Favorites" : "我的最愛",
     "Favorites info" : "最愛資料",
     "Load more favorites" : "加載更多最愛",
@@ -892,6 +890,8 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "若不想造訪該頁，您可以回到<a href=\"%s\">Mail</a>。",
     "Continue to %s" : "前往 %s",
     "Determine importance using machine learning" : "使用機器學習判斷重要性",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "郵件將會以您與其互動或標記為重要的郵件為基礎來自動標記重要郵件。ㄧ開始，您可以能必須手動教導系統哪些是重要郵件，然後它就會與時俱進。",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "您發送的訊息如果在幾天內未收到回覆，將在此處顯示。",
     "Mark all messages of this folder as read" : "將此資料夾中所有的訊息都標記為已讀",
     "Last 7 days" : "過去7日",
     "From me" : "來自我"

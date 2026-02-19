@@ -274,7 +274,6 @@ OC.L10N.register(
     "Last month" : "Last month",
     "Choose target folder" : "Choose target folder",
     "No more submailboxes in here" : "No more submailboxes in here",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time.",
     "Favorites" : "Favorites",
     "Important info" : "Important info",
     "Other" : "Other",
@@ -619,6 +618,7 @@ OC.L10N.register(
     "The link leads to %s" : "The link leads to %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continue to %s",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time.",
     "Last 7 days" : "Last 7 days"
 },
 "nplurals=2; plural=(n!=1);");

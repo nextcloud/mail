@@ -312,8 +312,6 @@ OC.L10N.register(
     "Last month" : "先月",
     "Choose target folder" : "ターゲットフォルダーを選択",
     "No more submailboxes in here" : "サブメールボックスはありません",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "あなたの過去の操作を元にしてメールには自動的に重要マークがつけられます。最初のうちは重要マークを手動でつけたり外したりしてシステムに重要なメールを教える必要がありますが、精度は徐々に向上します。",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "返信が必要なメッセージを送信したが、数日経っても返信がない場合は、ここに表示されます。",
     "Favorites" : "お気に入り",
     "Follow up" : "フォローアップ",
     "Follow up info" : "フォローアップ情報",
@@ -731,6 +729,8 @@ OC.L10N.register(
     "The link leads to %s" : "リンクが %s につながります",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ページにアクセスしたくない場合は、<a href=\"%s\">メール</a>に戻ることができます",
     "Continue to %s" : "%s にリダイレクトする",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "あなたの過去の操作を元にしてメールには自動的に重要マークがつけられます。最初のうちは重要マークを手動でつけたり外したりしてシステムに重要なメールを教える必要がありますが、精度は徐々に向上します。",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "返信が必要なメッセージを送信したが、数日経っても返信がない場合は、ここに表示されます。",
     "Mark all messages of this folder as read" : "このフォルダのすべてのメッセージを開封済みにする",
     "Last 7 days" : "7日以内",
     "From me" : "私から"

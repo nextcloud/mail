@@ -248,7 +248,6 @@ OC.L10N.register(
     "Could not open folder" : "Map kon niet worden geopend",
     "Choose target folder" : "Kies doelmap…",
     "No more submailboxes in here" : "Niet meer subpostbussen hier",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Berichten zullen automatisch als belangrijk gemarkeerd worden, gebaseerd op met welke berichten je gewerkt hebt of welke je als belangrijk hebt gemarkeerd. In het begin moet je misschien handmatig de belangrijkheid aanpassen om het systeem in te leren, maar het wordt beter met de tijd.",
     "Favorites" : "Favorieten",
     "Important info" : "Belangrijke informatie",
     "Other" : "Ander",
@@ -526,6 +525,7 @@ OC.L10N.register(
     "Redirect" : "Omleiden",
     "The link leads to %s" : "De link verwijst naar %s",
     "Continue to %s" : "Verder naar %s",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Berichten zullen automatisch als belangrijk gemarkeerd worden, gebaseerd op met welke berichten je gewerkt hebt of welke je als belangrijk hebt gemarkeerd. In het begin moet je misschien handmatig de belangrijkheid aanpassen om het systeem in te leren, maar het wordt beter met de tijd.",
     "Mark all messages of this folder as read" : "Markeer alle berichten in deze map als gelezen",
     "Last 7 days" : "Laatste 7 dagen"
 },

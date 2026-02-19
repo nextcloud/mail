@@ -312,8 +312,6 @@ OC.L10N.register(
     "Yesterday" : "أمس",
     "Choose target folder" : "اختر مكان المجلد",
     "No more submailboxes in here" : "لم تعُد هناك أيّ صناديق بريد فرعية هنا",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "سيتم وضع علامة على الرسائل تلقائيًا على أنها مهمة بناءً على الرسائل التي تفاعلت معها أو تم وضع علامة عليها كمهمة. في البداية، قد تضطر إلى تغيير الأهمية يدويّاً من أجل تعليم النظام، لكنه سيتحسن بمرور الوقت.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "الرسائل التي أرسلتها أنت وتتطلب ردّاً لكن مرت عدة أيام و لم يتم إرساله ستظهر هنا. ",
     "Favorites" : "المفضلة",
     "Follow up" : "المتابعة",
     "Follow up info" : "معلومات المتابعة",
@@ -724,6 +722,8 @@ OC.L10N.register(
     "The link leads to %s" : "الرابط يؤدي إل %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "إذا لم تكن راغباً في زيارة تلك الصفحة، يمكنك العودة إلى <a href=\"%s\">البريد Mail</a>.",
     "Continue to %s" : "إستمر نحو %s",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "سيتم وضع علامة على الرسائل تلقائيًا على أنها مهمة بناءً على الرسائل التي تفاعلت معها أو تم وضع علامة عليها كمهمة. في البداية، قد تضطر إلى تغيير الأهمية يدويّاً من أجل تعليم النظام، لكنه سيتحسن بمرور الوقت.",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "الرسائل التي أرسلتها أنت وتتطلب ردّاً لكن مرت عدة أيام و لم يتم إرساله ستظهر هنا. ",
     "Last 7 days" : "آخر 7 أيام",
     "From me" : "مِنِّي أنا"
 },

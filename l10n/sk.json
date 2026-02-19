@@ -379,9 +379,7 @@
     "Indexing your messages. This can take a bit longer for larger folders." : "Indexovanie vašich správ. Môže to trvať o niečo dlhšie pri väčších priečinkoch.",
     "Choose target folder" : "Vyberte cieľový priečinok",
     "No more submailboxes in here" : "Žadne ďalšie podschránky",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Správy sa automaticky označia ako dôležité v závislosti na tom, ktorými správami ste sa zaoberali alebo označili ako dôležité. Na začiatku bude potrebné meniť dôležitosť ručne a systém tak postupne učiť, ale časom sa to zlepší.",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "Správy, ktoré ste označili ako obľúbené, sa zobrazia na vrchu priečinkov. Túto funkciu môžete deaktivovať v nastaveniach aplikácie.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Tu sa zobrazia vami odoslané správy, ktoré vyžadujú odpoveď, no po niekoľkých dňoch ju nedostali.",
     "Favorites" : "Obľúbené",
     "Favorites info" : "Informácie o obľúbených",
     "Load more favorites" : "Načítať viac obľúbených",
@@ -890,6 +888,8 @@
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ak si neprajete navštíviť stránku, možete sa vátiť na <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Pokračovať na %s",
     "Determine importance using machine learning" : "Určte dôležitosť pomocou strojového učenia",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Správy sa automaticky označia ako dôležité v závislosti na tom, ktorými správami ste sa zaoberali alebo označili ako dôležité. Na začiatku bude potrebné meniť dôležitosť ručne a systém tak postupne učiť, ale časom sa to zlepší.",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Tu sa zobrazia vami odoslané správy, ktoré vyžadujú odpoveď, no po niekoľkých dňoch ju nedostali.",
     "Mark all messages of this folder as read" : "Všetky správy v tomto priečinku označiť ako prečítané",
     "Last 7 days" : "Posledných 7 dní",
     "From me" : "Odo mňa"

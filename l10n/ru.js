@@ -307,8 +307,6 @@ OC.L10N.register(
     "Could not open folder" : "Не удалось открыть папку",
     "Choose target folder" : "Выбор папки назначения",
     "No more submailboxes in here" : "Вложенные папки отсутствуют",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Письма будут автоматически отмечаться важными на основе анализа ваших действий и присвоения метки «Важно». В первое время, возможно, потребуется обучить систему присвоением и удалением меток вручную.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Здесь будут отображаться отправленные вами сообщения, требующие ответа, но не полученные в течение нескольких дней.",
     "Favorites" : "Избранные",
     "Follow up" : "Следовать за",
     "Follow up info" : "Последующая информация",
@@ -739,6 +737,8 @@ OC.L10N.register(
     "The link leads to %s" : "Эта ссылка ведёт на %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Если вы не хотите посещать эту страницу, вы можете вернуться в <a href=\"%s\">Почту</a>",
     "Continue to %s" : "Продолжать %s",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Письма будут автоматически отмечаться важными на основе анализа ваших действий и присвоения метки «Важно». В первое время, возможно, потребуется обучить систему присвоением и удалением меток вручную.",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Здесь будут отображаться отправленные вами сообщения, требующие ответа, но не полученные в течение нескольких дней.",
     "Mark all messages of this folder as read" : "Пометить все сообщения в этой папке как прочитанные",
     "Last 7 days" : "Последние 7 дней",
     "From me" : "От меня"

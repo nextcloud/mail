@@ -379,9 +379,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "İletileriniz dizine ekleniyor. Çok sayıda ileti bulunan e-posta klasörlerinde bu işlem biraz zaman alabilir.",
     "Choose target folder" : "Hedef klasörü seçin",
     "No more submailboxes in here" : "Burada başka alt e-posta kutusu yok",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "İletiler, hangileri ile etkileşim kurduğunuza ya da hangilerini önemli olarak işaretlediğinize göre otomatik olarak önemli olarak işaretlenecek.",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "Sık kullanılan olarak işaretlediğiniz iletiler, sıralamada klasörlerin üstünde görüntülenir. Bu davranışı uygulama ayarlarından kapatabilirsiniz",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Gönderdiğiniz ve yanıtlanması gereken ancak birkaç gün geçmesine rağmen yanıt alamayan iletileriniz burada görüntülenir.",
     "Favorites" : "Sık kullanılanlar",
     "Favorites info" : "Sık kullanılanlar bilgileri",
     "Load more favorites" : "Diğer sık kullanılanları yükle",
@@ -889,6 +887,8 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Bu sayfayı ziyaret etmek istemiyorsanız, <a href=\"%s\">E-posta</a> uygulamasına geri dönebilirsiniz.",
     "Continue to %s" : "%s sayfasına ilerle",
     "Determine importance using machine learning" : "Önem makine öğrenmesi ile belirlensin",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "İletiler, hangileri ile etkileşim kurduğunuza ya da hangilerini önemli olarak işaretlediğinize göre otomatik olarak önemli olarak işaretlenecek.",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Gönderdiğiniz ve yanıtlanması gereken ancak birkaç gün geçmesine rağmen yanıt alamayan iletileriniz burada görüntülenir.",
     "Mark all messages of this folder as read" : "Bu klasördeki tüm iletileri okunmuş olarak işaretle",
     "Last 7 days" : "Önceki 7 gün",
     "From me" : "Benden"

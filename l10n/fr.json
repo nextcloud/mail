@@ -379,9 +379,7 @@
     "Indexing your messages. This can take a bit longer for larger folders." : "Indexation de vos messages. Cela peut prendre un peu plus de temps pour les dossiers volumineux.",
     "Choose target folder" : "Sélectionner le dossier cible",
     "No more submailboxes in here" : "Plus aucun sous-dossier ici",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Les messages seront automatiquement marqués comme importants en fonction des messages avec lesquels vous avez interagi et marqués comme importants. Au début, vous devrez manuellement modifier l'importance pour que le système apprenne, mais le marquage automatique va s'améliorer avec le temps.",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "Les messages que vos avez marqués comme favoris seront affichés en haut des dossiers. Vous pouvez désactiver ce comportement dans les paramètres de l'application",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Les messages que vous avez envoyés et qui n'ont pas reçu de réponse au bout de quelques jours apparaîtront ici.",
     "Favorites" : "Favoris",
     "Load more favorites" : "Charger plus de favoris",
     "Follow up" : "Suivre",
@@ -888,6 +886,8 @@
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si vous ne souhaitez pas visiter cette page, vous pouvez retourner à l'application <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continuer vers %s",
     "Determine importance using machine learning" : "Déterminer l'importance à l'aide de l'apprentissage automatique",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Les messages seront automatiquement marqués comme importants en fonction des messages avec lesquels vous avez interagi et marqués comme importants. Au début, vous devrez manuellement modifier l'importance pour que le système apprenne, mais le marquage automatique va s'améliorer avec le temps.",
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Les messages que vous avez envoyés et qui n'ont pas reçu de réponse au bout de quelques jours apparaîtront ici.",
     "Mark all messages of this folder as read" : "Marquer tous les messages de ce dossier comme lus",
     "Last 7 days" : "7 derniers jours",
     "From me" : "De moi"

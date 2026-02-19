@@ -152,7 +152,6 @@ OC.L10N.register(
     "Last week" : "Sa chida passada",
     "Choose target folder" : "Sèbera cartella de destinatzione",
     "No more submailboxes in here" : "Non b'at àteras suta-cartellas inoghe",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Is messàgios s'ant a marcare in manera automàtica comente importantes in sa base de is messàgios cun is chi as tènnidu interatziones o chi si sunt marcados comente importantes. Fortzis a su cumintzu as a dèpere cambiare a manu s'importàntzia pro ddu imparare a su sistema, ma at a megiorare in su tempus.",
     "Favorites" : "Preferidos",
     "Important info" : "Informatzione importante",
     "Other" : "Àteru",
@@ -342,6 +341,7 @@ OC.L10N.register(
     "Redirect" : "Torra a deretare",
     "The link leads to %s" : "Su ligòngiu deretat a %s",
     "Continue to %s" : "Sighi in %s",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Is messàgios s'ant a marcare in manera automàtica comente importantes in sa base de is messàgios cun is chi as tènnidu interatziones o chi si sunt marcados comente importantes. Fortzis a su cumintzu as a dèpere cambiare a manu s'importàntzia pro ddu imparare a su sistema, ma at a megiorare in su tempus.",
     "Last 7 days" : "Ùrtimas 7 dies"
 },
 "nplurals=2; plural=(n != 1);");
