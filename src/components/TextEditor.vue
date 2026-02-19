@@ -52,6 +52,7 @@ import {
 	Underline,
 } from 'ckeditor5'
 import { getLinkWithPicker, searchProvider } from '@nextcloud/vue/components/NcRichText'
+import TextDirectionPlugin from '../ckeditor/direction/TextDirectionPlugin.js'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
@@ -148,6 +149,7 @@ export default {
 				RemoveFormat,
 				Base64UploadAdapter,
 				MailPlugin,
+				TextDirectionPlugin,
 			])
 			toolbar.unshift(...[
 				'heading',
@@ -163,6 +165,8 @@ export default {
 				'fontBackgroundColor',
 				'insertImage',
 				'alignment',
+				'textDirection:ltr',
+				'textDirection:rtl',
 				'bulletedList',
 				'numberedList',
 				'blockquote',
