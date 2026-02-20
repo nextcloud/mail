@@ -196,14 +196,46 @@
 								{{ t('mail', 'Use master password') }}
 							</label>
 						</div>
-						<div>
-							<input
-								id="mail-master-password"
-								v-model="masterPassword"
-								:disabled="loading"
-								type="password"
-								:required="masterPasswordEnabled">
-							<label for="mail-master-password"> {{ t('mail', 'Master password') }} </label>
+						<div v-show="masterPasswordEnabled">
+							<div>
+								<input
+									id="mail-master-password"
+									v-model="masterPassword"
+									:disabled="loading"
+									type="password"
+									:required="masterPasswordEnabled">
+								<label for="mail-master-password"> {{ t('mail', 'Master password') }} </label>
+							</div>
+							<p>
+								{{ t('mail', 'When only master password is set, all users will authenticate with their normal username and this static password.') }}
+							</p>
+							<div>
+								<label :for="'mail-master-user' + setting.id">
+									{{ t('mail', 'Master user (Dovecot master user)') }}
+									<br>
+									<input
+										:id="'mail-master-user' + setting.id"
+										v-model="masterUser"
+										:disabled="loading"
+										type="text"
+										:placeholder="t('mail', 'e.g. masteruser')">
+								</label>
+								<p>{{ t('mail', 'When master user is set, authentication will use the Dovecot master user format: user{separator}masteruser with the master password.') }}</p>
+							</div>
+							<div>
+								<label :for="'mail-master-user-separator' + setting.id">
+									{{ t('mail', 'Master user separator') }}
+									<br>
+									<input
+										:id="'mail-master-user-separator' + setting.id"
+										v-model="masterUserSeparator"
+										:disabled="loading"
+										type="text"
+										maxlength="8"
+										:required="needsMasterUserSeparator">
+								</label>
+								<p>{{ t('mail', 'The separator between the user and master user') }}</p>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -426,6 +458,8 @@ export default {
 			smtpSslMode: this.setting.smtpSslMode || 'tls',
 			masterPasswordEnabled: this.setting.masterPasswordEnabled === true,
 			masterPassword: this.setting.masterPassword || '',
+			masterUser: this.setting.masterUser || '',
+			masterUserSeparator: this.setting.masterUserSeparator || '',
 			sieveEnabled: this.setting.sieveEnabled || '',
 			sieveHost: this.setting.sieveHost || '',
 			sievePort: this.setting.sievePort || '',
@@ -448,6 +482,10 @@ export default {
 	},
 
 	computed: {
+		needsMasterUserSeparator() {
+			return this.masterPasswordEnabled && this.masterUser.length > 0
+		},
+
 		previewTemplates() {
 			return {
 				email: this.emailTemplate,
@@ -462,6 +500,8 @@ export default {
 				smtpSslMode: this.smtpSslMode,
 				masterPasswordEnabled: this.masterPasswordEnabled,
 				masterPassword: this.masterPassword,
+				masterUser: this.masterUser,
+				masterUserSeparator: this.masterUserSeparator,
 				sieveEnabled: this.sieveEnabled,
 				sieveUser: this.sieveUser,
 				sieveHost: this.sieveHost,
@@ -497,6 +537,8 @@ export default {
 					smtpSslMode: this.smtpSslMode,
 					masterPasswordEnabled: this.masterPasswordEnabled,
 					masterPassword: this.masterPassword,
+					masterUser: this.masterUser,
+					masterUserSeparator: this.masterUserSeparator,
 					sieveEnabled: this.sieveEnabled,
 					sieveUser: this.sieveUser,
 					sieveHost: this.sieveHost,

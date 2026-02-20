@@ -67,7 +67,7 @@ class ProvisioningMapper extends QBMapper {
 			$exception->setField('imapHost', false);
 		}
 		if (!isset($data['imapPort']) || (int)$data['imapPort'] === 0) {
-			$exception->setField('imapHost', false);
+			$exception->setField('imapPort', false);
 		}
 		if (!isset($data['imapSslMode']) || $data['imapSslMode'] === '') {
 			$exception->setField('imapSslMode', false);
@@ -92,6 +92,20 @@ class ProvisioningMapper extends QBMapper {
 			$exception->setField('ldapAliasesAttribute', false);
 		}
 
+		$masterPasswordEnabled = (bool)($data['masterPasswordEnabled'] ?? false);
+		$masterPassword = $data['masterPassword'] ?? '';
+		$masterUser = $data['masterUser'] ?? '';
+		$masterUserSeparator = $data['masterUserSeparator'] ?? '';
+
+		if ($masterPasswordEnabled) {
+			if ($masterPassword === '') {
+				$exception->setField('masterPassword', false);
+			}
+			if ($masterUser !== '' && $masterUserSeparator === '') {
+				$exception->setField('masterUserSeparator', false);
+			}
+		}
+
 		if (!empty($exception->getFields())) {
 			throw $exception;
 		}
@@ -108,12 +122,6 @@ class ProvisioningMapper extends QBMapper {
 		$provisioning->setSmtpHost($data['smtpHost']);
 		$provisioning->setSmtpPort((int)$data['smtpPort']);
 		$provisioning->setSmtpSslMode($data['smtpSslMode']);
-
-		$provisioning->setMasterPasswordEnabled((bool)($data['masterPasswordEnabled'] ?? false));
-		if (isset($data['masterPassword']) && $data['masterPassword'] !== Provisioning::MASTER_PASSWORD_PLACEHOLDER) {
-			$provisioning->setMasterPassword($data['masterPassword']);
-		}
-
 		$provisioning->setSieveEnabled((bool)$data['sieveEnabled']);
 		$provisioning->setSieveHost($data['sieveHost'] ?? '');
 		$provisioning->setSieveUser($data['sieveUser'] ?? '');
@@ -122,6 +130,20 @@ class ProvisioningMapper extends QBMapper {
 
 		$provisioning->setLdapAliasesProvisioning($ldapAliasesProvisioning);
 		$provisioning->setLdapAliasesAttribute($ldapAliasesAttribute);
+
+		if ($masterPasswordEnabled) {
+			$provisioning->setMasterPasswordEnabled(true);
+			if ($masterPassword !== Provisioning::MASTER_PASSWORD_PLACEHOLDER) {
+				$provisioning->setMasterPassword($masterPassword);
+			}
+			$provisioning->setMasterUser($masterUser);
+			$provisioning->setMasterUserSeparator($masterUserSeparator);
+		} else {
+			$provisioning->setMasterPasswordEnabled(false);
+			$provisioning->setMasterPassword(null);
+			$provisioning->setMasterUser(null);
+			$provisioning->setMasterUserSeparator(null);
+		}
 
 		return $provisioning;
 	}

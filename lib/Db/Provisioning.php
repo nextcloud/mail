@@ -38,7 +38,11 @@ use ReturnTypeWillChange;
  * @method bool|null getMasterPasswordEnabled()
  * @method void setMasterPasswordEnabled(bool $masterPasswordEnabled)
  * @method string|null getMasterPassword()
- * @method void setMasterPassword(string $masterPassword)
+ * @method void setMasterPassword(?string $masterPassword)
+ * @method string|null getMasterUser()
+ * @method void setMasterUser(?string $masterUser)
+ * @method string|null getMasterUserSeparator()
+ * @method void setMasterUserSeparator(?string $masterUserSeparator)
  * @method bool|null getSieveEnabled()
  * @method void setSieveEnabled(bool $sieveEnabled)
  * @method string|null getSieveHost()
@@ -72,6 +76,8 @@ class Provisioning extends Entity implements JsonSerializable {
 	protected $smtpSslMode;
 	protected $masterPasswordEnabled;
 	protected $masterPassword;
+	protected $masterUser;
+	protected $masterUserSeparator;
 	protected $sieveEnabled;
 	protected $sieveUser;
 	protected $sieveHost;
@@ -86,6 +92,8 @@ class Provisioning extends Entity implements JsonSerializable {
 		$this->addType('smtpPort', 'integer');
 		$this->addType('masterPasswordEnabled', 'boolean');
 		$this->addType('masterPassword', 'string');
+		$this->addType('masterUser', 'string');
+		$this->addType('masterUserSeparator', 'string');
 		$this->addType('sieveEnabled', 'boolean');
 		$this->addType('sievePort', 'integer');
 		$this->addType('ldapAliasesProvisioning', 'boolean');
@@ -108,6 +116,8 @@ class Provisioning extends Entity implements JsonSerializable {
 			'smtpSslMode' => $this->getSmtpSslMode(),
 			'masterPasswordEnabled' => $this->getMasterPasswordEnabled(),
 			'masterPassword' => !empty($this->getMasterPassword()) ? self::MASTER_PASSWORD_PLACEHOLDER : null,
+			'masterUser' => $this->getMasterUser(),
+			'masterUserSeparator' => $this->getMasterUserSeparator(),
 			'sieveEnabled' => $this->getSieveEnabled(),
 			'sieveUser' => $this->getSieveUser(),
 			'sieveHost' => $this->getSieveHost(),
