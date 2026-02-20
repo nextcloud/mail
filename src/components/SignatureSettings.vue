@@ -271,9 +271,9 @@ export default {
 .warning-large-signature {
 	color: darkorange;
 }
-
+// its a bit hard to make it work without this max-width in the modal because it overlaps with the sidebar of the modal
 :deep(.ck.ck-toolbar-dropdown>.ck-dropdown__panel) {
-	max-width: 34vw;
+	max-width: 19vw;
 }
 
 </style>
