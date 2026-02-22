@@ -69,6 +69,7 @@ OC.L10N.register(
     "User" : "Aseqdac",
     "Guest" : "Inebgi",
     "Group" : "Agraw",
+    "Shared" : "Yettwabḍa",
     "Account connected" : "Amiḍan d uqqin",
     "All" : "Akk",
     "Inbox" : "Tanaka",
