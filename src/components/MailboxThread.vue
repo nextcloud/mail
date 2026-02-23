@@ -667,6 +667,7 @@ export default {
 	flex: 1 1 auto;
 	overflow-y: auto;
 	min-height: 0;
+	contain: none !important;
 }
 
 .information-icon {
