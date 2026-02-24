@@ -44,5 +44,5 @@ export function convertAxiosError(axiosError) {
 		return axiosError
 	}
 
-	return new map[response.data.data.type](response.data.message)
+	return new map[response.data.data.type](response.data.data.message)
 }
