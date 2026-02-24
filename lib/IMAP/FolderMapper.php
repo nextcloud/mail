@@ -98,11 +98,6 @@ class FolderMapper {
 
 	/**
 	 * @param Folder[] $folders
-	 * @param Horde_Imap_Client_Socket $client
-	 *
-	 * @throws Horde_Imap_Client_Exception
-	 *
-	 * @return void
 	 */
 	public function fetchFolderAcls(array $folders,
 		Horde_Imap_Client_Socket $client): void {
@@ -111,43 +106,31 @@ class FolderMapper {
 		foreach ($folders as $folder) {
 			$acls = null;
 			if ($hasAcls && !in_array('\\noselect', array_map('strtolower', $folder->getAttributes()), true)) {
-				$acls = (string)$client->getMyACLRights($folder->getMailbox());
+				try {
+					$acls = (string)$client->getMyACLRights($folder->getMailbox());
+				} catch (Horde_Imap_Client_Exception $e) {
+					// FolderMapper::getFolders may return mailboxes that could not be accessed.
+					$this->logger->debug('Unable to fetch acls for mailbox ' . $folder->getMailbox(), [
+						'exception' => $e,
+					]);
+				}
 			}
-
 			$folder->setMyAcls($acls);
 		}
 	}
 
-	/**
-	 * @param Horde_Imap_Client_Socket $client
-	 * @param string $mailbox
-	 *
-	 * @throws Horde_Imap_Client_Exception
-	 *
-	 * @return MailboxStats[]
-	 */
-	public function getFoldersStatusAsObject(Horde_Imap_Client_Socket $client,
-		array $mailboxes): array {
-		$statuses = [];
-		foreach ($mailboxes as $mailbox) {
-			$status = $client->status($mailbox);
-			try {
-				if (!isset($status['messages'], $status['unseen'])) {
-					throw new ServiceException('Could not fetch stats of mailbox: ' . $mailbox);
-				}
-				$statuses[$mailbox] = new MailboxStats(
-					$status['messages'],
-					$status['unseen'],
-				);
-			} catch (ServiceException $e) {
-				$this->logger->warning($e->getMessage(), [
-					'exception' => $e,
-					'mailboxes' => $mailboxes,
-					'status' => $status,
-				]);
+	public function getFolderStatus(Horde_Imap_Client_Socket $client, string $mailbox): ?MailboxStats {
+		try {
+			$status = $client->status($mailbox, Horde_Imap_Client::STATUS_MESSAGES | Horde_Imap_Client::STATUS_UNSEEN);
+			if (isset($status['messages'], $status['unseen'])) {
+				return new MailboxStats($status['messages'], $status['unseen']);
 			}
+		} catch (Horde_Imap_Client_Exception $e) {
+			$this->logger->debug('Unable to fetch status for mailbox ' . $mailbox, [
+				'exception' => $e,
+			]);
 		}
-		return $statuses;
+		return null;
 	}
 
 	/**
