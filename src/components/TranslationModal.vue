@@ -46,6 +46,12 @@
 					{{ isLoading ? t('mail', 'Translating') : t('mail', 'Translate') }}
 				</NcButton>
 			</div>
+			<div class="translate-dialog__ai-note">
+				<WarningIcon class="translate-dialog__ai-note-icon" />
+				<span>
+					{{ t('mail', 'This translation is generated using AI and may contain inaccuracies') }}
+				</span>
+			</div>
 
 			<NcRichText
 				class="translate-dialog__message translate-dialog__message-source"
@@ -79,6 +85,7 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import { getLanguage } from '@nextcloud/l10n'
 import { NcButton, NcDialog, NcLoadingIcon, NcRichText, NcSelect } from '@nextcloud/vue'
 import { mapState } from 'pinia'
+import WarningIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import ArrowRight from 'vue-material-design-icons/ArrowRight.vue'
 import ContentCopy from 'vue-material-design-icons/ContentCopy.vue'
 import { translateText } from '../service/translationService.js'
@@ -95,6 +102,7 @@ export default {
 		NcSelect,
 		ArrowRight,
 		ContentCopy,
+		WarningIcon,
 	},
 
 	props: {
@@ -226,6 +234,11 @@ export default {
 		&-translation {
 			border: 2px solid var(--color-primary-element);
 		}
+	}
+	&__ai-note {
+		display: flex;
+		align-items: center;
+		gap: 5px;
 	}
 }
 </style>
