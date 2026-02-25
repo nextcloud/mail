@@ -144,7 +144,7 @@ class MailboxSync {
 	 */
 	public function syncStats(Horde_Imap_Client_Socket $client, Mailbox $mailbox): void {
 		try {
-			$allStats = $this->folderMapper->getFoldersStatusAsObject($client, [$mailbox->getName()]);
+			$stats = $this->folderMapper->getFolderStatus($client, $mailbox->getName());
 		} catch (Horde_Imap_Client_Exception $e) {
 			$id = $mailbox->getId();
 			throw new ServiceException(
@@ -154,11 +154,10 @@ class MailboxSync {
 			);
 		}
 
-		if (!isset($allStats[$mailbox->getName()])) {
+		if ($stats === null) {
 			return;
 		}
 
-		$stats = $allStats[$mailbox->getName()];
 		$mailbox->setMessages($stats->getTotal());
 		$mailbox->setUnseen($stats->getUnread());
 		$this->mailboxMapper->update($mailbox);
@@ -275,9 +274,8 @@ class MailboxSync {
 		shuffle($doNotSync);
 		/** @var Mailbox[] $syncStatus */
 		$syncStatus = [...$sync, ...array_slice($doNotSync, 0, 5)];
-		$statuses = $this->folderMapper->getFoldersStatusAsObject($client, array_map(fn (Mailbox $mailbox) => $mailbox->getName(), $syncStatus));
 		foreach ($syncStatus as $mailbox) {
-			$status = $statuses[$mailbox->getName()] ?? null;
+			$status = $this->folderMapper->getFolderStatus($client, $mailbox->getName());
 			if ($status !== null) {
 				$mailbox->setMessages($status->getTotal());
 				$mailbox->setUnseen($status->getUnread());
