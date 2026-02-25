@@ -546,6 +546,7 @@ import { findRecipient } from '../service/AutocompleteService.js'
 import { savePreference } from '../service/PreferenceService.js'
 import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
+import { formatDateTime } from '../util/formatDateTime.js'
 import { detect, html, toHtml, toPlain } from '../util/text.js'
 import textBlockSvg from './../../img/text_snippet.svg'
 
@@ -760,11 +761,11 @@ export default {
 			firstDayDatetimePicker: getFirstDay() === 0 ? 7 : getFirstDay(),
 			formatter: {
 				stringify: (date) => {
-					return date ? moment(date).format('LLL') : ''
+					return date ? formatDateTime(date) : ''
 				},
 
 				parse: (value) => {
-					return value ? moment(value, 'LLL').toDate() : null
+					return value ? new Date(value) : null
 				},
 			},
 
