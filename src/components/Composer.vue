@@ -512,6 +512,7 @@ import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nex
 import moment from '@nextcloud/moment'
 import { NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcActions as Actions, NcButton as ButtonVue, NcListItemIcon as ListItemIcon, NcIconSvgWrapper, NcSelect } from '@nextcloud/vue'
 import addressParser from 'address-rfc2822'
+import { parseEmailList } from '../util/emailAddress.js'
 import debouncePromise from 'debounce-promise'
 import debounce from 'lodash/fp/debounce.js'
 import trimStart from 'lodash/fp/trimCharsStart.js'
@@ -1467,66 +1468,6 @@ export default {
 			this.onNewAddr(option, this.selectBcc, 'bcc')
 		},
 
-		getLabelAndAddress(string) {
-			const regex = /(<)?(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])(>?|,?|;?|>?,?|>;?)/g
-			const match = string.match(regex)
-
-			if (!match) return false
-
-			const email = match[0].replace(/<|>|\n/g, '').trim()
-			const label = string.split(match[0])[0].trim() || email
-
-			return { label, email }
-		},
-
-		parseEmailList(string) {
-			let start = 0
-			let inEmail = false
-			const list = []
-
-			for (let i = 0; i < string.length; i++) {
-				const char = string[i]
-
-				if (char === '@' || inEmail) {
-					inEmail = true
-
-					if ([';', ',', ' '].includes(char)) {
-						const stringAddress = string.substring(start, i).trim()
-						const labelAndAddress = this.getLabelAndAddress(stringAddress)
-
-						if (labelAndAddress) {
-							list.push(labelAndAddress)
-						}
-
-						inEmail = false
-						start = i + 1
-					}
-				}
-			}
-
-			if (inEmail) {
-				const stringAddress = string.substring(start).trim()
-				const labelAndAddress = this.getLabelAndAddress(stringAddress)
-
-				if (labelAndAddress) {
-					list.push(labelAndAddress)
-				}
-			}
-
-			return list
-		},
-
-		pushNewAddr(option, list) {
-			if (list.some((recipient) => recipient.email === option.email)) {
-				return
-			}
-
-			const recipient = { ...option }
-			this.newRecipients.push(recipient)
-			list.push(recipient)
-			this.saveDraftDebounced()
-		},
-
 		onNewAddr(option, list, type) {
 			if (
 				(option === null || option === undefined)
@@ -1547,11 +1488,22 @@ export default {
 			}
 
 			if (option.id) {
-				this.pushNewAddr(option, list)
+				if (!list.some((recipient) => recipient.email === option.email)) {
+					const recipient = { ...option }
+					this.newRecipients.push(recipient)
+					list.push(recipient)
+				}
 			} else {
-				const emailList = this.parseEmailList(option.email)
-				emailList.forEach(email => this.pushNewAddr(email, list))
+				const emailList = parseEmailList(option.email)
+				for (const addr of emailList) {
+					if (!list.some((recipient) => recipient.email === addr.email)) {
+						const recipient = { ...addr }
+						this.newRecipients.push(recipient)
+						list.push(recipient)
+					}
+				}
 			}
+			this.saveDraftDebounced()
 		},
 
 		async onSend() {
