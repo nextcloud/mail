@@ -38,6 +38,7 @@ OC.L10N.register(
     "Remove" : "Kkes",
     "Today" : "Ass-a",
     "Yesterday" : "Iḍelli",
+    "Choose target folder" : "Fren akaram aniccan",
     "Favorites" : "Imenyafen",
     "Other" : "Wayeḍ",
     "Forward" : "Avancer",
