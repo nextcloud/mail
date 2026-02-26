@@ -14,6 +14,7 @@ use Horde_Imap_Client_Exception_NoSupportExtension;
 use Horde_Imap_Client_Socket;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IMemcache;
+use OCP\IMemcacheTTL;
 use function floor;
 
 /**
@@ -53,14 +54,20 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 		}
 	}
 
+	private const RATE_LIMIT_WINDOW = 3 * 60 * 60;
+
+	protected function imapLogin() {
+		return parent::_login();
+	}
+
 	#[\Override]
 	protected function _login() {
 		if ($this->rateLimiterCache === null) {
-			return parent::_login();
+			return $this->imapLogin();
 		}
 
 		$now = $this->timeFactory->getTime();
-		$window = floor($now / (3 * 60 * 60));
+		$window = floor($now / self::RATE_LIMIT_WINDOW);
 		$cacheKey = $this->hash . $window;
 
 		$counter = $this->rateLimiterCache->get($cacheKey);
@@ -73,11 +80,14 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 		}
 
 		try {
-			return parent::_login();
+			return $this->imapLogin();
 		} catch (Horde_Imap_Client_Exception $e) {
 			if ($e->getCode() === Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED
 				&& $e->getMessage() === 'Authentication failed.') {
 				$this->rateLimiterCache->inc($cacheKey);
+				if ($this->rateLimiterCache instanceof IMemcacheTTL) {
+					$this->rateLimiterCache->setTTL($cacheKey, self::RATE_LIMIT_WINDOW);
+				}
 			}
 			throw $e;
 		}
