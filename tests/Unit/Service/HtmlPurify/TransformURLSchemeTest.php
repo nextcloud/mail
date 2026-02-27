@@ -14,6 +14,7 @@ use Closure;
 use HTMLPurifier_Config;
 use HTMLPurifier_Context;
 use HTMLPurifier_URI;
+use OCA\Mail\Html\ProxyHmacGenerator;
 use OCA\Mail\Service\HtmlPurify\TransformURLScheme;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -23,12 +24,14 @@ class TransformURLSchemeTest extends TestCase {
 	private TransformURLScheme $filter;
 	private IURLGenerator|MockObject $urlGenerator;
 	private IRequest|MockObject $request;
+	private ProxyHmacGenerator|MockObject $hmacGenerator;
 	private Closure $mapCidToAttachmentId;
 
 	protected function setUp(): void {
 		parent::setUp();
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->request = $this->createMock(IRequest::class);
+		$this->hmacGenerator = $this->createMock(ProxyHmacGenerator::class);
 
 		$this->mapCidToAttachmentId = function (string $cid) {
 			if ($cid === 'valid-cid') {
@@ -37,17 +40,12 @@ class TransformURLSchemeTest extends TestCase {
 			return null;
 		};
 
-		$messageParameters = [
-			'accountId' => 1,
-			'folderId' => 'INBOX',
-			'id' => 42,
-		];
-
 		$this->filter = new TransformURLScheme(
-			$messageParameters,
+			42,
 			$this->mapCidToAttachmentId,
 			$this->urlGenerator,
 			$this->request,
+			$this->hmacGenerator,
 		);
 	}
 
@@ -187,6 +185,14 @@ class TransformURLSchemeTest extends TestCase {
 		$attr = 'src';
 		$context->register('CurrentAttr', $attr);
 
+		$originalURL = 'https://example.com/image.png';
+		$hmac = 'abc123';
+
+		$this->hmacGenerator->expects($this->once())
+			->method('generate')
+			->with(42, $originalURL)
+			->willReturn($hmac);
+
 		$this->request->expects($this->once())
 			->method('getServerProtocol')
 			->willReturn('https');
@@ -195,15 +201,19 @@ class TransformURLSchemeTest extends TestCase {
 			->willReturn('mail.example.com');
 		$this->urlGenerator->expects($this->once())
 			->method('linkToRoute')
-			->with('mail.proxy.proxy')
-			->willReturn('/apps/mail/proxy');
+			->with('mail.proxy.proxy', [
+				'id' => 42,
+				'hmac' => $hmac,
+				'src' => $originalURL,
+			])
+			->willReturn('/apps/mail/proxy?id=42&hmac=abc123&src=https%3A%2F%2Fexample.com%2Fimage.png');
 
 		$this->filter->filter($uri, $config, $context);
 
 		$this->assertSame('https', $uri->scheme);
 		$this->assertSame('mail.example.com', $uri->host);
 		$this->assertSame('/apps/mail/proxy', $uri->path);
-		$this->assertStringContainsString('src=', $uri->query);
+		$this->assertStringContainsString('id=42', $uri->query);
 	}
 
 	public function testCidSchemeWithValidAttachment(): void {
@@ -252,6 +262,14 @@ class TransformURLSchemeTest extends TestCase {
 		$attr = 'src';
 		$context->register('CurrentAttr', $attr);
 
+		$originalURL = 'https://example.com/page?id=123&name=test';
+		$hmac = 'abc123';
+
+		$this->hmacGenerator->expects($this->once())
+			->method('generate')
+			->with(42, $originalURL)
+			->willReturn($hmac);
+
 		$this->request->expects($this->once())
 			->method('getServerProtocol')
 			->willReturn('https');
@@ -260,8 +278,12 @@ class TransformURLSchemeTest extends TestCase {
 			->willReturn('mail.example.com');
 		$this->urlGenerator->expects($this->once())
 			->method('linkToRoute')
-			->with('mail.proxy.proxy')
-			->willReturn('/apps/mail/proxy');
+			->with('mail.proxy.proxy', [
+				'id' => 42,
+				'hmac' => $hmac,
+				'src' => $originalURL,
+			])
+			->willReturn('/apps/mail/proxy?id=42&hmac=abc123&src=https%3A%2F%2Fexample.com%2Fpage%3Fid%3D123%26name%3Dtest');
 
 		$this->filter->filter($uri, $config, $context);
 
@@ -275,6 +297,14 @@ class TransformURLSchemeTest extends TestCase {
 		$attr = 'src';
 		$context->register('CurrentAttr', $attr);
 
+		$originalURL = 'https://example.com/page#section';
+		$hmac = 'abc123';
+
+		$this->hmacGenerator->expects($this->once())
+			->method('generate')
+			->with(42, $originalURL)
+			->willReturn($hmac);
+
 		$this->request->expects($this->once())
 			->method('getServerProtocol')
 			->willReturn('https');
@@ -283,8 +313,12 @@ class TransformURLSchemeTest extends TestCase {
 			->willReturn('mail.example.com');
 		$this->urlGenerator->expects($this->once())
 			->method('linkToRoute')
-			->with('mail.proxy.proxy')
-			->willReturn('/apps/mail/proxy');
+			->with('mail.proxy.proxy', [
+				'id' => 42,
+				'hmac' => $hmac,
+				'src' => $originalURL,
+			])
+			->willReturn('/apps/mail/proxy?id=42&hmac=abc123&src=https%3A%2F%2Fexample.com%2Fpage%23section');
 
 		$this->filter->filter($uri, $config, $context);
 
@@ -292,17 +326,12 @@ class TransformURLSchemeTest extends TestCase {
 	}
 
 	public function testCidSchemeMapsCidToAttachmentId(): void {
-		$messageParameters = [
-			'accountId' => 1,
-			'folderId' => 'INBOX',
-			'id' => 42,
-		];
-
 		$filter = new TransformURLScheme(
-			$messageParameters,
+			42,
 			$this->mapCidToAttachmentId,
 			$this->urlGenerator,
 			$this->request,
+			$this->hmacGenerator,
 		);
 
 		$uri = new HTMLPurifier_URI('cid', null, null, null, 'valid-cid', null, null);
@@ -312,8 +341,6 @@ class TransformURLSchemeTest extends TestCase {
 		$this->urlGenerator->expects($this->once())
 			->method('linkToRouteAbsolute')
 			->with('mail.messages.downloadAttachment', [
-				'accountId' => 1,
-				'folderId' => 'INBOX',
 				'id' => 42,
 				'attachmentId' => 123,
 			])
