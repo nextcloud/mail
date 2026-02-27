@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Listener;
 
-use Doctrine\DBAL\Platforms\PostgreSQL94Platform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use OCP\DB\Events\AddMissingIndicesEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
@@ -108,7 +108,7 @@ class OptionalIndicesListener implements IEventListener {
 		 * This index may be missing on Postgres - we add it back on all DBs nevertheless
 		 * @see \OCA\Mail\Migration\Version1130Date20220412111833::changeSchema for the different lengths
 		 */
-		if ($this->connection->getDatabasePlatform() instanceof PostgreSQL94Platform) {
+		if ($this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
 			$event->addMissingIndex(
 				'mail_messages',
 				'mail_msg_thrd_root_snt_idx',

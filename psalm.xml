@@ -33,6 +33,7 @@
 		<UndefinedClass>
 			<errorLevel type="suppress">
 				<referencedClass name="Doctrine\DBAL\Platforms\MySQLPlatform" />
+				<referencedClass name="Doctrine\DBAL\Platforms\PostgreSQLPlatform" />
 				<referencedClass name="Doctrine\DBAL\Platforms\PostgreSQL94Platform" />
 				<referencedClass name="Doctrine\DBAL\Platforms\SqlitePlatform" />
 				<referencedClass name="Doctrine\DBAL\Schema\Table" />
