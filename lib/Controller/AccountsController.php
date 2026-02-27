@@ -459,7 +459,7 @@ class AccountsController extends Controller {
 			try {
 				$previousDraft = $this->mailManager->getMessage($this->currentUserId, $draftId);
 			} catch (ClientException $e) {
-				$this->logger->info('Draft ' . $draftId . ' could not be loaded: ' . $e->getMessage());
+				$this->logger->info("Draft {$draftId} could not be loaded: {$e->getMessage()}");
 			}
 		}
 		$messageData = NewMessageData::fromRequest($account, $subject, $body, $to, $cc, $bcc, [], $isHtml);
