@@ -17,6 +17,7 @@ use Horde_Imap_Client_DateTime;
 use Horde_Mime_Part;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\Tag;
+use OCA\Mail\Html\ProxyHmacGenerator;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Html;
 use OCP\IRequest;
@@ -41,7 +42,8 @@ class IMAPMessageTest extends TestCase {
 		$request = $this->getMockBuilder(IRequest::class)
 			->disableOriginalConstructor()
 			->getMock();
-		$htmlService = new Html($urlGenerator, $request);
+		$hmacGenerator = $this->createMock(ProxyHmacGenerator::class);
+		$htmlService = new Html($urlGenerator, $request, $hmacGenerator);
 
 		$part = Horde_Mime_Part::parseMessage(file_get_contents(__DIR__ . '/../../data/mail-message-123.txt'),
 			['level' => 1]);

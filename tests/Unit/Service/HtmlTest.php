@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OC;
+use OCA\Mail\Html\ProxyHmacGenerator;
 use OCA\Mail\Service\Html;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -26,8 +26,9 @@ class HtmlTest extends TestCase {
 	public function testLinkDetection(string $expected, string $text) {
 		$urlGenerator = Server::get(IURLGenerator::class);
 		$request = Server::get(IRequest::class);
+		$hmacGenerator = $this->createMock(ProxyHmacGenerator::class);
 
-		$html = new Html($urlGenerator, $request);
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
 		$withLinks = $html->convertLinks($text);
 
 		self::assertSame($expected, $withLinks);
@@ -62,9 +63,11 @@ class HtmlTest extends TestCase {
 	 * @param $text
 	 */
 	public function testParseMailBody($expectedBody, $expectedSignature, $text) {
-		$urlGenerator = OC::$server->getURLGenerator();
-		$request = OC::$server->getRequest();
-		$html = new Html($urlGenerator, $request);
+		$urlGenerator = \OCP\Server::get(\OCP\IURLGenerator::class);
+		$request = \OCP\Server::get(\OCP\IRequest::class);
+		$hmacGenerator = $this->createMock(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
 		[$b, $s] = $html->parseMailBody($text);
 		$this->assertSame($expectedBody, $b);
 		$this->assertSame($expectedSignature, $s);
@@ -86,6 +89,7 @@ class HtmlTest extends TestCase {
 			->with('mail', 'blocked-image.png')
 			->willReturn($blockedUrl);
 		$request = Server::get(IRequest::class);
+		$hmacGenerator = $this->createMock(ProxyHmacGenerator::class);
 
 		$styleSheet = implode(' ', [
 			'big { background-image: url(https://tracker.com/script.png); }',
@@ -97,7 +101,7 @@ class HtmlTest extends TestCase {
 			'</style>',
 		]);
 
-		$html = new Html($urlGenerator, $request);
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
 		$sanitizedStyleSheet = $html->sanitizeStyleSheet($styleSheet);
 		self::assertSame($expected, $sanitizedStyleSheet);
 	}

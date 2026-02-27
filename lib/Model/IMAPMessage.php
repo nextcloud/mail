@@ -348,9 +348,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * @return string
 	 */
 	public function getHtmlBody(int $id): string {
-		return $this->htmlService->sanitizeHtmlMailBody($this->htmlMessage, [
-			'id' => $id,
-		], function ($cid) {
+		return $this->htmlService->sanitizeHtmlMailBody($this->htmlMessage, $id, function ($cid) {
 			$match = array_filter($this->inlineAttachments,
 				static fn ($a) => $a['cid'] === $cid);
 			$match = array_shift($match);
