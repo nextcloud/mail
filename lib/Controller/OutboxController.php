@@ -146,7 +146,7 @@ class OutboxController extends Controller {
 	 * @return JsonResponse
 	 */
 	#[TrapError]
-	public function createFromDraft(DraftsService $draftsService, int $id, ?int $sendAt = null): JsonResponse {
+	public function createFromDraft(DraftsService $draftsService, int $id, int $sendAt): JsonResponse {
 		$draftMessage = $draftsService->getMessage($id, $this->userId);
 		// Locate the account to check authorization
 		$this->accountService->find($this->userId, $draftMessage->getAccountId());
