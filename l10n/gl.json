@@ -639,6 +639,7 @@
     "Target language to translate into" : "Idioma de destino ao que traducir",
     "Translate to" : "Traducir a",
     "Translating" : "Traducindo",
+    "This translation is generated using AI and may contain inaccuracies" : "Esta tradución foi xerada empregando IA e pode conter imprecisións",
     "Copy translated text" : "Copiar o texto traducido",
     "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed." : "Desactive a retención do lixo deixando o campo baleiro ou axustándoo a 0. Só se procesarán os correos eliminados após activar a retención do lixo.",
     "Could not remove trusted sender {sender}" : "Non foi posíbel retirar o remitente de confianza {sender}",
