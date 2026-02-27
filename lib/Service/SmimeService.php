@@ -140,7 +140,6 @@ class SmimeService {
 	 * @throws SmimeCertificateParserException If the certificate can't be parsed
 	 */
 	public function parseCertificate(string $certificate): SmimeCertificateInfo {
-		// TODO: support parsing email addresses from SANs
 		// TODO: support multiple email addresses per certificate
 
 		$certificateData = openssl_x509_parse($certificate);
@@ -148,8 +147,14 @@ class SmimeService {
 			throw new SmimeCertificateParserException('Could not parse certificate');
 		}
 
-		if (!isset($certificateData['subject']['emailAddress'])
-			&& !isset($certificateData['subject']['CN'])) {
+		// Resolve email address from Subject emailAddress, then SAN (RFC 8550 preferred),
+		// then Subject CN only if it looks like an email address.
+		$cn = $certificateData['subject']['CN'] ?? null;
+		$emailAddress = $certificateData['subject']['emailAddress']
+			?? $this->extractEmailFromSan($certificateData)
+			?? (($cn !== null && str_contains($cn, '@')) ? $cn : null);
+
+		if ($emailAddress === null) {
 			throw new SmimeCertificateParserException('Certificate does not contain an email address');
 		}
 
@@ -168,12 +173,40 @@ class SmimeService {
 
 		$caBundle = [$this->certificateManager->getAbsoluteBundlePath()];
 		return new SmimeCertificateInfo(
-			$certificateData['subject']['CN'] ?? null,
-			$certificateData['subject']['emailAddress'] ?? $certificateData['subject']['CN'],
+			$cn,
+			$emailAddress,
 			$certificateData['validTo_time_t'],
 			$purposes,
 			openssl_x509_checkpurpose($certificate, X509_PURPOSE_ANY, $caBundle, $decryptedCertificateFile) === true,
 		);
+	}
+
+	/**
+	 * Extract the first email address from the Subject Alternative Name extension.
+	 *
+	 * The subjectAltName string from openssl_x509_parse() is comma-separated with entries
+	 * like "email:user@example.com", "DNS:example.com", etc.
+	 *
+	 * @param array $certificateData Parsed certificate data from openssl_x509_parse()
+	 * @return string|null First RFC822 email address found in the SAN, or null if none
+	 */
+	private function extractEmailFromSan(array $certificateData): ?string {
+		$san = $certificateData['extensions']['subjectAltName'] ?? null;
+		if ($san === null) {
+			return null;
+		}
+
+		foreach (explode(',', $san) as $entry) {
+			$entry = trim($entry);
+			if (stripos($entry, 'email:') === 0) {
+				$email = substr($entry, 6);
+				if (filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
+					return $email;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	/**

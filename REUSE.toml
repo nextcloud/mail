@@ -178,3 +178,9 @@ path = [".patches/url-normalizer-fix-deprecation-warning-on-PHP-8.5.patch"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2013 Glen Scott"
 SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["tests/data/smime-certs/san-only@imap.localhost.crt", "tests/data/smime-certs/san-only@imap.localhost.key"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 CyberMyte, LLC"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
