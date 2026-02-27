@@ -15,6 +15,7 @@ use HTMLPurifier_Config;
 use HTMLPurifier_URI;
 use HTMLPurifier_URIFilter;
 use HTMLPurifier_URIParser;
+use OCA\Mail\Html\ProxyHmacGenerator;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 
@@ -33,17 +34,20 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	 */
 	private $mapCidToAttachmentId;
 
-	/** @var array */
-	private $messageParameters;
+	private int $id;
 
-	public function __construct(array $messageParameters,
+	private ProxyHmacGenerator $hmacGenerator;
+
+	public function __construct(int $id,
 		Closure $mapCidToAttachmentId,
 		IURLGenerator $urlGenerator,
-		IRequest $request) {
-		$this->messageParameters = $messageParameters;
+		IRequest $request,
+		ProxyHmacGenerator $hmacGenerator) {
+		$this->id = $id;
 		$this->mapCidToAttachmentId = $mapCidToAttachmentId;
 		$this->urlGenerator = $urlGenerator;
 		$this->request = $request;
+		$this->hmacGenerator = $hmacGenerator;
 	}
 
 	/**
@@ -56,7 +60,6 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	 */
 	#[\Override]
 	public function filter(&$uri, $config, $context) {
-
 		if ($uri->scheme === null) {
 			$uri->scheme = 'https';
 		}
@@ -71,10 +74,14 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 			if (is_null($attachmentId)) {
 				return true;
 			}
-			$this->messageParameters['attachmentId'] = $attachmentId;
 
-			$imgUrl = $this->urlGenerator->linkToRouteAbsolute('mail.messages.downloadAttachment',
-				$this->messageParameters);
+			$imgUrl = $this->urlGenerator->linkToRouteAbsolute(
+				'mail.messages.downloadAttachment',
+				[
+					'id' => $this->id,
+					'attachmentId' => $attachmentId,
+				],
+			);
 			$parser = new HTMLPurifier_URIParser();
 			$uri = $parser->parse($imgUrl);
 		}
@@ -88,23 +95,23 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	 * @return HTMLPurifier_URI
 	 */
 	private function filterHttpFtp(&$uri, $context) {
-		$originalURL = urlencode($uri->scheme . '://' . $uri->host);
+		$originalURL = $uri->scheme . '://' . $uri->host;
 
 		// Add the port if it's not a default port
 		if ($uri->port !== null
 			&& !($uri->scheme === 'http' && $uri->port === 80)
 			&& !($uri->scheme === 'https' && $uri->port === 443)
 			&& !($uri->scheme === 'ftp' && $uri->port === 21)) {
-			$originalURL = $originalURL . urlencode(':' . $uri->port);
+			$originalURL = $originalURL . ':' . $uri->port;
 		}
 
-		$originalURL = $originalURL . urlencode($uri->path);
+		$originalURL = $originalURL . $uri->path;
 
 		if ($uri->query !== null) {
-			$originalURL = $originalURL . urlencode('?' . $uri->query);
+			$originalURL = $originalURL . '?' . $uri->query;
 		}
 		if ($uri->fragment !== null) {
-			$originalURL = $originalURL . urlencode('#' . $uri->fragment);
+			$originalURL = $originalURL . '#' . $uri->fragment;
 		}
 
 		// Get the HTML attribute
@@ -116,12 +123,19 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 			return $uri;
 		}
 
+		$proxyUrl = $this->urlGenerator->linkToRoute('mail.proxy.proxy', [
+			'id' => $this->id,
+			'hmac' => $this->hmacGenerator->generate($this->id, $originalURL),
+			'src' => $originalURL
+		]);
+		$parsedProxyUrl = parse_url($proxyUrl);
+		/** @var array{path: string, query: string} $parsedProxyUrl */
 		return new \HTMLPurifier_URI(
 			$this->request->getServerProtocol(),
 			null, $this->request->getServerHost(),
 			null,
-			$this->urlGenerator->linkToRoute('mail.proxy.proxy'),
-			'src=' . $originalURL . '&requesttoken=' . \OCP\Server::get(\OCP\ISession::class)->get('requesttoken'),
+			$parsedProxyUrl['path'],
+			$parsedProxyUrl['query'],
 			null
 		);
 	}
