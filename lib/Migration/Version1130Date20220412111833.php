@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Migration;
 
 use Closure;
-use Doctrine\DBAL\Platforms\PostgreSQL94Platform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\DBAL\Types\Type;
 use OCP\DB\ISchemaWrapper;
@@ -161,12 +161,12 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 			['lengths' => [128]],
 		);
 
-		// Postgres doesn't allow for shortened indices, so let's skip the last index.
-		if ($this->connection->getDatabasePlatform() instanceof PostgreSQL94Platform) {
-			return $schema;
+		// Postgres doesn't need shortened indices
+		if ($this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
+			$messagesTable->addIndex(['mailbox_id', 'thread_root_id', 'sent_at'], 'mail_msg_thrd_root_snt_idx');
+		} else {
+			$messagesTable->addIndex(['mailbox_id', 'thread_root_id', 'sent_at'], 'mail_msg_thrd_root_snt_idx', [], ['lengths' => [null, 64, null]]);
 		}
-
-		$messagesTable->addIndex(['mailbox_id', 'thread_root_id', 'sent_at'], 'mail_msg_thrd_root_snt_idx', [], ['lengths' => [null, 64, null]]);
 
 		return $schema;
 	}
