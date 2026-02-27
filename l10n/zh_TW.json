@@ -639,6 +639,7 @@
     "Target language to translate into" : "要翻譯至的目標語言",
     "Translate to" : "翻譯至",
     "Translating" : "正在翻譯",
+    "This translation is generated using AI and may contain inaccuracies" : "此翻譯使用人工智慧產生，可能不準確",
     "Copy translated text" : "複製已翻譯的文字",
     "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed." : "將該欄位留空或設定其為 0 來停用垃圾保留。僅處理啟用垃圾保留後的郵件。",
     "Could not remove trusted sender {sender}" : "無法移除受信任的寄件者 {sender}",
