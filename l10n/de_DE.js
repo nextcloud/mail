@@ -641,6 +641,7 @@ OC.L10N.register(
     "Target language to translate into" : "Zielsprache in die übersetzt werden soll",
     "Translate to" : "Übersetzen in",
     "Translating" : "Übersetze",
+    "This translation is generated using AI and may contain inaccuracies" : "Diese Übersetzung wurde mithilfe von KI erstellt und kann Ungenauigkeiten enthalten",
     "Copy translated text" : "Übersetzten Text kopieren",
     "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed." : "Deaktivieren Sie die Aufbewahrung im Papierkorb, indem Sie das Feld leer lassen oder auf 0 setzen. Es werden nur Mails verarbeitet, die nach der Aktivierung der Aufbewahrung im Papierkorb gelöscht wurden.",
     "Could not remove trusted sender {sender}" : "Vertrauenswürdiger Absender konnte nicht entfernt werden {sender}",

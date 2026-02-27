@@ -639,6 +639,7 @@
     "Target language to translate into" : "Zielsprache, in die übersetzt werden soll",
     "Translate to" : "Übersetzen in",
     "Translating" : "Übersetze",
+    "This translation is generated using AI and may contain inaccuracies" : "Diese Übersetzung wurde mithilfe von KI erstellt und kann Ungenauigkeiten enthalten",
     "Copy translated text" : "Übersetzen Text kopieren",
     "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed." : "Die Aufbewahrung im Papierkorb deaktivieren, indem du das Feld leer lässt oder auf 0 setzt. Es werden nur Mails verarbeitet, die nach der Aktivierung der Aufbewahrung im Papierkorb gelöscht wurden.",
     "Could not remove trusted sender {sender}" : "Vertrauenswürdiger Absender {sender} konnte nicht entfernt werden",

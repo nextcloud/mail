@@ -641,6 +641,7 @@ OC.L10N.register(
     "Target language to translate into" : "Çevirinin yapılacağı hedef dil",
     "Translate to" : "Hedef dil",
     "Translating" : "Çevriliyor",
+    "This translation is generated using AI and may contain inaccuracies" : "Bu çeviri yapay zeka ile oluşturulmuştur ve hatalar olabilir",
     "Copy translated text" : "Çevrilmiş yazıyı kopyala",
     "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed." : "Alanı boş bırakarak ya da 0 olarak ayarlayarak çöpleri tutma özelliğini kapatın. Yalnızca çöpleri tutma özelliği açıldıktan sonra silinen e-postalar işlenir.",
     "Could not remove trusted sender {sender}" : "{sender} güvenilen göndericisi silinemedi",
