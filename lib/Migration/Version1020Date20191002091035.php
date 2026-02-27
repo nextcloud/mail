@@ -124,7 +124,10 @@ class Version1020Date20191002091035 extends SimpleMigrationStep {
 		]);
 		$recipientsTable->setPrimaryKey(['id']);
 		$recipientsTable->addIndex(['message_id'], 'mail_recipient_msg_id_idx');
-		$recipientsTable->addIndex(['email'], 'mail_recipient_email_idx');
+
+		// Converted to wider index later on - installations might have the old one until replacement
+		// $recipientsTable->addIndex(['email'], 'mail_recipient_email_idx');
+		$recipientsTable->addIndex(['email', 'type', 'message_id'], 'mail_recip_eml_type_mid_idx');
 
 		$mailboxTable = $schema->getTable('mail_mailboxes');
 		$mailboxTable->addColumn('sync_new_lock', Types::INTEGER, [
