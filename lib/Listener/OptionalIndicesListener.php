@@ -122,6 +122,14 @@ class OptionalIndicesListener implements IEventListener {
 				['lengths' => [null, 64, null]],
 			);
 		}
+
+		$event->replaceIndex(
+			'mail_recipients',
+			['mail_recipient_email_idx'],
+			'mail_recip_eml_type_mid_idx',
+			['email', 'type', 'message_id'],
+			false,
+		);
 	}
 
 }
