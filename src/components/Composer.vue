@@ -432,43 +432,38 @@
 							</template>
 						</ActionButton>
 						<ActionRadio
-							:value="undefined"
-							name="sendLater"
-							:checked="!sendAtVal"
-							class="send-action-radio"
-							@change="onChangeSendLater(undefined)">
+							v-model="sendAtVal"
+							:value="0"
+							:name="sendAtVal.toString()"
+							class="send-action-radio">
 							{{ t('mail', 'Send now') }}
 						</ActionRadio>
 						<ActionRadio
+							v-model="sendAtVal"
 							:value="dateTomorrowMorning"
-							name="sendLater"
-							:checked="isSendAtTomorrowMorning"
-							class="send-action-radio send-action-radio--multiline"
-							@change="onChangeSendLater(dateTomorrowMorning)">
+							:name="sendAtVal.toString()"
+							class="send-action-radio send-action-radio--multiline">
 							{{ t('mail', 'Tomorrow morning') }} - {{ convertToLocalDate(dateTomorrowMorning) }}
 						</ActionRadio>
 						<ActionRadio
+							v-model="sendAtVal"
 							:value="dateTomorrowAfternoon"
-							name="sendLater"
-							:checked="isSendAtTomorrowAfternoon"
-							class="send-action-radio send-action-radio--multiline"
-							@change="onChangeSendLater(dateTomorrowAfternoon)">
+							:name="sendAtVal.toString()"
+							class="send-action-radio send-action-radio--multiline">
 							{{ t('mail', 'Tomorrow afternoon') }} - {{ convertToLocalDate(dateTomorrowAfternoon) }}
 						</ActionRadio>
 						<ActionRadio
+							v-model="sendAtVal"
 							:value="dateMondayMorning"
-							name="sendLater"
-							:checked="isSendAtMondayMorning"
-							class="send-action-radio send-action-radio--multiline"
-							@change="onChangeSendLater(dateMondayMorning)">
+							:name="sendAtVal.toString()"
+							class="send-action-radio send-action-radio--multiline">
 							{{ t('mail', 'Monday morning') }} - {{ convertToLocalDate(dateMondayMorning) }}
 						</ActionRadio>
 						<ActionRadio
-							name="sendLater"
+							v-model="sendAtVal"
+							:name="sendAtVal.toString()"
 							class="send-action-radio"
-							:checked="isSendAtCustom"
-							:value="customSendTime"
-							@change="onChangeSendLater(customSendTime)">
+							:value="customSendTime">
 							{{ t('mail', 'Custom date and time') }}
 						</ActionRadio>
 						<ActionInput
@@ -757,7 +752,7 @@ export default {
 			isActionsOpen: false,
 			isMoreActionsOpen: false,
 			selectedDate,
-			sendAtVal: this.sendAt,
+			sendAtVal: Number.isNaN(this.sendAt) ? 0 : this.sendAt,
 			firstDayDatetimePicker: getFirstDay() === 0 ? 7 : getFirstDay(),
 			formatter: {
 				stringify: (date) => {
@@ -1257,7 +1252,7 @@ export default {
 				inReplyToMessageId: this.inReplyToMessageId ?? (this.replyTo ? this.replyTo.messageId : undefined),
 				isHtml: !this.encrypt && !this.editorPlainText,
 				requestMdn: this.requestMdnVal,
-				sendAt: this.sendAtVal ? Math.floor(this.sendAtVal / 1000) : undefined,
+				sendAt: this.sendAtVal !== 0 ? Math.floor(this.sendAtVal / 1000) : undefined,
 				smimeSign: this.shouldSmimeSign,
 				smimeEncrypt: this.shouldSmimeEncrypt,
 				smimeCertificateId: this.smimeCertificateForCurrentAlias?.id,
@@ -1339,7 +1334,7 @@ export default {
 		},
 
 		onChangeSendLater(value) {
-			this.sendAtVal = value ? Number.parseInt(value, 10) : undefined
+			this.sendAtVal = Number.parseInt(value, 10)
 		},
 
 		convertToLocalDate(timestamp) {
@@ -1515,7 +1510,7 @@ export default {
 			this.newRecipients = []
 			this.requestMdnVal = false
 			this.changeSignature = false
-			this.sendAtVal = undefined
+			this.sendAtVal = 0
 
 			this.setAlias()
 			this.initBody()
