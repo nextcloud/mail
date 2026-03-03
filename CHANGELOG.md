@@ -1,3 +1,31 @@
+## [5.6.14](https://github.com/nextcloud/mail/compare/v5.6.13...v5.6.14) (2026-03-03)
+
+
+### Bug Fixes
+
+* **contactsIntegration:** avoid incorrect cache results ([a2e4de9](https://github.com/nextcloud/mail/commit/a2e4de91563ed41432b0c2407f07d1fb8cd83032))
+* **contacts:** Use correct default for shareapi_allow_share_dialog_user_enumeration ([71466b2](https://github.com/nextcloud/mail/commit/71466b2a3de5bf73efb3f9320c747bab83939676))
+* **dns:** Update public suffix list ([4b5e7cf](https://github.com/nextcloud/mail/commit/4b5e7cfeb5359fd15e5eb59d3990a6195893063f))
+* Dont hijack mailto links ([1d8f59d](https://github.com/nextcloud/mail/commit/1d8f59dd7a679a0e28ff9f1bccc0f1b86f8a15da))
+* **l10n:** Update translations from Transifex ([a199366](https://github.com/nextcloud/mail/commit/a1993661b7a8f97769e2a183b6158423c350dd0c))
+* **l10n:** Update translations from Transifex ([c449aef](https://github.com/nextcloud/mail/commit/c449aefa5e81d06c46ff0e95eb4c7463285c6163))
+* **l10n:** Update translations from Transifex ([08d9374](https://github.com/nextcloud/mail/commit/08d9374d6a4a553da489d4016ff482cfe79da880))
+* **l10n:** Update translations from Transifex ([af79cc0](https://github.com/nextcloud/mail/commit/af79cc023143a1050450a81a71efa34c5b2ad3a5))
+* **l10n:** Update translations from Transifex ([d871fcd](https://github.com/nextcloud/mail/commit/d871fcd6dbd6eac8d3e0a65a4cd523e5153828a0))
+* **l10n:** Update translations from Transifex ([3d69bcf](https://github.com/nextcloud/mail/commit/3d69bcfcb3ac579c32c52fc6a77c18a76e9a0714))
+* **l10n:** Update translations from Transifex ([c1c3f2f](https://github.com/nextcloud/mail/commit/c1c3f2f6e70d3286e642bf23ec5d2f1a7cfcfb5b))
+* **l10n:** Update translations from Transifex ([38f108f](https://github.com/nextcloud/mail/commit/38f108f6de63c5e44f36827c661d001f7c984942))
+* **l10n:** Update translations from Transifex ([a6ce553](https://github.com/nextcloud/mail/commit/a6ce55330f593be9d99dc3335535e198bb0fc9f9))
+* **l10n:** Update translations from Transifex ([909d8c1](https://github.com/nextcloud/mail/commit/909d8c123727355419fe8b7ea6beac7a7bc35982))
+* **l10n:** Update translations from Transifex ([6d2434a](https://github.com/nextcloud/mail/commit/6d2434af981aa8f50d964558aca36633384b0217))
+* **l10n:** Update translations from Transifex ([9ee728c](https://github.com/nextcloud/mail/commit/9ee728c98ec9d956bb1b2b9ad425bdd9a19cb688))
+* **l10n:** Update translations from Transifex ([93e2f51](https://github.com/nextcloud/mail/commit/93e2f518d788ed619855baa268e00c4e59015a6a))
+* **l10n:** Update translations from Transifex ([9864393](https://github.com/nextcloud/mail/commit/986439341a476b2695b6baa7ca20f215c03b83e3))
+* **oauth:** do not force a Microsoft 365 consent ([41fd81b](https://github.com/nextcloud/mail/commit/41fd81bff7aaa6ed408c4313d221cfd06d88a588))
+* thread scrolling position ([dfd1dc2](https://github.com/nextcloud/mail/commit/dfd1dc246e33330ccff631a69252a7bce136ec69))
+
+
+
 ## [5.6.13](https://github.com/nextcloud/mail/compare/v5.6.12...v5.6.13) (2026-02-17)
 
 
