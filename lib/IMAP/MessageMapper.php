@@ -27,6 +27,7 @@ use Html2Text\Html2Text;
 use OCA\Mail\Attachment;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Html\Parser;
 use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\Model\IMAPMessage;
@@ -66,9 +67,11 @@ class MessageMapper {
 	}
 
 	/**
-	 * @return IMAPMessage
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Mime_Exception
+	 * @throws ServiceException
+	 * @throws SmimeDecryptException
 	 */
 	public function find(Horde_Imap_Client_Base $client,
 		string $mailbox,
@@ -85,15 +88,17 @@ class MessageMapper {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
-	 * @param string $mailbox
+	 * @return array{
+	 *     messages: list<IMAPMessage>,
+	 *     all: bool,
+	 *     total: int,
+	 * }
 	 *
-	 * @param int $maxResults
-	 * @param int $highestKnownUid
-	 * @param PerformanceLoggerTask $perf
-	 *
-	 * @return array
+	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 * @throws Horde_Mime_Exception
+	 * @throws ServiceException
 	 */
 	public function findAll(Horde_Imap_Client_Socket $client,
 		string $mailbox,
@@ -256,22 +261,18 @@ class MessageMapper {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Base $client
-	 * @param string $mailbox
 	 * @param int[]|Horde_Imap_Client_Ids $ids
-	 * @param string $userId
-	 * @param bool $loadBody
-	 * @return IMAPMessage[]
+	 * @return list<IMAPMessage>
 	 *
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
-	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
 	 * @throws Horde_Mime_Exception
 	 * @throws ServiceException
+	 * @throws SmimeDecryptException
 	 */
 	public function findByIds(Horde_Imap_Client_Base $client,
 		string $mailbox,
-		$ids,
+		array|Horde_Imap_Client_Ids $ids,
 		string $userId,
 		bool $loadBody = false,
 		bool $runPhishingCheck = false): array {
