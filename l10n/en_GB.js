@@ -641,6 +641,7 @@ OC.L10N.register(
     "Target language to translate into" : "Target language to translate into",
     "Translate to" : "Translate to",
     "Translating" : "Translating",
+    "This translation is generated using AI and may contain inaccuracies" : "This translation is generated using AI and may contain inaccuracies",
     "Copy translated text" : "Copy translated text",
     "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed." : "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed.",
     "Could not remove trusted sender {sender}" : "Could not remove trusted sender {sender}",
