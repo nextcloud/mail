@@ -1,3 +1,24 @@
+## [5.7.2](https://github.com/nextcloud/mail/compare/v5.7.1...v5.7.2) (2026-03-03)
+
+
+### Bug Fixes
+
+* **db:** add missing messages table index for Postgres ([5f1143a](https://github.com/nextcloud/mail/commit/5f1143a0966ed16527cfafd4bbbaa2c7a6d33d98))
+* **db:** widen recipients table index for email+type+message_id ([d7ad1c1](https://github.com/nextcloud/mail/commit/d7ad1c14fa02ce632565a23291fe5a9957fe54ec))
+* **dns:** Update public suffix list ([21f9053](https://github.com/nextcloud/mail/commit/21f90534e35a2b49a558db7c8a51cd9fe6c121b0))
+* Dont hijack mailto links ([cc96272](https://github.com/nextcloud/mail/commit/cc96272e83a8cbd94b890360c2b29dc6476673fd))
+* **imap:** Handle unselectable mailboxe ([d66d051](https://github.com/nextcloud/mail/commit/d66d051bdfb5453e15dd79ab010ecf81cbd39045))
+* **l10n:** Update translations from Transifex ([22cd6b0](https://github.com/nextcloud/mail/commit/22cd6b0f8a85a4abca7e4ea758385c75e3f8d138))
+* **l10n:** Update translations from Transifex ([8444490](https://github.com/nextcloud/mail/commit/8444490fa8b2bc72d3885670c459823f1f515fdb))
+* **l10n:** Update translations from Transifex ([950c2b7](https://github.com/nextcloud/mail/commit/950c2b718251b7d4c57626977f3afe5251c61d22))
+* **l10n:** Update translations from Transifex ([5efa6f1](https://github.com/nextcloud/mail/commit/5efa6f1caa60e843131c7323bd3407706bc56d59))
+* **l10n:** Update translations from Transifex ([0490322](https://github.com/nextcloud/mail/commit/04903229b952f95c37ee490b9e99094b814f6b11))
+* **l10n:** Update translations from Transifex ([975d336](https://github.com/nextcloud/mail/commit/975d336d84dc5e7eea0346a55aa8bff0a6a9a442))
+* **l10n:** Update translations from Transifex ([1ff09d8](https://github.com/nextcloud/mail/commit/1ff09d830ae99351f6261a91ca5b6a228f107f8a))
+* **l10n:** Update translations from Transifex ([06be93b](https://github.com/nextcloud/mail/commit/06be93b431be6439385b862ed684a71e47a03e96))
+
+
+
 ## [5.7.1](https://github.com/nextcloud/mail/compare/v5.7.0...v5.7.1) (2026-02-23)
 
 
