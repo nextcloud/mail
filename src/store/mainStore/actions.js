@@ -2404,10 +2404,13 @@ export default function mainStoreActions() {
 			return list.map((msgId) => this.envelopes[msgId])
 		},
 		getEnvelopesByThreadRootId(accountId, threadRootId) {
-			return sortBy(
+			const sorted = sortBy(
 				prop('dateInt'),
 				Object.values(this.envelopes).filter((envelope) => envelope.accountId === accountId && envelope.threadRootId === threadRootId),
 			)
+			return this.getPreference('thread-order', 'oldest') === 'newest'
+				? sorted.reverse()
+				: sorted
 		},
 		getMessage(id) {
 			return this.messages[id]
@@ -2461,6 +2464,27 @@ export default function mainStoreActions() {
 		},
 		getQuickActions() {
 			return this.quickActions
+		},
+		loadPendingInlineRepliesMutation(userId) {
+			try {
+				const raw = localStorage.getItem(`mail_pending_inline_replies_${userId}`)
+				this.pendingInlineReplies = raw ? JSON.parse(raw) : {}
+			} catch (e) {
+				this.pendingInlineReplies = {}
+			}
+		},
+		addPendingInlineReply({ userId, parentEnvelopeId, draftId, mode, bodyHtml, bodyPlain, isHtml, subject }) {
+			this.pendingInlineReplies = {
+				...this.pendingInlineReplies,
+				[parentEnvelopeId]: { draftId, mode, bodyHtml, bodyPlain, isHtml, subject },
+			}
+			localStorage.setItem(`mail_pending_inline_replies_${userId}`, JSON.stringify(this.pendingInlineReplies))
+		},
+		removePendingInlineReply({ userId, parentEnvelopeId }) {
+			const updated = { ...this.pendingInlineReplies }
+			delete updated[parentEnvelopeId]
+			this.pendingInlineReplies = updated
+			localStorage.setItem(`mail_pending_inline_replies_${userId}`, JSON.stringify(this.pendingInlineReplies))
 		},
 		async processHtmlBody(id) {
 			try {

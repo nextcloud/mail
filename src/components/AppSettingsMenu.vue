@@ -90,6 +90,14 @@
 					<NcRadioGroupButton :label="t('mail', 'Oldest first')" value="oldest" />
 				</NcRadioGroup>
 
+				<NcRadioGroup
+					:model-value="threadOrder"
+					:label="t('mail', 'Thread message order')"
+					@update:modelValue="onThreadOrderChange">
+					<NcRadioGroupButton :label="t('mail', 'Oldest first')" value="oldest" />
+					<NcRadioGroupButton :label="t('mail', 'Newest first')" value="newest" />
+				</NcRadioGroup>
+
 				<NcAppSettingsSection id="messages" name="Messages">
 					<NcFormBox>
 						<NcFormBoxSwitch
@@ -371,6 +379,7 @@ export default {
 			loadingSortFavorites: false,
 			displaySmimeCertificateModal: false,
 			sortOrder: 'newest',
+			threadOrder: 'oldest',
 			showSettings: false,
 			showAccountSettings: false,
 			showMailSettings: true,
@@ -534,6 +543,7 @@ export default {
 
 	mounted() {
 		this.sortOrder = this.mainStore.getPreference('sort-order', 'newest')
+		this.threadOrder = this.mainStore.getPreference('thread-order', 'oldest')
 		document.addEventListener.call(window, 'mailvelope', () => this.checkMailvelope())
 		if (!this.mainStore.areTextBlocksFetched()) {
 			this.mainStore.fetchMyTextBlocks()
@@ -673,6 +683,21 @@ export default {
 			} catch (error) {
 				Logger.error('could not save preferences', { error })
 				this.sortOrder = previousValue
+				showError(t('mail', 'Could not update preference'))
+			}
+		},
+
+		async onThreadOrderChange(value) {
+			const previousValue = this.threadOrder
+			try {
+				this.threadOrder = value
+				await this.mainStore.savePreference({
+					key: 'thread-order',
+					value,
+				})
+			} catch (error) {
+				Logger.error('could not save thread order preference', { error })
+				this.threadOrder = previousValue
 				showError(t('mail', 'Could not update preference'))
 			}
 		},
