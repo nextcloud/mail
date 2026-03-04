@@ -10,8 +10,10 @@ declare(strict_types=1);
 namespace OCA\Mail\Http\Middleware;
 
 use Exception;
+use Horde\ManageSieve\Exception as ManageSieveException;
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse;
@@ -61,6 +63,20 @@ class ErrorMiddleware extends Middleware {
 
 		if ($exception instanceof ClientException) {
 			return JsonResponse::failWith($exception);
+		}
+
+		if ($exception instanceof CouldNotConnectException) {
+			return JsonResponse::fail([
+				'message' => $exception->getMessage(),
+				'type' => get_class($exception),
+			], Http::STATUS_SERVICE_UNAVAILABLE);
+		}
+
+		if ($exception instanceof ManageSieveException) {
+			return JsonResponse::fail([
+				'message' => $exception->getMessage(),
+				'type' => get_class($exception),
+			], Http::STATUS_SERVICE_UNAVAILABLE);
 		}
 
 		if ($exception instanceof DoesNotExistException) {
