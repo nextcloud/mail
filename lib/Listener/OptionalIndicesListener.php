@@ -9,10 +9,12 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Listener;
 
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use OCP\DB\Events\AddMissingIndicesEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IConfig;
+use OCP\IDBConnection;
 
 /**
  * @template-implements IEventListener<Event|OptionalIndicesListener>
@@ -21,9 +23,12 @@ class OptionalIndicesListener implements IEventListener {
 
 	/** @var IConfig */
 	private $config;
+	private IDBConnection $connection;
 
-	public function __construct(IConfig $config) {
+	public function __construct(IConfig $config,
+		IDBConnection $connection) {
 		$this->config = $config;
+		$this->connection = $connection;
 	}
 
 	#[\Override]
@@ -97,6 +102,33 @@ class OptionalIndicesListener implements IEventListener {
 			'mail_coll_idx',
 			['user_id', 'email', 'display_name'],
 			false
+		);
+
+		/**
+		 * This index may be missing on Postgres - we add it back on all DBs nevertheless
+		 * @see \OCA\Mail\Migration\Version1130Date20220412111833::changeSchema for the different lengths
+		 */
+		if ($this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
+			$event->addMissingIndex(
+				'mail_messages',
+				'mail_msg_thrd_root_snt_idx',
+				['mailbox_id', 'thread_root_id', 'sent_at'],
+			);
+		} else {
+			$event->addMissingIndex(
+				'mail_messages',
+				'mail_msg_thrd_root_snt_idx',
+				['mailbox_id', 'thread_root_id', 'sent_at'],
+				['lengths' => [null, 64, null]],
+			);
+		}
+
+		$event->replaceIndex(
+			'mail_recipients',
+			['mail_recipient_email_idx'],
+			'mail_recip_eml_type_mid_idx',
+			['email', 'type', 'message_id'],
+			false,
 		);
 	}
 

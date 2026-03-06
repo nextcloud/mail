@@ -94,7 +94,7 @@ class FollowUpClassifierJob extends QueuedJob {
 			return;
 		}
 
-		$this->logger->debug('Message requires follow-up: ' . $message->getId());
+		$this->logger->debug("Message requires follow-up: {$message->getId()}");
 		$tag = $this->mailManager->createTag('Follow up', '#d77000', $userId);
 		$this->mailManager->tagMessage(
 			$account,

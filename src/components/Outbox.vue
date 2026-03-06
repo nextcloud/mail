@@ -11,7 +11,7 @@
 		<OutboxMessageContent />
 		<!-- List -->
 		<template #list>
-			<AppContentList>
+			<AppContentList class="outbox-list">
 				<Error
 					v-if="error"
 					:error="t('mail', 'Could not open outbox')"
@@ -119,6 +119,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.outbox-list {
+	contain: none !important;
+}
+
 :deep(.button-vue--vue-secondary) {
 	box-shadow: none;
 }
