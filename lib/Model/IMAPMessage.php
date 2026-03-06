@@ -384,6 +384,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 	/**
 	 * @return Horde_Mime_Part[]
+	 * @todo Actually returns list<array{id: string, messageId: int, fileName: string|null, mime: string, size: int, cid: string|null, disposition: string|null}>, violating the IMessage contract.
 	 */
 	#[\Override]
 	public function getAttachments(): array {
