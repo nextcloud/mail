@@ -22,6 +22,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\UploadException;
 use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -279,6 +280,8 @@ class AttachmentService implements IAttachmentService {
 				true
 			);
 			$attachments = $imapMessage->getAttachments();
+		} catch (SmimeDecryptException $e) {
+			$this->logger->debug('Could not get attachment names for S/MIME encrypted message', ['exception' => $e, 'messageId' => $message->getUid()]);
 		} catch (ServiceException $e) {
 			$this->logger->warning('Could not get attachment names', ['exception' => $e, 'messageId' => $message->getUid()]);
 		}
