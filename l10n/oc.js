@@ -63,6 +63,7 @@ OC.L10N.register(
     "Decline" : "Declinar",
     "Remove" : "Suprimir",
     "Today" : "Uèi",
+    "Yesterday" : "Ièr",
     "Last week" : "La setmana passada",
     "Last month" : "Lo mes passat",
     "Favorites" : "Favorits",
