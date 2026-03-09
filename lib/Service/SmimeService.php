@@ -485,7 +485,8 @@ class SmimeService {
 	 * @param string $userId
 	 * @return SmimeDecryptionResult
 	 *
-	 * @throws ServiceException
+	 * @throws ServiceException If the database query fails
+	 * @throws SmimeDecryptException No certificate for decryption found
 	 */
 	public function decryptDataFetch(Horde_Imap_Client_Data_Fetch $message,
 		string $userId): SmimeDecryptionResult {
