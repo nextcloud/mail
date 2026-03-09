@@ -214,9 +214,7 @@ class SetupServiceTest extends TestCase {
 
 		$this->accountService->expects(self::once())
 			->method('save')
-			->with(self::callback(function (MailAccount $account): bool {
-				return $account->getAuthMethod() === self::AUTH_METHOD_OAUTH2;
-			}));
+			->with(self::callback(fn (MailAccount $account): bool => $account->getAuthMethod() === self::AUTH_METHOD_OAUTH2));
 
 		$this->tagMapper->expects(self::once())->method('createDefaultTags');
 

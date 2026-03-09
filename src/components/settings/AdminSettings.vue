@@ -128,7 +128,7 @@
 			<article>
 				<p>
 					<NcCheckboxRadioSwitch
-						:checked.sync="allowNewMailAccounts"
+						v-model="allowNewMailAccounts"
 						type="switch"
 						@update:checked="updateAllowNewMailAccounts">
 						{{ t('mail', 'Allow additional Mail accounts from User Settings') }}
@@ -146,10 +146,26 @@
 				</p>
 				<p>
 					<NcCheckboxRadioSwitch
-						:checked.sync="isLlmEnabled"
+						v-model="isLlmEnabled"
 						type="switch"
 						@update:checked="updateLlmEnabled">
 						{{ t('mail', 'Enable LLM processing') }}
+					</NcCheckboxRadioSwitch>
+				</p>
+			</article>
+		</div>
+		<div class="app-description">
+			<h3>{{ t('mail', 'Enable classification by importance by default') }}</h3>
+			<article>
+				<p>
+					{{ t('mail', 'The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts.') }}
+				</p>
+				<p>
+					<NcCheckboxRadioSwitch
+						type="switch"
+						:model-value="isImportanceClassificationEnabledByDefault"
+						@update:checked="setImportanceClassificationEnabledByDefault">
+						{{ t('mail', 'Enable classification of important mails by default') }}
 					</NcCheckboxRadioSwitch>
 				</p>
 			</article>
@@ -243,18 +259,18 @@
 				</p>
 				<p>
 					<NcCheckboxRadioSwitch
+						v-model="layoutMessageView"
 						type="radio"
 						name="message_view_mode_radio"
 						value="threaded"
-						:checked.sync="layoutMessageView"
 						@update:checked="setLayoutMessageView('threaded')">
 						{{ t('mail', 'Show all messages in thread') }}
 					</NcCheckboxRadioSwitch>
 					<NcCheckboxRadioSwitch
+						v-model="layoutMessageView"
 						type="radio"
 						name="message_view_mode_radio"
 						value="singleton"
-						:checked.sync="layoutMessageView"
 						@update:checked="setLayoutMessageView('singleton')">
 						{{ t('mail', 'Show only the selected message') }}
 					</NcCheckboxRadioSwitch>
@@ -281,6 +297,7 @@ import {
 	createProvisioningSettings,
 	disableProvisioning,
 	provisionAll,
+	setImportanceClassificationEnabledByDefault,
 	setLayoutMessageView,
 	updateAllowNewMailAccounts,
 	updateEnabledSmartReply,
@@ -355,6 +372,7 @@ export default {
 			isLlmEnabled: loadState('mail', 'llm_processing', true),
 			isLlmFreePromptConfigured: loadState('mail', 'enabled_llm_free_prompt_backend'),
 			layoutMessageView: loadState('mail', 'layout_message_view'),
+			isImportanceClassificationEnabledByDefault: loadState('mail', 'importance_classification_default', true),
 		}
 	},
 
@@ -424,6 +442,16 @@ export default {
 
 		async setLayoutMessageView(value) {
 			await setLayoutMessageView(value)
+		},
+
+		async setImportanceClassificationEnabledByDefault(enabledByDefault) {
+			try {
+				await setImportanceClassificationEnabledByDefault(enabledByDefault)
+				this.isImportanceClassificationEnabledByDefault = !this.isImportanceClassificationEnabledByDefault
+			} catch (error) {
+				showError(t('mail', 'Could not save default classification setting'))
+				logger.error('Could not save default classification setting', { error })
+			}
 		},
 	},
 }

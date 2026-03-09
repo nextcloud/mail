@@ -144,6 +144,11 @@ class MessagesController extends Controller {
 		?int $limit = null,
 		?string $view = null,
 		?string $v = null): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+		$limit = min(100, max(1, $limit));
+
 		try {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $mailboxId);
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
@@ -184,6 +189,9 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function show(int $id): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -215,6 +223,9 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function getBody(int $id): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -289,6 +300,9 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function getItineraries(int $id): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -308,6 +322,9 @@ class MessagesController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function getDkim(int $id): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -348,6 +365,9 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function getThread(int $id): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -376,6 +396,9 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function move(int $id, int $destFolderId): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$srcMailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -409,6 +432,9 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function snooze(int $id, int $unixTimestamp, int $destMailboxId): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$srcMailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -435,6 +461,9 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function unSnooze(int $id): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 		} catch (DoesNotExistException $e) {
@@ -458,6 +487,9 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function mdn(int $id): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -472,7 +504,7 @@ class MessagesController extends Controller {
 
 		try {
 			$this->mailTransmission->sendMdn($account, $mailbox, $message);
-			$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), 'mdnsent', true);
+			$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), '$mdnsent', true);
 		} catch (ServiceException $ex) {
 			$this->logger->error('Sending mdn failed: ' . $ex->getMessage());
 			throw $ex;
@@ -489,6 +521,9 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function getSource(int $id): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -530,6 +565,9 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function export(int $id): Response {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -570,17 +608,27 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function getHtmlBody(int $id, bool $plain = false): Response {
+		if ($this->currentUserId === null) {
+			return new TemplateResponse(
+				$this->appName,
+				'error',
+				['message' => 'Not authenticated'],
+				TemplateResponse::RENDER_AS_BLANK,
+				Http::STATUS_UNAUTHORIZED,
+			);
+		}
 		try {
 			try {
 				$message = $this->mailManager->getMessage($this->currentUserId, $id);
 				$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 				$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-			} catch (DoesNotExistException $e) {
+			} catch (DoesNotExistException) {
 				return new TemplateResponse(
 					$this->appName,
 					'error',
 					['message' => 'Not allowed'],
-					'none'
+					TemplateResponse::RENDER_AS_BLANK,
+					Http::STATUS_NOT_FOUND,
 				);
 			}
 
@@ -634,7 +682,8 @@ class MessagesController extends Controller {
 				$this->appName,
 				'error',
 				['message' => $ex->getMessage()],
-				'none'
+				TemplateResponse::RENDER_AS_BLANK,
+				Http::STATUS_INTERNAL_SERVER_ERROR
 			);
 		}
 	}
@@ -653,6 +702,9 @@ class MessagesController extends Controller {
 	#[TrapError]
 	public function downloadAttachment(int $id,
 		string $attachmentId): Response {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -699,6 +751,9 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function downloadAttachments(int $id): Response {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -739,6 +794,9 @@ class MessagesController extends Controller {
 	public function saveAttachment(int $id,
 		string $attachmentId,
 		string $targetPath) {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -797,6 +855,9 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function setFlags(int $id, array $flags): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -825,6 +886,9 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function setTag(int $id, string $imapLabel): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -856,6 +920,9 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function removeTag(int $id, string $imapLabel): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -884,6 +951,9 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function destroy(int $id): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -911,6 +981,9 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function smartReply(int $messageId):JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $messageId);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());

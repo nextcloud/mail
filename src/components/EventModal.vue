@@ -50,7 +50,7 @@
 				<NcSelect
 					v-else
 					id="attendee"
-					:value="attendeesList"
+					:model-value="attendeesList"
 					class="select-users"
 					:multiple="true"
 					label="displayName"

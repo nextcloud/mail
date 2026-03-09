@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace OCA\Mail\AppInfo;
 
 use Horde_Translation;
+use OCA\Mail\ContextChat\ContextChatProvider;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Contracts\IDkimService;
@@ -74,6 +75,7 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\ContextChat\Events\ContentProviderRegisterEvent;
 use OCP\DB\Events\AddMissingIndicesEvent;
 use OCP\IServerContainer;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
@@ -174,6 +176,13 @@ final class Application extends App implements IBootstrap {
 		Horde_Translation::setHandler('Horde_Imap_Client', new HordeTranslationHandler());
 		Horde_Translation::setHandler('Horde_Mime', new HordeTranslationHandler());
 		Horde_Translation::setHandler('Horde_Smtp', new HordeTranslationHandler());
+
+		// Added in version 5.6.0
+		if (class_exists(ContentProviderRegisterEvent::class)) {
+			$context->registerEventListener(ContentProviderRegisterEvent::class, ContextChatProvider::class);
+			$context->registerEventListener(NewMessagesSynchronized::class, ContextChatProvider::class);
+			$context->registerEventListener(MessageDeletedEvent::class, ContextChatProvider::class);
+		}
 	}
 
 	#[\Override]

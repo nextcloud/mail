@@ -44,7 +44,7 @@ class ContactsGroupService implements IGroupService {
 
 		// If 'Allow username autocompletion in share dialog' is disabled in the admin sharing settings, then we must not
 		// auto-complete system users
-		$allowSystemUsers = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'no') === 'yes';
+		$allowSystemUsers = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes') === 'yes';
 
 		$result = $this->contactsManager->search($term, ['CATEGORIES']);
 		$receivers = [];
@@ -73,7 +73,7 @@ class ContactsGroupService implements IGroupService {
 
 		// If 'Allow username autocompletion in share dialog' is disabled in the admin sharing settings, then we must not
 		// auto-complete system users
-		$allowSystemUsers = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'no') === 'yes';
+		$allowSystemUsers = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes') === 'yes';
 
 		$result = $this->contactsManager->search($groupId, ['CATEGORIES']);
 		$receivers = [];

@@ -25,6 +25,9 @@ use Psr\Log\LoggerInterface;
 	table: 'mail_accounts',
 	description: 'Remove invalid mailbox_id from *_mailbox_id columns and add foreign keys to ensure consistency')
 ]
+/**
+ * @psalm-api
+ */
 class Version5007Date20260108124422 extends SimpleMigrationStep {
 	public function __construct(
 		private IDBConnection $db,

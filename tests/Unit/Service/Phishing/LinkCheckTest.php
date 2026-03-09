@@ -86,4 +86,11 @@ class LinkCheckTest extends TestCase {
 		]], $actualJson['additionalData']);
 		$this->assertTrue(is_string(json_encode($actualJson, JSON_THROW_ON_ERROR)));
 	}
+
+	public function testAddressCasing(): void {
+		$htmlMessage = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body><a href="https://Nextcloud.example">Nextcloud.example</a></body></html>';
+
+		$result = $this->service->run($htmlMessage);
+		$this->assertFalse($result->isPhishing());
+	}
 }

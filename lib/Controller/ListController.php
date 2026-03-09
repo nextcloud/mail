@@ -54,6 +54,10 @@ class ListController extends Controller {
 	 * @UserRateThrottle(limit=10, period=3600)
 	 */
 	public function unsubscribe(int $id): JsonResponse {
+		if ($this->currentUserId === null) {
+			return JsonResponse::fail([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());

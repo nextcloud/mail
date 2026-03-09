@@ -38,8 +38,7 @@ describe('PhishingWarning', () => {
 				phishingData: [{
 					isPhishing: true,
 					message: 'Lorem ipsum',
-				},
-				{
+				}, {
 					isPhishing: true,
 					message: 'Ipsum lorem',
 				}],

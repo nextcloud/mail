@@ -77,9 +77,9 @@ We are also available on [our public Mail development chat](https://cloud.nextcl
 ## Documentation
 
 Need help? Check out our documentation. It's split into three parts.
-* [Admin documentation](doc/admin.md) (installation, configuration, troubleshooting)
+* [Admin documentation](https://docs.nextcloud.com/server/stable/admin_manual/groupware/mail.html) (installation, configuration, troubleshooting)
 * [Developer documentation](doc/developer.md) (developer setup, nightly builds)
-* [User documentation](doc/user.md) (usage, keyboard shortcuts)
+* [User documentation](https://docs.nextcloud.com/server/stable/user_manual/en/groupware/mail.html) (usage)
 
 ## Credits
 This project uses [CKEditor](https://ckeditor.com), which is licensed under the [GPLv2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).

@@ -52,7 +52,7 @@ class ContactsIntegration {
 
 		// If 'Allow username autocompletion in share dialog' is disabled in the admin sharing settings, then we must not
 		// auto-complete system users
-		$shareeEnumeration = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'no') === 'yes';
+		$shareeEnumeration = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes') === 'yes';
 		$shareeEnumerationInGroupOnly = $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_to_group', 'no') === 'yes';
 		$shareeEnumerationFullMatch = $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match', 'yes') === 'yes';
 		$shareeEnumerationFullMatchUserId = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_userid', 'yes') === 'yes';
@@ -233,7 +233,7 @@ class ContactsIntegration {
 	 * @param string[] $fields
 	 */
 	private function doSearch(string $term, array $fields, bool $strictSearch) : array {
-		$allowSystemUsers = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'no') === 'yes';
+		$allowSystemUsers = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes') === 'yes';
 
 		$result = $this->contactsManager->search($term, $fields, [
 			'strict_search' => $strictSearch,

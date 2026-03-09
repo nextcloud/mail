@@ -17,6 +17,7 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\TrashMailboxNotSetException;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Quota;
@@ -46,12 +47,13 @@ interface IMailManager {
 	/**
 	 * @param Account $account
 	 * @param string $name
+	 * @param string[] $specialUse
 	 *
 	 * @return Mailbox
 	 *
 	 * @throws ServiceException
 	 */
-	public function createMailbox(Account $account, string $name): Mailbox;
+	public function createMailbox(Account $account, string $name, array $specialUse = []): Mailbox;
 
 	/**
 	 * @param Mailbox $mailbox
@@ -96,6 +98,7 @@ interface IMailManager {
 	 * @return IMAPMessage
 	 *
 	 * @throws ServiceException
+	 * @throws SmimeDecryptException
 	 */
 	public function getImapMessage(Horde_Imap_Client_Socket $client,
 		Account $account,

@@ -41,6 +41,10 @@ class TrustedSendersController extends Controller {
 	 */
 	#[TrapError]
 	public function setTrusted(string $email, string $type): JsonResponse {
+		if ($this->uid === null) {
+			return JsonResponse::fail([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		$this->trustedSenderService->trust(
 			$this->uid,
 			$email,
@@ -59,6 +63,10 @@ class TrustedSendersController extends Controller {
 	 */
 	#[TrapError]
 	public function removeTrust(string $email, string $type): JsonResponse {
+		if ($this->uid === null) {
+			return JsonResponse::fail([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		$this->trustedSenderService->trust(
 			$this->uid,
 			$email,
@@ -75,6 +83,10 @@ class TrustedSendersController extends Controller {
 	 */
 	#[TrapError]
 	public function list(): JsonResponse {
+		if ($this->uid === null) {
+			return JsonResponse::fail([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		$list = $this->trustedSenderService->getTrusted(
 			$this->uid
 		);

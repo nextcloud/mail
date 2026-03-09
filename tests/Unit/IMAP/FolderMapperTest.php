@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Unit\IMAP;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Data_Capability;
+use Horde_Imap_Client_Exception_ServerResponse;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
@@ -205,36 +206,80 @@ class FolderMapperTest extends TestCase {
 		$this->mapper->fetchFolderAcls($folders, $client);
 	}
 
-	public function testGetFoldersStatusAsObject(): void {
+	public function testFetchFolderAclsSkipsInaccessibleMailbox(): void {
+		$inaccessibleFolder = $this->createMock(Folder::class);
+		$inaccessibleFolder->method('getAttributes')->willReturn([]);
+		$inaccessibleFolder->method('getMailbox')->willReturn('inaccessible');
+		$inaccessibleFolder->expects($this->once())
+			->method('setMyAcls')
+			->with(null);
+		$normalFolder = $this->createMock(Folder::class);
+		$normalFolder->method('getAttributes')->willReturn([]);
+		$normalFolder->method('getMailbox')->willReturn('INBOX');
+		$normalFolder->expects($this->once())
+			->method('setMyAcls')
+			->with('lrs');
+
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$capability = $this->createMock(Horde_Imap_Client_Data_Capability::class);
+		$client->method('__get')->with('capability')->willReturn($capability);
+		$capability->method('query')->with('ACL')->willReturn(true);
+
+		$client->expects($this->exactly(2))
+			->method('getMyACLRights')
+			->willReturnCallback(function (string $mailbox) {
+				if ($mailbox === 'inaccessible') {
+					throw $this->createMock(Horde_Imap_Client_Exception_ServerResponse::class);
+				}
+				return 'lrs';
+			});
+		$this->logger->expects($this->once())
+			->method('debug');
+
+		$this->mapper->fetchFolderAcls([$inaccessibleFolder, $normalFolder], $client);
+	}
+
+	public function testGetFolderStatus(): void {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('status')
-			->with('INBOX')
+			->with('INBOX', Horde_Imap_Client::STATUS_MESSAGES | Horde_Imap_Client::STATUS_UNSEEN)
 			->willReturn([
 				'messages' => 123,
 				'unseen' => 2,
 			]);
 
-		$stats = $this->mapper->getFoldersStatusAsObject($client, ['INBOX']);
+		$stats = $this->mapper->getFolderStatus($client, 'INBOX');
 
-		self::assertArrayHasKey('INBOX', $stats);
-		$expected = new MailboxStats(123, 2);
-		self::assertEquals($expected, $stats['INBOX']);
+		self::assertEquals(new MailboxStats(123, 2), $stats);
 	}
 
-	public function testGetFoldersStatusAsObjectNullStats(): void {
+	public function testGetFolderStatusNullStats(): void {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('status')
-			->with('INBOX')
+			->with('INBOX', Horde_Imap_Client::STATUS_MESSAGES | Horde_Imap_Client::STATUS_UNSEEN)
 			->willReturn([
 				'messages' => null,
 				'unseen' => 2,
 			]);
 
-		$stats = $this->mapper->getFoldersStatusAsObject($client, ['INBOX']);
+		$stats = $this->mapper->getFolderStatus($client, 'INBOX');
 
-		self::assertArrayNotHasKey('INBOX', $stats);
+		self::assertNull($stats);
+	}
+
+	public function testGetFolderStatusInaccessibleMailbox(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client->expects($this->once())
+			->method('status')
+			->willThrowException($this->createMock(Horde_Imap_Client_Exception_ServerResponse::class));
+		$this->logger->expects($this->once())
+			->method('debug');
+
+		$stats = $this->mapper->getFolderStatus($client, 'inaccessible');
+
+		self::assertNull($stats);
 	}
 
 	public function testDetectSpecialUseFromAttributes() {

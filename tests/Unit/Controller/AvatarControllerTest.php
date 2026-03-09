@@ -17,10 +17,10 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IRequest;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class AvatarControllerTest extends TestCase {
-	/** @var IAvatarService|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IAvatarService|MockObject */
 	private $avatarService;
 
 	/** @var AvatarsController */

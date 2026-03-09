@@ -40,6 +40,7 @@
     "Account settings" : "Konta iestatījumi",
     "Aliases" : "Aizstājvārdi",
     "Signature" : "Paraksts",
+    "Calendar settings" : "Kalendāra iestatījumi",
     "Filters" : "Filtri",
     "Rename alias" : "Pārdēvēt aizstājvārdu",
     "Go back" : "Atpakaļ",
@@ -147,6 +148,7 @@
     "Tag" : "Birkas",
     "delete" : "dzēst",
     "Edit" : "Labot",
+    "Enable classification of important mails by default" : "Pēc noklusējuma iespējot svarīgu e-pasta ziņojumu šķirošanu",
     "Reset" : "Atiestatīt",
     "Client ID" : "Klienta ID",
     "User" : "Lietotājs",
@@ -181,7 +183,6 @@
     "Redirect" : "Novirzīt",
     "The link leads to %s" : "Saite, kas ved uz %s",
     "Continue to %s" : "Turpināt %s",
-    "From me" : "No manis",
-    "Enable classification of important mails by default" : "Pēc noklusējuma iespējot svarīgu e-pasta ziņojumu šķirošanu"
+    "From me" : "No manis"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);"
 }

@@ -126,7 +126,7 @@ class Html {
 		$html = $config->getDefinition('HTML');
 		$html->info_attr_transform_post['imagesrc'] = new TransformImageSrc($this->urlGenerator);
 		$html->info_attr_transform_post['cssbackground'] = new TransformStyleURLs($this->urlGenerator);
-		$html->info_attr_transform_post['htmllinks'] = new TransformHTMLLinks($this->urlGenerator);
+		$html->info_attr_transform_post['htmllinks'] = new TransformHTMLLinks();
 
 		/** @var HTMLPurifier_URIDefinition $uri */
 		$uri = $config->getDefinition('URI');

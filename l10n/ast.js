@@ -32,6 +32,7 @@ OC.L10N.register(
     "Default folders" : "Carpetes predeterminaes",
     "Automatic trash deletion" : "Desaniciu automáticu de la papelera",
     "Autoresponder" : "Rempuesta automática",
+    "Calendar settings" : "Configuración del calendariu",
     "Filters" : "Filtros",
     "Mail server" : "Sirvidor de corréu electrónicu",
     "Go back" : "Dir p'atrás",

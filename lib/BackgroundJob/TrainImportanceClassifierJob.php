@@ -50,7 +50,7 @@ class TrainImportanceClassifierJob extends TimedJob {
 		try {
 			$account = $this->accountService->findById($accountId);
 		} catch (DoesNotExistException $e) {
-			$this->logger->debug('Could not find account <' . $accountId . '> removing from jobs');
+			$this->logger->debug("Could not find account <{$accountId}> removing from jobs");
 			$this->jobList->remove(self::class, $argument);
 			return;
 		}
@@ -60,7 +60,7 @@ class TrainImportanceClassifierJob extends TimedJob {
 			return;
 		}
 
-		if (!$account->getClassificationEnabled()) {
+		if (!$account->getMailAccount()->getClassificationEnabled()) {
 			$this->logger->debug("classification is turned off for account $accountId");
 			return;
 		}

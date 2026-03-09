@@ -14,6 +14,7 @@ use OCA\Mail\Integration\GoogleIntegration;
 use OCA\Mail\Integration\MicrosoftIntegration;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AntiSpamService;
+use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Defaults;
@@ -47,6 +48,7 @@ class AdminSettings implements ISettings {
 		IConfig $config,
 		AiIntegrationsService $aiIntegrationsService,
 		private Defaults $themingDefaults,
+		private ClassificationSettingsService $classificationSettingsService,
 	) {
 		$this->initialStateService = $initialStateService;
 		$this->provisioningManager = $provisioningManager;
@@ -113,6 +115,11 @@ class AdminSettings implements ISettings {
 			Application::APP_ID,
 			'google_oauth_redirect_url',
 			$this->googleIntegration->getRedirectUrl(),
+		);
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'importance_classification_default',
+			$this->classificationSettingsService->isClassificationEnabledByDefault(),
 		);
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,

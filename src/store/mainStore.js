@@ -101,6 +101,7 @@ export default defineStore('main', {
 			smimeCertificates: [],
 			hasFetchedInitialEnvelopes: false,
 			followUpFeatureAvailable: false,
+			contextChatFeatureAvailable: false,
 			internalAddress: [],
 			hasCurrentUserPrincipalAndCollections: false,
 			showAccountSettings: null,

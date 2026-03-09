@@ -62,6 +62,10 @@ export default function initAfterAppCreation() {
 		value: startMailboxId ? parseInt(startMailboxId, 10) : null,
 	})
 	mainStore.savePreferenceMutation({
+		key: 'index-context-chat',
+		value: preferences['index-context-chat'],
+	})
+	mainStore.savePreferenceMutation({
 		key: 'allow-new-accounts',
 		value: loadState('mail', 'allow-new-accounts', true),
 	})
@@ -106,6 +110,7 @@ export default function initAfterAppCreation() {
 	const googleOauthUrl = loadState('mail', 'google-oauth-url', null)
 	const microsoftOauthUrl = loadState('mail', 'microsoft-oauth-url', null)
 	const followUpFeatureAvailable = loadState('mail', 'llm_followup_available', false)
+	const contextChatFeatureAvailable = loadState('mail', 'context_chat_available', false)
 
 	accounts.map(fixAccountId).forEach((account) => {
 		const settings = accountSettings.find((settings) => settings.accountId === account.id)
@@ -130,6 +135,7 @@ export default function initAfterAppCreation() {
 	mainStore.setGoogleOauthUrlMutation(googleOauthUrl)
 	mainStore.setMicrosoftOauthUrlMutation(microsoftOauthUrl)
 	mainStore.setFollowUpFeatureAvailableMutation(followUpFeatureAvailable)
+	mainStore.setContextChatFeatureAvailableMutation(contextChatFeatureAvailable)
 
 	const smimeCertificates = loadState('mail', 'smime-certificates', [])
 	mainStore.setSmimeCertificatesMutation(smimeCertificates)

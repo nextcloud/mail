@@ -90,6 +90,8 @@ class MailboxesApiController extends OCSController {
 		?string $filter = null,
 		?int $limit = null,
 		?string $view = null): DataResponse {
+		$limit = min(100, max(1, $limit));
+
 		$userId = $this->userId;
 		if ($userId === null) {
 			return new DataResponse([], Http::STATUS_NOT_FOUND);

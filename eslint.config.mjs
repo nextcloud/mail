@@ -5,7 +5,6 @@
 
 import { recommendedVue2 } from '@nextcloud/eslint-config'
 import pluginImport from 'eslint-plugin-import'
-import pluginPerfectionist from 'eslint-plugin-perfectionist'
 import pluginVitest from 'eslint-plugin-vitest-globals'
 import { defineConfig } from 'eslint/config'
 
@@ -13,7 +12,6 @@ export default defineConfig([
 	...recommendedVue2,
 	{
 		plugins: {
-			perfectionist: pluginPerfectionist,
 			import: pluginImport,
 			vitest: pluginVitest,
 		},

@@ -82,8 +82,7 @@
 				<NcFormBox>
 					<NcFormBoxSwitch
 						v-model="compactMode"
-						:label="t('mail', 'Use compact mode')"
-						@update:modelValue="compactMode = $event" />
+						:label="t('mail', 'Use compact mode')" />
 				</NcFormBox>
 
 				<NcRadioGroup :model-value="sortOrder" :label="t('mail', 'Sorting')" @update:modelValue="onSortByDate">
@@ -95,15 +94,13 @@
 					<NcFormBox>
 						<NcFormBoxSwitch
 							v-model="useExternalAvatars"
-							:disabled="loadingAvatarSettings"
-							@update:modelValue="onToggleExternalAvatars">
+							:disabled="loadingAvatarSettings">
 							{{ t('mail', 'Avatars from Gravatar and favicons') }}
 						</NcFormBoxSwitch>
 
 						<NcFormBoxSwitch
 							v-model="searchPriorityBody"
-							:disabled="loadingPrioritySettings"
-							@update:modelValue="onToggleSearchPriorityBody">
+							:disabled="loadingPrioritySettings">
 							{{ prioritySettingsText }}
 						</NcFormBoxSwitch>
 					</NcFormBox>
@@ -139,8 +136,7 @@
 					<NcFormBoxSwitch
 						v-model="useDataCollection"
 						:label="t('mail', 'Data collection')"
-						:description="t('mail', 'Allow the app to collect and process data locally to adapt to your preferences')"
-						@update:modelValue="onToggleCollectData" />
+						:description="t('mail', 'Allow the app to collect and process data locally to adapt to your preferences')" />
 
 					<NcFormGroup :label="t('mail', 'Always show images from')">
 						<TrustedSenders />
@@ -151,8 +147,7 @@
 						v-model="useInternalAddresses"
 						:disabled="loadingInternalAddresses"
 						:label="internalAddressText"
-						:description="t('mail', 'Manage your internal addresses and domains to ensure recognized contacts stay unmarked')"
-						@update:modelValue="onToggleInternalAddress" />
+						:description="t('mail', 'Manage your internal addresses and domains to ensure recognized contacts stay unmarked')" />
 					<InternalAddress />
 
 					<NcFormGroup :label="t('mail', 'S/MIME')">
@@ -201,13 +196,21 @@
 					<NcFormBox>
 						<NcFormBoxSwitch
 							:checked="useFollowUpReminders"
-							:disabled="loadingFollowUpReminders"
-							@update:modelValue="onToggleFollowUpReminders">
+							:disabled="loadingFollowUpReminders">
 							{{ followUpReminderText }}
 						</NcFormBoxSwitch>
 					</NcFormBox>
 				</NcAppSettingsSection>
-
+				<NcAppSettingsSection v-if="contextChatFeatureAvailable" id="context-chat-settings" :name="t('mail', 'Context Chat integration')">
+					<NcFormBox>
+						<NcFormBoxSwitch
+							:checked="useContextChat"
+							:disabled="loadingContextChat"
+							@update:modelValue="onToggleContextChat">
+							{{ contextChatText }}
+						</NcFormBoxSwitch>
+					</NcFormBox>
+				</NcAppSettingsSection>
 				<NcAppSettingsShortcutsSection>
 					<NcHotkeyList>
 						<NcHotkey :label="t('mail', 'Compose new message')" hotkey="C" />
@@ -234,7 +237,7 @@
 					:name="t('mail', 'New text block')"
 					:is-form="true"
 					size="normal">
-					<NcInputField :value.sync="localTextBlock.title" :label="t('mail', 'Title of the text block')" />
+					<NcInputField v-model="localTextBlock.title" :label="t('mail', 'Title of the text block')" />
 					<TextEditor
 						v-model="localTextBlock.content"
 						:is-bordered="true"
@@ -359,10 +362,11 @@ export default {
 			loadingOptOutSettings: false,
 			loadingInternalAddresses: false,
 			loadingReplySettings: false,
-
+			contextChatText: t('mail', 'Make mails available to Context Chat'),
 			followUpReminderText: t('mail', 'Remind about messages that require a reply but received none'),
 			internalAddressText: t('mail', 'Highlight external addresses'),
 			toggleAutoTagging: false,
+			loadingContextChat: false,
 			loadingFollowUpReminders: false,
 			loadingSortFavorites: false,
 			displaySmimeCertificateModal: false,
@@ -384,7 +388,14 @@ export default {
 
 	computed: {
 		...mapStores(useMainStore),
-		...mapState(useMainStore, ['getAccounts', 'followUpFeatureAvailable', 'getMyTextBlocks', 'getSharedTextBlocks']),
+		...mapState(useMainStore, [
+			'getAccounts',
+			'followUpFeatureAvailable',
+			'contextChatFeatureAvailable',
+			'getMyTextBlocks',
+			'getSharedTextBlocks',
+		]),
+
 		useBottomReplies() {
 			return this.mainStore.getPreference('reply-mode', 'top') === 'bottom'
 		},
@@ -438,6 +449,16 @@ export default {
 
 			set(value) {
 				this.onToggleCollectData(value)
+			},
+		},
+
+		useContextChat: {
+			get() {
+				return this.mainStore.getPreference('index-context-chat', 'true') === 'true'
+			},
+
+			set(value) {
+				this.onToggleContextChat(value)
 			},
 		},
 
@@ -669,6 +690,22 @@ export default {
 				showError(t('mail', 'Could not update preference'))
 			} finally {
 				this.loadingFollowUpReminders = false
+			}
+		},
+
+		async onToggleContextChat(enabled) {
+			this.loadingContextChat = true
+
+			try {
+				await this.mainStore.savePreference({
+					key: 'index-context-chat',
+					value: enabled ? 'true' : 'false',
+				})
+			} catch (error) {
+				Logger.error('Could not save preferences', { error })
+				showError(t('mail', 'Could not update preference'))
+			} finally {
+				this.loadingContextChat = false
 			}
 		},
 

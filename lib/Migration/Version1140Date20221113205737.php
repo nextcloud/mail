@@ -15,6 +15,9 @@ use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @psalm-api
+ */
 class Version1140Date20221113205737 extends SimpleMigrationStep {
 	private LoggerInterface $logger;
 	private MessageMapper $messageMapper;

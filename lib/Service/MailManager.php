@@ -32,7 +32,6 @@ use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ImapFlagEncodingException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\TrashMailboxNotSetException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
@@ -143,18 +142,11 @@ class MailManager implements IMailManager {
 		return $this->mailboxMapper->findAll($account);
 	}
 
-	/**
-	 * @param Account $account
-	 * @param string $name
-	 *
-	 * @return Mailbox
-	 * @throws ServiceException
-	 */
 	#[\Override]
-	public function createMailbox(Account $account, string $name): Mailbox {
+	public function createMailbox(Account $account, string $name, array $specialUse = []): Mailbox {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
-			$folder = $this->folderMapper->createFolder($client, $name);
+			$folder = $this->folderMapper->createFolder($client, $name, $specialUse);
 			$this->folderMapper->fetchFolderAcls([$folder], $client);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
@@ -172,18 +164,6 @@ class MailManager implements IMailManager {
 		return $this->mailboxMapper->find($account, $name);
 	}
 
-	/**
-	 * @param Horde_Imap_Client_Socket $client
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 * @param int $uid
-	 * @param bool $loadBody
-	 *
-	 * @return IMAPMessage
-	 *
-	 * @throws ServiceException
-	 * @throws SmimeDecryptException
-	 */
 	#[\Override]
 	public function getImapMessage(Horde_Imap_Client_Socket $client,
 		Account $account,
@@ -198,7 +178,7 @@ class MailManager implements IMailManager {
 				$account->getUserId(),
 				$loadBody
 			);
-		} catch (Horde_Imap_Client_Exception|DoesNotExistException $e) {
+		} catch (DoesNotExistException|Horde_Mime_Exception|Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
 				'Could not load message',
 				$e->getCode(),

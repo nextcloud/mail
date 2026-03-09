@@ -21,7 +21,7 @@ use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class TextBlockSharesControllerTest extends TestCase {
+final class TextBlockSharesControllerTest extends TestCase {
 
 	/** @var TextBlockService|MockObject */
 	private $textBlockService;

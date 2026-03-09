@@ -32,7 +32,7 @@
 		<NcModal v-if="editModal" :name="modalName" @close="closeEditModal">
 			<h2 class="modal-name" v-text="modalName" />
 			<div class="modal-content">
-				<NcTextField :value.sync="localAction.name" :label="t('mail', 'Quick action name')" />
+				<NcTextField v-model="localAction.name" :label="t('mail', 'Quick action name')" />
 				<h3>{{ t('mail', 'Do the following actions') }}</h3>
 				<Container @onDrop="onDrop">
 					<Draggable

@@ -24,7 +24,7 @@ jobs:
       ocp-matrix: ${{ steps.versions.outputs.ocp-matrix }}
     steps:
       - name: Checkout app
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
 
@@ -41,18 +41,17 @@ jobs:
     strategy:
       # do not stop on another job's failure
       fail-fast: false
-      matrix:
-        ocp-version: [ 'dev-stable31', 'dev-stable32', 'dev-master' ]
+      matrix: ${{ fromJson(needs.matrix.outputs.ocp-matrix) }}
 
     name: static-psalm-analysis ${{ matrix.ocp-version }}
     steps:
       - name: Checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
 
       - name: Set up php${{ matrix.php-min }}
-        uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # 2.35.5
+        uses: shivammathur/setup-php@85c019fd025f731a83ac9fbc1cdd9ba69d76b6e3 # v2.36.0 with verbose logging due to stuck runs
         with:
           php-version: ${{ matrix.php-min }}
           extensions: bz2, ctype, curl, dom, fileinfo, gd, iconv, intl, json, libxml, mbstring, openssl, pcntl, posix, session, simplexml, xmlreader, xmlwriter, zip, zlib, sqlite, pdo_sqlite

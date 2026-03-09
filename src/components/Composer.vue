@@ -17,7 +17,7 @@
 			<div class="composer-fields--custom">
 				<NcSelect
 					id="from"
-					:value="selectedAlias"
+					:model-value="selectedAlias"
 					:options="aliases"
 					label="name"
 					:get-option-key="(option) => option.selectId"
@@ -51,7 +51,7 @@
 				<NcSelect
 					id="to"
 					ref="toLabel"
-					:value="selectTo"
+					:model-value="selectTo"
 					:options="selectableRecipients.filter(recipient => !selectTo.some(to => to.email === recipient.email))"
 					:get-option-key="(option) => option.email"
 					:taggable="true"
@@ -105,7 +105,7 @@
 				<NcSelect
 					id="cc"
 					ref="toLabel"
-					:value="selectCc"
+					:model-value="selectCc"
 					class="select"
 					:class="{ opened: !autoLimit }"
 					:options="selectableRecipients.filter(recipient => !selectCc.some(cc => cc.email === recipient.email))"
@@ -162,7 +162,7 @@
 				<NcSelect
 					id="bcc"
 					ref="toLabel"
-					:value="selectBcc"
+					:model-value="selectBcc"
 					class="select"
 					:class="{ opened: !autoLimit }"
 					:no-wrap="false"
@@ -432,43 +432,38 @@
 							</template>
 						</ActionButton>
 						<ActionRadio
-							:value="undefined"
-							name="sendLater"
-							:checked="!sendAtVal"
-							class="send-action-radio"
-							@change="onChangeSendLater(undefined)">
+							v-model="sendAtVal"
+							:value="0"
+							:name="sendAtVal.toString()"
+							class="send-action-radio">
 							{{ t('mail', 'Send now') }}
 						</ActionRadio>
 						<ActionRadio
+							v-model="sendAtVal"
 							:value="dateTomorrowMorning"
-							name="sendLater"
-							:checked="isSendAtTomorrowMorning"
-							class="send-action-radio send-action-radio--multiline"
-							@change="onChangeSendLater(dateTomorrowMorning)">
+							:name="sendAtVal.toString()"
+							class="send-action-radio send-action-radio--multiline">
 							{{ t('mail', 'Tomorrow morning') }} - {{ convertToLocalDate(dateTomorrowMorning) }}
 						</ActionRadio>
 						<ActionRadio
+							v-model="sendAtVal"
 							:value="dateTomorrowAfternoon"
-							name="sendLater"
-							:checked="isSendAtTomorrowAfternoon"
-							class="send-action-radio send-action-radio--multiline"
-							@change="onChangeSendLater(dateTomorrowAfternoon)">
+							:name="sendAtVal.toString()"
+							class="send-action-radio send-action-radio--multiline">
 							{{ t('mail', 'Tomorrow afternoon') }} - {{ convertToLocalDate(dateTomorrowAfternoon) }}
 						</ActionRadio>
 						<ActionRadio
+							v-model="sendAtVal"
 							:value="dateMondayMorning"
-							name="sendLater"
-							:checked="isSendAtMondayMorning"
-							class="send-action-radio send-action-radio--multiline"
-							@change="onChangeSendLater(dateMondayMorning)">
+							:name="sendAtVal.toString()"
+							class="send-action-radio send-action-radio--multiline">
 							{{ t('mail', 'Monday morning') }} - {{ convertToLocalDate(dateMondayMorning) }}
 						</ActionRadio>
 						<ActionRadio
-							name="sendLater"
+							v-model="sendAtVal"
+							:name="sendAtVal.toString()"
 							class="send-action-radio"
-							:checked="isSendAtCustom"
-							:value="customSendTime"
-							@change="onChangeSendLater(customSendTime)">
+							:value="customSendTime">
 							{{ t('mail', 'Custom date and time') }}
 						</ActionRadio>
 						<ActionInput
@@ -546,6 +541,7 @@ import { findRecipient } from '../service/AutocompleteService.js'
 import { savePreference } from '../service/PreferenceService.js'
 import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
+import { formatDateTime } from '../util/formatDateTime.js'
 import { detect, html, toHtml, toPlain } from '../util/text.js'
 import textBlockSvg from './../../img/text_snippet.svg'
 
@@ -756,15 +752,15 @@ export default {
 			isActionsOpen: false,
 			isMoreActionsOpen: false,
 			selectedDate,
-			sendAtVal: this.sendAt,
+			sendAtVal: Number.isNaN(this.sendAt) ? 0 : this.sendAt,
 			firstDayDatetimePicker: getFirstDay() === 0 ? 7 : getFirstDay(),
 			formatter: {
 				stringify: (date) => {
-					return date ? moment(date).format('LLL') : ''
+					return date ? formatDateTime(date) : ''
 				},
 
 				parse: (value) => {
-					return value ? moment(value, 'LLL').toDate() : null
+					return value ? new Date(value) : null
 				},
 			},
 
@@ -1081,19 +1077,15 @@ export default {
 
 	mounted() {
 		if (!this.isReply && this.isFirstOpen) {
-			this.$nextTick(() => this.$refs.toLabel.$el.focus())
-		}
-
-		// Add attachments in case of forward
-		if (this.forwardFrom?.attachments !== undefined) {
-			this.forwardFrom.attachments.forEach((att) => {
-				this.attachments.push({
-					fileName: att.fileName,
-					displayName: trimStart('/', att.fileName),
-					id: att.id,
-					messageId: this.forwardFrom.databaseId,
-					type: 'message-attachment',
-				})
+			this.$nextTick(() => {
+				const toField = this.$refs.toLabel
+				if (toField?.$el) {
+					// Find the search input within the NcSelect/vue-select component
+					const searchInput = toField.$el.querySelector('.vs__search')
+					if (searchInput) {
+						searchInput.focus()
+					}
+				}
 			})
 		}
 
@@ -1260,7 +1252,7 @@ export default {
 				inReplyToMessageId: this.inReplyToMessageId ?? (this.replyTo ? this.replyTo.messageId : undefined),
 				isHtml: !this.encrypt && !this.editorPlainText,
 				requestMdn: this.requestMdnVal,
-				sendAt: this.sendAtVal ? Math.floor(this.sendAtVal / 1000) : undefined,
+				sendAt: this.sendAtVal !== 0 ? Math.floor(this.sendAtVal / 1000) : undefined,
 				smimeSign: this.shouldSmimeSign,
 				smimeEncrypt: this.shouldSmimeEncrypt,
 				smimeCertificateId: this.smimeCertificateForCurrentAlias?.id,
@@ -1342,7 +1334,7 @@ export default {
 		},
 
 		onChangeSendLater(value) {
-			this.sendAtVal = value ? Number.parseInt(value, 10) : undefined
+			this.sendAtVal = Number.parseInt(value, 10)
 		},
 
 		convertToLocalDate(timestamp) {
@@ -1518,7 +1510,7 @@ export default {
 			this.newRecipients = []
 			this.requestMdnVal = false
 			this.changeSignature = false
-			this.sendAtVal = undefined
+			this.sendAtVal = 0
 
 			this.setAlias()
 			this.initBody()

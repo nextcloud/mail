@@ -19,10 +19,12 @@
 	"commitMessageTopic": "{{depName}}",
 	"commitMessageExtra": "from {{currentVersion}} to {{#if isPinDigest}}{{{newDigestShort}}}{{else}}{{#if isMajor}}{{prettyNewMajor}}{{else}}{{#if isSingleVersion}}{{prettyNewVersion}}{{else}}{{#if newValue}}{{{newValue}}}{{else}}{{{newDigestShort}}}{{/if}}{{/if}}{{/if}}{{/if}}",
 	"rangeStrategy": "bump",
+	"minimumReleaseAge": "7 days",
 	"rebaseWhen": "conflicted",
 	"ignoreUnstable": false,
-	"baseBranches": [
+	"baseBranchPatterns": [
 		"main",
+		"stable5.7",
 		"stable5.6"
 	],
 	"enabledManagers": [
@@ -152,6 +154,11 @@
 				"4. to release"
 			],
 			"reviewers": []
+		},
+		{
+			"description": "Disable minimum release age checks for internal dependencies",
+			"matchPackageNames": ["@nextcloud/*"],
+			"minimumReleaseAge": null
 		},
 		{
 			"description": "Only automerge packages that follow semver",

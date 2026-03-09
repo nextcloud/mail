@@ -18,6 +18,9 @@ use OCP\Migration\SimpleMigrationStep;
 use Override;
 
 #[ModifyColumn(table: 'mail_mailboxes', name: 'name', type: ColumnType::STRING, description: 'Increase the column length from 255 to 1024')]
+/**
+ * @psalm-api
+ */
 class Version5006Date20250927130132 extends SimpleMigrationStep {
 
 	/**

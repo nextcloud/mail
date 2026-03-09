@@ -234,7 +234,9 @@ class AccountsController extends Controller {
 		?int $trashRetentionDays = null,
 		?int $junkMailboxId = null,
 		?bool $searchBody = null,
-		?bool $classificationEnabled = null): JSONResponse {
+		?bool $classificationEnabled = null,
+		?bool $imipCreate = null,
+	): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $id);
 
 		$dbAccount = $account->getMailAccount();
@@ -284,6 +286,9 @@ class AccountsController extends Controller {
 		}
 		if ($classificationEnabled !== null) {
 			$dbAccount->setClassificationEnabled($classificationEnabled);
+		}
+		if ($imipCreate !== null) {
+			$dbAccount->setImipCreate($imipCreate);
 		}
 		return new JSONResponse(
 			new Account($this->accountService->save($dbAccount))
@@ -454,7 +459,7 @@ class AccountsController extends Controller {
 			try {
 				$previousDraft = $this->mailManager->getMessage($this->currentUserId, $draftId);
 			} catch (ClientException $e) {
-				$this->logger->info('Draft ' . $draftId . ' could not be loaded: ' . $e->getMessage());
+				$this->logger->info("Draft {$draftId} could not be loaded: {$e->getMessage()}");
 			}
 		}
 		$messageData = NewMessageData::fromRequest($account, $subject, $body, $to, $cc, $bcc, [], $isHtml);

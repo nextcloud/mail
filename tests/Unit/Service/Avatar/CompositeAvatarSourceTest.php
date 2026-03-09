@@ -14,16 +14,16 @@ use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\CompositeAvatarSource;
 use OCA\Mail\Service\Avatar\FaviconSource;
 use OCA\Mail\Service\Avatar\GravatarSource;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class CompositeAvatarSourceTest extends TestCase {
-	/** @var AddressbookSource|PHPUnit_Framework_MockObject_MockObject */
+	/** @var AddressbookSource|MockObject */
 	private $addressbookSource;
 
-	/** @var GravatarSource|PHPUnit_Framework_MockObject_MockObject */
+	/** @var GravatarSource|MockObject */
 	private $gravatarSource;
 
-	/** @var FaviconSource|PHPUnit_Framework_MockObject_MockObject */
+	/** @var FaviconSource|MockObject */
 	private $faviconSource;
 
 	/** @var CompositeAvatarSource */

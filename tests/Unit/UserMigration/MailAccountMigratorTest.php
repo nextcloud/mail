@@ -43,9 +43,7 @@ class MailAccountMigratorTest extends TestCase {
 			->willReturnArgument(0);
 		$this->serviceMock->getParameter('crypto')
 			->method('encrypt')
-			->willReturnCallback(function (string $value) {
-				return $value . '_encrypted';
-			});
+			->willReturnCallback(fn (string $value) => $value . '_encrypted');
 		$this->serviceMock->getParameter('crypto')
 			->method('decrypt')
 			->willReturnCallback(function (string $encryptedValue) {

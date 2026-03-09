@@ -15,6 +15,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMapper;
 use OCA\Mail\IMAP\MessageMapper as ImapMapper;
+use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\AvatarService;
 use Psr\Log\LoggerInterface;
@@ -39,11 +40,14 @@ class PreviewEnhancer {
 	/** @var AvatarService */
 	private $avatarService;
 
-	public function __construct(IMAPClientFactory $clientFactory,
+	public function __construct(
+		IMAPClientFactory $clientFactory,
 		ImapMapper $imapMapper,
 		DbMapper $dbMapper,
 		LoggerInterface $logger,
-		AvatarService $avatarService) {
+		AvatarService $avatarService,
+		private AttachmentService $attachmentService,
+	) {
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
 		$this->mapper = $dbMapper;
@@ -65,6 +69,12 @@ class PreviewEnhancer {
 
 			return array_merge($carry, [$message->getUid()]);
 		}, []);
+		$client = $this->clientFactory->getClient($account);
+
+		foreach ($messages as $message) {
+			$attachments = $this->attachmentService->getAttachmentNames($account, $mailbox, $message, $client);
+			$message->setAttachments($attachments);
+		}
 
 		if ($preLoadAvatars) {
 			foreach ($messages as $message) {
@@ -87,7 +97,7 @@ class PreviewEnhancer {
 			return $messages;
 		}
 
-		$client = $this->clientFactory->getClient($account);
+
 		try {
 			$data = $this->imapMapper->getBodyStructureData(
 				$client,
