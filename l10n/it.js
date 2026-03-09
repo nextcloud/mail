@@ -430,6 +430,7 @@ OC.L10N.register(
     "Stop" : "Ferma",
     "Deleted" : "Eliminato",
     "Recipient" : "Destinatario",
+    "Delete filter" : "Elimina filtro",
     "Help" : "Assistenza",
     "contains" : "contiene",
     "matches" : "corrisponde",
