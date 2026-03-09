@@ -2,6 +2,7 @@
  * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+import { getCurrentUser } from '@nextcloud/auth'
 import { loadState } from '@nextcloud/initial-state'
 import { fixAccountId } from './service/AccountService.js'
 import { fetchAvailableLanguages } from './service/translationService.js'
@@ -97,8 +98,13 @@ export default function initAfterAppCreation() {
 		key: 'compact-mode',
 		value: preferences['compact-mode'],
 	})
+	mainStore.savePreferenceMutation({
+		key: 'thread-order',
+		value: preferences['thread-order'],
+	})
 
 	mainStore.setQuickActions(loadState('mail', 'quick-actions', []))
+	mainStore.loadPendingInlineRepliesMutation(getCurrentUser()?.uid ?? '')
 
 	const accountSettings = loadState('mail', 'account-settings')
 	const accounts = loadState('mail', 'accounts', [])
