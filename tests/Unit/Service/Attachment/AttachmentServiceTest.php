@@ -97,6 +97,7 @@ class AttachmentServiceTest extends TestCase {
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
 			'createdAt' => 123456,
+			'disposition' => LocalAttachment::DISPOSITION_ATTACHMENT,
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
@@ -129,12 +130,14 @@ class AttachmentServiceTest extends TestCase {
 		$attachment = LocalAttachment::fromParams([
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
-			'createdAt' => 123456
+			'createdAt' => 123456,
+			'disposition' => LocalAttachment::DISPOSITION_ATTACHMENT,
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
+			'disposition' => LocalAttachment::DISPOSITION_ATTACHMENT,
 		]);
 
 		$this->mapper->expects($this->once())
@@ -154,6 +157,8 @@ class AttachmentServiceTest extends TestCase {
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'image/jpg',
+			'contentId' => null,
+			'disposition' => null,
 			'createdAt' => 123456,
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
@@ -169,14 +174,14 @@ class AttachmentServiceTest extends TestCase {
 			->willReturn($persistedAttachment);
 		$this->storage->expects($this->once())
 			->method('saveContent')
-			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo('sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds'))
+			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo('Lorem ipsum dolor sit amet'))
 			->willThrowException(new NotPermittedException());
 		$this->mapper->expects($this->once())
 			->method('delete')
 			->with($this->equalTo($persistedAttachment));
 		$this->expectException(UploadException::class);
 
-		$this->service->addFileFromString($userId, 'cat.jpg', 'image/jpg', 'sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds');
+		$this->service->addFileFromString($userId, 'cat.jpg', 'image/jpg', 'Lorem ipsum dolor sit amet', null, null);
 	}
 
 	public function testAddFileFromString() {
@@ -200,9 +205,16 @@ class AttachmentServiceTest extends TestCase {
 			->willReturn($persistedAttachment);
 		$this->storage->expects($this->once())
 			->method('saveContent')
-			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo('sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds'));
+			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo('Lorem ipsum dolor sit amet'));
 
-		$this->service->addFileFromString($userId, 'cat.jpg', 'image/jpg', 'sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds');
+		$this->service->addFileFromString(
+			$userId,
+			'cat.jpg',
+			'image/jpg',
+			'Lorem ipsum dolor sit amet',
+			null,
+			null,
+		);
 	}
 
 	public function testDeleteAttachment(): void {
@@ -302,6 +314,7 @@ class AttachmentServiceTest extends TestCase {
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'text/plain',
 			'createdAt' => 123456,
+			'disposition' => 'attachment'
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
@@ -323,6 +336,7 @@ class AttachmentServiceTest extends TestCase {
 			'id' => 123,
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'text/plain',
+
 		];
 
 		$this->mailManager->expects(self::once())
@@ -336,14 +350,14 @@ class AttachmentServiceTest extends TestCase {
 		$this->messageMapper->expects(self::once())
 			->method('getFullText')
 			->with($client, $mailbox->getName(), $message->getUid(), $userId)
-			->willReturn('sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds');
+			->willReturn('Lorem ipsum dolor sit amet');
 		$this->mapper->expects($this->once())
 			->method('insert')
 			->with($this->equalTo($attachment))
 			->willReturn($persistedAttachment);
 		$this->storage->expects($this->once())
 			->method('saveContent')
-			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo('sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds'));
+			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo('Lorem ipsum dolor sit amet'));
 		$this->service->handleAttachments($account, [$attachments], $client);
 	}
 
@@ -353,6 +367,8 @@ class AttachmentServiceTest extends TestCase {
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'text/plain',
+			'contentId' => null,
+			'disposition' => 'attachment',
 			'createdAt' => 123456,
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
@@ -373,18 +389,27 @@ class AttachmentServiceTest extends TestCase {
 			'type' => 'message-attachment',
 			'mailboxId' => $mailbox->getId(),
 			'uid' => 999,
+			'id' => '2',
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'text/plain',
 		];
-		$imapAttachment = ['sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds'];
+		$imapAttachment = new \OCA\Mail\Attachment(
+			'2',
+			'cat.jpg',
+			'text/plain',
+			'Lorem ipsum dolor sit amet',
+			strlen('Lorem ipsum dolor sit amet'),
+			null,
+			'attachment',
+		);
 
 		$this->mailManager->expects(self::once())
 			->method('getMailbox')
 			->with($account->getUserId(), $mailbox->getId())
 			->willReturn($mailbox);
 		$this->messageMapper->expects(self::once())
-			->method('getRawAttachments')
-			->with($client, $mailbox->getName(), 999)
+			->method('getAttachment')
+			->with($client, $mailbox->getName(), 999, '2', $userId)
 			->willReturn($imapAttachment);
 		$this->mapper->expects($this->once())
 			->method('insert')
@@ -392,7 +417,68 @@ class AttachmentServiceTest extends TestCase {
 			->willReturn($persistedAttachment);
 		$this->storage->expects($this->once())
 			->method('saveContent')
-			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo('sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds'));
+			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo('Lorem ipsum dolor sit amet'));
+
+		$this->service->handleAttachments($account, [$attachments], $client);
+	}
+
+	public function testHandleAttachmentsForwardedInlineAttachmentPreservesContentId(): void {
+		$userId = 'linus';
+		$attachment = LocalAttachment::fromParams([
+			'userId' => $userId,
+			'fileName' => 'logo.png',
+			'mimeType' => 'image/png',
+			'contentId' => 'img001@example.com',
+			'disposition' => 'inline',
+			'createdAt' => 123456,
+		]);
+		$persistedAttachment = LocalAttachment::fromParams([
+			'id' => 456,
+			'userId' => $userId,
+			'fileName' => 'logo.png',
+			'mimeType' => 'image/png',
+		]);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getUserId' => $userId
+		]);
+
+		$mailbox = new Mailbox();
+		$mailbox->setId(9);
+		$mailbox->setName('INBOX');
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$attachments = [
+			'type' => 'message-attachment-inline',
+			'mailboxId' => $mailbox->getId(),
+			'uid' => 999,
+			'id' => '3',
+			'fileName' => 'logo.png',
+			'mimeType' => 'image/png',
+		];
+		$imapAttachment = new \OCA\Mail\Attachment(
+			'3',
+			'logo.png',
+			'image/png',
+			'fake png content',
+			strlen('fake png content'),
+			'img001@example.com',
+			'inline',
+		);
+
+		$this->mailManager->expects(self::once())
+			->method('getMailbox')
+			->with($account->getUserId(), $mailbox->getId())
+			->willReturn($mailbox);
+		$this->messageMapper->expects(self::once())
+			->method('getAttachment')
+			->with($client, $mailbox->getName(), 999, '3', $userId)
+			->willReturn($imapAttachment);
+		$this->mapper->expects($this->once())
+			->method('insert')
+			->with($this->equalTo($attachment))
+			->willReturn($persistedAttachment);
+		$this->storage->expects($this->once())
+			->method('saveContent')
+			->with($this->equalTo($userId), $this->equalTo(456), $this->equalTo('fake png content'));
 
 		$this->service->handleAttachments($account, [$attachments], $client);
 	}
@@ -420,7 +506,7 @@ class AttachmentServiceTest extends TestCase {
 		$file = $this->createConfiguredMock(File::class, [
 			'getName' => 'cat.jpg',
 			'getMimeType' => 'text/plain',
-			'getContent' => 'sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds',
+			'getContent' => 'Lorem ipsum dolor sit amet',
 			'getStorage' => $storage
 		]);
 		$account = $this->createConfiguredMock(Account::class, [
@@ -452,7 +538,7 @@ class AttachmentServiceTest extends TestCase {
 		$file = $this->createConfiguredMock(File::class, [
 			'getName' => 'cat.jpg',
 			'getMimeType' => 'text/plain',
-			'getContent' => 'sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds',
+			'getContent' => 'Lorem ipsum dolor sit amet',
 			'getStorage' => $this->createMock(SharedStorage::class)
 		]);
 		$account = $this->createConfiguredMock(Account::class, [
@@ -464,6 +550,7 @@ class AttachmentServiceTest extends TestCase {
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'text/plain',
 			'createdAt' => 123456,
+			'disposition' => 'attachment'
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
@@ -476,6 +563,7 @@ class AttachmentServiceTest extends TestCase {
 			'messageId' => 999,
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'text/plain',
+
 		];
 
 		$this->userFolder->expects(self::once())
@@ -492,7 +580,7 @@ class AttachmentServiceTest extends TestCase {
 			->willReturn($persistedAttachment);
 		$this->storage->expects($this->once())
 			->method('saveContent')
-			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo('sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds'));
+			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo('Lorem ipsum dolor sit amet'));
 
 		$this->service->handleAttachments($account, [$attachments], $client);
 	}
