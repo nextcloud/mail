@@ -119,37 +119,21 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @param string $accountName
-	 * @param string $emailAddress
-	 * @param string $imapHost
-	 * @param int $imapPort
-	 * @param string $imapSslMode
-	 * @param string $imapUser
-	 * @param string $imapPassword
-	 * @param string $smtpHost
-	 * @param int $smtpPort
-	 * @param string $smtpSslMode
-	 * @param string $smtpUser
-	 * @param string $smtpPassword
-	 * @param string $authMethod
-	 *
-	 * @return JSONResponse
 	 * @throws ClientException
 	 */
 	#[TrapError]
 	public function update(int $id,
 		string $accountName,
 		string $emailAddress,
-		?string $imapHost = null,
-		?int $imapPort = null,
-		?string $imapSslMode = null,
-		?string $imapUser = null,
+		string $imapHost,
+		int $imapPort,
+		string $imapSslMode,
+		string $imapUser,
+		string $smtpHost,
+		int $smtpPort,
+		string $smtpSslMode,
+		string $smtpUser,
 		?string $imapPassword = null,
-		?string $smtpHost = null,
-		?int $smtpPort = null,
-		?string $smtpSslMode = null,
-		?string $smtpUser = null,
 		?string $smtpPassword = null,
 		string $authMethod = 'password'): JSONResponse {
 		try {
@@ -329,36 +313,19 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @param string $accountName
-	 * @param string $emailAddress
-	 * @param string|null $imapHost
-	 * @param int|null $imapPort
-	 * @param string|null $imapSslMode
-	 * @param string|null $imapUser
-	 * @param string|null $imapPassword
-	 * @param string|null $smtpHost
-	 * @param int|null $smtpPort
-	 * @param string|null $smtpSslMode
-	 * @param string|null $smtpUser
-	 * @param string|null $smtpPassword
-	 * @param string $authMethod
-	 * @param bool|null $classificationEnabled
-	 *
-	 * @return JSONResponse
 	 */
 	#[TrapError]
 	public function create(string $accountName,
 		string $emailAddress,
-		?string $imapHost = null,
-		?int $imapPort = null,
-		?string $imapSslMode = null,
-		?string $imapUser = null,
+		string $imapHost,
+		int $imapPort,
+		string $imapSslMode,
+		string $imapUser,
+		string $smtpHost,
+		int $smtpPort,
+		string $smtpSslMode,
+		string $smtpUser,
 		?string $imapPassword = null,
-		?string $smtpHost = null,
-		?int $smtpPort = null,
-		?string $smtpSslMode = null,
-		?string $smtpUser = null,
 		?string $smtpPassword = null,
 		string $authMethod = 'password',
 		?bool $classificationEnabled = null): JSONResponse {
