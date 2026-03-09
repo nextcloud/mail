@@ -212,6 +212,17 @@ export default {
 						},
 					],
 				},
+
+				htmlSupport: {
+					allow: [
+						{
+							name: 'img',
+							attributes: {
+								'data-cid': true,
+							},
+						},
+					],
+				},
 			},
 		}
 	},

@@ -476,6 +476,8 @@ class MessagesControllerTest extends TestCase {
 				'image/png',
 				'abcdefg',
 				7,
+				null,
+				null,
 			),
 		];
 

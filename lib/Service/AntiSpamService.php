@@ -157,10 +157,12 @@ class AntiSpamService {
 		$mimeMessage = new MimeMessage(
 			new DataUriParser()
 		);
+
 		$mimePart = $mimeMessage->build(
 			null,
 			$message->getContent(),
-			$message->getAttachments()
+			false,
+			array_values($message->getAttachments()),
 		);
 
 		$mail->setBasePart($mimePart);

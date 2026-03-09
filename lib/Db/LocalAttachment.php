@@ -20,12 +20,20 @@ use ReturnTypeWillChange;
  * @method void setFileName(string $fileName)
  * @method string getMimeType()
  * @method void setMimeType(string $mimeType)
+ * @method string|null getContentId()
+ * @method void setContentId(?string $contentId)
+ * @method string|null getDisposition()
+ * @method void setDisposition(?string $disposition)
  * @method int|null getCreatedAt()
  * @method void setCreatedAt(int $createdAt)
  * @method int|null getLocalMessageId()
  * @method void setLocalMessageId(int $localMessageId)
  */
 class LocalAttachment extends Entity implements JsonSerializable {
+	public const DISPOSITION_ATTACHMENT = 'attachment';
+	public const DISPOSITION_INLINE = 'inline';
+	public const DISPOSITION_OMIT = null;
+
 	/** @var string */
 	protected $userId;
 
@@ -34,6 +42,12 @@ class LocalAttachment extends Entity implements JsonSerializable {
 
 	/** @var string */
 	protected $mimeType;
+
+	/** @var ?string */
+	protected $contentId;
+
+	/** @var ?string */
+	protected $disposition;
 
 	/** @var int|null */
 	protected $createdAt;
@@ -49,8 +63,14 @@ class LocalAttachment extends Entity implements JsonSerializable {
 			'type' => 'local',
 			'fileName' => $this->fileName,
 			'mimeType' => $this->mimeType,
+			'contentId' => $this->contentId,
+			'disposition' => $this->disposition,
 			'createdAt' => $this->createdAt,
 			'localMessageId' => $this->localMessageId
 		];
+	}
+
+	public function isDispositionAttachmentOrInline(): bool {
+		return $this->disposition === self::DISPOSITION_ATTACHMENT || $this->disposition === self::DISPOSITION_INLINE;
 	}
 }

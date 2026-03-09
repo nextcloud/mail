@@ -537,7 +537,9 @@ class MailManagerTest extends TestCase {
 				'cat.png',
 				'image/png',
 				'abcdefg',
-				7
+				7,
+				null,
+				null,
 			),
 		];
 		$client = $this->createStub(Horde_Imap_Client_Socket::class);

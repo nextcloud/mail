@@ -778,7 +778,7 @@ class MessageMapperTest extends TestCase {
 		);
 
 		$this->assertEquals('test.pdf', $attachment->getName());
-		$this->assertEquals('application/octet-stream', $attachment->getType());
+		$this->assertEquals('application/pdf', $attachment->getType());
 		$this->assertEquals($bodyContent, $attachment->getContent());
 	}
 
@@ -807,7 +807,7 @@ class MessageMapperTest extends TestCase {
 		);
 
 		$this->assertEquals('fallback.pdf', $attachment->getName());
-		$this->assertEquals('application/octet-stream', $attachment->getType());
+		$this->assertEquals('application/pdf', $attachment->getType());
 	}
 
 	public function testGetAttachmentTextCalendarContentType(): void {
@@ -908,7 +908,8 @@ class MessageMapperTest extends TestCase {
 		);
 
 		$this->assertEquals('report.pdf', $attachment->getName());
-		$this->assertEquals('application/octet-stream', $attachment->getType());
+		$this->assertEquals('application/pdf', $attachment->getType());
+		$this->assertEquals('attachment', $attachment->disposition);
 	}
 
 	public function testGetAttachmentEncryptedWithInlineImage(): void {
@@ -926,6 +927,7 @@ class MessageMapperTest extends TestCase {
 		);
 
 		$this->assertEquals('nextcloud.png', $attachment->getName());
-		$this->assertEquals('application/octet-stream', $attachment->getType());
+		$this->assertEquals('image/png', $attachment->getType());
+		$this->assertEquals('inline', $attachment->disposition);
 	}
 }

@@ -91,11 +91,29 @@ class MessageSend {
 		$attachments = [];
 		try {
 			foreach ($message->getAttachments() as $entry) {
+				/*
+				 * The mail provider API has no disposition field, so we infer it:
+				 * omit the Content-Disposition header (null) when name is null,
+				 * otherwise default to attachment.
+				 *
+				 * See https://github.com/nextcloud/mail/issues/10416 for the original motivation.
+				 *
+				 * Previously handled in TransmissionService::handleAttachment;
+				 * moved here now that LocalAttachment carries a disposition field.
+				 */
+				if ($entry->getName() === null) {
+					$disposition = LocalAttachment::DISPOSITION_OMIT;
+				} else {
+					$disposition = LocalAttachment::DISPOSITION_ATTACHMENT;
+				}
+
 				$attachments[] = $this->attachmentService->addFileFromString(
 					$userId,
 					(string)$entry->getName(),
 					(string)$entry->getType(),
-					(string)$entry->getContents()
+					(string)$entry->getContents(),
+					null,
+					$disposition,
 				);
 			}
 		} catch (UploadException $e) {

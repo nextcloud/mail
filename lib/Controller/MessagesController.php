@@ -259,10 +259,8 @@ class MessagesController extends Controller {
 		if ($itineraries) {
 			$json['itineraries'] = $itineraries;
 		}
-		$json['attachments'] = array_map(fn ($a) => $this->enrichDownloadUrl(
-			$id,
-			$a
-		), $json['attachments']);
+		$json['attachments'] = $this->enrichAttachments($id, $json['attachments']);
+		$json['inlineAttachments'] = $this->enrichAttachments($id, $json['inlineAttachments']);
 		$json['accountId'] = $account->getId();
 		$json['mailboxId'] = $mailbox->getId();
 		$json['databaseId'] = $message->getId();
@@ -645,9 +643,7 @@ class MessagesController extends Controller {
 						$mailbox,
 						$message->getUid(),
 						true
-					)->getHtmlBody(
-						$id
-					);
+					)->getHtmlBody($id);
 				} finally {
 					$client->logout();
 				}
@@ -1049,20 +1045,24 @@ class MessagesController extends Controller {
 		}
 	}
 
+	private function enrichAttachments(int $id, array $attachments): array {
+		return array_map(
+			fn ($attachment) => $this->enrichAttachment($id, $attachment),
+			$attachments
+		);
+	}
+
 	/**
 	 * @param int $id
 	 * @param array $attachment
 	 *
 	 * @return array
 	 */
-	private function enrichDownloadUrl(int $id,
-		array $attachment) {
-		$downloadUrl = $this->urlGenerator->linkToRoute('mail.messages.downloadAttachment',
-			[
-				'id' => $id,
-				'attachmentId' => $attachment['id'],
-			]);
-		$downloadUrl = $this->urlGenerator->getAbsoluteURL($downloadUrl);
+	private function enrichAttachment(int $id, array $attachment): array {
+		$downloadUrl = $this->urlGenerator->linkToRouteAbsolute('mail.messages.downloadAttachment', [
+			'id' => $id,
+			'attachmentId' => $attachment['id'],
+		]);
 		$attachment['downloadUrl'] = $downloadUrl;
 		$attachment['mimeUrl'] = $this->mimeTypeDetector->mimeTypeIcon($attachment['mime']);
 

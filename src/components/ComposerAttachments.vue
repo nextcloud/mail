@@ -199,6 +199,7 @@ export default {
 				finished: true,
 				sizeString: this.formatBytes(attachment.size),
 				imageBlobURL: attachment.isImage ? attachment.downloadUrl : attachment.mimeUrl,
+				type: attachment.type,
 			})
 			return attachment
 		})
@@ -281,6 +282,7 @@ export default {
 					finished: false,
 					error: false,
 					hasPreview: false,
+					type: 'local',
 					controller,
 				}
 				this.attachments.push(attachment)
