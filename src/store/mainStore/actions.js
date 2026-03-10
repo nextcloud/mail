@@ -2321,6 +2321,9 @@ export default function mainStoreActions() {
 		},
 		deleteTextBlockLocally(id) {
 			const index = this.myTextBlocks.findIndex((textBlock) => textBlock.id === id)
+			if (index === -1) {
+				return
+			}
 			this.myTextBlocks.splice(index, 1)
 		},
 		patchTextBlockLocally(textBlock) {
