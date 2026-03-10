@@ -76,7 +76,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->user = $this->createTestUser();
 
 		/** @var ICrypto $crypo */
-		$crypo = OC::$server->getCrypto();
+		$crypo = \OCP\Server::get(\OCP\Security\ICrypto::class);
 		/** @var MailAccountMapper $mapper */
 		$mapper = Server::get(MailAccountMapper::class);
 		$mailAccount = MailAccount::fromParams([
