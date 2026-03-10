@@ -108,7 +108,7 @@ class MailManagerTest extends TestCase {
 
 	public function testGetFolders() {
 		/** @var Account|MockObject $account */
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$mailboxes = [
 			$this->createMock(Mailbox::class),
 			$this->createMock(Mailbox::class),
@@ -127,12 +127,12 @@ class MailManagerTest extends TestCase {
 	}
 
 	public function testCreateFolder() {
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$account = $this->createMock(Account::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$account = $this->createStub(Account::class);
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->willReturn($client);
-		$folder = $this->createMock(Folder::class);
+		$folder = $this->createStub(Folder::class);
 		$this->folderMapper->expects($this->once())
 			->method('createFolder')
 			->with($this->equalTo($client), $this->equalTo('new'))
@@ -156,7 +156,7 @@ class MailManagerTest extends TestCase {
 
 	public function testDeleteMessageSourceFolderNotFound(): void {
 		/** @var Account|MockObject $account */
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$this->eventDispatcher->expects($this->never())
 			->method('dispatchTyped');
 		$this->mailboxMapper->expects($this->once())
@@ -219,7 +219,7 @@ class MailManagerTest extends TestCase {
 			->method('findById')
 			->with(123)
 			->willReturn($trash);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->willReturn($client);
@@ -259,7 +259,7 @@ class MailManagerTest extends TestCase {
 			->method('findById')
 			->with(123)
 			->willReturn($trash);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->willReturn($client);
@@ -279,8 +279,8 @@ class MailManagerTest extends TestCase {
 	}
 
 	public function testSetCustomFlagNoIMAPCapabilities(): void {
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$account = $this->createMock(Account::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$account = $this->createStub(Account::class);
 
 		$this->imapClientFactory->expects($this->any())
 			->method('getClient')
@@ -296,7 +296,7 @@ class MailManagerTest extends TestCase {
 
 	public function testSetCustomFlagWithIMAPCapabilities(): void {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 
 		$this->imapClientFactory->expects($this->any())
 			->method('getClient')
@@ -312,7 +312,7 @@ class MailManagerTest extends TestCase {
 
 	public function testUnsetCustomFlagWithIMAPCapabilities(): void {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 
 		$this->imapClientFactory->expects($this->any())
 			->method('getClient')
@@ -327,8 +327,8 @@ class MailManagerTest extends TestCase {
 	}
 
 	public function testFilterFlagsWithSystemFlags(): void {
-		$account = $this->createMock(Account::class);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createStub(Account::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$flags = [
 			'seen' => [\Horde_Imap_Client::FLAG_SEEN],
 			'answered' => [\Horde_Imap_Client::FLAG_ANSWERED],
@@ -345,7 +345,7 @@ class MailManagerTest extends TestCase {
 	}
 
 	public function testFilterFlagsWithDefinedKeyword() {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
 		$client->expects($this->exactly(2))
@@ -359,7 +359,7 @@ class MailManagerTest extends TestCase {
 	}
 
 	public function testFilterFlagsWithCustomKeyword() {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
 		$client->expects($this->exactly(2))
@@ -376,14 +376,14 @@ class MailManagerTest extends TestCase {
 	}
 
 	public function testFilterFlagsNoCapabilities() {
-		$account = $this->createMock(Account::class);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createStub(Account::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->assertEquals([], $this->manager->filterFlags($client, $account, Tag::LABEL_IMPORTANT, 'INBOX'));
 	}
 
 	public function testIsPermflagsEnabledTrue(): void {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
 		$client->expects($this->once())
@@ -394,7 +394,7 @@ class MailManagerTest extends TestCase {
 	}
 
 	public function testIsPermflagsEnabledFalse(): void {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
 		$client->expects($this->once())
@@ -405,12 +405,12 @@ class MailManagerTest extends TestCase {
 	}
 
 	public function testRemoveFlag(): void {
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$account = $this->createMock(Account::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$account = $this->createStub(Account::class);
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->willReturn($client);
-		$mb = $this->createMock(Mailbox::class);
+		$mb = $this->createStub(Mailbox::class);
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
@@ -516,7 +516,7 @@ class MailManagerTest extends TestCase {
 	}
 
 	public function testGetThread(): void {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$threadRootId = '<some.message.id@localhost>';
 
 		$this->dbMessageMapper->expects($this->once())
@@ -540,7 +540,7 @@ class MailManagerTest extends TestCase {
 				7
 			),
 		];
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$mailbox = new Mailbox();
 		$mailbox->setName('Inbox');
 		$message = new Message();

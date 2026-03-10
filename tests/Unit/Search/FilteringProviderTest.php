@@ -63,7 +63,7 @@ class FilteringProviderTest extends TestCase {
 
 	public function testSearchForTerm(): void {
 		$term = 'spam';
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$filters = [
 			IFilter::BUILTIN_TERM => new StringFilter($term),
 		];
@@ -91,8 +91,8 @@ class FilteringProviderTest extends TestCase {
 	}
 
 	public function testSearchForUserNoEmail(): void {
-		$user = $this->createMock(IUser::class);
-		$otherUser = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
+		$otherUser = $this->createStub(IUser::class);
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('bob')
@@ -115,7 +115,7 @@ class FilteringProviderTest extends TestCase {
 	}
 
 	public function testSearchForUser(): void {
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$otherUser = $this->createMock(IUser::class);
 		$otherUser->method('getEMailAddress')
 			->willReturn('other@domain.tld');
@@ -151,7 +151,7 @@ class FilteringProviderTest extends TestCase {
 	}
 
 	public function testSearchSinceAndUntil(): void {
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$otherUser = $this->createMock(IUser::class);
 		$otherUser->method('getEMailAddress')
 			->willReturn('other@domain.tld');

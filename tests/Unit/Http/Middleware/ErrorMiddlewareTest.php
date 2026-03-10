@@ -50,7 +50,7 @@ class ErrorMiddlewareTest extends TestCase {
 
 	public function testDoesNotChangeSuccessfulResponses() {
 		$response = new JSONResponse();
-		$controller = $this->createMock(Controller::class);
+		$controller = $this->createStub(Controller::class);
 
 		$after = $this->middleware->afterController($controller, 'index', $response);
 
@@ -58,7 +58,7 @@ class ErrorMiddlewareTest extends TestCase {
 	}
 
 	public function testDoesNotChangeUntaggedMethodResponses() {
-		$request = $this->createMock(IRequest::class);
+		$request = $this->createStub(IRequest::class);
 		$controller = new class($request) extends Controller {
 			public function __construct(IRequest $request) {
 				parent::__construct('myapp', $request);
@@ -84,7 +84,7 @@ class ErrorMiddlewareTest extends TestCase {
 	 * @dataProvider trappedErrorsData
 	 */
 	public function testTrapsErrors($exception, $shouldLog, $expectedStatus) {
-		$request = $this->createMock(IRequest::class);
+		$request = $this->createStub(IRequest::class);
 		$controller = new class($request) extends Controller {
 			public function __construct(IRequest $request) {
 				parent::__construct('myapp', $request);
@@ -108,7 +108,7 @@ class ErrorMiddlewareTest extends TestCase {
 	public function testSerializesRecursively() {
 		$inner = new Exception();
 		$outer = new ServiceException('Test', 0, $inner);
-		$request = $this->createMock(IRequest::class);
+		$request = $this->createStub(IRequest::class);
 		$controller = new class($request) extends Controller {
 			public function __construct(IRequest $request) {
 				parent::__construct('myapp', $request);
@@ -143,8 +143,8 @@ class ErrorMiddlewareTest extends TestCase {
 	 * @dataProvider temporaryExceptionsData
 	 */
 	public function testHandlesTemporaryErrors(Throwable $ex, bool $temporary): void {
-		$controller = $this->createMock(Controller::class);
-		$request = $this->createMock(IRequest::class);
+		$controller = $this->createStub(Controller::class);
+		$request = $this->createStub(IRequest::class);
 		$controller = new class($request) extends Controller {
 			public function __construct(IRequest $request) {
 				parent::__construct('myapp', $request);

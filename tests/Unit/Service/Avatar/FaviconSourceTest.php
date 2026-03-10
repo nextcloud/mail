@@ -58,7 +58,7 @@ class FaviconSourceTest extends TestCase {
 			->method('isValid')
 			->with('https://jancborchardt.net')
 			->willReturn(false);
-		$avatarFactory = $this->createMock(AvatarFactory::class);
+		$avatarFactory = $this->createStub(AvatarFactory::class);
 		$this->favicon->expects(self::never())
 			->method('get');
 
@@ -73,7 +73,7 @@ class FaviconSourceTest extends TestCase {
 			->method('isValid')
 			->with('https://jancborchardt.net')
 			->willReturn(true);
-		$avatarFactory = $this->createMock(AvatarFactory::class);
+		$avatarFactory = $this->createStub(AvatarFactory::class);
 		$this->favicon->expects($this->once())
 			->method('get')
 			->with('https://jancborchardt.net')
@@ -130,7 +130,7 @@ class FaviconSourceTest extends TestCase {
 			->method('isValid')
 			->with('https://jancborchardt.net')
 			->willReturn(true);
-		$avatarFactory = $this->createMock(AvatarFactory::class);
+		$avatarFactory = $this->createStub(AvatarFactory::class);
 		$this->favicon->expects($this->once())
 			->method('get')
 			->with('https://jancborchardt.net')

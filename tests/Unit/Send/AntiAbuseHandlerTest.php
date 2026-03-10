@@ -46,7 +46,7 @@ class AntiAbuseHandlerTest extends TestCase {
 		$account = new Account($mailAccount);
 		$localMessage = new LocalMessage();
 		$localMessage->setStatus(LocalMessage::STATUS_RAW);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->userManager->expects(self::once())
 			->method('get')
@@ -68,7 +68,7 @@ class AntiAbuseHandlerTest extends TestCase {
 		$account = new Account($mailAccount);
 		$localMessage = new LocalMessage();
 		$localMessage->setStatus(LocalMessage::STATUS_RAW);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->userManager->expects(self::once())
 			->method('get')
@@ -90,7 +90,7 @@ class AntiAbuseHandlerTest extends TestCase {
 		$account = new Account($mailAccount);
 		$localMessage = new LocalMessage();
 		$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->userManager->expects(self::never())
 			->method('get');

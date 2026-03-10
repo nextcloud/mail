@@ -91,7 +91,7 @@ class MailTransmissionTest extends TestCase {
 		$localMessage->setSubject('Test');
 		$localMessage->setBodyPlain('Test');
 		$localMessage->setHtml(false);
-		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$transport = $this->createStub(Horde_Mail_Transport::class);
 
 		$this->smtpClientFactory->expects($this->once())
 			->method('create')
@@ -120,7 +120,7 @@ class MailTransmissionTest extends TestCase {
 		$localMessage->setSubject('Test');
 		$localMessage->setBodyPlain('Test');
 		$localMessage->setHtml(false);
-		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$transport = $this->createStub(Horde_Mail_Transport::class);
 
 		$this->transmissionService->expects(self::once())
 			->method('getSignMimePart')
@@ -153,7 +153,7 @@ class MailTransmissionTest extends TestCase {
 		$localMessage->setHtml(false);
 		$localMessage->setAliasId(1);
 		$localMessage->setRequestMdn(true);
-		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$transport = $this->createStub(Horde_Mail_Transport::class);
 		$this->smtpClientFactory->expects($this->once())
 			->method('create')
 			->willReturn($transport);
@@ -193,7 +193,7 @@ class MailTransmissionTest extends TestCase {
 		$localMessage->setHtml(false);
 		$localMessage->setAliasId(1);
 		$localMessage->setRequestMdn(true);
-		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$transport = $this->createStub(Horde_Mail_Transport::class);
 		$this->smtpClientFactory->expects($this->once())
 			->method('create')
 			->willReturn($transport);
@@ -230,7 +230,7 @@ class MailTransmissionTest extends TestCase {
 		$localMessage->setHtml(false);
 		$localMessage->setAliasId(1);
 		$localMessage->setRequestMdn(true);
-		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$transport = $this->createStub(Horde_Mail_Transport::class);
 		$this->smtpClientFactory->expects($this->once())
 			->method('create')
 			->willReturn($transport);
@@ -272,7 +272,7 @@ class MailTransmissionTest extends TestCase {
 		$attachment->setId(1);
 		$localMessage->setAttachments([$attachment]);
 		$message = new Message();
-		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$transport = $this->createStub(Horde_Mail_Transport::class);
 		$attachmentMessage = new DbMessage();
 		$attachmentMessage->setMailboxId(1234);
 		$attachmentMessage->setUid(11);
@@ -324,7 +324,7 @@ class MailTransmissionTest extends TestCase {
 		$messageInReply->setUid($repliedMessageUid);
 		$messageInReply->setMessageId('message@server');
 		$message = new Message();
-		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$transport = $this->createStub(Horde_Mail_Transport::class);
 
 		$this->smtpClientFactory->expects($this->once())
 			->method('create')
@@ -353,7 +353,7 @@ class MailTransmissionTest extends TestCase {
 		$messageData = NewMessageData::fromRequest($account, 'sub', 'bod', 'to@d.com', '', '');
 		$message = new Message();
 
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->with($account)

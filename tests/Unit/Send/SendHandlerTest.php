@@ -41,7 +41,7 @@ class SendHandlerTest extends TestCase {
 		$localMessage = new LocalMessage();
 		$localMessage->setId(100);
 		$localMessage->setStatus(LocalMessage::STATUS_RAW);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->transmission->expects(self::once())
 			->method('sendMessage')
@@ -60,7 +60,7 @@ class SendHandlerTest extends TestCase {
 		$localMessage = new LocalMessage();
 		$localMessage->setId(100);
 		$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->transmission->expects(self::never())
 			->method('sendMessage');
@@ -82,7 +82,7 @@ class SendHandlerTest extends TestCase {
 		$mock->expects(self::any())
 			->method('getStatus')
 			->willReturn(LocalMessage::STATUS_SMPT_SEND_FAIL);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->transmission->expects(self::once())
 			->method('sendMessage');

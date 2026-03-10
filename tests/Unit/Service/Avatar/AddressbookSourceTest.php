@@ -48,7 +48,7 @@ class AddressbookSourceTest extends TestCase {
 
 	public function testFetchNoneFound() {
 		$email = 'john@doe.com';
-		$avatarFactory = $this->createMock(AvatarFactory::class);
+		$avatarFactory = $this->createStub(AvatarFactory::class);
 		$this->ci->expects($this->once())
 			->method('getPhoto')
 			->willReturn(null);
