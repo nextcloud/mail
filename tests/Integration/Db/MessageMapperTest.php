@@ -41,7 +41,7 @@ class MessageMapperTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->db = \OC::$server->getDatabaseConnection();
+		$this->db = \OCP\Server::get(\OCP\IDBConnection::class);
 		$this->time = $this->createMock(ITimeFactory::class);
 		$this->time->method('getTime')->willReturnCallback(fn () => $this->timestamp);
 		$tagMapper = $this->createMock(TagMapper::class);

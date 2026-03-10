@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "be292b2d3c07ab4d670217b32dedbb81",
+    "content-hash": "8df47d40b09bad037b778cdb33a0b4ec",
     "packages": [],
     "packages-dev": [
         {
             "name": "christophwurst/nextcloud_testing",
-            "version": "v1.1.0",
+            "version": "v1.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_testing.git",
-                "reference": "3bca2106eb406effc713162f0dc9e71fc735a8b3"
+                "reference": "2428fddb15caeb025fa0bb37638e7756aae2a1f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_testing/zipball/3bca2106eb406effc713162f0dc9e71fc735a8b3",
-                "reference": "3bca2106eb406effc713162f0dc9e71fc735a8b3",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_testing/zipball/2428fddb15caeb025fa0bb37638e7756aae2a1f1",
+                "reference": "2428fddb15caeb025fa0bb37638e7756aae2a1f1",
                 "shasum": ""
             },
             "require": {
@@ -45,9 +45,9 @@
             "description": "Simple and fast unit and integration testing framework for Nextcloud, based on PHPUnit",
             "support": {
                 "issues": "https://github.com/ChristophWurst/nextcloud_testing/issues",
-                "source": "https://github.com/ChristophWurst/nextcloud_testing/tree/v1.1.0"
+                "source": "https://github.com/ChristophWurst/nextcloud_testing/tree/v1.1.3"
             },
-            "time": "2025-12-10T13:23:32+00:00"
+            "time": "2026-03-10T18:18:16+00:00"
         },
         {
             "name": "doctrine/instantiator",
