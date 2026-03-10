@@ -568,6 +568,7 @@ OC.L10N.register(
     "Add default tags" : "Lägg till standardtaggar",
     "Add tag" : "Lägg till tagg",
     "Saving tag …" : "Sparar tagg ...",
+    "Task created" : "Uppgift skapad",
     "Summarizing thread failed." : "Kunde inte skapa sammanfattning",
     "Could not load your message thread" : "Det gick inte att ladda meddelandetråden",
     "The thread doesn't exist or has been deleted" : "Tråden finns inte eller har raderats",
