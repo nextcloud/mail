@@ -11,7 +11,6 @@ namespace OCA\Mail\Tests\Integration\Db;
 
 use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OC;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\MailAccount;
@@ -38,7 +37,7 @@ class AliasMapperTest extends TestCase {
 	 */
 	public function setup(): void {
 		parent::setUp();
-		$this->db = OC::$server->getDatabaseConnection();
+		$this->db = \OCP\Server::get(\OCP\IDBConnection::class);
 		$this->mapper = new AliasMapper($this->db);
 	}
 

@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OC;
 use OCA\Mail\Service\Html;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -62,8 +61,8 @@ class HtmlTest extends TestCase {
 	 * @param $text
 	 */
 	public function testParseMailBody($expectedBody, $expectedSignature, $text) {
-		$urlGenerator = OC::$server->getURLGenerator();
-		$request = OC::$server->getRequest();
+		$urlGenerator = \OCP\Server::get(\OCP\IURLGenerator::class);
+		$request = \OCP\Server::get(\OCP\IRequest::class);
 		$html = new Html($urlGenerator, $request);
 		[$b, $s] = $html->parseMailBody($text);
 		$this->assertSame($expectedBody, $b);
