@@ -72,6 +72,6 @@ class HtmlResponse extends Response {
 			return $this->content;
 		}
 
-		return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><script nonce="' . $this->nonce . '" src="' . $this->scriptUrl . '"></script></head><body>' . $this->content . '<div data-iframe-size></div></body></html>';
+		return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><script nonce="' . htmlspecialchars($this->nonce, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '" src="' . htmlspecialchars($this->scriptUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '"></script></head><body>' . $this->content . '<div data-iframe-size></div></body></html>';
 	}
 }

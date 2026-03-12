@@ -463,7 +463,9 @@ class PageController extends Controller {
 			$parts = explode('&', $parts['query']);
 			foreach ($parts as $part) {
 				$pair = explode('=', $part, 2);
-				$params[strtolower($pair[0])] = urldecode($pair[1]);
+				if (count($pair) === 2) {
+					$params[strtolower($pair[0])] = urldecode($pair[1]);
+				}
 			}
 		}
 

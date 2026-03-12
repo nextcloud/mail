@@ -678,10 +678,11 @@ class MessagesController extends Controller {
 
 			return $htmlResponse;
 		} catch (Exception $ex) {
+			$this->logger->error('Could not load message body', ['exception' => $ex]);
 			return new TemplateResponse(
 				$this->appName,
 				'error',
-				['message' => $ex->getMessage()],
+				['message' => 'Could not load the message body'],
 				TemplateResponse::RENDER_AS_BLANK,
 				Http::STATUS_INTERNAL_SERVER_ERROR
 			);

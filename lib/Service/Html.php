@@ -179,14 +179,16 @@ class Html {
 		// Save original styles to be able to restore them later
 		$savedStyles = '';
 		if ($hasBlockedContent) {
-			$savedStyles = 'data-original-content="' . htmlspecialchars($styles) . '"';
-			$styles = $css->render(OutputFormat::createCompact());
+			$savedStyles = 'data-original-content="' . htmlspecialchars($styles, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '"';
 		}
+
+		// Always use CSS parser output to prevent style tag injection
+		$renderedStyles = $css->render(OutputFormat::createCompact());
 
 		// Render style tag
 		return implode('', [
 			'<style type="text/css" ', $savedStyles, '>',
-			$styles,
+			$renderedStyles,
 			'</style>',
 		]);
 	}
