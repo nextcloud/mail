@@ -19,6 +19,7 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Model\EventData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -54,6 +55,9 @@ class ThreadControllerTest extends TestCase {
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 
+	/** @var DelegationService|MockObject */
+	private $delegationService;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -65,6 +69,9 @@ class ThreadControllerTest extends TestCase {
 		$this->snoozeService = $this->createMock(SnoozeService::class);
 		$this->aiIntergrationsService = $this->createMock(AiIntegrationsService::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->delegationService = $this->createMock(DelegationService::class);
+		$this->delegationService->method('resolveMessageUserId')->willReturn($this->userId);
+		$this->delegationService->method('resolveMailboxUserId')->willReturn($this->userId);
 
 		$this->controller = new ThreadController(
 			$this->appName,
@@ -75,6 +82,7 @@ class ThreadControllerTest extends TestCase {
 			$this->snoozeService,
 			$this->aiIntergrationsService,
 			$this->logger,
+			$this->delegationService,
 		);
 	}
 

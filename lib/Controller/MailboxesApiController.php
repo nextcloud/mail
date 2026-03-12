@@ -11,8 +11,10 @@ namespace OCA\Mail\Controller;
 
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\ResponseDefinitions;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\ApiRoute;
@@ -33,6 +35,7 @@ class MailboxesApiController extends OCSController {
 		private IMailManager $mailManager,
 		private readonly AccountService $accountService,
 		private IMailSearch $mailSearch,
+		private DelegationService $delegationService,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -56,8 +59,9 @@ class MailboxesApiController extends OCSController {
 		}
 
 		try {
-			$account = $this->accountService->find($userId, $accountId);
-		} catch (DoesNotExistException $e) {
+			$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $userId);
+			$account = $this->accountService->find($effectiveUserId, $accountId);
+		} catch (ClientException $e) {
 			return new DataResponse([], Http::STATUS_NOT_FOUND);
 		}
 
@@ -97,8 +101,9 @@ class MailboxesApiController extends OCSController {
 			return new DataResponse([], Http::STATUS_NOT_FOUND);
 		}
 		try {
-			$mailbox = $this->mailManager->getMailbox($userId, $mailboxId);
-			$account = $this->accountService->find($userId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($mailboxId, $userId);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $mailboxId);
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new DataResponse([], Http::STATUS_FORBIDDEN);
 		}

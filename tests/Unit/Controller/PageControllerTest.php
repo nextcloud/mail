@@ -205,6 +205,10 @@ class PageControllerTest extends TestCase {
 				$account1,
 				$account2,
 			]));
+		$this->accountService->expects($this->once())
+			->method('findDelegatedAccounts')
+			->with($this->userId)
+			->willReturn([]);
 		$this->mailManager->expects($this->exactly(2))
 			->method('getMailboxes')
 			->withConsecutive(
@@ -247,6 +251,7 @@ class PageControllerTest extends TestCase {
 				'mailboxes' => [
 					$mailbox,
 				],
+				'isDelegated' => false,
 			],
 			[
 				'accountId' => 2,
@@ -255,6 +260,7 @@ class PageControllerTest extends TestCase {
 					'a22',
 				],
 				'mailboxes' => [],
+				'isDelegated' => false,
 			],
 		];
 

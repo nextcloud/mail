@@ -14,6 +14,7 @@ use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\ThreadMapper;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Http\TrapError;
+use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -31,6 +32,7 @@ class FollowUpController extends Controller {
 		private ThreadMapper $threadMapper,
 		private MessageMapper $messageMapper,
 		private MailboxMapper $mailboxMapper,
+		private DelegationService $delegationService,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -54,7 +56,8 @@ class FollowUpController extends Controller {
 			$mailboxId = $message->getMailboxId();
 			if (!isset($mailboxes[$mailboxId])) {
 				try {
-					$mailboxes[$mailboxId] = $this->mailboxMapper->findByUid($mailboxId, $userId);
+					$effectiveUserId = $this->delegationService->resolveMailboxUserId($mailboxId, $userId);
+					$mailboxes[$mailboxId] = $this->mailboxMapper->findByUid($mailboxId, $effectiveUserId);
 				} catch (DoesNotExistException $e) {
 					continue;
 				}

@@ -19,6 +19,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message as DbMessage;
 use OCA\Mail\Folder;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
@@ -33,6 +34,7 @@ class MailboxesApiControllerTest extends TestCase {
 	private IMailManager|MockObject $mailManager;
 	private AccountService&MockObject $accountService;
 	private MockObject|IMailSearch $mailSearch;
+	private DelegationService&MockObject $delegationService;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -41,6 +43,11 @@ class MailboxesApiControllerTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->mailSearch = $this->createMock(IMailSearch::class);
+		$this->delegationService = $this->createMock(DelegationService::class);
+		$this->delegationService->method('resolveAccountUserId')
+			->willReturn(self::USER_ID);
+		$this->delegationService->method('resolveMailboxUserId')
+			->willReturn(self::USER_ID);
 
 		$this->controller = new MailboxesApiController(
 			'mail',
@@ -49,7 +56,7 @@ class MailboxesApiControllerTest extends TestCase {
 			$this->mailManager,
 			$this->accountService,
 			$this->mailSearch,
-
+			$this->delegationService,
 		);
 	}
 
@@ -61,6 +68,7 @@ class MailboxesApiControllerTest extends TestCase {
 			$this->mailManager,
 			$this->accountService,
 			$this->mailSearch,
+			$this->delegationService,
 		);
 
 		$this->accountService->expects(self::never())
@@ -101,6 +109,7 @@ class MailboxesApiControllerTest extends TestCase {
 			$this->mailManager,
 			$this->accountService,
 			$this->mailSearch,
+			$this->delegationService,
 		);
 
 		$this->accountService->expects(self::never())

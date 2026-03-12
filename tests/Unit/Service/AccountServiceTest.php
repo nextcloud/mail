@@ -13,6 +13,7 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\BackgroundJob\QuotaJob;
 use OCA\Mail\BackgroundJob\SyncJob;
+use OCA\Mail\Db\DelegationMapper;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
@@ -61,6 +62,7 @@ class AccountServiceTest extends TestCase {
 
 	private IConfig&MockObject $config;
 	private ITimeFactory&MockObject $time;
+	private DelegationMapper&MockObject $delegationMapper;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -72,6 +74,7 @@ class AccountServiceTest extends TestCase {
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->config = $this->createMock(IConfig::class);
 		$this->time = $this->createMock(ITimeFactory::class);
+		$this->delegationMapper = $this->createMock(DelegationMapper::class);
 		$this->accountService = new AccountService(
 			$this->mapper,
 			$this->aliasesService,
@@ -79,6 +82,7 @@ class AccountServiceTest extends TestCase {
 			$this->imapClientFactory,
 			$this->config,
 			$this->time,
+			$this->delegationMapper,
 		);
 
 		$this->account1 = new MailAccount();

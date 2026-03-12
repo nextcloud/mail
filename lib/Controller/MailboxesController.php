@@ -21,8 +21,10 @@ use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
@@ -38,6 +40,7 @@ class MailboxesController extends Controller {
 	private IMailManager $mailManager;
 	private SyncService $syncService;
 	private ?string $currentUserId;
+	private DelegationService $delegationService;
 
 	public function __construct(
 		string $appName,
@@ -48,6 +51,7 @@ class MailboxesController extends Controller {
 		SyncService $syncService,
 		private readonly IConfig $config,
 		private readonly ITimeFactory $timeFactory,
+		DelegationService $delegationService,
 	) {
 		parent::__construct($appName, $request);
 
@@ -55,6 +59,7 @@ class MailboxesController extends Controller {
 		$this->currentUserId = $userId;
 		$this->mailManager = $mailManager;
 		$this->syncService = $syncService;
+		$this->delegationService = $delegationService;
 	}
 
 	/**
@@ -74,7 +79,12 @@ class MailboxesController extends Controller {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
 
-		$account = $this->accountService->find($this->currentUserId, $accountId);
+		try {
+			$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->currentUserId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$account = $this->accountService->find($effectiveUserId, $accountId);
 
 		$mailboxes = $this->mailManager->getMailboxes($account, $forceSync);
 		return new JSONResponse([
@@ -102,8 +112,13 @@ class MailboxesController extends Controller {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
 
-		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
-		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->currentUserId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 
 		if ($name !== null) {
 			$mailbox = $this->mailManager->renameMailbox(
@@ -148,8 +163,13 @@ class MailboxesController extends Controller {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
 
-		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
-		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->currentUserId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		$order = $sortOrder === 'newest' ? IMailSearch::ORDER_NEWEST_FIRST: IMailSearch::ORDER_OLDEST_FIRST;
 
 		$this->config->setUserValue(
@@ -194,8 +214,13 @@ class MailboxesController extends Controller {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
 
-		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
-		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->currentUserId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 
 		$this->syncService->clearCache($account, $mailbox);
 		return new JSONResponse([]);
@@ -216,8 +241,13 @@ class MailboxesController extends Controller {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
 
-		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
-		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->currentUserId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 
 		$this->mailManager->markFolderAsRead($account, $mailbox);
 
@@ -240,7 +270,12 @@ class MailboxesController extends Controller {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
 
-		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->currentUserId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
 		return new JSONResponse($mailbox->getStats());
 	}
 
@@ -280,7 +315,12 @@ class MailboxesController extends Controller {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
 
-		$account = $this->accountService->find($this->currentUserId, $accountId);
+		try {
+			$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->currentUserId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$account = $this->accountService->find($effectiveUserId, $accountId);
 
 		return new JSONResponse($this->mailManager->createMailbox($account, $name));
 	}
@@ -300,8 +340,13 @@ class MailboxesController extends Controller {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
 
-		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
-		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->currentUserId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 
 		$this->mailManager->deleteMailbox($account, $mailbox);
 		return new JSONResponse();
@@ -323,8 +368,13 @@ class MailboxesController extends Controller {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
 
-		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
-		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->currentUserId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 
 		$this->mailManager->clearMailbox($account, $mailbox);
 		return new JSONResponse();
@@ -341,8 +391,13 @@ class MailboxesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
-		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->currentUserId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 
 		$this->syncService->repairSync($account, $mailbox);
 		return new JsonResponse();

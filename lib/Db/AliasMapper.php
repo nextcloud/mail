@@ -141,6 +141,18 @@ class AliasMapper extends QBMapper {
 		}
 	}
 
+	/**
+	 * @throws DoesNotExistException
+	 */
+	public function findAccountIdForAlias(int $aliasId): int {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('account_id')
+			->from($this->getTableName())
+			->where($qb->expr()->eq('id', $qb->createNamedParameter($aliasId)));
+		$row = $this->findOneQuery($qb);
+		return (int)$row['account_id'];
+	}
+
 	public function deleteOrphans(): void {
 		$qb1 = $this->db->getQueryBuilder();
 		$idsQuery = $qb1->select('a.id')
