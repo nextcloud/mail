@@ -56,7 +56,7 @@
 						<NcButton
 							variant="tertiary-no-background"
 							:aria-label="t('mail', 'AI info')"
-							class="button">
+							class="ai-button">
 							<template #icon>
 								<IconInfo :size="20" />
 							</template>
