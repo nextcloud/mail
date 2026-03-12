@@ -183,8 +183,6 @@ class AiIntegrationsServiceTest extends TestCase {
 		$message = new Message();
 		$message->setUid(1);
 		$imapMessage = $this->createMock(IMAPMessage::class);
-		$addessList = $this->createMock(AddressList::class);
-		$addessList->method('first')->willreturn('normal@email.com');
 		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
 		$this->textProcessingManager
 			->method('getAvailableTaskTypes')
@@ -198,7 +196,6 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->assertEquals($replies, []);
 		$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
 		$imapMessage->method('getUnsubscribeUrl')->willReturn(null);
-		$addessList->method('first')->willreturn('noreply@test.com');
 		$replies = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
 		$this->assertEquals($replies, []);
 	}
