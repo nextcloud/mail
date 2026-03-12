@@ -79,13 +79,19 @@ class MailboxSync {
 	 */
 	public function sync(Account $account,
 		LoggerInterface $logger,
-		bool $force = false): void {
+		bool $force = false,
+		?Horde_Imap_Client_Socket $client = null): void {
 		if (!$force && $account->getMailAccount()->getLastMailboxSync() >= ($this->timeFactory->getTime() - 7200)) {
 			$logger->debug('account is up to date, skipping mailbox sync');
 			return;
 		}
 
-		$client = $this->imapClientFactory->getClient($account);
+		if ($client === null) {
+			$client = $this->imapClientFactory->getClient($account);
+			$ownClient = true;
+		} else {
+			$ownClient = false;
+		}
 		try {
 			try {
 				$namespaces = $client->getNamespaces([], [
@@ -131,7 +137,9 @@ class MailboxSync {
 				new MailboxesSynchronizedEvent($account)
 			);
 		} finally {
-			$client->logout();
+			if ($ownClient) {
+				$client->logout();
+			}
 		}
 	}
 
