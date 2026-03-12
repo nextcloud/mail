@@ -21,6 +21,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Attachment\UploadedFile;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\ItineraryService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
@@ -66,6 +67,7 @@ class MessageApiController extends OCSController {
 		private IDkimService $dkimService,
 		private ItineraryService $itineraryService,
 		private TrustedSenderService $trustedSenderService,
+		private DelegationService $delegationService,
 	) {
 		parent::__construct($appName, $request);
 		$this->userId = $userId;
@@ -120,7 +122,8 @@ class MessageApiController extends OCSController {
 		}
 
 		try {
-			$mailAccount = $this->accountService->find($this->userId, $accountId);
+			$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
+			$mailAccount = $this->accountService->find($effectiveUserId, $accountId);
 		} catch (ClientException $e) {
 			$this->logger->error("Mail account #$accountId not found", ['exception' => $e]);
 			return new DataResponse('Account not found.', Http::STATUS_NOT_FOUND);
@@ -128,7 +131,7 @@ class MessageApiController extends OCSController {
 
 		if ($fromEmail !== $mailAccount->getEmail()) {
 			try {
-				$alias = $this->aliasesService->findByAliasAndUserId($fromEmail, $this->userId);
+				$alias = $this->aliasesService->findByAliasAndUserId($fromEmail, $effectiveUserId);
 			} catch (DoesNotExistException $e) {
 				$this->logger->error("Alias $fromEmail for mail account $accountId not found", ['exception' => $e]);
 				// Cannot send from this email as it is not configured as an alias
@@ -234,9 +237,10 @@ class MessageApiController extends OCSController {
 		}
 
 		try {
-			$message = $this->mailManager->getMessage($this->userId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->userId, $message->getMailboxId());
-			$account = $this->accountService->find($this->userId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (ClientException|DoesNotExistException $e) {
 			$this->logger->error('Message, Account or Mailbox not found', ['exception' => $e->getMessage()]);
 			return new DataResponse('Account not found.', Http::STATUS_NOT_FOUND);
@@ -322,9 +326,10 @@ class MessageApiController extends OCSController {
 		}
 
 		try {
-			$message = $this->mailManager->getMessage($this->userId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->userId, $message->getMailboxId());
-			$account = $this->accountService->find($this->userId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (ClientException|DoesNotExistException $e) {
 			$this->logger->error('Message, Account or Mailbox not found', ['exception' => $e->getMessage()]);
 			return new DataResponse('Message, Account or Mailbox not found', Http::STATUS_NOT_FOUND);
@@ -383,9 +388,10 @@ class MessageApiController extends OCSController {
 	#[TrapError]
 	public function getAttachment(int $id, string $attachmentId): DataResponse {
 		try {
-			$message = $this->mailManager->getMessage($this->userId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->userId, $message->getMailboxId());
-			$account = $this->accountService->find($this->userId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException|ClientException $e) {
 			return new DataResponse('Message, Account or Mailbox not found', Http::STATUS_NOT_FOUND);
 		}

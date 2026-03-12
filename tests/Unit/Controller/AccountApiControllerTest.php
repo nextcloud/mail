@@ -16,6 +16,7 @@ use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -28,6 +29,7 @@ class AccountApiControllerTest extends TestCase {
 	private IRequest&MockObject $request;
 	private AccountService&MockObject $accountService;
 	private AliasesService&MockObject $aliasesService;
+	private DelegationService&MockObject $delegationService;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -35,6 +37,7 @@ class AccountApiControllerTest extends TestCase {
 		$this->request = $this->createMock(IRequest::class);
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);
+		$this->delegationService = $this->createMock(DelegationService::class);
 
 		$this->controller = new AccountApiController(
 			'mail',
@@ -42,6 +45,7 @@ class AccountApiControllerTest extends TestCase {
 			self::USER_ID,
 			$this->accountService,
 			$this->aliasesService,
+			$this->delegationService,
 		);
 	}
 
@@ -52,6 +56,7 @@ class AccountApiControllerTest extends TestCase {
 			null,
 			$this->accountService,
 			$this->aliasesService,
+			$this->delegationService,
 		);
 
 		$this->accountService->expects(self::never())
@@ -74,6 +79,10 @@ class AccountApiControllerTest extends TestCase {
 			->method('findByUserId')
 			->with(self::USER_ID)
 			->willReturn([$account]);
+		$this->accountService->expects(self::once())
+			->method('findDelegatedAccounts')
+			->with(self::USER_ID)
+			->willReturn([]);
 
 		$alias = new Alias();
 		$alias->setId(10);
@@ -90,6 +99,7 @@ class AccountApiControllerTest extends TestCase {
 			[
 				'id' => 42,
 				'email' => 'foo@bar.com',
+				'isDelegated' => false,
 				'aliases' => [
 					[
 						'id' => 10,
@@ -111,6 +121,10 @@ class AccountApiControllerTest extends TestCase {
 			->method('findByUserId')
 			->with(self::USER_ID)
 			->willReturn([$account]);
+		$this->accountService->expects(self::once())
+			->method('findDelegatedAccounts')
+			->with(self::USER_ID)
+			->willReturn([]);
 
 		$alias = new Alias();
 		$alias->setId(10);
@@ -127,6 +141,7 @@ class AccountApiControllerTest extends TestCase {
 			[
 				'id' => 42,
 				'email' => 'foo@bar.com',
+				'isDelegated' => false,
 				'aliases' => [
 					[
 						'id' => 10,
@@ -148,6 +163,10 @@ class AccountApiControllerTest extends TestCase {
 			->method('findByUserId')
 			->with(self::USER_ID)
 			->willReturn([$account]);
+		$this->accountService->expects(self::once())
+			->method('findDelegatedAccounts')
+			->with(self::USER_ID)
+			->willReturn([]);
 
 		$this->aliasesService->expects(self::once())
 			->method('findAll')
@@ -160,6 +179,7 @@ class AccountApiControllerTest extends TestCase {
 			[
 				'id' => 42,
 				'email' => 'foo@bar.com',
+				'isDelegated' => false,
 				'aliases' => [],
 			]
 		], $actual->getData());

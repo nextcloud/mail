@@ -15,6 +15,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -32,6 +33,7 @@ class ThreadController extends Controller {
 	private SnoozeService $snoozeService;
 	private AiIntegrationsService $aiIntergrationsService;
 	private LoggerInterface $logger;
+	private DelegationService $delegationService;
 
 
 	public function __construct(string $appName,
@@ -41,7 +43,8 @@ class ThreadController extends Controller {
 		IMailManager $mailManager,
 		SnoozeService $snoozeService,
 		AiIntegrationsService $aiIntergrationsService,
-		LoggerInterface $logger) {
+		LoggerInterface $logger,
+		DelegationService $delegationService) {
 		parent::__construct($appName, $request);
 		$this->currentUserId = $userId;
 		$this->accountService = $accountService;
@@ -49,6 +52,7 @@ class ThreadController extends Controller {
 		$this->snoozeService = $snoozeService;
 		$this->aiIntergrationsService = $aiIntergrationsService;
 		$this->logger = $logger;
+		$this->delegationService = $delegationService;
 	}
 
 	/**
@@ -64,11 +68,12 @@ class ThreadController extends Controller {
 	#[TrapError]
 	public function move(int $id, int $destMailboxId): JSONResponse {
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$srcMailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$srcAccount = $this->accountService->find($this->currentUserId, $srcMailbox->getAccountId());
-			$dstMailbox = $this->mailManager->getMailbox($this->currentUserId, $destMailboxId);
-			$dstAccount = $this->accountService->find($this->currentUserId, $dstMailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->currentUserId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$srcMailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$srcAccount = $this->accountService->find($effectiveUserId, $srcMailbox->getAccountId());
+			$dstMailbox = $this->mailManager->getMailbox($effectiveUserId, $destMailboxId);
+			$dstAccount = $this->accountService->find($effectiveUserId, $dstMailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
@@ -98,11 +103,12 @@ class ThreadController extends Controller {
 	#[TrapError]
 	public function snooze(int $id, int $unixTimestamp, int $destMailboxId): JSONResponse {
 		try {
-			$selectedMessage = $this->mailManager->getMessage($this->currentUserId, $id);
-			$srcMailbox = $this->mailManager->getMailbox($this->currentUserId, $selectedMessage->getMailboxId());
-			$srcAccount = $this->accountService->find($this->currentUserId, $srcMailbox->getAccountId());
-			$dstMailbox = $this->mailManager->getMailbox($this->currentUserId, $destMailboxId);
-			$dstAccount = $this->accountService->find($this->currentUserId, $dstMailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->currentUserId);
+			$selectedMessage = $this->mailManager->getMessage($effectiveUserId, $id);
+			$srcMailbox = $this->mailManager->getMailbox($effectiveUserId, $selectedMessage->getMailboxId());
+			$srcAccount = $this->accountService->find($effectiveUserId, $srcMailbox->getAccountId());
+			$dstMailbox = $this->mailManager->getMailbox($effectiveUserId, $destMailboxId);
+			$dstAccount = $this->accountService->find($effectiveUserId, $dstMailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
@@ -124,12 +130,13 @@ class ThreadController extends Controller {
 	#[TrapError]
 	public function unSnooze(int $id): JSONResponse {
 		try {
-			$selectedMessage = $this->mailManager->getMessage($this->currentUserId, $id);
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->currentUserId);
+			$selectedMessage = $this->mailManager->getMessage($effectiveUserId, $id);
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$this->snoozeService->unSnoozeThread($selectedMessage, $this->currentUserId);
+		$this->snoozeService->unSnoozeThread($selectedMessage, $effectiveUserId);
 
 		return new JSONResponse();
 	}
@@ -143,9 +150,10 @@ class ThreadController extends Controller {
 	 */
 	public function summarize(int $id): JSONResponse {
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->currentUserId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
@@ -175,9 +183,10 @@ class ThreadController extends Controller {
 	 */
 	public function generateEventData(int $id): JSONResponse {
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->currentUserId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
@@ -207,9 +216,10 @@ class ThreadController extends Controller {
 	#[TrapError]
 	public function delete(int $id): JSONResponse {
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->currentUserId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}

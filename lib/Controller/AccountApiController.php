@@ -14,6 +14,7 @@ use OCA\Mail\Db\Alias;
 use OCA\Mail\ResponseDefinitions;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\ApiRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -32,6 +33,7 @@ class AccountApiController extends OCSController {
 		private readonly ?string $userId,
 		private readonly AccountService $accountService,
 		private readonly AliasesService $aliasesService,
+		private readonly DelegationService $delegationService,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -54,17 +56,36 @@ class AccountApiController extends OCSController {
 		}
 
 		$accounts = $this->accountService->findByUserId($userId);
-		return new DataResponse(array_map(function (Account $account) use ($userId) {
+		$result = array_map(function (Account $account) use ($userId) {
 			$aliases = $this->aliasesService->findAll($account->getId(), $userId);
 			return [
 				'id' => $account->getId(),
 				'email' => $account->getEmail(),
+				'isDelegated' => false,
 				'aliases' => array_map(static fn (Alias $alias) => [
 					'id' => $alias->getId(),
 					'email' => $alias->getAlias(),
 					'name' => $alias->getName(),
 				], $aliases),
 			];
-		}, $accounts));
+		}, $accounts);
+
+		$delegatedAccounts = $this->accountService->findDelegatedAccounts($userId);
+		foreach ($delegatedAccounts as $account) {
+			$ownerUserId = $account->getUserId();
+			$aliases = $this->aliasesService->findAll($account->getId(), $ownerUserId);
+			$result[] = [
+				'id' => $account->getId(),
+				'email' => $account->getEmail(),
+				'isDelegated' => true,
+				'aliases' => array_map(static fn (Alias $alias) => [
+					'id' => $alias->getId(),
+					'email' => $alias->getAlias(),
+					'name' => $alias->getName(),
+				], $aliases),
+			];
+		}
+
+		return new DataResponse($result);
 	}
 }

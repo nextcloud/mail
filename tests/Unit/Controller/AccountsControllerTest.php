@@ -143,6 +143,10 @@ class AccountsControllerTest extends TestCase {
 			->method('findAll')
 			->with(self::equalTo($this->accountId), self::equalTo($this->userId))
 			->will(self::returnValue(['a1', 'a2']));
+		$this->accountService->expects(self::once())
+			->method('findDelegatedAccounts')
+			->with(self::equalTo($this->userId))
+			->willReturn([]);
 
 		$response = $this->controller->index();
 
@@ -153,6 +157,7 @@ class AccountsControllerTest extends TestCase {
 					'a1',
 					'a2',
 				],
+				'isDelegated' => false,
 			]
 		]);
 		self::assertEquals($expectedResponse, $response);

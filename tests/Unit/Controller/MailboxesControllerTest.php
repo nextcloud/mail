@@ -18,6 +18,7 @@ use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -49,6 +50,7 @@ class MailboxesControllerTest extends TestCase {
 
 	private IConfig|MockObject $config;
 	private ITimeFactory|MockObject $timeFactory;
+	private DelegationService|MockObject $delegationService;
 
 	public function setUp(): void {
 		parent::setUp();
@@ -59,6 +61,9 @@ class MailboxesControllerTest extends TestCase {
 		$this->syncService = $this->createMock(SyncService::class);
 		$this->config = $this->createMock(IConfig::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
+		$this->delegationService = $this->createMock(DelegationService::class);
+		$this->delegationService->method('resolveAccountUserId')->willReturn($this->userId);
+		$this->delegationService->method('resolveMailboxUserId')->willReturn($this->userId);
 
 		$this->controller = new MailboxesController(
 			$this->appName,
@@ -68,7 +73,8 @@ class MailboxesControllerTest extends TestCase {
 			$this->mailManager,
 			$this->syncService,
 			$this->config,
-			$this->timeFactory
+			$this->timeFactory,
+			$this->delegationService,
 		);
 	}
 

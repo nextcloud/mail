@@ -98,6 +98,15 @@ class AccountsController extends Controller {
 		foreach ($mailAccounts as $mailAccount) {
 			$conf = $mailAccount->jsonSerialize();
 			$conf['aliases'] = $this->aliasesService->findAll($conf['accountId'], $this->currentUserId);
+			$conf['isDelegated'] = false;
+			$json[] = $conf;
+		}
+
+		$delegatedAccounts = $this->accountService->findDelegatedAccounts($this->currentUserId);
+		foreach ($delegatedAccounts as $delegatedAccount) {
+			$conf = $delegatedAccount->jsonSerialize();
+			$conf['isDelegated'] = true;
+			$conf['aliases'] = $this->aliasesService->findAll($conf['accountId'], $delegatedAccount->getUserId());
 			$json[] = $conf;
 		}
 		return new JSONResponse($json);
