@@ -682,7 +682,7 @@ class MessagesController extends Controller {
 			return new TemplateResponse(
 				$this->appName,
 				'error',
-				['message' => 'Could not load the message body'],
+				['message' => 'Could not load the message body. Please try refreshing the page.'],
 				TemplateResponse::RENDER_AS_BLANK,
 				Http::STATUS_INTERNAL_SERVER_ERROR
 			);
