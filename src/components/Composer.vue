@@ -1710,6 +1710,40 @@ export default {
 .composer-actions {
 	position: sticky;
 	background: linear-gradient(rgba(255, 255, 255, 0), var(--color-main-background-translucent) 50%);
+
+	&-right {
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: space-between;
+		bottom: var(--default-grid-baseline);
+	}
+
+	&--primary-actions {
+		display: flex;
+		flex-direction: row;
+		padding-inline-start: calc(var(--default-grid-baseline) * 2);
+		align-items: center;
+
+		.button {
+			padding: 2px;
+		}
+	}
+
+	&--secondary-actions {
+		display: flex;
+		flex-direction: row;
+		padding: 12px;
+		gap: 5px;
+
+		.button {
+			flex-shrink: 0;
+		}
+	}
+
+	&-draft-status {
+		padding-inline-start: 10px;
+	}
 }
 
 .composer-fields {
@@ -1740,7 +1774,7 @@ export default {
 		border-radius: 0;
 	}
 
-	.composer-fields--custom {
+	&--custom {
 		display: flex;
 		align-items: flex-start;
 		justify-content: space-between;
@@ -1890,55 +1924,23 @@ export default {
 	margin-top: 0 !important;
 }
 
-.composer-actions-right {
-	display: flex;
-	align-items: center;
-	flex-direction: row;
-	justify-content: space-between;
-	bottom: var(--default-grid-baseline);
-}
-
-.composer-actions--primary-actions {
-	display: flex;
-	flex-direction: row;
-	padding-inline-start: calc(var(--default-grid-baseline) * 2);
-	align-items: center;
-}
-
-.composer-actions--secondary-actions {
-	display: flex;
-	flex-direction: row;
-	padding: 12px;
-	gap: 5px;
-}
-
-.composer-actions--primary-actions .button {
-	padding: 2px;
-}
-
-.composer-actions--secondary-actions .button{
-	flex-shrink: 0;
-}
-
-.composer-actions-draft-status {
-	padding-inline-start: 10px;
-}
-
 :deep(.vs__selected-options .vs__dropdown-toggle .vs--multiple ){
 	width: 100%;
 }
 
 @media only screen and (max-width: 580px) {
-	.composer-actions-right {
-		align-items: end;
-		flex-direction: column-reverse;
-	}
-	.composer-actions-draft-status {
-		text-align: end;
-		padding-inline-end: 15px;
-	}
-	.composer-actions--primary-actions {
-		padding-inline-end: 5px;
+	.composer-actions {
+		&-right {
+			align-items: end;
+			flex-direction: column-reverse;
+		}
+		&-draft-status {
+			text-align: end;
+			padding-inline-end: 15px;
+		}
+		&--primary-actions {
+			padding-inline-end: 5px;
+		}
 	}
 }
 
