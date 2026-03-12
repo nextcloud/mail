@@ -14,6 +14,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\DraftsService;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\SmimeService;
@@ -29,18 +30,21 @@ class OutboxController extends Controller {
 	private string $userId;
 	private AccountService $accountService;
 	private SmimeService $smimeService;
+	private DelegationService $delegationService;
 
 	public function __construct(string $appName,
 		$userId,
 		IRequest $request,
 		OutboxService $service,
 		AccountService $accountService,
-		SmimeService $smimeService) {
+		SmimeService $smimeService,
+		DelegationService $delegationService) {
 		parent::__construct($appName, $request);
 		$this->userId = $userId;
 		$this->service = $service;
 		$this->accountService = $accountService;
 		$this->smimeService = $smimeService;
+		$this->delegationService = $delegationService;
 	}
 
 	/**
@@ -61,7 +65,8 @@ class OutboxController extends Controller {
 	 */
 	#[TrapError]
 	public function show(int $id): JsonResponse {
-		$message = $this->service->getMessage($id, $this->userId);
+		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
+		$message = $this->service->getMessage($id, $effectiveUserId);
 		return JsonResponse::success($message);
 	}
 
@@ -108,7 +113,8 @@ class OutboxController extends Controller {
 		bool $requestMdn = false,
 		bool $isPgpMime = false,
 	): JsonResponse {
-		$account = $this->accountService->find($this->userId, $accountId);
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
+		$account = $this->accountService->find($effectiveUserId, $accountId);
 
 		if ($draftId !== null) {
 			$this->service->handleDraft($account, $draftId);
@@ -147,9 +153,10 @@ class OutboxController extends Controller {
 	 */
 	#[TrapError]
 	public function createFromDraft(DraftsService $draftsService, int $id, int $sendAt): JsonResponse {
-		$draftMessage = $draftsService->getMessage($id, $this->userId);
+		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
+		$draftMessage = $draftsService->getMessage($id, $effectiveUserId);
 		// Locate the account to check authorization
-		$this->accountService->find($this->userId, $draftMessage->getAccountId());
+		$this->accountService->find($effectiveUserId, $draftMessage->getAccountId());
 
 		$outboxMessage = $this->service->convertDraft($draftMessage, $sendAt);
 
@@ -201,11 +208,12 @@ class OutboxController extends Controller {
 		bool $requestMdn = false,
 		bool $isPgpMime = false,
 	): JsonResponse {
-		$message = $this->service->getMessage($id, $this->userId);
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
+		$message = $this->service->getMessage($id, $effectiveUserId);
 		if ($message->getStatus() === LocalMessage::STATUS_PROCESSED) {
 			return JsonResponse::error('Cannot modify already sent message', Http::STATUS_FORBIDDEN, [$message]);
 		}
-		$account = $this->accountService->find($this->userId, $accountId);
+		$account = $this->accountService->find($effectiveUserId, $accountId);
 
 		$message->setAccountId($accountId);
 		$message->setAliasId($aliasId);
@@ -239,8 +247,9 @@ class OutboxController extends Controller {
 	 */
 	#[TrapError]
 	public function send(int $id): JsonResponse {
-		$message = $this->service->getMessage($id, $this->userId);
-		$account = $this->accountService->find($this->userId, $message->getAccountId());
+		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
+		$message = $this->service->getMessage($id, $effectiveUserId);
+		$account = $this->accountService->find($effectiveUserId, $message->getAccountId());
 
 		$message = $this->service->sendMessage($message, $account);
 
@@ -260,8 +269,9 @@ class OutboxController extends Controller {
 	 */
 	#[TrapError]
 	public function destroy(int $id): JsonResponse {
-		$message = $this->service->getMessage($id, $this->userId);
-		$this->service->deleteMessage($this->userId, $message);
+		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
+		$message = $this->service->getMessage($id, $effectiveUserId);
+		$this->service->deleteMessage($effectiveUserId, $message);
 		return JsonResponse::success('Message deleted', Http::STATUS_ACCEPTED);
 	}
 }

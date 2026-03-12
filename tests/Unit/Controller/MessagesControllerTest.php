@@ -37,6 +37,7 @@ use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\ItineraryService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\SmimeService;
@@ -134,6 +135,8 @@ class MessagesControllerTest extends TestCase {
 
 	private ICacheFactory&MockObject $cacheFactory;
 
+	private DelegationService|MockObject $delegationService;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -163,6 +166,10 @@ class MessagesControllerTest extends TestCase {
 
 		$this->cacheFactory->method('createDistributed')
 			->willReturn(new NullCache());
+
+		$this->delegationService = $this->createMock(DelegationService::class);
+		$this->delegationService->method('resolveMessageUserId')->willReturn($this->userId);
+		$this->delegationService->method('resolveMailboxUserId')->willReturn($this->userId);
 
 		$timeFactory = $this->createMocK(ITimeFactory::class);
 		$timeFactory->expects($this->any())
@@ -194,6 +201,7 @@ class MessagesControllerTest extends TestCase {
 			$this->snoozeService,
 			$this->aiIntegrationsService,
 			$this->cacheFactory,
+			$this->delegationService,
 		);
 
 		$this->account = $this->createMock(Account::class);
@@ -1249,6 +1257,7 @@ class MessagesControllerTest extends TestCase {
 			$this->snoozeService,
 			$this->aiIntegrationsService,
 			$this->cacheFactory,
+			$this->delegationService,
 		);
 
 		$actualResponse = $controller->needsTranslation(100);
@@ -1421,6 +1430,7 @@ class MessagesControllerTest extends TestCase {
 			$this->snoozeService,
 			$this->aiIntegrationsService,
 			$this->cacheFactory,
+			$this->delegationService,
 		);
 
 		$actualResponse = $controller->smartReply(100);

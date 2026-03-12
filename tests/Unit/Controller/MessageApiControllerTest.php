@@ -27,6 +27,7 @@ use OCA\Mail\Model\SmimeData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Attachment\AttachmentService;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\DkimService;
 use OCA\Mail\Service\ItineraryService;
 use OCA\Mail\Service\MailManager;
@@ -58,6 +59,7 @@ class MessageApiControllerTest extends TestCase {
 	private DkimService|MockObject $dkimService;
 	private MockObject|ItineraryService $itineraryService;
 	private TrustedSenderService|MockObject $trustedSenderService;
+	private DelegationService|MockObject $delegationService;
 	private MessageApiController $controller;
 	private string $fromEmail = 'john@test.com';
 	private int $accountId = 1;
@@ -84,6 +86,9 @@ class MessageApiControllerTest extends TestCase {
 		$this->dkimService = $this->createMock(DkimService::class);
 		$this->itineraryService = $this->createMock(ItineraryService::class);
 		$this->trustedSenderService = $this->createMock(TrustedSenderService::class);
+		$this->delegationService = $this->createMock(DelegationService::class);
+		$this->delegationService->method('resolveAccountUserId')->willReturn($this->userId);
+		$this->delegationService->method('resolveMessageUserId')->willReturn($this->userId);
 
 		$this->controller = new MessageApiController($this->appName,
 			$this->userId,
@@ -100,6 +105,7 @@ class MessageApiControllerTest extends TestCase {
 			$this->dkimService,
 			$this->itineraryService,
 			$this->trustedSenderService,
+			$this->delegationService,
 		);
 
 		$mailAccount = new MailAccount();

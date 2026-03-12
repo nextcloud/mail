@@ -12,6 +12,7 @@ namespace OCA\Mail\Controller;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -23,14 +24,17 @@ use OCP\IRequest;
 class AliasesController extends Controller {
 	private AliasesService $aliasService;
 	private string $currentUserId;
+	private DelegationService $delegationService;
 
 	public function __construct(string $appName,
 		IRequest $request,
 		AliasesService $aliasesService,
-		string $userId) {
+		string $userId,
+		DelegationService $delegationService) {
 		parent::__construct($appName, $request);
 		$this->aliasService = $aliasesService;
 		$this->currentUserId = $userId;
+		$this->delegationService = $delegationService;
 	}
 
 	/**
@@ -42,7 +46,8 @@ class AliasesController extends Controller {
 	 */
 	#[TrapError]
 	public function index(int $accountId): JSONResponse {
-		return new JSONResponse($this->aliasService->findAll($accountId, $this->currentUserId));
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->currentUserId);
+		return new JSONResponse($this->aliasService->findAll($accountId, $effectiveUserId));
 	}
 
 	/**
@@ -64,9 +69,10 @@ class AliasesController extends Controller {
 		string $alias,
 		string $aliasName,
 		?int $smimeCertificateId = null): JSONResponse {
+		$effectiveUserId = $this->delegationService->resolveAliasUserId($id, $this->currentUserId);
 		return new JSONResponse(
 			$this->aliasService->update(
-				$this->currentUserId,
+				$effectiveUserId,
 				$id,
 				$alias,
 				$aliasName,
@@ -83,7 +89,8 @@ class AliasesController extends Controller {
 	 */
 	#[TrapError]
 	public function destroy(int $id): JSONResponse {
-		return new JSONResponse($this->aliasService->delete($this->currentUserId, $id));
+		$effectiveUserId = $this->delegationService->resolveAliasUserId($id, $this->currentUserId);
+		return new JSONResponse($this->aliasService->delete($effectiveUserId, $id));
 	}
 
 	/**
@@ -98,8 +105,9 @@ class AliasesController extends Controller {
 	 */
 	#[TrapError]
 	public function create(int $accountId, string $alias, string $aliasName): JSONResponse {
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->currentUserId);
 		return new JSONResponse(
-			$this->aliasService->create($this->currentUserId, $accountId, $alias, $aliasName),
+			$this->aliasService->create($effectiveUserId, $accountId, $alias, $aliasName),
 			Http::STATUS_CREATED
 		);
 	}
@@ -115,6 +123,7 @@ class AliasesController extends Controller {
 	 */
 	#[TrapError]
 	public function updateSignature(int $id, ?string $signature = null): JSONResponse {
-		return new JSONResponse($this->aliasService->updateSignature($this->currentUserId, $id, $signature));
+		$effectiveUserId = $this->delegationService->resolveAliasUserId($id, $this->currentUserId);
+		return new JSONResponse($this->aliasService->updateSignature($effectiveUserId, $id, $signature));
 	}
 }
