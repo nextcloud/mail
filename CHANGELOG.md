@@ -1,3 +1,23 @@
+## [5.7.3](https://github.com/nextcloud/mail/compare/v5.7.2...v5.7.3) (2026-03-12)
+
+
+### Bug Fixes
+
+* **cache:** expire the IMAP ratelimit keys via TTL ([39e4c18](https://github.com/nextcloud/mail/commit/39e4c18ea6412b5f4d686374e13ad65b3ef3619b))
+* **composer:** Use v-model for send later radio buttons ([698a788](https://github.com/nextcloud/mail/commit/698a788a3caad2f7cf6d27a0957ab7d20b05b45f))
+* **deps:** bump dompurify from 3.3.1 to v3.3.2 ([0e2f852](https://github.com/nextcloud/mail/commit/0e2f8520d4f2ffe2a4a0cdfd7db1ec46c6a48a4c))
+* Handle SmimeDecryptException when getting attachments ([2aacc58](https://github.com/nextcloud/mail/commit/2aacc58fbc8b0fa2972c896e2f6e837760390726))
+* Invalid cache lookup for emails without attachment ([5633e38](https://github.com/nextcloud/mail/commit/5633e38dad2657ba3a4ea3904acf836318baf765))
+* **l10n:** Update translations from Transifex ([27659a0](https://github.com/nextcloud/mail/commit/27659a01ac722249fa65a924684a29a8c5ebec72))
+* **l10n:** Update translations from Transifex ([119b653](https://github.com/nextcloud/mail/commit/119b6537aa28a1591128062e70a6ccea9aff6955))
+* **l10n:** Update translations from Transifex ([7469af2](https://github.com/nextcloud/mail/commit/7469af210d2c2f924c91afc69dd8d012dd42d594))
+* **l10n:** Update translations from Transifex ([40ec18e](https://github.com/nextcloud/mail/commit/40ec18e019e676fda3fa728fc6f4dde21081e78d))
+* **l10n:** Update translations from Transifex ([384d140](https://github.com/nextcloud/mail/commit/384d1404da2ee19dc84670e408632f80fac6df72))
+* Match default tag colors with Thunderbird ([4e3c96a](https://github.com/nextcloud/mail/commit/4e3c96ae3d6b008775f35685e07aa734b1a3c672))
+* show loading inidcator when searching messages ([4dfa052](https://github.com/nextcloud/mail/commit/4dfa052a2714e5aadf14145ea4edf22290a488fe))
+
+
+
 ## [5.7.2](https://github.com/nextcloud/mail/compare/v5.7.1...v5.7.2) (2026-03-03)
 
 
