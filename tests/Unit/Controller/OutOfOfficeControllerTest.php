@@ -53,8 +53,8 @@ class OutOfOfficeControllerTest extends TestCase {
 			->with(IAvailabilityCoordinator::class)
 			->willReturn(true);
 
-		$user = $this->createMock(IUser::class);
-		$state = $this->createMock(OutOfOfficeState::class);
+		$user = $this->createStub(IUser::class);
+		$state = $this->createStub(OutOfOfficeState::class);
 
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(1);

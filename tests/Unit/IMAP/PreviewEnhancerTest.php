@@ -63,8 +63,8 @@ class PreviewEnhancerTest extends TestCase {
 	}
 
 	public function testAvatars(): void {
-		$account = $this->createMock(\OCA\Mail\Account::class);
-		$mailbox = $this->createMock(\OCA\Mail\Db\Mailbox::class);
+		$account = $this->createStub(\OCA\Mail\Account::class);
+		$mailbox = $this->createStub(\OCA\Mail\Db\Mailbox::class);
 		$message1 = new Message();
 		$message1->setId(1);
 		$message1->setStructureAnalyzed(true);
@@ -75,7 +75,7 @@ class PreviewEnhancerTest extends TestCase {
 		$message2->setFrom(new AddressList([Address::fromRaw('Bob', 'bob@example.com')]));
 		$messages = [$message1, $message2];
 		$message2Avatar = new Avatar('example.com', 'image/png', true);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->with($account)

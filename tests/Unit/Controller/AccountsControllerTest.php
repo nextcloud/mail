@@ -239,7 +239,7 @@ class AccountsControllerTest extends TestCase {
 		$smtpSslMode = 'none';
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$this->setupService->expects(self::once())
 			->method('createNewAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password')
@@ -316,7 +316,7 @@ class AccountsControllerTest extends TestCase {
 		$smtpSslMode = 'none';
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$this->setupService->expects(self::once())
 			->method('createNewAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password', $id)
@@ -370,7 +370,7 @@ class AccountsControllerTest extends TestCase {
 		$id = 123;
 		$newId = 1245;
 		$newUid = 124;
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
 		$this->accountService->expects(self::once())
 			->method('find')

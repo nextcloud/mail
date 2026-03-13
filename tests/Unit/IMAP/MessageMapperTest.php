@@ -73,8 +73,8 @@ class MessageMapperTest extends TestCase {
 
 		$imapMessageFetcher1 = $this->createMock(ImapMessageFetcher::class);
 		$imapMessageFetcher2 = $this->createMock(ImapMessageFetcher::class);
-		$message1 = $this->createMock(IMAPMessage::class);
-		$message2 = $this->createMock(IMAPMessage::class);
+		$message1 = $this->createStub(IMAPMessage::class);
+		$message2 = $this->createStub(IMAPMessage::class);
 
 		$fetchResults = new Horde_Imap_Client_Fetch_Results();
 		$fetchResult1 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
@@ -187,7 +187,7 @@ class MessageMapperTest extends TestCase {
 		$runPhishingCheck = false;
 
 		$imapMessageFetcher1 = $this->createMock(ImapMessageFetcher::class);
-		$message1 = $this->createMock(IMAPMessage::class);
+		$message1 = $this->createStub(IMAPMessage::class);
 
 		$fetchResults = new Horde_Imap_Client_Fetch_Results();
 		$fetchResult1 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);

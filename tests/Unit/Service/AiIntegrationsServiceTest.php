@@ -275,7 +275,7 @@ class AiIntegrationsServiceTest extends TestCase {
 	}
 
 	public function testGenerateEventDataFreePromptUnavailable(): void {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$message1 = new Message();
 		$message2 = new Message();
 		$this->textProcessingManager->expects(self::once())
@@ -294,7 +294,7 @@ class AiIntegrationsServiceTest extends TestCase {
 
 	public function testGenerateEventDataInvalidJson(): void {
 
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$message1 = new Message();
 		$message1->setUid(1);
 		$message1->setMailboxId(123);
@@ -327,7 +327,7 @@ class AiIntegrationsServiceTest extends TestCase {
 
 	public function testGenerateEventData(): void {
 
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$message1 = new Message();
 		$message1->setUid(1);
 		$message1->setMailboxId(123);
@@ -386,7 +386,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$account = new Account($mailAccount);
 		$message = new Message();
 		$message->setSummary('Test Summary');
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 
 		$this->userManager->expects(self::once())
 			->method('get')
@@ -426,7 +426,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$message->setId(1);
 		$message->setUid(100);
 		$message->setMailboxId(1);
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 
 		$this->userManager->expects(self::once())
 			->method('get')
@@ -496,7 +496,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$message->setUid(100);
 		$message->setMailboxId(1);
 
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 
 		$this->userManager->expects(self::once())
 			->method('get')

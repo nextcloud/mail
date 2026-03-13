@@ -212,7 +212,7 @@ class MailboxSyncTest extends TestCase {
 	}
 
 	public function testSyncStats(): void {
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$stats = new MailboxStats(42, 10, null);
 		$mailbox = new Mailbox();
 		$mailbox->setName('mailbox');
@@ -231,7 +231,7 @@ class MailboxSyncTest extends TestCase {
 	}
 
 	public function testSyncStatsWithNoStats(): void {
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$mailbox = new Mailbox();
 		$mailbox->setMessages(10);
 		$mailbox->setUnseen(6);
