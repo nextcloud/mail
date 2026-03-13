@@ -2163,11 +2163,11 @@ export default function mainStoreActions() {
 			Vue.delete(this.envelopes, id)
 		},
 		removeEnvelopesMutation({ id }) {
-			Vue.set(this.mailboxes[id], 'envelopeLists', [])
+			Vue.set(this.mailboxes[id], 'envelopeLists', {})
 		},
 		removeAllEnvelopesMutation() {
 			Object.keys(this.mailboxes).forEach((id) => {
-				Vue.set(this.mailboxes[id], 'envelopeLists', [])
+				Vue.set(this.mailboxes[id], 'envelopeLists', {})
 			})
 		},
 		removeEnvelopeFromFollowUpMailboxMutation({ id }) {
