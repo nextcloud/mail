@@ -671,7 +671,7 @@
     "Choose the headers you want to use to create your filter. In the next step, you will be able to refine the filter conditions and specify the actions to be taken on messages that match your criteria." : "Wählen Sie die Header aus, mit denen Sie Ihren Filter erstellen möchten. Im nächsten Schritt können dann die Filterbedingungen verfeinert und die Aktionen festgelegt werden, die auf Nachrichten angewandt werden sollen, auf welche die Kriterien zutreffen.",
     "Delete filter" : "Filter löschen",
     "Delete mail filter {filterName}?" : "Mailfilter {filterName} löschen?",
-    "Are you sure to delete the mail filter?" : "Soll dieser Mailfilter wirklich gelöscht werden?",
+    "Are you sure to delete the mail filter?" : "Soll dieser Mailfilter gelöscht werden?",
     "New filter" : "Neuer Filter",
     "Filter saved" : "Filter gespeichert",
     "Could not save filter" : "Filter konnte nicht gespeichert werden",
