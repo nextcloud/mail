@@ -80,14 +80,17 @@ final class ExportAccount extends Command {
 			$output->writeln(json_encode($this->getAccountsData($accounts), JSON_PRETTY_PRINT));
 		} else {
 			foreach ($accounts as $account) {
-				$output->writeln('<info>Account ' . $account->getId() . ':</info>');
+				$accountId = $account->getId();
+				$output->writeln("<info>Account $accountId:</info>");
 				$output->writeln('- E-Mail: ' . $account->getEmail());
 				$output->writeln('- Name: ' . $account->getName());
 				$output->writeln('- Provision: ' . ($account->getMailAccount()->getProvisioningId() ? 'set' : 'none') . ' ID: ' . ($account->getMailAccount()->getProvisioningId() ?: 'N/A'));
 				$output->writeln('- IMAP user: ' . $account->getMailAccount()->getInboundUser());
-				$output->writeln('- IMAP host: ' . $account->getMailAccount()->getInboundHost() . ':' . $account->getMailAccount()->getInboundPort() . ', security: ' . $account->getMailAccount()->getInboundSslMode());
+				$inboundPort = $account->getMailAccount()->getInboundPort();
+				$output->writeln('- IMAP host: ' . $account->getMailAccount()->getInboundHost() . ":$inboundPort, security: " . $account->getMailAccount()->getInboundSslMode());
 				$output->writeln('- SMTP user: ' . $account->getMailAccount()->getOutboundUser());
-				$output->writeln('- SMTP host: ' . $account->getMailAccount()->getOutboundHost() . ':' . $account->getMailAccount()->getOutboundPort() . ', security: ' . $account->getMailAccount()->getOutboundSslMode());
+				$outboundPort = $account->getMailAccount()->getOutboundPort();
+				$output->writeln('- SMTP host: ' . $account->getMailAccount()->getOutboundHost() . ":$outboundPort, security: " . $account->getMailAccount()->getOutboundSslMode());
 			}
 		}
 

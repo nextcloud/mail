@@ -235,7 +235,7 @@ class MessagesController extends Controller {
 		}
 
 		$cacheInstance = $this->getCacheForAccount($account->getId());
-		$imapMessageCacheKey = 'message_' . $id;
+		$imapMessageCacheKey = "message_$id";
 
 		$client = $this->clientFactory->getClient($account);
 		try {
@@ -633,7 +633,7 @@ class MessagesController extends Controller {
 			}
 
 			$cacheInstance = $this->getCacheForAccount($account->getId());
-			$imapMessageCacheKey = 'message_' . $id;
+			$imapMessageCacheKey = "message_$id";
 
 			$html = $cacheInstance->get($imapMessageCacheKey);
 			if ($html === null) {
@@ -1098,6 +1098,6 @@ class MessagesController extends Controller {
 	}
 
 	private function getCacheForAccount(int $accountId): ICache {
-		return $this->cacheFactory->createDistributed('mail_account_' . $accountId);
+		return $this->cacheFactory->createDistributed("mail_account_$accountId");
 	}
 }

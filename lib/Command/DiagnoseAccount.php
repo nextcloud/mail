@@ -120,6 +120,7 @@ final class DiagnoseAccount extends Command {
 			$status = $imapClient->status($mb, Horde_Imap_Client::STATUS_MESSAGES);
 			return $c + $status['messages'];
 		}, 0);
-		$output->writeln('Account has ' . $messages . ' messages in ' . count($mailboxes) . ' mailboxes');
+		$nMailboxes = count($mailboxes);
+		$output->writeln("Account has $messages messages in $nMailboxes mailboxes");
 	}
 }

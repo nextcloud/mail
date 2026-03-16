@@ -58,16 +58,20 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 		$accountId = $event->getAccount()->getId();
 		$logger->debug("Building threads for account $accountId");
 		$messages = $this->mapper->findThreadingData($event->getAccount());
-		$logger->debug("Account $accountId has " . count($messages) . ' messages with threading information');
+		$nMessages = count($messages);
+		$logger->debug("Account $accountId has $nMessages messages with threading information");
 		$threads = $this->builder->build($messages, $logger);
-		$logger->debug("Account $accountId has " . count($threads) . ' threads');
+		$nThreads = count($threads);
+		$logger->debug("Account $accountId has $nThreads threads");
 		/** @var DatabaseMessage[] $flattened */
 		$flattened = iterator_to_array($this->flattenThreads($threads), false);
-		$logger->debug("Account $accountId has " . count($flattened) . ' messages with a new thread IDs');
+		$nFlattened = count($flattened);
+		$logger->debug("Account $accountId has $nFlattened messages with a new thread IDs");
+		$chunkSize = self::WRITE_IDS_CHUNK_SIZE;
 		foreach (array_chunk($flattened, self::WRITE_IDS_CHUNK_SIZE) as $chunk) {
 			$this->mapper->writeThreadIds($chunk);
 
-			$logger->debug('Chunk of ' . self::WRITE_IDS_CHUNK_SIZE . ' messages updated');
+			$logger->debug("Chunk of $chunkSize messages updated");
 		}
 
 		// Free memory

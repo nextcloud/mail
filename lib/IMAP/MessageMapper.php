@@ -160,7 +160,7 @@ class MessageMapper {
 		// Here we assume somewhat equally distributed UIDs
 		// +1 is added to fetch all messages with the rare case of strictly
 		// continuous UIDs and fractions
-		$estimatedPageSize = (int)(($totalRange / $total) * $maxResults) + 1;
+		$estimatedPageSize = (int)((float)($totalRange / $total) * $maxResults) + 1;
 		// Determine min UID to fetch, but don't exceed the known maximum
 		$lower = max(
 			$min,
@@ -181,20 +181,20 @@ class MessageMapper {
 			];
 		}
 
-		$idsToFetch = new Horde_Imap_Client_Ids($lower . ':' . $upper);
+		$idsToFetch = new Horde_Imap_Client_Ids("$lower:$upper");
 		$actualPageSize = $this->getPageSize($client, $mailbox, $idsToFetch);
 		$logger->debug("Built range for findAll: min=$min max=$max total=$total totalRange=$totalRange estimatedPageSize=$estimatedPageSize actualPageSize=$actualPageSize lower=$lower upper=$upper highestKnownUid=$highestKnownUid");
 		while ($actualPageSize > $maxResults) {
 			$logger->debug("Range for findAll matches too many messages: min=$min max=$max total=$total estimatedPageSize=$estimatedPageSize actualPageSize=$actualPageSize");
 
-			$estimatedPageSize = (int)($estimatedPageSize / 2);
+			$estimatedPageSize = (int)($estimatedPageSize / 2.0);
 
 			$upper = min(
 				$max,
 				$lower + $estimatedPageSize,
 				$lower + 1_000_000, // Somewhat sensible number of UIDs that fit into memory (Horde_Imap_ClientId bloat)
 			);
-			$idsToFetch = new Horde_Imap_Client_Ids($lower . ':' . $upper);
+			$idsToFetch = new Horde_Imap_Client_Ids("$lower:$upper");
 			$actualPageSize = $this->getPageSize($client, $mailbox, $idsToFetch);
 		}
 
@@ -305,7 +305,8 @@ class MessageMapper {
 		$fetchResults = array_values(array_filter($fetchResults, static fn (Horde_Imap_Client_Data_Fetch $fetchResult) => $fetchResult->exists(Horde_Imap_Client::FETCH_ENVELOPE)));
 
 		if ($fetchResults === []) {
-			$this->logger->debug("findByIds in $mailbox got " . count($ids) . ' UIDs but found none');
+			$nIds = count($ids);
+			$this->logger->debug("findByIds in $mailbox got $nIds UIDs but found none");
 		} else {
 			$minFetched = $fetchResults[0]->getUid();
 			$maxFetched = $fetchResults[count($fetchResults) - 1]->getUid();
@@ -314,7 +315,9 @@ class MessageMapper {
 			} else {
 				$range = 'literals';
 			}
-			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs ($range) and found " . count($fetchResults) . ". minFetched=$minFetched maxFetched=$maxFetched");
+			$nIds = count($ids);
+			$nFetched = count($fetchResults);
+			$this->logger->debug("findByIds in $mailbox got $nIds UIDs ($range) and found $nFetched. minFetched=$minFetched maxFetched=$maxFetched");
 		}
 
 		return array_map(fn (Horde_Imap_Client_Data_Fetch $fetchResult) => $this->imapMessageFactory

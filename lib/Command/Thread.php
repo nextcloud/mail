@@ -63,9 +63,11 @@ final class Thread extends Command {
 			$output->writeln('<error>Could not read thread data</error>');
 			return 2;
 		}
-		$consoleLogger->debug(strlen($json) . 'B read');
+		$nRead = strlen($json);
+		$consoleLogger->debug("{$nRead}B read");
 		$parsed = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-		$consoleLogger->debug(count($parsed) . ' data sets loaded');
+		$nParsed = count($parsed);
+		$consoleLogger->debug("$nParsed data sets loaded");
 		$threadData = array_map(static fn ($serialized) => new DatabaseMessage(
 			$serialized['databaseId'],
 			$serialized['subject'],
@@ -75,10 +77,12 @@ final class Thread extends Command {
 		), $parsed);
 
 		$threads = $this->builder->build($threadData, $consoleLogger);
-		$output->writeln(count($threads) . ' threads built from ' . count($threadData) . ' messages');
+		$nThreads = count($threads);
+		$nThreadData = count($threadData);
+		$output->writeln("$nThreads threads built from $nThreadData messages");
 
 		$mbs = (int)(memory_get_peak_usage() / 1024 / 1024);
-		$output->writeln('<info>' . $mbs . 'MB of memory used</info>');
+		$output->writeln("<info>{$mbs}MB of memory used</info>");
 
 		return 0;
 	}

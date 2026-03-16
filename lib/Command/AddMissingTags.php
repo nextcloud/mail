@@ -73,7 +73,8 @@ final class AddMissingTags extends Command {
 
 		$progress->finish();
 		$output->writeln('');
-		$output->writeln('Patched default tags for ' . count($accounts));
+		$n = count($accounts);
+		$output->writeln("Patched default tags for $n");
 		return 0;
 	}
 }

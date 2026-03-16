@@ -122,7 +122,7 @@ final class CreateAccount extends Command {
 
 		$account = $this->accountService->save($account);
 
-		$output->writeln('<info>Account ' . $account->getId() . " for $email created</info>");
+		$output->writeln("<info>Account {$account->getId()} for $email created</info>");
 
 		return 0;
 	}

@@ -79,7 +79,7 @@ class MailConnectionPerformance implements ISetupCheck {
 
 					$tests[$host][$accountId] = ['start' => $tStart, 'login' => $tLogin, 'operation' => $tOperation];
 				} catch (Throwable $e) {
-					$this->logger->warning('Error occurred while performing system check on mail account: ' . $account->getId());
+					$this->logger->warning("Error occurred while performing system check on mail account: {$account->getId()}");
 				} finally {
 					$client->close();
 				}
@@ -88,15 +88,15 @@ class MailConnectionPerformance implements ISetupCheck {
 		// calculate performance
 		$performance = [];
 		foreach ($tests as $host => $test) {
-			$tLogin = 0;
-			$tOperation = 0;
+			$tLogin = 0.0;
+			$tOperation = 0.0;
 			foreach ($test as $entry) {
 				[$start, $login, $operation] = array_values($entry);
 				$tLogin += ($login - $start);
 				$tOperation += ($operation - $login);
 			}
-			$performance[$host]['login'] = $tLogin / count($tests[$host]);
-			$performance[$host]['operation'] = $tOperation / count($tests[$host]);
+			$performance[$host]['login'] = $tLogin / (float)count($tests[$host]);
+			$performance[$host]['operation'] = $tOperation / (float)count($tests[$host]);
 		}
 		// display performance test outcome
 		foreach ($performance as $host => $entry) {
