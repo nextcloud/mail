@@ -29,7 +29,7 @@ class Cache {
 	 * @return string
 	 */
 	public function buildUrlKey(array $ids): string {
-		return base64_encode(json_encode($ids));
+		return base64_encode(json_encode($ids, JSON_THROW_ON_ERROR));
 	}
 
 

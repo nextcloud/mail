@@ -48,6 +48,7 @@ class Version5007Date20251024153423 extends SimpleMigrationStep {
 		return $schema;
 	}
 
+	#[Override]
 	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
 
 		// If value not set or is true, we only care about users who have explicitly disabled classification

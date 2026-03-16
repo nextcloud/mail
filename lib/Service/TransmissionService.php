@@ -38,14 +38,10 @@ class TransmissionService {
 	 * @return AddressList
 	 */
 	public function getAddressList(LocalMessage $message, int $type): AddressList {
-		return new AddressList(
-			array_map(
-				static fn ($recipient) => Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail()),
-				$this->groupsIntegration->expand(
-					array_filter($message->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === $type)
-				)
-			)
-		);
+		$recipientsForType = array_filter($message->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === $type);
+		$expandedRecipients = array_values($this->groupsIntegration->expand($recipientsForType));
+		$addresses = array_map(static fn (Recipient $recipient) => Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail()), $expandedRecipients);
+		return new AddressList($addresses);
 	}
 
 	/**
