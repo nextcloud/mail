@@ -67,6 +67,9 @@ class SmimeService {
 
 		$messageTemp = $this->getTemporaryFileOrThrow();
 		$messageTempHandle = fopen($messageTemp, 'wb');
+		if ($messageTempHandle === false) {
+			throw new ServiceException('Could not open temp file for writing');
+		}
 		fwrite($messageTempHandle, $message);
 		fclose($messageTempHandle);
 		/** @psalm-suppress NullArgument */
@@ -106,6 +109,9 @@ class SmimeService {
 		$verifiedContentTemp = $this->getTemporaryFileOrThrow();
 		$messageTemp = $this->getTemporaryFileOrThrow();
 		$messageTempHandle = fopen($messageTemp, 'wb');
+		if ($messageTempHandle === false) {
+			throw new ServiceException('Could not open temp file for writing');
+		}
 		fwrite($messageTempHandle, $message);
 		fclose($messageTempHandle);
 		/** @psalm-suppress NullArgument */
@@ -408,7 +414,11 @@ class SmimeService {
 		}
 
 		try {
-			$parsedPart = Horde_Mime_Part::parseMessage(file_get_contents($outPath));
+			$signedContent = file_get_contents($outPath);
+			if ($signedContent === false) {
+				throw new SmimeSignException('Failed to read signed MIME part from temp file');
+			}
+			$parsedPart = Horde_Mime_Part::parseMessage($signedContent);
 		} catch (Horde_Mime_Exception $e) {
 			throw new SmimeSignException(
 				'Failed to parse signed MIME part: ' . $e->getMessage(),
@@ -462,6 +472,9 @@ class SmimeService {
 		}
 
 		$decryptedMessage = file_get_contents($outPath);
+		if ($decryptedMessage === false) {
+			throw new SmimeDecryptException('Failed to read decrypted content from temp file');
+		}
 
 		// Handle smime-type="signed-data" as the content is opaque until verified
 		$headers = Horde_Mime_Headers::parseHeaders($decryptedMessage);
@@ -630,7 +643,11 @@ class SmimeService {
 		}
 
 		try {
-			$parsedPart = Horde_Mime_Part::parseMessage(file_get_contents($outPath), [
+			$encryptedContent = file_get_contents($outPath);
+			if ($encryptedContent === false) {
+				throw new SmimeEncryptException('Failed to read encrypted MIME part from temp file');
+			}
+			$parsedPart = Horde_Mime_Part::parseMessage($encryptedContent, [
 				'forcemime' => true,
 			]);
 		} catch (Horde_Mime_Exception $e) {
