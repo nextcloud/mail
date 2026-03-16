@@ -58,7 +58,7 @@ class MakeItineraryExtractorExecutable implements IRepairStep {
 				throw new Exception('chmod returned false');
 			}
 		} catch (Throwable $e) {
-			$this->logger->error('Can\'t make itinerary extractor executable: ' . $e, [
+			$this->logger->error('Can\'t make itinerary extractor executable: ' . $e->getMessage(), [
 				'exception' => $e,
 			]);
 			$output->warning('Can\'t make itinerary extractor executable: ' . $e->getMessage());
