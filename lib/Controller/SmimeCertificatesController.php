@@ -105,7 +105,7 @@ class SmimeCertificatesController extends Controller {
 		}
 
 		$certificateFile = new UploadedFile($attachedCertificate);
-		$certificateData = file_get_contents($certificateFile->getTempPath());
+		$certificateData = file_get_contents($certificateFile->getTempPath() ?? '');
 		if ($certificateData === false) {
 			return JsonResponse::fail(
 				'Could not read certificate file',
@@ -116,7 +116,7 @@ class SmimeCertificatesController extends Controller {
 		$privateKeyData = null;
 		if ($attachedPrivateKey !== null) {
 			$privateKeyFile = new UploadedFile($attachedPrivateKey);
-			$privateKeyData = file_get_contents($privateKeyFile->getTempPath());
+			$privateKeyData = file_get_contents($privateKeyFile->getTempPath() ?? '');
 			if ($privateKeyData === false) {
 				return JsonResponse::fail(
 					'Could not read private key file',

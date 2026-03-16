@@ -73,12 +73,16 @@ class ThreadController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
+		$threadRootId = $message->getThreadRootId();
+		if ($threadRootId === null) {
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
+		}
 		$this->mailManager->moveThread(
 			$srcAccount,
 			$srcMailbox,
 			$dstAccount,
 			$dstMailbox,
-			$message->getThreadRootId()
+			$threadRootId
 		);
 
 		return new JSONResponse();
@@ -149,14 +153,15 @@ class ThreadController extends Controller {
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
-		if (empty($message->getThreadRootId())) {
+		if ($message->getThreadRootId() === null || $message->getThreadRootId() === '') {
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		}
-		$thread = $this->mailManager->getThread($account, $message->getThreadRootId());
+		$threadRootId = $message->getThreadRootId();
+		$thread = $this->mailManager->getThread($account, $threadRootId);
 		try {
 			$summary = $this->aiIntergrationsService->summarizeThread(
 				$account,
-				$message->getThreadRootId(),
+				$threadRootId,
 				$thread,
 				$this->currentUserId,
 			);
@@ -181,13 +186,14 @@ class ThreadController extends Controller {
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
-		if (empty($message->getThreadRootId())) {
+		if ($message->getThreadRootId() === null || $message->getThreadRootId() === '') {
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		}
-		$thread = $this->mailManager->getThread($account, $message->getThreadRootId());
+		$threadRootId = $message->getThreadRootId();
+		$thread = $this->mailManager->getThread($account, $threadRootId);
 		$data = $this->aiIntergrationsService->generateEventData(
 			$account,
-			$message->getThreadRootId(),
+			$threadRootId,
 			$thread,
 			$this->currentUserId,
 		);
@@ -214,10 +220,14 @@ class ThreadController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
+		$threadRootId = $message->getThreadRootId();
+		if ($threadRootId === null) {
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
+		}
 		$this->mailManager->deleteThread(
 			$account,
 			$mailbox,
-			$message->getThreadRootId()
+			$threadRootId
 		);
 
 		return new JSONResponse();

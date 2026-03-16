@@ -135,6 +135,17 @@ class PageController extends Controller {
 	 * @return TemplateResponse renders the index page
 	 */
 	public function index(): TemplateResponse {
+		if ($this->currentUserId === null) {
+			// This should not happen as the route requires authentication,
+			// but handle it defensively.
+			return new TemplateResponse($this->appName, 'index');
+		}
+
+		$user = $this->userSession->getUser();
+		if ($user === null) {
+			return new TemplateResponse($this->appName, 'index');
+		}
+
 		if (class_exists(LoadViewer::class)) {
 			$this->dispatcher->dispatchTyped(new LoadViewer());
 		}
@@ -216,7 +227,6 @@ class PageController extends Controller {
 			$passwordIsUnavailable,
 		);
 
-		$user = $this->userSession->getUser();
 		$response = new TemplateResponse($this->appName, 'index');
 		$this->initialStateService->provideInitialState('preferences', [
 			'attachment-size-limit' => $this->config->getSystemValue('app.mail.attachment-size-limit', 0),
@@ -456,14 +466,14 @@ class PageController extends Controller {
 	public function compose(string $uri): RedirectResponse {
 		$parts = parse_url($uri);
 		$params = [];
-		if (isset($parts['path'])) {
+		if (is_array($parts) && isset($parts['path'])) {
 			$params['to'] = $parts['path'];
 		}
-		if (isset($parts['query'])) {
-			$parts = explode('&', $parts['query']);
-			foreach ($parts as $part) {
+		if (is_array($parts) && isset($parts['query'])) {
+			$queryParts = explode('&', $parts['query']);
+			foreach ($queryParts as $part) {
 				$pair = explode('=', $part, 2);
-				$params[strtolower($pair[0])] = urldecode($pair[1]);
+				$params[strtolower($pair[0])] = urldecode($pair[1] ?? '');
 			}
 		}
 
