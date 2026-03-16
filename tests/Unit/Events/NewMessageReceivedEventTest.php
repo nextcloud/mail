@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Events;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OCA\Mail\Account;
 use OCA\Mail\Events\NewMessageReceivedEvent;
 
 class NewMessageReceivedEventTest extends TestCase {
