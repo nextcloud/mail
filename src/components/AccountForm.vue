@@ -771,7 +771,7 @@ export default {
 }
 </style>
 
-<style scoped>
+<style lang=scss" scoped>
 h4 {
 	text-align: start;
 }
