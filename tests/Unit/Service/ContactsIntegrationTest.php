@@ -144,7 +144,7 @@ class ContactsIntegrationTest extends TestCase {
 		];
 
 		$this->common($term, $searchResult, true, true, false, false, false);
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
@@ -199,7 +199,7 @@ class ContactsIntegrationTest extends TestCase {
 		];
 
 		$this->common($term, $searchResult, true, true, true);
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
@@ -240,7 +240,7 @@ class ContactsIntegrationTest extends TestCase {
 		];
 
 		$this->common($term, $searchResult, true, true, true);
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
@@ -281,7 +281,7 @@ class ContactsIntegrationTest extends TestCase {
 		];
 
 		$this->common($term, $searchResult, true, true, true);
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
@@ -324,7 +324,7 @@ class ContactsIntegrationTest extends TestCase {
 
 		$this->common($term, $searchResult, true, true, false, false, false);
 
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')

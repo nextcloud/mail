@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Unit\Service\Sync;
 
-use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MessageMapper;
@@ -24,21 +23,16 @@ use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCA\Mail\Service\Sync\SyncService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 
 final class SyncServiceTest extends TestCase {
 
 	private IMAPClientFactory&MockObject $clientFactory;
-	private Horde_Imap_Client_Socket&MockObject $client;
 
 	/** @var ImapToDbSynchronizer */
 	private $synchronizer;
 
 	/** @var MessageMapper */
 	private $messageMapper;
-
-	/** @var LoggerInterface */
-	private $loggerInterface;
 
 	/** @var MailboxSync */
 	private $mailboxSync;
@@ -50,27 +44,23 @@ final class SyncServiceTest extends TestCase {
 		parent::setUp();
 
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
-		$this->client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$this->synchronizer = $this->createMock(ImapToDbSynchronizer::class);
-		$filterStringParser = $this->createMock(FilterStringParser::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
-		$previewEnhancer = $this->createMock(PreviewEnhancer::class);
-		$this->loggerInterface = $this->createMock(LoggerInterface::class);
 		$this->mailboxSync = $this->createMock(MailboxSync::class);
 
 		$this->syncService = new SyncService(
 			$this->clientFactory,
 			$this->synchronizer,
-			$filterStringParser,
+			$this->createStub(FilterStringParser::class),
 			$this->messageMapper,
-			$previewEnhancer,
-			$this->loggerInterface,
+			$this->createStub(PreviewEnhancer::class),
+			$this->createStub(\Psr\Log\LoggerInterface::class),
 			$this->mailboxSync
 		);
 	}
 
 	public function testPartialSyncOnUncachedMailbox(): void {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
 		$mailbox->expects($this->once())
 			->method('isCached')
@@ -103,7 +93,7 @@ final class SyncServiceTest extends TestCase {
 		$this->clientFactory
 			->method('getClient')
 			->with($account)
-			->willReturn($this->client);
+			->willReturn($this->createStub(\Horde_Imap_Client_Socket::class));
 		$this->messageMapper
 			->method('findUidsForIds')
 			->with($mailbox, [])
@@ -112,16 +102,16 @@ final class SyncServiceTest extends TestCase {
 			->method('sync')
 			->with(
 				$account,
-				$this->client,
+				$this->createStub(\Horde_Imap_Client_Socket::class),
 				$mailbox,
-				$this->loggerInterface,
+				$this->createStub(\Psr\Log\LoggerInterface::class),
 				0,
 				[],
 				true
 			);
 		$this->mailboxSync->expects($this->once())
 			->method('syncStats')
-			->with($this->client, $mailbox);
+			->with($this->createStub(\Horde_Imap_Client_Socket::class), $mailbox);
 
 		$response = $this->syncService->syncMailbox(
 			$account,

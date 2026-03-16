@@ -41,7 +41,7 @@ class CompositeAvatarSourceTest extends TestCase {
 
 	public function testFetchNoneFound() {
 		$email = 'jane@doe.com';
-		$avatarFactory = $this->createMock(AvatarFactory::class);
+		$avatarFactory = $this->createStub(AvatarFactory::class);
 		$this->addressbookSource->expects($this->any())
 			->method('isExternal')
 			->willReturn(false);
@@ -71,7 +71,7 @@ class CompositeAvatarSourceTest extends TestCase {
 
 	public function testFetchNoneFoundQueryOnlyInternal() {
 		$email = 'jane@doe.com';
-		$avatarFactory = $this->createMock(AvatarFactory::class);
+		$avatarFactory = $this->createStub(AvatarFactory::class);
 		$this->addressbookSource->expects($this->once())
 			->method('isExternal')
 			->willReturn(false);
@@ -102,7 +102,7 @@ class CompositeAvatarSourceTest extends TestCase {
 	public function testFetchFromGravatar() {
 		$email = 'jane@doe.com';
 		$avatar = new Avatar('https://gravatar.com', 'image/jpeg');
-		$avatarFactory = $this->createMock(AvatarFactory::class);
+		$avatarFactory = $this->createStub(AvatarFactory::class);
 		$this->addressbookSource->expects($this->once())
 			->method('fetch')
 			->with($email, $avatarFactory)

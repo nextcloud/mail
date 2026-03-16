@@ -33,7 +33,7 @@ class SentMailboxHandlerTest extends TestCase {
 		$account = new Account($mailAccount);
 		$localMessage = new LocalMessage();
 		$localMessage->setStatus(LocalMessage::STATUS_RAW);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->antiAbuseHandler->expects(self::once())
 			->method('process');
@@ -49,7 +49,7 @@ class SentMailboxHandlerTest extends TestCase {
 		$localMessage = $this->getMockBuilder(LocalMessage::class);
 		$localMessage->addMethods(['setStatus']);
 		$mock = $localMessage->getMock();
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$mock->expects(self::once())
 			->method('setStatus')

@@ -260,7 +260,7 @@ class ManagerTest extends TestCase {
 
 	public function testUpdatePasswordNotProvisioned(): void {
 		/** @var IUser|MockObject $user */
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
@@ -272,7 +272,7 @@ class ManagerTest extends TestCase {
 
 	public function testUpdateLoginPassword(): void {
 		/** @var IUser|MockObject $user */
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(1000);
 		$this->mock->getParameter('mailAccountMapper')
@@ -292,7 +292,7 @@ class ManagerTest extends TestCase {
 
 	public function testUpdateMasterPasswordWithExistingLoginPassword(): void {
 		/** @var IUser|MockObject $user */
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(1000);
 		$this->mock->getParameter('mailAccountMapper')
@@ -318,7 +318,7 @@ class ManagerTest extends TestCase {
 
 	public function testUpdateMasterPasswordWithoutLoginPassword(): void {
 		/** @var IUser|MockObject $user */
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(1000);
 		$this->mock->getParameter('mailAccountMapper')

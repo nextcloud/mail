@@ -179,7 +179,7 @@ class PageControllerTest extends TestCase {
 	public function testIndex(): void {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Mailbox::class);
+		$mailbox = $this->createStub(Mailbox::class);
 		$this->preferences->expects($this->exactly(14))
 			->method('getPreference')
 			->willReturnMap([
