@@ -11,6 +11,7 @@ namespace OCA\Mail\Service\MailFilter;
 
 use JsonException;
 use OCA\Mail\Exception\FilterParserException;
+use OCA\Mail\Sieve\SieveUtils;
 
 class FilterParser {
 	private const SEPARATOR = '### Nextcloud Mail: Filters ### DON\'T EDIT ###';
@@ -62,6 +63,6 @@ class FilterParser {
 			$state = $nextState;
 		}
 
-		return new FilterParserResult($filters, $sieveScript, implode("\r\n", $scriptOut));
+		return new FilterParserResult($filters, $sieveScript, implode(SieveUtils::NEWLINE, $scriptOut));
 	}
 }

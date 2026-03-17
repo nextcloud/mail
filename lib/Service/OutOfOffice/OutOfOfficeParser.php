@@ -74,7 +74,7 @@ class OutOfOfficeParser {
 			$state = $nextState;
 		}
 
-		return new OutOfOfficeParserResult($data, $sieveScript, implode("\r\n", $scriptOut));
+		return new OutOfOfficeParserResult($data, $sieveScript, implode(SieveUtils::NEWLINE, $scriptOut));
 	}
 
 	/**
@@ -96,16 +96,22 @@ class OutOfOfficeParser {
 			$state->setEnd(null);
 		}
 
+		$untouchedScript = rtrim($untouchedScript, SieveUtils::NEWLINE);
 		$stateJsonString = json_encode($state, JSON_THROW_ON_ERROR);
 
 		if (!$state->isEnabled()) {
 			//unset($jsonData['start'], $jsonString['end']);
-			return implode("\r\n", [
-				$untouchedScript,
+			$parts = [
 				self::SEPARATOR,
 				self::DATA_MARKER . $stateJsonString,
-				self::SEPARATOR,
-			]);
+				self::SEPARATOR
+			];
+
+			if ($untouchedScript !== '') {
+				array_unshift($parts, $untouchedScript, '');
+			}
+
+			return implode(SieveUtils::NEWLINE, $parts) . SieveUtils::NEWLINE;
 		}
 
 		if ($state->getStart() === null) {
@@ -176,11 +182,13 @@ class OutOfOfficeParser {
 			self::SEPARATOR,
 		]);
 
-		return implode("\r\n", array_merge(
-			$requireSection,
-			[$untouchedScript],
-			$vacationSection,
-		));
+		$lines = $requireSection;
+		if ($untouchedScript !== '') {
+			$lines[] = $untouchedScript;
+			$lines[] = '';
+		}
+		array_push($lines, ...$vacationSection);
+		return implode(SieveUtils::NEWLINE, $lines) . SieveUtils::NEWLINE;
 	}
 
 	private function formatDateForSieve(DateTimeImmutable $date): string {

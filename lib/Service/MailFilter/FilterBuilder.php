@@ -16,7 +16,6 @@ use OCA\Mail\Sieve\SieveUtils;
 class FilterBuilder {
 	private const SEPARATOR = '### Nextcloud Mail: Filters ### DON\'T EDIT ###';
 	private const DATA_MARKER = '# FILTER: ';
-	private const SIEVE_NEWLINE = "\r\n";
 
 	public function __construct(
 		private ImapFlag $imapFlag,
@@ -104,9 +103,9 @@ class FilterBuilder {
 			);
 
 			$ifBlock = sprintf(
-				"if %s {\r\n%s\r\n}",
+				"if %s {" . SieveUtils::NEWLINE . "%s" . SieveUtils::NEWLINE . "}",
 				$ifTest,
-				implode(self::SIEVE_NEWLINE, $actions)
+				implode(SieveUtils::NEWLINE, $actions)
 			);
 
 			$commands[] = $ifBlock;
@@ -121,24 +120,24 @@ class FilterBuilder {
 			$lines[] = self::SEPARATOR;
 		}
 
-		/*
-		 * Using implode("\r\n", $lines) may introduce an extra newline if the original script already ends with one.
-		 * There may be a cleaner solution, but I couldn't find one that works seamlessly with Filter and Autoresponder.
-		 * Feel free to give it a try!
-		 */
-		if (str_ends_with($untouchedScript, self::SIEVE_NEWLINE . self::SIEVE_NEWLINE)) {
-			$untouchedScript = substr($untouchedScript, 0, -2);
+		$untouchedScript = rtrim($untouchedScript, SieveUtils::NEWLINE);
+		$hasUntouchedScript = $untouchedScript !== '';
+
+		if ($hasUntouchedScript) {
+			$lines[] = $untouchedScript;
 		}
-		$lines[] = $untouchedScript;
 
 		if (count($filters) > 0) {
+			if ($hasUntouchedScript) {
+				$lines[] = '';
+			}
 			$lines[] = self::SEPARATOR;
 			$lines[] = self::DATA_MARKER . json_encode($this->sanitizeDefinition($filters), JSON_THROW_ON_ERROR);
 			array_push($lines, ...$commands);
 			$lines[] = self::SEPARATOR;
 		}
 
-		return implode(self::SIEVE_NEWLINE, $lines);
+		return implode(SieveUtils::NEWLINE, $lines) . SieveUtils::NEWLINE;
 	}
 
 	private function sanitizeFlag(string $flag): string {

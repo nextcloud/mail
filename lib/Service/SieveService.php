@@ -37,10 +37,6 @@ class SieveService {
 			$script = $sieve->getScript($scriptName);
 		}
 
-		// Sieve appends the script with a carriage return and line feed (\r\n) each time it's saved.
-		// Strip those line feeds to avoid the accumulation of unnecessary white space.
-		$script = rtrim($script, "\r\n");
-
 		return new NamedSieveScript($scriptName, $script);
 	}
 
