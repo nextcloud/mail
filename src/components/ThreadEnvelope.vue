@@ -734,7 +734,7 @@ export default {
 		}, 100)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		if (this.seenTimer !== undefined) {
 			logger.info('Navigating away before seenTimer delay, will not mark message as seen/read')
 			clearTimeout(this.seenTimer)

@@ -57,7 +57,7 @@ export default {
 		}, 3500)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		clearTimeout(this.slowTimer)
 	},
 }
