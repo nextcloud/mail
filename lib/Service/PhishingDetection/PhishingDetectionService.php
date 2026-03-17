@@ -58,7 +58,7 @@ class PhishingDetectionService {
 			}
 		}
 
-		$date = $headers->getHeader('Date')?->value;
+		$date = $headers->getHeader('Date')?->value_single;
 
 		$list = new PhishingDetectionList();
 		if ($fromEmail !== null) {
