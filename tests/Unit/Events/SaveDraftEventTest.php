@@ -12,8 +12,8 @@ namespace OCA\Mail\Tests\Unit\Events;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Message;
-use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Events\SaveDraftEvent;
+use OCA\Mail\Model\NewMessageData;
 
 class SaveDraftEventTest extends TestCase {
 	public function testConstructorAndGetters(): void {
