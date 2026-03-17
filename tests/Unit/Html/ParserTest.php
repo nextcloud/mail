@@ -39,11 +39,17 @@ class ParserTest extends TestCase {
 	}
 
 	public function testParseHtmlWithSpecialCharacters(): void {
-		$html = '<html><body><p>Test & special < > chars</p></body></html>';
+		$html = '<html><body><p>Test &amp; special &lt; &gt; chars</p></body></html>';
 
 		$doc = Parser::parseToDomDocument($html);
 
 		$this->assertInstanceOf(DOMDocument::class, $doc);
+		$paragraphs = $doc->getElementsByTagName('p');
+		$this->assertEquals(1, $paragraphs->length);
+		$textContent = $paragraphs->item(0)->textContent;
+		$this->assertStringContainsString('&', $textContent);
+		$this->assertStringContainsString('<', $textContent);
+		$this->assertStringContainsString('>', $textContent);
 	}
 
 	public function testParseComplexHtml(): void {
