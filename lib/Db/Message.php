@@ -181,7 +181,7 @@ class Message extends Entity implements JsonSerializable {
 	 * before setting it, or sets null if it is not valid.
 	 */
 	public function setMessageId(?string $messageId): void {
-		$this->setMessageIdFieldIfNotEmpty('messageId', $messageId);
+		$this->setter('messageId', [$this->parseMessageId($messageId)]);
 	}
 
 	public function setRawReferences(?string $references): void {
@@ -190,19 +190,23 @@ class Message extends Entity implements JsonSerializable {
 	}
 
 	public function setInReplyTo(?string $inReplyTo): void {
-		$this->setMessageIdFieldIfNotEmpty('inReplyTo', $inReplyTo);
+		$this->setter('inReplyTo', [$this->parseMessageId($inReplyTo)]);
 	}
 
-	public function setThreadRootId(?string $messageId): void {
-		$threadRootId = (!empty($messageId)) ? '<' . rtrim(ltrim($messageId, '<'), '>') . '>' : $this->getMessageId();
-		$parsed = new Horde_Mail_Rfc822_Identification($threadRootId);
-		$this->setter('threadRootId', [$parsed->ids[0] ?? $this->getMessageId()]);
+	public function setThreadRootId(?string $threadRootId): void {
+		$this->setter('threadRootId', [$this->parseMessageId($threadRootId) ?? $this->messageId]);
 	}
 
-	private function setMessageIdFieldIfNotEmpty(string $field, ?string $id): void {
-		$id = (!empty($id)) ? '<' . rtrim(ltrim($id, '<'), '>') . '>' : null;
+	private function parseMessageId(?string $id): ?string {
+		if (empty($id)) {
+			return null;
+		}
+
+		// trim whitespace and <>
+		$id = '<' . trim(trim($id), '<>') . '>';
+
 		$parsed = new Horde_Mail_Rfc822_Identification($id);
-		$this->setter($field, [$parsed->ids[0] ?? null]);
+		return $parsed->ids[0] ?? null;
 	}
 
 	/**
