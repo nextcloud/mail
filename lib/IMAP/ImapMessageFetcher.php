@@ -17,6 +17,7 @@ use Horde_Imap_Client_Exception_NoSupportExtension;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_ListHeaders;
+use Horde_Mail_Rfc822_Identification;
 use Horde_Mime_Exception;
 use Horde_Mime_Headers;
 use Horde_Mime_Part;
@@ -246,9 +247,13 @@ class ImapMessageFetcher {
 		$this->parseHeaders($fetch);
 
 		$envelope = $fetch->getEnvelope();
+
+		$messageId = new Horde_Mail_Rfc822_Identification($envelope->message_id);
+		$inReplyTo = new Horde_Mail_Rfc822_Identification($envelope->in_reply_to);
+
 		return new IMAPMessage(
 			$this->uid,
-			$envelope->message_id,
+			$messageId->ids[0] ?? '',
 			$fetch->getFlags(),
 			AddressList::fromHorde($envelope->from),
 			AddressList::fromHorde($envelope->to),
@@ -271,7 +276,7 @@ class ImapMessageFetcher {
 			$this->unsubscribeUrl,
 			$this->isOneClickUnsubscribe,
 			$this->unsubscribeMailto,
-			$envelope->in_reply_to,
+			$inReplyTo->ids[0] ?? '',
 			$isEncrypted,
 			$isSigned,
 			$signatureIsValid,
