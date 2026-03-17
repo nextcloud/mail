@@ -228,6 +228,12 @@ class OutboxService {
 				// Ignore message of non-existent account
 				continue;
 			}
+
+			if ($message->getStatus() === LocalMessage::STATUS_ERROR) {
+				// Skip messages with status error
+				continue;
+			}
+
 			try {
 				$this->sendChain->process($account, $message);
 				$this->logger->debug('Outbox message {id} sent', [
