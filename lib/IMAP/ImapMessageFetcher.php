@@ -393,7 +393,10 @@ class ImapMessageFetcher {
 		// so this just appends the raw source to the main message.
 		if ($p[0] === 'message') {
 			$data = $this->loadBodyData($p, $partNo, $isFetched);
-			$this->plainMessage .= trim($data) . "\n\n";
+			if ($this->plainMessage !== '') {
+				$this->plainMessage .= "\n\n";
+			}
+			$this->plainMessage .= $data;
 		}
 	}
 
@@ -427,7 +430,10 @@ class ImapMessageFetcher {
 	 */
 	private function handleTextMessage(Horde_Mime_Part $p, string $partNo, bool $isFetched): void {
 		$data = $this->loadBodyData($p, $partNo, $isFetched);
-		$this->plainMessage .= trim($data) . "\n\n";
+		if ($this->plainMessage !== '') {
+			$this->plainMessage .= "\n\n";
+		}
+		$this->plainMessage .= $data;
 	}
 
 	/**
@@ -443,7 +449,10 @@ class ImapMessageFetcher {
 	private function handleHtmlMessage(Horde_Mime_Part $p, string $partNo, bool $isFetched): void {
 		$this->hasHtmlMessage = true;
 		$data = $this->loadBodyData($p, $partNo, $isFetched);
-		$this->htmlMessage .= $data . '<br><br>';
+		if ($this->htmlMessage !== '') {
+			$this->htmlMessage .= '<br><br>';
+		}
+		$this->htmlMessage .= $data;
 	}
 
 	/**
