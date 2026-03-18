@@ -204,7 +204,7 @@ class IMipService {
 
 	/**
 	 * Send error notification when iMIP processing fails
-	 * Uses Nextcloud Notifications app - respects user settings for push/email
+	 * Uses Nextcloud Notifications app
 	 */
 	private function sendErrorNotification(
 		Account $account,
