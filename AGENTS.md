@@ -52,3 +52,20 @@ Single-page Vue 2 app. All routes render through `views/Home.vue`.
 - **Mozart**: Some vendor packages are namespaced into `lib/Vendor/` to avoid conflicts.
 - **REUSE**: Every file requires an SPDX license header (`AGPL-3.0-only` for new files).
 - **OpenAPI**: `ResponseDefinitions.php` documents API types; run `composer openapi` to regenerate the spec.
+
+## Testing
+
+### Unit Tests
+Located in `tests/Unit/` with structure mirroring `lib/`.
+
+#### Pattern
+- Use **arrange-act-assert** structure with blank lines separating each phase (no literal comments)
+- Mock dependencies via `$this->createMock(Interface::class)`
+- Setup mocks in `setUp()` for common fixtures
+
+#### Running Tests
+```bash
+composer test:unit                                    # Run all unit tests
+composer test:unit -- tests/Unit/Service/HtmlTest.php # Run specific test file
+composer test:unit -- --filter="TestClassName"        # Run tests matching filter
+```
