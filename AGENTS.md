@@ -50,5 +50,5 @@ Single-page Vue 2 app. All routes render through `views/Home.vue`.
 - **Registration**: `appinfo/info.xml` registers background jobs, CLI commands, settings pages, navigation entries, and repair steps. `AppInfo/Application.php` registers event listeners and other services via the Nextcloud bootstrap API.
 - **Events**: Domain events in `lib/Events/` are dispatched after state changes; `lib/Listener/` reacts to them.
 - **Mozart**: Some vendor packages are namespaced into `lib/Vendor/` to avoid conflicts.
-- **REUSE**: Every file requires an SPDX license header (`AGPL-3.0-only` for new files).
+- **REUSE**: Every file requires an SPDX license header (`AGPL-3.0-or-later` for new files).
 - **OpenAPI**: `ResponseDefinitions.php` documents API types; run `composer openapi` to regenerate the spec.
