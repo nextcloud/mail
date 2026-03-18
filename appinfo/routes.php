@@ -361,6 +361,11 @@ return [
 			'verb' => 'PUT'
 		],
 		[
+			'name' => 'settings#setLlmCustomPrompts',
+			'url' => '/api/settings/llm-prompts',
+			'verb' => 'PUT'
+		],
+		[
 			'name' => 'trusted_senders#setTrusted',
 			'url' => '/api/trustedsenders/{email}',
 			'verb' => 'PUT'
