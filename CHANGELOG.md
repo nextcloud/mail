@@ -1,3 +1,21 @@
+## [5.6.15](https://github.com/nextcloud/mail/compare/v5.6.14...v5.6.15) (2026-03-19)
+
+
+### Bug Fixes
+
+* **deps:** bump dompurify from 3.3.0 to v3.3.2 ([b2031ee](https://github.com/nextcloud/mail/commit/b2031ee2d74d784cd56dff1c20ddc89a9bd93315))
+* **deps:** update minimatch ([88fa2e1](https://github.com/nextcloud/mail/commit/88fa2e12d072c70c76a24275abbf007f717deedb))
+* **dns:** Update public suffix list ([0a7200b](https://github.com/nextcloud/mail/commit/0a7200b4134e43ef068170530e39d6f625227a7a))
+* **l10n:** Update translations from Transifex ([61833ea](https://github.com/nextcloud/mail/commit/61833ea558bef3668f92c7e09a74ae71632452ef))
+* **l10n:** Update translations from Transifex ([10026e4](https://github.com/nextcloud/mail/commit/10026e4ed9238b7c998eaffa99b0844ee6399c27))
+* **l10n:** Update translations from Transifex ([e255653](https://github.com/nextcloud/mail/commit/e255653d6ddea7638a1b2c03becaef4e10afd79b))
+* **l10n:** Update translations from Transifex ([94bce4d](https://github.com/nextcloud/mail/commit/94bce4d71f45397d9d307fb2706714f4ab7bd94f))
+* **l10n:** Update translations from Transifex ([1e13918](https://github.com/nextcloud/mail/commit/1e139181ef432fa53cefe745d8d8f766a5f1c636))
+* **l10n:** Update translations from Transifex ([2723ed0](https://github.com/nextcloud/mail/commit/2723ed0a9fae7c2201427d7ff69106bcdf44f5a3))
+* **l10n:** Update translations from Transifex ([e2b7010](https://github.com/nextcloud/mail/commit/e2b7010d8c1991646a79b21694961656f6affdf7))
+
+
+
 ## [5.6.14](https://github.com/nextcloud/mail/compare/v5.6.13...v5.6.14) (2026-03-03)
 
 
