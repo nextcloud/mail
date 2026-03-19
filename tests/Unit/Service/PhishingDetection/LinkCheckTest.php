@@ -87,4 +87,13 @@ class LinkCheckTest extends TestCase {
 
 		$this->assertFalse($result->isPhishing());
 	}
+
+	public function testMalformedUrlReturnsSafe(): void {
+		// Test that malformed URLs don't cause errors but are silently skipped
+		$html = '<html><body><a href="ht!tp://exa mple">Click here</a></body></html>';
+
+		$result = $this->check->run($html);
+
+		$this->assertFalse($result->isPhishing());
+	}
 }

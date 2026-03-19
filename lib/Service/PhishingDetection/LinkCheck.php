@@ -74,6 +74,12 @@ class LinkCheck {
 			];
 		}
 		foreach ($zippedArray as $zipped) {
+			// Skip URLs that cannot be parsed to avoid deprecation errors in URL\Normalizer
+			// with malformed URLs in PHP 8.1+
+			if (parse_url($zipped['href']) === false) {
+				continue;
+			}
+
 			$un = new Normalizer($zipped['href']);
 			$url = $un->normalize();
 			if ($this->textLooksLikeALink($zipped['linkText'])) {
