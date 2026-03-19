@@ -1,3 +1,21 @@
+## [5.7.4](https://github.com/nextcloud/mail/compare/v5.7.3...v5.7.4) (2026-03-19)
+
+
+### Bug Fixes
+
+* Avoid undefined array key for address list ([14e0db4](https://github.com/nextcloud/mail/commit/14e0db4ba35bfd23cfc5a0733fc887084b5ce9d8))
+* **deps:** update minimatch ([6ac1a79](https://github.com/nextcloud/mail/commit/6ac1a7919eced8e8c083bfe5d3416e73f63f9f38))
+* **dns:** Update public suffix list ([d005604](https://github.com/nextcloud/mail/commit/d005604217f28de2e6299041e60dec8b94c1972d))
+* **IMAP:** don't add whitespaces to drafts ([ddd891a](https://github.com/nextcloud/mail/commit/ddd891a5fa3a84b33003588a4418a4719ba7c391))
+* **l10n:** Update translations from Transifex ([634ae1a](https://github.com/nextcloud/mail/commit/634ae1ac34f871e064c77a2266350777a0c62ecc))
+* **l10n:** Update translations from Transifex ([2fae9b2](https://github.com/nextcloud/mail/commit/2fae9b2b067e4a35c1ccfd08aa8291443358e399))
+* Normalize message IDs via RFC822 parser to handle malformed input ([8075bde](https://github.com/nextcloud/mail/commit/8075bde95bd187744b96acc5578ae21543f399a3))
+* **outbox:** Skip messages with status error ([d18b725](https://github.com/nextcloud/mail/commit/d18b725e5d6380676346dd878f4c87be8d0d2039))
+* replace deprecated and removed OC\Server getters ([853cd4a](https://github.com/nextcloud/mail/commit/853cd4addd5aec97768ace4fa20cbb09bcd4c657))
+* **textblocks:** guard removal of non existing text block ([1c3adaf](https://github.com/nextcloud/mail/commit/1c3adaf33471490509e862684b1c8448808262c0))
+
+
+
 ## [5.7.3](https://github.com/nextcloud/mail/compare/v5.7.2...v5.7.3) (2026-03-12)
 
 
