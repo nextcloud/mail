@@ -1396,4 +1396,239 @@ class MessagesControllerTest extends TestCase {
 
 		$this->controller->index(100, null, null, $limit);
 	}
+
+	public function testSmartReplyNoUser(): void {
+		$controller = new MessagesController(
+			$this->appName,
+			$this->request,
+			$this->accountService,
+			$this->mailManager,
+			$this->mailSearch,
+			$this->itineraryService,
+			null,
+			$this->userFolder,
+			$this->logger,
+			$this->l10n,
+			$this->mimeTypeDetector,
+			$this->urlGenerator,
+			$this->nonceManager,
+			$this->trustedSenderService,
+			$this->mailTransmission,
+			$this->smimeService,
+			$this->clientFactory,
+			$this->dkimService,
+			$this->userPreferences,
+			$this->snoozeService,
+			$this->aiIntegrationsService,
+			$this->cacheFactory,
+		);
+
+		$actualResponse = $controller->smartReply(100);
+		$expectedResponse = new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		$this->assertEquals($expectedResponse, $actualResponse);
+	}
+
+	public function testSmartReplyNoMessage(): void {
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, 100)
+			->willThrowException(new DoesNotExistException(''));
+
+		$actualResponse = $this->controller->smartReply(100);
+		$expectedResponse = new JSONResponse([], Http::STATUS_FORBIDDEN);
+		$this->assertEquals($expectedResponse, $actualResponse);
+	}
+
+	public function testSmartReplyNoMailbox(): void {
+		$message = new \OCA\Mail\Db\Message();
+		$message->setId(100);
+		$message->setMailboxId(1);
+
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, 100)
+			->willReturn($message);
+
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $message->getMailboxId())
+			->willThrowException(new DoesNotExistException(''));
+
+		$actualResponse = $this->controller->smartReply(100);
+		$expectedResponse = new JSONResponse([], Http::STATUS_FORBIDDEN);
+		$this->assertEquals($expectedResponse, $actualResponse);
+	}
+
+	public function testSmartReplyNoAccount(): void {
+		$message = new \OCA\Mail\Db\Message();
+		$message->setId(100);
+		$message->setMailboxId(1);
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$mailbox->setAccountId(1);
+
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, 100)
+			->willReturn($message);
+
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $message->getMailboxId())
+			->willReturn($mailbox);
+
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->userId, $mailbox->getAccountId())
+			->willThrowException(new DoesNotExistException(''));
+
+		$actualResponse = $this->controller->smartReply(100);
+		$expectedResponse = new JSONResponse([], Http::STATUS_FORBIDDEN);
+		$this->assertEquals($expectedResponse, $actualResponse);
+	}
+
+	public function testSmartReplyServiceException(): void {
+		$message = new \OCA\Mail\Db\Message();
+		$message->setId(100);
+		$message->setMailboxId(1);
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$mailbox->setAccountId(1);
+
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, 100)
+			->willReturn($message);
+
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $message->getMailboxId())
+			->willReturn($mailbox);
+
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->userId, $mailbox->getAccountId())
+			->willReturn(new Account(new MailAccount()));
+
+		$this->aiIntegrationsService->expects($this->once())
+			->method('getSmartReply')
+			->with($this->anything(), $this->anything(), $this->anything(), $this->userId)
+			->willThrowException(new ServiceException('AI service error'));
+
+		$this->logger->expects($this->once())
+			->method('error');
+
+		$actualResponse = $this->controller->smartReply(100);
+		$expectedResponse = new JSONResponse([], Http::STATUS_NO_CONTENT);
+		$this->assertEquals($expectedResponse, $actualResponse);
+	}
+
+	public function testSmartReplySuccessful(): void {
+		$message = new \OCA\Mail\Db\Message();
+		$message->setId(100);
+		$message->setMailboxId(1);
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$mailbox->setAccountId(1);
+
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, 100)
+			->willReturn($message);
+
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $message->getMailboxId())
+			->willReturn($mailbox);
+
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->userId, $mailbox->getAccountId())
+			->willReturn(new Account(new MailAccount()));
+
+		$replies = ['reply1' => 'OK thanks', 'reply2' => 'Sounds good'];
+		$this->aiIntegrationsService->expects($this->once())
+			->method('getSmartReply')
+			->with($this->anything(), $this->anything(), $this->anything(), $this->userId)
+			->willReturn($replies);
+
+		$actualResponse = $this->controller->smartReply(100);
+		$expectedResponse = new JSONResponse(array_values($replies));
+		$this->assertEquals($expectedResponse, $actualResponse);
+	}
+
+	public function testSmartReplyEmptyReplies(): void {
+		$message = new \OCA\Mail\Db\Message();
+		$message->setId(100);
+		$message->setMailboxId(1);
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$mailbox->setAccountId(1);
+
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, 100)
+			->willReturn($message);
+
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $message->getMailboxId())
+			->willReturn($mailbox);
+
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->userId, $mailbox->getAccountId())
+			->willReturn(new Account(new MailAccount()));
+
+		$this->aiIntegrationsService->expects($this->once())
+			->method('getSmartReply')
+			->with($this->anything(), $this->anything(), $this->anything(), $this->userId)
+			->willReturn([]);
+
+		$actualResponse = $this->controller->smartReply(100);
+		$expectedResponse = new JSONResponse([]);
+		$this->assertEquals($expectedResponse, $actualResponse);
+	}
+
+	public function testSmartReplyWithCachedInvalidJson(): void {
+		// This test verifies that when getSmartReply() encounters corrupted cache
+		// (which would cause json_decode to fail), it throws ServiceException
+		// and the controller properly handles it by returning NO_CONTENT.
+		// This prevents the TypeError: array_values(): Argument #1 ($array) must be of type array, null given
+
+		$message = new \OCA\Mail\Db\Message();
+		$message->setId(100);
+		$message->setMailboxId(1);
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$mailbox->setAccountId(1);
+
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, 100)
+			->willReturn($message);
+
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $message->getMailboxId())
+			->willReturn($mailbox);
+
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->userId, $mailbox->getAccountId())
+			->willReturn(new Account(new MailAccount()));
+
+		// Simulate the AI service throwing ServiceException due to corrupted cache
+		$this->aiIntegrationsService->expects($this->once())
+			->method('getSmartReply')
+			->with($this->anything(), $this->anything(), $this->anything(), $this->userId)
+			->willThrowException(new ServiceException('Failed to decode smart replies JSON output'));
+
+		$this->logger->expects($this->once())
+			->method('error');
+
+		$actualResponse = $this->controller->smartReply(100);
+		$expectedResponse = new JSONResponse([], Http::STATUS_NO_CONTENT);
+		$this->assertEquals($expectedResponse, $actualResponse);
+	}
 }
