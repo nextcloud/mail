@@ -31,13 +31,13 @@ class OutboxController extends Controller {
 	private SmimeService $smimeService;
 
 	public function __construct(string $appName,
-		$UserId,
+		$userId,
 		IRequest $request,
 		OutboxService $service,
 		AccountService $accountService,
 		SmimeService $smimeService) {
 		parent::__construct($appName, $request);
-		$this->userId = $UserId;
+		$this->userId = $userId;
 		$this->service = $service;
 		$this->accountService = $accountService;
 		$this->smimeService = $smimeService;

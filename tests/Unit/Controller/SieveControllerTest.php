@@ -40,7 +40,7 @@ class SieveControllerTest extends TestCase {
 			SieveController::class,
 			[
 				'hostValidator' => $this->remoteHostValidator,
-				'UserId' => '1',
+				'userId' => '1',
 			]
 		);
 		$this->sieveController = $this->serviceMock->getService();
