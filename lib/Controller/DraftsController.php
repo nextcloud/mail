@@ -33,14 +33,14 @@ class DraftsController extends Controller {
 
 
 	public function __construct(string $appName,
-		$UserId,
+		$userId,
 		IRequest $request,
 		DraftsService $service,
 		AccountService $accountService,
 		ITimeFactory $timeFactory,
 		SmimeService $smimeService) {
 		parent::__construct($appName, $request);
-		$this->userId = $UserId;
+		$this->userId = $userId;
 		$this->service = $service;
 		$this->accountService = $accountService;
 		$this->timeFactory = $timeFactory;

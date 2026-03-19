@@ -31,10 +31,10 @@ class LocalAttachmentsController extends Controller {
 	 * @param string $UserId
 	 */
 	public function __construct(string $appName, IRequest $request,
-		IAttachmentService $attachmentService, $UserId) {
+		IAttachmentService $attachmentService, $userId) {
 		parent::__construct($appName, $request);
 		$this->attachmentService = $attachmentService;
-		$this->userId = $UserId;
+		$this->userId = $userId;
 	}
 
 	/**

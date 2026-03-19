@@ -83,7 +83,7 @@ class MessagesController extends Controller {
 		IMailManager $mailManager,
 		IMailSearch $mailSearch,
 		ItineraryService $itineraryService,
-		?string $UserId,
+		?string $userId,
 		$userFolder,
 		LoggerInterface $logger,
 		IL10N $l10n,
@@ -105,7 +105,7 @@ class MessagesController extends Controller {
 		$this->mailManager = $mailManager;
 		$this->mailSearch = $mailSearch;
 		$this->itineraryService = $itineraryService;
-		$this->currentUserId = $UserId;
+		$this->currentUserId = $userId;
 		$this->userFolder = $userFolder;
 		$this->logger = $logger;
 		$this->l10n = $l10n;

@@ -24,11 +24,11 @@ class TrustedSendersController extends Controller {
 	private ITrustedSenderService $trustedSenderService;
 
 	public function __construct(IRequest $request,
-		?string $UserId,
+		?string $userId,
 		ITrustedSenderService $trustedSenderService) {
 		parent::__construct(Application::APP_ID, $request);
 
-		$this->uid = $UserId;
+		$this->uid = $userId;
 		$this->trustedSenderService = $trustedSenderService;
 	}
 

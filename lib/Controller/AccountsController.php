@@ -57,7 +57,7 @@ class AccountsController extends Controller {
 		string $appName,
 		IRequest $request,
 		AccountService $accountService,
-		$UserId,
+		$userId,
 		LoggerInterface $logger,
 		IL10N $l10n,
 		AliasesService $aliasesService,
@@ -72,7 +72,7 @@ class AccountsController extends Controller {
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
-		$this->currentUserId = $UserId;
+		$this->currentUserId = $userId;
 		$this->logger = $logger;
 		$this->l10n = $l10n;
 		$this->aliasesService = $aliasesService;
