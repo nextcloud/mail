@@ -58,5 +58,13 @@ class Cache {
 		$this->cache->set($key, $value ?? false, self::CACHE_TTL);
 	}
 
+	/**
+	 * @param string $key
+	 *
+	 * @return void
+	 */
+	public function remove(string $key): void {
+		$this->cache->remove($key);
+	}
 
 }
