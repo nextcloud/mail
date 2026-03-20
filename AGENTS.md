@@ -69,3 +69,18 @@ composer test:unit                                    # Run all unit tests
 composer test:unit -- tests/Unit/Service/HtmlTest.php # Run specific test file
 composer test:unit -- --filter="TestClassName"        # Run tests matching filter
 ```
+
+## Git Workflow
+
+Do NOT commit changes unless explicitly asked to do so.
+
+After completing code changes:
+1. Verify your work is complete and tests pass
+2. Make sure there is no trailing whitespace
+3. Leave changes in working directory or staged (do not commit)
+4. Provide a summary of what was changed and why
+5. Suggest a commit message using Conventional Commits format
+   - There is a [contributing doc](./.github/CONTRIBUTING.md) with suggestions
+6. The user will review and commit when ready
+
+The commit message's last line before sign-off should be `AI-assisted: <agent> (model)`. For example: `AI-assisted: Claude Code (Claude Haiku 4.5)`
