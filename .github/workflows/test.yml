@@ -213,7 +213,7 @@ jobs:
               fallbackNode: '^14'
               fallbackNpm: '^7'
           - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
-            uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+            uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
             with:
               node-version: ${{ steps.versions.outputs.nodeVersion }}
           - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
@@ -267,7 +267,7 @@ jobs:
       - name: Install the app
         run: php -f nextcloud/occ app:enable mail
       - name: Set up node ${{ env.E2E_NODE_VERSION }}
-        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version: ${{ env.E2E_NODE_VERSION }}
       - name: Install npm dependencies
@@ -292,7 +292,7 @@ jobs:
       - name: Run Playwright tests
         working-directory: nextcloud/apps/mail
         run: DEBUG=pw:api npx playwright test
-      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         if: always()
         with:
           name: playwright-report-${{ github.event.number }}-nc${{ needs.matrix.outputs.branches-min }}-php${{ needs.matrix.outputs.php-min }}-node${{ env.E2E_NODE_VERSION }}
