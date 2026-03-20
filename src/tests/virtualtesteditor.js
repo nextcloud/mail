@@ -5,11 +5,11 @@
  * For licensing, see https://github.com/ckeditor/ckeditor5/blob/master/LICENSE.md
  * or https://ckeditor.com/legal/ckeditor-oss-license
  */
-import { DataApiMixin, Editor, mix } from 'ckeditor5'
+import { Editor } from 'ckeditor5'
 
 /**
  * A simple editor implementation useful for testing the engine part of the features.
- * It contains full data pipepilne and the engine pipeline but without rendering to DOM.
+ * It contains full data pipeline and the engine pipeline but without rendering to DOM.
  *
  * Should work in Node.js. If not now, then in the future :).
  */
@@ -34,5 +34,3 @@ export default class VirtualTestEditor extends Editor {
 		})
 	}
 }
-
-mix(VirtualTestEditor, DataApiMixin)
