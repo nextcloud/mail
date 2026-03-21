@@ -32,6 +32,7 @@ use OCP\Files\Folder;
 use OCP\Files\IMimeTypeDetector;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
+use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\ICacheFactory;
 use OCP\IURLGenerator;
 use Psr\Log\LoggerInterface;
@@ -140,11 +141,9 @@ class AttachmentService implements IAttachmentService {
 	}
 
 	/**
-	 * @param string $userId
-	 * @param int $id
+	 * Try to get an attachment by id
 	 *
-	 * @return array of LocalAttachment and ISimpleFile
-	 *
+	 * @return array{0: LocalAttachment, 1: ISimpleFile}
 	 * @throws AttachmentNotFoundException
 	 */
 	#[\Override]
