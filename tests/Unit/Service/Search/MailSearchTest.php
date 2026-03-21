@@ -23,9 +23,9 @@ use OCA\Mail\Service\Search\Flag;
 use OCA\Mail\Service\Search\MailSearch;
 use OCA\Mail\Service\Search\SearchQuery;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\IConfig;
-use OCP\AppFramework\Utility\ITimeFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class MailSearchTest extends TestCase {
