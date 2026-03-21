@@ -93,7 +93,8 @@ class ImapToDbSynchronizer {
 		IMailManager $mailManager,
 		TagMapper $tagMapper,
 		NewMessagesClassifier $newMessagesClassifier,
-		private IConfig $config) {
+		private IConfig $config
+	) {
 		$this->dbMapper = $dbMapper;
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
@@ -627,7 +628,7 @@ class ImapToDbSynchronizer {
 				);
 
 				if (!empty($imapMessages)) {
-					$logger->debug("syncOlderMessages: found " . count($imapMessages) . " messages in {$days}-day range");
+					$logger->debug('syncOlderMessages: found ' . count($imapMessages) . " messages in {$days}-day range");
 					break;
 				}
 			}
@@ -703,7 +704,7 @@ class ImapToDbSynchronizer {
 				);
 
 				if (!empty($imapMessages)) {
-					$logger->debug("syncOlderMessagesBackground: found " . count($imapMessages) . " messages in {$days}-day range");
+					$logger->debug('syncOlderMessagesBackground: found ' . count($imapMessages) . " messages in {$days}-day range");
 					break;
 				}
 			}
