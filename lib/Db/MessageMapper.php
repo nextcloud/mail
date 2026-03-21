@@ -701,7 +701,9 @@ class MessageMapper extends QBMapper {
 
 		$toRemove = array_udiff($dbTags, $imapTags, static fn (Tag $a, Tag $b) => strcmp($a->getImapLabel(), $b->getImapLabel()));
 		foreach ($toRemove as $tag) {
-			$this->tagMapper->untagMessage($tag, $message->getMessageId());
+			/** @var string $messageId */
+			$messageId = $message->getMessageId();
+			$this->tagMapper->untagMessage($tag, $messageId);
 		}
 		$perf->step('Untagged messages');
 	}
