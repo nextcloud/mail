@@ -390,8 +390,7 @@ class MessageMapper extends QBMapper {
 
 			// Detect database platform for conflict handling
 			$platform = $this->db->getDatabasePlatform();
-			$isPostgres = $platform instanceof \Doctrine\DBAL\Platforms\PostgreSQLPlatform
-				|| $platform instanceof \Doctrine\DBAL\Platforms\PostgreSQL120Platform;
+			$isPostgres = $platform instanceof \Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 
 			$qb2 = $this->db->getQueryBuilder();
 			$qb2->insert('mail_recipients')

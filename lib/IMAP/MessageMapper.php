@@ -124,7 +124,7 @@ class MessageMapper {
 			$searchQuery = new Horde_Imap_Client_Search_Query();
 			$since = new \DateTime();
 			$since->modify("-{$maxSyncDays} days");
-			$searchQuery->dateSearch($since, Horde_Imap_Client_Search_Query::DATE_SINCE, false, 'UTC');
+			$searchQuery->dateSearch($since, Horde_Imap_Client_Search_Query::DATE_SINCE, false);
 		}
 
 		$metaResults = $client->search(
@@ -292,8 +292,8 @@ class MessageMapper {
 		int $limit = 50,
 	): array {
 		$searchQuery = new Horde_Imap_Client_Search_Query();
-		$searchQuery->dateSearch($since, Horde_Imap_Client_Search_Query::DATE_SINCE, false, 'UTC');
-		$searchQuery->dateSearch($before, Horde_Imap_Client_Search_Query::DATE_BEFORE, false, 'UTC');
+		$searchQuery->dateSearch($since, Horde_Imap_Client_Search_Query::DATE_SINCE, false);
+		$searchQuery->dateSearch($before, Horde_Imap_Client_Search_Query::DATE_BEFORE, false);
 
 		$results = $client->search(
 			$mailbox,

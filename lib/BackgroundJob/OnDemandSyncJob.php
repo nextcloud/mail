@@ -69,7 +69,7 @@ class OnDemandSyncJob extends QueuedJob {
 			);
 			$this->logger->debug("OnDemandSyncJob: synced $synced messages for account $accountId mailbox $mailboxId");
 		} catch (\Throwable $e) {
-			$this->logger->warning("OnDemandSyncJob failed: " . $e->getMessage(), [
+			$this->logger->warning('OnDemandSyncJob failed: ' . $e->getMessage(), [
 				'exception' => $e,
 			]);
 		}

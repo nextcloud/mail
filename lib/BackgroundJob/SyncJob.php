@@ -10,10 +10,10 @@ namespace OCA\Mail\BackgroundJob;
 
 use Horde_Imap_Client_Exception;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\MailboxSync;
-use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCP\AppFramework\Db\DoesNotExistException;

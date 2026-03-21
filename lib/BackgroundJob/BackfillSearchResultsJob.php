@@ -101,7 +101,7 @@ class BackfillSearchResultsJob extends QueuedJob {
 			$inserted = $this->messageMapper->insertBulkIgnore($account, ...$dbMessages);
 			$this->logger->debug("BackfillSearchResultsJob: inserted $inserted messages for mailbox $mailboxId");
 		} catch (\Throwable $e) {
-			$this->logger->warning("BackfillSearchResultsJob failed: " . $e->getMessage(), [
+			$this->logger->warning('BackfillSearchResultsJob failed: ' . $e->getMessage(), [
 				'exception' => $e,
 			]);
 		} finally {

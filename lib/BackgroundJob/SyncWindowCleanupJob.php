@@ -9,10 +9,10 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
+use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
-use OCA\Mail\Account;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
 use OCP\IConfig;
@@ -79,7 +79,7 @@ class SyncWindowCleanupJob extends TimedJob {
 				$uids = array_map(static fn ($message) => $message->getUid(), $messages);
 				$this->messageMapper->deleteByUid($mailbox, ...$uids);
 				$cleaned += count($uids);
-			} while (count($messages) > 0);
+			} while (true);
 
 			if ($cleaned > 0) {
 				$this->logger->debug('Cleaned {count} old messages from mailbox {mailboxId}', [
