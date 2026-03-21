@@ -101,3 +101,15 @@ export async function setImportanceClassificationEnabledByDefault(enabledByDefau
 		enabledByDefault,
 	})
 }
+
+/**
+ * @param {number} value
+ * @return {Promise<void>}
+ */
+export async function setMaxSyncDays(value) {
+	const url = generateUrl('/apps/mail/api/settings/max-sync-days')
+	const resp = await axios.put(url, {
+		value,
+	})
+	return resp.data
+}

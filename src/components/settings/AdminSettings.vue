@@ -277,6 +277,25 @@
 				</p>
 			</article>
 		</div>
+		<div class="app-description">
+			<h3>{{ t('mail', 'Synchronization window') }}</h3>
+			<article>
+				<p>
+					{{ t('mail', 'Limit the number of days of email to synchronize locally. Older messages are searched on-demand via IMAP. Set to 0 for unlimited synchronization.') }}
+				</p>
+				<p>
+					<label for="mail-max-sync-days">{{ t('mail', 'Maximum days to sync') }}</label>
+					<input
+						id="mail-max-sync-days"
+						v-model.number="maxSyncDays"
+						type="number"
+						min="0"
+						step="1"
+						class="max-sync-days-input"
+						@change="updateMaxSyncDays">
+				</p>
+			</article>
+		</div>
 	</SettingsSection>
 </template>
 
@@ -299,6 +318,7 @@ import {
 	provisionAll,
 	setImportanceClassificationEnabledByDefault,
 	setLayoutMessageView,
+	setMaxSyncDays,
 	updateAllowNewMailAccounts,
 	updateEnabledSmartReply,
 	updateLlmEnabled,
@@ -373,6 +393,7 @@ export default {
 			isLlmFreePromptConfigured: loadState('mail', 'enabled_llm_free_prompt_backend'),
 			layoutMessageView: loadState('mail', 'layout_message_view'),
 			isImportanceClassificationEnabledByDefault: loadState('mail', 'importance_classification_default', true),
+			maxSyncDays: loadState('mail', 'max_sync_days', 0),
 		}
 	},
 
@@ -453,6 +474,16 @@ export default {
 				logger.error('Could not save default classification setting', { error })
 			}
 		},
+
+		async updateMaxSyncDays() {
+			try {
+				await setMaxSyncDays(this.maxSyncDays)
+				showSuccess(t('mail', 'Synchronization window updated'))
+			} catch (error) {
+				showError(t('mail', 'Could not save synchronization window setting'))
+				logger.error('Could not save max sync days setting', { error })
+			}
+		},
 	},
 }
 </script>
@@ -465,5 +496,10 @@ export default {
 .config-button {
 	display: inline-block;
 	margin-inline: 4px;
+}
+
+.max-sync-days-input {
+	width: 80px;
+	margin-inline-start: 8px;
 }
 </style>

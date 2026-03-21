@@ -361,6 +361,11 @@ return [
 			'verb' => 'PUT'
 		],
 		[
+			'name' => 'settings#setMaxSyncDays',
+			'url' => '/api/settings/max-sync-days',
+			'verb' => 'PUT'
+		],
+		[
 			'name' => 'trusted_senders#setTrusted',
 			'url' => '/api/trustedsenders/{email}',
 			'verb' => 'PUT'

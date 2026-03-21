@@ -13,6 +13,7 @@ use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\MailboxSync;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -46,6 +47,7 @@ class SyncJob extends TimedJob {
 		LoggerInterface $logger,
 		IJobList $jobList,
 		private readonly IConfig $config,
+		private readonly MailboxMapper $mailboxMapper,
 	) {
 		parent::__construct($time);
 
@@ -126,6 +128,25 @@ class SyncJob extends TimedJob {
 		try {
 			$this->mailboxSync->sync($account, $this->logger, true);
 			$this->syncService->syncAccount($account, $this->logger);
+
+			// Schedule deep-sync as a separate QueuedJob instead of running
+			// it inline. This prevents 10K accounts x 300-800ms from blocking
+			// the entire cron cycle.
+			$maxSyncDays = (int)$this->config->getAppValue('mail', 'max_sync_days', '0');
+			if ($maxSyncDays > 0) {
+				foreach ($this->mailboxMapper->findAll($account) as $mailbox) {
+					if ($mailbox->isInbox()) {
+						$jobArg = [
+							'accountId' => $account->getId(),
+							'mailboxId' => $mailbox->getId(),
+						];
+						if (!$this->jobList->has(DeepSyncJob::class, $jobArg)) {
+							$this->jobList->add(DeepSyncJob::class, $jobArg);
+						}
+						break;
+					}
+				}
+			}
 		} catch (IncompleteSyncException $e) {
 			$this->logger->warning($e->getMessage(), [
 				'exception' => $e,
