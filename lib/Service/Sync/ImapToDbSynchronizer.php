@@ -81,7 +81,8 @@ class ImapToDbSynchronizer {
 	private TagMapper $tagMapper;
 	private NewMessagesClassifier $newMessagesClassifier;
 
-	public function __construct(DatabaseMessageMapper $dbMapper,
+	public function __construct(
+		DatabaseMessageMapper $dbMapper,
 		IMAPClientFactory $clientFactory,
 		ImapMessageMapper $imapMapper,
 		MailboxMapper $mailboxMapper,
@@ -93,7 +94,7 @@ class ImapToDbSynchronizer {
 		IMailManager $mailManager,
 		TagMapper $tagMapper,
 		NewMessagesClassifier $newMessagesClassifier,
-		private IConfig $config
+		private IConfig $config,
 	) {
 		$this->dbMapper = $dbMapper;
 		$this->clientFactory = $clientFactory;

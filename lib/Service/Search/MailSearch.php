@@ -46,14 +46,16 @@ class MailSearch implements IMailSearch {
 	/** @var ITimeFactory */
 	private $timeFactory;
 
-	public function __construct(FilterStringParser $filterStringParser,
+	public function __construct(
+		FilterStringParser $filterStringParser,
 		ImapSearchProvider $imapSearchProvider,
 		MessageMapper $messageMapper,
 		PreviewEnhancer $previewEnhancer,
 		ITimeFactory $timeFactory,
 		private IConfig $config,
 		private ImapToDbSynchronizer $imapToDbSynchronizer,
-		private IJobList $jobList) {
+		private IJobList $jobList,
+	) {
 		$this->filterStringParser = $filterStringParser;
 		$this->imapSearchProvider = $imapSearchProvider;
 		$this->messageMapper = $messageMapper;
