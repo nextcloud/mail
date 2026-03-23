@@ -6,7 +6,7 @@ import logger from '../../../logger.js'
 import dragEventBus from '../util/dragEventBus.js'
 
 export class DroppableMailbox {
-	constructor(el, componentInstance, options) {
+	constructor(el, options) {
 		this.el = el
 		this.options = options
 		this.mainStore = options.mainStore

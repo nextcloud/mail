@@ -6,14 +6,22 @@ import { DroppableMailbox } from './droppable-mailbox.js'
 
 let instance
 
+function onBind(el, binding) {
+	instance = new DroppableMailbox(el, binding.value)
+}
+
+function onUpdate(el, binding) {
+	instance.options = binding.value
+	instance.update(el, instance)
+}
+
 export const DroppableMailboxDirective = {
-	bind(el, binding, vnode) {
-		instance = new DroppableMailbox(el, vnode.context, binding.value)
-	},
-	componentUpdated(el, binding) {
-		instance.options = binding.value
-		instance.update(el, instance)
-	},
+	// Vue 2
+	bind: onBind,
+	componentUpdated: onUpdate,
+	// Vue 3
+	mounted: onBind,
+	updated: onUpdate,
 }
 
 export default DroppableMailbox
