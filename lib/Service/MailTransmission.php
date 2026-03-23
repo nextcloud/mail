@@ -51,6 +51,7 @@ use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 class MailTransmission implements IMailTransmission {
 	private const RETRIABLE_CODES = [
@@ -172,13 +173,19 @@ class MailTransmission implements IMailTransmission {
 				$localMessage->setStatus(LocalMessage::STATUS_SMPT_SEND_FAIL);
 				return;
 			}
+
+			try {
+				$localMessage->setRaw($mail->getRaw(false));
+			} catch (Throwable) {
+				// Having the raw message is nice for troubleshooting, but should not fail hard.
+			}
 			$localMessage->setStatus(LocalMessage::STATUS_ERROR);
 			return;
 		} finally {
 			if ($transport instanceof Horde_Mail_Transport_Smtphorde) {
 				try {
 					$transport->getSMTPObject()->logout();
-				} catch (\Throwable $e) {
+				} catch (Throwable) {
 					// Handle silently as this is a resource usage optimization
 				}
 			}
