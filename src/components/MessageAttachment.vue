@@ -171,14 +171,6 @@ export default {
 		}
 	},
 
-	mounted() {
-		document.addEventListener('click', this.handleClickOutside)
-	},
-
-	beforeUnmount() {
-		document.removeEventListener('click', this.handleClickOutside)
-	},
-
 	computed: {
 		name() {
 			if (this.mime === 'message/rfc822') {
@@ -206,6 +198,14 @@ export default {
 		boundariesElement() {
 			return document.querySelector('#content-vue')
 		},
+	},
+
+	mounted() {
+		document.addEventListener('click', this.handleClickOutside)
+	},
+
+	beforeUnmount() {
+		document.removeEventListener('click', this.handleClickOutside)
 	},
 
 	methods: {
