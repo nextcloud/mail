@@ -51,6 +51,21 @@
 		<div id="reply-composer" />
 		<div class="reply-buttons">
 			<div v-if="smartReplies.length > 0" class="reply-buttons__suggested">
+				<NcPopover trigger="hover focus">
+					<template #trigger>
+						<NcButton
+							variant="tertiary-no-background"
+							:aria-label="t('mail', 'AI info')"
+							class="ai-button">
+							<template #icon>
+								<IconInfo :size="20" />
+							</template>
+						</NcButton>
+					</template>
+					<p class="smart-replies-info">
+						{{ aiInfo }}
+					</p>
+				</NcPopover>
 				<NcAssistantButton
 					v-for="(reply, index) in smartReplies"
 					:key="index"
@@ -75,8 +90,9 @@
 
 <script>
 import { generateUrl } from '@nextcloud/router'
-import { NcAssistantButton, NcButton } from '@nextcloud/vue'
+import { NcAssistantButton, NcButton, NcPopover } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
 import LockOffIcon from 'vue-material-design-icons/LockOffOutline.vue'
 import ReplyIcon from 'vue-material-design-icons/ReplyOutline.vue'
 import Imip from './Imip.vue'
@@ -94,6 +110,7 @@ export default {
 	name: 'Message',
 	components: {
 		Itinerary,
+		IconInfo,
 		MessageAttachments,
 		MessageEncryptedBody,
 		MessageHTMLBody,
@@ -104,6 +121,7 @@ export default {
 		ReplyIcon,
 		NcButton,
 		NcAssistantButton,
+		NcPopover,
 	},
 
 	props: {
@@ -133,6 +151,12 @@ export default {
 			required: true,
 			type: String,
 		},
+	},
+
+	data() {
+		return {
+			aiInfo: t('mail', 'Suggested replies are using AI'),
+		}
 	},
 
 	computed: {
@@ -256,5 +280,9 @@ export default {
 			margin-inline-start: 0;
 		}
 	}
+}
+
+.smart-replies-info {
+	padding: 15px;
 }
 </style>
