@@ -246,6 +246,7 @@ OC.L10N.register(
     "Group" : "קבוצה",
     "Shared" : "משותף",
     "Shares" : "שיתופים",
+    "Insert" : "הכנסה",
     "Account connected" : "חשבון מחובר",
     "Connect your mail account" : "התחברות לחשבון הדוא״ל שלך",
     "All" : "הכול",
