@@ -482,7 +482,7 @@ export default function mainStoreActions() {
 						data.isHtml = true
 						data.bodyHtml = await this.processHtmlBody(original.databaseId)
 						if (reply.suggestedReply) {
-							data.bodyHtml = `<p>${reply.suggestedReply}<\\p>` + data.bodyHtml
+							data.bodyHtml = `<p>${reply.suggestedReply}</p>` + data.bodyHtml
 						}
 					} else {
 						data.isHtml = false
