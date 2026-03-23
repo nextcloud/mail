@@ -167,8 +167,9 @@ class MicrosoftIntegration {
 				],
 			]);
 		} catch (Exception $e) {
-			$this->logger->warning('Could not refresh oauth token: ' . $e->getMessage(), [
+			$this->logger->warning('Could not refresh Microsoft OAuth token for account {accountId}: ' . $e->getMessage(), [
 				'exception' => $e,
+				'accountId' => $account->getId(),
 			]);
 			return $account;
 		}
