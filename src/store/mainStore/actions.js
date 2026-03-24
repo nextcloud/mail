@@ -529,6 +529,7 @@ export default function mainStoreActions() {
 								bodyHtml: data.bodyHtml,
 								bodyPlain: data.bodyPlain,
 								replyTo: reply.data,
+								smartReply: reply.smartReply,
 							},
 						})
 						return
