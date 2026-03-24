@@ -103,7 +103,8 @@ class OutboxServiceIntegrationTest extends TestCase {
 			Server::get(ICacheFactory::class),
 			Server::get(IURLGenerator::class),
 			Server::get(IMimeTypeDetector::class),
-			new NullLogger()
+			new NullLogger(),
+			Server::get(ITimeFactory::class)
 		);
 		$this->client = $this->getClient($this->account);
 		$this->mapper = Server::get(LocalMessageMapper::class);

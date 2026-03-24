@@ -26,6 +26,7 @@ use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\UploadException;
 use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\IMimeTypeDetector;
@@ -72,6 +73,7 @@ class AttachmentService implements IAttachmentService {
 		private IURLGenerator $urlGenerator,
 		private IMimeTypeDetector $mimeTypeDetector,
 		LoggerInterface $logger,
+		private ITimeFactory $timeFactory,
 	) {
 		$this->mapper = $mapper;
 		$this->storage = $storage;
@@ -92,6 +94,7 @@ class AttachmentService implements IAttachmentService {
 		$attachment->setUserId($userId);
 		$attachment->setFileName($file->getFileName());
 		$attachment->setMimeType($file->getMimeType());
+		$attachment->setCreatedAt($this->timeFactory->getTime());
 
 		$persisted = $this->mapper->insert($attachment);
 		try {
@@ -110,6 +113,7 @@ class AttachmentService implements IAttachmentService {
 		$attachment->setUserId($userId);
 		$attachment->setFileName($name);
 		$attachment->setMimeType($mime);
+		$attachment->setCreatedAt($this->timeFactory->getTime());
 
 		$persisted = $this->mapper->insert($attachment);
 		try {
