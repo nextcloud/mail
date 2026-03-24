@@ -109,16 +109,36 @@ class AliasMapper extends QBMapper {
 	 * @throws \OCP\DB\Exception
 	 */
 	public function deleteProvisionedAliasesByUid(string $uid): void {
-		$qb = $this->db->getQueryBuilder();
-
-		$qb->delete($this->getTableName(), 'aliases')
-			->join('aliases', 'mail_accounts', 'accounts', 'accounts.id = aliases.account_id')
+		// Step 1: Query to find all provisioned alias IDs for the given user
+		$qb1 = $this->db->getQueryBuilder();
+		$idsQuery = $qb1->select('aliases.id')
+			->from($this->getTableName(), 'aliases')
+			->join('aliases', 'mail_accounts', 'accounts', $qb1->expr()->eq('aliases.account_id', 'accounts.id'))
 			->where(
-				$qb->expr()->eq('accounts.user_id', $qb->createNamedParameter($uid)),
-				$qb->expr()->isNotNull('provisioning_id')
+				$qb1->expr()->eq('accounts.user_id', $qb1->createNamedParameter($uid)),
+				$qb1->expr()->isNotNull('provisioning_id')
 			);
 
-		$qb->executeStatement();
+		$result = $idsQuery->executeQuery();
+		$ids = array_map(static fn (array $row) => (int)$row['id'], $result->fetchAll());
+		$result->closeCursor();
+
+		// If no provisioned aliases found, nothing to delete
+		if (empty($ids)) {
+			return;
+		}
+
+		// Step 2: Delete the aliases by their IDs
+		$qb2 = $this->db->getQueryBuilder();
+		$qb2->delete($this->getTableName())
+			->where(
+				$qb2->expr()->in('id', $qb2->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY)
+			);
+
+		foreach (array_chunk($ids, 1000) as $chunk) {
+			$qb2->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+			$qb2->executeStatement();
+		}
 	}
 
 	public function deleteOrphans(): void {
