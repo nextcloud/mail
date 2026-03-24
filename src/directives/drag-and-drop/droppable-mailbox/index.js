@@ -4,16 +4,38 @@
  */
 import { DroppableMailbox } from './droppable-mailbox.js'
 
-let instance
+let instances = []
 
-export const DroppableMailboxDirective = {
-	bind(el, binding, vnode) {
-		instance = new DroppableMailbox(el, vnode.context, binding.value)
-	},
-	componentUpdated(el, binding) {
+function onBind(el, binding) {
+	const instance = new DroppableMailbox(el, binding.value)
+	instances.push(instance)
+}
+
+function onUpdate(el, binding) {
+	const instance = instances.find((instance) => instance.el === el)
+	if (instance) {
 		instance.options = binding.value
 		instance.update(el, instance)
-	},
+	}
+}
+
+function onUnbind(el) {
+	const instance = instances.find((instance) => instance.el === el)
+	if (instance) {
+		instance.removeListeners(el)
+	}
+	instances = instances.filter((instance) => instance.el !== el)
+}
+
+export const DroppableMailboxDirective = {
+	// Vue 2
+	bind: onBind,
+	componentUpdated: onUpdate,
+	unbind: onUnbind,
+	// Vue 3
+	mounted: onBind,
+	updated: onUpdate,
+	unmounted: onUnbind,
 }
 
 export default DroppableMailbox
