@@ -1,3 +1,19 @@
+## [5.7.5](https://github.com/nextcloud/mail/compare/v5.7.4...v5.7.5) (2026-03-24)
+
+
+### Bug Fixes
+
+* adding smart reply text when reply all ([91fa6b7](https://github.com/nextcloud/mail/commit/91fa6b762cc137892b14dff045dd0a9b81f240c7))
+* **db:** refactor delete by alias to separate queries ([538c27f](https://github.com/nextcloud/mail/commit/538c27f80a8b1ff3c2b44493faca9612c1cbc44e))
+* **l10n:** Update translations from Transifex ([bd0d2bd](https://github.com/nextcloud/mail/commit/bd0d2bd87807086f05fb16b8b62003dba3f35c16))
+* **l10n:** Update translations from Transifex ([4d17edd](https://github.com/nextcloud/mail/commit/4d17edd2b002960289671d274301cfd300ee92c7))
+* **l10n:** Update translations from Transifex ([be27a35](https://github.com/nextcloud/mail/commit/be27a35249fd299029c9354c301aeb52079b9e50))
+* **l10n:** Update translations from Transifex ([0de3d91](https://github.com/nextcloud/mail/commit/0de3d91aee7219379d77e2ac298f99953cee48fa))
+* **MailTransmission:** Handle clients/servers picky about empty headers ([5eaf903](https://github.com/nextcloud/mail/commit/5eaf9030fa5646f1102c2918d1dbc07cbdee3722))
+* **ui:** fix paragraph end tag ([7a4bf9b](https://github.com/nextcloud/mail/commit/7a4bf9be49d617f191c7c1227ef59c05c30431d0))
+
+
+
 ## [5.7.4](https://github.com/nextcloud/mail/compare/v5.7.3...v5.7.4) (2026-03-19)
 
 
