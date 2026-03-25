@@ -15,7 +15,6 @@ function onUpdate(el, binding) {
 	const instance = instances.find((instance) => instance.el === el)
 	if (instance) {
 		instance.options = binding.value
-		instance.update(el, instance)
 	}
 }
 
