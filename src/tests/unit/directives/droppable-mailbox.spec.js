@@ -1,10 +1,10 @@
 /**
- * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2026 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 import { DroppableMailboxDirective } from '../../../directives/drag-and-drop/droppable-mailbox/index.js'
-import { DroppableMailbox } from '../../../directives/drag-and-drop/droppable-mailbox/droppable-mailbox.js'
+import dragEventBus from '../../../directives/drag-and-drop/util/dragEventBus.js'
 
 /**
  * Creates a mock DOM element with a firstChild for the directive.
@@ -42,6 +42,13 @@ describe('DroppableMailboxDirective', () => {
 	// Use the Vue 2 hooks since the project is on Vue 2.7
 	const { bind, componentUpdated, unbind } = DroppableMailboxDirective
 
+	let boundEls = []
+
+	afterEach(() => {
+		boundEls.forEach((el) => unbind(el))
+		boundEls = []
+	})
+
 	it('tracks multiple instances independently', () => {
 		const el1 = createMockEl('el1')
 		const el2 = createMockEl('el2')
@@ -50,29 +57,57 @@ describe('DroppableMailboxDirective', () => {
 		bind(el1, createBinding({ mailboxId: 1 }))
 		bind(el2, createBinding({ mailboxId: 2 }))
 		bind(el3, createBinding({ mailboxId: 3 }))
+		boundEls.push(el1, el2, el3)
 
-		// All elements should have listeners registered
-		expect(el1.firstChild.addEventListener).toHaveBeenCalledTimes(3)
-		expect(el2.firstChild.addEventListener).toHaveBeenCalledTimes(3)
-		expect(el3.firstChild.addEventListener).toHaveBeenCalledTimes(3)
+		// All elements should have the expected event listeners registered
+		for (const el of [el1, el2, el3]) {
+			expect(el.firstChild.addEventListener).toHaveBeenCalledWith(
+				'dragover',
+				expect.any(Function),
+			)
+			expect(el.firstChild.addEventListener).toHaveBeenCalledWith(
+				'dragleave',
+				expect.any(Function),
+			)
+			expect(el.firstChild.addEventListener).toHaveBeenCalledWith(
+				'drop',
+				expect.any(Function),
+			)
+		}
 	})
 
-	it('updates the correct instance on update', () => {
-		const updateSpy = vi.spyOn(DroppableMailbox.prototype, 'update')
-
+	it('updates the correct instance on componentUpdated', () => {
 		const el1 = createMockEl('el1')
 		const el2 = createMockEl('el2')
 
 		bind(el1, createBinding({ mailboxId: 1, isValidDropTarget: true }))
 		bind(el2, createBinding({ mailboxId: 2, isValidDropTarget: true }))
+		boundEls.push(el1, el2)
 
-		componentUpdated(el1, createBinding({ mailboxId: 1, isValidDropTarget: false }))
+		// Update el1 to disable drop target
+		componentUpdated(
+			el1,
+			createBinding({ mailboxId: 1, isValidDropTarget: false }),
+		)
 
-		// update() should have been called on the instance bound to el1
-		expect(updateSpy).toHaveBeenCalledTimes(1)
-		expect(updateSpy.mock.instances[0].el).toBe(el1)
+		// Clear setAttribute calls from bind so we only see drag-start effects
+		el1.setAttribute.mockClear()
+		el2.setAttribute.mockClear()
 
-		updateSpy.mockRestore()
+		// Trigger drag-start on all instances via the event bus
+		dragEventBus.emit('drag-start', { accountId: 1, mailboxId: 99 })
+
+		// el1 should be disabled because its isValidDropTarget was set to false
+		expect(el1.setAttribute).toHaveBeenCalledWith(
+			'droppable-mailbox',
+			'disabled',
+		)
+
+		// el2 should NOT be disabled because its options were not changed
+		expect(el2.setAttribute).not.toHaveBeenCalledWith(
+			'droppable-mailbox',
+			'disabled',
+		)
 	})
 
 	it('removes listeners and instance on unbind', () => {
@@ -81,11 +116,23 @@ describe('DroppableMailboxDirective', () => {
 
 		bind(el1, createBinding({ mailboxId: 1 }))
 		bind(el2, createBinding({ mailboxId: 2 }))
+		boundEls.push(el2)
 
 		unbind(el1)
 
-		// el1 should have had removeEventListener called
-		expect(el1.firstChild.removeEventListener).toHaveBeenCalledTimes(3)
+		// el1 should have had removeEventListener called for each event
+		expect(el1.firstChild.removeEventListener).toHaveBeenCalledWith(
+			'dragover',
+			expect.any(Function),
+		)
+		expect(el1.firstChild.removeEventListener).toHaveBeenCalledWith(
+			'dragleave',
+			expect.any(Function),
+		)
+		expect(el1.firstChild.removeEventListener).toHaveBeenCalledWith(
+			'drop',
+			expect.any(Function),
+		)
 
 		// el2 should NOT have had removeEventListener called
 		expect(el2.firstChild.removeEventListener).not.toHaveBeenCalled()

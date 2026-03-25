@@ -28,10 +28,6 @@ export class DroppableMailbox {
 		this.setStatus('enabled')
 	}
 
-	update(el, instance) {
-		this.options = instance.options
-	}
-
 	registerListeners(el) {
 		dragEventBus.on('drag-start', this._onDragStart)
 		dragEventBus.on('drag-end', this._onDragEnd)
