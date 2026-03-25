@@ -605,7 +605,11 @@ export default {
 		},
 
 		onMove(ids) {
-			this.navigateToAdjacentEnvelope(ids[0], ids)
+			const currentThreadId = this.$route.params.threadId
+			const movedId = ids.find((id) => id === currentThreadId)
+			if (movedId !== undefined) {
+				this.navigateToAdjacentEnvelope(movedId, ids)
+			}
 		},
 
 		onScroll() {
