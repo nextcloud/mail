@@ -84,11 +84,13 @@ class Converter {
 			return $data;
 		}
 
-		$normalizedCharset = $this->normalizeCharset($charset ?? '');
+		$normalizedCharset = $charset !== null ? $this->normalizeCharset($charset) : null;
 		$converted = @mb_convert_encoding($data, 'UTF-8', $normalizedCharset);
 		if ($converted === false) {
 			// Might be a charset that PHP mb doesn't know how to handle, fall back to iconv
-			$converted = iconv($normalizedCharset, 'UTF-8', $data);
+			if ($normalizedCharset !== null) {
+				$converted = iconv($normalizedCharset, 'UTF-8', $data);
+			}
 		}
 
 		if (!is_string($converted)) {

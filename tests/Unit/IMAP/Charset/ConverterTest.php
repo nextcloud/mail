@@ -102,4 +102,26 @@ class ConverterTest extends TestCase {
 			[$windowsMimePart, 'قام زهاء أوراقهم ما,']
 		];
 	}
+
+	/**
+	 * Test that conversion works when no charset is specified and content
+	 * is not valid UTF-8, triggering the fallback auto-detection path.
+	 *
+	 * This tests the code path where $charset is null and we reach the
+	 * fallback mb_convert_encoding() call. With null, mbstring should
+	 * auto-detect the encoding rather than receiving an empty string.
+	 */
+	public function testConvertWithNullCharsetFallback(): void {
+		// Create a mock that returns null for getCharset() to test the null charset path
+		$mimePart = $this->createMock(Horde_Mime_Part::class);
+		$mimePart->method('getContents')
+			->willReturn(mb_convert_encoding('Tëst', 'ISO-8859-1', 'UTF-8'));
+		$mimePart->method('getCharset')
+			->willReturn(null);
+
+		$result = $this->converter->convert($mimePart);
+
+		// Should successfully convert (via auto-detection) and return valid UTF-8
+		$this->assertTrue(mb_check_encoding($result, 'UTF-8'));
+	}
 }
