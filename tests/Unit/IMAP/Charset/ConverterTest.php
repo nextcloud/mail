@@ -73,6 +73,16 @@ class ConverterTest extends TestCase {
 		$koreanKsc56011989MimePart->setType('text/plain');
 		$koreanKsc56011989MimePart->setCharset('ks_c_5601-1989');
 		$koreanKsc56011989MimePart->setContents(mb_convert_encoding($koreanText, 'UHC', 'UTF-8'));
+		// Korean (Outlook) - uppercase variant KS_C_5601-1987 (case-insensitive)
+		$koreanKsc56011987UpperMimePart = new Horde_Mime_Part();
+		$koreanKsc56011987UpperMimePart->setType('text/plain');
+		$koreanKsc56011987UpperMimePart->setCharset('KS_C_5601-1987');
+		$koreanKsc56011987UpperMimePart->setContents(mb_convert_encoding($koreanText, 'UHC', 'UTF-8'));
+		// Korean (Outlook) - mixed case variant Ks_C_5601-1987 (case-insensitive)
+		$koreanKsc56011987MixedMimePart = new Horde_Mime_Part();
+		$koreanKsc56011987MixedMimePart->setType('text/plain');
+		$koreanKsc56011987MixedMimePart->setCharset('Ks_C_5601-1987');
+		$koreanKsc56011987MixedMimePart->setContents(mb_convert_encoding($koreanText, 'UHC', 'UTF-8'));
 		// Arabic - not in mb
 		$windowsMimePart = new Horde_Mime_Part();
 		$windowsMimePart->setType('text/plain');
@@ -87,6 +97,8 @@ class ConverterTest extends TestCase {
 			[$iso88591MimePart_noCharset, 'בה בדף לחבר ממונרכיה, בקר בגרסה ואמנות דת'],
 			[$koreanKsc56011987MimePart, $koreanText],
 			[$koreanKsc56011989MimePart, $koreanText],
+			[$koreanKsc56011987UpperMimePart, $koreanText],
+			[$koreanKsc56011987MixedMimePart, $koreanText],
 			[$windowsMimePart, 'قام زهاء أوراقهم ما,']
 		];
 	}

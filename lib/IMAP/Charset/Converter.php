@@ -22,8 +22,14 @@ class Converter {
 	 * Maps unsupported charset names to their mbstring equivalents.
 	 * Notably, handles Korean encodings used by Outlook:
 	 * - ks_c_5601-1987 and ks_c_5601-1989 are mapped to UHC (Windows-949/CP949)
+	 *
+	 * Charset tokens are case-insensitive in email headers (RFC 2046),
+	 * so we normalize to lowercase for lookup.
 	 */
 	private function normalizeCharset(string $charset): string {
+		$charset = trim($charset);
+		$lowerCharset = strtolower($charset);
+
 		// Map unsupported charsets to compatible alternatives
 		// See: http://lists.w3.org/Archives/Public/ietf-charsets/2001AprJun/0030.html
 		$charsetMap = [
@@ -31,8 +37,7 @@ class Converter {
 			'ks_c_5601-1989' => 'UHC',
 		];
 
-		$normalizedCharset = $charsetMap[$charset] ?? $charset;
-		return $normalizedCharset;
+		return $charsetMap[$lowerCharset] ?? $charset;
 	}
 
 	/**
