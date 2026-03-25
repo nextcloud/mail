@@ -118,6 +118,7 @@
 					:account="account"
 					:envelopes="selectedEnvelopes"
 					:move-thread="true"
+					@move="(ids) => $emit('move', ids)"
 					@close="onCloseMoveModal" />
 			</div>
 		</transition>
@@ -134,6 +135,7 @@
 				:selected-envelopes="selectedEnvelopes"
 				:compact-mode="compactMode"
 				@delete="$emit('delete', env.databaseId)"
+				@move="(ids) => $emit('move', ids)"
 				@update:selected="onEnvelopeSelectToggle(env, index, $event)"
 				@select-multiple="onEnvelopeSelectMultiple(env, index)"
 				@open:quick-actions-settings="showQuickActionsSettings = true" />

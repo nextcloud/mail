@@ -69,6 +69,10 @@ export default {
 					return
 				}
 
+				// Emit before the move so the parent can navigate to the next message
+				// while the envelopes are still in the list
+				this.$emit('move', envelopes.map((envelope) => envelope.databaseId))
+
 				for (const envelope of envelopes) {
 					if (this.moveThread) {
 						await this.mainStore.moveThread({ envelope, destMailboxId: this.destMailboxId })
@@ -78,7 +82,6 @@ export default {
 				}
 
 				await this.mainStore.syncEnvelopes({ mailboxId: this.destMailboxId })
-				this.$emit('move')
 			} catch (error) {
 				logger.error('could not move messages', {
 					error,

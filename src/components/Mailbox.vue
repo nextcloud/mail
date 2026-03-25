@@ -28,7 +28,8 @@
 					:loading-more="false"
 					:load-more-button="false"
 					:skip-transition="skipListTransition"
-					@delete="onDelete" />
+					@delete="onDelete"
+					@move="onMove" />
 			</div>
 		</template>
 		<EnvelopeList
@@ -42,6 +43,7 @@
 			:load-more-button="showLoadMore"
 			:skip-transition="skipListTransition"
 			@delete="onDelete"
+			@move="onMove"
 			@load-more="loadMore" />
 	</div>
 </template>
@@ -62,6 +64,7 @@ import MailboxNotCachedError from '../errors/MailboxNotCachedError.js'
 import { matchError } from '../errors/match.js'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError.js'
+import dragEventBus from '../directives/drag-and-drop/util/dragEventBus.js'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
@@ -198,8 +201,10 @@ export default {
 	created() {
 		this.bus.on('load-more', this.onScroll)
 		this.bus.on('delete', this.onDelete)
+		this.bus.on('move', this.onMove)
 		this.bus.on('archive', this.onArchive)
 		this.bus.on('shortcut', this.handleShortcut)
+		dragEventBus.on('envelopes-dropped', this.onEnvelopesDropped)
 		this.loadMailboxInterval = setInterval(this.loadMailbox, 60000)
 	},
 
@@ -220,8 +225,10 @@ export default {
 	unmounted() {
 		this.bus.off('load-more', this.onScroll)
 		this.bus.off('delete', this.onDelete)
+		this.bus.off('move', this.onMove)
 		this.bus.off('archive', this.onArchive)
 		this.bus.off('shortcut', this.handleShortcut)
+		dragEventBus.off('envelopes-dropped', this.onEnvelopesDropped)
 		this.stopInterval()
 	},
 
@@ -539,18 +546,22 @@ export default {
 			}
 		},
 
-		// onDelete(id): Load more message and navigate to other message if needed
-		// id: The id of the message being delete
-		onDelete(id) {
-			// Get a new message
-			this.mainStore.fetchNextEnvelopes({
-				mailboxId: this.mailbox.databaseId,
-				query: this.searchQuery,
-				quantity: 1,
-			})
+		onEnvelopesDropped({ envelopes }) {
+			const currentThreadId = this.$route.params.threadId
+			if (!currentThreadId) {
+				return
+			}
+			const movedIds = envelopes.map((e) => e.databaseId)
+			const wasMoved = movedIds.some((id) => String(id) === String(currentThreadId))
+			if (wasMoved) {
+				this.onMove(movedIds)
+			}
+		},
+
+		navigateToAdjacentEnvelope(id, excludeIds = []) {
 			const idx = findIndex(propEq(id, 'databaseId'), this.envelopes)
 			if (idx === -1) {
-				logger.debug('envelope to delete does not exist in envelope list')
+				logger.debug('envelope does not exist in envelope list')
 				return
 			}
 			if (id !== this.$route.params.threadId) {
@@ -558,7 +569,15 @@ export default {
 				return
 			}
 
-			const next = this.envelopes[idx === 0 ? 1 : idx - 1]
+			// Find the nearest envelope that is not being moved, preferring
+			// the one above (idx - 1) unless we're at the top of the list
+			let next
+			if (idx === 0) {
+				next = this.envelopes.slice(idx + 1).find((env) => !excludeIds.includes(env.databaseId))
+			} else {
+				next = this.envelopes.slice(0, idx).reverse().find((env) => !excludeIds.includes(env.databaseId))
+					|| this.envelopes.slice(idx + 1).find((env) => !excludeIds.includes(env.databaseId))
+			}
 			if (!next) {
 				logger.debug('no next/previous envelope, not navigating')
 				return
@@ -574,6 +593,19 @@ export default {
 					threadId: next.databaseId,
 				},
 			})
+		},
+
+		onDelete(id) {
+			this.mainStore.fetchNextEnvelopes({
+				mailboxId: this.mailbox.databaseId,
+				query: this.searchQuery,
+				quantity: 1,
+			})
+			this.navigateToAdjacentEnvelope(id, [id])
+		},
+
+		onMove(ids) {
+			this.navigateToAdjacentEnvelope(ids[0], ids)
 		},
 
 		onScroll() {

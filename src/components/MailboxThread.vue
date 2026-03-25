@@ -190,7 +190,7 @@
 			</div>
 		</template>
 
-		<Thread v-if="showThread" :current-account-email="account.emailAddress" @delete="deleteMessage" />
+		<Thread v-if="showThread" :current-account-email="account.emailAddress" @delete="deleteMessage" @move="moveMessage" />
 		<NoMessageSelected v-else-if="hasEnvelopes" />
 	</AppContent>
 </template>
@@ -495,6 +495,10 @@ export default {
 
 		deleteMessage(id) {
 			this.bus.emit('delete', id)
+		},
+
+		moveMessage(ids) {
+			this.bus.emit('move', ids)
 		},
 
 		onScroll(event) {

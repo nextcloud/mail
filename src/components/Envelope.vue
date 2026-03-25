@@ -1387,11 +1387,12 @@ export default {
 			this.showEventModal = true
 		},
 
-		onMove() {
-			this.$emit('move')
+		onMove(envelopeIds) {
+			this.$emit('move', envelopeIds)
 		},
 
 		async moveThread(destMailboxId) {
+			this.$emit('move', [this.data.databaseId])
 			if (this.layoutMessageViewThreaded) {
 				await this.mainStore.moveThread({
 					envelope: this.data,
@@ -1403,7 +1404,6 @@ export default {
 					destMailboxId,
 				})
 			}
-			this.onMove()
 		},
 
 		onCloseMoveModal() {

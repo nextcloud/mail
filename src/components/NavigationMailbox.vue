@@ -514,13 +514,11 @@ export default {
 	mounted() {
 		dragEventBus.on('drag-start', this.onDragStart)
 		dragEventBus.on('drag-end', this.onDragEnd)
-		dragEventBus.on('envelopes-moved', this.onEnvelopesMoved)
 	},
 
 	beforeUnmount() {
 		dragEventBus.off('drag-start', this.onDragStart)
 		dragEventBus.off('drag-end', this.onDragEnd)
-		dragEventBus.off('envelopes-moved', this.onEnvelopesMoved)
 	},
 
 	methods: {
@@ -761,26 +759,6 @@ export default {
 				return
 			}
 			this.showSubMailboxes = false
-		},
-
-		onEnvelopesMoved({ mailboxId, movedEnvelopes }) {
-			if (this.mailbox.databaseId !== mailboxId) {
-				return
-			}
-			const openedMessageHasBeenMoved = movedEnvelopes.find((movedEnvelope) => {
-				return movedEnvelope.envelopeId === this.$route.params.threadId
-			})
-			// navigate to the mailbox root
-			// if the currently displayed message has been moved
-			if (this.$route.name === 'message' && openedMessageHasBeenMoved) {
-				this.$router.push({
-					name: 'mailbox',
-					params: {
-						mailboxId: this.$route.params.mailboxId,
-						filter: this.$route.params?.filter,
-					},
-				})
-			}
 		},
 
 		/**
