@@ -26,6 +26,7 @@ use OCA\Mail\IMAP\ImapMessageFetcher;
 use OCA\Mail\IMAP\ImapMessageFetcherFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Model\SmimeDecryptionResult;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Support\PerformanceLoggerTask;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -863,5 +864,68 @@ class MessageMapperTest extends TestCase {
 		);
 
 		$this->assertEquals($originalContent, $attachment->getContent());
+	}
+
+	private function mockEncryptedFetch(int $messageUid, string $decryptedMime): Horde_Imap_Client_Base {
+		$fetchData = new Horde_Imap_Client_Data_Fetch();
+		$fetchData->setUid($messageUid);
+		$fetchResult = new Horde_Imap_Client_Fetch_Results();
+		$fetchResult[$messageUid] = $fetchData;
+
+		$fullTextFetchData = new Horde_Imap_Client_Data_Fetch();
+		$fullTextFetchData->setUid($messageUid);
+		$fullTextFetchResult = new Horde_Imap_Client_Fetch_Results();
+		$fullTextFetchResult[$messageUid] = $fullTextFetchData;
+
+		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
+		$imapClient->method('fetch')
+			->willReturnOnConsecutiveCalls($fetchResult, $fullTextFetchResult);
+
+		$this->sMimeService->method('isEncrypted')->willReturn(true);
+		$this->sMimeService->method('addDecryptQueries')->willReturnCallback(
+			static function (Horde_Imap_Client_Fetch_Query $query): void {
+			}
+		);
+		$this->sMimeService->method('decryptDataFetch')
+			->with($fullTextFetchData, 'alice')
+			->willReturn(new SmimeDecryptionResult($decryptedMime, true, false, false));
+
+		return $imapClient;
+	}
+
+	public function testGetAttachmentEncryptedWithRegularAttachment(): void {
+		$messageUid = 1;
+		$attachmentId = '1.2';
+		$decryptedMime = file_get_contents(__DIR__ . '/../../data/decrypted-message-body-with-attachment.txt');
+		$imapClient = $this->mockEncryptedFetch($messageUid, $decryptedMime);
+
+		$attachment = $this->mapper->getAttachment(
+			$imapClient,
+			'INBOX',
+			$messageUid,
+			$attachmentId,
+			'alice',
+		);
+
+		$this->assertEquals('report.pdf', $attachment->getName());
+		$this->assertEquals('application/octet-stream', $attachment->getType());
+	}
+
+	public function testGetAttachmentEncryptedWithInlineImage(): void {
+		$messageUid = 1;
+		$attachmentId = '1.1.2.2';
+		$decryptedMime = file_get_contents(__DIR__ . '/../../data/decrypted-message-body-with-attachment.txt');
+		$imapClient = $this->mockEncryptedFetch($messageUid, $decryptedMime);
+
+		$attachment = $this->mapper->getAttachment(
+			$imapClient,
+			'INBOX',
+			$messageUid,
+			$attachmentId,
+			'alice',
+		);
+
+		$this->assertEquals('nextcloud.png', $attachment->getName());
+		$this->assertEquals('application/octet-stream', $attachment->getType());
 	}
 }
