@@ -10,6 +10,7 @@ describe('groupEnvelopesByDate', () => {
 	const makeEnvelope = (date) => ({ dateInt: Math.floor(date.getTime() / 1000) })
 
 	it('groups envelopes into lastHour, yesterday, lastMonth, July, and 2024', () => {
+		const julyLabel = new Date(2025, 6, 1).toLocaleString('default', { month: 'long' })
 		const envelopes = [
 			makeEnvelope(new Date('2025-10-07T11:30:00Z')),
 			makeEnvelope(new Date('2025-10-06T18:00:00Z')),
@@ -24,7 +25,7 @@ describe('groupEnvelopesByDate', () => {
 		expect(result).toHaveLength(5)
 
 		const labels = result.map(([label]) => label)
-		expect(labels).toEqual(expect.arrayContaining(['lastHour', 'yesterday', 'lastMonth', 'July', '2024']))
+		expect(labels).toEqual(expect.arrayContaining(['lastHour', 'yesterday', 'lastMonth', julyLabel, '2024']))
 
 		result.forEach(([label, group]) => {
 			expect(Array.isArray(group)).toBe(true)
