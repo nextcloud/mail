@@ -175,6 +175,7 @@ export default {
 		return {
 			linkTribute: null,
 			emojiTribute: null,
+			contactMentionQuery: null,
 			textSmiles: [],
 			ready: false,
 			editor: DecoupledEditor,
@@ -241,8 +242,15 @@ export default {
 			if (text.length === 0) {
 				return []
 			}
-			let contactResults = await autoCompleteByName(text)
-			contactResults = contactResults.filter((result) => result.email.filter((email) => email.length > 1).length > 0)
+			this.contactMentionQuery = text
+			let contactResults
+			try {
+				contactResults = await autoCompleteByName(text)
+				contactResults = contactResults.filter((result) => result.email?.filter((email) => email.length > 0))
+			} catch (error) {
+				logger.error('could not fetch contacts to mention', { error })
+				return []
+			}
 			return contactResults
 		},
 
@@ -452,7 +460,8 @@ export default {
 						})
 				}
 				if (eventData.marker === '@') {
-					this.editorInstance.execute('insertItem', { email: item.email[0], label: item.label }, '@')
+					const lookback = this.contactMentionQuery?.length ? this.contactMentionQuery.length + '@'.length : 5
+					this.editorInstance.execute('insertItem', { email: item.email[0], label: item.label }, '@', lookback)
 					this.$emit('mention', { email: item.email[0], label: item.label })
 				}
 				if (eventData.marker === '!') {
