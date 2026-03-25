@@ -17,6 +17,25 @@ use function is_string;
 class Converter {
 
 	/**
+	 * Normalize charset names for mbstring compatibility.
+	 *
+	 * Maps unsupported charset names to their mbstring equivalents.
+	 * Notably, handles Korean encodings used by Outlook:
+	 * - ks_c_5601-1987 and ks_c_5601-1989 are mapped to UHC (Windows-949/CP949)
+	 */
+	private function normalizeCharset(string $charset): string {
+		// Map unsupported charsets to compatible alternatives
+		// See: http://lists.w3.org/Archives/Public/ietf-charsets/2001AprJun/0030.html
+		$charsetMap = [
+			'ks_c_5601-1987' => 'UHC',
+			'ks_c_5601-1989' => 'UHC',
+		];
+
+		$normalizedCharset = $charsetMap[$charset] ?? $charset;
+		return $normalizedCharset;
+	}
+
+	/**
 	 * @param Horde_Mime_Part $p
 	 * @return string
 	 * @throws ServiceException
@@ -37,10 +56,11 @@ class Converter {
 
 		// The part specifies a charset
 		if ($charset !== null) {
-			if (in_array($charset, mb_list_encodings(), true)) {
-				$converted = mb_convert_encoding($data, 'UTF-8', $charset);
+			$normalizedCharset = $this->normalizeCharset($charset);
+			if (in_array($normalizedCharset, mb_list_encodings(), true)) {
+				$converted = mb_convert_encoding($data, 'UTF-8', $normalizedCharset);
 			} else {
-				$converted = iconv($charset, 'UTF-8', $data);
+				$converted = iconv($normalizedCharset, 'UTF-8', $data);
 			}
 
 			if (is_string($converted)) {
@@ -59,10 +79,11 @@ class Converter {
 			return $data;
 		}
 
-		$converted = @mb_convert_encoding($data, 'UTF-8', $charset);
+		$normalizedCharset = $this->normalizeCharset($charset ?? '');
+		$converted = @mb_convert_encoding($data, 'UTF-8', $normalizedCharset);
 		if ($converted === false) {
 			// Might be a charset that PHP mb doesn't know how to handle, fall back to iconv
-			$converted = iconv($charset, 'UTF-8', $data);
+			$converted = iconv($normalizedCharset, 'UTF-8', $data);
 		}
 
 		if (!is_string($converted)) {

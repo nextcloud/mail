@@ -62,11 +62,17 @@ class ConverterTest extends TestCase {
 		$iso2022jpMimePart->setContents(mb_convert_encoding('外せ園査リツハワ題', 'ISO-2022-JP', 'UTF-8'));
 		$iso2022jpMimePart_noCharset = new Horde_Mime_Part();
 		$iso2022jpMimePart_noCharset->setContents('外せ園査リツハワ題');
-		// Korean - not in mb nor iconv
-		// $iso106461MimePart = new Horde_Mime_Part();
-		// $iso106461MimePart->setType('text/plain');
-		// $iso106461MimePart->setCharset('ISO 10646-1');
-		//$iso106461MimePart->setContents(iconv('UTF-8', 'ISO 10646-1', '언론·출판은 타인의 명'));
+		// Korean (Outlook) - ks_c_5601-1987 is mapped to UHC
+		$koreanKsc56011987MimePart = new Horde_Mime_Part();
+		$koreanKsc56011987MimePart->setType('text/plain');
+		$koreanKsc56011987MimePart->setCharset('ks_c_5601-1987');
+		$koreanText = '안녕하세요';
+		$koreanKsc56011987MimePart->setContents(mb_convert_encoding($koreanText, 'UHC', 'UTF-8'));
+		// Korean (Outlook) - ks_c_5601-1989 is also mapped to UHC
+		$koreanKsc56011989MimePart = new Horde_Mime_Part();
+		$koreanKsc56011989MimePart->setType('text/plain');
+		$koreanKsc56011989MimePart->setCharset('ks_c_5601-1989');
+		$koreanKsc56011989MimePart->setContents(mb_convert_encoding($koreanText, 'UHC', 'UTF-8'));
 		// Arabic - not in mb
 		$windowsMimePart = new Horde_Mime_Part();
 		$windowsMimePart->setType('text/plain');
@@ -79,7 +85,8 @@ class ConverterTest extends TestCase {
 			[$iso88591MimePart, 'Ümlaut'],
 			[$iso2022jpMimePart, '外せ園査リツハワ題'],
 			[$iso88591MimePart_noCharset, 'בה בדף לחבר ממונרכיה, בקר בגרסה ואמנות דת'],
-			// [$iso106461MimePart, '언론·출판은 타인의 명'],
+			[$koreanKsc56011987MimePart, $koreanText],
+			[$koreanKsc56011989MimePart, $koreanText],
 			[$windowsMimePart, 'قام زهاء أوراقهم ما,']
 		];
 	}
