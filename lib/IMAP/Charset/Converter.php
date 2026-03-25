@@ -17,27 +17,31 @@ use function is_string;
 class Converter {
 
 	/**
+	 * Map of unsupported charset names to their mbstring equivalents.
+	 * Keys must be lowercase for case-insensitive lookup.
+	 *
+	 * @see http://lists.w3.org/Archives/Public/ietf-charsets/2001AprJun/0030.html
+	 */
+	private const CHARSET_MAP = [
+		'ks_c_5601-1987' => 'UHC',
+		'ks_c_5601-1989' => 'UHC',
+	];
+
+	/**
 	 * Normalize charset names for mbstring compatibility.
 	 *
 	 * Maps unsupported charset names to their mbstring equivalents.
 	 * Notably, handles Korean encodings used by Outlook:
 	 * - ks_c_5601-1987 and ks_c_5601-1989 are mapped to UHC (Windows-949/CP949)
 	 *
-	 * Charset tokens are case-insensitive in email headers (RFC 2046),
+	 * Charset tokens are case-insensitive in email headers (RFC 2045),
 	 * so we normalize to lowercase for lookup.
 	 */
 	private function normalizeCharset(string $charset): string {
 		$charset = trim($charset);
 		$lowerCharset = strtolower($charset);
 
-		// Map unsupported charsets to compatible alternatives
-		// See: http://lists.w3.org/Archives/Public/ietf-charsets/2001AprJun/0030.html
-		$charsetMap = [
-			'ks_c_5601-1987' => 'UHC',
-			'ks_c_5601-1989' => 'UHC',
-		];
-
-		return $charsetMap[$lowerCharset] ?? $charset;
+		return self::CHARSET_MAP[$lowerCharset] ?? $charset;
 	}
 
 	/**
