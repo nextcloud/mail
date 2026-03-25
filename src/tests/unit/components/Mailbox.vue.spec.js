@@ -4,8 +4,8 @@
  */
 
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { createPinia, setActivePinia } from 'pinia'
 import mitt from 'mitt'
+import { createPinia, setActivePinia } from 'pinia'
 import Mailbox from '../../../components/Mailbox.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'

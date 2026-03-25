@@ -27,7 +27,7 @@ describe('groupEnvelopesByDate', () => {
 		const labels = result.map(([label]) => label)
 		expect(labels).toEqual(expect.arrayContaining(['lastHour', 'yesterday', 'lastMonth', julyLabel, '2024']))
 
-		result.forEach(([label, group]) => {
+		result.forEach(([, group]) => {
 			expect(Array.isArray(group)).toBe(true)
 			expect(group).toHaveLength(1)
 		})
