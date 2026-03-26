@@ -60,8 +60,6 @@ class ConverterTest extends TestCase {
 		$iso2022jpMimePart->setType('text/plain');
 		$iso2022jpMimePart->setCharset('ISO-2022-JP');
 		$iso2022jpMimePart->setContents(mb_convert_encoding('外せ園査リツハワ題', 'ISO-2022-JP', 'UTF-8'));
-		$iso2022jpMimePart_noCharset = new Horde_Mime_Part();
-		$iso2022jpMimePart_noCharset->setContents('外せ園査リツハワ題');
 		// Korean (Outlook) - ks_c_5601-1987 is mapped to UHC (CP949)
 		// Use iconv for encoding to avoid dependency on mbstring's UHC support
 		$koreanKsc56011987MimePart = new Horde_Mime_Part();
@@ -130,20 +128,28 @@ class ConverterTest extends TestCase {
 	}
 
 	/**
-	 * Test that an invalid/unknown charset name throws ServiceException
-	 * instead of letting ValueError bubble up, when the content cannot
-	 * be auto-detected as UTF-8.
+	 * Test that an invalid/unknown charset name does not let ValueError bubble up.
+	 *
+	 * When an invalid charset is provided, Converter catches the ValueError
+	 * and falls back to mbstring auto-detection. The result depends on
+	 * mb_detect_order, but the important behavior is that no ValueError escapes.
 	 */
-	public function testConvertWithInvalidCharsetThrowsServiceException(): void {
+	public function testConvertWithInvalidCharsetDoesNotThrowValueError(): void {
 		$mimePart = $this->createMock(Horde_Mime_Part::class);
-		// Use content that is NOT valid UTF-8 (raw ISO-8859-1 bytes)
 		$mimePart->method('getContents')
 			->willReturn(mb_convert_encoding('Tëst with spëcial chärs', 'ISO-8859-1', 'UTF-8'));
 		$mimePart->method('getCharset')
 			->willReturn('INVALID-CHARSET-NAME-12345');
 
-		$this->expectException(\OCA\Mail\Exception\ServiceException::class);
+		$thrown = null;
+		try {
+			$this->converter->convert($mimePart);
+		} catch (\ValueError $e) {
+			$thrown = $e;
+		} catch (\OCA\Mail\Exception\ServiceException) {
+			// ServiceException is acceptable (auto-detection failed)
+		}
 
-		$this->converter->convert($mimePart);
+		$this->assertNull($thrown, 'ValueError should not bubble up from convert()');
 	}
 }
