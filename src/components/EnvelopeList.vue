@@ -173,6 +173,7 @@ import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import IconSelect from 'vue-material-design-icons/CloseThick.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
 import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
+import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
 import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import AddIcon from 'vue-material-design-icons/Plus.vue'
@@ -205,6 +206,7 @@ export default {
 		ActionButton,
 		Envelope,
 		IconDelete,
+		ImportantIcon,
 		ImportantOutlineIcon,
 		IconFavorite,
 		IconSelect,
