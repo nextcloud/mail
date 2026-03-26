@@ -103,13 +103,13 @@ class ConverterTest extends TestCase {
 	}
 
 	/**
-	 * Test that conversion completes without error when no charset is specified,
-	 * triggering the fallback auto-detection path.
+	 * Test that conversion succeeds when no charset is specified in the MIME header.
 	 *
-	 * This tests the code path where $charset is null and we reach the
-	 * fallback mb_convert_encoding() call. With null, mbstring should
-	 * auto-detect the encoding rather than receiving an empty string
-	 * (which would cause a ValueError).
+	 * This tests the code path where $charset is null. The Converter should:
+	 * 1. Use mb_detect_encoding() to detect the source encoding
+	 * 2. Use the detected charset for conversion to UTF-8
+	 *
+	 * Without detection, conversion would fail or produce garbled output.
 	 */
 	public function testConvertWithNullCharsetFallback(): void {
 		// Create a mock that returns null for getCharset() to test the null charset path
@@ -119,12 +119,13 @@ class ConverterTest extends TestCase {
 		$mimePart->method('getCharset')
 			->willReturn(null);
 
-		// Should complete without ValueError and return valid UTF-8
-		// (auto-detection may not produce perfect results, but should not throw)
+		// Should complete without ValueError and return the correctly converted text
 		$result = $this->converter->convert($mimePart);
 
+		// Verify actual conversion correctness, not just UTF-8 validity
+		$this->assertEquals('Tëst', $result);
+		// Also verify it's valid UTF-8
 		$this->assertTrue(mb_check_encoding($result, 'UTF-8'));
-		$this->assertNotEmpty($result);
 	}
 
 	/**

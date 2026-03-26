@@ -87,34 +87,42 @@ class Converter {
 		// No charset specified, let's ask mb if this could be UTF-8
 		$detectedCharset = mb_detect_encoding($data, 'UTF-8', true);
 		if ($detectedCharset === false) {
-			// Fallback, non UTF-8
-			$detectedCharset = mb_detect_encoding($data, null, true);
+			// Fallback, try common charsets (the default mb_detect_encoding order may miss some)
+			$detectedCharset = mb_detect_encoding($data, 'ISO-8859-1,ISO-8859-2,UTF-8,ASCII', true);
 		}
 		// Still UTF8, no need to convert
 		if ($detectedCharset !== false && strtoupper($detectedCharset) === 'UTF-8') {
 			return $data;
 		}
 
-		$normalizedCharset = $charset !== null ? $this->normalizeCharset($charset) : null;
+		// Use detected charset when available, otherwise use original/normalized charset
+		if ($detectedCharset !== false) {
+			$sourceCharset = $detectedCharset;
+		} elseif ($charset !== null) {
+			$sourceCharset = $this->normalizeCharset($charset);
+		} else {
+			$sourceCharset = null;
+		}
+
+		// Attempt conversion with the source charset
 		try {
-			$converted = @mb_convert_encoding($data, 'UTF-8', $normalizedCharset);
+			$converted = @mb_convert_encoding($data, 'UTF-8', $sourceCharset);
 		} catch (ValueError) {
 			$converted = false;
 		}
+
 		if ($converted === false) {
 			// Might be a charset that PHP mb doesn't know how to handle, fall back to iconv
-			if ($normalizedCharset !== null) {
-				try {
-					$converted = @iconv($normalizedCharset, 'UTF-8', $data);
-				} catch (ValueError) {
-					// Invalid charset, conversion not possible
-					$converted = null;
-				}
+			try {
+				$converted = @iconv($sourceCharset, 'UTF-8', $data);
+			} catch (ValueError) {
+				// Invalid charset, conversion not possible
+				$converted = null;
 			}
 		}
 
 		if (!is_string($converted)) {
-			throw new ServiceException('Could not detect message charset');
+			throw new ServiceException('Could not convert message charset');
 		}
 		return $converted;
 	}
