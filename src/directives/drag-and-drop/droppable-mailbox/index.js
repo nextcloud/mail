@@ -4,26 +4,26 @@
  */
 import { DroppableMailbox } from './droppable-mailbox.js'
 
-let instances = []
+const instances = new WeakMap()
 
 function onBind(el, binding) {
 	const instance = new DroppableMailbox(el, binding.value)
-	instances.push(instance)
+	instances.set(el, instance)
 }
 
 function onUpdate(el, binding) {
-	const instance = instances.find((instance) => instance.el === el)
+	const instance = instances.get(el)
 	if (instance) {
 		instance.options = binding.value
 	}
 }
 
 function onUnbind(el) {
-	const instance = instances.find((instance) => instance.el === el)
+	const instance = instances.get(el)
 	if (instance) {
 		instance.removeListeners(el)
 	}
-	instances = instances.filter((instance) => instance.el !== el)
+	instances.delete(el)
 }
 
 export const DroppableMailboxDirective = {
