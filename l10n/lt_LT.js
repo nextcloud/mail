@@ -427,6 +427,7 @@ OC.L10N.register(
     "PEM Certificate" : "PEM liudijimas",
     "Certificate" : "Liudijimas",
     "Submit" : "Pateikti",
+    "Group" : "Grupė",
     "Shared" : "Bendrinama",
     "Edit {title}" : "Taisyti {title}",
     "Delete {title}" : "Ištrinti {title}",
