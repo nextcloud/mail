@@ -74,7 +74,8 @@ class Converter {
 					$converted = @iconv($normalizedCharset, 'UTF-8', $data);
 				}
 			} catch (ValueError) {
-				// Invalid charset name, fall through to auto-detection
+				// Invalid charset name, treat as null to use auto-detection below
+				$charset = null;
 				$converted = null;
 			}
 
