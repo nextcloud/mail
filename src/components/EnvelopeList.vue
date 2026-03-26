@@ -113,13 +113,7 @@
 						{{ n('mail', 'Forward {number} as attachment', 'Forward {number} as attachment', selection.length, { number: selection.length }) }}
 					</ActionButton>
 				</Actions>
-				<MoveModal
-					v-if="showMoveModal"
-					:account="account"
-					:envelopes="selectedEnvelopes"
-					:move-thread="true"
-					@close="onCloseMoveModal" />
-			</div>
+				</div>
 		</transition>
 
 		<transition-group :name="listTransitionName">
@@ -153,6 +147,13 @@
 			:account="account"
 			:envelopes="selectedEnvelopes"
 			@close="onCloseTagModal" />
+
+		<MoveModal
+			v-if="showMoveModal"
+			:account="account"
+			:envelopes="selectedEnvelopes"
+			:move-thread="true"
+			@close="onCloseMoveModal" />
 
 		<NcDialog
 			v-if="showQuickActionsSettings"
