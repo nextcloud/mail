@@ -62,27 +62,28 @@ class ConverterTest extends TestCase {
 		$iso2022jpMimePart->setContents(mb_convert_encoding('外せ園査リツハワ題', 'ISO-2022-JP', 'UTF-8'));
 		$iso2022jpMimePart_noCharset = new Horde_Mime_Part();
 		$iso2022jpMimePart_noCharset->setContents('外せ園査リツハワ題');
-		// Korean (Outlook) - ks_c_5601-1987 is mapped to UHC
+		// Korean (Outlook) - ks_c_5601-1987 is mapped to UHC (CP949)
+		// Use iconv for encoding to avoid dependency on mbstring's UHC support
 		$koreanKsc56011987MimePart = new Horde_Mime_Part();
 		$koreanKsc56011987MimePart->setType('text/plain');
 		$koreanKsc56011987MimePart->setCharset('ks_c_5601-1987');
 		$koreanText = '안녕하세요';
-		$koreanKsc56011987MimePart->setContents(mb_convert_encoding($koreanText, 'UHC', 'UTF-8'));
-		// Korean (Outlook) - ks_c_5601-1989 is also mapped to UHC
+		$koreanKsc56011987MimePart->setContents(iconv('UTF-8', 'CP949', $koreanText));
+		// Korean (Outlook) - ks_c_5601-1989 is also mapped to UHC (CP949)
 		$koreanKsc56011989MimePart = new Horde_Mime_Part();
 		$koreanKsc56011989MimePart->setType('text/plain');
 		$koreanKsc56011989MimePart->setCharset('ks_c_5601-1989');
-		$koreanKsc56011989MimePart->setContents(mb_convert_encoding($koreanText, 'UHC', 'UTF-8'));
+		$koreanKsc56011989MimePart->setContents(iconv('UTF-8', 'CP949', $koreanText));
 		// Korean (Outlook) - uppercase variant KS_C_5601-1987 (case-insensitive)
 		$koreanKsc56011987UpperMimePart = new Horde_Mime_Part();
 		$koreanKsc56011987UpperMimePart->setType('text/plain');
 		$koreanKsc56011987UpperMimePart->setCharset('KS_C_5601-1987');
-		$koreanKsc56011987UpperMimePart->setContents(mb_convert_encoding($koreanText, 'UHC', 'UTF-8'));
+		$koreanKsc56011987UpperMimePart->setContents(iconv('UTF-8', 'CP949', $koreanText));
 		// Korean (Outlook) - mixed case variant Ks_C_5601-1987 (case-insensitive)
 		$koreanKsc56011987MixedMimePart = new Horde_Mime_Part();
 		$koreanKsc56011987MixedMimePart->setType('text/plain');
 		$koreanKsc56011987MixedMimePart->setCharset('Ks_C_5601-1987');
-		$koreanKsc56011987MixedMimePart->setContents(mb_convert_encoding($koreanText, 'UHC', 'UTF-8'));
+		$koreanKsc56011987MixedMimePart->setContents(iconv('UTF-8', 'CP949', $koreanText));
 		// Arabic - not in mb
 		$windowsMimePart = new Horde_Mime_Part();
 		$windowsMimePart->setType('text/plain');
@@ -126,5 +127,23 @@ class ConverterTest extends TestCase {
 
 		$this->assertTrue(mb_check_encoding($result, 'UTF-8'));
 		$this->assertNotEmpty($result);
+	}
+
+	/**
+	 * Test that an invalid/unknown charset name throws ServiceException
+	 * instead of letting ValueError bubble up, when the content cannot
+	 * be auto-detected as UTF-8.
+	 */
+	public function testConvertWithInvalidCharsetThrowsServiceException(): void {
+		$mimePart = $this->createMock(Horde_Mime_Part::class);
+		// Use content that is NOT valid UTF-8 (raw ISO-8859-1 bytes)
+		$mimePart->method('getContents')
+			->willReturn(mb_convert_encoding('Tëst with spëcial chärs', 'ISO-8859-1', 'UTF-8'));
+		$mimePart->method('getCharset')
+			->willReturn('INVALID-CHARSET-NAME-12345');
+
+		$this->expectException(\OCA\Mail\Exception\ServiceException::class);
+
+		$this->converter->convert($mimePart);
 	}
 }

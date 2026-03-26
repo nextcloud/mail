@@ -11,6 +11,7 @@ namespace OCA\Mail\IMAP\Charset;
 
 use Horde_Mime_Part;
 use OCA\Mail\Exception\ServiceException;
+use ValueError;
 use function in_array;
 use function is_string;
 
@@ -66,10 +67,15 @@ class Converter {
 		// The part specifies a charset
 		if ($charset !== null) {
 			$normalizedCharset = $this->normalizeCharset($charset);
-			if (in_array($normalizedCharset, mb_list_encodings(), true)) {
-				$converted = mb_convert_encoding($data, 'UTF-8', $normalizedCharset);
-			} else {
-				$converted = iconv($normalizedCharset, 'UTF-8', $data);
+			try {
+				if (in_array($normalizedCharset, mb_list_encodings(), true)) {
+					$converted = mb_convert_encoding($data, 'UTF-8', $normalizedCharset);
+				} else {
+					$converted = @iconv($normalizedCharset, 'UTF-8', $data);
+				}
+			} catch (ValueError) {
+				// Invalid charset name, fall through to auto-detection
+				$converted = null;
 			}
 
 			if (is_string($converted)) {
@@ -89,11 +95,20 @@ class Converter {
 		}
 
 		$normalizedCharset = $charset !== null ? $this->normalizeCharset($charset) : null;
-		$converted = @mb_convert_encoding($data, 'UTF-8', $normalizedCharset);
+		try {
+			$converted = @mb_convert_encoding($data, 'UTF-8', $normalizedCharset);
+		} catch (ValueError) {
+			$converted = false;
+		}
 		if ($converted === false) {
 			// Might be a charset that PHP mb doesn't know how to handle, fall back to iconv
 			if ($normalizedCharset !== null) {
-				$converted = iconv($normalizedCharset, 'UTF-8', $data);
+				try {
+					$converted = @iconv($normalizedCharset, 'UTF-8', $data);
+				} catch (ValueError) {
+					// Invalid charset, conversion not possible
+					$converted = null;
+				}
 			}
 		}
 
