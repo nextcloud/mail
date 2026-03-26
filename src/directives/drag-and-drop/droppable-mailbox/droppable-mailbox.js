@@ -130,11 +130,6 @@ export class DroppableMailbox {
 			await Promise.all(processedEnvelopes)
 		} catch (error) {
 			logger.error('could not process dropped messages', error)
-		} finally {
-			dragEventBus.emit('envelopes-moved', {
-				mailboxId: this.options.mailboxId,
-				movedEnvelopes: envelopesBeingDragged,
-			})
 		}
 	}
 
