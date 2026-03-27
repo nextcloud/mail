@@ -68,33 +68,7 @@
 							{{ envelope.from && envelope.from[0] ? envelope.from[0].email : '' }}
 						</p>
 					</div>
-					<template v-if="expanded">
-						<div v-if="envelope.to && envelope.to.length" class="recipients">
-							<span class="recipients__label">{{ t('mail', 'To:') }}</span>
-							<RecipientBubble
-								v-for="recipient in envelope.to"
-								:key="recipient.email"
-								:email="recipient.email"
-								:label="recipient.label" />
-						</div>
-						<div v-if="envelope.cc && envelope.cc.length" class="recipients">
-							<span class="recipients__label">{{ t('mail', 'Cc:') }}</span>
-							<RecipientBubble
-								v-for="recipient in envelope.cc"
-								:key="recipient.email"
-								:email="recipient.email"
-								:label="recipient.label" />
-						</div>
-						<div v-if="envelope.bcc && envelope.bcc.length" class="recipients">
-							<span class="recipients__label">{{ t('mail', 'Bcc:') }}</span>
-							<RecipientBubble
-								v-for="recipient in envelope.bcc"
-								:key="recipient.email"
-								:email="recipient.email"
-								:label="recipient.label" />
-						</div>
-					</template>
-					<div v-if="hasChangedSubject" class="subline">
+						<div v-if="hasChangedSubject" class="subline">
 						{{ cleanSubject }}
 					</div>
 					<div v-if="showSubline" class="subline">
@@ -297,7 +271,33 @@
 				</template>
 			</div>
 		</div>
-		<MessageLoadingSkeleton v-if="loading === Loading.Skeleton" />
+		<div v-if="expanded" class="envelope__recipients">
+		<div v-if="envelope.to && envelope.to.length" class="recipients">
+			<span class="recipients__label">{{ t('mail', 'To:') }}</span>
+			<RecipientBubble
+				v-for="recipient in envelope.to"
+				:key="recipient.email"
+				:email="recipient.email"
+				:label="recipient.label" />
+		</div>
+		<div v-if="envelope.cc && envelope.cc.length" class="recipients">
+			<span class="recipients__label">{{ t('mail', 'Cc:') }}</span>
+			<RecipientBubble
+				v-for="recipient in envelope.cc"
+				:key="recipient.email"
+				:email="recipient.email"
+				:label="recipient.label" />
+		</div>
+		<div v-if="envelope.bcc && envelope.bcc.length" class="recipients">
+			<span class="recipients__label">{{ t('mail', 'Bcc:') }}</span>
+			<RecipientBubble
+				v-for="recipient in envelope.bcc"
+				:key="recipient.email"
+				:email="recipient.email"
+				:label="recipient.label" />
+		</div>
+	</div>
+	<MessageLoadingSkeleton v-if="loading === Loading.Skeleton" />
 		<Message
 			v-if="message"
 			v-show="loading === Loading.Done"
@@ -1342,20 +1342,6 @@ export default {
 			white-space: nowrap;
 		}
 
-		.recipients {
-			display: flex;
-			align-items: center;
-			flex-wrap: wrap;
-			gap: 4px;
-			margin-block: 2px;
-			margin-inline-start: 8px;
-
-			&__label {
-				color: var(--color-text-maxcontrast);
-				font-weight: bold;
-				white-space: nowrap;
-			}
-		}
 
 		&--expanded {
 			min-height: 350px;
@@ -1407,6 +1393,28 @@ export default {
 		overflow: hidden;
 		text-overflow: ellipsis;
 		inset-inline-start: var(--default-grid-baseline);
+	}
+
+	.envelope__recipients {
+		padding-inline: 60px 38px;
+		padding-block: 4px;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	.recipients {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 4px;
+
+		&__label {
+			color: var(--color-text-maxcontrast);
+			font-weight: bold;
+			white-space: nowrap;
+			min-width: 32px;
+		}
 	}
 
 	.smime-text {
