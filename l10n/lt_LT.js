@@ -287,6 +287,7 @@ OC.L10N.register(
     "Send anyway" : "Vis tiek siųsti",
     "Autoresponder off" : "Atsakiklis išjungtas",
     "Autoresponder on" : "Atsakiklis įjungtas",
+    "First day" : "Pirma diena",
     "Message" : "Žinutė",
     "Oh Snap!" : "O, ne!",
     "Pending or not sent messages will show up here" : "Čia bus rodomi laukiantys ar neišsiųsti laiškai",
