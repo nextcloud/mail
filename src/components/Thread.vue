@@ -16,7 +16,6 @@
 					<h2 dir="auto" :title="threadSubject">
 						{{ threadSubject }}
 					</h2>
-
 				</div>
 			</div>
 			<ThreadSummary v-if="showSummaryBox" :loading="summaryLoading" :summary="summaryText" />
@@ -61,13 +60,6 @@ export default {
 		Error,
 		Loading,
 		ThreadEnvelope,
-	},
-
-	props: {
-		currentAccountEmail: {
-			type: String,
-			required: true,
-		},
 	},
 
 	data() {
@@ -642,35 +634,6 @@ export default {
 	.icon-reply-all-white {
 		background-position: calc(var(--default-grid-baseline) * 3) center;
 	}
-}
-
-.avatar-header {
-	height: var(--default-clickable-area);
-	overflow: hidden;
-	display: flex;
-	align-items: stretch;
-
-	:deep(.v-popper--theme-dropdown.v-popper__popper .v-popper__inner) {
-		height: 300px;
-		width: 250px;
-		overflow: auto;
-	}
-}
-
-.avatar-more {
-	display: flex;
-	background-color: var(--color-background-dark);
-	border-radius: var(--border-radius-large);
-	align-items: center;
-	cursor: pointer;
-}
-
-.v-popper.avatar-more {
-	padding: calc(var(--default-grid-baseline) * 2);
-}
-
-.avatar-hidden {
-	visibility: hidden;
 }
 
 .app-content-list-item-star.icon-starred {

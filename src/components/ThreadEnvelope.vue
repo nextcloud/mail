@@ -68,7 +68,7 @@
 							{{ envelope.from && envelope.from[0] ? envelope.from[0].email : '' }}
 						</p>
 					</div>
-						<div v-if="hasChangedSubject" class="subline">
+					<div v-if="hasChangedSubject" class="subline">
 						{{ cleanSubject }}
 					</div>
 					<div v-if="showSubline" class="subline">
@@ -272,32 +272,32 @@
 			</div>
 		</div>
 		<div v-if="expanded" class="envelope__recipients">
-		<div v-if="envelope.to && envelope.to.length" class="recipients">
-			<span class="recipients__label">{{ t('mail', 'To:') }}</span>
-			<RecipientBubble
-				v-for="recipient in envelope.to"
-				:key="recipient.email"
-				:email="recipient.email"
-				:label="recipient.label" />
+			<div v-if="envelope.to && envelope.to.length" class="recipients">
+				<span class="recipients__label">{{ t('mail', 'To:') }}</span>
+				<RecipientBubble
+					v-for="recipient in envelope.to"
+					:key="recipient.email"
+					:email="recipient.email"
+					:label="recipient.label" />
+			</div>
+			<div v-if="envelope.cc && envelope.cc.length" class="recipients">
+				<span class="recipients__label">{{ t('mail', 'Cc:') }}</span>
+				<RecipientBubble
+					v-for="recipient in envelope.cc"
+					:key="recipient.email"
+					:email="recipient.email"
+					:label="recipient.label" />
+			</div>
+			<div v-if="envelope.bcc && envelope.bcc.length" class="recipients">
+				<span class="recipients__label">{{ t('mail', 'Bcc:') }}</span>
+				<RecipientBubble
+					v-for="recipient in envelope.bcc"
+					:key="recipient.email"
+					:email="recipient.email"
+					:label="recipient.label" />
+			</div>
 		</div>
-		<div v-if="envelope.cc && envelope.cc.length" class="recipients">
-			<span class="recipients__label">{{ t('mail', 'Cc:') }}</span>
-			<RecipientBubble
-				v-for="recipient in envelope.cc"
-				:key="recipient.email"
-				:email="recipient.email"
-				:label="recipient.label" />
-		</div>
-		<div v-if="envelope.bcc && envelope.bcc.length" class="recipients">
-			<span class="recipients__label">{{ t('mail', 'Bcc:') }}</span>
-			<RecipientBubble
-				v-for="recipient in envelope.bcc"
-				:key="recipient.email"
-				:email="recipient.email"
-				:label="recipient.label" />
-		</div>
-	</div>
-	<MessageLoadingSkeleton v-if="loading === Loading.Skeleton" />
+		<MessageLoadingSkeleton v-if="loading === Loading.Skeleton" />
 		<Message
 			v-if="message"
 			v-show="loading === Loading.Done"
@@ -367,7 +367,6 @@ import IconFavorite from 'vue-material-design-icons/Star.vue'
 import StarOutline from 'vue-material-design-icons/StarOutline.vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import Avatar from './Avatar.vue'
-import RecipientBubble from './RecipientBubble.vue'
 import ConfirmModal from './ConfirmationModal.vue'
 import Error from './Error.vue'
 import EventModal from './EventModal.vue'
@@ -378,6 +377,7 @@ import Message from './Message.vue'
 import MessageLoadingSkeleton from './MessageLoadingSkeleton.vue'
 import Moment from './Moment.vue'
 import MoveModal from './MoveModal.vue'
+import RecipientBubble from './RecipientBubble.vue'
 import SourceModal from './SourceModal.vue'
 import TagModal from './TagModal.vue'
 import TaskModal from './TaskModal.vue'
@@ -1345,7 +1345,6 @@ export default {
 			text-overflow: ellipsis;
 			white-space: nowrap;
 		}
-
 
 		&--expanded {
 			min-height: 350px;
