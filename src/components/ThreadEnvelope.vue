@@ -1399,24 +1399,26 @@ export default {
 	}
 
 	.envelope__recipients {
-		padding-inline: 60px 38px;
-		padding-block: 4px;
+		// align with sender name: header padding + avatar (40px) + gap (2 * grid-baseline)
+		padding-inline-start: calc(var(--border-radius-container) + var(--default-grid-baseline) * 12);
+		padding-inline-end: var(--border-radius-container);
+		padding-block: var(--default-grid-baseline);
 		display: flex;
 		flex-direction: column;
-		gap: 4px;
-	}
+		gap: var(--default-grid-baseline);
 
-	.recipients {
-		display: flex;
-		align-items: center;
-		flex-wrap: wrap;
-		gap: 4px;
+		.recipients {
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+			gap: var(--default-grid-baseline);
 
-		&__label {
-			color: var(--color-text-maxcontrast);
-			font-weight: bold;
-			white-space: nowrap;
-			min-width: 32px;
+			&__label {
+				color: var(--color-text-maxcontrast);
+				font-weight: bold;
+				white-space: nowrap;
+				min-width: 32px;
+			}
 		}
 	}
 
