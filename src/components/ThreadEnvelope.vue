@@ -62,9 +62,9 @@
 				:class="{ seen: envelope.flags.seen }"
 				@click.native.prevent="$emit('toggle-expand', $event)">
 				<div class="envelope__header__left__sender-subject-tags">
-					<div class="sender">
+					<div class="sender" :class="{ 'sender--expanded': expanded }">
 						{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
-						<p class="sender__email" :style="{ color: senderEmailColor }">
+						<p v-if="expanded" class="sender__email" :style="{ color: senderEmailColor }">
 							{{ envelope.from && envelope.from[0] ? envelope.from[0].email : '' }}
 						</p>
 					</div>
@@ -1151,11 +1151,15 @@ export default {
 <style lang="scss" scoped>
 	.sender {
 		margin-inline-start: calc(var(--default-grid-baseline) * 2);
-		&__email{
+
+		&--expanded {
+			color: var(--color-text-maxcontrast);
+		}
+
+		&__email {
 			text-overflow: ellipsis;
 			overflow: hidden;
 		}
-
 	}
 
 	.right {
