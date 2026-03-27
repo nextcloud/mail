@@ -68,6 +68,32 @@
 							{{ envelope.from && envelope.from[0] ? envelope.from[0].email : '' }}
 						</p>
 					</div>
+					<template v-if="expanded">
+						<div v-if="envelope.to && envelope.to.length" class="recipients">
+							<span class="recipients__label">{{ t('mail', 'To:') }}</span>
+							<RecipientBubble
+								v-for="recipient in envelope.to"
+								:key="recipient.email"
+								:email="recipient.email"
+								:label="recipient.label" />
+						</div>
+						<div v-if="envelope.cc && envelope.cc.length" class="recipients">
+							<span class="recipients__label">{{ t('mail', 'Cc:') }}</span>
+							<RecipientBubble
+								v-for="recipient in envelope.cc"
+								:key="recipient.email"
+								:email="recipient.email"
+								:label="recipient.label" />
+						</div>
+						<div v-if="envelope.bcc && envelope.bcc.length" class="recipients">
+							<span class="recipients__label">{{ t('mail', 'Bcc:') }}</span>
+							<RecipientBubble
+								v-for="recipient in envelope.bcc"
+								:key="recipient.email"
+								:email="recipient.email"
+								:label="recipient.label" />
+						</div>
+					</template>
 					<div v-if="hasChangedSubject" class="subline">
 						{{ cleanSubject }}
 					</div>
@@ -341,6 +367,7 @@ import IconFavorite from 'vue-material-design-icons/Star.vue'
 import StarOutline from 'vue-material-design-icons/StarOutline.vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import Avatar from './Avatar.vue'
+import RecipientBubble from './RecipientBubble.vue'
 import ConfirmModal from './ConfirmationModal.vue'
 import Error from './Error.vue'
 import EventModal from './EventModal.vue'
@@ -389,6 +416,7 @@ export default {
 		TranslationModal,
 		ConfirmModal,
 		Avatar,
+		RecipientBubble,
 		NcActionButton,
 		NcButton,
 		Error,
@@ -1312,6 +1340,21 @@ export default {
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
+		}
+
+		.recipients {
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+			gap: 4px;
+			margin-block: 2px;
+			margin-inline-start: 8px;
+
+			&__label {
+				color: var(--color-text-maxcontrast);
+				font-weight: bold;
+				white-space: nowrap;
+			}
 		}
 
 		&--expanded {
