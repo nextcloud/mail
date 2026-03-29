@@ -388,6 +388,7 @@
     "Clear locally cached data, in case there are issues with synchronization." : "Hreinsa gögn úr staðværu biðminni, komi upp vandamál við samstillingu.",
     "Subscribed" : "Í áskrift",
     "Sync in background" : "Samstilling í bakgrunni",
+    "Delete all messages" : "Eyða öllum skilaboðum",
     "Outbox" : "Úthólf",
     "New message" : "Ný skilaboð",
     "Edit message" : "Breyta skilaboðum",
