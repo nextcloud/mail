@@ -356,7 +356,7 @@
 				</div>
 			</form>
 			<div>
-				<h4>Preview</h4>
+				<h4>{{ t('mail', 'Preview') }}</h4>
 				<p>
 					{{
 						t('mail', 'With the settings above, the app will create account settings in the following way:')
