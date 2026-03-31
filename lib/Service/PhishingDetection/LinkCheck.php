@@ -49,9 +49,12 @@ class LinkCheck {
 	}
 
 	public function run(string $htmlMessage) : PhishingDetectionResult {
-
 		$results = [];
 		$zippedArray = [];
+
+		if (empty($htmlMessage)) {
+			return $this->generateResult($results);
+		}
 
 		$dom = Parser::parseToDomDocument($htmlMessage);
 		$anchors = $dom->getElementsByTagName('a');
@@ -85,11 +88,24 @@ class LinkCheck {
 				}
 			}
 		}
-		if (count($results) > 0) {
-			return new PhishingDetectionResult(PhishingDetectionResult::LINK_CHECK, true, $this->l10n->t('Some addresses in this message are not matching the link text'), $results);
-		}
-		return  new PhishingDetectionResult(PhishingDetectionResult::LINK_CHECK, false);
 
+		return $this->generateResult($results);
+	}
+
+	private function generateResult(array $results): PhishingDetectionResult {
+		if ($results === []) {
+			return new PhishingDetectionResult(
+				PhishingDetectionResult::LINK_CHECK,
+				false
+			);
+		}
+
+		return new PhishingDetectionResult(
+			PhishingDetectionResult::LINK_CHECK,
+			true,
+			$this->l10n->t('Some addresses in this message are not matching the link text'),
+			$results
+		);
 	}
 
 }

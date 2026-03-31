@@ -93,4 +93,11 @@ class LinkCheckTest extends TestCase {
 		$result = $this->service->run($htmlMessage);
 		$this->assertFalse($result->isPhishing());
 	}
+
+	public function testEmptyMessage(): void {
+		$htmlMessage = '';
+
+		$result = $this->service->run($htmlMessage);
+		$this->assertFalse($result->isPhishing());
+	}
 }
