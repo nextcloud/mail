@@ -1,3 +1,16 @@
+## [5.7.6](https://github.com/nextcloud/mail/compare/v5.7.5...v5.7.6) (2026-03-31)
+
+
+### Bug Fixes
+
+* **deps:** bump node-forge from 1.3.3 to v1.4.0 ([134783b](https://github.com/nextcloud/mail/commit/134783bd2ee08c98eee851f89ad760affb833a6d))
+* **l10n:** Update translations from Transifex ([44b5e44](https://github.com/nextcloud/mail/commit/44b5e44bc3be3f4d45eb1e066af56df661c805d5))
+* **l10n:** Update translations from Transifex ([b3ee851](https://github.com/nextcloud/mail/commit/b3ee851a269c87303df1ed85904c0435aaf808b9))
+* **l10n:** Update translations from Transifex ([d8bf2ae](https://github.com/nextcloud/mail/commit/d8bf2ae3f581c1872e512f899257b31ce92249df))
+* **l10n:** Update translations from Transifex ([8f34af0](https://github.com/nextcloud/mail/commit/8f34af02813dbbc44506f25b51f4fa145ccbcd58))
+
+
+
 ## [5.7.5](https://github.com/nextcloud/mail/compare/v5.7.4...v5.7.5) (2026-03-24)
 
 
