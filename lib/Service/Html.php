@@ -16,6 +16,7 @@ use HTMLPurifier_HTMLDefinition;
 use HTMLPurifier_URIDefinition;
 use HTMLPurifier_URISchemeRegistry;
 use OCA\Mail\Html\ProxyHmacGenerator;
+use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\HtmlPurify\CidURIScheme;
 use OCA\Mail\Service\HtmlPurify\TransformCidDataAttr;
 use OCA\Mail\Service\HtmlPurify\TransformHTMLLinks;
@@ -34,6 +35,9 @@ use Youthweb\UrlLinker\UrlLinker;
 
 require_once __DIR__ . '/../../vendor/cerdic/css-tidy/class.csstidy.php';
 
+/**
+ * @psalm-import-type IMAPAttachment from IMAPMessage
+ */
 class Html {
 	/** @var IURLGenerator */
 	private $urlGenerator;
@@ -108,8 +112,8 @@ class Html {
 	}
 
 	/**
-	 * @param list<array> $inlineAttachments
-	 * @return list<array{id: string, messageId: int, fileName: string|null, mime: string, size: int, cid: string|null, disposition: string|null, url: string}>
+	 * @param list<IMAPAttachment> $inlineAttachments
+	 * @return list<array{id: string|null, messageId: int, fileName: string|null, mime: string, size: int, cid: string|null, disposition: string, url: string}>
 	 */
 	private function addAttachmentUrl(int $messageId, array $inlineAttachments): array {
 		return array_map(function (array $inlineAttachment) use ($messageId) {
@@ -123,6 +127,9 @@ class Html {
 		}, $inlineAttachments);
 	}
 
+	/**
+	 * @param list<IMAPAttachment> $inlineAttachments
+	 */
 	public function sanitizeHtmlMailBody(int $messageId, string $mailBody, array $inlineAttachments): string {
 		$inlineAttachments = $this->addAttachmentUrl($messageId, $inlineAttachments);
 
