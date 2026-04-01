@@ -11,10 +11,39 @@ namespace OCA\Mail\IMAP\Charset;
 
 use Horde_Mime_Part;
 use OCA\Mail\Exception\ServiceException;
+use ValueError;
 use function in_array;
 use function is_string;
 
 class Converter {
+
+	/**
+	 * Map of unsupported charset names to their mbstring equivalents.
+	 * Keys must be lowercase for case-insensitive lookup.
+	 *
+	 * @see http://lists.w3.org/Archives/Public/ietf-charsets/2001AprJun/0030.html
+	 */
+	private const CHARSET_MAP = [
+		'ks_c_5601-1987' => 'UHC',
+		'ks_c_5601-1989' => 'UHC',
+	];
+
+	/**
+	 * Normalize charset names for mbstring compatibility.
+	 *
+	 * Maps unsupported charset names to their mbstring equivalents.
+	 * Notably, handles Korean encodings used by Outlook:
+	 * - ks_c_5601-1987 and ks_c_5601-1989 are mapped to UHC (Windows-949/CP949)
+	 *
+	 * Charset tokens are case-insensitive in email headers (RFC 2045),
+	 * so we normalize to lowercase for lookup.
+	 */
+	private function normalizeCharset(string $charset): string {
+		$charset = trim($charset);
+		$lowerCharset = strtolower($charset);
+
+		return self::CHARSET_MAP[$lowerCharset] ?? $charset;
+	}
 
 	/**
 	 * @param Horde_Mime_Part $p
@@ -37,10 +66,17 @@ class Converter {
 
 		// The part specifies a charset
 		if ($charset !== null) {
-			if (in_array($charset, mb_list_encodings(), true)) {
-				$converted = mb_convert_encoding($data, 'UTF-8', $charset);
-			} else {
-				$converted = iconv($charset, 'UTF-8', $data);
+			$normalizedCharset = $this->normalizeCharset($charset);
+			try {
+				if (in_array($normalizedCharset, mb_list_encodings(), true)) {
+					$converted = mb_convert_encoding($data, 'UTF-8', $normalizedCharset);
+				} else {
+					$converted = @iconv($normalizedCharset, 'UTF-8', $data);
+				}
+			} catch (ValueError) {
+				// Invalid charset name, treat as null to use auto-detection below
+				$charset = null;
+				$converted = null;
 			}
 
 			if (is_string($converted)) {
@@ -51,22 +87,42 @@ class Converter {
 		// No charset specified, let's ask mb if this could be UTF-8
 		$detectedCharset = mb_detect_encoding($data, 'UTF-8', true);
 		if ($detectedCharset === false) {
-			// Fallback, non UTF-8
-			$detectedCharset = mb_detect_encoding($data, null, true);
+			// Fallback, try common charsets (the default mb_detect_encoding order may miss some)
+			$detectedCharset = mb_detect_encoding($data, 'ISO-8859-1,ISO-8859-2,UTF-8,ASCII', true);
 		}
 		// Still UTF8, no need to convert
 		if ($detectedCharset !== false && strtoupper($detectedCharset) === 'UTF-8') {
 			return $data;
 		}
 
-		$converted = @mb_convert_encoding($data, 'UTF-8', $charset);
+		// Use detected charset when available, otherwise use original/normalized charset
+		if ($detectedCharset !== false) {
+			$sourceCharset = $detectedCharset;
+		} elseif ($charset !== null) {
+			$sourceCharset = $this->normalizeCharset($charset);
+		} else {
+			$sourceCharset = null;
+		}
+
+		// Attempt conversion with the source charset
+		try {
+			$converted = @mb_convert_encoding($data, 'UTF-8', $sourceCharset);
+		} catch (ValueError) {
+			$converted = false;
+		}
+
 		if ($converted === false) {
 			// Might be a charset that PHP mb doesn't know how to handle, fall back to iconv
-			$converted = iconv($charset, 'UTF-8', $data);
+			try {
+				$converted = @iconv($sourceCharset, 'UTF-8', $data);
+			} catch (ValueError) {
+				// Invalid charset, conversion not possible
+				$converted = null;
+			}
 		}
 
 		if (!is_string($converted)) {
-			throw new ServiceException('Could not detect message charset');
+			throw new ServiceException('Could not convert message charset');
 		}
 		return $converted;
 	}
