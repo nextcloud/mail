@@ -33,6 +33,16 @@ use function trim;
 
 /**
  * @psalm-import-type MailIMAPFullMessage from ResponseDefinitions
+ *
+ * @psalm-type IMAPAttachment = array{
+ *      id: string|null,
+ *      messageId: int,
+ *      fileName: string|null,
+ *      mime: string,
+ *      size: int,
+ *      cid: string|null,
+ *      disposition: string,
+ *  }
  */
 class IMAPMessage implements IMessage, JsonSerializable {
 	use ConvertAddresses;
@@ -53,6 +63,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	public string $plainMessage;
 	public string $htmlMessage;
 	public array $attachments;
+	/** @var list<IMAPAttachment> */
 	public array $inlineAttachments;
 	private bool $hasAttachments;
 	public array $scheduling;
@@ -71,6 +82,9 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	private bool $signatureIsValid;
 	private bool $isPgpMimeEncrypted;
 
+	/**
+	 * @param list<IMAPAttachment> $inlineAttachments
+	 */
 	public function __construct(int $uid,
 		string $messageId,
 		array $flags,
