@@ -1260,6 +1260,8 @@ export default {
 
 			if (data.isHtml) {
 				data.bodyHtml = this.bodyVal
+			} else if (data.isPgpMime) {
+				data.bodyPlain = this.bodyVal
 			} else {
 				data.bodyPlain = toPlain(html(this.bodyVal)).value
 			}
