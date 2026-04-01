@@ -757,6 +757,7 @@ class MessageMapper {
 		// TODO: compare logic and merge with getAttachments()
 
 		$query = new Horde_Imap_Client_Fetch_Query();
+		$query->structure();
 		$query->bodyPart($attachmentId);
 		$query->mimeHeader($attachmentId);
 		$this->smimeService->addEncryptionCheckQueries($query);
@@ -769,6 +770,10 @@ class MessageMapper {
 
 		/** @var Horde_Imap_Client_Data_Fetch $fetch */
 		$fetch = $headers[$messageUid];
+
+		if ($fetch->getStructure()->count() === 0) {
+			throw new DoesNotExistException('Unable to load the attachment.');
+		}
 
 		/** @var Horde_Mime_Headers $mimeHeaders */
 		$mimeHeaders = $fetch->getMimeHeader($attachmentId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
