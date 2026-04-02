@@ -264,7 +264,7 @@ OC.L10N.register(
     "Blind copy recipients only" : "Nur BCC-Empfänger",
     "No subject" : "Kein Betreff",
     "{markup-start}Draft:{markup-end} {subject}" : "{markup-start} Entwurf: {markup-end} {subject}",
-    "Later today – {timeLocale}" : "Später am Tag – {timeLocale}",
+    "Later today – {timeLocale}" : "Später heute – {timeLocale}",
     "Set reminder for later today" : "Erinnerung für nachher erstellen",
     "Tomorrow – {timeLocale}" : "Morgen – {timeLocale}",
     "Set reminder for tomorrow" : "Erinnerung für morgen erstellen",
