@@ -193,6 +193,7 @@ OC.L10N.register(
     "{attendeeName} declined your invitation" : "{attendeeName} atmetė jūsų pakvietimą",
     "You accepted this invitation" : "Jūs priėmėte šį pakvietimą",
     "You declined this invitation" : "Jūs atmetėte šį pakvietimą",
+    "This event was cancelled" : "Šis renginys buvo atšauktas",
     "Save to" : "Įrašyti į",
     "Select" : "Pasirinkti",
     "Comment" : "Komentaras",
