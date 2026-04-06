@@ -36,6 +36,18 @@
 						</template>
 						{{ t('mail', 'Account settings') }}
 					</ActionButton>
+					<ActionButton
+						v-if="canDelegate"
+						:close-after-click="true"
+						@click="showDelegationModal = true">
+						<template #icon>
+							<NcIconSvgWrapper
+								:size="20"
+								:title="t('mail', 'Delegate account')"
+								:svg="IconDelegation" />
+						</template>
+						{{ t('mail', 'Delegate account') }}
+					</ActionButton>
 					<ActionCheckbox
 						:checked="account.showSubscribedOnly"
 						:disabled="savingShowOnlySubscribed"
@@ -85,6 +97,7 @@
 			</template>
 		</NcAppNavigationCaption>
 		<AccountSettings :open="showSettings" :account="account" @update:open="showAccountSettings($event)" />
+		<DelegationModal v-if="showDelegationModal" :account="account" @close="showDelegationModal = false" />
 	</Fragment>
 </template>
 
@@ -92,7 +105,7 @@
 import { DialogBuilder, showError } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
-import { NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading, NcAppNavigationCaption } from '@nextcloud/vue'
+import { NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading, NcAppNavigationCaption, NcIconSvgWrapper } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import { Fragment } from 'vue-frag'
 import MenuDown from 'vue-material-design-icons/ChevronDown.vue'
@@ -104,6 +117,7 @@ import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import logger from '../logger.js'
 import { fetchQuota } from '../service/AccountService.js'
 import useMainStore from '../store/mainStore.js'
+import IconDelegation from './../../img/delegation.svg'
 
 export default {
 	name: 'NavigationAccount',
@@ -115,8 +129,10 @@ export default {
 		ActionInput,
 		ActionText,
 		AccountSettings: () => import(/* webpackChunkName: "account-settings" */ './AccountSettings.vue'),
+		DelegationModal: () => import(/* webpackChunkName: "delegation-modal" */ './DelegationModal.vue'),
 		IconInfo,
 		IconSettings,
+		NcIconSvgWrapper,
 		IconFolderAdd,
 		MenuDown,
 		MenuUp,
@@ -162,6 +178,8 @@ export default {
 			quota: undefined,
 			editing: false,
 			showSaving: false,
+			showDelegationModal: false,
+			IconDelegation,
 			createMailboxName: '',
 			showMailboxes: false,
 			nameInput: false,
@@ -177,6 +195,10 @@ export default {
 
 		visible() {
 			return this.account.isUnified !== true && this.account.visible !== false
+		},
+
+		canDelegate() {
+			return !this.account.isDelegated
 		},
 
 		id() {
