@@ -9,7 +9,7 @@
 			<UserBubble
 				v-bind="attrs"
 				:display-name="label"
-				:size="26"
+				:size="size"
 				:avatar-image="avatarUrlAbsolute"
 				@click="onClickOpenContactDialog" />
 		</template>
@@ -157,6 +157,11 @@ export default {
 		label: {
 			type: String,
 			required: true,
+		},
+
+		size: {
+			type: Number,
+			default: 26,
 		},
 	},
 

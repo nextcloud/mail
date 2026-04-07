@@ -64,8 +64,21 @@
 				<div class="envelope__header__left__sender-subject-tags">
 					<div class="sender" :class="{ 'sender--expanded': expanded }">
 						{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
-						<p v-if="expanded" class="sender__email" :style="{ color: senderEmailColor }">
-							{{ envelope.from && envelope.from[0] ? envelope.from[0].email : '' }}
+						<button
+							v-if="expanded && hasRecipients"
+							type="button"
+							class="sender__email sender__email--toggle"
+							:style="{ color: senderEmailColor }"
+							@click.stop.prevent="showRecipients = !showRecipients">
+							{{ senderEmail }}
+							<ChevronUpIcon v-if="showRecipients" :size="16" />
+							<ChevronDownIcon v-else :size="16" />
+						</button>
+						<p
+							v-else-if="expanded"
+							class="sender__email"
+							:style="{ color: senderEmailColor }">
+							{{ senderEmail }}
 						</p>
 					</div>
 					<div v-if="hasChangedSubject" class="subline">
@@ -271,14 +284,15 @@
 				</template>
 			</div>
 		</div>
-		<div v-if="expanded" class="envelope__recipients">
+		<div v-if="expanded && showRecipients" class="envelope__recipients">
 			<div v-if="envelope.to && envelope.to.length" class="recipients">
 				<span class="recipients__label">{{ t('mail', 'To:') }}</span>
 				<RecipientBubble
 					v-for="recipient in envelope.to"
 					:key="recipient.email"
 					:email="recipient.email"
-					:label="recipient.label" />
+					:label="recipient.label"
+					:size="24" />
 			</div>
 			<div v-if="envelope.cc && envelope.cc.length" class="recipients">
 				<span class="recipients__label">{{ t('mail', 'Cc:') }}</span>
@@ -286,7 +300,8 @@
 					v-for="recipient in envelope.cc"
 					:key="recipient.email"
 					:email="recipient.email"
-					:label="recipient.label" />
+					:label="recipient.label"
+					:size="24" />
 			</div>
 			<div v-if="envelope.bcc && envelope.bcc.length" class="recipients">
 				<span class="recipients__label">{{ t('mail', 'Bcc:') }}</span>
@@ -294,7 +309,8 @@
 					v-for="recipient in envelope.bcc"
 					:key="recipient.email"
 					:email="recipient.email"
-					:label="recipient.label" />
+					:label="recipient.label"
+					:size="24" />
 			</div>
 		</div>
 		<MessageLoadingSkeleton v-if="loading === Loading.Skeleton" />
@@ -356,6 +372,8 @@ import { mapStores } from 'pinia'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionText from '@nextcloud/vue/components/NcActionText'
 import ArchiveIcon from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
+import ChevronDownIcon from 'vue-material-design-icons/ChevronDown.vue'
+import ChevronUpIcon from 'vue-material-design-icons/ChevronUp.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
 import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
 import LockOffIcon from 'vue-material-design-icons/LockOffOutline.vue'
@@ -431,6 +449,8 @@ export default {
 		EmailUnread,
 		DeleteIcon,
 		ArchiveIcon,
+		ChevronDownIcon,
+		ChevronUpIcon,
 		LockIcon,
 		LockOffIcon,
 		LockPlusIcon,
@@ -489,6 +509,7 @@ export default {
 	data() {
 		return {
 			loading: Loading.Done,
+			showRecipients: false,
 			showListUnsubscribeConfirmation: false,
 			error: undefined,
 			message: undefined,
@@ -516,6 +537,14 @@ export default {
 
 	computed: {
 		...mapStores(useOutboxStore, useMainStore),
+		senderEmail() {
+			return this.envelope.from?.[0]?.email ?? ''
+		},
+
+		hasRecipients() {
+			return !!(this.envelope.to?.length || this.envelope.cc?.length || this.envelope.bcc?.length)
+		},
+
 		inlineMenuSize() {
 			const { envelope } = this.$refs
 			const envelopeWidth = (envelope && envelope.clientWidth) || 250
@@ -730,6 +759,7 @@ export default {
 			} else {
 				this.message = undefined
 				this.loading = Loading.Done
+				this.showRecipients = false
 			}
 		},
 
@@ -1159,6 +1189,20 @@ export default {
 		&__email {
 			text-overflow: ellipsis;
 			overflow: hidden;
+
+			&--toggle {
+				display: inline-flex;
+				align-items: center;
+				gap: calc(var(--default-grid-baseline) / 2);
+				background: none;
+				border: none;
+				padding: 0;
+				cursor: pointer;
+				font-size: inherit;
+				font-family: inherit;
+				line-height: inherit;
+				color: inherit;
+			}
 		}
 	}
 
