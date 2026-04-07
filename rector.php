@@ -8,6 +8,7 @@ declare(strict_types=1);
  */
 
 use Nextcloud\Rector\Set\NextcloudSets;
+use Rector\CodingStyle\Rector\FuncCall\CountArrayToEmptyArrayComparisonRector;
 use Rector\Config\RectorConfig;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\TypeDeclaration\Rector\Class_\AddTestsVoidReturnTypeWhereNoReturnRector;
@@ -32,4 +33,5 @@ return RectorConfig::configure()
 	)
 	->withRules([
 		AddTestsVoidReturnTypeWhereNoReturnRector::class,
+		CountArrayToEmptyArrayComparisonRector::class,
 	]);
