@@ -70,6 +70,10 @@ export default function initAfterAppCreation() {
 		value: loadState('mail', 'allow-new-accounts', true),
 	})
 	mainStore.savePreferenceMutation({
+		key: 'allow-new-aliases',
+		value: loadState('mail', 'allow-new-aliases', true),
+	})
+	mainStore.savePreferenceMutation({
 		key: 'password-is-unavailable',
 		value: loadState('mail', 'password-is-unavailable', false),
 	})

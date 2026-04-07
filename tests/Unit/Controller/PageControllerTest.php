@@ -269,7 +269,7 @@ class PageControllerTest extends TestCase {
 				['version', '0.0.0', '26.0.0'],
 				['app.mail.attachment-size-limit', 0, 123],
 			]);
-		$this->config->expects($this->exactly(7))
+		$this->config->expects($this->exactly(8))
 			->method('getAppValue')
 			->withConsecutive(
 				[ 'mail', 'installed_version' ],
@@ -279,6 +279,7 @@ class PageControllerTest extends TestCase {
 				['mail', 'microsoft_oauth_tenant_id' ],
 				['core', 'backgroundjobs_mode', 'ajax' ],
 				['mail', 'allow_new_mail_accounts', 'yes'],
+				['mail', 'allow_new_mail_aliases', 'yes'],
 			)->willReturnOnConsecutiveCalls(
 				$this->returnValue('1.2.3'),
 				$this->returnValue('threaded'),
@@ -287,7 +288,7 @@ class PageControllerTest extends TestCase {
 				$this->returnValue(''),
 				$this->returnValue('cron'),
 				$this->returnValue('yes'),
-				$this->returnValue('no')
+				$this->returnValue('yes'),
 			);
 		$this->aiIntegrationsService->expects(self::exactly(4))
 			->method('isLlmProcessingEnabled')

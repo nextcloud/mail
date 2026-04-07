@@ -12,6 +12,7 @@
 		:name="t('mail', 'Account settings')"
 		@update:open="updateOpen">
 		<AppSettingsSection
+			v-if="allowNewAliases"
 			id="alias-settings"
 			:name="t('mail', 'Aliases')">
 			<AliasSettings :account="account" @rename-primary-alias="scrollToAccountSettings" />
@@ -208,6 +209,10 @@ export default {
 
 		email() {
 			return this.account.emailAddress
+		},
+
+		allowNewAliases() {
+			return this.mainStore.getPreference('allow-new-aliases', true)
 		},
 	},
 
