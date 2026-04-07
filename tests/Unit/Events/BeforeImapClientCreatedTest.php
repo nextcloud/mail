@@ -15,7 +15,7 @@ use OCA\Mail\Events\BeforeImapClientCreated;
 
 class BeforeImapClientCreatedTest extends TestCase {
 	public function testConstructorAndGetter(): void {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 
 		$event = new BeforeImapClientCreated($account);
 

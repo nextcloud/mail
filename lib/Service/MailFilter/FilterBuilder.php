@@ -60,7 +60,7 @@ class FilterBuilder {
 				}
 			}
 
-			if (count($tests) === 0) {
+			if ($tests === []) {
 				// skip filter without tests
 				$commands[] = '# No valid tests found';
 				continue;
@@ -115,7 +115,7 @@ class FilterBuilder {
 		$lines = [];
 
 		$extensions = array_unique($extensions);
-		if (count($extensions) > 0) {
+		if ($extensions !== []) {
 			$lines[] = self::SEPARATOR;
 			$lines[] = 'require ' . SieveUtils::stringList($extensions) . ';';
 			$lines[] = self::SEPARATOR;
@@ -131,7 +131,7 @@ class FilterBuilder {
 		}
 		$lines[] = $untouchedScript;
 
-		if (count($filters) > 0) {
+		if ($filters !== []) {
 			$lines[] = self::SEPARATOR;
 			$lines[] = self::DATA_MARKER . json_encode($this->sanitizeDefinition($filters), JSON_THROW_ON_ERROR);
 			array_push($lines, ...$commands);

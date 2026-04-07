@@ -63,7 +63,7 @@ class MailProvider implements IProvider {
 	 */
 	#[\Override]
 	public function hasServices(string $userId): bool {
-		return (count($this->listServices($userId)) > 0);
+		return ($this->listServices($userId) !== []);
 	}
 
 	/**
@@ -132,7 +132,7 @@ class MailProvider implements IProvider {
 		// retrieve service details from data store
 		$accounts = $this->accountService->findByUserIdAndAddress($userId, $address);
 		// evaluate if service details where found
-		if (count($accounts) > 0) {
+		if ($accounts !== []) {
 			// return mail service object
 			return $this->serviceFromAccount($userId, $accounts[0]);
 		}

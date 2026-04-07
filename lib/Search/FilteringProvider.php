@@ -49,7 +49,7 @@ class FilteringProvider extends Provider implements IFilteringProvider {
 			}
 		}
 
-		if (count($filters) === 0) {
+		if ($filters === []) {
 			return SearchResult::complete(
 				$this->getName(),
 				[]

@@ -1042,7 +1042,7 @@ class MessageMapper extends QBMapper {
 
 		if ($query instanceof GlobalSearchQuery) {
 			$excludeMailboxIds = $query->getExcludeMailboxIds();
-			if (count($excludeMailboxIds) > 0) {
+			if ($excludeMailboxIds !== []) {
 				$selectMailboxIds->andWhere(
 					$qb->expr()->notIn('mb.id', $qb->createNamedParameter($excludeMailboxIds, IQueryBuilder::PARAM_INT_ARRAY))
 				);

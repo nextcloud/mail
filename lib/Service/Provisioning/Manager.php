@@ -116,7 +116,7 @@ class Manager {
 		$counter = 0;
 
 		$configs = $this->getConfigs();
-		if (count($configs) === 0) {
+		if ($configs === []) {
 			return $counter;
 		}
 

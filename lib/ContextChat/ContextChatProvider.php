@@ -61,7 +61,7 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 			$messageIds = array_map(static fn (Message $m): int => $m->getId(), $event->getMessages());
 
 			// Ensure that there are messages to sync
-			if (count($messageIds) === 0) {
+			if ($messageIds === []) {
 				return;
 			}
 

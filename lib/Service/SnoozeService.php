@@ -298,7 +298,7 @@ class SnoozeService {
 			$now,
 		);
 
-		if (count($messages) === 0) {
+		if ($messages === []) {
 			return;
 		}
 

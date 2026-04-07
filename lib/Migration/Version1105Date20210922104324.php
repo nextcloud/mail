@@ -50,7 +50,7 @@ class Version1105Date20210922104324 extends SimpleMigrationStep {
 		$accountIds = array_map(static fn ($row) => (int)$row['id'], $result->fetchAll());
 		$result->closeCursor();
 
-		if (count($accountIds) === 0) {
+		if ($accountIds === []) {
 			return;
 		}
 

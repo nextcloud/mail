@@ -38,7 +38,7 @@ class MimeMessage {
 
 		if ($isPgpEncrypted === true && isset($contentPlain)) {
 			$basePart = $this->buildPgpPart($contentPlain);
-		} elseif (count($attachments) > 0) {
+		} elseif ($attachments !== []) {
 			/*
 			* Messages with non embedded attachments need to be wrap in a multipart/mixed part
 			*/
@@ -145,7 +145,7 @@ class MimeMessage {
 			$messagePart = new Horde_Mime_Part();
 		}
 
-		if (isset($embeddedParts) && count($embeddedParts) > 0) {
+		if (isset($embeddedParts) && $embeddedParts !== []) {
 			/*
 			 * Text parts with embedded content (e.g. inline images, etc) need be wrapped in multipart/related part
 			 */
