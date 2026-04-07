@@ -1,3 +1,21 @@
+## [5.7.7](https://github.com/nextcloud/mail/compare/v5.7.6...v5.7.7) (2026-04-07)
+
+
+### Bug Fixes
+
+* Broken encryption with Mailvelope ([bd8138e](https://github.com/nextcloud/mail/commit/bd8138ee24adb0a991ffb93c8f6be6074c69c218))
+* **deps:** bump lodash from 4.17.23 to v4.18.1 ([bbf89c1](https://github.com/nextcloud/mail/commit/bbf89c1ab66d8003d51ac9d286dc8847d51e3fac))
+* **dns:** Update public suffix list ([afd56a0](https://github.com/nextcloud/mail/commit/afd56a0c3be5dfc2f8586116991ef4326e73785a))
+* **l10n:** Update translations from Transifex ([5a3f19c](https://github.com/nextcloud/mail/commit/5a3f19c219930ce2b4f446a6c23a0b82244e320d))
+* **l10n:** Update translations from Transifex ([7ee0f06](https://github.com/nextcloud/mail/commit/7ee0f06a1bd0f9a58984f1b279a91d9da5971dec))
+* **l10n:** Update translations from Transifex ([6f757af](https://github.com/nextcloud/mail/commit/6f757af0d084bd8bd87706cffcf0c17dfdb662e8))
+* **l10n:** Update translations from Transifex ([8684f34](https://github.com/nextcloud/mail/commit/8684f344a60a2be567af45084f63d41e916c2ccc))
+* **l10n:** Update translations from Transifex ([518c2d7](https://github.com/nextcloud/mail/commit/518c2d7bb729efbeb91f16af8aa36c5af99083ad))
+* **l10n:** Update translations from Transifex ([9d93b2d](https://github.com/nextcloud/mail/commit/9d93b2dc8f78527738631391f4f1c976cd0a62c6))
+* Skip link check for empty message ([388653d](https://github.com/nextcloud/mail/commit/388653d0c78b34b51470040d0b68fe2d84faf02c))
+
+
+
 ## [5.7.6](https://github.com/nextcloud/mail/compare/v5.7.5...v5.7.6) (2026-03-31)
 
 
