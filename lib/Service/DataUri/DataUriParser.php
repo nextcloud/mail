@@ -35,7 +35,7 @@ class DataUriParser {
 		$parameters = ['charset' => 'US-ASCII'];
 		$base64 = false;
 
-		if (count($items) > 0) {
+		if ($items !== []) {
 			$mediaType = array_shift($items);
 			foreach ($items as $item) {
 				if ($item === 'base64') {

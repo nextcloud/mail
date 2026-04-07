@@ -59,7 +59,7 @@ class FollowUpClassifierJob extends QueuedJob {
 			$messages,
 			static fn (Message $message) => $message->getMailboxId() === $mailboxId,
 		);
-		if (count($messages) === 0) {
+		if ($messages === []) {
 			return;
 		}
 
@@ -80,7 +80,7 @@ class FollowUpClassifierJob extends QueuedJob {
 			);
 			return;
 		}
-		if (count($newerMessages) > 0) {
+		if ($newerMessages !== []) {
 			return;
 		}
 

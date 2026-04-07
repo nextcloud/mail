@@ -15,7 +15,7 @@ use OCA\Mail\Events\MailboxesSynchronizedEvent;
 
 class MailboxesSynchronizedEventTest extends TestCase {
 	public function testConstructorAndGetter(): void {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 
 		$event = new MailboxesSynchronizedEvent($account);
 

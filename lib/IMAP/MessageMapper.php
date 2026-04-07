@@ -81,7 +81,7 @@ class MessageMapper {
 		bool $loadBody = false): IMAPMessage {
 		$result = $this->findByIds($client, $mailbox, new Horde_Imap_Client_Ids([$id]), $userId, $loadBody, true);
 
-		if (count($result) === 0) {
+		if ($result === []) {
 			throw new DoesNotExistException('Message does not exist');
 		}
 

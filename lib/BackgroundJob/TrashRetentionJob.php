@@ -92,7 +92,7 @@ class TrashRetentionJob extends TimedJob {
 			$now - $retentionSeconds,
 		);
 
-		if (count($messages) === 0) {
+		if ($messages === []) {
 			return;
 		}
 

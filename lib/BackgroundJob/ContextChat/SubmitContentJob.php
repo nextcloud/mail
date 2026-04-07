@@ -158,7 +158,7 @@ class SubmitContentJob extends TimedJob {
 			}
 		}
 
-		if (count($items) > 0) {
+		if ($items !== []) {
 			$this->contentManager->submitContent($this->contextChatProvider->getAppId(), $items);
 		}
 
