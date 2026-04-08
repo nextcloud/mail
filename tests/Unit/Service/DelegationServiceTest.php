@@ -24,7 +24,6 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
-use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\Notification\IManager;
@@ -41,7 +40,6 @@ class DelegationServiceTest extends TestCase {
 	private IUserManager&MockObject $userManager;
 	private IManager&MockObject $notificationManager;
 	private ITimeFactory&MockObject $timeFactory;
-	private IEventDispatcher&MockObject $eventDispatcher;
 	private DelegationService $service;
 
 	private Account $account;
@@ -58,7 +56,6 @@ class DelegationServiceTest extends TestCase {
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->notificationManager = $this->createMock(IManager::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
-		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 
 		$this->service = new DelegationService(
 			$this->delegationMapper,
@@ -67,6 +64,9 @@ class DelegationServiceTest extends TestCase {
 			$this->messageMapper,
 			$this->aliasMapper,
 			$this->localMessageMapper,
+			$this->userManager,
+			$this->notificationManager,
+			$this->timeFactory,
 		);
 
 		$mailAccount = new MailAccount();
@@ -76,7 +76,7 @@ class DelegationServiceTest extends TestCase {
 		$this->account = new Account($mailAccount);
 	}
 
-	private function mockNotification(): void {
+	private function mockNotification(): INotification&MockObject {
 		$notification = $this->createMock(INotification::class);
 		$notification->method('setApp')->willReturnSelf();
 		$notification->method('setUser')->willReturnSelf();
@@ -89,8 +89,10 @@ class DelegationServiceTest extends TestCase {
 
 		$user = $this->createMock(IUser::class);
 		$user->method('getDisplayName')->willReturn('Owner User');
-		$this->userManager->method('get')->with('owner')->willReturn($user);
+		$this->userManager->method('getExistingUser')->with('owner')->willReturn($user);
 		$this->timeFactory->method('getDateTime')->willReturn(new \DateTime());
+
+		return $notification;
 	}
 
 	public function testDelegateSuccess(): void {
@@ -112,7 +114,7 @@ class DelegationServiceTest extends TestCase {
 				return $d;
 			});
 
-		$result = $this->service->delegate($this->account->getId(), 'delegatee');
+		$result = $this->service->delegate($this->account, 'delegatee', 'owner');
 
 		$this->assertEquals(1, $result->getAccountId());
 		$this->assertEquals('delegatee', $result->getUserId());
@@ -133,7 +135,7 @@ class DelegationServiceTest extends TestCase {
 
 		$this->expectException(DelegationExistsException::class);
 
-		$this->service->delegate($this->account->getId(), 'delegatee');
+		$this->service->delegate($this->account, 'delegatee', 'owner');
 	}
 
 	public function testFindDelegatedToUsersForAccount(): void {
@@ -169,10 +171,12 @@ class DelegationServiceTest extends TestCase {
 			->method('delete')
 			->with($delegation);
 
-		$this->service->unDelegate($this->account->getId(), 'delegatee');
+		$this->service->unDelegate($this->account, 'delegatee', 'owner');
 	}
 
 	public function testUnDelegateWhenNotFound(): void {
+		$this->mockNotification();
+
 		$this->delegationMapper->expects($this->once())
 			->method('find')
 			->with(1, 'delegatee')
@@ -181,7 +185,7 @@ class DelegationServiceTest extends TestCase {
 		$this->delegationMapper->expects($this->never())
 			->method('delete');
 
-		$this->service->unDelegate($this->account->getId(), 'delegatee');
+		$this->service->unDelegate($this->account, 'delegatee', 'owner');
 	}
 
 	public function testResolveAccountUserIdOwner(): void {
@@ -309,5 +313,84 @@ class DelegationServiceTest extends TestCase {
 		$result = $this->service->resolveLocalMessageUserId(55, 'owner');
 
 		$this->assertEquals('owner', $result);
+	}
+
+	public function testDelegateSendsNotification(): void {
+		$notification = $this->mockNotification();
+		$now = new \DateTime();
+		$this->timeFactory = $this->createMock(ITimeFactory::class);
+		$this->timeFactory->method('getDateTime')->willReturn($now);
+
+		$this->delegationMapper->method('find')
+			->willThrowException(new DoesNotExistException('Not found'));
+		$this->delegationMapper->method('insert')
+			->willReturnCallback(function (Delegation $d) {
+				$d->setId(10);
+				return $d;
+			});
+
+		$notification->expects($this->once())->method('setApp')->with('mail')->willReturnSelf();
+		$notification->expects($this->once())->method('setUser')->with('delegatee')->willReturnSelf();
+		$notification->expects($this->once())->method('setObject')->with('delegation', '1')->willReturnSelf();
+		$notification->expects($this->once())
+			->method('setSubject')
+			->with('account_delegation', [
+				'id' => 1,
+				'account_email' => 'owner@example.com',
+			])
+			->willReturnSelf();
+		$notification->expects($this->once())->method('setDateTime')->willReturnSelf();
+		$notification->expects($this->once())
+			->method('setMessage')
+			->with('account_delegation_changed', [
+				'id' => 1,
+				'delegated' => true,
+				'current_user_id' => 'owner',
+				'current_user_display_name' => 'Owner User',
+				'account_email' => 'owner@example.com',
+			])
+			->willReturnSelf();
+		$this->notificationManager->expects($this->once())
+			->method('notify')
+			->with($notification);
+
+		$this->service->delegate($this->account, 'delegatee', 'owner');
+	}
+
+	public function testUnDelegateSendsRevokedNotification(): void {
+		$notification = $this->mockNotification();
+
+		$delegation = new Delegation();
+		$delegation->setId(10);
+		$delegation->setAccountId(1);
+		$delegation->setUserId('delegatee');
+
+		$this->delegationMapper->method('find')->willReturn($delegation);
+
+		$notification->expects($this->once())->method('setApp')->with('mail')->willReturnSelf();
+		$notification->expects($this->once())->method('setUser')->with('delegatee')->willReturnSelf();
+		$notification->expects($this->once())->method('setObject')->with('delegation', '1')->willReturnSelf();
+		$notification->expects($this->once())
+			->method('setSubject')
+			->with('account_delegation', [
+				'id' => 1,
+				'account_email' => 'owner@example.com',
+			])
+			->willReturnSelf();
+		$notification->expects($this->once())
+			->method('setMessage')
+			->with('account_delegation_changed', [
+				'id' => 1,
+				'delegated' => false,
+				'current_user_id' => 'owner',
+				'current_user_display_name' => 'Owner User',
+				'account_email' => 'owner@example.com',
+			])
+			->willReturnSelf();
+		$this->notificationManager->expects($this->once())
+			->method('notify')
+			->with($notification);
+
+		$this->service->unDelegate($this->account, 'delegatee', 'owner');
 	}
 }
