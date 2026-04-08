@@ -78,7 +78,7 @@ class DelegationController extends Controller {
 		}
 
 		try {
-			$delegation = $this->delegationService->delegate($accountId, $userId);
+			$delegation = $this->delegationService->delegate($account, $userId, $this->currentUserId);
 		} catch (DelegationExistsException) {
 			return new JSONResponse(['message' => 'Delegation already exists'], Http::STATUS_CONFLICT);
 		}
@@ -100,7 +100,7 @@ class DelegationController extends Controller {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
 
-		$this->delegationService->unDelegate($accountId, $userId);
+		$this->delegationService->unDelegate($account, $userId, $this->currentUserId);
 		return new JSONResponse([], Http::STATUS_OK);
 	}
 }

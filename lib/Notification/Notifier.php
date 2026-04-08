@@ -72,8 +72,57 @@ class Notifier implements INotifier {
 						]
 					]);
 				break;
+			case 'account_delegation':
+				$parameters = $notification->getSubjectParameters();
+				$messageParameters = $notification->getMessageParameters();
+				$delegated = $messageParameters['delegated'];
+				if ($delegated) {
+					$notification->setRichSubject($l->t('{account_email} has been delegated to you'), [
+						'account_email' => [
+							'type' => 'highlight',
+							'id' => (string)$parameters['id'],
+							'name' => $parameters['account_email']
+						]
+					]);
+					$notification->setRichMessage($l->t('{user} delegated {account} to you'),
+						[
+							'user' => [
+								'type' => 'user',
+								'id' => $messageParameters['current_user_id'],
+								'name' => $messageParameters['current_user_display_name'],
+							],
+							'account' => [
+								'type' => 'highlight',
+								'id' => (string)$messageParameters['id'],
+								'name' => $messageParameters['account_email']
+							]
+						]);
+				} else {
+					$notification->setRichSubject($l->t('{account_email} is no longer delegated to you'), [
+						'account_email' => [
+							'type' => 'highlight',
+							'id' => (string)$parameters['id'],
+							'name' => $parameters['account_email']
+						]
+					]);
+					$notification->setRichMessage($l->t('{user} revoked delagation for {account}'),
+						[
+							'user' => [
+								'type' => 'user',
+								'id' => $messageParameters['current_user_id'],
+								'name' => $messageParameters['current_user_display_name'],
+							],
+							'account' => [
+								'type' => 'highlight',
+								'id' => (string)$messageParameters['id'],
+								'name' => $messageParameters['account_email']
+							]
+						]);
+				}
+
+				break;
 			default:
-				throw  new UnknownNotificationException();
+				throw new UnknownNotificationException();
 		}
 
 		return $notification;
