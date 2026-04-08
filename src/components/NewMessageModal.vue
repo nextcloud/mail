@@ -386,7 +386,7 @@ export default {
 		},
 
 		onEditorReady({ additionalFocusTrap }) {
-			if (additionalFocusTrap && this.additionalTrapElements.indexOf() === -1) {
+			if (additionalFocusTrap && this.additionalTrapElements.indexOf(additionalFocusTrap) === -1) {
 				this.additionalTrapElements.push(additionalFocusTrap)
 			}
 		},
