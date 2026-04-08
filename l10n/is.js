@@ -375,6 +375,7 @@ OC.L10N.register(
     "Collapse folders" : "Fella möppur saman",
     "_{total} message_::_{total} messages_" : ["{total} skilaboð","{total} skilaboð"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} ólesið af {total}","{unread} ólesin af {total}"],
+    "Loading …" : "Hleð inn…",
     "All messages in mailbox will be deleted." : "Öllum skilaboðum í pósthólfinu verður eytt.",
     "Clear mailbox {name}" : "Hreinsa pósthólfið {name}",
     "The folder and all messages in it will be deleted." : "Möppunni og öllum skilaboðum í henni verður eytt.",
