@@ -44,9 +44,7 @@ class QuickActionsService {
 		$actionIds = array_map(fn (Actions $action) => $action->getId(), $actions);
 		$actionSteps = $this->actionStepMapper->findStepsByActionIds($actionIds, $userId);
 		return array_map(function (Actions $action) use ($actionSteps) {
-			$steps = array_values(array_filter($actionSteps, function (ActionStep $step) use ($action) {
-				return $step->getActionId() === $action->getId();
-			}));
+			$steps = array_values(array_filter($actionSteps, fn (ActionStep $step) => $step->getActionId() === $action->getId()));
 			$action->setActionSteps($steps);
 			if (!empty($steps)) {
 				$action->setIcon($steps[0]->getName());

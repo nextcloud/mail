@@ -12,10 +12,10 @@ use OCA\Mail\Service\Avatar\AddressbookSource;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\ContactsIntegration;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class AddressbookSourceTest extends TestCase {
-	/** @var ContactsIntegration|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ContactsIntegration|MockObject */
 	private $ci;
 
 	/** @var AddressbookSource */
@@ -48,7 +48,7 @@ class AddressbookSourceTest extends TestCase {
 
 	public function testFetchNoneFound() {
 		$email = 'john@doe.com';
-		$avatarFactory = $this->createMock(AvatarFactory::class);
+		$avatarFactory = $this->createStub(AvatarFactory::class);
 		$this->ci->expects($this->once())
 			->method('getPhoto')
 			->willReturn(null);

@@ -18,6 +18,9 @@ use function chmod;
 use function is_executable;
 use function is_file;
 
+/**
+ * @psalm-api
+ */
 class MakeItineraryExtractorExecutable implements IRepairStep {
 	/** @var LoggerInterface */
 	private $logger;
@@ -55,7 +58,7 @@ class MakeItineraryExtractorExecutable implements IRepairStep {
 				throw new Exception('chmod returned false');
 			}
 		} catch (Throwable $e) {
-			$this->logger->error('Can\'t make itinerary extractor executable: ' . $e, [
+			$this->logger->error('Can\'t make itinerary extractor executable: ' . $e->getMessage(), [
 				'exception' => $e,
 			]);
 			$output->warning('Can\'t make itinerary extractor executable: ' . $e->getMessage());

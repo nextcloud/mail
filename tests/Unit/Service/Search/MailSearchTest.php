@@ -63,7 +63,7 @@ class MailSearchTest extends TestCase {
 	}
 
 	public function testFindMessagesNotCached() {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setSyncNewToken('abc');
 		$mailbox->setSyncChangedToken('def');
@@ -82,7 +82,7 @@ class MailSearchTest extends TestCase {
 	}
 
 	public function testFindMessagesLocked() {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setSyncNewLock(123);
 		$this->expectException(MailboxLockedException::class);

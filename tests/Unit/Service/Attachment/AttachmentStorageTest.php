@@ -16,12 +16,12 @@ use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Files\SimpleFS\ISimpleFolder;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class AttachmentStorageTest extends TestCase {
 	private $tmpFilePath = '/tmp/nc_mail_attachment_test';
 
-	/** @var IAppData|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IAppData|MockObject */
 	private $appData;
 
 	/** @var AttachmentStorage */
@@ -64,9 +64,9 @@ class AttachmentStorageTest extends TestCase {
 	}
 
 	public function testSaveWithPermissionProblems() {
-		$folder = $this->createMock(ISimpleFolder::class);
-		$file = $this->createMock(ISimpleFile::class);
-		$uploadedFile = $this->createMock(UploadedFile::class);
+		$folder = $this->createStub(ISimpleFolder::class);
+		$file = $this->createStub(ISimpleFile::class);
+		$uploadedFile = $this->createStub(UploadedFile::class);
 
 		$this->appData->expects($this->once())
 			->method('getFolder')
@@ -83,7 +83,7 @@ class AttachmentStorageTest extends TestCase {
 
 	public function testSaveWithoutTempPath() {
 		$folder = $this->createMock(ISimpleFolder::class);
-		$file = $this->createMock(ISimpleFile::class);
+		$file = $this->createStub(ISimpleFile::class);
 		$uploadedFile = $this->createMock(UploadedFile::class);
 
 		$this->appData->expects($this->once())
@@ -108,7 +108,7 @@ class AttachmentStorageTest extends TestCase {
 
 	public function testSaveWithFileReadError() {
 		$folder = $this->createMock(ISimpleFolder::class);
-		$file = $this->createMock(ISimpleFile::class);
+		$file = $this->createStub(ISimpleFile::class);
 		$uploadedFile = $this->createMock(UploadedFile::class);
 
 		$this->appData->expects($this->once())

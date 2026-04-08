@@ -30,12 +30,12 @@ class ContactIntegrationController extends Controller {
 		IRequest $request,
 		ContactIntegrationService $service,
 		ICacheFactory $cacheFactory,
-		string $UserId) {
+		string $userId) {
 		parent::__construct($appName, $request);
 
 		$this->service = $service;
 		$this->cache = $cacheFactory->createLocal('mail.contacts');
-		$this->uid = $UserId;
+		$this->uid = $userId;
 	}
 
 	/**
@@ -57,7 +57,7 @@ class ContactIntegrationController extends Controller {
 	 * @return JSONResponse
 	 */
 	#[TrapError]
-	public function addMail(?string $uid = null, ?string $mail = null): JSONResponse {
+	public function addMail(string $uid, string $mail): JSONResponse {
 		$res = $this->service->addEMailToContact($uid, $mail);
 		if ($res === null) {
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
@@ -69,7 +69,7 @@ class ContactIntegrationController extends Controller {
 	 * @NoAdminRequired
 	 */
 	#[TrapError]
-	public function newContact(?string $contactName = null, ?string $mail = null): JSONResponse {
+	public function newContact(string $contactName, string $mail): JSONResponse {
 		$res = $this->service->newContact($contactName, $mail);
 		if ($res === null) {
 			return new JSONResponse([], Http::STATUS_NOT_ACCEPTABLE);
@@ -85,7 +85,7 @@ class ContactIntegrationController extends Controller {
 	 */
 	#[TrapError]
 	public function autoComplete(string $term): JSONResponse {
-		$cached = $this->cache->get($this->uid . $term);
+		$cached = $this->cache->get("{$this->uid}:$term");
 		if ($cached !== null) {
 			$decoded = json_decode($cached, true);
 			if ($decoded !== null) {
@@ -93,7 +93,7 @@ class ContactIntegrationController extends Controller {
 			}
 		}
 		$res = $this->service->autoComplete($term);
-		$this->cache->set($this->uid . $term, json_encode($res), 24 * 3600);
+		$this->cache->set("{$this->uid}:$term", json_encode($res), 24 * 3600);
 		return new JSONResponse($res);
 	}
 }

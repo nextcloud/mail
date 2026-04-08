@@ -113,7 +113,7 @@ class MailboxesControllerTest extends TestCase {
 	}
 
 	public function testCreate() {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
 		$accountId = 28;
 		$this->accountService->expects($this->once())

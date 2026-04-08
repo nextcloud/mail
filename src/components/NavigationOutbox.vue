@@ -11,7 +11,6 @@
 		:to="to">
 		<template #icon>
 			<IconOutbox
-				class="outbox-opacity-icon"
 				:size="20" />
 		</template>
 		<template #counter>
@@ -60,10 +59,4 @@ export default {
 	}
 }
 
-.outbox-opacity-icon {
-	opacity: .7;
-	&:hover {
-		opacity: 1;
-	}
-}
 </style>

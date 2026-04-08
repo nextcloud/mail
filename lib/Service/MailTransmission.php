@@ -14,6 +14,8 @@ use Horde_Imap_Client;
 use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
+use Horde_Mail_Rfc822_Address;
+use Horde_Mail_Rfc822_List;
 use Horde_Mail_Transport_Null;
 use Horde_Mail_Transport_Smtphorde;
 use Horde_Mime_Exception;
@@ -28,6 +30,7 @@ use Horde_Smtp_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
+use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Mailbox;
@@ -41,7 +44,6 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
-use OCA\Mail\Model\Message as ModelMessage;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Service\DataUri\DataUriParser;
 use OCA\Mail\SMTP\SmtpClientFactory;
@@ -67,6 +69,7 @@ class MailTransmission implements IMailTransmission {
 		private PerformanceLogger $performanceLogger,
 		private AliasesService $aliasesService,
 		private TransmissionService $transmissionService,
+		private IMailManager $mailManager,
 	) {
 	}
 
@@ -105,13 +108,13 @@ class MailTransmission implements IMailTransmission {
 
 		$transport = $this->smtpClientFactory->create($account);
 		// build mime body
-		$headers = [
-			'From' => $from->toHorde(),
-			'To' => $to->toHorde(),
-			'Cc' => $cc->toHorde(),
-			'Bcc' => $bcc->toHorde(),
-			'Subject' => $localMessage->getSubject(),
-		];
+		$headers = $this->buildHeaders(
+			$from,
+			$to,
+			$cc,
+			$bcc,
+			$localMessage->getSubject()
+		);
 
 		// The table (oc_local_messages) currently only allows for a single reply to message id
 		// but we already set the 'references' header for an email so we could support multiple references
@@ -155,7 +158,16 @@ class MailTransmission implements IMailTransmission {
 			$localMessage->setRaw($mail->getRaw(false));
 			$localMessage->setStatus(LocalMessage::STATUS_RAW);
 		} catch (Horde_Mime_Exception $e) {
-			$this->logger->error($e->getMessage(), ['exception' => $e]);
+			if ($e->getPrevious() instanceof Horde_Smtp_Exception) {
+				/** @var Horde_Smtp_Exception $previousException */
+				$previousException = $e->getPrevious();
+				$this->logger->error('SMTP error: ' . $e->getMessage(), [
+					'exception' => $e,
+					'smtpErrorCode' => $previousException->getSmtpCode(),
+				]);
+			} else {
+				$this->logger->error($e->getMessage(), ['exception' => $e]);
+			}
 			if (in_array($e->getCode(), self::RETRIABLE_CODES, true)) {
 				$localMessage->setStatus(LocalMessage::STATUS_SMPT_SEND_FAIL);
 				return;
@@ -186,41 +198,27 @@ class MailTransmission implements IMailTransmission {
 
 		$perfLogger = $this->performanceLogger->start('save local draft');
 
-		$imapMessage = new ModelMessage();
-		$imapMessage->setTo($to);
-		$imapMessage->setSubject($message->getSubject());
-		$from = new AddressList([
-			Address::fromRaw($account->getName(), $account->getEMailAddress()),
-		]);
-		$imapMessage->setFrom($from);
-		$imapMessage->setCC($cc);
-		$imapMessage->setBcc($bcc);
-		if ($message->isHtml() === true) {
-			$imapMessage->setContent($message->getBodyHtml());
-		} else {
-			$imapMessage->setContent($message->getBodyPlain());
-		}
+		$from = Address::fromRaw($account->getName(), $account->getEMailAddress());
 
 		foreach ($attachments as $attachment) {
 			$this->transmissionService->handleAttachment($account, $attachment);
 		}
 
 		// build mime body
-		$headers = [
-			'From' => $imapMessage->getFrom()->first()->toHorde(),
-			'To' => $imapMessage->getTo()->toHorde(),
-			'Cc' => $imapMessage->getCC()->toHorde(),
-			'Bcc' => $imapMessage->getBCC()->toHorde(),
-			'Subject' => $imapMessage->getSubject(),
-			'Date' => Horde_Mime_Headers_Date::create(),
-		];
+		$headers = $this->buildHeaders(
+			$from,
+			$to,
+			$cc,
+			$bcc,
+			$message->getSubject()
+		);
 
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
 		if ($message->isHtml()) {
-			$mail->setHtmlBody($imapMessage->getContent());
+			$mail->setHtmlBody($message->getBodyHtml());
 		} else {
-			$mail->setBody($imapMessage->getContent());
+			$mail->setBody($message->getBodyPlain());
 		}
 		$mail->addHeaderOb(Horde_Mime_Headers_MessageId::create());
 		$perfLogger->step('build local draft message');
@@ -231,12 +229,7 @@ class MailTransmission implements IMailTransmission {
 			$transport = new Horde_Mail_Transport_Null();
 			$mail->send($transport, false, false);
 			$perfLogger->step('create IMAP draft message');
-			// save the message in the drafts folder
-			$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
-			if ($draftsMailboxId === null) {
-				throw new ClientException('No drafts mailbox configured');
-			}
-			$draftsMailbox = $this->mailboxMapper->findById($draftsMailboxId);
+			$draftsMailbox = $this->findOrCreateDraftsMailbox($account);
 			$this->messageMapper->save(
 				$client,
 				$draftsMailbox,
@@ -258,6 +251,20 @@ class MailTransmission implements IMailTransmission {
 		$perfLogger->end();
 	}
 
+	private function findOrCreateDraftsMailbox(Account $account): Mailbox {
+		$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
+
+		if ($draftsMailboxId === null) {
+			return $this->mailManager->createMailbox(
+				$account,
+				'Drafts',
+				[Horde_Imap_Client::SPECIALUSE_DRAFTS]
+			);
+		}
+
+		return $this->mailboxMapper->findById($draftsMailboxId);
+	}
+
 	/**
 	 * @param NewMessageData $message
 	 * @param Message|null $previousDraft
@@ -277,33 +284,22 @@ class MailTransmission implements IMailTransmission {
 		$perfLogger->step('emit pre event');
 
 		$account = $message->getAccount();
-		$imapMessage = new ModelMessage();
-		$imapMessage->setTo($message->getTo());
-		$imapMessage->setSubject($message->getSubject());
-		$from = new AddressList([
-			Address::fromRaw($account->getName(), $account->getEMailAddress()),
-		]);
-		$imapMessage->setFrom($from);
-		$imapMessage->setCC($message->getCc());
-		$imapMessage->setBcc($message->getBcc());
-		$imapMessage->setContent($message->getBody());
+		$from = Address::fromRaw($account->getName(), $account->getEMailAddress());
 
-		// build mime body
-		$headers = [
-			'From' => $imapMessage->getFrom()->first()->toHorde(),
-			'To' => $imapMessage->getTo()->toHorde(),
-			'Cc' => $imapMessage->getCC()->toHorde(),
-			'Bcc' => $imapMessage->getBCC()->toHorde(),
-			'Subject' => $imapMessage->getSubject(),
-			'Date' => Horde_Mime_Headers_Date::create(),
-		];
+		$headers = $this->buildHeaders(
+			$from,
+			$message->getTo(),
+			$message->getCc(),
+			$message->getBcc(),
+			$message->getSubject()
+		);
 
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
 		if ($message->isHtml()) {
-			$mail->setHtmlBody($imapMessage->getContent());
+			$mail->setHtmlBody($message->getBody());
 		} else {
-			$mail->setBody($imapMessage->getContent());
+			$mail->setBody($message->getBody());
 		}
 		$mail->addHeaderOb(Horde_Mime_Headers_MessageId::create());
 		$perfLogger->step('build draft message');
@@ -343,6 +339,32 @@ class MailTransmission implements IMailTransmission {
 
 		$perfLogger->end();
 		return [$account, $draftsMailbox, $newUid];
+	}
+
+	/**
+	 * @return array{
+	 *     From: Horde_Mail_Rfc822_Address,
+	 *     To: Horde_Mail_Rfc822_List,
+	 *     Subject: string|null,
+	 *     Cc?: Horde_Mail_Rfc822_List,
+	 *     Bcc?: Horde_Mail_Rfc822_List,
+	 * }
+	 */
+	private function buildHeaders(Address $from, AddressList $to, AddressList $cc, AddressList $bcc, ?string $subject): array {
+		$headers = [
+			'From' => $from->toHorde(),
+			'To' => $to->toHorde(),
+			'Subject' => $subject,
+		];
+
+		if (count($cc) > 0) {
+			$headers['Cc'] = $cc->toHorde();
+		}
+		if (count($bcc) > 0) {
+			$headers['Bcc'] = $bcc->toHorde();
+		}
+
+		return $headers;
 	}
 
 	#[\Override]

@@ -15,6 +15,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Listener\UserDeletedListener;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\TextBlockService;
 use OCP\EventDispatcher\Event;
 use OCP\IUser;
 use OCP\User\Events\UserDeletedEvent;
@@ -23,6 +24,8 @@ use Psr\Log\LoggerInterface;
 
 class UserDeletedListenerTest extends TestCase {
 	private AccountService&MockObject $accountService;
+
+	private TextBlockService&MockObject $textBlockService;
 	private LoggerInterface&MockObject $logger;
 	private UserDeletedListener $listener;
 
@@ -31,9 +34,11 @@ class UserDeletedListenerTest extends TestCase {
 
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->textBlockService = $this->createMock(TextBlockService::class);
 
 		$this->listener = new UserDeletedListener(
 			$this->accountService,
+			$this->textBlockService,
 			$this->logger
 		);
 	}
@@ -60,6 +65,9 @@ class UserDeletedListenerTest extends TestCase {
 		$this->accountService->expects($this->never())
 			->method('findByUserId');
 
+		$this->textBlockService->expects($this->never())
+			->method('deleteByUserId');
+
 		$this->listener->handle($event);
 
 		$this->addToAssertionCount(1);
@@ -80,6 +88,10 @@ class UserDeletedListenerTest extends TestCase {
 		$this->logger->expects($this->never())
 			->method('error');
 
+		$this->textBlockService->expects($this->once())
+			->method('deleteByUserId')
+			->with('test-user');
+
 		$this->listener->handle($event);
 	}
 
@@ -97,8 +109,13 @@ class UserDeletedListenerTest extends TestCase {
 			->method('delete')
 			->with('test-user', 42);
 
+
 		$this->logger->expects($this->never())
 			->method('error');
+
+		$this->textBlockService->expects($this->once())
+			->method('deleteByUserId')
+			->with('test-user');
 
 		$this->listener->handle($event);
 	}
@@ -124,6 +141,10 @@ class UserDeletedListenerTest extends TestCase {
 
 		$this->logger->expects($this->never())
 			->method('error');
+
+		$this->textBlockService->expects($this->once())
+			->method('deleteByUserId')
+			->with('test-user');
 
 		$this->listener->handle($event);
 	}
@@ -151,6 +172,10 @@ class UserDeletedListenerTest extends TestCase {
 				'Could not delete user\'s Mail account: Test exception',
 				['exception' => $exception]
 			);
+
+		$this->textBlockService->expects($this->once())
+			->method('deleteByUserId')
+			->with('test-user');
 
 		$this->listener->handle($event);
 	}
@@ -184,6 +209,9 @@ class UserDeletedListenerTest extends TestCase {
 				'Could not delete user\'s Mail account: Failed to delete account 2',
 				['exception' => $exception]
 			);
+		$this->textBlockService->expects($this->once())
+			->method('deleteByUserId')
+			->with('test-user');
 
 		$this->listener->handle($event);
 	}

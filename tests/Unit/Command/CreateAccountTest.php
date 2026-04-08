@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Unit\Command;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Command\CreateAccount;
+use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCP\IUserManager;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -20,6 +21,7 @@ class CreateAccountTest extends TestCase {
 	private $service;
 	private $crypto;
 	private $userManager;
+	private $classificationSettingsService;
 	private $command;
 	private $args = [
 		'user-id',
@@ -46,8 +48,9 @@ class CreateAccountTest extends TestCase {
 			->getMock();
 		$this->crypto = $this->getMockBuilder('\OCP\Security\ICrypto')->getMock();
 		$this->userManager = $this->createMock(IUserManager::class);
+		$this->classificationSettingsService = $this->createMock(ClassificationSettingsService::class);
 
-		$this->command = new CreateAccount($this->service, $this->crypto, $this->userManager);
+		$this->command = new CreateAccount($this->service, $this->crypto, $this->userManager, $this->classificationSettingsService);
 	}
 
 	public function testName() {

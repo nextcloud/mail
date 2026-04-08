@@ -77,6 +77,7 @@ OC.L10N.register(
     "Automatic trash deletion" : "Golirea automată a coșului",
     "Days after which messages in Trash will automatically be deleted:" : "Număr de zile după care mesajele din coș sunt șterse automat:",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Răspuns automat la mesajele primite. Dacă cineva vă trimite câteva mesaje, acest răspuns automat va fi trimis cel mult o dată la 4 zile.",
+    "Calendar settings" : "Setări calendar",
     "Filters" : "Filtre",
     "Mail server" : "Server mail",
     "Update alias" : "Actualizează aliasul",
@@ -251,7 +252,6 @@ OC.L10N.register(
     "Today" : "Azi",
     "Choose target folder" : "Alege directorul destinație",
     "No more submailboxes in here" : "Nu mai sunt subfoldere",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Mesajul va fi marcat automat ca important în funcție de mesajele cu care ați interacționat sau pe care le-ați marcat ca importante. La început ar trebui să setați manual importanța pentru antrenarea sistemului, dar aceasta se va îmbunătăți în timp.",
     "Favorites" : "Favorite",
     "Important info" : "Informații importante",
     "Other" : "Altele",
@@ -494,6 +494,7 @@ OC.L10N.register(
     "The link leads to %s" : "Link-ul duce la %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Dacă nu doriți să vizitați acea pagină, vă puteți întoarce la <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continuă către %s",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Mesajul va fi marcat automat ca important în funcție de mesajele cu care ați interacționat sau pe care le-ați marcat ca importante. La început ar trebui să setați manual importanța pentru antrenarea sistemului, dar aceasta se va îmbunătăți în timp.",
     "Last 7 days" : "Ultimele 7 zile"
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");

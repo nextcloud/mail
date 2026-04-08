@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<Popover popup-role="dialog" class="contact-popover">
+	<NcPopover popup-role="dialog" class="contact-popover">
 		<template #trigger="{ attrs }">
 			<UserBubble
 				v-bind="attrs"
@@ -109,13 +109,13 @@
 				</div>
 			</div>
 		</template>
-	</Popover>
+	</NcPopover>
 </template>
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
-import { NcButton as ButtonVue, NcSelect, NcPopover as Popover, NcUserBubble as UserBubble } from '@nextcloud/vue'
+import { NcButton as ButtonVue, NcPopover, NcSelect, NcUserBubble as UserBubble } from '@nextcloud/vue'
 import debouncePromise from 'debounce-promise'
 import uniqBy from 'lodash/fp/uniqBy.js'
 import IconUser from 'vue-material-design-icons/AccountOutline.vue'
@@ -137,7 +137,7 @@ export default {
 	components: {
 		ButtonVue,
 		UserBubble,
-		Popover,
+		NcPopover,
 		NcSelect,
 		IconReply,
 		IconUser,

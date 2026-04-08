@@ -15,6 +15,9 @@ use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
+/**
+ * @psalm-api
+ */
 class Version0210Date20191212144925 extends SimpleMigrationStep {
 	/**
 	 * @param IOutput $output

@@ -52,7 +52,7 @@ class CopySendMessageHandlerTest extends TestCase {
 		$localMessage->addMethods(['getStatus','setStatus', 'getRaw']);
 		$mock = $localMessage->getMock();
 		$mailbox = new Mailbox();
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$mock->expects(self::once())
 			->method('getStatus')
@@ -87,7 +87,7 @@ class CopySendMessageHandlerTest extends TestCase {
 		$localMessage = $this->getMockBuilder(LocalMessage::class);
 		$localMessage->addMethods(['getStatus', 'setStatus', 'getRaw']);
 		$mock = $localMessage->getMock();
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->loggerInterface->expects(self::once())
 			->method('warning');
@@ -120,7 +120,7 @@ class CopySendMessageHandlerTest extends TestCase {
 		$localMessage = $this->getMockBuilder(LocalMessage::class);
 		$localMessage->addMethods(['getStatus', 'setStatus', 'getRaw']);
 		$mock = $localMessage->getMock();
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->loggerInterface->expects(self::never())
 			->method('warning');
@@ -155,7 +155,7 @@ class CopySendMessageHandlerTest extends TestCase {
 		$localMessage->addMethods(['getStatus','setStatus', 'getRaw']);
 		$mock = $localMessage->getMock();
 		$mailbox = new Mailbox();
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$mock->expects(self::once())
 			->method('getStatus')
@@ -189,7 +189,7 @@ class CopySendMessageHandlerTest extends TestCase {
 		$localMessage = $this->getMockBuilder(LocalMessage::class);
 		$localMessage->addMethods(['getStatus']);
 		$mock = $localMessage->getMock();
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->loggerInterface->expects(self::never())
 			->method('warning');
@@ -216,7 +216,7 @@ class CopySendMessageHandlerTest extends TestCase {
 		$localMessage = $this->getMockBuilder(LocalMessage::class);
 		$localMessage->addMethods(['getStatus','setStatus', 'getRaw']);
 		$mock = $localMessage->getMock();
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$mock->expects(self::once())
 			->method('getStatus')

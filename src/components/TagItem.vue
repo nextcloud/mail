@@ -23,10 +23,10 @@
 			</NcActionButton>
 			<NcColorPicker
 				v-if="!renameTagLabel"
+				v-model="editColor"
 				class="app-navigation-entry-bullet-wrapper"
-				:value="`#${tag.color}`"
-				@input="updateColor">
-				<div :style="{ backgroundColor: tag.color }" class="color0 app-navigation-entry-bullet" />
+				@submit="updateColor">
+				<div :style="{ backgroundColor: editColor }" class="color0 app-navigation-entry-bullet" />
 			</NcColorPicker>
 			<ActionInput
 				v-if="renameTagInput"
@@ -101,6 +101,7 @@ export default {
 		return {
 			isAdded: false,
 			editing: false,
+			editColor: null,
 			tagLabel: true,
 			tagInput: false,
 			showSaving: false,
@@ -119,14 +120,13 @@ export default {
 			this.$emit('delete-tag', this.tag)
 		},
 
-		async updateColor(newColor) {
-			this.editColor = newColor
+		async updateColor() {
 			this.showSaving = false
 			try {
 				await this.mainStore.updateTag({
 					tag: this.tag,
 					displayName: this.tag.displayName,
-					color: newColor,
+					color: this.editColor,
 				})
 				this.showSaving = false
 			} catch (error) {
@@ -140,6 +140,7 @@ export default {
 			this.renameTagLabel = false
 			this.renameTagInput = true
 			this.showSaving = false
+			this.editColor = this.tag.color
 		},
 
 		async renameTag(tag, event) {
@@ -151,7 +152,7 @@ export default {
 				await this.mainStore.updateTag({
 					tag,
 					displayName,
-					color: tag.color,
+					color: this.tag.color,
 				})
 				this.renameTagLabel = true
 				this.renameTagInput = false

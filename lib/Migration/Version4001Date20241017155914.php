@@ -18,6 +18,9 @@ use OCP\Migration\SimpleMigrationStep;
 /**
  * @codeCoverageIgnore
  */
+/**
+ * @psalm-api
+ */
 class Version4001Date20241017155914 extends SimpleMigrationStep {
 	/**
 	 * @param IOutput $output
@@ -25,6 +28,7 @@ class Version4001Date20241017155914 extends SimpleMigrationStep {
 	 * @param array $options
 	 * @return ISchemaWrapper
 	 */
+	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 		$schema = $schemaClosure();
 		if ($schema->hasTable('mail_blocks_shares')) {

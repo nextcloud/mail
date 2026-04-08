@@ -43,9 +43,7 @@ class MailAccountMigratorTest extends TestCase {
 			->willReturnArgument(0);
 		$this->serviceMock->getParameter('crypto')
 			->method('encrypt')
-			->willReturnCallback(function (string $value) {
-				return $value . '_encrypted';
-			});
+			->willReturnCallback(fn (string $value) => $value . '_encrypted');
 		$this->serviceMock->getParameter('crypto')
 			->method('decrypt')
 			->willReturnCallback(function (string $encryptedValue) {
@@ -187,7 +185,7 @@ class MailAccountMigratorTest extends TestCase {
 
 	public function testImportInvalidIndex(): void {
 		$this->expectException(UserMigrationException::class);
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 
 		$importSource = $this->createMock(IImportSource::class);
 		$importSource->method('getFileContents')

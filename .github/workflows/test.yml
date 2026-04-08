@@ -14,31 +14,31 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['8.2', '8.3']
-        nextcloud-versions: ['master', 'stable31']
+        php-versions: ['8.5']
+        nextcloud-versions: ['master']
         include:
           - php-versions: '8.4'
             nextcloud-versions: 'master'
             coverage: true
           - php-versions: '8.1'
             nextcloud-versions: 'stable32'
-          - php-versions: '8.4'
-            nextcloud-versions: 'stable32'
-          - php-versions: '8.5'
+          - php-versions: '8.2'
+            nextcloud-versions: 'stable33'
+          - php-versions: '8.3'
             nextcloud-versions: 'master'
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests ${{ matrix.coverage && '(coverage)' || ''}}
     steps:
     - name: Set up Nextcloud env
-      uses: ChristophWurst/setup-nextcloud@fc0790385c175d97e88a7cb0933490de6e990374 # v0.3.2
+      uses: ChristophWurst/setup-nextcloud@14cf58de73855aa30212721e8177ca45626e4477 # v0.4.2
       with:
         nextcloud-version: ${{ matrix.nextcloud-versions }}
         php-version: ${{ matrix.php-versions }}
         php-coverage: ${{ matrix.coverage && 'xdebug' || 'none' }}
-        patch-php-version-check: ${{ matrix.php-versions == '8.5' }}
+        patch-php-version-check: ${{ matrix.php-versions == '8.6' }}
         node-version: 'false'
         install: true
     - name: Checkout Mail
-      uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       with:
         path: nextcloud/apps/mail
         fetch-depth: 2
@@ -51,7 +51,7 @@ jobs:
       env:
         XDEBUG_MODE: ${{ matrix.coverage && 'coverage' || 'off' }}
     - name: Report coverage
-      uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
+      uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
       if: ${{ !cancelled() && matrix.coverage }}
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
@@ -76,19 +76,15 @@ jobs:
                   cache: 'nocache'
                   coverage: true
                 - php-versions: 8.1
-                  nextcloud-versions: 'stable31'
+                  nextcloud-versions: 'stable32'
                   db: 'sqlite'
                   cache: 'redis'
                 - php-versions: 8.2
-                  nextcloud-versions: 'stable31'
+                  nextcloud-versions: 'stable32'
                   db: 'pgsql'
                   cache: 'redis'
-                - php-versions: 8.3
-                  nextcloud-versions: 'stable32'
-                  db: 'mysql'
-                  cache: 'redis'
                 - php-versions: 8.4
-                  nextcloud-versions: 'stable32'
+                  nextcloud-versions: 'stable33'
                   db: 'mysql'
                   cache: 'redis'
                   coverage: true
@@ -147,7 +143,7 @@ jobs:
                 - 6379:6379
       steps:
           - name: Set up Nextcloud env
-            uses: ChristophWurst/setup-nextcloud@fc0790385c175d97e88a7cb0933490de6e990374 # v0.3.2
+            uses: ChristophWurst/setup-nextcloud@14cf58de73855aa30212721e8177ca45626e4477 # v0.4.2
             with:
               nextcloud-version: ${{ matrix.nextcloud-versions }}
               php-version: ${{ matrix.php-versions }}
@@ -162,7 +158,7 @@ jobs:
               php -f nextcloud/occ config:system:set memcache.local --value='\OC\Memcache\Redis'
               php -f nextcloud/occ config:system:set memcache.distributed --value='\OC\Memcache\Redis'
           - name: Checkout Mail
-            uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+            uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
             with:
                 path: nextcloud/apps/mail
                 fetch-depth: 2
@@ -170,8 +166,8 @@ jobs:
             working-directory: nextcloud/apps/mail
             run: composer install
           - name: Patch version check for nightly PHP
-            if: ${{ matrix.php-versions == '8.5' }}
-            run: sed -i 's/max-version="8.4"/max-version="8.5"/' nextcloud/apps/mail/appinfo/info.xml
+            if: ${{ matrix.php-versions == '8.6' }}
+            run: sed -i 's/max-version="8.5"/max-version="8.6"/' nextcloud/apps/mail/appinfo/info.xml
           - name: Install Mail
             run: php -f nextcloud/occ app:enable mail
           - name: Configure Nextcloud for testing
@@ -196,7 +192,7 @@ jobs:
             if: ${{ always() }}
             run: cat nextcloud/data/mail-*-*-imap.log
           - name: Report coverage
-            uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
+            uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
             if: ${{ !cancelled() && matrix.coverage }}
             with:
               token: ${{ secrets.CODECOV_TOKEN }}
@@ -209,7 +205,7 @@ jobs:
       runs-on: ubuntu-latest
       name: Front-end unit tests
       steps:
-          - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+          - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
           - name: Read package.json node and npm engines version
             uses: skjnldsv/read-package-engines-version-actions@8205673bab74a63eb9b8093402fd9e0e018663a1 # v2.2
             id: versions
@@ -217,7 +213,7 @@ jobs:
               fallbackNode: '^14'
               fallbackNpm: '^7'
           - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
-            uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+            uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
             with:
               node-version: ${{ steps.versions.outputs.nodeVersion }}
           - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
@@ -236,10 +232,10 @@ jobs:
       branches-min: ${{ steps.versions.outputs.branches-min }}
     steps:
       - name: Checkout app
-        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Get version matrix
         id: versions
-        uses: icewind1991/nextcloud-version-matrix@58becf3b4bb6dc6cef677b15e2fd8e7d48c0908f # v1.3.1
+        uses: icewind1991/nextcloud-version-matrix@8a7bac6300b2f0f3100088b297995a229558ddba # v1.3.2
 
   frontend-e2e-tests:
     runs-on: ubuntu-latest
@@ -247,7 +243,7 @@ jobs:
     needs: matrix
     steps:
       - name: Set up Nextcloud env
-        uses: ChristophWurst/setup-nextcloud@fc0790385c175d97e88a7cb0933490de6e990374 # v0.3.2
+        uses: ChristophWurst/setup-nextcloud@14cf58de73855aa30212721e8177ca45626e4477 # v0.4.2
         with:
           nextcloud-version: ${{ needs.matrix.outputs.branches-min }}
           php-version: ${{ needs.matrix.outputs.php-min }}
@@ -262,7 +258,7 @@ jobs:
           php -f nextcloud/occ config:system:set app.mail.debug --type=bool --value=true
           php -f nextcloud/occ config:system:set app.mail.verify-tls-peer --type=bool --value=false
       - name: Check out the app
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           path: nextcloud/apps/mail
       - name: Install php dependencies
@@ -271,7 +267,7 @@ jobs:
       - name: Install the app
         run: php -f nextcloud/occ app:enable mail
       - name: Set up node ${{ env.E2E_NODE_VERSION }}
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version: ${{ env.E2E_NODE_VERSION }}
       - name: Install npm dependencies
@@ -296,7 +292,7 @@ jobs:
       - name: Run Playwright tests
         working-directory: nextcloud/apps/mail
         run: DEBUG=pw:api npx playwright test
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         if: always()
         with:
           name: playwright-report-${{ github.event.number }}-nc${{ needs.matrix.outputs.branches-min }}-php${{ needs.matrix.outputs.php-min }}-node${{ env.E2E_NODE_VERSION }}

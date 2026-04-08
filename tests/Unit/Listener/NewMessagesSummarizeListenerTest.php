@@ -59,7 +59,7 @@ class NewMessagesSummarizeListenerTest extends TestCase {
 	}
 
 	public function testLlmDisabled(): void {
-		$event = $this->createMock(NewMessagesSynchronized::class);
+		$event = $this->createStub(NewMessagesSynchronized::class);
 		$this->appConfig->expects($this->once())
 			->method('getAppValueBool')
 			->with('llm_processing', false)

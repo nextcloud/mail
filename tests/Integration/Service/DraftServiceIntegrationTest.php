@@ -32,8 +32,11 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder;
+use OCP\Files\IMimeTypeDetector;
+use OCP\ICacheFactory;
 use OCP\IDBConnection;
 use OCP\IServerContainer;
+use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\Server;
 use Psr\Container\ContainerInterface;
@@ -96,7 +99,11 @@ class DraftServiceIntegrationTest extends TestCase {
 			Server::get(AttachmentStorage::class),
 			$mailManager,
 			Server::get(MessageMapper::class),
-			new NullLogger()
+			Server::get(ICacheFactory::class),
+			Server::get(IURLGenerator::class),
+			Server::get(IMimeTypeDetector::class),
+			new NullLogger(),
+			Server::get(ITimeFactory::class)
 		);
 		$this->client = $this->getClient($this->account);
 		$this->mapper = Server::get(LocalMessageMapper::class);

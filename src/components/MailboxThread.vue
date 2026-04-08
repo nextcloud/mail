@@ -36,7 +36,7 @@
 							<SectionTitle
 								class="section-title"
 								:name="t('mail', 'Favorites')" />
-							<Popover trigger="hover focus">
+							<NcPopover trigger="hover focus">
 								<template #trigger>
 									<ButtonVue
 										type="tertiary-no-background"
@@ -50,7 +50,7 @@
 								<p class="section-header-info">
 									{{ favoritesInfo }}
 								</p>
-							</Popover>
+							</NcPopover>
 						</div>
 						<Mailbox
 							v-show="hasFavoriteEnvelopes"
@@ -81,7 +81,7 @@
 							<SectionTitle
 								class="section-title"
 								:name="t('mail', 'Favorites')" />
-							<Popover trigger="hover focus">
+							<NcPopover trigger="hover focus">
 								<template #trigger>
 									<ButtonVue
 										type="tertiary-no-background"
@@ -95,7 +95,7 @@
 								<p class="section-header-info">
 									{{ favoritesInfo }}
 								</p>
-							</Popover>
+							</NcPopover>
 						</div>
 						<Mailbox
 							v-show="hasFavoriteEnvelopes"
@@ -114,7 +114,7 @@
 							<SectionTitle
 								class="section-title"
 								:name="t('mail', 'Follow up')" />
-							<Popover trigger="hover focus">
+							<NcPopover trigger="hover focus">
 								<template #trigger>
 									<ButtonVue
 										type="tertiary-no-background"
@@ -128,7 +128,7 @@
 								<p class="section-header-info">
 									{{ followupInfo }}
 								</p>
-							</Popover>
+							</NcPopover>
 						</div>
 						<Mailbox
 							v-show="hasFollowUpEnvelopes"
@@ -145,7 +145,7 @@
 							<SectionTitle
 								class="section-title important"
 								:name="t('mail', 'Important')" />
-							<Popover trigger="hover focus">
+							<NcPopover trigger="hover focus">
 								<template #trigger>
 									<ButtonVue
 										type="tertiary-no-background"
@@ -159,7 +159,7 @@
 								<p class="section-header-info">
 									{{ importantInfo }}
 								</p>
-							</Popover>
+							</NcPopover>
 						</div>
 						<Mailbox
 							v-show="hasImportantEnvelopes"
@@ -196,7 +196,7 @@
 </template>
 
 <script>
-import { NcAppContent as AppContent, NcAppContentList as AppContentList, NcButton as ButtonVue, isMobile, NcPopover as Popover } from '@nextcloud/vue'
+import { NcAppContent as AppContent, NcAppContentList as AppContentList, NcButton as ButtonVue, isMobile, NcPopover } from '@nextcloud/vue'
 import addressParser from 'address-rfc2822'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
@@ -237,7 +237,7 @@ export default {
 		IconInfo,
 		Mailbox,
 		NoMessageSelected,
-		Popover,
+		NcPopover,
 		SectionTitle,
 		SearchMessages,
 		Thread,
@@ -259,9 +259,9 @@ export default {
 	data() {
 		return {
 
-			importantInfo: t('mail', 'Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time.'),
-			favoritesInfo: t('mail', 'Messages that your mark as favorite will be shown at the top of folders. You can disable this behavior in the app settings'),
-			followupInfo: t('mail', 'Messages sent by you that require a reply but did not receive one after a couple of days will be shown here.'),
+			importantInfo: t('mail', 'Messages will automatically be marked as important using AI. The system learns from which messages you interact with or mark as important. In the beginning you might have to manually change the importance to teach it, but it will improve over time'),
+			favoritesInfo: t('mail', 'Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings'),
+			followupInfo: t('mail', 'AI identifies messages sent by you that likely require a reply but did not receive one after a couple of days and shows them here'),
 			bus: mitt(),
 			searchQuery: undefined,
 			shortkeys: {
@@ -667,6 +667,7 @@ export default {
 	flex: 1 1 auto;
 	overflow-y: auto;
 	min-height: 0;
+	contain: none !important;
 }
 
 .information-icon {

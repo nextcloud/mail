@@ -217,7 +217,7 @@ export default {
 		this.mainStore.setHasFetchedInitialEnvelopesMutation(true)
 	},
 
-	destroyed() {
+	unmounted() {
 		this.bus.off('load-more', this.onScroll)
 		this.bus.off('delete', this.onDelete)
 		this.bus.off('archive', this.onArchive)
@@ -241,7 +241,7 @@ export default {
 
 		async loadEnvelopes() {
 			logger.debug(`Fetching envelopes for folder ${this.mailbox.databaseId} (${this.searchQuery})`, this.mailbox)
-			if (!this.syncedMailboxes.has(this.mailbox.databaseId)) {
+			if (!this.syncedMailboxes.has(this.mailbox.databaseId + (this.searchQuery ?? ''))) {
 				// Only trigger skeleton if we didn't sync envelopes yet
 				this.loadingEnvelopes = true
 			} else {
@@ -263,7 +263,7 @@ export default {
 
 				logger.debug(envelopes.length + ' envelopes fetched', { envelopes })
 
-				this.syncedMailboxes.add(this.mailbox.databaseId)
+				this.syncedMailboxes.add(this.mailbox.databaseId + (this.searchQuery ?? ''))
 				this.loadingEnvelopes = false
 			} catch (error) {
 				await matchError(error, {
@@ -335,7 +335,7 @@ export default {
 						limit: this.initialPageSize,
 						includeCacheBuster: true,
 					})
-					this.syncedMailboxes.add(mailbox.databaseId)
+					this.syncedMailboxes.add(mailbox.databaseId + (this.searchQuery ?? ''))
 					logger.debug(`Prefetched ${envelopes.length} envelopes for folder ${mailbox.displayName} (${mailbox.databaseId})`)
 				} catch (error) {
 					if (error instanceof MailboxNotCachedError) {

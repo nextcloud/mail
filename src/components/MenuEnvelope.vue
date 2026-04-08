@@ -236,7 +236,7 @@
 			<NcActionInput
 				type="datetime-local"
 				is-native-picker
-				:value="customSnoozeDateTime"
+				:model-value="customSnoozeDateTime"
 				:min="new Date()"
 				@change="setCustomSnoozeDateTime">
 				<template #icon>

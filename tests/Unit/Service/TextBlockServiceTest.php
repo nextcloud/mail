@@ -19,7 +19,7 @@ use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class TextBlockServiceTest extends TestCase {
+final class TextBlockServiceTest extends TestCase {
 	/** @var TextBlockMapper|MockObject */
 	private $textBlockMapper;
 
@@ -71,11 +71,13 @@ class TextBlockServiceTest extends TestCase {
 
 		$this->textBlockMapper->expects($this->once())
 			->method('insert')
-			->with($this->callback(fn (TextBlock $s) => $s->getOwner() === $userId
-					   && $s->getTitle() === $title
-					   && $s->getContent() === $content
-					   && $s->getPreview() === 'This is content'))
-			->willReturn($textBlock);
+			->willReturnCallback(function (TextBlock $s) use ($userId, $title, $content, $textBlock): TextBlock {
+				$this->assertSame($userId, $s->getOwner());
+				$this->assertSame($title, $s->getTitle());
+				$this->assertSame($content, $s->getContent());
+				$this->assertSame('This is content', $s->getPreview());
+				return $textBlock;
+			});
 
 		$result = $this->textBlockService->create($userId, $title, $content);
 
@@ -92,8 +94,11 @@ class TextBlockServiceTest extends TestCase {
 		$textBlock->setOwner($userId);
 		$this->textBlockMapper->expects($this->once())
 			->method('update')
-			->with($this->callback(fn (TextBlock $s) => $s->getTitle() === $title && $s->getContent() === $content))
-			->willReturn($textBlock);
+			->willReturnCallback(function (TextBlock $s) use ($title, $content, $textBlock): TextBlock {
+				$this->assertSame($title, $s->getTitle());
+				$this->assertSame($content, $s->getContent());
+				return $textBlock;
+			});
 
 		$result = $this->textBlockService->update($textBlock, $userId, $title, $content);
 
@@ -144,7 +149,7 @@ class TextBlockServiceTest extends TestCase {
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with($shareWith)
-			->willReturn($this->createMock(\OCP\IUser::class));
+			->willReturn($this->createStub(\OCP\IUser::class));
 
 		$this->textBlockShareMapper->expects($this->once())
 			->method(constraint: 'shareExists')
@@ -153,9 +158,12 @@ class TextBlockServiceTest extends TestCase {
 
 		$this->textBlockShareMapper->expects($this->once())
 			->method('insert')
-			->with($this->callback(fn (TextBlockShare $s) => $s->getTextBlockId() === $textBlockId
-					   && $s->getShareWith() === $shareWith
-					   && $s->getType() === TextBlockShare::TYPE_USER));
+			->with($this->callback(function (TextBlockShare $s) use ($textBlockId, $shareWith): bool {
+				$this->assertSame($textBlockId, $s->getTextBlockId());
+				$this->assertSame($shareWith, $s->getShareWith());
+				$this->assertSame(TextBlockShare::TYPE_USER, $s->getType());
+				return true;
+			}));
 
 		$this->textBlockService->share($textBlockId, $shareWith);
 	}
@@ -167,7 +175,7 @@ class TextBlockServiceTest extends TestCase {
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with($shareWith)
-			->willReturn($this->createMock(\OCP\IUser::class));
+			->willReturn($this->createStub(\OCP\IUser::class));
 
 		$this->textBlockShareMapper->expects($this->once())
 			->method('shareExists')
@@ -244,9 +252,12 @@ class TextBlockServiceTest extends TestCase {
 
 		$this->textBlockShareMapper->expects($this->once())
 			->method('insert')
-			->with($this->callback(fn (TextBlockShare $share) => $share->getTextBlockId() === $textBlockId
-					   && $share->getShareWith() === $groupId
-					   && $share->getType() === TextBlockShare::TYPE_GROUP));
+			->with($this->callback(function (TextBlockShare $share) use ($textBlockId, $groupId): bool {
+				$this->assertSame($textBlockId, $share->getTextBlockId());
+				$this->assertSame($groupId, $share->getShareWith());
+				$this->assertSame(TextBlockShare::TYPE_GROUP, $share->getType());
+				return true;
+			}));
 
 		$this->textBlockService->shareWithGroup($textBlockId, $groupId);
 	}
@@ -270,7 +281,7 @@ class TextBlockServiceTest extends TestCase {
 
 	public function testFindAllSharedWithMe(): void {
 		$userId = 'alice';
-		$user = $this->createMock(\OCP\IUser::class);
+		$user = $this->createStub(\OCP\IUser::class);
 		$shares = [new TextBlockShare(), new TextBlockShare()];
 
 		$this->userManager->expects($this->once())
@@ -338,5 +349,12 @@ class TextBlockServiceTest extends TestCase {
 		$this->assertSame($shares, $result);
 	}
 
+	public function testDeleteByUserId(): void {
+		$userId = 'toBeDeleted';
+		$this->textBlockMapper->expects($this->once())
+			->method('deleteByUserId')
+			->with($userId);
+		$this->textBlockService->deleteByUserId($userId);
+	}
 
 }

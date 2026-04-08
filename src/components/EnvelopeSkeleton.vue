@@ -55,7 +55,10 @@
 									<!-- @slot Slot for the second line of the component -->
 									<slot name="subname" />
 								</div>
-								<div v-if="$slots.tags" class="list-item-content__inner__tags">
+								<div
+									v-if="$slots.tags"
+									class="list-item-content__inner__tags"
+									@click.prevent.stop>
 									<!-- @slot This slot is used for the third line of the component -->
 									<slot name="tags" />
 								</div>
@@ -616,14 +619,22 @@ export default {
 			flex-direction: row;
 			align-content: center;
 			align-items: center;
+			min-width: 0;
 
 			&__name {
+				flex: 0 0 auto;
+				min-width: 0;
+				max-width: 40%;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
 				align-self: center;
-				min-width: 300px;
 				padding-inline-end: calc(var(--default-grid-baseline) * 2);
 			}
 
 			&__inner {
+				flex: 1 1 auto;
+				min-width: 0;
 				overflow-y: hidden;
 			}
 

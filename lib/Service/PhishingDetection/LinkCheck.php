@@ -43,9 +43,9 @@ class LinkCheck {
 
 	private function parse(string $url): string {
 		if (!str_contains($url, '://')) {
-			return 'http://' . $url;
+			$url = 'http://' . $url;
 		}
-		return $url;
+		return strtolower($url);
 	}
 
 	public function run(string $htmlMessage) : PhishingDetectionResult {

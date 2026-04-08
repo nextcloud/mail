@@ -129,7 +129,7 @@ class IMAPClientFactory {
 				'backend' => $this->hordeCacheFactory->newCache($account),
 			];
 		}
-		if ($account->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
+		if ($account->getMailAccount()->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
 			$fn = 'mail-' . $account->getUserId() . '-' . $account->getId() . '-imap.log';
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;
 		}

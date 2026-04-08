@@ -144,7 +144,7 @@ class ContactsIntegrationTest extends TestCase {
 		];
 
 		$this->common($term, $searchResult, true, true, false, false, false);
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
@@ -199,7 +199,7 @@ class ContactsIntegrationTest extends TestCase {
 		];
 
 		$this->common($term, $searchResult, true, true, true);
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
@@ -240,7 +240,7 @@ class ContactsIntegrationTest extends TestCase {
 		];
 
 		$this->common($term, $searchResult, true, true, true);
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
@@ -281,7 +281,7 @@ class ContactsIntegrationTest extends TestCase {
 		];
 
 		$this->common($term, $searchResult, true, true, true);
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
@@ -324,7 +324,7 @@ class ContactsIntegrationTest extends TestCase {
 
 		$this->common($term, $searchResult, true, true, false, false, false);
 
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
@@ -347,7 +347,7 @@ class ContactsIntegrationTest extends TestCase {
 		$this->config->expects(self::atLeast(3))
 			->method('getAppValue')
 			->withConsecutive(
-				['core', 'shareapi_allow_share_dialog_user_enumeration', 'no'],
+				['core', 'shareapi_allow_share_dialog_user_enumeration', 'yes'],
 				['core', 'shareapi_restrict_user_enumeration_to_group', 'no'],
 				['core', 'shareapi_restrict_user_enumeration_full_match', 'yes'],
 				['core', 'shareapi_restrict_user_enumeration_full_match_userid', 'yes'],
@@ -403,6 +403,146 @@ class ContactsIntegrationTest extends TestCase {
 				null,
 			],
 		];
+	}
+
+	public function testGetContactsWithName(): void {
+		$name = 'John';
+		$searchResult = [
+			[
+				'UID' => 'jd',
+				'FN' => 'John Doe',
+				'EMAIL' => 'john@doe.com',
+			],
+			[
+				'UID' => 'js',
+				'FN' => 'John Smith',
+				'EMAIL' => ['john@smith.com', 'jsmith@example.com'],
+			],
+		];
+
+		$this->config->expects($this->once())
+			->method('getAppValue')
+			->with('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes')
+			->willReturn('yes');
+		$this->contactsManager->expects($this->once())
+			->method('search')
+			->with($name, ['FN'], [
+				'strict_search' => false,
+				'limit' => 20,
+			])
+			->willReturn($searchResult);
+
+		$expected = [
+			[
+				'id' => 'jd',
+				'label' => 'John Doe',
+				'email' => 'john@doe.com',
+			],
+			[
+				'id' => 'js',
+				'label' => 'John Smith',
+				'email' => ['john@smith.com', 'jsmith@example.com'],
+			],
+		];
+
+		$actual = $this->contactsIntegration->getContactsWithName($name);
+
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function testGetContactsWithNameFiltersSystemUsersWhenDisabled(): void {
+		$name = 'John';
+		$searchResult = [
+			[
+				'UID' => 'jd',
+				'FN' => 'John Doe',
+				'EMAIL' => 'john@doe.com',
+				'isLocalSystemBook' => true,
+			],
+			[
+				'UID' => 'js',
+				'FN' => 'John Smith',
+				'EMAIL' => 'john@smith.com',
+			],
+		];
+
+		$this->config->expects($this->once())
+			->method('getAppValue')
+			->with('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes')
+			->willReturn('no');
+		$this->contactsManager->expects($this->once())
+			->method('search')
+			->with($name, ['FN'], [
+				'strict_search' => false,
+				'limit' => 20,
+			])
+			->willReturn($searchResult);
+
+		$expected = [
+			[
+				'id' => 'js',
+				'label' => 'John Smith',
+				'email' => 'john@smith.com',
+			],
+		];
+
+		$actual = $this->contactsIntegration->getContactsWithName($name);
+
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function testGetContactsWithNameNoResults(): void {
+		$name = 'Nonexistent';
+
+		$this->config->expects($this->once())
+			->method('getAppValue')
+			->with('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes')
+			->willReturn('yes');
+		$this->contactsManager->expects($this->once())
+			->method('search')
+			->with($name, ['FN'], [
+				'strict_search' => false,
+				'limit' => 20,
+			])
+			->willReturn([]);
+
+		$actual = $this->contactsIntegration->getContactsWithName($name);
+
+		$this->assertEquals([], $actual);
+	}
+
+	public function testGetContactsWithNameNoEmail(): void {
+		$name = 'John';
+		$searchResult = [
+			[
+				'UID' => 'jd',
+				'FN' => 'John Doe',
+			],
+		];
+
+		$this->config->expects($this->once())
+			->method('getAppValue')
+			->with('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes')
+			->willReturn('yes');
+		$this->contactsManager->expects($this->once())
+			->method('search')
+			->with($name, ['FN'], [
+				'strict_search' => false,
+				'limit' => 20,
+			])
+			->willReturn($searchResult);
+
+		$expected = [
+			[
+				'id' => 'jd',
+				'label' => 'John Doe',
+				'email' => null,
+			],
+		];
+
+		$actual = $this->contactsIntegration->getContactsWithName($name);
+
+		$this->assertEquals($expected, $actual);
 	}
 
 	/**

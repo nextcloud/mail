@@ -27,10 +27,10 @@ class AliasesController extends Controller {
 	public function __construct(string $appName,
 		IRequest $request,
 		AliasesService $aliasesService,
-		string $UserId) {
+		string $userId) {
 		parent::__construct($appName, $request);
 		$this->aliasService = $aliasesService;
-		$this->currentUserId = $UserId;
+		$this->currentUserId = $userId;
 	}
 
 	/**

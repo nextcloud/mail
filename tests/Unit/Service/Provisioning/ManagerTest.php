@@ -61,6 +61,30 @@ class ManagerTest extends TestCase {
 		$this->assertEquals(0, $count);
 	}
 
+	public function testDisabledAppDoesUnprovision() {
+		/** @var IUser|MockObject $user */
+		$user = $this->createConfiguredMock(IUser::class, [
+			'getEmailAddress' => 'bruce.wayne@batman.com',
+			'getUID' => 'bruce'
+		]);
+		$configs = [new Provisioning()];
+		$this->mock->getParameter('appManager')
+			->expects($this->once())
+			->method('isEnabledForUser')
+			->willReturn(false);
+		$this->mock->getParameter('aliasMapper')
+			->expects($this->once())
+			->method('deleteProvisionedAliasesByUid')
+			->with($user->getUID());
+		$this->mock->getParameter('mailAccountMapper')
+			->expects($this->once())
+			->method('deleteProvisionedAccountsByUid')
+			->with($user->getUID());
+
+		$result = $this->manager->provisionSingleUser($configs, $user);
+		$this->assertFalse($result);
+	}
+
 	public function testUpdateProvisionSingleUser() {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [
@@ -74,6 +98,10 @@ class ManagerTest extends TestCase {
 		$configs = [$config];
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(1000);
+		$this->mock->getParameter('appManager')
+			->expects($this->once())
+			->method('isEnabledForUser')
+			->willReturn(true);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
@@ -100,6 +128,10 @@ class ManagerTest extends TestCase {
 		$config->setProvisioningDomain('batman.com');
 		$config->setEmailTemplate('%USER%@batman.com');
 		$configs = [$config];
+		$this->mock->getParameter('appManager')
+			->expects($this->once())
+			->method('isEnabledForUser')
+			->willReturn(true);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
@@ -133,6 +165,10 @@ class ManagerTest extends TestCase {
 		$configs = [$config];
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(1000);
+		$this->mock->getParameter('appManager')
+			->expects($this->once())
+			->method('isEnabledForUser')
+			->willReturn(true);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
@@ -159,6 +195,10 @@ class ManagerTest extends TestCase {
 		$config->setProvisioningDomain('*');
 		$config->setEmailTemplate('%USER%@batman.com');
 		$configs = [$config];
+		$this->mock->getParameter('appManager')
+			->expects($this->once())
+			->method('isEnabledForUser')
+			->willReturn(true);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
@@ -186,6 +226,10 @@ class ManagerTest extends TestCase {
 		$config->setProvisioningDomain('arkham-asylum.com');
 		$config->setEmailTemplate('%USER%@batman.com');
 		$configs = [$config];
+		$this->mock->getParameter('appManager')
+			->expects($this->once())
+			->method('isEnabledForUser')
+			->willReturn(true);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->never())
 			->method('findProvisionedAccount');
@@ -216,7 +260,7 @@ class ManagerTest extends TestCase {
 
 	public function testUpdatePasswordNotProvisioned(): void {
 		/** @var IUser|MockObject $user */
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
@@ -228,7 +272,7 @@ class ManagerTest extends TestCase {
 
 	public function testUpdateLoginPassword(): void {
 		/** @var IUser|MockObject $user */
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(1000);
 		$this->mock->getParameter('mailAccountMapper')
@@ -248,7 +292,7 @@ class ManagerTest extends TestCase {
 
 	public function testUpdateMasterPasswordWithExistingLoginPassword(): void {
 		/** @var IUser|MockObject $user */
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(1000);
 		$this->mock->getParameter('mailAccountMapper')
@@ -274,7 +318,7 @@ class ManagerTest extends TestCase {
 
 	public function testUpdateMasterPasswordWithoutLoginPassword(): void {
 		/** @var IUser|MockObject $user */
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(1000);
 		$this->mock->getParameter('mailAccountMapper')

@@ -7,7 +7,7 @@
 		<div class="action__type">
 			<NcSelect
 				class="action__type__column action__type__column__select"
-				:value="currentAction"
+				:model-value="currentAction"
 				:required="true"
 				:label-outside="true"
 				:options="availableTypes"

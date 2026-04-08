@@ -11,18 +11,22 @@ namespace OCA\Mail\Tests\Unit\IMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client;
+use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Data_Fetch;
+use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Fetch_Results;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Socket;
+use Horde_Mime_Part;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\IMAP\ImapMessageFetcher;
 use OCA\Mail\IMAP\ImapMessageFetcherFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Model\SmimeDecryptionResult;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Support\PerformanceLoggerTask;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -71,8 +75,8 @@ class MessageMapperTest extends TestCase {
 
 		$imapMessageFetcher1 = $this->createMock(ImapMessageFetcher::class);
 		$imapMessageFetcher2 = $this->createMock(ImapMessageFetcher::class);
-		$message1 = $this->createMock(IMAPMessage::class);
-		$message2 = $this->createMock(IMAPMessage::class);
+		$message1 = $this->createStub(IMAPMessage::class);
+		$message2 = $this->createStub(IMAPMessage::class);
 
 		$fetchResults = new Horde_Imap_Client_Fetch_Results();
 		$fetchResult1 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
@@ -185,7 +189,7 @@ class MessageMapperTest extends TestCase {
 		$runPhishingCheck = false;
 
 		$imapMessageFetcher1 = $this->createMock(ImapMessageFetcher::class);
-		$message1 = $this->createMock(IMAPMessage::class);
+		$message1 = $this->createStub(IMAPMessage::class);
 
 		$fetchResults = new Horde_Imap_Client_Fetch_Results();
 		$fetchResult1 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
@@ -666,7 +670,7 @@ class MessageMapperTest extends TestCase {
 		$fetchData->setUid(100);
 
 		$fetchResult = new Horde_Imap_Client_Fetch_Results();
-		$fetchResult[0] = $fetchData;
+		$fetchResult[100] = $fetchData;
 
 		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
 		$imapClient->method('fetch')
@@ -680,7 +684,65 @@ class MessageMapperTest extends TestCase {
 		);
 
 		$this->assertCount(1, $data);
-		$this->assertEquals($expected, $data[0]->isImipMessage());
+		$this->assertEquals($expected, $data[100]->isImipMessage());
+	}
+
+	/**
+	 * Some MDAs like Exchange or Stalwart follow the RFC for requesting
+	 * MIME headers pretty strictly. They only return headers that are
+	 * inside the MIME part. This test checks if we use the message
+	 * headers correctly as fallback mechanism in this case when
+	 * determine the Content-Type and Content-Transfer-Encoding
+	 * as described in RFC 2045 Section 6.4.
+	 *
+	 * @throws Horde_Imap_Client_Exception
+	 */
+	public function testGetBodyStructureUsesMessageHeaderFallback(): void {
+		$messageId = 100;
+		$headerText = 'Content-Type: text/plain; charset="utf-8"
+			Content-Transfer-Encoding: base64
+			MIME-Version: 1.0';
+		$bodyText = 'Lorem ipsum dolor sit';
+		$bodyTextAsBase64 = base64_encode($bodyText);
+
+		// This definition of the content-type is necessary so
+		// the Horde IMAP lib don't reject our body content when
+		// accessing the internal data structure. It's not being
+		// returned when using getHeader() inside the $convertBody
+		// function of the MessageMapper (I've tested that) and
+		// therefore being set to the default values specified in
+		// RFC 2045 Section 5.2.
+		$part = new Horde_Mime_Part();
+		$header = $part->addMimeHeaders();
+		$header->addHeader('content-type', 'text/plain; charset=us-ascii');
+
+		$fetchData = new Horde_Imap_Client_Data_Fetch();
+		$fetchData->setStructure($part);
+		$fetchData->setHeaderText('0', $headerText);
+		$fetchData->setBodyPart('1', $bodyTextAsBase64);
+		$fetchData->setUid($messageId);
+
+		$fetchResult = new Horde_Imap_Client_Fetch_Results();
+		$fetchResult[$messageId] = $fetchData;
+
+		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
+		$imapClient->method('fetch')
+			->willReturn($fetchResult);
+
+		$this->converter
+			->expects(self::once())
+			->method('convert')
+			->willReturn(base64_decode($fetchData->getBodyPart('1')));
+
+		$data = $this->mapper->getBodyStructureData(
+			$imapClient,
+			'INBOX',
+			[$messageId],
+			'alice@example.org'
+		);
+
+		$this->assertCount(1, $data);
+		$this->assertEquals($bodyText, $data[$messageId]->getPreviewText());
 	}
 
 	public function isImipMessageProvider(): array {
@@ -688,5 +750,182 @@ class MessageMapperTest extends TestCase {
 			'google request' => ['request_google', true],
 			'outlook.com request' => ['request_outlook_com', true],
 		];
+	}
+
+	public function testGetAttachmentFilenameFromContentDisposition(): void {
+		$messageUid = 1;
+		$attachmentId = '2';
+		$bodyContent = 'attachment body content';
+		$headerText = "Content-Disposition: attachment; filename=\"test.pdf\"\r\n"
+			. "Content-Type: application/pdf\r\n"
+			. "Content-Transfer-Encoding: 7bit\r\n";
+		$fetchData = new Horde_Imap_Client_Data_Fetch();
+		$fetchData->setMimeHeader($attachmentId, $headerText);
+		$fetchData->setBodyPart($attachmentId, $bodyContent);
+		$fetchData->setUid($messageUid);
+		$fetchResult = new Horde_Imap_Client_Fetch_Results();
+		$fetchResult[$messageUid] = $fetchData;
+		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
+		$imapClient->method('fetch')->willReturn($fetchResult);
+		$this->sMimeService->method('isEncrypted')->willReturn(false);
+
+		$attachment = $this->mapper->getAttachment(
+			$imapClient,
+			'INBOX',
+			$messageUid,
+			$attachmentId,
+			'alice',
+		);
+
+		$this->assertEquals('test.pdf', $attachment->getName());
+		$this->assertEquals('application/octet-stream', $attachment->getType());
+		$this->assertEquals($bodyContent, $attachment->getContent());
+	}
+
+	public function testGetAttachmentFilenameFromContentTypeName(): void {
+		$messageUid = 1;
+		$attachmentId = '2';
+		$bodyContent = 'attachment body content';
+		$headerText = "Content-Type: application/pdf; name=\"fallback.pdf\"\r\n"
+			. "Content-Transfer-Encoding: 7bit\r\n";
+		$fetchData = new Horde_Imap_Client_Data_Fetch();
+		$fetchData->setMimeHeader($attachmentId, $headerText);
+		$fetchData->setBodyPart($attachmentId, $bodyContent);
+		$fetchData->setUid($messageUid);
+		$fetchResult = new Horde_Imap_Client_Fetch_Results();
+		$fetchResult[$messageUid] = $fetchData;
+		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
+		$imapClient->method('fetch')->willReturn($fetchResult);
+		$this->sMimeService->method('isEncrypted')->willReturn(false);
+
+		$attachment = $this->mapper->getAttachment(
+			$imapClient,
+			'INBOX',
+			$messageUid,
+			$attachmentId,
+			'alice',
+		);
+
+		$this->assertEquals('fallback.pdf', $attachment->getName());
+		$this->assertEquals('application/octet-stream', $attachment->getType());
+	}
+
+	public function testGetAttachmentTextCalendarContentType(): void {
+		$messageUid = 1;
+		$attachmentId = '2';
+		$bodyContent = 'BEGIN:VCALENDAR';
+		$headerText = "Content-Type: text/calendar; charset=utf-8\r\n"
+			. "Content-Transfer-Encoding: 7bit\r\n";
+		$fetchData = new Horde_Imap_Client_Data_Fetch();
+		$fetchData->setMimeHeader($attachmentId, $headerText);
+		$fetchData->setBodyPart($attachmentId, $bodyContent);
+		$fetchData->setUid($messageUid);
+		$fetchResult = new Horde_Imap_Client_Fetch_Results();
+		$fetchResult[$messageUid] = $fetchData;
+		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
+		$imapClient->method('fetch')->willReturn($fetchResult);
+		$this->sMimeService->method('isEncrypted')->willReturn(false);
+
+		$attachment = $this->mapper->getAttachment(
+			$imapClient,
+			'INBOX',
+			$messageUid,
+			$attachmentId,
+			'alice',
+		);
+
+		$this->assertEquals('text/calendar', $attachment->getType());
+		$this->assertEquals('calendar.ics', $attachment->getName());
+	}
+
+	public function testGetAttachmentAppliesContentTransferEncoding(): void {
+		$messageUid = 1;
+		$attachmentId = '2';
+		$originalContent = 'hello world';
+		$bodyContent = base64_encode($originalContent);
+		$headerText = "Content-Type: application/octet-stream\r\n"
+			. "Content-Transfer-Encoding: base64\r\n";
+		$fetchData = new Horde_Imap_Client_Data_Fetch();
+		$fetchData->setMimeHeader($attachmentId, $headerText);
+		$fetchData->setBodyPart($attachmentId, $bodyContent);
+		$fetchData->setUid($messageUid);
+		$fetchResult = new Horde_Imap_Client_Fetch_Results();
+		$fetchResult[$messageUid] = $fetchData;
+		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
+		$imapClient->method('fetch')->willReturn($fetchResult);
+		$this->sMimeService->method('isEncrypted')->willReturn(false);
+
+		$attachment = $this->mapper->getAttachment(
+			$imapClient,
+			'INBOX',
+			$messageUid,
+			$attachmentId,
+			'alice',
+		);
+
+		$this->assertEquals($originalContent, $attachment->getContent());
+	}
+
+	private function mockEncryptedFetch(int $messageUid, string $decryptedMime): Horde_Imap_Client_Base {
+		$fetchData = new Horde_Imap_Client_Data_Fetch();
+		$fetchData->setUid($messageUid);
+		$fetchResult = new Horde_Imap_Client_Fetch_Results();
+		$fetchResult[$messageUid] = $fetchData;
+
+		$fullTextFetchData = new Horde_Imap_Client_Data_Fetch();
+		$fullTextFetchData->setUid($messageUid);
+		$fullTextFetchResult = new Horde_Imap_Client_Fetch_Results();
+		$fullTextFetchResult[$messageUid] = $fullTextFetchData;
+
+		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
+		$imapClient->method('fetch')
+			->willReturnOnConsecutiveCalls($fetchResult, $fullTextFetchResult);
+
+		$this->sMimeService->method('isEncrypted')->willReturn(true);
+		$this->sMimeService->method('addDecryptQueries')->willReturnCallback(
+			static function (Horde_Imap_Client_Fetch_Query $query): void {
+			}
+		);
+		$this->sMimeService->method('decryptDataFetch')
+			->with($fullTextFetchData, 'alice')
+			->willReturn(new SmimeDecryptionResult($decryptedMime, true, false, false));
+
+		return $imapClient;
+	}
+
+	public function testGetAttachmentEncryptedWithRegularAttachment(): void {
+		$messageUid = 1;
+		$attachmentId = '1.2';
+		$decryptedMime = file_get_contents(__DIR__ . '/../../data/decrypted-message-body-with-attachment.txt');
+		$imapClient = $this->mockEncryptedFetch($messageUid, $decryptedMime);
+
+		$attachment = $this->mapper->getAttachment(
+			$imapClient,
+			'INBOX',
+			$messageUid,
+			$attachmentId,
+			'alice',
+		);
+
+		$this->assertEquals('report.pdf', $attachment->getName());
+		$this->assertEquals('application/octet-stream', $attachment->getType());
+	}
+
+	public function testGetAttachmentEncryptedWithInlineImage(): void {
+		$messageUid = 1;
+		$attachmentId = '1.1.2.2';
+		$decryptedMime = file_get_contents(__DIR__ . '/../../data/decrypted-message-body-with-attachment.txt');
+		$imapClient = $this->mockEncryptedFetch($messageUid, $decryptedMime);
+
+		$attachment = $this->mapper->getAttachment(
+			$imapClient,
+			'INBOX',
+			$messageUid,
+			$attachmentId,
+			'alice',
+		);
+
+		$this->assertEquals('nextcloud.png', $attachment->getName());
+		$this->assertEquals('application/octet-stream', $attachment->getType());
 	}
 }

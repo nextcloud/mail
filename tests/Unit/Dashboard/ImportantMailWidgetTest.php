@@ -57,7 +57,7 @@ class ImportantMailWidgetTest extends TestCase {
 	}
 
 	public function testGetItems(): void {
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$this->userManager->expects($this->once())
 			->method('get')
 			->willReturn($user);
@@ -87,7 +87,7 @@ class ImportantMailWidgetTest extends TestCase {
 	}
 
 	public function testGetItemsWithSince(): void {
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$this->userManager->expects($this->once())
 			->method('get')
 			->willReturn($user);

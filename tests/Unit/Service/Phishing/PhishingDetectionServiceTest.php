@@ -14,6 +14,7 @@ use OCA\Mail\PhishingDetectionResult;
 use OCA\Mail\Service\PhishingDetection\ContactCheck;
 use OCA\Mail\Service\PhishingDetection\CustomEmailCheck;
 use OCA\Mail\Service\PhishingDetection\DateCheck;
+use OCA\Mail\Service\PhishingDetection\ImapFlagCheck;
 use OCA\Mail\Service\PhishingDetection\LinkCheck;
 use OCA\Mail\Service\PhishingDetection\PhishingDetectionService;
 use OCA\Mail\Service\PhishingDetection\ReplyToCheck;
@@ -27,6 +28,7 @@ class PhishingDetectionServiceTest extends TestCase {
 	private DateCheck|MockObject $dateCheck;
 	private ReplyToCheck|MockObject $replyToCheck;
 	private LinkCheck|MockObject $linkCheck;
+	private ImapFlagCheck $imapFlagCheck;
 	private PhishingDetectionService $service;
 
 	protected function setUp(): void {
@@ -36,7 +38,8 @@ class PhishingDetectionServiceTest extends TestCase {
 		$this->dateCheck = $this->createMock(DateCheck::class);
 		$this->replyToCheck = $this->createMock(ReplyToCheck::class);
 		$this->linkCheck = $this->createMock(LinkCheck::class);
-		$this->service = new PhishingDetectionService($this->contactCheck, $this->customEmailCheck, $this->dateCheck, $this->replyToCheck, $this->linkCheck);
+		$this->imapFlagCheck = $this->createMock(ImapFlagCheck::class);
+		$this->service = new PhishingDetectionService($this->contactCheck, $this->customEmailCheck, $this->dateCheck, $this->replyToCheck, $this->linkCheck, $this->imapFlagCheck);
 	}
 
 	public function testCheckHeadersForPhishing(): void {
@@ -60,7 +63,10 @@ class PhishingDetectionServiceTest extends TestCase {
 		$this->linkCheck->expects($this->once())
 			->method('run')
 			->willReturn(new PhishingDetectionResult(PhishingDetectionResult::LINK_CHECK, false));
-		$result = $this->service->checkHeadersForPhishing($parsedHeaders, true, '');
+		$this->imapFlagCheck->expects($this->once())
+			->method('run')
+			->willReturn(new PhishingDetectionResult(PhishingDetectionResult::IMAP_FLAG_CHECK, false));
+		$result = $this->service->checkHeadersForPhishing($parsedHeaders, [], true, '');
 		$this->assertFalse($result['warning']);
 	}
 
@@ -81,7 +87,10 @@ class PhishingDetectionServiceTest extends TestCase {
 		$this->linkCheck->expects($this->once())
 			->method('run')
 			->willReturn(new PhishingDetectionResult(PhishingDetectionResult::LINK_CHECK, false));
-		$result = $this->service->checkHeadersForPhishing($parsedHeaders, true, '');
+		$this->imapFlagCheck->expects($this->once())
+			->method('run')
+			->willReturn(new PhishingDetectionResult(PhishingDetectionResult::IMAP_FLAG_CHECK, false));
+		$result = $this->service->checkHeadersForPhishing($parsedHeaders, [], true, '');
 		$this->assertFalse($result['warning']);
 	}
 
@@ -104,7 +113,10 @@ class PhishingDetectionServiceTest extends TestCase {
 		$this->linkCheck->expects($this->once())
 			->method('run')
 			->willReturn(new PhishingDetectionResult(PhishingDetectionResult::LINK_CHECK, false));
-		$result = $this->service->checkHeadersForPhishing($parsedHeaders, true, '');
+		$this->imapFlagCheck->expects($this->once())
+			->method('run')
+			->willReturn(new PhishingDetectionResult(PhishingDetectionResult::IMAP_FLAG_CHECK, false));
+		$result = $this->service->checkHeadersForPhishing($parsedHeaders, [], true, '');
 		$this->assertFalse($result['warning']);
 	}
 
@@ -129,7 +141,10 @@ class PhishingDetectionServiceTest extends TestCase {
 		$this->linkCheck->expects($this->once())
 			->method('run')
 			->willReturn(new PhishingDetectionResult(PhishingDetectionResult::LINK_CHECK, false));
-		$result = $this->service->checkHeadersForPhishing($parsedHeaders, true, '');
+		$this->imapFlagCheck->expects($this->once())
+			->method('run')
+			->willReturn(new PhishingDetectionResult(PhishingDetectionResult::IMAP_FLAG_CHECK, false));
+		$result = $this->service->checkHeadersForPhishing($parsedHeaders, [], true, '');
 		$this->assertFalse($result['warning']);
 	}
 }

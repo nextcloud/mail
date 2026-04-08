@@ -13,6 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestUser;
 use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
+use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
@@ -75,7 +76,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->user = $this->createTestUser();
 
 		/** @var ICrypto $crypo */
-		$crypo = OC::$server->getCrypto();
+		$crypo = \OCP\Server::get(\OCP\Security\ICrypto::class);
 		/** @var MailAccountMapper $mapper */
 		$mapper = Server::get(MailAccountMapper::class);
 		$mailAccount = MailAccount::fromParams([
@@ -140,6 +141,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 			Server::get(PerformanceLogger::class),
 			Server::get(AliasesService::class),
 			Server::get(TransmissionService::class),
+			Server::get(IMailManager::class)
 		);
 	}
 

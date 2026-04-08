@@ -185,6 +185,7 @@ export default {
 			changed: false,
 			largerModal: false,
 			isLargeScreen: window.innerWidth >= 1024,
+			additionalTrapElements: [],
 			isMaximized: false,
 			recipient: {
 				name: '',
@@ -266,7 +267,7 @@ export default {
 		window.addEventListener('resize', this.checkScreenSize)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		window.removeEventListener('beforeunload', this.onBeforeUnload)
 		window.removeEventListener('resize', this.checkScreenSize)
 	},
@@ -333,6 +334,9 @@ export default {
 					let idToReturn
 					const dataForServer = this.getDataForServer(data, true)
 					if (!id) {
+						if (dataForServer.draftId) {
+							this.mainStore.removeEnvelopeMutation({ id: dataForServer.draftId })
+						}
 						const { id } = await saveDraft(dataForServer)
 						dataForServer.id = id
 						await this.mainStore.patchComposerData({ id, draftId: dataForServer.draftId })

@@ -48,7 +48,7 @@ class MessageKnownSinceListenerTest extends TestCase {
 		$dbAccount->setTrashRetentionDays(60);
 		$dbAccount->setTrashMailboxId(420);
 		$account = new Account($dbAccount);
-		$mailbox = $this->createMock(Mailbox::class);
+		$mailbox = $this->createStub(Mailbox::class);
 		$message1 = new Message();
 		$message1->setUid(11);
 		$message1->setMailboxId(420);
@@ -78,7 +78,7 @@ class MessageKnownSinceListenerTest extends TestCase {
 		$dbAccount->setTrashRetentionDays(null);
 		$dbAccount->setTrashMailboxId(420);
 		$account = new Account($dbAccount);
-		$mailbox = $this->createMock(Mailbox::class);
+		$mailbox = $this->createStub(Mailbox::class);
 		$message1 = new Message();
 		$message1->setMessageId('<foobar@local.host>');
 		$message1->setMailboxId(420);

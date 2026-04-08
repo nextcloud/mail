@@ -37,6 +37,17 @@ class ListControllerTest extends TestCase {
 		$this->controller = $this->serviceMock->getService();
 	}
 
+	public function testUnsubscribeNullUser(): void {
+		$serviceMock = $this->createServiceMock(ListController::class, [
+			'userId' => null,
+		]);
+		$controller = $serviceMock->getService();
+
+		$response = $controller->unsubscribe(123);
+
+		self::assertEquals(Http::STATUS_UNAUTHORIZED, $response->getStatus());
+	}
+
 	public function testMessageNotFound(): void {
 		$this->serviceMock->getParameter('mailManager')
 			->expects(self::once())

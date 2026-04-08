@@ -84,7 +84,8 @@ class Message extends Entity implements JsonSerializable {
 		'forwarded',
 		'$junk',
 		'$notjunk',
-		'mdnsent',
+		'$phishing',
+		'$mdnsent',
 		Tag::LABEL_IMPORTANT,
 		'$important' // @todo remove this when we have removed all references on IMAP to $important @link https://github.com/nextcloud/mail/issues/25
 	];
@@ -142,6 +143,8 @@ class Message extends Entity implements JsonSerializable {
 
 	/** @var bool */
 	private $fetchAvatarFromClient = false;
+	/** @var array */
+	private $attachments = [];
 
 	public function __construct() {
 		$this->from = new AddressList([]);
@@ -178,7 +181,7 @@ class Message extends Entity implements JsonSerializable {
 	 * before setting it, or sets null if it is not valid.
 	 */
 	public function setMessageId(?string $messageId): void {
-		$this->setMessageIdFieldIfNotEmpty('messageId', $messageId);
+		$this->setter('messageId', [$this->parseMessageId($messageId)]);
 	}
 
 	public function setRawReferences(?string $references): void {
@@ -187,19 +190,23 @@ class Message extends Entity implements JsonSerializable {
 	}
 
 	public function setInReplyTo(?string $inReplyTo): void {
-		$this->setMessageIdFieldIfNotEmpty('inReplyTo', $inReplyTo);
+		$this->setter('inReplyTo', [$this->parseMessageId($inReplyTo)]);
 	}
 
-	public function setThreadRootId(?string $messageId): void {
-		$threadRootId = (!empty($messageId)) ? '<' . rtrim(ltrim($messageId, '<'), '>') . '>' : $this->getMessageId();
-		$parsed = new Horde_Mail_Rfc822_Identification($threadRootId);
-		$this->setter('threadRootId', [$parsed->ids[0] ?? $this->getMessageId()]);
+	public function setThreadRootId(?string $threadRootId): void {
+		$this->setter('threadRootId', [$this->parseMessageId($threadRootId) ?? $this->messageId]);
 	}
 
-	private function setMessageIdFieldIfNotEmpty(string $field, ?string $id): void {
-		$id = (!empty($id)) ? '<' . rtrim(ltrim($id, '<'), '>') . '>' : null;
+	private function parseMessageId(?string $id): ?string {
+		if (empty($id)) {
+			return null;
+		}
+
+		// trim whitespace and <>
+		$id = '<' . trim(trim($id), '<>') . '>';
+
 		$parsed = new Horde_Mail_Rfc822_Identification($id);
-		$this->setter($field, [$parsed->ids[0] ?? null]);
+		return $parsed->ids[0] ?? null;
 	}
 
 	/**
@@ -286,6 +293,8 @@ class Message extends Entity implements JsonSerializable {
 			$this->setFlagJunk($value);
 		} elseif ($flag === '$notjunk') {
 			$this->setFlagNotjunk($value);
+		} elseif ($flag === '$mdnsent') {
+			$this->setFlagMdnsent($value);
 		} else {
 			$this->setter(
 				$this->columnToProperty("flag_$flag"),
@@ -310,6 +319,14 @@ class Message extends Entity implements JsonSerializable {
 	 */
 	public function getAvatar(): ?Avatar {
 		return $this->avatar;
+	}
+
+	public function setAttachments(array $attachments): void {
+		$this->attachments = $attachments;
+	}
+
+	public function getAttachments(): array {
+		return $this->attachments;
 	}
 
 	#[\Override]
@@ -338,7 +355,7 @@ class Message extends Entity implements JsonSerializable {
 				'important' => ($this->getFlagImportant() === true),
 				'$junk' => ($this->getFlagJunk() === true),
 				'$notjunk' => ($this->getFlagNotjunk() === true),
-				'mdnsent' => ($this->getFlagMdnsent() === true),
+				'$mdnsent' => ($this->getFlagMdnsent() === true),
 			],
 			'tags' => $indexed,
 			'from' => $this->getFrom()->jsonSerialize(),
@@ -357,6 +374,7 @@ class Message extends Entity implements JsonSerializable {
 			'mentionsMe' => $this->getMentionsMe(),
 			'avatar' => $this->avatar?->jsonSerialize(),
 			'fetchAvatarFromClient' => $this->fetchAvatarFromClient,
+			'attachments' => $this->getAttachments(),
 		];
 	}
 }

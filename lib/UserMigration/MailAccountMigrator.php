@@ -37,6 +37,7 @@ class MailAccountMigrator implements IMigrator {
 	) {
 	}
 
+	#[\Override]
 	public function export(IUser $user,
 		IExportDestination $exportDestination,
 		OutputInterface $output,
@@ -115,6 +116,7 @@ class MailAccountMigrator implements IMigrator {
 		$exportDestination->addFileContents('mail/accounts/index.json', json_encode($index));
 	}
 
+	#[\Override]
 	public function import(IUser $user, IImportSource $importSource, OutputInterface $output): void {
 		try {
 			$index = json_decode($importSource->getFileContents('mail/accounts/index.json'), true, flags: JSON_THROW_ON_ERROR);
@@ -176,22 +178,27 @@ class MailAccountMigrator implements IMigrator {
 		}
 	}
 
+	#[\Override]
 	public function getId(): string {
 		return 'mail_account';
 	}
 
+	#[\Override]
 	public function getDisplayName(): string {
 		return $this->l10n->t('Mail');
 	}
 
+	#[\Override]
 	public function getDescription(): string {
 		return $this->l10n->t('Mail account parameters, aliases and preferences');
 	}
 
+	#[\Override]
 	public function getVersion(): int {
 		return 01_00_00;
 	}
 
+	#[\Override]
 	public function canImport(IImportSource $importSource): bool {
 		try {
 			return $importSource->getMigratorVersion($this->getId()) <= $this->getVersion();

@@ -12,7 +12,7 @@
 				:placeholder="t('mail', 'Search in folder')"
 				:aria-label="t('mail', 'Search in folder')"
 				@focus="showButtons = true"
-				@blur="hideButtonsWithDelay">
+				@blur="hideButtonsWithDelay(true)">
 			<NcButton
 				variant="tertiary"
 				:aria-label="t('mail', 'Open search modal')"
@@ -103,7 +103,7 @@
 								label="label"
 								track-by="email"
 								:options="autocompleteRecipients"
-								:value="searchInFrom"
+								:model-value="searchInFrom"
 								:placeholder="t('mail', 'Select senders')"
 								:aria-label-combobox="t('mail', 'Select senders')"
 								:multiple="true"
@@ -128,7 +128,7 @@
 								label="label"
 								track-by="email"
 								:options="autocompleteRecipients"
-								:value="searchInTo"
+								:model-value="searchInTo"
 								:placeholder="t('mail', 'Select recipients')"
 								:aria-label-combobox="t('mail', 'Select recipients')"
 								:multiple="true"
@@ -152,7 +152,7 @@
 								label="label"
 								track-by="email"
 								:options="autocompleteRecipients"
-								:value="searchInCc"
+								:model-value="searchInCc"
 								:placeholder="t('mail', 'Select CC recipients')"
 								:aria-label-combobox="t('mail', 'Select CC recipients')"
 								:multiple="true"
@@ -176,7 +176,7 @@
 								label="label"
 								track-by="email"
 								:options="autocompleteRecipients"
-								:value="searchInBcc"
+								:model-value="searchInBcc"
 								:placeholder="t('mail', 'Select BCC recipients')"
 								:aria-label-combobox="t('mail', 'Select BCC recipients')"
 								:multiple="true"
@@ -201,7 +201,7 @@
 								class="multiselect-search-tags "
 								:options="tags"
 								label="displayName"
-								:value="selectedTags"
+								:model-value="selectedTags"
 								:placeholder="t('mail', 'Select tags')"
 								:aria-label-combobox="t('mail', 'Select tags')"
 								track-by="displayName"
@@ -237,7 +237,7 @@
 						<div class="modal-inner--container marked-as">
 							<div class="modal-inner-inline">
 								<NcCheckboxRadioSwitch
-									:checked.sync="searchFlags"
+									v-model="searchFlags"
 									value="is_important"
 									name="flags[]"
 									type="checkbox">
@@ -246,7 +246,7 @@
 							</div>
 							<div class="modal-inner-inline">
 								<NcCheckboxRadioSwitch
-									:checked.sync="searchFlags"
+									v-model="searchFlags"
 									value="starred"
 									name="flags[]"
 									type="checkbox">
@@ -255,7 +255,7 @@
 							</div>
 							<div class="modal-inner-inline">
 								<NcCheckboxRadioSwitch
-									:checked.sync="searchFlags"
+									v-model="searchFlags"
 									value="attachments"
 									name="flags[]"
 									type="checkbox">
@@ -263,7 +263,7 @@
 								</NcCheckboxRadioSwitch>
 							</div>
 							<div class="modal-inner-inline">
-								<NcCheckboxRadioSwitch :checked.sync="mentionsMe">
+								<NcCheckboxRadioSwitch v-model="mentionsMe">
 									{{ t('mail', 'Mentions me') }}
 								</NcCheckboxRadioSwitch>
 							</div>
@@ -280,7 +280,6 @@
 				:aria-label="t('mail', 'Has attachment')"
 				:title="t('mail', 'Has attachment')"
 				:pressed="hasAttachmentActive"
-				@update:pressed="hasAttachmentActive = !hasAttachmentActive"
 				@click="toggleGetAttachments">
 				{{ t('mail', 'Has attachment') }}
 			</NcButton>
@@ -290,7 +289,6 @@
 				:pressed="hasUnreadActive"
 				:aria-label="t('mail', 'Unread')"
 				:title="t('mail', 'Unread')"
-				@update:pressed="hasUnreadActive = !hasUnreadActive"
 				@click="toggleUnread">
 				{{ t('mail', 'Unread') }}
 			</NcButton>
@@ -300,7 +298,6 @@
 				:pressed="hasToMeActive"
 				:aria-label="t('mail', 'To me')"
 				:title="t('mail', 'To me')"
-				@update:pressed="hasToMeActive = !hasToMeActive"
 				@click="toggleCurrentUser">
 				{{ t('mail', 'To me') }}
 			</NcButton>
@@ -371,9 +368,6 @@ export default {
 			searchInMessageBody: null,
 			searchFlags: [],
 			mentionsMe: false,
-			hasAttachmentActive: false,
-			hasUnreadActive: false,
-			hasToMeActive: false,
 			startDate: null,
 			endDate: null,
 			dialogButtons: [
@@ -411,6 +405,22 @@ export default {
 				}
 				return a.displayName.localeCompare(b.displayName)
 			})
+		},
+
+		hasAttachmentActive() {
+			return this.searchFlags.includes('attachments')
+		},
+
+		hasUnreadActive() {
+			return this.searchFlags.includes('unread')
+		},
+
+		hasToMeActive() {
+			return this.searchInTo !== null && this.searchInTo[0]?.email === this.account.emailAddress
+		},
+
+		hasQuickFiltersActive() {
+			return this.hasAttachmentActive || this.hasUnreadActive || this.hasToMeActive
 		},
 
 		filterChanged() {
@@ -480,20 +490,33 @@ export default {
 			this.searchInTo = [{ email: this.query, label: this.query }]
 			this.debouncedSearchQuery()
 		},
+
+		hasQuickFiltersActive(newVal) {
+			if (!newVal) {
+				this.hideButtonsWithDelay()
+			}
+		},
 	},
 
 	methods: {
-		hideButtonsWithDelay() {
-			setTimeout(() => {
+		hideButtonsWithDelay(delay = false) {
+			if (delay) {
+				setTimeout(() => {
+					if (this.hasQuickFiltersActive) {
+						return
+					}
+					this.showButtons = false
+				}, 500)
+			} else {
 				this.showButtons = false
-			}, 100)
+			}
 		},
 
 		toggleGetAttachments() {
 			if (this.hasAttachmentActive) {
-				this.searchFlags.push('attachments')
-			} else {
 				this.searchFlags = this.searchFlags.filter((flag) => flag !== 'attachments')
+			} else {
+				this.searchFlags.push('attachments')
 			}
 			this.$nextTick(() => {
 				this.sendQueryEvent()
@@ -502,12 +525,12 @@ export default {
 
 		toggleCurrentUser() {
 			if (this.hasToMeActive) {
+				this.searchInTo = []
+			} else {
 				this.searchInTo = [{
 					email: this.account.emailAddress,
 					label: this.account.emailAddress,
 				}]
-			} else {
-				this.searchInTo = null
 			}
 			this.$nextTick(() => {
 				this.sendQueryEvent()
@@ -515,15 +538,10 @@ export default {
 		},
 
 		toggleUnread() {
-			if (this.hasUnreadActive) {
-				if (!Array.isArray(this.searchFlags)) {
-					this.searchFlags = []
-				}
-				if (!this.searchFlags.includes('unread')) {
-					this.searchFlags.push('unread')
-				}
-			} else {
+			if (this.searchFlags.includes('unread')) {
 				this.searchFlags = this.searchFlags.filter((flag) => flag !== 'unread')
+			} else {
+				this.searchFlags.push('unread')
 			}
 			this.$nextTick(() => {
 				this.sendQueryEvent()

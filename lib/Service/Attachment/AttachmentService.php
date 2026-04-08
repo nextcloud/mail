@@ -18,14 +18,22 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\AttachmentNotFoundException;
+use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\UploadException;
 use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\File;
 use OCP\Files\Folder;
+use OCP\Files\IMimeTypeDetector;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
+use OCP\ICacheFactory;
+use OCP\IURLGenerator;
 use Psr\Log\LoggerInterface;
 
 class AttachmentService implements IAttachmentService {
@@ -55,12 +63,18 @@ class AttachmentService implements IAttachmentService {
 	/**
 	 * @param Folder $userFolder
 	 */
-	public function __construct($userFolder,
+	public function __construct(
+		$userFolder,
 		LocalAttachmentMapper $mapper,
 		AttachmentStorage $storage,
 		IMailManager $mailManager,
 		MessageMapper $imapMessageMapper,
-		LoggerInterface $logger) {
+		private ICacheFactory $cacheFactory,
+		private IURLGenerator $urlGenerator,
+		private IMimeTypeDetector $mimeTypeDetector,
+		LoggerInterface $logger,
+		private ITimeFactory $timeFactory,
+	) {
 		$this->mapper = $mapper;
 		$this->storage = $storage;
 		$this->mailManager = $mailManager;
@@ -80,6 +94,7 @@ class AttachmentService implements IAttachmentService {
 		$attachment->setUserId($userId);
 		$attachment->setFileName($file->getFileName());
 		$attachment->setMimeType($file->getMimeType());
+		$attachment->setCreatedAt($this->timeFactory->getTime());
 
 		$persisted = $this->mapper->insert($attachment);
 		try {
@@ -98,6 +113,7 @@ class AttachmentService implements IAttachmentService {
 		$attachment->setUserId($userId);
 		$attachment->setFileName($name);
 		$attachment->setMimeType($mime);
+		$attachment->setCreatedAt($this->timeFactory->getTime());
 
 		$persisted = $this->mapper->insert($attachment);
 		try {
@@ -245,6 +261,59 @@ class AttachmentService implements IAttachmentService {
 			$attachmentIds[] = $this->handleCloudAttachment($account, $attachment);
 		}
 		return array_values(array_filter($attachmentIds));
+	}
+
+	/**
+	 * @return list<array{id: string, fileName: string|null, mime: string, downloadUrl: string, mimeUrl: string}>
+	 */
+	public function getAttachmentNames(Account $account, Mailbox $mailbox, Message $message, \Horde_Imap_Client_Socket $client): array {
+		if ($message->getStructureAnalyzed() === true && $message->getFlagAttachments() === false) {
+			// Structure analysis already confirmed no attachments, nothing to fetch.
+			return [];
+		}
+
+		$cache = $this->cacheFactory->createDistributed('mail_attachment_names');
+
+		$cacheKey = hash('xxh128', implode('_', [
+			$account->getUserId(),
+			(string)$account->getId(),
+			(string)$mailbox->getId(),
+			(string)$message->getId()
+		]));
+
+		$cached = $cache->get($cacheKey);
+		if (is_array($cached)) {
+			/** @var list<array{id: string, fileName: string|null, mime: string, downloadUrl: string, mimeUrl: string}> $cached */
+			return $cached;
+		}
+
+		$attachments = [];
+		try {
+			$imapMessage = $this->mailManager->getImapMessage(
+				$client,
+				$account,
+				$mailbox,
+				$message->getUid(),
+				true
+			);
+			$attachments = $imapMessage->getAttachments();
+		} catch (SmimeDecryptException $e) {
+			$this->logger->debug('Could not get attachment names for S/MIME encrypted message', ['exception' => $e, 'messageId' => $message->getUid()]);
+		} catch (ServiceException $e) {
+			$this->logger->warning('Could not get attachment names', ['exception' => $e, 'messageId' => $message->getUid()]);
+		}
+
+		$result = array_values(array_map(function ($attachment) use ($message) {
+			$downloadUrl = $this->urlGenerator->linkToRouteAbsolute('mail.messages.downloadAttachment', [
+				'id' => $message->getId(),
+				'attachmentId' => $attachment['id'],
+			]);
+			$mimeUrl = $this->mimeTypeDetector->mimeTypeIcon($attachment['mime']);
+			return ['id' => $attachment['id'], 'fileName' => $attachment['fileName'], 'mime' => $attachment['mime'], 'downloadUrl' => $downloadUrl, 'mimeUrl' => $mimeUrl];
+		}, $attachments));
+
+		$cache->set($cacheKey, $result, 604800);
+		return $result;
 	}
 
 	/**

@@ -4,6 +4,7 @@
 -->
 <template>
 	<EnvelopeSkeleton
+		ref="component"
 		v-draggable-envelope="{
 			accountId: data.accountId ? data.accountId : mailbox.accountId,
 			mailboxId: data.mailboxId,
@@ -20,6 +21,7 @@
 		:name="addresses"
 		:details="formatted()"
 		:one-line="oneLineLayout"
+		:compact="compactMode"
 		:is-read="showImportantIconVariant"
 		:is-important="isImportant"
 		@click.exact="onClick"
@@ -30,51 +32,104 @@
 		@toggle-seen="onToggleSeen"
 		@update:menuOpen="closeMoreAndSnoozeOptions">
 		<template #icon>
-			<Star
-				v-if="data.flags.flagged"
-				fill-color="#f9cf3d"
-				:size="18"
-				class="app-content-list-item-star favorite-icon-style"
-				:class="{ 'one-line': oneLineLayout, 'favorite-icon-style': !oneLineLayout }"
-				:data-starred="data.flags.flagged ? 'true' : 'false'"
-				@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
-			<ImportantIcon
-				v-if="isImportant"
-				:size="18"
-				class="app-content-list-item-star icon-important"
-				:class="{ 'important-one-line': oneLineLayout, 'icon-important': !oneLineLayout }"
-				data-starred="true" />
-			<JunkIcon
-				v-if="data.flags.$junk"
-				:size="18"
-				class="app-content-list-item-star junk-icon-style"
-				:class="{ 'one-line': oneLineLayout, 'junk-icon-style': !oneLineLayout }"
-				:data-starred="data.flags.$junk ? 'true' : 'false'"
-				@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
+			<div v-if="!compactMode">
+				<Star
+					v-if="data.flags.flagged"
+					:size="22"
+					fill-color="#f9cf3d"
+					class="app-content-list-item-star favorite-icon-style"
+					:class="{ 'one-line': oneLineLayout, 'favorite-icon-style': !oneLineLayout }"
+					:data-starred="data.flags.flagged ? 'true' : 'false'"
+					@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
+				<ImportantIcon
+					v-if="isImportant"
+					fill-color="#00679e"
+					:size="20"
+					class="app-content-list-item-star icon-important"
+					:class="{ 'important-one-line': oneLineLayout, 'icon-important': !oneLineLayout }"
+					data-starred="true" />
+				<JunkIcon
+					v-if="data.flags.$junk"
+					:size="20"
+					class="app-content-list-item-star junk-icon-style"
+					:class="{ 'one-line': oneLineLayout, 'junk-icon-style': !oneLineLayout }"
+					:data-starred="data.flags.$junk ? 'true' : 'false'"
+					@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
+			</div>
 			<div
 				class="hovering-status"
-				:class="{ 'hover-active': hoveringAvatar && !selected }"
+				:class="{ 'hover-active': hoveringAvatar && !selected && !compactMode }"
 				@mouseenter="hoveringAvatar = true"
-				@mouseleave="hoveringAvatar = false"
-				@click.stop.exact.prevent="toggleSelected"
-				@click.shift.exact.prevent="onSelectMultiple">
-				<template v-if="hoveringAvatar || selected">
-					<CheckIcon :size="28" class="check-icon" :class="{ 'app-content-list-item-avatar-selected': selected }" />
+				@mouseleave="hoveringAvatar = false">
+				<template v-if="compactMode">
+					<div
+						class="compact-checkbox-wrapper"
+						@mousedown.stop.prevent
+						@click.stop.prevent>
+						<NcCheckboxRadioSwitch
+							type="checkbox"
+							class="compact-checkbox"
+							:model-value="selected"
+							@update:checked="toggleSelected" />
+					</div>
 				</template>
+
 				<template v-else>
-					<Avatar
-						:display-name="addresses"
-						:email="avatarEmail"
-						:fetch-avatar="data.fetchAvatarFromClient"
-						:avatar="data.avatar" />
+					<div
+						@click.stop.exact.prevent="toggleSelected"
+						@click.shift.exact.prevent="onSelectMultiple">
+						<template v-if="hoveringAvatar || selected">
+							<CheckIcon
+								:size="28"
+								class="check-icon"
+								:class="{ 'app-content-list-item-avatar-selected': selected }" />
+						</template>
+
+						<template v-else>
+							<Avatar
+								:display-name="addresses"
+								:email="avatarEmail"
+								:fetch-avatar="data.fetchAvatarFromClient"
+								:avatar="data.avatar" />
+						</template>
+					</div>
 				</template>
+			</div>
+		</template>
+		<template #name>
+			<div class="envelope__recipient-row">
+				<template v-if="compactMode && oneLineLayout">
+					<ImportantIcon
+						v-if="isImportant"
+						fill-color="#00679e"
+						:size="20"
+						class="recipient-icon important-icon--recipient"
+						@click.stop.prevent="hasWriteAcl ? onToggleFlagged() : false" />
+					<Star
+						v-if="data.flags.flagged"
+						fill-color="#f9cf3d"
+						:size="20"
+						class="recipient-icon favorite-icon--recipient"
+						@click.stop.prevent="hasWriteAcl ? onToggleFlagged() : false" />
+
+					<JunkIcon
+						v-if="data.flags.$junk"
+						:size="20"
+						class="app-content-list-item-star junk-icon-style junk-icon--recipient"
+						:data-starred="data.flags.$junk ? 'true' : 'false'"
+						@click.stop.prevent="hasWriteAcl ? onToggleJunk() : false" />
+				</template>
+
+				<span class="envelope__recipient-text">
+					{{ addresses }}
+				</span>
 			</div>
 		</template>
 		<template #subname>
 			<div
 				class="line-two"
 				:class="{ 'one-line': oneLineLayout }">
-				<div class="envelope__subtitle">
+				<div class="envelope__subtitle envelope__subtitle--compact-wrapper">
 					<Reply
 						v-if="data.flags.answered"
 						class="seen-icon-style"
@@ -83,6 +138,30 @@
 						v-if="data.flags.hasAttachments === true"
 						class="attachment-icon-style"
 						:size="18" />
+					<div
+						v-if="compactMode && !oneLineLayout"
+						class="compact-subject-icons">
+						<ImportantIcon
+							v-if="isImportant"
+							fill-color="#00679e"
+							:size="20"
+							class="icon-important--compact"
+							@click.stop.prevent="hasWriteAcl ? onToggleFlagged() : false" />
+
+						<Star
+							v-if="data.flags.flagged"
+							fill-color="#f9cf3d"
+							:size="22"
+							class="favorite-icon-style--compact"
+							@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
+
+						<JunkIcon
+							v-if="data.flags.$junk"
+							:size="18"
+							class="junk-icon-style--compact"
+							@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
+					</div>
+
 					<span
 						class="envelope__subtitle__subject"
 						:class="{ 'one-line': oneLineLayout }"
@@ -91,7 +170,7 @@
 					</span>
 				</div>
 				<div
-					v-if="data.encrypted || data.previewText"
+					v-if="!compactMode && (data.encrypted || data.previewText)"
 					class="envelope__preview-text"
 					:title="data.summary ? t('mail', 'This summary was AI generated') : null">
 					<NcAssistantIcon v-if="data.summary" :size="15" class="envelope__preview-text__icon" />
@@ -298,7 +377,7 @@
 				<NcActionInput
 					type="datetime-local"
 					is-native-picker
-					:value="customSnoozeDateTime"
+					:model-value="customSnoozeDateTime"
 					:min="new Date()"
 					@change="setCustomSnoozeDateTime">
 					<template #icon>
@@ -399,6 +478,14 @@
 					{{ translateTagDisplayName(tag) }}
 				</span>
 			</div>
+			<div v-for="(attachment, idx) in attachments" :key="`attachement-${idx}`">
+				<AttachmentTag
+					:file-name="attachment.fileName"
+					:mime-type="attachment.mime"
+					:mime-url="attachment.mimeUrl"
+					@open="showViewer(fileInfos[idx])" />
+			</div>
+			<AttachmentTag v-if="remainingAttachements > 0" :remaining="remainingAttachements" />
 			<MoveModal
 				v-if="showMoveModal"
 				:account="account"
@@ -433,7 +520,9 @@ import {
 	NcActionLink as ActionLink,
 	NcActionText as ActionText,
 	NcActionInput,
-	NcActionSeparator, NcAssistantIcon,
+	NcActionSeparator,
+	NcAssistantIcon,
+	NcCheckboxRadioSwitch,
 } from '@nextcloud/vue'
 import escapeHtml from 'escape-html'
 import { mapState, mapStores } from 'pinia'
@@ -463,6 +552,7 @@ import StarOutline from 'vue-material-design-icons/StarOutline.vue'
 import TagIcon from 'vue-material-design-icons/TagOutline.vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import DownloadIcon from 'vue-material-design-icons/TrayArrowDown.vue'
+import AttachmentTag from './AttachmentTag.vue'
 import Avatar from './Avatar.vue'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions.vue'
 import EnvelopeSkeleton from './EnvelopeSkeleton.vue'
@@ -478,6 +568,7 @@ import { matchError } from '../errors/match.js'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError.js'
 import logger from '../logger.js'
+import AttachementMixin from '../mixins/AttachementMixin.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
@@ -489,6 +580,7 @@ import { hiddenTags } from './tags.js'
 export default {
 	name: 'Envelope',
 	components: {
+		AttachmentTag,
 		AlertOctagonIcon,
 		Avatar,
 		IconCreateEvent,
@@ -506,6 +598,7 @@ export default {
 		EnvelopeSkeleton,
 		JunkIcon,
 		ActionButton,
+		NcCheckboxRadioSwitch,
 		MoveModal,
 		OpenInNewIcon,
 		PlusIcon,
@@ -535,6 +628,8 @@ export default {
 	directives: {
 		draggableEnvelope: DraggableEnvelopeDirective,
 	},
+
+	mixins: [AttachementMixin],
 
 	props: {
 		withReply: {
@@ -589,6 +684,7 @@ export default {
 			overwriteOneLineMobile: false,
 			hoveringAvatar: false,
 			quickActionLoading: false,
+			possibleAttachementsCount: 0,
 		}
 	},
 
@@ -612,6 +708,10 @@ export default {
 
 		layoutMessageViewThreaded() {
 			return this.mainStore.getPreference('layout-message-view', 'threaded') === 'threaded'
+		},
+
+		compactMode() {
+			return this.mainStore.getPreference('compact-mode', 'false') === 'true'
 		},
 
 		hasMultipleRecipients() {
@@ -717,6 +817,14 @@ export default {
 			}
 
 			return tags
+		},
+
+		attachments() {
+			return this.data.attachments.filter((e) => e.fileName && e.fileName.length > 0).slice(0, this.possibleAttachementsCount)
+		},
+
+		remainingAttachements() {
+			return this.data.attachments.length - this.attachments.length
 		},
 
 		draggableLabel() {
@@ -871,6 +979,14 @@ export default {
 		},
 	},
 
+	watch: {
+		compactMode(enabled) {
+			if (enabled) {
+				this.hoveringAvatar = false
+			}
+		},
+	},
+
 	mounted() {
 		this.onWindowResize()
 		window.addEventListener('resize', this.onWindowResize)
@@ -886,6 +1002,20 @@ export default {
 
 		formatted() {
 			return shortRelativeDatetime(new Date(this.data.dateInt * 1000))
+		},
+
+		countPossibleAttachements() {
+			const container = this.$refs.component?.$el?.querySelector('.list-item-content')
+			if (!container) {
+				return 0 // or a default value
+			}
+			const tagsWidth = Array.from(container.querySelectorAll('.tag-group') ?? [])
+				.reduce((total, tag) => total + tag.clientWidth, 0)
+			const detailsWidth = container.querySelector('.list-item-content__inner__details')?.clientWidth ?? 0
+			const availableWidth = (container.clientWidth ?? 0) - detailsWidth - tagsWidth - 30 // 30px for the extra (+n) indicator
+
+			const attachementSize = 140 + 4 // min-width + gap
+			this.possibleAttachementsCount = Math.min(3, Math.floor(availableWidth / attachementSize))
 		},
 
 		async executeQuickAction(action) {
@@ -1308,6 +1438,7 @@ export default {
 			} else {
 				this.overwriteOneLineMobile = false
 			}
+			this.countPossibleAttachements()
 		},
 	},
 }
@@ -1381,7 +1512,7 @@ export default {
 
 .icon-important {
 	:deep(path) {
-		fill: #ffcc00;
+		fill: var(--color-primary);
 		stroke: var(--color-main-background);
 		stroke-width: 2;
 	}
@@ -1603,4 +1734,58 @@ export default {
 	justify-content: center;
 }
 
+.list-item--compact {
+	.envelope__subtitle__subject {
+		margin-inline-start: 0;
+		flex: 1;
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+}
+
+.list-item--compact .envelope__subtitle {
+	display: flex;
+	align-items: center;
+	padding-inline-start: 0;
+}
+
+.envelope__subtitle--compact-wrapper {
+	display: flex;
+	align-items: center;
+}
+
+.compact-subject-icons {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	flex-shrink: 0;
+	margin-inline-end: 4px;
+}
+
+.envelope__recipient-row {
+	display: inline-flex;
+	align-items: center;
+	min-width: 0;
+}
+
+.recipient-icon {
+	flex: 0 0 auto;
+	margin-inline-end: 6px;
+}
+
+.envelope__recipient-text {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.envelope--compact.envelope--one-line {
+	.favorite-icon-style,
+	.icon-important {
+		display: none;
+	}
+}
 </style>

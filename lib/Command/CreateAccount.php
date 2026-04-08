@@ -12,6 +12,7 @@ namespace OCA\Mail\Command;
 
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCP\IUserManager;
 use OCP\Security\ICrypto;
 use Symfony\Component\Console\Command\Command;
@@ -39,9 +40,12 @@ final class CreateAccount extends Command {
 	private ICrypto $crypto;
 	private IUserManager $userManager;
 
-	public function __construct(AccountService $service,
+	public function __construct(
+		AccountService $service,
 		ICrypto $crypto,
-		IUserManager $userManager) {
+		IUserManager $userManager,
+		private ClassificationSettingsService $classificationSettingsService,
+	) {
 		parent::__construct();
 
 		$this->accountService = $service;
@@ -114,6 +118,7 @@ final class CreateAccount extends Command {
 		$account->setOutboundSslMode($smtpSslMode);
 		$account->setOutboundUser($smtpUser);
 		$account->setOutboundPassword($this->crypto->encrypt($smtpPassword));
+		$account->setClassificationEnabled($this->classificationSettingsService->isClassificationEnabledByDefault());
 
 		$account = $this->accountService->save($account);
 

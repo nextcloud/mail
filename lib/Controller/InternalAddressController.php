@@ -41,6 +41,10 @@ class InternalAddressController extends Controller {
 	 */
 	#[TrapError]
 	public function setAddress(string $address, string $type): JsonResponse {
+		if ($this->uid === null) {
+			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
+		}
+
 		$address = $this->internalAddressService->add(
 			$this->uid,
 			$address,

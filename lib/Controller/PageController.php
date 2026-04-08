@@ -19,6 +19,8 @@ use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\Classification\ClassificationSettingsService;
+use OCA\Mail\Service\ContextChat\ContextChatSettingsService;
 use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\QuickActionsService;
@@ -72,6 +74,7 @@ class PageController extends Controller {
 	private IAvailabilityCoordinator $availabilityCoordinator;
 	private InternalAddressService $internalAddressService;
 	private QuickActionsService $quickActionsService;
+	private ContextChatSettingsService $contextChatSettingsService;
 
 	public function __construct(
 		string $appName,
@@ -80,7 +83,7 @@ class PageController extends Controller {
 		IConfig $config,
 		AccountService $accountService,
 		AliasesService $aliasesService,
-		?string $UserId,
+		?string $userId,
 		IUserSession $userSession,
 		IUserPreferences $preferences,
 		IMailManager $mailManager,
@@ -97,6 +100,8 @@ class PageController extends Controller {
 		IAvailabilityCoordinator $availabilityCoordinator,
 		QuickActionsService $quickActionsService,
 		private IAppManager $appManager,
+		ContextChatSettingsService $contextChatSettingsService,
+		private ClassificationSettingsService $classificationSettingsService,
 	) {
 		parent::__construct($appName, $request);
 
@@ -104,7 +109,7 @@ class PageController extends Controller {
 		$this->config = $config;
 		$this->accountService = $accountService;
 		$this->aliasesService = $aliasesService;
-		$this->currentUserId = $UserId;
+		$this->currentUserId = $userId;
 		$this->userSession = $userSession;
 		$this->preferences = $preferences;
 		$this->mailManager = $mailManager;
@@ -120,6 +125,7 @@ class PageController extends Controller {
 		$this->internalAddressService = $internalAddressService;
 		$this->availabilityCoordinator = $availabilityCoordinator;
 		$this->quickActionsService = $quickActionsService;
+		$this->contextChatSettingsService = $contextChatSettingsService;
 	}
 
 	/**
@@ -224,10 +230,16 @@ class PageController extends Controller {
 			'start-mailbox-id' => $this->preferences->getPreference($this->currentUserId, 'start-mailbox-id'),
 			'follow-up-reminders' => $this->preferences->getPreference($this->currentUserId, 'follow-up-reminders', 'true'),
 			'sort-favorites' => $this->preferences->getPreference($this->currentUserId, 'sort-favorites', 'false'),
+			'index-context-chat' => $this->contextChatSettingsService->isIndexingEnabled($this->currentUserId) ? 'true' : 'false',
+			'compact-mode' => $this->preferences->getPreference($this->currentUserId, 'compact-mode', 'false'),
 		]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',
 			$this->userManager->getDisplayName($this->currentUserId),
+		);
+		$this->initialStateService->provideInitialState(
+			'importance_classification_default',
+			$this->classificationSettingsService->isClassificationEnabledByDefault(),
 		);
 		$this->initialStateService->provideInitialState(
 			'prefill_email',
@@ -268,7 +280,6 @@ class PageController extends Controller {
 					'redirect_uri' => $this->urlGenerator->linkToRouteAbsolute('mail.microsoftIntegration.oauthRedirect'),
 					'response_type' => 'code',
 					'response_mode' => 'query',
-					'prompt' => 'consent',
 					'state' => '_accountId_', // Replaced by frontend
 					'scope' => 'offline_access https://outlook.office.com/IMAP.AccessAsUser.All https://outlook.office.com/SMTP.Send',
 					'access_type' => 'offline',
@@ -312,6 +323,11 @@ class PageController extends Controller {
 			'llm_followup_available',
 			$this->aiIntegrationsService->isLlmProcessingEnabled()
 			&& $this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
+		);
+
+		$this->initialStateService->provideInitialState(
+			'context_chat_available',
+			$this->appManager->isEnabledForUser('context_chat')
 		);
 
 		$this->initialStateService->provideInitialState(
