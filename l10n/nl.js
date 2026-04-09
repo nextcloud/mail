@@ -411,7 +411,7 @@ OC.L10N.register(
     "Clear folder" : "Map leegmaken",
     "The folder and all messages in it will be deleted." : "De map en alle berichten erin worden verwijderd.",
     "Delete folder" : "Map verwijderen",
-    "Delete folder {name}" : "Verwijder map {naam}",
+    "Delete folder {name}" : "Verwijder map {name}",
     "An error occurred, unable to rename the mailbox." : "Er is een fout opgetreden, de naam van de mailbox kon niet worden gewijzigd.",
     "Mark all as read" : "Alles als gelezen markeren",
     "Add subfolder" : "Toevoegen submap",
