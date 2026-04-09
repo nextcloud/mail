@@ -1717,7 +1717,7 @@ export default {
 }
 
 .hovering-status {
-	// Needs to be the same width as the check-icon and the avatar to prevent automatic resizing
+	// Needs to be the same height as the check-icon and the avatar to prevent automatic resizing
 	// and height differences between hover state and normal state
 	height: calc(var(--default-grid-baseline) * 10);
 	padding-top: 3px;
