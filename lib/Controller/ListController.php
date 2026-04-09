@@ -99,6 +99,7 @@ class ListController extends Controller {
 		} finally {
 			$client->logout();
 		}
+		$this->delegationService->logDelegatedAction("$this->currentUserId unsubscribed from mailing list: $id on behalf of $effectiveUserId");
 
 		return JsonResponse::success();
 	}

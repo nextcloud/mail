@@ -99,6 +99,7 @@ class SieveController extends Controller {
 			$this->logger->error('Installing sieve script failed: ' . $e->getMessage(), ['app' => 'mail', 'exception' => $e]);
 			return new JSONResponse(data: ['message' => $e->getMessage()], statusCode: Http::STATUS_UNPROCESSABLE_ENTITY);
 		}
+		$this->delegationService->logDelegatedAction("$this->currentUserId updated the active sieve script for account <$id> on behalf of $effectiveUserId");
 
 		return new JSONResponse();
 	}
@@ -182,6 +183,7 @@ class SieveController extends Controller {
 		}
 
 		$this->mailAccountMapper->save($mailAccount);
+		$this->delegationService->logDelegatedAction("$this->currentUserId updated sieve settings for account <$id> on behalf of $effectiveUserId");
 		return new JSONResponse(['sieveEnabled' => $mailAccount->isSieveEnabled()]);
 	}
 }

@@ -126,6 +126,7 @@ class MailboxesController extends Controller {
 				$mailbox,
 				$name
 			);
+			$this->delegationService->logDelegatedAction("$this->currentUserId changed mailbox: id 's name to $name  on behalf of $effectiveUserId");
 		}
 		if ($subscribed !== null) {
 			$mailbox = $this->mailManager->updateSubscription(
@@ -133,14 +134,18 @@ class MailboxesController extends Controller {
 				$mailbox,
 				$subscribed
 			);
+			$subscribedVerb = $subscribed ? 'subscribed' : 'unsubscribed';
+			$this->delegationService->logDelegatedAction("$this->currentUserId $subscribedVerb to mailbox: $id on behalf of $effectiveUserId");
+
 		}
 		if ($syncInBackground !== null) {
 			$mailbox = $this->mailManager->enableMailboxBackgroundSync(
 				$mailbox,
 				$syncInBackground
 			);
+			$syncVerb = $syncInBackground ? 'enabled' : 'disabled';
+			$this->delegationService->logDelegatedAction("$this->currentUserId $syncVerb background sync for mailbox: $id on behalf of $effectiveUserId");
 		}
-
 		return new JSONResponse($mailbox);
 	}
 
@@ -251,6 +256,8 @@ class MailboxesController extends Controller {
 
 		$this->mailManager->markFolderAsRead($account, $mailbox);
 
+		$this->delegationService->logDelegatedAction("$this->currentUserId marked all messages as read in mailbox: $id on behalf of $effectiveUserId");
+
 		return new JSONResponse([]);
 	}
 
@@ -321,8 +328,11 @@ class MailboxesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 		$account = $this->accountService->find($effectiveUserId, $accountId);
+		$mailbox = $this->mailManager->createMailbox($account, $name);
+		$id = $mailbox->getId();
+		$this->delegationService->logDelegatedAction("$this->currentUserId created mailbox: $id on behalf of $effectiveUserId");
 
-		return new JSONResponse($this->mailManager->createMailbox($account, $name));
+		return new JSONResponse($mailbox);
 	}
 
 	/**
@@ -349,6 +359,8 @@ class MailboxesController extends Controller {
 		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 
 		$this->mailManager->deleteMailbox($account, $mailbox);
+		$this->delegationService->logDelegatedAction("$this->currentUserId deleted mailbox: $id on behalf of $effectiveUserId");
+
 		return new JSONResponse();
 	}
 
@@ -377,6 +389,7 @@ class MailboxesController extends Controller {
 		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 
 		$this->mailManager->clearMailbox($account, $mailbox);
+		$this->delegationService->logDelegatedAction("$this->currentUserId cleared mailbox: $id on behalf of $effectiveUserId");
 		return new JSONResponse();
 	}
 
@@ -400,6 +413,8 @@ class MailboxesController extends Controller {
 		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 
 		$this->syncService->repairSync($account, $mailbox);
+		$this->delegationService->logDelegatedAction("$this->currentUserId repaired mailbox: $id on behalf of $effectiveUserId");
+
 		return new JsonResponse();
 	}
 }

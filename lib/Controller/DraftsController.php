@@ -125,7 +125,8 @@ class DraftsController extends Controller {
 		}
 
 		$this->service->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
-
+		$id = $message->getId();
+		$this->delegationService->logDelegatedAction("$this->currentUserId created draft: $id  on behalf of $effectiveUserId");
 		return JsonResponse::success($message, Http::STATUS_CREATED);
 	}
 
@@ -213,6 +214,7 @@ class DraftsController extends Controller {
 		$this->accountService->find($effectiveUserId, $message->getAccountId());
 
 		$this->service->deleteMessage($effectiveUserId, $message);
+		$this->delegationService->logDelegatedAction("$this->currentUserId deleted draft: $id  on behalf of $effectiveUserId");
 		return JsonResponse::success('Message deleted', Http::STATUS_ACCEPTED);
 	}
 
@@ -229,6 +231,7 @@ class DraftsController extends Controller {
 		$account = $this->accountService->find($effectiveUserId, $message->getAccountId());
 
 		$this->service->sendMessage($message, $account);
+		$this->delegationService->logDelegatedAction("$this->currentUserId moved draft: $id to the IMAP server on behalf of $effectiveUserId");
 		return  JsonResponse::success(
 			'Message moved to IMAP', Http::STATUS_ACCEPTED
 		);
