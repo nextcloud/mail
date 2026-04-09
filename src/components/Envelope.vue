@@ -1787,4 +1787,3 @@ export default {
 	color: var(--color-primary-element) !important;
 }
 </style>
-
