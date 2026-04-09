@@ -149,7 +149,7 @@ final class TextBlockServiceTest extends TestCase {
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with($shareWith)
-			->willReturn($this->createMock(\OCP\IUser::class));
+			->willReturn($this->createStub(\OCP\IUser::class));
 
 		$this->textBlockShareMapper->expects($this->once())
 			->method(constraint: 'shareExists')
@@ -175,7 +175,7 @@ final class TextBlockServiceTest extends TestCase {
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with($shareWith)
-			->willReturn($this->createMock(\OCP\IUser::class));
+			->willReturn($this->createStub(\OCP\IUser::class));
 
 		$this->textBlockShareMapper->expects($this->once())
 			->method('shareExists')
@@ -281,7 +281,7 @@ final class TextBlockServiceTest extends TestCase {
 
 	public function testFindAllSharedWithMe(): void {
 		$userId = 'alice';
-		$user = $this->createMock(\OCP\IUser::class);
+		$user = $this->createStub(\OCP\IUser::class);
 		$shares = [new TextBlockShare(), new TextBlockShare()];
 
 		$this->userManager->expects($this->once())

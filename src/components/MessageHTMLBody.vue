@@ -129,7 +129,7 @@ export default {
 		}
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		scout.off('beforeprint', this.onBeforePrint)
 		this.$refs.iframe.iFrameResizer.close()
 	},

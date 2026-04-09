@@ -152,8 +152,9 @@ class GoogleIntegration {
 				], JSON_THROW_ON_ERROR)
 			]);
 		} catch (Exception $e) {
-			$this->logger->warning('Could not refresh oauth token: ' . $e->getMessage(), [
+			$this->logger->warning('Could not refresh Google OAuth token for account {accountId}: ' . $e->getMessage(), [
 				'exception' => $e,
+				'accountId' => $account->getId(),
 			]);
 			return $account;
 		}

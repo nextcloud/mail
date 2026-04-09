@@ -16,7 +16,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 class RepliedMessageTest extends TestCase {
 	public function testGetAccount() {
 		/** @var Account|MockObject $account */
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$message = new Message();
 		$data = new RepliedMessageData($account, $message);
 
@@ -25,7 +25,7 @@ class RepliedMessageTest extends TestCase {
 
 	public function testGetMessage() {
 		/** @var Account|MockObject $account */
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$message = new Message();
 		$data = new RepliedMessageData($account, $message);
 

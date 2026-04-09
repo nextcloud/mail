@@ -13,6 +13,8 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use Horde_Mail_Transport;
 use OCA\Mail\Account;
+use OCA\Mail\Address;
+use OCA\Mail\AddressList;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\LocalAttachment;
@@ -91,7 +93,7 @@ class MailTransmissionTest extends TestCase {
 		$localMessage->setSubject('Test');
 		$localMessage->setBodyPlain('Test');
 		$localMessage->setHtml(false);
-		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$transport = $this->createStub(Horde_Mail_Transport::class);
 
 		$this->smtpClientFactory->expects($this->once())
 			->method('create')
@@ -120,7 +122,7 @@ class MailTransmissionTest extends TestCase {
 		$localMessage->setSubject('Test');
 		$localMessage->setBodyPlain('Test');
 		$localMessage->setHtml(false);
-		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$transport = $this->createStub(Horde_Mail_Transport::class);
 
 		$this->transmissionService->expects(self::once())
 			->method('getSignMimePart')
@@ -136,7 +138,6 @@ class MailTransmissionTest extends TestCase {
 	}
 
 	public function testSendMessageFromAlias() {
-		// Arrange
 		$mailAccount = new MailAccount();
 		$mailAccount->setName('Bob');
 		$mailAccount->setEmail('bob@example.org');
@@ -153,7 +154,7 @@ class MailTransmissionTest extends TestCase {
 		$localMessage->setHtml(false);
 		$localMessage->setAliasId(1);
 		$localMessage->setRequestMdn(true);
-		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$transport = $this->createStub(Horde_Mail_Transport::class);
 		$this->smtpClientFactory->expects($this->once())
 			->method('create')
 			->willReturn($transport);
@@ -167,17 +168,14 @@ class MailTransmissionTest extends TestCase {
 			->method('getEncryptMimePart')
 			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
 
-		// Act
 		$this->transmission->sendMessage($account, $localMessage);
 
-		// Assert
 		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
 		$this->assertStringContainsString('From: Info <info@example.org', $localMessage->getRaw());
 		$this->assertStringContainsString('Disposition-Notification-To: Info <info@example.org>', $localMessage->getRaw());
 	}
 
 	public function testSendMessageAliasFallbackName() {
-		// Arrange
 		$mailAccount = new MailAccount();
 		$mailAccount->setName('Bob');
 		$mailAccount->setEmail('bob@example.org');
@@ -193,7 +191,7 @@ class MailTransmissionTest extends TestCase {
 		$localMessage->setHtml(false);
 		$localMessage->setAliasId(1);
 		$localMessage->setRequestMdn(true);
-		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$transport = $this->createStub(Horde_Mail_Transport::class);
 		$this->smtpClientFactory->expects($this->once())
 			->method('create')
 			->willReturn($transport);
@@ -207,17 +205,14 @@ class MailTransmissionTest extends TestCase {
 			->method('getEncryptMimePart')
 			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
 
-		// Act
 		$this->transmission->sendMessage($account, $localMessage);
 
-		// Assert
 		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
 		$this->assertStringContainsString('From: Bob <info@example.org', $localMessage->getRaw());
 		$this->assertStringContainsString('Disposition-Notification-To: Bob <info@example.org>', $localMessage->getRaw());
 	}
 
 	public function testSendMessageAliasDoesNotExist() {
-		// Arrange
 		$mailAccount = new MailAccount();
 		$mailAccount->setName('Bob');
 		$mailAccount->setEmail('bob@example.org');
@@ -230,7 +225,7 @@ class MailTransmissionTest extends TestCase {
 		$localMessage->setHtml(false);
 		$localMessage->setAliasId(1);
 		$localMessage->setRequestMdn(true);
-		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$transport = $this->createStub(Horde_Mail_Transport::class);
 		$this->smtpClientFactory->expects($this->once())
 			->method('create')
 			->willReturn($transport);
@@ -244,10 +239,8 @@ class MailTransmissionTest extends TestCase {
 			->method('getEncryptMimePart')
 			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
 
-		// Act
 		$this->transmission->sendMessage($account, $localMessage);
 
-		// Assert
 		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
 		$this->assertStringContainsString('From: Bob <bob@example.org', $localMessage->getRaw());
 		$this->assertStringContainsString('Disposition-Notification-To: Bob <bob@example.org>', $localMessage->getRaw());
@@ -272,7 +265,7 @@ class MailTransmissionTest extends TestCase {
 		$attachment->setId(1);
 		$localMessage->setAttachments([$attachment]);
 		$message = new Message();
-		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$transport = $this->createStub(Horde_Mail_Transport::class);
 		$attachmentMessage = new DbMessage();
 		$attachmentMessage->setMailboxId(1234);
 		$attachmentMessage->setUid(11);
@@ -324,7 +317,7 @@ class MailTransmissionTest extends TestCase {
 		$messageInReply->setUid($repliedMessageUid);
 		$messageInReply->setMessageId('message@server');
 		$message = new Message();
-		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$transport = $this->createStub(Horde_Mail_Transport::class);
 
 		$this->smtpClientFactory->expects($this->once())
 			->method('create')
@@ -353,7 +346,7 @@ class MailTransmissionTest extends TestCase {
 		$messageData = NewMessageData::fromRequest($account, 'sub', 'bod', 'to@d.com', '', '');
 		$message = new Message();
 
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->with($account)
@@ -432,5 +425,92 @@ class MailTransmissionTest extends TestCase {
 			->method('save');
 
 		$this->transmission->saveLocalDraft(new Account($mailAccount), $localMessage);
+	}
+
+	public function testSendMessageCc() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setName('Bob');
+		$mailAccount->setEmail('bob@mail.example');
+		$mailAccount->setUserId('bob');
+		$mailAccount->setSentMailboxId(123);
+		$account = new Account($mailAccount);
+		$localMessage = new LocalMessage();
+		$localMessage->setSubject('Test');
+		$localMessage->setBodyPlain('Test');
+		$localMessage->setHtml(false);
+		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$this->smtpClientFactory->expects($this->once())
+			->method('create')
+			->willReturn($transport);
+		$this->transmissionService->expects(self::once())
+			->method('getSignMimePart')
+			->willReturnCallback(static fn ($localMessage, $account, $mimePart) => $mimePart);
+		$this->transmissionService->expects(self::once())
+			->method('getEncryptMimePart')
+			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
+		$this->transmissionService->expects(self::exactly(3))
+			->method('getAddressList')
+			->willReturnCallback(function ($localMessage, $type) {
+				$addresses = [];
+
+				if ($type === Recipient::TYPE_CC) {
+					$addresses[] = Address::fromRaw('Alice', 'alice@mail.example');
+				}
+
+				if ($type === Recipient::TYPE_BCC) {
+					$addresses[] = Address::fromRaw('Jane', 'jane@mail.example');
+				}
+
+				return new AddressList($addresses);
+			});
+
+
+		$this->transmission->sendMessage($account, $localMessage);
+
+		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
+		$this->assertStringContainsString('From: Bob <bob@mail.example>', $localMessage->getRaw());
+		$this->assertStringContainsString('Cc: Alice <alice@mail.example>', $localMessage->getRaw());
+		$this->assertStringNotContainsString('Bcc:', $localMessage->getRaw());
+	}
+
+	public function testSendMessageOmitCc() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setName('Bob');
+		$mailAccount->setEmail('bob@example.org');
+		$mailAccount->setUserId('bob');
+		$mailAccount->setSentMailboxId(123);
+		$account = new Account($mailAccount);
+		$localMessage = new LocalMessage();
+		$localMessage->setSubject('Test');
+		$localMessage->setBodyPlain('Test');
+		$localMessage->setHtml(false);
+		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$this->smtpClientFactory->expects($this->once())
+			->method('create')
+			->willReturn($transport);
+		$this->transmissionService->expects(self::once())
+			->method('getSignMimePart')
+			->willReturnCallback(static fn ($localMessage, $account, $mimePart) => $mimePart);
+		$this->transmissionService->expects(self::once())
+			->method('getEncryptMimePart')
+			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
+		$this->transmissionService->expects(self::exactly(3))
+			->method('getAddressList')
+			->willReturnCallback(static function ($message, $type) {
+				$addresses = [];
+
+				if ($type === Recipient::TYPE_TO) {
+					$addresses[] = Address::fromRaw('Alice', 'alice@mail.example');
+				}
+
+				return new AddressList($addresses);
+			});
+
+		$this->transmission->sendMessage($account, $localMessage);
+
+		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
+		$this->assertStringContainsString('From: Bob <bob@example.org>', $localMessage->getRaw());
+		$this->assertStringNotContainsString('Cc:', $localMessage->getRaw());
+		$this->assertStringNotContainsString('Bcc:', $localMessage->getRaw());
 	}
 }

@@ -30,12 +30,12 @@ class ContactIntegrationController extends Controller {
 		IRequest $request,
 		ContactIntegrationService $service,
 		ICacheFactory $cacheFactory,
-		string $UserId) {
+		string $userId) {
 		parent::__construct($appName, $request);
 
 		$this->service = $service;
 		$this->cache = $cacheFactory->createLocal('mail.contacts');
-		$this->uid = $UserId;
+		$this->uid = $userId;
 	}
 
 	/**

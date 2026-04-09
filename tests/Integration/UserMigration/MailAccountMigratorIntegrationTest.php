@@ -61,7 +61,7 @@ class MailAccountMigratorIntegrationTest extends TestCase {
 				return $exportContents[$path];
 			});
 
-		$output = $this->createMock(OutputInterface::class);
+		$output = $this->createStub(OutputInterface::class);
 
 		$this->migrator->export(
 			$sourceUser,

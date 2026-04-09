@@ -37,7 +37,7 @@ class FolderMapperTest extends TestCase {
 	}
 
 	public function testGetFoldersEmtpyAccount(): void {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('listMailboxes')

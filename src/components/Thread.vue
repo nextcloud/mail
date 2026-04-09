@@ -221,7 +221,7 @@ export default {
 		window.addEventListener('keydown', this.handleKeyDown)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		window.removeEventListener('resize', this.resizeDebounced)
 		window.removeEventListener('keydown', this.handleKeyDown)
 	},

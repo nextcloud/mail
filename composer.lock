@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1bfa096a8f37087661d4065620d02ac2",
+    "content-hash": "957fa4d92b4c75b257b689fd921d0a93",
     "packages": [
         {
             "name": "amphp/amp",
@@ -824,16 +824,16 @@
         },
         {
             "name": "bytestream/horde-imap-client",
-            "version": "v2.33.6",
+            "version": "v2.34.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Imap_Client.git",
-                "reference": "33dc825bb4fb0a3fc6c892625404807aee7cd861"
+                "reference": "e6b2d5b0eec6e7918a8f22afbb1f070b411f9887"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/33dc825bb4fb0a3fc6c892625404807aee7cd861",
-                "reference": "33dc825bb4fb0a3fc6c892625404807aee7cd861",
+                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/e6b2d5b0eec6e7918a8f22afbb1f070b411f9887",
+                "reference": "e6b2d5b0eec6e7918a8f22afbb1f070b411f9887",
                 "shasum": ""
             },
             "require": {
@@ -875,9 +875,9 @@
             "description": "Horde IMAP client library",
             "homepage": "https://www.horde.org/libraries/Horde_Imap_Client",
             "support": {
-                "source": "https://github.com/bytestream/Imap_Client/tree/v2.33.6"
+                "source": "https://github.com/bytestream/Imap_Client/tree/v2.34.0"
             },
-            "time": "2025-04-30T16:20:39+00:00"
+            "time": "2026-03-22T11:53:24+00:00"
         },
         {
             "name": "bytestream/horde-listheaders",
@@ -988,16 +988,16 @@
         },
         {
             "name": "bytestream/horde-mime",
-            "version": "v2.14.0",
+            "version": "v2.14.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Mime.git",
-                "reference": "5e5cfdecccf1db5db39df17028af00bb8e513b27"
+                "reference": "6cd0216b850ea811ebc543c4b5731ef3a256ba89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Mime/zipball/5e5cfdecccf1db5db39df17028af00bb8e513b27",
-                "reference": "5e5cfdecccf1db5db39df17028af00bb8e513b27",
+                "url": "https://api.github.com/repos/bytestream/Mime/zipball/6cd0216b850ea811ebc543c4b5731ef3a256ba89",
+                "reference": "6cd0216b850ea811ebc543c4b5731ef3a256ba89",
                 "shasum": ""
             },
             "require": {
@@ -1046,9 +1046,9 @@
             "description": "MIME library",
             "homepage": "https://www.horde.org/libraries/Horde_Mime",
             "support": {
-                "source": "https://github.com/bytestream/Mime/tree/v2.14.0"
+                "source": "https://github.com/bytestream/Mime/tree/v2.14.1"
             },
-            "time": "2026-02-12T14:39:44+00:00"
+            "time": "2026-03-30T09:58:39+00:00"
         },
         {
             "name": "bytestream/horde-secret",

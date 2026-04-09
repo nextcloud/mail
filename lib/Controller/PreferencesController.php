@@ -27,11 +27,11 @@ class PreferencesController extends Controller {
 	 * @param IUserPreferences $userPreference
 	 * @param string $UserId
 	 */
-	public function __construct(IRequest $request, IUserPreferences $userPreference, string $UserId) {
+	public function __construct(IRequest $request, IUserPreferences $userPreference, string $userId) {
 		parent::__construct('mail', $request);
 
 		$this->userPreference = $userPreference;
-		$this->userId = $UserId;
+		$this->userId = $userId;
 	}
 
 	/**

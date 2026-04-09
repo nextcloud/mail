@@ -84,7 +84,6 @@ import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import { formatFileSize } from '@nextcloud/files'
 import { translate as t } from '@nextcloud/l10n'
 import { NcActionButton as ActionButton, NcActions as Actions, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-import { mixin as onClickOutside } from 'vue-on-click-outside'
 import IconArrow from 'vue-material-design-icons/ArrowLeft.vue'
 import IconSave from 'vue-material-design-icons/FolderOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
@@ -106,7 +105,6 @@ export default {
 		IconDownload,
 	},
 
-	mixins: [onClickOutside],
 	props: {
 		id: {
 			type: String,
@@ -202,7 +200,25 @@ export default {
 		},
 	},
 
+	mounted() {
+		document.addEventListener('click', this.handleClickOutside)
+	},
+
+	beforeUnmount() {
+		document.removeEventListener('click', this.handleClickOutside)
+	},
+
 	methods: {
+		handleClickOutside(event) {
+			if (!this.showCalendarPopover) {
+				return
+			}
+
+			if (this.$el && !this.$el.contains(event.target)) {
+				this.closeCalendarPopover()
+			}
+		},
+
 		humanReadable(size) {
 			return formatFileSize(size)
 		},

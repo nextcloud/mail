@@ -173,7 +173,7 @@ class DraftsServiceTest extends TestCase {
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => $this->userId
 		]);
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(\Horde_Imap_Client_Socket::class);
 
 		$this->mapper->expects(self::once())
 			->method('saveWithRecipients')
@@ -277,7 +277,7 @@ class DraftsServiceTest extends TestCase {
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => $this->userId
 		]);
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(\Horde_Imap_Client_Socket::class);
 
 		$this->mapper->expects(self::once())
 			->method('updateWithRecipients')
@@ -335,7 +335,7 @@ class DraftsServiceTest extends TestCase {
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => $this->userId
 		]);
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(\Horde_Imap_Client_Socket::class);
 
 		$this->mapper->expects(self::once())
 			->method('updateWithRecipients')
@@ -428,7 +428,7 @@ class DraftsServiceTest extends TestCase {
 			'email' => 'museum@startdewvalley.com',
 			'type' => Recipient::TYPE_TO,
 		]);
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 
 		$this->mapper->expects(self::once())
 			->method('saveWithRecipients')

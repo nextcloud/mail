@@ -7,15 +7,13 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-namespace OCA\Mail\Tests\Integration\Db;
+namespace OCA\Mail\Tests\Unit\Db;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Service\Avatar\Avatar;
 
 class MessageTest extends TestCase {
-	protected function setUp(): void {
-	}
 
 	public function testNewForMessageId(): void {
 		$expected = '<abc@123.com>';
@@ -42,23 +40,48 @@ class MessageTest extends TestCase {
 
 	public function testNewWithMessageIdOneAngleBrackets(): void {
 		$expected = '<abc@123.com>';
-		$noBrackets = '<abc@123.com';
 		$message = new Message();
 
-		$message->setMessageId($noBrackets);
-		$message->setThreadRootId($noBrackets);
+		$message->setMessageId('abc@123.com>');
+		$message->setThreadRootId('abc@123.com>');
 
 		$this->assertEquals($expected, $message->getMessageId());
 		$this->assertEquals($expected, $message->getThreadRootId());
+	}
 
-		$noBrackets = 'abc@123.com>';
+	public function testLeadingNewlineOutlook(): void {
 		$message = new Message();
+		$message->setMessageId("\n <abc@123.com>");
 
-		$message->setMessageId($noBrackets);
-		$message->setThreadRootId($noBrackets);
+		$this->assertEquals('<abc@123.com>', $message->getMessageId());
+	}
 
-		$this->assertEquals($expected, $message->getMessageId());
-		$this->assertEquals($expected, $message->getThreadRootId());
+	public function testLeadingCrLfFoldedHeader(): void {
+		$message = new Message();
+		$message->setMessageId("\r\n <abc@123.com>");
+
+		$this->assertEquals('<abc@123.com>', $message->getMessageId());
+	}
+
+	public function testLeadingWhitespace(): void {
+		$message = new Message();
+		$message->setMessageId('   <abc@123.com>');
+
+		$this->assertEquals('<abc@123.com>', $message->getMessageId());
+	}
+
+	public function testTrailingWhitespace(): void {
+		$message = new Message();
+		$message->setMessageId('<abc@123.com>   ');
+
+		$this->assertEquals('<abc@123.com>', $message->getMessageId());
+	}
+
+	public function testOutlookMultipleAtSigns(): void {
+		$message = new Message();
+		$message->setMessageId('<abc@@example.com>');
+
+		$this->assertEquals('<abc@@example.com>', $message->getMessageId());
 	}
 
 	public function testThreadrootIdNull(): void {

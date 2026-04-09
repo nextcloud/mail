@@ -50,5 +50,37 @@ Single-page Vue 2 app. All routes render through `views/Home.vue`.
 - **Registration**: `appinfo/info.xml` registers background jobs, CLI commands, settings pages, navigation entries, and repair steps. `AppInfo/Application.php` registers event listeners and other services via the Nextcloud bootstrap API.
 - **Events**: Domain events in `lib/Events/` are dispatched after state changes; `lib/Listener/` reacts to them.
 - **Mozart**: Some vendor packages are namespaced into `lib/Vendor/` to avoid conflicts.
-- **REUSE**: Every file requires an SPDX license header (`AGPL-3.0-only` for new files).
+- **REUSE**: Every file requires an SPDX license header (`AGPL-3.0-or-later` for new files).
 - **OpenAPI**: `ResponseDefinitions.php` documents API types; run `composer openapi` to regenerate the spec.
+
+## Testing
+
+### Unit Tests
+Located in `tests/Unit/` with structure mirroring `lib/`.
+
+#### Pattern
+- Use **arrange-act-assert** structure with blank lines separating each phase (no literal comments)
+- Mock dependencies via `$this->createMock(Interface::class)`
+- Setup mocks in `setUp()` for common fixtures
+
+#### Running Tests
+```bash
+composer test:unit                                    # Run all unit tests
+composer test:unit -- tests/Unit/Service/HtmlTest.php # Run specific test file
+composer test:unit -- --filter="TestClassName"        # Run tests matching filter
+```
+
+## Git Workflow
+
+Do NOT commit changes unless explicitly asked to do so.
+
+After completing code changes:
+1. Verify your work is complete and tests pass
+2. Make sure there is no trailing whitespace
+3. Leave changes in working directory or staged (do not commit)
+4. Provide a summary of what was changed and why
+5. Suggest a commit message using Conventional Commits format
+   - There is a [contributing doc](./.github/CONTRIBUTING.md) with suggestions
+6. The user will review and commit when ready
+
+The commit message's last line before sign-off should be `AI-assisted: <agent> (model)`. For example: `AI-assisted: Claude Code (Claude Haiku 4.5)`

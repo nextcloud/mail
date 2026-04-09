@@ -82,7 +82,7 @@ class InteractionListenerTest extends TestCase {
 			$this->createMock(Account::class),
 			$message,
 		);
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$this->serviceMock->getParameter('userSession')
 			->method('getUser')
 			->willReturn($user);

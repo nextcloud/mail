@@ -121,7 +121,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 			null, $this->request->getServerHost(),
 			null,
 			$this->urlGenerator->linkToRoute('mail.proxy.proxy'),
-			'src=' . $originalURL . '&requesttoken=' . \OC::$server->getSession()->get('requesttoken'),
+			'src=' . $originalURL . '&requesttoken=' . \OCP\Server::get(\OCP\ISession::class)->get('requesttoken'),
 			null
 		);
 	}

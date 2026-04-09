@@ -518,7 +518,7 @@ export default {
 		dragEventBus.on('envelopes-moved', this.onEnvelopesMoved)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		dragEventBus.off('drag-start', this.onDragStart)
 		dragEventBus.off('drag-end', this.onDragEnd)
 		dragEventBus.off('envelopes-moved', this.onEnvelopesMoved)

@@ -39,7 +39,7 @@ class SieveController extends Controller {
 
 	public function __construct(
 		IRequest $request,
-		string $UserId,
+		string $userId,
 		MailAccountMapper $mailAccountMapper,
 		SieveClientFactory $sieveClientFactory,
 		ICrypto $crypto,
@@ -48,7 +48,7 @@ class SieveController extends Controller {
 		private SieveService $sieveService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->currentUserId = $UserId;
+		$this->currentUserId = $userId;
 		$this->mailAccountMapper = $mailAccountMapper;
 		$this->sieveClientFactory = $sieveClientFactory;
 		$this->crypto = $crypto;

@@ -641,6 +641,7 @@ OC.L10N.register(
     "Target language to translate into" : "Cílový jazyk, do kterého přeložit",
     "Translate to" : "Přeložit do",
     "Translating" : "Překládá se",
+    "This translation is generated using AI and may contain inaccuracies" : "Tento překlad je vytvořený pomocí AI a může obsahovat nepřesnosti",
     "Copy translated text" : "Zkopírovat přeložený text",
     "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed." : "Pokud chcete ponechávání v koši vypnout, kolonku nevyplňujte nebo zadejte hodnotu 0 (nula). Zpracovány budou pouze ty e-maily, smazaná po zapnutí ponechávání v koši.",
     "Could not remove trusted sender {sender}" : "Nepodařilo se odebrat důvěryhodného odesílatele {sender}",

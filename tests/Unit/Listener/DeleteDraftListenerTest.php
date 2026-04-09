@@ -74,9 +74,9 @@ class DeleteDraftListenerTest extends TestCase {
 
 	public function testHandleDraftSavedEventNoUid(): void {
 		/** @var Account|MockObject $account */
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		/** @var NewMessageData|MockObject $newMessageData */
-		$newMessageData = $this->createMock(NewMessageData::class);
+		$newMessageData = $this->createStub(NewMessageData::class);
 		$event = new DraftSavedEvent(
 			$account,
 			$newMessageData,
@@ -98,7 +98,7 @@ class DeleteDraftListenerTest extends TestCase {
 		$mailAccount = new MailAccount();
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		/** @var NewMessageData|MockObject $newMessageData */
-		$newMessageData = $this->createMock(NewMessageData::class);
+		$newMessageData = $this->createStub(NewMessageData::class);
 		$draft = new Message();
 		$uid = 123;
 		$draft->setUid($uid);
@@ -108,7 +108,7 @@ class DeleteDraftListenerTest extends TestCase {
 			$draft
 		);
 		/** @var \Horde_Imap_Client_Socket|MockObject $client */
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(\Horde_Imap_Client_Socket::class);
 		$this->imapClientFactory
 			->method('getClient')
 			->with($account)
@@ -129,7 +129,7 @@ class DeleteDraftListenerTest extends TestCase {
 		$mailAccount->setDraftsMailboxId(123);
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		/** @var NewMessageData|MockObject $newMessageData */
-		$newMessageData = $this->createMock(NewMessageData::class);
+		$newMessageData = $this->createStub(NewMessageData::class);
 		$draft = new Message();
 		$uid = 123;
 		$draft->setUid($uid);
@@ -139,7 +139,7 @@ class DeleteDraftListenerTest extends TestCase {
 			$draft
 		);
 		/** @var \Horde_Imap_Client_Socket|MockObject $client */
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(\Horde_Imap_Client_Socket::class);
 		$this->imapClientFactory
 			->method('getClient')
 			->with($account)
@@ -157,9 +157,9 @@ class DeleteDraftListenerTest extends TestCase {
 
 	public function testHandleMessageSentEventNoUid(): void {
 		/** @var Account|MockObject $account */
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		/** @var NewMessageData|MockObject $newMessageData */
-		$newMessageData = $this->createMock(NewMessageData::class);
+		$newMessageData = $this->createStub(NewMessageData::class);
 		$event = new DraftSavedEvent(
 			$account,
 			$newMessageData,
