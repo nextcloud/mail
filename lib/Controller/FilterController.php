@@ -66,6 +66,7 @@ class FilterController extends Controller {
 		}
 
 		$this->mailFilterService->update($account->getMailAccount(), $filters);
+		$this->delegationService->logDelegatedAction("$this->currentUserId updated account: $accountId 's filters  on behalf of $effectiveUserId");
 
 		return new JSONResponse([]);
 	}

@@ -20,7 +20,9 @@ use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\DelegationExistsException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IUserManager;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Notification\IManager;
 
 class DelegationService {
@@ -35,6 +37,7 @@ class DelegationService {
 		private IUserManager $userManager,
 		private IManager $notificationManager,
 		private ITimeFactory $time,
+		private IEventDispatcher $eventDispatcher,
 	) {
 	}
 
@@ -114,6 +117,11 @@ class DelegationService {
 	public function resolveLocalMessageUserId(int $localMessageId, string $currentUserId): string {
 		$accountId = $this->localMessageMapper->findAccountIdForLocalMessage($localMessageId);
 		return $this->resolveAccountUserId($accountId, $currentUserId);
+	}
+
+
+	public function logDelegatedAction(string $logMessage) {
+		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent($logMessage));
 	}
 
 	/**

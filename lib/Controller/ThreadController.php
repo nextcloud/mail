@@ -85,6 +85,7 @@ class ThreadController extends Controller {
 			$dstMailbox,
 			$message->getThreadRootId()
 		);
+		$this->delegationService->logDelegatedAction("$this->currentUserId moved thread <$id> to mailbox <$destMailboxId> on behalf of $effectiveUserId");
 
 		return new JSONResponse();
 	}
@@ -114,6 +115,7 @@ class ThreadController extends Controller {
 		}
 
 		$this->snoozeService->snoozeThread($selectedMessage, $unixTimestamp, $srcAccount, $srcMailbox, $dstAccount, $dstMailbox);
+		$this->delegationService->logDelegatedAction("$this->currentUserId snoozed thread <$id> until <$unixTimestamp> in mailbox <$destMailboxId> on behalf of $effectiveUserId");
 
 		return new JSONResponse();
 	}
@@ -137,6 +139,7 @@ class ThreadController extends Controller {
 		}
 
 		$this->snoozeService->unSnoozeThread($selectedMessage, $effectiveUserId);
+		$this->delegationService->logDelegatedAction("$this->currentUserId unsnoozed thread <$id> on behalf of $effectiveUserId");
 
 		return new JSONResponse();
 	}
@@ -229,6 +232,7 @@ class ThreadController extends Controller {
 			$mailbox,
 			$message->getThreadRootId()
 		);
+		$this->delegationService->logDelegatedAction("$this->currentUserId deleted thread <$id> on behalf of $effectiveUserId");
 
 		return new JSONResponse();
 	}
