@@ -1719,7 +1719,8 @@ export default {
 .hovering-status {
 	// Needs to be the same width as the check-icon and the avatar to prevent automatic resizing
 	// and height differences between hover state and normal state
-	height: 34px;
+	height: calc(var(--default-grid-baseline) * 10);
+	padding-top: 3px;
 }
 
 .check-icon {
@@ -1780,12 +1781,10 @@ export default {
 		display: none;
 	}
 }
-</style>
-
-<style>
-.list-item__wrapper--active .compact-checkbox .checkbox-radio-switch__content,
-.list-item__wrapper.active .compact-checkbox .checkbox-radio-switch__content {
+.list-item__wrapper--active :deep(.compact-checkbox .checkbox-radio-switch__content),
+.list-item__wrapper.active :deep(.compact-checkbox .checkbox-radio-switch__content) {
 	background-color: var(--color-primary-element-text) !important;
 	color: var(--color-primary-element) !important;
 }
 </style>
+
