@@ -65,6 +65,10 @@ class DelegationController extends Controller {
 	public function delegate(int $accountId, string $userId): JSONResponse {
 
 		$account = $this->accountService->findById($accountId);
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		if ($account->getUserId() !== $this->currentUserId) {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
@@ -96,6 +100,11 @@ class DelegationController extends Controller {
 	#[TrapError]
 	public function unDelegate(int $accountId, string $userId): JSONResponse {
 		$account = $this->accountService->findById($accountId);
+
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		if ($account->getUserId() !== $this->currentUserId) {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
