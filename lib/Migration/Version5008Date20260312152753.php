@@ -16,7 +16,7 @@ use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 use Override;
 
-class Version5007Date20260312152753 extends SimpleMigrationStep {
+class Version5008Date20260312152753 extends SimpleMigrationStep {
 
 	/**
 	 * @param IOutput $output
