@@ -122,7 +122,7 @@ class DelegationControllerTest extends TestCase {
 
 		$this->delegationService->expects($this->once())
 			->method('delegate')
-			->with(1, 'delegatee')
+			->with($this->ownAccount, 'delegatee', $this->currentUserId)
 			->willReturn($delegation);
 
 		$response = $this->controller->delegate(1, 'delegatee');
@@ -196,7 +196,7 @@ class DelegationControllerTest extends TestCase {
 
 		$this->delegationService->expects($this->once())
 			->method('delegate')
-			->with(1, 'delegatee')
+			->with($this->ownAccount, 'delegatee', $this->currentUserId)
 			->willThrowException(new DelegationExistsException('Delegation already exists'));
 
 		$response = $this->controller->delegate(1, 'delegatee');
@@ -214,7 +214,7 @@ class DelegationControllerTest extends TestCase {
 
 		$this->delegationService->expects($this->once())
 			->method('unDelegate')
-			->with(1, 'delegatee');
+			->with($this->ownAccount, 'delegatee', $this->currentUserId);
 
 		$response = $this->controller->unDelegate(1, 'delegatee');
 

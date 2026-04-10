@@ -134,7 +134,7 @@ class DelegationService {
 	 */
 	private function notify(string $userId, string $currentUserId, Account $account, bool $delegated) {
 		$notification = $this->notificationManager->createNotification();
-		$displayName = $this->userManager->get($currentUserId)->getDisplayName();
+		$displayName = $this->userManager->get($currentUserId)?->getDisplayName() ?? $currentUserId;
 		$time = $this->time->getDateTime('now');
 		$notification
 			->setApp('mail')

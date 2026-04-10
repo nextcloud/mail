@@ -182,6 +182,7 @@ class AccountsController extends Controller {
 			$result = MailJsonResponse::success(
 				$this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $effectiveUserId, $authMethod, $id)
 			);
+			$this->delegationService->logDelegatedAction("$this->currentUserId updated account <$id> on behalf of $effectiveUserId");
 			return $result;
 		} catch (CouldNotConnectException $e) {
 			$data = [
@@ -294,6 +295,7 @@ class AccountsController extends Controller {
 		$result = new JSONResponse(
 			new Account($this->accountService->save($dbAccount))
 		);
+		$this->delegationService->logDelegatedAction("$this->currentUserId patched account <$id> on behalf of $effectiveUserId");
 		return $result;
 	}
 
@@ -312,6 +314,7 @@ class AccountsController extends Controller {
 	public function updateSignature(int $id, ?string $signature = null): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->currentUserId);
 		$this->accountService->updateSignature($id, $effectiveUserId, $signature);
+		$this->delegationService->logDelegatedAction("$this->currentUserId updated signature for account <$id> on behalf of $effectiveUserId");
 		return new JSONResponse();
 	}
 
@@ -328,6 +331,7 @@ class AccountsController extends Controller {
 	public function destroy(int $id): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->currentUserId);
 		$this->accountService->delete($effectiveUserId, $id);
+		$this->delegationService->logDelegatedAction("$this->currentUserId deleted account <$id> on behalf of $effectiveUserId");
 		return new JSONResponse();
 	}
 
@@ -463,6 +467,7 @@ class AccountsController extends Controller {
 				null,
 				[]
 			);
+			$this->delegationService->logDelegatedAction("$this->currentUserId saved draft in account <$id> on behalf of $effectiveUserId");
 			return new JSONResponse([
 				'id' => $this->mailManager->getMessageIdForUid($draftsMailbox, $newUID)
 			]);
@@ -505,6 +510,7 @@ class AccountsController extends Controller {
 		$account = $this->accountService->find($effectiveUserId, $id)->getMailAccount();
 		$account->setSmimeCertificateId($smimeCertificateId);
 		$this->accountService->update($account);
+		$this->delegationService->logDelegatedAction("$this->currentUserId updated S/MIME certificate for account <$id> on behalf of $effectiveUserId");
 		return MailJsonResponse::success();
 	}
 
