@@ -505,7 +505,7 @@
     "Translating" : "Vertalen",
     "Copy translated text" : "Kopieer vertaalde tekst",
     "Could not remove trusted sender {sender}" : "Kon vertrouwde afzender niet verwijderen {sender}",
-    "No senders are trusted at the moment." : "Er zijn nu geen vertrouwder afzenders.",
+    "No senders are trusted at the moment." : "Er zijn nu geen vertrouwde afzenders.",
     "Untitled event" : "Naamloos evenement",
     "(organizer)" : "(organisator)",
     "Import into {calendar}" : "Importeer in {calendar}",
