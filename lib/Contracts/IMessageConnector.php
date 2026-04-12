@@ -13,6 +13,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Attachment;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Protocol\SyncResult;
 use OCA\Mail\Service\Quota;
 
 interface IMessageConnector {
@@ -20,7 +21,7 @@ interface IMessageConnector {
 	/**
 	 * Perform a differential sync for the given mailbox.
 	 */
-	public function syncMessages(Account $account, Mailbox $mailbox, bool $force = false): void;
+	public function syncMessages(Account $account, Mailbox $mailbox, bool $force = false): SyncResult;
 
 	/**
 	 * Fetch a single message envelope (and optionally its body).
