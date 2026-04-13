@@ -14,6 +14,7 @@ use OCP\Contacts\IManager;
 use OCP\IConfig;
 use OCP\IGroupManager;
 use OCP\IUserManager;
+use function is_array;
 
 class ContactsIntegration {
 	/** @var IManager */
@@ -46,55 +47,9 @@ class ContactsIntegration {
 	 * @return array
 	 */
 	public function getMatchingRecipient(string $userId, string $term): array {
-		if (!$this->contactsManager->isEnabled()) {
-			return [];
-		}
-
-		// If 'Allow username autocompletion in share dialog' is disabled in the admin sharing settings, then we must not
-		// auto-complete system users
-		$shareeEnumeration = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'no') === 'yes';
-		$shareeEnumerationInGroupOnly = $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_to_group', 'no') === 'yes';
-		$shareeEnumerationFullMatch = $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match', 'yes') === 'yes';
-		$shareeEnumerationFullMatchUserId = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_userid', 'yes') === 'yes';
-		$shareeEnumerationFullMatchEmail = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_email', 'yes') === 'yes';
-
-		$result = $this->contactsManager->search(
-			$term,
-			['UID', 'FN', 'EMAIL'],
-			[
-				'enumeration' => $shareeEnumeration,
-				'fullmatch' => $shareeEnumerationFullMatch,
-				'limit' => 20,
-			],
-		);
-		if (empty($result)) {
-			return [];
-		}
+		$result = $this->search($userId, $term, ['UID', 'FN', 'EMAIL']);
 		$receivers = [];
-
-		if ($shareeEnumeration && $shareeEnumerationInGroupOnly) {
-			$user = $this->userManager->get($userId);
-			if ($user === null) {
-				return [];
-			}
-			$userGroups = $this->groupManager->getUserGroupIds($user);
-		}
-
 		foreach ($result as $r) {
-			$isSystemUser = isset($r['isLocalSystemBook']) && $r['isLocalSystemBook'];
-			$isInSameGroup = false;
-			if ($isSystemUser && $shareeEnumerationInGroupOnly) {
-				foreach ($userGroups as $userGroup) {
-					if ($this->groupManager->isInGroup($r['UID'], $userGroup)) {
-						$isInSameGroup = true;
-						break;
-					}
-				}
-				if (!$shareeEnumerationFullMatch && !$isInSameGroup) {
-					continue;
-				}
-			}
-
 			$id = $r['UID'];
 			$fn = $r['FN'] ?? null;
 			if (!isset($r['EMAIL'])) {
@@ -111,23 +66,10 @@ class ContactsIntegration {
 				if ($e === '') {
 					continue;
 				}
-				$lowerTerm = strtolower($term);
-
-				if ($isSystemUser && $shareeEnumerationInGroupOnly && !$isInSameGroup) {
-					// Check for full match. If full match is disabled, matching results already filtered out
-					if (!($lowerTerm !== '' && (
-						($shareeEnumerationFullMatch && !empty($fn) && $lowerTerm === strtolower($fn))
-						|| ($shareeEnumerationFullMatchUserId && $lowerTerm === strtolower($id))
-						|| ($shareeEnumerationFullMatchEmail && $lowerTerm === strtolower($e))))) {
-						// Not a full Match
-						continue;
-					}
-				}
-
 				$receivers[] = [
 					'id' => $id,
 					// Show full name if possible or fall back to email
-					'label' => $fn,
+					'label' => $fn ?? $e,
 					'email' => $e,
 					'photo' => $photo,
 					'source' => 'contacts',
@@ -229,21 +171,98 @@ class ContactsIntegration {
 		return $createdContact;
 	}
 
+	private function search(string $userId, string $term, array $fields, ?bool $strictSearch = null): array {
+		if (!$this->contactsManager->isEnabled()) {
+			return [];
+		}
+
+		// If 'Allow username autocompletion in share dialog' is disabled in the admin sharing settings, then we must not
+		// auto-complete system users
+		$shareeEnumeration = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes') === 'yes';
+		$shareeEnumerationInGroupOnly = $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_to_group', 'no') === 'yes';
+		$shareeEnumerationFullMatch = $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match', 'yes') === 'yes';
+		$shareeEnumerationFullMatchDisplayName = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_displayname', 'yes') === 'yes';
+		$shareeEnumerationFullMatchUserId = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_userid', 'yes') === 'yes';
+		$shareeEnumerationFullMatchEmail = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_email', 'yes') === 'yes';
+
+		$options = [
+			'enumeration' => $shareeEnumeration,
+			'fullmatch' => $shareeEnumerationFullMatch,
+			'limit' => 20,
+		];
+		if ($strictSearch !== null) {
+			$options['strict_search'] = $strictSearch;
+		}
+
+		$result = $this->contactsManager->search(
+			$term,
+			$fields,
+			$options,
+		);
+
+		$userGroups = [];
+		if ($shareeEnumeration && $shareeEnumerationInGroupOnly) {
+			$user = $this->userManager->get($userId);
+			if ($user === null) {
+				return [];
+			}
+			$userGroups = $this->groupManager->getUserGroupIds($user);
+		}
+
+		$filteredResults = [];
+		foreach ($result as $r) {
+			$isSystemUser = isset($r['isLocalSystemBook']) && $r['isLocalSystemBook'];
+			$isInSameGroup = false;
+			if ($isSystemUser && $shareeEnumerationInGroupOnly) {
+				foreach ($userGroups as $userGroup) {
+					if ($this->groupManager->isInGroup($r['UID'], $userGroup)) {
+						$isInSameGroup = true;
+						break;
+					}
+				}
+				if (!$shareeEnumerationFullMatch && !$isInSameGroup) {
+					continue;
+				}
+			}
+
+			if ($isSystemUser && $shareeEnumerationInGroupOnly && !$isInSameGroup && $shareeEnumerationFullMatch) {
+				// Check for full match. If full match is disabled, non-matching results already filtered out above.
+				$id = $r['UID'];
+				$fn = $r['FN'] ?? null;
+				$lowerTerm = strtolower($term);
+				$isMatch = ($lowerTerm !== '' && (
+					($shareeEnumerationFullMatchDisplayName && !empty($fn) && $lowerTerm === strtolower($fn))
+					|| ($shareeEnumerationFullMatchUserId && $lowerTerm === strtolower($id)))) ;
+				if ($shareeEnumerationFullMatchEmail && !$isMatch) {
+					$email = $r['EMAIL'] ?? null;
+					if ($email === null) {
+						continue;
+					}
+					$emails = is_array($email) ? $email : [$email];
+					foreach ($emails as $e) {
+						if ($lowerTerm === strtolower($e)) {
+							$isMatch = true;
+							break;
+						}
+					}
+				}
+				if (!$isMatch) {
+					continue;
+				}
+			}
+
+			$filteredResults[] = $r;
+		}
+		return $filteredResults;
+	}
+
 	/**
 	 * @param string[] $fields
 	 */
-	private function doSearch(string $term, array $fields, bool $strictSearch) : array {
-		$allowSystemUsers = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'no') === 'yes';
-
-		$result = $this->contactsManager->search($term, $fields, [
-			'strict_search' => $strictSearch,
-			'limit' => 20,
-		]);
+	private function doSearch(string $userId, string $term, array $fields, bool $strictSearch) : array {
+		$result = $this->search($userId, $term, $fields, $strictSearch);
 		$matches = [];
 		foreach ($result as $r) {
-			if (!$allowSystemUsers && isset($r['isLocalSystemBook']) && $r['isLocalSystemBook']) {
-				continue;
-			}
 			$id = $r['UID'];
 			$fn = $r['FN'];
 			$email = $r['EMAIL'] ?? null;
@@ -258,18 +277,15 @@ class ContactsIntegration {
 
 	/**
 	 * Extracts all Contacts with the specified mail address
-	 *
-	 * @param string $mailAddr
-	 * @return array
 	 */
-	public function getContactsWithMail(string $mailAddr) {
-		return $this->doSearch($mailAddr, ['EMAIL'], true);
+	public function getContactsWithMail(string $userId, string $mailAddr): array {
+		return $this->doSearch($userId, $mailAddr, ['EMAIL'], true);
 	}
 
 	/**
 	 * Extracts all Contacts with the specified name
 	 */
-	public function getContactsWithName(string $name): array {
-		return $this->doSearch($name, ['FN'], false);
+	public function getContactsWithName(string $userId, string $name): array {
+		return $this->doSearch($userId, $name, ['FN'], false);
 	}
 }
