@@ -22,9 +22,9 @@ class ContactCheck {
 		$this->contactIntegration = $contactIntegration;
 	}
 
-	public function run(string $fn, string $email): PhishingDetectionResult {
+	public function run(string $userId, string $fn, string $email): PhishingDetectionResult {
 		$emails = [];
-		$contacts = $this->contactIntegration->getContactsWithName($fn);
+		$contacts = $this->contactIntegration->getContactsWithName($userId, $fn);
 		foreach ($contacts as $contact) {
 			if (!isset($contact['email'])) {
 				continue;
