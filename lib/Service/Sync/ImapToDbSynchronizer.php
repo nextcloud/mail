@@ -420,7 +420,8 @@ class ImapToDbSynchronizer {
 				),
 				$account->getUserId(),
 				$hasQresync,
-				Horde_Imap_Client::SYNC_NEWMSGSUIDS
+				$logger,
+				Horde_Imap_Client::SYNC_NEWMSGSUIDS,
 			);
 			$perf->step('get new messages via Horde');
 
@@ -485,7 +486,8 @@ class ImapToDbSynchronizer {
 				),
 				$account->getUserId(),
 				$hasQresync,
-				Horde_Imap_Client::SYNC_FLAGSUIDS
+				$logger,
+				Horde_Imap_Client::SYNC_FLAGSUIDS,
 			);
 			$perf->step('get changed messages via Horde');
 
@@ -515,7 +517,8 @@ class ImapToDbSynchronizer {
 				),
 				$account->getUserId(),
 				$hasQresync,
-				Horde_Imap_Client::SYNC_VANISHEDUIDS
+				$logger,
+				Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			);
 			$perf->step('get vanished messages via Horde');
 
