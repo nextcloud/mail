@@ -33,7 +33,7 @@ class PhishingDetectionService {
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function checkHeadersForPhishing(Horde_Mime_Headers $headers, array $flags, bool $hasHtmlMessage, string $htmlMessage = ''): array {
+	public function checkHeadersForPhishing(string $uid, Horde_Mime_Headers $headers, array $flags, bool $hasHtmlMessage, string $htmlMessage = ''): array {
 		/** @var string|null $fromFN */
 		$fromFN = null;
 		/** @var string|null $fromEmail */
@@ -66,7 +66,7 @@ class PhishingDetectionService {
 				$list->addCheck($this->replyToCheck->run($fromEmail, $replyToEmail));
 			}
 			if ($fromFN !== null) {
-				$list->addCheck($this->contactCheck->run($fromFN, $fromEmail));
+				$list->addCheck($this->contactCheck->run($uid, $fromFN, $fromEmail));
 			}
 			if ($customEmail !== null) {
 				$list->addCheck($this->customEmailCheck->run($fromEmail, $customEmail));

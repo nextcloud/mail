@@ -46,7 +46,7 @@ class ContactIntegrationController extends Controller {
 	 */
 	#[TrapError]
 	public function match(string $mail): JSONResponse {
-		return (new JSONResponse($this->service->findMatches($mail)))->cacheFor(60 * 60, false, true);
+		return (new JSONResponse($this->service->findMatches($this->uid, $mail)))->cacheFor(60 * 60, false, true);
 	}
 
 	/**
@@ -92,7 +92,7 @@ class ContactIntegrationController extends Controller {
 				return new JSONResponse($decoded);
 			}
 		}
-		$res = $this->service->autoComplete($term);
+		$res = $this->service->autoComplete($this->uid, $term);
 		$this->cache->set("{$this->uid}:$term", json_encode($res), 24 * 3600);
 		return new JSONResponse($res);
 	}
