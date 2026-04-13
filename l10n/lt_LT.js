@@ -9,6 +9,7 @@ OC.L10N.register(
     "Important" : "Svarbūs",
     "Work" : "Darbas",
     "Personal" : "Asmeniniai",
+    "To Do" : "Reikia atlikti",
     "Later" : "Vėliau",
     "Mail" : "Paštas",
     "Mails" : "El. laiškai",
