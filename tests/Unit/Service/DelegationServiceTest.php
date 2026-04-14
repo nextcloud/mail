@@ -26,6 +26,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IUser;
 use OCP\IUserManager;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Notification\IManager;
 use OCP\Notification\INotification;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -66,6 +67,10 @@ class DelegationServiceTest extends TestCase {
 			$this->messageMapper,
 			$this->aliasMapper,
 			$this->localMessageMapper,
+			$this->userManager,
+			$this->notificationManager,
+			$this->timeFactory,
+			$this->eventDispatcher,
 		);
 
 		$mailAccount = new MailAccount();
@@ -111,7 +116,10 @@ class DelegationServiceTest extends TestCase {
 				return $d;
 			});
 
-		$result = $this->service->delegate($this->account->getId(), 'delegatee');
+		$this->notificationManager->expects($this->once())
+			->method('notify');
+
+		$result = $this->service->delegate($this->account, 'delegatee', 'owner');
 
 		$this->assertEquals(1, $result->getAccountId());
 		$this->assertEquals('delegatee', $result->getUserId());
@@ -132,7 +140,7 @@ class DelegationServiceTest extends TestCase {
 
 		$this->expectException(DelegationExistsException::class);
 
-		$this->service->delegate($this->account->getId(), 'delegatee');
+		$this->service->delegate($this->account, 'delegatee', 'owner');
 	}
 
 	public function testFindDelegatedToUsersForAccount(): void {
@@ -168,7 +176,10 @@ class DelegationServiceTest extends TestCase {
 			->method('delete')
 			->with($delegation);
 
-		$this->service->unDelegate($this->account->getId(), 'delegatee');
+		$this->notificationManager->expects($this->once())
+			->method('notify');
+
+		$this->service->unDelegate($this->account, 'delegatee', 'owner');
 	}
 
 	public function testUnDelegateThrowsWhenNotFound(): void {
@@ -182,7 +193,7 @@ class DelegationServiceTest extends TestCase {
 
 		$this->expectException(DoesNotExistException::class);
 
-		$this->service->unDelegate($this->account->getId(), 'delegatee');
+		$this->service->unDelegate($this->account, 'delegatee', 'owner');
 	}
 
 	public function testResolveAccountUserIdOwner(): void {
@@ -310,5 +321,13 @@ class DelegationServiceTest extends TestCase {
 		$result = $this->service->resolveLocalMessageUserId(55, 'owner');
 
 		$this->assertEquals('owner', $result);
+	}
+
+	public function testLogDelegatedAction(): void {
+		$this->eventDispatcher->expects($this->once())
+			->method('dispatchTyped')
+			->with($this->isInstanceOf(CriticalActionPerformedEvent::class));
+
+		$this->service->logDelegatedAction('User owner read mailbox on behalf of owner');
 	}
 }

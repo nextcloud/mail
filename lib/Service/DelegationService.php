@@ -20,7 +20,9 @@ use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\DelegationExistsException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IUserManager;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Notification\IManager;
 
 class DelegationService {
@@ -35,6 +37,7 @@ class DelegationService {
 		private IUserManager $userManager,
 		private IManager $notificationManager,
 		private ITimeFactory $time,
+		private IEventDispatcher $eventDispatcher,
 	) {
 	}
 
@@ -116,6 +119,11 @@ class DelegationService {
 		return $this->resolveAccountUserId($accountId, $currentUserId);
 	}
 
+
+	public function logDelegatedAction(string $logMessage) {
+		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent($logMessage));
+	}
+
 	/**
 	 * Send a notification on delegation
 	 * @param string $userId The user the account is being delegated to
@@ -126,7 +134,7 @@ class DelegationService {
 	 */
 	private function notify(string $userId, string $currentUserId, Account $account, bool $delegated) {
 		$notification = $this->notificationManager->createNotification();
-		$displayName = $this->userManager->get($currentUserId)->getDisplayName();
+		$displayName = $this->userManager->get($currentUserId)?->getDisplayName() ?? $currentUserId;
 		$time = $this->time->getDateTime('now');
 		$notification
 			->setApp('mail')
