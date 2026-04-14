@@ -1,3 +1,19 @@
+## [5.7.8](https://github.com/nextcloud/mail/compare/v5.7.7...v5.7.8) (2026-04-14)
+
+
+### Bug Fixes
+
+* **imap:** avoid expanding UID ranges ([753cc1a](https://github.com/nextcloud/mail/commit/753cc1a49ac4b7924ef059b18722abf9183120f3))
+* **imap:** log details of the sync to debug OOMs ([595ae53](https://github.com/nextcloud/mail/commit/595ae5368953a422869fe70a7b7ef018a0aee6f0))
+* **l10n:** Update translations from Transifex ([6030608](https://github.com/nextcloud/mail/commit/603060895b423278c4435bfbcd675feda7cc1e08))
+* **l10n:** Update translations from Transifex ([002ac2a](https://github.com/nextcloud/mail/commit/002ac2a1ed1de0f42f2a8f8e5dfe43c77f8780ff))
+* **l10n:** Update translations from Transifex ([f8357b2](https://github.com/nextcloud/mail/commit/f8357b296242d9135d8f3c913ffa40e737c565f2))
+* **l10n:** Update translations from Transifex ([64debb5](https://github.com/nextcloud/mail/commit/64debb511e9bd69a8ddc38dcca705c1daebf5a1b))
+* **l10n:** Update translations from Transifex ([0ac4a1d](https://github.com/nextcloud/mail/commit/0ac4a1d51fc253101bbc4737e9d6dc8cd30ce5f8))
+* **l10n:** Update translations from Transifex ([252a6f2](https://github.com/nextcloud/mail/commit/252a6f2cd0c8f515047293344ff1eb1c6b42354a))
+
+
+
 ## [5.7.7](https://github.com/nextcloud/mail/compare/v5.7.6...v5.7.7) (2026-04-07)
 
 
