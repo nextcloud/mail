@@ -266,7 +266,6 @@ class MessagesControllerTest extends TestCase {
 		$expectedRichResponse->cacheFor(3600);
 
 		$policy = new ContentSecurityPolicy();
-		$policy->allowEvalScript(false);
 		$policy->disallowScriptDomain('\'self\'');
 		$policy->disallowConnectDomain('\'self\'');
 		$policy->disallowFontDomain('\'self\'');
