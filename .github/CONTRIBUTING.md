@@ -43,6 +43,5 @@ Usage of AI agents has to be made transparent. Therefore, the commit message's l
 
 ## Translations
 
-Please submit translations via [Transifex][transifex].
+See [our website](https://nextcloud.com/translation/) for how translations of this repository work and how you can get started.
 
-[transifex]: https://www.transifex.com/projects/p/nextcloud/
