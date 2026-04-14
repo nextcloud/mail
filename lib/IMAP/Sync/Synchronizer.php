@@ -81,6 +81,7 @@ class Synchronizer {
 			throw $e;
 		}
 
+		$logger->debug('Fetching new and changed messages after sync');
 		$newMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), $newUids, $userId);
 		$nNew = count($newMessages);
 		$logger->debug("Found {$nNew} new messages");
@@ -108,6 +109,8 @@ class Synchronizer {
 		$syncData = $imapClient->sync($mailbox, $request->getToken(), [
 			'criteria' => Horde_Imap_Client::SYNC_ALL,
 		]);
+
+		$logger->debug('Combined sync finished');
 
 		return [
 			$syncData->newmsgsuids,
