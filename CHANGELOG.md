@@ -1,3 +1,14 @@
+## [5.7.9](https://github.com/nextcloud/mail/compare/v5.7.8...v5.7.9) (2026-04-15)
+
+
+### Bug Fixes
+
+* **imap:** log more sync details ([5bd0707](https://github.com/nextcloud/mail/commit/5bd07071dc1d7961a85915b9b501d2ef99c8275e))
+* Remove call to deprecated allowEvalScript ([f110773](https://github.com/nextcloud/mail/commit/f11077340c4de75333f62a570ea32e6df37287fe))
+* use HMAC for proxied HTML iframe content ([a88b52b](https://github.com/nextcloud/mail/commit/a88b52b36f56e21fc70f06879329b63e14b29655))
+
+
+
 ## [5.7.8](https://github.com/nextcloud/mail/compare/v5.7.7...v5.7.8) (2026-04-14)
 
 
