@@ -22,8 +22,8 @@ export async function fetchDelegatedUsers(accountId) {
 	const url = generateUrl('/apps/mail/api/delegations/{accountId}', {
 		accountId,
 	})
-
-	return axios.get(url).then((resp) => resp.data)
+	const { data } = await axios.get(url)
+	return data
 }
 
 /**
@@ -37,8 +37,8 @@ export async function delegate(accountId, userId) {
 	const url = generateUrl('/apps/mail/api/delegations/{accountId}', {
 		accountId,
 	})
-
-	return axios.post(url, { userId }).then((resp) => resp.data)
+	const { data } = await axios.post(url, { userId })
+	return data
 }
 
 /**
@@ -54,5 +54,6 @@ export async function unDelegate(accountId, userId) {
 		userId,
 	})
 
-	return axios.delete(url).then((resp) => resp.data)
+	const { data } = await axios.delete(url)
+	return data
 }

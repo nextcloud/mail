@@ -4,9 +4,15 @@
 -->
 
 <template>
-	<NcModal v-if="view === 'main'" size="normal" @close="$emit('close')">
+	<NcModal
+		v-if="view === 'main'"
+		size="normal"
+		label-id="delegation-modal-title"
+		@close="$emit('close')">
 		<div class="delegation-modal">
-			<h2>{{ t('mail', 'Delegation') }}</h2>
+			<h2 id="delegation-modal-title">
+				{{ t('mail', 'Delegation') }}
+			</h2>
 
 			<div class="delegation-modal__section">
 				<p class="delegation-modal__description">
@@ -250,11 +256,12 @@ export default {
 				const delegation = await delegate(this.account.accountId, this.selectedUser.id)
 				this.delegates.push(delegation)
 				showSuccess(t('mail', 'Delegated access to {userId}', { userId: this.selectedUser.id }))
-				this.delegating = false
 			} catch (error) {
 				logger.error('Could not delegate access', { error })
 				showError(t('mail', 'Could not delegate access'))
+			} finally {
 				this.delegating = false
+				this.closeDialog()
 			}
 		},
 

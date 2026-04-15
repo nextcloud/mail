@@ -14,7 +14,9 @@ use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -36,15 +38,15 @@ class DelegationController extends Controller {
 		$this->currentUserId = $UserId;
 	}
 
-	/**
-	 * @NoAdminRequired
-	 *
-	 * @param int $accountId
-	 * @return JSONResponse
-	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function getDelegatedUsers(int $accountId): JSONResponse {
-		$account = $this->accountService->findById($accountId);
+		try {
+			$account = $this->accountService->findById($accountId);
+		} catch (DoesNotExistException) {
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
+		}
+
 		if ($account->getUserId() !== $this->currentUserId) {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
@@ -54,19 +56,17 @@ class DelegationController extends Controller {
 		);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 *
-	 * @param int $accountId
-	 * @param string $userId
-	 * @return JSONResponse
-	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function delegate(int $accountId, string $userId): JSONResponse {
-
-		$account = $this->accountService->findById($accountId);
 		if ($this->currentUserId === null) {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$account = $this->accountService->findById($accountId);
+		} catch (DoesNotExistException) {
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		}
 
 		if ($account->getUserId() !== $this->currentUserId) {
@@ -90,19 +90,17 @@ class DelegationController extends Controller {
 		return new JSONResponse($delegation, Http::STATUS_CREATED);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 *
-	 * @param int $accountId
-	 * @param string $userId
-	 * @return JSONResponse
-	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function unDelegate(int $accountId, string $userId): JSONResponse {
-		$account = $this->accountService->findById($accountId);
-
 		if ($this->currentUserId === null) {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$account = $this->accountService->findById($accountId);
+		} catch (DoesNotExistException) {
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		}
 
 		if ($account->getUserId() !== $this->currentUserId) {
