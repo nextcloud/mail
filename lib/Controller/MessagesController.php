@@ -621,7 +621,6 @@ class MessagesController extends Controller {
 
 			// Harden the default security policy
 			$policy = new ContentSecurityPolicy();
-			$policy->allowEvalScript(false);
 			$policy->disallowScriptDomain('\'self\'');
 			$policy->disallowConnectDomain('\'self\'');
 			$policy->disallowFontDomain('\'self\'');
