@@ -1,3 +1,36 @@
+## [5.6.16](https://github.com/nextcloud/mail/compare/v5.6.15...v5.6.16) (2026-04-15)
+
+
+### Bug Fixes
+
+* **deps:** bump lodash from 4.17.23 to v4.18.1 ([1d48740](https://github.com/nextcloud/mail/commit/1d487400e5bd2b853e92f0d3174862425f272275))
+* **deps:** bump node-forge from 1.3.2 to v1.4.0 ([019b427](https://github.com/nextcloud/mail/commit/019b427a83c28fb48a6a27197db1e78f52e14d67))
+* **dns:** Update public suffix list ([de9615a](https://github.com/nextcloud/mail/commit/de9615a9c4e6e760a9e7e943b1d66ed699119972))
+* **l10n:** Update translations from Transifex ([d1bf3c8](https://github.com/nextcloud/mail/commit/d1bf3c887d8ea8a32d2612144dc775aeba9232d4))
+* **l10n:** Update translations from Transifex ([b72634d](https://github.com/nextcloud/mail/commit/b72634ddad698ccfa243dfc8e99a42c55b6e1b43))
+* **l10n:** Update translations from Transifex ([d4d5ee1](https://github.com/nextcloud/mail/commit/d4d5ee187252d36d833a0b1000c3d493df19631c))
+* **l10n:** Update translations from Transifex ([d140ad7](https://github.com/nextcloud/mail/commit/d140ad734ab0b17f44095258160bd9479277bf26))
+* **l10n:** Update translations from Transifex ([bc6907d](https://github.com/nextcloud/mail/commit/bc6907d0fb30816ce7c1032f43e4717263b59fac))
+* **l10n:** Update translations from Transifex ([56a2974](https://github.com/nextcloud/mail/commit/56a2974e03265aef2df4a709c7b80ac0f7c58140))
+* **l10n:** Update translations from Transifex ([8cc8651](https://github.com/nextcloud/mail/commit/8cc8651e2aa81199b6ef1c3b73b9537061e3f7a8))
+* **l10n:** Update translations from Transifex ([3fba199](https://github.com/nextcloud/mail/commit/3fba19910d6ffcf2cd2c8f4604086b627ec88b9a))
+* **l10n:** Update translations from Transifex ([e340f5e](https://github.com/nextcloud/mail/commit/e340f5ee3c75141ee9eaa50dd710d37c37af4851))
+* **l10n:** Update translations from Transifex ([8cdf960](https://github.com/nextcloud/mail/commit/8cdf960963bfd3dace90e500e0841d335870e597))
+* **l10n:** Update translations from Transifex ([b218cac](https://github.com/nextcloud/mail/commit/b218cac19eb37b490f40eee94080a709d0e0d440))
+* **l10n:** Update translations from Transifex ([83f3caf](https://github.com/nextcloud/mail/commit/83f3cafce052c076fba9e15d481df8b6ccabee59))
+* **l10n:** Update translations from Transifex ([59f21ca](https://github.com/nextcloud/mail/commit/59f21cac7d89d16372fbd34030a8a5f051f83801))
+* **l10n:** Update translations from Transifex ([9b6cb1b](https://github.com/nextcloud/mail/commit/9b6cb1b545095f35c9cf63716d2d2292cabe60b2))
+* **l10n:** Update translations from Transifex ([e1bae36](https://github.com/nextcloud/mail/commit/e1bae364c3c021651171852f0c9a710f8d0b4c6a))
+* **l10n:** Update translations from Transifex ([3bd4354](https://github.com/nextcloud/mail/commit/3bd4354c7a9773efec0876dd275a3bf6104bad0d))
+* **l10n:** Update translations from Transifex ([72931e6](https://github.com/nextcloud/mail/commit/72931e6b73a8a98a5d4eebde67dcdec801708489))
+* **l10n:** Update translations from Transifex ([c01466d](https://github.com/nextcloud/mail/commit/c01466df27ed06f0fa4ee0b91b56ba316dd1924b))
+* **l10n:** Update translations from Transifex ([385763d](https://github.com/nextcloud/mail/commit/385763df32b5625b3b1319cefcbf14e814dc46c2))
+* **l10n:** Update translations from Transifex ([3de7f70](https://github.com/nextcloud/mail/commit/3de7f706228cc09ec211b9759786c6272afe727a))
+* Remove call to deprecated allowEvalScript ([13eed22](https://github.com/nextcloud/mail/commit/13eed22358674f1e38e3a821940dc694d070913a))
+* use HMAC for proxied HTML iframe content ([4c555ed](https://github.com/nextcloud/mail/commit/4c555ed5d3ab82f88c278a8878ee22c047174607))
+
+
+
 ## [5.6.15](https://github.com/nextcloud/mail/compare/v5.6.14...v5.6.15) (2026-03-19)
 
 
