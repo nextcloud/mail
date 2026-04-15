@@ -1184,6 +1184,9 @@ export default {
 
 		&--expanded {
 			color: var(--color-text-maxcontrast);
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
 		}
 
 		&__email {
@@ -1446,10 +1449,10 @@ export default {
 		// align with sender name: header padding + avatar (40px) + gap (2 * grid-baseline)
 		padding-inline-start: calc(var(--border-radius-container) + var(--default-grid-baseline) * 12);
 		padding-inline-end: var(--border-radius-container);
-		padding-block: var(--default-grid-baseline);
+		padding-block: var(--default-grid-baseline) calc(var(--default-grid-baseline) * 2);
 		display: flex;
 		flex-direction: column;
-		gap: var(--default-grid-baseline);
+		gap: calc(var(--default-grid-baseline) / 2);
 
 		.recipients {
 			display: flex;
@@ -1462,6 +1465,15 @@ export default {
 				font-weight: bold;
 				white-space: nowrap;
 				min-width: 32px;
+			}
+
+			:deep(.user-bubble__content) {
+				height: var(--clickable-area-small);
+				border-radius: var(--border-radius-pill);
+
+				> :last-child {
+					padding-inline-end: 0;
+				}
 			}
 		}
 	}
