@@ -11,10 +11,15 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use Exception;
+use OCA\Mail\Html\ProxyHmacGenerator;
 use OCA\Mail\Http\ProxyDownloadResponse;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\Attribute\UserRateLimit;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Http\Client\IClientService;
 use OCP\IRequest;
@@ -23,6 +28,7 @@ use OCP\IURLGenerator;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\LoggerInterface;
 use function file_get_contents;
+use function hash_equals;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ProxyController extends Controller {
@@ -30,19 +36,28 @@ class ProxyController extends Controller {
 	private ISession $session;
 	private IClientService $clientService;
 	private LoggerInterface $logger;
+	private ProxyHmacGenerator $hmacGenerator;
+	private MailManager $mailManager;
+	private ?string $userId;
 
 	public function __construct(string $appName,
 		IRequest $request,
 		IURLGenerator $urlGenerator,
 		ISession $session,
 		IClientService $clientService,
-		LoggerInterface $logger) {
+		ProxyHmacGenerator $hmacGenerator,
+		LoggerInterface $logger,
+		MailManager $mailManager,
+		?string $userId) {
 		parent::__construct($appName, $request);
 		$this->request = $request;
 		$this->urlGenerator = $urlGenerator;
 		$this->session = $session;
 		$this->clientService = $clientService;
 		$this->logger = $logger;
+		$this->hmacGenerator = $hmacGenerator;
+		$this->mailManager = $mailManager;
+		$this->userId = $userId;
 	}
 
 	/**
@@ -88,10 +103,10 @@ class ProxyController extends Controller {
 	 *       The caching should also already happen in a cronjob so that the sender of the
 	 *       mail does not know whether the mail has been opened.
 	 *
-	 * @return ProxyDownloadResponse
+	 * @return Response|ProxyDownloadResponse
 	 */
 	#[UserRateLimit(limit: 50, period: 60)]
-	public function proxy(string $src): ProxyDownloadResponse {
+	public function proxy(string $src, ?int $id, ?string $hmac): Response {
 		// close the session to allow parallel downloads
 		$this->session->close();
 
@@ -99,6 +114,20 @@ class ProxyController extends Controller {
 		if (!$this->request->passesStrictCookieCheck()) {
 			$content = file_get_contents(__DIR__ . '/../../img/blocked-image.png');
 			return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
+		}
+
+		// HMAC check
+		if ($this->userId === null || $id === null || $hmac === null) {
+			return new Response(Http::STATUS_BAD_REQUEST);
+		}
+		try {
+			$this->mailManager->getMessage($this->userId, $id);
+		} catch (DoesNotExistException $e) {
+			return new Response(Http::STATUS_BAD_REQUEST);
+		}
+		if (!hash_equals($this->hmacGenerator->generate($id, $src), $hmac)) {
+			$this->logger->info('Proxied email content blocked due to invalid HMAC');
+			return new Response(Http::STATUS_UNAUTHORIZED);
 		}
 
 		$client = $this->clientService->newClient();

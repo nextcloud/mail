@@ -539,8 +539,15 @@
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$value]]></code>
     </PossiblyUndefinedArrayOffset>
-  </file>
-  <file src="lib/Service/IMipService.php">
+   </file>
+   <file src="lib/Service/HtmlPurify/TransformURLScheme.php">
+     <NullArgument>
+       <code><![CDATA[null]]></code>
+       <code><![CDATA[null]]></code>
+       <code><![CDATA[null]]></code>
+     </NullArgument>
+   </file>
+   <file src="lib/Service/IMipService.php">
     <PossiblyNullArgument>
       <code><![CDATA[$sender]]></code>
       <code><![CDATA[$sender]]></code>
