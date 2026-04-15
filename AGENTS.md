@@ -18,7 +18,16 @@ npm ci
 See `package.json` scripts for all available commands (build, dev, watch, lint, stylelint, test:unit, test:e2e, etc.).
 
 ### PHP
-See `composer.json` scripts for all available commands (cs:check, cs:fix, psalm, test:unit, test:integration, openapi, etc.).
+Available composer commands:
+```bash
+composer cs:check                # Check code style
+composer cs:fix                  # Fix code style
+composer psalm                   # Run static analysis
+composer test:unit               # Run unit tests
+composer test:integration        # Run integration tests
+composer openapi                 # Generate OpenAPI spec
+```
+See `composer.json` for all available commands.
 
 ## Architecture
 
