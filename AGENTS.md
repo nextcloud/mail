@@ -93,7 +93,11 @@ After completing code changes:
 
 All commits must include two lines at the end:
 1. Agent/model attribution: `AI-assisted: <agent> (model)`
-2. DCO sign-off: `Signed-off-by: Name <email>`
+2. DCO sign-off: Use `git commit -s` to add automatically
+
+When committing, use: `git commit -m "message" -s`
+
+This ensures the sign-off includes your configured Git user email.
 
 Example:
 ```
