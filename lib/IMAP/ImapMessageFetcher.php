@@ -155,7 +155,10 @@ class ImapMessageFetcher {
 				&& $structure->getContentTypeParameter('protocol') === 'application/pgp-encrypted');
 			if ($this->isPgpMimeEncrypted) {
 				$this->plainMessage = $this->loadBodyData($structure, '2', false);
-				$this->attachmentsToIgnore[] = $structure->getPartByIndex(1)->getName();
+				$attachmentName = $structure->getPartByIndex(1)?->getName();
+				if ($attachmentName !== null) {
+					$this->attachmentsToIgnore[] = $attachmentName;
+				}
 			}
 
 			$this->hasAnyAttachment = $this->hasAttachments($structure);
