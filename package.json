@@ -98,7 +98,7 @@
     "patch-package": "^8.0.1",
     "postcss": "^8.5.9",
     "postcss-loader": "^4.3.0",
-    "sass": "^1.97.3",
+    "sass": "^1.99.0",
     "sass-loader": "^16.0.7",
     "style-loader": "^4.0.0",
     "svg-inline-loader": "^0.8.2",
