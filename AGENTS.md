@@ -89,4 +89,19 @@ After completing code changes:
    - There is a [contributing doc](./.github/CONTRIBUTING.md) with suggestions
 6. The user will review and commit when ready
 
-The commit message's last line before sign-off should be `AI-assisted: <agent> (model)`. For example: `AI-assisted: Claude Code (Claude Haiku 4.5)`
+### Commit Message Format
+
+All commits must include two lines at the end:
+1. Agent/model attribution: `AI-assisted: <agent> (model)`
+2. DCO sign-off: `Signed-off-by: Name <email>`
+
+Example:
+```
+fix(deps): Update package dependencies
+
+- Updated package X to latest stable version
+- Verified all tests pass
+
+AI-assisted: OpenCode (Claude Haiku 4.5)
+Signed-off-by: Name <email>
+```
