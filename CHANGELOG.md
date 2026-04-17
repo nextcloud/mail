@@ -1,3 +1,12 @@
+## [5.7.11](https://github.com/nextcloud/mail/compare/v5.7.10...v5.7.11) (2026-04-17)
+
+
+### Bug Fixes
+
+* Remove unused proxy redirect route ([b6dd17f](https://github.com/nextcloud/mail/commit/b6dd17f16e27c1db8ff9ae6833df8482df787473))
+
+
+
 ## [5.7.10](https://github.com/nextcloud/mail/compare/v5.7.9...v5.7.10) (2026-04-17)
 
 
