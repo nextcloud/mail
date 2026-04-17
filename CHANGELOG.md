@@ -1,3 +1,13 @@
+## [5.6.17](https://github.com/nextcloud/mail/compare/v5.6.16...v5.6.17) (2026-04-17)
+
+
+### Bug Fixes
+
+* **deps:** bump dompurify from 3.3.2 to v3.4.0 ([79321d2](https://github.com/nextcloud/mail/commit/79321d24055cf42306b535928cfd3f9177ec5f5a))
+* Remove unused proxy redirect route ([f766f64](https://github.com/nextcloud/mail/commit/f766f6423f698ab69ba8a3b203218fd2fcf919f1))
+
+
+
 ## [5.6.16](https://github.com/nextcloud/mail/compare/v5.6.15...v5.6.16) (2026-04-15)
 
 
