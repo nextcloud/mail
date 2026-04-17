@@ -1,3 +1,19 @@
+## [5.7.10](https://github.com/nextcloud/mail/compare/v5.7.9...v5.7.10) (2026-04-17)
+
+
+### Bug Fixes
+
+* **ai:** handle invalid JSON and possible null for smart replies ([85bfc77](https://github.com/nextcloud/mail/commit/85bfc77e7461ef9b93611601f099545da23124c2))
+* **deps:** bump dompurify from 3.3.2 to v3.4.0 ([d6f9b07](https://github.com/nextcloud/mail/commit/d6f9b071a7a5fbade5fb44cb2a200eeab88b46c5))
+* **deps:** Bump dompurify to latest stable version ([314b9eb](https://github.com/nextcloud/mail/commit/314b9eb5f3c26bb25474f825fbfd997b888c7a7a))
+* **deps:** Update symfony/process to fix MSYS2 argument escaping vulnerability ([ca7663d](https://github.com/nextcloud/mail/commit/ca7663dc5d68cbb77dc85eb41d1383ce26de4735))
+* **dns:** Update public suffix list ([0738bcd](https://github.com/nextcloud/mail/commit/0738bcd21e17677ad674828785f282684f0240fb))
+* Ignore attachments without a name ([9e61416](https://github.com/nextcloud/mail/commit/9e614168d5a4b699f815da0b6dc456dd3fc781ec))
+* Keep raw message on smtp/mime failure ([0da9873](https://github.com/nextcloud/mail/commit/0da98731d29aba7bb7382f13112b02ae84e46e7f))
+* Skip iconv without a charset ([e653e5a](https://github.com/nextcloud/mail/commit/e653e5a51d8fcf8468477d6a267a869ee91c72ae))
+
+
+
 ## [5.7.9](https://github.com/nextcloud/mail/compare/v5.7.8...v5.7.9) (2026-04-15)
 
 
