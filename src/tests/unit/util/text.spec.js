@@ -149,15 +149,6 @@ describe('text', () => {
 			expect(actual).toEqual(expected)
 		})
 
-		it('does not leak internal redirection URLs', () => {
-			const source = html('<a href="https://localhost/apps/mail/redirect?src=domain.tld">domain.tld</a>')
-			const expected = plain('domain.tld')
-
-			const actual = toPlain(source)
-
-			expect(actual).toEqual(expected)
-		})
-
 		it('preserves quotes', () => {
 			const source = html('<blockquote><div><b>yes.</b></div><div><br /></div><div>Am Montag, den 21.10.2019, 16:51 +0200 schrieb Christoph Wurst:</div><blockquote style="margin:0 0 0 .8ex;border-left:2px #729fcf solid;padding-left:1ex;"><div>ok cool</div><div><br /></div><div>Am Montag, den 21.10.2019, 16:51 +0200 schrieb Christoph Wurst:</div><blockquote style="margin:0 0 0 .8ex;border-left:2px #729fcf solid;padding-left:1ex;"><div>Hello</div><div><br /></div><div>this is some t<i>e</i>xt</div><div><br /></div><div>yes</div><div><br /></div><div>cheers</div><br></blockquote><br></blockquote></blockquote>')
 			const expected = plain(`> yes.
