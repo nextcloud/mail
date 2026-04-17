@@ -296,11 +296,6 @@ return [
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'proxy#redirect',
-			'url' => '/redirect',
-			'verb' => 'GET'
-		],
-		[
 			'name' => 'proxy#proxy',
 			'url' => '/proxy',
 			'verb' => 'GET'

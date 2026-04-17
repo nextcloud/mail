@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use Exception;
 use OCA\Mail\Html\ProxyHmacGenerator;
 use OCA\Mail\Http\ProxyDownloadResponse;
 use OCA\Mail\Service\MailManager;
@@ -20,7 +19,6 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\AppFramework\Http\Response;
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Http\Client\IClientService;
 use OCP\IRequest;
 use OCP\ISession;
@@ -58,38 +56,6 @@ class ProxyController extends Controller {
 		$this->hmacGenerator = $hmacGenerator;
 		$this->mailManager = $mailManager;
 		$this->userId = $userId;
-	}
-
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
-	 * @param string $src
-	 *
-	 * @throws \Exception If the URL is not valid.
-	 * @return TemplateResponse
-	 */
-	public function redirect(string $src): TemplateResponse {
-		$authorizedRedirect = false;
-
-		if (!str_starts_with($src, 'http://')
-			&& !str_starts_with($src, 'https://')
-			&& !str_starts_with($src, 'ftp://')) {
-			throw new Exception('URL is not valid.', 1);
-		}
-
-		// If strict cookies are set it means we come from the same domain so no open redirect
-		if ($this->request->passesStrictCookieCheck()) {
-			$authorizedRedirect = true;
-		}
-
-		$params = [
-			'authorizedRedirect' => $authorizedRedirect,
-			'url' => $src,
-			'urlHost' => parse_url($src, PHP_URL_HOST),
-			'mailURL' => $this->urlGenerator->linkToRoute('mail.page.index'),
-		];
-		return new TemplateResponse($this->appName, 'redirect', $params, 'guest');
 	}
 
 	/**
