@@ -218,7 +218,12 @@ PROMPT;
 		if (in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes(), true)) {
 			$cachedReplies = $this->cache->getValue('smartReplies_' . $message->getId());
 			if ($cachedReplies) {
-				return json_decode($cachedReplies, true, 512);
+				try {
+					return json_decode($cachedReplies, true, 512, JSON_THROW_ON_ERROR);
+				} catch (JsonException $e) {
+					$this->cache->remove('smartReplies_' . $message->getId());
+					throw new ServiceException('Failed to decode smart replies JSON output', previous: $e);
+				}
 			}
 			$client = $this->clientFactory->getClient($account);
 			try {
