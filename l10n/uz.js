@@ -87,7 +87,6 @@ OC.L10N.register(
     "Account connected" : "Akkaunt ulangan",
     "All" : "All",
     "Error while sharing file" : "Fayl almashishda xatolik yuz berdi",
-    "Continue to %s" : " %sni davom eting",
     "Last 7 days" : "Oxirgi 7 kun"
 },
 "nplurals=1; plural=0;");

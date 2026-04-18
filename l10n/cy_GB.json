@@ -126,11 +126,6 @@
     "Could not load the desired message" : "Methu llwytho'r neges a ddewiswyd",
     "Could not load the message" : "Methu llwytho'r neges",
     "Error loading message" : "Gwall wrth lwytho neges",
-    "Forwarding to %s" : "Anfon ymlaen at %s",
-    "Click here if you are not automatically redirected within the next few seconds." : "Cliciwch yma os na chewch eich ailgyfeirio'n awtomatig o fewn yr ychydig eiliadau nesaf.",
-    "Redirect" : "Ailgyfeirio",
-    "The link leads to %s" : "Mae'r ddolen yn arwain at %s",
-    "Continue to %s" : "Parhau i %s",
     "Mark all messages of this folder as read" : "Marcio'r holl negeseuon y ffolder hon fel y'u darllenwyd"
 },"pluralForm" :"nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;"
 }

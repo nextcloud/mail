@@ -270,11 +270,6 @@ OC.L10N.register(
     "Could not load the desired message" : "Không thể tải tin nhắn mong muốn",
     "Could not load the message" : "Không thể tải tin nhắn",
     "Error loading message" : "Lỗi khi tải tin nhắn",
-    "Forwarding to %s" : "Chuyển tiếp tới %s",
-    "Click here if you are not automatically redirected within the next few seconds." : "Nhấp vào đây nếu bạn không được chuyển hướng tự động trong vòng vài giây tới",
-    "Redirect" : "Chuyển hướng",
-    "The link leads to %s" : "Liên kết dẫn đến %s",
-    "Continue to %s" : "Tiếp tục %s",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Tin nhắn sẽ tự động được đánh dấu là quan trọng dựa trên những tin nhắn bạn đã tương tác hoặc được đánh dấu là quan trọng. Lúc đầu, bạn có thể phải thay đổi thủ công tầm quan trọng để dạy hệ thống, nhưng nó sẽ cải thiện theo thời gian.",
     "Last 7 days" : "7 ngày trước"
 },

@@ -549,12 +549,6 @@ OC.L10N.register(
     "Could not load the desired message" : "Желаното съобщение не може да бъде заредено",
     "Could not load the message" : "Съобщението не може да бъде заредено",
     "Error loading message" : "Грешка при зареждане съобщението",
-    "Forwarding to %s" : "Препращане към %s",
-    "Click here if you are not automatically redirected within the next few seconds." : "Щракнете тук, ако не бъдете пренасочени автоматично в следващите няколко секунди.",
-    "Redirect" : "Пренасочване",
-    "The link leads to %s" : "Връзката води до %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желаете да посетите тази страница, може да се върнете към <a href=\"%s\">Поща</a>.",
-    "Continue to %s" : "Продължи към %s",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Съобщенията автоматично ще бъдат маркирани като важни въз основа на съобщенията, с които сте взаимодействали или маркирани като важни. В началото може да се наложи ръчно да промените важността, за да обучите системата, но тя ще се подобри с течение на времето.",
     "Mark all messages of this folder as read" : "Маркирай всички съобщения в папката като прочетени",
     "Last 7 days" : "Последни 7 дни"
