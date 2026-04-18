@@ -605,11 +605,6 @@ OC.L10N.register(
     "Could not load the desired message" : "Haluttua viestiä ei voitu ladata",
     "Could not load the message" : "Viestiä ei voitu ladata",
     "Error loading message" : "Virhe viestiä ladatessa",
-    "Forwarding to %s" : "Välitä viesti %s",
-    "Click here if you are not automatically redirected within the next few seconds." : "Klikkaa jos sinua ei uudelleenohjata automaattisesti muutamaan sekuntiin.",
-    "Redirect" : "Uudelleenohjaus",
-    "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
-    "Continue to %s" : "Jatka sivulle %s",
     "Mark all messages of this folder as read" : "Merkitse tämän kansion kaikki viestit luetuiksi",
     "Last 7 days" : "Edelliset 7 päivää"
 },

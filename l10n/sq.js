@@ -139,11 +139,6 @@ OC.L10N.register(
     "Message sent" : "Mesazhi u dërgua",
     "Could not load {tag}{name}{endtag}" : "Nuk mund të ngarkohej {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Pati një problem me ngarkimin e {tag}{name}{endtag}",
-    "Error loading message" : "Gabim në ngarkimin e kartelës",
-    "Forwarding to %s" : "Ridrejto te %s",
-    "Click here if you are not automatically redirected within the next few seconds." : "Klikoni këtu nëse nuk ridrejtoheni automatikisht brenda disa sekondave",
-    "Redirect" : "Ridrejtoje",
-    "The link leads to %s" : "Lidhja shpie te %s",
-    "Continue to %s" : "Vazhdo te %s"
+    "Error loading message" : "Gabim në ngarkimin e kartelës"
 },
 "nplurals=2; plural=(n != 1);");

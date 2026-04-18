@@ -191,11 +191,6 @@ OC.L10N.register(
     "Could not load the desired message" : "Ne eblis ŝargi la deziratan mesaĝon",
     "Could not load the message" : "Ne eblis ŝargi la mesaĝon",
     "Error loading message" : "Eraris ŝargi mesaĝon",
-    "Forwarding to %s" : "Plusendi al %s",
-    "Click here if you are not automatically redirected within the next few seconds." : "Alklaku ĉi tie, ĉu vi ne estos aŭtomate alidirektita post kelkaj sekundoj.",
-    "Redirect" : "Alidirekto",
-    "The link leads to %s" : "La ligilo iras al %s",
-    "Continue to %s" : "Daŭrigi al %s",
     "Mark all messages of this folder as read" : "Marki ĉiujn mesaĝojn el tiu dosierujo kiel legitaj",
     "Last 7 days" : "Lastaj 7 tagoj"
 },
