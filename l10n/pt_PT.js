@@ -271,11 +271,6 @@ OC.L10N.register(
     "Could not load the desired message" : "Não foi possível carregar a mensagem escolhida",
     "Could not load the message" : "Não foi possível carregar a mensagem",
     "Error loading message" : "Erro ao carregar a mensagem",
-    "Forwarding to %s" : "A reencaminhar para %s",
-    "Click here if you are not automatically redirected within the next few seconds." : "Clique aqui se não for automaticamente redirecionado dentro de segundos.",
-    "Redirect" : "Redirecionar",
-    "The link leads to %s" : "A ligação aponta para %s",
-    "Continue to %s" : "Continuar para %s",
     "Determine importance using machine learning" : "Determinar a importância usando aprendizagem de máquina",
     "Last 7 days" : "Últimos 7 dias"
 },

@@ -630,12 +630,6 @@
     "Could not load the desired message" : "원하는 메시지를 불러올 수 없음",
     "Could not load the message" : "메시지를 불러올 수 없음",
     "Error loading message" : "메시지 불러오기 오류",
-    "Forwarding to %s" : "%s 전달",
-    "Click here if you are not automatically redirected within the next few seconds." : "자동으로 이동하지 않는 경우 여기를 클릭하십시오.",
-    "Redirect" : "넘겨주기",
-    "The link leads to %s" : "이 링크가 %s을(를) 향함",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "해당 페이지를 방문하지 않으려면 <a href=\"%s\">메일</a>로 돌아갈 수 있습니다.",
-    "Continue to %s" : "%s(으)로 이동",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "사용자의 메시지 상호작용, 중요 표시 정보 등을 바탕으로 특정 메시지가 자동으로 중요 표시됩니다. 초기 단계에서는 시스템의 학습을 위해 사용자가 중요 여부를 수동으로 변경하게 될 수 있으나, 이는 점차 개선될 것입니다.",
     "Last 7 days" : "지난 7일"
 },"pluralForm" :"nplurals=1; plural=0;"
