@@ -6,7 +6,7 @@ import defer from 'lodash/defer.js'
 import dragEventBus from '../util/dragEventBus.js'
 
 export class DraggableEnvelope {
-	constructor(el, componentInstance, options) {
+	constructor(el, options) {
 		this.el = el
 		this.options = options
 		this.registerListeners.bind(this)(el)
@@ -44,7 +44,7 @@ export class DraggableEnvelope {
 		const envelopes = []
 		if (selectedEnvelopes.length) {
 			// handle dragged selection mode items
-			selectedEnvelopes.forEach((envelope, index) => {
+			selectedEnvelopes.forEach((envelope) => {
 				envelopes.push({
 					accountId,
 					mailboxId,
@@ -68,7 +68,7 @@ export class DraggableEnvelope {
 		})
 	}
 
-	onDragEnd(event) {
+	onDragEnd() {
 		dragEventBus.emit('drag-end', { accountId: this.options.accountId })
 	}
 

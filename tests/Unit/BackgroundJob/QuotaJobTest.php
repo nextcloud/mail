@@ -85,7 +85,7 @@ class QuotaJobTest extends TestCase {
 			->method('findById')
 			->with(123)
 			->willReturn($account);
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$this->serviceMock->getParameter('userManager')
 			->expects(self::once())
 			->method('get')

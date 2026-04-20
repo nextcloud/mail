@@ -16,6 +16,7 @@ use HTMLPurifier_Config;
 use HTMLPurifier_HTMLDefinition;
 use HTMLPurifier_URIDefinition;
 use HTMLPurifier_URISchemeRegistry;
+use OCA\Mail\Html\ProxyHmacGenerator;
 use OCA\Mail\Service\HtmlPurify\CidURIScheme;
 use OCA\Mail\Service\HtmlPurify\TransformHTMLLinks;
 use OCA\Mail\Service\HtmlPurify\TransformImageSrc;
@@ -39,10 +40,14 @@ class Html {
 
 	/** @var IRequest */
 	private $request;
+	private ProxyHmacGenerator $hmacGenerator;
 
-	public function __construct(IURLGenerator $urlGenerator, IRequest $request) {
+	public function __construct(IURLGenerator $urlGenerator,
+		IRequest $request,
+		ProxyHmacGenerator $hmacGenerator) {
 		$this->urlGenerator = $urlGenerator;
 		$this->request = $request;
+		$this->hmacGenerator = $hmacGenerator;
 	}
 
 	/**
@@ -102,7 +107,7 @@ class Html {
 		];
 	}
 
-	public function sanitizeHtmlMailBody(string $mailBody, array $messageParameters, Closure $mapCidToAttachmentId): string {
+	public function sanitizeHtmlMailBody(string $mailBody, int $id, Closure $mapCidToAttachmentId): string {
 		$config = HTMLPurifier_Config::createDefault();
 
 		// Append target="_blank" to all link (a) elements
@@ -126,11 +131,20 @@ class Html {
 		$html = $config->getDefinition('HTML');
 		$html->info_attr_transform_post['imagesrc'] = new TransformImageSrc($this->urlGenerator);
 		$html->info_attr_transform_post['cssbackground'] = new TransformStyleURLs($this->urlGenerator);
-		$html->info_attr_transform_post['htmllinks'] = new TransformHTMLLinks($this->urlGenerator);
+		$html->info_attr_transform_post['htmllinks'] = new TransformHTMLLinks();
 
 		/** @var HTMLPurifier_URIDefinition $uri */
 		$uri = $config->getDefinition('URI');
-		$uri->addFilter(new TransformURLScheme($messageParameters, $mapCidToAttachmentId, $this->urlGenerator, $this->request), $config);
+		$uri->addFilter(
+			new TransformURLScheme(
+				$id,
+				$mapCidToAttachmentId,
+				$this->urlGenerator,
+				$this->request,
+				$this->hmacGenerator,
+			),
+			$config
+		);
 
 		$uriSchemeRegistry = HTMLPurifier_URISchemeRegistry::instance();
 		$uriSchemeRegistry->register('cid', new CidURIScheme());

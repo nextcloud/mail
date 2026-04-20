@@ -42,11 +42,11 @@ use function array_filter;
  * @method bool|null isPgpMime()
  * @method setPgpMime(bool $pgpMime)
  * @method bool|null getSmimeSign()
- * @method setSmimeSign(bool $smimeSign)
+ * @method setSmimeSign(?bool $smimeSign)
  * @method int|null getSmimeCertificateId()
  * @method setSmimeCertificateId(?int $smimeCertificateId)
  * @method bool|null getSmimeEncrypt()
- * @method setSmimeEncrypt(bool $smimeEncryt)
+ * @method setSmimeEncrypt(?bool $smimeEncrypt)
  * @method int|null getStatus();
  * @method setStatus(?int $status);
  * @method string|null getRaw()

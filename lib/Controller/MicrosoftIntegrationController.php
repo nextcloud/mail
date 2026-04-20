@@ -31,12 +31,12 @@ class MicrosoftIntegrationController extends Controller {
 	private LoggerInterface $logger;
 
 	public function __construct(IRequest $request,
-		?string $UserId,
+		?string $userId,
 		AccountService $accountService,
 		MicrosoftIntegration $microsoftIntegration,
 		LoggerInterface $logger) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->userId = $UserId;
+		$this->userId = $userId;
 		$this->accountService = $accountService;
 		$this->microsoftIntegration = $microsoftIntegration;
 		$this->logger = $logger;

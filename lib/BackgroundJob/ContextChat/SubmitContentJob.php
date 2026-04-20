@@ -139,7 +139,7 @@ class SubmitContentJob extends TimedJob {
 
 
 				$items[] = new ContentItem(
-					$mailbox->getId() . ':' . $message->getId(),
+					"{$mailbox->getId()}:{$message->getId()}",
 					$this->contextChatProvider->getId(),
 					$imapMessage->getSubject(),
 					$fullMessage['body'] ?? '',

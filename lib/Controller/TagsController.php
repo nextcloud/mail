@@ -30,12 +30,12 @@ class TagsController extends Controller {
 
 
 	public function __construct(IRequest $request,
-		string $UserId,
+		string $userId,
 		IMailManager $mailManager,
 		AccountService $accountService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->currentUserId = $UserId;
+		$this->currentUserId = $userId;
 		$this->mailManager = $mailManager;
 		$this->accountService = $accountService;
 	}

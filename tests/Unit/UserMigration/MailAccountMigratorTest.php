@@ -185,7 +185,7 @@ class MailAccountMigratorTest extends TestCase {
 
 	public function testImportInvalidIndex(): void {
 		$this->expectException(UserMigrationException::class);
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 
 		$importSource = $this->createMock(IImportSource::class);
 		$importSource->method('getFileContents')

@@ -18,26 +18,6 @@
       <code><![CDATA[$slicemap = &$this->_slicemap[$mailbox]]]></code>
     </UnsupportedPropertyReferenceUsage>
   </file>
-  <file src="lib/Controller/AccountsController.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$imapHost]]></code>
-      <code><![CDATA[$imapHost]]></code>
-      <code><![CDATA[$imapPort]]></code>
-      <code><![CDATA[$imapPort]]></code>
-      <code><![CDATA[$imapSslMode]]></code>
-      <code><![CDATA[$imapSslMode]]></code>
-      <code><![CDATA[$imapUser]]></code>
-      <code><![CDATA[$imapUser]]></code>
-      <code><![CDATA[$smtpHost]]></code>
-      <code><![CDATA[$smtpHost]]></code>
-      <code><![CDATA[$smtpPort]]></code>
-      <code><![CDATA[$smtpPort]]></code>
-      <code><![CDATA[$smtpSslMode]]></code>
-      <code><![CDATA[$smtpSslMode]]></code>
-      <code><![CDATA[$smtpUser]]></code>
-      <code><![CDATA[$smtpUser]]></code>
-    </PossiblyNullArgument>
-  </file>
   <file src="lib/Controller/AvatarsController.php">
     <PossiblyNullArgument>
       <code><![CDATA[$image]]></code>
@@ -50,22 +30,6 @@
       <code><![CDATA[getMime]]></code>
       <code><![CDATA[isExternal]]></code>
     </PossiblyNullReference>
-  </file>
-  <file src="lib/Controller/ContactIntegrationController.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$contactName]]></code>
-      <code><![CDATA[$mail]]></code>
-      <code><![CDATA[$mail]]></code>
-      <code><![CDATA[$uid]]></code>
-    </PossiblyNullArgument>
-  </file>
-  <file src="lib/Controller/DraftsController.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$smimeEncrypt]]></code>
-      <code><![CDATA[$smimeEncrypt]]></code>
-      <code><![CDATA[$smimeSign]]></code>
-      <code><![CDATA[$smimeSign]]></code>
-    </PossiblyNullArgument>
   </file>
   <file src="lib/Controller/InternalAddressController.php">
     <PossiblyNullArgument>
@@ -158,12 +122,6 @@
       <code><![CDATA[$fileParts['extension']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
-  <file src="lib/Controller/OutboxController.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$editorBody]]></code>
-      <code><![CDATA[$sendAt]]></code>
-    </PossiblyNullArgument>
-  </file>
   <file src="lib/Controller/PageController.php">
     <PossiblyNullArgument>
       <code><![CDATA[$this->currentUserId]]></code>
@@ -181,11 +139,6 @@
     <PossiblyInvalidArgument>
       <code><![CDATA[$content]]></code>
     </PossiblyInvalidArgument>
-  </file>
-  <file src="lib/Controller/SieveController.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$sievePassword]]></code>
-    </PossiblyNullArgument>
   </file>
   <file src="lib/Controller/SmimeCertificatesController.php">
     <PossiblyNullArgument>
@@ -539,6 +492,13 @@
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$value]]></code>
     </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="lib/Service/HtmlPurify/TransformURLScheme.php">
+    <NullArgument>
+      <code><![CDATA[null]]></code>
+      <code><![CDATA[null]]></code>
+      <code><![CDATA[null]]></code>
+    </NullArgument>
   </file>
   <file src="lib/Service/IMipService.php">
     <PossiblyNullArgument>

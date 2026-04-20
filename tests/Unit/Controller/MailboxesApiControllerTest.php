@@ -74,8 +74,8 @@ class MailboxesApiControllerTest extends TestCase {
 
 
 	public function testListMailboxes() {
-		$account = $this->createMock(Account::class);
-		$folder = $this->createMock(Folder::class);
+		$account = $this->createStub(Account::class);
+		$folder = $this->createStub(Folder::class);
 		$accountId = 42;
 		$this->accountService->expects($this->once())
 			->method('find')

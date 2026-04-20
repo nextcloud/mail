@@ -265,7 +265,7 @@ export default {
 		window.addEventListener('resize', this.checkScreenSize)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		window.removeEventListener('beforeunload', this.onBeforeUnload)
 		window.removeEventListener('resize', this.checkScreenSize)
 	},

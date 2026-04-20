@@ -31,7 +31,6 @@ use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ImapFlagEncodingException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\TrashMailboxNotSetException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
@@ -148,6 +147,8 @@ class MailManager implements IMailManager {
 		try {
 			$folder = $this->folderMapper->createFolder($client, $name, $specialUse);
 			$this->folderMapper->fetchFolderAcls([$folder], $client);
+			$this->folderMapper->detectFolderSpecialUse([$folder]);
+			$this->mailboxSync->sync($account, $this->logger, true, $client);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
 				'Could not get mailbox status: ' . $e->getMessage(),
@@ -157,25 +158,10 @@ class MailManager implements IMailManager {
 		} finally {
 			$client->logout();
 		}
-		$this->folderMapper->detectFolderSpecialUse([$folder]);
-
-		$this->mailboxSync->sync($account, $this->logger, true);
 
 		return $this->mailboxMapper->find($account, $name);
 	}
 
-	/**
-	 * @param Horde_Imap_Client_Socket $client
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 * @param int $uid
-	 * @param bool $loadBody
-	 *
-	 * @return IMAPMessage
-	 *
-	 * @throws ServiceException
-	 * @throws SmimeDecryptException
-	 */
 	#[\Override]
 	public function getImapMessage(Horde_Imap_Client_Socket $client,
 		Account $account,
@@ -190,7 +176,7 @@ class MailManager implements IMailManager {
 				$account->getUserId(),
 				$loadBody
 			);
-		} catch (Horde_Imap_Client_Exception|DoesNotExistException $e) {
+		} catch (DoesNotExistException|Horde_Mime_Exception|Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
 				'Could not load message',
 				$e->getCode(),
@@ -426,6 +412,11 @@ class MailManager implements IMailManager {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
 			$client->subscribeMailbox($mailbox->getName(), $subscribed);
+
+			/**
+			 * 2. Pull changes into the mailbox database cache
+			 */
+			$this->mailboxSync->sync($account, $this->logger, true, $client);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
 				'Could not set subscription status for mailbox ' . $mailbox->getId() . ' on IMAP: ' . $e->getMessage(),
@@ -435,11 +426,6 @@ class MailManager implements IMailManager {
 		} finally {
 			$client->logout();
 		}
-
-		/**
-		 * 2. Pull changes into the mailbox database cache
-		 */
-		$this->mailboxSync->sync($account, $this->logger, true);
 
 		/**
 		 * 3. Return the updated object
@@ -628,14 +614,14 @@ class MailManager implements IMailManager {
 				$mailbox->getName(),
 				$name
 			);
+
+			/**
+			 * 2. Get the IMAP changes into our database cache
+			 */
+			$this->mailboxSync->sync($account, $this->logger, true, $client);
 		} finally {
 			$client->logout();
 		}
-
-		/**
-		 * 2. Get the IMAP changes into our database cache
-		 */
-		$this->mailboxSync->sync($account, $this->logger, true);
 
 		/**
 		 * 3. Return the cached object with the new ID

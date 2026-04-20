@@ -124,14 +124,14 @@ class MailboxSyncTest extends TestCase {
 			->method('getFolders')
 			->with($account, $client)
 			->willReturn($folders);
-		$this->folderMapper->expects($this->once())
-			->method('getFoldersStatusAsObject')
-			->with($client, self::equalToCanonicalizing(['mb1', 'mb2', 'mb3',]))
-			->willReturn([
-				'mb1' => new MailboxStats(1, 2),
-				'mb2' => new MailboxStats(1, 2),
-				/* no status for mb3 */
-			]);
+		$this->folderMapper->expects($this->exactly(3))
+			->method('getFolderStatus')
+			->willReturnCallback(function (Horde_Imap_Client_Socket $c, string $name) {
+				if ($name === 'mb3') {
+					return null;
+				}
+				return new MailboxStats(1, 2);
+			});
 		$this->folderMapper->expects($this->once())
 			->method('detectFolderSpecialUse')
 			->with($folders);
@@ -198,12 +198,11 @@ class MailboxSyncTest extends TestCase {
 			->method('findAll')
 			->with($account)
 			->willReturn([$inbox, $sharedMailbox]);
-		$this->folderMapper->expects($this->once())
-			->method('getFoldersStatusAsObject')
-			->with($client, [$inbox->getName(), $sharedMailbox->getName()])
-			->willReturn([
-				$inbox->getName() => new MailboxStats(1, 2),
-				$sharedMailbox->getName() => new MailboxStats(0, 0),
+		$this->folderMapper->expects($this->exactly(2))
+			->method('getFolderStatus')
+			->willReturnMap([
+				[$client, $inbox->getName(), new MailboxStats(1, 2)],
+				[$client, $sharedMailbox->getName(), new MailboxStats(0, 0)],
 			]);
 		$this->mailboxMapper->expects(self::exactly(4))
 			->method('update')
@@ -213,14 +212,14 @@ class MailboxSyncTest extends TestCase {
 	}
 
 	public function testSyncStats(): void {
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$stats = new MailboxStats(42, 10, null);
 		$mailbox = new Mailbox();
 		$mailbox->setName('mailbox');
 		$this->folderMapper->expects($this->once())
-			->method('getFoldersStatusAsObject')
-			->with($client, [$mailbox->getName()])
-			->willReturn(['mailbox' => $stats]);
+			->method('getFolderStatus')
+			->with($client, $mailbox->getName())
+			->willReturn($stats);
 		$this->mailboxMapper->expects($this->once())
 			->method('update')
 			->with($mailbox);
@@ -232,16 +231,15 @@ class MailboxSyncTest extends TestCase {
 	}
 
 	public function testSyncStatsWithNoStats(): void {
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$stats = new MailboxStats(42, 10, null);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$mailbox = new Mailbox();
 		$mailbox->setMessages(10);
 		$mailbox->setUnseen(6);
 		$mailbox->setName('mailbox');
 		$this->folderMapper->expects(self::once())
-			->method('getFoldersStatusAsObject')
-			->with($client, [$mailbox->getName()])
-			->willReturn(['otherMailbox' => $stats]);
+			->method('getFolderStatus')
+			->with($client, $mailbox->getName())
+			->willReturn(null);
 		$this->mailboxMapper->expects(self::never())
 			->method('update');
 

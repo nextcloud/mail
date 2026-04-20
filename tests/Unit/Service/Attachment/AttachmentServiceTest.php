@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
@@ -18,15 +20,20 @@ use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\UploadException;
 use OCA\Mail\IMAP\MessageMapper;
+use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Attachment\AttachmentStorage;
 use OCA\Mail\Service\Attachment\UploadedFile;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\Folder;
 use OCP\Files\IMimeTypeDetector;
 use OCP\Files\NotPermittedException;
+use OCP\ICache;
 use OCP\ICacheFactory;
 use OCP\IURLGenerator;
 use OCP\Share\IAttributes;
@@ -35,34 +42,19 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class AttachmentServiceTest extends TestCase {
-	/** @var LocalAttachmentMapper|MockObject */
-	private $mapper;
+	private LocalAttachmentMapper&MockObject $mapper;
+	private AttachmentStorage&MockObject $storage;
+	private IMailManager&MockObject $mailManager;
+	private MessageMapper&MockObject $messageMapper;
+	private Folder&MockObject $userFolder;
+	private ICache&MockObject $cache;
+	private ICacheFactory&MockObject $cacheFactory;
+	private IURLGenerator&MockObject $urlGenerator;
+	private IMimeTypeDetector&MockObject $mimeTypeDetector;
+	private LoggerInterface&MockObject $logger;
+	private ITimeFactory&MockObject $timeFactory;
+	private AttachmentService $service;
 
-	/** @var AttachmentStorage|MockObject */
-	private $storage;
-
-	/** @var AttachmentService */
-	private $service;
-
-	/** @var Folder|MockObject */
-	private $userFolder;
-
-	/** @var IMailManager|MockObject */
-	private $mailManager;
-
-	/** @var MessageMapper|MockObject */
-	private $messageMapper;
-
-	/** @var ICacheFactory|MockObject */
-	private $cacheFactory;
-
-	/** @var MockObject|LoggerInterface */
-	private $logger;
-
-	/** @var MockObject|IURLGenerator */
-	private $urlGenerator;
-
-	/** @var MockObject|IMimeTypeDetector */
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -72,10 +64,14 @@ class AttachmentServiceTest extends TestCase {
 		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->userFolder = $this->createMock(Folder::class);
+		$this->cache = $this->createMock(ICache::class);
 		$this->cacheFactory = $this->createMock(ICacheFactory::class);
+		$this->cacheFactory->method('createDistributed')->willReturn($this->cache);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
-		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->mimeTypeDetector = $this->createMock(IMimeTypeDetector::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->timeFactory = $this->createMock(ITimeFactory::class);
+		$this->timeFactory->method('getTime')->willReturn(123456);
 
 		$this->service = new AttachmentService(
 			$this->userFolder,
@@ -86,7 +82,8 @@ class AttachmentServiceTest extends TestCase {
 			$this->cacheFactory,
 			$this->urlGenerator,
 			$this->mimeTypeDetector,
-			$this->logger
+			$this->logger,
+			$this->timeFactory,
 		);
 	}
 
@@ -99,6 +96,7 @@ class AttachmentServiceTest extends TestCase {
 		$attachment = LocalAttachment::fromParams([
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
+			'createdAt' => 123456,
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
@@ -130,7 +128,8 @@ class AttachmentServiceTest extends TestCase {
 			->willReturn('cat.jpg');
 		$attachment = LocalAttachment::fromParams([
 			'userId' => $userId,
-			'fileName' => 'cat.jpg'
+			'fileName' => 'cat.jpg',
+			'createdAt' => 123456
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
@@ -155,6 +154,7 @@ class AttachmentServiceTest extends TestCase {
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'image/jpg',
+			'createdAt' => 123456,
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
@@ -185,6 +185,7 @@ class AttachmentServiceTest extends TestCase {
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'image/jpg',
+			'createdAt' => 123456,
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
@@ -282,8 +283,8 @@ class AttachmentServiceTest extends TestCase {
 	}
 
 	public function testhandleLocalMessageAttachment(): void {
-		$account = $this->createMock(Account::class);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createStub(Account::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$attachments = [
 			[
 				'type' => 'local',
@@ -300,6 +301,7 @@ class AttachmentServiceTest extends TestCase {
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'text/plain',
+			'createdAt' => 123456,
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
@@ -315,7 +317,7 @@ class AttachmentServiceTest extends TestCase {
 		$message->setMailboxId(1);
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$attachments = [
 			'type' => 'message',
 			'id' => 123,
@@ -351,6 +353,7 @@ class AttachmentServiceTest extends TestCase {
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'text/plain',
+			'createdAt' => 123456,
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
@@ -365,7 +368,7 @@ class AttachmentServiceTest extends TestCase {
 		$mailbox = new Mailbox();
 		$mailbox->setId(9);
 		$mailbox->setName('INBOX');
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$attachments = [
 			'type' => 'message-attachment',
 			'mailboxId' => $mailbox->getId(),
@@ -423,7 +426,7 @@ class AttachmentServiceTest extends TestCase {
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => $userId
 		]);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$attachments = [
 			'type' => 'cloud',
 			'messageId' => 999,
@@ -455,11 +458,12 @@ class AttachmentServiceTest extends TestCase {
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => $userId
 		]);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$attachment = LocalAttachment::fromParams([
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'text/plain',
+			'createdAt' => 123456,
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
@@ -534,6 +538,159 @@ class AttachmentServiceTest extends TestCase {
 			->method('delete')
 			->with($userId, 5678);
 		$this->service->updateLocalMessageAttachments($userId, $message, $attachmentIds);
+	}
+
+	public function testGetAttachmentNamesCacheHit(): void {
+		// Arrange
+		$account = $this->createConfiguredMock(Account::class, ['getUserId' => 'user1', 'getId' => 1]);
+		$mailbox = new Mailbox();
+		$mailbox->setId(2);
+		$message = new Message();
+		$message->setUid(3);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$cached = [['id' => '1.2', 'fileName' => 'file.pdf', 'mime' => 'application/pdf', 'downloadUrl' => 'http://example.test/dl', 'mimeUrl' => 'http://example.test/mime']];
+		$this->cache->expects(self::once())->method('get')->willReturn($cached);
+		$this->mailManager->expects(self::never())->method('getImapMessage');
+
+		// Act
+		$result = $this->service->getAttachmentNames($account, $mailbox, $message, $client);
+
+		// Assert
+		$this->assertSame($cached, $result);
+	}
+
+	public function testGetAttachmentNamesEarlyExitNoAttachments(): void {
+		// Arrange
+		$account = $this->createConfiguredMock(Account::class, ['getUserId' => 'user1', 'getId' => 1]);
+		$mailbox = new Mailbox();
+		$mailbox->setId(2);
+		$message = new Message();
+		$message->setUid(3);
+		$message->setStructureAnalyzed(true);
+		$message->setFlagAttachments(false);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$this->cache->expects(self::never())->method('get');
+		$this->mailManager->expects(self::never())->method('getImapMessage');
+
+		// Act
+		$result = $this->service->getAttachmentNames($account, $mailbox, $message, $client);
+
+		// Assert
+		$this->assertSame([], $result);
+	}
+
+	public function testGetAttachmentNamesCacheHitEmptyArray(): void {
+		// Arrange
+		$account = $this->createConfiguredMock(Account::class, ['getUserId' => 'user1', 'getId' => 1]);
+		$mailbox = new Mailbox();
+		$mailbox->setId(2);
+		$message = new Message();
+		$message->setUid(3);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$this->cache->expects(self::once())->method('get')->willReturn([]);
+		$this->mailManager->expects(self::never())->method('getImapMessage');
+
+		// Act
+		$result = $this->service->getAttachmentNames($account, $mailbox, $message, $client);
+
+		// Assert
+		$this->assertSame([], $result);
+	}
+
+	public function testGetAttachmentNamesCacheMissWithAttachments(): void {
+		// Arrange
+		$account = $this->createConfiguredMock(Account::class, ['getUserId' => 'user1', 'getId' => 1]);
+		$mailbox = new Mailbox();
+		$mailbox->setId(2);
+		$message = new Message();
+		$message->setUid(3);
+		$message->setId(99);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$this->cache->expects(self::once())->method('get')->willReturn(null);
+		$this->mailManager->expects(self::once())
+			->method('getImapMessage')
+			->with($client, $account, $mailbox, 3, true)
+			->willReturn($imapMessage);
+		$imapMessage->expects(self::once())
+			->method('getAttachments')
+			->willReturn([['id' => '1.2', 'fileName' => 'file.pdf', 'mime' => 'application/pdf']]);
+		$this->urlGenerator->method('linkToRouteAbsolute')->willReturn('http://example.test/dl');
+		$this->mimeTypeDetector->method('mimeTypeIcon')->willReturn('http://example.test/mime');
+		$this->cache->expects(self::once())->method('set');
+
+		// Act
+		$result = $this->service->getAttachmentNames($account, $mailbox, $message, $client);
+
+		// Assert
+		$this->assertCount(1, $result);
+		$this->assertSame('1.2', $result[0]['id']);
+		$this->assertSame('file.pdf', $result[0]['fileName']);
+	}
+
+	public function testGetAttachmentNamesCacheMissNoAttachments(): void {
+		// Arrange
+		$account = $this->createConfiguredMock(Account::class, ['getUserId' => 'user1', 'getId' => 1]);
+		$mailbox = new Mailbox();
+		$mailbox->setId(2);
+		$message = new Message();
+		$message->setUid(3);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$this->cache->expects(self::once())->method('get')->willReturn(null);
+		$this->mailManager->expects(self::once())->method('getImapMessage')->willReturn($imapMessage);
+		$imapMessage->expects(self::once())->method('getAttachments')->willReturn([]);
+		$this->cache->expects(self::once())->method('set')->with(self::anything(), []);
+
+		// Act
+		$result = $this->service->getAttachmentNames($account, $mailbox, $message, $client);
+
+		// Assert
+		$this->assertSame([], $result);
+	}
+
+	public function testGetAttachmentNamesSmimeDecryptException(): void {
+		// Arrange
+		$account = $this->createConfiguredMock(Account::class, ['getUserId' => 'user1', 'getId' => 1]);
+		$mailbox = new Mailbox();
+		$mailbox->setId(2);
+		$message = new Message();
+		$message->setUid(3);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$this->cache->expects(self::once())->method('get')->willReturn(null);
+		$this->mailManager->expects(self::once())
+			->method('getImapMessage')
+			->willThrowException(new SmimeDecryptException());
+		$this->logger->expects(self::once())->method('debug');
+		$this->cache->expects(self::once())->method('set')->with(self::anything(), []);
+
+		// Act
+		$result = $this->service->getAttachmentNames($account, $mailbox, $message, $client);
+
+		// Assert
+		$this->assertSame([], $result);
+	}
+
+	public function testGetAttachmentNamesServiceException(): void {
+		// Arrange
+		$account = $this->createConfiguredMock(Account::class, ['getUserId' => 'user1', 'getId' => 1]);
+		$mailbox = new Mailbox();
+		$mailbox->setId(2);
+		$message = new Message();
+		$message->setUid(3);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$this->cache->expects(self::once())->method('get')->willReturn(null);
+		$this->mailManager->expects(self::once())
+			->method('getImapMessage')
+			->willThrowException(new ServiceException());
+		$this->logger->expects(self::once())->method('warning');
+		$this->cache->expects(self::once())->method('set')->with(self::anything(), []);
+
+		// Act
+		$result = $this->service->getAttachmentNames($account, $mailbox, $message, $client);
+
+		// Assert
+		$this->assertSame([], $result);
 	}
 
 	public function testUpdateLocalMessageAttachmentsDiffAttachments(): void {

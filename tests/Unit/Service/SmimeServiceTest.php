@@ -424,6 +424,16 @@ class SmimeServiceTest extends TestCase {
 					false,
 				),
 			],
+			[ // Email address only in SAN, not in Subject (RFC 8550 / government PKI pattern)
+				$this->getTestCertificate('san-only@imap.localhost'),
+				new SmimeCertificateInfo(
+					'SAN Only User',
+					'san-only@imap.localhost',
+					4927747705,
+					new SmimeCertificatePurposes(true, true),
+					false,
+				),
+			],
 		];
 	}
 

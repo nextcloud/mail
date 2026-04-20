@@ -63,6 +63,7 @@ OC.L10N.register(
     "Decline" : "Declinar",
     "Remove" : "Suprimir",
     "Today" : "Uèi",
+    "Yesterday" : "Ièr",
     "Last week" : "La setmana passada",
     "Last month" : "Lo mes passat",
     "Favorites" : "Favorits",
@@ -121,7 +122,6 @@ OC.L10N.register(
     "Error while sharing file" : "Error pendent lo partiment del fichièr",
     "{from}\n{subject}" : "{from}\n{subject}",
     "Message sent" : "Messatge mandat",
-    "Error loading message" : "Error al moment del cargament del messatge",
-    "Continue to %s" : "Contunhar cap a %s"
+    "Error loading message" : "Error al moment del cargament del messatge"
 },
 "nplurals=2; plural=(n > 1);");

@@ -587,12 +587,6 @@ OC.L10N.register(
     "Could not load the desired message" : "پیام مورد نظر بارگیری نشد",
     "Could not load the message" : "بارگیری پیام امکان پذیر نیست",
     "Error loading message" : "خطا در بارگزاری پیام",
-    "Forwarding to %s" : "انتقال به%s",
-    "Click here if you are not automatically redirected within the next few seconds." : "اگر چند ثانیه دیگر به طور خودکار هدایت نشود ، اینجا را کلیک کنید.",
-    "Redirect" : "تغییر مسیر",
-    "The link leads to %s" : "پیوند منجر به%s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "ادامه دهید%s",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time.",
     "Mark all messages of this folder as read" : "تمام پیام های این پوشه را به عنوان خوانده شده علامت گذاری کنید",
     "Last 7 days" : "۷ روز گذشته"

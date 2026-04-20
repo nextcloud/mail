@@ -40,7 +40,6 @@ const plugins = [
 
 module.exports = async () => ({
 	entry: {
-		autoredirect: path.join(__dirname, 'src/autoredirect.js'),
 		mail: path.join(__dirname, 'src/main.js'),
 		oauthpopup: path.join(__dirname, 'src/main-oauth-popup.js'),
 		settings: path.join(__dirname, 'src/main-settings'),

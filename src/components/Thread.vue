@@ -73,7 +73,6 @@
 <script>
 import { showError } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import moment from '@nextcloud/moment'
 import { NcAppContentDetails as AppContentDetails, NcPopover } from '@nextcloud/vue'
 import debounce from 'lodash/fp/debounce.js'
 import { mapStores } from 'pinia'
@@ -87,6 +86,7 @@ import logger from '../logger.js'
 import { summarizeThread } from '../service/AiIntergrationsService.js'
 import useMainStore from '../store/mainStore.js'
 import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory.js'
+import { formatDateTimeFromUnix } from '../util/formatDateTime.js'
 
 export default {
 	name: 'Thread',
@@ -221,7 +221,7 @@ export default {
 		window.addEventListener('keydown', this.handleKeyDown)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		window.removeEventListener('resize', this.resizeDebounced)
 		window.removeEventListener('keydown', this.handleKeyDown)
 	},
@@ -466,7 +466,7 @@ export default {
 
 			const dateSpan = virtualIframeDocument.createElement('p')
 			dateSpan.style.fontWeight = 'bold'
-			dateSpan.textContent = t('mail', 'Date') + ': ' + moment.unix(this.thread[index].dateInt).format('LLL')
+			dateSpan.textContent = t('mail', 'Date') + ': ' + formatDateTimeFromUnix(this.thread[index].dateInt)
 
 			const recipientSpan = virtualIframeDocument.createElement('p')
 			recipientSpan.style.fontWeight = 'bold'

@@ -76,7 +76,6 @@ OC.L10N.register(
     "Inbox" : "Tanaka",
     "Nextcloud Mail" : "Imayl n Nextcloud",
     "Message sent" : "Izen yettwazen",
-    "Continue to %s" : "Kemmel ar %s",
     "Last 7 days" : "7 n wussan yezrin"
 },
 "nplurals=2; plural=(n != 1);");

@@ -15,6 +15,12 @@ localVue.mixin(Nextcloud)
 localVue.use(PiniaVuePlugin)
 const pinia = createPinia()
 
+const $route = {
+	params: {
+		mailboxId: '123', // String because it comes from URL params
+	},
+}
+
 describe('Composer', () => {
 	let store
 
@@ -23,16 +29,41 @@ describe('Composer', () => {
 			value: 0,
 		})
 
+		const defaultAccount = {
+			id: 123,
+			editorMode: 'plaintext',
+			isUnified: false,
+			aliases: [],
+			connectionStatus: true,
+			emailAddress: 'test@example.com',
+			name: 'Test Account',
+		}
+
 		shallowMount(Composer, {
 			propsData: {
 				isFirstOpen: true,
-				accounts: [],
+				accounts: [defaultAccount],
+			},
+			mocks: {
+				$route,
 			},
 			localVue,
 			pinia,
 			store,
 		})
 		store = useMainStore()
+
+		// Add a mailbox to the store for the route param to reference
+		store.mailboxes[123] = {
+			id: 123,
+			databaseId: 123,
+			accountId: 123,
+			name: 'INBOX',
+			attributes: [],
+			specialUse: ['inbox'],
+			envelopeLists: {},
+			mailboxes: [],
+		}
 	})
 
 	it('does not drop the reply message ID', () => {
@@ -48,6 +79,9 @@ describe('Composer', () => {
 						aliases: [],
 					},
 				],
+			},
+			mocks: {
+				$route,
 			},
 			store,
 			localVue,
@@ -71,6 +105,9 @@ describe('Composer', () => {
 						aliases: [],
 					},
 				],
+			},
+			mocks: {
+				$route,
 			},
 			store,
 			localVue,
@@ -98,6 +135,9 @@ describe('Composer', () => {
 					},
 				],
 			},
+			mocks: {
+				$route,
+			},
 			store,
 			localVue,
 		})
@@ -119,6 +159,9 @@ describe('Composer', () => {
 						aliases: [],
 					},
 				],
+			},
+			mocks: {
+				$route,
 			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
@@ -149,6 +192,9 @@ describe('Composer', () => {
 					},
 				],
 			},
+			mocks: {
+				$route,
+			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
 					return { foo: 'bar' }
@@ -178,6 +224,9 @@ describe('Composer', () => {
 					},
 				],
 			},
+			mocks: {
+				$route,
+			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
 					return undefined
@@ -206,6 +255,9 @@ describe('Composer', () => {
 						aliases: [],
 					},
 				],
+			},
+			mocks: {
+				$route,
 			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
@@ -239,6 +291,9 @@ describe('Composer', () => {
 					},
 				],
 			},
+			mocks: {
+				$route,
+			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
 					return { foo: 'bar' }
@@ -271,6 +326,9 @@ describe('Composer', () => {
 					},
 				],
 			},
+			mocks: {
+				$route,
+			},
 			store,
 			localVue,
 		})
@@ -299,6 +357,9 @@ describe('Composer', () => {
 						aliases: [],
 					},
 				],
+			},
+			mocks: {
+				$route,
 			},
 			store,
 			localVue,

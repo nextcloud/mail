@@ -563,12 +563,6 @@
     "Could not load the desired message" : "No fue posible cargar el mensaje deseado",
     "Could not load the message" : "No fue posible cargar el mensaje",
     "Error loading message" : "Se presentó un error al cargar el mensaje",
-    "Forwarding to %s" : "Reenviando a %s",
-    "Click here if you are not automatically redirected within the next few seconds." : "Haz click aqui si no eres redireccionado automáticamente dentro de los siguietes segundos. ",
-    "Redirect" : "Redireccionar",
-    "The link leads to %s" : "La liga lleva a %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no deseas visitar esa página, puedes regresar a <a href=\"%s\">Correo</a>.",
-    "Continue to %s" : "Continuar a %s",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Los mensajes se marcarán automáticamente como importantes en función de los mensajes con los que interactúes o que marques como importantes. Al principio, es posible que debas cambiar manualmente la importancia para enseñar al sistema, pero mejorará con el tiempo.",
     "Last 7 days" : "Últimos 7 días"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"

@@ -106,11 +106,23 @@ class SmimeCertificatesController extends Controller {
 
 		$certificateFile = new UploadedFile($attachedCertificate);
 		$certificateData = file_get_contents($certificateFile->getTempPath());
+		if ($certificateData === false) {
+			return JsonResponse::fail(
+				'Could not read certificate file',
+				Http::STATUS_UNPROCESSABLE_ENTITY,
+			);
+		}
 
 		$privateKeyData = null;
 		if ($attachedPrivateKey !== null) {
 			$privateKeyFile = new UploadedFile($attachedPrivateKey);
 			$privateKeyData = file_get_contents($privateKeyFile->getTempPath());
+			if ($privateKeyData === false) {
+				return JsonResponse::fail(
+					'Could not read private key file',
+					Http::STATUS_UNPROCESSABLE_ENTITY,
+				);
+			}
 		}
 
 		$certificate = $this->certificateService->createCertificate(

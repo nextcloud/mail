@@ -20,6 +20,7 @@ use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Socket;
 use Horde_Mime_Exception;
 use Horde_Mime_Headers;
+use Horde_Mime_Headers_ContentParam;
 use Horde_Mime_Headers_ContentParam_ContentType;
 use Horde_Mime_Headers_ContentTransferEncoding;
 use Horde_Mime_Part;
@@ -27,6 +28,7 @@ use Html2Text\Html2Text;
 use OCA\Mail\Attachment;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Html\Parser;
 use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\Model\IMAPMessage;
@@ -66,9 +68,11 @@ class MessageMapper {
 	}
 
 	/**
-	 * @return IMAPMessage
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Mime_Exception
+	 * @throws ServiceException
+	 * @throws SmimeDecryptException
 	 */
 	public function find(Horde_Imap_Client_Base $client,
 		string $mailbox,
@@ -85,15 +89,17 @@ class MessageMapper {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
-	 * @param string $mailbox
+	 * @return array{
+	 *     messages: list<IMAPMessage>,
+	 *     all: bool,
+	 *     total: int,
+	 * }
 	 *
-	 * @param int $maxResults
-	 * @param int $highestKnownUid
-	 * @param PerformanceLoggerTask $perf
-	 *
-	 * @return array
+	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 * @throws Horde_Mime_Exception
+	 * @throws ServiceException
 	 */
 	public function findAll(Horde_Imap_Client_Socket $client,
 		string $mailbox,
@@ -256,22 +262,18 @@ class MessageMapper {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Base $client
-	 * @param string $mailbox
 	 * @param int[]|Horde_Imap_Client_Ids $ids
-	 * @param string $userId
-	 * @param bool $loadBody
-	 * @return IMAPMessage[]
+	 * @return list<IMAPMessage>
 	 *
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
-	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
 	 * @throws Horde_Mime_Exception
 	 * @throws ServiceException
+	 * @throws SmimeDecryptException
 	 */
 	public function findByIds(Horde_Imap_Client_Base $client,
 		string $mailbox,
-		$ids,
+		array|Horde_Imap_Client_Ids $ids,
 		string $userId,
 		bool $loadBody = false,
 		bool $runPhishingCheck = false): array {
@@ -581,8 +583,9 @@ class MessageMapper {
 			/** @var Horde_Imap_Client_Data_Fetch $part */
 			$body = $part->getBodyPart($htmlPartId);
 			if ($body !== null) {
+				/** @var Horde_Mime_Headers $mimeHeaders */
 				$mimeHeaders = $part->getMimeHeader($htmlPartId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
+				if ($enc = $mimeHeaders['content-transfer-encoding']?->value_single) {
 					$structure->setTransferEncoding($enc);
 				}
 				$structure->setContents($body);
@@ -694,8 +697,9 @@ class MessageMapper {
 			// Encrypted parts were already decoded and their content can be used directly
 			if (!$isEncrypted) {
 				$stream = $messageData->getBodyPart($key, true);
+				/** @var Horde_Mime_Headers $mimeHeaders */
 				$mimeHeaders = $messageData->getMimeHeader($key, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
+				if ($enc = $mimeHeaders['content-transfer-encoding']?->value_single) {
 					$part->setTransferEncoding($enc);
 				}
 
@@ -801,24 +805,30 @@ class MessageMapper {
 		$mimePart->setDisposition('attachment');
 
 		// Extract headers from part
-		$contentDisposition = $mimeHeaders->getValue('content-disposition', Horde_Mime_Headers::VALUE_PARAMS);
+		$cdEl = $mimeHeaders['content-disposition'];
+		$contentDisposition = $cdEl instanceof Horde_Mime_Headers_ContentParam
+			? array_change_key_case($cdEl->params, CASE_LOWER)
+			: null;
 		if (!is_null($contentDisposition) && isset($contentDisposition['filename'])) {
 			$mimePart->setDispositionParameter('filename', $contentDisposition['filename']);
 		} else {
-			$contentDisposition = $mimeHeaders->getValue('content-type', Horde_Mime_Headers::VALUE_PARAMS);
-			if (isset($contentDisposition['name'])) {
-				$mimePart->setContentTypeParameter('name', $contentDisposition['name']);
+			$ctEl = $mimeHeaders['content-type'];
+			$contentTypeParams = $ctEl instanceof Horde_Mime_Headers_ContentParam
+				? array_change_key_case($ctEl->params, CASE_LOWER)
+				: null;
+			if (isset($contentTypeParams['name'])) {
+				$mimePart->setContentTypeParameter('name', $contentTypeParams['name']);
 			}
 		}
 
 		// Content transfer encoding
 		// Decrypted parts are already decoded because they went through the MIME parser
-		if (!$isEncrypted && $tmp = $mimeHeaders->getValue('content-transfer-encoding')) {
+		if (!$isEncrypted && $tmp = $mimeHeaders['content-transfer-encoding']?->value_single) {
 			$mimePart->setTransferEncoding($tmp);
 		}
 
 		/* Content type */
-		$contentType = $mimeHeaders->getValue('content-type');
+		$contentType = $mimeHeaders['content-type']?->value_single;
 		if (!is_null($contentType) && str_contains($contentType, 'text/calendar')) {
 			$mimePart->setType('text/calendar');
 			if ($mimePart->getContentTypeParameter('name') === null) {
