@@ -149,6 +149,10 @@ class AccountService {
 		}
 		$this->aliasesService->deleteAll($accountId);
 		$this->mapper->delete($mailAccount);
+
+		// Invalidate cache to ensure deleted account is not included
+		// in subsequent `findByUserId` and `findByUserIdAndAddress` calls
+		unset($this->accounts[$currentUserId]);
 	}
 
 	/**
@@ -164,17 +168,31 @@ class AccountService {
 		}
 		$this->aliasesService->deleteAll($accountId);
 		$this->mapper->delete($mailAccount);
+
+		// Invalidate cache to ensure deleted account is not included
+		// in subsequent `findByUserId` and `findByUserIdAndAddress` calls
+		unset($this->accounts[$mailAccount->getUserId()]);
 	}
 
 	/**
 	 * @param MailAccount $newAccount
+	 * @param bool $scheduleBackgroundJobs Optional parameter to save the mail account
+	 *                                     without scheduling the corresponding background jobs. This can be useful if
+	 *                                     further database modifications must be done before running any background
+	 *                                     jobs. Defaults to `true`.
 	 * @return MailAccount
 	 */
-	public function save(MailAccount $newAccount): MailAccount {
+	public function save(MailAccount $newAccount, bool $scheduleBackgroundJobs = true): MailAccount {
 		$newAccount = $this->mapper->save($newAccount);
 
 		// Insert background jobs for this account
-		$this->scheduleBackgroundJobs($newAccount->getId());
+		if ($scheduleBackgroundJobs) {
+			$this->scheduleBackgroundJobs($newAccount->getId());
+		}
+
+		// Invalidate cache to ensure created account is being included
+		// in subsequent `findByUserId` and `findByUserIdAndAddress` calls
+		unset($this->accounts[$newAccount->getUserId()]);
 
 		return $newAccount;
 	}
@@ -196,6 +214,10 @@ class AccountService {
 		$mailAccount = $account->getMailAccount();
 		$mailAccount->setSignature($signature);
 		$this->mapper->save($mailAccount);
+
+		// Invalidate cache to ensure changed signature is being included
+		// in subsequent `findByUserId` and `findByUserIdAndAddress` calls
+		unset($this->accounts[$uid]);
 	}
 
 	/**
