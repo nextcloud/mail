@@ -113,13 +113,7 @@
 						{{ n('mail', 'Forward {number} as attachment', 'Forward {number} as attachment', selection.length, { number: selection.length }) }}
 					</ActionButton>
 				</Actions>
-				<MoveModal
-					v-if="showMoveModal"
-					:account="account"
-					:envelopes="selectedEnvelopes"
-					:move-thread="true"
-					@close="onCloseMoveModal" />
-			</div>
+				</div>
 		</transition>
 
 		<transition-group :name="listTransitionName">
@@ -154,6 +148,13 @@
 			:envelopes="selectedEnvelopes"
 			@close="onCloseTagModal" />
 
+		<MoveModal
+			v-if="showMoveModal"
+			:account="account"
+			:envelopes="selectedEnvelopes"
+			:move-thread="true"
+			@close="onCloseMoveModal" />
+
 		<NcDialog
 			v-if="showQuickActionsSettings"
 			:name="t('mail', 'Manage quick actions')"
@@ -172,6 +173,7 @@ import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import IconSelect from 'vue-material-design-icons/CloseThick.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
 import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
+import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
 import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import AddIcon from 'vue-material-design-icons/Plus.vue'
@@ -204,6 +206,7 @@ export default {
 		ActionButton,
 		Envelope,
 		IconDelete,
+		ImportantIcon,
 		ImportantOutlineIcon,
 		IconFavorite,
 		IconSelect,
