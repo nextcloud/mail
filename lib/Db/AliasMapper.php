@@ -12,6 +12,7 @@ namespace OCA\Mail\Db;
 
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\QBMapper;
+use OCP\DB\Exception;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use function array_map;
@@ -86,6 +87,28 @@ class AliasMapper extends QBMapper {
 			);
 
 		return $this->findEntities($qb);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function countByAccountId(int $accountId, string $currentUserId): int {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select($qb->func()->count('*', 'count'))
+			->from($this->getTableName(), 'aliases')
+			->join('aliases', 'mail_accounts', 'accounts', $qb->expr()->eq('aliases.account_id', 'accounts.id'))
+			->where(
+				$qb->expr()->andX(
+					$qb->expr()->eq('accounts.user_id', $qb->createNamedParameter($currentUserId)),
+					$qb->expr()->eq('aliases.account_id', $qb->createNamedParameter($accountId))
+				)
+			);
+
+		$result = $qb->executeQuery();
+		$count = (int)$result->fetchOne();
+		$result->closeCursor();
+
+		return $count;
 	}
 
 	/**

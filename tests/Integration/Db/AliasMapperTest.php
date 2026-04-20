@@ -85,6 +85,48 @@ class AliasMapperTest extends TestCase {
 		);
 	}
 
+	public function testCountByAccountId() {
+		$account = $this->insertAccount();
+
+		self::assertSame(0, $this->mapper->countByAccountId($account->getId(), $account->getUserId()));
+
+		foreach (['one', 'two'] as $name) {
+			$alias = new Alias();
+			$alias->setAccountId($account->getId());
+			$alias->setAlias("$name@marvel.com");
+			$alias->setName($name);
+			$this->mapper->insert($alias);
+		}
+
+		self::assertSame(2, $this->mapper->countByAccountId($account->getId(), $account->getUserId()));
+	}
+
+	public function testCountByAccountIdIgnoresOtherUsers() {
+		$account = $this->insertAccount();
+
+		$alias = new Alias();
+		$alias->setAccountId($account->getId());
+		$alias->setAlias('alias@marvel.com');
+		$alias->setName('alias');
+		$this->mapper->insert($alias);
+
+		self::assertSame(0, $this->mapper->countByAccountId($account->getId(), 'someone-else'));
+	}
+
+	private function insertAccount(string $userId = 'user12345'): MailAccount {
+		$account = new MailAccount();
+		$account->setName('Peter Parker');
+		$account->setInboundHost('mail.marvel.com');
+		$account->setInboundPort(159);
+		$account->setInboundUser('spiderman');
+		$account->setInboundPassword('xxxxxxxx');
+		$account->setInboundSslMode('tls');
+		$account->setEmail('peter.parker@marvel.com');
+		$account->setUserId($userId);
+
+		return (new MailAccountMapper($this->db))->insert($account);
+	}
+
 	public function testDeleteProvisionedAliasesByUid() {
 		$accountMapper = new MailAccountMapper($this->db);
 

@@ -405,6 +405,80 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           run_command: empty-upload
 
+  user-migration-smoke-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: [ '8.5' ]
+        nextcloud-versions: [ 'master' ]
+        db: [ 'mysql' ]
+    env:
+      TEST_USER: user1
+      TEST_EMAIL: user1@localhost
+      EXPORT_DIRECTORY: /tmp
+    name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} user migration test
+    steps:
+      - name: Set up Nextcloud env
+        uses: nextcloud/setup-server-action@34b73d5b0e3633f83a52227d00cc2a6c41d01d9a # v1.0.0
+        with:
+          nextcloud-version: ${{ matrix.nextcloud-versions }}
+          php-version: ${{ matrix.php-versions }}
+          patch-php-version-check: ${{ matrix.php-versions == '8.6' }}
+          node-version: 'false'
+          install: true
+      - name: Checkout mail
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: nextcloud/apps/mail
+          fetch-depth: 2
+      - name: Install dependencies
+        working-directory: nextcloud/apps/mail
+        run: composer install --no-dev
+      - name: Install mail
+        run: php -f nextcloud/occ app:enable mail
+      - name: Checkout user_migration
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: nextcloud/user_migration
+          ref: 3b4007d9ed2c80c53ca8bce6692e14aab5e482b0 # v10.5.0
+          path: nextcloud/apps/user_migration
+      - name: Install dependencies
+        working-directory: nextcloud/apps/user_migration
+        run: composer install --no-dev
+      - name: Patch version check for nightly Nextcloud
+        if: ${{ matrix.nextcloud-versions == 'master' }}
+        run: sed -i -E 's/max-version="([0-9]{2})"/max-version="99"/' nextcloud/apps/user_migration/appinfo/info.xml
+      - name: Install user_migration
+        run: php -f nextcloud/occ app:enable user_migration
+      - name: Create test user
+        run: php -f nextcloud/occ user:add --generate-password $TEST_USER
+      - name: Create mail account to migrate
+        run: |
+          php -f nextcloud/occ mail:account:create-imap \
+            $TEST_USER 'Test Account' $TEST_EMAIL \
+            imap.localhost 993 ssl $TEST_EMAIL imap-password \
+            smtp.localhost 465 ssl $TEST_EMAIL smtp-password
+      - name: Test basic mail export
+        run: php -f nextcloud/occ user:export -t mail_account $TEST_USER $EXPORT_DIRECTORY
+      - name: Assert the account was written to the export
+        run: |
+          EXPORTED_ZIP=$(find $EXPORT_DIRECTORY -name "$TEST_USER*.zip" | tail -1)
+          unzip -l "$EXPORTED_ZIP" | grep -q 'mail/accounts/.*\.json' \
+            || { echo "::error::no account file in the export"; unzip -l "$EXPORTED_ZIP"; exit 1; }
+      - name: Delete exported user to avoid overwrite confirmation during import
+        run: php -f nextcloud/occ user:delete $TEST_USER
+      - name: Test basic mail import
+        run: |
+          EXPORTED_ZIP=$(find $EXPORT_DIRECTORY -name "$TEST_USER*.zip" | tail -1)
+          php -f nextcloud/occ user:import $EXPORTED_ZIP
+      - name: Assert the account was restored
+        run: |
+          php -f nextcloud/occ mail:account:export $TEST_USER | tee /tmp/imported-accounts.txt
+          grep -q "E-Mail: $TEST_EMAIL" /tmp/imported-accounts.txt \
+            || { echo "::error::imported user has no mail account"; exit 1; }
+          grep -q "IMAP user: $TEST_EMAIL" /tmp/imported-accounts.txt \
+            || { echo "::error::imported account lost its IMAP username"; exit 1; }
+
   summary:
     runs-on: ubuntu-latest-low
     needs:
@@ -412,6 +486,7 @@ jobs:
       - integration-tests
       - frontend-unit-test
       - frontend-e2e-tests
+      - user-migration-smoke-test
 
     if: always()
 
@@ -426,3 +501,5 @@ jobs:
         run: if ${{ needs.frontend-unit-test.result != 'success' && needs.frontend-unit-test.result != 'skipped' }}; then exit 1; fi
       - name: Frontend E2E test status
         run: if ${{ needs.frontend-e2e-tests.result != 'success' && needs.frontend-e2e-tests.result != 'skipped' }}; then exit 1; fi
+      - name: User migration smoke test status
+        run: if ${{ needs.user-migration-smoke-test.result != 'success' && needs.user-migration-smoke-test.result != 'skipped' }}; then exit 1; fi

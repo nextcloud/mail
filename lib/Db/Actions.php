@@ -30,6 +30,13 @@ class Actions extends Entity implements JsonSerializable {
 		$this->addType('accountId', 'integer');
 	}
 
+	/**
+	 * @return list<ActionStep>
+	 */
+	public function getActionSteps(): array {
+		return $this->actionSteps;
+	}
+
 	public function setActionSteps(array $actionSteps): void {
 		$this->actionSteps = $actionSteps;
 	}
