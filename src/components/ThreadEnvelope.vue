@@ -1044,8 +1044,8 @@ export default {
 			}
 		},
 
-		onMove() {
-			this.$emit('move')
+		onMove(envelopeIds) {
+			this.$emit('move', envelopeIds)
 		},
 
 		onOpenMoveModal() {

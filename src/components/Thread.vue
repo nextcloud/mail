@@ -297,12 +297,8 @@ export default {
 
 		onMove(threadId) {
 			if (threadId === this.threadId) {
-				this.$router.replace({
-					name: 'mailbox',
-					params: {
-						mailboxId: this.$route.params.mailboxId,
-					},
-				})
+				// Let Mailbox.vue handle navigation to the next message
+				this.$emit('move', [threadId])
 			} else {
 				this.expandedThreads = this.expandedThreads.filter((id) => id !== threadId)
 				this.fetchThread()
