@@ -3,13 +3,29 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import addressParser from 'address-rfc2822'
+
 /**
- * RFC 5322 inspired regex for extracting an email address (with optional angle brackets)
- * from a string that may also contain a display name.
+ * Try to parse a string with address-rfc2822.
+ * Returns an array of {label, email} objects, or an empty array on failure.
  *
- * Case-insensitive via the `i` flag.
+ * @param {string} str The input string
+ * @return {Array<{ label: string, email: string }>}
  */
-const emailRegex = /(<)?(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])(>)?/gi
+function tryParse(str) {
+	if (!str) {
+		return []
+	}
+
+	try {
+		return addressParser.parse(str).map(addr => ({
+			label: addr.name() || addr.address,
+			email: addr.address,
+		}))
+	} catch {
+		return []
+	}
+}
 
 /**
  * Extract a label and email address from a string like "John Doe <john@example.com>"
@@ -19,20 +35,10 @@ const emailRegex = /(<)?(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_
  * @return {{ label: string, email: string } | null} Parsed result or null if no email found
  */
 export function getLabelAndAddress(str) {
-	// Reset lastIndex since we reuse a global regex
-	emailRegex.lastIndex = 0
-	const match = emailRegex.exec(str)
-
-	if (!match) {
-		return null
-	}
-
-	// Strip angle brackets from the matched email
-	const email = match[0].replace(/[<>]/g, '').trim()
-	// Everything before the matched portion is the display name
-	const label = str.substring(0, match.index).trim() || email
-
-	return { label, email }
+	// Strip trailing delimiters that address-rfc2822 can't handle
+	const cleaned = str.replace(/[,;]+$/, '').trim()
+	const results = tryParse(cleaned)
+	return results.length > 0 ? results[0] : null
 }
 
 /**
@@ -48,38 +54,41 @@ export function getLabelAndAddress(str) {
  * @return {Array<{ label: string, email: string }>} List of parsed addresses
  */
 export function parseEmailList(str) {
-	let start = 0
-	let inEmail = false
+	if (!str) {
+		return []
+	}
+
+	// Normalize semicolons to commas (address-rfc2822 only supports commas)
+	let normalized = str.replace(/;/g, ',')
+
+	// Remove trailing commas
+	normalized = normalized.replace(/,\s*$/, '')
+
+	// First try: parse the whole string as-is (handles comma-separated lists)
+	const results = tryParse(normalized)
+	if (results.length > 0) {
+		return results
+	}
+
+	// Second try: split by commas, parse each part individually
+	// This handles cases like "not-an-email, alice@example.com" where the
+	// library would reject the whole string
+	const parts = normalized.split(',')
 	const list = []
+	for (const part of parts) {
+		// Handle potential space-separated emails within each part
+		const trimmed = part.trim()
+		if (!trimmed) continue
 
-	for (let i = 0; i < str.length; i++) {
-		const char = str[i]
-
-		if (char === '@' || inEmail) {
-			inEmail = true
-
-			if ([';', ',', ' '].includes(char)) {
-				const stringAddress = str.substring(start, i).trim()
-				const labelAndAddress = getLabelAndAddress(stringAddress)
-
-				if (labelAndAddress) {
-					list.push(labelAndAddress)
-				}
-
-				inEmail = false
-				start = i + 1
+		const parsed = tryParse(trimmed)
+		if (parsed.length > 0) {
+			list.push(...parsed)
+		} else if (trimmed.includes(' ') && trimmed.includes('@')) {
+			// Try splitting on spaces for space-separated bare emails
+			for (const word of trimmed.split(/\s+/)) {
+				list.push(...tryParse(word))
 			}
 		}
 	}
-
-	if (inEmail) {
-		const stringAddress = str.substring(start).trim()
-		const labelAndAddress = getLabelAndAddress(stringAddress)
-
-		if (labelAndAddress) {
-			list.push(labelAndAddress)
-		}
-	}
-
 	return list
 }

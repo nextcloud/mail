@@ -128,9 +128,9 @@ describe('parseEmailList', () => {
 		])
 	})
 
-	it('treats text before an email as a display name', () => {
+	it('ignores non-email entries in a list', () => {
 		expect(parseEmailList('not-an-email, alice@example.com')).toEqual([
-			{ label: 'not-an-email,', email: 'alice@example.com' },
+			{ label: 'alice@example.com', email: 'alice@example.com' },
 		])
 	})
 
