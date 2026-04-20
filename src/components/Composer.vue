@@ -57,6 +57,7 @@
 					:taggable="true"
 					:aria-label-combobox="t('mail', 'Select recipient')"
 					:filter-by="(option, label, search) => filterOption(option, label, search, 'to')"
+					:dropdown-should-open="shouldOpenRecipientDropdown"
 					:multiple="true"
 					:clear-search-on-select="true"
 					:loading="loadingIndicatorTo"
@@ -112,6 +113,7 @@
 					:get-option-key="(option) => option.email"
 					:no-wrap="false"
 					:filter-by="(option, label, search) => filterOption(option, label, search, 'cc')"
+					:dropdown-should-open="shouldOpenRecipientDropdown"
 					:taggable="true"
 					:clear-search-on-blur="() => clearOnBlur('cc')"
 					:append-to-body="false"
@@ -169,6 +171,7 @@
 					:filter-by="(option, label, search) => filterOption(option, label, search, 'bcc')"
 					:options="selectableRecipients.filter(recipient => !selectBcc.some(bcc => bcc.email === recipient.email))"
 					:get-option-key="(option) => option.email"
+					:dropdown-should-open="shouldOpenRecipientDropdown"
 					:taggable="true"
 					:clear-search-on-blur="() => clearOnBlur('bcc')"
 					:append-to-body="false"
@@ -1170,6 +1173,10 @@ export default {
 
 			return (label || '').toLocaleLowerCase().includes(searchInLowerCase)
 				|| (option?.email || '').toLocaleLowerCase().includes(searchInLowerCase)
+		},
+
+		shouldOpenRecipientDropdown({ noDrop, open, search }) {
+			return !noDrop && open && search.trim() !== ''
 		},
 
 		setAlias() {
