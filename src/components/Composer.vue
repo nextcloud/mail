@@ -1485,11 +1485,13 @@ export default {
 				return
 			}
 
+			let changed = false
 			if (option.id) {
 				if (!list.some((recipient) => recipient.email === option.email)) {
 					const recipient = { ...option }
 					this.newRecipients.push(recipient)
 					list.push(recipient)
+					changed = true
 				}
 			} else {
 				const emailList = parseEmailList(option.email)
@@ -1498,10 +1500,13 @@ export default {
 						const recipient = { ...addr }
 						this.newRecipients.push(recipient)
 						list.push(recipient)
+						changed = true
 					}
 				}
 			}
-			this.saveDraftDebounced()
+			if (changed) {
+				this.saveDraftDebounced()
+			}
 		},
 
 		async onSend() {

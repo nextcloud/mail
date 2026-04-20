@@ -184,4 +184,23 @@ describe('parseEmailList', () => {
 		expect(parseEmailList(null)).toEqual([])
 		expect(parseEmailList(undefined)).toEqual([])
 	})
+
+	// Regression tests from PR description / issue #6013
+	it('handles real-world paste: plain addresses with display name (issue #6013 case 1)', () => {
+		const result = parseEmailList('test@test.com, Jane Doe, MSc jane@doe.tld')
+		expect(result).toEqual([
+			{ label: 'test@test.com', email: 'test@test.com' },
+			{ label: 'jane@doe.tld', email: 'jane@doe.tld' },
+		])
+	})
+
+	it('handles real-world paste: messy mixed input (issue #6013 case 2)', () => {
+		const input = 'ian eiloart iane@example.ac.uk>;shuf6@example.ac.uk,, test+user@company.c, "ian,eiloart"<ian@example.ac.uk>, <@example.com:foo@example.ac.uk>, foo@#,ian@-example.com, ian@one@two;asdas< test@test.com> test@test.com, Newasd Na@,me >; testaaaa@aasd.com'
+		const result = parseEmailList(input)
+		const emails = result.map(r => r.email)
+		expect(emails).toContain('shuf6@example.ac.uk')
+		expect(emails).toContain('ian@example.ac.uk')
+		expect(emails).toContain('test@test.com')
+		expect(emails).toContain('testaaaa@aasd.com')
+	})
 })
