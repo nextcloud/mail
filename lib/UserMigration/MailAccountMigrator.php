@@ -95,7 +95,7 @@ class MailAccountMigrator implements IMigrator {
 
 	#[\Override]
 	public function getVersion(): int {
-		return 01_00_00;
+		return 02_00_00;
 	}
 
 	#[\Override]
