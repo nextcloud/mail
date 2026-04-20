@@ -28,6 +28,40 @@ function tryParse(str) {
 }
 
 /**
+ * Split a string on commas that are not inside quotes or angle brackets.
+ *
+ * @param {string} str The input string
+ * @return {string[]} The parts
+ */
+function splitOnCommas(str) {
+	const parts = []
+	let current = ''
+	let inQuotes = false
+	let inAngle = false
+
+	for (let i = 0; i < str.length; i++) {
+		const ch = str[i]
+
+		if (ch === '"' && (i === 0 || str[i - 1] !== '\\')) {
+			inQuotes = !inQuotes
+		} else if (!inQuotes && ch === '<') {
+			inAngle = true
+		} else if (!inQuotes && ch === '>') {
+			inAngle = false
+		}
+
+		if (ch === ',' && !inQuotes && !inAngle) {
+			parts.push(current)
+			current = ''
+		} else {
+			current += ch
+		}
+	}
+	parts.push(current)
+	return parts
+}
+
+/**
  * Extract a label and email address from a string like "John Doe <john@example.com>"
  * or just "john@example.com".
  *
@@ -35,6 +69,10 @@ function tryParse(str) {
  * @return {{ label: string, email: string } | null} Parsed result or null if no email found
  */
 export function getLabelAndAddress(str) {
+	if (!str) {
+		return null
+	}
+
 	// Strip trailing delimiters that address-rfc2822 can't handle
 	const cleaned = str.replace(/[,;]+$/, '').trim()
 	const results = tryParse(cleaned)
@@ -70,13 +108,12 @@ export function parseEmailList(str) {
 		return results
 	}
 
-	// Second try: split by commas, parse each part individually
-	// This handles cases like "not-an-email, alice@example.com" where the
-	// library would reject the whole string
-	const parts = normalized.split(',')
+	// Second try: split by commas (respecting quotes/angle brackets),
+	// then parse each part individually. This handles cases like
+	// "not-an-email, alice@example.com" where the library rejects the whole string.
+	const parts = splitOnCommas(normalized)
 	const list = []
 	for (const part of parts) {
-		// Handle potential space-separated emails within each part
 		const trimmed = part.trim()
 		if (!trimmed) continue
 

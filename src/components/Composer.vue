@@ -1670,7 +1670,7 @@ export default {
 		 * @return {{email: string, label: string}} The new option
 		 */
 		createRecipientOption(value) {
-			if (!this.seemsValidEmailAddress(value)) {
+			if (parseEmailList(value).length === 0) {
 				throw new Error('Skipping because it does not look like a valid email address')
 			}
 			return { email: value, label: value }

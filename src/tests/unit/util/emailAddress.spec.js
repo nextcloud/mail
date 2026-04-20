@@ -49,6 +49,11 @@ describe('getLabelAndAddress', () => {
 		expect(getLabelAndAddress('')).toBeNull()
 	})
 
+	it('returns null for null or undefined', () => {
+		expect(getLabelAndAddress(null)).toBeNull()
+		expect(getLabelAndAddress(undefined)).toBeNull()
+	})
+
 	it('does not include trailing delimiters in the email', () => {
 		expect(getLabelAndAddress('alice@example.com,')).toEqual({
 			label: 'alice@example.com',
@@ -158,5 +163,25 @@ describe('parseEmailList', () => {
 			{ label: 'Alice Smith', email: 'alice@example.com' },
 			{ label: 'Bob Jones', email: 'bob@example.com' },
 		])
+	})
+
+	it('handles quoted display names containing commas', () => {
+		// address-rfc2822 normalizes "Last, First" to "First Last" per RFC 2822
+		expect(parseEmailList('"Smith, Alice" <alice@example.com>, "Jones, Bob" <bob@example.com>')).toEqual([
+			{ label: 'Alice Smith', email: 'alice@example.com' },
+			{ label: 'Bob Jones', email: 'bob@example.com' },
+		])
+	})
+
+	it('extracts valid addresses from mixed input with invalid tokens', () => {
+		expect(parseEmailList('invalid-entry, "Smith, Alice" <alice@example.com>, not-an-email, bob@example.com')).toEqual([
+			{ label: 'Alice Smith', email: 'alice@example.com' },
+			{ label: 'bob@example.com', email: 'bob@example.com' },
+		])
+	})
+
+	it('returns empty array for null or undefined', () => {
+		expect(parseEmailList(null)).toEqual([])
+		expect(parseEmailList(undefined)).toEqual([])
 	})
 })
