@@ -1472,7 +1472,7 @@ export default {
 				&& this.recipientSearchTerms[type] !== undefined
 				&& this.recipientSearchTerms[type] !== ''
 			) {
-				if (!this.seemsValidEmailAddress(this.recipientSearchTerms[type])) {
+				if (parseEmailList(this.recipientSearchTerms[type]).length === 0) {
 					return
 				}
 				option = {}

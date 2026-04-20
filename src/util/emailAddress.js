@@ -28,12 +28,13 @@ function tryParse(str) {
 }
 
 /**
- * Split a string on commas that are not inside quotes or angle brackets.
+ * Split a string on delimiter characters (commas and semicolons) that are
+ * not inside quotes or angle brackets.
  *
  * @param {string} str The input string
  * @return {string[]} The parts
  */
-function splitOnCommas(str) {
+function splitOnDelimiters(str) {
 	const parts = []
 	let current = ''
 	let inQuotes = false
@@ -50,7 +51,7 @@ function splitOnCommas(str) {
 			inAngle = false
 		}
 
-		if (ch === ',' && !inQuotes && !inAngle) {
+		if ((ch === ',' || ch === ';') && !inQuotes && !inAngle) {
 			parts.push(current)
 			current = ''
 		} else {
@@ -96,22 +97,19 @@ export function parseEmailList(str) {
 		return []
 	}
 
-	// Normalize semicolons to commas (address-rfc2822 only supports commas)
-	let normalized = str.replace(/;/g, ',')
+	// Split on commas and semicolons (respecting quotes/angle brackets),
+	// then normalize to a comma-separated string for address-rfc2822.
+	const parts = splitOnDelimiters(str)
+	const normalized = parts.map(p => p.trim()).filter(Boolean).join(', ')
 
-	// Remove trailing commas
-	normalized = normalized.replace(/,\s*$/, '')
-
-	// First try: parse the whole string as-is (handles comma-separated lists)
+	// First try: parse the whole normalized string (handles clean lists)
 	const results = tryParse(normalized)
 	if (results.length > 0) {
 		return results
 	}
 
-	// Second try: split by commas (respecting quotes/angle brackets),
-	// then parse each part individually. This handles cases like
+	// Second try: parse each part individually. This handles cases like
 	// "not-an-email, alice@example.com" where the library rejects the whole string.
-	const parts = splitOnCommas(normalized)
 	const list = []
 	for (const part of parts) {
 		const trimmed = part.trim()

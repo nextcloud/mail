@@ -27,7 +27,7 @@ describe('getLabelAndAddress', () => {
 		})
 	})
 
-	it('handles uppercase email addresses (case-insensitive)', () => {
+	it('preserves uppercase email addresses', () => {
 		expect(getLabelAndAddress('User@Example.COM')).toEqual({
 			label: 'User@Example.COM',
 			email: 'User@Example.COM',
