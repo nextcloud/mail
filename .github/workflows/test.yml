@@ -304,6 +304,57 @@ jobs:
     env:
       CI: true
 
+  user-migration-smoke-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: [ '8.4' ]
+        nextcloud-versions: [ 'stable33' ]
+        db: [ 'mysql' ]
+    env:
+      TEST_USER: user1
+      EXPORT_DIRECTORY: /tmp
+    name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} user migration test
+    steps:
+      - name: Set up Nextcloud env
+        uses: nextcloud/setup-server-action@34b73d5b0e3633f83a52227d00cc2a6c41d01d9a # v1.0.0
+        with:
+          nextcloud-version: ${{ matrix.nextcloud-versions }}
+          php-version: ${{ matrix.php-versions }}
+          patch-php-version-check: ${{ matrix.php-versions == '8.6' }}
+          node-version: 'false'
+          install: true
+      - name: Checkout mail
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          path: nextcloud/apps/mail
+          fetch-depth: 2
+      - name: Install dependencies
+        working-directory: nextcloud/apps/mail
+        run: composer install --no-dev
+      - name: Install mail
+        run: php -f nextcloud/occ app:enable mail
+      - name: Checkout user_migration
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: nextcloud/user_migration
+          path: nextcloud/apps/user_migration
+      - name: Install dependencies
+        working-directory: nextcloud/apps/user_migration
+        run: composer install --no-dev
+      - name: Install user_migration
+        run: php -f nextcloud/occ app:enable user_migration
+      - name: Create test user
+        run: php -f nextcloud/occ user:add --generate-password $TEST_USER
+      - name: Test basic mail export
+        run: php -f nextcloud/occ user:export -t mail_account $TEST_USER $EXPORT_DIRECTORY
+      - name: Delete exported user to avoid overwrite confirmation during import
+        run: php -f nextcloud/occ user:delete $TEST_USER
+      - name: Test basic mail import
+        run: |
+          EXPORTED_ZIP=$(find $EXPORT_DIRECTORY -name "$TEST_USER*.zip" | tail -1)
+          php -f nextcloud/occ user:import $EXPORTED_ZIP
+
   summary:
     runs-on: ubuntu-latest-low
     needs:
@@ -311,6 +362,7 @@ jobs:
       - integration-tests
       - frontend-unit-test
       - frontend-e2e-tests
+      - user-migration-smoke-test
 
     if: always()
 
@@ -325,3 +377,5 @@ jobs:
         run: if ${{ needs.frontend-unit-test.result != 'success' && needs.frontend-unit-test.result != 'skipped' }}; then exit 1; fi
       - name: Frontend E2E test status
         run: if ${{ needs.frontend-e2e-tests.result != 'success' && needs.frontend-e2e-tests.result != 'skipped' }}; then exit 1; fi
+      - name: User migration smoke test status
+        run: if ${{ needs.user-migration-smoke-test.result != 'success' && needs.user-migration-smoke-test.result != 'skipped' }}; then exit 1; fi
