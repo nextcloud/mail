@@ -35,6 +35,7 @@ class Version5800Date20260401000002 extends SimpleMigrationStep {
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 		$schema = $schemaClosure();
 		$mailboxesTable = $schema->getTable('mail_mailboxes');
+
 		if (!$mailboxesTable->hasColumn('remote_parent_id')) {
 			$mailboxesTable->addColumn('remote_parent_id', Types::STRING, [
 				'length' => 255,
