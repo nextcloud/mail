@@ -12,6 +12,7 @@ namespace OCA\Mail\UserMigration;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\UserMigration\Service\AccountMigrationService;
 use OCA\Mail\UserMigration\Service\AppConfigMigrationService;
+use OCA\Mail\UserMigration\Service\TrustedSendersMigrationService;
 use OCP\IL10N;
 use OCP\IUser;
 use OCP\Security\ICrypto;
@@ -30,6 +31,7 @@ class MailAccountMigrator implements IMigrator {
 		private readonly ICrypto $crypto,
 		private readonly AccountMigrationService $accountMigrationService,
 		private readonly AppConfigMigrationService $appConfigMigrationService,
+		private readonly TrustedSendersMigrationService $trustedSendersMigrationService,
 	) {
 	}
 
@@ -44,6 +46,7 @@ class MailAccountMigrator implements IMigrator {
 		);
 
 		$this->appConfigMigrationService->exportAppConfiguration($user, $exportDestination, $output);
+		$this->trustedSendersMigrationService->exportTrustedSenders($user, $exportDestination, $output);
 	}
 
 	#[\Override]
@@ -54,6 +57,7 @@ class MailAccountMigrator implements IMigrator {
 		);
 
 		$this->appConfigMigrationService->importAppConfiguration($user, $importSource, $output);
+		$this->trustedSendersMigrationService->importTrustedSenders($user, $importSource, $output);
 
 		$this->accountMigrationService->scheduleBackgroundJobs($user, $output);
 	}
