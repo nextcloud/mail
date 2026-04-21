@@ -12,10 +12,8 @@ namespace OCA\Mail\Command;
 use OCA\Mail\Account;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MailboxSync;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCA\Mail\Support\ConsoleLoggerDecorator;
 use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
@@ -33,10 +31,8 @@ final class SyncAccount extends Command {
 
 	public function __construct(
 		private AccountService $accountService,
-		private MailboxSync $mailboxSync,
-		private ImapToDbSynchronizer $syncService,
+		private ProtocolFactory $protocolFactory,
 		private LoggerInterface $logger,
-		private IMAPClientFactory $clientFactory,
 	) {
 		parent::__construct();
 	}
@@ -46,7 +42,7 @@ final class SyncAccount extends Command {
 	 */
 	protected function configure() {
 		$this->setName('mail:account:sync');
-		$this->setDescription('Synchronize an IMAP account');
+		$this->setDescription('Synchronize a mail account');
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::REQUIRED);
 		$this->addOption(self::OPTION_FORCE, 'f', InputOption::VALUE_NONE);
 	}
@@ -78,8 +74,8 @@ final class SyncAccount extends Command {
 		);
 
 		try {
-			$this->mailboxSync->sync($account, $consoleLogger, $force);
-			$this->syncService->syncAccount($account, $consoleLogger, $force);
+			$this->protocolFactory->mailboxConnector($account)->syncAll($account, $force);
+			$this->protocolFactory->messageConnector($account)->syncAll($account, $force);
 		} catch (ServiceException $e) {
 			if (!($e instanceof IncompleteSyncException)) {
 				throw $e;
@@ -88,10 +84,6 @@ final class SyncAccount extends Command {
 			$mbs = (int)(memory_get_usage() / 1024 / 1024);
 			$output->writeln("<info>Batch of new messages sync'ed. " . $mbs . 'MB of memory in use</info>');
 			$this->sync($account, $force, $output);
-		}
-
-		foreach ($this->clientFactory->getLoginStats() as $host => $count) {
-			$consoleLogger->debug(sprintf('%d IMAP connection(s) to %s', $count, $host));
 		}
 	}
 }

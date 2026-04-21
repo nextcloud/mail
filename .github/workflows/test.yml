@@ -116,8 +116,15 @@ jobs:
               image: stalwartlabs/stalwart:v0.15.5
               env:
                   STALWART_ADMIN_PASSWORD: ${{ env.STALWART_PWD }}
+              # Pin a stable container hostname. Stalwart derives the authority of
+              # its published JMAP discovery URLs (apiUrl/downloadUrl/uploadUrl) from
+              # the container hostname + internal port, which is otherwise a random
+              # container id the runner cannot resolve. With a known hostname we can
+              # map it to loopback via /etc/hosts and publish the internal port 1:1
+              # so the advertised http://stalwart:8080/jmap/ is reachable.
+              options: --hostname stalwart
               ports:
-                  - 10080:8080
+                  - 8080:8080
                   - 10025:25
                   - 10143:143
                   - 10993:993
@@ -158,13 +165,15 @@ jobs:
               ports:
                 - 6379:6379
       steps:
+          - name: Map Stalwart hostname to loopback
+            run: echo "127.0.0.1 stalwart" | sudo tee -a /etc/hosts
           - name: Create domain and account in Stalwart
             run: |
-              curl -sf -X POST http://localhost:10080/api/principal \
+              curl -sf -X POST http://stalwart:8080/api/principal \
                 -u "admin:${{ env.STALWART_PWD }}" \
                 -H 'Content-Type: application/json' \
                 -d '{"type":"domain","name":"example.com"}'
-              curl -sf -X POST http://localhost:10080/api/principal \
+              curl -sf -X POST http://stalwart:8080/api/principal \
                 -u "admin:${{ env.STALWART_PWD }}" \
                 -H 'Content-Type: application/json' \
                 -d '{"type":"individual","name":"user@example.com","secrets":["mypassword"],"emails":["user@example.com"],"roles":["user"]}'

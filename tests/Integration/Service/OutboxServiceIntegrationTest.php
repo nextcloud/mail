@@ -13,18 +13,18 @@ use ChristophWurst\Nextcloud\Testing\TestUser;
 use Horde_Imap_Client;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Attachment\AttachmentStorage;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
@@ -65,7 +65,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
-	/** @var IMAPClientFactory */
+	/** @var ProtocolFactory */
 	private $clientFactory;
 
 	/** @var LocalMessageMapper */
@@ -93,7 +93,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$c = Server::get(ContainerInterface::class);
 		$userContainer = $c->get(IServerContainer::class);
 		$this->userFolder = $userContainer->getUserFolder($this->account->getUserId());
-		$mailManager = Server::get(IMailManager::class);
+		$mailManager = Server::get(MailManager::class);
 		$this->attachmentService = new AttachmentService(
 			$this->userFolder,
 			Server::get(LocalAttachmentMapper::class),
@@ -109,7 +109,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$this->client = $this->getClient($this->account);
 		$this->mapper = Server::get(LocalMessageMapper::class);
 		$this->eventDispatcher = Server::get(IEventDispatcher::class);
-		$this->clientFactory = Server::get(IMAPClientFactory::class);
+		$this->clientFactory = Server::get(ProtocolFactory::class);
 		$this->accountService = Server::get(AccountService::class);
 		$this->timeFactory = Server::get(ITimeFactory::class);
 		$this->chain = Server::get(Chain::class);
