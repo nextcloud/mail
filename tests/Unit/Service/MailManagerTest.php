@@ -10,26 +10,25 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
+use OCA\Mail\Contracts\IMailboxConnector;
+use OCA\Mail\Contracts\IMessageConnector;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
+use OCA\Mail\Db\MessageTags;
 use OCA\Mail\Db\MessageTagsMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Db\ThreadMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Folder;
-use OCA\Mail\IMAP\FolderMapper;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\ImapFlag;
-use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -37,17 +36,11 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class MailManagerTest extends TestCase {
-	/** @var IMAPClientFactory|MockObject */
-	private $imapClientFactory;
+	/** @var ProtocolFactory|MockObject */
+	private $protocolFactory;
 
 	/** @var MailboxMapper|MockObject */
 	private $mailboxMapper;
-
-	/** @var MailboxSync|MockObject */
-	private $mailboxSync;
-
-	/** @var FolderMapper|MockObject */
-	private $folderMapper;
 
 	/** @var ImapMessageMapper|MockObject */
 	private $imapMessageMapper;
@@ -76,12 +69,10 @@ class MailManagerTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
-		$this->folderMapper = $this->createMock(FolderMapper::class);
 		$this->imapMessageMapper = $this->createMock(ImapMessageMapper::class);
 		$this->dbMessageMapper = $this->createMock(DbMessageMapper::class);
-		$this->mailboxSync = $this->createMock(MailboxSync::class);
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->tagMapper = $this->createMock(TagMapper::class);
@@ -89,18 +80,16 @@ class MailManagerTest extends TestCase {
 		$this->threadMapper = $this->createMock(ThreadMapper::class);
 
 		$this->manager = new MailManager(
-			$this->imapClientFactory,
 			$this->mailboxMapper,
-			$this->mailboxSync,
-			$this->folderMapper,
 			$this->imapMessageMapper,
 			$this->dbMessageMapper,
 			$this->eventDispatcher,
 			$this->logger,
 			$this->tagMapper,
 			$this->messageTagsMapper,
-			$this->threadMapper,
+			$this->protocolFactory,
 			new ImapFlag(),
+			$this->threadMapper,
 		);
 	}
 
@@ -111,9 +100,14 @@ class MailManagerTest extends TestCase {
 			$this->createMock(Mailbox::class),
 			$this->createMock(Mailbox::class),
 		];
-		$this->mailboxSync->expects($this->once())
-			->method('sync')
-			->with($this->equalTo($account));
+		$mailboxConnector = $this->createMock(IMailboxConnector::class);
+		$this->protocolFactory->expects($this->once())
+			->method('mailboxConnector')
+			->with($account)
+			->willReturn($mailboxConnector);
+		$mailboxConnector->expects($this->once())
+			->method('syncAll')
+			->with($account, false);
 		$this->mailboxMapper->expects($this->once())
 			->method('findAll')
 			->with($this->equalTo($account))
@@ -125,26 +119,16 @@ class MailManagerTest extends TestCase {
 	}
 
 	public function testCreateFolder() {
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$account = $this->createStub(Account::class);
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->willReturn($client);
-		$folder = $this->createStub(Folder::class);
-		$this->folderMapper->expects($this->once())
-			->method('createFolder')
-			->with($this->equalTo($client), $this->equalTo('new'))
-			->willReturn($folder);
-		$this->folderMapper->expects($this->once())
-			->method('fetchFolderAcls')
-			->with($this->equalTo([$folder]));
-		$this->folderMapper->expects($this->once())
-			->method('detectFolderSpecialUse')
-			->with($this->equalTo([$folder]));
 		$mailbox = new Mailbox();
-		$this->mailboxMapper->expects($this->once())
-			->method('find')
-			->with($account, 'new')
+		$mailboxConnector = $this->createMock(IMailboxConnector::class);
+		$this->protocolFactory->expects($this->once())
+			->method('mailboxConnector')
+			->with($account)
+			->willReturn($mailboxConnector);
+		$mailboxConnector->expects($this->once())
+			->method('create')
+			->with($account, 'new', [])
 			->willReturn($mailbox);
 
 		$created = $this->manager->createMailbox($account, 'new');
@@ -152,38 +136,18 @@ class MailManagerTest extends TestCase {
 		$this->assertEquals($mailbox, $created);
 	}
 
-	public function testDeleteMessageSourceFolderNotFound(): void {
-		/** @var Account|MockObject $account */
-		$account = $this->createStub(Account::class);
-		$this->eventDispatcher->expects($this->never())
-			->method('dispatchTyped');
-		$this->mailboxMapper->expects($this->once())
-			->method('find')
-			->with($account, 'INBOX')
-			->willThrowException(new DoesNotExistException(''));
-		$this->expectException(ServiceException::class);
-
-		$this->manager->deleteMessage(
-			$account,
-			'INBOX',
-			123
-		);
-	}
-
 	public function testDeleteMessageTrashMailboxNotFound(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$mailAccount = new MailAccount();
 		$mailAccount->setTrashMailboxId(123);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
-		$account->method('getMailAccount')->willReturn($mailAccount);
-		$this->eventDispatcher->expects($this->once())
+		$message = new Message();
+		$message->setUid(123);
+		$this->eventDispatcher->expects($this->never())
 			->method('dispatchTyped');
-		$this->mailboxMapper->expects($this->once())
-			->method('find')
-			->with($account, 'INBOX')
-			->willReturn($mailbox);
 		$this->mailboxMapper->expects($this->once())
 			->method('findById')
 			->with(123)
@@ -192,8 +156,8 @@ class MailManagerTest extends TestCase {
 
 		$this->manager->deleteMessage(
 			$account,
-			'INBOX',
-			123
+			$mailbox,
+			$message
 		);
 	}
 
@@ -204,36 +168,35 @@ class MailManagerTest extends TestCase {
 		$mailAccount->setTrashMailboxId(123);
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$inbox = new Mailbox();
+		$inbox->setId(1);
 		$inbox->setName('INBOX');
 		$trash = new Mailbox();
+		$trash->setId(123);
 		$trash->setName('Trash');
+		$message = new Message();
+		$message->setUid(123);
 		$this->eventDispatcher->expects($this->exactly(2))
 			->method('dispatchTyped');
-		$this->mailboxMapper->expects($this->once())
-			->method('find')
-			->with($account, 'INBOX')
-			->willReturn($inbox);
 		$this->mailboxMapper->expects($this->once())
 			->method('findById')
 			->with(123)
 			->willReturn($trash);
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->willReturn($client);
-		$this->imapMessageMapper->expects($this->once())
-			->method('move')
-			->with(
-				$client,
-				'INBOX',
-				123,
-				'Trash'
-			);
+		$messageConnector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory->expects($this->once())
+			->method('messageConnector')
+			->with($account)
+			->willReturn($messageConnector);
+		$messageConnector->expects($this->once())
+			->method('moveMessages')
+			->with($account, $trash, $inbox, $message)
+			->willReturn([$message]);
+		$this->dbMessageMapper->expects($this->once())
+			->method('updateBulk');
 
 		$this->manager->deleteMessage(
 			$account,
-			'INBOX',
-			123
+			$inbox,
+			$message
 		);
 	}
 
@@ -244,273 +207,125 @@ class MailManagerTest extends TestCase {
 		$mailAccount->setTrashMailboxId(123);
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$source = new Mailbox();
+		$source->setId(123);
 		$source->setName('Trash');
 		$trash = new Mailbox();
+		$trash->setId(123);
 		$trash->setName('Trash');
+		$message = new Message();
+		$message->setUid(123);
 		$this->eventDispatcher->expects($this->exactly(2))
 			->method('dispatchTyped');
-		$this->mailboxMapper->expects($this->once())
-			->method('find')
-			->with($account, 'Trash')
-			->willReturn($source);
 		$this->mailboxMapper->expects($this->once())
 			->method('findById')
 			->with(123)
 			->willReturn($trash);
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->willReturn($client);
-		$this->imapMessageMapper->expects($this->once())
-			->method('expunge')
-			->with(
-				$client,
-				'Trash',
-				123
-			);
+		$messageConnector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory->expects($this->once())
+			->method('messageConnector')
+			->with($account)
+			->willReturn($messageConnector);
+		$messageConnector->expects($this->once())
+			->method('deleteMessages')
+			->with($account, $source, $message)
+			->willReturn([$message]);
+		$this->dbMessageMapper->expects($this->once())
+			->method('deleteByUid')
+			->with($source, 123);
 
 		$this->manager->deleteMessage(
 			$account,
-			'Trash',
-			123
+			$source,
+			$message
 		);
 	}
 
-	public function testSetCustomFlagNoIMAPCapabilities(): void {
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+	public function testFlagMessages(): void {
 		$account = $this->createStub(Account::class);
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$message = new Message();
+		$message->setUid(123);
+		$messageConnector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory->expects($this->once())
+			->method('messageConnector')
+			->with($account)
+			->willReturn($messageConnector);
+		$messageConnector->expects($this->once())
+			->method('flagMessages')
+			->with($account, $mailbox, 'seen', true, $message)
+			->willReturn([$message]);
+		$this->dbMessageMapper->expects($this->once())
+			->method('updateBulk');
+		$this->eventDispatcher->expects($this->once())
+			->method('dispatchTyped');
 
-		$this->imapClientFactory->expects($this->any())
-			->method('getClient')
-			->willReturn($client);
-		$this->imapMessageMapper->expects($this->never())
-			->method('addFlag');
-		$this->imapMessageMapper->expects($this->never())
-			->method('removeFlag');
-
-		$this->manager->flagMessage($account, 'INBOX', 123, Tag::LABEL_IMPORTANT, true);
-		$this->manager->flagMessage($account, 'INBOX', 123, Tag::LABEL_IMPORTANT, false);
+		$this->manager->flagMessages($account, $mailbox, 'seen', true, $message);
 	}
 
-	public function testSetCustomFlagWithIMAPCapabilities(): void {
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+	public function testIsPermflagsEnabled(): void {
 		$account = $this->createStub(Account::class);
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$messageConnector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory->expects($this->once())
+			->method('messageConnector')
+			->with($account)
+			->willReturn($messageConnector);
+		$messageConnector->expects($this->once())
+			->method('isPermflagsEnabled')
+			->with($account, $mailbox)
+			->willReturn(true);
 
-		$this->imapClientFactory->expects($this->any())
-			->method('getClient')
-			->willReturn($client);
-		$client->expects($this->once())
-			->method('status')
-			->willReturn([ 'permflags' => [ '11' => "\*" ] ]);
-		$this->imapMessageMapper->expects($this->once())
-			->method('addFlag');
-
-		$this->manager->flagMessage($account, 'INBOX', 123, Tag::LABEL_IMPORTANT, true);
-	}
-
-	public function testUnsetCustomFlagWithIMAPCapabilities(): void {
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$account = $this->createStub(Account::class);
-
-		$this->imapClientFactory->expects($this->any())
-			->method('getClient')
-			->willReturn($client);
-		$client->expects($this->once())
-			->method('status')
-			->willReturn([ 'permflags' => [ '11' => "\*" ] ]);
-		$this->imapMessageMapper->expects($this->once())
-			->method('removeFlag');
-
-		$this->manager->flagMessage($account, 'INBOX', 123, Tag::LABEL_IMPORTANT, false);
-	}
-
-	public function testFilterFlagsWithSystemFlags(): void {
-		$account = $this->createStub(Account::class);
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
-		$flags = [
-			'seen' => [\Horde_Imap_Client::FLAG_SEEN],
-			'answered' => [\Horde_Imap_Client::FLAG_ANSWERED],
-			'flagged' => [\Horde_Imap_Client::FLAG_FLAGGED],
-			'deleted' => [\Horde_Imap_Client::FLAG_DELETED],
-			'draft' => [\Horde_Imap_Client::FLAG_DRAFT],
-			'recent' => [\Horde_Imap_Client::FLAG_RECENT],
-		];
-
-		// test all system flags
-		foreach ($flags as $k => $flag) {
-			$this->assertEquals($this->manager->filterFlags($client, $account, $k, 'INBOX'), $flags[$k]);
-		}
-	}
-
-	public function testFilterFlagsWithDefinedKeyword() {
-		$account = $this->createStub(Account::class);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-
-		$client->expects($this->exactly(2))
-			->method('status')
-			->willReturn(['permflags' => ['\seen', '$junk', '$notjunk']]);
-
-		// test keyword supported
-		$this->assertEquals(['$junk'], $this->manager->filterFlags($client, $account, '$junk', 'INBOX'));
-		// test keyword unsupported
-		$this->assertEquals([], $this->manager->filterFlags($client, $account, '$autojunk', 'INBOX'));
-	}
-
-	public function testFilterFlagsWithCustomKeyword() {
-		$account = $this->createStub(Account::class);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-
-		$client->expects($this->exactly(2))
-			->method('status')
-			->willReturnOnConsecutiveCalls(
-				['permflags' => ['\seen', '$junk', '$notjunk', '\*']],
-				['permflags' => ['\seen', '$junk', '$notjunk']],
-			);
-
-		// test custom keyword supported
-		$this->assertEquals([Tag::LABEL_IMPORTANT], $this->manager->filterFlags($client, $account, Tag::LABEL_IMPORTANT, 'INBOX'));
-		// test custom keyword unsupported
-		$this->assertEquals([], $this->manager->filterFlags($client, $account, Tag::LABEL_IMPORTANT, 'INBOX'));
-	}
-
-	public function testFilterFlagsNoCapabilities() {
-		$account = $this->createStub(Account::class);
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
-
-		$this->assertEquals([], $this->manager->filterFlags($client, $account, Tag::LABEL_IMPORTANT, 'INBOX'));
-	}
-
-	public function testIsPermflagsEnabledTrue(): void {
-		$account = $this->createStub(Account::class);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-
-		$client->expects($this->once())
-			->method('status')
-			->willReturn(['permflags' => [ '11' => "\*"] ]);
-
-		$this->assertTrue($this->manager->isPermflagsEnabled($client, $account, 'INBOX'));
-	}
-
-	public function testIsPermflagsEnabledFalse(): void {
-		$account = $this->createStub(Account::class);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-
-		$client->expects($this->once())
-			->method('status')
-			->willReturn([]);
-
-		$this->assertFalse($this->manager->isPermflagsEnabled($client, $account, 'INBOX'));
-	}
-
-	public function testRemoveFlag(): void {
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
-		$account = $this->createStub(Account::class);
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->willReturn($client);
-		$mb = $this->createStub(Mailbox::class);
-		$this->mailboxMapper->expects($this->once())
-			->method('find')
-			->with($account, 'INBOX')
-			->willReturn($mb);
-		$this->imapMessageMapper->expects($this->never())
-			->method('addFlag');
-		$this->imapMessageMapper->expects($this->once())
-			->method('removeFlag')
-			->with($client, $mb, [123], '\\seen');
-
-		$this->manager->flagMessage($account, 'INBOX', 123, 'seen', false);
+		$this->assertTrue($this->manager->isPermflagsEnabled($account, $mailbox));
 	}
 
 	public function testTagMessage(): void {
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$tag = new Tag();
 		$tag->setImapLabel(Tag::LABEL_IMPORTANT);
-		$message = new \OCA\Mail\Db\Message();
+		$message = new Message();
 		$message->setUid(123);
 		$message->setMessageId('<jhfjkhdsjkfhdsjkhfjkdsh@test.com>');
-		$this->imapClientFactory->expects($this->any())
-			->method('getClient')
-			->willReturn($client);
-		$mb = new Mailbox();
-		$mb->setName('INBOX');
-		$this->mailboxMapper->expects($this->once())
-			->method('find')
-			->with($account, 'INBOX')
-			->willReturn($mb);
-		$client->expects($this->once())
-			->method('status')
-			->willReturn(['permflags' => [ '11' => "\*"] ]);
-		$this->imapMessageMapper->expects($this->once())
-			->method('addFlag')
-			->with($client, $mb, [123], Tag::LABEL_IMPORTANT);
-		$account->expects($this->once())
-			->method('getUserId')
-			->willReturn('test');
-		$this->manager->tagMessage($account, 'INBOX', $message, $tag, true);
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$messageConnector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory->expects($this->once())
+			->method('messageConnector')
+			->with($account)
+			->willReturn($messageConnector);
+		$messageConnector->expects($this->once())
+			->method('tagMessages')
+			->with($account, $mailbox, $tag, true, $message)
+			->willReturn([$message]);
+		$this->dbMessageMapper->expects($this->once())
+			->method('updateBulk');
+
+		$this->manager->tagMessages($account, $mailbox, $tag, true, $message);
 	}
 
 	public function testUntagMessage(): void {
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$tag = new Tag();
 		$tag->setImapLabel(Tag::LABEL_IMPORTANT);
-		$message = new \OCA\Mail\Db\Message();
+		$message = new Message();
 		$message->setUid(123);
 		$message->setMessageId('<jhfjkhdsjkfhdsjkhfjkdsh@test.com>');
-		$this->imapClientFactory->expects($this->any())
-			->method('getClient')
-			->willReturn($client);
-		$mb = new Mailbox();
-		$mb->setName('INBOX');
-		$this->mailboxMapper->expects($this->once())
-			->method('find')
-			->with($account, 'INBOX')
-			->willReturn($mb);
-		$client->expects($this->once())
-			->method('status')
-			->willReturn(['permflags' => [ '11' => "\*"] ]);
-		$this->imapMessageMapper->expects($this->once())
-			->method('removeFlag')
-			->with($client, $mb, [123], Tag::LABEL_IMPORTANT);
-		$this->imapMessageMapper->expects($this->never())
-			->method('addFlag');
-		$account->expects($this->never())
-			->method('getUserId')
-			->willReturn('test');
-		$this->manager->tagMessage($account, 'INBOX', $message, $tag, false);
-	}
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$messageConnector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory->expects($this->once())
+			->method('messageConnector')
+			->with($account)
+			->willReturn($messageConnector);
+		$messageConnector->expects($this->once())
+			->method('tagMessages')
+			->with($account, $mailbox, $tag, false, $message)
+			->willReturn([$message]);
+		$this->dbMessageMapper->expects($this->once())
+			->method('updateBulk');
 
-	public function testTagNoIMAPCapabilities(): void {
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$account = $this->createMock(Account::class);
-		$message = new \OCA\Mail\Db\Message();
-		$message->setUid(123);
-		$message->setMessageId('<jhfjkhdsjkfhdsjkhfjkdsh@test.com>');
-		$tag = new Tag();
-		$tag->setImapLabel(Tag::LABEL_IMPORTANT);
-
-		$this->imapClientFactory->expects($this->any())
-			->method('getClient')
-			->willReturn($client);
-		$mb = new Mailbox();
-		$mb->setName('INBOX');
-		$this->mailboxMapper->expects($this->once())
-			->method('find')
-			->with($account, 'INBOX')
-			->willReturn($mb);
-		$client->expects($this->once())
-			->method('status')
-			->willReturn([]);
-		$this->imapMessageMapper->expects($this->never())
-			->method('removeFlag');
-		$this->imapMessageMapper->expects($this->never())
-			->method('addFlag');
-		$account->expects($this->once())
-			->method('getUserId')
-			->willReturn('test');
-		$this->manager->tagMessage($account, 'INBOX', $message, $tag, true);
+		$this->manager->tagMessages($account, $mailbox, $tag, false, $message);
 	}
 
 	public function testGetThread(): void {
@@ -525,10 +340,7 @@ class MailManagerTest extends TestCase {
 	}
 
 	public function testGetMailAttachments(): void {
-		$account = $this->createMock(Account::class);
-		$account->expects($this->once())
-			->method('getUserId')
-			->willReturn('user');
+		$account = $this->createStub(Account::class);
 		$attachments = [
 			new Attachment(
 				null,
@@ -540,23 +352,22 @@ class MailManagerTest extends TestCase {
 				null,
 			),
 		];
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$mailbox = new Mailbox();
 		$mailbox->setName('Inbox');
 		$message = new Message();
 		$message->setUid(123);
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
+		$messageConnector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory->expects($this->once())
+			->method('messageConnector')
 			->with($account)
-			->willReturn($client);
-		$this->imapMessageMapper->expects($this->once())
-			->method('getAttachments')
-			->with(
-				$client,
-				$mailbox->getName(),
-				$message->getUid()
-			)->willReturn($attachments);
+			->willReturn($messageConnector);
+		$messageConnector->expects($this->once())
+			->method('fetchAttachments')
+			->with($account, $mailbox, $message)
+			->willReturn($attachments);
+
 		$result = $this->manager->getMailAttachments($account, $mailbox, $message);
+
 		$this->assertEquals($attachments, $result);
 	}
 
@@ -667,8 +478,16 @@ class MailManagerTest extends TestCase {
 		$srcMailbox->setId($srcMailboxId);
 		$srcMailbox->setAccountId($mailAccount->getId());
 		$srcMailbox->setName('INBOX');
+		$dstMailbox = new Mailbox();
+		$dstMailbox->setId($dstMailboxId);
+		$dstMailbox->setAccountId($mailAccount->getId());
+		$dstMailbox->setName('Trash');
+		$message1 = new Message();
+		$message1->setUid(200);
+		$message2 = new Message();
+		$message2->setUid(300);
 		$this->mailboxMapper
-			->expects(self::exactly(2))
+			->expects(self::once())
 			->method('find')
 			->with($account, $srcMailbox->getName())
 			->willReturn($srcMailbox);
@@ -680,17 +499,25 @@ class MailManagerTest extends TestCase {
 				['messageUid' => 200, 'mailboxName' => 'INBOX'],
 				['messageUid' => 300, 'mailboxName' => 'INBOX'],
 			]);
-		$dstMailbox = new Mailbox();
-		$dstMailbox->setId($dstMailboxId);
-		$dstMailbox->setAccountId($mailAccount->getId());
-		$dstMailbox->setName('Trash');
-
-		$this->imapMessageMapper
-			->expects(self::exactly(2))
-			->method('move');
-		$this->eventDispatcher
-			->expects(self::exactly(2))
-			->method('dispatch');
+		$this->dbMessageMapper
+			->expects(self::once())
+			->method('findByUids')
+			->with($srcMailbox, [200, 300])
+			->willReturn([$message1, $message2]);
+		$messageConnector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory
+			->expects(self::once())
+			->method('messageConnector')
+			->with($account)
+			->willReturn($messageConnector);
+		$messageConnector
+			->expects(self::once())
+			->method('moveMessages')
+			->with($account, $dstMailbox, $srcMailbox, $message1, $message2)
+			->willReturn([$message1, $message2]);
+		$this->dbMessageMapper
+			->expects(self::once())
+			->method('updateBulk');
 
 		$this->manager->moveThread(
 			$account,
@@ -713,8 +540,16 @@ class MailManagerTest extends TestCase {
 		$srcMailbox->setId($srcMailboxId);
 		$srcMailbox->setAccountId($mailAccount->getId());
 		$srcMailbox->setName('Trash');
+		$dstMailbox = new Mailbox();
+		$dstMailbox->setId($dstMailboxId);
+		$dstMailbox->setAccountId($mailAccount->getId());
+		$dstMailbox->setName('INBOX');
+		$message1 = new Message();
+		$message1->setUid(200);
+		$message2 = new Message();
+		$message2->setUid(300);
 		$this->mailboxMapper
-			->expects(self::exactly(2))
+			->expects(self::once())
 			->method('find')
 			->with($account, $srcMailbox->getName())
 			->willReturn($srcMailbox);
@@ -726,17 +561,25 @@ class MailManagerTest extends TestCase {
 				['messageUid' => 200, 'mailboxName' => 'Trash'],
 				['messageUid' => 300, 'mailboxName' => 'Trash'],
 			]);
-		$dstMailbox = new Mailbox();
-		$dstMailbox->setId($dstMailboxId);
-		$dstMailbox->setAccountId($mailAccount->getId());
-		$dstMailbox->setName('INBOX');
-
-		$this->imapMessageMapper
-			->expects(self::exactly(2))
-			->method('move');
-		$this->eventDispatcher
-			->expects(self::exactly(2))
-			->method('dispatch');
+		$this->dbMessageMapper
+			->expects(self::once())
+			->method('findByUids')
+			->with($srcMailbox, [200, 300])
+			->willReturn([$message1, $message2]);
+		$messageConnector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory
+			->expects(self::once())
+			->method('messageConnector')
+			->with($account)
+			->willReturn($messageConnector);
+		$messageConnector
+			->expects(self::once())
+			->method('moveMessages')
+			->with($account, $dstMailbox, $srcMailbox, $message1, $message2)
+			->willReturn([$message1, $message2]);
+		$this->dbMessageMapper
+			->expects(self::once())
+			->method('updateBulk');
 
 		$this->manager->moveThread(
 			$account,
@@ -759,8 +602,16 @@ class MailManagerTest extends TestCase {
 		$mailbox->setId($mailboxId);
 		$mailbox->setAccountId($mailAccount->getId());
 		$mailbox->setName('INBOX');
+		$trashMailbox = new Mailbox();
+		$trashMailbox->setId($trashMailboxId);
+		$trashMailbox->setAccountId($mailAccount->getId());
+		$trashMailbox->setName('Trash');
+		$message1 = new Message();
+		$message1->setUid(200);
+		$message2 = new Message();
+		$message2->setUid(300);
 		$this->mailboxMapper
-			->expects(self::exactly(2))
+			->expects(self::once())
 			->method('find')
 			->with($account, $mailbox->getName())
 			->willReturn($mailbox);
@@ -772,18 +623,30 @@ class MailManagerTest extends TestCase {
 				['messageUid' => 200, 'mailboxName' => 'INBOX'],
 				['messageUid' => 300, 'mailboxName' => 'INBOX'],
 			]);
-		$trashMailbox = new Mailbox();
-		$trashMailbox->setId($trashMailboxId);
-		$trashMailbox->setAccountId($mailAccount->getId());
-		$trashMailbox->setName('Trash');
+		$this->dbMessageMapper
+			->expects(self::once())
+			->method('findByUids')
+			->with($mailbox, [200, 300])
+			->willReturn([$message1, $message2]);
 		$this->mailboxMapper
-			->expects(self::exactly(2))
+			->expects(self::once())
 			->method('findById')
 			->with($trashMailbox->getId())
 			->willReturn($trashMailbox);
-		$this->imapMessageMapper
-			->expects(self::exactly(2))
-			->method('move');
+		$messageConnector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory
+			->expects(self::once())
+			->method('messageConnector')
+			->with($account)
+			->willReturn($messageConnector);
+		$messageConnector
+			->expects(self::once())
+			->method('moveMessages')
+			->with($account, $trashMailbox, $mailbox, $message1, $message2)
+			->willReturn([$message1, $message2]);
+		$this->dbMessageMapper
+			->expects(self::once())
+			->method('updateBulk');
 		$this->eventDispatcher
 			->expects(self::exactly(4))
 			->method('dispatchTyped');
@@ -806,13 +669,17 @@ class MailManagerTest extends TestCase {
 		$mailbox->setId($mailboxId);
 		$mailbox->setAccountId($mailAccount->getId());
 		$mailbox->setName('Trash');
+		$message1 = new Message();
+		$message1->setUid(200);
+		$message2 = new Message();
+		$message2->setUid(300);
 		$this->mailboxMapper
-			->expects(self::exactly(2))
+			->expects(self::once())
 			->method('find')
 			->with($account, $mailbox->getName())
 			->willReturn($mailbox);
 		$this->mailboxMapper
-			->expects(self::exactly(2))
+			->expects(self::once())
 			->method('findById')
 			->with($mailbox->getId())
 			->willReturn($mailbox);
@@ -824,9 +691,26 @@ class MailManagerTest extends TestCase {
 				['messageUid' => 200, 'mailboxName' => 'Trash'],
 				['messageUid' => 300, 'mailboxName' => 'Trash'],
 			]);
-		$this->imapMessageMapper
-			->expects(self::exactly(2))
-			->method('expunge');
+		$this->dbMessageMapper
+			->expects(self::once())
+			->method('findByUids')
+			->with($mailbox, [200, 300])
+			->willReturn([$message1, $message2]);
+		$messageConnector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory
+			->expects(self::once())
+			->method('messageConnector')
+			->with($account)
+			->willReturn($messageConnector);
+		$messageConnector
+			->expects(self::once())
+			->method('deleteMessages')
+			->with($account, $mailbox, $message1, $message2)
+			->willReturn([$message1, $message2]);
+		$this->dbMessageMapper
+			->expects(self::once())
+			->method('deleteByUid')
+			->with($mailbox, 200, 300);
 		$this->eventDispatcher
 			->expects(self::exactly(4))
 			->method('dispatchTyped');
@@ -836,5 +720,123 @@ class MailManagerTest extends TestCase {
 			$mailbox,
 			$threadRootId
 		);
+	}
+
+	public function testClearMailboxWithoutMessagesDoesNothing(): void {
+		$account = $this->createMock(Account::class);
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->dbMessageMapper->expects(self::once())
+			->method('findAllUids')
+			->with($mailbox)
+			->willReturn([]);
+		$this->dbMessageMapper->expects(self::never())
+			->method('findByUids');
+		$this->protocolFactory->expects(self::never())
+			->method('messageConnector');
+
+		$this->manager->clearMailbox($account, $mailbox);
+	}
+
+	public function testClearMailboxMovesAllMessagesToTrash(): void {
+		$account = $this->createMock(Account::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setTrashMailboxId(123);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$inbox = new Mailbox();
+		$inbox->setId(1);
+		$inbox->setName('INBOX');
+		$trash = new Mailbox();
+		$trash->setId(123);
+		$trash->setName('Trash');
+		$message1 = new Message();
+		$message1->setUid(11);
+		$message2 = new Message();
+		$message2->setUid(12);
+		$this->dbMessageMapper->expects(self::once())
+			->method('findAllUids')
+			->with($inbox)
+			->willReturn([11, 12]);
+		$this->dbMessageMapper->expects(self::once())
+			->method('findByUids')
+			->with($inbox, [11, 12])
+			->willReturn([$message1, $message2]);
+		$this->mailboxMapper->expects(self::once())
+			->method('findById')
+			->with(123)
+			->willReturn($trash);
+		$messageConnector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory->expects(self::once())
+			->method('messageConnector')
+			->with($account)
+			->willReturn($messageConnector);
+		$messageConnector->expects(self::once())
+			->method('moveMessages')
+			->with($account, $trash, $inbox, $message1, $message2)
+			->willReturn([$message1, $message2]);
+		$this->dbMessageMapper->expects(self::once())
+			->method('updateBulk');
+
+		$this->manager->clearMailbox($account, $inbox);
+	}
+
+	public function testDeleteTagUntagsMessagesGroupedByMailbox(): void {
+		$account = $this->createMock(Account::class);
+		$tag = new Tag();
+		$tag->setImapLabel('$label1');
+		$this->tagMapper->expects(self::once())
+			->method('getTagForUser')
+			->with(5, 'user')
+			->willReturn($tag);
+		$messageTag = new MessageTags();
+		$messageTag->setImapMessageId('msg@id');
+		$this->messageTagsMapper->expects(self::once())
+			->method('getMessagesByTag')
+			->with(5)
+			->willReturn([$messageTag]);
+		// two messages of the same tag living in different mailboxes
+		$messageInInbox = new Message();
+		$messageInInbox->setUid(11);
+		$messageInInbox->setMailboxId(1);
+		$messageInArchive = new Message();
+		$messageInArchive->setUid(22);
+		$messageInArchive->setMailboxId(2);
+		$this->dbMessageMapper->expects(self::once())
+			->method('findByMessageId')
+			->with($account, 'msg@id')
+			->willReturn([$messageInInbox, $messageInArchive]);
+		$inbox = new Mailbox();
+		$inbox->setId(1);
+		$archive = new Mailbox();
+		$archive->setId(2);
+		$this->mailboxMapper->method('findById')
+			->willReturnMap([
+				[1, $inbox],
+				[2, $archive],
+			]);
+		$messageConnector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory->method('messageConnector')
+			->with($account)
+			->willReturn($messageConnector);
+		// the connector is asked to untag once per mailbox, with that mailbox's messages
+		$tagCalls = [];
+		$messageConnector->expects(self::exactly(2))
+			->method('tagMessages')
+			->willReturnCallback(function (Account $a, Mailbox $mailbox, Tag $t, bool $value, Message ...$messages) use (&$tagCalls): array {
+				$tagCalls[$mailbox->getId()] = $messages;
+				return $messages;
+			});
+		$this->messageTagsMapper->expects(self::once())
+			->method('delete')
+			->with($messageTag);
+		$this->tagMapper->expects(self::once())
+			->method('delete')
+			->with($tag)
+			->willReturn($tag);
+
+		$this->manager->deleteTag(5, 'user', [$account]);
+
+		self::assertEquals([$messageInInbox], $tagCalls[1]);
+		self::assertEquals([$messageInArchive], $tagCalls[2]);
 	}
 }

@@ -19,7 +19,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\CouldNotConnectException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\SMTP\SmtpClientFactory;
@@ -47,7 +47,7 @@ class SetupServiceTest extends TestCase {
 	private AccountService&MockObject $accountService;
 	private ICrypto&MockObject $crypto;
 	private SmtpClientFactory&MockObject $smtpClientFactory;
-	private IMAPClientFactory&MockObject $imapClientFactory;
+	private ProtocolFactory&MockObject $protocolFactory;
 	private LoggerInterface&MockObject $logger;
 	private TagMapper&MockObject $tagMapper;
 	private SetupService $setupService;
@@ -58,7 +58,7 @@ class SetupServiceTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->smtpClientFactory = $this->createMock(SmtpClientFactory::class);
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->tagMapper = $this->createMock(TagMapper::class);
 
@@ -66,7 +66,7 @@ class SetupServiceTest extends TestCase {
 			$this->accountService,
 			$this->crypto,
 			$this->smtpClientFactory,
-			$this->imapClientFactory,
+			$this->protocolFactory,
 			$this->logger,
 			$this->tagMapper
 		);
@@ -77,8 +77,8 @@ class SetupServiceTest extends TestCase {
 		$imapClient->expects(self::once())->method('login');
 		$imapClient->expects(self::once())->method('logout');
 
-		$this->imapClientFactory->expects(self::once())
-			->method('getClient')
+		$this->protocolFactory->expects(self::once())
+			->method('imapClient')
 			->willReturn($imapClient);
 
 		return $imapClient;
@@ -209,7 +209,7 @@ class SetupServiceTest extends TestCase {
 			->method('debug')
 			->with(self::stringContains('account created '));
 
-		$this->imapClientFactory->expects(self::never())->method('getClient');
+		$this->protocolFactory->expects(self::never())->method('imapClient');
 		$this->smtpClientFactory->expects(self::never())->method('create');
 
 		$this->accountService->expects(self::once())
@@ -272,8 +272,8 @@ class SetupServiceTest extends TestCase {
 		$imapClient->expects(self::once())
 			->method('logout');
 
-		$this->imapClientFactory->expects(self::once())
-			->method('getClient')
+		$this->protocolFactory->expects(self::once())
+			->method('imapClient')
 			->willReturn($imapClient);
 
 		$this->setupService->createNewAccount(

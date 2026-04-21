@@ -21,7 +21,6 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\NewMessagesSynchronized;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ContextChat\TaskService;
@@ -63,9 +62,6 @@ class SubmitContentJobTest extends TestCase {
 	/** @var ITimeFactory|MockObject */
 	private $time;
 
-	/** @var IMAPClientFactory|MockObject */
-	private $imapClientFactory;
-
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 
@@ -87,7 +83,6 @@ class SubmitContentJobTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->mailManager = $this->createMock(MailManager::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->contextChatProvider = $this->createMock(ContextChatProvider::class);
 		$this->contentManager = $this->createMock(IContentManager::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
@@ -99,7 +94,6 @@ class SubmitContentJobTest extends TestCase {
 			$this->accountService,
 			$this->mailManager,
 			$this->messageMapper,
-			$this->imapClientFactory,
 			$this->contextChatProvider,
 			$this->contentManager,
 			$this->logger,
@@ -174,8 +168,6 @@ class SubmitContentJobTest extends TestCase {
 		$message->setId(2);
 		$message->setUid(2);
 		$this->messageMapper->expects($this->once())->method('findByIds')->willReturn([$message]);
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory->expects($this->once())->method('getClient')->willReturn($client);
 		$imapMessage = $this->createMock(IMAPMessage::class);
 		$this->mailManager->expects($this->once())->method('getImapMessage')->willReturn($imapMessage);
 		$imapMessage->expects($this->once())->method('isEncrypted')->willReturn(false);
@@ -184,7 +176,6 @@ class SubmitContentJobTest extends TestCase {
 		$imapMessage->expects($this->once())->method('getSubject')->willReturn('subject');
 		$sent = new \Horde_Imap_Client_DateTime('2025-01-01 00:00:00');
 		$imapMessage->expects($this->once())->method('getSentDate')->willReturn($sent);
-		$client->expects($this->once())->method('close');
 		$this->contextChatProvider->expects($this->once())->method('getAppId')->willReturn('mail');
 		$this->contextChatProvider->expects($this->once())->method('getId')->willReturn('mail');
 		$this->contentManager->expects($this->once())->method('submitContent');
@@ -264,10 +255,7 @@ class SubmitContentJobTest extends TestCase {
 		$this->accountService->expects($this->once())->method('findById')->with()->willReturn($account);
 		$message = new Message();
 		$this->messageMapper->expects($this->once())->method('findByIds')->willReturn([$message]);
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory->expects($this->once())->method('getClient')->willReturn($client);
 		$this->mailManager->expects($this->never())->method('getImapMessage'); // will not get called because the job takes too long already
-		$client->expects($this->once())->method('close');
 
 		$this->submitContentJob->setLastRun(0);
 		$this->submitContentJob->start($this->createMock(IJobList::class));
@@ -310,13 +298,10 @@ class SubmitContentJobTest extends TestCase {
 		$message->setId(1);
 		$message->setUid(1);
 		$this->messageMapper->expects($this->once())->method('findByIds')->willReturn([$message]);
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory->expects($this->once())->method('getClient')->willReturn($client);
 		$imapMessage = $this->createMock(IMAPMessage::class);
 		$this->mailManager->expects($this->once())->method('getImapMessage')->willReturn($imapMessage);
 		$imapMessage->expects($this->once())->method('isEncrypted')->willReturn(true);
 		$imapMessage->expects($this->never())->method('getFullMessage');
-		$client->expects($this->once())->method('close');
 
 		$this->submitContentJob->setLastRun(0);
 		$this->submitContentJob->start($this->createMock(IJobList::class));
@@ -331,7 +316,6 @@ class SubmitContentJobTest extends TestCase {
 
 		$this->taskService->expects($this->once())->method('findNext')->willThrowException(new \OCP\DB\Exception('An error'));
 		$this->contentManager->expects($this->never())->method('submitContent');
-		$this->imapClientFactory->expects($this->never())->method('getClient');
 
 		$this->submitContentJob->setLastRun(0);
 		$this->submitContentJob->start($this->createMock(IJobList::class));
@@ -346,7 +330,6 @@ class SubmitContentJobTest extends TestCase {
 
 		$this->taskService->expects($this->once())->method('findNext')->willThrowException(new DoesNotExistException('ERROR'));
 		$this->contentManager->expects($this->never())->method('submitContent');
-		$this->imapClientFactory->expects($this->never())->method('getClient');
 
 		$this->submitContentJob->setLastRun(0);
 		$this->submitContentJob->start($this->createMock(IJobList::class));
@@ -369,7 +352,6 @@ class SubmitContentJobTest extends TestCase {
 		$mailbox->setAccountId(5);
 		$this->mailboxMapper->expects($this->once())->method('findById')->willThrowException(new \OCA\Mail\Exception\ServiceException());
 		$this->contentManager->expects($this->never())->method('submitContent');
-		$this->imapClientFactory->expects($this->never())->method('getClient');
 
 		$this->submitContentJob->setLastRun(0);
 		$this->submitContentJob->start($this->createMock(IJobList::class));
@@ -392,7 +374,6 @@ class SubmitContentJobTest extends TestCase {
 		$mailbox->setAccountId(5);
 		$this->mailboxMapper->expects($this->once())->method('findById')->willThrowException(new DoesNotExistException('ERROR'));
 		$this->contentManager->expects($this->never())->method('submitContent');
-		$this->imapClientFactory->expects($this->never())->method('getClient');
 
 		$this->submitContentJob->setLastRun(0);
 		$this->submitContentJob->start($this->createMock(IJobList::class));

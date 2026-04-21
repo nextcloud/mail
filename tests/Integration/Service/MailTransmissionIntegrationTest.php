@@ -13,7 +13,6 @@ use ChristophWurst\Nextcloud\Testing\TestUser;
 use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
@@ -23,10 +22,10 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Db\RecipientMapper;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\NewMessageData;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Send\AntiAbuseHandler;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Send\CopySentMessageHandler;
@@ -35,6 +34,7 @@ use OCA\Mail\Send\SendHandler;
 use OCA\Mail\Send\SentMailboxHandler;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Attachment\UploadedFile;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\TransmissionService;
 use OCA\Mail\SMTP\SmtpClientFactory;
@@ -129,10 +129,10 @@ class MailTransmissionIntegrationTest extends TestCase {
 			Server::get(FlagRepliedMessageHandler::class),
 			$this->attachmentService,
 			$this->localMessageMapper,
-			Server::get(IMAPClientFactory::class),
+			Server::get(ProtocolFactory::class),
 		);
 
-		$this->transmission = new MailTransmission(Server::get(IMAPClientFactory::class),
+		$this->transmission = new MailTransmission(Server::get(ProtocolFactory::class),
 			Server::get(SmtpClientFactory::class),
 			Server::get(IEventDispatcher::class),
 			Server::get(MailboxMapper::class),
@@ -141,7 +141,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 			Server::get(PerformanceLogger::class),
 			Server::get(AliasesService::class),
 			Server::get(TransmissionService::class),
-			Server::get(IMailManager::class)
+			Server::get(MailManager::class)
 		);
 	}
 

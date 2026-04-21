@@ -77,7 +77,7 @@ interface IMessageConnector {
 	 *
 	 * @return Message[] The deleted messages
 	 */
-	public function deleteMessages(Account $account, Mailbox $mailbox, Message ...$message): array;
+	public function deleteMessages(Account $account, Mailbox $mailbox, Message ...$messages): array;
 
 	/**
 	 * Set or unset a flag on a messages.

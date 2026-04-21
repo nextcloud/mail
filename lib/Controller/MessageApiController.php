@@ -15,7 +15,6 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\UploadException;
 use OCA\Mail\Http\TrapError;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\SmimeData;
 use OCA\Mail\ResponseDefinitions;
 use OCA\Mail\Service\AccountService;
@@ -59,7 +58,6 @@ class MessageApiController extends OCSController {
 		private AttachmentService $attachmentService,
 		private OutboxService $outboxService,
 		private MailManager $mailManager,
-		private IMAPClientFactory $clientFactory,
 		private LoggerInterface $logger,
 		private ITimeFactory $time,
 		private IURLGenerator $urlGenerator,
@@ -252,13 +250,11 @@ class MessageApiController extends OCSController {
 		}
 
 		$loadBody = true;
-		$client = $this->clientFactory->getClient($account);
 		try {
 			$imapMessage = $this->mailManager->getImapMessage(
-				$client,
 				$account,
 				$mailbox,
-				$message->getUid(),
+				$message,
 				true
 			);
 		} catch (ServiceException $e) {
@@ -268,13 +264,10 @@ class MessageApiController extends OCSController {
 			$this->logger->warning('Message could not be decrypted', ['exception' => $e->getMessage()]);
 			$loadBody = false;
 			$imapMessage = $this->mailManager->getImapMessage(
-				$client,
 				$account,
 				$mailbox,
-				$message->getUid()
+				$message
 			);
-		} finally {
-			$client->logout();
 		}
 
 		$json = $imapMessage->getFullMessage($id, $loadBody);
@@ -344,19 +337,15 @@ class MessageApiController extends OCSController {
 			return new DataResponse('Message, Account or Mailbox not found', Http::STATUS_NOT_FOUND);
 		}
 
-		$client = $this->clientFactory->getClient($account);
 		try {
-			$source = $this->mailManager->getSource(
-				$client,
+			$source = $this->mailManager->getRawMessage(
 				$account,
-				$mailbox->getName(),
-				$message->getUid()
+				$mailbox,
+				$message
 			);
 		} catch (ServiceException $e) {
 			$this->logger->error('Message not found on IMAP, or mail server went away', ['exception' => $e->getMessage()]);
 			return new DataResponse('Message not found', Http::STATUS_NOT_FOUND);
-		} finally {
-			$client->logout();
 		}
 
 		return new DataResponse($source, Http::STATUS_OK);

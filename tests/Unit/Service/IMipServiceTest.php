@@ -196,8 +196,8 @@ class IMipServiceTest extends TestCase {
 			->method('findById')
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getImapMessagesForScheduleProcessing')
-			->with($account, $mailbox, [$message->getUid()])
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
 			->willReturn([$imapMessage]);
 		$this->calendarManager->expects(self::never())
 			->method('handleIMipRequest');
@@ -239,7 +239,7 @@ class IMipServiceTest extends TestCase {
 			->method('findById')
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getImapMessagesForScheduleProcessing')
+			->method('getImapMessages')
 			->willThrowException(new ServiceException());
 		$this->logger->expects(self::once())
 			->method('error');
@@ -283,8 +283,8 @@ class IMipServiceTest extends TestCase {
 			->method('findById')
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getImapMessagesForScheduleProcessing')
-			->with($account, $mailbox, [$message->getUid()])
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
 			->willReturn([$imapMessage]);
 		$this->serverVersion->expects(self::once())
 			->method('getMajorVersion')
@@ -343,8 +343,8 @@ class IMipServiceTest extends TestCase {
 			->method('findById')
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getImapMessagesForScheduleProcessing')
-			->with($account, $mailbox, [$message->getUid()])
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
 			->willReturn([$imapMessage]);
 		$this->serverVersion->expects(self::once())
 			->method('getMajorVersion')
@@ -401,8 +401,8 @@ class IMipServiceTest extends TestCase {
 			->method('findById')
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getImapMessagesForScheduleProcessing')
-			->with($account, $mailbox, [$message->getUid()])
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
 			->willReturn([$imapMessage]);
 		$this->serverVersion->expects(self::once())
 			->method('getMajorVersion')
@@ -467,8 +467,8 @@ class IMipServiceTest extends TestCase {
 			->method('findById')
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getImapMessagesForScheduleProcessing')
-			->with($account, $mailbox, [$message->getUid()])
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
 			->willReturn([$imapMessage]);
 		$this->serverVersion->expects(self::once())
 			->method('getMajorVersion')
@@ -533,8 +533,8 @@ class IMipServiceTest extends TestCase {
 			->method('findById')
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getImapMessagesForScheduleProcessing')
-			->with($account, $mailbox, [$message->getUid()])
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
 			->willReturn([$imapMessage]);
 		$this->serverVersion->expects(self::once())
 			->method('getMajorVersion')
@@ -599,8 +599,8 @@ class IMipServiceTest extends TestCase {
 			->method('findById')
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getImapMessagesForScheduleProcessing')
-			->with($account, $mailbox, [$message->getUid()])
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
 			->willReturn([$imapMessage]);
 		$this->serverVersion->expects(self::once())
 			->method('getMajorVersion')
@@ -661,8 +661,8 @@ class IMipServiceTest extends TestCase {
 			->method('findById')
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getImapMessagesForScheduleProcessing')
-			->with($account, $mailbox, [$message->getUid()])
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
 			->willReturn([$imapMessage]);
 		$imapMessage->expects(self::once())
 			->method('getUid')

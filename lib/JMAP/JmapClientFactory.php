@@ -79,7 +79,7 @@ class JmapClientFactory {
 		);
 
 		$client = new JmapClient('', null, $adapter, $requestFactory, $streamFactory);
-		$client->configureTransportMode($secure ? 'https' : 'http');
+		$client->configureTransportMode($secure ? JmapClient::TRANSPORT_MODE_SECURE : JmapClient::TRANSPORT_MODE_STANDARD);
 		$client->setHost($host . ':' . $port);
 		if ($path !== '/.well-known/jmap') {
 			$client->setDiscoveryPath($path);

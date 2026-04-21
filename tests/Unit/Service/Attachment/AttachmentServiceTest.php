@@ -14,7 +14,6 @@ use Horde_Imap_Client_Socket;
 use OC\Files\Node\File;
 use OCA\Files_Sharing\SharedStorage;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
@@ -28,6 +27,7 @@ use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Attachment\AttachmentStorage;
 use OCA\Mail\Service\Attachment\UploadedFile;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\Folder;
@@ -44,7 +44,7 @@ use Psr\Log\LoggerInterface;
 class AttachmentServiceTest extends TestCase {
 	private LocalAttachmentMapper&MockObject $mapper;
 	private AttachmentStorage&MockObject $storage;
-	private IMailManager&MockObject $mailManager;
+	private MailManager&MockObject $mailManager;
 	private MessageMapper&MockObject $messageMapper;
 	private Folder&MockObject $userFolder;
 	private ICache&MockObject $cache;
@@ -60,7 +60,7 @@ class AttachmentServiceTest extends TestCase {
 
 		$this->mapper = $this->createMock(LocalAttachmentMapper::class);
 		$this->storage = $this->createMock(AttachmentStorage::class);
-		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->mailManager = $this->createMock(MailManager::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->userFolder = $this->createMock(Folder::class);
 		$this->cache = $this->createMock(ICache::class);
@@ -632,13 +632,12 @@ class AttachmentServiceTest extends TestCase {
 		$mailbox->setId(2);
 		$message = new Message();
 		$message->setUid(3);
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$cached = [['id' => '1.2', 'fileName' => 'file.pdf', 'mime' => 'application/pdf', 'downloadUrl' => 'http://example.test/dl', 'mimeUrl' => 'http://example.test/mime']];
 		$this->cache->expects(self::once())->method('get')->willReturn($cached);
 		$this->mailManager->expects(self::never())->method('getImapMessage');
 
 		// Act
-		$result = $this->service->getAttachmentNames($account, $mailbox, $message, $client);
+		$result = $this->service->getAttachmentNames($account, $mailbox, $message);
 
 		// Assert
 		$this->assertSame($cached, $result);
@@ -653,12 +652,11 @@ class AttachmentServiceTest extends TestCase {
 		$message->setUid(3);
 		$message->setStructureAnalyzed(true);
 		$message->setFlagAttachments(false);
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$this->cache->expects(self::never())->method('get');
 		$this->mailManager->expects(self::never())->method('getImapMessage');
 
 		// Act
-		$result = $this->service->getAttachmentNames($account, $mailbox, $message, $client);
+		$result = $this->service->getAttachmentNames($account, $mailbox, $message);
 
 		// Assert
 		$this->assertSame([], $result);
@@ -671,12 +669,11 @@ class AttachmentServiceTest extends TestCase {
 		$mailbox->setId(2);
 		$message = new Message();
 		$message->setUid(3);
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$this->cache->expects(self::once())->method('get')->willReturn([]);
 		$this->mailManager->expects(self::never())->method('getImapMessage');
 
 		// Act
-		$result = $this->service->getAttachmentNames($account, $mailbox, $message, $client);
+		$result = $this->service->getAttachmentNames($account, $mailbox, $message);
 
 		// Assert
 		$this->assertSame([], $result);
@@ -690,12 +687,11 @@ class AttachmentServiceTest extends TestCase {
 		$message = new Message();
 		$message->setUid(3);
 		$message->setId(99);
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$imapMessage = $this->createMock(IMAPMessage::class);
 		$this->cache->expects(self::once())->method('get')->willReturn(null);
 		$this->mailManager->expects(self::once())
 			->method('getImapMessage')
-			->with($client, $account, $mailbox, 3, true)
+			->with($account, $mailbox, $message, true)
 			->willReturn($imapMessage);
 		$imapMessage->expects(self::once())
 			->method('getAttachments')
@@ -705,7 +701,7 @@ class AttachmentServiceTest extends TestCase {
 		$this->cache->expects(self::once())->method('set');
 
 		// Act
-		$result = $this->service->getAttachmentNames($account, $mailbox, $message, $client);
+		$result = $this->service->getAttachmentNames($account, $mailbox, $message);
 
 		// Assert
 		$this->assertCount(1, $result);
@@ -720,7 +716,6 @@ class AttachmentServiceTest extends TestCase {
 		$mailbox->setId(2);
 		$message = new Message();
 		$message->setUid(3);
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$imapMessage = $this->createMock(IMAPMessage::class);
 		$this->cache->expects(self::once())->method('get')->willReturn(null);
 		$this->mailManager->expects(self::once())->method('getImapMessage')->willReturn($imapMessage);
@@ -728,7 +723,7 @@ class AttachmentServiceTest extends TestCase {
 		$this->cache->expects(self::once())->method('set')->with(self::anything(), []);
 
 		// Act
-		$result = $this->service->getAttachmentNames($account, $mailbox, $message, $client);
+		$result = $this->service->getAttachmentNames($account, $mailbox, $message);
 
 		// Assert
 		$this->assertSame([], $result);
@@ -741,7 +736,6 @@ class AttachmentServiceTest extends TestCase {
 		$mailbox->setId(2);
 		$message = new Message();
 		$message->setUid(3);
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$this->cache->expects(self::once())->method('get')->willReturn(null);
 		$this->mailManager->expects(self::once())
 			->method('getImapMessage')
@@ -750,7 +744,7 @@ class AttachmentServiceTest extends TestCase {
 		$this->cache->expects(self::once())->method('set')->with(self::anything(), []);
 
 		// Act
-		$result = $this->service->getAttachmentNames($account, $mailbox, $message, $client);
+		$result = $this->service->getAttachmentNames($account, $mailbox, $message);
 
 		// Assert
 		$this->assertSame([], $result);
@@ -763,7 +757,6 @@ class AttachmentServiceTest extends TestCase {
 		$mailbox->setId(2);
 		$message = new Message();
 		$message->setUid(3);
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$this->cache->expects(self::once())->method('get')->willReturn(null);
 		$this->mailManager->expects(self::once())
 			->method('getImapMessage')
@@ -772,7 +765,7 @@ class AttachmentServiceTest extends TestCase {
 		$this->cache->expects(self::once())->method('set')->with(self::anything(), []);
 
 		// Act
-		$result = $this->service->getAttachmentNames($account, $mailbox, $message, $client);
+		$result = $this->service->getAttachmentNames($account, $mailbox, $message);
 
 		// Assert
 		$this->assertSame([], $result);
