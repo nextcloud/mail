@@ -50,8 +50,10 @@ interface IMessageConnector {
 
 	/**
 	 * Fetch the raw RFC 5322 source of a message.
+	 *
+	 * @param bool $decrypt Whether to decrypt S/MIME content before returning it.
 	 */
-	public function fetchMessageRaw(Account $account, Mailbox $mailbox, Message $message): ?string;
+	public function fetchMessageRaw(Account $account, Mailbox $mailbox, Message $message, bool $decrypt = false): ?string;
 
 	/**
 	 * Fetch all attachments for a message.
