@@ -10,14 +10,13 @@ declare(strict_types=1);
 namespace OCA\Mail\BackgroundJob;
 
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\MessageRetentionMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
@@ -27,12 +26,11 @@ class TrashRetentionJob extends TimedJob {
 	public function __construct(
 		ITimeFactory $time,
 		private LoggerInterface $logger,
-		private IMAPClientFactory $clientFactory,
 		private MessageMapper $messageMapper,
 		private MessageRetentionMapper $messageRetentionMapper,
 		private MailAccountMapper $accountMapper,
 		private MailboxMapper $mailboxMapper,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 	) {
 		parent::__construct($time);
 
@@ -96,22 +94,16 @@ class TrashRetentionJob extends TimedJob {
 			return;
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			foreach ($messages as $message) {
-				$this->mailManager->deleteMessageWithClient(
-					$account,
-					$trashMailbox,
-					$message->getUid(),
-					$client,
-				);
-				$this->messageRetentionMapper->deleteByMailboxIdAndUid(
-					$message->getMailboxId(),
-					$message->getUid(),
-				);
-			}
-		} finally {
-			$client->logout();
+		foreach ($messages as $message) {
+			$this->mailManager->deleteMessage(
+				$account,
+				$trashMailbox,
+				$message,
+			);
+			$this->messageRetentionMapper->deleteByMailboxIdAndUid(
+				$message->getMailboxId(),
+				$message->getUid(),
+			);
 		}
 	}
 }
