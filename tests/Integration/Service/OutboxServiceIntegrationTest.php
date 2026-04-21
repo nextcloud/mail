@@ -19,7 +19,6 @@ use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
-use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
@@ -65,9 +64,6 @@ class OutboxServiceIntegrationTest extends TestCase {
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
-	/** @var ProtocolFactory */
-	private $clientFactory;
-
 	/** @var LocalMessageMapper */
 	private $mapper;
 
@@ -99,7 +95,6 @@ class OutboxServiceIntegrationTest extends TestCase {
 			Server::get(LocalAttachmentMapper::class),
 			Server::get(AttachmentStorage::class),
 			$mailManager,
-			Server::get(\OCA\Mail\IMAP\MessageMapper::class),
 			Server::get(ICacheFactory::class),
 			Server::get(IURLGenerator::class),
 			Server::get(IMimeTypeDetector::class),
@@ -109,7 +104,6 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$this->client = $this->getClient($this->account);
 		$this->mapper = Server::get(LocalMessageMapper::class);
 		$this->eventDispatcher = Server::get(IEventDispatcher::class);
-		$this->clientFactory = Server::get(ProtocolFactory::class);
 		$this->accountService = Server::get(AccountService::class);
 		$this->timeFactory = Server::get(ITimeFactory::class);
 		$this->chain = Server::get(Chain::class);
@@ -123,7 +117,6 @@ class OutboxServiceIntegrationTest extends TestCase {
 			$this->mapper,
 			$this->attachmentService,
 			$this->eventDispatcher,
-			$this->clientFactory,
 			$mailManager,
 			$this->accountService,
 			$this->timeFactory,
