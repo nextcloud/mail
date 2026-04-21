@@ -9,13 +9,13 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\DelegationService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -32,7 +32,7 @@ class ThreadController extends Controller {
 		IRequest $request,
 		private string $userId,
 		private AccountService $accountService,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private SnoozeService $snoozeService,
 		private AiIntegrationsService $aiIntergrationsService,
 		private LoggerInterface $logger,

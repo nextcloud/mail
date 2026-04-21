@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
@@ -28,7 +28,7 @@ class QuotaJob extends TimedJob {
 		ITimeFactory $time,
 		IUserManager $userManager,
 		private AccountService $accountService,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		IManager $notificationManager,
 		private LoggerInterface $logger,
 		IJobList $jobList,
