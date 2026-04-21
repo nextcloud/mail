@@ -291,8 +291,7 @@
 					v-for="recipient in envelope.to"
 					:key="recipient.email"
 					:email="recipient.email"
-					:label="recipient.label"
-					:size="24" />
+					:label="recipient.label" />
 			</div>
 			<div v-if="envelope.cc && envelope.cc.length" class="recipients">
 				<span class="recipients__label">{{ t('mail', 'Cc:') }}</span>
@@ -300,8 +299,7 @@
 					v-for="recipient in envelope.cc"
 					:key="recipient.email"
 					:email="recipient.email"
-					:label="recipient.label"
-					:size="24" />
+					:label="recipient.label" />
 			</div>
 			<div v-if="envelope.bcc && envelope.bcc.length" class="recipients">
 				<span class="recipients__label">{{ t('mail', 'Bcc:') }}</span>
@@ -309,8 +307,7 @@
 					v-for="recipient in envelope.bcc"
 					:key="recipient.email"
 					:email="recipient.email"
-					:label="recipient.label"
-					:size="24" />
+					:label="recipient.label" />
 			</div>
 		</div>
 		<MessageLoadingSkeleton v-if="loading === Loading.Skeleton" />
@@ -1468,12 +1465,19 @@ export default {
 			}
 
 			:deep(.user-bubble__content) {
-				height: var(--clickable-area-small);
-				border-radius: var(--border-radius-pill);
+				height: 24px !important;
+				line-height: 24px !important;
+				border-radius: var(--border-radius-pill) !important;
 
 				> :last-child {
 					padding-inline-end: 0;
 				}
+			}
+
+			:deep(.user-bubble__avatar) {
+				--avatar-size: 24px !important;
+				font-size: 11px !important;
+				line-height: 24px !important;
 			}
 		}
 	}
