@@ -16,15 +16,10 @@ use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Recipient;
-use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Exception\AttachmentNotFoundException;
-use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Exception\SmimeSignException;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\GroupsIntegration;
-use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Service\TransmissionService;
-use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Files\SimpleFS\InMemoryFile;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -34,7 +29,6 @@ class TransmissionServiceTest extends TestCase {
 	private GroupsIntegration|MockObject $groupsIntegration;
 	private AttachmentService|MockObject $attachmentService;
 	private LoggerInterface|MockObject $logger;
-	private SmimeService|MockObject $smimeService;
 	private MockObject|TransmissionService $transmissionService;
 
 	protected function setUp(): void {
@@ -42,13 +36,11 @@ class TransmissionServiceTest extends TestCase {
 
 		$this->attachmentService = $this->createMock(AttachmentService::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
-		$this->smimeService = $this->createMock(SmimeService::class);
 		$this->groupsIntegration = $this->createMock(GroupsIntegration::class);
 		$this->transmissionService = new TransmissionService(
 			$this->groupsIntegration,
 			$this->attachmentService,
 			$this->logger,
-			$this->smimeService,
 		);
 	}
 
@@ -84,7 +76,7 @@ class TransmissionServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testHandleAttachment(): void {
+	public function testGetAttachmentContent(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('bob');
 		$account = new Account($mailAccount);
@@ -105,12 +97,18 @@ class TransmissionServiceTest extends TestCase {
 		$this->logger->expects(self::never())
 			->method('warning');
 
-		$part = $this->transmissionService->handleAttachment($account, ['id' => 1, 'type' => 'local']);
+		$content = $this->transmissionService->getAttachmentContent($account, ['id' => 1, 'type' => 'local']);
 
-		$this->assertEquals('test.txt', $part->getContentTypeParameter('name'));
+		$this->assertEquals([
+			'content' => "Hello, I'm a test file.",
+			'type' => 'text/plain',
+			'name' => 'test.txt',
+			'disposition' => 'attachment',
+			'contentId' => null,
+		], $content);
 	}
 
-	public function testHandleAttachmentInlineWithContentId(): void {
+	public function testGetAttachmentContentInlineWithContentId(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('bob');
 		$account = new Account($mailAccount);
@@ -127,14 +125,15 @@ class TransmissionServiceTest extends TestCase {
 			->method('getAttachment')
 			->willReturn([$attachment, $file]);
 
-		$part = $this->transmissionService->handleAttachment($account, ['id' => 1, 'type' => 'local']);
+		$content = $this->transmissionService->getAttachmentContent($account, ['id' => 1, 'type' => 'local']);
 
-		$this->assertEquals('inline', $part->getDisposition());
-		$this->assertEquals('img001@example.com', $part->getContentId());
-		$this->assertEquals('logo.png', $part->getContentTypeParameter('name'));
+		$this->assertEquals('fake png content', $content['content']);
+		$this->assertEquals('inline', $content['disposition']);
+		$this->assertEquals('img001@example.com', $content['contentId']);
+		$this->assertEquals('logo.png', $content['name']);
 	}
 
-	public function testHandleAttachmentNoId(): void {
+	public function testGetAttachmentContentNoId(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('bob');
 		$account = new Account($mailAccount);
@@ -142,10 +141,12 @@ class TransmissionServiceTest extends TestCase {
 		$this->logger->expects(self::once())
 			->method('warning');
 
-		$this->transmissionService->handleAttachment($account, ['type' => 'local']);
+		$content = $this->transmissionService->getAttachmentContent($account, ['type' => 'local']);
+
+		$this->assertNull($content);
 	}
 
-	public function testHandleAttachmentNotFound(): void {
+	public function testGetAttachmentContentNotFound(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('bob');
 		$account = new Account($mailAccount);
@@ -156,273 +157,8 @@ class TransmissionServiceTest extends TestCase {
 		$this->logger->expects(self::once())
 			->method('warning');
 
-		$this->transmissionService->handleAttachment($account, ['id' => 1, 'type' => 'local']);
-	}
+		$content = $this->transmissionService->getAttachmentContent($account, ['id' => 1, 'type' => 'local']);
 
-	public function testGetSignMimePart() {
-		$send = new \Horde_Mime_Part();
-		$send->setContents('Test');
-		$localMessage = new LocalMessage();
-		$localMessage->setSmimeSign(true);
-		$localMessage->setSmimeCertificateId(1);
-		$mailAccount = new MailAccount();
-		$mailAccount->setUserId('bob');
-		$account = new Account($mailAccount);
-		$smimeCertificate = new SmimeCertificate();
-		$smimeCertificate->setCertificate('123');
-
-		$this->smimeService->expects(self::once())
-			->method('findCertificate')
-			->willReturn($smimeCertificate);
-		$this->smimeService->expects(self::once())
-			->method('signMimePart');
-
-		$this->transmissionService->getSignMimePart($localMessage, $account, $send);
-		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
-	}
-
-	public function testGetSignMimePartNoCertId() {
-		$send = new \Horde_Mime_Part();
-		$send->setContents('Test');
-		$localMessage = new LocalMessage();
-		$localMessage->setSmimeSign(true);
-		$mailAccount = new MailAccount();
-		$mailAccount->setUserId('bob');
-		$account = new Account($mailAccount);
-
-		$this->smimeService->expects(self::never())
-			->method('findCertificate');
-		$this->smimeService->expects(self::never())
-			->method('signMimePart');
-
-		$this->expectException(ServiceException::class);
-		$this->transmissionService->getSignMimePart($localMessage, $account, $send);
-		$this->assertEquals(LocalMessage::STATUS_SMIME_SIGN_NO_CERT_ID, $localMessage->getStatus());
-	}
-
-	public function testGetSignMimePartNoCertFound() {
-		$send = new \Horde_Mime_Part();
-		$send->setContents('Test');
-		$localMessage = new LocalMessage();
-		$localMessage->setSmimeSign(true);
-		$localMessage->setSmimeCertificateId(1);
-		$mailAccount = new MailAccount();
-		$mailAccount->setUserId('bob');
-		$account = new Account($mailAccount);
-
-		$this->smimeService->expects(self::once())
-			->method('findCertificate')
-			->willThrowException(new DoesNotExistException(''));
-		$this->smimeService->expects(self::never())
-			->method('signMimePart');
-
-		$this->expectException(ServiceException::class);
-		$this->transmissionService->getSignMimePart($localMessage, $account, $send);
-		$this->assertEquals(LocalMessage::STATUS_SMIME_SIGN_CERT, $localMessage->getStatus());
-	}
-
-	public function testGetSignMimePartFailedSigning() {
-		$send = new \Horde_Mime_Part();
-		$send->setContents('Test');
-		$localMessage = new LocalMessage();
-		$localMessage->setSmimeSign(true);
-		$localMessage->setSmimeCertificateId(1);
-		$mailAccount = new MailAccount();
-		$mailAccount->setUserId('bob');
-		$account = new Account($mailAccount);
-		$smimeCertificate = new SmimeCertificate();
-		$smimeCertificate->setCertificate('123');
-
-		$this->smimeService->expects(self::once())
-			->method('findCertificate')
-			->willReturn($smimeCertificate);
-		$this->smimeService->expects(self::once())
-			->method('signMimePart')
-			->willThrowException(new SmimeSignException());
-
-		$this->expectException(ServiceException::class);
-		$this->transmissionService->getSignMimePart($localMessage, $account, $send);
-		$this->assertEquals(LocalMessage::STATUS_SMIME_SIGN_FAIL, $localMessage->getStatus());
-	}
-
-	public function testGetEncryptMimePart() {
-		$send = new \Horde_Mime_Part();
-		$send->setContents('Test');
-		$localMessage = new LocalMessage();
-		$localMessage->setSmimeEncrypt(true);
-		$localMessage->setSmimeCertificateId(1);
-		$to = new AddressList([Address::fromRaw('Bob', 'bob@test.com')]);
-		$cc = new AddressList([]);
-		$bcc = new AddressList([]);
-		$mailAccount = new MailAccount();
-		$mailAccount->setUserId('bob');
-		$account = new Account($mailAccount);
-		$smimeCertificate = new SmimeCertificate();
-		$smimeCertificate->setCertificate('123');
-
-		$this->smimeService->expects(self::once())
-			->method('findCertificatesByAddressList')
-			->willReturn([$smimeCertificate]);
-		$this->smimeService->expects(self::once())
-			->method('findCertificate')
-			->willReturn($smimeCertificate);
-		$this->smimeService->expects(self::once())
-			->method('encryptMimePart');
-
-		$this->transmissionService->getEncryptMimePart($localMessage, $to, $cc, $bcc, $account, $send);
-		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
-	}
-
-	public function testGetEncryptMimePartNoCertId() {
-		$send = new \Horde_Mime_Part();
-		$send->setContents('Test');
-		$localMessage = new LocalMessage();
-		$localMessage->setSmimeEncrypt(true);
-		$mailAccount = new MailAccount();
-		$mailAccount->setUserId('bob');
-		$account = new Account($mailAccount);
-		$to = new AddressList([Address::fromRaw('Bob', 'bob@test.com')]);
-		$cc = new AddressList([]);
-		$bcc = new AddressList([]);
-
-		$this->expectException(ServiceException::class);
-		$this->transmissionService->getEncryptMimePart($localMessage, $to, $cc, $bcc, $account, $send);
-		$this->assertEquals(LocalMessage::STATUS_SMIME_ENCRYPT_NO_CERT_ID, $localMessage->getStatus());
-	}
-
-	public function testGetEncryptMimePartNoAddressCerts() {
-		$send = new \Horde_Mime_Part();
-		$send->setContents('Test');
-		$localMessage = new LocalMessage();
-		$localMessage->setSmimeEncrypt(true);
-		$localMessage->setSmimeCertificateId(1);
-		$to = new AddressList([Address::fromRaw('Bob', 'bob@test.com')]);
-		$cc = new AddressList([]);
-		$bcc = new AddressList([]);
-		$mailAccount = new MailAccount();
-		$mailAccount->setUserId('bob');
-		$account = new Account($mailAccount);
-		$smimeCertificate = new SmimeCertificate();
-		$smimeCertificate->setCertificate('123');
-
-		$this->smimeService->expects(self::once())
-			->method('findCertificatesByAddressList')
-			->willThrowException(new ServiceException());
-		$this->smimeService->expects(self::never())
-			->method('findCertificate');
-		$this->smimeService->expects(self::never())
-			->method('encryptMimePart');
-
-		$this->expectException(ServiceException::class);
-		$this->transmissionService->getEncryptMimePart($localMessage, $to, $cc, $bcc, $account, $send);
-		$this->assertEquals(LocalMessage::STATUS_SMIME_ENCRYT_FAIL, $localMessage->getStatus());
-	}
-
-	public function testGetEncryptMimePartNoCert() {
-		$send = new \Horde_Mime_Part();
-		$send->setContents('Test');
-		$localMessage = new LocalMessage();
-		$localMessage->setSmimeEncrypt(true);
-		$localMessage->setSmimeCertificateId(1);
-		$to = new AddressList([Address::fromRaw('Bob', 'bob@test.com')]);
-		$cc = new AddressList([]);
-		$bcc = new AddressList([]);
-		$mailAccount = new MailAccount();
-		$mailAccount->setUserId('bob');
-		$account = new Account($mailAccount);
-		$smimeCertificate = new SmimeCertificate();
-		$smimeCertificate->setCertificate('123');
-
-		$this->smimeService->expects(self::once())
-			->method('findCertificatesByAddressList')
-			->willReturn([$smimeCertificate]);
-		$this->smimeService->expects(self::once())
-			->method('findCertificate')
-			->willThrowException(new DoesNotExistException(''));
-		$this->smimeService->expects(self::never())
-			->method('encryptMimePart');
-
-		$this->expectException(ServiceException::class);
-		$this->transmissionService->getEncryptMimePart($localMessage, $to, $cc, $bcc, $account, $send);
-		$this->assertEquals(LocalMessage::STATUS_SMIME_ENCRYPT_CERT, $localMessage->getStatus());
-	}
-
-	public function testGetEncryptMimePartEncryptFail() {
-		$send = new \Horde_Mime_Part();
-		$send->setContents('Test');
-		$localMessage = new LocalMessage();
-		$localMessage->setSmimeEncrypt(true);
-		$localMessage->setSmimeCertificateId(1);
-		$to = new AddressList([Address::fromRaw('Bob', 'bob@test.com')]);
-		$cc = new AddressList([]);
-		$bcc = new AddressList([]);
-		$mailAccount = new MailAccount();
-		$mailAccount->setUserId('bob');
-		$account = new Account($mailAccount);
-		$smimeCertificate = new SmimeCertificate();
-		$smimeCertificate->setCertificate('123');
-
-		$this->smimeService->expects(self::once())
-			->method('findCertificatesByAddressList')
-			->willReturn([$smimeCertificate]);
-		$this->smimeService->expects(self::once())
-			->method('findCertificate')
-			->willReturn($smimeCertificate);
-		$this->smimeService->expects(self::once())
-			->method('encryptMimePart')
-			->willThrowException(new ServiceException());
-
-		$this->expectException(ServiceException::class);
-		$this->transmissionService->getEncryptMimePart($localMessage, $to, $cc, $bcc, $account, $send);
-		$this->assertEquals(LocalMessage::STATUS_SMIME_ENCRYT_FAIL, $localMessage->getStatus());
-	}
-
-	public function testHandleAttachmentKeepAdditionalContentTypeParameters(): void {
-		$mailAccount = new MailAccount();
-		$mailAccount->setUserId('bob');
-		$account = new Account($mailAccount);
-		$attachment = new LocalAttachment();
-		$attachment->setFileName(null);
-		$attachment->setMimeType('text/calendar; method=REQUEST; charset="utf-8"; name=event.ics');
-		// iMIP attachments must not carry a Content-Disposition header.
-		// See https://github.com/nextcloud/mail/issues/10416
-		$attachment->setDisposition(LocalAttachment::DISPOSITION_OMIT);
-		$file = new InMemoryFile(
-			'event.ics',
-			"BEGIN:VCALENDAR\nEND:VCALENDAR"
-		);
-		$this->attachmentService->expects(self::once())
-			->method('getAttachment')
-			->willReturn([$attachment, $file]);
-
-		$part = $this->transmissionService->handleAttachment($account, ['id' => 1, 'type' => 'local']);
-
-		$this->assertEquals('text/calendar', $part->getType());
-		$this->assertEquals('REQUEST', $part->getContentTypeParameter('method'));
-		$this->assertEquals('utf-8', $part->getContentTypeParameter('charset'));
-		$this->assertEquals('event.ics', $part->getContentTypeParameter('name'));
-	}
-
-	public function testHandleAttachmentImipOmitsContentDisposition(): void {
-		$mailAccount = new MailAccount();
-		$mailAccount->setUserId('bob');
-		$account = new Account($mailAccount);
-		$attachment = new LocalAttachment();
-		$attachment->setFileName(null);
-		$attachment->setMimeType('text/calendar; method=REQUEST; charset="utf-8"; name=event.ics');
-		// iMIP attachments must not carry a Content-Disposition header.
-		// See https://github.com/nextcloud/mail/issues/10416
-		$attachment->setDisposition(LocalAttachment::DISPOSITION_OMIT);
-		$file = new InMemoryFile(
-			'event.ics',
-			"BEGIN:VCALENDAR\nEND:VCALENDAR"
-		);
-		$this->attachmentService->expects(self::once())
-			->method('getAttachment')
-			->willReturn([$attachment, $file]);
-
-		$part = $this->transmissionService->handleAttachment($account, ['id' => 1, 'type' => 'local']);
-
-		$this->assertEquals('', $part->getDisposition());
+		$this->assertNull($content);
 	}
 }

@@ -16,7 +16,6 @@ use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -38,7 +37,6 @@ class OutboxService {
 		private LocalMessageMapper $mapper,
 		private AttachmentService $attachmentService,
 		IEventDispatcher $eventDispatcher,
-		private ProtocolFactory $protocolFactory,
 		private MailManager $mailManager,
 		private AccountService $accountService,
 		ITimeFactory $timeFactory,
@@ -117,12 +115,7 @@ class OutboxService {
 			return $message;
 		}
 
-		$client = $this->protocolFactory->imapClient($account);
-		try {
-			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
-		} finally {
-			$client->logout();
-		}
+		$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments);
 
 		$message->setAttachments($this->attachmentService->saveLocalMessageAttachments($account->getUserId(), $message->getId(), $attachmentIds));
 		return $message;
@@ -149,12 +142,7 @@ class OutboxService {
 			return $message;
 		}
 
-		$client = $this->protocolFactory->imapClient($account);
-		try {
-			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
-		} finally {
-			$client->logout();
-		}
+		$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments);
 		$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getUserId(), $message, $attachmentIds));
 		return $message;
 	}
