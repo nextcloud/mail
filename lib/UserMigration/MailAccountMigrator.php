@@ -13,6 +13,7 @@ use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\UserMigration\Service\AccountMigrationService;
+use OCA\Mail\UserMigration\Service\AppConfigMigrationService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IL10N;
 use OCP\IUser;
@@ -31,6 +32,7 @@ class MailAccountMigrator implements IMigrator {
 		private readonly IL10N $l10n,
 		private readonly ICrypto $crypto,
 		private readonly AccountMigrationService $accountMigrationService,
+		private readonly AppConfigMigrationService $appConfigMigrationService,
 	) {
 	}
 
@@ -40,13 +42,16 @@ class MailAccountMigrator implements IMigrator {
 		OutputInterface $output,
 	): void {
 		$output->writeln($this->l10n->t("Exporting mail accounts for user {$user->getUID()}"), OutputInterface::VERBOSITY_VERBOSE);
+
+		$this->appConfigMigrationService->exportAppConfiguration($user, $exportDestination, $output);
 	}
 
 	#[\Override]
 	public function import(IUser $user, IImportSource $importSource, OutputInterface $output): void {
 		$output->writeln($this->l10n->t("Importing mail accounts for user {$user->getUID()}"), OutputInterface::VERBOSITY_VERBOSE);
-
 		$this->deleteExistingData($user, $output);
+
+		$this->appConfigMigrationService->importAppConfiguration($user, $importSource, $output);
 
 		$this->accountMigrationService->scheduleBackgroundJobs($user, $output);
 	}
@@ -63,6 +68,8 @@ class MailAccountMigrator implements IMigrator {
 	 */
 	private function deleteExistingData(IUser $user, OutputInterface $output): void {
 		$output->writeln($this->l10n->t("Deleting existing mail data for user {$user->getUID()}"), OutputInterface::VERBOSITY_VERBOSE);
+
+		$this->appConfigMigrationService->deleteAppConfiguration($user, $output);
 		$this->accountMigrationService->deleteAllAccounts($user, $output);
 	}
 
