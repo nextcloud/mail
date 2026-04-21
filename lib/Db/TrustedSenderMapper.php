@@ -72,6 +72,13 @@ class TrustedSenderMapper extends QBMapper {
 		$delete->executeStatement();
 	}
 
+	public function removeAll(string $uid): void {
+		$qb = $this->db->getQueryBuilder();
+		$delete = $qb->delete($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($uid)));
+		$delete->executeStatement();
+	}
+
 	/**
 	 * @param string $uid
 	 * @return TrustedSender[]
