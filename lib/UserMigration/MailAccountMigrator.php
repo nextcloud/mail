@@ -55,6 +55,7 @@ class MailAccountMigrator implements IMigrator {
 	#[\Override]
 	public function import(IUser $user, IImportSource $importSource, OutputInterface $output): void {
 		$output->writeln($this->l10n->t("Importing mail accounts for user {$user->getUID()}"), OutputInterface::VERBOSITY_VERBOSE);
+
 		$this->deleteExistingData($user, $output);
 
 		$this->appConfigMigrationService->importAppConfiguration($user, $importSource, $output);
