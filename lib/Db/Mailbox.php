@@ -92,6 +92,8 @@ class Mailbox extends Entity implements JsonSerializable {
 	 */
 	public const LOCK_TIMEOUT = 300;
 
+	public const SPECIAL_USE_DRAFTS = 'drafts';
+
 	public function __construct() {
 		$this->addType('accountId', 'integer');
 		$this->addType('messages', 'integer');

@@ -32,7 +32,7 @@ interface IMailboxConnector {
 	/**
 	 * Create a new mailbox on the remote server and persist it locally.
 	 *
-	 * @param string[] $specialUse
+	 * @param string[] $specialUse special-use names such as Mailbox::SPECIAL_USE_DRAFTS
 	 *
 	 * @throws ServiceException
 	 */
