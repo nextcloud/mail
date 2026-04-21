@@ -10,29 +10,41 @@ namespace Unit\Listener;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Listener\MoveJunkListener;
+use OCA\Mail\Service\MailManager;
 use Psr\Log\LoggerInterface;
 use Psr\Log\Test\TestLogger;
 
 class MoveJunkListenerTest extends TestCase {
-	private IMailManager $mailManager;
+	private MailManager $mailManager;
+	private MailboxMapper $mailboxMapper;
 	private LoggerInterface $logger;
 	private MoveJunkListener $listener;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->mailManager = $this->createMock(MailManager::class);
+		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->logger = new TestLogger();
+
+		$this->mailManager->method('getMessageIdForUid')
+			->willReturn(1);
+		$this->mailManager->method('getMessage')
+			->willReturn(new Message());
+		$this->mailboxMapper->method('findSpecialUseMailbox')
+			->willReturn(new Mailbox());
 
 		$this->listener = new MoveJunkListener(
 			$this->mailManager,
+			$this->mailboxMapper,
 			$this->logger
 		);
 	}

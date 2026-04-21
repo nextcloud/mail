@@ -17,7 +17,7 @@ use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\IMAP\PreviewEnhancer;
-use OCA\Mail\IMAP\Search\Provider;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\Search\FilterStringParser;
 use OCA\Mail\Service\Search\Flag;
 use OCA\Mail\Service\Search\MailSearch;
@@ -32,8 +32,8 @@ class MailSearchTest extends TestCase {
 	/** @var MailSearch */
 	private $search;
 
-	/** @var Provider|MockObject */
-	private $imapSearchProvider;
+	/** @var MailManager|MockObject */
+	private $mailManager;
 
 	/** @var PreviewEnhancer|MockObject */
 	private $previewEnhancer;
@@ -48,14 +48,14 @@ class MailSearchTest extends TestCase {
 		parent::setUp();
 
 		$this->filterStringParser = $this->createMock(FilterStringParser::class);
-		$this->imapSearchProvider = $this->createMock(Provider::class);
+		$this->mailManager = $this->createMock(MailManager::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->previewEnhancer = $this->createMock(PreviewEnhancer::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 
 		$this->search = new MailSearch(
 			$this->filterStringParser,
-			$this->imapSearchProvider,
+			$this->mailManager,
 			$this->messageMapper,
 			$this->previewEnhancer,
 			$this->timeFactory
@@ -144,8 +144,8 @@ class MailSearchTest extends TestCase {
 				$this->createMock(Message::class),
 				$this->createMock(Message::class),
 			]);
-		$this->imapSearchProvider->expects($this->never())
-			->method('findMatches');
+		$this->mailManager->expects($this->never())
+			->method('findMessages');
 		$this->previewEnhancer->expects($this->once())
 			->method('process')
 			->willReturnArgument(2);
@@ -180,8 +180,8 @@ class MailSearchTest extends TestCase {
 			->method('parse')
 			->with('my search')
 			->willReturn($query);
-		$this->imapSearchProvider->expects($this->once())
-			->method('findMatches')
+		$this->mailManager->expects($this->once())
+			->method('findMessages')
 			->with($account, $mailbox, $query)
 			->willReturn([2, 3]);
 		$this->messageMapper->expects($this->once())

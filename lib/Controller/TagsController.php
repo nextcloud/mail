@@ -10,10 +10,10 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -26,7 +26,7 @@ class TagsController extends Controller {
 	public function __construct(
 		IRequest $request,
 		private string $userId,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private AccountService $accountService,
 	) {
 		parent::__construct(Application::APP_ID, $request);

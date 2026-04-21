@@ -16,7 +16,6 @@ use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Contracts\IDkimValidator;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\ITrustedSenderService;
@@ -62,7 +61,6 @@ use OCA\Mail\Service\Avatar\FaviconDataAccess;
 use OCA\Mail\Service\AvatarService;
 use OCA\Mail\Service\DkimService;
 use OCA\Mail\Service\DkimValidator;
-use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\Search\MailSearch;
 use OCA\Mail\Service\TrustedSenderService;
@@ -120,7 +118,6 @@ final class Application extends App implements IBootstrap {
 
 		$context->registerServiceAlias(IAvatarService::class, AvatarService::class);
 		$context->registerServiceAlias(IAttachmentService::class, AttachmentService::class);
-		$context->registerServiceAlias(IMailManager::class, MailManager::class);
 		$context->registerServiceAlias(IMailSearch::class, MailSearch::class);
 		$context->registerServiceAlias(IMailTransmission::class, MailTransmission::class);
 		$context->registerServiceAlias(ITrustedSenderService::class, TrustedSenderService::class);

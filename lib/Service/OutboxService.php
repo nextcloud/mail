@@ -10,14 +10,13 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -40,8 +39,8 @@ class OutboxService {
 		private LocalMessageMapper $mapper,
 		private AttachmentService $attachmentService,
 		IEventDispatcher $eventDispatcher,
-		private IMAPClientFactory $clientFactory,
-		private IMailManager $mailManager,
+		private ProtocolFactory $protocolFactory,
+		private MailManager $mailManager,
 		private AccountService $accountService,
 		ITimeFactory $timeFactory,
 		private LoggerInterface $logger,
@@ -119,7 +118,7 @@ class OutboxService {
 			return $message;
 		}
 
-		$client = $this->clientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
 		} finally {
@@ -151,7 +150,7 @@ class OutboxService {
 			return $message;
 		}
 
-		$client = $this->clientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
 		} finally {

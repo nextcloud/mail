@@ -10,14 +10,13 @@ declare(strict_types=1);
 namespace Unit\IMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use Horde_Imap_Client_Socket;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMapper;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper as ImapMapper;
 use OCA\Mail\IMAP\PreviewEnhancer;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\AvatarService;
@@ -27,8 +26,8 @@ use Psr\Log\LoggerInterface;
 class PreviewEnhancerTest extends TestCase {
 
 
-	/** @var IMAPClientFactory|MockObject */
-	private $imapClientFactory;
+	/** @var ProtocolFactory|MockObject */
+	private $protocolFactory;
 	/** @var ImapMapper|MockObject */
 	private $imapMapper;
 	/** @var DbMapper|MockObject */
@@ -45,7 +44,7 @@ class PreviewEnhancerTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->imapMapper = $this->createMock(ImapMapper::class);
 		$this->dbMapper = $this->createMock(DbMapper::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
@@ -53,7 +52,7 @@ class PreviewEnhancerTest extends TestCase {
 		$this->attachmentService = $this->createMock(AttachmentService::class);
 
 		$this->previewEnhancer = new PreviewEnhancer(
-			$this->imapClientFactory,
+			$this->protocolFactory,
 			$this->imapMapper,
 			$this->dbMapper,
 			$this->logger,
@@ -75,16 +74,11 @@ class PreviewEnhancerTest extends TestCase {
 		$message2->setFrom(new AddressList([Address::fromRaw('Bob', 'bob@example.com')]));
 		$messages = [$message1, $message2];
 		$message2Avatar = new Avatar('example.com', 'image/png', true);
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->with($account)
-			->willReturn($client);
 		$this->attachmentService->expects($this->exactly(2))
 			->method('getAttachmentNames')
 			->withConsecutive(
-				[$account, $mailbox, $message1, $client],
-				[$account, $mailbox, $message2, $client],
+				[$account, $mailbox, $message1],
+				[$account, $mailbox, $message2],
 			)
 			->willReturnOnConsecutiveCalls(
 				[], []

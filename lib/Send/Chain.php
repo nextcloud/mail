@@ -11,7 +11,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\DB\Exception;
 
@@ -24,7 +24,7 @@ class Chain {
 		private FlagRepliedMessageHandler $flagRepliedMessageHandler,
 		private AttachmentService $attachmentService,
 		private LocalMessageMapper $localMessageMapper,
-		private IMAPClientFactory $clientFactory,
+		private ProtocolFactory $protocolFactory,
 	) {
 	}
 
@@ -49,7 +49,7 @@ class Chain {
 			throw new ServiceException('Could not send message because a previous send operation produced an unclear sent state.');
 		}
 
-		$client = $this->clientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$result = $handlers->process($account, $localMessage, $client);
 		} finally {

@@ -22,7 +22,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJob;
@@ -45,7 +45,7 @@ class AccountService {
 		private MailAccountMapper $mapper,
 		private AliasesService $aliasesService,
 		IJobList $jobList,
-		private IMAPClientFactory $imapClientFactory,
+		private ProtocolFactory $protocolFactory,
 		private readonly IConfig $config,
 		private readonly ITimeFactory $timeFactory,
 		private DelegationMapper $delegationMapper,
@@ -235,8 +235,7 @@ class AccountService {
 	public function testAccountConnection(string $currentUserId, int $accountId) :bool {
 		$account = $this->find($currentUserId, $accountId);
 		try {
-			$client = $this->imapClientFactory->getClient($account);
-			$client->close();
+			$this->protocolFactory->testConnection($account);
 			return true;
 		} catch (\Throwable $e) {
 			return false;

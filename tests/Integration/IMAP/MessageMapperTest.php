@@ -13,9 +13,9 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\Sync\SyncService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
@@ -44,8 +44,8 @@ class MessageMapperTest extends TestCase {
 		$imapMessageMapper = Server::get(ImapMessageMapper::class);
 		/** @var MessageMapper $messageMapper */
 		$messageMapper = Server::get(MessageMapper::class);
-		/** @var IMailManager $mailManager */
-		$mailManager = Server::get(IMailManager::class);
+		/** @var MailManager $mailManager */
+		$mailManager = Server::get(MailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -127,8 +127,8 @@ class MessageMapperTest extends TestCase {
 		$account = $this->createTestAccount();
 		/** @var ImapMessageMapper $messageMapper */
 		$imapMessageMapper = Server::get(ImapMessageMapper::class);
-		/** @var IMailManager $mailManager */
-		$mailManager = Server::get(IMailManager::class);
+		/** @var MailManager $mailManager */
+		$mailManager = Server::get(MailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {

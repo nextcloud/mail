@@ -16,9 +16,9 @@ use OCA\Mail\Db\Message as DbMessage;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Model\NewMessageData;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\SMTP\SmtpClientFactory;
@@ -30,7 +30,7 @@ class AntiSpamServiceTest extends TestCase {
 	private AntiSpamService $service;
 	private IAppConfig|MockObject $appConfig;
 	private DbMessageMapper|MockObject $dbMessageMapper;
-	private IMAPClientFactory|MockObject $imapClientFactory;
+	private ProtocolFactory|MockObject $protocolFactory;
 	private SmtpClientFactory|MockObject $smtpClientFactory;
 	private MockObject|ImapMessageMapper $imapMessageMapper;
 	private LoggerInterface|MockObject $logger;
@@ -44,7 +44,7 @@ class AntiSpamServiceTest extends TestCase {
 		$this->dbMessageMapper = $this->createMock(DbMessageMapper::class);
 		$this->transmission = $this->createMock(IMailTransmission::class);
 		$this->mailManager = $this->createMock(MailManager::class);
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->smtpClientFactory = $this->createMock(SmtpClientFactory::class);
 		$this->imapMessageMapper = $this->createMock(ImapMessageMapper::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
@@ -52,7 +52,7 @@ class AntiSpamServiceTest extends TestCase {
 		$this->service = new AntiSpamService(
 			$this->dbMessageMapper,
 			$this->mailManager,
-			$this->imapClientFactory,
+			$this->protocolFactory,
 			$this->smtpClientFactory,
 			$this->imapMessageMapper,
 			$this->logger,
@@ -172,8 +172,8 @@ class AntiSpamServiceTest extends TestCase {
 		$this->mailManager->expects(self::exactly(2))
 			->method('getMailbox')
 			->willReturn($mailbox);
-		$this->imapClientFactory->expects(self::exactly(2))
-			->method('getClient')
+		$this->protocolFactory->expects(self::exactly(2))
+			->method('imapClient')
 			->willReturn($client);
 		$client->expects(self::exactly(2))
 			->method('logout');
@@ -238,8 +238,8 @@ class AntiSpamServiceTest extends TestCase {
 		$this->mailManager->expects(self::exactly(2))
 			->method('getMailbox')
 			->willReturn($mailbox);
-		$this->imapClientFactory->expects(self::exactly(2))
-			->method('getClient')
+		$this->protocolFactory->expects(self::exactly(2))
+			->method('imapClient')
 			->willReturn($client);
 		$client->expects(self::exactly(2))
 			->method('logout');

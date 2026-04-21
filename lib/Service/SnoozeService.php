@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
@@ -20,7 +19,6 @@ use OCA\Mail\Db\MessageSnooze;
 use OCA\Mail\Db\MessageSnoozeMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\Exception;
@@ -32,12 +30,11 @@ class SnoozeService {
 	public function __construct(
 		private ITimeFactory $time,
 		private LoggerInterface $logger,
-		private IMAPClientFactory $clientFactory,
 		private MessageMapper $messageMapper,
 		private MessageSnoozeMapper $messageSnoozeMapper,
 		private MailAccountMapper $accountMapper,
 		private MailboxMapper $mailboxMapper,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private AccountService $accountService,
 	) {
 	}
@@ -87,10 +84,10 @@ class SnoozeService {
 	): void {
 		$newUid = $this->mailManager->moveMessage(
 			$srcAccount,
-			$srcMailbox->getName(),
-			$message->getUid(),
+			$srcMailbox,
+			$message,
 			$dstAccount,
-			$dstMailbox->getName()
+			$dstMailbox
 		);
 
 		// TODO: This is bad - we should handle this case more gracefully!
@@ -127,21 +124,24 @@ class SnoozeService {
 
 		$originalMailboxName = 'INBOX';
 
+		$originalMailbox = null;
 		if ($originalMailboxId !== null) {
 			try {
 				$originalMailbox = $this->mailboxMapper->findById($originalMailboxId);
-				$originalMailboxName = $originalMailbox->getName();
 			} catch (DoesNotExistException $e) {
 				// Could not find mailbox, moving back to INBOX
 			}
 		}
+		if ($originalMailbox === null) {
+			$originalMailbox = $this->mailboxMapper->find($srcAccount, $originalMailboxName);
+		}
 
 		$this->mailManager->moveMessage(
 			$srcAccount,
-			$snoozedMailbox->getName(),
-			$message->getUid(),
+			$snoozedMailbox,
+			$message,
 			$srcAccount,
-			$originalMailboxName
+			$originalMailbox
 		);
 
 		$this->messageSnoozeMapper->deleteByMailboxIdAndUid(
@@ -204,13 +204,16 @@ class SnoozeService {
 
 		$originalMailboxName = 'INBOX';
 
+		$originalMailbox = null;
 		if ($originalMailboxId !== null) {
 			try {
 				$originalMailbox = $this->mailboxMapper->findById($originalMailboxId);
-				$originalMailboxName = $originalMailbox->getName();
 			} catch (DoesNotExistException $e) {
 				// Could not find mailbox, moving back to INBOX
 			}
+		}
+		if ($originalMailbox === null) {
+			$originalMailbox = $this->mailboxMapper->find($srcAccount, $originalMailboxName);
 		}
 
 		$messages = $this->messageMapper->findThread($srcAccount, $selectedMessage->getThreadRootId());
@@ -218,10 +221,10 @@ class SnoozeService {
 		foreach ($messages as $message) {
 			$this->mailManager->moveMessage(
 				$srcAccount,
-				$snoozedMailbox->getName(),
-				$message->getUid(),
+				$snoozedMailbox,
+				$message,
 				$srcAccount,
-				$originalMailboxName
+				$originalMailbox
 			);
 
 			$this->messageSnoozeMapper->deleteByMailboxIdAndUid(
@@ -302,42 +305,40 @@ class SnoozeService {
 			return;
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			foreach ($messages as $message) {
-				$srcMailboxId = $this->messageSnoozeMapper->getSrcMailboxId(
-					$message->getMailboxId(),
-					$message->getUid(),
-				);
+		foreach ($messages as $message) {
+			$srcMailboxId = $this->messageSnoozeMapper->getSrcMailboxId(
+				$message->getMailboxId(),
+				$message->getUid(),
+			);
 
-				$srcMailboxName = 'INBOX';
+			$srcMailboxName = 'INBOX';
 
-				if ($srcMailboxId !== null) {
-					try {
-						$srcMailbox = $this->mailboxMapper->findById($srcMailboxId);
-						$srcMailboxName = $srcMailbox->getName();
-					} catch (DoesNotExistException $e) {
-						// Could not find mailbox, moving back to INBOX
-					}
+			$srcMailbox = null;
+			if ($srcMailboxId !== null) {
+				try {
+					$srcMailbox = $this->mailboxMapper->findById($srcMailboxId);
+				} catch (DoesNotExistException $e) {
+					// Could not find mailbox, moving back to INBOX
 				}
-
-				$this->mailManager->flagMessage($account, $snoozeMailbox->getName(), $message->getUid(), 'seen', false);
-
-				$this->mailManager->moveMessage(
-					$account,
-					$snoozeMailbox->getName(),
-					$message->getUid(),
-					$account,
-					$srcMailboxName
-				);
-
-				$this->messageSnoozeMapper->deleteByMailboxIdAndUid(
-					$message->getMailboxId(),
-					$message->getUid(),
-				);
 			}
-		} finally {
-			$client->logout();
+			if ($srcMailbox === null) {
+				$srcMailbox = $this->mailboxMapper->find($account, $srcMailboxName);
+			}
+
+			$this->mailManager->flagMessages($account, $snoozeMailbox, 'seen', false, $message);
+
+			$this->mailManager->moveMessage(
+				$account,
+				$snoozeMailbox,
+				$message,
+				$account,
+				$srcMailbox
+			);
+
+			$this->messageSnoozeMapper->deleteByMailboxIdAndUid(
+				$message->getMailboxId(),
+				$message->getUid(),
+			);
 		}
 	}
 
