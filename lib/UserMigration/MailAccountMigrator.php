@@ -12,6 +12,7 @@ namespace OCA\Mail\UserMigration;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\UserMigration\Service\AccountMigrationService;
 use OCA\Mail\UserMigration\Service\AppConfigMigrationService;
+use OCA\Mail\UserMigration\Service\TagsMigrationService;
 use OCA\Mail\UserMigration\Service\TextBlocksMigrationService;
 use OCA\Mail\UserMigration\Service\TrustedSendersMigrationService;
 use OCP\IL10N;
@@ -34,6 +35,7 @@ class MailAccountMigrator implements IMigrator {
 		private readonly AppConfigMigrationService $appConfigMigrationService,
 		private readonly TrustedSendersMigrationService $trustedSendersMigrationService,
 		private readonly TextBlocksMigrationService $textBlocksMigrationService,
+		private readonly TagsMigrationService $tagsMigrationService,
 	) {
 	}
 
@@ -50,8 +52,12 @@ class MailAccountMigrator implements IMigrator {
 		$this->appConfigMigrationService->exportAppConfiguration($user, $exportDestination, $output);
 		$this->trustedSendersMigrationService->exportTrustedSenders($user, $exportDestination, $output);
 		$this->textBlocksMigrationService->exportTextBlocks($user, $exportDestination, $output);
+		$this->tagsMigrationService->exportTags($user, $exportDestination, $output);
 	}
 
+	/**
+	 * @throws \OCP\DB\Exception
+	 */
 	#[\Override]
 	public function import(IUser $user, IImportSource $importSource, OutputInterface $output): void {
 		$output->writeln(
@@ -62,6 +68,7 @@ class MailAccountMigrator implements IMigrator {
 		$this->appConfigMigrationService->importAppConfiguration($user, $importSource, $output);
 		$this->trustedSendersMigrationService->importTrustedSenders($user, $importSource, $output);
 		$this->textBlocksMigrationService->importTextBlocks($user, $importSource, $output);
+		$migratedTags = $this->tagsMigrationService->importTags($user, $importSource, $output);
 
 		$this->accountMigrationService->scheduleBackgroundJobs($user, $output);
 	}
