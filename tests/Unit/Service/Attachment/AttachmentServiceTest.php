@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service\Attachment;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use Horde_Imap_Client_Socket;
 use OC\Files\Node\File;
 use OCA\Files_Sharing\SharedStorage;
 use OCA\Mail\Account;
@@ -22,7 +21,6 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\UploadException;
-use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Attachment\AttachmentStorage;
@@ -45,7 +43,6 @@ class AttachmentServiceTest extends TestCase {
 	private LocalAttachmentMapper&MockObject $mapper;
 	private AttachmentStorage&MockObject $storage;
 	private MailManager&MockObject $mailManager;
-	private MessageMapper&MockObject $messageMapper;
 	private Folder&MockObject $userFolder;
 	private ICache&MockObject $cache;
 	private ICacheFactory&MockObject $cacheFactory;
@@ -61,7 +58,6 @@ class AttachmentServiceTest extends TestCase {
 		$this->mapper = $this->createMock(LocalAttachmentMapper::class);
 		$this->storage = $this->createMock(AttachmentStorage::class);
 		$this->mailManager = $this->createMock(MailManager::class);
-		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->userFolder = $this->createMock(Folder::class);
 		$this->cache = $this->createMock(ICache::class);
 		$this->cacheFactory = $this->createMock(ICacheFactory::class);
@@ -77,7 +73,6 @@ class AttachmentServiceTest extends TestCase {
 			$this->mapper,
 			$this->storage,
 			$this->mailManager,
-			$this->messageMapper,
 			$this->cacheFactory,
 			$this->urlGenerator,
 			$this->mimeTypeDetector,
@@ -295,14 +290,13 @@ class AttachmentServiceTest extends TestCase {
 
 	public function testhandleLocalMessageAttachment(): void {
 		$account = $this->createStub(Account::class);
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$attachments = [
 			[
 				'type' => 'local',
 				'id' => 1
 			]
 		];
-		$result = $this->service->handleAttachments($account, $attachments, $client);
+		$result = $this->service->handleAttachments($account, $attachments);
 		$this->assertEquals([1], $result);
 	}
 
@@ -329,7 +323,6 @@ class AttachmentServiceTest extends TestCase {
 		$message->setMailboxId(1);
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$attachments = [
 			'type' => 'message',
 			'id' => 123,
@@ -345,9 +338,9 @@ class AttachmentServiceTest extends TestCase {
 			->method('getMailbox')
 			->with($account->getUserId())
 			->willReturn($mailbox);
-		$this->messageMapper->expects(self::once())
-			->method('getFullText')
-			->with($client, $mailbox->getName(), $message->getUid(), $userId)
+		$this->mailManager->expects(self::once())
+			->method('getRawMessage')
+			->with($account, $mailbox, $message, true)
 			->willReturn('Lorem ipsum dolor sit amet');
 		$this->mapper->expects($this->once())
 			->method('insert')
@@ -356,7 +349,7 @@ class AttachmentServiceTest extends TestCase {
 		$this->storage->expects($this->once())
 			->method('saveContent')
 			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo('Lorem ipsum dolor sit amet'));
-		$this->service->handleAttachments($account, [$attachments], $client);
+		$this->service->handleAttachments($account, [$attachments]);
 	}
 
 	public function testHandleAttachmentsForwardedAttachment(): void {
@@ -382,7 +375,6 @@ class AttachmentServiceTest extends TestCase {
 		$mailbox = new Mailbox();
 		$mailbox->setId(9);
 		$mailbox->setName('INBOX');
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$attachments = [
 			'type' => 'message-attachment',
 			'mailboxId' => $mailbox->getId(),
@@ -400,14 +392,24 @@ class AttachmentServiceTest extends TestCase {
 			null,
 			'attachment',
 		);
+		$message = new Message();
+		$message->setUid(999);
 
 		$this->mailManager->expects(self::once())
 			->method('getMailbox')
 			->with($account->getUserId(), $mailbox->getId())
 			->willReturn($mailbox);
-		$this->messageMapper->expects(self::once())
-			->method('getAttachment')
-			->with($client, $mailbox->getName(), 999, '2', $userId)
+		$this->mailManager->expects(self::once())
+			->method('getMessageIdForUid')
+			->with($mailbox, 999)
+			->willReturn(50);
+		$this->mailManager->expects(self::once())
+			->method('getMessage')
+			->with($userId, 50)
+			->willReturn($message);
+		$this->mailManager->expects(self::once())
+			->method('getMailAttachment')
+			->with($account, $mailbox, $message, '2')
 			->willReturn($imapAttachment);
 		$this->mapper->expects($this->once())
 			->method('insert')
@@ -417,7 +419,7 @@ class AttachmentServiceTest extends TestCase {
 			->method('saveContent')
 			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo('Lorem ipsum dolor sit amet'));
 
-		$this->service->handleAttachments($account, [$attachments], $client);
+		$this->service->handleAttachments($account, [$attachments]);
 	}
 
 	public function testHandleAttachmentsForwardedInlineAttachmentPreservesContentId(): void {
@@ -443,7 +445,6 @@ class AttachmentServiceTest extends TestCase {
 		$mailbox = new Mailbox();
 		$mailbox->setId(9);
 		$mailbox->setName('INBOX');
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$attachments = [
 			'type' => 'message-attachment-inline',
 			'mailboxId' => $mailbox->getId(),
@@ -461,14 +462,24 @@ class AttachmentServiceTest extends TestCase {
 			'img001@example.com',
 			'inline',
 		);
+		$message = new Message();
+		$message->setUid(999);
 
 		$this->mailManager->expects(self::once())
 			->method('getMailbox')
 			->with($account->getUserId(), $mailbox->getId())
 			->willReturn($mailbox);
-		$this->messageMapper->expects(self::once())
-			->method('getAttachment')
-			->with($client, $mailbox->getName(), 999, '3', $userId)
+		$this->mailManager->expects(self::once())
+			->method('getMessageIdForUid')
+			->with($mailbox, 999)
+			->willReturn(51);
+		$this->mailManager->expects(self::once())
+			->method('getMessage')
+			->with($userId, 51)
+			->willReturn($message);
+		$this->mailManager->expects(self::once())
+			->method('getMailAttachment')
+			->with($account, $mailbox, $message, '3')
 			->willReturn($imapAttachment);
 		$this->mapper->expects($this->once())
 			->method('insert')
@@ -478,7 +489,7 @@ class AttachmentServiceTest extends TestCase {
 			->method('saveContent')
 			->with($this->equalTo($userId), $this->equalTo(456), $this->equalTo('fake png content'));
 
-		$this->service->handleAttachments($account, [$attachments], $client);
+		$this->service->handleAttachments($account, [$attachments]);
 	}
 
 	public function testHandleAttachmentsCloudAttachmentNoDownloadPermission(): void {
@@ -510,7 +521,6 @@ class AttachmentServiceTest extends TestCase {
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => $userId
 		]);
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$attachments = [
 			'type' => 'cloud',
 			'messageId' => 999,
@@ -526,7 +536,7 @@ class AttachmentServiceTest extends TestCase {
 			->with('cat.jpg')
 			->willReturn($file);
 
-		$result = $this->service->handleAttachments($account, [$attachments], $client);
+		$result = $this->service->handleAttachments($account, [$attachments]);
 		$this->assertEquals([], $result);
 
 	}
@@ -542,7 +552,6 @@ class AttachmentServiceTest extends TestCase {
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => $userId
 		]);
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$attachment = LocalAttachment::fromParams([
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
@@ -579,7 +588,7 @@ class AttachmentServiceTest extends TestCase {
 			->method('saveContent')
 			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo('Lorem ipsum dolor sit amet'));
 
-		$this->service->handleAttachments($account, [$attachments], $client);
+		$this->service->handleAttachments($account, [$attachments]);
 	}
 
 	public function testUpdateLocalMessageAttachments(): void {
