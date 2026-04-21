@@ -11,14 +11,15 @@ namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\MailboxesController;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -39,7 +40,7 @@ class MailboxesControllerTest extends TestCase {
 	/** @var string */
 	private $userId = 'john';
 
-	/** @var IMailManager|MockObject */
+	/** @var MailManager|MockObject */
 	private $mailManager;
 
 	/** @var MailboxesController */
@@ -51,19 +52,21 @@ class MailboxesControllerTest extends TestCase {
 	private IConfig|MockObject $config;
 	private ITimeFactory|MockObject $timeFactory;
 	private DelegationService|MockObject $delegationService;
+	private MailboxMapper|MockObject $mailboxMapper;
 
 	public function setUp(): void {
 		parent::setUp();
 
 		$this->request = $this->createMock(IRequest::class);
 		$this->accountService = $this->createMock(AccountService::class);
-		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->mailManager = $this->createMock(MailManager::class);
 		$this->syncService = $this->createMock(SyncService::class);
 		$this->config = $this->createMock(IConfig::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->delegationService = $this->createMock(DelegationService::class);
 		$this->delegationService->method('resolveAccountUserId')->willReturn($this->userId);
 		$this->delegationService->method('resolveMailboxUserId')->willReturn($this->userId);
+		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 
 		$this->controller = new MailboxesController(
 			$this->appName,
@@ -75,6 +78,7 @@ class MailboxesControllerTest extends TestCase {
 			$this->config,
 			$this->timeFactory,
 			$this->delegationService,
+			$this->mailboxMapper,
 		);
 	}
 
@@ -226,9 +230,9 @@ class MailboxesControllerTest extends TestCase {
 		$this->accountService->expects($this->once())
 			->method('find')
 			->willReturn($account);
-		$this->mailManager->expects($this->once())
-			->method('enableMailboxBackgroundSync')
-			->with($mailbox, true)
+		$this->mailboxMapper->expects($this->once())
+			->method('update')
+			->with($mailbox)
 			->willReturn($mailbox);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
