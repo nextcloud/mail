@@ -16,10 +16,10 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Events\DraftSavedEvent;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Listener\DeleteDraftListener;
 use OCA\Mail\Model\NewMessageData;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -28,8 +28,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class DeleteDraftListenerTest extends TestCase {
-	/** @var IMAPClientFactory|MockObject */
-	private $imapClientFactory;
+	/** @var ProtocolFactory|MockObject */
+	private $protocolFactory;
 
 	/** @var MailboxMapper|MockObject */
 	private $mailboxMapper;
@@ -49,14 +49,14 @@ class DeleteDraftListenerTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 
 		$this->listener = new DeleteDraftListener(
-			$this->imapClientFactory,
+			$this->protocolFactory,
 			$this->mailboxMapper,
 			$this->messageMapper,
 			$this->logger,
@@ -109,8 +109,8 @@ class DeleteDraftListenerTest extends TestCase {
 		);
 		/** @var \Horde_Imap_Client_Socket|MockObject $client */
 		$client = $this->createStub(\Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory
-			->method('getClient')
+		$this->protocolFactory
+			->method('imapClient')
 			->with($account)
 			->willReturn($client);
 		$mailbox = new Mailbox();
@@ -140,8 +140,8 @@ class DeleteDraftListenerTest extends TestCase {
 		);
 		/** @var \Horde_Imap_Client_Socket|MockObject $client */
 		$client = $this->createStub(\Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory
-			->method('getClient')
+		$this->protocolFactory
+			->method('imapClient')
 			->with($account)
 			->willReturn($client);
 		$mailbox = new Mailbox();

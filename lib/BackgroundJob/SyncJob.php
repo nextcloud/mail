@@ -10,11 +10,11 @@ namespace OCA\Mail\BackgroundJob;
 
 use Horde_Imap_Client_Exception;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\MailboxSync;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
@@ -37,8 +37,7 @@ class SyncJob extends TimedJob {
 		ITimeFactory $time,
 		IUserManager $userManager,
 		private AccountService $accountService,
-		private MailboxSync $mailboxSync,
-		private ImapToDbSynchronizer $syncService,
+		private ProtocolFactory $protocolFactory,
 		private LoggerInterface $logger,
 		IJobList $jobList,
 		private readonly IConfig $config,
@@ -75,7 +74,8 @@ class SyncJob extends TimedJob {
 			return;
 		}
 
-		if (!$account->getMailAccount()->canAuthenticateImap()) {
+		if ($account->getMailAccount()->getProtocol() === MailAccount::PROTOCOL_IMAP
+			&& !$account->getMailAccount()->canAuthenticateImap()) {
 			$this->logger->debug('No authentication on IMAP possible, skipping background sync job');
 			return;
 		}
@@ -116,8 +116,12 @@ class SyncJob extends TimedJob {
 		}
 
 		try {
-			$this->mailboxSync->sync($account, $this->logger, true);
-			$this->syncService->syncAccount($account, $this->logger);
+			$this->protocolFactory
+				->mailboxConnector($account)
+				->syncAll($account, true);
+			$this->protocolFactory
+				->messageConnector($account)
+				->syncAll($account, true);
 		} catch (IncompleteSyncException $e) {
 			$this->logger->warning($e->getMessage(), [
 				'exception' => $e,

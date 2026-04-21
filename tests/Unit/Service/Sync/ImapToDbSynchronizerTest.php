@@ -13,17 +13,17 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Data_Capability_Imap;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper as DatabaseMessageMapper;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Events\SynchronizationEvent;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\IMAP\Sync\Synchronizer;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\Classification\NewMessagesClassifier;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCA\Mail\Support\PerformanceLogger;
 use OCA\Mail\Support\PerformanceLoggerTask;
@@ -33,7 +33,7 @@ use Psr\Log\LoggerInterface;
 
 class ImapToDbSynchronizerTest extends TestCase {
 	private DatabaseMessageMapper&MockObject $dbMapper;
-	private IMAPClientFactory&MockObject $clientFactory;
+	private ProtocolFactory&MockObject $protocolFactory;
 	private ImapMessageMapper&MockObject $imapMapper;
 	private MailboxMapper&MockObject $mailboxMapper;
 	private IEventDispatcher&MockObject $dispatcher;
@@ -43,7 +43,7 @@ class ImapToDbSynchronizerTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 		$this->dbMapper = $this->createMock(DatabaseMessageMapper::class);
-		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->imapMapper = $this->createMock(ImapMessageMapper::class);
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->dispatcher = $this->createMock(IEventDispatcher::class);
@@ -52,7 +52,7 @@ class ImapToDbSynchronizerTest extends TestCase {
 			->willReturn($this->createStub(PerformanceLoggerTask::class));
 		$this->synchronizer = new ImapToDbSynchronizer(
 			$this->dbMapper,
-			$this->clientFactory,
+			$this->protocolFactory,
 			$this->imapMapper,
 			$this->mailboxMapper,
 			$this->createStub(DatabaseMessageMapper::class),
@@ -60,7 +60,7 @@ class ImapToDbSynchronizerTest extends TestCase {
 			$this->dispatcher,
 			$this->performanceLogger,
 			$this->createStub(LoggerInterface::class),
-			$this->createStub(IMailManager::class),
+			$this->createStub(MailManager::class),
 			$this->createStub(TagMapper::class),
 			$this->createStub(NewMessagesClassifier::class),
 		);
@@ -85,8 +85,8 @@ class ImapToDbSynchronizerTest extends TestCase {
 			->method('getSyncToken')
 			->with('INBOX')
 			->willReturn('dG9rZW5XaXRoSA==');
-		$this->clientFactory->expects($this->once())
-			->method('getClient')
+		$this->protocolFactory->expects($this->once())
+			->method('imapClient')
 			->with($account, false)
 			->willReturn($noCacheClient);
 		$this->dbMapper->method('findHighestUid')->willReturn(null);
