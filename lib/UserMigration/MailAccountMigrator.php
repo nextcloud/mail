@@ -14,6 +14,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\UserMigration\Service\AccountMigrationService;
 use OCA\Mail\UserMigration\Service\AppConfigMigrationService;
+use OCA\Mail\UserMigration\Service\TagsMigrationService;
 use OCA\Mail\UserMigration\Service\TextBlocksMigrationService;
 use OCA\Mail\UserMigration\Service\TrustedSendersMigrationService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -37,6 +38,7 @@ class MailAccountMigrator implements IMigrator {
 		private readonly AppConfigMigrationService $appConfigMigrationService,
 		private readonly TrustedSendersMigrationService $trustedSendersMigrationService,
 		private readonly TextBlocksMigrationService $textBlocksMigrationService,
+		private readonly TagsMigrationService $tagsMigrationService,
 	) {
 	}
 
@@ -50,16 +52,19 @@ class MailAccountMigrator implements IMigrator {
 		$this->appConfigMigrationService->exportAppConfiguration($user, $exportDestination, $output);
 		$this->trustedSendersMigrationService->exportTrustedSenders($user, $exportDestination, $output);
 		$this->textBlocksMigrationService->exportTextBlocks($user, $exportDestination, $output);
+		$this->tagsMigrationService->exportTags($user, $exportDestination, $output);
 	}
 
 	#[\Override]
 	public function import(IUser $user, IImportSource $importSource, OutputInterface $output): void {
 		$output->writeln($this->l10n->t("Importing mail accounts for user {$user->getUID()}"), OutputInterface::VERBOSITY_VERBOSE);
+
 		$this->deleteExistingData($user, $output);
 
 		$this->appConfigMigrationService->importAppConfiguration($user, $importSource, $output);
 		$this->trustedSendersMigrationService->importTrustedSenders($user, $importSource, $output);
 		$this->textBlocksMigrationService->importTextBlocks($user, $importSource, $output);
+		$newTagIds = $this->tagsMigrationService->importTags($user, $importSource, $output);
 
 		$this->accountMigrationService->scheduleBackgroundJobs($user, $output);
 	}
@@ -80,6 +85,7 @@ class MailAccountMigrator implements IMigrator {
 		$this->appConfigMigrationService->deleteAppConfiguration($user, $output);
 		$this->trustedSendersMigrationService->removeAllTrustedSenders($user, $output);
 		$this->textBlocksMigrationService->deleteAllTextBlocks($user, $output);
+		$this->tagsMigrationService->deleteAllTags($user, $output);
 		$this->accountMigrationService->deleteAllAccounts($user, $output);
 	}
 
