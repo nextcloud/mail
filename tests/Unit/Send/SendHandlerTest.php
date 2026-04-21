@@ -8,32 +8,110 @@ declare(strict_types=1);
 namespace Unit\Send;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailTransmission;
+use OCA\Mail\Contracts\ITransmissionConnector;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Send\CopySentMessageHandler;
+use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Events\MessageSentEvent;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Send\FlagRepliedMessageHandler;
 use OCA\Mail\Send\SendHandler;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\EventDispatcher\IEventDispatcher;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class SendHandlerTest extends TestCase {
-	private MockObject|IMailTransmission $transmission;
-	private MockObject|CopySentMessageHandler $copySentMessageHandler;
-	private MockObject|FlagRepliedMessageHandler $flagRepliedMessageHandler;
+	private MockObject|ProtocolFactory $protocolFactory;
+	private MockObject|IEventDispatcher $eventDispatcher;
+	private MockObject|MailboxMapper $mailboxMapper;
+	private MockObject|LoggerInterface $logger;
+	private MockObject|FlagRepliedMessageHandler $nextHandler;
 	private SendHandler $handler;
 
 	protected function setUp(): void {
-		$this->transmission = $this->createMock(IMailTransmission::class);
-		$this->copySentMessageHandler = $this->createMock(CopySentMessageHandler::class);
-		$this->flagRepliedMessageHandler = $this->createMock(FlagRepliedMessageHandler::class);
-		$this->handler = new SendHandler($this->transmission);
-		$this->handler->setNext($this->copySentMessageHandler)
-			->setNext($this->flagRepliedMessageHandler);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
+		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
+		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->nextHandler = $this->createMock(FlagRepliedMessageHandler::class);
+		$this->handler = new SendHandler(
+			$this->protocolFactory,
+			$this->eventDispatcher,
+			$this->mailboxMapper,
+			$this->logger,
+		);
+		$this->handler->setNext($this->nextHandler);
 	}
 
-	public function testProcess(): void {
+	public function testProcessSkipsIfAlreadyProcessed(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setSentMailboxId(1);
+		$mailAccount->setUserId('bob');
+		$account = new Account($mailAccount);
+		$localMessage = new LocalMessage();
+		$localMessage->setId(100);
+		$localMessage->setStatus(LocalMessage::STATUS_PROCESSED);
+
+		$this->protocolFactory->expects(self::never())
+			->method('transmissionConnector');
+		$this->nextHandler->expects(self::once())
+			->method('process')
+			->with($account, $localMessage)
+			->willReturn($localMessage);
+
+		$this->handler->process($account, $localMessage);
+	}
+
+	public function testProcessNoSentMailbox(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('bob');
+		// sentMailboxId is null — no sent mailbox configured
+		$account = new Account($mailAccount);
+		$localMessage = new LocalMessage();
+		$localMessage->setId(100);
+		$localMessage->setStatus(LocalMessage::STATUS_RAW);
+
+		$this->protocolFactory->expects(self::never())
+			->method('transmissionConnector');
+		$this->eventDispatcher->expects(self::never())
+			->method('dispatchTyped');
+		$this->nextHandler->expects(self::never())
+			->method('process');
+
+		$result = $this->handler->process($account, $localMessage);
+
+		$this->assertEquals(LocalMessage::STATUS_NO_SENT_MAILBOX, $result->getStatus());
+	}
+
+	public function testProcessSentMailboxNotFound(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('bob');
+		$mailAccount->setSentMailboxId(42);
+		$account = new Account($mailAccount);
+		$localMessage = new LocalMessage();
+		$localMessage->setId(100);
+		$localMessage->setStatus(LocalMessage::STATUS_RAW);
+
+		$this->mailboxMapper->expects(self::once())
+			->method('findById')
+			->with(42)
+			->willThrowException(new DoesNotExistException(''));
+		$this->protocolFactory->expects(self::never())
+			->method('transmissionConnector');
+		$this->eventDispatcher->expects(self::never())
+			->method('dispatchTyped');
+		$this->nextHandler->expects(self::never())
+			->method('process');
+
+		$result = $this->handler->process($account, $localMessage);
+
+		$this->assertEquals(LocalMessage::STATUS_NO_SENT_MAILBOX, $result->getStatus());
+	}
+
+	public function testProcessSendsMessage(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setSentMailboxId(1);
 		$mailAccount->setUserId('bob');
@@ -41,54 +119,66 @@ class SendHandlerTest extends TestCase {
 		$localMessage = new LocalMessage();
 		$localMessage->setId(100);
 		$localMessage->setStatus(LocalMessage::STATUS_RAW);
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$sentMailbox = new Mailbox();
+		$sentMailbox->setId(1);
 
-		$this->transmission->expects(self::once())
+		$connector = $this->createMock(ITransmissionConnector::class);
+		$this->mailboxMapper->expects(self::once())
+			->method('findById')
+			->with(1)
+			->willReturn($sentMailbox);
+		$this->protocolFactory->expects(self::once())
+			->method('transmissionConnector')
+			->with($account)
+			->willReturn($connector);
+		$connector->expects(self::once())
 			->method('sendMessage')
-			->with($account, $localMessage);
-		$this->copySentMessageHandler->expects(self::once())
-			->method('process');
+			->with($account, $localMessage, $sentMailbox)
+			->willReturnCallback(function ($acct, $msg, $mbx) {
+				$msg->setStatus(LocalMessage::STATUS_PROCESSED);
+			});
+		$this->eventDispatcher->expects(self::once())
+			->method('dispatchTyped')
+			->with(self::isInstanceOf(MessageSentEvent::class));
+		$this->nextHandler->expects(self::once())
+			->method('process')
+			->willReturn($localMessage);
 
-		$this->handler->process($account, $localMessage, $client);
+		$this->handler->process($account, $localMessage);
 	}
 
-	public function testProcessAlreadyProcessed(): void {
+	public function testProcessSendError(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setSentMailboxId(1);
 		$mailAccount->setUserId('bob');
 		$account = new Account($mailAccount);
 		$localMessage = new LocalMessage();
 		$localMessage->setId(100);
-		$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$localMessage->setStatus(LocalMessage::STATUS_RAW);
+		$sentMailbox = new Mailbox();
+		$sentMailbox->setId(1);
 
-		$this->transmission->expects(self::never())
-			->method('sendMessage');
-		$this->copySentMessageHandler->expects(self::once())
+		$connector = $this->createMock(ITransmissionConnector::class);
+		$this->mailboxMapper->expects(self::once())
+			->method('findById')
+			->with(1)
+			->willReturn($sentMailbox);
+		$this->protocolFactory->expects(self::once())
+			->method('transmissionConnector')
+			->with($account)
+			->willReturn($connector);
+		$connector->expects(self::once())
+			->method('sendMessage')
+			->willReturnCallback(function ($acct, $msg, $mbx) {
+				$msg->setStatus(LocalMessage::STATUS_SMPT_SEND_FAIL);
+			});
+		$this->eventDispatcher->expects(self::never())
+			->method('dispatchTyped');
+		$this->nextHandler->expects(self::never())
 			->method('process');
 
-		$this->handler->process($account, $localMessage, $client);
-	}
+		$result = $this->handler->process($account, $localMessage);
 
-	public function testProcessError(): void {
-		$mailAccount = new MailAccount();
-		$mailAccount->setSentMailboxId(1);
-		$mailAccount->setUserId('bob');
-		$account = new Account($mailAccount);
-		$localMessage = $this->getMockBuilder(LocalMessage::class);
-		$localMessage->addMethods(['getStatus']);
-		$mock = $localMessage->getMock();
-		$mock->setStatus(10);
-		$mock->expects(self::any())
-			->method('getStatus')
-			->willReturn(LocalMessage::STATUS_SMPT_SEND_FAIL);
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
-
-		$this->transmission->expects(self::once())
-			->method('sendMessage');
-		$this->copySentMessageHandler->expects(self::never())
-			->method('process');
-
-		$this->handler->process($account, $mock, $client);
+		$this->assertEquals(LocalMessage::STATUS_SMPT_SEND_FAIL, $result->getStatus());
 	}
 }

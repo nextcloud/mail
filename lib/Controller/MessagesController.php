@@ -15,8 +15,8 @@ use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Contracts\IMailSearch;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\ITrustedSenderService;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
@@ -67,7 +67,7 @@ class MessagesController extends Controller {
 	private IURLGenerator $urlGenerator;
 	private ContentSecurityPolicyNonceManager $nonceManager;
 	private ITrustedSenderService $trustedSenderService;
-	private IMailTransmission $mailTransmission;
+	private ProtocolFactory $protocolFactory;
 	private SmimeService $smimeService;
 	private IDkimService $dkimService;
 	private IUserPreferences $preferences;
@@ -89,7 +89,7 @@ class MessagesController extends Controller {
 		IURLGenerator $urlGenerator,
 		ContentSecurityPolicyNonceManager $nonceManager,
 		ITrustedSenderService $trustedSenderService,
-		IMailTransmission $mailTransmission,
+		ProtocolFactory $protocolFactory,
 		SmimeService $smimeService,
 		IDkimService $dkimService,
 		IUserPreferences $preferences,
@@ -110,7 +110,7 @@ class MessagesController extends Controller {
 		$this->urlGenerator = $urlGenerator;
 		$this->nonceManager = $nonceManager;
 		$this->trustedSenderService = $trustedSenderService;
-		$this->mailTransmission = $mailTransmission;
+		$this->protocolFactory = $protocolFactory;
 		$this->smimeService = $smimeService;
 		$this->dkimService = $dkimService;
 		$this->preferences = $preferences;
@@ -495,7 +495,7 @@ class MessagesController extends Controller {
 		}
 
 		try {
-			$this->mailTransmission->sendMdn($account, $mailbox, $message);
+			$this->protocolFactory->transmissionConnector($account)->sendMdn($account, $mailbox, $message);
 			$this->mailManager->flagMessages($account, $mailbox, '$mdnsent', true, $message);
 		} catch (ServiceException $ex) {
 			$this->logger->error('Sending mdn failed: ' . $ex->getMessage());
@@ -617,18 +617,14 @@ class MessagesController extends Controller {
 
 			$html = $cacheInstance->get($imapMessageCacheKey);
 			if ($html === null) {
-				$client = $this->clientFactory->getClient($account);
-				try {
-					$html = $this->mailManager->getImapMessage(
-						$client,
-						$account,
-						$mailbox,
-						$message->getUid(),
-						true
-					)->getHtmlBody($id);
-				} finally {
-					$client->logout();
-				}
+				$html = $this->mailManager->getImapMessage(
+					$account,
+					$mailbox,
+					$message,
+					true
+				)->getHtmlBody(
+					$id
+				);
 			}
 
 

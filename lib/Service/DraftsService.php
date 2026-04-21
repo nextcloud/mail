@@ -9,12 +9,16 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
+use Horde_Imap_Client;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
+use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\DraftMessageCreatedEvent;
+use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Protocol\ProtocolFactory;
@@ -26,31 +30,31 @@ use Psr\Log\LoggerInterface;
 use Throwable;
 
 class DraftsService {
-	private IMailTransmission $transmission;
 	private LocalMessageMapper $mapper;
 	private AttachmentService $attachmentService;
 	private IEventDispatcher $eventDispatcher;
 	private ProtocolFactory $protocolFactory;
 	private MailManager $mailManager;
+	private MailboxMapper $mailboxMapper;
 	private LoggerInterface $logger;
 	private AccountService $accountService;
 	private ITimeFactory $time;
 
-	public function __construct(IMailTransmission $transmission,
-		LocalMessageMapper $mapper,
+	public function __construct(LocalMessageMapper $mapper,
 		AttachmentService $attachmentService,
 		IEventDispatcher $eventDispatcher,
 		ProtocolFactory $protocolFactory,
 		MailManager $mailManager,
+		MailboxMapper $mailboxMapper,
 		LoggerInterface $logger,
 		AccountService $accountService,
 		ITimeFactory $time) {
-		$this->transmission = $transmission;
 		$this->mapper = $mapper;
 		$this->attachmentService = $attachmentService;
 		$this->eventDispatcher = $eventDispatcher;
 		$this->protocolFactory = $protocolFactory;
 		$this->mailManager = $mailManager;
+		$this->mailboxMapper = $mailboxMapper;
 		$this->logger = $logger;
 		$this->accountService = $accountService;
 		$this->time = $time;
@@ -160,23 +164,18 @@ class DraftsService {
 		$this->eventDispatcher->dispatchTyped(new DraftMessageCreatedEvent($account, $message));
 	}
 
-	/**
-	 * "Send" the message
-	 *
-	 * @param LocalMessage $message
-	 * @param Account $account
-	 * @return void
-	 */
 	public function sendMessage(LocalMessage $message, Account $account): void {
+		$draftsMailbox = $this->findOrCreateDraftsMailbox($account);
 		try {
-			$this->transmission->saveLocalDraft($account, $message);
+			$this->protocolFactory->transmissionConnector($account)->saveMessage($account, $draftsMailbox, $message, ['$draft']);
 		} catch (ClientException|ServiceException $e) {
-			$this->logger->error('Could not move draft to IMAP', ['exception' => $e]);
+			$this->logger->error('Could not save draft', ['exception' => $e]);
 			// Mark as failed so the message is not moved repeatedly in background
 			$message->setFailed(true);
 			$this->mapper->update($message);
 			throw $e;
 		}
+		$this->eventDispatcher->dispatchTyped(new DraftSavedEvent($account, null));
 		$this->attachmentService->deleteLocalMessageAttachments($account->getUserId(), $message->getId());
 		$this->mapper->deleteWithRecipients($message);
 	}
@@ -235,5 +234,27 @@ class DraftsService {
 				]);
 			}
 		}
+	}
+
+	/**
+	 * "Send" the message
+	 *
+	 * @param LocalMessage $message
+	 * @param Account $account
+	 * @return void
+	 */
+	private function findOrCreateDraftsMailbox(Account $account): Mailbox {
+		$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
+		if ($draftsMailboxId === null) {
+			if ($account->getMailAccount()->getProtocol() !== MailAccount::PROTOCOL_IMAP) {
+				throw new ServiceException('No drafts mailbox configured for JMAP account ' . $account->getId());
+			}
+			return $this->mailManager->createMailbox(
+				$account,
+				'Drafts',
+				[Horde_Imap_Client::SPECIALUSE_DRAFTS]
+			);
+		}
+		return $this->mailboxMapper->findById($draftsMailboxId);
 	}
 }

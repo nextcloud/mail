@@ -24,6 +24,7 @@ use OCA\Mail\IMAP\ImapTransmissionConnector;
 use OCA\Mail\JMAP\JmapClientFactory;
 use OCA\Mail\JMAP\JmapMailboxConnector;
 use OCA\Mail\JMAP\JmapMessageConnector;
+use OCA\Mail\JMAP\JmapTransmissionConnector;
 use Psr\Container\ContainerInterface;
 
 class ProtocolFactory {
@@ -35,12 +36,12 @@ class ProtocolFactory {
 		MailAccount::PROTOCOL_IMAP => [
 			IMailboxConnector::class => ImapMailboxConnector::class,
 			IMessageConnector::class => ImapMessageConnector::class,
-			//ITransmissionConnector::class => ImapTransmissionConnector::class,
+			ITransmissionConnector::class => ImapTransmissionConnector::class,
 		],
 		MailAccount::PROTOCOL_JMAP => [
 			IMailboxConnector::class => JmapMailboxConnector::class,
 			IMessageConnector::class => JmapMessageConnector::class,
-			//ITransmissionConnector::class => JmapTransmissionConnector::class,
+			ITransmissionConnector::class => JmapTransmissionConnector::class,
 		],
 	];
 
