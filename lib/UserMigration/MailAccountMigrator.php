@@ -14,6 +14,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\UserMigration\Service\AccountMigrationService;
 use OCA\Mail\UserMigration\Service\AppConfigMigrationService;
+use OCA\Mail\UserMigration\Service\TrustedSendersMigrationService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IL10N;
 use OCP\IUser;
@@ -33,6 +34,7 @@ class MailAccountMigrator implements IMigrator {
 		private readonly ICrypto $crypto,
 		private readonly AccountMigrationService $accountMigrationService,
 		private readonly AppConfigMigrationService $appConfigMigrationService,
+		private readonly TrustedSendersMigrationService $trustedSendersMigrationService,
 	) {
 	}
 
@@ -44,6 +46,7 @@ class MailAccountMigrator implements IMigrator {
 		$output->writeln($this->l10n->t("Exporting mail accounts for user {$user->getUID()}"), OutputInterface::VERBOSITY_VERBOSE);
 
 		$this->appConfigMigrationService->exportAppConfiguration($user, $exportDestination, $output);
+		$this->trustedSendersMigrationService->exportTrustedSenders($user, $exportDestination, $output);
 	}
 
 	#[\Override]
@@ -52,6 +55,7 @@ class MailAccountMigrator implements IMigrator {
 		$this->deleteExistingData($user, $output);
 
 		$this->appConfigMigrationService->importAppConfiguration($user, $importSource, $output);
+		$this->trustedSendersMigrationService->importTrustedSenders($user, $importSource, $output);
 
 		$this->accountMigrationService->scheduleBackgroundJobs($user, $output);
 	}
@@ -70,6 +74,7 @@ class MailAccountMigrator implements IMigrator {
 		$output->writeln($this->l10n->t("Deleting existing mail data for user {$user->getUID()}"), OutputInterface::VERBOSITY_VERBOSE);
 
 		$this->appConfigMigrationService->deleteAppConfiguration($user, $output);
+		$this->trustedSendersMigrationService->removeAllTrustedSenders($user, $output);
 		$this->accountMigrationService->deleteAllAccounts($user, $output);
 	}
 
@@ -90,7 +95,7 @@ class MailAccountMigrator implements IMigrator {
 
 	#[\Override]
 	public function getVersion(): int {
-		return 02_00_00;
+		return 01_00_00;
 	}
 
 	#[\Override]
