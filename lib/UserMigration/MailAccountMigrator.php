@@ -12,6 +12,7 @@ namespace OCA\Mail\UserMigration;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\UserMigration\Service\AccountMigrationService;
 use OCA\Mail\UserMigration\Service\AppConfigMigrationService;
+use OCA\Mail\UserMigration\Service\TextBlocksMigrationService;
 use OCA\Mail\UserMigration\Service\TrustedSendersMigrationService;
 use OCP\IL10N;
 use OCP\IUser;
@@ -32,6 +33,7 @@ class MailAccountMigrator implements IMigrator {
 		private readonly AccountMigrationService $accountMigrationService,
 		private readonly AppConfigMigrationService $appConfigMigrationService,
 		private readonly TrustedSendersMigrationService $trustedSendersMigrationService,
+		private readonly TextBlocksMigrationService $textBlocksMigrationService,
 	) {
 	}
 
@@ -47,6 +49,7 @@ class MailAccountMigrator implements IMigrator {
 
 		$this->appConfigMigrationService->exportAppConfiguration($user, $exportDestination, $output);
 		$this->trustedSendersMigrationService->exportTrustedSenders($user, $exportDestination, $output);
+		$this->textBlocksMigrationService->exportTextBlocks($user, $exportDestination, $output);
 	}
 
 	#[\Override]
@@ -58,6 +61,7 @@ class MailAccountMigrator implements IMigrator {
 
 		$this->appConfigMigrationService->importAppConfiguration($user, $importSource, $output);
 		$this->trustedSendersMigrationService->importTrustedSenders($user, $importSource, $output);
+		$this->textBlocksMigrationService->importTextBlocks($user, $importSource, $output);
 
 		$this->accountMigrationService->scheduleBackgroundJobs($user, $output);
 	}
