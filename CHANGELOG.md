@@ -1,3 +1,12 @@
+## [5.7.12](https://github.com/nextcloud/mail/compare/v5.7.11...v5.7.12) (2026-04-21)
+
+
+### Bug Fixes
+
+* **l10n:** Update translations from Transifex ([76a5daa](https://github.com/nextcloud/mail/commit/76a5daae7386d67881ceaaed6c99612811e1cd49))
+
+
+
 ## [5.7.11](https://github.com/nextcloud/mail/compare/v5.7.10...v5.7.11) (2026-04-17)
 
 
