@@ -278,7 +278,7 @@ class MailboxSynchronizationTest extends TestCase {
 
 		// Receive unsolicited vanished uid
 		$client = $this->getClient($this->account);
-		$mailManager->getSource(
+		$mailManager->getRawMessage(
 			$client,
 			new Account($this->account),
 			$mailbox,

@@ -13,7 +13,6 @@ namespace OCA\Mail\Controller;
 use Horde_Imap_Client;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
@@ -25,6 +24,7 @@ use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
@@ -47,7 +47,7 @@ class AccountsController extends Controller {
 	private AliasesService $aliasesService;
 	private IMailTransmission $mailTransmission;
 	private SetupService $setup;
-	private IMailManager $mailManager;
+	private MailManager $mailManager;
 	private SyncService $syncService;
 	private IConfig $config;
 	private IRemoteHostValidator $hostValidator;
@@ -63,7 +63,7 @@ class AccountsController extends Controller {
 		AliasesService $aliasesService,
 		IMailTransmission $mailTransmission,
 		SetupService $setup,
-		IMailManager $mailManager,
+		MailManager $mailManager,
 		SyncService $syncService,
 		IConfig $config,
 		IRemoteHostValidator $hostValidator,

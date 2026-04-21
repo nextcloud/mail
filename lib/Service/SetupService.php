@@ -18,7 +18,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
@@ -34,8 +34,8 @@ class SetupService {
 	/** @var SmtpClientFactory */
 	private $smtpClientFactory;
 
-	/** @var IMAPClientFactory */
-	private $imapClientFactory;
+	/** @var ProtocolFactory */
+	private $protocolFactory;
 
 	/** @var LoggerInterface */
 	private $logger;
@@ -46,13 +46,13 @@ class SetupService {
 	public function __construct(AccountService $accountService,
 		ICrypto $crypto,
 		SmtpClientFactory $smtpClientFactory,
-		IMAPClientFactory $imapClientFactory,
+		ProtocolFactory $protocolFactory,
 		LoggerInterface $logger,
 		TagMapper $tagMapper) {
 		$this->accountService = $accountService;
 		$this->crypto = $crypto;
 		$this->smtpClientFactory = $smtpClientFactory;
-		$this->imapClientFactory = $imapClientFactory;
+		$this->protocolFactory = $protocolFactory;
 		$this->logger = $logger;
 		$this->tagMapper = $tagMapper;
 	}
@@ -127,7 +127,7 @@ class SetupService {
 	protected function testConnectivity(Account $account): void {
 		$mailAccount = $account->getMailAccount();
 
-		$imapClient = $this->imapClientFactory->getClient($account);
+		$imapClient = $this->protocolFactory->imapClient($account);
 		try {
 			$imapClient->login();
 		} catch (Horde_Imap_Client_Exception $e) {

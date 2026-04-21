@@ -30,7 +30,6 @@ use Horde_Smtp_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Mailbox;
@@ -42,9 +41,9 @@ use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Events\SaveDraftEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\NewMessageData;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\DataUri\DataUriParser;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
@@ -61,7 +60,7 @@ class MailTransmission implements IMailTransmission {
 	];
 
 	public function __construct(
-		private IMAPClientFactory $imapClientFactory,
+		private ProtocolFactory $protocolFactory,
 		private SmtpClientFactory $smtpClientFactory,
 		private IEventDispatcher $eventDispatcher,
 		private MailboxMapper $mailboxMapper,
@@ -70,7 +69,7 @@ class MailTransmission implements IMailTransmission {
 		private PerformanceLogger $performanceLogger,
 		private AliasesService $aliasesService,
 		private TransmissionService $transmissionService,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 	) {
 	}
 
@@ -231,7 +230,7 @@ class MailTransmission implements IMailTransmission {
 		$perfLogger->step('build local draft message');
 
 		// 'Send' the message
-		$client = $this->imapClientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$transport = new Horde_Mail_Transport_Null();
 			$mail->send($transport, false, false);
@@ -312,7 +311,7 @@ class MailTransmission implements IMailTransmission {
 		$perfLogger->step('build draft message');
 
 		// 'Send' the message
-		$client = $this->imapClientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$transport = new Horde_Mail_Transport_Null();
 			$mail->send($transport, false, false);
@@ -385,7 +384,7 @@ class MailTransmission implements IMailTransmission {
 			'peek' => true,
 		]);
 
-		$imapClient = $this->imapClientFactory->getClient($account);
+		$imapClient = $this->protocolFactory->imapClient($account);
 		try {
 			/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
 			$fetchResults = iterator_to_array($imapClient->fetch($mailbox->getName(), $query, [
