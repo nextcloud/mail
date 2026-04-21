@@ -11,7 +11,6 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\ConfigLexicon;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message as DbMessage;
@@ -36,7 +35,6 @@ class AntiSpamServiceTest extends TestCase {
 	private SmtpClientFactory|MockObject $smtpClientFactory;
 	private MockObject|ImapMessageMapper $imapMessageMapper;
 	private LoggerInterface|MockObject $logger;
-	private MockObject|IMailTransmission $transmission;
 	private MailManager|MockObject $mailManager;
 
 	protected function setUp(): void {
@@ -44,7 +42,6 @@ class AntiSpamServiceTest extends TestCase {
 
 		$this->appConfig = $this->createMock(IAppConfig::class);
 		$this->dbMessageMapper = $this->createMock(DbMessageMapper::class);
-		$this->transmission = $this->createMock(IMailTransmission::class);
 		$this->mailManager = $this->createMock(MailManager::class);
 		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->smtpClientFactory = $this->createMock(SmtpClientFactory::class);
