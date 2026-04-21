@@ -8,13 +8,11 @@ declare(strict_types=1);
 namespace OCA\Mail\Send;
 
 use Horde_Imap_Client;
-use Horde_Imap_Client_Exception;
-use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
-use OCA\Mail\IMAP\MessageMapper;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
 
@@ -22,7 +20,7 @@ class FlagRepliedMessageHandler extends AHandler {
 	public function __construct(
 		private MailboxMapper $mailboxMapper,
 		private LoggerInterface $logger,
-		private MessageMapper $messageMapper,
+		private MailManager $mailManager,
 		private DbMessageMapper $dbMessageMapper,
 	) {
 	}
@@ -31,19 +29,18 @@ class FlagRepliedMessageHandler extends AHandler {
 	public function process(
 		Account $account,
 		LocalMessage $localMessage,
-		Horde_Imap_Client_Socket $client,
 	): LocalMessage {
 		if ($localMessage->getStatus() !== LocalMessage::STATUS_PROCESSED) {
 			return $localMessage;
 		}
 
 		if ($localMessage->getInReplyToMessageId() === null) {
-			return $this->processNext($account, $localMessage, $client);
+			return $this->processNext($account, $localMessage);
 		}
 
 		$messages = $this->dbMessageMapper->findByMessageId($account, $localMessage->getInReplyToMessageId());
 		if ($messages === []) {
-			return $this->processNext($account, $localMessage, $client);
+			return $this->processNext($account, $localMessage);
 		}
 
 		foreach ($messages as $message) {
@@ -58,21 +55,22 @@ class FlagRepliedMessageHandler extends AHandler {
 					continue;
 				}
 				// Mark all other mailboxes that contain the message with the same imap message id as replied
-				$this->messageMapper->addFlag(
-					$client,
+				$this->mailManager->flagMessages(
+					$account,
 					$mailbox,
-					[$message->getUid()],
-					Horde_Imap_Client::FLAG_ANSWERED
+					Horde_Imap_Client::FLAG_ANSWERED,
+					true,
+					$message
 				);
 				$message->setFlagAnswered(true);
 				$this->dbMessageMapper->update($message);
-			} catch (DoesNotExistException|Horde_Imap_Client_Exception $e) {
+			} catch (DoesNotExistException $e) {
 				$this->logger->warning('Could not flag replied message: ' . $e->getMessage(), [
 					'exception' => $e,
 				]);
 			}
 		}
 
-		return $this->processNext($account, $localMessage, $client);
+		return $this->processNext($account, $localMessage);
 	}
 }

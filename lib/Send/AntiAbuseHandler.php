@@ -7,7 +7,6 @@ declare(strict_types=1);
  */
 namespace OCA\Mail\Send;
 
-use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Service\AntiAbuseService;
@@ -27,11 +26,10 @@ class AntiAbuseHandler extends AHandler {
 	public function process(
 		Account $account,
 		LocalMessage $localMessage,
-		Horde_Imap_Client_Socket $client,
 	): LocalMessage {
 		if ($localMessage->getStatus() === LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL
 			|| $localMessage->getStatus() === LocalMessage::STATUS_PROCESSED) {
-			return $this->processNext($account, $localMessage, $client);
+			return $this->processNext($account, $localMessage);
 		}
 
 		$user = $this->userManager->get($account->getUserId());
@@ -52,6 +50,6 @@ class AntiAbuseHandler extends AHandler {
 		// at this point.
 		// Any future improvement from https://github.com/nextcloud/mail/issues/6461
 		// should refactor the chain to stop at this point unless the force send option is true
-		return $this->processNext($account, $localMessage, $client);
+		return $this->processNext($account, $localMessage);
 	}
 }

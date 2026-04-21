@@ -11,20 +11,16 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\DB\Exception;
 
 class Chain {
 	public function __construct(
-		private SentMailboxHandler $sentMailboxHandler,
 		private AntiAbuseHandler $antiAbuseHandler,
 		private SendHandler $sendHandler,
-		private CopySentMessageHandler $copySentMessageHandler,
 		private FlagRepliedMessageHandler $flagRepliedMessageHandler,
 		private AttachmentService $attachmentService,
 		private LocalMessageMapper $localMessageMapper,
-		private ProtocolFactory $protocolFactory,
 	) {
 	}
 
@@ -34,12 +30,6 @@ class Chain {
 	 * @throws ServiceException
 	 */
 	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
-		$handlers = $this->sentMailboxHandler;
-		$handlers->setNext($this->antiAbuseHandler)
-			->setNext($this->sendHandler)
-			->setNext($this->copySentMessageHandler)
-			->setNext($this->flagRepliedMessageHandler);
-
 		/**
 		 * Skip all messages that errored out indeterminedly in the SMTP send.
 		 * @see \Horde_Smtp_Exception  for the error codes that are inderminate
@@ -49,12 +39,11 @@ class Chain {
 			throw new ServiceException('Could not send message because a previous send operation produced an unclear sent state.');
 		}
 
-		$client = $this->protocolFactory->imapClient($account);
-		try {
-			$result = $handlers->process($account, $localMessage, $client);
-		} finally {
-			$client->logout();
-		}
+		$head = $this->antiAbuseHandler;
+		$head->setNext($this->sendHandler)
+			->setNext($this->flagRepliedMessageHandler);
+
+		$result = $head->process($account, $localMessage);
 
 		if ($result->getStatus() === LocalMessage::STATUS_PROCESSED) {
 			$this->attachmentService->deleteLocalMessageAttachments($account->getUserId(), $result->getId());

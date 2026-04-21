@@ -19,7 +19,6 @@ use OCA\Mail\Account;
 use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Contracts\IMailSearch;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\MessagesController;
@@ -33,6 +32,7 @@ use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Model\Message;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\DelegationService;
@@ -111,8 +111,8 @@ class MessagesControllerTest extends TestCase {
 	/** @var MockObject|ITrustedSenderService */
 	private $trustedSenderService;
 
-	/** @var MockObject|IMailTransmission */
-	private $mailTransmission;
+	/** @var MockObject|ProtocolFactory */
+	private $protocolFactory;
 
 	/** @var ITimeFactory */
 	private $oldFactory;
@@ -151,7 +151,7 @@ class MessagesControllerTest extends TestCase {
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->nonceManager = $this->createMock(ContentSecurityPolicyNonceManager::class);
 		$this->trustedSenderService = $this->createMock(ITrustedSenderService::class);
-		$this->mailTransmission = $this->createMock(IMailTransmission::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->smimeService = $this->createMock(SmimeService::class);
 		$this->dkimService = $this->createMock(IDkimService::class);
 		$this->userPreferences = $this->createMock(IUserPreferences::class);
@@ -188,7 +188,7 @@ class MessagesControllerTest extends TestCase {
 			$this->urlGenerator,
 			$this->nonceManager,
 			$this->trustedSenderService,
-			$this->mailTransmission,
+			$this->protocolFactory,
 			$this->smimeService,
 			$this->dkimService,
 			$this->userPreferences,
@@ -1289,7 +1289,7 @@ class MessagesControllerTest extends TestCase {
 			$this->urlGenerator,
 			$this->nonceManager,
 			$this->trustedSenderService,
-			$this->mailTransmission,
+			$this->protocolFactory,
 			$this->smimeService,
 			$this->dkimService,
 			$this->userPreferences,
@@ -1461,7 +1461,7 @@ class MessagesControllerTest extends TestCase {
 			$this->urlGenerator,
 			$this->nonceManager,
 			$this->trustedSenderService,
-			$this->mailTransmission,
+			$this->protocolFactory,
 			$this->smimeService,
 			$this->dkimService,
 			$this->userPreferences,
