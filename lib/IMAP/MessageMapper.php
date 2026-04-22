@@ -916,10 +916,17 @@ class MessageMapper {
 					$hasAttachments = true;
 				}
 
-				if ($part->getType() === 'text/calendar') {
-					if ($part->getContentTypeParameter('method') !== null) {
-						$isImipMessage = true;
-					}
+				// Flag the message as iMIP when we see a text/calendar or
+				// application/ics part. Proton Mail Bridge is known to strip the
+				// `method=` parameter from the Content-Type header while
+				// re-assembling a message after E2E-decryption, so requiring the
+				// parameter here would drop every Bridge-delivered invitation.
+				// The actual method (REQUEST/REPLY/CANCEL) is parsed out of the
+				// ICS body downstream in ImapMessageFetcher::getPart() — see the
+				// matching fallback there.
+				if ($part->getType() === 'text/calendar'
+						|| $part->getType() === 'application/ics') {
+					$isImipMessage = true;
 				}
 			}
 
