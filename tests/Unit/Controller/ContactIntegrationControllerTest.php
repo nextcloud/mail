@@ -61,7 +61,7 @@ class ContactIntegrationControllerTest extends TestCase {
 
 		$this->service->expects($this->once())
 			->method('findMatches')
-			->with($mail)
+			->with($this->userId, $mail)
 			->willReturn($expected);
 
 		$response = $this->controller->match($mail);
@@ -170,7 +170,7 @@ class ContactIntegrationControllerTest extends TestCase {
 
 		$this->service->expects($this->once())
 			->method('autoComplete')
-			->with($term)
+			->with($this->userId, $term)
 			->willReturn($serviceResult);
 
 		$this->cache->expects($this->once())
@@ -201,7 +201,7 @@ class ContactIntegrationControllerTest extends TestCase {
 
 		$this->service->expects($this->once())
 			->method('autoComplete')
-			->with($term)
+			->with($this->userId, $term)
 			->willReturn($serviceResult);
 
 		$this->cache->expects($this->once())
@@ -228,7 +228,7 @@ class ContactIntegrationControllerTest extends TestCase {
 
 		$this->service->expects($this->once())
 			->method('autoComplete')
-			->with($term)
+			->with($this->userId, $term)
 			->willReturn([]);
 
 		$this->cache->expects($this->once())
@@ -256,7 +256,7 @@ class ContactIntegrationControllerTest extends TestCase {
 
 		$this->service->expects($this->once())
 			->method('autoComplete')
-			->with($term)
+			->with($this->userId, $term)
 			->willReturn([]);
 
 		$this->cache->expects($this->once())

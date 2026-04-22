@@ -34,7 +34,7 @@ class ContactCheckTest extends TestCase {
 			['uid' => 'contact1', 'email' => ['sender@example.com']],
 		]);
 
-		$result = $this->check->run('Sender Name', 'sender@example.com');
+		$result = $this->check->run('currentUser', 'Sender Name', 'sender@example.com');
 
 		$this->assertFalse($result->isPhishing());
 	}
@@ -42,7 +42,7 @@ class ContactCheckTest extends TestCase {
 	public function testNoContactMatchReturnsNonPhishing(): void {
 		$this->contactsIntegration->method('getContactsWithName')->willReturn([]);
 
-		$result = $this->check->run('Unknown Name', 'unknown@example.com');
+		$result = $this->check->run('currentUser', 'Unknown Name', 'unknown@example.com');
 
 		$this->assertFalse($result->isPhishing());
 	}
@@ -52,7 +52,7 @@ class ContactCheckTest extends TestCase {
 			['uid' => 'contact1', 'email' => ['different@example.com']],
 		]);
 
-		$result = $this->check->run('Sender Name', 'sender@example.com');
+		$result = $this->check->run('currentUser', 'Sender Name', 'sender@example.com');
 
 		$this->assertTrue($result->isPhishing());
 	}
@@ -62,7 +62,7 @@ class ContactCheckTest extends TestCase {
 			['uid' => 'contact1', 'email' => ['email1@example.com', 'email2@example.com']],
 		]);
 
-		$result = $this->check->run('Sender Name', 'sender@example.com');
+		$result = $this->check->run('currentUser', 'Sender Name', 'sender@example.com');
 
 		$this->assertTrue($result->isPhishing());
 	}
@@ -72,7 +72,7 @@ class ContactCheckTest extends TestCase {
 			['uid' => 'contact1', 'email' => ['Test@Example.com']],
 		]);
 
-		$result = $this->check->run('Sender Name', 'test@example.com');
+		$result = $this->check->run('currentUser', 'Sender Name', 'test@example.com');
 
 		$this->assertFalse($result->isPhishing());
 	}
@@ -82,7 +82,7 @@ class ContactCheckTest extends TestCase {
 			['uid' => 'contact1'],
 		]);
 
-		$result = $this->check->run('Sender Name', 'sender@example.com');
+		$result = $this->check->run('currentUser', 'Sender Name', 'sender@example.com');
 
 		$this->assertFalse($result->isPhishing());
 	}
@@ -93,7 +93,7 @@ class ContactCheckTest extends TestCase {
 			['uid' => 'contact2', 'email' => ['email2@example.com']],
 		]);
 
-		$result = $this->check->run('Sender Name', 'sender@example.com');
+		$result = $this->check->run('currentUser', 'Sender Name', 'sender@example.com');
 
 		$this->assertTrue($result->isPhishing());
 	}

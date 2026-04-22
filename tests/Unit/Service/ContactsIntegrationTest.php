@@ -343,13 +343,14 @@ class ContactsIntegrationTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function common($term, $searchResult, $allowSystemUsers, $allowSystemUsersInGroupOnly, $shareeEnumerationFullMatch, $shareeEnumerationFullMatchUserId = true, $shareeEnumerationFullMatchEmail = true) {
+	public function common($term, $searchResult, $allowSystemUsers, $allowSystemUsersInGroupOnly, $shareeEnumerationFullMatch, $shareeEnumerationFullMatchDisplayName = true, $shareeEnumerationFullMatchUserId = true, $shareeEnumerationFullMatchEmail = true) {
 		$this->config->expects(self::atLeast(3))
 			->method('getAppValue')
 			->withConsecutive(
 				['core', 'shareapi_allow_share_dialog_user_enumeration', 'yes'],
 				['core', 'shareapi_restrict_user_enumeration_to_group', 'no'],
 				['core', 'shareapi_restrict_user_enumeration_full_match', 'yes'],
+				['core', 'shareapi_restrict_user_enumeration_full_match_displayname', 'yes'],
 				['core', 'shareapi_restrict_user_enumeration_full_match_userid', 'yes'],
 				['core', 'shareapi_restrict_user_enumeration_full_match_email', 'yes'],
 			)
@@ -357,6 +358,7 @@ class ContactsIntegrationTest extends TestCase {
 				$allowSystemUsers ? 'yes' : ' no',
 				$allowSystemUsersInGroupOnly ? 'yes' : ' no',
 				$shareeEnumerationFullMatch ? 'yes' : ' no',
+				$shareeEnumerationFullMatchDisplayName ? 'yes' : 'no',
 				$shareeEnumerationFullMatchUserId ? 'yes' : 'no',
 				$shareeEnumerationFullMatchEmail ? 'yes' : ' no');
 		$this->contactsManager->expects($this->once())
@@ -420,13 +422,22 @@ class ContactsIntegrationTest extends TestCase {
 			],
 		];
 
-		$this->config->expects($this->once())
+		$this->contactsManager->expects($this->once())
+			->method('isEnabled')
+			->willReturn(true);
+		$this->config->expects(self::exactly(3))
 			->method('getAppValue')
-			->with('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes')
-			->willReturn('yes');
+			->withConsecutive(
+				['core', 'shareapi_allow_share_dialog_user_enumeration', 'yes'],
+				['core', 'shareapi_restrict_user_enumeration_to_group', 'no'],
+				['core', 'shareapi_restrict_user_enumeration_full_match', 'yes'],
+			)
+			->willReturnOnConsecutiveCalls('yes', 'no', 'no');
 		$this->contactsManager->expects($this->once())
 			->method('search')
 			->with($name, ['FN'], [
+				'enumeration' => true,
+				'fullmatch' => false,
 				'strict_search' => false,
 				'limit' => 20,
 			])
@@ -445,20 +456,16 @@ class ContactsIntegrationTest extends TestCase {
 			],
 		];
 
-		$actual = $this->contactsIntegration->getContactsWithName($name);
+		$actual = $this->contactsIntegration->getContactsWithName('currentUser', $name);
 
 		$this->assertEquals($expected, $actual);
 	}
 
 	public function testGetContactsWithNameFiltersSystemUsersWhenDisabled(): void {
 		$name = 'John';
+		// When enumeration is disabled the contacts manager filters system users;
+		// only non-system contacts are returned.
 		$searchResult = [
-			[
-				'UID' => 'jd',
-				'FN' => 'John Doe',
-				'EMAIL' => 'john@doe.com',
-				'isLocalSystemBook' => true,
-			],
 			[
 				'UID' => 'js',
 				'FN' => 'John Smith',
@@ -466,13 +473,22 @@ class ContactsIntegrationTest extends TestCase {
 			],
 		];
 
-		$this->config->expects($this->once())
+		$this->contactsManager->expects($this->once())
+			->method('isEnabled')
+			->willReturn(true);
+		$this->config->expects(self::exactly(3))
 			->method('getAppValue')
-			->with('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes')
-			->willReturn('no');
+			->withConsecutive(
+				['core', 'shareapi_allow_share_dialog_user_enumeration', 'yes'],
+				['core', 'shareapi_restrict_user_enumeration_to_group', 'no'],
+				['core', 'shareapi_restrict_user_enumeration_full_match', 'yes'],
+			)
+			->willReturnOnConsecutiveCalls('no', 'no', 'no');
 		$this->contactsManager->expects($this->once())
 			->method('search')
 			->with($name, ['FN'], [
+				'enumeration' => false,
+				'fullmatch' => false,
 				'strict_search' => false,
 				'limit' => 20,
 			])
@@ -486,7 +502,7 @@ class ContactsIntegrationTest extends TestCase {
 			],
 		];
 
-		$actual = $this->contactsIntegration->getContactsWithName($name);
+		$actual = $this->contactsIntegration->getContactsWithName('currentUser', $name);
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -494,19 +510,28 @@ class ContactsIntegrationTest extends TestCase {
 	public function testGetContactsWithNameNoResults(): void {
 		$name = 'Nonexistent';
 
-		$this->config->expects($this->once())
+		$this->contactsManager->expects($this->once())
+			->method('isEnabled')
+			->willReturn(true);
+		$this->config->expects(self::exactly(3))
 			->method('getAppValue')
-			->with('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes')
-			->willReturn('yes');
+			->withConsecutive(
+				['core', 'shareapi_allow_share_dialog_user_enumeration', 'yes'],
+				['core', 'shareapi_restrict_user_enumeration_to_group', 'no'],
+				['core', 'shareapi_restrict_user_enumeration_full_match', 'yes'],
+			)
+			->willReturnOnConsecutiveCalls('yes', 'no', 'no');
 		$this->contactsManager->expects($this->once())
 			->method('search')
 			->with($name, ['FN'], [
+				'enumeration' => true,
+				'fullmatch' => false,
 				'strict_search' => false,
 				'limit' => 20,
 			])
 			->willReturn([]);
 
-		$actual = $this->contactsIntegration->getContactsWithName($name);
+		$actual = $this->contactsIntegration->getContactsWithName('currentUser', $name);
 
 		$this->assertEquals([], $actual);
 	}
@@ -520,13 +545,22 @@ class ContactsIntegrationTest extends TestCase {
 			],
 		];
 
-		$this->config->expects($this->once())
+		$this->contactsManager->expects($this->once())
+			->method('isEnabled')
+			->willReturn(true);
+		$this->config->expects(self::exactly(3))
 			->method('getAppValue')
-			->with('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes')
-			->willReturn('yes');
+			->withConsecutive(
+				['core', 'shareapi_allow_share_dialog_user_enumeration', 'yes'],
+				['core', 'shareapi_restrict_user_enumeration_to_group', 'no'],
+				['core', 'shareapi_restrict_user_enumeration_full_match', 'yes'],
+			)
+			->willReturnOnConsecutiveCalls('yes', 'no', 'no');
 		$this->contactsManager->expects($this->once())
 			->method('search')
 			->with($name, ['FN'], [
+				'enumeration' => true,
+				'fullmatch' => false,
 				'strict_search' => false,
 				'limit' => 20,
 			])
@@ -540,7 +574,7 @@ class ContactsIntegrationTest extends TestCase {
 			],
 		];
 
-		$actual = $this->contactsIntegration->getContactsWithName($name);
+		$actual = $this->contactsIntegration->getContactsWithName('currentUser', $name);
 
 		$this->assertEquals($expected, $actual);
 	}

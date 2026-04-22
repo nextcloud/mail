@@ -38,9 +38,9 @@ class ContactCheckTest extends TestCase {
 		];
 		$this->contactsIntegration->expects(self::once())
 			->method('getContactsWithName')
-			->with($fn)
+			->with('currentUser', $fn)
 			->willReturn($contacts);
-		$result = $this->service->run($fn, $email);
+		$result = $this->service->run('currentUser', $fn, $email);
 
 		$this->assertFalse($result->isPhishing());
 	}
@@ -56,9 +56,9 @@ class ContactCheckTest extends TestCase {
 		$this->contactsIntegration
 			->expects(self::once())
 			->method('getContactsWithName')
-			->with($fn)
+			->with('currentUser', $fn)
 			->willReturn($contacts);
-		$result = $this->service->run($fn, $email);
+		$result = $this->service->run('currentUser', $fn, $email);
 
 		$this->assertFalse($result->isPhishing());
 	}
@@ -73,10 +73,10 @@ class ContactCheckTest extends TestCase {
 		];
 		$this->contactsIntegration->expects(self::once())
 			->method('getContactsWithName')
-			->with($fn)
+			->with('currentUser', $fn)
 			->willReturn($contacts);
 
-		$result = $this->service->run($fn, $email);
+		$result = $this->service->run('currentUser', $fn, $email);
 
 		$this->assertTrue($result->isPhishing());
 	}
@@ -88,10 +88,10 @@ class ContactCheckTest extends TestCase {
 		$this->contactsIntegration
 			->expects(self::once())
 			->method('getContactsWithName')
-			->with($fn)
+			->with('currentUser', $fn)
 			->willReturn($contacts);
 
-		$result = $this->service->run($fn, $email);
+		$result = $this->service->run('currentUser', $fn, $email);
 
 		$this->assertFalse($result->isPhishing());
 	}
