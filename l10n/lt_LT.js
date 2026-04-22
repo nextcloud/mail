@@ -333,7 +333,7 @@ OC.L10N.register(
     "Could not create event" : "Nepavyko sukurti įvykio",
     "Create event" : "Sukurti įvykį",
     "All day" : "Visą dieną",
-    "Attendees" : "Kviestiniai",
+    "Attendees" : "Dalyviai",
     "You can only invite attendees if your account has an email address set" : "Dalyvius galite pakviesti tik tuo atveju, jei jūsų paskyroje yra nustatytas el. pašto adresas.",
     "Select calendar" : "Pasirinkti kalendorių",
     "Description" : "Aprašas",
