@@ -296,10 +296,14 @@ class MessageApiController extends OCSController {
 		$json['rawUrl'] = $this->urlGenerator->linkToOCSRouteAbsolute('mail.messageApi.getRaw', ['id' => $id]);
 
 		if (!$loadBody) {
-			return new DataResponse($json, Http::STATUS_PARTIAL_CONTENT);
+			/** @var DataResponse<Http::STATUS_PARTIAL_CONTENT, MailMessageApiResponse, array{}> $response */
+			$response = new DataResponse($json, Http::STATUS_PARTIAL_CONTENT);
+			return $response;
 		}
 
-		return new DataResponse($json, Http::STATUS_OK);
+		/** @var DataResponse<Http::STATUS_OK, MailMessageApiResponse, array{}> $response */
+		$response = new DataResponse($json, Http::STATUS_OK);
+		return $response;
 	}
 
 	/**
@@ -382,6 +386,10 @@ class MessageApiController extends OCSController {
 	#[NoAdminRequired]
 	#[TrapError]
 	public function getAttachment(int $id, string $attachmentId): DataResponse {
+		if ($this->userId === null) {
+			return new DataResponse('Account not found.', Http::STATUS_NOT_FOUND);
+		}
+
 		try {
 			$message = $this->mailManager->getMessage($this->userId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->userId, $message->getMailboxId());
@@ -407,20 +415,24 @@ class MessageApiController extends OCSController {
 
 		// Body party and embedded messages do not have a name
 		if ($attachment->getName() === null) {
-			return new DataResponse([
+			/** @var DataResponse<Http::STATUS_OK, MailMessageApiAttachment, array{}> $response */
+			$response = new DataResponse([
 				'name' => $attachmentId . '.eml',
 				'mime' => $attachment->getType(),
 				'size' => $attachment->getSize(),
 				'content' => $attachment->getContent()
 			]);
+			return $response;
 		}
 
-		return new DataResponse([
+		/** @var DataResponse<Http::STATUS_OK, MailMessageApiAttachment, array{}> $response */
+		$response = new DataResponse([
 			'name' => $attachment->getName(),
 			'mime' => $attachment->getType(),
 			'size' => $attachment->getSize(),
 			'content' => $attachment->getContent()
 		]);
+		return $response;
 	}
 
 	/**
