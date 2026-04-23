@@ -14,6 +14,7 @@
     "General" : "Umumiy",
     "Appearance" : "Tashqi ko'rinish",
     "List" : "Ro`yxat",
+    "Privacy" : "Maxfiylik",
     "Security" : "Xavfsizlik",
     "Archive" : "Arxiv",
     "Delete" : "O'chirish",
@@ -37,6 +38,7 @@
     "Attendees" : "Ishtirokchilar",
     "Description" : "Tavsif",
     "Create" : "Yaratish",
+    "This event was cancelled" : "Bu tadbir bekor qilindi",
     "Select" : "Select",
     "Comment" : "Izoh",
     "Accept" : "Qabul qiling",
@@ -62,6 +64,7 @@
     "Reply" : "Javob bering",
     "Retry" : "Qayta urinish",
     "Add" : "Add",
+    "Clear" : "Toza",
     "Close" : "Yopish",
     "Date" : "Sana",
     "Tags" : "Tags",
@@ -77,6 +80,7 @@
     "Edit" : "Tahrirlash",
     "Reset" : "Qayta tiklash",
     "Client ID" : "Mijoz identifikatori",
+    "User" : "Foydalanuvchi",
     "Port" : "Port",
     "Submit" : "Submit",
     "Group" : "Guruh",
@@ -85,6 +89,7 @@
     "Account connected" : "Akkaunt ulangan",
     "All" : "All",
     "Error while sharing file" : "Fayl almashishda xatolik yuz berdi",
+    "Discard changes" : "O'zgarishlarni bekor qilish",
     "Last 7 days" : "Oxirgi 7 kun"
 },"pluralForm" :"nplurals=1; plural=0;"
 }
