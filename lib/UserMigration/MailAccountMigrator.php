@@ -14,6 +14,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\UserMigration\Service\AccountMigrationService;
 use OCA\Mail\UserMigration\Service\AppConfigMigrationService;
+use OCA\Mail\UserMigration\Service\InternalAddressesMigrationService;
 use OCA\Mail\UserMigration\Service\SMIMEMigrationService;
 use OCA\Mail\UserMigration\Service\TagsMigrationService;
 use OCA\Mail\UserMigration\Service\TextBlocksMigrationService;
@@ -37,6 +38,7 @@ class MailAccountMigrator implements IMigrator {
 		private readonly ICrypto $crypto,
 		private readonly AccountMigrationService $accountMigrationService,
 		private readonly AppConfigMigrationService $appConfigMigrationService,
+		private readonly InternalAddressesMigrationService $internalAddressesMigrationService,
 		private readonly TrustedSendersMigrationService $trustedSendersMigrationService,
 		private readonly TextBlocksMigrationService $textBlocksMigrationService,
 		private readonly TagsMigrationService $tagsMigrationService,
@@ -52,6 +54,7 @@ class MailAccountMigrator implements IMigrator {
 		$output->writeln($this->l10n->t("Exporting mail accounts for user {$user->getUID()}"), OutputInterface::VERBOSITY_VERBOSE);
 
 		$this->appConfigMigrationService->exportAppConfiguration($user, $exportDestination, $output);
+		$this->internalAddressesMigrationService->exportInternalAddresses($user, $exportDestination, $output);
 		$this->trustedSendersMigrationService->exportTrustedSenders($user, $exportDestination, $output);
 		$this->textBlocksMigrationService->exportTextBlocks($user, $exportDestination, $output);
 		$this->tagsMigrationService->exportTags($user, $exportDestination, $output);
@@ -65,6 +68,7 @@ class MailAccountMigrator implements IMigrator {
 		$this->deleteExistingData($user, $output);
 
 		$this->appConfigMigrationService->importAppConfiguration($user, $importSource, $output);
+		$this->internalAddressesMigrationService->importInternalAddresses($user, $importSource, $output);
 		$this->trustedSendersMigrationService->importTrustedSenders($user, $importSource, $output);
 		$this->textBlocksMigrationService->importTextBlocks($user, $importSource, $output);
 		$newTagIds = $this->tagsMigrationService->importTags($user, $importSource, $output);
@@ -87,6 +91,7 @@ class MailAccountMigrator implements IMigrator {
 		$output->writeln($this->l10n->t("Deleting existing mail data for user {$user->getUID()}"), OutputInterface::VERBOSITY_VERBOSE);
 
 		$this->appConfigMigrationService->deleteAppConfiguration($user, $output);
+		$this->internalAddressesMigrationService->removeInternalAddresses($user, $output);
 		$this->trustedSendersMigrationService->removeAllTrustedSenders($user, $output);
 		$this->textBlocksMigrationService->deleteAllTextBlocks($user, $output);
 		$this->tagsMigrationService->deleteAllTags($user, $output);
