@@ -12,6 +12,7 @@ namespace OCA\Mail\UserMigration;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\UserMigration\Service\AccountMigrationService;
 use OCA\Mail\UserMigration\Service\AppConfigMigrationService;
+use OCA\Mail\UserMigration\Service\SMIMEMigrationService;
 use OCA\Mail\UserMigration\Service\TagsMigrationService;
 use OCA\Mail\UserMigration\Service\TextBlocksMigrationService;
 use OCA\Mail\UserMigration\Service\TrustedSendersMigrationService;
@@ -36,6 +37,7 @@ class MailAccountMigrator implements IMigrator {
 		private readonly TrustedSendersMigrationService $trustedSendersMigrationService,
 		private readonly TextBlocksMigrationService $textBlocksMigrationService,
 		private readonly TagsMigrationService $tagsMigrationService,
+		private readonly SMIMEMigrationService $smimeMigrationService,
 	) {
 	}
 
@@ -53,6 +55,7 @@ class MailAccountMigrator implements IMigrator {
 		$this->trustedSendersMigrationService->exportTrustedSenders($user, $exportDestination, $output);
 		$this->textBlocksMigrationService->exportTextBlocks($user, $exportDestination, $output);
 		$this->tagsMigrationService->exportTags($user, $exportDestination, $output);
+		$this->smimeMigrationService->exportCertificates($user, $exportDestination, $output);
 	}
 
 	/**
