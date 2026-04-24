@@ -20,8 +20,8 @@ use OCP\Migration\SimpleMigrationStep;
 /**
  * @psalm-api
  */
-#[AddColumn(table: 'mail_mailboxes', name: 'rpid', type: ColumnType::STRING)]
-#[AddColumn(table: 'mail_mailboxes', name: 'rid', type: ColumnType::STRING)]
+#[AddColumn(table: 'mail_mailboxes', name: 'remote_parent_id', type: ColumnType::STRING)]
+#[AddColumn(table: 'mail_mailboxes', name: 'remote_id', type: ColumnType::STRING)]
 #[AddColumn(table: 'mail_mailboxes', name: 'state', type: ColumnType::STRING)]
 class Version5800Date20260401000002 extends SimpleMigrationStep {
 
@@ -35,15 +35,15 @@ class Version5800Date20260401000002 extends SimpleMigrationStep {
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 		$schema = $schemaClosure();
 		$mailboxesTable = $schema->getTable('mail_mailboxes');
-		if (!$mailboxesTable->hasColumn('rpid')) {
-			$mailboxesTable->addColumn('rpid', Types::STRING, [
+		if (!$mailboxesTable->hasColumn('remote_parent_id')) {
+			$mailboxesTable->addColumn('remote_parent_id', Types::STRING, [
 				'length' => 255,
 				'notnull' => false,
 				'default' => null,
 			]);
 		}
-		if (!$mailboxesTable->hasColumn('rid')) {
-			$mailboxesTable->addColumn('rid', Types::STRING, [
+		if (!$mailboxesTable->hasColumn('remote_id')) {
+			$mailboxesTable->addColumn('remote_id', Types::STRING, [
 				'length' => 255,
 				'notnull' => false,
 				'default' => null,
