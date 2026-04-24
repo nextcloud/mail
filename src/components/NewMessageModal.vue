@@ -309,6 +309,10 @@ export default {
 
 		handleShow(element) {
 			this.additionalTrapElements.push(element)
+			const ckBodyWrapper = document.querySelector('.ck-body-wrapper')
+			if (ckBodyWrapper && !this.additionalTrapElements.includes(ckBodyWrapper)) {
+				this.additionalTrapElements.push(ckBodyWrapper)
+			}
 		},
 
 		/**
