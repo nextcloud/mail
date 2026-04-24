@@ -49,7 +49,7 @@ class MailAccountMigrator implements IMigrator {
 		OutputInterface $output,
 	): void {
 		$output->writeln(
-			$this->l10n->t('Exporting mail accounts for user %s', [ $user->getUID() ]),
+			$this->l10n->t('Exporting mail accounts for user %s', [$user->getUID()]),
 			OutputInterface::VERBOSITY_VERBOSE
 		);
 
@@ -59,15 +59,20 @@ class MailAccountMigrator implements IMigrator {
 		$this->textBlocksMigrationService->exportTextBlocks($user, $exportDestination, $output);
 		$this->tagsMigrationService->exportTags($user, $exportDestination, $output);
 		$this->smimeMigrationService->exportCertificates($user, $exportDestination, $output);
+		$this->accountMigrationService->exportAccounts($user, $exportDestination, $output);
 	}
 
 	/**
+	 * @throws \JsonException
+	 * @throws \OCA\Mail\Exception\ServiceException
+	 * @throws \OCP\AppFramework\Db\DoesNotExistException
 	 * @throws \OCP\DB\Exception
+	 * @throws \OCP\UserMigration\UserMigrationException
 	 */
 	#[\Override]
 	public function import(IUser $user, IImportSource $importSource, OutputInterface $output): void {
 		$output->writeln(
-			$this->l10n->t('Importing mail accounts for user %s', [ $user->getUID() ]),
+			$this->l10n->t('Importing mail accounts for user %s', [$user->getUID()]),
 			OutputInterface::VERBOSITY_VERBOSE
 		);
 
@@ -76,6 +81,9 @@ class MailAccountMigrator implements IMigrator {
 		$this->trustedSendersMigrationService->importTrustedSenders($user, $importSource, $output);
 		$this->textBlocksMigrationService->importTextBlocks($user, $importSource, $output);
 		$migratedTags = $this->tagsMigrationService->importTags($user, $importSource, $output);
+		$migratedCertificates = $this->smimeMigrationService->importCertificates($user, $importSource, $output);
+		$migratedAccountsAndMailboxes = $this->accountMigrationService->importAccounts($user, $importSource, $output,
+			$migratedCertificates);
 
 		$this->accountMigrationService->scheduleBackgroundJobs($user, $output);
 	}
