@@ -55,32 +55,34 @@
 					@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
 			</div>
 
-			<router-link
-				:to="route"
-				event=""
+			<div
 				class="left"
 				:class="{ seen: envelope.flags.seen }"
-				@click.native.prevent="$emit('toggle-expand', $event)">
+				role="button"
+				tabindex="0"
+				@click="$emit('toggle-expand', $event)"
+				@keydown.enter="$emit('toggle-expand', $event)"
+				@keydown.space.prevent="$emit('toggle-expand', $event)">
 				<div class="envelope__header__left__sender-subject-tags">
 					<div class="sender" :class="{ 'sender--expanded': expanded }">
 						{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
-						<button
-							v-if="expanded && hasRecipients"
-							type="button"
-							class="sender__email sender__email--toggle"
-							:style="{ color: senderEmailColor }"
-							@click.stop.prevent="showRecipients = !showRecipients">
-							{{ senderEmail }}
-							<ChevronUpIcon v-if="showRecipients" :size="16" />
-							<ChevronDownIcon v-else :size="16" />
-						</button>
-						<p
-							v-else-if="expanded"
-							class="sender__email"
-							:style="{ color: senderEmailColor }">
-							{{ senderEmail }}
-						</p>
 					</div>
+					<button
+						v-if="expanded && hasRecipients"
+						type="button"
+						class="sender__email sender__email--toggle"
+						:style="{ color: senderEmailColor }"
+						@click.stop.prevent="showRecipients = !showRecipients">
+						{{ senderEmail }}
+						<ChevronUpIcon v-if="showRecipients" :size="16" />
+						<ChevronDownIcon v-else :size="16" />
+					</button>
+					<p
+						v-else-if="expanded"
+						class="sender__email"
+						:style="{ color: senderEmailColor }">
+						{{ senderEmail }}
+					</p>
 					<div v-if="hasChangedSubject" class="subline">
 						{{ cleanSubject }}
 					</div>
@@ -110,11 +112,11 @@
 						v-if="message && message.dkimValid && (message.unsubscribeUrl || message.unsubscribeMailto)"
 						variant="tertiary"
 						class="envelope__header__unsubscribe"
-						@click="showListUnsubscribeConfirmation = true">
+						@click.stop="showListUnsubscribeConfirmation = true">
 						{{ t('mail', 'Unsubscribe') }}
 					</NcButton>
 				</div>
-			</router-link>
+			</div>
 			<div class="right">
 				<Moment class="timestamp" :timestamp="envelope.dateInt" />
 				<template v-if="expanded">
@@ -288,26 +290,29 @@
 			<div v-if="envelope.to && envelope.to.length" class="recipients">
 				<span class="recipients__label">{{ t('mail', 'To:') }}</span>
 				<RecipientBubble
-					v-for="recipient in envelope.to"
-					:key="recipient.email"
+					v-for="(recipient, index) in envelope.to"
+					:key="`${recipient.email}-${index}`"
 					:email="recipient.email"
-					:label="recipient.label" />
+					:label="recipient.label"
+					:size="24" />
 			</div>
 			<div v-if="envelope.cc && envelope.cc.length" class="recipients">
 				<span class="recipients__label">{{ t('mail', 'Cc:') }}</span>
 				<RecipientBubble
-					v-for="recipient in envelope.cc"
-					:key="recipient.email"
+					v-for="(recipient, index) in envelope.cc"
+					:key="`${recipient.email}-${index}`"
 					:email="recipient.email"
-					:label="recipient.label" />
+					:label="recipient.label"
+					:size="24" />
 			</div>
 			<div v-if="envelope.bcc && envelope.bcc.length" class="recipients">
 				<span class="recipients__label">{{ t('mail', 'Bcc:') }}</span>
 				<RecipientBubble
-					v-for="recipient in envelope.bcc"
-					:key="recipient.email"
+					v-for="(recipient, index) in envelope.bcc"
+					:key="`${recipient.email}-${index}`"
 					:email="recipient.email"
-					:label="recipient.label" />
+					:label="recipient.label"
+					:size="24" />
 			</div>
 		</div>
 		<MessageLoadingSkeleton v-if="loading === Loading.Skeleton" />
@@ -587,16 +592,6 @@ export default {
 				email: this.account.emailAddress,
 			})
 			return recipients.to.concat(recipients.cc).length > 1
-		},
-
-		route() {
-			return {
-				name: 'message',
-				params: {
-					mailboxId: this.mailboxId || this.envelope.mailboxId,
-					threadId: this.envelope.databaseId,
-				},
-			}
 		},
 
 		isEncrypted() {
@@ -1181,12 +1176,10 @@ export default {
 
 		&--expanded {
 			color: var(--color-text-maxcontrast);
-			display: flex;
-			flex-direction: column;
-			align-items: flex-start;
 		}
 
 		&__email {
+			margin-inline-start: calc(var(--default-grid-baseline) * 2);
 			text-overflow: ellipsis;
 			overflow: hidden;
 
@@ -1465,19 +1458,11 @@ export default {
 			}
 
 			:deep(.user-bubble__content) {
-				height: 24px !important;
-				line-height: 24px !important;
-				border-radius: var(--border-radius-pill) !important;
+				border-radius: var(--border-radius-pill);
 
 				> :last-child {
 					padding-inline-end: 0;
 				}
-			}
-
-			:deep(.user-bubble__avatar) {
-				--avatar-size: 24px !important;
-				font-size: 11px !important;
-				line-height: 24px !important;
 			}
 		}
 	}

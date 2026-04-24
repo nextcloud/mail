@@ -217,7 +217,6 @@ export default {
 			if (this.mainStore.getPreference('layout-message-view', 'threaded') === 'threaded') {
 				await this.fetchThread()
 			}
-			this.updateParticipantsToDisplay()
 			this.updateSummary()
 			this.loadedThreads = 0
 		},
