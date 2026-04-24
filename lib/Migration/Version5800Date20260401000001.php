@@ -21,6 +21,7 @@ use OCP\Migration\SimpleMigrationStep;
  * @psalm-api
  */
 #[AddColumn(table: 'mail_accounts', name: 'protocol', type: ColumnType::STRING)]
+#[AddColumn(table: 'mail_accounts', name: 'path', type: ColumnType::STRING)]
 class Version5800Date20260401000001 extends SimpleMigrationStep {
 
 	/**

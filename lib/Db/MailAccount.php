@@ -303,6 +303,7 @@ class MailAccount extends Entity {
 		$this->addType('classificationEnabled', 'boolean');
 		$this->addType('imipCreate', 'boolean');
 		$this->addType('protocol', 'string');
+		$this->addType('path', 'string');
 	}
 
 	public function getOutOfOfficeFollowsSystem(): bool {
@@ -354,7 +355,7 @@ class MailAccount extends Entity {
 			'debug' => $this->getDebug(),
 			'classificationEnabled' => $this->getClassificationEnabled(),
 			'imipCreate' => $this->getImipCreate(),
-			'protocol' => $this->getProtocol() ?? self::PROTOCOL_IMAP,
+			'protocol' => $this->getProtocol(),
 			'path' => $this->getPath(),
 		];
 

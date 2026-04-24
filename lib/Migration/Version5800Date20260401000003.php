@@ -20,7 +20,7 @@ use OCP\Migration\SimpleMigrationStep;
 /**
  * @psalm-api
  */
-#[AddColumn(table: 'mail_messages', name: 'rid', type: ColumnType::STRING)]
+#[AddColumn(table: 'mail_messages', name: 'remote_id', type: ColumnType::STRING)]
 class Version5800Date20260401000003 extends SimpleMigrationStep {
 
 	/**
@@ -34,8 +34,8 @@ class Version5800Date20260401000003 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 		$messagesTable = $schema->getTable('mail_messages');
 
-		if (!$messagesTable->hasColumn('rid')) {
-			$messagesTable->addColumn('rid', Types::STRING, [
+		if (!$messagesTable->hasColumn('remote_id')) {
+			$messagesTable->addColumn('remote_id', Types::STRING, [
 				'length' => 255,
 				'notnull' => false,
 				'default' => null,
