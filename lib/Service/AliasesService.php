@@ -15,6 +15,7 @@ use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\DB\Exception;
 
 class AliasesService {
 	/** @var AliasMapper */
@@ -131,6 +132,18 @@ class AliasesService {
 	public function updateSignature(string $userId, int $aliasId, ?string $signature = null): Alias {
 		$entity = $this->find($aliasId, $userId);
 		$entity->setSignature($signature);
+		return $this->aliasMapper->update($entity);
+	}
+
+	/**
+	 * Update the S/MIME certificate for an alias.
+	 *
+	 * @throws DoesNotExistException
+	 * @throws Exception
+	 */
+	public function updateSMIMECertificateId(string $userId, int $aliasId, ?int $sMimeCertificateId = null): Alias {
+		$entity = $this->find($aliasId, $userId);
+		$entity->setSmimeCertificateId($sMimeCertificateId);
 		return $this->aliasMapper->update($entity);
 	}
 }
