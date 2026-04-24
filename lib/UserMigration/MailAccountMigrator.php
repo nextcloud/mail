@@ -42,7 +42,7 @@ class MailAccountMigrator implements IMigrator {
 		private readonly TrustedSendersMigrationService $trustedSendersMigrationService,
 		private readonly TextBlocksMigrationService $textBlocksMigrationService,
 		private readonly TagsMigrationService $tagsMigrationService,
-		private readonly SMIMEMigrationService $smimeMigrationService,
+		private readonly SMIMEMigrationService $sMimeMigrationService,
 	) {
 	}
 
@@ -58,7 +58,8 @@ class MailAccountMigrator implements IMigrator {
 		$this->trustedSendersMigrationService->exportTrustedSenders($user, $exportDestination, $output);
 		$this->textBlocksMigrationService->exportTextBlocks($user, $exportDestination, $output);
 		$this->tagsMigrationService->exportTags($user, $exportDestination, $output);
-		$this->smimeMigrationService->exportCertificates($user, $exportDestination, $output);
+		$this->sMimeMigrationService->exportCertificates($user, $exportDestination, $output);
+		$this->accountMigrationService->exportAccounts($user, $exportDestination, $output);
 	}
 
 	#[\Override]
@@ -71,8 +72,9 @@ class MailAccountMigrator implements IMigrator {
 		$this->internalAddressesMigrationService->importInternalAddresses($user, $importSource, $output);
 		$this->trustedSendersMigrationService->importTrustedSenders($user, $importSource, $output);
 		$this->textBlocksMigrationService->importTextBlocks($user, $importSource, $output);
+		$newCertificateIds = $this->sMimeMigrationService->importCertificates($user, $importSource, $output);
+		$newAccountIds = $this->accountMigrationService->importAccounts($user, $importSource, $output, $newCertificateIds);
 		$newTagIds = $this->tagsMigrationService->importTags($user, $importSource, $output);
-		$newCertificateIds = $this->smimeMigrationService->importCertificates($user, $importSource, $output);
 
 		$this->accountMigrationService->scheduleBackgroundJobs($user, $output);
 	}
@@ -90,13 +92,14 @@ class MailAccountMigrator implements IMigrator {
 	private function deleteExistingData(IUser $user, OutputInterface $output): void {
 		$output->writeln($this->l10n->t("Deleting existing mail data for user {$user->getUID()}"), OutputInterface::VERBOSITY_VERBOSE);
 
+		$this->accountMigrationService->deleteAllAccounts($user, $output);
 		$this->appConfigMigrationService->deleteAppConfiguration($user, $output);
 		$this->internalAddressesMigrationService->removeInternalAddresses($user, $output);
 		$this->trustedSendersMigrationService->removeAllTrustedSenders($user, $output);
 		$this->textBlocksMigrationService->deleteAllTextBlocks($user, $output);
 		$this->tagsMigrationService->deleteAllTags($user, $output);
 		$this->accountMigrationService->deleteAllAccounts($user, $output);
-		$this->smimeMigrationService->deleteAllUserCertificates($user, $output);
+		$this->sMimeMigrationService->deleteAllUserCertificates($user, $output);
 	}
 
 	#[\Override]
