@@ -234,6 +234,100 @@ class AccountServiceTest extends TestCase {
 		$this->assertTrue($connected);
 	}
 
+	public function testDeleteInvalidatesCache(): void {
+		$accountId = 33;
+		$this->account1->setUserId($this->user);
+
+		$this->mapper->expects(self::exactly(2))
+			->method('findByUserId')
+			->with($this->user)
+			->willReturn([$this->account1]);
+		$this->mapper->method('find')
+			->with($this->user, $accountId)
+			->willReturn($this->account1);
+
+		$this->accountService->findByUserId($this->user);
+		$this->accountService->delete($this->user, $accountId);
+		$this->accountService->findByUserId($this->user);
+	}
+
+	public function testDeleteByAccountIdInvalidatesCache(): void {
+		$accountId = 33;
+		$this->account1->setUserId($this->user);
+		$this->account1->setId($accountId);
+
+		$this->mapper->expects(self::exactly(2))
+			->method('findByUserId')
+			->with($this->user)
+			->willReturn([$this->account1]);
+		$this->mapper->method('findById')
+			->with($accountId)
+			->willReturn($this->account1);
+
+		$this->accountService->findByUserId($this->user);
+		$this->accountService->deleteByAccountId($accountId);
+		$this->accountService->findByUserId($this->user);
+	}
+
+	public function testSaveInvalidatesCache(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
+		$mailAccount->setUserId($this->user);
+
+		$this->mapper->expects(self::exactly(2))
+			->method('findByUserId')
+			->with($this->user)
+			->willReturn([$mailAccount]);
+		$this->mapper->method('save')
+			->willReturnArgument(0);
+		$this->time->method('getTime')
+			->willReturn(1755850409);
+		$this->jobList->method('has')
+			->willReturn(true);
+
+		$this->accountService->findByUserId($this->user);
+		$this->accountService->save($mailAccount);
+		$this->accountService->findByUserId($this->user);
+	}
+
+	public function testUpdateInvalidatesCache(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
+		$mailAccount->setUserId($this->user);
+
+		$this->mapper->expects(self::exactly(2))
+			->method('findByUserId')
+			->with($this->user)
+			->willReturn([$mailAccount]);
+		$this->mapper->method('update')
+			->willReturnArgument(0);
+
+		$this->accountService->findByUserId($this->user);
+		$this->accountService->update($mailAccount);
+		$this->accountService->findByUserId($this->user);
+	}
+
+	public function testUpdateSignatureInvalidatesCache(): void {
+		$id = 3;
+		$uid = $this->user;
+		$mailAccount = new MailAccount();
+		$mailAccount->setId($id);
+		$mailAccount->setUserId($uid);
+
+		$this->mapper->expects(self::exactly(2))
+			->method('findByUserId')
+			->with($uid)
+			->willReturn([$mailAccount]);
+		$this->mapper->method('find')
+			->with($uid, $id)
+			->willReturn($mailAccount);
+		$this->mapper->method('save');
+
+		$this->accountService->findByUserId($uid);
+		$this->accountService->updateSignature($id, $uid, 'sig');
+		$this->accountService->findByUserId($uid);
+	}
+
 	public function testScheduleBackgroundJobs(): void {
 		$mailAccountId = 1000;
 		$this->time->expects(self::once())
