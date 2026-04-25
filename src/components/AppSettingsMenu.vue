@@ -114,8 +114,7 @@
 						:label="t('mail', 'Text blocks')"
 						:description="t('mail', 'Reusable pieces of text that can be inserted in messages')">
 						<List
-							:text-blocks="getMyTextBlocks()"
-							@show-toolbar="handleShowToolbar" />
+							:text-blocks="getMyTextBlocks()" />
 						<NcButton variant="secondary" wide @click="() => textBlockDialogOpen = true">
 							<template #icon>
 								<IconAdd :size="20" />
@@ -126,8 +125,7 @@
 							<h6>{{ t('mail', 'Shared with me') }}</h6>
 							<List
 								:text-blocks="getSharedTextBlocks()"
-								:shared="true"
-								@show-toolbar="handleShowToolbar" />
+								:shared="true" />
 						</template>
 					</NcFormGroup>
 				</NcAppSettingsSection>
@@ -243,8 +241,7 @@
 						:is-bordered="true"
 						:html="true"
 						:placeholder="t('mail', 'Content of the text block')"
-						:bus="bus"
-						:show-toolbar="handleShowToolbar" />
+						:bus="bus" />
 					<div class="text-block-buttons">
 						<NcButton
 							variant="tertiary"
@@ -343,6 +340,12 @@ export default {
 		NcHotkeyList,
 		NcHotkey,
 		IconArrow,
+	},
+
+	provide() {
+		return {
+			addToFocusTrap: (trapElement) => this.trapElements.push(trapElement),
+		}
 	},
 
 	props: {
@@ -742,10 +745,6 @@ export default {
 			iframe.style = 'display: none'
 			iframe.src = 'https://api.mailvelope.com/authorize-domain/?api=true'
 			document.body.append(iframe)
-		},
-
-		handleShowToolbar(element) {
-			this.trapElements.push(element)
 		},
 
 		newTextBlock() {

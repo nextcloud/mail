@@ -25,7 +25,7 @@
 			<p class="settings-hint">
 				{{ t('mail', 'A signature is added to the text of new messages and replies.') }}
 			</p>
-			<SignatureSettings :account="account" @show-toolbar="handleShowToolbar" />
+			<SignatureSettings :account="account" />
 		</AppSettingsSection>
 		<AppSettingsSection id="writing-mode" :name="t('mail', 'Writing mode')">
 			<p class="settings-hint">
@@ -179,6 +179,12 @@ export default {
 		NcCheckboxRadioSwitch,
 	},
 
+	provide() {
+		return {
+			addToFocusTrap: (trapElement) => this.trapElements.push(trapElement),
+		}
+	},
+
 	props: {
 		account: {
 			required: true,
@@ -232,10 +238,6 @@ export default {
 
 		updateOpen() {
 			this.$emit('update:open')
-		},
-
-		handleShowToolbar(element) {
-			this.trapElements.push(element)
 		},
 
 		async onToggleClassification(classificationEnabled) {
