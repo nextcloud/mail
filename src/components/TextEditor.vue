@@ -68,6 +68,10 @@ export default {
 		ckeditor: CKEditor.component,
 	},
 
+	inject: {
+		addToFocusTrap: { default: () => {} },
+	},
+
 	props: {
 		value: {
 			type: String,
@@ -482,7 +486,7 @@ export default {
 			}
 
 			if (this.html) {
-				this.$emit('show-toolbar', editor.ui._focusableToolbarDefinitions[0].toolbarView.element)
+				this.addToFocusTrap('.ck-body-wrapper')
 			}
 
 			this.bus.on('append-to-body-at-cursor', this.appendToBodyAtCursor)

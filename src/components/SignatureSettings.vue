@@ -32,8 +32,7 @@
 				:html="true"
 				:placeholder="t('mail', 'Signature …')"
 				:bus="bus"
-				class="signature-editor-wrapper__editor"
-				@show-toolbar="handleShowToolbar" />
+				class="signature-editor-wrapper__editor" />
 		</div>
 		<p v-if="isLargeSignature" class="warning-large-signature">
 			{{ t('mail', 'Your signature is larger than 2 MB. This may affect the performance of your editor.') }}
@@ -189,9 +188,6 @@ export default {
 				})
 		},
 
-		handleShowToolbar(event) {
-			this.$emit('show-toolbar', event)
-		},
 	},
 }
 </script>
