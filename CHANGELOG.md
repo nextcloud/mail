@@ -1,3 +1,19 @@
+## [5.7.13](https://github.com/nextcloud/mail/compare/v5.7.12...v5.7.13) (2026-04-27)
+
+
+### Bug Fixes
+
+* **AccountService:** Invalidate cache after account creation/change/deletion ([28b9304](https://github.com/nextcloud/mail/commit/28b93042fa0846cfc6956444509fe04e20410161))
+* **autocomplete:** respect privacy settings for sharing ([7201159](https://github.com/nextcloud/mail/commit/7201159771e82f35acfd15a7d3706b19266aca42))
+* **deps:** bump uuid from 11.1.0 to v14 ([75c5c03](https://github.com/nextcloud/mail/commit/75c5c03dcbd47056a2a35abbbcb1c3d08444a377))
+* **l10n:** Update translations from Transifex ([6d374e1](https://github.com/nextcloud/mail/commit/6d374e1dc24a1e392bcba6dc5e2409253165054d))
+* **l10n:** Update translations from Transifex ([3fed98c](https://github.com/nextcloud/mail/commit/3fed98cc9d84809e229b4b71aad0a7aa6680eb34))
+* **l10n:** Update translations from Transifex ([6913ebf](https://github.com/nextcloud/mail/commit/6913ebf84fff20b6603909e820698c22236e232b))
+* **mention:** custom range for usernames and error handling ([d9979dd](https://github.com/nextcloud/mail/commit/d9979dd0fff03c2b733357057cb7d286640885f2))
+* **Thread:** title printing ([3405d1a](https://github.com/nextcloud/mail/commit/3405d1a05b5eef751fa86074b367216e07b4abdc))
+
+
+
 ## [5.7.12](https://github.com/nextcloud/mail/compare/v5.7.11...v5.7.12) (2026-04-21)
 
 
