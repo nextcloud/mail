@@ -32,18 +32,22 @@ class Version5008Date20260320125737 extends SimpleMigrationStep {
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 		$schema = $schemaClosure();
 
-		if ($schema->hasTable('mail_attachments')) {
-			$attachmentsTable = $schema->getTable('mail_attachments');
-			if (!$attachmentsTable->hasColumn('content_id')) {
-				$attachmentsTable->addColumn('content_id', Types::STRING, [
-					'notnull' => false,
-				]);
-			}
-			if (!$attachmentsTable->hasColumn('disposition')) {
-				$attachmentsTable->addColumn('disposition', Types::STRING, [
-					'notnull' => false,
-				]);
-			}
+		if (!$schema->hasTable('mail_attachments')) {
+			return null;
+		}
+
+		$attachmentsTable = $schema->getTable('mail_attachments');
+		if (!$attachmentsTable->hasColumn('content_id')) {
+			$attachmentsTable->addColumn('content_id', Types::STRING, [
+				'notnull' => false,
+				'length' => 255,
+			]);
+		}
+		if (!$attachmentsTable->hasColumn('disposition')) {
+			$attachmentsTable->addColumn('disposition', Types::STRING, [
+				'notnull' => false,
+				'length' => 10,
+			]);
 		}
 
 		return $schema;
