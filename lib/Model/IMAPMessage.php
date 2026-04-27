@@ -326,6 +326,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		[$mailBody, $signature] = $this->htmlService->parseMailBody($mailBody);
 		$data['signature'] = $signature;
 		$data['attachments'] = array_merge($this->attachments, $this->inlineAttachments);
+		$data['inlineAttachments'] = [];
 		if ($loadBody) {
 			$data['body'] = $mailBody;
 		}

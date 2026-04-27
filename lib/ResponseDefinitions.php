@@ -31,6 +31,7 @@ namespace OCA\Mail;
  *     unsubscribeMailTo: ?string,
  *     scheduling: list<array{id: ?string, messageId: string, method: string, contents: string}>,
  *     attachments: list<array{id: int<1, max>, messageId: int<1, max>, filename: string, mime: string, size: int<0, max>, cid: ?string, disposition: string, downloadUrl?: string}>
+ *     inlineAttachments: list<array{id: int<1, max>, messageId: int<1, max>, filename: string, mime: string, size: int<0, max>, cid: ?string, disposition: string, downloadUrl?: string}>
  * }
  *
  * @psalm-type MailMessageApiResponse = MailIMAPFullMessage&array{
