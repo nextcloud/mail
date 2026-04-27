@@ -534,13 +534,14 @@ export default {
 							iframeDocument.write(`
 								<html>
 									<head>
-										<title>${this.threadSubject}</title>
+										<title></title>
 									</head>
 									<body>
 										<div class="message-container">${messageContainer.innerHTML}</div>
 									</body>
 								</html>
 							`)
+							iframeDocument.title = this.threadSubject
 
 							const threadInfo = this.addThreadInfo(iframeDocument)
 							iframeDocument.body.insertBefore(threadInfo, iframeDocument.body.firstChild)
