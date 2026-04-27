@@ -62,7 +62,7 @@ class Version5008Date20260320125737 extends SimpleMigrationStep {
 	}
 
 	#[Override]
-	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
+	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options): void {
 		$qb = $this->connection->getQueryBuilder();
 		$qb->update('mail_attachments')
 			->set('disposition', $qb->createNamedParameter('attachment', IQueryBuilder::PARAM_STR))
