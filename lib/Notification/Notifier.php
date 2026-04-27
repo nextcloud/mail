@@ -15,15 +15,19 @@ use OCP\L10N\IFactory;
 use OCP\Notification\INotification;
 use OCP\Notification\INotifier;
 use OCP\Notification\UnknownNotificationException;
+use Psr\Log\LoggerInterface;
 
 class Notifier implements INotifier {
 	private IFactory $factory;
 	private IURLGenerator $url;
+	private LoggerInterface $logger;
 
 	public function __construct(IFactory $factory,
-		IURLGenerator $url) {
+		IURLGenerator $url,
+		LoggerInterface $logger) {
 		$this->factory = $factory;
 		$this->url = $url;
+		$this->logger = $logger;
 	}
 
 	#[\Override]
@@ -71,6 +75,41 @@ class Notifier implements INotifier {
 							'name' => (string)$messageParameters['quota_percentage'] . '%',
 						]
 					]);
+				break;
+			case 'imip_processing_failed':
+				$parameters = $notification->getSubjectParameters();
+				$subject = $parameters['subject'] ?? $l->t('No subject');
+				$sender = $parameters['sender'] ?? $l->t('Unknown sender');
+				$mailboxId = (int)$parameters['mailboxId'];
+				$messageId = (int)$parameters['messageId'];
+				$subjectParam = [
+					'type' => 'highlight',
+					'id' => (string)$messageId,
+					'name' => $subject,
+				];
+				$senderParam = [
+					'type' => 'highlight',
+					'id' => 'sender',
+					'name' => $sender,
+				];
+				$notification->setRichSubject(
+					$l->t('Calendar invitation processing failed for "{subject}"'),
+					[
+						'subject' => $subjectParam,
+					]
+				);
+				$link = $this->url->linkToRouteAbsolute('mail.page.thread', [
+					'mailboxId' => $mailboxId,
+					'id' => $messageId,
+				]);
+				$notification->setLink($link);
+				$notification->setRichMessage(
+					$l->t('The invitation "{subject}" from {sender} could not be processed automatically. Please add the event manually.'),
+					[
+						'subject' => $subjectParam,
+						'sender' => $senderParam,
+					]
+				);
 				break;
 			default:
 				throw  new UnknownNotificationException();

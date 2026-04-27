@@ -19,6 +19,7 @@ use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Util\ServerVersion;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Calendar\IManager;
+use OCP\Notification\IManager as INotificationManager;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
@@ -32,6 +33,7 @@ class IMipService {
 	private MailManager $mailManager;
 	private MessageMapper $messageMapper;
 	private ServerVersion $serverVersion;
+	private INotificationManager $notificationManager;
 
 	public function __construct(
 		AccountService $accountService,
@@ -41,6 +43,7 @@ class IMipService {
 		MailManager $mailManager,
 		MessageMapper $messageMapper,
 		ServerVersion $serverVersion,
+		INotificationManager $notificationManager,
 	) {
 		$this->accountService = $accountService;
 		$this->calendarManager = $manager;
@@ -49,6 +52,7 @@ class IMipService {
 		$this->mailManager = $mailManager;
 		$this->messageMapper = $messageMapper;
 		$this->serverVersion = $serverVersion;
+		$this->notificationManager = $notificationManager;
 	}
 
 	public function process(): void {
@@ -145,6 +149,7 @@ class IMipService {
 					// an IMAP message could contain more than one iMIP object
 					foreach ($imapMessage->scheduling as $schedulingInfo) {
 						$processed = false;
+
 						if ($systemVersion < 33) {
 							$principalUri = 'principals/users/' . $userId;
 							if ($schedulingInfo['method'] === 'REQUEST') {
@@ -182,9 +187,46 @@ class IMipService {
 					]);
 					$message->setImipProcessed(true);
 					$message->setImipError(true);
+
+					try {
+						$this->sendErrorNotification($account, $mailbox, $message, $imapMessage);
+					} catch (Throwable $notificationException) {
+						$this->logger->error('Failed to send error notification', [
+							'exception' => $notificationException,
+							'messageId' => $message->getId(),
+						]);
+					}
 				}
 			}
 			$this->messageMapper->updateImipData(...$filteredMessages);
 		}
+	}
+
+	/**
+	 * Send error notification when iMIP processing fails
+	 * Uses Nextcloud Notifications app
+	 */
+	private function sendErrorNotification(
+		Account $account,
+		Mailbox $mailbox,
+		Message $message,
+		IMAPMessage $imapMessage,
+	): void {
+
+		$notification = $this->notificationManager->createNotification();
+
+		$notification
+			->setApp('mail')
+			->setUser($account->getUserId())
+			->setObject('imip_error', (string)$message->getId())
+			->setSubject('imip_processing_failed', [
+				'subject' => $imapMessage->getSubject(),
+				'sender' => $imapMessage->getFrom()->first()?->getEmail(),
+				'mailboxId' => $mailbox->getId(),
+				'messageId' => $message->getId(),
+			])
+			->setDateTime(new \DateTime());
+
+		$this->notificationManager->notify($notification);
 	}
 }
