@@ -21,11 +21,11 @@ class TransformCidDataAttrTest extends TestCase {
 	private array $inlineAttachments = [
 		[
 			'cid' => 'image001@example.com',
-			'url' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachments/7',
+			'url' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachment/7',
 		],
 		[
 			'cid' => 'image002@example.com',
-			'url' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachments/8',
+			'url' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachment/8',
 		],
 	];
 
@@ -43,7 +43,7 @@ class TransformCidDataAttrTest extends TestCase {
 
 	public function testNonImgTagIsUnchanged(): void {
 		$transform = new TransformCidDataAttr($this->inlineAttachments);
-		$attr = ['src' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachments/7'];
+		$attr = ['src' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachment/7'];
 		$context = $this->makeContext('div');
 
 		$result = $transform->transform($attr, $this->config, $context);
@@ -63,7 +63,7 @@ class TransformCidDataAttrTest extends TestCase {
 
 	public function testMatchingSrcSetsCidAttribute(): void {
 		$transform = new TransformCidDataAttr($this->inlineAttachments);
-		$attr = ['src' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachments/7'];
+		$attr = ['src' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachment/7'];
 		$context = $this->makeContext('img');
 
 		$result = $transform->transform($attr, $this->config, $context);
@@ -73,7 +73,7 @@ class TransformCidDataAttrTest extends TestCase {
 
 	public function testSecondAttachmentMatches(): void {
 		$transform = new TransformCidDataAttr($this->inlineAttachments);
-		$attr = ['src' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachments/8'];
+		$attr = ['src' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachment/8'];
 		$context = $this->makeContext('img');
 
 		$result = $transform->transform($attr, $this->config, $context);
@@ -83,7 +83,7 @@ class TransformCidDataAttrTest extends TestCase {
 
 	public function testNonMatchingSrcLeavesNoCidAttribute(): void {
 		$transform = new TransformCidDataAttr($this->inlineAttachments);
-		$attr = ['src' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachments/99'];
+		$attr = ['src' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachment/99'];
 		$context = $this->makeContext('img');
 
 		$result = $transform->transform($attr, $this->config, $context);
@@ -94,7 +94,7 @@ class TransformCidDataAttrTest extends TestCase {
 	public function testPathComparisonIgnoresSchemeAndHost(): void {
 		$transform = new TransformCidDataAttr($this->inlineAttachments);
 		// Same path, different scheme/host (e.g. behind a reverse proxy)
-		$attr = ['src' => 'http://internal.proxy/index.php/apps/mail/api/messages/42/attachments/7'];
+		$attr = ['src' => 'http://internal.proxy/index.php/apps/mail/api/messages/42/attachment/7'];
 		$context = $this->makeContext('img');
 
 		$result = $transform->transform($attr, $this->config, $context);
@@ -104,10 +104,10 @@ class TransformCidDataAttrTest extends TestCase {
 
 	public function testAttachmentWithoutCidIsSkipped(): void {
 		$attachments = [
-			['url' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachments/7'],
+			['url' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachment/7'],
 		];
 		$transform = new TransformCidDataAttr($attachments);
-		$attr = ['src' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachments/7'];
+		$attr = ['src' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachment/7'];
 		$context = $this->makeContext('img');
 
 		$result = $transform->transform($attr, $this->config, $context);
@@ -120,7 +120,7 @@ class TransformCidDataAttrTest extends TestCase {
 			['cid' => 'image001@example.com'],
 		];
 		$transform = new TransformCidDataAttr($attachments);
-		$attr = ['src' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachments/7'];
+		$attr = ['src' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachment/7'];
 		$context = $this->makeContext('img');
 
 		$result = $transform->transform($attr, $this->config, $context);
@@ -130,7 +130,7 @@ class TransformCidDataAttrTest extends TestCase {
 
 	public function testEmptyInlineAttachments(): void {
 		$transform = new TransformCidDataAttr([]);
-		$attr = ['src' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachments/7'];
+		$attr = ['src' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachment/7'];
 		$context = $this->makeContext('img');
 
 		$result = $transform->transform($attr, $this->config, $context);
@@ -141,7 +141,7 @@ class TransformCidDataAttrTest extends TestCase {
 	public function testExistingAttributesArePreserved(): void {
 		$transform = new TransformCidDataAttr($this->inlineAttachments);
 		$attr = [
-			'src' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachments/7',
+			'src' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachment/7',
 			'alt' => 'inline image',
 			'width' => '100',
 		];
