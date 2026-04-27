@@ -343,13 +343,14 @@ class ContactsIntegrationTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function common($term, $searchResult, $allowSystemUsers, $allowSystemUsersInGroupOnly, $shareeEnumerationFullMatch, $shareeEnumerationFullMatchUserId = true, $shareeEnumerationFullMatchEmail = true) {
+	public function common($term, $searchResult, $allowSystemUsers, $allowSystemUsersInGroupOnly, $shareeEnumerationFullMatch, $shareeEnumerationFullMatchDisplayName = true, $shareeEnumerationFullMatchUserId = true, $shareeEnumerationFullMatchEmail = true) {
 		$this->config->expects(self::atLeast(3))
 			->method('getAppValue')
 			->withConsecutive(
 				['core', 'shareapi_allow_share_dialog_user_enumeration', 'yes'],
 				['core', 'shareapi_restrict_user_enumeration_to_group', 'no'],
 				['core', 'shareapi_restrict_user_enumeration_full_match', 'yes'],
+				['core', 'shareapi_restrict_user_enumeration_full_match_displayname', 'yes'],
 				['core', 'shareapi_restrict_user_enumeration_full_match_userid', 'yes'],
 				['core', 'shareapi_restrict_user_enumeration_full_match_email', 'yes'],
 			)
@@ -357,6 +358,7 @@ class ContactsIntegrationTest extends TestCase {
 				$allowSystemUsers ? 'yes' : ' no',
 				$allowSystemUsersInGroupOnly ? 'yes' : ' no',
 				$shareeEnumerationFullMatch ? 'yes' : ' no',
+				$shareeEnumerationFullMatchDisplayName ? 'yes' : 'no',
 				$shareeEnumerationFullMatchUserId ? 'yes' : 'no',
 				$shareeEnumerationFullMatchEmail ? 'yes' : ' no');
 		$this->contactsManager->expects($this->once())
@@ -403,6 +405,178 @@ class ContactsIntegrationTest extends TestCase {
 				null,
 			],
 		];
+	}
+
+	public function testGetContactsWithName(): void {
+		$name = 'John';
+		$searchResult = [
+			[
+				'UID' => 'jd',
+				'FN' => 'John Doe',
+				'EMAIL' => 'john@doe.com',
+			],
+			[
+				'UID' => 'js',
+				'FN' => 'John Smith',
+				'EMAIL' => ['john@smith.com', 'jsmith@example.com'],
+			],
+		];
+
+		$this->contactsManager->expects($this->once())
+			->method('isEnabled')
+			->willReturn(true);
+		$this->config->expects(self::exactly(3))
+			->method('getAppValue')
+			->withConsecutive(
+				['core', 'shareapi_allow_share_dialog_user_enumeration', 'yes'],
+				['core', 'shareapi_restrict_user_enumeration_to_group', 'no'],
+				['core', 'shareapi_restrict_user_enumeration_full_match', 'yes'],
+			)
+			->willReturnOnConsecutiveCalls('yes', 'no', 'no');
+		$this->contactsManager->expects($this->once())
+			->method('search')
+			->with($name, ['FN'], [
+				'enumeration' => true,
+				'fullmatch' => false,
+				'strict_search' => false,
+				'limit' => 20,
+			])
+			->willReturn($searchResult);
+
+		$expected = [
+			[
+				'id' => 'jd',
+				'label' => 'John Doe',
+				'email' => 'john@doe.com',
+			],
+			[
+				'id' => 'js',
+				'label' => 'John Smith',
+				'email' => ['john@smith.com', 'jsmith@example.com'],
+			],
+		];
+
+		$actual = $this->contactsIntegration->getContactsWithName('currentUser', $name);
+
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function testGetContactsWithNameFiltersSystemUsersWhenDisabled(): void {
+		$name = 'John';
+		// When enumeration is disabled the contacts manager filters system users;
+		// only non-system contacts are returned.
+		$searchResult = [
+			[
+				'UID' => 'js',
+				'FN' => 'John Smith',
+				'EMAIL' => 'john@smith.com',
+			],
+		];
+
+		$this->contactsManager->expects($this->once())
+			->method('isEnabled')
+			->willReturn(true);
+		$this->config->expects(self::exactly(3))
+			->method('getAppValue')
+			->withConsecutive(
+				['core', 'shareapi_allow_share_dialog_user_enumeration', 'yes'],
+				['core', 'shareapi_restrict_user_enumeration_to_group', 'no'],
+				['core', 'shareapi_restrict_user_enumeration_full_match', 'yes'],
+			)
+			->willReturnOnConsecutiveCalls('no', 'no', 'no');
+		$this->contactsManager->expects($this->once())
+			->method('search')
+			->with($name, ['FN'], [
+				'enumeration' => false,
+				'fullmatch' => false,
+				'strict_search' => false,
+				'limit' => 20,
+			])
+			->willReturn($searchResult);
+
+		$expected = [
+			[
+				'id' => 'js',
+				'label' => 'John Smith',
+				'email' => 'john@smith.com',
+			],
+		];
+
+		$actual = $this->contactsIntegration->getContactsWithName('currentUser', $name);
+
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function testGetContactsWithNameNoResults(): void {
+		$name = 'Nonexistent';
+
+		$this->contactsManager->expects($this->once())
+			->method('isEnabled')
+			->willReturn(true);
+		$this->config->expects(self::exactly(3))
+			->method('getAppValue')
+			->withConsecutive(
+				['core', 'shareapi_allow_share_dialog_user_enumeration', 'yes'],
+				['core', 'shareapi_restrict_user_enumeration_to_group', 'no'],
+				['core', 'shareapi_restrict_user_enumeration_full_match', 'yes'],
+			)
+			->willReturnOnConsecutiveCalls('yes', 'no', 'no');
+		$this->contactsManager->expects($this->once())
+			->method('search')
+			->with($name, ['FN'], [
+				'enumeration' => true,
+				'fullmatch' => false,
+				'strict_search' => false,
+				'limit' => 20,
+			])
+			->willReturn([]);
+
+		$actual = $this->contactsIntegration->getContactsWithName('currentUser', $name);
+
+		$this->assertEquals([], $actual);
+	}
+
+	public function testGetContactsWithNameNoEmail(): void {
+		$name = 'John';
+		$searchResult = [
+			[
+				'UID' => 'jd',
+				'FN' => 'John Doe',
+			],
+		];
+
+		$this->contactsManager->expects($this->once())
+			->method('isEnabled')
+			->willReturn(true);
+		$this->config->expects(self::exactly(3))
+			->method('getAppValue')
+			->withConsecutive(
+				['core', 'shareapi_allow_share_dialog_user_enumeration', 'yes'],
+				['core', 'shareapi_restrict_user_enumeration_to_group', 'no'],
+				['core', 'shareapi_restrict_user_enumeration_full_match', 'yes'],
+			)
+			->willReturnOnConsecutiveCalls('yes', 'no', 'no');
+		$this->contactsManager->expects($this->once())
+			->method('search')
+			->with($name, ['FN'], [
+				'enumeration' => true,
+				'fullmatch' => false,
+				'strict_search' => false,
+				'limit' => 20,
+			])
+			->willReturn($searchResult);
+
+		$expected = [
+			[
+				'id' => 'jd',
+				'label' => 'John Doe',
+				'email' => null,
+			],
+		];
+
+		$actual = $this->contactsIntegration->getContactsWithName('currentUser', $name);
+
+		$this->assertEquals($expected, $actual);
 	}
 
 	/**

@@ -52,10 +52,10 @@ class PhishingDetectionServiceIntegrationTest extends TestCase {
 	public function testContactCheck(): void {
 		$this->contactsIntegration->expects(self::once())
 			->method('getContactsWithName')
-			->with('John Doe')
+			->with('batman', 'John Doe')
 			->willReturn([['id' => 1, 'fn' => 'John Doe', 'email' => ['jhon@example.org','Doe@example.org']]]);
 
-		$result = $this->contactCheck->run('John Doe', 'jhon.doe@example.org');
+		$result = $this->contactCheck->run('batman', 'John Doe', 'jhon.doe@example.org');
 
 		$this->assertTrue($result->isPhishing());
 	}
@@ -73,7 +73,7 @@ class PhishingDetectionServiceIntegrationTest extends TestCase {
 		$headerStream = fopen(__DIR__ . '/../../../data/phishing-mail-headers.txt', 'r');
 		$parsedHeaders = Horde_Mime_Headers::parseHeaders($headerStream);
 		fclose($headerStream);
-		$result = $this->service->checkHeadersForPhishing($parsedHeaders, false);
+		$result = $this->service->checkHeadersForPhishing('batman', $parsedHeaders, false);
 		$this->assertTrue($result['warning']);
 	}
 
