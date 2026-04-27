@@ -11,7 +11,9 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\DB\Types;
+use OCP\IDBConnection;
 use OCP\Migration\Attributes\ModifyColumn;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
@@ -25,6 +27,12 @@ use Override;
 	description: 'Add column to store content-id and content-disposition', )
 ]
 class Version5008Date20260320125737 extends SimpleMigrationStep {
+
+	public function __construct(
+		private IDBConnection $connection,
+	) {
+	}
+
 	/**
 	 * @param Closure(): ISchemaWrapper $schemaClosure
 	 */
@@ -51,5 +59,14 @@ class Version5008Date20260320125737 extends SimpleMigrationStep {
 		}
 
 		return $schema;
+	}
+
+	#[Override]
+	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
+		$qb = $this->connection->getQueryBuilder();
+		$qb->update('mail_attachments')
+			->set('disposition', $qb->createNamedParameter('attachment', IQueryBuilder::PARAM_NULL))
+			->where($qb->expr()->isNull('disposition'));
+		$qb->executeStatement();
 	}
 }
