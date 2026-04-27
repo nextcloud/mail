@@ -771,7 +771,7 @@ export default {
 }
 </style>
 
-<style scoped>
+<style lang="scss" scoped>
 h4 {
 	text-align: start;
 }
@@ -793,34 +793,36 @@ input[type='radio'][disabled] + label {
 	opacity: 0.5;
 }
 
-.account-form__label--required:after {
-	content:" *";
-}
+.account-form {
+	&__label--required:after {
+		content:" *";
+	}
 
-.account-form__heading--required:after {
-	content:" *";
-}
+	&__heading--required:after {
+		content:" *";
+	}
 
-.account-form__submit-buttons {
-	display: flex;
-	justify-content: center;
-	margin-top: var(--default-grid-baseline);
-}
+	&__submit-buttons {
+		display: flex;
+		justify-content: center;
+		margin-top: var(--default-grid-baseline);
+	}
 
-.account-form__submit-button {
-	display: flex;
-	align-items: center;
-}
+	&__submit-button {
+		display: flex;
+		align-items: center;
+	}
 
-.account-form--feedback {
-	color: var(--color-text-maxcontrast);
-	margin-top: var(--default-grid-baseline);
-	text-align: center;
-}
+	&--feedback {
+		color: var(--color-text-maxcontrast);
+		margin-top: var(--default-grid-baseline);
+		text-align: center;
+	}
 
-.account-form--error {
-	text-align: start;
-	font-size: 14px;
+	&--error {
+		text-align: start;
+		font-size: 14px;
+	}
 }
 
 #account-form {
