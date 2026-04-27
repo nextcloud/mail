@@ -198,7 +198,7 @@ export default {
 		},
 
 		canDelegate() {
-			return !this.account.isDelegated
+			return !this.account.isDelegated && !this.account.provisioningId
 		},
 
 		id() {

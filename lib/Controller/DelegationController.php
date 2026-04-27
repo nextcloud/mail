@@ -73,6 +73,10 @@ class DelegationController extends Controller {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
 
+		if ($account->getMailAccount()->getProvisioningId() !== null) {
+			return new JSONResponse(['message' => 'Cannot delegate provisioned accounts'], Http::STATUS_FORBIDDEN);
+		}
+
 		if ($userId === $this->currentUserId) {
 			return new JSONResponse(['message' => 'Cannot delegate to yourself'], Http::STATUS_BAD_REQUEST);
 		}

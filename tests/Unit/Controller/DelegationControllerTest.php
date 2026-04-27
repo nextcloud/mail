@@ -147,6 +147,29 @@ class DelegationControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_UNAUTHORIZED, $response->getStatus());
 	}
 
+	public function testDelegateProvisionedAccount(): void {
+		$provisionedMailAccount = new MailAccount();
+		$provisionedMailAccount->setId(3);
+		$provisionedMailAccount->setUserId($this->currentUserId);
+		$provisionedMailAccount->setEmail('provisioned@example.com');
+		$provisionedMailAccount->setProvisioningId(42);
+		$provisionedAccount = new Account($provisionedMailAccount);
+
+		$this->accountService->expects($this->once())
+			->method('findById')
+			->with(3)
+			->willReturn($provisionedAccount);
+
+		$this->delegationService->expects($this->never())
+			->method('delegate');
+
+		$response = $this->controller->delegate(3, 'delegatee');
+
+		$this->assertInstanceOf(JSONResponse::class, $response);
+		$this->assertEquals(Http::STATUS_FORBIDDEN, $response->getStatus());
+		$this->assertEquals(['message' => 'Cannot delegate provisioned accounts'], $response->getData());
+	}
+
 	public function testDelegateToSelf(): void {
 		$this->accountService->expects($this->once())
 			->method('findById')
