@@ -1,3 +1,17 @@
+## [5.6.18](https://github.com/nextcloud/mail/compare/v5.6.17...v5.6.18) (2026-04-27)
+
+
+### Bug Fixes
+
+* **deps:** bump uuid from 11.1.0 to v14 ([ba272c6](https://github.com/nextcloud/mail/commit/ba272c6f398ea4c62ea7caa8852c6e5d9024e536))
+* **l10n:** Update translations from Transifex ([a0c1bfa](https://github.com/nextcloud/mail/commit/a0c1bfad3f35e7fe1f91f18eb2d5ed51fa9ab78b))
+* **l10n:** Update translations from Transifex ([1f16461](https://github.com/nextcloud/mail/commit/1f164612ee527e5f7922d8fcf365a07c2036298a))
+* **l10n:** Update translations from Transifex ([69a1da2](https://github.com/nextcloud/mail/commit/69a1da2068f09ab89e6d075de8e707e28de3c1e9))
+* **l10n:** Update translations from Transifex ([c1950f5](https://github.com/nextcloud/mail/commit/c1950f53111ba0f9c854e1a30c9f6846da3e12f1))
+* **Thread:** title printing ([02da801](https://github.com/nextcloud/mail/commit/02da801575fb6fc1a648126509f2c07cfd58cf69))
+
+
+
 ## [5.6.17](https://github.com/nextcloud/mail/compare/v5.6.16...v5.6.17) (2026-04-17)
 
 
