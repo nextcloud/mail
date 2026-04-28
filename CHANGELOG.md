@@ -1,3 +1,24 @@
+## [5.5.16](https://github.com/nextcloud/mail/compare/v5.5.15...v5.5.16) (2026-04-28)
+
+
+### Bug Fixes
+
+* add the warning icon when account cannot connect ([df06995](https://github.com/nextcloud/mail/commit/df0699554d213d4f046bbe7136b39bde2f65033c))
+* **autocomplete:** respect privacy settings for sharing ([661e7d7](https://github.com/nextcloud/mail/commit/661e7d7592c97947eaac5e68f976315f92c48648))
+* **contactsIntegration:** avoid incorrect cache results ([8233c84](https://github.com/nextcloud/mail/commit/8233c8432324c24df28e1a9e64b90c1d6136e282))
+* **DKIMValidator:** Add patch from upstream against broken canonical handling ([fe21a6e](https://github.com/nextcloud/mail/commit/fe21a6e318af9ef18b9e28296ed1ad6fcca3c4a3))
+* **l10n:** Update translations from Transifex ([25e6122](https://github.com/nextcloud/mail/commit/25e61222b7dd0692b3be4e5363e583c65c7159a5))
+* **l10n:** Update translations from Transifex ([9e98062](https://github.com/nextcloud/mail/commit/9e98062a61155a4a58d4f6fcd54ba45afea8eca1))
+* **l10n:** Update translations from Transifex ([9555a81](https://github.com/nextcloud/mail/commit/9555a81da0f830b3596704a68d40a3da76730dbb))
+* **l10n:** Update translations from Transifex ([180e6db](https://github.com/nextcloud/mail/commit/180e6dbaef6944cbe17f1398a985e5695b8ca158))
+* **l10n:** Update translations from Transifex ([bd55a75](https://github.com/nextcloud/mail/commit/bd55a75a16ed102d6e0e345e1aa2efc5420e3fab))
+* **l10n:** Update translations from Transifex ([1d838aa](https://github.com/nextcloud/mail/commit/1d838aa7de015d34b90f2cd57ff2113d160d8820))
+* **l10n:** Update translations from Transifex ([d24e7f3](https://github.com/nextcloud/mail/commit/d24e7f3cd01b72b36a72be7c8037670f8155e545))
+* safe-guard limit argument ([9cb97b2](https://github.com/nextcloud/mail/commit/9cb97b28bf400c9e3a8a8862e2ac74e3d9cb587c))
+* warning for accounts that can't connect ([0e2bb57](https://github.com/nextcloud/mail/commit/0e2bb57ebe609b64c27933108044b075d7b0627c))
+
+
+
 ## [5.5.15](https://github.com/nextcloud/mail/compare/v5.5.14...v5.5.15) (2025-11-13)
 
 
