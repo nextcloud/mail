@@ -1,3 +1,13 @@
+## [5.6.19](https://github.com/nextcloud/mail/compare/v5.6.18...v5.6.19) (2026-04-28)
+
+
+### Bug Fixes
+
+* **autocomplete:** respect privacy settings for sharing ([9cebfc7](https://github.com/nextcloud/mail/commit/9cebfc78bd6816d1b5b2fa46627ef0dfd9c2b3b7))
+* **l10n:** Update translations from Transifex ([ec2a6b6](https://github.com/nextcloud/mail/commit/ec2a6b6ac6e5259bbc5a3ff2b81be8a592e8cc30))
+
+
+
 ## [5.6.18](https://github.com/nextcloud/mail/compare/v5.6.17...v5.6.18) (2026-04-27)
 
 
