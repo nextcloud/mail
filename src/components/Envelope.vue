@@ -69,6 +69,7 @@
 						<NcCheckboxRadioSwitch
 							type="checkbox"
 							class="compact-checkbox"
+							:class="{ 'compact-checkbox--active': selected }"
 							:model-value="selected"
 							@update:checked="toggleSelected" />
 					</div>
@@ -164,9 +165,9 @@
 
 					<span
 						class="envelope__subtitle__subject"
-						:class="{ 'one-line': oneLineLayout }"
+						:class="{ 'one-line': oneLineLayout && !compactMode }"
 						dir="auto">
-						<span class="envelope__subtitle__subject__text" :class="{ 'one-line': oneLineLayout, draft }" v-html="subjectForSubtitle" />
+						<span class="envelope__subtitle__subject__text" :class="{ 'one-line': oneLineLayout && !compactMode, draft }" v-html="subjectForSubtitle" />
 					</span>
 				</div>
 				<div
@@ -1505,7 +1506,8 @@ export default {
 }
 
 .list-item__wrapper--active {
-	div, :deep(.list-item-content__inner__details__details) {
+	div:not(.compact-checkbox-wrapper, .compact-checkbox-wrapper *),
+	:deep(.list-item-content__inner__details__details) {
 		color: var(--color-primary-element-text) !important;
 	}
 }
@@ -1686,11 +1688,6 @@ export default {
 	display: flex;
 	align-items: center;
 	height: calc(var(--default-font-size) * var(--default-line-height));
-
-	&::after {
-		content: '\00B7';
-		margin: 12px;
-	}
 }
 
 .envelope__subtitle__subject__text.one-line {
@@ -1723,6 +1720,7 @@ export default {
 	// Needs to be the same height as the check-icon and the avatar to prevent automatic resizing
 	// and height differences between hover state and normal state
 	height: calc(var(--default-grid-baseline) * 10);
+	padding-top: 3px;
 }
 
 .check-icon {
@@ -1739,9 +1737,6 @@ export default {
 		margin-inline-start: 0;
 		flex: 1;
 		min-width: 0;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
 	}
 }
 
@@ -1759,13 +1754,11 @@ export default {
 .compact-subject-icons {
 	display: flex;
 	align-items: center;
-	gap: 4px;
 	flex-shrink: 0;
-	margin-inline-end: 4px;
 }
 
 .envelope__recipient-row {
-	display: inline-flex;
+	display: flex;
 	align-items: center;
 	min-width: 0;
 }
@@ -1787,5 +1780,10 @@ export default {
 	.icon-important {
 		display: none;
 	}
+}
+.list-item__wrapper--active :deep(.compact-checkbox .checkbox-radio-switch__content),
+.list-item__wrapper.active :deep(.compact-checkbox .checkbox-radio-switch__content) {
+	background-color: var(--color-primary-element-text) !important;
+	color: var(--color-primary-element) !important;
 }
 </style>

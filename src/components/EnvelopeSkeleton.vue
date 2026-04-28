@@ -73,7 +73,7 @@
 								<!-- Counter and indicator -->
 								<div
 									v-if="counterNumber || hasIndicator"
-									v-show="showAdditionalElements"
+									:class="{ 'extra--hidden': !showAdditionalElements }"
 									class="list-item-content__inner__details__extra">
 									<NcCounterBubble
 										v-if="counterNumber"
@@ -553,6 +553,11 @@ export default {
 				&--bold {
 					font-weight: 500;
 				}
+				.list-item--compact.list-item--multiline & {
+					white-space: normal;
+					overflow: visible;
+					text-overflow: unset;
+				}
 			}
 
 			&__tags {
@@ -726,5 +731,8 @@ export default {
 :deep(.app-content-list-item-icon), :deep(.avatardiv), :deep(.avatardiv__initials-wrapper) {
 	height: calc(var(--header-menu-item-height) - 4px);
 	width: calc(var(--header-menu-item-height) - 4px);
+}
+.extra--hidden {
+	visibility: hidden;
 }
 </style>
