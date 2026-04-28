@@ -11,13 +11,13 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Command;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OCA\Mail\Command\CreateAccount;
+use OCA\Mail\Command\CreateImapAccount;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCP\IUserManager;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateAccountTest extends TestCase {
+class CreateImapAccountTest extends TestCase {
 	private $service;
 	private $crypto;
 	private $userManager;
@@ -50,15 +50,19 @@ class CreateAccountTest extends TestCase {
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->classificationSettingsService = $this->createMock(ClassificationSettingsService::class);
 
-		$this->command = new CreateAccount($this->service, $this->crypto, $this->userManager, $this->classificationSettingsService);
+		$this->command = new CreateImapAccount($this->service, $this->crypto, $this->userManager, $this->classificationSettingsService);
 	}
 
 	public function testName() {
-		$this->assertSame('mail:account:create', $this->command->getName());
+		$this->assertSame('mail:account:create-imap', $this->command->getName());
+	}
+
+	public function testAlias() {
+		$this->assertSame(['mail:account:create'], $this->command->getAliases());
 	}
 
 	public function testDescription() {
-		$this->assertSame('creates IMAP account', $this->command->getDescription());
+		$this->assertSame('creates an IMAP mail account', $this->command->getDescription());
 	}
 
 	public function testArguments() {

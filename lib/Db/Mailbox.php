@@ -56,6 +56,12 @@ use function strtolower;
  * @method void setShared(bool $shared)
  * @method string getNameHash()
  * @method void setNameHash(string $nameHash)
+ * @method string|null getRemoteParentId()
+ * @method void setRemoteParentId(?string $remoteParentId)
+ * @method string|null getRemoteId()
+ * @method void setRemoteId(?string $remoteId)
+ * @method string|null getState()
+ * @method void setState(?string $state)
  */
 class Mailbox extends Entity implements JsonSerializable {
 	protected $name;
@@ -76,6 +82,9 @@ class Mailbox extends Entity implements JsonSerializable {
 	protected $myAcls;
 	protected $shared;
 	protected $nameHash;
+	protected ?string $remoteParentId = null;
+	protected ?string $remoteId = null;
+	protected ?string $state = null;
 
 	/**
 	 * @var int

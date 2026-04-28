@@ -11,6 +11,12 @@
 		"optimize-autoloader": true,
 		"autoloader-suffix": "Mail"
 	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/sebastiankrupinski/jmap-client-php"
+		}
+	],
 	"require": {
 		"php": ">=8.1 <=8.4",
 		"ext-openssl": "*",
@@ -43,6 +49,7 @@
 		"psr/log": "^3.0.2",
 		"rubix/ml": "2.5.3",
 		"sabberworm/php-css-parser": "^8.9.0",
+		"sebastiankrupinski/jmap-client-php": "dev-main",
 		"wamania/php-stemmer": "4.0 as 3.0",
 		"youthweb/urllinker": "^2.1.0"
 	},
