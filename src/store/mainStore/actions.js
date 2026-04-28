@@ -685,12 +685,10 @@ export default function mainStoreActions() {
 					const fetchUnifiedEnvelopes = pipe(
 						findIndividualMailboxes(this.getMailboxes, mailbox.specialRole),
 						fetchIndividualLists,
-						andThen(combineEnvelopeLists(this.getPreference('sort-order'))),
-						andThen(sliceToPage),
-						andThen(tap((envelopes) => this.addEnvelopesMutation({
-							envelopes,
+						andThen(tap((threadlist) => threadlist.forEach((threads) => this.addThreadsMutation({
+							threads,
 							query,
-						}))),
+						})))),
 					)
 
 					return fetchUnifiedEnvelopes(this.getAccounts)
@@ -698,9 +696,9 @@ export default function mainStoreActions() {
 
 				return pipe(
 					fetchEnvelopes,
-					andThen(tap((envelopes) => this.addEnvelopesMutation({
+					andThen(tap((threads) => this.addThreadsMutation({
 						query,
-						envelopes,
+						threads,
 						addToUnifiedMailboxes,
 					}))),
 				)(mailbox.accountId, mailboxId, query, undefined, PAGE_SIZE, this.getPreference('sort-order'), this.getPreference('layout-message-view'), includeCacheBuster ? mailbox.cacheBuster : undefined)
@@ -794,7 +792,7 @@ export default function mainStoreActions() {
 
 					const envelopes = nextLocalUnifiedEnvelopes(this.getAccounts)
 					logger.debug('next unified page can be built locally and consists of ' + envelopes.length + ' envelopes', { addToUnifiedMailboxes })
-					this.addEnvelopesMutation({
+					this.addThreadsMutation({
 						query,
 						envelopes,
 						addToUnifiedMailboxes,
@@ -817,25 +815,17 @@ export default function mainStoreActions() {
 					return Promise.reject(new Error('Cannot find last envelope. Required for the mailbox cursor'))
 				}
 
-				return fetchEnvelopes(
-					mailbox.accountId,
-					mailboxId,
-					query,
-					lastEnvelope.dateInt,
-					quantity,
-					this.getPreference('sort-order'),
-					this.getPreference('layout-message-view'),
-				).then((envelopes) => {
-					logger.debug(`fetched ${envelopes.length} messages for mailbox ${mailboxId}`, {
-						envelopes,
+				return fetchEnvelopes(mailbox.accountId, mailboxId, query, lastEnvelope.dateInt, quantity, this.getPreference('sort-order'), this.getPreference('layout-message-view')).then((threads) => {
+					logger.debug(`fetched ${threads.length} messages for mailbox ${mailboxId}`, {
+						threads,
 						addToUnifiedMailboxes,
 					})
-					this.addEnvelopesMutation({
+					this.addThreadsMutation({
 						query,
-						envelopes,
+						threads,
 						addToUnifiedMailboxes,
 					})
-					return envelopes
+					return threads
 				})
 			})
 		},
@@ -888,16 +878,16 @@ export default function mainStoreActions() {
 
 						const unifiedMailbox = this.getUnifiedMailbox(mailbox.specialRole)
 
-						this.addEnvelopesMutation({
-							envelopes: syncData.newMessages,
+						this.addThreadsMutation({
+							threads: syncData.newMessages,
 							query,
 						})
 
-						syncData.newMessages.forEach((envelope) => {
+						syncData.newMessages.forEach((thread) => {
 							if (unifiedMailbox) {
-								this.updateEnvelopeMutation({
+								thread.forEach((envelope) => this.updateEnvelopeMutation({
 									envelope,
-								})
+								}))
 							}
 						})
 						syncData.changedMessages.forEach((envelope) => {
@@ -1834,7 +1824,7 @@ export default function mainStoreActions() {
 			if (this.getPreference('layout-message-view') === 'singleton') {
 				existing.push(envelope.databaseId)
 			} else {
-				const index = existing.findIndex((id) => this.envelopes[id].threadRootId === envelope.threadRootId)
+				const index = existing.findIndex((id) => this.getEnvelope(id).threadRootId === envelope.threadRootId)
 				if (index === -1) {
 					existing.push(envelope.databaseId)
 				} else {
@@ -2015,6 +2005,37 @@ export default function mainStoreActions() {
 			Vue.set(this.newMessage, 'type', 'outbox')
 			Vue.set(this.newMessage.data, 'id', message.id)
 		},
+		addThreadsMutation({
+			query,
+			threads,
+			addToUnifiedMailboxes = true,
+		}) {
+			if (threads.length === 0) {
+				return
+			}
+			const isThreaded = this.getPreference('layout-message-view') === 'threaded'
+			if (isThreaded) {
+				threads.forEach((thread) => {
+					const threadRootId = thread[0].threadRootId
+					const messages = {}
+					thread.forEach((message) => {
+						messages[message.databaseId] = message
+						this.messageToThreadDictionnary[message.databaseId] = threadRootId
+					})
+					this.threads[threadRootId] = messages
+				})
+			} else {
+				threads.forEach((thread) => {
+					this.threads[thread[0].databaseId] = { [thread[0].databaseId]: thread[0] }
+				})
+			}
+			const envelopes = threads.flat()
+			this.addEnvelopesMutation({
+				query,
+				envelopes,
+				addToUnifiedMailboxes,
+			})
+		},
 		addEnvelopesMutation({
 			query,
 			envelopes,
@@ -2023,17 +2044,21 @@ export default function mainStoreActions() {
 			if (envelopes.length === 0) {
 				return
 			}
-
-			const idToDateInt = (id) => this.envelopes[id].dateInt
+			const idToDateInt = (id) => this.getEnvelope(id).dateInt
 
 			const listId = normalizedEnvelopeListId(query)
 			const orderByDateInt = orderBy(idToDateInt, this.preferences['sort-order'] === 'newest' ? 'desc' : 'asc')
-
 			envelopes.forEach((envelope) => {
+				if (!Object.keys(this.threads).includes(envelope.threadRootId)) {
+					this.threads[envelope.threadRootId] = {}
+				}
+				if (!Object.keys(this.threads[envelope.threadRootId]).includes(String(envelope.databaseId))) {
+					this.threads[envelope.threadRootId][envelope.databaseId] = envelope
+					this.messageToThreadDictionnary[envelope.databaseId] = envelope.threadRootId
+				}
 				const mailbox = this.mailboxes[envelope.mailboxId]
 				const existing = mailbox.envelopeLists[listId] || []
 				this.normalizeTags(envelope)
-				Vue.set(this.envelopes, envelope.databaseId, { ...this.envelopes[envelope.databaseId] || {}, ...envelope })
 				Vue.set(envelope, 'accountId', mailbox.accountId)
 				Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(this.appendOrReplaceEnvelopeId(existing, envelope))))
 				if (!addToUnifiedMailboxes) {
@@ -2054,7 +2079,7 @@ export default function mainStoreActions() {
 			})
 		},
 		updateEnvelopeMutation({ envelope }) {
-			const existing = this.envelopes[envelope.databaseId]
+			const existing = this.getEnvelope(envelope.databaseId)
 			if (!existing) {
 				return
 			}
@@ -2112,8 +2137,11 @@ export default function mainStoreActions() {
 		}) {
 			Vue.set(envelope, 'tags', envelope.tags.filter((id) => id !== tagId))
 		},
+		removeThreadMutation({ id }) {
+			Vue.delete(this.threads, id)
+		},
 		removeEnvelopeMutation({ id }) {
-			const envelope = this.envelopes[id]
+			const envelope = this.getEnvelope(id)
 			if (!envelope) {
 				console.warn('envelope ' + id + ' is unknown, can\'t remove it')
 				return
@@ -2136,6 +2164,16 @@ export default function mainStoreActions() {
 				Vue.set(mailbox, 'unread', mailbox.unread - 1)
 			}
 
+			// Remove envelope from its thread
+			const threadRootId = envelope.threadRootId
+			if (threadRootId && this.threads[threadRootId]) {
+				const thread = this.threads[threadRootId]
+				Vue.delete(thread, id)
+				Vue.delete(this.messageToThreadDictionnary, id)
+				if (Object.keys(this.threads[threadRootId]).length === 0) {
+					Vue.delete(this.threads, threadRootId)
+				}
+			}
 			this.accountsUnmapped[UNIFIED_ACCOUNT_ID].mailboxes
 				.map((mailboxId) => this.mailboxes[mailboxId])
 				.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
@@ -2160,18 +2198,6 @@ export default function mainStoreActions() {
 						list.splice(idx, 1)
 					}
 				})
-
-			// Delete references from other threads
-			for (const [key, env] of Object.entries(this.envelopes)) {
-				if (!env.thread) {
-					continue
-				}
-
-				const thread = env.thread.filter((threadId) => threadId !== id)
-				Vue.set(this.envelopes[key], 'thread', thread)
-			}
-
-			Vue.delete(this.envelopes, id)
 		},
 		removeEnvelopesMutation({ id }) {
 			Vue.set(this.mailboxes[id], 'envelopeLists', {})
@@ -2217,22 +2243,15 @@ export default function mainStoreActions() {
 			id,
 			thread,
 		}) {
+			const messages = {}
 			// Store the envelopes, merge into any existing object if one exists
 			thread.forEach((e) => {
 				this.normalizeTags(e)
 				const mailbox = this.mailboxes[e.mailboxId]
 				Vue.set(e, 'accountId', mailbox.accountId)
-				const existing = this.envelopes[e.databaseId] || {}
-				const merged = { ...existing, ...e }
-				// preserve attachments
-				if (existing.attachments && existing.attachments.length > 0) {
-					merged.attachments = existing.attachments
-				}
-				Vue.set(this.envelopes, e.databaseId, merged)
+				messages[e.databaseId] = e
 			})
-
-			// Store the references
-			Vue.set(this.envelopes[id], 'thread', thread.map((e) => e.databaseId))
+			Vue.set(this.threads, thread[0].threadRootId, messages)
 		},
 		removeMessageMutation({ id }) {
 			Vue.delete(this.messages, id)
@@ -2411,29 +2430,44 @@ export default function mainStoreActions() {
 				.filter((mailbox) => mailbox.specialRole === specialRole))
 		},
 		getEnvelope(id) {
-			return this.envelopes[id]
+			const isThreaded = this.getPreference('layout-message-view') === 'threaded'
+			let envelope
+			if (isThreaded) {
+				const threadRootId = this.messageToThreadDictionnary[id]
+				envelope = this.threads[threadRootId][id]
+			} else {
+				envelope = this.threads[id][id]
+			}
+			return envelope
 		},
 		getEnvelopes(mailboxId, query) {
 			const list = this.getMailbox(mailboxId).envelopeLists[normalizedEnvelopeListId(query)] || []
-			return list.map((msgId) => this.envelopes[msgId])
+			return list.map((msgId) => this.getEnvelope(msgId)).filter((message) => message)
 		},
 		getEnvelopesByThreadRootId(accountId, threadRootId) {
 			return sortBy(
 				prop('dateInt'),
-				Object.values(this.envelopes).filter((envelope) => envelope.accountId === accountId && envelope.threadRootId === threadRootId),
+				Object.values(this.threads[threadRootId]),
 			)
 		},
 		getMessage(id) {
 			return this.messages[id]
 		},
 		getEnvelopeThread(id) {
-			console.debug('get thread for envelope', id, this.envelopes[id], this.envelopes)
-			const thread = this.envelopes[id]?.thread ?? []
-			const envelopes = thread.map((id) => this.envelopes[id])
-			return sortBy(prop('dateInt'), envelopes)
+			const envelope = this.getEnvelope[id]
+			const isThreaded = this.getPreference('layout-message-view') === 'threaded'
+			const envelopes = isThreaded ? this.threads[envelope.threadRootId] : this.threads[id]
+			return sortBy(prop('dateInt'), Object.values(envelopes))
 		},
 		getEnvelopeTags(id) {
-			const tags = this.envelopes[id]?.tags ?? []
+			const envelope = this.getEnvelope(id)
+			if (!envelope) {
+				return []
+			}
+			if (!Array.isArray(envelope.tags)) {
+				this.normalizeTags(envelope)
+			}
+			const tags = envelope.tags
 			return tags.map((tagId) => this.tags[tagId])
 		},
 		getTag(id) {

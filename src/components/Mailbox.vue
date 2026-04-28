@@ -285,6 +285,7 @@ export default {
 						}
 					},
 					default: (error) => {
+						console.error(error)
 						logger.error(`Could not fetch envelopes of folder ${this.mailbox.databaseId} (${this.searchQuery})`, { error })
 						this.loadingEnvelopes = false
 						this.error = error

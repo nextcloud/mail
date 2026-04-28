@@ -42,7 +42,7 @@ interface IMailSearch {
 	 * @param string|null $userId
 	 * @param string|null $view
 	 *
-	 * @return Message[]
+	 * @return Message[][]
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -59,7 +59,7 @@ interface IMailSearch {
 	/**
 	 * Run a search through all mailboxes of a user.
 	 *
-	 * @return Message[]
+	 * @return Message[][]
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
