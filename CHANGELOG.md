@@ -1,3 +1,13 @@
+## [5.7.14](https://github.com/nextcloud/mail/compare/v5.7.13...v5.7.14) (2026-04-28)
+
+
+### Bug Fixes
+
+* **deps:** bump bytestream/horde-imap-client from 2.33.6 to ^2.34.1 ([a80ab1a](https://github.com/nextcloud/mail/commit/a80ab1a88a103e6c9691c1b8d5d01ee4c8764f23))
+* **l10n:** Update translations from Transifex ([2fda499](https://github.com/nextcloud/mail/commit/2fda499c56892d6bce792c332188367400b37063))
+
+
+
 ## [5.7.13](https://github.com/nextcloud/mail/compare/v5.7.12...v5.7.13) (2026-04-27)
 
 
