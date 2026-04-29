@@ -68,7 +68,7 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 
 		$now = $this->timeFactory->getTime();
 		$window = floor($now / self::RATE_LIMIT_WINDOW);
-		$cacheKey = $this->hash . $window;
+		$cacheKey = $this->hash . (string)$window;
 
 		$counter = $this->rateLimiterCache->get($cacheKey);
 		if ($counter !== null && $counter >= 3) {

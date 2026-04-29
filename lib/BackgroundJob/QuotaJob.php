@@ -86,7 +86,7 @@ class QuotaJob extends TimedJob {
 		if ($quota->getLimit() === 0) {
 			$mailAccount->setQuotaPercentage(0);
 		} else {
-			$mailAccount->setQuotaPercentage((int)round($quota->getUsage() / $quota->getLimit() * 100));
+			$mailAccount->setQuotaPercentage((int)round((float)$quota->getUsage() / (float)$quota->getLimit() * 100.0));
 		}
 		$this->accountService->update($mailAccount);
 		$current = $mailAccount->getQuotaPercentage();

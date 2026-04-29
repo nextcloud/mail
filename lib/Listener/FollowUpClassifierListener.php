@@ -77,7 +77,8 @@ class FollowUpClassifierListener implements IEventListener {
 			];
 			// Delay job a bit because there might be some replies until then and we might be able
 			// to skip the expensive LLM task
-			$timestamp = (new DateTimeImmutable('@' . $message->getSentAt()))
+			$sentAt = $message->getSentAt();
+			$timestamp = (new DateTimeImmutable("@$sentAt"))
 				->add(new DateInterval('P3DT12H'))
 				->getTimestamp();
 			$this->jobList->scheduleAfter(

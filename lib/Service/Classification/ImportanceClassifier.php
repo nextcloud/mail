@@ -167,10 +167,12 @@ class ImportanceClassifier {
 		$perf ??= $this->performanceLogger->start('build data set for importance classifier training');
 
 		$incomingMailboxes = $this->getIncomingMailboxes($account);
-		$logger->debug('found ' . count($incomingMailboxes) . ' incoming mailbox(es)');
+		$nIncoming = count($incomingMailboxes);
+		$logger->debug("found $nIncoming incoming mailbox(es)");
 		$perf->step('find incoming mailboxes');
 		$outgoingMailboxes = $this->getOutgoingMailboxes($account);
-		$logger->debug('found ' . count($outgoingMailboxes) . ' outgoing mailbox(es)');
+		$nOutgoing = count($outgoingMailboxes);
+		$logger->debug("found $nOutgoing outgoing mailbox(es)");
 		$perf->step('find outgoing mailboxes');
 
 		$mailboxIds = array_map(static fn (Mailbox $mailbox) => $mailbox->getId(), $incomingMailboxes);
@@ -179,7 +181,9 @@ class ImportanceClassifier {
 			[$this, 'filterMessageHasSenderEmail']
 		);
 		$importantMessages = array_filter($messages, static fn (Message $message) => $message->getFlagImportant() === true);
-		$logger->debug('found ' . count($messages) . ' messages of which ' . count($importantMessages) . ' are important');
+		$nMessages = count($messages);
+		$nImportant = count($importantMessages);
+		$logger->debug("found $nMessages messages of which $nImportant are important");
 		if (count($importantMessages) < self::COLD_START_THRESHOLD) {
 			$logger->info('not enough messages to train a classifier');
 			return null;
@@ -275,7 +279,7 @@ class ImportanceClassifier {
 		 */
 		$validationThreshold = max(
 			5,
-			(int)(count($dataSet) * 0.2)
+			(int)((float)count($dataSet) * 0.2)
 		);
 		$validationSet = array_slice($dataSet, 0, $validationThreshold);
 		$trainingSet = array_slice($dataSet, $validationThreshold);
@@ -293,7 +297,11 @@ class ImportanceClassifier {
 			}
 		}
 
-		$logger->debug('data set split into ' . count($trainingSet) . ' (' . self::LABEL_IMPORTANT . ': ' . $trainingSetImportantCount . ') training and ' . count($validationSet) . ' (' . self::LABEL_IMPORTANT . ': ' . $validationSetImportantCount . ') validation sets with ' . count($trainingSet[0]['features'] ?? []) . ' dimensions');
+		$nTraining = count($trainingSet);
+		$nValidation = count($validationSet);
+		$nFeatures = count($trainingSet[0]['features'] ?? []);
+		$labelImportant = self::LABEL_IMPORTANT;
+		$logger->debug("data set split into $nTraining ($labelImportant: $trainingSetImportantCount) training and $nValidation ($labelImportant: $validationSetImportantCount) validation sets with $nFeatures dimensions");
 
 		if ($validationSet === [] || $trainingSet === []) {
 			$logger->info('not enough messages to train a classifier');

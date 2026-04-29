@@ -216,7 +216,7 @@ PROMPT;
 	 */
 	public function getSmartReply(Account $account, Mailbox $mailbox, Message $message, string $currentUserId): ?array {
 		if (in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes(), true)) {
-			$cachedReplies = $this->cache->getValue('smartReplies_' . $message->getId());
+			$cachedReplies = $this->cache->getValue("smartReplies_{$message->getId()}");
 			if ($cachedReplies) {
 				try {
 					return json_decode($cachedReplies, true, 512, JSON_THROW_ON_ERROR);
@@ -261,7 +261,7 @@ PROMPT;
 			try {
 				$cleaned = preg_replace('/^```json\s*|\s*```$/', '', trim($replies));
 				$decoded = json_decode($cleaned, true, 512, JSON_THROW_ON_ERROR);
-				$this->cache->addValue('smartReplies_' . $message->getId(), $replies);
+				$this->cache->addValue("smartReplies_{$message->getId()}", $replies);
 				return $decoded;
 			} catch (JsonException $e) {
 				throw new ServiceException('Failed to decode smart replies JSON output', previous: $e);
@@ -346,7 +346,8 @@ Never return null or undefined.";
 		}
 
 		$language = explode('_', $this->l->getLanguageCode())[0];
-		$cachedValue = $this->cache->getValue('needsTranslation_' . $language . $message->getId());
+		$messageId = $message->getId();
+		$cachedValue = $this->cache->getValue("needsTranslation_{$language}{$messageId}");
 		if ($cachedValue) {
 			return  $cachedValue === 'true' ? true : false;
 		}
@@ -402,7 +403,7 @@ Never return null or undefined.";
 		}
 		// Can't use json_decode() here because the output contains additional garbage
 		$result = preg_match('/{\s*"needsTranslation"\s*:\s*true\s*}/i', $output) === 1;
-		$this->cache->addValue('needsTranslation_' . $language . $message->getId(), $result ? 'true' : 'false');
+		$this->cache->addValue("needsTranslation_{$language}{$messageId}", $result ? 'true' : 'false');
 		return $result;
 	}
 
