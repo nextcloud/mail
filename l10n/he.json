@@ -244,6 +244,7 @@
     "Group" : "קבוצה",
     "Shared" : "משותף",
     "Shares" : "שיתופים",
+    "Insert" : "הכנסה",
     "Account connected" : "חשבון מחובר",
     "Connect your mail account" : "התחברות לחשבון הדוא״ל שלך",
     "All" : "הכול",
@@ -266,11 +267,6 @@
     "Could not load the desired message" : "לא ניתן לטעון את ההודעה המבוקשת",
     "Could not load the message" : "לא ניתן לטעון את ההודעה",
     "Error loading message" : "שגיאה בהעלאת הודעה",
-    "Forwarding to %s" : "מועבר אל %s",
-    "Click here if you are not automatically redirected within the next few seconds." : "יש ללחוץ כאן אם לא הועברת אוטומטית בשניות הקרובות.",
-    "Redirect" : "הפנייה",
-    "The link leads to %s" : "הקישור מוביל אל %s",
-    "Continue to %s" : "ממשיך אל %s",
     "Mark all messages of this folder as read" : "סימון כל ההודעות בתיקייה הזאת כנקראו"
 },"pluralForm" :"nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;"
 }

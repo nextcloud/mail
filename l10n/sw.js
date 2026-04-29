@@ -176,8 +176,6 @@ OC.L10N.register(
     "Nextcloud Mail" : "Nextcloud Mail",
     "Discard changes" : "Discard changes",
     "Message sent" : "Ujumbe umetumwa",
-    "Redirect" : "Elekeza upya",
-    "Continue to %s" : "Endelea katika %s",
     "Last 7 days" : "Siku 7 zilizopita"
 },
 "nplurals=2; plural=(n != 1);");

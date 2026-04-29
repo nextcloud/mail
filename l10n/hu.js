@@ -625,12 +625,6 @@ OC.L10N.register(
     "Could not load the desired message" : "Nem sikerült betölteni a kért üzenetet",
     "Could not load the message" : "Nem sikerült betölteni az üzenetet",
     "Error loading message" : "Hiba történt az üzenet betöltése közben",
-    "Forwarding to %s" : "Továbbítás ide: %s",
-    "Click here if you are not automatically redirected within the next few seconds." : "Kattintson ide, ha a következő néhány másodpercben nem lenne automatikusan átirányítva.",
-    "Redirect" : "Átirányítás",
-    "The link leads to %s" : "A hivatkozás ide mutat: %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarja megnyitni azt az oldalt, akkor térjen vissza a <a href=\"%s\">Levelezéshez</a>.",
-    "Continue to %s" : "Folytatás ide: %s",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Az üzeneteket automatikusan fontosként jelöli meg az alapján, hogy mely üzenetekre reagált, vagy jelölt meg fontosként. Kezdetben lehet, hogy kézzel megváltoztatnia a fontosságot és ezzel kell tanítania a rendszert, de ez az idő múlásával javulni fog.",
     "Mark all messages of this folder as read" : "A mappában található összes üzenet megjelölése olvasottként",
     "Last 7 days" : "Előző 7 nap"

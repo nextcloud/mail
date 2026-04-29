@@ -6,6 +6,7 @@
 		"sort-packages": true
 	},
 	"require-dev": {
-		"christophwurst/nextcloud_testing": "^1.1.3"
+		"christophwurst/nextcloud_testing": "^2.0.0",
+		"fig/log-test": "^1.2.1"
 	}
 }

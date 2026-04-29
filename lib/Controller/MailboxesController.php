@@ -43,7 +43,7 @@ class MailboxesController extends Controller {
 		string $appName,
 		IRequest $request,
 		AccountService $accountService,
-		?string $UserId,
+		?string $userId,
 		IMailManager $mailManager,
 		SyncService $syncService,
 		private readonly IConfig $config,
@@ -52,7 +52,7 @@ class MailboxesController extends Controller {
 		parent::__construct($appName, $request);
 
 		$this->accountService = $accountService;
-		$this->currentUserId = $UserId;
+		$this->currentUserId = $userId;
 		$this->mailManager = $mailManager;
 		$this->syncService = $syncService;
 	}

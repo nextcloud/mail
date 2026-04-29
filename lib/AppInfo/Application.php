@@ -106,7 +106,7 @@ final class Application extends App implements IBootstrap {
 
 		$context->registerService('userFolder', static function (ContainerInterface $c) {
 			$userContainer = $c->get(IServerContainer::class);
-			$uid = $c->get('UserId');
+			$uid = $c->get('userId');
 
 			return $userContainer->getUserFolder($uid);
 		});

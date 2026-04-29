@@ -79,6 +79,7 @@ class AvatarService implements IAvatarService {
 		}
 	}
 
+	#[\Override]
 	public function getCachedAvatar(string $email, string $uid): Avatar|false|null {
 		return $this->cache->get($email, $uid);
 	}

@@ -36,14 +36,14 @@ class ThreadController extends Controller {
 
 	public function __construct(string $appName,
 		IRequest $request,
-		string $UserId,
+		string $userId,
 		AccountService $accountService,
 		IMailManager $mailManager,
 		SnoozeService $snoozeService,
 		AiIntegrationsService $aiIntergrationsService,
 		LoggerInterface $logger) {
 		parent::__construct($appName, $request);
-		$this->currentUserId = $UserId;
+		$this->currentUserId = $userId;
 		$this->accountService = $accountService;
 		$this->mailManager = $mailManager;
 		$this->snoozeService = $snoozeService;

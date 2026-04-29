@@ -39,6 +39,7 @@ class Actions extends Entity implements JsonSerializable {
 	}
 
 	#[ReturnTypeWillChange]
+	#[\Override]
 	public function jsonSerialize() {
 		return [
 			'id' => $this->getId(),

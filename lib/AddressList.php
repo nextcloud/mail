@@ -12,7 +12,6 @@ namespace OCA\Mail;
 use Countable;
 use Horde_Mail_Rfc822_Address;
 use Horde_Mail_Rfc822_List;
-use Horde_Mail_Rfc822_Object;
 use JsonSerializable;
 use ReturnTypeWillChange;
 
@@ -20,11 +19,11 @@ use ReturnTypeWillChange;
  * @psalm-immutable
  */
 class AddressList implements Countable, JsonSerializable {
-	/** @var Address[] */
-	private $addresses;
+	/** @var list<Address> */
+	private array $addresses;
 
 	/**
-	 * @param Address[] $addresses
+	 * @param list<Address> $addresses
 	 */
 	public function __construct(array $addresses = []) {
 		$this->addresses = $addresses;
@@ -43,14 +42,11 @@ class AddressList implements Countable, JsonSerializable {
 
 	/**
 	 * Construct a new list from an horde list
-	 *
-	 * @param Horde_Mail_Rfc822_List $hordeList
-	 * @return AddressList
 	 */
-	public static function fromHorde(Horde_Mail_Rfc822_List $hordeList) {
-		$addresses = array_map(static fn (Horde_Mail_Rfc822_Address $addr) => Address::fromHorde($addr), array_filter(iterator_to_array($hordeList), static fn (Horde_Mail_Rfc822_Object $obj)
-			// TODO: how to handle non-addresses? This doesn't seem right …
-			=> $obj instanceof Horde_Mail_Rfc822_Address));
+	public static function fromHorde(Horde_Mail_Rfc822_List $hordeList): self {
+		$hordeObjects = iterator_to_array($hordeList, false);
+		$hordeAddresses = array_values(array_filter($hordeObjects, static fn (mixed $obj) => $obj instanceof Horde_Mail_Rfc822_Address));
+		$addresses = array_map(static fn (Horde_Mail_Rfc822_Address $addr) => Address::fromHorde($addr), $hordeAddresses);
 		return new AddressList($addresses);
 	}
 
@@ -67,12 +63,11 @@ class AddressList implements Countable, JsonSerializable {
 	 *
 	 * @return Address|null
 	 */
-	public function first() {
-		if ($this->addresses === []) {
-			return null;
+	public function first(): ?Address {
+		foreach ($this->addresses as $address) {
+			return $address;
 		}
-
-		return $this->addresses[0];
+		return null;
 	}
 
 	#[\Override]

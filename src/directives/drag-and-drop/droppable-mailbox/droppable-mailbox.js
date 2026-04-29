@@ -6,11 +6,20 @@ import logger from '../../../logger.js'
 import dragEventBus from '../util/dragEventBus.js'
 
 export class DroppableMailbox {
-	constructor(el, componentInstance, options) {
+	constructor(el, options) {
 		this.el = el
 		this.options = options
 		this.mainStore = options.mainStore
-		this.registerListeners.bind(this)(el)
+
+		// Store bound references so removeListeners can use the same
+		// function references that were passed to addEventListener/on
+		this._onDragStart = this.onDragStart.bind(this)
+		this._onDragEnd = this.onDragEnd.bind(this)
+		this._onDragOver = this.onDragOver.bind(this)
+		this._onDragLeave = this.onDragLeave.bind(this)
+		this._onDrop = this.onDrop.bind(this)
+
+		this.registerListeners(el)
 		this.setInitialAttributes()
 	}
 
@@ -19,30 +28,25 @@ export class DroppableMailbox {
 		this.setStatus('enabled')
 	}
 
-	update(el, instance) {
-		this.setInitialAttributes()
-		this.options = instance.options
-	}
-
 	registerListeners(el) {
-		dragEventBus.on('drag-start', this.onDragStart.bind(this))
-		dragEventBus.on('drag-end', this.onDragEnd.bind(this))
+		dragEventBus.on('drag-start', this._onDragStart)
+		dragEventBus.on('drag-end', this._onDragEnd)
 
 		// event listeners need to be attached to the first child element
 		// (a button or an anchor tag) instead of the root el, because there
 		// can be sub-mailboxes within the root element of the directive
-		el.firstChild.addEventListener('dragover', this.onDragOver.bind(this))
-		el.firstChild.addEventListener('dragleave', this.onDragLeave.bind(this))
-		el.firstChild.addEventListener('drop', this.onDrop.bind(this))
+		el.firstChild.addEventListener('dragover', this._onDragOver)
+		el.firstChild.addEventListener('dragleave', this._onDragLeave)
+		el.firstChild.addEventListener('drop', this._onDrop)
 	}
 
 	removeListeners(el) {
-		dragEventBus.off('drag-start', this.onDragStart)
-		dragEventBus.off('drag-end', this.onDragEnd)
+		dragEventBus.off('drag-start', this._onDragStart)
+		dragEventBus.off('drag-end', this._onDragEnd)
 
-		el.firstChild.removeEventListener('dragover', this.onDragOver)
-		el.firstChild.removeEventListener('dragleave', this.onDragLeave)
-		el.firstChild.removeEventListener('drop', this.onDrop)
+		el.firstChild.removeEventListener('dragover', this._onDragOver)
+		el.firstChild.removeEventListener('dragleave', this._onDragLeave)
+		el.firstChild.removeEventListener('drop', this._onDrop)
 	}
 
 	setStatus(status) {

@@ -16,7 +16,7 @@ use OCP\AppFramework\Http;
 class TrustedSendersControllerTest extends TestCase {
 	public function testSetTrustedNullUser(): void {
 		$serviceMock = $this->createServiceMock(TrustedSendersController::class, [
-			'UserId' => null,
+			'userId' => null,
 		]);
 
 		$response = $serviceMock->getService()->setTrusted('sender@example.com', 'individual');
@@ -26,7 +26,7 @@ class TrustedSendersControllerTest extends TestCase {
 
 	public function testRemoveTrustNullUser(): void {
 		$serviceMock = $this->createServiceMock(TrustedSendersController::class, [
-			'UserId' => null,
+			'userId' => null,
 		]);
 
 		$response = $serviceMock->getService()->removeTrust('sender@example.com', 'individual');
@@ -36,7 +36,7 @@ class TrustedSendersControllerTest extends TestCase {
 
 	public function testListNullUser(): void {
 		$serviceMock = $this->createServiceMock(TrustedSendersController::class, [
-			'UserId' => null,
+			'userId' => null,
 		]);
 
 		$response = $serviceMock->getService()->list();

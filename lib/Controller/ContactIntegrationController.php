@@ -30,12 +30,12 @@ class ContactIntegrationController extends Controller {
 		IRequest $request,
 		ContactIntegrationService $service,
 		ICacheFactory $cacheFactory,
-		string $UserId) {
+		string $userId) {
 		parent::__construct($appName, $request);
 
 		$this->service = $service;
 		$this->cache = $cacheFactory->createLocal('mail.contacts');
-		$this->uid = $UserId;
+		$this->uid = $userId;
 	}
 
 	/**
@@ -46,7 +46,7 @@ class ContactIntegrationController extends Controller {
 	 */
 	#[TrapError]
 	public function match(string $mail): JSONResponse {
-		return (new JSONResponse($this->service->findMatches($mail)))->cacheFor(60 * 60, false, true);
+		return (new JSONResponse($this->service->findMatches($this->uid, $mail)))->cacheFor(60 * 60, false, true);
 	}
 
 	/**
@@ -90,7 +90,7 @@ class ContactIntegrationController extends Controller {
 				return new JSONResponse($decoded);
 			}
 		}
-		$res = $this->service->autoComplete($term);
+		$res = $this->service->autoComplete($this->uid, $term);
 		$this->cache->set("{$this->uid}:$term", json_encode($res), 24 * 3600);
 		return new JSONResponse($res);
 	}

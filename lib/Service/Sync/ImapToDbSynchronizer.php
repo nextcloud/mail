@@ -374,7 +374,18 @@ class ImapToDbSynchronizer {
 			throw new IncompleteSyncException("Initial sync is not complete for $loggingMailboxId ($cached of $total messages cached).");
 		}
 
-		$syncToken = $client->getSyncToken($mailbox->getName());
+		// Get the sync token from a cache-enabled client. The non-cache client
+		// used above does not activate CONDSTORE/QRESYNC, so its sync token
+		// lacks HIGHESTMODSEQ. Without it, the first partial sync falls into
+		// Horde's "no MODSEQ" fallback that resolves ALL UIDs, causing OOM on
+		// large mailboxes.
+		$client->logout();
+		$cacheClient = $this->clientFactory->getClient($account);
+		try {
+			$syncToken = $cacheClient->getSyncToken($mailbox->getName());
+		} finally {
+			$cacheClient->logout();
+		}
 		$mailbox->setSyncNewToken($syncToken);
 		$mailbox->setSyncChangedToken($syncToken);
 		$mailbox->setSyncVanishedToken($syncToken);
@@ -420,7 +431,8 @@ class ImapToDbSynchronizer {
 				),
 				$account->getUserId(),
 				$hasQresync,
-				Horde_Imap_Client::SYNC_NEWMSGSUIDS
+				$logger,
+				Horde_Imap_Client::SYNC_NEWMSGSUIDS,
 			);
 			$perf->step('get new messages via Horde');
 
@@ -485,7 +497,8 @@ class ImapToDbSynchronizer {
 				),
 				$account->getUserId(),
 				$hasQresync,
-				Horde_Imap_Client::SYNC_FLAGSUIDS
+				$logger,
+				Horde_Imap_Client::SYNC_FLAGSUIDS,
 			);
 			$perf->step('get changed messages via Horde');
 
@@ -515,7 +528,8 @@ class ImapToDbSynchronizer {
 				),
 				$account->getUserId(),
 				$hasQresync,
-				Horde_Imap_Client::SYNC_VANISHEDUIDS
+				$logger,
+				Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			);
 			$perf->step('get vanished messages via Horde');
 

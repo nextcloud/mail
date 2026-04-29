@@ -221,7 +221,7 @@ export default {
 		window.addEventListener('keydown', this.handleKeyDown)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		window.removeEventListener('resize', this.resizeDebounced)
 		window.removeEventListener('keydown', this.handleKeyDown)
 	},
@@ -534,13 +534,14 @@ export default {
 							iframeDocument.write(`
 								<html>
 									<head>
-										<title>${this.threadSubject}</title>
+										<title></title>
 									</head>
 									<body>
 										<div class="message-container">${messageContainer.innerHTML}</div>
 									</body>
 								</html>
 							`)
+							iframeDocument.title = this.threadSubject
 
 							const threadInfo = this.addThreadInfo(iframeDocument)
 							iframeDocument.body.insertBefore(threadInfo, iframeDocument.body.firstChild)
@@ -582,7 +583,7 @@ export default {
 </script>
 
 <style lang="scss">
-@use '../../css/variables';
+@use '../../css/variables.scss';
 
 #mail-message {
 	width: 100%;
@@ -718,7 +719,7 @@ export default {
 	color: #07d;
 	border-bottom: var(--border-width-input) dotted #07d;
 	text-decoration: none;
-	word-wrap: break-word;
+	overflow-wrap: break-word;
 }
 
 /* Show action button label and move icon to the left

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "acceb892db9ab4d907e466cce9357761",
+    "content-hash": "061bba735b97e7c1b6b0c1d095f4c75b",
     "packages": [
         {
             "name": "amphp/amp",
@@ -616,16 +616,16 @@
         },
         {
             "name": "bamarni/composer-bin-plugin",
-            "version": "1.8.3",
+            "version": "1.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bamarni/composer-bin-plugin.git",
-                "reference": "e7ef9e012667327516c24e5fad9903a3bc91389d"
+                "reference": "641d0663f5ac270b1aeec4337b7856f76204df47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bamarni/composer-bin-plugin/zipball/e7ef9e012667327516c24e5fad9903a3bc91389d",
-                "reference": "e7ef9e012667327516c24e5fad9903a3bc91389d",
+                "url": "https://api.github.com/repos/bamarni/composer-bin-plugin/zipball/641d0663f5ac270b1aeec4337b7856f76204df47",
+                "reference": "641d0663f5ac270b1aeec4337b7856f76204df47",
                 "shasum": ""
             },
             "require": {
@@ -633,11 +633,11 @@
                 "php": "^7.2.5 || ^8.0"
             },
             "require-dev": {
-                "composer/composer": "^2.0",
+                "composer/composer": "^2.2.26",
                 "ext-json": "*",
                 "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "^1.8",
-                "phpstan/phpstan-phpunit": "^1.1",
+                "phpstan/phpstan": "^1.8 || ^2.0",
+                "phpstan/phpstan-phpunit": "^1.1 || ^2.0",
                 "phpunit/phpunit": "^8.5 || ^9.6 || ^10.0",
                 "symfony/console": "^2.8.52 || ^3.4.35 || ^4.4 || ^5.0 || ^6.0",
                 "symfony/finder": "^2.8.52 || ^3.4.35 || ^4.4 || ^5.0 || ^6.0",
@@ -667,9 +667,9 @@
             ],
             "support": {
                 "issues": "https://github.com/bamarni/composer-bin-plugin/issues",
-                "source": "https://github.com/bamarni/composer-bin-plugin/tree/1.8.3"
+                "source": "https://github.com/bamarni/composer-bin-plugin/tree/1.9.1"
             },
-            "time": "2025-11-24T19:20:55+00:00"
+            "time": "2026-02-04T10:18:12+00:00"
         },
         {
             "name": "bytestream/horde-crypt-blowfish",
@@ -824,16 +824,16 @@
         },
         {
             "name": "bytestream/horde-imap-client",
-            "version": "v2.33.7",
+            "version": "v2.34.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Imap_Client.git",
-                "reference": "69a022da369d2ed4bc9035294825ccdd1a999c30"
+                "reference": "0171a72c144fa050250e4b40dc0160507c265300"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/69a022da369d2ed4bc9035294825ccdd1a999c30",
-                "reference": "69a022da369d2ed4bc9035294825ccdd1a999c30",
+                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/0171a72c144fa050250e4b40dc0160507c265300",
+                "reference": "0171a72c144fa050250e4b40dc0160507c265300",
                 "shasum": ""
             },
             "require": {
@@ -875,9 +875,9 @@
             "description": "Horde IMAP client library",
             "homepage": "https://www.horde.org/libraries/Horde_Imap_Client",
             "support": {
-                "source": "https://github.com/bytestream/Imap_Client/tree/v2.33.7"
+                "source": "https://github.com/bytestream/Imap_Client/tree/v2.34.1"
             },
-            "time": "2026-03-11T09:30:28+00:00"
+            "time": "2026-04-23T09:47:18+00:00"
         },
         {
             "name": "bytestream/horde-listheaders",
@@ -988,16 +988,16 @@
         },
         {
             "name": "bytestream/horde-mime",
-            "version": "v2.14.0",
+            "version": "v2.14.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Mime.git",
-                "reference": "5e5cfdecccf1db5db39df17028af00bb8e513b27"
+                "reference": "6cd0216b850ea811ebc543c4b5731ef3a256ba89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Mime/zipball/5e5cfdecccf1db5db39df17028af00bb8e513b27",
-                "reference": "5e5cfdecccf1db5db39df17028af00bb8e513b27",
+                "url": "https://api.github.com/repos/bytestream/Mime/zipball/6cd0216b850ea811ebc543c4b5731ef3a256ba89",
+                "reference": "6cd0216b850ea811ebc543c4b5731ef3a256ba89",
                 "shasum": ""
             },
             "require": {
@@ -1046,9 +1046,9 @@
             "description": "MIME library",
             "homepage": "https://www.horde.org/libraries/Horde_Mime",
             "support": {
-                "source": "https://github.com/bytestream/Mime/tree/v2.14.0"
+                "source": "https://github.com/bytestream/Mime/tree/v2.14.1"
             },
-            "time": "2026-02-12T14:39:44+00:00"
+            "time": "2026-03-30T09:58:39+00:00"
         },
         {
             "name": "bytestream/horde-secret",
@@ -3342,16 +3342,16 @@
         },
         {
             "name": "psalm/phar",
-            "version": "6.7.1",
+            "version": "6.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psalm/phar.git",
-                "reference": "a7112d33cfd48d857c2eb730ea642046d21bbdf5"
+                "reference": "333a7a0d7805b699860262e1b4ea8cf14e1cd118"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psalm/phar/zipball/a7112d33cfd48d857c2eb730ea642046d21bbdf5",
-                "reference": "a7112d33cfd48d857c2eb730ea642046d21bbdf5",
+                "url": "https://api.github.com/repos/psalm/phar/zipball/333a7a0d7805b699860262e1b4ea8cf14e1cd118",
+                "reference": "333a7a0d7805b699860262e1b4ea8cf14e1cd118",
                 "shasum": ""
             },
             "require": {
@@ -3371,9 +3371,9 @@
             "description": "Composer-based Psalm Phar",
             "support": {
                 "issues": "https://github.com/psalm/phar/issues",
-                "source": "https://github.com/psalm/phar/tree/6.7.1"
+                "source": "https://github.com/psalm/phar/tree/6.8.2"
             },
-            "time": "2025-02-17T10:54:35+00:00"
+            "time": "2025-02-20T08:23:26+00:00"
         },
         {
             "name": "roave/security-advisories",

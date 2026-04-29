@@ -93,7 +93,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '../../css/fluid';
+@use '../../css/fluid.scss';
 
 .setup {
 	/* make sure the background image covers everything */
