@@ -93,7 +93,7 @@
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-vitest-globals": "^1.6.1",
     "file-loader": "^6.2.0",
-    "jsdom": "^27.4.0",
+    "jsdom": "^29.0.2",
     "node-polyfill-webpack-plugin": "^3.0.0",
     "patch-package": "^8.0.1",
     "postcss": "^8.5.12",
