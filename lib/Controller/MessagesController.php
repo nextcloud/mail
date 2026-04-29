@@ -14,7 +14,6 @@ use Exception;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IDkimService;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\ITrustedSenderService;
@@ -25,11 +24,11 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Http\TrapError;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\SmimeData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\ItineraryService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Controller;
@@ -57,7 +56,7 @@ use function array_map;
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class MessagesController extends Controller {
 	private AccountService $accountService;
-	private IMailManager $mailManager;
+	private MailManager $mailManager;
 	private IMailSearch $mailSearch;
 	private ItineraryService $itineraryService;
 	private ?string $currentUserId;
@@ -70,7 +69,6 @@ class MessagesController extends Controller {
 	private ITrustedSenderService $trustedSenderService;
 	private IMailTransmission $mailTransmission;
 	private SmimeService $smimeService;
-	private IMAPClientFactory $clientFactory;
 	private IDkimService $dkimService;
 	private IUserPreferences $preferences;
 	private SnoozeService $snoozeService;
@@ -80,7 +78,7 @@ class MessagesController extends Controller {
 		string $appName,
 		IRequest $request,
 		AccountService $accountService,
-		IMailManager $mailManager,
+		MailManager $mailManager,
 		IMailSearch $mailSearch,
 		ItineraryService $itineraryService,
 		?string $userId,
@@ -93,7 +91,6 @@ class MessagesController extends Controller {
 		ITrustedSenderService $trustedSenderService,
 		IMailTransmission $mailTransmission,
 		SmimeService $smimeService,
-		IMAPClientFactory $clientFactory,
 		IDkimService $dkimService,
 		IUserPreferences $preferences,
 		SnoozeService $snoozeService,
@@ -115,7 +112,6 @@ class MessagesController extends Controller {
 		$this->trustedSenderService = $trustedSenderService;
 		$this->mailTransmission = $mailTransmission;
 		$this->smimeService = $smimeService;
-		$this->clientFactory = $clientFactory;
 		$this->dkimService = $dkimService;
 		$this->preferences = $preferences;
 		$this->snoozeService = $snoozeService;
@@ -237,23 +233,17 @@ class MessagesController extends Controller {
 		$cacheInstance = $this->getCacheForAccount($account->getId());
 		$imapMessageCacheKey = "message_$id";
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$imapMessage = $this->mailManager->getImapMessage(
-				$client,
-				$account,
-				$mailbox,
-				$message->getUid(), true
-			);
+		$imapMessage = $this->mailManager->getImapMessage(
+			$account,
+			$mailbox,
+			$message->getUid(), true
+		);
 
-			if ($imapMessage->hasHtmlMessage()) {
-				$cacheInstance->set($imapMessageCacheKey, $imapMessage->getHtmlBody($id), 600);
-			}
-
-			$json = $imapMessage->getFullMessage($id);
-		} finally {
-			$client->logout();
+		if ($imapMessage->hasHtmlMessage()) {
+			$cacheInstance->set($imapMessageCacheKey, $imapMessage->getHtmlBody($id), 600);
 		}
+
+		$json = $imapMessage->getFullMessage($id);
 
 		$itineraries = $this->itineraryService->getCached($account, $mailbox, $message->getUid());
 		if ($itineraries) {
@@ -504,7 +494,7 @@ class MessagesController extends Controller {
 
 		try {
 			$this->mailTransmission->sendMdn($account, $mailbox, $message);
-			$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), '$mdnsent', true);
+			$this->mailManager->flagMessages($account, '$mdnsent', true, $message);
 		} catch (ServiceException $ex) {
 			$this->logger->error('Sending mdn failed: ' . $ex->getMessage());
 			throw $ex;
@@ -520,7 +510,7 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
-	public function getSource(int $id): JSONResponse {
+	public function getRawMessage(int $id): JSONResponse {
 		if ($this->currentUserId === null) {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
@@ -532,19 +522,13 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$response = new JSONResponse([
-				'source' => $this->mailManager->getSource(
-					$client,
-					$account,
-					$mailbox->getName(),
-					$message->getUid()
-				)
-			]);
-		} finally {
-			$client->logout();
-		}
+		$response = new JSONResponse([
+			'source' => $this->mailManager->getRawMessage(
+				$account,
+				$mailbox->getName(),
+				$message->getUid()
+			)
+		]);
 
 		// Enable caching
 		$response->cacheFor(60 * 60, false, true);
@@ -576,17 +560,11 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$source = $this->mailManager->getSource(
-				$client,
-				$account,
-				$mailbox->getName(),
-				$message->getUid()
-			);
-		} finally {
-			$client->logout();
-		}
+		$source = $this->mailManager->getRawMessage(
+			$account,
+			$mailbox->getName(),
+			$message->getUid()
+		);
 
 		return new AttachmentDownloadResponse(
 			$source,
@@ -637,20 +615,14 @@ class MessagesController extends Controller {
 
 			$html = $cacheInstance->get($imapMessageCacheKey);
 			if ($html === null) {
-				$client = $this->clientFactory->getClient($account);
-				try {
-					$html = $this->mailManager->getImapMessage(
-						$client,
-						$account,
-						$mailbox,
-						$message->getUid(),
-						true
-					)->getHtmlBody(
-						$id
-					);
-				} finally {
-					$client->logout();
-				}
+				$html = $this->mailManager->getImapMessage(
+					$account,
+					$mailbox,
+					$message->getUid(),
+					true
+				)->getHtmlBody(
+					$id
+				);
 			}
 
 
@@ -870,7 +842,7 @@ class MessagesController extends Controller {
 
 		foreach ($flags as $flag => $value) {
 			$value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
-			$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), $flag, $value);
+			$this->mailManager->flagMessages($account, $flag, $value, $message);
 		}
 		return new JSONResponse();
 	}
@@ -900,12 +872,12 @@ class MessagesController extends Controller {
 		}
 
 		try {
-			$tag = $this->mailManager->getTagByImapLabel($imapLabel, $this->currentUserId);
+			$tag = $this->mailManager->getTagByLabel($imapLabel, $this->currentUserId);
 		} catch (ClientException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$this->mailManager->tagMessage($account, $mailbox->getName(), $message, $tag, true);
+		$this->mailManager->tagMessages($account, $tag, true, $message);
 		return new JSONResponse($tag);
 	}
 
@@ -934,12 +906,12 @@ class MessagesController extends Controller {
 		}
 
 		try {
-			$tag = $this->mailManager->getTagByImapLabel($imapLabel, $this->currentUserId);
+			$tag = $this->mailManager->getTagByLabel($imapLabel, $this->currentUserId);
 		} catch (ClientException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$this->mailManager->tagMessage($account, $mailbox->getName(), $message, $tag, false);
+		$this->mailManager->tagMessages($account, $tag, false, $message);
 		return new JSONResponse($tag);
 	}
 

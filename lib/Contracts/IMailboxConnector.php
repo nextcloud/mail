@@ -18,12 +18,12 @@ interface IMailboxConnector {
 	/**
 	 * Synchronise the list of mailboxes for the given account.
 	 */
-	public function syncMailboxList(Account $account, LoggerInterface $logger, bool $force = false): void;
+	public function syncAccount(Account $account, bool $force = false): void;
 
 	/**
 	 * Refresh cached statistics (total / unseen) for a single mailbox.
 	 */
-	public function syncMailboxStats(Account $account, Mailbox $mailbox): void;
+	public function syncMailbox(Account $account, Mailbox $mailbox): void;
 
 	/**
 	 * Create a new mailbox on the remote server and persist it locally.

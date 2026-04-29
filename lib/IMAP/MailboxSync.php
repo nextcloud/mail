@@ -81,7 +81,7 @@ class MailboxSync {
 		LoggerInterface $logger,
 		bool $force = false,
 		?Horde_Imap_Client_Socket $client = null): void {
-		if (!$force && $account->getMailAccount()->getLastMailboxSync() >= ($this->timeFactory->getTime() - 7200)) {
+		if (!$force && $account->getMailAccount()->getLastMailboxSync() >= ($this->timeFactory->getTime() - 900)) {
 			$logger->debug('account is up to date, skipping mailbox sync');
 			return;
 		}

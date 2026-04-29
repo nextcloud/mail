@@ -9,12 +9,12 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\ThreadMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\QueuedJob;
 use OCP\DB\Exception;
@@ -30,7 +30,7 @@ class FollowUpClassifierJob extends QueuedJob {
 		ITimeFactory $time,
 		private LoggerInterface $logger,
 		private AccountService $accountService,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private AiIntegrationsService $aiService,
 		private ThreadMapper $threadMapper,
 	) {
@@ -54,7 +54,7 @@ class FollowUpClassifierJob extends QueuedJob {
 			return;
 		}
 
-		$messages = $this->mailManager->getByMessageId($account, $messageId);
+		$messages = $this->mailManager->getMessagesByMessageId($account, $messageId);
 		$messages = array_filter(
 			$messages,
 			static fn (Message $message) => $message->getMailboxId() === $mailboxId,
@@ -96,12 +96,11 @@ class FollowUpClassifierJob extends QueuedJob {
 
 		$this->logger->debug("Message requires follow-up: {$message->getId()}");
 		$tag = $this->mailManager->createTag('Follow up', '#d77000', $userId);
-		$this->mailManager->tagMessage(
+		$this->mailManager->tagMessages(
 			$account,
-			$mailbox->getName(),
-			$message,
 			$tag,
 			true,
+			$message,
 		);
 	}
 }

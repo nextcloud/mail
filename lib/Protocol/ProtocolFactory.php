@@ -18,7 +18,12 @@ use OCA\Mail\Contracts\ITransmissionConnector;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\ImapMailboxConnector;
+use OCA\Mail\IMAP\ImapMessageConnector;
+use OCA\Mail\IMAP\ImapTransmissionConnector;
 use OCA\Mail\JMAP\JmapClientFactory;
+use OCA\Mail\JMAP\JmapMailboxConnector;
+use OCA\Mail\JMAP\JmapMessageConnector;
 use Psr\Container\ContainerInterface;
 
 class ProtocolFactory {
@@ -27,16 +32,15 @@ class ProtocolFactory {
 	 * Maps protocol => connector interface => class name
 	 */
 	private const CONNECTOR_MAP = [
-		// MailAccount::PROTOCOL_IMAP => [
-		// 	IMailboxConnector::class => ImapMailboxConnector::class,
-		// 	IMessageConnector::class => ImapMessageConnector::class,
-		// 	ITransmissionConnector::class => ImapTransmissionConnector::class,
-		// ],
-		// MailAccount::PROTOCOL_JMAP => [
-		// 	IMailboxConnector::class => JmapMailboxConnector::class,
-		// 	IMessageConnector::class => JmapMessageConnector::class,
-		// 	ITransmissionConnector::class => JmapTransmissionConnector::class,
-		// ],
+		MailAccount::PROTOCOL_IMAP => [
+			IMailboxConnector::class => ImapMailboxConnector::class,
+			IMessageConnector::class => ImapMessageConnector::class,
+			ITransmissionConnector::class => ImapTransmissionConnector::class,
+		],
+		MailAccount::PROTOCOL_JMAP => [
+			IMailboxConnector::class => JmapMailboxConnector::class,
+			IMessageConnector::class => JmapMessageConnector::class,
+		],
 	];
 
 	public function __construct(
@@ -60,6 +64,28 @@ class ProtocolFactory {
 	public function jmapClient(Account $account): JmapClient {
 		$this->verifyProtocol($account, MailAccount::PROTOCOL_JMAP);
 		return $this->jmapClientFactory->getClient($account);
+	}
+
+	/**
+	 * @throws ServiceException
+	 */
+	public function testConnection(Account $account): void {
+		$protocol = $account->getMailAccount()->getProtocol();
+
+		if ($protocol === MailAccount::PROTOCOL_IMAP) {
+			$this->imapClient($account)->close();
+			return;
+		}
+
+		if ($protocol === MailAccount::PROTOCOL_JMAP) {
+			$client = $this->jmapClient($account);
+			if (!$client->sessionStatus()) {
+				$client->connect();
+			}
+			return;
+		}
+
+		throw new ServiceException("Unsupported protocol $protocol");
 	}
 
 	/**

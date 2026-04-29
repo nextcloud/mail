@@ -9,10 +9,10 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\ResponseDefinitions;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\ApiRoute;
@@ -30,7 +30,7 @@ class MailboxesApiController extends OCSController {
 		string $appName,
 		IRequest $request,
 		private readonly ?string $userId,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private readonly AccountService $accountService,
 		private IMailSearch $mailSearch,
 	) {

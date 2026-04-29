@@ -14,7 +14,6 @@ use InvalidArgumentException;
 use OCA\Files_Sharing\SharedStorage;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
@@ -25,6 +24,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\UploadException;
 use OCA\Mail\IMAP\MessageMapper;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\File;
@@ -43,7 +43,7 @@ class AttachmentService implements IAttachmentService {
 	/** @var AttachmentStorage */
 	private $storage;
 	/**
-	 * @var IMailManager
+	 * @var MailManager
 	 */
 	private $mailManager;
 	/**
@@ -67,7 +67,7 @@ class AttachmentService implements IAttachmentService {
 		$userFolder,
 		LocalAttachmentMapper $mapper,
 		AttachmentStorage $storage,
-		IMailManager $mailManager,
+		MailManager $mailManager,
 		MessageMapper $imapMessageMapper,
 		private ICacheFactory $cacheFactory,
 		private IURLGenerator $urlGenerator,
@@ -266,7 +266,7 @@ class AttachmentService implements IAttachmentService {
 	/**
 	 * @return list<array{id: string, fileName: string|null, mime: string, downloadUrl: string, mimeUrl: string}>
 	 */
-	public function getAttachmentNames(Account $account, Mailbox $mailbox, Message $message, \Horde_Imap_Client_Socket $client): array {
+	public function getAttachmentNames(Account $account, Mailbox $mailbox, Message $message): array {
 		if ($message->getStructureAnalyzed() === true && $message->getFlagAttachments() === false) {
 			// Structure analysis already confirmed no attachments, nothing to fetch.
 			return [];
@@ -290,7 +290,6 @@ class AttachmentService implements IAttachmentService {
 		$attachments = [];
 		try {
 			$imapMessage = $this->mailManager->getImapMessage(
-				$client,
 				$account,
 				$mailbox,
 				$message->getUid(),

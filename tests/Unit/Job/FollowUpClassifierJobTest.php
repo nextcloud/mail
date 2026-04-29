@@ -98,7 +98,7 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('user', 100)
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getByMessageId')
+			->method('getMessagesByMessageId')
 			->with($account, '<message1@foo.bar>')
 			->willReturn($messages);
 		$this->threadMapper->expects(self::once())
@@ -141,7 +141,7 @@ class FollowUpClassifierJobTest extends TestCase {
 		$this->accountService->expects(self::never())
 			->method('find');
 		$this->mailManager->expects(self::never())
-			->method('getByMessageId');
+			->method('getMessagesByMessageId');
 		$this->threadMapper->expects(self::never())
 			->method('findNewerMessageIdsInThread');
 		$this->aiService->expects(self::never())
@@ -181,7 +181,7 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('user', 100)
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getByMessageId')
+			->method('getMessagesByMessageId')
 			->with($account, '<message1@foo.bar>')
 			->willReturn($messages);
 		$this->threadMapper->expects(self::never())
@@ -231,7 +231,7 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('user', 100)
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getByMessageId')
+			->method('getMessagesByMessageId')
 			->with($account, '<message1@foo.bar>')
 			->willReturn($messages);
 		$this->threadMapper->expects(self::once())
@@ -285,7 +285,7 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('user', 100)
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getByMessageId')
+			->method('getMessagesByMessageId')
 			->with($account, '<message1@foo.bar>')
 			->willReturn($messages);
 		$this->threadMapper->expects(self::once())
@@ -339,7 +339,7 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('user', 100)
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getByMessageId')
+			->method('getMessagesByMessageId')
 			->with($account, '<message1@foo.bar>')
 			->willReturn($messages);
 		$this->threadMapper->expects(self::once())
@@ -390,7 +390,7 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('user', 100)
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getByMessageId')
+			->method('getMessagesByMessageId')
 			->with($account, '<message1@foo.bar>')
 			->willReturn($messages);
 		$this->threadMapper->expects(self::once())

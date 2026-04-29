@@ -11,13 +11,13 @@ namespace OCA\Mail\Service\Classification;
 
 use Horde_Imap_Client;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Service\MailManager;
 use Psr\Log\LoggerInterface;
 
 class NewMessagesClassifier {
@@ -33,7 +33,7 @@ class NewMessagesClassifier {
 		private ImportanceClassifier $classifier,
 		private TagMapper $tagMapper,
 		private LoggerInterface $logger,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 	) {
 	}
 
@@ -88,8 +88,8 @@ class NewMessagesClassifier {
 				$this->logger->info("Message {$message->getUid()} ({$message->getPreviewText()}) is " . ($prediction ? 'important' : 'not important'));
 				if ($prediction) {
 					$message->setFlagImportant(true);
-					$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), Tag::LABEL_IMPORTANT, true);
-					$this->mailManager->tagMessage($account, $mailbox->getName(), $message, $importantTag, true);
+					$this->mailManager->flagMessages($account, Tag::LABEL_IMPORTANT, true, $message);
+					$this->mailManager->tagMessages($account, $importantTag, true, $message);
 				}
 			}
 		} catch (ServiceException $e) {

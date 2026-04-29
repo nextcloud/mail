@@ -14,7 +14,6 @@ use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Ids;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper as DatabaseMessageMapper;
@@ -29,12 +28,13 @@ use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\UidValidityChangedException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Synchronizer;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\Classification\NewMessagesClassifier;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -53,8 +53,8 @@ class ImapToDbSynchronizer {
 	/** @var DatabaseMessageMapper */
 	private $dbMapper;
 
-	/** @var IMAPClientFactory */
-	private $clientFactory;
+	/** @var ProtocolFactory */
+	private $protocolFactory;
 
 	/** @var ImapMessageMapper */
 	private $imapMapper;
@@ -74,14 +74,14 @@ class ImapToDbSynchronizer {
 	/** @var LoggerInterface */
 	private $logger;
 
-	/** @var IMailManager */
+	/** @var MailManager */
 	private $mailManager;
 
 	private TagMapper $tagMapper;
 	private NewMessagesClassifier $newMessagesClassifier;
 
 	public function __construct(DatabaseMessageMapper $dbMapper,
-		IMAPClientFactory $clientFactory,
+		ProtocolFactory $protocolFactory,
 		ImapMessageMapper $imapMapper,
 		MailboxMapper $mailboxMapper,
 		DatabaseMessageMapper $messageMapper,
@@ -89,11 +89,11 @@ class ImapToDbSynchronizer {
 		IEventDispatcher $dispatcher,
 		PerformanceLogger $performanceLogger,
 		LoggerInterface $logger,
-		IMailManager $mailManager,
+		MailManager $mailManager,
 		TagMapper $tagMapper,
 		NewMessagesClassifier $newMessagesClassifier) {
 		$this->dbMapper = $dbMapper;
-		$this->clientFactory = $clientFactory;
+		$this->protocolFactory = $protocolFactory;
 		$this->imapMapper = $imapMapper;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->synchronizer = $synchronizer;
@@ -119,7 +119,7 @@ class ImapToDbSynchronizer {
 		$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
 		$trashRetentionDays = $account->getMailAccount()->getTrashRetentionDays();
 
-		$client = $this->clientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 
 		foreach ($this->mailboxMapper->findAll($account) as $mailbox) {
 			$syncTrash = $trashMailboxId === $mailbox->getId() && $trashRetentionDays !== null;
@@ -337,7 +337,7 @@ class ImapToDbSynchronizer {
 
 		// Need a client without a cache
 		$client->logout();
-		$client = $this->clientFactory->getClient($account, false);
+		$client = $this->protocolFactory->imapClient($account, false);
 
 		$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);
 		try {
@@ -380,7 +380,7 @@ class ImapToDbSynchronizer {
 		// Horde's "no MODSEQ" fallback that resolves ALL UIDs, causing OOM on
 		// large mailboxes.
 		$client->logout();
-		$cacheClient = $this->clientFactory->getClient($account);
+		$cacheClient = $this->protocolFactory->imapClient($account);
 		try {
 			$syncToken = $cacheClient->getSyncToken($mailbox->getName());
 		} finally {
@@ -502,7 +502,7 @@ class ImapToDbSynchronizer {
 			);
 			$perf->step('get changed messages via Horde');
 
-			$permflagsEnabled = $this->mailManager->isPermflagsEnabled($client, $account, $mailbox->getName());
+			$permflagsEnabled = $this->mailManager->isPermflagsEnabled($account, $mailbox->getName());
 
 			foreach (array_chunk($response->getChangedMessages(), 500) as $chunk) {
 				$this->dbMapper->updateBulk($account, $permflagsEnabled, ...array_map(static fn (IMAPMessage $imapMessage) => $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount()), $chunk));
@@ -572,7 +572,7 @@ class ImapToDbSynchronizer {
 		);
 
 		// Need to use a client without a cache here (to disable QRESYNC entirely)
-		$client = $this->clientFactory->getClient($account, false);
+		$client = $this->protocolFactory->imapClient($account, false);
 		try {
 			$knownUids = $this->dbMapper->findAllUids($mailbox);
 			$hordeMailbox = new \Horde_Imap_Client_Mailbox($mailbox->getName());

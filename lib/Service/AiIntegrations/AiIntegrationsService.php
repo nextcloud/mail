@@ -12,13 +12,13 @@ namespace OCA\Mail\Service\AiIntegrations;
 use JsonException;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\EventData;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Service\MailManager;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IUserManager;
@@ -51,7 +51,7 @@ PROMPT;
 		private IConfig $config,
 		private Cache $cache,
 		private IMAPClientFactory $clientFactory,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private TaskProcessingManager $taskProcessingManager,
 		private TextProcessingManager $textProcessingManager,
 		private IL10N $l,
@@ -76,51 +76,45 @@ PROMPT;
 		}
 		$user = $this->userManager->get($account->getUserId());
 		$language = explode('_', $this->l10nFactory->getUserLanguage($user))[0];
-		$client = $this->clientFactory->getClient($account);
-		try {
-			foreach ($messages as $entry) {
-				if (mb_strlen((string)$entry->getSummary()) !== 0) {
-					continue;
-				}
-				// retrieve full message from server
-				$userId = $account->getUserId();
-				$mailboxId = $entry->getMailboxId();
-				$messageLocalId = $entry->getId();
-				$messageRemoteId = $entry->getUid();
-				$mailbox = $this->mailManager->getMailbox($userId, $mailboxId);
-				$message = $this->mailManager->getImapMessage(
-					$client,
-					$account,
-					$mailbox,
-					$messageRemoteId,
-					true
-				);
-				// skip message if it is encrypted or empty
-				if ($message->isEncrypted() || empty(trim($message->getPlainBody()))) {
-					continue;
-				}
-				// construct prompt and task
-				$messageBody = $message->getPlainBody();
-				$prompt = "You are tasked with formulating a helpful summary of a email message. \r\n"
-						  . 'The summary should be in the language of this language code ' . $language . ". \r\n"
-						  . "The summary should be less than 160 characters. \r\n"
-						  . "Output *ONLY* the summary itself, leave out any introduction. \r\n"
-						  . "Here is the ***E-MAIL*** for which you must generate a helpful summary: \r\n"
-						  . "***START_OF_E-MAIL***\r\n$messageBody\r\n***END_OF_E-MAIL***\r\n";
-				$task = new TaskProcessingTask(
-					TextToText::ID,
-					[
-						'max_tokens' => 1024,
-						'input' => $prompt,
-					],
-					Application::APP_ID,
-					$userId,
-					'message:' . (string)$messageLocalId
-				);
-				$this->taskProcessingManager->scheduleTask($task);
+		foreach ($messages as $entry) {
+			if (mb_strlen((string)$entry->getSummary()) !== 0) {
+				continue;
 			}
-		} finally {
-			$client->logout();
+			// retrieve full message from server
+			$userId = $account->getUserId();
+			$mailboxId = $entry->getMailboxId();
+			$messageLocalId = $entry->getId();
+			$messageRemoteId = $entry->getUid();
+			$mailbox = $this->mailManager->getMailbox($userId, $mailboxId);
+			$message = $this->mailManager->getImapMessage(
+				$account,
+				$mailbox,
+				$messageRemoteId,
+				true
+			);
+			// skip message if it is encrypted or empty
+			if ($message->isEncrypted() || empty(trim($message->getPlainBody()))) {
+				continue;
+			}
+			// construct prompt and task
+			$messageBody = $message->getPlainBody();
+			$prompt = "You are tasked with formulating a helpful summary of a email message. \r\n"
+					  . 'The summary should be in the language of this language code ' . $language . ". \r\n"
+					  . "The summary should be less than 160 characters. \r\n"
+					  . "Output *ONLY* the summary itself, leave out any introduction. \r\n"
+					  . "Here is the ***E-MAIL*** for which you must generate a helpful summary: \r\n"
+					  . "***START_OF_E-MAIL***\r\n$messageBody\r\n***END_OF_E-MAIL***\r\n";
+			$task = new TaskProcessingTask(
+				TextToText::ID,
+				[
+					'max_tokens' => 1024,
+					'input' => $prompt,
+				],
+				Application::APP_ID,
+				$userId,
+				'message:' . (string)$messageLocalId
+			);
+			$this->taskProcessingManager->scheduleTask($task);
 		}
 	}
 
@@ -141,22 +135,15 @@ PROMPT;
 			if ($cachedSummary) {
 				return $cachedSummary;
 			}
-			$client = $this->clientFactory->getClient($account);
-			try {
-				$messagesBodies = array_map(function ($message) use ($client, $account, $currentUserId) {
-					$mailbox = $this->mailManager->getMailbox($currentUserId, $message->getMailboxId());
-					$imapMessage = $this->mailManager->getImapMessage(
-						$client,
-						$account,
-						$mailbox,
-						$message->getUid(), true
-					);
-					return $imapMessage->getPlainBody();
-				}, $messages);
-
-			} finally {
-				$client->logout();
-			}
+			$messagesBodies = array_map(function ($message) use ($account, $currentUserId) {
+				$mailbox = $this->mailManager->getMailbox($currentUserId, $message->getMailboxId());
+				$imapMessage = $this->mailManager->getImapMessage(
+					$account,
+					$mailbox,
+					$message->getUid(), true
+				);
+				return $imapMessage->getPlainBody();
+			}, $messages);
 
 			$taskPrompt = implode("\n", $messagesBodies);
 			$summaryTask = new TextProcessingTask(SummaryTaskType::class, $taskPrompt, 'mail', $currentUserId, $threadId);
@@ -178,21 +165,15 @@ PROMPT;
 		if (!in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes(), true)) {
 			return null;
 		}
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$messageBodies = array_map(function ($message) use ($client, $account, $currentUserId) {
-				$mailbox = $this->mailManager->getMailbox($currentUserId, $message->getMailboxId());
-				$imapMessage = $this->mailManager->getImapMessage(
-					$client,
-					$account,
-					$mailbox,
-					$message->getUid(), true
-				);
-				return $imapMessage->getPlainBody();
-			}, $messages);
-		} finally {
-			$client->logout();
-		}
+		$messageBodies = array_map(function ($message) use ($account, $currentUserId) {
+			$mailbox = $this->mailManager->getMailbox($currentUserId, $message->getMailboxId());
+			$imapMessage = $this->mailManager->getImapMessage(
+				$account,
+				$mailbox,
+				$message->getUid(), true
+			);
+			return $imapMessage->getPlainBody();
+		}, $messages);
 
 		$task = new TextProcessingTask(
 			FreePromptTaskType::class,
@@ -225,22 +206,15 @@ PROMPT;
 					throw new ServiceException('Failed to decode smart replies JSON output', previous: $e);
 				}
 			}
-			$client = $this->clientFactory->getClient($account);
-			try {
-				$imapMessage = $this->mailManager->getImapMessage(
-					$client,
-					$account,
-					$mailbox,
-					$message->getUid(), true
-				);
-				if (!$this->isPersonalEmail($imapMessage)) {
-					return [];
-				}
-				$messageBody = $imapMessage->getPlainBody();
-
-			} finally {
-				$client->logout();
+			$imapMessage = $this->mailManager->getImapMessage(
+				$account,
+				$mailbox,
+				$message->getUid(), true
+			);
+			if (!$this->isPersonalEmail($imapMessage)) {
+				return [];
 			}
+			$messageBody = $imapMessage->getPlainBody();
 			$prompt = "You are tasked with formulating helpful replies or reply templates to e-mails provided that have been sent to me. If you don't know some relevant information for answering the e-mails (like my schedule) leave blanks in the text that can later be filled by me. You must write the replies from my point of view as replies to the original sender of the provided e-mail!
 
 			Formulate two extremely succinct reply suggestions to the provided ***E-MAIL***. Please, do not invent any context for the replies but, rather, leave blanks for me to fill in with relevant information where necessary. Provide the output formatted as valid JSON with the keys 'reply1' and 'reply2' for the reply suggestions.
@@ -286,18 +260,12 @@ PROMPT;
 			throw new ServiceException('No language model available for smart replies');
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$imapMessage = $this->mailManager->getImapMessage(
-				$client,
-				$account,
-				$mailbox,
-				$message->getUid(),
-				true,
-			);
-		} finally {
-			$client->logout();
-		}
+		$imapMessage = $this->mailManager->getImapMessage(
+			$account,
+			$mailbox,
+			$message->getUid(),
+			true,
+		);
 
 		if (!$this->isPersonalEmail($imapMessage)) {
 			return false;
@@ -352,18 +320,12 @@ Never return null or undefined.";
 			return  $cachedValue === 'true' ? true : false;
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$imapMessage = $this->mailManager->getImapMessage(
-				$client,
-				$account,
-				$mailbox,
-				$message->getUid(),
-				true,
-			);
-		} finally {
-			$client->logout();
-		}
+		$imapMessage = $this->mailManager->getImapMessage(
+			$account,
+			$mailbox,
+			$message->getUid(),
+			true,
+		);
 
 		if (!$this->isPersonalEmail($imapMessage)) {
 			return false;

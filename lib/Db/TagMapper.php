@@ -80,6 +80,7 @@ class TagMapper extends QBMapper {
 		try {
 			$tag = $this->getTagByImapLabel($tag->getImapLabel(), $userId);
 		} catch (DoesNotExistException $e) {
+			$tag->setUserId($userId);
 			$tag = $this->insert($tag);
 		}
 

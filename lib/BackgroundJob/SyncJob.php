@@ -10,11 +10,11 @@ namespace OCA\Mail\BackgroundJob;
 
 use Horde_Imap_Client_Exception;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\MailboxSync;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
@@ -31,8 +31,6 @@ class SyncJob extends TimedJob {
 
 	private IUserManager $userManager;
 	private AccountService $accountService;
-	private ImapToDbSynchronizer $syncService;
-	private MailboxSync $mailboxSync;
 	private LoggerInterface $logger;
 	private IJobList $jobList;
 	private readonly bool $forcedSyncInterval;
@@ -41,8 +39,7 @@ class SyncJob extends TimedJob {
 		ITimeFactory $time,
 		IUserManager $userManager,
 		AccountService $accountService,
-		MailboxSync $mailboxSync,
-		ImapToDbSynchronizer $syncService,
+		private ProtocolFactory $protocolFactory,
 		LoggerInterface $logger,
 		IJobList $jobList,
 		private readonly IConfig $config,
@@ -51,8 +48,6 @@ class SyncJob extends TimedJob {
 
 		$this->userManager = $userManager;
 		$this->accountService = $accountService;
-		$this->syncService = $syncService;
-		$this->mailboxSync = $mailboxSync;
 		$this->logger = $logger;
 		$this->jobList = $jobList;
 
@@ -83,7 +78,8 @@ class SyncJob extends TimedJob {
 			return;
 		}
 
-		if (!$account->getMailAccount()->canAuthenticateImap()) {
+		if ($account->getMailAccount()->getProtocol() === MailAccount::PROTOCOL_IMAP
+			&& !$account->getMailAccount()->canAuthenticateImap()) {
 			$this->logger->debug('No authentication on IMAP possible, skipping background sync job');
 			return;
 		}
@@ -124,8 +120,12 @@ class SyncJob extends TimedJob {
 		}
 
 		try {
-			$this->mailboxSync->sync($account, $this->logger, true);
-			$this->syncService->syncAccount($account, $this->logger);
+			$this->protocolFactory
+				->mailboxConnector($account)
+				->syncAccount($account, true);
+			$this->protocolFactory
+				->messageConnector($account)
+				->syncAccount($account, true);
 		} catch (IncompleteSyncException $e) {
 			$this->logger->warning($e->getMessage(), [
 				'exception' => $e,
