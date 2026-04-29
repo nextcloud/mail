@@ -13,6 +13,7 @@ use OCA\Mail\AppInfo\Application;
 use OCA\Mail\UserMigration\Service\AccountMigrationService;
 use OCA\Mail\UserMigration\Service\AppConfigMigrationService;
 use OCA\Mail\UserMigration\Service\InternalAddressesMigrationService;
+use OCA\Mail\UserMigration\Service\QuickActionsMigrationService;
 use OCA\Mail\UserMigration\Service\SMIMEMigrationService;
 use OCA\Mail\UserMigration\Service\TagsMigrationService;
 use OCA\Mail\UserMigration\Service\TextBlocksMigrationService;
@@ -39,7 +40,8 @@ class MailAccountMigrator implements IMigrator {
 		private readonly TrustedSendersMigrationService $trustedSendersMigrationService,
 		private readonly TextBlocksMigrationService $textBlocksMigrationService,
 		private readonly TagsMigrationService $tagsMigrationService,
-		private readonly SMIMEMigrationService $smimeMigrationService,
+		private readonly SMIMEMigrationService $sMimeMigrationService,
+		private readonly QuickActionsMigrationService $quickActionsMigrationService,
 	) {
 	}
 
@@ -58,8 +60,9 @@ class MailAccountMigrator implements IMigrator {
 		$this->trustedSendersMigrationService->exportTrustedSenders($user, $exportDestination, $output);
 		$this->textBlocksMigrationService->exportTextBlocks($user, $exportDestination, $output);
 		$this->tagsMigrationService->exportTags($user, $exportDestination, $output);
-		$this->smimeMigrationService->exportCertificates($user, $exportDestination, $output);
+		$this->sMimeMigrationService->exportCertificates($user, $exportDestination, $output);
 		$this->accountMigrationService->exportAccounts($user, $exportDestination, $output);
+		$this->quickActionsMigrationService->exportQuickActions($user, $exportDestination, $output);
 	}
 
 	/**
@@ -81,9 +84,11 @@ class MailAccountMigrator implements IMigrator {
 		$this->trustedSendersMigrationService->importTrustedSenders($user, $importSource, $output);
 		$this->textBlocksMigrationService->importTextBlocks($user, $importSource, $output);
 		$migratedTags = $this->tagsMigrationService->importTags($user, $importSource, $output);
-		$migratedCertificates = $this->smimeMigrationService->importCertificates($user, $importSource, $output);
+		$migratedCertificates = $this->sMimeMigrationService->importCertificates($user, $importSource, $output);
 		$migratedAccountsAndMailboxes = $this->accountMigrationService->importAccounts($user, $importSource, $output,
 			$migratedCertificates);
+		$this->quickActionsMigrationService->importQuickActions($user, $importSource, $output,
+			$migratedAccountsAndMailboxes['accounts'], $migratedAccountsAndMailboxes['mailboxes'], $migratedTags);
 
 		$this->accountMigrationService->scheduleBackgroundJobs($user, $output);
 	}
