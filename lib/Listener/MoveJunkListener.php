@@ -9,10 +9,10 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Listener;
 
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Service\MailManager;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
@@ -22,7 +22,7 @@ use Psr\Log\LoggerInterface;
  */
 class MoveJunkListener implements IEventListener {
 	public function __construct(
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private LoggerInterface $logger,
 	) {
 	}

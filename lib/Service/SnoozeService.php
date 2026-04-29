@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
@@ -37,7 +36,7 @@ class SnoozeService {
 		private MessageSnoozeMapper $messageSnoozeMapper,
 		private MailAccountMapper $accountMapper,
 		private MailboxMapper $mailboxMapper,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private AccountService $accountService,
 	) {
 	}
@@ -302,42 +301,37 @@ class SnoozeService {
 			return;
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			foreach ($messages as $message) {
-				$srcMailboxId = $this->messageSnoozeMapper->getSrcMailboxId(
-					$message->getMailboxId(),
-					$message->getUid(),
-				);
+		foreach ($messages as $message) {
+			$srcMailboxId = $this->messageSnoozeMapper->getSrcMailboxId(
+				$message->getMailboxId(),
+				$message->getUid(),
+			);
 
-				$srcMailboxName = 'INBOX';
+			$srcMailboxName = 'INBOX';
 
-				if ($srcMailboxId !== null) {
-					try {
-						$srcMailbox = $this->mailboxMapper->findById($srcMailboxId);
-						$srcMailboxName = $srcMailbox->getName();
-					} catch (DoesNotExistException $e) {
-						// Could not find mailbox, moving back to INBOX
-					}
+			if ($srcMailboxId !== null) {
+				try {
+					$srcMailbox = $this->mailboxMapper->findById($srcMailboxId);
+					$srcMailboxName = $srcMailbox->getName();
+				} catch (DoesNotExistException $e) {
+					// Could not find mailbox, moving back to INBOX
 				}
-
-				$this->mailManager->flagMessage($account, $snoozeMailbox->getName(), $message->getUid(), 'seen', false);
-
-				$this->mailManager->moveMessage(
-					$account,
-					$snoozeMailbox->getName(),
-					$message->getUid(),
-					$account,
-					$srcMailboxName
-				);
-
-				$this->messageSnoozeMapper->deleteByMailboxIdAndUid(
-					$message->getMailboxId(),
-					$message->getUid(),
-				);
 			}
-		} finally {
-			$client->logout();
+
+			$this->mailManager->flagMessages($account, 'seen', false, $message);
+
+			$this->mailManager->moveMessage(
+				$account,
+				$snoozeMailbox->getName(),
+				$message->getUid(),
+				$account,
+				$srcMailboxName
+			);
+
+			$this->messageSnoozeMapper->deleteByMailboxIdAndUid(
+				$message->getMailboxId(),
+				$message->getUid(),
+			);
 		}
 	}
 

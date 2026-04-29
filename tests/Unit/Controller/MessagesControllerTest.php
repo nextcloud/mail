@@ -1110,7 +1110,7 @@ class MessagesControllerTest extends TestCase {
 		$source = file_get_contents(__DIR__ . '/../../data/mail-message-123.txt');
 		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$this->mailManager->expects($this->exactly(1))
-			->method('getSource')
+			->method('getRawMessage')
 			->with($client, $this->account, $folderId, 123)
 			->willReturn($source);
 		$this->clientFactory->expects($this->once())

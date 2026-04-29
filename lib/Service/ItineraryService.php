@@ -11,10 +11,10 @@ namespace OCA\Mail\Service;
 
 use Nextcloud\KItinerary\Itinerary;
 use OCA\Mail\Account;
+use OCA\Mail\Attachment;
 use OCA\Mail\Db\Mailbox;
-use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Integration\KItinerary\ItineraryExtractor;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCP\ICache;
 use OCP\ICacheFactory;
 use Psr\Log\LoggerInterface;
@@ -26,11 +26,8 @@ class ItineraryService {
 	private const CACHE_PREFIX = 'mail_itinerary';
 	private const CACHE_TTL = 7 * 24 * 3600;
 
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var MessageMapper */
-	private $messageMapper;
+	/** @var ProtocolFactory */
+	private $protocolFactory;
 
 	/** @var ItineraryExtractor */
 	private $extractor;
@@ -41,13 +38,11 @@ class ItineraryService {
 	/** @var LoggerInterface */
 	private $logger;
 
-	public function __construct(IMAPClientFactory $clientFactory,
-		MessageMapper $messageMapper,
+	public function __construct(ProtocolFactory $protocolFactory,
 		ItineraryExtractor $extractor,
 		ICacheFactory $cacheFactory,
 		LoggerInterface $logger) {
-		$this->clientFactory = $clientFactory;
-		$this->messageMapper = $messageMapper;
+		$this->protocolFactory = $protocolFactory;
 		$this->extractor = $extractor;
 		$this->cache = $cacheFactory->createLocal(self::CACHE_PREFIX);
 		$this->logger = $logger;
@@ -70,25 +65,24 @@ class ItineraryService {
 			return $cached;
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$itinerary = new Itinerary();
-			$htmlBody = $this->messageMapper->getHtmlBody($client, $mailbox->getName(), $id, $account->getUserId());
-			if ($htmlBody !== null) {
-				$itinerary = $itinerary->merge(
-					$this->extractor->extract($htmlBody)
-				);
+		$messageConnector = $this->protocolFactory->messageConnector($account);
+		$message = $messageConnector->fetchMessage($account, $mailbox, $id, true);
+
+		$itinerary = new Itinerary();
+		$htmlBody = $message->htmlMessage;
+		if ($htmlBody !== '') {
+			$itinerary = $itinerary->merge(
+				$this->extractor->extract($htmlBody)
+			);
 				$nItinerary = count($itinerary);
-				$this->logger->debug("Extracted $nItinerary itinerary entries from the message HTML body");
-			} else {
-				$this->logger->debug('Message does not have an HTML body, can\'t extract itinerary info');
-			}
-			$attachments = $this->messageMapper->getRawAttachments($client, $mailbox->getName(), $id, $account->getUserId());
-		} finally {
-			$client->logout();
+			$this->logger->debug("Extracted $nItinerary itinerary entries from the message HTML body");
+		} else {
+			$this->logger->debug('Message does not have an HTML body, can\'t extract itinerary info');
 		}
-		$itinerary = array_reduce($attachments, function (Itinerary $combined, string $attachment) {
-			$extracted = $this->extractor->extract($attachment);
+
+		$attachments = $messageConnector->fetchAttachments($account, $mailbox, $id);
+		$itinerary = array_reduce($attachments, function (Itinerary $combined, Attachment $attachment) {
+			$extracted = $this->extractor->extract($attachment->getContent());
 			$nExtracted = count($extracted);
 			$this->logger->debug("Extracted $nExtracted itinerary entries from an attachment");
 			return $combined->merge($extracted);

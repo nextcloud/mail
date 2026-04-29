@@ -12,7 +12,6 @@ namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\IncompleteSyncException;
@@ -21,6 +20,7 @@ use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -35,7 +35,7 @@ use OCP\IRequest;
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class MailboxesController extends Controller {
 	private AccountService $accountService;
-	private IMailManager $mailManager;
+	private MailManager $mailManager;
 	private SyncService $syncService;
 	private ?string $currentUserId;
 
@@ -44,7 +44,7 @@ class MailboxesController extends Controller {
 		IRequest $request,
 		AccountService $accountService,
 		?string $userId,
-		IMailManager $mailManager,
+		MailManager $mailManager,
 		SyncService $syncService,
 		private readonly IConfig $config,
 		private readonly ITimeFactory $timeFactory,

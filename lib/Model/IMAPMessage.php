@@ -482,6 +482,10 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		return $this->signatureIsValid;
 	}
 
+	public function hasDkimSignature(): bool {
+		return $this->hasDkimSignature;
+	}
+
 	public function getUnsubscribeUrl(): ?string {
 		return $this->unsubscribeUrl;
 	}

@@ -10,10 +10,10 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -24,14 +24,14 @@ use OCP\IRequest;
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class TagsController extends Controller {
 	private string $currentUserId;
-	private IMailManager $mailManager;
+	private MailManager $mailManager;
 
 	private AccountService $accountService;
 
 
 	public function __construct(IRequest $request,
 		string $userId,
-		IMailManager $mailManager,
+		MailManager $mailManager,
 		AccountService $accountService,
 	) {
 		parent::__construct(Application::APP_ID, $request);

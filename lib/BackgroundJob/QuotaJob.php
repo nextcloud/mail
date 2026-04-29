@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
@@ -22,7 +22,7 @@ use function sprintf;
 class QuotaJob extends TimedJob {
 	private IUserManager $userManager;
 	private AccountService $accountService;
-	private IMailManager $mailManager;
+	private MailManager $mailManager;
 	private LoggerInterface $logger;
 	private IJobList $jobList;
 	private IManager $notificationManager;
@@ -30,7 +30,7 @@ class QuotaJob extends TimedJob {
 	public function __construct(ITimeFactory $time,
 		IUserManager $userManager,
 		AccountService $accountService,
-		IMailManager $mailManager,
+		MailManager $mailManager,
 		IManager $notificationManager,
 		LoggerInterface $logger,
 		IJobList $jobList) {

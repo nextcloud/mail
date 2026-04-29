@@ -158,6 +158,28 @@ class MailboxMapper extends QBMapper {
 	}
 
 	/**
+	 * @throws DoesNotExistException
+	 * @throws ServiceException
+	 */
+	public function findByName(Account $account, string $name): Mailbox {
+		$qb = $this->db->getQueryBuilder();
+
+		$select = $qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq('account_id', $qb->createNamedParameter($account->getId())),
+				$qb->expr()->eq('name', $qb->createNamedParameter($name))
+			);
+
+		try {
+			return $this->findEntity($select);
+		} catch (MultipleObjectsReturnedException $e) {
+			// Not possible due to DB constraints
+			throw new ServiceException('The impossible has happened', 42, $e);
+		}
+	}
+
+	/**
 	 * @throws MailboxLockedException
 	 */
 	private function lockForSync(Mailbox $mailbox, string $attr, ?int $lock): int {

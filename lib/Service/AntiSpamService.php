@@ -19,9 +19,9 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Model\Message;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\DataUri\DataUriParser;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -36,7 +36,7 @@ class AntiSpamService {
 		private IConfig $config,
 		private MessageMapper $dbMessageMapper,
 		private MailManager $mailManager,
-		private IMAPClientFactory $imapClientFactory,
+		private ProtocolFactory $protocolFactory,
 		private SmtpClientFactory $smtpClientFactory,
 		private ImapMessageMapper $messageMapper,
 		private LoggerInterface $logger,
@@ -119,7 +119,7 @@ class AntiSpamService {
 
 		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
 
-		$client = $this->imapClientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$fullText = $this->messageMapper->getFullText(
 				$client,
@@ -195,7 +195,7 @@ class AntiSpamService {
 			return;
 		}
 
-		$client = $this->imapClientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$this->messageMapper->save(
 				$client,

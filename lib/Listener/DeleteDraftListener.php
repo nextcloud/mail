@@ -19,8 +19,8 @@ use OCA\Mail\Events\DraftMessageCreatedEvent;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -31,8 +31,8 @@ use Psr\Log\LoggerInterface;
  * @template-implements IEventListener<Event|DraftSavedEvent|OutboxMessageCreatedEvent|DraftMessageCreatedEvent>
  */
 class DeleteDraftListener implements IEventListener {
-	/** @var IMAPClientFactory */
-	private $imapClientFactory;
+	/** @var ProtocolFactory */
+	private $protocolFactory;
 
 	/** @var MailboxMapper */
 	private $mailboxMapper;
@@ -46,12 +46,12 @@ class DeleteDraftListener implements IEventListener {
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
-	public function __construct(IMAPClientFactory $imapClientFactory,
+	public function __construct(ProtocolFactory $protocolFactory,
 		MailboxMapper $mailboxMapper,
 		MessageMapper $messageMapper,
 		LoggerInterface $logger,
 		IEventDispatcher $eventDispatcher) {
-		$this->imapClientFactory = $imapClientFactory;
+		$this->protocolFactory = $protocolFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->logger = $logger;
@@ -70,7 +70,7 @@ class DeleteDraftListener implements IEventListener {
 	 * @param Message $draft
 	 */
 	private function deleteDraft(Account $account, Message $draft): void {
-		$client = $this->imapClientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$draftsMailbox = $this->getDraftsMailbox($account);
 		} catch (DoesNotExistException $e) {

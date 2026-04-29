@@ -7,7 +7,8 @@ permissions:
   contents: read
 
 env:
-  E2E_NODE_VERSION: "20" # TODO: Extract automatically using another action
+  E2E_NODE_VERSION: "20"
+  STALWART_PWD: "secretpassword"
 
 jobs:
   unit-tests:
@@ -94,7 +95,7 @@ jobs:
                   cache: 'redis'
       name: ${{ matrix.nextcloud-versions }} w/ php${{ matrix.php-versions }}-${{ matrix.db }}-${{ matrix.cache }} integration tests ${{ matrix.coverage && '(coverage)' || ''}}
       services:
-          mail-service:
+          mail-dovecot-service:
               image: ghcr.io/christophwurst/docker-imap-devel:latest
               env:
                   MAILNAME: mail.domain.tld
@@ -105,6 +106,15 @@ jobs:
                   - 143:143
                   - 993:993
                   - 4190:4190
+          mail-stalwart-service:
+              image: stalwartlabs/stalwart:v0.15.5
+              env:
+                  STALWART_ADMIN_PASSWORD: ${{ env.STALWART_PWD }}
+              ports:
+                  - 10080:8080
+                  - 10025:25
+                  - 10143:143
+                  - 10993:993
           mariadb-service:
               image: ghcr.io/nextcloud/continuous-integration-mariadb-11.4:latest
               env:
@@ -142,6 +152,16 @@ jobs:
               ports:
                 - 6379:6379
       steps:
+          - name: Create domain and account in Stalwart
+            run: |
+              curl -sf -X POST http://localhost:10080/api/principal \
+                -u "admin:${{ env.STALWART_PWD }}" \
+                -H 'Content-Type: application/json' \
+                -d '{"type":"domain","name":"example.com"}'
+              curl -sf -X POST http://localhost:10080/api/principal \
+                -u "admin:${{ env.STALWART_PWD }}" \
+                -H 'Content-Type: application/json' \
+                -d '{"type":"individual","name":"user@example.com","secrets":["mypassword"],"emails":["user@example.com"],"roles":["user"]}'
           - name: Set up Nextcloud env
             uses: nextcloud/setup-server-action@34b73d5b0e3633f83a52227d00cc2a6c41d01d9a # v1.0.0
             with:

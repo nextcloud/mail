@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
@@ -7,6 +9,7 @@
 
 namespace OCA\Mail\Command;
 
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Security\ICrypto;
@@ -16,7 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class UpdateAccount extends Command {
+final class UpdateImapAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 	public const ARGUMENT_NAME = 'name';
 	public const ARGUMENT_EMAIL = 'email';
@@ -32,26 +35,17 @@ final class UpdateAccount extends Command {
 	public const ARGUMENT_SMTP_USER = 'smtp-user';
 	public const ARGUMENT_SMTP_PASSWORD = 'smtp-password';
 
-
-	/** @var mapper */
-	private $mapper;
-
-	/** @var ICrypto */
-	private $crypto;
-
-	public function __construct(MailAccountMapper $mapper, ICrypto $crypto) {
+	public function __construct(
+		private readonly MailAccountMapper $mapper,
+		private readonly ICrypto $crypto,
+	) {
 		parent::__construct();
-
-		$this->mapper = $mapper;
-		$this->crypto = $crypto;
 	}
 
-	/**
-	 * @return void
-	 */
-	protected function configure() {
-		$this->setName('mail:account:update');
-		$this->setDescription('Update a user\'s IMAP account');
+	protected function configure(): void {
+		$this->setName('mail:account:update-imap');
+		$this->setAliases(['mail:account:update']);
+		$this->setDescription('Update an IMAP mail account');
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::REQUIRED);
 
 		$this->addOption(self::ARGUMENT_NAME, '', InputOption::VALUE_OPTIONAL);
@@ -95,70 +89,75 @@ final class UpdateAccount extends Command {
 			$mailAccount = $this->mapper->findById($accountId);
 		} catch (DoesNotExistException $e) {
 			$output->writeln("<error>No Email Account found with ID $accountId </error>");
-			return 1;
+			return self::FAILURE;
+		}
+
+		if ($mailAccount->getProtocol() !== MailAccount::PROTOCOL_IMAP) {
+			$output->writeln('<error>Account ' . $accountId . ' uses protocol ' . $mailAccount->getProtocol() . '. Use mail:account:update-jmap instead.</error>');
+			return self::FAILURE;
 		}
 
 		$output->writeLn('<info>Found account with email: ' . $mailAccount->getEmail() . '</info>');
 
 		//AUTH METHOD
-		if ($input->getOption(self::ARGUMENT_AUTH_METHOD)) {
+		if ($input->getOption(self::ARGUMENT_AUTH_METHOD) !== null) {
 			$mailAccount->setAuthMethod($authMethod);
 		}
 
 		//ACCOUNT OPTIONS
-		if ($input->getOption(self::ARGUMENT_NAME)) {
+		if ($input->getOption(self::ARGUMENT_NAME) !== null) {
 			$mailAccount->setName($name);
 		}
-		if ($input->getOption(self::ARGUMENT_EMAIL)) {
+		if ($input->getOption(self::ARGUMENT_EMAIL) !== null) {
 			$mailAccount->setEmail($email);
 		}
 
 		//INBOUND
-		if ($input->getOption(self::ARGUMENT_IMAP_HOST)) {
+		if ($input->getOption(self::ARGUMENT_IMAP_HOST) !== null) {
 			$mailAccount->setInboundHost($imapHost);
 		}
 
-		if ($input->getOption(self::ARGUMENT_IMAP_PORT)) {
+		if ($input->getOption(self::ARGUMENT_IMAP_PORT) !== null) {
 			$mailAccount->setInboundPort((int)$imapPort);
 		}
 
-		if ($input->getOption(self::ARGUMENT_IMAP_SSL_MODE)) {
+		if ($input->getOption(self::ARGUMENT_IMAP_SSL_MODE) !== null) {
 			$mailAccount->setInboundSslMode($imapSslMode);
 		}
 
-		if ($input->getOption(self::ARGUMENT_IMAP_PASSWORD)) {
+		if ($input->getOption(self::ARGUMENT_IMAP_PASSWORD) !== null) {
 			$mailAccount->setInboundPassword($this->crypto->encrypt($imapPassword));
 		}
 
-		if ($input->getOption(self::ARGUMENT_SMTP_USER)) {
+		if ($input->getOption(self::ARGUMENT_IMAP_USER) !== null) {
 			$mailAccount->setInboundUser($imapUser);
 		}
 
 		// OUTBOUND
 
-		if ($input->getOption(self::ARGUMENT_SMTP_HOST)) {
+		if ($input->getOption(self::ARGUMENT_SMTP_HOST) !== null) {
 			$mailAccount->setOutboundHost($smtpHost);
 		}
 
-		if ($input->getOption(self::ARGUMENT_SMTP_PORT)) {
+		if ($input->getOption(self::ARGUMENT_SMTP_PORT) !== null) {
 			$mailAccount->setOutboundPort((int)$smtpPort);
 		}
 
-		if ($input->getOption(self::ARGUMENT_SMTP_SSL_MODE)) {
+		if ($input->getOption(self::ARGUMENT_SMTP_SSL_MODE) !== null) {
 			$mailAccount->setOutboundSslMode($smtpSslMode);
 		}
 
-		if ($input->getOption(self::ARGUMENT_SMTP_PASSWORD)) {
+		if ($input->getOption(self::ARGUMENT_SMTP_PASSWORD) !== null) {
 			$mailAccount->setOutboundPassword($this->crypto->encrypt($smtpPassword));
 		}
 
-		if ($input->getOption(self::ARGUMENT_SMTP_USER)) {
+		if ($input->getOption(self::ARGUMENT_SMTP_USER) !== null) {
 			$mailAccount->setOutboundUser($smtpUser);
 		}
 
 		$this->mapper->save($mailAccount);
 
 		$output->writeln('<info>Account ' . $mailAccount->getEmail() . " with ID  $accountId  succesfully updated </info>");
-		return 0;
+		return self::SUCCESS;
 	}
 }

@@ -12,9 +12,8 @@ namespace OCA\Mail\Command;
 use OCA\Mail\Account;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\MailboxSync;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCA\Mail\Support\ConsoleLoggerDecorator;
 use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
@@ -31,19 +30,16 @@ final class SyncAccount extends Command {
 	public const OPTION_FORCE = 'force';
 
 	private AccountService $accountService;
-	private MailboxSync $mailboxSync;
-	private ImapToDbSynchronizer $syncService;
+	private ProtocolFactory $protocolFactory;
 	private LoggerInterface $logger;
 
 	public function __construct(AccountService $service,
-		MailboxSync $mailboxSync,
-		ImapToDbSynchronizer $messageSync,
+		ProtocolFactory $protocolFactory,
 		LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->accountService = $service;
-		$this->mailboxSync = $mailboxSync;
-		$this->syncService = $messageSync;
+		$this->protocolFactory = $protocolFactory;
 		$this->logger = $logger;
 	}
 
@@ -52,7 +48,7 @@ final class SyncAccount extends Command {
 	 */
 	protected function configure() {
 		$this->setName('mail:account:sync');
-		$this->setDescription('Synchronize an IMAP account');
+		$this->setDescription('Synchronize a mail account');
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::REQUIRED);
 		$this->addOption(self::OPTION_FORCE, 'f', InputOption::VALUE_NONE);
 	}
@@ -84,8 +80,8 @@ final class SyncAccount extends Command {
 		);
 
 		try {
-			$this->mailboxSync->sync($account, $consoleLogger, $force);
-			$this->syncService->syncAccount($account, $consoleLogger, $force);
+			$this->protocolFactory->mailboxConnector($account)->syncAccount($account, $force);
+			$this->protocolFactory->messageConnector($account)->syncAccount($account, $force);
 		} catch (ServiceException $e) {
 			if (!($e instanceof IncompleteSyncException)) {
 				throw $e;

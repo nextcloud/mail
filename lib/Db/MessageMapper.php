@@ -262,6 +262,7 @@ class MessageMapper extends QBMapper {
 			$qb1 = $this->db->getQueryBuilder();
 			$qb1->insert($this->getTableName());
 			$qb1->setValue('uid', $qb1->createParameter('uid'));
+			$qb1->setValue('remote_id', $qb1->createParameter('remote_id'));
 			$qb1->setValue('message_id', $qb1->createParameter('message_id'));
 			$qb1->setValue('references', $qb1->createParameter('references'));
 			$qb1->setValue('in_reply_to', $qb1->createParameter('in_reply_to'));
@@ -289,6 +290,7 @@ class MessageMapper extends QBMapper {
 
 			foreach ($messages as $message) {
 				$qb1->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
+				$qb1->setParameter('remote_id', $message->getRemoteId(), $message->getRemoteId() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
 				$qb1->setParameter('message_id', $message->getMessageId(), IQueryBuilder::PARAM_STR);
 				$inReplyTo = self::filterMessageIdLength($message->getInReplyTo());
 				$qb1->setParameter('in_reply_to', $inReplyTo, $inReplyTo === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
@@ -737,6 +739,74 @@ class MessageMapper extends QBMapper {
 				$deleteRecipientsQuery->executeStatement();
 
 				// delete all messages
+				$deleteMessagesQuery->setParameter('ids', $ids, IQueryBuilder::PARAM_INT_ARRAY);
+				$deleteMessagesQuery->executeStatement();
+			}, $this->db);
+		}
+	}
+
+	/**
+	 * @param Mailbox $mailbox
+	 * @param string[] $rids
+	 *
+	 * @return Message[]
+	 */
+	public function findByRemoteIds(Mailbox $mailbox, array $rids): array {
+		if ($rids === []) {
+			return [];
+		}
+
+		$qb = $this->db->getQueryBuilder();
+
+		$select = $qb
+			->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailbox->getId()), IQueryBuilder::PARAM_INT),
+				$qb->expr()->in('remote_id', $qb->createNamedParameter($rids, IQueryBuilder::PARAM_STR_ARRAY))
+			)
+			->orderBy('sent_at', 'desc');
+
+		return $this->findRecipients($this->findEntities($select));
+	}
+
+	/**
+	 * @param Mailbox $mailbox
+	 * @param string[] $rids
+	 */
+	public function deleteByRemoteIds(Mailbox $mailbox, string ...$rids): void {
+		$selectMessageIdsQuery = $this->db->getQueryBuilder();
+		$deleteRecipientsQuery = $this->db->getQueryBuilder();
+		$deleteMessagesQuery = $this->db->getQueryBuilder();
+
+		$selectMessageIdsQuery->select('id')
+			->from($this->getTableName())
+			->where(
+				$selectMessageIdsQuery->expr()->eq('mailbox_id', $selectMessageIdsQuery->createNamedParameter($mailbox->getId())),
+				$selectMessageIdsQuery->expr()->in('remote_id', $deleteMessagesQuery->createParameter('remote_ids')),
+			);
+		$deleteRecipientsQuery->delete('mail_recipients')
+			->where(
+				$deleteRecipientsQuery->expr()->in('message_id', $deleteRecipientsQuery->createParameter('ids')),
+			);
+		$deleteMessagesQuery->delete('mail_messages')
+			->where(
+				$deleteMessagesQuery->expr()->in('id', $deleteMessagesQuery->createParameter('ids')),
+			);
+
+		foreach (array_chunk($rids, 1000) as $chunk) {
+			$this->atomic(function () use ($selectMessageIdsQuery, $deleteRecipientsQuery, $deleteMessagesQuery, $chunk) {
+				$selectMessageIdsQuery->setParameter('remote_ids', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
+				$selectResult = $selectMessageIdsQuery->executeQuery();
+				$ids = array_map('intval', $selectResult->fetchAll(\PDO::FETCH_COLUMN));
+				$selectResult->closeCursor();
+				if (empty($ids)) {
+					return;
+				}
+
+				$deleteRecipientsQuery->setParameter('ids', $ids, IQueryBuilder::PARAM_INT_ARRAY);
+				$deleteRecipientsQuery->executeStatement();
+
 				$deleteMessagesQuery->setParameter('ids', $ids, IQueryBuilder::PARAM_INT_ARRAY);
 				$deleteMessagesQuery->executeStatement();
 			}, $this->db);
