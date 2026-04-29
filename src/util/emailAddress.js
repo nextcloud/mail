@@ -82,12 +82,13 @@ export function getLabelAndAddress(str) {
 
 /**
  * Parse a string containing one or more email addresses separated by
- * commas, semicolons, or spaces.
+ * commas or semicolons, with limited support for spaces between bare
+ * email addresses.
  *
  * Supports formats like:
  *   - "alice@example.com, bob@example.com"
  *   - "Alice <alice@example.com>; Bob <bob@example.com>"
- *   - "alice@example.com bob@example.com"
+ *   - "alice@example.com bob@example.com" (bare email addresses only)
  *
  * @param {string} str The input string containing email addresses
  * @return {Array<{ label: string, email: string }>} List of parsed addresses

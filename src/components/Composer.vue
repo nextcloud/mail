@@ -1127,8 +1127,9 @@ export default {
 		/**
 		 * Called once a user leaves the recipient picker.
 		 *
-		 * If the user is typing something that looks like a valid email address, we clear the input (return true)
-		 * because the related code in onNewAddr will add the value as a recipient.
+		 * If the user is typing something that looks like a valid email address (or a
+		 * pasted list of addresses), we clear the input (return true) because the
+		 * related code in onNewAddr will add the value as a recipient.
 		 *
 		 * Otherwise, the user is still typing and we don't clear the input.
 		 *
@@ -1137,7 +1138,7 @@ export default {
 		 */
 		clearOnBlur(event) {
 			if (this.recipientSearchTerms[event]) {
-				return this.seemsValidEmailAddress(this.recipientSearchTerms[event])
+				return parseEmailList(this.recipientSearchTerms[event]).length > 0
 			}
 			return false
 		},
@@ -1472,13 +1473,25 @@ export default {
 				&& this.recipientSearchTerms[type] !== undefined
 				&& this.recipientSearchTerms[type] !== ''
 			) {
-				if (parseEmailList(this.recipientSearchTerms[type]).length === 0) {
+				const parsedFromSearch = parseEmailList(this.recipientSearchTerms[type])
+				if (parsedFromSearch.length === 0) {
 					return
 				}
-				option = {}
-				option.email = this.recipientSearchTerms[type]
-				option.label = this.recipientSearchTerms[type]
 				this.recipientSearchTerms[type] = ''
+
+				let changed = false
+				for (const addr of parsedFromSearch) {
+					if (!list.some((recipient) => recipient.email === addr.email)) {
+						const recipient = { ...addr }
+						this.newRecipients.push(recipient)
+						list.push(recipient)
+						changed = true
+					}
+				}
+				if (changed) {
+					this.saveDraftDebounced()
+				}
+				return
 			}
 
 			if (!option) {

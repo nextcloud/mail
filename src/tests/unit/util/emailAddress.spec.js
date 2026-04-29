@@ -118,7 +118,7 @@ describe('parseEmailList', () => {
 		])
 	})
 
-	it('handles uppercase email addresses', () => {
+	it('preserves uppercase email addresses', () => {
 		expect(parseEmailList('User@Example.COM, Another@TEST.org')).toEqual([
 			{ label: 'User@Example.COM', email: 'User@Example.COM' },
 			{ label: 'Another@TEST.org', email: 'Another@TEST.org' },
