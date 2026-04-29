@@ -99,10 +99,10 @@ export default {
 
 <style lang="scss">
 .quoted-text {
-	color: var(--color-text-maxcontrast)
+	color: var(--color-text-maxcontrast);
 
 	summary {
-		cursor: pointer
+		cursor: pointer;
 	}
 }
 </style>
@@ -114,10 +114,10 @@ export default {
 }
 
 .mail-signature, .quoted {
-	color: var(--color-text-maxcontrast)
+	color: var(--color-text-maxcontrast);
 
 	summary {
-		cursor: pointer
+		cursor: pointer;
 	}
 }
 </style>

@@ -197,7 +197,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '../../css/variables';
+@use '../../css/variables.scss';
 
 .v-popover > .trigger > .action-item {
 	border-radius: 22px;

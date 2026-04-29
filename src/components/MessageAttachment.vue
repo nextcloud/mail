@@ -276,7 +276,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '../../css/variables';
+@use '../../css/variables.scss';
 
 @media screen and (max-width: #{variables.$breakpoint-mobile}) {
 	.attachment{
