@@ -15,6 +15,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\UserMigration\Service\AccountMigrationService;
 use OCA\Mail\UserMigration\Service\AppConfigMigrationService;
 use OCA\Mail\UserMigration\Service\InternalAddressesMigrationService;
+use OCA\Mail\UserMigration\Service\QuickActionsMigrationService;
 use OCA\Mail\UserMigration\Service\SMIMEMigrationService;
 use OCA\Mail\UserMigration\Service\TagsMigrationService;
 use OCA\Mail\UserMigration\Service\TextBlocksMigrationService;
@@ -43,6 +44,7 @@ class MailAccountMigrator implements IMigrator {
 		private readonly TextBlocksMigrationService $textBlocksMigrationService,
 		private readonly TagsMigrationService $tagsMigrationService,
 		private readonly SMIMEMigrationService $sMimeMigrationService,
+		private readonly QuickActionsMigrationService $quickActionsMigrationService,
 	) {
 	}
 
@@ -60,6 +62,7 @@ class MailAccountMigrator implements IMigrator {
 		$this->tagsMigrationService->exportTags($user, $exportDestination, $output);
 		$this->sMimeMigrationService->exportCertificates($user, $exportDestination, $output);
 		$this->accountMigrationService->exportAccounts($user, $exportDestination, $output);
+		$this->quickActionsMigrationService->exportQuickActions($user, $exportDestination, $output);
 	}
 
 	#[\Override]
@@ -73,8 +76,9 @@ class MailAccountMigrator implements IMigrator {
 		$this->trustedSendersMigrationService->importTrustedSenders($user, $importSource, $output);
 		$this->textBlocksMigrationService->importTextBlocks($user, $importSource, $output);
 		$newCertificateIds = $this->sMimeMigrationService->importCertificates($user, $importSource, $output);
-		$newAccountIds = $this->accountMigrationService->importAccounts($user, $importSource, $output, $newCertificateIds);
+		$newAccountAndMailboxIds = $this->accountMigrationService->importAccounts($user, $importSource, $output, $newCertificateIds);
 		$newTagIds = $this->tagsMigrationService->importTags($user, $importSource, $output);
+		$this->quickActionsMigrationService->importQuickActions($user, $importSource, $output, $newAccountAndMailboxIds, $newTagIds);
 
 		$this->accountMigrationService->scheduleBackgroundJobs($user, $output);
 	}
@@ -92,6 +96,7 @@ class MailAccountMigrator implements IMigrator {
 	private function deleteExistingData(IUser $user, OutputInterface $output): void {
 		$output->writeln($this->l10n->t("Deleting existing mail data for user {$user->getUID()}"), OutputInterface::VERBOSITY_VERBOSE);
 
+		$this->quickActionsMigrationService->deleteAllQuickActions($user, $output);
 		$this->accountMigrationService->deleteAllAccounts($user, $output);
 		$this->appConfigMigrationService->deleteAppConfiguration($user, $output);
 		$this->internalAddressesMigrationService->removeInternalAddresses($user, $output);
