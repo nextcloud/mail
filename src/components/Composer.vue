@@ -506,8 +506,6 @@ import { showError, showWarning } from '@nextcloud/dialogs'
 import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
 import { NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcActions as Actions, NcButton as ButtonVue, NcListItemIcon as ListItemIcon, NcIconSvgWrapper, NcSelect } from '@nextcloud/vue'
-import addressParser from 'address-rfc2822'
-import { parseEmailList } from '../util/emailAddress.js'
 import debouncePromise from 'debounce-promise'
 import debounce from 'lodash/fp/debounce.js'
 import trimStart from 'lodash/fp/trimCharsStart.js'
@@ -542,6 +540,7 @@ import { findRecipient } from '../service/AutocompleteService.js'
 import { savePreference } from '../service/PreferenceService.js'
 import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
+import { parseEmailList } from '../util/emailAddress.js'
 import { formatDateTime } from '../util/formatDateTime.js'
 import { detect, html, toHtml, toPlain } from '../util/text.js'
 import textBlockSvg from './../../img/text_snippet.svg'
@@ -1715,20 +1714,6 @@ export default {
 			return option.email
 		},
 
-		/**
-		 * True when value looks like a valid email address
-		 *
-		 * @param {string} value to check if email address
-		 * @return {boolean}
-		 */
-		seemsValidEmailAddress(value) {
-			try {
-				addressParser.parse(value)
-				return true
-			} catch (error) {
-				return false
-			}
-		},
 	},
 }
 </script>
