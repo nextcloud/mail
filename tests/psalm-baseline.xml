@@ -82,9 +82,6 @@
     <PossiblyFalseArgument>
       <code><![CDATA[strpos($raw, 'http')]]></code>
     </PossiblyFalseArgument>
-    <PossiblyUndefinedVariable>
-      <code><![CDATA[$userGroups]]></code>
-    </PossiblyUndefinedVariable>
   </file>
   <file src="lib/Service/Html.php">
     <PossiblyFalseArgument>
@@ -101,11 +98,6 @@
       <code><![CDATA[$state->getEnd()]]></code>
       <code><![CDATA[$state->getStart()]]></code>
     </PossiblyNullArgument>
-  </file>
-  <file src="lib/Service/PhishingDetection/LinkCheck.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$htmlMessage]]></code>
-    </ArgumentTypeCoercion>
   </file>
   <file src="lib/Service/Search/Flag.php">
     <ArgumentTypeCoercion>
