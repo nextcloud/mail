@@ -183,7 +183,7 @@ export default {
 </script>
 
 <style lang="scss">
-@use '../../css/variables';
+@use '../../css/variables.scss';
 
 .attachments {
 	width: 100%;

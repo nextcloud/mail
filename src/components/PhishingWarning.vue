@@ -68,7 +68,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '../../css/variables';
+@use '../../css/variables.scss';
 
 .phishing-warning {
 	background-color: rgba(var(--color-warning-rgb), 0.2);
@@ -86,7 +86,7 @@ export default {
 		list-style-position: inside;
 		list-style-type: disc;
 		&__item {
-			word-wrap: break-word;
+			overflow-wrap: break-word;
 		}
 	}
 	&__links {
