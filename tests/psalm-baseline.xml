@@ -1,9 +1,146 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="6.7.1@a2f190972555ea01b0cfcc1913924d6c5fc1a64e">
+  <file src="lib/Cache/HordeSyncTokenParser.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$decodedToken]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="lib/Controller/MessageApiController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->userId]]></code>
+      <code><![CDATA[$this->userId]]></code>
+      <code><![CDATA[$this->userId]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Controller/MessagesController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$attachment->getName()]]></code>
+      <code><![CDATA[$fileName]]></code>
+      <code><![CDATA[$message->getThreadRootId()]]></code>
+      <code><![CDATA[$source]]></code>
+      <code><![CDATA[$this->aiIntegrationService->getSmartReply($account, $mailbox, $message, $this->currentUserId)]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code><![CDATA[newFile]]></code>
+      <code><![CDATA[nodeExists]]></code>
+    </PossiblyNullReference>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$fileParts['extension']]]></code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="lib/Controller/PageController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->userManager->getDisplayName($this->currentUserId)]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code><![CDATA[getUID]]></code>
+    </PossiblyNullReference>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$pair[1]]]></code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="lib/Controller/ProxyController.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$content]]></code>
+    </PossiblyFalseArgument>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$content]]></code>
+    </PossiblyInvalidArgument>
+  </file>
+  <file src="lib/Controller/SmimeCertificatesController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$certificateFile->getTempPath()]]></code>
+      <code><![CDATA[$privateKeyFile->getTempPath()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Controller/ThreadController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$message->getThreadRootId()]]></code>
+      <code><![CDATA[$message->getThreadRootId()]]></code>
+      <code><![CDATA[$message->getThreadRootId()]]></code>
+      <code><![CDATA[$message->getThreadRootId()]]></code>
+      <code><![CDATA[$message->getThreadRootId()]]></code>
+      <code><![CDATA[$message->getThreadRootId()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Dashboard/MailWidget.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$firstFrom ? $firstFrom->getLabel() : '']]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Db/CollectedAddressMapper.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$label]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Db/LocalMessage.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->getRecipients()]]></code>
+      <code><![CDATA[$this->getRecipients()]]></code>
+      <code><![CDATA[$this->getRecipients()]]></code>
+      <code><![CDATA[$this->getRecipients()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Db/LocalMessageMapper.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$message->getId()]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullArrayOffset>
+      <code><![CDATA[$attachmentMap[$a->getLocalMessageId()]]]></code>
+      <code><![CDATA[$attachmentMap[$a->getLocalMessageId()]]]></code>
+      <code><![CDATA[$attachmentMap[$a->getLocalMessageId()]]]></code>
+      <code><![CDATA[$recipientMap[$r->getLocalMessageId()]]]></code>
+      <code><![CDATA[$recipientMap[$r->getLocalMessageId()]]]></code>
+      <code><![CDATA[$recipientMap[$r->getLocalMessageId()]]]></code>
+    </PossiblyNullArrayOffset>
+  </file>
+  <file src="lib/Db/Message.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->getReferences()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Db/MessageMapper.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$convertedText]]></code>
+    </PossiblyFalseArgument>
+    <PossiblyNullArgument>
+      <code><![CDATA[$message->getMessageId()]]></code>
+      <code><![CDATA[$message->getMessageId()]]></code>
+      <code><![CDATA[$message->getMessageId()]]></code>
+      <code><![CDATA[$message->getPreviewText()]]></code>
+      <code><![CDATA[$recipient->getLabel()]]></code>
+      <code><![CDATA[preg_replace('/\s/u', ' ', $convertedText)]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullArrayOffset>
+      <code><![CDATA[$tags[$message->getMessageId()]]]></code>
+      <code><![CDATA[$tags[$message->getMessageId()]]]></code>
+    </PossiblyNullArrayOffset>
+  </file>
+  <file src="lib/Db/Provisioning.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->getSieveUser()]]></code>
+      <code><![CDATA[$user->getEMailAddress()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Db/ProvisioningMapper.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$data['id'] ?? null]]></code>
+    </PossiblyNullArgument>
+  </file>
   <file src="lib/Folder.php">
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$delimiter]]></code>
     </PossiblyNullPropertyAssignmentValue>
+  </file>
+  <file src="lib/Http/JsonResponse.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$error->getCode()]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyNullArgument>
+      <code><![CDATA[self::serializeException($error)]]></code>
+    </PossiblyNullArgument>
   </file>
   <file src="lib/IMAP/FolderMapper.php">
     <ArgumentTypeCoercion>
@@ -18,11 +155,22 @@
       <code><![CDATA[getTime]]></code>
     </PossiblyNullReference>
   </file>
+  <file src="lib/IMAP/IMAPClientFactory.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$account->getMailAccount()->getInboundPassword()]]></code>
+    </PossiblyNullArgument>
+  </file>
   <file src="lib/IMAP/MessageMapper.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$uidsToFetch]]></code>
       <code><![CDATA[$uidsToFetch]]></code>
     </ArgumentTypeCoercion>
+    <InvalidOperand>
+      <code><![CDATA[$estimatedPageSize]]></code>
+      <code><![CDATA[(float)($totalRange / $total)]]></code>
+      <code><![CDATA[max($uidsToFetch)]]></code>
+      <code><![CDATA[min($uidsToFetch)]]></code>
+    </InvalidOperand>
     <PossiblyNullArgument>
       <code><![CDATA[$attachmentIds]]></code>
       <code><![CDATA[$fullText]]></code>
@@ -49,22 +197,99 @@
       <code><![CDATA[hasReSubject]]></code>
     </PossiblyNullReference>
   </file>
+  <file src="lib/Integration/GoogleIntegration.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$response->getBody()]]></code>
+      <code><![CDATA[$response->getBody()]]></code>
+    </PossiblyInvalidArgument>
+  </file>
   <file src="lib/Integration/KItinerary/ItineraryExtractor.php">
     <PossiblyFalsePropertyAssignmentValue>
       <code><![CDATA[$this->findAvailableAdapter() ?? false]]></code>
     </PossiblyFalsePropertyAssignmentValue>
   </file>
-  <file src="lib/Service/Attachment/AttachmentService.php">
+  <file src="lib/Integration/MicrosoftIntegration.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$response->getBody()]]></code>
+      <code><![CDATA[$response->getBody()]]></code>
+    </PossiblyInvalidArgument>
+  </file>
+  <file src="lib/Listener/MailboxesSynchronizedSpecialMailboxesUpdater.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$mailAccount->getArchiveMailboxId()]]></code>
+      <code><![CDATA[$mailAccount->getDraftsMailboxId()]]></code>
+      <code><![CDATA[$mailAccount->getJunkMailboxId()]]></code>
+      <code><![CDATA[$mailAccount->getSentMailboxId()]]></code>
+      <code><![CDATA[$mailAccount->getSnoozeMailboxId()]]></code>
+      <code><![CDATA[$mailAccount->getTrashMailboxId()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Model/ConvertAddresses.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$address]]></code>
+      <code><![CDATA[$address]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Model/IMAPMessage.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$displayName]]></code>
+    </PossiblyFalseArgument>
+    <PossiblyNullArgument>
+      <code><![CDATA[$msg->getMessageId()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/SMTP/SmtpClientFactory.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$mailAccount->getOutboundPassword()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Send/FlagRepliedMessageHandler.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$localMessage->getInReplyToMessageId()]]></code>
+      <code><![CDATA[$mailbox->getMyAcls()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/AiIntegrations/AiIntegrationsService.php">
+    <InvalidOperand>
+      <code><![CDATA[$message->getId()]]></code>
+    </InvalidOperand>
+    <PossiblyNullArgument>
+      <code><![CDATA[$cleaned]]></code>
+      <code><![CDATA[$replies]]></code>
+      <code><![CDATA[$task->getOutput()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/AntiAbuseService.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$message->getRecipients()]]></code>
+      <code><![CDATA[$message->getRecipients()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/AntiSpamService.php">
     <PossiblyNullArgument>
       <code><![CDATA[$fullText]]></code>
-      <code><![CDATA[$fullText]]></code>
     </PossiblyNullArgument>
-    <UndefinedClass/>
-    <UndefinedDocblockClass/>
+    <PossiblyNullReference>
+      <code><![CDATA[toHorde]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="lib/Service/Attachment/AttachmentService.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$file->getFileName()]]></code>
+      <code><![CDATA[$message->getAttachments()]]></code>
+    </PossiblyNullArgument>
+    <UndefinedClass>
+      <code><![CDATA[SharedStorage::class]]></code>
+    </UndefinedClass>
+    <UndefinedDocblockClass>
+      <code><![CDATA[SharedStorage]]></code>
+      <code><![CDATA[SharedStorage]]></code>
+    </UndefinedDocblockClass>
   </file>
   <file src="lib/Service/AutoConfig/IspDb.php">
     <PossiblyInvalidArgument>
       <code><![CDATA[$url]]></code>
+      <code><![CDATA[$xml]]></code>
     </PossiblyInvalidArgument>
     <PossiblyInvalidCast>
       <code><![CDATA[$url]]></code>
@@ -73,18 +298,72 @@
       <code><![CDATA[$domain]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
+  <file src="lib/Service/Avatar/FaviconSource.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$body]]></code>
+      <code><![CDATA[$body]]></code>
+    </PossiblyInvalidArgument>
+  </file>
+  <file src="lib/Service/Avatar/GravatarSource.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$body]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="lib/Service/Classification/FeatureExtraction/ImportantMessagesExtractor.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getEmail]]></code>
+      <code><![CDATA[getEmail]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="lib/Service/Classification/FeatureExtraction/ReadMessagesExtractor.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getEmail]]></code>
+      <code><![CDATA[getEmail]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="lib/Service/Classification/FeatureExtraction/RepliedMessagesExtractor.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getEmail]]></code>
+      <code><![CDATA[getEmail]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="lib/Service/Classification/FeatureExtraction/SentMessagesExtractor.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getEmail]]></code>
+      <code><![CDATA[getEmail]]></code>
+    </PossiblyNullReference>
+  </file>
   <file src="lib/Service/Classification/ImportanceClassifier.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$predictedValidationLabel]]></code>
     </ArgumentTypeCoercion>
+    <InvalidOperand>
+      <code><![CDATA[self::MAX_TRAINING_SET_SIZE]]></code>
+    </InvalidOperand>
+    <PossiblyFalseOperand>
+      <code><![CDATA[json_encode([]]></code>
+    </PossiblyFalseOperand>
+    <PossiblyNullReference>
+      <code><![CDATA[getEmail]]></code>
+    </PossiblyNullReference>
   </file>
   <file src="lib/Service/ContactsIntegration.php">
     <PossiblyFalseArgument>
       <code><![CDATA[strpos($raw, 'http')]]></code>
     </PossiblyFalseArgument>
+    <PossiblyNullArgument>
+      <code><![CDATA[$addressbook]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/Group/NextcloudGroupService.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getUsers]]></code>
+    </PossiblyNullReference>
   </file>
   <file src="lib/Service/Html.php">
     <PossiblyFalseArgument>
+      <code><![CDATA[$parts]]></code>
+      <code><![CDATA[$parts]]></code>
       <code><![CDATA[$parts]]></code>
     </PossiblyFalseArgument>
   </file>
@@ -93,10 +372,47 @@
       <code><![CDATA[$value]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
+  <file src="lib/Service/ItineraryService.php">
+    <InvalidOperand>
+      <code><![CDATA[$account->getId()]]></code>
+      <code><![CDATA[$id]]></code>
+    </InvalidOperand>
+    <PossiblyFalseArgument>
+      <code><![CDATA[json_encode($itinerary)]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="lib/Service/MailManager.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$message->getMessageId()]]></code>
+      <code><![CDATA[$message->getMessageId()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/MailTransmission.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$localMessage->getAliasId()]]></code>
+    </PossiblyNullArgument>
+  </file>
   <file src="lib/Service/OutOfOffice/OutOfOfficeParser.php">
     <PossiblyNullArgument>
       <code><![CDATA[$state->getEnd()]]></code>
       <code><![CDATA[$state->getStart()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/OutOfOfficeService.php">
+    <InvalidOperand>
+      <code><![CDATA[$currentOutOfOfficeData->getEndDate()]]></code>
+      <code><![CDATA[$currentOutOfOfficeData->getStartDate()]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="lib/Service/Provisioning/Manager.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$account->getInboundPassword()]]></code>
+      <code><![CDATA[$account->getOutboundPassword()]]></code>
+      <code><![CDATA[$config->getSieveEnabled()]]></code>
+      <code><![CDATA[$password]]></code>
+      <code><![CDATA[$provisioning->getLdapAliasesAttribute()]]></code>
+      <code><![CDATA[$this->userManager->getDisplayName($user->getUID())]]></code>
+      <code><![CDATA[$this->userManager->getDisplayName($user->getUID())]]></code>
     </PossiblyNullArgument>
   </file>
   <file src="lib/Service/Search/Flag.php">
@@ -119,5 +435,84 @@
       <code><![CDATA[static]]></code>
       <code><![CDATA[static]]></code>
     </MoreSpecificReturnType>
+  </file>
+  <file src="lib/Service/SieveService.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$account->getMailAccount()->getSieveHost()]]></code>
+      <code><![CDATA[$account->getMailAccount()->getSievePort()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/SmimeService.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$decryptedCertificates]]></code>
+    </ArgumentTypeCoercion>
+    <PossiblyNullArgument>
+      <code><![CDATA[$certificate->getPrivateKey()]]></code>
+      <code><![CDATA[$certificate->getPrivateKey()]]></code>
+      <code><![CDATA[$emailAddress]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/SnoozeService.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$currentUserId]]></code>
+      <code><![CDATA[$currentUserId]]></code>
+      <code><![CDATA[$selectedMessage->getThreadRootId()]]></code>
+      <code><![CDATA[$selectedMessage->getThreadRootId()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/Sync/ImapToDbSynchronizer.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$client]]></code>
+    </ArgumentTypeCoercion>
+    <InvalidOperand>
+      <code><![CDATA[$account->getId()]]></code>
+      <code><![CDATA[$account->getId()]]></code>
+      <code><![CDATA[$account->getId()]]></code>
+    </InvalidOperand>
+    <PossiblyNullArgument>
+      <code><![CDATA[$mailbox->getSyncChangedToken()]]></code>
+      <code><![CDATA[$mailbox->getSyncNewToken()]]></code>
+      <code><![CDATA[$mailbox->getSyncVanishedToken()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/Sync/SyncService.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$sortOrder]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="lib/Service/TransmissionService.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$localMessage->getSmimeCertificateId()]]></code>
+      <code><![CDATA[$localMessage->getSmimeCertificateId()]]></code>
+      <code><![CDATA[$message->getAttachments()]]></code>
+      <code><![CDATA[$message->getRecipients()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Settings/AdminSettings.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->googleIntegration->getClientId()]]></code>
+      <code><![CDATA[$this->microsoftIntegration->getClientId()]]></code>
+      <code><![CDATA[$this->microsoftIntegration->getTenantId()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Sieve/SieveClientFactory.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$account->getMailAccount()->getSieveHost()]]></code>
+      <code><![CDATA[$account->getMailAccount()->getSievePort()]]></code>
+      <code><![CDATA[$account->getMailAccount()->getSieveSslMode()]]></code>
+      <code><![CDATA[$password]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Support/PerformanceLoggerTask.php">
+    <InvalidOperand>
+      <code><![CDATA[memory_get_peak_usage() / 1024.0 / 1024.0]]></code>
+      <code><![CDATA[memory_get_usage() / 1024.0 / 1024.0]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="lib/UserMigration/MailAccountMigrator.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[json_encode($accountData)]]></code>
+      <code><![CDATA[json_encode($index)]]></code>
+    </PossiblyFalseArgument>
   </file>
 </files>
