@@ -45,11 +45,12 @@ class InternalAddressController extends Controller {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 
-		$address = $this->internalAddressService->add(
+		$internalAddress = $this->internalAddressService->add(
 			$this->uid,
 			$address,
 			$type
-		)->jsonSerialize();
+		);
+		$address = $internalAddress !== null ? $internalAddress->jsonSerialize() : [];
 
 		return JsonResponse::success($address, Http::STATUS_CREATED);
 	}

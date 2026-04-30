@@ -52,8 +52,6 @@ class ContactIntegrationController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param string $uid
-	 * @param string $mail
 	 * @return JSONResponse
 	 */
 	#[TrapError]

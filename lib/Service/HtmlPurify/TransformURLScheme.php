@@ -130,6 +130,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 		]);
 		$parsedProxyUrl = parse_url($proxyUrl);
 		/** @var array{path: string, query: string} $parsedProxyUrl */
+		/** @psalm-suppress PossiblyNullArgument PossiblyInvalidArrayAccess PossiblyUndefinedArrayOffset */
 		return new \HTMLPurifier_URI(
 			$this->request->getServerProtocol(),
 			null, $this->request->getServerHost(),
