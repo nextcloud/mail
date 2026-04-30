@@ -13,29 +13,29 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
-use OCP\IAppConfig;
+use OCP\IConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ClassificationSettingsServiceTest extends TestCase {
 
 	private IUserPreferences&MockObject $preferences;
-	private IAppConfig&MockObject $appConfig;
+	private IConfig&MockObject $config;
 	private ClassificationSettingsService $service;
 
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->preferences = $this->createMock(IUserPreferences::class);
-		$this->appConfig = $this->createMock(IAppConfig::class);
+		$this->config = $this->createMock(IConfig::class);
 		$this->service = new ClassificationSettingsService(
 			$this->preferences,
-			$this->appConfig,
+			$this->config,
 		);
 	}
 
 	public function testIsClassificationEnabledByDefault(): void {
-		$this->appConfig->expects(self::once())
-			->method('getValueString')
+		$this->config->expects(self::once())
+			->method('getAppValue')
 			->with(Application::APP_ID, 'importance_classification_default', 'yes')
 			->willReturn('yes');
 
@@ -45,8 +45,8 @@ class ClassificationSettingsServiceTest extends TestCase {
 	}
 
 	public function testSetClassificationEnabledByDefaultTrue(): void {
-		$this->appConfig->expects(self::once())
-			->method('setValueString')
+		$this->config->expects(self::once())
+			->method('setAppValue')
 			->with(Application::APP_ID, 'importance_classification_default', 'yes');
 
 		$this->service->setClassificationEnabledByDefault(true);

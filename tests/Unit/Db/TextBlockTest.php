@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Db;
 use OCA\Mail\Db\TextBlock;
 use PHPUnit\Framework\TestCase;
 
-final class TextBlockTest extends TestCase {
+class TextBlockTest extends TestCase {
 	private TextBlock $entity;
 
 	protected function setUp(): void {
@@ -104,8 +104,8 @@ final class TextBlockTest extends TestCase {
 
 		$this->assertSame('user+tag@domain.com', $json['owner']);
 		$this->assertSame('Test "quoted" & special chars', $json['title']);
-		$this->assertStringContainsString('<html>', (string)$json['content']);
-		$this->assertStringContainsString('🎉', (string)$json['preview']);
+		$this->assertStringContainsString('<html>', $json['content']);
+		$this->assertStringContainsString('🎉', $json['preview']);
 	}
 
 	public function testMultipleSetCallsOverwriteValue(): void {

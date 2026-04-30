@@ -42,7 +42,7 @@ class IMAPMessageTest extends TestCase {
 		$request = $this->getMockBuilder(IRequest::class)
 			->disableOriginalConstructor()
 			->getMock();
-		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+		$hmacGenerator = $this->createMock(ProxyHmacGenerator::class);
 		$htmlService = new Html($urlGenerator, $request, $hmacGenerator);
 
 		$part = Horde_Mime_Part::parseMessage(file_get_contents(__DIR__ . '/../../data/mail-message-123.txt'),

@@ -16,8 +16,8 @@ use OCA\Mail\Events\MessageSentEvent;
 
 class MessageSentEventTest extends TestCase {
 	public function testConstructorAndGetters(): void {
-		$account = $this->createStub(Account::class);
-		$localMessage = $this->createStub(LocalMessage::class);
+		$account = $this->createMock(Account::class);
+		$localMessage = $this->createMock(LocalMessage::class);
 
 		$event = new MessageSentEvent($account, $localMessage);
 

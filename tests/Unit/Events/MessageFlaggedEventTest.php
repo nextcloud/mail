@@ -16,8 +16,8 @@ use OCA\Mail\Events\MessageFlaggedEvent;
 
 class MessageFlaggedEventTest extends TestCase {
 	public function testConstructorAndGetters(): void {
-		$account = $this->createStub(Account::class);
-		$mailbox = $this->createStub(Mailbox::class);
+		$account = $this->createMock(Account::class);
+		$mailbox = $this->createMock(Mailbox::class);
 		$uid = 12345;
 		$flag = 'Seen';
 		$set = true;
@@ -32,8 +32,8 @@ class MessageFlaggedEventTest extends TestCase {
 	}
 
 	public function testFlagUnset(): void {
-		$account = $this->createStub(Account::class);
-		$mailbox = $this->createStub(Mailbox::class);
+		$account = $this->createMock(Account::class);
+		$mailbox = $this->createMock(Mailbox::class);
 		$uid = 99999;
 		$flag = 'Flagged';
 		$set = false;

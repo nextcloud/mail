@@ -19,7 +19,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\EventData;
 use OCA\Mail\Model\IMAPMessage;
-use OCP\IAppConfig;
+use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IUserManager;
 use OCP\L10N\IFactory;
@@ -48,7 +48,7 @@ PROMPT;
 
 	public function __construct(
 		private LoggerInterface $logger,
-		private IAppConfig $appConfig,
+		private IConfig $config,
 		private Cache $cache,
 		private IMAPClientFactory $clientFactory,
 		private IMailManager $mailManager,
@@ -420,7 +420,7 @@ Never return null or undefined.";
 	 * Whether the llm_processing admin setting is enabled globally on this instance.
 	 */
 	public function isLlmProcessingEnabled(): bool {
-		return $this->appConfig->getValueString(Application::APP_ID, 'llm_processing', 'no') === 'yes';
+		return $this->config->getAppValue(Application::APP_ID, 'llm_processing', 'no') === 'yes';
 	}
 
 	private function isPersonalEmail(IMAPMessage $imapMessage): bool {

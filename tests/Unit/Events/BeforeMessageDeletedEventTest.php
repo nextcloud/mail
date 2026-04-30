@@ -15,7 +15,7 @@ use OCA\Mail\Events\BeforeMessageDeletedEvent;
 
 class BeforeMessageDeletedEventTest extends TestCase {
 	public function testConstructorAndGetters(): void {
-		$account = $this->createStub(Account::class);
+		$account = $this->createMock(Account::class);
 		$folderId = 'INBOX';
 		$messageId = 123;
 

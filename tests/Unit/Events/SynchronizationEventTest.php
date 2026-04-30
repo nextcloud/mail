@@ -16,8 +16,8 @@ use Psr\Log\LoggerInterface;
 
 class SynchronizationEventTest extends TestCase {
 	public function testConstructorAndGetters(): void {
-		$account = $this->createStub(Account::class);
-		$logger = $this->createStub(LoggerInterface::class);
+		$account = $this->createMock(Account::class);
+		$logger = $this->createMock(LoggerInterface::class);
 		$rebuildThreads = true;
 
 		$event = new SynchronizationEvent($account, $logger, $rebuildThreads);
@@ -28,8 +28,8 @@ class SynchronizationEventTest extends TestCase {
 	}
 
 	public function testConstructorWithoutRebuildThreads(): void {
-		$account = $this->createStub(Account::class);
-		$logger = $this->createStub(LoggerInterface::class);
+		$account = $this->createMock(Account::class);
+		$logger = $this->createMock(LoggerInterface::class);
 		$rebuildThreads = false;
 
 		$event = new SynchronizationEvent($account, $logger, $rebuildThreads);

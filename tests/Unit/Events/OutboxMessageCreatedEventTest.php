@@ -16,8 +16,8 @@ use OCA\Mail\Events\OutboxMessageCreatedEvent;
 
 class OutboxMessageCreatedEventTest extends TestCase {
 	public function testConstructorAndGetters(): void {
-		$account = $this->createStub(Account::class);
-		$message = $this->createStub(Message::class);
+		$account = $this->createMock(Account::class);
+		$message = $this->createMock(Message::class);
 
 		$event = new OutboxMessageCreatedEvent($account, $message);
 

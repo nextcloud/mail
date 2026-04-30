@@ -11,12 +11,12 @@ namespace OCA\Mail\Service\Classification;
 
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IUserPreferences;
-use OCP\IAppConfig;
+use OCP\IConfig;
 
 class ClassificationSettingsService {
 	public function __construct(
 		private IUserPreferences $preferences,
-		private IAppConfig $appConfig,
+		private IConfig $config,
 	) {
 	}
 
@@ -25,7 +25,7 @@ class ClassificationSettingsService {
 	 * preference themselves.
 	 */
 	public function isClassificationEnabledByDefault(): bool {
-		return $this->appConfig->getValueString(
+		return $this->config->getAppValue(
 			Application::APP_ID,
 			'importance_classification_default',
 			'yes'
@@ -37,7 +37,7 @@ class ClassificationSettingsService {
 	 * the preference themselves.
 	 */
 	public function setClassificationEnabledByDefault(bool $enabledByDefault): void {
-		$this->appConfig->setValueString(
+		$this->config->setAppValue(
 			Application::APP_ID,
 			'importance_classification_default',
 			$enabledByDefault ? 'yes' : 'no',

@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Db;
 use OCA\Mail\Db\Actions;
 use PHPUnit\Framework\TestCase;
 
-final class ActionsTest extends TestCase {
+class ActionsTest extends TestCase {
 	private Actions $entity;
 
 	protected function setUp(): void {

@@ -22,7 +22,7 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AiIntegrations\Cache;
-use OCP\IAppConfig;
+use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IUser;
 use OCP\IUserManager;
@@ -40,7 +40,7 @@ use Psr\Log\NullLogger;
 class AiIntegrationsServiceTest extends TestCase {
 
 	private TextProcessingManager|MockObject $textProcessingManager;
-	private IAppConfig|MockObject $appConfig;
+	private IConfig|MockObject $config;
 	private NullLogger|MockObject $logger;
 	private AiIntegrationsService $aiIntegrationsService;
 	private Cache|MockObject $cache;
@@ -57,7 +57,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		parent::setUp();
 
 		$this->logger = $this->createMock(NullLogger::class);
-		$this->appConfig = $this->createMock(IAppConfig::class);
+		$this->config = $this->createMock(IConfig::class);
 		$this->cache = $this->createMock(Cache::class);
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
@@ -68,7 +68,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->aiIntegrationsService = new AiIntegrationsService(
 			$this->logger,
-			$this->appConfig,
+			$this->config,
 			$this->cache,
 			$this->clientFactory,
 			$this->mailManager,
@@ -229,8 +229,8 @@ class AiIntegrationsServiceTest extends TestCase {
 	 * @dataProvider isLlmProcessingEnabledDataProvider
 	 */
 	public function testIsLlmProcessingEnabled(string $appConfigValue, bool $expected) {
-		$this->appConfig->expects(self::once())
-			->method('getValueString')
+		$this->config->expects(self::once())
+			->method('getAppValue')
 			->with('mail', 'llm_processing', 'no')
 			->willReturn($appConfigValue);
 

@@ -25,7 +25,7 @@ use OCA\Mail\Model\Message;
 use OCA\Mail\Service\DataUri\DataUriParser;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\IAppConfig;
+use OCP\IConfig;
 use Psr\Log\LoggerInterface;
 
 class AntiSpamService {
@@ -33,22 +33,22 @@ class AntiSpamService {
 	private const MESSAGE_TYPE = 'message/rfc822';
 
 	public function __construct(
+		private IConfig $config,
 		private MessageMapper $dbMessageMapper,
 		private MailManager $mailManager,
 		private IMAPClientFactory $imapClientFactory,
 		private SmtpClientFactory $smtpClientFactory,
 		private ImapMessageMapper $messageMapper,
 		private LoggerInterface $logger,
-		private IAppConfig $appConfig,
 	) {
 	}
 
 	public function getSpamEmail(): string {
-		return $this->appConfig->getValueString('mail', self::NAME . '_spam');
+		return $this->config->getAppValue('mail', self::NAME . '_spam');
 	}
 
 	public function getHamEmail(): string {
-		return $this->appConfig->getValueString('mail', self::NAME . '_ham');
+		return $this->config->getAppValue('mail', self::NAME . '_ham');
 	}
 
 	public function getSpamSubject(): string {
@@ -60,16 +60,16 @@ class AntiSpamService {
 	}
 
 	public function setSpamEmail(string $email): void {
-		$this->appConfig->setValueString('mail', self::NAME . '_spam', $email);
+		$this->config->setAppValue('mail', self::NAME . '_spam', $email);
 	}
 
 	public function setHamEmail(string $email): void {
-		$this->appConfig->setValueString('mail', self::NAME . '_ham', $email);
+		$this->config->setAppValue('mail', self::NAME . '_ham', $email);
 	}
 
 	public function deleteConfig(): void {
-		$this->appConfig->deleteKey('mail', self::NAME . '_spam');
-		$this->appConfig->deleteKey('mail', self::NAME . '_ham');
+		$this->config->deleteAppValue('mail', self::NAME . '_spam');
+		$this->config->deleteAppValue('mail', self::NAME . '_ham');
 	}
 
 	/**

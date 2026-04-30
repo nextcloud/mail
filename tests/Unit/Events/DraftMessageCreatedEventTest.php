@@ -16,8 +16,8 @@ use OCA\Mail\Events\DraftMessageCreatedEvent;
 
 class DraftMessageCreatedEventTest extends TestCase {
 	public function testConstructorAndGetters(): void {
-		$account = $this->createStub(Account::class);
-		$draft = $this->createStub(Message::class);
+		$account = $this->createMock(Account::class);
+		$draft = $this->createMock(Message::class);
 
 		$event = new DraftMessageCreatedEvent($account, $draft);
 

@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Sieve;
 use OCA\Mail\Sieve\SieveLogger;
 use PHPUnit\Framework\TestCase;
 
-final class SieveLoggerTest extends TestCase {
+class SieveLoggerTest extends TestCase {
 	private string $tempDir;
 
 	protected function setUp(): void {
@@ -72,7 +72,7 @@ final class SieveLoggerTest extends TestCase {
 		unset($logger); // Trigger destructor to flush/close
 
 		$content = file_get_contents($logFile);
-		$this->assertStringContainsString('Test message', (string)$content);
+		$this->assertStringContainsString('Test message', $content);
 	}
 
 	public function testDebugWritesMultipleMessages(): void {
@@ -85,9 +85,9 @@ final class SieveLoggerTest extends TestCase {
 		unset($logger);
 
 		$content = file_get_contents($logFile);
-		$this->assertStringContainsString('Message 1', (string)$content);
-		$this->assertStringContainsString('Message 2', (string)$content);
-		$this->assertStringContainsString('Message 3', (string)$content);
+		$this->assertStringContainsString('Message 1', $content);
+		$this->assertStringContainsString('Message 2', $content);
+		$this->assertStringContainsString('Message 3', $content);
 	}
 
 	public function testDebugWithEmptyString(): void {
@@ -109,8 +109,8 @@ final class SieveLoggerTest extends TestCase {
 		unset($logger);
 
 		$content = file_get_contents($logFile);
-		$this->assertStringContainsString('äöü', (string)$content);
-		$this->assertStringContainsString('🎉', (string)$content);
+		$this->assertStringContainsString('äöü', $content);
+		$this->assertStringContainsString('🎉', $content);
 	}
 
 	public function testDebugWithMultilineMessage(): void {
@@ -126,9 +126,9 @@ final class SieveLoggerTest extends TestCase {
 		unset($logger);
 
 		$content = file_get_contents($logFile);
-		$this->assertStringContainsString('Line 1', (string)$content);
-		$this->assertStringContainsString('Line 2', (string)$content);
-		$this->assertStringContainsString('Line 3', (string)$content);
+		$this->assertStringContainsString('Line 1', $content);
+		$this->assertStringContainsString('Line 2', $content);
+		$this->assertStringContainsString('Line 3', $content);
 	}
 
 	public function testDebugWithLongMessage(): void {
@@ -157,8 +157,8 @@ final class SieveLoggerTest extends TestCase {
 		unset($logger2);
 
 		$content = file_get_contents($logFile);
-		$this->assertStringContainsString('First message', (string)$content);
-		$this->assertStringContainsString('Second message', (string)$content);
+		$this->assertStringContainsString('First message', $content);
+		$this->assertStringContainsString('Second message', $content);
 	}
 
 	public function testConstructorWithAbsolutePath(): void {
@@ -223,7 +223,7 @@ final class SieveLoggerTest extends TestCase {
 		unset($logger);
 
 		$content = file_get_contents($logFile);
-		$this->assertStringContainsString(pack('H*', 'deadbeef'), (string)$content);
+		$this->assertStringContainsString(pack('H*', 'deadbeef'), $content);
 	}
 
 	public function testConstructorMultipleInstancesWithDifferentFiles(): void {

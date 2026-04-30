@@ -17,9 +17,9 @@ use OCA\Mail\Model\NewMessageData;
 
 class DraftSavedEventTest extends TestCase {
 	public function testConstructorWithAllParams(): void {
-		$account = $this->createStub(Account::class);
-		$newMessageData = $this->createStub(NewMessageData::class);
-		$draft = $this->createStub(Message::class);
+		$account = $this->createMock(Account::class);
+		$newMessageData = $this->createMock(NewMessageData::class);
+		$draft = $this->createMock(Message::class);
 
 		$event = new DraftSavedEvent($account, $newMessageData, $draft);
 
@@ -29,7 +29,7 @@ class DraftSavedEventTest extends TestCase {
 	}
 
 	public function testConstructorWithoutOptionalParams(): void {
-		$account = $this->createStub(Account::class);
+		$account = $this->createMock(Account::class);
 
 		$event = new DraftSavedEvent($account);
 
@@ -39,8 +39,8 @@ class DraftSavedEventTest extends TestCase {
 	}
 
 	public function testConstructorWithPartialParams(): void {
-		$account = $this->createStub(Account::class);
-		$newMessageData = $this->createStub(NewMessageData::class);
+		$account = $this->createMock(Account::class);
+		$newMessageData = $this->createMock(NewMessageData::class);
 
 		$event = new DraftSavedEvent($account, $newMessageData);
 

@@ -11,12 +11,12 @@ namespace OCA\Mail\Service\ContextChat;
 
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IUserPreferences;
-use OCP\IAppConfig;
+use OCP\IConfig;
 
 class ContextChatSettingsService {
 	public function __construct(
 		private IUserPreferences $preferences,
-		private IAppConfig $appConfig,
+		private IConfig $config,
 	) {
 	}
 
@@ -24,7 +24,7 @@ class ContextChatSettingsService {
 	 * Whether the classification by importance is enabled for a given user.
 	 */
 	public function isIndexingEnabled(string $userId): bool {
-		$appConfig = $this->appConfig->getValueString(
+		$appConfig = $this->config->getAppValue(
 			Application::APP_ID,
 			'index_context_chat_default',
 			'no',
@@ -42,7 +42,7 @@ class ContextChatSettingsService {
 	 * preference themselves.
 	 */
 	public function isIndexingEnabledByDefault(): bool {
-		return $this->appConfig->getValueString(
+		return $this->config->getAppValue(
 			Application::APP_ID,
 			'index_context_chat_default',
 			'no'
@@ -54,7 +54,7 @@ class ContextChatSettingsService {
 	 * the preference themselves.
 	 */
 	public function setIndexingEnabledByDefault(bool $enabledByDefault): void {
-		$this->appConfig->setValueString(
+		$this->config->setAppValue(
 			Application::APP_ID,
 			'index_context_chat_default',
 			$enabledByDefault ? 'yes' : 'no',

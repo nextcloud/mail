@@ -438,7 +438,7 @@ class MailTransmissionTest extends TestCase {
 		$localMessage->setSubject('Test');
 		$localMessage->setBodyPlain('Test');
 		$localMessage->setHtml(false);
-		$transport = $this->createStub(Horde_Mail_Transport::class);
+		$transport = $this->createMock(Horde_Mail_Transport::class);
 		$this->smtpClientFactory->expects($this->once())
 			->method('create')
 			->willReturn($transport);
@@ -484,7 +484,7 @@ class MailTransmissionTest extends TestCase {
 		$localMessage->setSubject('Test');
 		$localMessage->setBodyPlain('Test');
 		$localMessage->setHtml(false);
-		$transport = $this->createStub(Horde_Mail_Transport::class);
+		$transport = $this->createMock(Horde_Mail_Transport::class);
 		$this->smtpClientFactory->expects($this->once())
 			->method('create')
 			->willReturn($transport);

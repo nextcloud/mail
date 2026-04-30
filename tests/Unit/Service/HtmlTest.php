@@ -26,7 +26,7 @@ class HtmlTest extends TestCase {
 	public function testLinkDetection(string $expected, string $text) {
 		$urlGenerator = Server::get(IURLGenerator::class);
 		$request = Server::get(IRequest::class);
-		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+		$hmacGenerator = $this->createMock(ProxyHmacGenerator::class);
 
 		$html = new Html($urlGenerator, $request, $hmacGenerator);
 		$withLinks = $html->convertLinks($text);
@@ -65,7 +65,7 @@ class HtmlTest extends TestCase {
 	public function testParseMailBody($expectedBody, $expectedSignature, $text) {
 		$urlGenerator = \OCP\Server::get(\OCP\IURLGenerator::class);
 		$request = \OCP\Server::get(\OCP\IRequest::class);
-		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+		$hmacGenerator = $this->createMock(ProxyHmacGenerator::class);
 
 		$html = new Html($urlGenerator, $request, $hmacGenerator);
 		[$b, $s] = $html->parseMailBody($text);
@@ -89,7 +89,7 @@ class HtmlTest extends TestCase {
 			->with('mail', 'blocked-image.png')
 			->willReturn($blockedUrl);
 		$request = Server::get(IRequest::class);
-		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+		$hmacGenerator = $this->createMock(ProxyHmacGenerator::class);
 
 		$styleSheet = implode(' ', [
 			'big { background-image: url(https://tracker.com/script.png); }',

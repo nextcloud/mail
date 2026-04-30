@@ -22,13 +22,13 @@ use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\SMTP\SmtpClientFactory;
-use OCP\IAppConfig;
+use OCP\IConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class AntiSpamServiceTest extends TestCase {
 	private AntiSpamService $service;
-	private IAppConfig|MockObject $appConfig;
+	private IConfig|MockObject $config;
 	private DbMessageMapper|MockObject $dbMessageMapper;
 	private IMAPClientFactory|MockObject $imapClientFactory;
 	private SmtpClientFactory|MockObject $smtpClientFactory;
@@ -40,7 +40,7 @@ class AntiSpamServiceTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->appConfig = $this->createMock(IAppConfig::class);
+		$this->config = $this->createMock(IConfig::class);
 		$this->dbMessageMapper = $this->createMock(DbMessageMapper::class);
 		$this->transmission = $this->createMock(IMailTransmission::class);
 		$this->mailManager = $this->createMock(MailManager::class);
@@ -50,13 +50,13 @@ class AntiSpamServiceTest extends TestCase {
 		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->service = new AntiSpamService(
+			$this->config,
 			$this->dbMessageMapper,
 			$this->mailManager,
 			$this->imapClientFactory,
 			$this->smtpClientFactory,
 			$this->imapMessageMapper,
 			$this->logger,
-			$this->appConfig,
 		);
 	}
 
@@ -67,8 +67,8 @@ class AntiSpamServiceTest extends TestCase {
 			'getFlag' => '$junk'
 		]);
 
-		$this->appConfig->expects(self::once())
-			->method('getValueString')
+		$this->config->expects(self::once())
+			->method('getAppValue')
 			->with('mail', 'antispam_reporting_spam')
 			->willReturn('');
 		$this->dbMessageMapper->expects(self::never())
@@ -84,8 +84,8 @@ class AntiSpamServiceTest extends TestCase {
 			'getFlag' => '$junk'
 		]);
 
-		$this->appConfig->expects(self::once())
-			->method('getValueString')
+		$this->config->expects(self::once())
+			->method('getAppValue')
 			->with('mail', 'antispam_reporting_spam')
 			->willReturn('test@test.com');
 		$this->dbMessageMapper->expects(self::once())
@@ -104,8 +104,8 @@ class AntiSpamServiceTest extends TestCase {
 			'getFlag' => '$junk'
 		]);
 
-		$this->appConfig->expects(self::once())
-			->method('getValueString')
+		$this->config->expects(self::once())
+			->method('getAppValue')
 			->with('mail', 'antispam_reporting_spam')
 			->willReturn('test@test.com');
 		$messageData = NewMessageData::fromRequest(
@@ -147,8 +147,8 @@ class AntiSpamServiceTest extends TestCase {
 		]);
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 
-		$this->appConfig->expects(self::once())
-			->method('getValueString')
+		$this->config->expects(self::once())
+			->method('getAppValue')
 			->with('mail', 'antispam_reporting_spam')
 			->willReturn('test@test.com');
 		$messageData = NewMessageData::fromRequest(
@@ -213,8 +213,8 @@ class AntiSpamServiceTest extends TestCase {
 		]);
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 
-		$this->appConfig->expects(self::once())
-			->method('getValueString')
+		$this->config->expects(self::once())
+			->method('getAppValue')
 			->with('mail', 'antispam_reporting_spam')
 			->willReturn('test@test.com');
 		$messageData = NewMessageData::fromRequest(

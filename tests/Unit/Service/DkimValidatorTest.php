@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Service;
 use OCA\Mail\Service\DkimValidator;
 use PHPUnit\Framework\TestCase;
 
-final class DkimValidatorTest extends TestCase {
+class DkimValidatorTest extends TestCase {
 	private DkimValidator $validator;
 
 	protected function setUp(): void {
