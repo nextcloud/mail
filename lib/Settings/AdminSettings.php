@@ -96,6 +96,24 @@ class AdminSettings implements ISettings {
 
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,
+			'llm_custom_prompts',
+			$this->aiIntegrationsService->getCustomPrompts(),
+		);
+
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'llm_default_prompts',
+			[
+				AiIntegrationsService::PROMPT_SUMMARIZE => $this->aiIntegrationsService->getDefaultPrompt(AiIntegrationsService::PROMPT_SUMMARIZE),
+				AiIntegrationsService::PROMPT_SMART_REPLY => $this->aiIntegrationsService->getDefaultPrompt(AiIntegrationsService::PROMPT_SMART_REPLY),
+				AiIntegrationsService::PROMPT_FOLLOW_UP => $this->aiIntegrationsService->getDefaultPrompt(AiIntegrationsService::PROMPT_FOLLOW_UP),
+				AiIntegrationsService::PROMPT_TRANSLATION => $this->aiIntegrationsService->getDefaultPrompt(AiIntegrationsService::PROMPT_TRANSLATION),
+				AiIntegrationsService::PROMPT_EVENT_DATA => $this->aiIntegrationsService->getDefaultPrompt(AiIntegrationsService::PROMPT_EVENT_DATA),
+			],
+		);
+
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
 			'enabled_llm_free_prompt_backend',
 			$this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
 		);

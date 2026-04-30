@@ -39,12 +39,81 @@ use function json_decode;
 
 class AiIntegrationsService {
 
-	private const EVENT_DATA_PROMPT_PREAMBLE = <<<PROMPT
+	public const PROMPT_SUMMARIZE = 'llm_prompt_summarize';
+	public const PROMPT_SMART_REPLY = 'llm_prompt_smart_reply';
+	public const PROMPT_FOLLOW_UP = 'llm_prompt_follow_up';
+	public const PROMPT_TRANSLATION = 'llm_prompt_translation';
+	public const PROMPT_EVENT_DATA = 'llm_prompt_event_data';
+
+	private const DEFAULT_PROMPT_SUMMARIZE = "You are tasked with formulating a helpful summary of a email message. \r\nThe summary should be in the language of this language code {language}. \r\nThe summary should be less than 160 characters. \r\nOutput *ONLY* the summary itself, leave out any introduction. \r\nHere is the ***E-MAIL*** for which you must generate a helpful summary: \r\n***START_OF_E-MAIL***\r\n{body}\r\n***END_OF_E-MAIL***\r\n";
+
+	private const DEFAULT_PROMPT_SMART_REPLY = "You are tasked with formulating helpful replies or reply templates to e-mails provided that have been sent to me. If you don't know some relevant information for answering the e-mails (like my schedule) leave blanks in the text that can later be filled by me. You must write the replies from my point of view as replies to the original sender of the provided e-mail!
+
+Formulate two extremely succinct reply suggestions to the provided ***E-MAIL***. Please, do not invent any context for the replies but, rather, leave blanks for me to fill in with relevant information where necessary. Provide the output formatted as valid JSON with the keys 'reply1' and 'reply2' for the reply suggestions.
+
+Each suggestion must be of 25 characters or less.
+
+Here is the ***E-MAIL*** for which you must suggest the replies to:
+
+***START_OF_E-MAIL***{body}
+
+***END_OF_E-MAIL***
+
+Please, output *ONLY* a valid JSON string with the keys 'reply1' and 'reply2' for the reply suggestions. Leave out any other text besides the JSON! Be extremely succinct and write the replies from my point of view.
+ ";
+
+	private const DEFAULT_PROMPT_FOLLOW_UP = 'Consider the following TypeScript function prototype:
+---
+/**
+ * This function takes in an email text and returns a boolean indicating whether the email author expects a response.
+ *
+ * @param emailText - string with the email text
+ * @returns boolean true if the email expects a reply, false if not
+ */
+declare function doesEmailExpectReply(emailText: string): Promise<boolean>;
+---
+Tell me what the function outputs for the following parameters.
+
+emailText: "{body}"
+The JSON output should be in the form: {"expectsReply": true}
+Never return null or undefined.';
+
+	private const DEFAULT_PROMPT_TRANSLATION = 'Consider the following TypeScript function prototype:
+---
+/**
+ * This function takes in an email text and returns a boolean indicating whether the email needs translation from a specific language.
+ *
+ * @param emailText - string with the email text
+ * @param language - the language code to check against (e.g., \'en\', \'de\', etc.)
+ * @returns boolean true if the email is written in a different language than the one specified and needs translation, false if it is written in the specified language.
+ * only return true if whole sentences are written in a different language, not just a word or two.
+ */
+declare function isEmailWrittenInLanguage(emailText: string, language: string): Promise<boolean>;
+---
+Tell me what the function outputs for the following parameters.
+
+emailText: "{body}"
+language: "{language}"
+The JSON output should be in the form: {"needsTranslation": true}
+Never return null or undefined.';
+
+	private const DEFAULT_PROMPT_EVENT_DATA = <<<PROMPT
 I am scheduling an event based on an email thread and need an event title and agenda. Provide the result as JSON with keys for "title" and "agenda". For example ```{ "title": "Project kick-off meeting", "agenda": "* Introduction\\n* Project goals\\n* Next steps" }```.
 
 The email contents are:
 
 PROMPT;
+
+	/**
+	 * Map from config key to default prompt constant.
+	 */
+	private const PROMPT_DEFAULTS = [
+		self::PROMPT_SUMMARIZE => self::DEFAULT_PROMPT_SUMMARIZE,
+		self::PROMPT_SMART_REPLY => self::DEFAULT_PROMPT_SMART_REPLY,
+		self::PROMPT_FOLLOW_UP => self::DEFAULT_PROMPT_FOLLOW_UP,
+		self::PROMPT_TRANSLATION => self::DEFAULT_PROMPT_TRANSLATION,
+		self::PROMPT_EVENT_DATA => self::DEFAULT_PROMPT_EVENT_DATA,
+	];
 
 	public function __construct(
 		private LoggerInterface $logger,
@@ -58,6 +127,47 @@ PROMPT;
 		private IFactory $l10nFactory,
 		private IUserManager $userManager,
 	) {
+	}
+
+	/**
+	 * Get the configured prompt for a given key, falling back to the built-in default.
+	 */
+	public function getPrompt(string $key): string {
+		$custom = $this->config->getAppValue(Application::APP_ID, $key, '');
+		if ($custom !== '') {
+			return $custom;
+		}
+		return self::PROMPT_DEFAULTS[$key] ?? '';
+	}
+
+	/**
+	 * Get the default (built-in) prompt for a given key.
+	 */
+	public function getDefaultPrompt(string $key): string {
+		return self::PROMPT_DEFAULTS[$key] ?? '';
+	}
+
+	/**
+	 * Get all custom prompts (only the ones that have been customized).
+	 *
+	 * @return array<string, string>
+	 */
+	public function getCustomPrompts(): array {
+		$prompts = [];
+		foreach (array_keys(self::PROMPT_DEFAULTS) as $key) {
+			$prompts[$key] = $this->config->getAppValue(Application::APP_ID, $key, '');
+		}
+		return $prompts;
+	}
+
+	/**
+	 * Set a custom prompt for a given key. Pass empty string to reset to default.
+	 */
+	public function setCustomPrompt(string $key, string $value): void {
+		if (!isset(self::PROMPT_DEFAULTS[$key])) {
+			return;
+		}
+		$this->config->setAppValue(Application::APP_ID, $key, $value);
 	}
 
 	/**
@@ -101,12 +211,12 @@ PROMPT;
 				}
 				// construct prompt and task
 				$messageBody = $message->getPlainBody();
-				$prompt = "You are tasked with formulating a helpful summary of a email message. \r\n"
-						  . 'The summary should be in the language of this language code ' . $language . ". \r\n"
-						  . "The summary should be less than 160 characters. \r\n"
-						  . "Output *ONLY* the summary itself, leave out any introduction. \r\n"
-						  . "Here is the ***E-MAIL*** for which you must generate a helpful summary: \r\n"
-						  . "***START_OF_E-MAIL***\r\n$messageBody\r\n***END_OF_E-MAIL***\r\n";
+				$promptTemplate = $this->getPrompt(self::PROMPT_SUMMARIZE);
+				$prompt = str_replace(
+					['{language}', '{body}'],
+					[$language, $messageBody],
+					$promptTemplate,
+				);
 				$task = new TaskProcessingTask(
 					TextToText::ID,
 					[
@@ -194,9 +304,10 @@ PROMPT;
 			$client->logout();
 		}
 
+		$eventDataPrompt = $this->getPrompt(self::PROMPT_EVENT_DATA);
 		$task = new TextProcessingTask(
 			FreePromptTaskType::class,
-			self::EVENT_DATA_PROMPT_PREAMBLE . implode("\n\n---\n\n", $messageBodies),
+			$eventDataPrompt . implode("\n\n---\n\n", $messageBodies),
 			'mail',
 			$currentUserId,
 			"event_data_$threadId",
@@ -241,20 +352,7 @@ PROMPT;
 			} finally {
 				$client->logout();
 			}
-			$prompt = "You are tasked with formulating helpful replies or reply templates to e-mails provided that have been sent to me. If you don't know some relevant information for answering the e-mails (like my schedule) leave blanks in the text that can later be filled by me. You must write the replies from my point of view as replies to the original sender of the provided e-mail!
-
-			Formulate two extremely succinct reply suggestions to the provided ***E-MAIL***. Please, do not invent any context for the replies but, rather, leave blanks for me to fill in with relevant information where necessary. Provide the output formatted as valid JSON with the keys 'reply1' and 'reply2' for the reply suggestions.
-
-			Each suggestion must be of 25 characters or less.
-
-			Here is the ***E-MAIL*** for which you must suggest the replies to:
-
-			***START_OF_E-MAIL***" . $messageBody . "
-
-			***END_OF_E-MAIL***
-
-			Please, output *ONLY* a valid JSON string with the keys 'reply1' and 'reply2' for the reply suggestions. Leave out any other text besides the JSON! Be extremely succinct and write the replies from my point of view.
-			 ";
+			$prompt = str_replace('{body}', $messageBody, $this->getPrompt(self::PROMPT_SMART_REPLY));
 			$task = new TextProcessingTask(FreePromptTaskType::class, $prompt, 'mail,', $currentUserId);
 			$this->textProcessingManager->runTask($task);
 			$replies = $task->getOutput();
@@ -306,21 +404,7 @@ PROMPT;
 		$messageBody = $imapMessage->getPlainBody();
 		$messageBody = str_replace('"', '\"', $messageBody);
 
-		$prompt = "Consider the following TypeScript function prototype:
----
-/**
- * This function takes in an email text and returns a boolean indicating whether the email author expects a response.
- *
- * @param emailText - string with the email text
- * @returns boolean true if the email expects a reply, false if not
- */
-declare function doesEmailExpectReply(emailText: string): Promise<boolean>;
----
-Tell me what the function outputs for the following parameters.
-
-emailText: \"$messageBody\"
-The JSON output should be in the form: {\"expectsReply\": true}
-Never return null or undefined.";
+		$prompt = str_replace('{body}', $messageBody, $this->getPrompt(self::PROMPT_FOLLOW_UP));
 		$task = new TextProcessingTask(FreePromptTaskType::class, $prompt, Application::APP_ID, $currentUserId);
 
 		$this->textProcessingManager->runTask($task);
@@ -372,24 +456,11 @@ Never return null or undefined.";
 		$messageBody = $imapMessage->getPlainBody();
 		$messageBody = str_replace('"', '\"', $messageBody);
 
-		$prompt = "Consider the following TypeScript function prototype:
----
-/**
- * This function takes in an email text and returns a boolean indicating whether the email needs translation from a specific language.
- *
- * @param emailText - string with the email text
- * @param language - the language code to check against (e.g., 'en', 'de', etc.)
- * @returns boolean true if the email is written in a different language than the one specified and needs translation, false if it is written in the specified language.
- * only return true if whole sentences are written in a different language, not just a word or two.
- */
-declare function isEmailWrittenInLanguage(emailText: string, language: string): Promise<boolean>;
----
-Tell me what the function outputs for the following parameters.
-
-emailText: \"$messageBody\"
-language: \"$language\"
-The JSON output should be in the form: {\"needsTranslation\": true}
-Never return null or undefined.";
+		$prompt = str_replace(
+			['{body}', '{language}'],
+			[$messageBody, $language],
+			$this->getPrompt(self::PROMPT_TRANSLATION),
+		);
 		$task = new TextProcessingTask(FreePromptTaskType::class, $prompt, Application::APP_ID, $currentUserId);
 
 		$this->textProcessingManager->runTask($task);

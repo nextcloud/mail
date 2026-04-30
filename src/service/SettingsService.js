@@ -101,3 +101,13 @@ export async function setImportanceClassificationEnabledByDefault(enabledByDefau
 		enabledByDefault,
 	})
 }
+
+/**
+ * @param {object} prompts - Map of prompt keys to custom prompt strings
+ * @return {Promise<void>}
+ */
+export async function setLlmCustomPrompts(prompts) {
+	const url = generateUrl('/apps/mail/api/settings/llm-prompts')
+	const resp = await axios.put(url, { prompts })
+	return resp.data
+}
