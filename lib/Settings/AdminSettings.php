@@ -142,6 +142,12 @@ class AdminSettings implements ISettings {
 			$this->themingDefaults->buildDocLinkToKey('admin-groupware-oauth-microsoft'),
 		);
 
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'max_sync_days',
+			(int)$this->config->getAppValue('mail', 'max_sync_days', '0')
+		);
+
 		return new TemplateResponse(Application::APP_ID, 'settings-admin');
 	}
 

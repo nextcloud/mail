@@ -11,6 +11,8 @@ namespace OCA\Mail\Service\Search;
 
 use Horde_Imap_Client;
 use OCA\Mail\Account;
+use OCA\Mail\BackgroundJob\BackfillSearchResultsJob;
+use OCA\Mail\BackgroundJob\OnDemandSyncJob;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
@@ -21,8 +23,11 @@ use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Search\Provider as ImapSearchProvider;
+use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\BackgroundJob\IJobList;
+use OCP\IConfig;
 use OCP\IUser;
 
 class MailSearch implements IMailSearch {
@@ -41,11 +46,16 @@ class MailSearch implements IMailSearch {
 	/** @var ITimeFactory */
 	private $timeFactory;
 
-	public function __construct(FilterStringParser $filterStringParser,
+	public function __construct(
+		FilterStringParser $filterStringParser,
 		ImapSearchProvider $imapSearchProvider,
 		MessageMapper $messageMapper,
 		PreviewEnhancer $previewEnhancer,
-		ITimeFactory $timeFactory) {
+		ITimeFactory $timeFactory,
+		private IConfig $config,
+		private ImapToDbSynchronizer $imapToDbSynchronizer,
+		private IJobList $jobList,
+	) {
 		$this->filterStringParser = $filterStringParser;
 		$this->imapSearchProvider = $imapSearchProvider;
 		$this->messageMapper = $messageMapper;
@@ -150,16 +160,58 @@ class MailSearch implements IMailSearch {
 	 * @throws ServiceException
 	 */
 	private function getIdsLocally(Account $account, Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit): array {
-		if (empty($query->getBodies())) {
-			return $this->messageMapper->findIdsByQuery($mailbox, $query, $sortOrder, $limit);
+		$hasSearchTerms = !empty($query->getBodies())
+			|| !empty($query->getSubjects())
+			|| !empty($query->getFrom())
+			|| !empty($query->getTo())
+			|| !empty($query->getCc())
+			|| $query->getStart() !== null
+			|| $query->getEnd() !== null;
+
+		if ($hasSearchTerms) {
+			$fromImap = $this->imapSearchProvider->findMatches(
+				$account,
+				$mailbox,
+				$query
+			);
+
+			// Detect search result UIDs that are not in the local DB (outside
+			// the sync window) and schedule a background backfill job so the
+			// next search returns complete results.
+			$maxSyncDays = (int)$this->config->getAppValue('mail', 'max_sync_days', '0');
+			if ($maxSyncDays > 0 && !empty($fromImap)) {
+				$missingUids = $this->messageMapper->findMissingUids($mailbox, $fromImap);
+				if (!empty($missingUids)) {
+					$this->jobList->add(BackfillSearchResultsJob::class, [
+						'accountId' => $account->getId(),
+						'mailboxId' => $mailbox->getId(),
+						'uids' => array_slice($missingUids, 0, 200),
+					]);
+				}
+			}
+
+			return $this->messageMapper->findIdsByQuery($mailbox, $query, $sortOrder, $limit, $fromImap);
 		}
 
-		$fromImap = $this->imapSearchProvider->findMatches(
-			$account,
-			$mailbox,
-			$query
-		);
-		return $this->messageMapper->findIdsByQuery($mailbox, $query, $sortOrder, $limit, $fromImap);
+		$messageIds = $this->messageMapper->findIdsByQuery($mailbox, $query, $sortOrder, $limit);
+
+		// On-demand older message loading: when the user scrolls past all
+		// locally cached messages and a sync window is active, schedule an
+		// async background job instead of blocking the HTTP request.
+		// The frontend will retry after a short delay.
+		$maxSyncDays = (int)$this->config->getAppValue('mail', 'max_sync_days', '0');
+		if (empty($messageIds) && $maxSyncDays > 0 && $query->getCursor() !== null) {
+			$jobArg = [
+				'accountId' => $account->getId(),
+				'mailboxId' => $mailbox->getId(),
+				'cursorTimestamp' => $query->getCursor(),
+			];
+			if (!$this->jobList->has(OnDemandSyncJob::class, $jobArg)) {
+				$this->jobList->add(OnDemandSyncJob::class, $jobArg);
+			}
+		}
+
+		return $messageIds;
 	}
 
 	/**

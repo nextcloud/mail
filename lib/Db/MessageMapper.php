@@ -141,6 +141,23 @@ class MessageMapper extends QBMapper {
 		return $this->findUids($query);
 	}
 
+	/**
+	 * Find the oldest sent_at timestamp for a given mailbox.
+	 * Used by background deep-sync to know where to start fetching older messages.
+	 */
+	public function findOldestSentAt(Mailbox $mailbox): ?int {
+		$query = $this->db->getQueryBuilder();
+		$query->select($query->func()->min('sent_at'))
+			->from($this->getTableName())
+			->where($query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT));
+
+		$result = $query->executeQuery();
+		$row = $result->fetchOne();
+		$result->closeCursor();
+
+		return $row !== false && $row !== null ? (int)$row : null;
+	}
+
 	public function findAllIds(Mailbox $mailbox): array {
 		$query = $this->db->getQueryBuilder();
 
@@ -348,6 +365,139 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
+	 * Insert messages ignoring duplicates.
+	 *
+	 * Uses the existing UNIQUE(uid, mailbox_id) constraint for deduplication
+	 * instead of loading all UIDs into PHP memory via findAllUids().
+	 * Duplicate messages are silently skipped.
+	 *
+	 * @return int number of actually inserted messages
+	 */
+	public function insertBulkIgnore(Account $account, Message ...$messages): int {
+		if ($messages === []) {
+			return 0;
+		}
+
+		$this->db->beginTransaction();
+		$inserted = 0;
+		try {
+			$tableName = $this->getTableName();
+			$columns = 'uid, message_id, `references`, in_reply_to, thread_root_id, mailbox_id, '
+				. 'subject, sent_at, flag_answered, flag_deleted, flag_draft, flag_flagged, '
+				. 'flag_seen, flag_forwarded, flag_junk, flag_notjunk, flag_important, '
+				. 'flag_mdnsent, structure_analyzed';
+			$placeholders = '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+
+			// Detect database platform for conflict handling
+			$platform = $this->db->getDatabasePlatform();
+			$isPostgres = $platform instanceof \Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+
+			$qb2 = $this->db->getQueryBuilder();
+			$qb2->insert('mail_recipients')
+				->setValue('message_id', $qb2->createParameter('message_id'))
+				->setValue('type', $qb2->createParameter('type'))
+				->setValue('label', $qb2->createParameter('label'))
+				->setValue('email', $qb2->createParameter('email'));
+
+			foreach ($messages as $message) {
+				$inReplyTo = self::filterMessageIdLength($message->getInReplyTo());
+				$threadRootId = self::filterMessageIdLength($message->getThreadRootId());
+
+				$params = [
+					$message->getUid(),
+					$message->getMessageId(),
+					$message->getReferences(),
+					$inReplyTo,
+					$threadRootId,
+					$message->getMailboxId(),
+					$message->getSubject(),
+					$message->getSentAt(),
+					$message->getFlagAnswered() ? 1 : 0,
+					$message->getFlagDeleted() ? 1 : 0,
+					$message->getFlagDraft() ? 1 : 0,
+					$message->getFlagFlagged() ? 1 : 0,
+					$message->getFlagSeen() ? 1 : 0,
+					$message->getFlagForwarded() ? 1 : 0,
+					$message->getFlagJunk() ? 1 : 0,
+					$message->getFlagNotjunk() ? 1 : 0,
+					$message->getFlagImportant() ? 1 : 0,
+					$message->getFlagMdnsent() ? 1 : 0,
+					$message->getStructureAnalyzed() ? 1 : 0,
+				];
+
+				if ($isPostgres) {
+					$sql = "INSERT INTO *PREFIX*{$tableName} ({$columns}) VALUES {$placeholders} "
+						. 'ON CONFLICT (uid, mailbox_id) DO NOTHING';
+				} else {
+					// MySQL / SQLite
+					$sql = "INSERT IGNORE INTO *PREFIX*{$tableName} ({$columns}) VALUES {$placeholders}";
+				}
+
+				$affectedRows = $this->db->executeStatement($sql, $params);
+				if ($affectedRows > 0) {
+					$inserted++;
+					// Get the auto-generated ID for recipient inserts
+					$message->setId($this->db->lastInsertId("*PREFIX*{$tableName}"));
+
+					$recipientTypes = [
+						Address::TYPE_FROM => $message->getFrom(),
+						Address::TYPE_TO => $message->getTo(),
+						Address::TYPE_CC => $message->getCc(),
+						Address::TYPE_BCC => $message->getBcc(),
+					];
+					foreach ($recipientTypes as $type => $recipients) {
+						foreach ($recipients->iterate() as $recipient) {
+							if ($recipient->getEmail() === null) {
+								continue;
+							}
+							$qb2->setParameter('message_id', $message->getId(), IQueryBuilder::PARAM_INT);
+							$qb2->setParameter('type', $type, IQueryBuilder::PARAM_INT);
+							$qb2->setParameter('label', mb_strcut($recipient->getLabel() ?? '', 0, 255), IQueryBuilder::PARAM_STR);
+							$qb2->setParameter('email', mb_strcut($recipient->getEmail(), 0, 255), IQueryBuilder::PARAM_STR);
+							$qb2->executeStatement();
+						}
+					}
+					foreach ($message->getTags() as $tag) {
+						$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
+					}
+				}
+			}
+
+			$this->db->commit();
+		} catch (Throwable $e) {
+			$this->db->rollBack();
+			throw $e;
+		}
+
+		return $inserted;
+	}
+
+	/**
+	 * Find UIDs from a given set that are NOT present in the local DB for a mailbox.
+	 * Used to detect search results that need to be backfilled from IMAP.
+	 *
+	 * @param int[] $uids
+	 * @return int[] UIDs not found in the local DB
+	 */
+	public function findMissingUids(Mailbox $mailbox, array $uids): array {
+		if ($uids === []) {
+			return [];
+		}
+
+		$existing = [];
+		foreach (array_chunk($uids, 1000) as $chunk) {
+			$query = $this->db->getQueryBuilder();
+			$query->select('uid')
+				->from($this->getTableName())
+				->where($query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT))
+				->andWhere($query->expr()->in('uid', $query->createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)));
+			$existing = array_merge($existing, $this->findUids($query));
+		}
+
+		return array_values(array_diff($uids, $existing));
+	}
+
+	/**
 	 * @throws Exception
 	 */
 	private static function filterMessageIdLength(?string $messageId): ?string {
@@ -551,7 +701,9 @@ class MessageMapper extends QBMapper {
 
 		$toRemove = array_udiff($dbTags, $imapTags, static fn (Tag $a, Tag $b) => strcmp($a->getImapLabel(), $b->getImapLabel()));
 		foreach ($toRemove as $tag) {
-			$this->tagMapper->untagMessage($tag, $message->getMessageId());
+			/** @var string $messageId */
+			$messageId = $message->getMessageId();
+			$this->tagMapper->untagMessage($tag, $messageId);
 		}
 		$perf->step('Untagged messages');
 	}
@@ -1739,5 +1891,33 @@ class MessageMapper extends QBMapper {
 			->setMaxResults($limit);
 
 		return $this->findIds($qb);
+	}
+
+	/**
+	 * Find messages with sent_at before the given timestamp.
+	 * Used by the sync window cleanup job to remove old local metadata.
+	 *
+	 * @return Message[]
+	 */
+	public function findMessagesBefore(int $mailboxId, int $beforeTimestamp, int $limit = 500): array {
+		$qb = $this->db->getQueryBuilder();
+
+		$select = $qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq(
+					'mailbox_id',
+					$qb->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT),
+					IQueryBuilder::PARAM_INT,
+				),
+				$qb->expr()->lt(
+					'sent_at',
+					$qb->createNamedParameter($beforeTimestamp, IQueryBuilder::PARAM_INT),
+					IQueryBuilder::PARAM_INT,
+				),
+			)
+			->setMaxResults($limit);
+
+		return $this->findEntities($select);
 	}
 }

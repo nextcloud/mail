@@ -38,6 +38,7 @@ use OCA\Mail\Service\Classification\NewMessagesClassifier;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IConfig;
 use Psr\Log\LoggerInterface;
 use Throwable;
 use function array_chunk;
@@ -80,7 +81,8 @@ class ImapToDbSynchronizer {
 	private TagMapper $tagMapper;
 	private NewMessagesClassifier $newMessagesClassifier;
 
-	public function __construct(DatabaseMessageMapper $dbMapper,
+	public function __construct(
+		DatabaseMessageMapper $dbMapper,
 		IMAPClientFactory $clientFactory,
 		ImapMessageMapper $imapMapper,
 		MailboxMapper $mailboxMapper,
@@ -91,7 +93,9 @@ class ImapToDbSynchronizer {
 		LoggerInterface $logger,
 		IMailManager $mailManager,
 		TagMapper $tagMapper,
-		NewMessagesClassifier $newMessagesClassifier) {
+		NewMessagesClassifier $newMessagesClassifier,
+		private IConfig $config,
+	) {
 		$this->dbMapper = $dbMapper;
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
@@ -339,6 +343,7 @@ class ImapToDbSynchronizer {
 		$client->logout();
 		$client = $this->clientFactory->getClient($account, false);
 
+		$maxSyncDays = (int)$this->config->getAppValue('mail', 'max_sync_days', '0');
 		$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);
 		try {
 			$imapMessages = $this->imapMapper->findAll(
@@ -349,6 +354,7 @@ class ImapToDbSynchronizer {
 				$logger,
 				$perf,
 				$account->getUserId(),
+				$maxSyncDays,
 			);
 			$perf->step(sprintf('fetch %d messages from IMAP', count($imapMessages)));
 		} catch (Horde_Imap_Client_Exception $e) {
@@ -596,5 +602,152 @@ class ImapToDbSynchronizer {
 		}
 
 		$perf->end();
+	}
+
+	/**
+	 * Sync older messages on-demand when user scrolls past the sync window.
+	 *
+	 * Uses iterative date ranges (7d -> 14d -> 30d -> 90d) to find messages
+	 * efficiently. Only messages not already in the local DB are persisted.
+	 * Messages are marked as structure_analyzed to skip the PreviewEnhancer's
+	 * second IMAP connection -- structure is loaded lazily when opened.
+	 *
+	 * @return int number of new messages synced
+	 */
+	public function syncOlderMessages(
+		Account $account,
+		Mailbox $mailbox,
+		int $cursorTimestamp,
+	): int {
+		$logger = $this->logger;
+		$logger->debug("syncOlderMessages for mailbox {$mailbox->getId()} with cursor " . date('Y-m-d', $cursorTimestamp));
+
+		$client = $this->clientFactory->getClient($account, false);
+		try {
+			$before = new \DateTime("@$cursorTimestamp");
+
+			// Try progressively larger date ranges to find messages
+			$ranges = [7, 14, 30, 90];
+			$imapMessages = [];
+			foreach ($ranges as $days) {
+				$since = clone $before;
+				$since->modify("-{$days} days");
+
+				$imapMessages = $this->imapMapper->findByDateRange(
+					$client,
+					$mailbox->getName(),
+					$since,
+					$before,
+					$account->getUserId(),
+					50,
+				);
+
+				if (!empty($imapMessages)) {
+					$logger->debug('syncOlderMessages: found ' . count($imapMessages) . " messages in {$days}-day range");
+					break;
+				}
+			}
+
+			if (empty($imapMessages)) {
+				$logger->debug('syncOlderMessages: no messages found in any range');
+				return 0;
+			}
+
+			// Use INSERT IGNORE to let the DB handle deduplication via the
+			// UNIQUE(uid, mailbox_id) constraint instead of loading all UIDs
+			// into memory with findAllUids().
+			$dbMessages = array_map(
+				static function (IMAPMessage $imapMessage) use ($mailbox, $account) {
+					$msg = $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
+					$msg->setStructureAnalyzed(true);
+					return $msg;
+				},
+				$imapMessages
+			);
+			$count = $this->dbMapper->insertBulkIgnore($account, ...$dbMessages);
+
+			$logger->debug("syncOlderMessages: synced $count new messages");
+			return $count;
+		} catch (Horde_Imap_Client_Exception $e) {
+			$logger->warning('syncOlderMessages failed: ' . $e->getMessage(), ['exception' => $e]);
+			return 0;
+		} finally {
+			$client->logout();
+		}
+	}
+
+	/**
+	 * Background deep-sync: fetch older messages for a mailbox.
+	 *
+	 * Can be called with an existing IMAP client (from syncAccount) or without
+	 * one (from DeepSyncJob), in which case a new connection is created.
+	 */
+	public function syncOlderMessagesBackground(
+		Account $account,
+		Mailbox $mailbox,
+		LoggerInterface $logger,
+		?Horde_Imap_Client_Base $existingClient = null,
+	): void {
+		$clientOwned = false;
+		$client = $existingClient;
+		try {
+			if ($client === null) {
+				$client = $this->clientFactory->getClient($account, false);
+				$clientOwned = true;
+			}
+
+			$oldestTimestamp = $this->dbMapper->findOldestSentAt($mailbox);
+			if ($oldestTimestamp === null) {
+				return;
+			}
+
+			$before = new \DateTime("@$oldestTimestamp");
+
+			$ranges = [7, 14, 30, 90];
+			$imapMessages = [];
+			foreach ($ranges as $days) {
+				$since = clone $before;
+				$since->modify("-{$days} days");
+
+				$imapMessages = $this->imapMapper->findByDateRange(
+					$client,
+					$mailbox->getName(),
+					$since,
+					$before,
+					$account->getUserId(),
+					50,
+				);
+
+				if (!empty($imapMessages)) {
+					$logger->debug('syncOlderMessagesBackground: found ' . count($imapMessages) . " messages in {$days}-day range");
+					break;
+				}
+			}
+
+			if (empty($imapMessages)) {
+				$logger->debug('syncOlderMessagesBackground: no older messages found on IMAP');
+				return;
+			}
+
+			$dbMessages = array_map(
+				static function (IMAPMessage $imapMessage) use ($mailbox, $account) {
+					$msg = $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
+					$msg->setStructureAnalyzed(true);
+					return $msg;
+				},
+				$imapMessages
+			);
+			$inserted = $this->dbMapper->insertBulkIgnore($account, ...$dbMessages);
+
+			$logger->debug("syncOlderMessagesBackground: synced $inserted new messages (of " . count($dbMessages) . ' candidates) for mailbox ' . $mailbox->getId());
+		} catch (Horde_Imap_Client_Exception $e) {
+			$logger->warning('syncOlderMessagesBackground failed: ' . $e->getMessage(), ['exception' => $e]);
+		} catch (\Throwable $e) {
+			$logger->warning('syncOlderMessagesBackground error: ' . $e->getMessage(), ['exception' => $e]);
+		} finally {
+			if ($clientOwned && $client !== null) {
+				$client->logout();
+			}
+		}
 	}
 }

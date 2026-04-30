@@ -107,7 +107,8 @@ class MessageMapper {
 		int $highestKnownUid,
 		LoggerInterface $logger,
 		PerformanceLoggerTask $perf,
-		string $userId): array {
+		string $userId,
+		int $maxSyncDays = 0): array {
 		/**
 		 * To prevent memory exhaustion, we don't want to just ask for a list of
 		 * all UIDs and limit them client-side. Instead, we can (hopefully
@@ -118,9 +119,17 @@ class MessageMapper {
 		 * This logic might return fewer or more results than $maxResults
 		 */
 
+		$searchQuery = null;
+		if ($maxSyncDays > 0) {
+			$searchQuery = new Horde_Imap_Client_Search_Query();
+			$since = new \DateTime();
+			$since->modify("-{$maxSyncDays} days");
+			$searchQuery->dateSearch($since, Horde_Imap_Client_Search_Query::DATE_SINCE, false);
+		}
+
 		$metaResults = $client->search(
 			$mailbox,
-			null,
+			$searchQuery,
 			[
 				'results' => [
 					Horde_Imap_Client::SEARCH_RESULTS_MIN,
@@ -221,7 +230,7 @@ class MessageMapper {
 			// Clean up some unused variables before recursion
 			unset($fetchResult, $idsToFetch, $query);
 			$perf->step('free memory before recursion');
-			return $this->findAll($client, $mailbox, $maxResults, $upper, $logger, $perf, $userId);
+			return $this->findAll($client, $mailbox, $maxResults, $upper, $logger, $perf, $userId, $maxSyncDays);
 		}
 		$uidCandidates = array_filter(
 			array_map(
@@ -259,6 +268,56 @@ class MessageMapper {
 			'all' => $highestUidToFetch === $max,
 			'total' => $total,
 		];
+	}
+
+	/**
+	 * Find messages in a date range via IMAP SEARCH.
+	 *
+	 * Used by on-demand sync to fetch older messages outside the sync window.
+	 *
+	 * @param Horde_Imap_Client_Base $client
+	 * @param string $mailbox
+	 * @param \DateTime $since
+	 * @param \DateTime $before
+	 * @param string $userId
+	 * @param int $limit
+	 * @return list<IMAPMessage>
+	 */
+	public function findByDateRange(
+		Horde_Imap_Client_Base $client,
+		string $mailbox,
+		\DateTime $since,
+		\DateTime $before,
+		string $userId,
+		int $limit = 50,
+	): array {
+		$searchQuery = new Horde_Imap_Client_Search_Query();
+		$searchQuery->dateSearch($since, Horde_Imap_Client_Search_Query::DATE_SINCE, false);
+		$searchQuery->dateSearch($before, Horde_Imap_Client_Search_Query::DATE_BEFORE, false);
+
+		$results = $client->search(
+			$mailbox,
+			$searchQuery,
+			[
+				'results' => [Horde_Imap_Client::SEARCH_RESULTS_MATCH],
+				'sort' => [Horde_Imap_Client::SORT_REVERSE, Horde_Imap_Client::SORT_DATE],
+			]
+		);
+
+		$uids = $results['match']->ids;
+		if (empty($uids)) {
+			return [];
+		}
+
+		// Limit the number of UIDs to fetch
+		$uids = array_slice($uids, 0, $limit);
+
+		return $this->findByIds(
+			$client,
+			$mailbox,
+			new Horde_Imap_Client_Ids($uids),
+			$userId,
+		);
 	}
 
 	/**

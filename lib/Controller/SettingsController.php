@@ -127,4 +127,9 @@ class SettingsController extends Controller {
 		return new JSONResponse([]);
 	}
 
+	public function setMaxSyncDays(int $value): JSONResponse {
+		$this->config->setAppValue('mail', 'max_sync_days', (string)max(0, $value));
+		return new JSONResponse([]);
+	}
+
 }
