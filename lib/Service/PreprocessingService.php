@@ -57,7 +57,9 @@ class PreprocessingService {
 			}
 
 			$processedMessages = $this->previewEnhancer->process($account, $mailbox, $filteredMessages);
-			$this->logger->debug('Processed ' . count($processedMessages) . ' messages for structure data for mailbox ' . $mailbox->getId());
+			$nProcessed = count($processedMessages);
+			$mailboxId = $mailbox->getId();
+			$this->logger->debug("Processed $nProcessed messages for structure data for mailbox $mailboxId");
 		}
 	}
 }

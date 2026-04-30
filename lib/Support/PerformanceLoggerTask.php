@@ -52,8 +52,8 @@ class PerformanceLoggerTask {
 			$this->logger->debug(
 				sprintf(
 					$message . ' %d/%dMB memory used',
-					round(memory_get_usage() / 1024 / 1024),
-					round(memory_get_peak_usage() / 1024 / 1024)
+					round(memory_get_usage() / 1024.0 / 1024.0),
+					round(memory_get_peak_usage() / 1024.0 / 1024.0)
 				)
 			);
 		} else {

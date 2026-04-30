@@ -190,7 +190,7 @@ class TagMapper extends QBMapper {
 		$tags = [];
 		for ($i = 1; $i < 6; $i++) {
 			$tag = new Tag();
-			$tag->setImapLabel('$label' . $i);
+			$tag->setImapLabel("\$label$i");
 			$tag->setUserId($account->getUserId());
 			switch ($i) {
 				case 1:

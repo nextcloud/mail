@@ -42,7 +42,7 @@
 		"phpmailer/dkimvalidator": "^0.3.1",
 		"psr/log": "^3.0.2",
 		"rubix/ml": "2.5.3",
-		"sabberworm/php-css-parser": "^8.9.0",
+		"sabberworm/php-css-parser": "^9.3.0",
 		"wamania/php-stemmer": "4.0 as 3.0",
 		"youthweb/urllinker": "^2.1.0"
 	},

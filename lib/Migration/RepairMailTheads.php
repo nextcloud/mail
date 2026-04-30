@@ -49,7 +49,7 @@ class RepairMailTheads implements IRepairStep {
 		}
 
 		$count = $this->mapper->resetInReplyTo();
-		$this->logger->info('Repairing Mail Threading, ' . $count . ' messages updated');
+		$this->logger->info("Repairing Mail Threading, $count messages updated");
 		$output->info(sprintf('Repaired threads, %s messages updated', $count));
 	}
 }

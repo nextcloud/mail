@@ -44,7 +44,8 @@ class AddressCollector {
 	 * @return void
 	 */
 	public function addAddresses(string $userId, AddressList $addressList): void {
-		$this->logger->debug('collecting ' . count($addressList) . ' email addresses');
+		$nAddresses = count($addressList);
+		$this->logger->debug("collecting $nAddresses email addresses");
 		foreach ($addressList->iterate() as $address) {
 			/* @var $address Address */
 			$this->saveAddress($userId, $address);
@@ -82,7 +83,8 @@ class AddressCollector {
 	public function searchAddress(string $userId, string $term): array {
 		$this->logger->debug("searching for collected address <$term>");
 		$result = $this->mapper->findMatching($userId, $term);
-		$this->logger->debug('found ' . count($result) . ' matches in collected addresses');
+		$nResult = count($result);
+		$this->logger->debug("found $nResult matches in collected addresses");
 		return $result;
 	}
 }
