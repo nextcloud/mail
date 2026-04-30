@@ -52,6 +52,7 @@
 import iframeResize from '@iframe-resizer/parent'
 import { loadState } from '@nextcloud/initial-state'
 import { NcActionButton as ActionButton, NcActions as Actions } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
 import PrintScout from 'printscout'
 import IconDomain from 'vue-material-design-icons/Domain.vue'
 import IconMail from 'vue-material-design-icons/EmailOutline.vue'
@@ -61,6 +62,7 @@ import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
 import logger from '../logger.js'
 import { needsTranslation } from '../service/AiIntergrationsService.js'
 import { trustSender } from '../service/TrustedSenderService.js'
+import useMainStore from '../store/mainStore.js'
 
 const scout = new PrintScout()
 
@@ -104,6 +106,7 @@ export default {
 	},
 
 	computed: {
+		...mapStores(useMainStore),
 		sender() {
 			return this.message.from[0]?.email
 		},
@@ -178,12 +181,22 @@ export default {
 		async onShowBlockedContent() {
 			this.displayIframe()
 			await trustSender(this.message.from[0].email, 'individual', true)
+			this.mainStore.setSenderTrustedMutation({
+				id: this.message.databaseId,
+				trusted: true,
+			})
+			this.isSenderTrusted = true
 		},
 
 		async onShowBlockedContentForDomain() {
 			this.displayIframe()
 			// TODO: there might be more than one @ in an email address
 			await trustSender(this.domain, 'domain', true)
+			this.mainStore.setSenderTrustedMutation({
+				id: this.message.databaseId,
+				trusted: true,
+			})
+			this.isSenderTrusted = true
 		},
 	},
 }

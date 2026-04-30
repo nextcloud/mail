@@ -29,21 +29,24 @@ class TrustedSenderService implements ITrustedSenderService {
 		);
 	}
 
-	public function isSenderTrusted(string $uid, Message $message): bool {
+	public function isTrustedByMessage(string $uid, Message $message): bool {
 		$from = $message->getFrom();
 		$first = $from->first();
 		if ($first === null) {
 			return false;
 		}
-		$email = $first->getEmail();
+
+		try {
+			$email = $first->getEmail();
+		} catch (\Exception) {
+			return false;
+		}
+
 		if ($email === null) {
 			return false;
 		}
 
-		return $this->mapper->exists(
-			$uid,
-			$email
-		);
+		return $this->isTrusted($uid, $email);
 	}
 
 	#[\Override]

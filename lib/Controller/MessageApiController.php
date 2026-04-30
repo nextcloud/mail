@@ -278,7 +278,7 @@ class MessageApiController extends OCSController {
 			$a
 		), $json['attachments']);
 		$json['id'] = $message->getId();
-		$json['isSenderTrusted'] = $this->trustedSenderService->isSenderTrusted($this->userId, $message);
+		$json['isSenderTrusted'] = $this->trustedSenderService->isTrustedByMessage($this->userId, $message);
 
 		$smimeData = new SmimeData();
 		$smimeData->setIsEncrypted($message->isEncrypted() || $imapMessage->isEncrypted());

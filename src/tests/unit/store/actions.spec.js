@@ -674,4 +674,40 @@ describe('Vuex store actions', () => {
 			'abcdef123', // cache buster
 		)
 	})
+
+	it('merges trusted sender state from the envelope into fetched messages', async () => {
+		store.envelopes[123] = {
+			databaseId: 123,
+			isSenderTrusted: true,
+		}
+
+		MessageService.fetchMessage.mockResolvedValueOnce({
+			databaseId: 123,
+			body: 'Hello',
+		})
+
+		const message = await store.fetchMessage(123)
+
+		expect(message.isSenderTrusted).toBe(true)
+		expect(store.messages[123].isSenderTrusted).toBe(true)
+	})
+
+	it('updates envelope and message trust state locally', () => {
+		store.envelopes[123] = {
+			databaseId: 123,
+			isSenderTrusted: false,
+		}
+		store.messages[123] = {
+			databaseId: 123,
+			isSenderTrusted: false,
+		}
+
+		store.setSenderTrustedMutation({
+			id: 123,
+			trusted: true,
+		})
+
+		expect(store.envelopes[123].isSenderTrusted).toBe(true)
+		expect(store.messages[123].isSenderTrusted).toBe(true)
+	})
 })

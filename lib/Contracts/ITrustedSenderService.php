@@ -9,10 +9,13 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Contracts;
 
+use OCA\Mail\Db\Message;
 use OCA\Mail\Db\TrustedSender;
 
 interface ITrustedSenderService {
 	public function isTrusted(string $uid, string $email): bool;
+
+	public function isTrustedByMessage(string $uid, Message $message): bool;
 
 	public function trust(string $uid, string $email, string $type, ?bool $trust = true);
 

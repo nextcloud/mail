@@ -171,6 +171,20 @@ class MessagesController extends Controller {
 			$this->currentUserId,
 			$view
 		);
+		$trustedSenders = [];
+		$messages = array_map(function (Message $message) use (&$trustedSenders) {
+			$json = $message->jsonSerialize();
+			$cacheKey = json_encode($message->getFrom()->jsonSerialize());
+			if ($cacheKey === false) {
+				$json['isSenderTrusted'] = $this->trustedSenderService->isTrustedByMessage($this->currentUserId, $message);
+
+				return $json;
+			}
+
+			$json['isSenderTrusted'] = $trustedSenders[$cacheKey] ??= $this->trustedSenderService->isTrustedByMessage($this->currentUserId, $message);
+
+			return $json;
+		}, $messages);
 
 		$response = new JSONResponse($messages);
 		if ($v !== null && $v !== '') {
@@ -201,14 +215,15 @@ class MessagesController extends Controller {
 		}
 
 		$this->logger->debug("loading message <$id>");
-
-		return new JSONResponse(
-			$this->mailSearch->findMessage(
-				$account,
-				$mailbox,
-				$message
-			)
+		$message = $this->mailSearch->findMessage(
+			$account,
+			$mailbox,
+			$message
 		);
+		$json = $message->jsonSerialize();
+		$json['isSenderTrusted'] = $this->trustedSenderService->isTrustedByMessage($this->currentUserId, $message);
+
+		return new JSONResponse($json);
 	}
 
 	/**
@@ -266,7 +281,6 @@ class MessagesController extends Controller {
 		$json['accountId'] = $account->getId();
 		$json['mailboxId'] = $mailbox->getId();
 		$json['databaseId'] = $message->getId();
-		$json['isSenderTrusted'] = $this->isSenderTrusted($message);
 
 		$smimeData = new SmimeData();
 		$smimeData->setIsEncrypted($message->isEncrypted() || $imapMessage->isEncrypted());
@@ -336,22 +350,6 @@ class MessagesController extends Controller {
 		$response = new JSONResponse(['valid' => $this->dkimService->validate($account, $mailbox, $message->getUid())]);
 		$response->cacheFor(24 * 60 * 60, false, true);
 		return $response;
-	}
-
-	private function isSenderTrusted(Message $message): bool {
-		$from = $message->getFrom();
-		$first = $from->first();
-		if ($first === null) {
-			return false;
-		}
-		$email = $first->getEmail();
-		if ($email === null) {
-			return false;
-		}
-		return $this->trustedSenderService->isTrusted(
-			$this->currentUserId,
-			$email
-		);
 	}
 
 	/**

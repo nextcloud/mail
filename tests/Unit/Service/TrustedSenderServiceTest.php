@@ -10,6 +10,10 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Mail_Rfc822_Address;
+use OCA\Mail\Address;
+use OCA\Mail\AddressList;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Db\TrustedSenderMapper;
 use OCA\Mail\Service\TrustedSenderService;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -59,6 +63,32 @@ class TrustedSenderServiceTest extends TestCase {
 		);
 
 		$this->assertFalse($trusted);
+	}
+
+	public function testIsTrustedByMessage(): void {
+		$message = new Message();
+		$message->setFrom(new AddressList([Address::fromRaw('Christoph', 'christoph@next.cloud')]));
+
+		$this->mapper->expects($this->once())
+			->method('exists')
+			->with('greta', 'christoph@next.cloud')
+			->willReturn(true);
+
+		$this->assertTrue($this->service->isTrustedByMessage('greta', $message));
+	}
+
+	public function testIsTrustedByMessageReturnsFalseOnInvalidEmailEncoding(): void {
+		$invalidAddress = new Horde_Mail_Rfc822_Address();
+		$invalidAddress->mailbox = "\xC3";
+		$invalidAddress->host = 'example.com';
+
+		$message = new Message();
+		$message->setFrom(new AddressList([Address::fromHorde($invalidAddress)]));
+
+		$this->mapper->expects($this->never())
+			->method('exists');
+
+		$this->assertFalse($this->service->isTrustedByMessage('greta', $message));
 	}
 
 	public function testTrustAlreadyTrusted(): void {

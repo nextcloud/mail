@@ -282,6 +282,125 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expectedRichResponse, $actualRichResponse);
 	}
 
+	public function testShowIncludesTrustedSenderFlag(): void {
+		$messageId = 123;
+		$mailboxId = 13;
+		$accountId = 17;
+
+		$message = new DbMessage();
+		$message->setId($messageId);
+		$message->setMailboxId($mailboxId);
+		$message->setFrom(new AddressList([Address::fromRaw('Alice', 'alice@example.com')]));
+
+		$mailbox = new Mailbox();
+		$mailbox->setAccountId($accountId);
+
+		$processed = new DbMessage();
+		$processed->setId($messageId);
+		$processed->setMailboxId($mailboxId);
+		$processed->setUid(77);
+		$processed->setFrom(new AddressList([Address::fromRaw('Alice', 'alice@example.com')]));
+
+		$this->mailManager->expects(self::once())
+			->method('getMessage')
+			->with($this->userId, $messageId)
+			->willReturn($message);
+		$this->mailManager->expects(self::once())
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
+		$this->mailSearch->expects(self::once())
+			->method('findMessage')
+			->with($this->account, $mailbox, $message)
+			->willReturn($processed);
+		$this->trustedSenderService->expects(self::once())
+			->method('isTrustedByMessage')
+			->with($this->userId, $processed)
+			->willReturn(true);
+
+		$response = $this->controller->show($messageId);
+
+		$this->assertTrue($response->getData()['isSenderTrusted']);
+	}
+
+	public function testGetBodyKeepsCachingAndOmitsTrustedSenderFlag(): void {
+		$messageId = 4321;
+		$mailboxId = 13;
+		$accountId = 17;
+
+		$message = new DbMessage();
+		$message->setId($messageId);
+		$message->setMailboxId($mailboxId);
+		$message->setUid(123);
+		$message->setFrom(new AddressList([Address::fromRaw('Alice', 'alice@example.com')]));
+
+		$mailbox = new Mailbox();
+		$mailbox->setId($mailboxId);
+		$mailbox->setAccountId($accountId);
+
+		$this->account
+			->method('getId')
+			->willReturn($accountId);
+
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$imapMessage = $this->createMock(IMAPMessage::class);
+
+		$this->mailManager->expects(self::once())
+			->method('getMessage')
+			->with($this->userId, $messageId)
+			->willReturn($message);
+		$this->mailManager->expects(self::once())
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
+		$this->clientFactory->expects(self::once())
+			->method('getClient')
+			->with($this->account)
+			->willReturn($client);
+		$this->mailManager->expects(self::once())
+			->method('getImapMessage')
+			->with($client, $this->account, $mailbox, 123, true)
+			->willReturn($imapMessage);
+		$imapMessage->expects(self::once())
+			->method('hasHtmlMessage')
+			->willReturn(false);
+		$imapMessage->expects(self::once())
+			->method('getFullMessage')
+			->with($messageId)
+			->willReturn(['attachments' => []]);
+		$client->expects(self::once())
+			->method('logout');
+		$this->itineraryService->expects(self::once())
+			->method('getCached')
+			->with($this->account, $mailbox, 123)
+			->willReturn(null);
+		$this->trustedSenderService->expects(self::never())
+			->method('isTrustedByMessage');
+		$imapMessage->expects(self::once())
+			->method('isEncrypted')
+			->willReturn(false);
+		$imapMessage->expects(self::once())
+			->method('isSigned')
+			->willReturn(false);
+		$this->dkimService->expects(self::once())
+			->method('getCached')
+			->with($this->account, $mailbox, 123)
+			->willReturn(null);
+
+		$response = $this->controller->getBody($messageId);
+
+		$this->assertSame('private, max-age=3600, immutable', $response->getHeaders()['Cache-Control'] ?? null);
+		$this->assertArrayNotHasKey('isSenderTrusted', $response->getData());
+	}
+
 	public function testDownloadAttachment() {
 		$accountId = 17;
 		$mailboxId = 987;
@@ -1222,6 +1341,53 @@ class MessagesControllerTest extends TestCase {
 		} else {
 			$this->assertEquals('no-cache, no-store, must-revalidate', $cacheForHeader);
 		}
+	}
+
+	public function testIndexIncludesTrustedSenderFlag(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setAccountId(100);
+		$this->mailManager->expects(self::once())
+			->method('getMailbox')
+			->with($this->userId, 100)
+			->willReturn($mailbox);
+		$mailAccount = new MailAccount();
+		$account = new Account($mailAccount);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with($this->userId, 100)
+			->willReturn($account);
+
+		$this->userPreferences->expects(self::once())
+			->method('getPreference')
+			->with($this->userId, 'sort-order', 'newest')
+			->willReturnArgument(2);
+
+		$message = new DbMessage();
+		$message->setId(77);
+		$message->setMailboxId(100);
+		$message->setUid(88);
+		$message->setFrom(new AddressList([Address::fromRaw('Alice', 'alice@example.com')]));
+
+		$this->mailSearch->expects(self::once())
+			->method('findMessages')
+			->with(
+				$account,
+				$mailbox,
+				'DESC',
+				null,
+				null,
+				20,
+				$this->userId,
+				'threaded',
+			)->willReturn([$message]);
+		$this->trustedSenderService->expects(self::once())
+			->method('isTrustedByMessage')
+			->with($this->userId, $message)
+			->willReturn(true);
+
+		$response = $this->controller->index(100, null, null, 20);
+
+		$this->assertTrue($response->getData()[0]['isSenderTrusted']);
 	}
 
 	public function testNeedsTranslationNoUser() {

@@ -1206,6 +1206,10 @@ export default function mainStoreActions() {
 				const message = await fetchMessage(id)
 				// Only commit if not undefined (not found)
 				if (message) {
+					const envelope = this.getEnvelope(id)
+					if (envelope?.isSenderTrusted !== undefined) {
+						message.isSenderTrusted = envelope.isSenderTrusted
+					}
 					this.addMessageMutation({
 						message,
 					})
@@ -2061,6 +2065,9 @@ export default function mainStoreActions() {
 			this.normalizeTags(envelope)
 			Vue.set(existing, 'flags', envelope.flags)
 			Vue.set(existing, 'tags', envelope.tags)
+			if (envelope.isSenderTrusted !== undefined) {
+				Vue.set(existing, 'isSenderTrusted', envelope.isSenderTrusted)
+			}
 		},
 		flagEnvelopeMutation({
 			envelope,
@@ -2192,6 +2199,17 @@ export default function mainStoreActions() {
 		},
 		addMessageMutation({ message }) {
 			Vue.set(this.messages, message.databaseId, message)
+		},
+		setSenderTrustedMutation({ id, trusted }) {
+			const envelope = this.envelopes[id]
+			if (envelope) {
+				Vue.set(envelope, 'isSenderTrusted', trusted)
+			}
+
+			const message = this.messages[id]
+			if (message) {
+				Vue.set(message, 'isSenderTrusted', trusted)
+			}
 		},
 		addMessageItinerariesMutation({
 			id,
