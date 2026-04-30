@@ -17,8 +17,8 @@ use OCA\Mail\Events\NewMessagesSynchronized;
 
 class NewMessagesSynchronizedTest extends TestCase {
 	public function testConstructorAndGetters(): void {
-		$account = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Mailbox::class);
+		$account = $this->createStub(Account::class);
+		$mailbox = $this->createStub(Mailbox::class);
 		$messages = [
 			$this->createMock(Message::class),
 			$this->createMock(Message::class),
@@ -33,8 +33,8 @@ class NewMessagesSynchronizedTest extends TestCase {
 	}
 
 	public function testConstructorWithEmptyMessages(): void {
-		$account = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Mailbox::class);
+		$account = $this->createStub(Account::class);
+		$mailbox = $this->createStub(Mailbox::class);
 		$messages = [];
 
 		$event = new NewMessagesSynchronized($account, $mailbox, $messages);
