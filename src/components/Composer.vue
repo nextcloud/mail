@@ -506,7 +506,6 @@ import { showError, showWarning } from '@nextcloud/dialogs'
 import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
 import { NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcActions as Actions, NcButton as ButtonVue, NcListItemIcon as ListItemIcon, NcIconSvgWrapper, NcSelect } from '@nextcloud/vue'
-import addressParser from 'address-rfc2822'
 import debouncePromise from 'debounce-promise'
 import debounce from 'lodash/fp/debounce.js'
 import trimStart from 'lodash/fp/trimCharsStart.js'
@@ -541,6 +540,7 @@ import { findRecipient } from '../service/AutocompleteService.js'
 import { savePreference } from '../service/PreferenceService.js'
 import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
+import { parseEmailList } from '../util/emailAddress.js'
 import { formatDateTime } from '../util/formatDateTime.js'
 import { detect, html, toHtml, toPlain } from '../util/text.js'
 import textBlockSvg from './../../img/text_snippet.svg'
@@ -1126,8 +1126,9 @@ export default {
 		/**
 		 * Called once a user leaves the recipient picker.
 		 *
-		 * If the user is typing something that looks like a valid email address, we clear the input (return true)
-		 * because the related code in onNewAddr will add the value as a recipient.
+		 * If the user is typing something that looks like a valid email address (or a
+		 * pasted list of addresses), we clear the input (return true) because the
+		 * related code in onNewAddr will add the value as a recipient.
 		 *
 		 * Otherwise, the user is still typing and we don't clear the input.
 		 *
@@ -1136,7 +1137,7 @@ export default {
 		 */
 		clearOnBlur(event) {
 			if (this.recipientSearchTerms[event]) {
-				return this.seemsValidEmailAddress(this.recipientSearchTerms[event])
+				return parseEmailList(this.recipientSearchTerms[event]).length > 0
 			}
 			return false
 		},
@@ -1471,22 +1472,53 @@ export default {
 				&& this.recipientSearchTerms[type] !== undefined
 				&& this.recipientSearchTerms[type] !== ''
 			) {
-				if (!this.seemsValidEmailAddress(this.recipientSearchTerms[type])) {
+				const parsedFromSearch = parseEmailList(this.recipientSearchTerms[type])
+				if (parsedFromSearch.length === 0) {
 					return
 				}
-				option = {}
-				option.email = this.recipientSearchTerms[type]
-				option.label = this.recipientSearchTerms[type]
 				this.recipientSearchTerms[type] = ''
-			}
 
-			if (list.some((recipient) => recipient.email === option?.email) || !option) {
+				let changed = false
+				for (const addr of parsedFromSearch) {
+					if (!list.some((recipient) => recipient.email === addr.email)) {
+						const recipient = { ...addr }
+						this.newRecipients.push(recipient)
+						list.push(recipient)
+						changed = true
+					}
+				}
+				if (changed) {
+					this.saveDraftDebounced()
+				}
 				return
 			}
-			const recipient = { ...option }
-			this.newRecipients.push(recipient)
-			list.push(recipient)
-			this.saveDraftDebounced()
+
+			if (!option) {
+				return
+			}
+
+			let changed = false
+			if (option.id) {
+				if (!list.some((recipient) => recipient.email === option.email)) {
+					const recipient = { ...option }
+					this.newRecipients.push(recipient)
+					list.push(recipient)
+					changed = true
+				}
+			} else {
+				const emailList = parseEmailList(option.email)
+				for (const addr of emailList) {
+					if (!list.some((recipient) => recipient.email === addr.email)) {
+						const recipient = { ...addr }
+						this.newRecipients.push(recipient)
+						list.push(recipient)
+						changed = true
+					}
+				}
+			}
+			if (changed) {
+				this.saveDraftDebounced()
+			}
 		},
 
 		async onSend() {
@@ -1655,7 +1687,7 @@ export default {
 		 * @return {{email: string, label: string}} The new option
 		 */
 		createRecipientOption(value) {
-			if (!this.seemsValidEmailAddress(value)) {
+			if (parseEmailList(value).length === 0) {
 				throw new Error('Skipping because it does not look like a valid email address')
 			}
 			return { email: value, label: value }
@@ -1682,20 +1714,6 @@ export default {
 			return option.email
 		},
 
-		/**
-		 * True when value looks like a valid email address
-		 *
-		 * @param {string} value to check if email address
-		 * @return {boolean}
-		 */
-		seemsValidEmailAddress(value) {
-			try {
-				addressParser.parse(value)
-				return true
-			} catch (error) {
-				return false
-			}
-		},
 	},
 }
 </script>
