@@ -134,7 +134,7 @@ class ProvisioningMapper extends QBMapper {
 		try {
 			return $this->findEntity($qb);
 		} catch (DoesNotExistException $e) {
-			$this->logger->error('Could not find entry with ID #' . $id);
+			$this->logger->error("Could not find entry with ID #$id");
 			return null;
 		}
 	}

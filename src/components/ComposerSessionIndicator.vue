@@ -97,7 +97,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '../../css/variables';
+@use '../../css/variables.scss';
 
 .composer-session {
 	position: fixed;

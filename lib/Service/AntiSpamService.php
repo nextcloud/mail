@@ -113,7 +113,7 @@ class AntiSpamService {
 		try {
 			$attachmentMessage = $this->mailManager->getMessage($userId, $messageId);
 		} catch (DoesNotExistException $e) {
-			$this->logger->error('Could not find reported email with message ID #' . $messageId, ['exception' => $e]);
+			$this->logger->error("Could not find reported email with message ID #$messageId", ['exception' => $e]);
 			return;
 		}
 
@@ -203,7 +203,7 @@ class AntiSpamService {
 				$mail->getRaw(false)
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
-			$this->logger->error('Could not move report email to sent mailbox, but the report email was sent. Reported email was id: #' . $messageId, ['exception' => $e]);
+			$this->logger->error("Could not move report email to sent mailbox, but the report email was sent. Reported email was id: #$messageId", ['exception' => $e]);
 		} finally {
 			$client->logout();
 		}

@@ -39,7 +39,7 @@ class SieveClientFactory {
 			}
 
 			if ($account->getMailAccount()->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
-				$logFile = $this->config->getSystemValue('datadirectory') . '/mail-' . $account->getUserId() . '-' . $account->getId() . '-sieve.log';
+				$logFile = $this->config->getSystemValue('datadirectory') . "/mail-{$account->getUserId()}-{$account->getId()}-sieve.log";
 			} else {
 				$logFile = null;
 			}

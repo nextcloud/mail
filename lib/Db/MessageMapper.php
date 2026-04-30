@@ -371,7 +371,7 @@ class MessageMapper extends QBMapper {
 		$this->db->beginTransaction();
 
 		$perf = $this->performanceLogger->start(
-			'partial sync ' . $account->getId() . ':' . $account->getName()
+			"partial sync {$account->getId()}:{$account->getName()}"
 		);
 
 		// MailboxId is the same for all messages according to updateBulk() call

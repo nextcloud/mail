@@ -97,7 +97,7 @@ class HtmlTest extends TestCase {
 		]);
 		$expected = implode('', [
 			"<style type=\"text/css\" data-original-content=\"$styleSheet\">",
-			"big{background-image:url(\"$blockedUrl\");}ul{list-style:url(\"$blockedUrl\") outside;}",
+			"big{background-image:url(\"$blockedUrl\")}ul{list-style:url(\"$blockedUrl\") outside}",
 			'</style>',
 		]);
 

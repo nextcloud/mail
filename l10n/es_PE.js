@@ -101,6 +101,7 @@ OC.L10N.register(
     "Select tags" : "Selecciona las etiquetas",
     "Custom" : "Personalizado",
     "Add tag" : "Agregar etiqueta",
+    "Task created" : "Tarea creada",
     "Deleted" : "Borrado",
     "Recipient" : "Destinatario",
     "Help" : "Ayuda",

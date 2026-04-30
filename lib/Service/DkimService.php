@@ -64,7 +64,7 @@ class DkimService implements IDkimService {
 			);
 
 			if ($fullText === null) {
-				throw new ServiceException('Could not fetch message source for uid ' . $id);
+				throw new ServiceException("Could not fetch message source for uid $id");
 			}
 		} finally {
 			$client->logout();
@@ -84,6 +84,7 @@ class DkimService implements IDkimService {
 	}
 
 	private function buildCacheKey(Account $account, Mailbox $mailbox, int $id): string {
-		return $account->getId() . '_' . $mailbox->getName() . '_' . $id;
+		$accountId = $account->getId();
+		return "{$accountId}_{$mailbox->getName()}_$id";
 	}
 }
