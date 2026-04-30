@@ -32,6 +32,16 @@
 							</template>
 							{{ account.emailAddress }}
 						</NcFormBoxButton>
+						<NcFormBoxButton
+							v-for="account in delegatedAccounts"
+							:key="account.id"
+							:aria-label="t('mail', 'Account settings')"
+							@click="openAccountSettings(account.id)">
+							<template #icon>
+								<IconArrow :size="20" />
+							</template>
+							{{ t('mail', '{email} (delegated)', {email: account.emailAddress}) }}
+						</NcFormBoxButton>
 						<NcButton
 							v-if="allowNewMailAccounts"
 							variant="secondary"
@@ -409,7 +419,11 @@ export default {
 		},
 
 		accountsWithEmail() {
-			return this.getAccounts.filter((account) => account && account.emailAddress)
+			return this.getAccounts.filter((account) => account && account.emailAddress && !account.isDelegated)
+		},
+
+		delegatedAccounts() {
+			return this.getAccounts.filter((account) => account && account.emailAddress && account.isDelegated)
 		},
 
 		sortFavorites: {

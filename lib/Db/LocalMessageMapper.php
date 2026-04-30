@@ -105,6 +105,19 @@ class LocalMessageMapper extends QBMapper {
 	}
 
 	/**
+	 * @throws DoesNotExistException
+	 */
+	public function findAccountIdForLocalMessage(int $localMessageId): int {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('account_id')
+			->from($this->getTableName())
+			->where($qb->expr()->eq('id', $qb->createNamedParameter($localMessageId, IQueryBuilder::PARAM_INT)));
+
+		$row = $this->findOneQuery($qb);
+		return (int)$row['account_id'];
+	}
+
+	/**
 	 * Find all messages that should be sent
 	 *
 	 * @param int $time upper bound send time stamp

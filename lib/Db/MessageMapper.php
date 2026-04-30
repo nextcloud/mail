@@ -131,6 +131,21 @@ class MessageMapper extends QBMapper {
 		return $results[0];
 	}
 
+	/**
+	 * @throws DoesNotExistException
+	 */
+	public function findAccountIdForMessage(int $messageId): int {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('mb.account_id')
+			->from($this->getTableName(), 'm')
+			->join('m', 'mail_mailboxes', 'mb',
+				$qb->expr()->eq('m.mailbox_id', 'mb.id', IQueryBuilder::PARAM_INT))
+			->where($qb->expr()->eq('m.id', $qb->createNamedParameter($messageId, IQueryBuilder::PARAM_INT)));
+
+		$row = $this->findOneQuery($qb);
+		return (int)$row['account_id'];
+	}
+
 	public function findAllUids(Mailbox $mailbox): array {
 		$query = $this->db->getQueryBuilder();
 

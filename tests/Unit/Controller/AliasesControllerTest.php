@@ -15,6 +15,7 @@ use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -35,6 +36,9 @@ class AliasesControllerTest extends TestCase {
 	/** @var AliasesService */
 	private $aliasService;
 
+	/** @var DelegationService */
+	private $delegationService;
+
 	public function setUp(): void {
 		parent::setUp();
 		$this->request = $this->getMockBuilder('OCP\IRequest')
@@ -48,7 +52,12 @@ class AliasesControllerTest extends TestCase {
 		$this->mailAccountMapper = $this->createMock(MailAccountMapper::class);
 
 		$this->aliasService = new AliasesService($this->aliasMapper, $this->mailAccountMapper);
-		$this->controller = new AliasesController($this->appName, $this->request, $this->aliasService, $this->userId);
+		$this->delegationService = $this->createMock(DelegationService::class);
+		$this->delegationService->method('resolveAccountUserId')
+			->willReturn($this->userId);
+		$this->delegationService->method('resolveAliasUserId')
+			->willReturn($this->userId);
+		$this->controller = new AliasesController($this->appName, $this->request, $this->aliasService, $this->userId, $this->delegationService);
 	}
 
 	public function testIndex(): void {

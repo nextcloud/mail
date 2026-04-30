@@ -158,6 +158,7 @@ class PageController extends Controller {
 		$accountsJson = [];
 		foreach ($mailAccounts as $mailAccount) {
 			$json = $mailAccount->jsonSerialize();
+			$json['isDelegated'] = false;
 			$json['aliases'] = $this->aliasesService->findAll($mailAccount->getId(),
 				$this->currentUserId);
 			try {
@@ -172,6 +173,26 @@ class PageController extends Controller {
 			}
 			$accountsJson[] = $json;
 		}
+
+		$delegatedAccounts = $this->accountService->findDelegatedAccounts($this->currentUserId);
+		foreach ($delegatedAccounts as $delegatedAccount) {
+			$json = $delegatedAccount->jsonSerialize();
+			$json['isDelegated'] = true;
+			$json['aliases'] = $this->aliasesService->findAll($delegatedAccount->getId(),
+				$delegatedAccount->getUserId());
+			try {
+				$mailboxes = $this->mailManager->getMailboxes($delegatedAccount);
+				$json['mailboxes'] = $mailboxes;
+			} catch (Throwable $ex) {
+				$this->logger->critical('Could not load delegated account mailboxes: ' . $ex->getMessage(), [
+					'exception' => $ex,
+				]);
+				$json['mailboxes'] = [];
+				$json['error'] = true;
+			}
+			$accountsJson[] = $json;
+		}
+
 		$this->initialStateService->provideInitialState(
 			'accounts',
 			$accountsJson

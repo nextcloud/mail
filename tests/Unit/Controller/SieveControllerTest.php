@@ -43,6 +43,9 @@ class SieveControllerTest extends TestCase {
 				'userId' => '1',
 			]
 		);
+		$this->serviceMock->getParameter('delegationService')
+			->method('resolveAccountUserId')
+			->willReturn('1');
 		$this->sieveController = $this->serviceMock->getService();
 	}
 
