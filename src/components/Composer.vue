@@ -260,8 +260,7 @@
 				@input="onEditorInput"
 				@ready="onEditorReady"
 				@mention="handleMention"
-				@submit="onEditorSubmit"
-				@show-toolbar="handleShow" />
+				@submit="onEditorSubmit" />
 			<MailvelopeEditor
 				v-else
 				ref="mailvelopeEditor"
@@ -710,6 +709,7 @@ export default {
 			type: Array,
 			required: true,
 		},
+
 	},
 
 	data() {
@@ -1138,10 +1138,6 @@ export default {
 				return this.seemsValidEmailAddress(this.recipientSearchTerms[event])
 			}
 			return false
-		},
-
-		handleShow(event) {
-			this.$emit('show-toolbar', event)
 		},
 
 		openPicker() {
