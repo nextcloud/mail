@@ -29,6 +29,7 @@
 					:loading-more="false"
 					:load-more-button="false"
 					:skip-transition="skipListTransition"
+					:date-grouped="true"
 					@delete="onDelete" />
 			</div>
 		</template>
