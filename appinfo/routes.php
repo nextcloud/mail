@@ -341,6 +341,11 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'settings#setAllowNewMailAliases',
+			'url' => '/api/settings/allownewaliases',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'settings#setEnabledLlmProcessing',
 			'url' => '/api/settings/llm',
 			'verb' => 'PUT'

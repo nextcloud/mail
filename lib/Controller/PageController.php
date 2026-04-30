@@ -305,6 +305,11 @@ class PageController extends Controller {
 		);
 
 		$this->initialStateService->provideInitialState(
+			'allow-new-aliases',
+			$this->config->getAppValue('mail', 'allow_new_mail_aliases', 'yes') === 'yes'
+		);
+
+		$this->initialStateService->provideInitialState(
 			'llm_summaries_available',
 			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class)
 		);
