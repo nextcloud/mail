@@ -81,6 +81,43 @@ class HtmlTest extends TestCase {
 		];
 	}
 
+	public function testSanitizeHtmlMailBodyRewritesCidToUrl(): void {
+		$attachmentUrl = 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachment/7';
+		$urlGenerator = $this->createMock(IURLGenerator::class);
+		$urlGenerator->expects(self::once())
+			->method('linkToRouteAbsolute')
+			->with('mail.messages.downloadAttachment', ['id' => 42, 'attachmentId' => '7'])
+			->willReturn($attachmentUrl);
+		$request = $this->createMock(IRequest::class);
+		$hmacGenerator = $this->createMock(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$inlineAttachments = [['id' => '7', 'cid' => 'image001@example.com']];
+
+		$result = $html->sanitizeHtmlMailBody(42, '<img src="cid:image001@example.com">', $inlineAttachments);
+
+		$this->assertStringContainsString($attachmentUrl, $result);
+		$this->assertStringNotContainsString('src="cid:', $result);
+	}
+
+	public function testSanitizeHtmlMailBodySetsDataCidOnInlineImage(): void {
+		$attachmentUrl = 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachment/7';
+		$urlGenerator = $this->createMock(IURLGenerator::class);
+		$urlGenerator->expects(self::once())
+			->method('linkToRouteAbsolute')
+			->with('mail.messages.downloadAttachment', ['id' => 42, 'attachmentId' => '7'])
+			->willReturn($attachmentUrl);
+		$request = $this->createMock(IRequest::class);
+		$hmacGenerator = $this->createMock(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$inlineAttachments = [['id' => '7', 'cid' => 'image001@example.com']];
+
+		$result = $html->sanitizeHtmlMailBody(42, '<img src="cid:image001@example.com">', $inlineAttachments);
+
+		$this->assertStringContainsString('data-cid="image001@example.com"', $result);
+	}
+
 	public function testSanitizeStyleSheet() {
 		$blockedUrl = '/apps/mail/img/blocked-image.png';
 		$urlGenerator = self::createMock(IURLGenerator::class);

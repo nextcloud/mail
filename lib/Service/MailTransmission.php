@@ -138,8 +138,8 @@ class MailTransmission implements IMailTransmission {
 		$mimePart = $mimeMessage->build(
 			$localMessage->getBodyPlain(),
 			$localMessage->getBodyHtml(),
+			$localMessage->isPgpMime() === true,
 			$attachmentParts,
-			$localMessage->isPgpMime() === true
 		);
 
 		// TODO: add smimeEncrypt check if implemented

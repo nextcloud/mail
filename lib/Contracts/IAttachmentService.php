@@ -12,6 +12,7 @@ namespace OCA\Mail\Contracts;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Service\Attachment\UploadedFile;
+use OCP\Files\SimpleFS\ISimpleFile;
 
 interface IAttachmentService {
 	/**
@@ -22,8 +23,8 @@ interface IAttachmentService {
 	/**
 	 * Try to get an attachment by id
 	 *
+	 * @return array{0: LocalAttachment, 1: ISimpleFile}
 	 * @throws AttachmentNotFoundException
-	 * @return array of LocalAttachment and ISimpleFile
 	 */
 	public function getAttachment(string $userId, int $id): array;
 

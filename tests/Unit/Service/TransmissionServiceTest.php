@@ -91,6 +91,7 @@ class TransmissionServiceTest extends TestCase {
 		$attachment = new LocalAttachment();
 		$attachment->setFileName('test.txt');
 		$attachment->setMimeType('text/plain');
+		$attachment->setDisposition(LocalAttachment::DISPOSITION_ATTACHMENT);
 
 		$file = new InMemoryFile(
 			'test.txt',
@@ -106,6 +107,30 @@ class TransmissionServiceTest extends TestCase {
 		$part = $this->transmissionService->handleAttachment($account, ['id' => 1, 'type' => 'local']);
 
 		$this->assertEquals('test.txt', $part->getContentTypeParameter('name'));
+	}
+
+	public function testHandleAttachmentInlineWithContentId(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('bob');
+		$account = new Account($mailAccount);
+
+		$attachment = new LocalAttachment();
+		$attachment->setFileName('logo.png');
+		$attachment->setMimeType('image/png');
+		$attachment->setDisposition(LocalAttachment::DISPOSITION_INLINE);
+		$attachment->setContentId('img001@example.com');
+
+		$file = new InMemoryFile('logo.png', 'fake png content');
+
+		$this->attachmentService->expects(self::once())
+			->method('getAttachment')
+			->willReturn([$attachment, $file]);
+
+		$part = $this->transmissionService->handleAttachment($account, ['id' => 1, 'type' => 'local']);
+
+		$this->assertEquals('inline', $part->getDisposition());
+		$this->assertEquals('img001@example.com', $part->getContentId());
+		$this->assertEquals('logo.png', $part->getContentTypeParameter('name'));
 	}
 
 	public function testHandleAttachmentNoId(): void {
@@ -355,23 +380,48 @@ class TransmissionServiceTest extends TestCase {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('bob');
 		$account = new Account($mailAccount);
-
 		$attachment = new LocalAttachment();
-		$attachment->setFileName('event.ics');
-		$attachment->setMimeType('text/calendar; method=REQUEST');
-
+		$attachment->setFileName(null);
+		$attachment->setMimeType('text/calendar; method=REQUEST; charset="utf-8"; name=event.ics');
+		// iMIP attachments must not carry a Content-Disposition header.
+		// See https://github.com/nextcloud/mail/issues/10416
+		$attachment->setDisposition(LocalAttachment::DISPOSITION_OMIT);
 		$file = new InMemoryFile(
 			'event.ics',
 			"BEGIN:VCALENDAR\nEND:VCALENDAR"
 		);
-
 		$this->attachmentService->expects(self::once())
 			->method('getAttachment')
 			->willReturn([$attachment, $file]);
 
 		$part = $this->transmissionService->handleAttachment($account, ['id' => 1, 'type' => 'local']);
 
-		$this->assertEquals('event.ics', $part->getContentTypeParameter('name'));
+		$this->assertEquals('text/calendar', $part->getType());
 		$this->assertEquals('REQUEST', $part->getContentTypeParameter('method'));
+		$this->assertEquals('utf-8', $part->getContentTypeParameter('charset'));
+		$this->assertEquals('event.ics', $part->getContentTypeParameter('name'));
+	}
+
+	public function testHandleAttachmentImipOmitsContentDisposition(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('bob');
+		$account = new Account($mailAccount);
+		$attachment = new LocalAttachment();
+		$attachment->setFileName(null);
+		$attachment->setMimeType('text/calendar; method=REQUEST; charset="utf-8"; name=event.ics');
+		// iMIP attachments must not carry a Content-Disposition header.
+		// See https://github.com/nextcloud/mail/issues/10416
+		$attachment->setDisposition(LocalAttachment::DISPOSITION_OMIT);
+		$file = new InMemoryFile(
+			'event.ics',
+			"BEGIN:VCALENDAR\nEND:VCALENDAR"
+		);
+		$this->attachmentService->expects(self::once())
+			->method('getAttachment')
+			->willReturn([$attachment, $file]);
+
+		$part = $this->transmissionService->handleAttachment($account, ['id' => 1, 'type' => 'local']);
+
+		$this->assertEquals('', $part->getDisposition());
 	}
 }

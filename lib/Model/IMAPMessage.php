@@ -33,6 +33,16 @@ use function trim;
 
 /**
  * @psalm-import-type MailIMAPFullMessage from ResponseDefinitions
+ *
+ * @psalm-type IMAPAttachment = array{
+ *      id: string|null,
+ *      messageId: int,
+ *      fileName: string|null,
+ *      mime: string,
+ *      size: int,
+ *      cid: string|null,
+ *      disposition: string,
+ *  }
  */
 class IMAPMessage implements IMessage, JsonSerializable {
 	use ConvertAddresses;
@@ -53,6 +63,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	public string $plainMessage;
 	public string $htmlMessage;
 	public array $attachments;
+	/** @var list<IMAPAttachment> */
 	public array $inlineAttachments;
 	private bool $hasAttachments;
 	public array $scheduling;
@@ -71,6 +82,9 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	private bool $signatureIsValid;
 	private bool $isPgpMimeEncrypted;
 
+	/**
+	 * @param list<IMAPAttachment> $inlineAttachments
+	 */
 	public function __construct(int $uid,
 		string $messageId,
 		array $flags,
@@ -304,6 +318,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		if ($this->hasHtmlMessage) {
 			$data['hasHtmlBody'] = true;
 			$data['attachments'] = $this->attachments;
+			$data['inlineAttachments'] = $this->inlineAttachments;
 			return $data;
 		}
 
@@ -311,6 +326,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		[$mailBody, $signature] = $this->htmlService->parseMailBody($mailBody);
 		$data['signature'] = $signature;
 		$data['attachments'] = array_merge($this->attachments, $this->inlineAttachments);
+		$data['inlineAttachments'] = [];
 		if ($loadBody) {
 			$data['body'] = $mailBody;
 		}
@@ -349,15 +365,11 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * @return string
 	 */
 	public function getHtmlBody(int $id): string {
-		return $this->htmlService->sanitizeHtmlMailBody($this->htmlMessage, $id, function ($cid) {
-			$match = array_filter($this->inlineAttachments,
-				static fn ($a) => $a['cid'] === $cid);
-			$match = array_shift($match);
-			if ($match === null) {
-				return null;
-			}
-			return $match['id'];
-		});
+		return $this->htmlService->sanitizeHtmlMailBody(
+			$id,
+			$this->htmlMessage,
+			$this->inlineAttachments,
+		);
 	}
 
 	/**

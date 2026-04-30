@@ -23,6 +23,8 @@ class Attachment {
 		string $type,
 		string $content,
 		int $size,
+		public readonly ?string $contentId,
+		public readonly ?string $disposition,
 	) {
 		$this->id = $id;
 		$this->name = $name;
@@ -32,12 +34,19 @@ class Attachment {
 	}
 
 	public static function fromMimePart(Horde_Mime_Part $mimePart): self {
+		$disposition = $mimePart->getDisposition();
+		if ($disposition === '') {
+			$disposition = null;
+		}
+
 		return new Attachment(
 			$mimePart->getMimeId(),
 			$mimePart->getName(),
 			$mimePart->getType(),
 			$mimePart->getContents(),
 			(int)$mimePart->getBytes(),
+			$mimePart->getContentId(),
+			$disposition,
 		);
 	}
 

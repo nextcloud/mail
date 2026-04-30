@@ -20,7 +20,7 @@ use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Socket;
 use Horde_Mime_Exception;
 use Horde_Mime_Headers;
-use Horde_Mime_Headers_ContentParam;
+use Horde_Mime_Headers_ContentParam_ContentDisposition;
 use Horde_Mime_Headers_ContentParam_ContentType;
 use Horde_Mime_Headers_ContentTransferEncoding;
 use Horde_Mime_Part;
@@ -804,24 +804,15 @@ class MessageMapper {
 
 		$mimePart = new Horde_Mime_Part();
 
-		// Serve all files with a content-disposition of "attachment" to prevent Cross-Site Scripting
-		$mimePart->setDisposition('attachment');
+		$contentId = $mimeHeaders['content-id']?->value_single;
+		if ($contentId !== null) {
+			$mimePart->setContentId($contentId);
+		}
 
-		// Extract headers from part
-		$cdEl = $mimeHeaders['content-disposition'];
-		$contentDisposition = $cdEl instanceof Horde_Mime_Headers_ContentParam
-			? array_change_key_case($cdEl->params, CASE_LOWER)
-			: null;
-		if (!is_null($contentDisposition) && isset($contentDisposition['filename'])) {
-			$mimePart->setDispositionParameter('filename', $contentDisposition['filename']);
-		} else {
-			$ctEl = $mimeHeaders['content-type'];
-			$contentTypeParams = $ctEl instanceof Horde_Mime_Headers_ContentParam
-				? array_change_key_case($ctEl->params, CASE_LOWER)
-				: null;
-			if (isset($contentTypeParams['name'])) {
-				$mimePart->setContentTypeParameter('name', $contentTypeParams['name']);
-			}
+		$contentDisposition = $mimeHeaders['content-disposition'];
+		if ($contentDisposition instanceof Horde_Mime_Headers_ContentParam_ContentDisposition) {
+			$mimePart->setDisposition($contentDisposition->value_single);
+			$mimePart->setDispositionParameter('filename', $contentDisposition['filename'] ?? null);
 		}
 
 		// Content transfer encoding
@@ -830,17 +821,15 @@ class MessageMapper {
 			$mimePart->setTransferEncoding($tmp);
 		}
 
-		/* Content type */
-		$contentType = $mimeHeaders['content-type']?->value_single;
-		if (!is_null($contentType) && str_contains($contentType, 'text/calendar')) {
-			$mimePart->setType('text/calendar');
-			if ($mimePart->getContentTypeParameter('name') === null) {
-				$mimePart->setContentTypeParameter('name', 'calendar.ics');
+		$contentType = $mimeHeaders['content-type'];
+		if ($contentType instanceof Horde_Mime_Headers_ContentParam_ContentType) {
+			if (str_contains($contentType->value_single, 'text/calendar')) {
+				$mimePart->setType('text/calendar');
+				$mimePart->setContentTypeParameter('name', $contentType['name'] ?? 'calendar.ics');
+			} else {
+				$mimePart->setType($contentType->value_single);
+				$mimePart->setContentTypeParameter('name', $contentType['name'] ?? null);
 			}
-		} else {
-			// To prevent potential problems with the SOP we serve all files but calendar entries with the
-			// MIME type "application/octet-stream"
-			$mimePart->setType('application/octet-stream');
 		}
 
 		$mimePart->setContents($body);
