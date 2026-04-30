@@ -7,13 +7,15 @@ declare(strict_types=1);
  */
 namespace OCA\Mail\Send;
 
+use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\IMAP\MessageMapper;
-use OCP\AppFramework\Db\DoesNotExistException;
+use OCA\Mail\Service\MailManager;
 use Psr\Log\LoggerInterface;
 
 class CopySentMessageHandler extends AHandler {
@@ -21,6 +23,7 @@ class CopySentMessageHandler extends AHandler {
 		private MailboxMapper $mailboxMapper,
 		private LoggerInterface $logger,
 		private MessageMapper $messageMapper,
+		private MailManager $mailManager,
 	) {
 	}
 
@@ -40,30 +43,7 @@ class CopySentMessageHandler extends AHandler {
 			return $localMessage;
 		}
 
-		$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
-		if ($sentMailboxId === null) {
-			// We can't write the "sent mailbox" status here bc that would trigger an additional send.
-			// Thus, we leave the "imap copy to sent mailbox" status.
-			$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
-			$this->logger->warning("No sent mailbox exists, can't save sent message");
-			return $localMessage;
-		}
-
-		// Save the message in the sent mailbox
-		try {
-			$sentMailbox = $this->mailboxMapper->findById(
-				$sentMailboxId
-			);
-		} catch (DoesNotExistException $e) {
-			// We can't write the "sent mailbox" status here bc that would trigger an additional send.
-			// Thus, we leave the "imap copy to sent mailbox" status.
-			$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
-			$this->logger->error('Sent mailbox could not be found', [
-				'exception' => $e,
-			]);
-
-			return $localMessage;
-		}
+		$sentMailbox = $this->findOrCreateSentMailbox($account);
 
 		try {
 			$this->messageMapper->save(
@@ -81,5 +61,19 @@ class CopySentMessageHandler extends AHandler {
 		}
 
 		return $this->processNext($account, $localMessage, $client);
+	}
+
+	private function findOrCreateSentMailbox(Account $account): Mailbox {
+		$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
+
+		if ($sentMailboxId === null) {
+			return $this->mailManager->createMailbox(
+				$account,
+				'Sents',
+				[Horde_Imap_Client::SPECIALUSE_SENT]
+			);
+		}
+
+		return $this->mailboxMapper->findById($sentMailboxId);
 	}
 }
