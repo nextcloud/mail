@@ -16,39 +16,6 @@
 					<h2 dir="auto" :title="threadSubject">
 						{{ threadSubject }}
 					</h2>
-					<div v-if="thread.length" ref="avatarHeader" class="avatar-header">
-						<!-- Participants that can fit in the parent div -->
-						<RecipientBubble
-							v-for="participant in threadParticipants.slice(0, participantsToDisplay)"
-							:key="participant.email"
-							:email="participant.email"
-							:label="participant.label" />
-						<!-- Indicator to show that there are more participants than displayed -->
-						<NcPopover
-							v-if="threadParticipants.length > participantsToDisplay"
-							class="avatar-more">
-							<template #trigger="{ attrs }">
-								<span
-									class="avatar-more"
-									v-bind="attrs">
-									{{ moreParticipantsString }}
-								</span>
-							</template>
-							<RecipientBubble
-								v-for="participant in threadParticipants.slice(participantsToDisplay)"
-								:key="participant.email"
-								:title="participant.email"
-								:email="participant.email"
-								:label="participant.label" />
-						</NcPopover>
-						<!-- Remaining participants, if any (Needed to have avatarHeader reactive) -->
-						<RecipientBubble
-							v-for="participant in threadParticipants.slice(participantsToDisplay)"
-							:key="participant.email"
-							class="avatar-hidden"
-							:email="participant.email"
-							:label="participant.label" />
-					</div>
 				</div>
 			</div>
 			<ThreadSummary v-if="showSummaryBox" :loading="summaryLoading" :summary="summaryText" />
@@ -73,13 +40,10 @@
 <script>
 import { showError } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import { NcAppContentDetails as AppContentDetails, NcPopover } from '@nextcloud/vue'
-import debounce from 'lodash/fp/debounce.js'
+import { NcAppContentDetails as AppContentDetails } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
-import { prop, uniqBy } from 'ramda'
 import Error from './Error.vue'
 import Loading from './Loading.vue'
-import RecipientBubble from './RecipientBubble.vue'
 import ThreadEnvelope from './ThreadEnvelope.vue'
 import ThreadSummary from './ThreadSummary.vue'
 import logger from '../logger.js'
@@ -91,20 +55,11 @@ import { formatDateTimeFromUnix } from '../util/formatDateTime.js'
 export default {
 	name: 'Thread',
 	components: {
-		RecipientBubble,
 		ThreadSummary,
 		AppContentDetails,
 		Error,
 		Loading,
 		ThreadEnvelope,
-		NcPopover,
-	},
-
-	props: {
-		currentAccountEmail: {
-			type: String,
-			required: true,
-		},
 	},
 
 	data() {
@@ -115,8 +70,6 @@ export default {
 			errorMessage: '',
 			errorTitle: '',
 			expandedThreads: [],
-			participantsToDisplay: 999,
-			resizeDebounced: debounce(500, this.updateParticipantsToDisplay),
 			enabledThreadSummary: loadState('mail', 'llm_summaries_available', false),
 			summaryText: '',
 			summaryError: false,
@@ -126,11 +79,6 @@ export default {
 
 	computed: {
 		...mapStores(useMainStore),
-		moreParticipantsString() {
-			// Returns a number showing the number of thread participants that are not shown in the avatar-header
-			return `+${this.threadParticipants.length - this.participantsToDisplay}`
-		},
-
 		threadId() {
 			return parseInt(this.$route.params.threadId, 10)
 		},
@@ -178,13 +126,6 @@ export default {
 			}
 		},
 
-		threadParticipants() {
-			const recipients = this.thread.flatMap((envelope) => {
-				return envelope.from.concat(envelope.to).concat(envelope.cc)
-			}).filter((participant) => participant.email !== this.currentAccountEmail)
-			return uniqBy(prop('email'), recipients)
-		},
-
 		threadSubject() {
 			const thread = this.thread
 			if (thread.length === 0) {
@@ -217,12 +158,10 @@ export default {
 
 	created() {
 		this.resetThread()
-		window.addEventListener('resize', this.resizeDebounced)
 		window.addEventListener('keydown', this.handleKeyDown)
 	},
 
 	beforeUnmount() {
-		window.removeEventListener('resize', this.resizeDebounced)
 		window.removeEventListener('keydown', this.handleKeyDown)
 	},
 
@@ -241,44 +180,6 @@ export default {
 				logger.error('Summarizing thread failed', { error })
 			} finally {
 				this.summaryLoading = false
-			}
-		},
-
-		updateParticipantsToDisplay() {
-			// Wait until everything is in place
-			if (!this.$refs.avatarHeader || !this.threadParticipants) {
-				return
-			}
-
-			// Compute the number of participants to display depending on the width available
-			const avatarHeader = this.$refs.avatarHeader
-			const maxWidth = (avatarHeader.clientWidth - 100) // Reserve 100px for the avatar-more span
-			let childrenWidth = 0
-			let fits = 0
-			let idx = 0
-			while (childrenWidth < maxWidth && fits < this.threadParticipants.length) {
-				// Skipping the 'avatar-more' span
-				if (avatarHeader.childNodes[idx].clientWidth === undefined) {
-					idx += 3
-					continue
-				}
-				childrenWidth += avatarHeader.childNodes[idx].clientWidth
-				fits++
-				idx++
-			}
-
-			if (childrenWidth > maxWidth) {
-				// There's not enough space to show all thread participants
-				if (fits > 1) {
-					this.participantsToDisplay = fits - 1
-				} else if (fits === 0) {
-					this.participantsToDisplay = 1
-				} else {
-					this.participantsToDisplay = fits
-				}
-			} else {
-				// There's enough space to show all thread participants
-				this.participantsToDisplay = this.threadParticipants.length
 			}
 		},
 
@@ -316,7 +217,6 @@ export default {
 			if (this.mainStore.getPreference('layout-message-view', 'threaded') === 'threaded') {
 				await this.fetchThread()
 			}
-			this.updateParticipantsToDisplay()
 			this.updateSummary()
 			this.loadedThreads = 0
 		},
@@ -734,35 +634,6 @@ export default {
 	.icon-reply-all-white {
 		background-position: calc(var(--default-grid-baseline) * 3) center;
 	}
-}
-
-.avatar-header {
-	height: var(--default-clickable-area);
-	overflow: hidden;
-	display: flex;
-	align-items: stretch;
-
-	:deep(.v-popper--theme-dropdown.v-popper__popper .v-popper__inner) {
-		height: 300px;
-		width: 250px;
-		overflow: auto;
-	}
-}
-
-.avatar-more {
-	display: flex;
-	background-color: var(--color-background-dark);
-	border-radius: var(--border-radius-large);
-	align-items: center;
-	cursor: pointer;
-}
-
-.v-popper.avatar-more {
-	padding: calc(var(--default-grid-baseline) * 2);
-}
-
-.avatar-hidden {
-	visibility: hidden;
 }
 
 .app-content-list-item-star.icon-starred {
