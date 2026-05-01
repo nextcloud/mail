@@ -5,8 +5,8 @@
 // Please pull this list from, and only from https://publicsuffix.org/list/public_suffix_list.dat,
 // rather than any other VCS sites. Pulling from any other URL is not guaranteed to be supported.
 
-// VERSION: 2026-04-10_20-27-44_UTC
-// COMMIT: 8f9e04f2be9098ada07aa3cf13592dfe78870985
+// VERSION: 2026-05-01_02-51-25_UTC
+// COMMIT: 8b4345f9a2513011b21e6fc7b8a7197a849be52c
 
 // Instructions on pulling and using this list can be found at https://publicsuffix.org/list/.
 
@@ -6824,7 +6824,7 @@ org.zw
 
 // newGTLDs
 
-// List of new gTLDs imported from https://www.icann.org/resources/registries/gtlds/v2/gtlds.json on 2026-04-10T15:53:10Z
+// List of new gTLDs imported from https://www.icann.org/resources/registries/gtlds/v2/gtlds.json on 2026-04-30T16:18:08Z
 // This list is auto-generated, don't edit it manually.
 // aaa : American Automobile Association, Inc.
 // https://www.iana.org/domains/root/db/aaa.html
@@ -7010,7 +7010,7 @@ anquan
 // https://www.iana.org/domains/root/db/anz.html
 anz
 
-// aol : Yahoo Inc.
+// aol : AOL Media LLC
 // https://www.iana.org/domains/root/db/aol.html
 aol
 
@@ -9926,7 +9926,7 @@ saarland
 // https://www.iana.org/domains/root/db/safe.html
 safe
 
-// safety : Safety Registry Services, LLC.
+// safety : Jolly Host, LLC
 // https://www.iana.org/domains/root/db/safety.html
 safety
 
@@ -12344,6 +12344,10 @@ opentunnel.xyz
 // Submitted by Sander Hoentjen <systeembeheer@antagonist.nl>
 antagonist.cloud
 
+// Anthropic : https://www.anthropic.com/
+// Submitted by Sid Bidasaria <security@anthropic.com>
+claude.app
+
 // Apigee : https://apigee.com/
 // Submitted by Apigee Security Team <security@apigee.com>
 apigee.io
@@ -12423,7 +12427,10 @@ sweetpepper.org
 myasustor.com
 
 // Atlassian : https://atlassian.com
-// Submitted by Sam Smyth <devloop@atlassian.com>
+// Submitted by Benjamin McAlary <edge-services@atlassian.com>
+*.atlassian-3p.com
+*.atlassian-3p-us-gov-mod.com
+*.atlassian-isolated-3p.com
 cdn.prod.atlassian-dev.net
 
 // AVM : https://avm.de
@@ -12896,6 +12903,8 @@ sandbox.deno.net
 // DeployAgent : https://deployagent.com
 // Submitted by Danny <security@deployagent.com>
 deployagent.com
+piebox.site
+deployagent.space
 
 // deSEC : https://desec.io/
 // Submitted by Peter Thomassen <peter@desec.io>
@@ -13476,6 +13485,10 @@ on.staging.expo.app
 // Submitted by Eric Jiang <eric@fabrica.dev>
 onfabrica.com
 
+// fachschaften.org: https://fachschaften.org/
+// Submitted by Felix Schäfer <security@fachschaften.org>
+fspages.org
+
 // FAITID : https://faitid.org/
 // Submitted by Maxim Alzoba <tech.contact@faitid.org>
 // https://www.flexireg.net/stat_info
@@ -13922,11 +13935,6 @@ goupile.fr
 // GOV.UK Pay : https://www.payments.service.gov.uk/
 // Submitted by Richard Baker <richard.baker@digital.cabinet-office.gov.uk>
 pymnt.uk
-
-// GOV.UK Platform as a Service : https://www.cloud.service.gov.uk/
-// Submitted by Tom Whitwell <gov-uk-paas-support@digital.cabinet-office.gov.uk>
-cloudapps.digital
-london.cloudapps.digital
 
 // Government of the Netherlands : https://www.government.nl
 // Submitted by <domeinnaam@minaz.nl>
@@ -14624,6 +14632,7 @@ messerli.app
 // Submitted by Jacob Cordero <public-suffix@meta.com>
 atmeta.com
 apps.fbsbx.com
+*.metaaiusercontent.com
 
 // MetaCentrum, CESNET z.s.p.o. : https://www.metacentrum.cz/en/
 // Submitted by Zdeněk Šustr <zdenek.sustr@cesnet.cz> and Radim Janča <janca@cesnet.cz>
@@ -15652,6 +15661,12 @@ pp.ua
 // Shanghai Accounting Society : https://www.sasf.org.cn
 // Submitted by Information Administration <info@sasf.org.cn>
 as.sh.cn
+
+// Shanghai Oray Information Technology Co., Ltd.: https://www.oray.com/
+// Submitted by: Shanghai Oray Information Technology Co., Ltd. <registrar@oray.com>
+vicp.fun
+yicp.fun
+zicp.fun
 
 // Sheezy.Art : https://sheezy.art
 // Submitted by Nyoom <admin@sheezy.art>
