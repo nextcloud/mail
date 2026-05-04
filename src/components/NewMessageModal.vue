@@ -700,7 +700,7 @@ export default {
 	flex: 0 0 370px;
 	overflow-y: auto;
 	padding-inline-start: 5px;
-	border-inline-start: 1px solid var(--color-text-maxcontrast);
+	border-inline-start: 1px solid var(--color-border);
 	@media (max-width: #{variables.$breakpoint-mobile}) {
 		display: none;
 	}
