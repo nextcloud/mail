@@ -415,7 +415,7 @@ export default {
 					/* eslint-disable @stylistic/comma-dangle, @stylistic/function-paren-newline */
 					const { default: coreTranslations } = await import(
 						/* webpackMode: "lazy" */
-						`ckeditor5/translations/${candidate}.js`
+						`../../node_modules/ckeditor5/build/translations/${candidate}.js`
 					)
 					/* eslint-enable @stylistic/comma-dangle, @stylistic/function-paren-newline */
 
