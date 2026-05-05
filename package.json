@@ -96,7 +96,7 @@
     "jsdom": "^29.1.1",
     "node-polyfill-webpack-plugin": "^3.0.0",
     "patch-package": "^8.0.1",
-    "postcss": "^8.5.12",
+    "postcss": "^8.5.13",
     "postcss-loader": "^4.3.0",
     "sass": "^1.99.0",
     "sass-loader": "^16.0.7",
