@@ -107,7 +107,7 @@ class JsonResponse extends Base {
 	 * @param Http::STATUS_* $status
 	 * @param array|JsonSerializable|bool|string $data
 	 *
-	 * @return static
+	 * @return self
 	 */
 	public static function errorFromThrowable(Throwable $error,
 		int $status = Http::STATUS_INTERNAL_SERVER_ERROR,
