@@ -16,6 +16,7 @@ jobs:
       matrix:
         branches:
           - 'main'
+          - 'stable5.8'
           - 'stable5.7'
           - 'stable5.6'
 
