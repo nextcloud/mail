@@ -69,6 +69,10 @@ export default {
 		Ckeditor: CKEditor.component,
 	},
 
+	inject: {
+		addToFocusTrap: { default: () => {} },
+	},
+
 	props: {
 		value: {
 			type: String,
@@ -494,7 +498,7 @@ export default {
 			}
 
 			if (this.html) {
-				this.$emit('show-toolbar', editor.ui._focusableToolbarDefinitions[0].toolbarView.element)
+				this.addToFocusTrap('.ck-body-wrapper')
 			}
 
 			this.bus.on('append-to-body-at-cursor', this.appendToBodyAtCursor)
@@ -662,7 +666,11 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	border-radius: var(--border-radius-large) !important;
 	background: var(--color-main-background) !important;
     color: var(--color-main-text) !important;
-	border: 1px solid var(--color-text-maxcontrast) !important;
+	border: 1px solid var(--color-border) !important;
+
+	.ck.ck-toolbar__separator {
+		background: var(--color-border) !important;
+	}
 }
 
 .ck-rounded-corners .ck.ck-dropdown__panel, .ck.ck-dropdown__panel.ck-rounded-corners {

@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Db;
 use OCA\Mail\Db\MessageSnooze;
 use PHPUnit\Framework\TestCase;
 
-class MessageSnoozeTest extends TestCase {
+final class MessageSnoozeTest extends TestCase {
 	private MessageSnooze $entity;
 
 	protected function setUp(): void {

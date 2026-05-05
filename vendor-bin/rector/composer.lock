@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "99fd037a89ab879ad9e96eb25dd7010e",
+    "content-hash": "5ad5e59cd94d7383d7fc0a0e7f6ecbb6",
     "packages": [],
     "packages-dev": [
         {
@@ -57,16 +57,16 @@
         },
         {
             "name": "nextcloud/rector",
-            "version": "v0.4.1",
+            "version": "v0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-libraries/rector.git",
-                "reference": "9c5c78cc323537ec6dba5b3cd9c422ff9524d8cf"
+                "reference": "27bff78af53633d9b77ed8af17b27af73e8f67e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-libraries/rector/zipball/9c5c78cc323537ec6dba5b3cd9c422ff9524d8cf",
-                "reference": "9c5c78cc323537ec6dba5b3cd9c422ff9524d8cf",
+                "url": "https://api.github.com/repos/nextcloud-libraries/rector/zipball/27bff78af53633d9b77ed8af17b27af73e8f67e9",
+                "reference": "27bff78af53633d9b77ed8af17b27af73e8f67e9",
                 "shasum": ""
             },
             "require": {
@@ -116,9 +116,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nextcloud-libraries/rector/issues",
-                "source": "https://github.com/nextcloud-libraries/rector/tree/v0.4.1"
+                "source": "https://github.com/nextcloud-libraries/rector/tree/v0.5.0"
             },
-            "time": "2025-03-31T15:27:10+00:00"
+            "time": "2026-04-28T08:20:44+00:00"
         },
         {
             "name": "phpstan/phpstan",

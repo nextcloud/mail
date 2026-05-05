@@ -11,6 +11,11 @@ declare(strict_types=1);
 return [
 	'routes' => [
 		[
+			'name' => 'deep_link#open',
+			'url' => '/open/{messageId}',
+			'verb' => 'GET',
+		],
+		[
 			'name' => 'page#index',
 			'url' => '/',
 			'verb' => 'GET'

@@ -85,13 +85,14 @@ class AvatarsController extends Controller {
 		}
 
 		$imageData = $this->avatarService->getAvatarImage($email, $this->uid);
+
 		if ($imageData === null) {
-			// This could happen if the cache invalidated meanwhile
 			return $this->noAvatarFoundResponse();
 		}
 		[$avatar, $image] = $imageData;
 
 		if (!$avatar->isExternal()) {
+			// This could happen if the cache invalidated meanwhile
 			return $this->noAvatarFoundResponse();
 		}
 

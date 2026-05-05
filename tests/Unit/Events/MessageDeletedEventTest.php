@@ -16,8 +16,8 @@ use OCA\Mail\Events\MessageDeletedEvent;
 
 class MessageDeletedEventTest extends TestCase {
 	public function testConstructorAndGetters(): void {
-		$account = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Mailbox::class);
+		$account = $this->createStub(Account::class);
+		$mailbox = $this->createStub(Mailbox::class);
 		$messageId = 42;
 
 		$event = new MessageDeletedEvent($account, $mailbox, $messageId);

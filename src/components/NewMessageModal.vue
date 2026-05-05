@@ -107,8 +107,7 @@
 						@draft="onDraft"
 						@discard-draft="discardDraft"
 						@upload-attachment="onAttachmentUploading"
-						@send="onSend"
-						@show-toolbar="handleShow" />
+						@send="onSend" />
 				</KeepAlive>
 			</div>
 
@@ -157,6 +156,12 @@ export default {
 		MaximizeIcon,
 		DefaultComposerIcon,
 		RecipientInfo,
+	},
+
+	provide() {
+		return {
+			addToFocusTrap: (trapElement) => this.additionalTrapElements.push(trapElement),
+		}
 	},
 
 	props: {
@@ -305,10 +310,6 @@ export default {
 			if (!this.mainStore.composerMessageIsSaved && this.changed) {
 				await this.onDraft(this.cookedComposerData, { showToast: true })
 			}
-		},
-
-		handleShow(element) {
-			this.additionalTrapElements.push(element)
 		},
 
 		/**
@@ -699,7 +700,7 @@ export default {
 	flex: 0 0 370px;
 	overflow-y: auto;
 	padding-inline-start: 5px;
-	border-inline-start: 1px solid var(--color-text-maxcontrast);
+	border-inline-start: 1px solid var(--color-border);
 	@media (max-width: #{variables.$breakpoint-mobile}) {
 		display: none;
 	}

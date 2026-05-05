@@ -80,7 +80,7 @@ class ImapToDbSynchronizerTest extends TestCase {
 		$capability->method('isEnabled')->with('QRESYNC')->willReturn(false);
 		$initialClient = $this->createMock(Horde_Imap_Client_Socket::class);
 		$initialClient->method('__get')->with('capability')->willReturn($capability);
-		$noCacheClient = $this->createMock(Horde_Imap_Client_Socket::class);
+		$noCacheClient = $this->createStub(Horde_Imap_Client_Socket::class);
 		$cacheClient = $this->createMock(Horde_Imap_Client_Socket::class);
 		$cacheClient->expects($this->once())
 			->method('getSyncToken')
@@ -101,11 +101,9 @@ class ImapToDbSynchronizerTest extends TestCase {
 		]);
 		$this->mailboxMapper->expects($this->once())
 			->method('update')
-			->with($this->callback(function (Mailbox $mb) {
-				return $mb->getSyncNewToken() === 'dG9rZW5XaXRoSA=='
+			->with($this->callback(fn (Mailbox $mb) => $mb->getSyncNewToken() === 'dG9rZW5XaXRoSA=='
 					&& $mb->getSyncChangedToken() === 'dG9rZW5XaXRoSA=='
-					&& $mb->getSyncVanishedToken() === 'dG9rZW5XaXRoSA==';
-			}));
+					&& $mb->getSyncVanishedToken() === 'dG9rZW5XaXRoSA=='));
 		$this->dispatcher->expects($this->once())
 			->method('dispatchTyped')
 			->with($this->isInstanceOf(SynchronizationEvent::class));

@@ -378,4 +378,58 @@ describe('Composer', () => {
 
 		expect(view.vm.submitButtonTitle).toEqual('Encrypt with Mailvelope and send later Jan 1, 02:00 PM')
 	})
+
+	it('does not open the recipient dropdown on focus without a search term', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			mocks: {
+				$route,
+			},
+			store,
+			localVue,
+		})
+
+		expect(view.vm.shouldOpenRecipientDropdown({
+			noDrop: false,
+			open: true,
+			search: '',
+		})).toEqual(false)
+	})
+
+	it('opens the recipient dropdown once a search term is entered', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			mocks: {
+				$route,
+			},
+			store,
+			localVue,
+		})
+
+		expect(view.vm.shouldOpenRecipientDropdown({
+			noDrop: false,
+			open: true,
+			search: 'alice',
+		})).toEqual(true)
+	})
 })

@@ -50,9 +50,11 @@ class InternalAddressController extends Controller {
 			$address,
 			$type
 		);
-		$address = $internalAddress !== null ? $internalAddress->jsonSerialize() : [];
+		if ($internalAddress === null) {
+			return JsonResponse::success(null);
+		}
 
-		return JsonResponse::success($address, Http::STATUS_CREATED);
+		return JsonResponse::success($internalAddress->jsonSerialize(), Http::STATUS_CREATED);
 	}
 
 	/**

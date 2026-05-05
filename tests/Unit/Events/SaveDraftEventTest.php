@@ -17,9 +17,9 @@ use OCA\Mail\Model\NewMessageData;
 
 class SaveDraftEventTest extends TestCase {
 	public function testConstructorAndGetters(): void {
-		$account = $this->createMock(Account::class);
-		$newMessageData = $this->createMock(NewMessageData::class);
-		$draft = $this->createMock(Message::class);
+		$account = $this->createStub(Account::class);
+		$newMessageData = $this->createStub(NewMessageData::class);
+		$draft = $this->createStub(Message::class);
 
 		$event = new SaveDraftEvent($account, $newMessageData, $draft);
 
@@ -29,8 +29,8 @@ class SaveDraftEventTest extends TestCase {
 	}
 
 	public function testConstructorWithoutDraft(): void {
-		$account = $this->createMock(Account::class);
-		$newMessageData = $this->createMock(NewMessageData::class);
+		$account = $this->createStub(Account::class);
+		$newMessageData = $this->createStub(NewMessageData::class);
 
 		$event = new SaveDraftEvent($account, $newMessageData, null);
 
