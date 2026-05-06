@@ -75,10 +75,20 @@ class TransmissionService {
 			[$localAttachment, $file] = $this->attachmentService->getAttachment($account->getMailAccount()->getUserId(), (int)$attachment['id']);
 			$part = new Horde_Mime_Part();
 			$part->setCharset('us-ascii');
-			if (!empty($localAttachment->getFileName())) {
-				$part->setDisposition('attachment');
+
+			if ($localAttachment->isDispositionAttachmentOrInline()) {
+				$part->setDisposition($localAttachment->getDisposition());
+				/*
+				 * Setting a name implicitly adds a Content-Disposition header in Horde,
+				 * which would override the intentional omission. Only set it for attachment/inline dispositions.
+				 */
 				$part->setName($localAttachment->getFileName());
 			}
+
+			if ($localAttachment->getContentId() !== null) {
+				$part->setContentId($localAttachment->getContentId());
+			}
+
 			$part->setContents($file->getContent());
 			/*
 			 * Horde_Mime_Part.setType takes the mimetype (e.g. text/calendar)

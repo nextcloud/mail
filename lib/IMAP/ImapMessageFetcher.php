@@ -33,6 +33,9 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use function str_starts_with;
 use function strtolower;
 
+/**
+ * @psalm-import-type IMAPAttachment from IMAPMessage
+ */
 class ImapMessageFetcher {
 	/** @var string[] */
 	private array $attachmentsToIgnore = ['signature.asc', 'smime.p7s'];
@@ -50,7 +53,9 @@ class ImapMessageFetcher {
 	private Horde_Imap_Client_Base $client;
 	private string $htmlMessage = '';
 	private string $plainMessage = '';
+	/** @var list<IMAPAttachment> */
 	private array $attachments = [];
+	/** @var list<IMAPAttachment> */
 	private array $inlineAttachments = [];
 	private bool $hasAnyAttachment = false;
 	private array $scheduling = [];
@@ -369,7 +374,8 @@ class ImapMessageFetcher {
 				'fileName' => $filename,
 				'mime' => $p->getType(),
 				'size' => $p->getBytes(),
-				'cid' => $p->getContentId()
+				'cid' => $p->getContentId(),
+				'disposition' => $p->getDisposition()
 			];
 			return;
 		}
