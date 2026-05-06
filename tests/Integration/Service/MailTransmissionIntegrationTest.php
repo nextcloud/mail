@@ -13,8 +13,6 @@ use ChristophWurst\Nextcloud\Testing\TestUser;
 use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
-use OCA\Mail\Contracts\IMailManager;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\MailAccount;
@@ -23,29 +21,14 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Db\RecipientMapper;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
-use OCA\Mail\IMAP\MessageMapper;
-use OCA\Mail\Model\NewMessageData;
-use OCA\Mail\Send\AntiAbuseHandler;
 use OCA\Mail\Send\Chain;
-use OCA\Mail\Send\CopySentMessageHandler;
-use OCA\Mail\Send\FlagRepliedMessageHandler;
-use OCA\Mail\Send\SendHandler;
-use OCA\Mail\Send\SentMailboxHandler;
-use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Attachment\UploadedFile;
-use OCA\Mail\Service\MailTransmission;
-use OCA\Mail\Service\TransmissionService;
-use OCA\Mail\SMTP\SmtpClientFactory;
-use OCA\Mail\Support\PerformanceLogger;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\TestCase;
-use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IUser;
 use OCP\Security\ICrypto;
 use OCP\Server;
-use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 class MailTransmissionIntegrationTest extends TestCase {
@@ -61,8 +44,6 @@ class MailTransmissionIntegrationTest extends TestCase {
 	/** @var IAttachmentService */
 	private $attachmentService;
 
-	/** @var IMailTransmission */
-	private $transmission;
 	private Chain $chain;
 
 	private LocalMessageMapper $localMessageMapper;
@@ -121,28 +102,8 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$mbSync = Server::get(MailboxSync::class);
 		$mbSync->sync($this->account, new NullLogger(), true);
 
-		$this->chain = new Chain(
-			Server::get(SentMailboxHandler::class),
-			Server::get(AntiAbuseHandler::class),
-			Server::get(SendHandler::class),
-			Server::get(CopySentMessageHandler::class),
-			Server::get(FlagRepliedMessageHandler::class),
-			$this->attachmentService,
-			$this->localMessageMapper,
-			Server::get(IMAPClientFactory::class),
-		);
+		$this->chain = Server::get(Chain::class);
 
-		$this->transmission = new MailTransmission(Server::get(IMAPClientFactory::class),
-			Server::get(SmtpClientFactory::class),
-			Server::get(IEventDispatcher::class),
-			Server::get(MailboxMapper::class),
-			Server::get(MessageMapper::class),
-			Server::get(LoggerInterface::class),
-			Server::get(PerformanceLogger::class),
-			Server::get(AliasesService::class),
-			Server::get(TransmissionService::class),
-			Server::get(IMailManager::class)
-		);
 	}
 
 	public function testSendMail() {
@@ -241,27 +202,5 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 		$this->assertMailboxExists('Sent');
 		$this->assertMessageCount(1, 'Sent');
-	}
-
-	public function testSaveNewDraft() {
-		$message = NewMessageData::fromRequest($this->account, 'greetings', 'hello there', 'recipient@domain.com', null, null, [], false);
-		[,,$uid] = $this->transmission->saveDraft($message);
-		// There should be a new mailbox …
-		$this->assertMailboxExists('Drafts');
-		// … and it should have exactly one message …
-		$this->assertMessageCount(1, 'Drafts');
-		// … and the correct content
-		$this->assertMessageContent('Drafts', $uid, 'hello there');
-	}
-
-	public function testReplaceDraft() {
-		$message1 = NewMessageData::fromRequest($this->account, 'greetings', 'hello t', 'recipient@domain.com', null, null, []);
-		[,,$uid] = $this->transmission->saveDraft($message1);
-		$message2 = NewMessageData::fromRequest($this->account, 'greetings', 'hello there', 'recipient@domain.com', null, null, []);
-		$previous = new Message();
-		$previous->setUid($uid);
-		$this->transmission->saveDraft($message2, $previous);
-
-		$this->assertMessageCount(1, 'Drafts');
 	}
 }

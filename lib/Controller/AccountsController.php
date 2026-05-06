@@ -10,10 +10,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use Horde_Imap_Client;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
@@ -21,12 +19,10 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse as MailJsonResponse;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\IMAP\MailboxSync;
-use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\SetupService;
-use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
@@ -45,10 +41,8 @@ class AccountsController extends Controller {
 	private LoggerInterface $logger;
 	private IL10N $l10n;
 	private AliasesService $aliasesService;
-	private IMailTransmission $mailTransmission;
 	private SetupService $setup;
 	private MailManager $mailManager;
-	private SyncService $syncService;
 	private IConfig $config;
 	private IRemoteHostValidator $hostValidator;
 	private MailboxSync $mailboxSync;
@@ -61,10 +55,8 @@ class AccountsController extends Controller {
 		LoggerInterface $logger,
 		IL10N $l10n,
 		AliasesService $aliasesService,
-		IMailTransmission $mailTransmission,
 		SetupService $setup,
 		MailManager $mailManager,
-		SyncService $syncService,
 		IConfig $config,
 		IRemoteHostValidator $hostValidator,
 		MailboxSync $mailboxSync,
@@ -76,10 +68,8 @@ class AccountsController extends Controller {
 		$this->logger = $logger;
 		$this->l10n = $l10n;
 		$this->aliasesService = $aliasesService;
-		$this->mailTransmission = $mailTransmission;
 		$this->setup = $setup;
 		$this->mailManager = $mailManager;
-		$this->syncService = $syncService;
 		$this->config = $config;
 		$this->hostValidator = $hostValidator;
 		$this->mailboxSync = $mailboxSync;
@@ -396,59 +386,6 @@ class AccountsController extends Controller {
 		return MailJsonResponse::success(
 			$account, Http::STATUS_CREATED
 		);
-	}
-
-	/**
-	 * @NoAdminRequired
-	 *
-	 * @return JSONResponse
-	 *
-	 * @throws ClientException
-	 */
-	#[TrapError]
-	public function draft(int $id,
-		string $subject,
-		string $body,
-		string $to,
-		string $cc,
-		string $bcc,
-		bool $isHtml = true,
-		?int $draftId = null): JSONResponse {
-		if ($draftId === null) {
-			$this->logger->info("Saving a new draft in account <$id>");
-		} else {
-			$this->logger->info("Updating draft <$draftId> in account <$id>");
-		}
-
-		$account = $this->accountService->find($this->currentUserId, $id);
-		$previousDraft = null;
-		if ($draftId !== null) {
-			try {
-				$previousDraft = $this->mailManager->getMessage($this->currentUserId, $draftId);
-			} catch (ClientException $e) {
-				$this->logger->info("Draft {$draftId} could not be loaded: {$e->getMessage()}");
-			}
-		}
-		$messageData = NewMessageData::fromRequest($account, $subject, $body, $to, $cc, $bcc, [], $isHtml);
-
-		try {
-			/** @var Mailbox $draftsMailbox */
-			[, $draftsMailbox, $newUID] = $this->mailTransmission->saveDraft($messageData, $previousDraft);
-			$this->syncService->syncMailbox(
-				$account,
-				$draftsMailbox,
-				Horde_Imap_Client::SYNC_NEWMSGSUIDS,
-				false,
-				null,
-				[]
-			);
-			return new JSONResponse([
-				'id' => $this->mailManager->getMessageIdForUid($draftsMailbox, $newUID)
-			]);
-		} catch (ClientException|ServiceException $ex) {
-			$this->logger->error('Saving draft failed: ' . $ex->getMessage());
-			throw $ex;
-		}
 	}
 
 	/**

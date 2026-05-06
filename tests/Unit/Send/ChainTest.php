@@ -9,51 +9,37 @@ namespace Unit\Send;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 
-use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Db\MessageMapper;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Send\AntiAbuseHandler;
 use OCA\Mail\Send\Chain;
-use OCA\Mail\Send\CopySentMessageHandler;
 use OCA\Mail\Send\FlagRepliedMessageHandler;
 use OCA\Mail\Send\SendHandler;
-use OCA\Mail\Send\SentMailboxHandler;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ChainTest extends TestCase {
 	private Chain $chain;
-	private SentMailboxHandler|MockObject $sentMailboxHandler;
 	private MockObject|AntiAbuseHandler $antiAbuseHandler;
 	private SendHandler|MockObject $sendHandler;
-	private MockObject|CopySentMessageHandler $copySentMessageHandler;
 	private MockObject|FlagRepliedMessageHandler $flagRepliedMessageHandler;
-	private MockObject|MessageMapper $messageMapper;
 	private AttachmentService|MockObject $attachmentService;
 	private MockObject|LocalMessageMapper $localMessageMapper;
-	private MockObject&IMAPClientFactory $clientFactory;
 
 	protected function setUp(): void {
-		$this->sentMailboxHandler = $this->createMock(SentMailboxHandler::class);
 		$this->antiAbuseHandler = $this->createMock(AntiAbuseHandler::class);
 		$this->sendHandler = $this->createMock(SendHandler::class);
-		$this->copySentMessageHandler = $this->createMock(CopySentMessageHandler::class);
 		$this->flagRepliedMessageHandler = $this->createMock(FlagRepliedMessageHandler::class);
 		$this->attachmentService = $this->createMock(AttachmentService::class);
 		$this->localMessageMapper = $this->createMock(LocalMessageMapper::class);
-		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
-		$this->chain = new Chain($this->sentMailboxHandler,
+		$this->chain = new Chain(
 			$this->antiAbuseHandler,
 			$this->sendHandler,
-			$this->copySentMessageHandler,
 			$this->flagRepliedMessageHandler,
 			$this->attachmentService,
 			$this->localMessageMapper,
-			$this->clientFactory,
 		);
 	}
 
@@ -68,16 +54,14 @@ class ChainTest extends TestCase {
 		$expected = new LocalMessage();
 		$expected->setStatus(LocalMessage::STATUS_PROCESSED);
 		$expected->setId(100);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$client->expects(self::once())
-			->method('logout');
 
-		$this->sentMailboxHandler->expects(self::once())
-			->method('setNext');
-		$this->clientFactory->expects(self::once())
-			->method('getClient')
-			->willReturn($client);
-		$this->sentMailboxHandler->expects(self::once())
+		$this->antiAbuseHandler->expects(self::once())
+			->method('setNext')
+			->willReturn($this->sendHandler);
+		$this->sendHandler->expects(self::once())
+			->method('setNext')
+			->willReturn($this->flagRepliedMessageHandler);
+		$this->antiAbuseHandler->expects(self::once())
 			->method('process')
 			->with($account, $localMessage)
 			->willReturn($expected);
@@ -93,7 +77,7 @@ class ChainTest extends TestCase {
 		$this->chain->process($account, $localMessage);
 	}
 
-	public function testProcessNotProcessed() {
+	public function testProcessNotProcessed(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setSentMailboxId(1);
 		$mailAccount->setUserId('bob');
@@ -104,16 +88,14 @@ class ChainTest extends TestCase {
 		$expected = new LocalMessage();
 		$expected->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
 		$expected->setId(100);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$client->expects(self::once())
-			->method('logout');
 
-		$this->sentMailboxHandler->expects(self::once())
-			->method('setNext');
-		$this->clientFactory->expects(self::once())
-			->method('getClient')
-			->willReturn($client);
-		$this->sentMailboxHandler->expects(self::once())
+		$this->antiAbuseHandler->expects(self::once())
+			->method('setNext')
+			->willReturn($this->sendHandler);
+		$this->sendHandler->expects(self::once())
+			->method('setNext')
+			->willReturn($this->flagRepliedMessageHandler);
+		$this->antiAbuseHandler->expects(self::once())
 			->method('process')
 			->with($account, $localMessage)
 			->willReturn($expected);

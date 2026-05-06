@@ -913,57 +913,107 @@ class JmapOperationsService {
 	}
 
 	/**
-	 * send entity
+	 * Send an email via JMAP, atomically staging it in Drafts and filing the sent copy in the Sent mailbox.
+	 *
+	 * Batches an Email/set create with an EmailSubmission/set create in a single HTTP request.
+	 * On successful delivery, the server updates the staged email's mailboxIds to point to
+	 * the Sent mailbox and removes the $draft keyword (RFC 8621 §7.5 onSuccessUpdateEmail).
+	 *
+	 * @param string $identity JMAP identity ID to send from
+	 * @param MailParametersRequest $email Pre-built email parameters (mailboxIds set to $preSendLocation by this method)
+	 * @param string $preSendLocation JMAP remote ID of the Drafts mailbox (staging area)
+	 * @param string $postSentLocation JMAP remote ID of the Sent mailbox
+	 * @param string $from Envelope From address (bare email)
+	 * @param string[] $rcptTo Envelope recipient addresses (bare emails, To + Cc + Bcc combined)
+	 * @throws Exception on server error or submission failure
 	 */
-	public function entitySend(string $identity, MailMessageObject $message, ?string $presendLocation = null, ?string $postsendLocation = null): string {
-		// determine if pre-send location is present
-		if ($presendLocation === null || empty($presendLocation)) {
+	public function entitySend(
+		string $identity,
+		MailParametersRequest $email,
+		string $preSendLocation,
+		string $postSentLocation,
+		string $from,
+		array $rcptTo,
+	): void {
+		if ($preSendLocation === '') {
 			throw new Exception('Pre-Send Location is missing', 1);
 		}
-		// determine if post-send location is present
-		if ($postsendLocation === null || empty($postsendLocation)) {
-			throw new Exception('Post-Send Location is missing', 1);
+		if ($postSentLocation === '') {
+			throw new Exception('Post-Sent Location is missing', 1);
 		}
-		// determine if we have the basic required data and fail otherwise
-		if (empty($message->getFrom())) {
-			throw new Exception('Missing Requirements: Message MUST have a From address', 1);
+		if ($from === '') {
+			throw new Exception('Envelope From address is missing', 1);
 		}
-		if (empty($message->getTo())) {
-			throw new Exception('Missing Requirements: Message MUST have a To address(es)', 1);
+		if ($rcptTo === []) {
+			throw new Exception('At least one envelope recipient is required', 1);
 		}
-		// determine if message has attachments
-		if (count($message->getAttachments()) > 0) {
-			// process attachments first
-			$message = $this->depositAttachmentsFromMessage($message);
-		}
-		// convert from address object to string
-		$from = $message->getFrom()->getAddress();
-		// convert to, cc and bcc address object arrays to single strings array
-		$to = array_map(
-			function ($entry) { return $entry->getAddress(); },
-			array_merge($message->getTo(), $message->getCc(), $message->getBcc())
-		);
-		unset($cc, $bcc);
-		// construct set request
+		// Stage the message in the pre-send (Drafts) mailbox
 		$r0 = new MailSet($this->dataAccount);
-		$r0->create('1', $message)->in($presendLocation);
-		// construct set request
+		$r0->create('1', $email)->in($preSendLocation);
+		// Submit via EmailSubmission/set; on success move the staged email to Sent
 		$r1 = new MailSubmissionSet($this->dataAccount);
-		// construct envelope
 		$e1 = $r1->create('2');
 		$e1->identity($identity);
 		$e1->message('#1');
 		$e1->from($from);
-		$e1->to($to);
-		// transceive
+		$e1->to($rcptTo);
+		$r1->completionUpdate('#2', [
+			'mailboxIds/' . $postSentLocation => true,
+			'mailboxIds/' . $preSendLocation => null,
+			'keywords/$draft' => null,
+		]);
+		// Perform both requests in a single HTTP round-trip
 		$bundle = $this->dataStore->perform([$r0, $r1]);
-		// extract response
-		$response = $bundle->response(1);
-		// return collection information
-		return (string)$response->created()['2']['id'];
+		// Check Email/set create
+		$emailResponse = $bundle->response(0);
+		if ($emailResponse instanceof ResponseException) {
+			throw new Exception('Email/set failed: ' . $emailResponse->type() . ': ' . $emailResponse->description(), 1);
+		}
+		$emailFailure = $emailResponse->createFailure('1');
+		if ($emailFailure !== null) {
+			throw new Exception('Email/set create failed: ' . ($emailFailure['type'] ?? 'unknownError'), 1);
+		}
+		// Check EmailSubmission/set create
+		$submissionResponse = $bundle->response(1);
+		if ($submissionResponse instanceof ResponseException) {
+			throw new Exception('EmailSubmission/set failed: ' . $submissionResponse->type() . ': ' . $submissionResponse->description(), 1);
+		}
+		$submissionFailure = $submissionResponse->createFailure('2');
+		if ($submissionFailure !== null) {
+			throw new Exception('EmailSubmission/set create failed: ' . ($submissionFailure['type'] ?? 'unknownError'), 1);
+		}
 	}
 
-	public function attachmentFetch(string $entityId, string ...$blobId): array {
+	/**
+	 * Save/stage an email in a mailbox (e.g., save as draft).
+	 *
+	 * @param MailParametersRequest $email Pre-built email parameters including mailboxIds and keywords.
+	 * @return string Remote ID of the created email.
+	 * @throws Exception on server error.
+	 */
+	public function entitySave(MailParametersRequest $email): string {
+		$id = uniqid();
+		$r0 = new MailSet($this->dataAccount);
+		$r0->create($id, $email);
+		$bundle = $this->dataStore->perform([$r0]);
+		$response = $bundle->first();
+		if ($response instanceof ResponseException) {
+			throw new Exception($response->type() . ': ' . $response->description(), 1);
+		}
+		$result = $response->createSuccess($id);
+		if ($result !== null) {
+			return (string)($result['id'] ?? '');
+		}
+		$failure = $response->createFailure($id);
+		if ($failure !== null) {
+			$type = $failure['type'] ?? 'unknownError';
+			$description = $failure['description'] ?? 'An unknown error occurred.';
+			throw new Exception("$type: $description", 1);
+		}
+		throw new Exception('Email/set create returned no result', 1);
+	}
+
+	public function attachmentFetch(string $entityId, string ...$blobIds): array {
 		$entities = $this->entityFetchNative($entityId);
 		$entity = $entities[$entityId] ?? null;
 		if (!$entity instanceof MailParametersResponse) {
@@ -972,8 +1022,7 @@ class JmapOperationsService {
 
 		$attachments = [];
 		foreach (($entity->attachments() ?? []) as $key => $attachment) {
-			if ($blobIds === null || in_array($attachment->blob(), $blobIds, true)) {
-				$content = null;
+				if ($blobIds === [] || in_array($attachment->blob(), $blobIds, true)) {
 				$this->dataStore->download($this->dataAccount, $attachment->blob(), $content);
 
 				$attachment = new Attachment(
@@ -989,45 +1038,6 @@ class JmapOperationsService {
 		}
 
 		return $attachments;
-	}
-
-	/**
-	 * retrieve collection entity attachment from remote storage
-	 */
-	public function depositAttachmentsFromMessage(MailMessageObject $message): MailMessageObject {
-
-		$parameters = $message->toJmap();
-		$attachments = $message->getAttachments();
-		$matches = [];
-
-		$this->findAttachmentParts($parameters['bodyStructure'], $matches);
-
-		foreach ($attachments as $attachment) {
-			$part = $attachment->toJmap();
-			if (isset($matches[$part->getId()])) {
-				// deposit attachment in data store
-				$response = $this->blobDeposit($account, $part->getType(), $attachment->getContents());
-				// transfer blobId and size to mail part
-				$matches[$part->getId()]->blobId = $response['blobId'];
-				$matches[$part->getId()]->size = $response['size'];
-				unset($matches[$part->getId()]->partId);
-			}
-		}
-
-		return (new MailMessageObject())->fromJmap($parameters);
-
-	}
-
-	protected function findAttachmentParts(object &$part, array &$matches) {
-
-		if ($part->disposition === 'attachment' || $part->disposition === 'inline') {
-			$matches[$part->partId] = $part;
-		}
-
-		foreach ($part->subParts as $entry) {
-			$this->findAttachmentParts($entry, $matches);
-		}
-
 	}
 
 	/**
@@ -1048,5 +1058,6 @@ class JmapOperationsService {
 		// convert json object to message object and return
 		return $response->objects();
 	}
+
 
 }
