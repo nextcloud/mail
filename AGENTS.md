@@ -85,6 +85,17 @@ composer test:unit -- tests/Unit/Service/HtmlTest.php # Run specific test file
 composer test:unit -- --filter="TestClassName"        # Run tests matching filter
 ```
 
+### Integration Tests
+Located in `tests/Integration/`.
+
+#### Running Tests
+```bash
+composer test:integration                                           # Run all integration tests
+composer test:integration -- tests/Integration/IMAP/MessageMapperTest.php # Run specific test file
+composer test:integration -- --filter="TestClassName"               # Run tests matching filter
+composer test:integration:dev                                       # Run and stop on first failure
+```
+
 ## Git Workflow
 
 Do NOT commit changes unless explicitly asked to do so.
