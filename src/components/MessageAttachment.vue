@@ -42,6 +42,7 @@
 				</ActionButton>
 				<ActionButton
 					class="attachment-download"
+					:close-after-click="true"
 					@click="download">
 					<template #icon>
 						<IconDownload :size="20" />
@@ -51,7 +52,8 @@
 				<ActionButton
 					class="attachment-save-to-cloud"
 					:disabled="savingToCloud"
-					@click.stop="() => isFilePickerOpen = true">
+					:close-after-click="true"
+					@click="() => isFilePickerOpen = true">
 					<template #icon>
 						<IconSave v-if="!savingToCloud" :size="20" />
 						<IconLoading v-else-if="savingToCloud" :size="20" />
