@@ -91,12 +91,14 @@ Do NOT commit changes unless explicitly asked to do so.
 
 After completing code changes:
 1. Verify your work is complete and tests pass
-2. Make sure there is no trailing whitespace
-3. Leave changes in working directory or staged (do not commit)
-4. Provide a summary of what was changed and why
-5. Suggest a commit message using Conventional Commits format
+2. Never push directly to `main` — always create a feature branch with a descriptive name (e.g. `perf/imap-selective-headers`, `fix/sync-token`, `chore/update-agents`).
+3. Worktree branches must use descriptive feature-branch names, not generated names like `agent-xxxx`.
+4. Make sure there is no trailing whitespace
+5. Leave changes in working directory or staged (do not commit)
+6. Provide a summary of what was changed and why
+7. Suggest a commit message using Conventional Commits format
    - There is a [contributing doc](./.github/CONTRIBUTING.md) with suggestions
-6. The user will review and commit when ready
+8. The user will review and commit when ready
 
 ### Commit Message Format
 
