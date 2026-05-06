@@ -21,6 +21,7 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCP\AppFramework\Db\TTransactional;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -48,9 +49,6 @@ class MailboxSync {
 	/** @var MailAccountMapper */
 	private $mailAccountMapper;
 
-	/** @var IMAPClientFactory */
-	private $imapClientFactory;
-
 	/** @var ITimeFactory */
 	private $timeFactory;
 
@@ -58,17 +56,18 @@ class MailboxSync {
 	private $dispatcher;
 	private IDBConnection $dbConnection;
 
-	public function __construct(MailboxMapper $mailboxMapper,
+	public function __construct(
+		MailboxMapper $mailboxMapper,
 		FolderMapper $folderMapper,
 		MailAccountMapper $mailAccountMapper,
-		IMAPClientFactory $imapClientFactory,
+		private readonly ProtocolFactory $protocolFactory,
 		ITimeFactory $timeFactory,
 		IEventDispatcher $dispatcher,
-		IDBConnection $dbConnection) {
+		IDBConnection $dbConnection,
+	) {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->folderMapper = $folderMapper;
 		$this->mailAccountMapper = $mailAccountMapper;
-		$this->imapClientFactory = $imapClientFactory;
 		$this->timeFactory = $timeFactory;
 		$this->dispatcher = $dispatcher;
 		$this->dbConnection = $dbConnection;
@@ -81,13 +80,13 @@ class MailboxSync {
 		LoggerInterface $logger,
 		bool $force = false,
 		?Horde_Imap_Client_Socket $client = null): void {
-		if (!$force && $account->getMailAccount()->getLastMailboxSync() >= ($this->timeFactory->getTime() - 7200)) {
+		if (!$force && $account->getMailAccount()->getLastMailboxSync() >= ($this->timeFactory->getTime() - 900)) {
 			$logger->debug('account is up to date, skipping mailbox sync');
 			return;
 		}
 
 		if ($client === null) {
-			$client = $this->imapClientFactory->getClient($account);
+			$client = $this->protocolFactory->imapClient($account);
 			$ownClient = true;
 		} else {
 			$ownClient = false;

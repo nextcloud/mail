@@ -15,7 +15,6 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeDecryptException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ContextChat\TaskService;
 use OCA\Mail\Service\MailManager;
@@ -36,7 +35,6 @@ class SubmitContentJob extends TimedJob {
 		private AccountService $accountService,
 		private MailManager $mailManager,
 		private MessageMapper $messageMapper,
-		private IMAPClientFactory $clientFactory,
 		private ContextChatProvider $contextChatProvider,
 		private IContentManager $contentManager,
 		private LoggerInterface $logger,
@@ -109,53 +107,41 @@ class SubmitContentJob extends TimedJob {
 		}
 
 
-		$client = $this->clientFactory->getClient($account);
 		$items = [];
 
-		try {
-			$startTime = $this->time->getTime();
-			foreach ($messages as $message) {
-				if ($this->time->getTime() - $startTime > ContextChatProvider::CONTEXT_CHAT_JOB_INTERVAL) {
-					break;
-				}
-				try {
-					$imapMessage = $this->mailManager->getImapMessage($client, $account, $mailbox, $message->getUid(), true);
-				} catch (ServiceException $e) {
-					// couldn't load message, let's skip it. Retrying would be too costly
-					continue;
-				} catch (SmimeDecryptException $e) {
-					// encryption problem, skip this message
-					continue;
-				}
-
-
-				// Skip encrypted messages
-				if ($imapMessage->isEncrypted()) {
-					continue;
-				}
-
-
-				$fullMessage = $imapMessage->getFullMessage($imapMessage->getUid(), true);
-
-
-				$items[] = new ContentItem(
-					"{$mailbox->getId()}:{$message->getId()}",
-					$this->contextChatProvider->getId(),
-					$imapMessage->getSubject(),
-					$fullMessage['body'] ?? '',
-					'E-Mail',
-					$imapMessage->getSentDate(),
-					[$account->getUserId()],
-				);
+		$startTime = $this->time->getTime();
+		foreach ($messages as $message) {
+			if ($this->time->getTime() - $startTime > ContextChatProvider::CONTEXT_CHAT_JOB_INTERVAL) {
+				break;
 			}
-		} catch (\Throwable $e) {
-			$this->logger->warning('Exception occurred when trying to fetch messages for context chat', ['exception' => $e]);
-		} finally {
 			try {
-				$client->close();
-			} catch (\Horde_Imap_Client_Exception $e) {
-				$this->logger->debug('Failed to close IMAP client', ['exception' => $e]);
+				$imapMessage = $this->mailManager->getImapMessage($account, $mailbox, $message, true);
+			} catch (ServiceException $e) {
+				// couldn't load message, let's skip it. Retrying would be too costly
+				continue;
+			} catch (SmimeDecryptException $e) {
+				// encryption problem, skip this message
+				continue;
 			}
+
+
+			// Skip encrypted messages
+			if ($imapMessage->isEncrypted()) {
+				continue;
+			}
+
+
+			$fullMessage = $imapMessage->getFullMessage($imapMessage->getUid(), true);
+
+			$items[] = new ContentItem(
+				"{$mailbox->getId()}:{$message->getId()}",
+				$this->contextChatProvider->getId(),
+				$imapMessage->getSubject(),
+				$fullMessage['body'] ?? '',
+				'E-Mail',
+				$imapMessage->getSentDate(),
+				[$account->getUserId()],
+			);
 		}
 
 		if (count($items) > 0) {

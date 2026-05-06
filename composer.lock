@@ -4647,7 +4647,9 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
+        "sebastiankrupinski/jmap-client-php": 20,
         "gravatarphp/gravatar": 20,
+        "sebastiankrupinski/jmap-client-php": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,

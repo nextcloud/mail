@@ -10,14 +10,13 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -39,10 +38,10 @@ class OutboxService {
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
-	/** @var IMAPClientFactory */
-	private $clientFactory;
+	/** @var ProtocolFactory */
+	private $protocolFactory;
 
-	/** @var IMailManager */
+	/** @var MailManager */
 	private $mailManager;
 
 	/** @var AccountService */
@@ -58,8 +57,8 @@ class OutboxService {
 		LocalMessageMapper $mapper,
 		AttachmentService $attachmentService,
 		IEventDispatcher $eventDispatcher,
-		IMAPClientFactory $clientFactory,
-		IMailManager $mailManager,
+		ProtocolFactory $protocolFactory,
+		MailManager $mailManager,
 		AccountService $accountService,
 		ITimeFactory $timeFactory,
 		LoggerInterface $logger,
@@ -68,7 +67,7 @@ class OutboxService {
 		$this->mapper = $mapper;
 		$this->attachmentService = $attachmentService;
 		$this->eventDispatcher = $eventDispatcher;
-		$this->clientFactory = $clientFactory;
+		$this->protocolFactory = $protocolFactory;
 		$this->mailManager = $mailManager;
 		$this->timeFactory = $timeFactory;
 		$this->logger = $logger;
@@ -143,7 +142,7 @@ class OutboxService {
 			return $message;
 		}
 
-		$client = $this->clientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
 		} finally {
@@ -175,7 +174,7 @@ class OutboxService {
 			return $message;
 		}
 
-		$client = $this->clientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
 		} finally {

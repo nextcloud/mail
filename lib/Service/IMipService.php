@@ -113,7 +113,7 @@ class IMipService {
 			}
 
 			try {
-				$imapMessages = $this->mailManager->getImapMessagesForScheduleProcessing($account, $mailbox, array_map(static fn ($message) => $message->getUid(), $filteredMessages));
+				$imapMessages = $this->mailManager->getImapMessages($account, $mailbox, true, ...$filteredMessages);
 			} catch (ServiceException $e) {
 				$this->logger->error('Could not get IMAP messages form IMAP server', ['exception' => $e]);
 				continue;
