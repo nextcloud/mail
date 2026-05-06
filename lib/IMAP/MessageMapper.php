@@ -282,16 +282,11 @@ class MessageMapper {
 		$query->flags();
 		$query->uid();
 		$query->imapDate();
-		$query->headers(
-			'syncFields',
+		$query->headerText(
 			[
-				'references',
-				'disposition-notification-to',
-				'dkim-signature',
-				'list-unsubscribe',
-				'list-unsubscribe-post',
-			],
-			['peek' => true],
+				'cache' => true,
+				'peek' => true,
+			]
 		);
 
 		if (is_array($ids)) {

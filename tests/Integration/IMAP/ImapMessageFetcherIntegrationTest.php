@@ -9,12 +9,10 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Integration\IMAP;
 
-use Horde_Imap_Client_Ids;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\SmimeCertificateMapper;
 use OCA\Mail\IMAP\ImapMessageFetcherFactory;
-use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
 use OCA\Mail\Tests\Integration\TestCase;
@@ -188,66 +186,5 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 		$this->assertFalse($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
 		$this->assertTrue($message->isSignatureValid());
-	}
-
-	/**
-	 * Verifies that all five header fields parsed during the loadBody=false sync path
-	 * are correctly extracted. This is the regression guard for switching from
-	 * BODY.PEEK[HEADER] (full headers) to BODY.PEEK[HEADER.FIELDS (...)] (selective).
-	 */
-	public function testSyncPathParsesAllRequiredHeaderFields(): void {
-		// Append raw bytes directly to avoid Horde_Mime_Mail rewriting the headers
-		$rawMime = implode("\r\n", [
-			'From: sender@test.invalid',
-			'To: recipient@test.invalid',
-			'Subject: Header fields test',
-			'Message-ID: <header-fields-test@test.invalid>',
-			'References: <parent@test.invalid>',
-			'Disposition-Notification-To: sender@test.invalid',
-			'DKIM-Signature: v=1; a=rsa-sha256; d=test.invalid; s=default;',
-			' h=from:to:subject;',
-			' bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;',
-			' b=ZXhhbXBsZXNpZ25hdHVyZQ==',
-			'List-Unsubscribe: <https://test.invalid/unsubscribe>',
-			'List-Unsubscribe-Post: List-Unsubscribe=One-Click',
-			'Content-Type: text/plain; charset=utf-8',
-			'',
-			'Test body',
-		]);
-
-		$appendClient = $this->getClient(null);
-		$uid = $appendClient->append('INBOX', [['data' => $rawMime]])->ids[0];
-		$appendClient->logout();
-
-		/** @var ImapMessageMapper $mapper */
-		$mapper = Server::get(ImapMessageMapper::class);
-		$fetchClient = $this->getClient($this->account);
-		try {
-			$messages = $mapper->findByIds(
-				$fetchClient,
-				'INBOX',
-				new Horde_Imap_Client_Ids([$uid]),
-				$this->account->getUserId(),
-			);
-		} finally {
-			$fetchClient->logout();
-		}
-
-		$this->assertCount(1, $messages);
-		$message = $messages[0];
-
-		// disposition-notification-to
-		$this->assertSame('sender@test.invalid', $message->getDispositionNotificationTo());
-
-		// dkim-signature (no public getter — check via serialization)
-		$this->assertTrue($message->jsonSerialize()['hasDkimSignature']);
-
-		// list-unsubscribe + list-unsubscribe-post
-		$this->assertSame('https://test.invalid/unsubscribe', $message->getUnsubscribeUrl());
-		$this->assertTrue($message->isOneClickUnsubscribe());
-
-		// references — flows through toDbMessage() which parses IDs from the raw value
-		$dbMessage = $message->toDbMessage(1, $this->account);
-		$this->assertStringContainsString('parent@test.invalid', $dbMessage->getReferences() ?? '');
 	}
 }
