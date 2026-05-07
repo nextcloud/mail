@@ -17,7 +17,16 @@
 			:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger folders.')" />
 		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
 		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
-		<template v-else-if="hasGroupedEnvelopes && !isPriorityInbox">
+		<div v-else>
+			<div v-if="!selectMode" class="select-all-bar">
+				<NcCheckboxRadioSwitch
+					:model-value="false"
+					type="checkbox"
+					@update:checked="selectAll">
+					{{ n('mail', 'Select {count} message', 'Select all {count} messages', flatEnvelopeList.length, { count: flatEnvelopeList.length }) }}
+				</NcCheckboxRadioSwitch>
+			</div>
+			<template v-if="hasGroupedEnvelopes && !isPriorityInbox">
 			<div v-for="[label, group] in groupEnvelopes" :key="label">
 				<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
 				<EnvelopeList
@@ -28,7 +37,11 @@
 					:loading-more="false"
 					:load-more-button="false"
 					:skip-transition="skipListTransition"
-					@delete="onDelete" />
+					:selection="selection"
+					:flat-index="getGroupFlatIndex(label)"
+					@delete="onDelete"
+					@update:selection="onUpdateSelection"
+					@select-range="onSelectRange" />
 			</div>
 		</template>
 		<EnvelopeList
@@ -41,8 +54,13 @@
 			:loading-more="loadingMore"
 			:load-more-button="showLoadMore"
 			:skip-transition="skipListTransition"
+			:selection="selection"
+			:flat-index="0"
 			@delete="onDelete"
-			@load-more="loadMore" />
+			@load-more="loadMore"
+			@update:selection="onUpdateSelection"
+			@select-range="onSelectRange" />
+		</div>
 	</div>
 </template>
 
@@ -56,6 +74,7 @@ import EnvelopeList from './EnvelopeList.vue'
 import Error from './Error.vue'
 import Loading from './Loading.vue'
 import LoadingSkeleton from './LoadingSkeleton.vue'
+import { NcCheckboxRadioSwitch } from '@nextcloud/vue'
 import SectionTitle from './SectionTitle.vue'
 import MailboxLockedError from '../errors/MailboxLockedError.js'
 import MailboxNotCachedError from '../errors/MailboxNotCachedError.js'
@@ -76,6 +95,7 @@ export default {
 		Error,
 		Loading,
 		LoadingSkeleton,
+		NcCheckboxRadioSwitch,
 		SectionTitle,
 	},
 
@@ -141,6 +161,7 @@ export default {
 			endReached: false,
 			syncedMailboxes: new Set(),
 			skipListTransition: false,
+			selection: [],
 		}
 	},
 
@@ -175,10 +196,37 @@ export default {
 		showLoadMore() {
 			return !this.endReached && this.paginate === 'manual'
 		},
+
+		/**
+		 * Flat list of all visible envelopes, regardless of grouping.
+		 * Used for shift-click range selection and Select All.
+		 */
+		flatEnvelopeList() {
+			if (this.hasGroupedEnvelopes) {
+				return this.groupEnvelopes.flatMap(([, group]) => group)
+			}
+			return this.envelopesToShow
+		},
+
+		/**
+		 * Whether selection mode is active (at least one envelope selected).
+		 */
+		selectMode() {
+			return this.selection.length > 0
+		},
+
+		/**
+		 * Whether all visible envelopes are currently selected.
+		 */
+		allSelected() {
+			return this.flatEnvelopeList.length > 0
+				&& this.selection.length === this.flatEnvelopeList.length
+		},
 	},
 
 	watch: {
 		mailbox() {
+			this.selection = []
 			this.loadEnvelopes()
 				.then(() => {
 					logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.query}) after folder change`)
@@ -187,10 +235,12 @@ export default {
 		},
 
 		searchQuery() {
+			this.selection = []
 			this.loadEnvelopes()
 		},
 
 		sortOrder() {
+			this.selection = []
 			this.loadEnvelopes()
 		},
 	},
@@ -542,6 +592,9 @@ export default {
 		// onDelete(id): Load more message and navigate to other message if needed
 		// id: The id of the message being delete
 		onDelete(id) {
+			// Remove from selection if selected
+			this.selection = this.selection.filter((selectedId) => selectedId !== id)
+
 			// Get a new message
 			this.mainStore.fetchNextEnvelopes({
 				mailboxId: this.mailbox.databaseId,
@@ -603,6 +656,82 @@ export default {
 			this.loadMailboxInterval = undefined
 		},
 
+		/**
+		 * Compute the flat index offset for a group label.
+		 * Used by grouped EnvelopeList children to emit
+		 * correct global indices for shift-click range selection.
+		 *
+		 * @param {string} label The group label key
+		 * @return {number} Flat index of the first envelope in this group
+		 */
+		getGroupFlatIndex(label) {
+			let offset = 0
+			for (const [groupLabel, group] of this.groupEnvelopes) {
+				if (groupLabel === label) {
+					return offset
+				}
+				offset += group.length
+			}
+			return offset
+		},
+
+		/**
+		 * Handle a child EnvelopeList updating its selection.
+		 * The child emits its full new selection array (local IDs),
+		 * and we merge it with the global selection, replacing
+		 * any IDs from this child's visible envelope set.
+		 *
+		 * @param {number[]} childSelection Array of selected envelope databaseIds
+		 * @param {object[]} childEnvelopes Array of envelopes visible in this child
+		 */
+		onUpdateSelection(childSelection, childEnvelopes) {
+			const childIds = new Set(childEnvelopes.map((e) => e.databaseId))
+			// Remove all IDs from this child's scope, then add the new selection
+			this.selection = this.selection.filter((id) => !childIds.has(id))
+			this.selection.push(...childSelection)
+		},
+
+		/**
+		 * Handle shift-click range selection across the flat envelope list.
+		 * Called by a child EnvelopeList with global flat indices.
+		 *
+		 * @param {number} fromIndex Start of the range (global flat index)
+		 * @param {number} toIndex End of the range (global flat index)
+		 * @param {boolean} deselect If true, remove the range from selection
+		 */
+		onSelectRange(fromIndex, toIndex, deselect = false) {
+			const start = Math.min(fromIndex, toIndex)
+			const end = Math.max(fromIndex, toIndex)
+			const idsInRange = new Set(
+				this.flatEnvelopeList
+					.slice(start, end + 1)
+					.map((e) => e.databaseId),
+			)
+			if (deselect) {
+				this.selection = this.selection.filter((id) => !idsInRange.has(id))
+			} else {
+				const newSelection = new Set(this.selection)
+				for (const id of idsInRange) {
+					newSelection.add(id)
+				}
+				this.selection = [...newSelection]
+			}
+		},
+
+		/**
+		 * Select all visible envelopes.
+		 */
+		selectAll() {
+			this.selection = this.flatEnvelopeList.map((e) => e.databaseId)
+		},
+
+		/**
+		 * Clear the current selection.
+		 */
+		unselectAll() {
+			this.selection = []
+		},
+
 		getLabelForGroup(group) {
 			switch (group) {
 				case 'lastHour':
@@ -635,5 +764,17 @@ export default {
 	height: 100%;
 	display: flex;
 	justify-content: center;
+}
+
+.select-all-bar {
+	display: flex;
+	align-items: center;
+	margin-top: 8px;
+	padding: 4px 8px;
+	cursor: pointer;
+	border-bottom: 1px solid var(--color-border);
+	&:hover {
+		background-color: var(--color-background-hover);
+	}
 }
 </style>
