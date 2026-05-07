@@ -81,18 +81,14 @@ class ImapToDbSynchronizerTest extends TestCase {
 		$initialClient = $this->createMock(Horde_Imap_Client_Socket::class);
 		$initialClient->method('__get')->with('capability')->willReturn($capability);
 		$noCacheClient = $this->createStub(Horde_Imap_Client_Socket::class);
-		$cacheClient = $this->createMock(Horde_Imap_Client_Socket::class);
-		$cacheClient->expects($this->once())
+		$initialClient->expects($this->once())
 			->method('getSyncToken')
 			->with('INBOX')
 			->willReturn('dG9rZW5XaXRoSA==');
-		$cacheClient->expects($this->once())->method('logout');
-		$this->clientFactory->expects($this->exactly(2))
+		$this->clientFactory->expects($this->once())
 			->method('getClient')
-			->willReturnMap([
-				[$account, false, $noCacheClient],
-				[$account, true, $cacheClient],
-			]);
+			->with($account, false)
+			->willReturn($noCacheClient);
 		$this->dbMapper->method('findHighestUid')->willReturn(null);
 		$this->imapMapper->method('findAll')->willReturn([
 			'messages' => [],
