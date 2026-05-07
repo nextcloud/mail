@@ -12,6 +12,7 @@ namespace OCA\Mail\Command;
 use OCA\Mail\Account;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
@@ -34,17 +35,20 @@ final class SyncAccount extends Command {
 	private MailboxSync $mailboxSync;
 	private ImapToDbSynchronizer $syncService;
 	private LoggerInterface $logger;
+	private IMAPClientFactory $clientFactory;
 
 	public function __construct(AccountService $service,
 		MailboxSync $mailboxSync,
 		ImapToDbSynchronizer $messageSync,
-		LoggerInterface $logger) {
+		LoggerInterface $logger,
+		IMAPClientFactory $clientFactory) {
 		parent::__construct();
 
 		$this->accountService = $service;
 		$this->mailboxSync = $mailboxSync;
 		$this->syncService = $messageSync;
 		$this->logger = $logger;
+		$this->clientFactory = $clientFactory;
 	}
 
 	/**
@@ -94,6 +98,10 @@ final class SyncAccount extends Command {
 			$mbs = (int)(memory_get_usage() / 1024 / 1024);
 			$output->writeln("<info>Batch of new messages sync'ed. " . $mbs . 'MB of memory in use</info>');
 			$this->sync($account, $force, $output);
+		}
+
+		foreach ($this->clientFactory->getLoginStats() as $host => $count) {
+			$consoleLogger->debug(sprintf('%d IMAP connection(s) to %s', $count, $host));
 		}
 	}
 }
