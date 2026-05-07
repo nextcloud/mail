@@ -18,13 +18,27 @@ use ReturnTypeWillChange;
  * @method void setImapMessageId(string $imapMessageId)
  * @method int getTagId()
  * @method void setTagId(int $tagId)
+ * @method string getType()
+ * @method void setType(string $type)
  */
 class MessageTags extends Entity implements JsonSerializable {
+	/**
+	 * Tag was applied by the user (manual interaction).
+	 */
+	public const TYPE_USER = 'user';
+
+	/**
+	 * Tag was applied by the automatic importance classifier.
+	 */
+	public const TYPE_CLASSIFIER = 'classifier';
+
 	protected $imapMessageId;
 	protected $tagId;
+	protected $type = self::TYPE_USER;
 
 	public function __construct() {
 		$this->addType('tagId', 'integer');
+		$this->addType('type', 'string');
 	}
 
 	#[\Override]
@@ -34,6 +48,7 @@ class MessageTags extends Entity implements JsonSerializable {
 			'id' => $this->getId(),
 			'imapMessageId' => $this->getImapMessageId(),
 			'tagId' => $this->getTagId(),
+			'type' => $this->getType(),
 		];
 	}
 }

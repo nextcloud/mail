@@ -16,6 +16,7 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Db\MessageTags;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\ThreadMapper;
 use OCA\Mail\Service\AccountService;
@@ -115,7 +116,7 @@ class FollowUpClassifierJobTest extends TestCase {
 			->willReturn($tag);
 		$this->mailManager->expects(self::once())
 			->method('tagMessage')
-			->with($account, 'sent', $message, $tag, true);
+			->with($account, 'sent', $message, $tag, true, MessageTags::TYPE_CLASSIFIER);
 
 		$this->job->run($argument);
 	}
@@ -248,7 +249,7 @@ class FollowUpClassifierJobTest extends TestCase {
 			->willReturn($tag);
 		$this->mailManager->expects(self::once())
 			->method('tagMessage')
-			->with($account, 'sent', $message, $tag, true);
+			->with($account, 'sent', $message, $tag, true, MessageTags::TYPE_CLASSIFIER);
 
 		$this->job->run($argument);
 	}
@@ -302,7 +303,7 @@ class FollowUpClassifierJobTest extends TestCase {
 			->willReturn($tag);
 		$this->mailManager->expects(self::once())
 			->method('tagMessage')
-			->with($account, 'sent', $message, $tag, true);
+			->with($account, 'sent', $message, $tag, true, MessageTags::TYPE_CLASSIFIER);
 
 		$this->job->run($argument);
 	}
