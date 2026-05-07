@@ -266,11 +266,20 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+
+		selection: {
+			type: Array,
+			default: () => [],
+		},
+
+		flatIndex: {
+			type: Number,
+			default: 0,
+		},
 	},
 
 	data() {
 		return {
-			selection: [],
 			showMoveModal: false,
 			showTagModal: false,
 			lastToggledIndex: undefined,
@@ -362,10 +371,27 @@ export default {
 	},
 
 	watch: {
+		selection: {
+			handler(newSelection) {
+				// Sync flags.selected with the global selection prop.
+				// This ensures checkboxes stay correct when another
+				// EnvelopeList instance changes the selection (e.g. shift-click
+				// across groups, or Select All / Unselect All).
+				const selectionSet = new Set(newSelection)
+				this.sortedEnvelops.forEach((env) => {
+					env.flags.selected = selectionSet.has(env.databaseId)
+				})
+			},
+			immediate: true,
+		},
+
 		sortedEnvelops(newVal, oldVal) {
-			// Unselect vanished envelopes
-			const newIds = newVal.map((env) => env.databaseId)
-			this.selection = this.selection.filter((id) => newIds.includes(id))
+			// Unselect vanished envelopes by emitting cleaned selection
+			const newIds = new Set(newVal.map((env) => env.databaseId))
+			const cleanedSelection = this.selection.filter((id) => newIds.has(id))
+			if (cleanedSelection.length !== this.selection.length) {
+				this.$emit('update:selection', cleanedSelection, this.envelopes)
+			}
 			differenceWith((a, b) => a.databaseId === b.databaseId, oldVal, newVal)
 				.forEach((env) => {
 					env.flags.selected = false
@@ -538,16 +564,22 @@ export default {
 			const alreadySelected = this.selection.includes(envelope.databaseId)
 			if (selected && !alreadySelected) {
 				envelope.flags.selected = true
-				this.selection.push(envelope.databaseId)
 			} else if (!selected && alreadySelected) {
 				envelope.flags.selected = false
-				this.selection.splice(this.selection.indexOf(envelope.databaseId), 1)
 			}
+		},
+
+		emitLocalSelection() {
+			const localIds = this.sortedEnvelops
+				.filter((env) => env.flags.selected)
+				.map((env) => env.databaseId)
+			this.$emit('update:selection', localIds, this.envelopes)
 		},
 
 		onEnvelopeSelectToggle(envelope, index, selected) {
 			this.lastToggledIndex = index
 			this.setEnvelopeSelected(envelope, selected)
+			this.emitLocalSelection()
 		},
 
 		onEnvelopeSelectMultiple(envelope, index) {
@@ -558,12 +590,12 @@ export default {
 				return
 			}
 
-			const start = Math.min(lastToggledIndex, index)
-			const end = Math.max(lastToggledIndex, index)
-			const selected = this.selection.includes(envelope.databaseId)
-			for (let i = start; i <= end; i++) {
-				this.setEnvelopeSelected(this.sortedEnvelops[i], !selected)
-			}
+			// Convert to global flat indices and delegate to the parent
+			const globalFrom = this.flatIndex + lastToggledIndex
+			const globalTo = this.flatIndex + index
+			// If the clicked envelope is already selected, deselect the range
+			const deselect = this.selection.includes(envelope.databaseId)
+			this.$emit('select-range', globalFrom, globalTo, deselect)
 			this.lastToggledIndex = index
 		},
 
@@ -571,7 +603,7 @@ export default {
 			this.sortedEnvelops.forEach((env) => {
 				env.flags.selected = false
 			})
-			this.selection = []
+			this.$emit('update:selection', [], this.envelopes)
 		},
 
 		onOpenMoveModal() {
