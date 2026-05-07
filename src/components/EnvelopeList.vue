@@ -113,7 +113,7 @@
 						{{ n('mail', 'Forward {number} as attachment', 'Forward {number} as attachment', selection.length, { number: selection.length }) }}
 					</ActionButton>
 				</Actions>
-				</div>
+			</div>
 		</transition>
 
 		<transition-group :name="listTransitionName">
