@@ -61,7 +61,10 @@ import {
 } from '../../service/caldavService.js'
 import { moveDraft, updateDraft } from '../../service/DraftService.js'
 import * as FollowUpService from '../../service/FollowUpService.js'
-import { addInternalAddress, removeInternalAddress } from '../../service/InternalAddressService.js'
+import {
+	addInternalAddress,
+	removeInternalAddress,
+} from '../../service/InternalAddressService.js'
 import {
 	clearMailbox,
 	create as createMailbox,
@@ -92,14 +95,25 @@ import {
 } from '../../service/MessageService.js'
 import { showNewMessagesNotification } from '../../service/NotificationService.js'
 import { savePreference } from '../../service/PreferenceService.js'
-import { createQuickAction, deleteQuickAction, updateQuickAction } from '../../service/QuickActionsService.js'
+import {
+	createQuickAction,
+	deleteQuickAction,
+	updateQuickAction,
+} from '../../service/QuickActionsService.js'
 import {
 	getActiveScript,
 	updateActiveScript,
 	updateAccount as updateSieveAccount,
 } from '../../service/SieveService.js'
-import * as SmimeCertificateService from '../../service/SmimeCertificateService.js'
-import { createTextBlock, deleteTextBlock, fetchMyTextBlocks, fetchSharedTextBlocks, updateTextBlock } from '../../service/TextBlockService.js'
+import * as SmimeCertificateService
+	from '../../service/SmimeCertificateService.js'
+import {
+	createTextBlock,
+	deleteTextBlock,
+	fetchMyTextBlocks,
+	fetchSharedTextBlocks,
+	updateTextBlock,
+} from '../../service/TextBlockService.js'
 import * as ThreadService from '../../service/ThreadService.js'
 import { normalizedEnvelopeListId } from '../../util/normalization.js'
 import {
@@ -522,6 +536,7 @@ export default function mainStoreActions() {
 								bodyPlain: data.bodyPlain,
 								replyTo: reply.data,
 								smartReply: reply.smartReply,
+								attachments: this.prepareAttachments(original),
 							},
 						})
 						return
@@ -543,6 +558,7 @@ export default function mainStoreActions() {
 								bodyPlain: data.bodyPlain,
 								replyTo: reply.data,
 								smartReply: reply.smartReply,
+								attachments: this.prepareAttachments(original),
 							},
 						})
 						return
@@ -558,13 +574,7 @@ export default function mainStoreActions() {
 								bodyHtml: data.bodyHtml,
 								bodyPlain: data.bodyPlain,
 								forwardFrom: reply.data,
-								attachments: original.attachments.map((attachment) => ({
-									...attachment,
-									mailboxId: original.mailboxId,
-									// messageId for attachments is actually the uid
-									uid: attachment.messageId,
-									type: 'message-attachment',
-								})),
+								attachments: this.prepareAttachments(original, true),
 							},
 						})
 						return
@@ -613,6 +623,35 @@ export default function mainStoreActions() {
 					this.setComposerMessageSavedMutation(true)
 				}
 			})
+		},
+		prepareAttachments(original, forward = false) {
+			const attachments = []
+
+			if (forward && original.attachments) {
+				for (const attachment of original.attachments) {
+					attachments.push({
+						...attachment,
+						mailboxId: original.mailboxId,
+						// messageId for attachments is actually the uid
+						uid: attachment.messageId,
+						type: 'message-attachment',
+					})
+				}
+			}
+
+			if (original.inlineAttachments) {
+				for (const inlineAttachment of original.inlineAttachments) {
+					attachments.push({
+						...inlineAttachment,
+						mailboxId: original.mailboxId,
+						// messageId for attachments is actually the uid
+						uid: inlineAttachment.messageId,
+						type: 'message-attachment-inline',
+					})
+				}
+			}
+
+			return attachments
 		},
 		async stopComposerSession({
 			restoreOriginalSendAt = false,

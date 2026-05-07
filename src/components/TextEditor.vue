@@ -217,6 +217,17 @@ export default {
 						},
 					],
 				},
+
+				htmlSupport: {
+					allow: [
+						{
+							name: 'img',
+							attributes: {
+								'data-cid': true,
+							},
+						},
+					],
+				},
 			},
 		}
 	},
@@ -415,7 +426,7 @@ export default {
 					/* eslint-disable @stylistic/comma-dangle, @stylistic/function-paren-newline */
 					const { default: coreTranslations } = await import(
 						/* webpackMode: "lazy" */
-						`ckeditor5/translations/${candidate}.js`
+						`../../node_modules/ckeditor5/build/translations/${candidate}.js`
 					)
 					/* eslint-enable @stylistic/comma-dangle, @stylistic/function-paren-newline */
 
@@ -666,7 +677,11 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	border-radius: var(--border-radius-large) !important;
 	background: var(--color-main-background) !important;
     color: var(--color-main-text) !important;
-	border: 1px solid var(--color-text-maxcontrast) !important;
+	border: 1px solid var(--color-border) !important;
+
+	.ck.ck-toolbar__separator {
+		background: var(--color-border) !important;
+	}
 }
 
 .ck-rounded-corners .ck.ck-dropdown__panel, .ck.ck-dropdown__panel.ck-rounded-corners {

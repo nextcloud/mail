@@ -275,7 +275,7 @@ jobs:
         run: npm ci
       - name: Build frontend
         working-directory: nextcloud/apps/mail
-        run: npm run build
+        run: npm run build -- --fail-on-warnings
       - name: Install stunnel (tiny https proxy)
         run: sudo apt-get install -y stunnel
       - name: Start php server and https proxy

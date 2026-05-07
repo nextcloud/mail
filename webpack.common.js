@@ -106,6 +106,10 @@ module.exports = async () => ({
 			},
 		],
 	},
+	performance: {
+		maxAssetSize: 5 * 1024 * 1024,
+		maxEntrypointSize: 2 * 1024 * 1024,
+	},
 	plugins,
 	resolve: {
 		extensions: ['*', '.tsx', '.ts', '.js', '.vue', '.json'],

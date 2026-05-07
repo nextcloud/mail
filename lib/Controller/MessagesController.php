@@ -259,10 +259,8 @@ class MessagesController extends Controller {
 		if ($itineraries) {
 			$json['itineraries'] = $itineraries;
 		}
-		$json['attachments'] = array_map(fn ($a) => $this->enrichDownloadUrl(
-			$id,
-			$a
-		), $json['attachments']);
+		$json['attachments'] = $this->enrichAttachments($id, $json['attachments']);
+		$json['inlineAttachments'] = $this->enrichAttachments($id, $json['inlineAttachments']);
 		$json['accountId'] = $account->getId();
 		$json['mailboxId'] = $mailbox->getId();
 		$json['databaseId'] = $message->getId();
@@ -339,6 +337,9 @@ class MessagesController extends Controller {
 	}
 
 	private function isSenderTrusted(Message $message): bool {
+		if ($this->currentUserId === null) {
+			return false;
+		}
 		$from = $message->getFrom();
 		$first = $from->first();
 		if ($first === null) {
@@ -380,7 +381,7 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		}
 
-		return new JSONResponse($this->mailManager->getThread($account, $message->getThreadRootId()));
+		return new JSONResponse($this->mailManager->getThread($account, (string)$message->getThreadRootId()));
 	}
 
 	/**
@@ -589,7 +590,7 @@ class MessagesController extends Controller {
 		}
 
 		return new AttachmentDownloadResponse(
-			$source,
+			$source ?? '',
 			$message->getSubject() . '.eml',
 			'message/rfc822',
 		);
@@ -645,9 +646,7 @@ class MessagesController extends Controller {
 						$mailbox,
 						$message->getUid(),
 						true
-					)->getHtmlBody(
-						$id
-					);
+					)->getHtmlBody($id);
 				} finally {
 					$client->logout();
 				}
@@ -720,7 +719,8 @@ class MessagesController extends Controller {
 		);
 
 		// Body party and embedded messages do not have a name
-		if ($attachment->getName() === null) {
+		$attachmentName = $attachment->getName();
+		if ($attachmentName === null) {
 			return new AttachmentDownloadResponse(
 				$attachment->getContent(),
 				$this->l10n->t('Embedded message %s', [
@@ -731,7 +731,7 @@ class MessagesController extends Controller {
 		}
 		return new AttachmentDownloadResponse(
 			$attachment->getContent(),
-			$attachment->getName(),
+			$attachmentName,
 			$attachment->getType()
 		);
 	}
@@ -765,7 +765,7 @@ class MessagesController extends Controller {
 		$zip = new ZipResponse($this->request, 'attachments');
 
 		foreach ($attachments as $attachment) {
-			$fileName = $attachment->getName();
+			$fileName = $attachment->getName() ?? '';
 			$fh = fopen('php://temp', 'r+');
 			if ($fh === false) {
 				continue;
@@ -799,6 +799,9 @@ class MessagesController extends Controller {
 		if ($this->currentUserId === null) {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
+		if ($this->userFolder === null) {
+			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -830,7 +833,7 @@ class MessagesController extends Controller {
 			]) . '.eml';
 			$fileParts = pathinfo($fileName);
 			$fileName = $fileParts['filename'];
-			$fileExtension = $fileParts['extension'];
+			$fileExtension = $fileParts['extension'] ?? '';
 			$fullPath = "$targetPath/$fileName.$fileExtension";
 			$counter = 2;
 			while ($this->userFolder->nodeExists($fullPath)) {
@@ -994,7 +997,7 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 		try {
-			$replies = array_values($this->aiIntegrationService->getSmartReply($account, $mailbox, $message, $this->currentUserId));
+			$replies = array_values($this->aiIntegrationService->getSmartReply($account, $mailbox, $message, $this->currentUserId) ?? []);
 		} catch (ServiceException $e) {
 			$this->logger->error('Smart reply failed: ' . $e->getMessage(), [
 				'exception' => $e,
@@ -1049,20 +1052,24 @@ class MessagesController extends Controller {
 		}
 	}
 
+	private function enrichAttachments(int $id, array $attachments): array {
+		return array_map(
+			fn ($attachment) => $this->enrichAttachment($id, $attachment),
+			$attachments
+		);
+	}
+
 	/**
 	 * @param int $id
 	 * @param array $attachment
 	 *
 	 * @return array
 	 */
-	private function enrichDownloadUrl(int $id,
-		array $attachment) {
-		$downloadUrl = $this->urlGenerator->linkToRoute('mail.messages.downloadAttachment',
-			[
-				'id' => $id,
-				'attachmentId' => $attachment['id'],
-			]);
-		$downloadUrl = $this->urlGenerator->getAbsoluteURL($downloadUrl);
+	private function enrichAttachment(int $id, array $attachment): array {
+		$downloadUrl = $this->urlGenerator->linkToRouteAbsolute('mail.messages.downloadAttachment', [
+			'id' => $id,
+			'attachmentId' => $attachment['id'],
+		]);
 		$attachment['downloadUrl'] = $downloadUrl;
 		$attachment['mimeUrl'] = $this->mimeTypeDetector->mimeTypeIcon($attachment['mime']);
 
