@@ -43,7 +43,7 @@
 						v-if="isAtLeastOneSelectedFavorite"
 						variant="tertiary"
 						:title="n('mail', 'Unfavorite {number}', 'Unfavorite {number}', selection.length, { number: selection.length })"
-						@click.prevent="favoriteAll">
+						@click.prevent="unfavoriteAll">
 						<IconUnFavorite :size="20" />
 					</NcButton>
 
@@ -51,7 +51,7 @@
 						v-if="isAtLeastOneSelectedUnFavorite"
 						variant="tertiary"
 						:title="n('mail', 'Favorite {number}', 'Favorite {number}', selection.length, { number: selection.length })"
-						@click.prevent="unFavoriteAll">
+						@click.prevent="favoriteAll">
 						<IconFavorite :size="20" />
 					</NcButton>
 
@@ -454,23 +454,21 @@ export default {
 			this.unselectAll()
 		},
 
-		favoriteAll() {
-			const favFlag = !this.isAtLeastOneSelectedUnFavorite
+		unfavoriteAll() {
 			this.selectedEnvelopes.forEach((envelope) => {
 				this.mainStore.markEnvelopeFavoriteOrUnfavorite({
 					envelope,
-					favFlag,
+					favFlag: false,
 				})
 			})
 			this.unselectAll()
 		},
 
-		unFavoriteAll() {
-			const favFlag = !this.isAtLeastOneSelectedFavorite
+		favoriteAll() {
 			this.selectedEnvelopes.forEach((envelope) => {
 				this.mainStore.markEnvelopeFavoriteOrUnfavorite({
 					envelope,
-					favFlag,
+					favFlag: true,
 				})
 			})
 			this.unselectAll()
