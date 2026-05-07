@@ -56,13 +56,16 @@ class Provider {
 	 * @return Horde_Imap_Client_Search_Query
 	 */
 	private function convertMailQueryToHordeQuery(SearchQuery $searchQuery): Horde_Imap_Client_Search_Query {
+		$query = new Horde_Imap_Client_Search_Query();
+
+		$query->charset('UTF-8');
 		return array_reduce(
 			$searchQuery->getBodies(),
 			static function (Horde_Imap_Client_Search_Query $query, string $textToken) {
 				$query->text($textToken, true);
 				return $query;
 			},
-			new Horde_Imap_Client_Search_Query()
+			$query
 		);
 	}
 }
