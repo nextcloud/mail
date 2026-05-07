@@ -28,6 +28,12 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 	private ?IMemcache $rateLimiterCache = null;
 	private ?ITimeFactory $timeFactory = null;
 	private ?string $hash = null;
+	private IMAPClientFactory $factory;
+
+	public function __construct(array $params, IMAPClientFactory $factory) {
+		parent::__construct($params);
+		$this->factory = $factory;
+	}
 
 	public function enableRateLimiter(
 		IMemcache $cache,
@@ -57,7 +63,9 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 	private const RATE_LIMIT_WINDOW = 3 * 60 * 60;
 
 	protected function imapLogin() {
-		return parent::_login();
+		$result = parent::_login();
+		$this->factory->recordLogin($this->_params['hostspec']);
+		return $result;
 	}
 
 	#[\Override]
