@@ -26,15 +26,19 @@ class MimeMessage {
 	}
 
 	/**
-	 * generates mime message
+	 * Generates mime message
 	 *
-	 * @param string $contentPlain
-	 * @param string $contentHtml
-	 * @param Horde_Mime_Part[] $attachments
+	 * @param list<Horde_Mime_Part> $attachments
 	 *
 	 * @return Horde_Mime_Part
 	 */
-	public function build(?string $contentPlain, ?string $contentHtml, array $attachments, bool $isPgpEncrypted = false): Horde_Mime_Part {
+	public function build(
+		?string $contentPlain,
+		?string $contentHtml,
+		bool $isPgpEncrypted,
+		array $attachments,
+	): Horde_Mime_Part {
+		[$inlineAttachments, $attachments] = $this->separateAttachments($attachments);
 
 		if ($isPgpEncrypted === true && isset($contentPlain)) {
 			$basePart = $this->buildPgpPart($contentPlain);
@@ -44,12 +48,12 @@ class MimeMessage {
 			*/
 			$basePart = new Horde_Mime_Part();
 			$basePart->setType('multipart/mixed');
-			$basePart[] = $this->buildMessagePart($contentPlain, $contentHtml);
+			$basePart[] = $this->buildMessagePart($contentPlain, $contentHtml, $inlineAttachments);
 			foreach ($attachments as $attachment) {
 				$basePart[] = $attachment;
 			}
 		} else {
-			$basePart = $this->buildMessagePart($contentPlain, $contentHtml);
+			$basePart = $this->buildMessagePart($contentPlain, $contentHtml, $inlineAttachments);
 		}
 
 		$basePart->isBasePart(true);
@@ -60,9 +64,11 @@ class MimeMessage {
 	/**
 	 * generates html/plain message part
 	 *
+	 * @param list<Horde_Mime_Part> $inlineAttachments
+	 *
 	 * @return Horde_Mime_Part
 	 */
-	private function buildMessagePart(?string $contentPlain, ?string $contentHtml): Horde_Mime_Part {
+	private function buildMessagePart(?string $contentPlain, ?string $contentHtml, array $inlineAttachments): Horde_Mime_Part {
 
 		if (isset($contentHtml)) {
 
@@ -73,39 +79,9 @@ class MimeMessage {
 				$source = ' ' . $contentHtml;
 			}
 
-			// determine if content has any embedded images
-			$embeddedParts = [];
 			$doc = Parser::parseToDomDocument($source);
-			foreach ($doc->getElementsByTagName('img') as $id => $image) {
-				if (!($image instanceof DOMElement)) {
-					continue;
-				}
-
-				$src = $image->getAttribute('src');
-				if ($src === '') {
-					continue;
-				}
-				try {
-					$dataUri = $this->uriParser->parse($src);
-				} catch (InvalidDataUriException $e) {
-					continue;
-				}
-
-				$part = new Horde_Mime_Part();
-				$part->setType($dataUri->getMediaType());
-				$part->setCharset($dataUri->getParameters()['charset']);
-				$part->setName('embedded_image_' . $id);
-				$part->setDisposition('inline');
-				if ($dataUri->isBase64()) {
-					$part->setTransferEncoding('base64');
-				}
-				$part->setContents($dataUri->getData());
-
-				$cid = $part->setContentId();
-				$embeddedParts[] = $part;
-
-				$image->setAttribute('src', 'cid:' . $cid);
-			}
+			array_push($inlineAttachments, ...$this->extractDataUriImages($doc));
+			$this->rewriteSrcToCid($doc);
 			$htmlContent = $doc->saveHTML();
 
 			$htmlPart = new Horde_Mime_Part();
@@ -145,14 +121,14 @@ class MimeMessage {
 			$messagePart = new Horde_Mime_Part();
 		}
 
-		if (isset($embeddedParts) && count($embeddedParts) > 0) {
+		if (count($inlineAttachments) > 0) {
 			/*
 			 * Text parts with embedded content (e.g. inline images, etc) need be wrapped in multipart/related part
 			 */
 			$basePart = new Horde_Mime_Part();
 			$basePart->setType('multipart/related');
 			$basePart[] = $messagePart;
-			foreach ($embeddedParts as $part) {
+			foreach ($inlineAttachments as $part) {
 				$basePart[] = $part;
 			}
 		} else {
@@ -160,6 +136,74 @@ class MimeMessage {
 		}
 
 		return $basePart;
+	}
+
+	/**
+	 * Extracts data URI images from the HTML document, converts each to an
+	 * inline MIME part with a generated Content-ID, and rewrites the src
+	 * attribute to the corresponding cid: reference.
+	 *
+	 * @return Horde_Mime_Part[]
+	 */
+	private function extractDataUriImages(DOMDocument $doc): array {
+		$parts = [];
+		foreach ($doc->getElementsByTagName('img') as $id => $image) {
+			if (!($image instanceof DOMElement)) {
+				continue;
+			}
+
+			$src = $image->getAttribute('src');
+			if ($src === '') {
+				continue;
+			}
+
+			try {
+				$dataUri = $this->uriParser->parse($src);
+			} catch (InvalidDataUriException) {
+				continue;
+			}
+
+			if (!str_starts_with($dataUri->getMediaType(), 'image/')) {
+				continue;
+			}
+
+			$part = new Horde_Mime_Part();
+			$part->setType($dataUri->getMediaType());
+			$part->setCharset($dataUri->getParameters()['charset']);
+			$part->setName('embedded_image_' . $id);
+			$part->setDisposition('inline');
+			if ($dataUri->isBase64()) {
+				$part->setTransferEncoding('base64');
+			}
+			$part->setContents($dataUri->getData());
+
+			$cid = $part->setContentId();
+			$parts[] = $part;
+
+			$image->setAttribute('src', 'cid:' . $cid);
+		}
+		return $parts;
+	}
+
+	/**
+	 * Rewrites src attributes of img elements that carry a data-cid attribute
+	 * back to their cid: reference, as required by the MIME structure for
+	 * inline attachments when forwarding messages.
+	 */
+	private function rewriteSrcToCid(DOMDocument $doc): void {
+		foreach ($doc->getElementsByTagName('img') as $image) {
+			if (!($image instanceof DOMElement)) {
+				continue;
+			}
+
+			$cid = $image->getAttribute('data-cid');
+			if ($cid === '') {
+				continue;
+			}
+
+			$image->setAttribute('src', 'cid:' . $cid);
+			$image->removeAttribute('data-cid');
+		}
 	}
 
 	/**
@@ -194,6 +238,25 @@ class MimeMessage {
 
 		return $basePart;
 
+	}
+
+	/**
+	 * @param list<Horde_Mime_Part> $attachments
+	 * @return array{0: list<Horde_Mime_Part>, 1: list<Horde_Mime_Part>}
+	 */
+	private function separateAttachments(array $attachments): array {
+		$inline = [];
+		$normal = [];
+
+		foreach ($attachments as $attachment) {
+			if ($attachment->getDisposition() === 'inline') {
+				$inline[] = $attachment;
+			} else {
+				$normal[] = $attachment;
+			}
+		}
+
+		return [$inline, $normal];
 	}
 
 	/**

@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service\HtmlPurify;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use Closure;
 use HTMLPurifier_Config;
 use HTMLPurifier_Context;
 use HTMLPurifier_URI;
@@ -25,7 +24,10 @@ class TransformURLSchemeTest extends TestCase {
 	private IURLGenerator|MockObject $urlGenerator;
 	private IRequest|MockObject $request;
 	private ProxyHmacGenerator|MockObject $hmacGenerator;
-	private Closure $mapCidToAttachmentId;
+
+	private array $inlineAttachments = [
+		['cid' => 'valid-cid', 'url' => 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachment/123'],
+	];
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -33,16 +35,9 @@ class TransformURLSchemeTest extends TestCase {
 		$this->request = $this->createMock(IRequest::class);
 		$this->hmacGenerator = $this->createMock(ProxyHmacGenerator::class);
 
-		$this->mapCidToAttachmentId = function (string $cid) {
-			if ($cid === 'valid-cid') {
-				return 123;
-			}
-			return null;
-		};
-
 		$this->filter = new TransformURLScheme(
 			42,
-			$this->mapCidToAttachmentId,
+			$this->inlineAttachments,
 			$this->urlGenerator,
 			$this->request,
 			$this->hmacGenerator,
@@ -221,11 +216,6 @@ class TransformURLSchemeTest extends TestCase {
 		$config = HTMLPurifier_Config::createDefault();
 		$context = new HTMLPurifier_Context();
 
-		$this->urlGenerator->expects($this->once())
-			->method('linkToRouteAbsolute')
-			->with('mail.messages.downloadAttachment', $this->anything())
-			->willReturn('https://mail.example.com/download/123');
-
 		$result = $this->filter->filter($uri, $config, $context);
 
 		$this->assertTrue($result);
@@ -325,27 +315,17 @@ class TransformURLSchemeTest extends TestCase {
 		$this->assertStringContainsString('%23section', $uri->query);
 	}
 
-	public function testCidSchemeMapsCidToAttachmentId(): void {
-		$filter = new TransformURLScheme(
-			42,
-			$this->mapCidToAttachmentId,
-			$this->urlGenerator,
-			$this->request,
-			$this->hmacGenerator,
-		);
-
+	public function testCidSchemeRewritesUriFromUrl(): void {
 		$uri = new HTMLPurifier_URI('cid', null, null, null, 'valid-cid', null, null);
 		$config = HTMLPurifier_Config::createDefault();
 		$context = new HTMLPurifier_Context();
 
-		$this->urlGenerator->expects($this->once())
-			->method('linkToRouteAbsolute')
-			->with('mail.messages.downloadAttachment', [
-				'id' => 42,
-				'attachmentId' => 123,
-			])
-			->willReturn('https://mail.example.com/download/123');
+		$this->urlGenerator->expects($this->never())->method('linkToRouteAbsolute');
 
-		$filter->filter($uri, $config, $context);
+		$this->filter->filter($uri, $config, $context);
+
+		$this->assertSame('https', $uri->scheme);
+		$this->assertSame('mail.example.com', $uri->host);
+		$this->assertStringContainsString('/apps/mail/api/messages/42/attachment/123', $uri->path);
 	}
 }

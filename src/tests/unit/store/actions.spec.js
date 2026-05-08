@@ -674,4 +674,46 @@ describe('Vuex store actions', () => {
 			'abcdef123', // cache buster
 		)
 	})
+
+	describe('prepareAttachments', () => {
+		const original = {
+			mailboxId: 1,
+			attachments: [{ id: 'att1', messageId: 42, fileName: 'doc.pdf' }],
+			inlineAttachments: [{ id: 'img1', messageId: 42, cid: 'abc@x', fileName: 'logo.png' }],
+		}
+
+		it('reply includes only inline attachments', () => {
+			const result = store.prepareAttachments(original)
+
+			expect(result).toHaveLength(1)
+			expect(result[0]).toMatchObject({
+				id: 'img1',
+				type: 'message-attachment-inline',
+				mailboxId: 1,
+				uid: 42,
+			})
+		})
+
+		it('forward includes regular and inline attachments', () => {
+			const result = store.prepareAttachments(original, true)
+
+			expect(result).toHaveLength(2)
+			expect(result[0]).toMatchObject({
+				id: 'att1',
+				type: 'message-attachment',
+				mailboxId: 1,
+				uid: 42,
+			})
+			expect(result[1]).toMatchObject({
+				id: 'img1',
+				type: 'message-attachment-inline',
+				mailboxId: 1,
+				uid: 42,
+			})
+		})
+
+		it('returns empty array when message has no attachments', () => {
+			expect(store.prepareAttachments({})).toEqual([])
+		})
+	})
 })

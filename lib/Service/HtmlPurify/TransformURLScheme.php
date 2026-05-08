@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\HtmlPurify;
 
-use Closure;
 use HTMLPurifier_Config;
+use HTMLPurifier_Context;
 use HTMLPurifier_URI;
 use HTMLPurifier_URIFilter;
 use HTMLPurifier_URIParser;
@@ -20,34 +20,15 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 
 class TransformURLScheme extends HTMLPurifier_URIFilter {
-	public $name = 'TransformURLScheme';
-	public $post = true;
-
-	/** @var IURLGenerator */
-	private $urlGenerator;
-
-	/** @var IRequest */
-	private $request;
-
-	/**
-	 * @var \Closure
-	 */
-	private $mapCidToAttachmentId;
-
-	private int $id;
-
-	private ProxyHmacGenerator $hmacGenerator;
-
-	public function __construct(int $id,
-		Closure $mapCidToAttachmentId,
-		IURLGenerator $urlGenerator,
-		IRequest $request,
-		ProxyHmacGenerator $hmacGenerator) {
-		$this->id = $id;
-		$this->mapCidToAttachmentId = $mapCidToAttachmentId;
-		$this->urlGenerator = $urlGenerator;
-		$this->request = $request;
-		$this->hmacGenerator = $hmacGenerator;
+	public function __construct(
+		private int $messageId,
+		private array $inlineAttachments,
+		private IURLGenerator $urlGenerator,
+		private IRequest $request,
+		private ProxyHmacGenerator $hmacGenerator,
+	) {
+		$this->name = 'TransformURLScheme';
+		$this->post = true;
 	}
 
 	/**
@@ -55,7 +36,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	 *
 	 * @param \HTMLPurifier_URI $uri
 	 * @param HTMLPurifier_Config $config
-	 * @param \HTMLPurifier_Context $context
+	 * @param HTMLPurifier_Context $context
 	 * @return bool
 	 */
 	#[\Override]
@@ -70,31 +51,13 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 		}
 
 		if ($uri->scheme === 'cid') {
-			$attachmentId = $this->mapCidToAttachmentId->__invoke($uri->path);
-			if (is_null($attachmentId)) {
-				return true;
-			}
-
-			$imgUrl = $this->urlGenerator->linkToRouteAbsolute(
-				'mail.messages.downloadAttachment',
-				[
-					'id' => $this->id,
-					'attachmentId' => $attachmentId,
-				],
-			);
-			$parser = new HTMLPurifier_URIParser();
-			$uri = $parser->parse($imgUrl);
+			$uri = $this->replaceCidWithUrl($uri);
 		}
 
 		return true;
 	}
 
-	/**
-	 * @param HTMLPurifier_URI $uri
-	 * @param \HTMLPurifier_Context $context
-	 * @return HTMLPurifier_URI
-	 */
-	private function filterHttpFtp(&$uri, $context) {
+	private function filterHttpFtp(HTMLPurifier_URI $uri, HTMLPurifier_Context $context): HTMLPurifier_URI {
 		$originalURL = $uri->scheme . '://' . $uri->host;
 
 		// Add the port if it's not a default port
@@ -124,8 +87,8 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 		}
 
 		$proxyUrl = $this->urlGenerator->linkToRoute('mail.proxy.proxy', [
-			'id' => $this->id,
-			'hmac' => $this->hmacGenerator->generate($this->id, $originalURL),
+			'id' => $this->messageId,
+			'hmac' => $this->hmacGenerator->generate($this->messageId, $originalURL),
 			'src' => $originalURL
 		]);
 		$parsedProxyUrl = parse_url($proxyUrl);
@@ -138,5 +101,17 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 			$parsedProxyUrl['query'],
 			null
 		);
+	}
+
+	private function replaceCidWithUrl(HTMLPurifier_URI $uri): HTMLPurifier_URI {
+		$inlineAttachment = array_find($this->inlineAttachments, static function ($attachment) use ($uri) {
+			return $attachment['cid'] === $uri->path;
+		});
+
+		if ($inlineAttachment === null) {
+			return $uri;
+		}
+
+		return (new HTMLPurifier_URIParser())->parse($inlineAttachment['url']);
 	}
 }
