@@ -5,6 +5,7 @@
 /.babelrc
 /build
 codecov.yml
+/.coderabbit.yaml
 /composer.*
 /CONTRIBUTING.md
 /coverage
