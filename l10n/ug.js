@@ -616,6 +616,7 @@ OC.L10N.register(
     "Reply to sender only" : "ئەۋەتكۈچىگە جاۋاب قايتۇرۇڭ",
     "Mark as unfavorite" : "ياقتۇرمايدىغان دەپ بەلگە قويۇڭ",
     "Mark as favorite" : "ياقتۇرىدىغان دەپ بەلگە قويۇڭ",
+    "To:" : "غا:",
     "Unsubscribe via link" : "ئۇلىنىش ئارقىلىق مۇشتەرى بولۇڭ",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "مۇشتەرى بولۇش خەت ئەۋەتىش تىزىملىكىدىكى بارلىق ئۇچۇرلارنى توختىتىدۇ {sender}",
     "Send unsubscribe email" : "مۇشتەرى بولمىغان ئېلېكترونلۇق خەت ئەۋەتىڭ",

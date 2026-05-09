@@ -217,6 +217,7 @@ OC.L10N.register(
     "Add default tags" : "Adicionar etiquetas padrão",
     "Not found" : "Não  encontrado",
     "Reply to sender only" : "Resposta apenas ao remetente",
+    "To:" : "Para:",
     "No senders are trusted at the moment." : "Nenhum remetente é confiável no momento.",
     "Untitled event" : "Evento sem título",
     "Import into {calendar}" : "Importar para {calendar}",

@@ -560,6 +560,7 @@ OC.L10N.register(
     "Reply to sender only" : "Ответить только отправителю",
     "Mark as unfavorite" : "Отметить как неизбранное",
     "Mark as favorite" : "Отметить как избранное",
+    "To:" : "По:",
     "Unsubscribe via link" : "Отписаться по ссылке",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Отказ от подписки приведет к остановке всех сообщений из списка рассылки {sender}",
     "Send unsubscribe email" : "Отправить письмо об отказе от подписки",

@@ -624,6 +624,7 @@ OC.L10N.register(
     "Reply to sender only" : "只回复发送者",
     "Mark as unfavorite" : "取消标记为收藏",
     "Mark as favorite" : "标记为收藏",
+    "To:" : "到：",
     "Unsubscribe via link" : "通过链接取消订阅",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "取消订阅将停止来自邮寄列表 {sender} 的全部邮件",
     "Send unsubscribe email" : "发送取消订阅电子邮件",

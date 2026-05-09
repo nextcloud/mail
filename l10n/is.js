@@ -515,6 +515,7 @@ OC.L10N.register(
     "Reply to sender only" : "Svara einungis sendanda",
     "Mark as unfavorite" : "Taka úr eftirlætum",
     "Mark as favorite" : "Merkja sem eftirlæti",
+    "To:" : "Til:",
     "Unsubscribe via link" : "Hætta í áskrift með tengli",
     "Send unsubscribe email" : "Senda tölvupóst til að segja upp áskrift",
     "Unsubscribe via email" : "Hætta í áskrift með tölvupósti",

@@ -624,6 +624,7 @@ OC.L10N.register(
     "Reply to sender only" : "Atsakyti tik siuntėjui",
     "Mark as unfavorite" : "Pažymėti kaip nepatinkantį",
     "Mark as favorite" : "Žymėti kaip mėgstamiausią",
+    "To:" : "Iki:",
     "Unsubscribe via link" : "Atsisakyti prenumeratos per nuorodą",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Atsisakę prenumeratos, nebegausite jokių laiškų iš šio pašto sąrašo {sender}",
     "Send unsubscribe email" : "Siųsti laišką dėl prenumeratos atsisakymo",

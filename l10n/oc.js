@@ -89,6 +89,7 @@ OC.L10N.register(
     "Tags" : "Etiquetas",
     "Custom" : "Personalizats",
     "Not found" : "Non trobat",
+    "To:" : "Al :",
     "Translate message" : "Traduire lo messatge",
     "Translating" : "Traduccion",
     "Untitled event" : "Eveniment sens títol",

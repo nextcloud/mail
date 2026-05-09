@@ -591,6 +591,7 @@ OC.L10N.register(
     "Unsubscribe" : "Avsluta prenumeration",
     "Reply to sender only" : "Svara endast avsändaren",
     "Mark as favorite" : "Markera som favorit",
+    "To:" : "Till:",
     "Unsubscribe via link" : "Avsluta prenumerationen via länk",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Om du avslutar prenumerationen stoppas alla meddelanden från e-postlistan {sender}",
     "Send unsubscribe email" : "Skicka e-postmeddelande för avregistrering",
