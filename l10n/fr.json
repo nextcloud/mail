@@ -617,6 +617,7 @@
     "Reply to sender only" : "Répondre à l'émetteur uniquement",
     "Mark as unfavorite" : "Ne plus marquer comme favori",
     "Mark as favorite" : "Marquer comme favori",
+    "To:" : "Au :",
     "Unsubscribe via link" : "Se désabonner via un lien",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Le désabonnement stoppera la réception des messages de la liste de diffusion {sender}",
     "Send unsubscribe email" : "Envoyer le mail de désinscription",

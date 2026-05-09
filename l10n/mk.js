@@ -369,6 +369,7 @@ OC.L10N.register(
     "Reply to sender only" : "Одговор само до испраќачот",
     "Mark as unfavorite" : "Од-означи омилена",
     "Mark as favorite" : "Означи како омилена",
+    "To:" : "До:",
     "Untitled event" : "Неименуван настан",
     "(organizer)" : "(organizer)",
     "Import into {calendar}" : "Увези во {calendar}",

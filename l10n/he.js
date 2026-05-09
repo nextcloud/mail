@@ -202,6 +202,7 @@ OC.L10N.register(
     "Could not load your message thread" : "לא ניתן לטעון את שרשור ההודעות שלך",
     "Not found" : "לא נמצא",
     "Reply to sender only" : "להגיב לשולח בלבד",
+    "To:" : "סיום:",
     "Could not remove trusted sender {sender}" : "לא ניתן להסיר את השולח המאומת {sender}",
     "No senders are trusted at the moment." : "אין שולחים מהימנים כרגע.",
     "Untitled event" : "אירוע ללא כותרת",

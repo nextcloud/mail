@@ -573,6 +573,7 @@ OC.L10N.register(
     "Reply to sender only" : "Відповісти лише відправникові",
     "Mark as unfavorite" : "Прибрати зірочку",
     "Mark as favorite" : "Позначити зірочкою",
+    "To:" : "До:",
     "Unsubscribe via link" : "Відписатися через посилання",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Відписка припинить надсилання всіх повідомлень зі списку розсилки {sender}.",
     "Send unsubscribe email" : "Надіслати електронний лист щодо відписування",
