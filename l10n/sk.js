@@ -624,6 +624,7 @@ OC.L10N.register(
     "Reply to sender only" : "Odpovedať iba odosielateľovi",
     "Mark as unfavorite" : "Zrušiť označenie ako obľúbené",
     "Mark as favorite" : "Označiť ako obľúbené",
+    "To:" : "Do: ",
     "Unsubscribe via link" : "Odhlásiť sa cez odkaz",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Odhlásenie zastaví všetky správy z mailing listu {sender}.",
     "Send unsubscribe email" : "Poslať e-mail pre odlásenie.",

@@ -622,6 +622,7 @@ OC.L10N.register(
     "Reply to sender only" : "Yalnızca gönderene yanıtla",
     "Mark as unfavorite" : "Sık kullanılanlardan kaldır",
     "Mark as favorite" : "Sık kullanılanlara ekle",
+    "To:" : "Bitiş:",
     "Unsubscribe via link" : "Bağlantı ile abonelikten ayrıl",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Abonelikten ayrıldığınızda {sender} e-posta listesinden iletileri almayacaksınız ",
     "Send unsubscribe email" : "Abonelikten ayrılma e-postası gönder",

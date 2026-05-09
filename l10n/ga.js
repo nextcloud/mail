@@ -624,6 +624,7 @@ OC.L10N.register(
     "Reply to sender only" : "Freagair don seoltóir amháin",
     "Mark as unfavorite" : "Marcáil mar rud is fearr leat",
     "Mark as favorite" : "Marcáil mar is fearr leat",
+    "To:" : "Chun:",
     "Unsubscribe via link" : "Díliostáil tríd an nasc",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Cuirfidh díliostáil stop le gach teachtaireacht ón liosta postála {sender}",
     "Send unsubscribe email" : "Seol ríomhphost díliostáil",

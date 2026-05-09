@@ -624,6 +624,7 @@ OC.L10N.register(
     "Reply to sender only" : "Nur dem Absender antworten",
     "Mark as unfavorite" : "Als nicht favorisiert markieren",
     "Mark as favorite" : "Als favorisiert markieren",
+    "To:" : "An:",
     "Unsubscribe via link" : "Per Link abbestellen",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Die Abbestellung stoppt alle Nachrichten von der Mailingliste {sender}",
     "Send unsubscribe email" : "Abbestellungs-E-Mail senden",

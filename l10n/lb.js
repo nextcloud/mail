@@ -46,6 +46,7 @@ OC.L10N.register(
     "Date" : "Date",
     "Tags" : "Tags",
     "Custom" : "Individualiséier",
+    "To:" : "Un:",
     "Deleted" : "Geläscht",
     "Help" : "Hëllef",
     "Actions" : "Aktiounen",

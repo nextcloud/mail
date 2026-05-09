@@ -518,6 +518,7 @@ OC.L10N.register(
     "Reply to sender only" : "送信者のみに返信",
     "Mark as unfavorite" : "お気に入りから外す",
     "Mark as favorite" : "お気に入りにする",
+    "To:" : "先:",
     "Unsubscribe via link" : "リンク経由で購読を解除する",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "リスト{sender}から全ての配信メッセージを停止する",
     "Send unsubscribe email" : "配信停止メールを送信する",

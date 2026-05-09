@@ -61,6 +61,7 @@ OC.L10N.register(
     "Tags" : "Tibzimin",
     "Task created" : "Tawuri tettwarna",
     "Not found" : "Ulac-it",
+    "To:" : "Ɣer:",
     "Translate from" : "Suqel seg",
     "Translate to" : "Suqel ar",
     "Deleted" : "Yettwakkes",

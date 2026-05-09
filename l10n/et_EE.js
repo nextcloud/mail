@@ -615,6 +615,7 @@ OC.L10N.register(
     "Reply to sender only" : "Vasta vaid saatjale",
     "Mark as unfavorite" : "Märgi mittelemmikuks",
     "Mark as favorite" : "Märgi lemmikuks",
+    "To:" : "Saaja:",
     "Unsubscribe via link" : "Loobu tellimusest lingi kaudu",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Tellimusest loobudes sa enam ei saa kirju postiloendist {sender}",
     "Send unsubscribe email" : "Saada loobumiskiri",

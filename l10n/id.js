@@ -619,6 +619,7 @@ OC.L10N.register(
     "Reply to sender only" : "Balas hanya ke pengirim",
     "Mark as unfavorite" : "Tandai sebagai bukan favorit",
     "Mark as favorite" : "Tandai sebagai favorit",
+    "To:" : "Untuk:",
     "Unsubscribe via link" : "Berhenti berlangganan via tautan",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Berhenti berlangganan akan menghentikan semua pesan dari milis {sender}",
     "Send unsubscribe email" : "Kirim email berhenti berlangganan",
