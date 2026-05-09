@@ -452,6 +452,7 @@ OC.L10N.register(
     "Reply to sender only" : "발신자에게만 답장",
     "Mark as unfavorite" : "즐겨찾기에서 해제",
     "Mark as favorite" : "즐겨찾기로 표시",
+    "To:" : "끝:",
     "Unsubscribe via link" : "링크로 구독 해지",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "구독 해지는 메일링 리스트 {sender}이(가) 보내는 모든 메시지의 발신을 정지합니다",
     "Send unsubscribe email" : "구독 해지 이메일 보내기",

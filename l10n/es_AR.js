@@ -99,6 +99,7 @@ OC.L10N.register(
     "Tag already exists" : "La etiqueta ya existe",
     "Add tag" : "Añadir etiqueta",
     "Not found" : "No encontrado",
+    "To:" : "Para:",
     "Deleted" : "Eliminado",
     "Recipient" : "Recipiente",
     "Help" : "Ayuda",

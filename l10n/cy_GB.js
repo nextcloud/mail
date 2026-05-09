@@ -99,6 +99,7 @@ OC.L10N.register(
     "Tags" : "Tagiau",
     "Custom" : "Cyfaddas",
     "Not found" : "Heb ei ganfod",
+    "To:" : "At:",
     "Untitled event" : "Digwyddiad di-deitl",
     "(organizer)" : "(trefnydd)",
     "Deleted" : "Wedi dileu",

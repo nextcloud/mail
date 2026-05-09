@@ -135,6 +135,7 @@ OC.L10N.register(
     "Task created" : "Task created",
     "Not found" : "Haipatikani",
     "Unsubscribe" : "Unsubscribe",
+    "To:" : "Mpaka:",
     "The message could not be translated" : "The message could not be translated",
     "Translation copied to clipboard" : "Translation copied to clipboard",
     "Translation could not be copied" : "Translation could not be copied",
