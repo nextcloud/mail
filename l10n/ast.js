@@ -235,6 +235,7 @@ OC.L10N.register(
     "Could not load your message thread" : "Nun se pudo cargar el filu de mensaxes",
     "Loading thread" : "Cargando'l filu",
     "Not found" : "Nun s'atopó",
+    "To:" : "A:",
     "Go to latest message" : "Dir al últimu mensaxe",
     "The message could not be translated" : "Nun se pudo traducir el mensaxe",
     "Translation copied to clipboard" : "La traducción copióse al cartafueyu",

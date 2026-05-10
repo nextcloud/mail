@@ -192,6 +192,7 @@ OC.L10N.register(
     "Could not create task" : "Не ўдалося стварыць заданне",
     "No calendars with task list support" : "Няма календароў з падтрымкай спісаў заднняў",
     "Not found" : "Не знойдзена",
+    "To:" : "Да:",
     "Go to latest message" : "Перайсці да апошняга паведамлення",
     "Newest message" : "Апошняе паведамленне",
     "Please select languages to translate to and from" : "Выберыце, з якой мовы на якую перакладаць",
