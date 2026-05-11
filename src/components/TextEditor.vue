@@ -54,7 +54,6 @@ import {
 } from 'ckeditor5'
 import { getLinkWithPicker, searchProvider } from '@nextcloud/vue/components/NcRichText'
 import TextDirectionPlugin from '../ckeditor/direction/TextDirectionPlugin.js'
-import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
 import PickerPlugin from '../ckeditor/smartpicker/PickerPlugin.js'
@@ -153,7 +152,6 @@ export default {
 				Font,
 				RemoveFormat,
 				Base64UploadAdapter,
-				MailPlugin,
 				SourceEditing,
 				TextDirectionPlugin,
 			])
@@ -670,6 +668,11 @@ export default {
 :deep(p) {
 	cursor: text;
 	margin: 0 !important;
+}
+
+// Show empty lines correctly in composer
+:deep(p + p) {
+	margin-top: 1em !important;
 }
 </style>
 
