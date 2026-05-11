@@ -88,6 +88,7 @@ import { mapState } from 'pinia'
 import WarningIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import ArrowRight from 'vue-material-design-icons/ArrowRight.vue'
 import ContentCopy from 'vue-material-design-icons/ContentCopy.vue'
+import logger from '../logger.js'
 import { translateText } from '../service/translationService.js'
 import useMainStore from '../store/mainStore.js'
 
@@ -175,7 +176,7 @@ export default {
 				const response = await translateText(this.message.trim(), this.selectedFrom.value, this.selectedTo.value)
 				this.translatedMessage = response
 			} catch (error) {
-				console.error(error)
+				logger.error('could not translate message', { error })
 				showError(error.response?.data?.ocs?.data?.message ?? t('mail', 'The message could not be translated'))
 			} finally {
 				this.isLoading = false

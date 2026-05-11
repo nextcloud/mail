@@ -129,7 +129,7 @@ export default {
 		threadSubject() {
 			const thread = this.thread
 			if (thread.length === 0) {
-				console.warn('thread is empty')
+				logger.warn('thread is empty')
 				return ''
 			}
 			return thread[0].subject || this.t('mail', 'No subject')
@@ -188,10 +188,10 @@ export default {
 				return
 			}
 			if (!this.expandedThreads.includes(threadId)) {
-				console.debug(`expand thread ${threadId}`)
+				logger.debug(`expand thread ${threadId}`)
 				this.expandedThreads.push(threadId)
 			} else {
-				console.debug(`collapse thread ${threadId}`)
+				logger.debug(`collapse thread ${threadId}`)
 				this.expandedThreads = this.expandedThreads.filter((t) => t !== threadId)
 			}
 		},

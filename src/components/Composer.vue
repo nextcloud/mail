@@ -1008,7 +1008,7 @@ export default {
 		},
 
 		aliases(newAliases) {
-			console.debug('aliases changed')
+			logger.debug('aliases changed')
 			if (this.selectedAlias === NO_ALIAS_SET) {
 				return
 			}

@@ -4,6 +4,7 @@
  */
 
 import IssueTemplateBuilder from 'nextcloud_issuetemplate_builder'
+import logger from '../logger.js'
 
 function flattenError(error) {
 	let text = ''
@@ -37,7 +38,7 @@ function flattenTrace(trace) {
 }
 
 export function getReportUrl(error) {
-	console.error(error)
+	logger.error('crash report', { error })
 	let message = error.message || 'An unkown error occurred.'
 	if (!message.endsWith('.')) {
 		message += '.'

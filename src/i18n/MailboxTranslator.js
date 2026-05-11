@@ -4,6 +4,7 @@
  */
 
 import { translate as t } from '@nextcloud/l10n'
+import logger from '../logger.js'
 
 function translateSpecial(mailbox) {
 	if (mailbox.specialUse.includes('all')) {
@@ -54,7 +55,7 @@ export function translate(mailbox) {
 		try {
 			return translateSpecial(mailbox)
 		} catch (e) {
-			console.error('could not translate special mailbox', e)
+			logger.error('could not translate special mailbox', { error: e })
 		}
 	}
 	return mailbox.displayName

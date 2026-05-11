@@ -294,14 +294,14 @@ export default {
 
 		onMenuToggle(open) {
 			if (open && this.account.quotaPercentage !== null) {
-				console.debug('accounts menu opened, fetching quota')
+				logger.debug('accounts menu opened, fetching quota')
 				this.fetchQuota()
 			}
 		},
 
 		async fetchQuota() {
 			const quota = await fetchQuota(this.account.id)
-			console.debug('quota fetched', {
+			logger.debug('quota fetched', {
 				quota,
 			})
 

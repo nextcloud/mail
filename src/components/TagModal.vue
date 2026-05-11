@@ -59,6 +59,7 @@ import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconTag from 'vue-material-design-icons/TagOutline.vue'
 import DeleteTagModal from './DeleteTagModal.vue'
 import TagItem from './TagItem.vue'
+import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 import { hiddenTags } from './tags.js'
 
@@ -179,7 +180,7 @@ export default {
 					color: randomColor(displayName),
 				})
 			} catch (error) {
-				console.debug(error)
+				logger.error('could not create tag', { error })
 				showError(this.t('mail', 'An error occurred, unable to create the tag.'))
 			} finally {
 				this.showSaving = false
@@ -223,7 +224,7 @@ export default {
 				this.showSaving = false
 			} catch (error) {
 				showInfo(t('mail', 'An error occurred, unable to rename the tag.'))
-				console.error(error)
+				logger.error('could not rename tag', { error })
 				this.renameTagLabel = false
 				this.renameTagInput = false
 				this.showSaving = true

@@ -77,8 +77,6 @@ export default {
 		},
 
 		signatureSummary() {
-			console.info(this.signature.match(regFirstParagraph))
-
 			return this.signatureSummaryAndBody.summary
 		},
 	},

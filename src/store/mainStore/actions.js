@@ -347,7 +347,7 @@ export default function mainStoreActions() {
 					? account.personalNamespace + name
 					: name
 				const mailbox = await createMailbox(account.id, prefixed)
-				console.debug(`mailbox ${prefixed} created for account ${account.id}`, { mailbox })
+				logger.debug(`mailbox ${prefixed} created for account ${account.id}`, { mailbox })
 				this.addMailboxMutation({
 					account,
 					mailbox,
@@ -804,7 +804,7 @@ export default function mainStoreActions() {
 
 					const mailboxesToFetch = (accounts) => pipe(
 						findIndividualMailboxes(this.getMailboxes, mailbox.specialRole),
-						tap((mbs) => console.info('individual mailboxes', mbs)),
+						tap((mbs) => logger.info('individual mailboxes', { mbs })),
 						filter(needsFetch(query, nextLocalUnifiedEnvelopes(accounts))),
 					)(accounts)
 					const mbs = mailboxesToFetch(this.getAccounts)
@@ -843,12 +843,12 @@ export default function mainStoreActions() {
 
 				const list = mailbox.envelopeLists[normalizedEnvelopeListId(query)]
 				if (list === undefined) {
-					console.warn("envelope list is not defined, can't fetch next envelopes", mailboxId, query)
+					logger.warn("envelope list is not defined, can't fetch next envelopes", { mailboxId, query })
 					return Promise.resolve([])
 				}
 				const lastEnvelopeId = last(list)
 				if (typeof lastEnvelopeId === 'undefined') {
-					console.error('mailbox is empty', list)
+					logger.error('mailbox is empty', { list })
 					return Promise.reject(new Error('Local mailbox has no envelopes, cannot determine cursor'))
 				}
 				const lastEnvelope = this.getEnvelope(lastEnvelopeId)
@@ -961,7 +961,7 @@ export default function mainStoreActions() {
 					.catch((error) => {
 						return matchError(error, {
 							[SyncIncompleteError.getName()]: () => {
-								console.warn(`(initial) sync of mailbox ${mailboxId} (${query}) is incomplete, retriggering`)
+								logger.warn(`(initial) sync of mailbox ${mailboxId} (${query}) is incomplete, retriggering`)
 								return this.syncEnvelopes({
 									mailboxId,
 									query,
@@ -982,7 +982,7 @@ export default function mainStoreActions() {
 								}))
 							},
 							default(error) {
-								console.error('Could not sync envelopes: ' + error.message, error)
+								logger.error('Could not sync envelopes: ' + error.message, { error })
 								throw error
 							},
 						})
@@ -1110,7 +1110,7 @@ export default function mainStoreActions() {
 						seen: newState,
 					})
 				} catch (error) {
-					console.error('could not toggle message seen state', error)
+					logger.error('could not toggle message seen state', { error })
 
 					// Revert change
 					this.flagEnvelopeMutation({
@@ -1151,7 +1151,7 @@ export default function mainStoreActions() {
 						$notjunk: oldState,
 					})
 				} catch (error) {
-					console.error('could not toggle message junk state', error)
+					logger.error('could not toggle message junk state', { error })
 
 					if (removeEnvelope) {
 						this.addEnvelopesMutation([envelope])
@@ -1191,7 +1191,7 @@ export default function mainStoreActions() {
 						flagged: favFlag,
 					})
 				} catch (error) {
-					console.error('could not favorite/unfavorite message ' + envelope.uid, error)
+					logger.error('could not favorite/unfavorite message ' + envelope.uid, { error })
 
 					// Revert change
 					this.flagEnvelopeMutation({
@@ -1279,7 +1279,7 @@ export default function mainStoreActions() {
 			return handleHttpAuthErrors(async () => {
 				const internalAddress = await addInternalAddress(address, type)
 				this.addInternalAddressMutation(internalAddress)
-				console.debug('internal address added')
+				logger.debug('internal address added')
 			})
 		},
 		async removeInternalAddress({
@@ -1291,9 +1291,9 @@ export default function mainStoreActions() {
 				try {
 					await removeInternalAddress(address, type)
 					this.removeInternalAddressMutation({ addressId: id })
-					console.debug('internal address removed')
+					logger.debug('internal address removed')
 				} catch (error) {
-					console.error('could not delete internal address', error)
+					logger.error('could not delete internal address', { error })
 					throw error
 				}
 			})
@@ -1305,9 +1305,9 @@ export default function mainStoreActions() {
 				try {
 					await deleteMessage(id)
 					this.removeMessageMutation({ id })
-					console.debug('message removed')
+					logger.debug('message removed')
 				} catch (err) {
-					console.error('could not delete message', err)
+					logger.error('could not delete message', { error: err })
 					const envelope = this.getEnvelope(id)
 					if (envelope) {
 						this.addEnvelopesMutation({ envelopes: [envelope] })
@@ -1395,7 +1395,7 @@ export default function mainStoreActions() {
 					name: newName,
 				})
 
-				console.debug(`mailbox ${mailbox.databaseId} renamed to ${newName}`, { mailbox })
+				logger.debug(`mailbox ${mailbox.databaseId} renamed to ${newName}`, { mailbox })
 				this.removeMailboxMutation({ id: mailbox.databaseId })
 				this.addMailboxMutation({
 					account,
@@ -1543,10 +1543,10 @@ export default function mainStoreActions() {
 
 				try {
 					await ThreadService.deleteThread(envelope.databaseId)
-					console.debug('thread removed')
+					logger.debug('thread removed')
 				} catch (e) {
 					this.addEnvelopesMutation({ envelopes: [envelope] })
-					console.error('could not delete thread', e)
+					logger.error('could not delete thread', { error: e })
 					throw e
 				}
 			})
@@ -1560,10 +1560,10 @@ export default function mainStoreActions() {
 
 				try {
 					await ThreadService.moveThread(envelope.databaseId, destMailboxId)
-					console.debug('thread removed')
+					logger.debug('thread moved')
 				} catch (e) {
 					this.addEnvelopesMutation({ envelopes: [envelope] })
-					console.error('could not move thread', e)
+					logger.error('could not move thread', { error: e })
 					throw e
 				}
 			})
@@ -1576,10 +1576,10 @@ export default function mainStoreActions() {
 			return handleHttpAuthErrors(async () => {
 				try {
 					await ThreadService.snoozeThread(envelope.databaseId, unixTimestamp, destMailboxId)
-					console.debug('thread snoozed')
+					logger.debug('thread snoozed')
 				} catch (e) {
 					this.addEnvelopesMutation({ envelopes: [envelope] })
-					console.error('could not snooze thread', e)
+					logger.error('could not snooze thread', { error: e })
 					throw e
 				}
 				this.removeEnvelopeMutation({ id: envelope.databaseId })
@@ -1589,9 +1589,9 @@ export default function mainStoreActions() {
 			return handleHttpAuthErrors(async () => {
 				try {
 					await ThreadService.unSnoozeThread(envelope.databaseId)
-					console.debug('thread unSnoozed')
+					logger.debug('thread unSnoozed')
 				} catch (e) {
-					console.error('could not unsnooze thread', e)
+					logger.error('could not unsnooze thread', { error: e })
 					throw e
 				}
 				this.removeEnvelopeMutation({ id: envelope.databaseId })
@@ -2154,7 +2154,7 @@ export default function mainStoreActions() {
 		removeEnvelopeMutation({ id }) {
 			const envelope = this.envelopes[id]
 			if (!envelope) {
-				console.warn('envelope ' + id + ' is unknown, can\'t remove it')
+				logger.warn('envelope ' + id + ' is unknown, can\'t remove it')
 				return
 			}
 			const mailbox = this.mailboxes[envelope.mailboxId]
@@ -2167,7 +2167,7 @@ export default function mainStoreActions() {
 				if (idx < 0) {
 					continue
 				}
-				console.debug('envelope ' + id + ' removed from mailbox list ' + listId)
+				logger.debug('envelope ' + id + ' removed from mailbox list ' + listId)
 				list.splice(idx, 1)
 			}
 
@@ -2186,16 +2186,10 @@ export default function mainStoreActions() {
 						const list = mailbox.envelopeLists[listId]
 						const idx = list.indexOf(id)
 						if (idx < 0) {
-							console.warn(
-								'envelope does not exist in unified mailbox',
-								mailbox.databaseId,
-								id,
-								listId,
-								list,
-							)
+							logger.warn('envelope does not exist in unified mailbox', { mailboxId: mailbox.databaseId, id, listId, list })
 							continue
 						}
-						console.debug('envelope removed from unified mailbox', mailbox.databaseId, id)
+						logger.debug('envelope removed from unified mailbox', { mailboxId: mailbox.databaseId, id })
 						list.splice(idx, 1)
 					}
 				})
@@ -2466,7 +2460,7 @@ export default function mainStoreActions() {
 			return this.messages[id]
 		},
 		getEnvelopeThread(id) {
-			console.debug('get thread for envelope', id, this.envelopes[id], this.envelopes)
+			logger.debug('get thread for envelope', { id, envelope: this.envelopes[id] })
 			const thread = this.envelopes[id]?.thread ?? []
 			const envelopes = thread.map((id) => this.envelopes[id])
 			return sortBy(prop('dateInt'), envelopes)
