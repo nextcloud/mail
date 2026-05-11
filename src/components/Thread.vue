@@ -34,12 +34,14 @@
 									{{ moreParticipantsString }}
 								</span>
 							</template>
-							<RecipientBubble
-								v-for="participant in threadParticipants.slice(participantsToDisplay)"
-								:key="participant.email"
-								:title="participant.email"
-								:email="participant.email"
-								:label="participant.label" />
+							<div class="thread-participants-overflow">
+								<RecipientBubble
+									v-for="participant in threadParticipants.slice(participantsToDisplay)"
+									:key="participant.email"
+									:title="participant.email"
+									:email="participant.email"
+									:label="participant.label" />
+							</div>
 						</NcPopover>
 						<!-- Remaining participants, if any (Needed to have avatarHeader reactive) -->
 						<RecipientBubble
@@ -741,12 +743,16 @@ export default {
 	overflow: hidden;
 	display: flex;
 	align-items: stretch;
+}
 
-	:deep(.v-popper--theme-dropdown.v-popper__popper .v-popper__inner) {
-		height: 300px;
-		width: 250px;
-		overflow: auto;
-	}
+.thread-participants-overflow {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: var(--default-grid-baseline);
+	max-height: min(50vh, 400px);
+	max-width: min(80vw, 320px);
+	overflow-y: auto;
 }
 
 .avatar-more {
