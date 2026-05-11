@@ -32,13 +32,16 @@ use OCP\IRequest;
 
 class ContactIntegrationController extends Controller {
 	private ContactIntegrationService $service;
+	private string $uid;
 
 	public function __construct(string $appName,
 		IRequest $request,
-		ContactIntegrationService $service) {
+		ContactIntegrationService $service,
+		string $userId) {
 		parent::__construct($appName, $request);
 
 		$this->service = $service;
+		$this->uid = $userId;
 	}
 
 	/**
@@ -49,7 +52,7 @@ class ContactIntegrationController extends Controller {
 	 */
 	#[TrapError]
 	public function match(string $mail): JSONResponse {
-		return (new JSONResponse($this->service->findMatches($mail)))->cacheFor(60 * 60, false, true);
+		return (new JSONResponse($this->service->findMatches($this->uid, $mail)))->cacheFor(60 * 60, false, true);
 	}
 
 	/**
@@ -88,7 +91,7 @@ class ContactIntegrationController extends Controller {
 	 */
 	#[TrapError]
 	public function autoComplete(string $term): JSONResponse {
-		$res = $this->service->autoComplete($term);
+		$res = $this->service->autoComplete($this->uid, $term);
 		return (new JSONResponse($res))->cacheFor(60 * 60, false, true);
 	}
 }
