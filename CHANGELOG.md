@@ -1,3 +1,29 @@
+## [5.7.15](https://github.com/nextcloud/mail/compare/v5.7.14...v5.7.15) (2026-05-11)
+
+
+### Bug Fixes
+
+* **composer:** Adjust border color of vertical separator to be in line with other borders ([535e483](https://github.com/nextcloud/mail/commit/535e483177a6993e549f9a1f18618f9e4c85c16c))
+* **composer:** Adjust border colors of CKEditor element to be in line with other borders ([0c8ad08](https://github.com/nextcloud/mail/commit/0c8ad08911a73792b43cb6723ecb2a064da585f2))
+* **deps:** bump postcss from 8.5.6 to v8.5.10 ([174435a](https://github.com/nextcloud/mail/commit/174435ace927b41567ff7ed24f21260fc0b84391))
+* **imap:** log number of connections during CLI sync ([f9fb4c2](https://github.com/nextcloud/mail/commit/f9fb4c250fd1ee4a4e31a3e355a2b8f618705e05))
+* **imap:** prevent null HIGHESTMODSEQ after initial sync ([987cd16](https://github.com/nextcloud/mail/commit/987cd16d7333da4f8e830780a9e1964f65d4b1ad))
+* **l10n:** Update translations from Transifex ([579813c](https://github.com/nextcloud/mail/commit/579813c9a767bc5ac94d2fc1fe8e3d9d83a7a7e8))
+* **l10n:** Update translations from Transifex ([db462ce](https://github.com/nextcloud/mail/commit/db462cef7c7293b3a6280b89cf8e3a3300a9181a))
+* **l10n:** Update translations from Transifex ([99b9489](https://github.com/nextcloud/mail/commit/99b948975b1b26a91abee77d69782df2e0b3933d))
+* **l10n:** Update translations from Transifex ([e742c29](https://github.com/nextcloud/mail/commit/e742c29a3bb69c22720e2903983898d99abefb7f))
+* **l10n:** Update translations from Transifex ([74cf508](https://github.com/nextcloud/mail/commit/74cf50814319f30471f4f6a5a1a76cff7b17bfb3))
+* Modal open bug ([0a70908](https://github.com/nextcloud/mail/commit/0a7090855574fbf80b9f21b0db44ecce28536d13))
+* **ui:** close attachment actions menu after clicking Download or Save to Files ([3aa6d47](https://github.com/nextcloud/mail/commit/3aa6d47d10e83a981d82779392947ed3df16d270))
+* **ui:** Handle focus trap through provide / inject ([ac9bcc5](https://github.com/nextcloud/mail/commit/ac9bcc5253666ea408917b63ddad32175376bb52))
+
+
+### Performance Improvements
+
+* **imap:** reuse existing IMAP client/connection for mailbox sync ([8a1c043](https://github.com/nextcloud/mail/commit/8a1c043bc0357434c7fd9ffaf34d405dcd86c2ce))
+
+
+
 ## [5.7.14](https://github.com/nextcloud/mail/compare/v5.7.13...v5.7.14) (2026-04-28)
 
 
