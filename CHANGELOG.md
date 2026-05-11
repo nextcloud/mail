@@ -1,3 +1,18 @@
+## [5.6.20](https://github.com/nextcloud/mail/compare/v5.6.19...v5.6.20) (2026-05-11)
+
+
+### Bug Fixes
+
+* **deps:** bump postcss from 8.5.6 to v8.5.10 ([1848d49](https://github.com/nextcloud/mail/commit/1848d49488f6e2de0b24ae497c3447f05058b061))
+* **dns:** Update public suffix list ([024793b](https://github.com/nextcloud/mail/commit/024793b7ddc5df33c22b8e0e2908941e80edf9a4))
+* **l10n:** Update translations from Transifex ([eefe28f](https://github.com/nextcloud/mail/commit/eefe28fe4831d2f981688822e156a4c804037e7c))
+* **l10n:** Update translations from Transifex ([6b7ba2f](https://github.com/nextcloud/mail/commit/6b7ba2f62c1c5792c927c5ed3e270268696cefa0))
+* **l10n:** Update translations from Transifex ([4d71219](https://github.com/nextcloud/mail/commit/4d712199dabf926141ea2a74750ab48c74ca9ada))
+* **l10n:** Update translations from Transifex ([a18e891](https://github.com/nextcloud/mail/commit/a18e891a919067273b7087cd0d908f35ddd3ffcf))
+* **l10n:** Update translations from Transifex ([f2e7399](https://github.com/nextcloud/mail/commit/f2e73999460a9de89cd457e003674a9cd988af53))
+
+
+
 ## [5.6.19](https://github.com/nextcloud/mail/compare/v5.6.18...v5.6.19) (2026-04-28)
 
 
