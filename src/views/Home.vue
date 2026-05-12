@@ -115,7 +115,7 @@ export default {
 			// FIXME: this assumes that there's at least one mailbox
 			const firstMailbox = this.mainStore.getMailboxes(firstAccount.id)[0]
 
-			console.debug('loading first mailbox of first account', firstAccount.id, firstMailbox.databaseId)
+			logger.debug('loading first mailbox of first account', { accountId: firstAccount.id, mailboxId: firstMailbox.databaseId })
 
 			this.$router.replace({
 				name: 'mailbox',
@@ -130,7 +130,7 @@ export default {
 			})
 		} else if (this.$route.name === 'mailto') {
 			if (accounts.length === 0) {
-				console.error('cannot handle mailto:, no accounts configured')
+				logger.error('cannot handle mailto:, no accounts configured')
 				return
 			}
 
@@ -139,7 +139,7 @@ export default {
 			// FIXME: this assumes that there's at least one mailbox
 			const firstMailbox = this.mainStore.getMailboxes(firstAccount.id)[0]
 
-			console.debug('loading composer with first account and folder', firstAccount.id, firstMailbox.id)
+			logger.debug('loading composer with first account and folder', { accountId: firstAccount.id, mailboxId: firstMailbox.id })
 
 			this.$router.replace({
 				name: 'message',

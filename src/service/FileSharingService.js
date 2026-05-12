@@ -9,6 +9,7 @@
 import axios from '@nextcloud/axios'
 import { showError } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'
+import logger from '../logger.js'
 
 /**
  * Makes a share link for a given file or directory.
@@ -33,11 +34,11 @@ async function shareFile(path, token) {
 			&& error.response.data.ocs.meta
 			&& error.response.data.ocs.meta.message
 		) {
-			console.error(`Error while sharing file: ${error.response.data.ocs.meta.message || 'Unknown error'}`)
+			logger.error(`Error while sharing file: ${error.response.data.ocs.meta.message || 'Unknown error'}`, { error })
 			showError(error.response.data.ocs.meta.message)
 			throw error
 		} else {
-			console.error('Error while sharing file: Unknown error')
+			logger.error('Error while sharing file: Unknown error', { error })
 			showError(t('mail', 'Error while sharing file'))
 			throw error
 		}

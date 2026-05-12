@@ -483,7 +483,7 @@ export default {
 							this.editorInstance.editing.view.focus()
 						})
 						.catch((error) => {
-							console.debug('Smart picker promise rejected:', error)
+							logger.debug('Smart picker promise rejected', { error })
 						})
 				}
 				if (eventData.marker === '@') {
