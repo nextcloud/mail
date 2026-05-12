@@ -63,6 +63,7 @@ OC.L10N.register(
     "Close" : "Serriñ",
     "Date" : "Deiz",
     "Tags" : "Klavioù",
+    "To:" : "Da :",
     "Translate to" : "Treiñ e",
     "Deleted" : "Dilamet",
     "Help" : "Skoazell",

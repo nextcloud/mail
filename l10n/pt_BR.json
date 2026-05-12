@@ -91,7 +91,6 @@
     "SMTP Port" : "Porta SMTP",
     "SMTP User" : "Usuário SMTP",
     "SMTP Password" : "Senha SMTP",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Para que a conta do Google funcione com este aplicativo, você precisa ativar a autenticação de dois fatores para o Google e gerar uma senha de aplicativo.",
     "Account settings" : "Configurações de conta",
     "Aliases" : "Aliases",
     "Alias to S/MIME certificate mapping" : "Mapeamento de alias para certificado S/MIME",
@@ -890,11 +889,7 @@
     "Could not load the desired message" : "Não foi possível carregar a mensagem desejada",
     "Could not load the message" : "Não foi possível carregar a mensagem",
     "Error loading message" : "Erro carregando mensagem",
-    "Determine importance using machine learning" : "Determinar a importância usando aprendizado de máquina",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "As mensagens serão automaticamente marcadas como importantes com base nas mensagens com as quais você interagiu ou marcou como importantes. No início você pode ter que mudar manualmente a importância para ensinar o sistema, mas ele irá melhorar com o tempo.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "As mensagens enviadas por você que exigem uma resposta, mas não receberam uma após alguns dias, serão mostradas aqui.",
-    "Mark all messages of this folder as read" : "Marcar todas as mensagens desta pasta como lidas",
-    "Last 7 days" : "Últimos 7 dias",
-    "From me" : "De mim"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "As mensagens enviadas por você que exigem uma resposta, mas não receberam uma após alguns dias, serão mostradas aqui."
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

@@ -106,7 +106,6 @@ OC.L10N.register(
     "Sent" : "ส่งแล้ว",
     "Trash" : "ถังขยะ",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "Error loading message" : "เกิดข้อผิดพลาดขณะโหลดข้อความ",
-    "Last 7 days" : "ภายใน 7 วัน"
+    "Error loading message" : "เกิดข้อผิดพลาดขณะโหลดข้อความ"
 },
 "nplurals=1; plural=0;");

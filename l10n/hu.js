@@ -69,7 +69,6 @@ OC.L10N.register(
     "SMTP Port" : "SMTP port",
     "SMTP User" : "SMTP felhasználó",
     "SMTP Password" : "SMTP jelszó",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Ahhoz, hogy a Google-fiókja működjön ezzel az alkalmazással, engedélyeznie kell a kétfaktoros hitelesítést, és elő kell állítania egy alkalmazásjelszót.",
     "Account settings" : "Fiókbeállítások",
     "Aliases" : "Álnevek",
     "Alias to S/MIME certificate mapping" : "Álnév az S/MIME tanúsítvány-hozzárendeléshez",
@@ -626,8 +625,6 @@ OC.L10N.register(
     "Could not load the desired message" : "Nem sikerült betölteni a kért üzenetet",
     "Could not load the message" : "Nem sikerült betölteni az üzenetet",
     "Error loading message" : "Hiba történt az üzenet betöltése közben",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Az üzeneteket automatikusan fontosként jelöli meg az alapján, hogy mely üzenetekre reagált, vagy jelölt meg fontosként. Kezdetben lehet, hogy kézzel megváltoztatnia a fontosságot és ezzel kell tanítania a rendszert, de ez az idő múlásával javulni fog.",
-    "Mark all messages of this folder as read" : "A mappában található összes üzenet megjelölése olvasottként",
-    "Last 7 days" : "Előző 7 nap"
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Az üzeneteket automatikusan fontosként jelöli meg az alapján, hogy mely üzenetekre reagált, vagy jelölt meg fontosként. Kezdetben lehet, hogy kézzel megváltoztatnia a fontosságot és ezzel kell tanítania a rendszert, de ez az idő múlásával javulni fog."
 },
 "nplurals=2; plural=(n != 1);");

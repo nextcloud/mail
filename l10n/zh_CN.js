@@ -93,7 +93,6 @@ OC.L10N.register(
     "SMTP Port" : "SMTP 端口",
     "SMTP User" : "SMTP 用户",
     "SMTP Password" : "SMTP 密码",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "要在此应用程序中使用 Google 账号, 你需要为 Google 启用两步验证并生成应用程序密码。",
     "Account settings" : "账号设置",
     "Aliases" : "别名",
     "Alias to S/MIME certificate mapping" : "別名到 S/MIME 证书映射",
@@ -890,11 +889,7 @@ OC.L10N.register(
     "Could not load the desired message" : "无法加载所需邮件",
     "Could not load the message" : "无法加载邮件",
     "Error loading message" : "加载邮件时出错",
-    "Determine importance using machine learning" : "使用机器学习确定重要性",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "将根据您与哪些邮件互动或手动标记为重要，自动标记邮件为重要邮件。开始时，您可能需要手动更改重要性来调教系统，但随着时间的推移，它会不断改进。",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "您发送的需要回复但几天后未收到回复的邮件将显示在此处。",
-    "Mark all messages of this folder as read" : "将此文件夹的所有邮件标记为已读",
-    "Last 7 days" : "过去 7 天",
-    "From me" : "来自我"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "您发送的需要回复但几天后未收到回复的邮件将显示在此处。"
 },
 "nplurals=1; plural=0;");

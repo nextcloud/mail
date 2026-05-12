@@ -77,7 +77,6 @@
     "SMTP Port" : "Puerto SMTP",
     "SMTP User" : "Usuario SMTP",
     "SMTP Password" : "Contraseña SMTP",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Para que la cuenta de Google funcione con esta aplicación, debes habilitar la autenticación en dos pasos para Google y generar una contraseña de aplicación.",
     "Account settings" : "Configuración de la cuenta",
     "Aliases" : "Aliases",
     "Alias to S/MIME certificate mapping" : "Asignación de alias a certificados S/MIME",
@@ -372,7 +371,6 @@
     "Could not load your message" : "No fue posible cargar tu mensaje",
     "Could not load the desired message" : "No fue posible cargar el mensaje deseado",
     "Could not load the message" : "No fue posible cargar el mensaje",
-    "Error loading message" : "Se presentó un error al cargar el mensaje",
-    "Last 7 days" : "Últimos 7 días"
+    "Error loading message" : "Se presentó un error al cargar el mensaje"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

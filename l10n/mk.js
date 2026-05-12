@@ -34,7 +34,7 @@ OC.L10N.register(
     "Configuration discovery failed. Please use the manual settings" : "Неуспешна детекција на конфигурација. Користете рачни поставки",
     "Password required" : "Потребна е лозинка",
     "Testing authentication" : "Тестирање на автентикација",
-    "Loading account" : "Вчирување на сметка",
+    "Loading account" : "Вчитување на сметка",
     "Account updated" : "Сметката е ажурирана",
     "IMAP server is not reachable" : "IMAP серверот не е достапен",
     "SMTP server is not reachable" : "SMTP серверот не е достапен",
@@ -65,7 +65,6 @@ OC.L10N.register(
     "SMTP Port" : "SMTP порта",
     "SMTP User" : "SMTP корисник",
     "SMTP Password" : "SMTP лозинка",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "За да работи Google сметка, потребно е да активирате дво-факторна авторизација за Google и да генерирате лозинка за апликација.",
     "Account settings" : "Праметри за сметката",
     "Signature" : "Потпис",
     "A signature is added to the text of new messages and replies." : "Потписот ќе се додава на крајот од текстот на нови пораки и одговори.",
@@ -456,8 +455,6 @@ OC.L10N.register(
     "Could not load the desired message" : "Неможе да се вчита посакуваната порака",
     "Could not load the message" : "Неможе да се вчита пораката",
     "Error loading message" : "Грешка при вчитување на пораката",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Пораките автоматски ќе бидат означени како важни врз основа на кои пораки сте комуницирале или сте ги означиле како важни. На почетокот можеби ќе треба рачно да ја менувате важноста да го научите системот, но тоа ќе се подобрува со текот на времето.",
-    "Mark all messages of this folder as read" : "Означи ги сите пораки во оваа папка како прочитани",
-    "Last 7 days" : "Предходни 7 дена"
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Пораките автоматски ќе бидат означени како важни врз основа на кои пораки сте комуницирале или сте ги означиле како важни. На почетокот можеби ќе треба рачно да ја менувате важноста да го научите системот, но тоа ќе се подобрува со текот на времето."
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");
