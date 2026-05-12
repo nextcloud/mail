@@ -269,7 +269,6 @@ OC.L10N.register(
     "Could not load your message" : "לא ניתן לטעון את ההודעה שלך",
     "Could not load the desired message" : "לא ניתן לטעון את ההודעה המבוקשת",
     "Could not load the message" : "לא ניתן לטעון את ההודעה",
-    "Error loading message" : "שגיאה בהעלאת הודעה",
-    "Mark all messages of this folder as read" : "סימון כל ההודעות בתיקייה הזאת כנקראו"
+    "Error loading message" : "שגיאה בהעלאת הודעה"
 },
 "nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;");

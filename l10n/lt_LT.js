@@ -93,7 +93,6 @@ OC.L10N.register(
     "SMTP Port" : "SMTP prievadas",
     "SMTP User" : "SMTP naudotojo vardas",
     "SMTP Password" : "SMTP slaptažodis",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Kad „Google“ paskyra veiktų su šia programėle, turite įjungti dviejų veiksnių autentifikavimą „Google“ sistemoje ir sugeneruoti programos slaptažodį.",
     "Account settings" : "Paskyros nustatymai",
     "Aliases" : "Pseudonimai",
     "Alias to S/MIME certificate mapping" : "Slapyvardžio ir S/MIME sertifikato susiejimas",
@@ -890,11 +889,7 @@ OC.L10N.register(
     "Could not load the desired message" : "Nepavyko įkelti pageidaujamo laiško",
     "Could not load the message" : "Nepavyko įkelti laiško",
     "Error loading message" : "Klaida įkeliant laišką",
-    "Determine importance using machine learning" : "Nustatyti svarbą naudojant mašininį mokymąsi",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Pranešimai bus automatiškai pažymėti kaip svarbūs, atsižvelgiant į tai, su kuriais pranešimais jūs sąveikavote arba kuriuos pažymėjote kaip svarbius. Pradžioje gali tekti rankiniu būdu pakeisti svarbos lygį, kad sistema išmoktų, tačiau laikui bėgant ji tobulės.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Čia bus rodomos jūsų išsiųstos žinutės, į kurias reikia atsakyti, bet per keletą dienų atsakymo negauta.",
-    "Mark all messages of this folder as read" : "Žymėti visus laiškus šiame aplanke kaip skaitytus",
-    "Last 7 days" : "Paskutinės 7 dienos",
-    "From me" : "Iš manęs"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Čia bus rodomos jūsų išsiųstos žinutės, į kurias reikia atsakyti, bet per keletą dienų atsakymo negauta."
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");

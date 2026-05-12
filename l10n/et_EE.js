@@ -88,7 +88,6 @@ OC.L10N.register(
     "SMTP Port" : "SMTP port",
     "SMTP User" : "SMTP kasutajanimi",
     "SMTP Password" : "SMTP salasõna",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Kui soovid, et Google'i konto toimiks siin rakenduses, siis pead seal kasutusele võtma kaheastmelise autentimise ja looma rakendusele salasõna.",
     "Account settings" : "Konto seadistused",
     "Aliases" : "Aliased",
     "Alias to S/MIME certificate mapping" : "Alias S/MIME sertifikaatide vastavuse jaoks",
@@ -850,10 +849,6 @@ OC.L10N.register(
     "Could not load the desired message" : "Soovitud kirja laadimine ei õnnestunud",
     "Could not load the message" : "Kirja laadimine ei õnnestunud",
     "Error loading message" : "Viga kirja laadimisel",
-    "Determine importance using machine learning" : "Määra olulisus masinõppe abil",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Kirjad märgitakse automaatselt oluliseks selle alusel, milliste kirjadega sa suhestud või milliseid sa oluliseks märgid. Alguses võib olla vaja olulisuse taset käsitsi muuta, et süsteemi õpetada, kuid aja jooksul muutub see üha paremaks",
-    "Mark all messages of this folder as read" : "Märgi kõik selle kausta kirjad loetuks",
-    "Last 7 days" : "Viimase 7 päeva jooksul",
-    "From me" : "Minult"
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Kirjad märgitakse automaatselt oluliseks selle alusel, milliste kirjadega sa suhestud või milliseid sa oluliseks märgid. Alguses võib olla vaja olulisuse taset käsitsi muuta, et süsteemi õpetada, kuid aja jooksul muutub see üha paremaks"
 },
 "nplurals=2; plural=(n != 1);");

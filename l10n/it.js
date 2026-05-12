@@ -641,8 +641,6 @@ OC.L10N.register(
     "Could not load the desired message" : "Impossibile caricare messaggio desiderato",
     "Could not load the message" : "Impossibile caricare il messaggio",
     "Error loading message" : "Errore durante il caricamento del messaggio",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "I messaggi saranno automaticamente contrassegnati come importanti in base ai messaggi con cui hai interagito o contrassegnati come importanti. All'inizio potresti dover cambiare manualmente l'importanza per addestrare il sistema, ma migliorerà nel tempo.",
-    "Mark all messages of this folder as read" : "Marca tutti i messaggi di questa cartella come letti",
-    "Last 7 days" : "Ultimi 7 giorni"
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "I messaggi saranno automaticamente contrassegnati come importanti in base ai messaggi con cui hai interagito o contrassegnati come importanti. All'inizio potresti dover cambiare manualmente l'importanza per addestrare il sistema, ma migliorerà nel tempo."
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

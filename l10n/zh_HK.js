@@ -93,7 +93,6 @@ OC.L10N.register(
     "SMTP Port" : "SMTP 連接埠",
     "SMTP User" : "SMTP 賬號",
     "SMTP Password" : "SMTP 密碼",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "要使 Google 帳戶與此應用程式配合使用，您需要為 Google 啟用雙重認證並生成應用程式密碼。",
     "Account settings" : "賬號設定",
     "Aliases" : "别名",
     "Alias to S/MIME certificate mapping" : "别名到 S/MIME 證書映射",
@@ -889,11 +888,7 @@ OC.L10N.register(
     "Could not load the desired message" : "無法載入所選的信件",
     "Could not load the message" : "無法載入信件",
     "Error loading message" : "載入信件錯誤",
-    "Determine importance using machine learning" : "使用機器學習判斷重要性",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "郵件將會以您與其互動或標記為重要的郵件為基礎來自動標記重要郵件。ㄧ開始，您可以能必須手動教導系統哪些是重要郵件，然後它就會與時俱進。",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "您發送的訊息如果在幾天內未收到回覆，將在此處顯示。",
-    "Mark all messages of this folder as read" : "將此資料夾中所有的訊息都標記為已讀",
-    "Last 7 days" : "過去7日",
-    "From me" : "來自我"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "您發送的訊息如果在幾天內未收到回覆，將在此處顯示。"
 },
 "nplurals=1; plural=0;");

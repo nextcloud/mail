@@ -66,7 +66,6 @@ OC.L10N.register(
     "SMTP Port" : "SMTP-portti",
     "SMTP User" : "SMTP-käyttäjä",
     "SMTP Password" : "SMTP-salasana",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Google-tilin toiminta tämän sovelluksen kanssa vaatii, että otat kaksivaiheisen todennuksen käyttöön Googlessa ja luot sovelluksen salasanan.",
     "Account settings" : "Tilin asetukset",
     "Aliases" : "Aliakset",
     "Signature" : "Allekirjoitus",
@@ -605,8 +604,6 @@ OC.L10N.register(
     "Could not load your message" : "Viestiä ei voitu ladata",
     "Could not load the desired message" : "Haluttua viestiä ei voitu ladata",
     "Could not load the message" : "Viestiä ei voitu ladata",
-    "Error loading message" : "Virhe viestiä ladatessa",
-    "Mark all messages of this folder as read" : "Merkitse tämän kansion kaikki viestit luetuiksi",
-    "Last 7 days" : "Edelliset 7 päivää"
+    "Error loading message" : "Virhe viestiä ladatessa"
 },
 "nplurals=2; plural=(n != 1);");
