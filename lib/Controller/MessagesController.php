@@ -721,6 +721,9 @@ class MessagesController extends Controller {
 					$this->nonceManager->getNonce(),
 					$this->urlGenerator->getAbsoluteURL(
 						$this->urlGenerator->linkTo('mail', 'js/htmlresponse.js')
+					),
+					$this->urlGenerator->getAbsoluteURL(
+						$this->urlGenerator->linkTo('mail', 'css/htmlresponse.css')
 					)
 				);
 

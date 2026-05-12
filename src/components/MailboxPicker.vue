@@ -21,8 +21,8 @@
 			<ul>
 				<NcListItem
 					v-for="box in filteredMailboxes"
-					compact
 					:key="box.databaseId"
+					compact
 					:name="getMailboxTitle(box)"
 					@click.prevent="onClickMailbox(box)">
 					<template #icon>
@@ -51,8 +51,12 @@
 				<IconFolder />
 			</template>
 			<template #description>
-				<p v-if="filterName == ''">{{ t('mail', 'No more submailboxes in here') }}</p>
-				<p v-else>{{ t('mail', 'No results') }}</p>
+				<p v-if="filterName == ''">
+					{{ t('mail', 'No more submailboxes in here') }}
+				</p>
+				<p v-else>
+					{{ t('mail', 'No results') }}
+				</p>
 			</template>
 		</NcEmptyContent>
 	</NcDialog>

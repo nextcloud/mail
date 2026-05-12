@@ -17,6 +17,8 @@ all: appstore
 clean:
 	rm -rf $(build_dir)
 	rm -rf node_modules
+	rm -rf js
+	rm -f css/*.css css/*.css.map
 
 install-deps: install-composer-deps-dev install-npm-deps-dev
 
@@ -61,4 +63,3 @@ start-docker:
 
 appstore:
 	krankerl package
-

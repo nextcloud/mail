@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-// injected styles
-import '../css/html-response.css'
+// Extracted styles
+import '../css/html-response.scss'
 import '@iframe-resizer/child'
 
 // Fix width of some newsletter mails
