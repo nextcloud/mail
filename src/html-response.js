@@ -6,8 +6,8 @@
 import { limitToContainerWidth } from './util/fitWidth.ts'
 import { keepAttributeAspectRatio } from './util/imageAspectRatio.ts'
 
-// injected styles
-import '../css/html-response.css'
+// Extracted styles
+import '../css/html-response.scss'
 import '@iframe-resizer/child'
 
 document.addEventListener('DOMContentLoaded', function() {

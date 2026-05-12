@@ -18,6 +18,10 @@ node_modules/
 
 /js
 
+# CSS extracted from the JS build (CssExtractRspackPlugin)
+css/*.css
+css/*.css.map
+
 # packaged app
 build/artifacts
 

@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import IconCheck from '@mdi/svg/svg/check.svg'
+import IconCheck from '@mdi/svg/svg/check.svg?raw'
 import { mapState } from 'pinia'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
 import ListItem from './ListItem.vue'
