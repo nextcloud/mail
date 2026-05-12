@@ -1,3 +1,13 @@
+# [5.8.0-rc.0](https://github.com/nextcloud/mail/compare/v5.8.0-beta.0...v5.8.0-rc.0) (2026-05-12)
+
+
+### Bug Fixes
+
+* **auth:** detect and warn about MS accounts without oauth setup ([b9162fc](https://github.com/nextcloud/mail/commit/b9162fc3b3afcfa10acf42445fc34fc2b04d9614))
+* **l10n:** Update translations from Transifex ([ebd499a](https://github.com/nextcloud/mail/commit/ebd499abe9e3741f6c2cb42b2bff5a4f6fbd3d3a))
+
+
+
 # [5.8.0-beta.0](https://github.com/nextcloud/mail/compare/v5.8.0-alpha.1...v5.8.0-beta.0) (2026-05-11)
 
 
