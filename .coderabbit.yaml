@@ -4,4 +4,8 @@
 reviews:
   auto_review:
     enabled: false
+    auto_incremental_review: false
+    base_branches:
+      - stable*
+  enable_prompt_for_ai_agents: false
   review_status: false
