@@ -1,3 +1,17 @@
+## [3.7.25](https://github.com/nextcloud/mail/compare/v3.7.24...v3.7.25) (2026-05-12)
+
+
+### Bug Fixes
+
+* Apply recipient search input on blur ([bafacf7](https://github.com/nextcloud/mail/commit/bafacf7d62630ac303211c79b252a1bc4d9d949f))
+* **autocomplete:** respect privacy settings for sharing ([a079161](https://github.com/nextcloud/mail/commit/a079161dcb9374d1e62eb728a47e22ab818912f8))
+* **dns:** Update public suffix list ([9aee763](https://github.com/nextcloud/mail/commit/9aee7630ea34d10db576140a932fd992b884b44b))
+* **dns:** Update public suffix list ([062d18f](https://github.com/nextcloud/mail/commit/062d18f666b2a74f4e831c2a73053586e3a117ea))
+* **dns:** Update public suffix list ([61ad723](https://github.com/nextcloud/mail/commit/61ad723e086afacbe143472e3397cc4714d38965))
+* go back warining discards the reply text ([ea83606](https://github.com/nextcloud/mail/commit/ea83606af42dbfd38af70ebd3d492e36ada2fda8))
+
+
+
 ## [3.7.24](https://github.com/nextcloud/mail/compare/v3.7.23...v3.7.24) (2025-03-18)
 
 
