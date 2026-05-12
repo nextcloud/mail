@@ -93,7 +93,6 @@ OC.L10N.register(
     "SMTP Port" : "SMTP bağlantı noktası",
     "SMTP User" : "SMTP kullanıcı adı",
     "SMTP Password" : "SMTP parolası",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Google hesabının bu uygulamayla çalışması için Google iki adımlı doğrulamasını açmanız ve bir uygulama parolası oluşturmanız gerekir.",
     "Account settings" : "Hesap ayarları",
     "Aliases" : "Takma adlar",
     "Alias to S/MIME certificate mapping" : "S/MIME sertifika eşleştirmesinin takma adı",
@@ -887,11 +886,7 @@ OC.L10N.register(
     "Could not load the desired message" : "İstenilen ileti yüklenemedi",
     "Could not load the message" : "İleti yüklenemedi",
     "Error loading message" : "İleti yüklenirken sorun çıktı",
-    "Determine importance using machine learning" : "Önem makine öğrenmesi ile belirlensin",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "İletiler, hangileri ile etkileşim kurduğunuza ya da hangilerini önemli olarak işaretlediğinize göre otomatik olarak önemli olarak işaretlenecek.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Gönderdiğiniz ve yanıtlanması gereken ancak birkaç gün geçmesine rağmen yanıt alamayan iletileriniz burada görüntülenir.",
-    "Mark all messages of this folder as read" : "Bu klasördeki tüm iletileri okunmuş olarak işaretle",
-    "Last 7 days" : "Önceki 7 gün",
-    "From me" : "Benden"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Gönderdiğiniz ve yanıtlanması gereken ancak birkaç gün geçmesine rağmen yanıt alamayan iletileriniz burada görüntülenir."
 },
 "nplurals=2; plural=(n > 1);");

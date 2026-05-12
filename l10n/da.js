@@ -82,7 +82,6 @@ OC.L10N.register(
     "SMTP Port" : "SMTP port",
     "SMTP User" : "SMTP bruger",
     "SMTP Password" : "SMTP kodeord",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "For at din Google-konto skal kunne fungere med denne app, skal du aktivere to-faktor-godkendelse for Gmail samt generere en App-specifik adgangskode.",
     "Account settings" : "Kontoindstillinger",
     "Aliases" : "Aliases",
     "Signature" : "Underskrift",
@@ -582,9 +581,6 @@ OC.L10N.register(
     "Could not load the desired message" : "Den ønskede besked kunne ikke indlæses",
     "Could not load the message" : "Beskeden kunne ikke indlæses",
     "Error loading message" : "Fejl under indlæsning af besked",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Beskeder vil automatisk blive markeret som vigtige baseret på, hvilke meddelelser du har interageret med eller markeret som vigtige. I begyndelsen skal du muligvis manuelt ændre vigtigheden for at lære systemet, men det vil forbedres med tiden.",
-    "Mark all messages of this folder as read" : "Markér alle beskeder i denne mappe som læst",
-    "Last 7 days" : "Sidste 7 dage",
-    "From me" : "Fra mig"
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Beskeder vil automatisk blive markeret som vigtige baseret på, hvilke meddelelser du har interageret med eller markeret som vigtige. I begyndelsen skal du muligvis manuelt ændre vigtigheden for at lære systemet, men det vil forbedres med tiden."
 },
 "nplurals=2; plural=(n != 1);");

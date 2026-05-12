@@ -85,7 +85,6 @@ OC.L10N.register(
     "SMTP Port" : "Πόρτα SMTP",
     "SMTP User" : "Χρήστης SMTP",
     "SMTP Password" : "Συνθηματικό SMTP",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Για να λειτουργήσει ο λογαριασμός Google με αυτήν την εφαρμογή, πρέπει να ενεργοποιήσετε τον έλεγχο ταυτότητας δύο παραγόντων για το Google και να δημιουργήσετε ένα συνθηματικό για την εφαρμογή.",
     "Account settings" : "Ρυθμίσεις λογαριασμού",
     "Aliases" : "Ψευδώνυμα",
     "Alias to S/MIME certificate mapping" : "Αντιστοίχιση ψευδώνυμου με πιστοποιητικό S/MIME",
@@ -832,9 +831,6 @@ OC.L10N.register(
     "Could not load the message" : "Δεν ήταν δυνατή η φόρτωση του μηνύματος",
     "Error loading message" : "Σφάλμα φόρτωσης μηνύματος",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Τα μηνύματα θα επισημανθούν αυτόματα ως σημαντικά με βάση αυτά με τα οποία επισημαίνετε ως σημαντικά. Στην αρχή ίσως χρειαστεί να τα αλλάζετε χειροκίνητα, έως ότου εκπαιδευτεί το σύστημα, αλλά θα βελτιώνεται σταδιακά με την πάροδο του χρόνου.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Μηνύματα που στείλατε και απαιτούν απάντηση αλλά δεν έλαβαν καμία μετά από μερικές ημέρες θα εμφανίζονται εδώ.",
-    "Mark all messages of this folder as read" : "Σημείωση όλων των μυνημάτων ως αναγνωσμένων",
-    "Last 7 days" : "Τελευταίες 7 ημέρες",
-    "From me" : "Από εμένα"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Μηνύματα που στείλατε και απαιτούν απάντηση αλλά δεν έλαβαν καμία μετά από μερικές ημέρες θα εμφανίζονται εδώ."
 },
 "nplurals=2; plural=(n != 1);");

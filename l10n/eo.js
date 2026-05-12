@@ -191,8 +191,6 @@ OC.L10N.register(
     "Could not load your message" : "Ne eblis ŝargi vian mesaĝon",
     "Could not load the desired message" : "Ne eblis ŝargi la deziratan mesaĝon",
     "Could not load the message" : "Ne eblis ŝargi la mesaĝon",
-    "Error loading message" : "Eraris ŝargi mesaĝon",
-    "Mark all messages of this folder as read" : "Marki ĉiujn mesaĝojn el tiu dosierujo kiel legitaj",
-    "Last 7 days" : "Lastaj 7 tagoj"
+    "Error loading message" : "Eraris ŝargi mesaĝon"
 },
 "nplurals=2; plural=(n != 1);");

@@ -84,7 +84,6 @@ OC.L10N.register(
     "SMTP Port" : "SMTP-gátt",
     "SMTP User" : "SMTP-notandi",
     "SMTP Password" : "SMTP-lykilorð",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Til að Google-reikningur virki með þessu forriti þarft þú að virkja tveggja-þátta auðkenningu fyrir Google og útbúa lykilorð fyrir forritið.",
     "Account settings" : "Stillingar notandaaðgangs",
     "Aliases" : "Samnefni",
     "Alias to S/MIME certificate mapping" : "Samnefni við tengingu S/MIME-skilríkis",
@@ -696,9 +695,6 @@ OC.L10N.register(
     "Could not load the desired message" : "Gat ekki hlaðið inn umbeðnum skilaboðum",
     "Could not load the message" : "Gat ekki hlaðið inn skilaboðunum",
     "Error loading message" : "Villa við hleðslu á skilaboðum",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Skilaboð sem þú sendir og sem þarfnast svars en hafa ekki enn fengið svar eftir nokkra daga, munu birtast hér.",
-    "Mark all messages of this folder as read" : "Merkja öll skilaboð í þessari möppu sem lesin",
-    "Last 7 days" : "Síðustu 7 daga",
-    "From me" : "Frá mér"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Skilaboð sem þú sendir og sem þarfnast svars en hafa ekki enn fengið svar eftir nokkra daga, munu birtast hér."
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

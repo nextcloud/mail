@@ -93,7 +93,6 @@ OC.L10N.register(
     "SMTP Port" : "Port SMTP",
     "SMTP User" : "Úsáideoir SMTP",
     "SMTP Password" : "Pasfhocal SMTP",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Chun go n-oibreoidh an Cuntas Google leis an aip seo ní mór duit fíordheimhniú dhá-fhachtóir a chumasú do Google agus pasfhocal aipe a ghiniúint.",
     "Account settings" : "Socruithe cuntas",
     "Aliases" : "Ailiasanna",
     "Alias to S/MIME certificate mapping" : "Ailias le mapáil teastais S/MIME",
@@ -892,11 +891,7 @@ OC.L10N.register(
     "Could not load the desired message" : "Níorbh fhéidir an teachtaireacht atá uait a luchtú",
     "Could not load the message" : "Níorbh fhéidir an teachtaireacht a luchtú",
     "Error loading message" : "Earráid agus an teachtaireacht á lódáil",
-    "Determine importance using machine learning" : "Cinntigh tábhacht trí úsáid a bhaint as foghlaim meaisín",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Déanfar teachtaireachtaí a mharcáil go huathoibríoch mar thábhachtach, bunaithe ar na teachtaireachtaí a ndearna tú idirghníomhú leo nó a mharcáil tú a bheith tábhachtach. Ar dtús b'fhéidir go mbeadh ort an tábhacht a bhaineann leis an gcóras a mhúineadh a athrú de láimh, ach feabhsóidh sé le himeacht ama.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Taispeánfar anseo teachtaireachtaí a sheol tú a dteastaíonn freagra uathu ach nach bhfuair tú tar éis cúpla lá.",
-    "Mark all messages of this folder as read" : "Marcáil gach teachtaireacht sa fhillteán seo mar léite",
-    "Last 7 days" : "7 lá seo caite",
-    "From me" : "Uaim"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Taispeánfar anseo teachtaireachtaí a sheol tú a dteastaíonn freagra uathu ach nach bhfuair tú tar éis cúpla lá."
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

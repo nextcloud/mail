@@ -93,7 +93,6 @@ OC.L10N.register(
     "SMTP Port" : "SMTP Port",
     "SMTP User" : "SMTP User",
     "SMTP Password" : "SMTP Password",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password.",
     "Account settings" : "Account settings",
     "Aliases" : "Aliases",
     "Alias to S/MIME certificate mapping" : "Alias to S/MIME certificate mapping",
@@ -890,11 +889,7 @@ OC.L10N.register(
     "Could not load the desired message" : "Could not load the desired message",
     "Could not load the message" : "Could not load the message",
     "Error loading message" : "Error loading message",
-    "Determine importance using machine learning" : "Determine importance using machine learning",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here.",
-    "Mark all messages of this folder as read" : "Mark all messages of this folder as read",
-    "Last 7 days" : "Last 7 days",
-    "From me" : "From me"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here."
 },
 "nplurals=2; plural=(n != 1);");

@@ -93,7 +93,6 @@ OC.L10N.register(
     "SMTP Port" : "Port SMTP",
     "SMTP User" : "Pengguna SMTP",
     "SMTP Password" : "Kata sandi SMTP",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Agar akun Google dapat berfungsi dengan aplikasi ini, Anda perlu mengaktifkan autentikasi dua faktor untuk Google dan membuat kata sandi aplikasi.",
     "Account settings" : "Pengaturan akun",
     "Aliases" : "Alias",
     "Alias to S/MIME certificate mapping" : "Pemetaan alias ke sertifikat S/MIME",
@@ -882,11 +881,7 @@ OC.L10N.register(
     "Could not load the desired message" : "Tidak dapat memuat pesan yang diinginkan",
     "Could not load the message" : "Tidak dapat memuat pesan",
     "Error loading message" : "Kesalahan saat memuat pesan",
-    "Determine importance using machine learning" : "Tentukan tingkat kepentingan menggunakan pembelajaran mesin",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Pesan akan otomatis ditandai sebagai penting berdasarkan pesan mana yang Anda interaksikan atau tandai sebagai penting. Pada awalnya Anda mungkin perlu mengubah tingkat kepentingan secara manual untuk mengajarkan sistem, tetapi seiring waktu akan membaik.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Pesan yang Anda kirim yang memerlukan balasan tetapi tidak menerima balasan setelah beberapa hari akan ditampilkan di sini.",
-    "Mark all messages of this folder as read" : "Tandai semua pesan di folder ini sebagai dibaca",
-    "Last 7 days" : "7 hari terakhir",
-    "From me" : "Dari saya"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Pesan yang Anda kirim yang memerlukan balasan tetapi tidak menerima balasan setelah beberapa hari akan ditampilkan di sini."
 },
 "nplurals=1; plural=0;");

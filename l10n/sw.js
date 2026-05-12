@@ -176,7 +176,6 @@ OC.L10N.register(
     "Error while sharing file" : "Hitilafu wakati wa kushirikisha faili",
     "Nextcloud Mail" : "Nextcloud Mail",
     "Discard changes" : "Discard changes",
-    "Message sent" : "Ujumbe umetumwa",
-    "Last 7 days" : "Siku 7 zilizopita"
+    "Message sent" : "Ujumbe umetumwa"
 },
 "nplurals=2; plural=(n != 1);");
