@@ -114,6 +114,11 @@ class SettingsController extends Controller {
 		$this->config->setAppValue('mail', 'allow_new_mail_accounts', $allowed ? 'yes' : 'no');
 	}
 
+	public function setAllowNewMailAliases(bool $allowed): JSONResponse {
+		$this->config->setAppValue('mail', 'allow_new_mail_aliases', $allowed ? 'yes' : 'no');
+		return new JSONResponse([]);
+	}
+
 	public function setEnabledLlmProcessing(bool $enabled): JSONResponse {
 		$this->config->setAppValue('mail', 'llm_processing', $enabled ? 'yes' : 'no');
 		return new JSONResponse([]);

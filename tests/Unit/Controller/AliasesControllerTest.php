@@ -18,6 +18,7 @@ use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\IConfig;
 
 class AliasesControllerTest extends TestCase {
 	private $controller;
@@ -46,8 +47,12 @@ class AliasesControllerTest extends TestCase {
 
 		$this->aliasMapper = $this->createMock(AliasMapper::class);
 		$this->mailAccountMapper = $this->createMock(MailAccountMapper::class);
+		$config = $this->createMock(IConfig::class);
+		$config->method('getAppValue')
+			->with('mail', 'allow_new_mail_aliases', 'yes')
+			->willReturn('yes');
 
-		$this->aliasService = new AliasesService($this->aliasMapper, $this->mailAccountMapper);
+		$this->aliasService = new AliasesService($this->aliasMapper, $this->mailAccountMapper, $config);
 		$this->controller = new AliasesController($this->appName, $this->request, $this->aliasService, $this->userId);
 	}
 

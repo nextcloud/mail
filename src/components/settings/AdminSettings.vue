@@ -136,6 +136,21 @@
 				</p>
 			</article>
 		</div>
+		<div class="app-description">
+			<h3>{{ t('mail', 'Allow aliases') }}</h3>
+			<article>
+				<p>
+					{{ t('mail', 'The Mail app does not verify aliases. If this is enabled without existing server-side support, your mail server will likely reject outgoing messages, causing emails to fail.') }}
+				</p>
+				<p>
+					<NcCheckboxRadioSwitch v-model="allowNewMailAliases"
+						type="switch"
+						@update:checked="updateAllowNewMailAliases">
+						{{ t('mail', 'Allow users to create mail aliases') }}
+					</NcCheckboxRadioSwitch>
+				</p>
+			</article>
+		</div>
 		<div
 			v-if="isLlmSummaryConfigured"
 			class="app-description">
@@ -300,6 +315,7 @@ import {
 	setImportanceClassificationEnabledByDefault,
 	setLayoutMessageView,
 	updateAllowNewMailAccounts,
+	updateAllowNewMailAliases,
 	updateEnabledSmartReply,
 	updateLlmEnabled,
 	updateProvisioningSettings,
@@ -368,6 +384,7 @@ export default {
 			},
 
 			allowNewMailAccounts: loadState('mail', 'allow_new_mail_accounts', true),
+			allowNewMailAliases: loadState('mail', 'allow_new_mail_aliases', true),
 			isLlmSummaryConfigured: loadState('mail', 'enabled_llm_summary_backend'),
 			isLlmEnabled: loadState('mail', 'llm_processing', true),
 			isLlmFreePromptConfigured: loadState('mail', 'enabled_llm_free_prompt_backend'),
@@ -430,6 +447,10 @@ export default {
 
 		async updateAllowNewMailAccounts(checked) {
 			await updateAllowNewMailAccounts(checked)
+		},
+
+		async updateAllowNewMailAliases(checked) {
+			await updateAllowNewMailAliases(checked)
 		},
 
 		async updateLlmEnabled(checked) {

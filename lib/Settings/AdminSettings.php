@@ -84,6 +84,12 @@ class AdminSettings implements ISettings {
 
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,
+			'allow_new_mail_aliases',
+			$this->config->getAppValue('mail', 'allow_new_mail_aliases', 'yes') === 'yes'
+		);
+
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
 			'layout_message_view',
 			$this->config->getAppValue('mail', 'layout_message_view', 'threaded')
 		);
