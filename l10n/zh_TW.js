@@ -93,6 +93,8 @@ OC.L10N.register(
     "SMTP Port" : "SMTP 連接埠",
     "SMTP User" : "SMTP 帳號",
     "SMTP Password" : "SMTP 密碼",
+    "Google requires OAuth authentication. If your Nextcloud admin has not configured Google OAuth, you can use a Google App Password instead." : "Google 需要 OAuth 驗證。若您的 Nextcloud 管理員尚未設定 Google OAuth，您可以改用 Google 應用程式密碼。",
+    "Microsoft requires OAuth authentication. Ask your Nextcloud admin to configure Microsoft OAuth in the admin settings." : "Microsoft 需要 OAuth 驗證。請聯絡您的 Nextcloud 管理員，在管理設定中設定 Microsoft OAuth。",
     "Account settings" : "帳號設定",
     "Aliases" : "別名",
     "Alias to S/MIME certificate mapping" : "別名至 S/MIME 憑證對映",
