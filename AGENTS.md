@@ -111,6 +111,17 @@ After completing code changes:
    - There is a [contributing doc](./.github/CONTRIBUTING.md) with suggestions
 8. The user will review and commit when ready
 
+### PR Review Workflow
+
+Once a branch is pushed and under review, **do not force-push**. Reviewers track changes incrementally — a force-push destroys that history and forces them to re-read the full diff from scratch.
+
+Instead, address feedback with **fixup commits**:
+```bash
+git commit --fixup=<sha>   # targets the specific commit being corrected
+```
+
+The branch will be rebased and squashed into a clean history before merge (CI enforces this). The failing "clean history" CI check is intentional and expected during review — ignore it until the PR has a positive review, then rebase to clean up.
+
 ### Commit Message Format
 
 All commits must include two lines at the end:
