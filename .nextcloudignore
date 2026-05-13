@@ -31,6 +31,7 @@ codecov.yml
 /psalm.xml
 /rector.php
 /renovate.json
+/rspack.config.js
 /screenshots
 /src
 /tests
@@ -42,6 +43,5 @@ codecov.yml
 /vendor/*/*/test
 /vendor/*/*/tests
 /vendor/*/*/test_data
-/webpack.*
 /vitest.config.*
 /patches

@@ -6,20 +6,20 @@
   "license": "AGPL-3.0-only",
   "author": "Christoph Wurst <christoph@winzerhof-wurst.at>",
   "scripts": {
+    "analyze": "RSDOCTOR=true rspack build --env production",
     "build": "rspack build --env production",
     "dev": "rspack build --env development",
-    "watch": "rspack build --env development --watch",
-    "analyze": "RSDOCTOR=true rspack build --env production",
-    "stats": "rspack build --env production --json js/stats.json",
     "postinstall": "patch-package",
     "lint": "eslint --ext .js,.ts,.vue .",
     "lint:fix": "eslint --ext .js,.ts,.vue --fix .",
+    "stats": "rspack build --env production --json js/stats.json",
     "stylelint": "stylelint \"css/*.css\" \"css/*.scss\" \"src/**/*.scss\" \"src/**/*.vue\"",
     "stylelint:fix": "stylelint \"css/*.css\" \"css/*.scss\" \"src/**/*.scss\" \"src/**/*.vue\" --fix",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:unit": "vitest --run",
-    "test:unit:watch": "vitest --watch"
+    "test:unit:watch": "vitest --watch",
+    "watch": "rspack build --env development --watch"
   },
   "browserslist": [
     "extends @nextcloud/browserslist-config"
@@ -103,8 +103,8 @@
     "typescript": "^5.9.3",
     "vitest": "^3.2.4",
     "vue-loader": "^15.11.1",
-    "webpack": "^5.102.1",
-    "vue-template-compiler": "^2.7.16"
+    "vue-template-compiler": "^2.7.16",
+    "webpack": "^5.102.1"
   },
   "engines": {
     "node": "^24.0.0",

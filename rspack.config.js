@@ -35,7 +35,7 @@ const transpilePackages = [
 	'yocto-queue',
 ]
 
-const shouldExcludeFromJsTranspile = (resourcePath) => {
+function shouldExcludeFromJsTranspile(resourcePath) {
 	if (!resourcePath.includes(`${path.sep}node_modules${path.sep}`)) {
 		return false
 	}
@@ -223,6 +223,7 @@ module.exports = defineConfig((env) => {
 			extensions: ['*', '.tsx', '.ts', '.js', '.vue', '.json'],
 			symlinks: false,
 			alias: {
+				ckeditor5$: path.resolve(__dirname, 'node_modules', 'ckeditor5', 'dist', 'ckeditor5.js'),
 				'@': path.resolve(__dirname, 'src'),
 			},
 			fallback: {
