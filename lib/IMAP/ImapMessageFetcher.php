@@ -305,13 +305,11 @@ class ImapMessageFetcher {
 	 */
 	private function getPart(Horde_Mime_Part $p, string $partNo, bool $isFetched): void {
 		// iMIP messages
-		// Handle text/calendar and application/ics parts first because they
-		// might be attachments at the same time. Otherwise, some of the
-		// following if-conditions might break the handling and treat iMIP
+		// Handle text/calendar parts first because they might be attachments at the same time.
+		// Otherwise, some of the following if-conditions might break the handling and treat iMIP
 		// data like regular attachments.
 		$allContentTypeParameters = $p->getAllContentTypeParameters();
-		if ($p->getType() === 'text/calendar'
-				|| $p->getType() === 'application/ics') {
+		if ($p->getType() === 'text/calendar') {
 			// Handle event data like a regular attachment
 			// Outlook doesn't set a content disposition
 			// We work around this by checking for the name only
@@ -336,7 +334,7 @@ class ImapMessageFetcher {
 			$contents = null;
 			if ($method === null) {
 				$contents = $this->loadBodyData($p, $partNo, $isFetched);
-				if (preg_match('/^METHOD:\s*(\S+)/mi', $contents, $m)) {
+				if (preg_match('/^METHOD:([A-Z]+)/mi', $contents, $m) === 1) {
 					$method = $m[1];
 				}
 			}

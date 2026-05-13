@@ -755,10 +755,6 @@ class MessageMapperTest extends TestCase {
 			// body. Must still be flagged as iMIP so downstream processing
 			// picks it up.
 			'proton bridge request (method= stripped)' => ['request_proton_bridge', true],
-			// Google occasionally attaches the same invitation twice: once as
-			// text/calendar and once as application/ics. We used to ignore the
-			// latter even though it is functionally equivalent.
-			'application/ics request' => ['request_application_ics', true],
 		];
 	}
 
