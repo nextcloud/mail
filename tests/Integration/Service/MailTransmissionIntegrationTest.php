@@ -243,6 +243,33 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->assertMessageCount(1, 'Sent');
 	}
 
+	public function testSkipsAppendWhenServerAlreadySavedSentMessage(): void {
+		$messageId = '<server-saved-' . microtime(true) . '@domain.tld>';
+		$rawMessage = implode("\r\n", [
+			'From: user@domain.tld',
+			'To: recipient@domain.com',
+			'Message-ID: ' . $messageId,
+			'Subject: server auto-save test',
+			'',
+			'Body text',
+		]);
+
+		// Simulate what an Exchange-style server does: save to Sent before the client does
+		$this->saveMimeMessage('Sent', $rawMessage);
+		$this->assertMessageCount(1, 'Sent');
+
+		$this->message->setRaw($rawMessage);
+
+		/** @var IMAPClientFactory $clientFactory */
+		$clientFactory = Server::get(IMAPClientFactory::class);
+		$client = $clientFactory->getClient($this->account);
+		/** @var CopySentMessageHandler $handler */
+		$handler = Server::get(CopySentMessageHandler::class);
+		$handler->process($this->account, $this->message, $client);
+
+		$this->assertMessageCount(1, 'Sent');
+	}
+
 	public function testSaveNewDraft() {
 		$message = NewMessageData::fromRequest($this->account, 'greetings', 'hello there', 'recipient@domain.com', null, null, [], false);
 		[,,$uid] = $this->transmission->saveDraft($message);

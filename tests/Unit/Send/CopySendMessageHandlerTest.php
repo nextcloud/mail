@@ -208,6 +208,79 @@ class CopySendMessageHandlerTest extends TestCase {
 		$this->handler->process($account, $mock, $client);
 	}
 
+	public function testProcessSkipsAppendWhenServerAlreadySaved(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setSentMailboxId(1);
+		$mailAccount->setUserId('bob');
+		$account = new Account($mailAccount);
+		$localMessage = $this->getMockBuilder(LocalMessage::class);
+		$localMessage->addMethods(['getStatus', 'setStatus', 'getRaw']);
+		$mock = $localMessage->getMock();
+		$mailbox = new Mailbox();
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$rawWithMessageId = "Message-ID: <abc@example.com>\r\nSubject: Test\r\n\r\nBody";
+
+		$mock->expects(self::once())
+			->method('getStatus')
+			->willReturn(LocalMessage::STATUS_RAW);
+		$mock->expects(self::once())
+			->method('getRaw')
+			->willReturn($rawWithMessageId);
+		$this->mailboxMapper->expects(self::once())
+			->method('findById')
+			->willReturn($mailbox);
+		$this->messageMapper->expects(self::once())
+			->method('existsInMailboxByMessageId')
+			->with($client, $mailbox, '<abc@example.com>')
+			->willReturn(true);
+		$this->messageMapper->expects(self::never())
+			->method('save');
+		$mock->expects(self::once())
+			->method('setStatus')
+			->with(LocalMessage::STATUS_PROCESSED);
+		$this->flagRepliedMessageHandler->expects(self::once())
+			->method('process');
+
+		$this->handler->process($account, $mock, $client);
+	}
+
+	public function testProcessFallsBackToAppendWhenSearchFails(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setSentMailboxId(1);
+		$mailAccount->setUserId('bob');
+		$account = new Account($mailAccount);
+		$localMessage = $this->getMockBuilder(LocalMessage::class);
+		$localMessage->addMethods(['getStatus', 'setStatus', 'getRaw']);
+		$mock = $localMessage->getMock();
+		$mailbox = new Mailbox();
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$rawWithMessageId = "Message-ID: <xyz@example.com>\r\nSubject: Test\r\n\r\nBody";
+
+		$mock->expects(self::once())
+			->method('getStatus')
+			->willReturn(LocalMessage::STATUS_RAW);
+		$mock->expects(self::once())
+			->method('getRaw')
+			->willReturn($rawWithMessageId);
+		$this->mailboxMapper->expects(self::once())
+			->method('findById')
+			->willReturn($mailbox);
+		$this->messageMapper->expects(self::once())
+			->method('existsInMailboxByMessageId')
+			->willThrowException(new Horde_Imap_Client_Exception());
+		$this->loggerInterface->expects(self::once())
+			->method('warning');
+		$this->messageMapper->expects(self::once())
+			->method('save');
+		$mock->expects(self::once())
+			->method('setStatus')
+			->with(LocalMessage::STATUS_PROCESSED);
+		$this->flagRepliedMessageHandler->expects(self::once())
+			->method('process');
+
+		$this->handler->process($account, $mock, $client);
+	}
+
 	public function testProcessNoRawMessage(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setSentMailboxId(1);

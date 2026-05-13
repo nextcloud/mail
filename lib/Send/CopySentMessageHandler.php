@@ -11,6 +11,7 @@ use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -22,6 +23,22 @@ class CopySentMessageHandler extends AHandler {
 		private LoggerInterface $logger,
 		private MessageMapper $messageMapper,
 	) {
+	}
+
+	private function isAlreadySavedByServer(
+		Horde_Imap_Client_Socket $client,
+		Mailbox $mailbox,
+		string $rawMessage,
+	): bool {
+		if (!preg_match('/^Message-ID:\s*(<[^>]+>)/im', $rawMessage, $m)) {
+			return false;
+		}
+		try {
+			return $this->messageMapper->existsInMailboxByMessageId($client, $mailbox, $m[1]);
+		} catch (Horde_Imap_Client_Exception $e) {
+			$this->logger->warning('Could not search for existing sent message, proceeding with APPEND', ['exception' => $e]);
+			return false;
+		}
 	}
 
 	#[\Override]
@@ -63,6 +80,14 @@ class CopySentMessageHandler extends AHandler {
 			]);
 
 			return $localMessage;
+		}
+
+		// Some servers (e.g. Exchange) auto-save sent messages, so skip the APPEND when the
+		// message is already present to avoid duplicates in the Sent folder.
+		if ($this->isAlreadySavedByServer($client, $sentMailbox, $rawMessage)) {
+			$this->logger->debug('Sent message already present in sent mailbox (server auto-saved), skipping APPEND');
+			$localMessage->setStatus(LocalMessage::STATUS_PROCESSED);
+			return $this->processNext($account, $localMessage, $client);
 		}
 
 		try {
