@@ -67,6 +67,29 @@ class MailAccountMapper extends QBMapper {
 	}
 
 	/**
+	 * Finds all Mail Accounts delegated to the given user
+	 *
+	 * @param string $userId the id of the user that has been delegated access
+	 *
+	 * @return list<MailAccount>
+	 */
+	public function findDelegatedByUserId(string $userId): array {
+		$qb = $this->db->getQueryBuilder();
+		$query = $qb
+			->select('a.*')
+			->from($this->getTableName(), 'a')
+			->innerJoin(
+				'a',
+				'mail_delegations',
+				'd',
+				$qb->expr()->eq('a.id', 'd.account_id')
+			)
+			->where($qb->expr()->eq('d.user_id', $qb->createNamedParameter($userId)));
+
+		return $this->findEntities($query);
+	}
+
+	/**
 	 * Finds all Mail Accounts by user id existing for this user
 	 *
 	 * @param string $userId the id of the user that we want to find

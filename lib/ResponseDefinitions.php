@@ -49,6 +49,7 @@ namespace OCA\Mail;
  * @psalm-type MailAccountListResponse = array{
  *      id: int,
  *      email: string,
+ *      isDelegated: bool,
  *      aliases: list<array{
  *          id: int,
  *          email: string,

@@ -144,7 +144,7 @@ SPDX-FileCopyrightText = "2018-2024 Google LLC, 2016-2024 Nextcloud GmbH and Nex
 SPDX-License-Identifier = "Apache-2.0"
 
 [[annotations]]
-path = ["img/mail.png", "img/mail.svg", "img/mail-dark.svg", "img/important.svg", "img/star.png", "img/star.svg", "img/mail-notification.png", "img/mail-notification.svg", "img/text_snippet.svg", "img/format-pilcrow-arrow-right.svg", "img/format-pilcrow-arrow-left.svg"]
+path = ["img/mail.png", "img/mail.svg", "img/mail-dark.svg", "img/important.svg", "img/star.png", "img/star.svg", "img/mail-notification.png", "img/mail-notification.svg", "img/text_snippet.svg", "img/format-pilcrow-arrow-right.svg", "img/format-pilcrow-arrow-left.svg", "img/delegation.svg"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2018-2026 Google LLC"
 SPDX-License-Identifier = "Apache-2.0"

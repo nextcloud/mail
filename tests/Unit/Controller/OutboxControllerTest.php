@@ -19,6 +19,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -43,6 +44,8 @@ class OutboxControllerTest extends TestCase {
 	/** @var SmimeService&MockObject */
 	private $smimeService;
 
+	private DelegationService&MockObject $delegationService;
+
 	private OutboxController $controller;
 	protected function setUp(): void {
 		parent::setUp();
@@ -53,6 +56,11 @@ class OutboxControllerTest extends TestCase {
 		$this->request = $this->createMock(IRequest::class);
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->smimeService = $this->createMock(SmimeService::class);
+		$this->delegationService = $this->createMock(DelegationService::class);
+		$this->delegationService->method('resolveAccountUserId')
+			->willReturn($this->userId);
+		$this->delegationService->method('resolveLocalMessageUserId')
+			->willReturn($this->userId);
 
 		$this->controller = new OutboxController(
 			$this->appName,
@@ -61,6 +69,7 @@ class OutboxControllerTest extends TestCase {
 			$this->service,
 			$this->accountService,
 			$this->smimeService,
+			$this->delegationService,
 		);
 	}
 

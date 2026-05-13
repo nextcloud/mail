@@ -15,6 +15,7 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -31,6 +32,7 @@ class ListController extends Controller {
 	private IClientService $httpClientService;
 	private LoggerInterface $logger;
 	private ?string $currentUserId;
+	private DelegationService $delegationService;
 
 	public function __construct(IRequest $request,
 		IMailManager $mailManager,
@@ -38,7 +40,8 @@ class ListController extends Controller {
 		IMAPClientFactory $clientFactory,
 		IClientService $httpClientService,
 		LoggerInterface $logger,
-		?string $userId) {
+		?string $userId,
+		DelegationService $delegationService) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->mailManager = $mailManager;
 		$this->accountService = $accountService;
@@ -47,6 +50,7 @@ class ListController extends Controller {
 		$this->httpClientService = $httpClientService;
 		$this->logger = $logger;
 		$this->currentUserId = $userId;
+		$this->delegationService = $delegationService;
 	}
 
 	/**
@@ -59,9 +63,10 @@ class ListController extends Controller {
 		}
 
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->currentUserId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return JsonResponse::fail(null, Http::STATUS_NOT_FOUND);
 		}

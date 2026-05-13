@@ -19,6 +19,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\DraftsService;
 use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -35,6 +36,7 @@ class DraftsControllerTest extends TestCase {
 	private AccountService $accountService;
 	private DraftsController $controller;
 	private SmimeService $smimeService;
+	private DelegationService $delegationService;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -46,6 +48,11 @@ class DraftsControllerTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->smimeService = $this->createMock(SmimeService::class);
+		$this->delegationService = $this->createMock(DelegationService::class);
+		$this->delegationService->method('resolveAccountUserId')
+			->willReturn($this->userId);
+		$this->delegationService->method('resolveLocalMessageUserId')
+			->willReturn($this->userId);
 
 		$this->controller = new DraftsController(
 			$this->appName,
@@ -54,7 +61,8 @@ class DraftsControllerTest extends TestCase {
 			$this->service,
 			$this->accountService,
 			$this->timeFactory,
-			$this->smimeService
+			$this->smimeService,
+			$this->delegationService,
 		);
 	}
 
