@@ -93,6 +93,8 @@ OC.L10N.register(
     "SMTP Port" : "SMTP-Port",
     "SMTP User" : "SMTP-Benutzer",
     "SMTP Password" : "SMTP-Passwort",
+    "Google requires OAuth authentication. If your Nextcloud admin has not configured Google OAuth, you can use a Google App Password instead." : "Google erfordert eine OAuth-Authentifizierung. Wenn die Nextcloud-Administration Google OAuth nicht eingerichtet hat, kann stattdessen ein Google App-Passwort verwendet werden.",
+    "Microsoft requires OAuth authentication. Ask your Nextcloud admin to configure Microsoft OAuth in the admin settings." : "Microsoft erfordert OAuth-Authentifizierung. Bitte deine Nextcloud-Administration, Microsoft OAuth in den Administrations-Einstellungen einzurichten.",
     "Account settings" : "Kontoeinstellungen",
     "Aliases" : "Aliasse",
     "Alias to S/MIME certificate mapping" : "Alias einem S/MIME-Zertifikat zuordnen",
