@@ -30,7 +30,8 @@ class CopySentMessageHandler extends AHandler {
 		Mailbox $mailbox,
 		string $rawMessage,
 	): bool {
-		if (!preg_match('/^Message-ID:\s*(<[^>]+>)/im', $rawMessage, $m)) {
+		[$headers] = preg_split("/\r?\n\r?\n/", $rawMessage, 2);
+		if (!preg_match('/^Message-ID:\s*(<[^>\r\n]+>)/im', $headers, $m)) {
 			return false;
 		}
 		try {
