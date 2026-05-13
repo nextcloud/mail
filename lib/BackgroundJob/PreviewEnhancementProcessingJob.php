@@ -8,19 +8,21 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\PreprocessingService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\BackgroundJob\TimedJob;
-use OCP\IConfig;
+use OCP\IAppConfig;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 use function max;
 use function sprintf;
 
 class PreviewEnhancementProcessingJob extends TimedJob {
+	public const CONFIG_KEY_INTERVAL = 'preview_enhancement_interval';
 	private const DEFAULT_INTERVAL = 3600;
 	private const MIN_INTERVAL = 60;
 
@@ -36,7 +38,7 @@ class PreviewEnhancementProcessingJob extends TimedJob {
 		PreprocessingService $preprocessingService,
 		LoggerInterface $logger,
 		IJobList $jobList,
-		IConfig $config) {
+		IAppConfig $appConfig) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;
@@ -50,8 +52,9 @@ class PreviewEnhancementProcessingJob extends TimedJob {
 		// that IMipMessageJob depends on to turn incoming invitations into
 		// calendar events). A floor of MIN_INTERVAL keeps a misconfigured
 		// value from hammering the DB.
-		$configured = $config->getSystemValueInt(
-			'app.mail.preview-enhancement-interval',
+		$configured = $appConfig->getValueInt(
+			Application::APP_ID,
+			self::CONFIG_KEY_INTERVAL,
 			self::DEFAULT_INTERVAL,
 		);
 		$this->setInterval(max(self::MIN_INTERVAL, $configured));
