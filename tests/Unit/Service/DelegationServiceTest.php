@@ -29,6 +29,7 @@ use OCP\IUserManager;
 use OCP\Notification\IManager;
 use OCP\Notification\INotification;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class DelegationServiceTest extends TestCase {
 	private DelegationMapper&MockObject $delegationMapper;
@@ -40,6 +41,7 @@ class DelegationServiceTest extends TestCase {
 	private IUserManager&MockObject $userManager;
 	private IManager&MockObject $notificationManager;
 	private ITimeFactory&MockObject $timeFactory;
+	private LoggerInterface&MockObject $logger;
 	private DelegationService $service;
 
 	private Account $account;
@@ -56,6 +58,7 @@ class DelegationServiceTest extends TestCase {
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->notificationManager = $this->createMock(IManager::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->service = new DelegationService(
 			$this->delegationMapper,
@@ -67,6 +70,7 @@ class DelegationServiceTest extends TestCase {
 			$this->userManager,
 			$this->notificationManager,
 			$this->timeFactory,
+			$this->logger,
 		);
 
 		$mailAccount = new MailAccount();
@@ -89,7 +93,7 @@ class DelegationServiceTest extends TestCase {
 
 		$user = $this->createMock(IUser::class);
 		$user->method('getDisplayName')->willReturn('Owner User');
-		$this->userManager->method('getExistingUser')->with('owner')->willReturn($user);
+		$this->userManager->method('get')->with('owner')->willReturn($user);
 		$this->timeFactory->method('getDateTime')->willReturn(new \DateTime());
 
 		return $notification;

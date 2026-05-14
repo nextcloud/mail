@@ -108,7 +108,7 @@ class Notifier implements INotifier {
 							'name' => $parameters['account_email']
 						]
 					]);
-					$notification->setRichMessage($l->t('{user} revoked delagation for {account}'),
+					$notification->setRichMessage($l->t('{user} revoked delegation for {account}'),
 						[
 							'user' => [
 								'type' => 'user',

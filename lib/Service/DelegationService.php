@@ -22,6 +22,8 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IUserManager;
 use OCP\Notification\IManager;
+use OCP\Notification\IncompleteNotificationException;
+use Psr\Log\LoggerInterface;
 
 class DelegationService {
 
@@ -35,6 +37,7 @@ class DelegationService {
 		private IUserManager $userManager,
 		private IManager $notificationManager,
 		private ITimeFactory $time,
+		private LoggerInterface $logger,
 	) {
 	}
 
@@ -135,7 +138,7 @@ class DelegationService {
 	 */
 	private function notify(string $userId, string $currentUserId, Account $account, bool $delegated) {
 		$notification = $this->notificationManager->createNotification();
-		$displayName = $this->userManager->getExistingUser($currentUserId)->getDisplayName();
+		$displayName = $this->userManager->get($currentUserId)?->getDisplayName() ?? $currentUserId;
 		$time = $this->time->getDateTime('now');
 		$notification
 			->setApp('mail')
@@ -155,6 +158,11 @@ class DelegationService {
 				'account_email' => $account->getEmail(),
 			]
 			);
-		$this->notificationManager->notify($notification);
+
+		try {
+			$this->notificationManager->notify($notification);
+		} catch (IncompleteNotificationException $e) {
+			$this->logger->warning('Failed to send delegation notification to {userId}', ['userId' => $userId,'exception' => $e]);
+		}
 	}
 }
