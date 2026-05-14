@@ -433,12 +433,23 @@ class MailManager implements IMailManager {
 			$client->logout();
 		}
 
+		// Looking the message up by uid is a shortcut to avoid changing this method's
+		// signature, which the JMAP PR does anyway.
+		$messages = $this->dbMessageMapper->findByUids($mb, [$uid]);
+		if (count($messages) < 1) {
+			// The message should be in the database cache, otherwise the client wouldn't
+			// know about the uid. Skip the event rather than fail the whole flag operation.
+			return;
+		}
+
+		$message = reset($messages);
+
 		$this->eventDispatcher->dispatch(
 			MessageFlaggedEvent::class,
 			new MessageFlaggedEvent(
 				$account,
 				$mb,
-				$uid,
+				$message,
 				$flag,
 				$value
 			)

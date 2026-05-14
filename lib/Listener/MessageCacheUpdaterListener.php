@@ -29,16 +29,8 @@ class MessageCacheUpdaterListener implements IEventListener {
 	#[\Override]
 	public function handle(Event $event): void {
 		if ($event instanceof MessageFlaggedEvent) {
-			$messages = $this->mapper->findByUids($event->getMailbox(), [$event->getUid()]);
-			$message = reset($messages);
-
-			if ($message === false) {
-				$this->logger->warning('Flagged message is not cached');
-				return;
-			}
-
+			$message = $event->getMessage();
 			$message->setFlag($event->getFlag(), $event->isSet());
-
 			$this->mapper->update($message);
 		} elseif ($event instanceof MessageDeletedEvent) {
 			$this->mapper->deleteByUid(
