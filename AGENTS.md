@@ -142,3 +142,11 @@ fix(deps): Update package dependencies
 AI-assisted: OpenCode (Claude Haiku 4.5)
 Signed-off-by: Name <email>
 ```
+
+### Styling
+
+For all CSS colors, spacing, and dimensions, you must use the standard Nextcloud CSS variables.
+
+Do not leave any magic numbers. If you need more specific control over dimensions use `calc(x*var)` when necessary.
+
+You can find the CSS variables already in use in this repository, and the full documentation available at this link: https://docs.nextcloud.com/server/latest/developer_manual/html_css_design/css.html.
