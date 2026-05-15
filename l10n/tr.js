@@ -253,6 +253,7 @@ OC.L10N.register(
     "Expand composer" : "Oluşturucuyu genişlet",
     "Close composer" : "Oluşturucuyu kapat",
     "Confirm" : "Onayla",
+    "Revoke" : "Geçersiz kıl",
     "Tag: {name} deleted" : "Etiket: {name} silindi",
     "An error occurred, unable to delete the tag." : "Bir sorun çıktı. Etiket silinemedi.",
     "The tag will be deleted from all messages." : "Etiket tüm iletilerden silinecek.",

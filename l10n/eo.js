@@ -71,6 +71,7 @@ OC.L10N.register(
     "Choose" : "Elekti",
     "Choose a file to add as attachment" : "Elektu dosieron aldonotan kiel kunsendaĵon",
     "Confirm" : "Konfirmi",
+    "Revoke" : "Senvalidigi",
     "Plain text" : "Ebenaĵa teksto",
     "No messages in this folder" : "Neniu mesaĝo en tiu dosierujo",
     "Blind copy recipients only" : "Nur blindkopiaj ricevontoj",

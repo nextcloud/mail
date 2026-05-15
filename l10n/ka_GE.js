@@ -52,6 +52,7 @@ OC.L10N.register(
     "Choose" : "აირჩიეთ",
     "Choose a file to add as attachment" : "დანართად დასამატებლად აირჩიეთ ფაილი",
     "Confirm" : "დადასტურება",
+    "Revoke" : "წვდომის გაუქმება",
     "Unfavorite" : "რჩეულებიდან ამოშლა",
     "Favorite" : "რჩეული",
     "Read" : "წაკითხვა",

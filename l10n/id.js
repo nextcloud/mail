@@ -252,6 +252,7 @@ OC.L10N.register(
     "Expand composer" : "Perluas penyusun",
     "Close composer" : "Tutup penyusun",
     "Confirm" : "Konfirmasi",
+    "Revoke" : "Cabut",
     "Tag: {name} deleted" : "Tag: {name} dihapus",
     "An error occurred, unable to delete the tag." : "Terjadi kesalahan, tidak dapat menghapus tag.",
     "The tag will be deleted from all messages." : "Tag akan dihapus dari semua pesan.",

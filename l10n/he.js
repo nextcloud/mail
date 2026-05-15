@@ -96,6 +96,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "בחירת קובץ להוספה כקובץ מצורף",
     "Choose a file to share as a link" : "נא לבחור קובץ לשיתוף כקישור",
     "Confirm" : "אימות",
+    "Revoke" : "שלילה",
     "Plain text" : "טקסט פשוט",
     "Rich text" : "טקסט עשיר",
     "No messages in this folder" : "אין הודעות בתיקייה זו",

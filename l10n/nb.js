@@ -205,6 +205,7 @@ OC.L10N.register(
     "Expand composer" : "Utvid skrivebehandler",
     "Close composer" : "Lukk skrivebehandler",
     "Confirm" : "Bekreft",
+    "Revoke" : "Avslå",
     "Tag: {name} deleted" : "Merke: {name} slettet",
     "An error occurred, unable to delete the tag." : "En feil oppstod, ikke i stand til å slette merkelappen.",
     "The tag will be deleted from all messages." : "Merkelappen slettes fra alle meldinger.",

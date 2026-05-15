@@ -248,6 +248,7 @@ OC.L10N.register(
     "Expand composer" : "Näita koostamisvaadet laiemana",
     "Close composer" : "Sulge koostamisvaade",
     "Confirm" : "Kinnita",
+    "Revoke" : "Tühista",
     "Tag: {name} deleted" : "Silt: {name} on kustutatud",
     "An error occurred, unable to delete the tag." : "Tekkis viga, silti ei õnnestu kustutada",
     "The tag will be deleted from all messages." : "See silt saab olema eemaldatud kõikide kirjade juurest.",

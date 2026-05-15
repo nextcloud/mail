@@ -29,6 +29,7 @@ OC.L10N.register(
     "Refresh" : "Freskaat",
     "Choose" : "Dibab",
     "Confirm" : "Kadarnañ",
+    "Revoke" : "Digargañ",
     "Unfavorite" : "Digaretañ",
     "Favorite" : "Pennrollañ",
     "Back" : "Distro",

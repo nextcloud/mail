@@ -234,6 +234,7 @@
     "Expand composer" : "Развиј састављач",
     "Close composer" : "Затвори састављач",
     "Confirm" : "Потврди",
+    "Revoke" : "Повуци",
     "Tag: {name} deleted" : "Ознака: {name} је обрисана",
     "An error occurred, unable to delete the tag." : "Дошло је до грешке, не може да се обрише ознака.",
     "The tag will be deleted from all messages." : "Ознака ће се обрисати из свих порука.",

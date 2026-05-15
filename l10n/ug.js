@@ -250,6 +250,7 @@ OC.L10N.register(
     "Expand composer" : "كومپوزىتورنى كېڭەيتىڭ",
     "Close composer" : "كومپوزىتورنى تاقاش",
     "Confirm" : "جەزملەشتۈرۈڭ",
+    "Revoke" : "بىكار قىلىش",
     "Tag: {name} deleted" : "خەتكۈچ: {name} ئۆچۈرۈلدى",
     "An error occurred, unable to delete the tag." : "خەتكۈچنى ئۆچۈرەلمەي خاتالىق كۆرۈلدى.",
     "The tag will be deleted from all messages." : "خەتكۈچ بارلىق ئۇچۇرلاردىن ئۆچۈرۈلىدۇ.",

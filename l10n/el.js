@@ -217,6 +217,7 @@ OC.L10N.register(
     "Expand composer" : "Ανάπτυξη συντάκτη",
     "Close composer" : "Κλείσιμο συντάκτη",
     "Confirm" : "Επιβεβαίωση",
+    "Revoke" : "Ανάκληση",
     "Tag: {name} deleted" : "Η ετικέτα «{name)» διαγράφηκε",
     "An error occurred, unable to delete the tag." : "Προέκυψε σφάλμα, δεν ήταν δυνατή η διαγραφή της ετικέτας.",
     "The tag will be deleted from all messages." : "Η ετικέτα θα διαγραφεί από όλα τα μηνύματα.",

@@ -253,6 +253,7 @@ OC.L10N.register(
     "Expand composer" : "Estender a xanela de redacción",
     "Close composer" : "Pechar a xanela de redacción",
     "Confirm" : "Confirmar",
+    "Revoke" : "Revogar",
     "Tag: {name} deleted" : "Etiqueta: {name} eliminada",
     "An error occurred, unable to delete the tag." : "Produciuse un erro, non é posíbel eliminar a etiqueta.",
     "The tag will be deleted from all messages." : "Eliminarase a etiqueta de todas as mensaxes.",

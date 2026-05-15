@@ -253,6 +253,7 @@ OC.L10N.register(
     "Expand composer" : "Proširi sastavljač poruke",
     "Close composer" : "Zatvori sastavljač poruke",
     "Confirm" : "Potvrdi",
+    "Revoke" : "Opozovi",
     "Tag: {name} deleted" : "Oznaka: {name} je obrisana",
     "An error occurred, unable to delete the tag." : "Došlo je do pogreške, nije moguće izbrisati oznaku.",
     "The tag will be deleted from all messages." : "Oznaka će biti uklonjena sa svih poruka.",

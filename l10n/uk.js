@@ -218,6 +218,7 @@ OC.L10N.register(
     "Expand composer" : "Розгорнути редактор",
     "Close composer" : "Закрити редактор",
     "Confirm" : "Підтвердити",
+    "Revoke" : "Відкликати",
     "Tag: {name} deleted" : "Мітка: {name} вилучено",
     "An error occurred, unable to delete the tag." : "Пимилка під час вилучення мітки.",
     "The tag will be deleted from all messages." : "Мітку буде вилучено зі всіх листів.",

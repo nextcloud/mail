@@ -240,6 +240,7 @@ OC.L10N.register(
     "Expand composer" : "Expand composer",
     "Close composer" : "Close composer",
     "Confirm" : "ຢືນຢັນ",
+    "Revoke" : "Revoke",
     "Tag: {name} deleted" : "Tag: {name} deleted",
     "An error occurred, unable to delete the tag." : "An error occurred, unable to delete the tag.",
     "The tag will be deleted from all messages." : "The tag will be deleted from all messages.",

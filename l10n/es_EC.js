@@ -161,6 +161,7 @@ OC.L10N.register(
     "Expand composer" : "Expandir redactor",
     "Close composer" : "Cerrar redactor",
     "Confirm" : "Confirmar",
+    "Revoke" : "Revocar",
     "Plain text" : "Texto sin formato",
     "Rich text" : "Texto enriquecido",
     "No messages in this folder" : "No hay mensajes en esta carpeta",
