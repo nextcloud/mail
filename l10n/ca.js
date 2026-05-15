@@ -206,6 +206,7 @@ OC.L10N.register(
     "Expand composer" : "Ampliar el compositor",
     "Close composer" : "Tanca finestra del compositor",
     "Confirm" : "Confirma",
+    "Revoke" : "Revoca",
     "Tag: {name} deleted" : "Etiqueta: {name} suprimida",
     "An error occurred, unable to delete the tag." : "S'ha produït un error, no s'ha pogut suprimir l'etiqueta.",
     "The tag will be deleted from all messages." : "L'etiqueta se suprimirà de tots els missatges.",

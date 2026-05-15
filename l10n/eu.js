@@ -199,6 +199,7 @@ OC.L10N.register(
     "Expand composer" : "Hedatu egilea",
     "Close composer" : "Itxi egilea",
     "Confirm" : "Berretsi",
+    "Revoke" : "Ezeztatu",
     "Tag: {name} deleted" : "Etiketa: {name} ezabatuta",
     "An error occurred, unable to delete the tag." : "Errore bat gertatu da, ezin izan da etiketa ezabatu.",
     "The tag will be deleted from all messages." : "Mezu guztietako etiketak ezabatuko dira.",

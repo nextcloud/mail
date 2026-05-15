@@ -119,6 +119,7 @@ OC.L10N.register(
     "Choose" : "Escolher",
     "Choose a file to add as attachment" : "Escolha um ficheiro para adicionar como anexo",
     "Confirm" : "Confirmar",
+    "Revoke" : "Revogar",
     "Plain text" : "Texto simples",
     "No messages" : "Sem mensagens",
     "Could not delete message" : "Não foi possível apagar a mensagem",

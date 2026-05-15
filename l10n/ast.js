@@ -85,6 +85,7 @@ OC.L10N.register(
     "Expand composer" : "Espander el compositor",
     "Close composer" : "Zarrar el compositor",
     "Confirm" : "Confirmar",
+    "Revoke" : "Revocar",
     "An error occurred, unable to delete the tag." : "Prodúxose un error, nun ye posible desaniciar la etiqueta.",
     "Plain text" : "Testu ensin formatu",
     "Rich text" : "Testu arriquecíu",

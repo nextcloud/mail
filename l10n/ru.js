@@ -247,6 +247,7 @@ OC.L10N.register(
     "_{count} attachment_::_{count} attachments_" : ["{count} вложение","{count} вложения","{count} вложений","{count} вложений"],
     "Untitled message" : "Сообщение без названия",
     "Confirm" : "Подтвердить",
+    "Revoke" : "Отозвать",
     "Tag: {name} deleted" : "Тег: {name} удален",
     "An error occurred, unable to delete the tag." : "Произошла ошибка, не удалось удалить тег.",
     "The tag will be deleted from all messages." : "Тег будет удален из всех сообщений.",

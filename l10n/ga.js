@@ -253,6 +253,7 @@ OC.L10N.register(
     "Expand composer" : "Cumadóir a leathnú",
     "Close composer" : "Cumadóir dlúth",
     "Confirm" : "Deimhnigh",
+    "Revoke" : "Chúlghairm",
     "Tag: {name} deleted" : "Chlib: {name} scriosta",
     "An error occurred, unable to delete the tag." : "Tharla earráid, níorbh fhéidir an chlib a scriosadh.",
     "The tag will be deleted from all messages." : "Scriosfar an chlib ó gach teachtaireacht.",

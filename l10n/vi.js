@@ -86,6 +86,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Chọn một tệp để thêm dưới dạng tệp đính kèm",
     "Choose a file to share as a link" : "Chọn một tệp để chia sẻ dưới dạng liên kết",
     "Confirm" : "Xác nhận",
+    "Revoke" : "Thu hồi",
     "No messages" : "Không có tin nhắn",
     "Blind copy recipients only" : "Chỉ người nhận bản sao ẩn",
     "Later today – {timeLocale}" : "Sau này - {timeLocale}",

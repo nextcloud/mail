@@ -195,6 +195,7 @@ OC.L10N.register(
     "Expand composer" : "Expandir redactor",
     "Close composer" : "Cerrar redactor",
     "Confirm" : "Confirmar",
+    "Revoke" : "Revocar",
     "Tag: {name} deleted" : "Etiqueta: {name} eliminada",
     "An error occurred, unable to delete the tag." : "Ha ocurrido un error, no se ha podido eliminar la etiqueta.",
     "The tag will be deleted from all messages." : "La etiqueta se eliminará de todos los mensajes.",

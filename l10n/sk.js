@@ -253,6 +253,7 @@ OC.L10N.register(
     "Expand composer" : "Zobraziť editor správ",
     "Close composer" : "Zatvoriť editor správ",
     "Confirm" : "Potvrdiť",
+    "Revoke" : "Odvolať",
     "Tag: {name} deleted" : "Štítok: {name} odstránený",
     "An error occurred, unable to delete the tag." : "Vyskytla sa chyba, nie je možné odstrániť štítok.",
     "The tag will be deleted from all messages." : "Štítok bude odstránený zo všetkých správ.",

@@ -251,6 +251,7 @@
     "Expand composer" : "展开编辑器",
     "Close composer" : "关闭编辑器",
     "Confirm" : "确认",
+    "Revoke" : "撤销",
     "Tag: {name} deleted" : "标签：{name} 已删除",
     "An error occurred, unable to delete the tag." : "发生错误，无法删除标签。",
     "The tag will be deleted from all messages." : "将从所有邮件中删除此标签。",

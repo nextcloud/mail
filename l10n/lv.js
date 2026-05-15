@@ -71,6 +71,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Izvēlēties datni, ko pievienot kā pielikumu",
     "Choose a file to share as a link" : "Jāizvēlas datne, ko kopīgot kā saiti",
     "Confirm" : "Apstiprināt",
+    "Revoke" : "Atsaukt",
     "No messages in this folder" : "Šajā mapē nav neviens ziņojums",
     "Later today – {timeLocale}" : "Vēlāk šodien – {timeLocale}",
     "Set reminder for later today" : "Iestatīt atgādinājumu vēlākam šodien",

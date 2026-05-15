@@ -184,6 +184,7 @@ OC.L10N.register(
     "Expand composer" : "Laajenna lähetysikkunaa",
     "Close composer" : "Sulje lähetysikkuna",
     "Confirm" : "Vahvista",
+    "Revoke" : "Peru oikeus",
     "Plain text" : "Raakateksti",
     "Rich text" : "Rikas teksti",
     "No messages in this folder" : "Tässä kansiossa ei ole viestejä",

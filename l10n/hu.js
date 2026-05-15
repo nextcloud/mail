@@ -177,6 +177,7 @@ OC.L10N.register(
     "Expand composer" : "Szerkesztő kibontása",
     "Close composer" : "Szerkesztő bezárása",
     "Confirm" : "Megerősítés",
+    "Revoke" : "Visszavonás",
     "Plain text" : "Egyszerű szöveg",
     "Rich text" : "Formázott szöveg",
     "No messages in this folder" : "Nincs üzenet a mappában!",

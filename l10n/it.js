@@ -212,6 +212,7 @@ OC.L10N.register(
     "Expand composer" : "Espandi compositore",
     "Close composer" : "Chiudi compositore",
     "Confirm" : "Conferma",
+    "Revoke" : "Revoca",
     "Plain text" : "Testo semplice",
     "Rich text" : "Testo formattato",
     "No messages in this folder" : "Nessun messaggio in questa cartella",

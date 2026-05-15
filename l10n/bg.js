@@ -164,6 +164,7 @@ OC.L10N.register(
     "Choose a file to share as a link" : "Изберете файл, който да споделите като връзка",
     "_{count} attachment_::_{count} attachments_" : ["{count} прикачени файлове","{count} прикачени файлове"],
     "Confirm" : "Потвърдете",
+    "Revoke" : "Отнемане",
     "Plain text" : "Обикновен текст",
     "Rich text" : "Форматиран текст",
     "No messages in this folder" : "Няма съобщения",

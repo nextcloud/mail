@@ -54,6 +54,7 @@ OC.L10N.register(
     "Choose a file to share as a link" : "Chagua faili kushirikisha kama kiungo",
     "_{count} attachment_::_{count} attachments_" : ["{count} attachment","{count} attachments"],
     "Confirm" : "Thibitisha",
+    "Revoke" : "Revoke",
     "No messages" : "Hakuna jumbe",
     "Later today – {timeLocale}" : "Baadaye leo-{timeLocale}",
     "Set reminder for later today" : "Set reminder for later today",

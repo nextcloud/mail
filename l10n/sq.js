@@ -53,6 +53,7 @@ OC.L10N.register(
     "Choose" : "Zgjidhni",
     "Choose a file to add as attachment" : "Zgjidhni një kartelë që të shtohet si bashkëngjitje",
     "Confirm" : "Konfirmo",
+    "Revoke" : "Anulo",
     "Unfavorite" : "Jo i/e preferuar",
     "Favorite" : "I/E Preferuar",
     "Read" : "Lexoni",

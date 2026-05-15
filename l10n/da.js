@@ -215,6 +215,7 @@ OC.L10N.register(
     "Expand composer" : "Udvid composer",
     "Close composer" : "Luk composer",
     "Confirm" : "Bekræft",
+    "Revoke" : "Tilbagekald",
     "Tag: {name} deleted" : "Tag: {name} slettet",
     "An error occurred, unable to delete the tag." : "En fejl opstod, kunne ikke slette tagget",
     "The tag will be deleted from all messages." : "Tagget bliver slettet fra alle beskeder.",

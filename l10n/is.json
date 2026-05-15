@@ -200,6 +200,7 @@
     "Expand composer" : "Þenja ritil",
     "Close composer" : "Loka ritli",
     "Confirm" : "Staðfesta",
+    "Revoke" : "Afturkalla",
     "Tag: {name} deleted" : "Merki: {name} eytt",
     "An error occurred, unable to delete the tag." : "Villa kom upp, gat ekki eytt merkinu.",
     "The tag will be deleted from all messages." : "Merkinu verður eytt af öllum skilaboðum.",

@@ -217,6 +217,7 @@ OC.L10N.register(
     "Expand composer" : "コンポーザーを展開する",
     "Close composer" : "コンポーザーを閉じる",
     "Confirm" : "承認",
+    "Revoke" : "取り消す",
     "Tag: {name} deleted" : "タグ:{name}削除済み",
     "An error occurred, unable to delete the tag." : "タグ削除を無効にする時エラーが発生しました",
     "The tag will be deleted from all messages." : "全てのメッセージからタグが削除されました",

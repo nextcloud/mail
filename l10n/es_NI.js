@@ -53,6 +53,7 @@ OC.L10N.register(
     "Choose" : "Seleccionar",
     "Choose a file to add as attachment" : "Selecciona el archivo a agregar como adjunto",
     "Confirm" : "Confirmar",
+    "Revoke" : "Revocar",
     "Unfavorite" : "Quitar favorito",
     "Favorite" : "Hacer favorito",
     "Read" : "Leer",
