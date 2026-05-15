@@ -253,6 +253,7 @@ OC.L10N.register(
     "Expand composer" : "Rozbalit dialog psaní",
     "Close composer" : "Zavřít dialog psaní",
     "Confirm" : "Potvrdit",
+    "Revoke" : "Odvolat",
     "Tag: {name} deleted" : "Štítek: {name} smazán",
     "An error occurred, unable to delete the tag." : "Došlo k chybě, štítek se nepodařilo smazat.",
     "The tag will be deleted from all messages." : "Štítek bude smazán ze všech zpráv.",

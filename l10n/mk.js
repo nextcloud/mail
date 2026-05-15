@@ -165,6 +165,7 @@ OC.L10N.register(
     "_{count} attachment_::_{count} attachments_" : ["{count} прилог","{count} прилози"],
     "Untitled message" : "Неименувана порака",
     "Confirm" : "Потврди",
+    "Revoke" : "Одземи",
     "Plain text" : "Обичен текст",
     "Rich text" : "Богат текст",
     "No messages in this folder" : "Нема пораки во оваа папка",

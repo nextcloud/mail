@@ -253,6 +253,7 @@ OC.L10N.register(
     "Expand composer" : "Išskleisti rašymo langą",
     "Close composer" : "Uždaryti rašymo langą",
     "Confirm" : "Patvirtinti",
+    "Revoke" : "Panaikinti",
     "Tag: {name} deleted" : "Žyma: {name} ištrinta",
     "An error occurred, unable to delete the tag." : "Įvyko klaida, nepavyko ištrinti žymos.",
     "The tag will be deleted from all messages." : "Žymė bus ištrinta iš visų pranešimų.",

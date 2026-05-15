@@ -245,6 +245,7 @@
     "_{count} attachment_::_{count} attachments_" : ["{count} bilaga","{count} bilagor"],
     "Untitled message" : "Namnlöst meddelande",
     "Confirm" : "Bekräfta",
+    "Revoke" : "Återkalla",
     "Tag: {name} deleted" : "Tagg: {name} borttagen",
     "An error occurred, unable to delete the tag." : "Ett fel uppstod, det gick inte att ta bort taggen.",
     "The tag will be deleted from all messages." : "Taggen kommer att raderas från alla meddelanden.",

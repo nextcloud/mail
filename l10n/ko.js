@@ -179,6 +179,7 @@ OC.L10N.register(
     "_{count} attachment_::_{count} attachments_" : ["{count}개의 첨부파일"],
     "Untitled message" : "제목 없는 메시지",
     "Confirm" : "확인",
+    "Revoke" : "취소",
     "Tag: {name} deleted" : "태그: {name}이(가) 삭제됨",
     "An error occurred, unable to delete the tag." : "오류가 발생하여 태그를 삭제할 수 없습니다",
     "The tag will be deleted from all messages." : "태그가 모든 메시지로부터 삭제됩니다.",

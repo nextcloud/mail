@@ -35,6 +35,7 @@ OC.L10N.register(
     "Choose" : "เลือก",
     "Choose a file to add as attachment" : "เลือกไฟล์ที่ต้องการแนบ",
     "Confirm" : "ยืนยัน",
+    "Revoke" : "เพิกถอน",
     "Favorite" : "รายการโปรด",
     "Read" : "อ่าน",
     "Edit tags" : "แก้ไขแท็ก",

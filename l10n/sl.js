@@ -160,6 +160,7 @@ OC.L10N.register(
     "_{count} attachment_::_{count} attachments_" : ["{count} priloga","{count} prilogi","{count} priloge","{count} prilog"],
     "Untitled message" : "Nenaslovljeno sporočilo",
     "Confirm" : "Potrdi",
+    "Revoke" : "Prekliči",
     "Plain text" : "Besedilno",
     "Rich text" : "Obogateno besedilo",
     "No messages in this folder" : "V tej mapi ni sporočil",

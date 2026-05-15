@@ -253,6 +253,7 @@
     "Expand composer" : "展開編輯器",
     "Close composer" : "關閉編輯器",
     "Confirm" : "確認",
+    "Revoke" : "撤銷",
     "Tag: {name} deleted" : "標籤：{name} 已刪除",
     "An error occurred, unable to delete the tag." : "遇到錯誤，無法刪除標籤。",
     "The tag will be deleted from all messages." : "該標籤將從所有訊息刪除。",

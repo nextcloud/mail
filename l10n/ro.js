@@ -158,6 +158,7 @@ OC.L10N.register(
     "Expand composer" : "Expandează mesajul",
     "Close composer" : "Închide mesajul",
     "Confirm" : "Confirmă",
+    "Revoke" : "Revocă",
     "Tag: {name} deleted" : "Eticheta: {name} a fost ștearsă",
     "An error occurred, unable to delete the tag." : "Eticheta nu a putut fi ștearsă.",
     "The tag will be deleted from all messages." : "Eticheta va fi ștearsă pentru toate mesajele.",

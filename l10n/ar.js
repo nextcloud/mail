@@ -207,6 +207,7 @@ OC.L10N.register(
     "Expand composer" : "تمديد الناظِم composer",
     "Close composer" : "إغلاق الناظِم composer",
     "Confirm" : "تأكيد",
+    "Revoke" : "سحب ",
     "Tag: {name} deleted" : "تمّ حذف السمة: {name} ",
     "An error occurred, unable to delete the tag." : "حدث خطأ؛ تعذّرَ حذف السِّمَة.",
     "The tag will be deleted from all messages." : "سوف يتم حذف الوسم من جميع الرسائل.",

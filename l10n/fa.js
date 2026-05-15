@@ -173,6 +173,7 @@ OC.L10N.register(
     "Expand composer" : "Expand composer",
     "Close composer" : "Close composer",
     "Confirm" : "تائید",
+    "Revoke" : "لغو",
     "Plain text" : "متن ساده",
     "Rich text" : "متن غنی",
     "No messages in this folder" : "هیچ پیامی در این پوشه وجود ندارد",

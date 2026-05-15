@@ -45,6 +45,7 @@ OC.L10N.register(
     "Choose" : "Causir",
     "Choose a file to add as attachment" : "Causissètz un fichièr de jónher al messatge",
     "Confirm" : "Confirmar",
+    "Revoke" : "Revocar",
     "No messages" : "Cap de messatge",
     "Tomorrow – {timeLocale}" : "Deman – {timeLocale}",
     "Favorite" : "Favorit",

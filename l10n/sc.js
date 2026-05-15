@@ -96,6 +96,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Sèbera un'archìviu de agiùnghere comente alligongiadu",
     "Choose a file to share as a link" : "Sèbera un'archìviu de cumpartzire comente ligòngiu",
     "Confirm" : "Cunfirma",
+    "Revoke" : "Rèvoca",
     "Plain text" : "Testu simple",
     "Rich text" : "Testu formatadu",
     "No messages" : "Perunu messàgiu",

@@ -243,6 +243,7 @@ OC.L10N.register(
     "_{count} attachment_::_{count} attachments_" : ["{count} bijlagen","{count} bijlagen"],
     "Untitled message" : "Naamloos bericht",
     "Confirm" : "Bevestigen",
+    "Revoke" : "Intrekken",
     "Tag: {name} deleted" : "Etiket: {name} verwijderd",
     "An error occurred, unable to delete the tag." : "Er is een fout opgetreden, etiket kan niet verwijderd worden.",
     "The tag will be deleted from all messages." : "Dit etiket wordt verwijderd uit alle berichten.",

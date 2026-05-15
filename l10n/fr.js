@@ -253,6 +253,7 @@ OC.L10N.register(
     "Expand composer" : "Déplier la fenêtre de composition",
     "Close composer" : "Fermer la fenêtre de composition",
     "Confirm" : "Confirmer",
+    "Revoke" : "Révoquer",
     "Tag: {name} deleted" : "Étiquette : {name} supprimée",
     "An error occurred, unable to delete the tag." : "Une erreur est survenue, impossible de supprimer l'étiquette.",
     "The tag will be deleted from all messages." : "L'étiquette sera supprimée de tous les messages.",

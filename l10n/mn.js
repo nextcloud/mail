@@ -246,6 +246,7 @@ OC.L10N.register(
     "Expand composer" : "Бичигчийг өргөжүүлэх",
     "Close composer" : "Бичигчийг хаах",
     "Confirm" : "–ë–∞—Ç–ª–∞—Ö",
+    "Revoke" : "Цуцлах",
     "Tag: {name} deleted" : "Таг: {name} устгагдлаа",
     "An error occurred, unable to delete the tag." : "Алдаа гарлаа, таг устгах боломжгүй.",
     "The tag will be deleted from all messages." : "Таг бүх зурвасаас устгагдана.",

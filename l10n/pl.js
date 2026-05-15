@@ -253,6 +253,7 @@ OC.L10N.register(
     "Expand composer" : "Rozwiń edytor wiadomości",
     "Close composer" : "Zamknij edytor wiadomości",
     "Confirm" : "Potwierdź",
+    "Revoke" : "Cofnij",
     "Tag: {name} deleted" : "Tag: {name} usunięty",
     "An error occurred, unable to delete the tag." : "Wystąpił błąd, nie udało się usunąć tagu.",
     "The tag will be deleted from all messages." : "Tag zostanie usunięty ze wszystkich wiadomości.",
