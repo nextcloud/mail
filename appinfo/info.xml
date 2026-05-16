@@ -79,18 +79,20 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 	<commands>
 		<command>OCA\Mail\Command\AddMissingTags</command>
 		<command>OCA\Mail\Command\CleanUp</command>
-		<command>OCA\Mail\Command\CreateAccount</command>
+		<command>OCA\Mail\Command\CreateImapAccount</command>
+		<command>OCA\Mail\Command\CreateJmapAccount</command>
 		<command>OCA\Mail\Command\CreateTagMigrationJobEntry</command>
 		<command>OCA\Mail\Command\DebugAccount</command>
 		<command>OCA\Mail\Command\DeleteAccount</command>
-		<command>OCA\Mail\Command\DiagnoseAccount</command>
 		<command>OCA\Mail\Command\ExportAccount</command>
 		<command>OCA\Mail\Command\ExportAccountThreads</command>
 		<command>OCA\Mail\Command\PredictImportance</command>
+		<command>OCA\Mail\Command\TestAccount</command>
 		<command>OCA\Mail\Command\SyncAccount</command>
 		<command>OCA\Mail\Command\Thread</command>
 		<command>OCA\Mail\Command\TrainAccount</command>
-		<command>OCA\Mail\Command\UpdateAccount</command>
+		<command>OCA\Mail\Command\UpdateImapAccount</command>
+		<command>OCA\Mail\Command\UpdateJmapAccount</command>
 		<command>OCA\Mail\Command\UpdateSystemAutoresponders</command>
 		<command>OCA\Mail\Command\RunMetaEstimator</command>
 	</commands>
