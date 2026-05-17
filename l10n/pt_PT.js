@@ -192,6 +192,7 @@ OC.L10N.register(
     "Clear locally cached data, in case there are issues with synchronization." : "Limpe a cache de dados local no caso de ter problemas com a sincronização.",
     "Subscribed" : "Subscrito",
     "New message" : "Nova mensagem",
+    "Draft" : "Rascunho",
     "Reply" : "Resposta",
     "Error sending your message" : "Erro ao enviar a sua mensagem",
     "Retry" : "Repetir",
