@@ -85,7 +85,6 @@ OC.L10N.register(
     "SMTP Port" : "Порт SMTP",
     "SMTP User" : "Користувач SMTP",
     "SMTP Password" : "Пароль SMTP",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Щоби мати доступ до цього застосунку з обліковим записом Google, вам потрібно увімкнути двофакторну автентифікацію у вашому обліковому записі Google, налаштувати пароль для застосунка.",
     "Account settings" : "Налаштування облікового запису",
     "Aliases" : "Синоніми",
     "Alias to S/MIME certificate mapping" : "Синонім для мапування сертифікату S/MIME",
@@ -219,6 +218,7 @@ OC.L10N.register(
     "Expand composer" : "Розгорнути редактор",
     "Close composer" : "Закрити редактор",
     "Confirm" : "Підтвердити",
+    "Revoke" : "Відкликати",
     "Tag: {name} deleted" : "Мітка: {name} вилучено",
     "An error occurred, unable to delete the tag." : "Пимилка під час вилучення мітки.",
     "The tag will be deleted from all messages." : "Мітку буде вилучено зі всіх листів.",
@@ -573,6 +573,7 @@ OC.L10N.register(
     "Reply to sender only" : "Відповісти лише відправникові",
     "Mark as unfavorite" : "Прибрати зірочку",
     "Mark as favorite" : "Позначити зірочкою",
+    "To:" : "До:",
     "Unsubscribe via link" : "Відписатися через посилання",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Відписка припинить надсилання всіх повідомлень зі списку розсилки {sender}.",
     "Send unsubscribe email" : "Надіслати електронний лист щодо відписування",
@@ -832,9 +833,6 @@ OC.L10N.register(
     "Could not load the message" : "Неможливо завантажити повідомлення",
     "Error loading message" : "Помилка завантаження повідомлення.",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Повідомлення автоматично будуть позначатися як важливі на основі повідомлень, з якими ви взаємодієте або позначаєте як важливі. Спочатку вам потрібно буде вручну змінювати важливість, щоб навчити систему, але з часом автоматичне визначення важливих повідомлень покращиться.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Тут будуть показані надіслані вами повідомлення, які потребують відповіді, але не були отримані протягом декількох днів.",
-    "Mark all messages of this folder as read" : "Позначити усі повідомлення у цій теці як прочитані",
-    "Last 7 days" : "За останні 7 днів",
-    "From me" : "Від мене"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Тут будуть показані надіслані вами повідомлення, які потребують відповіді, але не були отримані протягом декількох днів."
 },
 "nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);");

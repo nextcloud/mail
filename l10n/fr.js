@@ -93,7 +93,6 @@ OC.L10N.register(
     "SMTP Port" : "Port SMTP",
     "SMTP User" : "Utilisateur SMTP",
     "SMTP Password" : "Mot de passe SMTP",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Pour que le compte Google fonctionne avec cette application, vous devez activer l'authentification à deux facteurs pour Google et générer un mot de passe pour l'application.",
     "Account settings" : "Paramètres du compte",
     "Aliases" : "Alias",
     "Alias to S/MIME certificate mapping" : "Correspondance entre l'alias et le certificat S/MIME",
@@ -254,6 +253,7 @@ OC.L10N.register(
     "Expand composer" : "Déplier la fenêtre de composition",
     "Close composer" : "Fermer la fenêtre de composition",
     "Confirm" : "Confirmer",
+    "Revoke" : "Révoquer",
     "Tag: {name} deleted" : "Étiquette : {name} supprimée",
     "An error occurred, unable to delete the tag." : "Une erreur est survenue, impossible de supprimer l'étiquette.",
     "The tag will be deleted from all messages." : "L'étiquette sera supprimée de tous les messages.",
@@ -619,6 +619,7 @@ OC.L10N.register(
     "Reply to sender only" : "Répondre à l'émetteur uniquement",
     "Mark as unfavorite" : "Ne plus marquer comme favori",
     "Mark as favorite" : "Marquer comme favori",
+    "To:" : "Au :",
     "Unsubscribe via link" : "Se désabonner via un lien",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Le désabonnement stoppera la réception des messages de la liste de diffusion {sender}",
     "Send unsubscribe email" : "Envoyer le mail de désinscription",
@@ -881,11 +882,7 @@ OC.L10N.register(
     "Could not load the desired message" : "Impossible de charger le message souhaité",
     "Could not load the message" : "Impossible de charger le message",
     "Error loading message" : "Erreur lors du chargement du message",
-    "Determine importance using machine learning" : "Déterminer l'importance à l'aide de l'apprentissage automatique",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Les messages seront automatiquement marqués comme importants en fonction des messages avec lesquels vous avez interagi et marqués comme importants. Au début, vous devrez manuellement modifier l'importance pour que le système apprenne, mais le marquage automatique va s'améliorer avec le temps.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Les messages que vous avez envoyés et qui n'ont pas reçu de réponse au bout de quelques jours apparaîtront ici.",
-    "Mark all messages of this folder as read" : "Marquer tous les messages de ce dossier comme lus",
-    "Last 7 days" : "7 derniers jours",
-    "From me" : "De moi"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Les messages que vous avez envoyés et qui n'ont pas reçu de réponse au bout de quelques jours apparaîtront ici."
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

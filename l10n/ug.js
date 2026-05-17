@@ -93,7 +93,6 @@ OC.L10N.register(
     "SMTP Port" : "SMTP ئېغىزى",
     "SMTP User" : "SMTP ئىشلەتكۈچى",
     "SMTP Password" : "SMTP پارول",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "گۇگۇل ھېساباتىنىڭ بۇ دېتال بىلەن ئىشلىشى ئۈچۈن گۇگۇل ئۈچۈن ئىككى ئامىللىق دەلىللەشنى قوزغىتىپ ، بىر پارول ھاسىل قىلىشىڭىز كېرەك.",
     "Account settings" : "ھېسابات تەڭشىكى",
     "Aliases" : "لەقەملەر",
     "Alias to S/MIME certificate mapping" : "S/MIME گۇۋاھنامىسىنىڭ خەرىتىسى",
@@ -251,6 +250,7 @@ OC.L10N.register(
     "Expand composer" : "كومپوزىتورنى كېڭەيتىڭ",
     "Close composer" : "كومپوزىتورنى تاقاش",
     "Confirm" : "جەزملەشتۈرۈڭ",
+    "Revoke" : "بىكار قىلىش",
     "Tag: {name} deleted" : "خەتكۈچ: {name} ئۆچۈرۈلدى",
     "An error occurred, unable to delete the tag." : "خەتكۈچنى ئۆچۈرەلمەي خاتالىق كۆرۈلدى.",
     "The tag will be deleted from all messages." : "خەتكۈچ بارلىق ئۇچۇرلاردىن ئۆچۈرۈلىدۇ.",
@@ -616,6 +616,7 @@ OC.L10N.register(
     "Reply to sender only" : "ئەۋەتكۈچىگە جاۋاب قايتۇرۇڭ",
     "Mark as unfavorite" : "ياقتۇرمايدىغان دەپ بەلگە قويۇڭ",
     "Mark as favorite" : "ياقتۇرىدىغان دەپ بەلگە قويۇڭ",
+    "To:" : "غا:",
     "Unsubscribe via link" : "ئۇلىنىش ئارقىلىق مۇشتەرى بولۇڭ",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "مۇشتەرى بولۇش خەت ئەۋەتىش تىزىملىكىدىكى بارلىق ئۇچۇرلارنى توختىتىدۇ {sender}",
     "Send unsubscribe email" : "مۇشتەرى بولمىغان ئېلېكترونلۇق خەت ئەۋەتىڭ",
@@ -878,11 +879,7 @@ OC.L10N.register(
     "Could not load the desired message" : "لازىملىق ئۇچۇرنى يۈكلىيەلمىدى",
     "Could not load the message" : "ئۇچۇرنى يۈكلىيەلمىدى",
     "Error loading message" : "ئۇچۇر يۈكلەشتە خاتالىق",
-    "Determine importance using machine learning" : "ماشىنىلىق ئۆگىنىش ئارقىلىق مۇھىملىقىنى بەلگىلە",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "سىز قايسى ئۇچۇرلار بىلەن ئالاقە قىلغان ياكى مۇھىم دەپ بەلگە قويۇلغان ئۇچۇرلار ئاپتوماتىك ھالدا مۇھىم دەپ بەلگە قىلىنىدۇ. باشتا سىز سىستېمىنى ئوقۇتۇشنىڭ مۇھىملىقىنى قولدا ئۆزگەرتىشىڭىز مۇمكىن ، ئەمما ۋاقىتنىڭ ئۆتۈشىگە ئەگىشىپ ياخشىلىنىدۇ.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "سىز ئەۋەتكەن جاۋابنى تەلەپ قىلىدىغان ، ئەمما بىر نەچچە كۈندىن كېيىن تاپشۇرۇۋالمىغان ئۇچۇرلار بۇ يەردە كۆرسىتىلىدۇ.",
-    "Mark all messages of this folder as read" : "بۇ قىسقۇچتىكى بارلىق ئۇچۇرلارنى ئوقۇغان قىل",
-    "Last 7 days" : "ئاخىرقى 7 كۈن",
-    "From me" : "مەندىن"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "سىز ئەۋەتكەن جاۋابنى تەلەپ قىلىدىغان ، ئەمما بىر نەچچە كۈندىن كېيىن تاپشۇرۇۋالمىغان ئۇچۇرلار بۇ يەردە كۆرسىتىلىدۇ."
 },
 "nplurals=2; plural=(n != 1);");

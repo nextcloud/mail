@@ -136,7 +136,6 @@ export default {
 	},
 
 	mounted() {
-		console.log(this.attachments)
 		let prevTop = null
 		this.visible = 0
 		this.$nextTick(function() {

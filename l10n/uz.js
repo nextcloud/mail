@@ -91,7 +91,6 @@ OC.L10N.register(
     "Account connected" : "Akkaunt ulangan",
     "All" : "All",
     "Error while sharing file" : "Fayl almashishda xatolik yuz berdi",
-    "Discard changes" : "O'zgarishlarni bekor qilish",
-    "Last 7 days" : "Oxirgi 7 kun"
+    "Discard changes" : "O'zgarishlarni bekor qilish"
 },
 "nplurals=1; plural=0;");

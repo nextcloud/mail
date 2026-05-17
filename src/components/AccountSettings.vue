@@ -106,7 +106,7 @@
 			</div>
 		</AppSettingsSection>
 		<AppSettingsSection
-			v-if="account && !account.provisioningId"
+			v-if="account && !account.provisioningId && !account.isDelegated"
 			id="mail-server"
 			:name="t('mail', 'Mail server')">
 			<div id="mail-settings">

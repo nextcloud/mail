@@ -99,6 +99,7 @@ OC.L10N.register(
     "Tags" : "Tagiau",
     "Custom" : "Cyfaddas",
     "Not found" : "Heb ei ganfod",
+    "To:" : "At:",
     "Untitled event" : "Digwyddiad di-deitl",
     "(organizer)" : "(trefnydd)",
     "Deleted" : "Wedi dileu",
@@ -127,7 +128,6 @@ OC.L10N.register(
     "Could not load your message" : "Methu llwytho'ch neges",
     "Could not load the desired message" : "Methu llwytho'r neges a ddewiswyd",
     "Could not load the message" : "Methu llwytho'r neges",
-    "Error loading message" : "Gwall wrth lwytho neges",
-    "Mark all messages of this folder as read" : "Marcio'r holl negeseuon y ffolder hon fel y'u darllenwyd"
+    "Error loading message" : "Gwall wrth lwytho neges"
 },
 "nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;");

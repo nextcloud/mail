@@ -17,6 +17,7 @@ use OCA\Mail\BackgroundJob\QuotaJob;
 use OCA\Mail\BackgroundJob\RepairSyncJob;
 use OCA\Mail\BackgroundJob\SyncJob;
 use OCA\Mail\BackgroundJob\TrainImportanceClassifierJob;
+use OCA\Mail\Db\DelegationMapper;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
@@ -56,6 +57,7 @@ class AccountService {
 		IMAPClientFactory $imapClientFactory,
 		private readonly IConfig $config,
 		private readonly ITimeFactory $timeFactory,
+		private DelegationMapper $delegationMapper,
 	) {
 		$this->mapper = $mapper;
 		$this->aliasesService = $aliasesService;
@@ -73,6 +75,14 @@ class AccountService {
 		}
 
 		return $this->accounts[$currentUserId];
+	}
+
+	/**
+	 * @param string $userId
+	 * @return list<Account>
+	 */
+	public function findDelegatedAccounts(string $userId): array {
+		return array_map(static fn ($a) => new Account($a), $this->mapper->findDelegatedByUserId($userId));
 	}
 
 	/**

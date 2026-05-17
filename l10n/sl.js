@@ -64,7 +64,6 @@ OC.L10N.register(
     "SMTP Port" : "Vrata SMTP",
     "SMTP User" : "Uporabnik SMTP",
     "SMTP Password" : "Geslo SMTP",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Za pravilno delovanje poštnega računa Google je treba omogočiti dvostopenjsko overitev in določiti geslo za program.",
     "Account settings" : "Nastavitve računa",
     "Aliases" : "Vzdevki",
     "Signature" : "Podpis",
@@ -161,6 +160,7 @@ OC.L10N.register(
     "_{count} attachment_::_{count} attachments_" : ["{count} priloga","{count} prilogi","{count} priloge","{count} prilog"],
     "Untitled message" : "Nenaslovljeno sporočilo",
     "Confirm" : "Potrdi",
+    "Revoke" : "Prekliči",
     "Plain text" : "Besedilno",
     "Rich text" : "Obogateno besedilo",
     "No messages in this folder" : "V tej mapi ni sporočil",
@@ -391,6 +391,7 @@ OC.L10N.register(
     "Reply to sender only" : "Odgovori le pošiljatelju",
     "Mark as unfavorite" : "Odstrani oznako priljubljeno",
     "Mark as favorite" : "Označi kot priljubljeno",
+    "To:" : "Do:",
     "The message could not be translated" : "Sporočila ni mogoče prevesti",
     "Translation copied to clipboard" : "Prevod je kopiran v odložišče",
     "Translation could not be copied" : "Prevoda ni mogoče kopirati!",
@@ -520,8 +521,6 @@ OC.L10N.register(
     "Could not load the desired message" : "Želenega sporočila ni mogoče naložiti",
     "Could not load the message" : "Sporočila ni mogoče naložiti",
     "Error loading message" : "Napaka nalaganja sporočila",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Sporočila bodo samodejno označena kot pomembna na podlagi do sedaj označenih takih sporočil. V začetku bo verjetno treba kakšno označiti še ročno, a se bo sistem s časom izboljševal.",
-    "Mark all messages of this folder as read" : "Označi vsa sporočila v tej mapi kot prebrana",
-    "Last 7 days" : "Zadnjih 7 dni"
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Sporočila bodo samodejno označena kot pomembna na podlagi do sedaj označenih takih sporočil. V začetku bo verjetno treba kakšno označiti še ročno, a se bo sistem s časom izboljševal."
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

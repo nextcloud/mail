@@ -68,6 +68,7 @@ import { NcActionInput as ActionInput, NcActions as Actions, NcActionText as Act
 import { mapStores } from 'pinia'
 import IconEdit from 'vue-material-design-icons/PencilOutline.vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
+import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 import { translateTagDisplayName } from '../util/tag.js'
 
@@ -131,7 +132,7 @@ export default {
 				this.showSaving = false
 			} catch (error) {
 				showInfo(t('mail', 'An error occurred, unable to rename the tag.'))
-				console.error(error)
+				logger.error('could not rename tag', { error })
 				this.showSaving = true
 			}
 		},
@@ -159,7 +160,7 @@ export default {
 				this.showSaving = false
 			} catch (error) {
 				showInfo(t('mail', 'An error occurred, unable to rename the tag.'))
-				console.error(error)
+				logger.error('could not rename tag', { error })
 				this.renameTagLabel = false
 				this.renameTagInput = false
 				this.showSaving = true

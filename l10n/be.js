@@ -192,6 +192,7 @@ OC.L10N.register(
     "Could not create task" : "Не ўдалося стварыць заданне",
     "No calendars with task list support" : "Няма календароў з падтрымкай спісаў заднняў",
     "Not found" : "Не знойдзена",
+    "To:" : "Да:",
     "Go to latest message" : "Перайсці да апошняга паведамлення",
     "Newest message" : "Апошняе паведамленне",
     "Please select languages to translate to and from" : "Выберыце, з якой мовы на якую перакладаць",
@@ -278,7 +279,6 @@ OC.L10N.register(
     "There was a problem loading {tag}{name}{endtag}" : "Узнікла праблема з загрузкай {tag}{name}{endtag}",
     "Could not load your message" : "Не ўдалося загрузіць ваша паведамленне",
     "Could not load the message" : "Не ўдалося загрузіць паведамленне",
-    "Error loading message" : "Памылка пры загрузцы паведамлення",
-    "Last 7 days" : "Апошнія 7 дзён"
+    "Error loading message" : "Памылка пры загрузцы паведамлення"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

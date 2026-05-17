@@ -62,7 +62,6 @@ OC.L10N.register(
     "SMTP Port" : "Puerto SMTP",
     "SMTP User" : "Usuario SMTP",
     "SMTP Password" : "Contraseña SMTP",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Para que la cuenta de Google funcione con esta aplicación, debes habilitar la autenticación en dos pasos para Google y generar una contraseña de aplicación.",
     "Account settings" : "Configuración de la cuenta",
     "Aliases" : "Aliases",
     "Alias to S/MIME certificate mapping" : "Asignación de alias a certificados S/MIME",
@@ -162,6 +161,7 @@ OC.L10N.register(
     "Expand composer" : "Expandir redactor",
     "Close composer" : "Cerrar redactor",
     "Confirm" : "Confirmar",
+    "Revoke" : "Revocar",
     "Plain text" : "Texto sin formato",
     "Rich text" : "Texto enriquecido",
     "No messages in this folder" : "No hay mensajes en esta carpeta",
@@ -395,6 +395,7 @@ OC.L10N.register(
     "Reply to sender only" : "Responder solo al remitente",
     "Mark as unfavorite" : "Marcar como no favorito",
     "Mark as favorite" : "Marcar como favorito",
+    "To:" : "Para:",
     "Unsubscribe via link" : "Cancelar suscripción mediante enlace",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Cancelar la suscripción detendrá todos los mensajes de la lista de correo {sender}",
     "Send unsubscribe email" : "Enviar correo electrónico de cancelación de suscripción",
@@ -565,7 +566,6 @@ OC.L10N.register(
     "Could not load the desired message" : "No fue posible cargar el mensaje deseado",
     "Could not load the message" : "No fue posible cargar el mensaje",
     "Error loading message" : "Se presentó un error al cargar el mensaje",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Los mensajes se marcarán automáticamente como importantes en función de los mensajes con los que interactúes o que marques como importantes. Al principio, es posible que debas cambiar manualmente la importancia para enseñar al sistema, pero mejorará con el tiempo.",
-    "Last 7 days" : "Últimos 7 días"
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Los mensajes se marcarán automáticamente como importantes en función de los mensajes con los que interactúes o que marques como importantes. Al principio, es posible que debas cambiar manualmente la importancia para enseñar al sistema, pero mejorará con el tiempo."
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

@@ -59,6 +59,7 @@
     "Tags" : "Tibzimin",
     "Task created" : "Tawuri tettwarna",
     "Not found" : "Ulac-it",
+    "To:" : "Ɣer:",
     "Translate from" : "Suqel seg",
     "Translate to" : "Suqel ar",
     "Deleted" : "Yettwakkes",
@@ -73,7 +74,6 @@
     "All" : "Akk",
     "Inbox" : "Tanaka",
     "Nextcloud Mail" : "Imayl n Nextcloud",
-    "Message sent" : "Izen yettwazen",
-    "Last 7 days" : "7 n wussan yezrin"
+    "Message sent" : "Izen yettwazen"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

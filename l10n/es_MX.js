@@ -79,7 +79,6 @@ OC.L10N.register(
     "SMTP Port" : "Puerto SMTP",
     "SMTP User" : "Usuario SMTP",
     "SMTP Password" : "Contraseña SMTP",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Para que la cuenta de Google funcione con esta aplicación, debes habilitar la autenticación en dos pasos para Google y generar una contraseña de aplicación.",
     "Account settings" : "Configuración de la cuenta",
     "Aliases" : "Aliases",
     "Alias to S/MIME certificate mapping" : "Asignación de alias a certificados S/MIME",
@@ -196,6 +195,7 @@ OC.L10N.register(
     "Expand composer" : "Expandir redactor",
     "Close composer" : "Cerrar redactor",
     "Confirm" : "Confirmar",
+    "Revoke" : "Revocar",
     "Tag: {name} deleted" : "Etiqueta: {name} eliminada",
     "An error occurred, unable to delete the tag." : "Ha ocurrido un error, no se ha podido eliminar la etiqueta.",
     "The tag will be deleted from all messages." : "La etiqueta se eliminará de todos los mensajes.",
@@ -330,6 +330,7 @@ OC.L10N.register(
     "Tag already exists" : "La etiqueta ya existe",
     "Add tag" : "Añadir etiqueta",
     "Not found" : "No encontrado",
+    "To:" : "Para:",
     "Translate from" : "Traducir desde",
     "Untitled event" : "Evento sin título",
     "(organizer)" : "(organizador)",
@@ -373,7 +374,6 @@ OC.L10N.register(
     "Could not load your message" : "No fue posible cargar tu mensaje",
     "Could not load the desired message" : "No fue posible cargar el mensaje deseado",
     "Could not load the message" : "No fue posible cargar el mensaje",
-    "Error loading message" : "Se presentó un error al cargar el mensaje",
-    "Last 7 days" : "Últimos 7 días"
+    "Error loading message" : "Se presentó un error al cargar el mensaje"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

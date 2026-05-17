@@ -91,7 +91,6 @@
     "SMTP Port" : "SMTP číslo portu",
     "SMTP User" : "SMTP používateľ",
     "SMTP Password" : "SMTP heslo",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Pre správne fungovanie účtu Google s touto aplikáciou musíte povoliť dvojfaktorové overovanie pre Google a vygenerovať heslo pre aplikáciu.",
     "Account settings" : "Nastavenia účtu",
     "Aliases" : "Aliasy",
     "Alias to S/MIME certificate mapping" : "Alias pre mapovanie certifikátu S/MIME",
@@ -252,6 +251,7 @@
     "Expand composer" : "Zobraziť editor správ",
     "Close composer" : "Zatvoriť editor správ",
     "Confirm" : "Potvrdiť",
+    "Revoke" : "Odvolať",
     "Tag: {name} deleted" : "Štítok: {name} odstránený",
     "An error occurred, unable to delete the tag." : "Vyskytla sa chyba, nie je možné odstrániť štítok.",
     "The tag will be deleted from all messages." : "Štítok bude odstránený zo všetkých správ.",
@@ -622,6 +622,7 @@
     "Reply to sender only" : "Odpovedať iba odosielateľovi",
     "Mark as unfavorite" : "Zrušiť označenie ako obľúbené",
     "Mark as favorite" : "Označiť ako obľúbené",
+    "To:" : "Do: ",
     "Unsubscribe via link" : "Odhlásiť sa cez odkaz",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Odhlásenie zastaví všetky správy z mailing listu {sender}.",
     "Send unsubscribe email" : "Poslať e-mail pre odlásenie.",
@@ -887,11 +888,7 @@
     "Could not load the desired message" : "Nepodarilo sa načítať požadovanú správu",
     "Could not load the message" : "Správu sa nepodarilo sa načítať",
     "Error loading message" : "Chyba načítavania správy",
-    "Determine importance using machine learning" : "Určte dôležitosť pomocou strojového učenia",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Správy sa automaticky označia ako dôležité v závislosti na tom, ktorými správami ste sa zaoberali alebo označili ako dôležité. Na začiatku bude potrebné meniť dôležitosť ručne a systém tak postupne učiť, ale časom sa to zlepší.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Tu sa zobrazia vami odoslané správy, ktoré vyžadujú odpoveď, no po niekoľkých dňoch ju nedostali.",
-    "Mark all messages of this folder as read" : "Všetky správy v tomto priečinku označiť ako prečítané",
-    "Last 7 days" : "Posledných 7 dní",
-    "From me" : "Odo mňa"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Tu sa zobrazia vami odoslané správy, ktoré vyžadujú odpoveď, no po niekoľkých dňoch ju nedostali."
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);"
 }

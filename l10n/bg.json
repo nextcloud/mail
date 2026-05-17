@@ -61,7 +61,6 @@
     "SMTP Port" : "SMTP порт",
     "SMTP User" : "SMTP потребител",
     "SMTP Password" : "SMTP парола",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "За да може Google профил да работи с това приложение, трябва да активирате двустепенно удостоверяване за Google и да генерирате парола за приложението.",
     "Account settings" : "Настройки на профила",
     "Aliases" : "Псевдоними",
     "Alias to S/MIME certificate mapping" : "Съпоставка на псевдоним със S/MIME сертификат",
@@ -163,6 +162,7 @@
     "Choose a file to share as a link" : "Изберете файл, който да споделите като връзка",
     "_{count} attachment_::_{count} attachments_" : ["{count} прикачени файлове","{count} прикачени файлове"],
     "Confirm" : "Потвърдете",
+    "Revoke" : "Отнемане",
     "Plain text" : "Обикновен текст",
     "Rich text" : "Форматиран текст",
     "No messages in this folder" : "Няма съобщения",
@@ -547,8 +547,6 @@
     "Could not load the desired message" : "Желаното съобщение не може да бъде заредено",
     "Could not load the message" : "Съобщението не може да бъде заредено",
     "Error loading message" : "Грешка при зареждане съобщението",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Съобщенията автоматично ще бъдат маркирани като важни въз основа на съобщенията, с които сте взаимодействали или маркирани като важни. В началото може да се наложи ръчно да промените важността, за да обучите системата, но тя ще се подобри с течение на времето.",
-    "Mark all messages of this folder as read" : "Маркирай всички съобщения в папката като прочетени",
-    "Last 7 days" : "Последни 7 дни"
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Съобщенията автоматично ще бъдат маркирани като важни въз основа на съобщенията, с които сте взаимодействали или маркирани като важни. В началото може да се наложи ръчно да промените важността, за да обучите системата, но тя ще се подобри с течение на времето."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

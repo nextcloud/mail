@@ -93,7 +93,6 @@ OC.L10N.register(
     "SMTP Port" : "Port SMTP",
     "SMTP User" : "Użytkownik SMTP",
     "SMTP Password" : "Hasło SMTP",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Aby konto Google mogło współpracować z tą aplikacją, musisz włączyć uwierzytelnianie dwuskładnikowe dla Google i wygenerować hasło do aplikacji.",
     "Account settings" : "Ustawienia konta",
     "Aliases" : "Aliasy",
     "Alias to S/MIME certificate mapping" : "Mapowanie aliasu do certyfikatu S/MIME",
@@ -254,6 +253,7 @@ OC.L10N.register(
     "Expand composer" : "Rozwiń edytor wiadomości",
     "Close composer" : "Zamknij edytor wiadomości",
     "Confirm" : "Potwierdź",
+    "Revoke" : "Cofnij",
     "Tag: {name} deleted" : "Tag: {name} usunięty",
     "An error occurred, unable to delete the tag." : "Wystąpił błąd, nie udało się usunąć tagu.",
     "The tag will be deleted from all messages." : "Tag zostanie usunięty ze wszystkich wiadomości.",
@@ -883,11 +883,7 @@ OC.L10N.register(
     "Could not load the desired message" : "Nie można wczytać żądanej wiadomości",
     "Could not load the message" : "Nie można wczytać wiadomości",
     "Error loading message" : "Błąd podczas wczytywania wiadomości",
-    "Determine importance using machine learning" : "Określ ważność przy użyciu uczenia maszynowego",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Wiadomości będą automatycznie oznaczane jako ważne na podstawie wiadomości, z którymi wchodziłeś w interakcję lub które oznaczałeś jako ważne. Na początku być może trzeba będzie ręcznie zmienić ważność dla uczenia systemu, ale z czasem będzie się poprawiać.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Wiadomości wysłane przez ciebie, które wymagają odpowiedzi, ale jej nie otrzymały po kilku dniach, będą wyświetlane tutaj",
-    "Mark all messages of this folder as read" : "Oznacz wszystkie wiadomości w tym folderze jako przeczytane",
-    "Last 7 days" : "Ostatnie 7 dni",
-    "From me" : "Ode mnie"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Wiadomości wysłane przez ciebie, które wymagają odpowiedzi, ale jej nie otrzymały po kilku dniach, będą wyświetlane tutaj"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

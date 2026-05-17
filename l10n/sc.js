@@ -96,6 +96,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Sèbera un'archìviu de agiùnghere comente alligongiadu",
     "Choose a file to share as a link" : "Sèbera un'archìviu de cumpartzire comente ligòngiu",
     "Confirm" : "Cunfirma",
+    "Revoke" : "Rèvoca",
     "Plain text" : "Testu simple",
     "Rich text" : "Testu formatadu",
     "No messages" : "Perunu messàgiu",
@@ -336,7 +337,6 @@ OC.L10N.register(
     "Could not load the desired message" : "No at fatu a carrigare su messàgiu disigiadu",
     "Could not load the message" : "No at fatu a carrigare su messàgiu",
     "Error loading message" : "Errore in su carrigamentu de su messàgiu",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Is messàgios s'ant a marcare in manera automàtica comente importantes in sa base de is messàgios cun is chi as tènnidu interatziones o chi si sunt marcados comente importantes. Fortzis a su cumintzu as a dèpere cambiare a manu s'importàntzia pro ddu imparare a su sistema, ma at a megiorare in su tempus.",
-    "Last 7 days" : "Ùrtimas 7 dies"
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Is messàgios s'ant a marcare in manera automàtica comente importantes in sa base de is messàgios cun is chi as tènnidu interatziones o chi si sunt marcados comente importantes. Fortzis a su cumintzu as a dèpere cambiare a manu s'importàntzia pro ddu imparare a su sistema, ma at a megiorare in su tempus."
 },
 "nplurals=2; plural=(n != 1);");

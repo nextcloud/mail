@@ -91,7 +91,6 @@ OC.L10N.register(
     "SMTP Port" : "SMTP-port",
     "SMTP User" : "SMTP-användare",
     "SMTP Password" : "SMTP-lösenord",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "För att Google-kontot ska fungera med den här appen måste du aktivera tvåfaktorsautentisering för Google och generera ett lösenord.",
     "Account settings" : "Kontoinställningar",
     "Aliases" : "Alias",
     "Alias to S/MIME certificate mapping" : "Alias ​​till S/MIME-certifikatmappning",
@@ -248,6 +247,7 @@ OC.L10N.register(
     "_{count} attachment_::_{count} attachments_" : ["{count} bilaga","{count} bilagor"],
     "Untitled message" : "Namnlöst meddelande",
     "Confirm" : "Bekräfta",
+    "Revoke" : "Återkalla",
     "Tag: {name} deleted" : "Tagg: {name} borttagen",
     "An error occurred, unable to delete the tag." : "Ett fel uppstod, det gick inte att ta bort taggen.",
     "The tag will be deleted from all messages." : "Taggen kommer att raderas från alla meddelanden.",
@@ -591,6 +591,7 @@ OC.L10N.register(
     "Unsubscribe" : "Avsluta prenumeration",
     "Reply to sender only" : "Svara endast avsändaren",
     "Mark as favorite" : "Markera som favorit",
+    "To:" : "Till:",
     "Unsubscribe via link" : "Avsluta prenumerationen via länk",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Om du avslutar prenumerationen stoppas alla meddelanden från e-postlistan {sender}",
     "Send unsubscribe email" : "Skicka e-postmeddelande för avregistrering",
@@ -838,11 +839,7 @@ OC.L10N.register(
     "Could not load the desired message" : "Kunde inte läsa in önskat meddelande",
     "Could not load the message" : "Kunde inte läsa in meddelandet",
     "Error loading message" : "Fel vid inläsning av meddelande",
-    "Determine importance using machine learning" : "Avgör vikt med maskininlärning",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Meddelanden kommer automatiskt att markeras som viktiga baserat på vilka meddelanden du interagerade med eller har markerat som viktiga. I början kan du behöva ändra vikten manuellt, men det kommer att förbättras med tiden.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Meddelanden som du skickat och som kräver svar men inte fått något efter ett par dagar visas här.",
-    "Mark all messages of this folder as read" : "Markera alla meddelanden i den här mappen som lästa",
-    "Last 7 days" : "Senaste 7 dagarna",
-    "From me" : "Från mig"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Meddelanden som du skickat och som kräver svar men inte fått något efter ett par dagar visas här."
 },
 "nplurals=2; plural=(n != 1);");

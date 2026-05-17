@@ -69,7 +69,6 @@ OC.L10N.register(
     "SMTP Port" : "SMTP Port",
     "SMTP User" : "SMTP User",
     "SMTP Password" : "SMTP Password",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password.",
     "Account settings" : "Account settings",
     "Aliases" : "Aliases",
     "Alias to S/MIME certificate mapping" : "Alias to S/MIME certificate mapping",
@@ -175,6 +174,7 @@ OC.L10N.register(
     "Expand composer" : "Expand composer",
     "Close composer" : "Close composer",
     "Confirm" : "Confirm",
+    "Revoke" : "Revoke",
     "Tag: {name} deleted" : "Tag: {name} deleted",
     "An error occurred, unable to delete the tag." : "An error occurred, unable to delete the tag.",
     "The tag will be deleted from all messages." : "The tag will be deleted from all messages.",
@@ -442,6 +442,7 @@ OC.L10N.register(
     "Reply to sender only" : "Reply to sender only",
     "Mark as unfavorite" : "Mark as unfavorite",
     "Mark as favorite" : "Mark as favorite",
+    "To:" : "To:",
     "Unsubscribe via link" : "Unsubscribe via link",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Unsubscribing will stop all messages from the mailing list {sender}",
     "Send unsubscribe email" : "Send unsubscribe email",
@@ -612,7 +613,6 @@ OC.L10N.register(
     "Could not load the desired message" : "Could not load the desired message",
     "Could not load the message" : "Could not load the message",
     "Error loading message" : "Error loading message",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time.",
-    "Last 7 days" : "Last 7 days"
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time."
 },
 "nplurals=2; plural=(n!=1);");

@@ -6,6 +6,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { Paragraph } from 'ckeditor5'
 import mitt from 'mitt'
+import { vi } from 'vitest'
 import TextEditor from '../../../components/TextEditor.vue'
 import MailPlugin from '../../../ckeditor/mail/MailPlugin.js'
 import Nextcloud from '../../../mixins/Nextcloud.js'
@@ -123,5 +124,78 @@ describe('TextEditor', () => {
 		expect(wrapper.emitted().ready[0]).toBeTruthy()
 		expect(wrapper.emitted().ready[0][0].getData())
 			.toEqual('<p style="margin:0;">bonjour bonjour</p>')
+	})
+
+	it('emits updated data while editing source', async () => {
+		vi.useFakeTimers()
+
+		const wrapper = shallowMount(TextEditor, {
+			localVue,
+			provide: {
+				addToFocusTrap: vi.fn(),
+			},
+			propsData: {
+				value: '<p>bonjour</p>',
+				html: true,
+				bus: mitt(),
+			},
+		})
+
+		const textarea = document.createElement('textarea')
+		const updateEditorData = vi.fn()
+		const sourceEditingPlugin = {
+			updateEditorData,
+			on: vi.fn(),
+			off: vi.fn(),
+		}
+		const editor = {
+			locale: {
+				uiLanguageDirection: 'ltr',
+			},
+			ui: {
+				view: {
+					toolbar: {
+						element: document.createElement('div'),
+						items: [],
+					},
+					editable: { element: document.createElement('div') },
+				},
+				getEditableElement: vi.fn((name) => name === 'sourceEditing:main' ? textarea : null),
+			},
+			commands: {
+				get: vi.fn(() => null),
+			},
+			plugins: {
+				has: vi.fn((pluginName) => pluginName === 'SourceEditing'),
+				get: vi.fn(() => sourceEditingPlugin),
+			},
+			keystrokes: {
+				set: vi.fn(),
+			},
+			editing: {
+				view: {
+					focus: vi.fn(),
+				},
+			},
+		}
+
+		wrapper.vm.$refs.toolbarContainer = document.createElement('div')
+		wrapper.vm.$refs.editableContainer = { appendChild: vi.fn() }
+
+		wrapper.vm.onEditorReady(editor)
+
+		const sourceEditingModeHandler = sourceEditingPlugin.on.mock.calls.find(([evt]) => evt === 'change:isSourceEditingMode')[1]
+
+		sourceEditingModeHandler(null, 'isSourceEditingMode', true)
+		textarea.dispatchEvent(new Event('input'))
+
+		await vi.runAllTimersAsync()
+
+		// updateEditorData() calls editor.data.set() → model change:data → Vue wrapper emits @input.
+		// We assert the handoff to CKEditor's pipeline here; the Vue wrapper propagation is tested
+		// by @ckeditor/ckeditor5-vue2's own suite.
+		expect(updateEditorData).toHaveBeenCalledTimes(1)
+
+		vi.useRealTimers()
 	})
 })

@@ -384,7 +384,7 @@ export default {
 
 		hasMultipleRecipients() {
 			if (!this.account) {
-				console.error('account is undefined', {
+				logger.error('account is undefined', {
 					accountId: this.envelope.accountId,
 				})
 			}

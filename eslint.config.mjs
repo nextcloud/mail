@@ -22,7 +22,7 @@ export default defineConfig([
 			},
 		},
 		rules: {
-			'no-console': 'warn',
+			'no-console': 'error',
 			'no-unused-vars': 'warn',
 
 			// 'jsdoc/no-undefined-types': 'error',

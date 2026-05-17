@@ -66,7 +66,6 @@
     "SMTP Port" : "درگاه SMTP",
     "SMTP User" : "کاربر SMTP",
     "SMTP Password" : "رمز عبور SMTP",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password.",
     "Account settings" : "تنظیمات حساب",
     "Aliases" : "Aliases",
     "Alias to S/MIME certificate mapping" : "Alias to S/MIME certificate mapping",
@@ -172,6 +171,7 @@
     "Expand composer" : "Expand composer",
     "Close composer" : "Close composer",
     "Confirm" : "تائید",
+    "Revoke" : "لغو",
     "Plain text" : "متن ساده",
     "Rich text" : "متن غنی",
     "No messages in this folder" : "هیچ پیامی در این پوشه وجود ندارد",
@@ -423,6 +423,7 @@
     "Reply to sender only" : "فقط به فرستنده پاسخ دهید",
     "Mark as unfavorite" : "Mark as unfavorite",
     "Mark as favorite" : "Mark as favorite",
+    "To:" : "به:",
     "Unsubscribe via link" : "Unsubscribe via link",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Unsubscribing will stop all messages from the mailing list {sender}",
     "Send unsubscribe email" : "Send unsubscribe email",
@@ -585,8 +586,6 @@
     "Could not load the desired message" : "پیام مورد نظر بارگیری نشد",
     "Could not load the message" : "بارگیری پیام امکان پذیر نیست",
     "Error loading message" : "خطا در بارگزاری پیام",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time.",
-    "Mark all messages of this folder as read" : "تمام پیام های این پوشه را به عنوان خوانده شده علامت گذاری کنید",
-    "Last 7 days" : "۷ روز گذشته"
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time."
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

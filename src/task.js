@@ -7,6 +7,7 @@
 import moment from '@nextcloud/moment'
 import ICAL from 'ical.js'
 import { v4 as uuid } from 'uuid'
+import logger from './logger.js'
 
 export default class Task {
 	/**
@@ -54,7 +55,7 @@ export default class Task {
 		}
 
 		if (!this.vtodo.hasProperty('uid')) {
-			console.debug('This task did not have a proper uid. Setting a new one for ', this)
+			logger.debug('task did not have a proper uid, setting a new one')
 			this.vtodo.addPropertyWithValue('uid', uuid())
 		}
 

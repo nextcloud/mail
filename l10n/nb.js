@@ -78,7 +78,6 @@ OC.L10N.register(
     "SMTP Port" : "SMTP-port",
     "SMTP User" : "SMTP-bruker",
     "SMTP Password" : "SMTP-passord",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "For at Google-kontoen skal fungere med denne appen, må du aktivere tofaktorautentisering for Google og generere et app-passord.",
     "Account settings" : "Kontoinnstillinger",
     "Aliases" : "Aliaser",
     "Alias to S/MIME certificate mapping" : "Alias til S/MIME-sertifikattilordning",
@@ -206,6 +205,7 @@ OC.L10N.register(
     "Expand composer" : "Utvid skrivebehandler",
     "Close composer" : "Lukk skrivebehandler",
     "Confirm" : "Bekreft",
+    "Revoke" : "Avslå",
     "Tag: {name} deleted" : "Merke: {name} slettet",
     "An error occurred, unable to delete the tag." : "En feil oppstod, ikke i stand til å slette merkelappen.",
     "The tag will be deleted from all messages." : "Merkelappen slettes fra alle meldinger.",
@@ -509,6 +509,7 @@ OC.L10N.register(
     "Reply to sender only" : "Svar kun til avsender",
     "Mark as unfavorite" : "Merk som ufavoritt",
     "Mark as favorite" : "Merk som favoritt",
+    "To:" : "Til:",
     "Unsubscribe via link" : "Avslutt abonnement via kobling",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Hvis du avslutter abonnementet, stoppes alle meldinger fra adresselisten {avsender}",
     "Send unsubscribe email" : "Send e-post for avmelding",
@@ -693,10 +694,7 @@ OC.L10N.register(
     "Could not load the desired message" : "Kunne ikke laste den ønskede meldingen",
     "Could not load the message" : "Kunne ikke laste meldingen",
     "Error loading message" : "Feil ved innlasting av melding",
-    "Determine importance using machine learning" : "Bestem viktighet ved hjelp av maskinlæring",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Meldinger blir automatisk merket som viktige basert på hvilke meldinger du har interagert med eller merket som viktige. I begynnelsen må du kanskje endre viktigheten manuelt for å lære systemet, men det vil forbedres over tid.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Meldinger sendt av deg som krever svar, men ikke mottok en etter et par dager, vises her.",
-    "Last 7 days" : "Siste 7 dager",
-    "From me" : "Fra meg"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Meldinger sendt av deg som krever svar, men ikke mottok en etter et par dager, vises her."
 },
 "nplurals=2; plural=(n != 1);");

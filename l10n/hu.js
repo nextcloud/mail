@@ -69,7 +69,6 @@ OC.L10N.register(
     "SMTP Port" : "SMTP port",
     "SMTP User" : "SMTP felhasználó",
     "SMTP Password" : "SMTP jelszó",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Ahhoz, hogy a Google-fiókja működjön ezzel az alkalmazással, engedélyeznie kell a kétfaktoros hitelesítést, és elő kell állítania egy alkalmazásjelszót.",
     "Account settings" : "Fiókbeállítások",
     "Aliases" : "Álnevek",
     "Alias to S/MIME certificate mapping" : "Álnév az S/MIME tanúsítvány-hozzárendeléshez",
@@ -178,6 +177,7 @@ OC.L10N.register(
     "Expand composer" : "Szerkesztő kibontása",
     "Close composer" : "Szerkesztő bezárása",
     "Confirm" : "Megerősítés",
+    "Revoke" : "Visszavonás",
     "Plain text" : "Egyszerű szöveg",
     "Rich text" : "Formázott szöveg",
     "No messages in this folder" : "Nincs üzenet a mappában!",
@@ -448,6 +448,7 @@ OC.L10N.register(
     "Reply to sender only" : "Válasz csak a feladónak",
     "Mark as unfavorite" : "Megjelölés nem kedvencként",
     "Mark as favorite" : "Megjelölés kedvencként",
+    "To:" : "Eddig a dátumig:",
     "Unsubscribe via link" : "Leiratkozás hivatkozással",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "A leiratkozás leállít minden üzenetet, amely a(z) {sender} levelezőlistáról érkezik",
     "Send unsubscribe email" : "Leiratkozási e-mail küldése",
@@ -625,8 +626,6 @@ OC.L10N.register(
     "Could not load the desired message" : "Nem sikerült betölteni a kért üzenetet",
     "Could not load the message" : "Nem sikerült betölteni az üzenetet",
     "Error loading message" : "Hiba történt az üzenet betöltése közben",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Az üzeneteket automatikusan fontosként jelöli meg az alapján, hogy mely üzenetekre reagált, vagy jelölt meg fontosként. Kezdetben lehet, hogy kézzel megváltoztatnia a fontosságot és ezzel kell tanítania a rendszert, de ez az idő múlásával javulni fog.",
-    "Mark all messages of this folder as read" : "A mappában található összes üzenet megjelölése olvasottként",
-    "Last 7 days" : "Előző 7 nap"
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Az üzeneteket automatikusan fontosként jelöli meg az alapján, hogy mely üzenetekre reagált, vagy jelölt meg fontosként. Kezdetben lehet, hogy kézzel megváltoztatnia a fontosságot és ezzel kell tanítania a rendszert, de ez az idő múlásával javulni fog."
 },
 "nplurals=2; plural=(n != 1);");

@@ -71,6 +71,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Izvēlēties datni, ko pievienot kā pielikumu",
     "Choose a file to share as a link" : "Jāizvēlas datne, ko kopīgot kā saiti",
     "Confirm" : "Apstiprināt",
+    "Revoke" : "Atsaukt",
     "No messages in this folder" : "Šajā mapē nav neviens ziņojums",
     "Later today – {timeLocale}" : "Vēlāk šodien – {timeLocale}",
     "Set reminder for later today" : "Iestatīt atgādinājumu vēlākam šodien",
@@ -139,6 +140,7 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Birkas nosaukums ir slēpta sistēmas birka",
     "Tag already exists" : "Birka jau pastāv",
     "Not found" : "Nav atrasts",
+    "To:" : "Kam:",
     "Untitled event" : "Nenosaukts notikums",
     "Deleted" : "Izdzēsts",
     "Recipient" : "Saņēmējs",
@@ -179,7 +181,6 @@ OC.L10N.register(
     "Discard unsaved changes" : "Atmest nesaglabātās izmaiņas",
     "Could not load {tag}{name}{endtag}" : "Nevarēja ielādēt {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Radusies problēma, ielādējot {tag}{name}{endtag}",
-    "Error loading message" : "Kļūda ielādējot vēstuli",
-    "From me" : "No manis"
+    "Error loading message" : "Kļūda ielādējot vēstuli"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

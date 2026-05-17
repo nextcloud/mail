@@ -77,7 +77,6 @@
     "SMTP Port" : "SMTP ataka",
     "SMTP User" : "SMTP erabiltzailea",
     "SMTP Password" : "SMTP pasahitza",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Google-ko kontuak aplikazio honekin funtziona dezan, Google-n bi faktoreko autentifikazioa gaitu eta aplikazioaren pasahitza sortu behar duzu.",
     "Account settings" : "Kontuaren ezarpenak",
     "Aliases" : "Aliasak",
     "Alias to S/MIME certificate mapping" : "S/MIME ziurtagiriaren esleipenerako aliasa",
@@ -198,6 +197,7 @@
     "Expand composer" : "Hedatu egilea",
     "Close composer" : "Itxi egilea",
     "Confirm" : "Berretsi",
+    "Revoke" : "Ezeztatu",
     "Tag: {name} deleted" : "Etiketa: {name} ezabatuta",
     "An error occurred, unable to delete the tag." : "Errore bat gertatu da, ezin izan da etiketa ezabatu.",
     "The tag will be deleted from all messages." : "Mezu guztietako etiketak ezabatuko dira.",
@@ -506,6 +506,7 @@
     "Reply to sender only" : "Erantzun bakarrik igorleari",
     "Mark as unfavorite" : "Markatu ez gogoko gisa",
     "Mark as favorite" : "Markatu gogoko gisa",
+    "To:" : "Noiz arte:",
     "Unsubscribe via link" : "Harpidetza kendu esteka bidez",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Harpidetza kentzeak {sender} posta-zerrendako mezu guztiak geldituko ditu",
     "Send unsubscribe email" : "Bidali harpidetza kentzeko mezu elektronikoa",
@@ -703,9 +704,6 @@
     "Could not load the message" : "Ezin izan da mezua kargatu",
     "Error loading message" : "Errorea mezua kargatzerakoan",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Mezuak automatikoki markatuko dira garrantzitsu bezala kontuan izanda zein mezurekin aritu zaren interakzioan edo zein markatu dituzun garratzitsu gisa. Hasieran garrantzia eskuz aldatu beharko duzu sistemari irakasteko, baina denborarekin hobetuko du.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Erantzuteko eskatuz bidali zenituen emailak, baina egun batzuen ondoren erantzunik jasotzen ez dutenak hemen erakutsiko dira.",
-    "Mark all messages of this folder as read" : "Markatu karpeta honetako mezu guztiak irakurrita bezala",
-    "Last 7 days" : "Azken 7 egunetan",
-    "From me" : "Nigandik"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Erantzuteko eskatuz bidali zenituen emailak, baina egun batzuen ondoren erantzunik jasotzen ez dutenak hemen erakutsiko dira."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

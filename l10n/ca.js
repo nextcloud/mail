@@ -84,7 +84,6 @@ OC.L10N.register(
     "SMTP Port" : "Port SMTP",
     "SMTP User" : "Usuari SMTP",
     "SMTP Password" : "Contrasenya SMTP",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Perquè el compte de Google funcioni amb aquesta aplicació, heu d'habilitar l'autenticació de doble factor per a Google i generar una contrasenya d'aplicació.",
     "Account settings" : "Paràmetres del compte",
     "Aliases" : "Àlies",
     "Alias to S/MIME certificate mapping" : "Mapeig d'àlies a certificat S/MIME",
@@ -207,6 +206,7 @@ OC.L10N.register(
     "Expand composer" : "Ampliar el compositor",
     "Close composer" : "Tanca finestra del compositor",
     "Confirm" : "Confirma",
+    "Revoke" : "Revoca",
     "Tag: {name} deleted" : "Etiqueta: {name} suprimida",
     "An error occurred, unable to delete the tag." : "S'ha produït un error, no s'ha pogut suprimir l'etiqueta.",
     "The tag will be deleted from all messages." : "L'etiqueta se suprimirà de tots els missatges.",
@@ -520,6 +520,7 @@ OC.L10N.register(
     "Reply to sender only" : "Respon només al remitent",
     "Mark as unfavorite" : "Marca com a no favorit",
     "Mark as favorite" : "Marca'l com a preferit",
+    "To:" : "A:",
     "Unsubscribe via link" : "Cancel·la la subscripció mitjançant l'enllaç",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "La cancel·lació de la subscripció aturarà tots els missatges de la llista de correu {sender}",
     "Send unsubscribe email" : "Envia un correu electrònic de cancel·lació de la subscripció",
@@ -720,9 +721,6 @@ OC.L10N.register(
     "Could not load the message" : "No s’ha pogut carregar el missatge",
     "Error loading message" : "S'ha produït un error mentre es carregava el missatge",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Els missatges es marcaran automàticament com a importants en funció dels missatges amb els quals heu interaccionat o marcat com a importants. Al principi és possible que hageu de canviar manualment la importància per ensenyar el sistema, però millorarà amb el temps.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Aquí es mostraran els missatges enviats per tu que requereixen una resposta però que no n'hagis rebut cap al cap d'un parell de dies.",
-    "Mark all messages of this folder as read" : "Marca tots els missatges d'aquesta carpeta com a llegits",
-    "Last 7 days" : "Darrers 7 dies",
-    "From me" : "De mi"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Aquí es mostraran els missatges enviats per tu que requereixen una resposta però que no n'hagis rebut cap al cap d'un parell de dies."
 },
 "nplurals=2; plural=(n != 1);");

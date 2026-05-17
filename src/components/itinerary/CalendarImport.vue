@@ -27,6 +27,7 @@ import moment from '@nextcloud/moment'
 import { NcActionButton as ActionButton, NcActions as Actions, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import ical from 'ical.js'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
+import logger from '../../logger.js'
 
 export default {
 	name: 'CalendarImport',
@@ -63,7 +64,7 @@ export default {
 			calendar.loading = true
 
 			this.handler(calendar)
-				.catch(console.error.bind(this))
+				.catch((error) => logger.error('could not import calendar event', { error }))
 				.then(() => {
 					calendar.loading = false
 				})

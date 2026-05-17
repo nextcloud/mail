@@ -24,6 +24,7 @@ OC.L10N.register(
     "Refresh" : "Refrescar",
     "Choose a file to add as attachment" : "Selectiona un file pro adder como attachamento",
     "Confirm" : "Confirmar",
+    "Revoke" : "Revocar",
     "Favorite" : "Favorite",
     "Back" : "Retro",
     "Attendees" : "Participantes",

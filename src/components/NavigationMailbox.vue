@@ -727,7 +727,7 @@ export default {
 				this.renameInput = false
 			} catch (error) {
 				showInfo(t('mail', 'An error occurred, unable to rename the mailbox.'))
-				console.error(error)
+				logger.error('could not rename mailbox', { error })
 			} finally {
 				this.showSaving = false
 			}

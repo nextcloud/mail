@@ -119,6 +119,7 @@ OC.L10N.register(
     "Choose" : "Escolher",
     "Choose a file to add as attachment" : "Escolha um ficheiro para adicionar como anexo",
     "Confirm" : "Confirmar",
+    "Revoke" : "Revogar",
     "Plain text" : "Texto simples",
     "No messages" : "Sem mensagens",
     "Could not delete message" : "Não foi possível apagar a mensagem",
@@ -191,6 +192,7 @@ OC.L10N.register(
     "Clear locally cached data, in case there are issues with synchronization." : "Limpe a cache de dados local no caso de ter problemas com a sincronização.",
     "Subscribed" : "Subscrito",
     "New message" : "Nova mensagem",
+    "Draft" : "Rascunho",
     "Reply" : "Resposta",
     "Error sending your message" : "Erro ao enviar a sua mensagem",
     "Retry" : "Repetir",
@@ -217,6 +219,7 @@ OC.L10N.register(
     "Add default tags" : "Adicionar etiquetas padrão",
     "Not found" : "Não  encontrado",
     "Reply to sender only" : "Resposta apenas ao remetente",
+    "To:" : "Para:",
     "No senders are trusted at the moment." : "Nenhum remetente é confiável no momento.",
     "Untitled event" : "Evento sem título",
     "Import into {calendar}" : "Importar para {calendar}",
@@ -270,8 +273,6 @@ OC.L10N.register(
     "Could not load your message" : "Não foi possível carregar a sua mensagem",
     "Could not load the desired message" : "Não foi possível carregar a mensagem escolhida",
     "Could not load the message" : "Não foi possível carregar a mensagem",
-    "Error loading message" : "Erro ao carregar a mensagem",
-    "Determine importance using machine learning" : "Determinar a importância usando aprendizagem de máquina",
-    "Last 7 days" : "Últimos 7 dias"
+    "Error loading message" : "Erro ao carregar a mensagem"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

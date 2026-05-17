@@ -5,6 +5,7 @@
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
+import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 
 async function fetchAvailableLanguages() {
@@ -23,7 +24,7 @@ async function fetchAvailableLanguages() {
 		mainStore.translationInputLanguages = inputLanguages
 		mainStore.translationOutputLanguages = outputLanguages
 	} catch (e) {
-		console.error('Failed to fetch available languages', e)
+		logger.error('Failed to fetch available languages', { error: e })
 	}
 }
 

@@ -91,7 +91,6 @@
     "SMTP Port" : "SMTP port",
     "SMTP User" : "SMTP uživatel",
     "SMTP Password" : "SMTP heslo",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Aby Google účet fungoval s touto aplikací, je třeba v něm zapnout dvoufaktorové ověřování a vytvořit tam heslo pro tuto aplikaci.",
     "Account settings" : "Nastavení účtu",
     "Aliases" : "Alternativní názvy",
     "Alias to S/MIME certificate mapping" : "Alternativní název mapování S/MIME certifikátu",
@@ -252,6 +251,7 @@
     "Expand composer" : "Rozbalit dialog psaní",
     "Close composer" : "Zavřít dialog psaní",
     "Confirm" : "Potvrdit",
+    "Revoke" : "Odvolat",
     "Tag: {name} deleted" : "Štítek: {name} smazán",
     "An error occurred, unable to delete the tag." : "Došlo k chybě, štítek se nepodařilo smazat.",
     "The tag will be deleted from all messages." : "Štítek bude smazán ze všech zpráv.",
@@ -884,11 +884,7 @@
     "Could not load the desired message" : "Nedaří se načíst vyžádanou zprávu",
     "Could not load the message" : "Zprávu se nedaří načíst",
     "Error loading message" : "Chyba při načtení zprávy",
-    "Determine importance using machine learning" : "Zjistit důležitost pomocí strojového učení",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Správy budou automaticky označené jako důležité v závislosti na tom, jakými správami jste se zabývali nebo označili jako důležité. Na začátku bude třeba měnit důležitost ručně a systém tak naučit, ale po čase se to zlepší.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Vámi zaslané zprávy, které vyžadují odpověď, ale ani po několika dnech se tak nestalo, se zobrazí zde.",
-    "Mark all messages of this folder as read" : "Označit všechny zprávy v této složce jako přečtené",
-    "Last 7 days" : "Uplynulých 7 dnů",
-    "From me" : "Ode mne"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Vámi zaslané zprávy, které vyžadují odpověď, ale ani po několika dnech se tak nestalo, se zobrazí zde."
 },"pluralForm" :"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;"
 }

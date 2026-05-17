@@ -30,7 +30,7 @@ import {
 	Base64UploadAdapter,
 	BlockQuote,
 	Bold,
-	DecoupledEditor,
+	ClassicEditor,
 	DropdownView,
 	Essentials,
 	FindAndReplace,
@@ -46,6 +46,7 @@ import {
 	Mention,
 	Paragraph,
 	RemoveFormat,
+	SourceEditing,
 	Strikethrough,
 	Subscript,
 	Superscript,
@@ -153,6 +154,7 @@ export default {
 				RemoveFormat,
 				Base64UploadAdapter,
 				MailPlugin,
+				SourceEditing,
 				TextDirectionPlugin,
 			])
 			toolbar.unshift(...[
@@ -177,6 +179,7 @@ export default {
 				'link',
 				'removeFormat',
 				'findAndReplace',
+				'sourceEditing',
 			])
 		}
 
@@ -185,8 +188,11 @@ export default {
 			emojiTribute: null,
 			contactMentionQuery: null,
 			textSmiles: [],
+			sourceEditingInputHandler: null,
+			sourceEditingModeHandler: null,
+			sourceEditingDebounceTimer: null,
 			ready: false,
-			editor: DecoupledEditor,
+			editor: ClassicEditor,
 			config: {
 				licenseKey: 'GPL',
 				placeholder: this.placeholder,
@@ -220,14 +226,28 @@ export default {
 
 				htmlSupport: {
 					allow: [
+						'table',
+						'tbody',
+						'td',
+						'tfoot',
+						'th',
+						'thead',
+						'tr',
+						'figure',
+						{
+							name: 'a',
+							attributes: ['title', 'name', 'id'],
+							classes: true,
+							styles: true,
+						},
 						{
 							name: 'img',
-							attributes: {
-								'data-cid': true,
-							},
+							attributes: ['src', 'alt', 'title', 'width', 'height', 'data-cid', 'loading'],
+							styles: true,
 						},
 					],
 				},
+
 			},
 		}
 	},
@@ -236,7 +256,45 @@ export default {
 		this.loadEditorTranslations(getLanguage())
 	},
 
+	beforeDestroy() {
+		this.unregisterSourceEditingInputListener()
+
+		if (this.editorInstance?.plugins.has('SourceEditing') && this.sourceEditingModeHandler) {
+			this.editorInstance.plugins.get('SourceEditing').off('change:isSourceEditingMode', this.sourceEditingModeHandler)
+		}
+	},
+
 	methods: {
+		registerSourceEditingInputListener() {
+			const textarea = this.editorInstance.ui.getEditableElement('sourceEditing:main')
+
+			if (!textarea || this.sourceEditingInputHandler) {
+				return
+			}
+
+			this.sourceEditingInputHandler = () => {
+				clearTimeout(this.sourceEditingDebounceTimer)
+				this.sourceEditingDebounceTimer = setTimeout(() => {
+					this.editorInstance.plugins.get('SourceEditing').updateEditorData()
+				}, 300)
+			}
+
+			textarea.addEventListener('input', this.sourceEditingInputHandler)
+		},
+
+		unregisterSourceEditingInputListener() {
+			clearTimeout(this.sourceEditingDebounceTimer)
+			this.sourceEditingDebounceTimer = null
+
+			if (!this.sourceEditingInputHandler) {
+				return
+			}
+
+			const textarea = this.editorInstance?.ui.getEditableElement('sourceEditing:main')
+			textarea?.removeEventListener('input', this.sourceEditingInputHandler)
+			this.sourceEditingInputHandler = null
+		},
+
 		getLink(text) {
 			const results = searchProvider(text)
 			if (results.length === 1 && !results[0].title.toLowerCase().includes(text.toLowerCase())) {
@@ -483,7 +541,7 @@ export default {
 							this.editorInstance.editing.view.focus()
 						})
 						.catch((error) => {
-							console.debug('Smart picker promise rejected:', error)
+							logger.debug('Smart picker promise rejected', { error })
 						})
 				}
 				if (eventData.marker === '@') {
@@ -495,6 +553,19 @@ export default {
 					this.insertTextBlock(item, false)
 				}
 			}, { priority: 'high' })
+
+			if (editor.plugins.has('SourceEditing')) {
+				this.sourceEditingModeHandler = (_event, _name, isSourceEditingMode) => {
+					if (isSourceEditingMode) {
+						this.registerSourceEditingInputListener()
+						return
+					}
+
+					this.unregisterSourceEditingInputListener()
+				}
+
+				editor.plugins.get('SourceEditing').on('change:isSourceEditingMode', this.sourceEditingModeHandler)
+			}
 
 			editor.keystrokes.set('Ctrl+Enter', (event) => {
 				logger.debug('Detected Ctrl+Enter/Cmd+Enter', event)

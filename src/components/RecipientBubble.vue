@@ -9,8 +9,8 @@
 			<UserBubble
 				v-bind="attrs"
 				:display-name="label"
-				:size="26"
 				:avatar-image="avatarUrlAbsolute"
+				:size="size"
 				@click="onClickOpenContactDialog" />
 		</template>
 		<template>
@@ -125,6 +125,7 @@ import IconClose from 'vue-material-design-icons/CloseOutline.vue'
 import IconDetails from 'vue-material-design-icons/InformationOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconReply from 'vue-material-design-icons/ReplyOutline.vue'
+import logger from '../logger.js'
 import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
 import { addToContact, autoCompleteByName, findMatches, newContact } from '../service/ContactIntegrationService.js'
 
@@ -157,6 +158,11 @@ export default {
 		label: {
 			type: String,
 			required: true,
+		},
+
+		size: {
+			type: Number,
+			default: 26,
 		},
 	},
 
@@ -210,7 +216,7 @@ export default {
 		try {
 			this.avatarUrl = await fetchAvatarUrlMemoized(this.email)
 		} catch (error) {
-			console.debug('no avatar for ' + this.email, {
+			logger.debug('no avatar for ' + this.email, {
 				error,
 			})
 		}
@@ -253,11 +259,11 @@ export default {
 		onClickAddToContact() {
 			if (this.selection === ContactSelectionStateEnum.new) {
 				if (this.newContactName !== '') {
-					newContact(this.newContactName.trim(), this.email).then((res) => console.debug('ContactIntegration', res))
+					newContact(this.newContactName.trim(), this.email).then((res) => logger.debug('ContactIntegration', { res }))
 				}
 			} else if (this.selection === ContactSelectionStateEnum.existing) {
 				if (this.selectedContact) {
-					addToContact(this.selectedContact.id, this.email).then((res) => console.debug('ContactIntegration', res))
+					addToContact(this.selectedContact.id, this.email).then((res) => logger.debug('ContactIntegration', { res }))
 				}
 			}
 		},

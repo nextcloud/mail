@@ -85,7 +85,6 @@ OC.L10N.register(
     "SMTP Port" : "Puerto SMTP",
     "SMTP User" : "Usuario SMTP",
     "SMTP Password" : "Contraseña SMTP",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "De manera que la cuenta Google funcione con esta app, debe habilitar la autenticación de dos factores para Google y generar una contraseña de app.",
     "Account settings" : "Ajustes de la cuenta",
     "Aliases" : "Aliases",
     "Alias to S/MIME certificate mapping" : "Alias al mapeo del certificado S/MIME",
@@ -218,6 +217,7 @@ OC.L10N.register(
     "Expand composer" : "Expandir compositor",
     "Close composer" : "Cerrar compositor",
     "Confirm" : "Confirmar",
+    "Revoke" : "Anular",
     "Tag: {name} deleted" : "Etiqueta: {name} eliminada",
     "An error occurred, unable to delete the tag." : "Ha ocurrido un error, no se ha podido borrar la etiqueta.",
     "The tag will be deleted from all messages." : "La etiqueta se borrará de todos los mensajes.",
@@ -572,6 +572,7 @@ OC.L10N.register(
     "Reply to sender only" : "Responder sólo al remitente",
     "Mark as unfavorite" : "Desmarcar como favorito",
     "Mark as favorite" : "Marcar como favorito",
+    "To:" : "Hasta:",
     "Unsubscribe via link" : "Desuscribirse vía enlace",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Al cancelar la suscripción se detendrán todos los mensajes de la lista de distribución {sender}",
     "Send unsubscribe email" : "Enviar enlace de desuscripción",
@@ -831,9 +832,6 @@ OC.L10N.register(
     "Could not load the message" : "No se ha podido cargar el mensaje",
     "Error loading message" : "Error al cargar el mensaje",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Los mensajes se marcarán automáticamente como importantes en función de los mensajes con los que interactuó o se marcaron como importantes. Al principio puede que tengas que cambiar manualmente la importancia para enseñar el sistema, pero mejorará con el tiempo.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Los mensajes que ha enviado y requieren respuesta pero no han recibido ninguna en un par de días aparecerán aquí.",
-    "Mark all messages of this folder as read" : "Marcar todos los mensajes de este buzón como leídos",
-    "Last 7 days" : "Últimos 7 días",
-    "From me" : "De mí"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Los mensajes que ha enviado y requieren respuesta pero no han recibido ninguna en un par de días aparecerán aquí."
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

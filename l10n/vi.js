@@ -86,6 +86,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Chọn một tệp để thêm dưới dạng tệp đính kèm",
     "Choose a file to share as a link" : "Chọn một tệp để chia sẻ dưới dạng liên kết",
     "Confirm" : "Xác nhận",
+    "Revoke" : "Thu hồi",
     "No messages" : "Không có tin nhắn",
     "Blind copy recipients only" : "Chỉ người nhận bản sao ẩn",
     "Later today – {timeLocale}" : "Sau này - {timeLocale}",
@@ -207,6 +208,7 @@ OC.L10N.register(
     "Could not load your message thread" : "Không thể tải chuỗi tin nhắn của bạn",
     "Not found" : "Không tìm thấy",
     "Reply to sender only" : "Chỉ trả lời người gửi",
+    "To:" : "Tới :",
     "Could not remove trusted sender {sender}" : "Không thể xóa người gửi đáng tin cậy {sender}",
     "No senders are trusted at the moment." : "Không có người gửi nào được tin cậy vào lúc này.",
     "Untitled event" : "Sự kiện không tiêu đề",
@@ -270,7 +272,6 @@ OC.L10N.register(
     "Could not load the desired message" : "Không thể tải tin nhắn mong muốn",
     "Could not load the message" : "Không thể tải tin nhắn",
     "Error loading message" : "Lỗi khi tải tin nhắn",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Tin nhắn sẽ tự động được đánh dấu là quan trọng dựa trên những tin nhắn bạn đã tương tác hoặc được đánh dấu là quan trọng. Lúc đầu, bạn có thể phải thay đổi thủ công tầm quan trọng để dạy hệ thống, nhưng nó sẽ cải thiện theo thời gian.",
-    "Last 7 days" : "7 ngày trước"
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Tin nhắn sẽ tự động được đánh dấu là quan trọng dựa trên những tin nhắn bạn đã tương tác hoặc được đánh dấu là quan trọng. Lúc đầu, bạn có thể phải thay đổi thủ công tầm quan trọng để dạy hệ thống, nhưng nó sẽ cải thiện theo thời gian."
 },
 "nplurals=1; plural=0;");

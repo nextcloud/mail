@@ -34,6 +34,9 @@ class ListControllerTest extends TestCase {
 		$this->serviceMock = $this->createServiceMock(ListController::class, [
 			'userId' => 'user123',
 		]);
+		$this->serviceMock->getParameter('delegationService')
+			->method('resolveMessageUserId')
+			->willReturn('user123');
 		$this->controller = $this->serviceMock->getService();
 	}
 

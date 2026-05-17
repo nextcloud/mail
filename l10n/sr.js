@@ -85,7 +85,6 @@ OC.L10N.register(
     "SMTP Port" : "SMTP порт",
     "SMTP User" : "SMTP корисничко име",
     "SMTP Password" : "SMTP лозинка",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Да би са апликацијом функционисао Google налог, потребно је да укључите двофакторску аутентификацију за Google и генеришете лозинку апликације.",
     "Account settings" : "Поставке налога",
     "Aliases" : "Алијаси",
     "Alias to S/MIME certificate mapping" : "Алијас на мапирање S/MIME сертификата",
@@ -237,6 +236,7 @@ OC.L10N.register(
     "Expand composer" : "Развиј састављач",
     "Close composer" : "Затвори састављач",
     "Confirm" : "Потврди",
+    "Revoke" : "Повуци",
     "Tag: {name} deleted" : "Ознака: {name} је обрисана",
     "An error occurred, unable to delete the tag." : "Дошло је до грешке, не може да се обрише ознака.",
     "The tag will be deleted from all messages." : "Ознака ће се обрисати из свих порука.",
@@ -596,6 +596,7 @@ OC.L10N.register(
     "Reply to sender only" : "Одговори само пошиљаоцу",
     "Mark as unfavorite" : "Маркирај као неомиљено",
     "Mark as favorite" : "Маркирај као омиљено",
+    "To:" : "За:",
     "Unsubscribe via link" : "Одјавите се преко линка",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Укидање претплате ће да заустави пријем свих порука иза мејлинг листе {sender}",
     "Send unsubscribe email" : "Пошаљи и-мејл за одјаву",
@@ -854,11 +855,7 @@ OC.L10N.register(
     "Could not load the desired message" : "Неуспело учитавање жељене поруке",
     "Could not load the message" : "Неуспело учитавање поруке",
     "Error loading message" : "Грешка при учитавању поруке",
-    "Determine importance using machine learning" : "Одреди важносту употребом машинског учења",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Поруке ће аутоматски бити означаване као важне на основу тога које поруке одговарати или означавате као важне. У почетку ћете можда морати ручно да мењате важност да научите систем, али ће се он поправљати временом.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Овде ће се приказати поруке које сте послали и захтевали да се одговори на њих, али за које нисте примили никакав одговор након неколико дана.",
-    "Mark all messages of this folder as read" : "Означи све поруке из ове фасцикле као прочитане",
-    "Last 7 days" : "Последњих 7 дана",
-    "From me" : "Од мене"
+    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Овде ће се приказати поруке које сте послали и захтевали да се одговори на њих, али за које нисте примили никакав одговор након неколико дана."
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

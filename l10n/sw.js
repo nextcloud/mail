@@ -54,6 +54,7 @@ OC.L10N.register(
     "Choose a file to share as a link" : "Chagua faili kushirikisha kama kiungo",
     "_{count} attachment_::_{count} attachments_" : ["{count} attachment","{count} attachments"],
     "Confirm" : "Thibitisha",
+    "Revoke" : "Revoke",
     "No messages" : "Hakuna jumbe",
     "Later today – {timeLocale}" : "Baadaye leo-{timeLocale}",
     "Set reminder for later today" : "Set reminder for later today",
@@ -135,6 +136,7 @@ OC.L10N.register(
     "Task created" : "Task created",
     "Not found" : "Haipatikani",
     "Unsubscribe" : "Unsubscribe",
+    "To:" : "Mpaka:",
     "The message could not be translated" : "The message could not be translated",
     "Translation copied to clipboard" : "Translation copied to clipboard",
     "Translation could not be copied" : "Translation could not be copied",
@@ -175,7 +177,6 @@ OC.L10N.register(
     "Error while sharing file" : "Hitilafu wakati wa kushirikisha faili",
     "Nextcloud Mail" : "Nextcloud Mail",
     "Discard changes" : "Discard changes",
-    "Message sent" : "Ujumbe umetumwa",
-    "Last 7 days" : "Siku 7 zilizopita"
+    "Message sent" : "Ujumbe umetumwa"
 },
 "nplurals=2; plural=(n != 1);");
