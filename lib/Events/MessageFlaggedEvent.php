@@ -67,7 +67,7 @@ class MessageFlaggedEvent extends Event implements IWebhookCompatibleEvent {
 		return [
 			'accountId' => $this->account->getId(),
 			'mailboxId' => $this->mailbox->getId(),
-			'messageId' => $this->uid,
+			'messageUid' => $this->uid,
 			'flag' => $this->flag,
 			'set' => $this->set,
 		];
