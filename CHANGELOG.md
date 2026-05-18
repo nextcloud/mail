@@ -1,3 +1,22 @@
+# [5.8.0-rc.1](https://github.com/nextcloud/mail/compare/v5.8.0-rc.0...v5.8.0-rc.1) (2026-05-18)
+
+
+### Bug Fixes
+
+* **deps:** Fix npm audit ([3657584](https://github.com/nextcloud/mail/commit/3657584070815c1e4134eee9e883c2b58fdf56bc))
+* **l10n:** Update translations from Transifex ([f92e753](https://github.com/nextcloud/mail/commit/f92e75353f365701793d8ca84cd0e96ab6c3cda1))
+* **l10n:** Update translations from Transifex ([e93d74b](https://github.com/nextcloud/mail/commit/e93d74b67541c234d6496c0ffe297f11bcfb8dde))
+* **l10n:** Update translations from Transifex ([8270bf7](https://github.com/nextcloud/mail/commit/8270bf74a04ec0ea36f3c5281ff2e598a3539108))
+* **l10n:** Update translations from Transifex ([a322d88](https://github.com/nextcloud/mail/commit/a322d883d05f73c415007216f5ce6723f2e97737))
+* **recipient-list:** scroll on overflow ([0b97b50](https://github.com/nextcloud/mail/commit/0b97b50cc36a6a669bf82c8c527d2ca979111eea))
+
+
+### Performance Improvements
+
+* **imap:** reuse client connection during initial sync ([dab44f8](https://github.com/nextcloud/mail/commit/dab44f8407735bf309d4a7a2644cba9d1fe28a87))
+
+
+
 # [5.8.0-rc.0](https://github.com/nextcloud/mail/compare/v5.8.0-beta.0...v5.8.0-rc.0) (2026-05-12)
 
 
