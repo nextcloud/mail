@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 5.9.0 – unreleased
+### Added
+* Account delegation
+* HTML and source editing support in composer/signature editor
+* Per-message To/Cc/Bcc recipients in thread view
+### Changed
+* Translations
+
 ## 5.8.0 – unreleased
 ### Added
 * Deep link support for opening messages by Message-ID
