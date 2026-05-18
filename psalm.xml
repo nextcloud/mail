@@ -11,6 +11,7 @@
     xsi:schemaLocation="https://getpsalm.org/schema/config"
     errorBaseline="tests/psalm-baseline.xml"
     phpVersion="8.1"
+	findUnusedCode="false"
 >
     <projectFiles>
         <directory name="lib" />
@@ -28,6 +29,11 @@
 		<file name="tests/stubs/php-polyfill.php" />
 	</stubs>
 	<issueHandlers>
+		<!-- Ignore errors related to unused classes, methods... -->
+		<UnusedClass errorLevel="suppress" />
+		<PossiblyUnusedMethod errorLevel="suppress" />
+		<PossiblyUnusedReturnValue errorLevel="suppress" />
+
 		<UndefinedAttributeClass>
 			<errorLevel type="info">
 				<referencedClass name="OCP\AppFramework\Http\Attribute\UserRateLimit" />
