@@ -11,6 +11,7 @@ namespace OCA\Mail\UserMigration;
 
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\UserMigration\Service\AccountMigrationService;
+use OCA\Mail\UserMigration\Service\AppConfigMigrationService;
 use OCP\IL10N;
 use OCP\IUser;
 use OCP\Security\ICrypto;
@@ -28,6 +29,7 @@ class MailAccountMigrator implements IMigrator {
 		private readonly IL10N $l10n,
 		private readonly ICrypto $crypto,
 		private readonly AccountMigrationService $accountMigrationService,
+		private readonly AppConfigMigrationService $appConfigMigrationService,
 	) {
 	}
 
@@ -40,6 +42,8 @@ class MailAccountMigrator implements IMigrator {
 			$this->l10n->t('Exporting mail accounts for user %s', [ $user->getUID() ]),
 			OutputInterface::VERBOSITY_VERBOSE
 		);
+
+		$this->appConfigMigrationService->exportAppConfiguration($user, $exportDestination, $output);
 	}
 
 	#[\Override]
@@ -48,6 +52,8 @@ class MailAccountMigrator implements IMigrator {
 			$this->l10n->t('Importing mail accounts for user %s', [ $user->getUID() ]),
 			OutputInterface::VERBOSITY_VERBOSE
 		);
+
+		$this->appConfigMigrationService->importAppConfiguration($user, $importSource, $output);
 
 		$this->accountMigrationService->scheduleBackgroundJobs($user, $output);
 	}
