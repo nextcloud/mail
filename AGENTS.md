@@ -124,8 +124,8 @@ The branch will be rebased and squashed into a clean history before merge (CI en
 
 ### Commit Message Format
 
-All commits must include two lines at the end:
-1. Agent/model attribution: `AI-assisted: <agent> (model)`
+All commits must include two trailers at the end:
+1. Agent/model attribution: `Assisted-by: <AgentName>:<model-id>`
 2. DCO sign-off: Use `git commit -s` to add automatically
 
 When committing, use: `git commit -m "message" -s`
@@ -139,7 +139,7 @@ fix(deps): Update package dependencies
 - Updated package X to latest stable version
 - Verified all tests pass
 
-AI-assisted: OpenCode (Claude Haiku 4.5)
+Assisted-by: Claude:claude-sonnet-4-6
 Signed-off-by: Name <email>
 ```
 
