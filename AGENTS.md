@@ -134,10 +134,10 @@ This ensures the sign-off includes your configured Git user email.
 
 Example:
 ```
-fix(deps): Update package dependencies
+fix(deps): update package dependencies
 
-- Updated package X to latest stable version
-- Verified all tests pass
+- update package X to latest stable version
+- verify all tests pass
 
 Assisted-by: Claude:claude-sonnet-4-6
 Signed-off-by: Name <email>
