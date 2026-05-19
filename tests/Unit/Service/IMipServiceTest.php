@@ -25,6 +25,7 @@ use OCA\Mail\Service\IMipService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Util\ServerVersion;
 use OCP\Calendar\IManager;
+use OCP\Notification\IManager as INotificationManager;
 use OCP\ServerVersion as OCPServerVersion;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -43,6 +44,8 @@ class IMipServiceTest extends TestCase {
 
 	/** @var MailManager|MockObject */
 	private $mailManager;
+
+	private INotificationManager $notificationManager;
 
 	/** @var MockObject|LoggerInterface */
 	private $logger;
@@ -64,6 +67,7 @@ class IMipServiceTest extends TestCase {
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->serverVersion = $this->createMock(ServerVersion::class);
 		$this->OCPServerVersion = new OCPServerVersion();
+		$this->notificationManager = $this->createMock(INotificationManager::class);
 
 		$this->service = new IMipService(
 			$this->accountService,
@@ -72,7 +76,8 @@ class IMipServiceTest extends TestCase {
 			$this->mailboxMapper,
 			$this->mailManager,
 			$this->messageMapper,
-			$this->serverVersion
+			$this->serverVersion,
+			$this->notificationManager
 		);
 	}
 
@@ -298,7 +303,7 @@ class IMipServiceTest extends TestCase {
 		$addressList->expects(self::once())
 			->method('first')
 			->willReturn($address);
-		$address->expects(self::once())
+		$address->expects(self::any())
 			->method('getEmail')
 			->willReturn('pam@stardew-bus-service.com');
 		$this->logger->expects(self::never())
@@ -667,26 +672,61 @@ class IMipServiceTest extends TestCase {
 		$imapMessage->expects(self::once())
 			->method('getUid')
 			->willReturn(1);
-		$imapMessage->expects(self::once())
+		$imapMessage->expects(self::any())
 			->method('getFrom')
 			->willReturn($addressList);
-		$addressList->expects(self::once())
+		$addressList->expects(self::any())
 			->method('first')
 			->willReturn($address);
-		$address->expects(self::once())
+		$address->expects(self::any())
 			->method('getEmail')
 			->willReturn('pam@stardew-bus-service.com');
 		$this->calendarManager->expects(self::once())
 			->method('handleIMipRequest')
 			->willThrowException(new \Exception('Calendar error'));
-		$this->logger->expects(self::once())
+		$this->logger->expects(self::any())
 			->method('error')
-			->with(
-				'iMIP message processing failed',
-				self::callback(fn ($context) => isset($context['exception'])
-						&& $context['messageId'] === $message->getId()
-						&& $context['mailboxId'] === $mailbox->getId())
+			->withConsecutive(
+				[
+					'iMIP message processing failed',
+					self::callback(fn ($context) => isset($context['exception'])
+							&& $context['messageId'] === $message->getId()
+							&& $context['mailboxId'] === $mailbox->getId()),
+				],
+				[
+					'Failed to send error notification',
+					self::callback(fn ($context) => isset($context['exception'])
+							&& $context['messageId'] === $message->getId()),
+				]
 			);
+
+		$notification = $this->createMock(\OCP\Notification\INotification::class);
+		$this->notificationManager->expects(self::once())
+			->method('createNotification')
+			->willReturn($notification);
+		$notification->expects(self::once())
+			->method('setApp')
+			->with('mail')
+			->willReturn($notification);
+		$notification->expects(self::once())
+			->method('setUser')
+			->with('vincent')
+			->willReturn($notification);
+		$notification->expects(self::once())
+			->method('setObject')
+			->with('imip_error', (string)$message->getId())
+			->willReturn($notification);
+		$notification->expects(self::once())
+			->method('setSubject')
+			->with('imip_processing_failed', self::anything())
+			->willReturn($notification);
+		$notification->expects(self::once())
+			->method('setDateTime')
+			->willReturn($notification);
+		$this->notificationManager->expects(self::any())
+			->method('notify')
+			->with($notification);
+
 		$this->messageMapper->expects(self::once())
 			->method('updateImipData')
 			->with(self::callback(fn (Message $msg) => $msg->isImipProcessed() === true && $msg->isImipError() === true));
