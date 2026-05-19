@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
+use OCA\Mail\Account;
 use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\Delegation;
 use OCA\Mail\Db\DelegationMapper;
@@ -18,6 +19,11 @@ use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\DelegationExistsException;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\IUserManager;
+use OCP\Notification\IManager;
+use OCP\Notification\IncompleteNotificationException;
+use Psr\Log\LoggerInterface;
 
 class DelegationService {
 
@@ -28,10 +34,15 @@ class DelegationService {
 		private MessageMapper $messageMapper,
 		private AliasMapper $aliasMapper,
 		private LocalMessageMapper $localMessageMapper,
+		private IUserManager $userManager,
+		private IManager $notificationManager,
+		private ITimeFactory $time,
+		private LoggerInterface $logger,
 	) {
 	}
 
-	public function delegate(int $accountId, string $userId): Delegation {
+	public function delegate(Account $account, string $userId, string $currentUserId): Delegation {
+		$accountId = $account->getId();
 		try {
 			$this->delegationMapper->find($accountId, $userId);
 			throw new DelegationExistsException("Delegation already exists for account $accountId and user $userId");
@@ -42,17 +53,21 @@ class DelegationService {
 		$delegation = new Delegation();
 		$delegation->setAccountId($accountId);
 		$delegation->setUserId($userId);
-		return $this->delegationMapper->insert($delegation);
+		$result = $this->delegationMapper->insert($delegation);
+		$this->notify($userId, $currentUserId, $account, true);
+		return $result;
 	}
 
 	public function findDelegatedToUsersForAccount(int $accountId): array {
 		return $this->delegationMapper->findDelegatedToUsers($accountId);
 	}
 
-	public function unDelegate(int $accountId, string $userId): void {
+	public function unDelegate(Account $account, string $userId, string $currentUserId): void {
 		try {
+			$accountId = $account->getId();
 			$delegation = $this->delegationMapper->find($accountId, $userId);
 			$this->delegationMapper->delete($delegation);
+			$this->notify($userId, $currentUserId, $account, false);
 		} catch (DoesNotExistException $e) {
 			// shouldn't end up here
 			// delegation not found nothing to undelegate
@@ -111,5 +126,43 @@ class DelegationService {
 	public function resolveLocalMessageUserId(int $localMessageId, string $currentUserId): string {
 		$accountId = $this->localMessageMapper->findAccountIdForLocalMessage($localMessageId);
 		return $this->resolveAccountUserId($accountId, $currentUserId);
+	}
+
+	/**
+	 * Send a notification on delegation
+	 * @param string $userId The user the account is being delegated to
+	 * @param string $currentUserId Current user
+	 * @param Account $account The delegated account
+	 * @param bool $delegated true for delegate|false for undelegate
+	 * @return void
+	 */
+	private function notify(string $userId, string $currentUserId, Account $account, bool $delegated) {
+		$notification = $this->notificationManager->createNotification();
+		$displayName = $this->userManager->get($currentUserId)?->getDisplayName() ?? $currentUserId;
+		$time = $this->time->getDateTime('now');
+		$notification
+			->setApp('mail')
+			->setUser($userId)
+			->setObject('delegation', (string)$account->getId())
+			->setSubject('account_delegation', [
+				'id' => $account->getId(),
+				'account_email' => $account->getEmail(),
+
+			])
+			->setDateTime($time)
+			->setMessage('account_delegation_changed', [
+				'id' => $account->getId(),
+				'delegated' => $delegated,
+				'current_user_id' => $currentUserId,
+				'current_user_display_name' => $displayName,
+				'account_email' => $account->getEmail(),
+			]
+			);
+
+		try {
+			$this->notificationManager->notify($notification);
+		} catch (IncompleteNotificationException $e) {
+			$this->logger->warning('Failed to send delegation notification to {userId}', ['userId' => $userId,'exception' => $e]);
+		}
 	}
 }
