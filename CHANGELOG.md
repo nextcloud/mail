@@ -1,3 +1,13 @@
+# [5.8.0](https://github.com/nextcloud/mail/compare/v5.8.0-rc.1...v5.8.0) (2026-05-19)
+
+
+### Bug Fixes
+
+* **dns:** Update public suffix list ([ac249b3](https://github.com/nextcloud/mail/commit/ac249b318f4c46c2142cdb3c8c39b205aa380072))
+* **l10n:** Update translations from Transifex ([07eaa48](https://github.com/nextcloud/mail/commit/07eaa48b42401356656d4942356f08d24a712bcf))
+
+
+
 # [5.8.0-rc.1](https://github.com/nextcloud/mail/compare/v5.8.0-rc.0...v5.8.0-rc.1) (2026-05-18)
 
 
