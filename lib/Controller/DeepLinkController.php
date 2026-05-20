@@ -14,6 +14,7 @@ use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -40,6 +41,7 @@ class DeepLinkController extends Controller {
 	 * @param string $messageId
 	 * @return RedirectResponse
 	 */
+	#[NoCSRFRequired]
 	public function open(string $messageId): RedirectResponse {
 		$user = $this->userSession->getUser();
 		if ($user === null) {
