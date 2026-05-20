@@ -15,50 +15,43 @@ use ReturnTypeWillChange;
 
 class EnrichedSmimeCertificate implements JsonSerializable {
 	private SmimeCertificate $certificate;
-	private SmimeCertificateInfo $info;
+	private ?SmimeCertificateInfo $info;
+	private ?string $error;
 
-	/**
-	 * @param SmimeCertificate $certificate
-	 * @param SmimeCertificateInfo $info
-	 */
-	public function __construct(SmimeCertificate $certificate, SmimeCertificateInfo $info) {
+	public function __construct(SmimeCertificate $certificate,
+		?SmimeCertificateInfo $info,
+		?string $error = null) {
 		$this->certificate = $certificate;
 		$this->info = $info;
+		$this->error = $error;
 	}
 
-	/**
-	 * @return SmimeCertificate
-	 */
 	public function getCertificate(): SmimeCertificate {
 		return $this->certificate;
 	}
 
-	/**
-	 * @param SmimeCertificate $certificate
-	 */
 	public function setCertificate(SmimeCertificate $certificate): void {
 		$this->certificate = $certificate;
 	}
 
-	/**
-	 * @return SmimeCertificateInfo
-	 */
-	public function getInfo(): SmimeCertificateInfo {
+	public function getInfo(): ?SmimeCertificateInfo {
 		return $this->info;
 	}
 
-	/**
-	 * @param SmimeCertificateInfo $info
-	 */
-	public function setInfo(SmimeCertificateInfo $info): void {
+	public function setInfo(?SmimeCertificateInfo $info): void {
 		$this->info = $info;
+	}
+
+	public function getError(): ?string {
+		return $this->error;
 	}
 
 	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		$json = $this->certificate->jsonSerialize();
-		$json['info'] = $this->info->jsonSerialize();
+		$json['info'] = $this->info?->jsonSerialize();
+		$json['error'] = $this->error;
 		return $json;
 	}
 }
