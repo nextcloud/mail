@@ -348,11 +348,11 @@ export default {
 				emailTemplate: '',
 				imapHost: 'mx.domain.com',
 				imapPort: 993,
-				imapUser: '%USERID%domain.com',
+				imapUser: '%USERID%@domain.com',
 				imapSslMode: 'ssl',
 				smtpHost: 'mx.domain.com',
 				smtpPort: 587,
-				smtpUser: '%USERID%domain.com',
+				smtpUser: '%USERID%@domain.com',
 				smtpSslMode: 'tls',
 				previewData1: {
 					uid: 'user123',
