@@ -802,6 +802,12 @@ class MessagesController extends Controller {
 		if ($this->userFolder === null) {
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
+		if (!$this->userFolder->nodeExists($targetPath)) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		}
+		if (!($this->userFolder->get($targetPath) instanceof Folder)) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		}
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
