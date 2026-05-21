@@ -821,6 +821,12 @@ class MessagesController extends Controller {
 		if ($this->userFolder === null) {
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
+		if (!$this->userFolder->nodeExists($targetPath)) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		}
+		if (!($this->userFolder->get($targetPath) instanceof Folder)) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		}
 		try {
 			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->currentUserId);
 			$message = $this->mailManager->getMessage($effectiveUserId, $id);
