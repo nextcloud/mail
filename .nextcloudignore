@@ -11,6 +11,7 @@ codecov.yml
 /coverage
 /.editorconfig
 /.eslintrc.js
+/eslint.config.mjs
 .git
 .git-blame-ignore-revs
 .gitattributes
@@ -45,3 +46,9 @@ codecov.yml
 /webpack.*
 /vitest.config.*
 /patches
+/.patches
+/patches.json
+/patches.lock.json
+/playwright.config.js
+/stylelint.config.js
+/tsconfig.json
