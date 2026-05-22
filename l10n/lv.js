@@ -174,7 +174,7 @@ OC.L10N.register(
     "Inbox" : "Iesūtne",
     "Junk" : "Nevēlams",
     "Sent" : "Izsūtne",
-    "Trash" : "Miskaste",
+    "Trash" : "Atkritne",
     "Error while sharing file" : "Kļūda datnes kopīgošanā",
     "{from}\n{subject}" : "{from}\n{subject}",
     "There is already a message in progress. All unsaved changes will be lost if you continue!" : "Jau tiek apstrādāts ziņojums. Tiks zaudētas visas nesaglabātas izmaiņas, ja turpināsi.",
