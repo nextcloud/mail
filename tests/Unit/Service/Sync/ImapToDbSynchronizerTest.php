@@ -86,13 +86,10 @@ class ImapToDbSynchronizerTest extends TestCase {
 			->method('getSyncToken')
 			->with('INBOX')
 			->willReturn('dG9rZW5XaXRoSA==');
-		$cacheClient->expects($this->once())->method('logout');
-		$this->clientFactory->expects($this->exactly(2))
+		$this->clientFactory->expects($this->once())
 			->method('getClient')
-			->willReturnMap([
-				[$account, false, $noCacheClient],
-				[$account, true, $cacheClient],
-			]);
+			->with($account, false)
+			->willReturn($noCacheClient);
 		$this->dbMapper->method('findHighestUid')->willReturn(null);
 		$this->imapMapper->method('findAll')->willReturn([
 			'messages' => [],
