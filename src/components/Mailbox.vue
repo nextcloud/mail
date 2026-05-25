@@ -27,45 +27,46 @@
 				</NcCheckboxRadioSwitch>
 			</div>
 			<template v-if="hasGroupedEnvelopes && !isPriorityInbox">
-			<div v-for="[label, group] in groupEnvelopes" :key="label">
-				<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
-				<EnvelopeList
-					:account="account"
-					:mailbox="mailbox"
-					:search-query="searchQuery"
-					:envelopes="group"
-					:loading-more="false"
-					:load-more-button="false"
-					:skip-transition="skipListTransition"
-					:selection="selection"
-					:flat-index="getGroupFlatIndex(label)"
-					@delete="onDelete"
-					@update:selection="onUpdateSelection"
-					@select-range="onSelectRange" />
-			</div>
-		</template>
-		<EnvelopeList
-			v-else
-			:account="account"
-			:load-more-label="loadMoreLabel"
-			:mailbox="mailbox"
-			:search-query="searchQuery"
-			:envelopes="envelopesToShow"
-			:loading-more="loadingMore"
-			:load-more-button="showLoadMore"
-			:skip-transition="skipListTransition"
-			:selection="selection"
-			:flat-index="0"
-			@delete="onDelete"
-			@load-more="loadMore"
-			@update:selection="onUpdateSelection"
-			@select-range="onSelectRange" />
+				<div v-for="[label, group] in groupEnvelopes" :key="label">
+					<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
+					<EnvelopeList
+						:account="account"
+						:mailbox="mailbox"
+						:search-query="searchQuery"
+						:envelopes="group"
+						:loading-more="false"
+						:load-more-button="false"
+						:skip-transition="skipListTransition"
+						:selection="selection"
+						:flat-index="getGroupFlatIndex(label)"
+						@delete="onDelete"
+						@update:selection="onUpdateSelection"
+						@select-range="onSelectRange" />
+				</div>
+			</template>
+			<EnvelopeList
+				v-else
+				:account="account"
+				:load-more-label="loadMoreLabel"
+				:mailbox="mailbox"
+				:search-query="searchQuery"
+				:envelopes="envelopesToShow"
+				:loading-more="loadingMore"
+				:load-more-button="showLoadMore"
+				:skip-transition="skipListTransition"
+				:selection="selection"
+				:flat-index="0"
+				@delete="onDelete"
+				@load-more="loadMore"
+				@update:selection="onUpdateSelection"
+				@select-range="onSelectRange" />
 		</div>
 	</div>
 </template>
 
 <script>
 import { showError, showWarning } from '@nextcloud/dialogs'
+import { NcCheckboxRadioSwitch } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import { findIndex, propEq } from 'ramda'
 import EmptyMailbox from './EmptyMailbox.vue'
@@ -74,7 +75,6 @@ import EnvelopeList from './EnvelopeList.vue'
 import Error from './Error.vue'
 import Loading from './Loading.vue'
 import LoadingSkeleton from './LoadingSkeleton.vue'
-import { NcCheckboxRadioSwitch } from '@nextcloud/vue'
 import SectionTitle from './SectionTitle.vue'
 import MailboxLockedError from '../errors/MailboxLockedError.js'
 import MailboxNotCachedError from '../errors/MailboxNotCachedError.js'
@@ -703,11 +703,9 @@ export default {
 		onSelectRange(fromIndex, toIndex, deselect = false) {
 			const start = Math.min(fromIndex, toIndex)
 			const end = Math.max(fromIndex, toIndex)
-			const idsInRange = new Set(
-				this.flatEnvelopeList
-					.slice(start, end + 1)
-					.map((e) => e.databaseId),
-			)
+			const idsInRange = new Set(this.flatEnvelopeList
+				.slice(start, end + 1)
+				.map((e) => e.databaseId))
 			if (deselect) {
 				this.selection = this.selection.filter((id) => !idsInRange.has(id))
 			} else {
