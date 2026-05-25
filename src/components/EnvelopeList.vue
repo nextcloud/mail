@@ -382,6 +382,7 @@ export default {
 					env.flags.selected = selectionSet.has(env.databaseId)
 				})
 			},
+
 			immediate: true,
 		},
 
