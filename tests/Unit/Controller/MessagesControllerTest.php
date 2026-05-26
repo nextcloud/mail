@@ -367,10 +367,15 @@ class MessagesControllerTest extends TestCase {
 			->method('getName')
 			->with()
 			->will($this->returnValue('cat.jpg'));
+		$folderNode = $this->createMock(Folder::class);
 		$this->userFolder->expects($this->once())
+			->method('get')
+			->with('Downloads')
+			->willReturn($folderNode);
+		$this->userFolder->expects($this->exactly(2))
 			->method('nodeExists')
-			->with('Downloads/cat.jpg')
-			->will($this->returnValue(false));
+			->withConsecutive(['Downloads'], ['Downloads/cat.jpg'])
+			->willReturnOnConsecutiveCalls(true, false);
 		$file = $this->getMockBuilder('\OCP\Files\File')
 			->disableOriginalConstructor()
 			->getMock();
@@ -430,10 +435,15 @@ class MessagesControllerTest extends TestCase {
 			->method('getName')
 			->with()
 			->will($this->returnValue('cat.jpg'));
+		$folderNode = $this->createMock(Folder::class);
 		$this->userFolder->expects($this->once())
+			->method('get')
+			->with('Downloads')
+			->willReturn($folderNode);
+		$this->userFolder->expects($this->exactly(2))
 			->method('nodeExists')
-			->with('Downloads/cat.jpg')
-			->will($this->returnValue(false));
+			->withConsecutive(['Downloads'], ['Downloads/cat.jpg'])
+			->willReturnOnConsecutiveCalls(true, false);
 		$file = $this->getMockBuilder('\OCP\Files\File')
 			->disableOriginalConstructor()
 			->getMock();
@@ -456,6 +466,35 @@ class MessagesControllerTest extends TestCase {
 		);
 
 		$this->assertEquals($expected, $response);
+	}
+
+	public function testSaveAttachmentTargetPathNotFound(): void {
+		$this->userFolder->expects($this->once())
+			->method('nodeExists')
+			->with('NoSuchFolder')
+			->willReturn(false);
+
+		$response = $this->controller->saveAttachment(123, '1', 'NoSuchFolder');
+
+		$this->assertSame(Http::STATUS_BAD_REQUEST, $response->getStatus());
+	}
+
+	public function testSaveAttachmentTargetPathIsFile(): void {
+		$fileNode = $this->getMockBuilder('\OCP\Files\File')
+			->disableOriginalConstructor()
+			->getMock();
+		$this->userFolder->expects($this->once())
+			->method('nodeExists')
+			->with('some/file.txt')
+			->willReturn(true);
+		$this->userFolder->expects($this->once())
+			->method('get')
+			->with('some/file.txt')
+			->willReturn($fileNode);
+
+		$response = $this->controller->saveAttachment(123, '1', 'some/file.txt');
+
+		$this->assertSame(Http::STATUS_BAD_REQUEST, $response->getStatus());
 	}
 
 	public function testDownloadAttachments() {
