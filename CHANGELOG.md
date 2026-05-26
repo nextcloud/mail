@@ -1,3 +1,18 @@
+## [5.8.1](https://github.com/nextcloud/mail/compare/v5.8.0...v5.8.1) (2026-05-26)
+
+
+### Bug Fixes
+
+* **api:** validate targetPath is an existing folder on saveAttachment ([467505c](https://github.com/nextcloud/mail/commit/467505cab667f98df18994ac6e0b0e070ec445e7))
+* **deps:** Fix npm audit ([61eb095](https://github.com/nextcloud/mail/commit/61eb0956876b3804632d9785c03d95a8a507c087))
+* **l10n:** Update translations from Transifex ([e320337](https://github.com/nextcloud/mail/commit/e3203370f183a4ad036c0fb7af3cfd193023bbd3))
+* **l10n:** Update translations from Transifex ([2ed6bec](https://github.com/nextcloud/mail/commit/2ed6bececb6d613d1ad3af2fb7794c616d8b9486))
+* **l10n:** Update translations from Transifex ([481023b](https://github.com/nextcloud/mail/commit/481023be21c89a2462bf9742126f9b781b7ce841))
+* **package:** exclude dev config and patch files from release tarball ([a775f2a](https://github.com/nextcloud/mail/commit/a775f2ad5054480d5381f4136ee0c3159cc11ab4))
+* **ui:** add NcModal name prop to SmimeCertificateModal for accessibility ([45de45d](https://github.com/nextcloud/mail/commit/45de45d8cbdf8cfb59e23dca1f07c3e37dde32b7))
+
+
+
 # [5.8.0](https://github.com/nextcloud/mail/compare/v5.8.0-rc.1...v5.8.0) (2026-05-19)
 
 
