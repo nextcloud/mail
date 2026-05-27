@@ -24,6 +24,8 @@ jobs:
             nextcloud-versions: 'stable32'
           - php-versions: '8.2'
             nextcloud-versions: 'stable33'
+          - php-versions: '8.2'
+            nextcloud-versions: 'stable34'
           - php-versions: '8.3'
             nextcloud-versions: 'master'
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests ${{ matrix.coverage && '(coverage)' || ''}}
@@ -51,7 +53,7 @@ jobs:
       env:
         XDEBUG_MODE: ${{ matrix.coverage && 'coverage' || 'off' }}
     - name: Report coverage
-      uses: codecov/codecov-action@75cd11691c0faa626561e295848008c8a7dddffe # v5.5.4
+      uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
       if: ${{ !cancelled() && matrix.coverage }}
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
@@ -88,6 +90,10 @@ jobs:
                   db: 'mysql'
                   cache: 'redis'
                   coverage: true
+                - php-versions: 8.4
+                  nextcloud-versions: 'stable34'
+                  db: 'mysql'
+                  cache: 'redis'
                 - php-versions: 8.5
                   nextcloud-versions: 'master'
                   db: 'mysql'
@@ -192,7 +198,7 @@ jobs:
             if: ${{ always() }}
             run: cat nextcloud/data/mail-*-*-imap.log
           - name: Report coverage
-            uses: codecov/codecov-action@75cd11691c0faa626561e295848008c8a7dddffe # v5.5.4
+            uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
             if: ${{ !cancelled() && matrix.coverage }}
             with:
               token: ${{ secrets.CODECOV_TOKEN }}
