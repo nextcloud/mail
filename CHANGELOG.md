@@ -3,11 +3,22 @@ All notable changes to this project will be documented in this file.
 
 ## 5.9.0 – unreleased
 ### Added
-* Account delegation
+* Nextcloud 35 support
+* Account delegation with notifications
 * HTML and source editing support in composer/signature editor
 * Per-message To/Cc/Bcc recipients in thread view
+* Paste or copy several email addresses into address fields at once
+* Keep inline images when forwarding messages
 ### Changed
 * Translations
+### Performance
+* Reuse IMAP client connections during initial sync
+### Fixed
+* Attachment actions menu closes after Download or Save to Files
+* Correct favorite/unfavorite bulk action behavior
+* Detect and warn about Microsoft accounts without OAuth configured
+* Important message icon not displayed in message list
+* Load translations via filesystem path
 
 ## 5.8.0 – unreleased
 ### Added
