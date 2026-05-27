@@ -429,6 +429,25 @@ class MessageMapper {
 	}
 
 	/**
+	 * Returns true if a message with the given Message-ID header already exists in $mailbox.
+	 * Used to detect server-side automatic sent-message saving (e.g. Exchange).
+	 *
+	 * @throws Horde_Imap_Client_Exception
+	 */
+	public function existsInMailboxByMessageId(
+		Horde_Imap_Client_Socket $client,
+		Mailbox $mailbox,
+		string $messageId,
+	): bool {
+		$query = new Horde_Imap_Client_Search_Query();
+		$query->headerText('Message-ID', $messageId);
+		$result = $client->search($mailbox->getName(), $query, [
+			'results' => [Horde_Imap_Client::SEARCH_RESULTS_COUNT],
+		]);
+		return ($result['count'] ?? 0) > 0;
+	}
+
+	/**
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function addFlag(Horde_Imap_Client_Socket $client,
