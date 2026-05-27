@@ -42,6 +42,7 @@ use OCA\Mail\Support\PerformanceLogger;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\TestCase;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IConfig;
 use OCP\IUser;
 use OCP\Security\ICrypto;
 use OCP\Server;
@@ -254,6 +255,9 @@ class MailTransmissionIntegrationTest extends TestCase {
 			'Body text',
 		]);
 
+		// Enable the opt-in feature flag
+		Server::get(IConfig::class)->setAppValue('mail', 'smtp_saves_sent', 'true');
+
 		// Simulate what an Exchange-style server does: save to Sent before the client does
 		$this->saveMimeMessage('Sent', $rawMessage);
 		$this->assertMessageCount(1, 'Sent');
@@ -266,6 +270,8 @@ class MailTransmissionIntegrationTest extends TestCase {
 		/** @var CopySentMessageHandler $handler */
 		$handler = Server::get(CopySentMessageHandler::class);
 		$handler->process($this->account, $this->message, $client);
+
+		Server::get(IConfig::class)->deleteAppValue('mail', 'smtp_saves_sent');
 
 		$this->assertMessageCount(1, 'Sent');
 	}

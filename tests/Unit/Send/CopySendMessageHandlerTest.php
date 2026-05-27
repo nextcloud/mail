@@ -19,6 +19,7 @@ use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Send\CopySentMessageHandler;
 use OCA\Mail\Send\FlagRepliedMessageHandler;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\IConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
@@ -27,6 +28,7 @@ class CopySendMessageHandlerTest extends TestCase {
 	private LoggerInterface|MockObject $loggerInterface;
 	private MockObject|MessageMapper $messageMapper;
 	private MockObject|FlagRepliedMessageHandler $flagRepliedMessageHandler;
+	private IConfig|MockObject $config;
 	private CopySentMessageHandler $handler;
 
 	protected function setUp(): void {
@@ -35,10 +37,13 @@ class CopySendMessageHandlerTest extends TestCase {
 		$this->loggerInterface = $this->createMock(LoggerInterface::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->flagRepliedMessageHandler = $this->createMock(FlagRepliedMessageHandler::class);
+		$this->config = $this->createMock(IConfig::class);
+		$this->config->method('getAppValue')->willReturn('false');
 		$this->handler = new CopySentMessageHandler(
 			$this->mailboxMapper,
 			$this->loggerInterface,
 			$this->messageMapper,
+			$this->config,
 		);
 		$this->handler->setNext($this->flagRepliedMessageHandler);
 	}
@@ -220,6 +225,8 @@ class CopySendMessageHandlerTest extends TestCase {
 		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$rawWithMessageId = "Message-ID: <abc@example.com>\r\nSubject: Test\r\n\r\nBody";
 
+		$this->config->method('getAppValue')->willReturn('true');
+
 		$mock->expects(self::once())
 			->method('getStatus')
 			->willReturn(LocalMessage::STATUS_RAW);
@@ -255,6 +262,8 @@ class CopySendMessageHandlerTest extends TestCase {
 		$mailbox = new Mailbox();
 		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$rawWithMessageId = "Message-ID: <xyz@example.com>\r\nSubject: Test\r\n\r\nBody";
+
+		$this->config->method('getAppValue')->willReturn('true');
 
 		$mock->expects(self::once())
 			->method('getStatus')

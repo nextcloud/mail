@@ -10,11 +10,13 @@ namespace OCA\Mail\Send;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\IConfig;
 use Psr\Log\LoggerInterface;
 
 class CopySentMessageHandler extends AHandler {
@@ -22,6 +24,7 @@ class CopySentMessageHandler extends AHandler {
 		private MailboxMapper $mailboxMapper,
 		private LoggerInterface $logger,
 		private MessageMapper $messageMapper,
+		private IConfig $config,
 	) {
 	}
 
@@ -85,7 +88,9 @@ class CopySentMessageHandler extends AHandler {
 
 		// Some servers (e.g. Exchange) auto-save sent messages, so skip the APPEND when the
 		// message is already present to avoid duplicates in the Sent folder.
-		if ($this->isAlreadySavedByServer($client, $sentMailbox, $rawMessage)) {
+		// Opt-in via: occ config:app:set mail smtp_saves_sent --value=true
+		if ($this->config->getAppValue(Application::APP_ID, 'smtp_saves_sent', 'false') === 'true'
+			&& $this->isAlreadySavedByServer($client, $sentMailbox, $rawMessage)) {
 			$this->logger->debug('Sent message already present in sent mailbox (server auto-saved), skipping APPEND');
 			$localMessage->setStatus(LocalMessage::STATUS_PROCESSED);
 			return $this->processNext($account, $localMessage, $client);
