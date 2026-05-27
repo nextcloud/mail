@@ -193,7 +193,7 @@
 				<NcAppSettingsSection v-if="followUpFeatureAvailable" id="autotagging-settings" :name="t('mail', 'Assistance features')">
 					<NcFormBox>
 						<NcFormBoxSwitch
-							:checked="useFollowUpReminders"
+							v-model="useFollowUpReminders"
 							:disabled="loadingFollowUpReminders">
 							{{ followUpReminderText }}
 						</NcFormBoxSwitch>
@@ -202,9 +202,8 @@
 				<NcAppSettingsSection v-if="contextChatFeatureAvailable" id="context-chat-settings" :name="t('mail', 'Context Chat integration')">
 					<NcFormBox>
 						<NcFormBoxSwitch
-							:checked="useContextChat"
-							:disabled="loadingContextChat"
-							@update:modelValue="onToggleContextChat">
+							v-model="useContextChat"
+							:disabled="loadingContextChat">
 							{{ contextChatText }}
 						</NcFormBoxSwitch>
 					</NcFormBox>
