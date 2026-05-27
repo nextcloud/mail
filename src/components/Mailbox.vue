@@ -374,6 +374,7 @@ export default {
 				logger.debug('envelope is not in the list, ignoring shortcut', {
 					srcKey: e.srcKey,
 				})
+				return
 			}
 
 			switch (e.srcKey) {
