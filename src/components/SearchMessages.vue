@@ -378,9 +378,14 @@ export default {
 					icon: IconClose,
 				},
 				{
+					label: t('mail', 'Select all matching'),
+					callback: () => this.selectAllMatching(),
+					type: 'primary',
+				},
+				{
 					label: t('mail', 'Search'),
 					callback: () => this.closeSearchModal(),
-					type: 'primary',
+					type: 'tertiary',
 					icon: IconMagnify,
 				},
 			],
@@ -447,7 +452,7 @@ export default {
 				body: this.searchInMessageBody !== null && this.searchInMessageBody.length > 1 ? this.searchInMessageBody : '',
 				tags: this.selectedTags.length > 0 ? this.selectedTags.map((item) => item.id) : '',
 				flags: this.searchFlags.length > 0 ? this.searchFlags.map((item) => item) : '',
-				mentions: this.mentionsMe,
+				mentions: this.mentionsMe ? this.mentionsMe : '',
 				start: this.prepareStart(),
 				end: this.prepareEnd(),
 			}
@@ -563,11 +568,19 @@ export default {
 		},
 
 		closeSearchModal() {
+			if (!this.moreSearchActions) {
+				return
+			}
 			this.moreSearchActions = false
 			this.match = 'allof'
-			this.$nextTick(() => {
-				this.sendQueryEvent()
-			})
+			this.sendQueryEvent()
+		},
+
+		selectAllMatching() {
+			this.match = 'allof'
+			this.moreSearchActions = false
+			// No sendQueryEvent() — bus handler manages loading to avoid watcher race
+			this.$emit('select-all-matching', this.searchQuery)
 		},
 
 		sendQueryEvent() {
