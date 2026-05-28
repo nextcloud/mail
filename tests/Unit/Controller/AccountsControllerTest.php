@@ -15,6 +15,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Controller\AccountsController;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\IMAP\MailboxSync;
@@ -197,6 +198,9 @@ class AccountsControllerTest extends TestCase {
 		$this->accountService->expects(self::once())
 			->method('updateSignature')
 			->with(self::equalTo($this->accountId), self::equalTo($this->userId), 'sig');
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId updated signature for account <$this->accountId> on behalf of $this->userId");
 
 		$response = $this->controller->updateSignature($this->accountId, 'sig');
 
@@ -219,6 +223,9 @@ class AccountsControllerTest extends TestCase {
 		$this->accountService->expects(self::once())
 			->method('delete')
 			->with(self::equalTo($this->userId), self::equalTo($this->accountId));
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId deleted account <$this->accountId> on behalf of $this->userId");
 
 		$response = $this->controller->destroy($this->accountId);
 
@@ -334,6 +341,9 @@ class AccountsControllerTest extends TestCase {
 			->method('createNewAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password', $id)
 			->willReturn($account);
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId updated account <$id> on behalf of $this->userId");
 
 		$response = $this->controller->update($id, $accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $imapPassword, $smtpPassword);
 
@@ -398,6 +408,9 @@ class AccountsControllerTest extends TestCase {
 		$this->syncService->expects(self::once())
 			->method('syncMailbox')
 			->willReturn(new Response([], [], []));
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId saved draft in account <$this->accountId> on behalf of $this->userId");
 
 		$actual = $this->controller->draft($this->accountId, $subject, $body, $to, $cc, $bcc, true, $id);
 
@@ -405,5 +418,48 @@ class AccountsControllerTest extends TestCase {
 			'id' => $newId,
 		]);
 		self::assertEquals($expected, $actual);
+	}
+
+	public function testPatchAccountLogsDelegatedAction(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId($this->accountId);
+		$mailAccount->setUserId($this->userId);
+		$account = new Account($mailAccount);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with($this->userId, $this->accountId)
+			->willReturn($account);
+		$this->accountService->expects(self::once())
+			->method('save')
+			->willReturn($mailAccount);
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId patched account <$this->accountId> on behalf of $this->userId");
+
+		$response = $this->controller->patchAccount($this->accountId, 'plaintext');
+
+		self::assertEquals(new JSONResponse(new Account($mailAccount)), $response);
+	}
+
+	public function testUpdateSmimeCertificateLogsDelegatedAction(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId($this->accountId);
+		$mailAccount->setUserId($this->userId);
+		$account = new Account($mailAccount);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with($this->userId, $this->accountId)
+			->willReturn($account);
+		$this->accountService->expects(self::once())
+			->method('update')
+			->with($mailAccount);
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId updated S/MIME certificate for account <$this->accountId> on behalf of $this->userId");
+
+		$response = $this->controller->updateSmimeCertificate($this->accountId, 42);
+
+		self::assertEquals(42, $mailAccount->getSmimeCertificateId());
+		self::assertInstanceOf(JSONResponse::class, $response);
 	}
 }
