@@ -86,6 +86,10 @@
 					<div v-if="hasChangedSubject" class="subline">
 						{{ cleanSubject }}
 					</div>
+					<div v-if="envelope.flags.aiGenerated" class="subline subline--ai-generated">
+						<AiIcon :size="14" />
+						<span>{{ t('mail', 'Contains AI generated content') }}</span>
+					</div>
 					<div v-if="showSubline" class="subline">
 						<span class="preview">
 							{{ isEncrypted ? t('mail', 'Encrypted message') : envelope.previewText }}
@@ -373,6 +377,7 @@ import { NcActionButton, NcButton } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionText from '@nextcloud/vue/components/NcActionText'
+import AiIcon from '@nextcloud/vue/components/NcAssistantIcon'
 import ArchiveIcon from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
 import ChevronDownIcon from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUpIcon from 'vue-material-design-icons/ChevronUp.vue'
@@ -442,6 +447,7 @@ export default {
 		Error,
 		IconFavorite,
 		JunkIcon,
+		AiIcon,
 		MessageLoadingSkeleton,
 		MenuEnvelope,
 		Moment,
@@ -1476,5 +1482,11 @@ export default {
 		font-weight: normal;
 		display: inline;
 		align-items: center;
+	}
+	.subline--ai-generated {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		opacity: 0.8;
 	}
 </style>
