@@ -15,19 +15,14 @@ use OCP\Server;
 use Psr\Log\NullLogger;
 
 trait ImapTestAccount {
-	/**
-	 * @return string
-	 */
-	public function getTestAccountUserId() {
+	public function getTestAccountUserId(): string {
 		return 'user12345';
 	}
 
 	/**
 	 * Create and persist a new mail account
-	 *
-	 * @return MailAccount
 	 */
-	public function createTestAccount(?string $userId = null) {
+	public function createTestAccount(?string $userId = null): MailAccount {
 		/* @var $accountService AccountService */
 		$accountService = Server::get(AccountService::class);
 
