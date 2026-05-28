@@ -122,7 +122,6 @@ class MailSearch implements IMailSearch {
 				$sortOrder,
 			),
 			true,
-			$userId
 		);
 	}
 
