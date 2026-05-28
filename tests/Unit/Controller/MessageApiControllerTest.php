@@ -405,7 +405,7 @@ class MessageApiControllerTest extends TestCase {
 	/**
 	 * @dataProvider mailData
 	 */
-	public function testSend($messageStatus, $expected): void {
+	public function testSend($messageStatus, $expected, ?string $expectedLogMessage = null): void {
 		$this->message->setStatus($messageStatus);
 
 		$this->accountService->expects(self::once())
@@ -426,6 +426,11 @@ class MessageApiControllerTest extends TestCase {
 		$this->outboxService->expects(self::once())
 			->method('sendMessage')
 			->willReturn($this->message);
+		if ($expectedLogMessage !== null) {
+			$this->delegationService->expects(self::once())
+				->method('logDelegatedAction')
+				->with($this->userId, $this->userId, $expectedLogMessage);
+		}
 
 		$actual = $this->controller->send(
 			$this->accountId,
@@ -475,11 +480,11 @@ class MessageApiControllerTest extends TestCase {
 
 	public function mailData() {
 		return [
-			[LocalMessage::STATUS_PROCESSED, new DataResponse('', Http::STATUS_OK)],
-			[LocalMessage::STATUS_NO_SENT_MAILBOX, new DataResponse('Configuration error: Cannot send message without sent mailbox.', Http::STATUS_FORBIDDEN)],
-			[LocalMessage::STATUS_SMPT_SEND_FAIL, new DataResponse('SMTP error: could not send message. Message sending will be retried. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR)],
-			[LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL, new DataResponse('Email was sent but could not be copied to sent mailbox. Copying will be retried. Please check the logs.', Http::STATUS_ACCEPTED)],
-			[LocalMessage::STATUS_TOO_MANY_RECIPIENTS, new DataResponse('An error occured. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR)],
+			[LocalMessage::STATUS_PROCESSED, new DataResponse('', Http::STATUS_OK), 'john sent a message on behalf of john'],
+			[LocalMessage::STATUS_NO_SENT_MAILBOX, new DataResponse('Configuration error: Cannot send message without sent mailbox.', Http::STATUS_FORBIDDEN), 'john attempted sending a message on behalf of john but no sent mailbox is configured'],
+			[LocalMessage::STATUS_SMPT_SEND_FAIL, new DataResponse('SMTP error: could not send message. Message sending will be retried. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR), 'john attempted sending a message on behalf of john but SMTP sending failed'],
+			[LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL, new DataResponse('Email was sent but could not be copied to sent mailbox. Copying will be retried. Please check the logs.', Http::STATUS_ACCEPTED), 'john sent a message on behalf of john but copying to sent mailbox failed'],
+			[LocalMessage::STATUS_TOO_MANY_RECIPIENTS, new DataResponse('An error occured. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR), 'john attempted sending a message on behalf of john but an unknown error occurred'],
 		];
 	}
 
