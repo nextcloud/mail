@@ -1443,37 +1443,6 @@ export default {
 		inset-inline-start: var(--default-grid-baseline);
 	}
 
-	.envelope__recipients {
-		// align with sender name: header padding + avatar (40px) + gap (2 * grid-baseline)
-		padding-inline-start: calc(var(--border-radius-container) + var(--default-grid-baseline) * 12);
-		padding-inline-end: var(--border-radius-container);
-		padding-block: var(--default-grid-baseline) calc(var(--default-grid-baseline) * 2);
-		display: flex;
-		flex-direction: column;
-		gap: calc(var(--default-grid-baseline) / 2);
-
-		.recipients {
-			display: flex;
-			align-items: center;
-			flex-wrap: wrap;
-			gap: var(--default-grid-baseline);
-
-			&__label {
-				color: var(--color-text-maxcontrast);
-				font-weight: bold;
-				white-space: nowrap;
-				min-width: 32px;
-			}
-
-			:deep(.user-bubble__content) {
-				border-radius: var(--border-radius-pill);
-
-				> :last-child {
-					padding-inline-end: 0;
-				}
-			}
-		}
-	}
 
 	.smime-text {
 		// same as padding-right on action-text styling
