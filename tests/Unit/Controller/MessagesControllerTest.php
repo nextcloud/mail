@@ -697,6 +697,9 @@ class MessagesControllerTest extends TestCase {
 		$this->mailManager->expects($this->once())
 			->method('flagMessage')
 			->with($this->account, 'INBOX', 444, 'seen', false);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId updated flags on message <$id> with [seen=false] on behalf of $this->userId");
 
 		$expected = new JSONResponse();
 		$response = $this->controller->setFlags(
@@ -804,6 +807,9 @@ class MessagesControllerTest extends TestCase {
 		$this->mailManager->expects($this->once())
 			->method('tagMessage')
 			->with($this->account, $mailbox->getName(), $message, $tag, true);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId added tag <{$tag->getImapLabel()}> on message <$id> on behalf of $this->userId");
 
 		$this->controller->setTag($id, $tag->getImapLabel());
 	}
@@ -905,6 +911,9 @@ class MessagesControllerTest extends TestCase {
 		$this->mailManager->expects($this->once())
 			->method('tagMessage')
 			->with($this->account, $mailbox->getName(), $message, $tag, false);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId removed tag <{$tag->getImapLabel()}> on message <$id> on behalf of $this->userId");
 
 		$this->controller->removeTag($id, $tag->getImapLabel());
 	}
@@ -937,6 +946,9 @@ class MessagesControllerTest extends TestCase {
 		$this->mailManager->expects($this->once())
 			->method('flagMessage')
 			->with($this->account, 'INBOX', 444, 'flagged', true);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId updated flags on message <$id> with [flagged=true] on behalf of $this->userId");
 
 		$expected = new JSONResponse();
 		$response = $this->controller->setFlags(
@@ -972,6 +984,9 @@ class MessagesControllerTest extends TestCase {
 		$this->mailManager->expects($this->once())
 			->method('deleteMessage')
 			->with($this->account, 'INBOX', 444);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId deleted message <$id> on behalf of $this->userId");
 
 		$expected = new JSONResponse();
 		$result = $this->controller->destroy($id);
