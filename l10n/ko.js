@@ -632,7 +632,6 @@ OC.L10N.register(
     "Could not load your message" : "메시지를 불러올 수 없음",
     "Could not load the desired message" : "원하는 메시지를 불러올 수 없음",
     "Could not load the message" : "메시지를 불러올 수 없음",
-    "Error loading message" : "메시지 불러오기 오류",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "사용자의 메시지 상호작용, 중요 표시 정보 등을 바탕으로 특정 메시지가 자동으로 중요 표시됩니다. 초기 단계에서는 시스템의 학습을 위해 사용자가 중요 여부를 수동으로 변경하게 될 수 있으나, 이는 점차 개선될 것입니다."
+    "Error loading message" : "메시지 불러오기 오류"
 },
 "nplurals=1; plural=0;");

@@ -914,8 +914,6 @@ OC.L10N.register(
     "Could not load your message" : "İletiniz yüklenemedi",
     "Could not load the desired message" : "İstenilen ileti yüklenemedi",
     "Could not load the message" : "İleti yüklenemedi",
-    "Error loading message" : "İleti yüklenirken sorun çıktı",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "İletiler, hangileri ile etkileşim kurduğunuza ya da hangilerini önemli olarak işaretlediğinize göre otomatik olarak önemli olarak işaretlenecek.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Gönderdiğiniz ve yanıtlanması gereken ancak birkaç gün geçmesine rağmen yanıt alamayan iletileriniz burada görüntülenir."
+    "Error loading message" : "İleti yüklenirken sorun çıktı"
 },
 "nplurals=2; plural=(n > 1);");

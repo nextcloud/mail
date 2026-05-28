@@ -520,7 +520,6 @@ OC.L10N.register(
     "Could not load your message" : "Sporočila ni mogoče naložiti",
     "Could not load the desired message" : "Želenega sporočila ni mogoče naložiti",
     "Could not load the message" : "Sporočila ni mogoče naložiti",
-    "Error loading message" : "Napaka nalaganja sporočila",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Sporočila bodo samodejno označena kot pomembna na podlagi do sedaj označenih takih sporočil. V začetku bo verjetno treba kakšno označiti še ročno, a se bo sistem s časom izboljševal."
+    "Error loading message" : "Napaka nalaganja sporočila"
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

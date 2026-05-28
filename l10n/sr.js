@@ -854,8 +854,6 @@ OC.L10N.register(
     "Could not load your message" : "Неуспело учитавање поруке",
     "Could not load the desired message" : "Неуспело учитавање жељене поруке",
     "Could not load the message" : "Неуспело учитавање поруке",
-    "Error loading message" : "Грешка при учитавању поруке",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Поруке ће аутоматски бити означаване као важне на основу тога које поруке одговарати или означавате као важне. У почетку ћете можда морати ручно да мењате важност да научите систем, али ће се он поправљати временом.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Овде ће се приказати поруке које сте послали и захтевали да се одговори на њих, али за које нисте примили никакав одговор након неколико дана."
+    "Error loading message" : "Грешка при учитавању поруке"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");
