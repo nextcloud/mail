@@ -695,7 +695,6 @@ OC.L10N.register(
     "Could not load your message" : "Gat ekki hlaðið inn skilaboðunum þínum",
     "Could not load the desired message" : "Gat ekki hlaðið inn umbeðnum skilaboðum",
     "Could not load the message" : "Gat ekki hlaðið inn skilaboðunum",
-    "Error loading message" : "Villa við hleðslu á skilaboðum",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Skilaboð sem þú sendir og sem þarfnast svars en hafa ekki enn fengið svar eftir nokkra daga, munu birtast hér."
+    "Error loading message" : "Villa við hleðslu á skilaboðum"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

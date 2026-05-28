@@ -889,8 +889,6 @@ OC.L10N.register(
     "Could not load your message" : "Could not load your message",
     "Could not load the desired message" : "Could not load the desired message",
     "Could not load the message" : "Could not load the message",
-    "Error loading message" : "Error loading message",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here."
+    "Error loading message" : "Error loading message"
 },
 "nplurals=2; plural=(n != 1);");
