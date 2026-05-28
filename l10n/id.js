@@ -881,8 +881,6 @@ OC.L10N.register(
     "Could not load your message" : "Tidak dapat memuat pesan Anda",
     "Could not load the desired message" : "Tidak dapat memuat pesan yang diinginkan",
     "Could not load the message" : "Tidak dapat memuat pesan",
-    "Error loading message" : "Kesalahan saat memuat pesan",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Pesan akan otomatis ditandai sebagai penting berdasarkan pesan mana yang Anda interaksikan atau tandai sebagai penting. Pada awalnya Anda mungkin perlu mengubah tingkat kepentingan secara manual untuk mengajarkan sistem, tetapi seiring waktu akan membaik.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Pesan yang Anda kirim yang memerlukan balasan tetapi tidak menerima balasan setelah beberapa hari akan ditampilkan di sini."
+    "Error loading message" : "Kesalahan saat memuat pesan"
 },
 "nplurals=1; plural=0;");

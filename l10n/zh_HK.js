@@ -914,8 +914,6 @@ OC.L10N.register(
     "Could not load your message" : "無法載入您的信件",
     "Could not load the desired message" : "無法載入所選的信件",
     "Could not load the message" : "無法載入信件",
-    "Error loading message" : "載入信件錯誤",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "郵件將會以您與其互動或標記為重要的郵件為基礎來自動標記重要郵件。ㄧ開始，您可以能必須手動教導系統哪些是重要郵件，然後它就會與時俱進。",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "您發送的訊息如果在幾天內未收到回覆，將在此處顯示。"
+    "Error loading message" : "載入信件錯誤"
 },
 "nplurals=1; plural=0;");

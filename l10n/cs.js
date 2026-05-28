@@ -885,8 +885,6 @@ OC.L10N.register(
     "Could not load your message" : "Vaši zprávu se nedaří načíst",
     "Could not load the desired message" : "Nedaří se načíst vyžádanou zprávu",
     "Could not load the message" : "Zprávu se nedaří načíst",
-    "Error loading message" : "Chyba při načtení zprávy",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Správy budou automaticky označené jako důležité v závislosti na tom, jakými správami jste se zabývali nebo označili jako důležité. Na začátku bude třeba měnit důležitost ručně a systém tak naučit, ale po čase se to zlepší.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Vámi zaslané zprávy, které vyžadují odpověď, ale ani po několika dnech se tak nestalo, se zobrazí zde."
+    "Error loading message" : "Chyba při načtení zprávy"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

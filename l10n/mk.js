@@ -148,6 +148,7 @@ OC.L10N.register(
     "Disable formatting" : "Оневозможи форматирање",
     "Upload attachment" : "Прикачи прилог",
     "Add attachment from Files" : "Додади прилог од датотеките",
+    "Smart picker" : "Паметен избирач",
     "Request a read receipt" : "Побарај потврда за прочитана порака",
     "Sign message with S/MIME" : "Потпиши ја пораката со S/MIME",
     "Encrypt message with S/MIME" : "Шифрирај порака со S/MIME",
@@ -455,7 +456,6 @@ OC.L10N.register(
     "Could not load your message" : "Неможе да се вчита пораката",
     "Could not load the desired message" : "Неможе да се вчита посакуваната порака",
     "Could not load the message" : "Неможе да се вчита пораката",
-    "Error loading message" : "Грешка при вчитување на пораката",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Пораките автоматски ќе бидат означени како важни врз основа на кои пораки сте комуницирале или сте ги означиле како важни. На почетокот можеби ќе треба рачно да ја менувате важноста да го научите системот, но тоа ќе се подобрува со текот на времето."
+    "Error loading message" : "Грешка при вчитување на пораката"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

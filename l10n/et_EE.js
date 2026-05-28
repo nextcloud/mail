@@ -849,7 +849,6 @@ OC.L10N.register(
     "Could not load your message" : "Sinu kirja laadimine ei õnnestunud",
     "Could not load the desired message" : "Soovitud kirja laadimine ei õnnestunud",
     "Could not load the message" : "Kirja laadimine ei õnnestunud",
-    "Error loading message" : "Viga kirja laadimisel",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Kirjad märgitakse automaatselt oluliseks selle alusel, milliste kirjadega sa suhestud või milliseid sa oluliseks märgid. Alguses võib olla vaja olulisuse taset käsitsi muuta, et süsteemi õpetada, kuid aja jooksul muutub see üha paremaks"
+    "Error loading message" : "Viga kirja laadimisel"
 },
 "nplurals=2; plural=(n != 1);");

@@ -867,8 +867,6 @@ OC.L10N.register(
     "Could not load your message" : "Таны зурвасыг ачаалах боломжгүй",
     "Could not load the desired message" : "Хүссэн зурвасыг ачаалах боломжгүй",
     "Could not load the message" : "Зурвас ачаалах боломжгүй",
-    "Error loading message" : "–∞–ª–¥–∞–∞—Ç–∞–π –∞—á–∞–∞–ª–ª–∞—Ö –∑—É—Ä–≤–∞—Å",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Таны ямар зурвастай харилцаж байсан эсвэл чухал гэж тэмдэглэсэн дээр суурилан зурвасууд автоматаар чухал гэж тэмдэглэгдэнэ. Эхэндээ та системд заахын тулд чухлын зэргийг гараар өөрчлөх шаардлагатай байж магадгүй, гэхдээ цаг хугацааны явцад сайжирна.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Таны илгээсэн зурвасуудаас хариу шаардлагатай боловч хэд хоногийн дараа хариу аваагүй зурвасууд энд харагдана."
+    "Error loading message" : "–∞–ª–¥–∞–∞—Ç–∞–π –∞—á–∞–∞–ª–ª–∞—Ö –∑—É—Ä–≤–∞—Å"
 },
 "nplurals=2; plural=(n != 1);");

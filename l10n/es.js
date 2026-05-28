@@ -830,8 +830,6 @@ OC.L10N.register(
     "Could not load your message" : "No se ha podido cargar tu mensaje",
     "Could not load the desired message" : "No se ha podido cargar el mensaje deseado",
     "Could not load the message" : "No se ha podido cargar el mensaje",
-    "Error loading message" : "Error al cargar el mensaje",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Los mensajes se marcarán automáticamente como importantes en función de los mensajes con los que interactuó o se marcaron como importantes. Al principio puede que tengas que cambiar manualmente la importancia para enseñar el sistema, pero mejorará con el tiempo.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Los mensajes que ha enviado y requieren respuesta pero no han recibido ninguna en un par de días aparecerán aquí."
+    "Error loading message" : "Error al cargar el mensaje"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

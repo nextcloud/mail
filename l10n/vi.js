@@ -271,7 +271,6 @@ OC.L10N.register(
     "Could not load your message" : "Không thể tải tin nhắn của bạn",
     "Could not load the desired message" : "Không thể tải tin nhắn mong muốn",
     "Could not load the message" : "Không thể tải tin nhắn",
-    "Error loading message" : "Lỗi khi tải tin nhắn",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Tin nhắn sẽ tự động được đánh dấu là quan trọng dựa trên những tin nhắn bạn đã tương tác hoặc được đánh dấu là quan trọng. Lúc đầu, bạn có thể phải thay đổi thủ công tầm quan trọng để dạy hệ thống, nhưng nó sẽ cải thiện theo thời gian."
+    "Error loading message" : "Lỗi khi tải tin nhắn"
 },
 "nplurals=1; plural=0;");

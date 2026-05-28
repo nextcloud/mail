@@ -785,8 +785,6 @@ OC.L10N.register(
     "Could not load your message" : "Ошибка получения вашего сообщения",
     "Could not load the desired message" : "Ошибка получения указанного сообщения",
     "Could not load the message" : "Ошибка получения этого сообщения",
-    "Error loading message" : "Ошибка загрузки сообщения",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Письма будут автоматически отмечаться важными на основе анализа ваших действий и присвоения метки «Важно». В первое время, возможно, потребуется обучить систему присвоением и удалением меток вручную.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Здесь будут отображаться отправленные вами сообщения, требующие ответа, но не полученные в течение нескольких дней."
+    "Error loading message" : "Ошибка загрузки сообщения"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");
