@@ -13,6 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\SMTP\LenientSmtphordeTransport;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\HostNameFactory;
 use OCP\IConfig;
@@ -70,7 +71,7 @@ class SmtpClientFactoryTest extends TestCase {
 		$this->hostNameFactory->expects($this->once())
 			->method('getHostName')
 			->willReturn('cloud.example.com');
-		$expected = new Horde_Mail_Transport_Smtphorde([
+		$expected = new LenientSmtphordeTransport([
 			'host' => 'smtp.domain.tld',
 			'password' => 'pass123',
 			'port' => 25,
