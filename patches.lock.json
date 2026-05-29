@@ -1,5 +1,5 @@
 {
-    "_hash": "e3297c923adcdbd735cc8da9765e21e3f6bcb9f669ed228d8954814d910fc127",
+    "_hash": "6053b3121d6c1645269ff3498cce80b35864f85ff75b039cc6c5889e28706293",
     "patches": {
         "glenscott/url-normalizer": [
             {
@@ -23,6 +23,18 @@
                 "depth": 1,
                 "extra": {
                     "upstream-fix-url": "https://github.com/PHPMailer/DKIMValidator/pull/21",
+                    "provenance": "patches-file:patches.json"
+                }
+            }
+        ],
+        "bytestream/horde-mail": [
+            {
+                "package": "bytestream/horde-mail",
+                "description": "Fix _rfc822IsAtext treating digit 0 as empty due to PHP empty() quirk",
+                "url": ".patches/horde-mail-rfc822-isAtext-empty-zero.patch",
+                "sha256": "b864ec2b2ba71b37a44c05e69934ec9f95269b8f1cc1ef8352a294e02ae3eb71",
+                "depth": 1,
+                "extra": {
                     "provenance": "patches-file:patches.json"
                 }
             }
