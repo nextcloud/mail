@@ -180,6 +180,12 @@ SPDX-FileCopyrightText = "angrychimp, Teon d.o.o. - Bostjan Skufca, Marcus Boint
 SPDX-License-Identifier = "MIT"
 
 [[annotations]]
+path = [".patches/horde-mail-rfc822-isAtext-empty-zero.patch"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
 path = [".patches/url-normalizer-fix-deprecation-warning-on-PHP-8.5.patch"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2013 Glen Scott"
