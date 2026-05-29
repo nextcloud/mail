@@ -547,8 +547,8 @@ export default {
 	// initial width
 	width: 0;
 	// while scrolling, the back button overlaps with subject on small screen
-	// 66px to allign with the sender Envelope -> 8px margin + 2px border+ avatar -> 40px width  + envelope__header -> 8px padding + sender-> margin 8px
-	padding-inline-start: 66px;
+	// envelope margin (2×baseline) + border (2px) + header padding (--border-radius-container) + avatar (10×baseline) + sender margin (2×baseline)
+	padding-inline-start: calc(var(--default-grid-baseline) * 14 + var(--border-radius-container) + 2px);
 	// grow and try to fill 100%
 	flex: 1 1 auto;
 	background: var(--color-main-background);

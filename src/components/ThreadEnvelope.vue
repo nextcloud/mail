@@ -77,12 +77,11 @@
 						<ChevronUpIcon v-if="showRecipients" :size="16" />
 						<ChevronDownIcon v-else :size="16" />
 					</button>
-					<p
-						v-else-if="expanded"
-						class="sender__email"
-						:style="{ color: senderEmailColor }">
-						{{ senderEmail }}
-					</p>
+					<RecipientBubble
+						v-else-if="expanded && envelope.from && envelope.from[0]"
+						:email="envelope.from[0].email"
+						:label="envelope.from[0].label"
+						:size="24" />
 					<div v-if="hasChangedSubject" class="subline">
 						{{ cleanSubject }}
 					</div>
@@ -287,6 +286,15 @@
 			</div>
 		</div>
 		<div v-if="expanded && showRecipients" class="envelope__recipients">
+			<div v-if="envelope.from && envelope.from.length" class="recipients">
+				<span class="recipients__label">{{ t('mail', 'From:') }}</span>
+				<RecipientBubble
+					v-for="recipient in envelope.from"
+					:key="recipient.email"
+					:email="recipient.email"
+					:label="recipient.label"
+					:size="24" />
+			</div>
 			<div v-if="envelope.to && envelope.to.length" class="recipients">
 				<span class="recipients__label">{{ t('mail', 'To:') }}</span>
 				<RecipientBubble
@@ -1435,37 +1443,6 @@ export default {
 		inset-inline-start: var(--default-grid-baseline);
 	}
 
-	.envelope__recipients {
-		// align with sender name: header padding + avatar (40px) + gap (2 * grid-baseline)
-		padding-inline-start: calc(var(--border-radius-container) + var(--default-grid-baseline) * 12);
-		padding-inline-end: var(--border-radius-container);
-		padding-block: var(--default-grid-baseline) calc(var(--default-grid-baseline) * 2);
-		display: flex;
-		flex-direction: column;
-		gap: calc(var(--default-grid-baseline) / 2);
-
-		.recipients {
-			display: flex;
-			align-items: center;
-			flex-wrap: wrap;
-			gap: var(--default-grid-baseline);
-
-			&__label {
-				color: var(--color-text-maxcontrast);
-				font-weight: bold;
-				white-space: nowrap;
-				min-width: 32px;
-			}
-
-			:deep(.user-bubble__content) {
-				border-radius: var(--border-radius-pill);
-
-				> :last-child {
-					padding-inline-end: 0;
-				}
-			}
-		}
-	}
 
 	.smime-text {
 		// same as padding-right on action-text styling
