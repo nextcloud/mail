@@ -81,6 +81,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	private bool $isSigned;
 	private bool $signatureIsValid;
 	private bool $isPgpMimeEncrypted;
+	private bool $isAiGenerated = false;
 
 	/**
 	 * @param list<IMAPAttachment> $inlineAttachments
@@ -149,6 +150,10 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 	public static function generateMessageId(): string {
 		return Horde_Mime_Headers_MessageId::create('nextcloud-mail-generated')->value;
+	}
+
+	public function isAiGenerated(): bool {
+		return $this->isAiGenerated;
 	}
 
 	public function hasHtmlMessage(): bool {

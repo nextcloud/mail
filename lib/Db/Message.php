@@ -28,6 +28,8 @@ use function json_encode;
  * @method string|null getInReplyTo()
  * @method string|null getThreadRootId()
  * @method void setMailboxId(int $mailbox)
+ * @method void setFlagAiGenerated(bool $aiGenerated)
+ * @method bool|null getFlagAiGenerated()
  * @method int getMailboxId()
  * @method void setSubject(string $subject)
  * @method string getSubject()
@@ -91,6 +93,7 @@ class Message extends Entity implements JsonSerializable {
 	];
 
 	protected $uid;
+	protected $flagAiGenerated;
 	protected $messageId;
 	protected $references;
 	protected $inReplyTo;
@@ -167,6 +170,7 @@ class Message extends Entity implements JsonSerializable {
 		$this->addType('flagAttachments', 'boolean');
 		$this->addType('flagImportant', 'boolean');
 		$this->addType('flagMdnsent', 'boolean');
+		$this->addType('flagAiGenerated', 'boolean');
 		$this->addType('updatedAt', 'integer');
 		$this->addType('imipMessage', 'boolean');
 		$this->addType('imipProcessed', 'boolean');
@@ -345,6 +349,7 @@ class Message extends Entity implements JsonSerializable {
 			'subject' => $this->getSubject(),
 			'dateInt' => $this->getSentAt(),
 			'flags' => [
+				'aiGenerated' => ($this->getFlagAiGenerated() === true),
 				'seen' => ($this->getFlagSeen() === true),
 				'flagged' => ($this->getFlagFlagged() === true),
 				'answered' => ($this->getFlagAnswered() === true),
@@ -356,6 +361,7 @@ class Message extends Entity implements JsonSerializable {
 				'$junk' => ($this->getFlagJunk() === true),
 				'$notjunk' => ($this->getFlagNotjunk() === true),
 				'$mdnsent' => ($this->getFlagMdnsent() === true),
+				'aiGenerated' => ($this->getFlagAiGenerated() === true),
 			],
 			'tags' => $indexed,
 			'from' => $this->getFrom()->jsonSerialize(),

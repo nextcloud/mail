@@ -53,6 +53,8 @@ use function array_filter;
  * @method setRaw(string|null $raw)
  * @method bool getRequestMdn()
  * @method setRequestMdn(bool $mdn)
+ * @method void setAiGenerated(bool $aiGenerated)
+ * @method bool|null getAiGenerated()
  */
 class LocalMessage extends Entity implements JsonSerializable {
 	public const TYPE_OUTGOING = 0;
@@ -141,6 +143,8 @@ class LocalMessage extends Entity implements JsonSerializable {
 	/** @var bool */
 	protected $requestMdn;
 
+	protected $aiGenerated = false;
+
 	public function __construct() {
 		$this->addType('type', 'integer');
 		$this->addType('accountId', 'integer');
@@ -155,6 +159,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 		$this->addType('smimeEncrypt', 'boolean');
 		$this->addType('status', 'integer');
 		$this->addType('requestMdn', 'boolean');
+		$this->addType('aiGenerated', 'boolean');
 
 	}
 
@@ -226,5 +231,8 @@ class LocalMessage extends Entity implements JsonSerializable {
 	 */
 	public function getRecipients(): ?array {
 		return $this->recipients;
+	}
+	public function isAiGenerated(): bool {
+		return $this->getAiGenerated() === true;
 	}
 }

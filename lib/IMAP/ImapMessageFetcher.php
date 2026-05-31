@@ -64,6 +64,8 @@ class ImapMessageFetcher {
 	private string $rawReferences = '';
 	private string $dispositionNotificationTo = '';
 	private bool $hasDkimSignature = false;
+
+	private bool $isAiGenerated = false;
 	private array $phishingDetails = [];
 	private ?string $unsubscribeUrl = null;
 	private bool $isOneClickUnsubscribe = false;
@@ -290,6 +292,7 @@ class ImapMessageFetcher {
 			$signatureIsValid,
 			$this->htmlService, // TODO: drop the html service dependency
 			$this->isPgpMimeEncrypted,
+			$this->isAiGenerated,
 		);
 	}
 
@@ -553,6 +556,10 @@ class ImapMessageFetcher {
 
 		$dkimSignatureHeader = $parsedHeaders->getHeader('dkim-signature');
 		$this->hasDkimSignature = $dkimSignatureHeader !== null;
+
+		$aiGeneratedHeader = $parsedHeaders->getHeader('x-ai-generated');
+		$this->isAiGenerated = $aiGeneratedHeader !== null
+			&& strtolower($aiGeneratedHeader->value_single) === 'true';
 
 		if ($this->runPhishingCheck) {
 			$this->phishingDetails = $this->phishingDetectionService->checkHeadersForPhishing($this->userId, $parsedHeaders, $fetch->getFlags(), $this->hasHtmlMessage, $this->htmlMessage);
