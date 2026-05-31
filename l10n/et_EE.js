@@ -339,7 +339,7 @@ OC.L10N.register(
     "_Mark {number} as unimportant_::_Mark {number} as unimportant_" : ["Märgi {number} mitteoluliseks","Märgi {number} mitteoluliseks"],
     "_Unfavorite {number}_::_Unfavorite {number}_" : ["Eemalda {number} lemmikute seast","Eemalda {number} lemmikute seast"],
     "_Favorite {number}_::_Favorite {number}_" : ["Lisa {number} kiri lemmikuks","Lisa {number} kirja lemmikuks"],
-    "_Unselect {number}_::_Unselect {number}_" : ["Eemalda {number} kiri lemmikute seast","Eemalda {number} kirja lemmikute seast"],
+    "_Unselect {number}_::_Unselect {number}_" : ["Eemalda {number} kiri valikust","Eemalda {number} kirja valikust"],
     "_Mark {number} as spam_::_Mark {number} as spam_" : ["Märgi {number} kiri rämpspostiks","Märgi {number} kirja rämpspostiks"],
     "_Mark {number} as not spam_::_Mark {number} as not spam_" : ["Eemalda {number}-lt kirjalt rämpsposti märge","Eemalda {number}-lt kirjalt rämpsposti märge"],
     "_Edit tags for {number}_::_Edit tags for {number}_" : ["Muuda {number} kirja silte","Muuda {number} kirja silte"],
