@@ -2451,10 +2451,13 @@ export default function mainStoreActions() {
 			return list.map((msgId) => this.envelopes[msgId])
 		},
 		getEnvelopesByThreadRootId(accountId, threadRootId) {
-			return sortBy(
+			const sorted = sortBy(
 				prop('dateInt'),
 				Object.values(this.envelopes).filter((envelope) => envelope.accountId === accountId && envelope.threadRootId === threadRootId),
 			)
+			return this.getPreference('thread-order', 'oldest') === 'newest'
+				? sorted.reverse()
+				: sorted
 		},
 		getMessage(id) {
 			return this.messages[id]

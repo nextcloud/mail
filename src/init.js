@@ -98,6 +98,10 @@ export default function initAfterAppCreation() {
 		key: 'compact-mode',
 		value: preferences['compact-mode'],
 	})
+	mainStore.savePreferenceMutation({
+		key: 'thread-order',
+		value: preferences['thread-order'],
+	})
 
 	mainStore.setQuickActions(loadState('mail', 'quick-actions', []))
 
