@@ -275,6 +275,7 @@ OC.L10N.register(
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Nem helyezheti át ezt az üzenetet az archiválási mappába vagy törölheti a jelenlegi mappából",
     "Last hour" : "Elmúlt óra",
     "Today" : "Ma",
+    "Yesterday" : "Tegnap",
     "Last week" : "Előző hét",
     "Last month" : "Előző hónap",
     "Choose target folder" : "Válasszon célmappát",
