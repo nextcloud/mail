@@ -358,6 +358,7 @@ export default {
 			changingSyncInBackground: false,
 			editing: false,
 			showSubMailboxes: false,
+			wasExpandedBeforeDrag: false,
 			menuOpen: false,
 			renameLabel: true,
 			renameInput: false,
@@ -752,6 +753,7 @@ export default {
 			if (accountId !== this.mailbox.accountId) {
 				return
 			}
+			this.wasExpandedBeforeDrag = this.showSubMailboxes
 			this.mainStore.expandAccountMutation(accountId)
 			this.showSubMailboxes = true
 		},
@@ -760,7 +762,7 @@ export default {
 			if (accountId !== this.mailbox.accountId) {
 				return
 			}
-			this.showSubMailboxes = false
+			this.showSubMailboxes = this.wasExpandedBeforeDrag
 		},
 
 		onEnvelopesMoved({ mailboxId, movedEnvelopes }) {
