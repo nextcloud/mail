@@ -1,3 +1,18 @@
+## [5.8.2](https://github.com/nextcloud/mail/compare/v5.8.1...v5.8.2) (2026-06-01)
+
+
+### Bug Fixes
+
+* **l10n:** Update translations from Transifex ([68d5874](https://github.com/nextcloud/mail/commit/68d5874e06ad6595ed6d4d4b54c71f0965285579))
+* **l10n:** Update translations from Transifex ([01424c7](https://github.com/nextcloud/mail/commit/01424c72900232e9a8f039b3c5e8e1324f2bf255))
+* **l10n:** Update translations from Transifex ([fd2108d](https://github.com/nextcloud/mail/commit/fd2108d314e939368f0ed05203b7ac4ca7316bc6))
+* **l10n:** Update translations from Transifex ([a0b9c4f](https://github.com/nextcloud/mail/commit/a0b9c4ff93511544df61ca771851a91d6446a0db))
+* **smtp:** handle non ascii sender names ([b30598a](https://github.com/nextcloud/mail/commit/b30598aea1177f4c19770c3e9630c2f6228d8e51))
+* **ui:** prevent type error during shortkey usage ([06da05e](https://github.com/nextcloud/mail/commit/06da05e6a27fec8dcd93882724cb0c462c38b8ad))
+* **ui:** use v-model for assistance setting switches ([8b228c3](https://github.com/nextcloud/mail/commit/8b228c3085351d2e3ca2d5e69a14ca652e79f216))
+
+
+
 ## [5.8.1](https://github.com/nextcloud/mail/compare/v5.8.0...v5.8.1) (2026-05-26)
 
 
