@@ -387,7 +387,7 @@ export default {
 						next = envelopes[idx - 1]
 					}
 
-					if (!next) {
+					if (!next || next.databaseId === currentId) {
 						logger.debug('ignoring shortcut: head or tail of envelope list reached', {
 							envelopes,
 							idx,
@@ -407,6 +407,7 @@ export default {
 						},
 					})
 					break
+				case 'backspace':
 				case 'del':
 					if (!this.hasDeleteAcl()) {
 						return
@@ -482,6 +483,10 @@ export default {
 					break
 				case 'unseen':
 					logger.debug('marking as seen/unseen via shortcut')
+
+					if (!env.flags) {
+						break
+					}
 
 					if (!this.hasSeenAcl()) {
 						showWarning(t('mail', 'Your IMAP server does not support storing the seen/unseen state.'))
