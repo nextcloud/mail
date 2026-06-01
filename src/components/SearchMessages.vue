@@ -6,6 +6,7 @@
 	<div class="search-messages">
 		<div class="search-messages__input">
 			<input
+				ref="searchInput"
 				v-model="query"
 				type="text"
 				class="search-messages--input"
@@ -499,6 +500,10 @@ export default {
 	},
 
 	methods: {
+		focusInput() {
+			this.$refs.searchInput.focus()
+		},
+
 		hideButtonsWithDelay(delay = false) {
 			if (delay) {
 				setTimeout(() => {
