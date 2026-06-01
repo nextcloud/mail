@@ -11,7 +11,6 @@ namespace OCA\Mail\SMTP;
 
 use Exception;
 use Horde_Mail_Transport;
-use Horde_Mail_Transport_Smtphorde;
 use Horde_Smtp_Password_Xoauth2;
 use OCA\Mail\Account;
 use OCA\Mail\Exception\ServiceException;
@@ -86,6 +85,6 @@ class SmtpClientFactory {
 			$fn = "mail-{$account->getUserId()}-{$account->getId()}-smtp.log";
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;
 		}
-		return new Horde_Mail_Transport_Smtphorde($params);
+		return new LenientSmtphordeTransport($params);
 	}
 }
