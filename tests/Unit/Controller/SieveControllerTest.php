@@ -57,6 +57,10 @@ class SieveControllerTest extends TestCase {
 			->willReturn(new MailAccount());
 		$mailAccountMapper->expects($this->once())
 			->method('save');
+		$this->serviceMock->getParameter('delegationService')
+			->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, '1 updated sieve settings for account <2> on behalf of 1');
 
 		$response = $this->sieveController->updateAccount(2, false, '', 0, '', '', '');
 
@@ -134,6 +138,10 @@ class SieveControllerTest extends TestCase {
 		$sieveService->expects($this->once())
 			->method('updateActiveScript')
 			->with('1', 2, 'sieve script');
+		$this->serviceMock->getParameter('delegationService')
+			->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, '1 updated the active sieve script for account <2> on behalf of 1');
 
 		$response = $this->sieveController->updateActiveScript(2, 'sieve script');
 
