@@ -1,3 +1,7 @@
+# [5.9.0](https://github.com/nextcloud/mail/compare/v5.9.0-rc.2...v5.9.0) (2026-06-02)
+
+
+
 # [5.9.0-rc.2](https://github.com/nextcloud/mail/compare/v5.9.0-rc.1...v5.9.0-rc.2) (2026-06-02)
 
 
