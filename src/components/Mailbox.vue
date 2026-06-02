@@ -18,7 +18,7 @@
 		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
 		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
 		<div v-else>
-			<div v-if="!selectMode" class="select-all-bar">
+			<div v-if="!selectMode" class="select-all-bar" @click="selectAll">
 				<NcCheckboxRadioSwitch
 					:model-value="false"
 					type="checkbox"
