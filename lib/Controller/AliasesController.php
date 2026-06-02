@@ -71,15 +71,15 @@ class AliasesController extends Controller {
 		string $aliasName,
 		?int $smimeCertificateId = null): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAliasUserId($id, $this->currentUserId);
-		return new JSONResponse(
-			$this->aliasService->update(
-				$effectiveUserId,
-				$id,
-				$alias,
-				$aliasName,
-				$smimeCertificateId,
-			)
+		$alias = $this->aliasService->update(
+			$effectiveUserId,
+			$id,
+			$alias,
+			$aliasName,
+			$smimeCertificateId,
 		);
+		$this->delegationService->logDelegatedAction($this->currentUserId, $effectiveUserId, "$this->currentUserId updated alias: $id on behalf of $effectiveUserId");
+		return new JSONResponse($alias);
 	}
 
 	/**
@@ -91,7 +91,9 @@ class AliasesController extends Controller {
 	#[TrapError]
 	public function destroy(int $id): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAliasUserId($id, $this->currentUserId);
-		return new JSONResponse($this->aliasService->delete($effectiveUserId, $id));
+		$alias = $this->aliasService->delete($effectiveUserId, $id);
+		$this->delegationService->logDelegatedAction($this->currentUserId, $effectiveUserId, "$this->currentUserId deleted alias: $id on behalf of $effectiveUserId");
+		return new JSONResponse($alias);
 	}
 
 	/**
@@ -108,8 +110,11 @@ class AliasesController extends Controller {
 	#[TrapError]
 	public function create(int $accountId, string $alias, string $aliasName): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->currentUserId);
+		$alias = $this->aliasService->create($effectiveUserId, $accountId, $alias, $aliasName);
+		$id = $alias->getId();
+		$this->delegationService->logDelegatedAction($this->currentUserId, $effectiveUserId, "$this->currentUserId created alias: $id  on behalf of $effectiveUserId");
 		return new JSONResponse(
-			$this->aliasService->create($effectiveUserId, $accountId, $alias, $aliasName),
+			$alias,
 			Http::STATUS_CREATED
 		);
 	}
@@ -127,6 +132,8 @@ class AliasesController extends Controller {
 	#[TrapError]
 	public function updateSignature(int $id, ?string $signature = null): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAliasUserId($id, $this->currentUserId);
-		return new JSONResponse($this->aliasService->updateSignature($effectiveUserId, $id, $signature));
+		$alias = $this->aliasService->updateSignature($effectiveUserId, $id, $signature);
+		$this->delegationService->logDelegatedAction($this->currentUserId, $effectiveUserId, "$this->currentUserId updated alias: $id 's signature on behalf of $effectiveUserId");
+		return new JSONResponse($alias);
 	}
 }

@@ -428,6 +428,9 @@ class MessagesController extends Controller {
 			$dstAccount,
 			$dstMailbox->getName()
 		);
+
+		$this->delegationService->logDelegatedAction($this->currentUserId, $effectiveUserId, "$this->currentUserId moved message <$id> to mailbox <$destFolderId> on behalf of $effectiveUserId");
+
 		return new JSONResponse();
 	}
 
@@ -459,6 +462,7 @@ class MessagesController extends Controller {
 		}
 
 		$this->snoozeService->snoozeMessage($message, $unixTimestamp, $srcAccount, $srcMailbox, $dstAccount, $dstMailbox);
+		$this->delegationService->logDelegatedAction($this->currentUserId, $effectiveUserId, "$this->currentUserId snoozed message <$id> to <$unixTimestamp> on behalf of $effectiveUserId");
 
 		return new JSONResponse();
 	}
@@ -485,6 +489,7 @@ class MessagesController extends Controller {
 		}
 
 		$this->snoozeService->unSnoozeMessage($message, $effectiveUserId);
+		$this->delegationService->logDelegatedAction($this->currentUserId, $effectiveUserId, "$this->currentUserId unsnoozed message <$id> on behalf of $effectiveUserId");
 
 		return new JSONResponse();
 	}
@@ -898,10 +903,14 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
+		$flagChanges = [];
 		foreach ($flags as $flag => $value) {
 			$value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
 			$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), $flag, $value);
+			$flagChanges[] = "$flag=" . ($value ? 'true' : 'false');
 		}
+		$flagsSummary = implode(', ', $flagChanges);
+		$this->delegationService->logDelegatedAction($this->currentUserId, $effectiveUserId, "$this->currentUserId updated flags on message <$id> with [$flagsSummary] on behalf of $effectiveUserId");
 		return new JSONResponse();
 	}
 
@@ -937,6 +946,7 @@ class MessagesController extends Controller {
 		}
 
 		$this->mailManager->tagMessage($account, $mailbox->getName(), $message, $tag, true);
+		$this->delegationService->logDelegatedAction($this->currentUserId, $effectiveUserId, "$this->currentUserId added tag <$imapLabel> on message <$id> on behalf of $effectiveUserId");
 		return new JSONResponse($tag);
 	}
 
@@ -972,6 +982,7 @@ class MessagesController extends Controller {
 		}
 
 		$this->mailManager->tagMessage($account, $mailbox->getName(), $message, $tag, false);
+		$this->delegationService->logDelegatedAction($this->currentUserId, $effectiveUserId, "$this->currentUserId removed tag <$imapLabel> on message <$id> on behalf of $effectiveUserId");
 		return new JSONResponse($tag);
 	}
 
@@ -1004,6 +1015,7 @@ class MessagesController extends Controller {
 			$mailbox->getName(),
 			$message->getUid()
 		);
+		$this->delegationService->logDelegatedAction($this->currentUserId, $effectiveUserId, "$this->currentUserId deleted message <$id> on behalf of $effectiveUserId");
 		return new JSONResponse();
 	}
 
