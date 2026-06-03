@@ -559,7 +559,7 @@ export default {
 				return
 			}
 
-			const next = this.envelopes[idx === 0 ? 1 : idx - 1]
+			const next = this.envelopes[idx + 1] ?? this.envelopes[idx - 1]
 			if (!next) {
 				logger.debug('no next/previous envelope, not navigating')
 				return
