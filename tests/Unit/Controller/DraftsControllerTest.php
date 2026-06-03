@@ -218,6 +218,7 @@ class DraftsControllerTest extends TestCase {
 		$message->setUpdatedAt(123456);
 		$message->setRequestMdn(false);
 		$message->setPgpMime(false);
+		$message->setAiGenerated(false);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
@@ -272,6 +273,7 @@ class DraftsControllerTest extends TestCase {
 		$message->setUpdatedAt(123456);
 		$message->setRequestMdn(false);
 		$message->setPgpMime(false);
+		$message->setAiGenerated(false);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
@@ -329,6 +331,7 @@ class DraftsControllerTest extends TestCase {
 		$message->setUpdatedAt(123456);
 		$message->setRequestMdn(false);
 		$message->setPgpMime(false);
+		$message->setAiGenerated(false);
 
 		$account = new Account(new MailAccount());
 		$this->accountService->expects(self::once())

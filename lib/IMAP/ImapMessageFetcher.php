@@ -55,6 +55,7 @@ class ImapMessageFetcher {
 	private string $rawReferences = '';
 	private string $dispositionNotificationTo = '';
 	private bool $hasDkimSignature = false;
+	private bool $isAiGenerated = false;
 	private array $phishingDetails = [];
 	private ?string $unsubscribeUrl = null;
 	private bool $isOneClickUnsubscribe = false;
@@ -262,6 +263,7 @@ class ImapMessageFetcher {
 			$this->rawReferences,
 			$this->dispositionNotificationTo,
 			$this->hasDkimSignature,
+			$this->isAiGenerated,
 			$this->phishingDetails,
 			$this->unsubscribeUrl,
 			$this->isOneClickUnsubscribe,
@@ -527,10 +529,8 @@ class ImapMessageFetcher {
 	}
 
 	private function parseHeaders(Horde_Imap_Client_Data_Fetch $fetch): void {
-		/** @var resource $headersStream */
-		$headersStream = $fetch->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_STREAM);
-		$parsedHeaders = Horde_Mime_Headers::parseHeaders($headersStream);
-		fclose($headersStream);
+		/** @var Horde_Mime_Headers $parsedHeaders */
+		$parsedHeaders = $fetch->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
 
 		$references = $parsedHeaders->getHeader('references');
 		if ($references !== null) {
@@ -544,6 +544,9 @@ class ImapMessageFetcher {
 
 		$dkimSignatureHeader = $parsedHeaders->getHeader('dkim-signature');
 		$this->hasDkimSignature = $dkimSignatureHeader !== null;
+
+		$aiGeneratedHeader = $parsedHeaders->getHeader('x-ai-generated');
+		$this->isAiGenerated = $aiGeneratedHeader !== null && trim($aiGeneratedHeader->value_single) === '1';
 
 		if ($this->runPhishingCheck) {
 			$this->phishingDetails = $this->phishingDetectionService->checkHeadersForPhishing($this->userId, $parsedHeaders, $fetch->getFlags(), $this->hasHtmlMessage, $this->htmlMessage);

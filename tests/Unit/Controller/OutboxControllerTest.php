@@ -315,6 +315,7 @@ class OutboxControllerTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setRequestMdn(false);
 		$message->setPgpMime(false);
+		$message->setAiGenerated(false);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 

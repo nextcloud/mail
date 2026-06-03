@@ -138,6 +138,10 @@ class MailTransmission implements IMailTransmission {
 			$fccHeaders->addHeaderOb(new Horde_Mime_Headers_Addresses(Horde_Mime_Mdn::MDN_HEADER, $from->toHorde()));
 		}
 
+		if ($localMessage->isAiGenerated()) {
+			$fccHeaders->addHeader('X-AI-Generated', '1');
+		}
+
 		// For SMTP delivery: strip Bcc so it never appears in the transmitted
 		// message (RFC 5321). All three recipient lists are passed as SMTP
 		// envelope recipients so every addressee still receives the mail.

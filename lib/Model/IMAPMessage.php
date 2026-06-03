@@ -72,6 +72,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		private string $rawReferences,
 		private string $dispositionNotificationTo,
 		private bool $hasDkimSignature,
+		private bool $isAiGenerated,
 		private array $phishingDetails,
 		private ?string $unsubscribeUrl,
 		private bool $isOneClickUnsubscribe,
@@ -293,6 +294,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'unsubscribeMailto' => $this->unsubscribeMailto,
 			'scheduling' => $this->scheduling,
 			'isPgpMimeEncrypted' => $this->isPgpMimeEncrypted,
+			'aiGenerated' => $this->isAiGenerated,
 		];
 	}
 
