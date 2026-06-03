@@ -126,7 +126,7 @@ class MailboxesController extends Controller {
 				$mailbox,
 				$name
 			);
-			$this->delegationService->logDelegatedAction($this->currentUserId, $effectiveUserId, "$this->currentUserId changed mailbox: id 's name to $name  on behalf of $effectiveUserId");
+			$this->delegationService->logDelegatedAction($this->currentUserId, $effectiveUserId, "$this->currentUserId changed mailbox: $id's name to $name on behalf of $effectiveUserId");
 		}
 		if ($subscribed !== null) {
 			$mailbox = $this->mailManager->updateSubscription(
