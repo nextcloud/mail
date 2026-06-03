@@ -1,4 +1,9 @@
-# [5.9.0](https://github.com/nextcloud/mail/compare/v5.9.0-rc.2...v5.9.0) (2026-06-02)
+# [5.10.0](https://github.com/nextcloud/mail/compare/v5.9.0-rc.2...v5.10.0) (2026-06-03)
+
+
+### Bug Fixes
+
+* **smtp:** handle non ascii sender names ([6562a91](https://github.com/nextcloud/mail/commit/6562a910d8f6e124dc61adeb96c545b8fd58ca97))
 
 
 
