@@ -6,6 +6,12 @@ SPDX-PackageSupplier = "Nextcloud <info@nextcloud.com>"
 SPDX-PackageDownloadLocation = "https://github.com/nextcloud/mail"
 
 [[annotations]]
+path = "CLAUDE.md"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
 path = ["l10n/**.js", "l10n/**.json", "js/**.js.map", "js/**.js"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2013-2016 ownCloud, Inc., 2016-2024 Nextcloud GmbH and Nextcloud contributors"

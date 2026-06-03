@@ -4,6 +4,7 @@
 /babel.config.js
 /.babelrc
 /build
+CLAUDE.md
 codecov.yml
 /.coderabbit.yaml
 /composer.*
