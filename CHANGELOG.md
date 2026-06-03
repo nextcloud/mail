@@ -1,3 +1,13 @@
+## [5.9.1](https://github.com/nextcloud/mail/compare/v5.9.0...v5.9.1) (2026-06-03)
+
+
+### Bug Fixes
+
+* deleting a message should move the focus one below ([7e4cd2a](https://github.com/nextcloud/mail/commit/7e4cd2ac1f91d8b550612db769bde361d863103c))
+* **smtp:** handle non ascii sender names ([6562a91](https://github.com/nextcloud/mail/commit/6562a910d8f6e124dc61adeb96c545b8fd58ca97))
+
+
+
 # [5.9.0](https://github.com/nextcloud/mail/compare/v5.9.0-rc.2...v5.9.0) (2026-06-02)
 
 
