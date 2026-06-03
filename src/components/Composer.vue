@@ -441,6 +441,12 @@
 							{{ t('mail', 'Request a read receipt') }}
 						</NcActionCheckbox>
 						<NcActionCheckbox
+							:model-value="isAiGeneratedVal"
+							@check="isAiGeneratedVal = true"
+							@uncheck="isAiGeneratedVal = false">
+							{{ t('mail', 'Mark as AI generated') }}
+						</NcActionCheckbox>
+						<NcActionCheckbox
 							v-if="smimeCertificateForCurrentAlias"
 							:model-value="wantsSmimeSign"
 							@check="smimeSignCheck(true)"
@@ -755,6 +761,11 @@ export default {
 			default: false,
 		},
 
+		isAiGenerated: {
+			type: Boolean,
+			default: false,
+		},
+
 		accounts: {
 			type: Array,
 			required: true,
@@ -793,6 +804,7 @@ export default {
 
 			editorMode: (this.body?.format !== 'html') ? EDITOR_MODE_TEXT : EDITOR_MODE_HTML,
 			requestMdnVal: this.requestMdn,
+			isAiGeneratedVal: this.isAiGenerated,
 			changeSignature: false,
 			loadingIndicatorTo: false,
 			loadingIndicatorCc: false,
@@ -1116,6 +1128,10 @@ export default {
 			this.$emit('update:request-mdn', val)
 		},
 
+		isAiGeneratedVal(val) {
+			this.$emit('update:is-ai-generated', val)
+		},
+
 		selectedAlias: {
 			handler() {
 				const aliasEmailAddress = this.selectedAlias.emailAddress
@@ -1313,6 +1329,7 @@ export default {
 				inReplyToMessageId: this.inReplyToMessageId ?? (this.replyTo ? this.replyTo.messageId : undefined),
 				isHtml: !this.encrypt && !this.editorPlainText,
 				requestMdn: this.requestMdnVal,
+				isAiGenerated: this.isAiGeneratedVal,
 				sendAt: this.sendAtVal !== 0 ? Math.floor(this.sendAtVal / 1000) : undefined,
 				smimeSign: this.shouldSmimeSign,
 				smimeEncrypt: this.shouldSmimeEncrypt,
@@ -1407,8 +1424,11 @@ export default {
 			if (!this.isDraft || this.changeSignature) {
 				this.insertSignature()
 			}
+			// TODO: the editor is recreated on editorMode change, so this re-appends the
+			// smart reply and re-arms isAiGeneratedVal even after the user unchecked it.
 			if (this.smartReply) {
 				this.bus.emit('append-to-body-at-cursor', this.smartReply)
+				this.isAiGeneratedVal = true
 			}
 		},
 
@@ -1639,6 +1659,7 @@ export default {
 			this.requestMdnVal = false
 			this.changeSignature = false
 			this.sendAtVal = 0
+			this.isAiGeneratedVal = false
 			this.toFieldTouched = false
 			this.setAlias()
 			this.initBody()

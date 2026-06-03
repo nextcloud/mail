@@ -72,6 +72,7 @@ class IMAPMessageTest extends TestCase {
 			'',
 			'disposition',
 			false,
+			false,
 			[],
 			null,
 			false,
@@ -114,6 +115,7 @@ class IMAPMessageTest extends TestCase {
 			new Horde_Imap_Client_DateTime('2016-01-01 00:00:00'),
 			'',
 			'disposition',
+			false,
 			false,
 			[],
 			null,
@@ -159,6 +161,7 @@ class IMAPMessageTest extends TestCase {
 			'phishingDetails' => [],
 			'scheduling' => [],
 			'isPgpMimeEncrypted' => false,
+			'hasAiGeneratedHeader' => false,
 		], $json);
 		$this->assertEquals(1234, $json['uid']);
 	}
