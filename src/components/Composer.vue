@@ -399,6 +399,12 @@
 							{{ t('mail', 'Request a read receipt') }}
 						</ActionCheckbox>
 						<ActionCheckbox
+							:checked="isAiGenerated"
+							@check="isAiGenerated = true"
+							@uncheck="isAiGenerated = false">
+							{{ t('mail', 'Mark as AI generated') }}
+						</ActionCheckbox>
+						<ActionCheckbox
 							v-if="smimeCertificateForCurrentAlias"
 							:checked="wantsSmimeSign"
 							@check="smimeSignCheck(true)"
@@ -748,6 +754,7 @@ export default {
 
 			editorMode: (this.body?.format !== 'html') ? EDITOR_MODE_TEXT : EDITOR_MODE_HTML,
 			requestMdnVal: this.requestMdn,
+			isAiGenerated: false,
 			changeSignature: false,
 			loadingIndicatorTo: false,
 			loadingIndicatorCc: false,
@@ -1257,6 +1264,7 @@ export default {
 				inReplyToMessageId: this.inReplyToMessageId ?? (this.replyTo ? this.replyTo.messageId : undefined),
 				isHtml: !this.encrypt && !this.editorPlainText,
 				requestMdn: this.requestMdnVal,
+				isAiGenerated: this.isAiGenerated,
 				sendAt: this.sendAtVal !== 0 ? Math.floor(this.sendAtVal / 1000) : undefined,
 				smimeSign: this.shouldSmimeSign,
 				smimeEncrypt: this.shouldSmimeEncrypt,
@@ -1332,6 +1340,7 @@ export default {
 			this.insertSignature()
 			if (this.smartReply) {
 				this.bus.emit('append-to-body-at-cursor', this.smartReply)
+				this.isAiGenerated = true
 			}
 		},
 

@@ -72,6 +72,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	private string $rawReferences;
 	private string $dispositionNotificationTo;
 	private bool $hasDkimSignature;
+	private bool $isAiGenerated;
 	private array $phishingDetails;
 	private ?string $unsubscribeUrl;
 	private bool $isOneClickUnsubscribe;
@@ -105,6 +106,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		string $rawReferences,
 		string $dispositionNotificationTo,
 		bool $hasDkimSignature,
+		bool $isAiGenerated,
 		array $phishingDetails,
 		?string $unsubscribeUrl,
 		bool $isOneClickUnsubscribe,
@@ -135,6 +137,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$this->rawReferences = $rawReferences;
 		$this->dispositionNotificationTo = $dispositionNotificationTo;
 		$this->hasDkimSignature = $hasDkimSignature;
+		$this->isAiGenerated = $isAiGenerated;
 		$this->phishingDetails = $phishingDetails;
 		$this->unsubscribeUrl = $unsubscribeUrl;
 		$this->isOneClickUnsubscribe = $isOneClickUnsubscribe;
@@ -350,6 +353,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'hasHtmlBody' => $this->hasHtmlMessage,
 			'dispositionNotificationTo' => $this->getDispositionNotificationTo(),
 			'hasDkimSignature' => $this->hasDkimSignature,
+			'isAiGenerated' => $this->isAiGenerated,
 			'phishingDetails' => $this->phishingDetails,
 			'unsubscribeUrl' => $this->unsubscribeUrl,
 			'isOneClickUnsubscribe' => $this->isOneClickUnsubscribe,
