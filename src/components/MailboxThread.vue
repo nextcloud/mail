@@ -615,12 +615,9 @@ export default {
 
 :deep(.app-content-list) {
 	flex: 1 1 auto;
-	height: 100% !important;
 	min-height: 0;
-	position: absolute;
 	overflow: scroll;
 	width: 100% !important;
-	top: 40px;
 }
 
 :deep(.app-content-wrapper) {
