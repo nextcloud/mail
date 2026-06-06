@@ -21,8 +21,6 @@ use OCA\Mail\Service\AvatarService;
 use Psr\Log\LoggerInterface;
 use function array_key_exists;
 use function array_map;
-use function array_merge;
-use function array_reduce;
 
 class PreviewEnhancer {
 	/** @var IMAPClientFactory */
@@ -60,43 +58,29 @@ class PreviewEnhancer {
 	 *
 	 * @return Message[]
 	 */
-	public function process(Account $account, Mailbox $mailbox, array $messages, bool $preLoadAvatars = false, ?string $userId = null): array {
-		$needAnalyze = array_reduce($messages, static function (array $carry, Message $message) {
-			if ($message->getStructureAnalyzed()) {
-				// Nothing to do
-				return $carry;
-			}
+	public function process(Account $account, Mailbox $mailbox, array $messages, bool $preLoadAvatars = false): array {
+		$needAnalyze = [];
 
-			return array_merge($carry, [$message->getUid()]);
-		}, []);
 		$client = $this->clientFactory->getClient($account);
 
 		foreach ($messages as $message) {
+			if ($message->getStructureAnalyzed() === false || $message->getStructureAnalyzed() === null) {
+				$needAnalyze[] = $message->getUid();
+			}
+
 			$attachments = $this->attachmentService->getAttachmentNames($account, $mailbox, $message, $client);
 			$message->setAttachments($attachments);
-		}
 
-		if ($preLoadAvatars) {
-			foreach ($messages as $message) {
-				$from = $message->getFrom()->first();
-				if ($message->getAvatar() === null && $from !== null && $from->getEmail() !== null && $userId !== null) {
-					$avatar = $this->avatarService->getCachedAvatar($from->getEmail(), $userId);
-					if ($avatar === null) {
-						$message->setFetchAvatarFromClient(true);
-					}
-					if ($avatar instanceof Avatar) {
-						$message->setAvatar($avatar);
-					}
-
-				}
+			if ($preLoadAvatars) {
+				$this->preLoadAvatar($message, $account->getUserId());
 			}
 		}
 
 		if ($needAnalyze === []) {
 			// Nothing to enhance
+			$client->logout();
 			return $messages;
 		}
-
 
 		try {
 			$data = $this->imapMapper->getBodyStructureData(
@@ -132,5 +116,33 @@ class PreviewEnhancer {
 
 			return $message;
 		}, $messages));
+	}
+
+	private function preLoadAvatar(Message $message, string $userId): void {
+		if ($message->getAvatar() !== null) {
+			return;
+		}
+
+		// Only allow client-side fetching once we confirm a cache miss.
+		$message->setFetchAvatarFromClient(false);
+
+		$from = $message->getFrom()->first();
+		if ($from === null) {
+			return;
+		}
+
+		try {
+			$email = $from->getEmail();
+		} catch (\Exception) {
+			return;
+		}
+
+		$avatar = $this->avatarService->getCachedAvatar($email, $userId);
+		if ($avatar instanceof Avatar) {
+			$message->setAvatar($avatar);
+			return;
+		}
+
+		$message->setFetchAvatarFromClient(true);
 	}
 }
