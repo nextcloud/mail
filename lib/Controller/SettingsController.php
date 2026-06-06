@@ -12,6 +12,7 @@ namespace OCA\Mail\Controller;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Exception\ValidationException;
 use OCA\Mail\Http\JsonResponse as HttpJsonResponse;
+use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
@@ -38,6 +39,7 @@ class SettingsController extends Controller {
 		IConfig $config,
 		ContainerInterface $container,
 		private ClassificationSettingsService $classificationSettingsService,
+		private AiIntegrationsService $aiIntegrationsService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->provisioningManager = $provisioningManager;
@@ -124,6 +126,19 @@ class SettingsController extends Controller {
 	}
 	public function setImportanceClassificationEnabledByDefault(bool $enabledByDefault): JSONResponse {
 		$this->classificationSettingsService->setClassificationEnabledByDefault($enabledByDefault);
+		return new JSONResponse([]);
+	}
+
+	/**
+	 * Update custom LLM prompts. Each key maps to a prompt config key,
+	 * and the value is the custom prompt string (empty string resets to default).
+	 *
+	 * @param array<string, string> $prompts
+	 */
+	public function setLlmCustomPrompts(array $prompts): JSONResponse {
+		foreach ($prompts as $key => $value) {
+			$this->aiIntegrationsService->setCustomPrompt($key, $value);
+		}
 		return new JSONResponse([]);
 	}
 
