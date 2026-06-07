@@ -261,6 +261,7 @@ OC.L10N.register(
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "You are not allowed to move this message to the archive folder and/or delete this message from the current folder",
     "Last hour" : "Last hour",
     "Today" : "امروز.",
+    "Yesterday" : "دیروز",
     "Last week" : "هفته گذشته",
     "Last month" : "ماه گذشته",
     "Choose target folder" : "پوشهٔ هدف را انتخاب کنید",
