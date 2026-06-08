@@ -206,6 +206,10 @@ PROMPT;
 			$decoded = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
 			return new EventData($decoded['title'], $decoded['agenda']);
 		} catch (JsonException $e) {
+			$this->logger->warning('Could not decode generated event data: ' . $e->getMessage(), [
+				'exception' => $e,
+				'threadId' => $threadId,
+			]);
 			return null;
 		}
 	}
