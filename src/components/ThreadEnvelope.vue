@@ -1141,6 +1141,7 @@ export default {
 				}
 				this.showTranslationModal = true
 			} catch (error) {
+				logger.error('could not open translation modal, message not loaded', { error })
 				showError(t('mail', 'Please wait for the message to load'))
 			}
 		},
