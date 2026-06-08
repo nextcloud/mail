@@ -223,6 +223,7 @@ export default {
 				await navigator.clipboard.writeText(this.email)
 				showSuccess(t('mail', 'Copied email address to clipboard'))
 			} catch (e) {
+				logger.error('could not copy email address to clipboard', { error: e })
 				showError(t('mail', 'Could not copy email address to clipboard'))
 			}
 		},
