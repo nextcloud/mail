@@ -810,6 +810,7 @@ export default {
 				// Handle rate limit: 429 Too Many Requests
 				// Ref https://axios-http.com/docs/handling_errors
 				if (error.response?.status === 429) {
+					logger.error('mailbox repair rate-limited', { error })
 					showError(t('mail', 'Please wait 10 minutes before repairing again'))
 				} else {
 					throw error
