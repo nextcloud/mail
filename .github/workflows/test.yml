@@ -112,7 +112,7 @@ jobs:
                   - 993:993
                   - 4190:4190
           mariadb-service:
-              image: ghcr.io/nextcloud/continuous-integration-mariadb-11.4:latest
+              image: ghcr.io/nextcloud/continuous-integration-mariadb-11.8:latest
               env:
                   MARIADB_ROOT_PASSWORD: my-secret-pw
                   MARIADB_DATABASE: nextcloud
