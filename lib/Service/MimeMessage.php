@@ -11,7 +11,6 @@ namespace OCA\Mail\Service;
 
 use DOMDocument;
 use DOMElement;
-use DOMNode;
 use Horde_Mime_Part;
 use Horde_Text_Filter;
 use OCA\Mail\Exception\InvalidDataUriException;
@@ -100,7 +99,7 @@ class MimeMessage {
 			$plainPart->setType('text/plain');
 			$plainPart->setCharset('UTF-8');
 			$plainPart->setContents(
-				Horde_Text_Filter::filter($contentHtml, 'Html2text', ['callback' => [$this, 'htmlToTextCallback']])
+				Horde_Text_Filter::filter($contentHtml, 'Html2text', [])
 			);
 		}
 
@@ -257,24 +256,5 @@ class MimeMessage {
 		}
 
 		return [$inline, $normal];
-	}
-
-	/**
-	 * A callback for Horde_Text_Filter.
-	 *
-	 * The purpose of this callback is to overwrite the default behavior
-	 * of html2text filter to convert <p>Hello</p> => Hello\n\n with
-	 * <p>Hello</p> => Hello\n.
-	 *
-	 * @param DOMDocument $doc
-	 * @param DOMNode $node
-	 * @return string|null non-null, add this text to the output and skip further processing of the node.
-	 */
-	public function htmlToTextCallback(DOMDocument $doc, DOMNode $node) {
-		if ($node instanceof DOMElement && strtolower($node->tagName) === 'p') {
-			return $node->textContent . "\n";
-		}
-
-		return null;
 	}
 }
