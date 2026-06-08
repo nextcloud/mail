@@ -141,7 +141,7 @@ class AliasesService {
 	 * @throws DoesNotExistException
 	 * @throws Exception
 	 */
-	public function updateSMIMECertificateId(string $userId, int $aliasId, ?int $sMimeCertificateId = null): Alias {
+	public function updateSmimeCertificateId(string $userId, int $aliasId, ?int $sMimeCertificateId = null): Alias {
 		$entity = $this->find($aliasId, $userId);
 		$entity->setSmimeCertificateId($sMimeCertificateId);
 		return $this->aliasMapper->update($entity);

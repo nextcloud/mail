@@ -221,10 +221,14 @@ class AccountMigrationService {
 	private function getDecryptedPasswords(MailAccount $mailAccount, array &$accountData): void {
 		if ($mailAccount->getAuthMethod() === 'password') {
 			$encryptedInboundPassword = $mailAccount->getInboundPassword();
-			$accountData['inboundPassword'] = $this->crypto->decrypt($encryptedInboundPassword);
+			if ($encryptedInboundPassword !== null) {
+				$accountData['inboundPassword'] = $this->crypto->decrypt($encryptedInboundPassword);
+			}
 
 			$encryptedOutboundPassword = $mailAccount->getOutboundPassword();
-			$accountData['outboundPassword'] = $this->crypto->decrypt($encryptedOutboundPassword);
+			if ($encryptedOutboundPassword !== null) {
+				$accountData['outboundPassword'] = $this->crypto->decrypt($encryptedOutboundPassword);
+			}
 		}
 	}
 
@@ -242,10 +246,14 @@ class AccountMigrationService {
 	private function getDecryptedOauthToken(MailAccount $mailAccount, array &$accountData): void {
 		if ($mailAccount->getAuthMethod() === 'xoauth2') {
 			$encryptedRefreshToken = $mailAccount->getOauthRefreshToken();
-			$accountData['oauthRefreshToken'] = $this->crypto->decrypt($encryptedRefreshToken);
+			if ($encryptedRefreshToken !== null) {
+				$accountData['oauthRefreshToken'] = $this->crypto->decrypt($encryptedRefreshToken);
+			}
 
 			$encryptedAccessToken = $mailAccount->getOauthAccessToken();
-			$accountData['oauthAccessToken'] = $this->crypto->decrypt($encryptedAccessToken);
+			if ($encryptedAccessToken !== null) {
+				$accountData['oauthAccessToken'] = $this->crypto->decrypt($encryptedAccessToken);
+			}
 
 			$accountData['oauthTokenTtl'] = $mailAccount->getOauthTokenTtl();
 		}

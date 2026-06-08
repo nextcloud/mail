@@ -52,6 +52,7 @@ class TextBlocksMigrationServiceTest extends TestCase {
 			->method('findAll')
 			->with(self::USER_ID)
 			->willReturn($textBlocksList);
+
 		$this->migrationService->exportTextBlocks($this->user, $this->exportDestination, $this->output);
 	}
 

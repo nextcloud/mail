@@ -114,6 +114,7 @@ class InternalAddressesMigrationServiceTest extends TestCase {
 			->with(InternalAddressesMigrationService::INTERNAL_ADDRESSES_FILE)
 			->willReturn($fileContents);
 		$this->serviceMock->getParameter('internalAddressService')->expects(self::never())->method('add');
+
 		$this->migrationService->importInternalAddresses($this->user, $this->importSource, $this->output);
 	}
 
