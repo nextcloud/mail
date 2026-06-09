@@ -12,18 +12,9 @@ import { PAGE_SIZE, UNIFIED_INBOX_ID } from '../../../store/constants.js'
 import useMainStore from '../../../store/mainStore.js'
 import { normalizedEnvelopeListId } from '../../../util/normalization.js'
 
-vi.mock('../../../service/MailboxService.js', async (importOriginal) => {
-	const mod = await importOriginal()
-	return Object.fromEntries(Object.keys(mod).map(k => [k, vi.fn()]))
-})
-vi.mock('../../../service/MessageService.js', async (importOriginal) => {
-	const mod = await importOriginal()
-	return Object.fromEntries(Object.keys(mod).map(k => [k, vi.fn()]))
-})
-vi.mock('../../../service/NotificationService.js', async (importOriginal) => {
-	const mod = await importOriginal()
-	return Object.fromEntries(Object.keys(mod).map(k => [k, vi.fn()]))
-})
+vi.mock('../../../service/MailboxService.js')
+vi.mock('../../../service/MessageService.js')
+vi.mock('../../../service/NotificationService.js')
 vi.mock('../../../util/normalization.js', () => ({
 	__esModule: true,
 	// Supply a default list id ('') to prevent annoying errors
