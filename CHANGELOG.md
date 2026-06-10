@@ -1,3 +1,16 @@
+## [5.9.2](https://github.com/nextcloud/mail/compare/v5.9.1...v5.9.2) (2026-06-10)
+
+
+### Bug Fixes
+
+* **delegation:** missing mailbox id in audit log ([7fdd495](https://github.com/nextcloud/mail/commit/7fdd495320b0c83a66f70480b853007ba7b7d88f))
+* **l10n:** Update translations from Transifex ([a471b67](https://github.com/nextcloud/mail/commit/a471b673a3b1c9c1ad6fad3b4f198fd900183db0))
+* **l10n:** Update translations from Transifex ([15d7dae](https://github.com/nextcloud/mail/commit/15d7dae05a846a0e7408c6f0907ae47a7c8dc786))
+* **l10n:** Update translations from Transifex ([203ebf8](https://github.com/nextcloud/mail/commit/203ebf82ea198f056899984a21f487778a5b3979))
+* **l10n:** Update translations from Transifex ([22be214](https://github.com/nextcloud/mail/commit/22be21400cb1076b2c6868213542e5656e028053))
+
+
+
 ## [5.9.1](https://github.com/nextcloud/mail/compare/v5.9.0...v5.9.1) (2026-06-03)
 
 
