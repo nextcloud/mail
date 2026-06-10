@@ -209,7 +209,8 @@ export default {
 		async deleteTextBlock() {
 			await this.mainStore.deleteTextBlock({ id: this.textBlock.id }).then(() => {
 				showSuccess(t('mail', 'Text block deleted'))
-			}).catch(() => {
+			}).catch((error) => {
+				logger.error('failed to delete text block', { error })
 				showError(t('mail', 'Failed to delete text block'))
 			})
 		},
@@ -222,6 +223,7 @@ export default {
 				showSuccess(t('mail', 'Text block shared with {sharee}', { sharee: sharee.shareWith }))
 				this.share = null
 			} catch (error) {
+				logger.error('failed to share text block', { error })
 				showError(t('mail', 'Failed to share text block with {sharee}', { sharee: sharee.shareWith }))
 			}
 		},
@@ -232,6 +234,7 @@ export default {
 				this.shares = this.shares.filter((share) => share.shareWith !== sharee.shareWith)
 				showSuccess(t('mail', 'Share deleted for {name}', { name: sharee.shareWith }))
 			} catch (error) {
+				logger.error('failed to delete text block share', { error })
 				showError(t('mail', 'Failed to delete share with {name}', { name: sharee.shareWith }))
 			}
 		},
