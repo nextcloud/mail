@@ -15,5 +15,10 @@ export default defineConfig({
 		environment: 'jsdom',
 		// Required for transforming CSS files
 		pool: 'vmForks',
+		server: {
+			deps: {
+				external: ['https-proxy-agent', 'agent-base'],
+			},
+		},
 	},
 })
