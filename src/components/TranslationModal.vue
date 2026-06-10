@@ -187,6 +187,7 @@ export default {
 				await navigator.clipboard.writeText(this.translatedMessage)
 				showSuccess(t('mail', 'Translation copied to clipboard'))
 			} catch (error) {
+				logger.error('could not copy translation to clipboard', { error })
 				showError(t('mail', 'Translation could not be copied'))
 			}
 		},
