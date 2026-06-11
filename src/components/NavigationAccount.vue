@@ -96,7 +96,11 @@
 				</template>
 			</template>
 		</NcAppNavigationCaption>
-		<AccountSettings :open="showSettings" :account="account" @update:open="showAccountSettings($event)" />
+		<AccountSettings
+			:open="showSettings"
+			:account="account"
+			:scroll-to-section="showSettingsSection"
+			@update:open="showAccountSettings($event)" />
 		<DelegationModal v-if="showDelegationModal" :account="account" @close="showDelegationModal = false" />
 	</Fragment>
 </template>
@@ -191,6 +195,10 @@ export default {
 		...mapStores(useMainStore),
 		showSettings() {
 			return this.mainStore.showSettingsForAccount(this.account.id)
+		},
+
+		showSettingsSection() {
+			return this.mainStore.showSettingsSectionForAccount(this.account.id)
 		},
 
 		visible() {
