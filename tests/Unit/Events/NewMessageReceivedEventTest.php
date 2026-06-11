@@ -10,13 +10,15 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Events;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Events\NewMessageReceivedEvent;
 
 class NewMessageReceivedEventTest extends TestCase {
 	public function testConstructorAndGetter(): void {
 		$uri = 'imap://user@example.com/INBOX;UID=123';
+		$message = new Message();
 
-		$event = new NewMessageReceivedEvent($uri);
+		$event = new NewMessageReceivedEvent($uri, $message);
 
 		$this->assertSame($uri, $event->getUri());
 	}

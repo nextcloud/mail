@@ -36,7 +36,7 @@ class NewMessagesNotifier implements IEventListener {
 
 		foreach ($event->getMessages() as $message) {
 			$uri = $this->urlGenerator->linkToOCSRouteAbsolute('mail.messageApi.get', ['id' => $message->getId()]);
-			$this->eventDispatcher->dispatchTyped(new NewMessageReceivedEvent($uri));
+			$this->eventDispatcher->dispatchTyped(new NewMessageReceivedEvent($uri, $message));
 		}
 	}
 }
