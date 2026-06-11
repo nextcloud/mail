@@ -36,8 +36,10 @@ class AppConfigMigrationService {
 	 */
 	public function exportAppConfiguration(IUser $user, IExportDestination $exportDestination, OutputInterface $output): void {
 		$output->writeln(
-			$this->l10n->t('Exporting mail app configuration for user %s', [ $user->getUID() ]),
-			OutputInterface::VERBOSITY_VERBOSE
+			$this->l10n->t(
+				'Exporting mail app configuration for user %s',
+				[$user->getUID()]
+			), OutputInterface::VERBOSITY_VERBOSE
 		);
 
 		$appConfigKeys = $this->config->getUserKeys($user->getUID(), Application::APP_ID);
@@ -64,16 +66,20 @@ class AppConfigMigrationService {
 	 */
 	public function importAppConfiguration(IUser $user, IImportSource $importSource, OutputInterface $output): void {
 		$output->writeln(
-			$this->l10n->t('Importing mail app configuration for user %s', [ $user->getUID() ]),
-			OutputInterface::VERBOSITY_VERBOSE
+			$this->l10n->t(
+				'Importing mail app configuration for user %s',
+				[$user->getUID()]
+			), OutputInterface::VERBOSITY_VERBOSE
 		);
 
 		try {
 			$appConfigFileContent = $importSource->getFileContents(self::APP_CONFIGURATION_FILE);
 		} catch (UserMigrationException) {
 			$output->writeln(
-				$this->l10n->t('Mail app configuration for user %s not found. Continue...', [ $user->getUID() ]),
-				OutputInterface::VERBOSITY_VERBOSE
+				$this->l10n->t(
+					'Mail app configuration for user %s not found. Continue...',
+					[$user->getUID()]
+				), OutputInterface::VERBOSITY_VERBOSE
 			);
 
 			return;
@@ -84,8 +90,10 @@ class AppConfigMigrationService {
 			$this->validateAppConfig($appConfig);
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
-				$this->l10n->t('Mail app configuration for user %s is invalid and will be skipped. Continue...', [ $user->getUID() ]),
-				OutputInterface::VERBOSITY_VERBOSE
+				$this->l10n->t(
+					'Mail app configuration for user %s is invalid and will be skipped. Continue...',
+					[$user->getUID()]
+				), OutputInterface::VERBOSITY_VERBOSE
 			);
 
 			return;
@@ -93,8 +101,10 @@ class AppConfigMigrationService {
 
 		foreach ($appConfig as $appSetting) {
 			$output->writeln(
-				$this->l10n->t('Importing mail app configuration key %s for user %s', [ $appSetting['key'], $user->getUID() ]),
-				OutputInterface::VERBOSITY_VERBOSE
+				$this->l10n->t(
+					'Importing mail app configuration key %s for user %s',
+					[$appSetting['key'], $user->getUID()]
+				), OutputInterface::VERBOSITY_VERBOSE
 			);
 
 			/** @noinspection PhpUnhandledExceptionInspection */

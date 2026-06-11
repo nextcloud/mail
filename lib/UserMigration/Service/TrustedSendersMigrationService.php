@@ -35,8 +35,10 @@ class TrustedSendersMigrationService {
 	 */
 	public function exportTrustedSenders(IUser $user, IExportDestination $exportDestination, OutputInterface $output): void {
 		$output->writeln(
-			$this->l10n->t('Exporting trusted senders for user %s', [ $user->getUID() ]),
-			OutputInterface::VERBOSITY_VERBOSE
+			$this->l10n->t(
+				'Exporting trusted senders for user %s',
+				[$user->getUID()]
+			), OutputInterface::VERBOSITY_VERBOSE
 		);
 
 		$trustedSenders = $this->trustedSenderService->getTrusted($user->getUID());
@@ -57,16 +59,20 @@ class TrustedSendersMigrationService {
 	 */
 	public function importTrustedSenders(IUser $user, IImportSource $importSource, OutputInterface $output): void {
 		$output->writeln(
-			$this->l10n->t('Importing trusted senders for user %s', [ $user->getUID() ]),
-			OutputInterface::VERBOSITY_VERBOSE
+			$this->l10n->t(
+				'Importing trusted senders for user %s',
+				[$user->getUID()]
+			), OutputInterface::VERBOSITY_VERBOSE
 		);
 
 		try {
 			$trustedSendersFileContent = $importSource->getFileContents(self::TRUSTED_SENDERS_FILE);
 		} catch (UserMigrationException) {
 			$output->writeln(
-				$this->l10n->t('Trusted senders configuration for user %s not found. Continue...', [ $user->getUID() ]),
-				OutputInterface::VERBOSITY_VERBOSE
+				$this->l10n->t(
+					'Trusted senders configuration for user %s not found. Continue...',
+					[$user->getUID()]
+				), OutputInterface::VERBOSITY_VERBOSE
 			);
 
 			return;
@@ -77,8 +83,10 @@ class TrustedSendersMigrationService {
 			$this->validateTrustedSenders($trustedSenders);
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
-				$this->l10n->t('Trusted senders configuration for user %s is invalid and will be skipped. Continue...', [ $user->getUID() ]),
-				OutputInterface::VERBOSITY_VERBOSE
+				$this->l10n->t(
+					'Trusted senders configuration for user %s is invalid and will be skipped. Continue...',
+					[$user->getUID()]
+				), OutputInterface::VERBOSITY_VERBOSE
 			);
 
 			return;
@@ -87,8 +95,10 @@ class TrustedSendersMigrationService {
 
 		foreach ($trustedSenders as $trustedSender) {
 			$output->writeln(
-				$this->l10n->t('Importing trusted sender %s for user %s', [$trustedSender['email'], $user->getUID()]),
-				OutputInterface::VERBOSITY_VERBOSE
+				$this->l10n->t(
+					'Importing trusted sender %s for user %s',
+					[$trustedSender['email'], $user->getUID()]
+				), OutputInterface::VERBOSITY_VERBOSE
 			);
 
 			$this->trustedSenderService->trust($user->getUID(), $trustedSender['email'], $trustedSender['type']);

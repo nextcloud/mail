@@ -45,9 +45,10 @@ class SmimeMigrationService {
 		IExportDestination $exportDestination,
 		OutputInterface $output): void {
 		$output->writeln(
-			$this->l10n->t('Exporting S/MIME certificates for user %s',
-				[$user->getUID()]),
-			OutputInterface::VERBOSITY_VERBOSE
+			$this->l10n->t(
+				'Exporting S/MIME certificates for user %s',
+				[$user->getUID()]
+			), OutputInterface::VERBOSITY_VERBOSE
 		);
 
 		$certificates = $this->smimeService->findAllCertificates($user->getUID());
@@ -93,9 +94,10 @@ class SmimeMigrationService {
 		IImportSource $importSource,
 		OutputInterface $output): array {
 		$output->writeln(
-			$this->l10n->t('Importing S/MIME certificates for user %s',
-				[$user->getUID()]),
-			OutputInterface::VERBOSITY_VERBOSE
+			$this->l10n->t(
+				'Importing S/MIME certificates for user %s',
+				[$user->getUID()]
+			), OutputInterface::VERBOSITY_VERBOSE
 		);
 
 		$certificatesMapping = [];
@@ -110,9 +112,10 @@ class SmimeMigrationService {
 					$this->validateCertificate($certificate);
 				} catch (JsonException|UserMigrationException) {
 					$output->writeln(
-						$this->l10n->t('S/MIME configuration %s for user %s is invalid and will be skipped. Continue...',
-							[$certificateFilePath, $user->getUID()]),
-						OutputInterface::VERBOSITY_VERBOSE
+						$this->l10n->t(
+							'S/MIME configuration %s for user %s is invalid and will be skipped. Continue...',
+							[$certificateFilePath, $user->getUID()]
+						), OutputInterface::VERBOSITY_VERBOSE
 					);
 
 					continue;
@@ -129,10 +132,10 @@ class SmimeMigrationService {
 
 		if (count($certificatesMapping) === 0) {
 			$output->writeln(
-				$this->l10n->t('No S/MIME certificates for user %s found. Continue...',
+				$this->l10n->t(
+					'No S/MIME certificates for user %s found. Continue...',
 					[$user->getUID()]
-				),
-				OutputInterface::VERBOSITY_VERBOSE
+				), OutputInterface::VERBOSITY_VERBOSE
 			);
 		}
 

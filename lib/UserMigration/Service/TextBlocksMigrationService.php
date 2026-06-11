@@ -36,8 +36,10 @@ class TextBlocksMigrationService {
 	 */
 	public function exportTextBlocks(IUser $user, IExportDestination $exportDestination, OutputInterface $output): void {
 		$output->writeln(
-			$this->l10n->t('Exporting text blocks for user %s', [$user->getUID()]),
-			OutputInterface::VERBOSITY_VERBOSE
+			$this->l10n->t(
+				'Exporting text blocks for user %s',
+				[$user->getUID()]
+			), OutputInterface::VERBOSITY_VERBOSE
 		);
 
 		$textBlocks = $this->textBlockService->findAll($user->getUID());
@@ -58,16 +60,20 @@ class TextBlocksMigrationService {
 	 */
 	public function importTextBlocks(IUser $user, IImportSource $importSource, OutputInterface $output): void {
 		$output->writeln(
-			$this->l10n->t('Importing text blocks for user %s', [$user->getUID()]),
-			OutputInterface::VERBOSITY_VERBOSE
+			$this->l10n->t(
+				'Importing text blocks for user %s',
+				[$user->getUID()]
+			), OutputInterface::VERBOSITY_VERBOSE
 		);
 
 		try {
 			$textBlocksFileContent = $importSource->getFileContents(self::TEXT_BLOCKS_FILE);
 		} catch (UserMigrationException) {
 			$output->writeln(
-				$this->l10n->t('Text blocks for user %s not found. Continue...', [$user->getUID()]),
-				OutputInterface::VERBOSITY_VERBOSE
+				$this->l10n->t(
+					'Text blocks for user %s not found. Continue...',
+					[$user->getUID()]
+				), OutputInterface::VERBOSITY_VERBOSE
 			);
 
 			return;
@@ -78,8 +84,10 @@ class TextBlocksMigrationService {
 			$this->validateTextBlocks($textBlocks);
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
-				$this->l10n->t('Text blocks configuration for user %s is invalid and will be skipped. Continue...', [ $user->getUID() ]),
-				OutputInterface::VERBOSITY_VERBOSE
+				$this->l10n->t(
+					'Text blocks configuration for user %s is invalid and will be skipped. Continue...',
+					[$user->getUID()]
+				), OutputInterface::VERBOSITY_VERBOSE
 			);
 
 			return;
@@ -88,8 +96,10 @@ class TextBlocksMigrationService {
 
 		foreach ($textBlocks as $textBlock) {
 			$output->writeln(
-				$this->l10n->t('Importing text block %s for user %s', [$textBlock['title'], $user->getUID()]),
-				OutputInterface::VERBOSITY_VERBOSE
+				$this->l10n->t(
+					'Importing text block %s for user %s',
+					[$textBlock['title'], $user->getUID()]
+				), OutputInterface::VERBOSITY_VERBOSE
 			);
 
 			$this->textBlockService->create($user->getUID(), $textBlock['title'], $textBlock['content']);

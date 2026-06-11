@@ -52,8 +52,10 @@ class AccountMigrationService {
 	 */
 	public function exportAccounts(IUser $user, IExportDestination $exportDestination, OutputInterface $output): void {
 		$output->writeln(
-			$this->l10n->t('Exporting mail accounts for user %s', [$user->getUID()]),
-			OutputInterface::VERBOSITY_VERBOSE
+			$this->l10n->t(
+				'Exporting mail accounts for user %s',
+				[$user->getUID()]
+			), OutputInterface::VERBOSITY_VERBOSE
 		);
 
 		$accounts = $this->accountService->findByUserId($user->getUID());
@@ -64,8 +66,10 @@ class AccountMigrationService {
 			$isProvisionedAccount = $mailAccount->getProvisioningId() !== null;
 			if ($isProvisionedAccount) {
 				$output->writeln(
-					$this->l10n->t('Skipping provisioned account with ID %i', [$account->getId()]),
-					OutputInterface::VERBOSITY_VERBOSE
+					$this->l10n->t(
+						'Skipping provisioned account with ID %i',
+						[$account->getId()]
+					), OutputInterface::VERBOSITY_VERBOSE
 				);
 
 				continue;
@@ -121,8 +125,10 @@ class AccountMigrationService {
 		OutputInterface $output,
 		array $certificatesMapping): array {
 		$output->writeln(
-			$this->l10n->t('Importing mail accounts for user %s', [$user->getUID()]),
-			OutputInterface::VERBOSITY_VERBOSE
+			$this->l10n->t(
+				'Importing mail accounts for user %s',
+				[$user->getUID()]
+			), OutputInterface::VERBOSITY_VERBOSE
 		);
 
 		$accounts = $this->getAccounts($importSource, $output);
@@ -180,7 +186,10 @@ class AccountMigrationService {
 			$this->setAliases($mailAccount, $accountData, $certificatesMapping);
 
 			$mailboxesMapping = $this->setMailboxes($mailAccount, $accountData);
-			$accountAndMailboxMappings['mailboxes'] += $mailboxesMapping;
+			$accountAndMailboxMappings['mailboxes'] = array_merge(
+				$accountAndMailboxMappings['mailboxes'] ?? [],
+				$mailboxesMapping
+			);
 		}
 
 		return $accountAndMailboxMappings;
@@ -324,6 +333,10 @@ class AccountMigrationService {
 	 * @throws \JsonException
 	 */
 	private function getAccounts(IImportSource $importSource, OutputInterface $output): array {
+		if (!$importSource->pathExists(self::ACCOUNT_FOLDER)) {
+			return [];
+		}
+
 		$accountFilePaths = $importSource->getFolderListing(self::ACCOUNT_FOLDER);
 
 		return array_map(function (string $accountFilePath) use ($importSource, $output) {
@@ -418,9 +431,11 @@ class AccountMigrationService {
 
 			$this->aliasesService->updateSignature($userId, $newAlias->getId(), (string)$alias['signature']);
 
-			$oldCertificateId = (int)$alias['smimeCertificateId'];
-			$this->aliasesService->updateSmimeCertificateId($userId, $newAlias->getId(),
-				$certificatesMapping[$oldCertificateId]);
+			$oldCertificateId = $alias['smimeCertificateId'];
+			if ($oldCertificateId !== null) {
+				$this->aliasesService->updateSmimeCertificateId($userId, $newAlias->getId(),
+					$certificatesMapping[(int)$oldCertificateId]);
+			}
 		}
 	}
 

@@ -41,8 +41,10 @@ class QuickActionsMigrationService {
 		IExportDestination $exportDestination,
 		OutputInterface $output): void {
 		$output->writeln(
-			$this->l10n->t('Exporting quick actions for user %s', [$user->getUID()]),
-			OutputInterface::VERBOSITY_VERBOSE
+			$this->l10n->t(
+				'Exporting quick actions for user %s',
+				[$user->getUID()]
+			), OutputInterface::VERBOSITY_VERBOSE
 		);
 
 		$quickActions = $this->quickActionsService->findAll($user->getUID());
@@ -71,16 +73,32 @@ class QuickActionsMigrationService {
 		array $mailboxMapping,
 		array $tagMapping): void {
 		$output->writeln(
-			$this->l10n->t('Importing quick actions for user %s', [$user->getUID()]),
-			OutputInterface::VERBOSITY_VERBOSE
+			$this->l10n->t(
+				'Importing quick actions for user %s',
+				[$user->getUID()]
+			), OutputInterface::VERBOSITY_VERBOSE
 		);
+
+		if (count($accountMapping) === 0 || count($mailboxMapping) === 0) {
+			$output->writeln(
+				$this->l10n->t(
+					'Missing account or mailbox mapping when importing quick actions for user %s. Continue...',
+					[$user->getUID()]
+				), OutputInterface::VERBOSITY_VERBOSE
+			);
+
+			return;
+
+		}
 
 		try {
 			$quickActionsFileContent = $importSource->getFileContents(self::QUICK_ACTIONS_FILE);
 		} catch (UserMigrationException) {
 			$output->writeln(
-				$this->l10n->t('Quick actions for user %s not found. Continue...', [$user->getUID()]),
-				OutputInterface::VERBOSITY_VERBOSE
+				$this->l10n->t(
+					'Quick actions for user %s not found. Continue...',
+					[$user->getUID()]
+				), OutputInterface::VERBOSITY_VERBOSE
 			);
 
 			return;
@@ -91,9 +109,10 @@ class QuickActionsMigrationService {
 			$this->validateQuickActions($quickActions);
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
-				$this->l10n->t('Quick actions configuration for user %s is invalid and will be skipped. Continue...',
-					[$user->getUID()]),
-				OutputInterface::VERBOSITY_VERBOSE
+				$this->l10n->t(
+					'Quick actions configuration for user %s is invalid and will be skipped. Continue...',
+					[$user->getUID()]
+				), OutputInterface::VERBOSITY_VERBOSE
 			);
 
 			return;
@@ -101,8 +120,20 @@ class QuickActionsMigrationService {
 
 
 		foreach ($quickActions as $quickAction) {
+			$oldAccountId = $quickAction['accountId'];
+
+			if (!array_key_exists($oldAccountId, $accountMapping)) {
+				$output->writeln(
+					$this->l10n->t(
+						'Skipping quick action %s because account %s was not imported. Continue...',
+						[$quickAction['name'], (string)$oldAccountId]
+					), OutputInterface::VERBOSITY_VERBOSE
+				);
+
+				continue;
+			}
 			$createdQuickAction = $this->quickActionsService->create($quickAction['name'],
-				$accountMapping[$quickAction['accountId']]);
+				$accountMapping[$oldAccountId]);
 
 			foreach ($quickAction['actionSteps'] as $actionStep) {
 				$this->quickActionsService->createActionStep($actionStep['name'], $actionStep['order'],

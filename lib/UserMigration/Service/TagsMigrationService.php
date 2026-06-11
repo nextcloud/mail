@@ -36,8 +36,10 @@ class TagsMigrationService {
 	 */
 	public function exportTags(IUser $user, IExportDestination $exportDestination, OutputInterface $output): void {
 		$output->writeln(
-			$this->l10n->t('Exporting tags for user %s', [$user->getUID()]),
-			OutputInterface::VERBOSITY_VERBOSE
+			$this->l10n->t(
+				'Exporting tags for user %s',
+				[$user->getUID()]
+			), OutputInterface::VERBOSITY_VERBOSE
 		);
 
 		$tags = $this->tagMapper->getAllTagsForUser($user->getUID());
@@ -59,16 +61,20 @@ class TagsMigrationService {
 	 */
 	public function importTags(IUser $user, IImportSource $importSource, OutputInterface $output): array {
 		$output->writeln(
-			$this->l10n->t('Importing tags for user %s', [$user->getUID()]),
-			OutputInterface::VERBOSITY_VERBOSE
+			$this->l10n->t(
+				'Importing tags for user %s',
+				[$user->getUID()]
+			), OutputInterface::VERBOSITY_VERBOSE
 		);
 
 		try {
 			$tagsFileContent = $importSource->getFileContents(self::TAGS_FILE);
 		} catch (UserMigrationException) {
 			$output->writeln(
-				$this->l10n->t('Tags for user %s not found. Continue...', [$user->getUID()]),
-				OutputInterface::VERBOSITY_VERBOSE
+				$this->l10n->t(
+					'Tags for user %s not found. Continue...',
+					[$user->getUID()]
+				), OutputInterface::VERBOSITY_VERBOSE
 			);
 
 			return [];
@@ -79,8 +85,10 @@ class TagsMigrationService {
 			$this->validateTags($tags);
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
-				$this->l10n->t('Tag configuration for user %s is invalid and will be skipped. Continue...', [ $user->getUID() ]),
-				OutputInterface::VERBOSITY_VERBOSE
+				$this->l10n->t(
+					'Tag configuration for user %s is invalid and will be skipped. Continue...',
+					[$user->getUID()]
+				), OutputInterface::VERBOSITY_VERBOSE
 			);
 
 			return [];
