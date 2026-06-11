@@ -259,6 +259,7 @@ export default {
 					options: [9, 10, 11, 12, 13, 14, 16, 18, 24, 'default'],
 					supportAllValues: true,
 				},
+
 				fontFamily: {
 					supportAllValues: true,
 				},
