@@ -1956,6 +1956,11 @@ export default function mainStoreActions() {
 		updateMailboxMutation({ mailbox }) {
 			const account = this.accountsUnmapped[mailbox.accountId]
 			transformMailboxName(account, mailbox)
+			Object.defineProperty(mailbox, 'isSubscribed', {
+				get() {
+					return this.attributes?.includes('\\subscribed') ?? false
+				},
+			})
 			Vue.set(this.mailboxes, mailbox.databaseId, mailbox)
 		},
 		removeMailboxMutation({ id }) {
