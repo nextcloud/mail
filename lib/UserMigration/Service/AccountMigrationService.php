@@ -143,7 +143,7 @@ class AccountMigrationService {
 			$newAccount->setSmimeCertificateId($certificatesMapping[$oldCertificateId] ?? null);
 			$newAccount->setEditorMode($accountData['editorMode'] ?? 'plaintext');
 			$newAccount->setTrashRetentionDays($accountData['trashRetentionDays']);
-			$newAccount->setOooFollowsSystem($accountData['ooFollowsSystem']);
+			$newAccount->setOooFollowsSystem($accountData['outOfOfficeFollowsSystem']);
 			$newAccount->setImipCreate($accountData['imipCreate']);
 			$newAccount->setClassificationEnabled($accountData['classificationEnabled']);
 			$newAccount->setSearchBody($accountData['searchBody']);
@@ -180,7 +180,7 @@ class AccountMigrationService {
 			$this->setAliases($mailAccount, $accountData, $certificatesMapping);
 
 			$mailboxesMapping = $this->setMailboxes($mailAccount, $accountData);
-			$accountAndMailboxMappings['mailboxes'] = $mailboxesMapping;
+			$accountAndMailboxMappings['mailboxes'] += $mailboxesMapping;
 		}
 
 		return $accountAndMailboxMappings;
