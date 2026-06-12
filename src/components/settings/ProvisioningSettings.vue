@@ -199,12 +199,12 @@
 						<div v-show="masterPasswordEnabled">
 							<div>
 								<input
-									id="mail-master-password"
+									:id="'mail-master-password' + setting.id"
 									v-model="masterPassword"
 									:disabled="loading"
 									type="password"
 									:required="masterPasswordEnabled">
-								<label for="mail-master-password"> {{ t('mail', 'Master password') }} </label>
+								<label :for="'mail-master-password' + setting.id"> {{ t('mail', 'Master password') }} </label>
 							</div>
 							<p>
 								{{ t('mail', 'When only master password is set, all users will authenticate with their normal username and this static password.') }}
@@ -509,6 +509,27 @@ export default {
 				sieveSslMode: this.sieveSslMode,
 				ldapAliasesProvisioning: this.ldapAliasesProvisioning,
 				ldapAliasesAttribute: this.ldapAliasesAttribute,
+			}
+		},
+	},
+
+	watch: {
+		masterPasswordEnabled(enabled) {
+			if (!enabled) {
+				// Master user/separator only apply together with the master
+				// password. Clear them when it is disabled so a value that is
+				// now hidden cannot silently block or alter the saved config.
+				this.masterUser = ''
+				this.masterUserSeparator = ''
+			}
+		},
+
+		masterUser(user) {
+			// Default to the Dovecot master-user separator so the separator
+			// field is never required-but-empty (which made saving fail
+			// without any visible feedback).
+			if (user.length > 0 && this.masterUserSeparator === '') {
+				this.masterUserSeparator = '*'
 			}
 		},
 	},
