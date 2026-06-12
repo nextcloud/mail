@@ -115,7 +115,6 @@
 							</span>
 						</div>
 					</div>
-
 				</div>
 				<div class="envelope__header__left__unsubscribe">
 					<NcButton
