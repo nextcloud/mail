@@ -66,6 +66,10 @@
 				<div class="envelope__header__left__sender-subject-tags">
 					<div class="sender" :class="{ 'sender--expanded': expanded }">
 						{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
+						<span v-if="hasAiGeneratedContent" class="ai-generated-label">
+							<AiIcon :size="14" />
+							{{ t('mail', 'Contains AI generated content') }}
+						</span>
 					</div>
 					<button
 						v-if="expanded && hasRecipients"
@@ -373,6 +377,7 @@ import { NcActionButton, NcButton } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionText from '@nextcloud/vue/components/NcActionText'
+import AiIcon from '@nextcloud/vue/components/NcAssistantIcon'
 import ArchiveIcon from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
 import ChevronDownIcon from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUpIcon from 'vue-material-design-icons/ChevronUp.vue'
@@ -428,6 +433,7 @@ const Loading = Object.seal({
 export default {
 	name: 'ThreadEnvelope',
 	components: {
+		AiIcon,
 		MailFilterFromEnvelope,
 		EventModal,
 		TaskModal,
@@ -597,6 +603,10 @@ export default {
 		isEncrypted() {
 			return this.envelope.previewText
 				&& isPgpText(this.envelope.previewText)
+		},
+
+		hasAiGeneratedContent() {
+			return this.message?.isAiGenerated === true
 		},
 
 		isImportant() {
@@ -1174,6 +1184,10 @@ export default {
 <style lang="scss" scoped>
 	.sender {
 		margin-inline-start: calc(var(--default-grid-baseline) * 2);
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		min-width: 0;
 
 		&--expanded {
 			color: var(--color-text-maxcontrast);
@@ -1477,5 +1491,11 @@ export default {
 		font-weight: normal;
 		display: inline;
 		align-items: center;
+	}
+	.ai-generated-label {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		opacity: 0.8;
 	}
 </style>
