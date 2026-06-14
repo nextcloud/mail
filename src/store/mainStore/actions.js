@@ -521,8 +521,13 @@ export default function mainStoreActions() {
 
 					if (reply.mode === 'reply') {
 						logger.debug('Show simple reply composer', { reply })
+						const account = this.getAccount(reply.data.accountId)
 						let to = original.replyTo !== undefined ? original.replyTo : reply.data.from
-						if (reply.followUp) {
+						// Replying to a message we sent ourselves: follow up with the
+						// original recipient(s) instead of addressing ourselves.
+						const isOwnMessage = to.length > 0
+							&& to.every((addr) => addr.email === account.emailAddress)
+						if (reply.followUp || isOwnMessage) {
 							to = reply.data.to
 						}
 						this.startComposerSessionMutation({
