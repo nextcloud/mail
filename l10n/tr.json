@@ -262,7 +262,7 @@
     "Revoke" : "Geçersiz kıl",
     "{userId} will no longer be able to act on your behalf" : "{userId} artık sizin adınıza davranamayacak",
     "Could not fetch delegates" : "Yetki devirleri alınamadı",
-    "Delegated access to {userId}" : "{userId} kullanıcısına yetki devredildi",
+    "Delegated access to {userId}" : "Yetki {userId} kullanıcısına devredildi",
     "Could not delegate access" : "Yetki devredilemedi",
     "Revoked access for {userId}" : "{userId} yetki devri geri alındı",
     "Could not revoke delegation" : "Yetki devri geri alınamadı",
