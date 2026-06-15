@@ -20,14 +20,14 @@
 					</thead>
 					<tbody>
 						<tr v-for="certificate in certificates" :key="certificate.id">
-							<td :title="certificate.info.commonName">
-								{{ certificate.info.commonName }}
+							<td :title="certificate.info ? certificate.info.commonName : t('mail', 'Invalid certificate')">
+								{{ certificate.info ? certificate.info.commonName : t('mail', 'Invalid certificate') }}
 							</td>
-							<td :title="certificate.info.emailAddress">
-								{{ certificate.info.emailAddress }}
+							<td :title="certificate.info ? certificate.info.emailAddress : certificate.error">
+								{{ certificate.info ? certificate.info.emailAddress : certificate.error }}
 							</td>
-							<td :title="moment.unix(certificate.info.notAfter).format('LL')">
-								{{ moment.unix(certificate.info.notAfter).format('LL') }}
+							<td :title="certificate.info ? moment.unix(certificate.info.notAfter).format('LL') : '—'">
+								{{ certificate.info ? moment.unix(certificate.info.notAfter).format('LL') : '—' }}
 							</td>
 							<td>
 								<NcButton

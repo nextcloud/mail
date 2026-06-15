@@ -118,7 +118,8 @@ export default {
 			const now = (new Date().getTime() / 1000) + 3600 * 24
 			const certs = this.smimeCertificates
 				.filter((cert) => {
-					return cert.hasKey
+					return cert.info
+						&& cert.hasKey
 						&& cert.emailAddress === this.alias.alias
 						&& cert.info.notAfter >= now
 						&& cert.info.purposes.sign
