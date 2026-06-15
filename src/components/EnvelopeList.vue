@@ -116,7 +116,29 @@
 			</div>
 		</transition>
 
-		<transition-group :name="listTransitionName">
+		<template v-if="sections">
+			<div v-for="[label, group] in sections" :key="label">
+				<SectionTitle class="section-title" :name="label" />
+				<transition-group :name="listTransitionName">
+					<Envelope
+						v-for="env in group"
+						:key="env.databaseId"
+						:data="env"
+						:mailbox="mailbox"
+						:selected="selection.includes(env.databaseId)"
+						:select-mode="selectMode"
+						:has-multiple-accounts="hasMultipleAccounts"
+						:selected-envelopes="selectedEnvelopes"
+						:compact-mode="compactMode"
+						@delete="$emit('delete', env.databaseId)"
+						@update:selected="onEnvelopeSelectToggle(env, envelopeSortedIndexMap.get(env.databaseId), $event)"
+						@select-multiple="onEnvelopeSelectMultiple(env, envelopeSortedIndexMap.get(env.databaseId))"
+						@open:quick-actions-settings="showQuickActionsSettings = true" />
+				</transition-group>
+			</div>
+		</template>
+
+		<transition-group v-else :name="listTransitionName">
 			<Envelope
 				v-for="(env, index) in sortedEnvelops"
 				:key="env.databaseId"
@@ -185,6 +207,7 @@ import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import Settings from '../components/quickActions/Settings.vue'
 import Envelope from './Envelope.vue'
 import MoveModal from './MoveModal.vue'
+import SectionTitle from './SectionTitle.vue'
 import TagModal from './TagModal.vue'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus.js'
 import { matchError } from '../errors/match.js'
@@ -212,6 +235,7 @@ export default {
 		IconSelect,
 		MoveModal,
 		OpenInNewIcon,
+		SectionTitle,
 		ShareIcon,
 		AlertOctagonIcon,
 		TagIcon,
@@ -237,7 +261,14 @@ export default {
 
 		envelopes: {
 			type: Array,
-			required: true,
+			required: false,
+			default: () => [],
+		},
+
+		sections: {
+			type: Array,
+			required: false,
+			default: null,
 		},
 
 		searchQuery: {
@@ -286,12 +317,23 @@ export default {
 		},
 
 		sortedEnvelops() {
+			if (this.sections) {
+				return this.sections.flatMap(([, group]) => group)
+			}
 			if (this.sortOrder === 'oldest') {
 				return [...this.envelopes].sort((a, b) => {
 					return a.dateInt < b.dateInt ? -1 : 1
 				})
 			}
 			return [...this.envelopes]
+		},
+
+		envelopeSortedIndexMap() {
+			const map = new Map()
+			this.sortedEnvelops.forEach((env, index) => {
+				map.set(env.databaseId, index)
+			})
+			return map
 		},
 
 		selectMode() {
