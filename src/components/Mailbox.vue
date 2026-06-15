@@ -15,9 +15,48 @@
 			v-else-if="loadingCacheInitialization"
 			:hint="t('mail', 'Loading messages …')"
 			:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger folders.')" />
-		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
-		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
-		<template v-else-if="hasGroupedEnvelopes && !isPriorityInbox">
+		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages && !loadingAllMatching" key="empty-section" />
+		<EmptyMailbox v-else-if="!hasMessages && !loadingAllMatching" key="empty-mailbox" />
+		<div v-else>
+			<NcCheckboxRadioSwitch
+				:model-value="selectMode"
+				:disabled="loadingAllMatching"
+				type="checkbox"
+				class="select-all-bar"
+				@update:model-value="selectMode ? unselectAll() : selectAll()">
+				{{ selectAllLabel }}
+			</NcCheckboxRadioSwitch>
+			<div v-if="loadingAllMatching" class="select-all-loading">
+				<NcLoadingIcon :size="16" />
+				<span>{{ t('mail', 'Loading all matching messages…') }}</span>
+			</div>
+			<div v-if="selectAllHint && !loadingAllMatching && !allSelected && !selectionLimitReached" class="select-all-hint">
+				{{ selectAllHint }}
+			</div>
+			<div v-if="selectionLimitReached" class="select-all-hint select-all-limit-warning">
+				{{ n('mail',
+					'Selection limited to {count} message — use a filter to narrow results, or process in several batches.',
+					'Selection limited to {count} messages — use a filter to narrow results, or process in several batches.',
+					flatEnvelopeList.length, { count: flatEnvelopeList.length }) }}
+			</div>
+			<div
+				v-if="allSelected && !selectAllMatching && !endReached && !isPriorityInbox"
+				class="select-all-banner">
+				<span v-if="hasFilter">{{ n('mail',
+					'All {visible} message on this page selected. Select all messages matching this filter?',
+					'All {visible} messages on this page selected. Select all messages matching this filter?',
+					flatEnvelopeList.length,
+					{ visible: flatEnvelopeList.length }) }}</span>
+				<span v-else>{{ n('mail',
+					'All {visible} message on this page selected. Select all messages in this folder?',
+					'All {visible} messages on this page selected. Select all messages in this folder?',
+					flatEnvelopeList.length,
+					{ visible: flatEnvelopeList.length }) }}</span>
+				<NcButton type="primary" @click="selectAllMatchingAction">
+					{{ hasFilter ? t('mail', 'Select all matching messages') : t('mail', 'Select all messages in this folder') }}
+				</NcButton>
+			</div>
+			<template v-if="hasGroupedEnvelopes && !isPriorityInbox">
 			<div v-for="[label, group] in groupEnvelopes" :key="label">
 				<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
 				<EnvelopeList
@@ -28,7 +67,11 @@
 					:loading-more="false"
 					:load-more-button="false"
 					:skip-transition="skipListTransition"
-					@delete="onDelete" />
+					:selection="selection"
+					:flat-index="getGroupFlatIndex(label)"
+					@delete="onDelete"
+					@update:selection="onUpdateSelection"
+					@select-range="onSelectRange" />
 			</div>
 		</template>
 		<EnvelopeList
@@ -41,13 +84,18 @@
 			:loading-more="loadingMore"
 			:load-more-button="showLoadMore"
 			:skip-transition="skipListTransition"
+			:selection="selection"
+			:flat-index="0"
 			@delete="onDelete"
-			@load-more="loadMore" />
+			@load-more="loadMore"
+			@update:selection="onUpdateSelection"
+			@select-range="onSelectRange" />
+		</div>
 	</div>
 </template>
 
 <script>
-import { showError, showWarning } from '@nextcloud/dialogs'
+import { showError, showInfo, showWarning } from '@nextcloud/dialogs'
 import { mapStores } from 'pinia'
 import { findIndex, propEq } from 'ramda'
 import EmptyMailbox from './EmptyMailbox.vue'
@@ -56,6 +104,7 @@ import EnvelopeList from './EnvelopeList.vue'
 import Error from './Error.vue'
 import Loading from './Loading.vue'
 import LoadingSkeleton from './LoadingSkeleton.vue'
+import { NcButton, NcCheckboxRadioSwitch, NcLoadingIcon } from '@nextcloud/vue'
 import SectionTitle from './SectionTitle.vue'
 import MailboxLockedError from '../errors/MailboxLockedError.js'
 import MailboxNotCachedError from '../errors/MailboxNotCachedError.js'
@@ -65,7 +114,12 @@ import NoTrashMailboxConfiguredError
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
+import { favoritesQuery, priorityImportantQuery, priorityOtherQuery } from '../util/priorityInbox.js'
 import { wait } from '../util/wait.js'
+
+// Hard cap: unified mailboxes fan out to N_accounts sub-fetches per page, so
+// 500 messages can mean hundreds of API calls. Beyond this, renderer runs OOM.
+const MAX_SELECT_MESSAGES = 500
 
 export default {
 	name: 'Mailbox',
@@ -76,6 +130,9 @@ export default {
 		Error,
 		Loading,
 		LoadingSkeleton,
+		NcButton,
+		NcCheckboxRadioSwitch,
+		NcLoadingIcon,
 		SectionTitle,
 	},
 
@@ -141,6 +198,10 @@ export default {
 			endReached: false,
 			syncedMailboxes: new Set(),
 			skipListTransition: false,
+			selection: [],
+			selectAllMatching: false,
+			loadingAllMatching: false,
+			selectionLimitReached: false,
 		}
 	},
 
@@ -175,22 +236,140 @@ export default {
 		showLoadMore() {
 			return !this.endReached && this.paginate === 'manual'
 		},
+
+		/**
+		 * Flat list of all visible envelopes, regardless of grouping.
+		 * Used for shift-click range selection and Select All.
+		 */
+		flatEnvelopeList() {
+			const sortVisible = (items) => this.sortOrder === 'oldest'
+				? [...items].sort((a, b) => (a.dateInt < b.dateInt ? -1 : 1))
+				: items
+
+			if (this.hasGroupedEnvelopes) {
+				return this.groupEnvelopes.flatMap(([, group]) => sortVisible(group))
+			}
+			return sortVisible(this.envelopesToShow)
+		},
+
+		selectMode() {
+			return this.selection.length > 0
+		},
+
+		allSelected() {
+			return this.flatEnvelopeList.length > 0
+				&& this.selection.length === this.flatEnvelopeList.length
+		},
+
+		hasFilter() {
+			if (!this.searchQuery) {
+				return false
+			}
+			const trimmed = this.searchQuery.trim()
+			// System section queries that should not count as user filters
+			if (trimmed === priorityImportantQuery || trimmed === priorityOtherQuery || trimmed === favoritesQuery) {
+				return false
+			}
+			return !/^match:allof\s*$/.test(trimmed)
+		},
+
+		/**
+		 * Context-aware label for the select-all checkbox.
+		 * - With active filter: "Select {N} matching messages"
+		 * - Without filter, more pages exist (non-Priority inbox): "Select {N} loaded messages"
+		 * - All loaded, or Priority inbox (no filter): "Select all {N} messages"
+		 */
+		selectAllLabel() {
+			if (this.loadingAllMatching) {
+				return this.t('mail', 'Selecting messages…')
+			}
+
+			const count = this.flatEnvelopeList.length
+			// When messages are selected, show the actual selection count
+			if (this.selectMode) {
+				return this.n('mail',
+					'{count} selected',
+					'{count} selected',
+					this.selection.length, { count: this.selection.length })
+			}
+
+			if (this.hasFilter) {
+				return this.n('mail',
+					'Select {count} matching message',
+					'Select {count} matching messages',
+					count, { count })
+			}
+			if (!this.endReached && count > 0 && !this.isPriorityInbox) {
+				return this.n('mail',
+					'Select {count} loaded message',
+					'Select {count} loaded messages',
+					count, { count })
+			}
+			return this.n('mail',
+				'Select {count} message',
+				'Select all {count} messages',
+				count, { count })
+		},
+
+		/**
+		 * Hint shown below the select-all checkbox to give context
+		 * about how many messages are available and how to select more.
+		 */
+		selectAllHint() {
+			if (this.paginate === 'manual' || this.endReached || this.flatEnvelopeList.length === 0) {
+				return ''
+			}
+			if (this.hasFilter) {
+				return this.t('mail', 'Scroll down to load more messages, or click an avatar circle to select one at a time')
+			}
+			return this.t('mail', 'Scroll down to load more messages, use a filter to refine, or click an avatar circle to select one at a time')
+		},
 	},
 
 	watch: {
+		selection(newVal, oldVal) {
+			// Notify sibling sections (Priority inbox) when selection becomes non-empty.
+			// Only fire for user-initiated transitions — not after a programmatic mass-select
+			// (selectAllMatching = true) so concurrent sections don't clear each other.
+			if (newVal.length > 0 && oldVal.length === 0 && !this.loadingAllMatching && !this.selectAllMatching) {
+				this.bus.emit('section-selected', this.searchQuery)
+			}
+		},
+
 		mailbox() {
+			this.selection = []
+			this.selectAllMatching = false
+			this.loadingAllMatching = false
+			this.selectionLimitReached = false
+			this.endReached = false
+			this.expanded = false
 			this.loadEnvelopes()
 				.then(() => {
-					logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.query}) after folder change`)
+					logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) after folder change`)
 					this.sync(false)
 				})
 		},
 
 		searchQuery() {
+			if (this.loadingAllMatching) {
+				return
+			}
+			this.selection = []
+			this.selectAllMatching = false
+			this.loadingAllMatching = false
+			this.selectionLimitReached = false
+			this.endReached = false
+			this.expanded = false
 			this.loadEnvelopes()
 		},
 
 		sortOrder() {
+			this.selection = []
+			this.selectAllMatching = false
+			this.loadingAllMatching = false
+			this.selectionLimitReached = false
+			this.endReached = false
+			this.expanded = false
 			this.loadEnvelopes()
 		},
 	},
@@ -198,8 +377,9 @@ export default {
 	created() {
 		this.bus.on('load-more', this.onScroll)
 		this.bus.on('delete', this.onDelete)
-		this.bus.on('archive', this.onArchive)
 		this.bus.on('shortcut', this.handleShortcut)
+		this.bus.on('select-all-matching', this.onBusSelectAllMatching)
+		this.bus.on('section-selected', this.onBusSectionSelected)
 		this.loadMailboxInterval = setInterval(this.loadMailbox, 60000)
 	},
 
@@ -220,8 +400,9 @@ export default {
 	unmounted() {
 		this.bus.off('load-more', this.onScroll)
 		this.bus.off('delete', this.onDelete)
-		this.bus.off('archive', this.onArchive)
 		this.bus.off('shortcut', this.handleShortcut)
+		this.bus.off('select-all-matching', this.onBusSelectAllMatching)
+		this.bus.off('section-selected', this.onBusSectionSelected)
 		this.stopInterval()
 	},
 
@@ -230,7 +411,7 @@ export default {
 			this.loadingCacheInitialization = true
 			this.error = false
 
-			logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.query}) during cache initalization`)
+			logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.searchQuery}) during cache initialization`)
 			this.sync(true)
 				.then(() => {
 					this.loadingCacheInitialization = false
@@ -239,9 +420,10 @@ export default {
 				})
 		},
 
-		async loadEnvelopes() {
-			logger.debug(`Fetching envelopes for folder ${this.mailbox.databaseId} (${this.searchQuery})`, this.mailbox)
-			if (!this.syncedMailboxes.has(this.mailbox.databaseId + (this.searchQuery ?? ''))) {
+		async loadEnvelopes(queryOverride) {
+			const query = queryOverride ?? this.searchQuery
+			logger.debug(`Fetching envelopes for folder ${this.mailbox.databaseId} (${query})`, this.mailbox)
+			if (!this.loadingAllMatching && !this.syncedMailboxes.has(this.mailbox.databaseId + (query ?? ''))) {
 				// Only trigger skeleton if we didn't sync envelopes yet
 				this.loadingEnvelopes = true
 			} else {
@@ -257,21 +439,21 @@ export default {
 			try {
 				const envelopes = await this.mainStore.fetchEnvelopes({
 					mailboxId: this.mailbox.databaseId,
-					query: this.searchQuery,
+					query,
 					limit: this.initialPageSize,
 				})
 
 				logger.debug(envelopes.length + ' envelopes fetched', { envelopes })
 
-				this.syncedMailboxes.add(this.mailbox.databaseId + (this.searchQuery ?? ''))
+				this.syncedMailboxes.add(this.mailbox.databaseId + (query ?? ''))
 				this.loadingEnvelopes = false
 			} catch (error) {
 				await matchError(error, {
 					[MailboxLockedError.getName()]: async (error) => {
 						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) is locked`, { error })
 						await wait(15 * 1000)
-						// Keep trying
-						await this.loadEnvelopes()
+						// Keep trying with the same query override so the cache key stays consistent
+						await this.loadEnvelopes(queryOverride)
 					},
 					[MailboxNotCachedError.getName()]: async (error) => {
 						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) not cached. Triggering initialization`, { error })
@@ -293,11 +475,12 @@ export default {
 			}
 		},
 
-		async loadMore() {
+		async loadMore(queryOverride) {
+			const query = queryOverride ?? this.searchQuery
 			if (!this.expanded && this.envelopesToShow.length < this.envelopes.length) {
 				logger.debug('expanding envelope list')
 				this.expanded = true
-				return
+				return true
 			}
 
 			logger.debug('fetching next envelope page')
@@ -306,14 +489,18 @@ export default {
 			try {
 				const envelopes = await this.mainStore.fetchNextEnvelopePage({
 					mailboxId: this.mailbox.databaseId,
-					query: this.searchQuery,
+					query,
 				})
 				if (envelopes.length === 0) {
 					logger.info('envelope list end reached')
 					this.endReached = true
+				} else {
+					this.expanded = true
 				}
+				return true
 			} catch (error) {
 				logger.error('could not fetch next envelope page', { error })
+				return false
 			} finally {
 				this.loadingMore = false
 			}
@@ -543,6 +730,9 @@ export default {
 		// onDelete(id): Load more message and navigate to other message if needed
 		// id: The id of the message being delete
 		onDelete(id) {
+			// Remove from selection if selected
+			this.selection = this.selection.filter((selectedId) => selectedId !== id)
+
 			// Get a new message
 			this.mainStore.fetchNextEnvelopes({
 				mailboxId: this.mailbox.databaseId,
@@ -604,6 +794,174 @@ export default {
 			this.loadMailboxInterval = undefined
 		},
 
+		/**
+		 * Compute the flat index offset for a group label.
+		 * Used by grouped EnvelopeList children to emit
+		 * correct global indices for shift-click range selection.
+		 *
+		 * @param {string} label The group label key
+		 * @return {number} Flat index of the first envelope in this group
+		 */
+		getGroupFlatIndex(label) {
+			let offset = 0
+			for (const [groupLabel, group] of this.groupEnvelopes) {
+				if (groupLabel === label) {
+					return offset
+				}
+				offset += group.length
+			}
+			return offset
+		},
+
+		/**
+		 * Handle a child EnvelopeList updating its selection.
+		 * The child emits its full new selection array (local IDs),
+		 * and we merge it with the global selection, replacing
+		 * any IDs from this child's visible envelope set.
+		 *
+		 * @param {number[]} childSelection Array of selected envelope databaseIds
+		 * @param {object[]} childEnvelopes Array of envelopes visible in this child
+		 */
+		onUpdateSelection(childSelection, childEnvelopes) {
+			const childIds = new Set(childEnvelopes.map((e) => e.databaseId))
+			const visibleIds = new Set(this.flatEnvelopeList.map((e) => e.databaseId))
+			// User manually changed selection — re-enable mutual exclusion signalling.
+			this.selectAllMatching = false
+			this.selection = [
+				...this.selection.filter((id) => !childIds.has(id)),
+				...childSelection,
+			].filter((id) => visibleIds.has(id))
+		},
+
+		/**
+		 * Handle shift-click range selection across the flat envelope list.
+		 * Called by a child EnvelopeList with global flat indices.
+		 *
+		 * @param {number} fromIndex Start of the range (global flat index)
+		 * @param {number} toIndex End of the range (global flat index)
+		 * @param {boolean} deselect If true, remove the range from selection
+		 */
+		onSelectRange(fromIndex, toIndex, deselect = false) {
+			const start = Math.min(fromIndex, toIndex)
+			const end = Math.max(fromIndex, toIndex)
+			const idsInRange = new Set(
+				this.flatEnvelopeList
+					.slice(start, end + 1)
+					.map((e) => e.databaseId),
+			)
+			// User manually shift-clicked — re-enable mutual exclusion signalling.
+			this.selectAllMatching = false
+			if (deselect) {
+				this.selection = this.selection.filter((id) => !idsInRange.has(id))
+			} else {
+				const newSelection = new Set(this.selection)
+				for (const id of idsInRange) {
+					newSelection.add(id)
+				}
+				this.selection = [...newSelection]
+			}
+		},
+
+		selectAll() {
+			this.selection = this.flatEnvelopeList.map((e) => e.databaseId)
+		},
+
+		/**
+		 * Triggered by the in-page banner button to select all messages in the
+		 * current folder/filter without going through the search modal.
+		 * Unlike the concurrent bus-triggered path, this is a single-section
+		 * intentional action so mutual exclusion should fire on completion.
+		 */
+		selectAllMatchingAction() {
+			this.onBusSelectAllMatching({ emitSectionSelected: true })
+		},
+
+		/**
+		 * Handler for the 'select-all-matching' bus event.
+		 * Forces a fresh load, then fetches all pages and selects everything.
+		 *
+		 * @param {object} [options] Options
+		 * @param {boolean} [options.emitSectionSelected] Emit 'section-selected' on completion
+		 *   to enforce mutual exclusion. Should be true only for single-section banner clicks,
+		 *   not for concurrent bus-triggered mass-selects (search modal path).
+		 */
+		async onBusSelectAllMatching({ emitSectionSelected = false } = {}) {
+			// Set flag before yield to block the searchQuery watcher
+			this.loadingAllMatching = true
+			// appendToSearch() props lag one render tick — wait for section-filtered searchQuery
+			await this.$nextTick()
+			const effectiveQuery = this.searchQuery
+
+			this.selection = []
+			this.selectAllMatching = true
+			this.selectionLimitReached = false
+			this.endReached = false
+			this.expanded = false
+			this.syncedMailboxes.delete(this.mailbox.databaseId + (effectiveQuery ?? ''))
+
+			try {
+				await this.loadEnvelopes(effectiveQuery)
+				let loadFailed = false
+				while (!this.endReached && this.flatEnvelopeList.length < MAX_SELECT_MESSAGES) {
+					if (!await this.loadMore(effectiveQuery)) {
+						loadFailed = true
+						break
+					}
+				}
+				if (loadFailed) {
+					this.selectAllMatching = false
+					logger.error('Mass select aborted: a page failed to load')
+					showError(t('mail', 'Could not load all messages. Please try again.'))
+					return
+				}
+				if (!this.endReached && this.flatEnvelopeList.length >= MAX_SELECT_MESSAGES) {
+					this.selectionLimitReached = true
+					logger.warn(`Mass select capped at ${MAX_SELECT_MESSAGES} messages (${this.flatEnvelopeList.length} loaded) to prevent OOM`)
+				}
+				// Wait for groupEnvelopes prop to propagate from parent (one render cycle)
+				await this.$nextTick()
+				this.selection = this.flatEnvelopeList.slice(0, MAX_SELECT_MESSAGES).map((e) => e.databaseId)
+				if (emitSectionSelected && this.selection.length > 0) {
+					this.bus.emit('section-selected', effectiveQuery)
+				}
+			} catch (error) {
+				logger.error('Failed to load all matching envelopes', { error })
+				this.selectAllMatching = false
+				showError(t('mail', 'Could not load all messages. Please try again.'))
+			} finally {
+				this.loadingAllMatching = false
+			}
+		},
+
+		onBusSectionSelected(activeQuery) {
+			// Another section on the same bus became active — clear our selection.
+			// Each section has its own independent toolbar so cross-section selection
+			// cannot be acted upon in a single operation.
+			if (activeQuery !== this.searchQuery && this.selection.length > 0) {
+				// Only notify the user when their own manual selection is cleared.
+				// A programmatic mass-select (selectAllMatching = true) is silently
+				// superseded — showing a toast for it would be confusing and noisy.
+				const wasUserInitiated = !this.selectAllMatching
+				this.selection = []
+				this.selectAllMatching = false
+				this.selectionLimitReached = false
+				if (wasUserInitiated) {
+					showInfo(t('mail', 'Selection cleared — only one Priority inbox section can be selected at a time'))
+				}
+			}
+		},
+
+		unselectAll() {
+			this.selection = []
+			this.selectAllMatching = false
+			this.loadingAllMatching = false
+			this.selectionLimitReached = false
+			// Intentional: collapse back to the initial page so the user starts
+			// fresh after clearing selection (avoids a full loaded list with
+			// nothing selected, which looks broken on re-entry).
+			this.expanded = false
+		},
+
 		getLabelForGroup(group) {
 			switch (group) {
 				case 'lastHour':
@@ -636,5 +994,57 @@ export default {
 	height: 100%;
 	display: flex;
 	justify-content: center;
+}
+
+.select-all-bar {
+	display: flex;
+	align-items: center;
+	margin-top: 8px;
+	padding: 4px 8px;
+	cursor: pointer;
+	border-bottom: 1px solid var(--color-border);
+	&:hover {
+		background-color: var(--color-background-hover);
+	}
+}
+
+.select-all-loading {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 4px 8px 4px 36px;
+	color: var(--color-text-maxcontrast);
+	font-size: var(--default-font-size);
+	border-bottom: 1px solid var(--color-border);
+}
+
+.select-all-hint {
+	padding: 2px 8px 2px 36px;
+	color: var(--color-text-maxcontrast);
+	font-size: calc(var(--default-font-size) * 0.85);
+	border-bottom: 1px solid var(--color-border);
+}
+
+.select-all-limit-warning {
+	color: var(--color-main-text);
+	background-color: var(--color-warning);
+	border-radius: var(--border-radius);
+	padding: 2px 6px;
+}
+
+.select-all-banner {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 8px;
+	padding: 8px 12px;
+	background-color: var(--color-primary-light);
+	border-bottom: 1px solid var(--color-border);
+	font-size: var(--default-font-size);
+
+	span {
+		flex: 1;
+		min-width: 120px;
+	}
 }
 </style>
