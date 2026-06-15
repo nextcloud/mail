@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Listener;
 
+use OCA\Mail\Db\DelegationMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\TextBlockService;
@@ -30,6 +31,7 @@ class UserDeletedListener implements IEventListener {
 	public function __construct(
 		AccountService $accountService,
 		private TextBlockService $textBlockService,
+		private DelegationMapper $delegationMapper,
 		LoggerInterface $logger,
 	) {
 		$this->accountService = $accountService;
@@ -57,6 +59,9 @@ class UserDeletedListener implements IEventListener {
 			}
 		}
 		$this->textBlockService->deleteByUserId(
+			$user->getUID()
+		);
+		$this->delegationMapper->deleteByUserId(
 			$user->getUID()
 		);
 	}
