@@ -35,9 +35,9 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder;
 use OCP\Files\IMimeTypeDetector;
+use OCP\Files\IRootFolder;
 use OCP\ICacheFactory;
 use OCP\IDBConnection;
-use OCP\IServerContainer;
 use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\Server;
@@ -50,11 +50,8 @@ class OutboxServiceIntegrationTest extends TestCase {
 		ImapTestAccount,
 		TestUser;
 
-	/** @var MailAccount */
-	private $account;
-
-	/** @var IUser */
-	private $user;
+	private MailAccount $account;
+	private IUser $user;
 
 	/** @var IAttachmentService */
 	private $attachmentService;
@@ -91,8 +88,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$this->user = $this->createTestUser();
 		$this->account = $this->createTestAccount($this->user->getUID());
 		$c = Server::get(ContainerInterface::class);
-		$userContainer = $c->get(IServerContainer::class);
-		$this->userFolder = $userContainer->getUserFolder($this->account->getUserId());
+		$this->userFolder = $c->get(IRootFolder::class)->getUserFolder($this->account->getUserId());
 		$mailManager = Server::get(IMailManager::class);
 		$this->attachmentService = new AttachmentService(
 			$this->userFolder,

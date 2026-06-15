@@ -33,13 +33,13 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder;
 use OCP\Files\IMimeTypeDetector;
+use OCP\Files\IRootFolder;
 use OCP\ICacheFactory;
 use OCP\IDBConnection;
-use OCP\IServerContainer;
 use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\Server;
-use Psr\Container\ContainerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -68,18 +68,10 @@ class DraftServiceIntegrationTest extends TestCase {
 
 	/** @var IMAPClientFactory */
 	private $clientFactory;
-
-	/** @var LocalMessageMapper */
-	private $mapper;
-
-	/** @var Folder */
-	private $userFolder;
-
-	/** @var AccountService|\PHPUnit\Framework\MockObject\MockObject */
-	private $accountService;
-
-	/** @var ITimeFactory|\PHPUnit\Framework\MockObject\MockObject */
-	private $timeFactory;
+	private LocalMessageMapper $mapper;
+	private Folder $userFolder;
+	private AccountService&MockObject $accountService;
+	private ITimeFactory&MockObject $timeFactory;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -89,9 +81,7 @@ class DraftServiceIntegrationTest extends TestCase {
 
 		$this->user = $this->createTestUser();
 		$this->account = $this->createTestAccount($this->user->getUID());
-		$c = Server::get(ContainerInterface::class);
-		$userContainer = $c->get(IServerContainer::class);
-		$this->userFolder = $userContainer->getUserFolder($this->account->getUserId());
+		$this->userFolder = Server::get(IRootFolder::class)->getUserFolder($this->account->getUserId());
 		$mailManager = Server::get(IMailManager::class);
 		$this->attachmentService = new AttachmentService(
 			$this->userFolder,
