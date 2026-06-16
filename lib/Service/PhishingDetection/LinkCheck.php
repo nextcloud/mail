@@ -48,6 +48,20 @@ class LinkCheck {
 		return strtolower($url);
 	}
 
+	protected function isSuspiciousHost(?string $host): bool {
+		if ($host === null || $host === '' || !class_exists('\Spoofchecker')) {
+			return false;
+		}
+
+		$spoofchecker = new \Spoofchecker();
+
+		try {
+			return $spoofchecker->isSuspicious($host);
+		} catch (\Throwable) {
+			return false;
+		}
+	}
+
 	public function run(string $htmlMessage) : PhishingDetectionResult {
 		$results = [];
 		$zippedArray = [];
@@ -80,7 +94,9 @@ class LinkCheck {
 			$un = new Normalizer($zipped['href']);
 			$url = $un->normalize();
 			if ($this->textLooksLikeALink($zipped['linkText'])) {
-				if (parse_url($this->parse($url), PHP_URL_HOST) !== parse_url($this->parse($zipped['linkText']), PHP_URL_HOST)) {
+				$hrefHost = parse_url($this->parse($url), PHP_URL_HOST);
+				$linkTextHost = parse_url($this->parse($zipped['linkText']), PHP_URL_HOST);
+				if ($hrefHost !== $linkTextHost || $this->isSuspiciousHost($hrefHost) || $this->isSuspiciousHost($linkTextHost)) {
 					$results[] = [
 						'href' => $url,
 						'linkText' => $zipped['linkText'],
@@ -103,7 +119,7 @@ class LinkCheck {
 		return new PhishingDetectionResult(
 			PhishingDetectionResult::LINK_CHECK,
 			true,
-			$this->l10n->t('Some addresses in this message are not matching the link text'),
+			$this->l10n->t('Some addresses in this message are suspicious or do not match the link text'),
 			$results
 		);
 	}
