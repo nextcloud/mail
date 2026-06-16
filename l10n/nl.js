@@ -472,6 +472,7 @@ OC.L10N.register(
     "An error occurred, unable to create the tag." : "Er trad een fout op, tag kon niet worden gecreëerd.",
     "Add default tags" : "Voeg standaard tags toe",
     "Add tag" : "Toevoegen tag",
+    "Task created" : "Taak aangemaakt",
     "Could not create task" : "Er kon geen taak worden aangemaakt",
     "Could not load your message thread" : "Kon je berichtendraad niet laden",
     "The thread doesn't exist or has been deleted" : "De draad bestaat niet of is verwijderd",
