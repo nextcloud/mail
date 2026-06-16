@@ -2357,8 +2357,11 @@ export default function mainStoreActions() {
 		hasCurrentUserPrincipalAndCollectionsMutation(hasCurrentUserPrincipalAndCollections) {
 			this.hasCurrentUserPrincipalAndCollections = hasCurrentUserPrincipalAndCollections
 		},
-		showSettingsForAccountMutation(accountId) {
-			this.showAccountSettings = accountId
+		showSettingsForAccountMutation(accountId, section) {
+			this.showAccountSettings = {
+				accountId,
+				section,
+			}
 		},
 		setMyTextBlocks(textBlocks) {
 			this.myTextBlocks = textBlocks
@@ -2500,7 +2503,13 @@ export default function mainStoreActions() {
 			return this.findMailboxBySpecialRole(accountId, 'inbox')
 		},
 		showSettingsForAccount(accountId) {
-			return this.showAccountSettings === accountId
+			return this.showAccountSettings?.accountId === accountId
+		},
+		showSettingsSectionForAccount(accountId) {
+			if (this.showAccountSettings?.accountId !== accountId) {
+				return undefined
+			}
+			return this.showAccountSettings.section
 		},
 		getMyTextBlocks() {
 			return this.myTextBlocks
