@@ -265,7 +265,8 @@ export default function mainStoreActions() {
 			return handleHttpAuthErrors(async () => {
 				const account = await updateAccount(config)
 				logger.debug('account updated', { account })
-				this.editAccountMutation(account)
+				this.editAccountMutation({ ...account, error: false })
+				await this.syncMailboxesForAccount(this.accountsUnmapped[account.id])
 				return account
 			})
 		},
