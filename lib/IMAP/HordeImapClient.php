@@ -91,7 +91,7 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 			return $this->imapLogin();
 		} catch (Horde_Imap_Client_Exception $e) {
 			if ($e->getCode() === Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED
-				&& $e->getMessage() === 'Authentication failed.') {
+				&& in_array($e->getMessage(), ['Authentication failed.', 'Mail server denied authentication.'], true)) {
 				$this->rateLimiterCache->inc($cacheKey);
 				if ($this->rateLimiterCache instanceof IMemcacheTTL) {
 					$this->rateLimiterCache->setTTL($cacheKey, self::RATE_LIMIT_WINDOW);
