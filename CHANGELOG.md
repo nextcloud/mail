@@ -1,3 +1,20 @@
+## [5.9.3](https://github.com/nextcloud/mail/compare/v5.9.2...v5.9.3) (2026-06-16)
+
+
+### Bug Fixes
+
+* disable CSRF check for message-id deeplinks ([bc11cfe](https://github.com/nextcloud/mail/commit/bc11cfe6e52e23876c3a58dd719c58637d10586a))
+* **frontend:** log swallowed errors in catch blocks ([a45314b](https://github.com/nextcloud/mail/commit/a45314b99172100beebf8d40de1da5a4fa0a4883))
+* **l10n:** Update translations from Transifex ([15490ca](https://github.com/nextcloud/mail/commit/15490ca8ffb5b786f1b9045c1e93b8daaeb2166e))
+* **l10n:** Update translations from Transifex ([e0ad218](https://github.com/nextcloud/mail/commit/e0ad218b968ca7b8c259d9ee1f8fa7cbd2314dd9))
+* **l10n:** Update translations from Transifex ([6f496ac](https://github.com/nextcloud/mail/commit/6f496acacb175d1569cc7c677939ca00686818d8))
+* **l10n:** Update translations from Transifex ([7caeec3](https://github.com/nextcloud/mail/commit/7caeec3c97d575145a5896480c3754a64a80ac70))
+* **l10n:** Update translations from Transifex ([c61ad6a](https://github.com/nextcloud/mail/commit/c61ad6a5fd6434e0e7a68d395e92fbac6cb28f8a))
+* **ui:** prevent type error during shortkey usage ([4fbb386](https://github.com/nextcloud/mail/commit/4fbb386c71acbef332dc806bce7902fe3f06d41a))
+* **ui:** restore isSubscribed getter on mailbox update ([9fef171](https://github.com/nextcloud/mail/commit/9fef1718d219c0b4440be5a854565930ee2a76d7))
+
+
+
 ## [5.9.2](https://github.com/nextcloud/mail/compare/v5.9.1...v5.9.2) (2026-06-10)
 
 
