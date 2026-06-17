@@ -442,6 +442,7 @@
     "Moving message" : "Presúvam správu",
     "This account cannot connect" : "Tento účet sa nemôže pripojiť",
     "Connection failed. Please verify your information and try again" : "Pripojenie zlyhalo. Skontrolujte svoje informácie a skúste to znova",
+    "Change password" : "Zmeniť heslo",
     "Used quota: {quota}% ({limit})" : "Použitá kvóta: {quota}% ({limit})",
     "Used quota: {quota}%" : "Použitá kvóta: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Nepodarilo sa vytvoriť poštovú schránku. Názov pravdepodobne obsahuje neplatné znaky. Skúste iný názov.",

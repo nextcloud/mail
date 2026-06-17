@@ -466,6 +466,7 @@ OC.L10N.register(
     "Moving message" : "در حال انتقال پیام",
     "This account cannot connect" : "این حساب قادر به اتصال نیست",
     "Connection failed. Please verify your information and try again" : "اتصال ناموفق بود. لطفاً اطلاعات خود را بررسی کنید و دوباره تلاش کنید",
+    "Change password" : "تغییر گذرواژه",
     "Used quota: {quota}% ({limit})" : "سهمیهٔ مصرف‌شده: {quota}% ({limit})",
     "Used quota: {quota}%" : "سهمیهٔ مصرف‌شده: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "ایجاد صندوق پستی ممکن نشد. احتمالاً نام شامل نویسه‌های نامعتبر است. لطفاً نام دیگری را امتحان کنید.",

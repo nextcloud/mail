@@ -466,6 +466,7 @@ OC.L10N.register(
     "Moving message" : "正在移動訊息",
     "This account cannot connect" : "此帳號無法連結",
     "Connection failed. Please verify your information and try again" : "連線失敗。請檢查您的資訊並再試一次",
+    "Change password" : "變更密碼",
     "Used quota: {quota}% ({limit})" : "已使用的配額：{quota}% ({limit})",
     "Used quota: {quota}%" : "已使用的配額：{quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "無法建立信箱。該名稱可能包含無效字元。請嘗試其他名稱。",

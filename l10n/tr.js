@@ -466,6 +466,7 @@ OC.L10N.register(
     "Moving message" : "İleti taşınıyor",
     "This account cannot connect" : "Bu hesap bağlantı kuramadı",
     "Connection failed. Please verify your information and try again" : "Bağlantı kurulamadı. Lütfen bilgilerinizi doğrulayıp yeniden deneyin",
+    "Change password" : "Parolayı değiştir",
     "Used quota: {quota}% ({limit})" : "Kullanılan kota: %{quota} ({limit})",
     "Used quota: {quota}%" : "Kullanılan kota: %{quota}",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "E-posta kutusu oluşturulamadı. Büyük olasılıkla adında geçersiz karakterler var. Lütfen başka bir ad deneyin.",

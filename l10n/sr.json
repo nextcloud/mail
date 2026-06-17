@@ -416,6 +416,7 @@
     "Moving" : "Померам",
     "Moving thread" : "Нит се премешта",
     "Moving message" : "Порука се премешта",
+    "Change password" : "Измени лозинку",
     "Used quota: {quota}% ({limit})" : "Употребљена квота: {quota}% ({limit}) ",
     "Used quota: {quota}%" : "Употребљена квота: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Поштанско сандуче не може да се креира. Име вероватно има неисправне карактере. Молимо вас да покушате са неким другим именом.",

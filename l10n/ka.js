@@ -317,6 +317,7 @@ OC.L10N.register(
     "Moving" : "Moving",
     "Moving thread" : "Moving thread",
     "Moving message" : "Moving message",
+    "Change password" : "Change password",
     "Remove account" : "Remove account",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider.",
     "Remove {email}" : "Remove {email}",

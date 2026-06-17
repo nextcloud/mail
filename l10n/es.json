@@ -396,6 +396,7 @@
     "Moving" : "Moviendo",
     "Moving thread" : "Moviendo hilo",
     "Moving message" : "Moviendo mensaje",
+    "Change password" : "Cambiar contraseña",
     "Used quota: {quota}% ({limit})" : "Cuota utilizada: {quota}% ({limit})",
     "Used quota: {quota}%" : "Cuota utilizada: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "No fue posible crear el buzón de correo. El nombre probablemente tenga caracteres inválidos. Por favor, intente con otro nombre.",

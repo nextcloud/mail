@@ -84,6 +84,7 @@ OC.L10N.register(
     "Save all to Files" : "Ruaji të gjitha te Dosjet",
     "The images have been blocked to protect your privacy." : "Imazhet janë bllokuar për të mbrojtur privatësinë tuaj.",
     "Move" : "Zhvendos",
+    "Change password" : "Ndrysho fjalëkalimin",
     "Remove account" : "Fshij llogarinë",
     "Folder name" : "Emër dosjeje",
     "Saving" : "Duke u ruajtur!",
