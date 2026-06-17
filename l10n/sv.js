@@ -416,6 +416,7 @@ OC.L10N.register(
     "Moving message" : "Flyttar meddelande",
     "This account cannot connect" : "Det här kontot kan inte ansluta",
     "Connection failed. Please verify your information and try again" : "Anslutningen misslyckades. Verifiera din information och försök igen.",
+    "Change password" : "Byt lösenord",
     "Used quota: {quota}% ({limit})" : "Använt utrymme: {quota}% ({limit})",
     "Used quota: {quota}%" : "Använt utrymme: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Det gick inte att skapa postlådan. Namnet innehåller troligen ogiltiga tecken. Försök med ett annat namn.",

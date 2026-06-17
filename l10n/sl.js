@@ -281,6 +281,7 @@ OC.L10N.register(
     "Moving" : "Premikanje",
     "Moving thread" : "Poteka premikanje niti ...",
     "Moving message" : "Poteka premikanje sporočila ...",
+    "Change password" : "Spremeni geslo",
     "Remove account" : "Odstrani račun",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Račun za {email} in podatki tega računa v predpomnilniku bodo odstranjeni iz oblaka Nextcloud, ne pa tudi iz poštnega računa pri ponudniku storitve.",
     "Remove {email}" : "Odstrani {email}",

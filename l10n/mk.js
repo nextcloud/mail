@@ -272,6 +272,7 @@ OC.L10N.register(
     "Move" : "Премести",
     "Moving" : "Преместува",
     "Moving message" : "Преместување порака",
+    "Change password" : "Смени лозинка",
     "Used quota: {quota}% ({limit})" : "Искористен простор: {quota}% ({limit})",
     "Used quota: {quota}%" : "Искористен простор: {quota}%",
     "Remove account" : "Отстрани сметка",

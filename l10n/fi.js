@@ -323,6 +323,7 @@ OC.L10N.register(
     "Moving thread" : "Siirretään ketjua",
     "Moving message" : "Siirretään viestiä",
     "This account cannot connect" : "Tämä tili ei voi yhdistää",
+    "Change password" : "Vaihda salasana",
     "Used quota: {quota}% ({limit})" : "Käytetty kiintiö: {quota}% ({limit})",
     "Used quota: {quota}%" : "Käytetty kiintiö: {quota}%",
     "Remove account" : "Poista tili",

@@ -187,6 +187,7 @@ OC.L10N.register(
     "Moving" : "Tramudende",
     "Moving thread" : "Tramudende sa dibata",
     "Moving message" : "Tramudende su messàgiu",
+    "Change password" : "Càmbia crae",
     "Remove account" : "Boga·nche contu",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Su contu pro {email} e is datos de posta eletrònica allogados in sa memòria temporànea s'ant a bogare dae Nextcloud, ma no dae su frunidore de posta eletrònica tuo.",
     "Remove {email}" : "Boga•nche {email}",

@@ -104,6 +104,7 @@ OC.L10N.register(
     "Unnamed" : "Warisem",
     "Show images" : "Sken tugniwin",
     "Move" : "Senkez",
+    "Change password" : "Beddel awal n uɛaddi",
     "Remove account" : "Kkes amiḍan",
     "Add folder" : "Rnu akaram",
     "Folder name" : "Isem n ukaram",

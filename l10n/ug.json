@@ -434,6 +434,7 @@
     "Moving message" : "يۆتكىلىشچان ئۇچۇر",
     "This account cannot connect" : "بۇ ھېسابات ئۇلانمىدى",
     "Connection failed. Please verify your information and try again" : "ئۇلىنىش مەغلۇپ بولدى. ئۇچۇرلىرىڭىزنى جەزملەشتۈرۈپ قايتا سىناپ بېقىڭ.",
+    "Change password" : "پارولنى ئۆزگەرتىڭ",
     "Used quota: {quota}% ({limit})" : "ئىشلىتىلگەن سىغىم: {quota}% ({limit})",
     "Used quota: {quota}%" : "ئىشلىتىلگەن سىغىم: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "پوچتا ساندۇقى قۇرۇلمىدى. بۇ ئىسىمدا خاتا ھەرپلەر بولۇشى مۇمكىن. باشقا ئىسىمنى سىناپ بېقىڭ.",

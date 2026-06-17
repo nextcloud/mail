@@ -325,6 +325,7 @@ OC.L10N.register(
     "Moving" : "Áthelyezés",
     "Moving thread" : "Szál áthelyezése",
     "Moving message" : "Üzenet áthelyezése",
+    "Change password" : "Jelszó módosítása",
     "Remove account" : "Fiók eltávolítása",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Az {email} fiók és a gyorsítótárazott e-mail-adatok el lesznek távolítva a Nextcloudból, az e-mail-szolgáltatójától azonban nem.",
     "Remove {email}" : "{email} eltávolítása",

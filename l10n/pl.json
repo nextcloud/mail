@@ -463,6 +463,7 @@
     "Moving message" : "Przenoszenie wiadomości",
     "This account cannot connect" : "To konto nie może się połączyć",
     "Connection failed. Please verify your information and try again" : "Połączenie nie powiodło się. Sprawdź swoje dane i spróbuj ponownie",
+    "Change password" : "Zmień hasło",
     "Used quota: {quota}% ({limit})" : "Wykorzystana quota: {quota} % ({limit})",
     "Used quota: {quota}%" : "Wykorzystana przestrzeń: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Nie można utworzyć skrzynki pocztowej. Nazwa prawdopodobnie zawiera nieprawidłowe znaki. Spróbuj innej nazwy.",

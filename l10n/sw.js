@@ -99,6 +99,7 @@ OC.L10N.register(
     "Forward" : "Mbele",
     "Translate" : "Tafsiri",
     "Move" : "Hamisha",
+    "Change password" : "Change password",
     "Remove account" : "Ondoa akaunti",
     "Remove {email}" : "Remove {email}",
     "Add folder" : "Ongeza kisanduku",

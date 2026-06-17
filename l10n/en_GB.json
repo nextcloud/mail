@@ -442,6 +442,7 @@
     "Moving message" : "Moving message",
     "This account cannot connect" : "This account cannot connect",
     "Connection failed. Please verify your information and try again" : "Connection failed. Please verify your information and try again",
+    "Change password" : "Change password",
     "Used quota: {quota}% ({limit})" : "Used quota: {quota}% ({limit})",
     "Used quota: {quota}%" : "Used quota: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Unable to create mailbox. The name likely contains invalid characters. Please try another name.",

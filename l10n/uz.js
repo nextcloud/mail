@@ -56,6 +56,7 @@ OC.L10N.register(
     "Other" : "Boshqa",
     "Translate" : "Tarjima",
     "Move" : "Move",
+    "Change password" : "Change password",
     "Remove {email}" : " {email} ni o'chirish",
     "Folder name" : "Jild nomi",
     "Saving" : "Saving",

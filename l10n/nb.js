@@ -362,6 +362,7 @@ OC.L10N.register(
     "Moving" : "Flytter",
     "Moving thread" : "Flytter tråd",
     "Moving message" : "Flytter melding",
+    "Change password" : "Endre passord",
     "Remove account" : "Fjern konto",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Kontoen for {email} og bufrede e-postdata vil bli fjernet fra Nextcloud, men ikke fra e-postleverandøren din.",
     "Remove {email}" : "Fjern {email}",

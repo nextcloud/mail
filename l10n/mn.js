@@ -430,6 +430,7 @@ OC.L10N.register(
     "Moving message" : "Зурвас зөөж байна",
     "This account cannot connect" : "Энэ бүртгэл холбогдох боломжгүй",
     "Connection failed. Please verify your information and try again" : "Холболт амжилтгүй боллоо. Мэдээллээ шалгаад дахин оролдоно уу",
+    "Change password" : "Нууц үг өөрчлөх",
     "Used quota: {quota}% ({limit})" : "Ашигласан квот: {quota}% ({limit})",
     "Used quota: {quota}%" : "Ашигласан квот: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Шуудангийн хайрцаг үүсгэх боломжгүй. Нэр нь хүчингүй тэмдэгтүүд агуулж байж магадгүй. Өөр нэрээр оролдоно уу.",

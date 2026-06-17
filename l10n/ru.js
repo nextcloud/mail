@@ -432,6 +432,7 @@ OC.L10N.register(
     "Moving" : "Выполняется перемещение",
     "Moving thread" : "Перемещение ветки",
     "Moving message" : "Сообщение перемещается",
+    "Change password" : "Сменить пароль",
     "Used quota: {quota}% ({limit})" : "Использовано квоты: {quota}% ({limit})",
     "Used quota: {quota}%" : "Использовано квоты: {quota}%",
     "Remove account" : "Удалить учётную запись",

@@ -442,6 +442,7 @@
     "Moving message" : "Premještanje poruke",
     "This account cannot connect" : "Ovaj se račun ne može povezati",
     "Connection failed. Please verify your information and try again" : "Povezivanje nije uspjelo. Provjerite podatke i pokušajte ponovno",
+    "Change password" : "Promijeni lozinku",
     "Used quota: {quota}% ({limit})" : "Iskorištena kvota: {quota}% ({limit})",
     "Used quota: {quota}%" : "Iskorištena kvota: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Nije moguće stvoriti sandučić. Naziv vjerojatno sadrži nedopuštene znakove. Pokušajte s drugim nazivom.",
