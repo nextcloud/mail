@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 5.10.0 – 2026-06-18
+### Added
+* Shortcut to change the password in account server settings
+* AI hint when replying with a meeting
+### Changed
+* Translations
+### Fixed
+* Printing messages
+* Drag and drop into sub-mailboxes blocked by a disabled parent mailbox
+* Prefer sans-serif font over Noto Color Emoji for text rendering
+
 ## 5.9.0 – unreleased
 ### Added
 * Nextcloud 35 support
