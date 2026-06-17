@@ -461,6 +461,7 @@ OC.L10N.register(
     "Moving message" : "Spostamento messaggio",
     "This account cannot connect" : "Questo account non riesce a connettersi",
     "Connection failed. Please verify your information and try again" : "Connessione non riuscita. Verifica i dati inseriti e riprova.",
+    "Change password" : "Modifica password",
     "Used quota: {quota}% ({limit})" : "Spazio utilizzato: {quota} % ({limit})",
     "Used quota: {quota}%" : "Spazio utilizzato: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Non è stato possibile creare la cartella. Il nome contiene probabilmente caratteri non validi. Prova a usare un altro nome.",

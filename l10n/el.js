@@ -398,6 +398,7 @@ OC.L10N.register(
     "Moving" : "Μετακινείται",
     "Moving thread" : "Μετακίνηση νήματος",
     "Moving message" : "Μετακίνηση μηνύματος",
+    "Change password" : "Αλλαγή συνθηματικού",
     "Used quota: {quota}% ({limit})" : "Χρησιμοποιημένη ποσόστωση: {quota}% ({limit})",
     "Used quota: {quota}%" : "Χρησιμοποιημένη ποσόστωση: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Αδυναμία δημιουργίας γραμματοκιβωτίου. Το όνομα πιθανώς περιέχει μη έγκυρους χαρακτήρες. Παρακαλώ δοκιμάστε ένα άλλο όνομα.",

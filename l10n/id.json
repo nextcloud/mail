@@ -437,6 +437,7 @@
     "Moving message" : "Memindahkan pesan",
     "This account cannot connect" : "Akun ini tidak dapat terhubung",
     "Connection failed. Please verify your information and try again" : "Koneksi gagal. Harap verifikasi informasi Anda dan coba lagi",
+    "Change password" : "Ubah kata sandi",
     "Used quota: {quota}% ({limit})" : "Kuota terpakai: {quota}% ({limit})",
     "Used quota: {quota}%" : "Kuota terpakai: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Tidak dapat membuat kotak surat. Namanya kemungkinan mengandung karakter yang tidak valid. Silakan coba nama lain.",

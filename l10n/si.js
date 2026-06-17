@@ -34,6 +34,7 @@ OC.L10N.register(
     "Favorites" : "ප්‍රියතම",
     "Other" : "වෙනත්",
     "Translate" : "පරිවර්තනය",
+    "Change password" : "මුරපදය වෙනස් කරන්න",
     "Remove account" : "ගිණුම ඉවත් කරන්න",
     "Folder name" : "බහාලුමේ නම",
     "Mark all as read" : "සියල්ල කියවූ ලෙස සලකුණු කරන්න",

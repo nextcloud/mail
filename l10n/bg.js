@@ -287,6 +287,7 @@ OC.L10N.register(
     "Moving" : "Преместване ",
     "Moving thread" : "Нишката се премества",
     "Moving message" : "Съобщението се премества",
+    "Change password" : "Промяна на парола",
     "Remove account" : "Изтриване",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Профилът за {email} и кешираните имейл данни ще бъдат премахнати от Nextcloud, но не и от вашия доставчик на електронна поща.",
     "Remove {email}" : "Премахване {email}",

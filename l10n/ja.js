@@ -374,6 +374,7 @@ OC.L10N.register(
     "Moving" : "移動中",
     "Moving thread" : "スレッドを移動しています",
     "Moving message" : "メッセージを移動しています",
+    "Change password" : "パスワードを変更",
     "Remove account" : "アカウント削除",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "{email}のアカウントとキャッシュされたメールデータはNextcloudから削除されますが、メールプロバイダーからは削除されません。",
     "Remove {email}" : "{email} を削除",

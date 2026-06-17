@@ -401,6 +401,7 @@
     "Moving" : "Переміщення",
     "Moving thread" : "Переміщення ланцюжка",
     "Moving message" : "Переміщення повідомлення",
+    "Change password" : "Змінити пароль",
     "Used quota: {quota}% ({limit})" : "Використана квота: {quota}% ({limit})",
     "Used quota: {quota}%" : "Використана квота: {quota}%.",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Не вдалося створити поштову скриньку. Ймовірно, ім'я містить неприпустимі символи. Будь ласка, спробуйте інше ім'я.",

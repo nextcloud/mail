@@ -464,6 +464,7 @@
     "Moving message" : "Mover mensagem",
     "This account cannot connect" : "Esta conta não pode conectar",
     "Connection failed. Please verify your information and try again" : "Falha na conexão. Verifique suas informações e tente novamente",
+    "Change password" : "Alterar senha",
     "Used quota: {quota}% ({limit})" : "Cota usada: {quota}% ({limit})",
     "Used quota: {quota}%" : "Cota usada: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Não foi possível criar a caixa de correio. O nome provavelmente contém caracteres inválidos. Tente outro nome.",

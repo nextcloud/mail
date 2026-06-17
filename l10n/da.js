@@ -389,6 +389,7 @@ OC.L10N.register(
     "Moving" : "Flytter",
     "Moving thread" : "Flytter tråd",
     "Moving message" : "Flytter besked",
+    "Change password" : "Skift adgangskode",
     "Used quota: {quota}% ({limit})" : "Anvendt kvote: {quota}% ({limit})",
     "Used quota: {quota}%" : "Anvendt kvote: {quota}%",
     "Remove account" : "Fjern konto",

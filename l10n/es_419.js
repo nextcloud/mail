@@ -80,6 +80,7 @@ OC.L10N.register(
     "Save all to Files" : "Guardar todo a Archivos",
     "The images have been blocked to protect your privacy." : "Las imágenes han sido bloqueadas para proteger tu privacidad. ",
     "Move" : "Mover",
+    "Change password" : "Cambiar password",
     "Remove account" : "Eliminar cuenta",
     "Folder name" : "Nombre de la carpeta",
     "Saving" : "Guardando",
