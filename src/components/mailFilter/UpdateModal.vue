@@ -57,6 +57,10 @@
 					@click="createAction">
 					{{ t('mail', 'Add action') }}
 				</NcButton>
+
+				<NcNoteCard v-if="hasRedirectAction" class="redirect-note" type="warning">
+					<p>{{ t('mail', 'Redirected messages might be rejected by the receiving server, and cannot be read by the recipient if encrypted.') }}</p>
+				</NcNoteCard>
 			</div>
 
 			<div class="filter-settings">
@@ -85,12 +89,12 @@
 </template>
 
 <script>
-import { NcButton, NcCheckboxRadioSwitch, NcLoadingIcon, NcModal, NcTextField } from '@nextcloud/vue'
+import { NcButton, NcCheckboxRadioSwitch, NcLoadingIcon, NcModal, NcNoteCard, NcTextField } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import Action from './Action.vue'
 import Operator from './Operator.vue'
 import Test from './Test.vue'
-import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
+import { MailFilterActions, MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
 import { randomId } from '../../util/randomId.js'
 
 export default {
@@ -104,6 +108,7 @@ export default {
 		NcCheckboxRadioSwitch,
 		NcLoadingIcon,
 		NcModal,
+		NcNoteCard,
 		NcTextField,
 	},
 
@@ -129,6 +134,12 @@ export default {
 			clone: structuredClone(this.filter),
 			boundaryElement: null,
 		}
+	},
+
+	computed: {
+		hasRedirectAction() {
+			return this.clone.actions.some((action) => action.type === MailFilterActions.Redirect)
+		},
 	},
 
 	methods: {
@@ -212,7 +223,11 @@ export default {
 	white-space: nowrap;
 }
 
-.add-condition, .add-action, .filter-name, .filter-settings {
+.add-condition, .add-action, .filter-name, .filter-settings, .redirect-note {
 	width: calc(100% - (30px + var(--default-grid-baseline)));
+}
+
+.redirect-note {
+	box-sizing: border-box;
 }
 </style>
