@@ -1,0 +1,27 @@
+[
+	{
+		"name": "Test 11",
+		"enable": true,
+		"operator": "allof",
+		"tests": [
+			{
+				"operator": "is",
+				"values": [
+					"bob@example.org"
+				],
+				"field": "to"
+			}
+		],
+		"actions": [
+			{
+				"type": "redirect",
+				"recipient": "alice@example.org"
+			},
+			{
+				"type": "fileinto",
+				"mailbox": "Trash"
+			}
+		],
+		"priority": 10
+	}
+]
