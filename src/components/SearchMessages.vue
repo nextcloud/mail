@@ -480,17 +480,11 @@ export default {
 	watch: {
 		query() {
 			if (this.query.length === 0) {
-				this.searchInFrom = []
-				this.searchInTo = []
-				this.searchInSubject = null
-				this.searchInMessageBody = null
-				this.match = 'allof'
-				this.debouncedSearchQuery()
 				return
 			}
 
 			this.match = 'anyof'
-			this.searchInMessageBody = this.searchBody ? this.query : null
+			this.searchInMessageBody = this.query
 			this.searchInSubject = this.query
 			this.searchInFrom = [{ email: this.query, label: this.query }]
 			this.searchInTo = [{ email: this.query, label: this.query }]
@@ -570,9 +564,7 @@ export default {
 
 		closeSearchModal() {
 			this.moreSearchActions = false
-			if (this.query.length === 0) {
-				this.match = 'allof'
-			}
+			this.match = 'allof'
 			this.$nextTick(() => {
 				this.sendQueryEvent()
 			})
