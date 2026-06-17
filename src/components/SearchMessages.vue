@@ -480,6 +480,12 @@ export default {
 	watch: {
 		query() {
 			if (this.query.length === 0) {
+				this.searchInFrom = []
+				this.searchInTo = []
+				this.searchInSubject = null
+				this.searchInMessageBody = null
+				this.match = 'allof'
+				this.debouncedSearchQuery()
 				return
 			}
 
@@ -564,7 +570,9 @@ export default {
 
 		closeSearchModal() {
 			this.moreSearchActions = false
-			this.match = 'allof'
+			if (this.query.length === 0) {
+				this.match = 'allof'
+			}
 			this.$nextTick(() => {
 				this.sendQueryEvent()
 			})
