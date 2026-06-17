@@ -53,6 +53,27 @@ describe('SignaturePlugin', () => {
 			expect(editor.getData()).toEqual(text)
 		})
 
+		it('Add signature without separator', async () => {
+			const text = '<p>bonjour bonjour</p>'
+			const expected = '<p>bonjour bonjour</p><div class="signature"><p>Jane Doe</p></div>'
+
+			const editor = await VirtualTestEditor.create({
+				licenseKey: 'GPL',
+				initialData: text,
+				plugins: [Paragraph, SignaturePlugin],
+			})
+
+			editor.execute(
+				'insertSignature',
+				TRIGGER_EDITOR_READY,
+				'<p>Jane Doe</p>',
+				false,
+				false,
+			)
+
+			expect(editor.getData()).toEqual(expected)
+		})
+
 		it('Add signature to content above quote', async () => {
 			const text = '<p>bonjour bonjour</p><div class="quote">"John Doe" john.doe@localhost - January 1, 1970 1:00 AM <blockquote><p>bonjour bonjour</p></blockquote></div>'
 			const expected = '<p>bonjour bonjour</p><div class="signature">--&nbsp;<p>&nbsp;</p><p>Jane Doe</p><p>&nbsp;</p></div><div class="quote"><p>"John Doe" john.doe@localhost - January 1, 1970 1:00 AM</p><p>bonjour bonjour</p></div>'

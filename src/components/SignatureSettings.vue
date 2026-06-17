@@ -15,6 +15,16 @@
 				{{ t("mail", "Place signature above quoted text") }}
 			</label>
 		</div>
+		<div>
+			<input
+				id="signature-separator-toggle"
+				v-model="signatureSeparator"
+				type="checkbox"
+				class="checkbox">
+			<label for="signature-separator-toggle">
+				{{ t("mail", "Add a separator line (--) above the signature") }}
+			</label>
+		</div>
 		<NcSelect
 			v-if="identities.length > 1"
 			:allow-empty="false"
@@ -93,6 +103,7 @@ export default {
 			identity: null,
 			signature: '',
 			signatureAboveQuote: this.account.signatureAboveQuote,
+			signatureSeparator: this.account.signatureSeparator,
 		}
 	},
 
@@ -134,6 +145,20 @@ export default {
 			} catch (e) {
 				logger.error('could not update signature above quote', { e })
 				this.signatureAboveQuote = oldVal
+			}
+		},
+		async signatureSeparator(val, oldVal) {
+			try {
+				await this.mainStore.patchAccount({
+					account: this.account,
+					data: {
+						signatureSeparator: val,
+					},
+				})
+				logger.debug('signature separator updated to ' + val)
+			} catch (e) {
+				logger.error('could not update signature separator', { e })
+				this.signatureSeparator = oldVal
 			}
 		},
 	},
