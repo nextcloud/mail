@@ -1033,17 +1033,8 @@ class MessageMapper {
 	private function getPageSize(Horde_Imap_Client_Socket $client,
 		string $mailbox,
 		Horde_Imap_Client_Ids $idsToFetch): int {
-		$rangeSearchQuery = new Horde_Imap_Client_Search_Query();
-		$rangeSearchQuery->ids($idsToFetch);
-		$rangeSearchResult = $client->search(
-			$mailbox,
-			$rangeSearchQuery,
-			[
-				'results' => [
-					Horde_Imap_Client::SEARCH_RESULTS_COUNT,
-				],
-			]
-		);
-		return (int)$rangeSearchResult['count'];
+		$query = new Horde_Imap_Client_Fetch_Query();
+		$query->uid();
+		return count($client->fetch($mailbox, $query, ['ids' => $idsToFetch]));
 	}
 }
