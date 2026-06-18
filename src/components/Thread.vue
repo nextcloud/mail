@@ -658,14 +658,6 @@ export default {
 	display: none;
 }
 
-.user-bubble__wrapper {
-	height: var(--default-clickable-area);
-	padding: var(--default-grid-baseline);
-	margin-inline-end: var(--default-grid-baseline);
-	background-color: var(--color-background-dark);
-	border-radius: var(--border-radius-large);
-}
-
 .v-popper__popper--shown .user-bubble__wrapper {
 	margin-inline-end: 0 !important;
 
