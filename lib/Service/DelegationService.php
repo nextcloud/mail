@@ -62,7 +62,11 @@ class DelegationService {
 	}
 
 	public function findDelegatedToUsersForAccount(int $accountId): array {
-		return $this->delegationMapper->findDelegatedToUsers($accountId);
+		return array_map(function (Delegation $delegation) {
+			$displayName = $this->userManager->get($delegation->getUserId())?->getDisplayName();
+			$delegation->setDisplayName($displayName);
+			return $delegation;
+		}, $this->delegationMapper->findDelegatedToUsers($accountId));
 	}
 
 	public function unDelegate(Account $account, string $userId, string $currentUserId): void {
