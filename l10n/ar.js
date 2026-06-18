@@ -362,6 +362,7 @@ OC.L10N.register(
     "Moving" : "النقل جارٍ...",
     "Moving thread" : "نقل النَّظْمَة thread ",
     "Moving message" : "نقل الرسالة",
+    "Change password" : "تغيير كلمة المرور",
     "Remove account" : "حذف حساب",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "ستتم إزالة حساب {email} وبيانات البريد الإلكتروني المخزنة مؤقتًا من نكست كلاود، ولكن ليس من مُزوِّد بريدك الإلكتروني.",
     "Remove {email}" : "إزالة {email}",

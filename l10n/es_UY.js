@@ -95,6 +95,7 @@ OC.L10N.register(
     "Message" : "Mensaje",
     "Copy to clipboard" : "Copiar al portapapeles",
     "Add" : "Agregar",
+    "Close" : "Close",
     "Date" : "Fecha",
     "Tags" : "Etiquetas",
     "Select tags" : "Selecciona las etiquetas",
