@@ -138,6 +138,7 @@ OC.L10N.register(
     "Download Zip" : "Спампаваць Zip",
     "Quoted text" : "Цытаваны тэкст",
     "Move" : "Перамясціць",
+    "Change password" : "Змяніць пароль",
     "Used quota: {quota}% ({limit})" : "Выкарыстана квота: {quota}% ({limit})",
     "Used quota: {quota}%" : "Выкарыстана квота: {quota}%",
     "Remove account" : "Выдаліць уліковы запіс",

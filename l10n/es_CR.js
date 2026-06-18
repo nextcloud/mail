@@ -96,6 +96,7 @@ OC.L10N.register(
     "Copy to clipboard" : "Copiar al portapapeles",
     "Add" : "Agregar",
     "Clear" : "Limpiar",
+    "Close" : "Close",
     "Date" : "Fecha",
     "Tags" : "Etiquetas",
     "Select tags" : "Selecciona las etiquetas",

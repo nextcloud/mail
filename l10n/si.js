@@ -15,6 +15,7 @@ OC.L10N.register(
     "General" : "සමාන්‍යය",
     "Privacy" : "පෞද්ගලිකත්වය",
     "Archive" : "සංරක්ෂණය",
+    "Delete" : "Delete",
     "Search" : "සොයන්න",
     "Send" : "යවන්න",
     "About" : "පිළිබඳ",
