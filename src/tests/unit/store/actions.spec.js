@@ -5,6 +5,7 @@
 
 import { createPinia, setActivePinia } from 'pinia'
 import { curry, range, reverse } from 'ramda'
+import * as AccountService from '../../../service/AccountService.js'
 import * as MailboxService from '../../../service/MailboxService.js'
 import * as MessageService from '../../../service/MessageService.js'
 import * as NotificationService from '../../../service/NotificationService.js'
@@ -12,6 +13,7 @@ import { PAGE_SIZE, UNIFIED_INBOX_ID } from '../../../store/constants.js'
 import useMainStore from '../../../store/mainStore.js'
 import { normalizedEnvelopeListId } from '../../../util/normalization.js'
 
+vi.mock('../../../service/AccountService.js')
 vi.mock('../../../service/MailboxService.js')
 vi.mock('../../../service/MessageService.js')
 vi.mock('../../../service/NotificationService.js')
@@ -714,6 +716,27 @@ describe('Vuex store actions', () => {
 
 		it('returns empty array when message has no attachments', () => {
 			expect(store.prepareAttachments({})).toEqual([])
+		})
+	})
+
+	describe('updateAccount', () => {
+		it('clears the error flag and syncs mailboxes after a successful settings update', async () => {
+			const account = {
+				id: 7,
+				personalNamespace: '',
+				mailboxes: [],
+				error: true,
+			}
+			store.addAccountMutation(account)
+
+			const updatedAccount = { id: 7, personalNamespace: '', mailboxes: [] }
+			AccountService.update.mockResolvedValue(updatedAccount)
+			MailboxService.fetchAll.mockResolvedValue([])
+
+			await store.updateAccount({ accountId: 7 })
+
+			expect(store.accountsUnmapped[7].error).toBe(false)
+			expect(MailboxService.fetchAll).toHaveBeenCalledWith(7, true)
 		})
 	})
 })
