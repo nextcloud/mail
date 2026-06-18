@@ -149,6 +149,7 @@ class DelegationServiceTest extends TestCase {
 
 	public function testFindDelegatedToUsersForAccount(): void {
 		$delegation = new Delegation();
+		$delegation->setId(10);
 		$delegation->setAccountId(1);
 		$delegation->setUserId('delegatee');
 
@@ -157,10 +158,15 @@ class DelegationServiceTest extends TestCase {
 			->with(1)
 			->willReturn([$delegation]);
 
+		$user = $this->createMock(IUser::class);
+		$user->method('getDisplayName')->willReturn('Delegatee Name');
+		$this->userManager->method('get')->with('delegatee')->willReturn($user);
+
 		$result = $this->service->findDelegatedToUsersForAccount(1);
 
 		$this->assertCount(1, $result);
 		$this->assertEquals('delegatee', $result[0]->getUserId());
+		$this->assertEquals('Delegatee Name', $result[0]->getDisplayName());
 	}
 
 	public function testUnDelegateSuccess(): void {
