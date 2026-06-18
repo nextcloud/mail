@@ -10,7 +10,12 @@
 		<div class="modal-content">
 			<h2>{{ t('mail', 'Create event') }}</h2>
 			<div class="eventTitle">
-				<input v-model="eventTitle" :disabled="generatingData" type="text">
+				<label for="eventTitle">{{ t('mail', 'Title') }}</label>
+				<input
+					id="eventTitle"
+					v-model="eventTitle"
+					:disabled="generatingData"
+					type="text">
 			</div>
 			<div class="dateTimePicker">
 				<DatetimePicker
