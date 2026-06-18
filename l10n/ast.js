@@ -162,6 +162,7 @@ OC.L10N.register(
     "Show images temporarily" : "Amosar les imáxenes temporalmente",
     "Quoted text" : "Cita",
     "Move" : "Mover",
+    "Change password" : "Camudar la contraseña",
     "Remove account" : "Quitar la cuenta",
     "Remove {email}" : "Quitar {email}",
     "Add folder" : "Amestar una carpeta",
