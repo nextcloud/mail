@@ -264,9 +264,7 @@ OC.L10N.register(
     "Revoke" : "Panaikinti",
     "{userId} will no longer be able to act on your behalf" : "{userId} nebegalės veikti jūsų vardu",
     "Could not fetch delegates" : "Nepavyko gauti delegatų",
-    "Delegated access to {userId}" : "Deleguota prieiga prie {userId}",
     "Could not delegate access" : "Nepavyko deleguoti prieigos",
-    "Revoked access for {userId}" : "Atšaukta prieiga {userId}",
     "Could not revoke delegation" : "Nepavyko atšaukti delegavimo",
     "Delegation" : "Delegavimas",
     "Allow users to send, receive, and delete mail on your behalf" : "Leisti vartotojams siųsti, gauti ir ištrinti el. laiškus jūsų vardu",
@@ -916,6 +914,8 @@ OC.L10N.register(
     "Could not load your message" : "Nepavyko įkelti jūsų laiško",
     "Could not load the desired message" : "Nepavyko įkelti pageidaujamo laiško",
     "Could not load the message" : "Nepavyko įkelti laiško",
-    "Error loading message" : "Klaida įkeliant laišką"
+    "Error loading message" : "Klaida įkeliant laišką",
+    "Delegated access to {userId}" : "Deleguota prieiga prie {userId}",
+    "Revoked access for {userId}" : "Atšaukta prieiga {userId}"
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");

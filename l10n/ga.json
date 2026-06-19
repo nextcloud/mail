@@ -262,9 +262,7 @@
     "Revoke" : "Chúlghairm",
     "{userId} will no longer be able to act on your behalf" : "Ní bheidh {userId} in ann gníomhú ar do shon a thuilleadh",
     "Could not fetch delegates" : "Níorbh fhéidir toscairí a fháil",
-    "Delegated access to {userId}" : "Rochtain tarmligthe chuig {userId}",
     "Could not delegate access" : "Níorbh fhéidir rochtain a tharmligean",
-    "Revoked access for {userId}" : "Rochtain curtha ar ceal do {userId}",
     "Could not revoke delegation" : "Níorbh fhéidir an toscaireacht a chúlghairm",
     "Delegation" : "Toscaireacht",
     "Allow users to send, receive, and delete mail on your behalf" : "Ceadaigh d'úsáideoirí ríomhphost a sheoladh, a fháil agus a scriosadh ar do shon",
@@ -914,6 +912,8 @@
     "Could not load your message" : "Níorbh fhéidir do theachtaireacht a lódáil",
     "Could not load the desired message" : "Níorbh fhéidir an teachtaireacht atá uait a luchtú",
     "Could not load the message" : "Níorbh fhéidir an teachtaireacht a luchtú",
-    "Error loading message" : "Earráid agus an teachtaireacht á lódáil"
+    "Error loading message" : "Earráid agus an teachtaireacht á lódáil",
+    "Delegated access to {userId}" : "Rochtain tarmligthe chuig {userId}",
+    "Revoked access for {userId}" : "Rochtain curtha ar ceal do {userId}"
 },"pluralForm" :"nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);"
 }

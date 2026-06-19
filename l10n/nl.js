@@ -264,9 +264,7 @@ OC.L10N.register(
     "Revoke" : "Intrekken",
     "{userId} will no longer be able to act on your behalf" : "{userId} kan niet langer namens jou handelen",
     "Could not fetch delegates" : "Kon gedelegeerden niet ophalen",
-    "Delegated access to {userId}" : "Toegang gedelegeerd aan {userId}",
     "Could not delegate access" : "Kon toegang niet delegeren",
-    "Revoked access for {userId}" : "Toegang ingetrokken voor {userId}",
     "Could not revoke delegation" : "Kon delegatie niet intrekken",
     "Delegation" : "Delegatie",
     "Allow users to send, receive, and delete mail on your behalf" : "Gebruikers toestaan om namens jou e-mail te versturen, ontvangen en verwijderen",
@@ -916,6 +914,8 @@ OC.L10N.register(
     "Could not load your message" : "Kon je bericht niet laden",
     "Could not load the desired message" : "Kon het gewenste bericht niet laden",
     "Could not load the message" : "Kon het bericht niet laden",
-    "Error loading message" : "Fout bij laden bericht"
+    "Error loading message" : "Fout bij laden bericht",
+    "Delegated access to {userId}" : "Toegang gedelegeerd aan {userId}",
+    "Revoked access for {userId}" : "Toegang ingetrokken voor {userId}"
 },
 "nplurals=2; plural=(n != 1);");

@@ -264,9 +264,7 @@ OC.L10N.register(
     "Revoke" : "撤銷",
     "{userId} will no longer be able to act on your behalf" : "{userId} 將無法再代表您執行操作",
     "Could not fetch delegates" : "無法擷取委派使用者",
-    "Delegated access to {userId}" : "已向 {userId} 委派存取權",
     "Could not delegate access" : "無法委派存取權",
-    "Revoked access for {userId}" : "已撤銷對 {userId} 的存取",
     "Could not revoke delegation" : "無法撤銷委派",
     "Delegation" : "委派",
     "Allow users to send, receive, and delete mail on your behalf" : "允許使用者代表您傳送、接收與刪除郵件",
@@ -916,6 +914,8 @@ OC.L10N.register(
     "Could not load your message" : "無法載入您的信件",
     "Could not load the desired message" : "無法載入所選的信件",
     "Could not load the message" : "無法載入信件",
-    "Error loading message" : "載入信件錯誤"
+    "Error loading message" : "載入信件錯誤",
+    "Delegated access to {userId}" : "已向 {userId} 委派存取權",
+    "Revoked access for {userId}" : "已撤銷對 {userId} 的存取"
 },
 "nplurals=1; plural=0;");

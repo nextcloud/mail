@@ -262,9 +262,7 @@
     "Revoke" : "Отозвать",
     "{userId} will no longer be able to act on your behalf" : "{userId} больше не сможет действовать от вашего имени",
     "Could not fetch delegates" : "Не удалось получить делегатов",
-    "Delegated access to {userId}" : "Делегированный доступ к {userId}",
     "Could not delegate access" : "Не удалось делегировать доступ",
-    "Revoked access for {userId}" : "Отменён доступ для {userId}",
     "Could not revoke delegation" : "Не удалось отозвать делегирование",
     "Delegation" : " Делегирование",
     "Allow users to send, receive, and delete mail on your behalf" : "Разрешить пользователям отправлять, получать и удалять почту от вашего имени",
@@ -815,6 +813,8 @@
     "Could not load your message" : "Ошибка получения вашего сообщения",
     "Could not load the desired message" : "Ошибка получения указанного сообщения",
     "Could not load the message" : "Ошибка получения этого сообщения",
-    "Error loading message" : "Ошибка загрузки сообщения"
+    "Error loading message" : "Ошибка загрузки сообщения",
+    "Delegated access to {userId}" : "Делегированный доступ к {userId}",
+    "Revoked access for {userId}" : "Отменён доступ для {userId}"
 },"pluralForm" :"nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);"
 }
