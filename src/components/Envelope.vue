@@ -479,7 +479,7 @@
 					{{ translateTagDisplayName(tag) }}
 				</span>
 			</div>
-			<div v-for="(attachment, idx) in attachments" :key="`attachement-${idx}`">
+			<div v-for="(attachment, idx) in attachments" :key="`attachment-${idx}`">
 				<AttachmentTag
 					:file-name="attachment.fileName"
 					:mime-type="attachment.mime"
@@ -685,7 +685,7 @@ export default {
 			overwriteOneLineMobile: false,
 			hoveringAvatar: false,
 			quickActionLoading: false,
-			possibleAttachementsCount: 0,
+			possibleAttachmentsCount: 0,
 		}
 	},
 
@@ -821,7 +821,7 @@ export default {
 		},
 
 		attachments() {
-			return this.data.attachments.filter((e) => e.fileName && e.fileName.length > 0).slice(0, this.possibleAttachementsCount)
+			return this.data.attachments.filter((e) => e.fileName && e.fileName.length > 0).slice(0, this.possibleAttachmentsCount)
 		},
 
 		remainingAttachements() {
@@ -1015,8 +1015,8 @@ export default {
 			const detailsWidth = container.querySelector('.list-item-content__inner__details')?.clientWidth ?? 0
 			const availableWidth = (container.clientWidth ?? 0) - detailsWidth - tagsWidth - 30 // 30px for the extra (+n) indicator
 
-			const attachementSize = 140 + 4 // min-width + gap
-			this.possibleAttachementsCount = Math.min(3, Math.floor(availableWidth / attachementSize))
+			const attachmentSize = 140 + 4 // min-width + gap
+			this.possibleAttachmentsCount = Math.min(3, Math.floor(availableWidth / attachmentSize))
 		},
 
 		async executeQuickAction(action) {
