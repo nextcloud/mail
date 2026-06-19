@@ -275,6 +275,7 @@ OC.L10N.register(
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Nem helyezheti át ezt az üzenetet az archiválási mappába vagy törölheti a jelenlegi mappából",
     "Last hour" : "Elmúlt óra",
     "Today" : "Ma",
+    "Yesterday" : "Tegnap",
     "Last week" : "Előző hét",
     "Last month" : "Előző hónap",
     "Choose target folder" : "Válasszon célmappát",
@@ -324,6 +325,7 @@ OC.L10N.register(
     "Moving" : "Áthelyezés",
     "Moving thread" : "Szál áthelyezése",
     "Moving message" : "Üzenet áthelyezése",
+    "Change password" : "Jelszó módosítása",
     "Remove account" : "Fiók eltávolítása",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Az {email} fiók és a gyorsítótárazott e-mail-adatok el lesznek távolítva a Nextcloudból, az e-mail-szolgáltatójától azonban nem.",
     "Remove {email}" : "{email} eltávolítása",
@@ -625,7 +627,6 @@ OC.L10N.register(
     "Could not load your message" : "Nem sikerült betölteni az üzenetét",
     "Could not load the desired message" : "Nem sikerült betölteni a kért üzenetet",
     "Could not load the message" : "Nem sikerült betölteni az üzenetet",
-    "Error loading message" : "Hiba történt az üzenet betöltése közben",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Az üzeneteket automatikusan fontosként jelöli meg az alapján, hogy mely üzenetekre reagált, vagy jelölt meg fontosként. Kezdetben lehet, hogy kézzel megváltoztatnia a fontosságot és ezzel kell tanítania a rendszert, de ez az idő múlásával javulni fog."
+    "Error loading message" : "Hiba történt az üzenet betöltése közben"
 },
 "nplurals=2; plural=(n != 1);");

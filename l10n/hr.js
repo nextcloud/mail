@@ -444,6 +444,7 @@ OC.L10N.register(
     "Moving message" : "Premještanje poruke",
     "This account cannot connect" : "Ovaj se račun ne može povezati",
     "Connection failed. Please verify your information and try again" : "Povezivanje nije uspjelo. Provjerite podatke i pokušajte ponovno",
+    "Change password" : "Promijeni lozinku",
     "Used quota: {quota}% ({limit})" : "Iskorištena kvota: {quota}% ({limit})",
     "Used quota: {quota}%" : "Iskorištena kvota: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Nije moguće stvoriti sandučić. Naziv vjerojatno sadrži nedopuštene znakove. Pokušajte s drugim nazivom.",
@@ -888,8 +889,6 @@ OC.L10N.register(
     "Could not load your message" : "Učitavanje vaše poruke nije uspjelo",
     "Could not load the desired message" : "Ne može se učitati željena poruka",
     "Could not load the message" : "Poruku nije moguće učitati",
-    "Error loading message" : "Pogreška pri učitavanju poruke",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Poruke se automatski označavaju kao važne na temelju poruka kojima ste rukovali ili koje ste označili kao važne. U početku ćete možda morati ručno mijenjati važnost poruka kako bi sustav zapamtio vaše želje, ali s vremenom će se poboljšati.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Poruke koje ste poslali i koje zahtijevaju odgovor, ali ga nisu dobile nakon nekoliko dana, prikazivat će se ovdje."
+    "Error loading message" : "Pogreška pri učitavanju poruke"
 },
 "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");

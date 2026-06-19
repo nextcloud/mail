@@ -20,7 +20,9 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\DelegationExistsException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IUserManager;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Notification\IManager;
 use OCP\Notification\IncompleteNotificationException;
 use Psr\Log\LoggerInterface;
@@ -37,6 +39,7 @@ class DelegationService {
 		private IUserManager $userManager,
 		private IManager $notificationManager,
 		private ITimeFactory $time,
+		private IEventDispatcher $eventDispatcher,
 		private LoggerInterface $logger,
 	) {
 	}
@@ -59,7 +62,11 @@ class DelegationService {
 	}
 
 	public function findDelegatedToUsersForAccount(int $accountId): array {
-		return $this->delegationMapper->findDelegatedToUsers($accountId);
+		return array_map(function (Delegation $delegation) {
+			$displayName = $this->userManager->get($delegation->getUserId())?->getDisplayName();
+			$delegation->setDisplayName($displayName);
+			return $delegation;
+		}, $this->delegationMapper->findDelegatedToUsers($accountId));
 	}
 
 	public function unDelegate(Account $account, string $userId, string $currentUserId): void {
@@ -126,6 +133,14 @@ class DelegationService {
 	public function resolveLocalMessageUserId(int $localMessageId, string $currentUserId): string {
 		$accountId = $this->localMessageMapper->findAccountIdForLocalMessage($localMessageId);
 		return $this->resolveAccountUserId($accountId, $currentUserId);
+	}
+
+
+	public function logDelegatedAction(string $currentUserId, string $effectiveUserId, string $logMessage): void {
+		if ($currentUserId === $effectiveUserId) {
+			return;
+		}
+		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent($logMessage));
 	}
 
 	/**

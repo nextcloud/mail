@@ -258,9 +258,7 @@
     "Revoke" : "撤销",
     "{userId} will no longer be able to act on your behalf" : "{userId} 将无法再代表您执行操作",
     "Could not fetch delegates" : "无法获取委派用户",
-    "Delegated access to {userId}" : "已向 {userId} 委派访问权限",
     "Could not delegate access" : "无法委派访问权限",
-    "Revoked access for {userId}" : "已撤销 {userId} 的访问权限",
     "Could not revoke delegation" : "无法撤销委派",
     "Delegation" : "委派",
     "Allow users to send, receive, and delete mail on your behalf" : "允许用户代表您发送、接收和删除邮件",
@@ -459,6 +457,7 @@
     "Moving message" : "正在移动邮件",
     "This account cannot connect" : "此账号无法连接",
     "Connection failed. Please verify your information and try again" : "连接失败。请验证您的信息，然后重试",
+    "Change password" : "更改密码",
     "Used quota: {quota}% ({limit})" : "已用配额：{quota}%（{limit}）",
     "Used quota: {quota}%" : "已用配额：{quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "无法创建邮箱。名称可能包含无效字符。请尝试其他名称。",
@@ -909,7 +908,7 @@
     "Could not load the desired message" : "无法加载所需邮件",
     "Could not load the message" : "无法加载邮件",
     "Error loading message" : "加载邮件时出错",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "将根据您与哪些邮件互动或手动标记为重要，自动标记邮件为重要邮件。开始时，您可能需要手动更改重要性来调教系统，但随着时间的推移，它会不断改进。",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "您发送的需要回复但几天后未收到回复的邮件将显示在此处。"
+    "Delegated access to {userId}" : "已向 {userId} 委派访问权限",
+    "Revoked access for {userId}" : "已撤销 {userId} 的访问权限"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

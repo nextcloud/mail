@@ -444,6 +444,7 @@ OC.L10N.register(
     "Moving message" : "Presúvam správu",
     "This account cannot connect" : "Tento účet sa nemôže pripojiť",
     "Connection failed. Please verify your information and try again" : "Pripojenie zlyhalo. Skontrolujte svoje informácie a skúste to znova",
+    "Change password" : "Zmeniť heslo",
     "Used quota: {quota}% ({limit})" : "Použitá kvóta: {quota}% ({limit})",
     "Used quota: {quota}%" : "Použitá kvóta: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Nepodarilo sa vytvoriť poštovú schránku. Názov pravdepodobne obsahuje neplatné znaky. Skúste iný názov.",
@@ -889,8 +890,6 @@ OC.L10N.register(
     "Could not load your message" : "Nepodarilo sa načítať vašu správu",
     "Could not load the desired message" : "Nepodarilo sa načítať požadovanú správu",
     "Could not load the message" : "Správu sa nepodarilo sa načítať",
-    "Error loading message" : "Chyba načítavania správy",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Správy sa automaticky označia ako dôležité v závislosti na tom, ktorými správami ste sa zaoberali alebo označili ako dôležité. Na začiatku bude potrebné meniť dôležitosť ručne a systém tak postupne učiť, ale časom sa to zlepší.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Tu sa zobrazia vami odoslané správy, ktoré vyžadujú odpoveď, no po niekoľkých dňoch ju nedostali."
+    "Error loading message" : "Chyba načítavania správy"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

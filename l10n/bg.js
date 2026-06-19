@@ -287,6 +287,7 @@ OC.L10N.register(
     "Moving" : "Преместване ",
     "Moving thread" : "Нишката се премества",
     "Moving message" : "Съобщението се премества",
+    "Change password" : "Промяна на парола",
     "Remove account" : "Изтриване",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Профилът за {email} и кешираните имейл данни ще бъдат премахнати от Nextcloud, но не и от вашия доставчик на електронна поща.",
     "Remove {email}" : "Премахване {email}",
@@ -548,7 +549,6 @@ OC.L10N.register(
     "Could not load your message" : "Вашето съобщение не може да бъде заредено",
     "Could not load the desired message" : "Желаното съобщение не може да бъде заредено",
     "Could not load the message" : "Съобщението не може да бъде заредено",
-    "Error loading message" : "Грешка при зареждане съобщението",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Съобщенията автоматично ще бъдат маркирани като важни въз основа на съобщенията, с които сте взаимодействали или маркирани като важни. В началото може да се наложи ръчно да промените важността, за да обучите системата, но тя ще се подобри с течение на времето."
+    "Error loading message" : "Грешка при зареждане съобщението"
 },
 "nplurals=2; plural=(n != 1);");

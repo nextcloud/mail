@@ -16,13 +16,13 @@ jobs:
       matrix:
         branches:
           - 'main'
-          - 'stable5.8'
-          - 'stable5.7'
+          - 'stable5.10'
+          - 'stable5.9'
 
     name: update-public-suffix-list-${{ matrix.branches }}
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           ref: ${{ matrix.branches }}
           submodules: true
@@ -31,7 +31,7 @@ jobs:
         run: curl --output resources/public_suffix_list.dat https://publicsuffix.org/list/public_suffix_list.dat
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7.0.11
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ secrets.COMMAND_BOT_PAT }}
           commit-message: 'fix(dns): Update public suffix list'

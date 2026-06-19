@@ -121,6 +121,7 @@ class MailboxesControllerTest extends TestCase {
 	public function testCreate() {
 		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
+		$mailbox->setId(99);
 		$accountId = 28;
 		$this->accountService->expects($this->once())
 			->method('find')
@@ -130,11 +131,198 @@ class MailboxesControllerTest extends TestCase {
 			->method('createMailbox')
 			->with($this->equalTo($account), $this->equalTo('new'))
 			->willReturn($mailbox);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId created mailbox: {$mailbox->getId()} on behalf of $this->userId");
 
 		$response = $this->controller->create($accountId, 'new');
 
 		$expected = new JSONResponse($mailbox);
 		$this->assertEquals($expected, $response);
+	}
+
+	public function testPatchRenameLogsDelegatedAction(): void {
+		$mailboxId = 13;
+		$mailbox = new Mailbox();
+		$mailbox->setId($mailboxId);
+		$mailbox->setAccountId(28);
+		$account = $this->createStub(Account::class);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->userId, 28)
+			->willReturn($account);
+		$this->mailManager->expects($this->once())
+			->method('renameMailbox')
+			->with($account, $mailbox, 'renamed')
+			->willReturn($mailbox);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId changed mailbox: {$mailboxId}'s name to renamed on behalf of $this->userId");
+
+		$response = $this->controller->patch($mailboxId, 'renamed');
+
+		$this->assertEquals(new JSONResponse($mailbox), $response);
+	}
+
+	public function testPatchSubscribeLogsDelegatedAction(): void {
+		$mailboxId = 13;
+		$mailbox = new Mailbox();
+		$mailbox->setId($mailboxId);
+		$mailbox->setAccountId(28);
+		$account = $this->createStub(Account::class);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->willReturn($account);
+		$this->mailManager->expects($this->once())
+			->method('updateSubscription')
+			->with($account, $mailbox, true)
+			->willReturn($mailbox);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId subscribed to mailbox: $mailboxId on behalf of $this->userId");
+
+		$this->controller->patch($mailboxId, null, true);
+	}
+
+	public function testPatchUnsubscribeLogsDelegatedAction(): void {
+		$mailboxId = 13;
+		$mailbox = new Mailbox();
+		$mailbox->setId($mailboxId);
+		$mailbox->setAccountId(28);
+		$account = $this->createStub(Account::class);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->willReturn($account);
+		$this->mailManager->expects($this->once())
+			->method('updateSubscription')
+			->with($account, $mailbox, false)
+			->willReturn($mailbox);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId unsubscribed to mailbox: $mailboxId on behalf of $this->userId");
+
+		$this->controller->patch($mailboxId, null, false);
+	}
+
+	public function testPatchEnableSyncLogsDelegatedAction(): void {
+		$mailboxId = 13;
+		$mailbox = new Mailbox();
+		$mailbox->setId($mailboxId);
+		$mailbox->setAccountId(28);
+		$account = $this->createStub(Account::class);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->willReturn($account);
+		$this->mailManager->expects($this->once())
+			->method('enableMailboxBackgroundSync')
+			->with($mailbox, true)
+			->willReturn($mailbox);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId enabled background sync for mailbox: $mailboxId on behalf of $this->userId");
+
+		$this->controller->patch($mailboxId, null, null, true);
+	}
+
+	public function testMarkAllAsReadLogsDelegatedAction(): void {
+		$mailboxId = 13;
+		$mailbox = new Mailbox();
+		$mailbox->setId($mailboxId);
+		$mailbox->setAccountId(28);
+		$account = $this->createStub(Account::class);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->willReturn($account);
+		$this->mailManager->expects($this->once())
+			->method('markFolderAsRead')
+			->with($account, $mailbox);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId marked all messages as read in mailbox: $mailboxId on behalf of $this->userId");
+
+		$this->controller->markAllAsRead($mailboxId);
+	}
+
+	public function testDestroyLogsDelegatedAction(): void {
+		$mailboxId = 13;
+		$mailbox = new Mailbox();
+		$mailbox->setId($mailboxId);
+		$mailbox->setAccountId(28);
+		$account = $this->createStub(Account::class);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->willReturn($account);
+		$this->mailManager->expects($this->once())
+			->method('deleteMailbox')
+			->with($account, $mailbox);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId deleted mailbox: $mailboxId on behalf of $this->userId");
+
+		$this->controller->destroy($mailboxId);
+	}
+
+	public function testClearMailboxLogsDelegatedAction(): void {
+		$mailboxId = 13;
+		$mailbox = new Mailbox();
+		$mailbox->setId($mailboxId);
+		$mailbox->setAccountId(28);
+		$account = $this->createStub(Account::class);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->willReturn($account);
+		$this->mailManager->expects($this->once())
+			->method('clearMailbox')
+			->with($account, $mailbox);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId cleared mailbox: $mailboxId on behalf of $this->userId");
+
+		$this->controller->clearMailbox($mailboxId);
+	}
+
+	public function testRepairLogsDelegatedAction(): void {
+		$mailboxId = 13;
+		$mailbox = new Mailbox();
+		$mailbox->setId($mailboxId);
+		$mailbox->setAccountId(28);
+		$account = $this->createStub(Account::class);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->willReturn($account);
+		$this->syncService->expects($this->once())
+			->method('repairSync')
+			->with($account, $mailbox);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId repaired mailbox: $mailboxId on behalf of $this->userId");
+
+		$this->controller->repair($mailboxId);
 	}
 
 	public function testStats(): void {

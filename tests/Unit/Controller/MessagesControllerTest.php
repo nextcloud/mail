@@ -375,10 +375,15 @@ class MessagesControllerTest extends TestCase {
 			->method('getName')
 			->with()
 			->will($this->returnValue('cat.jpg'));
+		$folderNode = $this->createMock(Folder::class);
 		$this->userFolder->expects($this->once())
+			->method('get')
+			->with('Downloads')
+			->willReturn($folderNode);
+		$this->userFolder->expects($this->exactly(2))
 			->method('nodeExists')
-			->with('Downloads/cat.jpg')
-			->will($this->returnValue(false));
+			->withConsecutive(['Downloads'], ['Downloads/cat.jpg'])
+			->willReturnOnConsecutiveCalls(true, false);
 		$file = $this->getMockBuilder('\OCP\Files\File')
 			->disableOriginalConstructor()
 			->getMock();
@@ -438,10 +443,15 @@ class MessagesControllerTest extends TestCase {
 			->method('getName')
 			->with()
 			->will($this->returnValue('cat.jpg'));
+		$folderNode = $this->createMock(Folder::class);
 		$this->userFolder->expects($this->once())
+			->method('get')
+			->with('Downloads')
+			->willReturn($folderNode);
+		$this->userFolder->expects($this->exactly(2))
 			->method('nodeExists')
-			->with('Downloads/cat.jpg')
-			->will($this->returnValue(false));
+			->withConsecutive(['Downloads'], ['Downloads/cat.jpg'])
+			->willReturnOnConsecutiveCalls(true, false);
 		$file = $this->getMockBuilder('\OCP\Files\File')
 			->disableOriginalConstructor()
 			->getMock();
@@ -464,6 +474,35 @@ class MessagesControllerTest extends TestCase {
 		);
 
 		$this->assertEquals($expected, $response);
+	}
+
+	public function testSaveAttachmentTargetPathNotFound(): void {
+		$this->userFolder->expects($this->once())
+			->method('nodeExists')
+			->with('NoSuchFolder')
+			->willReturn(false);
+
+		$response = $this->controller->saveAttachment(123, '1', 'NoSuchFolder');
+
+		$this->assertSame(Http::STATUS_BAD_REQUEST, $response->getStatus());
+	}
+
+	public function testSaveAttachmentTargetPathIsFile(): void {
+		$fileNode = $this->getMockBuilder('\OCP\Files\File')
+			->disableOriginalConstructor()
+			->getMock();
+		$this->userFolder->expects($this->once())
+			->method('nodeExists')
+			->with('some/file.txt')
+			->willReturn(true);
+		$this->userFolder->expects($this->once())
+			->method('get')
+			->with('some/file.txt')
+			->willReturn($fileNode);
+
+		$response = $this->controller->saveAttachment(123, '1', 'some/file.txt');
+
+		$this->assertSame(Http::STATUS_BAD_REQUEST, $response->getStatus());
 	}
 
 	public function testDownloadAttachments() {
@@ -658,6 +697,9 @@ class MessagesControllerTest extends TestCase {
 		$this->mailManager->expects($this->once())
 			->method('flagMessage')
 			->with($this->account, 'INBOX', 444, 'seen', false);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId updated flags on message <$id> with [seen=false] on behalf of $this->userId");
 
 		$expected = new JSONResponse();
 		$response = $this->controller->setFlags(
@@ -765,6 +807,9 @@ class MessagesControllerTest extends TestCase {
 		$this->mailManager->expects($this->once())
 			->method('tagMessage')
 			->with($this->account, $mailbox->getName(), $message, $tag, true);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId added tag <{$tag->getImapLabel()}> on message <$id> on behalf of $this->userId");
 
 		$this->controller->setTag($id, $tag->getImapLabel());
 	}
@@ -866,6 +911,9 @@ class MessagesControllerTest extends TestCase {
 		$this->mailManager->expects($this->once())
 			->method('tagMessage')
 			->with($this->account, $mailbox->getName(), $message, $tag, false);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId removed tag <{$tag->getImapLabel()}> on message <$id> on behalf of $this->userId");
 
 		$this->controller->removeTag($id, $tag->getImapLabel());
 	}
@@ -898,6 +946,9 @@ class MessagesControllerTest extends TestCase {
 		$this->mailManager->expects($this->once())
 			->method('flagMessage')
 			->with($this->account, 'INBOX', 444, 'flagged', true);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId updated flags on message <$id> with [flagged=true] on behalf of $this->userId");
 
 		$expected = new JSONResponse();
 		$response = $this->controller->setFlags(
@@ -933,6 +984,9 @@ class MessagesControllerTest extends TestCase {
 		$this->mailManager->expects($this->once())
 			->method('deleteMessage')
 			->with($this->account, 'INBOX', 444);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId deleted message <$id> on behalf of $this->userId");
 
 		$expected = new JSONResponse();
 		$result = $this->controller->destroy($id);

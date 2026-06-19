@@ -83,6 +83,9 @@ class DraftsControllerTest extends TestCase {
 		$this->service->expects(self::once())
 			->method('sendMessage')
 			->with($message, $account);
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId moved draft: {$message->getId()} to the IMAP server on behalf of $this->userId");
 
 		$expected = JsonResponse::success('Message moved to IMAP', Http::STATUS_ACCEPTED);
 		$actual = $this->controller->move($message->getId());
@@ -169,6 +172,9 @@ class DraftsControllerTest extends TestCase {
 		$this->service->expects(self::once())
 			->method('deleteMessage')
 			->with($this->userId, $message);
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId deleted draft: {$message->getId()}  on behalf of $this->userId");
 
 		$expected = JsonResponse::success('Message deleted', Http::STATUS_ACCEPTED);
 		$actual = $this->controller->destroy($message->getId());
@@ -226,6 +232,9 @@ class DraftsControllerTest extends TestCase {
 		$this->service->expects(self::once())
 			->method('saveMessage')
 			->with($account, $message, $to, $cc, [], []);
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId created draft:   on behalf of $this->userId");
 
 		$expected = JsonResponse::success($message, Http::STATUS_CREATED);
 		$actual = $this->controller->create(

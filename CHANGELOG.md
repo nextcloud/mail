@@ -1,13 +1,35 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 5.9.0 – unreleased
+## 5.10.0 – 2026-06-18
 ### Added
-* Account delegation
-* HTML and source editing support in composer/signature editor
-* Per-message To/Cc/Bcc recipients in thread view
+* Shortcut to change the password in account server settings
+* AI hint when replying with a meeting
 ### Changed
 * Translations
+### Fixed
+* Printing messages
+* Drag and drop into sub-mailboxes blocked by a disabled parent mailbox
+* Prefer sans-serif font over Noto Color Emoji for text rendering
+
+## 5.9.0 – unreleased
+### Added
+* Nextcloud 35 support
+* Account delegation with notifications
+* HTML and source editing support in composer/signature editor
+* Per-message To/Cc/Bcc recipients in thread view
+* Paste or copy several email addresses into address fields at once
+* Keep inline images when forwarding messages
+### Changed
+* Translations
+### Performance
+* Reuse IMAP client connections during initial sync
+### Fixed
+* Attachment actions menu closes after Download or Save to Files
+* Correct favorite/unfavorite bulk action behavior
+* Detect and warn about Microsoft accounts without OAuth configured
+* Important message icon not displayed in message list
+* Load translations via filesystem path
 
 ## 5.8.0 – unreleased
 ### Added

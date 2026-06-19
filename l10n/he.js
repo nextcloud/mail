@@ -158,6 +158,7 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "התמונות נחסמו כדי להגן על הפרטיות שלך",
     "Message frame" : "מסגרת הודעה",
     "Move" : "העברה",
+    "Change password" : "שינוי ססמה",
     "Remove account" : "הסרת חשבון",
     "Remove {email}" : "להסיר את {email}",
     "Show only subscribed folders" : "להציג תיקיות שבמינוי בלבד",

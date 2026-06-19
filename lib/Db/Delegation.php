@@ -23,9 +23,19 @@ class Delegation extends Entity implements JsonSerializable {
 	protected $accountId;
 	protected $userId;
 
+	private ?string $displayName = null;
+
 	public function __construct() {
 		$this->addType('userId', 'string');
 		$this->addType('accountId', 'integer');
+	}
+
+	public function getDisplayName(): ?string {
+		return $this->displayName;
+	}
+
+	public function setDisplayName(?string $displayName): void {
+		$this->displayName = $displayName;
 	}
 
 	#[ReturnTypeWillChange]
@@ -34,6 +44,7 @@ class Delegation extends Entity implements JsonSerializable {
 			'id' => $this->getId(),
 			'accountId' => $this->getAccountId(),
 			'userId' => $this->getUserId(),
+			'displayName' => $this->displayName ?? $this->getUserId(),
 		];
 	}
 }

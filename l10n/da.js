@@ -389,6 +389,7 @@ OC.L10N.register(
     "Moving" : "Flytter",
     "Moving thread" : "Flytter tråd",
     "Moving message" : "Flytter besked",
+    "Change password" : "Skift adgangskode",
     "Used quota: {quota}% ({limit})" : "Anvendt kvote: {quota}% ({limit})",
     "Used quota: {quota}%" : "Anvendt kvote: {quota}%",
     "Remove account" : "Fjern konto",
@@ -581,7 +582,6 @@ OC.L10N.register(
     "Could not load your message" : "Din besked kunne ikke indlæses",
     "Could not load the desired message" : "Den ønskede besked kunne ikke indlæses",
     "Could not load the message" : "Beskeden kunne ikke indlæses",
-    "Error loading message" : "Fejl under indlæsning af besked",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Beskeder vil automatisk blive markeret som vigtige baseret på, hvilke meddelelser du har interageret med eller markeret som vigtige. I begyndelsen skal du muligvis manuelt ændre vigtigheden for at lære systemet, men det vil forbedres med tiden."
+    "Error loading message" : "Fejl under indlæsning af besked"
 },
 "nplurals=2; plural=(n != 1);");

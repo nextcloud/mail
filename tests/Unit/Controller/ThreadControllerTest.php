@@ -127,6 +127,9 @@ class ThreadControllerTest extends TestCase {
 		$this->mailManager
 			->expects(self::once())
 			->method('moveThread');
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId moved thread <{$message->getId()}> to mailbox <{$dstMailbox->getId()}> on behalf of $this->userId");
 
 		$response = $this->controller->move($message->getId(), $dstMailbox->getId());
 
@@ -203,6 +206,9 @@ class ThreadControllerTest extends TestCase {
 		$this->mailManager
 			->expects(self::once())
 			->method('deleteThread');
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId deleted thread <{$message->getId()}> on behalf of $this->userId");
 
 		$response = $this->controller->delete(300);
 

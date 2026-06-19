@@ -219,6 +219,10 @@ OC.L10N.register(
     "Close composer" : "Закрити редактор",
     "Confirm" : "Підтвердити",
     "Revoke" : "Відкликати",
+    "Delegation" : "Делегування",
+    "Revoke access" : "Відкликати доступ",
+    "Add delegate" : "Додати делегата",
+    "Revoke access?" : "Відкликати доступ?",
     "Tag: {name} deleted" : "Мітка: {name} вилучено",
     "An error occurred, unable to delete the tag." : "Пимилка під час вилучення мітки.",
     "The tag will be deleted from all messages." : "Мітку буде вилучено зі всіх листів.",
@@ -399,6 +403,7 @@ OC.L10N.register(
     "Moving" : "Переміщення",
     "Moving thread" : "Переміщення ланцюжка",
     "Moving message" : "Переміщення повідомлення",
+    "Change password" : "Змінити пароль",
     "Used quota: {quota}% ({limit})" : "Використана квота: {quota}% ({limit})",
     "Used quota: {quota}%" : "Використана квота: {quota}%.",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Не вдалося створити поштову скриньку. Ймовірно, ім'я містить неприпустимі символи. Будь ласка, спробуйте інше ім'я.",
@@ -831,8 +836,6 @@ OC.L10N.register(
     "Could not load your message" : "Неможливо завантажити повідомлення",
     "Could not load the desired message" : "Неможливо завантажити обране повідомлення",
     "Could not load the message" : "Неможливо завантажити повідомлення",
-    "Error loading message" : "Помилка завантаження повідомлення.",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Повідомлення автоматично будуть позначатися як важливі на основі повідомлень, з якими ви взаємодієте або позначаєте як важливі. Спочатку вам потрібно буде вручну змінювати важливість, щоб навчити систему, але з часом автоматичне визначення важливих повідомлень покращиться.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Тут будуть показані надіслані вами повідомлення, які потребують відповіді, але не були отримані протягом декількох днів."
+    "Error loading message" : "Помилка завантаження повідомлення."
 },
 "nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);");

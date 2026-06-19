@@ -260,9 +260,7 @@ OC.L10N.register(
     "Revoke" : "Revoca",
     "{userId} will no longer be able to act on your behalf" : "{userId} non potrà più agire per tuo conto",
     "Could not fetch delegates" : "Non è stato possibile recuperare i delegati",
-    "Delegated access to {userId}" : "Accesso delegato a {userId}",
     "Could not delegate access" : "Non è stato possibile delegare l’accesso",
-    "Revoked access for {userId}" : "Revoca l'accesso a {userId}",
     "Could not revoke delegation" : "Non è possibile revocare la delega",
     "Delegation" : "Delega",
     "Allow users to send, receive, and delete mail on your behalf" : "Consenti agli utenti delegati di inviare, ricevere ed eliminare email per tuo conto",
@@ -461,6 +459,7 @@ OC.L10N.register(
     "Moving message" : "Spostamento messaggio",
     "This account cannot connect" : "Questo account non riesce a connettersi",
     "Connection failed. Please verify your information and try again" : "Connessione non riuscita. Verifica i dati inseriti e riprova.",
+    "Change password" : "Modifica password",
     "Used quota: {quota}% ({limit})" : "Spazio utilizzato: {quota} % ({limit})",
     "Used quota: {quota}%" : "Spazio utilizzato: {quota}%",
     "Unable to create mailbox. The name likely contains invalid characters. Please try another name." : "Non è stato possibile creare la cartella. Il nome contiene probabilmente caratteri non validi. Prova a usare un altro nome.",
@@ -911,7 +910,7 @@ OC.L10N.register(
     "Could not load the desired message" : "Impossibile caricare messaggio desiderato",
     "Could not load the message" : "Impossibile caricare il messaggio",
     "Error loading message" : "Errore durante il caricamento del messaggio",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "I messaggi saranno automaticamente contrassegnati come importanti in base ai messaggi con cui hai interagito o contrassegnati come importanti. All'inizio potresti dover cambiare manualmente l'importanza per addestrare il sistema, ma migliorerà nel tempo.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Qui verranno mostrati i messaggi che hai inviato e che richiedono una risposta, ma che non ne hanno ricevuta una dopo alcuni giorni."
+    "Delegated access to {userId}" : "Accesso delegato a {userId}",
+    "Revoked access for {userId}" : "Revoca l'accesso a {userId}"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

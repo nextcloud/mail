@@ -265,7 +265,8 @@ export default function mainStoreActions() {
 			return handleHttpAuthErrors(async () => {
 				const account = await updateAccount(config)
 				logger.debug('account updated', { account })
-				this.editAccountMutation(account)
+				this.editAccountMutation({ ...account, error: false })
+				await this.syncMailboxesForAccount(this.accountsUnmapped[account.id])
 				return account
 			})
 		},
@@ -1956,6 +1957,11 @@ export default function mainStoreActions() {
 		updateMailboxMutation({ mailbox }) {
 			const account = this.accountsUnmapped[mailbox.accountId]
 			transformMailboxName(account, mailbox)
+			Object.defineProperty(mailbox, 'isSubscribed', {
+				get() {
+					return this.attributes?.includes('\\subscribed') ?? false
+				},
+			})
 			Vue.set(this.mailboxes, mailbox.databaseId, mailbox)
 		},
 		removeMailboxMutation({ id }) {
@@ -2352,8 +2358,11 @@ export default function mainStoreActions() {
 		hasCurrentUserPrincipalAndCollectionsMutation(hasCurrentUserPrincipalAndCollections) {
 			this.hasCurrentUserPrincipalAndCollections = hasCurrentUserPrincipalAndCollections
 		},
-		showSettingsForAccountMutation(accountId) {
-			this.showAccountSettings = accountId
+		showSettingsForAccountMutation(accountId, section) {
+			this.showAccountSettings = {
+				accountId,
+				section,
+			}
 		},
 		setMyTextBlocks(textBlocks) {
 			this.myTextBlocks = textBlocks
@@ -2495,7 +2504,13 @@ export default function mainStoreActions() {
 			return this.findMailboxBySpecialRole(accountId, 'inbox')
 		},
 		showSettingsForAccount(accountId) {
-			return this.showAccountSettings === accountId
+			return this.showAccountSettings?.accountId === accountId
+		},
+		showSettingsSectionForAccount(accountId) {
+			if (this.showAccountSettings?.accountId !== accountId) {
+				return undefined
+			}
+			return this.showAccountSettings.section
 		},
 		getMyTextBlocks() {
 			return this.myTextBlocks

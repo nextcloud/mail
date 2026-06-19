@@ -355,6 +355,7 @@ OC.L10N.register(
     "Moving" : "Mugitzen",
     "Moving thread" : "Haria mugitzen",
     "Moving message" : "Mezua mugitzen",
+    "Change password" : "Pasahitza aldatu",
     "Remove account" : "Kendu kontua",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "{email} kontua eta cachean gordetako posta datuak Nextcloudetik ezabatu egingo dira, baina ez zure posta hornitzailetik.",
     "Remove {email}" : "Kendu {email}",
@@ -704,8 +705,6 @@ OC.L10N.register(
     "Could not load your message" : "Ezin izan da zure mezua kargatu",
     "Could not load the desired message" : "Ezin izan da kargatu nahi zen mezu hori",
     "Could not load the message" : "Ezin izan da mezua kargatu",
-    "Error loading message" : "Errorea mezua kargatzerakoan",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Mezuak automatikoki markatuko dira garrantzitsu bezala kontuan izanda zein mezurekin aritu zaren interakzioan edo zein markatu dituzun garratzitsu gisa. Hasieran garrantzia eskuz aldatu beharko duzu sistemari irakasteko, baina denborarekin hobetuko du.",
-    "Messages sent by you that require a reply but did not receive one after a couple of days will be shown here." : "Erantzuteko eskatuz bidali zenituen emailak, baina egun batzuen ondoren erantzunik jasotzen ez dutenak hemen erakutsiko dira."
+    "Error loading message" : "Errorea mezua kargatzerakoan"
 },
 "nplurals=2; plural=(n != 1);");

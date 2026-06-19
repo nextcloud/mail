@@ -187,6 +187,7 @@ OC.L10N.register(
     "Moving" : "Tramudende",
     "Moving thread" : "Tramudende sa dibata",
     "Moving message" : "Tramudende su messàgiu",
+    "Change password" : "Càmbia crae",
     "Remove account" : "Boga·nche contu",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Su contu pro {email} e is datos de posta eletrònica allogados in sa memòria temporànea s'ant a bogare dae Nextcloud, ma no dae su frunidore de posta eletrònica tuo.",
     "Remove {email}" : "Boga•nche {email}",
@@ -336,7 +337,6 @@ OC.L10N.register(
     "Could not load your message" : "No at fatu a carrigare su messàgiu tuo",
     "Could not load the desired message" : "No at fatu a carrigare su messàgiu disigiadu",
     "Could not load the message" : "No at fatu a carrigare su messàgiu",
-    "Error loading message" : "Errore in su carrigamentu de su messàgiu",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Is messàgios s'ant a marcare in manera automàtica comente importantes in sa base de is messàgios cun is chi as tènnidu interatziones o chi si sunt marcados comente importantes. Fortzis a su cumintzu as a dèpere cambiare a manu s'importàntzia pro ddu imparare a su sistema, ma at a megiorare in su tempus."
+    "Error loading message" : "Errore in su carrigamentu de su messàgiu"
 },
 "nplurals=2; plural=(n != 1);");
