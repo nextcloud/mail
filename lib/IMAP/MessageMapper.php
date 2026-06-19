@@ -890,15 +890,14 @@ class MessageMapper {
 		$structures = $client->fetch($mailbox, $structureQuery, [
 			'ids' => new Horde_Imap_Client_Ids($uids),
 		]);
-		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client, $emailAddress) {
-			$hasAttachments = false;
-			$text = '';
-			$isImipMessage = false;
-			$isEncrypted = false;
 
-			if ($this->smimeService->isEncrypted($fetchData)) {
-				$isEncrypted = true;
-			}
+		$perMessage = [];
+		$bodyPartIds = [];
+		foreach ($structures as $fetchData) {
+			/** @var Horde_Imap_Client_Data_Fetch $fetchData */
+			$hasAttachments = false;
+			$isImipMessage = false;
+			$isEncrypted = $this->smimeService->isEncrypted($fetchData);
 
 			$structure = $fetchData->getStructure();
 
@@ -917,34 +916,64 @@ class MessageMapper {
 
 			$textBodyId = $structure->findBody() ?? $structure->findBody('text');
 			$htmlBodyId = $structure->findBody('html');
-			if ($textBodyId === null && $htmlBodyId === null) {
-				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
-			}
-			$partsQuery = new Horde_Imap_Client_Fetch_Query();
+
 			if ($htmlBodyId !== null) {
-				$partsQuery->bodyPart($htmlBodyId, [
-					'peek' => true,
-				]);
-				$partsQuery->mimeHeader($htmlBodyId, [
-					'peek' => true
-				]);
+				$bodyPartIds[$htmlBodyId] = true;
 			}
 			if ($textBodyId !== null) {
-				$partsQuery->bodyPart($textBodyId, [
+				$bodyPartIds[$textBodyId] = true;
+			}
+
+			$perMessage[$fetchData->getUid()] = [
+				'fetchData' => $fetchData,
+				'structure' => $structure,
+				'hasAttachments' => $hasAttachments,
+				'isImipMessage' => $isImipMessage,
+				'isEncrypted' => $isEncrypted,
+				'textBodyId' => $textBodyId,
+				'htmlBodyId' => $htmlBodyId,
+			];
+		}
+
+		$parts = null;
+		if ($bodyPartIds !== []) {
+			$partsQuery = new Horde_Imap_Client_Fetch_Query();
+			foreach (array_keys($bodyPartIds) as $bodyPartId) {
+				$partsQuery->bodyPart($bodyPartId, [
 					'peek' => true,
 				]);
-				$partsQuery->mimeHeader($textBodyId, [
-					'peek' => true
+				$partsQuery->mimeHeader($bodyPartId, [
+					'peek' => true,
 				]);
 			}
 			$parts = $client->fetch($mailbox, $partsQuery, [
-				'ids' => new Horde_Imap_Client_Ids([$fetchData->getUid()]),
+				'ids' => new Horde_Imap_Client_Ids($uids),
 			]);
-			/** @var Horde_Imap_Client_Data_Fetch $part */
-			$part = $parts[$fetchData->getUid()];
+		}
+
+		$result = [];
+		foreach ($perMessage as $uid => $message) {
+			/** @var Horde_Imap_Client_Data_Fetch $fetchData */
+			$fetchData = $message['fetchData'];
+			$structure = $message['structure'];
+			$hasAttachments = $message['hasAttachments'];
+			$isImipMessage = $message['isImipMessage'];
+			$isEncrypted = $message['isEncrypted'];
+			$textBodyId = $message['textBodyId'];
+			$htmlBodyId = $message['htmlBodyId'];
+			$text = '';
+
+			if ($textBodyId === null && $htmlBodyId === null) {
+				$result[$uid] = new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
+				continue;
+			}
+
+			/** @var Horde_Imap_Client_Data_Fetch|null $part */
+			$part = $parts !== null ? $parts[$uid] : null;
 			// This is sus - why does this even happen? A delete / move in the middle of this processing?
 			if ($part === null) {
-				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
+				$result[$uid] = new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
+				continue;
 			}
 
 			/** Convert a given binary body to utf-8 according to the applicable
@@ -986,34 +1015,36 @@ class MessageMapper {
 				return $this->converter->convert($structure);
 			};
 
-
 			$htmlBody = ($htmlBodyId !== null) ? $part->getBodyPart($htmlBodyId) : null;
 			if (!empty($htmlBody)) {
 				$htmlBody = $convertBody($htmlBodyId, $htmlBody);
 				$mentionsUser = $this->checkLinks($htmlBody, $emailAddress);
 				$html = new Html2Text($htmlBody, ['do_links' => 'none','alt_image' => 'hide']);
-				return new MessageStructureData(
+				$result[$uid] = new MessageStructureData(
 					$hasAttachments,
 					trim($html->getText()),
 					$isImipMessage,
 					$isEncrypted,
 					$mentionsUser,
 				);
+				continue;
 			}
 
-			$textBody = $part->getBodyPart($textBodyId);
+			$textBody = $textBodyId !== null ? $part->getBodyPart($textBodyId) : null;
 			if (!empty($textBody)) {
 				$textBody = $convertBody($textBodyId, $textBody);
-				return new MessageStructureData(
+				$result[$uid] = new MessageStructureData(
 					$hasAttachments,
 					$textBody,
 					$isImipMessage,
 					$isEncrypted,
 					false,
 				);
+				continue;
 			}
-			return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
-		}, iterator_to_array($structures->getIterator()));
+			$result[$uid] = new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
+		}
+		return $result;
 	}
 	private function checkLinks(string $body, string $mailAddress) : bool {
 		if (empty($body)) {
