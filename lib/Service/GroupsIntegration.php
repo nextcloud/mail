@@ -16,7 +16,6 @@ use OCA\Mail\Service\Group\IGroupService;
 use OCA\Mail\Service\Group\NextcloudGroupService;
 use function array_map;
 use function mb_strlen;
-use function mb_strpos;
 use function mb_substr;
 use function OCA\Mail\array_flat_map;
 
@@ -82,7 +81,7 @@ class GroupsIntegration {
 	public function expand(array $recipients): array {
 		return array_flat_map(function (Recipient $recipient) {
 			foreach ($this->groupServices as $service) {
-				if (mb_strpos($recipient->getEmail(), $this->servicePrefix($service)) !== false) {
+				if (str_contains($recipient->getEmail(), $this->servicePrefix($service))) {
 					$groupId = mb_substr(
 						$recipient->getEmail(),
 						mb_strlen($this->servicePrefix($service))

@@ -1192,16 +1192,12 @@ class MessageMapper extends QBMapper {
 			throw new RuntimeException('Invalid operand type ' . get_class($operand));
 		}, $expr->getOperands());
 
-		switch ($expr->getOperator()) {
-			case 'and':
-				/** @psalm-suppress InvalidCast */
-				return (string)$qb->expr()->andX(...$operands);
-			case 'or':
-				/** @psalm-suppress InvalidCast */
-				return (string)$qb->expr()->orX(...$operands);
-			default:
-				throw new RuntimeException('Unknown operator ' . $expr->getOperator());
-		}
+		/** @psalm-suppress InvalidCast */
+		return match ($expr->getOperator()) {
+			'and' => (string)$qb->expr()->andX(...$operands),
+			'or' => (string)$qb->expr()->orX(...$operands),
+			default => throw new RuntimeException('Unknown operator ' . $expr->getOperator()),
+		};
 	}
 
 	private function flagToColumnName(Flag $flag): string {
