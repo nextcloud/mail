@@ -65,7 +65,7 @@
 					{{ t('mail', 'Please enter an email of the format name@example.com') }}
 				</p>
 
-				<h3>{{ t('mail', 'IMAP Settings') }}</h3>
+				<h4>{{ t('mail', 'IMAP Settings') }}</h4>
 				<NcInputField
 					id="man-imap-host"
 					v-model="manualConfig.imapHost"
@@ -144,7 +144,7 @@
 					required
 					@change="clearFeedback" />
 
-				<h3>{{ t('mail', 'SMTP Settings') }}</h3>
+				<h4>{{ t('mail', 'SMTP Settings') }}</h4>
 				<NcInputField
 					id="man-smtp-host"
 					ref="smtpHost"
@@ -776,6 +776,7 @@ export default {
 
 <style scoped>
 h4 {
+	font-size: 17px;
 	text-align: start;
 }
 
