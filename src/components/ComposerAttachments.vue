@@ -38,11 +38,11 @@
 			style="display: none;"
 			@change="onLocalAttachmentSelected">
 		<FilePicker
-			v-if="isAttachementPickerOpen"
+			v-if="isAttachmentPickerOpen"
 			:name="t('mail', 'Choose a file to add as attachment')"
-			:buttons="attachementPickerButtons"
+			:buttons="attachmentPickerButtons"
 			:filter-fn="filterAttachements"
-			@close="() => isAttachementPickerOpen = false" />
+			@close="() => isAttachmentPickerOpen = false" />
 		<FilePicker
 			v-if="isLinkPickerOpen"
 			:name="t('mail', 'Choose a file to share as a link')"
@@ -114,9 +114,9 @@ export default {
 			attachments: [],
 			isToggle: false,
 			hasNextLine: false,
-			isAttachementPickerOpen: false,
+			isAttachmentPickerOpen: false,
 			isLinkPickerOpen: false,
-			attachementPickerButtons: [
+			attachmentPickerButtons: [
 				{
 					label: t('mail', 'Choose'),
 					callback: this.onAddCloudAttachment,
@@ -213,7 +213,7 @@ export default {
 		},
 
 		openAttachementPicker() {
-			this.isAttachementPickerOpen = true
+			this.isAttachmentPickerOpen = true
 		},
 
 		OpenLinkPicker() {
