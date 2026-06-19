@@ -264,9 +264,7 @@ OC.L10N.register(
     "Revoke" : "Tühista",
     "{userId} will no longer be able to act on your behalf" : "Kasutaja {userId} ei saa enam sinu nimel tegutseda",
     "Could not fetch delegates" : "Volitatute laadimine ei õnnestunud",
-    "Delegated access to {userId}" : "Sa volitasid ligipääsu kasutajale {userId}",
     "Could not delegate access" : "Ligipääsu volitamine ei õnnestunud",
-    "Revoked access for {userId}" : "Kasutaja {userId} volitus on eemaldatud",
     "Could not revoke delegation" : "Volituse tühistamine ei õnnestunud",
     "Delegation" : "Volitamine",
     "Allow users to send, receive, and delete mail on your behalf" : "Luba volitatutel saata, vastu võtta ja kustutada e-kirju sinu nimel",
@@ -916,6 +914,8 @@ OC.L10N.register(
     "Could not load your message" : "Sinu kirja laadimine ei õnnestunud",
     "Could not load the desired message" : "Soovitud kirja laadimine ei õnnestunud",
     "Could not load the message" : "Kirja laadimine ei õnnestunud",
-    "Error loading message" : "Viga kirja laadimisel"
+    "Error loading message" : "Viga kirja laadimisel",
+    "Delegated access to {userId}" : "Sa volitasid ligipääsu kasutajale {userId}",
+    "Revoked access for {userId}" : "Kasutaja {userId} volitus on eemaldatud"
 },
 "nplurals=2; plural=(n != 1);");

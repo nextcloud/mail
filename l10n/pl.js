@@ -264,9 +264,7 @@ OC.L10N.register(
     "Revoke" : "Cofnij",
     "{userId} will no longer be able to act on your behalf" : "{userId} nie będzie już mógł/mogła działać w Twoim imieniu",
     "Could not fetch delegates" : "Nie udało się pobrać delegatów",
-    "Delegated access to {userId}" : "Dostęp został delegowany do {userId}",
     "Could not delegate access" : "Nie udało się delegować dostępu",
-    "Revoked access for {userId}" : "Cofnięto dostęp dla {userId}",
     "Could not revoke delegation" : "Nie udało się cofnąć delegacji",
     "Delegation" : "Delegacja",
     "Allow users to send, receive, and delete mail on your behalf" : "Pozwól użytkownikom wysyłać, odbierać i usuwać pocztę w Twoim imieniu",
@@ -915,6 +913,8 @@ OC.L10N.register(
     "Could not load your message" : "Nie można wczytać wiadomości",
     "Could not load the desired message" : "Nie można wczytać żądanej wiadomości",
     "Could not load the message" : "Nie można wczytać wiadomości",
-    "Error loading message" : "Błąd podczas wczytywania wiadomości"
+    "Error loading message" : "Błąd podczas wczytywania wiadomości",
+    "Delegated access to {userId}" : "Dostęp został delegowany do {userId}",
+    "Revoked access for {userId}" : "Cofnięto dostęp dla {userId}"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");
