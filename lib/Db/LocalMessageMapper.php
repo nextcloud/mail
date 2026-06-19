@@ -22,18 +22,12 @@ use function array_merge;
  * @template-extends QBMapper<LocalMessage>
  */
 class LocalMessageMapper extends QBMapper {
-	/** @var LocalAttachmentMapper */
-	private $attachmentMapper;
-
-	/** @var RecipientMapper */
-	private $recipientMapper;
-
-	public function __construct(IDBConnection $db,
-		LocalAttachmentMapper $attachmentMapper,
-		RecipientMapper $recipientMapper) {
+	public function __construct(
+		IDBConnection $db,
+		private LocalAttachmentMapper $attachmentMapper,
+		private RecipientMapper $recipientMapper,
+	) {
 		parent::__construct($db, 'mail_local_messages');
-		$this->recipientMapper = $recipientMapper;
-		$this->attachmentMapper = $attachmentMapper;
 	}
 
 	/**

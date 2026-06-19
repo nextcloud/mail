@@ -30,25 +30,15 @@ use function filter_var;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class GoogleIntegrationController extends Controller {
-	private ?string $userId;
-	private GoogleIntegration $googleIntegration;
-	private AccountService $accountService;
-	private LoggerInterface $logger;
-	private MailboxSync $mailboxSync;
-
-
-	public function __construct(IRequest $request,
-		?string $userId,
-		GoogleIntegration $googleIntegration,
-		AccountService $accountService,
-		LoggerInterface $logger,
-		MailboxSync $mailboxSync) {
+	public function __construct(
+		IRequest $request,
+		private ?string $userId,
+		private GoogleIntegration $googleIntegration,
+		private AccountService $accountService,
+		private LoggerInterface $logger,
+		private MailboxSync $mailboxSync,
+	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->userId = $userId;
-		$this->googleIntegration = $googleIntegration;
-		$this->accountService = $accountService;
-		$this->logger = $logger;
-		$this->mailboxSync = $mailboxSync;
 	}
 
 	/**

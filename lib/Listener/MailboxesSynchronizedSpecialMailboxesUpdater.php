@@ -28,21 +28,11 @@ use function strtolower;
  * @template-implements IEventListener<Event|MailboxesSynchronizedEvent>
  */
 class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
-	/** @var MailAccountMapper */
-	private $mailAccountMapper;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(MailAccountMapper $mailAccountMapper,
-		MailboxMapper $mailboxMapper,
-		LoggerInterface $logger) {
-		$this->mailAccountMapper = $mailAccountMapper;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->logger = $logger;
+	public function __construct(
+		private MailAccountMapper $mailAccountMapper,
+		private MailboxMapper $mailboxMapper,
+		private LoggerInterface $logger,
+	) {
 	}
 
 	/**

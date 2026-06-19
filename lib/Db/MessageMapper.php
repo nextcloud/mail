@@ -53,20 +53,14 @@ class MessageMapper extends QBMapper {
 	/** @var ITimeFactory */
 	private $timeFactory;
 
-	/** @var TagMapper */
-	private $tagMapper;
-
-	/** @var PerformanceLogger */
-	private $performanceLogger;
-
-	public function __construct(IDBConnection $db,
+	public function __construct(
+		IDBConnection $db,
 		ITimeFactory $timeFactory,
-		TagMapper $tagMapper,
-		PerformanceLogger $performanceLogger) {
+		private TagMapper $tagMapper,
+		private PerformanceLogger $performanceLogger,
+	) {
 		parent::__construct($db, 'mail_messages');
 		$this->timeFactory = $timeFactory;
-		$this->tagMapper = $tagMapper;
-		$this->performanceLogger = $performanceLogger;
 	}
 
 	/**

@@ -24,17 +24,12 @@ final class PhishingDetectionResult implements JsonSerializable {
 	public const IMAP_FLAG_CHECK = 'IMAP Flag';
 	public const TRUSTED_CHECK = 'Trusted';
 
-	private string $message = '';
-	private bool $isPhishing;
-	private array $additionalData = [];
-	private string $type;
-
-	public function __construct(string $type, bool $isPhishing, string $message = '', array $additionalData = []) {
-		$this->type = $type;
-		$this->message = $message;
-		$this->isPhishing = $isPhishing;
-		$this->additionalData = $additionalData;
-
+	public function __construct(
+		private string $type,
+		private bool $isPhishing,
+		private string $message = '',
+		private array $additionalData = [],
+	) {
 	}
 
 	public function getType(): string {

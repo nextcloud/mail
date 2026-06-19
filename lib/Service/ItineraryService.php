@@ -26,31 +26,17 @@ class ItineraryService {
 	private const CACHE_PREFIX = 'mail_itinerary';
 	private const CACHE_TTL = 7 * 24 * 3600;
 
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
-	/** @var ItineraryExtractor */
-	private $extractor;
-
 	/** @var ICache */
 	private $cache;
 
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(IMAPClientFactory $clientFactory,
-		MessageMapper $messageMapper,
-		ItineraryExtractor $extractor,
+	public function __construct(
+		private IMAPClientFactory $clientFactory,
+		private MessageMapper $messageMapper,
+		private ItineraryExtractor $extractor,
 		ICacheFactory $cacheFactory,
-		LoggerInterface $logger) {
-		$this->clientFactory = $clientFactory;
-		$this->messageMapper = $messageMapper;
-		$this->extractor = $extractor;
+		private LoggerInterface $logger,
+	) {
 		$this->cache = $cacheFactory->createLocal(self::CACHE_PREFIX);
-		$this->logger = $logger;
 	}
 
 	private function buildCacheKey(Account $account, Mailbox $mailbox, int $id): string {

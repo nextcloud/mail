@@ -31,9 +31,6 @@ use OCP\IConfig;
 use function array_map;
 
 class AccountService {
-	/** @var MailAccountMapper */
-	private $mapper;
-
 	/**
 	 * Cache accounts for multiple calls to 'findByUserId'
 	 *
@@ -41,28 +38,19 @@ class AccountService {
 	 */
 	private array $accounts = [];
 
-	/** @var AliasesService */
-	private $aliasesService;
-
 	/** @var IJobList */
 	private $jobList;
 
-	/** @var IMAPClientFactory */
-	private $imapClientFactory;
-
 	public function __construct(
-		MailAccountMapper $mapper,
-		AliasesService $aliasesService,
+		private MailAccountMapper $mapper,
+		private AliasesService $aliasesService,
 		IJobList $jobList,
-		IMAPClientFactory $imapClientFactory,
+		private IMAPClientFactory $imapClientFactory,
 		private readonly IConfig $config,
 		private readonly ITimeFactory $timeFactory,
 		private DelegationMapper $delegationMapper,
 	) {
-		$this->mapper = $mapper;
-		$this->aliasesService = $aliasesService;
 		$this->jobList = $jobList;
-		$this->imapClientFactory = $imapClientFactory;
 	}
 
 	/**

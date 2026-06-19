@@ -30,41 +30,15 @@ use function array_map;
 
 class SyncService {
 
-	private IMAPClientFactory $clientFactory;
-
-	/** @var ImapToDbSynchronizer */
-	private $synchronizer;
-
-	/** @var FilterStringParser */
-	private $filterStringParser;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
-	/** @var PreviewEnhancer */
-	private $previewEnhancer;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var MailboxSync */
-	private $mailboxSync;
-
 	public function __construct(
-		IMAPClientFactory $clientFactory,
-		ImapToDbSynchronizer $synchronizer,
-		FilterStringParser $filterStringParser,
-		MessageMapper $messageMapper,
-		PreviewEnhancer $previewEnhancer,
-		LoggerInterface $logger,
-		MailboxSync $mailboxSync) {
-		$this->clientFactory = $clientFactory;
-		$this->synchronizer = $synchronizer;
-		$this->filterStringParser = $filterStringParser;
-		$this->messageMapper = $messageMapper;
-		$this->previewEnhancer = $previewEnhancer;
-		$this->logger = $logger;
-		$this->mailboxSync = $mailboxSync;
+		private IMAPClientFactory $clientFactory,
+		private ImapToDbSynchronizer $synchronizer,
+		private FilterStringParser $filterStringParser,
+		private MessageMapper $messageMapper,
+		private PreviewEnhancer $previewEnhancer,
+		private LoggerInterface $logger,
+		private MailboxSync $mailboxSync,
+	) {
 	}
 
 	/**

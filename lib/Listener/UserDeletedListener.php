@@ -22,20 +22,12 @@ use Psr\Log\LoggerInterface;
  * @template-implements IEventListener<Event|UserDeletedEvent>
  */
 class UserDeletedListener implements IEventListener {
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var LoggerInterface */
-	private $logger;
-
 	public function __construct(
-		AccountService $accountService,
+		private AccountService $accountService,
 		private TextBlockService $textBlockService,
 		private DelegationService $delegationService,
-		LoggerInterface $logger,
+		private LoggerInterface $logger,
 	) {
-		$this->accountService = $accountService;
-		$this->logger = $logger;
 	}
 
 	#[\Override]

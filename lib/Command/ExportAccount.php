@@ -18,14 +18,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class ExportAccount extends Command {
 	public const ARGUMENT_USER_ID = 'user-id';
 	public const ARGUMENT_OUTPUT_FORMAT = 'output';
-
-	private AccountService $accountService;
 	private ICrypto $crypto;
 
-	public function __construct(AccountService $service, ICrypto $crypto) {
+	public function __construct(
+		private AccountService $accountService,
+		ICrypto $crypto,
+	) {
 		parent::__construct();
-
-		$this->accountService = $service;
 		$this->crypto = $crypto;
 	}
 
