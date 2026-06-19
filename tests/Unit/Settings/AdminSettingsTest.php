@@ -37,7 +37,7 @@ class AdminSettingsTest extends TestCase {
 	}
 
 	public function testGetForm() {
-		$this->serviceMock->getParameter('initialStateService')->expects($this->exactly(14))
+		$this->serviceMock->getParameter('initialStateService')->expects($this->exactly(16))
 			->method('provideInitialState')
 			->withConsecutive(
 				[
@@ -63,6 +63,16 @@ class AdminSettingsTest extends TestCase {
 				[
 					Application::APP_ID,
 					'llm_processing',
+					$this->anything()
+				],
+				[
+					Application::APP_ID,
+					'llm_custom_prompts',
+					$this->anything()
+				],
+				[
+					Application::APP_ID,
+					'llm_default_prompts',
 					$this->anything()
 				],
 				[

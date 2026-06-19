@@ -154,6 +154,109 @@
 				</p>
 			</article>
 		</div>
+		<div
+			v-if="isLlmSummaryConfigured && isLlmEnabled"
+			class="app-description">
+			<h3>{{ t('mail', 'Custom LLM prompts') }}</h3>
+			<article>
+				<p>
+					{{ t('mail', 'Customize the prompts used for AI-powered features. Use {body} as a placeholder for the email content and {language} for the user language code where applicable.', { body: '{body}', language: '{language}' }) }}
+				</p>
+				<div class="prompt-fields">
+					<div class="prompt-field">
+						<h4>{{ t('mail', 'Message summary prompt') }}</h4>
+						<p class="prompt-description">
+							{{ t('mail', 'Placeholders: {body} for the email body, {language} for the user language code.', { body: '{body}', language: '{language}' }) }}
+						</p>
+						<NcTextArea
+							v-model="promptValues.llm_prompt_summarize"
+							:label="t('mail', 'Message summary prompt')"
+							resize="vertical"
+							rows="4" />
+						<ButtonVue
+							v-if="promptValues.llm_prompt_summarize !== defaultPrompts.llm_prompt_summarize"
+							variant="tertiary"
+							@click="resetPrompt('llm_prompt_summarize')">
+							{{ t('mail', 'Reset to default') }}
+						</ButtonVue>
+					</div>
+					<div class="prompt-field">
+						<h4>{{ t('mail', 'Smart reply prompt') }}</h4>
+						<p class="prompt-description">
+							{{ t('mail', 'Placeholders: {body} for the email body.', { body: '{body}' }) }}
+						</p>
+						<NcTextArea
+							v-model="promptValues.llm_prompt_smart_reply"
+							:label="t('mail', 'Smart reply prompt')"
+							resize="vertical"
+							rows="4" />
+						<ButtonVue
+							v-if="promptValues.llm_prompt_smart_reply !== defaultPrompts.llm_prompt_smart_reply"
+							variant="tertiary"
+							@click="resetPrompt('llm_prompt_smart_reply')">
+							{{ t('mail', 'Reset to default') }}
+						</ButtonVue>
+					</div>
+					<div class="prompt-field">
+						<h4>{{ t('mail', 'Follow-up detection prompt') }}</h4>
+						<p class="prompt-description">
+							{{ t('mail', 'Placeholders: {body} for the email body.', { body: '{body}' }) }}
+						</p>
+						<NcTextArea
+							v-model="promptValues.llm_prompt_follow_up"
+							:label="t('mail', 'Follow-up detection prompt')"
+							resize="vertical"
+							rows="4" />
+						<ButtonVue
+							v-if="promptValues.llm_prompt_follow_up !== defaultPrompts.llm_prompt_follow_up"
+							variant="tertiary"
+							@click="resetPrompt('llm_prompt_follow_up')">
+							{{ t('mail', 'Reset to default') }}
+						</ButtonVue>
+					</div>
+					<div class="prompt-field">
+						<h4>{{ t('mail', 'Translation detection prompt') }}</h4>
+						<p class="prompt-description">
+							{{ t('mail', 'Placeholders: {body} for the email body, {language} for the user language code.', { body: '{body}', language: '{language}' }) }}
+						</p>
+						<NcTextArea
+							v-model="promptValues.llm_prompt_translation"
+							:label="t('mail', 'Translation detection prompt')"
+							resize="vertical"
+							rows="4" />
+						<ButtonVue
+							v-if="promptValues.llm_prompt_translation !== defaultPrompts.llm_prompt_translation"
+							variant="tertiary"
+							@click="resetPrompt('llm_prompt_translation')">
+							{{ t('mail', 'Reset to default') }}
+						</ButtonVue>
+					</div>
+					<div class="prompt-field">
+						<h4>{{ t('mail', 'Event data generation prompt') }}</h4>
+						<p class="prompt-description">
+							{{ t('mail', 'The email thread content will be appended to this prompt.') }}
+						</p>
+						<NcTextArea
+							v-model="promptValues.llm_prompt_event_data"
+							:label="t('mail', 'Event data generation prompt')"
+							resize="vertical"
+							rows="4" />
+						<ButtonVue
+							v-if="promptValues.llm_prompt_event_data !== defaultPrompts.llm_prompt_event_data"
+							variant="tertiary"
+							@click="resetPrompt('llm_prompt_event_data')">
+							{{ t('mail', 'Reset to default') }}
+						</ButtonVue>
+					</div>
+					<ButtonVue
+						variant="primary"
+						:disabled="savingPrompts"
+						@click="saveCustomPrompts">
+						{{ t('mail', 'Save custom prompts') }}
+					</ButtonVue>
+				</div>
+			</article>
+		</div>
 		<div class="app-description">
 			<h3>{{ t('mail', 'Enable classification by importance by default') }}</h3>
 			<article>
@@ -286,6 +389,7 @@ import { loadState } from '@nextcloud/initial-state'
 import ButtonVue from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import SettingsSection from '@nextcloud/vue/components/NcSettingsSection'
+import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import IconSettings from 'vue-material-design-icons/CogOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import AntiSpamSettings from './AntiSpamSettings.vue'
@@ -299,6 +403,7 @@ import {
 	provisionAll,
 	setImportanceClassificationEnabledByDefault,
 	setLayoutMessageView,
+	setLlmCustomPrompts,
 	updateAllowNewMailAccounts,
 	updateEnabledSmartReply,
 	updateLlmEnabled,
@@ -323,6 +428,7 @@ export default {
 		IconAdd,
 		IconSettings,
 		NcCheckboxRadioSwitch,
+		NcTextArea,
 	},
 
 	props: {
@@ -373,6 +479,25 @@ export default {
 			isLlmFreePromptConfigured: loadState('mail', 'enabled_llm_free_prompt_backend'),
 			layoutMessageView: loadState('mail', 'layout_message_view'),
 			isImportanceClassificationEnabledByDefault: loadState('mail', 'importance_classification_default', true),
+
+			defaultPrompts: loadState('mail', 'llm_default_prompts', {}),
+			promptValues: (() => {
+				const custom = loadState('mail', 'llm_custom_prompts', {
+					llm_prompt_summarize: '',
+					llm_prompt_smart_reply: '',
+					llm_prompt_follow_up: '',
+					llm_prompt_translation: '',
+					llm_prompt_event_data: '',
+				})
+				const defaults = loadState('mail', 'llm_default_prompts', {})
+				const values = {}
+				for (const key of Object.keys(custom)) {
+					values[key] = custom[key] || defaults[key] || ''
+				}
+				return values
+			})(),
+
+			savingPrompts: false,
 		}
 	},
 
@@ -453,6 +578,27 @@ export default {
 				logger.error('Could not save default classification setting', { error })
 			}
 		},
+
+		resetPrompt(key) {
+			this.promptValues[key] = this.defaultPrompts[key] || ''
+		},
+
+		async saveCustomPrompts() {
+			this.savingPrompts = true
+			try {
+				const prompts = {}
+				for (const key of Object.keys(this.promptValues)) {
+					prompts[key] = this.promptValues[key] === this.defaultPrompts[key] ? '' : this.promptValues[key]
+				}
+				await setLlmCustomPrompts(prompts)
+				showSuccess(t('mail', 'Custom prompts saved'))
+			} catch (error) {
+				showError(t('mail', 'Could not save custom prompts'))
+				logger.error('Could not save custom prompts', { error })
+			} finally {
+				this.savingPrompts = false
+			}
+		},
 	},
 }
 </script>
@@ -465,5 +611,37 @@ export default {
 .config-button {
 	display: inline-block;
 	margin-inline: 4px;
+}
+
+.prompt-fields {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	margin-top: 12px;
+}
+
+.prompt-field {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+
+	h4 {
+		font-weight: bold;
+		margin: 0;
+	}
+
+	:deep(.textarea) {
+		height: auto;
+	}
+
+	:deep(.textarea__main-wrapper) {
+		height: auto;
+	}
+}
+
+.prompt-description {
+	color: var(--color-text-maxcontrast);
+	font-size: small;
+	margin: 0;
 }
 </style>
