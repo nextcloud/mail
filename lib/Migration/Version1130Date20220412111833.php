@@ -36,7 +36,7 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 		$this->logger = $logger;
 
 		$tempBaseDir = $tempManager->getTempBaseDir();
-		$this->backupPath = tempnam($tempBaseDir, 'mail_recipients_backup');
+		$this->backupPath = (string)tempnam($tempBaseDir, 'mail_recipients_backup');
 	}
 
 	/**

@@ -230,6 +230,9 @@ class MessageApiController extends OCSController {
 	 * @param int $id the message id
 	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_PARTIAL_CONTENT, MailMessageApiResponse, array{}>|DataResponse<Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, string, array{}>
 	 *
+	 * @psalm-suppress MoreSpecificReturnType
+	 * @psalm-suppress LessSpecificReturnStatement
+	 *
 	 * 200: Message found
 	 * 206: Message could not be decrypted, no "body" data returned
 	 * 404: User was not logged in
@@ -387,6 +390,9 @@ class MessageApiController extends OCSController {
 	 * @param int $id the mail id
 	 * @param string $attachmentId the attachment id
 	 * @return DataResponse<Http::STATUS_OK, MailMessageApiAttachment, array{}>|DataResponse<Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, string, array{}>
+	 *
+	 * @psalm-suppress MoreSpecificReturnType
+	 * @psalm-suppress LessSpecificReturnStatement
 	 *
 	 * 200: Message found
 	 * 404: User was not logged in

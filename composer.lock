@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b0c4764ba63b0a3726e60bf2f7a19a22",
+    "content-hash": "b51539bc79b7cbbf83218bce98e5facb",
     "packages": [
         {
             "name": "amphp/amp",
@@ -3449,17 +3449,66 @@
     ],
     "packages-dev": [
         {
-            "name": "psalm/phar",
-            "version": "5.26.1",
+            "name": "fig/log-test",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/psalm/phar.git",
-                "reference": "8a38e7ad04499a0ccd2c506fd1da6fc01fff4547"
+                "url": "https://github.com/php-fig/log-test.git",
+                "reference": "83acb6c12875ea4f349dc4fe8b7d8e239c2b3715"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psalm/phar/zipball/8a38e7ad04499a0ccd2c506fd1da6fc01fff4547",
-                "reference": "8a38e7ad04499a0ccd2c506fd1da6fc01fff4547",
+                "url": "https://api.github.com/repos/php-fig/log-test/zipball/83acb6c12875ea4f349dc4fe8b7d8e239c2b3715",
+                "reference": "83acb6c12875ea4f349dc4fe8b7d8e239c2b3715",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0",
+                "psr/log": "^2.0 | ^3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.0 || ^9.0 || ^10.0 || ^11.0",
+                "squizlabs/php_codesniffer": "^3.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Log\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/",
+                    "role": "Organisation"
+                }
+            ],
+            "description": "Test utilities for the psr/log package that backs the PSR-3 specification.",
+            "keywords": [
+                "testing"
+            ],
+            "support": {
+                "issues": "https://github.com/php-fig/log-test/issues",
+                "source": "https://github.com/php-fig/log-test/tree/1.2.1"
+            },
+            "time": "2025-11-11T10:33:05+00:00"
+        },
+        {
+            "name": "psalm/phar",
+            "version": "6.8.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/psalm/phar.git",
+                "reference": "333a7a0d7805b699860262e1b4ea8cf14e1cd118"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/psalm/phar/zipball/333a7a0d7805b699860262e1b4ea8cf14e1cd118",
+                "reference": "333a7a0d7805b699860262e1b4ea8cf14e1cd118",
                 "shasum": ""
             },
             "require": {
@@ -3479,9 +3528,9 @@
             "description": "Composer-based Psalm Phar",
             "support": {
                 "issues": "https://github.com/psalm/phar/issues",
-                "source": "https://github.com/psalm/phar/tree/5.26.1"
+                "source": "https://github.com/psalm/phar/tree/6.8.2"
             },
-            "time": "2024-09-09T16:22:43+00:00"
+            "time": "2025-02-20T08:23:26+00:00"
         },
         {
             "name": "roave/security-advisories",
