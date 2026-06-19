@@ -309,6 +309,13 @@
 	opacity: .6;
 }
 
+.app-settings .modal-wrapper .modal-container {
+	overflow: visible !important;
+
+	.modal-container__content {
+		border-radius: var(--border-radius-container, var(--border-radius-rounded));
+	}
+}
 
 /* compose (handling mailto links) */
 
