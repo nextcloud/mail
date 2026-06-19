@@ -19,6 +19,12 @@ import useMainStore from './store/mainStore.js'
 
 export default {
 	name: 'App',
+	data() {
+		return {
+			syncing: false,
+		}
+	},
+
 	computed: {
 		...mapStores(useMainStore),
 		...mapState(useMainStore, [
@@ -64,6 +70,13 @@ export default {
 
 		sync() {
 			setTimeout(async () => {
+				// Don't sync a previous sync is still running
+				if (this.syncing) {
+					this.sync()
+					return
+				}
+
+				this.syncing = true
 				try {
 					await this.mainStore.syncInboxes()
 
@@ -78,6 +91,7 @@ export default {
 						},
 					})
 				} finally {
+					this.syncing = false
 					// Start over
 					this.sync()
 				}
