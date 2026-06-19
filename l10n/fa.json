@@ -262,9 +262,7 @@
     "Revoke" : "لغو",
     "{userId} will no longer be able to act on your behalf" : "{userId} دیگر نمی‌تواند از طرف شما اقدام کند",
     "Could not fetch delegates" : "امکان دریافت نمایندگان وجود نداشت",
-    "Delegated access to {userId}" : "دسترسی واگذار شده به {userId}",
     "Could not delegate access" : "امکان واگذاری دسترسی وجود نداشت",
-    "Revoked access for {userId}" : "دسترسی {userId} لغو شد",
     "Could not revoke delegation" : "امکان لغو واگذاری وجود نداشت",
     "Delegation" : "واگذاری",
     "Allow users to send, receive, and delete mail on your behalf" : "به کاربران اجازه دهید از طرف شما ایمیل ارسال، دریافت و حذف کنند",
@@ -914,6 +912,8 @@
     "Could not load your message" : "امکان بارگذاری پیام شما وجود ندارد",
     "Could not load the desired message" : "امکان بارگذاری پیام مورد نظر وجود ندارد",
     "Could not load the message" : "امکان بارگذاری پیام وجود ندارد",
-    "Error loading message" : "خطا در بارگذاری پیام"
+    "Error loading message" : "خطا در بارگذاری پیام",
+    "Delegated access to {userId}" : "دسترسی واگذار شده به {userId}",
+    "Revoked access for {userId}" : "دسترسی {userId} لغو شد"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

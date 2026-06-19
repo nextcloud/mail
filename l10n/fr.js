@@ -264,9 +264,7 @@ OC.L10N.register(
     "Revoke" : "Révoquer",
     "{userId} will no longer be able to act on your behalf" : "{userId} ne pourra plus agir en votre nom",
     "Could not fetch delegates" : "Impossible de récupérer les délégués",
-    "Delegated access to {userId}" : "Déléguer l'accès à {userId}",
     "Could not delegate access" : "Impossible de déléguer l'accès",
-    "Revoked access for {userId}" : "Accès révoqué pour {userId}",
     "Could not revoke delegation" : "Impossible de révoquer la délégation",
     "Delegation" : "Délégation",
     "Allow users to send, receive, and delete mail on your behalf" : "Autoriser des utilisateurs à envoyer, recevoir et supprimer des e-mails en votre nom",
@@ -915,6 +913,8 @@ OC.L10N.register(
     "Could not load your message" : "Impossible de charger votre message",
     "Could not load the desired message" : "Impossible de charger le message souhaité",
     "Could not load the message" : "Impossible de charger le message",
-    "Error loading message" : "Erreur lors du chargement du message"
+    "Error loading message" : "Erreur lors du chargement du message",
+    "Delegated access to {userId}" : "Déléguer l'accès à {userId}",
+    "Revoked access for {userId}" : "Accès révoqué pour {userId}"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

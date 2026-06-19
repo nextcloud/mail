@@ -264,9 +264,7 @@ OC.L10N.register(
     "Revoke" : "Geçersiz kıl",
     "{userId} will no longer be able to act on your behalf" : "{userId} artık sizin adınıza davranamayacak",
     "Could not fetch delegates" : "Yetki devirleri alınamadı",
-    "Delegated access to {userId}" : "Yetki {userId} kullanıcısına devredildi",
     "Could not delegate access" : "Yetki devredilemedi",
-    "Revoked access for {userId}" : "{userId} yetki devri geri alındı",
     "Could not revoke delegation" : "Yetki devri geri alınamadı",
     "Delegation" : "Yetki devri",
     "Allow users to send, receive, and delete mail on your behalf" : "Kullanıcıların sizin adınıza e-posta göndermesine, almasına ve silmesine izin verin",
@@ -916,6 +914,8 @@ OC.L10N.register(
     "Could not load your message" : "İletiniz yüklenemedi",
     "Could not load the desired message" : "İstenilen ileti yüklenemedi",
     "Could not load the message" : "İleti yüklenemedi",
-    "Error loading message" : "İleti yüklenirken sorun çıktı"
+    "Error loading message" : "İleti yüklenirken sorun çıktı",
+    "Delegated access to {userId}" : "Yetki {userId} kullanıcısına devredildi",
+    "Revoked access for {userId}" : "{userId} yetki devri geri alındı"
 },
 "nplurals=2; plural=(n > 1);");
