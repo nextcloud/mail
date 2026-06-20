@@ -88,6 +88,7 @@ import {
 } from 'ckeditor5'
 import { getLinkWithPicker, searchProvider } from '@nextcloud/vue/components/NcRichText'
 import TextDirectionPlugin from '../ckeditor/direction/TextDirectionPlugin.js'
+import ImageAlignmentPlugin from '../ckeditor/image/ImageAlignmentPlugin.js'
 import ImageDropdownPlugin from '../ckeditor/image/ImageDropdownPlugin.js'
 import ImageLinkFormPlugin from '../ckeditor/image/ImageLinkFormPlugin.js'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
@@ -212,6 +213,7 @@ export default {
 				ImageToolbar,
 				LinkImage,
 				ImageDropdownPlugin,
+				ImageAlignmentPlugin,
 				ImageLinkFormPlugin,
 				Font,
 				RemoveFormat,
@@ -301,19 +303,9 @@ export default {
 						{ name: 'resizeImage:large', value: '500', label: t('mail', 'Large') },
 					],
 					toolbar: [
-						{
-							name: 'imageStyle:alignment',
-							title: t('mail', 'Align image'),
-							items: [
-								'imageStyle:alignBlockLeft',
-								'imageStyle:alignCenter',
-								'imageStyle:alignBlockRight',
-							],
-							defaultItem: 'imageStyle:alignBlockLeft',
-						},
+						'imageAlignment',
 						'|',
 						'imageTextAlternative',
-						'linkImage',
 						'|',
 						'resizeImage',
 					],
@@ -735,7 +727,13 @@ export default {
 			}
 
 			if (this.html) {
-				this.addToFocusTrap('.ck-body-wrapper')
+				// Exempt CKEditor's balloon container (image toolbar, link form,
+				// mention lists, …) from the surrounding modal's focus trap so it
+				// can be interacted with. The account-settings dialog resolves trap
+				// elements differently from the composer modal, so register the
+				// resolved node — accepted by both — rather than a selector string.
+				const ckBodyWrapper = document.querySelector('.ck-body-wrapper')
+				this.addToFocusTrap(ckBodyWrapper || '.ck-body-wrapper')
 				editor.on('mail:insertImageFromUrl', () => {
 					this.imageUrlDialogOpen = true
 				})
