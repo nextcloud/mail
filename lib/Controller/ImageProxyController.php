@@ -15,6 +15,7 @@ use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\Files\IMimeTypeDetector;
+use OCA\Mail\Service\SvgSanitizer;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\LocalServerException;
 use OCP\IRequest;
@@ -29,7 +30,6 @@ use function in_array;
 use function is_resource;
 use function ltrim;
 use function parse_url;
-use function preg_replace;
 use function str_starts_with;
 use function stripos;
 use function strlen;
@@ -71,6 +71,7 @@ class ImageProxyController extends Controller {
 		private IClientService $clientService,
 		private IRemoteHostValidator $remoteHostValidator,
 		private IMimeTypeDetector $mimeTypeDetector,
+		private SvgSanitizer $svgSanitizer,
 		private LoggerInterface $logger,
 	) {
 		parent::__construct($appName, $request);
@@ -149,7 +150,7 @@ class ImageProxyController extends Controller {
 		}
 
 		if ($mimeType === 'image/svg+xml') {
-			$content = $this->hardenSvg($content);
+			$content = $this->svgSanitizer->sanitize($content);
 		}
 
 		$dataUri = 'data:' . $mimeType . ';base64,' . base64_encode($content);
@@ -165,20 +166,5 @@ class ImageProxyController extends Controller {
 			|| str_starts_with($start, '<!--')
 			|| stripos($start, '<svg') === 0;
 		return $hasSvgRoot && stripos($content, '<svg') !== false;
-	}
-
-	/**
-	 * Best-effort hardening of an SVG before embedding it. When rendered in an
-	 * <img>/CID context scripts do not execute, but the obvious active-content
-	 * vectors are stripped as defence in depth.
-	 */
-	private function hardenSvg(string $content): string {
-		$patterns = [
-			'/<script\b[^>]*>.*?<\/script>/is',
-			'/<foreignObject\b[^>]*>.*?<\/foreignObject>/is',
-			'/\son\w+\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i',
-			'/(?:href|xlink:href)\s*=\s*("\s*javascript:[^"]*"|\'\s*javascript:[^\']*\')/i',
-		];
-		return preg_replace($patterns, '', $content) ?? $content;
 	}
 }

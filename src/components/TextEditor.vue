@@ -39,12 +39,21 @@
 				:disabled="imageUrlLoading"
 				@keydown.enter.prevent="insertImageFromUrl" />
 		</NcDialog>
+
+		<FilePicker
+			v-if="imageFilePickerOpen"
+			:name="t('mail', 'Choose an image')"
+			:buttons="imageFilePickerButtons"
+			:multiselect="false"
+			:mimetype-filter="['image/png', 'image/jpeg', 'image/gif', 'image/bmp', 'image/webp', 'image/svg+xml']"
+			@close="() => imageFilePickerOpen = false" />
 	</div>
 </template>
 
 <script>
 import CKEditor from '@ckeditor/ckeditor5-vue2'
 import { showError } from '@nextcloud/dialogs'
+import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import { getLanguage } from '@nextcloud/l10n'
 import { emojiAddRecent, emojiSearch, NcDialog, NcTextField } from '@nextcloud/vue'
 import {
@@ -61,9 +70,11 @@ import {
 	Heading,
 	Image,
 	ImageResize,
+	ImageToolbar,
 	ImageUpload,
 	Italic,
 	Link,
+	LinkImage,
 	List,
 	Mention,
 	Paragraph,
@@ -81,6 +92,7 @@ import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
 import PickerPlugin from '../ckeditor/smartpicker/PickerPlugin.js'
+import { getClient } from '../dav/client.js'
 import logger from '../logger.js'
 import { autoCompleteByName } from '../service/ContactIntegrationService.js'
 import { fetchImageAsDataUri } from '../service/ImageProxyService.js'
@@ -88,10 +100,28 @@ import { Text, toPlain } from '../util/text.js'
 
 import 'ckeditor5/ckeditor5.css'
 
+const IMAGE_FILE_SIZE_LIMIT = 10 * 1024 * 1024
+
+/**
+ * Read a Blob as a data: URI.
+ *
+ * @param {Blob} blob the blob to read
+ * @return {Promise<string>} the data URI
+ */
+function readBlobAsDataUri(blob) {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader()
+		reader.onload = () => resolve(reader.result)
+		reader.onerror = () => reject(reader.error)
+		reader.readAsDataURL(blob)
+	})
+}
+
 export default {
 	name: 'TextEditor',
 	components: {
 		Ckeditor: CKEditor.component,
+		FilePicker,
 		NcDialog,
 		NcTextField,
 	},
@@ -176,6 +206,8 @@ export default {
 				Image,
 				ImageUpload,
 				ImageResize,
+				ImageToolbar,
+				LinkImage,
 				ImageDropdownPlugin,
 				Font,
 				RemoveFormat,
@@ -218,6 +250,14 @@ export default {
 			imageUrlDialogOpen: false,
 			imageUrl: '',
 			imageUrlLoading: false,
+			imageFilePickerOpen: false,
+			imageFilePickerButtons: [
+				{
+					label: t('mail', 'Choose'),
+					type: 'primary',
+					callback: this.onImageFilesPicked,
+				},
+			],
 			sourceEditingInputHandler: null,
 			sourceEditingModeHandler: null,
 			sourceEditingDebounceTimer: null,
@@ -236,6 +276,24 @@ export default {
 					// translate predictably and are normalised to width/height
 					// attributes when the message is sent.
 					resizeUnit: 'px',
+					// Insert images inline so they live inside a paragraph. This makes
+					// them left-aligned by default and lets the regular text-alignment
+					// buttons move them left/center/right (which is e-mail compatible).
+					insert: {
+						type: 'inline',
+					},
+					resizeOptions: [
+						{ name: 'resizeImage:original', value: null, label: t('mail', 'Original size') },
+						{ name: 'resizeImage:small', value: '150', label: t('mail', 'Small') },
+						{ name: 'resizeImage:medium', value: '300', label: t('mail', 'Medium') },
+						{ name: 'resizeImage:large', value: '500', label: t('mail', 'Large') },
+					],
+					toolbar: [
+						'imageTextAlternative',
+						'linkImage',
+						'|',
+						'resizeImage',
+					],
 					upload: {
 						// Defaults plus SVG so vector logos can be uploaded as well.
 						types: ['jpeg', 'png', 'gif', 'bmp', 'webp', 'tiff', 'svg+xml'],
@@ -661,6 +719,9 @@ export default {
 				editor.on('mail:uploadImageFromComputer', () => {
 					this.$refs.imageFileInput?.click()
 				})
+				editor.on('mail:insertImageFromFiles', () => {
+					this.imageFilePickerOpen = true
+				})
 			}
 
 			this.bus.on('append-to-body-at-cursor', this.appendToBodyAtCursor)
@@ -713,6 +774,29 @@ export default {
 			}
 			// Reset so selecting the same file again still triggers a change event.
 			event.target.value = ''
+		},
+
+		async onImageFilesPicked(nodes) {
+			this.imageFilePickerOpen = false
+			const node = Array.isArray(nodes) ? nodes[0] : nodes
+			if (!node?.path) {
+				return
+			}
+
+			try {
+				if (node.size > IMAGE_FILE_SIZE_LIMIT) {
+					showError(t('mail', 'The selected image is too large to embed'))
+					return
+				}
+				const content = await getClient('files').getFileContents(node.path, { format: 'binary' })
+				const blob = new Blob([content], { type: node.mime || 'application/octet-stream' })
+				const dataUri = await readBlobAsDataUri(blob)
+				this.editorInstance.execute('insertImage', { source: dataUri })
+				this.editorInstance.editing.view.focus()
+			} catch (error) {
+				logger.error('Could not insert image from files', { error })
+				showError(t('mail', 'Could not insert the selected image'))
+			}
 		},
 
 		editorExecute(commandName, ...args) {

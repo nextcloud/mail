@@ -155,7 +155,8 @@ class AntiSpamService {
 		$mail->addHeaders($headers);
 
 		$mimeMessage = new MimeMessage(
-			new DataUriParser()
+			new DataUriParser(),
+			new SvgSanitizer(),
 		);
 
 		$mimePart = $mimeMessage->build(

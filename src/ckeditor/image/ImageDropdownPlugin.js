@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import folderIcon from '@mdi/svg/svg/folder-image.svg?raw'
 import imageIcon from '@mdi/svg/svg/image.svg?raw'
 import linkIcon from '@mdi/svg/svg/link-variant.svg?raw'
 import uploadIcon from '@mdi/svg/svg/upload.svg?raw'
@@ -10,9 +11,10 @@ import { translate as t } from '@nextcloud/l10n'
 import { ButtonView, createDropdown, Plugin } from 'ckeditor5'
 
 /**
- * Toolbar dropdown to insert an image, offering two options: uploading a file
- * from the computer or fetching one by URL. Both options only fire an event;
- * the surrounding Vue component (TextEditor) performs the actual work.
+ * Toolbar dropdown to insert an image, offering three options: uploading a file
+ * from the computer, picking one from the Nextcloud files, or fetching one by
+ * URL. Each option only fires an event; the surrounding Vue component
+ * (TextEditor) performs the actual work.
  */
 export default class ImageDropdownPlugin extends Plugin {
 	init() {
@@ -26,27 +28,29 @@ export default class ImageDropdownPlugin extends Plugin {
 				tooltip: true,
 			})
 
-			const uploadButton = this._createActionButton(
+			const fire = (event) => () => {
+				dropdown.isOpen = false
+				editor.fire(event)
+			}
+
+			dropdown.panelView.children.add(this._createActionButton(
 				locale,
 				t('mail', 'Upload from computer'),
 				uploadIcon,
-				() => {
-					dropdown.isOpen = false
-					editor.fire('mail:uploadImageFromComputer')
-				},
-			)
-			const urlButton = this._createActionButton(
+				fire('mail:uploadImageFromComputer'),
+			))
+			dropdown.panelView.children.add(this._createActionButton(
+				locale,
+				t('mail', 'Insert with file manager'),
+				folderIcon,
+				fire('mail:insertImageFromFiles'),
+			))
+			dropdown.panelView.children.add(this._createActionButton(
 				locale,
 				t('mail', 'Insert via URL'),
 				linkIcon,
-				() => {
-					dropdown.isOpen = false
-					editor.fire('mail:insertImageFromUrl')
-				},
-			)
-
-			dropdown.panelView.children.add(uploadButton)
-			dropdown.panelView.children.add(urlButton)
+				fire('mail:insertImageFromUrl'),
+			))
 
 			return dropdown
 		})

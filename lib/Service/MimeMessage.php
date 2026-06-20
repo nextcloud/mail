@@ -20,9 +20,11 @@ use OCA\Mail\Service\DataUri\DataUriParser;
 
 class MimeMessage {
 	private DataUriParser $uriParser;
+	private SvgSanitizer $svgSanitizer;
 
-	public function __construct(DataUriParser $uriParser) {
+	public function __construct(DataUriParser $uriParser, SvgSanitizer $svgSanitizer) {
 		$this->uriParser = $uriParser;
+		$this->svgSanitizer = $svgSanitizer;
 	}
 
 	/**
@@ -173,10 +175,19 @@ class MimeMessage {
 			$part->setCharset($dataUri->getParameters()['charset']);
 			$part->setName('embedded_image_' . $id);
 			$part->setDisposition('inline');
-			if ($dataUri->isBase64()) {
+			if ($dataUri->getMediaType() === 'image/svg+xml') {
+				// Strip any active content from SVGs before they are sent.
+				$raw = $dataUri->isBase64()
+					? base64_decode($dataUri->getData(), true)
+					: rawurldecode($dataUri->getData());
 				$part->setTransferEncoding('base64');
+				$part->setContents(base64_encode($this->svgSanitizer->sanitize($raw === false ? '' : $raw)));
+			} else {
+				if ($dataUri->isBase64()) {
+					$part->setTransferEncoding('base64');
+				}
+				$part->setContents($dataUri->getData());
 			}
-			$part->setContents($dataUri->getData());
 
 			$cid = $part->setContentId();
 			$parts[] = $part;

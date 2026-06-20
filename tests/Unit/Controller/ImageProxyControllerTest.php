@@ -11,6 +11,7 @@ namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Controller\ImageProxyController;
+use OCA\Mail\Service\SvgSanitizer;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\Files\IMimeTypeDetector;
@@ -36,6 +37,9 @@ class ImageProxyControllerTest extends TestCase {
 	/** @var IMimeTypeDetector|MockObject */
 	private $mimeTypeDetector;
 
+	/** @var SvgSanitizer|MockObject */
+	private $svgSanitizer;
+
 	/** @var ImageProxyController */
 	private $controller;
 
@@ -46,12 +50,14 @@ class ImageProxyControllerTest extends TestCase {
 		$this->clientService = $this->createMock(IClientService::class);
 		$this->remoteHostValidator = $this->createMock(IRemoteHostValidator::class);
 		$this->mimeTypeDetector = $this->createMock(IMimeTypeDetector::class);
+		$this->svgSanitizer = $this->createMock(SvgSanitizer::class);
 		$this->controller = new ImageProxyController(
 			'mail',
 			$this->request,
 			$this->clientService,
 			$this->remoteHostValidator,
 			$this->mimeTypeDetector,
+			$this->svgSanitizer,
 			new NullLogger(),
 		);
 	}
@@ -153,6 +159,8 @@ class ImageProxyControllerTest extends TestCase {
 			->willReturn($client);
 		$this->mimeTypeDetector->method('detectString')
 			->willReturn('text/xml');
+		$this->svgSanitizer->method('sanitize')
+			->willReturnArgument(0);
 
 		$response = $this->controller->fetch('https://example.com/logo.svg');
 
@@ -163,9 +171,9 @@ class ImageProxyControllerTest extends TestCase {
 		);
 	}
 
-	public function testFetchStripsScriptsFromSvg(): void {
-		$svg = '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script><rect onload="x()"/></svg>';
-		$sanitized = '<svg xmlns="http://www.w3.org/2000/svg"><rect/></svg>';
+	public function testFetchSanitizesSvg(): void {
+		$svg = '<svg onload="x()"><rect/></svg>';
+		$sanitized = '<svg><rect/></svg>';
 		$this->remoteHostValidator->method('isValid')
 			->willReturn(true);
 		$httpResponse = $this->createMock(IResponse::class);
@@ -178,6 +186,10 @@ class ImageProxyControllerTest extends TestCase {
 			->willReturn($client);
 		$this->mimeTypeDetector->method('detectString')
 			->willReturn('image/svg+xml');
+		$this->svgSanitizer->expects(self::once())
+			->method('sanitize')
+			->with($svg)
+			->willReturn($sanitized);
 
 		$response = $this->controller->fetch('https://example.com/logo.svg');
 

@@ -17,6 +17,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Service\DataUri\DataUriParser;
 use OCA\Mail\Service\MimeMessage;
+use OCA\Mail\Service\SvgSanitizer;
 
 class MimeMessageTest extends TestCase {
 	private DataUriParser $uriParser;
@@ -27,7 +28,7 @@ class MimeMessageTest extends TestCase {
 		parent::setUp();
 
 		$this->uriParser = new DataUriParser();
-		$this->mimeMessage = new MimeMessage($this->uriParser);
+		$this->mimeMessage = new MimeMessage($this->uriParser, new SvgSanitizer());
 		$this->account = new Account(new MailAccount());
 	}
 
@@ -446,6 +447,29 @@ class MimeMessageTest extends TestCase {
 		$subParts = $part->getParts();
 		$htmlBody = $subParts[1]->getContents();
 		$this->assertStringNotContainsString('width="', $htmlBody);
+	}
+
+	public function testSanitizesInlineSvg(): void {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script><rect width="10" height="10"/></svg>';
+		$html = '<p><img src="data:image/svg+xml;base64,' . base64_encode($svg) . '"></p>';
+
+		$part = $this->mimeMessage->build(
+			null,
+			$html,
+			false,
+			[],
+		);
+
+		$this->assertEquals('multipart/related', $part->getType());
+
+		/** @var Horde_Mime_Part[] $relatedSubParts */
+		$relatedSubParts = $part->getParts();
+		$svgPart = $relatedSubParts[1];
+		$this->assertEquals('image/svg+xml', $svgPart->getType());
+
+		$sanitized = base64_decode($svgPart->getContents());
+		$this->assertStringNotContainsString('<script', $sanitized);
+		$this->assertStringContainsString('<rect', $sanitized);
 	}
 
 	private function createAttachmentPart(string $name, string $content, string $mime, string $disposition): Horde_Mime_Part {
