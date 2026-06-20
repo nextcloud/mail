@@ -306,6 +306,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'imageProxy#fetch',
+			'url' => '/api/image/proxy',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'settings#index',
 			'url' => '/api/settings/provisioning',
 			'verb' => 'GET'

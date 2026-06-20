@@ -18,13 +18,27 @@
 			class="editor"
 			@input="onEditorInput"
 			@ready="onEditorReady" />
+
+		<NcDialog
+			:open.sync="imageUrlDialogOpen"
+			:name="t('mail', 'Insert image from URL')"
+			:buttons="imageUrlDialogButtons"
+			size="normal">
+			<NcTextField
+				v-model="imageUrl"
+				:label="t('mail', 'Image URL')"
+				type="url"
+				:disabled="imageUrlLoading"
+				@keydown.enter.prevent="insertImageFromUrl" />
+		</NcDialog>
 	</div>
 </template>
 
 <script>
 import CKEditor from '@ckeditor/ckeditor5-vue2'
+import { showError } from '@nextcloud/dialogs'
 import { getLanguage } from '@nextcloud/l10n'
-import { emojiAddRecent, emojiSearch } from '@nextcloud/vue'
+import { emojiAddRecent, emojiSearch, NcDialog, NcTextField } from '@nextcloud/vue'
 import {
 	Alignment,
 	Base64UploadAdapter,
@@ -54,12 +68,14 @@ import {
 } from 'ckeditor5'
 import { getLinkWithPicker, searchProvider } from '@nextcloud/vue/components/NcRichText'
 import TextDirectionPlugin from '../ckeditor/direction/TextDirectionPlugin.js'
+import ImageFromUrlPlugin from '../ckeditor/image/ImageFromUrlPlugin.js'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
 import PickerPlugin from '../ckeditor/smartpicker/PickerPlugin.js'
 import logger from '../logger.js'
 import { autoCompleteByName } from '../service/ContactIntegrationService.js'
+import { fetchImageAsDataUri } from '../service/ImageProxyService.js'
 import { Text, toPlain } from '../util/text.js'
 
 import 'ckeditor5/ckeditor5.css'
@@ -68,6 +84,8 @@ export default {
 	name: 'TextEditor',
 	components: {
 		Ckeditor: CKEditor.component,
+		NcDialog,
+		NcTextField,
 	},
 
 	inject: {
@@ -150,6 +168,7 @@ export default {
 				Image,
 				ImageUpload,
 				ImageResize,
+				ImageFromUrlPlugin,
 				Font,
 				RemoveFormat,
 				Base64UploadAdapter,
@@ -170,6 +189,7 @@ export default {
 				'superscript',
 				'fontBackgroundColor',
 				'insertImage',
+				'imageFromUrl',
 				'alignment',
 				'textDirection:ltr',
 				'textDirection:rtl',
@@ -188,6 +208,9 @@ export default {
 			emojiTribute: null,
 			contactMentionQuery: null,
 			textSmiles: [],
+			imageUrlDialogOpen: false,
+			imageUrl: '',
+			imageUrlLoading: false,
 			sourceEditingInputHandler: null,
 			sourceEditingModeHandler: null,
 			sourceEditingDebounceTimer: null,
@@ -250,6 +273,38 @@ export default {
 
 			},
 		}
+	},
+
+	computed: {
+		imageUrlDialogButtons() {
+			return [
+				{
+					label: t('mail', 'Cancel'),
+					type: 'tertiary',
+					disabled: this.imageUrlLoading,
+					callback: () => {
+						this.imageUrlDialogOpen = false
+					},
+				},
+				{
+					label: t('mail', 'Insert'),
+					type: 'primary',
+					disabled: !this.imageUrl || this.imageUrlLoading,
+					callback: () => {
+						this.insertImageFromUrl()
+					},
+				},
+			]
+		},
+	},
+
+	watch: {
+		imageUrlDialogOpen(open) {
+			if (!open) {
+				this.imageUrl = ''
+				this.imageUrlLoading = false
+			}
+		},
 	},
 
 	beforeMount() {
@@ -581,6 +636,9 @@ export default {
 
 			if (this.html) {
 				this.addToFocusTrap('.ck-body-wrapper')
+				editor.on('mail:insertImageFromUrl', () => {
+					this.imageUrlDialogOpen = true
+				})
 			}
 
 			this.bus.on('append-to-body-at-cursor', this.appendToBodyAtCursor)
@@ -600,6 +658,29 @@ export default {
 			const viewFragment = this.editorInstance.data.processor.toView(toAppend)
 			const modelFragment = this.editorInstance.data.toModel(viewFragment)
 			this.editorInstance.model.insertContent(modelFragment)
+		},
+
+		async insertImageFromUrl() {
+			const url = this.imageUrl.trim()
+			if (!url || this.imageUrlLoading) {
+				return
+			}
+
+			this.imageUrlLoading = true
+			try {
+				// The image is fetched server-side and returned as a data: URI. It
+				// renders in the editor despite the strict CSP and is turned into an
+				// inline attachment when the message is sent.
+				const dataUri = await fetchImageAsDataUri(url)
+				this.appendToBodyAtCursor(`<img src="${dataUri}">`)
+				this.editorInstance.editing.view.focus()
+				this.imageUrlDialogOpen = false
+			} catch (error) {
+				logger.error('Could not insert image from URL', { error })
+				showError(t('mail', 'Could not insert image from URL'))
+			} finally {
+				this.imageUrlLoading = false
+			}
 		},
 
 		editorExecute(commandName, ...args) {
