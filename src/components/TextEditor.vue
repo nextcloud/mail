@@ -70,6 +70,7 @@ import {
 	Heading,
 	Image,
 	ImageResize,
+	ImageStyle,
 	ImageToolbar,
 	ImageUpload,
 	Italic,
@@ -88,6 +89,7 @@ import {
 import { getLinkWithPicker, searchProvider } from '@nextcloud/vue/components/NcRichText'
 import TextDirectionPlugin from '../ckeditor/direction/TextDirectionPlugin.js'
 import ImageDropdownPlugin from '../ckeditor/image/ImageDropdownPlugin.js'
+import ImageLinkFormPlugin from '../ckeditor/image/ImageLinkFormPlugin.js'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
@@ -206,9 +208,11 @@ export default {
 				Image,
 				ImageUpload,
 				ImageResize,
+				ImageStyle,
 				ImageToolbar,
 				LinkImage,
 				ImageDropdownPlugin,
+				ImageLinkFormPlugin,
 				Font,
 				RemoveFormat,
 				Base64UploadAdapter,
@@ -276,11 +280,19 @@ export default {
 					// translate predictably and are normalised to width/height
 					// attributes when the message is sent.
 					resizeUnit: 'px',
-					// Insert images inline so they live inside a paragraph. This makes
-					// them left-aligned by default and lets the regular text-alignment
-					// buttons move them left/center/right (which is e-mail compatible).
+					// Insert images as block widgets. This keeps alignment a property of
+					// the image itself (instead of the paragraph it lives in), lets the
+					// user add paragraphs before/after the image, and disables the text
+					// formatting buttons while an image is selected.
 					insert: {
-						type: 'inline',
+						type: 'block',
+					},
+					styles: {
+						// Image-specific alignment so changing it never reflows the
+						// surrounding text. The unstyled state is left-aligned (see the
+						// editor CSS) and is the e-mail-safe default; the explicit classes
+						// are turned into inline styles when the message is sent.
+						options: ['alignBlockLeft', 'alignCenter', 'alignBlockRight'],
 					},
 					resizeOptions: [
 						{ name: 'resizeImage:original', value: null, label: t('mail', 'Original size') },
@@ -289,6 +301,17 @@ export default {
 						{ name: 'resizeImage:large', value: '500', label: t('mail', 'Large') },
 					],
 					toolbar: [
+						{
+							name: 'imageStyle:alignment',
+							title: t('mail', 'Align image'),
+							items: [
+								'imageStyle:alignBlockLeft',
+								'imageStyle:alignCenter',
+								'imageStyle:alignBlockRight',
+							],
+							defaultItem: 'imageStyle:alignBlockLeft',
+						},
+						'|',
 						'imageTextAlternative',
 						'linkImage',
 						'|',
@@ -869,6 +892,13 @@ export default {
 	margin: 0 !important;
 }
 
+/* Block images are centred by CKEditor's default stylesheet. Left-align the
+   unstyled state so it matches both the e-mail-safe default and the explicit
+   "align left" option; centring/right alignment stay opt-in via the toolbar. */
+:deep(.ck-content .image:not([class*='image-style'])) {
+	margin-inline: 0 auto;
+}
+
 .image-file-input {
 	display: none;
 }
@@ -1064,6 +1094,27 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 
 .ck-dropdown__panel.ck-dropdown__panel-visible {
 	border-radius: var(--border-radius-large) !important;
+}
+
+/* Size the "Insert image" dropdown to its labels so it stays usable in narrow
+   containers too (e.g. the signature editor inside the settings dialog). */
+.mail-image-insert-dropdown .ck-dropdown__panel {
+	min-width: max-content;
+}
+
+/* Balance the padding of the "Insert image" dropdown entries: the icon should
+   sit a comfortable distance from the left edge and the label should not leave
+   a large empty gap on the right. */
+.mail-image-insert-dropdown .ck-dropdown__panel .ck-button {
+	display: flex;
+	width: 100%;
+	justify-content: flex-start;
+	padding-inline: var(--default-grid-baseline, 4px);
+}
+
+.mail-image-insert-dropdown .ck-dropdown__panel .ck-button .ck-button__label {
+	padding-inline-start: var(--default-grid-baseline, 4px);
+	padding-inline-end: var(--default-grid-baseline, 4px);
 }
 
 /* Needs to be set to flex, bececause else it breaks the toolbar - it is shown in 2 lines instead of 1 */

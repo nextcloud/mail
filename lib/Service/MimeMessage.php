@@ -85,6 +85,7 @@ class MimeMessage {
 			array_push($inlineAttachments, ...$this->extractDataUriImages($doc));
 			$this->rewriteSrcToCid($doc);
 			$this->normalizeImageDimensions($doc);
+			$this->normalizeImageAlignment($doc);
 			$htmlContent = $doc->saveHTML();
 
 			$htmlPart = new Horde_Mime_Part();
@@ -209,8 +210,16 @@ class MimeMessage {
 				continue;
 			}
 
-			$style = $image->getAttribute('style');
-			if ($style === '' || preg_match('/(?<![-\w])width:\s*([\d.]+)px/i', $style, $widthMatch) !== 1) {
+			// The editor stores the resize width as inline CSS. For inline images
+			// it lives on the <img>; for block images it lives on the wrapping
+			// <figure> while the aspect ratio stays on the <img>. Inspect both.
+			$parent = $image->parentNode;
+			$figureStyle = ($parent instanceof DOMElement && strtolower($parent->tagName) === 'figure')
+				? $parent->getAttribute('style')
+				: '';
+			$style = $image->getAttribute('style') . ';' . $figureStyle;
+
+			if (preg_match('/(?<![-\w])width:\s*([\d.]+)px/i', $style, $widthMatch) !== 1) {
 				continue;
 			}
 
@@ -231,6 +240,42 @@ class MimeMessage {
 						$image->setAttribute('height', (string)$height);
 					}
 				}
+			}
+		}
+	}
+
+	/**
+	 * Translates the editor's image-alignment classes into an inline text-align
+	 * style on the wrapping <figure>. Those classes rely on the editor's own
+	 * stylesheet, which recipients do not load; aligning the (inline) image via
+	 * text-align on its block wrapper is honoured by virtually every mail client.
+	 * The unstyled, left-aligned default needs no rewriting.
+	 */
+	private function normalizeImageAlignment(DOMDocument $doc): void {
+		$alignments = [
+			'image-style-block-align-left' => 'left',
+			'image-style-align-center' => 'center',
+			'image-style-block-align-right' => 'right',
+		];
+
+		foreach ($doc->getElementsByTagName('figure') as $figure) {
+			if (!($figure instanceof DOMElement)) {
+				continue;
+			}
+
+			$classes = $figure->getAttribute('class');
+			if ($classes === '') {
+				continue;
+			}
+
+			foreach ($alignments as $class => $align) {
+				if (!str_contains($classes, $class)) {
+					continue;
+				}
+
+				$style = rtrim(trim($figure->getAttribute('style')), ';');
+				$figure->setAttribute('style', ($style === '' ? '' : $style . '; ') . 'text-align: ' . $align);
+				break;
 			}
 		}
 	}

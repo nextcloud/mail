@@ -22,6 +22,7 @@ export default class ImageDropdownPlugin extends Plugin {
 
 		editor.ui.componentFactory.add('imageDropdown', (locale) => {
 			const dropdown = createDropdown(locale)
+			dropdown.class = 'mail-image-insert-dropdown'
 			dropdown.buttonView.set({
 				label: t('mail', 'Insert image'),
 				icon: imageIcon,

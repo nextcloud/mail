@@ -433,6 +433,23 @@ class MimeMessageTest extends TestCase {
 		$this->assertStringContainsString('height="100"', $htmlBody);
 	}
 
+	public function testNormalizeImageDimensionsFromFigure(): void {
+		$html = '<figure class="image image_resized" style="width:200px;"><img src="https://example.com/logo.png" style="aspect-ratio:2/1;"></figure>';
+
+		$part = $this->mimeMessage->build(
+			null,
+			$html,
+			false,
+			[],
+		);
+
+		/** @var Horde_Mime_Part[] $subParts */
+		$subParts = $part->getParts();
+		$htmlBody = $subParts[1]->getContents();
+		$this->assertStringContainsString('width="200"', $htmlBody);
+		$this->assertStringContainsString('height="100"', $htmlBody);
+	}
+
 	public function testNormalizeImageDimensionsIgnoresPercentageWidth(): void {
 		$html = '<p><img src="https://example.com/logo.png" style="width:50%;"></p>';
 
@@ -447,6 +464,38 @@ class MimeMessageTest extends TestCase {
 		$subParts = $part->getParts();
 		$htmlBody = $subParts[1]->getContents();
 		$this->assertStringNotContainsString('width="', $htmlBody);
+	}
+
+	public function testNormalizeImageAlignment(): void {
+		$html = '<figure class="image image-style-align-center"><img src="https://example.com/logo.png"></figure>';
+
+		$part = $this->mimeMessage->build(
+			null,
+			$html,
+			false,
+			[],
+		);
+
+		/** @var Horde_Mime_Part[] $subParts */
+		$subParts = $part->getParts();
+		$htmlBody = $subParts[1]->getContents();
+		$this->assertStringContainsString('text-align: center', $htmlBody);
+	}
+
+	public function testNormalizeImageAlignmentLeavesDefaultUntouched(): void {
+		$html = '<figure class="image"><img src="https://example.com/logo.png"></figure>';
+
+		$part = $this->mimeMessage->build(
+			null,
+			$html,
+			false,
+			[],
+		);
+
+		/** @var Horde_Mime_Part[] $subParts */
+		$subParts = $part->getParts();
+		$htmlBody = $subParts[1]->getContents();
+		$this->assertStringNotContainsString('text-align', $htmlBody);
 	}
 
 	public function testSanitizesInlineSvg(): void {
