@@ -82,6 +82,7 @@ class MimeMessage {
 			$doc = Parser::parseToDomDocument($source);
 			array_push($inlineAttachments, ...$this->extractDataUriImages($doc));
 			$this->rewriteSrcToCid($doc);
+			$this->normalizeImageDimensions($doc);
 			$htmlContent = $doc->saveHTML();
 
 			$htmlPart = new Horde_Mime_Part();
@@ -183,6 +184,44 @@ class MimeMessage {
 			$image->setAttribute('src', 'cid:' . $cid);
 		}
 		return $parts;
+	}
+
+	/**
+	 * Mirrors pixel dimensions set via the editor's resize feature (stored as
+	 * inline CSS) onto the width/height attributes. Many email clients drop
+	 * inline styles and classes but honour these attributes, so without them a
+	 * resized image would fall back to its (often huge) natural size.
+	 */
+	private function normalizeImageDimensions(DOMDocument $doc): void {
+		foreach ($doc->getElementsByTagName('img') as $image) {
+			if (!($image instanceof DOMElement)) {
+				continue;
+			}
+
+			$style = $image->getAttribute('style');
+			if ($style === '' || preg_match('/(?<![-\w])width:\s*([\d.]+)px/i', $style, $widthMatch) !== 1) {
+				continue;
+			}
+
+			$width = (int)round((float)$widthMatch[1]);
+			if ($width <= 0) {
+				continue;
+			}
+			$image->setAttribute('width', (string)$width);
+
+			// Derive the height from the aspect ratio the editor stores so clients
+			// that ignore CSS keep the correct proportions.
+			if (preg_match('#aspect-ratio:\s*([\d.]+)\s*/\s*([\d.]+)#i', $style, $ratioMatch) === 1) {
+				$ratioWidth = (float)$ratioMatch[1];
+				$ratioHeight = (float)$ratioMatch[2];
+				if ($ratioWidth > 0.0 && $ratioHeight > 0.0) {
+					$height = (int)round($width * $ratioHeight / $ratioWidth);
+					if ($height > 0) {
+						$image->setAttribute('height', (string)$height);
+					}
+				}
+			}
+		}
 	}
 
 	/**

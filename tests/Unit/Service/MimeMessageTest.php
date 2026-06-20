@@ -413,6 +413,41 @@ class MimeMessageTest extends TestCase {
 		$this->assertStringNotContainsString('data-cid', $htmlBody);
 	}
 
+	public function testNormalizeImageDimensions(): void {
+		$html = '<p><img src="https://example.com/logo.png" style="aspect-ratio:4/1;width:400px;"></p>';
+
+		$part = $this->mimeMessage->build(
+			null,
+			$html,
+			false,
+			[],
+		);
+
+		$this->assertEquals('multipart/alternative', $part->getType());
+
+		/** @var Horde_Mime_Part[] $subParts */
+		$subParts = $part->getParts();
+		$htmlBody = $subParts[1]->getContents();
+		$this->assertStringContainsString('width="400"', $htmlBody);
+		$this->assertStringContainsString('height="100"', $htmlBody);
+	}
+
+	public function testNormalizeImageDimensionsIgnoresPercentageWidth(): void {
+		$html = '<p><img src="https://example.com/logo.png" style="width:50%;"></p>';
+
+		$part = $this->mimeMessage->build(
+			null,
+			$html,
+			false,
+			[],
+		);
+
+		/** @var Horde_Mime_Part[] $subParts */
+		$subParts = $part->getParts();
+		$htmlBody = $subParts[1]->getContents();
+		$this->assertStringNotContainsString('width="', $htmlBody);
+	}
+
 	private function createAttachmentPart(string $name, string $content, string $mime, string $disposition): Horde_Mime_Part {
 		$part = new Horde_Mime_Part();
 		$part->setCharset('us-ascii');

@@ -139,6 +139,55 @@ class ImageProxyControllerTest extends TestCase {
 		self::assertSame(Http::STATUS_UNSUPPORTED_MEDIA_TYPE, $response->getStatus());
 	}
 
+	public function testFetchSniffsSvgMisdetectedAsText(): void {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg"><rect width="10" height="10"/></svg>';
+		$this->remoteHostValidator->method('isValid')
+			->willReturn(true);
+		$httpResponse = $this->createMock(IResponse::class);
+		$httpResponse->method('getBody')
+			->willReturn($this->streamFor($svg));
+		$client = $this->createMock(IClient::class);
+		$client->method('get')
+			->willReturn($httpResponse);
+		$this->clientService->method('newClient')
+			->willReturn($client);
+		$this->mimeTypeDetector->method('detectString')
+			->willReturn('text/xml');
+
+		$response = $this->controller->fetch('https://example.com/logo.svg');
+
+		self::assertSame(Http::STATUS_OK, $response->getStatus());
+		self::assertSame(
+			['data' => 'data:image/svg+xml;base64,' . base64_encode($svg)],
+			$response->getData(),
+		);
+	}
+
+	public function testFetchStripsScriptsFromSvg(): void {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script><rect onload="x()"/></svg>';
+		$sanitized = '<svg xmlns="http://www.w3.org/2000/svg"><rect/></svg>';
+		$this->remoteHostValidator->method('isValid')
+			->willReturn(true);
+		$httpResponse = $this->createMock(IResponse::class);
+		$httpResponse->method('getBody')
+			->willReturn($this->streamFor($svg));
+		$client = $this->createMock(IClient::class);
+		$client->method('get')
+			->willReturn($httpResponse);
+		$this->clientService->method('newClient')
+			->willReturn($client);
+		$this->mimeTypeDetector->method('detectString')
+			->willReturn('image/svg+xml');
+
+		$response = $this->controller->fetch('https://example.com/logo.svg');
+
+		self::assertSame(Http::STATUS_OK, $response->getStatus());
+		self::assertSame(
+			['data' => 'data:image/svg+xml;base64,' . base64_encode($sanitized)],
+			$response->getData(),
+		);
+	}
+
 	/**
 	 * @return resource
 	 */

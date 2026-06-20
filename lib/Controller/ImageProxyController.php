@@ -27,7 +27,11 @@ use function feof;
 use function fread;
 use function in_array;
 use function is_resource;
+use function ltrim;
 use function parse_url;
+use function preg_replace;
+use function str_starts_with;
+use function stripos;
 use function strlen;
 
 /**
@@ -50,7 +54,7 @@ class ImageProxyController extends Controller {
 
 	/**
 	 * Image types that browsers can render in an <img> tag and that are safe to
-	 * embed. SVG is intentionally excluded as it can carry active content.
+	 * embed.
 	 */
 	private const ALLOWED_MIME_TYPES = [
 		'image/png',
@@ -58,6 +62,7 @@ class ImageProxyController extends Controller {
 		'image/gif',
 		'image/webp',
 		'image/bmp',
+		'image/svg+xml',
 	];
 
 	public function __construct(
@@ -132,11 +137,48 @@ class ImageProxyController extends Controller {
 		// Detect the type from the actual bytes instead of trusting the remote
 		// Content-Type header.
 		$mimeType = $this->mimeTypeDetector->detectString($content);
+
+		// finfo frequently reports SVG (which is plain XML) as a text/* type, so
+		// fall back to sniffing the markup to support SVG logos.
+		if ($mimeType !== 'image/svg+xml' && $this->looksLikeSvg($content)) {
+			$mimeType = 'image/svg+xml';
+		}
+
 		if (!in_array($mimeType, self::ALLOWED_MIME_TYPES, true)) {
 			return new JSONResponse(['message' => 'Unsupported image type'], Http::STATUS_UNSUPPORTED_MEDIA_TYPE);
 		}
 
+		if ($mimeType === 'image/svg+xml') {
+			$content = $this->hardenSvg($content);
+		}
+
 		$dataUri = 'data:' . $mimeType . ';base64,' . base64_encode($content);
 		return new JSONResponse(['data' => $dataUri]);
+	}
+
+	/**
+	 * Heuristically decide whether the given bytes are an SVG document.
+	 */
+	private function looksLikeSvg(string $content): bool {
+		$start = ltrim($content);
+		$hasSvgRoot = str_starts_with($start, '<?xml')
+			|| str_starts_with($start, '<!--')
+			|| stripos($start, '<svg') === 0;
+		return $hasSvgRoot && stripos($content, '<svg') !== false;
+	}
+
+	/**
+	 * Best-effort hardening of an SVG before embedding it. When rendered in an
+	 * <img>/CID context scripts do not execute, but the obvious active-content
+	 * vectors are stripped as defence in depth.
+	 */
+	private function hardenSvg(string $content): string {
+		$patterns = [
+			'/<script\b[^>]*>.*?<\/script>/is',
+			'/<foreignObject\b[^>]*>.*?<\/foreignObject>/is',
+			'/\son\w+\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i',
+			'/(?:href|xlink:href)\s*=\s*("\s*javascript:[^"]*"|\'\s*javascript:[^\']*\')/i',
+		];
+		return preg_replace($patterns, '', $content) ?? $content;
 	}
 }

@@ -19,6 +19,14 @@
 			@input="onEditorInput"
 			@ready="onEditorReady" />
 
+		<input
+			ref="imageFileInput"
+			type="file"
+			accept="image/*"
+			multiple
+			class="image-file-input"
+			@change="onImageFilesSelected">
+
 		<NcDialog
 			:open.sync="imageUrlDialogOpen"
 			:name="t('mail', 'Insert image from URL')"
@@ -68,7 +76,7 @@ import {
 } from 'ckeditor5'
 import { getLinkWithPicker, searchProvider } from '@nextcloud/vue/components/NcRichText'
 import TextDirectionPlugin from '../ckeditor/direction/TextDirectionPlugin.js'
-import ImageFromUrlPlugin from '../ckeditor/image/ImageFromUrlPlugin.js'
+import ImageDropdownPlugin from '../ckeditor/image/ImageDropdownPlugin.js'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
@@ -168,7 +176,7 @@ export default {
 				Image,
 				ImageUpload,
 				ImageResize,
-				ImageFromUrlPlugin,
+				ImageDropdownPlugin,
 				Font,
 				RemoveFormat,
 				Base64UploadAdapter,
@@ -188,8 +196,7 @@ export default {
 				'subscript',
 				'superscript',
 				'fontBackgroundColor',
-				'insertImage',
-				'imageFromUrl',
+				'imageDropdown',
 				'alignment',
 				'textDirection:ltr',
 				'textDirection:rtl',
@@ -222,6 +229,18 @@ export default {
 				plugins,
 				toolbar,
 				language: 'en',
+				image: {
+					// Resize using absolute pixels instead of percentages. A percentage
+					// width is relative to the unknown width of the recipient's mail
+					// client, which makes images appear far too large elsewhere; pixels
+					// translate predictably and are normalised to width/height
+					// attributes when the message is sent.
+					resizeUnit: 'px',
+					upload: {
+						// Defaults plus SVG so vector logos can be uploaded as well.
+						types: ['jpeg', 'png', 'gif', 'bmp', 'webp', 'tiff', 'svg+xml'],
+					},
+				},
 				mention: {
 					feeds: [
 						{
@@ -639,6 +658,9 @@ export default {
 				editor.on('mail:insertImageFromUrl', () => {
 					this.imageUrlDialogOpen = true
 				})
+				editor.on('mail:uploadImageFromComputer', () => {
+					this.$refs.imageFileInput?.click()
+				})
 			}
 
 			this.bus.on('append-to-body-at-cursor', this.appendToBodyAtCursor)
@@ -670,9 +692,10 @@ export default {
 			try {
 				// The image is fetched server-side and returned as a data: URI. It
 				// renders in the editor despite the strict CSP and is turned into an
-				// inline attachment when the message is sent.
+				// inline attachment when the message is sent. Insert it through the
+				// same command the upload feature uses so both behave identically.
 				const dataUri = await fetchImageAsDataUri(url)
-				this.appendToBodyAtCursor(`<img src="${dataUri}">`)
+				this.editorInstance.execute('insertImage', { source: dataUri })
 				this.editorInstance.editing.view.focus()
 				this.imageUrlDialogOpen = false
 			} catch (error) {
@@ -681,6 +704,15 @@ export default {
 			} finally {
 				this.imageUrlLoading = false
 			}
+		},
+
+		onImageFilesSelected(event) {
+			const files = Array.from(event.target.files ?? [])
+			if (files.length > 0) {
+				this.editorInstance.execute('uploadImage', { file: files })
+			}
+			// Reset so selecting the same file again still triggers a change event.
+			event.target.value = ''
 		},
 
 		editorExecute(commandName, ...args) {
@@ -751,6 +783,10 @@ export default {
 :deep(p) {
 	cursor: text;
 	margin: 0 !important;
+}
+
+.image-file-input {
+	display: none;
 }
 </style>
 
