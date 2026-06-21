@@ -253,18 +253,27 @@ class MimeMessage {
 	}
 
 	/**
-	 * Translates the editor's image-alignment classes into an inline text-align
-	 * style on the wrapping <figure>. Those classes rely on the editor's own
-	 * stylesheet, which recipients do not load; aligning the (inline) image via
-	 * text-align on its block wrapper is honoured by virtually every mail client.
-	 * The unstyled, left-aligned default needs no rewriting.
+	 * Translates the editor's image-alignment classes into inline styles on the
+	 * wrapping <figure>. The editor expresses alignment through CSS classes
+	 * backed by its own stylesheet, which recipients do not load. Without
+	 * inlining, every client falls back to its own default rendering of a bare
+	 * <figure> (some left-align it, others centre it), so even the unstyled
+	 * default must be made explicit to render consistently everywhere.
+	 *
+	 * A block image is positioned by the auto margins of its (width-constrained)
+	 * <figure> box, exactly like the editor does it; text-align additionally
+	 * aligns the image inside a figure that spans the full width. Physical
+	 * margins are used because the Word engine behind Outlook ignores the
+	 * logical margin-inline shorthand.
 	 */
 	private function normalizeImageAlignment(DOMDocument $doc): void {
 		$alignments = [
-			'image-style-block-align-left' => 'left',
-			'image-style-align-center' => 'center',
-			'image-style-block-align-right' => 'right',
+			'image-style-align-center' => 'margin-left: auto; margin-right: auto; text-align: center;',
+			'image-style-block-align-right' => 'margin-left: auto; margin-right: 0; text-align: right;',
+			'image-style-block-align-left' => 'margin-left: 0; margin-right: auto; text-align: left;',
 		];
+		// The unstyled state is the editor's left-aligned default.
+		$default = 'margin-left: 0; margin-right: auto; text-align: left;';
 
 		foreach ($doc->getElementsByTagName('figure') as $figure) {
 			if (!($figure instanceof DOMElement)) {
@@ -272,19 +281,20 @@ class MimeMessage {
 			}
 
 			$classes = $figure->getAttribute('class');
-			if ($classes === '') {
+			if (!str_contains($classes, 'image')) {
 				continue;
 			}
 
-			foreach ($alignments as $class => $align) {
-				if (!str_contains($classes, $class)) {
-					continue;
+			$alignment = $default;
+			foreach ($alignments as $class => $style) {
+				if (str_contains($classes, $class)) {
+					$alignment = $style;
+					break;
 				}
-
-				$style = rtrim(trim($figure->getAttribute('style')), ';');
-				$figure->setAttribute('style', ($style === '' ? '' : $style . '; ') . 'text-align: ' . $align);
-				break;
 			}
+
+			$style = rtrim(trim($figure->getAttribute('style')), ';');
+			$figure->setAttribute('style', ($style === '' ? '' : $style . '; ') . $alignment);
 		}
 	}
 
