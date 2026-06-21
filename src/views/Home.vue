@@ -15,6 +15,18 @@
 			<ComposerSessionIndicator @close="onCloseMessageModal" />
 			<NewMessageModal ref="newMessageModal" :accounts="accounts" />
 		</template>
+
+		<!-- Rendered here, at the stable app root, rather than inside the
+		     navigation: NcModal relocates the dialog to <body> on mount, but the
+		     frequently re-rendering navigation moves it back into the scrollable,
+		     overflow-clipped sidebar. CKEditor then considers its content clipped
+		     and parks every balloon (image toolbar, link form) off-screen. -->
+		<AccountSettings
+			v-if="settingsAccount"
+			:open="settingsOpen"
+			:account="settingsAccount"
+			:scroll-to-section="settingsSection"
+			@update:open="onCloseAccountSettings" />
 	</NcContent>
 </template>
 
@@ -38,6 +50,7 @@ export default {
 		MailboxThread,
 		Navigation,
 		NewMessageModal: () => import(/* webpackChunkName: "new-message-modal" */ '../components/NewMessageModal.vue'),
+		AccountSettings: () => import(/* webpackChunkName: "account-settings" */ '../components/AccountSettings.vue'),
 		Outbox,
 		ComposerSessionIndicator,
 	},
@@ -45,12 +58,17 @@ export default {
 	data() {
 		return {
 			hasComposerSession: false,
+			// The currently open account-settings dialog. The account is kept
+			// after closing so the dialog stays mounted for its out-transition.
+			settingsAccount: null,
+			settingsOpen: false,
+			settingsSection: undefined,
 		}
 	},
 
 	computed: {
 		...mapStores(useMainStore),
-		...mapState(useMainStore, ['composerSessionId']),
+		...mapState(useMainStore, ['composerSessionId', 'showAccountSettings']),
 		accounts() {
 			return this.mainStore.getAccounts.filter((a) => !a.isUnified)
 		},
@@ -81,6 +99,23 @@ export default {
 			}
 
 			this.hasComposerSession = true
+		},
+
+		showAccountSettings: {
+			immediate: true,
+			handler(settings) {
+				if (settings?.accountId) {
+					this.settingsAccount = this.mainStore.getAccount(settings.accountId)
+					this.settingsSection = settings.section
+					// Mount first (settingsAccount), then open on the next tick so the
+					// dialog's `open` watcher fires and runs its on-open side effects.
+					this.$nextTick(() => {
+						this.settingsOpen = true
+					})
+				} else {
+					this.settingsOpen = false
+				}
+			},
 		},
 	},
 
@@ -171,6 +206,10 @@ export default {
 
 		async onCloseMessageModal() {
 			await this.$refs.newMessageModal.onClose()
+		},
+
+		onCloseAccountSettings() {
+			this.mainStore.showSettingsForAccountMutation(null)
 		},
 	},
 }

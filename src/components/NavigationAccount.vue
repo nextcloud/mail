@@ -96,11 +96,6 @@
 				</template>
 			</template>
 		</NcAppNavigationCaption>
-		<AccountSettings
-			:open="showSettings"
-			:account="account"
-			:scroll-to-section="showSettingsSection"
-			@update:open="showAccountSettings($event)" />
 		<DelegationModal v-if="showDelegationModal" :account="account" @close="showDelegationModal = false" />
 	</Fragment>
 </template>
@@ -132,7 +127,6 @@ export default {
 		ActionCheckbox,
 		ActionInput,
 		ActionText,
-		AccountSettings: () => import(/* webpackChunkName: "account-settings" */ './AccountSettings.vue'),
 		DelegationModal: () => import(/* webpackChunkName: "delegation-modal" */ './DelegationModal.vue'),
 		IconInfo,
 		IconSettings,
@@ -193,14 +187,6 @@ export default {
 
 	computed: {
 		...mapStores(useMainStore),
-		showSettings() {
-			return this.mainStore.showSettingsForAccount(this.account.id)
-		},
-
-		showSettingsSection() {
-			return this.mainStore.showSettingsSectionForAccount(this.account.id)
-		},
-
 		visible() {
 			return this.account.isUnified !== true && this.account.visible !== false
 		},
