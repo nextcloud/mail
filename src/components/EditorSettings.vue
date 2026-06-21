@@ -8,20 +8,24 @@
 		<p>
 			<input
 				id="plaintext"
-				v-model="mode"
+				ref="plaintext"
+				:name="radioGroupName"
 				type="radio"
 				class="radio"
-				value="plaintext">
-			<label :class="{ primary: mode === 'plaintext' }" for="plaintext">
+				:checked="account.editorMode === EDITOR_MODE_TEXT"
+				@change="selectMode(EDITOR_MODE_TEXT)">
+			<label :class="{ primary: account.editorMode === EDITOR_MODE_TEXT }" for="plaintext">
 				{{ t('mail', 'Plain text') }}
 			</label>
 			<input
 				id="richtext"
-				v-model="mode"
+				ref="richtext"
+				:name="radioGroupName"
 				type="radio"
 				class="radio"
-				value="richtext">
-			<label :class="{ primary: mode === 'richtext' }" for="richtext">
+				:checked="account.editorMode === EDITOR_MODE_HTML"
+				@change="selectMode(EDITOR_MODE_HTML)">
+			<label :class="{ primary: account.editorMode === EDITOR_MODE_HTML }" for="richtext">
 				{{ t('mail', 'Rich text') }}
 			</label>
 		</p>
@@ -31,6 +35,7 @@
 <script>
 import { mapStores } from 'pinia'
 import Logger from '../logger.js'
+import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 
 export default {
@@ -42,22 +47,56 @@ export default {
 		},
 	},
 
-	data() {
-		return {
-			mode: this.account.editorMode,
-		}
-	},
-
 	computed: {
 		...mapStores(useMainStore),
+
+		// Expose the constants to the template and group the radios per account.
+		EDITOR_MODE_TEXT: () => EDITOR_MODE_TEXT,
+		EDITOR_MODE_HTML: () => EDITOR_MODE_HTML,
+		radioGroupName() {
+			return `editor-mode-${this.account.id}`
+		},
 	},
 
-	watch: {
-		mode(val, oldVal) {
+	methods: {
+		selectMode(mode) {
+			if (mode === this.account.editorMode) {
+				return
+			}
+
+			// Switching from rich text to plain text strips all formatting and
+			// inline images — including those in the signature — so confirm first.
+			if (this.account.editorMode === EDITOR_MODE_HTML && mode === EDITOR_MODE_TEXT) {
+				// The native radio already moved the DOM selection; snap it back to
+				// the stored value at once so the writing mode only visibly changes
+				// once the user confirms.
+				this.syncRadios()
+				OC.dialogs.confirmDestructive(
+					t('mail', 'Switching to plain text removes any existing formatting such as bold, italic, underline, inline images and links — including those in your signature.'),
+					t('mail', 'Switch to plain text'),
+					{
+						type: OC.dialogs.YES_NO_BUTTONS,
+						confirm: t('mail', 'Switch and remove formatting'),
+						confirmClasses: 'error',
+						cancel: t('mail', 'Keep rich text'),
+					},
+					(decision) => {
+						if (decision) {
+							this.persistMode(mode)
+						}
+					},
+				)
+				return
+			}
+
+			this.persistMode(mode)
+		},
+
+		persistMode(mode) {
 			this.mainStore.patchAccount({
 				account: this.account,
 				data: {
-					editorMode: val,
+					editorMode: mode,
 				},
 			})
 				.then(() => {
@@ -65,9 +104,24 @@ export default {
 				})
 				.catch((error) => {
 					Logger.error('could not update editor mode', { error })
-					this.editorMode = oldVal
+					this.syncRadios()
 					throw error
 				})
+		},
+
+		/**
+		 * Re-asserts the radio DOM selection from the stored writing mode. Vue keeps
+		 * `:checked` bound to the store, but a native toggle we do not persist
+		 * (cancelled or failed) leaves the DOM out of sync because the bound value
+		 * never changed and Vue therefore skips patching it.
+		 */
+		syncRadios() {
+			if (this.$refs.plaintext) {
+				this.$refs.plaintext.checked = this.account.editorMode === EDITOR_MODE_TEXT
+			}
+			if (this.$refs.richtext) {
+				this.$refs.richtext.checked = this.account.editorMode === EDITOR_MODE_HTML
+			}
 		},
 	},
 }

@@ -28,8 +28,9 @@
 		<!-- Added wrapper to give the signature editor a clear input-style border -->
 		<div class="signature-editor-wrapper">
 			<TextEditor
+				:key="account.editorMode"
 				v-model="signature"
-				:html="true"
+				:html="editorIsHtml"
 				:placeholder="t('mail', 'Signature …')"
 				:bus="bus"
 				class="signature-editor-wrapper__editor" />
@@ -66,8 +67,9 @@ import { mapStores } from 'pinia'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import TextEditor from './TextEditor.vue'
 import logger from '../logger.js'
+import { EDITOR_MODE_HTML } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
-import { detect, toHtml } from '../util/text.js'
+import { detect, toHtml, toPlain } from '../util/text.js'
 
 export default {
 	name: 'SignatureSettings',
@@ -98,6 +100,10 @@ export default {
 
 	computed: {
 		...mapStores(useMainStore),
+		editorIsHtml() {
+			return this.account.editorMode === EDITOR_MODE_HTML
+		},
+
 		identities() {
 			const identities = this.account.aliases.map((alias) => {
 				return {
@@ -122,6 +128,15 @@ export default {
 	},
 
 	watch: {
+		// The signature editor follows the account's writing mode. When that mode
+		// changes (e.g. via the writing-mode setting), re-encode the in-editor
+		// signature so plain text never shows raw HTML and vice versa. Switching to
+		// plain text is lossy (images/links are dropped); the writing-mode setting
+		// warns the user before the change reaches here.
+		editorIsHtml() {
+			this.signature = this.formatSignature(this.signature)
+		},
+
 		async signatureAboveQuote(val, oldVal) {
 			try {
 				await this.mainStore.patchAccount({
@@ -146,9 +161,22 @@ export default {
 		changeIdentity(identity) {
 			logger.debug('select identity', { identity })
 			this.identity = identity
-			this.signature = identity.signature
-				? toHtml(detect(identity.signature)).value
-				: ''
+			this.signature = this.formatSignature(identity.signature)
+		},
+
+		/**
+		 * Encodes a stored signature into the format the editor currently expects
+		 * (HTML in rich-text mode, plain text otherwise).
+		 *
+		 * @param {string|null} signature the stored signature
+		 * @return {string} the signature in the active editor format
+		 */
+		formatSignature(signature) {
+			if (!signature) {
+				return ''
+			}
+			const detected = detect(signature)
+			return this.editorIsHtml ? toHtml(detected).value : toPlain(detected).value
 		},
 
 		async deleteSignature() {

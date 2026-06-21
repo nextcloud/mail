@@ -58,9 +58,11 @@ export default {
 	data() {
 		return {
 			hasComposerSession: false,
-			// The currently open account-settings dialog. The account is kept
-			// after closing so the dialog stays mounted for its out-transition.
-			settingsAccount: null,
+			// Id of the account whose settings dialog is open. The id is kept after
+			// closing so the dialog stays mounted for its out-transition. The account
+			// object itself is resolved reactively (see settingsAccount) so settings
+			// sub-components observe store updates live instead of a stale snapshot.
+			settingsAccountId: null,
 			settingsOpen: false,
 			settingsSection: undefined,
 		}
@@ -79,6 +81,12 @@ export default {
 
 		activeMailbox() {
 			return this.mainStore.getMailbox(this.$route.params.mailboxId)
+		},
+
+		settingsAccount() {
+			return this.settingsAccountId !== null
+				? this.mainStore.getAccount(this.settingsAccountId)
+				: null
 		},
 	},
 
@@ -105,7 +113,7 @@ export default {
 			immediate: true,
 			handler(settings) {
 				if (settings?.accountId) {
-					this.settingsAccount = this.mainStore.getAccount(settings.accountId)
+					this.settingsAccountId = settings.accountId
 					this.settingsSection = settings.section
 					// Mount first (settingsAccount), then open on the next tick so the
 					// dialog's `open` watcher fires and runs its on-open side effects.
