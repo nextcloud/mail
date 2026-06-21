@@ -212,11 +212,19 @@ class MimeMessage {
 
 			// The editor stores the resize width as inline CSS. For inline images
 			// it lives on the <img>; for block images it lives on the wrapping
-			// <figure> while the aspect ratio stays on the <img>. Inspect both.
-			$parent = $image->parentNode;
-			$figureStyle = ($parent instanceof DOMElement && strtolower($parent->tagName) === 'figure')
-				? $parent->getAttribute('style')
-				: '';
+			// <figure> while the aspect ratio stays on the <img>. A linked image
+			// is nested one level deeper (<figure><a><img></a></figure>), so walk
+			// up the ancestors to find the figure rather than only checking the
+			// direct parent. Inspect both the image's and the figure's style.
+			$figureStyle = '';
+			$ancestor = $image->parentNode;
+			while ($ancestor instanceof DOMElement) {
+				if (strtolower($ancestor->tagName) === 'figure') {
+					$figureStyle = $ancestor->getAttribute('style');
+					break;
+				}
+				$ancestor = $ancestor->parentNode;
+			}
 			$style = $image->getAttribute('style') . ';' . $figureStyle;
 
 			if (preg_match('/(?<![-\w])width:\s*([\d.]+)px/i', $style, $widthMatch) !== 1) {

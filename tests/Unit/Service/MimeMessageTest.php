@@ -450,6 +450,23 @@ class MimeMessageTest extends TestCase {
 		$this->assertStringContainsString('height="100"', $htmlBody);
 	}
 
+	public function testNormalizeImageDimensionsFromFigureWrappingLink(): void {
+		$html = '<figure class="image image_resized" style="width:200px;"><a href="https://example.com"><img src="https://example.com/logo.png" style="aspect-ratio:2/1;"></a></figure>';
+
+		$part = $this->mimeMessage->build(
+			null,
+			$html,
+			false,
+			[],
+		);
+
+		/** @var Horde_Mime_Part[] $subParts */
+		$subParts = $part->getParts();
+		$htmlBody = $subParts[1]->getContents();
+		$this->assertStringContainsString('width="200"', $htmlBody);
+		$this->assertStringContainsString('height="100"', $htmlBody);
+	}
+
 	public function testNormalizeImageDimensionsIgnoresPercentageWidth(): void {
 		$html = '<p><img src="https://example.com/logo.png" style="width:50%;"></p>';
 
