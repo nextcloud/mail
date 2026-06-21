@@ -545,7 +545,8 @@ class MessageMapper extends QBMapper {
 	 */
 	private function updateTags(Account $account, Message $message, array $tags, PerformanceLoggerTask $perf): void {
 		$imapTags = $message->getTags();
-		$dbTags = $tags[$message->getMessageId()] ?? [];
+		$messageId = $message->getMessageId();
+		$dbTags = $messageId !== null ? ($tags[$messageId] ?? []) : [];
 
 		if ($imapTags === [] && $dbTags === []) {
 			// neither old nor new tags
@@ -1354,7 +1355,8 @@ class MessageMapper extends QBMapper {
 		$tags = $this->tagMapper->getAllTagsForMessages($messages, $userId);
 		/** @var Message $message */
 		$messages = array_map(static function ($message) use ($tags) {
-			$message->setTags($tags[$message->getMessageId()] ?? []);
+			$messageId = $message->getMessageId();
+			$message->setTags($messageId !== null ? ($tags[$messageId] ?? []) : []);
 			return $message;
 		}, $messages);
 		return $messages;
