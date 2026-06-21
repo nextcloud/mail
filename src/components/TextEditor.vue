@@ -91,6 +91,7 @@ import TextDirectionPlugin from '../ckeditor/direction/TextDirectionPlugin.js'
 import ImageAlignmentPlugin from '../ckeditor/image/ImageAlignmentPlugin.js'
 import ImageDropdownPlugin from '../ckeditor/image/ImageDropdownPlugin.js'
 import ImageLinkFormPlugin from '../ckeditor/image/ImageLinkFormPlugin.js'
+import ImagePastePlugin from '../ckeditor/image/ImagePastePlugin.js'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
@@ -215,6 +216,7 @@ export default {
 				ImageDropdownPlugin,
 				ImageAlignmentPlugin,
 				ImageLinkFormPlugin,
+				ImagePastePlugin,
 				Font,
 				RemoveFormat,
 				Base64UploadAdapter,
