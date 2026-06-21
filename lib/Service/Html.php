@@ -154,6 +154,15 @@ class Html {
 		// Rewrite URL for redirection and proxying of content
 		/** @var HTMLPurifier_HTMLDefinition $def */
 		$def = $config->getHTMLDefinition(true);
+
+		// HTMLPurifier defaults to an HTML 4.01 schema which does not know the
+		// HTML5 <figure>/<figcaption> elements. Without registering them the
+		// figure wrappers are stripped and the contained images collapse from
+		// stacked blocks into inline siblings (rendered side by side). Editors
+		// such as CKEditor wrap images in figures, so keep them as block elements.
+		$def->addElement('figure', 'Block', 'Flow', 'Common');
+		$def->addElement('figcaption', 'Block', 'Flow', 'Common');
+
 		$def->info_attr_transform_post['imagesrc'] = new TransformImageSrc($this->urlGenerator);
 		$def->info_attr_transform_post['cssbackground'] = new TransformStyleURLs($this->urlGenerator);
 		$def->info_attr_transform_post['htmllinks'] = new TransformHTMLLinks();
