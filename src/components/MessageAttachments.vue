@@ -74,7 +74,7 @@ import CloudDownload from 'vue-material-design-icons/CloudDownloadOutline.vue'
 import Download from 'vue-material-design-icons/TrayArrowDown.vue'
 import MessageAttachment from './MessageAttachment.vue'
 import Logger from '../logger.js'
-import AttachementMixin from '../mixins/AttachementMixin.js'
+import AttachmentMixin from '../mixins/AttachmentMixin.js'
 import { saveAttachmentsToFiles } from '../service/AttachmentService.js'
 
 export default {
@@ -89,7 +89,7 @@ export default {
 		FilePicker,
 	},
 
-	mixins: [AttachementMixin],
+	mixins: [AttachmentMixin],
 	props: {
 		envelope: {
 			required: true,

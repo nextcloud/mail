@@ -13,7 +13,6 @@ export default {
 				mime: attachment.mime,
 				etag: 'fixme',
 				hasPreview: false,
-				fileid: parseInt(attachment.id, 10),
 			}))
 		},
 

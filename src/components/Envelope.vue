@@ -569,7 +569,7 @@ import { matchError } from '../errors/match.js'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError.js'
 import logger from '../logger.js'
-import AttachementMixin from '../mixins/AttachementMixin.js'
+import AttachmentMixin from '../mixins/AttachmentMixin.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
@@ -630,7 +630,7 @@ export default {
 		draggableEnvelope: DraggableEnvelopeDirective,
 	},
 
-	mixins: [AttachementMixin],
+	mixins: [AttachmentMixin],
 
 	props: {
 		withReply: {
