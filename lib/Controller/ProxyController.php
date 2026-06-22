@@ -13,6 +13,7 @@ namespace OCA\Mail\Controller;
 use OCA\Mail\Html\ProxyHmacGenerator;
 use OCA\Mail\Http\ProxyDownloadResponse;
 use OCA\Mail\Service\MailManager;
+use OCA\Mail\Service\SvgSanitizer;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -28,6 +29,9 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\LoggerInterface;
 use function file_get_contents;
 use function hash_equals;
+use function ltrim;
+use function stripos;
+use function str_starts_with;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ProxyController extends Controller {
@@ -37,6 +41,7 @@ class ProxyController extends Controller {
 	private LoggerInterface $logger;
 	private ProxyHmacGenerator $hmacGenerator;
 	private MailManager $mailManager;
+	private SvgSanitizer $svgSanitizer;
 	private ?string $userId;
 
 	public function __construct(string $appName,
@@ -47,6 +52,7 @@ class ProxyController extends Controller {
 		ProxyHmacGenerator $hmacGenerator,
 		LoggerInterface $logger,
 		MailManager $mailManager,
+		SvgSanitizer $svgSanitizer,
 		?string $userId) {
 		parent::__construct($appName, $request);
 		$this->request = $request;
@@ -56,6 +62,7 @@ class ProxyController extends Controller {
 		$this->logger = $logger;
 		$this->hmacGenerator = $hmacGenerator;
 		$this->mailManager = $mailManager;
+		$this->svgSanitizer = $svgSanitizer;
 		$this->userId = $userId;
 	}
 
@@ -112,6 +119,29 @@ class ProxyController extends Controller {
 			$content = file_get_contents(__DIR__ . '/../../img/blocked-image.png');
 		}
 
+		$content = (string)$content;
+
+		// Browsers sniff raster image formats in <img> tags, but they refuse to
+		// render SVG unless it is served with the image/svg+xml content type.
+		// Detect and sanitise SVG markup so external SVG logos are displayed
+		// instead of staying blank. Sanitising also strips any active content in
+		// case the response is fetched through a direct (non-<img>) navigation.
+		if ($this->looksLikeSvg($content)) {
+			$content = $this->svgSanitizer->sanitize($content);
+			return new ProxyDownloadResponse($content, $src, 'image/svg+xml');
+		}
+
 		return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
+	}
+
+	/**
+	 * Heuristically decide whether the given bytes are an SVG document.
+	 */
+	private function looksLikeSvg(string $content): bool {
+		$start = ltrim($content);
+		$hasSvgPrologue = str_starts_with($start, '<?xml')
+			|| str_starts_with($start, '<!--')
+			|| stripos($start, '<svg') === 0;
+		return $hasSvgPrologue && stripos($content, '<svg') !== false;
 	}
 }
