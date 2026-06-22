@@ -190,6 +190,7 @@ export default {
 		this.bus.on('on-add-cloud-attachment', this.openAttachementPicker)
 		this.bus.on('on-add-cloud-attachment-link', this.OpenLinkPicker)
 		this.bus.on('on-add-message-as-attachment', this.onAddMessageAsAttachment)
+		this.bus.on('on-add-local-files', this.addLocalFiles)
 		this.value.map((attachment) => {
 			this.attachments.push({
 				id: attachment.id,
@@ -240,11 +241,15 @@ export default {
 		},
 
 		onLocalAttachmentSelected(e) {
+			return this.addLocalFiles(Array.from(e.target.files))
+		},
+
+		addLocalFiles(files) {
 			this.uploading = true
 			// BUG - if choose again - progress lost/ move to complete()
 			Vue.set(this, 'uploads', {})
 
-			const toUpload = sumBy(prop('size'), Object.values(e.target.files))
+			const toUpload = sumBy(prop('size'), Object.values(files))
 			const newTotal = toUpload + this.totalSizeOfUpload()
 			logger.debug('checking upload size limit', {
 				existingUploads: this.totalSizeOfUpload(),
@@ -253,7 +258,7 @@ export default {
 				newTotal,
 			})
 			if (this.uploadSizeLimit && newTotal > this.uploadSizeLimit) {
-				this.showAttachmentFileSizeWarning(e.target.files.length)
+				this.showAttachmentFileSizeWarning(files.length)
 				this.uploading = false
 				return
 			}
@@ -318,7 +323,7 @@ export default {
 				} catch (error) {
 					logger.error('Could not upload file', { file, error })
 				}
-			}, e.target.files)
+			}, files)
 
 			const done = Promise.all(promises)
 				.catch((error) => logger.error('could not upload all attachments', { error }))
@@ -328,6 +333,8 @@ export default {
 
 			return done
 		},
+
+
 
 		async onAddCloudAttachment(nodes) {
 			try {
