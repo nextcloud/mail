@@ -21,8 +21,8 @@ use OCP\AppFramework\Services\IInitialState;
 use OCP\Defaults;
 use OCP\IConfig;
 use OCP\Settings\ISettings;
-use OCP\TextProcessing\FreePromptTaskType;
-use OCP\TextProcessing\SummaryTaskType;
+use OCP\TaskProcessing\TaskTypes\TextToText;
+use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
 
 class AdminSettings implements ISettings {
 	public function __construct(
@@ -70,12 +70,12 @@ class AdminSettings implements ISettings {
 
 		$this->initialStateService->provideInitialState(
 			'enabled_llm_free_prompt_backend',
-			$this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
+			$this->aiIntegrationsService->isLlmAvailable(TextToText::ID)
 		);
 
 		$this->initialStateService->provideInitialState(
 			'enabled_llm_summary_backend',
-			$this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class)
+			$this->aiIntegrationsService->isLlmAvailable(TextToTextSummary::ID)
 		);
 
 		$this->initialStateService->provideInitialState(
