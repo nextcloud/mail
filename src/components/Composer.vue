@@ -1539,6 +1539,11 @@ export default {
 		},
 
 		async onSend() {
+
+			if (this.selectTo.length === 0) {
+				showWarning(t('mail', 'The email has no visible ‘To’ recipients. Some mail providers may reject this message.'))
+			}
+
 			if (this.encrypt) {
 				logger.debug('get encrypted message from mailvelope')
 				await this.$refs.mailvelopeEditor.pull()
