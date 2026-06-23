@@ -869,7 +869,11 @@ export default {
 
 			// Fetch smart replies
 			if (this.enabledFreePrompt && this.message && !['trash', 'junk'].includes(this.mailbox.specialRole) && !this.showFollowUpHeader) {
-				this.smartReplies = await smartReply(this.envelope.databaseId)
+				try {
+					this.smartReplies = await smartReply(this.envelope.databaseId)
+				} catch (error) {
+					logger.error('Could not fetch smart replies', { error })
+				}
 			}
 		},
 

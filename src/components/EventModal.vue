@@ -243,6 +243,8 @@ export default {
 				const { summary, description } = await generateEventData(this.envelope.databaseId)
 				this.eventTitle = summary
 				this.description = description
+			} catch (error) {
+				logger.error('Could not generate event data', { error })
 			} finally {
 				this.generatingData = false
 			}
