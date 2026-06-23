@@ -35,13 +35,6 @@ use function json_decode;
 
 class AiIntegrationsService {
 
-	private const EVENT_DATA_PROMPT_PREAMBLE = <<<PROMPT
-I am scheduling an event based on an email thread and need an event title and agenda. Provide the result as JSON with keys for "title" and "agenda". For example ```{ "title": "Project kick-off meeting", "agenda": "* Introduction\\n* Project goals\\n* Next steps" }```.
-
-The email contents are:
-
-PROMPT;
-
 	public function __construct(
 		private LoggerInterface $logger,
 		private Cache $cache,
@@ -96,12 +89,7 @@ PROMPT;
 				}
 				// construct prompt and task
 				$messageBody = $message->getPlainBody();
-				$prompt = "You are tasked with formulating a helpful summary of a email message. \r\n"
-						  . 'The summary should be in the language of this language code ' . $language . ". \r\n"
-						  . "The summary should be less than 160 characters. \r\n"
-						  . "Output *ONLY* the summary itself, leave out any introduction. \r\n"
-						  . "Here is the ***E-MAIL*** for which you must generate a helpful summary: \r\n"
-						  . "***START_OF_E-MAIL***\r\n$messageBody\r\n***END_OF_E-MAIL***\r\n";
+				$prompt = sprintf(DefaultPrompts::SUMMARIZE_MESSAGE, $language, $messageBody);
 				$task = new TaskProcessingTask(
 					TextToText::ID,
 					[
@@ -162,7 +150,8 @@ PROMPT;
 				$threadId,
 			);
 			$this->taskProcessingManager->runTask($summaryTask);
-			$summary = $summaryTask->getOutput()['output'] ?? null;
+			$output = $summaryTask->getOutput()['output'] ?? null;
+			$summary = $output !== null ? (string)$output : null;
 
 			$this->cache->addValue($this->cache->buildUrlKey($messageIds), $summary);
 
@@ -197,13 +186,13 @@ PROMPT;
 
 		$task = new TaskProcessingTask(
 			TextToText::ID,
-			['input' => self::EVENT_DATA_PROMPT_PREAMBLE . implode("\n\n---\n\n", $messageBodies)],
+			['input' => DefaultPrompts::EVENT_DATA_PREAMBLE . implode("\n\n---\n\n", $messageBodies)],
 			Application::APP_ID,
 			$currentUserId,
 			"event_data_$threadId",
 		);
 		$this->taskProcessingManager->runTask($task);
-		$result = $task->getOutput()['output'] ?? '';
+		$result = (string)($task->getOutput()['output'] ?? '');
 		try {
 			$decoded = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
 			return new EventData($decoded['title'], $decoded['agenda']);
@@ -243,23 +232,10 @@ PROMPT;
 			} finally {
 				$client->logout();
 			}
-			$prompt = "You are tasked with formulating helpful replies or reply templates to e-mails provided that have been sent to me. If you don't know some relevant information for answering the e-mails (like my schedule) leave blanks in the text that can later be filled by me. You must write the replies from my point of view as replies to the original sender of the provided e-mail!
-
-			Formulate two extremely succinct reply suggestions to the provided ***E-MAIL***. Please, do not invent any context for the replies but, rather, leave blanks for me to fill in with relevant information where necessary. Provide the output formatted as valid JSON with the keys 'reply1' and 'reply2' for the reply suggestions.
-
-			Each suggestion must be of 25 characters or less.
-
-			Here is the ***E-MAIL*** for which you must suggest the replies to:
-
-			***START_OF_E-MAIL***" . $messageBody . "
-
-			***END_OF_E-MAIL***
-
-			Please, output *ONLY* a valid JSON string with the keys 'reply1' and 'reply2' for the reply suggestions. Leave out any other text besides the JSON! Be extremely succinct and write the replies from my point of view.
-			 ";
+			$prompt = sprintf(DefaultPrompts::SMART_REPLY, $messageBody);
 			$task = new TaskProcessingTask(TextToText::ID, ['input' => $prompt], Application::APP_ID, $currentUserId);
 			$this->taskProcessingManager->runTask($task);
-			$replies = $task->getOutput()['output'] ?? '';
+			$replies = (string)($task->getOutput()['output'] ?? '');
 			try {
 				$cleaned = preg_replace('/^```json\s*|\s*```$/', '', trim($replies));
 				$decoded = json_decode($cleaned, true, 512, JSON_THROW_ON_ERROR);
@@ -308,27 +284,13 @@ PROMPT;
 		$messageBody = $imapMessage->getPlainBody();
 		$messageBody = str_replace('"', '\"', $messageBody);
 
-		$prompt = "Consider the following TypeScript function prototype:
----
-/**
- * This function takes in an email text and returns a boolean indicating whether the email author expects a response.
- *
- * @param emailText - string with the email text
- * @returns boolean true if the email expects a reply, false if not
- */
-declare function doesEmailExpectReply(emailText: string): Promise<boolean>;
----
-Tell me what the function outputs for the following parameters.
-
-emailText: \"$messageBody\"
-The JSON output should be in the form: {\"expectsReply\": true}
-Never return null or undefined.";
+		$prompt = sprintf(DefaultPrompts::REQUIRES_FOLLOW_UP, $messageBody);
 		$task = new TaskProcessingTask(TextToText::ID, ['input' => $prompt], Application::APP_ID, $currentUserId);
 
 		$this->taskProcessingManager->runTask($task);
 
 		// Can't use json_decode() here because the output contains additional garbage
-		return preg_match('/{\s*"expectsReply"\s*:\s*true\s*}/i', $task->getOutput()['output'] ?? '') === 1;
+		return preg_match('/{\s*"expectsReply"\s*:\s*true\s*}/i', (string)($task->getOutput()['output'] ?? '')) === 1;
 	}
 
 	/**
@@ -374,28 +336,12 @@ Never return null or undefined.";
 		$messageBody = $imapMessage->getPlainBody();
 		$messageBody = str_replace('"', '\"', $messageBody);
 
-		$prompt = "Consider the following TypeScript function prototype:
----
-/**
- * This function takes in an email text and returns a boolean indicating whether the email needs translation from a specific language.
- *
- * @param emailText - string with the email text
- * @param language - the language code to check against (e.g., 'en', 'de', etc.)
- * @returns boolean true if the email is written in a different language than the one specified and needs translation, false if it is written in the specified language.
- * only return true if whole sentences are written in a different language, not just a word or two.
- */
-declare function isEmailWrittenInLanguage(emailText: string, language: string): Promise<boolean>;
----
-Tell me what the function outputs for the following parameters.
-
-emailText: \"$messageBody\"
-language: \"$language\"
-The JSON output should be in the form: {\"needsTranslation\": true}
-Never return null or undefined.";
+		$prompt = sprintf(DefaultPrompts::REQUIRES_TRANSLATION, $messageBody, $language);
 		$task = new TaskProcessingTask(TextToText::ID, ['input' => $prompt], Application::APP_ID, $currentUserId);
 
 		$this->taskProcessingManager->runTask($task);
 		$output = $task->getOutput()['output'] ?? null;
+		$output = $output !== null ? (string)$output : null;
 		if ($output === null) {
 			throw new ServiceException('Task output is null, possibly due to an error in the task processing', [
 				'messageId' => $message->getId(),
