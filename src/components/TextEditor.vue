@@ -581,6 +581,21 @@ export default {
 
 			if (this.html) {
 				this.addToFocusTrap('.ck-body-wrapper')
+
+				editor.keystrokes.set('Ctrl+Alt+1', (event, cancel) => {
+					editor.execute('heading', { value: 'heading1' })
+					cancel()
+				})
+
+				editor.keystrokes.set('Ctrl+Alt+2', (event, cancel) => {
+					editor.execute('heading', { value: 'heading2' })
+					cancel()
+				})
+
+				editor.keystrokes.set('Ctrl+Alt+3', (event, cancel) => {
+					editor.execute('heading', { value: 'heading3' })
+					cancel()
+				})
 			}
 
 			this.bus.on('append-to-body-at-cursor', this.appendToBodyAtCursor)
