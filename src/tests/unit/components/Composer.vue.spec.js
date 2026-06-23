@@ -432,4 +432,86 @@ describe('Composer', () => {
 			search: 'alice',
 		})).toEqual(true)
 	})
+
+	it('inserts the signature when composing a new message', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				isDraft: false,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			mocks: {
+				$route,
+			},
+			store,
+			localVue,
+		})
+		const insertSignature = vi.spyOn(view.vm, 'insertSignature').mockImplementation(() => {})
+
+		view.vm.onEditorReady({ getData: () => '' })
+
+		expect(insertSignature).toHaveBeenCalled()
+	})
+
+	it('does not insert the signature when opening a draft', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				isDraft: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			mocks: {
+				$route,
+			},
+			store,
+			localVue,
+		})
+		const insertSignature = vi.spyOn(view.vm, 'insertSignature').mockImplementation(() => {})
+
+		view.vm.onEditorReady({ getData: () => '' })
+
+		expect(insertSignature).not.toHaveBeenCalled()
+	})
+
+	it('inserts the signature on alias change even when opening a draft', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				isDraft: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			mocks: {
+				$route,
+			},
+			store,
+			localVue,
+		})
+		const insertSignature = vi.spyOn(view.vm, 'insertSignature').mockImplementation(() => {})
+		view.vm.changeSignature = true
+
+		view.vm.onEditorReady({ getData: () => '' })
+
+		expect(insertSignature).toHaveBeenCalled()
+	})
 })
