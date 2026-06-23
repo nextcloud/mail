@@ -30,13 +30,19 @@ class SvgSanitizer {
 		'set',
 	];
 
+	/** Attributes that carry URL references and must not point off-document. */
+	private const URL_ATTRIBUTES = ['href', 'xlink:href', 'src', 'action', 'formaction'];
+
+	/** Reject payloads larger than this to prevent DoS via oversized documents. */
+	private const MAX_SVG_BYTES = 2 * 1024 * 1024;
+
 	/**
 	 * @param string $svg The raw (decoded) SVG markup
 	 * @return string The sanitised markup, or an empty string if it cannot be
 	 *                parsed safely
 	 */
 	public function sanitize(string $svg): string {
-		if (trim($svg) === '') {
+		if (trim($svg) === '' || strlen($svg) > self::MAX_SVG_BYTES) {
 			return '';
 		}
 
@@ -70,6 +76,14 @@ class SvgSanitizer {
 			}
 		}
 
+		// Sanitise <style> element content: strip external CSS url() references.
+		$styleNodes = $xpath->query('//*[local-name() = "style"]');
+		if ($styleNodes !== false) {
+			foreach ($styleNodes as $node) {
+				$node->textContent = $this->stripCssUrls($node->textContent);
+			}
+		}
+
 		$elements = $xpath->query('//*');
 		if ($elements !== false) {
 			foreach ($elements as $element) {
@@ -81,6 +95,16 @@ class SvgSanitizer {
 
 		$result = $dom->saveXML($dom->documentElement);
 		return $result === false ? '' : $result;
+	}
+
+	/**
+	 * Heuristically decide whether the given bytes are an SVG document.
+	 */
+	public function looksLikeSvg(string $content): bool {
+		$start = ltrim($content);
+		$hasSvgPrologue = str_starts_with($start, '<?xml')
+			|| stripos($start, '<svg') === 0;
+		return $hasSvgPrologue && stripos($content, '<svg') !== false;
 	}
 
 	private function stripDangerousAttributes(DOMElement $element): void {
@@ -97,9 +121,23 @@ class SvgSanitizer {
 
 			// Only allow same-document references; strip javascript:, external
 			// and data: URLs from links and resource references.
-			if (in_array($name, ['href', 'xlink:href'], true) && !str_starts_with($value, '#')) {
+			if (in_array($name, self::URL_ATTRIBUTES, true) && !str_starts_with($value, '#')) {
 				$element->removeAttributeNode($attribute);
+				continue;
+			}
+
+			// Strip external CSS url() references from inline style attributes.
+			if ($name === 'style') {
+				$element->setAttribute('style', $this->stripCssUrls($value));
 			}
 		}
+	}
+
+	/**
+	 * Replace CSS url() references that point outside the document with 'none'.
+	 * Fragment references (url(#…)) are preserved for gradients and masks.
+	 */
+	private function stripCssUrls(string $css): string {
+		return preg_replace('/url\s*\((?!\s*[\'"]?#)[^)]*\)/i', 'none', $css) ?? $css;
 	}
 }

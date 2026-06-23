@@ -29,9 +29,6 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\LoggerInterface;
 use function file_get_contents;
 use function hash_equals;
-use function ltrim;
-use function stripos;
-use function str_starts_with;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ProxyController extends Controller {
@@ -126,22 +123,15 @@ class ProxyController extends Controller {
 		// Detect and sanitise SVG markup so external SVG logos are displayed
 		// instead of staying blank. Sanitising also strips any active content in
 		// case the response is fetched through a direct (non-<img>) navigation.
-		if ($this->looksLikeSvg($content)) {
-			$content = $this->svgSanitizer->sanitize($content);
-			return new ProxyDownloadResponse($content, $src, 'image/svg+xml');
+		if ($this->svgSanitizer->looksLikeSvg($content)) {
+			$sanitized = $this->svgSanitizer->sanitize($content);
+			if ($sanitized === '') {
+				$content = (string)file_get_contents(__DIR__ . '/../../img/blocked-image.png');
+				return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
+			}
+			return new ProxyDownloadResponse($sanitized, $src, 'image/svg+xml');
 		}
 
 		return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
-	}
-
-	/**
-	 * Heuristically decide whether the given bytes are an SVG document.
-	 */
-	private function looksLikeSvg(string $content): bool {
-		$start = ltrim($content);
-		$hasSvgPrologue = str_starts_with($start, '<?xml')
-			|| str_starts_with($start, '<!--')
-			|| stripos($start, '<svg') === 0;
-		return $hasSvgPrologue && stripos($content, '<svg') !== false;
 	}
 }

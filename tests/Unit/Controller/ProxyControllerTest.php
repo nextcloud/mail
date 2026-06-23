@@ -182,6 +182,10 @@ class ProxyControllerTest extends TestCase {
 			->method('getBody')
 			->willReturn($content);
 		$this->svgSanitizer->expects($this->once())
+			->method('looksLikeSvg')
+			->with($content)
+			->willReturn(true);
+		$this->svgSanitizer->expects($this->once())
 			->method('sanitize')
 			->with($content)
 			->willReturn($sanitized);
@@ -203,6 +207,62 @@ class ProxyControllerTest extends TestCase {
 		$this->assertInstanceOf(ProxyDownloadResponse::class, $response);
 		$this->assertSame('image/svg+xml', $response->getHeaders()['Content-Type']);
 		$this->assertSame($sanitized, $response->render());
+	}
+
+	public function testProxyServesBlockedImageWhenSvgSanitizerReturnsEmpty(): void {
+		$src = 'https://example.com/malicious.svg';
+		$id = 1;
+		$validHmac = 'valid-hmac-hash';
+		$content = '<svg xmlns="http://www.w3.org/2000/svg"><!DOCTYPE evil></svg>';
+		$httpResponse = $this->createMock(IResponse::class);
+		$this->request->expects(self::once())
+			->method('passesStrictCookieCheck')
+			->willReturn(true);
+		$this->session->expects($this->once())
+			->method('close');
+		$this->hmacGenerator->expects($this->once())
+			->method('generate')
+			->with($id, $src)
+			->willReturn($validHmac);
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, $id);
+		$client = $this->getMockBuilder(IClient::class)->getMock();
+		$this->clientService->expects($this->once())
+			->method('newClient')
+			->willReturn($client);
+		$client->expects($this->once())
+			->method('get')
+			->with($src)
+			->willReturn($httpResponse);
+		$httpResponse->expects($this->once())
+			->method('getBody')
+			->willReturn($content);
+		$this->svgSanitizer->expects($this->once())
+			->method('looksLikeSvg')
+			->with($content)
+			->willReturn(true);
+		$this->svgSanitizer->expects($this->once())
+			->method('sanitize')
+			->with($content)
+			->willReturn('');
+		$this->controller = new ProxyController(
+			$this->appName,
+			$this->request,
+			$this->urlGenerator,
+			$this->session,
+			$this->clientService,
+			$this->hmacGenerator,
+			$this->logger,
+			$this->mailManager,
+			$this->svgSanitizer,
+			$this->userId,
+		);
+
+		$response = $this->controller->proxy($src, $id, $validHmac);
+
+		$this->assertInstanceOf(ProxyDownloadResponse::class, $response);
+		$this->assertSame('application/octet-stream', $response->getHeaders()['Content-Type']);
 	}
 
 	public function testProxyWithInvalidHmac(): void {
