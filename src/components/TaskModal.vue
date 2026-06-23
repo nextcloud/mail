@@ -7,7 +7,8 @@
 		<div class="modal-content">
 			<h2>{{ t('mail', 'Create task') }}</h2>
 			<div class="taskTitle">
-				<input v-model="taskTitle" type="text">
+				<label for="taskTitle">{{ t('mail', 'Title') }}</label>
+				<input id="taskTitle" v-model="taskTitle" type="text">
 			</div>
 			<div class="all-day">
 				<DatetimePicker
