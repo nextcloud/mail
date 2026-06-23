@@ -277,6 +277,7 @@
 		<ComposerAttachments
 			v-model="attachments"
 			:bus="bus"
+			:account-id="selectedAlias.id"
 			:upload-size-limit="attachmentSizeLimit"
 			@upload="$emit('upload-attachment', $event, getMessageData())" />
 		<div class="composer-actions-right composer-actions">
