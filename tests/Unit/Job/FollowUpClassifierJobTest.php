@@ -18,6 +18,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\ThreadMapper;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -403,6 +404,56 @@ class FollowUpClassifierJobTest extends TestCase {
 			->method('createTag');
 		$this->mailManager->expects(self::never())
 			->method('tagMessage');
+
+		$this->job->run($argument);
+	}
+
+	public function testRunServiceFailure(): void {
+		$argument = [
+			'messageId' => '<message1@foo.bar>',
+			'mailboxId' => 200,
+			'userId' => 'user',
+		];
+		$mailbox = new Mailbox();
+		$mailbox->setId(200);
+		$mailbox->setAccountId(100);
+		$mailbox->setName('sent');
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(100);
+		$account = new Account($mailAccount);
+		$message = new Message();
+		$message->setMailboxId(200);
+		$message->setMessageId('<message1@foo.bar>');
+		$exception = new ServiceException('AI task processing failed');
+
+		$this->aiService->method('isLlmProcessingEnabled')->willReturn(true);
+		$this->mailManager
+			->method('getMailbox')
+			->with('user', 200)
+			->willReturn($mailbox);
+		$this->accountService
+			->method('find')
+			->with('user', 100)
+			->willReturn($account);
+		$this->mailManager
+			->method('getByMessageId')
+			->with($account, '<message1@foo.bar>')
+			->willReturn([$message]);
+		$this->threadMapper
+			->method('findNewerMessageIdsInThread')
+			->with(100, $message)
+			->willReturn([]);
+		$this->aiService
+			->expects(self::once())
+			->method('requiresFollowUp')
+			->with($account, $mailbox, $message, 'user')
+			->willThrowException($exception);
+		$this->logger
+			->expects(self::once())
+			->method('error')
+			->with('Failed to classify message for follow-up: AI task processing failed', ['exception' => $exception]);
+		$this->mailManager->expects(self::never())->method('createTag');
+		$this->mailManager->expects(self::never())->method('tagMessage');
 
 		$this->job->run($argument);
 	}
