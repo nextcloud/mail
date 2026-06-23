@@ -11,11 +11,11 @@ namespace OCA\Mail\Tests\Unit\Listener;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
-use OCA\Mail\Db\DelegationMapper;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Listener\UserDeletedListener;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\TextBlockService;
 use OCP\EventDispatcher\Event;
 use OCP\IUser;
@@ -27,7 +27,7 @@ class UserDeletedListenerTest extends TestCase {
 	private AccountService&MockObject $accountService;
 
 	private TextBlockService&MockObject $textBlockService;
-	private DelegationMapper&MockObject $delegationMapper;
+	private DelegationService&MockObject $delegationService;
 	private LoggerInterface&MockObject $logger;
 	private UserDeletedListener $listener;
 
@@ -37,12 +37,12 @@ class UserDeletedListenerTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->textBlockService = $this->createMock(TextBlockService::class);
-		$this->delegationMapper = $this->createMock(DelegationMapper::class);
+		$this->delegationService = $this->createMock(DelegationService::class);
 
 		$this->listener = new UserDeletedListener(
 			$this->accountService,
 			$this->textBlockService,
-			$this->delegationMapper,
+			$this->delegationService,
 			$this->logger
 		);
 	}
@@ -72,7 +72,7 @@ class UserDeletedListenerTest extends TestCase {
 		$this->textBlockService->expects($this->never())
 			->method('deleteByUserId');
 
-		$this->delegationMapper->expects($this->never())
+		$this->delegationService->expects($this->never())
 			->method('deleteByUserId');
 
 		$this->listener->handle($event);
@@ -99,7 +99,7 @@ class UserDeletedListenerTest extends TestCase {
 			->method('deleteByUserId')
 			->with('test-user');
 
-		$this->delegationMapper->expects($this->once())
+		$this->delegationService->expects($this->once())
 			->method('deleteByUserId')
 			->with('test-user');
 
@@ -127,7 +127,7 @@ class UserDeletedListenerTest extends TestCase {
 			->method('deleteByUserId')
 			->with('test-user');
 
-		$this->delegationMapper->expects($this->once())
+		$this->delegationService->expects($this->once())
 			->method('deleteByUserId')
 			->with('test-user');
 
@@ -160,7 +160,7 @@ class UserDeletedListenerTest extends TestCase {
 			->method('deleteByUserId')
 			->with('test-user');
 
-		$this->delegationMapper->expects($this->once())
+		$this->delegationService->expects($this->once())
 			->method('deleteByUserId')
 			->with('test-user');
 
@@ -195,7 +195,7 @@ class UserDeletedListenerTest extends TestCase {
 			->method('deleteByUserId')
 			->with('test-user');
 
-		$this->delegationMapper->expects($this->once())
+		$this->delegationService->expects($this->once())
 			->method('deleteByUserId')
 			->with('test-user');
 
@@ -236,7 +236,7 @@ class UserDeletedListenerTest extends TestCase {
 			->method('deleteByUserId')
 			->with('test-user');
 
-		$this->delegationMapper->expects($this->once())
+		$this->delegationService->expects($this->once())
 			->method('deleteByUserId')
 			->with('test-user');
 
