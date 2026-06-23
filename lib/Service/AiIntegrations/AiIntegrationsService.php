@@ -26,15 +26,11 @@ use OCP\L10N\IFactory;
 use OCP\TaskProcessing\IManager as TaskProcessingManager;
 use OCP\TaskProcessing\Task as TaskProcessingTask;
 use OCP\TaskProcessing\TaskTypes\TextToText;
-use OCP\TextProcessing\FreePromptTaskType;
-use OCP\TextProcessing\IManager as TextProcessingManager;
-use OCP\TextProcessing\SummaryTaskType;
-use OCP\TextProcessing\Task as TextProcessingTask;
+use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
 use Psr\Log\LoggerInterface;
 
 use function array_map;
 use function implode;
-use function in_array;
 use function json_decode;
 
 class AiIntegrationsService {
@@ -52,7 +48,6 @@ PROMPT;
 		private IMAPClientFactory $clientFactory,
 		private IMailManager $mailManager,
 		private TaskProcessingManager $taskProcessingManager,
-		private TextProcessingManager $textProcessingManager,
 		private IL10N $l,
 		private IFactory $l10nFactory,
 		private IUserManager $userManager,
@@ -135,7 +130,7 @@ PROMPT;
 	 * @throws ServiceException
 	 */
 	public function summarizeThread(Account $account, string $threadId, array $messages, string $currentUserId): ?string {
-		if (in_array(SummaryTaskType::class, $this->textProcessingManager->getAvailableTaskTypes(), true)) {
+		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToTextSummary::ID])) {
 			$messageIds = array_map(fn ($message) => $message->getMessageId(), $messages);
 			$cachedSummary = $this->cache->getValue($this->cache->buildUrlKey($messageIds));
 			if ($cachedSummary) {
@@ -159,9 +154,15 @@ PROMPT;
 			}
 
 			$taskPrompt = implode("\n", $messagesBodies);
-			$summaryTask = new TextProcessingTask(SummaryTaskType::class, $taskPrompt, 'mail', $currentUserId, $threadId);
-			$this->textProcessingManager->runTask($summaryTask);
-			$summary = $summaryTask->getOutput();
+			$summaryTask = new TaskProcessingTask(
+				TextToTextSummary::ID,
+				['input' => $taskPrompt],
+				Application::APP_ID,
+				$currentUserId,
+				$threadId,
+			);
+			$this->taskProcessingManager->runTask($summaryTask);
+			$summary = $summaryTask->getOutput()['output'] ?? null;
 
 			$this->cache->addValue($this->cache->buildUrlKey($messageIds), $summary);
 
@@ -175,7 +176,7 @@ PROMPT;
 	 * @param Message[] $messages
 	 */
 	public function generateEventData(Account $account, string $threadId, array $messages, string $currentUserId): ?EventData {
-		if (!in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes(), true)) {
+		if (!isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToText::ID])) {
 			return null;
 		}
 		$client = $this->clientFactory->getClient($account);
@@ -194,14 +195,15 @@ PROMPT;
 			$client->logout();
 		}
 
-		$task = new TextProcessingTask(
-			FreePromptTaskType::class,
-			self::EVENT_DATA_PROMPT_PREAMBLE . implode("\n\n---\n\n", $messageBodies),
-			'mail',
+		$task = new TaskProcessingTask(
+			TextToText::ID,
+			['input' => self::EVENT_DATA_PROMPT_PREAMBLE . implode("\n\n---\n\n", $messageBodies)],
+			Application::APP_ID,
 			$currentUserId,
 			"event_data_$threadId",
 		);
-		$result = $this->textProcessingManager->runTask($task);
+		$this->taskProcessingManager->runTask($task);
+		$result = $task->getOutput()['output'] ?? '';
 		try {
 			$decoded = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
 			return new EventData($decoded['title'], $decoded['agenda']);
@@ -215,7 +217,7 @@ PROMPT;
 	 * @throws ServiceException
 	 */
 	public function getSmartReply(Account $account, Mailbox $mailbox, Message $message, string $currentUserId): ?array {
-		if (in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes(), true)) {
+		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToText::ID])) {
 			$cachedReplies = $this->cache->getValue("smartReplies_{$message->getId()}");
 			if ($cachedReplies) {
 				try {
@@ -255,9 +257,9 @@ PROMPT;
 
 			Please, output *ONLY* a valid JSON string with the keys 'reply1' and 'reply2' for the reply suggestions. Leave out any other text besides the JSON! Be extremely succinct and write the replies from my point of view.
 			 ";
-			$task = new TextProcessingTask(FreePromptTaskType::class, $prompt, 'mail,', $currentUserId);
-			$this->textProcessingManager->runTask($task);
-			$replies = $task->getOutput();
+			$task = new TaskProcessingTask(TextToText::ID, ['input' => $prompt], Application::APP_ID, $currentUserId);
+			$this->taskProcessingManager->runTask($task);
+			$replies = $task->getOutput()['output'] ?? '';
 			try {
 				$cleaned = preg_replace('/^```json\s*|\s*```$/', '', trim($replies));
 				$decoded = json_decode($cleaned, true, 512, JSON_THROW_ON_ERROR);
@@ -282,7 +284,7 @@ PROMPT;
 		Message $message,
 		string $currentUserId,
 	): bool {
-		if (!in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes(), true)) {
+		if (!isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToText::ID])) {
 			throw new ServiceException('No language model available for smart replies');
 		}
 
@@ -321,12 +323,12 @@ Tell me what the function outputs for the following parameters.
 emailText: \"$messageBody\"
 The JSON output should be in the form: {\"expectsReply\": true}
 Never return null or undefined.";
-		$task = new TextProcessingTask(FreePromptTaskType::class, $prompt, Application::APP_ID, $currentUserId);
+		$task = new TaskProcessingTask(TextToText::ID, ['input' => $prompt], Application::APP_ID, $currentUserId);
 
-		$this->textProcessingManager->runTask($task);
+		$this->taskProcessingManager->runTask($task);
 
 		// Can't use json_decode() here because the output contains additional garbage
-		return preg_match('/{\s*"expectsReply"\s*:\s*true\s*}/i', $task->getOutput()) === 1;
+		return preg_match('/{\s*"expectsReply"\s*:\s*true\s*}/i', $task->getOutput()['output'] ?? '') === 1;
 	}
 
 	/**
@@ -340,7 +342,7 @@ Never return null or undefined.";
 		Message $message,
 		string $currentUserId,
 	): ?bool {
-		if (!in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes(), true)) {
+		if (!isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToText::ID])) {
 			$this->logger->info('No language model available for checking translation needs');
 			return null;
 		}
@@ -390,10 +392,10 @@ emailText: \"$messageBody\"
 language: \"$language\"
 The JSON output should be in the form: {\"needsTranslation\": true}
 Never return null or undefined.";
-		$task = new TextProcessingTask(FreePromptTaskType::class, $prompt, Application::APP_ID, $currentUserId);
+		$task = new TaskProcessingTask(TextToText::ID, ['input' => $prompt], Application::APP_ID, $currentUserId);
 
-		$this->textProcessingManager->runTask($task);
-		$output = $task->getOutput();
+		$this->taskProcessingManager->runTask($task);
+		$output = $task->getOutput()['output'] ?? null;
 		if ($output === null) {
 			throw new ServiceException('Task output is null, possibly due to an error in the task processing', [
 				'messageId' => $message->getId(),
@@ -408,7 +410,7 @@ Never return null or undefined.";
 	}
 
 	public function isLlmAvailable(string $taskType): bool {
-		return in_array($taskType, $this->textProcessingManager->getAvailableTaskTypes(), true);
+		return array_key_exists($taskType, $this->taskProcessingManager->getAvailableTaskTypes());
 	}
 
 	public function isTaskAvailable(string $taskName): bool {
