@@ -705,6 +705,11 @@ export default {
 			required: true,
 		},
 
+		isDraft: {
+			type: Boolean,
+			default: false,
+		},
+
 		requestMdn: {
 			type: Boolean,
 			default: false,
@@ -1329,7 +1334,12 @@ export default {
 
 		onEditorReady(editor) {
 			this.bodyVal = editor.getData()
-			this.insertSignature()
+
+			// Only append signature on opening drafts if alias changed.
+			// Otherwise leads to unwanted or even duplicate signatures.
+			if (!this.isDraft || this.changeSignature) {
+				this.insertSignature()
+			}
 			if (this.smartReply) {
 				this.bus.emit('append-to-body-at-cursor', this.smartReply)
 			}
