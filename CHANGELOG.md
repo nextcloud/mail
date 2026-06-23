@@ -1,3 +1,19 @@
+## [5.10.2](https://github.com/nextcloud/mail/compare/v5.10.1...v5.10.2) (2026-06-23)
+
+
+### Bug Fixes
+
+* **a11y:** add missing ARIA labels to form inputs and buttons ([8adbda4](https://github.com/nextcloud/mail/commit/8adbda4f1695c3d50d9ae54d33e0494c772fc88c))
+* **deps:** bump dompurify from ^3.4.8 to v3.4.11 ([6108959](https://github.com/nextcloud/mail/commit/6108959d6388f62d993c200103b8c81c609d02ab))
+* **deps:** Fix npm audit ([6cf41c0](https://github.com/nextcloud/mail/commit/6cf41c02f783698855132f247786283279c4c2fd))
+* **l10n:** Update translations from Transifex ([0ce1ab9](https://github.com/nextcloud/mail/commit/0ce1ab97f944fd4c6535af0867225339d80b159a))
+* **l10n:** Update translations from Transifex ([4328b25](https://github.com/nextcloud/mail/commit/4328b25153baeb4b9e02df43e809a4569b46263f))
+* **l10n:** Update translations from Transifex ([a5bc9fd](https://github.com/nextcloud/mail/commit/a5bc9fda6fa9ee49844cb747de2885834c4c5c47))
+* Omit fileid for attachments ([f561ea0](https://github.com/nextcloud/mail/commit/f561ea045589c40ce9315cae79d237e03dc9f2d6))
+* **outbox:** reset status and failure flag on message update ([6e3c00b](https://github.com/nextcloud/mail/commit/6e3c00b5e16c3cd1966eb53223246e4a4ce0faad))
+
+
+
 ## [5.10.1](https://github.com/nextcloud/mail/compare/v5.10.0...v5.10.1) (2026-06-19)
 
 
