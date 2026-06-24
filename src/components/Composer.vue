@@ -99,7 +99,7 @@
 				</NcSelect>
 			</div>
 			<div v-if="displayMissingToWarning">
-				<p class="to-warning">{{ t('mail', 'The email has no visible ‘To’ recipients. Some mail providers may reject this message') }}</p>
+				<p class="composer-fields__helper-text">{{ t('mail', 'The email has no visible ‘To’ recipients. Some mail providers may reject this message') }}</p>
 			</div>
 		</div>
 		<div v-if="showCC" class="composer-fields">
@@ -778,7 +778,6 @@ export default {
 			isTextBlockPickerOpen: false,
 			recipientSearchTerms: {},
 			smimeSignAliases: [],
-			displayMissingToWarning: false
 		}
 	},
 
@@ -999,6 +998,10 @@ export default {
 		textBlocks() {
 			return this.mainStore.getSharedTextBlocks()?.map((textBlock) => ({ title: textBlock.title, content: textBlock.content }))
 				.concat(this.mainStore.getMyTextBlocks().map((textBlock) => ({ title: textBlock.title, content: textBlock.content })))
+		},
+
+		displayMissingToWarning() {
+			return this.selectTo.length === 0
 		},
 	},
 
@@ -1545,10 +1548,6 @@ export default {
 
 		async onSend() {
 
-			if (this.selectTo.length === 0) {
-				this.displayMissingToWarning = true
-			}
-
 			if (this.encrypt) {
 				logger.debug('get encrypted message from mailvelope')
 				await this.$refs.mailvelopeEditor.pull()
@@ -1846,6 +1845,12 @@ export default {
 		-webkit-user-select: text;
 		user-select: text;
 	}
+
+	&__helper-text {
+		margin-top: 2px;
+		margin-bottom: 2px;
+		color: var(--color-text-error);
+	}
 }
 
 // Make composer editor expand
@@ -1977,12 +1982,6 @@ export default {
 
 .composer-actions-draft-status {
 	padding-inline-start: 10px;
-}
-
-.to-warning {
-	margin-top: 2px;
-	margin-bottom: 2px;
-	color: var(--color-text-error);
 }
 
 :deep(.vs__selected-options .vs__dropdown-toggle .vs--multiple ){
