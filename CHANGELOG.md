@@ -1,3 +1,12 @@
+## [5.10.3](https://github.com/nextcloud/mail/compare/v5.10.2...v5.10.3) (2026-06-24)
+
+
+### Bug Fixes
+
+* **l10n:** Update translations from Transifex ([3095472](https://github.com/nextcloud/mail/commit/3095472677c73d7d7dae43da333cadf94cf697da))
+
+
+
 ## [5.10.2](https://github.com/nextcloud/mail/compare/v5.10.1...v5.10.2) (2026-06-23)
 
 
