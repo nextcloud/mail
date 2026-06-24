@@ -234,10 +234,15 @@ class AiIntegrationsService {
 			}
 			$prompt = sprintf(DefaultPrompts::SMART_REPLY, $messageBody);
 			$task = new TaskProcessingTask(TextToText::ID, ['input' => $prompt], Application::APP_ID, $currentUserId);
-			$this->taskProcessingManager->runTask($task);
-			$replies = (string)($task->getOutput()['output'] ?? '');
+			$task = $this->taskProcessingManager->runTask($task);
+			$replies = trim((string)($task->getOutput()['output'] ?? ''));
+			if ($replies === '') {
+				// The task can fail or return nothing (e.g. provider timeout); treat as no replies
+				$this->logger->warning('Smart reply task returned no output', ['status' => $task->getStatus(), 'errorMessage' => $task->getErrorMessage()]);
+				return [];
+			}
 			try {
-				$cleaned = preg_replace('/^```json\s*|\s*```$/', '', trim($replies));
+				$cleaned = preg_replace('/^```json\s*|\s*```$/', '', $replies);
 				$decoded = json_decode($cleaned, true, 512, JSON_THROW_ON_ERROR);
 				$this->cache->addValue("smartReplies_{$message->getId()}", $replies);
 				return $decoded;
@@ -339,15 +344,13 @@ class AiIntegrationsService {
 		$prompt = sprintf(DefaultPrompts::REQUIRES_TRANSLATION, $messageBody, $language);
 		$task = new TaskProcessingTask(TextToText::ID, ['input' => $prompt], Application::APP_ID, $currentUserId);
 
-		$this->taskProcessingManager->runTask($task);
+		$task = $this->taskProcessingManager->runTask($task);
 		$output = $task->getOutput()['output'] ?? null;
 		$output = $output !== null ? (string)$output : null;
 		if ($output === null) {
-			throw new ServiceException('Task output is null, possibly due to an error in the task processing', [
-				'messageId' => $message->getId(),
-				'language' => $language,
-				'output' => $output,
-			]);
+			// The task can fail or return nothing (e.g. provider timeout); can't determine, don't cache
+			$this->logger->warning('Translation check task returned no output', ['status' => $task->getStatus(), 'errorMessage' => $task->getErrorMessage()]);
+			return null;
 		}
 		// Can't use json_decode() here because the output contains additional garbage
 		$result = preg_match('/{\s*"needsTranslation"\s*:\s*true\s*}/i', $output) === 1;
