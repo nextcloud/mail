@@ -98,6 +98,9 @@
 					</template>
 				</NcSelect>
 			</div>
+			<div v-if="displayMissingToWarning">
+				<p class="to-warning">{{ t('mail', 'The email has no visible ‘To’ recipients. Some mail providers may reject this message') }}</p>
+			</div>
 		</div>
 		<div v-if="showCC" class="composer-fields">
 			<label for="cc" class="cc-label">
@@ -775,6 +778,7 @@ export default {
 			isTextBlockPickerOpen: false,
 			recipientSearchTerms: {},
 			smimeSignAliases: [],
+			displayMissingToWarning: false
 		}
 	},
 
@@ -1024,6 +1028,7 @@ export default {
 		},
 
 		selectTo(val) {
+			this.displayMissingToWarning = false
 			this.$emit('update:to', val)
 		},
 
@@ -1541,7 +1546,7 @@ export default {
 		async onSend() {
 
 			if (this.selectTo.length === 0) {
-				showWarning(t('mail', 'The email has no visible ‘To’ recipients. Some mail providers may reject this message.'))
+				this.displayMissingToWarning = true
 			}
 
 			if (this.encrypt) {
@@ -1972,6 +1977,12 @@ export default {
 
 .composer-actions-draft-status {
 	padding-inline-start: 10px;
+}
+
+.to-warning {
+	margin-top: 2px;
+	margin-bottom: 2px;
+	color: var(--color-text-error);
 }
 
 :deep(.vs__selected-options .vs__dropdown-toggle .vs--multiple ){
