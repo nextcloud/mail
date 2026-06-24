@@ -61,6 +61,7 @@ OC.L10N.register(
     "Back" : "უკან",
     "Mark as unread" : "წაუკითხავად მონიშვნა",
     "Mark as read" : "წაკითხულად მონიშვნა",
+    "Title" : "სათაური",
     "All day" : "მთელი დღე",
     "Attendees" : "დამსწრეები",
     "Description" : "აღწერილობა",

@@ -62,6 +62,7 @@ OC.L10N.register(
     "Back" : "Prapa",
     "Mark as unread" : "Shënoje si të palexuar",
     "Mark as read" : "Shënoje si të lexuar",
+    "Title" : "Titulli",
     "All day" : "Gjithë ditën",
     "Attendees" : "Pjesëmarrës",
     "Description" : "Përshkrim",

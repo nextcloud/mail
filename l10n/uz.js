@@ -36,6 +36,7 @@ OC.L10N.register(
     "More actions" : "Ko'proq harakatlar",
     "Back" : "Orqaga",
     "Create event" : "Tadbir yaratish",
+    "Title" : "Sarlavha",
     "All day" : "Butun kun",
     "Attendees" : "Ishtirokchilar",
     "Description" : "Tavsif",

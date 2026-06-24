@@ -60,6 +60,7 @@ OC.L10N.register(
     "Edit tags" : "Editar etiquetas",
     "More actions" : "Más acciones",
     "Back" : "Atrás",
+    "Title" : "Título",
     "All day" : "Todo el día",
     "Attendees" : "Asistentes",
     "Description" : "Descripción",
