@@ -274,6 +274,7 @@ OC.L10N.register(
     "Event created" : "تمّ إنشاء الحدث",
     "Could not create event" : "تعذّر إنشاء الحدث",
     "Create event" : "إنشاء حَدَثٍ event",
+    "Title" : "العنوان",
     "All day" : "طِوَال اليوم",
     "Attendees" : "المشاركون",
     "Select calendar" : "إختر التقويم",
