@@ -853,12 +853,22 @@ export default {
 					clearTimeout(loadingTimeout)
 				}
 
-				if (!this.envelope.flags.seen && this.hasSeenAcl) {
-					logger.info('Starting timer to mark message as seen/read')
-					this.seenTimer = setTimeout(() => {
+				const autoMarkReadSetting = this.mainStore.getPreference('auto-mark-as-read', '3000')
+				const delay = parseInt(autoMarkReadSetting, 10)
+
+				if (!this.envelope.flags.seen && this.hasSeenAcl && delay >= 0) {
+					if (delay === 0) {
+						logger.info('Marking message as seen/read immediately')
 						this.mainStore.toggleEnvelopeSeen({ envelope: this.envelope })
-						this.seenTimer = undefined
-					}, 2000)
+					} else {
+						logger.info(`Starting timer (${delay}ms) to mark message as seen/read`)
+						this.seenTimer = setTimeout(() => {
+							if (!this.envelope.flags.seen) {
+								this.mainStore.toggleEnvelopeSeen({ envelope: this.envelope })
+							}
+							this.seenTimer = undefined
+						}, delay)
+					}
 				}
 
 				if (this.message.hasHtmlBody) {

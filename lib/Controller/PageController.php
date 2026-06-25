@@ -240,6 +240,7 @@ class PageController extends Controller {
 			'sort-favorites' => $this->preferences->getPreference($this->userId, 'sort-favorites', 'false'),
 			'index-context-chat' => $this->contextChatSettingsService->isIndexingEnabled($this->userId) ? 'true' : 'false',
 			'compact-mode' => $this->preferences->getPreference($this->userId, 'compact-mode', 'false'),
+			'auto-mark-as-read' => $this->preferences->getPreference($this->userId, 'auto-mark-as-read', '3000'),
 		]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',
