@@ -187,4 +187,29 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 		$this->assertTrue($message->isSigned());
 		$this->assertTrue($message->isSignatureValid());
 	}
+
+	/**
+	 * Proton Mail Bridge strips the `method=` parameter from the
+	 * text/calendar Content-Type during E2E re-assembly. The fetcher must
+	 * fall back to parsing the METHOD: line out of the ICS body, and
+	 * still emit a scheduling entry so downstream rendering picks it up.
+	 */
+	public function testFetchMessageWithImipRequestMissingMethodParam(): void {
+		$rawMessage = file_get_contents(__DIR__ . '/../../data/imip/request_proton_bridge.txt');
+		$uid = $this->saveMimeMessage('INBOX', $rawMessage);
+		$fetcher = $this->fetcherFactory
+			->build(
+				$uid,
+				'INBOX',
+				$this->getTestClient(),
+				$this->account->getUserId()
+			)
+			->withBody(true);
+
+		$message = $fetcher->fetchMessage();
+
+		$this->assertCount(1, $message->scheduling);
+		$this->assertSame('REQUEST', $message->scheduling[0]['method']);
+		$this->assertStringContainsString('METHOD:REQUEST', $message->scheduling[0]['contents']);
+	}
 }

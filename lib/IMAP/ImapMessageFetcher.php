@@ -325,18 +325,29 @@ class ImapMessageFetcher {
 				];
 			}
 
-			// return if this is an event attachment only
-			// the method parameter determines if this is a iMIP message
-			if (!isset($allContentTypeParameters['method'])) {
+			// Try the Content-Type method= parameter first — that's the common
+			// case. If it is missing, fall back to the METHOD: line inside
+			// the ICS body: Proton Mail Bridge strips the parameter during
+			// E2E re-assembly, and requiring it here would mean every
+			// Proton-Bridge user silently loses inbound invitations.
+			$method = $allContentTypeParameters['method'] ?? null;
+			$contents = null;
+			if ($method === null) {
+				$contents = $this->loadBodyData($p, $partNo, $isFetched);
+				if (preg_match('/^METHOD:([A-Z]+)/mi', $contents, $m) === 1) {
+					$method = $m[1];
+				}
+			}
+			if ($method === null) {
 				return;
 			}
 
-			if (in_array(strtoupper($allContentTypeParameters['method']), ['REQUEST', 'REPLY', 'CANCEL'])) {
+			if (in_array(strtoupper($method), ['REQUEST', 'REPLY', 'CANCEL'])) {
 				$this->scheduling[] = [
 					'id' => $p->getMimeId(),
 					'messageId' => $this->uid,
-					'method' => strtoupper($allContentTypeParameters['method']),
-					'contents' => $this->loadBodyData($p, $partNo, $isFetched),
+					'method' => strtoupper($method),
+					'contents' => $contents ?? $this->loadBodyData($p, $partNo, $isFetched),
 				];
 				return;
 			}
