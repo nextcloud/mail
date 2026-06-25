@@ -98,6 +98,10 @@ export default function initAfterAppCreation() {
 		key: 'compact-mode',
 		value: preferences['compact-mode'],
 	})
+	mainStore.savePreferenceMutation({
+		key: 'auto-mark-as-read',
+		value: preferences['auto-mark-as-read'],
+	})
 
 	mainStore.setQuickActions(loadState('mail', 'quick-actions', []))
 

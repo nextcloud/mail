@@ -845,7 +845,8 @@ export default {
 					clearTimeout(loadingTimeout)
 				}
 
-				if (!this.envelope.flags.seen && this.hasSeenAcl) {
+				const autoMarkAsRead = this.mainStore.getPreference('auto-mark-as-read', 'true') === 'true'
+				if (autoMarkAsRead && !this.envelope.flags.seen && this.hasSeenAcl) {
 					logger.info('Starting timer to mark message as seen/read')
 					this.seenTimer = setTimeout(() => {
 						this.mainStore.toggleEnvelopeSeen({ envelope: this.envelope })
