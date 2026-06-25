@@ -168,7 +168,7 @@
 import { showError } from '@nextcloud/dialogs'
 import { NcActionButton as ActionButton, NcActions as Actions, NcButton, NcDialog } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
-import { differenceWith } from 'ramda'
+
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import IconSelect from 'vue-material-design-icons/CloseThick.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
@@ -266,11 +266,20 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+
+		selection: {
+			type: Array,
+			default: () => [],
+		},
+
+		flatIndex: {
+			type: Number,
+			default: 0,
+		},
 	},
 
 	data() {
 		return {
-			selection: [],
 			showMoveModal: false,
 			showTagModal: false,
 			lastToggledIndex: undefined,
@@ -362,14 +371,32 @@ export default {
 	},
 
 	watch: {
-		sortedEnvelops(newVal, oldVal) {
-			// Unselect vanished envelopes
-			const newIds = newVal.map((env) => env.databaseId)
-			this.selection = this.selection.filter((id) => newIds.includes(id))
-			differenceWith((a, b) => a.databaseId === b.databaseId, oldVal, newVal)
-				.forEach((env) => {
-					env.flags.selected = false
+		selection: {
+			handler(newSelection) {
+				if (this._localToggleInProgress) {
+					return
+				}
+				// Sync flags.selected when the selection changes from outside this
+				// instance (e.g. shift-click across groups, Select All / Unselect All).
+				const selectionSet = new Set(newSelection)
+				this.sortedEnvelops.forEach((env) => {
+					env.flags.selected = selectionSet.has(env.databaseId)
 				})
+			},
+			immediate: true,
+		},
+
+		sortedEnvelops(newVal, oldVal) {
+			// Skip if a local toggle is in progress to avoid race conditions
+			if (this._localToggleInProgress) {
+				return
+			}
+			// Unselect vanished envelopes by emitting cleaned selection
+			const newIds = new Set(newVal.map((env) => env.databaseId))
+			const cleanedSelection = this.selection.filter((id) => newIds.has(id))
+			if (cleanedSelection.length !== this.selection.length) {
+				this.$emit('update:selection', cleanedSelection, this.envelopes)
+			}
 		},
 	},
 
@@ -534,20 +561,24 @@ export default {
 			this.unselectAll()
 		},
 
-		setEnvelopeSelected(envelope, selected) {
-			const alreadySelected = this.selection.includes(envelope.databaseId)
-			if (selected && !alreadySelected) {
-				envelope.flags.selected = true
-				this.selection.push(envelope.databaseId)
-			} else if (!selected && alreadySelected) {
-				envelope.flags.selected = false
-				this.selection.splice(this.selection.indexOf(envelope.databaseId), 1)
-			}
-		},
-
 		onEnvelopeSelectToggle(envelope, index, selected) {
 			this.lastToggledIndex = index
-			this.setEnvelopeSelected(envelope, selected)
+			this._localToggleInProgress = true
+			// Compute new local selection from the authoritative prop, applying this
+			// single toggle. flags.selected is unreliable here: the selection watcher
+			// may have been skipped (while _localToggleInProgress was true) leaving
+			// flags stale, and Pinia store updates can replace the flags object
+			// entirely, wiping selected=true during a background sync.
+			const myIds = new Set(this.sortedEnvelops.map((e) => e.databaseId))
+			const currentLocal = this.selection.filter((id) => myIds.has(id))
+			const newLocal = selected
+				? [...new Set([...currentLocal, envelope.databaseId])]
+				: currentLocal.filter((id) => id !== envelope.databaseId)
+			this.$emit('update:selection', newLocal, this.envelopes)
+			// Reset after next tick — Vue batches watchers at end of tick
+			this.$nextTick(() => {
+				this._localToggleInProgress = false
+			})
 		},
 
 		onEnvelopeSelectMultiple(envelope, index) {
@@ -558,12 +589,12 @@ export default {
 				return
 			}
 
-			const start = Math.min(lastToggledIndex, index)
-			const end = Math.max(lastToggledIndex, index)
-			const selected = this.selection.includes(envelope.databaseId)
-			for (let i = start; i <= end; i++) {
-				this.setEnvelopeSelected(this.sortedEnvelops[i], !selected)
-			}
+			// Convert to global flat indices and delegate to the parent
+			const globalFrom = this.flatIndex + lastToggledIndex
+			const globalTo = this.flatIndex + index
+			// If the clicked envelope is already selected, deselect the range
+			const deselect = this.selection.includes(envelope.databaseId)
+			this.$emit('select-range', globalFrom, globalTo, deselect)
 			this.lastToggledIndex = index
 		},
 
@@ -571,7 +602,7 @@ export default {
 			this.sortedEnvelops.forEach((env) => {
 				env.flags.selected = false
 			})
-			this.selection = []
+			this.$emit('update:selection', [], this.envelopes)
 		},
 
 		onOpenMoveModal() {
