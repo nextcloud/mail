@@ -115,6 +115,7 @@ OC.L10N.register(
     "Event created" : "Creóse l'eventu",
     "Could not create event" : "Nun se pudo crear l'eventu",
     "Create event" : "Crear un eventu",
+    "Title" : "Títulu",
     "All day" : "Tol día",
     "Attendees" : "Asistentes",
     "Description" : "Descripción",

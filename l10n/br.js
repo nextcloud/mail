@@ -33,6 +33,7 @@ OC.L10N.register(
     "Unfavorite" : "Digaretañ",
     "Favorite" : "Pennrollañ",
     "Back" : "Distro",
+    "Title" : "Titl",
     "Description" : "Deskrivadur",
     "Create" : "Krouiñ",
     "Select" : "Dibab",

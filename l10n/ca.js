@@ -274,6 +274,7 @@ OC.L10N.register(
     "Event created" : "Esdeveniment creat",
     "Could not create event" : "No s’ha pogut crear l'esdeveniment",
     "Create event" : "Crea un esdeveniment",
+    "Title" : "Títol",
     "All day" : "Tot el dia",
     "Attendees" : "Assistents",
     "Select calendar" : "Selecció d'un calendari",
