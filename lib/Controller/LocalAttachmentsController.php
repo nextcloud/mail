@@ -21,20 +21,19 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class LocalAttachmentsController extends Controller {
-	private IAttachmentService $attachmentService;
-	private string $userId;
-
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
 	 * @param IAttachmentService $attachmentService
 	 * @param string $UserId
 	 */
-	public function __construct(string $appName, IRequest $request,
-		IAttachmentService $attachmentService, $userId) {
+	public function __construct(
+		string $appName,
+		IRequest $request,
+		private IAttachmentService $attachmentService,
+		private string $userId,
+	) {
 		parent::__construct($appName, $request);
-		$this->attachmentService = $attachmentService;
-		$this->userId = $userId;
 	}
 
 	/**

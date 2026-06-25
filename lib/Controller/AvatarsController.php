@@ -21,17 +21,13 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AvatarsController extends Controller {
-	private IAvatarService $avatarService;
-	private string $uid;
-
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		IAvatarService $avatarService,
-		string $userId) {
+		private IAvatarService $avatarService,
+		private string $userId,
+	) {
 		parent::__construct($appName, $request);
-
-		$this->avatarService = $avatarService;
-		$this->uid = $userId;
 	}
 
 	/**
@@ -51,7 +47,7 @@ class AvatarsController extends Controller {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		}
 
-		$avatar = $this->avatarService->getAvatar($email, $this->uid);
+		$avatar = $this->avatarService->getAvatar($email, $this->userId);
 		if (is_null($avatar)) {
 			// No avatar found
 			$response = new JSONResponse([], Http::STATUS_NO_CONTENT);
@@ -84,7 +80,7 @@ class AvatarsController extends Controller {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		}
 
-		$imageData = $this->avatarService->getAvatarImage($email, $this->uid);
+		$imageData = $this->avatarService->getAvatarImage($email, $this->userId);
 
 		if ($imageData === null) {
 			return $this->noAvatarFoundResponse();

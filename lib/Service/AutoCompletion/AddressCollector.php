@@ -21,16 +21,10 @@ use Psr\Log\LoggerInterface;
 class AddressCollector {
 	use TTransactional;
 
-	/** @var CollectedAddressMapper */
-	private $mapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(CollectedAddressMapper $mapper,
-		LoggerInterface $logger) {
-		$this->mapper = $mapper;
-		$this->logger = $logger;
+	public function __construct(
+		private CollectedAddressMapper $mapper,
+		private LoggerInterface $logger,
+	) {
 	}
 
 	/**

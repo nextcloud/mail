@@ -25,21 +25,14 @@ use function filter_var;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class MicrosoftIntegrationController extends Controller {
-	private ?string $userId;
-	private AccountService $accountService;
-	private MicrosoftIntegration $microsoftIntegration;
-	private LoggerInterface $logger;
-
-	public function __construct(IRequest $request,
-		?string $userId,
-		AccountService $accountService,
-		MicrosoftIntegration $microsoftIntegration,
-		LoggerInterface $logger) {
+	public function __construct(
+		IRequest $request,
+		private ?string $userId,
+		private AccountService $accountService,
+		private MicrosoftIntegration $microsoftIntegration,
+		private LoggerInterface $logger,
+	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->userId = $userId;
-		$this->accountService = $accountService;
-		$this->microsoftIntegration = $microsoftIntegration;
-		$this->logger = $logger;
 	}
 
 	/**

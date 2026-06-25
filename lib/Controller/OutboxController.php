@@ -26,25 +26,16 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class OutboxController extends Controller {
-	private OutboxService $service;
-	private string $userId;
-	private AccountService $accountService;
-	private SmimeService $smimeService;
-	private DelegationService $delegationService;
-
-	public function __construct(string $appName,
-		$userId,
+	public function __construct(
+		string $appName,
+		private string $userId,
 		IRequest $request,
-		OutboxService $service,
-		AccountService $accountService,
-		SmimeService $smimeService,
-		DelegationService $delegationService) {
+		private OutboxService $service,
+		private AccountService $accountService,
+		private SmimeService $smimeService,
+		private DelegationService $delegationService,
+	) {
 		parent::__construct($appName, $request);
-		$this->userId = $userId;
-		$this->service = $service;
-		$this->accountService = $accountService;
-		$this->smimeService = $smimeService;
-		$this->delegationService = $delegationService;
 	}
 
 	/**

@@ -19,17 +19,10 @@ use function sprintf;
  * @psalm-api
  */
 class AddMissingDefaultTags implements IRepairStep {
-	/** @var TagMapper */
-	private $tagMapper;
-
-	/** @var MailAccountMapper */
-	private $accountMapper;
-
-
-	public function __construct(MailAccountMapper $accountMapper,
-		TagMapper $tagMapper) {
-		$this->accountMapper = $accountMapper;
-		$this->tagMapper = $tagMapper;
+	public function __construct(
+		private MailAccountMapper $accountMapper,
+		private TagMapper $tagMapper,
+	) {
 	}
 
 	#[\Override]

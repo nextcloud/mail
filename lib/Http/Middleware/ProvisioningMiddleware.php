@@ -23,15 +23,13 @@ class ProvisioningMiddleware extends Middleware {
 	/** @var ICredentialStore */
 	private $credentialStore;
 
-	/** @var ProvisioningManager */
-	private $provisioningManager;
-
-	public function __construct(IUserSession $userSession,
+	public function __construct(
+		IUserSession $userSession,
 		ICredentialStore $credentialStore,
-		ProvisioningManager $provisioningManager) {
+		private ProvisioningManager $provisioningManager,
+	) {
 		$this->userSession = $userSession;
 		$this->credentialStore = $credentialStore;
-		$this->provisioningManager = $provisioningManager;
 	}
 
 	#[\Override]

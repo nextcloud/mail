@@ -49,11 +49,9 @@ use function array_merge;
  */
 class MessageApiController extends OCSController {
 
-	private ?string $userId;
-
 	public function __construct(
 		string $appName,
-		?string $userId,
+		private ?string $userId,
 		IRequest $request,
 		private AccountService $accountService,
 		private AliasesService $aliasesService,
@@ -70,7 +68,6 @@ class MessageApiController extends OCSController {
 		private DelegationService $delegationService,
 	) {
 		parent::__construct($appName, $request);
-		$this->userId = $userId;
 	}
 
 	/**

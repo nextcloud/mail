@@ -40,26 +40,11 @@ class Manager {
 	/** @var IUserManager */
 	private $userManager;
 
-	/** @var ProvisioningMapper */
-	private $provisioningMapper;
-
-	/** @var MailAccountMapper */
-	private $mailAccountMapper;
-
 	/** @var ICrypto */
 	private $crypto;
 
 	/** @var ILDAPProviderFactory */
 	private $ldapProviderFactory;
-
-	/** @var AliasMapper */
-	private $aliasMapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var TagMapper */
-	private $tagMapper;
 
 	/** @var ICacheFactory */
 	private $cacheFactory;
@@ -67,26 +52,21 @@ class Manager {
 	public function __construct(
 		IAppManager $appManager,
 		IUserManager $userManager,
-		ProvisioningMapper $provisioningMapper,
-		MailAccountMapper $mailAccountMapper,
+		private ProvisioningMapper $provisioningMapper,
+		private MailAccountMapper $mailAccountMapper,
 		ICrypto $crypto,
 		ILDAPProviderFactory $ldapProviderFactory,
-		AliasMapper $aliasMapper,
-		LoggerInterface $logger,
-		TagMapper $tagMapper,
+		private AliasMapper $aliasMapper,
+		private LoggerInterface $logger,
+		private TagMapper $tagMapper,
 		ICacheFactory $cacheFactory,
 		private AccountService $accountService,
 		private ClassificationSettingsService $classificationSettingsService,
 	) {
 		$this->appManager = $appManager;
 		$this->userManager = $userManager;
-		$this->provisioningMapper = $provisioningMapper;
-		$this->mailAccountMapper = $mailAccountMapper;
 		$this->crypto = $crypto;
 		$this->ldapProviderFactory = $ldapProviderFactory;
-		$this->aliasMapper = $aliasMapper;
-		$this->logger = $logger;
-		$this->tagMapper = $tagMapper;
 		$this->cacheFactory = $cacheFactory;
 	}
 

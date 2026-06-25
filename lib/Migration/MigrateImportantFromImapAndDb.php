@@ -25,22 +25,11 @@ use Psr\Log\LoggerInterface;
 class MigrateImportantFromImapAndDb {
 
 
-	/** @var MessageMapper */
-	private $messageMapper;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(MessageMapper $messageMapper,
-		MailboxMapper $mailboxMapper,
-		LoggerInterface $logger,
+	public function __construct(
+		private MessageMapper $messageMapper,
+		private MailboxMapper $mailboxMapper,
+		private LoggerInterface $logger,
 	) {
-		$this->messageMapper = $messageMapper;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->logger = $logger;
 	}
 
 	public function migrateImportantOnImap(Horde_Imap_Client_Socket $client, Account $account, Mailbox $mailbox): void {

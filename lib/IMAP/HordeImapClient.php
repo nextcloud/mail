@@ -28,11 +28,12 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 	private ?IMemcache $rateLimiterCache = null;
 	private ?ITimeFactory $timeFactory = null;
 	private ?string $hash = null;
-	private IMAPClientFactory $factory;
 
-	public function __construct(array $params, IMAPClientFactory $factory) {
+	public function __construct(
+		array $params,
+		private IMAPClientFactory $factory,
+	) {
 		parent::__construct($params);
-		$this->factory = $factory;
 	}
 
 	public function enableRateLimiter(

@@ -40,17 +40,9 @@ class ImapMessageFetcher {
 	/** @var string[] */
 	private array $attachmentsToIgnore = ['signature.asc', 'smime.p7s'];
 
-	private Html $htmlService;
-	private SmimeService $smimeService;
-	private PhishingDetectionService $phishingDetectionService;
-	private string $userId;
-
 	private bool $runPhishingCheck = false;
 	// Conditional fetching/parsing
 	private bool $loadBody = false;
-
-	private int $uid;
-	private Horde_Imap_Client_Base $client;
 	private string $htmlMessage = '';
 	private string $plainMessage = '';
 	/** @var list<IMAPAttachment> */
@@ -60,7 +52,6 @@ class ImapMessageFetcher {
 	private bool $hasAnyAttachment = false;
 	private array $scheduling = [];
 	private bool $hasHtmlMessage = false;
-	private string $mailbox;
 	private string $rawReferences = '';
 	private string $dispositionNotificationTo = '';
 	private bool $hasDkimSignature = false;
@@ -71,22 +62,15 @@ class ImapMessageFetcher {
 	private bool $isPgpMimeEncrypted = false;
 
 	public function __construct(
-		int $uid,
-		string $mailbox,
-		Horde_Imap_Client_Base $client,
-		string $userId,
-		Html $htmlService,
-		SmimeService $smimeService,
+		private int $uid,
+		private string $mailbox,
+		private Horde_Imap_Client_Base $client,
+		private string $userId,
+		private Html $htmlService,
+		private SmimeService $smimeService,
 		private Converter $converter,
-		PhishingDetectionService $phishingDetectionService,
+		private PhishingDetectionService $phishingDetectionService,
 	) {
-		$this->uid = $uid;
-		$this->mailbox = $mailbox;
-		$this->client = $client;
-		$this->userId = $userId;
-		$this->htmlService = $htmlService;
-		$this->smimeService = $smimeService;
-		$this->phishingDetectionService = $phishingDetectionService;
 	}
 
 

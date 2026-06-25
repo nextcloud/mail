@@ -375,7 +375,7 @@ class MessagesControllerTest extends TestCase {
 			->method('getName')
 			->with()
 			->will($this->returnValue('cat.jpg'));
-		$folderNode = $this->createMock(Folder::class);
+		$folderNode = $this->createStub(Folder::class);
 		$this->userFolder->expects($this->once())
 			->method('get')
 			->with('Downloads')
@@ -443,7 +443,7 @@ class MessagesControllerTest extends TestCase {
 			->method('getName')
 			->with()
 			->will($this->returnValue('cat.jpg'));
-		$folderNode = $this->createMock(Folder::class);
+		$folderNode = $this->createStub(Folder::class);
 		$this->userFolder->expects($this->once())
 			->method('get')
 			->with('Downloads')

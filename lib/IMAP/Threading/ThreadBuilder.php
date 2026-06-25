@@ -15,11 +15,9 @@ use function array_key_exists;
 use function count;
 
 class ThreadBuilder {
-	/** @var PerformanceLogger */
-	private $performanceLogger;
-
-	public function __construct(PerformanceLogger $performanceLogger) {
-		$this->performanceLogger = $performanceLogger;
+	public function __construct(
+		private PerformanceLogger $performanceLogger,
+	) {
 	}
 
 	/**

@@ -23,11 +23,9 @@ use function reset;
 
 class FolderMapper {
 
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(LoggerInterface $logger) {
-		$this->logger = $logger;
+	public function __construct(
+		private LoggerInterface $logger,
+	) {
 	}
 	/**
 	 * This is a temporary workaround for when the sieve folder is a subfolder of

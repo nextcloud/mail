@@ -32,14 +32,12 @@ class Synchronizer {
 	 */
 	private const UID_CHUNK_MAX_BYTES = 10000;
 
-	/** @var MessageMapper */
-	private $messageMapper;
-
 	private ?string $requestId = null;
 	private ?Response $response = null;
 
-	public function __construct(MessageMapper $messageMapper) {
-		$this->messageMapper = $messageMapper;
+	public function __construct(
+		private MessageMapper $messageMapper,
+	) {
 	}
 
 	/**
