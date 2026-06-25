@@ -153,6 +153,13 @@
 					</NcFormBoxSwitch>
 				</NcFormBox>
 
+				<NcRadioGroup :model-value="autoMarkAsRead" :label="t('mail', 'Mark messages as read')" @update:modelValue="onToggleAutoMarkAsRead">
+					<NcRadioGroupButton :label="t('mail', 'Immediately')" value="0" :disabled="hasLoadingState('auto-mark-as-read')" />
+					<NcRadioGroupButton :label="n('mail', 'After %n second', 'After %n seconds', 3)" value="3000" :disabled="hasLoadingState('auto-mark-as-read')" />
+					<NcRadioGroupButton :label="n('mail', 'After %n second', 'After %n seconds', 30)" value="30000" :disabled="hasLoadingState('auto-mark-as-read')" />
+					<NcRadioGroupButton :label="t('mail', 'Manually')" value="-1" :disabled="hasLoadingState('auto-mark-as-read')" />
+				</NcRadioGroup>
+
 				<NcRadioGroup :model-value="useBottomReplies" :label="t('mail', 'Reply position')" @update:modelValue="onToggleButtonReplies">
 					<NcRadioGroupButton :label="t('mail', 'Top')" :value="false" :disabled="hasLoadingState('reply-mode')" />
 					<NcRadioGroupButton :label="t('mail', 'Bottom')" :value="true" :disabled="hasLoadingState('reply-mode')" />
@@ -449,6 +456,16 @@ export default {
 			},
 		},
 
+		autoMarkAsRead: {
+			get() {
+				return this.mainStore.getPreference('auto-mark-as-read', '3000')
+			},
+
+			set(value) {
+				this.onToggleAutoMarkAsRead(value)
+			},
+		},
+
 		useExternalAvatars: {
 			get() {
 				return this.mainStore.getPreference('external-avatars', 'true') === 'true'
@@ -672,6 +689,22 @@ export default {
 				Logger.error('could not save preferences', { error })
 			} finally {
 				this.setLoadingState('search-priority-body', false)
+			}
+		},
+
+		async onToggleAutoMarkAsRead(value) {
+			this.setLoadingState('auto-mark-as-read', true)
+
+			try {
+				await this.mainStore.savePreference({
+					key: 'auto-mark-as-read',
+					value: String(value),
+				})
+			} catch (error) {
+				Logger.error('could not save preferences', { error })
+				showError(t('mail', 'Could not update preference'))
+			} finally {
+				this.setLoadingState('auto-mark-as-read', false)
 			}
 		},
 
