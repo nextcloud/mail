@@ -8,17 +8,24 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\PreprocessingService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\BackgroundJob\TimedJob;
+use OCP\IAppConfig;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
+use function max;
 use function sprintf;
 
 class PreviewEnhancementProcessingJob extends TimedJob {
+	public const CONFIG_KEY_INTERVAL = 'preview_enhancement_interval';
+	private const DEFAULT_INTERVAL = 3600;
+	private const MIN_INTERVAL = 60;
+
 	private IUserManager $userManager;
 	private AccountService $accountService;
 	private LoggerInterface $logger;
@@ -30,7 +37,8 @@ class PreviewEnhancementProcessingJob extends TimedJob {
 		AccountService $accountService,
 		PreprocessingService $preprocessingService,
 		LoggerInterface $logger,
-		IJobList $jobList) {
+		IJobList $jobList,
+		IAppConfig $appConfig) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;
@@ -39,7 +47,17 @@ class PreviewEnhancementProcessingJob extends TimedJob {
 		$this->jobList = $jobList;
 		$this->preprocessingService = $preprocessingService;
 
-		$this->setInterval(3600);
+		// Allow admins to tighten the interval on setups where preview data
+		// directly gates user-visible behaviour (e.g. the imip_message flag
+		// that IMipMessageJob depends on to turn incoming invitations into
+		// calendar events). A floor of MIN_INTERVAL keeps a misconfigured
+		// value from hammering the DB.
+		$configured = $appConfig->getValueInt(
+			Application::APP_ID,
+			self::CONFIG_KEY_INTERVAL,
+			self::DEFAULT_INTERVAL,
+		);
+		$this->setInterval(max(self::MIN_INTERVAL, $configured));
 		$this->setTimeSensitivity(self::TIME_SENSITIVE);
 	}
 

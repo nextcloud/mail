@@ -15,6 +15,7 @@ use OCA\Mail\Service\PreprocessingService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
+use OCP\IAppConfig;
 use OCP\IUser;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
@@ -37,6 +38,9 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 
 	/** @var IJobList|IJobList&MockObject|MockObject */
 	private $jobList;
+
+	/** @var IAppConfig|IAppConfig&MockObject|MockObject */
+	private $appConfig;
 	private PreviewEnhancementProcessingJob $job;
 
 	/** @var int[] */
@@ -50,13 +54,17 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 		$this->preprocessingService = $this->createMock(PreprocessingService::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->jobList = $this->createMock(IJobList::class);
+		$this->appConfig = $this->createMock(IAppConfig::class);
+		$this->appConfig->method('getValueInt')
+			->willReturnArgument(2);
 		$this->job = new PreviewEnhancementProcessingJob(
 			$this->time,
 			$this->manager,
 			$this->accountService,
 			$this->preprocessingService,
 			$this->logger,
-			$this->jobList
+			$this->jobList,
+			$this->appConfig,
 		);
 
 		self::$argument = ['accountId' => 1];
