@@ -360,11 +360,20 @@ class ImapMessageFetcher {
 		}
 
 		// Inline attachments
-		// Horde doesn't consider parts with content-disposition set to inline as
-		// attachment so we need to use another way to get them.
-		// We use these inline attachments to render a message's html body in $this->getHtmlBody()
+		// Horde doesn't consider parts with content-disposition set to inline as attachments,
+		// so we detect them ourselves to render the message's html body in $this->getHtmlBody().
+		// A part qualifies when it has a filename, is an embedded message, or carries a Content-ID.
+		// The Content-ID case covers clients (e.g. IBM Notes/HCL Domino) that reference inline
+		// images solely by Content-ID, without a filename or content-disposition. text/* and
+		// multipart parts are excluded from it so the body parts still reach the handlers below.
 		$filename = $p->getName();
-		if ($p->getType() === 'message/rfc822' || isset($filename)) {
+		$primaryType = $p->getPrimaryType();
+
+		$hasContentId = $p->getContentId() !== null && !in_array($primaryType, ['text', 'multipart'], true);
+		$hasFilename = isset($filename);
+		$isEmbeddedMessage = $p->getType() === 'message/rfc822';
+
+		if ($hasContentId || $hasFilename || $isEmbeddedMessage) {
 			if (in_array($filename, $this->attachmentsToIgnore)) {
 				return;
 			}
@@ -380,7 +389,7 @@ class ImapMessageFetcher {
 			return;
 		}
 
-		if ($p->getPrimaryType() === 'multipart') {
+		if ($primaryType === 'multipart') {
 			$this->handleMultiPartMessage($p, $partNo, $isFetched);
 			return;
 		}
