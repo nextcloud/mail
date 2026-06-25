@@ -522,7 +522,7 @@ export default function mainStoreActions() {
 
 					if (reply.mode === 'reply') {
 						logger.debug('Show simple reply composer', { reply })
-						let to = original.replyTo !== undefined ? original.replyTo : reply.data.from
+						let to = reply.data.from
 						if (reply.followUp) {
 							to = reply.data.to
 						}
