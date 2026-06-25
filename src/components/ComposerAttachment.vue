@@ -5,7 +5,9 @@
 <template>
 	<li class="composer-attachment" :class="{ 'composer-attachment--with-error': attachment.error }" @click="onPreview">
 		<div class="attachment-preview">
-			<img :src="previewSrc" class="attachment-preview-image">
+			<img
+				:src="previewSrc"
+				class="attachment-preview-image">
 			<span v-if="attachment.type === 'cloud'" class="cloud-attachment-icon">
 				<Cloud :size="20" />
 			</span>
@@ -92,11 +94,6 @@ export default {
 			this.$emit('preview', this.attachment)
 		}
 	},
-
-	mounted() {
-		console.log("attachment", this.attachment)
-	}
-
 }
 </script>
 

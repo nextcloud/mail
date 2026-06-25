@@ -29,7 +29,7 @@
 				:attachment="attachment"
 				:uploading="uploading"
 				@on-delete-attachment="onDelete(attachment)"
-				@preview="onPreviewAttachment(attachment)"
+				@preview="onPreviewAttachment"
 			/>
 		</ul>
 
@@ -245,7 +245,6 @@ export default {
 			this.uploading = true
 			// BUG - if choose again - progress lost/ move to complete()
 			Vue.set(this, 'uploads', {})
-
 			const toUpload = sumBy(prop('size'), Object.values(e.target.files))
 			const newTotal = toUpload + this.totalSizeOfUpload()
 			logger.debug('checking upload size limit', {
@@ -277,6 +276,7 @@ export default {
 					fileName: file.name,
 					fileType: file.type,
 					imageBlobURL: this.generatePreview(file),
+					previewBlobUrl: this.generatePreviewBlobUrl(file),
 					displayName: trimStart('/', file.name),
 					progress: null,
 					percent: 0,
@@ -427,6 +427,10 @@ export default {
 				attachment.controller.abort()
 			}
 
+			if (attachment.previewBlobUrl) {
+				URL.revokeObjectURL(attachment.previewBlobUrl)
+			}
+
 			const val = {
 				fileName: attachment.fileName,
 				displayName: attachment.displayName,
@@ -500,15 +504,36 @@ export default {
 			}
 		},
 
+		generatePreviewBlobUrl(file) {
+			return this.isPreviewable(file)
+				? URL.createObjectURL(file)
+				: null
+		},
+
+		isPreviewable(file) {
+			return file.type.startsWith('image/')
+				|| file.type.startsWith('video/')
+				|| file.type.startsWith('audio/')
+				|| file.type.startsWith('text/')
+				|| file.type === 'application/pdf'
+				|| file.type === 'application/json'
+
+		},
+
 		isImage(file) {
 			return file.type && mimes.indexOf(file.type) !== -1
 		},
 
 		onPreviewAttachment(attachment) {
-			if(!attachment.finished) {
+			if (!attachment.finished) {
 				return
 			}
-		}
+
+			const url = attachment.previewBlobUrl
+			if (url) {
+				window.open(url, '_blank')
+			}
+		},
 
 	},
 }
