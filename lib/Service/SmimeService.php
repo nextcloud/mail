@@ -39,17 +39,17 @@ class SmimeService {
 	private ITempManager $tempManager;
 	private ICertificateManager $certificateManager;
 	private ICrypto $crypto;
-	private SmimeCertificateMapper $certificateMapper;
 
 
-	public function __construct(ITempManager $tempManager,
+	public function __construct(
+		ITempManager $tempManager,
 		ICertificateManager $certificateManager,
 		ICrypto $crypto,
-		SmimeCertificateMapper $certificateMapper) {
+		private SmimeCertificateMapper $certificateMapper,
+	) {
 		$this->tempManager = $tempManager;
 		$this->certificateManager = $certificateManager;
 		$this->crypto = $crypto;
-		$this->certificateMapper = $certificateMapper;
 	}
 
 	/**

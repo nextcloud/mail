@@ -38,50 +38,27 @@ use OCP\IURLGenerator;
 use Psr\Log\LoggerInterface;
 
 class AttachmentService implements IAttachmentService {
-	/** @var LocalAttachmentMapper */
-	private $mapper;
-
-	/** @var AttachmentStorage */
-	private $storage;
-	/**
-	 * @var IMailManager
-	 */
-	private $mailManager;
-	/**
-	 * @var MessageMapper
-	 */
-	private $messageMapper;
-
 	/**
 	 * @var Folder
 	 */
 	private $userFolder;
-	/**
-	 * @var LoggerInterface
-	 */
-	private $logger;
 
 	/**
 	 * @param Folder $userFolder
 	 */
 	public function __construct(
 		$userFolder,
-		LocalAttachmentMapper $mapper,
-		AttachmentStorage $storage,
-		IMailManager $mailManager,
-		MessageMapper $imapMessageMapper,
+		private LocalAttachmentMapper $mapper,
+		private AttachmentStorage $storage,
+		private IMailManager $mailManager,
+		private MessageMapper $messageMapper,
 		private ICacheFactory $cacheFactory,
 		private IURLGenerator $urlGenerator,
 		private IMimeTypeDetector $mimeTypeDetector,
-		LoggerInterface $logger,
+		private LoggerInterface $logger,
 		private ITimeFactory $timeFactory,
 	) {
-		$this->mapper = $mapper;
-		$this->storage = $storage;
-		$this->mailManager = $mailManager;
-		$this->messageMapper = $imapMessageMapper;
 		$this->userFolder = $userFolder;
-		$this->logger = $logger;
 	}
 
 	/**

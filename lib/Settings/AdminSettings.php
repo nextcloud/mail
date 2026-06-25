@@ -25,38 +25,17 @@ use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\SummaryTaskType;
 
 class AdminSettings implements ISettings {
-	/** @var IInitialState */
-	private $initialStateService;
-
-	/** @var ProvisioningManager */
-	private $provisioningManager;
-
-	/** @var AntiSpamService */
-	private $antiSpamService;
-
-	private GoogleIntegration $googleIntegration;
-	private MicrosoftIntegration $microsoftIntegration;
-	private IConfig $config;
-	private AiIntegrationsService $aiIntegrationsService;
-
 	public function __construct(
-		IInitialState $initialStateService,
-		ProvisioningManager $provisioningManager,
-		AntiSpamService $antiSpamService,
-		GoogleIntegration $googleIntegration,
-		MicrosoftIntegration $microsoftIntegration,
-		IConfig $config,
-		AiIntegrationsService $aiIntegrationsService,
+		private IInitialState $initialStateService,
+		private ProvisioningManager $provisioningManager,
+		private AntiSpamService $antiSpamService,
+		private GoogleIntegration $googleIntegration,
+		private MicrosoftIntegration $microsoftIntegration,
+		private IConfig $config,
+		private AiIntegrationsService $aiIntegrationsService,
 		private Defaults $themingDefaults,
 		private ClassificationSettingsService $classificationSettingsService,
 	) {
-		$this->initialStateService = $initialStateService;
-		$this->provisioningManager = $provisioningManager;
-		$this->antiSpamService = $antiSpamService;
-		$this->googleIntegration = $googleIntegration;
-		$this->microsoftIntegration = $microsoftIntegration;
-		$this->config = $config;
-		$this->aiIntegrationsService = $aiIntegrationsService;
 	}
 
 	#[\Override]

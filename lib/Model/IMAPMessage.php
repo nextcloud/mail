@@ -47,104 +47,42 @@ use function trim;
 class IMAPMessage implements IMessage, JsonSerializable {
 	use ConvertAddresses;
 
-	private Html $htmlService;
-
-	/** @var string[] */
-	private array $flags;
-
-	private int $messageId;
-	private string $realMessageId;
-	private AddressList $from;
-	private AddressList $to;
-	private AddressList $cc;
-	private AddressList $bcc;
-	private AddressList $replyTo;
-	private string $subject;
-	public string $plainMessage;
-	public string $htmlMessage;
-	public array $attachments;
-	/** @var list<IMAPAttachment> */
-	public array $inlineAttachments;
-	private bool $hasAttachments;
-	public array $scheduling;
-	private bool $hasHtmlMessage;
-	private Horde_Imap_Client_DateTime $imapDate;
-	private string $rawReferences;
-	private string $dispositionNotificationTo;
-	private bool $hasDkimSignature;
-	private array $phishingDetails;
-	private ?string $unsubscribeUrl;
-	private bool $isOneClickUnsubscribe;
-	private ?string $unsubscribeMailto;
-	private string $rawInReplyTo;
-	private bool $isEncrypted;
-	private bool $isSigned;
-	private bool $signatureIsValid;
-	private bool $isPgpMimeEncrypted;
-
 	/**
 	 * @param list<IMAPAttachment> $inlineAttachments
 	 */
-	public function __construct(int $uid,
-		string $messageId,
-		array $flags,
-		AddressList $from,
-		AddressList $to,
-		AddressList $cc,
-		AddressList $bcc,
-		AddressList $replyTo,
-		string $subject,
-		string $plainMessage,
-		string $htmlMessage,
-		bool $hasHtmlMessage,
-		array $attachments,
-		array $inlineAttachments,
-		bool $hasAttachments,
-		array $scheduling,
-		Horde_Imap_Client_DateTime $imapDate,
-		string $rawReferences,
-		string $dispositionNotificationTo,
-		bool $hasDkimSignature,
-		array $phishingDetails,
-		?string $unsubscribeUrl,
-		bool $isOneClickUnsubscribe,
-		?string $unsubscribeMailto,
-		string $rawInReplyTo,
-		bool $isEncrypted,
-		bool $isSigned,
-		bool $signatureIsValid,
-		Html $htmlService,
-		bool $isPgpMimeEncrypted) {
-		$this->messageId = $uid;
-		$this->realMessageId = $messageId;
-		$this->flags = $flags;
-		$this->from = $from;
-		$this->to = $to;
-		$this->cc = $cc;
-		$this->bcc = $bcc;
-		$this->replyTo = $replyTo;
-		$this->subject = $subject;
-		$this->plainMessage = $plainMessage;
-		$this->htmlMessage = $htmlMessage;
-		$this->hasHtmlMessage = $hasHtmlMessage;
-		$this->attachments = $attachments;
-		$this->inlineAttachments = $inlineAttachments;
-		$this->hasAttachments = $hasAttachments;
-		$this->scheduling = $scheduling;
-		$this->imapDate = $imapDate;
-		$this->rawReferences = $rawReferences;
-		$this->dispositionNotificationTo = $dispositionNotificationTo;
-		$this->hasDkimSignature = $hasDkimSignature;
-		$this->phishingDetails = $phishingDetails;
-		$this->unsubscribeUrl = $unsubscribeUrl;
-		$this->isOneClickUnsubscribe = $isOneClickUnsubscribe;
-		$this->unsubscribeMailto = $unsubscribeMailto;
-		$this->rawInReplyTo = $rawInReplyTo;
-		$this->isEncrypted = $isEncrypted;
-		$this->isSigned = $isSigned;
-		$this->signatureIsValid = $signatureIsValid;
-		$this->htmlService = $htmlService;
-		$this->isPgpMimeEncrypted = $isPgpMimeEncrypted;
+	public function __construct(
+		private int $messageId,
+		private string $realMessageId,
+		/** @var string[] */
+		private array $flags,
+		private AddressList $from,
+		private AddressList $to,
+		private AddressList $cc,
+		private AddressList $bcc,
+		private AddressList $replyTo,
+		private string $subject,
+		public string $plainMessage,
+		public string $htmlMessage,
+		private bool $hasHtmlMessage,
+		public array $attachments,
+		public array $inlineAttachments,
+		private bool $hasAttachments,
+		public array $scheduling,
+		private Horde_Imap_Client_DateTime $imapDate,
+		private string $rawReferences,
+		private string $dispositionNotificationTo,
+		private bool $hasDkimSignature,
+		private array $phishingDetails,
+		private ?string $unsubscribeUrl,
+		private bool $isOneClickUnsubscribe,
+		private ?string $unsubscribeMailto,
+		private string $rawInReplyTo,
+		private bool $isEncrypted,
+		private bool $isSigned,
+		private bool $signatureIsValid,
+		private Html $htmlService,
+		private bool $isPgpMimeEncrypted,
+	) {
 	}
 
 	public static function generateMessageId(): string {

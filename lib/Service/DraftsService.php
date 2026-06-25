@@ -27,33 +27,21 @@ use Psr\Log\LoggerInterface;
 use Throwable;
 
 class DraftsService {
-	private IMailTransmission $transmission;
-	private LocalMessageMapper $mapper;
-	private AttachmentService $attachmentService;
 	private IEventDispatcher $eventDispatcher;
-	private IMAPClientFactory $clientFactory;
-	private IMailManager $mailManager;
-	private LoggerInterface $logger;
-	private AccountService $accountService;
 	private ITimeFactory $time;
 
-	public function __construct(IMailTransmission $transmission,
-		LocalMessageMapper $mapper,
-		AttachmentService $attachmentService,
+	public function __construct(
+		private IMailTransmission $transmission,
+		private LocalMessageMapper $mapper,
+		private AttachmentService $attachmentService,
 		IEventDispatcher $eventDispatcher,
-		IMAPClientFactory $clientFactory,
-		IMailManager $mailManager,
-		LoggerInterface $logger,
-		AccountService $accountService,
-		ITimeFactory $time) {
-		$this->transmission = $transmission;
-		$this->mapper = $mapper;
-		$this->attachmentService = $attachmentService;
+		private IMAPClientFactory $clientFactory,
+		private IMailManager $mailManager,
+		private LoggerInterface $logger,
+		private AccountService $accountService,
+		ITimeFactory $time,
+	) {
 		$this->eventDispatcher = $eventDispatcher;
-		$this->clientFactory = $clientFactory;
-		$this->mailManager = $mailManager;
-		$this->logger = $logger;
-		$this->accountService = $accountService;
 		$this->time = $time;
 	}
 

@@ -25,30 +25,18 @@ use Throwable;
 use function array_filter;
 
 class IMipService {
-	private AccountService $accountService;
 	private IManager $calendarManager;
-	private LoggerInterface $logger;
-	private MailboxMapper $mailboxMapper;
-	private MailManager $mailManager;
-	private MessageMapper $messageMapper;
-	private ServerVersion $serverVersion;
 
 	public function __construct(
-		AccountService $accountService,
+		private AccountService $accountService,
 		IManager $manager,
-		LoggerInterface $logger,
-		MailboxMapper $mailboxMapper,
-		MailManager $mailManager,
-		MessageMapper $messageMapper,
-		ServerVersion $serverVersion,
+		private LoggerInterface $logger,
+		private MailboxMapper $mailboxMapper,
+		private MailManager $mailManager,
+		private MessageMapper $messageMapper,
+		private ServerVersion $serverVersion,
 	) {
-		$this->accountService = $accountService;
 		$this->calendarManager = $manager;
-		$this->logger = $logger;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->mailManager = $mailManager;
-		$this->messageMapper = $messageMapper;
-		$this->serverVersion = $serverVersion;
 	}
 
 	public function process(): void {

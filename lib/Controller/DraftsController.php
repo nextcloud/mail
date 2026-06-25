@@ -26,29 +26,21 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class DraftsController extends Controller {
-	private DraftsService $service;
-	private string $userId;
-	private AccountService $accountService;
 	private ITimeFactory $timeFactory;
-	private SmimeService $smimeService;
-	private DelegationService $delegationService;
 
 
-	public function __construct(string $appName,
-		$userId,
+	public function __construct(
+		string $appName,
+		private string $userId,
 		IRequest $request,
-		DraftsService $service,
-		AccountService $accountService,
+		private DraftsService $service,
+		private AccountService $accountService,
 		ITimeFactory $timeFactory,
-		SmimeService $smimeService,
-		DelegationService $delegationService) {
+		private SmimeService $smimeService,
+		private DelegationService $delegationService,
+	) {
 		parent::__construct($appName, $request);
-		$this->userId = $userId;
-		$this->service = $service;
-		$this->accountService = $accountService;
 		$this->timeFactory = $timeFactory;
-		$this->smimeService = $smimeService;
-		$this->delegationService = $delegationService;
 	}
 
 	/**

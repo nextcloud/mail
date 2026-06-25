@@ -39,18 +39,6 @@ use function str_starts_with;
 class MailboxSync {
 	use TTransactional;
 
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var FolderMapper */
-	private $folderMapper;
-
-	/** @var MailAccountMapper */
-	private $mailAccountMapper;
-
-	/** @var IMAPClientFactory */
-	private $imapClientFactory;
-
 	/** @var ITimeFactory */
 	private $timeFactory;
 
@@ -58,17 +46,15 @@ class MailboxSync {
 	private $dispatcher;
 	private IDBConnection $dbConnection;
 
-	public function __construct(MailboxMapper $mailboxMapper,
-		FolderMapper $folderMapper,
-		MailAccountMapper $mailAccountMapper,
-		IMAPClientFactory $imapClientFactory,
+	public function __construct(
+		private MailboxMapper $mailboxMapper,
+		private FolderMapper $folderMapper,
+		private MailAccountMapper $mailAccountMapper,
+		private IMAPClientFactory $imapClientFactory,
 		ITimeFactory $timeFactory,
 		IEventDispatcher $dispatcher,
-		IDBConnection $dbConnection) {
-		$this->mailboxMapper = $mailboxMapper;
-		$this->folderMapper = $folderMapper;
-		$this->mailAccountMapper = $mailAccountMapper;
-		$this->imapClientFactory = $imapClientFactory;
+		IDBConnection $dbConnection,
+	) {
 		$this->timeFactory = $timeFactory;
 		$this->dispatcher = $dispatcher;
 		$this->dbConnection = $dbConnection;

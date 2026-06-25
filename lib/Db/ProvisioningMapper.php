@@ -20,12 +20,11 @@ use Psr\Log\LoggerInterface;
  * @template-extends QBMapper<Provisioning>
  */
 class ProvisioningMapper extends QBMapper {
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(IDBConnection $db, LoggerInterface $logger) {
+	public function __construct(
+		IDBConnection $db,
+		private LoggerInterface $logger,
+	) {
 		parent::__construct($db, 'mail_provisionings');
-		$this->logger = $logger;
 	}
 
 	/**

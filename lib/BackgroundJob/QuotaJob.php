@@ -21,26 +21,22 @@ use function sprintf;
 
 class QuotaJob extends TimedJob {
 	private IUserManager $userManager;
-	private AccountService $accountService;
-	private IMailManager $mailManager;
-	private LoggerInterface $logger;
 	private IJobList $jobList;
 	private IManager $notificationManager;
 
-	public function __construct(ITimeFactory $time,
+	public function __construct(
+		ITimeFactory $time,
 		IUserManager $userManager,
-		AccountService $accountService,
-		IMailManager $mailManager,
+		private AccountService $accountService,
+		private IMailManager $mailManager,
 		IManager $notificationManager,
-		LoggerInterface $logger,
-		IJobList $jobList) {
+		private LoggerInterface $logger,
+		IJobList $jobList,
+	) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;
-		$this->accountService = $accountService;
-		$this->logger = $logger;
 		$this->jobList = $jobList;
-		$this->mailManager = $mailManager;
 
 		$this->setInterval(60 * 60 * 24 * 7);
 		$this->setTimeSensitivity(self::TIME_INSENSITIVE);

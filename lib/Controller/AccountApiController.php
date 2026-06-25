@@ -56,14 +56,10 @@ class AccountApiController extends OCSController {
 		}
 
 		$accounts = $this->accountService->findByUserId($userId);
-		$result = array_map(function (Account $account) {
-			return $this->transformAccountList($account, false);
-		}, $accounts);
+		$result = array_map(fn (Account $account) => $this->transformAccountList($account, false), $accounts);
 
 		$delegatedAccounts = $this->accountService->findDelegatedAccounts($userId);
-		$delegatedList = array_map(function (Account $account) {
-			return $this->transformAccountList($account, true);
-		}, $delegatedAccounts);
+		$delegatedList = array_map(fn (Account $account) => $this->transformAccountList($account, true), $delegatedAccounts);
 		array_push($result, ... $delegatedList);
 
 		return new DataResponse($result);
