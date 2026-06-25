@@ -16,6 +16,8 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\TagMapper;
+use OCA\Mail\Exception\SmimeCertificateParserException;
+use OCA\Mail\Model\EnrichedSmimeCertificate;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
@@ -364,7 +366,18 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'smime-certificates',
 			array_map(
-				fn (SmimeCertificate $certificate) => $this->smimeService->enrichCertificate($certificate),
+				function (SmimeCertificate $certificate) {
+					try {
+						return $this->smimeService->enrichCertificate($certificate);
+					} catch (SmimeCertificateParserException $e) {
+						$this->logger->warning('S/MIME certificate {id} cannot be parsed: {message}', [
+							'id' => $certificate->getId(),
+							'message' => $e->getMessage(),
+							'exception' => $e,
+						]);
+						return new EnrichedSmimeCertificate($certificate, null, $e->getMessage());
+					}
+				},
 				$this->smimeService->findAllCertificates($user->getUID()),
 			),
 		);

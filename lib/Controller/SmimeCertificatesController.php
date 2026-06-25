@@ -14,6 +14,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeCertificateParserException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Http\TrapError;
+use OCA\Mail\Model\EnrichedSmimeCertificate;
 use OCA\Mail\Service\Attachment\UploadedFile;
 use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Controller;
@@ -49,7 +50,16 @@ class SmimeCertificatesController extends Controller {
 		}
 
 		$certificates = $this->certificateService->findAllCertificates($this->userId);
-		$certificates = array_map(fn (SmimeCertificate $certificate) => $this->certificateService->enrichCertificate($certificate), $certificates);
+		$certificates = array_map(
+			function (SmimeCertificate $certificate) {
+				try {
+					return $this->certificateService->enrichCertificate($certificate);
+				} catch (SmimeCertificateParserException $e) {
+					return new EnrichedSmimeCertificate($certificate, null, $e->getMessage());
+				}
+			},
+			$certificates,
+		);
 		return JsonResponse::success($certificates);
 	}
 
@@ -130,7 +140,11 @@ class SmimeCertificatesController extends Controller {
 			$certificateData,
 			$privateKeyData,
 		);
-		$enrichedCertificate = $this->certificateService->enrichCertificate($certificate);
+		try {
+			$enrichedCertificate = $this->certificateService->enrichCertificate($certificate);
+		} catch (SmimeCertificateParserException $e) {
+			$enrichedCertificate = new EnrichedSmimeCertificate($certificate, null, $e->getMessage());
+		}
 		return JsonResponse::success($enrichedCertificate);
 	}
 }
