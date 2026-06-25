@@ -68,7 +68,7 @@
 						{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
 						<span v-if="hasAiGeneratedContent" class="ai-generated-label">
 							<AiIcon :size="14" />
-							{{ t('mail', 'Contains AI generated content') }}
+							{{ t('mail', 'Contains AI content') }}
 						</span>
 					</div>
 					<NcButton
