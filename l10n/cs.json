@@ -330,6 +330,7 @@
     "Event created" : "Událost vytvořena",
     "Could not create event" : "Událost se nedaří vytvořit",
     "Create event" : "Vytvořit událost",
+    "Title" : "Titul",
     "All day" : "Celý den",
     "Attendees" : "Účastníci",
     "You can only invite attendees if your account has an email address set" : "Účastníky můžete pozvat pouze pokud váš účet má nastavenou e-mailovou adresu",

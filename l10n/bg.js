@@ -215,6 +215,7 @@ OC.L10N.register(
     "Event created" : "Събитието е създадено",
     "Could not create event" : "Несупешно създаване на събитие",
     "Create event" : "Създаване на събитие",
+    "Title" : "Заглавие",
     "All day" : "Цял ден",
     "Attendees" : "Участници",
     "Description" : "Описание",
