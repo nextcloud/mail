@@ -12,8 +12,9 @@ namespace OCA\Mail\Events;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IWebhookCompatibleEvent;
 
-class MessageFlaggedEvent extends Event {
+class MessageFlaggedEvent extends Event implements IWebhookCompatibleEvent {
 	/** @var Account */
 	private $account;
 
@@ -60,5 +61,15 @@ class MessageFlaggedEvent extends Event {
 
 	public function isSet(): bool {
 		return $this->set;
+	}
+
+	public function getWebhookSerializable(): array {
+		return [
+			'accountId' => $this->account->getId(),
+			'mailboxId' => $this->mailbox->getId(),
+			'messageUid' => $this->uid,
+			'flag' => $this->flag,
+			'set' => $this->set,
+		];
 	}
 }
