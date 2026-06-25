@@ -16,6 +16,8 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\Db\Tag;
+use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\ClassifierTrainingException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\Classifier;
@@ -109,18 +111,22 @@ class ImportanceClassifier {
 
 	private ContainerInterface $container;
 
+	private TagMapper $tagMapper;
+
 	public function __construct(MailboxMapper $mailboxMapper,
 		MessageMapper $messageMapper,
 		PersistenceService $persistenceService,
 		PerformanceLogger $performanceLogger,
 		ImportanceRulesClassifier $rulesClassifier,
-		ContainerInterface $container) {
+		ContainerInterface $container,
+		TagMapper $tagMapper) {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->persistenceService = $persistenceService;
 		$this->performanceLogger = $performanceLogger;
 		$this->rulesClassifier = $rulesClassifier;
 		$this->container = $container;
+		$this->tagMapper = $tagMapper;
 	}
 
 	private static function createDefaultEstimator(): KNearestNeighbors {
@@ -180,10 +186,28 @@ class ImportanceClassifier {
 			$this->messageMapper->findLatestMessages($account->getUserId(), $mailboxIds, self::MAX_TRAINING_SET_SIZE),
 			[$this, 'filterMessageHasSenderEmail']
 		);
+
+		// Drop messages whose importance flag was set by the classifier itself.
+		// We have no ground truth for these, so including them would let the
+		// classifier reinforce its own predictions over time.
+		$classifierTaggedIds = array_flip($this->tagMapper->getClassifierTaggedMessageIds(
+			$messages,
+			$account->getUserId(),
+			Tag::LABEL_IMPORTANT,
+		));
+		$autoTaggedDropped = 0;
+		$messages = array_filter($messages, static function (Message $message) use ($classifierTaggedIds, &$autoTaggedDropped) {
+			if (isset($classifierTaggedIds[$message->getMessageId()])) {
+				$autoTaggedDropped++;
+				return false;
+			}
+			return true;
+		});
+
 		$importantMessages = array_filter($messages, static fn (Message $message) => $message->getFlagImportant() === true);
 		$nMessages = count($messages);
 		$nImportant = count($importantMessages);
-		$logger->debug("found $nMessages messages of which $nImportant are important");
+		$logger->debug("found $nMessages messages of which $nImportant are important (dropped $autoTaggedDropped classifier-tagged messages)");
 		if (count($importantMessages) < self::COLD_START_THRESHOLD) {
 			$logger->info('not enough messages to train a classifier');
 			return null;

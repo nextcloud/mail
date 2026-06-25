@@ -18,6 +18,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
+use OCA\Mail\Db\MessageTags;
 use OCA\Mail\Db\MessageTagsMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
@@ -450,6 +451,9 @@ class MailManagerTest extends TestCase {
 		$account->expects($this->once())
 			->method('getUserId')
 			->willReturn('test');
+		$this->tagMapper->expects($this->once())
+			->method('tagMessage')
+			->with($tag, $message->getMessageId(), 'test', MessageTags::TYPE_USER);
 		$this->manager->tagMessage($account, 'INBOX', $message, $tag, true);
 	}
 

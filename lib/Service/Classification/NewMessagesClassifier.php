@@ -14,6 +14,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Db\MessageTags;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\ClientException;
@@ -89,7 +90,7 @@ class NewMessagesClassifier {
 				if ($prediction) {
 					$message->setFlagImportant(true);
 					$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), Tag::LABEL_IMPORTANT, true);
-					$this->mailManager->tagMessage($account, $mailbox->getName(), $message, $importantTag, true);
+					$this->mailManager->tagMessage($account, $mailbox->getName(), $message, $importantTag, true, MessageTags::TYPE_CLASSIFIER);
 				}
 			}
 		} catch (ServiceException $e) {

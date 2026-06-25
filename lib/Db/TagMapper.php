@@ -76,7 +76,7 @@ class TagMapper extends QBMapper {
 	 *
 	 * To tag (flag) a message on IMAP, @see \OCA\Mail\Service\MailManager::tagMessage
 	 */
-	public function tagMessage(Tag $tag, string $messageId, string $userId): void {
+	public function tagMessage(Tag $tag, string $messageId, string $userId, string $type = MessageTags::TYPE_USER): void {
 		try {
 			$tag = $this->getTagByImapLabel($tag->getImapLabel(), $userId);
 		} catch (DoesNotExistException $e) {
@@ -86,7 +86,8 @@ class TagMapper extends QBMapper {
 		$qb = $this->db->getQueryBuilder();
 		$qb->insert('mail_message_tags')
 			->setValue('imap_message_id', $qb->createNamedParameter($messageId))
-			->setValue('tag_id', $qb->createNamedParameter($tag->getId(), IQueryBuilder::PARAM_INT));
+			->setValue('tag_id', $qb->createNamedParameter($tag->getId(), IQueryBuilder::PARAM_INT))
+			->setValue('type', $qb->createNamedParameter($type));
 		$qb->executeStatement();
 	}
 
@@ -141,6 +142,44 @@ class TagMapper extends QBMapper {
 			$queryResult->closeCursor();
 		}
 		return $tags;
+	}
+
+	/**
+	 * Return the IMAP message IDs of messages whose given tag was applied by
+	 * the automatic classifier (rather than the user). Useful for excluding
+	 * classifier-applied labels from the importance classifier's training
+	 * set so it does not reinforce its own predictions.
+	 *
+	 * @param Message[] $messages
+	 * @return string[]
+	 */
+	public function getClassifierTaggedMessageIds(array $messages, string $userId, string $imapLabel): array {
+		if ($messages === []) {
+			return [];
+		}
+		$ids = array_map(static fn (Message $message) => $message->getMessageId(), $messages);
+
+		$qb = $this->db->getQueryBuilder();
+		$query = $qb->selectDistinct('mt.imap_message_id')
+			->from($this->getTableName(), 't')
+			->join('t', 'mail_message_tags', 'mt', $qb->expr()->eq('t.id', 'mt.tag_id', IQueryBuilder::PARAM_INT))
+			->where(
+				$qb->expr()->in('mt.imap_message_id', $qb->createParameter('ids'), IQueryBuilder::PARAM_STR_ARRAY),
+				$qb->expr()->eq('t.user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR)),
+				$qb->expr()->eq('t.imap_label', $qb->createNamedParameter($imapLabel, IQueryBuilder::PARAM_STR)),
+				$qb->expr()->eq('mt.type', $qb->createNamedParameter(MessageTags::TYPE_CLASSIFIER, IQueryBuilder::PARAM_STR)),
+			);
+
+		$messageIds = [];
+		foreach (array_chunk($ids, 1000) as $chunk) {
+			$query->setParameter('ids', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
+			$result = $query->executeQuery();
+			while (($row = $result->fetch()) !== false) {
+				$messageIds[] = $row['imap_message_id'];
+			}
+			$result->closeCursor();
+		}
+		return $messageIds;
 	}
 
 	/**

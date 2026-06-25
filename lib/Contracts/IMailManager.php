@@ -14,6 +14,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Attachment;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Db\MessageTags;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
@@ -183,11 +184,14 @@ interface IMailManager {
 	 * @param Message $message
 	 * @param Tag $tag
 	 * @param bool $value
+	 * @param string $type Source of the tag, one of MessageTags::TYPE_USER (default)
+	 *                    or MessageTags::TYPE_CLASSIFIER. Used so the importance
+	 *                    classifier does not train on its own predictions.
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function tagMessage(Account $account, string $mailbox, Message $message, Tag $tag, bool $value): void;
+	public function tagMessage(Account $account, string $mailbox, Message $message, Tag $tag, bool $value, string $type = MessageTags::TYPE_USER): void;
 
 	/**
 	 * @param Account $account

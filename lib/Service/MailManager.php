@@ -21,6 +21,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
+use OCA\Mail\Db\MessageTags;
 use OCA\Mail\Db\MessageTagsMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
@@ -493,7 +494,7 @@ class MailManager implements IMailManager {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function tagMessagesWithClient(Horde_Imap_Client_Socket $client, Account $account, Mailbox $mailbox, array $messages, Tag $tag, bool $value):void {
+	public function tagMessagesWithClient(Horde_Imap_Client_Socket $client, Account $account, Mailbox $mailbox, array $messages, Tag $tag, bool $value, string $type = MessageTags::TYPE_USER):void {
 		if ($this->isPermflagsEnabled($client, $account, $mailbox->getName()) === true) {
 			$messageIds = array_map(static fn (Message $message) => $message->getUid(), $messages);
 			try {
@@ -514,7 +515,7 @@ class MailManager implements IMailManager {
 
 		if ($value) {
 			foreach ($messages as $message) {
-				$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
+				$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId(), $type);
 			}
 		} else {
 			foreach ($messages as $message) {
@@ -540,7 +541,7 @@ class MailManager implements IMailManager {
 	 * @link https://github.com/nextcloud/mail/issues/25
 	 */
 	#[\Override]
-	public function tagMessage(Account $account, string $mailbox, Message $message, Tag $tag, bool $value): void {
+	public function tagMessage(Account $account, string $mailbox, Message $message, Tag $tag, bool $value, string $type = MessageTags::TYPE_USER): void {
 		try {
 			$mb = $this->mailboxMapper->find($account, $mailbox);
 		} catch (DoesNotExistException $e) {
@@ -548,7 +549,7 @@ class MailManager implements IMailManager {
 		}
 		$client = $this->imapClientFactory->getClient($account);
 		try {
-			$this->tagMessagesWithClient($client, $account, $mb, [$message], $tag, $value);
+			$this->tagMessagesWithClient($client, $account, $mb, [$message], $tag, $value, $type);
 		} finally {
 			$client->logout();
 		}

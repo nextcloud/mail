@@ -11,6 +11,7 @@ namespace OCA\Mail\BackgroundJob;
 
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Db\MessageTags;
 use OCA\Mail\Db\ThreadMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Service\AccountService;
@@ -102,6 +103,7 @@ class FollowUpClassifierJob extends QueuedJob {
 			$message,
 			$tag,
 			true,
+			MessageTags::TYPE_CLASSIFIER,
 		);
 	}
 }
