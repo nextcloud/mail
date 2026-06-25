@@ -536,10 +536,18 @@ class ImapMessageFetcher {
 	}
 
 	private function parseHeaders(Horde_Imap_Client_Data_Fetch $fetch): void {
-		/** @var resource $headersStream */
-		$headersStream = $fetch->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_STREAM);
-		$parsedHeaders = Horde_Mime_Headers::parseHeaders($headersStream);
-		fclose($headersStream);
+		// Prefer the targeted HEADER.FIELDS fetch used by the sync path (BODY.PEEK[HEADER.FIELDS (...)]).
+		// Fall back to the full header text when loadBody=true re-fetches with headerText().
+		$parsedHeaders = $fetch->getHeaders('syncFields', Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
+		if ($parsedHeaders === null) {
+			/** @var resource $headersStream */
+			$headersStream = $fetch->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_STREAM);
+			if ($headersStream === null) {
+				return;
+			}
+			$parsedHeaders = Horde_Mime_Headers::parseHeaders($headersStream);
+			fclose($headersStream);
+		}
 
 		$references = $parsedHeaders->getHeader('references');
 		if ($references !== null) {
