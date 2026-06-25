@@ -57,10 +57,13 @@ export default function initAfterAppCreation() {
 		key: 'sort-favorites',
 		value: preferences['sort-favorites'],
 	})
-	const startMailboxId = preferences['start-mailbox-id']
+	let startMailboxId = preferences['start-mailbox-id']
+	if (startMailboxId && !['unified', 'priority'].includes(startMailboxId)) {
+		startMailboxId = parseInt(startMailboxId, 10)
+	}
 	mainStore.savePreferenceMutation({
 		key: 'start-mailbox-id',
-		value: startMailboxId ? parseInt(startMailboxId, 10) : null,
+		value: startMailboxId,
 	})
 	mainStore.savePreferenceMutation({
 		key: 'index-context-chat',
