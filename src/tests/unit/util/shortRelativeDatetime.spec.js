@@ -20,6 +20,32 @@ describe('shortRelativeDatetime', () => {
 			expect(formatted).toBe('9:27')
 		})
 
+		it('shortens yesterdays time', () => {
+			const ref = new Date()
+			ref.setFullYear(2020, 1, 13)
+			ref.setHours(13, 14)
+			const d = new Date()
+			d.setFullYear(2020, 1, 12)
+			d.setHours(9, 27)
+
+			const formatted = shortDatetime(ref, d)
+
+			expect(formatted).toBe('9:27')
+		})
+
+		it('shortens yesterdays time with label', () => {
+			const ref = new Date()
+			ref.setFullYear(2020, 1, 13)
+			ref.setHours(13, 14)
+			const d = new Date()
+			d.setFullYear(2020, 1, 12)
+			d.setHours(9, 27)
+
+			const formatted = shortDatetime(ref, d, true)
+
+			expect(formatted).toBe('Yesterday 9:27')
+		})
+
 		it('shortens this weeks day', () => {
 			const ref = new Date()
 			ref.setFullYear(2020, 1, 13)
