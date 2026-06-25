@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<li class="composer-attachment" :class="{ 'composer-attachment--with-error': attachment.error }">
+	<li class="composer-attachment" :class="{ 'composer-attachment--with-error': attachment.error }" @click="onPreview">
 		<div class="attachment-preview">
 			<img :src="previewSrc" class="attachment-preview-image">
 			<span v-if="attachment.type === 'cloud'" class="cloud-attachment-icon">
@@ -87,7 +87,15 @@ export default {
 		onDelete(attachment) {
 			this.$emit('on-delete-attachment', attachment)
 		},
+
+		onPreview() {
+			this.$emit('preview', this.attachment)
+		}
 	},
+
+	mounted() {
+		console.log("attachment", this.attachment)
+	}
 
 }
 </script>

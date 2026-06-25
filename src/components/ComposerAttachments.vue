@@ -28,7 +28,9 @@
 				:key="attachment.id"
 				:attachment="attachment"
 				:uploading="uploading"
-				@on-delete-attachment="onDelete(attachment)" />
+				@on-delete-attachment="onDelete(attachment)"
+				@preview="onPreviewAttachment(attachment)"
+			/>
 		</ul>
 
 		<input
@@ -501,6 +503,13 @@ export default {
 		isImage(file) {
 			return file.type && mimes.indexOf(file.type) !== -1
 		},
+
+		onPreviewAttachment(attachment) {
+			if(!attachment.finished) {
+				return
+			}
+		}
+
 	},
 }
 </script>
