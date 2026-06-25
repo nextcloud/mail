@@ -193,7 +193,10 @@ class AccountsController extends Controller {
 				'port' => $e->getPort(),
 			];
 
-			$this->logger->info('Creating account failed: ' . $e->getMessage(), $data);
+			$this->logger->info('Creating account failed: ' . $e->getMessage(), [
+				'exception' => $e,
+				...$data,
+			]);
 			return MailJsonResponse::fail($data);
 		} catch (ServiceException $e) {
 			$this->logger->error('Creating account failed: ' . $e->getMessage(), [
