@@ -159,6 +159,29 @@ export default {
 			}
 			return total
 		},
+
+		previewableFilesInfos() {
+			return this.attachments
+				.filter((attachment) => {
+					const mime = attachment.mime || attachment.fileType
+					return mime &&
+						(
+							mime.startsWith('image/') ||
+							mime.startsWith('video/') ||
+							mime.startsWith('audio/') ||
+							mime === 'application/pdf'
+						)
+				})
+				.map((attachment) => ({
+					filename: attachment.previewBlobUrl,
+					source: attachment.previewBlobUrl,
+					basename: attachment.fileName,
+					mime: attachment.mime || attachment.fileType,
+					etag: 'fixme',
+					hasPreview: false,
+					fileid: parseInt(attachment.id, 10),
+				}))
+		},
 	},
 
 	watch: {
@@ -358,6 +381,7 @@ export default {
 						size: filesFromCloud[i].size,
 
 					}
+
 					const _toAttachmentData = {
 						finished: true,
 						imageBlobURL: this.generatePreview(_cloudFile),
@@ -514,9 +538,7 @@ export default {
 			return file.type.startsWith('image/')
 				|| file.type.startsWith('video/')
 				|| file.type.startsWith('audio/')
-				|| file.type.startsWith('text/')
 				|| file.type === 'application/pdf'
-				|| file.type === 'application/json'
 
 		},
 
@@ -529,10 +551,24 @@ export default {
 				return
 			}
 
-			const url = attachment.previewBlobUrl
-			if (url) {
-				window.open(url, '_blank')
+			if (!attachment.previewBlobUrl) {
+				return
 			}
+
+			let fileInfo = {
+				filename: attachment?.previewBlobUrl,
+				source: attachment?.previewBlobUrl,
+				basename: attachment?.fileName,
+				mime: attachment?.mime || attachment?.fileType,
+				etag: 'fixme',
+				hasPreview: false,
+				fileid: parseInt(attachment.id, 10),
+			}
+
+				OCA.Viewer.open({
+					fileInfo,
+					list: this.previewableFilesInfos
+				})
 		},
 
 	},
