@@ -631,6 +631,9 @@ export default {
 			this.mainStore.setComposerIndicatorDisabledMutation(true)
 			await this.onMinimize()
 
+			window.removeEventListener('beforeunload', this.onBeforeUnload)
+			window.removeEventListener('resize', this.checkScreenSize)
+
 			// End the session only if all unsaved changes have been saved
 			if (this.canSaveDraft && ((this.changed && this.draftSaved) || !this.changed)) {
 				logger.debug('Closing composer session due to close button click')
