@@ -37,6 +37,7 @@ OC.L10N.register(
     "Favorites" : "Omiljene",
     "Other" : "Ostali",
     "Forward" : "Prosledi",
+    "Link copied" : "Veza iskopirana",
     "Translate" : "Prevedi",
     "Move" : "Premesti",
     "Remove account" : "Ukloni nalog",

@@ -98,6 +98,7 @@ OC.L10N.register(
     "Other" : "Cits",
     "The sender of this message has asked to be notified when you read this message." : "Šī ziņojuma sūtītājs ir norādījis, ka vēlas saņemt paziņojumu par šī ziņojuma izlasīšanu.",
     "Forward" : "Turpināt",
+    "Link copied" : "Saite nokopēta",
     "Translate" : "Tulkot",
     "View source" : "Skatīt avotu",
     "Unnamed" : "Nenosaukts",

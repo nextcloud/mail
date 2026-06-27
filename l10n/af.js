@@ -86,6 +86,7 @@ OC.L10N.register(
     "Favorites" : "Gunstelinge",
     "Other" : "Ander",
     "Forward" : "Stuur aan",
+    "Link copied" : "Skakel gekopieer",
     "View source" : "Bekyk bron",
     "Message body" : "Boodskaplyfteks",
     "Unnamed" : "Naamloos",

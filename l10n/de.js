@@ -430,6 +430,7 @@ OC.L10N.register(
     "Could not snooze message" : "Nachricht konnte nicht zurückgestellt werden",
     "Message was unsnoozed" : "Zurückstellung der Nachricht wurde aufgehoben",
     "Could not unsnooze message" : "Zurückstellung der Nachricht konnte nicht aufgehoben werden",
+    "Could not generate direct link: Message ID is missing" : "Direktlink konnte nicht erstellt werden: Nachrichten-ID fehlt",
     "Forward" : "Weiterleiten",
     "Move message" : "Nachricht verschieben",
     "Translate" : "Übersetzen",

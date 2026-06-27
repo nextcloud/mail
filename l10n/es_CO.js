@@ -74,6 +74,7 @@ OC.L10N.register(
     "Favorites" : "Favoritos",
     "Other" : "Otro",
     "Forward" : "Adelante",
+    "Link copied" : "Enlace copiado",
     "Translate" : "Traducir",
     "Unnamed" : "Sin nombre",
     "Choose a folder to store the attachment in" : "Seleccciona la carpeta en la cual almacenar el adjunto",

@@ -55,6 +55,8 @@ OC.L10N.register(
     "Last month" : "Oxirgi oy",
     "Favorites" : "Favorites",
     "Other" : "Boshqa",
+    "Direct link copied to clipboard" : "Klipbordga nusxa olish",
+    "Link copied" : "Havola nusxalandi",
     "Translate" : "Tarjima",
     "Move" : "Move",
     "Change password" : "Change password",

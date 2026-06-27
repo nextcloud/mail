@@ -74,6 +74,7 @@ OC.L10N.register(
     "Today" : "Heddiw",
     "Favorites" : "Ffefrynnau",
     "Other" : "Arall",
+    "Link copied" : "Dolen wedi'i gopïo",
     "Translate" : "Cyfieithu",
     "Choose a folder to store the attachment in" : "Dewiswch ffolder i gadw'r atodiad ynddi",
     "Import into calendar" : "Mewnforio i'r calendr",

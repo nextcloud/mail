@@ -145,6 +145,7 @@ OC.L10N.register(
     "Important info" : "מידע חשוב",
     "Other" : "אחר",
     "Forward" : "העברה",
+    "Link copied" : "הקישור הועתק",
     "Translate" : "תרגום",
     "View source" : "הצגת המקור",
     "Unnamed" : "ללא שם",
