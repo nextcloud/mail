@@ -56,6 +56,7 @@ OC.L10N.register(
     "Favorites" : "รายการโปรด",
     "Other" : "อื่น ๆ",
     "Forward" : "ส่งต่อ",
+    "Link copied" : "คัดลอกลิงก์แล้ว",
     "Translate" : "แปลภาษา",
     "Unnamed" : "ไม่มีชื่อ",
     "Choose a folder to store the attachment in" : "เลือกโฟลเดอร์ที่จะเก็บไฟล์แนบลงไป",

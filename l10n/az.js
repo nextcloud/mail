@@ -41,6 +41,7 @@ OC.L10N.register(
     "Today" : "Bu gün",
     "Favorites" : "Sevimlilər",
     "Other" : "Digər",
+    "Link copied" : "Link kopyalandı",
     "Choose a folder to store the attachment in" : "Əlavələrin saxlanılması üçün qovluğu seçin",
     "Move" : "Move",
     "Folder name" : "Qovluq adı",

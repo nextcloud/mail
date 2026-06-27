@@ -38,6 +38,7 @@ OC.L10N.register(
     "Yesterday" : "I går",
     "Favorites" : "Favorit",
     "Other" : "Anna",
+    "Link copied" : "Lenkje kopiert",
     "Move" : "Move",
     "Folder name" : "Katalognavn",
     "Saving" : "Lagrar",
