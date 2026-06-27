@@ -97,6 +97,7 @@ OC.L10N.register(
     "Favorites" : "Pliŝataĵoj",
     "Other" : "Alia",
     "Forward" : "Antaŭen",
+    "Link copied" : "Ligilo kopiita",
     "Translate" : "Traduku",
     "Unnamed" : "Nenomita",
     "Embedded message" : "Enkorpiga mesaĝo",

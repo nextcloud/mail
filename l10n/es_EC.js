@@ -250,6 +250,7 @@ OC.L10N.register(
     "Notify the sender" : "Notificar al remitente",
     "You sent a read confirmation to the sender of this message." : "Enviaste una confirmación de lectura al remitente de este mensaje.",
     "Forward" : "Adelante",
+    "Link copied" : "Enlace copiado",
     "Move message" : "Mover mensaje",
     "Translate" : "Traducir",
     "Forward message as attachment" : "Reenviar mensaje como adjunto",

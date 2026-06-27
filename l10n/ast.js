@@ -150,6 +150,7 @@ OC.L10N.register(
     "Favorites" : "Favoritos",
     "Important info" : "Información importante",
     "Forward" : "Avanzar",
+    "Link copied" : "Copióse l'enllaz",
     "Move message" : "Mover el mensaxe",
     "Translate" : "Traducir",
     "View source" : "Ver l'orixe",

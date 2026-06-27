@@ -266,6 +266,7 @@ OC.L10N.register(
     "Message was unsnoozed" : "Mesajul a fost reluat",
     "Could not unsnooze message" : "Nu s-a putut relua mesajul",
     "Forward" : "Înainte",
+    "Link copied" : "Link copiat",
     "Move message" : "Mută mesajul",
     "Translate" : "Tradu",
     "Forward message as attachment" : "Transmite mesajul ca atașament",

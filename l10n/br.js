@@ -47,6 +47,7 @@ OC.L10N.register(
     "Important info" : "Titouroù pouezus",
     "Other" : "All",
     "Forward" : "War-raok",
+    "Link copied" : "Liamm eilet",
     "Translate" : "Treiñ",
     "Show images" : "Diskouzh ar skeudennoù",
     "Message frame" : "Fram kemenadenn",

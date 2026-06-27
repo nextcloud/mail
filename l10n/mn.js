@@ -392,6 +392,7 @@ OC.L10N.register(
     "Message was unsnoozed" : "Зурвасыг хойшлуулалтаас гаргалаа",
     "Could not unsnooze message" : "Зурвасыг хойшлуулалтаас гаргах боломжгүй",
     "Forward" : "–¥–∞–º–∂–∏—Ö",
+    "Link copied" : "Холбоос хуулагдсан",
     "Move message" : "Зурвас зөөх",
     "Translate" : "–û—Ä—á—É—É–ª–≥–∞",
     "Forward message as attachment" : "Зурвасыг хавсралт болгож дамжуулах",

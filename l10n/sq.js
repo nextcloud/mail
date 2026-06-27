@@ -76,6 +76,7 @@ OC.L10N.register(
     "Favorites" : "Favorites",
     "Other" : "Tjetër",
     "Forward" : "Përpara",
+    "Link copied" : "Linku u kopjua",
     "Translate" : "Përkthe",
     "Unnamed" : "E paemër",
     "Choose a folder to store the attachment in" : "Zgjidhni një dosje ku të depozitohet bashkëngjitja",
