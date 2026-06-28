@@ -13,7 +13,7 @@ export default defineConfig({
 		setupFiles: ['./src/tests/setup.js'],
 		globals: true,
 		environment: 'jsdom',
-		// Required for transforming CSS files
-		pool: 'vmForks',
+		// Required for transforming CSS files; vmForks has a mock-hoisting bug in vitest 4
+		pool: 'vmThreads',
 	},
 })
