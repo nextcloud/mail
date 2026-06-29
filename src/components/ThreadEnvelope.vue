@@ -1499,7 +1499,7 @@ export default {
 		display: inline;
 		align-items: center;
 	}
-	
+
 	.ai-generated-label {
 		display: flex;
 		align-items: center;
