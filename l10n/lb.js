@@ -33,6 +33,7 @@ OC.L10N.register(
     "Today" : "Haut",
     "Favorites" : "Favoriten",
     "Other" : "Aner",
+    "Link copied" : "Link kopéiert",
     "Translate" : "Iwwersetzen",
     "Unnamed" : "ouni Numm",
     "Move" : "Verschieben",

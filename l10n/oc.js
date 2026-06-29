@@ -70,6 +70,7 @@ OC.L10N.register(
     "Last month" : "Lo mes passat",
     "Favorites" : "Favorits",
     "Other" : "Autre",
+    "Link copied" : "Ligam copiat",
     "Translate" : "Tradurre",
     "Choose a folder to store the attachment in" : "Causissètz lo dorsièr dins lo qual enregistrar la pèça junta",
     "Move" : "Move",

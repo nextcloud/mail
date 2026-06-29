@@ -162,6 +162,7 @@ OC.L10N.register(
     "Notify the sender" : "Notificare a sa persone chi imbiat",
     "You sent a read confirmation to the sender of this message." : "As imbiadu una cunfirma de letura a sa persone chi at imbiadu custu messàgiu.",
     "Forward" : "Torra a imbiare",
+    "Link copied" : "Ligòngiu copiadu",
     "Move message" : "Tràmuda messàgiu",
     "Translate" : "Borta",
     "View source" : "Visualiza sa fonte",

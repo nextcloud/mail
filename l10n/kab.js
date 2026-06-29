@@ -100,6 +100,7 @@ OC.L10N.register(
     "Favorites" : "Imenyafen",
     "Other" : "Wayeḍ",
     "Forward" : "Avancer",
+    "Link copied" : "Aseɣwen yettwanɣel",
     "Translate" : "Suqel",
     "View source" : "Wali aɣbalu",
     "Unnamed" : "Warisem",

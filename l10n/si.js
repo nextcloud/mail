@@ -34,6 +34,7 @@ OC.L10N.register(
     "Today" : "අද",
     "Favorites" : "ප්‍රියතම",
     "Other" : "වෙනත්",
+    "Link copied" : "සබැඳිය පිටපත් කළා",
     "Translate" : "පරිවර්තනය",
     "Change password" : "මුරපදය වෙනස් කරන්න",
     "Remove account" : "ගිණුම ඉවත් කරන්න",
