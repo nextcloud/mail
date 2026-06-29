@@ -72,6 +72,20 @@ class LinkCheckTest extends TestCase {
 		$this->assertTrue($result->isPhishing());
 	}
 
+	public function testLinkWithSuspiciousMatchingDomainReturnsWarning(): void {
+		$check = new class($this->l10n) extends LinkCheck {
+			protected function isSuspiciousHost(?string $host): bool {
+				return $host === 'xn--pple-43d.com';
+			}
+		};
+
+		$html = '<html><body><a href="https://xn--pple-43d.com">https://xn--pple-43d.com</a></body></html>';
+
+		$result = $check->run($html);
+
+		$this->assertTrue($result->isPhishing());
+	}
+
 	public function testLinkWithBracketsReturnsSafe(): void {
 		$html = '<html><body><a href="https://example.com">(https://example.com)</a></body></html>';
 
