@@ -291,7 +291,7 @@ export default {
 					return a.dateInt < b.dateInt ? -1 : 1
 				})
 			}
-			return [...this.envelopes]
+			return this.envelopes
 		},
 
 		selectMode() {
@@ -307,22 +307,18 @@ export default {
 			return this.selectedEnvelopes.some((env) => env.flags.seen === false)
 		},
 
+		selectedEnvelopeTags() {
+			return this.selectedEnvelopes.map((env) => this.mainStore.getEnvelopeTags(env.databaseId))
+		},
+
 		isAtLeastOneSelectedImportant() {
 			// returns true if at least one selected message is marked as important
-			return this.selectedEnvelopes.some((env) => {
-				return this.mainStore
-					.getEnvelopeTags(env.databaseId)
-					.some((tag) => tag.imapLabel === '$label1')
-			})
+			return this.selectedEnvelopeTags.some((tags) => tags.some((tag) => tag.imapLabel === '$label1'))
 		},
 
 		isAtLeastOneSelectedUnimportant() {
 			// returns true if at least one selected message is not marked as important
-			return this.selectedEnvelopes.some((env) => {
-				return !this.mainStore
-					.getEnvelopeTags(env.databaseId)
-					.some((tag) => tag.imapLabel === '$label1')
-			})
+			return this.selectedEnvelopeTags.some((tags) => !tags.some((tag) => tag.imapLabel === '$label1'))
 		},
 
 		isAtLeastOneSelectedJunk() {
