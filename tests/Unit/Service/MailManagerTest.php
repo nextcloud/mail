@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
@@ -400,6 +401,24 @@ class MailManagerTest extends TestCase {
 		$client->expects($this->once())
 			->method('status')
 			->willReturn([]);
+
+		$this->assertFalse($this->manager->isPermflagsEnabled($client, $account, 'INBOX'));
+	}
+
+	public function testIsPermflagsEnabledReturnsFalseOnImapError(): void {
+		$account = $this->createStub(Account::class);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+
+		$client->expects($this->once())
+			->method('status')
+			->with('INBOX', \Horde_Imap_Client::STATUS_PERMFLAGS)
+			->willThrowException(new Horde_Imap_Client_Exception('IMAP error reported by server.'));
+		$this->logger->expects($this->once())
+			->method('debug')
+			->with(
+				'Could not get IMAP PERMANENTFLAGS support; treating custom flags as unsupported',
+				$this->callback(static fn (array $context): bool => $context['mailbox'] === 'INBOX' && $context['exception'] instanceof Horde_Imap_Client_Exception),
+			);
 
 		$this->assertFalse($this->manager->isPermflagsEnabled($client, $account, 'INBOX'));
 	}

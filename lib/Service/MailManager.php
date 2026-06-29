@@ -759,11 +759,12 @@ class MailManager implements IMailManager {
 		try {
 			$capabilities = $client->status($mailbox, Horde_Imap_Client::STATUS_PERMFLAGS);
 		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException(
-				'Could not get message flag options from IMAP: ' . $e->getMessage(),
-				$e->getCode(),
-				$e
-			);
+			$this->logger->debug('Could not get IMAP PERMANENTFLAGS support; treating custom flags as unsupported', [
+				'exception' => $e,
+				'mailbox' => $mailbox,
+			]);
+
+			return false;
 		}
 		return (is_array($capabilities) === true && array_key_exists('permflags', $capabilities) === true && in_array("\*", $capabilities['permflags'], true) === true);
 	}
