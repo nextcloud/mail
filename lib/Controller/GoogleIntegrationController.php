@@ -11,11 +11,13 @@ namespace OCA\Mail\Controller;
 
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\InvalidOauthStateException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Integration\GoogleIntegration;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\OauthStateService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
@@ -24,10 +26,6 @@ use OCP\AppFramework\Http\StandaloneTemplateResponse;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 
-
-
-use function filter_var;
-
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class GoogleIntegrationController extends Controller {
 	private ?string $userId;
@@ -35,6 +33,7 @@ class GoogleIntegrationController extends Controller {
 	private AccountService $accountService;
 	private LoggerInterface $logger;
 	private MailboxSync $mailboxSync;
+	private OauthStateService $oauthStateService;
 
 
 	public function __construct(IRequest $request,
@@ -42,13 +41,15 @@ class GoogleIntegrationController extends Controller {
 		GoogleIntegration $googleIntegration,
 		AccountService $accountService,
 		LoggerInterface $logger,
-		MailboxSync $mailboxSync) {
+		MailboxSync $mailboxSync,
+		OauthStateService $oauthStateService) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->userId = $UserId;
 		$this->googleIntegration = $googleIntegration;
 		$this->accountService = $accountService;
 		$this->logger = $logger;
 		$this->mailboxSync = $mailboxSync;
+		$this->oauthStateService = $oauthStateService;
 	}
 
 	/**
@@ -107,26 +108,11 @@ class GoogleIntegrationController extends Controller {
 				'guest',
 			);
 		}
-		if (!filter_var($state, FILTER_VALIDATE_INT)) {
-			$this->logger->warning('Can not link Google account due to invalid state/account id {state}', [
-				'state' => $state,
-			]);
-			// TODO: redirect to main nextcloud page
-			return new StandaloneTemplateResponse(
-				Application::APP_ID,
-				'oauth_done',
-				[],
-				'guest',
-			);
-		}
-
 		try {
-			$account = $this->accountService->find(
-				$this->userId,
-				(int)$state,
-			);
-		} catch (ClientException $e) {
-			$this->logger->warning('Attempted Google authentication redirect for account: ' . $e->getMessage(), [
+			$accountId = $this->oauthStateService->validateAndConsume($state, $this->userId);
+			$account = $this->accountService->find($this->userId, $accountId);
+		} catch (InvalidOauthStateException|ClientException $e) {
+			$this->logger->warning('Cannot link Google account: invalid OAuth state', [
 				'exception' => $e,
 			]);
 			// TODO: redirect to main nextcloud page
