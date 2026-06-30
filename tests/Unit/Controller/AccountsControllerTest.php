@@ -299,6 +299,30 @@ class AccountsControllerTest extends TestCase {
 		self::assertEquals($expectedResponse, $response);
 	}
 
+	public function testCreateManualNoDuplicate(): void {
+		$email = 'user@domain.tld';
+		$accountName = 'Mail';
+		$imapHost = 'localhost';
+		$imapPort = 993;
+		$imapSslMode = 'ssl';
+		$imapUser = 'user@domain.tld';
+		$imapPassword = 'mypassword';
+		$smtpHost = 'localhost';
+		$smtpPort = 465;
+		$smtpSslMode = 'none';
+		$smtpUser = 'user@domain.tld';
+		$smtpPassword = 'mypassword';
+		$this->accountService->expects(self::once())
+			->method('findByUserIdAndAddress')
+			->willReturn(['existing account']);
+		$this->setupService->expects(self::never())
+			->method('createNewAccount');
+
+		$expectedResponse = \OCA\Mail\Http\JsonResponse::fail(['error' => 'ACCOUNT_EXISTS']);
+		$response = $this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $imapPassword, $smtpPassword);
+
+		self::assertEquals($expectedResponse, $response);
+	}
 
 	public function testCreateManualFailure(): void {
 		$email = 'user@domain.tld';
