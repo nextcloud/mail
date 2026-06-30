@@ -135,6 +135,20 @@ export default {
 			return thread[0].subject || this.t('mail', 'No subject')
 		},
 
+		threadParticipants() {
+			const seen = new Set()
+			return this.thread.flatMap((envelope) => [
+				...(envelope.from ?? []),
+				...(envelope.to ?? []),
+			]).filter(({ email }) => {
+				if (seen.has(email)) {
+					return false
+				}
+				seen.add(email)
+				return true
+			})
+		},
+
 		showSummaryBox() {
 			return this.thread.length > 2 && this.enabledThreadSummary && !this.summaryError
 		},
@@ -267,81 +281,84 @@ export default {
 			if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
 				event.preventDefault()
 
-				this.thread.forEach((thread) => {
-					if (!this.expandedThreads.includes(thread.databaseId)) {
-						this.expandedThreads.push(thread.databaseId)
+				try {
+					this.thread.forEach((thread) => {
+						if (!this.expandedThreads.includes(thread.databaseId)) {
+							this.expandedThreads.push(thread.databaseId)
+						}
+					})
+
+					while (true) {
+						if (this.loadedThreads === this.thread.length) {
+							break
+						}
+						await new Promise((resolve) => setTimeout(resolve, 100))
 					}
-				})
 
-				while (true) {
-					if (this.loadedThreads === this.thread.length) {
-						break
-					}
-					await new Promise((resolve) => setTimeout(resolve, 100))
-				}
+					const virtualIframe = document.createElement('iframe')
+					virtualIframe.style.position = 'absolute'
+					document.body.appendChild(virtualIframe)
+					const virtualIframeDocument = virtualIframe.contentDocument || virtualIframe.contentWindow.document
+					virtualIframeDocument.open()
+					virtualIframeDocument.write(`<html><head><title>${t('mail', 'Print')}</title></head><body></body></html>`)
+					virtualIframeDocument.close()
 
-				const virtualIframe = document.createElement('iframe')
-				virtualIframe.style.display = 'none'
-				document.body.appendChild(virtualIframe)
-				const virtualIframeDocument = virtualIframe.contentDocument || virtualIframe.contentWindow.document
-				virtualIframeDocument.open()
-				virtualIframeDocument.write(`<html><head><title>${t('mail', 'Print')}</title></head><body></body></html>`)
-				virtualIframeDocument.close()
+					virtualIframeDocument.body.appendChild(this.addThreadInfo(virtualIframeDocument))
 
-				virtualIframeDocument.body.appendChild(this.addThreadInfo(virtualIframeDocument))
+					const messageContainers = document.querySelectorAll('#message-container')
+					for (const [index, messageContainer] of messageContainers.entries()) {
+						const iframe = messageContainer.querySelector('iframe')
 
-				const messageContainers = document.querySelectorAll('#message-container')
-				for (const [index, messageContainer] of messageContainers.entries()) {
-					const iframe = messageContainer.querySelector('iframe')
+						this.addMessageInfo(virtualIframeDocument, index)
 
-					this.addMessageInfo(virtualIframeDocument, index)
+						if (!iframe) {
+							const div = virtualIframeDocument.createElement('div')
+							div.innerHTML = messageContainer.innerHTML
+							virtualIframeDocument.body.appendChild(div)
+							continue
+						}
 
-					if (!iframe) {
+						if (iframe.contentWindow.document.readyState !== 'complete') {
+							await new Promise((resolve) => {
+								iframe.contentWindow.onload = resolve
+							})
+						}
+
+						const iframeDocument = iframe.contentDocument || iframe.contentWindow.document
+						const iframeContent = iframeDocument.body.innerHTML
 						const div = virtualIframeDocument.createElement('div')
-						div.innerHTML = messageContainer.innerHTML
+
+						div.innerHTML = iframeContent
 						virtualIframeDocument.body.appendChild(div)
-						continue
 					}
 
-					iframe.setAttribute('data-iframe-size', 'true')
+					const images = virtualIframeDocument.querySelectorAll('img')
+					let imagesLoaded = 0
 
-					if (!iframe.contentWindow.document.readyState === 'complete') {
-						await new Promise((resolve) => {
-							iframe.contentWindow.onload = resolve
+					images.forEach((img) => {
+						img.addEventListener('load', () => {
+							imagesLoaded++
+							if (imagesLoaded === images.length) {
+								virtualIframe.contentWindow.print()
+								this.removeIframe(virtualIframe)
+							}
 						})
+						img.addEventListener('error', () => {
+							imagesLoaded++
+							if (imagesLoaded === images.length) {
+								virtualIframe.contentWindow.print()
+								this.removeIframe(virtualIframe)
+							}
+						})
+					})
+
+					if (images.length === 0) {
+						virtualIframe.contentWindow.print()
+						this.removeIframe(virtualIframe)
 					}
-
-					const iframeDocument = iframe.contentDocument || iframe.contentWindow.document
-					const iframeContent = iframeDocument.body.innerHTML
-					const div = virtualIframeDocument.createElement('div')
-
-					div.innerHTML = iframeContent
-					virtualIframeDocument.body.appendChild(div)
-				}
-
-				const images = virtualIframeDocument.querySelectorAll('img')
-				let imagesLoaded = 0
-
-				images.forEach((img) => {
-					img.addEventListener('load', () => {
-						imagesLoaded++
-						if (imagesLoaded === images.length) {
-							virtualIframe.contentWindow.print()
-							this.removeIframe(virtualIframe)
-						}
-					})
-					img.addEventListener('error', () => {
-						imagesLoaded++
-						if (imagesLoaded === images.length) {
-							virtualIframe.contentWindow.print()
-							this.removeIframe(virtualIframe)
-						}
-					})
-				})
-
-				if (images.length === 0) {
-					virtualIframe.contentWindow.print()
-					this.removeIframe(virtualIframe)
+				} catch (error) {
+					logger.error('Could not print message', { error })
+					showError(t('mail', 'Could not print message'))
 				}
 			}
 		},
@@ -474,6 +491,7 @@ export default {
 
 					iframe.contentWindow.print()
 				} catch (error) {
+					logger.error('Could not print message', { error })
 					showError(t('mail', 'Could not print message'))
 				}
 			}, 100)

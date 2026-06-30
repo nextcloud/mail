@@ -100,6 +100,7 @@ export default {
 			isSenderTrusted: this.message.isSenderTrusted,
 			needsTranslation: false,
 			enabledFreePrompt: loadState('mail', 'llm_freeprompt_available', false),
+			printOriginalHeight: null,
 		}
 	},
 
@@ -115,6 +116,7 @@ export default {
 
 	beforeMount() {
 		scout.on('beforeprint', this.onBeforePrint)
+		scout.on('afterprint', this.onAfterPrint)
 	},
 
 	async mounted() {
@@ -131,6 +133,7 @@ export default {
 
 	beforeUnmount() {
 		scout.off('beforeprint', this.onBeforePrint)
+		scout.off('afterprint', this.onAfterPrint)
 		this.$refs.iframe.iFrameResizer.close()
 	},
 
@@ -154,7 +157,16 @@ export default {
 		},
 
 		onBeforePrint() {
-			// this.$refs.iframe.style.setProperty('height', `${this.getIframeDoc().body.scrollHeight}px`, 'important')
+			const iframe = this.$refs.iframe
+			this.printOriginalHeight = iframe.style.height
+			iframe.style.setProperty('height', `${this.getIframeDoc().body.scrollHeight}px`, 'important')
+		},
+
+		onAfterPrint() {
+			if (this.printOriginalHeight !== null) {
+				this.$refs.iframe.style.height = this.printOriginalHeight
+				this.printOriginalHeight = null
+			}
 		},
 
 		displayIframe() {
