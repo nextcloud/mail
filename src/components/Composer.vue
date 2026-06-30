@@ -98,6 +98,9 @@
 					</template>
 				</NcSelect>
 			</div>
+			<div v-if="displayMissingToWarning">
+				<p class="composer-fields__helper-text">{{ t('mail', 'The email has no visible ‘To’ recipients. Some mail providers may reject this message') }}</p>
+			</div>
 		</div>
 		<div v-if="showCC" class="composer-fields">
 			<label for="cc" class="cc-label">
@@ -1001,6 +1004,10 @@ export default {
 			return this.mainStore.getSharedTextBlocks()?.map((textBlock) => ({ title: textBlock.title, content: textBlock.content }))
 				.concat(this.mainStore.getMyTextBlocks().map((textBlock) => ({ title: textBlock.title, content: textBlock.content })))
 		},
+
+		displayMissingToWarning() {
+			return this.selectTo.length === 0
+		},
 	},
 
 	watch: {
@@ -1029,6 +1036,7 @@ export default {
 		},
 
 		selectTo(val) {
+			this.displayMissingToWarning = false
 			this.$emit('update:to', val)
 		},
 
@@ -1549,6 +1557,7 @@ export default {
 		},
 
 		async onSend() {
+
 			if (this.encrypt) {
 				logger.debug('get encrypted message from mailvelope')
 				await this.$refs.mailvelopeEditor.pull()
@@ -1845,6 +1854,12 @@ export default {
 		// boundaries in safari
 		-webkit-user-select: text;
 		user-select: text;
+	}
+
+	&__helper-text {
+		margin-top: 2px;
+		margin-bottom: 2px;
+		color: var(--color-text-error);
 	}
 }
 
