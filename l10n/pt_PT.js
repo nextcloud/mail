@@ -183,6 +183,7 @@ OC.L10N.register(
     "Read" : "Ler",
     "Mark as spam" : "Marcar como spam",
     "Edit tags" : "Editar etiquetas",
+    "Delete thread" : "Excluir fio",
     "Delete message" : "Excluir mensagem",
     "More actions" : "Mais ações",
     "Back" : "Anterior",
