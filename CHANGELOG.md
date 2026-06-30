@@ -1,3 +1,21 @@
+## [5.10.4](https://github.com/nextcloud/mail/compare/v5.10.3...v5.10.4) (2026-06-30)
+
+
+### Bug Fixes
+
+* adjust sender details styling and alignment in thread view ([f7c640a](https://github.com/nextcloud/mail/commit/f7c640a5ff1ca9e926b055858c6adf85eb4617d5))
+* **composer:** do not re-insert signature when opening a draft ([348b87f](https://github.com/nextcloud/mail/commit/348b87fd12db2c17b6ae5b7a4f38874c94da949a))
+* **deps:** Fix npm audit ([8baf24a](https://github.com/nextcloud/mail/commit/8baf24af9c7445236f851ced595380994a60c4ec))
+* **imap:** render inline images referenced only by Content-ID ([64ebf76](https://github.com/nextcloud/mail/commit/64ebf76cc7221498bcd79ef6bf1dd82f08381d61))
+* **l10n:** Update translations from Transifex ([13b66be](https://github.com/nextcloud/mail/commit/13b66be714ae2f45d4d40af646c084be0b48d2d4))
+* **l10n:** Update translations from Transifex ([27ffd61](https://github.com/nextcloud/mail/commit/27ffd61c7faaa68fecf80f5dfb0610de9597d486))
+* **l10n:** Update translations from Transifex ([6231584](https://github.com/nextcloud/mail/commit/6231584989b9992e55920021b08014edcb7e0e32))
+* **l10n:** Update translations from Transifex ([b5e7b8c](https://github.com/nextcloud/mail/commit/b5e7b8c6b52713eeccae5e497583e7c9735319cb))
+* **l10n:** Update translations from Transifex ([2b5ce4c](https://github.com/nextcloud/mail/commit/2b5ce4ccf9157fa2d37345772726bee03e8640b8))
+* **l10n:** Update translations from Transifex ([6376e81](https://github.com/nextcloud/mail/commit/6376e81086893ae5cd03121c151b995ba94edee7))
+
+
+
 ## [5.10.3](https://github.com/nextcloud/mail/compare/v5.10.2...v5.10.3) (2026-06-24)
 
 
