@@ -26,6 +26,7 @@ use Horde_Mime_Headers_MessageId;
 use Horde_Mime_Headers_Subject;
 use Horde_Mime_Mail;
 use Horde_Mime_Mdn;
+use Horde_Mime_Part;
 use Horde_Smtp_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
@@ -211,36 +212,30 @@ class MailTransmission implements IMailTransmission {
 			$this->transmissionService->handleAttachment($account, $attachment);
 		}
 
-		// build mime body
-		$headers = $this->buildHeaders(
-			$from,
-			$to,
-			$cc,
-			$bcc,
-			$message->getSubject()
-		);
+		$draftHeaders = $this->buildMimeHeaders($from, $to, $cc, $bcc, $message->getSubject());
 
 		$mail = new Horde_Mime_Mail();
-		$mail->addHeaders($headers);
 		if ($message->isHtml()) {
 			$mail->setHtmlBody($message->getBodyHtml());
 		} else {
 			$mail->setBody($message->getBodyPlain());
 		}
-		$mail->addHeaderOb(Horde_Mime_Headers_MessageId::create());
 		$perfLogger->step('build local draft message');
 
-		// 'Send' the message
+		// Use a null transport to trigger MIME body encoding without sending
 		$client = $this->imapClientFactory->getClient($account);
 		try {
-			$transport = new Horde_Mail_Transport_Null();
-			$mail->send($transport, false, false);
+			$mail->send(new Horde_Mail_Transport_Null(), false, false);
 			$perfLogger->step('create IMAP draft message');
 			$draftsMailbox = $this->findOrCreateDraftsMailbox($account);
 			$this->messageMapper->save(
 				$client,
 				$draftsMailbox,
-				$mail->getRaw(false),
+				$mail->getBasePart()->toString([
+					'encode' => Horde_Mime_Part::ENCODE_7BIT | Horde_Mime_Part::ENCODE_8BIT | Horde_Mime_Part::ENCODE_BINARY,
+					'headers' => $draftHeaders,
+					'stream' => false,
+				]),
 				[Horde_Imap_Client::FLAG_DRAFT]
 			);
 			$perfLogger->step('save local draft message on IMAP');
@@ -293,7 +288,7 @@ class MailTransmission implements IMailTransmission {
 		$account = $message->getAccount();
 		$from = Address::fromRaw($account->getName(), $account->getEMailAddress());
 
-		$headers = $this->buildHeaders(
+		$draftHeaders = $this->buildMimeHeaders(
 			$from,
 			$message->getTo(),
 			$message->getCc(),
@@ -302,22 +297,19 @@ class MailTransmission implements IMailTransmission {
 		);
 
 		$mail = new Horde_Mime_Mail();
-		$mail->addHeaders($headers);
 		if ($message->isHtml()) {
 			$mail->setHtmlBody($message->getBody());
 		} else {
 			$mail->setBody($message->getBody());
 		}
-		$mail->addHeaderOb(Horde_Mime_Headers_MessageId::create());
 		$perfLogger->step('build draft message');
 
-		// 'Send' the message
+		// Use a null transport to trigger MIME body encoding without sending
 		$client = $this->imapClientFactory->getClient($account);
 		try {
-			$transport = new Horde_Mail_Transport_Null();
-			$mail->send($transport, false, false);
+			$mail->send(new Horde_Mail_Transport_Null(), false, false);
 			$perfLogger->step('create IMAP message');
-			// save the message in the drafts folder
+			// save the message in the drafts mailbox
 			$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
 			if ($draftsMailboxId === null) {
 				throw new ClientException('No drafts mailbox configured');
@@ -326,7 +318,11 @@ class MailTransmission implements IMailTransmission {
 			$newUid = $this->messageMapper->save(
 				$client,
 				$draftsMailbox,
-				$mail->getRaw(false),
+				$mail->getBasePart()->toString([
+					'encode' => Horde_Mime_Part::ENCODE_7BIT | Horde_Mime_Part::ENCODE_8BIT | Horde_Mime_Part::ENCODE_BINARY,
+					'headers' => $draftHeaders,
+					'stream' => false,
+				]),
 				[Horde_Imap_Client::FLAG_DRAFT]
 			);
 			$perfLogger->step('save message on IMAP');
@@ -346,6 +342,24 @@ class MailTransmission implements IMailTransmission {
 
 		$perfLogger->end();
 		return [$account, $draftsMailbox, $newUid];
+	}
+
+	private function buildMimeHeaders(Address $from, AddressList $to, AddressList $cc, AddressList $bcc, ?string $subject): Horde_Mime_Headers {
+		$headers = new Horde_Mime_Headers();
+		$headers->addHeaderOb(Horde_Mime_Headers_Date::create());
+		$headers->addHeaderOb(Horde_Mime_Headers_MessageId::create());
+		$headers->addHeaderOb(new Horde_Mime_Headers_Addresses('From', $from->toHorde()));
+		$headers->addHeaderOb(new Horde_Mime_Headers_Addresses('To', $to->toHorde()));
+		if (count($cc) > 0) {
+			$headers->addHeaderOb(new Horde_Mime_Headers_Addresses('Cc', $cc->toHorde()));
+		}
+		if (count($bcc) > 0) {
+			$headers->addHeaderOb(new Horde_Mime_Headers_Addresses('Bcc', $bcc->toHorde()));
+		}
+		if ($subject !== null) {
+			$headers->addHeader('Subject', $subject);
+		}
+		return $headers;
 	}
 
 	/**
