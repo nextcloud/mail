@@ -116,13 +116,13 @@ class MailTransmission implements IMailTransmission {
 		$fccHeaders = new Horde_Mime_Headers();
 		$fccHeaders->addHeaderOb(Horde_Mime_Headers_Date::create());
 		$fccHeaders->addHeaderOb(Horde_Mime_Headers_MessageId::create());
-		$fccHeaders->addHeader('From', $from->toHorde());
-		$fccHeaders->addHeader('To', $to->toHorde());
+		$fccHeaders->addHeaderOb(new Horde_Mime_Headers_Addresses('From', $from->toHorde()));
+		$fccHeaders->addHeaderOb(new Horde_Mime_Headers_Addresses('To', $to->toHorde()));
 		if (count($cc) > 0) {
-			$fccHeaders->addHeader('Cc', $cc->toHorde());
+			$fccHeaders->addHeaderOb(new Horde_Mime_Headers_Addresses('Cc', $cc->toHorde()));
 		}
 		if (count($bcc) > 0) {
-			$fccHeaders->addHeader('Bcc', $bcc->toHorde());
+			$fccHeaders->addHeaderOb(new Horde_Mime_Headers_Addresses('Bcc', $bcc->toHorde()));
 		}
 		if ($localMessage->getSubject() !== null) {
 			$fccHeaders->addHeader('Subject', $localMessage->getSubject());
@@ -135,7 +135,7 @@ class MailTransmission implements IMailTransmission {
 			$fccHeaders->addHeader('In-Reply-To', $inReplyTo);
 		}
 		if ($localMessage->getRequestMdn()) {
-			$fccHeaders->addHeader(Horde_Mime_Mdn::MDN_HEADER, $from->toHorde());
+			$fccHeaders->addHeaderOb(new Horde_Mime_Headers_Addresses(Horde_Mime_Mdn::MDN_HEADER, $from->toHorde()));
 		}
 
 		// For SMTP delivery: strip Bcc so it never appears in the transmitted
