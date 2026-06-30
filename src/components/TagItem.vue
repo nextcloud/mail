@@ -12,7 +12,7 @@
 			}">
 			{{ translateTagDisplayName(tag) }}
 		</button>
-		<Actions :force-menu="true">
+		<Actions :force-menu="true" @close="closeEditTag">
 			<NcActionButton
 				v-if="renameTagLabel"
 				@click="openEditTag">
@@ -142,6 +142,12 @@ export default {
 			this.renameTagInput = true
 			this.showSaving = false
 			this.editColor = this.tag.color
+		},
+
+		closeEditTag() {
+			this.renameTagInput = false
+			this.renameTagLabel = true
+			this.showSaving = false
 		},
 
 		async renameTag(tag, event) {
