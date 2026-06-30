@@ -338,6 +338,12 @@ class AccountsController extends Controller {
 			$this->logger->info('Creating account disabled by admin.');
 			return MailJsonResponse::error('Could not create account');
 		}
+		if (empty($this->accountService->findByUserIdAndAddress($this->userId, $emailAddress)) === false) {
+			$this->logger->info('Trying to create already existing account.');
+			return MailJsonResponse::fail([
+				'error' => 'ACCOUNT_EXISTS',
+			]);
+		}
 		if (!$this->hostValidator->isValid($imapHost)) {
 			$this->logger->debug('Prevented access to invalid IMAP host', [
 				'host' => $imapHost,

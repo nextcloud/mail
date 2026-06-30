@@ -692,6 +692,8 @@ export default {
 					} else if (error.data.service === 'SMTP') {
 						this.feedback = t('mail', 'SMTP server is not reachable')
 					}
+				} else if (error.data?.error === 'ACCOUNT_EXISTS') {
+					this.feedback = t('mail', 'Account already exists')
 				} else if (error.data?.error === 'AUTHENTICATION_WRONG_PASSWORD') {
 					if (error.data.service === 'IMAP') {
 						this.feedback = t('mail', 'IMAP username or password is wrong')
