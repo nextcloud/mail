@@ -433,8 +433,7 @@ class MessageApiController extends OCSController {
 	 */
 	private function handleAttachments(): array {
 		$fileAttachments = $this->request->getUploadedFile('attachments');
-		$hasAttachments = isset($fileAttachments['name']);
-		if (!$hasAttachments) {
+		if (!isset($fileAttachments['name'])) {
 			return [];
 		}
 

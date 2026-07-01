@@ -145,9 +145,7 @@ class Provisioning extends Entity implements JsonSerializable {
 	 * @return string
 	 */
 	private function buildUserEmail(string $original, IUser $user) {
-		if ($user->getUID() !== null) {
-			$original = str_replace('%USERID%', $user->getUID(), $original);
-		}
+		$original = str_replace('%USERID%', $user->getUID(), $original);
 		if ($user->getEMailAddress() !== null) {
 			$original = str_replace('%EMAIL%', $user->getEMailAddress(), $original);
 		}
