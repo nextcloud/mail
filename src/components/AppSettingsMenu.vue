@@ -113,6 +113,12 @@
 							:disabled="loadingPrioritySettings">
 							{{ prioritySettingsText }}
 						</NcFormBoxSwitch>
+
+						<NcFormBoxSwitch
+							v-model="autoMarkAsRead"
+							:disabled="loadingAutoMarkAsRead">
+							{{ t('mail', 'Automatically mark messages as read when opened') }}
+						</NcFormBoxSwitch>
 					</NcFormBox>
 
 					<NcRadioGroup :model-value="useBottomReplies" :label="t('mail', 'Reply position')" @update:modelValue="onToggleButtonReplies">
@@ -372,6 +378,7 @@ export default {
 			loadingAvatarSettings: false,
 			prioritySettingsText: t('mail', 'Search the body of messages in priority Inbox'),
 			loadingPrioritySettings: false,
+			loadingAutoMarkAsRead: false,
 
 			optOutSettingsText: t('mail', 'Activate'),
 			loadingOptOutSettings: false,
@@ -448,6 +455,16 @@ export default {
 
 			set(value) {
 				this.onToggleSearchPriorityBody(value)
+			},
+		},
+
+		autoMarkAsRead: {
+			get() {
+				return this.mainStore.getPreference('auto-mark-as-read', 'true') === 'true'
+			},
+
+			set(value) {
+				this.onToggleAutoMarkAsRead(value)
 			},
 		},
 
@@ -649,6 +666,22 @@ export default {
 				Logger.error('could not save preferences', { error })
 			} finally {
 				this.loadingPrioritySettings = false
+			}
+		},
+
+		async onToggleAutoMarkAsRead(enabled) {
+			this.loadingAutoMarkAsRead = true
+
+			try {
+				await this.mainStore.savePreference({
+					key: 'auto-mark-as-read',
+					value: enabled ? 'true' : 'false',
+				})
+			} catch (error) {
+				Logger.error('could not save preferences', { error })
+				showError(t('mail', 'Could not update preference'))
+			} finally {
+				this.loadingAutoMarkAsRead = false
 			}
 		},
 
