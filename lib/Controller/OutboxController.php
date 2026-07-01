@@ -103,7 +103,6 @@ class OutboxController extends Controller {
 		?int $sendAt = null,
 		bool $requestMdn = false,
 		bool $isPgpMime = false,
-		bool $isAiGenerated = false,
 	): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $accountId);
@@ -127,7 +126,6 @@ class OutboxController extends Controller {
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
 		$message->setRequestMdn($requestMdn);
-		$message->setAiGenerated($isAiGenerated);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $effectiveUserId);
@@ -200,7 +198,6 @@ class OutboxController extends Controller {
 		?int $sendAt = null,
 		bool $requestMdn = false,
 		bool $isPgpMime = false,
-		bool $isAiGenerated = false,
 	): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
 		$message = $this->service->getMessage($id, $effectiveUserId);
@@ -222,7 +219,6 @@ class OutboxController extends Controller {
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
 		$message->setRequestMdn($requestMdn);
-		$message->setAiGenerated($isAiGenerated);
 
 		// Reset the status to make it retryable.
 		$message->setFailed(false);

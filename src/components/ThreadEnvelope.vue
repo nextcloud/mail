@@ -617,7 +617,7 @@ export default {
 		},
 
 		hasAiGeneratedContent() {
-			return this.message?.isAiGenerated === true
+			return this.envelope.flags.aiGenerated === true
 		},
 
 		isImportant() {

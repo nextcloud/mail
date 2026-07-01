@@ -289,7 +289,6 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'hasHtmlBody' => $this->hasHtmlMessage,
 			'dispositionNotificationTo' => $this->getDispositionNotificationTo(),
 			'hasDkimSignature' => $this->hasDkimSignature,
-			'isAiGenerated' => $this->isAiGenerated,
 			'phishingDetails' => $this->phishingDetails,
 			'unsubscribeUrl' => $this->unsubscribeUrl,
 			'isOneClickUnsubscribe' => $this->isOneClickUnsubscribe,
@@ -495,6 +494,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$msg->setFlagImportant(in_array('$important', $flags, true) || in_array('$labelimportant', $flags, true) || in_array(Tag::LABEL_IMPORTANT, $flags, true));
 		$msg->setFlagAttachments(false);
 		$msg->setFlagMdnsent(in_array(Horde_Imap_Client::FLAG_MDNSENT, $flags, true));
+		$msg->setFlagAiGenerated($this->isAiGenerated);
 		if ($this->scheduling !== []) {
 			$msg->setImipMessage(true);
 		}
