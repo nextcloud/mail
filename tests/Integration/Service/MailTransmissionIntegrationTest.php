@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Integration\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestUser;
-use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
@@ -98,8 +97,6 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 		$this->account = new Account($mailAccount);
 		$this->attachmentService = Server::get(IAttachmentService::class);
-		$userFolder = OC::$server->getUserFolder($this->user->getUID());
-
 		$recipientMapper = Server::get(RecipientMapper::class);
 		$recipient = new Recipient();
 		$recipient->setType(Recipient::TYPE_TO);
