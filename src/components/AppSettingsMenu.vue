@@ -553,11 +553,15 @@ export default {
 
 	mounted() {
 		this.sortOrder = this.mainStore.getPreference('sort-order', 'newest')
-		document.addEventListener.call(window, 'mailvelope', () => this.checkMailvelope())
+		window.addEventListener('mailvelope', this.checkMailvelope)
 		if (!this.mainStore.areTextBlocksFetched()) {
 			this.mainStore.fetchMyTextBlocks()
 			this.mainStore.fetchSharedTextBlocks()
 		}
+	},
+
+	beforeUnmount() {
+		window.removeEventListener('mailvelope', this.checkMailvelope)
 	},
 
 	updated() {
