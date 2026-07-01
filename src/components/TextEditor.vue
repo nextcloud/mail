@@ -572,6 +572,13 @@ export default {
 				this.$emit('submit', editor)
 			})
 
+			editor.keystrokes.set('Ctrl+S', (event) => {
+				event.preventDefault()
+				event.stopPropagation()
+				logger.debug('Detected Ctrl+S/Cmd+S', event)
+				this.$emit('save', editor)
+			})
+
 			this.editorInstance = editor
 
 			if (this.focus) {
