@@ -16,7 +16,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\ProvisioningMapper;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\SetupChecks\MailConnectionPerformance;
 use OCA\Mail\SetupChecks\MicroTime;
 use OCP\IL10N;
@@ -30,7 +30,7 @@ class MailConnectionPerformanceTest extends TestCase {
 	private TestLogger $logger;
 	private ProvisioningMapper&MockObject $provisioningMapper;
 	private MailAccountMapper&MockObject $accountMapper;
-	private IMAPClientFactory&MockObject $clientFactory;
+	private ProtocolFactory&MockObject $protocolFactory;
 	private MicroTime&MockObject $microtime;
 	private MailConnectionPerformance $check;
 
@@ -41,7 +41,7 @@ class MailConnectionPerformanceTest extends TestCase {
 		$this->logger = new TestLogger();
 		$this->provisioningMapper = $this->createMock(ProvisioningMapper::class);
 		$this->accountMapper = $this->createMock(MailAccountMapper::class);
-		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->microtime = $this->createMock(MicroTime::class);
 
 		$this->check = new MailConnectionPerformance(
@@ -49,7 +49,7 @@ class MailConnectionPerformanceTest extends TestCase {
 			$this->logger,
 			$this->provisioningMapper,
 			$this->accountMapper,
-			$this->clientFactory,
+			$this->protocolFactory,
 			$this->microtime
 		);
 	}
@@ -115,8 +115,8 @@ class MailConnectionPerformanceTest extends TestCase {
 			->with('INBOX')
 			->willReturn([]);
 
-		$this->clientFactory->expects($this->once())
-			->method('getClient')
+		$this->protocolFactory->expects($this->once())
+			->method('imapClient')
 			->with(new Account($account))
 			->willReturn($client);
 
@@ -165,8 +165,8 @@ class MailConnectionPerformanceTest extends TestCase {
 			->with('INBOX')
 			->willReturn([]);
 
-		$this->clientFactory->expects($this->once())
-			->method('getClient')
+		$this->protocolFactory->expects($this->once())
+			->method('imapClient')
 			->with(new Account($account))
 			->willReturn($client);
 
@@ -206,8 +206,8 @@ class MailConnectionPerformanceTest extends TestCase {
 			->with(42)
 			->willReturn($account);
 
-		$this->clientFactory->expects($this->once())
-			->method('getClient')
+		$this->protocolFactory->expects($this->once())
+			->method('imapClient')
 			->with(new Account($account))
 			->willReturn($client);
 
@@ -243,8 +243,8 @@ class MailConnectionPerformanceTest extends TestCase {
 			->method('findById')
 			->with(42)
 			->willReturn($account);
-		$this->clientFactory->expects($this->once())
-			->method('getClient')
+		$this->protocolFactory->expects($this->once())
+			->method('imapClient')
 			->with(new Account($account))
 			->willThrowException(new ServiceException('Something about decryption'));
 

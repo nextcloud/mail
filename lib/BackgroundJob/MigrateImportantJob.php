@@ -14,8 +14,8 @@ use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\MailboxMapper;
 
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Migration\MigrateImportantFromImapAndDb;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -30,7 +30,7 @@ class MigrateImportantJob extends QueuedJob {
 		private MigrateImportantFromImapAndDb $migration,
 		private LoggerInterface $logger,
 		ITimeFactory $timeFactory,
-		private IMAPClientFactory $imapClientFactory,
+		private ProtocolFactory $protocolFactory,
 	) {
 		parent::__construct($timeFactory);
 	}
@@ -59,10 +59,10 @@ class MigrateImportantJob extends QueuedJob {
 		}
 
 		$account = new Account($mailAccount);
-		$client = $this->imapClientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 
 		try {
-			if ($this->mailManager->isPermflagsEnabled($client, $account, $mailbox->getName()) === false) {
+			if ($this->mailManager->isPermflagsEnabled($account, $mailbox) === false) {
 				$this->logger->debug("Permflags not enabled for <{$accountId}>");
 				return;
 			}

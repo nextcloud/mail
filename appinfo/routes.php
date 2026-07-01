@@ -226,7 +226,7 @@ return [
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'messages#getSource',
+			'name' => 'messages#getRawMessage',
 			'url' => '/api/messages/{id}/source',
 			'verb' => 'GET'
 		],

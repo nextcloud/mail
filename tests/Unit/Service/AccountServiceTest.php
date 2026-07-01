@@ -17,7 +17,7 @@ use OCA\Mail\Db\DelegationMapper;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -54,8 +54,8 @@ class AccountServiceTest extends TestCase {
 	/** @var IJobList|MockObject */
 	private $jobList;
 
-	/** @var IMAPClientFactory|MockObject */
-	private $imapClientFactory;
+	/** @var ProtocolFactory|MockObject */
+	private $protocolFactory;
 
 	/** @var Horde_Imap_Client_Socket|MockObject */
 	private $client;
@@ -71,7 +71,7 @@ class AccountServiceTest extends TestCase {
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);
 		$this->jobList = $this->createMock(IJobList::class);
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->config = $this->createMock(IConfig::class);
 		$this->time = $this->createMock(ITimeFactory::class);
 		$this->delegationMapper = $this->createMock(DelegationMapper::class);
@@ -79,7 +79,7 @@ class AccountServiceTest extends TestCase {
 			$this->mapper,
 			$this->aliasesService,
 			$this->jobList,
-			$this->imapClientFactory,
+			$this->protocolFactory,
 			$this->config,
 			$this->time,
 			$this->delegationMapper,
@@ -212,8 +212,8 @@ class AccountServiceTest extends TestCase {
 	}
 	public function testAccountsFailedConnection() {
 		$accountId = 1;
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
+		$this->protocolFactory->expects($this->once())
+			->method('testConnection')
 			->willThrowException(new ClientException());
 		$this->mapper->expects($this->once())
 			->method('find')
@@ -224,12 +224,8 @@ class AccountServiceTest extends TestCase {
 	}
 	public function testAccountsSuccesfulConnection() {
 		$accountId = 1;
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->willReturn($this->client);
-		$this->client->expects($this->once())
-			->method('close')
-			->willReturn(null);
+		$this->protocolFactory->expects($this->once())
+			->method('testConnection');
 		$this->mapper->expects($this->once())
 			->method('find')
 			->with($this->user, $accountId)

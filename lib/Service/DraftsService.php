@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
@@ -18,7 +17,7 @@ use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\DraftMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -35,8 +34,8 @@ class DraftsService {
 		private LocalMessageMapper $mapper,
 		private AttachmentService $attachmentService,
 		IEventDispatcher $eventDispatcher,
-		private IMAPClientFactory $clientFactory,
-		private IMailManager $mailManager,
+		private ProtocolFactory $protocolFactory,
+		private MailManager $mailManager,
 		private LoggerInterface $logger,
 		private AccountService $accountService,
 		ITimeFactory $time,
@@ -101,7 +100,7 @@ class DraftsService {
 			return $message;
 		}
 
-		$client = $this->clientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
 		} finally {
@@ -134,7 +133,7 @@ class DraftsService {
 			return $message;
 		}
 
-		$client = $this->clientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
 		} finally {

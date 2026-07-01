@@ -12,7 +12,6 @@ namespace Unit\Job;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\BackgroundJob\FollowUpClassifierJob;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
@@ -20,6 +19,7 @@ use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\ThreadMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Utility\ITimeFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -37,7 +37,7 @@ class FollowUpClassifierJobTest extends TestCase {
 	/** @var AccountService|MockObject */
 	private $accountService;
 
-	/** @var IMailManager|MockObject */
+	/** @var MailManager|MockObject */
 	private $mailManager;
 
 	/** @var AiIntegrationsService|MockObject */
@@ -52,7 +52,7 @@ class FollowUpClassifierJobTest extends TestCase {
 		$this->time = $this->createMock(ITimeFactory::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->accountService = $this->createMock(AccountService::class);
-		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->mailManager = $this->createMock(MailManager::class);
 		$this->aiService = $this->createMock(AiIntegrationsService::class);
 		$this->threadMapper = $this->createMock(ThreadMapper::class);
 
@@ -98,7 +98,7 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('user', 100)
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getByMessageId')
+			->method('getMessagesByMessageId')
 			->with($account, '<message1@foo.bar>')
 			->willReturn($messages);
 		$this->threadMapper->expects(self::once())
@@ -114,8 +114,8 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('Follow up', '#d77000', 'user')
 			->willReturn($tag);
 		$this->mailManager->expects(self::once())
-			->method('tagMessage')
-			->with($account, 'sent', $message, $tag, true);
+			->method('tagMessages')
+			->with($account, $mailbox, $tag, true, $message);
 
 		$this->job->run($argument);
 	}
@@ -141,7 +141,7 @@ class FollowUpClassifierJobTest extends TestCase {
 		$this->accountService->expects(self::never())
 			->method('find');
 		$this->mailManager->expects(self::never())
-			->method('getByMessageId');
+			->method('getMessagesByMessageId');
 		$this->threadMapper->expects(self::never())
 			->method('findNewerMessageIdsInThread');
 		$this->aiService->expects(self::never())
@@ -149,7 +149,7 @@ class FollowUpClassifierJobTest extends TestCase {
 		$this->mailManager->expects(self::never())
 			->method('createTag');
 		$this->mailManager->expects(self::never())
-			->method('tagMessage');
+			->method('tagMessages');
 
 		$this->job->run($argument);
 	}
@@ -181,7 +181,7 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('user', 100)
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getByMessageId')
+			->method('getMessagesByMessageId')
 			->with($account, '<message1@foo.bar>')
 			->willReturn($messages);
 		$this->threadMapper->expects(self::never())
@@ -191,7 +191,7 @@ class FollowUpClassifierJobTest extends TestCase {
 		$this->mailManager->expects(self::never())
 			->method('createTag');
 		$this->mailManager->expects(self::never())
-			->method('tagMessage');
+			->method('tagMessages');
 
 		$this->job->run($argument);
 	}
@@ -231,7 +231,7 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('user', 100)
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getByMessageId')
+			->method('getMessagesByMessageId')
 			->with($account, '<message1@foo.bar>')
 			->willReturn($messages);
 		$this->threadMapper->expects(self::once())
@@ -247,8 +247,8 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('Follow up', '#d77000', 'user')
 			->willReturn($tag);
 		$this->mailManager->expects(self::once())
-			->method('tagMessage')
-			->with($account, 'sent', $message, $tag, true);
+			->method('tagMessages')
+			->with($account, $mailbox, $tag, true, $message);
 
 		$this->job->run($argument);
 	}
@@ -285,7 +285,7 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('user', 100)
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getByMessageId')
+			->method('getMessagesByMessageId')
 			->with($account, '<message1@foo.bar>')
 			->willReturn($messages);
 		$this->threadMapper->expects(self::once())
@@ -301,8 +301,8 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('Follow up', '#d77000', 'user')
 			->willReturn($tag);
 		$this->mailManager->expects(self::once())
-			->method('tagMessage')
-			->with($account, 'sent', $message, $tag, true);
+			->method('tagMessages')
+			->with($account, $mailbox, $tag, true, $message);
 
 		$this->job->run($argument);
 	}
@@ -339,7 +339,7 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('user', 100)
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getByMessageId')
+			->method('getMessagesByMessageId')
 			->with($account, '<message1@foo.bar>')
 			->willReturn($messages);
 		$this->threadMapper->expects(self::once())
@@ -353,7 +353,7 @@ class FollowUpClassifierJobTest extends TestCase {
 		$this->mailManager->expects(self::never())
 			->method('createTag');
 		$this->mailManager->expects(self::never())
-			->method('tagMessage');
+			->method('tagMessages');
 
 		$this->job->run($argument);
 	}
@@ -390,7 +390,7 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('user', 100)
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getByMessageId')
+			->method('getMessagesByMessageId')
 			->with($account, '<message1@foo.bar>')
 			->willReturn($messages);
 		$this->threadMapper->expects(self::once())
@@ -402,7 +402,7 @@ class FollowUpClassifierJobTest extends TestCase {
 		$this->mailManager->expects(self::never())
 			->method('createTag');
 		$this->mailManager->expects(self::never())
-			->method('tagMessage');
+			->method('tagMessages');
 
 		$this->job->run($argument);
 	}

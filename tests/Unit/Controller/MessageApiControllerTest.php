@@ -21,7 +21,6 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\UploadException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Model\SmimeData;
 use OCA\Mail\Service\AccountService;
@@ -52,7 +51,6 @@ class MessageApiControllerTest extends TestCase {
 	private AttachmentService|MockObject $attachmentService;
 	private OutboxService|MockObject $outboxService;
 	private MailManager|MockObject $mailManager;
-	private IMAPClientFactory|MockObject $imapClientFactory;
 	private LoggerInterface|MockObject $logger;
 	private MockObject|ITimeFactory $time;
 	private MockObject|IURLGenerator $urlGenerator;
@@ -79,7 +77,6 @@ class MessageApiControllerTest extends TestCase {
 		$this->attachmentService = $this->createMock(AttachmentService::class);
 		$this->outboxService = $this->createMock(OutboxService::class);
 		$this->mailManager = $this->createMock(MailManager::class);
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->time = $this->createMock(ITimeFactory::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
@@ -98,7 +95,6 @@ class MessageApiControllerTest extends TestCase {
 			$this->attachmentService,
 			$this->outboxService,
 			$this->mailManager,
-			$this->imapClientFactory,
 			$this->logger,
 			$this->time,
 			$this->urlGenerator,
@@ -130,7 +126,6 @@ class MessageApiControllerTest extends TestCase {
 		$message->setUid(1);
 		$mailbox = new Mailbox();
 		$mailbox->setAccountId($this->accountId);
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 		$imapMessage = $this->createMock(IMAPMessage::class);
 
 		$this->logger->expects(self::never())
@@ -149,14 +144,9 @@ class MessageApiControllerTest extends TestCase {
 			->method('find')
 			->with($this->userId, $this->accountId)
 			->willReturn($this->account);
-		$this->imapClientFactory->expects(self::once())
-			->method('getClient')
-			->willReturn($client);
 		$this->mailManager->expects(self::once())
 			->method('getImapMessage')
 			->willReturn($imapMessage);
-		$client->expects(self::once())
-			->method('logout');
 		$imapMessage->expects(self::once())
 			->method('getFullMessage')
 			->with($this->messageId, true)
@@ -244,7 +234,6 @@ class MessageApiControllerTest extends TestCase {
 		$message->setUid(1);
 		$mailbox = new Mailbox();
 		$mailbox->setAccountId($this->accountId);
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 		$imapMessage = $this->createMock(IMAPMessage::class);
 		$smime = new SmimeData();
 		$smime->setIsEncrypted(true);
@@ -272,19 +261,14 @@ class MessageApiControllerTest extends TestCase {
 			->method('find')
 			->with($this->userId, $this->accountId)
 			->willReturn($this->account);
-		$this->imapClientFactory->expects(self::once())
-			->method('getClient')
-			->willReturn($client);
 		$this->mailManager->expects(self::exactly(2))
 			->method('getImapMessage')
-			->willReturnCallback(function ($client, $account, $mailbox, $uid, $loadBody) use ($imapMessage) {
+			->willReturnCallback(function ($account, $mailbox, $message, $loadBody) use ($imapMessage) {
 				if ($loadBody) {
 					throw new SmimeDecryptException();
 				}
 				return $imapMessage;
 			});
-		$client->expects(self::once())
-			->method('logout');
 		$imapMessage->expects(self::once())
 			->method('getFullMessage')
 			->with($this->messageId, false)
@@ -321,7 +305,6 @@ class MessageApiControllerTest extends TestCase {
 		$message->setUid(1);
 		$mailbox = new Mailbox();
 		$mailbox->setAccountId($this->accountId);
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 
 		$this->logger->expects(self::never())
 			->method('warning');
@@ -339,14 +322,9 @@ class MessageApiControllerTest extends TestCase {
 			->method('find')
 			->with($this->userId, $this->accountId)
 			->willReturn($this->account);
-		$this->imapClientFactory->expects(self::once())
-			->method('getClient')
-			->willReturn($client);
 		$this->mailManager->expects(self::once())
 			->method('getImapMessage')
 			->willThrowException(new ServiceException());
-		$client->expects(self::once())
-			->method('logout');
 		$this->itineraryService->expects(self::never())
 			->method('getCached');
 		$this->trustedSenderService->expects(self::never())
@@ -383,8 +361,6 @@ class MessageApiControllerTest extends TestCase {
 			->willThrowException(new ClientException(''));
 		$this->accountService->expects(self::never())
 			->method('find');
-		$this->imapClientFactory->expects(self::never())
-			->method('getClient');
 		$this->mailManager->expects(self::never())
 			->method('getImapMessage');
 		$this->itineraryService->expects(self::never())
