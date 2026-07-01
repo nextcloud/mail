@@ -53,6 +53,8 @@ use function array_filter;
  * @method setRaw(string|null $raw)
  * @method bool getRequestMdn()
  * @method setRequestMdn(bool $mdn)
+ * @method bool isAiGenerated()
+ * @method void setAiGenerated(bool $aiGenerated)
  */
 class LocalMessage extends Entity implements JsonSerializable {
 	public const TYPE_OUTGOING = 0;
@@ -140,6 +142,9 @@ class LocalMessage extends Entity implements JsonSerializable {
 
 	/** @var bool */
 	protected $requestMdn;
+
+	/** @var bool — not persisted; set at send time from the request */
+	protected $aiGenerated = false;
 
 	public function __construct() {
 		$this->addType('type', 'integer');
