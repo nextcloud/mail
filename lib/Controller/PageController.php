@@ -294,7 +294,7 @@ class PageController extends Controller {
 					'redirect_uri' => $this->urlGenerator->linkToRouteAbsolute('mail.googleIntegration.oauthRedirect'),
 					'response_type' => 'code',
 					'prompt' => 'consent',
-					'state' => '_accountId_', // Replaced by frontend
+					'state' => '_state_', // Replaced by frontend
 					'scope' => 'https://mail.google.com/',
 					'access_type' => 'offline',
 					'login_hint' => '_email_', // Replaced by frontend
@@ -311,7 +311,7 @@ class PageController extends Controller {
 					'redirect_uri' => $this->urlGenerator->linkToRouteAbsolute('mail.microsoftIntegration.oauthRedirect'),
 					'response_type' => 'code',
 					'response_mode' => 'query',
-					'state' => '_accountId_', // Replaced by frontend
+					'state' => '_state_', // Replaced by frontend
 					'scope' => 'offline_access https://outlook.office.com/IMAP.AccessAsUser.All https://outlook.office.com/SMTP.Send',
 					'access_type' => 'offline',
 					'login_hint' => '_email_', // Replaced by frontend
