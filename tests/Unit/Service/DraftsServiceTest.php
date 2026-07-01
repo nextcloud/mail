@@ -12,10 +12,13 @@ namespace OCA\Mail\Tests\Unit\Service;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC\EventDispatcher\EventDispatcher;
 use OCA\Mail\Account;
+use OCA\Mail\Contracts\ITransmissionConnector;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\DraftMessageCreatedEvent;
@@ -25,7 +28,6 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\DraftsService;
 use OCA\Mail\Service\MailManager;
-use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\OutboxService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -35,8 +37,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class DraftsServiceTest extends TestCase {
-	/** @var MailTransmission|MockObject */
-	private $transmission;
+	/** @var MailboxMapper|MockObject */
+	private $mailboxMapper;
 
 	/** @var LocalMessageMapper|MockObject */
 	private $mapper;
@@ -71,7 +73,7 @@ class DraftsServiceTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->transmission = $this->createMock(MailTransmission::class);
+		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->mapper = $this->createMock(LocalMessageMapper::class);
 		$this->attachmentService = $this->createMock(AttachmentService::class);
 		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
@@ -81,12 +83,12 @@ class DraftsServiceTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->draftsService = new DraftsService(
-			$this->transmission,
 			$this->mapper,
 			$this->attachmentService,
 			$this->eventDispatcher,
 			$this->protocolFactory,
 			$this->mailManager,
+			$this->mailboxMapper,
 			$this->logger,
 			$this->accountService,
 			$this->timeFactory
@@ -456,13 +458,24 @@ class DraftsServiceTest extends TestCase {
 		$attachments = [$attachment];
 		$message->setRecipients($recipients);
 		$message->setAttachments($attachments);
-		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $this->userId
-		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($this->userId);
+		$mailAccount->setDraftsMailboxId(3);
+		$account = new Account($mailAccount);
+		$mailbox = new Mailbox();
+		$connector = $this->createMock(ITransmissionConnector::class);
 
-		$this->transmission->expects(self::once())
-			->method('saveLocalDraft')
-			->with($account, $message);
+		$this->mailboxMapper->expects(self::once())
+			->method('findById')
+			->with(3)
+			->willReturn($mailbox);
+		$this->protocolFactory->expects(self::once())
+			->method('transmissionConnector')
+			->with($account)
+			->willReturn($connector);
+		$connector->expects(self::once())
+			->method('saveMessage')
+			->with($account, $mailbox, $message, ['$draft']);
 		$this->attachmentService->expects(self::once())
 			->method('deleteLocalMessageAttachments')
 			->with($account->getUserId(), $message->getId());
@@ -488,14 +501,28 @@ class DraftsServiceTest extends TestCase {
 		$attachments = [$attachment];
 		$message->setRecipients($recipients);
 		$message->setAttachments($attachments);
-		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $this->userId
-		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($this->userId);
+		$mailAccount->setDraftsMailboxId(3);
+		$account = new Account($mailAccount);
+		$mailbox = new Mailbox();
+		$connector = $this->createMock(ITransmissionConnector::class);
 
-		$this->transmission->expects(self::once())
-			->method('saveLocalDraft')
-			->with($account, $message)
+		$this->mailboxMapper->expects(self::once())
+			->method('findById')
+			->with(3)
+			->willReturn($mailbox);
+		$this->protocolFactory->expects(self::once())
+			->method('transmissionConnector')
+			->with($account)
+			->willReturn($connector);
+		$connector->expects(self::once())
+			->method('saveMessage')
+			->with($account, $mailbox, $message, ['$draft'])
 			->willThrowException(new ClientException());
+		$this->mapper->expects(self::once())
+			->method('update')
+			->with($message);
 		$this->attachmentService->expects(self::never())
 			->method('deleteLocalMessageAttachments');
 		$this->mapper->expects(self::never())
