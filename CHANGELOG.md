@@ -1,3 +1,15 @@
+## [5.10.5](https://github.com/nextcloud/mail/compare/v5.10.4...v5.10.5) (2026-07-01)
+
+
+### Bug Fixes
+
+* **dns:** Update public suffix list ([1f2c293](https://github.com/nextcloud/mail/commit/1f2c2936a8be72f70bc0cda43279fd3d225497f6))
+* **l10n:** Update translations from Transifex ([1915989](https://github.com/nextcloud/mail/commit/191598949f05a40e9cde86d3551d9a59405a10cf))
+* **oauth:** generate state token server-side before redirect ([323cd29](https://github.com/nextcloud/mail/commit/323cd29fa5558af0ea72f6c9edc1e89864da7287))
+* **ui:** restore folder expand state after drag-and-drop ([c00589e](https://github.com/nextcloud/mail/commit/c00589e876c84ad0d9daf4a745f8b9f3b50a32d8))
+
+
+
 ## [5.10.4](https://github.com/nextcloud/mail/compare/v5.10.3...v5.10.4) (2026-06-30)
 
 
