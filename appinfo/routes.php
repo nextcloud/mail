@@ -471,6 +471,11 @@ return [
 			'verb' => 'GET',
 		],
 		[
+			'name' => 'oauth#generateState',
+			'url' => '/api/oauth/state',
+			'verb' => 'POST',
+		],
+		[
 			'name' => 'list#unsubscribe',
 			'url' => '/api/list/unsubscribe/{id}',
 			'verb' => 'POST',

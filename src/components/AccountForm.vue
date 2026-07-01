@@ -272,6 +272,7 @@ import {
 	queryMx,
 	testConnectivity,
 } from '../service/AutoConfigService.js'
+import { generateOauthState } from '../service/OauthStateService.js'
 import useMainStore from '../store/mainStore.js'
 
 export default {
@@ -608,12 +609,12 @@ export default {
 							if (this.isGoogleAccount) {
 								this.feedback = t('mail', 'Account created. Please follow the pop-up instructions to link your Google account')
 								await getUserConsent(this.googleOauthUrl
-									.replace('_accountId_', account.id)
+									.replace('_state_', await generateOauthState(account.id))
 									.replace('_email_', encodeURIComponent(account.emailAddress)))
 							} else {
 								this.feedback = t('mail', 'Account created. Please follow the pop-up instructions to link your Microsoft account')
 								await getUserConsent(this.microsoftOauthUrl
-									.replace('_accountId_', account.id)
+									.replace('_state_', await generateOauthState(account.id))
 									.replace('_email_', encodeURIComponent(account.emailAddress)))
 							}
 						} catch (e) {
@@ -639,12 +640,12 @@ export default {
 							if (this.isGoogleAccount) {
 								this.feedback = t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your Google account')
 								await getUserConsent(this.googleOauthUrl
-									.replace('_accountId_', account.id)
+									.replace('_state_', await generateOauthState(account.id))
 									.replace('_email_', encodeURIComponent(account.emailAddress)))
 							} else {
 								this.feedback = t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your Microsoft account')
 								await getUserConsent(this.microsoftOauthUrl
-									.replace('_accountId_', account.id)
+									.replace('_state_', await generateOauthState(account.id))
 									.replace('_email_', encodeURIComponent(account.emailAddress)))
 							}
 						} catch (e) {
