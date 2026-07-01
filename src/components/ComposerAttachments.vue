@@ -28,7 +28,9 @@
 				:key="attachment.id"
 				:attachment="attachment"
 				:uploading="uploading"
-				@on-delete-attachment="onDelete(attachment)" />
+				@on-delete-attachment="onDelete(attachment)"
+				@preview="onPreviewAttachment"
+			/>
 		</ul>
 
 		<input
@@ -157,6 +159,29 @@ export default {
 			}
 			return total
 		},
+
+		previewableFilesInfos() {
+			return this.attachments
+				.filter((attachment) => {
+					const mime = attachment.mime || attachment.fileType
+					return mime &&
+						(
+							mime.startsWith('image/') ||
+							mime.startsWith('video/') ||
+							mime.startsWith('audio/') ||
+							mime === 'application/pdf'
+						)
+				})
+				.map((attachment) => ({
+					filename: attachment.previewBlobUrl,
+					source: attachment.previewBlobUrl,
+					basename: attachment.fileName,
+					mime: attachment.mime || attachment.fileType,
+					etag: 'fixme',
+					hasPreview: false,
+					fileid: parseInt(attachment.id, 10),
+				}))
+		},
 	},
 
 	watch: {
@@ -243,7 +268,6 @@ export default {
 			this.uploading = true
 			// BUG - if choose again - progress lost/ move to complete()
 			Vue.set(this, 'uploads', {})
-
 			const toUpload = sumBy(prop('size'), Object.values(e.target.files))
 			const newTotal = toUpload + this.totalSizeOfUpload()
 			logger.debug('checking upload size limit', {
@@ -275,6 +299,7 @@ export default {
 					fileName: file.name,
 					fileType: file.type,
 					imageBlobURL: this.generatePreview(file),
+					previewBlobUrl: this.generatePreviewBlobUrl(file),
 					displayName: trimStart('/', file.name),
 					progress: null,
 					percent: 0,
@@ -356,6 +381,7 @@ export default {
 						size: filesFromCloud[i].size,
 
 					}
+
 					const _toAttachmentData = {
 						finished: true,
 						imageBlobURL: this.generatePreview(_cloudFile),
@@ -423,6 +449,10 @@ export default {
 			// If the attachment is still uploading, abort the upload
 			if (!attachment.finished && attachment.controller) {
 				attachment.controller.abort()
+			}
+
+			if (attachment.previewBlobUrl) {
+				URL.revokeObjectURL(attachment.previewBlobUrl)
 			}
 
 			const val = {
@@ -498,9 +528,49 @@ export default {
 			}
 		},
 
+		generatePreviewBlobUrl(file) {
+			return this.isPreviewable(file)
+				? URL.createObjectURL(file)
+				: null
+		},
+
+		isPreviewable(file) {
+			return file.type.startsWith('image/')
+				|| file.type.startsWith('video/')
+				|| file.type.startsWith('audio/')
+				|| file.type === 'application/pdf'
+
+		},
+
 		isImage(file) {
 			return file.type && mimes.indexOf(file.type) !== -1
 		},
+
+		onPreviewAttachment(attachment) {
+			if (!attachment.finished) {
+				return
+			}
+
+			if (!attachment.previewBlobUrl) {
+				return
+			}
+
+			let fileInfo = {
+				filename: attachment?.previewBlobUrl,
+				source: attachment?.previewBlobUrl,
+				basename: attachment?.fileName,
+				mime: attachment?.mime || attachment?.fileType,
+				etag: 'fixme',
+				hasPreview: false,
+				fileid: parseInt(attachment.id, 10),
+			}
+
+				OCA.Viewer.open({
+					fileInfo,
+					list: this.previewableFilesInfos
+				})
+		},
+
 	},
 }
 </script>
