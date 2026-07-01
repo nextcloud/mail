@@ -1,3 +1,13 @@
+## [5.5.17](https://github.com/nextcloud/mail/compare/v5.5.16...v5.5.17) (2026-07-01)
+
+
+### Bug Fixes
+
+* **oauth:** generate state token server-side before redirect ([f7eb9d6](https://github.com/nextcloud/mail/commit/f7eb9d62fc001c8259637975be0e70d34ae06bad))
+* **psalm:** adapt to updated OCP dev-master return types ([097531c](https://github.com/nextcloud/mail/commit/097531c33e753a0a624b82fd4216bdaafc09809b))
+
+
+
 ## [5.5.16](https://github.com/nextcloud/mail/compare/v5.5.15...v5.5.16) (2026-04-28)
 
 
