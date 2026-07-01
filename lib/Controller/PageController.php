@@ -247,7 +247,7 @@ class PageController extends Controller {
 					'redirect_uri' => $this->urlGenerator->linkToRouteAbsolute('mail.googleIntegration.oauthRedirect'),
 					'response_type' => 'code',
 					'prompt' => 'consent',
-					'state' => '_accountId_', // Replaced by frontend
+					'state' => '_state_', // Replaced by frontend
 					'scope' => 'https://mail.google.com/',
 					'access_type' => 'offline',
 					'login_hint' => '_email_', // Replaced by frontend
