@@ -231,4 +231,25 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 		$this->assertTrue($message->isSigned());
 		$this->assertTrue($message->isSignatureValid());
 	}
+
+	public function testFetchMessageWithoutBody(): void {
+		$mimeMessage = file_get_contents(__DIR__ . '/../../data/nobody-message.txt');
+		$uid = $this->saveMimeMessage('INBOX', $mimeMessage);
+		$fetcher = $this->fetcherFactory
+			->build(
+				$uid,
+				'INBOX',
+				$this->getTestClient(),
+				$this->account->getUserId()
+			)
+			->withBody(true);
+
+		$message = $fetcher->fetchMessage();
+
+		$this->assertFalse($message->isEncrypted());
+		$this->assertCount(1, $message->attachments);
+		$attachment = $message->attachments[0];
+		$this->assertEquals('attach.zip', $attachment['fileName']);
+		$this->assertSame('application/zip', $attachment['mime']);
+	}
 }
