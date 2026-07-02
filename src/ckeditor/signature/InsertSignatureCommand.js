@@ -34,8 +34,9 @@ export default class InsertSignatureCommand extends Command {
 	 * @param {module:engine/model/writer~Writer} writer instance
 	 * @param {string} signature text
 	 * @param {boolean} signatureAboveQuote signature position: above/below the quoted text
+	 * @param {boolean} signatureSeparator whether to prepend the "-- " separator above the signature
 	 */
-	insertSignatureElement(editor, writer, signature, signatureAboveQuote) {
+	insertSignatureElement(editor, writer, signature, signatureAboveQuote, signatureSeparator) {
 		// Skip empty signature
 		if (signature.length === 0) {
 			return
@@ -55,8 +56,10 @@ export default class InsertSignatureCommand extends Command {
 		const modelFragment = editor.data.toModel(viewFragment)
 
 		const signatureElement = writer.createElement('signature')
-		writer.append(writer.createText('-- '), signatureElement)
-		writer.append(writer.createElement('paragraph'), signatureElement)
+		if (signatureSeparator !== false) {
+			writer.append(writer.createText('-- '), signatureElement)
+			writer.append(writer.createElement('paragraph'), signatureElement)
+		}
 		writer.append(modelFragment, signatureElement)
 		if (signatureAboveQuote) {
 			writer.append(writer.createElement('paragraph'), signatureElement)
@@ -122,8 +125,9 @@ export default class InsertSignatureCommand extends Command {
 	 * @param {string} trigger TRIGGER_CHANGE_ALIAS or TRIGGER_EDITOR_READY
 	 * @param {string} signature text
 	 * @param {boolean} signatureAboveQuote signature position: above/below the quoted text
+	 * @param {boolean} signatureSeparator whether to prepend the "-- " separator above the signature
 	 */
-	execute(trigger, signature, signatureAboveQuote) {
+	execute(trigger, signature, signatureAboveQuote, signatureSeparator) {
 		this.editor.model.change((writer) => {
 			/**
 			 * TRIGGER_CHANGE_ALIAS:
@@ -139,11 +143,11 @@ export default class InsertSignatureCommand extends Command {
 
 			if (trigger === TRIGGER_CHANGE_ALIAS) {
 				this.removeSignatureElement(this.editor, writer)
-				this.insertSignatureElement(this.editor, writer, signature, signatureAboveQuote)
+				this.insertSignatureElement(this.editor, writer, signature, signatureAboveQuote, signatureSeparator)
 			}
 
 			if (trigger === TRIGGER_EDITOR_READY && !this.hasSignatureElement(this.editor)) {
-				this.insertSignatureElement(this.editor, writer, signature, signatureAboveQuote)
+				this.insertSignatureElement(this.editor, writer, signature, signatureAboveQuote, signatureSeparator)
 			}
 		})
 	}

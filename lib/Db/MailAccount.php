@@ -79,6 +79,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setSievePassword(?string $sievePassword)
  * @method bool|null isSignatureAboveQuote()
  * @method void setSignatureAboveQuote(bool $signatureAboveQuote)
+ * @method bool|null isSignatureSeparator()
+ * @method void setSignatureSeparator(bool $signatureSeparator)
  * @method string getAuthMethod()
  * @method void setAuthMethod(string $method)
  * @method int getSignatureMode()
@@ -165,6 +167,8 @@ class MailAccount extends Entity {
 	protected $sievePassword;
 	/** @var bool */
 	protected $signatureAboveQuote = false;
+	/** @var bool */
+	protected $signatureSeparator = true;
 
 	/** @var int|null */
 	protected $provisioningId;
@@ -245,6 +249,9 @@ class MailAccount extends Entity {
 		if (isset($params['signatureAboveQuote'])) {
 			$this->setSignatureAboveQuote($params['signatureAboveQuote']);
 		}
+		if (isset($params['signatureSeparator'])) {
+			$this->setSignatureSeparator($params['signatureSeparator']);
+		}
 		if (isset($params['trashRetentionDays'])) {
 			$this->setTrashRetentionDays($params['trashRetentionDays']);
 		}
@@ -276,6 +283,7 @@ class MailAccount extends Entity {
 		$this->addType('sieveEnabled', 'boolean');
 		$this->addType('sievePort', 'integer');
 		$this->addType('signatureAboveQuote', 'boolean');
+		$this->addType('signatureSeparator', 'boolean');
 		$this->addType('signatureMode', 'integer');
 		$this->addType('smimeCertificateId', 'integer');
 		$this->addType('quotaPercentage', 'integer');
@@ -327,6 +335,7 @@ class MailAccount extends Entity {
 			'snoozeMailboxId' => $this->getSnoozeMailboxId(),
 			'sieveEnabled' => ($this->isSieveEnabled() === true),
 			'signatureAboveQuote' => ($this->isSignatureAboveQuote() === true),
+			'signatureSeparator' => ($this->isSignatureSeparator() !== false),
 			'signatureMode' => $this->getSignatureMode(),
 			'smimeCertificateId' => $this->getSmimeCertificateId(),
 			'quotaPercentage' => $this->getQuotaPercentage(),
