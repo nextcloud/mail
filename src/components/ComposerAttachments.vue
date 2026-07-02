@@ -104,6 +104,11 @@ export default {
 			type: Number,
 			default: 0,
 		},
+
+		accountId: {
+			type: Number,
+			default: null,
+		},
 	},
 
 	data() {
@@ -292,7 +297,7 @@ export default {
 					uploaded: 0,
 				})
 				try {
-					return uploadLocalAttachment(file, progress(file.name), controller)
+					return uploadLocalAttachment(file, this.accountId, progress(file.name), controller)
 						.catch(() => {
 							this.attachments.some((attachment) => {
 								if (attachment.displayName === file.name && !attachment.error) {
