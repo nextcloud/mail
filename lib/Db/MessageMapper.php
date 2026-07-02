@@ -755,10 +755,11 @@ class MessageMapper extends QBMapper {
 	/**
 	 * @param Account $account
 	 * @param string $threadRootId
+	 * @param string $sortOrder
 	 *
 	 * @return Message[]
 	 */
-	public function findThread(Account $account, string $threadRootId): array {
+	public function findThread(Account $account, string $threadRootId, string $sortOrder): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('messages.*')
 			->from($this->getTableName(), 'messages')
@@ -767,7 +768,7 @@ class MessageMapper extends QBMapper {
 				$qb->expr()->eq('mailboxes.account_id', $qb->createNamedParameter($account->getId(), IQueryBuilder::PARAM_INT)),
 				$qb->expr()->eq('messages.thread_root_id', $qb->createNamedParameter($threadRootId, IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR)
 			)
-			->orderBy('messages.sent_at', 'desc');
+			->orderBy('messages.sent_at', $sortOrder);
 
 		return $this->findRelatedData($this->findEntities($qb), $account->getUserId());
 	}
@@ -1228,10 +1229,11 @@ class MessageMapper extends QBMapper {
 	 * @param Mailbox $mailbox
 	 * @param string $userId
 	 * @param int[] $ids
+	 * @param string $sortOrder
 	 *
 	 * @return Message[]
 	 */
-	public function findByMailboxAndIds(Mailbox $mailbox, string $userId, array $ids): array {
+	public function findByMailboxAndIds(Mailbox $mailbox, string $userId, array $ids, string $sortOrder): array {
 		if ($ids === []) {
 			return [];
 		}
@@ -1243,7 +1245,7 @@ class MessageMapper extends QBMapper {
 				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailbox->getId()), IQueryBuilder::PARAM_INT),
 				$qb->expr()->in('id', $qb->createParameter('ids'))
 			)
-			->orderBy('sent_at', 'desc');
+			->orderBy('sent_at', $sortOrder);
 
 		$results = [];
 		foreach (array_chunk($ids, 1000) as $chunk) {
@@ -1251,6 +1253,92 @@ class MessageMapper extends QBMapper {
 			$results[] = $this->findRelatedData($this->findEntities($qb), $userId);
 		}
 		return array_merge([], ...$results);
+	}
+
+	/**
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 * @param string $userId
+	 * @param int[] $ids
+	 * @param string $sortOrder
+	 * @param bool $threadingEnabled
+	 *
+	 * @return Message[][]
+	 */
+	public function findMessageListsByMailboxAndIds(Account $account, Mailbox $mailbox, string $userId, array $ids, string $sortOrder, bool $threadingEnabled = false): array {
+		if ($ids === []) {
+			return [];
+		}
+
+		$base = $this->findByMailboxAndIds($mailbox, $userId, $ids, $sortOrder);
+		if ($threadingEnabled === false) {
+			return array_map(static fn (Message $m) => [$m], $base);
+		}
+
+		return $this->groupThreadsForRepresentatives($account, $base, $ids, $userId, $sortOrder);
+	}
+
+	/**
+	 * Expand a list of per-thread representative messages into full thread
+	 * groups by fetching all sibling messages (same thread_root_id) across the
+	 * account's mailboxes, preserving the order of $representatives.
+	 *
+	 * @param Message[] $representatives one ordered representative per thread
+	 * @param int[] $representativeIds ids already loaded in $representatives
+	 *
+	 * @return Message[][]
+	 */
+	private function groupThreadsForRepresentatives(Account $account, array $representatives, array $representativeIds, string $userId, string $sortOrder): array {
+		if ($representatives === []) {
+			return [];
+		}
+
+		// A null thread_root_id means the message is not threaded, so it must
+		// stay its own group. Casting null to '' would collapse every unthreaded
+		// representative into a single shared key, merging unrelated messages.
+		$keyOf = static fn (Message $m) => $m->getThreadRootId() ?? 'id:' . $m->getId();
+
+		// Only messages with an actual thread root can have siblings to fetch.
+		$threadRoots = array_values(array_unique(array_filter(
+			array_map(static fn (Message $m) => $m->getThreadRootId(), $representatives),
+			static fn (?string $root) => $root !== null
+		)));
+
+		$messages = [$representatives];
+		if ($threadRoots !== []) {
+			$qb = $this->db->getQueryBuilder();
+			$qb->select('m.*')
+				->from($this->getTableName(), 'm')
+				->join('m', 'mail_mailboxes', 'mb', $qb->expr()->eq('m.mailbox_id', 'mb.id', IQueryBuilder::PARAM_INT))
+				->where(
+					$qb->expr()->eq('mb.account_id', $qb->createNamedParameter($account->getId(), IQueryBuilder::PARAM_INT)),
+					$qb->expr()->in('m.thread_root_id', $qb->createParameter('roots')),
+					$qb->expr()->notIn('m.id', $qb->createNamedParameter($representativeIds, IQueryBuilder::PARAM_INT_ARRAY))
+				)
+				->orderBy('m.sent_at', $sortOrder);
+			foreach (array_chunk($threadRoots, 1000) as $chunk) {
+				$qb->setParameter('roots', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
+				$messages[] = $this->findEntities($qb);
+			}
+		}
+
+		$enriched = $this->findRelatedData(array_merge(...$messages), $userId);
+
+		$groups = [];
+		foreach ($enriched as $m) {
+			$groups[$keyOf($m)][] = $m;
+		}
+
+		$out = [];
+		$seen = [];
+		foreach ($representatives as $rep) {
+			$key = $keyOf($rep);
+			if (isset($groups[$key]) && !isset($seen[$key])) {
+				$out[] = $groups[$key];
+				$seen[$key] = true;
+			}
+		}
+		return $out;
 	}
 
 	/**
@@ -1278,6 +1366,29 @@ class MessageMapper extends QBMapper {
 			$results[] = $this->findRelatedData($this->findEntities($qb), $userId);
 		}
 		return array_merge([], ...$results);
+	}
+
+
+	/**
+	 * @param Account $account
+	 * @param string $userId
+	 * @param int[] $ids
+	 * @param string $sortOrder
+	 *
+	 * @return Message[][]
+	 */
+	public function findMessageListsByIds(Account $account, string $userId, array $ids, string $sortOrder, bool $threadingEnabled = false): array {
+		if ($ids === []) {
+			return [];
+		}
+
+		$base = $this->findByIds($userId, $ids, $sortOrder);
+
+		if ($threadingEnabled === false) {
+			return array_map(static fn (Message $m) => [$m], $base);
+		}
+
+		return $this->groupThreadsForRepresentatives($account, $base, $ids, $userId, $sortOrder);
 	}
 
 	/**

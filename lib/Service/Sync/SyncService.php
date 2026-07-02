@@ -11,6 +11,7 @@ namespace OCA\Mail\Service\Sync;
 
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailSearch;
+use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
@@ -24,6 +25,7 @@ use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\Service\Search\FilterStringParser;
 use OCA\Mail\Service\Search\SearchQuery;
+use OCP\IAppConfig;
 use Psr\Log\LoggerInterface;
 use function array_diff;
 use function array_map;
@@ -38,6 +40,8 @@ class SyncService {
 		private PreviewEnhancer $previewEnhancer,
 		private LoggerInterface $logger,
 		private MailboxSync $mailboxSync,
+		private IAppConfig $config,
+		private IUserPreferences $preferences,
 	) {
 	}
 
@@ -102,7 +106,8 @@ class SyncService {
 		);
 
 		$this->mailboxSync->syncStats($client, $mailbox);
-
+		$userId = $account->getUserId();
+		$threadingEnabled = $this->preferences->getPreference($userId, 'layout-message-view', $this->config->getValueString('mail', 'layout_message_view', 'threaded')) === 'threaded';
 		$client->logout();
 
 		$query = $filter === null ? null : $this->filterStringParser->parse($filter);
@@ -112,7 +117,8 @@ class SyncService {
 			$knownIds ?? [],
 			$lastMessageTimestamp,
 			$sortOrder,
-			$query
+			$query,
+			$threadingEnabled
 		);
 	}
 
@@ -121,6 +127,7 @@ class SyncService {
 	 * @param Mailbox $mailbox
 	 * @param int[] $knownIds
 	 * @param SearchQuery $query
+	 * @param bool $threadingEnabled
 	 *
 	 * @return Response
 	 * @todo does not work with text token search queries
@@ -131,7 +138,8 @@ class SyncService {
 		array $knownIds,
 		?int $lastMessageTimestamp,
 		string $sortOrder,
-		?SearchQuery $query): Response {
+		?SearchQuery $query,
+		bool $threadingEnabled): Response {
 		if ($knownIds === []) {
 			$newIds = $this->messageMapper->findAllIds($mailbox);
 		} else {
@@ -143,7 +151,13 @@ class SyncService {
 			$newUids = $this->messageMapper->findUidsForIds($mailbox, $newIds);
 			$newIds = $this->messageMapper->findIdsByQuery($mailbox, $query, $order, null, $newUids);
 		}
-		$new = $this->messageMapper->findByMailboxAndIds($mailbox, $account->getUserId(), $newIds);
+
+		$new = $this->messageMapper->findMessageListsByMailboxAndIds($account, $mailbox, $account->getUserId(), $newIds, $sortOrder, $threadingEnabled);
+
+		// Enhance previews for all new messages, grouping by mailbox so thread
+		// members in other folders are enhanced against their own folder. The
+		// Message objects are mutated in place, so the grouping stays intact.
+		$this->previewEnhancer->processMany($account, array_merge([], ...$new));
 
 		// TODO: $changed = $this->messageMapper->findChanged($account, $mailbox, $uids);
 		if ($query !== null) {
@@ -152,13 +166,13 @@ class SyncService {
 		} else {
 			$changedIds = $knownIds;
 		}
-		$changed = $this->messageMapper->findByMailboxAndIds($mailbox, $account->getUserId(), $changedIds);
+		$changed = $this->messageMapper->findByMailboxAndIds($mailbox, $account->getUserId(), $changedIds, $sortOrder);
 
 		$stillKnownIds = array_map(static fn (Message $msg) => $msg->getId(), $changed);
 		$vanished = array_values(array_diff($knownIds, $stillKnownIds));
 
 		return new Response(
-			$this->previewEnhancer->process($account, $mailbox, $new),
+			$new,
 			$changed,
 			$vanished,
 			$mailbox->getStats()
