@@ -548,7 +548,7 @@ class ImapMessageFetcher {
 		$this->hasDkimSignature = $dkimSignatureHeader !== null;
 
 		$aiGeneratedHeader = $parsedHeaders->getHeader('x-ai-generated');
-		$this->isAiGenerated = $aiGeneratedHeader !== null;
+		$this->isAiGenerated = $aiGeneratedHeader !== null && trim($aiGeneratedHeader->value_single) === '1';
 
 		if ($this->runPhishingCheck) {
 			$this->phishingDetails = $this->phishingDetectionService->checkHeadersForPhishing($this->userId, $parsedHeaders, $fetch->getFlags(), $this->hasHtmlMessage, $this->htmlMessage);
