@@ -274,6 +274,151 @@
 					</div>
 				</NcDialog>
 			</NcAppSettingsSection>
+
+			<NcAppSettingsSection id="messages" name="Messages">
+				<NcFormBox>
+					<NcFormBoxSwitch
+						v-model="useExternalAvatars"
+						:disabled="loadingAvatarSettings">
+						{{ t('mail', 'Avatars from Gravatar and favicons') }}
+					</NcFormBoxSwitch>
+
+					<NcFormBoxSwitch
+						v-model="searchPriorityBody"
+						:disabled="loadingPrioritySettings">
+						{{ prioritySettingsText }}
+					</NcFormBoxSwitch>
+				</NcFormBox>
+
+				<NcRadioGroup :model-value="useBottomReplies" :label="t('mail', 'Reply position')" @update:modelValue="onToggleButtonReplies">
+					<NcRadioGroupButton :label="t('mail', 'Top')" :value="false" />
+					<NcRadioGroupButton :label="t('mail', 'Bottom')" :value="true" />
+				</NcRadioGroup>
+
+				<NcFormGroup
+					:label="t('mail', 'Text blocks')"
+					:description="t('mail', 'Reusable pieces of text that can be inserted in messages')">
+					<List
+						:text-blocks="getMyTextBlocks()" />
+					<NcButton variant="secondary" wide @click="() => textBlockDialogOpen = true">
+						<template #icon>
+							<IconAdd :size="20" />
+						</template>
+						{{ t('mail', 'New text block') }}
+					</NcButton>
+					<template v-if="getSharedTextBlocks().length > 0">
+						<h6>{{ t('mail', 'Shared with me') }}</h6>
+						<List
+							:text-blocks="getSharedTextBlocks()"
+							:shared="true" />
+					</template>
+				</NcFormGroup>
+			</NcAppSettingsSection>
+
+			<NcAppSettingsSection id="privacy" :name="t('mail', 'Privacy')">
+				<NcFormBoxSwitch
+					v-model="useDataCollection"
+					:label="t('mail', 'Data collection')"
+					:description="t('mail', 'Allow the app to collect and process data locally to adapt to your preferences')" />
+
+				<NcFormGroup :label="t('mail', 'Always show images from')">
+					<TrustedSenders />
+				</NcFormGroup>
+			</NcAppSettingsSection>
+
+			<NcAppSettingsSection id="security" :name="t('mail', 'Security')">
+				<NcFormBoxSwitch
+					v-model="useInternalAddresses"
+					:disabled="loadingInternalAddresses"
+					:label="internalAddressText"
+					:description="t('mail', 'Manage your internal addresses and domains to ensure recognized contacts stay unmarked')" />
+				<InternalAddress />
+
+				<NcFormGroup :label="t('mail', 'S/MIME')">
+					<NcButton
+						class="app-settings-button"
+						variant="secondary"
+						:aria-label="t('mail', 'Manage certificates')"
+						wide
+						@click.prevent.stop="displaySmimeCertificateModal = true">
+						<template #icon>
+							<IconMedal :size="20" />
+						</template>
+						{{ t('mail', 'Manage certificates') }}
+					</NcButton>
+					<SmimeCertificateModal
+						v-if="displaySmimeCertificateModal"
+						@close="displaySmimeCertificateModal = false" />
+				</NcFormGroup>
+
+				<NcFormGroup :label="t('mail', 'Mailvelope')">
+					<NcNoteCard v-if="mailvelopeIsAvailable" type="success">
+						{{ t('mail', 'Mailvelope is enabled for the current domain.') }}
+					</NcNoteCard>
+
+					<NcFormBox v-else>
+						<NcFormBoxButton
+							href="https://www.mailvelope.com/"
+							target="_blank"
+							:label="t('mail', 'Step 1')"
+							:description="t('mail', 'Install the browser extension')"
+							inverted-accent />
+						<NcFormBoxButton
+							:label="t('mail', 'Step 2')"
+							:description="t('mail', 'Enable for the current domain')"
+							inverted-accent
+							@click="mailvelopeAuthorizeDomain">
+							<template #icon>
+								<IconDomain :size="20" />
+							</template>
+						</NcFormBoxButton>
+					</NcFormBox>
+				</NcFormGroup>
+			</NcAppSettingsSection>
+
+			<NcAppSettingsSection v-if="followUpFeatureAvailable" id="autotagging-settings" :name="t('mail', 'Assistance features')">
+				<NcFormBox>
+					<NcFormBoxSwitch
+						v-model="useFollowUpReminders"
+						:disabled="loadingFollowUpReminders">
+						{{ followUpReminderText }}
+					</NcFormBoxSwitch>
+				</NcFormBox>
+			</NcAppSettingsSection>
+
+			<NcAppSettingsSection v-if="contextChatFeatureAvailable" id="context-chat-settings" :name="t('mail', 'Context Chat integration')">
+				<NcFormBox>
+					<NcFormBoxSwitch
+						v-model="useContextChat"
+						:disabled="loadingContextChat">
+						{{ contextChatText }}
+					</NcFormBoxSwitch>
+				</NcFormBox>
+			</NcAppSettingsSection>
+
+			<NcAppSettingsShortcutsSection>
+				<NcHotkeyList>
+					<NcHotkey :label="t('mail', 'Compose new message')" hotkey="C" />
+					<NcHotkey :label="t('mail', 'Newer message')" hotkey="ArrowLeft" />
+					<NcHotkey :label="t('mail', 'Older message')" hotkey="ArrowRight" />
+					<NcHotkey :label="t('mail', 'Toggle star')" hotkey="S" />
+					<NcHotkey :label="t('mail', 'Toggle unread')" hotkey="U" />
+					<NcHotkey :label="t('mail', 'Archive')" hotkey="A" />
+					<NcHotkey :label="t('mail', 'Delete')" hotkey="Delete" />
+					<NcHotkey :label="t('mail', 'Search')" hotkey="Control F" />
+					<NcHotkey :label="t('mail', 'Send')" hotkey="Control Enter" />
+					<NcHotkey :label="t('mail', 'Refresh')" hotkey="R" />
+					<NcHotkey :label="t('mail', 'Heading1')" hotkey="Control Alt 1" />
+					<NcHotkey :label="t('mail', 'Heading2')" hotkey="Control Alt 2" />
+					<NcHotkey :label="t('mail', 'Heading3')" hotkey="Control Alt 3" />
+				</NcHotkeyList>
+			</NcAppSettingsShortcutsSection>
+
+			<NcAppSettingsSection id="about-settings" :name="t('mail', 'About')">
+				<NcFormGroup
+					:label="t('mail', 'Acknowledgements')"
+					:description="t('mail', 'This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2.')" />
+			</NcAppSettingsSection>
 		</NcAppSettingsDialog>
 	</div>
 </template>
