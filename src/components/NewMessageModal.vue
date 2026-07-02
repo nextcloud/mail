@@ -269,6 +269,10 @@ export default {
 		this.updateCookedComposerData()
 		await this.openModalSize()
 		window.addEventListener('resize', this.checkScreenSize)
+
+		if (this.composerData.draftId !== undefined) {
+			this.onDraft(this.cookedComposerData, { showToast: false })
+		}
 	},
 
 	beforeUnmount() {
