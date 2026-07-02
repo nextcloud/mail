@@ -739,4 +739,107 @@ describe('Vuex store actions', () => {
 			expect(MailboxService.fetchAll).toHaveBeenCalledWith(7, true)
 		})
 	})
+
+	describe('startComposerSession reply-to resolution', () => {
+		const account = {
+			id: 1,
+			emailAddress: 'me@example.com',
+			personalNamespace: '',
+			mailboxes: [],
+			name: 'Me',
+		}
+		const from = [{ email: 'sender@example.com', label: 'Sender' }]
+		const to = [{ email: 'me@example.com', label: 'Me' }]
+		const replyTo = [{ email: 'personal-replyto@example.com', label: 'Reply Here' }]
+
+		const makeEnvelope = (overrides = {}) => ({
+			databaseId: 42,
+			accountId: 1,
+			from,
+			to,
+			replyTo: undefined,
+			subject: 'Test subject',
+			...overrides,
+		})
+
+		const makeOriginal = (overrides = {}) => ({
+			databaseId: 42,
+			hasHtmlBody: false,
+			body: 'Message body',
+			replyTo: undefined,
+			unsubscribeUrl: null,
+			unsubscribeMailto: null,
+			...overrides,
+		})
+
+		beforeEach(() => {
+			store.addAccountMutation(account)
+			vi.spyOn(store, 'startComposerSessionMutation')
+		})
+
+		it('uses From for mailing list emails even when Reply-To is set', async () => {
+			MessageService.fetchMessage.mockResolvedValue(makeOriginal({
+				replyTo,
+				unsubscribeUrl: 'https://list.example.com/unsubscribe',
+			}))
+
+			await store.startComposerSession({
+				reply: {
+					mode: 'reply',
+					data: makeEnvelope({ replyTo }),
+				},
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({ to: from }),
+			}))
+		})
+
+		it('honours Reply-To for regular emails with a personal Reply-To', async () => {
+			MessageService.fetchMessage.mockResolvedValue(makeOriginal({ replyTo }))
+
+			await store.startComposerSession({
+				reply: {
+					mode: 'reply',
+					data: makeEnvelope({ replyTo }),
+				},
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({ to: replyTo }),
+			}))
+		})
+
+		it('uses To for own sent messages (isOwnMessage follow-up)', async () => {
+			const ownFrom = [{ email: 'me@example.com', label: 'Me' }]
+			MessageService.fetchMessage.mockResolvedValue(makeOriginal())
+
+			await store.startComposerSession({
+				reply: {
+					mode: 'reply',
+					data: makeEnvelope({ from: ownFrom }),
+				},
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({ to }),
+			}))
+		})
+
+		it('uses To when followUp flag is set', async () => {
+			MessageService.fetchMessage.mockResolvedValue(makeOriginal())
+
+			await store.startComposerSession({
+				reply: {
+					mode: 'reply',
+					data: makeEnvelope(),
+					followUp: true,
+				},
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({ to }),
+			}))
+		})
+	})
 })
