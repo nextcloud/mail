@@ -264,6 +264,7 @@
 				@input="onEditorInput"
 				@ready="onEditorReady"
 				@mention="handleMention"
+				@save="onEditorSave"
 				@submit="onEditorSubmit" />
 			<MailvelopeEditor
 				v-else
@@ -1344,6 +1345,10 @@ export default {
 			if (this.smartReply) {
 				this.bus.emit('append-to-body-at-cursor', this.smartReply)
 			}
+		},
+
+		onEditorSave(editor) {
+			this.saveDraft()
 		},
 
 		onEditorSubmit(editor) {
