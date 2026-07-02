@@ -14,6 +14,7 @@
 			<div :class="{ list__wrapper: !showThread || !isMobile }">
 				<div v-if="!showThread || !isMobile" class="sticky-header">
 					<SearchMessages
+						ref="searchMessages"
 						:mailbox="mailbox"
 						:account-id="account.accountId"
 						@search-changed="onUpdateSearchQuery" />
@@ -266,6 +267,7 @@ export default {
 			searchQuery: undefined,
 			shortkeys: {
 				del: ['del'],
+				backspace: ['backspace'],
 				arch: ['a'],
 				flag: ['s'],
 				next: ['arrowright'],
@@ -456,6 +458,7 @@ export default {
 
 	created() {
 		this.handleMailto()
+		document.addEventListener('keydown', this.handleSearchShortcut, true)
 	},
 
 	async mounted() {
@@ -470,6 +473,7 @@ export default {
 
 	beforeUnmount() {
 		clearTimeout(this.startMailboxTimer)
+		document.removeEventListener('keydown', this.handleSearchShortcut, true)
 	},
 
 	methods: {
@@ -505,6 +509,16 @@ export default {
 
 		onShortcut(e) {
 			this.bus.emit('shortcut', e)
+		},
+
+		handleSearchShortcut(event) {
+			if (event.target.matches('input, textarea, [contenteditable]')) {
+				return
+			}
+			if (event.key === 'f' && event.metaKey) {
+				event.preventDefault()
+				this.$refs.searchMessages?.focusInput()
+			}
 		},
 
 		appendToSearch(str) {
