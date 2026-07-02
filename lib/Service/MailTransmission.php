@@ -129,6 +129,10 @@ class MailTransmission implements IMailTransmission {
 			$headers[Horde_Mime_Mdn::MDN_HEADER] = $from->toHorde();
 		}
 
+		if ($localMessage->isAiGenerated()) {
+			$headers['X-AI-Generated'] = '1';
+		}
+
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
 

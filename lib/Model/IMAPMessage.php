@@ -72,6 +72,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		private string $rawReferences,
 		private string $dispositionNotificationTo,
 		private bool $hasDkimSignature,
+		private bool $isAiGenerated,
 		private array $phishingDetails,
 		private ?string $unsubscribeUrl,
 		private bool $isOneClickUnsubscribe,
@@ -493,6 +494,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$msg->setFlagImportant(in_array('$important', $flags, true) || in_array('$labelimportant', $flags, true) || in_array(Tag::LABEL_IMPORTANT, $flags, true));
 		$msg->setFlagAttachments(false);
 		$msg->setFlagMdnsent(in_array(Horde_Imap_Client::FLAG_MDNSENT, $flags, true));
+		$msg->setFlagAiGenerated($this->isAiGenerated);
 		if ($this->scheduling !== []) {
 			$msg->setImipMessage(true);
 		}
