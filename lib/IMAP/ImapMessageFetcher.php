@@ -531,10 +531,8 @@ class ImapMessageFetcher {
 	}
 
 	private function parseHeaders(Horde_Imap_Client_Data_Fetch $fetch): void {
-		/** @var resource $headersStream */
-		$headersStream = $fetch->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_STREAM);
-		$parsedHeaders = Horde_Mime_Headers::parseHeaders($headersStream);
-		fclose($headersStream);
+		/** @var Horde_Mime_Headers $parsedHeaders */
+		$parsedHeaders = $fetch->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
 
 		$references = $parsedHeaders->getHeader('references');
 		if ($references !== null) {

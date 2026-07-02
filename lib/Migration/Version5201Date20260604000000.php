@@ -24,8 +24,11 @@ class Version5201Date20260604000000 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$localMessages = $schema->getTable('mail_local_messages');
-		if ($localMessages->hasColumn('ai_generated')) {
-			$localMessages->dropColumn('ai_generated');
+		if (!$localMessages->hasColumn('ai_generated')) {
+			$localMessages->addColumn('ai_generated', Types::BOOLEAN, [
+				'notnull' => false,
+				'default' => false,
+			]);
 		}
 
 		$messages = $schema->getTable('mail_messages');

@@ -53,8 +53,6 @@ use function array_filter;
  * @method setRaw(string|null $raw)
  * @method bool getRequestMdn()
  * @method setRequestMdn(bool $mdn)
- * @method bool isAiGenerated()
- * @method void setAiGenerated(bool $aiGenerated)
  */
 class LocalMessage extends Entity implements JsonSerializable {
 	public const TYPE_OUTGOING = 0;
@@ -143,7 +141,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 	/** @var bool */
 	protected $requestMdn;
 
-	/** @var bool — not persisted; set at send time from the request */
+	/** @var bool */
 	protected $aiGenerated = false;
 
 	public function __construct() {
@@ -160,6 +158,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 		$this->addType('smimeEncrypt', 'boolean');
 		$this->addType('status', 'integer');
 		$this->addType('requestMdn', 'boolean');
+		$this->addType('aiGenerated', 'boolean');
 	}
 
 	#[\Override]
@@ -199,6 +198,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'status' => $this->getStatus(),
 			'raw' => $this->getRaw(),
 			'requestMdn' => $this->getRequestMdn(),
+			'isAiGenerated' => $this->isAiGenerated(),
 		];
 	}
 
@@ -215,6 +215,14 @@ class LocalMessage extends Entity implements JsonSerializable {
 	 */
 	public function getAttachments(): ?array {
 		return $this->attachments;
+	}
+
+	public function isAiGenerated(): bool {
+		return $this->aiGenerated === true;
+	}
+
+	public function setAiGenerated(bool $aiGenerated): void {
+		$this->setter('aiGenerated', [$aiGenerated]);
 	}
 
 	/**
