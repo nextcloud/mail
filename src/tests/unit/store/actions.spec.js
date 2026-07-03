@@ -197,6 +197,73 @@ describe('Vuex store actions', () => {
 		})
 	})
 
+	it('creates a unified page from the accounts that succeed even if another account fails', async () => {
+		const account13 = {
+			id: 13,
+			personalNamespace: '',
+			mailboxes: [],
+		}
+		const account14 = {
+			id: 14,
+			personalNamespace: '',
+			mailboxes: [],
+		}
+
+		store.addAccountMutation(account13)
+		store.addAccountMutation(account14)
+		store.addMailboxMutation({
+			account: account13,
+			mailbox: {
+				id: 'INBOX',
+				name: 'INBOX',
+				databaseId: 21,
+				accountId: 13,
+				specialRole: 'inbox',
+			},
+		})
+		store.addMailboxMutation({
+			account: account14,
+			mailbox: {
+				id: 'INBOX',
+				name: 'INBOX',
+				databaseId: 31,
+				accountId: 14,
+				specialRole: 'inbox',
+			},
+		})
+
+		store.addEnvelopesMutation = vi.fn()
+
+		MessageService.fetchEnvelopes.mockImplementation(async (accountId) => {
+			if (accountId === 14) {
+				throw new Error('account 14 is temporarily unavailable')
+			}
+
+			return [{
+				databaseId: 123,
+				mailboxId: 21,
+				uid: 321,
+				subject: 'msg1',
+			}]
+		})
+
+		const envelopes = await store.fetchEnvelopes({
+			mailboxId: UNIFIED_INBOX_ID,
+		})
+
+		// The unreachable account (14) contributes nothing, but the
+		// reachable one (13) still renders instead of the whole unified
+		// fetch coming back empty.
+		expect(envelopes).toEqual([
+			{
+				databaseId: 123,
+				mailboxId: 21,
+				uid: 321,
+				subject: 'msg1',
+			},
+		])
+	})
+
 	it('fetches the next individual page', async () => {
 		const msgs1 = reverse(range(30, 40))
 		const page1 = reverse(range(10, 30))
