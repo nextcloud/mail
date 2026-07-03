@@ -126,6 +126,25 @@ class MailManagerTest extends TestCase {
 		$this->assertSame($mailboxes, $result);
 	}
 
+	public function testGetCachedMailboxesDoesNotSync() {
+		/** @var Account|MockObject $account */
+		$account = $this->createStub(Account::class);
+		$mailboxes = [
+			$this->createMock(Mailbox::class),
+			$this->createMock(Mailbox::class),
+		];
+		$this->mailboxSync->expects($this->never())
+			->method('sync');
+		$this->mailboxMapper->expects($this->once())
+			->method('findAll')
+			->with($this->equalTo($account))
+			->willReturn($mailboxes);
+
+		$result = $this->manager->getCachedMailboxes($account);
+
+		$this->assertSame($mailboxes, $result);
+	}
+
 	public function testCreateFolder() {
 		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$account = $this->createStub(Account::class);

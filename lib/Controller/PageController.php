@@ -139,6 +139,13 @@ class PageController extends Controller {
 			$this->appManager->getAppVersion('mail'),
 		);
 
+		// Uses getCachedMailboxes() (DB read only) rather than getMailboxes()
+		// (which does a live IMAP sync first): this loop is synchronous
+		// across every connected account, so one account with a slow or
+		// unreachable IMAP server used to delay/block the whole page load
+		// for every other account too. The existing try/catch below only
+		// ever helped if the call threw quickly -- it did nothing for a
+		// hang, since a hang never reaches the catch block at all.
 		$mailAccounts = $this->accountService->findByUserId($this->userId);
 		$accountsJson = [];
 		foreach ($mailAccounts as $mailAccount) {
@@ -147,7 +154,7 @@ class PageController extends Controller {
 			$json['aliases'] = $this->aliasesService->findAll($mailAccount->getId(),
 				$this->userId);
 			try {
-				$mailboxes = $this->mailManager->getMailboxes($mailAccount);
+				$mailboxes = $this->mailManager->getCachedMailboxes($mailAccount);
 				$json['mailboxes'] = $mailboxes;
 			} catch (Throwable $ex) {
 				$this->logger->critical('Could not load account mailboxes: ' . $ex->getMessage(), [
@@ -166,7 +173,7 @@ class PageController extends Controller {
 			$json['aliases'] = $this->aliasesService->findAll($delegatedAccount->getId(),
 				$delegatedAccount->getUserId());
 			try {
-				$mailboxes = $this->mailManager->getMailboxes($delegatedAccount);
+				$mailboxes = $this->mailManager->getCachedMailboxes($delegatedAccount);
 				$json['mailboxes'] = $mailboxes;
 			} catch (Throwable $ex) {
 				$this->logger->critical('Could not load delegated account mailboxes: ' . $ex->getMessage(), [

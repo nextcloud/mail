@@ -102,6 +102,11 @@ class MailManager implements IMailManager {
 	}
 
 	#[\Override]
+	public function getCachedMailboxes(Account $account): array {
+		return $this->mailboxMapper->findAll($account);
+	}
+
+	#[\Override]
 	public function createMailbox(Account $account, string $name, array $specialUse = []): Mailbox {
 		$client = $this->imapClientFactory->getClient($account);
 		try {

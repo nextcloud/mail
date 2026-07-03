@@ -210,7 +210,7 @@ class PageControllerTest extends TestCase {
 			->with($this->userId)
 			->willReturn([]);
 		$this->mailManager->expects($this->exactly(2))
-			->method('getMailboxes')
+			->method('getCachedMailboxes')
 			->withConsecutive(
 				[$account1],
 				[$account2]

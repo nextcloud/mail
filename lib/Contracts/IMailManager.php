@@ -45,6 +45,19 @@ interface IMailManager {
 	public function getMailboxes(Account $account, bool $forceSync = false): array;
 
 	/**
+	 * Like getMailboxes(), but reads only the locally cached mailbox list --
+	 * no live IMAP sync. Useful for callers that need to list an account's
+	 * mailboxes quickly and don't need (or can't afford to wait for) an
+	 * up-to-date view, e.g. a page bootstrap iterating over every connected
+	 * account.
+	 *
+	 * @param Account $account
+	 *
+	 * @return Mailbox[]
+	 */
+	public function getCachedMailboxes(Account $account): array;
+
+	/**
 	 * @param Account $account
 	 * @param string $name
 	 * @param string[] $specialUse
