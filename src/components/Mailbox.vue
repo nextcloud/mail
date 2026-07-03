@@ -4,7 +4,8 @@
 -->
 
 <template>
-	<div class="mailbox"
+	<div
+		class="mailbox"
 		:class="{ 'empty-content': (!hasMessages && !loadingEnvelopes) || error }">
 		<Error
 			v-if="error"
