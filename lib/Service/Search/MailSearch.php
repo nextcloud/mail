@@ -16,6 +16,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\PreviewEnhancer;
@@ -76,12 +77,9 @@ class MailSearch implements IMailSearch {
 		?int $limit,
 		?string $userId,
 		?string $view): array {
-		// A mailbox sync lock coordinates concurrent *writes* (two sync
-		// attempts racing on the same mailbox); it was never a correctness
-		// requirement for a *read*. This method only ever reads from the
-		// local DB below (aside from an unrelated body-text-search path),
-		// so a mailbox mid-sync or currently locked can still be listed
-		// from its already-cached messages instead of failing outright.
+		if ($mailbox->hasLocks($this->timeFactory->getTime())) {
+			throw MailboxLockedException::from($mailbox);
+		}
 		if (!$mailbox->isCached()) {
 			throw MailboxNotCachedException::from($mailbox);
 		}

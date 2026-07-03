@@ -14,6 +14,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Search\Provider;
@@ -80,21 +81,13 @@ class MailSearchTest extends TestCase {
 		);
 	}
 
-	public function testFindMessagesIgnoresLock() {
-		$account = $this->createMock(Account::class);
-		$account->expects($this->once())
-			->method('getUserId')
-			->willReturn('admin');
+	public function testFindMessagesLocked() {
+		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
-		$mailbox->setSyncNewToken('abc');
-		$mailbox->setSyncChangedToken('def');
-		$mailbox->setSyncVanishedToken('ghi');
-		// A concurrent sync attempt is (or recently was) holding a lock on
-		// this mailbox -- findMessages() only reads already-cached
-		// messages, so it must not be blocked by it.
 		$mailbox->setSyncNewLock(123);
+		$this->expectException(MailboxLockedException::class);
 
-		$messages = $this->search->findMessages(
+		$this->search->findMessages(
 			$account,
 			$mailbox,
 			'DESC',
@@ -104,8 +97,6 @@ class MailSearchTest extends TestCase {
 			null,
 			null,
 		);
-
-		$this->assertEmpty($messages);
 	}
 
 	public function testNoFindMessages() {
