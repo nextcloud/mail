@@ -587,8 +587,13 @@ export default {
 		},
 
 		async loadMailbox() {
-			// When the account is unified or inbox, return nothing, else sync the mailbox
-			if (this.account.isUnified || this.mailbox.specialRole === 'inbox') {
+			// Unified mailboxes combine multiple real mailboxes and don't map
+			// to the single-folder sync this method calls, so they're still
+			// skipped here. The INBOX itself has no such reason to be
+			// skipped: every other folder gets this periodic background
+			// refresh, but the INBOX previously only ever synced once, on
+			// mount, and never again for as long as the view stayed open.
+			if (this.account.isUnified) {
 				return
 			}
 			try {
