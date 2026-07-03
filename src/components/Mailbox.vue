@@ -362,18 +362,16 @@ export default {
 
 			const selectedIds = new Set(alwaysVisibleMailboxes.map((mailbox) => mailbox.databaseId))
 
-			const topLevelMailboxes = this.sortMailboxesByDisplayName(
-				subscribedMailboxes
-					.filter((mailbox) => !selectedIds.has(mailbox.databaseId))
-					.filter((mailbox) => !this.isAlwaysVisiblePrefetchCandidate(mailbox))
-					.filter((mailbox) => this.isTopLevelMailbox(mailbox))
+			const topLevelMailboxes = this.sortMailboxesByDisplayName(subscribedMailboxes
+				.filter((mailbox) => !selectedIds.has(mailbox.databaseId))
+				.filter((mailbox) => !this.isAlwaysVisiblePrefetchCandidate(mailbox))
+				.filter((mailbox) => this.isTopLevelMailbox(mailbox))
 			)
 
-			const remainingMailboxes = this.sortMailboxesByDisplayName(
-				subscribedMailboxes
-					.filter((mailbox) => !selectedIds.has(mailbox.databaseId))
-					.filter((mailbox) => !this.isAlwaysVisiblePrefetchCandidate(mailbox))
-					.filter((mailbox) => !this.isTopLevelMailbox(mailbox))
+			const remainingMailboxes = this.sortMailboxesByDisplayName(subscribedMailboxes
+				.filter((mailbox) => !selectedIds.has(mailbox.databaseId))
+				.filter((mailbox) => !this.isAlwaysVisiblePrefetchCandidate(mailbox))
+				.filter((mailbox) => !this.isTopLevelMailbox(mailbox))
 			)
 
 			const result = [...alwaysVisibleMailboxes]
