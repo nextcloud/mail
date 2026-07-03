@@ -344,6 +344,7 @@
 			:smart-replies="showFollowUpHeader ? [] : smartReplies"
 			:reply-button-label="replyButtonLabel"
 			@load="onMessageLoaded"
+			@print-shortcut="$emit('print-shortcut')"
 			@translate="onOpenTranslationModal"
 			@reply="(body) => onReply(body, showFollowUpHeader)" />
 		<Error
@@ -580,6 +581,17 @@ export default {
 
 		account() {
 			return this.mainStore.getAccount(this.envelope.accountId)
+		},
+
+		/**
+		 * Whether this message is rendered and can therefore be printed. The
+		 * message body is only in the DOM once the message itself has been
+		 * fetched and its loading state has settled.
+		 *
+		 * @return {boolean}
+		 */
+		printable() {
+			return this.loading === Loading.Done && this.message !== undefined
 		},
 
 		senderEmailColor() {
