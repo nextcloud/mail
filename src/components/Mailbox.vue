@@ -4,7 +4,8 @@
 -->
 
 <template>
-	<div :class="{ 'empty-content': (!hasMessages && !loadingEnvelopes) || error }">
+	<div class="mailbox"
+		:class="{ 'empty-content': (!hasMessages && !loadingEnvelopes) || error }">
 		<Error
 			v-if="error"
 			:error="t('mail', 'Could not open folder')"
@@ -625,6 +626,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.mailbox {
+	height: 100%;
+}
+
 // Fix vertical space between sections in priority inbox
 .nameimportant {
 	:deep(#load-more-mail-messages) {
