@@ -422,6 +422,7 @@
 					{{ t('mail', 'Reply with meeting') }}
 				</ActionButton>
 				<ActionButton
+					v-if="tasksEnabled"
 					:close-after-click="true"
 					@click.prevent="showTaskModal = true">
 					<template #icon>
@@ -899,6 +900,10 @@ export default {
 
 		archiveMailbox() {
 			return this.mainStore.getMailbox(this.account.archiveMailboxId)
+		},
+
+		tasksEnabled() {
+			return this.mainStore.getTaskCalendarsForCurrentUser.length > 0
 		},
 
 		isSnoozedMailbox() {
