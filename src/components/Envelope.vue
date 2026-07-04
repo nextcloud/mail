@@ -328,20 +328,6 @@
 					</template>
 				</ActionButton>
 				<ActionButton
-					v-if="hasDeleteAcl"
-					:close-after-click="true"
-					@click.prevent="onDelete">
-					<template #icon>
-						<DeleteIcon :size="20" />
-					</template>
-					<template v-if="layoutMessageViewThreaded">
-						{{ t('mail', 'Delete thread') }}
-					</template>
-					<template v-else>
-						{{ t('mail', 'Delete message') }}
-					</template>
-				</ActionButton>
-				<ActionButton
 					:close-after-click="false"
 					@click="showMoreActionOptions">
 					<template #icon>
@@ -437,6 +423,20 @@
 					</template>
 					{{ t('mail', 'Download message') }}
 				</ActionLink>
+				<ActionButton
+					v-if="hasDeleteAcl"
+					:close-after-click="true"
+					@click.prevent="onDelete">
+					<template #icon>
+						<DeleteIcon :size="20" />
+					</template>
+					<template v-if="layoutMessageViewThreaded">
+						{{ t('mail', 'Delete thread') }}
+					</template>
+					<template v-else>
+						{{ t('mail', 'Delete message') }}
+					</template>
+				</ActionButton>
 			</template>
 			<template v-if="quickActionMenu">
 				<ActionButton
