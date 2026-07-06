@@ -351,8 +351,9 @@ export default {
 			if (!this.sortFavorites) {
 				return false
 			}
+			const mailbox = this.mailbox.isPriorityInbox ? this.unifiedInbox : this.mailbox
 			const envelopes = this.mainStore.getEnvelopes(
-				this.unifiedInbox.databaseId,
+				mailbox.databaseId,
 				this.appendToSearch(this.favoriteQuery),
 			)
 			return envelopes.length > 0
