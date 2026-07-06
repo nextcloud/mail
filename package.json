@@ -99,7 +99,7 @@
     "postcss": "^8.5.16",
     "postcss-loader": "^4.3.0",
     "sass": "^1.99.0",
-    "sass-loader": "^16.0.7",
+    "sass-loader": "^16.0.8",
     "style-loader": "^4.0.0",
     "svg-inline-loader": "^0.8.2",
     "ts-loader": "^9.6.0",
