@@ -37,14 +37,14 @@
 			</Actions>
 		</div>
 		<div id="message-container" :class="{ scroll: !fullHeight }">
+			<!-- allow-same-origin: parent JS accesses contentDocument directly (image unblocking, resize, print).
+			     allow-popups + allow-popups-to-escape-sandbox: email links must open as normal tabs, not sandboxed ones. -->
 			<iframe
 				ref="iframe"
 				class="message-frame"
 				:title="t('mail', 'Message frame')"
 				:src="url"
 				seamless
-				<!-- allow-same-origin: parent JS accesses contentDocument directly (image unblocking, resize, print) -->
-				<!-- allow-popups + allow-popups-to-escape-sandbox: email links must open as normal tabs, not sandboxed ones -->
 				sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"
 				@load="onMessageFrameLoad" />
 		</div>
@@ -256,4 +256,5 @@ export default {
 :deep(.button-vue--vue-tertiary) {
 	color: var(--color-text-maxcontrast);
 }
+
 </style>
