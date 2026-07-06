@@ -43,6 +43,8 @@
 				:title="t('mail', 'Message frame')"
 				:src="url"
 				seamless
+				<!-- allow-same-origin: parent JS accesses contentDocument directly (image unblocking, resize, print) -->
+				<!-- allow-popups + allow-popups-to-escape-sandbox: email links must open as normal tabs, not sandboxed ones -->
 				sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"
 				@load="onMessageFrameLoad" />
 		</div>
