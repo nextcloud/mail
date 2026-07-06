@@ -55,7 +55,7 @@ class InteractionListener implements IEventListener {
 		}
 		$message = $event->getLocalMessage();
 		$emails = [];
-		foreach ($message->getRecipients() as $recipient) {
+		foreach ($message->getRecipients() ?? [] as $recipient) {
 			if (in_array($recipient->getEmail(), $emails)) {
 				continue;
 			}
