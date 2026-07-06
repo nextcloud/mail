@@ -31,6 +31,7 @@
 					@shortkey.native="onShortcut">
 					<template v-if="!mailbox.isPriorityInbox">
 						<div
+							v-if="sortFavorites"
 							v-show="hasFavoriteEnvelopes"
 							class="app-content-list-item">
 							<SectionTitle
@@ -53,6 +54,7 @@
 							</NcPopover>
 						</div>
 						<Mailbox
+							v-if="sortFavorites"
 							v-show="hasFavoriteEnvelopes"
 							:load-more-label="t('mail', 'Load more favorites')"
 							:account="account"
@@ -76,6 +78,7 @@
 
 					<template v-else>
 						<div
+							v-if="sortFavorites"
 							v-show="hasFavoriteEnvelopes"
 							class="app-content-list-item">
 							<SectionTitle
@@ -98,6 +101,7 @@
 							</NcPopover>
 						</div>
 						<Mailbox
+							v-if="sortFavorites"
 							v-show="hasFavoriteEnvelopes"
 							:load-more-label="t('mail', 'Load more favorites')"
 							:account="unifiedAccount"
