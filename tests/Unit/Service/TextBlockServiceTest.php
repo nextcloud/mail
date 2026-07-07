@@ -105,7 +105,6 @@ final class TextBlockServiceTest extends TestCase {
 		$this->assertSame($textBlock, $result);
 	}
 
-
 	public function testDelete(): void {
 		$textBlockId = 1;
 		$userId = 'bob';

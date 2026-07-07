@@ -21,7 +21,6 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Calendar\IManager;
 use Psr\Log\LoggerInterface;
 use Throwable;
-
 use function array_filter;
 
 class IMipService {

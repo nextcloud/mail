@@ -12,7 +12,6 @@ namespace OCA\Mail\BackgroundJob;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\MailboxMapper;
-
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Migration\MigrateImportantFromImapAndDb;

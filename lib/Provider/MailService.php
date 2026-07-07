@@ -6,6 +6,7 @@ declare(strict_types=1);
  * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 namespace OCA\Mail\Provider;
 
 use OCA\Mail\Provider\Command\MessageSend;
@@ -16,7 +17,6 @@ use OCP\Mail\Provider\IMessage;
 use OCP\Mail\Provider\IMessageSend;
 use OCP\Mail\Provider\IService;
 use OCP\Mail\Provider\Message;
-
 use Psr\Container\ContainerInterface;
 
 class MailService implements IService, IMessageSend {

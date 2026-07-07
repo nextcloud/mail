@@ -605,7 +605,6 @@ class MessagesControllerTest extends TestCase {
 			->method('find')
 			->willThrowException(new ClientException());
 
-
 		// test our json error response
 		$this->expectException(ClientException::class);
 		$response = $this->controller->downloadAttachments(
@@ -667,7 +666,6 @@ class MessagesControllerTest extends TestCase {
 
 		$this->assertInstanceOf(JSONResponse::class, $response);
 	}
-
 
 	public function testSetFlagsUnseen() {
 		$accountId = 17;
@@ -1207,7 +1205,6 @@ class MessagesControllerTest extends TestCase {
 		$message->setMailboxId($mailbox->getId());
 		$message->setUid(123);
 		$message->setSubject('core/master has new results');
-
 
 		$this->mailManager->expects($this->exactly(1))
 			->method('getMessage')
