@@ -1,3 +1,12 @@
+## [5.10.7](https://github.com/nextcloud/mail/compare/v5.10.6...v5.10.7) (2026-07-07)
+
+
+### Bug Fixes
+
+* **sending:** preserve Bcc header in Sent mailbox copy ([abeaf95](https://github.com/nextcloud/mail/commit/abeaf9517e9f8a37ef0b77a0e8fbcbfbb61704b0))
+
+
+
 ## [5.10.6](https://github.com/nextcloud/mail/compare/v5.10.5...v5.10.6) (2026-07-07)
 
 
