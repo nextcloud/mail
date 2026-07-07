@@ -282,7 +282,6 @@ class ThreadControllerTest extends TestCase {
 			->method('summarizeThread')
 			->willReturn('example summary');
 
-
 		$response = $this->controller->summarize(300);
 		$this->assertEquals(Http::STATUS_OK, $response->getStatus());
 		$this->assertEquals(['data' => 'example summary'], $response->getData());

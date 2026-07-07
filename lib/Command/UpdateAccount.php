@@ -32,7 +32,6 @@ final class UpdateAccount extends Command {
 	public const ARGUMENT_SMTP_USER = 'smtp-user';
 	public const ARGUMENT_SMTP_PASSWORD = 'smtp-password';
 
-
 	/** @var mapper */
 	private $mapper;
 

@@ -33,7 +33,6 @@ class TaskProcessingListenerTest extends TestCase {
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 
-
 		$this->listener = new TaskProcessingListener(
 			$this->logger,
 			$this->messageMapper,

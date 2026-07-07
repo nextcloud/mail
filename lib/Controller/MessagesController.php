@@ -642,7 +642,6 @@ class MessagesController extends Controller {
 				}
 			}
 
-
 			$htmlResponse = $plain
 				? HtmlResponse::plain($html)
 				: HtmlResponse::withResizer(
@@ -1016,7 +1015,6 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_NO_CONTENT);
 		}
 		return new JSONResponse($replies);
-
 	}
 
 	/**

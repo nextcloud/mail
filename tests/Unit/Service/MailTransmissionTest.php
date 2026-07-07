@@ -464,7 +464,6 @@ class MailTransmissionTest extends TestCase {
 				return new AddressList($addresses);
 			});
 
-
 		$this->transmission->sendMessage($account, $localMessage);
 
 		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());

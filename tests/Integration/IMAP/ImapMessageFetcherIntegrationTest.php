@@ -35,7 +35,6 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-
 		$this->account = $this->createTestAccount();
 		$this->fetcherFactory = Server::get(ImapMessageFetcherFactory::class);
 		$this->certificateMapper = Server::get(SmimeCertificateMapper::class);

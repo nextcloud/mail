@@ -6,6 +6,7 @@ declare(strict_types=1);
  * SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
@@ -89,7 +90,6 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->expectExceptionMessage('No language model available for summary');
 		$this->aiIntegrationsService->summarizeThread($account, '', [], '');
 	}
-
 
 	public function testSmartReplyNoBackend(): void {
 		$account = new Account(new MailAccount());

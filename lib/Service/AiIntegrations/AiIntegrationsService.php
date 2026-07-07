@@ -31,7 +31,6 @@ use OCP\TextProcessing\IManager as TextProcessingManager;
 use OCP\TextProcessing\SummaryTaskType;
 use OCP\TextProcessing\Task as TextProcessingTask;
 use Psr\Log\LoggerInterface;
-
 use function array_map;
 use function implode;
 use function in_array;
@@ -446,6 +445,5 @@ Never return null or undefined.";
 		}
 		return true;
 	}
-
 
 }

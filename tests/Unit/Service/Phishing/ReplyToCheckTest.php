@@ -8,10 +8,8 @@
 namespace OCA\Mail\Tests\Integration\Service\Phishing;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-
 use OCA\Mail\Service\PhishingDetection\ReplyToCheck;
 use OCP\IL10N;
-
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ReplyToCheckTest extends TestCase {
@@ -24,7 +22,6 @@ class ReplyToCheckTest extends TestCase {
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->service = new ReplyToCheck($this->l10n);
 	}
-
 
 	public function testNoEmail(): void {
 		$email = 'jhon@example.com';
