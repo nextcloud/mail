@@ -1,3 +1,22 @@
+## [5.10.6](https://github.com/nextcloud/mail/compare/v5.10.5...v5.10.6) (2026-07-07)
+
+
+### Bug Fixes
+
+* **attachments:** store uploads under account owner for delegated sends ([5650650](https://github.com/nextcloud/mail/commit/56506506dcb8121c37adfe63517cfd263c15dcc2))
+* **deps:** Fix npm audit ([db30b50](https://github.com/nextcloud/mail/commit/db30b50e5128fe44b3164d44c525fb1a1bfbf974))
+* **l10n:** Update translations from Transifex ([2202d7e](https://github.com/nextcloud/mail/commit/2202d7e49faf6cae0cb22ed6750ff330d8228f4d))
+* **l10n:** Update translations from Transifex ([034e773](https://github.com/nextcloud/mail/commit/034e773de7b2098fe706a54e1ee9aa5532b3eeea))
+* **l10n:** Update translations from Transifex ([c399ddf](https://github.com/nextcloud/mail/commit/c399ddfd69ae0efd77f42cee47e9352e0762856f))
+* **l10n:** Update translations from Transifex ([e754c03](https://github.com/nextcloud/mail/commit/e754c03ca44231411ca4a22d6331eb1ee6d003fc))
+* small fix on the state of the action button to edit tags ([f916f7a](https://github.com/nextcloud/mail/commit/f916f7a7d1b3825b27b8a910e815956e7552407b))
+* **ui:** restore message loading position and slow hint ([633d6c1](https://github.com/nextcloud/mail/commit/633d6c1888362765e677315a7d49584ce4b2850f))
+* **ui:** show favorites section based on the current folder ([74b083c](https://github.com/nextcloud/mail/commit/74b083cbadab5369ca8de649743f74440c513c14))
+* validating email addresses from Contacts ([2584d84](https://github.com/nextcloud/mail/commit/2584d84b3d1b9b1c1ea933aab56e0e15ff476bcd))
+* whitespaces in visualization of plaintext email ([f74d4ba](https://github.com/nextcloud/mail/commit/f74d4ba901d6bbbcd210440b4978c6c74b2340d4))
+
+
+
 ## [5.10.5](https://github.com/nextcloud/mail/compare/v5.10.4...v5.10.5) (2026-07-01)
 
 
