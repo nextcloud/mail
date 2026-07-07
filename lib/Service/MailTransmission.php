@@ -26,6 +26,7 @@ use Horde_Mime_Headers_MessageId;
 use Horde_Mime_Headers_Subject;
 use Horde_Mime_Mail;
 use Horde_Mime_Mdn;
+use Horde_Mime_Part;
 use Horde_Smtp_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
@@ -108,29 +109,46 @@ class MailTransmission implements IMailTransmission {
 		}
 
 		$transport = $this->smtpClientFactory->create($account);
-		// build mime body
-		$headers = $this->buildHeaders(
-			$from,
-			$to,
-			$cc,
-			$bcc,
-			$localMessage->getSubject()
-		);
 
+		// Build full headers for the Sent-folder copy (FCC), including Bcc so the
+		// sender can see who was blind-copied when reviewing sent mail — the same
+		// approach used by Horde IMP and other clients (Evolution, Thunderbird).
+		$fccHeaders = new Horde_Mime_Headers();
+		$fccHeaders->addHeaderOb(Horde_Mime_Headers_Date::create());
+		$fccHeaders->addHeaderOb(Horde_Mime_Headers_MessageId::create());
+		$fccHeaders->addHeaderOb(new Horde_Mime_Headers_Addresses('From', $from->toHorde()));
+		$fccHeaders->addHeaderOb(new Horde_Mime_Headers_Addresses('To', $to->toHorde()));
+		if (count($cc) > 0) {
+			$fccHeaders->addHeaderOb(new Horde_Mime_Headers_Addresses('Cc', $cc->toHorde()));
+		}
+		if (count($bcc) > 0) {
+			$fccHeaders->addHeaderOb(new Horde_Mime_Headers_Addresses('Bcc', $bcc->toHorde()));
+		}
+		if ($localMessage->getSubject() !== null) {
+			$fccHeaders->addHeader('Subject', $localMessage->getSubject());
+		}
 		// The table (oc_local_messages) currently only allows for a single reply to message id
 		// but we already set the 'references' header for an email so we could support multiple references
 		// Get the previous message and then concatenate all its "References" message ids with this one
 		if (($inReplyTo = $localMessage->getInReplyToMessageId()) !== null) {
-			$headers['References'] = $inReplyTo;
-			$headers['In-Reply-To'] = $inReplyTo;
+			$fccHeaders->addHeader('References', $inReplyTo);
+			$fccHeaders->addHeader('In-Reply-To', $inReplyTo);
 		}
-
 		if ($localMessage->getRequestMdn()) {
-			$headers[Horde_Mime_Mdn::MDN_HEADER] = $from->toHorde();
+			$fccHeaders->addHeaderOb(new Horde_Mime_Headers_Addresses(Horde_Mime_Mdn::MDN_HEADER, $from->toHorde()));
 		}
 
-		$mail = new Horde_Mime_Mail();
-		$mail->addHeaders($headers);
+		// For SMTP delivery: strip Bcc so it never appears in the transmitted
+		// message (RFC 5321). All three recipient lists are passed as SMTP
+		// envelope recipients so every addressee still receives the mail.
+		$sendHeaders = clone $fccHeaders;
+		$sendHeaders->removeHeader('Bcc');
+
+		$smtpRecipients = new Horde_Mail_Rfc822_List();
+		$smtpRecipients->add($to->toHorde());
+		$smtpRecipients->add($cc->toHorde());
+		$smtpRecipients->add($bcc->toHorde());
+		$smtpRecipients->unique();
 
 		$mimeMessage = new MimeMessage(
 			new DataUriParser()
@@ -151,12 +169,14 @@ class MailTransmission implements IMailTransmission {
 			return;
 		}
 
-		$mail->setBasePart($mimePart);
-
 		// Send the message
 		try {
-			$mail->send($transport, false, false);
-			$localMessage->setRaw($mail->getRaw(false));
+			$mimePart->send($smtpRecipients->writeAddress(), $sendHeaders, $transport);
+			$localMessage->setRaw($mimePart->toString([
+				'encode' => Horde_Mime_Part::ENCODE_7BIT | Horde_Mime_Part::ENCODE_8BIT | Horde_Mime_Part::ENCODE_BINARY,
+				'headers' => $fccHeaders,
+				'stream' => false,
+			]));
 			$localMessage->setStatus(LocalMessage::STATUS_RAW);
 		} catch (Horde_Mime_Exception $e) {
 			if ($e->getPrevious() instanceof Horde_Smtp_Exception) {
@@ -175,7 +195,11 @@ class MailTransmission implements IMailTransmission {
 			}
 
 			try {
-				$localMessage->setRaw($mail->getRaw(false));
+				$localMessage->setRaw($mimePart->toString([
+					'encode' => Horde_Mime_Part::ENCODE_7BIT | Horde_Mime_Part::ENCODE_8BIT | Horde_Mime_Part::ENCODE_BINARY,
+					'headers' => $fccHeaders,
+					'stream' => false,
+				]));
 			} catch (Throwable) {
 				// Having the raw message is nice for troubleshooting, but should not fail hard.
 			}
