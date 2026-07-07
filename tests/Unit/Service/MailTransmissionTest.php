@@ -470,7 +470,7 @@ class MailTransmissionTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
 		$this->assertStringContainsString('From: Bob <bob@mail.example>', $localMessage->getRaw());
 		$this->assertStringContainsString('Cc: Alice <alice@mail.example>', $localMessage->getRaw());
-		$this->assertStringNotContainsString('Bcc:', $localMessage->getRaw());
+		$this->assertStringContainsString('Bcc: Jane <jane@mail.example>', $localMessage->getRaw());
 	}
 
 	public function testSendMessageOmitCc() {
