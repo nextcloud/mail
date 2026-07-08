@@ -83,6 +83,8 @@ export default defineStore('main', {
 			messages: {},
 			newMessage: undefined,
 			showMessageComposer: false,
+			// Set when the composer is reopened via "Undo send" so it can fly back in from the top
+			composerFlyIn: false,
 			composerMessageIsSaved: false,
 			composerSessionId: undefined,
 			nextComposerSessionId: 1,
