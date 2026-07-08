@@ -541,6 +541,7 @@ return [
 		'textBlockShares' => ['url' => '/api/textBlockshares'],
 		'quickActions' => ['url' => '/api/quick-actions'],
 		'actionStep' => ['url' => '/api/action-step'],
+		'messageTemplate' => ['url' => 'api/message-template']
 	],
 	'ocs' => [
 		[
