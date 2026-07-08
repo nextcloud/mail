@@ -136,6 +136,8 @@ OC.L10N.register(
     "Title of the text block" : "Título del bloque de texto",
     "Content of the text block" : "Contenido del bloque de texto",
     "Ok" : "Aceptar",
+    "Top" : "Arriba",
+    "Bottom" : "Abajo",
     "Text blocks" : "Bloques de texto",
     "Shared with me" : "Compartido conmigo",
     "Privacy" : "Privacidad",
