@@ -39,17 +39,10 @@
 			@change="onLocalAttachmentSelected">
 		<FilePicker
 			v-if="isAttachmentPickerOpen"
-			:name="t('mail', 'Choose a file to add as attachment')"
+			:name="t('mail', 'Choose a file')"
 			:buttons="attachmentPickerButtons"
 			:filter-fn="filterAttachements"
 			@close="() => isAttachmentPickerOpen = false" />
-		<FilePicker
-			v-if="isLinkPickerOpen"
-			:name="t('mail', 'Choose a file to share as a link')"
-			:multiselect="false"
-			:buttons="linkPickerButtons"
-			:filter-fn="filterAttachements"
-			@close="() => isLinkPickerOpen = false" />
 	</div>
 </template>
 
@@ -120,18 +113,14 @@ export default {
 			isToggle: false,
 			hasNextLine: false,
 			isAttachmentPickerOpen: false,
-			isLinkPickerOpen: false,
 			attachmentPickerButtons: [
 				{
-					label: t('mail', 'Choose'),
+					label: t('mail', 'Add as attachment'),
 					callback: this.onAddCloudAttachment,
 					type: 'primary',
 				},
-			],
-
-			linkPickerButtons: [
 				{
-					label: t('mail', 'Choose'),
+					label: t('mail', 'Add as share link'),
 					callback: this.onAddCloudAttachmentLink,
 					type: 'primary',
 				},
@@ -193,7 +182,6 @@ export default {
 	created() {
 		this.bus.on('on-add-local-attachment', this.onAddLocalAttachment)
 		this.bus.on('on-add-cloud-attachment', this.openAttachementPicker)
-		this.bus.on('on-add-cloud-attachment-link', this.OpenLinkPicker)
 		this.bus.on('on-add-message-as-attachment', this.onAddMessageAsAttachment)
 		this.value.map((attachment) => {
 			this.attachments.push({
@@ -219,10 +207,6 @@ export default {
 
 		openAttachementPicker() {
 			this.isAttachmentPickerOpen = true
-		},
-
-		OpenLinkPicker() {
-			this.isLinkPickerOpen = true
 		},
 
 		onAddLocalAttachment() {
