@@ -108,8 +108,7 @@ class AvatarsController extends Controller {
 	private function noAvatarFoundResponse(): Response {
 		$response = new Response();
 		$response->setStatus(Http::STATUS_NOT_FOUND);
-		// Clear cache
-		$response->cacheFor(0);
+		$response->cacheFor(60 * 60, false, true);
 		return $response;
 	}
 }
