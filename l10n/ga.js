@@ -660,6 +660,7 @@ OC.L10N.register(
     "Reply to sender only" : "Freagair don seoltóir amháin",
     "Mark as unfavorite" : "Marcáil mar rud is fearr leat",
     "Mark as favorite" : "Marcáil mar is fearr leat",
+    "From:" : "Ó:",
     "To:" : "Chun:",
     "Cc:" : "Cc:",
     "Bcc:" : "Bcc:",

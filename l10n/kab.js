@@ -147,6 +147,7 @@ OC.L10N.register(
     "Reply all" : "Err-assen akk",
     "Unsubscribe" : "Ffeɣ seg ujerred",
     "Mark as favorite" : "Creḍ d amenyaf",
+    "From:" : "Sɣur:",
     "To:" : "Ɣer:",
     "Cc:" : "Anɣ. I:",
     "Bcc:" : "Anɣ. Uff. I:",

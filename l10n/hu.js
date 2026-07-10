@@ -453,6 +453,7 @@ OC.L10N.register(
     "Reply to sender only" : "Válasz csak a feladónak",
     "Mark as unfavorite" : "Megjelölés nem kedvencként",
     "Mark as favorite" : "Megjelölés kedvencként",
+    "From:" : "Ettől a dátumtól:",
     "To:" : "Eddig a dátumig:",
     "Unsubscribe via link" : "Leiratkozás hivatkozással",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "A leiratkozás leállít minden üzenetet, amely a(z) {sender} levelezőlistáról érkezik",

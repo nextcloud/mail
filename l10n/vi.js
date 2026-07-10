@@ -211,6 +211,7 @@ OC.L10N.register(
     "Could not load your message thread" : "Không thể tải chuỗi tin nhắn của bạn",
     "Not found" : "Không tìm thấy",
     "Reply to sender only" : "Chỉ trả lời người gửi",
+    "From:" : "Từ :",
     "To:" : "Tới :",
     "Could not remove trusted sender {sender}" : "Không thể xóa người gửi đáng tin cậy {sender}",
     "No senders are trusted at the moment." : "Không có người gửi nào được tin cậy vào lúc này.",

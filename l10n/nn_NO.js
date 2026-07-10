@@ -50,6 +50,7 @@ OC.L10N.register(
     "Date" : "Dato",
     "Tags" : "Emneord",
     "Not found" : "Ikkje funne",
+    "From:" : "Frå:",
     "Deleted" : "Sletta",
     "Recipient" : "Mottakar",
     "Help" : "Hjelp",

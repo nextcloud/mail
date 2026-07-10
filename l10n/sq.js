@@ -111,6 +111,7 @@ OC.L10N.register(
     "Delete tag" : "Fshi etiketën",
     "Tag already exists" : "Etiketa ekziston",
     "Add tag" : "Shto etiketim",
+    "From:" : "Nga:",
     "To:" : "Deri më:",
     "Deleted" : "E fshirë",
     "Recipient" : "Marrës",

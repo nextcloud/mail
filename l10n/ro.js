@@ -408,6 +408,7 @@ OC.L10N.register(
     "Reply to sender only" : "Răspunde doar expeditorului",
     "Mark as unfavorite" : "Elimină de la favorite",
     "Mark as favorite" : "Marchează ca favorit",
+    "From:" : "De la :",
     "To:" : "Catre:",
     "Unsubscribe via link" : "Dezabonare prin link",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Dezabonare va opri mesajele din lista de distribuție {sender}",
