@@ -29,8 +29,7 @@
 				:attachment="attachment"
 				:uploading="uploading"
 				@on-delete-attachment="onDelete(attachment)"
-				@preview="onPreviewAttachment"
-			/>
+				@preview="onPreviewAttachment" />
 		</ul>
 
 		<input
@@ -164,12 +163,12 @@ export default {
 			return this.attachments
 				.filter((attachment) => {
 					const mime = attachment.mime || attachment.fileType
-					return mime &&
-						(
-							mime.startsWith('image/') ||
-							mime.startsWith('video/') ||
-							mime.startsWith('audio/') ||
-							mime === 'application/pdf'
+					return mime
+						&& (
+							mime.startsWith('image/')
+							|| mime.startsWith('video/')
+							|| mime.startsWith('audio/')
+							|| mime === 'application/pdf'
 						)
 				})
 				.map((attachment) => ({
@@ -539,7 +538,6 @@ export default {
 				|| file.type.startsWith('video/')
 				|| file.type.startsWith('audio/')
 				|| file.type === 'application/pdf'
-
 		},
 
 		isImage(file) {
@@ -555,20 +553,24 @@ export default {
 				return
 			}
 
-			let fileInfo = {
+			const fileInfo = {
 				filename: attachment?.previewBlobUrl,
 				source: attachment?.previewBlobUrl,
 				basename: attachment?.fileName,
 				mime: attachment?.mime || attachment?.fileType,
 				etag: 'fixme',
 				hasPreview: false,
-				fileid: parseInt(attachment.id, 10),
 			}
 
-				OCA.Viewer.open({
-					fileInfo,
-					list: this.previewableFilesInfos
-				})
+			if (!OCA.Viewer) {
+				showWarning(t('mail', 'File Viewer is not enabled'))
+				return
+			}
+
+			OCA.Viewer.open({
+				fileInfo,
+				list: this.previewableFilesInfos,
+			})
 		},
 
 	},

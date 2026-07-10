@@ -3,7 +3,13 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<li class="composer-attachment" :class="{ 'composer-attachment--with-error': attachment.error }" @click="onPreview">
+	<li
+		class="composer-attachment"
+		:class="{
+			'composer-attachment--with-error': attachment.error,
+			'composer-attachment--previewable': isPreviewable,
+		}"
+		@click="onPreview">
 		<div class="attachment-preview">
 			<img
 				:src="previewSrc"
@@ -80,6 +86,10 @@ export default {
 			return OC.MimeType.getIconUrl(this.attachment.fileType)
 		},
 
+		isPreviewable() {
+			return this.attachment.finished && !!this.attachment.previewBlobUrl
+		},
+
 		extension() {
 			return this.attachment.fileName.split('.').pop()
 		},
@@ -92,7 +102,7 @@ export default {
 
 		onPreview() {
 			this.$emit('preview', this.attachment)
-		}
+		},
 	},
 }
 </script>
@@ -111,6 +121,17 @@ export default {
 	&--with-error {
 		color:red;
 		opacity: 0.5;
+	}
+
+	&--previewable {
+		cursor: pointer;
+		.attachment-preview,
+		.attachment-preview img,
+		.attachment-inner,
+		.new-message-attachment-name,
+		.new-message-attachment-size {
+			cursor: pointer;
+		}
 	}
 
 	.cloud-attachment-icon {
