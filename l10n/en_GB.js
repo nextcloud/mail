@@ -660,6 +660,7 @@ OC.L10N.register(
     "Reply to sender only" : "Reply to sender only",
     "Mark as unfavorite" : "Remove from Favourites",
     "Mark as favorite" : "Mark as favourite",
+    "From:" : "From:",
     "To:" : "To:",
     "Cc:" : "Cc:",
     "Bcc:" : "Bcc:",

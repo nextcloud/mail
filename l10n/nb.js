@@ -513,6 +513,7 @@ OC.L10N.register(
     "Reply to sender only" : "Svar kun til avsender",
     "Mark as unfavorite" : "Merk som ufavoritt",
     "Mark as favorite" : "Merk som favoritt",
+    "From:" : "Fra:",
     "To:" : "Til:",
     "Unsubscribe via link" : "Avslutt abonnement via kobling",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Hvis du avslutter abonnementet, stoppes alle meldinger fra adresselisten {avsender}",

@@ -576,6 +576,7 @@ OC.L10N.register(
     "Reply to sender only" : "Απάντηση μόνο στον αποστολέα",
     "Mark as unfavorite" : "Κατάργηση επισήμανσης ως αγαπημένο",
     "Mark as favorite" : "Επισήμανση ως αγαπημένο",
+    "From:" : "Από:",
     "To:" : "Μέχρι:",
     "Unsubscribe via link" : "Διαγραφή μέσω συνδέσμου",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Η διαγραφή θα σταματήσει όλα τα μηνύματα από τη λίστα αλληλογραφίας {sender}",

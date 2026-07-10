@@ -509,6 +509,7 @@ OC.L10N.register(
     "Reply all" : "Besvar alle",
     "Disable reminder" : "Deaktivér påmindelse",
     "Reply to sender only" : "Besvar kun afsender",
+    "From:" : "Fra:",
     "To:" : "Til:",
     "Go to latest message" : "Gå til seneste besked",
     "Newest message" : "Nyeste besked",

@@ -523,6 +523,7 @@ OC.L10N.register(
     "Reply to sender only" : "Respon només al remitent",
     "Mark as unfavorite" : "Marca com a no favorit",
     "Mark as favorite" : "Marca'l com a preferit",
+    "From:" : "De:",
     "To:" : "A:",
     "Unsubscribe via link" : "Cancel·la la subscripció mitjançant l'enllaç",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "La cancel·lació de la subscripció aturarà tots els missatges de la llista de correu {sender}",

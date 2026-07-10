@@ -628,6 +628,7 @@ OC.L10N.register(
     "Reply to sender only" : "Odgovori pošiljatelju",
     "Mark as unfavorite" : "Ukloni iz omiljenih",
     "Mark as favorite" : "Označi kao omiljeno",
+    "From:" : "Od:",
     "Unsubscribe via link" : "Odjavi se putem poveznice",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Odjavom ćete zaustaviti sve poruke s mailing liste {sender}",
     "Send unsubscribe email" : "Pošalji e-poruku za odjavu",

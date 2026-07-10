@@ -449,6 +449,7 @@ OC.L10N.register(
     "Unsubscribe" : "Peruuta tilaus",
     "Reply to sender only" : "Vastaa vain lähettäjälle",
     "Mark as favorite" : "Merkitse suosikiksi",
+    "From:" : "Alkaen:",
     "To:" : "Päättyen:",
     "Unsubscribe via link" : "Lopeta tilaus linkin kautta",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Tilauksen lopettaminen pysäyttää kaikkien viestin saapumisen postituslistalta {sender}",

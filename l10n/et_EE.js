@@ -660,6 +660,7 @@ OC.L10N.register(
     "Reply to sender only" : "Vasta vaid saatjale",
     "Mark as unfavorite" : "Märgi mittelemmikuks",
     "Mark as favorite" : "Märgi lemmikuks",
+    "From:" : "Saatja:",
     "To:" : "Saaja:",
     "Cc:" : "Koopia:",
     "Bcc:" : "Pimekoopia:",

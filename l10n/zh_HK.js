@@ -649,6 +649,7 @@ OC.L10N.register(
     "Reply to sender only" : "僅回覆寄件人",
     "Mark as unfavorite" : "取消標記我的最愛",
     "Mark as favorite" : "標記為我的最愛",
+    "From:" : "從：",
     "To:" : "收件者：",
     "Cc:" : "副本：",
     "Bcc:" : "密件副本：",

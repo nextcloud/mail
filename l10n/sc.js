@@ -245,6 +245,7 @@ OC.L10N.register(
     "Not found" : "No agatadu",
     "Unsubscribe" : "Disiscrie·ti",
     "Reply to sender only" : "Responde isceti a chi at imbiadu",
+    "From:" : "Dae:",
     "Could not remove trusted sender {sender}" : "No at fatu a nche bogare s'imbiante afidàbile {sender}",
     "No senders are trusted at the moment." : "No b'at imbiantes afidàbiles in custu momentu.",
     "Untitled event" : "Eventu chene tìtulu",

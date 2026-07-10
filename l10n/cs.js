@@ -630,6 +630,7 @@ OC.L10N.register(
     "Reply to sender only" : "Odpovědět pouze odesílateli",
     "Mark as unfavorite" : "Zrušit označení jako oblíbeného",
     "Mark as favorite" : "Označit jako oblíbené",
+    "From:" : "Od:",
     "To:" : "Pro:",
     "Cc:" : "Kopie:",
     "Bcc:" : "Skrytá kopie:",

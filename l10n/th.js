@@ -80,6 +80,7 @@ OC.L10N.register(
     "Custom" : "กำหนดเอง",
     "Tag already exists" : "มีแท็กอยู่แล้ว",
     "Not found" : "ไม่พบ",
+    "From:" : "จาก:",
     "To:" : "ถึง:",
     "Deleted" : "ลบแล้ว",
     "Help" : "ช่วยเหลือ",
