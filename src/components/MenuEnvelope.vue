@@ -150,6 +150,7 @@
 				{{ t('mail', 'Reply with meeting') }}
 			</ActionButton>
 			<ActionButton
+				v-if="tasksEnabled"
 				:close-after-click="true"
 				@click.prevent="$emit('open-task-modal')">
 				<template #icon>
@@ -440,6 +441,10 @@ export default {
 
 		hasDeleteAcl() {
 			return mailboxHasRights(this.mailbox, 'te')
+		},
+
+		tasksEnabled() {
+			return this.mainStore.getTaskCalendarsForCurrentUser.length > 0
 		},
 
 		isSnoozedMailbox() {
