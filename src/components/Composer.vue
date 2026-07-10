@@ -1596,6 +1596,7 @@ export default {
 			this.requestMdnVal = false
 			this.changeSignature = false
 			this.sendAtVal = 0
+			this.isAiGeneratedVal = false
 
 			this.setAlias()
 			this.initBody()
