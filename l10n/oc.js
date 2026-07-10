@@ -92,6 +92,7 @@ OC.L10N.register(
     "Tags" : "Etiquetas",
     "Custom" : "Personalizats",
     "Not found" : "Non trobat",
+    "From:" : "Del :",
     "To:" : "Al :",
     "Translate message" : "Traduire lo messatge",
     "Translating" : "Traduccion",

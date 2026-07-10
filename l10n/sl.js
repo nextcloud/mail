@@ -395,6 +395,7 @@ OC.L10N.register(
     "Reply to sender only" : "Odgovori le pošiljatelju",
     "Mark as unfavorite" : "Odstrani oznako priljubljeno",
     "Mark as favorite" : "Označi kot priljubljeno",
+    "From:" : "Od:",
     "To:" : "Do:",
     "The message could not be translated" : "Sporočila ni mogoče prevesti",
     "Translation copied to clipboard" : "Prevod je kopiran v odložišče",

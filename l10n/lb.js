@@ -47,6 +47,7 @@ OC.L10N.register(
     "Date" : "Date",
     "Tags" : "Tags",
     "Custom" : "Individualiséier",
+    "From:" : "Vun:",
     "To:" : "Un:",
     "Deleted" : "Geläscht",
     "Help" : "Hëllef",

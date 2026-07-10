@@ -512,6 +512,7 @@ OC.L10N.register(
     "Reply to sender only" : "Erantzun bakarrik igorleari",
     "Mark as unfavorite" : "Markatu ez gogoko gisa",
     "Mark as favorite" : "Markatu gogoko gisa",
+    "From:" : "Noiztik:",
     "To:" : "Noiz arte:",
     "Unsubscribe via link" : "Harpidetza kendu esteka bidez",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Harpidetza kentzeak {sender} posta-zerrendako mezu guztiak geldituko ditu",

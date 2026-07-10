@@ -652,6 +652,7 @@ OC.L10N.register(
     "Reply to sender only" : "Yalnızca gönderene yanıtla",
     "Mark as unfavorite" : "Sık kullanılanlardan kaldır",
     "Mark as favorite" : "Sık kullanılanlara ekle",
+    "From:" : "Başlangıç:",
     "To:" : "Kime:",
     "Cc:" : "Kopya:",
     "Bcc:" : "Gizli kopya:",

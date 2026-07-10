@@ -543,6 +543,7 @@ OC.L10N.register(
     "Reply to sender only" : "Resposta apenas ao remetente",
     "Mark as unfavorite" : "Marcar como não-favorito",
     "Mark as favorite" : "Marcar como favorito",
+    "From:" : "De:",
     "To:" : "Para:",
     "Bcc:" : "Cco:",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Cancelar a inscrição interromperá todas as mensagens da lista de discussão {sender}",

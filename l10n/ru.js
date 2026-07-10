@@ -652,6 +652,7 @@ OC.L10N.register(
     "Reply to sender only" : "Ответить только отправителю",
     "Mark as unfavorite" : "Отметить как неизбранное",
     "Mark as favorite" : "Отметить как избранное",
+    "From:" : "С:",
     "To:" : "По:",
     "Cc:" : "Cc:",
     "Bcc:" : "Bcc:",

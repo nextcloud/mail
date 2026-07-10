@@ -650,6 +650,7 @@ OC.L10N.register(
     "Reply to sender only" : "پاسخ فقط به فرستنده",
     "Mark as unfavorite" : "علامت‌گذاری به عنوان غیرمحبوب",
     "Mark as favorite" : "علامت‌گذاری به عنوان محبوب",
+    "From:" : "از:",
     "To:" : "به:",
     "Cc:" : "رونوشت:",
     "Bcc:" : "رونوشت مخفی:",

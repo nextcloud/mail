@@ -607,6 +607,7 @@ OC.L10N.register(
     "Reply to sender only" : "Reply to sender only",
     "Mark as unfavorite" : "Mark as unfavorite",
     "Mark as favorite" : "Mark as favorite",
+    "From:" : "ຈາກ:",
     "To:" : "ເຖິງ:",
     "Unsubscribe via link" : "Unsubscribe via link",
     "Unsubscribing will stop all messages from the mailing list {sender}" : "Unsubscribing will stop all messages from the mailing list {sender}",

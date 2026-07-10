@@ -660,6 +660,7 @@ OC.L10N.register(
     "Reply to sender only" : "Atsakyti tik siuntėjui",
     "Mark as unfavorite" : "Pažymėti kaip nepatinkantį",
     "Mark as favorite" : "Žymėti kaip mėgstamiausią",
+    "From:" : "Nuo:",
     "To:" : "Iki:",
     "Cc:" : "Cc:",
     "Bcc:" : "Bcc:",

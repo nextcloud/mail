@@ -620,6 +620,7 @@ OC.L10N.register(
     "Unsubscribe" : "Avsluta prenumeration",
     "Reply to sender only" : "Svara endast avsändaren",
     "Mark as favorite" : "Markera som favorit",
+    "From:" : "Från:",
     "To:" : "Till:",
     "Cc:" : "Cc:",
     "Bcc:" : "Bcc:",
