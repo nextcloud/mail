@@ -3,19 +3,20 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<Modal
-		v-if="showMessageComposer"
-		:size="modalSize"
-		:name="modalTitle"
-		:additional-trap-elements="additionalTrapElements"
-		@close="$event.type === 'click' ? onClose() : onMinimize()">
-		<div class="modal-content">
-			<div class="left-pane">
+	<div v-if="showMessageComposer"
+		ref="floatingPanel"
+		class="floating-composer"
+		:class="{ 'floating-composer--maximized': largerModal }"
+		@mousedown.stop>
+		<div class="floating-composer__header">
+			<h2 class="floating-composer__title">
+				{{ modalTitle }}
+			</h2>
+			<div class="floating-composer__actions">
 				<NcButton
-					class="maximize-button"
 					variant="tertiary-no-background"
-					:aria-label="t('mail', 'Maximize composer')"
-					:title="largerModal ? t('mail', 'Show recipient details') : t('mail', 'Hide recipient details')"
+					:aria-label="largerModal ? t('mail', 'Restore composer') : t('mail', 'Maximize composer')"
+					:title="largerModal ? t('mail', 'Restore composer') : t('mail', 'Maximize composer')"
 					@click="onMaximize">
 					<template #icon>
 						<MaximizeIcon v-if="!largerModal" :size="20" />
@@ -23,7 +24,6 @@
 					</template>
 				</NcButton>
 				<NcButton
-					class="minimize-button"
 					variant="tertiary-no-background"
 					:aria-label="t('mail', 'Minimize composer')"
 					:title="t('mail', 'Minimize composer')"
@@ -32,91 +32,97 @@
 						<MinimizeIcon :size="20" />
 					</template>
 				</NcButton>
-
-				<KeepAlive>
-					<EmptyContent
-						v-if="error"
-						:name="t('mail', 'Error sending your message')"
-						class="empty-content"
-						role="alert">
-						<p>{{ error }}</p>
-						<template #action>
-							<NcButton variant="tertiary" :aria-label="t('mail', 'Go back')" @click="error = undefined">
-								{{ t('mail', 'Go back') }}
-							</NcButton>
-							<NcButton variant="tertiary" :aria-label="t('mail', 'Retry')" @click="onSend">
-								{{ t('mail', 'Retry') }}
-							</NcButton>
-						</template>
-					</EmptyContent>
-					<EmptyContent
-						v-else-if="warning"
-						:name="t('mail', 'Warning sending your message')"
-						class="empty-content"
-						role="alert">
-						<template #description>
-							{{ warning }}
-						</template>
-						<template #action>
-							<NcButton variant="tertiary" :aria-label="t('mail', 'Go back')" @click="warning = undefined">
-								{{ t('mail', 'Go back') }}
-							</NcButton>
-							<NcButton variant="tertiary" :aria-label="t('mail', 'Send anyway')" @click="onForceSend">
-								{{ t('mail', 'Send anyway') }}
-							</NcButton>
-						</template>
-					</EmptyContent>
-
-					<Composer
-						ref="composer"
-						:from-account="composerData.accountId"
-						:from-alias="composerData.aliasId"
-						:to="composerData.to"
-						:cc="composerData.cc"
-						:bcc="composerData.bcc"
-						:subject="composerData.subject"
-						:attachments-data="composerData.attachments"
-						:body="composerDataBodyAsTextInstance"
-						:editor-body="convertEditorBody(composerData)"
-						:in-reply-to-message-id="composerData.inReplyToMessageId"
-						:reply-to="composerData.replyTo"
-						:forward-from="composerData.forwardFrom"
-						:send-at="composerData.sendAt * 1000"
-						:forwarded-messages="forwardedMessages"
-						:smart-reply="smartReply"
-						:can-save-draft="canSaveDraft"
-						:saving-draft="savingDraft"
-						:draft-saved="draftSaved"
-						:smime-sign="composerData.smimeSign"
-						:smime-encrypt="composerData.smimeEncrypt"
-						:is-first-open="modalFirstOpen"
-						:is-draft="composerData.draftId !== undefined"
-						:request-mdn="composerData.requestMdn"
-						:accounts="accounts"
-						@update:from-account="patchComposerData({ accountId: $event })"
-						@update:from-alias="patchComposerData({ aliasId: $event })"
-						@update:to="patchComposerData({ to: $event })"
-						@update:cc="patchComposerData({ cc: $event })"
-						@update:bcc="patchComposerData({ bcc: $event })"
-						@update:subject="patchComposerData({ subject: $event })"
-						@update:attachments-data="patchComposerData({ attachments: $event })"
-						@update:editor-body="patchEditorBody"
-						@update:send-at="patchComposerData({ sendAt: $event / 1000 })"
-						@update:smime-sign="patchComposerData({ smimeSign: $event })"
-						@update:smime-encrypt="patchComposerData({ smimeSign: $event })"
-						@update:request-mdn="patchComposerData({ requestMdn: $event })"
-						@draft="onDraft"
-						@discard-draft="discardDraft"
-						@upload-attachment="onAttachmentUploading"
-						@send="onSend" />
-				</KeepAlive>
-			</div>
-
-			<div v-show="showRecipientPane && !warning && !error" class="right-pane">
-				<RecipientInfo />
+				<NcButton
+					variant="tertiary-no-background"
+					:aria-label="t('mail', 'Close composer')"
+					:title="t('mail', 'Close composer')"
+					@click="onClose">
+					<template #icon>
+						<CloseIcon :size="20" />
+					</template>
+				</NcButton>
 			</div>
 		</div>
-	</Modal>
+		<div class="floating-composer__body">
+			<KeepAlive>
+				<EmptyContent
+					v-if="error"
+					:name="t('mail', 'Error sending your message')"
+					class="empty-content"
+					role="alert">
+					<p>{{ error }}</p>
+					<template #action>
+						<NcButton variant="tertiary" :aria-label="t('mail', 'Go back')" @click="error = undefined">
+							{{ t('mail', 'Go back') }}
+						</NcButton>
+						<NcButton variant="tertiary" :aria-label="t('mail', 'Retry')" @click="onSend">
+							{{ t('mail', 'Retry') }}
+						</NcButton>
+					</template>
+				</EmptyContent>
+				<EmptyContent
+					v-else-if="warning"
+					:name="t('mail', 'Warning sending your message')"
+					class="empty-content"
+					role="alert">
+					<template #description>
+						{{ warning }}
+					</template>
+					<template #action>
+						<NcButton variant="tertiary" :aria-label="t('mail', 'Go back')" @click="warning = undefined">
+							{{ t('mail', 'Go back') }}
+						</NcButton>
+						<NcButton variant="tertiary" :aria-label="t('mail', 'Send anyway')" @click="onForceSend">
+							{{ t('mail', 'Send anyway') }}
+						</NcButton>
+					</template>
+				</EmptyContent>
+
+				<Composer
+					ref="composer"
+					:from-account="composerData.accountId"
+					:from-alias="composerData.aliasId"
+					:to="composerData.to"
+					:cc="composerData.cc"
+					:bcc="composerData.bcc"
+					:subject="composerData.subject"
+					:attachments-data="composerData.attachments"
+					:body="composerDataBodyAsTextInstance"
+					:editor-body="convertEditorBody(composerData)"
+					:in-reply-to-message-id="composerData.inReplyToMessageId"
+					:reply-to="composerData.replyTo"
+					:forward-from="composerData.forwardFrom"
+					:send-at="composerData.sendAt * 1000"
+					:forwarded-messages="forwardedMessages"
+					:smart-reply="smartReply"
+					:can-save-draft="canSaveDraft"
+					:saving-draft="savingDraft"
+					:draft-saved="draftSaved"
+					:smime-sign="composerData.smimeSign"
+					:smime-encrypt="composerData.smimeEncrypt"
+					:is-first-open="modalFirstOpen"
+					:is-draft="composerData.draftId !== undefined"
+					:request-mdn="composerData.requestMdn"
+					:accounts="accounts"
+					@update:from-account="patchComposerData({ accountId: $event })"
+					@update:from-alias="patchComposerData({ aliasId: $event })"
+					@update:to="patchComposerData({ to: $event })"
+					@update:cc="patchComposerData({ cc: $event })"
+					@update:bcc="patchComposerData({ bcc: $event })"
+					@update:subject="patchComposerData({ subject: $event })"
+					@update:attachments-data="patchComposerData({ attachments: $event })"
+					@update:editor-body="patchEditorBody"
+					@update:send-at="patchComposerData({ sendAt: $event / 1000 })"
+					@update:smime-sign="patchComposerData({ smimeSign: $event })"
+					@update:smime-encrypt="patchComposerData({ smimeSign: $event })"
+					@update:request-mdn="patchComposerData({ requestMdn: $event })"
+					@draft="onDraft"
+					@discard-draft="discardDraft"
+					@upload-attachment="onAttachmentUploading"
+					@send="onSend" />
+			</KeepAlive>
+		</div>
+	</div>
 </template>
 
 <script>
@@ -124,15 +130,14 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import {
 	NcEmptyContent as EmptyContent,
-	NcModal as Modal,
 	NcButton,
 } from '@nextcloud/vue'
 import { mapActions, mapState, mapStores } from 'pinia'
 import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
 import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
+import CloseIcon from 'vue-material-design-icons/Close.vue'
 import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
 import Composer from './Composer.vue'
-import RecipientInfo from './RecipientInfo.vue'
 import AttachmentMissingError from '../errors/AttachmentMissingError.js'
 import ManyRecipientsError from '../errors/ManyRecipientsError.js'
 import { matchError } from '../errors/match.js'
@@ -152,11 +157,10 @@ export default {
 		NcButton,
 		Composer,
 		EmptyContent,
-		Modal,
 		MinimizeIcon,
 		MaximizeIcon,
 		DefaultComposerIcon,
-		RecipientInfo,
+		CloseIcon,
 	},
 
 	provide() {
@@ -188,9 +192,7 @@ export default {
 			cookedComposerData: undefined,
 			changed: false,
 			largerModal: false,
-			isLargeScreen: window.innerWidth >= 1024,
 			additionalTrapElements: [],
-			isMaximized: false,
 			recipient: {
 				name: '',
 				email: '',
@@ -219,18 +221,10 @@ export default {
 			if (this.composerData.forwardFrom) {
 				return t('mail', 'Forward')
 			}
+			if (this.composerData.subject) {
+				return this.composerData.subject
+			}
 			return t('mail', 'New message')
-		},
-
-		hasContactDetailsApi() {
-			return !!window.OCA?.Contacts?.mountContactDetails
-		},
-
-		showRecipientPane() {
-			return this.hasContactDetailsApi
-				&& this.composerData.to
-				&& this.composerData.to.length > 0
-				&& !this.largerModal
 		},
 
 		composerMessage() {
@@ -248,12 +242,6 @@ export default {
 		smartReply() {
 			return this.composerData?.smartReply ?? null
 		},
-
-		modalSize() {
-			return this.isLargeScreen && this.hasContactDetailsApi && this.composerData.to && this.composerData.to.length > 0
-				? 'large'
-				: (this.largerModal ? 'large' : 'normal')
-		},
 	},
 
 	created() {
@@ -268,19 +256,15 @@ export default {
 		await this.$nextTick()
 		this.updateCookedComposerData()
 		await this.openModalSize()
-		window.addEventListener('resize', this.checkScreenSize)
+		document.addEventListener('mousedown', this.onClickOutside)
 	},
 
 	beforeUnmount() {
 		window.removeEventListener('beforeunload', this.onBeforeUnload)
-		window.removeEventListener('resize', this.checkScreenSize)
+		document.removeEventListener('mousedown', this.onClickOutside)
 	},
 
 	methods: {
-		checkScreenSize() {
-			this.isLargeScreen = window.innerWidth >= 1024
-		},
-
 		async openModalSize() {
 			try {
 				const sizePreference = this.mainStore.getPreference('modalSize')
@@ -290,8 +274,16 @@ export default {
 			}
 		},
 
+		onClickOutside(event) {
+			if (!this.showMessageComposer) return
+			if (!this.$refs.floatingPanel) return
+			if (this.$refs.floatingPanel.contains(event.target)) return
+			// Don't minimize when the user is interacting with a modal, popover, or CKEditor toolbar
+			if (event.target.closest('.modal-wrapper, .ck-body-wrapper, [data-popper-placement], .v-popper__popper')) return
+			this.onMinimize()
+		},
+
 		async onMaximize() {
-			this.isMaximized = !this.isMaximized
 			this.largerModal = !this.largerModal
 			try {
 				await this.mainStore.savePreference({
@@ -304,7 +296,6 @@ export default {
 		},
 
 		async onMinimize() {
-			this.isMaximized = false
 			this.modalFirstOpen = false
 
 			await this.mainStore.hideMessageComposerMutation()
@@ -648,70 +639,81 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '../../css/variables.scss';
+$composer-width: 600px;
+$header-height: calc(var(--default-clickable-area) + calc(var(--default-grid-baseline) * 2));
 
-@media only screen and (max-width: 600px) {
-	:deep(.modal-container) {
-		max-width: 80%;
+.floating-composer {
+	position: fixed;
+	bottom: calc(var(--body-container-margin, 0px) + var(--default-grid-baseline) * 2 + 52px);
+	inset-inline-end: calc(var(--body-container-margin, 0px) + var(--default-grid-baseline));
+	z-index: 1500;
+
+	width: $composer-width;
+	max-width: calc(100vw - 2 * var(--default-grid-baseline));
+	// Constrain growth so the panel never overflows the top of the viewport
+	max-height: calc(100vh - (var(--body-container-margin, 0px) + var(--default-grid-baseline) * 3 + 52px));
+
+	display: flex;
+	flex-direction: column;
+
+	background-color: var(--color-main-background);
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-large);
+	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+
+	&--maximized {
+		// Pin top edge below the Nextcloud navigation bar so the header stays visible
+		top: calc(var(--header-height, 44px) + var(--default-grid-baseline));
+	}
+
+	@media (max-width: #{$composer-width}) {
+		inset-inline-end: var(--default-grid-baseline);
+		inset-inline-start: var(--default-grid-baseline);
+		width: auto;
 	}
 }
 
-:deep(.modal-wrapper .modal-container) {
-	overflow-y: auto !important;
-	overflow-x: auto !important;
-	// from original Modal max-height
-	height: 90%;
-	// Max editor + modal height
-	max-height: 700px !important;
-}
-
-.minimize-button {
-	float: inline-end;
-	position: absolute;
-	top: 4px;
-	inset-inline-end: 63px;
-}
-
-.maximize-button {
-	float: inline-end;
-	position: absolute;
-	top: 4px;
-	inset-inline-end: 33px;
-
-}
-
-.empty-content{
-	height: 100%;
+.floating-composer__header {
+	position: relative;
+	z-index: 101;
 	display: flex;
+	align-items: center;
+	height: $header-height;
+	flex-shrink: 0;
+	padding: 0 calc(var(--default-grid-baseline) * 2);
+	border-bottom: 1px solid var(--color-border);
+	border-radius: var(--border-radius-large) var(--border-radius-large) 0 0;
+	background-color: var(--color-main-background);
+	cursor: default;
+	user-select: none;
 }
 
-.modal-content {
+.floating-composer__title {
+	flex: 1;
+	margin: 0;
+	font-size: var(--default-font-size);
+	font-weight: bold;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.floating-composer__actions {
 	display: flex;
-	height: 100%;
-	flex-direction: row;
-	width: 100%;
+	flex-shrink: 0;
+	gap: 0;
 }
 
-.left-pane {
+.floating-composer__body {
 	flex: 1;
 	overflow-y: auto;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
 }
 
-.right-pane {
-	flex: 0 0 370px;
-	overflow-y: auto;
-	padding-inline-start: 5px;
-	border-inline-start: 1px solid var(--color-border);
-	@media (max-width: #{variables.$breakpoint-mobile}) {
-		display: none;
-	}
-}
-
-.modal-content.with-recipient .left-pane {
-	flex: 1;
-}
-
-.modal-content .left-pane {
-	width: 100%;
+.empty-content {
+	height: 100%;
+	display: flex;
 }
 </style>

@@ -39,14 +39,9 @@
 			</div>
 		</div>
 		<div class="composer-fields">
-			<div class="composer-fields__label">
-				<label class="to-label" for="to">
-					{{ t('mail', 'To') }}
-				</label>
-				<ButtonVue size="small" type="tertiary-no-background" @click.prevent="toggleViewMode">
-					{{ t('mail', 'Cc/Bcc') }}
-				</ButtonVue>
-			</div>
+			<label class="to-label" for="to">
+				{{ t('mail', 'To') }}
+			</label>
 			<div class="composer-fields--custom">
 				<NcSelect
 					id="to"
@@ -98,6 +93,9 @@
 					</template>
 				</NcSelect>
 			</div>
+			<ButtonVue size="small" type="tertiary-no-background" class="copy-toggle" @click.prevent="toggleViewMode">
+				{{ t('mail', 'Cc/Bcc') }}
+			</ButtonVue>
 		</div>
 		<div v-if="showCC" class="composer-fields">
 			<label for="cc" class="cc-label">
@@ -1774,23 +1772,15 @@ export default {
 }
 
 .composer-fields {
-	padding: var(--default-grid-baseline) calc(var(--default-grid-baseline) * 2) 0 calc(var(--default-grid-baseline) * 2);
-
-	&__label {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: flex-end;
-
-		/** NcButton does not allow font weight styling */
-		:deep(.button-vue__text) {
-			font-weight: normal;
-		}
-	}
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	padding: 0 calc(var(--default-grid-baseline) * 2);
+	min-height: calc(var(--default-clickable-area) + calc(var(--default-grid-baseline) * 2));
 
 	&.mail-account {
 		border-top: none;
-		padding-top: calc(var(--default-grid-baseline) * 2);
+		padding-top: var(--default-grid-baseline);
 	}
 
 	input,
@@ -1802,10 +1792,12 @@ export default {
 	}
 
 	.composer-fields--custom {
+		flex: 1;
+		min-width: 0;
 		display: flex;
 		align-items: flex-start;
 		justify-content: space-between;
-		padding-top: calc(var(--default-grid-baseline) * 0.5);
+		padding: calc(var(--default-grid-baseline) * 1.5) 0;
 
 		button {
 			margin-top: 0;
@@ -1857,7 +1849,7 @@ export default {
 // Make composer editor expand
 .message-editor {
 	flex: 1 1 100%;
-	min-height: 0;
+	min-height: 200px;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -1870,23 +1862,22 @@ export default {
 
 .from-label,
 .to-label,
-.copy-toggle,
 .cc-label,
 .bcc-label {
+	width: calc(var(--default-grid-baseline) * 12);
+	flex-shrink: 0;
+	padding-top: calc(var(--default-grid-baseline) * 1.5 + 1px);
 	color: var(--color-text-maxcontrast);
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
 
-.bcc-label {
-	top: initial;
-	bottom: 0;
-}
-
 .copy-toggle {
+	flex-shrink: 0;
+	align-self: flex-start;
+	margin-top: calc(var(--default-grid-baseline) * 0.5);
 	cursor: pointer;
-	width: initial;
 
 	&:hover,
 	&:focus {
