@@ -87,7 +87,7 @@ export default {
 		},
 
 		isPreviewable() {
-			return this.attachment.finished && !!this.attachment.previewBlobUrl
+			return this.attachment.finished && !!this.attachment.previewBlobUrl && !!OCA?.Viewer
 		},
 
 		extension() {

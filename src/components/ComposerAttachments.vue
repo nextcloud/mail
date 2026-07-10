@@ -563,7 +563,6 @@ export default {
 			}
 
 			if (!OCA.Viewer) {
-				showWarning(t('mail', 'File Viewer is not enabled'))
 				return
 			}
 
