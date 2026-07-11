@@ -283,15 +283,11 @@
 			@upload="$emit('upload-attachment', $event, getMessageData())" />
 		<div class="composer-actions-right composer-actions">
 			<div class="composer-actions--primary-actions">
-				<p class="composer-actions-draft-status">
-					<span v-if="savingDraft" class="draft-status">{{ t('mail', 'Saving draft …') }}</span>
-					<span v-else-if="!canSaveDraft" class="draft-status">{{ t('mail', 'Error saving draft') }}</span>
-					<span v-else-if="draftSaved" class="draft-status">{{ t('mail', 'Draft saved') }}</span>
-				</p>
 				<ButtonVue
-					v-if="!savingDraft && !canSaveDraft"
+					v-if="!canSaveDraft"
 					class="button"
 					type="tertiary"
+					:disabled="savingDraft"
 					:aria-label="t('mail', 'Save draft')"
 					@click="saveDraft">
 					<template #icon>
@@ -299,15 +295,20 @@
 					</template>
 				</ButtonVue>
 				<ButtonVue
-					v-if="!savingDraft && draftSaved"
 					class="button"
 					type="tertiary"
+					:disabled="savingDraft"
 					:aria-label="t('mail', 'Discard & close draft')"
 					@click="$emit('discard-draft')">
 					<template #icon>
 						<Delete :size="20" :title="t('mail', 'Discard & close draft')" />
 					</template>
 				</ButtonVue>
+				<p class="composer-actions-draft-status">
+					<span v-if="savingDraft" class="draft-status">{{ t('mail', 'Saving draft …') }}</span>
+					<span v-else-if="!canSaveDraft" class="draft-status">{{ t('mail', 'Error saving draft') }}</span>
+					<span v-else-if="draftSaved" class="draft-status">{{ t('mail', 'Draft saved') }}</span>
+				</p>
 			</div>
 			<div class="composer-actions--secondary-actions">
 				<ButtonVue
@@ -1981,10 +1982,6 @@ export default {
 	flex-shrink: 0;
 }
 
-.composer-actions-draft-status {
-	padding-inline-start: 10px;
-}
-
 :deep(.vs__selected-options .vs__dropdown-toggle .vs--multiple ){
 	width: 100%;
 }
@@ -2000,6 +1997,7 @@ export default {
 	}
 	.composer-actions--primary-actions {
 		padding-inline-end: 5px;
+		flex-direction: row-reverse;
 	}
 }
 
