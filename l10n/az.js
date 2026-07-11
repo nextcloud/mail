@@ -55,6 +55,7 @@ OC.L10N.register(
     "Date" : "Date",
     "Tags" : "Işarələr",
     "Not found" : "Tapılmadı",
+    "From:" : "Kimdən:",
     "To:" : "Kimə:",
     "Deleted" : "Silinib",
     "Help" : "Kömək",
