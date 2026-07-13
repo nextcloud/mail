@@ -15,9 +15,11 @@ export async function saveAttachmentToFiles(id, attachmentId, directory) {
 		},
 	)
 
-	return await Axios.post(url, {
+	const res = await Axios.post(url, {
 		targetPath: directory,
 	})
+
+	return res.data
 }
 
 export async function saveAttachmentsToFiles(id, directory) {
