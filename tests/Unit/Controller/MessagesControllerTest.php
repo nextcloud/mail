@@ -398,7 +398,10 @@ class MessagesControllerTest extends TestCase {
 			->method('getContent')
 			->will($this->returnValue('abcdefg'));
 
-		$expected = new JSONResponse();
+		$expected = new JSONResponse([
+			'fileId' => $file->getId(),
+			'path' => $targetPath,
+		]);
 		$response = $this->controller->saveAttachment(
 			$id,
 			$attachmentId,
