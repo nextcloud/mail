@@ -53,6 +53,8 @@ use function array_filter;
  * @method setRaw(string|null $raw)
  * @method bool getRequestMdn()
  * @method setRequestMdn(bool $mdn)
+ * @method string|null getGovernanceLabelId()
+ * @method void setGovernanceLabelId(?string $governanceLabelId)
  */
 class LocalMessage extends Entity implements JsonSerializable {
 	public const TYPE_OUTGOING = 0;
@@ -141,6 +143,9 @@ class LocalMessage extends Entity implements JsonSerializable {
 	/** @var bool */
 	protected $requestMdn;
 
+	/** @var string|null */
+	protected $governanceLabelId;
+
 	public function __construct() {
 		$this->addType('type', 'integer');
 		$this->addType('accountId', 'integer');
@@ -195,6 +200,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'status' => $this->getStatus(),
 			'raw' => $this->getRaw(),
 			'requestMdn' => $this->getRequestMdn(),
+			'governanceLabelId' => $this->getGovernanceLabelId(),
 		];
 	}
 

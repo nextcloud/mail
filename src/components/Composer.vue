@@ -216,7 +216,7 @@
 				</NcSelect>
 			</div>
 		</div>
-		<div class="composer-fields">
+		<div class="composer-fields composer-fields--subject">
 			<label for="subject" class="subject-label hidden-visually">
 				{{ t('mail', 'Subject') }}
 			</label>
@@ -229,6 +229,7 @@
 				autocomplete="off"
 				:placeholder="t('mail', 'Subject …')"
 				@input="saveDraftDebounced">
+			<GovernanceLabelPicker v-model="governanceLabelIdVal" />
 		</div>
 		<div v-if="noReply" class="warning noreply-warning">
 			{{ t('mail', 'This message came from a noreply address so your reply will probably not be read.') }}
@@ -532,6 +533,7 @@ import Delete from 'vue-material-design-icons/TrashCanOutline.vue'
 import Download from 'vue-material-design-icons/TrayArrowDown.vue'
 import IconUpload from 'vue-material-design-icons/TrayArrowUp.vue'
 import ComposerAttachments from './ComposerAttachments.vue'
+import GovernanceLabelPicker from './GovernanceLabelPicker.vue'
 import MailvelopeEditor from './MailvelopeEditor.vue'
 import RecipientListItem from './RecipientListItem.vue'
 import TextBlockModal from './textBlocks/TextBlockModal.vue'
@@ -567,6 +569,7 @@ export default {
 		ActionRadio,
 		ButtonVue,
 		ComposerAttachments,
+		GovernanceLabelPicker,
 		TextBlockModal,
 		ChevronLeft,
 		Delete,
@@ -717,6 +720,11 @@ export default {
 			default: false,
 		},
 
+		governanceLabelId: {
+			type: String,
+			default: null,
+		},
+
 		accounts: {
 			type: Array,
 			required: true,
@@ -755,6 +763,7 @@ export default {
 
 			editorMode: (this.body?.format !== 'html') ? EDITOR_MODE_TEXT : EDITOR_MODE_HTML,
 			requestMdnVal: this.requestMdn,
+			governanceLabelIdVal: this.governanceLabelId,
 			changeSignature: false,
 			loadingIndicatorTo: false,
 			loadingIndicatorCc: false,
@@ -1070,6 +1079,10 @@ export default {
 			this.$emit('update:request-mdn', val)
 		},
 
+		governanceLabelIdVal(val) {
+			this.$emit('update:governance-label-id', val)
+		},
+
 		selectedAlias: {
 			handler() {
 				const aliasEmailAddress = this.selectedAlias.emailAddress
@@ -1264,6 +1277,7 @@ export default {
 				inReplyToMessageId: this.inReplyToMessageId ?? (this.replyTo ? this.replyTo.messageId : undefined),
 				isHtml: !this.encrypt && !this.editorPlainText,
 				requestMdn: this.requestMdnVal,
+				governanceLabelId: this.governanceLabelIdVal ?? undefined,
 				sendAt: this.sendAtVal !== 0 ? Math.floor(this.sendAtVal / 1000) : undefined,
 				smimeSign: this.shouldSmimeSign,
 				smimeEncrypt: this.shouldSmimeEncrypt,
@@ -1825,6 +1839,12 @@ export default {
 		.v-select{
 			flex-grow: 0.95;
 		}
+	}
+
+	&--subject {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
 	}
 
 	.subject {

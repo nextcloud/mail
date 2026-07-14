@@ -73,6 +73,8 @@ use function json_encode;
  * @method void setEncrypted(bool|null $encrypted)
  * @method bool getMentionsMe()
  * @method void setMentionsMe(bool $isMentionned)
+ * @method string|null getGovernanceLabelId()
+ * @method void setGovernanceLabelId(?string $governanceLabelId)
  */
 class Message extends Entity implements JsonSerializable {
 	private const MUTABLE_FLAGS = [
@@ -117,6 +119,7 @@ class Message extends Entity implements JsonSerializable {
 	protected $imipProcessed = false;
 	protected $imipError = false;
 	protected $mentionsMe = false;
+	protected $governanceLabelId;
 
 	/**
 	 * @var bool|null
@@ -375,6 +378,7 @@ class Message extends Entity implements JsonSerializable {
 			'avatar' => $this->avatar?->jsonSerialize(),
 			'fetchAvatarFromClient' => $this->fetchAvatarFromClient,
 			'attachments' => $this->getAttachments(),
+			'governanceLabelId' => $this->getGovernanceLabelId(),
 		];
 	}
 }

@@ -18,6 +18,7 @@ use OCA\Mail\IMAP\MessageMapper as ImapMapper;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\AvatarService;
+use OCA\Mail\Service\GovernanceLabelService;
 use Psr\Log\LoggerInterface;
 use function array_key_exists;
 use function array_map;
@@ -32,6 +33,7 @@ class PreviewEnhancer {
 		private LoggerInterface $logger,
 		private AvatarService $avatarService,
 		private AttachmentService $attachmentService,
+		private GovernanceLabelService $governanceLabelService,
 	) {
 	}
 
@@ -95,7 +97,7 @@ class PreviewEnhancer {
 			$client->logout();
 		}
 
-		return $this->mapper->updatePreviewDataBulk(...array_map(static function (Message $message) use ($data) {
+		return $this->mapper->updatePreviewDataBulk(...array_map(function (Message $message) use ($data) {
 			if (!array_key_exists($message->getUid(), $data)) {
 				// Nothing to do
 				return $message;
@@ -108,6 +110,9 @@ class PreviewEnhancer {
 			$message->setImipMessage($structureData->isImipMessage());
 			$message->setEncrypted($structureData->isEncrypted());
 			$message->setMentionsMe($structureData->getMentionsMe());
+			$message->setGovernanceLabelId(
+				$this->governanceLabelService->resolveHeaderLabelId($structureData->getGovernanceLabelHeader())
+			);
 
 			return $message;
 		}, $messages));
