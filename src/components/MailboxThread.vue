@@ -344,7 +344,7 @@ export default {
 		},
 
 		sortFavorites() {
-			return this.mainStore.getPreference('sort-favorites', 'false') === 'true'
+			return this.mainStore.getPreference('sort-favorites', 'false') === 'true' && this.$route.params.filter !== 'starred'
 		},
 
 		hasFavoriteEnvelopes() {
