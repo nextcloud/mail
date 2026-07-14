@@ -90,7 +90,8 @@ class DraftsController extends Controller {
 		?int $draftId = null,
 		bool $requestMdn = false,
 		bool $isPgpMime = false,
-		bool $isAiGenerated = false) : JsonResponse {
+		bool $isAiGenerated = false,
+		?string $governanceLabelId = null) : JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $accountId);
 		if ($aliasId !== null) {
@@ -113,6 +114,7 @@ class DraftsController extends Controller {
 		$message->setRequestMdn($requestMdn);
 		$message->setPgpMime($isPgpMime);
 		$message->setAiGenerated($isAiGenerated);
+		$message->setGovernanceLabelId($governanceLabelId);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $effectiveUserId);
@@ -168,7 +170,8 @@ class DraftsController extends Controller {
 		?int $sendAt = null,
 		bool $requestMdn = false,
 		bool $isPgpMime = false,
-		bool $isAiGenerated = false): JsonResponse {
+		bool $isAiGenerated = false,
+		?string $governanceLabelId = null): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
 		$message = $this->service->getMessage($id, $effectiveUserId);
 
@@ -195,6 +198,7 @@ class DraftsController extends Controller {
 		$message->setRequestMdn($requestMdn);
 		$message->setPgpMime($isPgpMime);
 		$message->setAiGenerated($isAiGenerated);
+		$message->setGovernanceLabelId($governanceLabelId);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $effectiveUserId);

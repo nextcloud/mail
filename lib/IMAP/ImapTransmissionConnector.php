@@ -42,6 +42,7 @@ use OCA\Mail\Exception\SmimeSignException;
 use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Attachment\AttachmentService;
+use OCA\Mail\Service\GovernanceLabelService;
 use OCA\Mail\Service\MimeMessage;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Service\TransmissionService;
@@ -69,6 +70,7 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 		private SmimeService $smimeService,
 		private AttachmentService $attachmentService,
 		private LoggerInterface $logger,
+		private GovernanceLabelService $governanceLabelService,
 	) {
 	}
 
@@ -136,6 +138,13 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 		}
 		if ($message->isAiGenerated()) {
 			$fccHeaders->addHeader(LocalMessage::HEADER_AI_GENERATED, '1');
+		}
+		$governanceLabelId = $message->getGovernanceLabelId();
+		if ($governanceLabelId !== null && $this->governanceLabelService->getLabel($governanceLabelId, true) !== null) {
+			$fccHeaders->addHeader(
+				GovernanceLabelService::HEADER,
+				$this->governanceLabelService->buildHeaderValue($governanceLabelId),
+			);
 		}
 
 		// For SMTP delivery: strip Bcc so it never appears in the transmitted

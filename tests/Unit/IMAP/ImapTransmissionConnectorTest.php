@@ -32,6 +32,7 @@ use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\DataUri\DataUriParser;
+use OCA\Mail\Service\GovernanceLabelService;
 use OCA\Mail\Service\MimeMessage;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Service\TransmissionService;
@@ -56,6 +57,7 @@ final class ImapTransmissionConnectorTest extends TestCase {
 	private SmimeService|MockObject $smimeService;
 	private AttachmentService|MockObject $attachmentService;
 	private LoggerInterface|MockObject $logger;
+	private GovernanceLabelService&MockObject $governanceLabelService;
 	private ImapTransmissionConnector $connector;
 
 	protected function setUp(): void {
@@ -71,6 +73,7 @@ final class ImapTransmissionConnectorTest extends TestCase {
 		$this->smimeService = $this->createMock(SmimeService::class);
 		$this->attachmentService = $this->createMock(AttachmentService::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->governanceLabelService = $this->createMock(GovernanceLabelService::class);
 
 		$this->connector = new ImapTransmissionConnector(
 			$this->protocolFactory,
@@ -83,6 +86,7 @@ final class ImapTransmissionConnectorTest extends TestCase {
 			$this->smimeService,
 			$this->attachmentService,
 			$this->logger,
+			$this->governanceLabelService,
 		);
 	}
 
@@ -534,6 +538,42 @@ final class ImapTransmissionConnectorTest extends TestCase {
 
 		$this->assertSame(LocalMessage::STATUS_PROCESSED, $localMessage->getStatus());
 		$this->assertStringContainsString(LocalMessage::HEADER_AI_GENERATED . ': 1', (string)$localMessage->getRaw());
+	}
+
+	public function testSendMessageAddsGovernanceLabelHeader(): void {
+		[$account, $sentMailbox, $localMessage] = $this->prepareAiGeneratedMessage();
+		$localMessage->setGovernanceLabelId('label-1');
+		$this->smtpClientFactory->method('create')
+			->willReturn(new Horde_Mail_Transport_Null());
+		$this->governanceLabelService->expects(self::once())
+			->method('getLabel')
+			->with('label-1', true)
+			->willReturn(['id' => 'label-1']);
+		$this->governanceLabelService->expects(self::once())
+			->method('buildHeaderValue')
+			->with('label-1')
+			->willReturn('id=label-1; origin=instance');
+
+		$this->connector->sendMessage($account, $localMessage, $sentMailbox);
+
+		$this->assertStringContainsString(GovernanceLabelService::HEADER . ': id=label-1; origin=instance', (string)$localMessage->getRaw());
+	}
+
+	public function testSendMessageSkipsUnknownGovernanceLabel(): void {
+		[$account, $sentMailbox, $localMessage] = $this->prepareAiGeneratedMessage();
+		$localMessage->setGovernanceLabelId('deleted-label');
+		$this->smtpClientFactory->method('create')
+			->willReturn(new Horde_Mail_Transport_Null());
+		$this->governanceLabelService->expects(self::once())
+			->method('getLabel')
+			->with('deleted-label', true)
+			->willReturn(null);
+		$this->governanceLabelService->expects(self::never())
+			->method('buildHeaderValue');
+
+		$this->connector->sendMessage($account, $localMessage, $sentMailbox);
+
+		$this->assertStringNotContainsString(GovernanceLabelService::HEADER, (string)$localMessage->getRaw());
 	}
 
 	public function testSendMessageWithoutSentCopy(): void {

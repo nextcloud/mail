@@ -74,6 +74,9 @@
 				<referencedClass name="OCP\Interaction\Receivers\UserReceiver" />
 				<referencedClass name="OCP\Interaction\RestrictInteractionEvent" />
 				<referencedClass name="OCP\Interaction\Actions\ShareAction" />
+				<referencedClass name="OCA\Governance\Db\LabelScope" />
+				<referencedClass name="OCA\Governance\Model\BaseLabelModel" />
+				<referencedClass name="OCA\Governance\Service\ResolverService" />
 			</errorLevel>
 		</UndefinedClass>
 		<UndefinedDocblockClass>

@@ -25,6 +25,7 @@ use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\ContextChat\ContextChatSettingsService;
+use OCA\Mail\Service\GovernanceLabelService;
 use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
@@ -126,6 +127,8 @@ final class PageControllerTest extends TestCase {
 	private ClassificationSettingsService|MockObject $classificationSettingsService;
 
 	private OidcIntegration&MockObject $oidcIntegration;
+	private GovernanceLabelService|MockObject $governanceLabelService;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -159,6 +162,7 @@ final class PageControllerTest extends TestCase {
 		$this->contextChatSettingsService->method('isIndexingEnabled')->willReturn(true);
 
 		$this->classificationSettingsService = $this->createMock(ClassificationSettingsService::class);
+		$this->governanceLabelService = $this->createMock(GovernanceLabelService::class);
 		$this->controller = new PageController(
 			$this->appName,
 			$this->request,
@@ -187,6 +191,7 @@ final class PageControllerTest extends TestCase {
 			$this->classificationSettingsService,
 			$this->appConfig,
 			$this->oidcIntegration,
+			$this->governanceLabelService,
 		);
 	}
 
@@ -370,12 +375,16 @@ final class PageControllerTest extends TestCase {
 		$this->classificationSettingsService->expects(($this->once()))
 			->method(('isClassificationEnabledByDefault'))
 			->willReturn(true);
-		$this->initialState->expects($this->exactly(28))
+		$this->governanceLabelService->expects($this->once())
+			->method('isGovernanceAvailable')
+			->willReturn(false);
+		$this->initialState->expects($this->exactly(29))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
 				['ncVersion', '26.0.0'],
 				['mailVersion', '0.0.1-dev.0'],
+				['governance-labels-available', false],
 				['accounts', $accountsJson],
 				['account-settings', []],
 				['tags', []],
