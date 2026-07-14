@@ -77,13 +77,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .list-item-content__quick-actions {
-	display: none;
+	display: flex;
 }
 
-.list-item:hover {
-	.list-item-content__quick-actions {
-		display: flex;
-	}
-}
 </style>
