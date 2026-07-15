@@ -224,6 +224,7 @@ import {
 	UNIFIED_INBOX_ID,
 } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
+import eventBus from '../util/eventBus.js'
 import { groupEnvelopesByDate } from '../util/groupedEnvelopes.js'
 import {
 	priorityImportantQuery,
@@ -287,6 +288,7 @@ export default {
 				prev: ['arrowleft'],
 				unseen: ['u'],
 				compose: ['c'],
+				refresh: ['r'],
 			},
 
 			priorityImportantQuery,
@@ -532,6 +534,11 @@ export default {
 				})
 				return
 			}
+			// Refresh through NewMessageButtonHeader so its spinner animates
+			if (e.srcKey === 'refresh') {
+				eventBus.emit('mail:refresh')
+				return
+			}
 			this.bus.emit('shortcut', e)
 		},
 
@@ -540,7 +547,9 @@ export default {
 				return
 			}
 			if (event.key === 'f' && (event.metaKey || event.ctrlKey) && this.$refs.searchMessages) {
+				// Keeps the header's unified search from also claiming the shortcut
 				event.preventDefault()
+				event.stopPropagation()
 				this.$refs.searchMessages.focusInput()
 			}
 		},

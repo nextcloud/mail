@@ -10,6 +10,7 @@ import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import NewMessageButtonHeader from '../../../components/NewMessageButtonHeader.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
+import eventBus from '../../../util/eventBus.js'
 
 describe('NewMessageButtonHeader', () => {
 	let store
@@ -22,12 +23,13 @@ describe('NewMessageButtonHeader', () => {
 		store.getAccount = vi.fn().mockReturnValue({ id: 1 })
 	})
 
-	const mountHeader = () => mount(NewMessageButtonHeader, {
+	const mountHeader = ({ props = {}, route = { name: 'mailbox', params: { mailboxId: 5 } } } = {}) => mount(NewMessageButtonHeader, {
+		props,
 		global: {
 			mixins: [Nextcloud],
 			directives: { shortkey: {} },
 			mocks: {
-				$route: { name: 'mailbox', params: { mailboxId: 5 } },
+				$route: route,
 			},
 		},
 	})
@@ -49,5 +51,46 @@ describe('NewMessageButtonHeader', () => {
 		await view.find('button').trigger('shortkey')
 
 		expect(store.startComposerSession).toHaveBeenCalledWith({ isBlankMessage: true })
+	})
+
+	it('shows the loading icon while a mail:refresh request refreshes', async () => {
+		store.syncEnvelopes = vi.fn().mockReturnValue(new Promise(() => {}))
+		const view = mountHeader()
+
+		eventBus.emit('mail:refresh')
+		await view.vm.$nextTick()
+
+		expect(store.syncEnvelopes).toHaveBeenCalledOnce()
+		expect(view.findComponent(NcLoadingIcon).exists()).toBe(true)
+		view.unmount()
+	})
+
+	it('ignores mail:refresh when the refresh button is hidden', () => {
+		store.syncEnvelopes = vi.fn()
+		const view = mountHeader({ props: { showRefresh: false } })
+
+		eventBus.emit('mail:refresh')
+
+		expect(store.syncEnvelopes).not.toHaveBeenCalled()
+		view.unmount()
+	})
+
+	it('ignores mail:refresh outside a mailbox', () => {
+		store.syncEnvelopes = vi.fn()
+		const view = mountHeader({ route: { name: 'outbox', params: {} } })
+
+		eventBus.emit('mail:refresh')
+
+		expect(store.syncEnvelopes).not.toHaveBeenCalled()
+		view.unmount()
+	})
+
+	it('stops listening to mail:refresh once unmounted', () => {
+		store.syncEnvelopes = vi.fn()
+		mountHeader().unmount()
+
+		eventBus.emit('mail:refresh')
+
+		expect(store.syncEnvelopes).not.toHaveBeenCalled()
 	})
 })
