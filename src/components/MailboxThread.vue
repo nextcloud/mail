@@ -469,7 +469,7 @@ export default {
 		}
 	},
 
-	beforeUnmount() {
+	beforeDestroy() {
 		clearTimeout(this.startMailboxTimer)
 	},
 

@@ -377,7 +377,7 @@ export default {
 		dragEventBus.on('envelopes-dropped', this.unselectAll)
 	},
 
-	beforeUnmount() {
+	beforeDestroy() {
 		dragEventBus.off('envelopes-dropped', this.unselectAll)
 	},
 
