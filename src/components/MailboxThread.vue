@@ -434,9 +434,9 @@ export default {
 
 		sortFavorites(enabled) {
 			if (enabled) {
-				this.searchQuery = this.searchQuery ? 'not:starred' : this.searchQuery + ' not:starred'
-			} else if (this.searchQuery.includes('not:starred')) {
-				this.searchQuery = this.searchQuery.replace('not:starred', '')
+				this.searchQuery = this.searchQuery ? this.searchQuery + ' not:starred' : 'not:starred'
+			} else if (this.searchQuery?.includes('not:starred')) {
+				this.searchQuery = this.searchQuery.replace('not:starred', '').trim() || undefined
 			}
 		},
 
@@ -509,7 +509,7 @@ export default {
 		},
 
 		appendToSearch(str) {
-			if (this.searchQuery === undefined) {
+			if (!this.searchQuery) {
 				return str
 			}
 
