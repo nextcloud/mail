@@ -13,6 +13,7 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\ThreadMapper;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -84,12 +85,19 @@ class FollowUpClassifierJob extends QueuedJob {
 			return;
 		}
 
-		$requiresFollowup = $this->aiService->requiresFollowUp(
-			$account,
-			$mailbox,
-			$message,
-			$userId,
-		);
+		try {
+			$requiresFollowup = $this->aiService->requiresFollowUp(
+				$account,
+				$mailbox,
+				$message,
+				$userId,
+			);
+		} catch (ServiceException $e) {
+			$this->logger->error('Failed to classify message for follow-up: ' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+			return;
+		}
 		if (!$requiresFollowup) {
 			return;
 		}

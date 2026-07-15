@@ -11,11 +11,13 @@ namespace OCA\Mail\Tests\Unit\Listener;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Listener\TaskProcessingListener;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
 use OCP\TaskProcessing\Task as TaskProcessingTask;
 use OCP\TaskProcessing\TaskTypes\TextToText;
+use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
 use Psr\Log\LoggerInterface;
 
 class TaskProcessingListenerTest extends TestCase {
@@ -42,37 +44,56 @@ class TaskProcessingListenerTest extends TestCase {
 	public function testNoCustomIdNull(): void {
 		$task = new TaskProcessingTask(TextToText::ID, [], Application::APP_ID, 'batman', null);
 		$event = new TaskSuccessfulEvent($task);
-		$this->logger->expects($this->once())
-			->method('info')
-			->with('Error handling task processing event custom id missing', ['taskCustomId' => null]);
+		$this->messageMapper->expects($this->never())
+			->method('findByIds');
+
 		$this->listener->handle($event);
 	}
 
-	public function testEmptyCustomId(): void {
-		$task = new TaskProcessingTask(TextToText::ID, [], Application::APP_ID, 'batman', '');
+	public function testNonMessageCustomIdIsIgnored(): void {
+		$task = new TaskProcessingTask(TextToText::ID, [], Application::APP_ID, 'batman', 'some-thread-id');
 		$event = new TaskSuccessfulEvent($task);
-		$this->logger->expects($this->once())
-			->method('info')
-			->with('Error handling task processing event custom id missing', ['taskCustomId' => '']);
+		$this->messageMapper->expects($this->never())
+			->method('findByIds');
+
 		$this->listener->handle($event);
 	}
 
-	public function testCorrectCustomId(): void {
-		$task = new TaskProcessingTask(TextToText::ID, [], Application::APP_ID, 'batman', 'followup:12345');
+	public function testThreadSummaryTaskIsIgnored(): void {
+		$task = new TaskProcessingTask(TextToTextSummary::ID, [], Application::APP_ID, 'batman', 'some-thread-id');
+		$event = new TaskSuccessfulEvent($task);
+		$this->messageMapper->expects($this->never())
+			->method('findByIds');
+
+		$this->listener->handle($event);
+	}
+
+	public function testMessageCustomIdMissingOutput(): void {
+		$task = new TaskProcessingTask(TextToText::ID, [], Application::APP_ID, 'batman', 'message:12345');
 		$task->setOutput(null);
 		$event = new TaskSuccessfulEvent($task);
 		$this->logger->expects($this->once())
 			->method('info')
 			->with('Error handling task processing event output missing');
+
 		$this->listener->handle($event);
 	}
 
-	public function testIncorrectCustomId(): void {
-		$task = new TaskProcessingTask(TextToText::ID, [], Application::APP_ID, 'batman', 'followup12345');
+	public function testMessageSummaryIsStored(): void {
+		$task = new TaskProcessingTask(TextToText::ID, [], Application::APP_ID, 'batman', 'message:12345');
+		$task->setOutput(['output' => 'a summary']);
 		$event = new TaskSuccessfulEvent($task);
-		$this->logger->expects($this->once())
-			->method('info')
-			->with('Error handling task processing event custom id missing', ['taskCustomId' => 'followup12345']);
+		$message = new Message();
+		$this->messageMapper->expects($this->once())
+			->method('findByIds')
+			->with('batman', [12345], '')
+			->willReturn([$message]);
+		$this->messageMapper->expects($this->once())
+			->method('update')
+			->with($message);
+
 		$this->listener->handle($event);
+
+		$this->assertSame('a summary', $message->getSummary());
 	}
 }
