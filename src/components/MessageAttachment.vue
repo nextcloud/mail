@@ -240,8 +240,8 @@ export default {
 					dir: saved?.path,
 				})
 
-				showSuccess(t('mail', `Attachment saved to Files
- 					${fileLocationUrl}`), {
+				showSuccess(t('mail', '<div><p>Attachment saved to files</p><p><strong><u>Go to Files</u></strong></p></div>'), {
+					isHTML: true,
 					onClick: () => {
 						window.open(fileLocationUrl, '_blank')
 					},
