@@ -278,6 +278,7 @@ export default {
 				prev: ['arrowleft'],
 				refresh: ['r'],
 				unseen: ['u'],
+				compose: ['c'],
 			},
 
 			priorityImportantQuery,
@@ -513,6 +514,13 @@ export default {
 		},
 
 		onShortcut(e) {
+			// Handled here because the bus fans out to multiple Mailbox instances
+			if (e.srcKey === 'compose') {
+				this.mainStore.startComposerSession({
+					isBlankMessage: true,
+				})
+				return
+			}
 			this.bus.emit('shortcut', e)
 		},
 
