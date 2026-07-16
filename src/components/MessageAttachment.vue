@@ -240,11 +240,10 @@ export default {
 					dir: saved?.path,
 				})
 
-				showSuccess(t('mail', '<div><p>Attachment saved to files</p><p><strong><u>Go to Files</u></strong></p></div>'), {
+				showSuccess(t('mail', '<div><p>Attachment saved to Files</p><p><a href="{fileLocationUrl}" target="_blank" rel="noopener noreferrer"><strong><u>Go to Files</u></strong></a></p></div>', {
+					fileLocationUrl,
+				}), {
 					isHTML: true,
-					onClick: () => {
-						window.open(fileLocationUrl, '_blank')
-					},
 				})
 			} catch (e) {
 				Logger.error('not saved', { error: e })
