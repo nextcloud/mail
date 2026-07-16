@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Provisioning;
 
 use Horde_Mail_Rfc822_Address;
+use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\AliasMapper;
@@ -19,6 +20,7 @@ use OCA\Mail\Db\Provisioning;
 use OCA\Mail\Db\ProvisioningMapper;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\ValidationException;
+use OCA\Mail\Integration\OidcIntegration;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCP\App\IAppManager;
@@ -62,6 +64,7 @@ class Manager {
 		ICacheFactory $cacheFactory,
 		private AccountService $accountService,
 		private ClassificationSettingsService $classificationSettingsService,
+		private OidcIntegration $oidcIntegration,
 	) {
 		$this->appManager = $appManager;
 		$this->userManager = $userManager;
@@ -258,9 +261,21 @@ class Manager {
 
 	/**
 	 * @throws ValidationException
+	 */
+	private function validateOidcAvailability(array $data): void {
+		if (($data['oidcEnabled'] ?? false) && !$this->oidcIntegration->isAvailable()) {
+			$exception = new ValidationException();
+			$exception->setField('oidcEnabled', false);
+			throw $exception;
+		}
+	}
+
+	/**
+	 * @throws ValidationException
 	 * @throws \OCP\DB\Exception
 	 */
 	public function newProvisioning(array $data): Provisioning {
+		$this->validateOidcAvailability($data);
 		$provisioning = $this->provisioningMapper->validate($data);
 		$provisioning = $this->provisioningMapper->insert($provisioning);
 		if ($this->cacheFactory->isAvailable()) {
@@ -275,6 +290,7 @@ class Manager {
 	 * @throws \OCP\DB\Exception
 	 */
 	public function updateProvisioning(array $data): void {
+		$this->validateOidcAvailability($data);
 		$provisioning = $this->provisioningMapper->validate($data);
 		$this->provisioningMapper->update($provisioning);
 		if ($this->cacheFactory->isAvailable()) {
@@ -286,6 +302,20 @@ class Manager {
 	private function updateAccount(IUser $user, MailAccount $account, Provisioning $config): MailAccount {
 		// Set the ID to make sure it reflects when the account switches from one config to another
 		$account->setProvisioningId($config->getId());
+
+		if ($config->getOidcEnabled() === true) {
+			// Authenticate with the user's OIDC access token (XOAUTH2) instead of a password.
+			// Tokens are seeded from user_oidc at login and refreshed by OidcIntegration.
+			$account->setAuthMethod('xoauth2');
+			$account->setInboundPassword(null);
+			$account->setOutboundPassword(null);
+		} elseif ($account->getAuthMethod() === 'xoauth2') {
+			// Config switched back from OIDC to password auth
+			$account->setAuthMethod('password');
+			$account->setOauthAccessToken(null);
+			$account->setOauthRefreshToken(null);
+			$account->setOauthTokenTtl(null);
+		}
 
 		$account->setEmail($config->buildEmail($user));
 		$account->setName($this->userManager->getDisplayName($user->getUID()));
@@ -335,6 +365,11 @@ class Manager {
 				return;
 			}
 
+			if ($provisioning->getOidcEnabled() === true) {
+				// OIDC accounts authenticate with the user's access token, never a password
+				return;
+			}
+
 			// FIXME: Need to check for an empty string here too?
 			// The password is empty (and not null) when using WebAuthn passwordless login.
 			// Maybe research other providers as well.
@@ -363,6 +398,33 @@ class Manager {
 			$this->logger->debug('Provisioned account password udpated');
 		} catch (DoesNotExistException $e) {
 			// Nothing to update
+		}
+	}
+
+	/**
+	 * Mirror the user's current OIDC session token into their provisioned account so
+	 * that background jobs can keep refreshing it after the session is gone.
+	 *
+	 * @param Provisioning[] $provisionings
+	 */
+	public function updateOidcToken(IUser $user, array $provisionings): void {
+		$provisioning = $this->findMatchingConfig($provisionings, $user);
+		if ($provisioning === null || $provisioning->getOidcEnabled() !== true) {
+			return;
+		}
+
+		try {
+			$mailAccount = $this->mailAccountMapper->findProvisionedAccount($user);
+		} catch (DoesNotExistException|MultipleObjectsReturnedException $e) {
+			// Nothing to update
+			return;
+		}
+
+		$ttlBefore = $mailAccount->getOauthTokenTtl();
+		$this->oidcIntegration->updateFromSession(new Account($mailAccount));
+		if ($mailAccount->getOauthTokenTtl() !== $ttlBefore) {
+			$this->mailAccountMapper->update($mailAccount);
+			$this->logger->debug('OIDC token of provisioned account updated from session for ' . $user->getUID());
 		}
 	}
 

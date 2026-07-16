@@ -113,6 +113,7 @@
 				v-if="addNew"
 				:key="formKey"
 				:setting="preview"
+				:oidc-available="oidcAvailable"
 				:submit="saveNewSettings"
 				:delete-button="false" />
 			<ProvisioningSettings
@@ -120,6 +121,7 @@
 				:id="setting.id"
 				:key="setting.id"
 				:setting="setting"
+				:oidc-available="oidcAvailable"
 				:submit="saveSettings"
 				:disable="deleteProvisioning" />
 		</p>
@@ -310,6 +312,7 @@ const googleOauthRedirectUrl = loadState('mail', 'google_oauth_redirect_url', nu
 const microsoftOauthTenantId = loadState('mail', 'microsoft_oauth_tenant_id', null) ?? undefined
 const microsoftOauthClientId = loadState('mail', 'microsoft_oauth_client_id', null) ?? undefined
 const microsoftOauthRedirectUrl = loadState('mail', 'microsoft_oauth_redirect_url', null)
+const oidcAvailable = loadState('mail', 'oidc_available', false)
 
 export default {
 	name: 'AdminSettings',
@@ -343,6 +346,7 @@ export default {
 			microsoftOauthClientId,
 			microsoftOauthDocs: loadState('mail', 'microsoft_oauth_docs'),
 			microsoftOauthRedirectUrl,
+			oidcAvailable,
 			preview: {
 				provisioningDomain: '',
 				emailTemplate: '',

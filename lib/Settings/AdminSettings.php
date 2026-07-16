@@ -12,6 +12,7 @@ namespace OCA\Mail\Settings;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Integration\GoogleIntegration;
 use OCA\Mail\Integration\MicrosoftIntegration;
+use OCA\Mail\Integration\OidcIntegration;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
@@ -31,6 +32,7 @@ class AdminSettings implements ISettings {
 		private AntiSpamService $antiSpamService,
 		private GoogleIntegration $googleIntegration,
 		private MicrosoftIntegration $microsoftIntegration,
+		private OidcIntegration $oidcIntegration,
 		private IConfig $config,
 		private AiIntegrationsService $aiIntegrationsService,
 		private Defaults $themingDefaults,
@@ -43,6 +45,11 @@ class AdminSettings implements ISettings {
 		$this->initialStateService->provideInitialState(
 			'provisioning_settings',
 			$this->provisioningManager->getConfigs()
+		);
+
+		$this->initialStateService->provideInitialState(
+			'oidc_available',
+			$this->oidcIntegration->isAvailable()
 		);
 
 		$this->initialStateService->provideInitialState(

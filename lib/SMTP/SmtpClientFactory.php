@@ -14,8 +14,10 @@ use Horde_Mail_Transport;
 use Horde_Mail_Transport_Smtphorde;
 use Horde_Smtp_Password_Xoauth2;
 use OCA\Mail\Account;
+use OCA\Mail\Events\BeforeSmtpClientCreated;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Support\HostNameFactory;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
 
@@ -30,6 +32,7 @@ class SmtpClientFactory {
 		IConfig $config,
 		ICrypto $crypto,
 		private HostNameFactory $hostNameFactory,
+		private IEventDispatcher $eventDispatcher,
 	) {
 		$this->config = $config;
 		$this->crypto = $crypto;
@@ -41,6 +44,9 @@ class SmtpClientFactory {
 	 * @return Horde_Mail_Transport
 	 */
 	public function create(Account $account): Horde_Mail_Transport {
+		$this->eventDispatcher->dispatchTyped(
+			new BeforeSmtpClientCreated($account)
+		);
 		$mailAccount = $account->getMailAccount();
 
 		$decryptedPassword = null;
