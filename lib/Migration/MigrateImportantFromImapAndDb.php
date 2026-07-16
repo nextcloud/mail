@@ -24,7 +24,6 @@ use Psr\Log\LoggerInterface;
  */
 class MigrateImportantFromImapAndDb {
 
-
 	public function __construct(
 		private MessageMapper $messageMapper,
 		private MailboxMapper $mailboxMapper,

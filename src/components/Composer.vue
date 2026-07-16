@@ -3,7 +3,11 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="message-composer">
+	<div
+		class="message-composer"
+		@dragover.prevent
+		@drop="onDrop"
+		@paste="onPaste">
 		<NcReferencePickerModal
 			v-if="isPickerAvailable && isPickerOpen"
 			id="reference-picker"
@@ -1129,7 +1133,7 @@ export default {
 		}
 	},
 
-	beforeUnmount() {
+	beforeDestroy() {
 		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
 	},
 
@@ -1753,6 +1757,42 @@ export default {
 			}
 
 			return option.email
+		},
+
+		onDrop(event) {
+			event.preventDefault()
+
+			const files = Array.from(event.dataTransfer.files)
+
+			if (!files.length) {
+				return
+			}
+
+			this.bus.emit('on-add-local-files', files)
+			this.saveDraftDebounced()
+		},
+
+		onPaste(event) {
+			const files = []
+
+			for (const item of event.clipboardData.items) {
+				if (item.kind === 'file') {
+					const file = item.getAsFile()
+
+					if (file) {
+						files.push(file)
+					}
+				}
+			}
+
+			if (!files.length) {
+				return
+			}
+
+			event.preventDefault()
+
+			this.bus.emit('on-add-local-files', files)
+			this.saveDraftDebounced()
 		},
 
 	},

@@ -611,7 +611,6 @@ class MessagesControllerTest extends TestCase {
 			->method('find')
 			->willThrowException(new ClientException());
 
-
 		// test our json error response
 		$this->expectException(ClientException::class);
 		$response = $this->controller->downloadAttachments(
@@ -673,7 +672,6 @@ class MessagesControllerTest extends TestCase {
 
 		$this->assertInstanceOf(JSONResponse::class, $response);
 	}
-
 
 	public function testSetFlagsUnseen() {
 		$accountId = 17;
@@ -1274,7 +1272,6 @@ class MessagesControllerTest extends TestCase {
 		$message->setUid(123);
 		$message->setSubject('core/master has new results');
 
-
 		$this->mailManager->expects($this->exactly(1))
 			->method('getMessage')
 			->with($this->userId, $message->getId())
@@ -1453,6 +1450,38 @@ class MessagesControllerTest extends TestCase {
 		$expectedResponse = new JSONResponse(['requiresTranslation' => false]);
 		$expectedResponse->cacheFor(60 * 60 * 24, false, true);
 		$this->assertEquals($expectedResponse, $actualResponse);
+	}
+
+	public function testNeedsTranslationFailureIsNotCached(): void {
+		$message = new \OCA\Mail\Db\Message();
+		$message->setId(100);
+		$message->setMailboxId(1);
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$mailbox->setAccountId(1);
+		$this->mailManager->expects(self::once())
+			->method('getMessage')
+			->with($this->userId, 100)
+			->willReturn($message);
+		$this->mailManager->expects(self::once())
+			->method('getMailbox')
+			->with($this->userId, $message->getMailboxId())
+			->willReturn($mailbox);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with($this->userId, $mailbox->getAccountId())
+			->willReturn(new Account(new MailAccount()));
+		$this->aiIntegrationsService->expects(self::once())
+			->method('isLlmProcessingEnabled')
+			->willReturn(true);
+		$this->aiIntegrationsService->expects(self::once())
+			->method('requiresTranslation')
+			->willThrowException(new ServiceException('Provider timeout'));
+
+		$actualResponse = $this->controller->needsTranslation(100);
+
+		$this->assertEquals(new JSONResponse([], Http::STATUS_NO_CONTENT), $actualResponse);
+		$this->assertSame('no-cache, no-store, must-revalidate', $actualResponse->getHeaders()['Cache-Control']);
 	}
 
 	public function testNeedsTranslation() {

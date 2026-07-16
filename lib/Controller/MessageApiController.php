@@ -5,6 +5,7 @@ declare(strict_types=1);
  * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\Contracts\IDkimService;
@@ -139,7 +140,6 @@ class MessageApiController extends OCSController {
 		if (empty($to)) {
 			return new DataResponse('Recipients cannot be empty.', Http::STATUS_BAD_REQUEST);
 		}
-
 
 		try {
 			$messageAttachments = $this->handleAttachments();

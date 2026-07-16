@@ -336,20 +336,6 @@
 					</template>
 				</ActionButton>
 				<ActionButton
-					v-if="hasDeleteAcl"
-					:close-after-click="true"
-					@click.prevent="onDelete">
-					<template #icon>
-						<DeleteIcon :size="20" />
-					</template>
-					<template v-if="layoutMessageViewThreaded">
-						{{ t('mail', 'Delete thread') }}
-					</template>
-					<template v-else>
-						{{ t('mail', 'Delete message') }}
-					</template>
-				</ActionButton>
-				<ActionButton
 					:close-after-click="false"
 					@click="showMoreActionOptions">
 					<template #icon>
@@ -430,6 +416,7 @@
 					{{ t('mail', 'Reply with meeting') }}
 				</ActionButton>
 				<ActionButton
+					v-if="tasksEnabled"
 					:close-after-click="true"
 					@click.prevent="showTaskModal = true">
 					<template #icon>
@@ -454,6 +441,20 @@
 						<IconSave :size="20" />
 					</template>
 					{{ t('mail', 'Save message to Files') }}
+				</ActionButton>
+				<ActionButton
+					v-if="hasDeleteAcl"
+					:close-after-click="true"
+					@click.prevent="onDelete">
+					<template #icon>
+						<DeleteIcon :size="20" />
+					</template>
+					<template v-if="layoutMessageViewThreaded">
+						{{ t('mail', 'Delete thread') }}
+					</template>
+					<template v-else>
+						{{ t('mail', 'Delete message') }}
+					</template>
 				</ActionButton>
 			</template>
 			<template v-if="quickActionMenu">
@@ -931,6 +932,10 @@ export default {
 
 		archiveMailbox() {
 			return this.mainStore.getMailbox(this.account.archiveMailboxId)
+		},
+
+		tasksEnabled() {
+			return this.mainStore.getTaskCalendarsForCurrentUser.length > 0
 		},
 
 		isSnoozedMailbox() {

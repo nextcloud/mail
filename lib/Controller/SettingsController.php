@@ -21,7 +21,6 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IConfig;
 use OCP\IRequest;
 use Psr\Container\ContainerInterface;
-
 use function array_merge;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]

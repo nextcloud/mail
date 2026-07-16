@@ -96,5 +96,4 @@ class TextBlockShareMapper extends QBMapper {
 			);
 	}
 
-
 }

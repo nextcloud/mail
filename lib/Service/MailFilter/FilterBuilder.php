@@ -23,7 +23,6 @@ class FilterBuilder {
 	) {
 	}
 
-
 	public function buildSieveScript(array $filters, string $untouchedScript): string {
 		$commands = [];
 		$extensions = [];

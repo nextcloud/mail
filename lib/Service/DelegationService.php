@@ -139,7 +139,6 @@ class DelegationService {
 		return $this->resolveAccountUserId($accountId, $currentUserId);
 	}
 
-
 	public function logDelegatedAction(string $currentUserId, string $effectiveUserId, string $logMessage): void {
 		if ($currentUserId === $effectiveUserId) {
 			return;
@@ -166,7 +165,6 @@ class DelegationService {
 			->setSubject('account_delegation', [
 				'id' => $account->getId(),
 				'account_email' => $account->getEmail(),
-
 			])
 			->setDateTime($time)
 			->setMessage('account_delegation_changed', [

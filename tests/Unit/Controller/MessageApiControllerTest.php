@@ -68,8 +68,6 @@ class MessageApiControllerTest extends TestCase {
 	private int $messageId = 100;
 	private int $mailboxId = 42;
 
-
-
 	protected function setUp(): void {
 		parent::setUp();
 

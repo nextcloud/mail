@@ -82,12 +82,11 @@
 							<ChevronDownIcon v-else :size="16" />
 						</template>
 					</NcButton>
-					<p
-						v-else-if="expanded"
-						class="sender__email"
-						:style="{ color: senderEmailColor }">
-						{{ senderEmail }}
-					</p>
+					<RecipientBubble
+						v-else-if="expanded && envelope.from && envelope.from[0]"
+						:email="envelope.from[0].email"
+						:label="envelope.from[0].label"
+						:size="24" />
 					<div v-if="hasChangedSubject" class="subline">
 						{{ cleanSubject }}
 					</div>
@@ -292,6 +291,15 @@
 			</div>
 		</div>
 		<div v-if="expanded && showRecipients" class="envelope__recipients">
+			<div v-if="envelope.from && envelope.from.length" class="recipients">
+				<span class="recipients__label">{{ t('mail', 'From:') }}</span>
+				<RecipientBubble
+					v-for="recipient in envelope.from"
+					:key="recipient.email"
+					:email="recipient.email"
+					:label="recipient.label"
+					:size="24" />
+			</div>
 			<div v-if="envelope.to && envelope.to.length" class="recipients">
 				<span class="recipients__label">{{ t('mail', 'To:') }}</span>
 				<div class="recipients__list">
@@ -795,7 +803,7 @@ export default {
 		}, 100)
 	},
 
-	beforeUnmount() {
+	beforeDestroy() {
 		if (this.seenTimer !== undefined) {
 			logger.info('Navigating away before seenTimer delay, will not mark message as seen/read')
 			clearTimeout(this.seenTimer)

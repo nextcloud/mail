@@ -141,6 +141,7 @@ OC.L10N.register(
     "Tag already exists" : "La etikedo jam ekzistas",
     "Not found" : "Ne trovita",
     "Reply to sender only" : "Respondi nur al sendinto",
+    "From:" : "El:",
     "To:" : "Al:",
     "Untitled event" : "Sentitola okazaĵo",
     "Import into {calendar}" : "Importi en {calendar}",

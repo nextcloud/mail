@@ -31,7 +31,6 @@ class FilterController extends Controller {
 		parent::__construct(Application::APP_ID, $request);
 	}
 
-
 	/**
 	 * @psalm-return JSONResponse<200|404, array, array<never, never>>
 	 */

@@ -189,12 +189,19 @@ class ThreadController extends Controller {
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		}
 		$thread = $this->mailManager->getThread($account, $threadRootId);
-		$data = $this->aiIntergrationsService->generateEventData(
-			$account,
-			$threadRootId,
-			$thread,
-			$this->userId,
-		);
+		try {
+			$data = $this->aiIntergrationsService->generateEventData(
+				$account,
+				$threadRootId,
+				$thread,
+				$this->userId,
+			);
+		} catch (ServiceException $e) {
+			$this->logger->error('Generating event data failed: ' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+			return new JSONResponse([], Http::STATUS_NO_CONTENT);
+		}
 
 		return new JSONResponse(['data' => $data]);
 	}

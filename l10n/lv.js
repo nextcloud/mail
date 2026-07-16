@@ -142,6 +142,7 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Birkas nosaukums ir slēpta sistēmas birka",
     "Tag already exists" : "Birka jau pastāv",
     "Not found" : "Nav atrasts",
+    "From:" : "No:",
     "To:" : "Kam:",
     "Untitled event" : "Nenosaukts notikums",
     "Deleted" : "Izdzēsts",

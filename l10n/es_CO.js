@@ -105,6 +105,7 @@ OC.L10N.register(
     "Custom" : "Personalizado",
     "Add tag" : "Agregar etiqueta",
     "Not found" : "No encontrado",
+    "From:" : "De:",
     "To:" : "Para:",
     "Deleted" : "Borrado",
     "Recipient" : "Destinatario",

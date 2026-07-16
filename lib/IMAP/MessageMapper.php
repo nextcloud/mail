@@ -977,7 +977,6 @@ class MessageMapper {
 				return $this->converter->convert($structure);
 			};
 
-
 			$htmlBody = ($htmlBodyId !== null) ? $part->getBodyPart($htmlBodyId) : null;
 			if (!empty($htmlBody)) {
 				$htmlBody = $convertBody($htmlBodyId, $htmlBody);

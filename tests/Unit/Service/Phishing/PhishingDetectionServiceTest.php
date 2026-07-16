@@ -10,7 +10,6 @@ namespace OCA\Mail\Tests\Unit\Service\Phishing;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Mime_Headers;
 use OCA\Mail\PhishingDetectionResult;
-
 use OCA\Mail\Service\PhishingDetection\ContactCheck;
 use OCA\Mail\Service\PhishingDetection\CustomEmailCheck;
 use OCA\Mail\Service\PhishingDetection\DateCheck;
@@ -18,7 +17,6 @@ use OCA\Mail\Service\PhishingDetection\ImapFlagCheck;
 use OCA\Mail\Service\PhishingDetection\LinkCheck;
 use OCA\Mail\Service\PhishingDetection\PhishingDetectionService;
 use OCA\Mail\Service\PhishingDetection\ReplyToCheck;
-
 use PHPUnit\Framework\MockObject\MockObject;
 
 class PhishingDetectionServiceTest extends TestCase {

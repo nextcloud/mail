@@ -327,7 +327,6 @@ class ImportanceClassifier {
 		return new ClassifierPipeline($persistedEstimator, $extractor);
 	}
 
-
 	/**
 	 * @param Account $account
 	 *

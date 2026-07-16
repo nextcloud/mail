@@ -299,7 +299,6 @@ class AccountsControllerTest extends TestCase {
 		self::assertEquals($expectedResponse, $response);
 	}
 
-
 	public function testCreateManualFailure(): void {
 		$email = 'user@domain.tld';
 		$accountName = 'Mail';

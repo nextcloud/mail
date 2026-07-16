@@ -236,7 +236,6 @@ class MimeMessage {
 		$basePart[] = $contentPart;
 
 		return $basePart;
-
 	}
 
 	/**

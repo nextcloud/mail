@@ -131,7 +131,7 @@ export default {
 		}
 	},
 
-	beforeUnmount() {
+	beforeDestroy() {
 		scout.off('beforeprint', this.onBeforePrint)
 		scout.off('afterprint', this.onAfterPrint)
 		this.$refs.iframe.iFrameResizer.close()

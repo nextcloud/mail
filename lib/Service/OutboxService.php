@@ -29,7 +29,6 @@ use Throwable;
 
 class OutboxService {
 
-
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 

@@ -40,7 +40,7 @@ jobs:
         node-version: 'false'
         install: true
     - name: Checkout Mail
-      uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       with:
         path: nextcloud/apps/mail
         fetch-depth: 2
@@ -101,7 +101,7 @@ jobs:
       name: ${{ matrix.nextcloud-versions }} w/ php${{ matrix.php-versions }}-${{ matrix.db }}-${{ matrix.cache }} integration tests ${{ matrix.coverage && '(coverage)' || ''}}
       services:
           mail-service:
-              image: ghcr.io/christophwurst/docker-imap-devel:latest
+              image: ghcr.io/christophwurst/docker-imap-devel:latest@sha256:b76a062268d7342ccec549f5323a0b6dc1b6ac55b03367f474934927653f5cb5
               env:
                   MAILNAME: mail.domain.tld
                   MAIL_ADDRESS: user@domain.tld
@@ -112,7 +112,7 @@ jobs:
                   - 993:993
                   - 4190:4190
           mariadb-service:
-              image: ghcr.io/nextcloud/continuous-integration-mariadb-11.8:latest
+              image: ghcr.io/nextcloud/continuous-integration-mariadb-11.8:latest@sha256:9232089007ddc49b42e5a7e4cc158ac373efebed6885ea0f76e3d4e5f8532bac
               env:
                   MARIADB_ROOT_PASSWORD: my-secret-pw
                   MARIADB_DATABASE: nextcloud
@@ -126,7 +126,7 @@ jobs:
                   --health-timeout=2s
                   --health-retries=5
           postgres-service:
-              image: ghcr.io/nextcloud/continuous-integration-postgres-15:latest
+              image: ghcr.io/nextcloud/continuous-integration-postgres-15:latest@sha256:1939108b31fd841cf01906c431c1802cd984fcfb0e57fb0d714b9e6895c340b0
               env:
                   POSTGRES_USER: nextcloud
                   POSTGRES_DB: nextcloud
@@ -139,7 +139,7 @@ jobs:
                   --health-timeout 5s
                   --health-retries 5
           redis:
-              image: ghcr.io/nextcloud/continuous-integration-redis:latest
+              image: ghcr.io/nextcloud/continuous-integration-redis:latest@sha256:4ae220629fc544cd1396b35723137628a4cf7e5355b1d86649073f30249d7cbe
               options: >-
                 --health-cmd "redis-cli ping"
                 --health-interval 10s
@@ -164,7 +164,7 @@ jobs:
               php -f nextcloud/occ config:system:set memcache.local --value='\OC\Memcache\Redis'
               php -f nextcloud/occ config:system:set memcache.distributed --value='\OC\Memcache\Redis'
           - name: Checkout Mail
-            uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+            uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
             with:
                 path: nextcloud/apps/mail
                 fetch-depth: 2
@@ -211,9 +211,9 @@ jobs:
       runs-on: ubuntu-24.04
       name: Front-end unit tests
       steps:
-          - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+          - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
           - name: Read package.json node and npm engines version
-            uses: skjnldsv/read-package-engines-version-actions@8205673bab74a63eb9b8093402fd9e0e018663a1 # v2.2
+            uses: skjnldsv/read-package-engines-version-actions@06d6baf7d8f41934ab630e97d9e6c0bc9c9ac5e4 # v3
             id: versions
             with:
               fallbackNode: '^14'
@@ -238,7 +238,7 @@ jobs:
       branches-min: ${{ steps.versions.outputs.branches-min }}
     steps:
       - name: Checkout app
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - name: Get version matrix
         id: versions
         uses: icewind1991/nextcloud-version-matrix@8a7bac6300b2f0f3100088b297995a229558ddba # v1.3.2
@@ -264,7 +264,7 @@ jobs:
           php -f nextcloud/occ config:system:set app.mail.debug --type=bool --value=true
           php -f nextcloud/occ config:system:set app.mail.verify-tls-peer --type=bool --value=false
       - name: Check out the app
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           path: nextcloud/apps/mail
       - name: Install php dependencies
