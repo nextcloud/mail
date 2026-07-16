@@ -87,6 +87,7 @@ import { formatFileSize } from '@nextcloud/files'
 import { translate as t } from '@nextcloud/l10n'
 import { generateUrl } from '@nextcloud/router'
 import { NcActionButton as ActionButton, NcActions as Actions, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import escapeHtml from 'escape-html'
 import IconArrow from 'vue-material-design-icons/ArrowLeft.vue'
 import IconSave from 'vue-material-design-icons/FolderOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
@@ -240,9 +241,10 @@ export default {
 					dir: saved?.path,
 				})
 
-				showSuccess(t('mail', '<div><p>Attachment saved to Files</p><p><a href="{fileLocationUrl}" target="_blank" rel="noopener noreferrer"><strong><u>Go to Files</u></strong></a></p></div>', {
-					fileLocationUrl,
-				}), {
+				const savedText = t('mail', 'Attachment saved to Files')
+				const goToFilesText = t('mail', 'Go to Files')
+
+				showSuccess(`<div><p>${escapeHtml(savedText)}</p><p><a href="${fileLocationUrl}" target="_blank" rel="noopener noreferrer"><strong><u>${escapeHtml(goToFilesText)}</u></strong></a></p></div>`, {
 					isHTML: true,
 				})
 			} catch (e) {
