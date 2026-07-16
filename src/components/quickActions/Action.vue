@@ -82,10 +82,14 @@ export default {
 				}))
 			}
 			if (this.action.name === 'moveThread') {
-				return this.mainStore.getMailboxes(this.account.accountId).map((mailbox) => ({
-					value: mailbox.displayName,
-					id: mailbox.databaseId,
-				}))
+				const ret = []
+				for (const mailbox of this.mainStore.getRecursiveMailboxIterator(this.account.accountId)) {
+					ret.push({
+						value: mailbox.name,
+						id: mailbox.databaseId,
+					})
+				}
+				return ret
 			}
 			return []
 		},
