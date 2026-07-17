@@ -49,6 +49,7 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\ZipResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\Folder;
+use OCP\Files\IFilenameValidator;
 use OCP\Files\IMimeTypeDetector;
 use OCP\ICacheFactory;
 use OCP\IL10N;
@@ -171,6 +172,10 @@ class MessagesControllerTest extends TestCase {
 		$this->delegationService->method('resolveMessageUserId')->willReturn($this->userId);
 		$this->delegationService->method('resolveMailboxUserId')->willReturn($this->userId);
 
+		$this->filenameValidator = $this->createMock(IFilenameValidator::class);
+		$this->filenameValidator->method('sanitizeFilename')
+			->willReturn('core_master has new results');
+
 		$timeFactory = $this->createMocK(ITimeFactory::class);
 		$timeFactory->expects($this->any())
 			->method('getTime')
@@ -187,6 +192,7 @@ class MessagesControllerTest extends TestCase {
 			$this->itineraryService,
 			$this->userId,
 			$this->userFolder,
+			$this->filenameValidator,
 			$this->logger,
 			$this->l10n,
 			$this->mimeTypeDetector,
@@ -1189,6 +1195,66 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expectedResponse, $actualResponse);
 	}
 
+	public function testSaveFile() {
+		$accountId = 17;
+		$mailboxId = 13;
+		$folderId = 'testfolder';
+		$messageId = 4321;
+		$targetPath = 'Downloads';
+		$this->account
+			->method('getId')
+			->willReturn($accountId);
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$message = new \OCA\Mail\Db\Message();
+		$message->setMailboxId($mailboxId);
+		$message->setUid(123);
+		$message->setSubject('core/master has new results');
+		$mailbox->setAccountId($accountId);
+		$mailbox->setName($folderId);
+		$this->mailManager->expects($this->exactly(1))
+			->method('getMessage')
+			->with($this->userId, $messageId)
+			->willReturn($message);
+		$this->mailManager->expects($this->exactly(1))
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects($this->exactly(1))
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->returnValue($this->account));
+		$source = file_get_contents(__DIR__ . '/../../data/mail-message-123.txt');
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$this->mailManager->expects($this->exactly(1))
+			->method('getSource')
+			->with($client, $this->account, $folderId, 123)
+			->willReturn($source);
+		$folderNode = $this->createStub(Folder::class);
+		$this->userFolder->expects($this->once())
+			->method('get')
+			->with('Downloads')
+			->willReturn($folderNode);
+		$this->userFolder->expects($this->exactly(2))
+			->method('nodeExists')
+			->withConsecutive(['Downloads'], ['Downloads/core_master has new results.eml'])
+			->willReturnOnConsecutiveCalls(true, false);
+		$file = $this->getMockBuilder('\OCP\Files\File')
+			->disableOriginalConstructor()
+			->getMock();
+		$this->userFolder->expects($this->once())
+			->method('newFile')
+			->with('Downloads/core_master has new results.eml')
+			->will($this->returnValue($file));
+		$this->clientFactory->expects($this->once())
+			->method('getClient')
+			->willReturn($client);
+
+		$expectedResponse = new JSONResponse();
+		$actualResponse = $this->controller->saveFile($messageId, $targetPath);
+
+		$this->assertEquals($expectedResponse, $actualResponse);
+	}
+
 	public function testGetDkim() {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(100);
@@ -1295,6 +1361,7 @@ class MessagesControllerTest extends TestCase {
 			$this->itineraryService,
 			null,
 			$this->userFolder,
+			$this->filenameValidator,
 			$this->logger,
 			$this->l10n,
 			$this->mimeTypeDetector,
@@ -1500,6 +1567,7 @@ class MessagesControllerTest extends TestCase {
 			$this->itineraryService,
 			null,
 			$this->userFolder,
+			$this->filenameValidator,
 			$this->logger,
 			$this->l10n,
 			$this->mimeTypeDetector,

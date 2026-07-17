@@ -5,6 +5,14 @@
 <!-- Standard Actions menu for Envelopes -->
 <template>
 	<div>
+		<FilePicker
+			v-if="isFilePickerOpen"
+			:name="t('mail', 'Choose a folder to store the message in')"
+			:buttons="saveMessageButtons"
+			:allow-pick-directory="true"
+			:multiselect="false"
+			:mimetype-filter="['httpd/unix-directory']"
+			@close="() => isFilePickerOpen = false" />
 		<template v-if="!localMoreActionsOpen && !snoozeActionsOpen">
 			<ActionButton
 				v-if="hasWriteAcl"
@@ -203,6 +211,17 @@
 				{{ t('mail', 'Download message') }}
 			</ActionLink>
 			<ActionButton
+				class="message-save-to-cloud"
+				:disabled="savingToCloud"
+				:close-after-click="true"
+				@click="() => isFilePickerOpen = true">
+				<template #icon>
+					<IconSave v-if="!savingToCloud" :size="20" />
+					<IconLoading v-else-if="savingToCloud" :size="20" />
+				</template>
+				{{ t('mail', 'Save message to Files') }}
+			</ActionButton>
+			<ActionButton
 				v-if="isSieveEnabled"
 				:close-after-click="true"
 				@click.prevent="$emit('open-mail-filter-from-envelope')">
@@ -275,11 +294,13 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
+import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
 import {
 	NcActionButton as ActionButton,
 	NcActionLink as ActionLink,
+	NcLoadingIcon as IconLoading,
 	NcActionButton,
 } from '@nextcloud/vue'
 import { Base64 } from 'js-base64'
@@ -296,6 +317,7 @@ import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
 import FilterIcon from 'vue-material-design-icons/FilterOutline.vue'
+import IconSave from 'vue-material-design-icons/FolderOutline.vue'
 import InformationIcon from 'vue-material-design-icons/InformationOutline.vue'
 import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
 import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
@@ -308,6 +330,7 @@ import TranslationIcon from 'vue-material-design-icons/Translate.vue'
 import DownloadIcon from 'vue-material-design-icons/TrayArrowDown.vue'
 import logger from '../logger.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
+import { saveMessage } from '../service/MessageService.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
 
@@ -327,6 +350,9 @@ export default {
 		DotsHorizontalIcon,
 		TranslationIcon,
 		DownloadIcon,
+		IconLoading,
+		IconSave,
+		FilePicker,
 		InformationIcon,
 		OpenInNewIcon,
 		PlusIcon,
@@ -387,6 +413,15 @@ export default {
 			customSnoozeDateTime: new Date(moment().add(2, 'hours').minute(0).second(0).valueOf()),
 			copied: false,
 			copyResetTimer: null,
+			savingToCloud: false,
+			isFilePickerOpen: false,
+			saveMessageButtons: [
+				{
+					label: t('mail', 'Choose'),
+					callback: this.saveToCloud,
+					type: 'primary',
+				},
+			],
 		}
 	},
 
@@ -684,6 +719,23 @@ export default {
 					this.copied = false
 					this.localMoreActionsOpen = false
 				}, 2000)
+			}
+		},
+
+		async saveToCloud(dest) {
+			const path = dest[0].path
+			this.savingToCloud = true
+			const id = this.envelope.databaseId
+
+			try {
+				await saveMessage(id, path)
+				logger.info('saved')
+				showSuccess(t('mail', 'Message saved to Files'))
+			} catch (e) {
+				logger.error('not saved', { error: e })
+				showError(t('mail', 'Message could not be saved'))
+			} finally {
+				this.savingToCloud = false
 			}
 		},
 
