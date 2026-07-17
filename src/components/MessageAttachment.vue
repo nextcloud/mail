@@ -85,7 +85,9 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import { formatFileSize } from '@nextcloud/files'
 import { translate as t } from '@nextcloud/l10n'
+import { generateUrl } from '@nextcloud/router'
 import { NcActionButton as ActionButton, NcActions as Actions, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import escapeHtml from 'escape-html'
 import IconArrow from 'vue-material-design-icons/ArrowLeft.vue'
 import IconSave from 'vue-material-design-icons/FolderOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
@@ -231,9 +233,20 @@ export default {
 			const id = this.$route.params.threadId
 
 			try {
-				await saveAttachmentToFiles(id, this.id, path)
+				const saved = await saveAttachmentToFiles(id, this.id, path)
 				Logger.info('saved')
-				showSuccess(t('mail', 'Attachment saved to Files'))
+
+				const fileLocationUrl = generateUrl('/apps/files/files/{fileId}?dir={dir}&openfile=true', {
+					fileId: saved?.fileId,
+					dir: saved?.path,
+				})
+
+				const savedText = t('mail', 'Attachment saved to Files')
+				const goToFilesText = t('mail', 'Go to Files')
+
+				showSuccess(`<div><p>${escapeHtml(savedText)}</p><p><a href="${fileLocationUrl}" target="_blank" rel="noopener noreferrer"><strong><u>${escapeHtml(goToFilesText)}</u></strong></a></p></div>`, {
+					isHTML: true,
+				})
 			} catch (e) {
 				Logger.error('not saved', { error: e })
 				showError(t('mail', 'Attachment could not be saved'))
