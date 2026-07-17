@@ -47,7 +47,7 @@
 					id="to"
 					ref="toLabel"
 					:model-value="selectTo"
-					class="select"
+					class="select to-select"
 					:options="selectableRecipients.filter(recipient => !selectTo.some(to => to.email === recipient.email))"
 					:get-option-key="(option) => option.email"
 					:taggable="true"
@@ -59,7 +59,7 @@
 					:loading="loadingIndicatorTo"
 					:reducible="true"
 					:clearable="true"
-					:no-wrap="false"
+					:no-wrap="true"
 					:append-to-body="false"
 					:create-option="createRecipientOption"
 					:clear-search-on-blur="() => clearOnBlur('to')"
@@ -74,12 +74,27 @@
 							class="vs__search"
 							v-bind="attributes"
 							v-on="events">
+						<ButtonVue
+							size="small"
+							type="tertiary-no-background"
+							class="copy-toggle"
+							@mousedown.stop
+							@click.prevent="toggleViewMode">
+							{{ t('mail', 'Cc/Bcc') }}
+						</ButtonVue>
 					</template>
 					<template #selected-option-container="{ option }">
 						<RecipientListItem
+							v-if="getRecipientIndex(selectTo, option) === 0"
 							:option="option"
 							class="vs__selected selected"
 							@remove-recipient="onRemoveRecipient(option, 'to')" />
+						<span
+							v-else-if="getRecipientIndex(selectTo, option) === 1"
+							:key="option.email"
+							class="vs__selected recipient-overflow">
+							+{{ selectTo.length - 1 }}
+						</span>
 					</template>
 					<template #option="option">
 						<div>
@@ -93,9 +108,6 @@
 					</template>
 				</NcSelect>
 			</div>
-			<ButtonVue size="small" type="tertiary-no-background" class="copy-toggle" @click.prevent="toggleViewMode">
-				{{ t('mail', 'Cc/Bcc') }}
-			</ButtonVue>
 		</div>
 		<div v-if="showCC" class="composer-fields">
 			<label for="cc" class="cc-label">
@@ -110,7 +122,7 @@
 					:class="{ opened: !autoLimit }"
 					:options="selectableRecipients.filter(recipient => !selectCc.some(cc => cc.email === recipient.email))"
 					:get-option-key="(option) => option.email"
-					:no-wrap="false"
+					:no-wrap="true"
 					:filter-by="(option, label, search) => filterOption(option, label, search, 'cc')"
 					:dropdown-should-open="shouldOpenRecipientDropdown"
 					:taggable="true"
@@ -138,9 +150,16 @@
 					</template>
 					<template #selected-option-container="{ option }">
 						<RecipientListItem
+							v-if="getRecipientIndex(selectCc, option) === 0"
 							:option="option"
 							class="vs__selected"
 							@remove-recipient="onRemoveRecipient(option, 'cc')" />
+						<span
+							v-else-if="getRecipientIndex(selectCc, option) === 1"
+							:key="option.email"
+							class="vs__selected recipient-overflow">
+							+{{ selectCc.length - 1 }}
+						</span>
 					</template>
 					<template #option="option">
 						<div>
@@ -166,7 +185,7 @@
 					:model-value="selectBcc"
 					class="select"
 					:class="{ opened: !autoLimit }"
-					:no-wrap="false"
+					:no-wrap="true"
 					:filter-by="(option, label, search) => filterOption(option, label, search, 'bcc')"
 					:options="selectableRecipients.filter(recipient => !selectBcc.some(bcc => bcc.email === recipient.email))"
 					:get-option-key="(option) => option.email"
@@ -197,9 +216,16 @@
 					</template>
 					<template #selected-option-container="{ option }">
 						<RecipientListItem
+							v-if="getRecipientIndex(selectBcc, option) === 0"
 							:option="option"
 							class="vs__selected"
 							@remove-recipient="onRemoveRecipient(option, 'bcc')" />
+						<span
+							v-else-if="getRecipientIndex(selectBcc, option) === 1"
+							:key="option.email"
+							class="vs__selected recipient-overflow">
+							+{{ selectBcc.length - 1 }}
+						</span>
 					</template>
 					<template #option="option">
 						<div>
@@ -1664,6 +1690,10 @@ export default {
 			this.showBCC = !(this.showBCC && this.selectBcc.length === 0 && this.autoLimit)
 		},
 
+		getRecipientIndex(recipients, option) {
+			return recipients.findIndex(r => r.email === option.email)
+		},
+
 		setEditorModeHtml() {
 			this.editorMode = EDITOR_MODE_HTML
 		},
@@ -1873,14 +1903,42 @@ export default {
 	text-overflow: ellipsis;
 }
 
-.copy-toggle {
+// Scope extra padding only to the To select so Cc/Bcc selects are unaffected
+.to-select :deep(.vs__selected-options) {
+	padding-inline-end: calc(var(--default-grid-baseline) * 10);
+}
+
+.recipient-overflow {
+	display: inline-flex;
+	align-items: center;
+	align-self: center;
+	padding: 0 calc(var(--default-grid-baseline) * 2);
+	height: calc(var(--default-clickable-area-small, 28px));
+	border-radius: var(--border-radius-pill);
+	background-color: var(--color-background-dark);
+	white-space: nowrap;
+	font-size: var(--default-font-size);
 	flex-shrink: 0;
-	align-self: flex-start;
-	margin-top: calc(var(--default-grid-baseline) * 0.5);
+}
+
+.copy-toggle {
+	// Absolute so it sits inside the To field visually without adding to its height
+	position: absolute;
+	inset-inline-end: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 1;
+	// Override the .composer-fields--custom button rule
+	opacity: 1;
 	cursor: pointer;
 
-	&:hover,
-	&:focus {
+	:deep(.button-vue__text) {
+		font-weight: normal;
+		color: var(--color-text-maxcontrast);
+	}
+
+	&:hover :deep(.button-vue__text),
+	&:focus :deep(.button-vue__text) {
 		color: var(--color-main-text);
 	}
 }
