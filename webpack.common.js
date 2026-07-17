@@ -76,6 +76,13 @@ module.exports = async () => ({
 					'js-base64',
 				]),
 			},
+			// Let node-stdlib-browser (node-polyfill-webpack-plugin v4) ESM imports resolve
+			{
+				test: /\.m?js$/,
+				resolve: {
+					fullySpecified: false,
+				},
+			},
 			// Fix html-to-text and its dependencies
 			// https://github.com/html-to-text/node-html-to-text/issues/229#issuecomment-945215065
 			{
