@@ -16,7 +16,6 @@ use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IWebhookCompatibleEvent;
 
-
 class MessageFlaggedEvent extends Event implements IWebhookCompatibleEvent {
 	public function __construct(
 		private ImapMessageMapper $imapMessageMapper,
@@ -46,11 +45,11 @@ class MessageFlaggedEvent extends Event implements IWebhookCompatibleEvent {
 	public function getMessageId(): ?string {
 		$client = $this->imapClientFactory->getClient($this->account);
 		$message = $this->imapMessageMapper->find(
-				$client,
-				$this->mailbox->getName(),
-				$this->uid,
-				$this->account->getUserId()
-			);
+			$client,
+			$this->mailbox->getName(),
+			$this->uid,
+			$this->account->getUserId()
+		);
 		return $message->getMessageId();
 	}
 

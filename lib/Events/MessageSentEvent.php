@@ -35,7 +35,12 @@ class MessageSentEvent extends Event implements IWebhookCompatibleEvent {
 
 	public function getWebhookSerializable(): array {
 		return [
-			'message' => $this->localMessage,
+			'messageId' => $this->localMessage->getId(),
+			'accountId' => $this->localMessage->getAccountId(),
+			'sendAt' => $this->localMessage->getSendAt(),
+			'subject' => $this->localMessage->getSubject(),
+			'inReplyTo' => $this->localMessage->getInReplyToMessageId(),
+			'failed' => $this->localMessage->isFailed()
 		];
 	}
 }

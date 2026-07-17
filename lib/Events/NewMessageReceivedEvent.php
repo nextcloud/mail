@@ -27,7 +27,13 @@ class NewMessageReceivedEvent extends Event implements IWebhookCompatibleEvent {
 	public function getWebhookSerializable(): array {
 		return [
 			'messageUri' => $this->uri,
-			'message' => $this->message,
+			'messageId' => $this->message->getMessageId(),
+			'mailboxId' => $this->message->getMailboxId(),
+			'sentAt' => $this->message->getSentAt(),
+			'subject' => $this->message->getSubject(),
+			'inReplyToMessageId' => $this->message->getInReplyTo(),
+			'threadRootId' => $this->message->getThreadRootId(),
+
 		];
 	}
 }
