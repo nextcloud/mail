@@ -22,9 +22,8 @@
     "Refresh" : "Yenilə",
     "Subject" : "Mövzu",
     "Enter a date" : "Tarixi əlavə edin",
-    "Choose" : "Seç",
-    "Choose a file to add as attachment" : "Əlavə ediləcək faylı seçin",
     "Confirm" : "Təsdiq edin",
+    "Choose" : "Seç",
     "Favorite" : "İstəkli",
     "Read" : "Oxu",
     "Back" : "Geri",
@@ -77,6 +76,7 @@
     "Junk" : "Önəmsiz",
     "Sent" : "Göndərildi",
     "Trash" : "Zibil",
-    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi"
+    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi",
+    "Choose a file to add as attachment" : "Əlavə ediləcək faylı seçin"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

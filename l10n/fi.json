@@ -173,10 +173,8 @@
     "Monday morning" : "Maanantaiaamuna",
     "Custom date and time" : "Omavalintainen päivä ja aika",
     "Enter a date" : "Kirjoita päiväys",
-    "Choose" : "Valitse",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Liite ylittää sallitun enimmäiskoon {size}. Jaa tiedosto linkin kautta.","Liitteet ylittävät sallitun enimmäiskoon {size}. Jaa tiedostot linkin kautta."],
-    "Choose a file to add as attachment" : "Valitse liitteeksi lisättävä tiedosto",
-    "Choose a file to share as a link" : "Valitse tiedosto, joka jaetaan linkkinä",
+    "Choose a file" : "Valitse tiedosto",
     "_{count} attachment_::_{count} attachments_" : ["{count} liite","{count} liitettä"],
     "Untitled message" : "Nimetön viesti",
     "Expand composer" : "Laajenna lähetysikkunaa",
@@ -189,6 +187,7 @@
     "Rich text" : "Rikas teksti",
     "No messages in this folder" : "Tässä kansiossa ei ole viestejä",
     "No messages" : "Ei viestejä",
+    "Choose" : "Valitse",
     "Blind copy recipients only" : "Vain piilokopion vastaanottajat",
     "No subject" : "Ei aihetta",
     "{markup-start}Draft:{markup-end} {subject}" : "{markup-start}Luonnos:{markup-end} {subject}",
@@ -610,6 +609,8 @@
     "Could not load your message" : "Viestiä ei voitu ladata",
     "Could not load the desired message" : "Haluttua viestiä ei voitu ladata",
     "Could not load the message" : "Viestiä ei voitu ladata",
-    "Error loading message" : "Virhe viestiä ladatessa"
+    "Error loading message" : "Virhe viestiä ladatessa",
+    "Choose a file to add as attachment" : "Valitse liitteeksi lisättävä tiedosto",
+    "Choose a file to share as a link" : "Valitse tiedosto, joka jaetaan linkkinä"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

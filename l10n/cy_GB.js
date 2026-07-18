@@ -54,10 +54,9 @@ OC.L10N.register(
     "Draft saved" : "Cadwyd y drafft",
     "Upload attachment" : "Llwytho atodiad",
     "Add attachment from Files" : "Ychwanegwch atodiad o'r Ffeiliau",
-    "Choose" : "Dewisa",
-    "Choose a file to add as attachment" : "Dewiswch ffeil i'w hychwanegu fel atodiad",
     "Confirm" : "Cadarnhau",
     "No messages in this folder" : "Dim negeseuon yn y ffolder hon",
+    "Choose" : "Dewisa",
     "Favorite" : "Ffefryn",
     "Back" : "Nôl",
     "Report this bug" : "Cofnodi'r gwall",
@@ -130,6 +129,7 @@ OC.L10N.register(
     "Could not load your message" : "Methu llwytho'ch neges",
     "Could not load the desired message" : "Methu llwytho'r neges a ddewiswyd",
     "Could not load the message" : "Methu llwytho'r neges",
-    "Error loading message" : "Gwall wrth lwytho neges"
+    "Error loading message" : "Gwall wrth lwytho neges",
+    "Choose a file to add as attachment" : "Dewiswch ffeil i'w hychwanegu fel atodiad"
 },
 "nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;");

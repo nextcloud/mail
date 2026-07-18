@@ -182,7 +182,6 @@
     "Disable formatting" : "Deaktiver formatering",
     "Upload attachment" : "Last opp vedlegg",
     "Add attachment from Files" : "Legg til vedlegg fra Filer",
-    "Add share link from Files" : "Legg til delingskobling fra Filer",
     "Smart picker" : "Smartvelger",
     "Request a read receipt" : "Be om lesekvittering",
     "Sign message with S/MIME" : "Signer melding med S/MIME",
@@ -194,10 +193,8 @@
     "Monday morning" : "Mandag morgen",
     "Custom date and time" : "Egendefinert dato og klokkeslett",
     "Enter a date" : "Skriv inn dato",
-    "Choose" : "Velg",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Vedlegget overskrider den tillatte vedleggsstørrelsen på {size}. Vennligst del filen via lenke i stedet.","Vedleggene overskrider den tillatte vedleggsstørrelsen på {size}. Vennligst del filene via lenke i stedet."],
-    "Choose a file to add as attachment" : "Velg en fil å legge til som vedlegg",
-    "Choose a file to share as a link" : "Velg en fil du vil dele som en lenke",
+    "Choose a file" : "Velg fil",
     "_{count} attachment_::_{count} attachments_" : ["{count} vedlegg","{count} vedlegg"],
     "Untitled message" : "Melding uten navn",
     "Expand composer" : "Utvid skrivebehandler",
@@ -211,6 +208,7 @@
     "Rich text" : "Rik tekst",
     "No messages in this folder" : "Ingen meldinger i denne mappen",
     "No messages" : "Ingen meldinger",
+    "Choose" : "Velg",
     "Blind copy recipients only" : "Kun blind kopi mottakere",
     "No subject" : "Ingen emne",
     "Later today – {timeLocale}" : "Senere i dag – {timeLocale}",
@@ -696,6 +694,9 @@
     "Could not load your message" : "Kunne ikke laste meldingene dine",
     "Could not load the desired message" : "Kunne ikke laste den ønskede meldingen",
     "Could not load the message" : "Kunne ikke laste meldingen",
-    "Error loading message" : "Feil ved innlasting av melding"
+    "Error loading message" : "Feil ved innlasting av melding",
+    "Add share link from Files" : "Legg til delingskobling fra Filer",
+    "Choose a file to add as attachment" : "Velg en fil å legge til som vedlegg",
+    "Choose a file to share as a link" : "Velg en fil du vil dele som en lenke"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

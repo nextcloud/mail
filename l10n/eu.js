@@ -178,7 +178,6 @@ OC.L10N.register(
     "Disable formatting" : "Desgaitu formateatzea",
     "Upload attachment" : "Igo eranskina",
     "Add attachment from Files" : "Gehitu eranskina Fitxategiak-etik",
-    "Add share link from Files" : "Gehitu partekatze esteka Fitxategiak-etik",
     "Smart picker" : "Hautatzaile adimenduna",
     "Request a read receipt" : "Eskatu irakurriagiria",
     "Sign message with S/MIME" : "Sinatu mezua S/MIME-rekin",
@@ -190,10 +189,8 @@ OC.L10N.register(
     "Monday morning" : "Astelehen goizean",
     "Custom date and time" : "Data eta ordu pertsonalizatuak",
     "Enter a date" : "Sartu data bat",
-    "Choose" : "Aukeratu",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Eranskinek baimendutako {size} -ko eranskin tamaina gainditzen du. Partekatu fitxategia esteka bidez horren ordez.","Eranskinek baimendutako {size} -ko eranskin tamaina gainditzen du. Partekatu fitxategia esteka bidez horren ordez."],
-    "Choose a file to add as attachment" : "Aukeratu fitxategia eranskin gisa gehitzeko",
-    "Choose a file to share as a link" : "Aukeratu fitxategi bat esteka bezala partekatzeko",
+    "Choose a file" : "Hautatu fitxategi bat",
     "_{count} attachment_::_{count} attachments_" : ["Eranskin {count}","{count} eranskin"],
     "Untitled message" : "Izenik gabeko mezua",
     "Expand composer" : "Hedatu egilea",
@@ -207,6 +204,7 @@ OC.L10N.register(
     "Rich text" : "Testu aberastua",
     "No messages in this folder" : "Mezurik ez karpeta honetan",
     "No messages" : "Mezurik ez",
+    "Choose" : "Aukeratu",
     "Blind copy recipients only" : "Kopia itsuen jasotzaileek besterik ez",
     "No subject" : "Gairik ez",
     "Later today – {timeLocale}" : "Beranduago gaur – {timeLocale}",
@@ -709,6 +707,9 @@ OC.L10N.register(
     "Could not load your message" : "Ezin izan da zure mezua kargatu",
     "Could not load the desired message" : "Ezin izan da kargatu nahi zen mezu hori",
     "Could not load the message" : "Ezin izan da mezua kargatu",
-    "Error loading message" : "Errorea mezua kargatzerakoan"
+    "Error loading message" : "Errorea mezua kargatzerakoan",
+    "Add share link from Files" : "Gehitu partekatze esteka Fitxategiak-etik",
+    "Choose a file to add as attachment" : "Aukeratu fitxategia eranskin gisa gehitzeko",
+    "Choose a file to share as a link" : "Aukeratu fitxategi bat esteka bezala partekatzeko"
 },
 "nplurals=2; plural=(n != 1);");

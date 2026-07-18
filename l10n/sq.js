@@ -50,10 +50,10 @@ OC.L10N.register(
     "Subject" : "Temë",
     "Upload attachment" : "Ngarko bashkëngjitje",
     "Add attachment from Files" : "Shto bashkëlidhje nga Dosjet",
-    "Choose" : "Zgjidhni",
-    "Choose a file to add as attachment" : "Zgjidhni një kartelë që të shtohet si bashkëngjitje",
+    "Choose a file" : "Zgjidh një Skedar",
     "Confirm" : "Konfirmo",
     "Revoke" : "Anulo",
+    "Choose" : "Zgjidhni",
     "Unfavorite" : "Jo i/e preferuar",
     "Favorite" : "I/E Preferuar",
     "Read" : "Lexoni",
@@ -145,6 +145,7 @@ OC.L10N.register(
     "Message sent" : "Mesazhi u dërgua",
     "Could not load {tag}{name}{endtag}" : "Nuk mund të ngarkohej {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Pati një problem me ngarkimin e {tag}{name}{endtag}",
-    "Error loading message" : "Gabim në ngarkimin e kartelës"
+    "Error loading message" : "Gabim në ngarkimin e kartelës",
+    "Choose a file to add as attachment" : "Zgjidhni një kartelë që të shtohet si bashkëngjitje"
 },
 "nplurals=2; plural=(n != 1);");

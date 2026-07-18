@@ -49,11 +49,11 @@ OC.L10N.register(
     "Subject" : "Asunto",
     "Upload attachment" : "Cargar adjunto",
     "Add attachment from Files" : "Agregar adjunto desd Archivos",
-    "Choose" : "Seleccionar",
-    "Choose a file to add as attachment" : "Selecciona el archivo a agregar como adjunto",
+    "Choose a file" : "Selecciona un archivo",
     "Confirm" : "Confirmar",
     "Revoke" : "Revocar",
     "No messages in this folder" : "No hay mensajes en esta carpeta",
+    "Choose" : "Seleccionar",
     "Unfavorite" : "Quitar favorito",
     "Favorite" : "Hacer favorito",
     "Read" : "Leer",
@@ -142,6 +142,7 @@ OC.L10N.register(
     "Could not load your message" : "No fue posible cargar tu mensaje",
     "Could not load the desired message" : "No fue posible cargar el mensaje deseado",
     "Could not load the message" : "No fue posible cargar el mensaje",
-    "Error loading message" : "Se presentó un error al cargar el mensaje"
+    "Error loading message" : "Se presentó un error al cargar el mensaje",
+    "Choose a file to add as attachment" : "Selecciona el archivo a agregar como adjunto"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

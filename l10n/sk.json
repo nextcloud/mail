@@ -230,7 +230,6 @@
     "Disable formatting" : "Vypnúť formátovanie",
     "Upload attachment" : "Nahrať prílohu",
     "Add attachment from Files" : "Pridať prílohu zo Súborov",
-    "Add share link from Files" : "Pridať zdieľaný odkaz zo Súborov",
     "Smart picker" : "Inteligentný výber",
     "Request a read receipt" : "Vyžiadať si potvrdenie o prečítaní",
     "Sign message with S/MIME" : "Podpísať správu pomocou S/MIME",
@@ -242,10 +241,8 @@
     "Monday morning" : "Pondelok ráno",
     "Custom date and time" : "Vlastný dátum a čas",
     "Enter a date" : "Zadajte dátum",
-    "Choose" : "Vybrať",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Príloha prekračuje povolenú veľlkosť {size}. Daný súbor môžete sprístupniť pomocou odkazu.","Prílohy prekračujú povolenú veľkosť príloh {size}. Dané súbory môžete sprístupniť pomocou odkazu.","Prílohy prekračujú povolenú veľkosť príloh {size}. Dané súbory môžete sprístupniť pomocou odkazu.","Prílohy prekračujú povolenú veľkosť príloh {size}. Dané súbory môžete sprístupniť pomocou odkazu."],
-    "Choose a file to add as attachment" : "Vyberte súbor, ktorý chcete pridať ako prílohu.",
-    "Choose a file to share as a link" : "Vyberte súbor, ktorý chcete sprístupniť pomocou odkazu",
+    "Choose a file" : "Vyberte súbor",
     "_{count} attachment_::_{count} attachments_" : ["{count} príloha","{count} prílohy","{count} príloh","{count} prílohy"],
     "Untitled message" : "Nepomenovaná správa",
     "Expand composer" : "Zobraziť editor správ",
@@ -259,6 +256,7 @@
     "Rich text" : "Formátovaný text",
     "No messages in this folder" : "Žiadne správy v tomto priečinku!",
     "No messages" : "Žiadne správy",
+    "Choose" : "Vybrať",
     "Blind copy recipients only" : "Iba príjemcovia slepej kópie",
     "No subject" : "Žiadny predmet",
     "{markup-start}Draft:{markup-end} {subject}" : "{markup-start}Koncept:{markup-end} {subject}",
@@ -892,6 +890,9 @@
     "Could not load your message" : "Nepodarilo sa načítať vašu správu",
     "Could not load the desired message" : "Nepodarilo sa načítať požadovanú správu",
     "Could not load the message" : "Správu sa nepodarilo sa načítať",
-    "Error loading message" : "Chyba načítavania správy"
+    "Error loading message" : "Chyba načítavania správy",
+    "Add share link from Files" : "Pridať zdieľaný odkaz zo Súborov",
+    "Choose a file to add as attachment" : "Vyberte súbor, ktorý chcete pridať ako prílohu.",
+    "Choose a file to share as a link" : "Vyberte súbor, ktorý chcete sprístupniť pomocou odkazu"
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);"
 }

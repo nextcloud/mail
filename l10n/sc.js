@@ -91,15 +91,14 @@ OC.L10N.register(
     "Request a read receipt" : "Pedi una cunfirma de letura",
     "Encrypt message with Mailvelope" : "Tzifra messàgiu cun Mailvelope",
     "Enter a date" : "Inserta una data",
-    "Choose" : "Sèbera",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Is alligongiados propassant sa mannària permìtida de {size}. Cumpartzi is archìvios cun unu ligòngiu.","Is alligongiados propassant sa mannària permìtida de {size}. Cumpartzi is archìvios cun unu ligòngiu."],
-    "Choose a file to add as attachment" : "Sèbera un'archìviu de agiùnghere comente alligongiadu",
-    "Choose a file to share as a link" : "Sèbera un'archìviu de cumpartzire comente ligòngiu",
+    "Choose a file" : "Sèbera un'archìviu",
     "Confirm" : "Cunfirma",
     "Revoke" : "Rèvoca",
     "Plain text" : "Testu simple",
     "Rich text" : "Testu formatadu",
     "No messages" : "Perunu messàgiu",
+    "Choose" : "Sèbera",
     "Blind copy recipients only" : "Isceti persones destinatàrias in còpia cuada",
     "Set reminder for later today" : "Cunfigura un'apuntu pro luego",
     "Set reminder for tomorrow" : "Cunfigura un'apuntu pro cras",
@@ -340,6 +339,8 @@ OC.L10N.register(
     "Could not load your message" : "No at fatu a carrigare su messàgiu tuo",
     "Could not load the desired message" : "No at fatu a carrigare su messàgiu disigiadu",
     "Could not load the message" : "No at fatu a carrigare su messàgiu",
-    "Error loading message" : "Errore in su carrigamentu de su messàgiu"
+    "Error loading message" : "Errore in su carrigamentu de su messàgiu",
+    "Choose a file to add as attachment" : "Sèbera un'archìviu de agiùnghere comente alligongiadu",
+    "Choose a file to share as a link" : "Sèbera un'archìviu de cumpartzire comente ligòngiu"
 },
 "nplurals=2; plural=(n != 1);");

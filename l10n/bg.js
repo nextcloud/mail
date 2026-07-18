@@ -146,7 +146,6 @@ OC.L10N.register(
     "Disable formatting" : "Деактивиране на форматирането",
     "Upload attachment" : "Прикачи файл",
     "Add attachment from Files" : "Прикачи от \"Файлове\"",
-    "Add share link from Files" : "Сподели връзка от \"Файлове\"",
     "Smart picker" : "Умно избиране",
     "Request a read receipt" : "Заявка на разписка за прочитане",
     "Sign message with S/MIME" : "Подписване на съобщение със S/MIME/сертификат/",
@@ -158,10 +157,8 @@ OC.L10N.register(
     "Monday morning" : "Понеделник сутрин",
     "Custom date and time" : "Персонализирана дата и час",
     "Enter a date" : "Въведете дата",
-    "Choose" : "Изберете",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Прикачените файлове надвишават разрешения размер на прикачени файлове от {size}. Моля, вместо това да споделите файловете чрез връзка.","Прикачените файлове надвишават разрешения размер на прикачени файлове от {size}. Моля, вместо това да споделите файловете чрез връзка."],
-    "Choose a file to add as attachment" : "Избери файл за прикачване",
-    "Choose a file to share as a link" : "Изберете файл, който да споделите като връзка",
+    "Choose a file" : "Изберете файл",
     "_{count} attachment_::_{count} attachments_" : ["{count} прикачени файлове","{count} прикачени файлове"],
     "Confirm" : "Потвърдете",
     "Revoke" : "Отнемане",
@@ -169,6 +166,7 @@ OC.L10N.register(
     "Rich text" : "Форматиран текст",
     "No messages in this folder" : "Няма съобщения",
     "No messages" : "Няма съобщения.",
+    "Choose" : "Изберете",
     "Blind copy recipients only" : "Само получателите на слепи копия",
     "No subject" : "Без /няма/ тема",
     "Later today – {timeLocale}" : "По-късно днес - {timeLocale}",
@@ -554,6 +552,9 @@ OC.L10N.register(
     "Could not load your message" : "Вашето съобщение не може да бъде заредено",
     "Could not load the desired message" : "Желаното съобщение не може да бъде заредено",
     "Could not load the message" : "Съобщението не може да бъде заредено",
-    "Error loading message" : "Грешка при зареждане съобщението"
+    "Error loading message" : "Грешка при зареждане съобщението",
+    "Add share link from Files" : "Сподели връзка от \"Файлове\"",
+    "Choose a file to add as attachment" : "Избери файл за прикачване",
+    "Choose a file to share as a link" : "Изберете файл, който да споделите като връзка"
 },
 "nplurals=2; plural=(n != 1);");

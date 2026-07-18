@@ -49,13 +49,12 @@ OC.L10N.register(
     "Draft saved" : "Draft saved",
     "Smart picker" : "Smart picker",
     "Send now" : "Tuma sasa",
-    "Choose" : "Chagua",
-    "Choose a file to add as attachment" : "Chagua faili kuongeza kama kiambatanisho",
-    "Choose a file to share as a link" : "Chagua faili kushirikisha kama kiungo",
+    "Choose a file" : "Chagua faili",
     "_{count} attachment_::_{count} attachments_" : ["{count} attachment","{count} attachments"],
     "Confirm" : "Thibitisha",
     "Revoke" : "Revoke",
     "No messages" : "Hakuna jumbe",
+    "Choose" : "Chagua",
     "Later today – {timeLocale}" : "Baadaye leo-{timeLocale}",
     "Set reminder for later today" : "Set reminder for later today",
     "Tomorrow – {timeLocale}" : "Kesho-{timeLocale}",
@@ -182,6 +181,8 @@ OC.L10N.register(
     "Error while sharing file" : "Hitilafu wakati wa kushirikisha faili",
     "Nextcloud Mail" : "Nextcloud Mail",
     "Discard changes" : "Discard changes",
-    "Message sent" : "Ujumbe umetumwa"
+    "Message sent" : "Ujumbe umetumwa",
+    "Choose a file to add as attachment" : "Chagua faili kuongeza kama kiambatanisho",
+    "Choose a file to share as a link" : "Chagua faili kushirikisha kama kiungo"
 },
 "nplurals=2; plural=(n != 1);");

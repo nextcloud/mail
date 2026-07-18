@@ -149,10 +149,7 @@ OC.L10N.register(
     "Monday morning" : "Luni dimineață",
     "Custom date and time" : "Dată și oră personalizate",
     "Enter a date" : "Introdu data",
-    "Choose" : "Alege",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Atașamentul depășește dimensiunea totală de  {size}. Partajați fișierul prin link.","Atașamentele depășesc dimensiunea totală de  {size}. Partajați fișierele prin link-uri.","Atașamentele depășesc dimensiunea totală de  {size}. Partajați fișierele prin link-uri."],
-    "Choose a file to add as attachment" : "Selectați un fișier ca atașament",
-    "Choose a file to share as a link" : "Selectați un fișier pentru partajare ca link",
     "_{count} attachment_::_{count} attachments_" : ["{count} atașament","{count} atașamente","{count} atașamente"],
     "Untitled message" : "Mesaj fără titlu",
     "Expand composer" : "Expandează mesajul",
@@ -165,6 +162,7 @@ OC.L10N.register(
     "Plain text" : "Text simplu",
     "Rich text" : "Text formatat",
     "No messages" : "Niciun mesaj",
+    "Choose" : "Alege",
     "Blind copy recipients only" : "Doar destinatarii din copia blind",
     "No subject" : "Fără subiect",
     "Later today – {timeLocale}" : "Azi, mai târziu – {timeLocale}",
@@ -492,6 +490,8 @@ OC.L10N.register(
     "Could not load your message" : "Mesajul nu s-a putut încărca",
     "Could not load the desired message" : "Nu s-a putut încărca mesajul dorit",
     "Could not load the message" : "Nu s-a putut încărca mesajul",
-    "Error loading message" : "Eroare la încărcarea mesajelor"
+    "Error loading message" : "Eroare la încărcarea mesajelor",
+    "Choose a file to add as attachment" : "Selectați un fișier ca atașament",
+    "Choose a file to share as a link" : "Selectați un fișier pentru partajare ca link"
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");
