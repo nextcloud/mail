@@ -159,10 +159,7 @@ OC.L10N.register(
     "Monday morning" : "Понеделник наутро",
     "Custom date and time" : "Одреден датум и време",
     "Enter a date" : "Внеси датум",
-    "Choose" : "Избери",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Прилогот ја надминува најголемата дозволена големина за прилози од {size}. Споделете го прилогот со линк.","Прилозите ја надминуваат најголемата дозволена големина за прилози од {size}. Споделете ги прилозите со линк."],
-    "Choose a file to add as attachment" : "Избери датотека за да додадете прилог",
-    "Choose a file to share as a link" : "Избери датотека за да се сподели како линк",
     "_{count} attachment_::_{count} attachments_" : ["{count} прилог","{count} прилози"],
     "Untitled message" : "Неименувана порака",
     "Confirm" : "Потврди",
@@ -171,6 +168,7 @@ OC.L10N.register(
     "Rich text" : "Богат текст",
     "No messages in this folder" : "Нема пораки во оваа папка",
     "No messages" : "Нема пораки",
+    "Choose" : "Избери",
     "Blind copy recipients only" : "Само приматели на слепи копии",
     "No subject" : "Нема наслов",
     "Later today – {timeLocale}" : "Денес покасно – {timeLocale}",
@@ -461,6 +459,8 @@ OC.L10N.register(
     "Could not load your message" : "Неможе да се вчита пораката",
     "Could not load the desired message" : "Неможе да се вчита посакуваната порака",
     "Could not load the message" : "Неможе да се вчита пораката",
-    "Error loading message" : "Грешка при вчитување на пораката"
+    "Error loading message" : "Грешка при вчитување на пораката",
+    "Choose a file to add as attachment" : "Избери датотека за да додадете прилог",
+    "Choose a file to share as a link" : "Избери датотека за да се сподели како линк"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

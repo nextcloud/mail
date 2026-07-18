@@ -185,7 +185,6 @@ OC.L10N.register(
     "Disable formatting" : "Inhabilita el format",
     "Upload attachment" : "Puja l'adjunt",
     "Add attachment from Files" : "Afegeix adjunts des dels fitxers",
-    "Add share link from Files" : "Afegeix un enllaç de compartició des de Fitxers",
     "Smart picker" : "Selector intel·ligent",
     "Request a read receipt" : "Sol·licitud de rebut de lectura",
     "Sign message with S/MIME" : "Signa el missatge amb S/MIME",
@@ -197,10 +196,8 @@ OC.L10N.register(
     "Monday morning" : "Dilluns al matí",
     "Custom date and time" : "Data i hora personalitzades",
     "Enter a date" : "Introduïu una data",
-    "Choose" : "Escolliu",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["El fitxer adjunt supera la mida permesa dels fitxers adjunts de {size}. Si us plau, compartiu el fitxer mitjançant l'enllaç.","Els fitxers adjunts superen la mida permesa dels fitxers adjunts de {size}. Compartiu els fitxers mitjançant un enllaç."],
-    "Choose a file to add as attachment" : "Trieu un fitxer per afegir als adjunts",
-    "Choose a file to share as a link" : "Tria un fitxer per compartir-lo com a enllaç",
+    "Choose a file" : "Trieu un fitxer",
     "_{count} attachment_::_{count} attachments_" : ["{count} fitxer adjunt","{count} fitxers adjunts"],
     "Untitled message" : "Missatge sense títol",
     "Expand composer" : "Ampliar el compositor",
@@ -214,6 +211,7 @@ OC.L10N.register(
     "Rich text" : "Text enriquit",
     "No messages in this folder" : "No hi ha missatges en aquesta carpeta",
     "No messages" : "No hi ha missatges",
+    "Choose" : "Escolliu",
     "Blind copy recipients only" : "Només destinataris de còpia cega",
     "No subject" : "Sense Assumpte",
     "Later today – {timeLocale}" : "Avui més tard: {timeLocale}",
@@ -723,6 +721,9 @@ OC.L10N.register(
     "Could not load your message" : "No s’ha pogut carregar el vostre missatge",
     "Could not load the desired message" : "No s’ha pogut carregar el missatge desitjat",
     "Could not load the message" : "No s’ha pogut carregar el missatge",
-    "Error loading message" : "S'ha produït un error mentre es carregava el missatge"
+    "Error loading message" : "S'ha produït un error mentre es carregava el missatge",
+    "Add share link from Files" : "Afegeix un enllaç de compartició des de Fitxers",
+    "Choose a file to add as attachment" : "Trieu un fitxer per afegir als adjunts",
+    "Choose a file to share as a link" : "Tria un fitxer per compartir-lo com a enllaç"
 },
 "nplurals=2; plural=(n != 1);");

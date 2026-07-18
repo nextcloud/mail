@@ -232,7 +232,6 @@ OC.L10N.register(
     "Disable formatting" : "Desactivar o formato",
     "Upload attachment" : "Enviar anexos",
     "Add attachment from Files" : "Engadir anexos desde Ficheiros",
-    "Add share link from Files" : "Engadir ligazón para compartir desde Ficheiros",
     "Smart picker" : "Selector intelixente",
     "Request a read receipt" : "Solicitar un acuse de recibimento",
     "Sign message with S/MIME" : "Asinar a mensaxe con S/MIME",
@@ -244,10 +243,8 @@ OC.L10N.register(
     "Monday morning" : "Luns pola mañá",
     "Custom date and time" : "Data e hora personalizadas",
     "Enter a date" : "Introduza unha data",
-    "Choose" : "Escoller",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["O anexo supera o tamaño permitido de {size}. No canto diso, comparta o ficheiro mediante ligazón.","Os anexos superan o tamaño permitido de {size}. En lugar diso, comparta os ficheiros mediante ligazón."],
-    "Choose a file to add as attachment" : "Escolla un ficheiro para engadir como anexo",
-    "Choose a file to share as a link" : "Escolla un ficheiro para compartir como ligazón",
+    "Choose a file" : "Escoller un ficheiro",
     "_{count} attachment_::_{count} attachments_" : ["{count} anexo","{count} anexos"],
     "Untitled message" : "Mensaxe sen título",
     "Expand composer" : "Estender a xanela de redacción",
@@ -265,6 +262,7 @@ OC.L10N.register(
     "Rich text" : "Texto mellorado",
     "No messages in this folder" : "Non hai mensaxes neste cartafol",
     "No messages" : "Non hai mensaxes",
+    "Choose" : "Escoller",
     "Blind copy recipients only" : "Só destinatarios de copias agochadas",
     "No subject" : "Sen asunto",
     "{markup-start}Draft:{markup-end} {subject}" : "{markup-start}Borrador:{markup-end} {subject}",
@@ -895,6 +893,9 @@ OC.L10N.register(
     "Could not load your message" : "Non foi posíbel cargar a súa mensaxe",
     "Could not load the desired message" : "Non foi posíbel cargar a mensaxe desexada",
     "Could not load the message" : "Non foi posíbel cargar a mensaxe",
-    "Error loading message" : "Produciuse un erro ao cargar a mensaxe"
+    "Error loading message" : "Produciuse un erro ao cargar a mensaxe",
+    "Add share link from Files" : "Engadir ligazón para compartir desde Ficheiros",
+    "Choose a file to add as attachment" : "Escolla un ficheiro para engadir como anexo",
+    "Choose a file to share as a link" : "Escolla un ficheiro para compartir como ligazón"
 },
 "nplurals=2; plural=(n != 1);");

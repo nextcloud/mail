@@ -233,7 +233,6 @@
     "Disable formatting" : "Odebrat formátování",
     "Upload attachment" : "Nahrát přílohu",
     "Add attachment from Files" : "Přidat přílohu ze Souborů",
-    "Add share link from Files" : "Přidat odkaz na sdílení ze Souborů",
     "Smart picker" : "Inteligentní výběr",
     "Request a read receipt" : "Vyžádat potvrzení o přečtení",
     "Sign message with S/MIME" : "Podepsat zprávu pomocí S/MIME",
@@ -245,10 +244,8 @@
     "Monday morning" : "V pondělí ráno",
     "Custom date and time" : "Uživatelsky určené datum a čas",
     "Enter a date" : "Zadejte datum",
-    "Choose" : "Vybrat",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Příloha překračuje povolenou velikost příloh {size}. Nasdílejte ho namísto toho prostřednictvím odkazu.","Přílohy překračují povolenou velikost příloh {size}. Nasdílejte je namísto toho prostřednictvím odkazu.","Přílohy překračují povolenou velikost příloh {size}. Nasdílejte je namísto toho prostřednictvím odkazu.","Přílohy překračují povolenou velikost příloh {size}. Nasdílejte je namísto toho prostřednictvím odkazu."],
-    "Choose a file to add as attachment" : "Vyberte soubor k přiložení",
-    "Choose a file to share as a link" : "Zvolte soubor, který sdílet jako odkaz",
+    "Choose a file" : "Vyberte soubor",
     "_{count} attachment_::_{count} attachments_" : ["{count} příloha","{count} přílohy","{count} příloh","{count} přílohy"],
     "Untitled message" : "Zpráva bez názvu",
     "Expand composer" : "Rozbalit dialog psaní",
@@ -263,6 +260,7 @@
     "Rich text" : "Formátovaný text",
     "No messages in this folder" : "V této složce nejsou žádné zprávy",
     "No messages" : "Žádné zprávy",
+    "Choose" : "Vybrat",
     "Blind copy recipients only" : "Pouze příjemci skryté kopie",
     "No subject" : "Žádný předmět",
     "{markup-start}Draft:{markup-end} {subject}" : "{markup-start}Koncept:{markup-end} {subject}",
@@ -895,6 +893,9 @@
     "Could not load your message" : "Vaši zprávu se nedaří načíst",
     "Could not load the desired message" : "Nedaří se načíst vyžádanou zprávu",
     "Could not load the message" : "Zprávu se nedaří načíst",
-    "Error loading message" : "Chyba při načtení zprávy"
+    "Error loading message" : "Chyba při načtení zprávy",
+    "Add share link from Files" : "Přidat odkaz na sdílení ze Souborů",
+    "Choose a file to add as attachment" : "Vyberte soubor k přiložení",
+    "Choose a file to share as a link" : "Zvolte soubor, který sdílet jako odkaz"
 },"pluralForm" :"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;"
 }

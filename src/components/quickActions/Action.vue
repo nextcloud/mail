@@ -5,7 +5,7 @@
 <template>
 	<div class="action">
 		<div class="action__info">
-			<DragIcon class="action__info__drag" :size="16" />
+			<DragIcon :class="'action__info__drag' + (!draggable ? ' undraggable' : '')" :size="16" />
 			<Icon class="action__info__icon" :action="action.name" />
 			<p v-if="!needsSelection">
 				{{ actionTitle }}
@@ -18,7 +18,11 @@
 				:model-value="selectedOption"
 				@update:modelValue="update" />
 		</div>
-		<NcButton :aria-label="t('mail', 'delete')" variant="tertiary-no-background" @click="$emit('delete')">
+		<NcButton
+			:aria-label="t('mail', 'delete')"
+			variant="tertiary-no-background"
+			class="delete-button"
+			@click="$emit('delete')">
 			<template #icon>
 				<CloseIcon :size="20" />
 			</template>
@@ -52,6 +56,11 @@ export default {
 
 		account: {
 			type: Object,
+			required: true,
+		},
+
+		draggable: {
+			type: Boolean,
 			required: true,
 		},
 	},
@@ -134,13 +143,23 @@ export default {
 	align-items: center;
 	&__info{
 		display: flex;
+		flex-grow: 1;
 		&__icon{
 			margin-inline-end : 3px
 		}
 		&__drag{
 			margin-inline-end : 6px;
 			cursor: grab;
+
+			&.undraggable {
+				opacity: .2;
+				cursor: revert;
+			}
 		}
+	}
+
+	.delete-button {
+		margin-inline-start : 6px;
 	}
 }
 </style>

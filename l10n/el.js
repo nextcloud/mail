@@ -196,7 +196,6 @@ OC.L10N.register(
     "Disable formatting" : "Απενεργοποίηση μορφοποίησης",
     "Upload attachment" : "Μεταφόρτωση συνημμένου",
     "Add attachment from Files" : "Προσθήκη συνημμένου από Αρχεία",
-    "Add share link from Files" : "Προσθήκη συνδέσμου κοινής χρήσης από Αρχεία",
     "Smart picker" : "Έξυπνος επιλογέας",
     "Request a read receipt" : "Αίτηση βεβαίωσης ανάγνωσης",
     "Sign message with S/MIME" : "Υπογραφή μηνύματος με S/MIME",
@@ -208,10 +207,8 @@ OC.L10N.register(
     "Monday morning" : "Δευτέρα πρωί",
     "Custom date and time" : "Επιλέξτε ημερομηνία και ώρα",
     "Enter a date" : "Προσθέστε ημερομηνία",
-    "Choose" : "Επιλογή",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Το συνημμένο υπερβαίνει το επιτρεπόμενο μέγεθος συνημμένων {size}. Παρακαλούμε διαμοιράστε το αρχείο μέσω συνδέσμου.","Τα συνημμένα υπερβαίνουν το επιτρεπόμενο μέγεθος συνημμένων {size}. Παρακαλούμε διαμοιράστε τα αρχεία μέσω συνδέσμου."],
-    "Choose a file to add as attachment" : "Επιλέξτε ένα αρχείο για να προσθέσετε ως συνημμένο",
-    "Choose a file to share as a link" : "Επιλέξτε ένα αρχείο για κοινή χρήση ως σύνδεσμο",
+    "Choose a file" : "Επιλογή αρχείου",
     "_{count} attachment_::_{count} attachments_" : ["{count} συνημμένo","{count} συνημμένα"],
     "Untitled message" : "Μήνυμα χωρίς τίτλο",
     "Expand composer" : "Ανάπτυξη συντάκτη",
@@ -225,6 +222,7 @@ OC.L10N.register(
     "Rich text" : "Εμπλουτισμένο κείμενο",
     "No messages in this folder" : "Δεν έχει μηνύματα ο φάκελος",
     "No messages" : "Κανένα μήνυμα",
+    "Choose" : "Επιλογή",
     "Blind copy recipients only" : "Αποδέκτες με κρυφή κοινοποίηση μόνο",
     "No subject" : "Χωρίς θέμα",
     "{markup-start}Draft:{markup-end} {subject}" : "{markup-start}Πρόχειρο:{markup-end} {subject}",
@@ -835,6 +833,9 @@ OC.L10N.register(
     "Could not load your message" : "Δεν ήταν δυνατή η φόρτωση του μηνύματός σας",
     "Could not load the desired message" : "Αδυναμία φόρτωσης του προτιμώμενου μηνύματος",
     "Could not load the message" : "Δεν ήταν δυνατή η φόρτωση του μηνύματος",
-    "Error loading message" : "Σφάλμα φόρτωσης μηνύματος"
+    "Error loading message" : "Σφάλμα φόρτωσης μηνύματος",
+    "Add share link from Files" : "Προσθήκη συνδέσμου κοινής χρήσης από Αρχεία",
+    "Choose a file to add as attachment" : "Επιλέξτε ένα αρχείο για να προσθέσετε ως συνημμένο",
+    "Choose a file to share as a link" : "Επιλέξτε ένα αρχείο για κοινή χρήση ως σύνδεσμο"
 },
 "nplurals=2; plural=(n != 1);");

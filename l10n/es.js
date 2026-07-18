@@ -198,7 +198,6 @@ OC.L10N.register(
     "Disable formatting" : "Deshabilitar formato",
     "Upload attachment" : "Subir adjunto",
     "Add attachment from Files" : "Añadir adjunto desde Archivos",
-    "Add share link from Files" : "Agregar un enlace a un recurso compartido desde Archivos",
     "Smart picker" : "Selector inteligente",
     "Request a read receipt" : "Solicitar acuse de lectura",
     "Sign message with S/MIME" : "Firmar mensaje con S/MIME",
@@ -210,10 +209,8 @@ OC.L10N.register(
     "Monday morning" : "El lunes por la mañana",
     "Custom date and time" : "Hora y fecha personalizadas",
     "Enter a date" : "Introduzca una fecha",
-    "Choose" : "Selecciona",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["El archivo adjunto supera el tamaño permitido de {size}. Por favor, comparta el archivo mediante un enlace.","Los archivos adjuntos superan el tamaño permitido de {size}. Por favor, comparta los archivos mediante un enlace.","Los archivos adjuntos superan el tamaño permitido de {size}. Por favor, comparta los archivos mediante un enlace."],
-    "Choose a file to add as attachment" : "Escoja un archivo para adjuntar",
-    "Choose a file to share as a link" : "Escoge un archivo para compartir como enlace",
+    "Choose a file" : "Elija un archivo",
     "_{count} attachment_::_{count} attachments_" : ["{count} adjunto","{count} adjuntos","{count} adjuntos"],
     "Untitled message" : "Mensaje sin título",
     "Expand composer" : "Expandir compositor",
@@ -227,6 +224,7 @@ OC.L10N.register(
     "Rich text" : "Texto enriquecido",
     "No messages in this folder" : "No hay mensajes en esta carpeta",
     "No messages" : "No hay mensajes",
+    "Choose" : "Selecciona",
     "Blind copy recipients only" : "Sólo a destinatarios con copia oculta (CCO)",
     "No subject" : "No hay asunto",
     "{markup-start}Draft:{markup-end} {subject}" : "{markup-start} Borrador: {markup-end}{subject}",
@@ -837,6 +835,9 @@ OC.L10N.register(
     "Could not load your message" : "No se ha podido cargar tu mensaje",
     "Could not load the desired message" : "No se ha podido cargar el mensaje deseado",
     "Could not load the message" : "No se ha podido cargar el mensaje",
-    "Error loading message" : "Error al cargar el mensaje"
+    "Error loading message" : "Error al cargar el mensaje",
+    "Add share link from Files" : "Agregar un enlace a un recurso compartido desde Archivos",
+    "Choose a file to add as attachment" : "Escoja un archivo para adjuntar",
+    "Choose a file to share as a link" : "Escoge un archivo para compartir como enlace"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

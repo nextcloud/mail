@@ -229,7 +229,6 @@ OC.L10N.register(
     "Disable formatting" : "فورماتنى چەكلەڭ",
     "Upload attachment" : "قوشۇمچە ھۆججەتنى يۈكلەڭ",
     "Add attachment from Files" : "ھۆججەتلەردىن قوشۇمچە ھۆججەت قوشۇڭ",
-    "Add share link from Files" : "ھۆججەتلەردىن ھەمبەھىر ئۇلانمىسىنى قوشۇڭ",
     "Smart picker" : "ئەقىللىق تاللىغۇچ",
     "Request a read receipt" : "ئوقۇش تالونىنى تەلەپ قىلىڭ",
     "Sign message with S/MIME" : "S/MIME بىلەن ئۇچۇر ئىمزالاڭ",
@@ -241,10 +240,8 @@ OC.L10N.register(
     "Monday morning" : "دۈشەنبە ئەتىگەن",
     "Custom date and time" : "ئىختىيارى چېسلا ۋە ۋاقىت",
     "Enter a date" : "چېسلانى كىرگۈزۈڭ",
-    "Choose" : "تاللاڭ",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["قوشۇمچە ھۆججەتنىڭ چوڭلۇقى {size} دىن ئېشىپ كەتتى. ھۆججەتنى ئۇلىنىش ئارقىلىق ئورتاقلىشىڭ.","قوشۇمچە ھۆججەتلەر رۇخسەت قىلىنغان {size} قوشۇمچە ھۆججەت چوڭلۇقىدىن ئېشىپ كەتتى. ھۆججەتلەرنى ئۇلىنىش ئارقىلىق ئورتاقلىشىڭ."],
-    "Choose a file to add as attachment" : "قوشۇمچە قىلىپ قوشماقچى بولغان ھۆججەتنى تاللاڭ",
-    "Choose a file to share as a link" : "ئۇلىنىش سۈپىتىدە ھەمبەھىرلىنىدىغان ھۆججەتنى تاللاڭ",
+    "Choose a file" : "ھۆججەت تاللاڭ",
     "_{count} attachment_::_{count} attachments_" : ["{count} يوللانما","{count} يوللانمىلار"],
     "Untitled message" : "نامسىز ئۇچۇر",
     "Expand composer" : "كومپوزىتورنى كېڭەيتىڭ",
@@ -258,6 +255,7 @@ OC.L10N.register(
     "Rich text" : "مول تېكىست",
     "No messages in this folder" : "بۇ قىسقۇچتا ئۇچۇر يوق",
     "No messages" : "ھېچقانداق ئۇچۇر يوق",
+    "Choose" : "تاللاڭ",
     "Blind copy recipients only" : "پەقەت ئەمالار كۆپەيتكۈچى",
     "No subject" : "تېما يوق",
     "{markup-start}Draft:{markup-end} {subject}" : "{markup-start} قوليازما: {markup-end} {subject}",
@@ -883,6 +881,9 @@ OC.L10N.register(
     "Could not load your message" : "ئۇچۇرىڭىزنى يۈكلىيەلمىدى",
     "Could not load the desired message" : "لازىملىق ئۇچۇرنى يۈكلىيەلمىدى",
     "Could not load the message" : "ئۇچۇرنى يۈكلىيەلمىدى",
-    "Error loading message" : "ئۇچۇر يۈكلەشتە خاتالىق"
+    "Error loading message" : "ئۇچۇر يۈكلەشتە خاتالىق",
+    "Add share link from Files" : "ھۆججەتلەردىن ھەمبەھىر ئۇلانمىسىنى قوشۇڭ",
+    "Choose a file to add as attachment" : "قوشۇمچە قىلىپ قوشماقچى بولغان ھۆججەتنى تاللاڭ",
+    "Choose a file to share as a link" : "ئۇلىنىش سۈپىتىدە ھەمبەھىرلىنىدىغان ھۆججەتنى تاللاڭ"
 },
 "nplurals=2; plural=(n != 1);");

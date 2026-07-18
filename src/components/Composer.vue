@@ -354,14 +354,6 @@
 							t('mail', 'Add attachment from Files')
 						}}
 					</ActionButton>
-					<ActionButton :close-after-click="true" :disabled="encrypt" @click="onAddCloudAttachmentLink">
-						<template #icon>
-							<IconPublic :size="20" />
-						</template>
-						{{
-							t('mail', 'Add share link from Files')
-						}}
-					</ActionButton>
 				</Actions>
 
 				<Actions
@@ -527,7 +519,6 @@ import { NcReferencePickerModal } from '@nextcloud/vue/components/NcRichText'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
 import IconFormat from 'vue-material-design-icons/FormatSize.vue'
-import IconPublic from 'vue-material-design-icons/Link.vue'
 import Paperclip from 'vue-material-design-icons/Paperclip.vue'
 import SendClock from 'vue-material-design-icons/SendClockOutline.vue'
 import Send from 'vue-material-design-icons/SendOutline.vue'
@@ -577,7 +568,6 @@ export default {
 		Download,
 		IconUpload,
 		IconFolder,
-		IconPublic,
 		IconLinkPicker,
 		NcSelect,
 		NcIconSvgWrapper,
@@ -1415,10 +1405,6 @@ export default {
 		onAddCloudAttachment() {
 			this.bus.emit('on-add-cloud-attachment')
 			this.saveDraftDebounced()
-		},
-
-		onAddCloudAttachmentLink() {
-			this.bus.emit('on-add-cloud-attachment-link')
 		},
 
 		onAutocomplete(term, addressType) {
