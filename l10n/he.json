@@ -90,15 +90,14 @@
     "Request a read receipt" : "בקשת אישור קריאה",
     "Encrypt message with Mailvelope" : "הצפנת הודעה עם Mailvelope",
     "Enter a date" : "נא למלא תאריך",
-    "Choose" : "בחר",
-    "Choose a file to add as attachment" : "בחירת קובץ להוספה כקובץ מצורף",
-    "Choose a file to share as a link" : "נא לבחור קובץ לשיתוף כקישור",
+    "Choose a file" : "נא לבחור קובץ",
     "Confirm" : "אימות",
     "Revoke" : "שלילה",
     "Plain text" : "טקסט פשוט",
     "Rich text" : "טקסט עשיר",
     "No messages in this folder" : "אין הודעות בתיקייה זו",
     "No messages" : "אין הודעות",
+    "Choose" : "בחר",
     "Blind copy recipients only" : "נמענים נסתרים בלבד",
     "Could not delete message" : "לא ניתן למחוק הודעה",
     "Unfavorite" : "ביטול כמועדף",
@@ -272,6 +271,8 @@
     "Could not load your message" : "לא ניתן לטעון את ההודעה שלך",
     "Could not load the desired message" : "לא ניתן לטעון את ההודעה המבוקשת",
     "Could not load the message" : "לא ניתן לטעון את ההודעה",
-    "Error loading message" : "שגיאה בהעלאת הודעה"
+    "Error loading message" : "שגיאה בהעלאת הודעה",
+    "Choose a file to add as attachment" : "בחירת קובץ להוספה כקובץ מצורף",
+    "Choose a file to share as a link" : "נא לבחור קובץ לשיתוף כקישור"
 },"pluralForm" :"nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;"
 }

@@ -225,7 +225,6 @@ OC.L10N.register(
     "Disable formatting" : "Форматлалт идэвхгүйжүүлэх",
     "Upload attachment" : "Хавсралт оруулах",
     "Add attachment from Files" : "–§–∞–π–ª–∞–∞—Å —Ö–∞–≤—Å—Ä–∞–ª—Ç –Ω—ç–º—ç—Ö",
-    "Add share link from Files" : "Файлуудаас хуваалцах холбоос нэмэх",
     "Smart picker" : "Ухаалаг сонгогч",
     "Request a read receipt" : "Унших баталгаа хүсэх",
     "Sign message with S/MIME" : "S/MIME-ээр зурвасыг гарын үсэг зурах",
@@ -237,10 +236,8 @@ OC.L10N.register(
     "Monday morning" : "Даваа гарагийн өглөө",
     "Custom date and time" : "Өөрийн огноо, цаг",
     "Enter a date" : "Огноо оруулах",
-    "Choose" : "–°–æ–Ω–≥–æ—Ö",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Хавсралт нь зөвшөөрөгдсөн хавсралтын хэмжээ {size}-с хэтэрсэн байна. Оронд нь файлыг холбоосоор хуваалцана уу.","Хавсралтууд нь зөвшөөрөгдсөн хавсралтын хэмжээ {size}-с хэтэрсэн байна. Оронд нь файлуудыг холбоосоор хуваалцана уу."],
-    "Choose a file to add as attachment" : "Хавсралт болгох файл сонгоно уу",
-    "Choose a file to share as a link" : "Холбоосоор хуваалцах файл сонгоно уу",
+    "Choose a file" : "Файл сонгох",
     "_{count} attachment_::_{count} attachments_" : ["{count} хавсралт","{count} хавсралт"],
     "Untitled message" : "Гарчиггүй зурвас",
     "Expand composer" : "Бичигчийг өргөжүүлэх",
@@ -254,6 +251,7 @@ OC.L10N.register(
     "Rich text" : "Баялаг текст",
     "No messages in this folder" : "Энэ хавтаст зурвас байхгүй",
     "No messages" : "Мессеж байхгүй",
+    "Choose" : "–°–æ–Ω–≥–æ—Ö",
     "Blind copy recipients only" : "Зөвхөн нууц хуулбар хүлээн авагчид",
     "No subject" : "Гарчиггүй",
     "{markup-start}Draft:{markup-end} {subject}" : "{markup-start}Ноорог:{markup-end} {subject}",
@@ -870,6 +868,9 @@ OC.L10N.register(
     "Could not load your message" : "Таны зурвасыг ачаалах боломжгүй",
     "Could not load the desired message" : "Хүссэн зурвасыг ачаалах боломжгүй",
     "Could not load the message" : "Зурвас ачаалах боломжгүй",
-    "Error loading message" : "–∞–ª–¥–∞–∞—Ç–∞–π –∞—á–∞–∞–ª–ª–∞—Ö –∑—É—Ä–≤–∞—Å"
+    "Error loading message" : "–∞–ª–¥–∞–∞—Ç–∞–π –∞—á–∞–∞–ª–ª–∞—Ö –∑—É—Ä–≤–∞—Å",
+    "Add share link from Files" : "Файлуудаас хуваалцах холбоос нэмэх",
+    "Choose a file to add as attachment" : "Хавсралт болгох файл сонгоно уу",
+    "Choose a file to share as a link" : "Холбоосоор хуваалцах файл сонгоно уу"
 },
 "nplurals=2; plural=(n != 1);");

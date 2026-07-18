@@ -168,10 +168,8 @@ OC.L10N.register(
     "Monday morning" : "Hétfő reggel",
     "Custom date and time" : "Egyéni dátum és idő",
     "Enter a date" : "Adjon meg egy dátumot",
-    "Choose" : "Válasszon",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["A melléklet mérete meghaladja a megengedett {size}-os méretet. Inkább ossza meg a fájlt hivatkozással.","A melléklet mérete meghaladja a megengedett {size}-os méretet. Inkább ossza meg a fájlt hivatkozással."],
-    "Choose a file to add as attachment" : "Válasszon mellékletként hozzáadandó fájlt",
-    "Choose a file to share as a link" : "Válasszon fájlt a hivatkozással történő megosztáshoz",
+    "Choose a file" : "Válasszon egy fájlt",
     "_{count} attachment_::_{count} attachments_" : ["{count} melléklet","{count} melléklet"],
     "Untitled message" : "Névtelen üzenet",
     "Expand composer" : "Szerkesztő kibontása",
@@ -182,6 +180,7 @@ OC.L10N.register(
     "Rich text" : "Formázott szöveg",
     "No messages in this folder" : "Nincs üzenet a mappában!",
     "No messages" : "Nincs üzenet",
+    "Choose" : "Válasszon",
     "Blind copy recipients only" : "Csak a rejtett másolatok címzettjei",
     "No subject" : "Nincs tárgy",
     "Later today – {timeLocale}" : "Később a mai nap – {timeLocale}",
@@ -631,6 +630,8 @@ OC.L10N.register(
     "Could not load your message" : "Nem sikerült betölteni az üzenetét",
     "Could not load the desired message" : "Nem sikerült betölteni a kért üzenetet",
     "Could not load the message" : "Nem sikerült betölteni az üzenetet",
-    "Error loading message" : "Hiba történt az üzenet betöltése közben"
+    "Error loading message" : "Hiba történt az üzenet betöltése közben",
+    "Choose a file to add as attachment" : "Válasszon mellékletként hozzáadandó fájlt",
+    "Choose a file to share as a link" : "Válasszon fájlt a hivatkozással történő megosztáshoz"
 },
 "nplurals=2; plural=(n != 1);");

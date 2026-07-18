@@ -182,7 +182,6 @@ OC.L10N.register(
     "Disable formatting" : "Gera sniðmótun óvirka",
     "Upload attachment" : "Senda inn viðhengi",
     "Add attachment from Files" : "Bæta við viðhengi úr skrám",
-    "Add share link from Files" : "Bæta við deilitengli úr skrám",
     "Smart picker" : "Snjall-veljari",
     "Request a read receipt" : "Biðja um leskvittun",
     "Sign message with S/MIME" : "Undirrita skilaboð með S/MIME",
@@ -194,9 +193,7 @@ OC.L10N.register(
     "Monday morning" : "Mánudagsmorgunn",
     "Custom date and time" : "Sérsniðin dagsetning og tími",
     "Enter a date" : "Settu inn dagsetningu",
-    "Choose" : "Velja",
-    "Choose a file to add as attachment" : "Veldu skrá til að setja sem viðhengi",
-    "Choose a file to share as a link" : "Veldu skrá til að deila sem tengli",
+    "Choose a file" : "Veldu skrá",
     "_{count} attachment_::_{count} attachments_" : ["{count} viðhengi","{count} viðhengi"],
     "Untitled message" : "Ónefnd skilaboð",
     "Expand composer" : "Þenja ritil",
@@ -210,6 +207,7 @@ OC.L10N.register(
     "Rich text" : "Sniðinn texti",
     "No messages in this folder" : "Engin skilaboð í þessari möppu",
     "No messages" : "Engin skilaboð",
+    "Choose" : "Velja",
     "Blind copy recipients only" : "Einungis viðtakendur dulinna afrita",
     "No subject" : "Ekkert viðfangsefni",
     "Later today – {timeLocale}" : "Síðar í dag – {timeLocale}",
@@ -698,6 +696,9 @@ OC.L10N.register(
     "Could not load your message" : "Gat ekki hlaðið inn skilaboðunum þínum",
     "Could not load the desired message" : "Gat ekki hlaðið inn umbeðnum skilaboðum",
     "Could not load the message" : "Gat ekki hlaðið inn skilaboðunum",
-    "Error loading message" : "Villa við hleðslu á skilaboðum"
+    "Error loading message" : "Villa við hleðslu á skilaboðum",
+    "Add share link from Files" : "Bæta við deilitengli úr skrám",
+    "Choose a file to add as attachment" : "Veldu skrá til að setja sem viðhengi",
+    "Choose a file to share as a link" : "Veldu skrá til að deila sem tengli"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

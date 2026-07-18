@@ -215,7 +215,6 @@ OC.L10N.register(
     "Disable formatting" : "Искључи форматирање",
     "Upload attachment" : "Закачи прилог",
     "Add attachment from Files" : "Додај прилог из фајлова",
-    "Add share link from Files" : "Додај везу дељења из Фајлова",
     "Smart picker" : "Паметни бирач",
     "Request a read receipt" : "Захтевај потврду о читању",
     "Sign message with S/MIME" : "Потпиши поруку са S/MIME",
@@ -227,10 +226,8 @@ OC.L10N.register(
     "Monday morning" : "Понедељак ујутру",
     "Custom date and time" : "Жељени датум и време",
     "Enter a date" : "Унеси датум",
-    "Choose" : "Изаберите",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Величина прилога прелази максимално довољену величину прилога {size}. Молимо вас да фајл поделите путем линка.","Величина прилога прелази максимално довољену величину прилога {size}. Молимо вас да фајлове поделите путем линка.","Величина прилога прелази максимално довољену величину прилога {size}. Молимо вас да фајлове поделите путем линка."],
-    "Choose a file to add as attachment" : "Изаберите фајл за прилог",
-    "Choose a file to share as a link" : "Одаберите фајл који желите да поделите као везу",
+    "Choose a file" : "Одаберите фајл",
     "_{count} attachment_::_{count} attachments_" : ["{count} прилог","{count} прилога","{count} прилога"],
     "Untitled message" : "Ненасловљена порука",
     "Expand composer" : "Развиј састављач",
@@ -244,6 +241,7 @@ OC.L10N.register(
     "Rich text" : "Обогаћени текст",
     "No messages in this folder" : "Нема порука у овој фасцикли",
     "No messages" : "Нема порука",
+    "Choose" : "Изаберите",
     "Blind copy recipients only" : "Само примаоци невидљиве копије",
     "No subject" : "Нема наслова",
     "{markup-start}Draft:{markup-end} {subject}" : "{markup-start}Нацрт:{markup-end} {subject}",
@@ -859,6 +857,9 @@ OC.L10N.register(
     "Could not load your message" : "Неуспело учитавање поруке",
     "Could not load the desired message" : "Неуспело учитавање жељене поруке",
     "Could not load the message" : "Неуспело учитавање поруке",
-    "Error loading message" : "Грешка при учитавању поруке"
+    "Error loading message" : "Грешка при учитавању поруке",
+    "Add share link from Files" : "Додај везу дељења из Фајлова",
+    "Choose a file to add as attachment" : "Изаберите фајл за прилог",
+    "Choose a file to share as a link" : "Одаберите фајл који желите да поделите као везу"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

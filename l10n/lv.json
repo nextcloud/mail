@@ -65,12 +65,11 @@
     "Subject" : "Temats",
     "Add attachment from Files" : "Pievienot pielikumu no Datnēm",
     "Enter a date" : "Ievadiet datumu",
-    "Choose" : "Izvēlēties",
-    "Choose a file to add as attachment" : "Izvēlēties datni, ko pievienot kā pielikumu",
-    "Choose a file to share as a link" : "Jāizvēlas datne, ko kopīgot kā saiti",
+    "Choose a file" : "Izvēlēties datni",
     "Confirm" : "Apstiprināt",
     "Revoke" : "Atsaukt",
     "No messages in this folder" : "Šajā mapē nav neviens ziņojums",
+    "Choose" : "Izvēlēties",
     "Later today – {timeLocale}" : "Vēlāk šodien – {timeLocale}",
     "Set reminder for later today" : "Iestatīt atgādinājumu vēlākam šodien",
     "Favorite" : "Izlasē",
@@ -182,6 +181,8 @@
     "Discard unsaved changes" : "Atmest nesaglabātās izmaiņas",
     "Could not load {tag}{name}{endtag}" : "Nevarēja ielādēt {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Radusies problēma, ielādējot {tag}{name}{endtag}",
-    "Error loading message" : "Kļūda ielādējot vēstuli"
+    "Error loading message" : "Kļūda ielādējot vēstuli",
+    "Choose a file to add as attachment" : "Izvēlēties datni, ko pievienot kā pielikumu",
+    "Choose a file to share as a link" : "Jāizvēlas datne, ko kopīgot kā saiti"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);"
 }

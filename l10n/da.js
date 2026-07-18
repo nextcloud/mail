@@ -194,7 +194,6 @@ OC.L10N.register(
     "Disable formatting" : "Deaktiver formatering",
     "Upload attachment" : "Upload vedhæftning",
     "Add attachment from Files" : "Vedhæft fra filer",
-    "Add share link from Files" : "Tilføj delingslink fra Filer",
     "Smart picker" : "Smart Vælger",
     "Request a read receipt" : "Anmod om en læsekvittering",
     "Sign message with S/MIME" : "Underskriv besked med S/MIME",
@@ -206,10 +205,8 @@ OC.L10N.register(
     "Monday morning" : "Mandag morgen",
     "Custom date and time" : "Brugerdefineret dato og tid",
     "Enter a date" : "Indtast en dato",
-    "Choose" : "Vælg",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Den vedhæftede fil overskrider den tilladte størrelse på vedhæftede filer på {size}. Del venligst filen via link i stedet.","De vedhæftede filer overskrider den tilladte størrelse på vedhæftede filer på {size}. Del venligst filerne via link i stedet."],
-    "Choose a file to add as attachment" : "Vælg en fil, der skal tilføjes som vedhæftning",
-    "Choose a file to share as a link" : "Vælg en fil der skal deles som link",
+    "Choose a file" : "Vælg en fil",
     "_{count} attachment_::_{count} attachments_" : ["{count} vedhæftet fil","{count} vedhæftede filer"],
     "Untitled message" : "Unavngivet besked",
     "Expand composer" : "Udvid composer",
@@ -223,6 +220,7 @@ OC.L10N.register(
     "Rich text" : "Formateret tekst",
     "No messages in this folder" : "Ingen beskeder i denne mappe",
     "No messages" : "Ingen beskeder",
+    "Choose" : "Vælg",
     "Blind copy recipients only" : "Kun blinde kopi-modtagere",
     "No subject" : "Intet emne",
     "{markup-start}Draft:{markup-end} {subject}" : "{markup-start}Kladde:{markup-end} {subject}",
@@ -590,6 +588,9 @@ OC.L10N.register(
     "Could not load your message" : "Din besked kunne ikke indlæses",
     "Could not load the desired message" : "Den ønskede besked kunne ikke indlæses",
     "Could not load the message" : "Beskeden kunne ikke indlæses",
-    "Error loading message" : "Fejl under indlæsning af besked"
+    "Error loading message" : "Fejl under indlæsning af besked",
+    "Add share link from Files" : "Tilføj delingslink fra Filer",
+    "Choose a file to add as attachment" : "Vælg en fil, der skal tilføjes som vedhæftning",
+    "Choose a file to share as a link" : "Vælg en fil der skal deles som link"
 },
 "nplurals=2; plural=(n != 1);");
