@@ -232,7 +232,6 @@ OC.L10N.register(
     "Disable formatting" : "Onemogući oblikovanje",
     "Upload attachment" : "Otpremi privitak",
     "Add attachment from Files" : "Dodaj privitak iz datoteka",
-    "Add share link from Files" : "Dodaj poveznicu za dijeljenje iz aplikacije Datoteke",
     "Smart picker" : "Pametni odabir",
     "Request a read receipt" : "Zatražite potvrdu o čitanju",
     "Sign message with S/MIME" : "Potpiši poruku S/MIME-om",
@@ -244,10 +243,8 @@ OC.L10N.register(
     "Monday morning" : "U ponedjeljak ujutro",
     "Custom date and time" : "Prilagođeni datum i vrijeme",
     "Enter a date" : "Unesi datum",
-    "Choose" : "Odaberite",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Privitak prekoračuje dopuštenu veličinu privitaka od {size}. Dijelite datoteku putem poveznice.","Privici prekoračuju dopuštenu veličinu privitaka od {size}. Dijelite datoteke putem poveznice.","Privici prekoračuju dopuštenu veličinu privitaka od {size}. Dijelite datoteke putem poveznice."],
-    "Choose a file to add as attachment" : "Izaberi datoteku kao privitak",
-    "Choose a file to share as a link" : "Izaberi datoteku za dijeljenje putem poveznice",
+    "Choose a file" : "Odaberi datoteku",
     "_{count} attachment_::_{count} attachments_" : ["{count} privitak","{count} privitka","{count} privitaka"],
     "Untitled message" : "Poruka bez naslova",
     "Expand composer" : "Proširi sastavljač poruke",
@@ -261,6 +258,7 @@ OC.L10N.register(
     "Rich text" : "Bogat tekst",
     "No messages in this folder" : "Nema poruka u ovoj mapi",
     "No messages" : "Nema poruka",
+    "Choose" : "Odaberite",
     "Blind copy recipients only" : "Samo primatelji skrivenih kopija poruke",
     "No subject" : "Bez predmeta",
     "{markup-start}Draft:{markup-end} {subject}" : "{markup-start}Skica:{markup-end} {subject}",
@@ -893,6 +891,9 @@ OC.L10N.register(
     "Could not load your message" : "Učitavanje vaše poruke nije uspjelo",
     "Could not load the desired message" : "Ne može se učitati željena poruka",
     "Could not load the message" : "Poruku nije moguće učitati",
-    "Error loading message" : "Pogreška pri učitavanju poruke"
+    "Error loading message" : "Pogreška pri učitavanju poruke",
+    "Add share link from Files" : "Dodaj poveznicu za dijeljenje iz aplikacije Datoteke",
+    "Choose a file to add as attachment" : "Izaberi datoteku kao privitak",
+    "Choose a file to share as a link" : "Izaberi datoteku za dijeljenje putem poveznice"
 },
 "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");

@@ -184,7 +184,6 @@
     "Disable formatting" : "إيقاف التنسيق",
     "Upload attachment" : "رفع المُرفَقات",
     "Add attachment from Files" : "إضافة مرفقات من الملفات",
-    "Add share link from Files" : "إضافة رابط المشاركة من الملفات",
     "Smart picker" : "اللاقط الذكي Smart picker",
     "Request a read receipt" : "طلب إيصال بالتسليم read reciept",
     "Sign message with S/MIME" : "توقيع الرسالة مع S/MIME",
@@ -196,10 +195,7 @@
     "Monday morning" : "أول صباح عمل في الأسبوع",
     "Custom date and time" : "وقت وتاريخ مخصص",
     "Enter a date" : "أدخِل تاريخاً",
-    "Choose" : "إختر",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["تجاوزت المرفقات حجم المرفقات المسموح به وهو {size}. يرجى مشاركة الملفات عبر رابط بدلا من ذلك.","تجاوزت المرفقات حجم المرفقات المسموح به وهو {size}. يرجى مشاركة الملفات عبر رابط بدلا من ذلك.","تجاوزت المرفقات حجم المرفقات المسموح به وهو {size}. يرجى مشاركة الملفات عبر رابط بدلا من ذلك.","تجاوزت المرفقات حجم المرفقات المسموح به وهو {size}. يرجى مشاركة الملفات عبر رابط بدلا من ذلك.","تجاوزت المرفقات حجم المرفقات المسموح به وهو {size}. يرجى مشاركة الملفات عبر رابط بدلا من ذلك.","تجاوزت المرفقات حجم المرفقات المسموح به وهو {size}. يرجى مشاركة الملفات عبر رابط بدلا من ذلك."],
-    "Choose a file to add as attachment" : "إختَر ملفاً لإضافته كمُرفَقٍ",
-    "Choose a file to share as a link" : "إختَر ملفاً لمُشاركته كرابطٍ",
     "_{count} attachment_::_{count} attachments_" : ["{count} مرفقات","{count} مرفق","{count} مرفقات","{count} مرفقات","{count} مرفقات","{count} مُرفَقات"],
     "Untitled message" : "رسالة بدون عنوان",
     "Expand composer" : "تمديد الناظِم composer",
@@ -212,6 +208,7 @@
     "Plain text" : "نصٌّ جَلِيٌّ plain text",
     "Rich text" : "نصٌّ مُنسَّقٌ rich text",
     "No messages" : "لاتوجد رسائل",
+    "Choose" : "إختر",
     "Blind copy recipients only" : "مُستَلِمِي النُّسخ المَخفِيّة bcc فقط",
     "No subject" : "لا يوجد موضوع",
     "Later today – {timeLocale}" : "في وقت لاحقٍ اليوم – {timeLocale}",
@@ -718,6 +715,9 @@
     "Could not load your message" : "تعذّر تحميل رسالتك",
     "Could not load the desired message" : "تعذّر تحميل الرسالة المطلوبة",
     "Could not load the message" : "تعذّر تحميل الرسالة",
-    "Error loading message" : "حدث خطأ أثناء تحميل الرسالة"
+    "Error loading message" : "حدث خطأ أثناء تحميل الرسالة",
+    "Add share link from Files" : "إضافة رابط المشاركة من الملفات",
+    "Choose a file to add as attachment" : "إختَر ملفاً لإضافته كمُرفَقٍ",
+    "Choose a file to share as a link" : "إختَر ملفاً لمُشاركته كرابطٍ"
 },"pluralForm" :"nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;"
 }

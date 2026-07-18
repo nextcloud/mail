@@ -196,7 +196,6 @@ OC.L10N.register(
     "Disable formatting" : "フォーマットを無効化する",
     "Upload attachment" : "添付ファイルをアップロードする",
     "Add attachment from Files" : "ファイルから添付ファイルの追加",
-    "Add share link from Files" : "ファイル から共有リンクを追加",
     "Smart picker" : "スマートピッカー",
     "Request a read receipt" : "開封の通知を要求する",
     "Sign message with S/MIME" : "S/MIMEでメッセージに署名する",
@@ -208,10 +207,8 @@ OC.L10N.register(
     "Monday morning" : "月曜日の朝",
     "Custom date and time" : "カスタム日時＆時間",
     "Enter a date" : "日付を入力してください",
-    "Choose" : "選択",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["添付ファイルのサイズが 許可された{size}を超えています。代わりにリンクでファイルを共有してください。"],
-    "Choose a file to add as attachment" : "添付として追加するファイルを選択",
-    "Choose a file to share as a link" : "共有リンクにして送信するファイルを選択",
+    "Choose a file" : "ファイルを選択する",
     "_{count} attachment_::_{count} attachments_" : ["{count} 個の添付ファイル"],
     "Untitled message" : "無題のメッセージ",
     "Expand composer" : "コンポーザーを展開する",
@@ -229,6 +226,7 @@ OC.L10N.register(
     "Rich text" : "リッチテキスト",
     "No messages in this folder" : "このフォルダーにメッセージはありません",
     "No messages" : "メッセージはありません",
+    "Choose" : "選択",
     "Blind copy recipients only" : "BCC受信者のみ",
     "No subject" : "件名無し",
     "Later today – {timeLocale}" : "今日この後 – {timeLocale}",
@@ -744,6 +742,9 @@ OC.L10N.register(
     "Could not load your message" : "あなたのメッセージを読み込めませんでした",
     "Could not load the desired message" : "目的のメッセージを読み込めませんでした",
     "Could not load the message" : "メッセージを読み込めませんでした",
-    "Error loading message" : "メッセージ読み込みエラー"
+    "Error loading message" : "メッセージ読み込みエラー",
+    "Add share link from Files" : "ファイル から共有リンクを追加",
+    "Choose a file to add as attachment" : "添付として追加するファイルを選択",
+    "Choose a file to share as a link" : "共有リンクにして送信するファイルを選択"
 },
 "nplurals=1; plural=0;");

@@ -153,10 +153,8 @@ OC.L10N.register(
     "Monday morning" : "Ponedeljek zjutraj",
     "Custom date and time" : "Datum in čas po meri",
     "Enter a date" : "Vpis datuma ...",
-    "Choose" : "Izbor",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Velikost priloge presega dovoljeno vrednost {size}. Priporočljivo je omogočiti souporabo prek povezave.","Velikost prilog presega dovoljeno vrednost {size}. Priporočljivo je omogočiti souporabo prek povezave.","Velikost prilog presega dovoljeno vrednost {size}. Priporočljivo je omogočiti souporabo prek povezave.","Velikost prilog presega dovoljeno vrednost {size}. Priporočljivo je omogočiti souporabo prek povezave."],
-    "Choose a file to add as attachment" : "Izbor datoteke za prilogo",
-    "Choose a file to share as a link" : "Izberite datoteko, ki jo želite dati v skupno rabo kot povezavo",
+    "Choose a file" : "Izbor datoteke",
     "_{count} attachment_::_{count} attachments_" : ["{count} priloga","{count} prilogi","{count} priloge","{count} prilog"],
     "Untitled message" : "Nenaslovljeno sporočilo",
     "Confirm" : "Potrdi",
@@ -165,6 +163,7 @@ OC.L10N.register(
     "Rich text" : "Obogateno besedilo",
     "No messages in this folder" : "V tej mapi ni sporočil",
     "No messages" : "Ni sporočil",
+    "Choose" : "Izbor",
     "Blind copy recipients only" : "Le prejemniki skrite kopije",
     "No subject" : "Ni zadeve",
     "Later today – {timeLocale}" : "Danes – {timeLocale}",
@@ -525,6 +524,8 @@ OC.L10N.register(
     "Could not load your message" : "Sporočila ni mogoče naložiti",
     "Could not load the desired message" : "Želenega sporočila ni mogoče naložiti",
     "Could not load the message" : "Sporočila ni mogoče naložiti",
-    "Error loading message" : "Napaka nalaganja sporočila"
+    "Error loading message" : "Napaka nalaganja sporočila",
+    "Choose a file to add as attachment" : "Izbor datoteke za prilogo",
+    "Choose a file to share as a link" : "Izberite datoteko, ki jo želite dati v skupno rabo kot povezavo"
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

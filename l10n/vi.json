@@ -79,13 +79,11 @@
     "Request a read receipt" : "Yêu cầu xác nhận đã đọc",
     "Encrypt message with Mailvelope" : "Mã hóa thư bằng Mailvelope",
     "Enter a date" : "Nhập ngày",
-    "Choose" : "Chọn",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Các tệp đính kèm vượt quá kích thước được cho phép là {size}. Thay vào đó, hãy chia sẻ các tệp qua liên kết."],
-    "Choose a file to add as attachment" : "Chọn một tệp để thêm dưới dạng tệp đính kèm",
-    "Choose a file to share as a link" : "Chọn một tệp để chia sẻ dưới dạng liên kết",
     "Confirm" : "Xác nhận",
     "Revoke" : "Thu hồi",
     "No messages" : "Không có tin nhắn",
+    "Choose" : "Chọn",
     "Blind copy recipients only" : "Chỉ người nhận bản sao ẩn",
     "Later today – {timeLocale}" : "Sau này - {timeLocale}",
     "Tomorrow – {timeLocale}" : "Ngày mai - {timeLocale}",
@@ -273,6 +271,8 @@
     "Could not load your message" : "Không thể tải tin nhắn của bạn",
     "Could not load the desired message" : "Không thể tải tin nhắn mong muốn",
     "Could not load the message" : "Không thể tải tin nhắn",
-    "Error loading message" : "Lỗi khi tải tin nhắn"
+    "Error loading message" : "Lỗi khi tải tin nhắn",
+    "Choose a file to add as attachment" : "Chọn một tệp để thêm dưới dạng tệp đính kèm",
+    "Choose a file to share as a link" : "Chọn một tệp để chia sẻ dưới dạng liên kết"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

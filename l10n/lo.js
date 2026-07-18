@@ -219,7 +219,6 @@ OC.L10N.register(
     "Disable formatting" : "Disable formatting",
     "Upload attachment" : "Upload attachment",
     "Add attachment from Files" : "Add attachment from Files",
-    "Add share link from Files" : "Add share link from Files",
     "Smart picker" : "Smart picker",
     "Request a read receipt" : "Request a read receipt",
     "Sign message with S/MIME" : "Sign message with S/MIME",
@@ -231,10 +230,8 @@ OC.L10N.register(
     "Monday morning" : "Monday morning",
     "Custom date and time" : "Custom date and time",
     "Enter a date" : "Enter a date",
-    "Choose" : "ເລືອກ",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["The attachments exceed the allowed attachments size of {size}. Please share the files via link instead."],
-    "Choose a file to add as attachment" : "Choose a file to add as attachment",
-    "Choose a file to share as a link" : "Choose a file to share as a link",
+    "Choose a file" : "ເລືອກຟາຍ",
     "_{count} attachment_::_{count} attachments_" : ["{count} attachments"],
     "Untitled message" : "Untitled message",
     "Expand composer" : "Expand composer",
@@ -248,6 +245,7 @@ OC.L10N.register(
     "Rich text" : "Rich text",
     "No messages in this folder" : "No messages in this folder",
     "No messages" : "No messages",
+    "Choose" : "ເລືອກ",
     "Blind copy recipients only" : "Blind copy recipients only",
     "No subject" : "No subject",
     "{markup-start}Draft:{markup-end} {subject}" : "{markup-start}Draft:{markup-end} {subject}",
@@ -866,6 +864,9 @@ OC.L10N.register(
     "Could not load your message" : "Could not load your message",
     "Could not load the desired message" : "Could not load the desired message",
     "Could not load the message" : "Could not load the message",
-    "Error loading message" : "Error loading message"
+    "Error loading message" : "Error loading message",
+    "Add share link from Files" : "Add share link from Files",
+    "Choose a file to add as attachment" : "Choose a file to add as attachment",
+    "Choose a file to share as a link" : "Choose a file to share as a link"
 },
 "nplurals=1; plural=0;");
