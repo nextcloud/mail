@@ -466,6 +466,36 @@ return [
 			'verb' => 'GET',
 		],
 		[
+			'name' => 'oidcIntegration#index',
+			'url' => '/api/integration/oidc/providers',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'oidcIntegration#create',
+			'url' => '/api/integration/oidc/providers',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'oidcIntegration#update',
+			'url' => '/api/integration/oidc/providers/{id}',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'oidcIntegration#destroy',
+			'url' => '/api/integration/oidc/providers/{id}',
+			'verb' => 'DELETE',
+		],
+		[
+			'name' => 'oidcIntegration#authorize',
+			'url' => '/integration/oidc-auth/start',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'oidcIntegration#oauthRedirect',
+			'url' => '/integration/oidc-auth',
+			'verb' => 'GET',
+		],
+		[
 			'name' => 'microsoftIntegration#configure',
 			'url' => '/api/integration/microsoft',
 			'verb' => 'POST',
