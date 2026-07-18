@@ -3,27 +3,23 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<Treeselect
-		ref="Treeselect"
-		v-model="selected"
+	<NcSelect
+		:input-label="label"
 		:options="mailboxes"
-		:multiple="false"
-		:clearable="false"
-		:disabled="disabled" />
+		label="value"
+		:model-value="selectedOption"
+		:disabled="disabled"
+		@update:modelValue="update" />
 </template>
 
 <script>
-import Treeselect from '@riophae/vue-treeselect'
-import { mapStores } from 'pinia'
+import { NcSelect } from '@nextcloud/vue'
 import useMainStore from '../store/mainStore.js'
-import { mailboxHasRights } from '../util/acl.js'
-
-import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 export default {
 	name: 'MailboxInlinePicker',
 	components: {
-		Treeselect,
+		NcSelect,
 	},
 
 	props: {
@@ -32,27 +28,33 @@ export default {
 			required: true,
 		},
 
-		disabled: {
-			type: Boolean,
-			default: false,
+		label: {
+			type: String,
+			default: '',
 		},
 
 		value: {
 			type: Number,
 			default: undefined,
 		},
-	},
 
-	data() {
-		return {
-			selected: this.value,
-		}
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	computed: {
-		...mapStores(useMainStore),
+		mainStore() {
+			return useMainStore()
+		},
+
 		mailboxes() {
 			return this.getMailboxes()
+		},
+
+		selectedOption() {
+			return this.mailboxes.find((option) => option.id === this.value) || null
 		},
 	},
 
@@ -66,66 +68,20 @@ export default {
 	},
 
 	methods: {
-		getMailboxes(mailboxId) {
-			let mailboxes = []
-			if (!mailboxId) {
-				mailboxes = this.mainStore.getMailboxes(this.account.accountId)
-			} else {
-				mailboxes = this.mainStore.getSubMailboxes(mailboxId)
-			}
-			mailboxes = mailboxes.filter((mailbox) => mailboxHasRights(mailbox, 'i'))
-			return mailboxes.map((mailbox) => {
-				return {
+		getMailboxes() {
+			const mailboxes = []
+			for (const mailbox of this.mainStore.getRecursiveMailboxIterator(this.account.accountId)) {
+				mailboxes.push({
+					value: mailbox.name,
 					id: mailbox.databaseId,
-					label: mailbox.displayName,
-					children: mailbox.mailboxes.length > 0 ? this.getMailboxes(mailbox.databaseId) : '',
-				}
-			})
+				})
+			}
+			return mailboxes
+		},
+
+		update(value) {
+			this.$emit('update', value ? value.id : 0)
 		},
 	},
 }
 </script>
-
-<style>
-.vue-treeselect__control {
-	padding: 0;
-	border: 0;
-	width: 250px;
-}
-
-.vue-treeselect__control-arrow-container {
-	display: none;
-}
-
-.vue-treeselect--searchable .vue-treeselect__input-container {
-	padding-inline-start: 0;
-	background-color: var(--color-main-background)
-}
-
-input.vue-treeselect__input {
-	margin: 0;
-	padding: 0;
-	border: 1px solid var(--color-border-maxcontrast) !important;
-}
-
-.vue-treeselect__menu {
-	background: var(--color-main-background);
-}
-
-.vue-treeselect--single .vue-treeselect__option--selected {
-	background: var(--color-primary-element-light);
-	border-radius: var(--border-radius-large);
-}
-
-.vue-treeselect__option.vue-treeselect__option--highlight,
-.vue-treeselect__option:hover,
-.vue-treeselect__option:focus {
-	border-radius: var(--border-radius-large);
-	}
-
-.vue-treeselect__placeholder, .vue-treeselect__single-value {
-	line-height: 34px;
-	color: var(--color-main-text);
-}
-
-</style>
