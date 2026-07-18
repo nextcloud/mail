@@ -40,11 +40,10 @@
     "About" : "A prepaus",
     "From" : "De",
     "Monday morning" : "Diluns matin",
-    "Choose" : "Causir",
-    "Choose a file to add as attachment" : "Causissètz un fichièr de jónher al messatge",
     "Confirm" : "Confirmar",
     "Revoke" : "Revocar",
     "No messages" : "Cap de messatge",
+    "Choose" : "Causir",
     "Tomorrow – {timeLocale}" : "Deman – {timeLocale}",
     "Favorite" : "Favorit",
     "Read" : "Legit",
@@ -125,6 +124,7 @@
     "Error while sharing file" : "Error pendent lo partiment del fichièr",
     "{from}\n{subject}" : "{from}\n{subject}",
     "Message sent" : "Messatge mandat",
-    "Error loading message" : "Error al moment del cargament del messatge"
+    "Error loading message" : "Error al moment del cargament del messatge",
+    "Choose a file to add as attachment" : "Causissètz un fichièr de jónher al messatge"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

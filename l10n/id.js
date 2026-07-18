@@ -231,7 +231,6 @@ OC.L10N.register(
     "Disable formatting" : "Nonaktifkan pemformatan",
     "Upload attachment" : "Unggah lampiran",
     "Add attachment from Files" : "Tambahkan lampiran dari Berkas",
-    "Add share link from Files" : "Tambahkan tautan berbagi dari Berkas",
     "Smart picker" : "Pemilih cerdas",
     "Request a read receipt" : "Minta tanda terima baca",
     "Sign message with S/MIME" : "Tandatangani pesan dengan S/MIME",
@@ -243,10 +242,8 @@ OC.L10N.register(
     "Monday morning" : "Senin pagi",
     "Custom date and time" : "Tanggal dan waktu kustom",
     "Enter a date" : "Masukkan tanggal",
-    "Choose" : "Pilih",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Lampiran melebihi ukuran lampiran yang diizinkan sebesar {size}. Harap bagikan berkas melalui tautan sebagai gantinya."],
-    "Choose a file to add as attachment" : "Pilih berkas untuk ditambahkan sebagai lampiran",
-    "Choose a file to share as a link" : "Pilih berkas untuk dibagikan sebagai tautan",
+    "Choose a file" : "Pilih file",
     "_{count} attachment_::_{count} attachments_" : ["{count} lampiran"],
     "Untitled message" : "Pesan tanpa judul",
     "Expand composer" : "Perluas penyusun",
@@ -260,6 +257,7 @@ OC.L10N.register(
     "Rich text" : "Teks kaya",
     "No messages in this folder" : "Tidak ada pesan di folder ini",
     "No messages" : "Tidak ada pesan",
+    "Choose" : "Pilih",
     "Blind copy recipients only" : "Hanya penerima tembusan tersembunyi",
     "No subject" : "Tanpa subjek",
     "{markup-start}Draft:{markup-end} {subject}" : "{markup-start}Draf:{markup-end} {subject}",
@@ -886,6 +884,9 @@ OC.L10N.register(
     "Could not load your message" : "Tidak dapat memuat pesan Anda",
     "Could not load the desired message" : "Tidak dapat memuat pesan yang diinginkan",
     "Could not load the message" : "Tidak dapat memuat pesan",
-    "Error loading message" : "Kesalahan saat memuat pesan"
+    "Error loading message" : "Kesalahan saat memuat pesan",
+    "Add share link from Files" : "Tambahkan tautan berbagi dari Berkas",
+    "Choose a file to add as attachment" : "Pilih berkas untuk ditambahkan sebagai lampiran",
+    "Choose a file to share as a link" : "Pilih berkas untuk dibagikan sebagai tautan"
 },
 "nplurals=1; plural=0;");

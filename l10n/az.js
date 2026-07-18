@@ -24,9 +24,8 @@ OC.L10N.register(
     "Refresh" : "Yenilə",
     "Subject" : "Mövzu",
     "Enter a date" : "Tarixi əlavə edin",
-    "Choose" : "Seç",
-    "Choose a file to add as attachment" : "Əlavə ediləcək faylı seçin",
     "Confirm" : "Təsdiq edin",
+    "Choose" : "Seç",
     "Favorite" : "İstəkli",
     "Read" : "Oxu",
     "Back" : "Geri",
@@ -79,6 +78,7 @@ OC.L10N.register(
     "Junk" : "Önəmsiz",
     "Sent" : "Göndərildi",
     "Trash" : "Zibil",
-    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi"
+    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi",
+    "Choose a file to add as attachment" : "Əlavə ediləcək faylı seçin"
 },
 "nplurals=2; plural=(n != 1);");

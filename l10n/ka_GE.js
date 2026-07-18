@@ -49,10 +49,10 @@ OC.L10N.register(
     "Subject" : "სათაური",
     "Upload attachment" : "დანართის ატვირთვა",
     "Add attachment from Files" : "დანართის დამატება ფაილებიდან",
-    "Choose" : "აირჩიეთ",
-    "Choose a file to add as attachment" : "დანართად დასამატებლად აირჩიეთ ფაილი",
+    "Choose a file" : "აირჩიეთ ფაილი",
     "Confirm" : "დადასტურება",
     "Revoke" : "წვდომის გაუქმება",
+    "Choose" : "აირჩიეთ",
     "Unfavorite" : "რჩეულებიდან ამოშლა",
     "Favorite" : "რჩეული",
     "Read" : "წაკითხვა",
@@ -143,6 +143,7 @@ OC.L10N.register(
     "Could not load your message" : "თქვენი წერილის ჩატვირთვა ვერ მოხერხდა",
     "Could not load the desired message" : "სასურველი წერილის ჩატვირთვა ვერ მოხერხდა",
     "Could not load the message" : "წერილის ჩატვირთვა ვერ მოხერხდა",
-    "Error loading message" : "წერილის ჩატვირთვისას წარმოიშვა შეცდომა"
+    "Error loading message" : "წერილის ჩატვირთვისას წარმოიშვა შეცდომა",
+    "Choose a file to add as attachment" : "დანართად დასამატებლად აირჩიეთ ფაილი"
 },
 "nplurals=2; plural=(n!=1);");

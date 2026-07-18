@@ -92,16 +92,15 @@
     "Add attachment from Files" : "Agregar adjunto desd Archivos",
     "Request a read receipt" : "Solicitar acuse de lectura",
     "Encrypt message with Mailvelope" : "Cifrar el mensaje con Mailvelope",
-    "Choose" : "Seleccionar",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Los archivos adjuntos exceden el tamaño permitido de {size}. Por favor comparte a través de  un enlace.","Los archivos adjuntos superan el tamaño permitido de {size}. Por favor envía los archivos mediante un enlace.","Los archivos adjuntos superan el tamaño permitido de {size}. Por favor envía los archivos mediante un enlace."],
-    "Choose a file to add as attachment" : "Selecciona el archivo a agregar como adjunto",
-    "Choose a file to share as a link" : "Selecciona un archivo para compartir como enlace",
+    "Choose a file" : "Selecciona un archivo",
     "Confirm" : "Confirmar",
     "Revoke" : "Revocar",
     "Plain text" : "Texto simple",
     "Rich text" : "Texto enriquecido",
     "No messages in this folder" : "No hay mensajes en esta carpeta",
     "No messages" : "No hay mensajes",
+    "Choose" : "Seleccionar",
     "Unfavorite" : "Desmarcar como favorito",
     "Favorite" : "Favorito",
     "Read" : "Leer",
@@ -193,6 +192,8 @@
     "Could not load your message" : "No fue posible cargar tu mensaje",
     "Could not load the desired message" : "No fue posible cargar el mensaje deseado",
     "Could not load the message" : "No fue posible cargar el mensaje",
-    "Error loading message" : "Se presentó un error al cargar el mensaje"
+    "Error loading message" : "Se presentó un error al cargar el mensaje",
+    "Choose a file to add as attachment" : "Selecciona el archivo a agregar como adjunto",
+    "Choose a file to share as a link" : "Selecciona un archivo para compartir como enlace"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

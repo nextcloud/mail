@@ -175,7 +175,6 @@ OC.L10N.register(
     "Disable formatting" : "Desactivar formato",
     "Upload attachment" : "Cargar adjunto",
     "Add attachment from Files" : "Agregar adjunto desd Archivos",
-    "Add share link from Files" : "Agregar un enlace adjunto desde Archivos",
     "Smart picker" : "Selector inteligente",
     "Request a read receipt" : "Solicitar confirmación de lectura",
     "Sign message with S/MIME" : "Firmar mensaje con S/MIME",
@@ -187,9 +186,7 @@ OC.L10N.register(
     "Monday morning" : "Lunes por la mañana",
     "Custom date and time" : "Fecha y hora personalizada",
     "Enter a date" : "Ingrese una fecha",
-    "Choose" : "Seleccionar",
-    "Choose a file to add as attachment" : "Selecciona el archivo a agregar como adjunto",
-    "Choose a file to share as a link" : "Eligir un archivo para compartir como enlace",
+    "Choose a file" : "Selecciona un archivo",
     "_{count} attachment_::_{count} attachments_" : ["{count} adjunto","{count} adjuntos","{count} adjuntos"],
     "Untitled message" : "Mensaje sin título",
     "Expand composer" : "Expandir redactor",
@@ -203,6 +200,7 @@ OC.L10N.register(
     "Rich text" : "Texto enriquecido",
     "No messages in this folder" : "No hay mensajes en esta carpeta",
     "No messages" : "Sin mensajes",
+    "Choose" : "Seleccionar",
     "Blind copy recipients only" : "Solo destinatarios de copia oculta",
     "No subject" : "Sin asunto",
     "Set reminder for later today" : "Configurar recordatorio para hoy, más tarde",
@@ -377,6 +375,9 @@ OC.L10N.register(
     "Could not load your message" : "No fue posible cargar tu mensaje",
     "Could not load the desired message" : "No fue posible cargar el mensaje deseado",
     "Could not load the message" : "No fue posible cargar el mensaje",
-    "Error loading message" : "Se presentó un error al cargar el mensaje"
+    "Error loading message" : "Se presentó un error al cargar el mensaje",
+    "Add share link from Files" : "Agregar un enlace adjunto desde Archivos",
+    "Choose a file to add as attachment" : "Selecciona el archivo a agregar como adjunto",
+    "Choose a file to share as a link" : "Eligir un archivo para compartir como enlace"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

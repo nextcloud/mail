@@ -198,7 +198,6 @@ OC.L10N.register(
     "Disable formatting" : "Вимкнути форматування",
     "Upload attachment" : "Завантажити вкладення",
     "Add attachment from Files" : "Додати вкладення з Файлів",
-    "Add share link from Files" : "Додати посилання на спільний доступ з Файлів",
     "Smart picker" : "Асистент розумного вибору",
     "Request a read receipt" : "Запитати підтвердження про прочитання",
     "Sign message with S/MIME" : "Підписати лист за допомогою S/MIME",
@@ -210,10 +209,8 @@ OC.L10N.register(
     "Monday morning" : "У понеділок вранці",
     "Custom date and time" : "Власна дата та час",
     "Enter a date" : "Введіть дату",
-    "Choose" : "Вибрати",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Вкладення перевищує дозволений розмір {size}. Рекомендуємо замість цього поділітися файлами через посилання.","Вкладення перевищують дозволений розмір {size}. Рекомендуємо замість цього поділітися файлами через посилання.","Вкладення перевищують дозволений розмір {size}. Рекомендуємо замість цього поділітися файлами через посилання.","Вкладення перевищують дозволений розмір {size}. Рекомендуємо замість цього поділітися файлами через посилання."],
-    "Choose a file to add as attachment" : "Виберіть файл для вкладення",
-    "Choose a file to share as a link" : "Виберіть файл, яким ви поділитеся через посилання",
+    "Choose a file" : "Виберіть файл",
     "_{count} attachment_::_{count} attachments_" : ["{count} долучений файл","{count} долучені файли","{count} долучених файлів","{count} долучених файлів"],
     "Untitled message" : "Лист без назви",
     "Expand composer" : "Розгорнути редактор",
@@ -231,6 +228,7 @@ OC.L10N.register(
     "Rich text" : "Текст з форматуванням",
     "No messages in this folder" : "Відсутні повідомлення у цій теці",
     "No messages" : "Відсутні повідомлення",
+    "Choose" : "Вибрати",
     "Blind copy recipients only" : "Лише отримувачі у прихованій копії",
     "No subject" : "Без теми",
     "{markup-start}Draft:{markup-end} {subject}" : "{markup-start}Draft:{markup-end} {subject}",
@@ -841,6 +839,9 @@ OC.L10N.register(
     "Could not load your message" : "Неможливо завантажити повідомлення",
     "Could not load the desired message" : "Неможливо завантажити обране повідомлення",
     "Could not load the message" : "Неможливо завантажити повідомлення",
-    "Error loading message" : "Помилка завантаження повідомлення."
+    "Error loading message" : "Помилка завантаження повідомлення.",
+    "Add share link from Files" : "Додати посилання на спільний доступ з Файлів",
+    "Choose a file to add as attachment" : "Виберіть файл для вкладення",
+    "Choose a file to share as a link" : "Виберіть файл, яким ви поділитеся через посилання"
 },
 "nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);");
