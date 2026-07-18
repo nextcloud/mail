@@ -90,7 +90,7 @@ export default {
 		await this.fetchMessages()
 	},
 
-	unmounted() {
+	destroyed() {
 		clearInterval(this.refreshInterval)
 	},
 

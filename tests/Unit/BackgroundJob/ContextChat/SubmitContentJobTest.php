@@ -121,7 +121,6 @@ class SubmitContentJobTest extends TestCase {
 		];
 	}
 
-
 	public function testRunWithoutContextChat(): void {
 		$this->contentManager->expects($this->once())
 			->method('isContextChatAvailable')

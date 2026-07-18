@@ -14,12 +14,14 @@
 				v-model="changeName"
 				type="text"
 				class="alias-form__form__input"
+				:aria-label="t('mail', 'Alias name')"
 				required>
 			<input
 				v-model="changeAlias"
 				:disabled="alias.provisioned"
 				type="email"
 				class="alias-form__form__input"
+				:aria-label="t('mail', 'Email address')"
 				required>
 		</form>
 		<div v-else>

@@ -24,8 +24,10 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IUser;
 use OCP\IUserManager;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Notification\IManager;
 use OCP\Notification\INotification;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -41,6 +43,7 @@ class DelegationServiceTest extends TestCase {
 	private IUserManager&MockObject $userManager;
 	private IManager&MockObject $notificationManager;
 	private ITimeFactory&MockObject $timeFactory;
+	private IEventDispatcher&MockObject $eventDispatcher;
 	private LoggerInterface&MockObject $logger;
 	private DelegationService $service;
 
@@ -58,6 +61,7 @@ class DelegationServiceTest extends TestCase {
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->notificationManager = $this->createMock(IManager::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
+		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->service = new DelegationService(
@@ -70,6 +74,7 @@ class DelegationServiceTest extends TestCase {
 			$this->userManager,
 			$this->notificationManager,
 			$this->timeFactory,
+			$this->eventDispatcher,
 			$this->logger,
 		);
 
@@ -144,6 +149,7 @@ class DelegationServiceTest extends TestCase {
 
 	public function testFindDelegatedToUsersForAccount(): void {
 		$delegation = new Delegation();
+		$delegation->setId(10);
 		$delegation->setAccountId(1);
 		$delegation->setUserId('delegatee');
 
@@ -152,10 +158,15 @@ class DelegationServiceTest extends TestCase {
 			->with(1)
 			->willReturn([$delegation]);
 
+		$user = $this->createMock(IUser::class);
+		$user->method('getDisplayName')->willReturn('Delegatee Name');
+		$this->userManager->method('get')->with('delegatee')->willReturn($user);
+
 		$result = $this->service->findDelegatedToUsersForAccount(1);
 
 		$this->assertCount(1, $result);
 		$this->assertEquals('delegatee', $result[0]->getUserId());
+		$this->assertEquals('Delegatee Name', $result[0]->getDisplayName());
 	}
 
 	public function testUnDelegateSuccess(): void {
@@ -396,5 +407,21 @@ class DelegationServiceTest extends TestCase {
 			->with($notification);
 
 		$this->service->unDelegate($this->account, 'delegatee', 'owner');
+	}
+
+	public function testLogDelegatedActionDispatchesEvent(): void {
+		$this->eventDispatcher->expects($this->once())
+			->method('dispatchTyped')
+			->with($this->callback(fn ($event) => $event instanceof CriticalActionPerformedEvent
+				&& $event->getLogMessage() === 'delegatee performed an action on behalf of owner'));
+
+		$this->service->logDelegatedAction('delegatee', 'owner', 'delegatee performed an action on behalf of owner');
+	}
+
+	public function testLogDelegatedActionSkipsWhenNotDelegated(): void {
+		$this->eventDispatcher->expects($this->never())
+			->method('dispatchTyped');
+
+		$this->service->logDelegatedAction('owner', 'owner', 'owner performed an action on their own account');
 	}
 }

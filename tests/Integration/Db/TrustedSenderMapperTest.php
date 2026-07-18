@@ -70,7 +70,6 @@ class TrustedSenderMapperTest extends TestCase {
 				'user_id' => $qb->createNamedParameter($uid),
 				'email' => $qb->createNamedParameter('next.cloud'),
 				'type' => $qb->createNamedParameter('domain'),
-
 			])
 			->executeStatement();
 

@@ -24,16 +24,13 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class SmimeCertificatesController extends Controller {
-	private ?string $userId;
-	private SmimeService $certificateService;
-
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		?string $userId,
-		SmimeService $certificateService) {
+		private ?string $userId,
+		private SmimeService $certificateService,
+	) {
 		parent::__construct($appName, $request);
-		$this->userId = $userId;
-		$this->certificateService = $certificateService;
 	}
 
 	/**

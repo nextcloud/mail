@@ -211,6 +211,11 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'messages#saveFile',
+			'url' => '/api/messages/{id}/file',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'messages#getBody',
 			'url' => '/api/messages/{id}/body',
 			'verb' => 'GET'
@@ -474,6 +479,11 @@ return [
 			'name' => 'microsoftIntegration#oauthRedirect',
 			'url' => '/integration/microsoft-auth',
 			'verb' => 'GET',
+		],
+		[
+			'name' => 'oauth#generateState',
+			'url' => '/api/oauth/state',
+			'verb' => 'POST',
 		],
 		[
 			'name' => 'list#unsubscribe',

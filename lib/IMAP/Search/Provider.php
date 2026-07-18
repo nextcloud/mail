@@ -19,11 +19,9 @@ use OCA\Mail\Service\Search\SearchQuery;
 use function array_reduce;
 
 class Provider {
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	public function __construct(IMAPClientFactory $clientFactory) {
-		$this->clientFactory = $clientFactory;
+	public function __construct(
+		private IMAPClientFactory $clientFactory,
+	) {
 	}
 
 	/**

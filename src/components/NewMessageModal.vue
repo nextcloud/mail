@@ -90,6 +90,7 @@
 						:smime-sign="composerData.smimeSign"
 						:smime-encrypt="composerData.smimeEncrypt"
 						:is-first-open="modalFirstOpen"
+						:is-draft="composerData.draftId !== undefined"
 						:request-mdn="composerData.requestMdn"
 						:accounts="accounts"
 						@update:from-account="patchComposerData({ accountId: $event })"
@@ -270,7 +271,7 @@ export default {
 		window.addEventListener('resize', this.checkScreenSize)
 	},
 
-	beforeUnmount() {
+	beforeDestroy() {
 		window.removeEventListener('beforeunload', this.onBeforeUnload)
 		window.removeEventListener('resize', this.checkScreenSize)
 	},

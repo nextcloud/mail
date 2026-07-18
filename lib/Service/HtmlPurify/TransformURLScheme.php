@@ -104,9 +104,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	}
 
 	private function replaceCidWithUrl(HTMLPurifier_URI $uri): HTMLPurifier_URI {
-		$inlineAttachment = array_find($this->inlineAttachments, static function ($attachment) use ($uri) {
-			return $attachment['cid'] === $uri->path;
-		});
+		$inlineAttachment = array_find($this->inlineAttachments, static fn ($attachment) => $attachment['cid'] === $uri->path);
 
 		if ($inlineAttachment === null) {
 			return $uri;

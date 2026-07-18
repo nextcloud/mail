@@ -1,10 +1,18 @@
 <!--
-  - SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-FileCopyrightText: 2021-2026 Nextcloud GmbH and Nextcloud contributors
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <!-- Standard Actions menu for Envelopes -->
 <template>
 	<div>
+		<FilePicker
+			v-if="isFilePickerOpen"
+			:name="t('mail', 'Choose a folder to store the message in')"
+			:buttons="saveMessageButtons"
+			:allow-pick-directory="true"
+			:multiselect="false"
+			:mimetype-filter="['httpd/unix-directory']"
+			@close="() => isFilePickerOpen = false" />
 		<template v-if="!localMoreActionsOpen && !snoozeActionsOpen">
 			<ActionButton
 				v-if="hasWriteAcl"
@@ -28,6 +36,21 @@
 						:size="20" />
 				</template>
 				{{ t('mail', 'Forward') }}
+			</ActionButton>
+			<ActionButton
+				:close-after-click="false"
+				:description="t('mail', 'Only for message recipients')"
+				@click.prevent="onCopyMessageLink">
+				<template #icon>
+					<CheckIcon
+						v-if="copied"
+						:size="20" />
+					<ContentCopyIcon
+						v-else
+						:title="t('mail', 'Copy direct link')"
+						:size="20" />
+				</template>
+				{{ copied ? t('mail', 'Link copied') : t('mail', 'Copy direct link') }}
 			</ActionButton>
 			<ActionButton
 				v-if="hasWriteAcl"
@@ -150,6 +173,7 @@
 				{{ t('mail', 'Reply with meeting') }}
 			</ActionButton>
 			<ActionButton
+				v-if="tasksEnabled"
 				:close-after-click="true"
 				@click.prevent="$emit('open-task-modal')">
 				<template #icon>
@@ -186,6 +210,17 @@
 				</template>
 				{{ t('mail', 'Download message') }}
 			</ActionLink>
+			<ActionButton
+				class="message-save-to-cloud"
+				:disabled="savingToCloud"
+				:close-after-click="true"
+				@click="() => isFilePickerOpen = true">
+				<template #icon>
+					<IconSave v-if="!savingToCloud" :size="20" />
+					<IconLoading v-else-if="savingToCloud" :size="20" />
+				</template>
+				{{ t('mail', 'Save message to Files') }}
+			</ActionButton>
 			<ActionButton
 				v-if="isSieveEnabled"
 				:close-after-click="true"
@@ -259,11 +294,13 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
+import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
 import {
 	NcActionButton as ActionButton,
 	NcActionLink as ActionLink,
+	NcLoadingIcon as IconLoading,
 	NcActionButton,
 } from '@nextcloud/vue'
 import { Base64 } from 'js-base64'
@@ -277,8 +314,10 @@ import CalendarClock from 'vue-material-design-icons/CalendarClockOutline.vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline.vue'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
+import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
 import FilterIcon from 'vue-material-design-icons/FilterOutline.vue'
+import IconSave from 'vue-material-design-icons/FolderOutline.vue'
 import InformationIcon from 'vue-material-design-icons/InformationOutline.vue'
 import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
 import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
@@ -291,6 +330,7 @@ import TranslationIcon from 'vue-material-design-icons/Translate.vue'
 import DownloadIcon from 'vue-material-design-icons/TrayArrowDown.vue'
 import logger from '../logger.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
+import { saveMessage } from '../service/MessageService.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
 
@@ -310,6 +350,9 @@ export default {
 		DotsHorizontalIcon,
 		TranslationIcon,
 		DownloadIcon,
+		IconLoading,
+		IconSave,
+		FilePicker,
 		InformationIcon,
 		OpenInNewIcon,
 		PlusIcon,
@@ -321,6 +364,7 @@ export default {
 		AlarmIcon,
 		PrinterIcon,
 		FilterIcon,
+		ContentCopyIcon,
 	},
 
 	props: {
@@ -367,6 +411,17 @@ export default {
 			snoozeActionsOpen: false,
 			forwardMessages: this.envelope.databaseId,
 			customSnoozeDateTime: new Date(moment().add(2, 'hours').minute(0).second(0).valueOf()),
+			copied: false,
+			copyResetTimer: null,
+			savingToCloud: false,
+			isFilePickerOpen: false,
+			saveMessageButtons: [
+				{
+					label: t('mail', 'Choose'),
+					callback: this.saveToCloud,
+					type: 'primary',
+				},
+			],
 		}
 	},
 
@@ -440,6 +495,10 @@ export default {
 
 		hasDeleteAcl() {
 			return mailboxHasRights(this.mailbox, 'te')
+		},
+
+		tasksEnabled() {
+			return this.mainStore.getTaskCalendarsForCurrentUser.length > 0
 		},
 
 		isSnoozedMailbox() {
@@ -632,6 +691,52 @@ export default {
 
 		onPrint() {
 			this.$emit('print')
+		},
+
+		async onCopyMessageLink() {
+			if (this.copyResetTimer) {
+				clearTimeout(this.copyResetTimer)
+			}
+
+			if (!this.envelope || typeof this.envelope.messageId !== 'string' || !this.envelope.messageId.trim()) {
+				showError(t('mail', 'Could not generate direct link: Message ID is missing'))
+				return
+			}
+
+			const trimmedMessageId = this.envelope.messageId.trim().replace(/^<|>$/g, '')
+			const url = window.location.origin + generateUrl('/apps/mail/open/' + encodeURIComponent(trimmedMessageId))
+
+			try {
+				await navigator.clipboard.writeText(url)
+				this.copied = true
+				showSuccess(t('mail', 'Direct link copied to clipboard'))
+			} catch (error) {
+				// Fallback for cases where clipboard API is not available (e.g. non-HTTPS localhost)
+				// or permission is denied. This exactly matches Nextcloud's useCopy composable behavior.
+				window.prompt(t('mail', 'Copy direct link'), url)
+			} finally {
+				this.copyResetTimer = setTimeout(() => {
+					this.copied = false
+					this.localMoreActionsOpen = false
+				}, 2000)
+			}
+		},
+
+		async saveToCloud(dest) {
+			const path = dest[0].path
+			this.savingToCloud = true
+			const id = this.envelope.databaseId
+
+			try {
+				await saveMessage(id, path)
+				logger.info('saved')
+				showSuccess(t('mail', 'Message saved to Files'))
+			} catch (e) {
+				logger.error('not saved', { error: e })
+				showError(t('mail', 'Message could not be saved'))
+			} finally {
+				this.savingToCloud = false
+			}
 		},
 
 		isSieveEnabled() {

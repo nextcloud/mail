@@ -23,19 +23,14 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AliasesController extends Controller {
-	private AliasesService $aliasService;
-	private string $currentUserId;
-	private DelegationService $delegationService;
-
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		AliasesService $aliasesService,
-		string $userId,
-		DelegationService $delegationService) {
+		private AliasesService $aliasService,
+		private string $userId,
+		private DelegationService $delegationService,
+	) {
 		parent::__construct($appName, $request);
-		$this->aliasService = $aliasesService;
-		$this->currentUserId = $userId;
-		$this->delegationService = $delegationService;
 	}
 
 	/**
@@ -47,7 +42,7 @@ class AliasesController extends Controller {
 	 */
 	#[TrapError]
 	public function index(int $accountId): JSONResponse {
-		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->currentUserId);
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
 		return new JSONResponse($this->aliasService->findAll($accountId, $effectiveUserId));
 	}
 
@@ -70,16 +65,16 @@ class AliasesController extends Controller {
 		string $alias,
 		string $aliasName,
 		?int $smimeCertificateId = null): JSONResponse {
-		$effectiveUserId = $this->delegationService->resolveAliasUserId($id, $this->currentUserId);
-		return new JSONResponse(
-			$this->aliasService->update(
-				$effectiveUserId,
-				$id,
-				$alias,
-				$aliasName,
-				$smimeCertificateId,
-			)
+		$effectiveUserId = $this->delegationService->resolveAliasUserId($id, $this->userId);
+		$alias = $this->aliasService->update(
+			$effectiveUserId,
+			$id,
+			$alias,
+			$aliasName,
+			$smimeCertificateId,
 		);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated alias: $id on behalf of $effectiveUserId");
+		return new JSONResponse($alias);
 	}
 
 	/**
@@ -90,8 +85,10 @@ class AliasesController extends Controller {
 	 */
 	#[TrapError]
 	public function destroy(int $id): JSONResponse {
-		$effectiveUserId = $this->delegationService->resolveAliasUserId($id, $this->currentUserId);
-		return new JSONResponse($this->aliasService->delete($effectiveUserId, $id));
+		$effectiveUserId = $this->delegationService->resolveAliasUserId($id, $this->userId);
+		$alias = $this->aliasService->delete($effectiveUserId, $id);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted alias: $id on behalf of $effectiveUserId");
+		return new JSONResponse($alias);
 	}
 
 	/**
@@ -107,9 +104,12 @@ class AliasesController extends Controller {
 	 */
 	#[TrapError]
 	public function create(int $accountId, string $alias, string $aliasName): JSONResponse {
-		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->currentUserId);
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
+		$alias = $this->aliasService->create($effectiveUserId, $accountId, $alias, $aliasName);
+		$id = $alias->getId();
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId created alias: $id  on behalf of $effectiveUserId");
 		return new JSONResponse(
-			$this->aliasService->create($effectiveUserId, $accountId, $alias, $aliasName),
+			$alias,
 			Http::STATUS_CREATED
 		);
 	}
@@ -126,7 +126,9 @@ class AliasesController extends Controller {
 	 */
 	#[TrapError]
 	public function updateSignature(int $id, ?string $signature = null): JSONResponse {
-		$effectiveUserId = $this->delegationService->resolveAliasUserId($id, $this->currentUserId);
-		return new JSONResponse($this->aliasService->updateSignature($effectiveUserId, $id, $signature));
+		$effectiveUserId = $this->delegationService->resolveAliasUserId($id, $this->userId);
+		$alias = $this->aliasService->updateSignature($effectiveUserId, $id, $signature);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated alias: $id 's signature on behalf of $effectiveUserId");
+		return new JSONResponse($alias);
 	}
 }

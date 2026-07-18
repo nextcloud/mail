@@ -35,20 +35,16 @@ final class CreateAccount extends Command {
 	public const ARGUMENT_SMTP_SSL_MODE = 'smtp-ssl-mode';
 	public const ARGUMENT_SMTP_USER = 'smtp-user';
 	public const ARGUMENT_SMTP_PASSWORD = 'smtp-password';
-
-	private AccountService $accountService;
 	private ICrypto $crypto;
 	private IUserManager $userManager;
 
 	public function __construct(
-		AccountService $service,
+		private AccountService $accountService,
 		ICrypto $crypto,
 		IUserManager $userManager,
 		private ClassificationSettingsService $classificationSettingsService,
 	) {
 		parent::__construct();
-
-		$this->accountService = $service;
 		$this->crypto = $crypto;
 		$this->userManager = $userManager;
 	}

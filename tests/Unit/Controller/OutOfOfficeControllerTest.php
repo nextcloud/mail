@@ -54,10 +54,12 @@ class OutOfOfficeControllerTest extends TestCase {
 			->willReturn(true);
 
 		$user = $this->createStub(IUser::class);
+		$user->method('getUID')->willReturn('user');
 		$state = $this->createStub(OutOfOfficeState::class);
 
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(1);
+		$mailAccount->setUserId('user');
 		$mailAccount->setOutOfOfficeFollowsSystem($followSystem);
 		$account = new Account($mailAccount);
 

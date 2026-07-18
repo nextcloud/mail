@@ -5,8 +5,8 @@
 // Please pull this list from, and only from https://publicsuffix.org/list/public_suffix_list.dat,
 // rather than any other VCS sites. Pulling from any other URL is not guaranteed to be supported.
 
-// VERSION: 2026-05-14_08-35-31_UTC
-// COMMIT: e452c7058d6946bd76952b128c12f5ce87a5acb8
+// VERSION: 2026-07-14_09-26-39_UTC
+// COMMIT: f8d153aafe2dd6aa1c27cfdabaeb41b90ece3d48
 
 // Instructions on pulling and using this list can be found at https://publicsuffix.org/list/.
 
@@ -1176,12 +1176,16 @@ gov.gd
 // Confirmed by registry <info@nic.ge> 2024-11-20
 ge
 com.ge
+cyb.ge
 edu.ge
 gov.ge
+llc.ge
 net.ge
+online.ge
 org.ge
 pvt.ge
 school.ge
+tnx.ge
 
 // gf : https://www.iana.org/domains/root/db/gf.html
 gf
@@ -1403,6 +1407,7 @@ video.hu
 // id : https://www.iana.org/domains/root/db/id.html
 id
 ac.id
+ai.id
 biz.id
 co.id
 desa.id
@@ -1463,11 +1468,14 @@ tv.im
 // Please note, that nic.in is not an official eTLD, but used by most
 // government institutions.
 // Confirmed by Gaurav Kansal <gaurav.kansal@nic.in> 2025-11-06
+// Added aero.in, alumni.in, school.in and ub.in by Gaurav Kansal <gaurav.kansal@nic.in> 2026-06-25
 in
 5g.in
 6g.in
 ac.in
+aero.in
 ai.in
+alumni.in
 am.in
 bank.in
 bihar.in
@@ -1502,8 +1510,10 @@ pg.in
 post.in
 pro.in
 res.in
+school.in
 travel.in
 tv.in
+ub.in
 uk.in
 up.in
 us.in
@@ -4335,14 +4345,18 @@ no
 fhs.no
 folkebibl.no
 fylkesbibl.no
+gielda.no
+herad.no
 idrett.no
+kommune.no
 museum.no
 priv.no
+suohkan.no
+tjielte.no
+uenorge.no
 vgs.no
 // Norid category second-level domains managed by parties other than Norid : https://www.norid.no/en/om-domenenavn/regelverk-for-no/vedlegg-d/
 dep.no
-herad.no
-kommune.no
 mil.no
 stat.no
 // Norid geographical second level domains : https://www.norid.no/en/om-domenenavn/regelverk-for-no/vedlegg-b/
@@ -4483,7 +4497,7 @@ askøy.no
 askvoll.no
 asnes.no
 åsnes.no
-audnedaln.no
+audnedal.no
 aukra.no
 aure.no
 aurland.no
@@ -4594,7 +4608,6 @@ forsand.no
 fosnes.no
 fræna.no
 frana.no
-frei.no
 frogn.no
 froland.no
 frosta.no
@@ -4645,6 +4658,7 @@ halden.no
 halsa.no
 hamar.no
 hamaroy.no
+hamarøy.no
 hammarfeasta.no
 hámmárfeasta.no
 hammerfest.no
@@ -4699,6 +4713,7 @@ karasjohka.no
 kárášjohka.no
 karasjok.no
 karlsoy.no
+karlsøy.no
 karmoy.no
 karmøy.no
 kautokeino.no
@@ -4887,6 +4902,7 @@ ralingen.no
 rana.no
 randaberg.no
 rauma.no
+re.no
 rendalen.no
 rennebu.no
 rennesoy.no
@@ -5044,6 +5060,7 @@ tysvær.no
 tysvar.no
 ullensaker.no
 ullensvang.no
+ulstein.no
 ulvik.no
 unjarga.no
 unjárga.no
@@ -5799,7 +5816,6 @@ or.th
 
 // tj : http://www.nic.tj/policy.html
 tj
-ac.tj
 biz.tj
 co.tj
 com.tj
@@ -6821,7 +6837,7 @@ org.zw
 
 // newGTLDs
 
-// List of new gTLDs imported from https://www.icann.org/resources/registries/gtlds/v2/gtlds.json on 2026-04-30T16:18:08Z
+// List of new gTLDs imported from https://www.icann.org/resources/registries/gtlds/v2/gtlds.json on 2026-06-13T16:12:40Z
 // This list is auto-generated, don't edit it manually.
 // aaa : American Automobile Association, Inc.
 // https://www.iana.org/domains/root/db/aaa.html
@@ -10875,7 +10891,7 @@ xin
 // https://www.iana.org/domains/root/db/xn--5su34j936bgsg.html
 香格里拉
 
-// xn--5tzm5g : Global Website TLD Asia Limited
+// xn--5tzm5g : Jolly Host, LLC
 // https://www.iana.org/domains/root/db/xn--5tzm5g.html
 网站
 
@@ -12574,10 +12590,12 @@ cafjs.com
 // Submitted by Joel Aquilina <publicsuffixlist@canva.com>
 canva-apps.cn
 my.canvasite.cn
+khsj.cn
 canva-apps.com
 canva-hosted-embed.com
 canvacode.com
 rice-labs.com
+canva.link
 canva.run
 my.canva.site
 
@@ -12747,6 +12765,12 @@ co.ca
 // co.com Registry, LLC : https://registry.co.com
 // Submitted by Gavin Brown <gavin.brown@centralnic.com>
 co.com
+
+// Code For Host Inc Ltd : https://codeforhost.com
+// Submitted by Mehedi Hasan <support@codeforhost.com>
+sch.ac
+dev.cv
+store.cv
 
 // Codeberg e. V. : https://codeberg.org
 // Submitted by Moritz Marquardt <git@momar.de>
@@ -12973,9 +12997,22 @@ cc.cd
 us.ci
 de5.net
 
-// DNShome : https://www.dnshome.de/
+// dnsHome : https://www.dnshome.de/
 // Submitted by Norbert Auler <mail@dnshome.de>
+dnshome.at
+resolve.bar
+ddns.berlin
+dnshome.cloud
+ddnssec.de
 dnshome.de
+dyndnssec.de
+heimdns.de
+srvdns.de
+dnshome.eu
+dnshome.it
+dyn.now
+heimdns.online
+ddns.wtf
 
 // DotArai : https://www.dotarai.com/
 // Submitted by Atsadawat Netcharadsang <atsadawat@dotarai.co.th>
@@ -13891,6 +13928,10 @@ whitesnow.jp
 zombie.jp
 heteml.net
 
+// GNTC, Inc. : https://gntc.com/
+// Submitted by VibeHost Security <security@vibehost.com>
+vibehost.space
+
 // GoDaddy Registry : https://registry.godaddy
 // Submitted by Rohan Durrant <tldns@registry.godaddy>
 graphic.design
@@ -14130,10 +14171,6 @@ in-vpn.org
 // Submitted by Connor McFarlane <noc@inferno.co.uk>
 oninferno.net
 
-// info.at : http://www.info.at/
-biz.at
-info.at
-
 // info.cx : http://info.cx
 // Submitted by June Slater <whois@igloo.to>
 info.cx
@@ -14208,6 +14245,12 @@ iopsys.se
 // IPiFony Systems, Inc. : https://www.ipifony.com/
 // Submitted by Matthew Hardeman <mhardeman@ipifony.com>
 ipifony.net
+
+// IPv64.net : https://ipv64.net/
+// Submitted by Dennis Schröder <info@ipv64.net>
+home64.de
+ipv64.de
+ipv64.net
 
 // ir.md : https://nic.ir.md
 // Submitted by Ali Soizi <info@nic.ir.md>
@@ -14594,7 +14637,6 @@ polyspace.com
 // May First - People Link : https://mayfirst.org/
 // Submitted by Jamie McClelland <info@mayfirst.org>
 mayfirst.info
-mayfirst.org
 
 // McHost : https://mchost.ru
 // Submitted by Evgeniy Subbotin <e.subbotin@mchost.ru>
@@ -14713,6 +14755,10 @@ mittwald.info
 mittwaldserver.info
 typo3server.info
 project.space
+
+// MKM : https://mkm.fan/
+// Submitted by Kashi Ahmer <admin@mkm.fan>
+mkm.fan
 
 // Mocha : https://getmocha.com
 // Submitted by Ben Reinhart <security@getmocha.com>
@@ -15049,6 +15095,7 @@ opensocial.site
 // OpenAI : https://openai.com
 // Submitted by Thomas Shadwell <security@openai.com>
 *.oaiusercontent.com
+chatgpt.site
 
 // OpenCraft GmbH : http://opencraft.com/
 // Submitted by Sven Marnach <sven@opencraft.com>
@@ -15245,6 +15292,12 @@ nyc.mn
 // pubtls.org : https://www.pubtls.org
 // Submitted by Kor Nielsen <kor@pubtls.org>
 pubtls.org
+
+// Puter : https://puter.com
+// Submitted by Puter Security Team <security@puter.com>
+puter.app
+puter.site
+puter.work
 
 // PythonAnywhere LLP : https://www.pythonanywhere.com
 // Submitted by Giles Thomas <giles@pythonanywhere.com>
@@ -15604,9 +15657,10 @@ dedibox.fr
 schokokeks.net
 
 // Scottish Government : https://www.gov.scot
-// Submitted by Martin Ellis <martin.ellis@gov.scot>
+// Submitted by Martin Ellis <digital-publishing@gov.scot>
 gov.scot
 service.gov.scot
+mygov.scot
 
 // Scry Security : http://www.scrysec.com
 // Submitted by Shante Adam <shante@skyhat.io>
@@ -16203,11 +16257,10 @@ webflowtest.io
 *.webhare.dev
 
 // WebHotelier Technologies Ltd : https://www.webhotelier.net/
-// Submitted by Apostolos Tsakpinis <apostolos.tsakpinis@gmail.com>
-bookonline.app
+// Submitted by Apostolos Tsakpinis <cto@webhotelier.net>
 hotelwithflight.com
-reserve-online.com
 reserve-online.net
+book.online
 
 // WebPros International, LLC : https://webpros.com/
 // Submitted by Nicolas Rochelemagne <public.suffix@webpros.com>
@@ -16298,6 +16351,10 @@ weeklylottery.org.uk
 // Submitted by Brandon DuRette <brandon.durette@wpengine.com>
 wpenginepowered.com
 js.wpenginepowered.com
+
+// xAI : https://x.ai/
+// Submitted by Asim Shrestha <security@x.ai>
+grok.me
 
 // XenonCloud GbR : https://xenoncloud.net
 // Submitted by Julian Uphoff <publicsuffixlist@xenoncloud.net>

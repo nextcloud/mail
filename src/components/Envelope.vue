@@ -189,6 +189,14 @@
 				fill-color="var(--color-primary-element)" />
 		</template>
 		<template #actions>
+			<FilePicker
+				v-if="isFilePickerOpen"
+				:name="t('mail', 'Choose a folder to store the message in')"
+				:buttons="saveMessageButtons"
+				:allow-pick-directory="true"
+				:multiselect="false"
+				:mimetype-filter="['httpd/unix-directory']"
+				@close="() => isFilePickerOpen = false" />
 			<EnvelopePrimaryActions v-if="!moreActionsOpen && !snoozeOptions" id="primary-actions">
 				<ActionButton
 					v-if="hasWriteAcl"
@@ -328,20 +336,6 @@
 					</template>
 				</ActionButton>
 				<ActionButton
-					v-if="hasDeleteAcl"
-					:close-after-click="true"
-					@click.prevent="onDelete">
-					<template #icon>
-						<DeleteIcon :size="20" />
-					</template>
-					<template v-if="layoutMessageViewThreaded">
-						{{ t('mail', 'Delete thread') }}
-					</template>
-					<template v-else>
-						{{ t('mail', 'Delete message') }}
-					</template>
-				</ActionButton>
-				<ActionButton
 					:close-after-click="false"
 					@click="showMoreActionOptions">
 					<template #icon>
@@ -422,6 +416,7 @@
 					{{ t('mail', 'Reply with meeting') }}
 				</ActionButton>
 				<ActionButton
+					v-if="tasksEnabled"
 					:close-after-click="true"
 					@click.prevent="showTaskModal = true">
 					<template #icon>
@@ -437,6 +432,30 @@
 					</template>
 					{{ t('mail', 'Download message') }}
 				</ActionLink>
+				<ActionButton
+					class="message-save-to-cloud"
+					:disabled="savingToCloud"
+					:close-after-click="true"
+					@click="() => isFilePickerOpen = true">
+					<template #icon>
+						<IconSave :size="20" />
+					</template>
+					{{ t('mail', 'Save message to Files') }}
+				</ActionButton>
+				<ActionButton
+					v-if="hasDeleteAcl"
+					:close-after-click="true"
+					@click.prevent="onDelete">
+					<template #icon>
+						<DeleteIcon :size="20" />
+					</template>
+					<template v-if="layoutMessageViewThreaded">
+						{{ t('mail', 'Delete thread') }}
+					</template>
+					<template v-else>
+						{{ t('mail', 'Delete message') }}
+					</template>
+				</ActionButton>
 			</template>
 			<template v-if="quickActionMenu">
 				<ActionButton
@@ -479,7 +498,7 @@
 					{{ translateTagDisplayName(tag) }}
 				</span>
 			</div>
-			<div v-for="(attachment, idx) in attachments" :key="`attachement-${idx}`">
+			<div v-for="(attachment, idx) in attachments" :key="`attachment-${idx}`">
 				<AttachmentTag
 					:file-name="attachment.fileName"
 					:mime-type="attachment.mime"
@@ -513,6 +532,7 @@
 
 <script>
 import { showError, showSuccess, showWarning } from '@nextcloud/dialogs'
+import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import { isRTL } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
@@ -542,6 +562,7 @@ import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
 import IconEmailFast from 'vue-material-design-icons/EmailFastOutline.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
 import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
+import IconSave from 'vue-material-design-icons/FolderOutline.vue'
 import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
 import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
@@ -569,8 +590,9 @@ import { matchError } from '../errors/match.js'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError.js'
 import logger from '../logger.js'
-import AttachementMixin from '../mixins/AttachementMixin.js'
+import AttachmentMixin from '../mixins/AttachmentMixin.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
+import { saveMessage } from '../service/MessageService.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
@@ -593,6 +615,8 @@ export default {
 		DotsHorizontalIcon,
 		EnvelopePrimaryActions,
 		EventModal,
+		IconSave,
+		FilePicker,
 		ImportantIcon,
 		ImportantOutlineIcon,
 		TaskModal,
@@ -630,7 +654,7 @@ export default {
 		draggableEnvelope: DraggableEnvelopeDirective,
 	},
 
-	mixins: [AttachementMixin],
+	mixins: [AttachmentMixin],
 
 	props: {
 		withReply: {
@@ -685,7 +709,16 @@ export default {
 			overwriteOneLineMobile: false,
 			hoveringAvatar: false,
 			quickActionLoading: false,
-			possibleAttachementsCount: 0,
+			possibleAttachmentsCount: 0,
+			savingToCloud: false,
+			isFilePickerOpen: false,
+			saveMessageButtons: [
+				{
+					label: t('mail', 'Choose'),
+					callback: this.saveToCloud,
+					type: 'primary',
+				},
+			],
 		}
 	},
 
@@ -821,7 +854,7 @@ export default {
 		},
 
 		attachments() {
-			return this.data.attachments.filter((e) => e.fileName && e.fileName.length > 0).slice(0, this.possibleAttachementsCount)
+			return this.data.attachments.filter((e) => e.fileName && e.fileName.length > 0).slice(0, this.possibleAttachmentsCount)
 		},
 
 		remainingAttachements() {
@@ -899,6 +932,10 @@ export default {
 
 		archiveMailbox() {
 			return this.mainStore.getMailbox(this.account.archiveMailboxId)
+		},
+
+		tasksEnabled() {
+			return this.mainStore.getTaskCalendarsForCurrentUser.length > 0
 		},
 
 		isSnoozedMailbox() {
@@ -1015,8 +1052,8 @@ export default {
 			const detailsWidth = container.querySelector('.list-item-content__inner__details')?.clientWidth ?? 0
 			const availableWidth = (container.clientWidth ?? 0) - detailsWidth - tagsWidth - 30 // 30px for the extra (+n) indicator
 
-			const attachementSize = 140 + 4 // min-width + gap
-			this.possibleAttachementsCount = Math.min(3, Math.floor(availableWidth / attachementSize))
+			const attachmentSize = 140 + 4 // min-width + gap
+			this.possibleAttachmentsCount = Math.min(3, Math.floor(availableWidth / attachmentSize))
 		},
 
 		async executeQuickAction(action) {
@@ -1417,6 +1454,23 @@ export default {
 
 		onCloseTagModal() {
 			this.showTagModal = false
+		},
+
+		async saveToCloud(dest) {
+			const path = dest[0].path
+			this.savingToCloud = true
+			const id = this.data.databaseId
+
+			try {
+				await saveMessage(id, path)
+				logger.info('saved')
+				showSuccess(t('mail', 'Message saved to Files'))
+			} catch (e) {
+				logger.error('not saved', { error: e })
+				showError(t('mail', 'Message could not be saved'))
+			} finally {
+				this.savingToCloud = false
+			}
 		},
 
 		getTimestamp(momentObject) {

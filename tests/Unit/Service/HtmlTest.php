@@ -88,8 +88,8 @@ class HtmlTest extends TestCase {
 			->method('linkToRouteAbsolute')
 			->with('mail.messages.downloadAttachment', ['id' => 42, 'attachmentId' => '7'])
 			->willReturn($attachmentUrl);
-		$request = $this->createMock(IRequest::class);
-		$hmacGenerator = $this->createMock(ProxyHmacGenerator::class);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
 
 		$html = new Html($urlGenerator, $request, $hmacGenerator);
 		$inlineAttachments = [['id' => '7', 'cid' => 'image001@example.com']];
@@ -107,8 +107,8 @@ class HtmlTest extends TestCase {
 			->method('linkToRouteAbsolute')
 			->with('mail.messages.downloadAttachment', ['id' => 42, 'attachmentId' => '7'])
 			->willReturn($attachmentUrl);
-		$request = $this->createMock(IRequest::class);
-		$hmacGenerator = $this->createMock(ProxyHmacGenerator::class);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
 
 		$html = new Html($urlGenerator, $request, $hmacGenerator);
 		$inlineAttachments = [['id' => '7', 'cid' => 'image001@example.com']];

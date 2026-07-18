@@ -28,18 +28,12 @@ use function sort;
 final class DiagnoseAccount extends Command {
 	private const ARGUMENT_ACCOUNT_ID = 'account-id';
 
-	private AccountService $accountService;
-	private IMAPClientFactory $clientFactory;
-	private LoggerInterface $logger;
-
-	public function __construct(AccountService $service,
-		IMAPClientFactory $clientFactory,
-		LoggerInterface $logger) {
+	public function __construct(
+		private AccountService $accountService,
+		private IMAPClientFactory $clientFactory,
+		private LoggerInterface $logger,
+	) {
 		parent::__construct();
-
-		$this->accountService = $service;
-		$this->clientFactory = $clientFactory;
-		$this->logger = $logger;
 	}
 
 	/**

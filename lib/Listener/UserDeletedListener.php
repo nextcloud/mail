@@ -11,6 +11,7 @@ namespace OCA\Mail\Listener;
 
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\TextBlockService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
@@ -21,19 +22,12 @@ use Psr\Log\LoggerInterface;
  * @template-implements IEventListener<Event|UserDeletedEvent>
  */
 class UserDeletedListener implements IEventListener {
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var LoggerInterface */
-	private $logger;
-
 	public function __construct(
-		AccountService $accountService,
+		private AccountService $accountService,
 		private TextBlockService $textBlockService,
-		LoggerInterface $logger,
+		private DelegationService $delegationService,
+		private LoggerInterface $logger,
 	) {
-		$this->accountService = $accountService;
-		$this->logger = $logger;
 	}
 
 	#[\Override]
@@ -57,6 +51,9 @@ class UserDeletedListener implements IEventListener {
 			}
 		}
 		$this->textBlockService->deleteByUserId(
+			$user->getUID()
+		);
+		$this->delegationService->deleteByUserId(
 			$user->getUID()
 		);
 	}

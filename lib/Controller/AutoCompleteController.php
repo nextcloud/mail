@@ -19,17 +19,13 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AutoCompleteController extends Controller {
-	private AutoCompleteService $service;
-	private ?string $userId;
-
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		AutoCompleteService $service,
-		?string $userId) {
+		private AutoCompleteService $service,
+		private ?string $userId,
+	) {
 		parent::__construct($appName, $request);
-
-		$this->service = $service;
-		$this->userId = $userId;
 	}
 
 	/**

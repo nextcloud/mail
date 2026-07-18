@@ -5,6 +5,7 @@ declare(strict_types=1);
  * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\Contracts\IDkimService;
@@ -49,11 +50,9 @@ use function array_merge;
  */
 class MessageApiController extends OCSController {
 
-	private ?string $userId;
-
 	public function __construct(
 		string $appName,
-		?string $userId,
+		private ?string $userId,
 		IRequest $request,
 		private AccountService $accountService,
 		private AliasesService $aliasesService,
@@ -70,7 +69,6 @@ class MessageApiController extends OCSController {
 		private DelegationService $delegationService,
 	) {
 		parent::__construct($appName, $request);
-		$this->userId = $userId;
 	}
 
 	/**
@@ -143,7 +141,6 @@ class MessageApiController extends OCSController {
 			return new DataResponse('Recipients cannot be empty.', Http::STATUS_BAD_REQUEST);
 		}
 
-
 		try {
 			$messageAttachments = $this->handleAttachments();
 		} catch (UploadException $e) {
@@ -206,8 +203,16 @@ class MessageApiController extends OCSController {
 			$this->logger->error('SMTP error: could not send message', ['exception' => $e]);
 			return new DataResponse('Fatal SMTP error: could not send message, and no resending is possible. Please check the mail server logs.', Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
+		$status = $localMessage->getStatus();
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, match ($status) {
+			LocalMessage::STATUS_PROCESSED => "$this->userId sent a message on behalf of $effectiveUserId",
+			LocalMessage::STATUS_NO_SENT_MAILBOX => "$this->userId attempted sending a message on behalf of $effectiveUserId but no sent mailbox is configured",
+			LocalMessage::STATUS_SMPT_SEND_FAIL => "$this->userId attempted sending a message on behalf of $effectiveUserId but SMTP sending failed",
+			LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL => "$this->userId sent a message on behalf of $effectiveUserId but copying to sent mailbox failed",
+			default => "$this->userId attempted sending a message on behalf of $effectiveUserId but an unknown error occurred",
+		});
 
-		return match ($localMessage->getStatus()) {
+		return match ($status) {
 			LocalMessage::STATUS_PROCESSED => new DataResponse('', Http::STATUS_OK),
 			LocalMessage::STATUS_NO_SENT_MAILBOX => new DataResponse('Configuration error: Cannot send message without sent mailbox.', Http::STATUS_FORBIDDEN),
 			LocalMessage::STATUS_SMPT_SEND_FAIL => new DataResponse('SMTP error: could not send message. Message sending will be retried. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR),
@@ -447,8 +452,7 @@ class MessageApiController extends OCSController {
 	 */
 	private function handleAttachments(): array {
 		$fileAttachments = $this->request->getUploadedFile('attachments');
-		$hasAttachments = isset($fileAttachments['name']);
-		if (!$hasAttachments) {
+		if (!isset($fileAttachments['name'])) {
 			return [];
 		}
 

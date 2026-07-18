@@ -5,6 +5,7 @@
 
 import { createPinia, setActivePinia } from 'pinia'
 import { curry, range, reverse } from 'ramda'
+import * as AccountService from '../../../service/AccountService.js'
 import * as MailboxService from '../../../service/MailboxService.js'
 import * as MessageService from '../../../service/MessageService.js'
 import * as NotificationService from '../../../service/NotificationService.js'
@@ -12,6 +13,7 @@ import { PAGE_SIZE, UNIFIED_INBOX_ID } from '../../../store/constants.js'
 import useMainStore from '../../../store/mainStore.js'
 import { normalizedEnvelopeListId } from '../../../util/normalization.js'
 
+vi.mock('../../../service/AccountService.js')
 vi.mock('../../../service/MailboxService.js')
 vi.mock('../../../service/MessageService.js')
 vi.mock('../../../service/NotificationService.js')
@@ -714,6 +716,130 @@ describe('Vuex store actions', () => {
 
 		it('returns empty array when message has no attachments', () => {
 			expect(store.prepareAttachments({})).toEqual([])
+		})
+	})
+
+	describe('updateAccount', () => {
+		it('clears the error flag and syncs mailboxes after a successful settings update', async () => {
+			const account = {
+				id: 7,
+				personalNamespace: '',
+				mailboxes: [],
+				error: true,
+			}
+			store.addAccountMutation(account)
+
+			const updatedAccount = { id: 7, personalNamespace: '', mailboxes: [] }
+			AccountService.update.mockResolvedValue(updatedAccount)
+			MailboxService.fetchAll.mockResolvedValue([])
+
+			await store.updateAccount({ accountId: 7 })
+
+			expect(store.accountsUnmapped[7].error).toBe(false)
+			expect(MailboxService.fetchAll).toHaveBeenCalledWith(7, true)
+		})
+	})
+
+	describe('startComposerSession reply-to resolution', () => {
+		const account = {
+			id: 1,
+			emailAddress: 'me@example.com',
+			personalNamespace: '',
+			mailboxes: [],
+			name: 'Me',
+		}
+		const from = [{ email: 'sender@example.com', label: 'Sender' }]
+		const to = [{ email: 'me@example.com', label: 'Me' }]
+		const replyTo = [{ email: 'personal-replyto@example.com', label: 'Reply Here' }]
+
+		const makeEnvelope = (overrides = {}) => ({
+			databaseId: 42,
+			accountId: 1,
+			from,
+			to,
+			replyTo: undefined,
+			subject: 'Test subject',
+			...overrides,
+		})
+
+		const makeOriginal = (overrides = {}) => ({
+			databaseId: 42,
+			hasHtmlBody: false,
+			body: 'Message body',
+			replyTo: undefined,
+			unsubscribeUrl: null,
+			unsubscribeMailto: null,
+			...overrides,
+		})
+
+		beforeEach(() => {
+			store.addAccountMutation(account)
+			vi.spyOn(store, 'startComposerSessionMutation')
+		})
+
+		it('uses From for mailing list emails even when Reply-To is set', async () => {
+			MessageService.fetchMessage.mockResolvedValue(makeOriginal({
+				replyTo,
+				unsubscribeUrl: 'https://list.example.com/unsubscribe',
+			}))
+
+			await store.startComposerSession({
+				reply: {
+					mode: 'reply',
+					data: makeEnvelope({ replyTo }),
+				},
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({ to: from }),
+			}))
+		})
+
+		it('honours Reply-To for regular emails with a personal Reply-To', async () => {
+			MessageService.fetchMessage.mockResolvedValue(makeOriginal({ replyTo }))
+
+			await store.startComposerSession({
+				reply: {
+					mode: 'reply',
+					data: makeEnvelope({ replyTo }),
+				},
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({ to: replyTo }),
+			}))
+		})
+
+		it('uses To for own sent messages (isOwnMessage follow-up)', async () => {
+			const ownFrom = [{ email: 'me@example.com', label: 'Me' }]
+			MessageService.fetchMessage.mockResolvedValue(makeOriginal())
+
+			await store.startComposerSession({
+				reply: {
+					mode: 'reply',
+					data: makeEnvelope({ from: ownFrom }),
+				},
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({ to }),
+			}))
+		})
+
+		it('uses To when followUp flag is set', async () => {
+			MessageService.fetchMessage.mockResolvedValue(makeOriginal())
+
+			await store.startComposerSession({
+				reply: {
+					mode: 'reply',
+					data: makeEnvelope(),
+					followUp: true,
+				},
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({ to }),
+			}))
 		})
 	})
 })

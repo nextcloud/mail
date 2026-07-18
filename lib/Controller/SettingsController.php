@@ -21,29 +21,22 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IConfig;
 use OCP\IRequest;
 use Psr\Container\ContainerInterface;
-
 use function array_merge;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class SettingsController extends Controller {
-	private ProvisioningManager $provisioningManager;
-	private AntiSpamService $antiSpamService;
-	private ContainerInterface $container;
 	private IConfig $config;
 
 	public function __construct(
 		IRequest $request,
-		ProvisioningManager $provisioningManager,
-		AntiSpamService $antiSpamService,
+		private ProvisioningManager $provisioningManager,
+		private AntiSpamService $antiSpamService,
 		IConfig $config,
-		ContainerInterface $container,
+		private ContainerInterface $container,
 		private ClassificationSettingsService $classificationSettingsService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->provisioningManager = $provisioningManager;
-		$this->antiSpamService = $antiSpamService;
 		$this->config = $config;
-		$this->container = $container;
 	}
 
 	public function index(): JSONResponse {

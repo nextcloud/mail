@@ -25,7 +25,7 @@
 					<NcListItem
 						v-for="user in delegates"
 						:key="user.userId"
-						:name="user.userId">
+						:name="user.displayName || user.userId">
 						<template #icon>
 							<NcAvatar
 								disable-menu
@@ -177,7 +177,7 @@ export default {
 			if (!this.revokeUser) {
 				return ''
 			}
-			return t('mail', '{userId} will no longer be able to act on your behalf', { userId: this.revokeUser.userId })
+			return t('mail', '{userId} will no longer be able to act on your behalf', { userId: this.revokeUser.displayName || this.revokeUser.userId })
 		},
 	},
 
@@ -260,8 +260,8 @@ export default {
 			this.delegating = true
 			try {
 				const delegation = await delegate(this.account.accountId, this.selectedUser.id)
-				this.delegates.push(delegation)
-				showSuccess(t('mail', 'Delegated access to {userId}', { userId: this.selectedUser.id }))
+				this.delegates.push({ ...delegation, displayName: this.selectedUser.displayName })
+				showSuccess(t('mail', 'Delegated access to {displayName}', { displayName: this.selectedUser.displayName || this.selectedUser.id }))
 			} catch (error) {
 				logger.error('Could not delegate access', { error })
 				showError(t('mail', 'Could not delegate access'))
@@ -279,7 +279,7 @@ export default {
 			try {
 				await unDelegate(this.account.accountId, this.revokeUser.userId)
 				this.delegates = this.delegates.filter((d) => d.userId !== this.revokeUser.userId)
-				showSuccess(t('mail', 'Revoked access for {userId}', { userId: this.revokeUser.userId }))
+				showSuccess(t('mail', 'Revoked access for {displayName}', { displayName: this.revokeUser.displayName }))
 			} catch (error) {
 				logger.error('Could not revoke delegation', { error })
 				showError(t('mail', 'Could not revoke delegation'))

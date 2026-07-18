@@ -16,6 +16,7 @@ use OCA\Mail\Controller\ThreadController;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\EventData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
@@ -127,6 +128,9 @@ class ThreadControllerTest extends TestCase {
 		$this->mailManager
 			->expects(self::once())
 			->method('moveThread');
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId moved thread <{$message->getId()}> to mailbox <{$dstMailbox->getId()}> on behalf of $this->userId");
 
 		$response = $this->controller->move($message->getId(), $dstMailbox->getId());
 
@@ -203,6 +207,9 @@ class ThreadControllerTest extends TestCase {
 		$this->mailManager
 			->expects(self::once())
 			->method('deleteThread');
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId deleted thread <{$message->getId()}> on behalf of $this->userId");
 
 		$response = $this->controller->delete(300);
 
@@ -276,7 +283,6 @@ class ThreadControllerTest extends TestCase {
 			->method('summarizeThread')
 			->willReturn('example summary');
 
-
 		$response = $this->controller->summarize(300);
 		$this->assertEquals(Http::STATUS_OK, $response->getStatus());
 		$this->assertEquals(['data' => 'example summary'], $response->getData());
@@ -322,4 +328,34 @@ class ThreadControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_OK, $response->getStatus());
 	}
 
+	public function testGenerateEventDataServiceFailure(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$account = new Account($mailAccount);
+		$this->accountService->method('find')->willReturn($account);
+		$mailbox = new Mailbox();
+		$mailbox->setId(20);
+		$mailbox->setAccountId($mailAccount->getId());
+		$this->mailManager->method('getMailbox')->willReturn($mailbox);
+		$message = new Message();
+		$message->setId(300);
+		$message->setMailboxId($mailbox->getId());
+		$message->setThreadRootId('some-thread-root-id-1');
+		$this->mailManager->method('getMessage')->willReturn($message);
+		$this->mailManager->method('getThread')->willReturn([]);
+		$exception = new ServiceException('AI task processing failed');
+		$this->aiIntergrationsService
+			->expects(self::once())
+			->method('generateEventData')
+			->with($account, $message->getThreadRootId(), [], $this->userId)
+			->willThrowException($exception);
+		$this->logger
+			->expects(self::once())
+			->method('error')
+			->with('Generating event data failed: AI task processing failed', ['exception' => $exception]);
+
+		$response = $this->controller->generateEventData(300);
+
+		$this->assertSame(Http::STATUS_NO_CONTENT, $response->getStatus());
+	}
 }

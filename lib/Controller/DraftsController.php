@@ -26,29 +26,20 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class DraftsController extends Controller {
-	private DraftsService $service;
-	private string $userId;
-	private AccountService $accountService;
 	private ITimeFactory $timeFactory;
-	private SmimeService $smimeService;
-	private DelegationService $delegationService;
 
-
-	public function __construct(string $appName,
-		$userId,
+	public function __construct(
+		string $appName,
+		private string $userId,
 		IRequest $request,
-		DraftsService $service,
-		AccountService $accountService,
+		private DraftsService $service,
+		private AccountService $accountService,
 		ITimeFactory $timeFactory,
-		SmimeService $smimeService,
-		DelegationService $delegationService) {
+		private SmimeService $smimeService,
+		private DelegationService $delegationService,
+	) {
 		parent::__construct($appName, $request);
-		$this->userId = $userId;
-		$this->service = $service;
-		$this->accountService = $accountService;
 		$this->timeFactory = $timeFactory;
-		$this->smimeService = $smimeService;
-		$this->delegationService = $delegationService;
 	}
 
 	/**
@@ -125,7 +116,8 @@ class DraftsController extends Controller {
 		}
 
 		$this->service->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
-
+		$id = $message->getId();
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId created draft: $id  on behalf of $effectiveUserId");
 		return JsonResponse::success($message, Http::STATUS_CREATED);
 	}
 
@@ -213,6 +205,7 @@ class DraftsController extends Controller {
 		$this->accountService->find($effectiveUserId, $message->getAccountId());
 
 		$this->service->deleteMessage($effectiveUserId, $message);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted draft: $id  on behalf of $effectiveUserId");
 		return JsonResponse::success('Message deleted', Http::STATUS_ACCEPTED);
 	}
 
@@ -229,6 +222,7 @@ class DraftsController extends Controller {
 		$account = $this->accountService->find($effectiveUserId, $message->getAccountId());
 
 		$this->service->sendMessage($message, $account);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId moved draft: $id to the IMAP server on behalf of $effectiveUserId");
 		return  JsonResponse::success(
 			'Message moved to IMAP', Http::STATUS_ACCEPTED
 		);

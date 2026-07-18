@@ -358,6 +358,7 @@ export default {
 			changingSyncInBackground: false,
 			editing: false,
 			showSubMailboxes: false,
+			wasExpandedBeforeDrag: false,
 			menuOpen: false,
 			renameLabel: true,
 			renameInput: false,
@@ -517,7 +518,7 @@ export default {
 		dragEventBus.on('envelopes-moved', this.onEnvelopesMoved)
 	},
 
-	beforeUnmount() {
+	beforeDestroy() {
 		dragEventBus.off('drag-start', this.onDragStart)
 		dragEventBus.off('drag-end', this.onDragEnd)
 		dragEventBus.off('envelopes-moved', this.onEnvelopesMoved)
@@ -752,6 +753,7 @@ export default {
 			if (accountId !== this.mailbox.accountId) {
 				return
 			}
+			this.wasExpandedBeforeDrag = this.showSubMailboxes
 			this.mainStore.expandAccountMutation(accountId)
 			this.showSubMailboxes = true
 		},
@@ -760,7 +762,7 @@ export default {
 			if (accountId !== this.mailbox.accountId) {
 				return
 			}
-			this.showSubMailboxes = false
+			this.showSubMailboxes = this.wasExpandedBeforeDrag
 		},
 
 		onEnvelopesMoved({ mailboxId, movedEnvelopes }) {
@@ -810,6 +812,7 @@ export default {
 				// Handle rate limit: 429 Too Many Requests
 				// Ref https://axios-http.com/docs/handling_errors
 				if (error.response?.status === 429) {
+					logger.error('mailbox repair rate-limited', { error })
 					showError(t('mail', 'Please wait 10 minutes before repairing again'))
 				} else {
 					throw error
