@@ -93,7 +93,29 @@ sure the access token it issues is accepted by your IMAP/SMTP server for `XOAUTH
 Before each IMAP connection Mail checks whether the access token is about to expire and,
 if so, refreshes it with the stored refresh token. This runs during background sync as
 well, so accounts keep working without user interaction as long as the refresh token is
-valid.
+valid. If the provider rotates refresh tokens, the new one is stored on every refresh, so
+a regularly syncing account keeps rolling its grant forward.
+
+## When the grant can no longer be renewed
+
+The refresh token itself eventually expires or is revoked — for example after an extended
+outage where nothing synced, or if the provider never issued one (no `offline_access`).
+OAuth defines no way to know that lifetime up front, so Mail reacts to it instead:
+
+1. A refresh that fails is not trusted on its own — the provider may simply have been
+   unreachable. Mail asks the provider's **introspection endpoint** (RFC 7662) whether the
+   refresh token is still active.
+2. Only a definitive `active: false` (or having no refresh token at all while the access
+   token has expired) marks the account as needing re-authentication. A network error or
+   an unavailable introspection endpoint is treated as transient and changes nothing.
+3. The next time the user opens Mail, a dialog offers to **Reconnect**, which runs the
+   same consent popup as the initial setup and restores the account. The flag is cleared
+   automatically as soon as any refresh or reconnect succeeds.
+
+> Introspection is only available when the provider is configured by discovery URL — a
+> discovery document advertises `introspection_endpoint`. With manually defined endpoints
+> there is nothing to introspect, so a failed refresh is always treated as transient and
+> the account is never flagged automatically.
 
 ## Troubleshooting
 

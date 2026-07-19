@@ -200,14 +200,20 @@ class OidcIntegration {
 	 * Resolve the provider's authorization and token endpoints, either from the
 	 * admin-entered manual values or from its discovery document.
 	 *
-	 * @return array{authorization_endpoint: string, token_endpoint: string}
+	 * The introspection endpoint is optional: with manual endpoints it is only known
+	 * when the admin entered one. When it is null a rejected refresh can not be
+	 * confirmed and is therefore never treated as a dead grant.
+	 *
+	 * @return array{authorization_endpoint: string, token_endpoint: string, introspection_endpoint: ?string}
 	 * @throws Exception when discovery is needed but can not be resolved
 	 */
 	public function getEndpoints(OidcProvider $provider): array {
 		if ($provider->getManualEndpoints()) {
+			$introspection = $provider->getIntrospectionEndpoint();
 			return [
 				'authorization_endpoint' => $provider->getAuthorizationEndpoint(),
 				'token_endpoint' => $provider->getTokenEndpoint(),
+				'introspection_endpoint' => $introspection !== '' ? $introspection : null,
 			];
 		}
 
@@ -215,7 +221,54 @@ class OidcIntegration {
 		return [
 			'authorization_endpoint' => (string)$discovery['authorization_endpoint'],
 			'token_endpoint' => (string)$discovery['token_endpoint'],
+			'introspection_endpoint' => isset($discovery['introspection_endpoint'])
+				? (string)$discovery['introspection_endpoint']
+				: null,
 		];
+	}
+
+	/**
+	 * Ask the provider whether a token is still active (RFC 7662).
+	 *
+	 * @return bool|null true/false when the provider answered, null when introspection
+	 *                   is unavailable or failed — the caller must not treat that as
+	 *                   proof the token is dead.
+	 */
+	public function introspectToken(OidcProvider $provider, string $token, string $hint): ?bool {
+		try {
+			$endpoint = $this->getEndpoints($provider)['introspection_endpoint'];
+		} catch (Exception $e) {
+			return null;
+		}
+		if ($endpoint === null) {
+			return null;
+		}
+
+		$body = [
+			'token' => $token,
+			'token_type_hint' => $hint,
+			'client_id' => $provider->getClientId(),
+		];
+		$clientSecret = $this->getClientSecret($provider);
+		if ($clientSecret !== null) {
+			$body['client_secret'] = $clientSecret;
+		}
+
+		try {
+			$response = $this->clientService->newClient()->post($endpoint, [
+				'headers' => ['Accept' => 'application/json'],
+				'body' => $body,
+			]);
+			$data = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+		} catch (Exception $e) {
+			$this->logger->warning('OIDC introspection failed for provider {providerId}: ' . $e->getMessage(), [
+				'exception' => $e,
+				'providerId' => $provider->getId(),
+			]);
+			return null;
+		}
+
+		return isset($data['active']) ? (bool)$data['active'] : null;
 	}
 
 	/**
@@ -268,6 +321,7 @@ class OidcIntegration {
 		}
 		$account->getMailAccount()->setOauthAccessToken($this->crypto->encrypt($data['access_token']));
 		$account->getMailAccount()->setOauthTokenTtl($this->timeFactory->getTime() + $data['expires_in']);
+		$account->getMailAccount()->setOauthNeedsReauth(false);
 		return $account;
 	}
 
@@ -277,7 +331,7 @@ class OidcIntegration {
 	 */
 	public function refresh(Account $account): Account {
 		$oauthRefreshToken = $account->getMailAccount()->getOauthRefreshToken();
-		if ($account->getMailAccount()->getOauthTokenTtl() === null || $oauthRefreshToken === null) {
+		if ($account->getMailAccount()->getOauthTokenTtl() === null) {
 			// Account is not authorized yet
 			return $account;
 		}
@@ -293,6 +347,16 @@ class OidcIntegration {
 			$this->logger->warning('Can not refresh OIDC token for account {accountId}: no provider matches its email domain', [
 				'accountId' => $account->getId(),
 			]);
+			return $account;
+		}
+
+		if ($oauthRefreshToken === null) {
+			// The access token expired and the provider never issued a refresh token
+			// (e.g. offline_access was not granted). Only the user can fix this.
+			$this->logger->info('OIDC account {accountId} has no refresh token, re-authentication required', [
+				'accountId' => $account->getId(),
+			]);
+			$account->getMailAccount()->setOauthNeedsReauth(true);
 			return $account;
 		}
 
@@ -327,12 +391,28 @@ class OidcIntegration {
 				'exception' => $e,
 				'accountId' => $account->getId(),
 			]);
+
+			// The refresh may have failed because the provider was unreachable rather
+			// than because the grant is gone. Ask the provider directly; only a
+			// definitive "inactive" answer marks the account as needing re-auth.
+			$active = $this->introspectToken(
+				$provider,
+				$this->crypto->decrypt($oauthRefreshToken),
+				'refresh_token',
+			);
+			if ($active === false) {
+				$this->logger->info('OIDC refresh token for account {accountId} is no longer active, re-authentication required', [
+					'accountId' => $account->getId(),
+				]);
+				$account->getMailAccount()->setOauthNeedsReauth(true);
+			}
 			return $account;
 		}
 
 		$data = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 		$account->getMailAccount()->setOauthAccessToken($this->crypto->encrypt($data['access_token']));
 		$account->getMailAccount()->setOauthTokenTtl($this->timeFactory->getTime() + $data['expires_in']);
+		$account->getMailAccount()->setOauthNeedsReauth(false);
 		// Providers may rotate refresh tokens
 		if (isset($data['refresh_token'])) {
 			$account->getMailAccount()->setOauthRefreshToken($this->crypto->encrypt($data['refresh_token']));

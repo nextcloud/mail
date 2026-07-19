@@ -87,6 +87,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setOauthAccessToken(string $token)
  * @method string|null getOauthRefreshToken()
  * @method void setOauthRefreshToken(string $token)
+ * @method bool|null getOauthNeedsReauth()
+ * @method void setOauthNeedsReauth(bool $needsReauth)
  * @method int|null getOauthTokenTtl()
  * @method void setOauthTokenTtl(int|null $ttl)
  * @method int|null getSmimeCertificateId()
@@ -135,6 +137,7 @@ class MailAccount extends Entity {
 	protected $oauthAccessToken;
 	protected $oauthRefreshToken;
 	protected $oauthTokenTtl;
+	protected $oauthNeedsReauth;
 
 	/** @var int|null */
 	protected $draftsMailboxId;
@@ -267,6 +270,7 @@ class MailAccount extends Entity {
 		$this->addType('provisioningId', 'integer');
 		$this->addType('order', 'integer');
 		$this->addType('showSubscribedOnly', 'boolean');
+		$this->addType('oauthNeedsReauth', 'boolean');
 		$this->addType('personalNamespace', 'string');
 		$this->addType('draftsMailboxId', 'integer');
 		$this->addType('sentMailboxId', 'integer');
@@ -326,6 +330,7 @@ class MailAccount extends Entity {
 			'archiveMailboxId' => $this->getArchiveMailboxId(),
 			'snoozeMailboxId' => $this->getSnoozeMailboxId(),
 			'sieveEnabled' => ($this->isSieveEnabled() === true),
+			'oauthNeedsReauth' => ($this->getOauthNeedsReauth() === true),
 			'signatureAboveQuote' => ($this->isSignatureAboveQuote() === true),
 			'signatureMode' => $this->getSignatureMode(),
 			'smimeCertificateId' => $this->getSmimeCertificateId(),

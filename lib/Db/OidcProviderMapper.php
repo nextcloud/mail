@@ -121,6 +121,11 @@ class OidcProviderMapper extends QBMapper {
 		$provider->setDiscoveryUrl($manualEndpoints ? '' : $data['discoveryUrl']);
 		$provider->setAuthorizationEndpoint($manualEndpoints ? $data['authorizationEndpoint'] : '');
 		$provider->setTokenEndpoint($manualEndpoints ? $data['tokenEndpoint'] : '');
+		// Optional even in manual mode: without it a rejected refresh can not be
+		// confirmed, so it is simply never treated as a dead grant.
+		$provider->setIntrospectionEndpoint(
+			$manualEndpoints ? ($data['introspectionEndpoint'] ?? '') : '',
+		);
 		$provider->setScope(
 			isset($data['scope']) && $data['scope'] !== ''
 				? $data['scope']

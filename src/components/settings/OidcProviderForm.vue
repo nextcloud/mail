@@ -113,6 +113,16 @@
 			:disabled="loading"
 			placeholder="https://idp.example.com/token" />
 		<NcInputField
+			v-show="manualEndpoints"
+			v-model="introspectionEndpoint"
+			type="url"
+			:label="t('mail', 'Introspection endpoint (optional)')"
+			:disabled="loading"
+			placeholder="https://idp.example.com/introspect" />
+		<p v-show="manualEndpoints" class="field-hint">
+			{{ t('mail', 'Used to confirm that a rejected token really expired, so the user can be asked to reconnect. Without it, a failed refresh is always treated as a temporary error.') }}
+		</p>
+		<NcInputField
 			v-model="clientId"
 			:label="t('mail', 'Client ID')"
 			:disabled="loading"
@@ -215,6 +225,7 @@ export default {
 			discoveryUrl: this.setting.discoveryUrl || '',
 			authorizationEndpoint: this.setting.authorizationEndpoint || '',
 			tokenEndpoint: this.setting.tokenEndpoint || '',
+			introspectionEndpoint: this.setting.introspectionEndpoint || '',
 			scope: this.setting.scope || 'openid email offline_access',
 		}
 	},
@@ -251,6 +262,7 @@ export default {
 					discoveryUrl: this.discoveryUrl,
 					authorizationEndpoint: this.authorizationEndpoint,
 					tokenEndpoint: this.tokenEndpoint,
+					introspectionEndpoint: this.introspectionEndpoint,
 					scope: this.scope,
 				})
 			} catch (error) {
@@ -314,6 +326,12 @@ export default {
 	display: flex;
 	gap: calc(var(--default-grid-baseline) * 2);
 	margin-block-start: calc(var(--default-grid-baseline) * 2);
+}
+
+.field-hint {
+	margin-top: calc(var(--default-grid-baseline) * -1);
+	color: var(--color-text-maxcontrast);
+	font-size: 0.9em;
 }
 
 .redirect-hint {

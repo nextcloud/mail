@@ -15,6 +15,8 @@
 			<ComposerSessionIndicator @close="onCloseMessageModal" />
 			<NewMessageModal ref="newMessageModal" :accounts="accounts" />
 		</template>
+
+		<OidcReauthDialog />
 	</NcContent>
 </template>
 
@@ -24,6 +26,7 @@ import { mapState, mapStores } from 'pinia'
 import ComposerSessionIndicator from '../components/ComposerSessionIndicator.vue'
 import MailboxThread from '../components/MailboxThread.vue'
 import Navigation from '../components/Navigation.vue'
+import OidcReauthDialog from '../components/OidcReauthDialog.vue'
 import Outbox from '../components/Outbox.vue'
 import logger from '../logger.js'
 import { testAccountConnection } from '../service/AccountService.js'
@@ -38,6 +41,7 @@ export default {
 		MailboxThread,
 		Navigation,
 		NewMessageModal: () => import(/* webpackChunkName: "new-message-modal" */ '../components/NewMessageModal.vue'),
+		OidcReauthDialog,
 		Outbox,
 		ComposerSessionIndicator,
 	},

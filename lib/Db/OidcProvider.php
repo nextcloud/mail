@@ -45,6 +45,8 @@ use ReturnTypeWillChange;
  * @method void setAuthorizationEndpoint(string $authorizationEndpoint)
  * @method string getTokenEndpoint()
  * @method void setTokenEndpoint(string $tokenEndpoint)
+ * @method string getIntrospectionEndpoint()
+ * @method void setIntrospectionEndpoint(string $introspectionEndpoint)
  * @method string getScope()
  * @method void setScope(string $scope)
  */
@@ -65,6 +67,7 @@ class OidcProvider extends Entity implements JsonSerializable {
 	protected $manualEndpoints;
 	protected $authorizationEndpoint;
 	protected $tokenEndpoint;
+	protected $introspectionEndpoint;
 	protected $scope;
 
 	public function __construct() {
@@ -96,6 +99,7 @@ class OidcProvider extends Entity implements JsonSerializable {
 			'manualEndpoints' => $this->getManualEndpoints(),
 			'authorizationEndpoint' => $this->getAuthorizationEndpoint(),
 			'tokenEndpoint' => $this->getTokenEndpoint(),
+			'introspectionEndpoint' => $this->getIntrospectionEndpoint(),
 			'scope' => $this->getScope(),
 		];
 	}

@@ -104,6 +104,11 @@ class Version5300Date20260717120000 extends SimpleMigrationStep {
 				'length' => 2048,
 				'default' => '',
 			]);
+			$table->addColumn('introspection_endpoint', Types::STRING, [
+				'notnull' => true,
+				'length' => 2048,
+				'default' => '',
+			]);
 			$table->addColumn('scope', Types::STRING, [
 				'notnull' => true,
 				'length' => 255,
@@ -111,6 +116,17 @@ class Version5300Date20260717120000 extends SimpleMigrationStep {
 			]);
 			$table->setPrimaryKey(['id']);
 			$table->addUniqueIndex(['email_domain'], 'mail_oidc_dm_idx');
+		}
+
+		// Set when the stored OIDC grant can no longer be renewed (refresh token
+		// expired/revoked, or none was ever issued) so the client can prompt the user
+		// to re-authenticate instead of failing silently.
+		$accounts = $schema->getTable('mail_accounts');
+		if (!$accounts->hasColumn('oauth_needs_reauth')) {
+			$accounts->addColumn('oauth_needs_reauth', Types::BOOLEAN, [
+				'notnull' => false,
+				'default' => false,
+			]);
 		}
 
 		return $schema;
