@@ -255,6 +255,8 @@ OC.L10N.register(
     "Custom date and time" : "Tinkinta data ir laikas",
     "Enter a date" : "Įveskite datą",
     "Remove attachment {fileName}" : "Šalinti priedą {fileName}",
+    "Add as attachment" : "Pridėti kaip priedą",
+    "Add as share link" : "Pridėti kaip bendrinimo nuorodą",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Priedo dydis viršija leistiną ribą {size}. Prašome failus atsiųsti naudojant nuorodą.","Priedų dydis viršija leistiną ribą {size}. Prašome failus atsiųsti naudojant nuorodą.","Priedų dydis viršija leistiną ribą {size}. Prašome failus atsiųsti naudojant nuorodą.","Priedų dydis viršija leistiną ribą {size}. Prašome failus atsiųsti naudojant nuorodą."],
     "Choose a file" : "Pasirinkti failą",
     "_{count} attachment_::_{count} attachments_" : ["{count} priedas","{count} priedai","{count} priedų","{count} priedas"],
