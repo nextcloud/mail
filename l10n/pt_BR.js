@@ -255,6 +255,8 @@ OC.L10N.register(
     "Custom date and time" : "Data e hora personalizadas",
     "Enter a date" : "Insira uma data",
     "Remove attachment {fileName}" : "Remover anexo {fileName}",
+    "Add as attachment" : "Adicionar como anexo",
+    "Add as share link" : "Adicionar como link de compartilhamento",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["O anexo excede o tamanho permitido de {size}. Em vez disso, compartilhe o arquivo por meio de um link.","Os anexos excedem o tamanho permitido de {size}. Em vez disso, compartilhe os arquivos por meio de um link.","Os anexos excedem o tamanho permitido de {size}. Em vez disso, compartilhe os arquivos por meio de um link."],
     "Choose a file" : "Escolher um arquivo",
     "_{count} attachment_::_{count} attachments_" : ["{count} anexo","{count} anexos","{count} anexos"],
