@@ -198,6 +198,7 @@ OC.L10N.register(
     "Custom date and time" : "وقت وتاريخ مخصص",
     "Enter a date" : "أدخِل تاريخاً",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["تجاوزت المرفقات حجم المرفقات المسموح به وهو {size}. يرجى مشاركة الملفات عبر رابط بدلا من ذلك.","تجاوزت المرفقات حجم المرفقات المسموح به وهو {size}. يرجى مشاركة الملفات عبر رابط بدلا من ذلك.","تجاوزت المرفقات حجم المرفقات المسموح به وهو {size}. يرجى مشاركة الملفات عبر رابط بدلا من ذلك.","تجاوزت المرفقات حجم المرفقات المسموح به وهو {size}. يرجى مشاركة الملفات عبر رابط بدلا من ذلك.","تجاوزت المرفقات حجم المرفقات المسموح به وهو {size}. يرجى مشاركة الملفات عبر رابط بدلا من ذلك.","تجاوزت المرفقات حجم المرفقات المسموح به وهو {size}. يرجى مشاركة الملفات عبر رابط بدلا من ذلك."],
+    "Choose a file" : "إختيار ملف",
     "_{count} attachment_::_{count} attachments_" : ["{count} مرفقات","{count} مرفق","{count} مرفقات","{count} مرفقات","{count} مرفقات","{count} مُرفَقات"],
     "Untitled message" : "رسالة بدون عنوان",
     "Expand composer" : "تمديد الناظِم composer",
