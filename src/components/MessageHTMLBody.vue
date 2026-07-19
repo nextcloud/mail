@@ -154,6 +154,19 @@ export default {
 			if (this.isSenderTrusted) {
 				this.displayIframe()
 			}
+
+			// Events occurring into the iframe are forced to bubble to the
+			// document, to be intercepted by other functions
+			const propagateEvents = ['click', 'keydown', 'keyup']
+			propagateEvents.forEach((eventType) => {
+				iframeDoc.addEventListener(eventType, (e) => {
+					const cloned = new e.constructor(e.type, e)
+					this.$refs.iframe.dispatchEvent(cloned)
+					if (cloned.defaultPrevented) {
+						e.preventDefault()
+					}
+				})
+			})
 		},
 
 		onBeforePrint() {
