@@ -30,7 +30,9 @@
 			</NcColorPicker>
 			<ActionInput
 				v-if="renameTagInput"
-				:value="tag.displayName"
+				v-model="currentTagName"
+				:error="hasError()"
+				:helper-text="errorMessage"
 				@submit="renameTag(tag, $event)" />
 			<ActionText v-if="showSaving">
 				<template #icon>
@@ -70,7 +72,7 @@ import IconEdit from 'vue-material-design-icons/PencilOutline.vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
-import { translateTagDisplayName } from '../util/tag.js'
+import { translateTagDisplayName, validateTag } from '../util/tag.js'
 
 export default {
 	name: 'TagItem',
@@ -106,13 +108,21 @@ export default {
 			tagLabel: true,
 			tagInput: false,
 			showSaving: false,
+			currentTagName: '',
 			renameTagLabel: true,
 			renameTagInput: false,
+			errorMessage: '',
 		}
 	},
 
 	computed: {
 		...mapStores(useMainStore),
+	},
+
+	watch: {
+		currentTagName() {
+			this.errorMessage = ''
+		},
 	},
 
 	methods: {
@@ -141,6 +151,7 @@ export default {
 			this.renameTagLabel = false
 			this.renameTagInput = true
 			this.showSaving = false
+			this.currentTagName = this.tag.displayName
 			this.editColor = this.tag.color
 		},
 
@@ -150,20 +161,30 @@ export default {
 			this.showSaving = false
 		},
 
+		hasError() {
+			return this.errorMessage !== ''
+		},
+
 		async renameTag(tag, event) {
-			this.renameTagInput = false
+			this.currentTagName = this.currentTagName.trim()
+
+			const otherTags = this.mainStore.getTags
+			const valid = validateTag(tag.id, this.currentTagName, otherTags)
+			if (valid !== true) {
+				this.errorMessage = valid
+				return
+			}
+
 			this.showSaving = false
-			const displayName = event.target.querySelector('input[type=text]').value
+			this.errorMessage = ''
 
 			try {
 				await this.mainStore.updateTag({
 					tag,
-					displayName,
+					displayName: this.currentTagName,
 					color: this.tag.color,
 				})
-				this.renameTagLabel = true
-				this.renameTagInput = false
-				this.showSaving = false
+				this.closeEditTag()
 			} catch (error) {
 				showInfo(t('mail', 'An error occurred, unable to rename the tag.'))
 				logger.error('could not rename tag', { error })
