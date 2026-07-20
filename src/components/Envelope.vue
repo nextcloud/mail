@@ -173,8 +173,12 @@
 				<div
 					v-if="!compactMode && (data.encrypted || data.previewText)"
 					class="envelope__preview-text"
-					:title="data.summary ? t('mail', 'This summary was AI generated') : null">
-					<NcAssistantIcon v-if="data.summary" :size="15" class="envelope__preview-text__icon" />
+					:title="data.summary ? data.summary.trim() : null">
+					<NcAssistantIcon
+						v-if="data.summary"
+						:size="15"
+						class="envelope__preview-text__icon"
+						:title="t('mail', 'This summary was AI-generated')" />
 					{{ isEncrypted ? t('mail', 'Encrypted message') : data.summary ? data.summary.trim() : data.previewText.trim() }}
 				</div>
 			</div>
