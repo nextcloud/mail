@@ -74,6 +74,7 @@ class MailAccountTest extends TestCase {
 			'classificationEnabled' => true,
 			'authMethod' => 'password',
 			'imipCreate' => false,
+			'oauthNeedsReauth' => false,
 		], $a->toJson());
 	}
 
@@ -115,6 +116,7 @@ class MailAccountTest extends TestCase {
 			'classificationEnabled' => true,
 			'authMethod' => 'password',
 			'imipCreate' => false,
+			'oauthNeedsReauth' => false,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency
