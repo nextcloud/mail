@@ -10,9 +10,13 @@
 		:envelopes="envelopes"
 		:account-id="envelopes[0].accountId"
 		@close="closeDeleteModal" />
-	<Modal v-else size="large" @close="onClose">
+	<Modal
+		v-else
+		size="large"
+		label-id="tag-modal-heading"
+		@close="onClose">
 		<div class="modal-content">
-			<h2 class="tag-title">
+			<h2 id="tag-modal-heading" class="tag-title">
 				{{ t('mail', 'Add default tags') }}
 			</h2>
 			<TagItem
