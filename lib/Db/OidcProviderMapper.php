@@ -109,7 +109,9 @@ class OidcProviderMapper extends QBMapper {
 			$provider->setId((int)$data['id']);
 		}
 		$provider->setName($data['name']);
-		$provider->setEmailDomain($data['emailDomain']);
+		// Stored lower-cased so it lines up with the case-insensitive lookup and the
+		// unique index does not depend on the database collation.
+		$provider->setEmailDomain(mb_strtolower($data['emailDomain']));
 		$provider->setImapHost($data['imapHost']);
 		$provider->setImapPort((int)$data['imapPort']);
 		$provider->setImapSslMode($data['imapSslMode']);

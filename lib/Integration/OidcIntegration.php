@@ -308,6 +308,7 @@ class OidcIntegration {
 				'headers' => ['Accept' => 'application/json'],
 				'body' => $body,
 			]);
+			$data = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 		} catch (Exception $e) {
 			$this->logger->error('Could not link OIDC account: ' . $e->getMessage(), [
 				'exception' => $e,
@@ -315,7 +316,13 @@ class OidcIntegration {
 			return $account;
 		}
 
-		$data = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+		if (!isset($data['access_token'], $data['expires_in'])) {
+			$this->logger->error('OIDC token endpoint returned an unexpected response while linking account {accountId}', [
+				'accountId' => $account->getId(),
+			]);
+			return $account;
+		}
+
 		if (isset($data['refresh_token'])) {
 			$account->getMailAccount()->setOauthRefreshToken($this->crypto->encrypt($data['refresh_token']));
 		}
@@ -361,6 +368,20 @@ class OidcIntegration {
 		}
 
 		try {
+			$refreshToken = $this->crypto->decrypt($oauthRefreshToken);
+		} catch (Exception $e) {
+			// A stored refresh token that no longer decrypts is unusable (e.g. the server
+			// secret was rotated). Only the user can fix it, and this must not bubble up
+			// and break opening the mailbox.
+			$this->logger->warning('Could not decrypt refresh token for account {accountId}, re-authentication required: ' . $e->getMessage(), [
+				'exception' => $e,
+				'accountId' => $account->getId(),
+			]);
+			$account->getMailAccount()->setOauthNeedsReauth(true);
+			return $account;
+		}
+
+		try {
 			$tokenEndpoint = $this->getEndpoints($provider)['token_endpoint'];
 		} catch (Exception $e) {
 			$this->logger->warning('Could not resolve OIDC endpoints for provider {providerId}: ' . $e->getMessage(), [
@@ -373,7 +394,7 @@ class OidcIntegration {
 		$body = [
 			'client_id' => $provider->getClientId(),
 			'grant_type' => 'refresh_token',
-			'refresh_token' => $this->crypto->decrypt($oauthRefreshToken),
+			'refresh_token' => $refreshToken,
 		];
 		$clientSecret = $this->getClientSecret($provider);
 		if ($clientSecret !== null) {
@@ -386,6 +407,7 @@ class OidcIntegration {
 				'headers' => ['Accept' => 'application/json'],
 				'body' => $body,
 			]);
+			$data = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 		} catch (Exception $e) {
 			$this->logger->warning('Could not refresh OIDC token for account {accountId}: ' . $e->getMessage(), [
 				'exception' => $e,
@@ -395,12 +417,7 @@ class OidcIntegration {
 			// The refresh may have failed because the provider was unreachable rather
 			// than because the grant is gone. Ask the provider directly; only a
 			// definitive "inactive" answer marks the account as needing re-auth.
-			$active = $this->introspectToken(
-				$provider,
-				$this->crypto->decrypt($oauthRefreshToken),
-				'refresh_token',
-			);
-			if ($active === false) {
+			if ($this->introspectToken($provider, $refreshToken, 'refresh_token') === false) {
 				$this->logger->info('OIDC refresh token for account {accountId} is no longer active, re-authentication required', [
 					'accountId' => $account->getId(),
 				]);
@@ -409,7 +426,13 @@ class OidcIntegration {
 			return $account;
 		}
 
-		$data = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+		if (!isset($data['access_token'], $data['expires_in'])) {
+			$this->logger->warning('OIDC token refresh for account {accountId} returned an unexpected response', [
+				'accountId' => $account->getId(),
+			]);
+			return $account;
+		}
+
 		$account->getMailAccount()->setOauthAccessToken($this->crypto->encrypt($data['access_token']));
 		$account->getMailAccount()->setOauthTokenTtl($this->timeFactory->getTime() + $data['expires_in']);
 		$account->getMailAccount()->setOauthNeedsReauth(false);

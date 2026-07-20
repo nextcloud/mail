@@ -137,4 +137,22 @@ class OidcConnectTest extends OidcIntegrationTestCase {
 
 		$this->assertNull($result->getMailAccount()->getOauthAccessToken());
 	}
+
+	public function testFinishConnectIgnoresUnexpectedResponse(): void {
+		$provider = $this->provider();
+		$provider->setManualEndpoints(true);
+		$provider->setTokenEndpoint('https://idp.example.com/token');
+		$account = $this->account('alice@example.com');
+		$this->crypto->method('decrypt')->willReturn('plain-secret');
+
+		$response = $this->createMock(IResponse::class);
+		$response->method('getBody')->willReturn(json_encode(['error' => 'invalid_grant']));
+		$client = $this->createMock(IClient::class);
+		$client->method('post')->willReturn($response);
+		$this->clientService->method('newClient')->willReturn($client);
+
+		$result = $this->integration->finishConnect($provider, $account, 'code');
+
+		$this->assertNull($result->getMailAccount()->getOauthAccessToken());
+	}
 }

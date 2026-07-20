@@ -154,4 +154,38 @@ class OidcRefreshTest extends OidcIntegrationTestCase {
 
 		$this->assertSame('enc-refresh', $account->getMailAccount()->getOauthRefreshToken());
 	}
+
+	public function testRefreshFlagsReauthWhenRefreshTokenCannotBeDecrypted(): void {
+		$provider = $this->provider();
+		$account = $this->expiredAccount('enc-refresh');
+		$this->providerMapper->method('findByEmailDomain')->willReturn($provider);
+		$this->crypto->method('decrypt')->willThrowException(new \Exception('bad ciphertext'));
+		$this->clientService->expects($this->never())->method('newClient');
+
+		$result = $this->integration->refresh($account);
+
+		$this->assertTrue($result->getMailAccount()->getOauthNeedsReauth());
+	}
+
+	public function testRefreshIsNoopOnUnexpectedTokenResponse(): void {
+		$provider = $this->provider();
+		$account = $this->expiredAccount('enc-refresh');
+		$this->providerMapper->method('findByEmailDomain')->willReturn($provider);
+		$this->cache->method('get')->willReturn(json_encode([
+			'authorization_endpoint' => 'https://idp.example.com/auth',
+			'token_endpoint' => 'https://idp.example.com/token',
+		]));
+		$this->crypto->method('decrypt')->willReturn('plain');
+
+		$response = $this->createMock(IResponse::class);
+		$response->method('getBody')->willReturn(json_encode(['error' => 'invalid_grant']));
+		$client = $this->createMock(IClient::class);
+		$client->method('post')->willReturn($response);
+		$this->clientService->method('newClient')->willReturn($client);
+
+		$result = $this->integration->refresh($account);
+
+		$this->assertNull($result->getMailAccount()->getOauthAccessToken());
+		$this->assertNotTrue($result->getMailAccount()->getOauthNeedsReauth());
+	}
 }

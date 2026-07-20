@@ -295,6 +295,7 @@ import {
 } from '../service/AutoConfigService.js'
 import { generateOauthState } from '../service/OauthStateService.js'
 import useMainStore from '../store/mainStore.js'
+import { findProviderForEmail, loadOidcProviders, openOidcConsent } from '../util/oidc.js'
 
 export default {
 	name: 'AccountForm',
@@ -362,7 +363,7 @@ export default {
 
 			feedback: null,
 			password: '',
-			oidcProviders: loadState('mail', 'oidc_providers', []),
+			oidcProviders: loadOidcProviders(),
 		}
 	},
 
@@ -434,12 +435,7 @@ export default {
 		 * @return {?object}
 		 */
 		oidcProvider() {
-			const at = this.emailAddress.lastIndexOf('@')
-			if (at === -1) {
-				return null
-			}
-			const domain = this.emailAddress.slice(at + 1).toLowerCase()
-			return this.oidcProviders.find((p) => (p.emailDomain || '').toLowerCase() === domain) ?? null
+			return findProviderForEmail(this.emailAddress, this.oidcProviders)
 		},
 
 		isOidcAccount() {
@@ -503,30 +499,27 @@ export default {
 
 		async requestOauthConsent(account, isUpdate) {
 			this.loadingMessage = t('mail', 'Awaiting user consent')
-			const state = await generateOauthState(account.id)
-			let url
 			if (this.isGoogleAccount) {
 				this.feedback = isUpdate
 					? t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your Google account')
 					: t('mail', 'Account created. Please follow the pop-up instructions to link your Google account')
-				url = this.googleOauthUrl
-					.replace('_state_', state)
-					.replace('_email_', encodeURIComponent(account.emailAddress))
+				await getUserConsent(this.googleOauthUrl
+					.replace('_state_', await generateOauthState(account.id))
+					.replace('_email_', encodeURIComponent(account.emailAddress)))
 			} else if (this.isMicrosoftAccount) {
 				this.feedback = isUpdate
 					? t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your Microsoft account')
 					: t('mail', 'Account created. Please follow the pop-up instructions to link your Microsoft account')
-				url = this.microsoftOauthUrl
-					.replace('_state_', state)
-					.replace('_email_', encodeURIComponent(account.emailAddress))
+				await getUserConsent(this.microsoftOauthUrl
+					.replace('_state_', await generateOauthState(account.id))
+					.replace('_email_', encodeURIComponent(account.emailAddress)))
 			} else {
 				const provider = this.oidcProvider.name || this.oidcProvider.emailDomain
 				this.feedback = isUpdate
 					? t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your {provider} account', { provider })
 					: t('mail', 'Account created. Please follow the pop-up instructions to link your {provider} account', { provider })
-				url = this.oidcProvider.authorizeUrl.replace('_state_', state)
+				await openOidcConsent(this.oidcProvider, account.id)
 			}
-			await getUserConsent(url)
 		},
 
 		onModeChanged(e) {

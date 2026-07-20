@@ -54,6 +54,7 @@ import {
 	deleteOidcProvider,
 	updateOidcProvider,
 } from '../../service/OidcIntegrationService.js'
+import { loadOidcProviders } from '../../util/oidc.js'
 
 export default {
 	name: 'OidcAdminSettings',
@@ -65,7 +66,7 @@ export default {
 
 	data() {
 		return {
-			providers: loadState('mail', 'oidc_providers', []),
+			providers: loadOidcProviders(),
 			redirectUrl: loadState('mail', 'oidc_redirect_url', ''),
 			addNew: false,
 			formKey: Math.random(),

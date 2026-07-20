@@ -57,6 +57,15 @@ class OidcProviderMapperTest extends TestCase {
 		$this->assertSame('s3cret', $provider->getClientSecret());
 	}
 
+	public function testValidateLowercasesEmailDomain(): void {
+		$data = $this->validData();
+		$data['emailDomain'] = 'Example.COM';
+
+		$provider = $this->mapper->validate($data);
+
+		$this->assertSame('example.com', $provider->getEmailDomain());
+	}
+
 	public function testValidateDefaultsScope(): void {
 		$provider = $this->mapper->validate($this->validData());
 

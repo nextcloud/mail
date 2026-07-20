@@ -5,11 +5,11 @@
 
 <template>
 	<NcDialog
-		v-if="account && !dismissed"
+		v-if="account"
 		:open="true"
 		:name="t('mail', 'Reconnect your mail account')"
 		:buttons="buttons"
-		@closing="dismissed = true">
+		@closing="dismiss">
 		<p>
 			{{
 				t(
@@ -24,14 +24,13 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { loadState } from '@nextcloud/initial-state'
 import { translate as t } from '@nextcloud/l10n'
 import { mapStores } from 'pinia'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
-import { CONSENT_ABORTED, getUserConsent } from '../integration/oauth.js'
+import { CONSENT_ABORTED } from '../integration/oauth.js'
 import logger from '../logger.js'
-import { generateOauthState } from '../service/OauthStateService.js'
 import useMainStore from '../store/mainStore.js'
+import { findProviderForEmail, loadOidcProviders, openOidcConsent } from '../util/oidc.js'
 
 export default {
 	name: 'OidcReauthDialog',
@@ -41,9 +40,9 @@ export default {
 
 	data() {
 		return {
-			dismissed: false,
+			dismissedIds: [],
 			reconnecting: false,
-			oidcProviders: loadState('mail', 'oidc_providers', []),
+			oidcProviders: loadOidcProviders(),
 		}
 	},
 
@@ -51,12 +50,13 @@ export default {
 		...mapStores(useMainStore),
 
 		/**
-		 * The first account whose OIDC grant can no longer be renewed.
+		 * The first flagged account the user has not dismissed this session.
 		 *
 		 * @return {?object}
 		 */
 		account() {
-			return this.mainStore.getAccounts.find((account) => account.oauthNeedsReauth) ?? null
+			return this.mainStore.getAccounts
+				.find((account) => account.oauthNeedsReauth && !this.dismissedIds.includes(account.id)) ?? null
 		},
 
 		/**
@@ -65,15 +65,7 @@ export default {
 		 * @return {?object}
 		 */
 		provider() {
-			if (!this.account?.emailAddress) {
-				return null
-			}
-			const at = this.account.emailAddress.lastIndexOf('@')
-			if (at === -1) {
-				return null
-			}
-			const domain = this.account.emailAddress.slice(at + 1).toLowerCase()
-			return this.oidcProviders.find((p) => (p.emailDomain || '').toLowerCase() === domain) ?? null
+			return findProviderForEmail(this.account?.emailAddress, this.oidcProviders)
 		},
 
 		buttons() {
@@ -82,7 +74,7 @@ export default {
 					label: t('mail', 'Later'),
 					type: 'tertiary',
 					disabled: this.reconnecting,
-					callback: () => { this.dismissed = true },
+					callback: () => { this.dismiss() },
 				},
 				{
 					label: t('mail', 'Reconnect'),
@@ -97,6 +89,12 @@ export default {
 	methods: {
 		t,
 
+		dismiss() {
+			if (this.account) {
+				this.dismissedIds = [...this.dismissedIds, this.account.id]
+			}
+		},
+
 		async reconnect() {
 			// Both are computed from the flagged account, which changes once it is
 			// patched below, so hold on to them for the whole flow.
@@ -108,7 +106,7 @@ export default {
 			this.reconnecting = true
 			try {
 				// Opened from the button click so the popup carries user activation
-				await getUserConsent(provider.authorizeUrl.replace('_state_', await generateOauthState(account.id)))
+				await openOidcConsent(provider, account.id)
 				// The server already cleared the flag when it stored the new tokens.
 				// Patch the one account instead of refetching the list: re-adding
 				// accounts that are already loaded appends duplicate ids to it.
