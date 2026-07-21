@@ -19,18 +19,15 @@
 		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
 		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
 		<template v-else-if="hasGroupedEnvelopes && !isPriorityInbox">
-			<div v-for="[label, group] in groupEnvelopes" :key="label">
-				<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
-				<EnvelopeList
-					:account="account"
-					:mailbox="mailbox"
-					:search-query="searchQuery"
-					:envelopes="group"
-					:loading-more="false"
-					:load-more-button="false"
-					:skip-transition="skipListTransition"
-					@delete="onDelete" />
-			</div>
+			<EnvelopeList
+				:account="account"
+				:mailbox="mailbox"
+				:search-query="searchQuery"
+				:sections="translatedSections"
+				:loading-more="false"
+				:load-more-button="false"
+				:skip-transition="skipListTransition"
+				@delete="onDelete" />
 		</template>
 		<EnvelopeList
 			v-else
@@ -57,7 +54,6 @@ import EnvelopeList from './EnvelopeList.vue'
 import Error from './Error.vue'
 import Loading from './Loading.vue'
 import LoadingSkeleton from './LoadingSkeleton.vue'
-import SectionTitle from './SectionTitle.vue'
 import MailboxLockedError from '../errors/MailboxLockedError.js'
 import MailboxNotCachedError from '../errors/MailboxNotCachedError.js'
 import { matchError } from '../errors/match.js'
@@ -77,7 +73,6 @@ export default {
 		Error,
 		Loading,
 		LoadingSkeleton,
-		SectionTitle,
 	},
 
 	props: {
@@ -175,6 +170,10 @@ export default {
 
 		showLoadMore() {
 			return !this.endReached && this.paginate === 'manual'
+		},
+
+		translatedSections() {
+			return this.groupEnvelopes.map(([label, group]) => [this.getLabelForGroup(label), group])
 		},
 	},
 
