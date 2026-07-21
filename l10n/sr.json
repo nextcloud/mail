@@ -262,7 +262,6 @@
     "Could not snooze thread" : "Низ порука није могао да се одложи",
     "Thread was unsnoozed" : "Прекинуто је одлагање низа порука",
     "Could not unsnooze thread" : "Није могло да се искључи одлагање низа порука",
-    "This summary was AI generated" : "Резиме је генерисала AI",
     "Encrypted message" : "Шифрована порука",
     "This message is unread" : "Ова порука није прочитана",
     "Unfavorite" : "Није омиљено",
@@ -563,9 +562,6 @@
     "Delete tag" : "Обриши ознаку",
     "Set tag" : "Постави ознаку",
     "Unset tag" : "Уклони ознаку",
-    "Tag name is a hidden system tag" : "Назив ознаке је скривена системска ознака",
-    "Tag already exists" : "Ознака већ постоји",
-    "Tag name cannot be empty" : "Назив ознаке не може бити празан",
     "An error occurred, unable to create the tag." : "Дошло је до грешке, ознака не може да се креира.",
     "Add default tags" : "Додај подразумеване ознаке",
     "Add tag" : "Додајте ознаку",
@@ -606,7 +602,6 @@
     "Thread summary" : "Резиме низа порука",
     "Go to latest message" : "Иди на најстарију поруку",
     "Newest message" : "Најновија порука",
-    "This summary is AI generated and may contain mistakes." : "Овај резиме је генерисала AI и може да садржи грешке.",
     "Please select languages to translate to and from" : "Молимо вас изаберите изворишни и циљни језик за превод",
     "The message could not be translated" : "Није могла да се преведе порука",
     "Translation copied to clipboard" : "Превод је копиран у клипборд",
@@ -855,9 +850,14 @@
     "Could not load your message" : "Неуспело учитавање поруке",
     "Could not load the desired message" : "Неуспело учитавање жељене поруке",
     "Could not load the message" : "Неуспело учитавање поруке",
+    "Tag name cannot be empty" : "Назив ознаке не може бити празан",
+    "Tag name is a hidden system tag" : "Назив ознаке је скривена системска ознака",
+    "Tag already exists" : "Ознака већ постоји",
     "Error loading message" : "Грешка при учитавању поруке",
     "Add share link from Files" : "Додај везу дељења из Фајлова",
     "Choose a file to add as attachment" : "Изаберите фајл за прилог",
-    "Choose a file to share as a link" : "Одаберите фајл који желите да поделите као везу"
+    "Choose a file to share as a link" : "Одаберите фајл који желите да поделите као везу",
+    "This summary was AI generated" : "Резиме је генерисала AI",
+    "This summary is AI generated and may contain mistakes." : "Овај резиме је генерисала AI и може да садржи грешке."
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 }

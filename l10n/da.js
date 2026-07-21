@@ -243,7 +243,6 @@ OC.L10N.register(
     "Could not snooze thread" : "Kunne ikke snooze tråd",
     "Thread was unsnoozed" : "Snooze blev fjernet fra tråd",
     "Could not unsnooze thread" : "Snooze kunne ikke fjernes fra tråd",
-    "This summary was AI generated" : "Dette sammendrag blev genereret af AI",
     "Encrypted message" : "Krypteret besked",
     "This message is unread" : "Denne besked er ulæst",
     "Unfavorite" : "U-favorit",
@@ -492,7 +491,6 @@ OC.L10N.register(
     "Custom" : "Brugerdefineret",
     "Save signature" : "Gem underskrift",
     "Message source" : "Beskedens kildekode",
-    "Tag already exists" : "Mærket eksisterer allerede",
     "Add tag" : "Tilføj tag",
     "Task created" : "Opgave oprettet",
     "Print" : "Udskriv",
@@ -588,9 +586,11 @@ OC.L10N.register(
     "Could not load your message" : "Din besked kunne ikke indlæses",
     "Could not load the desired message" : "Den ønskede besked kunne ikke indlæses",
     "Could not load the message" : "Beskeden kunne ikke indlæses",
+    "Tag already exists" : "Mærket eksisterer allerede",
     "Error loading message" : "Fejl under indlæsning af besked",
     "Add share link from Files" : "Tilføj delingslink fra Filer",
     "Choose a file to add as attachment" : "Vælg en fil, der skal tilføjes som vedhæftning",
-    "Choose a file to share as a link" : "Vælg en fil der skal deles som link"
+    "Choose a file to share as a link" : "Vælg en fil der skal deles som link",
+    "This summary was AI generated" : "Dette sammendrag blev genereret af AI"
 },
 "nplurals=2; plural=(n != 1);");

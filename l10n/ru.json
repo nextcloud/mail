@@ -300,7 +300,6 @@
     "Could not snooze thread" : "Не удалось отложить тред",
     "Thread was unsnoozed" : "Тред не был отложен",
     "Could not unsnooze thread" : "Не удалось отменить отмену треда",
-    "This summary was AI generated" : "Это резюме было создано ИИ",
     "Encrypted message" : "Зашифрованное сообщение",
     "This message is unread" : "Это сообщение не прочитано",
     "Unfavorite" : "Убрать из избранного",
@@ -615,9 +614,6 @@
     "Delete tag" : "Удалить метку",
     "Set tag" : "Установить тег",
     "Unset tag" : "Неустановленный тег",
-    "Tag name is a hidden system tag" : "Имя тега является скрытым системным тегом",
-    "Tag already exists" : "Метка уже существует",
-    "Tag name cannot be empty" : "Имя тега не может быть пустым",
     "An error occurred, unable to create the tag." : "Не удалось создать метку.",
     "Add default tags" : "Добавить метки по умолчанию",
     "Add tag" : "Добавить метку",
@@ -660,7 +656,6 @@
     "Thread summary" : "Резюме темы",
     "Go to latest message" : "Перейти к последнему сообщению",
     "Newest message" : "Самое свежее сообщение",
-    "This summary is AI generated and may contain mistakes." : "Это резюме создано ИИ и может содержать ошибки.",
     "Please select languages to translate to and from" : "Выберите языки с которых и на которые переводить",
     "The message could not be translated" : "Сообщение не может быть переведено",
     "Translation copied to clipboard" : "Перевод скопирован в буфер обмена",
@@ -916,11 +911,16 @@
     "Could not load your message" : "Ошибка получения вашего сообщения",
     "Could not load the desired message" : "Ошибка получения указанного сообщения",
     "Could not load the message" : "Ошибка получения этого сообщения",
+    "Tag name cannot be empty" : "Имя тега не может быть пустым",
+    "Tag name is a hidden system tag" : "Имя тега является скрытым системным тегом",
+    "Tag already exists" : "Метка уже существует",
     "Error loading message" : "Ошибка загрузки сообщения",
     "Add share link from Files" : "Добавить ссылку для общего доступа из Файлов",
     "Choose a file to add as attachment" : "Выбрать файл для вложения",
     "Choose a file to share as a link" : "Выберите файл для публикации ссылкой",
     "Delegated access to {userId}" : "Делегированный доступ к {userId}",
-    "Revoked access for {userId}" : "Отменён доступ для {userId}"
+    "Revoked access for {userId}" : "Отменён доступ для {userId}",
+    "This summary was AI generated" : "Это резюме было создано ИИ",
+    "This summary is AI generated and may contain mistakes." : "Это резюме создано ИИ и может содержать ошибки."
 },"pluralForm" :"nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);"
 }

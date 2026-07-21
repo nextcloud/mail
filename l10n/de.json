@@ -309,7 +309,6 @@
     "Could not unsnooze thread" : "Zurückstellung der Unterhaltung konnte nicht aufgehoben werden",
     "Message saved to Files" : "Nachricht wurde in Dateien gespeichert",
     "Message could not be saved" : "Nachricht konnte nicht gespeichert werden",
-    "This summary was AI generated" : "Diese Zusammenfassung wurde von KI generiert",
     "Encrypted message" : "Verschlüsselte Nachricht",
     "This message is unread" : "Diese Nachricht ist ungelesen",
     "Choose a folder to store the message in" : "Ordner zum Speichern der Nachricht auswählen",
@@ -629,9 +628,6 @@
     "Delete tag" : "Schlagwort löschen",
     "Set tag" : "Schlagwort setzen",
     "Unset tag" : "Schlagwort entfernen",
-    "Tag name is a hidden system tag" : "Name des Schlagworts ist ein verstecktes System-Schlagwort.",
-    "Tag already exists" : "Schlagwort ist bereits vorhanden",
-    "Tag name cannot be empty" : "Schlagwort darf nicht leer sein",
     "An error occurred, unable to create the tag." : "Es ist ein Fehler aufgetreten. Das Schlagwort konnte nicht erstellt werden.",
     "Add default tags" : "Standard-Schlagworte hinzufügen",
     "Add tag" : "Schlagwort hinzufügen",
@@ -674,7 +670,6 @@
     "Thread summary" : "Zusammenfassung der Unterhaltung",
     "Go to latest message" : "Zur ältesten Nachricht springen",
     "Newest message" : "Neueste Nachricht",
-    "This summary is AI generated and may contain mistakes." : "Diese Zusammenfassung wurde von KI erstellt und kann Fehler enthalten.",
     "Please select languages to translate to and from" : "Bitte die Sprachen auswählen, in die bzw. aus denen übersetzt werden soll",
     "The message could not be translated" : "Die Nachricht konnte nicht übersetzt werden",
     "Translation copied to clipboard" : "Übersetzung wurde in die Zwischenablage kopiert.",
@@ -930,11 +925,16 @@
     "Could not load your message" : "Deine Nachricht konnte nicht geladen werden",
     "Could not load the desired message" : "Gewünschte Nachricht konnte nicht geladen werden",
     "Could not load the message" : "Nachricht konnte nicht geladen werden",
+    "Tag name cannot be empty" : "Schlagwort darf nicht leer sein",
+    "Tag name is a hidden system tag" : "Name des Schlagworts ist ein verstecktes System-Schlagwort.",
+    "Tag already exists" : "Schlagwort ist bereits vorhanden",
     "Error loading message" : "Fehler beim Laden der Nachricht",
     "Add share link from Files" : "Link zum Teilen aus Dateien hinzufügen",
     "Choose a file to add as attachment" : "Wähle eine Datei, die als Anhang angefügt werden soll",
     "Choose a file to share as a link" : "Datei auswählen welche als Link geteilt wird",
     "Delegated access to {userId}" : "Zugriff delegiert an {userId}",
-    "Revoked access for {userId}" : "Zugriff für {userId} widerrufen"
+    "Revoked access for {userId}" : "Zugriff für {userId} widerrufen",
+    "This summary was AI generated" : "Diese Zusammenfassung wurde von KI generiert",
+    "This summary is AI generated and may contain mistakes." : "Diese Zusammenfassung wurde von KI erstellt und kann Fehler enthalten."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
