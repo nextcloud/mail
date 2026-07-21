@@ -59,7 +59,7 @@
 					:loading="loadingIndicatorTo"
 					:reducible="true"
 					:clearable="true"
-					:no-wrap="true"
+					:no-wrap="!toExpanded"
 					:append-to-body="false"
 					:create-option="createRecipientOption"
 					:clear-search-on-blur="() => clearOnBlur('to')"
@@ -85,16 +85,19 @@
 					</template>
 					<template #selected-option-container="{ option }">
 						<RecipientListItem
-							v-if="getRecipientIndex(selectTo, option) === 0"
+							v-if="toExpanded || getRecipientIndex(selectTo, option) === 0"
 							:option="option"
 							class="vs__selected selected"
 							@remove-recipient="onRemoveRecipient(option, 'to')" />
-						<span
+						<button
 							v-else-if="getRecipientIndex(selectTo, option) === 1"
 							:key="option.email"
-							class="vs__selected recipient-overflow">
+							type="button"
+							class="vs__selected recipient-overflow"
+							@click.prevent.stop="toExpanded = true">
 							+{{ selectTo.length - 1 }}
-						</span>
+						</button>
+						<span v-else />
 					</template>
 					<template #option="option">
 						<div>
@@ -122,7 +125,7 @@
 					:class="{ opened: !autoLimit }"
 					:options="selectableRecipients.filter(recipient => !selectCc.some(cc => cc.email === recipient.email))"
 					:get-option-key="(option) => option.email"
-					:no-wrap="true"
+					:no-wrap="!ccExpanded"
 					:filter-by="(option, label, search) => filterOption(option, label, search, 'cc')"
 					:dropdown-should-open="shouldOpenRecipientDropdown"
 					:taggable="true"
@@ -150,16 +153,19 @@
 					</template>
 					<template #selected-option-container="{ option }">
 						<RecipientListItem
-							v-if="getRecipientIndex(selectCc, option) === 0"
+							v-if="ccExpanded || getRecipientIndex(selectCc, option) === 0"
 							:option="option"
 							class="vs__selected"
 							@remove-recipient="onRemoveRecipient(option, 'cc')" />
-						<span
+						<button
 							v-else-if="getRecipientIndex(selectCc, option) === 1"
 							:key="option.email"
-							class="vs__selected recipient-overflow">
+							type="button"
+							class="vs__selected recipient-overflow"
+							@click.prevent.stop="ccExpanded = true">
 							+{{ selectCc.length - 1 }}
-						</span>
+						</button>
+						<span v-else />
 					</template>
 					<template #option="option">
 						<div>
@@ -185,7 +191,7 @@
 					:model-value="selectBcc"
 					class="select"
 					:class="{ opened: !autoLimit }"
-					:no-wrap="true"
+					:no-wrap="!bccExpanded"
 					:filter-by="(option, label, search) => filterOption(option, label, search, 'bcc')"
 					:options="selectableRecipients.filter(recipient => !selectBcc.some(bcc => bcc.email === recipient.email))"
 					:get-option-key="(option) => option.email"
@@ -216,16 +222,19 @@
 					</template>
 					<template #selected-option-container="{ option }">
 						<RecipientListItem
-							v-if="getRecipientIndex(selectBcc, option) === 0"
+							v-if="bccExpanded || getRecipientIndex(selectBcc, option) === 0"
 							:option="option"
 							class="vs__selected"
 							@remove-recipient="onRemoveRecipient(option, 'bcc')" />
-						<span
+						<button
 							v-else-if="getRecipientIndex(selectBcc, option) === 1"
 							:key="option.email"
-							class="vs__selected recipient-overflow">
+							type="button"
+							class="vs__selected recipient-overflow"
+							@click.prevent.stop="bccExpanded = true">
 							+{{ selectBcc.length - 1 }}
-						</span>
+						</button>
+						<span v-else />
 					</template>
 					<template #option="option">
 						<div>
@@ -800,6 +809,9 @@ export default {
 			},
 
 			autoLimit: true,
+			toExpanded: false,
+			ccExpanded: false,
+			bccExpanded: false,
 			wantsSmimeSign: this.smimeSign,
 			wantsSmimeEncrypt: this.smimeEncrypt,
 			isPickerOpen: false,
@@ -1919,6 +1931,13 @@ export default {
 	white-space: nowrap;
 	font-size: var(--default-font-size);
 	flex-shrink: 0;
+	border: none;
+	cursor: pointer;
+	color: var(--color-main-text);
+
+	&:hover {
+		background-color: var(--color-background-darker);
+	}
 }
 
 .copy-toggle {

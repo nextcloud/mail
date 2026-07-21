@@ -3,7 +3,8 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div v-if="showMessageComposer"
+	<div
+		v-if="showMessageComposer"
 		ref="floatingPanel"
 		class="floating-composer"
 		:class="{
@@ -66,7 +67,9 @@
 						:name="t('mail', 'Error sending your message')"
 						class="empty-content"
 						role="alert">
-						<p>{{ error }}</p>
+						<template #description>
+							{{ error }}
+						</template>
 						<template #action>
 							<NcButton variant="tertiary" :aria-label="t('mail', 'Go back')" @click="error = undefined">
 								{{ t('mail', 'Go back') }}
@@ -94,6 +97,7 @@
 						</template>
 					</EmptyContent>
 					<Composer
+						v-else
 						ref="composer"
 						:from-account="composerData.accountId"
 						:from-alias="composerData.aliasId"
@@ -215,12 +219,13 @@ export default {
 				name: '',
 				email: '',
 			},
+
 			recipientPaneOpen: true,
 		}
 	},
 
 	watch: {
-		'composerData.to'(newTo, oldTo) {
+		'composerData.to': function(newTo, oldTo) {
 			if (newTo?.length > 0 && !oldTo?.length) {
 				this.recipientPaneOpen = true
 			}
@@ -308,11 +313,19 @@ export default {
 		},
 
 		onClickOutside(event) {
-			if (!this.showMessageComposer) return
-			if (!this.$refs.floatingPanel) return
-			if (this.$refs.floatingPanel.contains(event.target)) return
+			if (!this.showMessageComposer) {
+				return
+			}
+			if (!this.$refs.floatingPanel) {
+				return
+			}
+			if (this.$refs.floatingPanel.contains(event.target)) {
+				return
+			}
 			// Don't minimize when the user is interacting with a modal, popover, or CKEditor toolbar
-			if (event.target.closest('.modal-wrapper, .ck-body-wrapper, [data-popper-placement], .v-popper__popper')) return
+			if (event.target.closest('.modal-wrapper, .ck-body-wrapper, [data-popper-placement], .v-popper__popper')) {
+				return
+			}
 			this.onMinimize()
 		},
 
@@ -674,6 +687,7 @@ export default {
 <style lang="scss" scoped>
 $composer-width: 600px;
 $recipient-pane-width: 300px;
+$composer-height: 500px;
 $header-height: calc(var(--default-clickable-area) + calc(var(--default-grid-baseline) * 2));
 $bottom-offset: calc(var(--body-container-margin, 0px) + var(--default-grid-baseline) * 2 + 52px);
 $panel-max-height: calc(100vh - (var(--body-container-margin, 0px) + var(--default-grid-baseline) * 3 + 52px));
@@ -682,10 +696,11 @@ $panel-max-height: calc(100vh - (var(--body-container-margin, 0px) + var(--defau
 	position: fixed;
 	bottom: $bottom-offset;
 	inset-inline-end: calc(var(--body-container-margin, 0px) + var(--default-grid-baseline));
-	z-index: 1500;
+	z-index: 9999999;
 
 	width: $composer-width;
 	max-width: calc(100vw - 2 * var(--default-grid-baseline));
+	height: $composer-height;
 	max-height: $panel-max-height;
 
 	display: flex;
@@ -698,18 +713,42 @@ $panel-max-height: calc(100vh - (var(--body-container-margin, 0px) + var(--defau
 
 	&--maximized {
 		top: calc(var(--header-height, 44px) + var(--default-grid-baseline));
+		height: auto;
 	}
 
 	&--with-recipient {
-		width: calc($composer-width + $recipient-pane-width);
-		max-width: calc(100vw - 2 * var(--default-grid-baseline));
+		width: calc(#{$composer-width} + #{$recipient-pane-width});
 	}
 
 	@media (max-width: #{$composer-width}) {
-		inset-inline-end: var(--default-grid-baseline);
-		inset-inline-start: var(--default-grid-baseline);
-		width: auto;
+		inset-inline-end: 0;
+		inset-inline-start: 0;
+		bottom: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		max-height: 100%;
+		border-radius: 0;
 	}
+}
+
+.recipient-pane {
+	flex: 0 0 $recipient-pane-width;
+	overflow-y: auto;
+	position: relative;
+	border-inline-end: 1px solid var(--color-border);
+	padding: calc(var(--default-grid-baseline) * 2);
+	padding-top: calc(var(--default-grid-baseline) * 6);
+
+	@media (max-width: #{$composer-width}) {
+		display: none;
+	}
+}
+
+.recipient-pane__close {
+	position: absolute;
+	top: var(--default-grid-baseline);
+	inset-inline-end: var(--default-grid-baseline);
 }
 
 .floating-composer__header {
@@ -749,26 +788,6 @@ $panel-max-height: calc(100vh - (var(--body-container-margin, 0px) + var(--defau
 	flex: 1;
 	min-height: 0;
 	overflow: hidden;
-}
-
-.recipient-pane {
-	width: $recipient-pane-width;
-	flex-shrink: 0;
-	overflow-y: auto;
-	border-inline-end: 1px solid var(--color-border);
-	position: relative;
-	padding: calc(var(--default-grid-baseline) * 2);
-	padding-top: calc(var(--default-grid-baseline) * 6);
-
-	@media (max-width: #{$composer-width}) {
-		display: none;
-	}
-}
-
-.recipient-pane__close {
-	position: absolute;
-	top: var(--default-grid-baseline);
-	inset-inline-end: var(--default-grid-baseline);
 }
 
 .floating-composer__body {
