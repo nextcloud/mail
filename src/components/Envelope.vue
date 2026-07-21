@@ -840,14 +840,16 @@ export default {
 				|| (this.data.previewText && isPgpText(this.data.previewText)) // PGP/Mailvelope
 		},
 
+		envelopeAllTags() {
+			return this.mainStore.getEnvelopeTags(this.data.databaseId)
+		},
+
 		isImportant() {
-			return this.mainStore
-				.getEnvelopeTags(this.data.databaseId)
-				.some((tag) => tag.imapLabel === '$label1')
+			return this.envelopeAllTags.some((tag) => tag.imapLabel === '$label1')
 		},
 
 		tags() {
-			let tags = this.mainStore.getEnvelopeTags(this.data.databaseId).filter((tag) => tag.imapLabel && tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags))
+			let tags = this.envelopeAllTags.filter((tag) => tag.imapLabel && tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags))
 
 			// Don't show follow-up tag in unified mailbox as it has its own section at the top
 			if (this.mailbox.isUnified) {
@@ -1032,6 +1034,10 @@ export default {
 	mounted() {
 		this.onWindowResize()
 		window.addEventListener('resize', this.onWindowResize)
+	},
+
+	beforeUnmount() {
+		window.removeEventListener('resize', this.onWindowResize)
 	},
 
 	methods: {
