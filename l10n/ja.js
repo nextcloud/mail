@@ -243,7 +243,6 @@ OC.L10N.register(
     "Could not snooze thread" : "スレッドをスヌーズできませんでした",
     "Thread was unsnoozed" : "スレッドがスヌーズ解除されました",
     "Could not unsnooze thread" : "スレッドのスヌーズを解除できませんでした",
-    "This summary was AI generated" : "この要約はAIによって作成されました",
     "Encrypted message" : "暗号化済みメッセージ",
     "This message is unread" : "このメッセージは未読です",
     "Unfavorite" : "お気に入りから外す",
@@ -507,9 +506,6 @@ OC.L10N.register(
     "Delete tag" : "タグを削除",
     "Set tag" : "タグを設定する",
     "Unset tag" : "タグを削除する",
-    "Tag name is a hidden system tag" : "タグ名は非表示のシステムタグです",
-    "Tag already exists" : "タグはすでに存在します",
-    "Tag name cannot be empty" : "タグ名は空にできません",
     "An error occurred, unable to create the tag." : "エラー:タグを作成できませんでした",
     "Add default tags" : "デフォルトのタグを追加する",
     "Add tag" : "タグを追加",
@@ -742,9 +738,13 @@ OC.L10N.register(
     "Could not load your message" : "あなたのメッセージを読み込めませんでした",
     "Could not load the desired message" : "目的のメッセージを読み込めませんでした",
     "Could not load the message" : "メッセージを読み込めませんでした",
+    "Tag name cannot be empty" : "タグ名は空にできません",
+    "Tag name is a hidden system tag" : "タグ名は非表示のシステムタグです",
+    "Tag already exists" : "タグはすでに存在します",
     "Error loading message" : "メッセージ読み込みエラー",
     "Add share link from Files" : "ファイル から共有リンクを追加",
     "Choose a file to add as attachment" : "添付として追加するファイルを選択",
-    "Choose a file to share as a link" : "共有リンクにして送信するファイルを選択"
+    "Choose a file to share as a link" : "共有リンクにして送信するファイルを選択",
+    "This summary was AI generated" : "この要約はAIによって作成されました"
 },
 "nplurals=1; plural=0;");

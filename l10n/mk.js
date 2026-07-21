@@ -361,8 +361,6 @@ OC.L10N.register(
     "Place signature above quoted text" : "Постави го потписот над цитираниот текст",
     "Message source" : "Извор на пораката",
     "An error occurred, unable to rename the tag." : "Настана грешка, неможе да се преименува ознака.",
-    "Tag name is a hidden system tag" : "Името на ознаката е сокриена системска ознака",
-    "Tag already exists" : "Тагот веќе постои",
     "An error occurred, unable to create the tag." : "Настана грешка, неможе да се креира ознака.",
     "Add default tags" : "Додади стандардни ознаки",
     "Add tag" : "Додади ознака",
@@ -459,6 +457,8 @@ OC.L10N.register(
     "Could not load your message" : "Неможе да се вчита пораката",
     "Could not load the desired message" : "Неможе да се вчита посакуваната порака",
     "Could not load the message" : "Неможе да се вчита пораката",
+    "Tag name is a hidden system tag" : "Името на ознаката е сокриена системска ознака",
+    "Tag already exists" : "Тагот веќе постои",
     "Error loading message" : "Грешка при вчитување на пораката",
     "Choose a file to add as attachment" : "Избери датотека за да додадете прилог",
     "Choose a file to share as a link" : "Избери датотека за да се сподели како линк"

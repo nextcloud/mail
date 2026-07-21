@@ -262,7 +262,6 @@ OC.L10N.register(
     "Could not archive message" : "Não foi possível arquivar a mensagem",
     "Could not snooze thread" : "Não foi possível adiar fio",
     "Could not unsnooze thread" : "Não foi possível desadiar fio",
-    "This summary was AI generated" : "Este resumo foi gerado por IA",
     "Encrypted message" : "Mensagem criptografada",
     "This message is unread" : "Esta mensagem não foi lida.",
     "Unfavorite" : "Não favorito",
@@ -514,8 +513,6 @@ OC.L10N.register(
     "Saving new tag name …" : "Salvando o novo nome da etiqueta …",
     "Delete tag" : "Excluir etiqueta",
     "Unset tag" : "Redefinir etiqueta",
-    "Tag already exists" : "A etiqueta já existe",
-    "Tag name cannot be empty" : "O nome da etiqueta não pode ficar vazio",
     "An error occurred, unable to create the tag." : "Ocorreu um erro, não foi possível criar a etiqueta.",
     "Add default tags" : "Adicionar etiquetas padrão",
     "Add tag" : "Adicionar etiqueta",
@@ -754,11 +751,14 @@ OC.L10N.register(
     "Could not load your message" : "Não foi possível carregar a sua mensagem",
     "Could not load the desired message" : "Não foi possível carregar a mensagem escolhida",
     "Could not load the message" : "Não foi possível carregar a mensagem",
+    "Tag name cannot be empty" : "O nome da etiqueta não pode ficar vazio",
+    "Tag already exists" : "A etiqueta já existe",
     "Error loading message" : "Erro ao carregar a mensagem",
     "Add share link from Files" : "Adicionar link de compartilhamento de Arquivos",
     "Choose a file to add as attachment" : "Escolha um ficheiro para adicionar como anexo",
     "Choose a file to share as a link" : "Escolha um arquivo para compartilhar como link",
     "Delegated access to {userId}" : "Delegar acesso a {userId}",
-    "Revoked access for {userId}" : "Acesso revogado de {userId}"
+    "Revoked access for {userId}" : "Acesso revogado de {userId}",
+    "This summary was AI generated" : "Este resumo foi gerado por IA"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

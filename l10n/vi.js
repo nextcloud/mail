@@ -204,7 +204,6 @@ OC.L10N.register(
     "Save sieve script" : "Lưu sieve script",
     "Save signature" : "Lưu chữ ký",
     "Message source" : "Nguồn tin nhắn",
-    "Tag already exists" : "Thẻ đã tồn tại",
     "Add tag" : "Thêm nhãn",
     "Could not load your message thread" : "Không thể tải chuỗi tin nhắn của bạn",
     "Not found" : "Không tìm thấy",
@@ -273,6 +272,7 @@ OC.L10N.register(
     "Could not load your message" : "Không thể tải tin nhắn của bạn",
     "Could not load the desired message" : "Không thể tải tin nhắn mong muốn",
     "Could not load the message" : "Không thể tải tin nhắn",
+    "Tag already exists" : "Thẻ đã tồn tại",
     "Error loading message" : "Lỗi khi tải tin nhắn",
     "Choose a file to add as attachment" : "Chọn một tệp để thêm dưới dạng tệp đính kèm",
     "Choose a file to share as a link" : "Chọn một tệp để chia sẻ dưới dạng liên kết"

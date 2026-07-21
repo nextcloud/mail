@@ -137,7 +137,6 @@ OC.L10N.register(
     "Custom" : "Propra",
     "Save signature" : "Konservi subskribon",
     "Delete tag" : "Forigi etikedon",
-    "Tag already exists" : "La etikedo jam ekzistas",
     "Not found" : "Ne trovita",
     "Reply to sender only" : "Respondi nur al sendinto",
     "From:" : "El:",
@@ -193,6 +192,7 @@ OC.L10N.register(
     "Could not load your message" : "Ne eblis ŝargi vian mesaĝon",
     "Could not load the desired message" : "Ne eblis ŝargi la deziratan mesaĝon",
     "Could not load the message" : "Ne eblis ŝargi la mesaĝon",
+    "Tag already exists" : "La etikedo jam ekzistas",
     "Error loading message" : "Eraris ŝargi mesaĝon",
     "Choose a file to add as attachment" : "Elektu dosieron aldonotan kiel kunsendaĵon"
 },

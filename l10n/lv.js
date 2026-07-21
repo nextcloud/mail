@@ -138,8 +138,6 @@ OC.L10N.register(
     "Custom" : "Pielāgots",
     "An error occurred, unable to rename the tag." : "Atgadījās kļūda, nevar pārdēvēt birku.",
     "Delete tag" : "Izdzēst birku",
-    "Tag name is a hidden system tag" : "Birkas nosaukums ir slēpta sistēmas birka",
-    "Tag already exists" : "Birka jau pastāv",
     "Not found" : "Nav atrasts",
     "From:" : "No:",
     "To:" : "Kam:",
@@ -183,6 +181,8 @@ OC.L10N.register(
     "Discard unsaved changes" : "Atmest nesaglabātās izmaiņas",
     "Could not load {tag}{name}{endtag}" : "Nevarēja ielādēt {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Radusies problēma, ielādējot {tag}{name}{endtag}",
+    "Tag name is a hidden system tag" : "Birkas nosaukums ir slēpta sistēmas birka",
+    "Tag already exists" : "Birka jau pastāv",
     "Error loading message" : "Kļūda ielādējot vēstuli",
     "Choose a file to add as attachment" : "Izvēlēties datni, ko pievienot kā pielikumu",
     "Choose a file to share as a link" : "Jāizvēlas datne, ko kopīgot kā saiti"

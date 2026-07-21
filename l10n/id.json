@@ -278,7 +278,6 @@
     "Could not snooze thread" : "Tidak dapat menunda utas",
     "Thread was unsnoozed" : "Penundaan utas dibatalkan",
     "Could not unsnooze thread" : "Tidak dapat membatalkan penundaan utas",
-    "This summary was AI generated" : "Ringkasan ini dibuat oleh AI",
     "Encrypted message" : "Pesan terenkripsi",
     "This message is unread" : "Pesan ini belum dibaca",
     "Unfavorite" : "Hapus dari favorit",
@@ -586,9 +585,6 @@
     "Delete tag" : "Hapus tag",
     "Set tag" : "Tetapkan tag",
     "Unset tag" : "Hapus tag",
-    "Tag name is a hidden system tag" : "Nama tag adalah tag sistem tersembunyi",
-    "Tag already exists" : "Tag sudah ada",
-    "Tag name cannot be empty" : "Nama tag tidak boleh kosong",
     "An error occurred, unable to create the tag." : "Terjadi kesalahan, tidak dapat membuat tag.",
     "Add default tags" : "Tambahkan tag default",
     "Add tag" : "Tambahkan tag",
@@ -629,7 +625,6 @@
     "Thread summary" : "Ringkasan utas",
     "Go to latest message" : "Buka pesan terbaru",
     "Newest message" : "Pesan terbaru",
-    "This summary is AI generated and may contain mistakes." : "Ringkasan ini dibuat oleh AI dan mungkin mengandung kesalahan.",
     "Please select languages to translate to and from" : "Silakan pilih bahasa untuk diterjemahkan dari dan ke",
     "The message could not be translated" : "Pesan tidak dapat diterjemahkan",
     "Translation copied to clipboard" : "Terjemahan disalin ke papan klip",
@@ -882,9 +877,14 @@
     "Could not load your message" : "Tidak dapat memuat pesan Anda",
     "Could not load the desired message" : "Tidak dapat memuat pesan yang diinginkan",
     "Could not load the message" : "Tidak dapat memuat pesan",
+    "Tag name cannot be empty" : "Nama tag tidak boleh kosong",
+    "Tag name is a hidden system tag" : "Nama tag adalah tag sistem tersembunyi",
+    "Tag already exists" : "Tag sudah ada",
     "Error loading message" : "Kesalahan saat memuat pesan",
     "Add share link from Files" : "Tambahkan tautan berbagi dari Berkas",
     "Choose a file to add as attachment" : "Pilih berkas untuk ditambahkan sebagai lampiran",
-    "Choose a file to share as a link" : "Pilih berkas untuk dibagikan sebagai tautan"
+    "Choose a file to share as a link" : "Pilih berkas untuk dibagikan sebagai tautan",
+    "This summary was AI generated" : "Ringkasan ini dibuat oleh AI",
+    "This summary is AI generated and may contain mistakes." : "Ringkasan ini dibuat oleh AI dan mungkin mengandung kesalahan."
 },"pluralForm" :"nplurals=1; plural=0;"
 }

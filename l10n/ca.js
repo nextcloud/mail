@@ -228,7 +228,6 @@ OC.L10N.register(
     "Could not snooze thread" : "No s'ha pogut posposar el fil",
     "Thread was unsnoozed" : "El fil no es va posposar",
     "Could not unsnooze thread" : "No s'ha reactivar el fil",
-    "This summary was AI generated" : "Aquest resum es va generar amb IA",
     "Encrypted message" : "Missatge xifrat",
     "This message is unread" : "Aquest missatge no s'ha llegit",
     "Unfavorite" : "Treu de favorits",
@@ -491,9 +490,6 @@ OC.L10N.register(
     "Delete tag" : "Suprimir etiqueta",
     "Set tag" : "Definiu etiqueta",
     "Unset tag" : "Desactiveu etiqueta",
-    "Tag name is a hidden system tag" : "El nom de l'etiqueta és una etiqueta del sistema oculta",
-    "Tag already exists" : "L'etiqueta ja existeix",
-    "Tag name cannot be empty" : "El nom de l'etiqueta no pot estar buit",
     "An error occurred, unable to create the tag." : "S'ha produït un error, no s'ha pogut crear l'etiqueta.",
     "Add default tags" : "Afegeix etiquetes per defecte",
     "Add tag" : "Afegeix etiqueta",
@@ -721,9 +717,13 @@ OC.L10N.register(
     "Could not load your message" : "No s’ha pogut carregar el vostre missatge",
     "Could not load the desired message" : "No s’ha pogut carregar el missatge desitjat",
     "Could not load the message" : "No s’ha pogut carregar el missatge",
+    "Tag name cannot be empty" : "El nom de l'etiqueta no pot estar buit",
+    "Tag name is a hidden system tag" : "El nom de l'etiqueta és una etiqueta del sistema oculta",
+    "Tag already exists" : "L'etiqueta ja existeix",
     "Error loading message" : "S'ha produït un error mentre es carregava el missatge",
     "Add share link from Files" : "Afegeix un enllaç de compartició des de Fitxers",
     "Choose a file to add as attachment" : "Trieu un fitxer per afegir als adjunts",
-    "Choose a file to share as a link" : "Tria un fitxer per compartir-lo com a enllaç"
+    "Choose a file to share as a link" : "Tria un fitxer per compartir-lo com a enllaç",
+    "This summary was AI generated" : "Aquest resum es va generar amb IA"
 },
 "nplurals=2; plural=(n != 1);");

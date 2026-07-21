@@ -98,7 +98,6 @@ OC.L10N.register(
     "Date" : "Fecha",
     "Tags" : "Etiquetas",
     "Custom" : "Personalizado",
-    "Tag already exists" : "La etiqueta ya existe",
     "Add tag" : "Añadir etiqueta",
     "Not found" : "No encontrado",
     "From:" : "De:",
@@ -140,6 +139,7 @@ OC.L10N.register(
     "Could not load your message" : "No se pudo cargar tu mensaje",
     "Could not load the desired message" : "No se pudo cargar el mensaje deseado",
     "Could not load the message" : "No se pudo cargar el mensaje.",
+    "Tag already exists" : "La etiqueta ya existe",
     "Error loading message" : "Se presentó un error al cargar el mensaje",
     "Choose a file to add as attachment" : "Seleccione el archivo a agregar como adjunto"
 },

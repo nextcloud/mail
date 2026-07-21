@@ -371,8 +371,6 @@ OC.L10N.register(
     "An error occurred, unable to rename the tag." : "Ocurrió un error, no se pudo cambiar el nombre de la etiqueta.",
     "Set tag" : "Establecer etiqueta",
     "Unset tag" : "Quitar etiqueta",
-    "Tag name is a hidden system tag" : "El nombre de la etiqueta es una etiqueta oculta del sistema",
-    "Tag already exists" : "La etiqueta ya existe",
     "An error occurred, unable to create the tag." : "Ocurrió un error, no se pudo crear la etiqueta.",
     "Add default tags" : "Agregar etiquetas predeterminadas",
     "Add tag" : "Agregar etiqueta",
@@ -567,6 +565,8 @@ OC.L10N.register(
     "Could not load your message" : "No fue posible cargar tu mensaje",
     "Could not load the desired message" : "No fue posible cargar el mensaje deseado",
     "Could not load the message" : "No fue posible cargar el mensaje",
+    "Tag name is a hidden system tag" : "El nombre de la etiqueta es una etiqueta oculta del sistema",
+    "Tag already exists" : "La etiqueta ya existe",
     "Error loading message" : "Se presentó un error al cargar el mensaje",
     "Choose a file to add as attachment" : "Selecciona el archivo a agregar como adjunto",
     "Choose a file to share as a link" : "Elige un archivo para compartir como enlace"
