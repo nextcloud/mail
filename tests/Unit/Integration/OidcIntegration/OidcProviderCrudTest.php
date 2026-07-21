@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Integration\OidcIntegration;
 
 use OCA\Mail\Db\OidcProvider;
+use OCA\Mail\Exception\OidcProviderNotFoundException;
 
 /**
  * Admin CRUD for the configured providers.
@@ -62,7 +63,7 @@ class OidcProviderCrudTest extends OidcIntegrationTestCase {
 	public function testUpdateProviderRequiresId(): void {
 		$this->providerMapper->method('validate')->willReturn(new OidcProvider());
 
-		$this->expectException(\InvalidArgumentException::class);
+		$this->expectException(OidcProviderNotFoundException::class);
 
 		$this->integration->updateProvider(['name' => 'x']);
 	}

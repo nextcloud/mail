@@ -87,25 +87,28 @@ class OidcIntegrationControllerTest extends TestCase {
 
 		$response = $this->controller->create([]);
 
-		$this->assertSame(Http::STATUS_BAD_REQUEST, $response->getStatus());
+		$this->assertSame(Http::STATUS_UNPROCESSABLE_ENTITY, $response->getStatus());
 	}
 
-	public function testCreateGenericFailure(): void {
+	/**
+	 * Anything that is not a validation error is left to the TrapError middleware.
+	 */
+	public function testCreatePropagatesUnexpectedErrors(): void {
 		$this->oidcIntegration->method('createProvider')
 			->willThrowException(new \RuntimeException('db down'));
 
-		$response = $this->controller->create(['name' => 'x']);
+		$this->expectException(\RuntimeException::class);
 
-		$this->assertSame(Http::STATUS_BAD_REQUEST, $response->getStatus());
+		$this->controller->create(['name' => 'x']);
 	}
 
-	public function testUpdateGenericFailure(): void {
+	public function testUpdatePropagatesUnexpectedErrors(): void {
 		$this->oidcIntegration->method('updateProvider')
 			->willThrowException(new \RuntimeException('db down'));
 
-		$response = $this->controller->update(1, ['name' => 'x']);
+		$this->expectException(\RuntimeException::class);
 
-		$this->assertSame(Http::STATUS_BAD_REQUEST, $response->getStatus());
+		$this->controller->update(1, ['name' => 'x']);
 	}
 
 	public function testUpdateValidationFailure(): void {
@@ -115,7 +118,7 @@ class OidcIntegrationControllerTest extends TestCase {
 
 		$response = $this->controller->update(1, []);
 
-		$this->assertSame(Http::STATUS_BAD_REQUEST, $response->getStatus());
+		$this->assertSame(Http::STATUS_UNPROCESSABLE_ENTITY, $response->getStatus());
 	}
 
 	public function testUpdateMergesId(): void {
@@ -164,7 +167,7 @@ class OidcIntegrationControllerTest extends TestCase {
 		$provider = new OidcProvider();
 		$this->oidcIntegration->method('getProvider')->willReturn($provider);
 		$this->oidcIntegration->method('getAuthorizationUrl')
-			->willThrowException(new \Exception('discovery down'));
+			->willThrowException(new ServiceException('discovery down'));
 
 		$response = $this->controller->authorize(7, 'the-state');
 
