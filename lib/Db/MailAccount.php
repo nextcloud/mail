@@ -109,8 +109,14 @@ use OCP\AppFramework\Db\Entity;
  * @method void setClassificationEnabled(bool $classificationEnabled)
  * @method bool getImipCreate()
  * @method void setImipCreate(bool $value)
+ * @method string getProtocol()
+ * @method void setProtocol(string $protocol)
+ * @method string|null getPath()
+ * @method void setPath(?string $path)
  */
 class MailAccount extends Entity {
+	public const PROTOCOL_IMAP = 'imap';
+	public const PROTOCOL_JMAP = 'jmap';
 	public const SIGNATURE_MODE_PLAIN = 0;
 	public const SIGNATURE_MODE_HTML = 1;
 
@@ -197,6 +203,10 @@ class MailAccount extends Entity {
 
 	protected bool $imipCreate = false;
 
+	protected string $protocol = 'imap';
+
+	protected ?string $path = null;
+
 	/**
 	 * @param array $params
 	 */
@@ -263,6 +273,12 @@ class MailAccount extends Entity {
 		if (isset($params['imipCreate'])) {
 			$this->setImipCreate($params['imipCreate']);
 		}
+		if (isset($params['protocol'])) {
+			$this->setProtocol($params['protocol']);
+		}
+		if (isset($params['path'])) {
+			$this->setPath($params['path']);
+		}
 
 		$this->addType('inboundPort', 'integer');
 		$this->addType('outboundPort', 'integer');
@@ -290,6 +306,8 @@ class MailAccount extends Entity {
 		$this->addType('debug', 'boolean');
 		$this->addType('classificationEnabled', 'boolean');
 		$this->addType('imipCreate', 'boolean');
+		$this->addType('protocol', 'string');
+		$this->addType('path', 'string');
 	}
 
 	public function getOutOfOfficeFollowsSystem(): bool {
@@ -342,6 +360,8 @@ class MailAccount extends Entity {
 			'debug' => $this->getDebug(),
 			'classificationEnabled' => $this->getClassificationEnabled(),
 			'imipCreate' => $this->getImipCreate(),
+			'protocol' => $this->getProtocol(),
+			'path' => $this->getPath(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {
