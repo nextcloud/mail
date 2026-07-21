@@ -466,26 +466,6 @@ return [
 			'verb' => 'GET',
 		],
 		[
-			'name' => 'oidcIntegration#index',
-			'url' => '/api/integration/oidc/providers',
-			'verb' => 'GET',
-		],
-		[
-			'name' => 'oidcIntegration#create',
-			'url' => '/api/integration/oidc/providers',
-			'verb' => 'POST',
-		],
-		[
-			'name' => 'oidcIntegration#update',
-			'url' => '/api/integration/oidc/providers/{id}',
-			'verb' => 'POST',
-		],
-		[
-			'name' => 'oidcIntegration#destroy',
-			'url' => '/api/integration/oidc/providers/{id}',
-			'verb' => 'DELETE',
-		],
-		[
 			'name' => 'oidcIntegration#authorize',
 			'url' => '/integration/oidc-auth/start',
 			'verb' => 'GET',
@@ -574,6 +554,7 @@ return [
 		'localAttachments' => ['url' => '/api/attachments'],
 		'mailboxes' => ['url' => '/api/mailboxes'],
 		'messages' => ['url' => '/api/messages'],
+		'oidcIntegration' => ['url' => '/api/integration/oidc/providers'],
 		'outbox' => ['url' => '/api/outbox'],
 		'preferences' => ['url' => '/api/preferences'],
 		'smimeCertificates' => ['url' => '/api/smime/certificates'],

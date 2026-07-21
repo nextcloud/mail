@@ -13,6 +13,9 @@ use Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Db\OidcProvider;
 use OCA\Mail\Db\OidcProviderMapper;
+use OCA\Mail\Exception\OidcProviderNotFoundException;
+use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\ValidationException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Http\Client\IClientService;
 use OCP\ICache;
@@ -102,12 +105,16 @@ class OidcIntegration {
 	 * placeholder, {@see OidcProviderMapper::validate()} leaves it untouched so the
 	 * stored secret is preserved.
 	 *
-	 * @throws \OCA\Mail\Exception\ValidationException
+	 * @param array $data
+	 * @return OidcProvider
+	 * @throws OidcProviderNotFoundException
+	 * @throws ValidationException
+	 * @throws \OCP\DB\Exception
 	 */
 	public function updateProvider(array $data): OidcProvider {
 		$provider = $this->providerMapper->validate($data);
 		if ($provider->getId() === null) {
-			throw new \InvalidArgumentException('Can not update a provider without an id');
+			throw new OidcProviderNotFoundException('Can not update a provider without an id');
 		}
 		$this->encryptClientSecret($provider);
 		return $this->providerMapper->update($provider);
@@ -189,7 +196,7 @@ class OidcIntegration {
 		$data = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
 		if (empty($data['authorization_endpoint']) || empty($data['token_endpoint'])) {
-			throw new Exception('OIDC discovery document for ' . $discoveryUrl . ' is missing required endpoints');
+			throw new ServiceException('OIDC discovery document for ' . $discoveryUrl . ' is missing required endpoints');
 		}
 
 		$this->discoveryCache->set($discoveryUrl, json_encode($data, JSON_THROW_ON_ERROR), self::DISCOVERY_CACHE_TTL);

@@ -15,11 +15,13 @@ use OCA\Mail\Exception\InvalidOauthStateException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\ValidationException;
 use OCA\Mail\Http\JsonResponse as HttpJsonResponse;
+use OCA\Mail\Http\TrapError;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Integration\OidcIntegration;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\OauthStateService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
@@ -47,32 +49,32 @@ class OidcIntegrationController extends Controller {
 	/**
 	 * List all configured OIDC providers (admin). Client secrets are masked.
 	 */
+	#[TrapError]
 	public function index(): JSONResponse {
 		return new JSONResponse($this->oidcIntegration->getProviders());
 	}
 
+	#[TrapError]
 	public function create(array $data): JSONResponse {
 		try {
 			return new JSONResponse($this->oidcIntegration->createProvider($data));
 		} catch (ValidationException $e) {
-			return HttpJsonResponse::fail([$e->getFields()]);
-		} catch (\Exception $e) {
-			return HttpJsonResponse::fail([$e->getMessage()]);
+			return HttpJsonResponse::fail([$e->getFields()], Http::STATUS_UNPROCESSABLE_ENTITY);
 		}
 	}
 
+	#[TrapError]
 	public function update(int $id, array $data): JSONResponse {
 		try {
 			return new JSONResponse(
 				$this->oidcIntegration->updateProvider(array_merge($data, ['id' => $id])),
 			);
 		} catch (ValidationException $e) {
-			return HttpJsonResponse::fail([$e->getFields()]);
-		} catch (\Exception $e) {
-			return HttpJsonResponse::fail([$e->getMessage()]);
+			return HttpJsonResponse::fail([$e->getFields()], Http::STATUS_UNPROCESSABLE_ENTITY);
 		}
 	}
 
+	#[TrapError]
 	public function destroy(int $id): JSONResponse {
 		$this->oidcIntegration->deleteProvider($id);
 		return new JSONResponse([]);
@@ -83,6 +85,7 @@ class OidcIntegrationController extends Controller {
 	 * and redirect the popup to the IdP authorization endpoint. Opened as a top-level
 	 * navigation, so it carries no CSRF token.
 	 */
+	#[TrapError]
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function authorize(int $providerId, string $state): Response {
@@ -96,7 +99,7 @@ class OidcIntegrationController extends Controller {
 
 		try {
 			$url = $this->oidcIntegration->getAuthorizationUrl($provider, $state);
-		} catch (\Exception $e) {
+		} catch (ServiceException $e) {
 			$this->logger->error('Cannot start OIDC consent flow: ' . $e->getMessage(), [
 				'exception' => $e,
 				'providerId' => $providerId,
@@ -111,6 +114,7 @@ class OidcIntegrationController extends Controller {
 	 * OAuth authorization-code callback. Exchanges the code for tokens and stores
 	 * them on the account matched by the CSRF state.
 	 */
+	#[TrapError]
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function oauthRedirect(?string $code, ?string $state, ?string $error): Response {
