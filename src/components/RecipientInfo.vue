@@ -6,19 +6,23 @@
 	<div class="recipient-info">
 		<!-- For a single recipient -->
 		<div v-if="recipients && recipients.length === 1" class="recipient-info__single">
-			<div class="recipient-info__header">
-				<div class="recipient-info__avatar">
-					<Avatar
-						:display-name="recipients[0].label"
-						:email="recipients[0].email"
-						:size="55"
-						:disable-tooltip="true"
-						:disable-menu="true"
-						:avatar="getAvatarForRecipient(recipients[0])" />
-				</div>
-				<div class="recipient-info__details">
-					<DisplayContactDetails :email="recipients[0].email" />
-				</div>
+			<div class="recipient-info__avatar">
+				<Avatar
+					:display-name="recipients[0].label"
+					:email="recipients[0].email"
+					:size="55"
+					:disable-tooltip="true"
+					:disable-menu="true"
+					:avatar="getAvatarForRecipient(recipients[0])" />
+			</div>
+			<div class="recipient-info__contact">
+				<span class="recipient-info__contact-name">{{ recipients[0].label }}</span>
+				<span v-if="recipients[0].email !== recipients[0].label" class="recipient-info__contact-email">
+					{{ recipients[0].email }}
+				</span>
+			</div>
+			<div class="recipient-info__details">
+				<DisplayContactDetails :email="recipients[0].email" />
 			</div>
 		</div>
 
@@ -26,30 +30,25 @@
 		<div v-else-if="recipients && recipients.length > 1" class="recipient-info__multiple">
 			<div v-for="(recipient, index) in recipients" :key="recipient.email" class="recipient-info__item">
 				<div class="recipient-info__header">
-					<div class="recipient-info__avatar">
+					<div class="recipient-info__avatar recipient-info__avatar--small">
 						<Avatar
 							:display-name="recipient.label"
 							:email="recipient.email"
-							:size="55"
+							:size="36"
 							:disable-tooltip="true"
 							:disable-menu="true"
 							:avatar="getAvatarForRecipient(recipient)" />
 					</div>
-					<div v-if="!expandedRecipients[index]" class="recipient-info__name">
-						<h6>{{ recipient.email }}</h6>
+					<div class="recipient-info__name">
+						<strong>{{ recipient.label }}</strong>
+						<span v-if="recipient.email !== recipient.label" class="recipient-info__contact-email">
+							{{ recipient.email }}
+						</span>
 					</div>
-					<div class="recipient-info__expand-toggle" @click="toggleExpand(index)">
-						<template v-if="isExpanded(index)">
-							<div class="recipient-info__show-less">
-								<IconArrowUp :size="20" />
-								<span>{{ t('mail', 'Show less') }}</span>
-							</div>
-						</template>
-						<template v-else>
-							<IconArrowDown :size="20" />
-							<span>{{ t('mail', 'Show more') }}</span>
-						</template>
-					</div>
+					<button class="recipient-info__expand-toggle" @click="toggleExpand(index)">
+						<IconArrowUp v-if="isExpanded(index)" :size="20" />
+						<IconArrowDown v-else :size="20" />
+					</button>
 				</div>
 				<div v-if="expandedRecipients[index]" class="recipient-info__details">
 					<DisplayContactDetails :email="recipient.email" />
@@ -121,51 +120,108 @@ export default {
 
 <style scoped lang="scss">
 .recipient-info {
-	display: inline;
 	width: 100%;
 
 	&__single {
-		width: 370px;
-		display: inline-block;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		gap: calc(var(--default-grid-baseline) * 2);
 	}
 
 	&__avatar {
-		margin-top: 20px;
-		display: inline;
-		float: inline-start;
-		padding: 20px;
+		display: flex;
+		justify-content: center;
+		flex-shrink: 0;
+	}
+
+	&__contact {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		text-align: start;
+		gap: var(--default-grid-baseline);
+		flex: 1;
+		min-width: 0;
+		overflow: hidden;
+	}
+
+	&__contact-name {
+		display: block;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		width: 100%;
+		color: var(--color-text-maxcontrast);
+	}
+
+	&__contact-email {
+		display: block;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		width: 100%;
+		color: var(--color-text-maxcontrast);
 	}
 
 	&__details {
-		max-width: 100%;
+		flex: 0 0 100%;
+		width: 100%;
+		overflow: hidden;
 	}
 
 	&__multiple {
-		margin-top: 10px;
 		display: flex;
 		flex-direction: column;
+		gap: calc(var(--default-grid-baseline) * 2);
 	}
 
 	&__item {
-		margin-bottom: 10px;
-	}
+		border-bottom: 1px solid var(--color-border);
+		padding-bottom: calc(var(--default-grid-baseline) * 2);
 
-	&__expand-toggle {
-		cursor: pointer;
-		display: flex;
-		gap: 5px;
+		&:last-child {
+			border-bottom: none;
+		}
 	}
 
 	&__header {
-		display: contents;
+		display: flex;
+		align-items: center;
+		gap: calc(var(--default-grid-baseline) * 2);
+	}
+
+	&__avatar--small {
+		flex-shrink: 0;
 	}
 
 	&__name {
-		margin-top: 50px;
+		flex: 1;
+		overflow: hidden;
+
+		strong {
+			display: block;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
 	}
 
-	&__show-less {
-		margin-top: 40px;
+	&__expand-toggle {
+		flex-shrink: 0;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: var(--default-grid-baseline);
+		color: var(--color-main-text);
+		display: flex;
+		align-items: center;
+		border-radius: var(--border-radius);
+
+		&:hover {
+			background-color: var(--color-background-hover);
+		}
 	}
 }
 </style>
