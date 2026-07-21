@@ -147,6 +147,7 @@ class MailAccountMigrator implements IMigrator {
 			$newAccount->setSearchBody($accountData['searchBody'] ?? false);
 			$newAccount->setClassificationEnabled($accountData['classificationEnabled'] ?? false);
 			$newAccount->setSignatureAboveQuote($accountData['signatureAboveQuote'] ?? false);
+			$newAccount->setSignatureSeparator($accountData['signatureSeparator'] ?? true);
 			$newAccount->setPersonalNamespace($accountData['personalNamespace'] ?? null);
 			if (isset($accountData['inboundPassword'])) {
 				$newAccount->setInboundPassword($this->crypto->encrypt($accountData['inboundPassword']));

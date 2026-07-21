@@ -799,6 +799,7 @@ export default {
 					name: account.name,
 					emailAddress: account.emailAddress,
 					signatureAboveQuote: account.signatureAboveQuote,
+					signatureSeparator: account.signatureSeparator,
 					smimeCertificateId: account.smimeCertificateId,
 					selectable: account.connectionStatus,
 				},
@@ -812,6 +813,7 @@ export default {
 						name: alias.name,
 						emailAddress: alias.alias,
 						signatureAboveQuote: account.signatureAboveQuote,
+						signatureSeparator: account.signatureSeparator,
 						smimeCertificateId: alias.smimeCertificateId,
 						selectable: account.connectionStatus,
 					}
@@ -1308,6 +1310,7 @@ export default {
 				trigger,
 				toHtml(detect(this.selectedAlias.signature)).value,
 				this.selectedAlias.signatureAboveQuote,
+				this.selectedAlias.signatureSeparator,
 			)
 
 			this.changeSignature = false
