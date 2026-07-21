@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Html\ProxyHmacGenerator;
 use OCA\Mail\Http\ProxyDownloadResponse;
 use OCA\Mail\Service\MailManager;
@@ -75,6 +76,7 @@ class ProxyController extends Controller {
 	 *       mail does not know whether the mail has been opened.
 	 *
 	 * @return Response|ProxyDownloadResponse
+	 * @throws ServiceException
 	 */
 	#[UserRateLimit(limit: 50, period: 60)]
 	public function proxy(string $src, ?int $id, ?string $hmac): Response {
@@ -83,7 +85,7 @@ class ProxyController extends Controller {
 
 		// If strict cookies are set it means we come from the same domain so no open redirect
 		if (!$this->request->passesStrictCookieCheck()) {
-			$content = file_get_contents(__DIR__ . '/../../img/blocked-image.png');
+			$content = $this->getBlockedImage();
 			return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
 		}
 
@@ -107,13 +109,13 @@ class ProxyController extends Controller {
 			$content = $response->getBody();
 		} catch (ClientExceptionInterface $e) {
 			$this->logger->notice('Unable to proxy image', ['exception' => $e]);
-			$content = file_get_contents(__DIR__ . '/../../img/blocked-image.png');
+			$content = $this->getBlockedImage();
 		} catch (LocalServerException $e) {
 			$this->logger->warning('Prevented image proxy access to forbidden URL', [
 				'blockedUrl' => $src,
 				'exception' => $e,
 			]);
-			$content = file_get_contents(__DIR__ . '/../../img/blocked-image.png');
+			$content = $this->getBlockedImage();
 		}
 
 		$content = (string)$content;
@@ -126,12 +128,24 @@ class ProxyController extends Controller {
 		if ($this->svgSanitizer->looksLikeSvg($content)) {
 			$sanitized = $this->svgSanitizer->sanitize($content);
 			if ($sanitized === '') {
-				$content = (string)file_get_contents(__DIR__ . '/../../img/blocked-image.png');
+				$content = $this->getBlockedImage();
 				return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
 			}
 			return new ProxyDownloadResponse($sanitized, $src, 'image/svg+xml');
 		}
 
 		return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
+	}
+
+	/**
+	 * @throws ServiceException
+	 */
+	private function getBlockedImage(): string {
+		$content = file_get_contents(__DIR__ . '/../../img/blocked-image.png');
+		if ($content === false) {
+			throw new ServiceException('Could not read blocked image');
+		}
+
+		return $content;
 	}
 }
