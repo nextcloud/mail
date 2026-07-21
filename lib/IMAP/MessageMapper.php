@@ -50,21 +50,12 @@ use function OCA\Mail\chunk_uid_sequence;
 use function sprintf;
 
 class MessageMapper {
-	/** @var LoggerInterface */
-	private $logger;
-
-	private SMimeService $smimeService;
-	private ImapMessageFetcherFactory $imapMessageFactory;
-
 	public function __construct(
-		LoggerInterface $logger,
-		SmimeService $smimeService,
-		ImapMessageFetcherFactory $imapMessageFactory,
+		private LoggerInterface $logger,
+		private SMimeService $smimeService,
+		private ImapMessageFetcherFactory $imapMessageFactory,
 		private Converter $converter,
 	) {
-		$this->logger = $logger;
-		$this->smimeService = $smimeService;
-		$this->imapMessageFactory = $imapMessageFactory;
 	}
 
 	/**
@@ -985,7 +976,6 @@ class MessageMapper {
 				$structure->setContents($bodyContent);
 				return $this->converter->convert($structure);
 			};
-
 
 			$htmlBody = ($htmlBodyId !== null) ? $part->getBodyPart($htmlBodyId) : null;
 			if (!empty($htmlBody)) {

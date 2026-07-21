@@ -71,7 +71,7 @@
 						</div>
 					</div>
 					<div class="modal-inner--field">
-						<label class="modal-inner--label" for="fromId">
+						<label class="modal-inner--label">
 							{{ t('mail', 'Date') }}
 						</label>
 						<div class="modal-inner--container range">

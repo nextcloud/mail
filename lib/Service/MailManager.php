@@ -58,64 +58,24 @@ class MailManager implements IMailManager {
 		'recent' => [Horde_Imap_Client::FLAG_RECENT],
 	];
 
-	/** @var IMAPClientFactory */
-	private $imapClientFactory;
-
-	/** @var MailboxSync */
-	private $mailboxSync;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var FolderMapper */
-	private $folderMapper;
-
-	/** @var ImapMessageMapper */
-	private $imapMessageMapper;
-
-	/** @var DbMessageMapper */
-	private $dbMessageMapper;
-
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var TagMapper */
-	private $tagMapper;
-
-	/** @var MessageTagsMapper */
-	private $messageTagsMapper;
-
-	/** @var ThreadMapper */
-	private $threadMapper;
-
 	public function __construct(
-		IMAPClientFactory $imapClientFactory,
-		MailboxMapper $mailboxMapper,
-		MailboxSync $mailboxSync,
-		FolderMapper $folderMapper,
-		ImapMessageMapper $messageMapper,
-		DbMessageMapper $dbMessageMapper,
+		private IMAPClientFactory $imapClientFactory,
+		private MailboxMapper $mailboxMapper,
+		private MailboxSync $mailboxSync,
+		private FolderMapper $folderMapper,
+		private ImapMessageMapper $imapMessageMapper,
+		private DbMessageMapper $dbMessageMapper,
 		IEventDispatcher $eventDispatcher,
-		LoggerInterface $logger,
-		TagMapper $tagMapper,
-		MessageTagsMapper $messageTagsMapper,
-		ThreadMapper $threadMapper,
+		private LoggerInterface $logger,
+		private TagMapper $tagMapper,
+		private MessageTagsMapper $messageTagsMapper,
+		private ThreadMapper $threadMapper,
 		private ImapFlag $imapFlag,
 	) {
-		$this->imapClientFactory = $imapClientFactory;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->mailboxSync = $mailboxSync;
-		$this->folderMapper = $folderMapper;
-		$this->imapMessageMapper = $messageMapper;
-		$this->dbMessageMapper = $dbMessageMapper;
 		$this->eventDispatcher = $eventDispatcher;
-		$this->logger = $logger;
-		$this->tagMapper = $tagMapper;
-		$this->messageTagsMapper = $messageTagsMapper;
-		$this->threadMapper = $threadMapper;
 	}
 
 	#[\Override]

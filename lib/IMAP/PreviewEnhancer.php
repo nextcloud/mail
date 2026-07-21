@@ -25,34 +25,14 @@ use function array_merge;
 use function array_reduce;
 
 class PreviewEnhancer {
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var ImapMapper */
-	private $imapMapper;
-
-	/** @var DbMapper */
-	private $mapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var AvatarService */
-	private $avatarService;
-
 	public function __construct(
-		IMAPClientFactory $clientFactory,
-		ImapMapper $imapMapper,
-		DbMapper $dbMapper,
-		LoggerInterface $logger,
-		AvatarService $avatarService,
+		private IMAPClientFactory $clientFactory,
+		private ImapMapper $imapMapper,
+		private DbMapper $mapper,
+		private LoggerInterface $logger,
+		private AvatarService $avatarService,
 		private AttachmentService $attachmentService,
 	) {
-		$this->clientFactory = $clientFactory;
-		$this->imapMapper = $imapMapper;
-		$this->mapper = $dbMapper;
-		$this->logger = $logger;
-		$this->avatarService = $avatarService;
 	}
 
 	/**
@@ -96,7 +76,6 @@ class PreviewEnhancer {
 			// Nothing to enhance
 			return $messages;
 		}
-
 
 		try {
 			$data = $this->imapMapper->getBodyStructureData(

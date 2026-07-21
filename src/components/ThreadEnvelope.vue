@@ -67,22 +67,26 @@
 					<div class="sender" :class="{ 'sender--expanded': expanded }">
 						{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
 					</div>
-					<button
+					<NcButton
 						v-if="expanded && hasRecipients"
 						type="button"
 						class="sender__email sender__email--toggle"
-						:style="{ color: senderEmailColor }"
+						size="small"
+						variant="tertiary"
+						alignment="start-reverse"
+						:style="{ '--font-weight-element': 'normal' }"
 						@click.stop.prevent="showRecipients = !showRecipients">
 						{{ senderEmail }}
-						<ChevronUpIcon v-if="showRecipients" :size="16" />
-						<ChevronDownIcon v-else :size="16" />
-					</button>
-					<p
-						v-else-if="expanded"
-						class="sender__email"
-						:style="{ color: senderEmailColor }">
-						{{ senderEmail }}
-					</p>
+						<template #icon>
+							<ChevronUpIcon v-if="showRecipients" :size="16" />
+							<ChevronDownIcon v-else :size="16" />
+						</template>
+					</NcButton>
+					<RecipientBubble
+						v-else-if="expanded && envelope.from && envelope.from[0]"
+						:email="envelope.from[0].email"
+						:label="envelope.from[0].label"
+						:size="24" />
 					<div v-if="hasChangedSubject" class="subline">
 						{{ cleanSubject }}
 					</div>
@@ -287,32 +291,47 @@
 			</div>
 		</div>
 		<div v-if="expanded && showRecipients" class="envelope__recipients">
-			<div v-if="envelope.to && envelope.to.length" class="recipients">
-				<span class="recipients__label">{{ t('mail', 'To:') }}</span>
+			<div v-if="envelope.from && envelope.from.length" class="recipients">
+				<span class="recipients__label">{{ t('mail', 'From:') }}</span>
 				<RecipientBubble
-					v-for="(recipient, index) in envelope.to"
-					:key="`${recipient.email}-${index}`"
+					v-for="recipient in envelope.from"
+					:key="recipient.email"
 					:email="recipient.email"
 					:label="recipient.label"
 					:size="24" />
+			</div>
+			<div v-if="envelope.to && envelope.to.length" class="recipients">
+				<span class="recipients__label">{{ t('mail', 'To:') }}</span>
+				<div class="recipients__list">
+					<RecipientBubble
+						v-for="(recipient, index) in envelope.to"
+						:key="`${recipient.email}-${index}`"
+						:email="recipient.email"
+						:label="recipient.label"
+						:size="24" />
+				</div>
 			</div>
 			<div v-if="envelope.cc && envelope.cc.length" class="recipients">
 				<span class="recipients__label">{{ t('mail', 'Cc:') }}</span>
-				<RecipientBubble
-					v-for="(recipient, index) in envelope.cc"
-					:key="`${recipient.email}-${index}`"
-					:email="recipient.email"
-					:label="recipient.label"
-					:size="24" />
+				<div class="recipients__list">
+					<RecipientBubble
+						v-for="(recipient, index) in envelope.cc"
+						:key="`${recipient.email}-${index}`"
+						:email="recipient.email"
+						:label="recipient.label"
+						:size="24" />
+				</div>
 			</div>
 			<div v-if="envelope.bcc && envelope.bcc.length" class="recipients">
 				<span class="recipients__label">{{ t('mail', 'Bcc:') }}</span>
-				<RecipientBubble
-					v-for="(recipient, index) in envelope.bcc"
-					:key="`${recipient.email}-${index}`"
-					:email="recipient.email"
-					:label="recipient.label"
-					:size="24" />
+				<div class="recipients__list">
+					<RecipientBubble
+						v-for="(recipient, index) in envelope.bcc"
+						:key="`${recipient.email}-${index}`"
+						:email="recipient.email"
+						:label="recipient.label"
+						:size="24" />
+				</div>
 			</div>
 		</div>
 		<MessageLoadingSkeleton v-if="loading === Loading.Skeleton" />
@@ -784,7 +803,7 @@ export default {
 		}, 100)
 	},
 
-	beforeUnmount() {
+	beforeDestroy() {
 		if (this.seenTimer !== undefined) {
 			logger.info('Navigating away before seenTimer delay, will not mark message as seen/read')
 			clearTimeout(this.seenTimer)
@@ -1177,29 +1196,23 @@ export default {
 
 <style lang="scss" scoped>
 	.sender {
-		margin-inline-start: calc(var(--default-grid-baseline) * 2);
+		margin-inline-start: calc(var(--default-grid-baseline) * 3);
 
 		&--expanded {
 			color: var(--color-text-maxcontrast);
 		}
 
 		&__email {
-			margin-inline-start: calc(var(--default-grid-baseline) * 2);
 			text-overflow: ellipsis;
 			overflow: hidden;
 
 			&--toggle {
-				display: inline-flex;
-				align-items: center;
-				gap: calc(var(--default-grid-baseline) / 2);
-				background: none;
-				border: none;
-				padding: 0;
-				cursor: pointer;
-				font-size: inherit;
-				font-family: inherit;
-				line-height: inherit;
-				color: inherit;
+				margin-inline-start: calc(var(--default-grid-baseline) * 2);
+
+				:deep(.button-vue__text) {
+					font-weight: normal;
+					color: var(--color-text-maxcontrast);
+				}
 			}
 		}
 	}
@@ -1442,33 +1455,31 @@ export default {
 
 	.envelope__recipients {
 		// align with sender name: header padding + avatar (40px) + gap (2 * grid-baseline)
-		padding-inline-start: calc(var(--border-radius-container) + var(--default-grid-baseline) * 12);
+		padding-inline-start: calc(var(--border-radius-container) + var(--default-grid-baseline) * 10 + var(--default-grid-baseline) * 3);
 		padding-inline-end: var(--border-radius-container);
 		padding-block: var(--default-grid-baseline) calc(var(--default-grid-baseline) * 2);
 		display: flex;
 		flex-direction: column;
-		gap: calc(var(--default-grid-baseline) / 2);
+		gap: calc(var(--default-grid-baseline));
 
 		.recipients {
 			display: flex;
-			align-items: center;
-			flex-wrap: wrap;
-			gap: var(--default-grid-baseline);
+			flex-direction: row;
 
 			&__label {
 				color: var(--color-text-maxcontrast);
-				font-weight: bold;
 				white-space: nowrap;
-				min-width: 32px;
+				min-width: calc(var(--default-grid-baseline) * 8);
+				height: 100%;
 			}
 
-			:deep(.user-bubble__content) {
-				border-radius: var(--border-radius-pill);
-
-				> :last-child {
-					padding-inline-end: 0;
-				}
+			&__list {
+				display: flex;
+				align-items: center;
+				flex-wrap: wrap;
+				gap: var(--default-grid-baseline);
 			}
+
 		}
 	}
 

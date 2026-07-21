@@ -552,7 +552,6 @@ class DraftsControllerTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-
 	public function testUpdateMessageNotFound(): void {
 		$message = new LocalMessage();
 		$message->setId(1);
@@ -575,7 +574,6 @@ class DraftsControllerTest extends TestCase {
 			->willThrowException(new DoesNotExistException(''));
 		$this->service->expects(self::never())
 			->method('updateMessage');
-
 
 		$this->expectException(DoesNotExistException::class);
 		$expected = JsonResponse::fail('', Http::STATUS_NOT_FOUND);

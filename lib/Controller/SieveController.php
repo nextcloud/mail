@@ -31,31 +31,23 @@ use Psr\Log\LoggerInterface;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class SieveController extends Controller {
-	private MailAccountMapper $mailAccountMapper;
-	private SieveClientFactory $sieveClientFactory;
-	private string $currentUserId;
 	private ICrypto $crypto;
 	private IRemoteHostValidator $hostValidator;
-	private LoggerInterface $logger;
 
 	public function __construct(
 		IRequest $request,
-		string $userId,
-		MailAccountMapper $mailAccountMapper,
-		SieveClientFactory $sieveClientFactory,
+		private string $userId,
+		private MailAccountMapper $mailAccountMapper,
+		private SieveClientFactory $sieveClientFactory,
 		ICrypto $crypto,
 		IRemoteHostValidator $hostValidator,
-		LoggerInterface $logger,
+		private LoggerInterface $logger,
 		private SieveService $sieveService,
 		private DelegationService $delegationService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->currentUserId = $userId;
-		$this->mailAccountMapper = $mailAccountMapper;
-		$this->sieveClientFactory = $sieveClientFactory;
 		$this->crypto = $crypto;
 		$this->hostValidator = $hostValidator;
-		$this->logger = $logger;
 	}
 
 	/**
@@ -71,7 +63,7 @@ class SieveController extends Controller {
 	 */
 	#[TrapError]
 	public function getActiveScript(int $id): JSONResponse {
-		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->currentUserId);
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		$activeScript = $this->sieveService->getActiveScript($effectiveUserId, $id);
 		return new JSONResponse([
 			'scriptName' => $activeScript->getName(),
@@ -92,14 +84,14 @@ class SieveController extends Controller {
 	 */
 	#[TrapError]
 	public function updateActiveScript(int $id, string $script): JSONResponse {
-		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->currentUserId);
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		try {
 			$this->sieveService->updateActiveScript($effectiveUserId, $id, $script);
 		} catch (ManagesieveException $e) {
 			$this->logger->error('Installing sieve script failed: ' . $e->getMessage(), ['app' => 'mail', 'exception' => $e]);
 			return new JSONResponse(data: ['message' => $e->getMessage()], statusCode: Http::STATUS_UNPROCESSABLE_ENTITY);
 		}
-		$this->delegationService->logDelegatedAction($this->currentUserId, $effectiveUserId, "$this->currentUserId updated the active sieve script for account <$id> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated the active sieve script for account <$id> on behalf of $effectiveUserId");
 
 		return new JSONResponse();
 	}
@@ -141,7 +133,7 @@ class SieveController extends Controller {
 				Http::STATUS_UNPROCESSABLE_ENTITY
 			);
 		}
-		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->currentUserId);
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		$mailAccount = $this->mailAccountMapper->find($effectiveUserId, $id);
 
 		if ($sieveEnabled === false) {
@@ -153,7 +145,7 @@ class SieveController extends Controller {
 			$mailAccount->setSievePassword(null);
 
 			$this->mailAccountMapper->save($mailAccount);
-			$this->delegationService->logDelegatedAction($this->currentUserId, $effectiveUserId, "$this->currentUserId updated sieve settings for account <$id> on behalf of $effectiveUserId");
+			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated sieve settings for account <$id> on behalf of $effectiveUserId");
 			return new JSONResponse(['sieveEnabled' => $mailAccount->isSieveEnabled()]);
 		}
 
@@ -185,7 +177,7 @@ class SieveController extends Controller {
 		}
 
 		$this->mailAccountMapper->save($mailAccount);
-		$this->delegationService->logDelegatedAction($this->currentUserId, $effectiveUserId, "$this->currentUserId updated sieve settings for account <$id> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated sieve settings for account <$id> on behalf of $effectiveUserId");
 		return new JSONResponse(['sieveEnabled' => $mailAccount->isSieveEnabled()]);
 	}
 }

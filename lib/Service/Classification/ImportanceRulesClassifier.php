@@ -20,26 +20,12 @@ use function array_combine;
 use function array_map;
 
 class ImportanceRulesClassifier {
-	/** @var ImportantMessagesExtractor */
-	private $importantMessagesExtractor;
-
-	/** @var ReadMessagesExtractor */
-	private $readMessagesExtractor;
-
-	/** @var RepliedMessagesExtractor */
-	private $repliedMessagesExtractor;
-
-	/** @var SentMessagesExtractor */
-	private $sentMessagesExtractor;
-
-	public function __construct(ImportantMessagesExtractor $importantMessagesExtractor,
-		ReadMessagesExtractor $readMessagesExtractor,
-		RepliedMessagesExtractor $repliedMessagesExtractor,
-		SentMessagesExtractor $sentMessagesExtractor) {
-		$this->importantMessagesExtractor = $importantMessagesExtractor;
-		$this->readMessagesExtractor = $readMessagesExtractor;
-		$this->repliedMessagesExtractor = $repliedMessagesExtractor;
-		$this->sentMessagesExtractor = $sentMessagesExtractor;
+	public function __construct(
+		private ImportantMessagesExtractor $importantMessagesExtractor,
+		private ReadMessagesExtractor $readMessagesExtractor,
+		private RepliedMessagesExtractor $repliedMessagesExtractor,
+		private SentMessagesExtractor $sentMessagesExtractor,
+	) {
 	}
 
 	/**

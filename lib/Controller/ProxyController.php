@@ -35,32 +35,23 @@ class ProxyController extends Controller {
 	private IURLGenerator $urlGenerator;
 	private ISession $session;
 	private IClientService $clientService;
-	private LoggerInterface $logger;
-	private ProxyHmacGenerator $hmacGenerator;
-	private MailManager $mailManager;
-	private SvgSanitizer $svgSanitizer;
-	private ?string $userId;
 
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
 		IURLGenerator $urlGenerator,
 		ISession $session,
 		IClientService $clientService,
-		ProxyHmacGenerator $hmacGenerator,
-		LoggerInterface $logger,
-		MailManager $mailManager,
-		SvgSanitizer $svgSanitizer,
-		?string $userId) {
+		private ProxyHmacGenerator $hmacGenerator,
+		private LoggerInterface $logger,
+		private MailManager $mailManager,
+		private ?string $userId,
+	) {
 		parent::__construct($appName, $request);
 		$this->request = $request;
 		$this->urlGenerator = $urlGenerator;
 		$this->session = $session;
 		$this->clientService = $clientService;
-		$this->logger = $logger;
-		$this->hmacGenerator = $hmacGenerator;
-		$this->mailManager = $mailManager;
-		$this->svgSanitizer = $svgSanitizer;
-		$this->userId = $userId;
 	}
 
 	/**

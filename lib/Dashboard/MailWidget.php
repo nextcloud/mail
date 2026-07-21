@@ -33,25 +33,21 @@ use OCP\IUserManager;
 abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOptionWidget, IButtonWidget {
 	protected IURLGenerator $urlGenerator;
 	protected IUserManager $userManager;
-	protected AccountService $accountService;
-	protected IMailSearch $mailSearch;
 	protected IInitialState $initialState;
-	protected ?string $userId;
 	protected IL10N $l10n;
 
-	public function __construct(IL10N $l10n,
+	public function __construct(
+		IL10N $l10n,
 		IURLGenerator $urlGenerator,
 		IUserManager $userManager,
-		AccountService $accountService,
-		IMailSearch $mailSearch,
+		protected AccountService $accountService,
+		protected IMailSearch $mailSearch,
 		IInitialState $initialState,
-		?string $userId) {
+		protected ?string $userId,
+	) {
 		$this->urlGenerator = $urlGenerator;
 		$this->userManager = $userManager;
-		$this->accountService = $accountService;
-		$this->mailSearch = $mailSearch;
 		$this->initialState = $initialState;
-		$this->userId = $userId;
 		$this->l10n = $l10n;
 	}
 

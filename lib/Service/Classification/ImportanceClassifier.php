@@ -92,35 +92,14 @@ class ImportanceClassifier {
 	 */
 	private const MAX_TRAINING_SET_SIZE = 300;
 
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
-	/** @var PersistenceService */
-	private $persistenceService;
-
-	/** @var PerformanceLogger */
-	private $performanceLogger;
-
-	/** @var ImportanceRulesClassifier */
-	private $rulesClassifier;
-
-	private ContainerInterface $container;
-
-	public function __construct(MailboxMapper $mailboxMapper,
-		MessageMapper $messageMapper,
-		PersistenceService $persistenceService,
-		PerformanceLogger $performanceLogger,
-		ImportanceRulesClassifier $rulesClassifier,
-		ContainerInterface $container) {
-		$this->mailboxMapper = $mailboxMapper;
-		$this->messageMapper = $messageMapper;
-		$this->persistenceService = $persistenceService;
-		$this->performanceLogger = $performanceLogger;
-		$this->rulesClassifier = $rulesClassifier;
-		$this->container = $container;
+	public function __construct(
+		private MailboxMapper $mailboxMapper,
+		private MessageMapper $messageMapper,
+		private PersistenceService $persistenceService,
+		private PerformanceLogger $performanceLogger,
+		private ImportanceRulesClassifier $rulesClassifier,
+		private ContainerInterface $container,
+	) {
 	}
 
 	private static function createDefaultEstimator(): KNearestNeighbors {
@@ -347,7 +326,6 @@ class ImportanceClassifier {
 		]);
 		return new ClassifierPipeline($persistedEstimator, $extractor);
 	}
-
 
 	/**
 	 * @param Account $account

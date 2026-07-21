@@ -17,58 +17,35 @@ use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Services\IInitialState;
 use OCP\Defaults;
 use OCP\IConfig;
-use OCP\IInitialStateService;
 use OCP\Settings\ISettings;
-use OCP\TextProcessing\FreePromptTaskType;
-use OCP\TextProcessing\SummaryTaskType;
+use OCP\TaskProcessing\TaskTypes\TextToText;
+use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
 
 class AdminSettings implements ISettings {
-	/** @var IInitialStateService */
-	private $initialStateService;
-
-	/** @var ProvisioningManager */
-	private $provisioningManager;
-
-	/** @var AntiSpamService */
-	private $antiSpamService;
-
-	private GoogleIntegration $googleIntegration;
-	private MicrosoftIntegration $microsoftIntegration;
-	private IConfig $config;
-	private AiIntegrationsService $aiIntegrationsService;
-
 	public function __construct(
-		IInitialStateService $initialStateService,
-		ProvisioningManager $provisioningManager,
-		AntiSpamService $antiSpamService,
-		GoogleIntegration $googleIntegration,
-		MicrosoftIntegration $microsoftIntegration,
-		IConfig $config,
-		AiIntegrationsService $aiIntegrationsService,
+		private IInitialState $initialStateService,
+		private ProvisioningManager $provisioningManager,
+		private AntiSpamService $antiSpamService,
+		private GoogleIntegration $googleIntegration,
+		private MicrosoftIntegration $microsoftIntegration,
+		private IConfig $config,
+		private AiIntegrationsService $aiIntegrationsService,
 		private Defaults $themingDefaults,
 		private ClassificationSettingsService $classificationSettingsService,
 	) {
-		$this->initialStateService = $initialStateService;
-		$this->provisioningManager = $provisioningManager;
-		$this->antiSpamService = $antiSpamService;
-		$this->googleIntegration = $googleIntegration;
-		$this->microsoftIntegration = $microsoftIntegration;
-		$this->config = $config;
-		$this->aiIntegrationsService = $aiIntegrationsService;
 	}
 
 	#[\Override]
 	public function getForm() {
 		$this->initialStateService->provideInitialState(
-			Application::APP_ID,
 			'provisioning_settings',
 			$this->provisioningManager->getConfigs()
 		);
 
 		$this->initialStateService->provideInitialState(
-			Application::APP_ID,
 			'antispam_setting',
 			[
 				'spam' => $this->antiSpamService->getSpamEmail(),
@@ -77,67 +54,55 @@ class AdminSettings implements ISettings {
 		);
 
 		$this->initialStateService->provideInitialState(
-			Application::APP_ID,
 			'allow_new_mail_accounts',
 			$this->config->getAppValue('mail', 'allow_new_mail_accounts', 'yes') === 'yes'
 		);
 
 		$this->initialStateService->provideInitialState(
-			Application::APP_ID,
 			'layout_message_view',
 			$this->config->getAppValue('mail', 'layout_message_view', 'threaded')
 		);
 
 		$this->initialStateService->provideInitialState(
-			Application::APP_ID,
 			'llm_processing',
 			$this->aiIntegrationsService->isLlmProcessingEnabled(),
 		);
 
 		$this->initialStateService->provideInitialState(
-			Application::APP_ID,
 			'enabled_llm_free_prompt_backend',
-			$this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
+			$this->aiIntegrationsService->isLlmAvailable(TextToText::ID)
 		);
 
 		$this->initialStateService->provideInitialState(
-			Application::APP_ID,
 			'enabled_llm_summary_backend',
-			$this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class)
+			$this->aiIntegrationsService->isLlmAvailable(TextToTextSummary::ID)
 		);
 
 		$this->initialStateService->provideInitialState(
-			Application::APP_ID,
 			'google_oauth_client_id',
 			$this->googleIntegration->getClientId(),
 		);
 		$this->initialStateService->provideInitialState(
-			Application::APP_ID,
 			'google_oauth_redirect_url',
 			$this->googleIntegration->getRedirectUrl(),
 		);
 		$this->initialStateService->provideInitialState(
-			Application::APP_ID,
 			'importance_classification_default',
 			$this->classificationSettingsService->isClassificationEnabledByDefault(),
 		);
 		$this->initialStateService->provideInitialState(
-			Application::APP_ID,
 			'microsoft_oauth_tenant_id',
 			$this->microsoftIntegration->getTenantId(),
 		);
 		$this->initialStateService->provideInitialState(
-			Application::APP_ID,
 			'microsoft_oauth_client_id',
 			$this->microsoftIntegration->getClientId(),
 		);
 		$this->initialStateService->provideInitialState(
-			Application::APP_ID,
 			'microsoft_oauth_redirect_url',
 			$this->microsoftIntegration->getRedirectUrl(),
 		);
 		$this->initialStateService->provideInitialState(
-			Application::APP_ID,
 			'microsoft_oauth_docs',
 			$this->themingDefaults->buildDocLinkToKey('admin-groupware-oauth-microsoft'),
 		);

@@ -5,6 +5,7 @@ declare(strict_types=1);
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
@@ -15,21 +16,12 @@ use OCA\Mail\IMAP\PreviewEnhancer;
 use Psr\Log\LoggerInterface;
 
 class PreprocessingService {
-	private MailboxMapper $mailboxMapper;
-	private MessageMapper $messageMapper;
-	private LoggerInterface $logger;
-	private PreviewEnhancer $previewEnhancer;
-
 	public function __construct(
-		MessageMapper $messageMapper,
-		LoggerInterface $logger,
-		MailboxMapper $mailboxMapper,
-		PreviewEnhancer $previewEnhancer,
+		private MessageMapper $messageMapper,
+		private LoggerInterface $logger,
+		private MailboxMapper $mailboxMapper,
+		private PreviewEnhancer $previewEnhancer,
 	) {
-		$this->messageMapper = $messageMapper;
-		$this->logger = $logger;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->previewEnhancer = $previewEnhancer;
 	}
 
 	public function process(int $limitTimestamp, Account $account): void {

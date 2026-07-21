@@ -35,7 +35,6 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-
 		$this->account = $this->createTestAccount();
 		$this->fetcherFactory = Server::get(ImapMessageFetcherFactory::class);
 		$this->certificateMapper = Server::get(SmimeCertificateMapper::class);
@@ -166,6 +165,50 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 		$this->assertFalse($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
 		$this->assertTrue($message->isSignatureValid());
+	}
+
+	public function testFetchMessageWithInlineImageWithoutFilename(): void {
+		$mimeMessage = file_get_contents(__DIR__ . '/../../data/mime-html-cid-no-filename.txt');
+		$uid = $this->saveMimeMessage('INBOX', $mimeMessage);
+		$fetcher = $this->fetcherFactory
+			->build(
+				$uid,
+				'INBOX',
+				$this->getTestClient(),
+				$this->account->getUserId()
+			)
+			->withBody(true);
+
+		$message = $fetcher->fetchMessage();
+
+		$this->assertCount(0, $message->attachments);
+		$this->assertCount(1, $message->inlineAttachments);
+		$inlineAttachment = $message->inlineAttachments[0];
+		$this->assertSame('_1_0FAD84280FACDD0C0038DE9FC1258E02', $inlineAttachment['cid']);
+		$this->assertNull($inlineAttachment['fileName']);
+		$this->assertSame('image/gif', $inlineAttachment['mime']);
+		$this->assertTrue($message->hasHtmlMessage());
+	}
+
+	public function testFetchMessageDoesNotTreatHtmlBodyWithCidAsInlineAttachment(): void {
+		$mimeMessage = file_get_contents(__DIR__ . '/../../data/mime-html-body-with-cid.txt');
+		$uid = $this->saveMimeMessage('INBOX', $mimeMessage);
+		$fetcher = $this->fetcherFactory
+			->build(
+				$uid,
+				'INBOX',
+				$this->getTestClient(),
+				$this->account->getUserId()
+			)
+			->withBody(true);
+
+		$message = $fetcher->fetchMessage();
+
+		$this->assertCount(0, $message->attachments);
+		$this->assertCount(1, $message->inlineAttachments);
+		$this->assertSame('image/gif', $message->inlineAttachments[0]['mime']);
+		$this->assertTrue($message->hasHtmlMessage());
+		$this->assertStringContainsString('Hello', $message->getHtmlBody($uid));
 	}
 
 	public function testFetchMessageWithOpaqueSignedMessage(): void {
