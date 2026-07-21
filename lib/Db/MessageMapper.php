@@ -585,7 +585,6 @@ class MessageMapper extends QBMapper {
 				->set('preview_text', $query->createParameter('preview_text'))
 				->set('structure_analyzed', $query->createNamedParameter(true, IQueryBuilder::PARAM_BOOL))
 				->set('updated_at', $query->createNamedParameter($this->timeFactory->getTime(), IQueryBuilder::PARAM_INT))
-				->set('imip_message', $query->createParameter('imip_message'))
 				->set('encrypted', $query->createParameter('encrypted'))
 				->set('mentions_me', $query->createParameter('mentions_me'))
 				->where($query->expr()->andX(
@@ -616,7 +615,6 @@ class MessageMapper extends QBMapper {
 					$previewText,
 					$previewText === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR
 				);
-				$query->setParameter('imip_message', $message->isImipMessage(), IQueryBuilder::PARAM_BOOL);
 				$query->setParameter('encrypted', $message->isEncrypted(), IQueryBuilder::PARAM_BOOL);
 				$query->setParameter('mentions_me', $message->getMentionsMe(), IQueryBuilder::PARAM_BOOL);
 
@@ -1564,15 +1562,15 @@ class MessageMapper extends QBMapper {
 		$time = $this->timeFactory->getTime() - 60 * 60 * 24 * 14;
 		$qb = $this->db->getQueryBuilder();
 
-		$select = $qb->select('*')
-			->from($this->getTableName())
+		$select = $qb->select('m.*')
+			->from($this->getTableName(), 'm')
+			->join('m', 'mail_messages_imip', 'i', $qb->expr()->eq('i.imip_message_id', 'm.id'))
 			->where(
-				$qb->expr()->eq('imip_message', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
-				$qb->expr()->eq('imip_processed', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
-				$qb->expr()->eq('imip_error', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
-				$qb->expr()->eq('flag_junk', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
-				$qb->expr()->gt('sent_at', $qb->createNamedParameter($time, IQueryBuilder::PARAM_INT)),
-			)->orderBy('sent_at', 'ASC'); // make sure we don't process newer messages first
+				$qb->expr()->eq('i.error', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
+				$qb->expr()->isNull('i.processed_at'),
+				$qb->expr()->eq('m.flag_junk', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
+				$qb->expr()->gt('m.sent_at', $qb->createNamedParameter($time, IQueryBuilder::PARAM_INT)),
+			)->orderBy('m.sent_at', 'ASC'); // make sure we don't process newer messages first
 
 		return $this->findEntities($select);
 	}

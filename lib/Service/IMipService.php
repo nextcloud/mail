@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
+use OCA\Mail\Db\ImipDataMapper;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
@@ -32,6 +33,7 @@ class IMipService {
 	private MailManager $mailManager;
 	private MessageMapper $messageMapper;
 	private ServerVersion $serverVersion;
+	private ImipDataMapper $imipDataMapper;
 
 	public function __construct(
 		AccountService $accountService,
@@ -41,6 +43,7 @@ class IMipService {
 		MailManager $mailManager,
 		MessageMapper $messageMapper,
 		ServerVersion $serverVersion,
+		ImipDataMapper $imipDataMapper,
 	) {
 		$this->accountService = $accountService;
 		$this->calendarManager = $manager;
@@ -49,6 +52,7 @@ class IMipService {
 		$this->mailManager = $mailManager;
 		$this->messageMapper = $messageMapper;
 		$this->serverVersion = $serverVersion;
+		$this->imipDataMapper = $imipDataMapper;
 	}
 
 	public function process(): void {
@@ -108,7 +112,8 @@ class IMipService {
 					$message->setImipProcessed(true);
 					return $message;
 				}, $filteredMessages); // Silently drop from passing to DAV and mark as processed, so we won't run into these messages again.
-				$this->messageMapper->updateImipData(...$processedMessages);
+				$this->imipDataMapper->markProcessedBulk(...$processedMessages);
+
 				continue;
 			}
 
@@ -184,7 +189,7 @@ class IMipService {
 					$message->setImipError(true);
 				}
 			}
-			$this->messageMapper->updateImipData(...$filteredMessages);
+			$this->imipDataMapper->markProcessedBulk(...$filteredMessages);
 		}
 	}
 }

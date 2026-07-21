@@ -13,6 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
+use OCA\Mail\Db\ImipDataMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
@@ -41,6 +42,8 @@ class PreviewEnhancerTest extends TestCase {
 	private $previewEnhancer;
 	/** @var AttachmentService|MockObject */
 	private $attachmentService;
+	/** @var ImipDataMapper */
+	private $imipDataMapper;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -51,6 +54,7 @@ class PreviewEnhancerTest extends TestCase {
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->avatarService = $this->createMock(AvatarService::class);
 		$this->attachmentService = $this->createMock(AttachmentService::class);
+		$this->imipDataMapper = $this->createMock(ImipDataMapper::class);
 
 		$this->previewEnhancer = new PreviewEnhancer(
 			$this->imapClientFactory,
@@ -58,7 +62,8 @@ class PreviewEnhancerTest extends TestCase {
 			$this->dbMapper,
 			$this->logger,
 			$this->avatarService,
-			$this->attachmentService
+			$this->attachmentService,
+			$this->imipDataMapper
 		);
 	}
 

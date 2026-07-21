@@ -13,6 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
+use OCA\Mail\Db\ImipDataMapper;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
@@ -53,6 +54,9 @@ class IMipServiceTest extends TestCase {
 
 	private OCPServerVersion $OCPServerVersion;
 
+	/** @var ImipDataMapper|MockObject */
+	private ImipDataMapper $imipDataMapper;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -64,6 +68,7 @@ class IMipServiceTest extends TestCase {
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->serverVersion = $this->createMock(ServerVersion::class);
 		$this->OCPServerVersion = new OCPServerVersion();
+		$this->imipDataMapper = $this->createMock(ImipDataMapper::class);
 
 		$this->service = new IMipService(
 			$this->accountService,
@@ -72,7 +77,8 @@ class IMipServiceTest extends TestCase {
 			$this->mailboxMapper,
 			$this->mailManager,
 			$this->messageMapper,
-			$this->serverVersion
+			$this->serverVersion,
+			$this->imipDataMapper
 		);
 	}
 

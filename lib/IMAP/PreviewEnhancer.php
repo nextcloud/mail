@@ -11,6 +11,7 @@ namespace OCA\Mail\IMAP;
 
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
+use OCA\Mail\Db\ImipDataMapper;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMapper;
@@ -18,6 +19,7 @@ use OCA\Mail\IMAP\MessageMapper as ImapMapper;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\AvatarService;
+use OCP\DB\Exception;
 use Psr\Log\LoggerInterface;
 use function array_key_exists;
 use function array_map;
@@ -40,6 +42,9 @@ class PreviewEnhancer {
 	/** @var AvatarService */
 	private $avatarService;
 
+	/** @var ImipDataMapper */
+	private $imipDataMapper;
+
 	public function __construct(
 		IMAPClientFactory $clientFactory,
 		ImapMapper $imapMapper,
@@ -47,12 +52,14 @@ class PreviewEnhancer {
 		LoggerInterface $logger,
 		AvatarService $avatarService,
 		private AttachmentService $attachmentService,
+		ImipDataMapper $imipDataMapper,
 	) {
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
 		$this->mapper = $dbMapper;
 		$this->logger = $logger;
 		$this->avatarService = $avatarService;
+		$this->imipDataMapper = $imipDataMapper;
 	}
 
 	/**
@@ -116,6 +123,22 @@ class PreviewEnhancer {
 			$client->logout();
 		}
 
+		foreach ($messages as $message) {
+			if (!array_key_exists($message->getUid(), $data)) {
+				continue;
+			}
+
+			if ($data[$message->getUid()]->isImipMessage()) {
+				try {
+					$this->imipDataMapper->markAsImipMessage($message->getId());
+				} catch (Exception $e) {
+					$this->logger->warning('Could not mark message as imip: ' . $e->getMessage(), [
+						'exception' => $e,
+					]);
+				}
+			}
+		}
+
 		return $this->mapper->updatePreviewDataBulk(...array_map(static function (Message $message) use ($data) {
 			if (!array_key_exists($message->getUid(), $data)) {
 				// Nothing to do
@@ -126,7 +149,6 @@ class PreviewEnhancer {
 			$message->setFlagAttachments($structureData->hasAttachments());
 			$message->setPreviewText($structureData->getPreviewText());
 			$message->setStructureAnalyzed(true);
-			$message->setImipMessage($structureData->isImipMessage());
 			$message->setEncrypted($structureData->isEncrypted());
 			$message->setMentionsMe($structureData->getMentionsMe());
 
