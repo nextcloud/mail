@@ -245,7 +245,6 @@
     "Could not snooze thread" : "No se ha podido diferir el hilo",
     "Thread was unsnoozed" : "El hilo fue reanudado",
     "Could not unsnooze thread" : "No se pudo reanudar el hilo",
-    "This summary was AI generated" : "Este resumen ha sido generado con IA",
     "Encrypted message" : "Mensaje cifrado",
     "This message is unread" : "Este mensaje no se ha leído",
     "Unfavorite" : "Desmarcar como favorito",
@@ -542,9 +541,6 @@
     "Delete tag" : "Eliminar etiqueta",
     "Set tag" : "Establecer etiqueta",
     "Unset tag" : "Quitar etiqueta",
-    "Tag name is a hidden system tag" : "El nombre de la etiqueta es una etiqueta oculta del sistema",
-    "Tag already exists" : "La etiqueta ya existe",
-    "Tag name cannot be empty" : "El nombre de la etiqueta no puede estar vacío",
     "An error occurred, unable to create the tag." : "Ocurrió un error, no fue posible crear la etiqueta.",
     "Add default tags" : "Añadir etiquetas predeterminadas",
     "Add tag" : "Añadir etiqueta",
@@ -584,7 +580,6 @@
     "Thread summary" : "Resumen del hilo",
     "Go to latest message" : "Ir al último mensaje",
     "Newest message" : "Mensaje más reciente",
-    "This summary is AI generated and may contain mistakes." : "Este resumen se genera mediante IA y puede contener errores.",
     "Please select languages to translate to and from" : "Por favor, seleccione los idiomas de los que/a los que traducir",
     "The message could not be translated" : "El mensaje no pudo ser traducido",
     "Translation copied to clipboard" : "La traducción se copió al portapapeles",
@@ -833,9 +828,14 @@
     "Could not load your message" : "No se ha podido cargar tu mensaje",
     "Could not load the desired message" : "No se ha podido cargar el mensaje deseado",
     "Could not load the message" : "No se ha podido cargar el mensaje",
+    "Tag name cannot be empty" : "El nombre de la etiqueta no puede estar vacío",
+    "Tag name is a hidden system tag" : "El nombre de la etiqueta es una etiqueta oculta del sistema",
+    "Tag already exists" : "La etiqueta ya existe",
     "Error loading message" : "Error al cargar el mensaje",
     "Add share link from Files" : "Agregar un enlace a un recurso compartido desde Archivos",
     "Choose a file to add as attachment" : "Escoja un archivo para adjuntar",
-    "Choose a file to share as a link" : "Escoge un archivo para compartir como enlace"
+    "Choose a file to share as a link" : "Escoge un archivo para compartir como enlace",
+    "This summary was AI generated" : "Este resumen ha sido generado con IA",
+    "This summary is AI generated and may contain mistakes." : "Este resumen se genera mediante IA y puede contener errores."
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

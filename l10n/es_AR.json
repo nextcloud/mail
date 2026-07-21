@@ -96,7 +96,6 @@
     "Date" : "Fecha",
     "Tags" : "Etiquetas",
     "Custom" : "Personalizado",
-    "Tag already exists" : "La etiqueta ya existe",
     "Add tag" : "Añadir etiqueta",
     "Not found" : "No encontrado",
     "From:" : "De:",
@@ -138,6 +137,7 @@
     "Could not load your message" : "No se pudo cargar tu mensaje",
     "Could not load the desired message" : "No se pudo cargar el mensaje deseado",
     "Could not load the message" : "No se pudo cargar el mensaje.",
+    "Tag already exists" : "La etiqueta ya existe",
     "Error loading message" : "Se presentó un error al cargar el mensaje",
     "Choose a file to add as attachment" : "Seleccione el archivo a agregar como adjunto"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"

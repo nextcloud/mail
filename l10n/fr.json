@@ -305,7 +305,6 @@
     "Could not snooze thread" : "Impossible de mettre le fil en attente",
     "Thread was unsnoozed" : "La mise en attente du fil a été annulée",
     "Could not unsnooze thread" : "Impossible d'annuler la mise en attente du fil",
-    "This summary was AI generated" : "Ce résumé a été généré par IA",
     "Encrypted message" : "Message chiffré",
     "This message is unread" : "Ce message est non-lu",
     "Unfavorite" : "Retirer des favoris",
@@ -623,9 +622,6 @@
     "Delete tag" : "Supprimer l'étiquette",
     "Set tag" : "Ajouter l'étiquette",
     "Unset tag" : "Supprimer l'étiquette",
-    "Tag name is a hidden system tag" : "Le nom de l'étiquette est celui d'une étiquette système cachée",
-    "Tag already exists" : "L'étiquette existe déjà",
-    "Tag name cannot be empty" : "Le nom de l'étiquette ne peut pas être vide",
     "An error occurred, unable to create the tag." : "Une erreur est survenue, impossible de créer l'étiquette.",
     "Add default tags" : "Ajouter les étiquettes par défaut",
     "Add tag" : "Ajouter une étiquette",
@@ -668,7 +664,6 @@
     "Thread summary" : "Résumé du fil de discussion",
     "Go to latest message" : "Aller au dernier message",
     "Newest message" : "Dernier message",
-    "This summary is AI generated and may contain mistakes." : "Ce résumé est généré par IA et peut contenir des erreurs.",
     "Please select languages to translate to and from" : "Veuillez sélectionner les langues à ou vers lesquelles traduire",
     "The message could not be translated" : "Le message n'a pas pu être traduit",
     "Translation copied to clipboard" : "Traduction copiée dans le presse-papier",
@@ -924,11 +919,16 @@
     "Could not load your message" : "Impossible de charger votre message",
     "Could not load the desired message" : "Impossible de charger le message souhaité",
     "Could not load the message" : "Impossible de charger le message",
+    "Tag name cannot be empty" : "Le nom de l'étiquette ne peut pas être vide",
+    "Tag name is a hidden system tag" : "Le nom de l'étiquette est celui d'une étiquette système cachée",
+    "Tag already exists" : "L'étiquette existe déjà",
     "Error loading message" : "Erreur lors du chargement du message",
     "Add share link from Files" : "Ajouter un lien de partage depuis Fichiers",
     "Choose a file to add as attachment" : "Choisissez un fichier à joindre au message",
     "Choose a file to share as a link" : "Sélectionnez un fichier à partager par lien",
     "Delegated access to {userId}" : "Déléguer l'accès à {userId}",
-    "Revoked access for {userId}" : "Accès révoqué pour {userId}"
+    "Revoked access for {userId}" : "Accès révoqué pour {userId}",
+    "This summary was AI generated" : "Ce résumé a été généré par IA",
+    "This summary is AI generated and may contain mistakes." : "Ce résumé est généré par IA et peut contenir des erreurs."
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

@@ -298,7 +298,6 @@
     "Could not snooze thread" : "امکان snooze کردن موضوع وجود نداشت",
     "Thread was unsnoozed" : "موضوع از حالت snooze خارج شد",
     "Could not unsnooze thread" : "امکان unsnooze کردن موضوع وجود نداشت",
-    "This summary was AI generated" : "این خلاصه توسط هوش مصنوعی تولید شده است",
     "Encrypted message" : "پیام رمزگذاری‌شده",
     "This message is unread" : "این پیام خوانده نشده است",
     "Unfavorite" : "حذف از علاقه‌مندی‌ها",
@@ -613,9 +612,6 @@
     "Delete tag" : "حذف برچسب",
     "Set tag" : "تنظیم برچسب",
     "Unset tag" : "لغو تنظیم برچسب",
-    "Tag name is a hidden system tag" : "نام برچسب یک برچسب سیستمی مخفی است",
-    "Tag already exists" : "برچسب از قبل وجود دارد",
-    "Tag name cannot be empty" : "نام برچسب نمی‌تواند خالی باشد",
     "An error occurred, unable to create the tag." : "خطایی رخ داد، امکان ایجاد برچسب وجود ندارد.",
     "Add default tags" : "افزودن برچسب‌های پیش‌فرض",
     "Add tag" : "افزودن برچسب",
@@ -658,7 +654,6 @@
     "Thread summary" : "خلاصه موضوع",
     "Go to latest message" : "رفتن به آخرین پیام",
     "Newest message" : "جدیدترین پیام",
-    "This summary is AI generated and may contain mistakes." : "این خلاصه توسط هوش مصنوعی تولید شده و ممکن است حاوی اشتباه باشد",
     "Please select languages to translate to and from" : "لطفاً زبان‌های ترجمه از و به را انتخاب کنید",
     "The message could not be translated" : "پیام قابل ترجمه نبود",
     "Translation copied to clipboard" : "ترجمه در کلیپ‌بورد کپی شد",
@@ -914,11 +909,16 @@
     "Could not load your message" : "امکان بارگذاری پیام شما وجود ندارد",
     "Could not load the desired message" : "امکان بارگذاری پیام مورد نظر وجود ندارد",
     "Could not load the message" : "امکان بارگذاری پیام وجود ندارد",
+    "Tag name cannot be empty" : "نام برچسب نمی‌تواند خالی باشد",
+    "Tag name is a hidden system tag" : "نام برچسب یک برچسب سیستمی مخفی است",
+    "Tag already exists" : "برچسب از قبل وجود دارد",
     "Error loading message" : "خطا در بارگذاری پیام",
     "Add share link from Files" : "افزودن لینک اشتراک‌گذاری از Files",
     "Choose a file to add as attachment" : "فایلی را برای افزودن به عنوان پیوست انتخاب کنید",
     "Choose a file to share as a link" : "فایلی را برای اشتراک‌گذاری به عنوان پیوند انتخاب کنید",
     "Delegated access to {userId}" : "دسترسی واگذار شده به {userId}",
-    "Revoked access for {userId}" : "دسترسی {userId} لغو شد"
+    "Revoked access for {userId}" : "دسترسی {userId} لغو شد",
+    "This summary was AI generated" : "این خلاصه توسط هوش مصنوعی تولید شده است",
+    "This summary is AI generated and may contain mistakes." : "این خلاصه توسط هوش مصنوعی تولید شده و ممکن است حاوی اشتباه باشد"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

@@ -109,7 +109,6 @@ OC.L10N.register(
     "Select tags" : "Përzgjidh etiketat",
     "Custom" : "E përshtatur",
     "Delete tag" : "Fshi etiketën",
-    "Tag already exists" : "Etiketa ekziston",
     "Add tag" : "Shto etiketim",
     "From:" : "Nga:",
     "To:" : "Deri më:",
@@ -145,6 +144,7 @@ OC.L10N.register(
     "Message sent" : "Mesazhi u dërgua",
     "Could not load {tag}{name}{endtag}" : "Nuk mund të ngarkohej {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Pati një problem me ngarkimin e {tag}{name}{endtag}",
+    "Tag already exists" : "Etiketa ekziston",
     "Error loading message" : "Gabim në ngarkimin e kartelës",
     "Choose a file to add as attachment" : "Zgjidhni një kartelë që të shtohet si bashkëngjitje"
 },

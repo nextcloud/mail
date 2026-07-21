@@ -77,7 +77,6 @@ OC.L10N.register(
     "Date" : "วันที่",
     "Tags" : "แท็ก",
     "Custom" : "กำหนดเอง",
-    "Tag already exists" : "มีแท็กอยู่แล้ว",
     "Not found" : "ไม่พบ",
     "From:" : "จาก:",
     "To:" : "ถึง:",
@@ -108,6 +107,7 @@ OC.L10N.register(
     "Sent" : "ส่งแล้ว",
     "Trash" : "ถังขยะ",
     "{from}\n{subject}" : "{from}\n{subject}",
+    "Tag already exists" : "มีแท็กอยู่แล้ว",
     "Error loading message" : "เกิดข้อผิดพลาดขณะโหลดข้อความ",
     "Choose a file to add as attachment" : "เลือกไฟล์ที่ต้องการแนบ"
 },

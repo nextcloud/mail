@@ -228,7 +228,6 @@ OC.L10N.register(
     "Could not snooze thread" : "تعذّر غَفْوُ snooze النَّظْمَة Thread ",
     "Thread was unsnoozed" : "تمّ خروج نَظْمَة الرسائل من الغفوة",
     "Could not unsnooze thread" : "تعذّر خروج نَظْمَة الرسائل من الغفوة",
-    "This summary was AI generated" : "المخلص تمّ توليده عن طريق الذكاء الاصطناعي",
     "Encrypted message" : "رسالة مُشفّرة",
     "This message is unread" : "هذه الرسالة غير مقرؤة",
     "Unfavorite" : "إبعادٌ من المُفضّلة",
@@ -489,9 +488,6 @@ OC.L10N.register(
     "Delete tag" : "حذف الوسم",
     "Set tag" : "تعيين وسم",
     "Unset tag" : "إلغاء تعيين الوَسْم",
-    "Tag name is a hidden system tag" : "اسم الوَسْم هو وَسْمٌ نِظَامِيٌّ مَخْفِيٌّ hidden system tag",
-    "Tag already exists" : "الوَسْمُ موجود سلفاً",
-    "Tag name cannot be empty" : "اسم السِّمَة لا يمكن أن يكون فارغاً",
     "An error occurred, unable to create the tag." : "حدث خطأ. يتعذّر إنشاء الوَسْم",
     "Add default tags" : "إضافة الوسوم التلقائية",
     "Add tag" : "إضافة وسم",
@@ -718,9 +714,13 @@ OC.L10N.register(
     "Could not load your message" : "تعذّر تحميل رسالتك",
     "Could not load the desired message" : "تعذّر تحميل الرسالة المطلوبة",
     "Could not load the message" : "تعذّر تحميل الرسالة",
+    "Tag name cannot be empty" : "اسم السِّمَة لا يمكن أن يكون فارغاً",
+    "Tag name is a hidden system tag" : "اسم الوَسْم هو وَسْمٌ نِظَامِيٌّ مَخْفِيٌّ hidden system tag",
+    "Tag already exists" : "الوَسْمُ موجود سلفاً",
     "Error loading message" : "حدث خطأ أثناء تحميل الرسالة",
     "Add share link from Files" : "إضافة رابط المشاركة من الملفات",
     "Choose a file to add as attachment" : "إختَر ملفاً لإضافته كمُرفَقٍ",
-    "Choose a file to share as a link" : "إختَر ملفاً لمُشاركته كرابطٍ"
+    "Choose a file to share as a link" : "إختَر ملفاً لمُشاركته كرابطٍ",
+    "This summary was AI generated" : "المخلص تمّ توليده عن طريق الذكاء الاصطناعي"
 },
 "nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;");

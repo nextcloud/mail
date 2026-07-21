@@ -374,8 +374,6 @@ OC.L10N.register(
     "Delete tag" : "Izbriši oznako",
     "Set tag" : "Nastavi oznako",
     "Unset tag" : "Odstrani oznako",
-    "Tag name is a hidden system tag" : "Ime oznake je skrita sistemska oznaka",
-    "Tag already exists" : "Oznaka že obstaja",
     "An error occurred, unable to create the tag." : "Prišlo je do napake, oznake ni mogoče ustvariti.",
     "Add default tags" : "Dodaj privzete oznake",
     "Add tag" : "Dodaj oznako",
@@ -524,6 +522,8 @@ OC.L10N.register(
     "Could not load your message" : "Sporočila ni mogoče naložiti",
     "Could not load the desired message" : "Želenega sporočila ni mogoče naložiti",
     "Could not load the message" : "Sporočila ni mogoče naložiti",
+    "Tag name is a hidden system tag" : "Ime oznake je skrita sistemska oznaka",
+    "Tag already exists" : "Oznaka že obstaja",
     "Error loading message" : "Napaka nalaganja sporočila",
     "Choose a file to add as attachment" : "Izbor datoteke za prilogo",
     "Choose a file to share as a link" : "Izberite datoteko, ki jo želite dati v skupno rabo kot povezavo"
