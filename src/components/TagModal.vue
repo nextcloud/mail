@@ -65,6 +65,7 @@ import DeleteTagModal from './DeleteTagModal.vue'
 import TagItem from './TagItem.vue'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
+import { validateTag } from '../util/tag.js'
 import { hiddenTags } from './tags.js'
 
 function randomColor() {
@@ -103,8 +104,6 @@ export default {
 			tagLabel: true,
 			tagInput: false,
 			showSaving: false,
-			renameTagLabel: true,
-			renameTagInput: false,
 			deleteTagModal: false,
 			tagToDelete: null,
 			color: randomColor(),
@@ -165,19 +164,14 @@ export default {
 				return
 			}
 
-			const displayName = event.target.querySelector('input[type=text]').value
-			if (displayName.toLowerCase() in hiddenTags) {
-				showError(this.t('mail', 'Tag name is a hidden system tag'))
+			const displayName = event.target.querySelector('input[type=text]').value.trim()
+			const otherTags = this.mainStore.getTags
+			const valid = validateTag(null, displayName, otherTags)
+			if (valid !== true) {
+				showError(valid)
 				return
 			}
-			if (this.mainStore.getTags.some((tag) => tag.displayName === displayName)) {
-				showError(this.t('mail', 'Tag already exists'))
-				return
-			}
-			if (displayName.trim() === '') {
-				showError(this.t('mail', 'Tag name cannot be empty'))
-				return
-			}
+
 			try {
 				await this.mainStore.createTag({
 					displayName,
@@ -189,49 +183,6 @@ export default {
 			} finally {
 				this.showSaving = false
 				this.tagLabel = true
-			}
-		},
-
-		convertHex(color, opacity) {
-			if (color.length === 4) {
-				const r = parseInt(color.substring(1, 2), 16)
-				const g = parseInt(color.substring(2, 3), 16)
-				const b = parseInt(color.substring(3, 4), 16)
-				return `rgba(${r}, ${g}, ${b}, ${opacity})`
-			} else {
-				const r = parseInt(color.substring(1, 3), 16)
-				const g = parseInt(color.substring(3, 5), 16)
-				const b = parseInt(color.substring(5, 7), 16)
-				return `rgba(${r}, ${g}, ${b}, ${opacity})`
-			}
-		},
-
-		openEditTag() {
-			this.renameTagLabel = false
-			this.renameTagInput = true
-			this.showSaving = false
-		},
-
-		async renameTag(tag, event) {
-			this.renameTagInput = false
-			this.showSaving = false
-			const displayName = event.target.querySelector('input[type=text]').value
-
-			try {
-				await this.mainStore.updateTag({
-					tag,
-					displayName,
-					color: tag.color,
-				})
-				this.renameTagLabel = true
-				this.renameTagInput = false
-				this.showSaving = false
-			} catch (error) {
-				showInfo(t('mail', 'An error occurred, unable to rename the tag.'))
-				logger.error('could not rename tag', { error })
-				this.renameTagLabel = false
-				this.renameTagInput = false
-				this.showSaving = true
 			}
 		},
 
