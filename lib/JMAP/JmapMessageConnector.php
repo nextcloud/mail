@@ -164,7 +164,7 @@ class JmapMessageConnector implements IMessageConnector {
 	}
 
 	#[\Override]
-	public function fetchMessageRaw(Account $account, Mailbox $mailbox, Message $message): ?string {
+	public function fetchMessageRaw(Account $account, Mailbox $mailbox, Message $message, bool $decrypt = false): ?string {
 		$remoteId = $message->getRemoteId();
 		if ($remoteId === null) {
 			throw new ServiceException("Message {$message->getId()} does not have a remote id");

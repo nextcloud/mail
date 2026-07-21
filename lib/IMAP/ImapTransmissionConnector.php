@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 /**
- * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
- * SPDX-License-Identifier: AGPL-3.0-only
+ * SPDX-FileCopyrightText: 2026 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-namespace OCA\Mail\Service;
+namespace OCA\Mail\IMAP;
 
 use Horde_Exception;
 use Horde_Imap_Client;
@@ -29,30 +29,24 @@ use Horde_Mime_Part;
 use Horde_Smtp_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
-use OCA\Mail\AddressList;
-use OCA\Mail\Contracts\IMailTransmission;
+use OCA\Mail\Contracts\ITransmissionConnector;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Recipient;
-use OCA\Mail\Events\DraftSavedEvent;
-use OCA\Mail\Events\MessageSentEvent;
-use OCA\Mail\Events\SaveDraftEvent;
-use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\MessageMapper;
-use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Protocol\ProtocolFactory;
-use OCA\Mail\Service\DataUri\DataUriParser;
+use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\MimeMessage;
+use OCA\Mail\Service\TransmissionService;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-class MailTransmission implements IMailTransmission {
+class ImapTransmissionConnector implements ITransmissionConnector {
 	private const RETRIABLE_CODES = [
 		Horde_Smtp_Exception::INSUFFICIENT_STORAGE,
 		Horde_Smtp_Exception::OVERQUOTA,
@@ -61,36 +55,55 @@ class MailTransmission implements IMailTransmission {
 
 	public function __construct(
 		private ProtocolFactory $protocolFactory,
-		private SmtpClientFactory $smtpClientFactory,
-		private IEventDispatcher $eventDispatcher,
-		private MailboxMapper $mailboxMapper,
-		private MessageMapper $messageMapper,
-		private LoggerInterface $logger,
-		private PerformanceLogger $performanceLogger,
-		private AliasesService $aliasesService,
 		private TransmissionService $transmissionService,
-		private MailManager $mailManager,
+		private AliasesService $aliasesService,
+		private SmtpClientFactory $smtpClientFactory,
+		private MimeMessage $mimeMessage,
+		private MessageMapper $messageMapper,
+		private MailboxMapper $mailboxMapper,
+		private PerformanceLogger $performanceLogger,
+		private LoggerInterface $logger,
 	) {
 	}
 
 	#[\Override]
-	public function sendMessage(Account $account, LocalMessage $localMessage): void {
-		$to = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_TO);
-		$cc = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_CC);
-		$bcc = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_BCC);
-		$attachments = $this->transmissionService->getAttachments($localMessage);
+	public function sendMessage(Account $account, LocalMessage $message, Mailbox $sentMailbox): void {
+		// If this is a retry of a failed copy-to-sent, skip SMTP and only re-attempt the copy.
+		if ($message->getStatus() === LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL) {
+			$raw = $message->getRaw();
+			if ($raw !== null) {
+				$client = $this->protocolFactory->imapClient($account);
+				try {
+					$this->messageMapper->save($client, $sentMailbox, $raw, []);
+					$message->setStatus(LocalMessage::STATUS_PROCESSED);
+				} catch (\Throwable $e) {
+					$this->logger->error('Retry copy-to-sent failed: ' . $e->getMessage(), ['exception' => $e]);
+					$message->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
+				} finally {
+					$client->logout();
+				}
+			} else {
+				$message->setStatus(LocalMessage::STATUS_ERROR);
+			}
+			return;
+		}
+		$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO);
+		$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC);
+		$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC);
+		$attachments = $this->transmissionService->getAttachments($message);
 
 		$name = $account->getName();
 		$emailAddress = $account->getEMailAddress();
 
-		if ($localMessage->getAliasId() !== null) {
+		$aliasId = $message->getAliasId();
+		if ($aliasId !== null) {
 			try {
-				$alias = $this->aliasesService->find($localMessage->getAliasId(), $account->getUserId());
+				$alias = $this->aliasesService->find($aliasId, $account->getUserId());
 				$name = ($alias->getName() ?? $name);
 				$emailAddress = $alias->getAlias();
 			} catch (DoesNotExistException) {
 				$this->logger->debug('The assigned alias no longer exists. Falling back to the default name and email address. It is likely that the alias was deleted or deprovisioned in the meantime.', [
-					'aliasId' => $localMessage->getAliasId(),
+					'aliasId' => $message->getAliasId(),
 					'accountId' => $account->getId(),
 				]);
 			}
@@ -122,17 +135,17 @@ class MailTransmission implements IMailTransmission {
 		if (count($bcc) > 0) {
 			$fccHeaders->addHeaderOb(new Horde_Mime_Headers_Addresses('Bcc', $bcc->toHorde()));
 		}
-		if ($localMessage->getSubject() !== null) {
-			$fccHeaders->addHeader('Subject', $localMessage->getSubject());
+		if ($message->getSubject() !== null) {
+			$fccHeaders->addHeader('Subject', $message->getSubject());
 		}
 		// The table (oc_local_messages) currently only allows for a single reply to message id
 		// but we already set the 'references' header for an email so we could support multiple references
 		// Get the previous message and then concatenate all its "References" message ids with this one
-		if (($inReplyTo = $localMessage->getInReplyToMessageId()) !== null) {
+		if (($inReplyTo = $message->getInReplyToMessageId()) !== null) {
 			$fccHeaders->addHeader('References', $inReplyTo);
 			$fccHeaders->addHeader('In-Reply-To', $inReplyTo);
 		}
-		if ($localMessage->getRequestMdn()) {
+		if ($message->getRequestMdn()) {
 			$fccHeaders->addHeaderOb(new Horde_Mime_Headers_Addresses(Horde_Mime_Mdn::MDN_HEADER, $from->toHorde()));
 		}
 
@@ -148,20 +161,16 @@ class MailTransmission implements IMailTransmission {
 		$smtpRecipients->add($bcc->toHorde());
 		$smtpRecipients->unique();
 
-		$mimeMessage = new MimeMessage(
-			new DataUriParser()
-		);
-		$mimePart = $mimeMessage->build(
-			$localMessage->getBodyPlain(),
-			$localMessage->getBodyHtml(),
-			$localMessage->isPgpMime() === true,
+		$mimePart = $this->mimeMessage->build(
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
+			$message->isPgpMime() === true,
 			$attachmentParts,
 		);
 
-		// TODO: add smimeEncrypt check if implemented
 		try {
-			$mimePart = $this->transmissionService->getSignMimePart($localMessage, $account, $mimePart);
-			$mimePart = $this->transmissionService->getEncryptMimePart($localMessage, $to, $cc, $bcc, $account, $mimePart);
+			$mimePart = $this->transmissionService->getSignMimePart($message, $account, $mimePart);
+			$mimePart = $this->transmissionService->getEncryptMimePart($message, $to, $cc, $bcc, $account, $mimePart);
 		} catch (ServiceException $e) {
 			$this->logger->error($e->getMessage(), ['exception' => $e]);
 			return;
@@ -170,12 +179,12 @@ class MailTransmission implements IMailTransmission {
 		// Send the message
 		try {
 			$mimePart->send($smtpRecipients->writeAddress(), $sendHeaders, $transport);
-			$localMessage->setRaw($mimePart->toString([
+			$message->setRaw($mimePart->toString([
 				'encode' => Horde_Mime_Part::ENCODE_7BIT | Horde_Mime_Part::ENCODE_8BIT | Horde_Mime_Part::ENCODE_BINARY,
 				'headers' => $fccHeaders,
 				'stream' => false,
 			]));
-			$localMessage->setStatus(LocalMessage::STATUS_RAW);
+			$message->setStatus(LocalMessage::STATUS_RAW);
 		} catch (Horde_Mime_Exception $e) {
 			if ($e->getPrevious() instanceof Horde_Smtp_Exception) {
 				/** @var Horde_Smtp_Exception $previousException */
@@ -187,13 +196,14 @@ class MailTransmission implements IMailTransmission {
 			} else {
 				$this->logger->error($e->getMessage(), ['exception' => $e]);
 			}
+
 			if (in_array($e->getCode(), self::RETRIABLE_CODES, true)) {
-				$localMessage->setStatus(LocalMessage::STATUS_SMPT_SEND_FAIL);
+				$message->setStatus(LocalMessage::STATUS_SMPT_SEND_FAIL);
 				return;
 			}
 
 			try {
-				$localMessage->setRaw($mimePart->toString([
+				$message->setRaw($mimePart->toString([
 					'encode' => Horde_Mime_Part::ENCODE_7BIT | Horde_Mime_Part::ENCODE_8BIT | Horde_Mime_Part::ENCODE_BINARY,
 					'headers' => $fccHeaders,
 					'stream' => false,
@@ -201,7 +211,7 @@ class MailTransmission implements IMailTransmission {
 			} catch (Throwable) {
 				// Having the raw message is nice for troubleshooting, but should not fail hard.
 			}
-			$localMessage->setStatus(LocalMessage::STATUS_ERROR);
+			$message->setStatus(LocalMessage::STATUS_ERROR);
 			return;
 		} finally {
 			if ($transport instanceof Horde_Mail_Transport_Smtphorde) {
@@ -213,19 +223,30 @@ class MailTransmission implements IMailTransmission {
 			}
 		}
 
-		$this->eventDispatcher->dispatchTyped(
-			new MessageSentEvent($account, $localMessage)
-		);
+		// Copy to Sent mailbox after successful SMTP send
+		$raw = $message->getRaw();
+		if ($raw !== null) {
+			$client = $this->protocolFactory->imapClient($account);
+			try {
+				$this->messageMapper->save($client, $sentMailbox, $raw, []);
+				$message->setStatus(LocalMessage::STATUS_PROCESSED);
+			} catch (\Throwable $e) {
+				$this->logger->error('Copy to sent mailbox failed: ' . $e->getMessage(), ['exception' => $e]);
+				$message->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
+			} finally {
+				$client->logout();
+			}
+		}
 	}
 
 	#[\Override]
-	public function saveLocalDraft(Account $account, LocalMessage $message): void {
+	public function saveMessage(Account $account, Mailbox $mailbox, LocalMessage $message, array $flags = []): void {
 		$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO);
 		$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC);
 		$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC);
 		$attachments = $this->transmissionService->getAttachments($message);
 
-		$perfLogger = $this->performanceLogger->start('save local draft');
+		$perfLogger = $this->performanceLogger->start('save message to IMAP mailbox');
 
 		$from = Address::fromRaw($account->getName(), $account->getEMailAddress());
 
@@ -233,154 +254,48 @@ class MailTransmission implements IMailTransmission {
 			$this->transmissionService->handleAttachment($account, $attachment);
 		}
 
-		$draftHeaders = $this->buildMimeHeaders($from, $to, $cc, $bcc, $message->getSubject());
+		$headers = $this->buildHeaders($from, $to, $cc, $bcc, $message->getSubject());
 
 		$mail = new Horde_Mime_Mail();
+		$mail->addHeaders($headers);
 		if ($message->isHtml()) {
 			$mail->setHtmlBody($message->getBodyHtml());
 		} else {
 			$mail->setBody($message->getBodyPlain());
 		}
-		$perfLogger->step('build local draft message');
+		$mail->addHeaderOb(Horde_Mime_Headers_MessageId::create());
+		$perfLogger->step('build MIME message');
 
-		// Use a null transport to trigger MIME body encoding without sending
-		$client = $this->protocolFactory->imapClient($account);
-		try {
-			$mail->send(new Horde_Mail_Transport_Null(), false, false);
-			$perfLogger->step('create IMAP draft message');
-			$draftsMailbox = $this->findOrCreateDraftsMailbox($account);
-			$this->messageMapper->save(
-				$client,
-				$draftsMailbox,
-				$mail->getBasePart()->toString([
-					'encode' => Horde_Mime_Part::ENCODE_7BIT | Horde_Mime_Part::ENCODE_8BIT | Horde_Mime_Part::ENCODE_BINARY,
-					'headers' => $draftHeaders,
-					'stream' => false,
-				]),
-				[Horde_Imap_Client::FLAG_DRAFT]
-			);
-			$perfLogger->step('save local draft message on IMAP');
-		} catch (DoesNotExistException $e) {
-			throw new ServiceException('Drafts mailbox does not exist', 0, $e);
-		} catch (Horde_Exception $e) {
-			throw new ServiceException('Could not save draft message', 0, $e);
-		} finally {
-			$client->logout();
-		}
-
-		$this->eventDispatcher->dispatchTyped(new DraftSavedEvent($account, null));
-		$perfLogger->step('emit post local draft save event');
-
-		$perfLogger->end();
-	}
-
-	private function findOrCreateDraftsMailbox(Account $account): Mailbox {
-		$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
-
-		if ($draftsMailboxId === null) {
-			return $this->mailManager->createMailbox(
-				$account,
-				'Drafts',
-				[Horde_Imap_Client::SPECIALUSE_DRAFTS]
-			);
-		}
-
-		return $this->mailboxMapper->findById($draftsMailboxId);
-	}
-
-	/**
-	 * @param NewMessageData $message
-	 * @param Message|null $previousDraft
-	 *
-	 * @return array
-	 *
-	 * @throws ClientException
-	 * @throws ServiceException
-	 */
-	#[\Override]
-	public function saveDraft(NewMessageData $message, ?Message $previousDraft = null): array {
-		$perfLogger = $this->performanceLogger->start('save draft');
-		$this->eventDispatcher->dispatch(
-			SaveDraftEvent::class,
-			new SaveDraftEvent($message->getAccount(), $message, $previousDraft)
-		);
-		$perfLogger->step('emit pre event');
-
-		$account = $message->getAccount();
-		$from = Address::fromRaw($account->getName(), $account->getEMailAddress());
-
-		$draftHeaders = $this->buildMimeHeaders(
-			$from,
-			$message->getTo(),
-			$message->getCc(),
-			$message->getBcc(),
-			$message->getSubject()
-		);
-
-		$mail = new Horde_Mime_Mail();
-		if ($message->isHtml()) {
-			$mail->setHtmlBody($message->getBody());
-		} else {
-			$mail->setBody($message->getBody());
-		}
-		$perfLogger->step('build draft message');
-
-		// Use a null transport to trigger MIME body encoding without sending
-		$client = $this->protocolFactory->imapClient($account);
-		try {
-			$mail->send(new Horde_Mail_Transport_Null(), false, false);
-			$perfLogger->step('create IMAP message');
-			// save the message in the drafts mailbox
-			$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
-			if ($draftsMailboxId === null) {
-				throw new ClientException('No drafts mailbox configured');
+		// Map JMAP-style keyword flags to IMAP flags
+		$imapFlags = [];
+		foreach ($flags as $flag) {
+			$imapFlag = match (strtolower($flag)) {
+				'$draft' => Horde_Imap_Client::FLAG_DRAFT,
+				'$seen' => Horde_Imap_Client::FLAG_SEEN,
+				'$flagged' => Horde_Imap_Client::FLAG_FLAGGED,
+				'$answered' => Horde_Imap_Client::FLAG_ANSWERED,
+				'$deleted' => Horde_Imap_Client::FLAG_DELETED,
+				default => null,
+			};
+			if ($imapFlag !== null) {
+				$imapFlags[] = $imapFlag;
 			}
-			$draftsMailbox = $this->mailboxMapper->findById($draftsMailboxId);
-			$newUid = $this->messageMapper->save(
-				$client,
-				$draftsMailbox,
-				$mail->getBasePart()->toString([
-					'encode' => Horde_Mime_Part::ENCODE_7BIT | Horde_Mime_Part::ENCODE_8BIT | Horde_Mime_Part::ENCODE_BINARY,
-					'headers' => $draftHeaders,
-					'stream' => false,
-				]),
-				[Horde_Imap_Client::FLAG_DRAFT]
-			);
+		}
+
+		$client = $this->protocolFactory->imapClient($account);
+		try {
+			$transport = new Horde_Mail_Transport_Null();
+			$mail->send($transport, false, false);
+			$perfLogger->step('encode MIME message');
+			$this->messageMapper->save($client, $mailbox, $mail->getRaw(false), $imapFlags);
 			$perfLogger->step('save message on IMAP');
-		} catch (DoesNotExistException $e) {
-			throw new ServiceException('Drafts mailbox does not exist', 0, $e);
 		} catch (Horde_Exception $e) {
-			throw new ServiceException('Could not save draft message', 0, $e);
+			throw new ServiceException('Could not save message to IMAP mailbox', 0, $e);
 		} finally {
 			$client->logout();
 		}
 
-		$this->eventDispatcher->dispatch(
-			DraftSavedEvent::class,
-			new DraftSavedEvent($account, $message, $previousDraft)
-		);
-		$perfLogger->step('emit post event');
-
 		$perfLogger->end();
-		return [$account, $draftsMailbox, $newUid];
-	}
-
-	private function buildMimeHeaders(Address $from, AddressList $to, AddressList $cc, AddressList $bcc, ?string $subject): Horde_Mime_Headers {
-		$headers = new Horde_Mime_Headers();
-		$headers->addHeaderOb(Horde_Mime_Headers_Date::create());
-		$headers->addHeaderOb(Horde_Mime_Headers_MessageId::create());
-		$headers->addHeaderOb(new Horde_Mime_Headers_Addresses('From', $from->toHorde()));
-		$headers->addHeaderOb(new Horde_Mime_Headers_Addresses('To', $to->toHorde()));
-		if (count($cc) > 0) {
-			$headers->addHeaderOb(new Horde_Mime_Headers_Addresses('Cc', $cc->toHorde()));
-		}
-		if (count($bcc) > 0) {
-			$headers->addHeaderOb(new Horde_Mime_Headers_Addresses('Bcc', $bcc->toHorde()));
-		}
-		if ($subject !== null) {
-			$headers->addHeader('Subject', $subject);
-		}
-		return $headers;
 	}
 
 	#[\Override]
@@ -409,7 +324,7 @@ class MailTransmission implements IMailTransmission {
 		}
 
 		$imapDate = $fetchResults[0]->getImapDate();
-		/** @var Horde_Mime_Headers $headers */
+		/** @var Horde_Mime_Headers $mdnHeaders */
 		$mdnHeaders = $fetchResults[0]->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
 		/** @var Horde_Mime_Headers_Addresses|null $dispositionNotificationTo */
 		$dispositionNotificationTo = $mdnHeaders->getHeader('disposition-notification-to');
@@ -453,4 +368,29 @@ class MailTransmission implements IMailTransmission {
 		}
 	}
 
+	/**
+	 * @return array{
+	 *     From: \Horde_Mail_Rfc822_Address,
+	 *     To: \Horde_Mail_Rfc822_List,
+	 *     Subject: string|null,
+	 *     Cc?: \Horde_Mail_Rfc822_List,
+	 *     Bcc?: \Horde_Mail_Rfc822_List,
+	 * }
+	 */
+	private function buildHeaders(Address $from, \OCA\Mail\AddressList $to, \OCA\Mail\AddressList $cc, \OCA\Mail\AddressList $bcc, ?string $subject): array {
+		$headers = [
+			'From' => $from->toHorde(),
+			'To' => $to->toHorde(),
+			'Subject' => $subject,
+		];
+
+		if (count($cc) > 0) {
+			$headers['Cc'] = $cc->toHorde();
+		}
+		if (count($bcc) > 0) {
+			$headers['Bcc'] = $bcc->toHorde();
+		}
+
+		return $headers;
+	}
 }
