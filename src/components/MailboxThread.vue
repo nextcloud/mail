@@ -16,7 +16,8 @@
 					<SearchMessages
 						:mailbox="mailbox"
 						:account-id="account.accountId"
-						@search-changed="onUpdateSearchQuery" />
+						@search-changed="onUpdateSearchQuery"
+						@select-all-matching="onSelectAllMatching" />
 				</div>
 				<AppContentList
 					v-infinite-scroll="onScroll"
@@ -221,6 +222,7 @@ import {
 import useMainStore from '../store/mainStore.js'
 import { groupEnvelopesByDate } from '../util/groupedEnvelopes.js'
 import {
+	favoritesQuery,
 	priorityImportantQuery,
 	priorityOtherQuery,
 } from '../util/priorityInbox.js'
@@ -280,7 +282,7 @@ export default {
 
 			priorityImportantQuery,
 			priorityOtherQuery,
-			favoriteQuery: 'is:starred',
+			favoriteQuery: favoritesQuery,
 			favoriteInitialPageSize: 5,
 			startMailboxTimer: undefined,
 			hasContent: false,
@@ -606,6 +608,11 @@ export default {
 
 		onUpdateSearchQuery(query) {
 			this.searchQuery = query
+		},
+
+		onSelectAllMatching(query) {
+			this.searchQuery = query
+			this.bus.emit('select-all-matching')
 		},
 	},
 }
