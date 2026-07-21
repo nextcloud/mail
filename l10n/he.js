@@ -199,7 +199,6 @@ OC.L10N.register(
     "Custom" : "מותאם אישית",
     "Save signature" : "שמירת החתימה",
     "Message source" : "מקור ההודעה",
-    "Tag already exists" : "תגית כבר קיימת",
     "An error occurred, unable to create the tag." : "אירעה שגיאה, לא ניתן ליצור את התגית.",
     "Add tag" : "הוספת תגית",
     "Could not load your message thread" : "לא ניתן לטעון את שרשור ההודעות שלך",
@@ -273,6 +272,7 @@ OC.L10N.register(
     "Could not load your message" : "לא ניתן לטעון את ההודעה שלך",
     "Could not load the desired message" : "לא ניתן לטעון את ההודעה המבוקשת",
     "Could not load the message" : "לא ניתן לטעון את ההודעה",
+    "Tag already exists" : "תגית כבר קיימת",
     "Error loading message" : "שגיאה בהעלאת הודעה",
     "Choose a file to add as attachment" : "בחירת קובץ להוספה כקובץ מצורף",
     "Choose a file to share as a link" : "נא לבחור קובץ לשיתוף כקישור"

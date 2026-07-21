@@ -383,8 +383,6 @@ OC.L10N.register(
     "Delete tag" : "Șterge eticheta",
     "Set tag" : "Setează eticheta",
     "Unset tag" : "Deselectează eticheta",
-    "Tag name is a hidden system tag" : "Numele este al unei etichete de sistem ascunsă",
-    "Tag already exists" : "Eticheta deja există",
     "An error occurred, unable to create the tag." : "Eroare la crearea etichetei.",
     "Add default tags" : "Adaugă etichetele implicite",
     "Add tag" : "Adaugă etichetă",
@@ -490,6 +488,8 @@ OC.L10N.register(
     "Could not load your message" : "Mesajul nu s-a putut încărca",
     "Could not load the desired message" : "Nu s-a putut încărca mesajul dorit",
     "Could not load the message" : "Nu s-a putut încărca mesajul",
+    "Tag name is a hidden system tag" : "Numele este al unei etichete de sistem ascunsă",
+    "Tag already exists" : "Eticheta deja există",
     "Error loading message" : "Eroare la încărcarea mesajelor",
     "Choose a file to add as attachment" : "Selectați un fișier ca atașament",
     "Choose a file to share as a link" : "Selectați un fișier pentru partajare ca link"

@@ -222,7 +222,6 @@
     "Could not snooze thread" : "Tókst ekki að setja spjallþráð í blund",
     "Thread was unsnoozed" : "Spjallþráður var vakinn af blundi",
     "Could not unsnooze thread" : "Gat ekki vakið spjallþráð af blundi",
-    "This summary was AI generated" : "Þessi samantekt var útbúin með AI-gervigreind",
     "Encrypted message" : "Dulrituð skilaboð",
     "This message is unread" : "Þessi skilaboð eru ólesin",
     "Unfavorite" : "Taka úr eftirlætum",
@@ -484,9 +483,6 @@
     "Delete tag" : "Eyða merki",
     "Set tag" : "Setja merki",
     "Unset tag" : "Afsetja merki",
-    "Tag name is a hidden system tag" : "Heiti merkis er falið merki kerfisins",
-    "Tag already exists" : "Merki er þegar til",
-    "Tag name cannot be empty" : "Nafn merkis má ekki vera tómt",
     "An error occurred, unable to create the tag." : "Villa kom upp, gat ekki búið til merkið.",
     "Add default tags" : "Bæta við sjálfgefnum merkjum",
     "Add tag" : "Bæta við merki",
@@ -694,9 +690,13 @@
     "Could not load your message" : "Gat ekki hlaðið inn skilaboðunum þínum",
     "Could not load the desired message" : "Gat ekki hlaðið inn umbeðnum skilaboðum",
     "Could not load the message" : "Gat ekki hlaðið inn skilaboðunum",
+    "Tag name cannot be empty" : "Nafn merkis má ekki vera tómt",
+    "Tag name is a hidden system tag" : "Heiti merkis er falið merki kerfisins",
+    "Tag already exists" : "Merki er þegar til",
     "Error loading message" : "Villa við hleðslu á skilaboðum",
     "Add share link from Files" : "Bæta við deilitengli úr skrám",
     "Choose a file to add as attachment" : "Veldu skrá til að setja sem viðhengi",
-    "Choose a file to share as a link" : "Veldu skrá til að deila sem tengli"
+    "Choose a file to share as a link" : "Veldu skrá til að deila sem tengli",
+    "This summary was AI generated" : "Þessi samantekt var útbúin með AI-gervigreind"
 },"pluralForm" :"nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
 }

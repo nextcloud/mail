@@ -205,7 +205,6 @@ OC.L10N.register(
     "Quick action executed" : "Pikatoiminto suoritettu",
     "Could not delete message" : "Ei voitu poistaa viestiä",
     "Could not archive message" : "Viestiä ei voitu arkistoida",
-    "This summary was AI generated" : "Tämä yhteenveto on tekoälyn luoma",
     "Encrypted message" : "Salattu viesti",
     "This message is unread" : "Tämä viesti on lukematon",
     "Unfavorite" : "Poista suosikeista",
@@ -425,8 +424,6 @@ OC.L10N.register(
     "An error occurred, unable to rename the tag." : "Tapahtui virhe, tunnistetta ei voitu nimetä uudelleen.",
     "Edit name or color" : "Muokkaa nimeä tai väriä",
     "Delete tag" : "Poista tunniste",
-    "Tag name is a hidden system tag" : "Tunnisteen nimi on piilotettu järjestelmätunniste",
-    "Tag already exists" : "Tunniste on jo olemassa",
     "An error occurred, unable to create the tag." : "Tapahtui virhe, tunnistetta ei voitu luoda.",
     "Add default tags" : "Lisää oletustunnisteet",
     "Add tag" : "Lisää tunniste",
@@ -611,8 +608,11 @@ OC.L10N.register(
     "Could not load your message" : "Viestiä ei voitu ladata",
     "Could not load the desired message" : "Haluttua viestiä ei voitu ladata",
     "Could not load the message" : "Viestiä ei voitu ladata",
+    "Tag name is a hidden system tag" : "Tunnisteen nimi on piilotettu järjestelmätunniste",
+    "Tag already exists" : "Tunniste on jo olemassa",
     "Error loading message" : "Virhe viestiä ladatessa",
     "Choose a file to add as attachment" : "Valitse liitteeksi lisättävä tiedosto",
-    "Choose a file to share as a link" : "Valitse tiedosto, joka jaetaan linkkinä"
+    "Choose a file to share as a link" : "Valitse tiedosto, joka jaetaan linkkinä",
+    "This summary was AI generated" : "Tämä yhteenveto on tekoälyn luoma"
 },
 "nplurals=2; plural=(n != 1);");

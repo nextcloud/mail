@@ -300,7 +300,6 @@
     "Could not snooze thread" : "无法延后线程",
     "Thread was unsnoozed" : "已取消延后线程",
     "Could not unsnooze thread" : "无法取消延后线程",
-    "This summary was AI generated" : "此摘要由 AI 生成",
     "Encrypted message" : "已加密邮件",
     "This message is unread" : "此邮件未读",
     "Unfavorite" : "取消收藏",
@@ -615,9 +614,6 @@
     "Delete tag" : "删除标签",
     "Set tag" : "设置标签",
     "Unset tag" : "取消设置标签",
-    "Tag name is a hidden system tag" : "标记名称是一个隐藏的系统标记",
-    "Tag already exists" : "标签已存在",
-    "Tag name cannot be empty" : "标签名称不能为空",
     "An error occurred, unable to create the tag." : "发生了一个错误，无法创建标签",
     "Add default tags" : "添加默认标签",
     "Add tag" : "添加标签",
@@ -660,7 +656,6 @@
     "Thread summary" : "线程摘要",
     "Go to latest message" : "转到最新邮件",
     "Newest message" : "最新邮件",
-    "This summary is AI generated and may contain mistakes." : "此摘要是 AI 生成的，可能包含错误。",
     "Please select languages to translate to and from" : "请选择翻译目标语言和源语言",
     "The message could not be translated" : "无法翻译邮件",
     "Translation copied to clipboard" : "翻译已复制到剪贴板",
@@ -916,11 +911,16 @@
     "Could not load your message" : "无法加载您的邮件",
     "Could not load the desired message" : "无法加载所需邮件",
     "Could not load the message" : "无法加载邮件",
+    "Tag name cannot be empty" : "标签名称不能为空",
+    "Tag name is a hidden system tag" : "标记名称是一个隐藏的系统标记",
+    "Tag already exists" : "标签已存在",
     "Error loading message" : "加载邮件时出错",
     "Add share link from Files" : "从文件添加共享链接",
     "Choose a file to add as attachment" : "选择文件添加为附件",
     "Choose a file to share as a link" : "选择要共享为链接的文件",
     "Delegated access to {userId}" : "已向 {userId} 委派访问权限",
-    "Revoked access for {userId}" : "已撤销 {userId} 的访问权限"
+    "Revoked access for {userId}" : "已撤销 {userId} 的访问权限",
+    "This summary was AI generated" : "此摘要由 AI 生成",
+    "This summary is AI generated and may contain mistakes." : "此摘要是 AI 生成的，可能包含错误。"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

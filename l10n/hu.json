@@ -425,8 +425,6 @@
     "Delete tag" : "Címke törlése",
     "Set tag" : "Címke beállítása",
     "Unset tag" : "Címke eltávolítása",
-    "Tag name is a hidden system tag" : "A címkenév egy rejtett rendszercímke",
-    "Tag already exists" : "A címke már létezik",
     "An error occurred, unable to create the tag." : "HIba történt, a címke nem hozható létre.",
     "Add default tags" : "Alapértelmezett címkék hozzáadása",
     "Add tag" : "Címke hozzáadása",
@@ -628,6 +626,8 @@
     "Could not load your message" : "Nem sikerült betölteni az üzenetét",
     "Could not load the desired message" : "Nem sikerült betölteni a kért üzenetet",
     "Could not load the message" : "Nem sikerült betölteni az üzenetet",
+    "Tag name is a hidden system tag" : "A címkenév egy rejtett rendszercímke",
+    "Tag already exists" : "A címke már létezik",
     "Error loading message" : "Hiba történt az üzenet betöltése közben",
     "Choose a file to add as attachment" : "Válasszon mellékletként hozzáadandó fájlt",
     "Choose a file to share as a link" : "Válasszon fájlt a hivatkozással történő megosztáshoz"
