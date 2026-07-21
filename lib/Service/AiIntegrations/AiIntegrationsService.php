@@ -212,6 +212,10 @@ class AiIntegrationsService {
 			}
 			return new EventData($decoded['title'], $decoded['agenda']);
 		} catch (JsonException $e) {
+			$this->logger->warning('Could not decode generated event data: ' . $e->getMessage(), [
+				'exception' => $e,
+				'threadId' => $threadId,
+			]);
 			return null;
 		}
 	}
