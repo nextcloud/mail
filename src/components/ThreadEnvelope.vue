@@ -96,6 +96,9 @@
 						</span>
 					</div>
 					<div class="tagline">
+						<GovernanceLabelChip
+							v-if="envelope.governanceLabelId"
+							:label-id="envelope.governanceLabelId" />
 						<div
 							v-for="tag in tags"
 							:key="tag.id"
@@ -409,6 +412,7 @@ import Avatar from './Avatar.vue'
 import ConfirmModal from './ConfirmationModal.vue'
 import Error from './Error.vue'
 import EventModal from './EventModal.vue'
+import GovernanceLabelChip from './GovernanceLabelChip.vue'
 import JunkIcon from './icons/JunkIcon.vue'
 import MailFilterFromEnvelope from './mailFilter/MailFilterFromEnvelope.vue'
 import MenuEnvelope from './MenuEnvelope.vue'
@@ -455,6 +459,7 @@ export default {
 		TranslationModal,
 		ConfirmModal,
 		Avatar,
+		GovernanceLabelChip,
 		RecipientBubble,
 		NcActionButton,
 		NcButton,

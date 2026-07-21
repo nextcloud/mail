@@ -30,6 +30,7 @@ use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\GovernanceLabelService;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\TransmissionService;
 use OCA\Mail\SMTP\SmtpClientFactory;
@@ -51,6 +52,7 @@ class MailTransmissionTest extends TestCase {
 	private MailTransmission $transmission;
 	private AliasesService|MockObject $aliasService;
 	private TransmissionService $transmissionService;
+	private GovernanceLabelService|MockObject $governanceLabelService;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -65,6 +67,7 @@ class MailTransmissionTest extends TestCase {
 		$this->aliasService = $this->createMock(AliasesService::class);
 		$this->transmissionService = $this->createMock(TransmissionService::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->governanceLabelService = $this->createMock(GovernanceLabelService::class);
 
 		$this->transmission = new MailTransmission(
 			$this->imapClientFactory,
@@ -77,6 +80,7 @@ class MailTransmissionTest extends TestCase {
 			$this->aliasService,
 			$this->transmissionService,
 			$this->mailManager,
+			$this->governanceLabelService,
 		);
 	}
 

@@ -58,6 +58,9 @@
 				<referencedClass name="OCP\TextProcessing\Task" />
 				<referencedClass name="OCP\TextProcessing\SummaryTaskType" />
 				<referencedClass name="OCP\TextProcessing\FreePromptTaskType" />
+				<referencedClass name="OCA\Governance\Db\LabelScope" />
+				<referencedClass name="OCA\Governance\Model\BaseLabelModel" />
+				<referencedClass name="OCA\Governance\Service\ResolverService" />
 			</errorLevel>
 		</UndefinedClass>
 		<UndefinedDocblockClass>

@@ -21,6 +21,7 @@ use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\ContextChat\ContextChatSettingsService;
+use OCA\Mail\Service\GovernanceLabelService;
 use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\QuickActionsService;
@@ -89,6 +90,7 @@ class PageController extends Controller {
 		private IAppManager $appManager,
 		private ContextChatSettingsService $contextChatSettingsService,
 		private ClassificationSettingsService $classificationSettingsService,
+		private GovernanceLabelService $governanceLabelService,
 	) {
 		parent::__construct($appName, $request);
 
@@ -137,6 +139,11 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'mailVersion',
 			$this->appManager->getAppVersion('mail'),
+		);
+
+		$this->initialStateService->provideInitialState(
+			'governance-labels-available',
+			$this->governanceLabelService->isGovernanceAvailable(),
 		);
 
 		$mailAccounts = $this->accountService->findByUserId($this->userId);

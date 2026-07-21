@@ -32,6 +32,7 @@ use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Html\Parser;
 use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Service\GovernanceLabelService;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Support\PerformanceLoggerTask;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -891,6 +892,10 @@ class MessageMapper {
 				$isEncrypted = true;
 			}
 
+			/** @var Horde_Mime_Headers $messageHeaders */
+			$messageHeaders = $fetchData->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
+			$governanceLabelHeader = $messageHeaders->getHeader(GovernanceLabelService::HEADER)?->value_single;
+
 			$structure = $fetchData->getStructure();
 
 			/** @var Horde_Mime_Part $part */
@@ -909,7 +914,7 @@ class MessageMapper {
 			$textBodyId = $structure->findBody() ?? $structure->findBody('text');
 			$htmlBodyId = $structure->findBody('html');
 			if ($textBodyId === null && $htmlBodyId === null) {
-				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
+				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false, $governanceLabelHeader);
 			}
 			$partsQuery = new Horde_Imap_Client_Fetch_Query();
 			if ($htmlBodyId !== null) {
@@ -935,7 +940,7 @@ class MessageMapper {
 			$part = $parts[$fetchData->getUid()];
 			// This is sus - why does this even happen? A delete / move in the middle of this processing?
 			if ($part === null) {
-				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
+				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false, $governanceLabelHeader);
 			}
 
 			/** Convert a given binary body to utf-8 according to the applicable
@@ -988,6 +993,7 @@ class MessageMapper {
 					$isImipMessage,
 					$isEncrypted,
 					$mentionsUser,
+					$governanceLabelHeader,
 				);
 			}
 
@@ -1000,9 +1006,10 @@ class MessageMapper {
 					$isImipMessage,
 					$isEncrypted,
 					false,
+					$governanceLabelHeader,
 				);
 			}
-			return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
+			return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false, $governanceLabelHeader);
 		}, iterator_to_array($structures->getIterator()));
 	}
 	private function checkLinks(string $body, string $mailAddress) : bool {

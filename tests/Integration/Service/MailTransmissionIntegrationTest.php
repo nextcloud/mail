@@ -35,6 +35,7 @@ use OCA\Mail\Send\SendHandler;
 use OCA\Mail\Send\SentMailboxHandler;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Attachment\UploadedFile;
+use OCA\Mail\Service\GovernanceLabelService;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\TransmissionService;
 use OCA\Mail\SMTP\SmtpClientFactory;
@@ -141,7 +142,8 @@ class MailTransmissionIntegrationTest extends TestCase {
 			Server::get(PerformanceLogger::class),
 			Server::get(AliasesService::class),
 			Server::get(TransmissionService::class),
-			Server::get(IMailManager::class)
+			Server::get(IMailManager::class),
+			Server::get(GovernanceLabelService::class)
 		);
 	}
 
