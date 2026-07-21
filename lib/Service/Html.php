@@ -44,14 +44,14 @@ class Html {
 
 	/** @var IRequest */
 	private $request;
-	private ProxyHmacGenerator $hmacGenerator;
 
-	public function __construct(IURLGenerator $urlGenerator,
+	public function __construct(
+		IURLGenerator $urlGenerator,
 		IRequest $request,
-		ProxyHmacGenerator $hmacGenerator) {
+		private ProxyHmacGenerator $hmacGenerator,
+	) {
 		$this->urlGenerator = $urlGenerator;
 		$this->request = $request;
-		$this->hmacGenerator = $hmacGenerator;
 	}
 
 	/**

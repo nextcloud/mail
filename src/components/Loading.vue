@@ -11,9 +11,11 @@
 			<template #icon>
 				<IconLoading />
 			</template>
-			<transition name="fade">
-				<em v-if="slowHint && slow">{{ slowHint }}</em>
-			</transition>
+			<template #description>
+				<transition name="fade">
+					<em v-if="slowHint && slow">{{ slowHint }}</em>
+				</transition>
+			</template>
 		</EmptyContent>
 		<IconLoading v-else class="container" />
 	</div>
@@ -57,7 +59,7 @@ export default {
 		}, 3500)
 	},
 
-	beforeUnmount() {
+	beforeDestroy() {
 		clearTimeout(this.slowTimer)
 	},
 }
@@ -85,6 +87,6 @@ export default {
 	flex-direction: column;
 	flex: 1 auto;
 	align-items: center;
-	height: 100vh;
+	height: 100%;
 }
 </style>

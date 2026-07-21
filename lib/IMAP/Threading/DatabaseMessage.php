@@ -16,24 +16,17 @@ use function array_merge;
 use function json_decode;
 
 final class DatabaseMessage extends Message implements JsonSerializable {
-	/** @var int */
-	private $databaseId;
-
-	/** @var string|null */
-	private $threadRootId;
-
 	/** @var bool */
 	private $dirty = false;
 
-	public function __construct(int $databaseId,
+	public function __construct(
+		private int $databaseId,
 		string $subject,
 		string $id,
 		array $references,
-		?string $threadRootId) {
+		private ?string $threadRootId,
+	) {
 		parent::__construct($subject, $id, $references);
-
-		$this->databaseId = $databaseId;
-		$this->threadRootId = $threadRootId;
 	}
 
 	public static function fromRowData(int $id,

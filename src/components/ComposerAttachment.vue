@@ -24,7 +24,9 @@
 				{{ attachment.sizeString }}
 			</span>
 		</div>
-		<button @click="onDelete(attachment)">
+		<button
+			:aria-label="t('mail', 'Remove attachment {fileName}', { fileName: attachment.displayName ?? attachment.fileName })"
+			@click="onDelete(attachment)">
 			<Close :size="20" />
 		</button>
 	</li>

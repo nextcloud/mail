@@ -39,17 +39,10 @@
 			@change="onLocalAttachmentSelected">
 		<FilePicker
 			v-if="isAttachmentPickerOpen"
-			:name="t('mail', 'Choose a file to add as attachment')"
+			:name="t('mail', 'Choose a file')"
 			:buttons="attachmentPickerButtons"
 			:filter-fn="filterAttachements"
 			@close="() => isAttachmentPickerOpen = false" />
-		<FilePicker
-			v-if="isLinkPickerOpen"
-			:name="t('mail', 'Choose a file to share as a link')"
-			:multiselect="false"
-			:buttons="linkPickerButtons"
-			:filter-fn="filterAttachements"
-			@close="() => isLinkPickerOpen = false" />
 	</div>
 </template>
 
@@ -104,6 +97,11 @@ export default {
 			type: Number,
 			default: 0,
 		},
+
+		accountId: {
+			type: Number,
+			default: null,
+		},
 	},
 
 	data() {
@@ -115,18 +113,14 @@ export default {
 			isToggle: false,
 			hasNextLine: false,
 			isAttachmentPickerOpen: false,
-			isLinkPickerOpen: false,
 			attachmentPickerButtons: [
 				{
-					label: t('mail', 'Choose'),
+					label: t('mail', 'Add as attachment'),
 					callback: this.onAddCloudAttachment,
 					type: 'primary',
 				},
-			],
-
-			linkPickerButtons: [
 				{
-					label: t('mail', 'Choose'),
+					label: t('mail', 'Add as share link'),
 					callback: this.onAddCloudAttachmentLink,
 					type: 'primary',
 				},
@@ -188,8 +182,8 @@ export default {
 	created() {
 		this.bus.on('on-add-local-attachment', this.onAddLocalAttachment)
 		this.bus.on('on-add-cloud-attachment', this.openAttachementPicker)
-		this.bus.on('on-add-cloud-attachment-link', this.OpenLinkPicker)
 		this.bus.on('on-add-message-as-attachment', this.onAddMessageAsAttachment)
+		this.bus.on('on-add-local-files', this.addLocalFiles)
 		this.value.map((attachment) => {
 			this.attachments.push({
 				id: attachment.id,
@@ -216,10 +210,6 @@ export default {
 			this.isAttachmentPickerOpen = true
 		},
 
-		OpenLinkPicker() {
-			this.isLinkPickerOpen = true
-		},
-
 		onAddLocalAttachment() {
 			this.$refs.localAttachments.click()
 		},
@@ -240,11 +230,15 @@ export default {
 		},
 
 		onLocalAttachmentSelected(e) {
+			return this.addLocalFiles(Array.from(e.target.files))
+		},
+
+		addLocalFiles(files) {
 			this.uploading = true
 			// BUG - if choose again - progress lost/ move to complete()
 			Vue.set(this, 'uploads', {})
 
-			const toUpload = sumBy(prop('size'), Object.values(e.target.files))
+			const toUpload = sumBy(prop('size'), Object.values(files))
 			const newTotal = toUpload + this.totalSizeOfUpload()
 			logger.debug('checking upload size limit', {
 				existingUploads: this.totalSizeOfUpload(),
@@ -253,7 +247,7 @@ export default {
 				newTotal,
 			})
 			if (this.uploadSizeLimit && newTotal > this.uploadSizeLimit) {
-				this.showAttachmentFileSizeWarning(e.target.files.length)
+				this.showAttachmentFileSizeWarning(files.length)
 				this.uploading = false
 				return
 			}
@@ -292,7 +286,7 @@ export default {
 					uploaded: 0,
 				})
 				try {
-					return uploadLocalAttachment(file, progress(file.name), controller)
+					return uploadLocalAttachment(file, this.accountId, progress(file.name), controller)
 						.catch(() => {
 							this.attachments.some((attachment) => {
 								if (attachment.displayName === file.name && !attachment.error) {
@@ -318,7 +312,7 @@ export default {
 				} catch (error) {
 					logger.error('Could not upload file', { file, error })
 				}
-			}, e.target.files)
+			}, files)
 
 			const done = Promise.all(promises)
 				.catch((error) => logger.error('could not upload all attachments', { error }))

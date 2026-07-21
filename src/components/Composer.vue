@@ -3,7 +3,11 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="message-composer">
+	<div
+		class="message-composer"
+		@dragover.prevent
+		@drop="onDrop"
+		@paste="onPaste">
 		<NcReferencePickerModal
 			v-if="isPickerAvailable && isPickerOpen"
 			id="reference-picker"
@@ -264,6 +268,7 @@
 				@input="onEditorInput"
 				@ready="onEditorReady"
 				@mention="handleMention"
+				@save="onEditorSave"
 				@submit="onEditorSubmit" />
 			<MailvelopeEditor
 				v-else
@@ -277,6 +282,7 @@
 		<ComposerAttachments
 			v-model="attachments"
 			:bus="bus"
+			:account-id="selectedAlias.id"
 			:upload-size-limit="attachmentSizeLimit"
 			@upload="$emit('upload-attachment', $event, getMessageData())" />
 		<div class="composer-actions-right composer-actions">
@@ -346,14 +352,6 @@
 						</template>
 						{{
 							t('mail', 'Add attachment from Files')
-						}}
-					</ActionButton>
-					<ActionButton :close-after-click="true" :disabled="encrypt" @click="onAddCloudAttachmentLink">
-						<template #icon>
-							<IconPublic :size="20" />
-						</template>
-						{{
-							t('mail', 'Add share link from Files')
 						}}
 					</ActionButton>
 				</Actions>
@@ -521,7 +519,6 @@ import { NcReferencePickerModal } from '@nextcloud/vue/components/NcRichText'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
 import IconFormat from 'vue-material-design-icons/FormatSize.vue'
-import IconPublic from 'vue-material-design-icons/Link.vue'
 import Paperclip from 'vue-material-design-icons/Paperclip.vue'
 import SendClock from 'vue-material-design-icons/SendClockOutline.vue'
 import Send from 'vue-material-design-icons/SendOutline.vue'
@@ -571,7 +568,6 @@ export default {
 		Download,
 		IconUpload,
 		IconFolder,
-		IconPublic,
 		IconLinkPicker,
 		NcSelect,
 		NcIconSvgWrapper,
@@ -703,6 +699,11 @@ export default {
 		isFirstOpen: {
 			type: Boolean,
 			required: true,
+		},
+
+		isDraft: {
+			type: Boolean,
+			default: false,
 		},
 
 		requestMdn: {
@@ -1122,7 +1123,7 @@ export default {
 		}
 	},
 
-	beforeUnmount() {
+	beforeDestroy() {
 		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
 	},
 
@@ -1329,10 +1330,19 @@ export default {
 
 		onEditorReady(editor) {
 			this.bodyVal = editor.getData()
-			this.insertSignature()
+
+			// Only append signature on opening drafts if alias changed.
+			// Otherwise leads to unwanted or even duplicate signatures.
+			if (!this.isDraft || this.changeSignature) {
+				this.insertSignature()
+			}
 			if (this.smartReply) {
 				this.bus.emit('append-to-body-at-cursor', this.smartReply)
 			}
+		},
+
+		onEditorSave(editor) {
+			this.saveDraft()
 		},
 
 		onEditorSubmit(editor) {
@@ -1395,10 +1405,6 @@ export default {
 		onAddCloudAttachment() {
 			this.bus.emit('on-add-cloud-attachment')
 			this.saveDraftDebounced()
-		},
-
-		onAddCloudAttachmentLink() {
-			this.bus.emit('on-add-cloud-attachment-link')
 		},
 
 		onAutocomplete(term, addressType) {
@@ -1737,6 +1743,42 @@ export default {
 			}
 
 			return option.email
+		},
+
+		onDrop(event) {
+			event.preventDefault()
+
+			const files = Array.from(event.dataTransfer.files)
+
+			if (!files.length) {
+				return
+			}
+
+			this.bus.emit('on-add-local-files', files)
+			this.saveDraftDebounced()
+		},
+
+		onPaste(event) {
+			const files = []
+
+			for (const item of event.clipboardData.items) {
+				if (item.kind === 'file') {
+					const file = item.getAsFile()
+
+					if (file) {
+						files.push(file)
+					}
+				}
+			}
+
+			if (!files.length) {
+				return
+			}
+
+			event.preventDefault()
+
+			this.bus.emit('on-add-local-files', files)
+			this.saveDraftDebounced()
 		},
 
 	},

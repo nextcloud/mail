@@ -17,8 +17,6 @@ use function OCA\Mail\array_flat_map;
  * Combines a set of DI'ed extractors so they can be used as one class
  */
 class CompositeExtractor implements IExtractor {
-	private readonly SubjectExtractor $subjectExtractor;
-
 	/** @var IExtractor[] */
 	private readonly array $extractors;
 
@@ -27,15 +25,14 @@ class CompositeExtractor implements IExtractor {
 		ReadMessagesExtractor $ex2,
 		RepliedMessagesExtractor $ex3,
 		SentMessagesExtractor $ex4,
-		SubjectExtractor $ex5,
+		private readonly SubjectExtractor $subjectExtractor,
 	) {
-		$this->subjectExtractor = $ex5;
 		$this->extractors = [
 			$ex1,
 			$ex2,
 			$ex3,
 			$ex4,
-			$ex5,
+			$this->subjectExtractor,
 		];
 	}
 

@@ -14,16 +14,14 @@ use OCA\Mail\Db\SmimeCertificate;
 use ReturnTypeWillChange;
 
 class EnrichedSmimeCertificate implements JsonSerializable {
-	private SmimeCertificate $certificate;
-	private SmimeCertificateInfo $info;
-
 	/**
 	 * @param SmimeCertificate $certificate
 	 * @param SmimeCertificateInfo $info
 	 */
-	public function __construct(SmimeCertificate $certificate, SmimeCertificateInfo $info) {
-		$this->certificate = $certificate;
-		$this->info = $info;
+	public function __construct(
+		private SmimeCertificate $certificate,
+		private SmimeCertificateInfo $info,
+	) {
 	}
 
 	/**

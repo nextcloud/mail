@@ -13,13 +13,12 @@ OC.L10N.register(
     "Go back" : "ফিরে যাও",
     "Cancel" : "বাতির",
     "General" : "সাধারণ",
+    "Ok" : "তথাস্তু",
     "Delete" : "মুছে",
     "Search" : "Search",
     "Send" : "পাঠাও",
     "Refresh" : "নবোদ্যম",
-    "Ok" : "তথাস্তু",
     "Choose" : "বেছে নিন",
-    "Choose a file to add as attachment" : "সংযুক্তি দেয়ার জন্য একটি ফাইল নির্বাচন করুন",
     "Favorite" : "প্রিয়জন",
     "Read" : "পড়",
     "Edit tags" : "ট্যাগ সম্পাদনা",
@@ -44,6 +43,7 @@ OC.L10N.register(
     "Close" : "বন্ধ",
     "Date" : "Date",
     "Tags" : "ট্যাগ",
+    "From:" : "হইতে:",
     "To:" : "প্রতি:",
     "Deleted" : "মুছে ফেলা",
     "Help" : "সহায়িকা",
@@ -58,6 +58,7 @@ OC.L10N.register(
     "Group" : "গোষ্ঠীসমূহ",
     "Shared" : "ভাগাভাগিকৃত",
     "Shares" : "ভাগাভাগি",
-    "All" : "সবাই"
+    "All" : "সবাই",
+    "Choose a file to add as attachment" : "সংযুক্তি দেয়ার জন্য একটি ফাইল নির্বাচন করুন"
 },
 "nplurals=2; plural=(n != 1);");

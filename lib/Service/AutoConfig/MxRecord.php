@@ -15,11 +15,9 @@ use function array_combine;
 use function asort;
 
 final class MxRecord {
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(LoggerInterface $logger) {
-		$this->logger = $logger;
+	public function __construct(
+		private LoggerInterface $logger,
+	) {
 	}
 
 	/**

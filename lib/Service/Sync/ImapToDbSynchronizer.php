@@ -50,59 +50,24 @@ class ImapToDbSynchronizer {
 	/** @var int */
 	public const MAX_NEW_MESSAGES = 5000;
 
-	/** @var DatabaseMessageMapper */
-	private $dbMapper;
-
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var ImapMessageMapper */
-	private $imapMapper;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var Synchronizer */
-	private $synchronizer;
-
 	/** @var IEventDispatcher */
 	private $dispatcher;
 
-	/** @var PerformanceLogger */
-	private $performanceLogger;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var IMailManager */
-	private $mailManager;
-
-	private TagMapper $tagMapper;
-	private NewMessagesClassifier $newMessagesClassifier;
-
-	public function __construct(DatabaseMessageMapper $dbMapper,
-		IMAPClientFactory $clientFactory,
-		ImapMessageMapper $imapMapper,
-		MailboxMapper $mailboxMapper,
+	public function __construct(
+		private DatabaseMessageMapper $dbMapper,
+		private IMAPClientFactory $clientFactory,
+		private ImapMessageMapper $imapMapper,
+		private MailboxMapper $mailboxMapper,
 		DatabaseMessageMapper $messageMapper,
-		Synchronizer $synchronizer,
+		private Synchronizer $synchronizer,
 		IEventDispatcher $dispatcher,
-		PerformanceLogger $performanceLogger,
-		LoggerInterface $logger,
-		IMailManager $mailManager,
-		TagMapper $tagMapper,
-		NewMessagesClassifier $newMessagesClassifier) {
-		$this->dbMapper = $dbMapper;
-		$this->clientFactory = $clientFactory;
-		$this->imapMapper = $imapMapper;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->synchronizer = $synchronizer;
+		private PerformanceLogger $performanceLogger,
+		private LoggerInterface $logger,
+		private IMailManager $mailManager,
+		private TagMapper $tagMapper,
+		private NewMessagesClassifier $newMessagesClassifier,
+	) {
 		$this->dispatcher = $dispatcher;
-		$this->performanceLogger = $performanceLogger;
-		$this->logger = $logger;
-		$this->mailManager = $mailManager;
-		$this->tagMapper = $tagMapper;
-		$this->newMessagesClassifier = $newMessagesClassifier;
 	}
 
 	/**
