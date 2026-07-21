@@ -1,3 +1,25 @@
+## [5.10.9](https://github.com/nextcloud/mail/compare/v5.10.8...v5.10.9) (2026-07-21)
+
+
+### Bug Fixes
+
+* check tag while renaming ([82a3150](https://github.com/nextcloud/mail/commit/82a3150a5db77fcbbffd51292d6d596717729d66))
+* **deps:** Fix npm audit ([0d77d28](https://github.com/nextcloud/mail/commit/0d77d28236e8f2138c6db2e716f84dd0562b1df5))
+* **dns:** Update public suffix list ([455d3e5](https://github.com/nextcloud/mail/commit/455d3e588718a476249cba9b05340947cb6a8c30))
+* **envelope:** show full summary on hover and refine AI notice ([be974ea](https://github.com/nextcloud/mail/commit/be974ea99b00f2e9ea467863a9c74e41cc5820cc))
+* **l10n:** Update translations from Transifex ([3d6486c](https://github.com/nextcloud/mail/commit/3d6486c8f0c289fb8dcd5231b69f5da2ab7d0191))
+* **l10n:** Update translations from Transifex ([82ceb25](https://github.com/nextcloud/mail/commit/82ceb254e35046392fcfd2fe960e539fc0d6b2e1))
+* **l10n:** Update translations from Transifex ([6a81d5c](https://github.com/nextcloud/mail/commit/6a81d5cb70133358939cd623957ab2c72475bc79))
+* signature editor on mobile, enlarged menu for formatting options ([685f5c8](https://github.com/nextcloud/mail/commit/685f5c8ebdfd473d8e3a937876a4bbdef230fde2))
+* subfolder selection for quick actions ([dc214ed](https://github.com/nextcloud/mail/commit/dc214edefc6a67e8c9b4a28cabfc9a54625a362f))
+* **tags:** add accessible title to tag modal ([be07280](https://github.com/nextcloud/mail/commit/be07280dcd39cbfa3141711be3754e5c3c7ee834))
+* **ui:** archive shortcut in unified mailboxes ([dcf4dbb](https://github.com/nextcloud/mail/commit/dcf4dbb678d4f1886c5b880c17f1bdad224d1f6c))
+* **ui:** build valid search query when toggling favorites sort ([486401e](https://github.com/nextcloud/mail/commit/486401e473251b0313bc840560c21f2f0629ed7b))
+* **ui:** improve quick actions modal design ([92422f2](https://github.com/nextcloud/mail/commit/92422f2e92a1b9d4e31c4c80ea8f12c821fc307a))
+* visualization of multiple attachments ([d228fd3](https://github.com/nextcloud/mail/commit/d228fd393fb9247470761709bddc1b82cd47e33a))
+
+
+
 ## [5.10.8](https://github.com/nextcloud/mail/compare/v5.10.7...v5.10.8) (2026-07-14)
 
 
