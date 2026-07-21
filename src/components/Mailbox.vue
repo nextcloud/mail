@@ -68,6 +68,10 @@ import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
 import { wait } from '../util/wait.js'
 
+const ALWAYS_VISIBLE_SPECIAL_ROLES = ['draft', 'sent', 'trash']
+const MAX_PREFETCH_MAILBOXES = 5
+const MAX_ALWAYS_VISIBLE_PREFETCH = 3
+
 export default {
 	name: 'Mailbox',
 	components: {
@@ -320,16 +324,79 @@ export default {
 			}
 		},
 
+		isAlwaysVisiblePrefetchCandidate(mailbox) {
+			return ALWAYS_VISIBLE_SPECIAL_ROLES.includes(mailbox.specialRole)
+		},
+
+		isTopLevelMailbox(mailbox) {
+			return mailbox.path === '' || mailbox.path === this.account.personalNamespace
+		},
+
+		getMailboxDisplayName(mailbox) {
+			return mailbox.displayName ?? mailbox.name ?? ''
+		},
+
+		sortMailboxesByDisplayName(mailboxes) {
+			return [...mailboxes].sort((a, b) => {
+				return this.getMailboxDisplayName(a).localeCompare(this.getMailboxDisplayName(b))
+			})
+		},
+
+		getMailboxesToPrefetch() {
+			const subscribedMailboxes = [...this.mainStore.getRecursiveMailboxIterator(this.account.id)]
+				.filter((mailbox) => mailbox.databaseId !== this.mailbox.databaseId)
+				.filter((mailbox) => mailbox.isSubscribed)
+
+			const alwaysVisibleMailboxes = subscribedMailboxes
+				.filter((mailbox) => this.isAlwaysVisiblePrefetchCandidate(mailbox))
+				.sort((a, b) => {
+					const aIndex = ALWAYS_VISIBLE_SPECIAL_ROLES.indexOf(a.specialRole)
+					const bIndex = ALWAYS_VISIBLE_SPECIAL_ROLES.indexOf(b.specialRole)
+
+					if (aIndex !== bIndex) {
+						return aIndex - bIndex
+					}
+
+					return this.getMailboxDisplayName(a).localeCompare(this.getMailboxDisplayName(b))
+				})
+				.slice(0, MAX_ALWAYS_VISIBLE_PREFETCH)
+
+			const selectedIds = new Set(alwaysVisibleMailboxes.map((mailbox) => mailbox.databaseId))
+
+			const topLevelMailboxes = this.sortMailboxesByDisplayName(subscribedMailboxes
+				.filter((mailbox) => !selectedIds.has(mailbox.databaseId))
+				.filter((mailbox) => !this.isAlwaysVisiblePrefetchCandidate(mailbox))
+				.filter((mailbox) => this.isTopLevelMailbox(mailbox))
+			)
+
+			const remainingMailboxes = this.sortMailboxesByDisplayName(subscribedMailboxes
+				.filter((mailbox) => !selectedIds.has(mailbox.databaseId))
+				.filter((mailbox) => !this.isAlwaysVisiblePrefetchCandidate(mailbox))
+				.filter((mailbox) => !this.isTopLevelMailbox(mailbox))
+			)
+
+			const result = [...alwaysVisibleMailboxes]
+
+			for (const mailbox of topLevelMailboxes) {
+				if (result.length >= MAX_PREFETCH_MAILBOXES) {
+					break
+				}
+				result.push(mailbox)
+				selectedIds.add(mailbox.databaseId)
+			}
+
+			for (const mailbox of remainingMailboxes) {
+				if (result.length >= MAX_PREFETCH_MAILBOXES) {
+					break
+				}
+				result.push(mailbox)
+			}
+
+			return result
+		},
+
 		async prefetchOtherMailboxes() {
-			for (const mailbox of this.mainStore.getRecursiveMailboxIterator(this.account.id)) {
-				if (mailbox.databaseId === this.mailbox.databaseId) {
-					continue
-				}
-
-				if (!mailbox.isSubscribed) {
-					continue
-				}
-
+			for (const mailbox of this.getMailboxesToPrefetch()) {
 				try {
 					const envelopes = await this.mainStore.fetchEnvelopes({
 						mailboxId: mailbox.databaseId,
