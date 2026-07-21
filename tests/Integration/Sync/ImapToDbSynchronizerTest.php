@@ -11,9 +11,9 @@ namespace OCA\Mail\Tests\Integration\Sync;
 
 use Horde_Imap_Client;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCA\Mail\Service\Sync\SyncService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
@@ -59,7 +59,7 @@ class ImapToDbSynchronizerTest extends TestCase {
 		$uid3 = $this->saveMessage($mailbox, $message, $this->account);
 
 		// Retrieve mailbox object
-		$mailManager = Server::get(IMailManager::class);
+		$mailManager = Server::get(MailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($this->account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -120,7 +120,7 @@ class ImapToDbSynchronizerTest extends TestCase {
 		$uid3 = $this->saveMessage($mailbox, $message, $this->account);
 
 		// Retrieve mailbox object
-		$mailManager = Server::get(IMailManager::class);
+		$mailManager = Server::get(MailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($this->account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {

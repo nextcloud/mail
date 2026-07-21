@@ -12,13 +12,12 @@ namespace OCA\Mail\Service\AiIntegrations;
 use JsonException;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\EventData;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Service\MailManager;
 use OCP\IAppConfig;
 use OCP\IL10N;
 use OCP\IUserManager;
@@ -41,8 +40,7 @@ class AiIntegrationsService {
 	public function __construct(
 		private LoggerInterface $logger,
 		private Cache $cache,
-		private IMAPClientFactory $clientFactory,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private TaskProcessingManager $taskProcessingManager,
 		private IL10N $l,
 		private IFactory $l10nFactory,
@@ -67,46 +65,39 @@ class AiIntegrationsService {
 		}
 		$user = $this->userManager->get($account->getUserId());
 		$language = explode('_', $this->l10nFactory->getUserLanguage($user))[0];
-		$client = $this->clientFactory->getClient($account);
-		try {
-			foreach ($messages as $entry) {
-				if (mb_strlen((string)$entry->getSummary()) !== 0) {
-					continue;
-				}
-				// retrieve full message from server
-				$userId = $account->getUserId();
-				$mailboxId = $entry->getMailboxId();
-				$messageLocalId = $entry->getId();
-				$messageRemoteId = $entry->getUid();
-				$mailbox = $this->mailManager->getMailbox($userId, $mailboxId);
-				$message = $this->mailManager->getImapMessage(
-					$client,
-					$account,
-					$mailbox,
-					$messageRemoteId,
-					true
-				);
-				// skip message if it is encrypted or empty
-				if ($message->isEncrypted() || empty(trim($message->getPlainBody()))) {
-					continue;
-				}
-				// construct prompt and task
-				$messageBody = $message->getPlainBody();
-				$prompt = sprintf(DefaultPrompts::SUMMARIZE_MESSAGE, $language, $messageBody);
-				$task = new TaskProcessingTask(
-					TextToText::ID,
-					[
-						'max_tokens' => 1024,
-						'input' => $prompt,
-					],
-					Application::APP_ID,
-					$userId,
-					'message:' . (string)$messageLocalId
-				);
-				$this->taskProcessingManager->scheduleTask($task);
+		foreach ($messages as $entry) {
+			if (mb_strlen((string)$entry->getSummary()) !== 0) {
+				continue;
 			}
-		} finally {
-			$client->logout();
+			// retrieve full message from server
+			$userId = $account->getUserId();
+			$mailboxId = $entry->getMailboxId();
+			$messageLocalId = $entry->getId();
+			$mailbox = $this->mailManager->getMailbox($userId, $mailboxId);
+			$message = $this->mailManager->getImapMessage(
+				$account,
+				$mailbox,
+				$entry,
+				true
+			);
+			// skip message if it is encrypted or empty
+			if ($message->isEncrypted() || empty(trim($message->getPlainBody()))) {
+				continue;
+			}
+			// construct prompt and task
+			$messageBody = $message->getPlainBody();
+			$prompt = sprintf(DefaultPrompts::SUMMARIZE_MESSAGE, $language, $messageBody);
+			$task = new TaskProcessingTask(
+				TextToText::ID,
+				[
+					'max_tokens' => 1024,
+					'input' => $prompt,
+				],
+				Application::APP_ID,
+				$userId,
+				'message:' . (string)$messageLocalId
+			);
+			$this->taskProcessingManager->scheduleTask($task);
 		}
 	}
 
@@ -127,22 +118,16 @@ class AiIntegrationsService {
 			if ($cachedSummary) {
 				return $cachedSummary;
 			}
-			$client = $this->clientFactory->getClient($account);
-			try {
-				$messagesBodies = array_map(function ($message) use ($client, $account, $currentUserId) {
-					$mailbox = $this->mailManager->getMailbox($currentUserId, $message->getMailboxId());
-					$imapMessage = $this->mailManager->getImapMessage(
-						$client,
-						$account,
-						$mailbox,
-						$message->getUid(), true
-					);
-					return $imapMessage->getPlainBody();
-				}, $messages);
-
-			} finally {
-				$client->logout();
-			}
+			$messagesBodies = array_map(function ($message) use ($account, $currentUserId) {
+				$mailbox = $this->mailManager->getMailbox($currentUserId, $message->getMailboxId());
+				$imapMessage = $this->mailManager->getImapMessage(
+					$account,
+					$mailbox,
+					$message,
+					true
+				);
+				return $imapMessage->getPlainBody();
+			}, $messages);
 
 			$taskPrompt = implode("\n", $messagesBodies);
 			$summaryTask = new TaskProcessingTask(
@@ -174,21 +159,16 @@ class AiIntegrationsService {
 		if (!isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToText::ID])) {
 			return null;
 		}
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$messageBodies = array_map(function ($message) use ($client, $account, $currentUserId) {
-				$mailbox = $this->mailManager->getMailbox($currentUserId, $message->getMailboxId());
-				$imapMessage = $this->mailManager->getImapMessage(
-					$client,
-					$account,
-					$mailbox,
-					$message->getUid(), true
-				);
-				return $imapMessage->getPlainBody();
-			}, $messages);
-		} finally {
-			$client->logout();
-		}
+		$messageBodies = array_map(function ($message) use ($account, $currentUserId) {
+			$mailbox = $this->mailManager->getMailbox($currentUserId, $message->getMailboxId());
+			$imapMessage = $this->mailManager->getImapMessage(
+				$account,
+				$mailbox,
+				$message,
+				true
+			);
+			return $imapMessage->getPlainBody();
+		}, $messages);
 
 		$task = new TaskProcessingTask(
 			TextToText::ID,
@@ -231,22 +211,16 @@ class AiIntegrationsService {
 					throw new ServiceException('Failed to decode smart replies JSON output', previous: $e);
 				}
 			}
-			$client = $this->clientFactory->getClient($account);
-			try {
-				$imapMessage = $this->mailManager->getImapMessage(
-					$client,
-					$account,
-					$mailbox,
-					$message->getUid(), true
-				);
-				if (!$this->isPersonalEmail($imapMessage)) {
-					return [];
-				}
-				$messageBody = $imapMessage->getPlainBody();
-
-			} finally {
-				$client->logout();
+			$imapMessage = $this->mailManager->getImapMessage(
+				$account,
+				$mailbox,
+				$message,
+				true
+			);
+			if (!$this->isPersonalEmail($imapMessage)) {
+				return [];
 			}
+			$messageBody = $imapMessage->getPlainBody();
 			$prompt = sprintf(DefaultPrompts::SMART_REPLY, $messageBody);
 			$task = new TaskProcessingTask(TextToText::ID, ['input' => $prompt], Application::APP_ID, $currentUserId);
 			$task = $this->runTask($task);
@@ -285,18 +259,12 @@ class AiIntegrationsService {
 			throw new ServiceException('No language model available for smart replies');
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$imapMessage = $this->mailManager->getImapMessage(
-				$client,
-				$account,
-				$mailbox,
-				$message->getUid(),
-				true,
-			);
-		} finally {
-			$client->logout();
-		}
+		$imapMessage = $this->mailManager->getImapMessage(
+			$account,
+			$mailbox,
+			$message,
+			true,
+		);
 
 		if (!$this->isPersonalEmail($imapMessage)) {
 			return false;
@@ -342,18 +310,12 @@ class AiIntegrationsService {
 			return  $cachedValue === 'true' ? true : false;
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$imapMessage = $this->mailManager->getImapMessage(
-				$client,
-				$account,
-				$mailbox,
-				$message->getUid(),
-				true,
-			);
-		} finally {
-			$client->logout();
-		}
+		$imapMessage = $this->mailManager->getImapMessage(
+			$account,
+			$mailbox,
+			$message,
+			true,
+		);
 
 		if (!$this->isPersonalEmail($imapMessage)) {
 			return false;

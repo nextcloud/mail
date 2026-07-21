@@ -11,11 +11,10 @@ namespace OCA\Mail\Controller;
 
 use Exception;
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Http\JsonResponse;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -30,9 +29,8 @@ class ListController extends Controller {
 
 	public function __construct(
 		IRequest $request,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private AccountService $accountService,
-		private IMAPClientFactory $clientFactory,
 		IClientService $httpClientService,
 		private LoggerInterface $logger,
 		private ?string $userId,
@@ -61,13 +59,11 @@ class ListController extends Controller {
 			return JsonResponse::fail(null, Http::STATUS_NOT_FOUND);
 		}
 
-		$client = $this->clientFactory->getClient($account);
 		try {
 			$imapMessage = $this->mailManager->getImapMessage(
-				$client,
 				$account,
 				$mailbox,
-				$message->getUid(),
+				$message,
 				true
 			);
 			$unsubscribeUrl = $imapMessage->getUnsubscribeUrl();
@@ -86,8 +82,6 @@ class ListController extends Controller {
 				'exception' => $e,
 			]);
 			return JsonResponse::error('Unknown error');
-		} finally {
-			$client->logout();
 		}
 		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId unsubscribed from mailing list: $id on behalf of $effectiveUserId");
 

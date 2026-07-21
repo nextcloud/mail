@@ -23,7 +23,7 @@ use function json_encode;
  * @method void setUid(int $uid)
  * @method int getUid()
  * @method string|null getMessageId()
- * @method void setReferences(string $references)
+ * @method void setReferences(string|null $references)
  * @method string|null getReferences()
  * @method string|null getInReplyTo()
  * @method string|null getThreadRootId()
