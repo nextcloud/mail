@@ -30,6 +30,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\LoggerInterface;
 use function file_get_contents;
 use function hash_equals;
+use function is_string;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ProxyController extends Controller {
@@ -46,6 +47,7 @@ class ProxyController extends Controller {
 		private ProxyHmacGenerator $hmacGenerator,
 		private LoggerInterface $logger,
 		private MailManager $mailManager,
+		private SvgSanitizer $svgSanitizer,
 		private ?string $userId,
 	) {
 		parent::__construct($appName, $request);
@@ -98,6 +100,9 @@ class ProxyController extends Controller {
 		try {
 			$response = $client->get($src);
 			$content = $response->getBody();
+			if (!is_string($content)) {
+				throw new ServiceException('Could not read proxied image');
+			}
 		} catch (ClientExceptionInterface $e) {
 			$this->logger->notice('Unable to proxy image', ['exception' => $e]);
 			$content = $this->getBlockedImage();
@@ -108,8 +113,6 @@ class ProxyController extends Controller {
 			]);
 			$content = $this->getBlockedImage();
 		}
-
-		$content = (string)$content;
 
 		// Browsers sniff raster image formats in <img> tags, but they refuse to
 		// render SVG unless it is served with the image/svg+xml content type.
