@@ -43,6 +43,7 @@
 				:title="t('mail', 'Message frame')"
 				:src="url"
 				seamless
+				sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-modals"
 				@load="onMessageFrameLoad" />
 		</div>
 	</div>
