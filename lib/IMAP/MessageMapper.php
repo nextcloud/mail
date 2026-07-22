@@ -151,7 +151,7 @@ class MessageMapper {
 		// Here we assume somewhat equally distributed UIDs
 		// +1 is added to fetch all messages with the rare case of strictly
 		// continuous UIDs and fractions
-		$estimatedPageSize = (int)((float)($totalRange / $total) * $maxResults) + 1;
+		$estimatedPageSize = (int)((float)($totalRange / $total) * (float)$maxResults) + 1;
 		// Determine min UID to fetch, but don't exceed the known maximum
 		$lower = max(
 			$min,
@@ -178,7 +178,7 @@ class MessageMapper {
 		while ($actualPageSize > $maxResults) {
 			$logger->debug("Range for findAll matches too many messages: min=$min max=$max total=$total estimatedPageSize=$estimatedPageSize actualPageSize=$actualPageSize");
 
-			$estimatedPageSize = (int)($estimatedPageSize / 2.0);
+			$estimatedPageSize = (int)((float)$estimatedPageSize / 2.0);
 
 			$upper = min(
 				$max,
