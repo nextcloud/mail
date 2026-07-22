@@ -30,7 +30,8 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\LoggerInterface;
 use function file_get_contents;
 use function hash_equals;
-use function is_string;
+use function is_resource;
+use function stream_get_contents;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ProxyController extends Controller {
@@ -100,8 +101,11 @@ class ProxyController extends Controller {
 		try {
 			$response = $client->get($src);
 			$content = $response->getBody();
-			if (!is_string($content)) {
-				throw new ServiceException('Could not read proxied image');
+			if (is_resource($content)) {
+				$content = stream_get_contents($content);
+				if ($content === false) {
+					$content = $this->getBlockedImage();
+				}
 			}
 		} catch (ClientExceptionInterface $e) {
 			$this->logger->notice('Unable to proxy image', ['exception' => $e]);

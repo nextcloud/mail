@@ -102,6 +102,9 @@ class SvgSanitizer {
 	 */
 	public function looksLikeSvg(string $content): bool {
 		$start = ltrim($content);
+		if (str_starts_with($start, "\xEF\xBB\xBF")) {
+			$start = ltrim(substr($start, 3));
+		}
 		$hasSvgPrologue = str_starts_with($start, '<?xml')
 			|| stripos($start, '<svg') === 0;
 		return $hasSvgPrologue && stripos($content, '<svg') !== false;

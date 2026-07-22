@@ -145,6 +145,10 @@ class SvgSanitizerTest extends TestCase {
 		$this->assertTrue($this->sanitizer->looksLikeSvg('<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg"/>'));
 	}
 
+	public function testLooksLikeSvgWithUtf8Bom(): void {
+		$this->assertTrue($this->sanitizer->looksLikeSvg("\xEF\xBB\xBF<svg xmlns=\"http://www.w3.org/2000/svg\"/>"));
+	}
+
 	public function testLooksLikeSvgReturnsFalseForHtml(): void {
 		$this->assertFalse($this->sanitizer->looksLikeSvg('<!DOCTYPE html><html><body><svg/></body></html>'));
 	}
