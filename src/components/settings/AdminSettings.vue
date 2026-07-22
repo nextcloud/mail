@@ -246,6 +246,12 @@
 			<MicrosoftAdminOauthSettings :tenant-id="microsoftOauthTenantId" :client-id="microsoftOauthClientId" />
 		</div>
 		<div class="app-description">
+			<h3>
+				{{ t('mail', 'OpenID Connect integration') }}
+			</h3>
+			<OidcAdminSettings />
+		</div>
+		<div class="app-description">
 			<h3>{{ t('mail', 'User Interface Preference Defaults') }}</h3>
 			<article>
 				<p>
@@ -291,6 +297,7 @@ import IconAdd from 'vue-material-design-icons/Plus.vue'
 import AntiSpamSettings from './AntiSpamSettings.vue'
 import GmailAdminOauthSettings from './GmailAdminOauthSettings.vue'
 import MicrosoftAdminOauthSettings from './MicrosoftAdminOauthSettings.vue'
+import OidcAdminSettings from './OidcAdminSettings.vue'
 import ProvisioningSettings from './ProvisioningSettings.vue'
 import logger from '../../logger.js'
 import {
@@ -317,6 +324,7 @@ export default {
 		GmailAdminOauthSettings,
 		AntiSpamSettings,
 		MicrosoftAdminOauthSettings,
+		OidcAdminSettings,
 		ProvisioningSettings,
 		SettingsSection,
 		ButtonVue,
