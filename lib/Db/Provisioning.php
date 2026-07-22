@@ -39,6 +39,8 @@ use ReturnTypeWillChange;
  * @method void setMasterPasswordEnabled(bool $masterPasswordEnabled)
  * @method string|null getMasterPassword()
  * @method void setMasterPassword(string $masterPassword)
+ * @method bool|null getOidcEnabled()
+ * @method void setOidcEnabled(bool $oidcEnabled)
  * @method bool|null getSieveEnabled()
  * @method void setSieveEnabled(bool $sieveEnabled)
  * @method string|null getSieveHost()
@@ -72,6 +74,7 @@ class Provisioning extends Entity implements JsonSerializable {
 	protected $smtpSslMode;
 	protected $masterPasswordEnabled;
 	protected $masterPassword;
+	protected $oidcEnabled;
 	protected $sieveEnabled;
 	protected $sieveUser;
 	protected $sieveHost;
@@ -86,6 +89,7 @@ class Provisioning extends Entity implements JsonSerializable {
 		$this->addType('smtpPort', 'integer');
 		$this->addType('masterPasswordEnabled', 'boolean');
 		$this->addType('masterPassword', 'string');
+		$this->addType('oidcEnabled', 'boolean');
 		$this->addType('sieveEnabled', 'boolean');
 		$this->addType('sievePort', 'integer');
 		$this->addType('ldapAliasesProvisioning', 'boolean');
@@ -108,6 +112,7 @@ class Provisioning extends Entity implements JsonSerializable {
 			'smtpSslMode' => $this->getSmtpSslMode(),
 			'masterPasswordEnabled' => $this->getMasterPasswordEnabled(),
 			'masterPassword' => !empty($this->getMasterPassword()) ? self::MASTER_PASSWORD_PLACEHOLDER : null,
+			'oidcEnabled' => $this->getOidcEnabled(),
 			'sieveEnabled' => $this->getSieveEnabled(),
 			'sieveUser' => $this->getSieveUser(),
 			'sieveHost' => $this->getSieveHost(),

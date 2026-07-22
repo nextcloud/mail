@@ -24,6 +24,7 @@ use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Dashboard\ImportantMailWidget;
 use OCA\Mail\Dashboard\UnreadMailWidget;
 use OCA\Mail\Events\BeforeImapClientCreated;
+use OCA\Mail\Events\BeforeSmtpClientCreated;
 use OCA\Mail\Events\DraftMessageCreatedEvent;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MailboxesSynchronizedEvent;
@@ -130,6 +131,7 @@ final class Application extends App implements IBootstrap {
 
 		$context->registerEventListener(AddMissingIndicesEvent::class, OptionalIndicesListener::class);
 		$context->registerEventListener(BeforeImapClientCreated::class, OauthTokenRefreshListener::class);
+		$context->registerEventListener(BeforeSmtpClientCreated::class, OauthTokenRefreshListener::class);
 		$context->registerEventListener(DraftSavedEvent::class, DeleteDraftListener::class);
 		$context->registerEventListener(DraftMessageCreatedEvent::class, DeleteDraftListener::class);
 		$context->registerEventListener(OutboxMessageCreatedEvent::class, DeleteDraftListener::class);

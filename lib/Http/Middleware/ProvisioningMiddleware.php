@@ -45,6 +45,8 @@ class ProvisioningMiddleware extends Middleware {
 		}
 		try {
 			$this->provisioningManager->provisionSingleUser($configs, $user);
+			// Keep the mirrored OIDC token fresh (no-op for password-based configs)
+			$this->provisioningManager->updateOidcToken($user, $configs);
 			$password = $this->credentialStore->getLoginCredentials()->getPassword();
 			$this->provisioningManager->updatePassword(
 				$user,
