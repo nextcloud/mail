@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Listener;
 
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
@@ -31,7 +32,7 @@ class NewMessagesSummarizeListener implements IEventListener {
 
 	#[\Override]
 	public function handle(Event $event): void {
-		if ($this->appConfig->getAppValueBool('llm_processing', false) === false) {
+		if ($this->appConfig->getAppValueBool(ConfigLexicon::LLM_PROCESSING, false) === false) {
 			return;
 		}
 		if (!($event instanceof NewMessagesSynchronized)) {

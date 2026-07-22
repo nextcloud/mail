@@ -12,6 +12,7 @@ namespace OCA\Mail\Service\AiIntegrations;
 use JsonException;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
@@ -390,7 +391,7 @@ class AiIntegrationsService {
 	 * Whether the llm_processing admin setting is enabled globally on this instance.
 	 */
 	public function isLlmProcessingEnabled(): bool {
-		return $this->appConfig->getValueString(Application::APP_ID, 'llm_processing', 'no') === 'yes';
+		return $this->appConfig->getValueBool(Application::APP_ID, ConfigLexicon::LLM_PROCESSING, false);
 	}
 
 	/**

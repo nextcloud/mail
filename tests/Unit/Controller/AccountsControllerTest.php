@@ -29,6 +29,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\IAppConfig;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
@@ -88,6 +89,9 @@ class AccountsControllerTest extends TestCase {
 	/** @var IConfig|(IConfig&MockObject)|MockObject */
 	private IConfig|MockObject $config;
 
+	/** @var IAppConfig|MockObject */
+	private IAppConfig|MockObject $appConfig;
+
 	/** @var DelegationService|MockObject */
 	private $delegationService;
 	/** @var IRemoteHostValidator|MockObject */
@@ -109,6 +113,7 @@ class AccountsControllerTest extends TestCase {
 		$this->syncService = $this->createMock(SyncService::class);
 		$this->mailboxSync = $this->createMock(mailboxSync::class);
 		$this->config = $this->createMock(IConfig::class);
+		$this->appConfig = $this->createMock(IAppConfig::class);
 		$this->hostValidator = $this->createMock(IRemoteHostValidator::class);
 		$this->hostValidator->method('isValid')->willReturn(true);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
@@ -133,6 +138,7 @@ class AccountsControllerTest extends TestCase {
 			$this->mailboxSync,
 			$this->timeFactory,
 			$this->delegationService,
+			$this->appConfig,
 		);
 		$this->account = $this->createMock(Account::class);
 		$this->accountId = 123;
@@ -244,9 +250,9 @@ class AccountsControllerTest extends TestCase {
 	}
 
 	public function testCreateManualSuccess(): void {
-		$this->config->expects(self::once())
-			->method('getAppValue')
-			->willReturn('yes');
+		$this->appConfig->expects(self::once())
+			->method('getValueBool')
+			->willReturn(true);
 		$email = 'user@domain.tld';
 		$accountName = 'Mail';
 		$imapHost = 'localhost';
@@ -285,9 +291,9 @@ class AccountsControllerTest extends TestCase {
 		$smtpSslMode = 'none';
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
-		$this->config->expects(self::once())
-			->method('getAppValue')
-			->willReturn('no');
+		$this->appConfig->expects(self::once())
+			->method('getValueBool')
+			->willReturn(false);
 		$this->logger->expects(self::once())
 			->method('info');
 		$this->setupService->expects(self::never())
@@ -300,6 +306,9 @@ class AccountsControllerTest extends TestCase {
 	}
 
 	public function testCreateManualFailure(): void {
+		$this->appConfig->expects(self::once())
+			->method('getValueBool')
+			->willReturn(true);
 		$email = 'user@domain.tld';
 		$accountName = 'Mail';
 		$imapHost = 'localhost';
