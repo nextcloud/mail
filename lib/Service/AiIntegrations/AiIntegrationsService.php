@@ -16,6 +16,7 @@ use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Exception\PotentialPromptInjectionException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\EventData;
@@ -50,6 +51,18 @@ class AiIntegrationsService {
 		private IUserManager $userManager,
 		private IAppConfig $appConfig,
 	) {
+	}
+
+	/**
+	 * Reject untrusted mail content that carries its own START/END-OF-EMAIL
+	 * boundary, which would attempt tp break out of the surrounding prompt template.
+	 *
+	 * @throws PotentialPromptInjectionException
+	 */
+	private static function assertNoPromptInjection(string $body): void {
+		if (preg_match('/\*{0,3}\s*(?:START|END)_OF_E-?MAIL\s*\*{0,3}/i', $body) === 1) {
+			throw new PotentialPromptInjectionException('Message body contains prompt delimiters');
+		}
 	}
 
 	/**
@@ -91,8 +104,14 @@ class AiIntegrationsService {
 				if ($message->isEncrypted() || empty(trim($message->getPlainBody()))) {
 					continue;
 				}
-				// construct prompt and task
 				$messageBody = $message->getPlainBody();
+				try {
+					self::assertNoPromptInjection($messageBody);
+				} catch (PotentialPromptInjectionException $e) {
+					$this->logger->warning('Skipped message summary: potential prompt injection', ['exception' => $e, 'messageId' => $messageLocalId]);
+					continue;
+				}
+				// construct prompt and task
 				$prompt = sprintf(DefaultPrompts::SUMMARIZE_MESSAGE, $language, $messageBody);
 				$task = new TaskProcessingTask(
 					TextToText::ID,
@@ -138,9 +157,13 @@ class AiIntegrationsService {
 						$mailbox,
 						$message->getUid(), true
 					);
-					return $imapMessage->getPlainBody();
+					$body = $imapMessage->getPlainBody();
+					self::assertNoPromptInjection($body);
+					return $body;
 				}, $messages);
-
+			} catch (PotentialPromptInjectionException $e) {
+				$this->logger->warning('Skipped thread summary: potential prompt injection', ['exception' => $e, 'threadId' => $threadId]);
+				return null;
 			} finally {
 				$client->logout();
 			}
@@ -185,8 +208,13 @@ class AiIntegrationsService {
 					$mailbox,
 					$message->getUid(), true
 				);
-				return $imapMessage->getPlainBody();
+				$body = $imapMessage->getPlainBody();
+				self::assertNoPromptInjection($body);
+				return $body;
 			}, $messages);
+		} catch (PotentialPromptInjectionException $e) {
+			$this->logger->warning('Skipped event data generation: potential prompt injection', ['exception' => $e, 'threadId' => $threadId]);
+			return null;
 		} finally {
 			$client->logout();
 		}
@@ -244,7 +272,10 @@ class AiIntegrationsService {
 					return [];
 				}
 				$messageBody = $imapMessage->getPlainBody();
-
+				self::assertNoPromptInjection($messageBody);
+			} catch (PotentialPromptInjectionException $e) {
+				$this->logger->warning('Skipped smart replies: potential prompt injection', ['exception' => $e, 'messageId' => $message->getId()]);
+				return [];
 			} finally {
 				$client->logout();
 			}
@@ -261,6 +292,12 @@ class AiIntegrationsService {
 			try {
 				$cleaned = preg_replace('/^```json\s*|\s*```$/', '', $replies);
 				$decoded = json_decode($cleaned, true, 512, JSON_THROW_ON_ERROR);
+				if (!is_array($decoded)
+					|| !isset($decoded['reply1'], $decoded['reply2'])
+					|| !is_string($decoded['reply1'])
+					|| !is_string($decoded['reply2'])) {
+					throw new ServiceException('Smart reply output has an unexpected structure');
+				}
 				$this->cache->addValue("smartReplies_{$message->getId()}", $cleaned);
 				return $decoded;
 			} catch (JsonException $e) {
@@ -304,6 +341,12 @@ class AiIntegrationsService {
 		}
 
 		$messageBody = $imapMessage->getPlainBody();
+		try {
+			self::assertNoPromptInjection($messageBody);
+		} catch (PotentialPromptInjectionException $e) {
+			$this->logger->warning('Skipped follow-up classification: potential prompt injection', ['exception' => $e, 'messageId' => $message->getId()]);
+			return false;
+		}
 		$messageBody = str_replace('"', '\"', $messageBody);
 
 		$prompt = sprintf(DefaultPrompts::REQUIRES_FOLLOW_UP, $messageBody);
@@ -361,6 +404,12 @@ class AiIntegrationsService {
 		}
 
 		$messageBody = $imapMessage->getPlainBody();
+		try {
+			self::assertNoPromptInjection($messageBody);
+		} catch (PotentialPromptInjectionException $e) {
+			$this->logger->warning('Skipped translation check: potential prompt injection', ['exception' => $e, 'messageId' => $messageId]);
+			return false;
+		}
 		$messageBody = str_replace('"', '\"', $messageBody);
 
 		$prompt = sprintf(DefaultPrompts::REQUIRES_TRANSLATION, $messageBody, $language);
