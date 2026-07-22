@@ -249,6 +249,22 @@
 						isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
 					}}
 				</ActionButton>
+				<ActionButton
+					v-if="showArchiveButton && hasArchiveAcl"
+					class="action--primary"
+					:close-after-click="true"
+					:disabled="disableArchiveButton"
+					@click.prevent="onArchive">
+					<template #icon>
+						<ArchiveIcon :size="24" />
+					</template>
+					<template v-if="layoutMessageViewThreaded">
+						{{ t('mail', 'Archive thread') }}
+					</template>
+					<template v-else>
+						{{ t('mail', 'Archive message') }}
+					</template>
+				</ActionButton>
 			</EnvelopePrimaryActions>
 			<template v-if="!moreActionsOpen && !snoozeOptions && !quickActionMenu">
 				<ActionText>
@@ -322,21 +338,6 @@
 					</template>
 					<template v-else>
 						{{ t('mail', 'Move Message') }}
-					</template>
-				</ActionButton>
-				<ActionButton
-					v-if="showArchiveButton && hasArchiveAcl"
-					:close-after-click="true"
-					:disabled="disableArchiveButton"
-					@click.prevent="onArchive">
-					<template #icon>
-						<ArchiveIcon :size="20" />
-					</template>
-					<template v-if="layoutMessageViewThreaded">
-						{{ t('mail', 'Archive thread') }}
-					</template>
-					<template v-else>
-						{{ t('mail', 'Archive message') }}
 					</template>
 				</ActionButton>
 				<ActionButton
