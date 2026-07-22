@@ -1362,11 +1362,14 @@ class MessageMapper extends QBMapper {
 		$select = $this->db->getQueryBuilder();
 		$subSelect = $this->db->getQueryBuilder();
 
-		// MIN returns NULL if there are no rows selected, therefore we use COALESCE to ensure 0 is returned in this case
+		// MIN/MAX return NULL when no known id matches, so COALESCE to a bound that keeps all rows
+		if ($sortOrder === IMailSearch::ORDER_NEWEST_FIRST) {
+			$sentAtBound = $subSelect->createFunction('COALESCE(' . $subSelect->func()->min('sent_at') . ', 0)');
+		} else {
+			$sentAtBound = $subSelect->createFunction('COALESCE(' . $subSelect->func()->max('sent_at') . ', ' . PHP_INT_MAX . ')');
+		}
 		$subSelect
-			->select('COALESCE(' . ($sortOrder === IMailSearch::ORDER_NEWEST_FIRST
-				? $subSelect->func()->min('sent_at')
-				: $subSelect->func()->max('sent_at')) . ', 0)')
+			->select($sentAtBound)
 			->from($this->getTableName())
 			->where(
 				$subSelect->expr()->eq('mailbox_id', $select->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),

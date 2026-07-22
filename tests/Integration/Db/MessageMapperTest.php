@@ -184,9 +184,11 @@ class MessageMapperTest extends TestCase {
 		$insert->executeStatement();
 		$id = $insert->getLastInsertId();
 
-		$found = $this->mapper->findNewIds($mailbox, [$id + 1], 12345, IMailSearch::ORDER_NEWEST_FIRST);
+		$foundNewest = $this->mapper->findNewIds($mailbox, [$id + 1], null, IMailSearch::ORDER_NEWEST_FIRST);
+		$foundOldest = $this->mapper->findNewIds($mailbox, [$id + 1], null, IMailSearch::ORDER_OLDEST_FIRST);
 
-		self::assertCount(1, $found);
+		self::assertCount(1, $foundNewest);
+		self::assertCount(1, $foundOldest);
 	}
 
 	public function testFindIdsByQuery(): void {
