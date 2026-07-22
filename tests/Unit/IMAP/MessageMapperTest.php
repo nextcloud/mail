@@ -745,6 +745,53 @@ class MessageMapperTest extends TestCase {
 		$this->assertEquals($bodyText, $data[$messageId]->getPreviewText());
 	}
 
+	/**
+	 * The body parts of every message in the batch must be retrieved with a
+	 * single combined fetch instead of one fetch per message (no N+1). For any
+	 * number of messages this means exactly two fetches: one for the
+	 * structures and one for the union of all body parts.
+	 *
+	 * @throws Horde_Imap_Client_Exception
+	 */
+	public function testGetBodyStructureDataBatchesBodyPartFetches(): void {
+		$uids = [100, 200, 300];
+		$structureResult = new Horde_Imap_Client_Fetch_Results();
+		$partsResult = new Horde_Imap_Client_Fetch_Results();
+		foreach ($uids as $uid) {
+			$part = new Horde_Mime_Part();
+			$header = $part->addMimeHeaders();
+			$header->addHeader('content-type', 'text/plain; charset=us-ascii');
+
+			$fetchData = new Horde_Imap_Client_Data_Fetch();
+			$fetchData->setStructure($part);
+			$fetchData->setHeaderText('0', "Content-Transfer-Encoding: base64\r\n");
+			$fetchData->setBodyPart('1', base64_encode('preview ' . $uid));
+			$fetchData->setUid($uid);
+
+			$structureResult[$uid] = $fetchData;
+			$partsResult[$uid] = $fetchData;
+		}
+
+		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
+		$imapClient->expects(self::exactly(2))
+			->method('fetch')
+			->willReturnOnConsecutiveCalls($structureResult, $partsResult);
+		$this->converter->method('convert')
+			->willReturnCallback(static fn (Horde_Mime_Part $part): string => $part->getContents());
+
+		$data = $this->mapper->getBodyStructureData(
+			$imapClient,
+			'INBOX',
+			$uids,
+			'alice@example.org',
+		);
+
+		$this->assertCount(3, $data);
+		$this->assertEquals('preview 100', $data[100]->getPreviewText());
+		$this->assertEquals('preview 200', $data[200]->getPreviewText());
+		$this->assertEquals('preview 300', $data[300]->getPreviewText());
+	}
+
 	public function isImipMessageProvider(): array {
 		return [
 			'google request' => ['request_google', true],
