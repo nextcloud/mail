@@ -3,14 +3,14 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 import { loadState } from '@nextcloud/initial-state'
-
+import logger from './logger.js'
 import { fixAccountId } from './service/AccountService.js'
 import { fetchAvailableLanguages } from './service/translationService.js'
 import useMainStore from './store/mainStore.js'
 import useOutboxStore from './store/outboxStore.js'
 
 export default function initAfterAppCreation() {
-	console.debug('Init after app creation')
+	logger.debug('Init after app creation')
 	const mainStore = useMainStore()
 
 	const preferences = loadState('mail', 'preferences', [])
@@ -22,6 +22,10 @@ export default function initAfterAppCreation() {
 	mainStore.savePreferenceMutation({
 		key: 'ncVersion',
 		value: loadState('mail', 'ncVersion'),
+	})
+	mainStore.savePreferenceMutation({
+		key: 'mailVersion',
+		value: loadState('mail', 'mailVersion'),
 	})
 
 	mainStore.savePreferenceMutation({
@@ -49,14 +53,18 @@ export default function initAfterAppCreation() {
 		key: 'search-priority-body',
 		value: preferences['search-priority-body'],
 	})
+	mainStore.savePreferenceMutation({
+		key: 'sort-favorites',
+		value: preferences['sort-favorites'],
+	})
 	const startMailboxId = preferences['start-mailbox-id']
 	mainStore.savePreferenceMutation({
 		key: 'start-mailbox-id',
 		value: startMailboxId ? parseInt(startMailboxId, 10) : null,
 	})
 	mainStore.savePreferenceMutation({
-		key: 'tag-classified-messages',
-		value: preferences['tag-classified-messages'],
+		key: 'index-context-chat',
+		value: preferences['index-context-chat'],
 	})
 	mainStore.savePreferenceMutation({
 		key: 'allow-new-accounts',
@@ -86,6 +94,10 @@ export default function initAfterAppCreation() {
 		key: 'smime-sign-aliases',
 		value: loadState('mail', 'smime-sign-aliases', []),
 	})
+	mainStore.savePreferenceMutation({
+		key: 'compact-mode',
+		value: preferences['compact-mode'],
+	})
 
 	mainStore.setQuickActions(loadState('mail', 'quick-actions', []))
 
@@ -99,9 +111,10 @@ export default function initAfterAppCreation() {
 	const googleOauthUrl = loadState('mail', 'google-oauth-url', null)
 	const microsoftOauthUrl = loadState('mail', 'microsoft-oauth-url', null)
 	const followUpFeatureAvailable = loadState('mail', 'llm_followup_available', false)
+	const contextChatFeatureAvailable = loadState('mail', 'context_chat_available', false)
 
 	accounts.map(fixAccountId).forEach((account) => {
-		const settings = accountSettings.find(settings => settings.accountId === account.id)
+		const settings = accountSettings.find((settings) => settings.accountId === account.id)
 		if (settings) {
 			delete settings.accountId
 			Object.entries(settings).forEach(([key, value]) => {
@@ -115,20 +128,21 @@ export default function initAfterAppCreation() {
 		mainStore.addAccountMutation({ ...account, ...settings })
 	})
 
-	tags.forEach(tag => mainStore.addTagMutation({ tag }))
-	internalAddressesList.forEach(internalAddress => mainStore.addInternalAddressMutation(internalAddress))
+	tags.forEach((tag) => mainStore.addTagMutation({ tag }))
+	internalAddressesList.forEach((internalAddress) => mainStore.addInternalAddressMutation(internalAddress))
 
 	mainStore.setScheduledSendingDisabledMutation(disableScheduledSend)
 	mainStore.setSnoozeDisabledMutation(disableSnooze)
 	mainStore.setGoogleOauthUrlMutation(googleOauthUrl)
 	mainStore.setMicrosoftOauthUrlMutation(microsoftOauthUrl)
 	mainStore.setFollowUpFeatureAvailableMutation(followUpFeatureAvailable)
+	mainStore.setContextChatFeatureAvailableMutation(contextChatFeatureAvailable)
 
 	const smimeCertificates = loadState('mail', 'smime-certificates', [])
 	mainStore.setSmimeCertificatesMutation(smimeCertificates)
 
 	const outboxStore = useOutboxStore()
-	outboxMessages.forEach(message => outboxStore.addMessageMutation({ message }))
+	outboxMessages.forEach((message) => outboxStore.addMessageMutation({ message }))
 
 	const llmTranslationEnabled = loadState('mail', 'llm_translation_enabled', false)
 	mainStore.isTranslationEnabled = llmTranslationEnabled

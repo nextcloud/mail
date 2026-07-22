@@ -51,7 +51,7 @@ class OutOfOfficeServiceTest extends TestCase {
 	}
 
 	public function testFollowSystemWithNotFollowingAccount(): void {
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(1);

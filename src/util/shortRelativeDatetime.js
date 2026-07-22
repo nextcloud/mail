@@ -26,7 +26,7 @@ export const shortDatetime = curry((ref, date) => {
 	return momentDate.format('MMM D, YYYY')
 })
 
-export const messageDateTime = (date) => {
+export function messageDateTime(date) {
 	return moment(date * 1000).format('lll')
 }
 

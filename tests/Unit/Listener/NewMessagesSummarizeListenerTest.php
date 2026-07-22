@@ -6,6 +6,7 @@ declare(strict_types=1);
  * SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 namespace Unit\Listener;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
@@ -59,7 +60,7 @@ class NewMessagesSummarizeListenerTest extends TestCase {
 	}
 
 	public function testLlmDisabled(): void {
-		$event = $this->createMock(NewMessagesSynchronized::class);
+		$event = $this->createStub(NewMessagesSynchronized::class);
 		$this->appConfig->expects($this->once())
 			->method('getAppValueBool')
 			->with('llm_processing', false)

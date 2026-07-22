@@ -42,12 +42,12 @@ class ActionStepMapper extends QBMapper {
 			);
 		return $this->findEntity($qb);
 	}
-	/**
-	 * @param mixed $actionId
-	 * @param string $owner Action's owner
-	 * @return ActionStep[]
-	 */
-	public function findAllStepsForOneAction(int $actionId, string $owner) {
+
+	public function findStepsByActionIds(array $actionIds, string $owner): array {
+		if (empty($actionIds)) {
+			return [];
+		}
+
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('step.*')
 			->from($this->getTableName(), 'step')
@@ -55,7 +55,7 @@ class ActionStepMapper extends QBMapper {
 			->join('actions', 'mail_accounts', 'accounts', $qb->expr()->eq('actions.account_id', 'accounts.id'))
 			->where(
 				$qb->expr()->andX(
-					$qb->expr()->eq('step.action_id', $qb->createNamedParameter($actionId, IQueryBuilder::PARAM_INT)),
+					$qb->expr()->in('step.action_id', $qb->createNamedParameter($actionIds, IQueryBuilder::PARAM_INT_ARRAY)),
 					$qb->expr()->eq('accounts.user_id', $qb->createNamedParameter($owner))
 				)
 			)

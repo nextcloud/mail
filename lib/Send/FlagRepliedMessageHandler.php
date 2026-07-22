@@ -5,6 +5,7 @@ declare(strict_types=1);
  * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 namespace OCA\Mail\Send;
 
 use Horde_Imap_Client;
@@ -67,7 +68,7 @@ class FlagRepliedMessageHandler extends AHandler {
 				$message->setFlagAnswered(true);
 				$this->dbMessageMapper->update($message);
 			} catch (DoesNotExistException|Horde_Imap_Client_Exception $e) {
-				$this->logger->warning('Could not flag replied message: ' . $e, [
+				$this->logger->warning('Could not flag replied message: ' . $e->getMessage(), [
 					'exception' => $e,
 				]);
 			}

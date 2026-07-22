@@ -3,18 +3,17 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import { createPinia, setActivePinia } from 'pinia'
 import { curry, range, reverse } from 'ramda'
-
+import * as AccountService from '../../../service/AccountService.js'
 import * as MailboxService from '../../../service/MailboxService.js'
 import * as MessageService from '../../../service/MessageService.js'
 import * as NotificationService from '../../../service/NotificationService.js'
-import { UNIFIED_INBOX_ID, PAGE_SIZE } from '../../../store/constants.js'
+import { PAGE_SIZE, UNIFIED_INBOX_ID } from '../../../store/constants.js'
+import useMainStore from '../../../store/mainStore.js'
 import { normalizedEnvelopeListId } from '../../../util/normalization.js'
 
-import { createPinia, setActivePinia } from 'pinia'
-
-import useMainStore from '../../../store/mainStore.js'
-
+vi.mock('../../../service/AccountService.js')
 vi.mock('../../../service/MailboxService.js')
 vi.mock('../../../service/MessageService.js')
 vi.mock('../../../service/NotificationService.js')
@@ -129,7 +128,7 @@ describe('Vuex store actions', () => {
 		expect(MailboxService.create).toHaveBeenCalledWith(13, 'INBOX.Archive.2020')
 	})
 
-	it('combines unified inbox even if no inboxes are present', async() => {
+	it('combines unified inbox even if no inboxes are present', async () => {
 		const envelopes = await store.fetchEnvelopes({
 			mailboxId: UNIFIED_INBOX_ID,
 		})
@@ -137,7 +136,7 @@ describe('Vuex store actions', () => {
 		expect(envelopes).toEqual([])
 	})
 
-	it('creates a unified page from one mailbox', async() => {
+	it('creates a unified page from one mailbox', async () => {
 		const account = {
 			id: 13,
 			personalNamespace: 'INBOX.',
@@ -198,7 +197,7 @@ describe('Vuex store actions', () => {
 		})
 	})
 
-	it('fetches the next individual page', async() => {
+	it('fetches the next individual page', async () => {
 		const msgs1 = reverse(range(30, 40))
 		const page1 = reverse(range(10, 30))
 
@@ -207,6 +206,7 @@ describe('Vuex store actions', () => {
 		}
 
 		store.preferences['sort-order'] = 'newest'
+		store.preferences['layout-message-view'] = 'threaded'
 
 		store.addAccountMutation(account13)
 		store.addMailboxMutation({
@@ -248,25 +248,21 @@ describe('Vuex store actions', () => {
 
 		expect(MessageService.fetchEnvelopes).toHaveBeenCalledTimes(1)
 		expect(MessageService.fetchEnvelopes)
-			.toHaveBeenNthCalledWith(1, 13, 11, undefined, 300000, PAGE_SIZE, 'newest')
-		expect(store.mailboxes[UNIFIED_INBOX_ID].envelopeLists[''].toSorted()).toEqual(
-			[
-				// Initial envelopes
-				...msgs1.map(mockEnvelope(11)),
+			.toHaveBeenNthCalledWith(1, 13, 11, undefined, 300000, PAGE_SIZE, 'newest', 'threaded')
+		expect(store.mailboxes[UNIFIED_INBOX_ID].envelopeLists[''].toSorted()).toEqual([
+			// Initial envelopes
+			...msgs1.map(mockEnvelope(11)),
 
-				// Fetched page for mailbox 11
-				...page1.map(mockEnvelope(11)),
-			].map(e => e.databaseId).sort(),
-		)
-		expect(store.mailboxes[11].envelopeLists[''].toSorted()).toEqual(
-			[
-				// Initial envelopes
-				...msgs1.map(mockEnvelope(11)),
+			// Fetched page for mailbox 11
+			...page1.map(mockEnvelope(11)),
+		].map((e) => e.databaseId).sort())
+		expect(store.mailboxes[11].envelopeLists[''].toSorted()).toEqual([
+			// Initial envelopes
+			...msgs1.map(mockEnvelope(11)),
 
-				// Fetched page for mailbox 11
-				...page1.map(mockEnvelope(11)),
-			].map(e => e.databaseId).sort(),
-		)
+			// Fetched page for mailbox 11
+			...page1.map(mockEnvelope(11)),
+		].map((e) => e.databaseId).sort())
 	})
 
 	it('builds the next unified page with local data', async () => {
@@ -320,15 +316,13 @@ describe('Vuex store actions', () => {
 		})
 
 		expect(MessageService.fetchEnvelopes).not.toHaveBeenCalled()
-		expect(store.mailboxes[UNIFIED_INBOX_ID].envelopeLists[''].toSorted()).toEqual(
-			[
-				// Initial envelopes
-				...page1.map(mockEnvelope(11)),
+		expect(store.mailboxes[UNIFIED_INBOX_ID].envelopeLists[''].toSorted()).toEqual([
+			// Initial envelopes
+			...page1.map(mockEnvelope(11)),
 
-				// Envelopes loaded from local state
-				...range(30, 50).map(mockEnvelope(11)),
-			].map(e => e.databaseId).sort(),
-		)
+			// Envelopes loaded from local state
+			...range(30, 50).map(mockEnvelope(11)),
+		].map((e) => e.databaseId).sort())
 	})
 
 	it('builds the next unified page with partial fetch', async () => {
@@ -344,6 +338,7 @@ describe('Vuex store actions', () => {
 		}
 
 		store.preferences['sort-order'] = 'newest'
+		store.preferences['layout-message-view'] = 'threaded'
 
 		store.addAccountMutation(account13)
 		store.addAccountMutation(account26)
@@ -389,23 +384,21 @@ describe('Vuex store actions', () => {
 		})
 
 		// Mock fetching next pages
-		MessageService.fetchEnvelopes.mockImplementation(
-			async (
-				accountId,
-				mailboxId,
-				query,
-				cursor,
-				limit,
-				sortOrder,
-			) => {
-				if (accountId !== 13 || mailboxId !== 11) {
-					return []
-				}
+		MessageService.fetchEnvelopes.mockImplementation(async (
+			accountId,
+			mailboxId,
+			query,
+			cursor,
+			limit,
+			sortOrder,
+		) => {
+			if (accountId !== 13 || mailboxId !== 11) {
+				return []
+			}
 
-				expect(sortOrder).toBe('newest')
-				return page2.map(mockEnvelope(11)).filter(e => e.dateInt < cursor).slice(0, limit)
-			},
-		)
+			expect(sortOrder).toBe('newest')
+			return page2.map(mockEnvelope(11)).filter((e) => e.dateInt < cursor).slice(0, limit)
+		})
 
 		await store.fetchNextEnvelopePage({
 			mailboxId: UNIFIED_INBOX_ID,
@@ -414,30 +407,26 @@ describe('Vuex store actions', () => {
 
 		expect(MessageService.fetchEnvelopes).toHaveBeenCalledTimes(2)
 		expect(MessageService.fetchEnvelopes)
-			.toHaveBeenNthCalledWith(1, 13, 11, undefined, 300000, PAGE_SIZE, 'newest')
+			.toHaveBeenNthCalledWith(1, 13, 11, undefined, 300000, PAGE_SIZE, 'newest', 'threaded')
 		expect(MessageService.fetchEnvelopes)
-			.toHaveBeenNthCalledWith(2, 26, 21, undefined, 600000, PAGE_SIZE, 'newest')
-		expect(store.mailboxes[UNIFIED_INBOX_ID].envelopeLists[''].toSorted()).toEqual(
-			[
-				// Initial envelopes
-				...page1.map(mockEnvelope(11)),
-				...msgs2.map(mockEnvelope(21)),
+			.toHaveBeenNthCalledWith(2, 26, 21, undefined, 600000, PAGE_SIZE, 'newest', 'threaded')
+		expect(store.mailboxes[UNIFIED_INBOX_ID].envelopeLists[''].toSorted()).toEqual([
+			// Initial envelopes
+			...page1.map(mockEnvelope(11)),
+			...msgs2.map(mockEnvelope(21)),
 
-				// Fetched page for mailbox 11
-				...page2.map(mockEnvelope(11)),
-			].map(e => e.databaseId).sort(),
-		)
-		expect(store.mailboxes[11].envelopeLists[''].toSorted()).toEqual(
-			[
-				// Initial envelopes
-				...page1.map(mockEnvelope(11)),
+			// Fetched page for mailbox 11
+			...page2.map(mockEnvelope(11)),
+		].map((e) => e.databaseId).sort())
+		expect(store.mailboxes[11].envelopeLists[''].toSorted()).toEqual([
+			// Initial envelopes
+			...page1.map(mockEnvelope(11)),
 
-				// Fetched page for mailbox 11
-				...page2.map(mockEnvelope(11)),
-			].map(e => e.databaseId).sort(),
-		)
+			// Fetched page for mailbox 11
+			...page2.map(mockEnvelope(11)),
+		].map((e) => e.databaseId).sort())
 		expect(store.mailboxes[21].envelopeLists[''].toSorted())
-			.toEqual(msgs2.map(mockEnvelope(21)).map(e => e.databaseId).toSorted())
+			.toEqual(msgs2.map(mockEnvelope(21)).map((e) => e.databaseId).toSorted())
 	})
 
 	describe('inbox sync', () => {
@@ -647,7 +636,7 @@ describe('Vuex store actions', () => {
 		expect(removeEnvelope).toBeFalsy()
 	})
 
-	it('includes a cache buster if requested', async() => {
+	it('includes a cache buster if requested', async () => {
 		const account = {
 			id: 13,
 			personalNamespace: 'INBOX.',
@@ -686,5 +675,171 @@ describe('Vuex store actions', () => {
 			undefined, // layout
 			'abcdef123', // cache buster
 		)
+	})
+
+	describe('prepareAttachments', () => {
+		const original = {
+			mailboxId: 1,
+			attachments: [{ id: 'att1', messageId: 42, fileName: 'doc.pdf' }],
+			inlineAttachments: [{ id: 'img1', messageId: 42, cid: 'abc@x', fileName: 'logo.png' }],
+		}
+
+		it('reply includes only inline attachments', () => {
+			const result = store.prepareAttachments(original)
+
+			expect(result).toHaveLength(1)
+			expect(result[0]).toMatchObject({
+				id: 'img1',
+				type: 'message-attachment-inline',
+				mailboxId: 1,
+				uid: 42,
+			})
+		})
+
+		it('forward includes regular and inline attachments', () => {
+			const result = store.prepareAttachments(original, true)
+
+			expect(result).toHaveLength(2)
+			expect(result[0]).toMatchObject({
+				id: 'att1',
+				type: 'message-attachment',
+				mailboxId: 1,
+				uid: 42,
+			})
+			expect(result[1]).toMatchObject({
+				id: 'img1',
+				type: 'message-attachment-inline',
+				mailboxId: 1,
+				uid: 42,
+			})
+		})
+
+		it('returns empty array when message has no attachments', () => {
+			expect(store.prepareAttachments({})).toEqual([])
+		})
+	})
+
+	describe('updateAccount', () => {
+		it('clears the error flag and syncs mailboxes after a successful settings update', async () => {
+			const account = {
+				id: 7,
+				personalNamespace: '',
+				mailboxes: [],
+				error: true,
+			}
+			store.addAccountMutation(account)
+
+			const updatedAccount = { id: 7, personalNamespace: '', mailboxes: [] }
+			AccountService.update.mockResolvedValue(updatedAccount)
+			MailboxService.fetchAll.mockResolvedValue([])
+
+			await store.updateAccount({ accountId: 7 })
+
+			expect(store.accountsUnmapped[7].error).toBe(false)
+			expect(MailboxService.fetchAll).toHaveBeenCalledWith(7, true)
+		})
+	})
+
+	describe('startComposerSession reply-to resolution', () => {
+		const account = {
+			id: 1,
+			emailAddress: 'me@example.com',
+			personalNamespace: '',
+			mailboxes: [],
+			name: 'Me',
+		}
+		const from = [{ email: 'sender@example.com', label: 'Sender' }]
+		const to = [{ email: 'me@example.com', label: 'Me' }]
+		const replyTo = [{ email: 'personal-replyto@example.com', label: 'Reply Here' }]
+
+		const makeEnvelope = (overrides = {}) => ({
+			databaseId: 42,
+			accountId: 1,
+			from,
+			to,
+			replyTo: undefined,
+			subject: 'Test subject',
+			...overrides,
+		})
+
+		const makeOriginal = (overrides = {}) => ({
+			databaseId: 42,
+			hasHtmlBody: false,
+			body: 'Message body',
+			replyTo: undefined,
+			unsubscribeUrl: null,
+			unsubscribeMailto: null,
+			...overrides,
+		})
+
+		beforeEach(() => {
+			store.addAccountMutation(account)
+			vi.spyOn(store, 'startComposerSessionMutation')
+		})
+
+		it('uses From for mailing list emails even when Reply-To is set', async () => {
+			MessageService.fetchMessage.mockResolvedValue(makeOriginal({
+				replyTo,
+				unsubscribeUrl: 'https://list.example.com/unsubscribe',
+			}))
+
+			await store.startComposerSession({
+				reply: {
+					mode: 'reply',
+					data: makeEnvelope({ replyTo }),
+				},
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({ to: from }),
+			}))
+		})
+
+		it('honours Reply-To for regular emails with a personal Reply-To', async () => {
+			MessageService.fetchMessage.mockResolvedValue(makeOriginal({ replyTo }))
+
+			await store.startComposerSession({
+				reply: {
+					mode: 'reply',
+					data: makeEnvelope({ replyTo }),
+				},
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({ to: replyTo }),
+			}))
+		})
+
+		it('uses To for own sent messages (isOwnMessage follow-up)', async () => {
+			const ownFrom = [{ email: 'me@example.com', label: 'Me' }]
+			MessageService.fetchMessage.mockResolvedValue(makeOriginal())
+
+			await store.startComposerSession({
+				reply: {
+					mode: 'reply',
+					data: makeEnvelope({ from: ownFrom }),
+				},
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({ to }),
+			}))
+		})
+
+		it('uses To when followUp flag is set', async () => {
+			MessageService.fetchMessage.mockResolvedValue(makeOriginal())
+
+			await store.startComposerSession({
+				reply: {
+					mode: 'reply',
+					data: makeEnvelope(),
+					followUp: true,
+				},
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({ to }),
+			}))
+		})
 	})
 })

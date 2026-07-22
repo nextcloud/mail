@@ -13,20 +13,15 @@ use OCA\Mail\Account;
 use OCP\EventDispatcher\Event;
 
 class BeforeMessageDeletedEvent extends Event {
-	/** @var Account */
-	private $account;
+	private string $folderId;
 
-	/** @var string */
-	private $folderId;
-
-	/** @var int */
-	private $messageId;
-
-	public function __construct(Account $account, string $mailbox, int $messageId) {
+	public function __construct(
+		private Account $account,
+		string $mailbox,
+		private int $messageId,
+	) {
 		parent::__construct();
-		$this->account = $account;
 		$this->folderId = $mailbox;
-		$this->messageId = $messageId;
 	}
 
 	public function getAccount(): Account {

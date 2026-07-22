@@ -7,7 +7,8 @@
 	<div v-if="attachments.length > 0" class="mail-message-attachments" :class="hasNextLine ? 'has-next-line' : ''">
 		<div class="mail-message-attachments--wrapper" :class="(hasNextLine === true && isToggled === true) ? 'hide' : ''">
 			<div class="attachments">
-				<MessageAttachment v-for="(attachment, idx) in attachments"
+				<MessageAttachment
+					v-for="(attachment, idx) in attachments"
 					:id="attachment.id"
 					ref="attachments"
 					:key="attachment.id"
@@ -22,38 +23,59 @@
 					@open="showViewer(fileInfos[idx])" />
 			</div>
 		</div>
-		<div v-if="hasNextLine"
-			class="show-more-attachments"
+
+		<NcButton
+			v-if="hasNextLine"
+			variant="tertiary"
+			size="small"
+			:disabled="savingToCloud"
+			class="attachment-button"
 			@click="isToggled = !isToggled">
-			<ChevronDown v-if="isToggled" :size="20" />
-			<ChevronUp v-if="!isToggled" :size="20" />
+			<template #icon>
+				<ChevronDown v-if="isToggled" />
+				<ChevronUp v-if="!isToggled" />
+			</template>
 			<span v-if="isToggled">
 				{{ n('mail', 'View {count} more attachment', 'View {count} more attachments', (attachments.length - visible), { count: attachments.length - visible }) }}
 			</span>
 			<span v-else>
 				{{ t('mail', 'View fewer attachments') }}
 			</span>
-		</div>
+		</NcButton>
+
 		<p v-if="moreThanOne" class="attachments-button-wrapper">
-			<FilePicker v-if="isFilePickerOpen"
+			<FilePicker
+				v-if="isFilePickerOpen"
 				:name="t('mail', 'Choose a folder to store the attachments in')"
 				:buttons="saveAttachementButtons"
 				:allow-pick-directory="true"
 				:multiselect="false"
 				:mimetype-filter="['httpd/unix-directory']"
-				@close="()=>isFilePickerOpen = false" />
-			<span class="attachment-link"
+				@close="() => isFilePickerOpen = false" />
+
+			<NcButton
+				variant="tertiary"
+				size="small"
 				:disabled="savingToCloud"
+				class="attachment-button"
 				@click="() => isFilePickerOpen = true">
-				<CloudDownload v-if="!savingToCloud" :size="18" />
-				<IconLoading v-else class="spin" :size="18" />
+				<template #icon>
+					<CloudDownload v-if="!savingToCloud" />
+					<IconLoading v-else class="spin" />
+				</template>
 				{{ t('mail', 'Save all to Files') }}
-			</span>
-			<span class="attachment-link"
+			</NcButton>
+
+			<NcButton
+				variant="tertiary"
+				size="small"
+				class="attachment-button"
 				@click="downloadZip">
-				<Download :size="18" />
+				<template #icon>
+					<Download />
+				</template>
 				{{ t('mail', 'Download Zip') }}
-			</span>
+			</NcButton>
 		</p>
 	</div>
 </template>
@@ -61,22 +83,21 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
-import { basename } from '@nextcloud/paths'
 import { generateUrl } from '@nextcloud/router'
-import { NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcLoadingIcon as IconLoading, NcButton } from '@nextcloud/vue'
 import ChevronDown from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
 import CloudDownload from 'vue-material-design-icons/CloudDownloadOutline.vue'
 import Download from 'vue-material-design-icons/TrayArrowDown.vue'
-
-import Logger from '../logger.js'
-
 import MessageAttachment from './MessageAttachment.vue'
+import Logger from '../logger.js'
+import AttachmentMixin from '../mixins/AttachmentMixin.js'
 import { saveAttachmentsToFiles } from '../service/AttachmentService.js'
 
 export default {
 	name: 'MessageAttachments',
 	components: {
+		NcButton,
 		MessageAttachment,
 		IconLoading,
 		Download,
@@ -85,16 +106,20 @@ export default {
 		ChevronUp,
 		FilePicker,
 	},
+
+	mixins: [AttachmentMixin],
 	props: {
 		envelope: {
 			required: true,
 			type: Object,
 		},
+
 		attachments: {
 			type: Array,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			visible: 0,
@@ -110,37 +135,24 @@ export default {
 					type: 'primary',
 				},
 			],
+
 			isFilePickerOpen: false,
 		}
 	},
+
 	computed: {
-		fileInfos() {
-			return this.attachments.map(attachment => ({
-				filename: attachment.downloadUrl,
-				source: attachment.downloadUrl,
-				basename: basename(attachment.downloadUrl),
-				mime: attachment.mime,
-				etag: 'fixme',
-				hasPreview: false,
-				fileid: parseInt(attachment.id, 10),
-			}))
-		},
-		previewableFileInfos() {
-			return this.fileInfos.filter(fileInfo => (fileInfo.mime.startsWith('image/')
-					|| fileInfo.mime.startsWith('video/')
-					|| fileInfo.mime.startsWith('audio/')
-					|| fileInfo.mime === 'application/pdf')
-				&& OCA.Viewer.mimetypes.includes(fileInfo.mime))
-		},
+
 		moreThanOne() {
 			return this.attachments.length > 1
 		},
+
 		zipUrl() {
 			return generateUrl('/apps/mail/api/messages/{id}/attachments', {
 				id: this.envelope.databaseId,
 			})
 		},
 	},
+
 	mounted() {
 		let prevTop = null
 		this.visible = 0
@@ -160,12 +172,10 @@ export default {
 				})
 			}
 		})
-
 	},
+
 	methods: {
-		canPreview(fileInfo) {
-			return this.previewableFileInfos.includes(fileInfo)
-		},
+
 		saveAll(dest) {
 			const path = dest[0].path
 			this.savingToCloud = true
@@ -181,26 +191,17 @@ export default {
 				this.savingToCloud = false
 			})
 		},
+
 		downloadZip() {
 			window.location = this.zipUrl
-		},
-		showViewer(fileInfo) {
-			if (!this.canPreview(fileInfo)) {
-				return
-			}
-
-			if (this.previewableFileInfos.includes(fileInfo)) {
-				OCA.Viewer.open({
-					fileInfo,
-					list: this.previewableFileInfos,
-				})
-			}
 		},
 	},
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@use '../../css/variables.scss';
+
 .attachments {
 	width: 100%;
     box-sizing: border-box;
@@ -218,20 +219,8 @@ export default {
 	align-items: center;
 }
 
-.show-more-attachments {
-	display: flex;
-    align-items: center;
-	cursor: pointer;
-	padding: 2px 0;
+.attachment-button {
 	color: var(--color-text-lighter);
-
-	span {
-		cursor: pointer;
-	}
-
-	&:hover {
-		color: var(--color-main-text);
-	}
 }
 
 @keyframes spin {
@@ -250,21 +239,6 @@ export default {
   animation: spin 1s linear infinite;
 }
 
-.attachment-link {
-	cursor: pointer;
-	display:flex;
-	align-items: center;
-	color: var(--color-text-lighter);
-
-	&:hover {
-		color: var(--color-main-text);
-	}
-
-	span {
-		margin: 0 4px 0 16px;
-	}
-}
-
 .oc-dialog {
 	z-index: 10000000;
 }
@@ -272,24 +246,31 @@ export default {
 .mail-message-attachments {
 	display:flex;
 	flex-wrap: wrap;
-	padding: 10px 6px 10px 46px;
+	padding: 10px 12px 10px 46px;
 	margin-top: 4px;
 	margin-bottom: 0;
-	position:sticky;
-	bottom:0;
-	background: linear-gradient(0deg, var(--color-main-background), var(--color-main-background) 90%, rgba(255, 255, 255, 0));
+	position: sticky;
+	bottom: -2px;
+	background: var(--color-main-background);
+
+	@media (max-width: #{variables.$breakpoint-mobile}) {
+        padding: 10px 12px 10px 12px;
+		flex-direction: column;
+    }
 }
 
 .mail-message-attachments--wrapper {
 	display:flex;
 	width:100%;
 	height:auto;
-	overflow: hidden;
-	max-height: none;
+	overflow-y: auto;
+	overflow-x: hidden;
+	max-height: 60vh;
 }
 
 .mail-message-attachments--wrapper.hide {
 	display:flex;
+	overflow: clip;
 	max-height: 70px;
 }
 </style>

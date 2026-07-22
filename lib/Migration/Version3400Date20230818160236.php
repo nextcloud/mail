@@ -15,6 +15,9 @@ use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
+/**
+ * @psalm-api
+ */
 class Version3400Date20230818160236 extends SimpleMigrationStep {
 
 	/**
@@ -31,7 +34,6 @@ class Version3400Date20230818160236 extends SimpleMigrationStep {
 		if (!$snoozeTable->hasColumn('src_mailbox_id')) {
 			$snoozeTable->addColumn('src_mailbox_id', Types::INTEGER, [
 				'notnull' => false,
-				'length' => 20,
 			]);
 		}
 

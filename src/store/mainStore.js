@@ -4,7 +4,6 @@
  */
 
 import { defineStore } from 'pinia'
-
 import {
 	FOLLOW_UP_MAILBOX_ID,
 	PRIORITY_INBOX_ID,
@@ -100,6 +99,7 @@ export default defineStore('main', {
 			smimeCertificates: [],
 			hasFetchedInitialEnvelopes: false,
 			followUpFeatureAvailable: false,
+			contextChatFeatureAvailable: false,
 			internalAddress: [],
 			hasCurrentUserPrincipalAndCollections: false,
 			showAccountSettings: null,

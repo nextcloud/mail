@@ -20,16 +20,12 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class TrustedSendersController extends Controller {
-	private ?string $uid;
-	private ITrustedSenderService $trustedSenderService;
-
-	public function __construct(IRequest $request,
-		?string $UserId,
-		ITrustedSenderService $trustedSenderService) {
+	public function __construct(
+		IRequest $request,
+		private ?string $userId,
+		private ITrustedSenderService $trustedSenderService,
+	) {
 		parent::__construct(Application::APP_ID, $request);
-
-		$this->uid = $UserId;
-		$this->trustedSenderService = $trustedSenderService;
 	}
 
 	/**
@@ -41,8 +37,12 @@ class TrustedSendersController extends Controller {
 	 */
 	#[TrapError]
 	public function setTrusted(string $email, string $type): JsonResponse {
+		if ($this->userId === null) {
+			return JsonResponse::fail([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		$this->trustedSenderService->trust(
-			$this->uid,
+			$this->userId,
 			$email,
 			$type
 		);
@@ -59,8 +59,12 @@ class TrustedSendersController extends Controller {
 	 */
 	#[TrapError]
 	public function removeTrust(string $email, string $type): JsonResponse {
+		if ($this->userId === null) {
+			return JsonResponse::fail([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		$this->trustedSenderService->trust(
-			$this->uid,
+			$this->userId,
 			$email,
 			$type,
 			false
@@ -75,8 +79,12 @@ class TrustedSendersController extends Controller {
 	 */
 	#[TrapError]
 	public function list(): JsonResponse {
+		if ($this->userId === null) {
+			return JsonResponse::fail([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		$list = $this->trustedSenderService->getTrusted(
-			$this->uid
+			$this->userId
 		);
 
 		return JsonResponse::success($list);

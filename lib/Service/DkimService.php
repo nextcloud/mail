@@ -23,27 +23,16 @@ class DkimService implements IDkimService {
 	private const CACHE_PREFIX = 'mail_dkim';
 	private const CACHE_TTL = 7 * 24 * 3600;
 
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
 	/** @var ICache */
 	private $cache;
 
-	private IDkimValidator $dkimValidator;
-
 	public function __construct(
-		IMAPClientFactory $clientFactory,
-		MessageMapper $messageMapper,
+		private IMAPClientFactory $clientFactory,
+		private MessageMapper $messageMapper,
 		ICacheFactory $cacheFactory,
-		IDkimValidator $dkimValidator,
+		private IDkimValidator $dkimValidator,
 	) {
-		$this->clientFactory = $clientFactory;
-		$this->messageMapper = $messageMapper;
 		$this->cache = $cacheFactory->createLocal(self::CACHE_PREFIX);
-		$this->dkimValidator = $dkimValidator;
 	}
 
 	#[\Override]
@@ -64,7 +53,7 @@ class DkimService implements IDkimService {
 			);
 
 			if ($fullText === null) {
-				throw new ServiceException('Could not fetch message source for uid ' . $id);
+				throw new ServiceException("Could not fetch message source for uid $id");
 			}
 		} finally {
 			$client->logout();
@@ -84,6 +73,7 @@ class DkimService implements IDkimService {
 	}
 
 	private function buildCacheKey(Account $account, Mailbox $mailbox, int $id): string {
-		return $account->getId() . '_' . $mailbox->getName() . '_' . $id;
+		$accountId = $account->getId();
+		return "{$accountId}_{$mailbox->getName()}_$id";
 	}
 }

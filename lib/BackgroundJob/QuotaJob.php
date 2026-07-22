@@ -21,26 +21,22 @@ use function sprintf;
 
 class QuotaJob extends TimedJob {
 	private IUserManager $userManager;
-	private AccountService $accountService;
-	private IMailManager $mailManager;
-	private LoggerInterface $logger;
 	private IJobList $jobList;
 	private IManager $notificationManager;
 
-	public function __construct(ITimeFactory $time,
+	public function __construct(
+		ITimeFactory $time,
 		IUserManager $userManager,
-		AccountService $accountService,
-		IMailManager $mailManager,
+		private AccountService $accountService,
+		private IMailManager $mailManager,
 		IManager $notificationManager,
-		LoggerInterface $logger,
-		IJobList $jobList) {
+		private LoggerInterface $logger,
+		IJobList $jobList,
+	) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;
-		$this->accountService = $accountService;
-		$this->logger = $logger;
 		$this->jobList = $jobList;
-		$this->mailManager = $mailManager;
 
 		$this->setInterval(60 * 60 * 24 * 7);
 		$this->setTimeSensitivity(self::TIME_INSENSITIVE);
@@ -56,7 +52,7 @@ class QuotaJob extends TimedJob {
 		try {
 			$account = $this->accountService->findById($accountId);
 		} catch (DoesNotExistException $e) {
-			$this->logger->debug('Could not find account <' . $accountId . '> removing from jobs');
+			$this->logger->debug("Could not find account <{$accountId}> removing from jobs");
 			$this->jobList->remove(self::class, $argument);
 			return;
 		}
@@ -78,17 +74,22 @@ class QuotaJob extends TimedJob {
 
 		$quota = $this->mailManager->getQuota($account);
 		if ($quota === null) {
-			$this->logger->debug('Could not get quota information for account <' . $account->getEmail() . '>', ['app' => 'mail']);
+			$this->logger->debug("Could not get quota information for account <{$account->getEmail()}>", ['app' => 'mail']);
 			return;
 		}
-		$previous = $account->getMailAccount()->getQuotaPercentage();
-		$account->calculateAndSetQuotaPercentage($quota);
-		$this->accountService->update($account->getMailAccount());
-		$current = $account->getQuotaPercentage();
+		$mailAccount = $account->getMailAccount();
+		$previous = $mailAccount->getQuotaPercentage();
+		if ($quota->getLimit() === 0) {
+			$mailAccount->setQuotaPercentage(0);
+		} else {
+			$mailAccount->setQuotaPercentage((int)round((float)$quota->getUsage() / (float)$quota->getLimit() * 100.0));
+		}
+		$this->accountService->update($mailAccount);
+		$current = $mailAccount->getQuotaPercentage();
 
 		// Only notify if we've reached the rising edge
 		if ($previous < $current && $previous <= 90 && $current > 90) {
-			$this->logger->debug('New quota information for <' . $account->getEmail() . '> - previous: ' . $previous . ', current: ' . $current);
+			$this->logger->debug("New quota information for <{$account->getEmail()}> - previous: {$previous}, current: {$current}");
 			$time = $this->time->getDateTime('now');
 			$notification = $this->notificationManager->createNotification();
 			$notification

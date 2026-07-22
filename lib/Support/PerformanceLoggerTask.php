@@ -18,14 +18,8 @@ use function round;
 use function sprintf;
 
 class PerformanceLoggerTask {
-	/** @var string */
-	private $task;
-
 	/** @var ITimeFactory */
 	private $timeFactory;
-
-	/** @var LoggerInterface */
-	private $logger;
 
 	/** @var int */
 	private $start;
@@ -33,12 +27,12 @@ class PerformanceLoggerTask {
 	/** @var int */
 	private $rel;
 
-	public function __construct(string $task,
+	public function __construct(
+		private string $task,
 		ITimeFactory $timeFactory,
-		LoggerInterface $logger) {
-		$this->task = $task;
+		private LoggerInterface $logger,
+	) {
 		$this->timeFactory = $timeFactory;
-		$this->logger = $logger;
 
 		$this->start = $this->rel = $timeFactory->getTime();
 	}
@@ -52,8 +46,8 @@ class PerformanceLoggerTask {
 			$this->logger->debug(
 				sprintf(
 					$message . ' %d/%dMB memory used',
-					round(memory_get_usage() / 1024 / 1024),
-					round(memory_get_peak_usage() / 1024 / 1024)
+					round(memory_get_usage() / 1024.0 / 1024.0),
+					round(memory_get_peak_usage() / 1024.0 / 1024.0)
 				)
 			);
 		} else {

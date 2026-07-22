@@ -14,11 +14,9 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\TrustedSenderMapper;
 
 class TrustedSenderService implements ITrustedSenderService {
-	/** @var TrustedSenderMapper */
-	private $mapper;
-
-	public function __construct(TrustedSenderMapper $mapper) {
-		$this->mapper = $mapper;
+	public function __construct(
+		private TrustedSenderMapper $mapper,
+	) {
 	}
 
 	#[\Override]

@@ -3,11 +3,9 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<li class="composer-attachment" :class="{'composer-attachment--with-error' : attachment.error }">
+	<li class="composer-attachment" :class="{ 'composer-attachment--with-error': attachment.error }">
 		<div class="attachment-preview">
-			<img v-if="attachment.imageBlobURL !== false" :src="attachment.imageBlobURL" class="attachment-preview-image">
-			<img v-else-if="attachment.hasPreview" :src="previewURL" class="attachment-preview-image">
-			<img v-else :src="getIcon" class="attachment-preview-image">
+			<img :src="previewSrc" class="attachment-preview-image">
 			<span v-if="attachment.type === 'cloud'" class="cloud-attachment-icon">
 				<Cloud :size="20" />
 			</span>
@@ -26,7 +24,9 @@
 				{{ attachment.sizeString }}
 			</span>
 		</div>
-		<button @click="onDelete(attachment)">
+		<button
+			:aria-label="t('mail', 'Remove attachment {fileName}', { fileName: attachment.displayName ?? attachment.fileName })"
+			@click="onDelete(attachment)">
 			<Close :size="20" />
 		</button>
 	</li>
@@ -45,16 +45,19 @@ export default {
 		Cloud,
 		EmailArrowRightIcon,
 	},
+
 	props: {
 		attachment: {
 			type: Object,
 			required: true,
 		},
+
 		uploading: {
 			type: Boolean,
 			default: false,
 		},
 	},
+
 	data() {
 		return {
 			progress: 0,
@@ -62,20 +65,26 @@ export default {
 			finished: false,
 		}
 	},
+
 	computed: {
-		previewURL() {
-			if (this.attachment.hasPreview && this.attachment.id > 0) {
+		previewSrc() {
+			if (this.attachment.imageBlobURL) {
+				return this.attachment.imageBlobURL
+			}
+
+			// attachment from cloud
+			if (this.attachment.type === 'cloud' && this.attachment.hasPreview && this.attachment.id > 0) {
 				return generateUrl(`/core/preview?fileId=${this.attachment.id}&x=100&y=100&a=0`)
 			}
-			return ''
-		},
-		getIcon() {
+
 			return OC.MimeType.getIconUrl(this.attachment.fileType)
 		},
+
 		extension() {
 			return this.attachment.fileName.split('.').pop()
 		},
 	},
+
 	methods: {
 		onDelete(attachment) {
 			this.$emit('on-delete-attachment', attachment)

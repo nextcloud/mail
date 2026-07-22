@@ -16,33 +16,26 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Util\ServerVersion;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Calendar\IManager;
 use Psr\Log\LoggerInterface;
+use Throwable;
 use function array_filter;
 
 class IMipService {
-	private AccountService $accountService;
 	private IManager $calendarManager;
-	private LoggerInterface $logger;
-	private MailboxMapper $mailboxMapper;
-	private MailManager $mailManager;
-	private MessageMapper $messageMapper;
 
 	public function __construct(
-		AccountService $accountService,
+		private AccountService $accountService,
 		IManager $manager,
-		LoggerInterface $logger,
-		MailboxMapper $mailboxMapper,
-		MailManager $mailManager,
-		MessageMapper $messageMapper,
+		private LoggerInterface $logger,
+		private MailboxMapper $mailboxMapper,
+		private MailManager $mailManager,
+		private MessageMapper $messageMapper,
+		private ServerVersion $serverVersion,
 	) {
-		$this->accountService = $accountService;
 		$this->calendarManager = $manager;
-		$this->logger = $logger;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->mailManager = $mailManager;
-		$this->messageMapper = $messageMapper;
 	}
 
 	public function process(): void {
@@ -113,39 +106,69 @@ class IMipService {
 				continue;
 			}
 
-			$principalUri = 'principals/users/' . $account->getUserId();
+			$userId = $account->getUserId();
 			$recipient = $account->getEmail();
+			$imipCreate = $account->getMailAccount()->getImipCreate();
+			$systemVersion = $this->serverVersion->getMajorVersion();
 
 			foreach ($filteredMessages as $message) {
 				/** @var IMAPMessage $imapMessage */
 				$imapMessage = current(array_filter($imapMessages, static fn (IMAPMessage $imapMessage) => $message->getUid() === $imapMessage->getUid()));
 				if (empty($imapMessage->scheduling)) {
 					// No scheduling info, maybe the DB is wrong
+					$message->setImipProcessed(true);
 					$message->setImipError(true);
 					continue;
 				}
 
 				$sender = $imapMessage->getFrom()->first()?->getEmail();
 				if ($sender === null) {
+					$message->setImipProcessed(true);
 					$message->setImipError(true);
 					continue;
 				}
 
-				foreach ($imapMessage->scheduling as $schedulingInfo) { // an IMAP message could contain more than one iMIP object
-					if ($schedulingInfo['method'] === 'REQUEST') {
-						$processed = $this->calendarManager->handleIMipRequest($principalUri, $sender, $recipient, $schedulingInfo['contents']);
-						$message->setImipProcessed($processed);
-						$message->setImipError(!$processed);
-					} elseif ($schedulingInfo['method'] === 'REPLY') {
-						$processed = $this->calendarManager->handleIMipReply($principalUri, $sender, $recipient, $schedulingInfo['contents']);
-						$message->setImipProcessed($processed);
-						$message->setImipError(!$processed);
-					} elseif ($schedulingInfo['method'] === 'CANCEL') {
-						$replyTo = $imapMessage->getReplyTo()->first()?->getEmail();
-						$processed = $this->calendarManager->handleIMipCancel($principalUri, $sender, $replyTo, $recipient, $schedulingInfo['contents']);
+				try {
+					// an IMAP message could contain more than one iMIP object
+					foreach ($imapMessage->scheduling as $schedulingInfo) {
+						$processed = false;
+						if ($systemVersion < 33) {
+							$principalUri = 'principals/users/' . $userId;
+							if ($schedulingInfo['method'] === 'REQUEST') {
+								$processed = $this->calendarManager->handleIMipRequest($principalUri, $sender, $recipient, $schedulingInfo['contents']);
+							} elseif ($schedulingInfo['method'] === 'REPLY') {
+								$processed = $this->calendarManager->handleIMipReply($principalUri, $sender, $recipient, $schedulingInfo['contents']);
+							} elseif ($schedulingInfo['method'] === 'CANCEL') {
+								$replyTo = $imapMessage->getReplyTo()->first()?->getEmail();
+								$processed = $this->calendarManager->handleIMipCancel($principalUri, $sender, $replyTo, $recipient, $schedulingInfo['contents']);
+							}
+						} else {
+							if (!method_exists($this->calendarManager, 'handleIMip')) {
+								$this->logger->error('iMIP handling is not supported by server version installed.');
+								continue;
+							}
+							$processed = $this->calendarManager->handleIMip(
+								$userId,
+								$schedulingInfo['contents'],
+								[
+									'recipient' => $recipient,
+									'absent' => $imipCreate ? 'create' : 'ignore',
+									'absentCreateStatus' => 'tentative',
+								],
+							);
+						}
+
 						$message->setImipProcessed($processed);
 						$message->setImipError(!$processed);
 					}
+				} catch (Throwable $e) {
+					$this->logger->error('iMIP message processing failed', [
+						'exception' => $e,
+						'messageId' => $message->getId(),
+						'mailboxId' => $mailbox->getId(),
+					]);
+					$message->setImipProcessed(true);
+					$message->setImipError(true);
 				}
 			}
 			$this->messageMapper->updateImipData(...$filteredMessages);

@@ -17,13 +17,17 @@ use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @psalm-api
+ */
 class Version1105Date20210922104324 extends SimpleMigrationStep {
 	private $connection;
-	private $logger;
 
-	public function __construct(IDBConnection $connection, LoggerInterface $logger) {
+	public function __construct(
+		IDBConnection $connection,
+		private LoggerInterface $logger,
+	) {
 		$this->connection = $connection;
-		$this->logger = $logger;
 	}
 
 	#[\Override]

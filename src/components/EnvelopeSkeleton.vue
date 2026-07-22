@@ -5,14 +5,17 @@
 
 <template>
 	<!-- This wrapper can be either a router link or a `<li>` -->
-	<component :is="to ? 'router-link' : 'NcVNodes'"
+	<component
+		:is="to ? 'router-link' : 'NcVNodes'"
 		v-slot="{ href: routerLinkHref, navigate, isActive }"
 		:custom="to ? true : null"
 		:to="to"
 		:exact="to ? exact : null">
-		<li class="list-item__wrapper"
-			:class="{ 'list-item__wrapper--active' : isActive || active }">
-			<div ref="list-item"
+		<li
+			class="list-item__wrapper"
+			:class="{ 'list-item__wrapper--active': isActive || active }">
+			<div
+				ref="list-item"
 				class="list-item"
 				:class="{
 					'list-item--compact': compact,
@@ -21,7 +24,8 @@
 				}"
 				@mouseover="handleMouseover"
 				@mouseleave="handleMouseleave">
-				<a :id="anchorId || undefined"
+				<a
+					:id="anchorId || undefined"
 					:aria-label="linkAriaLabel"
 					class="list-item__anchor"
 					:href="routerLinkHref || href"
@@ -44,29 +48,35 @@
 						</div>
 						<div class="list-item-content__inner">
 							<div class="list-item-content__inner__main">
-								<div v-if="hasSubname"
+								<div
+									v-if="hasSubname"
 									class="list-item-content__inner__subname"
-									:class="{'list-item-content__inner__subname--bold': bold}">
+									:class="{ 'list-item-content__inner__subname--bold': bold }">
 									<!-- @slot Slot for the second line of the component -->
 									<slot name="subname" />
 								</div>
-								<div v-if="$slots.tags" class="list-item-content__inner__tags">
+								<div
+									v-if="$slots.tags"
+									class="list-item-content__inner__tags"
+									@click.prevent.stop>
 									<!-- @slot This slot is used for the third line of the component -->
 									<slot name="tags" />
 								</div>
 							</div>
 
 							<div class="list-item-content__inner__details">
-								<div :class="['list-item-content__inner__details__details', { 'list-item-content__inner__details__details--hidden': showDetails }]">
+								<div class="list-item-content__inner__details__details" :class="[{ 'list-item-content__inner__details__details--hidden': showDetails }]">
 									<!-- @slot This slot is used for some details in form of icon (prop `details` as a fallback) -->
 									<slot name="details">{{ details }}</slot>
 								</div>
 
 								<!-- Counter and indicator -->
-								<div v-if="counterNumber || hasIndicator"
-									v-show="showAdditionalElements"
+								<div
+									v-if="counterNumber || hasIndicator"
+									:class="{ 'extra--hidden': !showAdditionalElements }"
 									class="list-item-content__inner__details__extra">
-									<NcCounterBubble v-if="counterNumber"
+									<NcCounterBubble
+										v-if="counterNumber"
 										:active="isActive || active"
 										class="list-item-content__inner__details__extra__counter"
 										:type="counterType">
@@ -84,17 +94,20 @@
 				</a>
 
 				<div class="list-item__hoverable">
-					<EnvelopeSingleClickActions :is-read="isRead"
+					<EnvelopeSingleClickActions
+						:is-read="isRead"
 						:is-important="isImportant"
 						@delete="$emit('delete')"
 						@toggle-important="$emit('toggle-important')"
 						@toggle-seen="$emit('toggle-seen')" />
 
 					<!-- Actions -->
-					<div v-show="forceDisplayActions || displayActionsOnHoverFocus"
+					<div
+						v-show="forceDisplayActions || displayActionsOnHoverFocus"
 						class="list-item__actions"
 						@focusout="handleBlur">
-						<NcActions ref="actions"
+						<NcActions
+							ref="actions"
 							:primary="isActive || active"
 							:aria-label="computedActionsAriaLabel"
 							variant="tertiary"
@@ -115,7 +128,6 @@
 <script>
 import { NcActions, NcCounterBubble, NcVNodes } from '@nextcloud/vue'
 import DotsHorizontal from 'vue-material-design-icons/DotsHorizontal.vue'
-
 import EnvelopeSingleClickActions from './EnvelopeSingleClickActions.vue'
 
 export default {
@@ -251,6 +263,7 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+
 		/**
 		 * Show the list component layout
 		 */
@@ -258,10 +271,12 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+
 		isRead: {
 			type: Boolean,
 			default: false,
 		},
+
 		isImportant: {
 			type: Boolean,
 			default: false,
@@ -538,6 +553,11 @@ export default {
 				&--bold {
 					font-weight: 500;
 				}
+				.list-item--compact.list-item--multiline & {
+					white-space: normal;
+					overflow: visible;
+					text-overflow: unset;
+				}
 			}
 
 			&__tags {
@@ -604,14 +624,22 @@ export default {
 			flex-direction: row;
 			align-content: center;
 			align-items: center;
+			min-width: 0;
 
 			&__name {
+				flex: 0 0 auto;
+				min-width: 0;
+				max-width: 40%;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
 				align-self: center;
-				min-width: 300px;
 				padding-inline-end: calc(var(--default-grid-baseline) * 2);
 			}
 
 			&__inner {
+				flex: 1 1 auto;
+				min-width: 0;
 				overflow-y: hidden;
 			}
 
@@ -703,5 +731,9 @@ export default {
 :deep(.app-content-list-item-icon), :deep(.avatardiv), :deep(.avatardiv__initials-wrapper) {
 	height: calc(var(--header-menu-item-height) - 4px);
 	width: calc(var(--header-menu-item-height) - 4px);
+}
+
+.extra--hidden {
+	visibility: hidden;
 }
 </style>

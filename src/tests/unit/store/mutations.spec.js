@@ -3,14 +3,13 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import { createTestingPinia } from '@pinia/testing'
+import { setActivePinia } from 'pinia'
 import {
 	PRIORITY_INBOX_ID,
 	UNIFIED_ACCOUNT_ID,
 	UNIFIED_INBOX_ID,
 } from '../../../store/constants.js'
-
-import { setActivePinia } from 'pinia'
-import { createTestingPinia } from '@pinia/testing'
 import useMainStore from '../../../store/mainStore.js'
 
 describe('Pinia store mutations', () => {
@@ -365,17 +364,16 @@ describe('Pinia store mutations', () => {
 			tags: {},
 		})
 
-		store.addMailboxMutation(
-			{
-				account,
-				mailbox: {
-					databaseId: 346,
-					name: 'Brchive',
-					delimiter: '.',
-					specialUse: ['archive'],
-					specialRole: 'archive',
-				},
-			})
+		store.addMailboxMutation({
+			account,
+			mailbox: {
+				databaseId: 346,
+				name: 'Brchive',
+				delimiter: '.',
+				specialUse: ['archive'],
+				specialRole: 'archive',
+			},
+		})
 
 		expect(store).toMatchObject({
 			accountList: [13],
@@ -941,6 +939,7 @@ describe('Pinia store mutations', () => {
 			databaseId: 123,
 			mailboxId: 27,
 			uid: 12345,
+			attachments: [{ id: 1, fileName: 'example' }],
 		}
 		store.$patch({
 			mailboxes: {
@@ -968,6 +967,7 @@ describe('Pinia store mutations', () => {
 					databaseId: 123,
 					mailboxId: 27,
 					uid: 12345,
+					attachments: [],
 				},
 				{
 					databaseId: 124,
@@ -1003,6 +1003,7 @@ describe('Pinia store mutations', () => {
 						124,
 					],
 					tags: [],
+					attachments: [{ id: 1, fileName: 'example' }],
 				},
 				124: {
 					databaseId: 124,
@@ -1044,6 +1045,7 @@ describe('Pinia store mutations', () => {
 			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12345,
+				attachments: [],
 				id: 123,
 				subject: 'henlo',
 				uid: 321,
@@ -1072,6 +1074,7 @@ describe('Pinia store mutations', () => {
 				12345: {
 					mailboxId: 27,
 					databaseId: 12345,
+					attachments: [],
 					uid: 321,
 					id: 123,
 					subject: 'henlo',

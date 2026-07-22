@@ -19,7 +19,6 @@ class Cache {
 	/** @var ICache */
 	private $cache;
 
-
 	public function __construct(ICacheFactory $cacheFactory) {
 		$this->cache = $cacheFactory->createLocal('mail.ai');
 	}
@@ -29,9 +28,8 @@ class Cache {
 	 * @return string
 	 */
 	public function buildUrlKey(array $ids): string {
-		return base64_encode(json_encode($ids));
+		return base64_encode(json_encode($ids, JSON_THROW_ON_ERROR));
 	}
-
 
 	/**
 	 * @param array $ids
@@ -58,5 +56,13 @@ class Cache {
 		$this->cache->set($key, $value ?? false, self::CACHE_TTL);
 	}
 
+	/**
+	 * @param string $key
+	 *
+	 * @return void
+	 */
+	public function remove(string $key): void {
+		$this->cache->remove($key);
+	}
 
 }

@@ -28,21 +28,11 @@ use function strtolower;
  * @template-implements IEventListener<Event|MailboxesSynchronizedEvent>
  */
 class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
-	/** @var MailAccountMapper */
-	private $mailAccountMapper;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(MailAccountMapper $mailAccountMapper,
-		MailboxMapper $mailboxMapper,
-		LoggerInterface $logger) {
-		$this->mailAccountMapper = $mailAccountMapper;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->logger = $logger;
+	public function __construct(
+		private MailAccountMapper $mailAccountMapper,
+		private MailboxMapper $mailboxMapper,
+		private LoggerInterface $logger,
+	) {
 	}
 
 	/**
@@ -56,62 +46,65 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 		$mailboxes = $this->indexMailboxes(
 			$this->mailboxMapper->findAll($account)
 		);
+		// Never auto-pick a shared mailbox; a shared "Sent" or "Drafts" folder
+		// belongs to someone else's account, not this one.
+		$personalMailboxes = array_filter($mailboxes, static fn (Mailbox $mb): bool => !$mb->isShared());
 
 		if ($mailAccount->getDraftsMailboxId() === null || !array_key_exists($mailAccount->getDraftsMailboxId(), $mailboxes)) {
 			try {
-				$draftsMailbox = $this->findSpecial($mailboxes, 'drafts');
+				$draftsMailbox = $this->findSpecial($personalMailboxes, 'drafts');
 				$mailAccount->setDraftsMailboxId($draftsMailbox->getId());
 			} catch (DoesNotExistException $e) {
-				$this->logger->info('Account ' . $account->getId() . ' does not have a drafts mailbox');
+				$this->logger->info("Account {$account->getId()} does not have a drafts mailbox");
 
 				$mailAccount->setDraftsMailboxId(null);
 			}
 		}
 		if ($mailAccount->getSentMailboxId() === null || !array_key_exists($mailAccount->getSentMailboxId(), $mailboxes)) {
 			try {
-				$sentMailbox = $this->findSpecial($mailboxes, 'sent');
+				$sentMailbox = $this->findSpecial($personalMailboxes, 'sent');
 				$mailAccount->setSentMailboxId($sentMailbox->getId());
 			} catch (DoesNotExistException $e) {
-				$this->logger->info('Account ' . $account->getId() . ' does not have a sent mailbox');
+				$this->logger->info("Account {$account->getId()} does not have a sent mailbox");
 
 				$mailAccount->setSentMailboxId(null);
 			}
 		}
 		if ($mailAccount->getTrashMailboxId() === null || !array_key_exists($mailAccount->getTrashMailboxId(), $mailboxes)) {
 			try {
-				$trashMailbox = $this->findSpecial($mailboxes, 'trash');
+				$trashMailbox = $this->findSpecial($personalMailboxes, 'trash');
 				$mailAccount->setTrashMailboxId($trashMailbox->getId());
 			} catch (DoesNotExistException $e) {
-				$this->logger->info('Account ' . $account->getId() . ' does not have a trash mailbox');
+				$this->logger->info("Account {$account->getId()} does not have a trash mailbox");
 
 				$mailAccount->setTrashMailboxId(null);
 			}
 		}
 		if ($mailAccount->getArchiveMailboxId() === null || !array_key_exists($mailAccount->getArchiveMailboxId(), $mailboxes)) {
 			try {
-				$archiveMailbox = $this->findSpecial($mailboxes, 'archive');
+				$archiveMailbox = $this->findSpecial($personalMailboxes, 'archive');
 				$mailAccount->setArchiveMailboxId($archiveMailbox->getId());
 			} catch (DoesNotExistException $e) {
-				$this->logger->info('Account ' . $account->getId() . ' does not have an archive mailbox');
+				$this->logger->info("Account {$account->getId()} does not have an archive mailbox");
 
 				$mailAccount->setArchiveMailboxId(null);
 			}
 		}
 		if ($mailAccount->getJunkMailboxId() === null || !array_key_exists($mailAccount->getJunkMailboxId(), $mailboxes)) {
 			try {
-				$junkMailbox = $this->findSpecial($mailboxes, 'junk');
+				$junkMailbox = $this->findSpecial($personalMailboxes, 'junk');
 				$mailAccount->setJunkMailboxId($junkMailbox->getId());
 			} catch (DoesNotExistException) {
-				$this->logger->info('Account ' . $account->getId() . ' does not have an junk mailbox');
+				$this->logger->info("Account {$account->getId()} does not have an junk mailbox");
 				$mailAccount->setJunkMailboxId(null);
 			}
 		}
 		if ($mailAccount->getSnoozeMailboxId() === null || !array_key_exists($mailAccount->getSnoozeMailboxId(), $mailboxes)) {
 			try {
-				$snoozeMailbox = $this->findSpecial($mailboxes, 'snooze');
+				$snoozeMailbox = $this->findSpecial($personalMailboxes, 'snooze');
 				$mailAccount->setSnoozeMailboxId($snoozeMailbox->getId());
 			} catch (DoesNotExistException $e) {
-				$this->logger->info('Account ' . $account->getId() . ' does not have an snooze mailbox');
+				$this->logger->info("Account {$account->getId()} does not have an snooze mailbox");
 
 				$mailAccount->setSnoozeMailboxId(null);
 			}

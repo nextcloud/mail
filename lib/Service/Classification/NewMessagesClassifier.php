@@ -34,7 +34,6 @@ class NewMessagesClassifier {
 		private TagMapper $tagMapper,
 		private LoggerInterface $logger,
 		private IMailManager $mailManager,
-		private ClassificationSettingsService $classificationSettingsService,
 	) {
 	}
 
@@ -50,22 +49,22 @@ class NewMessagesClassifier {
 	 * @param Mailbox $mailbox
 	 * @param Account $account
 	 * @param Tag $importantTag
-	 * @return void
+	 * @return bool true if classification was done
 	 */
 	public function classifyNewMessages(
 		array $messages,
 		Mailbox $mailbox,
 		Account $account,
 		Tag $importantTag,
-	): void {
-		if (!$this->classificationSettingsService->isClassificationEnabled($account->getUserId())) {
-			return;
+	): bool {
+		if (!$account->getMailAccount()->getClassificationEnabled()) {
+			return false;
 		}
 
 		foreach (self::EXEMPT_FROM_CLASSIFICATION as $specialUse) {
 			if ($mailbox->isSpecialUse($specialUse)) {
 				// Nothing to do then
-				return;
+				return false;
 			}
 		}
 
@@ -102,5 +101,6 @@ class NewMessagesClassifier {
 				'exception' => $e,
 			]);
 		}
+		return true;
 	}
 }

@@ -190,7 +190,7 @@ class TagMapper extends QBMapper {
 		$tags = [];
 		for ($i = 1; $i < 6; $i++) {
 			$tag = new Tag();
-			$tag->setImapLabel('$label' . $i);
+			$tag->setImapLabel("\$label$i");
 			$tag->setUserId($account->getUserId());
 			switch ($i) {
 				case 1:
@@ -200,12 +200,12 @@ class TagMapper extends QBMapper {
 					break;
 				case 2:
 					$tag->setDisplayName($this->l10n->t('Work'));
-					$tag->setColor('#31CC7C');
+					$tag->setColor('#B4A443');
 					$tag->setIsDefaultTag(true);
 					break;
 				case 3:
 					$tag->setDisplayName($this->l10n->t('Personal'));
-					$tag->setColor('#A85BF7');
+					$tag->setColor('#31CC7C');
 					$tag->setIsDefaultTag(true);
 					break;
 				case 4:
@@ -215,7 +215,7 @@ class TagMapper extends QBMapper {
 					break;
 				case 5:
 					$tag->setDisplayName($this->l10n->t('Later'));
-					$tag->setColor('#B4A443');
+					$tag->setColor('#A85BF7');
 					$tag->setIsDefaultTag(true);
 					break;
 			}

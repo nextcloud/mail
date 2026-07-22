@@ -21,8 +21,10 @@ use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
@@ -34,33 +36,25 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class MailboxesController extends Controller {
-	private AccountService $accountService;
-	private IMailManager $mailManager;
-	private SyncService $syncService;
-	private ?string $currentUserId;
-
 	public function __construct(
 		string $appName,
 		IRequest $request,
-		AccountService $accountService,
-		?string $UserId,
-		IMailManager $mailManager,
-		SyncService $syncService,
+		private AccountService $accountService,
+		private ?string $userId,
+		private IMailManager $mailManager,
+		private SyncService $syncService,
 		private readonly IConfig $config,
 		private readonly ITimeFactory $timeFactory,
+		private DelegationService $delegationService,
 	) {
 		parent::__construct($appName, $request);
-
-		$this->accountService = $accountService;
-		$this->currentUserId = $UserId;
-		$this->mailManager = $mailManager;
-		$this->syncService = $syncService;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 *
 	 * @param int $accountId
+	 * @param bool $forceSync
 	 *
 	 * @return JSONResponse
 	 *
@@ -68,15 +62,24 @@ class MailboxesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
-	public function index(int $accountId): JSONResponse {
-		$account = $this->accountService->find($this->currentUserId, $accountId);
+	public function index(int $accountId, bool $forceSync = false): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 
-		$mailboxes = $this->mailManager->getMailboxes($account);
+		try {
+			$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$account = $this->accountService->find($effectiveUserId, $accountId);
+
+		$mailboxes = $this->mailManager->getMailboxes($account, $forceSync);
 		return new JSONResponse([
 			'id' => $accountId,
 			'email' => $account->getEmail(),
 			'mailboxes' => $mailboxes,
-			'delimiter' => reset($mailboxes)->getDelimiter(),
+			'delimiter' => $mailboxes[0]?->getDelimiter(),
 		]);
 	}
 
@@ -93,8 +96,17 @@ class MailboxesController extends Controller {
 		?string $name = null,
 		?bool $subscribed = null,
 		?bool $syncInBackground = null): JSONResponse {
-		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
-		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->userId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 
 		if ($name !== null) {
 			$mailbox = $this->mailManager->renameMailbox(
@@ -102,6 +114,7 @@ class MailboxesController extends Controller {
 				$mailbox,
 				$name
 			);
+			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId changed mailbox: $id's name to $name on behalf of $effectiveUserId");
 		}
 		if ($subscribed !== null) {
 			$mailbox = $this->mailManager->updateSubscription(
@@ -109,14 +122,18 @@ class MailboxesController extends Controller {
 				$mailbox,
 				$subscribed
 			);
+			$subscribedVerb = $subscribed ? 'subscribed' : 'unsubscribed';
+			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId $subscribedVerb to mailbox: $id on behalf of $effectiveUserId");
+
 		}
 		if ($syncInBackground !== null) {
 			$mailbox = $this->mailManager->enableMailboxBackgroundSync(
 				$mailbox,
 				$syncInBackground
 			);
+			$syncVerb = $syncInBackground ? 'enabled' : 'disabled';
+			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId $syncVerb background sync for mailbox: $id on behalf of $effectiveUserId");
 		}
-
 		return new JSONResponse($mailbox);
 	}
 
@@ -135,12 +152,21 @@ class MailboxesController extends Controller {
 	 */
 	#[TrapError]
 	public function sync(int $id, array $ids = [], ?int $lastMessageTimestamp = null, bool $init = false, string $sortOrder = 'newest', ?string $query = null): JSONResponse {
-		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
-		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->userId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		$order = $sortOrder === 'newest' ? IMailSearch::ORDER_NEWEST_FIRST: IMailSearch::ORDER_OLDEST_FIRST;
 
 		$this->config->setUserValue(
-			$this->currentUserId,
+			$this->userId,
 			Application::APP_ID,
 			'ui-heartbeat',
 			(string)$this->timeFactory->getTime(),
@@ -177,8 +203,17 @@ class MailboxesController extends Controller {
 	 */
 	#[TrapError]
 	public function clearCache(int $id): JSONResponse {
-		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
-		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->userId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 
 		$this->syncService->clearCache($account, $mailbox);
 		return new JSONResponse([]);
@@ -195,10 +230,21 @@ class MailboxesController extends Controller {
 	 */
 	#[TrapError]
 	public function markAllAsRead(int $id): JSONResponse {
-		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
-		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->userId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 
 		$this->mailManager->markFolderAsRead($account, $mailbox);
+
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId marked all messages as read in mailbox: $id on behalf of $effectiveUserId");
 
 		return new JSONResponse([]);
 	}
@@ -215,7 +261,16 @@ class MailboxesController extends Controller {
 	 */
 	#[TrapError]
 	public function stats(int $id): JSONResponse {
-		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->userId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
 		return new JSONResponse($mailbox->getStats());
 	}
 
@@ -251,9 +306,21 @@ class MailboxesController extends Controller {
 	 */
 	#[TrapError]
 	public function create(int $accountId, string $name): JSONResponse {
-		$account = $this->accountService->find($this->currentUserId, $accountId);
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 
-		return new JSONResponse($this->mailManager->createMailbox($account, $name));
+		try {
+			$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$account = $this->accountService->find($effectiveUserId, $accountId);
+		$mailbox = $this->mailManager->createMailbox($account, $name);
+		$id = $mailbox->getId();
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId created mailbox: $id on behalf of $effectiveUserId");
+
+		return new JSONResponse($mailbox);
 	}
 
 	/**
@@ -267,10 +334,21 @@ class MailboxesController extends Controller {
 	 */
 	#[TrapError]
 	public function destroy(int $id): JSONResponse {
-		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
-		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->userId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 
 		$this->mailManager->deleteMailbox($account, $mailbox);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted mailbox: $id on behalf of $effectiveUserId");
+
 		return new JSONResponse();
 	}
 
@@ -286,10 +364,20 @@ class MailboxesController extends Controller {
 	 */
 	#[TrapError]
 	public function clearMailbox(int $id): JSONResponse {
-		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
-		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->userId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 
 		$this->mailManager->clearMailbox($account, $mailbox);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId cleared mailbox: $id on behalf of $effectiveUserId");
 		return new JSONResponse();
 	}
 
@@ -300,14 +388,21 @@ class MailboxesController extends Controller {
 	#[NoAdminRequired]
 	#[UserRateLimit(limit: 10, period: 600)]
 	public function repair(int $id): JSONResponse {
-		if ($this->currentUserId === null) {
+		if ($this->userId === null) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
-		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->userId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 
 		$this->syncService->repairSync($account, $mailbox);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId repaired mailbox: $id on behalf of $effectiveUserId");
+
 		return new JsonResponse();
 	}
 }

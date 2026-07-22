@@ -3,12 +3,10 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import {createLocalVue, shallowMount} from '@vue/test-utils'
-
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createPinia, PiniaVuePlugin } from 'pinia'
 import Composer from '../../../components/Composer.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
-import { createPinia, PiniaVuePlugin } from 'pinia'
-
 import useMainStore from '../../../store/mainStore.js'
 
 const localVue = createLocalVue()
@@ -17,8 +15,13 @@ localVue.mixin(Nextcloud)
 localVue.use(PiniaVuePlugin)
 const pinia = createPinia()
 
-describe('Composer', () => {
+const $route = {
+	params: {
+		mailboxId: '123', // String because it comes from URL params
+	},
+}
 
+describe('Composer', () => {
 	let store
 
 	beforeEach(() => {
@@ -26,16 +29,41 @@ describe('Composer', () => {
 			value: 0,
 		})
 
+		const defaultAccount = {
+			id: 123,
+			editorMode: 'plaintext',
+			isUnified: false,
+			aliases: [],
+			connectionStatus: true,
+			emailAddress: 'test@example.com',
+			name: 'Test Account',
+		}
+
 		shallowMount(Composer, {
 			propsData: {
 				isFirstOpen: true,
-				accounts: [],
+				accounts: [defaultAccount],
+			},
+			mocks: {
+				$route,
 			},
 			localVue,
 			pinia,
 			store,
 		})
 		store = useMainStore()
+
+		// Add a mailbox to the store for the route param to reference
+		store.mailboxes[123] = {
+			id: 123,
+			databaseId: 123,
+			accountId: 123,
+			name: 'INBOX',
+			attributes: [],
+			specialUse: ['inbox'],
+			envelopeLists: {},
+			mailboxes: [],
+		}
 	})
 
 	it('does not drop the reply message ID', () => {
@@ -51,6 +79,9 @@ describe('Composer', () => {
 						aliases: [],
 					},
 				],
+			},
+			mocks: {
+				$route,
 			},
 			store,
 			localVue,
@@ -74,6 +105,9 @@ describe('Composer', () => {
 						aliases: [],
 					},
 				],
+			},
+			mocks: {
+				$route,
 			},
 			store,
 			localVue,
@@ -101,6 +135,9 @@ describe('Composer', () => {
 					},
 				],
 			},
+			mocks: {
+				$route,
+			},
 			store,
 			localVue,
 		})
@@ -122,6 +159,9 @@ describe('Composer', () => {
 						aliases: [],
 					},
 				],
+			},
+			mocks: {
+				$route,
 			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
@@ -152,6 +192,9 @@ describe('Composer', () => {
 					},
 				],
 			},
+			mocks: {
+				$route,
+			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
 					return { foo: 'bar' }
@@ -181,6 +224,9 @@ describe('Composer', () => {
 					},
 				],
 			},
+			mocks: {
+				$route,
+			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
 					return undefined
@@ -209,6 +255,9 @@ describe('Composer', () => {
 						aliases: [],
 					},
 				],
+			},
+			mocks: {
+				$route,
 			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
@@ -242,6 +291,9 @@ describe('Composer', () => {
 					},
 				],
 			},
+			mocks: {
+				$route,
+			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
 					return { foo: 'bar' }
@@ -263,7 +315,7 @@ describe('Composer', () => {
 
 	it('generate title for submit button', () => {
 		const view = shallowMount(Composer, {
-            propsData: {
+			propsData: {
 				isFirstOpen: true,
 				accounts: [
 					{
@@ -273,11 +325,13 @@ describe('Composer', () => {
 						aliases: [],
 					},
 				],
-            },
+			},
+			mocks: {
+				$route,
+			},
 			store,
 			localVue,
 		})
-
 
 		expect(view.vm.submitButtonTitle).toEqual('Send')
 
@@ -293,8 +347,8 @@ describe('Composer', () => {
 
 	it('generate title for submit button (send later)', () => {
 		const view = shallowMount(Composer, {
-            propsData: {
-                isFirstOpen: true,
+			propsData: {
+				isFirstOpen: true,
 				accounts: [
 					{
 						id: 123,
@@ -303,7 +357,10 @@ describe('Composer', () => {
 						aliases: [],
 					},
 				],
-            },
+			},
+			mocks: {
+				$route,
+			},
 			store,
 			localVue,
 		})
@@ -322,5 +379,139 @@ describe('Composer', () => {
 		expect(view.vm.submitButtonTitle).toEqual('Encrypt with Mailvelope and send later Jan 1, 02:00 PM')
 	})
 
+	it('does not open the recipient dropdown on focus without a search term', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			mocks: {
+				$route,
+			},
+			store,
+			localVue,
+		})
 
+		expect(view.vm.shouldOpenRecipientDropdown({
+			noDrop: false,
+			open: true,
+			search: '',
+		})).toEqual(false)
+	})
+
+	it('opens the recipient dropdown once a search term is entered', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			mocks: {
+				$route,
+			},
+			store,
+			localVue,
+		})
+
+		expect(view.vm.shouldOpenRecipientDropdown({
+			noDrop: false,
+			open: true,
+			search: 'alice',
+		})).toEqual(true)
+	})
+
+	it('inserts the signature when composing a new message', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				isDraft: false,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			mocks: {
+				$route,
+			},
+			store,
+			localVue,
+		})
+		const insertSignature = vi.spyOn(view.vm, 'insertSignature').mockImplementation(() => {})
+
+		view.vm.onEditorReady({ getData: () => '' })
+
+		expect(insertSignature).toHaveBeenCalled()
+	})
+
+	it('does not insert the signature when opening a draft', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				isDraft: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			mocks: {
+				$route,
+			},
+			store,
+			localVue,
+		})
+		const insertSignature = vi.spyOn(view.vm, 'insertSignature').mockImplementation(() => {})
+
+		view.vm.onEditorReady({ getData: () => '' })
+
+		expect(insertSignature).not.toHaveBeenCalled()
+	})
+
+	it('inserts the signature on alias change even when opening a draft', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				isDraft: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			mocks: {
+				$route,
+			},
+			store,
+			localVue,
+		})
+		const insertSignature = vi.spyOn(view.vm, 'insertSignature').mockImplementation(() => {})
+		view.vm.changeSignature = true
+
+		view.vm.onEditorReady({ getData: () => '' })
+
+		expect(insertSignature).toHaveBeenCalled()
+	})
 })

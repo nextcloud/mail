@@ -22,19 +22,31 @@ use ReturnTypeWillChange;
 class Actions extends Entity implements JsonSerializable {
 	protected $name;
 	protected $accountId;
+	protected $actionSteps = [];
+	protected $icon = '';
 
 	public function __construct() {
 		$this->addType('name', 'string');
 		$this->addType('accountId', 'integer');
 	}
 
+	public function setActionSteps(array $actionSteps): void {
+		$this->actionSteps = $actionSteps;
+	}
+
+	public function setIcon(string $icon): void {
+		$this->icon = $icon;
+	}
+
 	#[ReturnTypeWillChange]
+	#[\Override]
 	public function jsonSerialize() {
 		return [
 			'id' => $this->getId(),
 			'name' => $this->getName(),
 			'accountId' => $this->getAccountId(),
-
+			'actionSteps' => $this->actionSteps,
+			'icon' => $this->icon,
 		];
 	}
 }

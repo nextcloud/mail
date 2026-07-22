@@ -19,19 +19,17 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class PreferencesController extends Controller {
-	private IUserPreferences $userPreference;
-	private string $userId;
-
 	/**
 	 * @param IRequest $request
 	 * @param IUserPreferences $userPreference
 	 * @param string $UserId
 	 */
-	public function __construct(IRequest $request, IUserPreferences $userPreference, string $UserId) {
+	public function __construct(
+		IRequest $request,
+		private IUserPreferences $userPreference,
+		private string $userId,
+	) {
 		parent::__construct('mail', $request);
-
-		$this->userPreference = $userPreference;
-		$this->userId = $UserId;
 	}
 
 	/**
@@ -60,7 +58,6 @@ class PreferencesController extends Controller {
 		if (is_null($key) || is_null($value)) {
 			throw new ClientException('key or value missing');
 		}
-
 
 		$newValue = $this->userPreference->setPreference($this->userId, $key, $value);
 

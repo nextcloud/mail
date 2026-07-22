@@ -15,6 +15,9 @@ use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
+/**
+ * @psalm-api
+ */
 class Version0156Date20190828140357 extends SimpleMigrationStep {
 	/**
 	 * @param IOutput $output
@@ -40,7 +43,6 @@ class Version0156Date20190828140357 extends SimpleMigrationStep {
 		]);
 		$mailboxTable->addColumn('account_id', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$mailboxTable->addColumn('sync_token', Types::STRING, [
 			'notnull' => true,
@@ -56,11 +58,9 @@ class Version0156Date20190828140357 extends SimpleMigrationStep {
 		]);
 		$mailboxTable->addColumn('messages', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$mailboxTable->addColumn('unseen', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$mailboxTable->addColumn('selectable', Types::BOOLEAN, [
 			'notnull' => false,

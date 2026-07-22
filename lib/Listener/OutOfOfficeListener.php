@@ -68,8 +68,8 @@ class OutOfOfficeListener implements IEventListener {
 
 			$state = new OutOfOfficeState(
 				$enabled,
-				new DateTimeImmutable('@' . $eventData->getStartDate()),
-				new DateTimeImmutable('@' . $eventData->getEndDate()),
+				new DateTimeImmutable('@' . (string)$eventData->getStartDate()),
+				new DateTimeImmutable('@' . (string)$eventData->getEndDate()),
 				'Re: ${subject}',
 				$eventData->getMessage(),
 			);

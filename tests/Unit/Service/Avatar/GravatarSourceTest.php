@@ -15,10 +15,10 @@ use OCA\Mail\Service\Avatar\GravatarSource;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class GravatarSourceTest extends TestCase {
-	/** @var IClientService|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IClientService|MockObject */
 	private $clientService;
 
 	/** @var GravatarSource */
@@ -61,7 +61,7 @@ class GravatarSourceTest extends TestCase {
 	public function testFetchHttpError() {
 		$email = 'hey@jancborchardt.net';
 		$client = $this->createMock(IClient::class);
-		$avatarFactory = $this->createMock(AvatarFactory::class);
+		$avatarFactory = $this->createStub(AvatarFactory::class);
 		$this->clientService->expects($this->once())
 			->method('newClient')
 			->willReturn($client);

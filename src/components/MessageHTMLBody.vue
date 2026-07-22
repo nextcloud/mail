@@ -5,7 +5,8 @@
 <template>
 	<div class="html-message-body">
 		<MdnRequest :message="message" />
-		<NeedsTranslationInfo v-if="needsTranslation"
+		<NeedsTranslationInfo
+			v-if="needsTranslation"
 			:is-html="true"
 			@translate="$emit('translate')" />
 		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content" style="color: #000000">
@@ -17,14 +18,16 @@
 					</template>
 					{{ t('mail', 'Show images temporarily') }}
 				</ActionButton>
-				<ActionButton v-if="sender"
+				<ActionButton
+					v-if="sender"
 					@click="onShowBlockedContent">
 					<template #icon>
 						<IconMail :size="20" />
 					</template>
 					{{ t('mail', 'Always show images from {sender}', { sender }) }}
 				</ActionButton>
-				<ActionButton v-if="domain"
+				<ActionButton
+					v-if="domain"
 					@click="onShowBlockedContentForDomain">
 					<template #icon>
 						<IconDomain :size="20" />
@@ -33,8 +36,9 @@
 				</ActionButton>
 			</Actions>
 		</div>
-		<div id="message-container" :class="{scroll: !fullHeight}">
-			<iframe ref="iframe"
+		<div id="message-container" :class="{ scroll: !fullHeight }">
+			<iframe
+				ref="iframe"
 				class="message-frame"
 				:title="t('mail', 'Message frame')"
 				:src="url"
@@ -52,10 +56,9 @@ import PrintScout from 'printscout'
 import IconDomain from 'vue-material-design-icons/Domain.vue'
 import IconMail from 'vue-material-design-icons/EmailOutline.vue'
 import IconImage from 'vue-material-design-icons/ImageSizeSelectActual.vue'
-
-import logger from '../logger.js'
 import MdnRequest from './MdnRequest.vue'
 import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
+import logger from '../logger.js'
 import { needsTranslation } from '../service/AiIntergrationsService.js'
 import { trustSender } from '../service/TrustedSenderService.js'
 
@@ -72,40 +75,50 @@ export default {
 		IconMail,
 		IconDomain,
 	},
+
 	props: {
 		url: {
 			type: String,
 			required: true,
 		},
+
 		fullHeight: {
 			type: Boolean,
 			required: false,
 			default: false,
 		},
+
 		message: {
 			required: true,
 			type: Object,
 		},
 	},
+
 	data() {
 		return {
 			hasBlockedContent: false,
 			isSenderTrusted: this.message.isSenderTrusted,
 			needsTranslation: false,
 			enabledFreePrompt: loadState('mail', 'llm_freeprompt_available', false),
+			printOriginalHeight: null,
 		}
 	},
+
 	computed: {
 		sender() {
 			return this.message.from[0]?.email
 		},
+
 		domain() {
 			return this.sender?.split('@').pop()
 		},
 	},
+
 	beforeMount() {
 		scout.on('beforeprint', this.onBeforePrint)
+		scout.on('afterprint', this.onAfterPrint)
 	},
+
 	async mounted() {
 		iframeResize({
 			license: 'GPLv3',
@@ -117,30 +130,45 @@ export default {
 			this.needsTranslation = await needsTranslation(this.message.databaseId)
 		}
 	},
+
 	beforeDestroy() {
 		scout.off('beforeprint', this.onBeforePrint)
+		scout.off('afterprint', this.onAfterPrint)
 		this.$refs.iframe.iFrameResizer.close()
 	},
+
 	methods: {
 		getIframeDoc() {
 			const iframe = this.$refs.iframe
 			return iframe.contentDocument || iframe.contentWindow.document
 		},
+
 		onMessageFrameLoad() {
 			const iframeDoc = this.getIframeDoc()
 			this.hasBlockedContent
 				= iframeDoc.querySelectorAll('[data-original-src]').length > 0
-				|| iframeDoc.querySelectorAll('[data-original-style]').length > 0
-				|| iframeDoc.querySelectorAll('style[data-original-content]').length > 0
+					|| iframeDoc.querySelectorAll('[data-original-style]').length > 0
+					|| iframeDoc.querySelectorAll('style[data-original-content]').length > 0
 
 			this.$emit('load')
 			if (this.isSenderTrusted) {
 				this.displayIframe()
 			}
 		},
+
 		onBeforePrint() {
-			// this.$refs.iframe.style.setProperty('height', `${this.getIframeDoc().body.scrollHeight}px`, 'important')
+			const iframe = this.$refs.iframe
+			this.printOriginalHeight = iframe.style.height
+			iframe.style.setProperty('height', `${this.getIframeDoc().body.scrollHeight}px`, 'important')
 		},
+
+		onAfterPrint() {
+			if (this.printOriginalHeight !== null) {
+				this.$refs.iframe.style.height = this.printOriginalHeight
+				this.printOriginalHeight = null
+			}
+		},
+
 		displayIframe() {
 			const iframeDoc = this.getIframeDoc()
 			logger.debug('showing external images')
@@ -158,10 +186,12 @@ export default {
 				})
 			this.hasBlockedContent = false
 		},
+
 		async onShowBlockedContent() {
 			this.displayIframe()
 			await trustSender(this.message.from[0].email, 'individual', true)
 		},
+
 		async onShowBlockedContentForDomain() {
 			this.displayIframe()
 			// TODO: there might be more than one @ in an email address
@@ -172,21 +202,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// account for 8px margin on iframe body
+// account for 12px (was 8) margin on iframe body
+// should be 12px so it maches the rest of the content
 .html-message-body {
-	margin : 2px calc(var(--default-grid-baseline) * 2) 0 calc(var(--default-grid-baseline) * 14);
+	margin : 2px calc(var(--default-grid-baseline) * 3) 0 calc(var(--default-grid-baseline) * 14);
 	background-color: #FFFFFF;
+	border-radius: var(--border-radius-element);
+
+	@media (max-width: 600px) {
+        margin-inline: calc(var(--default-grid-baseline) * 3);
+    }
 }
 
 #mail-message-has-blocked-content {
 	margin-inline-start: 10px;
 	color: var(--color-text-maxcontrast) !important;
+	padding-top: 5px;
 }
 
 #message-container {
 	flex: 1;
 	display: flex;
 	background-color: #FFFFFF;
+	border-radius: var(--border-radius-element);
 
 	// TODO: collapse quoted text and remove inner scrollbar
 	@media only screen {
@@ -205,6 +243,7 @@ export default {
 
 .message-frame {
 	width: 100%;
+	border-radius: var(--border-radius-element);
 }
 
 :deep(.button-vue__icon) {

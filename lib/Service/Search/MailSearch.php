@@ -26,30 +26,16 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IUser;
 
 class MailSearch implements IMailSearch {
-	/** @var FilterStringParser */
-	private $filterStringParser;
-
-	/** @var ImapSearchProvider */
-	private $imapSearchProvider;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
-	/** @var PreviewEnhancer */
-	private $previewEnhancer;
-
 	/** @var ITimeFactory */
 	private $timeFactory;
 
-	public function __construct(FilterStringParser $filterStringParser,
-		ImapSearchProvider $imapSearchProvider,
-		MessageMapper $messageMapper,
-		PreviewEnhancer $previewEnhancer,
-		ITimeFactory $timeFactory) {
-		$this->filterStringParser = $filterStringParser;
-		$this->imapSearchProvider = $imapSearchProvider;
-		$this->messageMapper = $messageMapper;
-		$this->previewEnhancer = $previewEnhancer;
+	public function __construct(
+		private FilterStringParser $filterStringParser,
+		private ImapSearchProvider $imapSearchProvider,
+		private MessageMapper $messageMapper,
+		private PreviewEnhancer $previewEnhancer,
+		ITimeFactory $timeFactory,
+	) {
 		$this->timeFactory = $timeFactory;
 	}
 

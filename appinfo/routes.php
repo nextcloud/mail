@@ -11,6 +11,11 @@ declare(strict_types=1);
 return [
 	'routes' => [
 		[
+			'name' => 'deep_link#open',
+			'url' => '/open/{messageId}',
+			'verb' => 'GET',
+		],
+		[
 			'name' => 'page#index',
 			'url' => '/',
 			'verb' => 'GET'
@@ -206,6 +211,11 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'messages#saveFile',
+			'url' => '/api/messages/{id}/file',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'messages#getBody',
 			'url' => '/api/messages/{id}/body',
 			'verb' => 'GET'
@@ -293,11 +303,6 @@ return [
 		[
 			'name' => 'avatars#image',
 			'url' => '/api/avatars/image/{email}',
-			'verb' => 'GET'
-		],
-		[
-			'name' => 'proxy#redirect',
-			'url' => '/redirect',
 			'verb' => 'GET'
 		],
 		[
@@ -476,6 +481,11 @@ return [
 			'verb' => 'GET',
 		],
 		[
+			'name' => 'oauth#generateState',
+			'url' => '/api/oauth/state',
+			'verb' => 'POST',
+		],
+		[
 			'name' => 'list#unsubscribe',
 			'url' => '/api/list/unsubscribe/{id}',
 			'verb' => 'POST',
@@ -506,14 +516,24 @@ return [
 			'verb' => 'POST',
 		],
 		[
-			'name' => 'textBlockShares#getTextBlockShares',
-			'url' => '/api/textBlocks/{id}/shares',
+			'name' => 'delegation#getDelegatedUsers',
+			'url' => '/api/delegations/{accountId}',
 			'verb' => 'GET',
 		],
 		[
-			'name' => 'actionStep#findAllStepsForAction',
-			'url' => '/api/action-step/{actionId}/steps',
-			'verb' => 'GET'
+			'name' => 'delegation#delegate',
+			'url' => '/api/delegations/{accountId}',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'delegation#unDelegate',
+			'url' => '/api/delegations/{accountId}/{userId}',
+			'verb' => 'DELETE',
+		],
+		[
+			'name' => 'textBlockShares#getTextBlockShares',
+			'url' => '/api/textBlocks/{id}/shares',
+			'verb' => 'GET',
 		],
 	],
 	'resources' => [

@@ -11,8 +11,10 @@ namespace OCA\Mail\Controller;
 
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\ResponseDefinitions;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\ApiRoute;
@@ -33,6 +35,7 @@ class MailboxesApiController extends OCSController {
 		private IMailManager $mailManager,
 		private readonly AccountService $accountService,
 		private IMailSearch $mailSearch,
+		private DelegationService $delegationService,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -56,16 +59,15 @@ class MailboxesApiController extends OCSController {
 		}
 
 		try {
-			$account = $this->accountService->find($userId, $accountId);
-		} catch (DoesNotExistException $e) {
+			$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $userId);
+			$account = $this->accountService->find($effectiveUserId, $accountId);
+		} catch (ClientException $e) {
 			return new DataResponse([], Http::STATUS_NOT_FOUND);
 		}
 
 		$mailboxes = $this->mailManager->getMailboxes($account);
 		return new DataResponse($mailboxes, Http::STATUS_OK);
 	}
-
-
 
 	/**
 	 * List the newest messages in a mailbox of the user which is currently logged-in
@@ -90,13 +92,16 @@ class MailboxesApiController extends OCSController {
 		?string $filter = null,
 		?int $limit = null,
 		?string $view = null): DataResponse {
+		$limit = min(100, max(1, $limit));
+
 		$userId = $this->userId;
 		if ($userId === null) {
 			return new DataResponse([], Http::STATUS_NOT_FOUND);
 		}
 		try {
-			$mailbox = $this->mailManager->getMailbox($userId, $mailboxId);
-			$account = $this->accountService->find($userId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($mailboxId, $userId);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $mailboxId);
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new DataResponse([], Http::STATUS_FORBIDDEN);
 		}

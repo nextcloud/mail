@@ -21,10 +21,19 @@ class PhishingDetectionService {
 		private DateCheck $dateCheck,
 		private ReplyToCheck $replyToCheck,
 		private LinkCheck $linkCheck,
+		private ImapFlagCheck $imapFlagCheck,
 	) {
 	}
 
-	public function checkHeadersForPhishing(Horde_Mime_Headers $headers, bool $hasHtmlMessage, string $htmlMessage = ''): array {
+	/**
+	 * @param Horde_Mime_Headers $headers
+	 * @param string[] $flags
+	 * @param bool $hasHtmlMessage
+	 * @param string $htmlMessage
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function checkHeadersForPhishing(string $uid, Horde_Mime_Headers $headers, array $flags, bool $hasHtmlMessage, string $htmlMessage = ''): array {
 		/** @var string|null $fromFN */
 		$fromFN = null;
 		/** @var string|null $fromEmail */
@@ -33,7 +42,7 @@ class PhishingDetectionService {
 		$customEmail = null;
 		$fromHeader = $headers->getHeader('From');
 		if ($fromHeader instanceof Horde_Mime_Headers_Element_Address) {
-			$firstAddr = AddressList::fromHorde($fromHeader->getAddressList(true))?->first();
+			$firstAddr = AddressList::fromHorde($fromHeader->getAddressList(true))->first();
 			$fromFN = $firstAddr?->getLabel();
 			$fromEmail = $firstAddr?->getEmail();
 			$customEmail = $firstAddr?->getCustomEmail();
@@ -49,7 +58,7 @@ class PhishingDetectionService {
 			}
 		}
 
-		$date = $headers->getHeader('Date')?->value;
+		$date = $headers->getHeader('Date')?->value_single;
 
 		$list = new PhishingDetectionList();
 		if ($fromEmail !== null) {
@@ -57,7 +66,7 @@ class PhishingDetectionService {
 				$list->addCheck($this->replyToCheck->run($fromEmail, $replyToEmail));
 			}
 			if ($fromFN !== null) {
-				$list->addCheck($this->contactCheck->run($fromFN, $fromEmail));
+				$list->addCheck($this->contactCheck->run($uid, $fromFN, $fromEmail));
 			}
 			if ($customEmail !== null) {
 				$list->addCheck($this->customEmailCheck->run($fromEmail, $customEmail));
@@ -66,6 +75,9 @@ class PhishingDetectionService {
 		if ($date !== null) {
 			$list->addCheck($this->dateCheck->run($date));
 		}
+
+		$list->addCheck($this->imapFlagCheck->run($flags));
+
 		if ($hasHtmlMessage) {
 			$list->addCheck($this->linkCheck->run($htmlMessage));
 		}

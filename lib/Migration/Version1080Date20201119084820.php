@@ -15,6 +15,9 @@ use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
+/**
+ * @psalm-api
+ */
 class Version1080Date20201119084820 extends SimpleMigrationStep {
 	/**
 	 * @param IOutput $output
@@ -31,7 +34,6 @@ class Version1080Date20201119084820 extends SimpleMigrationStep {
 		$table->addColumn('id', Types::INTEGER, [
 			'autoincrement' => true,
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$table->addColumn('email', Types::STRING, [
 			'notnull' => true,

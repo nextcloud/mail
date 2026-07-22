@@ -10,37 +10,56 @@
 		</template>
 		<template #list>
 			<!-- Special mailboxes first -->
-			<NavigationMailbox v-for="mailbox in unifiedMailboxes"
+			<NavigationMailbox
+				v-for="mailbox in unifiedMailboxes"
 				:key="'mailbox-' + mailbox.databaseId"
 				:account="unifiedAccount"
 				:mailbox="mailbox" />
 
 			<!-- All other mailboxes grouped by their account -->
 			<template v-for="group in menu">
-				<NavigationAccount v-if="group.account"
+				<NavigationAccount
+					v-if="group.account"
 					:key="group.account.id"
 					:account="group.account"
 					:first-mailbox="group.mailboxes[0]"
 					:is-first="isFirst(group.account)"
 					:is-last="isLast(group.account)"
 					:is-disabled="isDisabled(group.account)" />
-				<template v-if="!isDisabled(group.account)">
+				<div
+					v-if="group.account.error"
+					:key="group.account.error"
+					class="mail-navigation__error-message">
+					<IconAlertTriangle
+						:size="18"
+						:title="t('mail', 'This account cannot connect')" />
+					<span @click="showAccountSettings(group.account.id, 'mail-server')">
+						{{ t('mail', 'Connection failed. Please verify your information and try again') }}
+						<NcButton
+							:aria-label="t('mail', 'Change password')"
+							variant="tertiary">{{ t('mail', 'Change password') }}</NcButton>
+					</span>
+				</div>
+				<template v-else-if="!isDisabled(group.account)">
 					<template v-for="item in group.mailboxes">
-						<NavigationMailbox v-show="
-								!group.isCollapsible ||
-									!group.account.collapsed ||
-									!isCollapsed(group.account, item)
+						<NavigationMailbox
+							v-show="
+								!group.isCollapsible
+									|| !group.account.collapsed
+									|| !isCollapsed(group.account, item)
 							"
 							:key="'mailbox-' + item.databaseId"
 							:account="group.account"
 							:mailbox="item" />
-						<NavigationMailbox v-if="!group.account.isUnified && item.specialRole === 'inbox'"
+						<NavigationMailbox
+							v-if="!group.account.isUnified && item.specialRole === 'inbox'"
 							:key="item.databaseId + '-starred'"
 							:account="group.account"
 							:mailbox="item"
 							filter="starred" />
 					</template>
-					<NavigationAccountExpandCollapse v-if="!group.account.isUnified && group.isCollapsible"
+					<NavigationAccountExpandCollapse
+						v-if="!group.account.isUnified && group.isCollapsible"
 						:key="'collapse-' + group.account.id"
 						:account="group.account" />
 				</template>
@@ -51,7 +70,8 @@
 				<NavigationOutbox class="outbox" />
 			</div>
 			<div class="mail-settings">
-				<AppNavigationItem class="mail-settings__button"
+				<AppNavigationItem
+					class="mail-settings__button"
 					:close-after-click="true"
 					:name="t('mail', 'Mail settings')"
 					@click="showMailSettings">
@@ -66,16 +86,16 @@
 </template>
 
 <script>
-import { NcAppNavigation as AppNavigation, NcAppNavigationItem as AppNavigationItem } from '@nextcloud/vue'
+import { NcAppNavigation as AppNavigation, NcAppNavigationItem as AppNavigationItem, NcButton } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import IconAlertTriangle from 'vue-material-design-icons/AlertOutline.vue'
 import IconSetting from 'vue-material-design-icons/CogOutline.vue'
-
+import AppSettingsMenu from '../components/AppSettingsMenu.vue'
 import NavigationAccount from './NavigationAccount.vue'
 import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse.vue'
 import NavigationMailbox from './NavigationMailbox.vue'
 import NavigationOutbox from './NavigationOutbox.vue'
 import NewMessageButtonHeader from './NewMessageButtonHeader.vue'
-import AppSettingsMenu from '../components/AppSettingsMenu.vue'
 import { UNIFIED_ACCOUNT_ID } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import useOutboxStore from '../store/outboxStore.js'
@@ -89,26 +109,28 @@ export default {
 		NavigationAccountExpandCollapse,
 		NavigationMailbox,
 		NavigationOutbox,
+		NcButton,
 		NewMessageButtonHeader,
 		IconSetting,
 		AppNavigationItem,
+		IconAlertTriangle,
 	},
+
 	data() {
 		return {
 			refreshing: false,
 			showSettings: false,
 		}
 	},
+
 	computed: {
 		...mapStores(useOutboxStore, useMainStore),
 		menu() {
 			return this.mainStore.getAccounts
-				.filter(account => account.id !== UNIFIED_ACCOUNT_ID)
-				.map(account => {
+				.filter((account) => account.id !== UNIFIED_ACCOUNT_ID)
+				.map((account) => {
 					const mailboxes = this.mainStore.getMailboxes(account.id)
-					const nonSpecialRoleMailboxes = mailboxes.filter(
-						(mailbox) => this.isCollapsed(account, mailbox),
-					)
+					const nonSpecialRoleMailboxes = mailboxes.filter((mailbox) => this.isCollapsed(account, mailbox))
 					const isCollapsible = nonSpecialRoleMailboxes.length > 1
 
 					return {
@@ -119,12 +141,15 @@ export default {
 					}
 				})
 		},
+
 		unifiedAccount() {
 			return this.mainStore.getAccount(UNIFIED_ACCOUNT_ID)
 		},
+
 		unifiedMailboxes() {
 			return this.mainStore.getMailboxes(UNIFIED_ACCOUNT_ID)
 		},
+
 		/**
 		 * Whether the current session is using passwordless authentication.
 		 *
@@ -133,14 +158,21 @@ export default {
 		passwordIsUnavailable() {
 			return this.mainStore.getPreference('password-is-unavailable', false)
 		},
+
 		outboxMessages() {
 			return this.outboxStore.getAllMessages
 		},
 	},
+
 	methods: {
 		showMailSettings() {
 			this.showSettings = true
 		},
+
+		showAccountSettings(accountId, section) {
+			this.mainStore.showSettingsForAccountMutation(accountId, section)
+		},
+
 		isCollapsed(account, mailbox) {
 			if (mailbox.specialRole === 'inbox') {
 				// INBOX is always visible
@@ -156,14 +188,17 @@ export default {
 
 			return true
 		},
+
 		isFirst(account) {
 			const accounts = this.mainStore.getAccounts
 			return account === accounts[1]
 		},
+
 		isLast(account) {
 			const accounts = this.mainStore.getAccounts
 			return account === accounts[accounts.length - 1]
 		},
+
 		/**
 		 * Disable provisioned accounts when no password is available.
 		 * Loading messages of those accounts will fail and an endless spinner will be shown.
@@ -172,7 +207,6 @@ export default {
 		 * @return {boolean} True if the account should be disabled
 		 */
 		isDisabled(account) {
-
 			return (this.passwordIsUnavailable && !!account.provisioningId) && !!this.mainStore.masterPasswordEnabled
 		},
 	},
@@ -192,6 +226,11 @@ to {
 .mail-navigation {
 	&__new-message-button {
 		padding: calc(var(--default-grid-baseline, 4px) * 2);
+	}
+	&__error-message {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
 	}
 }
 

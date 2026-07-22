@@ -5,6 +5,13 @@
 
 import forge from 'node-forge'
 
+export class InvalidPkcs12CertificateError extends Error {
+	constructor() {
+		super()
+		this.name = InvalidPkcs12CertificateError.name
+	}
+}
+
 /**
  * Convert a PKCS #12 certificate from DER to PEM format.
  * This function will extract the certificate and private key.
@@ -37,13 +44,4 @@ export function convertPkcs12ToPem(pkcs12Der, password) {
 		certificate: certBags.map((certBag) => forge.pki.certificateToPem(certBag.cert)).join('\r\n'),
 		privateKey: forge.pki.privateKeyToPem(keyBags[0].key),
 	}
-}
-
-export class InvalidPkcs12CertificateError extends Error {
-
-	constructor() {
-		super()
-		this.name = InvalidPkcs12CertificateError.name
-	}
-
 }

@@ -50,12 +50,11 @@ export function groupEnvelopesByDate(envelopes, syncTimestamp, sortOrder = 'newe
 		}
 	}
 
-	const orderByDate = (a, b) =>
-		sortOrder === 'newest' ? b.dateInt - a.dateInt : a.dateInt - b.dateInt
+	const orderByDate = (a, b) => sortOrder === 'newest' ? b.dateInt - a.dateInt : a.dateInt - b.dateInt
 
-	Object.values(groups).forEach(list => list.sort(orderByDate))
-	Object.values(monthsMap).forEach(list => list.sort(orderByDate))
-	Object.values(yearsMap).forEach(list => list.sort(orderByDate))
+	Object.values(groups).forEach((list) => list.sort(orderByDate))
+	Object.values(monthsMap).forEach((list) => list.sort(orderByDate))
+	Object.values(yearsMap).forEach((list) => list.sort(orderByDate))
 
 	const groupOrder = []
 
@@ -79,6 +78,6 @@ export function groupEnvelopesByDate(envelopes, syncTimestamp, sortOrder = 'newe
 	}
 
 	return groupOrder
-		.filter(label => groups[label] && groups[label].length > 0)
-		.map(label => [label, groups[label]])
+		.filter((label) => groups[label] && groups[label].length > 0)
+		.map((label) => [label, groups[label]])
 }

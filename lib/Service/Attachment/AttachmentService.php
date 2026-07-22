@@ -18,55 +18,47 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\AttachmentNotFoundException;
+use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\UploadException;
 use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\File;
 use OCP\Files\Folder;
+use OCP\Files\IMimeTypeDetector;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
+use OCP\Files\SimpleFS\ISimpleFile;
+use OCP\ICacheFactory;
+use OCP\IURLGenerator;
 use Psr\Log\LoggerInterface;
 
 class AttachmentService implements IAttachmentService {
-	/** @var LocalAttachmentMapper */
-	private $mapper;
-
-	/** @var AttachmentStorage */
-	private $storage;
-	/**
-	 * @var IMailManager
-	 */
-	private $mailManager;
-	/**
-	 * @var MessageMapper
-	 */
-	private $messageMapper;
-
 	/**
 	 * @var Folder
 	 */
 	private $userFolder;
-	/**
-	 * @var LoggerInterface
-	 */
-	private $logger;
 
 	/**
 	 * @param Folder $userFolder
 	 */
-	public function __construct($userFolder,
-		LocalAttachmentMapper $mapper,
-		AttachmentStorage $storage,
-		IMailManager $mailManager,
-		MessageMapper $imapMessageMapper,
-		LoggerInterface $logger) {
-		$this->mapper = $mapper;
-		$this->storage = $storage;
-		$this->mailManager = $mailManager;
-		$this->messageMapper = $imapMessageMapper;
+	public function __construct(
+		$userFolder,
+		private LocalAttachmentMapper $mapper,
+		private AttachmentStorage $storage,
+		private IMailManager $mailManager,
+		private MessageMapper $messageMapper,
+		private ICacheFactory $cacheFactory,
+		private IURLGenerator $urlGenerator,
+		private IMimeTypeDetector $mimeTypeDetector,
+		private LoggerInterface $logger,
+		private ITimeFactory $timeFactory,
+	) {
 		$this->userFolder = $userFolder;
-		$this->logger = $logger;
 	}
 
 	/**
@@ -80,6 +72,9 @@ class AttachmentService implements IAttachmentService {
 		$attachment->setUserId($userId);
 		$attachment->setFileName($file->getFileName());
 		$attachment->setMimeType($file->getMimeType());
+		$attachment->setContentId(null);
+		$attachment->setDisposition(LocalAttachment::DISPOSITION_ATTACHMENT);
+		$attachment->setCreatedAt($this->timeFactory->getTime());
 
 		$persisted = $this->mapper->insert($attachment);
 		try {
@@ -93,11 +88,21 @@ class AttachmentService implements IAttachmentService {
 		return $attachment;
 	}
 
-	public function addFileFromString(string $userId, string $name, string $mime, string $fileContents): LocalAttachment {
+	public function addFileFromString(
+		string $userId,
+		string $name,
+		string $mime,
+		string $fileContents,
+		?string $contentId,
+		?string $disposition,
+	): LocalAttachment {
 		$attachment = new LocalAttachment();
 		$attachment->setUserId($userId);
 		$attachment->setFileName($name);
 		$attachment->setMimeType($mime);
+		$attachment->setContentId($contentId);
+		$attachment->setDisposition($disposition);
+		$attachment->setCreatedAt($this->timeFactory->getTime());
 
 		$persisted = $this->mapper->insert($attachment);
 		try {
@@ -112,11 +117,9 @@ class AttachmentService implements IAttachmentService {
 	}
 
 	/**
-	 * @param string $userId
-	 * @param int $id
+	 * Try to get an attachment by id
 	 *
-	 * @return array of LocalAttachment and ISimpleFile
-	 *
+	 * @return array{0: LocalAttachment, 1: ISimpleFile}
 	 * @throws AttachmentNotFoundException
 	 */
 	#[\Override]
@@ -209,7 +212,6 @@ class AttachmentService implements IAttachmentService {
 		return $this->mapper->findByLocalMessageId($userId, $message->getId());
 	}
 
-
 	/**
 	 * @param array $attachments
 	 * @return int[]
@@ -236,7 +238,7 @@ class AttachmentService implements IAttachmentService {
 				$attachmentIds[] = $this->handleForwardedMessageAttachment($account, $attachment, $client);
 				continue;
 			}
-			if ($attachment['type'] === 'message-attachment') {
+			if ($attachment['type'] === 'message-attachment' || $attachment['type'] === 'message-attachment-inline') {
 				// Adds an attachment from another email (use case is, eg., a mail forward)
 				$attachmentIds[] = $this->handleForwardedAttachment($account, $attachment, $client);
 				continue;
@@ -245,6 +247,59 @@ class AttachmentService implements IAttachmentService {
 			$attachmentIds[] = $this->handleCloudAttachment($account, $attachment);
 		}
 		return array_values(array_filter($attachmentIds));
+	}
+
+	/**
+	 * @return list<array{id: string, fileName: string|null, mime: string, downloadUrl: string, mimeUrl: string}>
+	 */
+	public function getAttachmentNames(Account $account, Mailbox $mailbox, Message $message, \Horde_Imap_Client_Socket $client): array {
+		if ($message->getStructureAnalyzed() === true && $message->getFlagAttachments() === false) {
+			// Structure analysis already confirmed no attachments, nothing to fetch.
+			return [];
+		}
+
+		$cache = $this->cacheFactory->createDistributed('mail_attachment_names');
+
+		$cacheKey = hash('xxh128', implode('_', [
+			$account->getUserId(),
+			(string)$account->getId(),
+			(string)$mailbox->getId(),
+			(string)$message->getId()
+		]));
+
+		$cached = $cache->get($cacheKey);
+		if (is_array($cached)) {
+			/** @var list<array{id: string, fileName: string|null, mime: string, downloadUrl: string, mimeUrl: string}> $cached */
+			return $cached;
+		}
+
+		$attachments = [];
+		try {
+			$imapMessage = $this->mailManager->getImapMessage(
+				$client,
+				$account,
+				$mailbox,
+				$message->getUid(),
+				true
+			);
+			$attachments = $imapMessage->getAttachments();
+		} catch (SmimeDecryptException $e) {
+			$this->logger->debug('Could not get attachment names for S/MIME encrypted message', ['exception' => $e, 'messageId' => $message->getUid()]);
+		} catch (ServiceException $e) {
+			$this->logger->warning('Could not get attachment names', ['exception' => $e, 'messageId' => $message->getUid()]);
+		}
+
+		$result = array_values(array_map(function ($attachment) use ($message) {
+			$downloadUrl = $this->urlGenerator->linkToRouteAbsolute('mail.messages.downloadAttachment', [
+				'id' => $message->getId(),
+				'attachmentId' => $attachment['id'],
+			]);
+			$mimeUrl = $this->mimeTypeDetector->mimeTypeIcon($attachment['mime']);
+			return ['id' => $attachment['id'], 'fileName' => $attachment['fileName'], 'mime' => $attachment['mime'], 'downloadUrl' => $downloadUrl, 'mimeUrl' => $mimeUrl];
+		}, $attachments));
+
+		$cache->set($cacheKey, $result, 604800);
+		return $result;
 	}
 
 	/**
@@ -276,7 +331,7 @@ class AttachmentService implements IAttachmentService {
 		}
 
 		try {
-			$localAttachment = $this->addFileFromString($account->getUserId(), $attachment['fileName'] ?? $attachmentMessage->getSubject() . '.eml', $mime, $fullText);
+			$localAttachment = $this->addFileFromString($account->getUserId(), $attachment['fileName'] ?? $attachmentMessage->getSubject() . '.eml', $mime, $fullText, null, LocalAttachment::DISPOSITION_ATTACHMENT);
 		} catch (UploadException $e) {
 			$this->logger->error('Could not create attachment', ['exception' => $e]);
 			return null;
@@ -296,32 +351,23 @@ class AttachmentService implements IAttachmentService {
 	private function handleForwardedAttachment(Account $account, array $attachment, \Horde_Imap_Client_Socket $client): ?int {
 		$mailbox = $this->mailManager->getMailbox($account->getUserId(), $attachment['mailboxId']);
 
-		$attachments = $this->messageMapper->getRawAttachments(
+		$imapAttachment = $this->messageMapper->getAttachment(
 			$client,
 			$mailbox->getName(),
 			(int)$attachment['uid'],
+			$attachment['id'],
 			$account->getUserId(),
-			[
-				$attachment['id'] ?? []
-			]
 		);
 
-		if ($attachments === []) {
-			return null;
-		}
-
-		// detect mime type
-		$mime = 'application/octet-stream';
-		if (extension_loaded('fileinfo')) {
-			$finfo = new finfo(FILEINFO_MIME_TYPE);
-			$detectedMime = $finfo->buffer($attachments[0]);
-			if ($detectedMime !== false) {
-				$mime = $detectedMime;
-			}
-		}
-
 		try {
-			$localAttachment = $this->addFileFromString($account->getUserId(), $attachment['fileName'], $mime, $attachments[0]);
+			$localAttachment = $this->addFileFromString(
+				$account->getUserId(),
+				$imapAttachment->getName() ?? 'unknown',
+				$imapAttachment->getType(),
+				$imapAttachment->getContent(),
+				$imapAttachment->contentId,
+				$imapAttachment->disposition,
+			);
 		} catch (UploadException $e) {
 			$this->logger->error('Could not create attachment', ['exception' => $e]);
 			return null;
@@ -340,7 +386,6 @@ class AttachmentService implements IAttachmentService {
 			if ($attributes->getAttribute('permissions', 'download') === false) {
 				$this->logger->warning('Could not create attachment, no download permission for file: ' . $fileName);
 				return false;
-
 			}
 		}
 		return true;
@@ -370,7 +415,7 @@ class AttachmentService implements IAttachmentService {
 		}
 
 		try {
-			$localAttachment = $this->addFileFromString($account->getUserId(), $file->getName(), $file->getMimeType(), $file->getContent());
+			$localAttachment = $this->addFileFromString($account->getUserId(), $file->getName(), $file->getMimeType(), $file->getContent(), null, LocalAttachment::DISPOSITION_ATTACHMENT);
 		} catch (UploadException $e) {
 			$this->logger->error('Could not create attachment', ['exception' => $e]);
 			return null;

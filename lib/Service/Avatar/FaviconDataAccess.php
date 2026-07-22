@@ -58,7 +58,7 @@ class FaviconDataAccess extends DataAccess {
 		// the status code.
 		return array_merge(
 			[
-				0 => 'HTTP/1.1 ' . $response->getStatusCode() . ' FOO',
+				0 => 'HTTP/1.1 ' . (string)$response->getStatusCode() . ' FOO',
 			],
 			array_change_key_case($response->getHeaders()),
 		);

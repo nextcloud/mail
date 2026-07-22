@@ -21,6 +21,9 @@ use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @psalm-api
+ */
 class Version1100Date20210419080523 extends SimpleMigrationStep {
 	/** @var IConfig */
 	protected $config;
@@ -52,7 +55,6 @@ class Version1100Date20210419080523 extends SimpleMigrationStep {
 			$provisioningTable->addColumn('id', Types::INTEGER, [
 				'autoincrement' => true,
 				'notnull' => true,
-				'length' => 4,
 			]);
 			$provisioningTable->addColumn('provisioning_domain', Types::STRING, [
 				'notnull' => true,
@@ -133,7 +135,6 @@ class Version1100Date20210419080523 extends SimpleMigrationStep {
 
 		$accountsTable = $schema->getTable('mail_accounts');
 		$accountsTable->addColumn('provisioning_id', Types::INTEGER, [
-			'length' => 4,
 			'notnull' => false,
 		]);
 

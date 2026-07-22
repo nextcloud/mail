@@ -1,0 +1,11 @@
+--- a/lib/Horde/Mail/Rfc822.php
++++ b/lib/Horde/Mail/Rfc822.php
+@@ -802,7 +802,7 @@
+             return strcspn($chr, $validate);
+         }
+
+-        $ord = empty($chr) ? 0 : ord($chr);
++        $ord = ($chr === '' || $chr === false) ? 0 : ord($chr);
+
+         /* UTF-8 characters check. */
+         if ($ord > 127) {

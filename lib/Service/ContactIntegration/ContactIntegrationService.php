@@ -12,15 +12,13 @@ namespace OCA\Mail\Service\ContactIntegration;
 use OCA\Mail\Service\ContactsIntegration;
 
 class ContactIntegrationService {
-	/** @var ContactsIntegration */
-	private $contactsIntegration;
-
-	public function __construct(ContactsIntegration $ci) {
-		$this->contactsIntegration = $ci;
+	public function __construct(
+		private ContactsIntegration $contactsIntegration,
+	) {
 	}
 
-	public function findMatches(string $mail): array {
-		$matches = $this->contactsIntegration->getContactsWithMail($mail);
+	public function findMatches(string $uid, string $mail): array {
+		$matches = $this->contactsIntegration->getContactsWithMail($uid, $mail);
 		return $matches;
 	}
 
@@ -32,7 +30,7 @@ class ContactIntegrationService {
 		return $this->contactsIntegration->newContact($name, $mail);
 	}
 
-	public function autoComplete(string $term): array {
-		return $this->contactsIntegration->getContactsWithName($term);
+	public function autoComplete(string $uid, string $term): array {
+		return $this->contactsIntegration->getContactsWithName($uid, $term);
 	}
 }

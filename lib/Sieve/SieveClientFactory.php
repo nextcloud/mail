@@ -38,8 +38,8 @@ class SieveClientFactory {
 				$password = $account->getMailAccount()->getInboundPassword();
 			}
 
-			if ($account->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
-				$logFile = $this->config->getSystemValue('datadirectory') . '/mail-' . $account->getUserId() . '-' . $account->getId() . '-sieve.log';
+			if ($account->getMailAccount()->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
+				$logFile = $this->config->getSystemValue('datadirectory') . "/mail-{$account->getUserId()}-{$account->getId()}-sieve.log";
 			} else {
 				$logFile = null;
 			}
@@ -80,7 +80,6 @@ class SieveClientFactory {
 				'ssl' => [
 					'verify_peer' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
 					'verify_peer_name' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
-
 				]
 			],
 		];

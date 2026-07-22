@@ -19,17 +19,12 @@ use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\IRequest;
 
 class InternalAddressController extends Controller {
-	private ?string $uid;
-
 	public function __construct(
 		IRequest $request,
-		?string $userId,
+		private ?string $userId,
 		private InternalAddressService $internalAddressService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-
-		$this->internalAddressService = $internalAddressService;
-		$this->uid = $userId;
 	}
 
 	/**
@@ -41,13 +36,20 @@ class InternalAddressController extends Controller {
 	 */
 	#[TrapError]
 	public function setAddress(string $address, string $type): JsonResponse {
-		$address = $this->internalAddressService->add(
-			$this->uid,
+		if ($this->userId === null) {
+			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
+		}
+
+		$internalAddress = $this->internalAddressService->add(
+			$this->userId,
 			$address,
 			$type
-		)->jsonSerialize();
+		);
+		if ($internalAddress === null) {
+			return JsonResponse::success(null);
+		}
 
-		return JsonResponse::success($address, Http::STATUS_CREATED);
+		return JsonResponse::success($internalAddress->jsonSerialize(), Http::STATUS_CREATED);
 	}
 
 	/**
@@ -59,12 +61,12 @@ class InternalAddressController extends Controller {
 	 */
 	#[TrapError]
 	public function removeAddress(string $address, string $type): JsonResponse {
-		if ($this->uid === null) {
+		if ($this->userId === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 
 		$this->internalAddressService->add(
-			$this->uid,
+			$this->userId,
 			$address,
 			$type,
 			false
@@ -80,11 +82,11 @@ class InternalAddressController extends Controller {
 	 */
 	#[TrapError]
 	public function list(): JsonResponse {
-		if ($this->uid === null) {
+		if ($this->userId === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 		$list = $this->internalAddressService->getInternalAddresses(
-			$this->uid
+			$this->userId
 		);
 
 		return JsonResponse::success($list);

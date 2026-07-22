@@ -1,6 +1,64 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 5.10.0 – 2026-06-18
+### Added
+* Shortcut to change the password in account server settings
+* AI hint when replying with a meeting
+### Changed
+* Translations
+### Fixed
+* Printing messages
+* Drag and drop into sub-mailboxes blocked by a disabled parent mailbox
+* Prefer sans-serif font over Noto Color Emoji for text rendering
+
+## 5.9.0 – unreleased
+### Added
+* Nextcloud 35 support
+* Account delegation with notifications
+* HTML and source editing support in composer/signature editor
+* Per-message To/Cc/Bcc recipients in thread view
+* Paste or copy several email addresses into address fields at once
+* Keep inline images when forwarding messages
+### Changed
+* Translations
+### Performance
+* Reuse IMAP client connections during initial sync
+### Fixed
+* Attachment actions menu closes after Download or Save to Files
+* Correct favorite/unfavorite bulk action behavior
+* Detect and warn about Microsoft accounts without OAuth configured
+* Important message icon not displayed in message list
+* Load translations via filesystem path
+
+## 5.8.0 – unreleased
+### Added
+* Deep link support for opening messages by Message-ID
+* AI hint displayed alongside smart replies
+* RTL/LTR text direction buttons in the composer toolbar
+* Improved follow-up reminder and priority inbox ML indicators
+### Changed
+* Translations
+### Fixed
+* Compact view alignment issues
+* S/MIME: parse email addresses from Subject Alternative Names
+* Composer: no dropdown shown when recipient field focused without input
+* Provisioning: missing @ character in user display
+* Drag and drop: track droppable mailbox instances independently
+* Incorrect creation timestamp for local attachments
+* Translation modal now indicates AI usage
+* List rendering on mobile
+* Out of office datepicker overlapping with sidebar
+* Null safety in HTTP controllers
+* PHP 8.5 deprecation warnings
+
+## 5.6.0 – 2025-11-20
+### Added
+* Keyboard shortcut CTRL+Enter to send an email
+* Settings signature editor border
+### Changed
+* Translations
+
 ## 5.5.0 – unreleased
 ### Added
 * Nextcloud 33 support

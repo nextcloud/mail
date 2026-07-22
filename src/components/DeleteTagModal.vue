@@ -3,17 +3,18 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<ConfirmationModal title="Delete tag"
+	<ConfirmationModal
+		title="Delete tag"
 		:disabled="deleting"
 		@confirm="deleteTag"
 		@cancel="onClose">
-		{{ t('mail','The tag will be deleted from all messages.') }}
+		{{ t('mail', 'The tag will be deleted from all messages.') }}
 	</ConfirmationModal>
 </template>
+
 <script>
 import { showInfo, showSuccess } from '@nextcloud/dialogs'
 import { mapStores } from 'pinia'
-
 import ConfirmationModal from './ConfirmationModal.vue'
 import useMainStore from '../store/mainStore.js'
 
@@ -22,38 +23,46 @@ export default {
 	components: {
 		ConfirmationModal,
 	},
+
 	props: {
 		tag: {
 			type: Object,
 			required: true,
 		},
+
 		envelopes: {
 			// The envelopes on which this menu will act
 			required: true,
 			type: Array,
 		},
+
 		accountId: {
 			type: Number,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			deleting: false,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 	},
+
 	methods: {
 		onClose() {
 			this.$emit('close')
 		},
+
 		removeTag(imapLabel) {
 			this.envelopes.forEach((envelope) => {
 				this.mainStore.removeEnvelopeTag({ envelope, imapLabel })
 			})
 		},
+
 		async deleteTag() {
 			this.deleting = true
 			try {
@@ -69,7 +78,6 @@ export default {
 				this.deleting = false
 				this.onClose()
 			}
-
 		},
 	},
 }

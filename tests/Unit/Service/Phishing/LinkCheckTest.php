@@ -9,10 +9,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service\Phishing;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-
 use OCA\Mail\Service\PhishingDetection\LinkCheck;
 use OCP\IL10N;
-
 use PHPUnit\Framework\MockObject\MockObject;
 
 class LinkCheckTest extends TestCase {
@@ -85,5 +83,19 @@ class LinkCheckTest extends TestCase {
 			'href' => 'https://iplookup.flagfox.net/',
 		]], $actualJson['additionalData']);
 		$this->assertTrue(is_string(json_encode($actualJson, JSON_THROW_ON_ERROR)));
+	}
+
+	public function testAddressCasing(): void {
+		$htmlMessage = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body><a href="https://Nextcloud.example">Nextcloud.example</a></body></html>';
+
+		$result = $this->service->run($htmlMessage);
+		$this->assertFalse($result->isPhishing());
+	}
+
+	public function testEmptyMessage(): void {
+		$htmlMessage = '';
+
+		$result = $this->service->run($htmlMessage);
+		$this->assertFalse($result->isPhishing());
 	}
 }

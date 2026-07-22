@@ -5,23 +5,26 @@
 <template>
 	<div class="action">
 		<div class="action__type">
-			<NcSelect class="action__type__column action__type__column__select"
-				:value="currentAction"
+			<NcSelect
+				class="action__type__column action__type__column__select"
+				:model-value="currentAction"
 				:required="true"
 				:label-outside="true"
 				:options="availableTypes"
 				:clearable="false"
 				@input="updateAction({ type: $event.id })" />
-			<component :is="componentInstance"
+			<component
+				:is="componentInstance"
 				v-if="componentInstance"
 				class="action__type__column"
 				:action="action"
 				:account="account"
 				@update-action="updateAction" />
 		</div>
-		<NcButton :aria-label="t('mail', 'Delete action')"
+		<NcButton
+			:aria-label="t('mail', 'Delete action')"
 			class="action__delete"
-			type="tertiary-no-background"
+			variant="tertiary-no-background"
 			@click="deleteAction">
 			<template #icon>
 				<DeleteIcon :size="20" />
@@ -29,13 +32,15 @@
 		</NcButton>
 	</div>
 </template>
+
 <script>
 import { NcButton, NcSelect, NcTextField } from '@nextcloud/vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
-
 import ActionAddflag from './ActionAddflag.vue'
+import ActionAddSystemFlag from './ActionAddSystemFlag.vue'
 import ActionFileinto from './ActionFileinto.vue'
 import ActionStop from './ActionStop.vue'
+import { MailFilterActions } from '../../models/mailFilter.ts'
 
 export default {
 	name: 'Action',
@@ -48,19 +53,26 @@ export default {
 		ActionStop,
 		DeleteIcon,
 	},
+
 	props: {
 		action: {
 			type: Object,
 			required: true,
 		},
+
 		account: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			availableTypes: [
+				{
+					id: MailFilterActions.AddSystemFlag,
+					label: this.t('mail', 'Mark message as'),
+				},
 				{
 					id: 'addflag',
 					label: this.t('mail', 'Add flag'),
@@ -70,37 +82,44 @@ export default {
 					label: this.t('mail', 'Move into folder'),
 				},
 				{
-					id: 'stop',
+					id: MailFilterActions.Stop,
 					label: this.t('mail', 'Stop'),
 				},
 			],
 		}
 	},
+
 	computed: {
 		currentAction() {
-			return this.availableTypes.find(type => type.id === this.action.type)
+			return this.availableTypes.find((type) => type.id === this.action.type)
 		},
+
 		componentInstance() {
 			if (this.action.type === 'fileinto') {
 				return ActionFileinto
 			} else if (this.action.type === 'addflag') {
 				return ActionAddflag
-			} else if (this.action.type === 'stop') {
+			} else if (this.action.type === MailFilterActions.Stop) {
 				return ActionStop
+			} else if (this.action.type === MailFilterActions.AddSystemFlag) {
+				return ActionAddSystemFlag
 			}
 			return null
 		},
 	},
+
 	methods: {
 		updateAction(properties) {
 			this.$emit('update-action', { ...this.action, ...properties })
 		},
+
 		deleteAction() {
 			this.$emit('delete-action', this.action)
 		},
 	},
 }
 </script>
+
 <style lang="scss" scoped>
 .action {
 	display: flex;

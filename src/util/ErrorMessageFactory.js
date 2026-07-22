@@ -6,7 +6,7 @@ import { translate as t } from '@nextcloud/l10n'
 
 const smileys = [':-(', ':-/', ':-\\', ':-|', ":'-(", ":'-/", ":'-\\", ":'-|"]
 
-const getRandomSmiley = () => {
+function getRandomSmiley() {
 	return smileys[Math.floor(Math.random() * smileys.length)]
 }
 
@@ -14,7 +14,7 @@ const getRandomSmiley = () => {
  * @param {object} folder a folder
  * @return {string}
  */
-export const getRandomFolderErrorMessage = (folder) => {
+export function getRandomFolderErrorMessage(folder) {
 	const folderName = folder.get('name')
 	const rawTexts = [
 		t('mail', 'Could not load {tag}{name}{endtag}', {
@@ -35,7 +35,7 @@ export const getRandomFolderErrorMessage = (folder) => {
 /**
  * @return {string}
  */
-export const getRandomMessageErrorMessage = () => {
+export function getRandomMessageErrorMessage() {
 	const texts = [
 		t('mail', 'Could not load your message'),
 		t('mail', 'Could not load the desired message'),

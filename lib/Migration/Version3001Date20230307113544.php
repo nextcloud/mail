@@ -14,6 +14,9 @@ use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
+/**
+ * @psalm-api
+ */
 class Version3001Date20230307113544 extends SimpleMigrationStep {
 	#[\Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
@@ -23,7 +26,6 @@ class Version3001Date20230307113544 extends SimpleMigrationStep {
 		$accountsTable->addColumn('junk_mailbox_id', 'integer', [
 			'notnull' => false,
 			'default' => null,
-			'length' => 20,
 		]);
 		$accountsTable->addColumn('move_junk', 'boolean', [
 			'notnull' => false,

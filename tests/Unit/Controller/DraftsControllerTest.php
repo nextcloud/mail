@@ -19,6 +19,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\DraftsService;
 use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -35,6 +36,7 @@ class DraftsControllerTest extends TestCase {
 	private AccountService $accountService;
 	private DraftsController $controller;
 	private SmimeService $smimeService;
+	private DelegationService $delegationService;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -46,6 +48,11 @@ class DraftsControllerTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->smimeService = $this->createMock(SmimeService::class);
+		$this->delegationService = $this->createMock(DelegationService::class);
+		$this->delegationService->method('resolveAccountUserId')
+			->willReturn($this->userId);
+		$this->delegationService->method('resolveLocalMessageUserId')
+			->willReturn($this->userId);
 
 		$this->controller = new DraftsController(
 			$this->appName,
@@ -54,7 +61,8 @@ class DraftsControllerTest extends TestCase {
 			$this->service,
 			$this->accountService,
 			$this->timeFactory,
-			$this->smimeService
+			$this->smimeService,
+			$this->delegationService,
 		);
 	}
 
@@ -75,6 +83,9 @@ class DraftsControllerTest extends TestCase {
 		$this->service->expects(self::once())
 			->method('sendMessage')
 			->with($message, $account);
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId moved draft: {$message->getId()} to the IMAP server on behalf of $this->userId");
 
 		$expected = JsonResponse::success('Message moved to IMAP', Http::STATUS_ACCEPTED);
 		$actual = $this->controller->move($message->getId());
@@ -161,6 +172,9 @@ class DraftsControllerTest extends TestCase {
 		$this->service->expects(self::once())
 			->method('deleteMessage')
 			->with($this->userId, $message);
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId deleted draft: {$message->getId()}  on behalf of $this->userId");
 
 		$expected = JsonResponse::success('Message deleted', Http::STATUS_ACCEPTED);
 		$actual = $this->controller->destroy($message->getId());
@@ -218,6 +232,9 @@ class DraftsControllerTest extends TestCase {
 		$this->service->expects(self::once())
 			->method('saveMessage')
 			->with($account, $message, $to, $cc, [], []);
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId created draft:   on behalf of $this->userId");
 
 		$expected = JsonResponse::success($message, Http::STATUS_CREATED);
 		$actual = $this->controller->create(
@@ -535,7 +552,6 @@ class DraftsControllerTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-
 	public function testUpdateMessageNotFound(): void {
 		$message = new LocalMessage();
 		$message->setId(1);
@@ -558,7 +574,6 @@ class DraftsControllerTest extends TestCase {
 			->willThrowException(new DoesNotExistException(''));
 		$this->service->expects(self::never())
 			->method('updateMessage');
-
 
 		$this->expectException(DoesNotExistException::class);
 		$expected = JsonResponse::fail('', Http::STATUS_NOT_FOUND);

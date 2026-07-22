@@ -30,30 +30,22 @@ class SyncJob extends TimedJob {
 	private const DEFAULT_SYNC_INTERVAL = 3600;
 
 	private IUserManager $userManager;
-	private AccountService $accountService;
-	private ImapToDbSynchronizer $syncService;
-	private MailboxSync $mailboxSync;
-	private LoggerInterface $logger;
 	private IJobList $jobList;
 	private readonly bool $forcedSyncInterval;
 
 	public function __construct(
 		ITimeFactory $time,
 		IUserManager $userManager,
-		AccountService $accountService,
-		MailboxSync $mailboxSync,
-		ImapToDbSynchronizer $syncService,
-		LoggerInterface $logger,
+		private AccountService $accountService,
+		private MailboxSync $mailboxSync,
+		private ImapToDbSynchronizer $syncService,
+		private LoggerInterface $logger,
 		IJobList $jobList,
 		private readonly IConfig $config,
 	) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;
-		$this->accountService = $accountService;
-		$this->syncService = $syncService;
-		$this->mailboxSync = $mailboxSync;
-		$this->logger = $logger;
 		$this->jobList = $jobList;
 
 		$configuredSyncInterval = $config->getSystemValueInt('app.mail.background-sync-interval');
@@ -78,7 +70,7 @@ class SyncJob extends TimedJob {
 		try {
 			$account = $this->accountService->findById($accountId);
 		} catch (DoesNotExistException $e) {
-			$this->logger->debug('Could not find account <' . $accountId . '> removing from jobs');
+			$this->logger->debug("Could not find account <{$accountId}> removing from jobs");
 			$this->jobList->remove(self::class, $argument);
 			return;
 		}

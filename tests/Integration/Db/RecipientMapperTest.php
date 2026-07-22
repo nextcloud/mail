@@ -48,7 +48,7 @@ class RecipientMapperTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->db = \OC::$server->getDatabaseConnection();
+		$this->db = \OCP\Server::get(\OCP\IDBConnection::class);
 		$this->mapper = new RecipientMapper(
 			$this->db
 		);

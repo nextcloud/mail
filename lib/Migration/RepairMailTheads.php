@@ -15,17 +15,14 @@ use OCP\Migration\IRepairStep;
 use Psr\Log\LoggerInterface;
 use function method_exists;
 
+/**
+ * @psalm-api
+ */
 class RepairMailTheads implements IRepairStep {
-	/** @var MessageMapper */
-	private $mapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(MessageMapper $mapper,
-		LoggerInterface $logger) {
-		$this->mapper = $mapper;
-		$this->logger = $logger;
+	public function __construct(
+		private MessageMapper $mapper,
+		private LoggerInterface $logger,
+	) {
 	}
 
 	#[\Override]
@@ -46,7 +43,7 @@ class RepairMailTheads implements IRepairStep {
 		}
 
 		$count = $this->mapper->resetInReplyTo();
-		$this->logger->info('Repairing Mail Threading, ' . $count . ' messages updated');
+		$this->logger->info("Repairing Mail Threading, $count messages updated");
 		$output->info(sprintf('Repaired threads, %s messages updated', $count));
 	}
 }

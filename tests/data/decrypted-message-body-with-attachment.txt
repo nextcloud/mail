@@ -1,0 +1,81 @@
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-512; boundary="------------ms090602070103080803000804"
+
+--------------ms090602070103080803000804
+Content-Type: multipart/mixed; boundary="------------qAYOrn93kRwkODOppBlz0hPa"
+
+--------------qAYOrn93kRwkODOppBlz0hPa
+Content-Type: multipart/alternative;
+ boundary="------------khRKVoYMOnH1fDekoKVmWtCU"
+
+--------------khRKVoYMOnH1fDekoKVmWtCU
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+Hi Bob,
+
+please take a look at the report.
+
+
+Best
+
+Alice
+
+
+--------------khRKVoYMOnH1fDekoKVmWtCU
+Content-Type: multipart/related;
+ boundary="------------XTvL9ftLXAsOr07D7RnGhT8k"
+
+--------------XTvL9ftLXAsOr07D7RnGhT8k
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <p>Hi Bob,</p>
+    <p>please take a look at the report.</p>
+    <p><br>
+    </p>
+    <p>Best</p>
+    <p>Alice</p>
+    <p><br>
+    </p>
+    <p><img moz-do-not-send="false"
+        src="cid:part1.rSMDTUJE.c3rWVu9G@mail.example.com" alt="" width="195"
+        height="130"></p>
+  </body>
+</html>
+--------------XTvL9ftLXAsOr07D7RnGhT8k
+Content-Type: image/png; name="nextcloud.png"
+Content-Disposition: inline; filename="nextcloud.png"
+Content-Id: <part1.rSMDTUJE.c3rWVu9G@mail.example.com>
+Content-Transfer-Encoding: base64
+
+iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ffpkAAAAASUVORK5CYII=
+
+--------------XTvL9ftLXAsOr07D7RnGhT8k--
+
+
+--------------khRKVoYMOnH1fDekoKVmWtCU--
+
+--------------qAYOrn93kRwkODOppBlz0hPa
+Content-Type: application/pdf; name="report.pdf"
+Content-Disposition: attachment; filename="report.pdf"
+Content-Transfer-Encoding: base64
+
+iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=
+
+--------------qAYOrn93kRwkODOppBlz0hPa--
+
+--------------ms090602070103080803000804
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+JVBERi0xLjcK
+--------------ms090602070103080803000804--

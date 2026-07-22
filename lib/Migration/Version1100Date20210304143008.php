@@ -18,6 +18,9 @@ use OCP\Migration\SimpleMigrationStep;
 /**
  * @link https://github.com/nextcloud/mail/issues/25
  */
+/**
+ * @psalm-api
+ */
 class Version1100Date20210304143008 extends SimpleMigrationStep {
 	/**
 	 * @param IOutput $output
@@ -34,7 +37,6 @@ class Version1100Date20210304143008 extends SimpleMigrationStep {
 			$tagsTable->addColumn('id', Types::INTEGER, [
 				'autoincrement' => true,
 				'notnull' => true,
-				'length' => 4,
 			]);
 			$tagsTable->addColumn('user_id', Types::STRING, [
 				'notnull' => true,
@@ -74,7 +76,6 @@ class Version1100Date20210304143008 extends SimpleMigrationStep {
 			$tagsMessageTable->addColumn('id', Types::INTEGER, [
 				'autoincrement' => true,
 				'notnull' => true,
-				'length' => 4,
 			]);
 			$tagsMessageTable->addColumn('imap_message_id', Types::STRING, [
 				'notnull' => true,
@@ -82,7 +83,6 @@ class Version1100Date20210304143008 extends SimpleMigrationStep {
 			]);
 			$tagsMessageTable->addColumn('tag_id', Types::INTEGER, [
 				'notnull' => true,
-				'length' => 4,
 			]);
 			$tagsMessageTable->setPrimaryKey(['id']);
 		}

@@ -5,7 +5,8 @@
 
 <template>
 	<div class="new-message-attachments">
-		<div v-if="hasNextLine"
+		<div
+			v-if="hasNextLine"
 			class="new-message-attachments--counter"
 			:class="{ 'new-message-attachments--counter--with-errors': hasAttachmentErrors }"
 			@click="isToggle = !isToggle">
@@ -15,12 +16,14 @@
 			<ChevronUp v-if="isToggle" :size="20" />
 			<ChevronDown v-if="!isToggle" :size="20" />
 		</div>
-		<ul class="new-message-attachments--list"
+		<ul
+			class="new-message-attachments--list"
 			:class="{
 				hide: isToggle,
 				active: !isToggle && hasNextLine,
 			}">
-			<ComposerAttachment v-for="attachment in attachments"
+			<ComposerAttachment
+				v-for="attachment in attachments"
 				ref="attachments"
 				:key="attachment.id"
 				:attachment="attachment"
@@ -28,22 +31,18 @@
 				@on-delete-attachment="onDelete(attachment)" />
 		</ul>
 
-		<input ref="localAttachments"
+		<input
+			ref="localAttachments"
 			type="file"
 			multiple
 			style="display: none;"
 			@change="onLocalAttachmentSelected">
-		<FilePicker v-if="isAttachementPickerOpen"
-			:name="t('mail','Choose a file to add as attachment')"
-			:buttons="attachementPickerButtons"
+		<FilePicker
+			v-if="isAttachmentPickerOpen"
+			:name="t('mail', 'Choose a file')"
+			:buttons="attachmentPickerButtons"
 			:filter-fn="filterAttachements"
-			@close="()=>isAttachementPickerOpen = false" />
-		<FilePicker v-if="isLinkPickerOpen"
-			:name="t('mail','Choose a file to share as a link')"
-			:multiselect="false"
-			:buttons="linkPickerButtons"
-			:filter-fn="filterAttachements"
-			@close="()=>isLinkPickerOpen = false" />
+			@close="() => isAttachmentPickerOpen = false" />
 	</div>
 </template>
 
@@ -60,10 +59,8 @@ import trimStart from 'lodash/fp/trimCharsStart.js'
 import Vue from 'vue'
 import ChevronDown from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
-
-import logger from '../logger.js'
-
 import ComposerAttachment from './ComposerAttachment.vue'
+import logger from '../logger.js'
 import { uploadLocalAttachment } from '../service/AttachmentService.js'
 import { getFileData } from '../service/FileService.js'
 import { shareFile } from '../service/FileSharingService.js'
@@ -84,20 +81,29 @@ export default {
 		ChevronDown,
 		ChevronUp,
 	},
+
 	props: {
 		value: {
 			type: Array,
 			required: true,
 		},
+
 		bus: {
 			type: Object,
 			required: true,
 		},
+
 		uploadSizeLimit: {
 			type: Number,
 			default: 0,
 		},
+
+		accountId: {
+			type: Number,
+			default: null,
+		},
 	},
+
 	data() {
 		return {
 			uploading: false,
@@ -106,18 +112,15 @@ export default {
 			attachments: [],
 			isToggle: false,
 			hasNextLine: false,
-			isAttachementPickerOpen: false,
-			isLinkPickerOpen: false,
-			attachementPickerButtons: [
+			isAttachmentPickerOpen: false,
+			attachmentPickerButtons: [
 				{
-					label: t('mail', 'Choose'),
+					label: t('mail', 'Add as attachment'),
 					callback: this.onAddCloudAttachment,
 					type: 'primary',
 				},
-			],
-			linkPickerButtons: [
 				{
-					label: t('mail', 'Choose'),
+					label: t('mail', 'Add as share link'),
 					callback: this.onAddCloudAttachmentLink,
 					type: 'primary',
 				},
@@ -125,10 +128,12 @@ export default {
 
 		}
 	},
+
 	computed: {
 		hasAttachmentErrors() {
-			return this.attachments.some(attachment => attachment.error)
+			return this.attachments.some((attachment) => attachment.error)
 		},
+
 		uploadProgress() {
 			let uploaded = 0
 			let total = 0
@@ -138,6 +143,7 @@ export default {
 			}
 			return ((uploaded / total) * 100).toFixed(1)
 		},
+
 		total() {
 			let total = 0
 			for (const id in this.uploads) {
@@ -146,6 +152,7 @@ export default {
 			return total
 		},
 	},
+
 	watch: {
 		attachments() {
 			this.$nextTick(function() {
@@ -171,12 +178,13 @@ export default {
 			})
 		},
 	},
+
 	created() {
 		this.bus.on('on-add-local-attachment', this.onAddLocalAttachment)
 		this.bus.on('on-add-cloud-attachment', this.openAttachementPicker)
-		this.bus.on('on-add-cloud-attachment-link', this.OpenLinkPicker)
 		this.bus.on('on-add-message-as-attachment', this.onAddMessageAsAttachment)
-		this.value.map(attachment => {
+		this.bus.on('on-add-local-files', this.addLocalFiles)
+		this.value.map((attachment) => {
 			this.attachments.push({
 				id: attachment.id,
 				fileName: attachment.fileName,
@@ -185,28 +193,31 @@ export default {
 				finished: true,
 				sizeString: this.formatBytes(attachment.size),
 				imageBlobURL: attachment.isImage ? attachment.downloadUrl : attachment.mimeUrl,
+				type: attachment.type,
 			})
 			return attachment
 		})
 	},
+
 	methods: {
 		filterAttachements(node) {
 			const downloadShareAttribute = node.attributes['share-attributes'] ? JSON.parse(node.attributes['share-attributes'])?.find((shareAttribute) => shareAttribute.key === 'download') : undefined
 			const downloadPermissions = downloadShareAttribute !== undefined ? downloadShareAttribute.value : true
 			return (node.permissions & OC.PERMISSION_READ) && downloadPermissions
 		},
+
 		openAttachementPicker() {
-			this.isAttachementPickerOpen = true
+			this.isAttachmentPickerOpen = true
 		},
-		OpenLinkPicker() {
-			this.isLinkPickerOpen = true
-		},
+
 		onAddLocalAttachment() {
 			this.$refs.localAttachments.click()
 		},
+
 		emitNewAttachments(attachments) {
 			this.$emit('input', this.value.concat(attachments))
 		},
+
 		totalSizeOfUpload() {
 			return Object.values(this.value).reduce((acc, upload) => {
 				if (!upload.type === 'local') {
@@ -217,12 +228,17 @@ export default {
 				return acc + upload.size
 			}, 0)
 		},
+
 		onLocalAttachmentSelected(e) {
+			return this.addLocalFiles(Array.from(e.target.files))
+		},
+
+		addLocalFiles(files) {
 			this.uploading = true
 			// BUG - if choose again - progress lost/ move to complete()
 			Vue.set(this, 'uploads', {})
 
-			const toUpload = sumBy(prop('size'), Object.values(e.target.files))
+			const toUpload = sumBy(prop('size'), Object.values(files))
 			const newTotal = toUpload + this.totalSizeOfUpload()
 			logger.debug('checking upload size limit', {
 				existingUploads: this.totalSizeOfUpload(),
@@ -231,7 +247,7 @@ export default {
 				newTotal,
 			})
 			if (this.uploadSizeLimit && newTotal > this.uploadSizeLimit) {
-				this.showAttachmentFileSizeWarning(e.target.files.length)
+				this.showAttachmentFileSizeWarning(files.length)
 				this.uploading = false
 				return
 			}
@@ -245,7 +261,6 @@ export default {
 					}
 					return item
 				})
-
 			}
 			// TODO bug: cancel axios on close or delete attachment
 			const promises = map((file) => {
@@ -261,6 +276,7 @@ export default {
 					finished: false,
 					error: false,
 					hasPreview: false,
+					type: 'local',
 					controller,
 				}
 				this.attachments.push(attachment)
@@ -270,9 +286,9 @@ export default {
 					uploaded: 0,
 				})
 				try {
-					return uploadLocalAttachment(file, progress(file.name), controller)
+					return uploadLocalAttachment(file, this.accountId, progress(file.name), controller)
 						.catch(() => {
-							this.attachments.some(attachment => {
+							this.attachments.some((attachment) => {
 								if (attachment.displayName === file.name && !attachment.error) {
 									this.$set(attachment, 'error', true)
 									return true
@@ -296,7 +312,7 @@ export default {
 				} catch (error) {
 					logger.error('Could not upload file', { file, error })
 				}
-			}, e.target.files)
+			}, files)
 
 			const done = Promise.all(promises)
 				.catch((error) => logger.error('could not upload all attachments', { error }))
@@ -306,9 +322,10 @@ export default {
 
 			return done
 		},
+
 		async onAddCloudAttachment(nodes) {
 			try {
-				const paths = nodes.map(node => node.path)
+				const paths = nodes.map((node) => node.path)
 				this.cloudAttachement = false
 				// maybe fiiled front with placeholder loader...?
 				const filesFromCloud = await Promise.all(paths.map(getFileData))
@@ -352,6 +369,7 @@ export default {
 				logger.error('could not choose a file as attachment', { error })
 			}
 		},
+
 		async onAddCloudAttachmentLink(nodes) {
 			try {
 				this.cloudAttachementLink = false
@@ -362,6 +380,7 @@ export default {
 				logger.error('could not choose a file as attachment link', { error })
 			}
 		},
+
 		/**
 		 * Add a forwarded message as an attachment
 		 *
@@ -381,6 +400,7 @@ export default {
 			})
 			this.emitNewAttachments([attachment])
 		},
+
 		showAttachmentFileSizeWarning(num) {
 			showWarning(n(
 				'mail',
@@ -392,6 +412,7 @@ export default {
 				},
 			))
 		},
+
 		onDelete(attachment) {
 			// If the attachment is still uploading, abort the upload
 			if (!attachment.finished && attachment.controller) {
@@ -406,11 +427,11 @@ export default {
 				type: attachment.type,
 			}
 
-			this.attachments = this.attachments.filter(a => a !== attachment)
+			this.attachments = this.attachments.filter((a) => a !== attachment)
 
 			this.$emit(
 				'input',
-				this.value.filter(a => {
+				this.value.filter((a) => {
 					if (val.type === 'cloud') {
 						return a.fileName !== val.fileName
 					} else {
@@ -420,7 +441,7 @@ export default {
 			)
 
 			const updatedUploads = Object.keys(this.uploads)
-				.filter(fileName => fileName !== attachment.fileName)
+				.filter((fileName) => fileName !== attachment.fileName)
 				.reduce((acc, fileName) => {
 					acc[fileName] = this.uploads[fileName]
 					return acc
@@ -430,17 +451,22 @@ export default {
 
 			this.$emit('on-delete-attachment', attachment)
 		},
+
 		appendToBodyAtCursor(toAppend) {
 			this.bus.emit('append-to-body-at-cursor', toAppend)
 		},
+
 		formatBytes(bytes, decimals = 2) {
-			if (bytes === 0) return '0 B'
+			if (bytes === 0) {
+				return '0 B'
+			}
 			const k = 1024
 			const dm = decimals < 0 ? 0 : decimals
 			const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
 			const i = Math.floor(Math.log(bytes) / Math.log(k))
 			return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
 		},
+
 		changeProgress(item, progress) {
 			this.attachments.map((attachment, i) => {
 				if (item.fileName === attachment.fileName) {
@@ -457,6 +483,7 @@ export default {
 				return attachment
 			})
 		},
+
 		generatePreview(file) {
 			if (this.isImage(file)) {
 				return URL.createObjectURL(file)
@@ -464,6 +491,7 @@ export default {
 				return false
 			}
 		},
+
 		isImage(file) {
 			return file.type && mimes.indexOf(file.type) !== -1
 		},

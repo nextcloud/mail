@@ -14,6 +14,9 @@ use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
+/**
+ * @psalm-api
+ */
 class Version1110Date20210908114229 extends SimpleMigrationStep {
 	/**
 	 * @param IOutput $output
@@ -27,7 +30,7 @@ class Version1110Date20210908114229 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$mailboxTable = $schema->getTable('mail_mailboxes');
-		$mailboxTable->changeColumn('delimiter', [
+		$mailboxTable->modifyColumn('delimiter', [
 			'notnull' => false,
 			'length' => 1,
 		]);

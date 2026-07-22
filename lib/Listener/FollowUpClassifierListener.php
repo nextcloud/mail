@@ -17,7 +17,7 @@ use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCP\BackgroundJob\IJobList;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\TextProcessing\FreePromptTaskType;
+use OCP\TaskProcessing\TaskTypes\TextToText;
 
 /**
  * @template-implements IEventListener<Event|NewMessagesSynchronized>
@@ -46,7 +46,7 @@ class FollowUpClassifierListener implements IEventListener {
 			return;
 		}
 
-		if (!$this->aiService->isLlmAvailable(FreePromptTaskType::class)) {
+		if (!$this->aiService->isLlmAvailable(TextToText::ID)) {
 			return;
 		}
 
@@ -77,7 +77,8 @@ class FollowUpClassifierListener implements IEventListener {
 			];
 			// Delay job a bit because there might be some replies until then and we might be able
 			// to skip the expensive LLM task
-			$timestamp = (new DateTimeImmutable('@' . $message->getSentAt()))
+			$sentAt = $message->getSentAt();
+			$timestamp = (new DateTimeImmutable("@$sentAt"))
 				->add(new DateInterval('P3DT12H'))
 				->getTimestamp();
 			$this->jobList->scheduleAfter(

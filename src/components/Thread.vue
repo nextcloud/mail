@@ -6,7 +6,8 @@
 	<AppContentDetails id="mail-message">
 		<!-- Show outer loading screen only if we have no data about the thread -->
 		<Loading v-if="loading && thread.length === 0" :hint="t('mail', 'Loading thread')" />
-		<Error v-else-if="errorTitle || errorMessage"
+		<Error
+			v-else-if="errorTitle || errorMessage"
 			:error="errorTitle ? errorTitle : t('mail', 'Not found')"
 			:message="errorMessage" />
 		<template v-else>
@@ -15,37 +16,11 @@
 					<h2 dir="auto" :title="threadSubject">
 						{{ threadSubject }}
 					</h2>
-					<div v-if="thread.length" ref="avatarHeader" class="avatar-header">
-						<!-- Participants that can fit in the parent div -->
-						<RecipientBubble v-for="participant in threadParticipants.slice(0, participantsToDisplay)"
-							:key="participant.email"
-							:email="participant.email"
-							:label="participant.label" />
-						<!-- Indicator to show that there are more participants than displayed -->
-						<Popover v-if="threadParticipants.length > participantsToDisplay"
-							class="avatar-more">
-							<template #trigger>
-								<span class="avatar-more">
-									{{ moreParticipantsString }}
-								</span>
-							</template>
-							<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
-								:key="participant.email"
-								:title="participant.email"
-								:email="participant.email"
-								:label="participant.label" />
-						</Popover>
-						<!-- Remaining participants, if any (Needed to have avatarHeader reactive) -->
-						<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
-							:key="participant.email"
-							class="avatar-hidden"
-							:email="participant.email"
-							:label="participant.label" />
-					</div>
 				</div>
 			</div>
 			<ThreadSummary v-if="showSummaryBox" :loading="summaryLoading" :summary="summaryText" />
-			<ThreadEnvelope v-for="(env, index) in thread"
+			<ThreadEnvelope
+				v-for="(env, index) in thread"
 				:key="env.databaseId"
 				:envelope="env"
 				:mailbox-id="$route.params.mailboxId"
@@ -65,39 +40,26 @@
 <script>
 import { showError } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import moment from '@nextcloud/moment'
-import { NcAppContentDetails as AppContentDetails, NcPopover as Popover } from '@nextcloud/vue'
-import debounce from 'lodash/fp/debounce.js'
+import { NcAppContentDetails as AppContentDetails } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
-import { prop, uniqBy } from 'ramda'
-
-import logger from '../logger.js'
-
 import Error from './Error.vue'
 import Loading from './Loading.vue'
-import RecipientBubble from './RecipientBubble.vue'
 import ThreadEnvelope from './ThreadEnvelope.vue'
 import ThreadSummary from './ThreadSummary.vue'
+import logger from '../logger.js'
 import { summarizeThread } from '../service/AiIntergrationsService.js'
 import useMainStore from '../store/mainStore.js'
 import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory.js'
+import { formatDateTimeFromUnix } from '../util/formatDateTime.js'
 
 export default {
 	name: 'Thread',
 	components: {
-		RecipientBubble,
 		ThreadSummary,
 		AppContentDetails,
 		Error,
 		Loading,
 		ThreadEnvelope,
-		Popover,
-	},
-	props: {
-		currentAccountEmail: {
-			type: String,
-			required: true,
-		},
 	},
 
 	data() {
@@ -108,8 +70,6 @@ export default {
 			errorMessage: '',
 			errorTitle: '',
 			expandedThreads: [],
-			participantsToDisplay: 999,
-			resizeDebounced: debounce(500, this.updateParticipantsToDisplay),
 			enabledThreadSummary: loadState('mail', 'llm_summaries_available', false),
 			summaryText: '',
 			summaryError: false,
@@ -119,13 +79,10 @@ export default {
 
 	computed: {
 		...mapStores(useMainStore),
-		moreParticipantsString() {
-			// Returns a number showing the number of thread participants that are not shown in the avatar-header
-			return `+${this.threadParticipants.length - this.participantsToDisplay}`
-		},
 		threadId() {
 			return parseInt(this.$route.params.threadId, 10)
 		},
+
 		thread() {
 			const envelope = this.mainStore.getEnvelope(this.threadId)
 			if (envelope === undefined) {
@@ -142,8 +99,8 @@ export default {
 			}
 
 			const currentMailbox = this.mainStore.getMailbox(envelope.mailboxId)
-			const trashMailbox = this.mainStore.getMailboxes(envelope.accountId).find(mailbox => mailbox.specialRole === 'trash')
-			const junkMailbox = this.mainStore.getMailboxes(envelope.accountId).find(mailbox => mailbox.specialRole === 'junk')
+			const trashMailbox = this.mainStore.getMailboxes(envelope.accountId).find((mailbox) => mailbox.specialRole === 'trash')
+			const junkMailbox = this.mainStore.getMailboxes(envelope.accountId).find((mailbox) => mailbox.specialRole === 'junk')
 
 			let limitEnvelopesToCurrentMailbox = false
 			const mailboxesToIgnore = []
@@ -163,29 +120,40 @@ export default {
 			}
 
 			if (limitEnvelopesToCurrentMailbox) {
-				return envelopes.filter(envelope => envelope.mailboxId === currentMailbox.databaseId)
+				return envelopes.filter((envelope) => envelope.mailboxId === currentMailbox.databaseId)
 			} else {
-				return envelopes.filter(envelope => !mailboxesToIgnore.includes(envelope.mailboxId))
+				return envelopes.filter((envelope) => !mailboxesToIgnore.includes(envelope.mailboxId))
 			}
 		},
-		threadParticipants() {
-			const recipients = this.thread.flatMap(envelope => {
-				return envelope.from.concat(envelope.to).concat(envelope.cc)
-			}).filter(participant => participant.email !== this.currentAccountEmail)
-			return uniqBy(prop('email'), recipients)
-		},
+
 		threadSubject() {
 			const thread = this.thread
 			if (thread.length === 0) {
-				console.warn('thread is empty')
+				logger.warn('thread is empty')
 				return ''
 			}
 			return thread[0].subject || this.t('mail', 'No subject')
 		},
+
+		threadParticipants() {
+			const seen = new Set()
+			return this.thread.flatMap((envelope) => [
+				...(envelope.from ?? []),
+				...(envelope.to ?? []),
+			]).filter(({ email }) => {
+				if (seen.has(email)) {
+					return false
+				}
+				seen.add(email)
+				return true
+			})
+		},
+
 		showSummaryBox() {
 			return this.thread.length > 2 && this.enabledThreadSummary && !this.summaryError
 		},
 	},
+
 	watch: {
 		$route(to, from) {
 			if (
@@ -201,18 +169,21 @@ export default {
 			this.resetThread()
 		},
 	},
+
 	created() {
 		this.resetThread()
-		window.addEventListener('resize', this.resizeDebounced)
 		window.addEventListener('keydown', this.handleKeyDown)
 	},
+
 	beforeDestroy() {
-		window.removeEventListener('resize', this.resizeDebounced)
 		window.removeEventListener('keydown', this.handleKeyDown)
 	},
+
 	methods: {
 		async updateSummary() {
-			if (this.thread.length <= 2 || !this.enabledThreadSummary) return
+			if (this.thread.length <= 2 || !this.enabledThreadSummary) {
+				return
+			}
 
 			this.summaryLoading = true
 			try {
@@ -225,55 +196,20 @@ export default {
 				this.summaryLoading = false
 			}
 		},
-		updateParticipantsToDisplay() {
-			// Wait until everything is in place
-			if (!this.$refs.avatarHeader || !this.threadParticipants) {
-				return
-			}
 
-			// Compute the number of participants to display depending on the width available
-			const avatarHeader = this.$refs.avatarHeader
-			const maxWidth = (avatarHeader.clientWidth - 100) // Reserve 100px for the avatar-more span
-			let childrenWidth = 0
-			let fits = 0
-			let idx = 0
-			while (childrenWidth < maxWidth && fits < this.threadParticipants.length) {
-				// Skipping the 'avatar-more' span
-				if (avatarHeader.childNodes[idx].clientWidth === undefined) {
-					idx += 3
-					continue
-				}
-				childrenWidth += avatarHeader.childNodes[idx].clientWidth
-				fits++
-				idx++
-			}
-
-			if (childrenWidth > maxWidth) {
-				// There's not enough space to show all thread participants
-				if (fits > 1) {
-					this.participantsToDisplay = fits - 1
-				} else if (fits === 0) {
-					this.participantsToDisplay = 1
-				} else {
-					this.participantsToDisplay = fits
-				}
-			} else {
-				// There's enough space to show all thread participants
-				this.participantsToDisplay = this.threadParticipants.length
-			}
-		},
 		toggleExpand(threadId) {
 			if (this.thread.length === 1) {
 				return
 			}
 			if (!this.expandedThreads.includes(threadId)) {
-				console.debug(`expand thread ${threadId}`)
+				logger.debug(`expand thread ${threadId}`)
 				this.expandedThreads.push(threadId)
 			} else {
-				console.debug(`collapse thread ${threadId}`)
-				this.expandedThreads = this.expandedThreads.filter(t => t !== threadId)
+				logger.debug(`collapse thread ${threadId}`)
+				this.expandedThreads = this.expandedThreads.filter((t) => t !== threadId)
 			}
 		},
+
 		onMove(threadId) {
 			if (threadId === this.threadId) {
 				this.$router.replace({
@@ -287,6 +223,7 @@ export default {
 				this.fetchThread()
 			}
 		},
+
 		async resetThread() {
 			this.expandedThreads = [this.threadId]
 			this.errorMessage = ''
@@ -294,10 +231,10 @@ export default {
 			if (this.mainStore.getPreference('layout-message-view', 'threaded') === 'threaded') {
 				await this.fetchThread()
 			}
-			this.updateParticipantsToDisplay()
 			this.updateSummary()
 			this.loadedThreads = 0
 		},
+
 		async fetchThread() {
 			this.loading = true
 			this.errorMessage = ''
@@ -339,92 +276,99 @@ export default {
 				}
 			}
 		},
+
 		async handleKeyDown(event) {
 			if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
 				event.preventDefault()
 
-				this.thread.forEach((thread) => {
-					if (!this.expandedThreads.includes(thread.databaseId)) this.expandedThreads.push(thread.databaseId)
-				})
+				try {
+					this.thread.forEach((thread) => {
+						if (!this.expandedThreads.includes(thread.databaseId)) {
+							this.expandedThreads.push(thread.databaseId)
+						}
+					})
 
-				while (true) {
-					if (this.loadedThreads === this.thread.length) {
-						break
+					while (true) {
+						if (this.loadedThreads === this.thread.length) {
+							break
+						}
+						await new Promise((resolve) => setTimeout(resolve, 100))
 					}
-					await new Promise(resolve => setTimeout(resolve, 100))
-				}
 
-				const virtualIframe = document.createElement('iframe')
-				virtualIframe.style.display = 'none'
-				document.body.appendChild(virtualIframe)
-				const virtualIframeDocument = virtualIframe.contentDocument || virtualIframe.contentWindow.document
-				virtualIframeDocument.open()
-				virtualIframeDocument.write(`<html><head><title>${t('mail', 'Print')}</title></head><body></body></html>`)
-				virtualIframeDocument.close()
+					const virtualIframe = document.createElement('iframe')
+					virtualIframe.style.position = 'absolute'
+					document.body.appendChild(virtualIframe)
+					const virtualIframeDocument = virtualIframe.contentDocument || virtualIframe.contentWindow.document
+					virtualIframeDocument.open()
+					virtualIframeDocument.write(`<html><head><title>${t('mail', 'Print')}</title></head><body></body></html>`)
+					virtualIframeDocument.close()
 
-				virtualIframeDocument.body.appendChild(this.addThreadInfo(virtualIframeDocument))
+					virtualIframeDocument.body.appendChild(this.addThreadInfo(virtualIframeDocument))
 
-				const messageContainers = document.querySelectorAll('#message-container')
-				for (const [index, messageContainer] of messageContainers.entries()) {
-					const iframe = messageContainer.querySelector('iframe')
+					const messageContainers = document.querySelectorAll('#message-container')
+					for (const [index, messageContainer] of messageContainers.entries()) {
+						const iframe = messageContainer.querySelector('iframe')
 
-					this.addMessageInfo(virtualIframeDocument, index)
+						this.addMessageInfo(virtualIframeDocument, index)
 
-					if (!iframe) {
+						if (!iframe) {
+							const div = virtualIframeDocument.createElement('div')
+							div.innerHTML = messageContainer.innerHTML
+							virtualIframeDocument.body.appendChild(div)
+							continue
+						}
+
+						if (iframe.contentWindow.document.readyState !== 'complete') {
+							await new Promise((resolve) => {
+								iframe.contentWindow.onload = resolve
+							})
+						}
+
+						const iframeDocument = iframe.contentDocument || iframe.contentWindow.document
+						const iframeContent = iframeDocument.body.innerHTML
 						const div = virtualIframeDocument.createElement('div')
-						div.innerHTML = messageContainer.innerHTML
+
+						div.innerHTML = iframeContent
 						virtualIframeDocument.body.appendChild(div)
-						continue
 					}
 
-					iframe.setAttribute('data-iframe-size', 'true')
+					const images = virtualIframeDocument.querySelectorAll('img')
+					let imagesLoaded = 0
 
-					if (!iframe.contentWindow.document.readyState === 'complete') {
-						await new Promise((resolve) => {
-							iframe.contentWindow.onload = resolve
+					images.forEach((img) => {
+						img.addEventListener('load', () => {
+							imagesLoaded++
+							if (imagesLoaded === images.length) {
+								virtualIframe.contentWindow.print()
+								this.removeIframe(virtualIframe)
+							}
 						})
+						img.addEventListener('error', () => {
+							imagesLoaded++
+							if (imagesLoaded === images.length) {
+								virtualIframe.contentWindow.print()
+								this.removeIframe(virtualIframe)
+							}
+						})
+					})
+
+					if (images.length === 0) {
+						virtualIframe.contentWindow.print()
+						this.removeIframe(virtualIframe)
 					}
-
-					const iframeDocument = iframe.contentDocument || iframe.contentWindow.document
-					const iframeContent = iframeDocument.body.innerHTML
-					const div = virtualIframeDocument.createElement('div')
-
-					div.innerHTML = iframeContent
-					virtualIframeDocument.body.appendChild(div)
+				} catch (error) {
+					logger.error('Could not print message', { error })
+					showError(t('mail', 'Could not print message'))
 				}
-
-				const images = virtualIframeDocument.querySelectorAll('img')
-				let imagesLoaded = 0
-
-				images.forEach((img) => {
-					img.addEventListener('load', () => {
-						imagesLoaded++
-						if (imagesLoaded === images.length) {
-							virtualIframe.contentWindow.print()
-							this.removeIframe(virtualIframe)
-						}
-					})
-					img.addEventListener('error', () => {
-						imagesLoaded++
-						if (imagesLoaded === images.length) {
-							virtualIframe.contentWindow.print()
-							this.removeIframe(virtualIframe)
-						}
-					})
-				})
-
-				if (images.length === 0) {
-					virtualIframe.contentWindow.print()
-					this.removeIframe(virtualIframe)
-				}
-
 			}
 		},
+
 		removeIframe(virtualIframe) {
 			setTimeout(() => {
 				document.body.removeChild(virtualIframe)
 			}, 500)
 		},
+
 		addMessageInfo(virtualIframeDocument, index) {
 			const hr = virtualIframeDocument.createElement('hr')
 			hr.style.border = '1px solid black'
@@ -439,7 +383,7 @@ export default {
 
 			const dateSpan = virtualIframeDocument.createElement('p')
 			dateSpan.style.fontWeight = 'bold'
-			dateSpan.textContent = t('mail', 'Date') + ': ' + moment.unix(this.thread[index].dateInt).format('LLL')
+			dateSpan.textContent = t('mail', 'Date') + ': ' + formatDateTimeFromUnix(this.thread[index].dateInt)
 
 			const recipientSpan = virtualIframeDocument.createElement('p')
 			recipientSpan.style.fontWeight = 'bold'
@@ -451,6 +395,7 @@ export default {
 			virtualIframeDocument.body.appendChild(dateSpan)
 			virtualIframeDocument.body.appendChild(recipientSpan)
 		},
+
 		addThreadInfo(document) {
 			const threadInfo = document.createElement('div')
 			threadInfo.style.marginTop = '20px'
@@ -463,15 +408,17 @@ export default {
 
 			const participantsLine = document.createElement('p')
 			participantsLine.textContent = this.threadParticipants
-				.map(participant => `${participant.label} <${participant.email}>`)
+				.map((participant) => `${participant.label} <${participant.email}>`)
 				.join(', ')
 			threadInfo.appendChild(participantsLine)
 
 			return threadInfo
 		},
+
 		addLoadedThread() {
 			this.loadedThreads++
 		},
+
 		print(threadIndex) {
 			setTimeout(() => {
 				try {
@@ -504,13 +451,14 @@ export default {
 							iframeDocument.write(`
 								<html>
 									<head>
-										<title>${this.threadSubject}</title>
+										<title></title>
 									</head>
 									<body>
 										<div class="message-container">${messageContainer.innerHTML}</div>
 									</body>
 								</html>
 							`)
+							iframeDocument.title = this.threadSubject
 
 							const threadInfo = this.addThreadInfo(iframeDocument)
 							iframeDocument.body.insertBefore(threadInfo, iframeDocument.body.firstChild)
@@ -543,6 +491,7 @@ export default {
 
 					iframe.contentWindow.print()
 				} catch (error) {
+					logger.error('Could not print message', { error })
 					showError(t('mail', 'Could not print message'))
 				}
 			}, 100)
@@ -552,8 +501,9 @@ export default {
 </script>
 
 <style lang="scss">
+@use '../../css/variables.scss';
+
 #mail-message {
-	margin-bottom: 30vh;
 	width: 100%;
 	max-width: 100%;
 
@@ -566,8 +516,9 @@ export default {
 
 .mail-message-body {
 	flex: 1;
-	margin-bottom: calc(var(--default-grid-baseline) * 2);
+	margin-bottom: 0;
 	position: relative;
+	border-radius: 5px;
 }
 
 #mail-thread-header {
@@ -603,14 +554,23 @@ export default {
 	}
 }
 
+@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
+    #mail-thread-header {
+        position: sticky !important;
+        top: 29px !important;
+    }
+}
+
 #mail-thread-header-fields {
 	// initial width
 	width: 0;
 	// while scrolling, the back button overlaps with subject on small screen
-	// 66px to allign with the sender Envelope -> 8px margin + 2px border+ avatar -> 40px width  + envelope__header -> 8px padding + sender-> margin 8px
-	padding-inline-start: 66px;
+	// envelope margin (2×baseline) + border (2px) + header padding (--border-radius-container) + avatar (10×baseline) + sender margin (2×baseline)
+	padding-inline-start: calc(var(--default-grid-baseline) * 14 + var(--border-radius-container) + 2px);
 	// grow and try to fill 100%
 	flex: 1 1 auto;
+	background: var(--color-main-background);
+	margin-inline-end: 5px;
 	h2,
 	p {
 		padding-bottom: calc(var(--default-grid-baseline) * 2);
@@ -631,9 +591,16 @@ export default {
 		}
 	}
 }
-@media only screen and (max-width: 1024px) {
+
+@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
+    #mail-thread-header-fields {
+        padding-inline-start: 48px;
+    }
+}
+
+@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
 	#mail-thread-header-fields {
-		margin-top: -20px;
+		margin-top: -32px;
 	}
 }
 
@@ -651,6 +618,12 @@ export default {
 	margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 10) 0 calc(var(--default-grid-baseline) * 14);
 }
 
+@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
+    #mail-content {
+        margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 3) 0 calc(var(--default-grid-baseline) * 3);
+    }
+}
+
 #mail-content iframe {
 	width: 100%;
 }
@@ -664,7 +637,7 @@ export default {
 	color: #07d;
 	border-bottom: var(--border-width-input) dotted #07d;
 	text-decoration: none;
-	word-wrap: break-word;
+	overflow-wrap: break-word;
 }
 
 /* Show action button label and move icon to the left
@@ -681,44 +654,8 @@ export default {
 	}
 }
 
-.avatar-header {
-	height: var(--default-clickable-area);
-	overflow: hidden;
-	display: flex;
-	align-items: stretch;
-
-	:deep(.v-popper--theme-dropdown.v-popper__popper .v-popper__inner) {
-		height: 300px;
-		width: 250px;
-		overflow: auto;
-	}
-}
-
-.avatar-more {
-	display: inline;
-	background-color: var(--color-background-dark);
-	border-radius: var(--border-radius-large);
-	cursor: pointer;
-}
-
-.v-popper.avatar-more {
-	padding: calc(var(--default-grid-baseline) * 2);
-}
-
-.avatar-hidden {
-	visibility: hidden;
-}
-
 .app-content-list-item-star.icon-starred {
 	display: none;
-}
-
-.user-bubble__wrapper {
-	height: var(--default-clickable-area);
-	padding: var(--default-grid-baseline);
-	margin-inline-end: var(--default-grid-baseline);
-	background-color: var(--color-background-dark);
-	border-radius: var(--border-radius-large);
 }
 
 .v-popper__popper--shown .user-bubble__wrapper {

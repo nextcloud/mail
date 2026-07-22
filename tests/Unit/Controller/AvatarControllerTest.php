@@ -17,10 +17,10 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IRequest;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class AvatarControllerTest extends TestCase {
-	/** @var IAvatarService|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IAvatarService|MockObject */
 	private $avatarService;
 
 	/** @var AvatarsController */
@@ -107,7 +107,7 @@ class AvatarControllerTest extends TestCase {
 
 		$expected = new Response();
 		$expected->setStatus(Http::STATUS_NOT_FOUND);
-		$expected->cacheFor(0);
+		$expected->cacheFor(60 * 60, false, true);
 		$this->assertEquals($expected, $resp);
 	}
 }

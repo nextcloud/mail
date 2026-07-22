@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { shortDatetime } from '../../../util/shortRelativeDatetime'
+import { shortDatetime } from '../../../util/shortRelativeDatetime.js'
 
 describe('shortRelativeDatetime', () => {
 	describe('toPlain', () => {

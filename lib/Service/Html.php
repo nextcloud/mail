@@ -10,13 +10,15 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
-use Closure;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use HTMLPurifier_HTMLDefinition;
 use HTMLPurifier_URIDefinition;
 use HTMLPurifier_URISchemeRegistry;
+use OCA\Mail\Html\ProxyHmacGenerator;
+use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\HtmlPurify\CidURIScheme;
+use OCA\Mail\Service\HtmlPurify\TransformCidDataAttr;
 use OCA\Mail\Service\HtmlPurify\TransformHTMLLinks;
 use OCA\Mail\Service\HtmlPurify\TransformImageSrc;
 use OCA\Mail\Service\HtmlPurify\TransformNoReferrer;
@@ -33,6 +35,9 @@ use Youthweb\UrlLinker\UrlLinker;
 
 require_once __DIR__ . '/../../vendor/cerdic/css-tidy/class.csstidy.php';
 
+/**
+ * @psalm-import-type IMAPAttachment from IMAPMessage
+ */
 class Html {
 	/** @var IURLGenerator */
 	private $urlGenerator;
@@ -40,7 +45,11 @@ class Html {
 	/** @var IRequest */
 	private $request;
 
-	public function __construct(IURLGenerator $urlGenerator, IRequest $request) {
+	public function __construct(
+		IURLGenerator $urlGenerator,
+		IRequest $request,
+		private ProxyHmacGenerator $hmacGenerator,
+	) {
 		$this->urlGenerator = $urlGenerator;
 		$this->request = $request;
 	}
@@ -73,9 +82,9 @@ class Html {
 		// TODO: Fix this - requires https://github.com/owncloud/core/issues/10767 to be fixed
 		$config->set('Cache.DefinitionImpl', null);
 
-		/** @var HTMLPurifier_HTMLDefinition $uri */
-		$uri = $config->getDefinition('HTML');
-		$uri->info_attr_transform_post['noreferrer'] = new TransformNoReferrer();
+		/** @var HTMLPurifier_HTMLDefinition $def */
+		$def = $config->getHTMLDefinition(true);
+		$def->info_attr_transform_post['noreferrer'] = new TransformNoReferrer();
 
 		$purifier = new HTMLPurifier($config);
 
@@ -102,7 +111,28 @@ class Html {
 		];
 	}
 
-	public function sanitizeHtmlMailBody(string $mailBody, array $messageParameters, Closure $mapCidToAttachmentId): string {
+	/**
+	 * @param list<IMAPAttachment> $inlineAttachments
+	 * @return list<array{id: string|null, messageId: int, fileName: string|null, mime: string, size: int, cid: string|null, disposition: string, url: string}>
+	 */
+	private function addAttachmentUrl(int $messageId, array $inlineAttachments): array {
+		return array_map(function (array $inlineAttachment) use ($messageId) {
+			$inlineAttachment['url'] = $this->urlGenerator->linkToRouteAbsolute(
+				'mail.messages.downloadAttachment', [
+					'id' => $messageId,
+					'attachmentId' => $inlineAttachment['id']
+				]
+			);
+			return $inlineAttachment;
+		}, $inlineAttachments);
+	}
+
+	/**
+	 * @param list<IMAPAttachment> $inlineAttachments
+	 */
+	public function sanitizeHtmlMailBody(int $messageId, string $mailBody, array $inlineAttachments): string {
+		$inlineAttachments = $this->addAttachmentUrl($messageId, $inlineAttachments);
+
 		$config = HTMLPurifier_Config::createDefault();
 
 		// Append target="_blank" to all link (a) elements
@@ -122,15 +152,27 @@ class Html {
 		$config->set('Cache.DefinitionImpl', null);
 
 		// Rewrite URL for redirection and proxying of content
-		/** @var HTMLPurifier_HTMLDefinition $html */
-		$html = $config->getDefinition('HTML');
-		$html->info_attr_transform_post['imagesrc'] = new TransformImageSrc($this->urlGenerator);
-		$html->info_attr_transform_post['cssbackground'] = new TransformStyleURLs($this->urlGenerator);
-		$html->info_attr_transform_post['htmllinks'] = new TransformHTMLLinks($this->urlGenerator);
+		/** @var HTMLPurifier_HTMLDefinition $def */
+		$def = $config->getHTMLDefinition(true);
+		$def->info_attr_transform_post['imagesrc'] = new TransformImageSrc($this->urlGenerator);
+		$def->info_attr_transform_post['cssbackground'] = new TransformStyleURLs($this->urlGenerator);
+		$def->info_attr_transform_post['htmllinks'] = new TransformHTMLLinks();
+		if (count($inlineAttachments) > 0) {
+			$def->info_attr_transform_post['datacid'] = new TransformCidDataAttr($inlineAttachments);
+		}
 
 		/** @var HTMLPurifier_URIDefinition $uri */
-		$uri = $config->getDefinition('URI');
-		$uri->addFilter(new TransformURLScheme($messageParameters, $mapCidToAttachmentId, $this->urlGenerator, $this->request), $config);
+		$uri = $config->getURIDefinition(true);
+		$uri->addFilter(
+			new TransformURLScheme(
+				$messageId,
+				$inlineAttachments,
+				$this->urlGenerator,
+				$this->request,
+				$this->hmacGenerator,
+			),
+			$config
+		);
 
 		$uriSchemeRegistry = HTMLPurifier_URISchemeRegistry::instance();
 		$uriSchemeRegistry->register('cid', new CidURIScheme());

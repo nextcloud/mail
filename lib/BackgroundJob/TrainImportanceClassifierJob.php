@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace OCA\Mail\BackgroundJob;
 
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -20,25 +19,17 @@ use Psr\Log\LoggerInterface;
 use Throwable;
 
 class TrainImportanceClassifierJob extends TimedJob {
-	private AccountService $accountService;
-	private ImportanceClassifier $classifier;
 	private IJobList $jobList;
-	private LoggerInterface $logger;
-	private ClassificationSettingsService $classificationSettingsService;
 
-	public function __construct(ITimeFactory $time,
-		AccountService $accountService,
-		ImportanceClassifier $classifier,
+	public function __construct(
+		ITimeFactory $time,
+		private AccountService $accountService,
+		private ImportanceClassifier $classifier,
 		IJobList $jobList,
-		LoggerInterface $logger,
-		ClassificationSettingsService $classificationSettingsService) {
+		private LoggerInterface $logger,
+	) {
 		parent::__construct($time);
-
-		$this->accountService = $accountService;
-		$this->classifier = $classifier;
 		$this->jobList = $jobList;
-		$this->logger = $logger;
-		$this->classificationSettingsService = $classificationSettingsService;
 
 		$this->setInterval(24 * 60 * 60);
 		$this->setTimeSensitivity(self::TIME_INSENSITIVE);
@@ -54,7 +45,7 @@ class TrainImportanceClassifierJob extends TimedJob {
 		try {
 			$account = $this->accountService->findById($accountId);
 		} catch (DoesNotExistException $e) {
-			$this->logger->debug('Could not find account <' . $accountId . '> removing from jobs');
+			$this->logger->debug("Could not find account <{$accountId}> removing from jobs");
 			$this->jobList->remove(self::class, $argument);
 			return;
 		}
@@ -64,7 +55,7 @@ class TrainImportanceClassifierJob extends TimedJob {
 			return;
 		}
 
-		if (!$this->classificationSettingsService->isClassificationEnabled($account->getUserId())) {
+		if (!$account->getMailAccount()->getClassificationEnabled()) {
 			$this->logger->debug("classification is turned off for account $accountId");
 			return;
 		}

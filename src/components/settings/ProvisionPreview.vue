@@ -10,9 +10,9 @@
 			<span v-if="data.email">email={{ email }}</span>
 		</b>
 		<br>
-		{{ t('mail', 'Domain Match: {provisioningDomain}', {provisioningDomain}) }}
+		{{ t('mail', 'Domain Match: {provisioningDomain}', { provisioningDomain }) }}
 		<br>
-		{{ t('mail', 'Email: {email}', {email}) }}<br>
+		{{ t('mail', 'Email: {email}', { email }) }}<br>
 		{{
 			t('mail', 'IMAP: {user} on {host}:{port} ({ssl} encryption)', {
 				user: imapUser,
@@ -50,54 +50,70 @@ export default {
 			type: Object,
 			required: true,
 		},
+
 		templates: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	computed: {
 		email() {
 			return this.templates.email.replace('%USERID%', this.data.uid).replace('%EMAIL%', this.data.email)
 		},
+
 		provisioningDomain() {
 			return this.templates.provisioningDomain
 		},
+
 		imapHost() {
 			return this.templates.imapHost
 		},
+
 		imapPort() {
 			return this.templates.imapPort
 		},
+
 		imapSslMode() {
 			return this.templates.imapSslMode
 		},
+
 		imapUser() {
 			return this.templates.imapUser.replace('%USERID%', this.data.uid).replace('%EMAIL%', this.data.email)
 		},
+
 		smtpHost() {
 			return this.templates.smtpHost
 		},
+
 		smtpPort() {
 			return this.templates.smtpPort
 		},
+
 		smtpSslMode() {
 			return this.templates.smtpSslMode
 		},
+
 		smtpUser() {
 			return this.templates.smtpUser.replace('%USERID%', this.data.uid).replace('%EMAIL%', this.data.email)
 		},
+
 		sieveEnabled() {
 			return this.templates.sieveEnabled
 		},
+
 		sieveHost() {
 			return this.templates.sieveHost
 		},
+
 		sievePort() {
 			return this.templates.sievePort
 		},
+
 		sieveSslMode() {
 			return this.templates.sieveSslMode
 		},
+
 		sieveUser() {
 			return this.templates.sieveUser.replace('%USERID%', this.data.uid).replace('%EMAIL%', this.data.email)
 		},

@@ -4,8 +4,10 @@
 -->
 <template>
 	<div>
-		<ListItem v-for="textBlock in textBlocks"
+		<ListItem
+			v-for="textBlock in textBlocks"
 			:key="textBlock.id"
+			class="text-block__list-item"
 			:text-block="textBlock"
 			:shared="shared" />
 		<span v-if="!textBlocks.length"> {{ t('mail', 'No text blocks available') }} </span>
@@ -19,17 +21,26 @@ export default {
 	components: {
 		ListItem,
 	},
+
 	props: {
 		shared: {
 			type: Boolean,
 			default: false,
 		},
+
 		textBlocks: {
 			type: Array,
 			required: true,
 		},
 	},
+
 	methods: {
 	},
 }
 </script>
+
+<style lang="scss" scoped>
+.text-block__list-item {
+	margin-inline-start: calc(var(--default-grid-baseline) * 4);
+}
+</style>

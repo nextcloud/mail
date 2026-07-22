@@ -5,7 +5,6 @@
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { curry } from 'ramda'
-
 import { convertAxiosError } from '../errors/convert.js'
 import SyncIncompleteError from '../errors/SyncIncompleteError.js'
 import { parseErrorResponse } from '../http/ErrorResponseParser.js'
@@ -62,12 +61,12 @@ export function fetchEnvelopes(accountId, mailboxId, query, cursor, limit, sort,
 			params,
 		})
 		.then((resp) => resp.data)
-		.then(envelopes => envelopes.map(amendEnvelopeWithIds(accountId)))
+		.then((envelopes) => envelopes.map(amendEnvelopeWithIds(accountId)))
 		.catch((error) => {
 			throw convertAxiosError(error)
 		})
 }
-export const fetchThread = async (id) => {
+export async function fetchThread(id) {
 	const url = generateUrl('apps/mail/api/messages/{id}/thread', {
 		id,
 	})
@@ -146,7 +145,8 @@ export async function createEnvelopeTag(displayName, color) {
 
 export async function setEnvelopeTag(id, imapLabel) {
 	const url = generateUrl('/apps/mail/api/messages/{id}/tags/{imapLabel}', {
-		id, imapLabel,
+		id,
+		imapLabel,
 	})
 
 	const { data } = await axios.put(url)
@@ -162,7 +162,8 @@ export async function updateEnvelopeTag(id, displayName, color) {
 
 export async function deleteTag(id, accountId) {
 	const url = generateUrl('/apps/mail/api/tags/{accountId}/delete/{id}', {
-		accountId, id,
+		accountId,
+		id,
 	})
 
 	await axios.delete(url)
@@ -170,7 +171,8 @@ export async function deleteTag(id, accountId) {
 
 export async function removeEnvelopeTag(id, imapLabel) {
 	const url = generateUrl('/apps/mail/api/messages/{id}/tags/{imapLabel}', {
-		id, imapLabel,
+		id,
+		imapLabel,
 	})
 
 	const { data } = await axios.delete(url)
@@ -191,6 +193,18 @@ export async function fetchMessage(id) {
 		}
 
 		throw parseErrorResponse(error.response)
+	}
+}
+
+export async function fetchMessageHtmlBody(id) {
+	const url = generateUrl('/apps/mail/api/messages/{id}/html?plain=true', {
+		id,
+	})
+
+	try {
+		return (await axios.get(url)).data
+	} catch (e) {
+		throw convertAxiosError(e)
 	}
 }
 
@@ -259,6 +273,16 @@ export function moveMessage(id, destFolderId) {
 
 	return axios.post(url, {
 		destFolderId,
+	})
+}
+
+export async function saveMessage(id, directory) {
+	const url = generateUrl('/apps/mail/api/messages/{id}/file', {
+		id,
+	})
+
+	return await axios.post(url, {
+		targetPath: directory,
 	})
 }
 

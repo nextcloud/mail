@@ -23,21 +23,13 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class TagsController extends Controller {
-	private string $currentUserId;
-	private IMailManager $mailManager;
-
-	private AccountService $accountService;
-
-
-	public function __construct(IRequest $request,
-		string $UserId,
-		IMailManager $mailManager,
-		AccountService $accountService,
+	public function __construct(
+		IRequest $request,
+		private string $userId,
+		private IMailManager $mailManager,
+		private AccountService $accountService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->currentUserId = $UserId;
-		$this->mailManager = $mailManager;
-		$this->accountService = $accountService;
 	}
 
 	/**
@@ -54,7 +46,7 @@ class TagsController extends Controller {
 		$this->validateDisplayName($displayName);
 		$this->validateColor($color);
 
-		$tag = $this->mailManager->createTag($displayName, $color, $this->currentUserId);
+		$tag = $this->mailManager->createTag($displayName, $color, $this->userId);
 		return new JSONResponse($tag);
 	}
 
@@ -73,7 +65,7 @@ class TagsController extends Controller {
 		$this->validateDisplayName($displayName);
 		$this->validateColor($color);
 
-		$tag = $this->mailManager->updateTag($id, $displayName, $color, $this->currentUserId);
+		$tag = $this->mailManager->updateTag($id, $displayName, $color, $this->userId);
 		return new JSONResponse($tag);
 	}
 	/**
@@ -84,11 +76,11 @@ class TagsController extends Controller {
 	#[TrapError]
 	public function delete(int $id, int $accountId): JSONResponse {
 		try {
-			$accounts = $this->accountService->findByUserId($this->currentUserId);
+			$accounts = $this->accountService->findByUserId($this->userId);
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
-		$this->mailManager->deleteTag($id, $this->currentUserId, $accounts);
+		$this->mailManager->deleteTag($id, $this->userId, $accounts);
 
 		return new JSONResponse([$id]);
 	}

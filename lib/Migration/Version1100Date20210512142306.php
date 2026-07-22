@@ -16,15 +16,17 @@ use OCP\BackgroundJob\IJobList;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
+/**
+ * @psalm-api
+ */
 class Version1100Date20210512142306 extends SimpleMigrationStep {
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
 	/** @var IJobList */
 	private $jobList;
 
-	public function __construct(MailboxMapper $mailboxMapper, IJobList $jobList) {
-		$this->mailboxMapper = $mailboxMapper;
+	public function __construct(
+		private MailboxMapper $mailboxMapper,
+		IJobList $jobList,
+	) {
 		$this->jobList = $jobList;
 	}
 

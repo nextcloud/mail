@@ -15,6 +15,9 @@ use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
+/**
+ * @psalm-api
+ */
 class Version5005Date20250903114909 extends SimpleMigrationStep {
 
 	/**
@@ -34,7 +37,6 @@ class Version5005Date20250903114909 extends SimpleMigrationStep {
 		$table->addColumn('id', Types::INTEGER, [
 			'autoincrement' => true,
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$table->addColumn('name', Types::STRING, [
 			'notnull' => true,
@@ -42,19 +44,15 @@ class Version5005Date20250903114909 extends SimpleMigrationStep {
 		]);
 		$table->addColumn('order', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$table->addColumn('action_id', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$table->addColumn('mailbox_id', Types::INTEGER, [
 			'notnull' => false,
-			'length' => 4,
 		]);
 		$table->addColumn('tag_id', Types::INTEGER, [
 			'notnull' => false,
-			'length' => 4,
 		]);
 
 		$table->setPrimaryKey(['id']);

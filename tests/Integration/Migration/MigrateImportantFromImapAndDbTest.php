@@ -44,8 +44,8 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 	}
 
 	public function testMigrateImportantOnImap() {
-		$account = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Mailbox::class);
+		$account = $this->createStub(Account::class);
+		$mailbox = $this->createStub(Mailbox::class);
 		$uids = [1,2,3];
 
 		$this->messageMapper->expects($this->once())
@@ -62,8 +62,8 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 	}
 
 	public function testMigrateImportantOnImapNoUids() {
-		$account = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Mailbox::class);
+		$account = $this->createStub(Account::class);
+		$mailbox = $this->createStub(Mailbox::class);
 		$uids = [];
 
 		$this->messageMapper->expects($this->once())
@@ -79,8 +79,8 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 	}
 
 	public function testMigrateImportantOnImapExceptionGetFlagged() {
-		$account = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Mailbox::class);
+		$account = $this->createStub(Account::class);
+		$mailbox = $this->createStub(Mailbox::class);
 		$e = new Horde_Imap_Client_Exception('');
 
 		$this->messageMapper->expects($this->once())
@@ -97,7 +97,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 	}
 
 	public function testMigrateImportantOnImapExceptionOnFlag() {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
 		$e = new Horde_Imap_Client_Exception('');
@@ -139,7 +139,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 	}
 
 	public function testMigrateImportantFromDbNoUids() {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setId(1);
 		$uids = [];
@@ -157,7 +157,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 	}
 
 	public function testMigrateImportantFromDbExceptionOnFlag() {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setId(1);
 		$mailbox->setName('INBOX');

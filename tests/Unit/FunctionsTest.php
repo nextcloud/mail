@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use Horde_Imap_Client_Ids;
 use function OCA\Mail\array_flat_map;
 use function OCA\Mail\chunk_uid_sequence;
 
@@ -60,9 +59,8 @@ class FunctionsTest extends TestCase {
 
 		$chunks = chunk_uid_sequence($uids, 10);
 
-		self::assertEquals([
-			new Horde_Imap_Client_Ids('100:101'),
-		], $chunks);
+		self::assertCount(1, $chunks);
+		self::assertEquals('100:101', $chunks[0]->tostring);
 	}
 
 	public function testChunkLongByteRange(): void {
@@ -70,11 +68,10 @@ class FunctionsTest extends TestCase {
 
 		$chunks = chunk_uid_sequence($uids, 10);
 
-		self::assertEquals([
-			new Horde_Imap_Client_Ids('100:101'),
-			new Horde_Imap_Client_Ids('103, 105'),
-			new Horde_Imap_Client_Ids('106, 201'),
-			new Horde_Imap_Client_Ids('203:204'),
-		], $chunks);
+		self::assertCount(4, $chunks);
+		self::assertEquals('100:101', $chunks[0]->tostring);
+		self::assertEquals('103,105', $chunks[1]->tostring);
+		self::assertEquals('106,201', $chunks[2]->tostring);
+		self::assertEquals('203:204', $chunks[3]->tostring);
 	}
 }

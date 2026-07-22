@@ -22,18 +22,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class AddMissingTags extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 
-	private LoggerInterface $logger;
-	private TagMapper $tagMapper;
-	private MailAccountMapper $mapper;
-
-	public function __construct(MailAccountMapper $mapper,
-		TagMapper $tagMapper,
-		LoggerInterface $logger) {
+	public function __construct(
+		private MailAccountMapper $mapper,
+		private TagMapper $tagMapper,
+		private LoggerInterface $logger,
+	) {
 		parent::__construct();
-
-		$this->mapper = $mapper;
-		$this->tagMapper = $tagMapper;
-		$this->logger = $logger;
 	}
 
 	/**
@@ -73,7 +67,8 @@ final class AddMissingTags extends Command {
 
 		$progress->finish();
 		$output->writeln('');
-		$output->writeln('Patched default tags for ' . count($accounts));
+		$n = count($accounts);
+		$output->writeln("Patched default tags for $n");
 		return 0;
 	}
 }

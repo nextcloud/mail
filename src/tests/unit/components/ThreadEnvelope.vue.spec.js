@@ -3,18 +3,16 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import {createLocalVue, shallowMount} from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-
-import Nextcloud from '../../../mixins/Nextcloud.js'
 import ThreadEnvelope from '../../../components/ThreadEnvelope.vue'
+import Nextcloud from '../../../mixins/Nextcloud.js'
 
 const localVue = createLocalVue()
 
 localVue.mixin(Nextcloud)
 
 describe('ThreadEnvelope', () => {
-
 	beforeEach(() => {
 		setActivePinia(createPinia())
 	})
@@ -24,12 +22,12 @@ describe('ThreadEnvelope', () => {
 			propsData: {
 				account: {},
 				mailbox: {
-					specialRole:'',
+					specialRole: '',
 				},
 				envelope: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
@@ -51,12 +49,12 @@ describe('ThreadEnvelope', () => {
 			propsData: {
 				account: {},
 				mailbox: {
-					specialRole:'',
+					specialRole: '',
 				},
 				envelope: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
@@ -78,12 +76,12 @@ describe('ThreadEnvelope', () => {
 			propsData: {
 				account: {},
 				mailbox: {
-					specialRole:'',
+					specialRole: '',
 				},
 				envelope: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
@@ -104,12 +102,12 @@ describe('ThreadEnvelope', () => {
 			propsData: {
 				account: {},
 				mailbox: {
-					specialRole:'',
+					specialRole: '',
 				},
 				envelope: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
@@ -134,12 +132,12 @@ describe('ThreadEnvelope', () => {
 			propsData: {
 				account: {},
 				mailbox: {
-					specialRole:'',
+					specialRole: '',
 				},
 				envelope: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
@@ -164,12 +162,12 @@ describe('ThreadEnvelope', () => {
 			propsData: {
 				account: {},
 				mailbox: {
-					specialRole:'',
+					specialRole: '',
 				},
 				envelope: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
@@ -194,12 +192,12 @@ describe('ThreadEnvelope', () => {
 			propsData: {
 				account: {},
 				mailbox: {
-					specialRole:'',
+					specialRole: '',
 				},
 				envelope: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
@@ -224,12 +222,12 @@ describe('ThreadEnvelope', () => {
 			propsData: {
 				account: {},
 				mailbox: {
-					specialRole:'',
+					specialRole: '',
 				},
 				envelope: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
@@ -251,12 +249,12 @@ describe('ThreadEnvelope', () => {
 			propsData: {
 				account: {},
 				mailbox: {
-					specialRole:'',
+					specialRole: '',
 				},
 				envelope: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 					subject: '',
 					dateInt: 1692200926180,
 
@@ -278,12 +276,12 @@ describe('ThreadEnvelope', () => {
 			propsData: {
 				account: {},
 				mailbox: {
-					specialRole:'',
+					specialRole: '',
 				},
 				envelope: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
@@ -304,12 +302,12 @@ describe('ThreadEnvelope', () => {
 			propsData: {
 				account: {},
 				mailbox: {
-					specialRole:'',
+					specialRole: '',
 				},
 				envelope: {
 					accountId: 123,
-					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
@@ -334,7 +332,7 @@ describe('ThreadEnvelope', () => {
 				},
 				envelope: {
 					accountId: 123,
-					from: [{email: 'info@test.com'}],
+					from: [{ email: 'info@test.com' }],
 					flags: {
 						seen: false,
 						flagged: false,
@@ -368,7 +366,7 @@ describe('ThreadEnvelope', () => {
 				},
 				envelope: {
 					accountId: 123,
-					from: [{email: 'info@test.com'}],
+					from: [{ email: 'info@test.com' }],
 					flags: {
 						seen: false,
 						flagged: false,
@@ -404,7 +402,7 @@ describe('ThreadEnvelope', () => {
 				},
 				envelope: {
 					accountId: 123,
-					from: [{email: 'info@test.com'}],
+					from: [{ email: 'info@test.com' }],
 					flags: {
 						seen: false,
 						flagged: false,

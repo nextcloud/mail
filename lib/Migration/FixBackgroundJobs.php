@@ -14,6 +14,9 @@ use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 use function method_exists;
 
+/**
+ * @psalm-api
+ */
 class FixBackgroundJobs implements IRepairStep {
 	public function __construct(
 		private MailAccountMapper $mapper,

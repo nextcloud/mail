@@ -2,11 +2,16 @@
  * SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-const path = require('path')
-const webpack = require('webpack')
-const { VueLoaderPlugin } = require('vue-loader')
+
+/* global __dirname */
+/* global module */
+/* global require */
+
 const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-modules-except')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+const path = require('path')
+const { VueLoaderPlugin } = require('vue-loader')
+const webpack = require('webpack')
 const { IgnorePlugin } = require('webpack')
 
 const appName = 'mail'
@@ -35,7 +40,6 @@ const plugins = [
 
 module.exports = async () => ({
 	entry: {
-		autoredirect: path.join(__dirname, 'src/autoredirect.js'),
 		mail: path.join(__dirname, 'src/main.js'),
 		oauthpopup: path.join(__dirname, 'src/main-oauth-popup.js'),
 		settings: path.join(__dirname, 'src/main-settings'),
@@ -101,6 +105,10 @@ module.exports = async () => ({
 				loader: 'raw-loader',
 			},
 		],
+	},
+	performance: {
+		maxAssetSize: 5 * 1024 * 1024,
+		maxEntrypointSize: 2 * 1024 * 1024,
 	},
 	plugins,
 	resolve: {

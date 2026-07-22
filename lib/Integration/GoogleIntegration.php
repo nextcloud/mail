@@ -27,20 +27,20 @@ class GoogleIntegration {
 	private ICrypto $crypto;
 	private IClientService $clientService;
 	private IURLGenerator $urlGenerator;
-	private LoggerInterface $logger;
 
-	public function __construct(ITimeFactory $timeFactory,
+	public function __construct(
+		ITimeFactory $timeFactory,
 		IConfig $config,
 		ICrypto $crypto,
 		IClientService $clientService,
 		IURLGenerator $urlGenerator,
-		LoggerInterface $logger) {
+		private LoggerInterface $logger,
+	) {
 		$this->timeFactory = $timeFactory;
 		$this->clientService = $clientService;
 		$this->crypto = $crypto;
 		$this->config = $config;
 		$this->urlGenerator = $urlGenerator;
-		$this->logger = $logger;
 	}
 
 	public function configure(string $clientId, string $clientSecret): void {
@@ -119,7 +119,8 @@ class GoogleIntegration {
 	}
 
 	public function refresh(Account $account): Account {
-		if ($account->getMailAccount()->getOauthTokenTtl() === null || $account->getMailAccount()->getOauthRefreshToken() === null) {
+		$oauthRefreshToken = $account->getMailAccount()->getOauthRefreshToken();
+		if ($account->getMailAccount()->getOauthTokenTtl() === null || $oauthRefreshToken === null) {
 			// Account is not authorized yet
 			return $account;
 		}
@@ -137,7 +138,7 @@ class GoogleIntegration {
 			return $account;
 		}
 
-		$refreshToken = $this->crypto->decrypt($account->getMailAccount()->getOauthRefreshToken());
+		$refreshToken = $this->crypto->decrypt($oauthRefreshToken);
 		$clientSecret = $this->crypto->decrypt($encryptedClientSecret);
 		$httpClient = $this->clientService->newClient();
 		try {
@@ -151,8 +152,9 @@ class GoogleIntegration {
 				], JSON_THROW_ON_ERROR)
 			]);
 		} catch (Exception $e) {
-			$this->logger->warning('Could not refresh oauth token: ' . $e->getMessage(), [
+			$this->logger->warning('Could not refresh Google OAuth token for account {accountId}: ' . $e->getMessage(), [
 				'exception' => $e,
+				'accountId' => $account->getId(),
 			]);
 			return $account;
 		}

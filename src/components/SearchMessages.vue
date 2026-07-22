@@ -5,14 +5,16 @@
 <template>
 	<div class="search-messages">
 		<div class="search-messages__input">
-			<input v-model="query"
+			<input
+				v-model="query"
 				type="text"
 				class="search-messages--input"
 				:placeholder="t('mail', 'Search in folder')"
 				:aria-label="t('mail', 'Search in folder')"
 				@focus="showButtons = true"
-				@blur="hideButtonsWithDelay">
-			<NcButton type="tertiary"
+				@blur="hideButtonsWithDelay(true)">
+			<NcButton
+				variant="tertiary"
 				:aria-label="t('mail', 'Open search modal')"
 				class="search-messages--filter"
 				@click="moreSearchActions = true">
@@ -20,7 +22,8 @@
 					<FilterVariantIcon :size="20" />
 				</template>
 			</NcButton>
-			<NcButton v-if="filterChanged"
+			<NcButton
+				v-if="filterChanged"
 				:aria-label="t('mail', 'Close')"
 				class="search-messages--close"
 				@click="resetFilter()">
@@ -29,10 +32,12 @@
 				</template>
 			</NcButton>
 
-			<span v-if="filterChanged"
+			<span
+				v-if="filterChanged"
 				class="filter-changed" />
 
-			<NcDialog v-if="moreSearchActions"
+			<NcDialog
+				v-if="moreSearchActions"
 				:name="t('mail', 'Search parameters')"
 				size="normal"
 				class="search-modal"
@@ -41,10 +46,11 @@
 				<div class="modal-inner--content">
 					<div class="modal-inner--field">
 						<label class="modal-inner--label" for="subjectId">
-							{{ t('mail','Subject') }}
+							{{ t('mail', 'Subject') }}
 						</label>
 						<div class="modal-inner--container">
-							<input id="subjectId"
+							<input
+								id="subjectId"
 								v-model="searchInSubject"
 								type="text"
 								class="search-input"
@@ -53,10 +59,11 @@
 					</div>
 					<div class="modal-inner--field">
 						<label class="modal-inner--label" for="bodyId">
-							{{ t('mail','Body') }}
+							{{ t('mail', 'Body') }}
 						</label>
 						<div class="modal-inner--container">
-							<input id="bodyId"
+							<input
+								id="bodyId"
 								v-model="searchInMessageBody"
 								type="text"
 								class="search-input"
@@ -64,18 +71,20 @@
 						</div>
 					</div>
 					<div class="modal-inner--field">
-						<label class="modal-inner--label" for="fromId">
+						<label class="modal-inner--label">
 							{{ t('mail', 'Date') }}
 						</label>
 						<div class="modal-inner--container range">
 							<div class="modal-inner-inline">
-								<NcDateTimePickerNative v-model="startDate"
+								<NcDateTimePickerNative
+									v-model="startDate"
 									type="date"
 									:label="t('mail', 'Pick a start date')"
 									confirm />
 							</div>
 							<div class="modal-inner-inline">
-								<NcDateTimePickerNative v-model="endDate"
+								<NcDateTimePickerNative
+									v-model="endDate"
 									type="date"
 									:disabled="startDate === null"
 									:label="t('mail', 'Pick an end date')"
@@ -88,12 +97,13 @@
 							{{ t('mail', 'From') }}
 						</label>
 						<div class="modal-inner--container">
-							<NcSelect id="fromId"
+							<NcSelect
+								id="fromId"
 								class="modal-inner--container__select"
 								label="label"
 								track-by="email"
 								:options="autocompleteRecipients"
-								:value="searchInFrom"
+								:model-value="searchInFrom"
 								:placeholder="t('mail', 'Select senders')"
 								:aria-label-combobox="t('mail', 'Select senders')"
 								:multiple="true"
@@ -101,8 +111,8 @@
 								:show-no-options="false"
 								:preserve-search="true"
 								:max="1"
-								@option:selecting="addTag($event,'from')"
-								@option:deselecting="removeTag($event,'from')"
+								@option:selecting="addTag($event, 'from')"
+								@option:deselecting="removeTag($event, 'from')"
 								@search="searchRecipients($event)" />
 						</div>
 					</div>
@@ -112,20 +122,21 @@
 							{{ t('mail', 'To') }}
 						</label>
 						<div class="modal-inner--container">
-							<NcSelect id="toId"
+							<NcSelect
+								id="toId"
 								class="modal-inner--container__select"
 								label="label"
 								track-by="email"
 								:options="autocompleteRecipients"
-								:value="searchInTo"
+								:model-value="searchInTo"
 								:placeholder="t('mail', 'Select recipients')"
 								:aria-label-combobox="t('mail', 'Select recipients')"
 								:multiple="true"
 								:taggable="true"
 								:show-no-options="false"
 								:preserve-search="true"
-								@option:selecting="addTag($event,'to')"
-								@option:deselecting="removeTag($event,'to')"
+								@option:selecting="addTag($event, 'to')"
+								@option:deselecting="removeTag($event, 'to')"
 								@search="searchRecipients($event)" />
 						</div>
 					</div>
@@ -135,20 +146,21 @@
 							{{ t('mail', 'Cc') }}
 						</label>
 						<div class="modal-inner--container">
-							<NcSelect id="ccId"
+							<NcSelect
+								id="ccId"
 								class="modal-inner--container__select"
 								label="label"
 								track-by="email"
 								:options="autocompleteRecipients"
-								:value="searchInCc"
+								:model-value="searchInCc"
 								:placeholder="t('mail', 'Select CC recipients')"
 								:aria-label-combobox="t('mail', 'Select CC recipients')"
 								:multiple="true"
 								:taggable="true"
 								:show-no-options="false"
 								:preserve-search="true"
-								@option:selecting="addTag($event,'cc')"
-								@option:deselecting="removeTag($event,'cc')"
+								@option:selecting="addTag($event, 'cc')"
+								@option:deselecting="removeTag($event, 'cc')"
 								@search="searchRecipients($event)" />
 						</div>
 					</div>
@@ -158,20 +170,21 @@
 							{{ t('mail', 'Bcc') }}
 						</label>
 						<div class="modal-inner--container">
-							<NcSelect id="bccId"
+							<NcSelect
+								id="bccId"
 								class="modal-inner--container__select"
 								label="label"
 								track-by="email"
 								:options="autocompleteRecipients"
-								:value="searchInBcc"
+								:model-value="searchInBcc"
 								:placeholder="t('mail', 'Select BCC recipients')"
 								:aria-label-combobox="t('mail', 'Select BCC recipients')"
 								:multiple="true"
 								:taggable="true"
 								:show-no-options="false"
 								:preserve-search="true"
-								@option:selecting="addTag($event,'bcc')"
-								@option:deselecting="removeTag($event,'bcc')"
+								@option:selecting="addTag($event, 'bcc')"
+								@option:deselecting="removeTag($event, 'bcc')"
 								@search="searchRecipients($event)" />
 						</div>
 					</div>
@@ -181,13 +194,14 @@
 							{{ t('mail', 'Tags') }}
 						</label>
 						<div class="modal-inner--container">
-							<NcSelect v-if="tags.length > 0"
+							<NcSelect
+								v-if="tags.length > 0"
 								id="tagsId"
 								v-model="selectedTags"
 								class="multiselect-search-tags "
 								:options="tags"
 								label="displayName"
-								:value="selectedTags"
+								:model-value="selectedTags"
 								:placeholder="t('mail', 'Select tags')"
 								:aria-label-combobox="t('mail', 'Select tags')"
 								track-by="displayName"
@@ -195,13 +209,15 @@
 								:auto-limit="false">
 								<template #selected-option="option">
 									<div class="tag-group__search">
-										<div class="tag-group__bg"
+										<div
+											class="tag-group__bg"
 											:style="
-												'background-color:' +
-													(option.color !== '#fff'
+												'background-color:'
+													+ (option.color !== '#fff'
 														? option.color
 														: '#333')" />
-										<div class="tag-group__label"
+										<div
+											class="tag-group__label"
 											:style="'color:' + option.color">
 											{{ option.displayName }}
 										</div>
@@ -220,7 +236,8 @@
 						</label>
 						<div class="modal-inner--container marked-as">
 							<div class="modal-inner-inline">
-								<NcCheckboxRadioSwitch :checked.sync="searchFlags"
+								<NcCheckboxRadioSwitch
+									v-model="searchFlags"
 									value="is_important"
 									name="flags[]"
 									type="checkbox">
@@ -228,7 +245,8 @@
 								</NcCheckboxRadioSwitch>
 							</div>
 							<div class="modal-inner-inline">
-								<NcCheckboxRadioSwitch :checked.sync="searchFlags"
+								<NcCheckboxRadioSwitch
+									v-model="searchFlags"
 									value="starred"
 									name="flags[]"
 									type="checkbox">
@@ -236,15 +254,8 @@
 								</NcCheckboxRadioSwitch>
 							</div>
 							<div class="modal-inner-inline">
-								<NcCheckboxRadioSwitch :checked.sync="searchFlags"
-									value="unread"
-									name="flags[]"
-									type="checkbox">
-									{{ t('mail', 'Unread') }}
-								</NcCheckboxRadioSwitch>
-							</div>
-							<div class="modal-inner-inline">
-								<NcCheckboxRadioSwitch :checked.sync="searchFlags"
+								<NcCheckboxRadioSwitch
+									v-model="searchFlags"
 									value="attachments"
 									name="flags[]"
 									type="checkbox">
@@ -252,7 +263,7 @@
 								</NcCheckboxRadioSwitch>
 							</div>
 							<div class="modal-inner-inline">
-								<NcCheckboxRadioSwitch :checked.sync="mentionsMe">
+								<NcCheckboxRadioSwitch v-model="mentionsMe">
 									{{ t('mail', 'Mentions me') }}
 								</NcCheckboxRadioSwitch>
 							</div>
@@ -263,33 +274,24 @@
 		</div>
 		<!-- Filter buttons -->
 		<div v-if="showButtons" class="filter-buttons">
-			<NcButton type="secondary"
-				class="shortcut"
+			<NcChip
+				:text="t('mail', 'Has attachment')"
+				:no-close="true"
+				:variant="hasAttachmentActive ? 'primary' : 'secondary'"
 				:aria-label="t('mail', 'Has attachment')"
-				:title="t('mail', 'Has attachment')"
-				:pressed="hasAttachmentActive"
-				@update:pressed="hasAttachmentActive = !hasAttachmentActive"
-				@click="toggleGetAttachments">
-				{{ t('mail', 'Has attachment') }}
-			</NcButton>
-			<NcButton type="secondary"
-				class="shortcut"
-				:pressed="hasLast7daysActive"
-				:aria-label="t('mail', 'Last 7 days')"
-				:title="t('mail', 'Last 7 days')"
-				@update:pressed="hasLast7daysActive = !hasLast7daysActive"
-				@click="toggleLastWeekFilter">
-				{{ t('mail', 'Last 7 days') }}
-			</NcButton>
-			<NcButton type="secondary"
-				class="shortcut"
-				:pressed="hasFromMeActive"
-				:aria-label="t('mail', 'From me')"
-				:title="t('mail', 'From me')"
-				@update:pressed="hasFromMeActive = !hasFromMeActive"
-				@click="toggleCurrentUser">
-				{{ t('mail', 'From me') }}
-			</NcButton>
+				@click.native="toggleGetAttachments" />
+			<NcChip
+				:text="t('mail', 'Unread')"
+				:no-close="true"
+				:variant="hasUnreadActive ? 'primary' : 'secondary'"
+				:aria-label="t('mail', 'Unread')"
+				@click.native="toggleUnread" />
+			<NcChip
+				:text="t('mail', 'To me')"
+				:no-close="true"
+				:variant="hasToMeActive ? 'primary' : 'secondary'"
+				:aria-label="t('mail', 'To me')"
+				@click.native="toggleCurrentUser" />
 		</div>
 	</div>
 </template>
@@ -299,27 +301,28 @@ import IconClose from '@mdi/svg/svg/close.svg'
 import IconMagnify from '@mdi/svg/svg/magnify.svg'
 import { translate as t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
-import NcButton from '@nextcloud/vue/components/NcButton'
-import NcCheckboxRadioSwitch
-	from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
-import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
-import NcDialog from '@nextcloud/vue/components/NcDialog'
-import NcSelect from '@nextcloud/vue/components/NcSelect'
 import debouncePromise from 'debounce-promise'
 import uniqBy from 'lodash/fp/uniqBy.js'
 import { mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch
+	from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcChip from '@nextcloud/vue/components/NcChip'
+import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import Close from 'vue-material-design-icons/Close.vue'
 import FilterVariantIcon from 'vue-material-design-icons/FilterVariant.vue'
-
-import { hiddenTags } from './tags.js'
 import { findRecipient } from '../service/AutocompleteService.js'
 import useMainStore from '../store/mainStore.js'
+import { hiddenTags } from './tags.js'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
 export default {
 	name: 'SearchMessages',
 	components: {
+		NcChip,
 		NcDialog,
 		NcSelect,
 		NcDateTimePickerNative,
@@ -328,16 +331,19 @@ export default {
 		FilterVariantIcon,
 		Close,
 	},
+
 	props: {
 		mailbox: {
 			type: Object,
 			required: true,
 		},
+
 		accountId: {
 			type: Number,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			showButtons: false,
@@ -355,16 +361,13 @@ export default {
 			searchInMessageBody: null,
 			searchFlags: [],
 			mentionsMe: false,
-			hasAttachmentActive: false,
-			hasLast7daysActive: false,
-			hasFromMeActive: false,
 			startDate: null,
 			endDate: null,
 			dialogButtons: [
 				{
 					label: t('mail', 'Clear'),
 					callback: () => this.resetFilter(),
-					type: 'secondary',
+					type: 'primary',
 					icon: IconClose,
 				},
 				{
@@ -376,6 +379,7 @@ export default {
 			],
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		tags() {
@@ -395,32 +399,53 @@ export default {
 				return a.displayName.localeCompare(b.displayName)
 			})
 		},
+
+		hasAttachmentActive() {
+			return this.searchFlags.includes('attachments')
+		},
+
+		hasUnreadActive() {
+			return this.searchFlags.includes('unread')
+		},
+
+		hasToMeActive() {
+			return this.searchInTo !== null && this.searchInTo[0]?.email === this.account.emailAddress
+		},
+
+		hasQuickFiltersActive() {
+			return this.hasAttachmentActive || this.hasUnreadActive || this.hasToMeActive
+		},
+
 		filterChanged() {
 			return Object.entries(this.filterData).filter(([key, val]) => {
 				return val !== '' && val !== null && val.length > 0
 			}).length > 0
 		},
+
 		searchBody() {
 			return this.mainStore.getAccount(this.accountId)?.searchBody || (this.mailbox.databaseId === 'priority' && this.mainStore.getPreference('search-priority-body', 'false') === 'true')
 		},
+
 		account() {
 			return this.mainStore.getAccount(this.accountId)
 		},
+
 		filterData() {
 			return {
-				to: this.searchInTo.length > 0 ? this.searchInTo.map(address => address.email) : null,
-				from: this.searchInFrom.length > 0 ? this.searchInFrom.map(address => address.email) : null,
-				cc: this.searchInCc.length > 0 ? this.searchInCc.map(address => address.email) : null,
-				bcc: this.searchInBcc.length > 0 ? this.searchInBcc.map(address => address.email) : null,
+				to: this.searchInTo.length > 0 ? this.searchInTo.map((address) => address.email) : null,
+				from: this.searchInFrom.length > 0 ? this.searchInFrom.map((address) => address.email) : null,
+				cc: this.searchInCc.length > 0 ? this.searchInCc.map((address) => address.email) : null,
+				bcc: this.searchInBcc.length > 0 ? this.searchInBcc.map((address) => address.email) : null,
 				subject: this.searchInSubject !== null && this.searchInSubject.length > 1 ? this.searchInSubject : '',
 				body: this.searchInMessageBody !== null && this.searchInMessageBody.length > 1 ? this.searchInMessageBody : '',
-				tags: this.selectedTags.length > 0 ? this.selectedTags.map(item => item.id) : '',
-				flags: this.searchFlags.length > 0 ? this.searchFlags.map(item => item) : '',
+				tags: this.selectedTags.length > 0 ? this.selectedTags.map((item) => item.id) : '',
+				flags: this.searchFlags.length > 0 ? this.searchFlags.map((item) => item) : '',
 				mentions: this.mentionsMe,
 				start: this.prepareStart(),
 				end: this.prepareEnd(),
 			}
 		},
+
 		searchQuery() {
 			let _search = ''
 			Object.entries(this.filterData).filter(([key, val]) => {
@@ -444,6 +469,7 @@ export default {
 			return _search.trim()
 		},
 	},
+
 	watch: {
 		query() {
 			if (this.query.length === 0) {
@@ -457,52 +483,64 @@ export default {
 			this.searchInTo = [{ email: this.query, label: this.query }]
 			this.debouncedSearchQuery()
 		},
-	},
-	methods: {
-		hideButtonsWithDelay() {
-			setTimeout(() => {
-				this.showButtons = false
-			}, 100)
+
+		hasQuickFiltersActive(newVal) {
+			if (!newVal) {
+				this.hideButtonsWithDelay()
+			}
 		},
+	},
+
+	methods: {
+		hideButtonsWithDelay(delay = false) {
+			if (delay) {
+				setTimeout(() => {
+					if (this.hasQuickFiltersActive) {
+						return
+					}
+					this.showButtons = false
+				}, 500)
+			} else {
+				this.showButtons = false
+			}
+		},
+
 		toggleGetAttachments() {
 			if (this.hasAttachmentActive) {
-				this.searchFlags.push('attachments')
-			} else {
 				this.searchFlags = this.searchFlags.filter((flag) => flag !== 'attachments')
+			} else {
+				this.searchFlags.push('attachments')
 			}
 			this.$nextTick(() => {
 				this.sendQueryEvent()
 			})
 		},
+
 		toggleCurrentUser() {
-			if (this.hasFromMeActive) {
-				this.searchInFrom = [{
+			if (this.hasToMeActive) {
+				this.searchInTo = []
+			} else {
+				this.searchInTo = [{
 					email: this.account.emailAddress,
 					label: this.account.emailAddress,
 				}]
-			} else {
-				this.searchInFrom = null
 			}
 			this.$nextTick(() => {
 				this.sendQueryEvent()
 			})
 		},
-		toggleLastWeekFilter() {
-			if (this.hasLast7daysActive) {
-				const endDate = new Date()
-				const startDate = new Date()
-				startDate.setDate(startDate.getDate() - 7)
 
-				this.startDate = startDate
-				this.endDate = endDate
+		toggleUnread() {
+			if (this.searchFlags.includes('unread')) {
+				this.searchFlags = this.searchFlags.filter((flag) => flag !== 'unread')
 			} else {
-				this.startDate = null
-				this.endDate = null
+				this.searchFlags.push('unread')
 			}
 			this.$nextTick(() => {
 				this.sendQueryEvent()
 			})
 		},
+
 		prepareStart() {
 			if (this.startDate !== null) {
 				if (this.endDate !== null && this.startDate > this.endDate) {
@@ -512,9 +550,11 @@ export default {
 			}
 			return ''
 		},
+
 		prepareEnd() {
 			return this.endDate !== null ? moment(this.endDate).add(1, 'days').unix().toString() : ''
 		},
+
 		closeSearchModal() {
 			this.moreSearchActions = false
 			this.match = 'allof'
@@ -522,19 +562,20 @@ export default {
 				this.sendQueryEvent()
 			})
 		},
+
 		sendQueryEvent() {
 			this.$emit('search-changed', this.searchQuery)
 		},
+
 		searchRecipients(term) {
 			if (term === undefined || term === '') {
 				return
 			}
-			debouncedSearch(term).then(results => {
-				this.autocompleteRecipients = uniqBy('email')(
-					this.autocompleteRecipients.concat(results),
-				)
+			debouncedSearch(term).then((results) => {
+				this.autocompleteRecipients = uniqBy('email')(this.autocompleteRecipients.concat(results))
 			})
 		},
+
 		resetFilter() {
 			this.match = 'allof'
 			this.query = ''
@@ -552,41 +593,44 @@ export default {
 			this.mentionsMe = false
 			this.sendQueryEvent()
 		},
+
 		addTag(tag, type) {
 			if (typeof tag === 'string') {
 				tag = { email: tag, label: tag }
 			}
 			switch (type) {
-			case 'to':
-				this.searchInTo.push(tag)
-				break
-			case 'from':
-				this.searchInFrom.push(tag)
-				break
-			case 'cc':
-				this.searchInCc.push(tag)
-				break
-			case 'bcc':
-				this.searchInBcc.push(tag)
-				break
+				case 'to':
+					this.searchInTo.push(tag)
+					break
+				case 'from':
+					this.searchInFrom.push(tag)
+					break
+				case 'cc':
+					this.searchInCc.push(tag)
+					break
+				case 'bcc':
+					this.searchInBcc.push(tag)
+					break
 			}
 		},
+
 		removeTag(tag, type) {
 			switch (type) {
-			case 'to':
-				this.searchInTo = this.removeAddress(tag, this.searchInTo)
-				break
-			case 'from':
-				this.searchInFrom = this.removeAddress(tag, this.searchInFrom)
-				break
-			case 'cc':
-				this.searchInCc = this.removeAddress(tag, this.searchInCc)
-				break
-			case 'bcc':
-				this.searchInBcc = this.removeAddress(tag, this.searchInBcc)
-				break
+				case 'to':
+					this.searchInTo = this.removeAddress(tag, this.searchInTo)
+					break
+				case 'from':
+					this.searchInFrom = this.removeAddress(tag, this.searchInFrom)
+					break
+				case 'cc':
+					this.searchInCc = this.removeAddress(tag, this.searchInCc)
+					break
+				case 'bcc':
+					this.searchInBcc = this.removeAddress(tag, this.searchInBcc)
+					break
 			}
 		},
+
 		removeAddress(tag, addresses) {
 			return addresses.filter((address) => address.email !== tag.email)
 		},
@@ -600,7 +644,6 @@ export default {
 	position: sticky;
 	top: 0;
 	z-index: 10;
-	height: 52px;
 	background-color: var(--color-main-background);
 	&__input {
 		min-height: 52px;
@@ -803,7 +846,6 @@ export default {
 	flex-wrap: nowrap;
 	gap: 4px;
 	overflow: hidden;
-	text-overflow: ellipsis;
 	padding: 0 5px 5px 5px;
 }
 </style>

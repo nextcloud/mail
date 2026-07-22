@@ -60,7 +60,7 @@ class Converter {
 		}
 
 		$converted = @mb_convert_encoding($data, 'UTF-8', $charset);
-		if ($converted === false) {
+		if ($converted === false && $charset !== null) {
 			// Might be a charset that PHP mb doesn't know how to handle, fall back to iconv
 			$converted = iconv($charset, 'UTF-8', $data);
 		}

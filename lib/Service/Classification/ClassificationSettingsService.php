@@ -11,30 +11,13 @@ namespace OCA\Mail\Service\Classification;
 
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IUserPreferences;
-use OCP\IConfig;
+use OCP\IAppConfig;
 
 class ClassificationSettingsService {
 	public function __construct(
 		private IUserPreferences $preferences,
-		private IConfig $config,
+		private IAppConfig $appConfig,
 	) {
-	}
-
-	/**
-	 * Whether the classification by importance is enabled for a given user.
-	 */
-	public function isClassificationEnabled(string $userId): bool {
-		$appConfig = $this->config->getAppValue(
-			Application::APP_ID,
-			'importance_classification_default',
-			'yes',
-		);
-		$preference = $this->preferences->getPreference(
-			$userId,
-			'tag-classified-messages',
-			$appConfig === 'yes' ? 'true' : 'false',
-		);
-		return $preference === 'true';
 	}
 
 	/**
@@ -42,7 +25,7 @@ class ClassificationSettingsService {
 	 * preference themselves.
 	 */
 	public function isClassificationEnabledByDefault(): bool {
-		return $this->config->getAppValue(
+		return $this->appConfig->getValueString(
 			Application::APP_ID,
 			'importance_classification_default',
 			'yes'
@@ -54,7 +37,7 @@ class ClassificationSettingsService {
 	 * the preference themselves.
 	 */
 	public function setClassificationEnabledByDefault(bool $enabledByDefault): void {
-		$this->config->setAppValue(
+		$this->appConfig->setValueString(
 			Application::APP_ID,
 			'importance_classification_default',
 			$enabledByDefault ? 'yes' : 'no',

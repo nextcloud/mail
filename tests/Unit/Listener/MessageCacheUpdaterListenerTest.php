@@ -43,8 +43,8 @@ class MessageCacheUpdaterListenerTest extends TestCase {
 	}
 
 	public function testHandleMessageFlaggedNotCached() {
-		$account = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Mailbox::class);
+		$account = $this->createStub(Account::class);
+		$mailbox = $this->createStub(Mailbox::class);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
@@ -65,8 +65,8 @@ class MessageCacheUpdaterListenerTest extends TestCase {
 	}
 
 	public function testHandleMessageFlagged() {
-		$account = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Mailbox::class);
+		$account = $this->createStub(Account::class);
+		$mailbox = $this->createStub(Mailbox::class);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,

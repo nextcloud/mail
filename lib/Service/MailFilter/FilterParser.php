@@ -29,7 +29,7 @@ class FilterParser {
 		$state = self::STATE_COPY;
 		$nextState = $state;
 
-		$lines = preg_split('/\r?\n/', $sieveScript);
+		$lines = preg_split('/\r?\n/', $sieveScript) ?: [];
 		foreach ($lines as $line) {
 			switch ($state) {
 				case self::STATE_COPY:

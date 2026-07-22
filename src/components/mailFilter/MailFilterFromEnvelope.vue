@@ -4,13 +4,15 @@
 -->
 <template>
 	<div class="section">
-		<CreateModal v-if="currentFilter === null"
+		<CreateModal
+			v-if="currentFilter === null"
 			:account="account"
 			:envelope="envelope"
 			:loading="loading"
 			@create-filter="createFilter"
 			@close="closeModal" />
-		<UpdateModal v-else
+		<UpdateModal
+			v-else
 			:filter="currentFilter"
 			:account="account"
 			:loading="loading"
@@ -22,7 +24,6 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { mapStores } from 'pinia'
-
 import CreateModal from './CreateModal.vue'
 import UpdateModal from './UpdateModal.vue'
 import logger from '../../logger.js'
@@ -45,31 +46,37 @@ export default {
 		UpdateModal,
 
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
+
 		envelope: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			currentFilter: null,
 			loading: false,
 		}
 	},
+
 	computed: {
 		...mapStores(useMailFilterStore, useMainStore),
 		filters() {
 			return this.mailFilterStore.filters
 		},
 	},
+
 	async mounted() {
 		await this.mailFilterStore.fetch(this.account.id)
 	},
+
 	methods: {
 		createFilter(headers) {
 			this.loading = true
@@ -136,6 +143,7 @@ export default {
 			this.currentFilter = filter
 			this.loading = false
 		},
+
 		async updateFilter(filter) {
 			this.loading = true
 
@@ -153,6 +161,7 @@ export default {
 				this.loading = false
 			}
 		},
+
 		closeModal() {
 			this.$emit('close')
 			this.currentFilter = null

@@ -15,12 +15,6 @@ use OCA\Mail\Service\MailFilter\FilterBuilder;
 
 class FilterBuilderTest extends TestCase {
 	private FilterBuilder $builder;
-	private string $testFolder;
-
-	public function __construct(?string $name = null, array $data = [], $dataName = '') {
-		parent::__construct($name, $data, $dataName);
-		$this->testFolder = __DIR__ . '/../../../data/mail-filter/';
-	}
 
 	public function setUp(): void {
 		parent::setUp();
@@ -34,7 +28,7 @@ class FilterBuilderTest extends TestCase {
 		$untouchedScript = '# Hello, this is a test';
 
 		$filters = json_decode(
-			file_get_contents($this->testFolder . $testName . '.json'),
+			file_get_contents(self::getTestFolder() . $testName . '.json'),
 			true,
 			512,
 			JSON_THROW_ON_ERROR
@@ -46,13 +40,13 @@ class FilterBuilderTest extends TestCase {
 		$script .= "\r\n";
 
 		$this->assertStringEqualsFile(
-			$this->testFolder . $testName . '.sieve',
+			self::getTestFolder() . $testName . '.sieve',
 			$script
 		);
 	}
 
 	public function dataBuild(): array {
-		$files = glob($this->testFolder . 'builder*.json');
+		$files = glob(self::getTestFolder() . 'builder*.json');
 		$tests = [];
 
 		foreach ($files as $file) {
@@ -61,5 +55,9 @@ class FilterBuilderTest extends TestCase {
 		}
 
 		return $tests;
+	}
+
+	public static function getTestFolder(): string {
+		return __DIR__ . '/../../../data/mail-filter/';
 	}
 }

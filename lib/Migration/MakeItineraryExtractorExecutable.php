@@ -18,17 +18,18 @@ use function chmod;
 use function is_executable;
 use function is_file;
 
+/**
+ * @psalm-api
+ */
 class MakeItineraryExtractorExecutable implements IRepairStep {
-	/** @var LoggerInterface */
-	private $logger;
-
 	/** @var string */
 	private $file;
 
-	public function __construct(LoggerInterface $logger,
-		?string $file = null) {
+	public function __construct(
+		private LoggerInterface $logger,
+		?string $file = null,
+	) {
 		$this->file = $file ?? (__DIR__ . '/../../vendor/nextcloud/kitinerary-bin/bin/kitinerary-extractor');
-		$this->logger = $logger;
 	}
 
 	#[\Override]
@@ -55,7 +56,7 @@ class MakeItineraryExtractorExecutable implements IRepairStep {
 				throw new Exception('chmod returned false');
 			}
 		} catch (Throwable $e) {
-			$this->logger->error('Can\'t make itinerary extractor executable: ' . $e, [
+			$this->logger->error('Can\'t make itinerary extractor executable: ' . $e->getMessage(), [
 				'exception' => $e,
 			]);
 			$output->warning('Can\'t make itinerary extractor executable: ' . $e->getMessage());

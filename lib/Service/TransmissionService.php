@@ -5,6 +5,7 @@ declare(strict_types=1);
  * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 namespace OCA\Mail\Service;
 
 use Horde_Mime_Part;
@@ -38,14 +39,10 @@ class TransmissionService {
 	 * @return AddressList
 	 */
 	public function getAddressList(LocalMessage $message, int $type): AddressList {
-		return new AddressList(
-			array_map(
-				static fn ($recipient) => Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail()),
-				$this->groupsIntegration->expand(
-					array_filter($message->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === $type)
-				)
-			)
-		);
+		$recipientsForType = array_filter($message->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === $type);
+		$expandedRecipients = array_values($this->groupsIntegration->expand($recipientsForType));
+		$addresses = array_map(static fn (Recipient $recipient) => Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail()), $expandedRecipients);
+		return new AddressList($addresses);
 	}
 
 	/**
@@ -79,10 +76,20 @@ class TransmissionService {
 			[$localAttachment, $file] = $this->attachmentService->getAttachment($account->getMailAccount()->getUserId(), (int)$attachment['id']);
 			$part = new Horde_Mime_Part();
 			$part->setCharset('us-ascii');
-			if (!empty($localAttachment->getFileName())) {
-				$part->setDisposition('attachment');
+
+			if ($localAttachment->isDispositionAttachmentOrInline()) {
+				$part->setDisposition($localAttachment->getDisposition());
+				/*
+				 * Setting a name implicitly adds a Content-Disposition header in Horde,
+				 * which would override the intentional omission. Only set it for attachment/inline dispositions.
+				 */
 				$part->setName($localAttachment->getFileName());
 			}
+
+			if ($localAttachment->getContentId() !== null) {
+				$part->setContentId($localAttachment->getContentId());
+			}
+
 			$part->setContents($file->getContent());
 			/*
 			 * Horde_Mime_Part.setType takes the mimetype (e.g. text/calendar)

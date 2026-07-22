@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 export default class AttachmentMissingError extends Error {
-
 	constructor(message) {
 		super(message)
 		this.name = AttachmentMissingError.getName()
@@ -13,5 +12,4 @@ export default class AttachmentMissingError extends Error {
 	static getName() {
 		return 'AttachmentMissingError'
 	}
-
 }

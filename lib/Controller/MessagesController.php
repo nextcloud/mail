@@ -29,6 +29,7 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\SmimeData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\ItineraryService;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Service\SnoozeService;
@@ -43,8 +44,11 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\ZipResponse;
 use OCP\Files\Folder;
 use OCP\Files\GenericFileException;
+use OCP\Files\IFilenameValidator;
 use OCP\Files\IMimeTypeDetector;
 use OCP\Files\NotPermittedException;
+use OCP\ICache;
+use OCP\ICacheFactory;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -54,67 +58,42 @@ use function array_map;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class MessagesController extends Controller {
-	private AccountService $accountService;
-	private IMailManager $mailManager;
-	private IMailSearch $mailSearch;
-	private ItineraryService $itineraryService;
-	private ?string $currentUserId;
-	private LoggerInterface $logger;
-	private ?Folder $userFolder;
 	private IMimeTypeDetector $mimeTypeDetector;
 	private IL10N $l10n;
 	private IURLGenerator $urlGenerator;
 	private ContentSecurityPolicyNonceManager $nonceManager;
-	private ITrustedSenderService $trustedSenderService;
-	private IMailTransmission $mailTransmission;
-	private SmimeService $smimeService;
-	private IMAPClientFactory $clientFactory;
-	private IDkimService $dkimService;
-	private IUserPreferences $preferences;
-	private SnoozeService $snoozeService;
-	private AiIntegrationsService $aiIntegrationService;
 
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		AccountService $accountService,
-		IMailManager $mailManager,
-		IMailSearch $mailSearch,
-		ItineraryService $itineraryService,
-		?string $UserId,
-		$userFolder,
-		LoggerInterface $logger,
+		private AccountService $accountService,
+		private IMailManager $mailManager,
+		private IMailSearch $mailSearch,
+		private ItineraryService $itineraryService,
+		private ?string $userId,
+		private ?Folder $userFolder,
+		private IFilenameValidator $filenameValidator,
+		private LoggerInterface $logger,
 		IL10N $l10n,
 		IMimeTypeDetector $mimeTypeDetector,
 		IURLGenerator $urlGenerator,
 		ContentSecurityPolicyNonceManager $nonceManager,
-		ITrustedSenderService $trustedSenderService,
-		IMailTransmission $mailTransmission,
-		SmimeService $smimeService,
-		IMAPClientFactory $clientFactory,
-		IDkimService $dkimService,
-		IUserPreferences $preferences,
-		SnoozeService $snoozeService,
-		AiIntegrationsService $aiIntegrationService) {
+		private ITrustedSenderService $trustedSenderService,
+		private IMailTransmission $mailTransmission,
+		private SmimeService $smimeService,
+		private IMAPClientFactory $clientFactory,
+		private IDkimService $dkimService,
+		private IUserPreferences $preferences,
+		private SnoozeService $snoozeService,
+		private AiIntegrationsService $aiIntegrationService,
+		private ICacheFactory $cacheFactory,
+		private DelegationService $delegationService,
+	) {
 		parent::__construct($appName, $request);
-		$this->accountService = $accountService;
-		$this->mailManager = $mailManager;
-		$this->mailSearch = $mailSearch;
-		$this->itineraryService = $itineraryService;
-		$this->currentUserId = $UserId;
-		$this->userFolder = $userFolder;
-		$this->logger = $logger;
 		$this->l10n = $l10n;
 		$this->mimeTypeDetector = $mimeTypeDetector;
 		$this->urlGenerator = $urlGenerator;
 		$this->nonceManager = $nonceManager;
-		$this->trustedSenderService = $trustedSenderService;
-		$this->mailTransmission = $mailTransmission;
-		$this->smimeService = $smimeService;
-		$this->clientFactory = $clientFactory;
-		$this->dkimService = $dkimService;
-		$this->preferences = $preferences;
-		$this->snoozeService = $snoozeService;
-		$this->aiIntegrationService = $aiIntegrationService;
 	}
 
 	/**
@@ -139,15 +118,21 @@ class MessagesController extends Controller {
 		?int $limit = null,
 		?string $view = null,
 		?string $v = null): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+		$limit = min(100, max(1, $limit));
+
 		try {
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $mailboxId);
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($mailboxId, $this->userId);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $mailboxId);
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
 		$this->logger->debug("loading messages of mailbox <$mailboxId>");
-		$sort = $this->preferences->getPreference($this->currentUserId, 'sort-order', 'newest') === 'newest' ? IMailSearch::ORDER_NEWEST_FIRST : IMailSearch::ORDER_OLDEST_FIRST;
+		$sort = $this->preferences->getPreference($this->userId, 'sort-order', 'newest') === 'newest' ? IMailSearch::ORDER_NEWEST_FIRST : IMailSearch::ORDER_OLDEST_FIRST;
 
 		$view = $view === 'singleton' ? IMailSearch::VIEW_SINGLETON : IMailSearch::VIEW_THREADED;
 
@@ -158,7 +143,7 @@ class MessagesController extends Controller {
 			$filter === '' ? null : $filter,
 			$cursor,
 			$limit,
-			$this->currentUserId,
+			$effectiveUserId,
 			$view
 		);
 
@@ -179,10 +164,14 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function show(int $id): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
@@ -210,13 +199,20 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function getBody(int $id): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
+
+		$cacheInstance = $this->getCacheForAccount($account->getId());
+		$imapMessageCacheKey = "message_$id";
 
 		$client = $this->clientFactory->getClient($account);
 		try {
@@ -226,6 +222,11 @@ class MessagesController extends Controller {
 				$mailbox,
 				$message->getUid(), true
 			);
+
+			if ($imapMessage->hasHtmlMessage()) {
+				$cacheInstance->set($imapMessageCacheKey, $imapMessage->getHtmlBody($id), 600);
+			}
+
 			$json = $imapMessage->getFullMessage($id);
 		} finally {
 			$client->logout();
@@ -235,10 +236,8 @@ class MessagesController extends Controller {
 		if ($itineraries) {
 			$json['itineraries'] = $itineraries;
 		}
-		$json['attachments'] = array_map(fn ($a) => $this->enrichDownloadUrl(
-			$id,
-			$a
-		), $json['attachments']);
+		$json['attachments'] = $this->enrichAttachments($id, $json['attachments']);
+		$json['inlineAttachments'] = $this->enrichAttachments($id, $json['inlineAttachments']);
 		$json['accountId'] = $account->getId();
 		$json['mailboxId'] = $mailbox->getId();
 		$json['databaseId'] = $message->getId();
@@ -276,10 +275,14 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function getItineraries(int $id): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
@@ -295,10 +298,14 @@ class MessagesController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function getDkim(int $id): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
@@ -309,6 +316,9 @@ class MessagesController extends Controller {
 	}
 
 	private function isSenderTrusted(Message $message): bool {
+		if ($this->userId === null) {
+			return false;
+		}
 		$from = $message->getFrom();
 		$first = $from->first();
 		if ($first === null) {
@@ -319,7 +329,7 @@ class MessagesController extends Controller {
 			return false;
 		}
 		return $this->trustedSenderService->isTrusted(
-			$this->currentUserId,
+			$this->userId,
 			$email
 		);
 	}
@@ -335,10 +345,14 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function getThread(int $id): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
@@ -347,7 +361,7 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		}
 
-		return new JSONResponse($this->mailManager->getThread($account, $message->getThreadRootId()));
+		return new JSONResponse($this->mailManager->getThread($account, (string)$message->getThreadRootId()));
 	}
 
 	/**
@@ -363,12 +377,16 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function move(int $id, int $destFolderId): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$srcMailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$dstMailbox = $this->mailManager->getMailbox($this->currentUserId, $destFolderId);
-			$srcAccount = $this->accountService->find($this->currentUserId, $srcMailbox->getAccountId());
-			$dstAccount = $this->accountService->find($this->currentUserId, $dstMailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$srcMailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$dstMailbox = $this->mailManager->getMailbox($effectiveUserId, $destFolderId);
+			$srcAccount = $this->accountService->find($effectiveUserId, $srcMailbox->getAccountId());
+			$dstAccount = $this->accountService->find($effectiveUserId, $dstMailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
@@ -380,6 +398,9 @@ class MessagesController extends Controller {
 			$dstAccount,
 			$dstMailbox->getName()
 		);
+
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId moved message <$id> to mailbox <$destFolderId> on behalf of $effectiveUserId");
+
 		return new JSONResponse();
 	}
 
@@ -396,17 +417,22 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function snooze(int $id, int $unixTimestamp, int $destMailboxId): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$srcMailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$dstMailbox = $this->mailManager->getMailbox($this->currentUserId, $destMailboxId);
-			$srcAccount = $this->accountService->find($this->currentUserId, $srcMailbox->getAccountId());
-			$dstAccount = $this->accountService->find($this->currentUserId, $dstMailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$srcMailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$dstMailbox = $this->mailManager->getMailbox($effectiveUserId, $destMailboxId);
+			$srcAccount = $this->accountService->find($effectiveUserId, $srcMailbox->getAccountId());
+			$dstAccount = $this->accountService->find($effectiveUserId, $dstMailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
 		$this->snoozeService->snoozeMessage($message, $unixTimestamp, $srcAccount, $srcMailbox, $dstAccount, $dstMailbox);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId snoozed message <$id> to <$unixTimestamp> on behalf of $effectiveUserId");
 
 		return new JSONResponse();
 	}
@@ -422,13 +448,18 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function unSnooze(int $id): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$this->snoozeService->unSnoozeMessage($message, $this->currentUserId);
+		$this->snoozeService->unSnoozeMessage($message, $effectiveUserId);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId unsnoozed message <$id> on behalf of $effectiveUserId");
 
 		return new JSONResponse();
 	}
@@ -445,10 +476,14 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function mdn(int $id): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
@@ -459,7 +494,7 @@ class MessagesController extends Controller {
 
 		try {
 			$this->mailTransmission->sendMdn($account, $mailbox, $message);
-			$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), 'mdnsent', true);
+			$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), '$mdnsent', true);
 		} catch (ServiceException $ex) {
 			$this->logger->error('Sending mdn failed: ' . $ex->getMessage());
 			throw $ex;
@@ -476,10 +511,14 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function getSource(int $id): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
@@ -517,10 +556,14 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function export(int $id): Response {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
@@ -538,10 +581,80 @@ class MessagesController extends Controller {
 		}
 
 		return new AttachmentDownloadResponse(
-			$source,
+			$source ?? '',
 			$message->getSubject() . '.eml',
 			'message/rfc822',
 		);
+	}
+
+	/**
+	 * Save a whole message as an .eml file in the local storage
+	 *
+	 * @NoAdminRequired
+	 *
+	 * @param int $id
+	 * @param string $targetPath
+	 *
+	 * @return Response
+	 *
+	 * @throws ClientException
+	 * @throws GenericFileException
+	 * @throws NotPermittedException
+	 * @throws LockedException
+	 * @throws ServiceException
+	 */
+	#[TrapError]
+	public function saveFile(int $id, string $targetPath): Response {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+		if ($this->userFolder === null) {
+			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+		if (!$this->userFolder->nodeExists($targetPath)) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		}
+		if (!($this->userFolder->get($targetPath) instanceof Folder)) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		}
+		try {
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		$client = $this->clientFactory->getClient($account);
+		try {
+			$source = $this->mailManager->getSource(
+				$client,
+				$account,
+				$mailbox->getName(),
+				$message->getUid()
+			);
+		} finally {
+			$client->logout();
+		}
+
+		if ($source === null) {
+			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
+		$fileName = $this->filenameValidator->sanitizeFilename($message->getSubject());
+		$fileExtension = 'eml';
+		$fullPath = "$targetPath/$fileName.$fileExtension";
+		$counter = 2;
+		while ($this->userFolder->nodeExists($fullPath)) {
+			$fullPath = "$targetPath/$fileName ($counter).$fileExtension";
+			$counter++;
+		}
+
+		$newFile = $this->userFolder->newFile($fullPath);
+		$newFile->putContent($source);
+
+		return new JSONResponse();
 	}
 
 	/**
@@ -557,33 +670,48 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function getHtmlBody(int $id, bool $plain = false): Response {
+		if ($this->userId === null) {
+			return new TemplateResponse(
+				$this->appName,
+				'error',
+				['message' => 'Not authenticated'],
+				TemplateResponse::RENDER_AS_BLANK,
+				Http::STATUS_UNAUTHORIZED,
+			);
+		}
 		try {
 			try {
-				$message = $this->mailManager->getMessage($this->currentUserId, $id);
-				$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-				$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-			} catch (DoesNotExistException $e) {
+				$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+				$message = $this->mailManager->getMessage($effectiveUserId, $id);
+				$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+				$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
+			} catch (DoesNotExistException) {
 				return new TemplateResponse(
 					$this->appName,
 					'error',
 					['message' => 'Not allowed'],
-					'none'
+					TemplateResponse::RENDER_AS_BLANK,
+					Http::STATUS_NOT_FOUND,
 				);
 			}
 
-			$client = $this->clientFactory->getClient($account);
-			try {
-				$html = $this->mailManager->getImapMessage(
-					$client,
-					$account,
-					$mailbox,
-					$message->getUid(),
-					true
-				)->getHtmlBody(
-					$id
-				);
-			} finally {
-				$client->logout();
+			$cacheInstance = $this->getCacheForAccount($account->getId());
+			$imapMessageCacheKey = "message_$id";
+
+			$html = $cacheInstance->get($imapMessageCacheKey);
+			if ($html === null) {
+				$client = $this->clientFactory->getClient($account);
+				try {
+					$html = $this->mailManager->getImapMessage(
+						$client,
+						$account,
+						$mailbox,
+						$message->getUid(),
+						true
+					)->getHtmlBody($id);
+				} finally {
+					$client->logout();
+				}
 			}
 
 			$htmlResponse = $plain
@@ -598,7 +726,6 @@ class MessagesController extends Controller {
 
 			// Harden the default security policy
 			$policy = new ContentSecurityPolicy();
-			$policy->allowEvalScript(false);
 			$policy->disallowScriptDomain('\'self\'');
 			$policy->disallowConnectDomain('\'self\'');
 			$policy->disallowFontDomain('\'self\'');
@@ -614,7 +741,8 @@ class MessagesController extends Controller {
 				$this->appName,
 				'error',
 				['message' => $ex->getMessage()],
-				'none'
+				TemplateResponse::RENDER_AS_BLANK,
+				Http::STATUS_INTERNAL_SERVER_ERROR
 			);
 		}
 	}
@@ -633,10 +761,14 @@ class MessagesController extends Controller {
 	#[TrapError]
 	public function downloadAttachment(int $id,
 		string $attachmentId): Response {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
@@ -649,7 +781,8 @@ class MessagesController extends Controller {
 		);
 
 		// Body party and embedded messages do not have a name
-		if ($attachment->getName() === null) {
+		$attachmentName = $attachment->getName();
+		if ($attachmentName === null) {
 			return new AttachmentDownloadResponse(
 				$attachment->getContent(),
 				$this->l10n->t('Embedded message %s', [
@@ -660,7 +793,7 @@ class MessagesController extends Controller {
 		}
 		return new AttachmentDownloadResponse(
 			$attachment->getContent(),
-			$attachment->getName(),
+			$attachmentName,
 			$attachment->getType()
 		);
 	}
@@ -679,10 +812,14 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function downloadAttachments(int $id): Response {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
@@ -691,8 +828,11 @@ class MessagesController extends Controller {
 		$zip = new ZipResponse($this->request, 'attachments');
 
 		foreach ($attachments as $attachment) {
-			$fileName = $attachment->getName();
+			$fileName = $attachment->getName() ?? '';
 			$fh = fopen('php://temp', 'r+');
+			if ($fh === false) {
+				continue;
+			}
 			fputs($fh, $attachment->getContent());
 			$size = $attachment->getSize();
 			rewind($fh);
@@ -719,10 +859,23 @@ class MessagesController extends Controller {
 	public function saveAttachment(int $id,
 		string $attachmentId,
 		string $targetPath) {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+		if ($this->userFolder === null) {
+			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+		if (!$this->userFolder->nodeExists($targetPath)) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		}
+		if (!($this->userFolder->get($targetPath) instanceof Folder)) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
@@ -750,7 +903,7 @@ class MessagesController extends Controller {
 			]) . '.eml';
 			$fileParts = pathinfo($fileName);
 			$fileName = $fileParts['filename'];
-			$fileExtension = $fileParts['extension'];
+			$fileExtension = $fileParts['extension'] ?? '';
 			$fullPath = "$targetPath/$fileName.$fileExtension";
 			$counter = 2;
 			while ($this->userFolder->nodeExists($fullPath)) {
@@ -777,18 +930,26 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function setFlags(int $id, array $flags): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
+		$flagChanges = [];
 		foreach ($flags as $flag => $value) {
 			$value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
 			$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), $flag, $value);
+			$flagChanges[] = "$flag=" . ($value ? 'true' : 'false');
 		}
+		$flagsSummary = implode(', ', $flagChanges);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated flags on message <$id> with [$flagsSummary] on behalf of $effectiveUserId");
 		return new JSONResponse();
 	}
 
@@ -805,21 +966,26 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function setTag(int $id, string $imapLabel): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
 		try {
-			$tag = $this->mailManager->getTagByImapLabel($imapLabel, $this->currentUserId);
+			$tag = $this->mailManager->getTagByImapLabel($imapLabel, $this->userId);
 		} catch (ClientException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
 		$this->mailManager->tagMessage($account, $mailbox->getName(), $message, $tag, true);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId added tag <$imapLabel> on message <$id> on behalf of $effectiveUserId");
 		return new JSONResponse($tag);
 	}
 
@@ -836,21 +1002,26 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function removeTag(int $id, string $imapLabel): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
 		try {
-			$tag = $this->mailManager->getTagByImapLabel($imapLabel, $this->currentUserId);
+			$tag = $this->mailManager->getTagByImapLabel($imapLabel, $this->userId);
 		} catch (ClientException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
 		$this->mailManager->tagMessage($account, $mailbox->getName(), $message, $tag, false);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId removed tag <$imapLabel> on message <$id> on behalf of $effectiveUserId");
 		return new JSONResponse($tag);
 	}
 
@@ -864,10 +1035,14 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function destroy(int $id): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
@@ -879,6 +1054,7 @@ class MessagesController extends Controller {
 			$mailbox->getName(),
 			$message->getUid()
 		);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted message <$id> on behalf of $effectiveUserId");
 		return new JSONResponse();
 	}
 
@@ -891,15 +1067,19 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function smartReply(int $messageId):JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $messageId);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($messageId, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $messageId);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 		try {
-			$replies = array_values($this->aiIntegrationService->getSmartReply($account, $mailbox, $message, $this->currentUserId));
+			$replies = array_values($this->aiIntegrationService->getSmartReply($account, $mailbox, $message, $effectiveUserId) ?? []);
 		} catch (ServiceException $e) {
 			$this->logger->error('Smart reply failed: ' . $e->getMessage(), [
 				'exception' => $e,
@@ -907,7 +1087,6 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_NO_CONTENT);
 		}
 		return new JSONResponse($replies);
-
 	}
 
 	/**
@@ -919,13 +1098,14 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function needsTranslation(int $messageId): JSONResponse {
-		if ($this->currentUserId === null) {
+		if ($this->userId === null) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $messageId);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($messageId, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $messageId);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
@@ -941,7 +1121,7 @@ class MessagesController extends Controller {
 				$account,
 				$mailbox,
 				$message,
-				$this->currentUserId
+				$effectiveUserId
 			);
 			$response = new JSONResponse(['requiresTranslation' => $requiresTranslation === true]);
 			$response->cacheFor(60 * 60 * 24, false, true);
@@ -954,20 +1134,24 @@ class MessagesController extends Controller {
 		}
 	}
 
+	private function enrichAttachments(int $id, array $attachments): array {
+		return array_map(
+			fn ($attachment) => $this->enrichAttachment($id, $attachment),
+			$attachments
+		);
+	}
+
 	/**
 	 * @param int $id
 	 * @param array $attachment
 	 *
 	 * @return array
 	 */
-	private function enrichDownloadUrl(int $id,
-		array $attachment) {
-		$downloadUrl = $this->urlGenerator->linkToRoute('mail.messages.downloadAttachment',
-			[
-				'id' => $id,
-				'attachmentId' => $attachment['id'],
-			]);
-		$downloadUrl = $this->urlGenerator->getAbsoluteURL($downloadUrl);
+	private function enrichAttachment(int $id, array $attachment): array {
+		$downloadUrl = $this->urlGenerator->linkToRouteAbsolute('mail.messages.downloadAttachment', [
+			'id' => $id,
+			'attachmentId' => $attachment['id'],
+		]);
 		$attachment['downloadUrl'] = $downloadUrl;
 		$attachment['mimeUrl'] = $this->mimeTypeDetector->mimeTypeIcon($attachment['mime']);
 
@@ -1000,5 +1184,9 @@ class MessagesController extends Controller {
 	 */
 	private function attachmentIsCalendarEvent(array $attachment): bool {
 		return in_array($attachment['mime'], ['text/calendar', 'application/ics'], true);
+	}
+
+	private function getCacheForAccount(int $accountId): ICache {
+		return $this->cacheFactory->createDistributed("mail_account_$accountId");
 	}
 }

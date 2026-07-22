@@ -6,7 +6,6 @@
 import { Plugin } from 'ckeditor5'
 
 export default class Quote extends Plugin {
-
 	init() {
 		this._defineSchema()
 		this._defineConverters()
@@ -31,5 +30,4 @@ export default class Quote extends Plugin {
 			},
 		})
 	}
-
 }

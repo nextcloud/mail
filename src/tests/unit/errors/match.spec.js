@@ -6,13 +6,13 @@
 import { matchError } from '../../../errors/match.js'
 
 describe('match', () => {
-	it('throws an error when nothing matches', () => new Promise(done => {
+	it('throws an error when nothing matches', () => new Promise((done) => {
 		const error = new Error('henlo')
 
 		matchError(error, {}).catch(() => done())
 	}))
 
-	it('uses the default', () => new Promise(done => {
+	it('uses the default', () => new Promise((done) => {
 		const map = {
 			default: (error) => 3,
 		}
@@ -24,7 +24,7 @@ describe('match', () => {
 		})
 	}))
 
-	it('matches errors', () => new Promise(done => {
+	it('matches errors', () => new Promise((done) => {
 		const map = {
 			MyErr: (error) => 2,
 			default: (error) => 3,

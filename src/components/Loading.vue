@@ -4,15 +4,18 @@
 -->
 <template>
 	<div class="wrapper">
-		<EmptyContent v-if="hint"
+		<EmptyContent
+			v-if="hint"
 			class="empty-content"
 			:name="hint">
 			<template #icon>
 				<IconLoading />
 			</template>
-			<transition name="fade">
-				<em v-if="slowHint && slow">{{ slowHint }}</em>
-			</transition>
+			<template #description>
+				<transition name="fade">
+					<em v-if="slowHint && slow">{{ slowHint }}</em>
+				</transition>
+			</template>
 		</EmptyContent>
 		<IconLoading v-else class="container" />
 	</div>
@@ -26,24 +29,28 @@ export default {
 		IconLoading,
 		EmptyContent,
 	},
+
 	props: {
 		hint: {
 			type: String,
 			default: '',
 			required: false,
 		},
+
 		slowHint: {
 			type: String,
 			default: '',
 			required: false,
 		},
 	},
+
 	data() {
 		return {
 			slow: false,
 			slowTimer: undefined,
 		}
 	},
+
 	mounted() {
 		clearTimeout(this.slowTimer)
 
@@ -51,6 +58,7 @@ export default {
 			this.slow = true
 		}, 3500)
 	},
+
 	beforeDestroy() {
 		clearTimeout(this.slowTimer)
 	},
@@ -79,6 +87,6 @@ export default {
 	flex-direction: column;
 	flex: 1 auto;
 	align-items: center;
-	height: 100vh;
+	height: 100%;
 }
 </style>

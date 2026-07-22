@@ -23,7 +23,7 @@ class ContainerTest extends TestCase {
 	}
 
 	public function testWithMessage(): void {
-		$message = $this->createMock(Message::class);
+		$message = $this->createStub(Message::class);
 
 		$container = Container::with($message);
 
@@ -33,7 +33,7 @@ class ContainerTest extends TestCase {
 	}
 
 	public function testFillWithMessage(): void {
-		$message = $this->createMock(Message::class);
+		$message = $this->createStub(Message::class);
 
 		$container = Container::with($message);
 

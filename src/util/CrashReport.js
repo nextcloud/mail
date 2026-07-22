@@ -4,8 +4,9 @@
  */
 
 import IssueTemplateBuilder from 'nextcloud_issuetemplate_builder'
+import logger from '../logger.js'
 
-const flattenError = (error) => {
+function flattenError(error) {
 	let text = ''
 	if (error.type) {
 		text += error.type + ': '
@@ -21,7 +22,7 @@ const flattenError = (error) => {
 	return text
 }
 
-const flattenTrace = (trace) => {
+function flattenTrace(trace) {
 	return trace.reduce(function(acc, entry) {
 		let text = ''
 		if (entry.class) {
@@ -36,8 +37,8 @@ const flattenTrace = (trace) => {
 	}, '')
 }
 
-export const getReportUrl = (error) => {
-	console.error(error)
+export function getReportUrl(error) {
+	logger.error('crash report', { error })
 	let message = error.message || 'An unkown error occurred.'
 	if (!message.endsWith('.')) {
 		message += '.'

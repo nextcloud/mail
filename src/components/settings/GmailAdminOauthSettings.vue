@@ -6,13 +6,15 @@
 <template>
 	<form @submit.prevent="onSubmit">
 		<label for="mail-gmail-oauth-client-id"> {{ t('mail', 'Client ID') }} </label>
-		<input id="mail-gmail-oauth-client-id"
+		<input
+			id="mail-gmail-oauth-client-id"
 			v-model="clientIdVal"
 			:disabled="loading"
 			type="text"
 			required>
 		<label for="mail-gmail-oauth-client-secret"> {{ t('mail', 'Client secret') }} </label>
-		<input id="mail-gmail-oauth-client-secret"
+		<input
+			id="mail-gmail-oauth-client-secret"
 			v-model="clientSecret"
 			:disabled="loading"
 			type="password"
@@ -29,7 +31,6 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
-
 import logger from '../../logger.js'
 import { configure, unlink } from '../../service/GoogleIntegrationService.js'
 
@@ -43,6 +44,7 @@ export default {
 			default: '',
 		},
 	},
+
 	data() {
 		return {
 			loading: false,
@@ -50,6 +52,7 @@ export default {
 			clientSecret: this.clientId ? PASSWORD_PLACEHOLDER : '',
 		}
 	},
+
 	methods: {
 		async onSubmit() {
 			this.loading = true
@@ -63,6 +66,7 @@ export default {
 				this.loading = false
 			}
 		},
+
 		async onUnlink() {
 			this.loading = true
 			try {

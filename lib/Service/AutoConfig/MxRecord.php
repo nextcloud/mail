@@ -15,11 +15,9 @@ use function array_combine;
 use function asort;
 
 final class MxRecord {
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(LoggerInterface $logger) {
-		$this->logger = $logger;
+	public function __construct(
+		private LoggerInterface $logger,
+	) {
 	}
 
 	/**
@@ -37,7 +35,8 @@ final class MxRecord {
 		asort($sortedRecords, SORT_NUMERIC);
 
 		$mxRecords = array_filter(array_keys($sortedRecords), static fn ($record) => !empty($record));
-		$this->logger->debug('found ' . count($sortedRecords) . " MX records for host <$host>");
+		$nRecords = count($sortedRecords);
+		$this->logger->debug("found $nRecords MX records for host <$host>");
 		if (empty(($mxRecords))) {
 			return [];
 		}

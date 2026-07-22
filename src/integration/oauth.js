@@ -4,7 +4,6 @@
  */
 
 import { translate as t } from '@nextcloud/l10n'
-
 import logger from '../logger.js'
 
 export const CONSENT_ABORTED = 'OAUTH_CONSENT_ABORTED'
@@ -23,6 +22,7 @@ export async function getUserConsent(redirectUrl) {
 
 			if (data === 'DONE') {
 				logger.info('OAUTH2 user consent given')
+				ssoWindow.close()
 				resolve()
 			}
 		})

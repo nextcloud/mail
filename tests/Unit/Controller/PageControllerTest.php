@@ -20,11 +20,13 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
+use OCA\Mail\Service\ContextChat\ContextChatSettingsService;
 use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\QuickActionsService;
 use OCA\Mail\Service\SmimeService;
+use OCP\App\IAppManager;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
@@ -103,16 +105,17 @@ class PageControllerTest extends TestCase {
 
 	private SmimeService $smimeService;
 
-	/** @var ClassificationSettingsService|MockObject */
-	private $classificationSettingsService;
-
 	/** @var InternalAddressService|MockObject */
 	private $internalAddressService;
 
 	private QuickActionsService|MockObject $quickActionsService;
 
 	private IAvailabilityCoordinator&MockObject $availabilityCoordinator;
+	private IAppManager $appManager;
 
+	private ContextChatSettingsService $contextChatSettingsService;
+
+	private ClassificationSettingsService|MockObject $classificationSettingsService;
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -135,11 +138,15 @@ class PageControllerTest extends TestCase {
 		$this->credentialStore = $this->createMock(ICredentialStore::class);
 		$this->smimeService = $this->createMock(SmimeService::class);
 		$this->userManager = $this->createMock(IUserManager::class);
-		$this->classificationSettingsService = $this->createMock(ClassificationSettingsService::class);
 		$this->internalAddressService = $this->createMock(InternalAddressService::class);
 		$this->availabilityCoordinator = $this->createMock(IAvailabilityCoordinator::class);
 		$this->quickActionsService = $this->createMock(QuickActionsService::class);
+		$this->appManager = $this->createMock(IAppManager::class);
+		$this->appManager->method('getAppVersion')->willReturn('0.0.1-dev.0');
+		$this->contextChatSettingsService = $this->createMock(ContextChatSettingsService::class);
+		$this->contextChatSettingsService->method('isIndexingEnabled')->willReturn(true);
 
+		$this->classificationSettingsService = $this->createMock(ClassificationSettingsService::class);
 		$this->controller = new PageController(
 			$this->appName,
 			$this->request,
@@ -160,18 +167,20 @@ class PageControllerTest extends TestCase {
 			$this->smimeService,
 			$this->aiIntegrationsService,
 			$this->userManager,
-			$this->classificationSettingsService,
 			$this->internalAddressService,
 			$this->availabilityCoordinator,
 			$this->quickActionsService,
+			$this->appManager,
+			$this->contextChatSettingsService,
+			$this->classificationSettingsService
 		);
 	}
 
 	public function testIndex(): void {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Mailbox::class);
-		$this->preferences->expects($this->exactly(12))
+		$mailbox = $this->createStub(Mailbox::class);
+		$this->preferences->expects($this->exactly(14))
 			->method('getPreference')
 			->willReturnMap([
 				[$this->userId, 'account-settings', '[]', json_encode([])],
@@ -186,11 +195,9 @@ class PageControllerTest extends TestCase {
 				[$this->userId, 'follow-up-reminders', 'true', 'true'],
 				[$this->userId, 'internal-addresses', 'false', 'false'],
 				[$this->userId, 'smime-sign-aliases', '[]', '[]'],
+				[$this->userId, 'sort-favorites', 'false', 'false'],
+				[$this->userId, 'compact-mode', 'false', 'false'],
 			]);
-		$this->classificationSettingsService->expects(self::once())
-			->method('isClassificationEnabled')
-			->with($this->userId)
-			->willReturn(false);
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
 			->with($this->userId)
@@ -198,6 +205,10 @@ class PageControllerTest extends TestCase {
 				$account1,
 				$account2,
 			]));
+		$this->accountService->expects($this->once())
+			->method('findDelegatedAccounts')
+			->with($this->userId)
+			->willReturn([]);
 		$this->mailManager->expects($this->exactly(2))
 			->method('getMailboxes')
 			->withConsecutive(
@@ -240,6 +251,7 @@ class PageControllerTest extends TestCase {
 				'mailboxes' => [
 					$mailbox,
 				],
+				'isDelegated' => false,
 			],
 			[
 				'accountId' => 2,
@@ -248,6 +260,7 @@ class PageControllerTest extends TestCase {
 					'a22',
 				],
 				'mailboxes' => [],
+				'isDelegated' => false,
 			],
 		];
 
@@ -298,6 +311,8 @@ class PageControllerTest extends TestCase {
 				$this->equalTo('email'), $this->equalTo(''))
 			->will($this->returnValue('jane@doe.cz'));
 
+		$this->appManager->method('isEnabledForUser')->willReturn(true);
+
 		$loginCredentials = $this->createMock(ICredentials::class);
 		$loginCredentials->expects($this->once())
 			->method('getPassword')
@@ -314,11 +329,15 @@ class PageControllerTest extends TestCase {
 			->method('findAll')
 			->with($this->userId)
 			->willReturn([]);
-		$this->initialState->expects($this->exactly(24))
+		$this->classificationSettingsService->expects(($this->once()))
+			->method(('isClassificationEnabledByDefault'))
+			->willReturn(true);
+		$this->initialState->expects($this->exactly(27))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
 				['ncVersion', '26.0.0'],
+				['mailVersion', '0.0.1-dev.0'],
 				['accounts', $accountsJson],
 				['account-settings', []],
 				['tags', []],
@@ -334,13 +353,16 @@ class PageControllerTest extends TestCase {
 					'app-version' => '1.2.3',
 					'collect-data' => 'true',
 					'start-mailbox-id' => '123',
-					'tag-classified-messages' => 'false',
 					'search-priority-body' => 'false',
 					'layout-mode' => 'vertical-split',
 					'layout-message-view' => 'threaded',
 					'follow-up-reminders' => 'true',
+					'sort-favorites' => 'false',
+					'index-context-chat' => 'true',
+					'compact-mode' => 'false'
 				]],
 				['prefill_displayName', 'Jane Doe'],
+				['importance_classification_default', true],
 				['prefill_email', 'jane@doe.cz'],
 				['outbox-messages', []],
 				['quick-actions', []],
@@ -351,6 +373,7 @@ class PageControllerTest extends TestCase {
 				['llm_translation_enabled', false],
 				['llm_freeprompt_available', false],
 				['llm_followup_available', false],
+				['context_chat_available', true],
 				['smime-certificates', []],
 				['enable-system-out-of-office', true],
 			);

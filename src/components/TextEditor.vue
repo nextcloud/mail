@@ -9,7 +9,8 @@
 
 		<div ref="editableContainer" class="editable" />
 
-		<ckeditor v-if="ready"
+		<Ckeditor
+			v-if="ready"
 			:value="value"
 			:config="config"
 			:editor="editor"
@@ -24,13 +25,12 @@
 import CKEditor from '@ckeditor/ckeditor5-vue2'
 import { getLanguage } from '@nextcloud/l10n'
 import { emojiAddRecent, emojiSearch } from '@nextcloud/vue'
-import { getLinkWithPicker, searchProvider } from '@nextcloud/vue/components/NcRichText'
 import {
 	Alignment,
 	Base64UploadAdapter,
 	BlockQuote,
 	Bold,
-	DecoupledEditor,
+	ClassicEditor,
 	DropdownView,
 	Essentials,
 	FindAndReplace,
@@ -46,12 +46,14 @@ import {
 	Mention,
 	Paragraph,
 	RemoveFormat,
+	SourceEditing,
 	Strikethrough,
 	Subscript,
 	Superscript,
 	Underline,
 } from 'ckeditor5'
-
+import { getLinkWithPicker, searchProvider } from '@nextcloud/vue/components/NcRichText'
+import TextDirectionPlugin from '../ckeditor/direction/TextDirectionPlugin.js'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
@@ -65,46 +67,60 @@ import 'ckeditor5/ckeditor5.css'
 export default {
 	name: 'TextEditor',
 	components: {
-		ckeditor: CKEditor.component,
+		Ckeditor: CKEditor.component,
 	},
+
+	inject: {
+		addToFocusTrap: { default: () => {} },
+	},
+
 	props: {
 		value: {
 			type: String,
 			required: true,
 		},
+
 		html: {
 			type: Boolean,
 			default: false,
 		},
+
 		placeholder: {
 			type: String,
 			default: '',
 		},
+
 		focus: {
 			type: Boolean,
 			default: false,
 		},
+
 		bus: {
 			type: Object,
 			required: true,
 		},
+
 		disabled: {
 			type: Boolean,
 			default: false,
 		},
+
 		textBlocks: {
 			type: Array,
 			default: () => [],
 		},
+
 		isBordered: {
 			type: Boolean,
 			default: false,
 		},
+
 		readOnly: {
 			type: Boolean,
 			default: false,
 		},
 	},
+
 	data() {
 		const plugins = [
 			Essentials,
@@ -138,6 +154,8 @@ export default {
 				RemoveFormat,
 				Base64UploadAdapter,
 				MailPlugin,
+				SourceEditing,
+				TextDirectionPlugin,
 			])
 			toolbar.unshift(...[
 				'heading',
@@ -153,21 +171,28 @@ export default {
 				'fontBackgroundColor',
 				'insertImage',
 				'alignment',
+				'textDirection:ltr',
+				'textDirection:rtl',
 				'bulletedList',
 				'numberedList',
 				'blockquote',
 				'link',
 				'removeFormat',
 				'findAndReplace',
+				'sourceEditing',
 			])
 		}
 
 		return {
 			linkTribute: null,
 			emojiTribute: null,
+			contactMentionQuery: null,
 			textSmiles: [],
+			sourceEditingInputHandler: null,
+			sourceEditingModeHandler: null,
+			sourceEditingDebounceTimer: null,
 			ready: false,
-			editor: DecoupledEditor,
+			editor: ClassicEditor,
 			config: {
 				licenseKey: 'GPL',
 				placeholder: this.placeholder,
@@ -189,7 +214,7 @@ export default {
 						{
 							marker: '@',
 							feed: this.getContact,
-							itemRenderer: this.customRenderer,
+							itemRenderer: (value) => this.customRenderer(value, 'contact'),
 						},
 						{
 							marker: '!',
@@ -198,13 +223,94 @@ export default {
 						},
 					],
 				},
+
+				htmlSupport: {
+					allow: [
+						'table',
+						'tbody',
+						'td',
+						'tfoot',
+						'th',
+						'thead',
+						'tr',
+						'figure',
+						{
+							name: 'a',
+							attributes: ['title', 'name', 'id'],
+							classes: true,
+							styles: true,
+						},
+						{
+							name: 'img',
+							attributes: ['src', 'alt', 'title', 'width', 'height', 'data-cid', 'loading'],
+							styles: true,
+						},
+					],
+				},
+
+				// Preserve arbitrary font sizes/families on inserted or pasted
+				// HTML (e.g. app-generated signatures). Without supportAllValues
+				// the Font plugins drop any value not in their preset list, so
+				// raw-HTML signatures lose font-size/font-family on send.
+				// NOTE: supportAllValues is incompatible with the default *named*
+				// presets ('tiny'/'big'/…) — it requires numeric options, or
+				// CKEditor throws at init and the editor fails to mount.
+				fontSize: {
+					options: [9, 10, 11, 12, 13, 14, 16, 18, 24, 'default'],
+					supportAllValues: true,
+				},
+
+				fontFamily: {
+					supportAllValues: true,
+				},
+
 			},
 		}
 	},
+
 	beforeMount() {
 		this.loadEditorTranslations(getLanguage())
 	},
+
+	beforeDestroy() {
+		this.unregisterSourceEditingInputListener()
+
+		if (this.editorInstance?.plugins.has('SourceEditing') && this.sourceEditingModeHandler) {
+			this.editorInstance.plugins.get('SourceEditing').off('change:isSourceEditingMode', this.sourceEditingModeHandler)
+		}
+	},
+
 	methods: {
+		registerSourceEditingInputListener() {
+			const textarea = this.editorInstance.ui.getEditableElement('sourceEditing:main')
+
+			if (!textarea || this.sourceEditingInputHandler) {
+				return
+			}
+
+			this.sourceEditingInputHandler = () => {
+				clearTimeout(this.sourceEditingDebounceTimer)
+				this.sourceEditingDebounceTimer = setTimeout(() => {
+					this.editorInstance.plugins.get('SourceEditing').updateEditorData()
+				}, 300)
+			}
+
+			textarea.addEventListener('input', this.sourceEditingInputHandler)
+		},
+
+		unregisterSourceEditingInputListener() {
+			clearTimeout(this.sourceEditingDebounceTimer)
+			this.sourceEditingDebounceTimer = null
+
+			if (!this.sourceEditingInputHandler) {
+				return
+			}
+
+			const textarea = this.editorInstance?.ui.getEditableElement('sourceEditing:main')
+			textarea?.removeEventListener('input', this.sourceEditingInputHandler)
+			this.sourceEditingInputHandler = null
+		},
+
 		getLink(text) {
 			const results = searchProvider(text)
 			if (results.length === 1 && !results[0].title.toLowerCase().includes(text.toLowerCase())) {
@@ -212,29 +318,43 @@ export default {
 			}
 			return results
 		},
+
 		getEmoji(text) {
+			// Disable the emoji picker if a [space] is the first character after the colon ':'
+			if (text[0] === ' ') {
+				return []
+			}
 			const emojiResults = emojiSearch(text)
 			if (this.textSmiles.includes(':' + text)) {
-
 				emojiResults.unshift(':' + text)
 			}
 			return emojiResults
 		},
+
 		async getContact(text) {
 			if (text.length === 0) {
 				return []
 			}
-			let contactResults = await autoCompleteByName(text)
-			contactResults = contactResults.filter(result => result.email.length > 0)
+			this.contactMentionQuery = text
+			let contactResults
+			try {
+				contactResults = await autoCompleteByName(text)
+				contactResults = contactResults.filter((result) => result.email?.filter((email) => email.length > 0))
+			} catch (error) {
+				logger.error('could not fetch contacts to mention', { error })
+				return []
+			}
 			return contactResults
 		},
+
 		getTextBlock(text) {
 			if (text.length === 0) {
 				return []
 			}
-			return this.textBlocks.filter(textBlock => textBlock.title.toLowerCase().includes(text.toLowerCase()))
+			return this.textBlocks.filter((textBlock) => textBlock.title.toLowerCase().includes(text.toLowerCase()))
 		},
-		 customEmojiRenderer(item) {
+
+		customEmojiRenderer(item) {
 			const itemElement = document.createElement('span')
 
 			itemElement.classList.add('custom-item')
@@ -249,6 +369,7 @@ export default {
 
 			return itemElement
 		},
+
 		customLinkRenderer(item) {
 			const itemElement = document.createElement('span')
 			itemElement.classList.add('link-container')
@@ -266,6 +387,7 @@ export default {
 
 			return itemElement
 		},
+
 		customRenderer(item, type) {
 			const itemElement = document.createElement('span')
 
@@ -280,23 +402,48 @@ export default {
 
 			return itemElement
 		},
+
 		overrideDropdownPositionsToNorth(editor, toolbarView) {
 			const {
-				south, north, southEast, southWest, northEast, northWest,
-				southMiddleEast, southMiddleWest, northMiddleEast, northMiddleWest,
+				south,
+				north,
+				southEast,
+				southWest,
+				northEast,
+				northWest,
+				southMiddleEast,
+				southMiddleWest,
+				northMiddleEast,
+				northMiddleWest,
 			} = DropdownView.defaultPanelPositions
 
 			let panelPositions
 
 			if (editor.locale.uiLanguageDirection !== 'rtl') {
 				panelPositions = [
-					northEast, northWest, northMiddleEast, northMiddleWest, north,
-					southEast, southWest, southMiddleEast, southMiddleWest, south,
+					northEast,
+					northWest,
+					northMiddleEast,
+					northMiddleWest,
+					north,
+					southEast,
+					southWest,
+					southMiddleEast,
+					southMiddleWest,
+					south,
 				]
 			} else {
 				panelPositions = [
-					northWest, northEast, northMiddleWest, northMiddleEast, north,
-					southWest, southEast, southMiddleWest, southMiddleEast, south,
+					northWest,
+					northEast,
+					northMiddleWest,
+					northMiddleEast,
+					north,
+					southWest,
+					southEast,
+					southMiddleWest,
+					southMiddleEast,
+					south,
 				]
 			}
 
@@ -319,6 +466,7 @@ export default {
 				})
 			}
 		},
+
 		overrideTooltipPositions(toolbarView) {
 			for (const item of toolbarView.items) {
 				if (item.buttonView) {
@@ -328,26 +476,45 @@ export default {
 				}
 			}
 		},
+
 		async loadEditorTranslations(language) {
-			if (language === 'en') {
+			// CKEditor uses lowercase locale codes (e.g. "de-ch" instead of "de-CH")
+			const ckeditorLanguage = language.toLowerCase()
+
+			if (ckeditorLanguage === 'en') {
 				// The default, nothing to fetch
-				return this.showEditor('en')
+				this.showEditor('en')
+				return
 			}
 
-			try {
-				logger.debug(`loading ${language} translations for CKEditor`)
-				const { default: coreTranslations } = await import(
-					/* webpackMode: "lazy-once" */
-					/* webpackPrefetch: true */
-					/* webpackPreload: true */
-					`ckeditor5/translations/${language}.js`
-				)
-				this.showEditor(language, [coreTranslations])
-			} catch (error) {
-				logger.error(`could not find CKEditor translations for "${language}"`, { error })
-				this.showEditor('en')
+			// Try exact match first (e.g. "de-ch"), then language only (e.g. "de"), then fall back to "en"
+			const candidates = [ckeditorLanguage]
+			if (ckeditorLanguage.includes('-')) {
+				candidates.push(ckeditorLanguage.split('-')[0])
 			}
+
+			for (const candidate of candidates) {
+				try {
+					logger.debug(`loading "${candidate}" translations for CKEditor`)
+
+					/* eslint-disable @stylistic/comma-dangle, @stylistic/function-paren-newline */
+					const { default: coreTranslations } = await import(
+						/* webpackMode: "lazy" */
+						`../../node_modules/ckeditor5/build/translations/${candidate}.js`
+					)
+					/* eslint-enable @stylistic/comma-dangle, @stylistic/function-paren-newline */
+
+					this.showEditor(candidate, [coreTranslations])
+					return
+				} catch (error) {
+					logger.debug(`no CKEditor translations for "${candidate}"`, { error })
+				}
+			}
+
+			logger.info(`no CKEditor translations found for "${language}", falling back to English`)
+			this.showEditor('en')
 		},
+
 		showEditor(language, translations) {
 			logger.debug(`using "${language}" as CKEditor language`)
 			if (translations) {
@@ -357,6 +524,7 @@ export default {
 
 			this.ready = true
 		},
+
 		/**
 		 * @param {module:core/editor/editor~Editor} editor editor the editor instance
 		 */
@@ -389,11 +557,12 @@ export default {
 							this.editorInstance.editing.view.focus()
 						})
 						.catch((error) => {
-							console.debug('Smart picker promise rejected:', error)
+							logger.debug('Smart picker promise rejected', { error })
 						})
 				}
 				if (eventData.marker === '@') {
-					this.editorInstance.execute('insertItem', { email: item.email[0], label: item.label }, '@')
+					const lookback = this.contactMentionQuery?.length ? this.contactMentionQuery.length + '@'.length : 5
+					this.editorInstance.execute('insertItem', { email: item.email[0], label: item.label }, '@', lookback)
 					this.$emit('mention', { email: item.email[0], label: item.label })
 				}
 				if (eventData.marker === '!') {
@@ -401,9 +570,29 @@ export default {
 				}
 			}, { priority: 'high' })
 
+			if (editor.plugins.has('SourceEditing')) {
+				this.sourceEditingModeHandler = (_event, _name, isSourceEditingMode) => {
+					if (isSourceEditingMode) {
+						this.registerSourceEditingInputListener()
+						return
+					}
+
+					this.unregisterSourceEditingInputListener()
+				}
+
+				editor.plugins.get('SourceEditing').on('change:isSourceEditingMode', this.sourceEditingModeHandler)
+			}
+
 			editor.keystrokes.set('Ctrl+Enter', (event) => {
 				logger.debug('Detected Ctrl+Enter/Cmd+Enter', event)
 				this.$emit('submit', editor)
+			})
+
+			editor.keystrokes.set('Ctrl+S', (event) => {
+				event.preventDefault()
+				event.stopPropagation()
+				logger.debug('Detected Ctrl+S/Cmd+S', event)
+				this.$emit('save', editor)
 			})
 
 			this.editorInstance = editor
@@ -414,25 +603,43 @@ export default {
 			}
 
 			if (this.html) {
-				this.$emit('show-toolbar', editor.ui._focusableToolbarDefinitions[0].toolbarView.element)
+				this.addToFocusTrap('.ck-body-wrapper')
+
+				editor.keystrokes.set('Ctrl+Alt+1', (event, cancel) => {
+					editor.execute('heading', { value: 'heading1' })
+					cancel()
+				})
+
+				editor.keystrokes.set('Ctrl+Alt+2', (event, cancel) => {
+					editor.execute('heading', { value: 'heading2' })
+					cancel()
+				})
+
+				editor.keystrokes.set('Ctrl+Alt+3', (event, cancel) => {
+					editor.execute('heading', { value: 'heading3' })
+					cancel()
+				})
 			}
 
 			this.bus.on('append-to-body-at-cursor', this.appendToBodyAtCursor)
 			this.bus.on('insert-text-block', this.insertTextBlock)
 			this.$emit('ready', editor)
 		},
+
 		onEditorInput(text) {
 			if (text !== this.value) {
 				logger.debug(`TextEditor input changed to <${text}>`)
 				this.$emit('input', text)
 			}
 		},
+
 		appendToBodyAtCursor(toAppend) {
 			// https://ckeditor.com/docs/ckeditor5/latest/builds/guides/faq.html#where-are-the-editorinserthtml-and-editorinserttext-methods-how-to-insert-some-content
 			const viewFragment = this.editorInstance.data.processor.toView(toAppend)
 			const modelFragment = this.editorInstance.data.toModel(viewFragment)
 			this.editorInstance.model.insertContent(modelFragment)
 		},
+
 		editorExecute(commandName, ...args) {
 			if (this.editorInstance) {
 				this.editorInstance.execute(commandName, ...args)
@@ -440,6 +647,7 @@ export default {
 				throw new Error('Impossible to execute a command before editor is ready.')
 			}
 		},
+
 		insertTextBlock(textBlock, addTriggrer = true) {
 			if (addTriggrer) {
 				this.appendToBodyAtCursor('!')
@@ -578,7 +786,11 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	border-radius: var(--border-radius-large) !important;
 	background: var(--color-main-background) !important;
     color: var(--color-main-text) !important;
-	border: 1px solid var(--color-text-maxcontrast) !important;
+	border: 1px solid var(--color-border) !important;
+
+	.ck.ck-toolbar__separator {
+		background: var(--color-border) !important;
+	}
 }
 
 .ck-rounded-corners .ck.ck-dropdown__panel, .ck.ck-dropdown__panel.ck-rounded-corners {

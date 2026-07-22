@@ -4,11 +4,13 @@
 -->
 
 <template>
-	<NcAvatar v-if="loading || !hasAvatar"
+	<NcAvatar
+		v-if="loading || !hasAvatar"
 		:display-name="displayName"
 		:size="size"
 		:disable-tooltip="disableTooltip" />
-	<NcAvatar v-else
+	<NcAvatar
+		v-else
 		:display-name="displayName"
 		:url="avatarUrl"
 		:size="size"
@@ -18,7 +20,6 @@
 <script>
 import { generateUrl } from '@nextcloud/router'
 import NcAvatar from '@nextcloud/vue/components/NcAvatar'
-
 import logger from '../logger.js'
 import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
 
@@ -27,49 +28,58 @@ export default {
 	components: {
 		NcAvatar,
 	},
+
 	props: {
 		displayName: {
 			type: String,
 			required: true,
 		},
+
 		avatar: {
 			type: Object,
 			default: null,
 		},
+
 		fetchAvatar: {
 			type: Boolean,
 			default: false,
 		},
+
 		email: {
 			type: String,
 			required: true,
 		},
+
 		disableTooltip: {
 			type: Boolean,
 			default: false,
 		},
+
 		size: {
 			type: Number,
 			default: 40,
 		},
 	},
+
 	data() {
 		return {
 			loading: true,
 			avatarUrl: undefined,
 		}
 	},
+
 	computed: {
 		hasAvatar() {
 			return this.avatarUrl !== undefined
 		},
 	},
+
 	async mounted() {
 		if (this.avatar) {
 			this.avatarUrl = this.avatar.isExternal
 				? generateUrl('/apps/mail/api/avatars/image/{email}', {
-					email: this.email,
-				})
+						email: this.email,
+					})
 				: this.avatar.url
 		} else if (this.fetchAvatar) {
 			if (this.email !== '') {

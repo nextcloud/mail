@@ -39,8 +39,6 @@ class SyncJobTest extends TestCase {
 		$this->job->setArgument([
 			'accountId' => 123,
 		]);
-		// Set a fake ID
-		$this->job->setId(99);
 	}
 
 	public function testAccountDoesntExist(): void {
@@ -118,7 +116,7 @@ class SyncJobTest extends TestCase {
 			->method('findById')
 			->with(123)
 			->willReturn($account);
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$this->serviceMock->getParameter('userManager')
 			->expects(self::once())
 			->method('get')

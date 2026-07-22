@@ -88,7 +88,6 @@ class TextBlockService {
 		$this->textBlockShareMapper->deleteByTextBlockId($textBlockId);
 	}
 
-
 	/**
 	 * @throws UserNotFoundException
 	 * @throws ShareeAlreadyExistsException
@@ -148,5 +147,9 @@ class TextBlockService {
 	public function unshare(int $textBlockId, string $shareWith): void {
 		$share = $this->textBlockShareMapper->find($textBlockId, $shareWith);
 		$this->textBlockShareMapper->delete($share);
+	}
+
+	public function deleteByUserId(string $userId): void {
+		$this->textBlockMapper->deleteByUserId($userId);
 	}
 }

@@ -39,18 +39,6 @@ use function str_starts_with;
 class MailboxSync {
 	use TTransactional;
 
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var FolderMapper */
-	private $folderMapper;
-
-	/** @var MailAccountMapper */
-	private $mailAccountMapper;
-
-	/** @var IMAPClientFactory */
-	private $imapClientFactory;
-
 	/** @var ITimeFactory */
 	private $timeFactory;
 
@@ -58,17 +46,15 @@ class MailboxSync {
 	private $dispatcher;
 	private IDBConnection $dbConnection;
 
-	public function __construct(MailboxMapper $mailboxMapper,
-		FolderMapper $folderMapper,
-		MailAccountMapper $mailAccountMapper,
-		IMAPClientFactory $imapClientFactory,
+	public function __construct(
+		private MailboxMapper $mailboxMapper,
+		private FolderMapper $folderMapper,
+		private MailAccountMapper $mailAccountMapper,
+		private IMAPClientFactory $imapClientFactory,
 		ITimeFactory $timeFactory,
 		IEventDispatcher $dispatcher,
-		IDBConnection $dbConnection) {
-		$this->mailboxMapper = $mailboxMapper;
-		$this->folderMapper = $folderMapper;
-		$this->mailAccountMapper = $mailAccountMapper;
-		$this->imapClientFactory = $imapClientFactory;
+		IDBConnection $dbConnection,
+	) {
 		$this->timeFactory = $timeFactory;
 		$this->dispatcher = $dispatcher;
 		$this->dbConnection = $dbConnection;
@@ -79,13 +65,19 @@ class MailboxSync {
 	 */
 	public function sync(Account $account,
 		LoggerInterface $logger,
-		bool $force = false): void {
+		bool $force = false,
+		?Horde_Imap_Client_Socket $client = null): void {
 		if (!$force && $account->getMailAccount()->getLastMailboxSync() >= ($this->timeFactory->getTime() - 7200)) {
 			$logger->debug('account is up to date, skipping mailbox sync');
 			return;
 		}
 
-		$client = $this->imapClientFactory->getClient($account);
+		if ($client === null) {
+			$client = $this->imapClientFactory->getClient($account);
+			$ownClient = true;
+		} else {
+			$ownClient = false;
+		}
 		try {
 			try {
 				$namespaces = $client->getNamespaces([], [
@@ -96,7 +88,8 @@ class MailboxSync {
 					$personalNamespace
 				);
 			} catch (Horde_Imap_Client_Exception $e) {
-				$logger->debug('Getting namespaces for account ' . $account->getId() . ' failed: ' . $e->getMessage(), [
+				$id = $account->getId();
+				$logger->debug("Getting namespaces for account $id failed: " . $e->getMessage(), [
 					'exception' => $e,
 				]);
 				$namespaces = null;
@@ -131,7 +124,9 @@ class MailboxSync {
 				new MailboxesSynchronizedEvent($account)
 			);
 		} finally {
-			$client->logout();
+			if ($ownClient) {
+				$client->logout();
+			}
 		}
 	}
 
@@ -144,7 +139,7 @@ class MailboxSync {
 	 */
 	public function syncStats(Horde_Imap_Client_Socket $client, Mailbox $mailbox): void {
 		try {
-			$allStats = $this->folderMapper->getFoldersStatusAsObject($client, [$mailbox->getName()]);
+			$stats = $this->folderMapper->getFolderStatus($client, $mailbox->getName());
 		} catch (Horde_Imap_Client_Exception $e) {
 			$id = $mailbox->getId();
 			throw new ServiceException(
@@ -154,11 +149,10 @@ class MailboxSync {
 			);
 		}
 
-		if (!isset($allStats[$mailbox->getName()])) {
+		if ($stats === null) {
 			return;
 		}
 
-		$stats = $allStats[$mailbox->getName()];
 		$mailbox->setMessages($stats->getTotal());
 		$mailbox->setUnseen($stats->getUnread());
 		$this->mailboxMapper->update($mailbox);
@@ -211,7 +205,7 @@ class MailboxSync {
 	}
 
 	private function updateMailboxFromFolder(Folder $folder, Mailbox $mailbox, ?Horde_Imap_Client_Namespace_List $namespaces): Mailbox {
-		$mailbox->setAttributes(json_encode($folder->getAttributes()));
+		$mailbox->setAttributes(json_encode($folder->getAttributes(), JSON_THROW_ON_ERROR));
 		$mailbox->setDelimiter($folder->getDelimiter());
 		$status = $folder->getStatus();
 		if ($status !== null) {
@@ -219,7 +213,7 @@ class MailboxSync {
 			$mailbox->setUnseen($status['unseen'] ?? 0);
 		}
 		$mailbox->setSelectable(!in_array('\noselect', $folder->getAttributes()));
-		$mailbox->setSpecialUse(json_encode($folder->getSpecialUse()));
+		$mailbox->setSpecialUse(json_encode($folder->getSpecialUse(), JSON_THROW_ON_ERROR));
 		$mailbox->setMyAcls($folder->getMyAcls());
 		$mailbox->setShared($this->isMailboxShared($namespaces, $mailbox));
 		return $this->mailboxMapper->update($mailbox);
@@ -229,13 +223,13 @@ class MailboxSync {
 		$mailbox = new Mailbox();
 		$mailbox->setName($folder->getMailbox());
 		$mailbox->setAccountId($account->getId());
-		$mailbox->setAttributes(json_encode($folder->getAttributes()));
+		$mailbox->setAttributes(json_encode($folder->getAttributes(), JSON_THROW_ON_ERROR));
 		$mailbox->setDelimiter($folder->getDelimiter());
 		$status = $folder->getStatus();
 		$mailbox->setMessages($status['messages'] ?? 0);
 		$mailbox->setUnseen($status['unseen'] ?? 0);
 		$mailbox->setSelectable(!in_array('\noselect', $folder->getAttributes()));
-		$mailbox->setSpecialUse(json_encode($folder->getSpecialUse()));
+		$mailbox->setSpecialUse(json_encode($folder->getSpecialUse(), JSON_THROW_ON_ERROR));
 		$mailbox->setMyAcls($folder->getMyAcls());
 		$mailbox->setShared($this->isMailboxShared($namespaces, $mailbox));
 		$mailbox->setNameHash(md5($folder->getMailbox()));
@@ -275,9 +269,8 @@ class MailboxSync {
 		shuffle($doNotSync);
 		/** @var Mailbox[] $syncStatus */
 		$syncStatus = [...$sync, ...array_slice($doNotSync, 0, 5)];
-		$statuses = $this->folderMapper->getFoldersStatusAsObject($client, array_map(fn (Mailbox $mailbox) => $mailbox->getName(), $syncStatus));
 		foreach ($syncStatus as $mailbox) {
-			$status = $statuses[$mailbox->getName()] ?? null;
+			$status = $this->folderMapper->getFolderStatus($client, $mailbox->getName());
 			if ($status !== null) {
 				$mailbox->setMessages($status->getTotal());
 				$mailbox->setUnseen($status->getUnread());

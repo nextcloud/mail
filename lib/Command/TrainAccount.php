@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Command;
 
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
 use OCA\Mail\Support\ConsoleLoggerDecorator;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -27,21 +26,12 @@ final class TrainAccount extends Command {
 	public const ARGUMENT_DRY_RUN = 'dry-run';
 	public const ARGUMENT_FORCE = 'force';
 
-	private AccountService $accountService;
-	private ImportanceClassifier $classifier;
-	private LoggerInterface $logger;
-	private ClassificationSettingsService $classificationSettingsService;
-
-	public function __construct(AccountService $service,
-		ImportanceClassifier $classifier,
-		ClassificationSettingsService $classificationSettingsService,
-		LoggerInterface $logger) {
+	public function __construct(
+		private AccountService $accountService,
+		private ImportanceClassifier $classifier,
+		private LoggerInterface $logger,
+	) {
 		parent::__construct();
-
-		$this->accountService = $service;
-		$this->classifier = $classifier;
-		$this->logger = $logger;
-		$this->classificationSettingsService = $classificationSettingsService;
 	}
 
 	protected function configure(): void {
@@ -76,7 +66,7 @@ final class TrainAccount extends Command {
 			return 1;
 		}
 
-		if (!$force && !$this->classificationSettingsService->isClassificationEnabled($account->getUserId())) {
+		if (!$force && !$account->getMailAccount()->getClassificationEnabled()) {
 			$output->writeln("<info>classification is turned off for account $accountId</info>");
 			return 2;
 		}

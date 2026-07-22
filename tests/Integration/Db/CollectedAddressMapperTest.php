@@ -10,7 +10,6 @@ namespace OCA\Mail\Tests\Integration\Db;
 
 use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OC;
 use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Db\CollectedAddressMapper;
 use OCP\IDBConnection;
@@ -42,7 +41,7 @@ class CollectedAddressMapperTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->db = OC::$server->getDatabaseConnection();
+		$this->db = \OCP\Server::get(\OCP\IDBConnection::class);
 		$this->mapper = new CollectedAddressMapper($this->db);
 
 		// Empty DB

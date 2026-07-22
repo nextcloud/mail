@@ -5,7 +5,6 @@
 
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-
 import { handleHttpAuthErrors } from '../http/sessionExpiryHandler.js'
 
 /**
@@ -17,7 +16,6 @@ export async function fetchMyTextBlocks() {
 		const response = await axios.get(url)
 		return response.data.data
 	})
-
 }
 
 /**
@@ -45,7 +43,6 @@ export async function createTextBlock(title, content) {
 		const response = await axios.post(url, { title, content })
 		return response.data.data
 	})
-
 }
 
 /**
@@ -59,7 +56,6 @@ export async function updateTextBlock(textBlock) {
 	const url = generateUrl('/apps/mail/api/textBlocks/{id}', { id: textBlock.id })
 	return handleHttpAuthErrors(async () => {
 		return (await axios.put(url, { title: textBlock.title, content: textBlock.content })).data.data
-
 	})
 }
 
@@ -85,7 +81,6 @@ export async function shareTextBlock(textBlockId, shareWith, type) {
 	return handleHttpAuthErrors(async () => {
 		await axios.post(url, { textBlockId, shareWith, type })
 	})
-
 }
 
 /**
@@ -109,5 +104,4 @@ export async function unshareTextBlock(textBlockId, shareWith) {
 	return handleHttpAuthErrors(async () => {
 		await axios.delete(url, { data: { shareWith } })
 	})
-
 }

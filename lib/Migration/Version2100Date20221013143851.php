@@ -15,6 +15,9 @@ use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
+/**
+ * @psalm-api
+ */
 class Version2100Date20221013143851 extends SimpleMigrationStep {
 	/**
 	 * @param IOutput $output
@@ -44,7 +47,6 @@ class Version2100Date20221013143851 extends SimpleMigrationStep {
 				Types::INTEGER,
 				[
 					'notnull' => false,
-					'length' => 8,
 				],
 			);
 		}

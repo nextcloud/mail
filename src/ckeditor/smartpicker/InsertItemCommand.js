@@ -5,14 +5,14 @@
 
 import { Command } from 'ckeditor5'
 export default class InsertItemCommand extends Command {
-
 	/**
 	 * @param {module:core/editor/editor~Editor} editor instance
 	 * @param {module:engine/model/writer~Writer} writer instance
 	 * @param {string} item smart picker or emoji picker
 	 * @param {string} trigger the character to replace
+	 * @param {int} loopBack the offset to set the corrrect range of the text to replace
 	 */
-	insertItem(editor, writer, item, trigger) {
+	insertItem(editor, writer, item, trigger, loopBack) {
 		const currentPosition = editor.model.document.selection.getLastPosition()
 		if (currentPosition === null) {
 			// null as current position is probably not possible
@@ -20,7 +20,7 @@ export default class InsertItemCommand extends Command {
 			return
 		}
 		const range = editor.model.createRange(
-			currentPosition.getShiftedBy(-5),
+			currentPosition.getShiftedBy(-loopBack),
 			currentPosition,
 		)
 		// Iterate over all items in this range:
@@ -46,9 +46,11 @@ export default class InsertItemCommand extends Command {
 						const modelFragment = editor.data.toModel(viewFragment)
 						editor.model.insertContent(modelFragment)
 					} else {
-						const itemElement = writer.createElement('paragraph')
-						writer.insertText(item.content, itemElement)
-						editor.model.insertContent(itemElement)
+						const lines = item.content.split('\n')
+						const htmlContent = lines.map((line) => `<p>${line}</p>`).join('')
+						const viewFragment = editor.data.processor.toView(htmlContent)
+						const modelFragment = editor.data.toModel(viewFragment)
+						editor.model.insertContent(modelFragment)
 					}
 				} else {
 					const itemElement = writer.createElement('paragraph')
@@ -66,15 +68,15 @@ export default class InsertItemCommand extends Command {
 	/**
 	 * @param {string}  item link from smart picker or emoji from emoji picker
 	 * @param {string} trigger the character to replace
+	 * @param {int} loopBack the offset to set the corrrect range of the text to replace defaults to 5
 	 */
-	execute(item, trigger) {
-		this.editor.model.change(writer => {
-			this.insertItem(this.editor, writer, item, trigger)
+	execute(item, trigger, loopBack = 5) {
+		this.editor.model.change((writer) => {
+			this.insertItem(this.editor, writer, item, trigger, loopBack)
 		})
 	}
 
 	refresh() {
 		this.isEnabled = true
 	}
-
 }

@@ -16,12 +16,13 @@ use OCA\Mail\Db\CollectedAddressMapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 
+/**
+ * @psalm-api
+ */
 class FixCollectedAddresses implements IRepairStep {
-	/** @var CollectedAddressMapper */
-	private $mapper;
-
-	public function __construct(CollectedAddressMapper $mapper) {
-		$this->mapper = $mapper;
+	public function __construct(
+		private CollectedAddressMapper $mapper,
+	) {
 	}
 
 	#[\Override]

@@ -45,7 +45,7 @@ class LocalMessageMapperTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->db = \OC::$server->getDatabaseConnection();
+		$this->db = \OCP\Server::get(\OCP\IDBConnection::class);
 		$recipientMapper = new RecipientMapper(
 			$this->db
 		);

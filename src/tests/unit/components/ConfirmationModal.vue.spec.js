@@ -3,8 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import {createLocalVue, shallowMount} from '@vue/test-utils'
-
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import ConfirmationModal from '../../../components/ConfirmationModal.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 
@@ -13,7 +12,6 @@ const localVue = createLocalVue()
 localVue.mixin(Nextcloud)
 
 describe('ConfirmationModal', () => {
-
 	it('renders with default button text', () => {
 		const view = shallowMount(ConfirmationModal, {
 			propsData: {},

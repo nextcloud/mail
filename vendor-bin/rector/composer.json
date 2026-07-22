@@ -1,5 +1,6 @@
 {
     "require-dev": {
-        "rector/rector": "^2.2.3"
+        "rector/rector": "^2.5.7",
+        "nextcloud/rector": "^0.5.2"
     }
 }

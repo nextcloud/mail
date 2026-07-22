@@ -48,8 +48,8 @@ class HamReportListenerTest extends TestCase {
 	}
 
 	public function testHandleNotFlaggedJunk(): void {
-		$account = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Mailbox::class);
+		$account = $this->createStub(Account::class);
+		$mailbox = $this->createStub(Mailbox::class);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
@@ -69,8 +69,8 @@ class HamReportListenerTest extends TestCase {
 	}
 
 	public function testHandleNotUnflaggingNonjunk(): void {
-		$account = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Mailbox::class);
+		$account = $this->createStub(Account::class);
+		$mailbox = $this->createStub(Mailbox::class);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
@@ -93,8 +93,8 @@ class HamReportListenerTest extends TestCase {
 	}
 
 	public function testHandleJunkExceptionOnSend() : void {
-		$account = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Mailbox::class);
+		$account = $this->createStub(Account::class);
+		$mailbox = $this->createStub(Mailbox::class);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
@@ -116,8 +116,8 @@ class HamReportListenerTest extends TestCase {
 	}
 
 	public function testHandle(): void {
-		$account = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Mailbox::class);
+		$account = $this->createStub(Account::class);
+		$mailbox = $this->createStub(Mailbox::class);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,

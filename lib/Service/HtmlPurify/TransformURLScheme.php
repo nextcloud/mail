@@ -10,40 +10,25 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\HtmlPurify;
 
-use Closure;
 use HTMLPurifier_Config;
+use HTMLPurifier_Context;
 use HTMLPurifier_URI;
 use HTMLPurifier_URIFilter;
 use HTMLPurifier_URIParser;
+use OCA\Mail\Html\ProxyHmacGenerator;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 
 class TransformURLScheme extends HTMLPurifier_URIFilter {
-	public $name = 'TransformURLScheme';
-	public $post = true;
-
-	/** @var IURLGenerator */
-	private $urlGenerator;
-
-	/** @var IRequest */
-	private $request;
-
-	/**
-	 * @var \Closure
-	 */
-	private $mapCidToAttachmentId;
-
-	/** @var array */
-	private $messageParameters;
-
-	public function __construct(array $messageParameters,
-		Closure $mapCidToAttachmentId,
-		IURLGenerator $urlGenerator,
-		IRequest $request) {
-		$this->messageParameters = $messageParameters;
-		$this->mapCidToAttachmentId = $mapCidToAttachmentId;
-		$this->urlGenerator = $urlGenerator;
-		$this->request = $request;
+	public function __construct(
+		private int $messageId,
+		private array $inlineAttachments,
+		private IURLGenerator $urlGenerator,
+		private IRequest $request,
+		private ProxyHmacGenerator $hmacGenerator,
+	) {
+		$this->name = 'TransformURLScheme';
+		$this->post = true;
 	}
 
 	/**
@@ -51,12 +36,11 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	 *
 	 * @param \HTMLPurifier_URI $uri
 	 * @param HTMLPurifier_Config $config
-	 * @param \HTMLPurifier_Context $context
+	 * @param HTMLPurifier_Context $context
 	 * @return bool
 	 */
 	#[\Override]
 	public function filter(&$uri, $config, $context) {
-
 		if ($uri->scheme === null) {
 			$uri->scheme = 'https';
 		}
@@ -67,44 +51,30 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 		}
 
 		if ($uri->scheme === 'cid') {
-			$attachmentId = $this->mapCidToAttachmentId->__invoke($uri->path);
-			if (is_null($attachmentId)) {
-				return true;
-			}
-			$this->messageParameters['attachmentId'] = $attachmentId;
-
-			$imgUrl = $this->urlGenerator->linkToRouteAbsolute('mail.messages.downloadAttachment',
-				$this->messageParameters);
-			$parser = new HTMLPurifier_URIParser();
-			$uri = $parser->parse($imgUrl);
+			$uri = $this->replaceCidWithUrl($uri);
 		}
 
 		return true;
 	}
 
-	/**
-	 * @param HTMLPurifier_URI $uri
-	 * @param \HTMLPurifier_Context $context
-	 * @return HTMLPurifier_URI
-	 */
-	private function filterHttpFtp(&$uri, $context) {
-		$originalURL = urlencode($uri->scheme . '://' . $uri->host);
+	private function filterHttpFtp(HTMLPurifier_URI $uri, HTMLPurifier_Context $context): HTMLPurifier_URI {
+		$originalURL = $uri->scheme . '://' . $uri->host;
 
 		// Add the port if it's not a default port
 		if ($uri->port !== null
 			&& !($uri->scheme === 'http' && $uri->port === 80)
 			&& !($uri->scheme === 'https' && $uri->port === 443)
 			&& !($uri->scheme === 'ftp' && $uri->port === 21)) {
-			$originalURL = $originalURL . urlencode(':' . $uri->port);
+			$originalURL = $originalURL . ':' . $uri->port;
 		}
 
-		$originalURL = $originalURL . urlencode($uri->path);
+		$originalURL = $originalURL . $uri->path;
 
 		if ($uri->query !== null) {
-			$originalURL = $originalURL . urlencode('?' . $uri->query);
+			$originalURL = $originalURL . '?' . $uri->query;
 		}
 		if ($uri->fragment !== null) {
-			$originalURL = $originalURL . urlencode('#' . $uri->fragment);
+			$originalURL = $originalURL . '#' . $uri->fragment;
 		}
 
 		// Get the HTML attribute
@@ -116,13 +86,30 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 			return $uri;
 		}
 
+		$proxyUrl = $this->urlGenerator->linkToRoute('mail.proxy.proxy', [
+			'id' => $this->messageId,
+			'hmac' => $this->hmacGenerator->generate($this->messageId, $originalURL),
+			'src' => $originalURL
+		]);
+		$parsedProxyUrl = parse_url($proxyUrl);
+		/** @var array{path: string, query: string} $parsedProxyUrl */
 		return new \HTMLPurifier_URI(
 			$this->request->getServerProtocol(),
 			null, $this->request->getServerHost(),
 			null,
-			$this->urlGenerator->linkToRoute('mail.proxy.proxy'),
-			'src=' . $originalURL . '&requesttoken=' . \OC::$server->getSession()->get('requesttoken'),
+			$parsedProxyUrl['path'],
+			$parsedProxyUrl['query'],
 			null
 		);
+	}
+
+	private function replaceCidWithUrl(HTMLPurifier_URI $uri): HTMLPurifier_URI {
+		$inlineAttachment = array_find($this->inlineAttachments, static fn ($attachment) => $attachment['cid'] === $uri->path);
+
+		if ($inlineAttachment === null) {
+			return $uri;
+		}
+
+		return (new HTMLPurifier_URIParser())->parse($inlineAttachment['url']);
 	}
 }

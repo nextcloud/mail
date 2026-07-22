@@ -16,6 +16,9 @@ use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
+/**
+ * @psalm-api
+ */
 class Version1020Date20191002091035 extends SimpleMigrationStep {
 	/** @var IDBConnection */
 	protected $connection;
@@ -40,11 +43,9 @@ class Version1020Date20191002091035 extends SimpleMigrationStep {
 		$messagesTable->addColumn('id', Types::INTEGER, [
 			'autoincrement' => true,
 			'notnull' => true,
-			'length' => 20,
 		]);
 		$messagesTable->addColumn('uid', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$messagesTable->addColumn('message_id', Types::STRING, [
 			'notnull' => false,
@@ -61,7 +62,6 @@ class Version1020Date20191002091035 extends SimpleMigrationStep {
 		]);
 		$messagesTable->addColumn('sent_at', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$messagesTable->addColumn('flag_answered', Types::BOOLEAN, [
 			'notnull' => false,
@@ -97,7 +97,6 @@ class Version1020Date20191002091035 extends SimpleMigrationStep {
 		]);
 		$messagesTable->addColumn('updated_at', Types::INTEGER, [
 			'notnull' => false,
-			'length' => 4,
 		]);
 		$messagesTable->setPrimaryKey(['id']);
 		// We allow each UID just once
@@ -111,15 +110,12 @@ class Version1020Date20191002091035 extends SimpleMigrationStep {
 		$recipientsTable->addColumn('id', Types::INTEGER, [
 			'autoincrement' => true,
 			'notnull' => true,
-			'length' => 20,
 		]);
 		$recipientsTable->addColumn('message_id', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 20,
 		]);
 		$recipientsTable->addColumn('type', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 2,
 		]);
 		$recipientsTable->addColumn('label', Types::STRING, [
 			'notnull' => false,
@@ -131,20 +127,20 @@ class Version1020Date20191002091035 extends SimpleMigrationStep {
 		]);
 		$recipientsTable->setPrimaryKey(['id']);
 		$recipientsTable->addIndex(['message_id'], 'mail_recipient_msg_id_idx');
-		$recipientsTable->addIndex(['email'], 'mail_recipient_email_idx');
+
+		// Converted to wider index later on - installations might have the old one until replacement
+		// $recipientsTable->addIndex(['email'], 'mail_recipient_email_idx');
+		$recipientsTable->addIndex(['email', 'type', 'message_id'], 'mail_recip_eml_type_mid_idx');
 
 		$mailboxTable = $schema->getTable('mail_mailboxes');
 		$mailboxTable->addColumn('sync_new_lock', Types::INTEGER, [
 			'notnull' => false,
-			'length' => 4,
 		]);
 		$mailboxTable->addColumn('sync_changed_lock', Types::INTEGER, [
 			'notnull' => false,
-			'length' => 4,
 		]);
 		$mailboxTable->addColumn('sync_vanished_lock', Types::INTEGER, [
 			'notnull' => false,
-			'length' => 4,
 		]);
 		$mailboxTable->addColumn('sync_new_token', Types::STRING, [
 			'notnull' => false,

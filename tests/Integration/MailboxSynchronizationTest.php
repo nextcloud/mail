@@ -16,6 +16,7 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\MailboxesController;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCA\Mail\Service\Sync\SyncService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
@@ -51,6 +52,7 @@ class MailboxSynchronizationTest extends TestCase {
 			Server::get(SyncService::class),
 			Server::get(IConfig::class),
 			Server::get(ITimeFactory::class),
+			Server::get(DelegationService::class),
 		);
 
 		$this->account = $this->createTestAccount('user12345');

@@ -4,7 +4,8 @@
 -->
 
 <template>
-	<NcDialog ref="translateDialog"
+	<NcDialog
+		ref="translateDialog"
 		class="translate-dialog"
 		:name="t('mail', 'Translate message')"
 		size="large"
@@ -12,7 +13,8 @@
 		@update:open="$emit('close')">
 		<template v-if="isMounted" #default>
 			<div class="translate-dialog__wrapper">
-				<NcSelect v-model="selectedFrom"
+				<NcSelect
+					v-model="selectedFrom"
 					class="translate-dialog__select"
 					input-id="from"
 					label="name"
@@ -23,7 +25,8 @@
 
 				<ArrowRight />
 
-				<NcSelect v-model="selectedTo"
+				<NcSelect
+					v-model="selectedTo"
 					class="translate-dialog__select"
 					input-id="to"
 					label="name"
@@ -32,7 +35,8 @@
 					:options="availableOutputLanguages"
 					no-wrap />
 
-				<NcButton type="primary"
+				<NcButton
+					variant="primary"
 					:disabled="isLoading"
 					class="translate-dialog__button"
 					@click="handleTranslate">
@@ -42,14 +46,22 @@
 					{{ isLoading ? t('mail', 'Translating') : t('mail', 'Translate') }}
 				</NcButton>
 			</div>
+			<div class="translate-dialog__ai-note">
+				<WarningIcon class="translate-dialog__ai-note-icon" />
+				<span>
+					{{ t('mail', 'This translation is generated using AI and may contain inaccuracies') }}
+				</span>
+			</div>
 
-			<NcRichText class="translate-dialog__message translate-dialog__message-source"
+			<NcRichText
+				class="translate-dialog__message translate-dialog__message-source"
 				:text="message"
 				:arguments="richParameters"
 				:use-markdown="true"
 				:reference-limit="0" />
 
-			<NcRichText v-if="translatedMessage"
+			<NcRichText
+				v-if="translatedMessage"
 				class="translate-dialog__message translate-dialog__message-translation"
 				:text="translatedMessage"
 				:arguments="richParameters"
@@ -73,9 +85,10 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import { getLanguage } from '@nextcloud/l10n'
 import { NcButton, NcDialog, NcLoadingIcon, NcRichText, NcSelect } from '@nextcloud/vue'
 import { mapState } from 'pinia'
+import WarningIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import ArrowRight from 'vue-material-design-icons/ArrowRight.vue'
 import ContentCopy from 'vue-material-design-icons/ContentCopy.vue'
-
+import logger from '../logger.js'
 import { translateText } from '../service/translationService.js'
 import useMainStore from '../store/mainStore.js'
 
@@ -90,6 +103,7 @@ export default {
 		NcSelect,
 		ArrowRight,
 		ContentCopy,
+		WarningIcon,
 	},
 
 	props: {
@@ -97,6 +111,7 @@ export default {
 			type: String,
 			required: true,
 		},
+
 		richParameters: {
 			type: Object,
 			required: true,
@@ -130,14 +145,15 @@ export default {
 		selectedTo() {
 			this.translatedMessage = ''
 		},
+
 		selectedFrom() {
 			this.translatedMessage = ''
 		},
 	},
 
 	async mounted() {
-		this.selectedTo = this.availableOutputLanguages.find(language => language.value === this.userLanguage) || null
-		this.selectedFrom = this.availableInputLanguages.find(language => language.value === 'detect_language')
+		this.selectedTo = this.availableOutputLanguages.find((language) => language.value === this.userLanguage) || null
+		this.selectedFrom = this.availableInputLanguages.find((language) => language.value === 'detect_language')
 		this.$nextTick(() => {
 			// FIXME trick to avoid focusTrap() from activating on NcSelect
 			this.isMounted = !!this.$refs.translateDialog.navigationId
@@ -160,7 +176,7 @@ export default {
 				const response = await translateText(this.message.trim(), this.selectedFrom.value, this.selectedTo.value)
 				this.translatedMessage = response
 			} catch (error) {
-				console.error(error)
+				logger.error('could not translate message', { error })
 				showError(error.response?.data?.ocs?.data?.message ?? t('mail', 'The message could not be translated'))
 			} finally {
 				this.isLoading = false
@@ -172,6 +188,7 @@ export default {
 				await navigator.clipboard.writeText(this.translatedMessage)
 				showSuccess(t('mail', 'Translation copied to clipboard'))
 			} catch (error) {
+				logger.error('could not copy translation to clipboard', { error })
 				showError(t('mail', 'Translation could not be copied'))
 			}
 		},
@@ -219,6 +236,11 @@ export default {
 		&-translation {
 			border: 2px solid var(--color-primary-element);
 		}
+	}
+	&__ai-note {
+		display: flex;
+		align-items: center;
+		gap: 5px;
 	}
 }
 </style>

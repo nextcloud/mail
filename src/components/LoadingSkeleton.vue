@@ -5,7 +5,8 @@
 <template>
 	<div>
 		<div v-for="i in numberOfLines" :key="i" class="item-list__entry">
-			<div v-if="withAvatar"
+			<div
+				v-if="withAvatar"
 				class="item-avatar" />
 			<div class="item__details">
 				<h3>&nbsp;</h3>
@@ -29,6 +30,7 @@ export default {
 			type: Number,
 			default: 10,
 		},
+
 		withAvatar: {
 			type: Boolean,
 			default: true,

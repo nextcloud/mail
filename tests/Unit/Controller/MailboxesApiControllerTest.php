@@ -19,6 +19,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message as DbMessage;
 use OCA\Mail\Folder;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
@@ -33,6 +34,7 @@ class MailboxesApiControllerTest extends TestCase {
 	private IMailManager|MockObject $mailManager;
 	private AccountService&MockObject $accountService;
 	private MockObject|IMailSearch $mailSearch;
+	private DelegationService&MockObject $delegationService;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -41,6 +43,11 @@ class MailboxesApiControllerTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->mailSearch = $this->createMock(IMailSearch::class);
+		$this->delegationService = $this->createMock(DelegationService::class);
+		$this->delegationService->method('resolveAccountUserId')
+			->willReturn(self::USER_ID);
+		$this->delegationService->method('resolveMailboxUserId')
+			->willReturn(self::USER_ID);
 
 		$this->controller = new MailboxesApiController(
 			'mail',
@@ -49,7 +56,7 @@ class MailboxesApiControllerTest extends TestCase {
 			$this->mailManager,
 			$this->accountService,
 			$this->mailSearch,
-
+			$this->delegationService,
 		);
 	}
 
@@ -61,6 +68,7 @@ class MailboxesApiControllerTest extends TestCase {
 			$this->mailManager,
 			$this->accountService,
 			$this->mailSearch,
+			$this->delegationService,
 		);
 
 		$this->accountService->expects(self::never())
@@ -72,10 +80,9 @@ class MailboxesApiControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_NOT_FOUND, $actual->getStatus());
 	}
 
-
 	public function testListMailboxes() {
-		$account = $this->createMock(Account::class);
-		$folder = $this->createMock(Folder::class);
+		$account = $this->createStub(Account::class);
+		$folder = $this->createStub(Folder::class);
 		$accountId = 42;
 		$this->accountService->expects($this->once())
 			->method('find')
@@ -101,6 +108,7 @@ class MailboxesApiControllerTest extends TestCase {
 			$this->mailManager,
 			$this->accountService,
 			$this->mailSearch,
+			$this->delegationService,
 		);
 
 		$this->accountService->expects(self::never())
@@ -111,7 +119,6 @@ class MailboxesApiControllerTest extends TestCase {
 		$actual = $controller->listMessages($accountId);
 		$this->assertEquals(Http::STATUS_NOT_FOUND, $actual->getStatus());
 	}
-
 
 	public function testListMessages(): void {
 		$accountId = 100;
@@ -141,7 +148,7 @@ class MailboxesApiControllerTest extends TestCase {
 				'DESC',
 				null,
 				null,
-				null,
+				1,
 				SELF::USER_ID,
 				'threaded',
 			)->willReturn($messages);
@@ -164,12 +171,49 @@ class MailboxesApiControllerTest extends TestCase {
 		$this->accountService->expects(self::never())
 			->method('find');
 
-
 		$actual = $this->controller->listMessages($mailboxId);
 
 		$this->assertEquals(Http::STATUS_FORBIDDEN, $actual->getStatus());
 	}
 
+	public static function provideLimitData(): array {
+		return [
+			'20' => [20, 20],
+			'500' => [500, 100],
+			'null' => [null, 1],
+		];
+	}
 
+	/** @dataProvider provideLimitData */
+	public function testRestrictLimit(?int $limit, int $expectedLimit): void {
+		$accountId = 100;
+		$mailboxId = 101;
+		$mailbox = new Mailbox();
+		$mailbox->setAccountId($accountId);
+		$this->mailManager->expects(self::once())
+			->method('getMailbox')
+			->with(SELF::USER_ID, $mailboxId)
+			->willReturn($mailbox);
+		$mailAccount = new MailAccount();
+		$account = new Account($mailAccount);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with(SELF::USER_ID, $accountId)
+			->willReturn($account);
+		$this->mailSearch->expects(self::once())
+			->method('findMessages')
+			->with(
+				$account,
+				$mailbox,
+				'DESC',
+				null,
+				null,
+				$expectedLimit,
+				SELF::USER_ID,
+				'threaded',
+			)->willReturn([]);
+
+		$this->controller->listMessages($mailboxId, null, null, $limit);
+	}
 
 }

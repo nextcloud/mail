@@ -7,7 +7,6 @@ import { Plugin } from 'ckeditor5'
 import InsertSignatureCommand from './InsertSignatureCommand.js'
 
 export default class Signature extends Plugin {
-
 	init() {
 		this._defineSchema()
 		this._defineConverters()
@@ -37,5 +36,4 @@ export default class Signature extends Plugin {
 			},
 		})
 	}
-
 }

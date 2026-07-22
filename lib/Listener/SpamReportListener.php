@@ -19,16 +19,10 @@ use Psr\Log\LoggerInterface;
  * @template-implements IEventListener<Event|MessageFlaggedEvent>
  */
 class SpamReportListener implements IEventListener {
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var AntiSpamService */
-	private $antiSpamService;
-
-	public function __construct(LoggerInterface $logger,
-		AntiSpamService $antiSpamService) {
-		$this->logger = $logger;
-		$this->antiSpamService = $antiSpamService;
+	public function __construct(
+		private LoggerInterface $logger,
+		private AntiSpamService $antiSpamService,
+	) {
 	}
 
 	#[\Override]

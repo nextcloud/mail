@@ -15,6 +15,7 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -25,28 +26,21 @@ use Psr\Log\LoggerInterface;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ListController extends Controller {
-	private IMailManager $mailManager;
-	private AccountService $accountService;
-	private IMAPClientFactory $clientFactory;
 	private IClientService $httpClientService;
-	private LoggerInterface $logger;
-	private ?string $currentUserId;
 
-	public function __construct(IRequest $request,
-		IMailManager $mailManager,
-		AccountService $accountService,
-		IMAPClientFactory $clientFactory,
+	public function __construct(
+		IRequest $request,
+		private IMailManager $mailManager,
+		private AccountService $accountService,
+		private IMAPClientFactory $clientFactory,
 		IClientService $httpClientService,
-		LoggerInterface $logger,
-		?string $userId) {
+		private LoggerInterface $logger,
+		private ?string $userId,
+		private DelegationService $delegationService,
+	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->mailManager = $mailManager;
-		$this->accountService = $accountService;
-		$this->clientFactory = $clientFactory;
 		$this->request = $request;
 		$this->httpClientService = $httpClientService;
-		$this->logger = $logger;
-		$this->currentUserId = $userId;
 	}
 
 	/**
@@ -54,10 +48,15 @@ class ListController extends Controller {
 	 * @UserRateThrottle(limit=10, period=3600)
 	 */
 	public function unsubscribe(int $id): JsonResponse {
+		if ($this->userId === null) {
+			return JsonResponse::fail([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return JsonResponse::fail(null, Http::STATUS_NOT_FOUND);
 		}
@@ -90,6 +89,7 @@ class ListController extends Controller {
 		} finally {
 			$client->logout();
 		}
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId unsubscribed from mailing list: $id on behalf of $effectiveUserId");
 
 		return JsonResponse::success();
 	}

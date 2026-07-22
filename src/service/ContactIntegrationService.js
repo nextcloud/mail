@@ -6,7 +6,7 @@
 import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 
-export const findMatches = (mail) => {
+export function findMatches(mail) {
 	const url = generateUrl('/apps/mail/api/contactIntegration/match/{mail}', {
 		mail,
 	})
@@ -14,19 +14,19 @@ export const findMatches = (mail) => {
 	return Axios.get(url).then((resp) => resp.data)
 }
 
-export const addToContact = (id, mailAddr) => {
+export function addToContact(id, mailAddr) {
 	const url = generateUrl('/apps/mail/api/contactIntegration/add')
 
 	return Axios.put(url, { uid: id, mail: mailAddr }).then((resp) => resp.data)
 }
 
-export const newContact = (name, mailAddr) => {
+export function newContact(name, mailAddr) {
 	const url = generateUrl('/apps/mail/api/contactIntegration/new')
 
 	return Axios.put(url, { contactName: name, mail: mailAddr }).then((resp) => resp.data)
 }
 
-export const autoCompleteByName = (term) => {
+export function autoCompleteByName(term) {
 	const url = generateUrl('/apps/mail/api/contactIntegration/autoComplete/{term}', {
 		term,
 	})

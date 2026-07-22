@@ -24,16 +24,13 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class SmimeCertificatesController extends Controller {
-	private ?string $userId;
-	private SmimeService $certificateService;
-
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		?string $userId,
-		SmimeService $certificateService) {
+		private ?string $userId,
+		private SmimeService $certificateService,
+	) {
 		parent::__construct($appName, $request);
-		$this->userId = $userId;
-		$this->certificateService = $certificateService;
 	}
 
 	/**
@@ -44,6 +41,10 @@ class SmimeCertificatesController extends Controller {
 	 */
 	#[TrapError]
 	public function index(): JsonResponse {
+		if ($this->userId === null) {
+			return JsonResponse::fail([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		$certificates = $this->certificateService->findAllCertificates($this->userId);
 		$certificates = array_map(fn (SmimeCertificate $certificate) => $this->certificateService->enrichCertificate($certificate), $certificates);
 		return JsonResponse::success($certificates);
@@ -59,6 +60,10 @@ class SmimeCertificatesController extends Controller {
 	 */
 	#[TrapError]
 	public function destroy(int $id): JsonResponse {
+		if ($this->userId === null) {
+			return JsonResponse::fail([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		$this->certificateService->deleteCertificate($id, $this->userId);
 		return JsonResponse::success();
 	}
@@ -73,6 +78,10 @@ class SmimeCertificatesController extends Controller {
 	 */
 	#[TrapError]
 	public function create(): JsonResponse {
+		if ($this->userId === null) {
+			return JsonResponse::fail([], Http::STATUS_UNAUTHORIZED);
+		}
+
 		// TODO: What about PKCS12 certificates?
 		// They need to be decrypted by the client because they are protected by a password.
 		// We could use
@@ -93,12 +102,24 @@ class SmimeCertificatesController extends Controller {
 		}
 
 		$certificateFile = new UploadedFile($attachedCertificate);
-		$certificateData = file_get_contents($certificateFile->getTempPath());
+		$certificateData = file_get_contents($certificateFile->getTempPath() ?? '');
+		if ($certificateData === false) {
+			return JsonResponse::fail(
+				'Could not read certificate file',
+				Http::STATUS_UNPROCESSABLE_ENTITY,
+			);
+		}
 
 		$privateKeyData = null;
 		if ($attachedPrivateKey !== null) {
 			$privateKeyFile = new UploadedFile($attachedPrivateKey);
-			$privateKeyData = file_get_contents($privateKeyFile->getTempPath());
+			$privateKeyData = file_get_contents($privateKeyFile->getTempPath() ?? '');
+			if ($privateKeyData === false) {
+				return JsonResponse::fail(
+					'Could not read private key file',
+					Http::STATUS_UNPROCESSABLE_ENTITY,
+				);
+			}
 		}
 
 		$certificate = $this->certificateService->createCertificate(

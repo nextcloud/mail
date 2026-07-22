@@ -5,46 +5,65 @@
 
 <template>
 	<div>
-		<div v-for="domain in sortedDomains"
-			:key="domain.address"
-			class="address">
-			{{ domain.address }}
-			<p class="address__type">
-				({{ t('mail', 'domain') }})
-			</p>
-			<ButtonVue type="tertiary"
-				class="button"
-				:aria-label="t('mail', 'Remove')"
-				@click="removeInternalAddress(domain)">
-				{{ t('mail','Remove') }}
-			</ButtonVue>
-		</div>
-		<div v-for="email in sortedEmails"
-			:key="email.address"
-			class="address">
-			{{ email.address }}
-			<p class="address__type">
-				({{ t('mail', 'email') }})
-			</p>
-			<ButtonVue type="tertiary"
-				class="button"
-				:aria-label="t('mail','Remove')"
-				@click="removeInternalAddress(email)">
-				{{ t('mail','Remove') }}
-			</ButtonVue>
-		</div>
-		<ButtonVue type="primary"
+		<NcListItem
+			v-for="domain in sortedDomains"
+			:key="domain.address">
+			<template #name>
+				{{ domain.address }}
+			</template>
+			<template #icon>
+				<IconDomain v-if="domain.type === 'domain'" :size="20" :title="senderType(domain.type)" />
+				<IconEmail v-if="domain.type === 'individual'" :size="20" :title="senderType(domain.type)" />
+			</template>
+			<template #extra-actions>
+				<NcActionButton
+					:title="t('mail', 'Remove')"
+					:aria-label="t('mail', 'Remove')"
+					@click="removeInternalAddress(domain)">
+					<template #icon>
+						<IconDelete :size="20" />
+					</template>
+				</NcActionButton>
+			</template>
+		</NcListItem>
+
+		<NcListItem
+			v-for="email in sortedEmails"
+			:key="email.address">
+			<template #name>
+				{{ email.address }}
+			</template>
+			<template #icon>
+				<IconDomain v-if="email.type === 'domain'" :size="20" :title="senderType(email.type)" />
+				<IconEmail v-if="email.type === 'individual'" :size="20" :title="senderType(email.type)" />
+			</template>
+			<template #extra-actions>
+				<NcActionButton
+					:title="t('mail', 'Remove')"
+					:aria-label="t('mail', 'Remove')"
+					@click="removeInternalAddress(email)">
+					<template #icon>
+						<IconDelete :size="20" />
+					</template>
+				</NcActionButton>
+			</template>
+		</NcListItem>
+
+		<ButtonVue
+			type="secondary"
+			wide
 			@click="openDialog = true">
 			<template #icon>
 				<IconAdd :size="20" />
 			</template>
 			{{ t('mail', 'Add internal address') }}
 		</ButtonVue>
-		<NcDialog :open.sync="openDialog"
+		<NcDialog
+			:open.sync="openDialog"
 			:buttons="buttons"
 			:name="t('mail', 'Add internal address')"
 			@close="openDialog = false">
-			<NcTextField class="input" :label="t('mail', 'Add internal email or domain')" :value.sync="newAddress" />
+			<NcTextField v-model="newAddress" class="input" :label="t('mail', 'Add internal email or domain')" />
 		</NcDialog>
 	</div>
 </template>
@@ -54,12 +73,14 @@
 import IconCancel from '@mdi/svg/svg/cancel.svg'
 import IconCheck from '@mdi/svg/svg/check.svg'
 import { showError } from '@nextcloud/dialogs'
-import { NcButton as ButtonVue, NcDialog, NcTextField } from '@nextcloud/vue'
+import { NcButton as ButtonVue, NcActionButton, NcDialog, NcListItem, NcTextField } from '@nextcloud/vue'
 import prop from 'lodash/fp/prop.js'
 import sortBy from 'lodash/fp/sortBy.js'
 import { mapStores } from 'pinia'
+import IconDomain from 'vue-material-design-icons/Domain.vue'
+import IconEmail from 'vue-material-design-icons/EmailOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
-
+import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 
@@ -71,6 +92,11 @@ export default {
 		ButtonVue,
 		NcDialog,
 		NcTextField,
+		NcActionButton,
+		NcListItem,
+		IconDomain,
+		IconEmail,
+		IconDelete,
 		IconAdd,
 	},
 
@@ -93,18 +119,22 @@ export default {
 			],
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		list() {
 			return this.mainStore.getInternalAddresses
 		},
+
 		sortedDomains() {
-			return sortByAddress(this.list.filter(a => a.type === 'domain'))
+			return sortByAddress(this.list.filter((a) => a.type === 'domain'))
 		},
+
 		sortedEmails() {
-			return sortByAddress(this.list.filter(a => a.type === 'individual'))
+			return sortByAddress(this.list.filter((a) => a.type === 'individual'))
 		},
 	},
+
 	methods: {
 		async removeInternalAddress(sender) {
 			// Remove the item immediately
@@ -119,6 +149,7 @@ export default {
 				}))
 			}
 		},
+
 		async addInternalAddress() {
 			const type = this.checkType()
 			try {
@@ -138,6 +169,7 @@ export default {
 				}))
 			}
 		},
+
 		checkType() {
 			const parts = this.newAddress.split('@')
 			if (parts.length !== 2) {
@@ -150,26 +182,16 @@ export default {
 			}
 			return 'individual'
 		},
+
 		senderType(type) {
 			switch (type) {
-			case 'individual':
-				return t('mail', 'individual')
-			case 'domain':
-				return t('mail', 'domain')
+				case 'individual':
+					return t('mail', 'individual')
+				case 'domain':
+					return t('mail', 'domain')
 			}
 			return type
 		},
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-.address {
-	display: flex;
-	align-items: center;
-	&__type{
-		color: var(--color-text-maxcontrast);
-	}
-}
-
-</style>

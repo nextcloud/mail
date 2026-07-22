@@ -3,13 +3,12 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import VirtualTestEditor from '../../virtualtesteditor.js'
 import { Paragraph } from 'ckeditor5'
 import MailPlugin from '../../../ckeditor/mail/MailPlugin.js'
+import VirtualTestEditor from '../../virtualtesteditor.js'
 
 describe('MailPlugin', () => {
-
-	it('Add margin:0 to paragraph', async() => {
+	it('Add margin:0 to paragraph', async () => {
 		const text = '<p>bonjour bonjour</p>'
 		const expected = '<p style="margin:0;">bonjour bonjour</p>'
 
@@ -21,5 +20,4 @@ describe('MailPlugin', () => {
 
 		expect(editor.getData()).toEqual(expected)
 	})
-
 })

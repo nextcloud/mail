@@ -5,6 +5,7 @@ declare(strict_types=1);
  * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 namespace Unit\Send;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
@@ -41,7 +42,7 @@ class SendHandlerTest extends TestCase {
 		$localMessage = new LocalMessage();
 		$localMessage->setId(100);
 		$localMessage->setStatus(LocalMessage::STATUS_RAW);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->transmission->expects(self::once())
 			->method('sendMessage')
@@ -60,7 +61,7 @@ class SendHandlerTest extends TestCase {
 		$localMessage = new LocalMessage();
 		$localMessage->setId(100);
 		$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->transmission->expects(self::never())
 			->method('sendMessage');
@@ -82,7 +83,7 @@ class SendHandlerTest extends TestCase {
 		$mock->expects(self::any())
 			->method('getStatus')
 			->willReturn(LocalMessage::STATUS_SMPT_SEND_FAIL);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->transmission->expects(self::once())
 			->method('sendMessage');

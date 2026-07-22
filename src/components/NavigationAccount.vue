@@ -5,7 +5,8 @@
 
 <template>
 	<Fragment>
-		<NcAppNavigationCaption v-if="visible"
+		<NcAppNavigationCaption
+			v-if="visible"
 			:id="id"
 			:key="id"
 			:name="account.emailAddress"
@@ -27,14 +28,28 @@
 						</template>
 						{{ quotaText }}
 					</ActionText>
-					<ActionButton :close-after-click="true"
+					<ActionButton
+						:close-after-click="true"
 						@click="showAccountSettings(true)">
 						<template #icon>
 							<IconSettings :size="20" />
 						</template>
 						{{ t('mail', 'Account settings') }}
 					</ActionButton>
-					<ActionCheckbox :checked="account.showSubscribedOnly"
+					<ActionButton
+						v-if="canDelegate"
+						:close-after-click="true"
+						@click="showDelegationModal = true">
+						<template #icon>
+							<NcIconSvgWrapper
+								:size="20"
+								:title="t('mail', 'Delegate account')"
+								:svg="IconDelegation" />
+						</template>
+						{{ t('mail', 'Delegate account') }}
+					</ActionButton>
+					<ActionCheckbox
+						:checked="account.showSubscribedOnly"
 						:disabled="savingShowOnlySubscribed"
 						@update:checked="changeShowSubscribedOnly">
 						{{ t('mail', 'Show only subscribed folders') }}
@@ -45,7 +60,8 @@
 						</template>
 						{{ t('mail', 'Add folder') }}
 					</ActionButton>
-					<ActionInput v-if="editing && nameInput"
+					<ActionInput
+						v-if="editing && nameInput"
 						:value.sync="createMailboxName"
 						@submit.prevent.stop="createMailbox">
 						<template #icon>
@@ -71,7 +87,7 @@
 						</template>
 						{{ t('mail', 'Move down') }}
 					</ActionButton>
-					<ActionButton v-if="!account.provisioningId" @click="removeAccount">
+					<ActionButton v-if="!account.provisioningId && !account.isDelegated" @click="removeAccount">
 						<template #icon>
 							<IconDelete :size="20" />
 						</template>
@@ -80,7 +96,12 @@
 				</template>
 			</template>
 		</NcAppNavigationCaption>
-		<AccountSettings :open="showSettings" :account="account" @update:open="showAccountSettings($event)" />
+		<AccountSettings
+			:open="showSettings"
+			:account="account"
+			:scroll-to-section="showSettingsSection"
+			@update:open="showAccountSettings($event)" />
+		<DelegationModal v-if="showDelegationModal" :account="account" @close="showDelegationModal = false" />
 	</Fragment>
 </template>
 
@@ -88,7 +109,7 @@
 import { DialogBuilder, showError } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
-import { NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading, NcAppNavigationCaption } from '@nextcloud/vue'
+import { NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading, NcAppNavigationCaption, NcIconSvgWrapper } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import { Fragment } from 'vue-frag'
 import MenuDown from 'vue-material-design-icons/ChevronDown.vue'
@@ -97,10 +118,10 @@ import IconSettings from 'vue-material-design-icons/CogOutline.vue'
 import IconFolderAdd from 'vue-material-design-icons/FolderOutline.vue'
 import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
-
 import logger from '../logger.js'
 import { fetchQuota } from '../service/AccountService.js'
 import useMainStore from '../store/mainStore.js'
+import IconDelegation from './../../img/delegation.svg'
 
 export default {
 	name: 'NavigationAccount',
@@ -112,63 +133,86 @@ export default {
 		ActionInput,
 		ActionText,
 		AccountSettings: () => import(/* webpackChunkName: "account-settings" */ './AccountSettings.vue'),
+		DelegationModal: () => import(/* webpackChunkName: "delegation-modal" */ './DelegationModal.vue'),
 		IconInfo,
 		IconSettings,
+		NcIconSvgWrapper,
 		IconFolderAdd,
 		MenuDown,
 		MenuUp,
 		IconDelete,
 		IconLoading,
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
+
 		firstMailbox: {
 			type: Object,
 			default: () => undefined,
 		},
+
 		isFirst: {
 			type: Boolean,
 			default: false,
 		},
+
 		isLast: {
 			type: Boolean,
 			default: false,
 		},
+
 		isDisabled: {
 			type: Boolean,
 			default: false,
 		},
 	},
+
 	data() {
 		return {
 			menuOpen: false,
 			loading: {
 				delete: false,
 			},
+
 			savingShowOnlySubscribed: false,
 			quota: undefined,
 			editing: false,
 			showSaving: false,
+			showDelegationModal: false,
+			IconDelegation,
 			createMailboxName: '',
 			showMailboxes: false,
 			nameInput: false,
 			nameLabel: true,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		showSettings() {
 			return this.mainStore.showSettingsForAccount(this.account.id)
 		},
+
+		showSettingsSection() {
+			return this.mainStore.showSettingsSectionForAccount(this.account.id)
+		},
+
 		visible() {
 			return this.account.isUnified !== true && this.account.visible !== false
 		},
+
+		canDelegate() {
+			return !this.account.isDelegated && !this.account.provisioningId
+		},
+
 		id() {
 			return 'account-' + this.account.id
 		},
+
 		quotaText() {
 			if (this.quota) {
 				return t('mail', 'Used quota: {quota}% ({limit})', {
@@ -184,6 +228,7 @@ export default {
 			return ''
 		},
 	},
+
 	methods: {
 		async createMailbox(e) {
 			this.nameInput = false
@@ -193,7 +238,8 @@ export default {
 			this.menuOpen = false
 			try {
 				await this.mainStore.createMailbox({
-					account: this.account, name,
+					account: this.account,
+					name,
 				})
 			} catch (error) {
 				showError(t('mail', 'Unable to create mailbox. The name likely contains invalid characters. Please try another name.'))
@@ -207,11 +253,13 @@ export default {
 			}
 			logger.info(`mailbox ${name} created`)
 		},
+
 		openCreateMailbox() {
 			this.editing = true
 			this.nameInput = true
 			this.showSaving = false
 		},
+
 		async removeAccount() {
 			const id = this.account.id
 			logger.info('delete account', { account: this.account })
@@ -235,6 +283,7 @@ export default {
 								location.href = generateUrl('/apps/mail')
 							} catch (error) {
 								logger.error('could not delete account', { error })
+								showError(t('mail', 'could not delete account'))
 							} finally {
 								this.loading.delete = false
 							}
@@ -244,14 +293,17 @@ export default {
 				.build()
 			await dialog.show()
 		},
+
 		changeAccountOrderUp() {
 			this.mainStore.moveAccount({ account: this.account, up: true })
 				.catch((error) => logger.error('could not move account up', { error }))
 		},
+
 		changeAccountOrderDown() {
 			this.mainStore.moveAccount({ account: this.account })
 				.catch((error) => logger.error('could not move account down', { error }))
 		},
+
 		changeShowSubscribedOnly(onlySubscribed) {
 			this.savingShowOnlySubscribed = true
 			this.mainStore.patchAccount({
@@ -270,15 +322,17 @@ export default {
 					throw error
 				})
 		},
+
 		onMenuToggle(open) {
 			if (open && this.account.quotaPercentage !== null) {
-				console.debug('accounts menu opened, fetching quota')
+				logger.debug('accounts menu opened, fetching quota')
 				this.fetchQuota()
 			}
 		},
+
 		async fetchQuota() {
 			const quota = await fetchQuota(this.account.id)
-			console.debug('quota fetched', {
+			logger.debug('quota fetched', {
 				quota,
 			})
 
@@ -289,6 +343,7 @@ export default {
 				this.quota = quota
 			}
 		},
+
 		/**
 		 * Show the settings for the given account
 		 *

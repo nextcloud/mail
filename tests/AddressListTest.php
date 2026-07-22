@@ -164,4 +164,27 @@ class AddressListTest extends TestCase {
 
 		$this->assertCount(2, $c);
 	}
+
+	public function testFirst(): void {
+		$list = new AddressList([
+			2 => Address::fromRaw('Alice', 'alice@mail.test'),
+			3 => Address::fromRaw('Bob', 'bob@mail.test'),
+		]);
+
+		$first = $list->first();
+
+		$this->assertInstanceOf(Address::class, $first);
+		$this->assertSame('alice@mail.test', $first->getEmail());
+	}
+
+	public function testFromHordeListWithGaps(): void {
+		$hordeList = new Horde_Mail_Rfc822_List([
+			new Horde_Mail_Rfc822_Group('Sample', ['alice@mail.test', 'bob@mail.test']),
+			new Horde_Mail_Rfc822_Address('jane@mail.test'),
+		]);
+
+		$list = AddressList::fromHorde($hordeList);
+
+		$this->assertCount(3, $list);
+	}
 }

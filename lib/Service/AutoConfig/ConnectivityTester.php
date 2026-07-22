@@ -26,6 +26,7 @@ class ConnectivityTester {
 	 * @param string $url
 	 * @param integer $port
 	 * @return bool
+	 * @codeCoverageIgnore
 	 */
 	public function canConnect(string $url, int $port): bool {
 		$this->logger->debug("attempting to connect to <$url> on port <$port>");

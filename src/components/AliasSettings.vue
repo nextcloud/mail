@@ -8,11 +8,13 @@
 		<ul class="aliases-list">
 			<!-- Primary alias -->
 			<li>
-				<AliasForm :account="account"
+				<AliasForm
+					:account="account"
 					:alias="accountAlias"
 					:enable-update="false"
 					:enable-delete="false">
-					<ButtonVue v-if="!account.provisioningId"
+					<ButtonVue
+						v-if="!account.provisioningId"
 						type="tertiary-no-background"
 						:aria-label="t('mail', 'Go back')"
 						:name="t('mail', 'Change name')"
@@ -26,7 +28,8 @@
 
 			<!-- Secondary aliases -->
 			<li v-for="alias in aliases" :key="alias.id">
-				<AliasForm :account="account"
+				<AliasForm
+					:account="account"
 					:alias="alias"
 					:on-update-alias="updateAlias"
 					:on-delete="deleteAlias" />
@@ -34,11 +37,13 @@
 
 			<li v-if="showForm">
 				<form id="createAliasForm" @submit.prevent="createAlias">
-					<input v-model="newName"
+					<input
+						v-model="newName"
 						type="text"
 						:placeholder="t('mail', 'Name')"
 						required>
-					<input v-model="newAlias"
+					<input
+						v-model="newAlias"
 						type="email"
 						:placeholder="t('mail', 'Email address')"
 						required>
@@ -47,14 +52,16 @@
 		</ul>
 
 		<div v-if="!account.provisioningId" class="aliases-controls">
-			<ButtonVue v-if="!showForm"
+			<ButtonVue
+				v-if="!showForm"
 				type="primary"
 				:aria-label="t('mail', 'Add alias')"
 				@click="showForm = true">
 				{{ t('mail', 'Add alias') }}
 			</ButtonVue>
 
-			<ButtonVue v-if="showForm"
+			<ButtonVue
+				v-if="showForm"
 				native-type="submit"
 				type="primary"
 				form="createAliasForm"
@@ -66,7 +73,8 @@
 				</template>
 				{{ t('mail', 'Create alias') }}
 			</ButtonVue>
-			<ButtonVue v-if="showForm"
+			<ButtonVue
+				v-if="showForm"
 				type="tertiary-no-background"
 				class="button-text"
 				:aria-label="t('mail', 'Cancel')"
@@ -82,9 +90,8 @@ import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/
 import { mapStores } from 'pinia'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconRename from 'vue-material-design-icons/PencilOutline.vue'
-
-import logger from '../logger.js'
 import AliasForm from './AliasForm.vue'
+import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 
 export default {
@@ -96,12 +103,14 @@ export default {
 		IconCheck,
 		IconRename,
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			newAlias: '',
@@ -110,11 +119,13 @@ export default {
 			loading: false,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		aliases() {
 			return this.account.aliases
 		},
+
 		accountAlias() {
 			return {
 				alias: this.account.emailAddress,
@@ -124,6 +135,7 @@ export default {
 			}
 		},
 	},
+
 	methods: {
 		async createAlias() {
 			this.loading = true
@@ -143,6 +155,7 @@ export default {
 			this.resetCreate()
 			this.loading = false
 		},
+
 		resetCreate() {
 			this.newAlias = ''
 			this.newName = this.account.name
@@ -159,6 +172,7 @@ export default {
 				smimeCertificateId: alias.smimeCertificateId,
 			})
 		},
+
 		async deleteAlias(aliasId) {
 			await this.mainStore.deleteAlias({
 				account: this.account,

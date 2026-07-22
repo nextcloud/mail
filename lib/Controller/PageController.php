@@ -20,11 +20,13 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
+use OCA\Mail\Service\ContextChat\ContextChatSettingsService;
 use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\QuickActionsService;
 use OCA\Mail\Service\SmimeService;
 use OCA\Viewer\Event\LoadViewer;
+use OCP\App\IAppManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
@@ -41,8 +43,8 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
 use OCP\IUserSession;
-use OCP\TextProcessing\FreePromptTaskType;
-use OCP\TextProcessing\SummaryTaskType;
+use OCP\TaskProcessing\TaskTypes\TextToText;
+use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
 use OCP\User\IAvailabilityCoordinator;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -54,73 +56,50 @@ use function json_decode;
 class PageController extends Controller {
 	private IURLGenerator $urlGenerator;
 	private IConfig $config;
-	private AccountService $accountService;
-	private AliasesService $aliasesService;
-	private ?string $currentUserId;
 	private IUserSession $userSession;
-	private IUserPreferences $preferences;
-	private IMailManager $mailManager;
-	private TagMapper $tagMapper;
 	private IInitialState $initialStateService;
-	private LoggerInterface $logger;
-	private OutboxService $outboxService;
 	private IEventDispatcher $dispatcher;
 	private ICredentialstore $credentialStore;
-	private SmimeService $smimeService;
-	private AiIntegrationsService $aiIntegrationsService;
 	private IUserManager $userManager;
 	private IAvailabilityCoordinator $availabilityCoordinator;
-	private ClassificationSettingsService $classificationSettingsService;
-	private InternalAddressService $internalAddressService;
-	private QuickActionsService $quickActionsService;
 
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
 		IURLGenerator $urlGenerator,
 		IConfig $config,
-		AccountService $accountService,
-		AliasesService $aliasesService,
-		?string $UserId,
+		private AccountService $accountService,
+		private AliasesService $aliasesService,
+		private ?string $userId,
 		IUserSession $userSession,
-		IUserPreferences $preferences,
-		IMailManager $mailManager,
-		TagMapper $tagMapper,
+		private IUserPreferences $preferences,
+		private IMailManager $mailManager,
+		private TagMapper $tagMapper,
 		IInitialState $initialStateService,
-		LoggerInterface $logger,
-		OutboxService $outboxService,
+		private LoggerInterface $logger,
+		private OutboxService $outboxService,
 		IEventDispatcher $dispatcher,
 		ICredentialStore $credentialStore,
-		SmimeService $smimeService,
-		AiIntegrationsService $aiIntegrationsService,
+		private SmimeService $smimeService,
+		private AiIntegrationsService $aiIntegrationsService,
 		IUserManager $userManager,
-		ClassificationSettingsService $classificationSettingsService,
-		InternalAddressService $internalAddressService,
+		private InternalAddressService $internalAddressService,
 		IAvailabilityCoordinator $availabilityCoordinator,
-		QuickActionsService $quickActionsService,
+		private QuickActionsService $quickActionsService,
+		private IAppManager $appManager,
+		private ContextChatSettingsService $contextChatSettingsService,
+		private ClassificationSettingsService $classificationSettingsService,
 	) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
 		$this->config = $config;
-		$this->accountService = $accountService;
-		$this->aliasesService = $aliasesService;
-		$this->currentUserId = $UserId;
 		$this->userSession = $userSession;
-		$this->preferences = $preferences;
-		$this->mailManager = $mailManager;
-		$this->tagMapper = $tagMapper;
 		$this->initialStateService = $initialStateService;
-		$this->logger = $logger;
-		$this->outboxService = $outboxService;
 		$this->dispatcher = $dispatcher;
 		$this->credentialStore = $credentialStore;
-		$this->smimeService = $smimeService;
-		$this->aiIntegrationsService = $aiIntegrationsService;
 		$this->userManager = $userManager;
-		$this->classificationSettingsService = $classificationSettingsService;
-		$this->internalAddressService = $internalAddressService;
 		$this->availabilityCoordinator = $availabilityCoordinator;
-		$this->quickActionsService = $quickActionsService;
 	}
 
 	/**
@@ -130,6 +109,17 @@ class PageController extends Controller {
 	 * @return TemplateResponse renders the index page
 	 */
 	public function index(): TemplateResponse {
+		if ($this->userId === null) {
+			// This should not happen as the route requires authentication,
+			// but handle it defensively.
+			return new TemplateResponse($this->appName, 'index');
+		}
+
+		$user = $this->userSession->getUser();
+		if ($user === null) {
+			return new TemplateResponse($this->appName, 'index');
+		}
+
 		if (class_exists(LoadViewer::class)) {
 			$this->dispatcher->dispatchTyped(new LoadViewer());
 		}
@@ -144,12 +134,18 @@ class PageController extends Controller {
 			$this->config->getSystemValue('version', '0.0.0')
 		);
 
-		$mailAccounts = $this->accountService->findByUserId($this->currentUserId);
+		$this->initialStateService->provideInitialState(
+			'mailVersion',
+			$this->appManager->getAppVersion('mail'),
+		);
+
+		$mailAccounts = $this->accountService->findByUserId($this->userId);
 		$accountsJson = [];
 		foreach ($mailAccounts as $mailAccount) {
 			$json = $mailAccount->jsonSerialize();
+			$json['isDelegated'] = false;
 			$json['aliases'] = $this->aliasesService->findAll($mailAccount->getId(),
-				$this->currentUserId);
+				$this->userId);
 			try {
 				$mailboxes = $this->mailManager->getMailboxes($mailAccount);
 				$json['mailboxes'] = $mailboxes;
@@ -162,37 +158,57 @@ class PageController extends Controller {
 			}
 			$accountsJson[] = $json;
 		}
+
+		$delegatedAccounts = $this->accountService->findDelegatedAccounts($this->userId);
+		foreach ($delegatedAccounts as $delegatedAccount) {
+			$json = $delegatedAccount->jsonSerialize();
+			$json['isDelegated'] = true;
+			$json['aliases'] = $this->aliasesService->findAll($delegatedAccount->getId(),
+				$delegatedAccount->getUserId());
+			try {
+				$mailboxes = $this->mailManager->getMailboxes($delegatedAccount);
+				$json['mailboxes'] = $mailboxes;
+			} catch (Throwable $ex) {
+				$this->logger->critical('Could not load delegated account mailboxes: ' . $ex->getMessage(), [
+					'exception' => $ex,
+				]);
+				$json['mailboxes'] = [];
+				$json['error'] = true;
+			}
+			$accountsJson[] = $json;
+		}
+
 		$this->initialStateService->provideInitialState(
 			'accounts',
 			$accountsJson
 		);
 		$this->initialStateService->provideInitialState(
 			'account-settings',
-			json_decode($this->preferences->getPreference($this->currentUserId, 'account-settings', '[]'), true, 512, JSON_THROW_ON_ERROR) ?? []
+			json_decode($this->preferences->getPreference($this->userId, 'account-settings', '[]'), true, 512, JSON_THROW_ON_ERROR) ?? []
 		);
 		$this->initialStateService->provideInitialState(
 			'tags',
-			$this->tagMapper->getAllTagsForUser($this->currentUserId)
+			$this->tagMapper->getAllTagsForUser($this->userId)
 		);
 
 		$this->initialStateService->provideInitialState(
 			'internal-addresses-list',
-			$this->internalAddressService->getInternalAddresses($this->currentUserId)
+			$this->internalAddressService->getInternalAddresses($this->userId)
 		);
 
 		$this->initialStateService->provideInitialState(
 			'internal-addresses',
-			$this->preferences->getPreference($this->currentUserId, 'internal-addresses', false)
+			$this->preferences->getPreference($this->userId, 'internal-addresses', false)
 		);
 
 		$this->initialStateService->provideInitialState(
 			'smime-sign-aliases',
-			json_decode($this->preferences->getPreference($this->currentUserId, 'smime-sign-aliases', '[]'), true, 512, JSON_THROW_ON_ERROR) ?? []
+			json_decode($this->preferences->getPreference($this->userId, 'smime-sign-aliases', '[]'), true, 512, JSON_THROW_ON_ERROR) ?? []
 		);
 
 		$this->initialStateService->provideInitialState(
 			'sort-order',
-			$this->preferences->getPreference($this->currentUserId, 'sort-order', 'newest')
+			$this->preferences->getPreference($this->userId, 'sort-order', 'newest')
 		);
 
 		try {
@@ -206,24 +222,29 @@ class PageController extends Controller {
 			$passwordIsUnavailable,
 		);
 
-		$user = $this->userSession->getUser();
 		$response = new TemplateResponse($this->appName, 'index');
 		$this->initialStateService->provideInitialState('preferences', [
 			'attachment-size-limit' => $this->config->getSystemValue('app.mail.attachment-size-limit', 0),
 			'app-version' => $this->config->getAppValue('mail', 'installed_version'),
-			'external-avatars' => $this->preferences->getPreference($this->currentUserId, 'external-avatars', 'true'),
-			'layout-mode' => $this->preferences->getPreference($this->currentUserId, 'layout-mode', 'vertical-split'),
-			'layout-message-view' => $this->preferences->getPreference($this->currentUserId, 'layout-message-view', $this->config->getAppValue('mail', 'layout_message_view', 'threaded')),
-			'reply-mode' => $this->preferences->getPreference($this->currentUserId, 'reply-mode', 'top'),
-			'collect-data' => $this->preferences->getPreference($this->currentUserId, 'collect-data', 'true'),
-			'search-priority-body' => $this->preferences->getPreference($this->currentUserId, 'search-priority-body', 'false'),
-			'start-mailbox-id' => $this->preferences->getPreference($this->currentUserId, 'start-mailbox-id'),
-			'tag-classified-messages' => $this->classificationSettingsService->isClassificationEnabled($this->currentUserId) ? 'true' : 'false',
-			'follow-up-reminders' => $this->preferences->getPreference($this->currentUserId, 'follow-up-reminders', 'true'),
+			'external-avatars' => $this->preferences->getPreference($this->userId, 'external-avatars', 'true'),
+			'layout-mode' => $this->preferences->getPreference($this->userId, 'layout-mode', 'vertical-split'),
+			'layout-message-view' => $this->preferences->getPreference($this->userId, 'layout-message-view', $this->config->getAppValue('mail', 'layout_message_view', 'threaded')),
+			'reply-mode' => $this->preferences->getPreference($this->userId, 'reply-mode', 'top'),
+			'collect-data' => $this->preferences->getPreference($this->userId, 'collect-data', 'true'),
+			'search-priority-body' => $this->preferences->getPreference($this->userId, 'search-priority-body', 'false'),
+			'start-mailbox-id' => $this->preferences->getPreference($this->userId, 'start-mailbox-id'),
+			'follow-up-reminders' => $this->preferences->getPreference($this->userId, 'follow-up-reminders', 'true'),
+			'sort-favorites' => $this->preferences->getPreference($this->userId, 'sort-favorites', 'false'),
+			'index-context-chat' => $this->contextChatSettingsService->isIndexingEnabled($this->userId) ? 'true' : 'false',
+			'compact-mode' => $this->preferences->getPreference($this->userId, 'compact-mode', 'false'),
 		]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',
-			$this->userManager->getDisplayName($this->currentUserId),
+			$this->userManager->getDisplayName($this->userId) ?? '',
+		);
+		$this->initialStateService->provideInitialState(
+			'importance_classification_default',
+			$this->classificationSettingsService->isClassificationEnabledByDefault(),
 		);
 		$this->initialStateService->provideInitialState(
 			'prefill_email',
@@ -236,7 +257,7 @@ class PageController extends Controller {
 		);
 		$this->initialStateService->provideInitialState(
 			'quick-actions',
-			$this->quickActionsService->findAll($this->currentUserId),
+			$this->quickActionsService->findAll($this->userId),
 		);
 		$googleOauthclientId = $this->config->getAppValue(Application::APP_ID, 'google_oauth_client_id');
 		if (!empty($googleOauthclientId)) {
@@ -247,7 +268,7 @@ class PageController extends Controller {
 					'redirect_uri' => $this->urlGenerator->linkToRouteAbsolute('mail.googleIntegration.oauthRedirect'),
 					'response_type' => 'code',
 					'prompt' => 'consent',
-					'state' => '_accountId_', // Replaced by frontend
+					'state' => '_state_', // Replaced by frontend
 					'scope' => 'https://mail.google.com/',
 					'access_type' => 'offline',
 					'login_hint' => '_email_', // Replaced by frontend
@@ -264,8 +285,7 @@ class PageController extends Controller {
 					'redirect_uri' => $this->urlGenerator->linkToRouteAbsolute('mail.microsoftIntegration.oauthRedirect'),
 					'response_type' => 'code',
 					'response_mode' => 'query',
-					'prompt' => 'consent',
-					'state' => '_accountId_', // Replaced by frontend
+					'state' => '_state_', // Replaced by frontend
 					'scope' => 'offline_access https://outlook.office.com/IMAP.AccessAsUser.All https://outlook.office.com/SMTP.Send',
 					'access_type' => 'offline',
 					'login_hint' => '_email_', // Replaced by frontend
@@ -291,7 +311,7 @@ class PageController extends Controller {
 
 		$this->initialStateService->provideInitialState(
 			'llm_summaries_available',
-			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class)
+			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isLlmAvailable(TextToTextSummary::ID)
 		);
 
 		$this->initialStateService->provideInitialState(
@@ -301,13 +321,18 @@ class PageController extends Controller {
 
 		$this->initialStateService->provideInitialState(
 			'llm_freeprompt_available',
-			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
+			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isLlmAvailable(TextToText::ID)
 		);
 
 		$this->initialStateService->provideInitialState(
 			'llm_followup_available',
 			$this->aiIntegrationsService->isLlmProcessingEnabled()
-			&& $this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
+			&& $this->aiIntegrationsService->isLlmAvailable(TextToText::ID)
+		);
+
+		$this->initialStateService->provideInitialState(
+			'context_chat_available',
+			$this->appManager->isEnabledForUser('context_chat')
 		);
 
 		$this->initialStateService->provideInitialState(
@@ -436,14 +461,14 @@ class PageController extends Controller {
 	public function compose(string $uri): RedirectResponse {
 		$parts = parse_url($uri);
 		$params = [];
-		if (isset($parts['path'])) {
+		if (is_array($parts) && isset($parts['path'])) {
 			$params['to'] = $parts['path'];
 		}
-		if (isset($parts['query'])) {
-			$parts = explode('&', $parts['query']);
-			foreach ($parts as $part) {
+		if (is_array($parts) && isset($parts['query'])) {
+			$queryParts = explode('&', $parts['query']);
+			foreach ($queryParts as $part) {
 				$pair = explode('=', $part, 2);
-				$params[strtolower($pair[0])] = urldecode($pair[1]);
+				$params[strtolower($pair[0])] = urldecode($pair[1] ?? '');
 			}
 		}
 

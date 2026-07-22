@@ -9,7 +9,6 @@ export const TRIGGER_CHANGE_ALIAS = 'change_alias'
 export const TRIGGER_EDITOR_READY = 'editor_ready'
 
 export default class InsertSignatureCommand extends Command {
-
 	/**
 	 * Remove a signature element
 	 *
@@ -18,9 +17,7 @@ export default class InsertSignatureCommand extends Command {
 	 */
 	removeSignatureElement(editor, writer) {
 		// Create a range spanning over the entire root content:
-		const range = editor.model.createRangeIn(
-			editor.model.document.getRoot(),
-		)
+		const range = editor.model.createRangeIn(editor.model.document.getRoot())
 
 		// Iterate over all items in this range:
 		for (const value of range.getWalker({ shallow: true })) {
@@ -83,9 +80,7 @@ export default class InsertSignatureCommand extends Command {
 	findPosition(editor, writer, signatureAboveQuote) {
 		if (signatureAboveQuote) {
 			// Create a range spanning over the entire root content:
-			const range = editor.model.createRangeIn(
-				editor.model.document.getRoot(),
-			)
+			const range = editor.model.createRangeIn(editor.model.document.getRoot())
 
 			// Iterate over all items in this range:
 			for (const value of range.getWalker({ shallow: true })) {
@@ -106,9 +101,7 @@ export default class InsertSignatureCommand extends Command {
 	 */
 	hasSignatureElement(editor) {
 		// Create a range spanning over the entire root content:
-		const range = editor.model.createRangeIn(
-			editor.model.document.getRoot(),
-		)
+		const range = editor.model.createRangeIn(editor.model.document.getRoot())
 
 		// Iterate over all items in this range:
 		for (const value of range.getWalker({ shallow: true })) {
@@ -131,7 +124,7 @@ export default class InsertSignatureCommand extends Command {
 	 * @param {boolean} signatureAboveQuote signature position: above/below the quoted text
 	 */
 	execute(trigger, signature, signatureAboveQuote) {
-		this.editor.model.change(writer => {
+		this.editor.model.change((writer) => {
 			/**
 			 * TRIGGER_CHANGE_ALIAS:
 			 * Current signature is replaced.
@@ -158,5 +151,4 @@ export default class InsertSignatureCommand extends Command {
 	refresh() {
 		this.isEnabled = true
 	}
-
 }

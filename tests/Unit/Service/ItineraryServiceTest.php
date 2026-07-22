@@ -88,7 +88,7 @@ class ItineraryServiceTest extends TestCase {
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
 
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->with($account)
@@ -117,7 +117,7 @@ class ItineraryServiceTest extends TestCase {
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
 
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->with($account)

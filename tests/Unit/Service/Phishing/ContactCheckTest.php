@@ -8,11 +8,9 @@
 namespace OCA\Mail\Tests\Unit\Service\Phishing;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-
 use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\PhishingDetection\ContactCheck;
 use OCP\IL10N;
-
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ContactCheckTest extends TestCase {
@@ -38,9 +36,9 @@ class ContactCheckTest extends TestCase {
 		];
 		$this->contactsIntegration->expects(self::once())
 			->method('getContactsWithName')
-			->with($fn)
+			->with('currentUser', $fn)
 			->willReturn($contacts);
-		$result = $this->service->run($fn, $email);
+		$result = $this->service->run('currentUser', $fn, $email);
 
 		$this->assertFalse($result->isPhishing());
 	}
@@ -56,9 +54,9 @@ class ContactCheckTest extends TestCase {
 		$this->contactsIntegration
 			->expects(self::once())
 			->method('getContactsWithName')
-			->with($fn)
+			->with('currentUser', $fn)
 			->willReturn($contacts);
-		$result = $this->service->run($fn, $email);
+		$result = $this->service->run('currentUser', $fn, $email);
 
 		$this->assertFalse($result->isPhishing());
 	}
@@ -73,10 +71,10 @@ class ContactCheckTest extends TestCase {
 		];
 		$this->contactsIntegration->expects(self::once())
 			->method('getContactsWithName')
-			->with($fn)
+			->with('currentUser', $fn)
 			->willReturn($contacts);
 
-		$result = $this->service->run($fn, $email);
+		$result = $this->service->run('currentUser', $fn, $email);
 
 		$this->assertTrue($result->isPhishing());
 	}
@@ -88,10 +86,10 @@ class ContactCheckTest extends TestCase {
 		$this->contactsIntegration
 			->expects(self::once())
 			->method('getContactsWithName')
-			->with($fn)
+			->with('currentUser', $fn)
 			->willReturn($contacts);
 
-		$result = $this->service->run($fn, $email);
+		$result = $this->service->run('currentUser', $fn, $email);
 
 		$this->assertFalse($result->isPhishing());
 	}

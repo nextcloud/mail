@@ -128,7 +128,6 @@ class MailboxMapper extends QBMapper {
 		return $this->findEntities($select);
 	}
 
-
 	/**
 	 * @param int $id
 	 * @param string $uid
@@ -155,6 +154,19 @@ class MailboxMapper extends QBMapper {
 			// Not possible due to DB constraints
 			throw new ServiceException('The impossible has happened', 42, $e);
 		}
+	}
+
+	/**
+	 * @throws DoesNotExistException
+	 */
+	public function findAccountIdForMailbox(int $mailboxId): int {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('account_id')
+			->from($this->getTableName())
+			->where($qb->expr()->eq('id', $qb->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT)));
+
+		$row = $this->findOneQuery($qb);
+		return (int)$row['account_id'];
 	}
 
 	/**

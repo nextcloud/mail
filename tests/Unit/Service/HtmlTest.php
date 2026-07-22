@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OC;
+use OCA\Mail\Html\ProxyHmacGenerator;
 use OCA\Mail\Service\Html;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -26,8 +26,9 @@ class HtmlTest extends TestCase {
 	public function testLinkDetection(string $expected, string $text) {
 		$urlGenerator = Server::get(IURLGenerator::class);
 		$request = Server::get(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
 
-		$html = new Html($urlGenerator, $request);
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
 		$withLinks = $html->convertLinks($text);
 
 		self::assertSame($expected, $withLinks);
@@ -62,9 +63,11 @@ class HtmlTest extends TestCase {
 	 * @param $text
 	 */
 	public function testParseMailBody($expectedBody, $expectedSignature, $text) {
-		$urlGenerator = OC::$server->getURLGenerator();
-		$request = OC::$server->getRequest();
-		$html = new Html($urlGenerator, $request);
+		$urlGenerator = \OCP\Server::get(\OCP\IURLGenerator::class);
+		$request = \OCP\Server::get(\OCP\IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
 		[$b, $s] = $html->parseMailBody($text);
 		$this->assertSame($expectedBody, $b);
 		$this->assertSame($expectedSignature, $s);
@@ -78,6 +81,43 @@ class HtmlTest extends TestCase {
 		];
 	}
 
+	public function testSanitizeHtmlMailBodyRewritesCidToUrl(): void {
+		$attachmentUrl = 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachment/7';
+		$urlGenerator = $this->createMock(IURLGenerator::class);
+		$urlGenerator->expects(self::once())
+			->method('linkToRouteAbsolute')
+			->with('mail.messages.downloadAttachment', ['id' => 42, 'attachmentId' => '7'])
+			->willReturn($attachmentUrl);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$inlineAttachments = [['id' => '7', 'cid' => 'image001@example.com']];
+
+		$result = $html->sanitizeHtmlMailBody(42, '<img src="cid:image001@example.com">', $inlineAttachments);
+
+		$this->assertStringContainsString($attachmentUrl, $result);
+		$this->assertStringNotContainsString('src="cid:', $result);
+	}
+
+	public function testSanitizeHtmlMailBodySetsDataCidOnInlineImage(): void {
+		$attachmentUrl = 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachment/7';
+		$urlGenerator = $this->createMock(IURLGenerator::class);
+		$urlGenerator->expects(self::once())
+			->method('linkToRouteAbsolute')
+			->with('mail.messages.downloadAttachment', ['id' => 42, 'attachmentId' => '7'])
+			->willReturn($attachmentUrl);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$inlineAttachments = [['id' => '7', 'cid' => 'image001@example.com']];
+
+		$result = $html->sanitizeHtmlMailBody(42, '<img src="cid:image001@example.com">', $inlineAttachments);
+
+		$this->assertStringContainsString('data-cid="image001@example.com"', $result);
+	}
+
 	public function testSanitizeStyleSheet() {
 		$blockedUrl = '/apps/mail/img/blocked-image.png';
 		$urlGenerator = self::createMock(IURLGenerator::class);
@@ -86,6 +126,7 @@ class HtmlTest extends TestCase {
 			->with('mail', 'blocked-image.png')
 			->willReturn($blockedUrl);
 		$request = Server::get(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
 
 		$styleSheet = implode(' ', [
 			'big { background-image: url(https://tracker.com/script.png); }',
@@ -93,11 +134,11 @@ class HtmlTest extends TestCase {
 		]);
 		$expected = implode('', [
 			"<style type=\"text/css\" data-original-content=\"$styleSheet\">",
-			"big{background-image:url(\"$blockedUrl\");}ul{list-style:url(\"$blockedUrl\") outside;}",
+			"big{background-image:url(\"$blockedUrl\")}ul{list-style:url(\"$blockedUrl\") outside}",
 			'</style>',
 		]);
 
-		$html = new Html($urlGenerator, $request);
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
 		$sanitizedStyleSheet = $html->sanitizeStyleSheet($styleSheet);
 		self::assertSame($expected, $sanitizedStyleSheet);
 	}

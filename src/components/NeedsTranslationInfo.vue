@@ -4,10 +4,12 @@
 -->
 
 <template>
-	<div class="needs-translation-info"
-		:class="{'needs-translation-info--html': isHtml}">
+	<div
+		class="needs-translation-info"
+		:class="{ 'needs-translation-info--html': isHtml }">
 		{{ t('mail', 'Translate this message to {language}', { language: localLanguage }) }}
-		<NcButton type="tertiary"
+		<NcButton
+			variant="tertiary"
 			@click="$emit('translate')">
 			{{ t('mail', 'Translate') }}
 		</NcButton>
@@ -18,7 +20,6 @@
 import { getLanguage } from '@nextcloud/l10n'
 import { NcButton } from '@nextcloud/vue'
 import { mapState } from 'pinia'
-
 import useMainStore from '../store/mainStore.js'
 
 export default {
@@ -26,18 +27,21 @@ export default {
 	components: {
 		NcButton,
 	},
+
 	props: {
 		isHtml: {
 			type: Boolean,
 			required: true,
 		},
 	},
+
 	computed: {
 		...mapState(useMainStore, {
 			availableOutputLanguages: 'translationOutputLanguages',
 		}),
+
 		localLanguage() {
-			return this.availableOutputLanguages.find(lang => lang.value === getLanguage())?.name || 'English'
+			return this.availableOutputLanguages.find((lang) => lang.value === getLanguage())?.name || 'English'
 		},
 
 	},

@@ -15,14 +15,14 @@ use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @psalm-api
+ */
 class Version1140Date20221027171138 extends SimpleMigrationStep {
-	private LoggerInterface $logger;
-	private MessageMapper $messageMapper;
-
-	public function __construct(MessageMapper $messageMapper,
-		LoggerInterface $logger) {
-		$this->logger = $logger;
-		$this->messageMapper = $messageMapper;
+	public function __construct(
+		private MessageMapper $messageMapper,
+		private LoggerInterface $logger,
+	) {
 	}
 
 	/**

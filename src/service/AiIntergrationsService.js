@@ -4,10 +4,9 @@
  */
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-
 import { convertAxiosError } from '../errors/convert.js'
 
-export const summarizeThread = async (threadId) => {
+export async function summarizeThread(threadId) {
 	const url = generateUrl('/apps/mail/api/thread/{threadId}/summary', {
 		threadId,
 	})
@@ -23,7 +22,7 @@ export const summarizeThread = async (threadId) => {
 	}
 }
 
-export const generateEventData = async (threadId) => {
+export async function generateEventData(threadId) {
 	const url = generateUrl('/apps/mail/api/thread/{threadId}/eventdata', {
 		threadId,
 	})
@@ -36,7 +35,7 @@ export const generateEventData = async (threadId) => {
 	}
 }
 
-export const smartReply = async (messageId) => {
+export async function smartReply(messageId) {
 	const url = generateUrl('/apps/mail/api/messages/{messageId}/smartreply', {
 		messageId,
 	})
@@ -52,7 +51,7 @@ export const smartReply = async (messageId) => {
 	}
 }
 
-export const needsTranslation = async (messageId) => {
+export async function needsTranslation(messageId) {
 	const url = generateUrl('/apps/mail/api/messages/{messageId}/needsTranslation', {
 		messageId,
 	})

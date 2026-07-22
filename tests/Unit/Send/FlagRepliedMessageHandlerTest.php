@@ -5,6 +5,7 @@ declare(strict_types=1);
  * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 namespace Unit\Send;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
@@ -53,7 +54,7 @@ class FlagRepliedMessageHandlerTest extends TestCase {
 		$dbMessage->setMailboxId(1);
 		$mailbox = new Mailbox();
 		$mailbox->setMyAcls('rw');
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->dbMessageMapper->expects(self::once())
 			->method('findByMessageId')
@@ -81,7 +82,7 @@ class FlagRepliedMessageHandlerTest extends TestCase {
 		$dbMessage->setMailboxId(1);
 		$mailbox = new Mailbox();
 		$mailbox->setMyAcls('rw');
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->dbMessageMapper->expects(self::once())
 			->method('findByMessageId')
@@ -110,7 +111,7 @@ class FlagRepliedMessageHandlerTest extends TestCase {
 		$dbMessage->setMailboxId(1);
 		$mailbox = new Mailbox();
 		$mailbox->setMyAcls('r');
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->dbMessageMapper->expects(self::once())
 			->method('findByMessageId')
@@ -133,7 +134,7 @@ class FlagRepliedMessageHandlerTest extends TestCase {
 		$localMessage = new LocalMessage();
 		$localMessage->setInReplyToMessageId('ab123');
 		$localMessage->setStatus(LocalMessage::STATUS_PROCESSED);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->dbMessageMapper->expects(self::once())
 			->method('findByMessageId')
@@ -154,7 +155,7 @@ class FlagRepliedMessageHandlerTest extends TestCase {
 		$account = new Account(new MailAccount());
 		$localMessage = new LocalMessage();
 		$localMessage->setStatus(LocalMessage::STATUS_PROCESSED);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
 		$this->dbMessageMapper->expects(self::never())
 			->method('findByMessageId');
