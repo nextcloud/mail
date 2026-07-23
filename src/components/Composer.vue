@@ -1513,11 +1513,24 @@ export default {
 
 			let changed = false
 			if (option.id) {
-				if (!existing.has(option.email.toLowerCase())) {
-					const recipient = { ...option }
-					this.newRecipients.push(recipient)
-					list.push(recipient)
-					changed = true
+				let toAdd
+
+				if (option.contents) {
+					toAdd = option.contents.map((content) => ({
+						email: content.email,
+						label: content.name,
+					}))
+				} else {
+					toAdd = [option]
+				}
+
+				for (const opt of toAdd) {
+					if (!existing.has(opt.email.toLowerCase())) {
+						const recipient = { ...opt }
+						this.newRecipients.push(recipient)
+						list.push(recipient)
+						changed = true
+					}
 				}
 			} else {
 				const emailList = parseEmailList(option.email)
