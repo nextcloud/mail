@@ -1,6 +1,25 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 5.11.0 – unreleased
+### Added
+* Initial JMAP protocol support
+* Attach files from Files as an attachment or as a link
+* Drag, drop and paste attachments into the composer
+* Save an email as an .eml file in Files
+* "Copy direct link" action in the message menu
+* Heading shortcuts in the editor
+* Save draft with Ctrl+S in the composer
+* Preserve custom font sizes and families in the editor
+### Changed
+* Translations
+### Fixed
+* Reply to sender only
+* Replying to your own message now addresses the original recipient
+* Rate limit all IMAP server authentication rejections
+* Favorites list no longer mounted when sorting is off
+* Search shortcut buttons no longer taking up their own space
+
 ## 5.10.0 – 2026-06-18
 ### Added
 * Shortcut to change the password in account server settings
