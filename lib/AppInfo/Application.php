@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace OCA\Mail\AppInfo;
 
 use Horde_Translation;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\ContextChat\ContextChatProvider;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IAvatarService;
@@ -171,6 +172,8 @@ final class Application extends App implements IBootstrap {
 		$context->registerSetupCheck(MailConnectionPerformance::class);
 
 		$context->registerUserMigrator(MailAccountMigrator::class);
+
+		$context->registerConfigLexicon(ConfigLexicon::class);
 
 		// bypass Horde Translation system
 		Horde_Translation::setHandler('Horde_Imap_Client', new HordeTranslationHandler());

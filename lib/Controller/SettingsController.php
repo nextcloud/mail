@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Exception\ValidationException;
 use OCA\Mail\Http\JsonResponse as HttpJsonResponse;
 use OCA\Mail\Service\AntiSpamService;
@@ -18,25 +19,22 @@ use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
-use OCP\IConfig;
+use OCP\IAppConfig;
 use OCP\IRequest;
 use Psr\Container\ContainerInterface;
 use function array_merge;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class SettingsController extends Controller {
-	private IConfig $config;
-
 	public function __construct(
 		IRequest $request,
 		private ProvisioningManager $provisioningManager,
 		private AntiSpamService $antiSpamService,
-		IConfig $config,
+		private IAppConfig $appConfig,
 		private ContainerInterface $container,
 		private ClassificationSettingsService $classificationSettingsService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->config = $config;
 	}
 
 	public function index(): JSONResponse {
@@ -104,15 +102,15 @@ class SettingsController extends Controller {
 	}
 
 	public function setAllowNewMailAccounts(bool $allowed): void {
-		$this->config->setAppValue('mail', 'allow_new_mail_accounts', $allowed ? 'yes' : 'no');
+		$this->appConfig->setValueBool(Application::APP_ID, ConfigLexicon::ALLOW_NEW_MAIL_ACCOUNTS, $allowed);
 	}
 
 	public function setEnabledLlmProcessing(bool $enabled): JSONResponse {
-		$this->config->setAppValue('mail', 'llm_processing', $enabled ? 'yes' : 'no');
+		$this->appConfig->setValueBool(Application::APP_ID, ConfigLexicon::LLM_PROCESSING, $enabled);
 		return new JSONResponse([]);
 	}
 	public function setLayoutMessageView(string $value): JSONResponse {
-		$this->config->setAppValue('mail', 'layout_message_view', $value);
+		$this->appConfig->setValueString(Application::APP_ID, ConfigLexicon::LAYOUT_MESSAGE_VIEW, $value);
 		return new JSONResponse([]);
 	}
 	public function setImportanceClassificationEnabledByDefault(bool $enabledByDefault): JSONResponse {

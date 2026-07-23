@@ -14,6 +14,8 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
+use OCA\Mail\AppInfo\Application;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
@@ -256,18 +258,18 @@ class AiIntegrationsServiceTest extends TestCase {
 
 	public function isLlmProcessingEnabledDataProvider(): array {
 		return [
-			['no', false],
-			['yes', true],
+			[false, false],
+			[true, true],
 		];
 	}
 
 	/**
 	 * @dataProvider isLlmProcessingEnabledDataProvider
 	 */
-	public function testIsLlmProcessingEnabled(string $appConfigValue, bool $expected) {
+	public function testIsLlmProcessingEnabled(bool $appConfigValue, bool $expected) {
 		$this->appConfig->expects(self::once())
-			->method('getValueString')
-			->with('mail', 'llm_processing', 'no')
+			->method('getValueBool')
+			->with(Application::APP_ID, ConfigLexicon::LLM_PROCESSING, false)
 			->willReturn($appConfigValue);
 
 		$this->assertEquals($expected, $this->aiIntegrationsService->isLlmProcessingEnabled());
