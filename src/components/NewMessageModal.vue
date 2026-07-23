@@ -3,19 +3,24 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<Modal
+	<div
 		v-if="showMessageComposer"
-		:size="modalSize"
-		:name="modalTitle"
-		:additional-trap-elements="additionalTrapElements"
-		@close="$event.type === 'click' ? onClose() : onMinimize()">
-		<div class="modal-content">
-			<div class="left-pane">
+		ref="floatingPanel"
+		class="floating-composer"
+		:class="{
+			'floating-composer--maximized': largerModal,
+			'floating-composer--with-recipient': showRecipientPane && !error && !warning && recipientPaneOpen,
+		}"
+		@mousedown.stop>
+		<div class="floating-composer__header">
+			<h2 class="floating-composer__title">
+				{{ modalTitle }}
+			</h2>
+			<div class="floating-composer__actions">
 				<NcButton
-					class="maximize-button"
 					variant="tertiary-no-background"
-					:aria-label="t('mail', 'Maximize composer')"
-					:title="largerModal ? t('mail', 'Show recipient details') : t('mail', 'Hide recipient details')"
+					:aria-label="largerModal ? t('mail', 'Restore composer') : t('mail', 'Maximize composer')"
+					:title="largerModal ? t('mail', 'Restore composer') : t('mail', 'Maximize composer')"
 					@click="onMaximize">
 					<template #icon>
 						<MaximizeIcon v-if="!largerModal" :size="20" />
@@ -23,7 +28,6 @@
 					</template>
 				</NcButton>
 				<NcButton
-					class="minimize-button"
 					variant="tertiary-no-background"
 					:aria-label="t('mail', 'Minimize composer')"
 					:title="t('mail', 'Minimize composer')"
@@ -32,14 +36,40 @@
 						<MinimizeIcon :size="20" />
 					</template>
 				</NcButton>
-
+				<NcButton
+					variant="tertiary-no-background"
+					:aria-label="t('mail', 'Close composer')"
+					:title="t('mail', 'Close composer')"
+					@click="onClose">
+					<template #icon>
+						<CloseIcon :size="20" />
+					</template>
+				</NcButton>
+			</div>
+		</div>
+		<div class="floating-composer__content">
+			<div v-if="showRecipientPane && !error && !warning && recipientPaneOpen" class="recipient-pane">
+				<NcButton
+					class="recipient-pane__close"
+					variant="tertiary-no-background"
+					:aria-label="t('mail', 'Close contact info')"
+					@click="recipientPaneOpen = false">
+					<template #icon>
+						<CloseIcon :size="20" />
+					</template>
+				</NcButton>
+				<RecipientInfo />
+			</div>
+			<div class="floating-composer__body">
 				<KeepAlive>
 					<EmptyContent
 						v-if="error"
 						:name="t('mail', 'Error sending your message')"
 						class="empty-content"
 						role="alert">
-						<p>{{ error }}</p>
+						<template #description>
+							{{ error }}
+						</template>
 						<template #action>
 							<NcButton variant="tertiary" :aria-label="t('mail', 'Go back')" @click="error = undefined">
 								{{ t('mail', 'Go back') }}
@@ -66,8 +96,8 @@
 							</NcButton>
 						</template>
 					</EmptyContent>
-
 					<Composer
+						v-else
 						ref="composer"
 						:from-account="composerData.accountId"
 						:from-alias="composerData.aliasId"
@@ -111,12 +141,8 @@
 						@send="onSend" />
 				</KeepAlive>
 			</div>
-
-			<div v-show="showRecipientPane && !warning && !error" class="right-pane">
-				<RecipientInfo />
-			</div>
 		</div>
-	</Modal>
+	</div>
 </template>
 
 <script>
@@ -124,12 +150,12 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import {
 	NcEmptyContent as EmptyContent,
-	NcModal as Modal,
 	NcButton,
 } from '@nextcloud/vue'
 import { mapActions, mapState, mapStores } from 'pinia'
 import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
 import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
+import CloseIcon from 'vue-material-design-icons/Close.vue'
 import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
 import Composer from './Composer.vue'
 import RecipientInfo from './RecipientInfo.vue'
@@ -152,11 +178,11 @@ export default {
 		NcButton,
 		Composer,
 		EmptyContent,
-		Modal,
 		MinimizeIcon,
+		RecipientInfo,
 		MaximizeIcon,
 		DefaultComposerIcon,
-		RecipientInfo,
+		CloseIcon,
 	},
 
 	provide() {
@@ -188,14 +214,22 @@ export default {
 			cookedComposerData: undefined,
 			changed: false,
 			largerModal: false,
-			isLargeScreen: window.innerWidth >= 1024,
 			additionalTrapElements: [],
-			isMaximized: false,
 			recipient: {
 				name: '',
 				email: '',
 			},
+
+			recipientPaneOpen: true,
 		}
+	},
+
+	watch: {
+		'composerData.to': function(newTo, oldTo) {
+			if (newTo?.length > 0 && !oldTo?.length) {
+				this.recipientPaneOpen = true
+			}
+		},
 	},
 
 	computed: {
@@ -219,18 +253,10 @@ export default {
 			if (this.composerData.forwardFrom) {
 				return t('mail', 'Forward')
 			}
+			if (this.composerData.subject) {
+				return this.composerData.subject
+			}
 			return t('mail', 'New message')
-		},
-
-		hasContactDetailsApi() {
-			return !!window.OCA?.Contacts?.mountContactDetails
-		},
-
-		showRecipientPane() {
-			return this.hasContactDetailsApi
-				&& this.composerData.to
-				&& this.composerData.to.length > 0
-				&& !this.largerModal
 		},
 
 		composerMessage() {
@@ -249,10 +275,10 @@ export default {
 			return this.composerData?.smartReply ?? null
 		},
 
-		modalSize() {
-			return this.isLargeScreen && this.hasContactDetailsApi && this.composerData.to && this.composerData.to.length > 0
-				? 'large'
-				: (this.largerModal ? 'large' : 'normal')
+		showRecipientPane() {
+			return this.composerData.to
+				&& this.composerData.to.length > 0
+				&& !this.largerModal
 		},
 	},
 
@@ -268,19 +294,15 @@ export default {
 		await this.$nextTick()
 		this.updateCookedComposerData()
 		await this.openModalSize()
-		window.addEventListener('resize', this.checkScreenSize)
+		document.addEventListener('mousedown', this.onClickOutside)
 	},
 
 	beforeDestroy() {
 		window.removeEventListener('beforeunload', this.onBeforeUnload)
-		window.removeEventListener('resize', this.checkScreenSize)
+		document.removeEventListener('mousedown', this.onClickOutside)
 	},
 
 	methods: {
-		checkScreenSize() {
-			this.isLargeScreen = window.innerWidth >= 1024
-		},
-
 		async openModalSize() {
 			try {
 				const sizePreference = this.mainStore.getPreference('modalSize')
@@ -290,8 +312,24 @@ export default {
 			}
 		},
 
+		onClickOutside(event) {
+			if (!this.showMessageComposer) {
+				return
+			}
+			if (!this.$refs.floatingPanel) {
+				return
+			}
+			if (this.$refs.floatingPanel.contains(event.target)) {
+				return
+			}
+			// Don't minimize when the user is interacting with a modal, popover, or CKEditor toolbar
+			if (event.target.closest('.modal-wrapper, .ck-body-wrapper, [data-popper-placement], .v-popper__popper')) {
+				return
+			}
+			this.onMinimize()
+		},
+
 		async onMaximize() {
-			this.isMaximized = !this.isMaximized
 			this.largerModal = !this.largerModal
 			try {
 				await this.mainStore.savePreference({
@@ -304,7 +342,6 @@ export default {
 		},
 
 		async onMinimize() {
-			this.isMaximized = false
 			this.modalFirstOpen = false
 
 			await this.mainStore.hideMessageComposerMutation()
@@ -648,70 +685,122 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '../../css/variables.scss';
+$composer-width: 600px;
+$recipient-pane-width: 300px;
+$composer-height: 500px;
+$header-height: calc(var(--default-clickable-area) + calc(var(--default-grid-baseline) * 2));
+$bottom-offset: calc(var(--body-container-margin, 0px) + var(--default-grid-baseline) * 2 + 52px);
+$panel-max-height: calc(100vh - (var(--body-container-margin, 0px) + var(--default-grid-baseline) * 3 + 52px));
 
-@media only screen and (max-width: 600px) {
-	:deep(.modal-container) {
-		max-width: 80%;
+.floating-composer {
+	position: fixed;
+	bottom: $bottom-offset;
+	inset-inline-end: calc(var(--body-container-margin, 0px) + var(--default-grid-baseline));
+	z-index: 9999999;
+
+	width: $composer-width;
+	max-width: calc(100vw - 2 * var(--default-grid-baseline));
+	height: $composer-height;
+	max-height: $panel-max-height;
+
+	display: flex;
+	flex-direction: column;
+
+	background-color: var(--color-main-background);
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-large);
+	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+
+	&--maximized {
+		top: calc(var(--header-height, 44px) + var(--default-grid-baseline));
+		height: auto;
+	}
+
+	&--with-recipient {
+		width: calc(#{$composer-width} + #{$recipient-pane-width});
+	}
+
+	@media (max-width: #{$composer-width}) {
+		inset-inline-end: 0;
+		inset-inline-start: 0;
+		bottom: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		max-height: 100%;
+		border-radius: 0;
 	}
 }
 
-:deep(.modal-wrapper .modal-container) {
-	overflow-y: auto !important;
-	overflow-x: auto !important;
-	// from original Modal max-height
-	height: 90%;
-	// Max editor + modal height
-	max-height: 700px !important;
-}
-
-.minimize-button {
-	float: inline-end;
-	position: absolute;
-	top: 4px;
-	inset-inline-end: 63px;
-}
-
-.maximize-button {
-	float: inline-end;
-	position: absolute;
-	top: 4px;
-	inset-inline-end: 33px;
-
-}
-
-.empty-content{
-	height: 100%;
-	display: flex;
-}
-
-.modal-content {
-	display: flex;
-	height: 100%;
-	flex-direction: row;
-	width: 100%;
-}
-
-.left-pane {
-	flex: 1;
+.recipient-pane {
+	flex: 0 0 $recipient-pane-width;
 	overflow-y: auto;
-}
+	position: relative;
+	border-inline-end: 1px solid var(--color-border);
+	padding: calc(var(--default-grid-baseline) * 2);
+	padding-top: calc(var(--default-grid-baseline) * 6);
 
-.right-pane {
-	flex: 0 0 370px;
-	overflow-y: auto;
-	padding-inline-start: 5px;
-	border-inline-start: 1px solid var(--color-border);
-	@media (max-width: #{variables.$breakpoint-mobile}) {
+	@media (max-width: #{$composer-width}) {
 		display: none;
 	}
 }
 
-.modal-content.with-recipient .left-pane {
-	flex: 1;
+.recipient-pane__close {
+	position: absolute;
+	top: var(--default-grid-baseline);
+	inset-inline-end: var(--default-grid-baseline);
 }
 
-.modal-content .left-pane {
-	width: 100%;
+.floating-composer__header {
+	position: relative;
+	z-index: 101;
+	display: flex;
+	align-items: center;
+	height: $header-height;
+	flex-shrink: 0;
+	padding: 0 calc(var(--default-grid-baseline) * 2);
+	border-bottom: 1px solid var(--color-border);
+	border-radius: var(--border-radius-large) var(--border-radius-large) 0 0;
+	background-color: var(--color-main-background);
+	cursor: default;
+	user-select: none;
+}
+
+.floating-composer__title {
+	flex: 1;
+	margin: 0;
+	font-size: var(--default-font-size);
+	font-weight: bold;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.floating-composer__actions {
+	display: flex;
+	flex-shrink: 0;
+	gap: 0;
+}
+
+.floating-composer__content {
+	display: flex;
+	flex-direction: row;
+	flex: 1;
+	min-height: 0;
+	overflow: hidden;
+}
+
+.floating-composer__body {
+	flex: 1;
+	overflow-y: auto;
+	min-height: 0;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.empty-content {
+	height: 100%;
+	display: flex;
 }
 </style>
