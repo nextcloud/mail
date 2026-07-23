@@ -21,13 +21,13 @@ use OCP\AppFramework\Db\Entity;
  */
 class ImipData extends Entity {
 	/** @var int */
-	protected int $imipMessageId;
+	protected $imipMessageId;
 
 	/** @var bool */
-	protected bool $error;
+	protected $error;
 
 	/** @var int|null */
-	protected ?int $processedAt = null;
+	protected $processedAt;
 
 	public function __construct() {
 		$this->addType('imipMessageId', 'integer');
