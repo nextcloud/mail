@@ -371,7 +371,7 @@ export default {
 			const idx = envelopes.indexOf(env)
 			let next
 
-			if (e.srcKey !== 'refresh' && !env) {
+			if (!env) {
 				logger.debug('envelope is not in the list, ignoring shortcut', {
 					srcKey: e.srcKey,
 				})
@@ -387,7 +387,7 @@ export default {
 						next = envelopes[idx - 1]
 					}
 
-					if (!next) {
+					if (!next || next.databaseId === currentId) {
 						logger.debug('ignoring shortcut: head or tail of envelope list reached', {
 							envelopes,
 							idx,
@@ -407,6 +407,7 @@ export default {
 						},
 					})
 					break
+				case 'backspace':
 				case 'del':
 					if (!this.hasDeleteAcl()) {
 						return
@@ -480,13 +481,12 @@ export default {
 						error,
 					}))
 					break
-				case 'refresh':
-					logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.searchQuery}) per shortcut`)
-					this.sync(false)
-
-					break
 				case 'unseen':
 					logger.debug('marking as seen/unseen via shortcut')
+
+					if (!env.flags) {
+						break
+					}
 
 					if (!this.hasSeenAcl()) {
 						showWarning(t('mail', 'Your IMAP server does not support storing the seen/unseen state.'))
