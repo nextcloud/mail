@@ -5,9 +5,11 @@
 <template>
 	<Modal
 		v-if="showMessageComposer"
+		:class="{ 'composer-fly-up': flying, 'composer-fly-in': composerFlyIn }"
 		:size="modalSize"
 		:name="modalTitle"
 		:additional-trap-elements="additionalTrapElements"
+		@animationend.native="onComposerAnimationEnd"
 		@close="$event.type === 'click' ? onClose() : onMinimize()">
 		<div class="modal-content">
 			<div class="left-pane">
@@ -146,6 +148,9 @@ import useOutboxStore from '../store/outboxStore.js'
 import { messageBodyToTextInstance } from '../util/message.js'
 import { toPlain } from '../util/text.js'
 
+// Duration of the "fly up" send animation, matches var(--animation-slow) (300ms)
+const SEND_ANIMATION_DURATION = 300
+
 export default {
 	name: 'NewMessageModal',
 	components: {
@@ -182,6 +187,7 @@ export default {
 			draftSaved: false,
 			uploadingAttachments: false,
 			sending: false,
+			flying: false,
 			error: undefined,
 			warning: undefined,
 			modalFirstOpen: true,
@@ -200,7 +206,7 @@ export default {
 
 	computed: {
 		...mapStores(useOutboxStore, useMainStore),
-		...mapState(useMainStore, ['showMessageComposer']),
+		...mapState(useMainStore, ['showMessageComposer', 'composerFlyIn']),
 		...mapActions(useMainStore, ['getPreference']),
 		composerDataBodyAsTextInstance() {
 			return messageBodyToTextInstance(this.composerData)
@@ -279,6 +285,37 @@ export default {
 	methods: {
 		checkScreenSize() {
 			this.isLargeScreen = window.innerWidth >= 1024
+		},
+
+		// Clear the fly-in flag once its animation has finished, so it only plays for the
+		// "Undo send" reopen and not on the next normal open
+		onComposerAnimationEnd(event) {
+			if (String(event.animationName).includes('composer-fly-in')) {
+				this.mainStore.composerFlyIn = false
+			}
+		},
+
+		// Trigger the fly-up animation and resolve once it has finished. Returns null when
+		// reduced motion is preferred. Called early in onSend so it plays immediately.
+		playSendAnimation() {
+			if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) {
+				return null
+			}
+			this.flying = true
+			return this.$nextTick().then(() => new Promise((resolve) => {
+				const container = this.$el?.querySelector?.('.modal-container')
+				let done = false
+				const finish = () => {
+					if (done) {
+						return
+					}
+					done = true
+					resolve()
+				}
+				container?.addEventListener('animationend', finish, { once: true })
+				// Fallback so sending never hangs if the animation doesn't fire
+				setTimeout(finish, SEND_ANIMATION_DURATION + 100)
+			}))
 		},
 
 		async openModalSize() {
@@ -461,6 +498,10 @@ export default {
 					}
 				}
 
+				// Start the fly-up animation right away so it feels immediate, overlapping the
+				// draft save / outbox enqueue below instead of waiting for those network calls
+				const flyUp = this.playSendAnimation()
+
 				if (!this.composerData.id) {
 					// This is a new message
 					const { id } = await saveDraft(dataForServer)
@@ -486,6 +527,10 @@ export default {
 					})
 				}
 
+				// Ensure the fly-up animation has finished before the composer is unmounted
+				if (flyUp) {
+					await flyUp
+				}
 				if (!data.sendAt || data.sendAt < Math.floor((now + UNDO_DELAY) / 1000)) {
 					// Awaiting here would keep the modal open for a long time and thus block the user
 					this.outboxStore.sendMessageWithUndo({ id: dataForServer.id }).catch((error) => {
@@ -526,6 +571,7 @@ export default {
 				})
 			} finally {
 				this.sending = false
+				this.flying = false
 			}
 
 			// Sync sent mailbox when it's currently open
@@ -649,6 +695,56 @@ export default {
 
 <style lang="scss" scoped>
 @use '../../css/variables.scss';
+
+// Apple Mail style "whoosh": tiny anticipation dip, then the composer shoots up out of view
+@keyframes composer-fly-up {
+	0% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+	15% {
+		transform: translateY(calc(var(--default-grid-baseline) * 2));
+	}
+	100% {
+		transform: translateY(-100vh);
+		opacity: 0;
+	}
+}
+
+// Fade the dark backdrop out together with the modal instead of letting it vanish instantly
+@keyframes composer-backdrop-fade-out {
+	to {
+		opacity: 0;
+	}
+}
+
+.composer-fly-up :deep(.modal-container) {
+	animation: composer-fly-up var(--animation-slow) ease-in forwards;
+}
+
+.modal-mask.composer-fly-up {
+	animation: composer-backdrop-fade-out var(--animation-slow) ease-in forwards;
+}
+
+// Reverse of the send animation: the composer drops in from the top with a tiny overshoot
+// (the backdrop fades back in through NcModal's own transition)
+@keyframes composer-fly-in {
+	0% {
+		transform: translateY(-100vh);
+		opacity: 0;
+	}
+	85% {
+		transform: translateY(calc(var(--default-grid-baseline) * 2));
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(0);
+	}
+}
+
+.composer-fly-in :deep(.modal-container) {
+	animation: composer-fly-in var(--animation-slow) ease-out;
+}
 
 @media only screen and (max-width: 600px) {
 	:deep(.modal-container) {
