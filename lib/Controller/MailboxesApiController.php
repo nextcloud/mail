@@ -69,8 +69,6 @@ class MailboxesApiController extends OCSController {
 		return new DataResponse($mailboxes, Http::STATUS_OK);
 	}
 
-
-
 	/**
 	 * List the newest messages in a mailbox of the user which is currently logged-in
 	 *

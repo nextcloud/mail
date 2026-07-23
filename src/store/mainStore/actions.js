@@ -265,7 +265,8 @@ export default function mainStoreActions() {
 			return handleHttpAuthErrors(async () => {
 				const account = await updateAccount(config)
 				logger.debug('account updated', { account })
-				this.editAccountMutation(account)
+				this.editAccountMutation({ ...account, error: false })
+				await this.syncMailboxesForAccount(this.accountsUnmapped[account.id])
 				return account
 			})
 		},
@@ -521,8 +522,19 @@ export default function mainStoreActions() {
 
 					if (reply.mode === 'reply') {
 						logger.debug('Show simple reply composer', { reply })
-						let to = original.replyTo !== undefined ? original.replyTo : reply.data.from
-						if (reply.followUp) {
+						const account = this.getAccount(reply.data.accountId)
+						// For mailing list emails, "Reply to sender" must use From because
+						// Reply-To points to the list address, not the original sender.
+						// For regular emails, honor Reply-To if the sender set one.
+						const isMailingList = !!(original.unsubscribeUrl || original.unsubscribeMailto)
+						let to = (!isMailingList && original.replyTo !== undefined)
+							? original.replyTo
+							: reply.data.from
+						// Replying to a message we sent ourselves: follow up with the
+						// original recipient(s) instead of addressing ourselves.
+						const isOwnMessage = to.length > 0
+							&& to.every((addr) => addr.email === account.emailAddress)
+						if (reply.followUp || isOwnMessage) {
 							to = reply.data.to
 						}
 						this.startComposerSessionMutation({
@@ -2357,8 +2369,11 @@ export default function mainStoreActions() {
 		hasCurrentUserPrincipalAndCollectionsMutation(hasCurrentUserPrincipalAndCollections) {
 			this.hasCurrentUserPrincipalAndCollections = hasCurrentUserPrincipalAndCollections
 		},
-		showSettingsForAccountMutation(accountId) {
-			this.showAccountSettings = accountId
+		showSettingsForAccountMutation(accountId, section) {
+			this.showAccountSettings = {
+				accountId,
+				section,
+			}
 		},
 		setMyTextBlocks(textBlocks) {
 			this.myTextBlocks = textBlocks
@@ -2500,7 +2515,13 @@ export default function mainStoreActions() {
 			return this.findMailboxBySpecialRole(accountId, 'inbox')
 		},
 		showSettingsForAccount(accountId) {
-			return this.showAccountSettings === accountId
+			return this.showAccountSettings?.accountId === accountId
+		},
+		showSettingsSectionForAccount(accountId) {
+			if (this.showAccountSettings?.accountId !== accountId) {
+				return undefined
+			}
+			return this.showAccountSettings.section
 		},
 		getMyTextBlocks() {
 			return this.myTextBlocks

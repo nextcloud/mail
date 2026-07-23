@@ -161,7 +161,7 @@ class MailboxesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId changed mailbox: id 's name to renamed  on behalf of $this->userId");
+			->with($this->userId, $this->userId, "$this->userId changed mailbox: {$mailboxId}'s name to renamed on behalf of $this->userId");
 
 		$response = $this->controller->patch($mailboxId, 'renamed');
 

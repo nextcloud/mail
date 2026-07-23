@@ -27,20 +27,20 @@ class GoogleIntegration {
 	private ICrypto $crypto;
 	private IClientService $clientService;
 	private IURLGenerator $urlGenerator;
-	private LoggerInterface $logger;
 
-	public function __construct(ITimeFactory $timeFactory,
+	public function __construct(
+		ITimeFactory $timeFactory,
 		IConfig $config,
 		ICrypto $crypto,
 		IClientService $clientService,
 		IURLGenerator $urlGenerator,
-		LoggerInterface $logger) {
+		private LoggerInterface $logger,
+	) {
 		$this->timeFactory = $timeFactory;
 		$this->clientService = $clientService;
 		$this->crypto = $crypto;
 		$this->config = $config;
 		$this->urlGenerator = $urlGenerator;
-		$this->logger = $logger;
 	}
 
 	public function configure(string $clientId, string $clientSecret): void {

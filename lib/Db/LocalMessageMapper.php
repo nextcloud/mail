@@ -22,18 +22,12 @@ use function array_merge;
  * @template-extends QBMapper<LocalMessage>
  */
 class LocalMessageMapper extends QBMapper {
-	/** @var LocalAttachmentMapper */
-	private $attachmentMapper;
-
-	/** @var RecipientMapper */
-	private $recipientMapper;
-
-	public function __construct(IDBConnection $db,
-		LocalAttachmentMapper $attachmentMapper,
-		RecipientMapper $recipientMapper) {
+	public function __construct(
+		IDBConnection $db,
+		private LocalAttachmentMapper $attachmentMapper,
+		private RecipientMapper $recipientMapper,
+	) {
 		parent::__construct($db, 'mail_local_messages');
-		$this->recipientMapper = $recipientMapper;
-		$this->attachmentMapper = $attachmentMapper;
 	}
 
 	/**
@@ -70,11 +64,19 @@ class LocalMessageMapper extends QBMapper {
 
 		$recipientMap = [];
 		foreach ($recipients as $r) {
-			$recipientMap[$r->getLocalMessageId()][] = $r;
+			$localMessageId = $r->getLocalMessageId();
+			if ($localMessageId === null) {
+				continue;
+			}
+			$recipientMap[$localMessageId][] = $r;
 		}
 		$attachmentMap = [];
 		foreach ($attachments as $a) {
-			$attachmentMap[$a->getLocalMessageId()][] = $a;
+			$localMessageId = $a->getLocalMessageId();
+			if ($localMessageId === null) {
+				continue;
+			}
+			$attachmentMap[$localMessageId][] = $a;
 		}
 
 		return array_map(static function ($localMessage) use ($attachmentMap, $recipientMap) {
@@ -147,11 +149,19 @@ class LocalMessageMapper extends QBMapper {
 
 		$recipientMap = [];
 		foreach ($recipients as $r) {
-			$recipientMap[$r->getLocalMessageId()][] = $r;
+			$localMessageId = $r->getLocalMessageId();
+			if ($localMessageId === null) {
+				continue;
+			}
+			$recipientMap[$localMessageId][] = $r;
 		}
 		$attachmentMap = [];
 		foreach ($attachments as $a) {
-			$attachmentMap[$a->getLocalMessageId()][] = $a;
+			$localMessageId = $a->getLocalMessageId();
+			if ($localMessageId === null) {
+				continue;
+			}
+			$attachmentMap[$localMessageId][] = $a;
 		}
 
 		return array_map(static function ($localMessage) use ($attachmentMap, $recipientMap) {
@@ -196,11 +206,19 @@ class LocalMessageMapper extends QBMapper {
 
 		$recipientMap = [];
 		foreach ($recipients as $r) {
-			$recipientMap[$r->getLocalMessageId()][] = $r;
+			$localMessageId = $r->getLocalMessageId();
+			if ($localMessageId === null) {
+				continue;
+			}
+			$recipientMap[$localMessageId][] = $r;
 		}
 		$attachmentMap = [];
 		foreach ($attachments as $a) {
-			$attachmentMap[$a->getLocalMessageId()][] = $a;
+			$localMessageId = $a->getLocalMessageId();
+			if ($localMessageId === null) {
+				continue;
+			}
+			$attachmentMap[$localMessageId][] = $a;
 		}
 
 		return array_map(static function ($localMessage) use ($attachmentMap, $recipientMap) {
@@ -245,7 +263,7 @@ class LocalMessageMapper extends QBMapper {
 		try {
 			$message = $this->update($message);
 
-			$this->recipientMapper->updateRecipients($message->getId(), $message->getRecipients(), $to, $cc, $bcc);
+			$this->recipientMapper->updateRecipients($message->getId(), $message->getRecipients() ?? [], $to, $cc, $bcc);
 			$recipients = $this->recipientMapper->findByLocalMessageId($message->getId());
 			$message->setRecipients($recipients);
 			$this->db->commit();

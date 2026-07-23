@@ -31,7 +31,6 @@ class SieveControllerTest extends TestCase {
 
 	private string $userId = 'testUser';
 
-
 	protected function setUp(): void {
 		parent::setUp();
 

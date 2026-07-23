@@ -231,7 +231,6 @@ class SnoozeService {
 		}
 	}
 
-
 	/**
 	 * Adds a DB entry for the message with a wake timestamp
 	 *

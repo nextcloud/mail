@@ -50,21 +50,12 @@ use function OCA\Mail\chunk_uid_sequence;
 use function sprintf;
 
 class MessageMapper {
-	/** @var LoggerInterface */
-	private $logger;
-
-	private SMimeService $smimeService;
-	private ImapMessageFetcherFactory $imapMessageFactory;
-
 	public function __construct(
-		LoggerInterface $logger,
-		SmimeService $smimeService,
-		ImapMessageFetcherFactory $imapMessageFactory,
+		private LoggerInterface $logger,
+		private SMimeService $smimeService,
+		private ImapMessageFetcherFactory $imapMessageFactory,
 		private Converter $converter,
 	) {
-		$this->logger = $logger;
-		$this->smimeService = $smimeService;
-		$this->imapMessageFactory = $imapMessageFactory;
 	}
 
 	/**
@@ -160,7 +151,7 @@ class MessageMapper {
 		// Here we assume somewhat equally distributed UIDs
 		// +1 is added to fetch all messages with the rare case of strictly
 		// continuous UIDs and fractions
-		$estimatedPageSize = (int)((float)($totalRange / $total) * $maxResults) + 1;
+		$estimatedPageSize = (int)((float)($totalRange / $total) * (float)$maxResults) + 1;
 		// Determine min UID to fetch, but don't exceed the known maximum
 		$lower = max(
 			$min,
@@ -187,7 +178,7 @@ class MessageMapper {
 		while ($actualPageSize > $maxResults) {
 			$logger->debug("Range for findAll matches too many messages: min=$min max=$max total=$total estimatedPageSize=$estimatedPageSize actualPageSize=$actualPageSize");
 
-			$estimatedPageSize = (int)($estimatedPageSize / 2.0);
+			$estimatedPageSize = (int)((float)$estimatedPageSize / 2.0);
 
 			$upper = min(
 				$max,
@@ -985,7 +976,6 @@ class MessageMapper {
 				$structure->setContents($bodyContent);
 				return $this->converter->convert($structure);
 			};
-
 
 			$htmlBody = ($htmlBodyId !== null) ? $part->getBodyPart($htmlBodyId) : null;
 			if (!empty($htmlBody)) {

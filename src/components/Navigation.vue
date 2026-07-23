@@ -33,8 +33,11 @@
 					<IconAlertTriangle
 						:size="18"
 						:title="t('mail', 'This account cannot connect')" />
-					<span>
+					<span @click="showAccountSettings(group.account.id, 'mail-server')">
 						{{ t('mail', 'Connection failed. Please verify your information and try again') }}
+						<NcButton
+							:aria-label="t('mail', 'Change password')"
+							variant="tertiary">{{ t('mail', 'Change password') }}</NcButton>
 					</span>
 				</div>
 				<template v-else-if="!isDisabled(group.account)">
@@ -83,7 +86,7 @@
 </template>
 
 <script>
-import { NcAppNavigation as AppNavigation, NcAppNavigationItem as AppNavigationItem } from '@nextcloud/vue'
+import { NcAppNavigation as AppNavigation, NcAppNavigationItem as AppNavigationItem, NcButton } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import IconAlertTriangle from 'vue-material-design-icons/AlertOutline.vue'
 import IconSetting from 'vue-material-design-icons/CogOutline.vue'
@@ -106,6 +109,7 @@ export default {
 		NavigationAccountExpandCollapse,
 		NavigationMailbox,
 		NavigationOutbox,
+		NcButton,
 		NewMessageButtonHeader,
 		IconSetting,
 		AppNavigationItem,
@@ -163,6 +167,10 @@ export default {
 	methods: {
 		showMailSettings() {
 			this.showSettings = true
+		},
+
+		showAccountSettings(accountId, section) {
+			this.mainStore.showSettingsForAccountMutation(accountId, section)
 		},
 
 		isCollapsed(account, mailbox) {

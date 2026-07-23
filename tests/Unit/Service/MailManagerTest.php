@@ -73,8 +73,6 @@ class MailManagerTest extends TestCase {
 	/** @var ThreadMapper|MockObject */
 	private $threadMapper;
 
-
-
 	protected function setUp(): void {
 		parent::setUp();
 

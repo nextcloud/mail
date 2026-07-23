@@ -17,15 +17,10 @@ use OCA\Mail\Exception\ClientException;
 use OCP\AppFramework\Db\DoesNotExistException;
 
 class AliasesService {
-	/** @var AliasMapper */
-	private $aliasMapper;
-
-	/** @var MailAccountMapper */
-	private $mailAccountMapper;
-
-	public function __construct(AliasMapper $aliasMapper, MailAccountMapper $mailAccountMapper) {
-		$this->aliasMapper = $aliasMapper;
-		$this->mailAccountMapper = $mailAccountMapper;
+	public function __construct(
+		private AliasMapper $aliasMapper,
+		private MailAccountMapper $mailAccountMapper,
+	) {
 	}
 
 	/**

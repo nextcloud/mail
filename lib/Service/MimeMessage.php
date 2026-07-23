@@ -19,10 +19,9 @@ use OCA\Mail\Html\Parser;
 use OCA\Mail\Service\DataUri\DataUriParser;
 
 class MimeMessage {
-	private DataUriParser $uriParser;
-
-	public function __construct(DataUriParser $uriParser) {
-		$this->uriParser = $uriParser;
+	public function __construct(
+		private DataUriParser $uriParser,
+	) {
 	}
 
 	/**
@@ -237,7 +236,6 @@ class MimeMessage {
 		$basePart[] = $contentPart;
 
 		return $basePart;
-
 	}
 
 	/**

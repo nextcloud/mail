@@ -111,7 +111,7 @@
 				</template>
 			</ActionButton>
 			<ActionButton
-				v-if="!editing && !account.isUnified && hasDelimiter && mailbox.specialRole !== 'flagged' && hasSubmailboxActionAcl"
+				v-if="subfolderLabel && !account.isUnified && hasDelimiter && mailbox.specialRole !== 'flagged' && hasSubmailboxActionAcl"
 				@click="openCreateMailbox">
 				<template #icon>
 					<IconAdd :size="20" />
@@ -119,13 +119,19 @@
 				{{ t('mail', 'Add subfolder') }}
 			</ActionButton>
 			<ActionInput
-				v-if="editing"
+				v-if="subfolderInput"
 				:value.sync="createMailboxName"
 				@submit.prevent.stop="createMailbox">
 				<template #icon>
 					<IconAdd :size="20" />
 				</template>
 			</ActionInput>
+			<ActionText v-if="subfolderSaving">
+				<template #icon>
+					<IconLoading :size="20" />
+				</template>
+				{{ t('mail', 'Saving') }}
+			</ActionText>
 			<ActionButton
 				v-if="renameLabel && !hasSubMailboxes && !account.isUnified && hasRenameAcl"
 				@click.prevent.stop="openRenameInput">
@@ -144,7 +150,7 @@
 						:size="20" />
 				</template>
 			</ActionInput>
-			<ActionText v-if="showSaving">
+			<ActionText v-if="renameSaving">
 				<template #icon>
 					<IconLoading :size="20" />
 				</template>
@@ -353,14 +359,17 @@ export default {
 			mailboxStats: undefined,
 			loadingMarkAsRead: false,
 			clearingCache: false,
-			showSaving: false,
 			changeSubscription: false,
 			changingSyncInBackground: false,
-			editing: false,
+			subfolderLabel: true,
+			subfolderInput: false,
+			subfolderSaving: false,
 			showSubMailboxes: false,
+			wasExpandedBeforeDrag: false,
 			menuOpen: false,
 			renameLabel: true,
 			renameInput: false,
+			renameSaving: false,
 			mailboxName: this.mailbox.displayName,
 			showMoveModal: false,
 			hasDelimiter: !!this.mailbox.delimiter,
@@ -517,7 +526,7 @@ export default {
 		dragEventBus.on('envelopes-moved', this.onEnvelopesMoved)
 	},
 
-	beforeUnmount() {
+	beforeDestroy() {
 		dragEventBus.off('drag-start', this.onDragStart)
 		dragEventBus.off('drag-end', this.onDragEnd)
 		dragEventBus.off('envelopes-moved', this.onEnvelopesMoved)
@@ -542,6 +551,16 @@ export default {
 		onMenuToggle(open) {
 			if (open) {
 				this.fetchMailboxStats()
+			} else {
+				if (!this.renameSaving) {
+					this.renameLabel = true
+					this.renameInput = false
+				}
+
+				if (!this.subfolderSaving) {
+					this.subfolderLabel = true
+					this.subfolderInput = false
+				}
 			}
 		},
 
@@ -565,11 +584,12 @@ export default {
 		},
 
 		async createMailbox(e) {
-			this.editing = true
+			this.subfolderInput = false
+			this.subfolderSaving = true
 			const name = this.createMailboxName
 			const withPrefix = this.mailbox.name + this.mailbox.delimiter + name
 			logger.info(`creating mailbox ${withPrefix} as submailbox of ${this.mailbox.databaseId}`)
-			this.menuOpen = false
+
 			try {
 				await this.mainStore.createMailbox({
 					account: this.account,
@@ -579,16 +599,20 @@ export default {
 				logger.error(`could not create mailbox ${withPrefix}`, { error })
 				throw error
 			} finally {
-				this.editing = false
-				this.showSaving = false
+				this.menuOpen = false
+				this.subfolderLabel = true
+				this.subfolderSaving = false
 			}
+
 			logger.info(`mailbox ${withPrefix} created`)
 			this.showSubMailboxes = true
 		},
 
 		openCreateMailbox() {
-			this.editing = true
-			this.showSaving = false
+			this.subfolderLabel = false
+			this.createMailboxName = ''
+			this.subfolderInput = true
+			this.subfolderSaving = false
 		},
 
 		markAsRead() {
@@ -711,7 +735,7 @@ export default {
 
 		async renameMailbox() {
 			this.renameInput = false
-			this.showSaving = true
+			this.renameSaving = true
 
 			try {
 				let newName = this.mailboxName
@@ -723,21 +747,21 @@ export default {
 					mailbox: this.mailbox,
 					newName,
 				})
-				this.renameLabel = true
-				this.renameInput = false
 			} catch (error) {
 				showInfo(t('mail', 'An error occurred, unable to rename the mailbox.'))
 				logger.error('could not rename mailbox', { error })
 			} finally {
-				this.showSaving = false
+				this.renameSaving = false
+				this.renameLabel = true
 			}
 		},
 
 		openRenameInput() {
 			// Hide label and show input
 			this.renameLabel = false
+			this.mailboxName = this.mailbox.displayName
 			this.renameInput = true
-			this.showSaving = false
+			this.renameSaving = false
 		},
 
 		onOpenMoveModal() {
@@ -752,6 +776,7 @@ export default {
 			if (accountId !== this.mailbox.accountId) {
 				return
 			}
+			this.wasExpandedBeforeDrag = this.showSubMailboxes
 			this.mainStore.expandAccountMutation(accountId)
 			this.showSubMailboxes = true
 		},
@@ -760,7 +785,7 @@ export default {
 			if (accountId !== this.mailbox.accountId) {
 				return
 			}
-			this.showSubMailboxes = false
+			this.showSubMailboxes = this.wasExpandedBeforeDrag
 		},
 
 		onEnvelopesMoved({ mailboxId, movedEnvelopes }) {
@@ -810,6 +835,7 @@ export default {
 				// Handle rate limit: 429 Too Many Requests
 				// Ref https://axios-http.com/docs/handling_errors
 				if (error.response?.status === 429) {
+					logger.error('mailbox repair rate-limited', { error })
 					showError(t('mail', 'Please wait 10 minutes before repairing again'))
 				} else {
 					throw error

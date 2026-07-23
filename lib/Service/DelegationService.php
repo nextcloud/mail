@@ -61,8 +61,16 @@ class DelegationService {
 		return $result;
 	}
 
+	public function deleteByUserId(string $userId): void {
+		$this->delegationMapper->deleteByUserId($userId);
+	}
+
 	public function findDelegatedToUsersForAccount(int $accountId): array {
-		return $this->delegationMapper->findDelegatedToUsers($accountId);
+		return array_map(function (Delegation $delegation) {
+			$displayName = $this->userManager->get($delegation->getUserId())?->getDisplayName();
+			$delegation->setDisplayName($displayName);
+			return $delegation;
+		}, $this->delegationMapper->findDelegatedToUsers($accountId));
 	}
 
 	public function unDelegate(Account $account, string $userId, string $currentUserId): void {
@@ -131,7 +139,6 @@ class DelegationService {
 		return $this->resolveAccountUserId($accountId, $currentUserId);
 	}
 
-
 	public function logDelegatedAction(string $currentUserId, string $effectiveUserId, string $logMessage): void {
 		if ($currentUserId === $effectiveUserId) {
 			return;
@@ -158,7 +165,6 @@ class DelegationService {
 			->setSubject('account_delegation', [
 				'id' => $account->getId(),
 				'account_email' => $account->getEmail(),
-
 			])
 			->setDateTime($time)
 			->setMessage('account_delegation_changed', [

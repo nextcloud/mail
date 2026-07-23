@@ -26,25 +26,16 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class OutboxController extends Controller {
-	private OutboxService $service;
-	private string $userId;
-	private AccountService $accountService;
-	private SmimeService $smimeService;
-	private DelegationService $delegationService;
-
-	public function __construct(string $appName,
-		$userId,
+	public function __construct(
+		string $appName,
+		private string $userId,
 		IRequest $request,
-		OutboxService $service,
-		AccountService $accountService,
-		SmimeService $smimeService,
-		DelegationService $delegationService) {
+		private OutboxService $service,
+		private AccountService $accountService,
+		private SmimeService $smimeService,
+		private DelegationService $delegationService,
+	) {
 		parent::__construct($appName, $request);
-		$this->userId = $userId;
-		$this->service = $service;
-		$this->accountService = $accountService;
-		$this->smimeService = $smimeService;
-		$this->delegationService = $delegationService;
 	}
 
 	/**
@@ -177,7 +168,6 @@ class OutboxController extends Controller {
 	 * @param string $body
 	 * @param string $editorBody
 	 * @param bool $isHtml
-	 * @param bool $failed
 	 * @param array $to i. e. [['label' => 'Linus', 'email' => 'tent@stardewvalley.com'], ['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']]
 	 * @param array $cc
 	 * @param array $bcc
@@ -198,7 +188,6 @@ class OutboxController extends Controller {
 		bool $isHtml,
 		bool $smimeSign,
 		bool $smimeEncrypt,
-		bool $failed = false,
 		array $to = [],
 		array $cc = [],
 		array $bcc = [],
@@ -230,6 +219,10 @@ class OutboxController extends Controller {
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
 		$message->setRequestMdn($requestMdn);
+
+		// Reset the status to make it retryable.
+		$message->setFailed(false);
+		$message->setStatus(LocalMessage::STATUS_RAW);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $effectiveUserId);

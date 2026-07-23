@@ -5,6 +5,7 @@ declare(strict_types=1);
  * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\Contracts\IDkimService;
@@ -49,11 +50,9 @@ use function array_merge;
  */
 class MessageApiController extends OCSController {
 
-	private ?string $userId;
-
 	public function __construct(
 		string $appName,
-		?string $userId,
+		private ?string $userId,
 		IRequest $request,
 		private AccountService $accountService,
 		private AliasesService $aliasesService,
@@ -70,7 +69,6 @@ class MessageApiController extends OCSController {
 		private DelegationService $delegationService,
 	) {
 		parent::__construct($appName, $request);
-		$this->userId = $userId;
 	}
 
 	/**
@@ -142,7 +140,6 @@ class MessageApiController extends OCSController {
 		if (empty($to)) {
 			return new DataResponse('Recipients cannot be empty.', Http::STATUS_BAD_REQUEST);
 		}
-
 
 		try {
 			$messageAttachments = $this->handleAttachments();
@@ -455,8 +452,7 @@ class MessageApiController extends OCSController {
 	 */
 	private function handleAttachments(): array {
 		$fileAttachments = $this->request->getUploadedFile('attachments');
-		$hasAttachments = isset($fileAttachments['name']);
-		if (!$hasAttachments) {
+		if (!isset($fileAttachments['name'])) {
 			return [];
 		}
 

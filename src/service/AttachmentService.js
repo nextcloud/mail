@@ -29,7 +29,7 @@ export function downloadAttachment(url) {
 	return Axios.get(url).then((res) => res.data)
 }
 
-export function uploadLocalAttachment(file, progress, controller) {
+export function uploadLocalAttachment(file, accountId, progress, controller) {
 	const url = generateUrl('/apps/mail/api/attachments')
 	const data = new FormData()
 	const opts = {
@@ -39,6 +39,10 @@ export function uploadLocalAttachment(file, progress, controller) {
 		opts.signal = controller.signal
 	}
 	data.append('attachment', file)
+
+	if (accountId) {
+		data.append('accountId', accountId)
+	}
 
 	return Axios.post(url, data, opts)
 		.then((resp) => resp.data)

@@ -108,7 +108,6 @@ class SubmitContentJob extends TimedJob {
 			return;
 		}
 
-
 		$client = $this->clientFactory->getClient($account);
 		$items = [];
 
@@ -128,15 +127,12 @@ class SubmitContentJob extends TimedJob {
 					continue;
 				}
 
-
 				// Skip encrypted messages
 				if ($imapMessage->isEncrypted()) {
 					continue;
 				}
 
-
 				$fullMessage = $imapMessage->getFullMessage($imapMessage->getUid(), true);
-
 
 				$items[] = new ContentItem(
 					"{$mailbox->getId()}:{$message->getId()}",

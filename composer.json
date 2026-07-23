@@ -6,7 +6,8 @@
 		"sort-packages": true,
 		"allow-plugins": {
 			"bamarni/composer-bin-plugin": true,
-			"cweagans/composer-patches": true
+			"cweagans/composer-patches": true,
+			"php-http/discovery": true
 		},
 		"optimize-autoloader": true,
 		"autoloader-suffix": "Mail"
@@ -40,9 +41,9 @@
 		"nextcloud/kitinerary-flatpak": "^1.0",
 		"nextcloud/kitinerary-sys": "^2.0.0",
 		"phpmailer/dkimvalidator": "^0.3.1",
-		"psr/log": "^3.0.2",
 		"rubix/ml": "2.5.3",
-		"sabberworm/php-css-parser": "^9.3.0",
+		"sabberworm/php-css-parser": "^9.4.0",
+		"sebastiankrupinski/jmap-client-php": "^2.0.0",
 		"wamania/php-stemmer": "4.0 as 3.0",
 		"youthweb/urllinker": "^2.1.0"
 	},
@@ -64,7 +65,12 @@
 	"scripts": {
 		"cs:check": "php-cs-fixer fix --dry-run --diff",
 		"cs:fix": "php-cs-fixer fix",
-		"lint": "find . -name \\*.php -not -path './vendor*/*' -not -path './tests/stubs/*' -print0 | xargs -0 -n1 php -l",
+		"lint": [
+			"@lint-8.2-or-earlier",
+			"@lint-8.3-or-later"
+		],
+		"lint-8.2-or-earlier": "[ $(php -r \"echo PHP_VERSION_ID;\") -ge 80300 ] || find . -type f -name '*.php' -not -path './vendor/*' -not -path './vendor-bin/*' -not -path './tests/stubs/*' -print0 | xargs -0 -n1 -P$(nproc) php -l",
+		"lint-8.3-or-later": "[ $(php -r \"echo PHP_VERSION_ID;\") -lt 80300 ] || find . -type f -name '*.php' -not -path './vendor/*' -not -path './vendor-bin/*' -not -path './tests/stubs/*' -print0 | xargs -0 -n200 -P$(nproc) php -l",
 		"psalm": "psalm.phar",
 		"psalm:fix": "psalm.phar --alter --issues=InvalidReturnType,InvalidNullableReturnType,MismatchingDocblockParamType,MismatchingDocblockReturnType,MissingParamType,InvalidFalsableReturnType",
 		"post-install-cmd": [

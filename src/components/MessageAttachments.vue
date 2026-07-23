@@ -23,19 +23,26 @@
 					@open="showViewer(fileInfos[idx])" />
 			</div>
 		</div>
-		<div
+
+		<NcButton
 			v-if="hasNextLine"
-			class="show-more-attachments"
+			variant="tertiary"
+			size="small"
+			:disabled="savingToCloud"
+			class="attachment-button"
 			@click="isToggled = !isToggled">
-			<ChevronDown v-if="isToggled" :size="20" />
-			<ChevronUp v-if="!isToggled" :size="20" />
+			<template #icon>
+				<ChevronDown v-if="isToggled" />
+				<ChevronUp v-if="!isToggled" />
+			</template>
 			<span v-if="isToggled">
 				{{ n('mail', 'View {count} more attachment', 'View {count} more attachments', (attachments.length - visible), { count: attachments.length - visible }) }}
 			</span>
 			<span v-else>
 				{{ t('mail', 'View fewer attachments') }}
 			</span>
-		</div>
+		</NcButton>
+
 		<p v-if="moreThanOne" class="attachments-button-wrapper">
 			<FilePicker
 				v-if="isFilePickerOpen"
@@ -45,20 +52,30 @@
 				:multiselect="false"
 				:mimetype-filter="['httpd/unix-directory']"
 				@close="() => isFilePickerOpen = false" />
-			<span
-				class="attachment-link"
+
+			<NcButton
+				variant="tertiary"
+				size="small"
 				:disabled="savingToCloud"
+				class="attachment-button"
 				@click="() => isFilePickerOpen = true">
-				<CloudDownload v-if="!savingToCloud" :size="18" />
-				<IconLoading v-else class="spin" :size="18" />
+				<template #icon>
+					<CloudDownload v-if="!savingToCloud" />
+					<IconLoading v-else class="spin" />
+				</template>
 				{{ t('mail', 'Save all to Files') }}
-			</span>
-			<span
-				class="attachment-link"
+			</NcButton>
+
+			<NcButton
+				variant="tertiary"
+				size="small"
+				class="attachment-button"
 				@click="downloadZip">
-				<Download :size="18" />
+				<template #icon>
+					<Download />
+				</template>
 				{{ t('mail', 'Download Zip') }}
-			</span>
+			</NcButton>
 		</p>
 	</div>
 </template>
@@ -67,19 +84,20 @@
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import { generateUrl } from '@nextcloud/router'
-import { NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcLoadingIcon as IconLoading, NcButton } from '@nextcloud/vue'
 import ChevronDown from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
 import CloudDownload from 'vue-material-design-icons/CloudDownloadOutline.vue'
 import Download from 'vue-material-design-icons/TrayArrowDown.vue'
 import MessageAttachment from './MessageAttachment.vue'
 import Logger from '../logger.js'
-import AttachementMixin from '../mixins/AttachementMixin.js'
+import AttachmentMixin from '../mixins/AttachmentMixin.js'
 import { saveAttachmentsToFiles } from '../service/AttachmentService.js'
 
 export default {
 	name: 'MessageAttachments',
 	components: {
+		NcButton,
 		MessageAttachment,
 		IconLoading,
 		Download,
@@ -89,7 +107,7 @@ export default {
 		FilePicker,
 	},
 
-	mixins: [AttachementMixin],
+	mixins: [AttachmentMixin],
 	props: {
 		envelope: {
 			required: true,
@@ -181,7 +199,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use '../../css/variables.scss';
 
 .attachments {
@@ -201,20 +219,8 @@ export default {
 	align-items: center;
 }
 
-.show-more-attachments {
-	display: flex;
-    align-items: center;
-	cursor: pointer;
-	padding: 2px 0;
+.attachment-button {
 	color: var(--color-text-lighter);
-
-	span {
-		cursor: pointer;
-	}
-
-	&:hover {
-		color: var(--color-main-text);
-	}
 }
 
 @keyframes spin {
@@ -233,21 +239,6 @@ export default {
   animation: spin 1s linear infinite;
 }
 
-.attachment-link {
-	cursor: pointer;
-	display:flex;
-	align-items: center;
-	color: var(--color-text-lighter);
-
-	&:hover {
-		color: var(--color-main-text);
-	}
-
-	span {
-		margin: 0 4px 0 16px;
-	}
-}
-
 .oc-dialog {
 	z-index: 10000000;
 }
@@ -260,10 +251,11 @@ export default {
 	margin-bottom: 0;
 	position: sticky;
 	bottom: -2px;
-	background: linear-gradient(0deg, var(--color-main-background), var(--color-main-background) 90%, rgba(255, 255, 255, 0));
+	background: var(--color-main-background);
 
 	@media (max-width: #{variables.$breakpoint-mobile}) {
         padding: 10px 12px 10px 12px;
+		flex-direction: column;
     }
 }
 
@@ -271,12 +263,14 @@ export default {
 	display:flex;
 	width:100%;
 	height:auto;
-	overflow: hidden;
-	max-height: none;
+	overflow-y: auto;
+	overflow-x: hidden;
+	max-height: 60vh;
 }
 
 .mail-message-attachments--wrapper.hide {
 	display:flex;
+	overflow: clip;
 	max-height: 70px;
 }
 </style>
