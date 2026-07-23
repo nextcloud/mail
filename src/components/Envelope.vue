@@ -237,16 +237,6 @@
 						isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
 					}}
 				</ActionButton>
-				<ActionButton
-					v-if="withReply"
-					class="action--primary"
-					:close-after-click="true"
-					@click.prevent="onReply()">
-					<template #icon>
-						<Reply :size="24" />
-					</template>
-					{{ t('mail', 'Reply') }}
-				</ActionButton>
 			</EnvelopePrimaryActions>
 			<template v-if="!moreActionsOpen && !snoozeOptions && !quickActionMenu">
 				<ActionText>
@@ -258,6 +248,16 @@
 					}}
 				</ActionText>
 				<NcActionSeparator />
+				<ActionButton
+					v-if="withReply"
+					class="action--primary"
+					:close-after-click="true"
+					@click.prevent="onReply()">
+					<template #icon>
+						<Reply :size="24" />
+					</template>
+					{{ t('mail', 'Reply') }}
+				</ActionButton>
 				<ActionButton :is-menu="true" @click="showQuickActionsMenu">
 					<template #icon>
 						<IconEmailFast :size="20" />
