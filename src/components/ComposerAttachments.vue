@@ -38,11 +38,23 @@
 			style="display: none;"
 			@change="onLocalAttachmentSelected">
 		<FilePicker
-			v-if="isAttachmentPickerOpen"
-			:name="t('mail', 'Choose a file')"
-			:buttons="attachmentPickerButtons"
+			v-if="isAttachementPickerOpen"
+			:name="t('mail', 'Choose a file to add as attachment')"
+			:buttons="attachementPickerButtons"
 			:filter-fn="filterAttachements"
-			@close="() => isAttachmentPickerOpen = false" />
+			@close="() => isAttachementPickerOpen = false" />
+		<input
+			ref="cloudUpload"
+			type="file"
+			style="display: none;"
+			@change="onCloudUploadSelected">
+		<FilePicker
+			v-if="isLinkPickerOpen"
+			:name="t('mail', 'Choose a file to share as a link')"
+			:multiselect="false"
+			:buttons="linkPickerButtons"
+			:filter-fn="filterAttachements"
+			@close="() => isLinkPickerOpen = false" />
 	</div>
 </template>
 
@@ -60,6 +72,7 @@ import Vue from 'vue'
 import ChevronDown from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
 import ComposerAttachment from './ComposerAttachment.vue'
+import { getClient } from '../dav/client'
 import logger from '../logger.js'
 import { uploadLocalAttachment } from '../service/AttachmentService.js'
 import { getFileData } from '../service/FileService.js'
@@ -97,11 +110,6 @@ export default {
 			type: Number,
 			default: 0,
 		},
-
-		accountId: {
-			type: Number,
-			default: null,
-		},
 	},
 
 	data() {
@@ -112,16 +120,26 @@ export default {
 			attachments: [],
 			isToggle: false,
 			hasNextLine: false,
-			isAttachmentPickerOpen: false,
-			attachmentPickerButtons: [
+			isAttachementPickerOpen: false,
+			isLinkPickerOpen: false,
+			attachementPickerButtons: [
 				{
-					label: t('mail', 'Add as attachment'),
+					label: t('mail', 'Choose'),
 					callback: this.onAddCloudAttachment,
 					type: 'primary',
 				},
+			],
+
+			linkPickerButtons: [
 				{
-					label: t('mail', 'Add as share link'),
+					label: t('mail', 'Choose'),
 					callback: this.onAddCloudAttachmentLink,
+					type: 'primary',
+				},
+
+				{
+					label: t('mail', 'Upload'),
+					callback: this.onUploadCloudAttachment,
 					type: 'primary',
 				},
 			],
@@ -182,8 +200,8 @@ export default {
 	created() {
 		this.bus.on('on-add-local-attachment', this.onAddLocalAttachment)
 		this.bus.on('on-add-cloud-attachment', this.openAttachementPicker)
+		this.bus.on('on-add-cloud-attachment-link', this.OpenLinkPicker)
 		this.bus.on('on-add-message-as-attachment', this.onAddMessageAsAttachment)
-		this.bus.on('on-add-local-files', this.addLocalFiles)
 		this.value.map((attachment) => {
 			this.attachments.push({
 				id: attachment.id,
@@ -207,11 +225,19 @@ export default {
 		},
 
 		openAttachementPicker() {
-			this.isAttachmentPickerOpen = true
+			this.isAttachementPickerOpen = true
+		},
+
+		OpenLinkPicker() {
+			this.isLinkPickerOpen = true
 		},
 
 		onAddLocalAttachment() {
 			this.$refs.localAttachments.click()
+		},
+
+		onUploadCloudAttachment() {
+			this.$refs.cloudUpload.click()
 		},
 
 		emitNewAttachments(attachments) {
@@ -230,15 +256,11 @@ export default {
 		},
 
 		onLocalAttachmentSelected(e) {
-			return this.addLocalFiles(Array.from(e.target.files))
-		},
-
-		addLocalFiles(files) {
 			this.uploading = true
 			// BUG - if choose again - progress lost/ move to complete()
 			Vue.set(this, 'uploads', {})
 
-			const toUpload = sumBy(prop('size'), Object.values(files))
+			const toUpload = sumBy(prop('size'), Object.values(e.target.files))
 			const newTotal = toUpload + this.totalSizeOfUpload()
 			logger.debug('checking upload size limit', {
 				existingUploads: this.totalSizeOfUpload(),
@@ -247,7 +269,7 @@ export default {
 				newTotal,
 			})
 			if (this.uploadSizeLimit && newTotal > this.uploadSizeLimit) {
-				this.showAttachmentFileSizeWarning(files.length)
+				this.showAttachmentFileSizeWarning(e.target.files.length)
 				this.uploading = false
 				return
 			}
@@ -286,7 +308,7 @@ export default {
 					uploaded: 0,
 				})
 				try {
-					return uploadLocalAttachment(file, this.accountId, progress(file.name), controller)
+					return uploadLocalAttachment(file, progress(file.name), controller)
 						.catch(() => {
 							this.attachments.some((attachment) => {
 								if (attachment.displayName === file.name && !attachment.error) {
@@ -312,7 +334,7 @@ export default {
 				} catch (error) {
 					logger.error('Could not upload file', { file, error })
 				}
-			}, files)
+			}, e.target.files)
 
 			const done = Promise.all(promises)
 				.catch((error) => logger.error('could not upload all attachments', { error }))
@@ -379,6 +401,36 @@ export default {
 			} catch (error) {
 				logger.error('could not choose a file as attachment link', { error })
 			}
+		},
+
+		async onCloudUploadSelected(e) {
+			const file = e.target.files[0]
+			if (!file) {
+				return
+			}
+
+			const client = getClient('files')
+			const folder = '/Email Attachments'
+			const path = `${folder}/${file.name}`
+
+			try {
+				await client.createDirectory(folder)
+			} catch (error) {
+				if (error?.status !== 405) {
+					logger.error('could not create Email Attachments folder', { error })
+					return
+				}
+			}
+
+			try {
+				const buffer = await file.arrayBuffer()
+				await client.putFileContents(path, buffer, { contentLength: file.size })
+				const url = await shareFile(path, getRequestToken())
+				this.appendToBodyAtCursor(`<a href="${url}">${url}</a>`)
+			} catch (error) {
+				logger.error('could not upload and share file', { error, file })
+			}
+			e.target.value = ''
 		},
 
 		/**
