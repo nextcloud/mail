@@ -12,11 +12,12 @@ namespace OCA\Mail\Events;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IWebhookCompatibleEvent;
 
 /**
  * @psalm-immutable
  */
-class MessageSentEvent extends Event {
+class MessageSentEvent extends Event implements IWebhookCompatibleEvent {
 	public function __construct(
 		private Account $account,
 		private LocalMessage $localMessage,
@@ -30,5 +31,16 @@ class MessageSentEvent extends Event {
 
 	public function getLocalMessage(): LocalMessage {
 		return $this->localMessage;
+	}
+
+	public function getWebhookSerializable(): array {
+		return [
+			'messageId' => $this->localMessage->getId(),
+			'accountId' => $this->localMessage->getAccountId(),
+			'sendAt' => $this->localMessage->getSendAt(),
+			'subject' => $this->localMessage->getSubject(),
+			'inReplyTo' => $this->localMessage->getInReplyToMessageId(),
+			'failed' => $this->localMessage->isFailed()
+		];
 	}
 }
