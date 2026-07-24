@@ -87,6 +87,8 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 		<command>OCA\Mail\Command\DeleteAccount</command>
 		<command>OCA\Mail\Command\ExportAccount</command>
 		<command>OCA\Mail\Command\ExportAccountThreads</command>
+		<command>OCA\Mail\Command\InspectMailbox</command>
+		<command>OCA\Mail\Command\ListMailboxes</command>
 		<command>OCA\Mail\Command\PredictImportance</command>
 		<command>OCA\Mail\Command\TestAccount</command>
 		<command>OCA\Mail\Command\SyncAccount</command>
