@@ -131,13 +131,13 @@ class Mailbox extends Entity implements JsonSerializable {
 	}
 
 	public function hasLocks(int $now): bool {
-		if ($this->getSyncNewLock() !== null || $this->getSyncNewLock() > ($now - self::LOCK_TIMEOUT)) {
+		if ($this->getSyncNewLock() !== null && $this->getSyncNewLock() > ($now - self::LOCK_TIMEOUT)) {
 			return true;
 		}
-		if ($this->getSyncChangedLock() !== null || $this->getSyncChangedLock() > ($now - self::LOCK_TIMEOUT)) {
+		if ($this->getSyncChangedLock() !== null && $this->getSyncChangedLock() > ($now - self::LOCK_TIMEOUT)) {
 			return true;
 		}
-		if ($this->getSyncVanishedLock() !== null || $this->getSyncVanishedLock() > ($now - self::LOCK_TIMEOUT)) {
+		if ($this->getSyncVanishedLock() !== null && $this->getSyncVanishedLock() > ($now - self::LOCK_TIMEOUT)) {
 			return true;
 		}
 		return false;
