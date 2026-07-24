@@ -149,8 +149,6 @@ class ImapMessageFetcher {
 				}
 			}
 
-			$this->hasAnyAttachment = $this->hasAttachments($structure);
-
 			$isEncrypted = $this->smimeService->isEncrypted($fetch);
 			$isOpaqueSigned = $structure->getContentTypeParameter('smime-type') === 'signed-data'
 				&& ($structure->getType() === 'application/pkcs7-mime'
@@ -204,7 +202,8 @@ class ImapMessageFetcher {
 				]);
 			}
 
-			// debugging below
+			$this->hasAnyAttachment = $this->hasAttachments($structure);
+
 			$structure_type = $structure->getPrimaryType();
 			if ($structure_type === 'multipart') {
 				$i = 1;
@@ -215,6 +214,11 @@ class ImapMessageFetcher {
 				$bodyPartId = $structure->findBody();
 				if (!is_null($bodyPartId)) {
 					$this->getPart($structure[$bodyPartId], $bodyPartId, $isEncrypted || $isSigned);
+				} else {
+					// This handles the special case of a mail which only
+					// content is an attached file
+					$this->getPart($structure, '1', $isEncrypted || $isSigned);
+					$this->hasAnyAttachment = true;
 				}
 			}
 		} elseif (is_null($fetch)) {
