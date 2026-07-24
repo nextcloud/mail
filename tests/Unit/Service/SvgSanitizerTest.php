@@ -131,6 +131,27 @@ class SvgSanitizerTest extends TestCase {
 		$this->assertStringContainsString('fill: red', $result);
 	}
 
+	public function testRejectsXslTransformNamespace(): void {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg"'
+			. ' xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+			. '<xsl:stylesheet version="1.0"><xsl:template match="/">'
+			. '<script>alert(1)</script></xsl:template></xsl:stylesheet>'
+			. '</svg>';
+
+		$this->assertSame('', $this->sanitizer->sanitize($svg));
+	}
+
+	public function testStripsProcessingInstructionsInsideRoot(): void {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg">'
+			. '<?xml-stylesheet type="text/css" href="style.css"?>'
+			. '<rect width="10"/></svg>';
+
+		$result = $this->sanitizer->sanitize($svg);
+
+		$this->assertStringNotContainsString('<?xml-stylesheet', $result);
+		$this->assertStringContainsString('<rect', $result);
+	}
+
 	public function testRejectsOversizedInput(): void {
 		$svg = str_repeat('a', 2 * 1024 * 1024 + 1);
 

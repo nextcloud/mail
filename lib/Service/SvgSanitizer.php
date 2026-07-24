@@ -52,6 +52,13 @@ class SvgSanitizer {
 			return '';
 		}
 
+		// An XSL/Transform namespace signals a client-side transformation
+		// stylesheet that can execute JavaScript in some browsers. Reject the
+		// document outright, matching server-side hardening in nextcloud/server.
+		if (str_contains($svg, 'http://www.w3.org/1999/XSL/Transform')) {
+			return '';
+		}
+
 		$dom = new DOMDocument();
 		$previousErrors = libxml_use_internal_errors(true);
 		// LIBXML_NONET forbids any network access while parsing.
@@ -64,6 +71,16 @@ class SvgSanitizer {
 		}
 
 		$xpath = new DOMXPath($dom);
+
+		// Remove processing instructions (e.g. <?xml-stylesheet type="text/xsl"?>).
+		// Document-level PIs are already excluded by saveXML($dom->documentElement),
+		// but PIs nested inside the root element are handled here.
+		$pis = $xpath->query('//processing-instruction()');
+		if ($pis !== false) {
+			foreach (iterator_to_array($pis) as $pi) {
+				$pi->parentNode?->removeChild($pi);
+			}
+		}
 
 		// Remove dangerous elements. Matching on the local name catches them
 		// regardless of any namespace prefix (e.g. <x:script>).
