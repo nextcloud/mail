@@ -15,6 +15,7 @@ use Horde_Mail_Transport_Smtphorde;
 use Horde_Smtp_Password_Xoauth2;
 use OCA\Mail\Account;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Support\DebugLogPathFactory;
 use OCA\Mail\Support\HostNameFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
@@ -30,6 +31,7 @@ class SmtpClientFactory {
 		IConfig $config,
 		ICrypto $crypto,
 		private HostNameFactory $hostNameFactory,
+		private DebugLogPathFactory $debugLogPathFactory,
 	) {
 		$this->config = $config;
 		$this->crypto = $crypto;
@@ -80,9 +82,9 @@ class SmtpClientFactory {
 				$decryptedAccessToken,
 			);
 		}
-		if ($account->getMailAccount()->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
-			$fn = "mail-{$account->getUserId()}-{$account->getId()}-smtp.log";
-			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;
+		$debugLogPath = $this->debugLogPathFactory->getPath($account, 'smtp');
+		if ($debugLogPath !== null) {
+			$params['debug'] = $debugLogPath;
 		}
 		return new Horde_Mail_Transport_Smtphorde($params);
 	}
