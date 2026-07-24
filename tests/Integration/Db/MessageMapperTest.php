@@ -45,6 +45,7 @@ class MessageMapperTest extends TestCase {
 		$this->time = $this->createMock(ITimeFactory::class);
 		$this->time->method('getTime')->willReturnCallback(fn () => $this->timestamp);
 		$tagMapper = $this->createMock(TagMapper::class);
+		$tagMapper->method('getAllTagsForMessages')->willReturn([]);
 		$performanceLogger = $this->createMock(PerformanceLogger::class);
 		$this->mapper = new MessageMapper(
 			$this->db,
@@ -269,5 +270,23 @@ class MessageMapperTest extends TestCase {
 
 		$mails = $this->mapper->findIdsAfter($mailbox, 2, 1234567890 + 200, 5);
 		$this->assertEquals([], $mails);
+	}
+
+	public function testFindMessageListsByIdsKeepsUnthreadedMessagesSeparate(): void {
+		$account = $this->createMock(Account::class);
+		$account->method('getId')->willReturn(13);
+		array_map(function ($i) {
+			$this->insertMessageWithId($i, 1);
+		}, range(1, 3));
+
+		$lists = $this->mapper->findMessageListsByIds($account, 'user', [1, 2, 3], 'DESC', true);
+
+		$this->assertCount(3, $lists);
+		foreach ($lists as $list) {
+			$this->assertCount(1, $list);
+		}
+		$ids = array_map(static fn (array $list) => $list[0]->getId(), $lists);
+		sort($ids);
+		$this->assertEquals([1, 2, 3], $ids);
 	}
 }

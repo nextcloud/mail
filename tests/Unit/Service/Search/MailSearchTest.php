@@ -139,16 +139,16 @@ class MailSearchTest extends TestCase {
 			->with('my search')
 			->willReturn($query);
 		$this->messageMapper->expects($this->once())
-			->method('findByIds')
+			->method('findMessageListsByIds')
 			->willReturn([
-				$this->createMock(Message::class),
-				$this->createMock(Message::class),
+				[$this->createMock(Message::class)],
+				[$this->createMock(Message::class)],
 			]);
 		$this->imapSearchProvider->expects($this->never())
 			->method('findMatches');
 		$this->previewEnhancer->expects($this->once())
-			->method('process')
-			->willReturnArgument(2);
+			->method('processMany')
+			->willReturnArgument(1);
 
 		$messages = $this->search->findMessages(
 			$account,
@@ -185,14 +185,14 @@ class MailSearchTest extends TestCase {
 			->with($account, $mailbox, $query)
 			->willReturn([2, 3]);
 		$this->messageMapper->expects($this->once())
-			->method('findByIds')
+			->method('findMessageListsByIds')
 			->willReturn([
-				$this->createMock(Message::class),
-				$this->createMock(Message::class),
+				[$this->createMock(Message::class)],
+				[$this->createMock(Message::class)],
 			]);
 		$this->previewEnhancer->expects($this->once())
-			->method('process')
-			->willReturnArgument(2);
+			->method('processMany')
+			->willReturnArgument(1);
 
 		$messages = $this->search->findMessages(
 			$account,

@@ -12,12 +12,14 @@ namespace OCA\Mail\IMAP;
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMapper;
 use OCA\Mail\IMAP\MessageMapper as ImapMapper;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\AvatarService;
+use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
 use function array_key_exists;
 use function array_map;
@@ -32,7 +34,35 @@ class PreviewEnhancer {
 		private LoggerInterface $logger,
 		private AvatarService $avatarService,
 		private AttachmentService $attachmentService,
+		private MailboxMapper $mailboxMapper,
 	) {
+	}
+
+	/**
+	 * Enhance messages that may belong to different mailboxes (e.g. thread
+	 * members spanning INBOX and Sent). Each mailbox's messages are processed
+	 * against their own IMAP folder, otherwise attachments and preview data
+	 * are fetched from the wrong folder and silently come back empty.
+	 *
+	 * @param Message[] $messages
+	 *
+	 * @return Message[]
+	 */
+	public function processMany(Account $account, array $messages, bool $preLoadAvatars = false, ?string $userId = null): array {
+		$byMailbox = [];
+		foreach ($messages as $message) {
+			$byMailbox[$message->getMailboxId()][] = $message;
+		}
+		foreach ($byMailbox as $mailboxId => $mailboxMessages) {
+			try {
+				$mailbox = $this->mailboxMapper->findById($mailboxId);
+			} catch (DoesNotExistException $e) {
+				$this->logger->warning('Could not enhance previews, mailbox ' . $mailboxId . ' not found: ' . $e->getMessage(), ['exception' => $e]);
+				continue;
+			}
+			$this->process($account, $mailbox, $mailboxMessages, $preLoadAvatars, $userId);
+		}
+		return $messages;
 	}
 
 	/**
