@@ -79,6 +79,7 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 	<commands>
 		<command>OCA\Mail\Command\AddMissingTags</command>
 		<command>OCA\Mail\Command\CleanUp</command>
+		<command>OCA\Mail\Command\ClearMailboxCache</command>
 		<command>OCA\Mail\Command\CreateImapAccount</command>
 		<command>OCA\Mail\Command\CreateJmapAccount</command>
 		<command>OCA\Mail\Command\CreateTagMigrationJobEntry</command>
