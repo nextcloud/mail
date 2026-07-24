@@ -21,6 +21,7 @@
 			<ThreadSummary v-if="showSummaryBox" :loading="summaryLoading" :summary="summaryText" />
 			<ThreadEnvelope
 				v-for="(env, index) in thread"
+				ref="envelopeRefs"
 				:key="env.databaseId"
 				:envelope="env"
 				:mailbox-id="$route.params.mailboxId"
@@ -50,7 +51,8 @@ import logger from '../logger.js'
 import { summarizeThread } from '../service/AiIntergrationsService.js'
 import useMainStore from '../store/mainStore.js'
 import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory.js'
-import { formatDateTimeFromUnix } from '../util/formatDateTime.js'
+import { buildHtmlMessageContent, buildMessageHeader, PRINT_DOCUMENT_STYLE, waitForImages } from '../util/printMessage.ts'
+import { wait } from '../util/wait.js'
 
 export default {
 	name: 'Thread',
@@ -133,20 +135,6 @@ export default {
 				return ''
 			}
 			return thread[0].subject || this.t('mail', 'No subject')
-		},
-
-		threadParticipants() {
-			const seen = new Set()
-			return this.thread.flatMap((envelope) => [
-				...(envelope.from ?? []),
-				...(envelope.to ?? []),
-			]).filter(({ email }) => {
-				if (seen.has(email)) {
-					return false
-				}
-				seen.add(email)
-				return true
-			})
 		},
 
 		showSummaryBox() {
@@ -278,223 +266,136 @@ export default {
 		},
 
 		async handleKeyDown(event) {
-			if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
-				event.preventDefault()
-
-				try {
-					this.thread.forEach((thread) => {
-						if (!this.expandedThreads.includes(thread.databaseId)) {
-							this.expandedThreads.push(thread.databaseId)
-						}
-					})
-
-					while (true) {
-						if (this.loadedThreads === this.thread.length) {
-							break
-						}
-						await new Promise((resolve) => setTimeout(resolve, 100))
-					}
-
-					const virtualIframe = document.createElement('iframe')
-					virtualIframe.style.position = 'absolute'
-					document.body.appendChild(virtualIframe)
-					const virtualIframeDocument = virtualIframe.contentDocument || virtualIframe.contentWindow.document
-					virtualIframeDocument.open()
-					virtualIframeDocument.write(`<html><head><title>${t('mail', 'Print')}</title></head><body></body></html>`)
-					virtualIframeDocument.close()
-
-					virtualIframeDocument.body.appendChild(this.addThreadInfo(virtualIframeDocument))
-
-					const messageContainers = document.querySelectorAll('#message-container')
-					for (const [index, messageContainer] of messageContainers.entries()) {
-						const iframe = messageContainer.querySelector('iframe')
-
-						this.addMessageInfo(virtualIframeDocument, index)
-
-						if (!iframe) {
-							const div = virtualIframeDocument.createElement('div')
-							div.innerHTML = messageContainer.innerHTML
-							virtualIframeDocument.body.appendChild(div)
-							continue
-						}
-
-						if (iframe.contentWindow.document.readyState !== 'complete') {
-							await new Promise((resolve) => {
-								iframe.contentWindow.onload = resolve
-							})
-						}
-
-						const iframeDocument = iframe.contentDocument || iframe.contentWindow.document
-						const iframeContent = iframeDocument.body.innerHTML
-						const div = virtualIframeDocument.createElement('div')
-
-						div.innerHTML = iframeContent
-						virtualIframeDocument.body.appendChild(div)
-					}
-
-					const images = virtualIframeDocument.querySelectorAll('img')
-					let imagesLoaded = 0
-
-					images.forEach((img) => {
-						img.addEventListener('load', () => {
-							imagesLoaded++
-							if (imagesLoaded === images.length) {
-								virtualIframe.contentWindow.print()
-								this.removeIframe(virtualIframe)
-							}
-						})
-						img.addEventListener('error', () => {
-							imagesLoaded++
-							if (imagesLoaded === images.length) {
-								virtualIframe.contentWindow.print()
-								this.removeIframe(virtualIframe)
-							}
-						})
-					})
-
-					if (images.length === 0) {
-						virtualIframe.contentWindow.print()
-						this.removeIframe(virtualIframe)
-					}
-				} catch (error) {
-					logger.error('Could not print message', { error })
-					showError(t('mail', 'Could not print message'))
-				}
+			if (!(event.ctrlKey || event.metaKey) || event.key !== 'p') {
+				return
 			}
-		},
+			event.preventDefault()
 
-		removeIframe(virtualIframe) {
-			setTimeout(() => {
-				document.body.removeChild(virtualIframe)
-			}, 500)
-		},
+			try {
+				this.thread.forEach((envelope) => {
+					if (!this.expandedThreads.includes(envelope.databaseId)) {
+						this.expandedThreads.push(envelope.databaseId)
+					}
+				})
 
-		addMessageInfo(virtualIframeDocument, index) {
-			const hr = virtualIframeDocument.createElement('hr')
-			hr.style.border = '1px solid black'
+				while (this.loadedThreads < this.thread.length) {
+					await wait(100)
+				}
 
-			const subjectSpan = virtualIframeDocument.createElement('p')
-			subjectSpan.style.fontWeight = 'bold'
-			subjectSpan.textContent = t('mail', 'Subject') + ': ' + this.thread[index].subject
-
-			const senderSpan = virtualIframeDocument.createElement('p')
-			senderSpan.style.fontWeight = 'bold'
-			senderSpan.textContent = t('mail', 'From') + ': ' + this.thread[index].from[0].label + ' <' + this.thread[index].from[0].email + '>'
-
-			const dateSpan = virtualIframeDocument.createElement('p')
-			dateSpan.style.fontWeight = 'bold'
-			dateSpan.textContent = t('mail', 'Date') + ': ' + formatDateTimeFromUnix(this.thread[index].dateInt)
-
-			const recipientSpan = virtualIframeDocument.createElement('p')
-			recipientSpan.style.fontWeight = 'bold'
-			recipientSpan.textContent = t('mail', 'To') + ': ' + this.thread[index].to[0].label + this.thread[index].to[0].email
-
-			virtualIframeDocument.body.appendChild(hr)
-			virtualIframeDocument.body.appendChild(subjectSpan)
-			virtualIframeDocument.body.appendChild(senderSpan)
-			virtualIframeDocument.body.appendChild(dateSpan)
-			virtualIframeDocument.body.appendChild(recipientSpan)
-		},
-
-		addThreadInfo(document) {
-			const threadInfo = document.createElement('div')
-			threadInfo.style.marginTop = '20px'
-			threadInfo.style.marginBottom = '20px'
-			threadInfo.className = 'mail-thread-info'
-
-			const subjectLine = document.createElement('h2')
-			subjectLine.textContent = `${this.threadSubject}`
-			threadInfo.appendChild(subjectLine)
-
-			const participantsLine = document.createElement('p')
-			participantsLine.textContent = this.threadParticipants
-				.map((participant) => `${participant.label} <${participant.email}>`)
-				.join(', ')
-			threadInfo.appendChild(participantsLine)
-
-			return threadInfo
+				const indices = this.thread
+					.map((envelope, index) => index)
+					.filter((index) => this.expandedThreads.includes(this.thread[index].databaseId))
+				await this.printMessages(indices)
+			} catch (error) {
+				logger.error('Could not print message', { error })
+				showError(t('mail', 'Could not print message'))
+			}
 		},
 
 		addLoadedThread() {
 			this.loadedThreads++
 		},
 
-		print(threadIndex) {
-			setTimeout(() => {
-				try {
-					const messages = Array.from(document.querySelectorAll('.html-message-body, .mail-message-body'))
+		async print(threadIndex) {
+			try {
+				await this.printMessages([threadIndex ?? this.thread.length - 1])
+			} catch (error) {
+				logger.error('Could not print message', { error })
+				showError(t('mail', 'Could not print message'))
+			}
+		},
 
-					let message
+		/**
+		 * Print the given thread messages by rendering them into a dedicated,
+		 * hidden iframe and printing that iframe's own document.
+		 *
+		 * This is deliberately isolated from the main document: the messages
+		 * carry their own (untrusted) CSS, which would otherwise leak into
+		 * the app and could shrink or clip the whole page. Because the iframe
+		 * document is printed as a standalone page, long emails also paginate
+		 * across pages instead of being cut off, and the app layout is never
+		 * mutated — so nothing needs to be reloaded afterwards.
+		 *
+		 * @param {number[]} indices thread indices to print, in order
+		 * @return {Promise<void>}
+		 */
+		async printMessages(indices) {
+			const frame = document.createElement('iframe')
+			frame.setAttribute('aria-hidden', 'true')
+			// The message HTML is copied into this iframe from the sanitized
+			// message frame, but unlike that frame it is not protected by the
+			// backend's Content-Security-Policy. Sandbox it without
+			// `allow-scripts` so no script or inline event handler in the
+			// content can run; `allow-same-origin` lets us populate it and
+			// `allow-modals` lets it open the print dialog.
+			frame.setAttribute('sandbox', 'allow-same-origin allow-modals')
+			frame.style.cssText = 'position: fixed; left: -9999px; top: 0; width: 0; height: 0; border: 0;'
+			document.body.appendChild(frame)
 
-					if (threadIndex !== undefined) {
-						message = messages[threadIndex * 2] ?? messages.pop()
-					} else {
-						// By default, we print the last opened message in the thread
-						message = messages.pop()
-					}
-
-					const iframe = message.querySelector('iframe')
-
-					if (iframe === null) {
-						// Handle plain text messages
-						const messageContainer = message.querySelector('#message-container')
-
-						if (messageContainer) {
-							// Create a new iframe
-							const newIframe = document.createElement('iframe')
-							newIframe.style.display = 'none' // Hide the iframe
-							document.body.appendChild(newIframe)
-
-							// Insert the message content into the iframe
-							const iframeDocument = newIframe.contentDocument || newIframe.contentWindow.document
-							iframeDocument.open()
-							iframeDocument.write(`
-								<html>
-									<head>
-										<title></title>
-									</head>
-									<body>
-										<div class="message-container">${messageContainer.innerHTML}</div>
-									</body>
-								</html>
-							`)
-							iframeDocument.title = this.threadSubject
-
-							const threadInfo = this.addThreadInfo(iframeDocument)
-							iframeDocument.body.insertBefore(threadInfo, iframeDocument.body.firstChild)
-
-							setTimeout(() => {
-								threadInfo.remove()
-							}, 5000)
-
-							iframeDocument.close()
-
-							newIframe.contentWindow.print()
-
-							// Clean up: remove the iframe after printing
-							setTimeout(() => {
-								document.body.removeChild(newIframe)
-							}, 500)
-						}
-
-						return
-					}
-
-					const iframeDocument = iframe.contentDocument || iframe.contentWindow.document
-
-					const threadInfo = this.addThreadInfo(iframeDocument)
-					iframeDocument.body.insertBefore(threadInfo, iframeDocument.body.firstChild)
-
-					setTimeout(() => {
-						threadInfo.remove()
-					}, 200)
-
-					iframe.contentWindow.print()
-				} catch (error) {
-					logger.error('Could not print message', { error })
-					showError(t('mail', 'Could not print message'))
+			let cleanedUp = false
+			const cleanup = () => {
+				if (cleanedUp) {
+					return
 				}
-			}, 100)
+				cleanedUp = true
+				frame.remove()
+			}
+
+			try {
+				const doc = frame.contentDocument || frame.contentWindow.document
+				doc.open()
+				doc.write('<!DOCTYPE html><html><head><meta charset="utf-8"></head><body></body></html>')
+				doc.close()
+				doc.title = this.threadSubject
+
+				const style = doc.createElement('style')
+				style.textContent = PRINT_DOCUMENT_STYLE
+				doc.head.appendChild(style)
+
+				indices.forEach((index) => this.appendMessageToDocument(doc, index))
+
+				await waitForImages(doc)
+
+				frame.contentWindow.addEventListener('afterprint', cleanup, { once: true })
+				frame.contentWindow.focus()
+				frame.contentWindow.print()
+
+				// Safety net: some browsers don't emit `afterprint`. The delay
+				// is long enough not to abort an open print dialog.
+				setTimeout(cleanup, 60000)
+			} catch (error) {
+				cleanup()
+				throw error
+			}
+		},
+
+		appendMessageToDocument(doc, index) {
+			const envelope = this.thread[index]
+			const envelopeComponent = this.$refs.envelopeRefs?.[index]
+			if (!envelope || !envelopeComponent) {
+				return
+			}
+
+			const messageEl = envelopeComponent.$el
+			const message = doc.createElement('div')
+			message.className = 'print-message'
+			message.appendChild(buildMessageHeader(doc, envelope))
+
+			const iframe = messageEl.querySelector('iframe')
+			if (iframe) {
+				const sourceDocument = iframe.contentDocument || iframe.contentWindow.document
+				message.appendChild(buildHtmlMessageContent(doc, sourceDocument))
+			} else {
+				const messageContainer = messageEl.querySelector('#message-container')
+				if (messageContainer) {
+					const content = doc.createElement('div')
+					content.className = 'print-message-content'
+					content.innerHTML = messageContainer.innerHTML
+					message.appendChild(content)
+				}
+			}
+
+			doc.body.appendChild(message)
 		},
 	},
 }
@@ -672,5 +573,36 @@ export default {
 
 .user-bubble__title {
 	cursor: pointer;
+}
+
+// The "Print message" action and Ctrl/Cmd+P render into an isolated iframe
+// and print that, so these rules only matter for a native browser print
+// (browser menu / right-click → Print) of the live page. They hide the app
+// chrome and let the document flow so the message body isn't printed inside
+// the surrounding UI. Because the message body keeps its own sandboxed
+// iframe, none of its CSS leaks into the app, and these rules revert
+// automatically once printing is done — nothing needs to be reloaded.
+@media print {
+	html,
+	body {
+		height: auto !important;
+		min-height: 0 !important;
+		overflow: visible !important;
+		position: static !important;
+	}
+
+	.app-navigation,
+	.app-content-list,
+	.message-composer,
+	.reply-buttons,
+	#reply-composer,
+	#mail-message-has-blocked-content,
+	.mail-message-attachments {
+		display: none !important;
+	}
+
+	#mail-thread-header {
+		position: static !important;
+	}
 }
 </style>
