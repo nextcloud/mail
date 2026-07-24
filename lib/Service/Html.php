@@ -59,6 +59,14 @@ class Html {
 	 * @return string
 	 */
 	public function convertLinks(string $data): string {
+		if (!mb_check_encoding($data, 'UTF-8')) {
+			// Some senders (e.g. Lotus Notes/Domino) declare a message as UTF-8 while
+			// actually sending a different charset. UrlLinker's escapeHtml() calls
+			// htmlspecialchars() without ENT_SUBSTITUTE/ENT_IGNORE, which returns an
+			// empty string for the whole input on the first invalid byte it hits.
+			$data = mb_convert_encoding($data, 'UTF-8', 'UTF-8');
+		}
+
 		$linker = new UrlLinker([
 			'allowFtpAddresses' => true,
 			'allowUpperCaseUrlSchemes' => false,
