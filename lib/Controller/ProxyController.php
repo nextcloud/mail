@@ -10,9 +10,11 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Html\ProxyHmacGenerator;
 use OCA\Mail\Http\ProxyDownloadResponse;
 use OCA\Mail\Service\MailManager;
+use OCA\Mail\Service\SvgSanitizer;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -28,6 +30,8 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\LoggerInterface;
 use function file_get_contents;
 use function hash_equals;
+use function is_resource;
+use function stream_get_contents;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ProxyController extends Controller {
@@ -44,6 +48,7 @@ class ProxyController extends Controller {
 		private ProxyHmacGenerator $hmacGenerator,
 		private LoggerInterface $logger,
 		private MailManager $mailManager,
+		private SvgSanitizer $svgSanitizer,
 		private ?string $userId,
 	) {
 		parent::__construct($appName, $request);
@@ -65,6 +70,7 @@ class ProxyController extends Controller {
 	 *       mail does not know whether the mail has been opened.
 	 *
 	 * @return Response|ProxyDownloadResponse
+	 * @throws ServiceException
 	 */
 	#[UserRateLimit(limit: 50, period: 60)]
 	public function proxy(string $src, ?int $id, ?string $hmac): Response {
@@ -73,7 +79,7 @@ class ProxyController extends Controller {
 
 		// If strict cookies are set it means we come from the same domain so no open redirect
 		if (!$this->request->passesStrictCookieCheck()) {
-			$content = file_get_contents(__DIR__ . '/../../img/blocked-image.png');
+			$content = $this->getBlockedImage();
 			return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
 		}
 
@@ -95,17 +101,49 @@ class ProxyController extends Controller {
 		try {
 			$response = $client->get($src);
 			$content = $response->getBody();
+			if (is_resource($content)) {
+				$content = stream_get_contents($content);
+				if ($content === false) {
+					$content = $this->getBlockedImage();
+				}
+			}
 		} catch (ClientExceptionInterface $e) {
 			$this->logger->notice('Unable to proxy image', ['exception' => $e]);
-			$content = file_get_contents(__DIR__ . '/../../img/blocked-image.png');
+			$content = $this->getBlockedImage();
 		} catch (LocalServerException $e) {
 			$this->logger->warning('Prevented image proxy access to forbidden URL', [
 				'blockedUrl' => $src,
 				'exception' => $e,
 			]);
-			$content = file_get_contents(__DIR__ . '/../../img/blocked-image.png');
+			$content = $this->getBlockedImage();
+		}
+
+		// Browsers sniff raster image formats in <img> tags, but they refuse to
+		// render SVG unless it is served with the image/svg+xml content type.
+		// Detect and sanitise SVG markup so external SVG logos are displayed
+		// instead of staying blank. Sanitising also strips any active content in
+		// case the response is fetched through a direct (non-<img>) navigation.
+		if ($this->svgSanitizer->looksLikeSvg($content)) {
+			$sanitized = $this->svgSanitizer->sanitize($content);
+			if ($sanitized === '') {
+				$content = $this->getBlockedImage();
+				return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
+			}
+			return new ProxyDownloadResponse($sanitized, $src, 'image/svg+xml');
 		}
 
 		return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
+	}
+
+	/**
+	 * @throws ServiceException
+	 */
+	private function getBlockedImage(): string {
+		$content = file_get_contents(__DIR__ . '/../../img/blocked-image.png');
+		if ($content === false) {
+			throw new ServiceException('Could not read blocked image');
+		}
+
+		return $content;
 	}
 }
