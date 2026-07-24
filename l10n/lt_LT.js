@@ -125,7 +125,7 @@ OC.L10N.register(
     "Alias name" : "Slapyvardis",
     "Email address" : "El. pašto adresas",
     "Update alias" : "Atnaujinti slapyvardį",
-    "Rename alias" : "Pervardyti slapyvardį",
+    "Rename alias" : "Pervadinti slapyvardį",
     "Show update alias form" : "Rodyti atnaujinimo slapyvardžio formą",
     "Delete alias" : "Ištrinti slapyvardį",
     "Go back" : "Grįžti",
