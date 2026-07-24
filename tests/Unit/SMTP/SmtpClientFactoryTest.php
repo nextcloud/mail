@@ -14,6 +14,7 @@ use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\SMTP\SmtpClientFactory;
+use OCA\Mail\Support\DebugLogPathFactory;
 use OCA\Mail\Support\HostNameFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
@@ -29,6 +30,9 @@ class SmtpClientFactoryTest extends TestCase {
 	/** @var HostNameFactory|MockObject */
 	private $hostNameFactory;
 
+	/** @var DebugLogPathFactory|MockObject */
+	private $debugLogPathFactory;
+
 	/** @var SmtpClientFactory */
 	private $factory;
 
@@ -38,8 +42,11 @@ class SmtpClientFactoryTest extends TestCase {
 		$this->config = $this->createMock(IConfig::class);
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->hostNameFactory = $this->createMock(HostNameFactory::class);
+		$this->debugLogPathFactory = $this->createMock(DebugLogPathFactory::class);
+		$this->debugLogPathFactory->method('getPath')
+			->willReturn(null);
 
-		$this->factory = new SmtpClientFactory($this->config, $this->crypto, $this->hostNameFactory);
+		$this->factory = new SmtpClientFactory($this->config, $this->crypto, $this->hostNameFactory, $this->debugLogPathFactory);
 	}
 
 	public function testSmtpTransport() {

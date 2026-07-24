@@ -9,7 +9,9 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Command;
 
+use OCA\Mail\Account;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Support\DebugLogPathFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -26,6 +28,7 @@ final class DebugAccount extends Command {
 	public function __construct(
 		private AccountService $accountService,
 		private LoggerInterface $logger,
+		private DebugLogPathFactory $debugLogPathFactory,
 	) {
 		parent::__construct();
 	}
@@ -48,7 +51,7 @@ final class DebugAccount extends Command {
 		$debug = false;
 
 		try {
-			$account = $this->accountService->findById($accountId)->getMailAccount();
+			$mailAccount = $this->accountService->findById($accountId)->getMailAccount();
 		} catch (DoesNotExistException $e) {
 			$output->writeln("<error>Account $accountId does not exist</error>");
 			return 1;
@@ -63,8 +66,23 @@ final class DebugAccount extends Command {
 			$debug = true;
 		}
 
-		$account->setDebug($debug);
-		$this->accountService->save($account);
+		$mailAccount->setDebug($debug);
+		$this->accountService->save($mailAccount);
+
+		$account = new Account($mailAccount);
+
+		if ($debug) {
+			$output->writeln("<info>Debug mode enabled for account $accountId</info>");
+		} else {
+			$output->writeln("<info>Debug mode disabled for account $accountId</info>");
+			if ($this->debugLogPathFactory->isActive($account)) {
+				$output->writeln('<comment>Note: the system-wide "app.mail.debug" config value is enabled, so debug logging for this account is still active.</comment>');
+			}
+			$output->writeln('Existing log files are not deleted automatically:');
+		}
+		$output->writeln('IMAP log: ' . $this->debugLogPathFactory->buildPath($account, 'imap'));
+		$output->writeln('SMTP log: ' . $this->debugLogPathFactory->buildPath($account, 'smtp'));
+		$output->writeln('Sieve log: ' . $this->debugLogPathFactory->buildPath($account, 'sieve'));
 
 		return 0;
 	}
