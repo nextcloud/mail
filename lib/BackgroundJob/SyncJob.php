@@ -8,10 +8,9 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
-use Horde_Imap_Client_Exception;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\Exception\ImapAuthenticationFailedException;
 use OCA\Mail\Exception\IncompleteSyncException;
-use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
@@ -123,9 +122,7 @@ class SyncJob extends TimedJob {
 				'exception' => $e,
 			]);
 		} catch (Throwable $e) {
-			if ($e instanceof ServiceException
-				&& $e->getPrevious() instanceof Horde_Imap_Client_Exception
-				&& $e->getPrevious()->getCode() === Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED) {
+			if (ImapAuthenticationFailedException::findHordeAuthFailure($e) !== null) {
 				$this->logger->info('Cron mail sync authentication failed for account {accountId}', [
 					'accountId' => $accountId,
 					'exception' => $e,

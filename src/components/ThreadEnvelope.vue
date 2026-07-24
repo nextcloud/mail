@@ -872,22 +872,32 @@ export default {
 					this.handleThreadScrolling()
 				})
 			} catch (error) {
-				this.error = error
+				const account = this.mainStore.getAccount(this.envelope.accountId)
+				if (account?.error) {
+					// The account cannot authenticate against IMAP: show an
+					// actionable message instead of a generic 'Not found'
+					this.error = new Error(t('mail', 'Authentication failed for account {email}. Please update your credentials in the account settings.', { email: account.emailAddress }))
+				} else {
+					this.error = error
+				}
 				this.loading = Loading.Done
 				logger.error('Could not fetch message', { error })
 			}
 
+			// Skip IMAP-backed background lookups while the account cannot authenticate
+			const accountHasAuthError = !!this.mainStore.getAccount(this.envelope.accountId)?.error
+
 			// Fetch itineraries if they haven't been included in the message data
-			if (this.message && !this.message.itineraries) {
+			if (this.message && !this.message.itineraries && !accountHasAuthError) {
 				this.fetchItineraries()
 			}
 			// Fetch dkim
-			if (this.message && this.message.dkimValid === undefined) {
+			if (this.message && this.message.dkimValid === undefined && !accountHasAuthError) {
 				this.fetchDkim()
 			}
 
 			// Fetch smart replies
-			if (this.enabledFreePrompt && this.message && !['trash', 'junk'].includes(this.mailbox.specialRole) && !this.showFollowUpHeader) {
+			if (this.enabledFreePrompt && this.message && !accountHasAuthError && !['trash', 'junk'].includes(this.mailbox.specialRole) && !this.showFollowUpHeader) {
 				try {
 					this.smartReplies = await smartReply(this.envelope.databaseId)
 				} catch (error) {

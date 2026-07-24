@@ -4,6 +4,7 @@
  */
 
 import CouldNotConnectError from './CouldNotConnectError.js'
+import ImapAuthenticationFailedError from './ImapAuthenticationFailedError.js'
 import MailboxLockedError from './MailboxLockedError.js'
 import MailboxNotCachedError from './MailboxNotCachedError.js'
 import ManageSieveError from './ManageSieveError.js'
@@ -19,6 +20,7 @@ const map = {
 	'OCA\\Mail\\Exception\\SentMailboxNotSetException': NoSentMailboxConfiguredError,
 	'OCA\\Mail\\Exception\\TrashMailboxNotSetException': NoTrashMailboxConfiguredError,
 	'OCA\\Mail\\Exception\\CouldNotConnectException': CouldNotConnectError,
+	'OCA\\Mail\\Exception\\ImapAuthenticationFailedException': ImapAuthenticationFailedError,
 	'OCA\\Mail\\Exception\\ManyRecipientsException': ManyRecipientsError,
 	'Horde\\ManageSieve\\Exception': ManageSieveError,
 }
@@ -44,5 +46,8 @@ export function convertAxiosError(axiosError) {
 		return axiosError
 	}
 
-	return new map[response.data.data.type](response.data.data.message)
+	const error = new map[response.data.data.type](response.data.data.message)
+	// Attach the structured payload so handlers can inspect extra fields (e.g. reason)
+	error.data = response.data.data
+	return error
 }

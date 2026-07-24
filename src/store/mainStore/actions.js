@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { showError, showWarning, TOAST_DEFAULT_TIMEOUT } from '@nextcloud/dialogs'
+import { showError, showWarning, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import DOMPurify from 'dompurify'
 import escapeRegExp from 'lodash/fp/escapeRegExp.js'
@@ -32,6 +32,7 @@ import {
 	where,
 } from 'ramda'
 import Vue from 'vue'
+import ImapAuthenticationFailedError from '../../errors/ImapAuthenticationFailedError.js'
 import MailboxLockedError from '../../errors/MailboxLockedError.js'
 import { matchError } from '../../errors/match.js'
 import SyncIncompleteError from '../../errors/SyncIncompleteError.js'
@@ -141,6 +142,37 @@ import useOutboxStore from '../outboxStore.js'
  */
 
 const sliceToPage = slice(0, PAGE_SIZE)
+
+// Accounts flagged with an authentication error are excluded from background
+// sync, but a single probe request is let through periodically so transient
+// failures (e.g. an OAuth token refresh hiccup) heal without a page reload.
+const AUTH_ERROR_RETRY_INTERVAL = 5 * 60 * 1000
+const AUTH_ERROR_PROBE_WINDOW = 30 * 1000
+const authErrorProbes = new Map()
+
+/**
+ * @param {object} account the account to check
+ * @return {boolean} whether syncing the account should be skipped
+ */
+function shouldSkipAuthErroredAccount(account) {
+	if (!account.error) {
+		return false
+	}
+
+	const now = Date.now()
+	const lastProbe = authErrorProbes.get(account.id) ?? 0
+	if (now - lastProbe < AUTH_ERROR_PROBE_WINDOW) {
+		// A probe was just allowed — let the related requests through
+		return false
+	}
+	if (now - lastProbe < AUTH_ERROR_RETRY_INTERVAL) {
+		return true
+	}
+
+	// Open a new probe window
+	authErrorProbes.set(account.id, now)
+	return false
+}
 
 const findIndividualMailboxes = curry((getMailboxes, specialRole) => pipe(
 	filter(complement(prop('isUnified'))),
@@ -266,6 +298,7 @@ export default function mainStoreActions() {
 				const account = await updateAccount(config)
 				logger.debug('account updated', { account })
 				this.editAccountMutation({ ...account, error: false })
+				authErrorProbes.delete(account.id)
 				await this.syncMailboxesForAccount(this.accountsUnmapped[account.id])
 				return account
 			})
@@ -900,9 +933,19 @@ export default function mainStoreActions() {
 
 				const mailbox = this.getMailbox(mailboxId)
 
-				// Skip superfluous requests if using passwordless authentication. They will fail anyway.
+				// Skip superfluous requests if using passwordless authentication or if the
+				// account has an authentication error. They will fail anyway.
 				const passwordIsUnavailable = this.getPreference('password-is-unavailable', false)
-				const isDisabled = (account) => passwordIsUnavailable && !!account.provisioningId
+				const isDisabled = (account) => (passwordIsUnavailable && !!account.provisioningId) || shouldSkipAuthErroredAccount(account)
+
+				if (init && (mailbox.isUnified || mailbox.isPriorityInbox)
+					&& this.getAccounts.some((account) => !account.isUnified && !!account.error)) {
+					// An initial sync must fail loudly when an account is skipped for an
+					// authentication error. Filtering it out silently would resolve the
+					// fan-out below successfully without ever caching the account's
+					// mailboxes, sending Mailbox.vue's initializeCache into a request loop.
+					throw new ImapAuthenticationFailedError('An account has an authentication error')
+				}
 
 				if (mailbox.isUnified) {
 					return Promise.all(this.getAccounts
@@ -930,12 +973,33 @@ export default function mainStoreActions() {
 					}))
 				}
 
+				const account = this.getAccount(mailbox.accountId)
+				if (account && !account.isUnified && isDisabled(account)) {
+					logger.debug(`Skipping sync of mailbox ${mailboxId}: account ${mailbox.accountId} is disabled or has an authentication error`)
+					if (init) {
+						// An initial sync must fail loudly. Resolving would make
+						// Mailbox.vue poll for envelopes that can never be cached.
+						throw account.error
+							? new ImapAuthenticationFailedError('Account has an authentication error')
+							: new Error('Account sync is disabled')
+					}
+					return []
+				}
+
 				const ids = this.getEnvelopes(mailboxId, query).map((env) => env.databaseId)
 				const lastTimestamp = this.getPreference('sort-order') === 'newest' ? null : this.getEnvelopes(mailboxId, query)[0]?.dateInt
 				logger.debug(`mailbox sync of ${mailboxId} (${query}) has ${ids.length} known IDs. ${lastTimestamp} is the last known message timestamp`, { mailbox })
 				return syncEnvelopesExternal(mailbox.accountId, mailboxId, ids, lastTimestamp, query, init, this.getPreference('sort-order'))
 					.then((syncData) => {
 						logger.debug(`mailbox ${mailboxId} (${query}) synchronized, ${syncData.newMessages.length} new, ${syncData.changedMessages.length} changed and ${syncData.vanishedMessages.length} vanished messages`)
+
+						const syncedAccount = this.getAccount(mailbox.accountId)
+						if (syncedAccount && syncedAccount.error) {
+							// A probe request went through: the account works again
+							logger.info(`Account ${mailbox.accountId} can connect again, resuming sync`)
+							this.editAccountMutation({ ...syncedAccount, error: false })
+							authErrorProbes.delete(mailbox.accountId)
+						}
 
 						const unifiedMailbox = this.getUnifiedMailbox(mailbox.specialRole)
 
@@ -980,6 +1044,26 @@ export default function mainStoreActions() {
 									init,
 								})
 							},
+							[ImapAuthenticationFailedError.getName()]: (error) => {
+								const failedAccount = this.getAccount(mailbox.accountId)
+								if (failedAccount && !failedAccount.error) {
+									logger.warn(`Authentication failed for account ${mailbox.accountId} (reason: ${error.data?.reason ?? 'unknown'}), pausing sync for this account`, { error })
+									this.editAccountMutation({ ...failedAccount, error: true })
+									// The failed request counts as the first probe
+									authErrorProbes.set(mailbox.accountId, Date.now())
+									showError(
+										t('mail', 'Authentication failed for account {email}. Please update your credentials in the account settings.', { email: failedAccount.emailAddress }),
+										{ timeout: TOAST_PERMANENT_TIMEOUT },
+									)
+								}
+
+								if (init) {
+									// Mirror MailboxLockedError: an initial sync must fail
+									// loudly or Mailbox.vue keeps polling for envelopes
+									// that can never be cached.
+									throw error
+								}
+							},
 							[MailboxLockedError.getName()]: (error) => {
 								if (init) {
 									logger.info('Sync failed because the mailbox is locked, stopping here because this is an initial sync', { error })
@@ -1002,9 +1086,10 @@ export default function mainStoreActions() {
 			})
 		},
 		async syncInboxes() {
-			// Skip superfluous requests if using passwordless authentication. They will fail anyway.
+			// Skip superfluous requests if using passwordless authentication or if the
+			// account has an authentication error. They will fail anyway.
 			const passwordIsUnavailable = this.getPreference('password-is-unavailable', false)
-			const isDisabled = (account) => passwordIsUnavailable && !!account.provisioningId
+			const isDisabled = (account) => (passwordIsUnavailable && !!account.provisioningId) || shouldSkipAuthErroredAccount(account)
 
 			return handleHttpAuthErrors(async () => {
 				const results = await Promise.all(this.getAccounts
