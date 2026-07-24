@@ -8,7 +8,6 @@ import { Paragraph } from 'ckeditor5'
 import mitt from 'mitt'
 import { vi } from 'vitest'
 import TextEditor from '../../../components/TextEditor.vue'
-import MailPlugin from '../../../ckeditor/mail/MailPlugin.js'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import VirtualTestEditor from '../../virtualtesteditor.js'
 
@@ -90,7 +89,7 @@ describe('TextEditor', () => {
 
 		expect(wrapper.emitted().ready[0]).toBeTruthy()
 	})
-	it('register conversion to add margin: 0px to every <p> element', async () => {
+	it('does not add inline margin style to paragraph elements', async () => {
 		const wrapper = shallowMount(TextEditor, {
 			localVue,
 			propsData: {
@@ -106,7 +105,7 @@ describe('TextEditor', () => {
 		const editor = await VirtualTestEditor.create({
 			licenseKey: 'GPL',
 			initialData: '<p>bonjour bonjour</p>',
-			plugins: [Paragraph, MailPlugin],
+			plugins: [Paragraph],
 		})
 
 		editor.ui = {
@@ -123,7 +122,7 @@ describe('TextEditor', () => {
 
 		expect(wrapper.emitted().ready[0]).toBeTruthy()
 		expect(wrapper.emitted().ready[0][0].getData())
-			.toEqual('<p style="margin:0;">bonjour bonjour</p>')
+			.toEqual('<p>bonjour bonjour</p>')
 	})
 
 	it('emits updated data while editing source', async () => {
