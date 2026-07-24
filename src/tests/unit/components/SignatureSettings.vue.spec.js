@@ -6,6 +6,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import SignatureSettings from '../../../components/SignatureSettings.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
+import { EDITOR_MODE_HTML } from '../../../store/constants.js'
 
 const localVue = createLocalVue()
 
@@ -18,6 +19,7 @@ describe('SignatureSettings', () => {
 			propsData: {
 				account: {
 					aliases: [],
+					editorMode: EDITOR_MODE_HTML,
 					signature: String('<p>Lorem ipsum</p>').repeat(120000),
 				},
 			},
