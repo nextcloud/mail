@@ -285,21 +285,13 @@ class MessagesControllerTest extends TestCase {
 		$this->assertCachedFor($actualRichResponse, 60 * 60);
 	}
 
-	public function testDownloadAttachment() {
+	private function mockAttachmentDownload(int $id, string $attachmentId, string $contents, ?string $name, string $type): void {
 		$accountId = 17;
 		$mailboxId = 987;
-		$id = 123;
-		$uid = 321;
-		$attachmentId = '3';
-
-		// Attachment data
-		$contents = 'abcdef';
-		$name = 'cat.jpg';
-		$type = 'image/jpg';
-		$message = new \OCA\Mail\Db\Message();
+		$message = new DbMessage();
 		$message->setMailboxId($mailboxId);
-		$message->setUid($uid);
-		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$message->setUid(321);
+		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
 		$mailbox->setAccountId($accountId);
 		$this->mailManager->expects($this->once())
@@ -313,28 +305,48 @@ class MessagesControllerTest extends TestCase {
 		$this->mailManager->expects($this->once())
 			->method('getMailAttachment')
 			->with($this->account, $mailbox, $message, $attachmentId)
-			->will($this->returnValue($this->attachment));
+			->willReturn($this->attachment);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->attachment->expects($this->once())
 			->method('getContent')
-			->will($this->returnValue($contents));
-		$this->attachment->expects($this->any())
-			->method('getName')
-			->will($this->returnValue($name));
+			->willReturn($contents);
+		$this->attachment->method('getName')
+			->willReturn($name);
 		$this->attachment->expects($this->once())
 			->method('getType')
-			->will($this->returnValue($type));
+			->willReturn($type);
+	}
 
-		$expected = new AttachmentDownloadResponse($contents, $name, $type);
-		$response = $this->controller->downloadAttachment(
-			$id,
-			$attachmentId
-		);
+	public function testDownloadAttachment(): void {
+		$this->mockAttachmentDownload(123, '3', 'abcdef', 'cat.jpg', 'image/jpg');
+		$expected = new AttachmentDownloadResponse('abcdef', 'cat.jpg', 'image/jpg');
 
-		$this->assertEquals($expected, $response);
+		$response = $this->controller->downloadAttachment(123, '3');
+
+		$this->assertSame($expected->render(), $response->render());
+		$this->assertSame($expected->getHeaders()['Content-Disposition'], $response->getHeaders()['Content-Disposition']);
+		$this->assertSame($expected->getHeaders()['Content-Type'], $response->getHeaders()['Content-Type']);
+		$this->assertCachedFor($response, 60 * 60);
+	}
+
+	public function testDownloadEmbeddedMessageAttachment(): void {
+		$this->mockAttachmentDownload(123, '2', 'embedded rfc822 bytes', null, 'message/rfc822');
+
+		$response = $this->controller->downloadAttachment(123, '2');
+
+		$this->assertStringContainsString('.eml', $response->getHeaders()['Content-Disposition']);
+		$this->assertCachedFor($response, 60 * 60);
+	}
+
+	public function testDownloadEmptyAttachmentIsNotCached(): void {
+		$this->mockAttachmentDownload(123, '3', '', 'cat.jpg', 'image/jpg');
+
+		$response = $this->controller->downloadAttachment(123, '3');
+
+		$this->assertSame('no-cache, no-store, must-revalidate', $response->getHeaders()['Cache-Control']);
 	}
 
 	public function testSaveSingleAttachment() {
