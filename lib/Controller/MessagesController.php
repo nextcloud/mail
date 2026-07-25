@@ -783,19 +783,28 @@ class MessagesController extends Controller {
 		// Body party and embedded messages do not have a name
 		$attachmentName = $attachment->getName();
 		if ($attachmentName === null) {
-			return new AttachmentDownloadResponse(
+			$response = new AttachmentDownloadResponse(
 				$attachment->getContent(),
 				$this->l10n->t('Embedded message %s', [
 					$attachmentId,
 				]) . '.eml',
 				$attachment->getType()
 			);
+		} else {
+			$response = new AttachmentDownloadResponse(
+				$attachment->getContent(),
+				$attachmentName,
+				$attachment->getType()
+			);
 		}
-		return new AttachmentDownloadResponse(
-			$attachment->getContent(),
-			$attachmentName,
-			$attachment->getType()
-		);
+
+		// The content of an attachment is immutable for a given message and
+		// attachment id, so let the browser cache it (e.g. inline images are
+		// requested again on every message open otherwise). 24h matches what
+		// Nextcloud core uses for file previews (core PreviewController).
+		$response->cacheFor(24 * 3600, false, true);
+
+		return $response;
 	}
 
 	/**

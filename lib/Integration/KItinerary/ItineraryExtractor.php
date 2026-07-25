@@ -45,6 +45,17 @@ class ItineraryExtractor {
 		return null;
 	}
 
+	/**
+	 * Whether any KItinerary adapter is available on this system, without
+	 * doing any extraction work
+	 */
+	public function hasAdapter(): bool {
+		if ($this->adapter === null) {
+			$this->adapter = $this->findAvailableAdapter() ?? false;
+		}
+		return $this->adapter !== false;
+	}
+
 	public function extract(string $content): Itinerary {
 		if ($this->adapter === null) {
 			$this->adapter = $this->findAvailableAdapter() ?? false;
