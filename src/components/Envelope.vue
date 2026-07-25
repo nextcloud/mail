@@ -514,7 +514,7 @@
 				v-if="showMoveModal"
 				:account="account"
 				:envelopes="[data]"
-				:move-thread="listViewThreaded"
+				:move-thread="layoutMessageViewThreaded"
 				@move="onMove"
 				@close="onCloseMoveModal" />
 			<EventModal

@@ -1568,13 +1568,11 @@ export default function mainStoreActions() {
 			destMailboxId,
 		}) {
 			return handleHttpAuthErrors(async () => {
-				this.removeEnvelopeMutation({ id: envelope.databaseId })
-
 				try {
 					await ThreadService.moveThread(envelope.databaseId, destMailboxId)
+					this.removeEnvelopeMutation({ id: envelope.databaseId })
 					logger.debug('thread moved')
 				} catch (e) {
-					this.addEnvelopesMutation({ envelopes: [envelope] })
 					logger.error('could not move thread', { error: e })
 					throw e
 				}
