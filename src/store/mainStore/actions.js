@@ -144,10 +144,13 @@ import useOutboxStore from '../outboxStore.js'
 const sliceToPage = slice(0, PAGE_SIZE)
 
 // Accounts flagged with an authentication error are excluded from background
-// sync, but a single probe request is let through periodically so transient
-// failures (e.g. an OAuth token refresh hiccup) heal without a page reload.
-const AUTH_ERROR_RETRY_INTERVAL = 5 * 60 * 1000
-const AUTH_ERROR_PROBE_WINDOW = 30 * 1000
+// sync, but probe requests are let through so transient failures (e.g. a mail
+// server hiccup or an OAuth token refresh problem) heal without a page reload.
+// Mirrors the backend rate limiter: a few quick retries, then a slow trickle.
+const AUTH_ERROR_FAST_RETRIES = 3
+const AUTH_ERROR_FAST_RETRY_INTERVAL = 30 * 1000
+const AUTH_ERROR_SLOW_RETRY_INTERVAL = 5 * 60 * 1000
+const AUTH_ERROR_PROBE_WINDOW = 15 * 1000
 const authErrorProbes = new Map()
 
 /**
@@ -160,17 +163,26 @@ function shouldSkipAuthErroredAccount(account) {
 	}
 
 	const now = Date.now()
-	const lastProbe = authErrorProbes.get(account.id) ?? 0
-	if (now - lastProbe < AUTH_ERROR_PROBE_WINDOW) {
+	const probe = authErrorProbes.get(account.id)
+	if (!probe) {
+		// Unknown state (e.g. flagged at page load): probe right away
+		authErrorProbes.set(account.id, { openedAt: now, count: 1 })
+		return false
+	}
+	if (now - probe.openedAt < AUTH_ERROR_PROBE_WINDOW) {
 		// A probe was just allowed — let the related requests through
 		return false
 	}
-	if (now - lastProbe < AUTH_ERROR_RETRY_INTERVAL) {
+
+	const interval = probe.count < AUTH_ERROR_FAST_RETRIES
+		? AUTH_ERROR_FAST_RETRY_INTERVAL
+		: AUTH_ERROR_SLOW_RETRY_INTERVAL
+	if (now - probe.openedAt < interval) {
 		return true
 	}
 
 	// Open a new probe window
-	authErrorProbes.set(account.id, now)
+	authErrorProbes.set(account.id, { openedAt: now, count: probe.count + 1 })
 	return false
 }
 
@@ -1049,8 +1061,9 @@ export default function mainStoreActions() {
 								if (failedAccount && !failedAccount.error) {
 									logger.warn(`Authentication failed for account ${mailbox.accountId} (reason: ${error.data?.reason ?? 'unknown'}), pausing sync for this account`, { error })
 									this.editAccountMutation({ ...failedAccount, error: true })
-									// The failed request counts as the first probe
-									authErrorProbes.set(mailbox.accountId, Date.now())
+									// The failed request counts as attempt zero; the first
+									// probe is due one fast interval later
+									authErrorProbes.set(mailbox.accountId, { openedAt: Date.now(), count: 0 })
 									showError(
 										t('mail', 'Authentication failed for account {email}. Please update your credentials in the account settings.', { email: failedAccount.emailAddress }),
 										{ timeout: TOAST_PERMANENT_TIMEOUT },

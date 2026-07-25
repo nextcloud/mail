@@ -15,7 +15,6 @@ use Horde_Imap_Client_Socket;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IMemcache;
 use OCP\IMemcacheTTL;
-use function floor;
 
 /**
  * "Decorator" around Horde's IMAP client to add auth error rate limiting.
@@ -62,7 +61,14 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 		}
 	}
 
-	private const RATE_LIMIT_WINDOW = 3 * 60 * 60;
+	/** Failed attempts are forgotten after this many seconds */
+	private const FAILURE_TTL = 3 * 60 * 60;
+	/** Unthrottled attempts before the leaky bucket engages */
+	private const THROTTLE_THRESHOLD = 3;
+	/** Throttled attempts allowed at the fast interval before slowing down */
+	private const FAST_RETRIES = 3;
+	private const FAST_RETRY_INTERVAL = 30;
+	private const SLOW_RETRY_INTERVAL = 5 * 60;
 
 	protected function imapLogin() {
 		$result = parent::_login();
@@ -76,27 +82,45 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 			return $this->imapLogin();
 		}
 
-		$now = $this->timeFactory->getTime();
-		$window = floor($now / self::RATE_LIMIT_WINDOW);
-		$cacheKey = $this->hash . (string)$window;
+		$failureKey = $this->hash . '_failures';
+		$attemptKey = $this->hash . '_last_attempt';
 
-		$counter = $this->rateLimiterCache->get($cacheKey);
-		if ($counter !== null && $counter >= 3) {
-			// Enough errors. Let's fail without involving IMAP
-			throw new Horde_Imap_Client_Exception(
-				'Too many auth attempts',
-				Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED
-			);
+		$failures = (int)$this->rateLimiterCache->get($failureKey);
+		if ($failures >= self::THROTTLE_THRESHOLD) {
+			// Leaky bucket instead of a hard block: keep allowing one real
+			// attempt per interval so transient server-side failures heal on
+			// their own — a few quick retries first, then a slow trickle.
+			$interval = $failures < self::THROTTLE_THRESHOLD + self::FAST_RETRIES
+				? self::FAST_RETRY_INTERVAL
+				: self::SLOW_RETRY_INTERVAL;
+			$now = $this->timeFactory->getTime();
+			$lastAttempt = (int)$this->rateLimiterCache->get($attemptKey);
+			if ($now - $lastAttempt < $interval) {
+				// Enough errors. Let's fail without involving IMAP
+				throw new Horde_Imap_Client_Exception(
+					'Too many auth attempts',
+					Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED
+				);
+			}
+			// Not atomic: a parallel burst may pass together, but the next
+			// interval only opens once the timestamp is stored
+			$this->rateLimiterCache->set($attemptKey, $now, self::FAILURE_TTL);
 		}
 
 		try {
-			return $this->imapLogin();
+			$result = $this->imapLogin();
+			if ($failures > 0) {
+				// The credentials work (again): reset the throttle state
+				$this->rateLimiterCache->remove($failureKey);
+				$this->rateLimiterCache->remove($attemptKey);
+			}
+			return $result;
 		} catch (Horde_Imap_Client_Exception $e) {
 			if ($e->getCode() === Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED
 				&& in_array($e->getMessage(), ['Authentication failed.', 'Mail server denied authentication.'], true)) {
-				$this->rateLimiterCache->inc($cacheKey);
+				$this->rateLimiterCache->inc($failureKey);
 				if ($this->rateLimiterCache instanceof IMemcacheTTL) {
-					$this->rateLimiterCache->setTTL($cacheKey, self::RATE_LIMIT_WINDOW);
+					$this->rateLimiterCache->setTTL($failureKey, self::FAILURE_TTL);
 				}
 			}
 			throw $e;
