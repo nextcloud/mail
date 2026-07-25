@@ -56,6 +56,15 @@ class ItineraryService {
 			return $cached;
 		}
 
+		$cacheKey = $this->buildCacheKey($account, $mailbox, $id);
+
+		if (!$this->extractor->hasAdapter()) {
+			$this->logger->debug('No KItinerary adapter is available, skipping itinerary extraction');
+			$itinerary = new Itinerary();
+			$this->cache->set($cacheKey, json_encode($itinerary), self::CACHE_TTL);
+			return $itinerary;
+		}
+
 		$client = $this->clientFactory->getClient($account);
 		try {
 			$itinerary = new Itinerary();
@@ -87,8 +96,7 @@ class ItineraryService {
 		$nFinal = count($final);
 		$this->logger->debug("Reduced $nItinerary itinerary entries to $nFinal entries");
 
-		$cache_key = $this->buildCacheKey($account, $mailbox, $id);
-		$this->cache->set($cache_key, json_encode($final), self::CACHE_TTL);
+		$this->cache->set($cacheKey, json_encode($final), self::CACHE_TTL);
 
 		return $final;
 	}
