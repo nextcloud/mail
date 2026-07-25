@@ -181,11 +181,6 @@
       <code><![CDATA[$response->getBody()]]></code>
     </PossiblyInvalidArgument>
   </file>
-  <file src="lib/Integration/KItinerary/ItineraryExtractor.php">
-    <PossiblyFalsePropertyAssignmentValue>
-      <code><![CDATA[$this->findAvailableAdapter() ?? false]]></code>
-    </PossiblyFalsePropertyAssignmentValue>
-  </file>
   <file src="lib/Integration/MicrosoftIntegration.php">
     <PossiblyInvalidArgument>
       <code><![CDATA[$response->getBody()]]></code>
