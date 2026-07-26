@@ -619,6 +619,11 @@ export default {
 					editor.execute('heading', { value: 'heading3' })
 					cancel()
 				})
+			} else {
+				const linkCommand = editor.commands.get('link')
+				if (linkCommand) {
+					linkCommand.forceDisabled('linking')
+				}
 			}
 
 			this.bus.on('append-to-body-at-cursor', this.appendToBodyAtCursor)
