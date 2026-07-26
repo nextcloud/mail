@@ -32,6 +32,7 @@ import {
 	where,
 } from 'ramda'
 import Vue from 'vue'
+import { hiddenTags } from '../../components/tags.js'
 import MailboxLockedError from '../../errors/MailboxLockedError.js'
 import { matchError } from '../../errors/match.js'
 import SyncIncompleteError from '../../errors/SyncIncompleteError.js'
@@ -2488,6 +2489,13 @@ export default function mainStoreActions() {
 		getEnvelopeTags(id) {
 			const tags = this.envelopes[id]?.tags ?? []
 			return tags.map((tagId) => this.tags[tagId])
+		},
+		getExposedTags() {
+			return this.getTags.filter((tag) => tag.imapLabel && tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags))
+		},
+		getEnvelopeExposedTags(id) {
+			const exposed = this.getExposedTags().map((t) => t.id)
+			return this.getEnvelopeTags(id).filter((t) => exposed.includes(t.id))
 		},
 		getTag(id) {
 			return this.tags[id]

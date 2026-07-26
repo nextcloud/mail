@@ -602,7 +602,6 @@ import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
 import { flatRelativeDatetime, groupedRelativeDatetime, messageDateTime } from '../util/relativeDatetime.js'
 import { translateTagDisplayName } from '../util/tag.js'
-import { hiddenTags } from './tags.js'
 
 export default {
 	name: 'Envelope',
@@ -852,7 +851,7 @@ export default {
 		},
 
 		tags() {
-			let tags = this.mainStore.getEnvelopeTags(this.data.databaseId).filter((tag) => tag.imapLabel && tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags))
+			let tags = this.mainStore.getEnvelopeExposedTags(this.data.databaseId)
 
 			// Don't show follow-up tag in unified mailbox as it has its own section at the top
 			if (this.mailbox.isUnified) {
@@ -1005,7 +1004,7 @@ export default {
 			const quickActions = this.mainStore.getQuickActions().filter((action) => action.accountId === this.data.accountId)
 			for (const action of quickActions) {
 				const check = action.actionSteps.every((step) => {
-					if (['markAsSpam', 'applyTag', 'markAsImportant', 'markAsFavorite'].includes(step.name) && !this.hasWriteAcl) {
+					if (['markAsSpam', 'applyTag', 'removeTags', 'markAsImportant', 'markAsFavorite'].includes(step.name) && !this.hasWriteAcl) {
 						return false
 					}
 					if (['markAsRead', 'markAsUnread'].includes(step.name) && !this.hasSeenAcl) {
@@ -1087,6 +1086,9 @@ export default {
 								showWarning(t('mail', 'Could not apply tag, configured tag not found'))
 							}
 							break
+						case 'removeTags':
+							await this.removeTags()
+							break
 						case 'markAsImportant':
 							if (!this.isImportant) {
 								if (this.layoutMessageViewThreaded) {
@@ -1151,6 +1153,21 @@ export default {
 			}
 			for (const envelope of threadEnvelopes) {
 				await this.mainStore.addEnvelopeTag({ envelope, imapLabel: tag.imapLabel })
+			}
+		},
+
+		async removeTags() {
+			const threadEnvelopes = this.layoutMessageViewThreaded
+				? this.mainStore.getEnvelopesByThreadRootId(this.data.accountId, this.data.threadRootId)
+				: [this.data]
+			for (const envelope of threadEnvelopes) {
+				const promises = []
+				const tags = this.mainStore.getEnvelopeExposedTags(envelope.databaseId)
+				for (const tag of tags) {
+					const call = this.mainStore.removeEnvelopeTag({ envelope, imapLabel: tag.imapLabel })
+					promises.push(call)
+				}
+				await Promise.all(promises)
 			}
 		},
 
