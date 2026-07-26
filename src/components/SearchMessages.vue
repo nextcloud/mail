@@ -315,7 +315,6 @@ import Close from 'vue-material-design-icons/Close.vue'
 import FilterVariantIcon from 'vue-material-design-icons/FilterVariant.vue'
 import { findRecipient } from '../service/AutocompleteService.js'
 import useMainStore from '../store/mainStore.js'
-import { hiddenTags } from './tags.js'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -385,7 +384,7 @@ export default {
 	computed: {
 		...mapStores(useMainStore),
 		tags() {
-			return this.mainStore.getTags.filter((tag) => !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
+			return this.mainStore.getExposedTags().sort((a, b) => {
 				if (a.isDefaultTag && !b.isDefaultTag) {
 					return -1
 				}
