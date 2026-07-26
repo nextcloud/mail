@@ -929,6 +929,7 @@ OC.L10N.register(
     "Could not load your message" : "Ihre Nachricht konnte nicht geladen werden",
     "Could not load the desired message" : "Gewünschte Nachricht konnte nicht geladen werden",
     "Could not load the message" : "Nachricht konnte nicht geladen werden",
+    "Yesterday {time}" : "Gestern {time}",
     "Tag name cannot be empty" : "Schlagwort darf nicht leer sein",
     "Tag name is a hidden system tag" : "Schlagwortname ist ein verstecktes System-Schlagwort",
     "Tag already exists" : "Schlagwort existiert bereits",
