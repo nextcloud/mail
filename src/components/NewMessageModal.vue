@@ -319,7 +319,7 @@ export default {
 		 * @param {boolean=} opts.showToast Show a toast after saving
 		 * @return {Promise<number>} Draft id promise
 		 */
-		// TODO: when there's no draft is saved, Cloing wont move ie case 2 doesn't work
+		// TODO: when there's no draft is saved, Cloning won't move ie case 2 doesn't work
 		onDraft(data, { showToast = false } = {}) {
 			if (!this.composerMessage) {
 				logger.info('Ignoring draft because there is no message anymore', { data })
