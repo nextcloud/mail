@@ -37,7 +37,7 @@ class ImapAuthenticationFailedException extends ClientException {
 		$reason = $e->getMessage() === 'Too many auth attempts'
 			? self::REASON_RATE_LIMITED
 			: self::REASON_AUTHENTICATION_FAILED;
-		return new self('IMAP authentication failed', (int)$e->getCode(), $e, $reason);
+		return new self('IMAP authentication failed', $e->getCode(), $e, $reason);
 	}
 
 	/**
